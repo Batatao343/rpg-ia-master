@@ -1,5 +1,5 @@
 {
-  "commit_sha": "736e94539a41038cea33edca6cbbd44274e316db",
+  "commit_sha": "c80c9b759ceb5ed10d5e207bdd8bb61790090f45",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -4861,6 +4861,50 @@
       },
       "source": "file:tests/test_bug_intencao_parsers.py",
       "target": "module:tests.test_bug_intencao_parsers",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 5
+      },
+      "source": "file:tests/test_bug_npc_ciclo_de_vida.py",
+      "target": "file:agents/npc.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 6
+      },
+      "source": "file:tests/test_bug_npc_ciclo_de_vida.py",
+      "target": "file:agents/npc.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 7
+      },
+      "source": "file:tests/test_bug_npc_ciclo_de_vida.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 1
+      },
+      "source": "file:tests/test_bug_npc_ciclo_de_vida.py",
+      "target": "module:tests.test_bug_npc_ciclo_de_vida",
       "type": "contains"
     },
     {
@@ -13081,6 +13125,17 @@
       "type": "contains"
     },
     {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_structured_output_guards.py",
+        "line": 1
+      },
+      "source": "file:tests/test_structured_output_guards.py",
+      "target": "module:tests.test_structured_output_guards",
+      "type": "contains"
+    },
+    {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
@@ -14955,21 +15010,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 14
+        "line": 15
       },
       "source": "module:agents.npc",
       "target": "module:llm_setup",
-      "type": "imports"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 16
-      },
-      "source": "module:agents.npc",
-      "target": "module:services",
       "type": "imports"
     },
     {
@@ -14991,29 +15035,7 @@
         "line": 18
       },
       "source": "module:agents.npc",
-      "target": "module:services.context_builder",
-      "type": "imports"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 39
-      },
-      "source": "module:agents.npc",
-      "target": "module:services.input_normalization",
-      "type": "imports"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 23
-      },
-      "source": "module:agents.npc",
-      "target": "module:services.memory_provenance",
+      "target": "module:services",
       "type": "imports"
     },
     {
@@ -15024,18 +15046,7 @@
         "line": 19
       },
       "source": "module:agents.npc",
-      "target": "module:services.memory_retry",
-      "type": "imports"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 31
-      },
-      "source": "module:agents.npc",
-      "target": "module:services.prose_guard",
+      "target": "module:services.context_builder",
       "type": "imports"
     },
     {
@@ -15046,6 +15057,50 @@
         "line": 40
       },
       "source": "module:agents.npc",
+      "target": "module:services.input_normalization",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 24
+      },
+      "source": "module:agents.npc",
+      "target": "module:services.memory_provenance",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 20
+      },
+      "source": "module:agents.npc",
+      "target": "module:services.memory_retry",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 32
+      },
+      "source": "module:agents.npc",
+      "target": "module:services.prose_guard",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 41
+      },
+      "source": "module:agents.npc",
       "target": "module:services.structured_outputs",
       "type": "imports"
     },
@@ -15054,7 +15109,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 13
+        "line": 14
       },
       "source": "module:agents.npc",
       "target": "module:state",
@@ -15065,7 +15120,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 15
+        "line": 16
       },
       "source": "module:agents.npc",
       "target": "module:world_utils",
@@ -15076,7 +15131,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 102
+        "line": 103
       },
       "source": "module:agents.npc",
       "target": "symbol:agents.npc.FactionReveal",
@@ -15087,7 +15142,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 110
+        "line": 111
       },
       "source": "module:agents.npc",
       "target": "symbol:agents.npc.NPCResponse",
@@ -15098,7 +15153,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 89
+        "line": 90
       },
       "source": "module:agents.npc",
       "target": "symbol:agents.npc.NPCSchema",
@@ -15109,7 +15164,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 70
+        "line": 71
       },
       "source": "module:agents.npc",
       "target": "symbol:agents.npc._canonical_npc_id",
@@ -15120,7 +15175,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 191
+        "line": 225
       },
       "source": "module:agents.npc",
       "target": "symbol:agents.npc._has_complete_npc_combat_sheet",
@@ -15131,7 +15186,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 217
+        "line": 251
       },
       "source": "module:agents.npc",
       "target": "symbol:agents.npc._infer_tier_from_name",
@@ -15142,7 +15197,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 58
+        "line": 59
       },
       "source": "module:agents.npc",
       "target": "symbol:agents.npc._interaction_outcome",
@@ -15153,7 +15208,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 198
+        "line": 177
+      },
+      "source": "module:agents.npc",
+      "target": "symbol:agents.npc._load_npc_db_raw",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 232
       },
       "source": "module:agents.npc",
       "target": "symbol:agents.npc._materialize_npc_combat_sheet",
@@ -15164,7 +15230,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 289
+        "line": 327
       },
       "source": "module:agents.npc",
       "target": "symbol:agents.npc._mission_hint_block",
@@ -15175,7 +15241,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 138
+        "line": 139
       },
       "source": "module:agents.npc",
       "target": "symbol:agents.npc._npc_db_path",
@@ -15186,7 +15252,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 53
+        "line": 160
+      },
+      "source": "module:agents.npc",
+      "target": "symbol:agents.npc._npc_entry_broken",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 54
       },
       "source": "module:agents.npc",
       "target": "symbol:agents.npc._npc_id",
@@ -15197,7 +15274,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 223
+        "line": 147
+      },
+      "source": "module:agents.npc",
+      "target": "symbol:agents.npc.clamp_relationship_change",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 257
       },
       "source": "module:agents.npc",
       "target": "symbol:agents.npc.generate_new_npc",
@@ -15208,7 +15296,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 143
+        "line": 166
       },
       "source": "module:agents.npc",
       "target": "symbol:agents.npc.load_npc_db",
@@ -15219,7 +15307,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 306
+        "line": 344
       },
       "source": "module:agents.npc",
       "target": "symbol:agents.npc.npc_actor_node",
@@ -15230,7 +15318,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 160
+        "line": 194
       },
       "source": "module:agents.npc",
       "target": "symbol:agents.npc.save_npc_template",
@@ -15285,7 +15373,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 99
+        "line": 100
       },
       "source": "module:agents.router",
       "target": "symbol:agents.router.RouterDecision",
@@ -15307,7 +15395,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 60
+        "line": 61
       },
       "source": "module:agents.router",
       "target": "symbol:agents.router._combat_gate",
@@ -15329,7 +15417,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 119
+        "line": 120
       },
       "source": "module:agents.router",
       "target": "symbol:agents.router.dm_router_node",
@@ -23799,6 +23887,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
+        "line": 242
+      },
+      "source": "module:party",
+      "target": "symbol:party._relationship",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "party.py",
         "line": 103
       },
       "source": "module:party",
@@ -23821,7 +23920,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
-        "line": 383
+        "line": 389
       },
       "source": "module:party",
       "target": "symbol:party.backfill_party",
@@ -23832,7 +23931,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
-        "line": 318
+        "line": 324
       },
       "source": "module:party",
       "target": "symbol:party.can_recruit",
@@ -23843,7 +23942,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
-        "line": 376
+        "line": 382
       },
       "source": "module:party",
       "target": "symbol:party.detect_party_command",
@@ -23854,7 +23953,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
-        "line": 339
+        "line": 345
       },
       "source": "module:party",
       "target": "symbol:party.dismiss",
@@ -23876,7 +23975,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
-        "line": 325
+        "line": 331
       },
       "source": "module:party",
       "target": "symbol:party.recruit",
@@ -23887,7 +23986,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
-        "line": 283
+        "line": 289
       },
       "source": "module:party",
       "target": "symbol:party.recruitment_decision",
@@ -23898,7 +23997,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
-        "line": 242
+        "line": 248
       },
       "source": "module:party",
       "target": "symbol:party.scene_allies",
@@ -23909,7 +24008,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
-        "line": 357
+        "line": 363
       },
       "source": "module:party",
       "target": "symbol:party.set_following",
@@ -23920,7 +24019,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
-        "line": 346
+        "line": 352
       },
       "source": "module:party",
       "target": "symbol:party.set_waiting",
@@ -40915,6 +41014,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/npc_layers.py",
+        "line": 100
+      },
+      "source": "module:services.npc_layers",
+      "target": "symbol:services.npc_layers.apply_npc_death",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/npc_layers.py",
         "line": 63
       },
       "source": "module:services.npc_layers",
@@ -40926,7 +41036,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/npc_layers.py",
-        "line": 85
+        "line": 120
       },
       "source": "module:services.npc_layers",
       "target": "symbol:services.npc_layers.is_in_scene",
@@ -40937,7 +41047,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/npc_layers.py",
-        "line": 115
+        "line": 85
+      },
+      "source": "module:services.npc_layers",
+      "target": "symbol:services.npc_layers.npc_alive",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/npc_layers.py",
+        "line": 153
       },
       "source": "module:services.npc_layers",
       "target": "symbol:services.npc_layers.npcs_for_context",
@@ -40948,7 +41069,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/npc_layers.py",
-        "line": 91
+        "line": 129
       },
       "source": "module:services.npc_layers",
       "target": "symbol:services.npc_layers.npcs_in_scene",
@@ -40959,7 +41080,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/npc_layers.py",
-        "line": 142
+        "line": 180
       },
       "source": "module:services.npc_layers",
       "target": "symbol:services.npc_layers.reset_scene",
@@ -40981,7 +41102,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/npc_layers.py",
-        "line": 151
+        "line": 189
       },
       "source": "module:services.npc_layers",
       "target": "symbol:services.npc_layers.tick_interaction",
@@ -40992,7 +41113,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/npc_layers.py",
-        "line": 172
+        "line": 210
       },
       "source": "module:services.npc_layers",
       "target": "symbol:services.npc_layers.trait_dc_modifier",
@@ -41003,7 +41124,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/npc_layers.py",
-        "line": 181
+        "line": 219
       },
       "source": "module:services.npc_layers",
       "target": "symbol:services.npc_layers.trait_names",
@@ -41025,7 +41146,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/npc_layers.py",
-        "line": 194
+        "line": 232
       },
       "source": "module:services.npc_layers",
       "target": "symbol:services.npc_layers.visible_npc_view",
@@ -47464,6 +47585,193 @@
       },
       "source": "module:tests.test_bug_intencao_parsers",
       "target": "symbol:tests.test_bug_intencao_parsers.test_vou_ao_finds_destination_and_travels",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 5
+      },
+      "source": "module:tests.test_bug_npc_ciclo_de_vida",
+      "target": "module:agents.npc",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 6
+      },
+      "source": "module:tests.test_bug_npc_ciclo_de_vida",
+      "target": "module:agents.npc",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 7
+      },
+      "source": "module:tests.test_bug_npc_ciclo_de_vida",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 10
+      },
+      "source": "module:tests.test_bug_npc_ciclo_de_vida",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida._AILLM",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 18
+      },
+      "source": "module:tests.test_bug_npc_ciclo_de_vida",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida._patch_gen",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 54
+      },
+      "source": "module:tests.test_bug_npc_ciclo_de_vida",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida.test_dead_npc_not_in_scene_or_context",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 26
+      },
+      "source": "module:tests.test_bug_npc_ciclo_de_vida",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_aimessage_not_persisted",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 34
+      },
+      "source": "module:tests.test_bug_npc_ciclo_de_vida",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_valid_llm_still_saves",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 135
+      },
+      "source": "module:tests.test_bug_npc_ciclo_de_vida",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida.test_load_npc_db_discards_broken_entries",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 67
+      },
+      "source": "module:tests.test_bug_npc_ciclo_de_vida",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida.test_npc_actor_dead_target_says_dead",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 129
+      },
+      "source": "module:tests.test_bug_npc_ciclo_de_vida",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida.test_npc_fallback_hint_cleared",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 76
+      },
+      "source": "module:tests.test_bug_npc_ciclo_de_vida",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida.test_npc_killed_syncs_state_npcs_and_party",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 86
+      },
+      "source": "module:tests.test_bug_npc_ciclo_de_vida",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida.test_process_pending_events_npc_killed_syncs",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 121
+      },
+      "source": "module:tests.test_bug_npc_ciclo_de_vida",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida.test_relationship_change_clamped",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 111
+      },
+      "source": "module:tests.test_bug_npc_ciclo_de_vida",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida.test_relationship_zero_is_zero",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 147
+      },
+      "source": "module:tests.test_bug_npc_ciclo_de_vida",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida.test_smoke_invalid_structured_output_leaves_cache_clean",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 102
+      },
+      "source": "module:tests.test_bug_npc_ciclo_de_vida",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida.test_waiting_companion_only_talks_at_waiting_location",
       "type": "defines"
     },
     {
@@ -79920,6 +80228,28 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_structured_output_guards.py",
+        "line": 16
+      },
+      "source": "module:tests.test_structured_output_guards",
+      "target": "symbol:tests.test_structured_output_guards._sites",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_structured_output_guards.py",
+        "line": 32
+      },
+      "source": "module:tests.test_structured_output_guards",
+      "target": "symbol:tests.test_structured_output_guards.test_all_structured_output_sites_guarded",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
         "line": 8
       },
@@ -85344,7 +85674,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 200
+        "line": 234
       },
       "source": "symbol:agents.npc._materialize_npc_combat_sheet",
       "target": "symbol:agents.npc._has_complete_npc_combat_sheet",
@@ -85355,7 +85685,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 249
+        "line": 283
       },
       "source": "symbol:agents.npc.generate_new_npc",
       "target": "symbol:agents.npc._infer_tier_from_name",
@@ -85366,7 +85696,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 240
+        "line": 274
       },
       "source": "symbol:agents.npc.generate_new_npc",
       "target": "symbol:agents.npc._materialize_npc_combat_sheet",
@@ -85377,7 +85707,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 278
+        "line": 314
       },
       "source": "symbol:agents.npc.generate_new_npc",
       "target": "symbol:agents.npc._materialize_npc_combat_sheet",
@@ -85388,7 +85718,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 229
+        "line": 263
       },
       "source": "symbol:agents.npc.generate_new_npc",
       "target": "symbol:agents.npc.load_npc_db",
@@ -85399,7 +85729,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 242
+        "line": 276
       },
       "source": "symbol:agents.npc.generate_new_npc",
       "target": "symbol:agents.npc.save_npc_template",
@@ -85410,7 +85740,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 280
+        "line": 318
       },
       "source": "symbol:agents.npc.generate_new_npc",
       "target": "symbol:agents.npc.save_npc_template",
@@ -85421,7 +85751,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 249
+        "line": 283
       },
       "source": "symbol:agents.npc.generate_new_npc",
       "target": "symbol:llm_setup.get_llm",
@@ -85432,7 +85762,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 662
+        "line": 168
+      },
+      "source": "symbol:agents.npc.load_npc_db",
+      "target": "symbol:agents.npc._load_npc_db_raw",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 169
+      },
+      "source": "symbol:agents.npc.load_npc_db",
+      "target": "symbol:agents.npc._npc_entry_broken",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 722
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:agents.npc._canonical_npc_id",
@@ -85443,7 +85795,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 389
+        "line": 446
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:agents.npc._interaction_outcome",
@@ -85454,219 +85806,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 394
+        "line": 451
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:agents.npc._interaction_outcome",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 464
-      },
-      "source": "symbol:agents.npc.npc_actor_node",
-      "target": "symbol:agents.npc._mission_hint_block",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 390
-      },
-      "source": "symbol:agents.npc.npc_actor_node",
-      "target": "symbol:agents.npc._npc_id",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 395
-      },
-      "source": "symbol:agents.npc.npc_actor_node",
-      "target": "symbol:agents.npc._npc_id",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 421
-      },
-      "source": "symbol:agents.npc.npc_actor_node",
-      "target": "symbol:agents.npc._npc_id",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 358
-      },
-      "source": "symbol:agents.npc.npc_actor_node",
-      "target": "symbol:agents.npc.generate_new_npc",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 352
-      },
-      "source": "symbol:agents.npc.npc_actor_node",
-      "target": "symbol:agents.npc.load_npc_db",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 443
-      },
-      "source": "symbol:agents.npc.npc_actor_node",
-      "target": "symbol:llm_setup.get_llm",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 428
-      },
-      "source": "symbol:agents.npc.npc_actor_node",
-      "target": "symbol:services.context_builder.build_context_pack",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 308
-      },
-      "source": "symbol:agents.npc.npc_actor_node",
-      "target": "symbol:services.input_normalization.optional_entity_ref",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 319
-      },
-      "source": "symbol:agents.npc.npc_actor_node",
-      "target": "symbol:services.input_normalization.optional_entity_ref",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 615
-      },
-      "source": "symbol:agents.npc.npc_actor_node",
-      "target": "symbol:services.memory_provenance.bounded_audit_rows",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 621
-      },
-      "source": "symbol:agents.npc.npc_actor_node",
-      "target": "symbol:services.memory_provenance.bounded_audit_rows",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 619
-      },
-      "source": "symbol:agents.npc.npc_actor_node",
-      "target": "symbol:services.memory_provenance.commit_memory_facts",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 572
-      },
-      "source": "symbol:agents.npc.npc_actor_node",
-      "target": "symbol:services.memory_provenance.make_memory_fact",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 588
-      },
-      "source": "symbol:agents.npc.npc_actor_node",
-      "target": "symbol:services.memory_provenance.memory_metadata",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 614
-      },
-      "source": "symbol:agents.npc.npc_actor_node",
-      "target": "symbol:services.memory_provenance.normalize_memory_facts",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 598
-      },
-      "source": "symbol:agents.npc.npc_actor_node",
-      "target": "symbol:services.memory_retry.enqueue_npc_memory",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 594
-      },
-      "source": "symbol:agents.npc.npc_actor_node",
-      "target": "symbol:services.memory_retry.normalize_pending_npc_memory",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/npc.py",
-        "line": 531
-      },
-      "source": "symbol:agents.npc.npc_actor_node",
-      "target": "symbol:services.prose_guard.log_if_repeats",
       "type": "calls"
     },
     {
@@ -85677,6 +85820,226 @@
         "line": 521
       },
       "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:agents.npc._mission_hint_block",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 447
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:agents.npc._npc_id",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 452
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:agents.npc._npc_id",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 478
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:agents.npc._npc_id",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 606
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:agents.npc.clamp_relationship_change",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 415
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:agents.npc.generate_new_npc",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 409
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:agents.npc.load_npc_db",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 500
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:llm_setup.get_llm",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 485
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:services.context_builder.build_context_pack",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 346
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:services.input_normalization.optional_entity_ref",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 357
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:services.input_normalization.optional_entity_ref",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 675
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:services.memory_provenance.bounded_audit_rows",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 681
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:services.memory_provenance.bounded_audit_rows",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 679
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:services.memory_provenance.commit_memory_facts",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 632
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:services.memory_provenance.make_memory_fact",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 648
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:services.memory_provenance.memory_metadata",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 674
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:services.memory_provenance.normalize_memory_facts",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 658
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:services.memory_retry.enqueue_npc_memory",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 654
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:services.memory_retry.normalize_pending_npc_memory",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 588
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:services.prose_guard.log_if_repeats",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 578
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.prose_guard.openings_clause",
       "type": "calls"
     },
@@ -85685,7 +86048,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 529
+        "line": 586
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.prose_guard.sanitize_meta_preamble",
@@ -85696,7 +86059,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 545
+        "line": 602
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.prose_guard.sanitize_meta_preamble",
@@ -85707,7 +86070,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 455
+        "line": 512
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.prose_guard.semantic_opening",
@@ -85718,7 +86081,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 529
+        "line": 586
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.prose_guard.strip_outer_quotes",
@@ -85729,7 +86092,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 532
+        "line": 589
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.prose_guard.vary_repeated_opening",
@@ -85740,7 +86103,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 669
+        "line": 729
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.quest_log.register_proposed_quests",
@@ -85751,7 +86114,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 637
+        "line": 697
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:world_utils.apply_faction_reveal",
@@ -85762,7 +86125,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 635
+        "line": 695
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:world_utils.ensure_faction_intel",
@@ -85773,7 +86136,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 437
+        "line": 494
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:world_utils.ensure_factions",
@@ -85784,7 +86147,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 163
+        "line": 197
       },
       "source": "symbol:agents.npc.save_npc_template",
       "target": "symbol:agents.npc.load_npc_db",
@@ -85795,7 +86158,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 110
+        "line": 111
       },
       "source": "symbol:agents.router.RouterDecision",
       "target": "symbol:agents.router.RouterDecision._normalize_loot_context",
@@ -85806,7 +86169,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 116
+        "line": 117
       },
       "source": "symbol:agents.router.RouterDecision",
       "target": "symbol:agents.router.RouterDecision._normalize_target",
@@ -85817,7 +86180,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 111
+        "line": 112
       },
       "source": "symbol:agents.router.RouterDecision._normalize_loot_context",
       "target": "symbol:services.input_normalization.optional_entity_ref",
@@ -85828,7 +86191,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 117
+        "line": 118
       },
       "source": "symbol:agents.router.RouterDecision._normalize_target",
       "target": "symbol:services.input_normalization.optional_entity_ref",
@@ -85839,7 +86202,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 79
+        "line": 80
       },
       "source": "symbol:agents.router._combat_gate",
       "target": "symbol:agents.router._last_human_text",
@@ -85850,7 +86213,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 139
+        "line": 140
       },
       "source": "symbol:agents.router.dm_router_node",
       "target": "symbol:agents.router._base_route_payload",
@@ -85861,7 +86224,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 148
+        "line": 149
       },
       "source": "symbol:agents.router.dm_router_node",
       "target": "symbol:agents.router._base_route_payload",
@@ -85872,7 +86235,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 155
+        "line": 156
       },
       "source": "symbol:agents.router.dm_router_node",
       "target": "symbol:agents.router._base_route_payload",
@@ -85883,7 +86246,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 195
+        "line": 196
       },
       "source": "symbol:agents.router.dm_router_node",
       "target": "symbol:agents.router._base_route_payload",
@@ -85894,7 +86257,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 135
+        "line": 136
       },
       "source": "symbol:agents.router.dm_router_node",
       "target": "symbol:agents.router._combat_gate",
@@ -85905,7 +86268,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 144
+        "line": 145
       },
       "source": "symbol:agents.router.dm_router_node",
       "target": "symbol:agents.router._last_human_text",
@@ -85916,7 +86279,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 169
+        "line": 170
       },
       "source": "symbol:agents.router.dm_router_node",
       "target": "symbol:llm_setup.get_llm",
@@ -85927,7 +86290,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/router.py",
-        "line": 210
+        "line": 211
       },
       "source": "symbol:agents.router.dm_router_node",
       "target": "symbol:services.input_normalization.optional_entity_ref",
@@ -104814,7 +105177,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
-        "line": 390
+        "line": 396
       },
       "source": "symbol:party.backfill_party",
       "target": "symbol:party._fold",
@@ -104825,7 +105188,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
-        "line": 321
+        "line": 327
       },
       "source": "symbol:party.can_recruit",
       "target": "symbol:party.recruitment_decision",
@@ -104836,7 +105199,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
-        "line": 342
+        "line": 348
       },
       "source": "symbol:party.dismiss",
       "target": "symbol:party._fold",
@@ -104880,7 +105243,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
-        "line": 327
+        "line": 333
       },
       "source": "symbol:party.recruit",
       "target": "symbol:party.can_recruit",
@@ -104891,7 +105254,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
-        "line": 335
+        "line": 341
       },
       "source": "symbol:party.recruit",
       "target": "symbol:party.make_companion_from_npc",
@@ -104902,7 +105265,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
-        "line": 306
+        "line": 297
+      },
+      "source": "symbol:party.recruitment_decision",
+      "target": "symbol:party._relationship",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "party.py",
+        "line": 312
       },
       "source": "symbol:party.recruitment_decision",
       "target": "symbol:party.active_allies",
@@ -104913,7 +105287,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
-        "line": 295
+        "line": 301
       },
       "source": "symbol:party.recruitment_decision",
       "target": "symbol:party.recruitment_decision.result",
@@ -104924,7 +105298,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
-        "line": 249
+        "line": 255
       },
       "source": "symbol:party.scene_allies",
       "target": "symbol:party._fold",
@@ -104935,7 +105309,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
-        "line": 266
+        "line": 272
       },
       "source": "symbol:party.scene_allies",
       "target": "symbol:party._fold",
@@ -104949,6 +105323,17 @@
         "line": 274
       },
       "source": "symbol:party.scene_allies",
+      "target": "symbol:party._relationship",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "party.py",
+        "line": 280
+      },
+      "source": "symbol:party.scene_allies",
       "target": "symbol:party.make_companion_from_npc",
       "type": "calls"
     },
@@ -104957,7 +105342,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
-        "line": 361
+        "line": 367
       },
       "source": "symbol:party.set_following",
       "target": "symbol:party._fold",
@@ -104968,7 +105353,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "party.py",
-        "line": 350
+        "line": 356
       },
       "source": "symbol:party.set_waiting",
       "target": "symbol:party._fold",
@@ -132721,7 +133106,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/event_processor.py",
-        "line": 236
+        "line": 237
       },
       "source": "symbol:services.event_processor.process_pending_events",
       "target": "symbol:services.chronicle.append_entry",
@@ -132732,7 +133117,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/event_processor.py",
-        "line": 234
+        "line": 235
       },
       "source": "symbol:services.event_processor.process_pending_events",
       "target": "symbol:services.chronicle.render_milestone",
@@ -132743,7 +133128,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/event_processor.py",
-        "line": 229
+        "line": 230
       },
       "source": "symbol:services.event_processor.process_pending_events",
       "target": "symbol:services.event_processor._bounded_rejections",
@@ -132754,7 +133139,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/event_processor.py",
-        "line": 264
+        "line": 265
       },
       "source": "symbol:services.event_processor.process_pending_events",
       "target": "symbol:services.event_processor._bounded_rejections",
@@ -132765,7 +133150,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/event_processor.py",
-        "line": 271
+        "line": 272
       },
       "source": "symbol:services.event_processor.process_pending_events",
       "target": "symbol:services.event_processor._build_event",
@@ -132776,7 +133161,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/event_processor.py",
-        "line": 327
+        "line": 333
       },
       "source": "symbol:services.event_processor.process_pending_events",
       "target": "symbol:services.event_processor._build_event",
@@ -132798,7 +133183,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/event_processor.py",
-        "line": 273
+        "line": 274
       },
       "source": "symbol:services.event_processor.process_pending_events",
       "target": "symbol:services.event_processor.apply_event",
@@ -132809,7 +133194,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/event_processor.py",
-        "line": 232
+        "line": 233
       },
       "source": "symbol:services.event_processor.process_pending_events",
       "target": "symbol:services.event_processor.process_pending_events._chronicle_milestone",
@@ -132820,7 +133205,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/event_processor.py",
-        "line": 283
+        "line": 284
       },
       "source": "symbol:services.event_processor.process_pending_events",
       "target": "symbol:services.quest_log.complete_quest_with_reward",
@@ -132831,7 +133216,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/event_processor.py",
-        "line": 303
+        "line": 309
       },
       "source": "symbol:services.event_processor.process_pending_events",
       "target": "symbol:services.quest_log.fail_orphan_quests",
@@ -132842,7 +133227,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/event_processor.py",
-        "line": 295
+        "line": 296
       },
       "source": "symbol:services.event_processor.process_pending_events",
       "target": "symbol:services.rule_engine.run_rules",
@@ -132853,7 +133238,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/event_processor.py",
-        "line": 251
+        "line": 252
       },
       "source": "symbol:services.event_processor.process_pending_events",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -132864,7 +133249,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/event_processor.py",
-        "line": 260
+        "line": 261
       },
       "source": "symbol:services.event_processor.process_pending_events",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -132875,7 +133260,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/event_processor.py",
-        "line": 258
+        "line": 259
       },
       "source": "symbol:services.event_processor.process_pending_events",
       "target": "symbol:services.world_validators.validate_proposal",
@@ -132886,7 +133271,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/event_processor.py",
-        "line": 236
+        "line": 237
       },
       "source": "symbol:services.event_processor.process_pending_events._chronicle_milestone",
       "target": "symbol:services.chronicle.append_entry",
@@ -132897,7 +133282,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/event_processor.py",
-        "line": 234
+        "line": 235
       },
       "source": "symbol:services.event_processor.process_pending_events._chronicle_milestone",
       "target": "symbol:services.chronicle.render_milestone",
@@ -136857,7 +137242,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/npc_layers.py",
-        "line": 134
+        "line": 124
+      },
+      "source": "symbol:services.npc_layers.is_in_scene",
+      "target": "symbol:services.npc_layers.npc_alive",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/npc_layers.py",
+        "line": 172
       },
       "source": "symbol:services.npc_layers.npcs_for_context",
       "target": "symbol:services.npc_layers.is_in_scene",
@@ -136868,10 +137264,43 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/npc_layers.py",
-        "line": 100
+        "line": 163
+      },
+      "source": "symbol:services.npc_layers.npcs_for_context",
+      "target": "symbol:services.npc_layers.npc_alive",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/npc_layers.py",
+        "line": 166
+      },
+      "source": "symbol:services.npc_layers.npcs_for_context",
+      "target": "symbol:services.npc_layers.npc_alive",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/npc_layers.py",
+        "line": 138
       },
       "source": "symbol:services.npc_layers.npcs_in_scene",
       "target": "symbol:services.npc_layers.is_in_scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/npc_layers.py",
+        "line": 142
+      },
+      "source": "symbol:services.npc_layers.npcs_in_scene",
+      "target": "symbol:services.npc_layers.npc_alive",
       "type": "calls"
     },
     {
@@ -136890,7 +137319,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/npc_layers.py",
-        "line": 157
+        "line": 195
       },
       "source": "symbol:services.npc_layers.tick_interaction",
       "target": "symbol:services.npc_layers.traits_catalog",
@@ -136901,7 +137330,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/npc_layers.py",
-        "line": 174
+        "line": 212
       },
       "source": "symbol:services.npc_layers.trait_dc_modifier",
       "target": "symbol:services.npc_layers.traits_catalog",
@@ -136912,7 +137341,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/npc_layers.py",
-        "line": 184
+        "line": 222
       },
       "source": "symbol:services.npc_layers.trait_names",
       "target": "symbol:services.npc_layers.traits_catalog",
@@ -136934,7 +137363,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/npc_layers.py",
-        "line": 211
+        "line": 248
+      },
+      "source": "symbol:services.npc_layers.visible_npc_view",
+      "target": "symbol:services.npc_layers.npc_alive",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/npc_layers.py",
+        "line": 249
+      },
+      "source": "symbol:services.npc_layers.visible_npc_view",
+      "target": "symbol:services.npc_layers.npc_alive",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/npc_layers.py",
+        "line": 250
       },
       "source": "symbol:services.npc_layers.visible_npc_view",
       "target": "symbol:services.npc_layers.trait_names",
@@ -147256,6 +147707,281 @@
       },
       "source": "symbol:tests.test_bug_intencao_parsers.test_vou_ao_finds_destination_and_travels",
       "target": "symbol:world_utils.find_travel_destination",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 14
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida._AILLM",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida._AILLM.invoke",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 11
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida._AILLM",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida._AILLM.with_structured_output",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 62
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_dead_npc_not_in_scene_or_context",
+      "target": "symbol:services.npc_layers.npc_alive",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 58
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_dead_npc_not_in_scene_or_context",
+      "target": "symbol:services.npc_layers.npcs_for_context",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 61
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_dead_npc_not_in_scene_or_context",
+      "target": "symbol:services.npc_layers.npcs_in_scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 63
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_dead_npc_not_in_scene_or_context",
+      "target": "symbol:services.npc_layers.visible_npc_view",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 29
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_aimessage_not_persisted",
+      "target": "symbol:agents.npc.generate_new_npc",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 28
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_aimessage_not_persisted",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida._AILLM",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 28
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_aimessage_not_persisted",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida._patch_gen",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 42
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_valid_llm_still_saves",
+      "target": "symbol:agents.npc.NPCSchema",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 49
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_valid_llm_still_saves",
+      "target": "symbol:agents.npc.generate_new_npc",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 48
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_valid_llm_still_saves",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida._patch_gen",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 37
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_valid_llm_still_saves",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_valid_llm_still_saves._OK",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 41
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_valid_llm_still_saves._OK",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_valid_llm_still_saves._OK.invoke",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 38
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_valid_llm_still_saves._OK",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_valid_llm_still_saves._OK.with_structured_output",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 42
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_valid_llm_still_saves._OK.invoke",
+      "target": "symbol:agents.npc.NPCSchema",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 142
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_load_npc_db_discards_broken_entries",
+      "target": "symbol:agents.npc.load_npc_db",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 72
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_npc_actor_dead_target_says_dead",
+      "target": "symbol:agents.npc.npc_actor_node",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 77
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_npc_killed_syncs_state_npcs_and_party",
+      "target": "symbol:services.npc_layers.apply_npc_death",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 123
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_relationship_change_clamped",
+      "target": "symbol:agents.npc.clamp_relationship_change",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 124
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_relationship_change_clamped",
+      "target": "symbol:agents.npc.clamp_relationship_change",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 125
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_relationship_change_clamped",
+      "target": "symbol:agents.npc.clamp_relationship_change",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 155
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_smoke_invalid_structured_output_leaves_cache_clean",
+      "target": "symbol:agents.npc.generate_new_npc",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 154
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_smoke_invalid_structured_output_leaves_cache_clean",
+      "target": "symbol:tests.test_bug_npc_ciclo_de_vida._AILLM",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_bug_npc_ciclo_de_vida.py",
+        "line": 107
+      },
+      "source": "symbol:tests.test_bug_npc_ciclo_de_vida.test_waiting_companion_only_talks_at_waiting_location",
+      "target": "symbol:agents.npc.npc_actor_node",
       "type": "calls"
     },
     {
@@ -212071,6 +212797,17 @@
       "type": "calls"
     },
     {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_structured_output_guards.py",
+        "line": 35
+      },
+      "source": "symbol:tests.test_structured_output_guards.test_all_structured_output_sites_guarded",
+      "target": "symbol:tests.test_structured_output_guards._sites",
+      "type": "calls"
+    },
+    {
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
@@ -220407,6 +221144,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/test_bug_npc_ciclo_de_vida.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/test_campaign_grounding_deferred.py",
       "kind": "file",
       "line": 1,
@@ -221783,6 +222527,13 @@
       "kind": "file",
       "line": 1,
       "path": "tests/test_stripe_checkout_local.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_structured_output_guards.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_structured_output_guards.py",
       "qualified_name": null
     },
     {
@@ -224530,6 +225281,13 @@
       "qualified_name": "tests.test_bug_intencao_parsers"
     },
     {
+      "id": "module:tests.test_bug_npc_ciclo_de_vida",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": "tests.test_bug_npc_ciclo_de_vida"
+    },
+    {
       "id": "module:tests.test_campaign_grounding_deferred",
       "kind": "module",
       "line": 1,
@@ -225909,6 +226667,13 @@
       "qualified_name": "tests.test_stripe_checkout_local"
     },
     {
+      "id": "module:tests.test_structured_output_guards",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_structured_output_guards.py",
+      "qualified_name": "tests.test_structured_output_guards"
+    },
+    {
       "id": "module:tests.test_tactical_archetypes_runtime",
       "kind": "module",
       "line": 1,
@@ -226611,105 +227376,126 @@
     {
       "id": "symbol:agents.npc.FactionReveal",
       "kind": "class",
-      "line": 102,
+      "line": 103,
       "path": "agents/npc.py",
       "qualified_name": "agents.npc.FactionReveal"
     },
     {
       "id": "symbol:agents.npc.NPCResponse",
       "kind": "class",
-      "line": 110,
+      "line": 111,
       "path": "agents/npc.py",
       "qualified_name": "agents.npc.NPCResponse"
     },
     {
       "id": "symbol:agents.npc.NPCSchema",
       "kind": "class",
-      "line": 89,
+      "line": 90,
       "path": "agents/npc.py",
       "qualified_name": "agents.npc.NPCSchema"
     },
     {
       "id": "symbol:agents.npc._canonical_npc_id",
       "kind": "function",
-      "line": 70,
+      "line": 71,
       "path": "agents/npc.py",
       "qualified_name": "agents.npc._canonical_npc_id"
     },
     {
       "id": "symbol:agents.npc._has_complete_npc_combat_sheet",
       "kind": "function",
-      "line": 191,
+      "line": 225,
       "path": "agents/npc.py",
       "qualified_name": "agents.npc._has_complete_npc_combat_sheet"
     },
     {
       "id": "symbol:agents.npc._infer_tier_from_name",
       "kind": "function",
-      "line": 217,
+      "line": 251,
       "path": "agents/npc.py",
       "qualified_name": "agents.npc._infer_tier_from_name"
     },
     {
       "id": "symbol:agents.npc._interaction_outcome",
       "kind": "function",
-      "line": 58,
+      "line": 59,
       "path": "agents/npc.py",
       "qualified_name": "agents.npc._interaction_outcome"
     },
     {
+      "id": "symbol:agents.npc._load_npc_db_raw",
+      "kind": "function",
+      "line": 177,
+      "path": "agents/npc.py",
+      "qualified_name": "agents.npc._load_npc_db_raw"
+    },
+    {
       "id": "symbol:agents.npc._materialize_npc_combat_sheet",
       "kind": "function",
-      "line": 198,
+      "line": 232,
       "path": "agents/npc.py",
       "qualified_name": "agents.npc._materialize_npc_combat_sheet"
     },
     {
       "id": "symbol:agents.npc._mission_hint_block",
       "kind": "function",
-      "line": 289,
+      "line": 327,
       "path": "agents/npc.py",
       "qualified_name": "agents.npc._mission_hint_block"
     },
     {
       "id": "symbol:agents.npc._npc_db_path",
       "kind": "function",
-      "line": 138,
+      "line": 139,
       "path": "agents/npc.py",
       "qualified_name": "agents.npc._npc_db_path"
     },
     {
+      "id": "symbol:agents.npc._npc_entry_broken",
+      "kind": "function",
+      "line": 160,
+      "path": "agents/npc.py",
+      "qualified_name": "agents.npc._npc_entry_broken"
+    },
+    {
       "id": "symbol:agents.npc._npc_id",
       "kind": "function",
-      "line": 53,
+      "line": 54,
       "path": "agents/npc.py",
       "qualified_name": "agents.npc._npc_id"
     },
     {
+      "id": "symbol:agents.npc.clamp_relationship_change",
+      "kind": "function",
+      "line": 147,
+      "path": "agents/npc.py",
+      "qualified_name": "agents.npc.clamp_relationship_change"
+    },
+    {
       "id": "symbol:agents.npc.generate_new_npc",
       "kind": "function",
-      "line": 223,
+      "line": 257,
       "path": "agents/npc.py",
       "qualified_name": "agents.npc.generate_new_npc"
     },
     {
       "id": "symbol:agents.npc.load_npc_db",
       "kind": "function",
-      "line": 143,
+      "line": 166,
       "path": "agents/npc.py",
       "qualified_name": "agents.npc.load_npc_db"
     },
     {
       "id": "symbol:agents.npc.npc_actor_node",
       "kind": "function",
-      "line": 306,
+      "line": 344,
       "path": "agents/npc.py",
       "qualified_name": "agents.npc.npc_actor_node"
     },
     {
       "id": "symbol:agents.npc.save_npc_template",
       "kind": "function",
-      "line": 160,
+      "line": 194,
       "path": "agents/npc.py",
       "qualified_name": "agents.npc.save_npc_template"
     },
@@ -226723,21 +227509,21 @@
     {
       "id": "symbol:agents.router.RouterDecision",
       "kind": "class",
-      "line": 99,
+      "line": 100,
       "path": "agents/router.py",
       "qualified_name": "agents.router.RouterDecision"
     },
     {
       "id": "symbol:agents.router.RouterDecision._normalize_loot_context",
       "kind": "method",
-      "line": 110,
+      "line": 111,
       "path": "agents/router.py",
       "qualified_name": "agents.router.RouterDecision._normalize_loot_context"
     },
     {
       "id": "symbol:agents.router.RouterDecision._normalize_target",
       "kind": "method",
-      "line": 116,
+      "line": 117,
       "path": "agents/router.py",
       "qualified_name": "agents.router.RouterDecision._normalize_target"
     },
@@ -226751,7 +227537,7 @@
     {
       "id": "symbol:agents.router._combat_gate",
       "kind": "function",
-      "line": 60,
+      "line": 61,
       "path": "agents/router.py",
       "qualified_name": "agents.router._combat_gate"
     },
@@ -226765,7 +227551,7 @@
     {
       "id": "symbol:agents.router.dm_router_node",
       "kind": "function",
-      "line": 119,
+      "line": 120,
       "path": "agents/router.py",
       "qualified_name": "agents.router.dm_router_node"
     },
@@ -233791,6 +234577,13 @@
       "qualified_name": "party._npc_v4_sheet"
     },
     {
+      "id": "symbol:party._relationship",
+      "kind": "function",
+      "line": 242,
+      "path": "party.py",
+      "qualified_name": "party._relationship"
+    },
+    {
       "id": "symbol:party._valid_partial_virtudes",
       "kind": "function",
       "line": 103,
@@ -233807,28 +234600,28 @@
     {
       "id": "symbol:party.backfill_party",
       "kind": "function",
-      "line": 383,
+      "line": 389,
       "path": "party.py",
       "qualified_name": "party.backfill_party"
     },
     {
       "id": "symbol:party.can_recruit",
       "kind": "function",
-      "line": 318,
+      "line": 324,
       "path": "party.py",
       "qualified_name": "party.can_recruit"
     },
     {
       "id": "symbol:party.detect_party_command",
       "kind": "function",
-      "line": 376,
+      "line": 382,
       "path": "party.py",
       "qualified_name": "party.detect_party_command"
     },
     {
       "id": "symbol:party.dismiss",
       "kind": "function",
-      "line": 339,
+      "line": 345,
       "path": "party.py",
       "qualified_name": "party.dismiss"
     },
@@ -233842,42 +234635,42 @@
     {
       "id": "symbol:party.recruit",
       "kind": "function",
-      "line": 325,
+      "line": 331,
       "path": "party.py",
       "qualified_name": "party.recruit"
     },
     {
       "id": "symbol:party.recruitment_decision",
       "kind": "function",
-      "line": 283,
+      "line": 289,
       "path": "party.py",
       "qualified_name": "party.recruitment_decision"
     },
     {
       "id": "symbol:party.recruitment_decision.result",
       "kind": "function",
-      "line": 295,
+      "line": 301,
       "path": "party.py",
       "qualified_name": "party.recruitment_decision.result"
     },
     {
       "id": "symbol:party.scene_allies",
       "kind": "function",
-      "line": 242,
+      "line": 248,
       "path": "party.py",
       "qualified_name": "party.scene_allies"
     },
     {
       "id": "symbol:party.set_following",
       "kind": "function",
-      "line": 357,
+      "line": 363,
       "path": "party.py",
       "qualified_name": "party.set_following"
     },
     {
       "id": "symbol:party.set_waiting",
       "kind": "function",
-      "line": 346,
+      "line": 352,
       "path": "party.py",
       "qualified_name": "party.set_waiting"
     },
@@ -243166,7 +243959,7 @@
     {
       "id": "symbol:services.event_processor.process_pending_events._chronicle_milestone",
       "kind": "function",
-      "line": 232,
+      "line": 233,
       "path": "services/event_processor.py",
       "qualified_name": "services.event_processor.process_pending_events._chronicle_milestone"
     },
@@ -245005,6 +245798,13 @@
       "qualified_name": "services.narrative_evidence.validate_narrative"
     },
     {
+      "id": "symbol:services.npc_layers.apply_npc_death",
+      "kind": "function",
+      "line": 100,
+      "path": "services/npc_layers.py",
+      "qualified_name": "services.npc_layers.apply_npc_death"
+    },
+    {
       "id": "symbol:services.npc_layers.ensure_npc_fields",
       "kind": "function",
       "line": 63,
@@ -245014,28 +245814,35 @@
     {
       "id": "symbol:services.npc_layers.is_in_scene",
       "kind": "function",
-      "line": 85,
+      "line": 120,
       "path": "services/npc_layers.py",
       "qualified_name": "services.npc_layers.is_in_scene"
     },
     {
+      "id": "symbol:services.npc_layers.npc_alive",
+      "kind": "function",
+      "line": 85,
+      "path": "services/npc_layers.py",
+      "qualified_name": "services.npc_layers.npc_alive"
+    },
+    {
       "id": "symbol:services.npc_layers.npcs_for_context",
       "kind": "function",
-      "line": 115,
+      "line": 153,
       "path": "services/npc_layers.py",
       "qualified_name": "services.npc_layers.npcs_for_context"
     },
     {
       "id": "symbol:services.npc_layers.npcs_in_scene",
       "kind": "function",
-      "line": 91,
+      "line": 129,
       "path": "services/npc_layers.py",
       "qualified_name": "services.npc_layers.npcs_in_scene"
     },
     {
       "id": "symbol:services.npc_layers.reset_scene",
       "kind": "function",
-      "line": 142,
+      "line": 180,
       "path": "services/npc_layers.py",
       "qualified_name": "services.npc_layers.reset_scene"
     },
@@ -245049,21 +245856,21 @@
     {
       "id": "symbol:services.npc_layers.tick_interaction",
       "kind": "function",
-      "line": 151,
+      "line": 189,
       "path": "services/npc_layers.py",
       "qualified_name": "services.npc_layers.tick_interaction"
     },
     {
       "id": "symbol:services.npc_layers.trait_dc_modifier",
       "kind": "function",
-      "line": 172,
+      "line": 210,
       "path": "services/npc_layers.py",
       "qualified_name": "services.npc_layers.trait_dc_modifier"
     },
     {
       "id": "symbol:services.npc_layers.trait_names",
       "kind": "function",
-      "line": 181,
+      "line": 219,
       "path": "services/npc_layers.py",
       "qualified_name": "services.npc_layers.trait_names"
     },
@@ -245077,7 +245884,7 @@
     {
       "id": "symbol:services.npc_layers.visible_npc_view",
       "kind": "function",
-      "line": 194,
+      "line": 232,
       "path": "services/npc_layers.py",
       "qualified_name": "services.npc_layers.visible_npc_view"
     },
@@ -249497,6 +250304,139 @@
       "line": 33,
       "path": "tests/test_bug_intencao_parsers.py",
       "qualified_name": "tests.test_bug_intencao_parsers.test_vou_ao_finds_destination_and_travels"
+    },
+    {
+      "id": "symbol:tests.test_bug_npc_ciclo_de_vida._AILLM",
+      "kind": "class",
+      "line": 10,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": "tests.test_bug_npc_ciclo_de_vida._AILLM"
+    },
+    {
+      "id": "symbol:tests.test_bug_npc_ciclo_de_vida._AILLM.invoke",
+      "kind": "test",
+      "line": 14,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": "tests.test_bug_npc_ciclo_de_vida._AILLM.invoke"
+    },
+    {
+      "id": "symbol:tests.test_bug_npc_ciclo_de_vida._AILLM.with_structured_output",
+      "kind": "test",
+      "line": 11,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": "tests.test_bug_npc_ciclo_de_vida._AILLM.with_structured_output"
+    },
+    {
+      "id": "symbol:tests.test_bug_npc_ciclo_de_vida._patch_gen",
+      "kind": "test",
+      "line": 18,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": "tests.test_bug_npc_ciclo_de_vida._patch_gen"
+    },
+    {
+      "id": "symbol:tests.test_bug_npc_ciclo_de_vida.test_dead_npc_not_in_scene_or_context",
+      "kind": "test",
+      "line": 54,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": "tests.test_bug_npc_ciclo_de_vida.test_dead_npc_not_in_scene_or_context"
+    },
+    {
+      "id": "symbol:tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_aimessage_not_persisted",
+      "kind": "test",
+      "line": 26,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": "tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_aimessage_not_persisted"
+    },
+    {
+      "id": "symbol:tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_valid_llm_still_saves",
+      "kind": "test",
+      "line": 34,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": "tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_valid_llm_still_saves"
+    },
+    {
+      "id": "symbol:tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_valid_llm_still_saves._OK",
+      "kind": "class",
+      "line": 37,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": "tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_valid_llm_still_saves._OK"
+    },
+    {
+      "id": "symbol:tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_valid_llm_still_saves._OK.invoke",
+      "kind": "test",
+      "line": 41,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": "tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_valid_llm_still_saves._OK.invoke"
+    },
+    {
+      "id": "symbol:tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_valid_llm_still_saves._OK.with_structured_output",
+      "kind": "test",
+      "line": 38,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": "tests.test_bug_npc_ciclo_de_vida.test_generate_new_npc_valid_llm_still_saves._OK.with_structured_output"
+    },
+    {
+      "id": "symbol:tests.test_bug_npc_ciclo_de_vida.test_load_npc_db_discards_broken_entries",
+      "kind": "test",
+      "line": 135,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": "tests.test_bug_npc_ciclo_de_vida.test_load_npc_db_discards_broken_entries"
+    },
+    {
+      "id": "symbol:tests.test_bug_npc_ciclo_de_vida.test_npc_actor_dead_target_says_dead",
+      "kind": "test",
+      "line": 67,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": "tests.test_bug_npc_ciclo_de_vida.test_npc_actor_dead_target_says_dead"
+    },
+    {
+      "id": "symbol:tests.test_bug_npc_ciclo_de_vida.test_npc_fallback_hint_cleared",
+      "kind": "test",
+      "line": 129,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": "tests.test_bug_npc_ciclo_de_vida.test_npc_fallback_hint_cleared"
+    },
+    {
+      "id": "symbol:tests.test_bug_npc_ciclo_de_vida.test_npc_killed_syncs_state_npcs_and_party",
+      "kind": "test",
+      "line": 76,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": "tests.test_bug_npc_ciclo_de_vida.test_npc_killed_syncs_state_npcs_and_party"
+    },
+    {
+      "id": "symbol:tests.test_bug_npc_ciclo_de_vida.test_process_pending_events_npc_killed_syncs",
+      "kind": "test",
+      "line": 86,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": "tests.test_bug_npc_ciclo_de_vida.test_process_pending_events_npc_killed_syncs"
+    },
+    {
+      "id": "symbol:tests.test_bug_npc_ciclo_de_vida.test_relationship_change_clamped",
+      "kind": "test",
+      "line": 121,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": "tests.test_bug_npc_ciclo_de_vida.test_relationship_change_clamped"
+    },
+    {
+      "id": "symbol:tests.test_bug_npc_ciclo_de_vida.test_relationship_zero_is_zero",
+      "kind": "test",
+      "line": 111,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": "tests.test_bug_npc_ciclo_de_vida.test_relationship_zero_is_zero"
+    },
+    {
+      "id": "symbol:tests.test_bug_npc_ciclo_de_vida.test_smoke_invalid_structured_output_leaves_cache_clean",
+      "kind": "test",
+      "line": 147,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": "tests.test_bug_npc_ciclo_de_vida.test_smoke_invalid_structured_output_leaves_cache_clean"
+    },
+    {
+      "id": "symbol:tests.test_bug_npc_ciclo_de_vida.test_waiting_companion_only_talks_at_waiting_location",
+      "kind": "test",
+      "line": 102,
+      "path": "tests/test_bug_npc_ciclo_de_vida.py",
+      "qualified_name": "tests.test_bug_npc_ciclo_de_vida.test_waiting_companion_only_talks_at_waiting_location"
     },
     {
       "id": "symbol:tests.test_campaign_grounding_deferred._state",
@@ -270086,6 +271026,20 @@
       "qualified_name": "tests.test_stripe_checkout_local.test_refund_keeps_purchase_and_audits_spent_funds"
     },
     {
+      "id": "symbol:tests.test_structured_output_guards._sites",
+      "kind": "test",
+      "line": 16,
+      "path": "tests/test_structured_output_guards.py",
+      "qualified_name": "tests.test_structured_output_guards._sites"
+    },
+    {
+      "id": "symbol:tests.test_structured_output_guards.test_all_structured_output_sites_guarded",
+      "kind": "test",
+      "line": 32,
+      "path": "tests/test_structured_output_guards.py",
+      "qualified_name": "tests.test_structured_output_guards.test_all_structured_output_sites_guarded"
+    },
+    {
       "id": "symbol:tests.test_tactical_archetypes_runtime._MinimumRng",
       "kind": "class",
       "line": 391,
@@ -271760,5 +272714,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:ec22b440cb1f2e9d36b325fc2c3e64ceb4bbf0f30bb75fc10e3922532d84fe74"
+  "source_tree_hash": "sha256:81000e4855f7837e23b7c4065d637ad0a46b7e7f2fd636026627375a3a66a524"
 }

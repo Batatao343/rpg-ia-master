@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "736e94539a41038cea33edca6cbbd44274e316db",
+  "commit_sha": "c80c9b759ceb5ed10d5e207bdd8bb61790090f45",
   "edge_counts": {
-    "calls": 10910,
-    "contains": 528,
-    "defines": 6525,
-    "imports": 1103,
-    "likely_test_for": 667,
+    "calls": 10942,
+    "contains": 530,
+    "defines": 6552,
+    "imports": 1106,
+    "likely_test_for": 670,
     "route_to": 58
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:38cb98a0a414262763eb0ba680c0eced06b26c2d5ca31b25cbfda6be51f1c723",
+  "graph_hash": "sha256:5949827cf1cd76f5a1170e0ac9c1870c424182f80b4e7af34de36e2f73fc6302",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -365,6 +365,7 @@
     "tests/test_browser_local.py",
     "tests/test_bug_economia_integridade.py",
     "tests/test_bug_intencao_parsers.py",
+    "tests/test_bug_npc_ciclo_de_vida.py",
     "tests/test_campaign_grounding_deferred.py",
     "tests/test_chaos_local.py",
     "tests/test_checkout_integrity.py",
@@ -562,6 +563,7 @@
     "tests/test_stripe_checkout_api.py",
     "tests/test_stripe_checkout_concurrency_local.py",
     "tests/test_stripe_checkout_local.py",
+    "tests/test_structured_output_guards.py",
     "tests/test_tactical_archetypes_runtime.py",
     "tests/test_telemetry_redaction.py",
     "tests/test_tiers_5_plus_content.py",
@@ -656,14 +658,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 587,
+    "class": 589,
     "endpoint": 58,
-    "file": 602,
-    "function": 2067,
+    "file": 604,
+    "function": 2073,
     "method": 593,
-    "module": 528,
-    "test": 3278
+    "module": 530,
+    "test": 3297
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:ec22b440cb1f2e9d36b325fc2c3e64ceb4bbf0f30bb75fc10e3922532d84fe74"
+  "source_tree_hash": "sha256:81000e4855f7837e23b7c4065d637ad0a46b7e7f2fd636026627375a3a66a524"
 }
