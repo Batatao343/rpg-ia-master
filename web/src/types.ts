@@ -657,13 +657,39 @@ export interface WorldMapData {
 }
 
 // Codex do jogador (GET /game/codex) — Fase 3.2. On-demand, fora do GameResponse.
-export interface CodexLocation {
+// SPEC-206: vocabulário compartilhado de conhecimento (ids em inglês; rótulo pt-BR em `label`).
+export type KnowledgeKind = "fact" | "report" | "rumor" | "suspicion" | "perception";
+export type KnowledgeCertainty = "confirmed" | "reported" | "speculative";
+
+export interface KnowledgeStamp {
+  knowledge_kind: KnowledgeKind;
+  certainty: KnowledgeCertainty;
+  source_kind: string;
+  source_ref: string;
+  label: string;
+  first_seen_turn: number | null;
+  last_updated_turn: number | null;
+  stale: boolean;
+}
+
+export interface KnowledgeNote extends KnowledgeStamp {
+  memory_id: string;
+  text: string;
+}
+
+// Campos aditivos da SPEC-206 — opcionais p/ compatibilidade com API antiga.
+export interface CodexKnowledgeFields {
+  knowledge?: KnowledgeStamp;
+  notes?: KnowledgeNote[];
+}
+
+export interface CodexLocation extends CodexKnowledgeFields {
   id: string;
   name: string;
   body: string; // "" se doc hidden/secret ou não achado
 }
 
-export interface CodexFaction {
+export interface CodexFaction extends CodexKnowledgeFields {
   id: string;
   name: string;
   goal: string; // "" se knows_goal for false (não-onisciência)
@@ -671,7 +697,7 @@ export interface CodexFaction {
   body: string;
 }
 
-export interface CodexCharacter {
+export interface CodexCharacter extends CodexKnowledgeFields {
   name: string;
   role: string;
   location: string;
@@ -681,7 +707,7 @@ export interface CodexCharacter {
   revealed_traits?: Array<{ id: string; name: string; description: string }>;
 }
 
-export interface CodexCreature {
+export interface CodexCreature extends CodexKnowledgeFields {
   id: string;
   tier: 1 | 2 | 3 | 4;
   tier_name: string; // "Rumores" | "Encontrada" | "Estudada" | "Dominada"
@@ -696,7 +722,7 @@ export interface CodexCreature {
   loot?: string[];
 }
 
-export interface CodexSecret {
+export interface CodexSecret extends CodexKnowledgeFields {
   entity_id: string;
   fact: string;
   turn: number;
@@ -708,6 +734,11 @@ export interface PlayerCodex {
   characters: CodexCharacter[];
   creatures: CodexCreature[];
   secrets: CodexSecret[];
+  meta?: {
+    taxonomy_version: number;
+    counts: Partial<Record<"locations" | "factions" | "characters" | "creatures" | "secrets", number>>;
+    redactions: number;
+  };
 }
 
 // Mensagem renderizada no log da história.

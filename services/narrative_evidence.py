@@ -52,9 +52,12 @@ def build_evidence(state: dict) -> EvidenceSnapshot:
         baseline['event_ids'], canonical)
 
 
-_QUALIFIED = re.compile(
+# SPEC-206: marcador público compartilhado (rumor/relato qualificado). O guard
+# narrativo continua usando o mesmo objeto, sem mudança de comportamento.
+QUALIFIED_MARKER = re.compile(
     r'\b(?:talvez|caso|outrora|ontem|antigamente|rumor|boato|'
     r'diz que|disse que|afirma que|alega que|conta que|segundo)\b|(?:^|[,;:]\s*)se\b')
+_QUALIFIED = QUALIFIED_MARKER
 
 
 def _reason(sentence: str, evidence: EvidenceSnapshot) -> str | None:

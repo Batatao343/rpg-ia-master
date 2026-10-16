@@ -759,6 +759,17 @@ select {
 .codex-entry__name { margin: 0; font-family: var(--display); font-size: 0.82rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink); }
 .codex-entry__meta { margin: 0.2rem 0 0; font-size: 0.82rem; color: var(--faint); }
 .codex-entry__body { margin: 0.35rem 0 0; font-size: 0.92rem; font-style: italic; color: var(--muted); line-height: 1.5; }
+/* SPEC-206: selo de conhecimento + notas ancoradas */
+.codex-knowledge {
+  display: inline-block; margin-left: 0.3rem; padding: 0.05rem 0.4rem; border: 1px solid var(--line-soft);
+  border-radius: 999px; font-family: var(--body, inherit); font-size: 0.62rem; letter-spacing: 0.04em;
+  text-transform: none; color: var(--muted); vertical-align: middle; overflow-wrap: anywhere;
+}
+.codex-knowledge--fact { border-color: var(--accent); color: var(--accent); }
+.codex-knowledge--rumor, .codex-knowledge--suspicion { font-style: italic; color: var(--faint); }
+.codex-notes { list-style: none; margin: 0.4rem 0 0; padding: 0; display: grid; gap: 0.25rem; }
+.codex-note { font-size: 0.82rem; color: var(--muted); line-height: 1.4; overflow-wrap: anywhere; }
+.codex-note .codex-knowledge { margin-left: 0; }
 
 .codex-beast__top { display: flex; align-items: flex-start; gap: 0.6rem; }
 .codex-beast__seal {

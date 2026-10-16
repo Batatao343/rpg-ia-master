@@ -309,6 +309,8 @@ def test_player_codex_deriva_fontes():
     assert codex["characters"][0]["body"]  # match por nome achou npc_valerius.md (público)
     assert {c["id"] for c in codex["creatures"]} == {RATO}
     assert codex["secrets"][0]["fact"] == "É um lich"
+    from services.player_knowledge import assert_no_player_leak
+    assert assert_no_player_leak(codex, state) == []  # SPEC-206 oráculo
 
 
 def test_faction_goal_nao_vaza_sem_knows_goal():
@@ -358,6 +360,8 @@ def test_endpoint_codex():
         assert resp.status_code == 200
         body = resp.json()
         assert {loc["id"] for loc in body["locations"]} == {"nova_arcadia"}
+        from services.player_knowledge import assert_no_player_leak
+        assert assert_no_player_leak(body, state) == []  # SPEC-206 oráculo
         assert body["creatures"][0]["tier_name"] == "Estudada"
     finally:
         if os.path.exists(save_path):

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { getCodex } from "../api";
 import { mdLite } from "../lib";
-import type { PlayerCodex } from "../types";
+import type { KnowledgeNote, KnowledgeStamp, PlayerCodex } from "../types";
+import { categoryCount, knowledgeBadgeText, knowledgeTooltip } from "../codexKnowledge";
 
 type Category = "locations" | "factions" | "characters" | "creatures" | "secrets";
 
@@ -14,6 +15,33 @@ const CATEGORIES: Array<[Category, string]> = [
 ];
 
 const TIER_ROMAN: Record<number, string> = { 1: "I", 2: "II", 3: "III", 4: "IV" };
+
+// SPEC-206: selo de conhecimento (fato/relato/rumor/suspeita/percepção).
+function KnowledgeBadge({ stamp }: { stamp?: KnowledgeStamp }) {
+  if (!stamp) return null;
+  return (
+    <span
+      className={"codex-knowledge codex-knowledge--" + stamp.knowledge_kind}
+      title={knowledgeTooltip(stamp)}
+      data-knowledge-kind={stamp.knowledge_kind}
+    >
+      {knowledgeBadgeText(stamp)}
+    </span>
+  );
+}
+
+function KnowledgeNotes({ notes }: { notes?: KnowledgeNote[] }) {
+  if (!notes?.length) return null;
+  return (
+    <ul className="codex-notes">
+      {notes.map((n) => (
+        <li key={n.memory_id} className="codex-note">
+          <KnowledgeBadge stamp={n} /> {n.text}
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export function CodexTab({
   gameId,
@@ -70,7 +98,7 @@ export function CodexTab({
             className={"codex-cat" + (category === id ? " is-active" : "")}
             onClick={() => setCategory(id)}
           >
-            {label} ({codex[id].length})
+            {label} ({categoryCount(codex, id)})
           </button>
         ))}
       </nav>
@@ -80,10 +108,11 @@ export function CodexTab({
           <ul className="codex-list">
             {codex.locations.map((loc) => (
               <li key={loc.id} className="codex-entry">
-                <p className="codex-entry__name">{loc.name}</p>
+                <p className="codex-entry__name">{loc.name} <KnowledgeBadge stamp={loc.knowledge} /></p>
                 {loc.body && (
                   <p className="codex-entry__body" dangerouslySetInnerHTML={{ __html: mdLite(loc.body) }} />
                 )}
+                <KnowledgeNotes notes={loc.notes} />
               </li>
             ))}
           </ul>
@@ -97,13 +126,14 @@ export function CodexTab({
           <ul className="codex-list">
             {codex.factions.map((f) => (
               <li key={f.id} className="codex-entry">
-                <p className="codex-entry__name">{f.name}</p>
+                <p className="codex-entry__name">{f.name} <KnowledgeBadge stamp={f.knowledge} /></p>
                 <p className="codex-entry__meta">
                   {f.knows_goal ? f.goal : "Plano desconhecido — descubra com quem sabe."}
                 </p>
                 {f.body && (
                   <p className="codex-entry__body" dangerouslySetInnerHTML={{ __html: mdLite(f.body) }} />
                 )}
+                <KnowledgeNotes notes={f.notes} />
               </li>
             ))}
           </ul>
@@ -120,6 +150,7 @@ export function CodexTab({
                 <p className="codex-entry__name">
                   {c.name}
                   {c.knowledge_source === "mentioned" && <span className="codex-entry__hint"> · ouviu falar</span>}
+                  {" "}<KnowledgeBadge stamp={c.knowledge} />
                 </p>
                 <p className="codex-entry__meta">{[c.role, c.location].filter(Boolean).join(" · ") || "—"}</p>
                 {(c.revealed_traits?.length ?? 0) > 0 && (
@@ -132,6 +163,7 @@ export function CodexTab({
                 {c.body && (
                   <p className="codex-entry__body" dangerouslySetInnerHTML={{ __html: mdLite(c.body) }} />
                 )}
+                <KnowledgeNotes notes={c.notes} />
               </li>
             ))}
           </ul>
@@ -148,7 +180,7 @@ export function CodexTab({
                 <div className="codex-beast__top">
                   <span className="codex-beast__seal" title={cr.tier_name}>{TIER_ROMAN[cr.tier]}</span>
                   <div>
-                    <p className="codex-entry__name">{cr.name}</p>
+                    <p className="codex-entry__name">{cr.name} <KnowledgeBadge stamp={cr.knowledge} /></p>
                     <p className="codex-entry__meta">{cr.tier_name}{cr.regions?.length ? ` · ${cr.regions.join(", ")}` : ""}</p>
                   </div>
                 </div>
@@ -164,6 +196,7 @@ export function CodexTab({
                 {cr.loot && cr.loot.length > 0 && (
                   <p className="codex-entry__meta">Loot: {cr.loot.join(", ")}</p>
                 )}
+                <KnowledgeNotes notes={cr.notes} />
               </li>
             ))}
           </ul>
@@ -178,7 +211,8 @@ export function CodexTab({
             {codex.secrets.map((s, i) => (
               <li key={i} className="codex-entry">
                 <p className="codex-entry__body">{s.fact}</p>
-                <p className="codex-entry__meta">revelado no turno {s.turn}</p>
+                <p className="codex-entry__meta">revelado no turno {s.turn} <KnowledgeBadge stamp={s.knowledge} /></p>
+                <KnowledgeNotes notes={s.notes} />
               </li>
             ))}
           </ul>

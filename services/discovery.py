@@ -193,6 +193,9 @@ def _characters_block(state: Dict) -> List[Dict]:
             continue
         entity_id = resolve_npc_entity_id(npc, str(npc.get("name", npc_name)))
         out.append({
+            # chaves `_` são internas: a projeção (SPEC-206) as usa e remove.
+            "_npc_key": npc_name,
+            "_entity_id": entity_id,
             "name": npc.get("name", npc_name),
             "role": npc.get("role", ""),
             "location": npc.get("location", ""),
@@ -206,8 +209,9 @@ def _characters_block(state: Dict) -> List[Dict]:
 def _secrets_block(state: Dict) -> List[Dict]:
     facts = ((state.get("world_projection") or {}).get("revealed_facts") or {})
     out = []
-    for fact in facts.values():
+    for event_id, fact in facts.items():
         out.append({
+            "_event_id": event_id,
             "entity_id": fact.get("entity_id", ""),
             "fact": fact.get("fact", ""),
             "turn": fact.get("revealed_at_turn", 0),
@@ -216,8 +220,7 @@ def _secrets_block(state: Dict) -> List[Dict]:
     return out
 
 
-def player_codex(state: Dict) -> Dict[str, List[Dict]]:
-    """Codex agregado — só o que já está registrado no save. Zero LLM."""
+def _raw_codex(state: Dict) -> Dict[str, List[Dict]]:
     return {
         "locations": _locations_block(state),
         "factions": _factions_block(state),
@@ -226,3 +229,13 @@ def player_codex(state: Dict) -> Dict[str, List[Dict]]:
                                    turn=int((state.get("world") or {}).get("turn_count", 0) or 0)),
         "secrets": _secrets_block(state),
     }
+
+
+def player_codex(state: Dict) -> Dict:
+    """Codex agregado — só o que já está registrado no save. Zero LLM.
+
+    SPEC-206: os blocos crus passam pela projeção player-facing, que anota cada
+    entrada com `knowledge` (taxonomia) + `notes[]` e omite fail-closed entidade
+    oculta não revelada. Adiciona `meta` (contagens já filtradas)."""
+    from services.player_knowledge import project_player_knowledge
+    return project_player_knowledge(state, _raw_codex(state))

@@ -1,7 +1,7 @@
 # SPEC-206 — Taxonomia de conhecimento visível ao jogador
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `in-progress`
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-234 `done` (mapa segredo↔entidade) · SPEC-007, SPEC-024, SPEC-028, SPEC-085, SPEC-149 e SPEC-171 `done` não reabertas (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-207, SPEC-211, SPEC-212, SPEC-215 (ordem final 2026-10-15)
 > **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 12 (parte a — só o que o JOGADOR vê; conhecimento por NPC fica na SPEC-215)
@@ -336,18 +336,18 @@ archivist e `memory_provenance.commit_memory_facts` → `memory_facts`.
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R14 cobertos pelos testes nomeados na §4.
+- [x] R1–R14 cobertos pelos testes nomeados na §4.
 - [ ] O corpus `player_knowledge` foi autorado em tarefa separada, travado e
       passa 100% com zero vazamento.
-- [ ] O oráculo `assert_no_player_leak` passa em todos os saves-fixture de
+- [x] O oráculo `assert_no_player_leak` passa em todos os saves-fixture de
       `tests/` que exercitam `/game/codex`.
-- [ ] Nenhum arquivo de `evals/` protegido foi alterado pelo implementador
+- [x] Nenhum arquivo de `evals/` protegido foi alterado pelo implementador
       (`git diff` limitado a `services/`, `api.py`, `web/`, `tests/`, `handoffs/`).
-- [ ] Nenhum campo de imagem/retrato/URL de arte aparece para entidade omitida por R4 (assert no oráculo, ramo (a)).
-- [ ] Sem novo `SCHEMA_VERSION`, e saves antigos continuam carregando.
-- [ ] `uv run pytest` verde (suíte offline completa) e `npm run build` verde.
-- [ ] Revisão Astra independente APPROVED, com foco em semântica da taxonomia e
-      ausência de canal de vazamento.
+- [x] Nenhum campo de imagem/retrato/URL de arte aparece para entidade omitida por R4 (assert no oráculo, ramo (a)).
+- [x] Sem novo `SCHEMA_VERSION`, e saves antigos continuam carregando.
+- [x] `uv run pytest` verde (suíte offline completa) e `npm run build` verde.
+- [x] Revisão Astra independente APPROVED, com foco em semântica da taxonomia e
+      ausência de canal de vazamento (2026-10-16; ver §10).
 
 ## 6. Smoke
 
@@ -405,3 +405,54 @@ ele é opt-in, com teto de 10 requests e US$ 0,05.
 - `docs/spec206/README.md` com JSON de exemplo do `/game/codex` antes e depois
   (save sintético), lista de arquivos alterados e parecer Astra.
 - Screenshot da aba Codex em 390 e 1440 px.
+
+## 10. Registro de execução (2026-10-16)
+
+**Status `in-progress`** — implementação, testes offline, revisão Astra e
+screenshots concluídos; resta **um** gate: o corpus `player_knowledge` (autoria
+separada, `evals/` protegido). Histórico dos três gates originais: (1) corpus `player_knowledge` autorado/travado em
+tarefa separada (handoff `handoffs/SPEC-206-eval-authoring.md`); (2) revisão Astra
+independente; (3) screenshots 390/1440 da aba Codex (smoke browser §6.4).
+
+**Defaults de decisão do dono (§8) aplicados:**
+- D1: notas de `memory_facts` expostas, só ancoradas em entrada visível e só
+  `fact/report/perception/suspicion` (rumor fica fora das notas).
+- D2: `player.known_secrets` fora desta spec — continua lido por `revealed_corpus` e
+  nunca escrito; **achado registrado** para spec de higiene (remover leitura ou criar
+  writer via `secret_revealed`). A projeção do jogador nunca o usa (R5).
+- D3: `stale` exibido como sufixo discreto "pode estar desatualizado", sem número.
+
+**Desvios/decisões de implementação:**
+- Paridade com `rag.vis_rank` replicada em `player_knowledge._vis_rank` (mesma regra)
+  em vez de importar `rag` — R14 (zero RAG no caminho).
+- Visibilidade da entidade = a mais restritiva entre grafo e frontmatter do Codex
+  (leitura só do frontmatter, cacheada por diretório).
+- R6 aplicado ao JSON serializado da entrada inteira (superconjunto dos campos
+  listados) e também a nomes/ids de entidades ocultas não reveladas (mesmo critério
+  do ramo (a) do oráculo). Nota que cita entidade oculta em `canonical_entity_ids`
+  é descartada.
+- Marcador de boato: `_QUALIFIED` de `narrative_evidence` virou a constante pública
+  `QUALIFIED_MARKER` (alias `_QUALIFIED` mantido — guard narrativo inalterado).
+- Achado: o nome "Verme-Primordial das Raízes do Mundo" é assinatura do segredo
+  `rei_subterraneo`, mapeado só a `mon_rei_subterraneo` em `data/secret_entities.json`;
+  revelar só a entidade do Verme mantém a entrada omitida (fail-closed correto).
+- `secret_revealed` sem `entity_id` em `revealed_facts` → entrada de segredo omitida.
+- Frontend: helpers puros em `web/src/codexKnowledge.ts` (testados em Node);
+  `CodexTab` mostra selo por entrada e por nota, tooltip só com label+turnos e
+  contagem de `meta.counts` com fallback para `.length`.
+
+Evidência: `docs/spec206/README.md`.
+
+**Revisão Astra (2026-10-16) — APPROVED.** Achado corrigido no WT: a varredura R6
+e o oráculo R12 casavam assinatura/nome oculto só por `casefold`, então texto sem
+acento (`raizes`) ou com quebra de linha escapava (`find_strict_unrevealed` não é
+alterado). `player_knowledge` agora normaliza (NFKD sem acento + espaços
+colapsados) via `_strict_unrevealed`/`_mentions_hidden`, varre folhas de texto (não
+o JSON escapado) e o oráculo varre chaves+valores normalizados. +2 testes
+(`test_signature_without_accents_or_with_linebreak_still_redacts`,
+`test_oracle_catches_accent_folded_leak`). Superfícies conferidas: `/game/codex`
+fecha R4 (60 entidades ocultas: 59 docs Codex + o Verme); `GameResponse.npcs`/
+`factions`/`chronicle`, `public_panel` e catálogo visual não expõem nenhuma das 60
+(nenhuma é NPC/local/facção jogável) e não foram tocados; `/data/map` inalterado
+(achado SPEC-210 não piora). `meta.redactions` é agregado aprovado por R6.
+Screenshots 390/1440 em `docs/spec206/codex-*.webp`.
