@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "4f7923e4ecdb1e2fb4db34b5808d485b1ea6de0a",
+  "commit_sha": "4f2d535b575ddd5b52396ccc04f4fad794365ed3",
   "edge_counts": {
-    "calls": 11895,
-    "contains": 549,
-    "defines": 7016,
-    "imports": 1158,
-    "likely_test_for": 714,
+    "calls": 11923,
+    "contains": 551,
+    "defines": 7041,
+    "imports": 1161,
+    "likely_test_for": 717,
     "route_to": 58
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:c8b655bc999c670dc83ee5cfeff1fd7cbd63cd0bd995759bbb00ee838f72c922",
+  "graph_hash": "sha256:313de3f6e5f63438d2ecaec87399be3e6b3fdc6cadb8033e98500f81b1f56e0e",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -390,6 +390,7 @@
     "tests/test_classes_refactor.py",
     "tests/test_combat_lifecycle.py",
     "tests/test_combat_simulator.py",
+    "tests/test_combat_xp_outside_prose.py",
     "tests/test_conflict_summary_lifecycle.py",
     "tests/test_conflito16_frontend.py",
     "tests/test_conflito_abismo.py",
@@ -589,6 +590,7 @@
     "tests/test_transicoes_criticas_b1.py",
     "tests/test_turn_effects_atomicity.py",
     "tests/test_turn_latency_contract.py",
+    "tests/test_turn_outcome_endpoints.py",
     "tests/test_turn_pipeline_concurrency.py",
     "tests/test_usage_capture.py",
     "tests/test_usage_metering.py",
@@ -609,6 +611,7 @@
     "web/e2e/fixtures.ts",
     "web/e2e/image-quote.spec.ts",
     "web/e2e/latency.spec.ts",
+    "web/e2e/outcome-toast.spec.ts",
     "web/e2e/pending-discard.spec.ts",
     "web/e2e/visual-surfaces.spec.ts",
     "web/e2e/voice-input.spec.ts",
@@ -633,6 +636,7 @@
     "web/src/components/LevelUpModal.tsx",
     "web/src/components/OnboardingHint.tsx",
     "web/src/components/ornaments.tsx",
+    "web/src/components/OutcomeToast.tsx",
     "web/src/components/PlayScreen.tsx",
     "web/src/components/QuestsTab.tsx",
     "web/src/components/ReactionPrompt.tsx",
@@ -652,6 +656,7 @@
     "web/src/native/backPolicy.ts",
     "web/src/native/lifecycle.ts",
     "web/src/native/platform.ts",
+    "web/src/outcomeToast.ts",
     "web/src/pendingOperation.ts",
     "web/src/purchases/androidPlay.ts",
     "web/src/purchases/index.ts",
@@ -682,14 +687,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 619,
+    "class": 621,
     "endpoint": 58,
-    "file": 628,
-    "function": 2185,
+    "file": 633,
+    "function": 2188,
     "method": 631,
-    "module": 549,
-    "test": 3581
+    "module": 551,
+    "test": 3601
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:5c94f97a9f06f037057a9246a55115cbf3f0be6b7936402156e4a304d63fb3c8"
+  "source_tree_hash": "sha256:363faa7c728341a3becf7b220f49cce5392023736eb8095423475f51c4cbb051"
 }
