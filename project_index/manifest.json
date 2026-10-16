@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "2e03974961df27e1b0f8f06c96f4ba295d057fcd",
+  "commit_sha": "4f7923e4ecdb1e2fb4db34b5808d485b1ea6de0a",
   "edge_counts": {
-    "calls": 11691,
-    "contains": 541,
-    "defines": 6848,
-    "imports": 1142,
-    "likely_test_for": 701,
+    "calls": 11895,
+    "contains": 549,
+    "defines": 7016,
+    "imports": 1158,
+    "likely_test_for": 714,
     "route_to": 58
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:fd125f42b731a984b49d03cef3aab1cc649e2104d0083a7a82c570914ab1c7a6",
+  "graph_hash": "sha256:c8b655bc999c670dc83ee5cfeff1fd7cbd63cd0bd995759bbb00ee838f72c922",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -140,6 +140,7 @@
     "main.py",
     "mock_llm.py",
     "observability/__init__.py",
+    "observability/latency.py",
     "observability/metrics.py",
     "observability/telemetry.py",
     "party.py",
@@ -147,6 +148,7 @@
     "playtest/__init__.py",
     "playtest/__main__.py",
     "playtest/invariants.py",
+    "playtest/latency_llm.py",
     "playtest/matrix.py",
     "playtest/matrix_lock.py",
     "playtest/metrics.py",
@@ -187,6 +189,8 @@
     "scripts/gen_tiers_5_plus.py",
     "scripts/gen_world_living_npcs.py",
     "scripts/import_visual_assets.py",
+    "scripts/latency_baseline.py",
+    "scripts/latency_journeys.py",
     "scripts/load_test.py",
     "scripts/migrate_bestiary_v4.py",
     "scripts/migrate_embedding_profile.py",
@@ -474,6 +478,10 @@
     "tests/test_jev_rollout.py",
     "tests/test_jev_router_ab_experiment.py",
     "tests/test_jev_target_loot_experiment.py",
+    "tests/test_latency_baseline_offline.py",
+    "tests/test_latency_client_endpoint.py",
+    "tests/test_latency_metrics_compat.py",
+    "tests/test_latency_timeline.py",
     "tests/test_letalidade_early.py",
     "tests/test_local_atomic_retry.py",
     "tests/test_longrun_remediation_v3.py",
@@ -600,6 +608,7 @@
     "web/e2e/diagnostics/spec201-capture.spec.ts",
     "web/e2e/fixtures.ts",
     "web/e2e/image-quote.spec.ts",
+    "web/e2e/latency.spec.ts",
     "web/e2e/pending-discard.spec.ts",
     "web/e2e/visual-surfaces.spec.ts",
     "web/e2e/voice-input.spec.ts",
@@ -638,6 +647,7 @@
     "web/src/hooks/useTypewriter.ts",
     "web/src/http.ts",
     "web/src/lib.ts",
+    "web/src/lib/turnLatency.ts",
     "web/src/main.tsx",
     "web/src/native/backPolicy.ts",
     "web/src/native/lifecycle.ts",
@@ -672,14 +682,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 608,
+    "class": 619,
     "endpoint": 58,
-    "file": 618,
-    "function": 2132,
-    "method": 595,
-    "module": 541,
-    "test": 3513
+    "file": 628,
+    "function": 2185,
+    "method": 631,
+    "module": 549,
+    "test": 3581
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:58eb5591dac9f81476de0ce7c6c9b96f60ad78f92dfe3b247551909c19e88b3b"
+  "source_tree_hash": "sha256:5c94f97a9f06f037057a9246a55115cbf3f0be6b7936402156e4a304d63fb3c8"
 }
