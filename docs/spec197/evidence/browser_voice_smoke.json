@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-16T03:59:26.456571+00:00",
+  "base": "https://rpg-ia-master-staging.vercel.app",
+  "checks": {
+    "composer": {
+      "auto_sent_actions": 0,
+      "note": "tone-only audio: empty/short transcript is possible; insertion checked via chars>0 or non-error state",
+      "ok": true,
+      "transcript_chars": 18,
+      "transcript_inserted": true,
+      "voice_state_after": "idle"
+    },
+    "composer_visible": {
+      "ok": true
+    },
+    "cookies_transferred": {
+      "count": 4,
+      "ok": true
+    },
+    "login": {
+      "ok": true
+    },
+    "new_game": {
+      "ok": true
+    },
+    "upload": {
+      "bytes": 0,
+      "content_type": "audio/wav",
+      "ok": true,
+      "status": 200
+    }
+  },
+  "cleanup": {
+    "user_delete_status": 200
+  },
+  "ok": true
+}

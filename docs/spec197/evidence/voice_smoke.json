@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-16T03:39:04.545463+00:00",
+  "at": "2026-10-16T03:55:59.958464+00:00",
   "base": "https://rpg-ia-master-staging.vercel.app",
   "checks": {
     "db": {
@@ -40,6 +40,6 @@
   "cleanup": {
     "user_delete_status": 200
   },
-  "deployed_git_sha": "cefe363ab3023f8b853ee4bf054e26e4004a364c",
+  "deployed_git_sha": "5a87a65ed6636d72e1b835517db7b16bac707b99",
   "ok": true
 }
