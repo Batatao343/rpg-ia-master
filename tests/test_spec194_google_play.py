@@ -337,3 +337,28 @@ def test_shared_client_is_cached_per_env_and_bearer_reused(monkeypatch):
     assert seen.count("oauth2.googleapis.com") == 1   # one OAuth exchange shared by all threads
     monkeypatch.setenv("GOOGLE_PLAY_PACKAGE_NAME", "com.example.other")
     assert gp.shared_client() is not first
+
+
+@pytest.mark.parametrize("purchase_type", [0, 2])
+def test_test_purchases_rejected_by_default_without_consume(monkeypatch, purchase_type):
+    """SPEC-225 R8: license tester (0) e rewarded (2) não creditam nem consomem por default."""
+    monkeypatch.delenv("RPG_PLAY_ACCEPT_TEST_PURCHASES", raising=False)
+    who, store, google, svc = setup(purchase_type=purchase_type)
+    with pytest.raises(GooglePlayError, match="google_play_test_purchase_rejected"):
+        svc.verify(who, "estilhas_pack_small", TOKEN)
+    assert store.wallet == {} and store.rows == {} and "consume" not in google.calls
+
+
+def test_test_purchase_credited_only_with_explicit_env(monkeypatch):
+    monkeypatch.setenv("RPG_PLAY_ACCEPT_TEST_PURCHASES", "1")
+    who, store, google, svc = setup(purchase_type=0)
+    result = svc.verify(who, "estilhas_pack_small", TOKEN)
+    assert result["status"] != "pending" and store.wallet[who.user_id] == 5000
+    assert "consume" in google.calls
+
+
+def test_normal_purchase_type_none_still_credits(monkeypatch):
+    monkeypatch.delenv("RPG_PLAY_ACCEPT_TEST_PURCHASES", raising=False)
+    who, store, _, svc = setup(purchase_type=None)
+    svc.verify(who, "estilhas_pack_small", TOKEN)
+    assert store.wallet[who.user_id] == 5000

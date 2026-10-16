@@ -36,7 +36,7 @@ REQUIRED_ENV["production"] = REQUIRED_ENV["staging"] + (
     "STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET", "RPG_CHECKOUT_ORIGIN", "JINA_API_KEY",
     "DEEPSEEK_API_KEY", "GROQ_API_KEY", "RPG_DAILY_SPEND_CAP_BRL",
 )
-FORBIDDEN_IN_PROD = ("RPG_FORCE_MOCK", "RPG_GOOGLE_PLAY_FAKE")  # mock / fake Play must be off in production
+FORBIDDEN_IN_PROD = ("RPG_FORCE_MOCK", "RPG_GOOGLE_PLAY_FAKE", "RPG_PLAY_ACCEPT_TEST_PURCHASES")  # mock / fake Play / test purchases off in production (SPEC-225 R8)
 RISK_ROW = re.compile(r"^\|\s*(R-\d+)\s*\|(.+)\|\s*$")
 CLOSED = ("fechado", "closed", "aceito", "accepted")  # exact status tokens ("fechado (staging)" does not count)
 DRAFT_MARKERS = ("RASCUNHO",)
@@ -194,6 +194,58 @@ def check_env_names(env: str, deps: Deps) -> Result:
                   {"missing": missing, "forbidden_present": forbidden})
 
 
+WORKFLOW_DIR = ROOT / ".github" / "workflows"
+SHA_USES_LINE = re.compile(r"^\s*-?\s*uses:\s*([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)@(\S+)")
+ENVIRONMENTS_VERIFIED = re.compile(r"ENVIRONMENTS_VERIFIED:\s*(\d{4}-\d{2}-\d{2})")
+
+
+def check_workflow_hygiene(directory: Path = WORKFLOW_DIR) -> Result:
+    """SPEC-225 R9: todo workflow com permissions no topo, sem pull_request_target, actions por SHA."""
+    problems: dict[str, list[str]] = {}
+    for path in sorted(directory.glob("*.yml")):
+        text = path.read_text(encoding="utf-8")
+        found = []
+        if not re.search(r"^permissions:", text, flags=re.M):
+            found.append("sem permissions")
+        if "pull_request_target" in text:
+            found.append("pull_request_target")
+        for line in text.splitlines():
+            match = SHA_USES_LINE.match(line)
+            if match and not re.fullmatch(r"[0-9a-f]{40}", match.group(2).split(" ")[0]):
+                found.append(f"action sem SHA: {match.group(1)}")
+        if found:
+            problems[path.name] = found
+    return Result("workflows_permissions_pins", "pass" if not problems else "fail",
+                  {"problems": problems} if problems else {"files": len(list(directory.glob("*.yml")))})
+
+
+def check_gitleaks_main(deps: Deps) -> Result:
+    """SPEC-225 R5/R9: o último run concluído do workflow validate na main (inclui secret-scan) está verde."""
+    rc, out = deps.run(["gh", "run", "list", "--workflow", "validate", "--branch", "main", "--limit", "5",
+                        "--json", "status,conclusion,headSha"])
+    if rc != 0:
+        return Result("gitleaks_main_green", "skip", "gh unavailable or unauthenticated")
+    try:
+        runs = [r for r in json.loads(out or "[]") if r.get("status") == "completed"]
+    except json.JSONDecodeError:
+        return Result("gitleaks_main_green", "fail", "gh output unreadable")
+    if not runs:
+        return Result("gitleaks_main_green", "not_provisioned", "no completed validate run on main")
+    last = runs[0]
+    return Result("gitleaks_main_green", "pass" if last.get("conclusion") == "success" else "fail",
+                  {"head": str(last.get("headSha", ""))[:12], "conclusion": last.get("conclusion")})
+
+
+def check_environments_verified(path: Path = ROOT / "docs" / "spec225" / "README.md") -> Result:
+    """SPEC-225 R4/R9: Environments (deployment branches = main, reviewers) verificados manualmente, com data."""
+    if not path.exists():
+        return Result("environments_restricted", "fail", "docs/spec225/README.md ausente")
+    match = ENVIRONMENTS_VERIFIED.search(path.read_text(encoding="utf-8"))
+    if not match:
+        return Result("environments_restricted", "fail", "verificação manual pendente (ENVIRONMENTS_VERIFIED: AAAA-MM-DD)")
+    return Result("environments_restricted", "pass", {"verified_on": match.group(1)})
+
+
 def check_legal(urls: dict[str, str], deps: Deps, *, allow_draft: bool = False) -> Result:
     if not urls:
         return Result("legal_pages", "fail", "no privacy/terms/support/refund URLs configured (--legal-url name=url)")
@@ -250,7 +302,8 @@ def run_checklist(env: str, base_url: str | None, legal_urls: dict[str, str], de
     results = [git, check_specs(), check_ci(sha, deps), check_migrations(env, deps),
                check_eval_locks(deps), check_finops_config(env=env, deps=deps), check_kill_switch(env, deps),
                check_health(base_url, sha, deps), check_env_names(env, deps),
-               check_legal(legal_urls, deps, allow_draft=allow_draft_legal), check_risks(risk_path)]
+               check_legal(legal_urls, deps, allow_draft=allow_draft_legal), check_risks(risk_path),
+               check_workflow_hygiene(), check_gitleaks_main(deps), check_environments_verified()]
     failing = [r.name for r in results if r.blocking and (
         r.status == "fail" or (strict and r.status in {"skip", "not_provisioned"}))]
     return {"schema": 1, "env": env, "sha": sha, "base_url": base_url, "ok": not failing,

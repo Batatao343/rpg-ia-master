@@ -57,3 +57,18 @@ docs/descricao_projeto/brag-output/work/
 .env.staging
 .vercel
 latency_runs/
+
+# SPEC-225: segredos locais e material de assinatura nunca são versionados.
+.env.*
+!.env.example
+!.env.staging.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+*.jks
+google-services.json
+*service-account*.json
+keystore.properties
+signing.properties

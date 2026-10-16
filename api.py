@@ -2603,7 +2603,8 @@ def google_play_verify(body: GooglePlayVerifyRequest):
     from infrastructure.wallet import WalletConflict
     from services.google_play import GooglePlayError
     unavailable = ('google_play_unavailable', 'google_play_unconfigured', 'new_purchases_disabled')
-    conflicts = ('google_play_token_conflict', 'google_play_purchase_cancelled', 'google_play_already_consumed')
+    conflicts = ('google_play_token_conflict', 'google_play_purchase_cancelled', 'google_play_already_consumed',
+                 'google_play_test_purchase_rejected')
     try:
         result = _google_play().verify(current_principal(), body.product_id, body.purchase_token, body.order_id)
     except WalletConflict:

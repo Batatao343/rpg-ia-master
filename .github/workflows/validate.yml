@@ -2,26 +2,74 @@ name: validate
 on:
   push: {branches: [main]}
   pull_request:
+  schedule:
+    # SPEC-225 D-B: varredura semanal do histórico completo pelo scanner de segredos.
+    - cron: "23 6 * * 1"
+permissions:
+  contents: read
 jobs:
   test:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5.4.1
       # A suíte cobre os builders opcionais usados pelas rotas reais:
       # DeepSeek/Groq/Qwen/MiniMax via OpenAI-compat e Anthropic no tier SMART.
       - run: uv sync --extra openai --extra anthropic --extra postgres
+      # SPEC-225 R6: CVEs conhecidos do lock (multidict, urllib3, langgraph-sdk), com prazo de
+      # revisão 2026-11-16. Remover cada id ao atualizar a dependência (uv lock --upgrade-package).
+      - name: pip-audit (requirements.txt exportado do lock)
+        run: >-
+          uvx --from pip-audit==2.10.1 pip-audit -r requirements.txt --progress-spinner off
+          --ignore-vuln PYSEC-2026-4244 --ignore-vuln PYSEC-2026-4177
+          --ignore-vuln PYSEC-2026-4176 --ignore-vuln PYSEC-2026-4175
+          --ignore-vuln PYSEC-2026-4240
       - run: uv run ruff check .
       - run: uv run python scripts/validate_content.py
       - run: uv run pytest -q
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 20
           cache: npm
           cache-dependency-path: web/package-lock.json
       - run: npm ci
         working-directory: web
+      # SPEC-225 R6: bloqueia high/critical de runtime; a árvore de dev (vite 5/esbuild) é não bloqueante.
+      - run: npm audit --omit=dev --audit-level=high
+        working-directory: web
       - run: npm test
         working-directory: web
       - run: npm run build
+        working-directory: web
+
+  secret-scan:
+    # SPEC-225 R5: gitleaks no diff do PR/push e, semanalmente, no histórico completo.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2.3.9
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_CONFIG: .gitleaks.toml
+
+  npm-audit-full:
+    # SPEC-225 R6: árvore completa (inclui dev) informativa até migrar para Vite >= 6.4 (D-A).
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+        working-directory: web
+      - run: npm audit
         working-directory: web

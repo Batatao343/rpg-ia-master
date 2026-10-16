@@ -16,6 +16,7 @@ from infrastructure.contracts import Conflict, JobRequest, LeaseHeld, Principal
 from infrastructure.postgres import PostgresGameStore, PostgresPool
 from infrastructure.postgres_jobs import PostgresJobQueue
 from infrastructure.postgres_turns import PostgresTurnCoordinator
+from services.dsn_cli import add_dsn_arguments, resolve_dsn
 from scripts.load_test import DEFAULT_DSN, _state
 
 
@@ -135,12 +136,13 @@ def run(dsn: str = DEFAULT_DSN, *, output: Path | None = None) -> dict:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dsn", default=DEFAULT_DSN)
+    add_dsn_arguments(parser)
     parser.add_argument(
         "--output", type=Path, default=Path("readiness_artifacts/chaos_test.json"),
     )
     args = parser.parse_args()
-    print(json.dumps(run(args.dsn, output=args.output), ensure_ascii=False))
+    dsn = resolve_dsn(parser, args, default_dsn=DEFAULT_DSN)
+    print(json.dumps(run(dsn, output=args.output), ensure_ascii=False))
     return 0
 
 

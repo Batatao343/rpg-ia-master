@@ -10,6 +10,7 @@ from uuid import UUID
 
 from infrastructure.contracts import Principal
 from infrastructure.postgres import PostgresPool
+from services.dsn_cli import add_dsn_arguments, resolve_dsn
 from services.game_transfer import import_saves, scan_saves, write_report
 
 
@@ -18,16 +19,14 @@ def main() -> int:
     parser.add_argument("command", choices=("scan", "dry-run", "import", "verify"))
     parser.add_argument("source", type=Path)
     parser.add_argument("--owner", required=True, type=UUID)
-    parser.add_argument("--dsn", default=os.getenv("DATABASE_URL"))
+    add_dsn_arguments(parser)
     parser.add_argument("--journal", type=Path, default=Path("data/runtime/save-import.jsonl"))
     parser.add_argument("--report", type=Path)
     args = parser.parse_args()
     if args.command == "scan":
         rows = [row.__dict__ for row in scan_saves(args.source)]
     else:
-        if not args.dsn:
-            parser.error("--dsn ou DATABASE_URL obrigatório")
-        pool = PostgresPool(args.dsn)
+        pool = PostgresPool(resolve_dsn(parser, args))
         try:
             rows = import_saves(
                 pool, Principal(args.owner, "migration", str(args.owner), local=True),

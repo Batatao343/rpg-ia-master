@@ -184,3 +184,38 @@ def test_legal_rejects_draft_and_placeholders():
     r = c.check_legal(urls, c.Deps(http_get=http(table)))
     assert r.status == "fail" and set(r.detail["problems"]) == {"terms", "support"}
     assert c.check_legal(urls, c.Deps(http_get=http(table)), allow_draft=True).status == "pass"
+
+
+# SPEC-225 R8/R9 -------------------------------------------------------------------------
+
+def test_prod_forbids_play_test_purchase_env():
+    full = set(c.REQUIRED_ENV["production"]) | {"RPG_PLAY_ACCEPT_TEST_PURCHASES"}
+    r = c.check_env_names("production", c.Deps(vercel_env_names=lambda e: full))
+    assert r.status == "fail" and r.detail["forbidden_present"] == ["RPG_PLAY_ACCEPT_TEST_PURCHASES"]
+
+
+def test_workflow_hygiene_passes_on_repo_and_flags_unpinned(tmp_path: Path):
+    assert c.check_workflow_hygiene().status == "pass"
+    (tmp_path / "bad.yml").write_text(
+        "on: push\njobs:\n  a:\n    steps:\n      - uses: actions/checkout@v4\n", encoding="utf-8")
+    r = c.check_workflow_hygiene(tmp_path)
+    assert r.status == "fail" and "bad.yml" in r.detail["problems"]
+    assert any("sem permissions" in p for p in r.detail["problems"]["bad.yml"])
+    assert any("action sem SHA" in p for p in r.detail["problems"]["bad.yml"])
+
+
+def test_gitleaks_main_uses_last_completed_validate_run():
+    ok = json.dumps([{"status": "completed", "conclusion": "success", "headSha": SHA}])
+    assert c.check_gitleaks_main(c.Deps(run=lambda a: (0, ok))).status == "pass"
+    bad = json.dumps([{"status": "completed", "conclusion": "failure", "headSha": SHA}])
+    assert c.check_gitleaks_main(c.Deps(run=lambda a: (0, bad))).status == "fail"
+    assert c.check_gitleaks_main(c.Deps(run=lambda a: (1, ""))).status == "skip"
+
+
+def test_environments_require_dated_manual_verification(tmp_path: Path):
+    doc = tmp_path / "README.md"
+    assert c.check_environments_verified(doc).status == "fail"
+    doc.write_text("sem marcador\n", encoding="utf-8")
+    assert c.check_environments_verified(doc).status == "fail"
+    doc.write_text("ENVIRONMENTS_VERIFIED: 2026-10-16\n", encoding="utf-8")
+    assert c.check_environments_verified(doc).detail == {"verified_on": "2026-10-16"}

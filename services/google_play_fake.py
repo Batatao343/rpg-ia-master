@@ -35,7 +35,7 @@ class FakeGooglePlayClient:
                                purchase_state=PURCHASED,
                                consumption_state=1 if token in self.consumed else 0,
                                acknowledgement_state=0, quantity=1, purchase_time_millis=1,
-                               account_id=account, purchase_type=0)
+                               account_id=account, purchase_type=None)  # compra normal (sem purchaseType de teste)
 
     def consume(self, product_id: str, token: str) -> None:
         self.consumed.add(token)

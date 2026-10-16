@@ -2,7 +2,7 @@
 
 Mesmo builder e mesma redaction do endpoint `POST /game/{id}/audit-export`.
 Duas fontes:
-  --dsn/DATABASE_URL + --owner  → Postgres owner-scoped (owner explícito)
+  --dsn-env (padrão DATABASE_URL) + --owner  → Postgres owner-scoped (owner explícito)
   --save <arquivo.json>          → save local de fixture/playtest (sem banco)
 Zero LLM, zero rede além do Postgres indicado.
 """
@@ -15,6 +15,8 @@ import os
 import subprocess
 from pathlib import Path
 from uuid import UUID
+
+from services.dsn_cli import add_dsn_arguments, resolve_dsn
 
 
 def _build_sha() -> str:
@@ -44,19 +46,19 @@ def main(argv=None) -> int:
     parser.add_argument("--owner", type=UUID)
     parser.add_argument("--save", type=Path)
     parser.add_argument("--output", required=True, type=Path)
-    parser.add_argument("--dsn", default=os.getenv("DATABASE_URL"))
+    add_dsn_arguments(parser)
     parser.add_argument("--generated-at", default=None)
     args = parser.parse_args(argv)
     from services.audit_export import bundle_zip, verify_audit_zip
     if args.save:
         source = source_from_save(args.save)
     else:
-        if not (args.game_id and args.owner and args.dsn):
-            parser.error("game_id + --owner + --dsn (ou --save) obrigatórios")
+        if not (args.game_id and args.owner):
+            parser.error("game_id + --owner (+ --dsn-env, ou --save) obrigatórios")
         from infrastructure.audit_source import PostgresAuditSource
         from infrastructure.contracts import Principal
         from infrastructure.postgres import PostgresGameStore, PostgresPool
-        pool = PostgresPool(args.dsn)
+        pool = PostgresPool(resolve_dsn(parser, args))
         try:
             principal = Principal(args.owner, "export", str(args.owner), local=True)
             source = PostgresAuditSource(pool, PostgresGameStore(pool), principal).load(args.game_id)

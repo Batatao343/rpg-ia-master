@@ -19,6 +19,7 @@ from infrastructure.contracts import Conflict, JobRequest, LeaseHeld, Principal
 from infrastructure.postgres import PostgresGameStore, PostgresPool
 from infrastructure.postgres_jobs import PostgresJobQueue
 from infrastructure.postgres_turns import PostgresTurnCoordinator
+from services.dsn_cli import add_dsn_arguments, resolve_dsn
 
 
 DEFAULT_DSN = "postgresql://postgres:postgres@127.0.0.1:55322/postgres"
@@ -232,15 +233,16 @@ def run(dsn: str = DEFAULT_DSN, *, workers: int = 2, operations: int = 12,
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dsn", default=DEFAULT_DSN)
+    add_dsn_arguments(parser)
     parser.add_argument("--workers", type=int, default=2)
     parser.add_argument("--operations", type=int, default=12)
     parser.add_argument(
         "--output", type=Path, default=Path("readiness_artifacts/load_test.json"),
     )
     args = parser.parse_args()
+    dsn = resolve_dsn(parser, args, default_dsn=DEFAULT_DSN)
     print(json.dumps(run(
-        args.dsn, workers=args.workers, operations=args.operations, output=args.output,
+        dsn, workers=args.workers, operations=args.operations, output=args.output,
     ), ensure_ascii=False))
     return 0
 

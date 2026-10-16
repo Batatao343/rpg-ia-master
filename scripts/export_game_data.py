@@ -10,6 +10,7 @@ from uuid import UUID
 
 from infrastructure.contracts import Principal
 from infrastructure.postgres import PostgresPool
+from services.dsn_cli import add_dsn_arguments, resolve_dsn
 from services.game_transfer import export_game, verify_export
 
 
@@ -18,11 +19,9 @@ def main() -> int:
     parser.add_argument("game_id", type=UUID)
     parser.add_argument("--owner", required=True, type=UUID)
     parser.add_argument("--output", required=True, type=Path)
-    parser.add_argument("--dsn", default=os.getenv("DATABASE_URL"))
+    add_dsn_arguments(parser)
     args = parser.parse_args()
-    if not args.dsn:
-        parser.error("--dsn ou DATABASE_URL obrigatório")
-    pool = PostgresPool(args.dsn)
+    pool = PostgresPool(resolve_dsn(parser, args))
     try:
         bundle = export_game(
             pool, Principal(args.owner, "export", str(args.owner), local=True), args.game_id,

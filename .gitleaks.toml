@@ -1,0 +1,20 @@
+# SPEC-225 R5: allowlist versionada do scanner de segredos (gitleaks).
+# Mantida mínima e revisada: qualquer nova exceção precisa de justificativa no PR.
+title = "rpg-ia-master"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Fixtures sintéticas de teste, DSNs do Postgres/Supabase local e hashes de compromisso/documentação"
+paths = [
+  '''(^|/)tests/''',
+  '''ground-truth\.commitment\.json$''',
+  '''(^|/)docs/descricao_projeto/fontes/exploracao/explore_05_infra\.md$''',
+  '''(^|/)docs/planos/rpg-next-jev-golive-plan/examples/spec-model-contract\.yaml$''',
+  '''(^|/)specs/SPEC-106-fase-10b-observabilidade-backup-caos\.md$''',
+]
+regexes = [
+  '''postgres:postgres@127\.0\.0\.1''',
+  '''postgres:postgres@localhost''',
+]

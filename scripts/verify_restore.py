@@ -9,6 +9,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from infrastructure.postgres import PostgresPool
+from services.dsn_cli import add_dsn_arguments, resolve_dsn
+
+
+LOCAL_DSN = "postgresql://postgres:postgres@127.0.0.1:55322/postgres"
 
 
 def run(dsn: str) -> dict[str, int]:
@@ -32,9 +36,9 @@ def run(dsn: str) -> dict[str, int]:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dsn", default="postgresql://postgres:postgres@127.0.0.1:55322/postgres")
+    add_dsn_arguments(parser)
     args = parser.parse_args()
-    print(run(args.dsn))
+    print(run(resolve_dsn(parser, args, default_dsn=LOCAL_DSN)))
     return 0
 
 

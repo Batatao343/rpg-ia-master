@@ -8,19 +8,18 @@ import os
 from uuid import UUID
 
 from infrastructure.postgres import PostgresPool
+from services.dsn_cli import add_dsn_arguments, resolve_dsn
 from services.operation_recovery import abandon_expired, orphan_operations
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dsn", default=os.getenv("DATABASE_URL"))
+    add_dsn_arguments(parser)
     parser.add_argument("--owner", type=UUID)
     parser.add_argument("--abandon", type=UUID)
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
-    if not args.dsn:
-        parser.error("--dsn ou DATABASE_URL obrigatório")
-    pool = PostgresPool(args.dsn)
+    pool = PostgresPool(resolve_dsn(parser, args))
     try:
         before = orphan_operations(pool, owner_id=args.owner)
         if args.abandon and args.apply:

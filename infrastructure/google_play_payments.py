@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+import os
 from datetime import datetime, timezone
 from typing import Protocol
 from uuid import UUID, uuid4
@@ -16,6 +17,13 @@ from services.google_play import (
 )
 
 CHANNEL = "google_play"
+# SPEC-225 R8: purchaseType 0 = compra de license tester e 2 = rewarded (oferta). O custo do provedor é
+# real, então não creditamos por default; QA de staging liga RPG_PLAY_ACCEPT_TEST_PURCHASES=1.
+TEST_PURCHASE_TYPES = (0, 2)
+
+
+def accept_test_purchases() -> bool:
+    return os.getenv("RPG_PLAY_ACCEPT_TEST_PURCHASES") == "1"
 MAX_CONSUME_ATTEMPTS = 8  # poison consume (400/404/410, still unconsumed at Google) -> terminal consume_failed
 log = logging.getLogger("rpg.google_play")
 
@@ -68,6 +76,9 @@ class GooglePlayPurchases:
         facts = self.client.get_purchase(product_id, purchase_token)
         if facts.product_id != product_id:
             raise GooglePlayError("google_play_product_mismatch")
+        if facts.purchase_type in TEST_PURCHASE_TYPES and not accept_test_purchases():
+            # Rejected before any credit or consume: Google refunds test purchases on its own side.
+            raise GooglePlayError("google_play_test_purchase_rejected")
         if facts.purchase_state == PENDING:
             return {"status": "pending"}
         if facts.purchase_state == CANCELLED:

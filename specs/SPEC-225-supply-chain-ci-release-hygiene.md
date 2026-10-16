@@ -1,6 +1,6 @@
 # SPEC-225 — Higiene de supply chain, CI e release: gitignore, permissões/pins de workflows, compras de teste do Play
 
-> **Status:** `draft`
+> **Status:** `in-progress`
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
 > **Depende de:** nenhuma · complementa SPEC-173 `done` e SPEC-194/198 (ordem final 2026-10-15)
 > **Desbloqueia:** gate de release SPEC-197/198 (ordem final 2026-10-15)
@@ -62,9 +62,12 @@ Objetivo: fechar a higiene preventiva com testes de contrato no CI e uma regra f
 2. **Implementação:** §3. **Verificação:** `uv run pytest -q`.
 
 ## 5. Critérios de aceite
-- [ ] Etapa 0 vermelha, verde ao final; R1–R9; `uv run pytest` verde; CI `validate` com gitleaks/pip-audit/npm audit verdes (ou allowlist justificada).
-- [ ] `git check-ignore` confirma a lista; Dependabot abriu/abre PRs; Environments verificados manualmente e anotados.
-- [ ] Staging Android (`RPG_PLAY_ACCEPT_TEST_PURCHASES=1`): compra de license tester continua creditando; sem a env (teste unitário) → 409 e sem consume.
+- [x] Etapa 0 vermelha, verde ao final; R1–R9 implementados; `uv run pytest` verde (ver evidência).
+- [ ] CI `validate` com gitleaks/pip-audit/npm audit verdes no PR (pendente: push/PR; pip-audit com allowlist de 5 ids, ver `docs/spec225/README.md`).
+- [x] `git check-ignore` confirma a lista.
+- [ ] Dependabot abriu PRs (pendente: push); Environments verificados e anotados (pendente: `eval-provider`/`eval-holdout`/`post-deploy-smoke` não existem no GitHub e `eval-governance` sem restrição de branch; ver evidência).
+- [x] Sem a env (teste unitário) → 409 e sem consume.
+- [ ] Staging Android (`RPG_PLAY_ACCEPT_TEST_PURCHASES=1`): compra de license tester continua creditando (pendente: execução em staging).
 
 ## 6. Smoke test
 Sem LLM/pagamento real: CI do PR + `scripts/release/checklist.py --env staging` verde.
@@ -80,3 +83,12 @@ Sem LLM/pagamento real: CI do PR + `scripts/release/checklist.py --env staging` 
 
 ## 9. Evidência requerida
 - Saída de `uv run pytest`; links dos runs de CI (validate/gitleaks/audits) verdes; captura/anotação da configuração dos Environments; `docs/secXX/README.md`; `ESTADO_ATUAL.md`/`ROADMAP.md`.
+
+## 10. Registro de execução (2026-10-16)
+
+- Implementado R1–R9 e evidência em [docs/spec225/README.md](../docs/spec225/README.md).
+- Desvios: `export_game_audit.py` recebeu `--dsn-env` (além dos seis listados em R7); `FORBIDDEN_IN_HOSTED` não existe no
+  repo, então a env de teste entra em `FORBIDDEN_IN_PROD`; `.github/dependabot.yml` usa ecossistema `pip` em `requirements.txt`.
+- Defaults D-A/D-B/D-C aplicados como recomendados.
+- Achado que bloqueia o fechamento: pip-audit encontrou 5 advisories no lock (allowlist temporária com prazo 2026-11-16) e
+  os Environments de GitHub não estão configurados como R4 pede.
