@@ -110,7 +110,10 @@ def resolve_edges(projection: Optional[dict], *,
     effective: List[dict] = [
         e for e in load_base_edges() if e.get("id") not in disabled_ids
     ]
-    effective.extend(projection.get("dynamic_edges", []))
+    # SPEC-233 R4: desativações (`edge_id`) valem também para edges dinâmicas (`dyn_*`).
+    effective.extend(
+        e for e in projection.get("dynamic_edges", []) if e.get("id") not in disabled_ids
+    )
 
     result: List[dict] = []
     for edge in effective:

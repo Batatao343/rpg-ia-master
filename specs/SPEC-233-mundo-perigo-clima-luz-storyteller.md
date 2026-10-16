@@ -1,6 +1,6 @@
 # SPEC-233 — Mundo: perigo efetivo, controle dinâmico, luz em masmorra, clima/reforços e exceção do storyteller
 
-> **Status:** `draft`
+> **Status:** `done`
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
 > **Depende de:** nenhuma · SPEC-052 weather-global-vivo, SPEC-053 itens-vivos-e-luz, SPEC-020 fase-6.4-encontros-sistemicos e SPEC-090 modo-simulacao-combate `done` são corrigidas (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-210, SPEC-212 (ordem final 2026-10-15)
@@ -112,11 +112,11 @@ effective` em todo turno (invariante nova `world.danger_mismatch`, warning).
 
 ## 5. Critérios de aceite
 
-- [ ] 9 testes vermelhos → verdes; `tests/test_fase0.py`, `test_weather*.py`, `test_luz*.py`/`test_itens_vivos*.py`,
+- [x] 9 testes vermelhos → verdes; `tests/test_fase0.py`, `test_weather*.py`, `test_luz*.py`/`test_itens_vivos*.py`,
       `test_fase25.py`, `test_fase2*.py`, `test_combat_simulator.py` verdes ou diff justificado.
-- [ ] `uv run pytest` verde; playtest offline com run_id e invariante nova sem violação.
-- [ ] Saves antigos carregam (`danger_overrides` int legado aceito).
-- [ ] Guard de FallbackLLM: não se aplica.
+- [x] `uv run pytest` verde; playtest offline com run_id e invariante nova sem violação.
+- [x] Saves antigos carregam (`danger_overrides` int legado aceito).
+- [x] Guard de FallbackLLM: não se aplica.
 
 ## 6. Smoke test com LLM real
 
@@ -140,3 +140,17 @@ effective` em todo turno (invariante nova `world.danger_mismatch`, warning).
 
 - `uv run pytest` completo; testes antes/depois; run_id do playtest com a invariante `world.danger_mismatch`.
 - `docs/<spec>/README.md` com os scripts da área 06 transcritos e a repro da API do laboratório (área 07).
+
+## 10. Implementação (2026-10-16)
+
+- Defaults de decisão usados: **D-A** decaimento a cada 10 turnos (`world.danger_shift_turns`); **D-B** tag implícita
+  (`masmorra|caverna|subterraneo|dark`, precedência sobre `abrigo`).
+- Desvio: `danger_overrides` segue int (dict aceito na leitura); o carimbo do último shift mora em `danger_shift_turns`
+  (sem mudança de `schema_version`). Shift negativo em base 1 agora vai a 0 (`max(0, base-1)`, literal da spec).
+- `advance_weather(world, rng=None, *, steps=1)`; viagem/descanso chamam o tick por período. Fações do descanso
+  bloqueado avançam 1 período. Gate do laboratório: `main.py` (START) + `api._reject_memorial` (409 `simulation_finished`,
+  cobre action/equip/levelup/arte).
+- Invariante `world.danger_mismatch` (warning) em `playtest/invariants.py`. Playtest offline 40t: explorador
+  `20261016-023806-197930` e normal `20261016-023809-277698`, 0 violações.
+- Testes alterados com justificativa: `test_world_sim`, `test_turn_pipeline_concurrency`, `test_conflict_summary_lifecycle`
+  (cidade ignora shift +1 / piso passa a base-1).

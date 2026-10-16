@@ -784,6 +784,11 @@ def _reject_memorial(state: dict) -> None:
     if state.get("game_over"):
         raise HTTPException(status_code=409,
                             detail="Esta saga terminou. A crônica permanece como memorial — comece uma nova jornada.")
+    # SPEC-233 R9: laboratório encerrado não vira campanha (sem XP/RAG/viagem).
+    if (state.get("combat_simulation") or {}).get("enabled")             and not (state.get("combat") or {}).get("active"):
+        raise HTTPException(
+            status_code=409,
+            detail="simulation_finished: o laboratório de combate terminou — reinicie a simulação.")
 
 
 def _reject_archived(state: dict) -> None:

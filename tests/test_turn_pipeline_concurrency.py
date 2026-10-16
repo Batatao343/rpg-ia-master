@@ -107,9 +107,9 @@ def test_world_pulse_proposal_is_pure_and_apply_is_single_commit(monkeypatch):
 
     monkeypatch.setattr(ws, "get_llm", lambda **_kwargs: Structured())
     world = {
-        "current_location_id": "nova_arcadia",
-        "current_location": "Nova Arcádia",
-        "danger_level": 1,
+        "current_location_id": "brekmar",  # SPEC-233 R2: cidade ignora shift +1
+        "current_location": "Brekmar",
+        "danger_level": 2,
     }
     original = dict(world)
 
@@ -117,7 +117,7 @@ def test_world_pulse_proposal_is_pure_and_apply_is_single_commit(monkeypatch):
     assert world == original
     applied, note, intents = ws.apply_world_pulse(world, proposal)
     assert world == original
-    assert applied["danger_level"] == 2
+    assert applied["danger_level"] == 3
     assert note == "[ECOS DO MUNDO] Sinos ecoam ao longe."
     assert len(intents) == 1
 

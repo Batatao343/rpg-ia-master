@@ -37,8 +37,8 @@ def test_simulate_world_fallback_guard(monkeypatch):
 def test_apply_danger_shift_clamps():
     w = ws._apply_danger_shift(_world("pradaria_ruinas"), "pradaria_ruinas", 1)  # base 2 → 3
     assert w["danger_overrides"]["pradaria_ruinas"] == 3
-    w2 = ws._apply_danger_shift(_world("nova_arcadia"), "nova_arcadia", -1)  # base 1 → piso 1
-    assert w2["danger_overrides"]["nova_arcadia"] == 1
+    w2 = ws._apply_danger_shift(_world("nova_arcadia"), "nova_arcadia", -1)  # base 1 → piso 0 (SPEC-233 R2: base-1)
+    assert w2["danger_overrides"]["nova_arcadia"] == 0
     # teto 4: parte de um override 4
     w3 = ws._apply_danger_shift({"current_location_id": "x", "danger_overrides": {"x": 4}}, "x", 1)
     assert w3["danger_overrides"]["x"] == 4

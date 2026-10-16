@@ -62,7 +62,12 @@ def build_game_graph():
     # jogador escolher Continuar (restaura) ou Aceitar (memorial).
     workflow.add_conditional_edges(
         START,
-        lambda s: "__end__" if (s.get("game_over") or s.get("death_pending") or s.get("archived")) else "action_guard",
+        lambda s: "__end__" if (
+            s.get("game_over") or s.get("death_pending") or s.get("archived")
+            # SPEC-233 R9: laboratório encerrado não segue como campanha.
+            or ((s.get("combat_simulation") or {}).get("enabled")
+                and not (s.get("combat") or {}).get("active"))
+        ) else "action_guard",
         {"__end__": END, "action_guard": "action_guard"},
     )
     workflow.add_conditional_edges(

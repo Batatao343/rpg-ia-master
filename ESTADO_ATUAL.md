@@ -16,6 +16,7 @@
 > **SPEC-234 `done` (16/10):** arquivista não congela com índice vetorial fora (ledger primário + retry a cada 3 turnos), segredo libera por ID de entidade validado, override de embeddings respeitado, perfil de embedding pgvector por provider (rodar `scripts/migrate_embedding_profile.py` no deploy), métrica `rpg_rag_degraded_total`.
 > **SPEC-231 `done` (16/10):** aliado (party ou transitório) estabiliza o jogador, companheiro tem fluxo de morte próprio, dano em aliado de cena persiste entre rodadas e reflete no NPC, flags de Última Ação resetam após tratar o Crítico (2ª quase-morte não mata na hora).
 > **SPEC-235 `done` (16/10):** operação `failed` pode ser retomada com a mesma chave mesmo com versão mudada (fim do 409 eterno), equip/levelup barram com 409 `pending_operation` legível, botão "Descartar ação pendente", storage bloqueado degrada para memória, export com nome unicode; validado em Postgres local + Playwright.
+> **SPEC-233 `done` (16/10):** perigo efetivo único (encontros, mapa e save antigo concordam), drift limitado ±1 com decaimento sem apagar ascensão de facção, masmorra/caverna escuras, clima avança por período, exceção do storyteller preserva o turno, laboratório encerra com 409 após o fim.
 
 > **15/10 — SPEC-196 `done`: FinOps, margin guard e kill switches.** Margem por SKU/canal/versão de preço
 > (gross, taxa de canal, custo variável, contribuição; infra fixa separada), alertas Prometheus sem ids de

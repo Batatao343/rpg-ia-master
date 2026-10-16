@@ -46,11 +46,9 @@ class WorldPulseProposal:
 
 
 def _effective_danger(world: dict, loc_id: str) -> int:
-    overrides = world.get("danger_overrides") or {}
-    if loc_id in overrides:
-        return int(overrides[loc_id])
-    loc = gamedata.get_location(loc_id) or {}
-    return int(loc.get("danger", world.get("danger_level", 1)))
+    # SPEC-233 R1: fonte única (aceita override int legado ou dict {value}).
+    from world_utils import _effective_danger as _wu_effective
+    return _wu_effective(world, loc_id)
 
 
 def _known_factions_ctx(factions, intel) -> str:
@@ -69,10 +67,27 @@ def _apply_danger_shift(world: dict, loc_id: str, shift: int) -> dict:
     if shift == 0 or not loc_id:
         return world
     cur = _effective_danger(world, loc_id)
-    new = max(1, min(4, cur + shift))
+    # SPEC-233 R2: drift ±1 em torno do BASE do mapa (piso 0 se o base for 0); shift
+    # positivo é ignorado em abrigo/cidade; nada empurra o perigo além disso.
+    loc = gamedata.get_location(loc_id) or {}
+    base = int(loc.get("danger", cur))
+    lo, hi = max(0, base - 1), min(4, base + 1)
+    if shift > 0 and ({"abrigo", "cidade"} & set(loc.get("tags") or [])):
+        return world
+    # Override sem carimbo de drift = ascensão de facção (mudança estrutural): o pulso
+    # do mundo não o corrói, senão o decaimento devolveria o local ao base do mapa.
+    if loc_id in (world.get("danger_overrides") or {})             and loc_id not in (world.get("danger_shift_turns") or {}):
+        return world
+    new = cur + shift
+    new = max(min(new, max(hi, cur)), min(lo, cur))
+    if new == cur:
+        return world
     overrides = dict(world.get("danger_overrides") or {})
     overrides[loc_id] = new
     world["danger_overrides"] = overrides
+    shifts = dict(world.get("danger_shift_turns") or {})
+    shifts[loc_id] = int(world.get("turn_count", 0) or 0)
+    world["danger_shift_turns"] = shifts
     if world.get("current_location_id") == loc_id:
         world["danger_level"] = new
     return world
@@ -123,6 +138,8 @@ def apply_world_pulse(world: dict, proposal: WorldPulseProposal) -> tuple[dict, 
     loc_id = world.get("current_location_id", "")
     loc_name = world.get("current_location", "a região")
 
+    from world_utils import decay_danger_overrides
+    world = decay_danger_overrides(world)
     before_danger = _effective_danger(world, loc_id)
     world = _apply_danger_shift(world, loc_id, proposal.danger_shift)
     after_danger = _effective_danger(world, loc_id)

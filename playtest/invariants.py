@@ -283,6 +283,14 @@ def check_world(state: dict, prev: Optional[dict], turn: int) -> List[Violation]
         out.append(_V("world.location_unknown", "error", turn,
                       f"current_location_id '{cur}' não existe no grafo", loc=cur))
 
+    # SPEC-233 R1: danger_level (campo de leitura) == perigo efetivo do local atual.
+    if cur and get_location(cur) and world.get("danger_level") is not None:
+        from world_utils import effective_danger
+        if int(world["danger_level"]) != effective_danger(world):
+            out.append(_V("world.danger_mismatch", "warning", turn,
+                          f"danger_level {world['danger_level']} != efetivo "
+                          f"{effective_danger(world)} em '{cur}'", loc=cur))
+
     for loc in world.get("visited", []) or []:
         if not get_location(loc):
             out.append(_V("world.visited_unknown", "error", turn,

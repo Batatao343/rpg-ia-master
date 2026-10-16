@@ -677,14 +677,15 @@ def test_world_pulse_persiste_so_consequencia_aplicada(monkeypatch):
         lambda game_id, facts: saved.extend(facts) or True)
     world_simulator.simulate_world(
         {"game_id": "g"},
-        {"current_location_id": "nova_arcadia",
-         "current_location": "Nova Arcádia", "danger_level": 1,
+        # SPEC-233 R2: shift positivo é ignorado em cidade/abrigo -> local de campo.
+        {"current_location_id": "brekmar",
+         "current_location": "Brekmar", "danger_level": 2,
          "world_clock": {"day": 1, "period": 1}},
         [], {}, periods=1,
     )
     assert saved
     assert all("dragão secreto" not in fact.casefold() for fact in saved)
-    assert any("perigo de Nova Arcádia mudou" in fact for fact in saved)
+    assert any("perigo de Brekmar mudou" in fact for fact in saved)
 
 
 def test_evento_rejeitado_nao_vira_fato_do_archivist(monkeypatch):

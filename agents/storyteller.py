@@ -195,10 +195,30 @@ def _player_facing_note(note: str) -> str:
     text = re.sub(
         r"^Ao explorar ([^,]+), o jogador ENCONTROU:\s*",
         r"Ao explorar \1, você encontra ", text)
+    # SPEC-233 R8: notas de descanso viram texto diegético de 2ª pessoa.
+    text = re.sub(r"^O jogador DESCANSOU\.\s*", "Você descansa. ", text)
+    text = text.replace("O tempo avançou para", "O tempo avança para")
+    text = text.replace("e ele recuperou parte das forças", "e você recupera parte das forças")
+    text = re.sub(r"^O jogador TENTOU descansar, mas", "Você tenta descansar, mas", text)
+    text = text.replace("NÃO permite descanso seguro", "não permite descanso seguro")
+    text = text.replace("NADA foi recuperado", "nada foi recuperado")
     text = re.sub(r"\s*Descreva\b[^.]*\.?", "", text, flags=re.IGNORECASE)
     text = re.sub(r"\s*Narre\b[^.]*\.?", "", text, flags=re.IGNORECASE)
     from services import prose_guard
     return prose_guard.sanitize_player_facing(text)
+
+
+def _dedupe_encounter(enc, world: dict):
+    """spec encontros-dedupe (R3) + SPEC-233 R6: não repete o MESMO template de encontro
+    2x seguidas no mesmo local — exceto reforços/controle, consequência prometida."""
+    if not enc:
+        return enc
+    if enc.get("reason") in ("reinforcements", "controlled"):
+        return enc
+    if enc.get("hint") and enc.get("hint") == world.get("last_encounter_id") \
+            and world.get("last_encounter_loc") == world.get("current_location_id"):
+        return None
+    return enc
 
 
 def _deterministic_story_fallback(notes, light: dict) -> str:
@@ -373,7 +393,8 @@ def storyteller_node(state: GameState):
         _rest_allies = _party_mod.active_allies(state)
         rested_player, world = apply_rest(dict(state.get("player", {})), world,
                                           allies=_rest_allies)
-        factions, faction_events = advance_factions(factions, 2)  # descanso = 2 períodos
+        # SPEC-233 R7: fações avançam pelo delta REAL do relógio (bloqueado = 1 período).
+        factions, faction_events = advance_factions(factions, 1 if rest_blocked else 2)
         factions, world, faction_note = resolve_faction_completions(factions, world, faction_events, intel)
         if rest_blocked:
             rest_note = (
@@ -416,7 +437,8 @@ def storyteller_node(state: GameState):
         _plevel = int((state.get("player") or {}).get("level", 1) or 1)
         from world_utils import recovery_rest_safe
         from gamedata import get_location as _get_location
-        danger_now = int(world.get("danger_level", 1) or 1)
+        from world_utils import effective_danger
+        danger_now = effective_danger(world)  # SPEC-233 R1
         # spec letalidade-early-game-v2 (alavanca 1): um DESCANSO de early-game em
         # zona não-apex de perigo baixo recupera SEM sortear encontro — o laço de
         # recuperação que faltava (viagem não cura; descanso interrompido = morte).
@@ -434,14 +456,14 @@ def storyteller_node(state: GameState):
                                   player_level=_plevel)
         # spec encontros-dedupe (R3): não repete o MESMO template de encontro 2x
         # seguidas no mesmo local (o mundo não é um carrossel).
-        if enc and enc.get("hint") and enc.get("hint") == world.get("last_encounter_id") \
-                and world.get("last_encounter_loc") == world.get("current_location_id"):
-            enc = None
+        enc = _dedupe_encounter(enc, world)  # SPEC-233 R6
+        if not enc:
+            world.pop("encounter_eff_danger", None)  # SPEC-233 R5
         if enc:
             world["last_encounter_turn"] = turn
             world["last_encounter_id"] = enc.get("hint")
             world["last_encounter_loc"] = world.get("current_location_id")
-            danger = int(world.get("danger_level", 1) or 1)
+            danger = effective_danger(world)
             base_p = (
                 rested_player if rested_player is not None
                 else dict(discovery_player or state.get("player") or {})
@@ -502,6 +524,7 @@ def storyteller_node(state: GameState):
 
             from gamedata import get_location
             loc_node = get_location(world.get("current_location_id", "")) or {}
+            world.pop("encounter_eff_danger", None)  # SPEC-233 R5: não-combate
             if kind == "trap":
                 from party import active_allies
                 helper = next(iter(active_allies(state)), None)
@@ -692,6 +715,9 @@ def storyteller_node(state: GameState):
     - Se um personagem conhecido SAIR da cena (foi embora, sumiu), adicione o nome em 'npcs_left_scene'.{npc_fallback_clause}{varie_clause}{opcoes_clause}
     """)
 
+    # SPEC-233 R8: ganhos registrados ANTES da LLM (o except não herda XP de beat
+    # que só seria aplicado no caminho feliz).
+    turn_bl_pre_llm = turn_bl
     try:
         story_engine = llm.with_structured_output(StoryUpdate)
         update = story_engine.invoke([sys] + messages[-3:]) # Contexto reduzido
@@ -1049,4 +1075,39 @@ def storyteller_node(state: GameState):
             fallback["world"] = world
             fallback["needs_replan"] = travel_needs_replan
             fallback["npcs"] = npc_layers.reset_scene(state.get("npcs", {}))
+        # SPEC-233 R8: TODA mecânica já aplicada sobrevive à exceção — o texto não pode
+        # prometer descanso/achado que o estado não registra (nem o inverso).
+        applied_player = rested_player if rested_player is not None else discovery_player
+        if applied_player is not None:
+            fallback["player"] = applied_player
+        if dest or rested_player is not None:
+            fallback["world"] = world
+            fallback["factions"] = factions
+            fallback["archive_due"] = True
+        if discovery_events or extra_engine_events:
+            fallback["pending_world_events"] = (
+                (state.get("pending_world_events", []) or [])
+                + list(discovery_events) + list(extra_engine_events)
+            )
+        if turn_bl_pre_llm is not state.get("turn_baseline"):
+            fallback["turn_baseline"] = turn_bl_pre_llm
+        if track_bk is not None:  # rastro narrado no fallback também chega ao Codex
+            fallback["bestiary_knowledge"] = track_bk
+        if rested_player is not None and rested_player.get("dead"):
+            fallback["death_pending"] = True
+            fallback["archive_due"] = True
+            fallback["pending_world_events"] = list(
+                fallback.get("pending_world_events")
+                or state.get("pending_world_events", []) or []
+            ) + [{
+                "type": "player_downed",
+                "actor_id": "player",
+                "target_id": "player",
+                "detail": "O herói tombou numa armadilha durante a viagem.",
+                "payload": {
+                    "location": world.get("current_location", ""),
+                    "cause": "armadilha",
+                },
+                "source": "trap",
+            }]
         return fallback

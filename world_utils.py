@@ -38,7 +38,9 @@ def ensure_world(world: dict) -> dict:
     loc = gamedata.get_location(cid) if cid else {}
     if loc:
         world.setdefault("current_location", loc["name"])
-        world.setdefault("danger_level", loc.get("danger", 1))
+        # SPEC-233 R1: perigo efetivo (override de ascensão/drift), não só o base.
+        # SPEC-233: perigo efetivo é derivado; save antigo com valor velho é corrigido no load.
+        world["danger_level"] = _effective_danger(world, cid)
     return world
 
 
@@ -203,11 +205,15 @@ def apply_travel(world: dict, dest: dict) -> dict:
     if dest["id"] not in visited:
         visited.append(dest["id"])
     world["visited"] = visited
-    world["danger_level"] = dest.get("danger", world.get("danger_level", 1))
+    # SPEC-233 R1: perigo EFETIVO do destino (danger_overrides vence o base do mapa).
+    world["danger_level"] = (_effective_danger(world, dest["id"]) if dest.get("id")
+                             else dest.get("danger", world.get("danger_level", 1)))
     if cost > 0:
         advance_clock(world, cost)
         # Fase 6.5: período mudou -> clima transiciona; clima bravo encarece a viagem
-        advance_weather(world)
+        # SPEC-233 R7: a duração do clima global conta períodos avançados, não chamadas.
+        for _ in range(cost):
+            advance_weather(world)
         extra = weather_effects(world, dest).get("travel_cost_extra", 0)
         if extra:
             advance_clock(world, extra)
@@ -297,7 +303,8 @@ def apply_rest(player: dict, world: dict, allies: list = None) -> Tuple[dict, di
     if "max_entropy" in player:
         player["entropy"] = player.get("max_entropy", 0)
     advance_clock(world, 2)
-    advance_weather(world)
+    for _ in range(2):  # 2 períodos -> 2 ticks (R7)
+        advance_weather(world)
     # Fações avançam no tempo off-screen: o storyteller chama advance_factions(2)
     # após o descanso (2 períodos). world_simulator narrado virá no próximo slice.
     return player, world
@@ -356,12 +363,14 @@ def advance_factions(factions, periods: int = 1) -> Tuple[list, list]:
 def _raise_danger(world: dict, loc_id: str) -> None:
     """Sobe o perigo de um local em +1 (teto 4), via override de runtime."""
     overrides = dict(world.get("danger_overrides") or {})
-    base = overrides.get(loc_id)
-    if base is None:
-        loc = gamedata.get_location(loc_id) or {}
-        base = loc.get("danger", 1)
+    base = _effective_danger(world, loc_id)
     overrides[loc_id] = min(4, int(base) + 1)
     world["danger_overrides"] = overrides
+    # SPEC-233 R2: ascensão assume o override — o drift do world_simulator não decai.
+    if loc_id in (world.get("danger_shift_turns") or {}):
+        shifts = dict(world["danger_shift_turns"])
+        shifts.pop(loc_id, None)
+        world["danger_shift_turns"] = shifts
     if world.get("current_location_id") == loc_id:
         world["danger_level"] = overrides[loc_id]
 
@@ -567,12 +576,58 @@ def recovery_rest_safe(player_level: int, danger_now: int, loc: dict) -> bool:
 
 
 def _effective_danger(world: dict, loc_id: str) -> int:
-    """Perigo atual do local: override de ascensão (se houver) senão o base do mapa."""
+    """Perigo atual do local: override de ascensão (se houver) senão o base do mapa.
+    `danger_overrides[loc]` pode ser int (legado) ou dict {value,...} (SPEC-233)."""
     overrides = world.get("danger_overrides") or {}
     if loc_id in overrides:
-        return int(overrides[loc_id])
+        v = overrides[loc_id]
+        if isinstance(v, dict):
+            v = v.get("value", 1)
+        return int(v)
     loc = gamedata.get_location(loc_id) or {}
     return int(loc.get("danger", world.get("danger_level", 1)))
+
+
+def effective_danger(world: dict) -> int:
+    """SPEC-233 R1: helper ÚNICO — perigo efetivo do local ATUAL (encontros, mapa, descanso)."""
+    world = world or {}
+    loc_id = world.get("current_location_id", "")
+    if not loc_id:
+        return int(world.get("danger_level", 1) or 1)
+    return _effective_danger(world, loc_id)
+
+
+DANGER_DECAY_TURNS = 10  # SPEC-233 R2 (D-A default): decai 1 rumo ao base a cada 10 turnos
+
+
+def decay_danger_overrides(world: dict) -> dict:
+    """SPEC-233 R2: drift de perigo (world_simulator) decai 1 em direção ao base a cada
+    DANGER_DECAY_TURNS sem novo shift. Overrides sem carimbo (ascensão) não decaem."""
+    shifts = dict(world.get("danger_shift_turns") or {})
+    if not shifts:
+        return world
+    overrides = dict(world.get("danger_overrides") or {})
+    now = int(world.get("turn_count", 0) or 0)
+    for loc_id, last in list(shifts.items()):
+        if loc_id not in overrides:
+            shifts.pop(loc_id, None)
+            continue
+        if now - int(last) < DANGER_DECAY_TURNS:
+            continue
+        base = int((gamedata.get_location(loc_id) or {}).get("danger", 1))
+        cur = _effective_danger(world, loc_id)
+        cur += (base > cur) - (base < cur)
+        if cur == base:
+            overrides.pop(loc_id, None)
+            shifts.pop(loc_id, None)
+        else:
+            overrides[loc_id] = cur
+            shifts[loc_id] = now
+    world["danger_overrides"] = overrides
+    world["danger_shift_turns"] = shifts
+    if world.get("current_location_id"):
+        world["danger_level"] = _effective_danger(world, world["current_location_id"])
+    return world
 
 
 def _hostile_ruler(world: dict, factions, loc_id: str):
@@ -767,6 +822,7 @@ def check_encounter(world: dict, factions, intel, turn: int = 0,
     # menos combate forçado de volta-a-volta, espaço pra recuperar entre lutas.
     cooldown = _ENCOUNTER_COOLDOWN + (_EARLY_COOLDOWN_BONUS
                                       if int(player_level or 1) <= EARLY_GAME_LEVEL else 0)
+    world.pop("encounter_eff_danger", None)  # SPEC-233 R5: flag one-shot nunca gruda
     if turn - int(world.get("last_encounter_turn", -99)) < cooldown:
         return None
 
@@ -781,16 +837,19 @@ def check_encounter(world: dict, factions, intel, turn: int = 0,
     # escalado pelo nível — salvo zona apex. Carimba p/ o combat spawn consumir
     # (one-shot, como encounter_surprise). Deliberado/scripted não passa por aqui.
     eff = forced_encounter_danger(loc, danger, player_level)
-    world["encounter_eff_danger"] = eff
+    # SPEC-233 R5: só carimba quando devolve um encontro (ver _stamp).
+    def _stamp(result):
+        world["encounter_eff_danger"] = eff
+        return result
 
     # R10: reforços — o fugitivo voltou, e não veio sozinho.
     alert = _pop_active_alert(world, loc, turn)
     if alert:
         hint = alert.get("hint", "os que fugiram")
-        return {"hint": hint,
+        return _stamp({"hint": hint,
                 "flavor": f"Eles voltaram — e não vieram sós. {hint} lidera o grupo que te cerca.",
                 "reason": "reinforcements",
-                "enemy_id": alert.get("enemy_id", "")}
+                "enemy_id": alert.get("enemy_id", "")})
 
     if ruler:
         fid = ruler.get("id")
@@ -804,21 +863,21 @@ def check_encounter(world: dict, factions, intel, turn: int = 0,
         else:
             hint = entry.get("name") if entry else "homens armados sob uma bandeira que você não reconhece"
             flavor = "Homens armados sob uma bandeira estranha cercam você sem dar explicações."
-        return {"hint": hint, "flavor": flavor, "reason": "controlled",
-                "enemy_id": entry.get("id", "") if entry else ""}
+        return _stamp({"hint": hint, "flavor": flavor, "reason": "controlled",
+                "enemy_id": entry.get("id", "") if entry else ""})
 
     if threat and danger >= 3:
-        return {"hint": f"criatura ligada a: {threat}", "flavor": str(threat),
-                "reason": "looming_threat", "enemy_id": ""}
+        return _stamp({"hint": f"criatura ligada a: {threat}", "flavor": str(threat),
+                "reason": "looming_threat", "enemy_id": ""})
 
     if danger >= 4:
         entry = pick_encounter_enemy(loc, eff, turn,
                                      bestiary_knowledge=bestiary_knowledge,
                                      projection=projection)
         hint = entry.get("name") if entry else f"feras/perigos de {region}"
-        return {"hint": hint, "enemy_id": entry.get("id", "") if entry else "",
+        return _stamp({"hint": hint, "enemy_id": entry.get("id", "") if entry else "",
                 "flavor": f"O perigo de {region} se materializa: algo hostil avança sobre você.",
-                "reason": "high_danger"}
+                "reason": "high_danger"})
 
     return None
 
@@ -862,12 +921,19 @@ def maybe_start_global_weather(world: dict, rng=None) -> Optional[str]:
     return desc
 
 
-def advance_weather(world: dict, rng=None) -> dict:
+def advance_weather(world: dict, rng=None, *, steps: int = 1) -> dict:
     """Transição de clima (cadeia de Markov por região) — chamar quando o
     PERÍODO do relógio muda (viagem/descanso). Muta e retorna world.
 
     spec weather-global-vivo: também tica/expira o fenômeno GLOBAL e, sem evento
-    ativo, rola p/ iniciar um novo (determinístico)."""
+    ativo, rola p/ iniciar um novo (determinístico). SPEC-233 R7: `steps` = períodos
+    realmente avançados — repete o tick por período (viagem de 3 = 3 ticks)."""
+    for _ in range(max(1, int(steps or 1)) - 1):
+        _advance_weather_once(world, rng)
+    return _advance_weather_once(world, rng)
+
+
+def _advance_weather_once(world: dict, rng=None) -> dict:
     import random as _random
     rng = rng or _random
     from gamedata import get_location
@@ -897,6 +963,7 @@ def advance_weather(world: dict, rng=None) -> dict:
 
 # spec itens-vivos-e-luz: sistema de LUZ determinístico.
 DARK_PERIODS = {"Anoitecer", "Noite"}
+_DARK_TAGS = {"dark", "masmorra", "caverna", "subterraneo"}
 DARK_PERCEPTION_PENALTY = -3   # [BALANCEAR] escuro sem luz: percepção
 DARK_COMBAT_PENALTY = -1       # [BALANCEAR] escuro sem luz: acerto (simétrico)
 
@@ -932,8 +999,11 @@ def light_level(world: dict, player: dict) -> dict:
     tags = set(loc.get("tags") or [])
     sheltered = bool(_SHELTER_TAGS & tags)
     period = world.get("time_of_day") or (world.get("world_clock") or {}).get("period") or ""
-    naturally_dark = (period in DARK_PERIODS) or ("dark" in tags)
-    dark = naturally_dark and not sheltered
+    # SPEC-233 R3: masmorra/caverna/subterrâneo são escuros — `abrigo` protege do clima,
+    # não ilumina (escuridão estrutural tem precedência sobre o abrigo).
+    structurally_dark = bool(_DARK_TAGS & tags)
+    naturally_dark = (period in DARK_PERIODS) or structurally_dark
+    dark = naturally_dark and (structurally_dark or not sheltered)
     if dark and _has_light_source(player):
         return {"dark": False, "natural_dark": True, "lit": True,
                 "perception_mod": 0, "combat_mod": 0,
