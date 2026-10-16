@@ -3611,7 +3611,7 @@ specs:
   lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
 - id: SPEC-205
   slug: combate-gesto-alvo-direto
-  status: draft
+  status: in-progress
   path: specs/SPEC-205-combate-gesto-alvo-direto.md
   created_commit: null
   created_at: '2026-10-15'

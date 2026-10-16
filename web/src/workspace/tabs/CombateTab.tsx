@@ -1,21 +1,35 @@
-import type { ActionOptions, GameResponse } from "../../types";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { ActionOptions, BasicActionView, CardView, GameResponse } from "../../types";
 import { CombatTab } from "../../components/Hud";
 import { CardHand } from "../../components/CardHand";
 import { ReactionPrompt } from "../../components/ReactionPrompt";
 import { CombatOutcomePanel } from "../../components/CombatOutcomePanel";
 import { resultFrom, shouldShowResult } from "../../combatOutcome";
-import { useState } from "react";
+import { Arena, buildParticipants } from "../../combat/Arena";
+import { CardTooltip } from "../../combat/CardTooltip";
+import type { AimMark } from "../../combat/TargetChip";
+import {
+  basicKey, basicPayload, BASIC_LABEL, cardPayload, planBasic, planCard, REASON_TEXT,
+} from "../../combat/targeting";
+import { useTargeting } from "../../combat/useTargeting";
 
-const TACTICAL_MANEUVERS = [
-  { label: "Engajar", kind: "maneuver" as const, maneuver: "engajar" as const },
-  { label: "Guardar", kind: "maneuver" as const, maneuver: "guardar" as const },
-  { label: "Esconder-se", kind: "maneuver" as const, maneuver: "esconder" as const },
-  { label: "Procurar", kind: "maneuver" as const, maneuver: "procurar" as const },
-  { label: "Fugir", kind: "flee" as const },
-];
+const DETAIL_ID = "combat-card-detail";
 
-/** SPEC-204 R10: único lugar dos controles táticos (Cartas, Reação, manobras,
- *  Ferimentos, zonas). Lê `data.combat` — sem store paralelo. */
+/** Servidor antigo (sem `basic_actions`): mesmas manobras de antes + ataque básico. */
+function legacyBasics(enemyIds: string[]): BasicActionView[] {
+  const row = (kind: BasicActionView["kind"], maneuver?: BasicActionView["maneuver"], targets: string[] = []): BasicActionView =>
+    ({ kind, maneuver, valid_targets: targets, invalid_reason: null, cost: 0 });
+  return [row("attack", undefined, enemyIds), row("maneuver", "engajar", enemyIds), row("maneuver", "guardar"),
+    row("maneuver", "esconder"), row("maneuver", "procurar", enemyIds), row("flee")];
+}
+
+const isTyping = (el: EventTarget | null) => {
+  const node = el as HTMLElement | null;
+  return !!node && (node.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(node.tagName));
+};
+
+/** SPEC-204 R10 + SPEC-205: único lugar dos controles táticos. Uma ação por gesto:
+ *  carta/ação básica → (alvo) → envio. Todos os números vêm de `data.combat`. */
 export function CombateTab({ data, busy, blocked, hitKey, ended, reactionCardId, onReaction, onAction }: {
   data: GameResponse | null;
   busy: boolean;
@@ -28,18 +42,135 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, reactionCardId,
   onAction: (text: string, options?: ActionOptions) => void;
 }) {
   const combat = data?.combat;
-  // SPEC-203 R8 na shell SPEC-204: o desfecho vive na aba Combate (que permanece aberta ao
-  // encerrar, R10) — visível em split e em tela estreita. "Continuar" fecha só o painel.
   const [dismissedResult, setDismissedResult] = useState<string | null>(null);
   const combatResult = resultFrom(data?.combat_result);
   const fighting = !!combat?.active;
-  const simulation = !!data?.combat_simulation?.enabled;
   const live = fighting && !!combat && !blocked;
-  const maneuvers = live
-    ? (simulation ? [{ label: "Ataque básico", kind: "attack" as const }, ...TACTICAL_MANEUVERS] : TACTICAL_MANEUVERS)
-    : [];
+
+  const resetKey = `${combat?.round ?? ""}|${combat?.active}|${blocked}|${data?.game_id ?? ""}`;
+  const targeting = useTargeting(busy, resetKey);
+  const [ruptureId, setRuptureId] = useState<string | null>(null);
+  const [detailId, setDetailId] = useState<string | null>(null);
+  const [announce, setAnnounce] = useState("");
+  const rootRef = useRef<HTMLDivElement>(null);
+  const trigger = useRef<HTMLElement | null>(null);
+  const prevPhase = useRef(targeting.state.phase);
+
+  const cards = combat?.cards ?? [];
+  const enemies = combat?.enemies ?? [];
+  const people = useMemo(() => (combat ? buildParticipants(combat, data?.party ?? []) : []), [combat, data?.party]);
+  const nameOf = (id: string) => people.find((p) => p.id === id)?.name;
+  const basics = combat ? (combat.basic_actions ?? legacyBasics(enemies.map((e) => e.id))) : [];
+  const activeCards = cards.filter((c) => c.type === "ativa");
+
+  const state = targeting.state;
+  const aimingCard: CardView | undefined = state.phase === "aiming" && state.source.kind === "card"
+    ? activeCards.find((c) => c.id === (state.source as { cardId: string }).cardId) : undefined;
+  const sourceKey = state.phase === "aiming" && state.source.kind === "basic" ? state.source.key : null;
+  const aimingBasic = sourceKey ? basics.find((a) => basicKey(a) === sourceKey) : undefined;
+
+  const aimTargets: string[] | null = aimingCard
+    ? planCard(aimingCard, enemies, false).targets
+    : aimingBasic ? planBasic(aimingBasic, false).targets : null;
+  const aimMarks: Record<string, AimMark> | undefined = aimTargets ? Object.fromEntries(people.map((p) => {
+    const valid = aimTargets.includes(p.id);
+    const supportCard = aimingCard?.target_kind === "self";
+    const reason = valid ? undefined
+      : p.role === "enemy" ? (supportCard ? "Esta carta só mira você e aliados" : "Oculto ou fora de alcance")
+      : "Esta ação só mira inimigos";
+    return [p.id, { valid, reason }];
+  })) : undefined;
+
+  const aimLabel = aimingCard ? aimingCard.name : aimingBasic ? BASIC_LABEL[basicKey(aimingBasic)] : "";
+
+  // Foco e anúncio: entra na mira → 1º alvo válido; sai sem enviar → volta ao gatilho.
+  useEffect(() => {
+    const before = prevPhase.current;
+    prevPhase.current = state.phase;
+    if (state.phase === "aiming") {
+      setAnnounce(`Mirando ${aimLabel}: escolha um alvo.`);
+      rootRef.current?.querySelector<HTMLElement>("button[data-target].is-valid")?.focus();
+    } else if (before === "aiming" && state.phase === "idle") {
+      setAnnounce("Mira cancelada.");
+      trigger.current?.focus();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.phase]);
+
+  const lastResult = combat?.last_player_action?.result;
+  useEffect(() => {
+    if (combat?.round && lastResult) setAnnounce(`Resultado da rodada ${combat.round}: ${lastResult}.`);
+  }, [combat?.round, lastResult]);
+
+  function sendCard(card: CardView, targetId: string | undefined) {
+    if (!targeting.begin()) return;
+    const [text, options] = cardPayload(card, targetId, targetId ? nameOf(targetId) : undefined,
+      ruptureId === card.id, reactionCardId);
+    setRuptureId(null);
+    onAction(text, options);
+  }
+
+  function sendBasic(action: BasicActionView, targetId: string | undefined) {
+    if (!targeting.begin()) return;
+    const [text, options] = basicPayload(action, targetId, targetId ? nameOf(targetId) : undefined, reactionCardId);
+    onAction(text, options);
+  }
+
+  function gestureCard(card: CardView, el?: HTMLElement) {
+    if (el) trigger.current = el;
+    const plan = planCard(card, enemies, busy);
+    if (plan.mode === "blocked") { setAnnounce(plan.reason ? `${card.name}: ${REASON_TEXT[plan.reason]}.` : ""); return; }
+    if (plan.mode === "direct") {
+      if (!targeting.beginDirect()) return;
+      const [text, options] = cardPayload(card, plan.directTarget, plan.directTarget ? nameOf(plan.directTarget) : undefined,
+        ruptureId === card.id, reactionCardId);
+      setRuptureId(null);
+      onAction(text, options);
+      return;
+    }
+    targeting.aim({ kind: "card", cardId: card.id });
+  }
+
+  function gestureBasic(action: BasicActionView, el?: HTMLElement) {
+    if (el) trigger.current = el;
+    const plan = planBasic(action, busy);
+    if (plan.mode === "blocked") { setAnnounce(plan.reason ? `${BASIC_LABEL[basicKey(action)]}: ${REASON_TEXT[plan.reason]}.` : ""); return; }
+    if (plan.mode === "direct") {
+      if (!targeting.beginDirect()) return;
+      const [text, options] = basicPayload(action, plan.directTarget, plan.directTarget ? nameOf(plan.directTarget) : undefined, reactionCardId);
+      onAction(text, options);
+      return;
+    }
+    targeting.aim({ kind: "basic", key: basicKey(action) });
+  }
+
+  function pick(targetId: string) {
+    if (aimingCard) sendCard(aimingCard, targetId);
+    else if (aimingBasic) sendBasic(aimingBasic, targetId);
+  }
+
+  // Atalhos 1–9 para a mão (P2): opcionais, ignorados ao digitar.
+  useEffect(() => {
+    if (!live) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.ctrlKey || event.metaKey || event.altKey || isTyping(event.target)) return;
+      if (!/^[1-9]$/.test(event.key)) return;
+      const card = activeCards[Number(event.key) - 1];
+      if (card) {
+        event.preventDefault();
+        gestureCard(card, rootRef.current?.querySelector<HTMLElement>(`[data-card="${card.id}"]`) ?? undefined);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  });
+
+  const detailCard = cards.find((c) => c.id === (detailId ?? aimingCard?.id)) ?? null;
+  const locked = busy || state.phase === "submitting";
+
   return (
-    <div className="ws-combat">
+    <div className="ws-combat" ref={rootRef}>
+      <p className="sr-only" aria-live="polite">{announce}</p>
       {combatResult && shouldShowResult(combatResult, dismissedResult) && (
         <CombatOutcomePanel result={combatResult} outcome={data?.turn_outcome}
           onContinue={() => setDismissedResult(combatResult.result_event_id)} />
@@ -49,26 +180,38 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, reactionCardId,
       )}
       {live && combat && (
         <>
-          <CardHand cards={combat.cards} enemies={combat.enemies} busy={busy}
-            reactionCardId={reactionCardId} onPlay={onAction} />
-          <ReactionPrompt cards={combat.cards} selected={reactionCardId} disabled={busy} onSelect={onReaction} />
+          <Arena combat={combat} party={data?.party ?? []} aim={aimMarks} onPick={pick} />
+          <div className="aimbar" data-aim-safe>
+            <span>{state.phase === "aiming" ? `Mirando ${aimLabel}: escolha um alvo`
+              : state.phase === "submitting" ? "Enviando…" : "Escolha uma carta ou ação"}</span>
+            {state.phase === "aiming" && (
+              <button type="button" className="aimbar__cancel" onClick={() => targeting.cancel()}>Cancelar (Esc)</button>
+            )}
+          </div>
+          <CardHand cards={cards} enemies={enemies} busy={locked}
+            aimingCardId={aimingCard?.id} ruptureId={ruptureId} detailId={DETAIL_ID}
+            onToggleRupture={(id) => setRuptureId((cur) => (cur === id ? null : id))}
+            onGesture={gestureCard} onDetail={setDetailId} />
+          <CardTooltip card={detailCard} id={DETAIL_ID} />
+          <ReactionPrompt cards={cards} selected={reactionCardId} disabled={busy} onSelect={onReaction} />
+          <div className="actionchips ws-combat__maneuvers" role="group" aria-label="Manobras táticas" data-aim-safe>
+            {basics.map((action) => {
+              const key = basicKey(action);
+              const plan = planBasic(action, locked);
+              const reason = plan.reason ? REASON_TEXT[plan.reason] : undefined;
+              return (
+                <button key={key} className="actionchip" type="button" data-basic={key}
+                  aria-pressed={sourceKey === key}
+                  aria-disabled={plan.mode === "blocked" || undefined} title={reason}
+                  onClick={(event) => { if (plan.mode !== "blocked" || sourceKey === key) gestureBasic(action, event.currentTarget); }}>
+                  {BASIC_LABEL[key] ?? key}
+                </button>
+              );
+            })}
+          </div>
         </>
       )}
-      {maneuvers.length > 0 && (
-        <div className="actionchips ws-combat__maneuvers" role="group" aria-label="Manobras táticas">
-          {maneuvers.map((maneuver) => (
-            <button key={maneuver.label} className="actionchip" type="button" disabled={busy}
-              onClick={() => onAction(maneuver.label, {
-                action_kind: maneuver.kind,
-                maneuver: "maneuver" in maneuver ? maneuver.maneuver : undefined,
-                reaction_card_id: reactionCardId,
-              })}>
-              {maneuver.label}
-            </button>
-          ))}
-        </div>
-      )}
-      <CombatTab c={combat} hitKey={hitKey} party={data?.party ?? []} />
+      <CombatTab c={combat} hitKey={hitKey} party={data?.party ?? []} arena={live} />
     </div>
   );
 }

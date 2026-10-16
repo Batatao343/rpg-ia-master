@@ -14,7 +14,7 @@ import type {
   VisualResponse,
 } from "./types";
 
-import { http, HttpError, uploadAudio } from "./http";
+import { formatDetail, http, HttpError, uploadAudio } from "./http";
 import { setClientLatencyReport } from "./lib/turnLatency";
 export { HttpError } from "./http";
 export { refreshSessionOnce } from "./http";
@@ -158,7 +158,14 @@ export async function sendActionStream(
   const handleEvent = (name: string, data: string) => {
     const payload = JSON.parse(data);
     handlers.onEvent?.(name, payload);
-    if (name === "error") throw new HttpError(Number(payload.code || 500), "stream_error", payload.detail || "erro no stream");
+    if (name === "error") {
+      // SPEC-205: detail estruturado (ex.: invalid_target) preserva code/mensagem.
+      if (payload.detail && typeof payload.detail === "object") {
+        const formatted = formatDetail(payload.detail, "erro no stream");
+        throw new HttpError(Number(payload.code || 500), formatted.code, formatted.message);
+      }
+      throw new HttpError(Number(payload.code || 500), "stream_error", payload.detail || "erro no stream");
+    }
     if (name === "phase") handlers.onPhase?.(payload.node);
     else if (name === "route") handlers.onRoute?.(payload.route);
     else if (name === "narrative") handlers.onChunk?.(payload.chunk, payload.done);

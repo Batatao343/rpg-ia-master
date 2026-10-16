@@ -1165,3 +1165,43 @@ select {
 .combat-outcome__cast, .combat-outcome__rewards { margin: 0; padding-left: 1.1rem; }
 .combat-outcome__rewards { color: var(--accent); }
 .combat-outcome__continue { justify-self: end; }
+
+/* ---- SPEC-205: combate por gesto ---- */
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.arena { display: grid; gap: 0.5rem; min-width: 0; }
+.arena__turn { margin: 0; color: var(--faint); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.arena__zones { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0.45rem; }
+.arena__zone { padding: 0.5rem; border: 1px solid var(--line-soft); border-radius: var(--r-md); background: var(--surface-2); min-width: 0; }
+.arena__zone h4 { margin: 0 0 0.35rem; color: var(--accent); font: 0.7rem var(--display); text-transform: uppercase; letter-spacing: 0.05em; }
+.arena__members { display: grid; gap: 0.35rem; }
+.tchip { display: grid; gap: 0.18rem; width: 100%; padding: 0.42rem 0.55rem; text-align: left; font: inherit; color: var(--muted); border: 1px solid var(--line); border-left: 3px solid var(--danger); border-radius: var(--r-sm); background: var(--surface); }
+.tchip--player, .tchip--ally { border-left-color: var(--accent); }
+.tchip__top { display: flex; justify-content: space-between; gap: 0.5rem; color: var(--ink); font-size: 0.82rem; }
+.tchip__bar { display: block; height: 4px; border-radius: 2px; background: var(--bg-deep); overflow: hidden; }
+.tchip__bar > span { display: block; height: 100%; background: var(--danger); }
+.tchip--player .tchip__bar > span, .tchip--ally .tchip__bar > span { background: var(--accent); }
+.tchip__meta { font-size: 0.7rem; color: var(--muted); }
+.tchip__tags { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+.tchip__tags em { font-style: normal; font-size: 0.66rem; padding: 0 0.35rem; border: 1px solid var(--line); border-radius: var(--r-pill); }
+button.tchip { cursor: pointer; }
+.tchip.is-valid { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: 1px; }
+.tchip.is-invalid { opacity: 0.5; cursor: not-allowed; border-style: dashed; }
+.tchip:focus-visible, .combat-card:focus-visible, .combat-card__rupture:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.aimbar { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; min-height: 2.2rem; padding: 0.3rem 0.6rem; border: 1px solid var(--line-soft); border-radius: var(--r-md); color: var(--ink); font-size: 0.82rem; }
+.aimbar__cancel { padding: 0.25rem 0.6rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--surface); color: var(--ink); cursor: pointer; }
+.combat-card-wrap { scroll-snap-align: start; display: grid; gap: 0.3rem; align-content: start; padding: 0.15rem; border-radius: var(--r-md); }
+.combat-card-wrap.is-spent .combat-card { opacity: 0.52; filter: grayscale(0.35); }
+.combat-card-wrap.is-rupture .combat-card { border-color: #a15be0; box-shadow: 0 0 20px rgba(141, 65, 200, 0.28); }
+.combat-card-wrap.is-aiming .combat-card { border-color: var(--accent); outline: 2px solid var(--accent); }
+.combat-card { display: grid; align-content: start; gap: 0.36rem; width: 100%; min-height: 150px; padding: 0.65rem; text-align: left; font: inherit; color: var(--ink); cursor: pointer; border: 1px solid var(--line); border-radius: var(--r-md); background: radial-gradient(circle at 10% 0%, oklch(0.58 0.11 75 / 0.12), transparent 42%), var(--surface); }
+.combat-card[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
+.combat-card__name { font: 0.82rem var(--display); text-transform: uppercase; letter-spacing: 0.04em; }
+.combat-card__desc { color: var(--muted); font-size: 0.78rem; line-height: 1.35; }
+.combat-card__rupture[aria-disabled="true"] { opacity: 0.45; cursor: default; }
+.card-detail { min-height: 5.6rem; padding: 0.5rem 0.7rem; border: 1px solid var(--line-soft); border-radius: var(--r-md); background: var(--surface-2); font-size: 0.78rem; color: var(--muted); }
+.card-detail p { margin: 0 0 0.2rem; }
+.card-detail__hint { font-style: italic; color: var(--faint); }
+.card-detail__reason { color: var(--danger-bright); }
+.actionchip[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
+.actionchip[aria-pressed="true"] { border-color: var(--accent); outline: 2px solid var(--accent); }
+.reaction-prompt__title { margin: 0 0 0.4rem; color: #d1acec; font: 0.7rem var(--display); letter-spacing: 0.08em; text-transform: uppercase; }

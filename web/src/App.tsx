@@ -564,7 +564,9 @@ export function App() {
           // A definitive refusal can never be retried as-is: release the input (SPEC-235 R2).
           if (shouldClearPending(error.status, error.code)) {
             clearPending(user, gid); setPending(null);
-            throw new Error(error.message + " A ação pendente foi descartada; você pode enviar uma nova.");
+            // Preserva status/code (SPEC-205 R9: `invalid_target` refaz a mira com o estado novo).
+            throw new api.HttpError(error.status, error.code,
+              error.message + " A ação pendente foi descartada; você pode enviar uma nova.");
           }
           throw error;
         }
@@ -582,6 +584,10 @@ export function App() {
       }
     } catch (error) {
       if (active()) setBanner({ msg: "Ação não confirmada: " + errMsg(error), kind: "error" });
+      // SPEC-205 R9: alvo velho — refaz a mira com o estado novo do servidor.
+      if (error instanceof api.HttpError && error.code === "invalid_target" && active()) {
+        try { const fresh = await api.getState(gid); if (active()) setData(fresh); } catch { /* o banner já explica */ }
+      }
     } finally {
       if (active()) { setThinking(false); setPhaseLabel(null); setBusy(false); }
     }

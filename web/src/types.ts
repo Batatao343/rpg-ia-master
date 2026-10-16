@@ -215,6 +215,7 @@ export interface CardView {
   subclass: string;
   prepared: boolean;
   cost: number;
+  base_cost?: number;
   frequency: string;
   spent: boolean;
   ready: boolean;
@@ -222,6 +223,20 @@ export interface CardView {
   rupture_ready: boolean;
   trigger: string;
   evolved: string | null;
+  /** SPEC-205: alvos válidos (ids) calculados no servidor; ausente em servidor antigo. */
+  valid_targets?: string[];
+  invalid_reason?: InvalidReason | null;
+}
+
+export type InvalidReason = "not_prepared" | "spent_frequency" | "no_entropy" | "cooldown" |
+  "no_valid_target" | "target_dead" | "target_hidden" | "out_of_zone" | "not_your_turn" | "combat_inactive";
+
+export interface BasicActionView {
+  kind: "attack" | "maneuver" | "pass" | "flee";
+  maneuver?: "engajar" | "desengajar" | "guardar" | "esconder" | "procurar";
+  valid_targets: string[];
+  invalid_reason: InvalidReason | null;
+  cost: number;
 }
 
 export interface WoundView {
@@ -275,6 +290,7 @@ export interface CombatBlock {
   order: InitiativeSlot[];
   enemies: EnemyView[];
   cards: CardView[];
+  basic_actions?: BasicActionView[];
   scene: ConflictSceneView;
   wounds: WoundTrackView;
   chase: ChaseView;

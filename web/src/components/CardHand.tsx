@@ -1,97 +1,72 @@
-import { useEffect, useState } from "react";
-import type { ActionOptions, CardView, EnemyView } from "../types";
+import type { CardView, EnemyView } from "../types";
+import { planCard, REASON_TEXT } from "../combat/targeting";
 
 interface Props {
   cards: CardView[];
   enemies: EnemyView[];
   busy: boolean;
-  reactionCardId?: string;
-  onPlay: (text: string, options: ActionOptions) => void;
+  aimingCardId?: string | null;
+  ruptureId: string | null;
+  detailId: string;
+  onToggleRupture: (cardId: string) => void;
+  onGesture: (card: CardView, trigger: HTMLElement) => void;
+  onDetail: (cardId: string | null) => void;
 }
 
-const FREQ_LABEL: Record<string, string> = {
-  livre: "livre",
-  turno: "1× turno",
-  cena: "1× cena",
-  descanso_curto: "1× descanso curto",
-  descanso_longo: "1× descanso longo",
+const FREQ_SHORT: Record<string, string> = {
+  livre: "livre", turno: "1× turno", cena: "1× cena",
+  descanso_curto: "1× descanso curto", descanso_longo: "1× descanso longo",
 };
 
-export function CardHand({ cards, enemies, busy, reactionCardId, onPlay }: Props) {
+/** SPEC-205: a carta É o gesto. Com alvo → mira; sem alvo → um clique. Sem select, sem "Jogar". */
+export function CardHand({ cards, enemies, busy, aimingCardId, ruptureId, detailId, onToggleRupture, onGesture, onDetail }: Props) {
   const activeCards = cards.filter((card) => card.type === "ativa");
-  const [targetId, setTargetId] = useState(enemies[0]?.id ?? "");
-  const [ruptureId, setRuptureId] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!enemies.some((enemy) => enemy.id === targetId)) {
-      setTargetId(enemies[0]?.id ?? "");
-    }
-  }, [enemies, targetId]);
-
   if (!activeCards.length) return null;
-
   return (
-    <section className="card-hand" aria-labelledby="card-hand-title">
+    <section className="card-hand" aria-labelledby="card-hand-title" data-aim-safe>
       <div className="card-hand__head">
         <div>
           <p className="card-hand__kicker">Cartas preparadas</p>
           <h2 id="card-hand-title">Sua mão</h2>
         </div>
-        {enemies.length > 1 && (
-          <label className="card-hand__target">
-            Alvo
-            <select value={targetId} onChange={(event) => setTargetId(event.target.value)}>
-              {enemies.map((enemy) => (
-                <option key={enemy.id} value={enemy.id}>{enemy.name}</option>
-              ))}
-            </select>
-          </label>
-        )}
       </div>
       <div className="card-hand__rail">
-        {activeCards.map((card) => {
+        {activeCards.map((card, index) => {
+          const plan = planCard(card, enemies, busy);
           const rupturing = ruptureId === card.id;
-          const disabled = busy || !card.ready;
+          const blocked = plan.mode === "blocked";
+          const aiming = aimingCardId === card.id;
+          const reasonText = plan.reason ? REASON_TEXT[plan.reason] : "";
+          const verb = plan.mode === "aim" ? "escolha o alvo" : "um clique";
           return (
-            <article key={card.id} className={`combat-card${card.spent ? " is-spent" : ""}${rupturing ? " is-rupture" : ""}`}>
-              <div className="combat-card__top">
-                <span className="combat-card__cost" title="Custo de Entropia">{card.cost}E</span>
-                <span className="combat-card__freq">{FREQ_LABEL[card.frequency] ?? card.frequency}</span>
-              </div>
-              <h3>{card.name}</h3>
-              <p>{card.description || card.effect_kind.replace(/_/g, " ")}</p>
-              <div className="combat-card__state">
-                {card.spent ? "Gasta" : card.ready ? "Disponível" : "Sem Entropia"}
-                {card.evolved ? ` · Caminho ${card.evolved}` : ""}
-              </div>
+            <div key={card.id} className={`combat-card-wrap${card.spent ? " is-spent" : ""}${rupturing ? " is-rupture" : ""}${aiming ? " is-aiming" : ""}`}>
+              <button type="button" className="combat-card" data-card={card.id}
+                aria-pressed={aiming} aria-disabled={blocked || undefined}
+                aria-describedby={detailId}
+                aria-keyshortcuts={index < 9 ? String(index + 1) : undefined}
+                aria-label={`Jogar Carta ${card.name}, ${card.cost} de Entropia${blocked && reasonText ? `, indisponível: ${reasonText}` : `, ${verb}`}`}
+                onMouseEnter={() => onDetail(card.id)} onMouseLeave={() => onDetail(null)}
+                onFocus={() => onDetail(card.id)} onBlur={() => onDetail(null)}
+                onClick={(event) => { if (!blocked || aiming) onGesture(card, event.currentTarget); }}>
+                <span className="combat-card__top">
+                  <span className="combat-card__cost" title="Custo de Entropia">{card.cost}E</span>
+                  <span className="combat-card__freq">{FREQ_SHORT[card.frequency] ?? card.frequency}</span>
+                </span>
+                <span className="combat-card__name">{card.name}</span>
+                <span className="combat-card__desc">{card.description || card.effect_kind.replace(/_/g, " ")}</span>
+                <span className="combat-card__state">
+                  {blocked ? (reasonText || "Indisponível") : aiming ? "Mirando…" : plan.mode === "aim" ? "Escolha o alvo" : "Disponível"}
+                  {card.evolved ? ` · Caminho ${card.evolved}` : ""}
+                </span>
+              </button>
               {card.has_rupture && (
-                <button
-                  type="button"
-                  className="combat-card__rupture"
-                  aria-pressed={rupturing}
-                  disabled={busy || !card.rupture_ready}
-                  onClick={() => setRuptureId((current) => current === card.id ? null : card.id)}
-                >
-                  {rupturing ? "Ruptura declarada" : "Declarar Ruptura"}
+                <button type="button" className="combat-card__rupture" aria-pressed={rupturing}
+                  aria-disabled={busy || !card.rupture_ready || undefined}
+                  onClick={() => { if (!busy && card.rupture_ready) onToggleRupture(card.id); }}>
+                  {rupturing ? "Ruptura ligada" : "Ruptura"}
                 </button>
               )}
-              <button
-                type="button"
-                className="combat-card__play"
-                disabled={disabled}
-                onClick={() => {
-                  setRuptureId(null);
-                  onPlay(`${rupturing ? "Declaro Ruptura e uso" : "Uso"} ${card.name}.`, {
-                    card_id: card.id,
-                    target_id: card.target_kind === "enemy" ? targetId || undefined : undefined,
-                    ruptura: rupturing,
-                    reaction_card_id: reactionCardId || undefined,
-                  });
-                }}
-              >
-                {rupturing ? "Romper" : "Jogar Carta"}
-              </button>
-            </article>
+            </div>
           );
         })}
       </div>

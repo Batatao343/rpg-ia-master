@@ -1571,6 +1571,14 @@ def _combat_result(state: dict) -> Dict[str, Any]:
     return em.result_view(state.get("combat"), public_outcome(state.get("last_turn_outcome")))
 
 
+def _targeting_cards(state: dict, cards_view: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """SPEC-205 R7: `valid_targets`/`invalid_reason` por Carta, calculados em Python."""
+    from services import combat_targeting as targeting
+    for row in cards_view:
+        row.update(targeting.card_targeting(state, str(row.get("id"))))
+    return cards_view
+
+
 def _combat_block(state: dict) -> Dict[str, Any]:
     """View tática pública do conflito, sem vazar ficha secreta de inimigo."""
     meta = state.get("combat") or {}
@@ -1585,6 +1593,7 @@ def _combat_block(state: dict) -> Dict[str, Any]:
 
     from services import bestiary_knowledge as knowledge
     from services import cards
+    from services import combat_targeting as _targeting
     initiative = list(meta.get("initiative") or [])
     scene = meta.get("scene") or {}
     participant_names = {"player": player.get("name", "Protagonista")}
@@ -1663,7 +1672,8 @@ def _combat_block(state: dict) -> Dict[str, Any]:
                   for side in initiative],
         "initiative": initiative,
         "enemies": enemy_views,
-        "cards": _cards_block(player, prepared_only=True),
+        "cards": _targeting_cards(state, _cards_block(player, prepared_only=True)),
+        "basic_actions": _targeting.basic_actions(state),
         "scene": scene_view,
         "wounds": {
             "vitality": int(player.get("vitalidade", 0) or 0),
@@ -3493,18 +3503,37 @@ def _apply_action_options(state: dict, req: ActionRequest) -> None:
     """Traduz seleções da UI para a declaração que o motor já consome."""
     if not (state.get("combat") or {}).get("active"):
         return
-    state["player_reaction_card_id"] = req.reaction_card_id
     active_enemies = [
         enemy for enemy in (state.get("enemies") or [])
         if not enemy.get("dead")
         and enemy.get("status", "ativo") not in ("morto", "fugiu", "rendido")
     ]
-    target_id = req.target_id or (
+    explicit_target = req.target_id
+    if req.card_id and explicit_target:
+        # SPEC-205 R10: Carta de suporte nunca mira um inimigo vindo da UI.
+        from services import cards as _cards_svc
+        _effect = str(((_cards_svc.get_card(req.card_id) or {}).get("efeito") or {}).get("kind") or "")
+        from services.conflict_turn import _SUPPORT_EFFECTS as _SUPPORT
+        if _effect in _SUPPORT and explicit_target in {str(e.get("id")) for e in active_enemies}:
+            explicit_target = None
+    # SPEC-205 R9: alvo explícito fora de `valid_targets` (estado velho) é
+    # rejeitado na borda, sem tocar Entropia/frequência nem rodar turno.
+    from services import combat_targeting as _targeting
+    _bad = _targeting.check_declared_target(
+        state, card_id=req.card_id, action_kind=req.action_kind,
+        maneuver=req.maneuver, target_id=explicit_target)
+    if _bad:
+        raise HTTPException(409, detail={
+            "code": "invalid_target", "invalid_reason": _bad,
+            "message": "O alvo escolhido deixou de ser válido. Escolha de novo.",
+        })
+    state["player_reaction_card_id"] = req.reaction_card_id
+    target_id = explicit_target or (
         str(active_enemies[0].get("id")) if active_enemies else None
     )
     action = None
     if req.card_id:
-        card_target = req.target_id
+        card_target = explicit_target
         if not card_target:
             # SPEC-232 (ex-SPEC-199 R12): Carta benéfica sem alvo explícito mira o
             # próprio jogador — nunca herda o 1º inimigo (cura no inimigo).

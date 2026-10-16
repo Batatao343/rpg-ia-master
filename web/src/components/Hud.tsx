@@ -387,8 +387,10 @@ export function PartyBars({ party }: { party: import("../types").PartyMember[] }
   );
 }
 
-export function CombatTab({ c, hitKey, party }: {
+export function CombatTab({ c, hitKey, party, arena }: {
   c: CombatBlock | undefined; hitKey: number; party: import("../types").PartyMember[];
+  /** SPEC-205: a Arena (aba Combate) já mostra zonas e inimigos — evita duplicar. */
+  arena?: boolean;
 }) {
   if (!c || !c.active || !c.enemies.length) {
     return (
@@ -401,13 +403,13 @@ export function CombatTab({ c, hitKey, party }: {
   const cds = Object.entries(c.cooldowns || {});
   return (
     <div>
-      <Combat c={c} hitKey={hitKey} cds={cds} />
+      <Combat c={c} hitKey={hitKey} cds={cds} arena={arena} />
       <PartyBars party={party} />
     </div>
   );
 }
 
-function Combat({ c, hitKey, cds }: { c: CombatBlock; hitKey: number; cds: [string, number][] }) {
+function Combat({ c, hitKey, cds, arena }: { c: CombatBlock; hitKey: number; cds: [string, number][]; arena?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const first = useRef(true);
   useEffect(() => {
@@ -426,9 +428,9 @@ function Combat({ c, hitKey, cds }: { c: CombatBlock; hitKey: number; cds: [stri
       </p>
 
       <WoundTrack wounds={c.wounds} />
-      <SceneZones scene={c.scene} chase={c.chase} />
+      {!arena && <SceneZones scene={c.scene} chase={c.chase} />}
 
-      <ul className="enemies">
+      {!arena && <ul className="enemies">
         {c.enemies.map((e, i) => (
           <li key={`${e.name}-${i}`} className="enemy">
             <div className="enemy__top">
@@ -452,7 +454,7 @@ function Combat({ c, hitKey, cds }: { c: CombatBlock; hitKey: number; cds: [stri
             {e.conditions.length > 0 && <CondChips conds={e.conditions} />}
           </li>
         ))}
-      </ul>
+      </ul>}
 
       {c.order.length > 0 && (
         <>

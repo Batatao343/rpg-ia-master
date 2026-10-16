@@ -26,7 +26,15 @@ export function SceneZones({ scene, chase }: { scene: ConflictSceneView; chase?:
           </article>
         );
       })}
-      {chase?.track && (
+      <ChaseTrack chase={chase} />
+    </section>
+  );
+}
+
+export function ChaseTrack({ chase }: { chase?: ChaseView }) {
+  if (!chase?.track) return null;
+  return (
+      
         <div className="chase-track" role="group" aria-label={`Perseguição: ${CHASE_LABEL[chase.track] ?? chase.track}`}>
           <p>Trilha de perseguição</p>
           <div>
@@ -35,7 +43,6 @@ export function SceneZones({ scene, chase }: { scene: ConflictSceneView; chase?:
             ))}
           </div>
         </div>
-      )}
-    </section>
+      
   );
 }

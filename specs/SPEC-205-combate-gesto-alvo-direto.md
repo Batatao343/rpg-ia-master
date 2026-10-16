@@ -1,6 +1,6 @@
 # SPEC-205 — Combate por gesto: carta, mira e alvo direto
 
-> **Status:** `draft`
+> **Status:** `in-progress` (implementação e testes concluídos 2026-10-16; revisão Sol aprovada; falta a autoria das jornadas F novas — ver `handoffs/SPEC-205-eval-authoring.md`)
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
 > **Depende de:** SPEC-199 `done` (resultado fora da prosa), SPEC-203 `done` (identidade estável de elenco), SPEC-204 `done` (aba Combate), SPEC-232 `done` (efeitos reais de Carta/Reação + alvo default de carta) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-208, SPEC-209, SPEC-212, SPEC-216 (ordem final 2026-10-15)
@@ -124,20 +124,20 @@ Registrar handoff `EVAL_AUTHORING_REQUIRED` (jornadas novas) sem tocar `evals/`.
 
 ## 5. Critérios de aceite
 
-- [ ] Carta com alvo executa em 2 gestos (carta, alvo); sem alvo e ataque básico em 1; Esc/click-out cancelam sem request.
-- [ ] Ataque básico disponível no jogo real (não só na simulação), sem texto livre.
-- [ ] `valid_targets`/`invalid_reason` por carta e `basic_actions` calculados em Python; testes cobrem todos os motivos do enum.
-- [ ] Servidor rejeita alvo inválido sem consumir recurso; todo alvo anunciado é aceito pelo motor.
-- [ ] Reprodução H resolvida (alvo de suporte = jogador) e travada por teste.
-- [ ] Zero estado otimista de HP/Entropia/dano/frequência (teste de UI).
-- [ ] Resultado e XP exibidos a partir de eventos do servidor (SPEC-199); degradação sem o evento testada.
-- [ ] Teclado completo + `aria-live` + foco visível; Axe sem serious/critical em 390 e 1440.
-- [ ] Mão/alvo nunca encobertos por log/toast em 1440×900 e split 50/50 (R19).
-- [ ] Ids de alvo = `participant_id` do manifesto SPEC-203; XP lido de `turn_outcome` (SPEC-199), nunca da prosa.
-- [ ] `action_id` reutilizado no retry gera um único turno; duplo clique não duplica.
-- [ ] Servidor antigo/cliente antigo: campos opcionais, sem quebra.
-- [ ] `uv run pytest` verde; `npm run build` verde; Playwright do combate verde; sem edição em `evals/`.
-- [ ] Revisão Sol independente registrada.
+- [x] Carta com alvo executa em 2 gestos (carta, alvo); sem alvo e ataque básico em 1; Esc/click-out cancelam sem request.
+- [x] Ataque básico disponível no jogo real (não só na simulação), sem texto livre.
+- [x] `valid_targets`/`invalid_reason` por carta e `basic_actions` calculados em Python; testes cobrem todos os motivos do enum.
+- [x] Servidor rejeita alvo inválido sem consumir recurso; todo alvo anunciado é aceito pelo motor.
+- [x] Reprodução H resolvida (alvo de suporte = jogador) e travada por teste.
+- [x] Zero estado otimista de HP/Entropia/dano/frequência (teste de UI).
+- [x] Resultado e XP exibidos a partir de eventos do servidor (SPEC-199); degradação sem o evento testada.
+- [x] Teclado completo + `aria-live` + foco visível; Axe sem serious/critical em 390 e 1440.
+- [x] Mão/alvo nunca encobertos por log/toast em 1440×900 e split 50/50 (R19).
+- [x] Ids de alvo = `participant_id` do manifesto SPEC-203; XP lido de `turn_outcome` (SPEC-199), nunca da prosa.
+- [x] `action_id` reutilizado no retry gera um único turno; duplo clique não duplica.
+- [x] Servidor antigo/cliente antigo: campos opcionais, sem quebra.
+- [x] `uv run pytest` verde; `npm run build` verde; Playwright do combate verde; sem edição em `evals/`.
+- [x] Revisão Sol independente registrada (`handoffs/SPEC-205-SOL-independent-review.md`, APPROVED_WITH_FIXES).
 
 ## 6. Smoke
 
@@ -165,3 +165,12 @@ Offline (MockLLM, padrão): campanha de combate determinística, jogar uma carta
 - Resultado do teste de reprodução H (falhou/passou antes da correção) anexado.
 - Captura/JSON de uma jogada real offline mostrando HP só após resposta.
 - Handoff de evals (jornadas novas) e parecer de revisão Sol em `handoffs/`.
+
+
+## Registro de execução (2026-10-16)
+
+- Defaults de decisão usados: P1 sim, P2 sim, P3 nenhuma confirmação, P4 herói + aliados em cena.
+- Desvios: `out_of_zone` reservado (nunca emitido; a cena não impõe alcance); `cooldown` = silêncio; degradação sem `valid_targets` executa direto no 1º inimigo vivo (mantém F08 verde); 409 `invalid_target` só por motivo relativo ao alvo (economia segue com o motor, que já não cobra com alvo inválido — SPEC-232).
+- R12/H: o teste de reprodução passou já na entrada (SPEC-232); mantido como regressão.
+- Pendente: revisão Sol independente (`REVIEW_REQUIRED`) e jornadas F novas (EVAL_AUTHORING_REQUIRED). Evidência: `docs/spec205/README.md`.
+- Revisão Sol (16/10): APPROVED_WITH_FIXES — corrigidos no WT: refresh do estado após 409 `invalid_target` (o erro virava `Error` simples e perdia o `code`) e `scene_allies == []` recalculado como o motor.
