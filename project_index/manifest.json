@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "ce83fb244c9aa9f3536e7205edf2263683c5f085",
+  "commit_sha": "1256f4d9256f6074f6f2724810c602c62ffe761f",
   "edge_counts": {
-    "calls": 13070,
-    "contains": 579,
-    "defines": 7611,
-    "imports": 1238,
-    "likely_test_for": 774,
+    "calls": 13081,
+    "contains": 582,
+    "defines": 7650,
+    "imports": 1242,
+    "likely_test_for": 777,
     "route_to": 59
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:8a9b23010b4776ccbe10493528f38e039d7326ce219152d013d0ff9f5d7cf8b7",
+  "graph_hash": "sha256:6549baf38b1e399c182d2595c6976ded1ecfba3b58ace7b9630bcaee90587375",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -84,6 +84,7 @@
     "docs/descricao_projeto/video/src/theme.ts",
     "docs/descricao_projeto/video/src/types.ts",
     "docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
+    "docs/spec221/evidence/local_smoke.py",
     "encounter_budget.py",
     "evals/__init__.py",
     "evals/__main__.py",
@@ -254,6 +255,7 @@
     "services/audit_trace.py",
     "services/auth_sessions.py",
     "services/bestiary_knowledge.py",
+    "services/body_limit.py",
     "services/cards.py",
     "services/chase.py",
     "services/checkpoints.py",
@@ -611,6 +613,7 @@
     "tests/test_stripe_checkout_concurrency_local.py",
     "tests/test_stripe_checkout_local.py",
     "tests/test_structured_output_guards.py",
+    "tests/test_surfaces_221.py",
     "tests/test_tactical_archetypes_runtime.py",
     "tests/test_telemetry_redaction.py",
     "tests/test_tiers_5_plus_content.py",
@@ -645,6 +648,7 @@
     "web/e2e/pending-discard.spec.ts",
     "web/e2e/visual-surfaces.spec.ts",
     "web/e2e/voice-input.spec.ts",
+    "web/e2e/workspace-shell.spec.ts",
     "web/package.json",
     "web/playwright.config.ts",
     "web/src/api.ts",
@@ -702,6 +706,17 @@
     "web/src/voice/recorder.ts",
     "web/src/voice/useVoiceInput.ts",
     "web/src/voice/wav.ts",
+    "web/src/workspace/chatSessionStore.ts",
+    "web/src/workspace/ChatSurface.tsx",
+    "web/src/workspace/ContextSurface.tsx",
+    "web/src/workspace/RovingTablist.tsx",
+    "web/src/workspace/tabs/BestiarioTab.tsx",
+    "web/src/workspace/tabs/CombateTab.tsx",
+    "web/src/workspace/tabs/PersonagemTab.tsx",
+    "web/src/workspace/useModalFocus.ts",
+    "web/src/workspace/Workspace.tsx",
+    "web/src/workspace/workspaceModel.ts",
+    "web/src/workspace/workspaceStorage.ts",
     "web/tests/artwork.fixture.tsx",
     "web/tests/vite.fixture.config.ts",
     "web/tests/voice-hook.fixture.tsx",
@@ -721,14 +736,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 654,
+    "class": 656,
     "endpoint": 59,
-    "file": 667,
-    "function": 2393,
-    "method": 641,
-    "module": 579,
-    "test": 3923
+    "file": 682,
+    "function": 2399,
+    "method": 650,
+    "module": 582,
+    "test": 3945
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:5a60b7db7c3ebc78d1148c4101d6188085459d3364f5f22ebcc148efa98f2133"
+  "source_tree_hash": "sha256:9efe2f823681adbefd5235124536997f09403c2c1a1c7434d9e0364b9cdf21a7"
 }
