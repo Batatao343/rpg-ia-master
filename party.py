@@ -296,7 +296,10 @@ def recruitment_decision(state: Dict, npc_name: str) -> RecruitmentDecision:
     display_name = str(npc.get("name") or npc_key)
     rel = _relationship(npc)
     from services.npc_layers import trait_dc_modifier
-    required = max(3, min(10, RECRUIT_MIN_REL + trait_dc_modifier(npc, "persuasao")))
+    # SPEC-232 R2: Carta de Virtude `bonus_social_por_estagio` facilita persuadir.
+    import combat_mechanics as cm
+    social = max(0, int(cm.passive_modifiers(state.get("player") or {}).get("social", 0) or 0))
+    required = max(3, min(10, RECRUIT_MIN_REL + trait_dc_modifier(npc, "persuasao") - social))
 
     def result(ok: bool, code: str, hint: str) -> RecruitmentDecision:
         return {"ok": ok, "code": code, "relationship": rel,

@@ -55,10 +55,14 @@ def _spend_budget(pos: dict, cost: str) -> Optional[str]:
 
 
 def reset_turn_budget(scene: dict, participant_id: str) -> None:
-    """Restaura Pré-Ação/Ação/Pós-Ação no começo do turno do participante."""
+    """Restaura Pré-Ação/Ação/Pós-Ação no começo do turno do participante.
+
+    SPEC-232 R6: a Guarda dura até o início do próximo turno de quem guardou —
+    para seguir protegido é preciso Guardar de novo (a Ação é gasta outra vez)."""
     pos = _pos(scene, participant_id)
     if pos is not None:
         pos["budget"] = dict(TURN_BUDGET)
+        pos["guarding"] = False
 
 
 def _tactical_state(scene: dict) -> dict:

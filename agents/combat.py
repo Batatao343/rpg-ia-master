@@ -17,6 +17,7 @@ import random
 import re
 from typing import Dict, List, NamedTuple, Optional
 
+import combat_mechanics as cm
 import gamedata
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
@@ -29,7 +30,7 @@ from services import conflict_scene as cs
 from services import conflict_summary as summ
 from services import death_flow
 from services import encounter_preparation as prep
-from services.conflict_turn import TurnDeclaration, TurnStep
+from services.conflict_turn import _SUPPORT_EFFECTS, TurnDeclaration, TurnStep
 from services.context_builder import build_context_pack
 from agents.bestiary import generate_new_enemy
 from pydantic import BaseModel, ConfigDict, Field
@@ -246,7 +247,8 @@ def _apply_encounter_budget(enemies: List[Dict], state: Dict, flavor: str) -> tu
 
 
 def _early_game_reaction_initiator(state: Dict, player: Dict,
-                                   initiator: Optional[str]) -> Optional[str]:
+                                   initiator: Optional[str], *,
+                                   combat_round: Optional[int] = None) -> Optional[str]:
     """Garante uma primeira decisão a herói novo e saudável fora de apex.
 
     [BALANCEAR] A baseline real encontrou mortes de nível 1–2 em emboscadas antes
@@ -257,14 +259,31 @@ def _early_game_reaction_initiator(state: Dict, player: Dict,
     level = int(player.get("level", 1) or 1)
     vitality = int(player.get("vitalidade", player.get("hp", 0)) or 0)
     maximum = int(player.get("max_vitalidade", player.get("max_hp", 0)) or 0)
-    combat_round = int((state.get("combat") or {}).get("round", 0) or 0)
+    # SPEC-232 R9: `combat_round` é a rodada CORRENTE (pós-incremento, 1 = primeira).
+    # Antes lia o estado pré-incremento com `<= 1` e valia por duas rodadas.
+    if combat_round is None:
+        combat_round = int((state.get("combat") or {}).get("round", 0) or 0)
     world = state.get("world") or {}
     loc = gamedata.get_location(world.get("current_location_id", "")) or {}
     tags = {str(tag).casefold() for tag in (loc.get("tags") or [])}
     if (level <= 2 and maximum > 0 and vitality >= maximum
-            and combat_round <= 1 and "apex" not in tags):
+            and combat_round == 1 and "apex" not in tags):
         return "heroes"
     return initiator
+
+
+_PREPARED_CATEGORIES = {"elite", "chefe", "nomeado", "boss"}
+
+
+def _wants_prepared_scene(player: Dict, enemies: List[Dict]) -> bool:
+    """D-A: Carga ≥ leve OU inimigo de categoria ≥ Elite."""
+    try:
+        if cm.abyss_tier(player) != "nenhum":
+            return True
+    except Exception:
+        pass
+    return any(str(e.get("categoria") or e.get("type") or "").strip().lower()
+               in _PREPARED_CATEGORIES for e in enemies or [])
 
 
 def _prepare_scene(state: Dict, enemies: List[Dict], player: Dict, allies: List[Dict]) -> dict:
@@ -281,9 +300,19 @@ def _prepare_scene(state: Dict, enemies: List[Dict], player: Dict, allies: List[
            "encounter_level": encounter_level,
            "narrative": build_context_pack(state, query=str(loc),
                                            purpose="combat_narration", token_budget=600).world_state_block}
-    # Mecânica é Python: geometria mínima e válida não precisa de um segundo
-    # invoke FAST no primeiro turno. A LLM continua identificando e narrando.
-    scene = prep.fallback_safe_scene(ctx)
+    # SPEC-232 R10 (D-A, default do dono): a preparação por LLM (objetos, eventos
+    # do Abismo, reforços, condições de fim) só roda quando importa — Carga do
+    # Abismo ≥ patamar leve ou algum inimigo Elite/Chefe/Nomeado. Custo: 1 invoke
+    # FAST nesses encontros; nos demais, geometria mínima em Python (sem invoke).
+    if _wants_prepared_scene(player, enemies):
+        try:
+            llm = get_llm(temperature=0.4, tier=ModelTier.FAST)
+            scene = prep.prepare_encounter(ctx, llm)   # guard + fallback internos
+        except Exception as e:
+            print(f"⚠️ [COMBAT PREP] {e}")
+            scene = prep.fallback_safe_scene(ctx)
+    else:
+        scene = prep.fallback_safe_scene(ctx)
     if not scene.get("zones"):
         scene["zones"] = [{"id": "z0", "name": loc, "connections": []}]
     scene["positions"] = {}
@@ -330,12 +359,22 @@ def _usable_items_catalog(player: Dict) -> str:
 def _default_card_target(card: Dict, enemy_id: Optional[str]) -> str:
     """Cartas benéficas sem alvo explícito afetam o próprio jogador. Evita que
     chips como Cura/Proteção herdem mecanicamente o primeiro inimigo."""
-    friendly = {
-        "cura", "estabilizar", "protecao", "reposicionar", "esconder",
-        "purga_condicao", "vantagem", "buff_defesa", "buff_acerto", "buff_dano",
-    }
     kind = str((card.get("efeito") or {}).get("kind") or "")
-    return _PLAYER_ID if kind in friendly else (enemy_id or _PLAYER_ID)
+    # SPEC-232 R9: fonte única = efeitos de suporte do motor (inclui a Purga
+    # `reduzir_carga_aliado`, antes ausente e gasta num inimigo).
+    return _PLAYER_ID if kind in _SUPPORT_EFFECTS else (enemy_id or _PLAYER_ID)
+
+
+def _card_target_for(card: Dict, declared: Optional[str], *, active_ids: List[str],
+                     friendly_ids: List[str]) -> str:
+    """SPEC-232 R5: alvo de Carta validado na borda do nó. Ofensiva só mira um
+    inimigo ATIVO (nunca o jogador nem um morto); suporte só mira o próprio lado.
+    Inválido → alvo default da Carta."""
+    kind = str((card.get("efeito") or {}).get("kind") or "")
+    allowed = friendly_ids if kind in _SUPPORT_EFFECTS else active_ids
+    if declared in set(allowed):
+        return str(declared)
+    return _default_card_target(card, active_ids[0] if active_ids else None)
 
 
 def _parse_turn_declaration(player: Dict, enemies: List[Dict], intent: str,
@@ -792,7 +831,8 @@ def combat_node(state: GameState):
         enemy["_env_attack_mod"] = weather_attack + enemy_light_attack
     surprise = world.get("encounter_surprise")
     initiator = "heroes" if surprise == "player" else ("enemy" if surprise == "enemy" else None)
-    initiator = _early_game_reaction_initiator(state, player, initiator)
+    initiator = _early_game_reaction_initiator(
+        state, player, initiator, combat_round=int(combat_meta.get("round", 1) or 1))
     if "encounter_surprise" in world:
         world_out = dict(world)
         world_out.pop("encounter_surprise", None)
@@ -847,10 +887,10 @@ def combat_node(state: GameState):
         elif decl.acao and decl.acao.kind == "card":
             from services import cards
             declared_card = cards.get_card(decl.acao.card_id or "") or {}
-            expected = _default_card_target(declared_card, active[0]["id"])
-            valid_ids = set(actors_by_id)
-            if decl.acao.target_id not in valid_ids:
-                decl.acao.target_id = expected
+            decl.acao.target_id = _card_target_for(
+                declared_card, decl.acao.target_id,
+                active_ids=[e["id"] for e in active],
+                friendly_ids=[_PLAYER_ID] + [aid for aid in ally_ids if aid])
         round_state = {
             "player": player,
             "_player_reaction_card_id": state.get("player_reaction_card_id"),
@@ -1156,6 +1196,7 @@ def _apply_weather_hazard(player: Dict, world: Dict, *, rng=None) -> List[str]:
         damage_type="arcano",
         ignore_resistance=True,
         defensavel=False,
+        bypass_armor=True,
         directed_region=None,
         rng=rng,
     )

@@ -264,18 +264,90 @@ def validate_preparation(scene: dict) -> dict:
 # ==========================================================================
 # Etapa 5 — geração pela LLM (guard) + cena simplificada de segurança (R9)
 # ==========================================================================
-class PreparedScene(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+# SPEC-232 R10 (smoke real 2026-10-16): o schema antigo (dicts abertos +
+# posições/inimigos/NPCs/reforços) fazia o provider gerar ~1.8k tokens de
+# prosa fora do contrato (DeepSeek estourava o timeout; a cena voltava sem
+# `base_narrativa` e caía no fallback). Agora o schema é ENXUTO e TIPADO — só o
+# que o motor consome (zonas, objetos com interação do catálogo, eventos do
+# Abismo, objetivos). Sem limites duros: tamanho/quantidade truncados em Python
+# (`_trim_prepared`). Posições, inimigos e NPCs vêm do Python, nunca da LLM;
+# reforços/condições de fim não têm consumidor no loop e saíram do pedido.
+class PreparedEffectParams(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    target: Optional[str] = Field(None, description="id de um participante listado (só p/ damage/apply_condition/reposition)")
+    condition: Optional[str] = Field(None, description="nome da condição (apply_condition)")
 
-    zones: List[Dict] = Field(default_factory=list)
-    positions: Dict[str, Dict] = Field(default_factory=dict)
-    enemies: List[Dict] = Field(default_factory=list)
-    npcs: List[Dict] = Field(default_factory=list)
-    objects: List[Dict] = Field(default_factory=list)
-    reinforcement_triggers: List[Dict] = Field(default_factory=list)
-    objectives: List[str] = Field(default_factory=list)
-    ending_conditions: List[str] = Field(default_factory=list)
-    abyss_events: List[Dict] = Field(default_factory=list)
+
+class PreparedEffect(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    kind: str = Field(description="um kind do catálogo fechado")
+    potency: str = Field("moderado", description="fraco|moderado|forte|devastador")
+    params: PreparedEffectParams = Field(default_factory=PreparedEffectParams)
+
+
+class PreparedInteraction(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    label: str = Field(description="verbo curto, ex.: derrubar")
+    effect: PreparedEffect
+
+
+class PreparedObject(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str
+    name: str = ""
+    base_narrativa: str = Field("", description="onde o objeto aparece na cena (curto)")
+    interactions: List[PreparedInteraction] = Field(default_factory=list)
+
+
+class PreparedZone(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str
+    name: str = ""
+    connections: List[str] = Field(default_factory=list)
+
+
+class PreparedAbyssEvent(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str
+    base_na_cena: str = Field(description="id de um objeto da cena")
+    effect: PreparedEffect
+
+
+class PreparedScene(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    zones: List[PreparedZone] = Field(default_factory=list, description="1 a 3 zonas")
+    objects: List[PreparedObject] = Field(default_factory=list, description="0 a 2 objetos")
+    abyss_events: List[PreparedAbyssEvent] = Field(default_factory=list, description="0 ou 1 evento")
+    objectives: List[str] = Field(default_factory=list, description="até 2, curtos")
+
+
+_PREP_TIMEOUT_DEFAULT = 12.0
+_MAX_ZONES, _MAX_OBJECTS, _MAX_EVENTS, _MAX_TEXT = 3, 2, 1, 120
+
+
+def _trim_prepared(scene: dict) -> dict:
+    """Truncagem determinística (padrão do repo: limite em Python, não no schema)."""
+    def cut(text) -> str:
+        return str(text or "").strip()[:_MAX_TEXT]
+    scene["zones"] = [
+        {**z, "id": cut(z.get("id")), "name": cut(z.get("name")),
+         "connections": [cut(c) for c in (z.get("connections") or [])][:_MAX_ZONES]}
+        for z in (scene.get("zones") or [])[:_MAX_ZONES] if str(z.get("id") or "").strip()]
+    scene["objects"] = [
+        {**o, "name": cut(o.get("name")) or cut(o.get("id")),
+         "base_narrativa": cut(o.get("base_narrativa")),
+         "interactions": list(o.get("interactions") or [])[:2]}
+        for o in (scene.get("objects") or [])[:_MAX_OBJECTS]]
+    events = []
+    for ev in (scene.get("abyss_events") or [])[:_MAX_EVENTS]:
+        # gatilho é Python: só "sempre" (flags livres de cena não existem aqui).
+        events.append({**ev, "base_na_cena": cut(ev.get("base_na_cena")), "gatilho": "sempre"})
+    scene["abyss_events"] = events
+    scene["objectives"] = [cut(o) for o in (scene.get("objectives") or [])[:2] if cut(o)]
+    scene.setdefault("ending_conditions", [])
+    scene.setdefault("reinforcement_triggers", [])
+    return scene
 
 
 def fallback_safe_scene(context: Optional[dict] = None) -> dict:
@@ -302,9 +374,11 @@ def prepare_encounter(narrative_context: dict, llm) -> dict:
     (R9). GUARD obrigatório. O fallback ENTRE providers é do `RoutedLLM`/`ROUTES`
     (llm_setup) — aqui só se garante que, esgotada a cadeia, nada trava."""
     try:
-        result = llm.with_structured_output(PreparedScene).invoke(_prep_prompt(narrative_context))
+        result = _invoke_with_deadline(
+            lambda: llm.with_structured_output(PreparedScene).invoke(
+                _prep_prompt(narrative_context)))
         if isinstance(result, PreparedScene):
-            scene = result.model_dump()
+            scene = _trim_prepared(_drop_none_params(result.model_dump()))
             # IDs mecânicos já conhecidos entram no conjunto de alvos válidos.
             scene["enemies"] = list(narrative_context.get("enemies") or scene.get("enemies") or [])
             scene["npcs"] = list(narrative_context.get("npcs") or scene.get("npcs") or [])
@@ -318,14 +392,59 @@ def prepare_encounter(narrative_context: dict, llm) -> dict:
     return fallback_safe_scene(narrative_context)
 
 
+def _drop_none_params(scene: dict) -> dict:
+    def clean(holder: dict) -> None:
+        effect = holder.get("effect")
+        if isinstance(effect, dict) and isinstance(effect.get("params"), dict):
+            effect["params"] = {k: v for k, v in effect["params"].items() if v is not None}
+    for obj in scene.get("objects") or []:
+        for it in obj.get("interactions") or []:
+            clean(it)
+    for ev in scene.get("abyss_events") or []:
+        clean(ev)
+    return scene
+
+
+def _invoke_with_deadline(call):
+    """SPEC-232 R10: teto curto dedicado (`RPG_PREP_TIMEOUT_SECONDS`, default 12 s)
+    para a preparação não travar o turno. Estourou → None (o chamador cai na cena
+    de segurança); a thread órfã termina sozinha e o resultado é descartado."""
+    import concurrent.futures
+    import contextvars
+    try:
+        timeout = float(os.getenv("RPG_PREP_TIMEOUT_SECONDS", _PREP_TIMEOUT_DEFAULT))
+    except ValueError:
+        timeout = _PREP_TIMEOUT_DEFAULT
+    ctx = contextvars.copy_context()
+    pool = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+    future = pool.submit(ctx.run, call)
+    try:
+        return future.result(timeout=timeout)
+    except concurrent.futures.TimeoutError:
+        print(f"⚠️ [COMBAT PREP] preparação excedeu {timeout:.0f}s — cena de segurança")
+        return None
+    finally:
+        pool.shutdown(wait=False, cancel_futures=True)
+
+
 def _prep_prompt(ctx: dict) -> str:
+    """Prompt COMPACTO (SPEC-232 R10): só nomes/ids — nunca o dict cru do contexto
+    (fichas inteiras de inimigo estouravam tokens e latência)."""
+    enemies = [e for e in (ctx.get("enemies") or []) if isinstance(e, dict)]
+    ids = ["player"] + [str(e.get("id") or e.get("name")) for e in enemies
+                        if e.get("id") or e.get("name")]
+    foes = ", ".join(f"{e.get('name', e.get('id'))} ({e.get('id', '?')})" for e in enemies[:6])
+    narrative = " ".join(str(ctx.get("narrative") or "").split())[:400]
     return (
-        "Transforme a cena narrativa a seguir numa cena de conflito JOGÁVEL de "
-        "Valoria: zonas + ligações, posições iniciais, Engajamentos, inimigos do "
-        "bestiário regional, NPCs, objetos interativos (só coerentes com a cena já "
-        "narrada) e efeitos SÓ do catálogo fechado. Use categorias de potência "
-        "(fraco/moderado/forte/devastador), nunca números.\n"
-        f"Contexto: {ctx}."
+        "Prepare a cena de conflito JOGÁVEL de Valoria em JSON curto (sem prosa).\n"
+        f"Local: {ctx.get('location', 'Campo')}. Inimigos: {foes or 'nenhum'}.\n"
+        f"Cena: {narrative or '—'}\n"
+        "Regras: 1-3 zonas (id curto, name, connections por id); 0-2 objetos "
+        "interativos coerentes com o local, cada um com base_narrativa curta e 1 "
+        "interação; 0-1 evento do Abismo cujo base_na_cena é o id de um objeto.\n"
+        f"effect.kind SÓ de: {', '.join(sorted(cs.EFFECT_KINDS))}. "
+        "potency SÓ de: fraco, moderado, forte, devastador (nunca números).\n"
+        f"params.target (obrigatório em damage/apply_condition/reposition) SÓ de: {', '.join(ids)}."
     )
 
 
@@ -355,7 +474,7 @@ def build_npc_combat_sheet(npc: dict) -> dict:
         "max_vitalidade": gamedata.vitalidade_para_corpo(corpo),
         "ferimento_espacos": gamedata.espacos_ferimento_para_corpo(corpo),
         "ferimentos": {"leve": [], "grave": [], "critico": []},
-        "esquiva": compute_esquiva({"virtudes": virtudes}),
+        "esquiva": compute_esquiva({"virtudes": virtudes}, include_modifiers=False),
         "categoria": npc.get("categoria", "padrao"),
         "active_conditions": [],
         "tactical_archetype": tactical_archetype,

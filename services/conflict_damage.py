@@ -207,8 +207,13 @@ def resolve_damage_and_wounds(target: dict, *, damage_base: int,
                               ignore_resistance: bool = False,
                               use_shield: bool = False,
                               defensavel: bool = True,
+                              bypass_armor: bool = False,
                               rng=None) -> dict:
-    """Resolve o dano na ORDEM FIXA (R8). Retorna a matemática completa (R9)."""
+    """Resolve o dano na ORDEM FIXA (R8). Retorna a matemática completa (R9).
+
+    SPEC-232 R7: `bypass_armor=True` (DoT, clima, auto-dano) ignora armadura,
+    escudo E Proteção de condição — Integridade fica intacta. `defensavel`
+    segue governando só o escudo (conflito-05 R6)."""
     log: List[str] = []
     secondary: List[dict] = []
     dtype = str(damage_type or "").lower()
@@ -234,11 +239,19 @@ def resolve_damage_and_wounds(target: dict, *, damage_base: int,
 
     # (3) Proteção + (4) Integridade (armadura/escudo compatível, não Comprometida)
     protegido = False
-    defense = _active_defense(target, use_shield)
+    defense = None if bypass_armor else _active_defense(target, use_shield)
+    # SPEC-232 R1: stat `protection` (Carta protecao, Reação, condição nomeada)
+    # soma à Proteção da armadura; positivo também absorve sem armadura.
+    cond_prot = 0
+    if not bypass_armor:
+        from combat_mechanics import combat_modifiers
+        cond_prot = int(combat_modifiers(target).get("protection", 0) or 0)
+    armor_applied = False
     if defense and not defense.get("comprometida"):
         compativel = is_fisico or dtype in (defense.get("resist_tipos") or [])
         if compativel and (defensavel or not use_shield):
-            protecao = int(defense.get("protecao", 0))
+            armor_applied = True
+            protecao = max(0, int(defense.get("protecao", 0)) + cond_prot)
             if dtype == "perfurante":
                 protecao = max(0, protecao - 1)   # R2
             absorbed = min(dano, protecao)
@@ -265,6 +278,12 @@ def resolve_damage_and_wounds(target: dict, *, damage_base: int,
             if defense["integridade_atual"] <= 0 and not defense.get("comprometida"):
                 defense["comprometida"] = True
                 log.append("Armadura COMPROMETIDA (0 Integridade)")
+
+    if not armor_applied and cond_prot > 0 and dano > 0:
+        absorbed = min(dano, cond_prot)
+        dano -= absorbed
+        protegido = True
+        log.append(f"Proteção (efeito) -{absorbed} -> {dano}")
 
     atravessou = dano > 0
 

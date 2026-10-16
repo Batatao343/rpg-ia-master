@@ -396,7 +396,15 @@ def sync_vitality(actor: dict, *, heal_to_full: bool = False) -> dict:
     vitality_bonus = max(0, int(configured_bonus or 0))
     if actor.get("class_name") in CLASSES:
         actor["vitalidade_base_bonus"] = vitality_bonus
-    novo_max = max(1, vitalidade_para_corpo(corpo) + vitality_bonus - penalty)
+    # SPEC-232 R2: Cartas passiva/virtude `bonus_vitalidade_por_estagio`.
+    card_bonus = 0
+    if actor.get("known_cards") or actor.get("virtue_cards"):
+        try:
+            from combat_mechanics import passive_modifiers
+            card_bonus = max(0, int(passive_modifiers(actor).get("vitality", 0) or 0))
+        except Exception:
+            card_bonus = 0
+    novo_max = max(1, vitalidade_para_corpo(corpo) + vitality_bonus + card_bonus - penalty)
     antigo_max = int(actor.get("max_vitalidade", 0) or 0)
     atual = int(actor.get("vitalidade", novo_max) or 0)
     actor["vitalidade_max_penalty"] = penalty

@@ -18,6 +18,7 @@ determinístico e ZERO LLM em resolução:
 (`enemy_declaration`) decide a `TurnDeclaration` por perfil tático (08), sem LLM.
 O jogador chega com a `TurnDeclaration` já montada (parse CLASSIFY no nó).
 """
+import copy
 import random
 from typing import Dict, List, Optional
 
@@ -84,7 +85,7 @@ def ensure_combat_sheet(actor: dict, *, is_player: bool = False,
     for c in ("leve", "grave", "critico"):
         fer.setdefault(c, [])
     if actor.get("esquiva") is None:
-        actor["esquiva"] = compute_esquiva(actor)
+        actor["esquiva"] = compute_esquiva(actor, include_modifiers=False)
     actor.setdefault("active_conditions", [])
     actor.setdefault("conscious", True)
     actor.setdefault("status", "ativo")
@@ -167,19 +168,46 @@ def _apply_dot_v4(target: dict, dot: int, dtype: str, out: dict, rng=None) -> No
         damage_type=dtype if dtype in known_types else "cortante",
         ignore_resistance=True,
         defensavel=False,
+        bypass_armor=True,
         directed_region=None,
         rng=rng,
     )
     out["logs"] += result["log"]
 
 
+def _is_stat_only(condition: dict) -> bool:
+    """Buff/debuff puro ({stat, delta} sem DoT nem controle)."""
+    return (bool(condition.get("stat")) and not int(condition.get("dot", 0) or 0)
+            and not condition.get("control"))
+
+
+def _expire_stat_conditions(actor: dict, present_at_start: list, out: dict) -> None:
+    """SPEC-232 R1: buff/debuff tipado decresce ao FIM do turno do portador, e só
+    se já estava ativo quando o turno começou. Assim `duracao: 1` aplicada no
+    próprio turno vale para o próximo ataque/defesa, e aplicada antes do turno
+    vale exatamente para este turno."""
+    survivors: List[dict] = []
+    for c in actor.get("active_conditions", []) or []:
+        if _is_stat_only(c) and any(c is p for p in present_at_start):
+            c["duration"] = int(c.get("duration", 0) or 0) - 1
+            if c["duration"] <= 0:
+                out["logs"].append(f"{_name(actor)}: {c.get('name', 'condição')} terminou.")
+                continue
+        survivors.append(c)
+    actor["active_conditions"] = survivors
+
+
 def _tick_conditions_v4(actor: dict, out: dict, rng=None) -> bool:
     """Versão v4 de `tick_conditions`: aplica DoT em Vitalidade (não em hp), decrementa
     duração e remove condições expiradas. Substitui `cm.tick_conditions` (que ticava
-    hp do motor antigo) no loop novo."""
+    hp do motor antigo) no loop novo. Buff/debuff puro expira no fim do turno
+    (`_expire_stat_conditions`), não aqui."""
     survivors: List[dict] = []
     damage_applied = False
     for c in actor.get("active_conditions", []) or []:
+        if _is_stat_only(c):
+            survivors.append(c)
+            continue
         dot = int(c.get("dot", 0) or 0)
         if dot > 0:
             damage_applied = True
@@ -505,6 +533,10 @@ def _declaration_leaves_engagement(decl: "ct.TurnDeclaration") -> bool:
     for slot in (decl.pre_acao, decl.acao, decl.pos_acao):
         if slot is None:
             continue
+        if slot.kind == "maneuver" and str(slot.maneuver or "").lower() == "desengajar":
+            # SPEC-232 R8: Desengajar ANTES de afastar encerra o Engajamento com
+            # segurança (conflito-06 R7) — não há AoO no resto da declaração.
+            return False
         if slot.kind == "move" and str(slot.direction or "").lower() in ("afastar", "away", "+"):
             return True
         if slot.kind == "tactic" and str(slot.maneuver or "").lower() == "flee":
@@ -534,12 +566,13 @@ def _resolve_opportunity_attacks(scene: dict, leaving_id: str, actors_by_id: Dic
 
 def _open_reaction_window(scene: dict, attacker_id: str, target_id: str,
                           actors_by_id: Dict[str, dict], sides: Dict[str, List[str]],
-                          out: dict, state: Optional[dict] = None) -> None:
+                          out: dict, state: Optional[dict] = None, *,
+                          rng=None, step=None) -> None:
     """R1/R3 (06): abre a janela sobre o ataque declarado e deixa reatores do lado
     oposto oferecerem UMA reação COMUM (Carta de reação) — reação defensiva de
     Guarda entra na cena antes de o ataque resolver. Player só reage pela UI
     (conflito-16); aqui os reatores são inimigos com Carta de reação embutida."""
-    declared = {"kind": "attack", "actor": attacker_id, "targets": [target_id]}
+    declared = _declared_attack(scene, attacker_id, target_id, actors_by_id, sides, step)
     chain = rx.open_reaction_window(declared)
     reactors = _opposing_ids(attacker_id, sides)
     ordered = rx.reaction_order(reactors, declared, stats_by_id=actors_by_id,
@@ -565,15 +598,117 @@ def _open_reaction_window(scene: dict, attacker_id: str, target_id: str,
             continue
         if not rx.gatilho_matches(card, declared, rid):
             continue
+        if (str((card.get("efeito") or {}).get("kind") or "") in ("contra_ataque", "dano")
+                and not _alive(actors_by_id.get(attacker_id))):
+            # Revisão Sol (SPEC-232 R3): revide sem atacante vivo na cena não
+            # cobra Entropia nem uso — não há o que resolver.
+            continue
+        snapshot = (reactor.get("entropy"),
+                    copy.deepcopy(reactor.get("card_usage")),
+                    copy.deepcopy(reactor.get("enemy_card_usage")))
         if rid == player_id:
             spent = cards.use_card(state or {"player": reactor}, card["id"])
         else:
             spent = cards.use_enemy_card(reactor, card["id"])
-        if spent.get("ok") and rx.offer_reaction(
-                chain, rid, card["id"], card=card, reactor=None):
-            # Proteção limitada ao próximo ataque; não deixa Guarda persistente.
-            cs.grant_tactical_modifier(scene, "protected", rid, rid)
+        if not spent.get("ok"):
+            continue
+        if not rx.offer_reaction(chain, rid, card["id"], card=card, reactor=None):
+            # SPEC-232 R3: reação não ofertada → reembolsa Entropia e uso.
+            reactor["entropy"] = snapshot[0]
+            for key, value in (("card_usage", snapshot[1]), ("enemy_card_usage", snapshot[2])):
+                if value is None:
+                    reactor.pop(key, None)
+                else:
+                    reactor[key] = value
+            continue
+        # Proteção limitada ao próximo ataque; não deixa Guarda persistente.
+        cs.grant_tactical_modifier(scene, "protected", rid, rid)
+        _resolve_reaction_effect(scene, reactor, rid, card, attacker_id,
+                                 actors_by_id, out, rng=rng)
     out.setdefault("reactions", []).extend(rx.resolve_chain(chain))
+
+
+def _resolve_reaction_effect(scene: dict, reactor: dict, reactor_id: str, card: dict,
+                             attacker_id: str, actors_by_id: Dict[str, dict], out: dict,
+                             *, rng=None) -> None:
+    """SPEC-232 R3: o `efeito` da Carta de Reação roda pelo mesmo pipeline das
+    ações — contra-ataque/dano rolam ataque do reagente contra o atacante; cura,
+    buff e Proteção valem para o reagente; condição/empurrão miram o atacante."""
+    effect = card.get("efeito") or {}
+    kind = str(effect.get("kind") or "")
+    name = card.get("name", card.get("id", "Reação"))
+    attacker = actors_by_id.get(attacker_id)
+    amount = ct._effect_amount(effect)
+    duration = max(1, int(effect.get("duracao", effect.get("duration", 1)) or 1))
+    if kind in ("contra_ataque", "dano"):
+        if _alive(attacker):
+            _basic_attack(scene, reactor, reactor_id, attacker, attacker_id, out, rng,
+                          label=name, damage_override=amount,
+                          damage_type=str(effect.get("dano_tipo") or "cortante"))
+    elif kind == "cura":
+        before = int(reactor.get("vitalidade", 0) or 0)
+        heal = max(0, amount + int(cm.combat_modifiers(reactor).get("heal", 0) or 0))
+        reactor["vitalidade"] = min(int(reactor.get("max_vitalidade", before) or before),
+                                    before + heal)
+        gamedata.sync_legacy_hp_aliases(reactor)
+        out["logs"].append(f"{name}: {_name(reactor)} recupera "
+                           f"{reactor['vitalidade'] - before} Vitalidade.")
+    elif kind == "aplicar_condicao":
+        if attacker is not None:
+            cond = cm.parse_condition(str(effect.get("condicao") or name),
+                                      source=card.get("id", name))
+            cond["duration"] = duration
+            out["logs"].append(cm.apply_condition(attacker, cond))
+    elif kind == "empurrao":
+        result = cs.move_distance(scene, attacker_id, "afastar")
+        cs.disengage(scene, reactor_id, attacker_id, spend=False)
+        out["logs"].append(result.get("log") or result.get("error", ""))
+    elif kind in ("buff_defesa", "buff_esquiva", "protecao", "buff_iniciativa"):
+        stat = {"buff_defesa": "ac", "buff_esquiva": "ac", "protecao": "protection",
+                "buff_iniciativa": "initiative"}[kind]
+        out["logs"].append(cm.apply_condition(reactor, {
+            "name": name, "dot": 0, "duration": duration,
+            "source": card.get("id", name), "stat": stat, "delta": amount}))
+    else:
+        out["logs"].append(f"{name}: reação sem efeito resolvível ({kind!r}).")
+
+
+def _declared_attack(scene: dict, attacker_id: str, target_id: str,
+                     actors_by_id: Dict[str, dict], sides: Dict[str, List[str]],
+                     step=None) -> dict:
+    """Ação declarada para a janela de Reação, com os campos determinísticos que
+    os gatilhos lêem (SPEC-232 R4): lados, corpo a corpo/distância, tipo de
+    dano, flanqueio, aliados caídos/controlados e auto-dano recente."""
+    card = None
+    if step is not None and getattr(step, "card_id", None):
+        from services import cards
+        card = cards.get_card(step.card_id)
+    effect = (card or {}).get("efeito") or {}
+    melee = ct._is_melee(card, step) if step is not None else True
+    dtype = str(effect.get("damage_type") or effect.get("tipo_dano")
+                or effect.get("dano_tipo") or "cortante").lower()
+    hero = set(sides.get("hero", [])) | set(sides.get("ally", []))
+    enemy = set(sides.get("enemy", []))
+    allies_of = {aid: sorted((hero if aid in hero else enemy) - {aid})
+                 for aid in hero | enemy}
+    positions = scene.get("positions") or {}
+    flanked = [aid for aid, pos in positions.items()
+               if len([o for o in pos.get("engaged_with", [])
+                       if (o in hero) != (aid in hero)]) >= 2]
+    return {
+        "kind": "attack", "actor": attacker_id, "targets": [target_id],
+        "allies_of": allies_of, "melee": bool(melee),
+        "already_engaged": cs.is_engaged(scene, attacker_id, target_id),
+        "damage_type": dtype,
+        "supernatural": dtype not in set(gamedata.DANO_FISICO),
+        "flanked": flanked,
+        "downed": [aid for aid, a in actors_by_id.items()
+                   if a.get("estado_terminal") or int(a.get("vitalidade", 1) or 0) <= 0],
+        "controlled": [aid for aid, a in actors_by_id.items()
+                       if cm.has_control(a, "stun")],
+        "self_harmed": [aid for aid, a in actors_by_id.items()
+                        if a.get("_self_harmed_round")],
+    }
 
 
 def _enemy_reaction_card(actor: dict) -> Optional[dict]:
@@ -586,7 +721,8 @@ def _enemy_reaction_card(actor: dict) -> Optional[dict]:
 
 def _basic_attack(scene: dict, attacker: dict, attacker_id: str, target: dict, target_id: str,
                   out: dict, rng, *, label: str = "Ataque",
-                  advantage: int = 0) -> None:
+                  advantage: int = 0, damage_override: Optional[int] = None,
+                  damage_type: str = "cortante") -> None:
     """Ataque básico determinístico (2d10+Virtude vs Esquiva → dano→Ferimento).
     Usado por AoO/reações que não passam pela declaração de turno."""
     advantage += cs.consume_tactical_attack_modifier(
@@ -604,7 +740,9 @@ def _basic_attack(scene: dict, attacker: dict, attacker_id: str, target: dict, t
     out["logs"].append(f"{label}: {_name(attacker)} → {_name(target)}: "
                        f"{atk['resultado']} ({atk['total']} vs {atk['esquiva_alvo']}).")
     if atk["acerto"]:
-        if attacker.get("dano_base_arma") is not None:
+        if damage_override is not None:
+            dmg = max(0, int(damage_override))
+        elif attacker.get("dano_base_arma") is not None:
             dmg = max(0, int(attacker.get("dano_base_arma") or 0))
         else:
             formula = str(attacker.get("attack_formula") or "1d6")
@@ -612,10 +750,12 @@ def _basic_attack(scene: dict, attacker: dict, attacker_id: str, target: dict, t
         if attacker_id == "player" or attacker.get("is_player"):
             dmg += cm.early_game_damage_bonus(
                 int(attacker.get("level", 1) or 1))
+        # SPEC-232 R1/R2: `damage` de condições/passivas estáticas do atacante.
+        dmg += int(cm.combat_modifiers(attacker).get("damage", 0) or 0)
         dres = resolve_damage_and_wounds(
             target,
             damage_base=max(0, dmg),
-            damage_type="cortante",
+            damage_type=damage_type,
             crit_mult=atk["efeito_principal_multiplicador"],
             directed_region=None,
             rng=rng,
@@ -670,6 +810,7 @@ def _apply_player_card_mechanics(player: dict, used: dict, player_id: str,
         from services.conflict_damage import sacrifice_vitality
         before = int(player.get("vitalidade", 0) or 0)
         sacrifice_vitality(player, self_harm)
+        player["_self_harmed_round"] = True   # gatilho `apos_auto_dano` (SPEC-232)
         out["logs"].append(
             f"{_name(player)} sacrifica {self_harm} Vitalidade pela Carta "
             f"(Vit {player.get('vitalidade', 0)}).")
@@ -886,7 +1027,8 @@ def _resolve_actor_turn(scene: dict, actor: dict, actor_id: str, actors_by_id: D
     acao = decl.acao
     if acao is not None and acao.kind in ("attack", "card") and acao.target_id:
         _open_reaction_window(
-            scene, actor_id, acao.target_id, actors_by_id, sides, out, state)
+            scene, actor_id, acao.target_id, actors_by_id, sides, out, state,
+            rng=rng, step=acao)
 
     if acao is not None and acao.kind == "tactic":
         cs.reset_turn_budget(scene, actor_id)
@@ -894,7 +1036,7 @@ def _resolve_actor_turn(scene: dict, actor: dict, actor_id: str, actors_by_id: D
             scene, actor, actor_id, actors_by_id, sides, acao, out, rng)
         return
 
-    sub = ct.resolve_turn(scene, actors_by_id, decl, state=state, rng=rng)
+    sub = ct.resolve_turn(scene, actors_by_id, decl, state=state, rng=rng, sides=sides)
     out["logs"] += [l for l in sub.get("logs", []) if l]
     out.setdefault("attacks", []).extend(sub.get("attacks", []))
     out.setdefault("cards_used", []).extend(sub.get("cards_used", []))
@@ -937,6 +1079,15 @@ def _resolve_actor_turn(scene: dict, actor: dict, actor_id: str, actors_by_id: D
         elif player is not None and tid in set(sides.get("hero", []) + sides.get("ally", [])):
             _entropy_event(player, {"kind": "on_ally_suffer"}, out)
         _check_terminal(tgt, tid, out, damage_applied=True)
+        if tgt.get("is_player") and _can_act(tgt) and _alive(actor):
+            # SPEC-232 R2: passiva `contra_ataque` (tier 8) — revida 1×frequência.
+            for pe in cm.triggered_passives(tgt, "on_hit_taken"):
+                from services import cards
+                paid = cards.use_passive(tgt, pe["source_card"])
+                if paid.get("ok"):
+                    out["logs"].append(paid["log"])
+                    _basic_attack(scene, tgt, tid, actor, actor_id, out, rng,
+                                  label="Contra-ataque", damage_override=pe.get("value"))
 
 
 def _hit_events(sub: dict, decl: "ct.TurnDeclaration") -> List[tuple[str, int]]:
@@ -1100,6 +1251,14 @@ def _maybe_abyss(scene: dict, player: dict, actors_by_id: Dict[str, dict],
                                       seed=rng.random() if rng else None)
     if not event:
         return
+    from services import encounter_preparation as prep
+    # SPEC-232 R9: só gasta Cargas/usos se o EffectSpec materializa (alvo e
+    # potência válidos); rejeitado = nada debitado.
+    if prep.materialize_effect(event.get("effect") or {},
+                               int(scene.get("encounter_level", 1) or 1),
+                               valid_targets=set(actors_by_id)) is None:
+        out["logs"].append("Evento do Abismo sem alvo válido — nenhuma Carga gasta.")
+        return
     fired = abyss_events.trigger_event(event, scene_state or {})
     if not fired.get("ok"):
         return
@@ -1139,8 +1298,11 @@ def apply_effect_spec(scene: dict, actors_by_id: Dict[str, dict], effect: dict,
         tid = params.get("target")
         tgt = actors_by_id.get(tid)
         if tgt is not None:
-            tgt.setdefault("active_conditions", []).append(
-                {"name": params.get("condition", "abissal"), "duration": int(params.get("duration", 1) or 1)})
+            # SPEC-232: condição nomeada passa pelo catálogo fechado (efeito real).
+            cond = cm.parse_condition(str(params.get("condition", "abissal")),
+                                      source="abismo")
+            cond["duration"] = int(params.get("duration", 1) or 1)
+            out.setdefault("logs", []).append(cm.apply_condition(tgt, cond))
 
 
 # ==========================================================================
@@ -1225,6 +1387,7 @@ def run_round(scene: dict, actors_by_id: Dict[str, dict], sides: Dict[str, List[
         if state is not None:
             cards.reset_card_usage(state, "turno")
         cm.reset_entropy_turn(player)
+        player.pop("_self_harmed_round", None)
         before_boiler = (player.get("_cool_deadline"),
                          int(player.get("vitalidade", player.get("hp", 0)) or 0))
         out["logs"] += cm.tick_boiler(player, rng=rng)
@@ -1267,18 +1430,23 @@ def run_round(scene: dict, actors_by_id: Dict[str, dict], sides: Dict[str, List[
         # esta ação e só então expirar. O fluxo anterior removia stun/sleep antes
         # de consultá-los, tornando consumíveis de controle mecanicamente inertes.
         stunned_this_turn = cm.has_control(actor, "stun")
+        # Lista de refs (não set de id()): mantém os dicts vivos — o id() de uma
+        # condição removida no tick podia ser reusado por buff novo deste turno.
+        present_at_start = list(actor.get("active_conditions") or [])
         dot_applied = _tick_conditions_v4(actor, out, rng=rng)
         _check_terminal(actor, actor_id, out, damage_applied=dot_applied)
         if not _can_act(actor):
             continue
         if stunned_this_turn:
             out["logs"].append(f"{_name(actor)} está atordoado e perde o turno.")
+            _expire_stat_conditions(actor, present_at_start, out)
             continue
         decl = declarations.get(actor_id)
         if decl is None:
             decl = enemy_declaration(scene, actor_id, actors_by_id, sides,
                                      scene_state=scene_state, rng=rng)
         _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
+        _expire_stat_conditions(actor, present_at_start, out)
 
     # Última Ação acontece fora da ordem, exatamente uma vez, ANTES do terminal.
     _resolve_last_stands(scene, actors_by_id, sides, out, rng)

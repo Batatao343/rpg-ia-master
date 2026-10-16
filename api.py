@@ -3263,9 +3263,18 @@ def _apply_action_options(state: dict, req: ActionRequest) -> None:
     )
     action = None
     if req.card_id:
+        card_target = req.target_id
+        if not card_target:
+            # SPEC-232 (ex-SPEC-199 R12): Carta benéfica sem alvo explícito mira o
+            # próprio jogador — nunca herda o 1º inimigo (cura no inimigo).
+            from agents.combat import _default_card_target
+            from services import cards as cards_svc
+            card_target = _default_card_target(
+                cards_svc.get_card(req.card_id) or {},
+                str(active_enemies[0].get("id")) if active_enemies else None)
         action = {
             "kind": "card", "card_id": req.card_id,
-            "target_id": target_id,
+            "target_id": card_target,
             "params": {"ruptura": bool(req.ruptura)},
         }
     elif req.action_kind == "maneuver" and req.maneuver:

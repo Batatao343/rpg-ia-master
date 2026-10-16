@@ -171,16 +171,37 @@ def parse_condition(text: str, source: str = "") -> Dict:
         cond["stat"] = ("damage" if "dano" in word
                         else "ac" if "defesa" in word else "attack")
         cond["delta"] = delta
-    if re.search(r"atordoa", low):
+    if re.search(r"atordoa|dominad", low):
         cond["control"] = "stun"
         cond["name"] = _CONTROL_NAMES["stun"]
     elif re.search(r"enredad|enraiza|agarrad", low):
         cond["control"] = "root"
         cond["name"] = _CONTROL_NAMES["root"]
-    elif re.search(r"\bmedo\b|apavora|aterroriza", low):
+    elif re.search(r"\bmedo\b|apavora|aterroriza|amedront", low):
         cond["control"] = "fear"
         cond["name"] = _CONTROL_NAMES["fear"]
+    else:
+        # SPEC-232: condições nomeadas das Cartas (`aplicar_condicao.condicao`)
+        # ganham efeito mecânico de um catálogo FECHADO — nome sem entrada aqui
+        # é órfão e o teste anti-órfão v2 (tests/test_mecanica_orfa.py) falha.
+        named = NAMED_CONDITIONS.get(re.sub(r"\s+", "_", low))
+        if named and "stat" not in cond and not dot:
+            cond.update(named)
     return cond
+
+
+# SPEC-232 (R1/R4): efeito mecânico das condições nomeadas usadas pelos dados.
+# Valores modestos e simétricos (jogador e inimigo sofrem igual) — [BALANCEAR].
+NAMED_CONDITIONS: Dict[str, Dict] = {
+    "exposto": {"stat": "ac", "delta": -2},
+    "cego": {"stat": "advantage", "delta": -1},
+    "enfraquecido": {"stat": "damage", "delta": -2},
+    "desmoralizado": {"stat": "attack", "delta": -1},
+    "desarmado_risco": {"stat": "damage", "delta": -2},
+    "armadura_comprometida": {"stat": "protection", "delta": -2},
+    "sangrando": {"dot": 1},
+    "silenciado": {"control": "silence"},
+}
 
 
 def class_passives(entity: Dict) -> List[Dict]:
@@ -191,13 +212,115 @@ def class_passives(entity: Dict) -> List[Dict]:
     return (CLASSES.get(cname) or {}).get("passive_effects") or []
 
 
-def learned_passives(entity: Dict, *, abilities_db=None) -> List[Dict]:
-    """Compatibilidade do agregador de passivas após o cutover.
+# SPEC-232 (R2): Cartas `passiva`/`virtude` (catálogo v4) → efeito normalizado.
+# Estáticas viram {trigger:"always", stat, delta}; as de gatilho (custo e
+# frequência próprios, tier 7/8) viram {trigger:on_attack|on_hit|on_hit_taken}.
+_PASSIVE_STAT_BY_KIND = {
+    "buff_dano": "damage", "buff_defesa": "ac", "buff_esquiva": "ac",
+    "buff_acerto": "attack", "buff_iniciativa": "initiative", "buff_dot": "dot",
+    "buff_cura": "heal", "protecao": "protection",
+}
+_STAGE_BONUS = {   # kind -> (stat, Virtude cujo Estágio escala o bônus)
+    "bonus_dano_por_estagio": ("damage", "forca"),
+    "bonus_esquiva_por_estagio": ("ac", "agilidade"),
+    "bonus_iniciativa_por_estagio": ("initiative", "agilidade"),
+    "bonus_percepcao_por_estagio": ("perception", "mente"),
+    "bonus_vitalidade_por_estagio": ("vitality", "corpo"),
+    "bonus_social_por_estagio": ("social", "carisma"),
+    "bonus_cura_por_estagio": ("heal", "mente"),
+}
+_TRIGGERED_PASSIVE = {"vantagem": "on_attack", "dano": "on_hit",
+                      "aplicar_condicao": "on_hit", "contra_ataque": "on_hit_taken"}
 
-    Passivas de Cartas usam o catálogo v4 e são resolvidas pelo motor de Cartas;
-    aqui sobrevivem somente passivas de classe e item no vocabulário antigo.
+
+def _card_effect_value(effect: Dict) -> int:
+    for key in ("valor", "dano_base"):
+        if effect.get(key) is not None:
+            try:
+                return int(effect.get(key) or 0)
+            except (TypeError, ValueError):
+                return 0
+    return 1
+
+
+def _virtue_value(entity: Dict, key: str) -> int:
+    try:
+        return int((entity.get("virtudes") or {}).get(key, 0) or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def _normalize_card_passive(card: Dict, entity: Dict, *, mastery: int = 0) -> Optional[Dict]:
+    from gamedata import normalize_virtude, virtue_card_stage
+    effect = card.get("efeito") or {}
+    kind = str(effect.get("kind") or "")
+    cid = card.get("id")
+    value = _card_effect_value(effect)
+    if kind in _STAGE_BONUS:
+        stat, vkey = _STAGE_BONUS[kind]
+        related = normalize_virtude(card.get("virtude_relacionada") or "") or vkey
+        stage = max(1, min(5, virtue_card_stage(_virtue_value(entity, related))
+                           + int(mastery or 0)))
+        delta = (value if effect.get("valor") is not None else 1) * stage
+        if stat == "perception":
+            return {"trigger": "perception", "delta": delta, "kind": kind,
+                    "source_card": cid}
+        return {"trigger": "always", "stat": stat, "delta": delta, "kind": kind,
+                "source_card": cid}
+    if kind == "perception":
+        return {"trigger": "perception", "delta": value, "kind": kind, "source_card": cid}
+    if kind in _PASSIVE_STAT_BY_KIND:
+        return {"trigger": "always", "stat": _PASSIVE_STAT_BY_KIND[kind], "delta": value,
+                "kind": kind, "source_card": cid}
+    if kind in _TRIGGERED_PASSIVE:
+        return {"trigger": _TRIGGERED_PASSIVE[kind], "kind": kind, "value": value,
+                "source_card": cid, "cost": int(card.get("custo_entropia", 0) or 0),
+                "frequency": str(card.get("frequencia", "livre")),
+                "condicao": effect.get("condicao"),
+                "duration": int(effect.get("duracao", effect.get("duration", 1)) or 1),
+                "damage_type": effect.get("dano_tipo") or effect.get("damage_type")}
+    return None
+
+
+def learned_passives(entity: Dict, *, abilities_db=None) -> List[Dict]:
+    """SPEC-232 R2 (D-B default): ponto ÚNICO de verdade das passivas de Carta.
+
+    Agrega Cartas `passiva` do Acervo (`known_cards`/`prepared_cards`, ou as
+    Cartas embutidas de inimigo) e as Cartas de `virtude` do personagem, já
+    normalizadas no vocabulário de `player_passives`. Estágio de Virtude vem do
+    valor VIVO da Virtude relacionada + Maestria (não do snapshot da criação).
     """
-    return []
+    from services import cards as cards_svc
+    db = abilities_db
+    lookup = (lambda cid: db.get(cid)) if db is not None else cards_svc.get_card
+    out: List[Dict] = []
+    seen = set()
+    ids = list(entity.get("known_cards") or []) + list(entity.get("prepared_cards") or [])
+    if not entity.get("is_player"):
+        try:
+            ids += cards_svc.enemy_card_ids(entity)
+        except Exception:
+            pass
+    for cid in ids:
+        if not isinstance(cid, str) or cid in seen:
+            continue
+        seen.add(cid)
+        card = lookup(cid) or {}
+        if card.get("tipo") != "passiva":
+            continue
+        norm = _normalize_card_passive(card, entity)
+        if norm:
+            out.append(norm)
+    for row in entity.get("virtue_cards") or []:
+        cid = (row or {}).get("card_id") if isinstance(row, dict) else None
+        card = (lookup(cid) or {}) if cid else {}
+        if not card or card.get("tipo") != "virtude" or cid in seen:
+            continue
+        seen.add(cid)
+        norm = _normalize_card_passive(card, entity, mastery=int(row.get("mastery", 0) or 0))
+        if norm:
+            out.append(norm)
+    return out
 
 
 def equipped_ids(entity: Dict) -> List[str]:
@@ -237,12 +360,17 @@ def player_passives(entity: Dict, *, abilities_db=None) -> List[Dict]:
             + item_passives(entity))
 
 
+MODIFIER_STATS = ("damage", "ac", "attack", "save", "protection", "advantage",
+                  "initiative", "dot", "heal", "vitality", "social")
+
+
 def condition_modifiers(entity: Dict) -> Dict[str, int]:
     """Fase 4.2: soma dos deltas das condições ativas por stat.
 
     Buff/debuff tipado ({stat, delta}) entra direto; `fear` embute -2 de acerto.
+    SPEC-232: `protection`/`advantage` também contam (consumidos pelo motor v2).
     """
-    out = {"damage": 0, "ac": 0, "attack": 0, "save": 0}
+    out = {k: 0 for k in MODIFIER_STATS}
     for c in entity.get("active_conditions", []) or []:
         stat = c.get("stat")
         if stat in out:
@@ -253,6 +381,62 @@ def condition_modifiers(entity: Dict) -> Dict[str, int]:
         if c.get("control") == "fear":
             out["attack"] -= 2
     return out
+
+
+def passive_modifiers(entity: Dict) -> Dict[str, int]:
+    """SPEC-232 R2: soma das passivas ESTÁTICAS (Cartas passiva/virtude + itens
+    equipados + classe) por stat. Inimigo só tem Cartas embutidas."""
+    out = {k: 0 for k in MODIFIER_STATS}
+    sources = (player_passives(entity) if entity.get("is_player")
+               else class_passives(entity) + learned_passives(entity))
+    for pe in sources:
+        stat = pe.get("stat")
+        trig = pe.get("trigger")
+        if stat not in out:
+            continue
+        try:
+            if trig == "always":
+                out[stat] += int(pe.get("delta", 0) or 0)
+            elif trig == "carga_embrace":
+                out[stat] += int(pe.get("per_tier", 1) or 1) * _tier_index(abyss_tier(entity))
+        except (TypeError, ValueError):
+            continue
+    return out
+
+
+def combat_modifiers(entity: Dict) -> Dict[str, int]:
+    """SPEC-232 R1/R2: modificador efetivo do motor v2 = condições ativas +
+    passivas estáticas. Fonte única lida por resolução de ataque, Esquiva,
+    dano, Proteção, iniciativa, cura e DoT."""
+    cond = condition_modifiers(entity)
+    pas = passive_modifiers(entity)
+    return {k: int(cond.get(k, 0)) + int(pas.get(k, 0)) for k in MODIFIER_STATS}
+
+
+def _fold(text: str) -> str:
+    import unicodedata
+    raw = unicodedata.normalize("NFKD", str(text or "")).encode("ascii", "ignore").decode()
+    return raw.strip().lower()
+
+
+def damage_type_bonus(entity: Dict, damage_type: str) -> int:
+    """Passiva `damage_type` (itens): +delta quando o dano causado é do tipo
+    declarado (comparação sem acento/caixa). SPEC-232 R4: antes sem consumidor."""
+    wanted = _fold(damage_type)
+    sources = player_passives(entity) if entity.get("is_player") else class_passives(entity)
+    total = 0
+    for pe in sources:
+        if pe.get("trigger") == "damage_type" and _fold(pe.get("damage_type")) == wanted:
+            try:
+                total += int(pe.get("delta", 0) or 0)
+            except (TypeError, ValueError):
+                continue
+    return total
+
+
+def triggered_passives(entity: Dict, trigger: str) -> List[Dict]:
+    """Passivas de gatilho (tier 7/8, custo/frequência próprios) para `trigger`."""
+    return [pe for pe in learned_passives(entity) if pe.get("trigger") == trigger]
 
 
 def has_control(entity: Dict, kind: str) -> bool:
@@ -304,6 +488,7 @@ def tick_conditions(entity: Dict, *, rng=None) -> List[str]:
                     damage_type=str(c.get("damage_type") or "cortante"),
                     ignore_resistance=True,
                     defensavel=False,
+                    bypass_armor=True,
                     directed_region=None,
                     rng=rng,
                 )
@@ -566,6 +751,7 @@ def tick_boiler(player: Dict, logs: Optional[List[str]] = None,
                 damage_type="arcano",
                 ignore_resistance=True,
                 defensavel=False,
+                bypass_armor=True,
                 directed_region=None,
                 rng=rng,
             )

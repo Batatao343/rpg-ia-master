@@ -106,7 +106,7 @@ def materialize_enemy_concept(concept: dict | EnemySchema, *,
     corpo = virtues["corpo"]
     max_vitality = gamedata.vitalidade_para_corpo(corpo)
     from services.conflict_resolution import compute_esquiva
-    esquiva = compute_esquiva({"virtudes": virtues})
+    esquiva = compute_esquiva({"virtudes": virtues}, include_modifiers=False)
     name = str(raw.get("name") or "Inimigo Desconhecido").strip() or "Inimigo Desconhecido"
     attack_name = str(raw.get("nome_ataque") or "Ataque").strip() or "Ataque"
     data = {

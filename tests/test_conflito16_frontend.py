@@ -120,7 +120,10 @@ def test_reacao_escolhida_pelo_jogador_e_consumida_quando_ele_e_alvo():
 
     assert any(r["participant"] == "player" and r["card_id"] == "dev_encaixe"
                for r in out["reactions"])
-    assert player["entropy"] == before - 1
+    # SPEC-232 R3: o contra-ataque da reação agora rola (consome RNG); o golpe
+    # do lobo pode render Entropia ao Devoto — desconta-se o ganho de classe.
+    gained = sum(int(e.get("entropy_delta", 0) or 0) for e in out["class_mechanics"])
+    assert player["entropy"] == before - 1 + gained
     assert player["card_usage"]["dev_encaixe"]["used_this_turn"] == 1
 
 

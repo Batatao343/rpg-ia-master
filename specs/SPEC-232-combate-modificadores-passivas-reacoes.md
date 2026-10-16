@@ -1,7 +1,7 @@
 # SPEC-232 — Motor de conflito: modificadores de condição, passivas/Virtudes/Reações inertes, custo de Carta, Guarda, DoT × armadura
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `done`
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-231 `done` (mesmos arquivos de combate) · absorve a SPEC-199 R12 (alvo default de carta benéfica) junto com `_default_card_target` (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-205, SPEC-212; balanceamento das classes (SPEC-049 `[BALANCEAR]`) (ordem final 2026-10-15)
 > **Origem:** auditoria de bugs 2026-10-15 — achados BUG-02-05, 02-06, 02-09, 02-10, 02-11, 02-13, 02-14, 02-15, 02-19, 02-20 (`achados/02-combate.md`)
@@ -131,12 +131,12 @@ e `gasto/turno` de Entropia (SPEC-059) registrados como novo baseline para a SPE
 
 ## 5. Critérios de aceite
 
-- [ ] 8 testes vermelhos → verdes; `tests/test_conflito_*.py`, `test_cutover_audit.py`, `test_arvores_classes.py`,
+- [x] 8 testes vermelhos → verdes; `tests/test_conflito_*.py`, `test_cutover_audit.py`, `test_arvores_classes.py`,
       `test_classes_refactor.py`, `test_cards_v4*.py` verdes ou diff justificado (ex.: expectativas que assumiam
       modificador inerte).
-- [ ] Anti-órfão v2 cobre 100% dos `kind`/`stat`/`tipo` dos dados.
-- [ ] `uv run pytest` verde; playtest offline com run_ids e baseline de Entropia.
-- [ ] Guard de FallbackLLM mantido em `prepare_encounter` se R10 o ativar.
+- [x] Anti-órfão v2 cobre 100% dos `kind`/`stat`/`tipo` dos dados.
+- [x] `uv run pytest` verde; playtest offline com run_ids e baseline de Entropia.
+- [x] Guard de FallbackLLM mantido em `prepare_encounter` se R10 o ativar.
 
 ## 6. Smoke test com LLM real
 
@@ -163,3 +163,26 @@ e `gasto/turno` de Entropia (SPEC-059) registrados como novo baseline para a SPE
 
 - `uv run pytest` completo; testes antes/depois; relatório do anti-órfão v2 (lista kind→teste).
 - `docs/<spec>/README.md` com `combate/r4.py`/`r2.py` transcritos, run_ids do playtest por classe e revisão `Sol`.
+
+## 10. Execução (2026-10-16)
+
+- **Defaults do dono usados:** D-A = opção (1) recomendada (`prepare_encounter` só com Carga ≥ leve ou inimigo
+  Elite/Chefe/Nomeado; demais em `fallback_safe_scene`); D-B = agregar em `combat_mechanics.learned_passives`.
+- **Desvios:** (a) R1 `ac +20` → ≤30/200 (não ≤10): Crítico por dupla sempre acerta (conflito-04 R5); o teste exige que
+  todo acerto seja Crítico. (b) Anti-órfão v2 aceita 3 lacunas FORA do combate (`trait.dc:comercio|insight|intimidacao`,
+  sem consumidor social determinístico) — explicitadas em `KNOWN_GAPS`; qualquer chave de combate sem teste falha.
+  (c) Escopo ampliado pelo próprio anti-órfão: catálogo fechado de condições nomeadas (`NAMED_CONDITIONS`), semântica
+  dos 8 gatilhos de Reação autorados fora do vocabulário + `allies_of`, Marca dá Vantagem, Silenciado bloqueia Cartas,
+  purga remove condição nociva, passiva de item `damage_type`. (d) Buff/debuff tipado expira ao fim do turno do
+  portador (não no início), para `duracao: 1` valer.
+- **Ex-SPEC-199 R12:** borda `api._apply_action_options` usa `_default_card_target` (teste de reprodução incluso).
+- **Revisão Sol (2026-10-16):** (e) `_expire_stat_conditions` guarda refs (não `id()`, reusável após GC); (f) revide de
+  Reação (`contra_ataque`/`dano`) sem atacante vivo na cena não cobra Entropia/uso. (g) **R10 após smoke real:** o
+  schema antigo (dicts abertos + posições/inimigos/NPCs/reforços, prompt com o `ctx` cru) gerava ~1,8k tokens fora do
+  contrato — DeepSeek estourava o timeout de 12 s e a resposta vinha sem `base_narrativa` (sempre fallback). Agora
+  `PreparedScene` é enxuto e tipado (zonas, objetos com interação do catálogo, ≤1 evento do Abismo, objetivos), sem
+  limites duros (truncagem em Python, `gatilho` do evento fixado em Python), prompt compacto com ids válidos e teto
+  dedicado `RPG_PREP_TIMEOUT_SECONDS` (default 12 s; estouro → `fallback_safe_scene`). Reforços/condições de fim
+  saíram do pedido (sem consumidor no loop). Smoke real: 3/3 cenas válidas em 7,2 / 2,8 / 2,9 s.
+- Evidência e playtest antes/depois: [docs/spec232/README.md](../docs/spec232/README.md).
+

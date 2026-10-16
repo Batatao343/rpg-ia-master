@@ -74,7 +74,12 @@ def _pass() -> ct.TurnDeclaration:
 def _run(player: dict, enemy: dict, declaration: ct.TurnDeclaration) -> dict:
     actors = {"player": player, "enemy": enemy}
     declarations = {"player": declaration}
-    if not enemy.get("surrendered"):
+    if enemy.get("_inert"):
+        # SPEC-232 R5: alvo rendido não é mais alvo válido de Carta ofensiva;
+        # o boneco de treino fica no conflito, mas passa o turno.
+        declarations["enemy"] = ct.TurnDeclaration(
+            actor_id="enemy", acao=ct.TurnStep(kind="pass"))
+    elif not enemy.get("surrendered"):
         declarations["enemy"] = ct.TurnDeclaration(
             actor_id="enemy",
             acao=ct.TurnStep(kind="attack", target_id="player"),
@@ -103,7 +108,7 @@ def test_sangromante_carta_v4_paga_auto_dano_e_dispara_cicatriz_de_pico():
         "Sangromante", card_id, subclass="exposto", entropy=10,
         vitalidade=40, max_vitalidade=40,
     )
-    enemy = _enemy(surrendered=True)
+    enemy = _enemy(_inert=True)
 
     out = _run(player, enemy, _card_declaration(card_id))
 
@@ -131,7 +136,7 @@ def test_corruptor_carta_de_decadencia_dispara_recurso_da_classe():
     card_id = "cor_bio_gangrena"
     player = _player("Corruptor", card_id, subclass="biologia", entropy=1)
 
-    out = _run(player, _enemy(surrendered=True), _card_declaration(card_id))
+    out = _run(player, _enemy(_inert=True), _card_declaration(card_id))
 
     assert player["entropy"] == 1
     assert player["abyss_charge"] == 1
@@ -140,7 +145,7 @@ def test_corruptor_carta_de_decadencia_dispara_recurso_da_classe():
 
 def test_arcanista_canaliza_arma_e_resfria_caldeira_com_cartas_v4():
     player = _player("Arcanista Cinzento", "arc_faisca", entropy=0)
-    out = _run(player, _enemy(surrendered=True), _card_declaration("arc_faisca"))
+    out = _run(player, _enemy(_inert=True), _card_declaration("arc_faisca"))
 
     assert player["entropy"] == 2
     assert player["abyss_charge"] == 1
@@ -150,7 +155,7 @@ def test_arcanista_canaliza_arma_e_resfria_caldeira_com_cartas_v4():
     player["prepared_cards"] = ["arc_descarga"]
     player["known_cards"] = ["arc_descarga"]
     cards.reset_card_usage({"player": player}, "turno")
-    out = _run(player, _enemy(surrendered=True), _card_declaration("arc_descarga"))
+    out = _run(player, _enemy(_inert=True), _card_declaration("arc_descarga"))
 
     assert "_cool_deadline" not in player
     assert any(e["kind"] == "special:boiler_cooled" for e in out["class_mechanics"])

@@ -20,6 +20,12 @@ from typing import Dict, List, Optional
 GATILHOS = frozenset({
     "sempre", "ao_ser_atacado", "ao_ser_alvo", "aliado_atacado",
     "inimigo_se_move", "inimigo_ataca", "ao_sofrer_dano",
+    # SPEC-232 R4: gatilhos autorados nas Cartas (conflito-14/17/tiers 5+) que
+    # antes caíam fora do vocabulário e nunca disparavam. Cada um lê um campo
+    # determinístico da ação declarada (montado pelo orquestrador).
+    "ao_ser_alvo_distancia", "ao_inimigo_engajar", "ao_sofrer_dano_sobrenatural",
+    "ao_ser_flanqueado", "ao_aliado_ser_atacado", "aliado_cai",
+    "ao_aliado_perder_acao", "apos_auto_dano",
 })
 
 
@@ -43,9 +49,28 @@ def gatilho_matches(card: dict, action: dict, reactor_id: str) -> bool:
         return kind == "attack" and reactor_id in targets
     if g == "ao_ser_alvo":
         return reactor_id in targets
-    if g == "aliado_atacado":
-        allies = (action.get("allies_of") or {}).get(reactor_id, [])
-        return kind == "attack" and any(t in allies for t in targets)
+    if g in ("aliado_atacado", "ao_aliado_ser_atacado", "aliado_cai",
+             "ao_aliado_perder_acao"):
+        allies = set((action.get("allies_of") or {}).get(reactor_id, [])) - {reactor_id}
+        hit = [t for t in targets if t in allies]
+        if kind != "attack" or not hit:
+            return False
+        if g == "aliado_cai":
+            return any(t in set(action.get("downed") or []) for t in hit)
+        if g == "ao_aliado_perder_acao":
+            return any(t in set(action.get("controlled") or []) for t in hit)
+        return True
+    attacked = kind == "attack" and reactor_id in targets
+    if g == "ao_ser_alvo_distancia":
+        return attacked and action.get("melee") is False
+    if g == "ao_inimigo_engajar":
+        return attacked and action.get("melee") is True and not action.get("already_engaged")
+    if g == "ao_sofrer_dano_sobrenatural":
+        return attacked and bool(action.get("supernatural"))
+    if g == "ao_ser_flanqueado":
+        return attacked and reactor_id in set(action.get("flanked") or [])
+    if g == "apos_auto_dano":
+        return attacked and reactor_id in set(action.get("self_harmed") or [])
     if g == "inimigo_se_move":
         return kind in ("move", "disengage_fail", "flee")
     if g == "inimigo_ataca":

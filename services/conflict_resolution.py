@@ -44,9 +44,17 @@ def virtude_value(actor: dict, key: str) -> int:
     return max(0, min(5, actor_mods(actor).get(_LEGACY_VIRTUDE.get(key, "str"), 0)))
 
 
-def compute_esquiva(actor: dict) -> int:
-    """Esquiva = 10 + Agilidade − penalidade (armadura pesada é conflito-05)."""
-    return 10 + virtude_value(actor, "agilidade") - int(actor.get("esquiva_penalidade", 0) or 0)
+def compute_esquiva(actor: dict, *, include_modifiers: bool = True) -> int:
+    """Esquiva = 10 + Agilidade − penalidade (armadura pesada é conflito-05).
+
+    SPEC-232 R1: soma o stat `ac` de condições ativas e passivas estáticas
+    (`combat_modifiers`). Fichas persistidas guardam só a base
+    (`include_modifiers=False`) — buff transitório nunca vira dado salvo."""
+    base = 10 + virtude_value(actor, "agilidade") - int(actor.get("esquiva_penalidade", 0) or 0)
+    if include_modifiers:
+        from combat_mechanics import combat_modifiers
+        base += int(combat_modifiers(actor).get("ac", 0) or 0)
+    return base
 
 
 # --------------------------------------------------------------------------
@@ -106,8 +114,15 @@ def _crit_from_kept(kept: List[int]) -> Optional[str]:
 # --------------------------------------------------------------------------
 # Iniciativa por lado (R2/R3)
 # --------------------------------------------------------------------------
+def _initiative_value(actor: dict) -> int:
+    """Agilidade + `initiative` de condições/passivas (SPEC-232 R2)."""
+    from combat_mechanics import combat_modifiers
+    return virtude_value(actor, "agilidade") + int(
+        combat_modifiers(actor).get("initiative", 0) or 0)
+
+
 def _side_roll(participants: List[dict], rng) -> Dict:
-    ag = max((virtude_value(p, "agilidade") for p in participants
+    ag = max((_initiative_value(p) for p in participants
               if p.get("conscious", True)), default=0)
     dados = [_d10(rng), _d10(rng)]
     return {"dice": dados, "agilidade": ag, "total": sum(dados) + ag}
@@ -141,17 +156,24 @@ def resolve_attack(attacker: dict, target: dict, *,
     Virtude, total, Esquiva, resultado (erro/acerto/critico/supercritico) e o
     multiplicador do efeito PRINCIPAL. Ruptura concede Vantagem (R8)."""
     rng = rng or random
+    from combat_mechanics import combat_modifiers
     if ruptura:
         advantage += 1
     if virtude_value_override is not None:
         vval = int(virtude_value_override)
     else:
         vval = virtude_value(attacker, virtude_key or "forca")
+    # SPEC-232 R1/R2: buffs/debuffs (condições) e passivas estáticas do atacante
+    # entram no total; `advantage` tipado conta só pelo sinal (Vantagem não acumula).
+    mods = combat_modifiers(attacker)
+    modificador = int(mods.get("attack", 0) or 0)
+    cond_adv = int(mods.get("advantage", 0) or 0)
+    advantage += (1 if cond_adv > 0 else -1 if cond_adv < 0 else 0)
     esq = int(esquiva) if esquiva is not None else compute_esquiva(target)
 
     roll = roll_kept(advantage, rng)
     kept = roll["kept"]
-    total = sum(kept) + vval
+    total = sum(kept) + vval + modificador
     crit = _crit_from_kept(kept)
     if crit == "supercritico":
         resultado, mult, acerto = "supercritico", 3, True
@@ -163,7 +185,7 @@ def resolve_attack(attacker: dict, target: dict, *,
 
     return {
         "dice_rolled": roll["rolled"], "dice_kept": kept, "virtude": vval,
-        "total": total, "esquiva_alvo": esq, "resultado": resultado,
+        "modificador": modificador, "total": total, "esquiva_alvo": esq, "resultado": resultado,
         "acerto": acerto, "efeito_principal_multiplicador": mult,
         "ruptura": bool(ruptura), "advantage": advantage,
     }

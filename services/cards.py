@@ -307,6 +307,33 @@ def use_card(state: dict, card_id: str) -> dict:
     }
 
 
+def use_passive(player: dict, card_id: str) -> dict:
+    """SPEC-232 R2: paga uma passiva DE GATILHO do Acervo (tier 7/8 com custo e
+    frequência próprios). Mesma economia de `use_card` (frequência + Entropia),
+    mas a Carta só precisa estar CONHECIDA — passiva não ocupa Preparação."""
+    card = get_card(card_id)
+    if not card or card.get("tipo") != "passiva":
+        return {"ok": False, "error": f"'{card_id}' não é passiva.", "log": ""}
+    known = set(player.get("known_cards") or []) | set(player.get("prepared_cards") or [])
+    if card_id not in known:
+        return {"ok": False, "error": f"Passiva '{card_id}' fora do Acervo.", "log": ""}
+    counter = FREQ_COUNTER.get(str(card.get("frequencia", "livre")))
+    entry = (player.get("card_usage") or {}).get(card_id) or {}
+    if counter and int(entry.get(counter, 0)) >= 1:
+        return {"ok": False, "error": "frequência esgotada", "log": ""}
+    custo = _entropy_cost(player, card)
+    if custo > int(player.get("entropy", 0) or 0):
+        return {"ok": False, "error": "Entropia insuficiente", "log": ""}
+    if custo:
+        player["entropy"] = int(player.get("entropy", 0)) - custo
+    entry = _usage_entry(player, card_id)
+    for k in _ALL_COUNTERS:
+        entry[k] = int(entry.get(k, 0)) + 1
+    return {"ok": True, "error": None, "cost": custo,
+            "log": f"Passiva {card.get('name', card_id)} desperta"
+                   + (f" (-{custo} Entropia)" if custo else "")}
+
+
 def can_use_card(player: dict, card_id: str) -> bool:
     """Consulta pura da mesma economia de `use_card`, para HUD/harness."""
     card = get_card(card_id)
