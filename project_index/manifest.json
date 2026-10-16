@@ -1,13 +1,13 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "7d522aac64b1eb8fca841079b303ff4f609d4075",
+  "commit_sha": "16bf785f4bf44b7441d0c3225deca1c7ebf19085",
   "edge_counts": {
-    "calls": 12373,
-    "contains": 560,
-    "defines": 7243,
-    "imports": 1184,
-    "likely_test_for": 733,
-    "route_to": 58
+    "calls": 12586,
+    "contains": 568,
+    "defines": 7369,
+    "imports": 1196,
+    "likely_test_for": 739,
+    "route_to": 59
   },
   "excluded_prefixes": [
     ".agents",
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:054eecd1a3833ed203d4296d9c3c0ae350bb95bc394091eaf1c209458a39b054",
+  "graph_hash": "sha256:3da5954c870ec6d99e57ff4a785aecaedf1ea2a5db5a9fea2b289468f6304989",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -109,6 +109,7 @@
     "infrastructure/__init__.py",
     "infrastructure/account_lifecycle.py",
     "infrastructure/account_read_model.py",
+    "infrastructure/audit_source.py",
     "infrastructure/contracts.py",
     "infrastructure/file_blob.py",
     "infrastructure/finops_reader.py",
@@ -182,6 +183,7 @@
     "scripts/cloud_doctor.py",
     "scripts/content_report.py",
     "scripts/dev_stack.py",
+    "scripts/export_game_audit.py",
     "scripts/export_game_data.py",
     "scripts/finops_margin_sim.py",
     "scripts/frontend_eval_report.py",
@@ -247,6 +249,9 @@
     "services/art_brief.py",
     "services/art_triggers.py",
     "services/asset_pipeline.py",
+    "services/audit_export.py",
+    "services/audit_redaction.py",
+    "services/audit_trace.py",
     "services/auth_sessions.py",
     "services/bestiary_knowledge.py",
     "services/cards.py",
@@ -360,8 +365,11 @@
     "tests/test_artwork_recovery_browser.py",
     "tests/test_asset_pipeline.py",
     "tests/test_audit_browser_local.py",
+    "tests/test_audit_export.py",
+    "tests/test_audit_export_local.py",
     "tests/test_audit_fixes.py",
     "tests/test_audit_real_contracts.py",
+    "tests/test_audit_redaction.py",
     "tests/test_audit_reward_contracts.py",
     "tests/test_auth_sessions.py",
     "tests/test_backup_restore_local.py",
@@ -662,6 +670,7 @@
     "web/src/hooks/useTypewriter.ts",
     "web/src/http.ts",
     "web/src/lib.ts",
+    "web/src/lib/auditExport.ts",
     "web/src/lib/turnLatency.ts",
     "web/src/main.tsx",
     "web/src/native/backPolicy.ts",
@@ -698,14 +707,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 632,
-    "endpoint": 58,
-    "file": 644,
-    "function": 2260,
-    "method": 633,
-    "module": 560,
-    "test": 3718
+    "class": 641,
+    "endpoint": 59,
+    "file": 653,
+    "function": 2315,
+    "method": 637,
+    "module": 568,
+    "test": 3776
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:5101542732df4c4f0732956da3ccfc232e98e9a76fb948bcbf5adba4f599d873"
+  "source_tree_hash": "sha256:cd722b17f9158ae58112204c0be84d22826784b21a666525527aa1064fa7ebfa"
 }
