@@ -15,8 +15,9 @@ export const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..
 
 /** R10: lista de tolerados, explícita e versionada (cada entrada justificada; nada genérico). */
 export const VERTICAL_ALLOWLIST: readonly string[] = [
-  // O beacon de latência (RPG_CLIENT_LATENCY_REPORT=1, ligado só pelo gate para medir R13) é enviado
-  // com keepalive e o Chromium o reporta como `requestfailed ERR_ABORTED` mesmo com 204 recebido.
+  // O beacon de latência (RPG_CLIENT_LATENCY_REPORT=1, ligado só pelo gate para medir R13) é um fetch
+  // comum fire-and-forget (sem keepalive, KI-3); `page.reload()`/navegação da jornada o aborta e o Chromium
+  // o reporta como `requestfailed ERR_ABORTED`.
   // A resposta chega (ledger.beaconFor lê o corpo); só esse caso exato é tolerado.
   "/telemetry/client-latency net::ERR_ABORTED$",
 ];

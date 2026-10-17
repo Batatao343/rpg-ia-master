@@ -237,8 +237,11 @@ test.describe("J-V1 jornada vertical", () => {
     await page.getByRole("button", { name: /Identidade/ }).click();
     await page.getByLabel("Nome do herói").fill(HERO);
     await page.getByRole("button", { name: "Tecer o prólogo" }).click();
+    const created = page.waitForResponse((r) => r.url().endsWith("/game/new") && r.request().method() === "POST", { timeout: 90_000 });
     await page.getByRole("button", { name: "Começar a jornada" }).click();
+    expect((await created).status(), "POST /game/new concluído").toBe(200);
     await composer().waitFor({ timeout: 60_000 });
+    await expect(composer()).toBeEnabled({ timeout: 60_000 });
 
     const saves = (await (await page.request.get("/game/saves")).json()) as Array<Record<string, any>>;
     const mine = saves.find((s) => s.name === HERO);
