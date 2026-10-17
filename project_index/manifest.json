@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "cd535f779eb5ed1b1583422939e60e8f7d026540",
+  "commit_sha": "a81832f8fa310113e951db5ee9b1d6bd4072f2c1",
   "edge_counts": {
-    "calls": 14471,
-    "contains": 620,
-    "defines": 8292,
-    "imports": 1343,
-    "likely_test_for": 837,
+    "calls": 14631,
+    "contains": 625,
+    "defines": 8410,
+    "imports": 1362,
+    "likely_test_for": 854,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:23e05bf865459bad43940f1e364300392c71a956550fa5c6745cd1db9401be3d",
+  "graph_hash": "sha256:2148cd8168bbb7f8bea85b4ab6c780101249ae6d2ef79cdf2055c753ef19f7a9",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -173,6 +173,7 @@
     "rag.py",
     "scripts/admin_kill_switch.py",
     "scripts/admin_wallet_adjust.py",
+    "scripts/admin_wallet_reconcile.py",
     "scripts/android/rename_package.py",
     "scripts/audit_local_gate.py",
     "scripts/audit_local_server.py",
@@ -348,6 +349,7 @@
     "services/turn_pipeline.py",
     "services/usage_metering.py",
     "services/visual_catalog.py",
+    "services/wallet_recovery.py",
     "services/world_distance.py",
     "services/world_validators.py",
     "state.py",
@@ -400,6 +402,8 @@
     "tests/test_bug_combate_morte_aliados.py",
     "tests/test_bug_contabilidade_recompensas.py",
     "tests/test_bug_economia_integridade.py",
+    "tests/test_bug_finops_wallet_jobs.py",
+    "tests/test_bug_finops_wallet_jobs_local.py",
     "tests/test_bug_intencao_parsers.py",
     "tests/test_bug_memoria_resiliencia.py",
     "tests/test_bug_morte_checkpoint.py",
@@ -635,6 +639,7 @@
     "tests/test_spec222_transparency.py",
     "tests/test_spec234_pgvector_profile_local.py",
     "tests/test_spec235_reclaim_local.py",
+    "tests/test_spec236_races_local.py",
     "tests/test_spec_index.py",
     "tests/test_spec_migration_safety.py",
     "tests/test_speech_api.py",
@@ -802,14 +807,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 698,
+    "class": 707,
     "endpoint": 63,
-    "file": 748,
-    "function": 2570,
-    "method": 679,
-    "module": 620,
-    "test": 4345
+    "file": 753,
+    "function": 2594,
+    "method": 686,
+    "module": 625,
+    "test": 4423
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:c034aa4e2e3202ee250a1ce6c14ae27196431fc840e96f8760014a355a2c3ce4"
+  "source_tree_hash": "sha256:a80a12b6c521b86da31d032acc074e804867734b24d13c297eea08e0e1eb3ddb"
 }
