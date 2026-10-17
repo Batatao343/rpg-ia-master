@@ -99,3 +99,29 @@ Alvo de rollback que funciona: `rpg-ia-master-staging-5set5e8vx-…vercel.app` (
 credenciais atuais) ou rodar `vercel_env.py --use-admin-dsn` + novo deploy. As migrations são aditivas
 (exceto o drop das policies de Storage de cliente, que o cliente não usa). Produção atual:
 `rpg-ia-master-staging-kie02bmt0-…vercel.app` (RLS on).
+
+## Adendo 2026-10-17 (tarde) — DeepSeek no staging, SPEC-236 §6.1 e gate real da SPEC-214
+
+Autorização do dono (17/10): "Sim, use a DeepSeek". Branch `staging-ds` (main `0241e4c` + tooling), sem push.
+
+* **Env/deploy.** `vercel_env.py` agora envia `DEEPSEEK_API_KEY` (opcional, nunca no preview; Groq mantido como
+  fallback) e tem `--invalid-deepseek-key` (literal público) para o smoke §6.1. Dois deploys do mesmo código com
+  `GIT_SHA=9807ab9`: o primeiro com a chave inválida (§6.1), o segundo com a chave real —
+  `rpg-ia-master-staging-eovi9utqp-…vercel.app`, `/health` com o sha, `hosted-supabase`, `hardened=true`.
+  Teto `RPG_DAILY_SPEND_CAP_BRL=5` mantido; cap de texto continua desligado (achado Jina).
+* **Turnos antes/depois.** Antes (Groq free, 4 turnos): 4/4 HTTP 200 mas **0/4 narrações reais** (63–102 chars =
+  narração de erro; 6 tentativas Groq 429). Depois (DeepSeek): `e2e_session` verde (`simulated=false`, 5/5 + retry
+  idempotente, `evidence/e2e_session_deepseek.json`) e mais 20 turnos: **25/25 narrações reais** (210–1 706 chars),
+  `providers_used=[deepseek]`, 0 tentativas falhas, 0 fallback.
+* **SPEC-236 §6.1 verde**: com a chave inválida, `deepseek invoke_error` ×9 → `failed_no_usage`, custo 0,
+  `counts_as_spend=false`; LLM do turno só Groq. §6.2 não exercido (precisaria escrever um trip retroativo no audit
+  imutável `app.kill_switch_audit` — recusado; segue coberto offline). §6.3 sem chave OpenAI. 236 segue `in-progress`.
+* **SPEC-214 gate real: `GO` pela regra** (context p50/p95 414/762 ms; TTLT p50/p95 10 487/14 774 ms;
+  share 3,94 %). Spec segue `draft`, sem implementação. [gate-real](../spec214/gate-real-2026-10-17.md).
+* **Gasto real:** DeepSeek ≈ US$ 0,10 no total (20 turnos = US$ 0,076 pelo log `usage`; ledger em
+  `conservative_peak` dá US$ 0,079; + e2e/jogos novos). Groq/Jina free tier. O ledger ainda mostra US$ 1 por
+  embedding Jina (estimativa; achado 3 aberto). Usuários/jogos sintéticos apagados (sweep = 0 sobras).
+* **Achado:** `cost_basis` do DeepSeek no ledger é `estimated` (`pricing_mode=conservative_peak` do card) enquanto o
+  log do turno diz `usage`; coerente com o card, mas o ledger nunca fica `billing_exact` para DeepSeek.
+* **Rollback** (inalterado): promover `kie02bmt0` (mesmo runtime, Groq-only, RLS on) ou repetir `vercel_env.py`
+  sem a chave + deploy. Para tirar a DeepSeek: apagar `DEEPSEEK_API_KEY` no projeto Vercel e redeploy.

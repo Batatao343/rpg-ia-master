@@ -1,6 +1,11 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
 > **SPEC-237 `in-progress` (17/10):** embeddings Jina precificados por card versionado separado (`embedding-2026-10-17-v1`, US$ 0,05/1M verificado online — não 0,02) em vez do piso de US$ 1; wallet aceita o card; revisão Sol com 2 correções; falta redeploy no staging + `RPG_DAILY_SPEND_CAP_TEXT=1` com ≥30 turnos.
+> **17/10 (tarde) — DeepSeek no staging (autorização do dono), branch `staging-ds`:** turnos reais 25/25
+> (antes, Groq free: 0/4 narrações reais); SPEC-236 §6.1 verde (falha DeepSeek = custo 0, fora do gasto;
+> §6.2/§6.3 não exercíveis, 236 segue `in-progress`); **gate da SPEC-214 com provider real = `GO` pela regra**
+> (context p95 762 ms ≥ 400; share 3,94 %; spec segue `draft`, sem implementação). Gasto ≈ US$ 0,10.
+> [Adendo](docs/staging-wave-2026-10-17/README.md) · [gate real](docs/spec214/gate-real-2026-10-17.md).
 
 > **17/10 — onda de staging (security/finops) aplicada no staging, branch `staging-wave` (não mergeada):**
 > 5 migrations no Supabase staging (28/28 em sync), `rpg_admin` + `rpg_runtime` rotacionados, RLS por request

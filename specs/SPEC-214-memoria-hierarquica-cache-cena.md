@@ -6,6 +6,10 @@
 > (`--mode scaled --scale 1.0`, seed 214): context p50/p95 = 9/36 ms (`typical`) e 5/12 ms (`slow-tail`),
 > `context_share` 0,14 % / 0,08 % do TTLT p50. Default P1 aplicado. Nenhum código de produto escrito;
 > limitação: offline não inclui embedding HTTP real. Evidência: [docs/spec214/gate.md](../docs/spec214/gate.md).
+> **Gate R1 com provider real (staging, 2026-10-17): `GO` pela regra** — DeepSeek + Jina, 20 turnos SSE:
+> context p50/p95 = 414/762 ms, TTLT p50/p95 = 10 487/14 774 ms, `context_share` 3,94 % (< 10 %) mas
+> `p95(context)` ≥ 400 ms ⇒ a condição de `NO_GO` não vale. Teto de ganho ~4 % do TTLT; amostra n = 20.
+> Spec segue `draft`, **sem implementação** até decisão do dono. Evidência: [docs/spec214/gate-real-2026-10-17.md](../docs/spec214/gate-real-2026-10-17.md).
 > **Depende de:** SPEC-200 `done` (baseline/gate), SPEC-213 `done` (cursor das projeções — recomendado), SPEC-234 `done` (ledger/resumo que não congela) · SPEC-005, SPEC-085, SPEC-146, SPEC-147, SPEC-149 e SPEC-170 `done` (insumos/régua, não reabertos) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-215, SPEC-217 (ordem final 2026-10-15)
 > **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 11

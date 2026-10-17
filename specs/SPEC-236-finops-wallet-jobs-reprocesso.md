@@ -3,6 +3,10 @@
 > **Status:** `in-progress` — código + testes offline/Postgres local entregues (2026-10-16); revisão independente
 > `Sol` (+Astra R1/R2/R5) **APPROVED_WITH_FIXES** em 2026-10-17 ([parecer](../handoffs/SPEC-236-SOL-independent-review.md)).
 > **17/10:** migration aplicada no staging; 429 do Groq gravados como `failed_no_usage` (custo 0, fora do gasto). **Falta:** o smoke §6 literal (sem chave DeepSeek/OpenAI no staging) e corrigir o rate card sem Jina (cada embedding = US$ 1 estimado, conta como gasto e dispara o cap de texto) — ver `docs/staging-wave-2026-10-17/README.md`.
+> **17/10 (DeepSeek no staging):** §6.1 **verde** (chave DeepSeek inválida temporária → 9 falhas `failed_no_usage`,
+> custo 0, `counts_as_spend=false`; LLM do turno = só Groq). §6.2 e §6.3 **não exercidos** (fixture de trip
+> retroativo no audit imutável não permitido no staging; sem chave OpenAI p/ fallback de STT) — seguem cobertos
+> pelos testes offline/`infra_local`. Status segue `in-progress`.
 > Evidência: [docs/spec236/README.md](../docs/spec236/README.md).
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
 > **Depende de:** nenhuma · SPEC-182/184/186/188/189/195/196 `done` e o teto diário da SPEC-197 são corrigidos (ordem final 2026-10-15)
@@ -224,4 +228,9 @@ update app.usage_events set counts_as_spend=false
       backoff exponencial no revive de job morto (F3), `stream_interrupted` no export de auditoria (F4); corridas reais
       em `tests/test_spec236_races_local.py`.
 - [x] Migration `20261017100000` aplicada no staging. **Staging 17/10:** aplicada, histórico 28/28.
-- [ ] Smoke real §6 em staging. **17/10 (parcial):** com Groq real, falhas sem usage = `failed_no_usage`/`counts_as_spend=false` (28 linhas); §6.1 (falha DeepSeek), §6.2 (teto cross-day) e §6.3 (fallback STT) não exercíveis no staging atual. Achado: o custo do turno não é "só Groq" — embeddings Jina sem rate card entram como US$ 1 estimado.
+- [ ] Smoke real §6 em staging. **17/10 (DeepSeek):** §6.1 ✅ — deploy com `vercel_env.py --invalid-deepseek-key`, 2 turnos:
+      `deepseek invoke_error` ×9 = `failed_no_usage`, `cost_usd=0`, `counts_as_spend=false`; gasto LLM do turno só Groq
+      (US$ 0,002594, `token_priced`); chave real reposta e redeploy (`eovi9utqp`). §6.2 ❌ não exercido: exige gravar um
+      trip de ontem em `app.kill_switch_audit` (imutável) — escrita retroativa no audit recusada; precisaria de 2 dias reais
+      ou do teste `test_spec197_daily_cap`. §6.3 ❌ sem `OPENAI_API_KEY` no staging (fallback de STT inexistente).
+      Evidência: `docs/staging-wave-2026-10-17/evidence/deepseek_turns_and_gate214.json` (`s61`). **17/10 (parcial, Groq):** com Groq real, falhas sem usage = `failed_no_usage`/`counts_as_spend=false` (28 linhas); §6.1 (falha DeepSeek), §6.2 (teto cross-day) e §6.3 (fallback STT) não exercíveis no staging atual. Achado: o custo do turno não é "só Groq" — embeddings Jina sem rate card entram como US$ 1 estimado.

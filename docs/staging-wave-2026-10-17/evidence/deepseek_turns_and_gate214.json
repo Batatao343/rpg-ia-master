@@ -1,0 +1,681 @@
+{
+ "before": {
+  "at": "2026-10-17T19:01:13.533804+00:00",
+  "new_game": {
+   "status": 200,
+   "ms": 10551,
+   "simulated": false
+  },
+  "turns": [
+   {
+    "status": 200,
+    "total_ms": 1068.8,
+    "narration_chars": 63,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 2163.7,
+    "narration_chars": 97,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 1424.0,
+    "narration_chars": 102,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 1696.8,
+    "narration_chars": 63,
+    "has_error": false,
+    "has_done": true
+   }
+  ],
+  "usage_event_counts": {
+   "groq|llm|success|token_priced|spend": 6,
+   "groq|llm|invoke_error|failed_no_usage|no_spend": 6,
+   "jina|embedding|response|estimated|spend": 7
+  },
+  "failed_no_usage_all_zero_cost": true,
+  "llm_spend_usd_by_provider": {
+   "groq": 0.002271,
+   "jina": 7.0
+  },
+  "audit_trace_timing": [
+   {
+    "phase_ms": null,
+    "providers_used": null,
+    "llm_failed_attempts": null,
+    "llm_fallbacks": null
+   },
+   {
+    "phase_ms": null,
+    "providers_used": null,
+    "llm_failed_attempts": null,
+    "llm_fallbacks": null
+   },
+   {
+    "phase_ms": null,
+    "providers_used": null,
+    "llm_failed_attempts": null,
+    "llm_fallbacks": null
+   },
+   {
+    "phase_ms": null,
+    "providers_used": null,
+    "llm_failed_attempts": null,
+    "llm_fallbacks": null
+   }
+  ]
+ },
+ "s61": {
+  "at": "2026-10-17T19:05:58.799096+00:00",
+  "new_game": {
+   "status": 200,
+   "ms": 11908,
+   "simulated": false
+  },
+  "turns": [
+   {
+    "status": 200,
+    "total_ms": 1361.8,
+    "narration_chars": 63,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 5604.9,
+    "narration_chars": 3,
+    "has_error": false,
+    "has_done": true
+   }
+  ],
+  "usage_event_counts": {
+   "deepseek|llm|invoke_error|failed_no_usage|no_spend": 9,
+   "groq|llm|success|token_priced|spend": 5,
+   "groq|llm|invoke_error|failed_no_usage|no_spend": 4,
+   "jina|embedding|response|estimated|spend": 6
+  },
+  "failed_no_usage_all_zero_cost": true,
+  "llm_spend_usd_by_provider": {
+   "deepseek": 0,
+   "jina": 6.0,
+   "groq": 0.002594
+  },
+  "audit_trace_timing": [
+   {
+    "phase_ms": {
+     "other": 259,
+     "router": 1,
+     "context": 317,
+     "narrator": 575,
+     "archivist": 1,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek",
+     "groq"
+    ],
+    "llm_failed_attempts": 2,
+    "llm_fallbacks": 1
+   },
+   {
+    "phase_ms": {
+     "other": 260,
+     "router": 1420,
+     "context": 386,
+     "narrator": 3330,
+     "archivist": 1,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek",
+     "groq"
+    ],
+    "llm_failed_attempts": 4,
+    "llm_fallbacks": 3
+   }
+  ]
+ },
+ "s214": {
+  "at": "2026-10-17T19:09:29.227154+00:00",
+  "new_game": {
+   "status": 200,
+   "ms": 14771,
+   "simulated": false
+  },
+  "turns": [
+   {
+    "status": 200,
+    "total_ms": 12246.1,
+    "narration_chars": 1525,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 15468.7,
+    "narration_chars": 794,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 7655.9,
+    "narration_chars": 1062,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 12859.9,
+    "narration_chars": 1058,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 6149.5,
+    "narration_chars": 210,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 6680.4,
+    "narration_chars": 1205,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 12607.4,
+    "narration_chars": 1403,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 10611.6,
+    "narration_chars": 1273,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 6263.6,
+    "narration_chars": 1006,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 13189.7,
+    "narration_chars": 600,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 5900.1,
+    "narration_chars": 1434,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 13414.9,
+    "narration_chars": 1292,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 6629.8,
+    "narration_chars": 1137,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 11047.3,
+    "narration_chars": 848,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 10413.8,
+    "narration_chars": 252,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 10870.3,
+    "narration_chars": 1279,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 10266.9,
+    "narration_chars": 1126,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 19007.7,
+    "narration_chars": 1706,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 6487.7,
+    "narration_chars": 1057,
+    "has_error": false,
+    "has_done": true
+   },
+   {
+    "status": 200,
+    "total_ms": 10636.7,
+    "narration_chars": 510,
+    "has_error": false,
+    "has_done": true
+   }
+  ],
+  "usage_event_counts": {
+   "deepseek|llm|success|estimated|spend": 60,
+   "jina|embedding|response|estimated|spend": 42
+  },
+  "failed_no_usage_all_zero_cost": true,
+  "llm_spend_usd_by_provider": {
+   "deepseek": 0.079223,
+   "jina": 42.0
+  },
+  "audit_trace_timing": [
+   {
+    "phase_ms": {
+     "other": 382,
+     "router": 1,
+     "context": 587,
+     "narrator": 10938,
+     "archivist": 9,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek"
+    ],
+    "llm_failed_attempts": 0,
+    "llm_fallbacks": 0
+   },
+   {
+    "phase_ms": {
+     "other": 384,
+     "router": 1480,
+     "context": 383,
+     "narrator": 8546,
+     "archivist": 3772,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek"
+    ],
+    "llm_failed_attempts": 0,
+    "llm_fallbacks": 0
+   },
+   {
+    "phase_ms": {
+     "other": 383,
+     "router": 2023,
+     "context": 375,
+     "narrator": 4589,
+     "archivist": 7,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek"
+    ],
+    "llm_failed_attempts": 0,
+    "llm_fallbacks": 0
+   },
+   {
+    "phase_ms": {
+     "other": 388,
+     "router": 1561,
+     "context": 878,
+     "narrator": 5199,
+     "archivist": 4466,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek"
+    ],
+    "llm_failed_attempts": 0,
+    "llm_fallbacks": 0
+   },
+   {
+    "phase_ms": {
+     "other": 396,
+     "router": 1364,
+     "context": 0,
+     "narrator": 1543,
+     "archivist": 2556,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek"
+    ],
+    "llm_failed_attempts": 0,
+    "llm_fallbacks": 0
+   },
+   {
+    "phase_ms": {
+     "other": 393,
+     "router": 1381,
+     "context": 382,
+     "narrator": 4234,
+     "archivist": 9,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek"
+    ],
+    "llm_failed_attempts": 0,
+    "llm_fallbacks": 0
+   },
+   {
+    "phase_ms": {
+     "other": 402,
+     "router": 1496,
+     "context": 431,
+     "narrator": 9914,
+     "archivist": 10,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek"
+    ],
+    "llm_failed_attempts": 0,
+    "llm_fallbacks": 0
+   },
+   {
+    "phase_ms": {
+     "other": 406,
+     "router": 1,
+     "context": 383,
+     "narrator": 5906,
+     "archivist": 3617,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek"
+    ],
+    "llm_failed_attempts": 0,
+    "llm_fallbacks": 0
+   },
+   {
+    "phase_ms": {
+     "other": 414,
+     "router": 1403,
+     "context": 377,
+     "narrator": 3698,
+     "archivist": 8,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek"
+    ],
+    "llm_failed_attempts": 0,
+    "llm_fallbacks": 0
+   },
+   {
+    "phase_ms": {
+     "other": 410,
+     "router": 1239,
+     "context": 403,
+     "narrator": 6570,
+     "archivist": 4205,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek"
+    ],
+    "llm_failed_attempts": 0,
+    "llm_fallbacks": 0
+   },
+   {
+    "phase_ms": {
+     "other": 418,
+     "router": 2,
+     "context": 435,
+     "narrator": 4716,
+     "archivist": 12,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek"
+    ],
+    "llm_failed_attempts": 0,
+    "llm_fallbacks": 0
+   },
+   {
+    "phase_ms": {
+     "other": 447,
+     "router": 1684,
+     "context": 535,
+     "narrator": 4814,
+     "archivist": 5558,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek"
+    ],
+    "llm_failed_attempts": 0,
+    "llm_fallbacks": 0
+   },
+   {
+    "phase_ms": {
+     "other": 424,
+     "router": 1612,
+     "context": 397,
+     "narrator": 3871,
+     "archivist": 9,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek"
+    ],
+    "llm_failed_attempts": 0,
+    "llm_fallbacks": 0
+   },
+   {
+    "phase_ms": {
+     "other": 434,
+     "router": 1660,
+     "context": 419,
+     "narrator": 3973,
+     "archivist": 4134,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek"
+    ],
+    "llm_failed_attempts": 0,
+    "llm_fallbacks": 0
+   },
+   {
+    "phase_ms": {
+     "other": 427,
+     "router": 4754,
+     "context": 343,
+     "narrator": 1414,
+     "archivist": 3107,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek"
+    ],
+    "llm_failed_attempts": 0,
+    "llm_fallbacks": 0
+   },
+   {
+    "phase_ms": {
+     "other": 434,
+     "router": 1341,
+     "context": 762,
+     "narrator": 3959,
+     "archivist": 3961,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek"
+    ],
+    "llm_failed_attempts": 0,
+    "llm_fallbacks": 0
+   },
+   {
+    "phase_ms": {
+     "other": 438,
+     "router": 1490,
+     "context": 408,
+     "narrator": 3616,
+     "archivist": 3932,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek"
+    ],
+    "llm_failed_attempts": 0,
+    "llm_fallbacks": 0
+   },
+   {
+    "phase_ms": {
+     "other": 445,
+     "router": 1,
+     "context": 528,
+     "narrator": 13446,
+     "archivist": 4172,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek"
+    ],
+    "llm_failed_attempts": 0,
+    "llm_fallbacks": 0
+   },
+   {
+    "phase_ms": {
+     "other": 457,
+     "router": 1511,
+     "context": 429,
+     "narrator": 3703,
+     "archivist": 14,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek"
+    ],
+    "llm_failed_attempts": 0,
+    "llm_fallbacks": 0
+   },
+   {
+    "phase_ms": {
+     "other": 451,
+     "router": 1466,
+     "context": 537,
+     "narrator": 3012,
+     "archivist": 4412,
+     "persistence": null
+    },
+    "providers_used": [
+     "deepseek"
+    ],
+    "llm_failed_attempts": 0,
+    "llm_fallbacks": 0
+   }
+  ]
+ },
+ "s214_server_logs_gate": {
+  "n": 20,
+  "ttlt": {
+   "p50": 10487.0,
+   "p95": 14774,
+   "max": 18852
+  },
+  "ttfmc": {
+   "p50": 10482.5,
+   "p95": 14770
+  },
+  "ack": {
+   "p50": 84.5,
+   "p95": 98
+  },
+  "phases": {
+   "router": {
+    "p50": 1473.0,
+    "p95": 2023,
+    "max": 4753,
+    "share_sum": 0.1338
+   },
+   "context": {
+    "p50": 413.5,
+    "p95": 762,
+    "max": 878,
+    "share_sum": 0.0438
+   },
+   "narrator": {
+    "p50": 4411.5,
+    "p95": 10939,
+    "max": 13446,
+    "share_sum": 0.5244
+   },
+   "archivist": {
+    "p50": 3362.0,
+    "p95": 4466,
+    "max": 5558,
+    "share_sum": 0.2337
+   },
+   "persistence": {
+    "p50": 214.0,
+    "p95": 270,
+    "max": 581,
+    "share_sum": 0.023
+   },
+   "other": {
+    "p50": 416.0,
+    "p95": 451,
+    "max": 457,
+    "share_sum": 0.0406
+   }
+  },
+  "context_share_p50_over_p50": 0.0394,
+  "context_ratio_per_turn_median": 0.0443,
+  "providers": [
+   "deepseek"
+  ],
+  "llm_failed_attempts": 0,
+  "routes": {
+   "npc_actor": 6,
+   "storyteller": 12,
+   "loot": 2
+  },
+  "cost_usd_sum": 0.075822,
+  "cost_basis": [
+   "usage"
+  ],
+  "input_size": [
+   "medium",
+   "short"
+  ]
+ },
+ "note": "Synthetic users/games deleted after reading (cascade removes their usage_events). No secret values; no game ids."
+}
