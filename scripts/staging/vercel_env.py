@@ -40,10 +40,10 @@ NON_SECRET_LITERALS = {
     "RPG_AUTH_CAPTCHA_REQUIRED": "1",
     "RPG_TURNSTILE_SITE_KEY": TURNSTILE_TEST_SITE_KEY,
     # Teto diario de gasto variavel (SPEC-197 R7): 5 BRL; o cron desliga imagem/STT ao passar.
-    # O cap de TEXTO (RPG_DAILY_SPEND_CAP_TEXT) fica DESLIGADO: o rate card nao tem Jina, cada embedding
-    # vira estimativa conservadora de US$ 1 e o cap recusaria todo turno (503) apos ~1 turno
-    # (achado do smoke 2026-10-17). O texto real fica limitado pelo free tier do Groq (sem cobranca).
+    # SPEC-237: embeddings Jina passaram a ser precificados por token (card versionado), entao o cap de
+    # TEXTO (SPEC-219 R8: 503 `daily_spend_cap` para novos turnos) volta LIGADO. Rollback: --no-text-cap.
     "RPG_DAILY_SPEND_CAP_BRL": "5",
+    "RPG_DAILY_SPEND_CAP_TEXT": "1",
     # STT (SPEC-186): synthetic pricing version seeded by synthetic_data.seed_wallet_prereqs; WAV only (no ffmpeg).
     "RPG_SPEECH_ENABLED": "1",
     "RPG_SPEECH_PRICING_VERSION": "spec197-restore-b",
@@ -52,15 +52,17 @@ NON_SECRET_LITERALS = {
 PREVIEW_LITERALS = {"RPG_RUNTIME_PROFILE": "hosted-supabase", "RPG_BIND_HOST": "0.0.0.0"}
 # Nomes que NAO podem continuar no projeto (o upsert nao apaga): RPG_FORCE_MOCK e proibido em hosted
 # (SPEC-218 boot fail-closed) e LLM_PROVIDER forcaria um provider unico fora de ROUTES.
-REMOVED_NAMES = ("RPG_FORCE_MOCK", "LLM_PROVIDER", "RPG_DAILY_SPEND_CAP_TEXT")
+REMOVED_NAMES = ("RPG_FORCE_MOCK", "LLM_PROVIDER")
 # Pares exclusivos do modo RLS (SPEC-224): ao alternar rollback <-> RLS o upsert deixaria a variavel do
 # outro modo para tras (ex.: RPG_REQUEST_RLS=off sobrevivendo a volta ao RLS efetivo).
 MODE_EXCLUSIVE = ("RPG_REQUEST_RLS", "RPG_ADMIN_DATABASE_URL")
+# Flags opcionais: saem do projeto quando nao estao em ``production`` (ex.: --no-text-cap).
+OPTIONAL_FLAGS = ("RPG_DAILY_SPEND_CAP_TEXT",)
 
 
 def stale_names(production: Mapping[str, str]) -> tuple[str, ...]:
-    """Variaveis a apagar do projeto: as removidas + as do outro modo RLS que nao estao em ``production``."""
-    return REMOVED_NAMES + tuple(n for n in MODE_EXCLUSIVE if n not in production)
+    """Variaveis a apagar: as removidas + as do outro modo RLS/flags opcionais ausentes de ``production``."""
+    return REMOVED_NAMES + tuple(n for n in MODE_EXCLUSIVE + OPTIONAL_FLAGS if n not in production)
 # SPEC-194: HMAC key for Play obfuscated account ids (>=32 chars). Pushed only when present in the env files.
 # SPEC-197 R6 voice: Groq only (no OPENAI_API_KEY => no paid STT fallback candidate).
 # 2026-10-17 (dono: "Sim, use a DeepSeek"): DEEPSEEK_API_KEY e o candidato PRIMARIO de ROUTES em todos os tiers;
@@ -81,9 +83,12 @@ def _load_files() -> dict[str, str]:
 
 
 def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST, use_admin_dsn: bool = False,
-              invalid_deepseek_key: bool = False) -> tuple[dict[str, str], dict[str, str]]:
+              invalid_deepseek_key: bool = False,
+              text_cap: bool = True) -> tuple[dict[str, str], dict[str, str]]:
     """Retorna (production, preview). Levanta KeyError com NOME do segredo ausente."""
     production = dict(NON_SECRET_LITERALS)
+    if not text_cap:
+        production.pop("RPG_DAILY_SPEND_CAP_TEXT", None)
     production["RPG_CORS_ORIGINS"] = f"https://{public_host}"
     missing = [k for k in SECRET_FROM_FILE if not files.get(k)]
     if missing:
@@ -159,6 +164,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--use-admin-dsn", action="store_true", help="rollback: DATABASE_URL = postgres")
     ap.add_argument("--invalid-deepseek-key", action="store_true",
                     help="SPEC-236 §6.1: envia uma chave DeepSeek invalida (forca fallback Groq); reverter sem a flag")
+    ap.add_argument("--no-text-cap", action="store_true",
+                    help="rollback SPEC-237: desliga o cap diario de TEXTO (apaga RPG_DAILY_SPEND_CAP_TEXT)")
     args = ap.parse_args(argv)
     if args.project_name != PROJECT_NAME:
         print(f"recusado: projeto deve ser {PROJECT_NAME}", file=sys.stderr)
@@ -170,7 +177,7 @@ def main(argv: list[str] | None = None) -> int:
     files = _load_files()
     try:
         production, preview = build_env(files, args.public_host, args.use_admin_dsn,
-                                        args.invalid_deepseek_key)
+                                        args.invalid_deepseek_key, text_cap=not args.no_text_cap)
     except KeyError as exc:
         print(exc.args[0], file=sys.stderr)
         return 1
