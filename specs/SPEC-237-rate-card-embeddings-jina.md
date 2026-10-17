@@ -1,6 +1,6 @@
 # SPEC-237 — Rate card de embeddings (Jina): preço por token em vez do piso de US$ 1
 
-> **Status:** `in-progress` — aprovada pelo dono em 2026-10-17 ("Sim, spec + execução"); código, testes offline e revisão Sol entregues; falta redeploy no staging + reativar `RPG_DAILY_SPEND_CAP_TEXT=1` e rodar ≥30 turnos.
+> **Status:** `done` — aprovada pelo dono em 2026-10-17 ("Sim, spec + execução"); código, testes offline e revisão Sol entregues; staging 17/10: redeploy (`3250cdb`) com `RPG_DAILY_SPEND_CAP_TEXT=1`, 32 turnos DeepSeek sem 503, embeddings Jina `token_priced` com `embedding-2026-10-17-v1-8e04a9bb33e8be9b` (`docs/staging-wave-2026-10-17/evidence/spec237_text_cap_32_turns.json`).
 > **Criada:** 2026-10-17 · **Atualizada:** 2026-10-17
 > **Depende de:** SPEC-182 `done` (metering), SPEC-183/196 `done` (rate card pinado), SPEC-236 `in-progress` (cap diário, `counts_as_spend`)
 > **Desbloqueia:** reativar `RPG_DAILY_SPEND_CAP_TEXT=1` no staging; gate de custos da SPEC-197
@@ -100,7 +100,7 @@ o fail-safe de US$ 1 para qualquer modelo/provider sem preço, sem tocar o card 
 - [x] Suíte completa offline verde e ruff limpo (ver `docs/spec237/README.md`)
 - [x] Revisão independente `Sol` (`handoffs/SPEC-237-SOL-independent-review.md`; 2 defeitos corrigidos)
 - [x] Preço verificado online pela revisão Sol: US$ 0,05/1M (não 0,02) — card corrigido antes do commit
-- [ ] Staging: redeploy + reativar `RPG_DAILY_SPEND_CAP_TEXT=1` e rodar ≥30 turnos sem 503 (remoto, fora desta execução)
+- [x] Staging: redeploy + reativar `RPG_DAILY_SPEND_CAP_TEXT=1` e rodar ≥30 turnos sem 503. **17/10:** deploy `6wy6q129o` (`git_sha 3250cdb`, `hardened=true`), `vercel_env.py` liga o cap de texto por padrão (`--no-text-cap` = rollback); 32/32 turnos 200, 0 × 503 `daily_spend_cap`; 56 embeddings Jina `token_priced` somando US$ 0,000098 (antes seriam 56 × US$ 1); 2 turnos extras confirmam `billing_exact=true`, `pricing_version=embedding-2026-10-17-v1-8e04a9bb33e8be9b`, 0 linhas `unknown-conservative` em 2 h. Dados sintéticos apagados.
 
 ## 6. Smoke
 

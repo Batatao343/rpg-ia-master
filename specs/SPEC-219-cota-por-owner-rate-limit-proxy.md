@@ -1,6 +1,6 @@
 # SPEC-219 — Cota de custo por owner, cobertura do rate limit e IP real atrás de proxy
 
-> **Status:** `in-progress` (17/10: migration aplicada no staging e smoke staging verde — 429 no 21º turno/min com `Retry-After`, outro owner no mesmo IP joga, token inválido sem round trip ao Auth, `chronicle/search` 429 no 11º; corrigido no staging-wave o contador diário que falhava aberto sob o role de request da SPEC-224. Faltam: medição R5 numa 2ª rede e a SPEC-218 aterrissar na `main`. Ver `docs/staging-wave-2026-10-17/README.md`)
+> **Status:** `in-progress` (17/10: todos os critérios próprios verdes no staging — R5 medido em 2 redes (ISP local + `pg_net` do Supabase), cap de texto R8 ligado com 32 turnos sem 503; código da SPEC-218 já está na `main`. Único pendente: a dependência SPEC-218 virar `done`, que espera itens do gate de release da SPEC-197 (páginas legais, riscos P0/P1, environments do GitHub, CI do sha). Ver `docs/staging-wave-2026-10-17/README.md`)
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
 > **Depende de:** SPEC-218 `done` (processo exposto sempre em perfil DB) · evolui SPEC-182/185/196 `done` e SPEC-197 `in-progress` sem reabri-las (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212; gate da SPEC-197; follow-up de cobrança por turno (SPEC-185) (ordem final 2026-10-15)
@@ -110,18 +110,18 @@ Objetivo: (1) todo caminho com custo externo tem limite **por owner** (além do 
 
 - [x] Etapa 0 vermelha no HEAD e verde ao final; R1–R11 (exceto a medicao empirica R5) com testes verdes; `uv run pytest` completo verde (exit 0); Node (120 testes)/`npm run build` verdes.
 - [x] Tabela de classes × limites publicada em `docs/spec219/README.md` e em `.env.example`.
-- [ ] Medição R5 registrada (qual header carrega o IP real na Vercel) e `client_ip` validada contra ela. **17/10 (parcial):** 1 rede — a chave do bucket `ip:<HMAC>` bate com o IP público do chamador, logo `client_ip` = `x-vercel-forwarded-for`; falta a 2ª rede.
+- [x] Medição R5 registrada (qual header carrega o IP real na Vercel) e `client_ip` validada contra ela. **17/10:** 1ª rede — a chave do bucket `ip:<HMAC>` bate com o IP público do chamador. **17/10 (2ª rede):** `pg_net` do banco de staging (sa-east-1) e o ISP local, com `X-Forwarded-For`/`X-Real-IP` e até `X-Vercel-Forwarded-For` forjados, caem em baldes `authfail:` distintos e estáveis por rede (`650ecd..` ×2, `4bd80e..` ×3); nenhum é HMAC de valor forjado, dos IPs do edge, do IPv6 do servidor nem de `unknown` ⇒ `client_ip` vem do `x-vercel-forwarded-for` sobrescrito pela plataforma. O IPv4 literal de saída do `pg_net` não é legível sem eco de terceiros (prova diferencial; `evidence/spec219_r5_second_network.json`).
 - [x] Playtest offline: o harness usa `app.invoke` (nao a API); cota e limites vivem em `api.py`/`_execute_action`, fora do grafo - sem impacto (confirmado por leitura; nao reexecutado).
 - [x] Smoke staging: usuário A 21 turnos/min → 429 no 21º; usuário B no mesmo IP joga normalmente; token inválido não aparece nos logs do Supabase Auth; `/game/chronicle/search` 11º/min → 429. **Staging 17/10:** 20×200 + 429 no 21º (28,7 s, `Retry-After` 32, `scope=owner`); B no mesmo IP 200; token inválido 401 sem `GET /user` 401 no Auth; `chronicle/search` 10×200 + 429 (`Retry-After` 55).
 - [x] Revisão Sol independente APPROVED (com 4 correcoes; `handoffs/SPEC-219-SOL-independent-review.md`).
 
 ### Pendente para fechar a spec (evidencia a gerar no staging pelo dono/coordenador)
 
-- [ ] Medicao R5: `client.host` vs `x-vercel-forwarded-for` no log `rpg.http` (2 redes distintas) registrada no README e `client_ip` validada contra ela. **17/10:** parcial (1 rede), ver acima.
+- [x] Medicao R5: 2 redes distintas registradas no README e `client_ip` validada contra elas (via chave do balde, nao `rpg.http`: o log nao carrega IP). Ver acima.
 - [x] Aplicar `20261017110000_owner_daily_counters.sql` no staging ANTES do deploy. **Staging 17/10:** aplicada antes do deploy; histórico 28/28.
 - [x] Smoke staging (item acima) com a transcricao dos codigos/`Retry-After` e a metrica `rpg_rate_limited_total`. **Staging 17/10:** códigos/`Retry-After` transcritos no README da onda; `/metrics` exige `RPG_METRICS_TOKEN` (não configurado no staging), então a métrica foi evidenciada pelo log `rpg.abuse blocked class=turn|embedding scope=owner` emitido pelo mesmo `record_block` que incrementa `rpg_rate_limited_total`.
 - [x] Revisao Sol independente APPROVED; parecer em `handoffs/SPEC-219-SOL-independent-review.md`.
-- [ ] SPEC-218 (`done`) aterrissar na `main` antes desta (esta branch esta empilhada sobre ela).
+- [ ] SPEC-218 (`done`) aterrissar na `main` antes desta. **17/10:** codigo da 218 ja esta na `main`; a 218 segue `in-progress` (so o `release/checklist.py --env staging` pendente por gate da SPEC-197), entao a 219 nao fecha ainda.
 
 ### Desvios / decisoes (defaults da spec usados)
 

@@ -125,3 +125,31 @@ Autorização do dono (17/10): "Sim, use a DeepSeek". Branch `staging-ds` (main 
   log do turno diz `usage`; coerente com o card, mas o ledger nunca fica `billing_exact` para DeepSeek.
 * **Rollback** (inalterado): promover `kie02bmt0` (mesmo runtime, Groq-only, RLS on) ou repetir `vercel_env.py`
   sem a chave + deploy. Para tirar a DeepSeek: apagar `DEEPSEEK_API_KEY` no projeto Vercel e redeploy.
+
+## Adendo 2026-10-17 (noite) — SPEC-237 no staging e SPEC-219 R5 em 2ª rede
+
+Branch `staging-237` (main `8823bb0` + 1 commit de tooling), sem push. Escopo inalterado (Supabase `uzeagzcyvxzrpjgrhaql`,
+Vercel `rpg-ia-master-staging`).
+
+* **Deploy.** `vercel_env.py` agora liga `RPG_DAILY_SPEND_CAP_TEXT=1` por padrão (`--no-text-cap` apaga a variável).
+  Deploy `rpg-ia-master-staging-6wy6q129o-…vercel.app`, `GIT_SHA=3250cdb`, `/health` com o sha, `hosted-supabase`,
+  `hardened=true`. A Vercel instala do **`uv.lock`** ("Installing required dependencies from uv.lock"), não do
+  `requirements-vercel.txt`; ambos fixam multidict 6.9.1 / urllib3 2.8.0 / langgraph-sdk 0.4.8 (SPEC-225).
+* **SPEC-237 (`done`).** Com o cap de texto ligado e teto R$ 5: 32/32 turnos SSE 200 (DeepSeek, `simulated=false`),
+  **0 × 503 `daily_spend_cap`**; 56 embeddings Jina `token_priced` = US$ 0,000098 (antes 56 × US$ 1); 2 turnos extras:
+  `billing_exact=true`, `pricing_version=embedding-2026-10-17-v1-8e04a9bb33e8be9b`, custo 4e-7…2e-5 USD, nenhuma linha
+  `unknown-conservative` nas últimas 2 h. Gasto real ≈ US$ 0,12. Jogos/usuários sintéticos apagados (sweep = 0).
+  [evidência](evidence/spec237_text_cap_32_turns.json).
+* **SPEC-219 R5 (2ª rede).** `GET /game/saves` com `rpg_access` lixo (→ 401 → balde `authfail:HMAC(client_ip)`):
+  ISP local ×2 → `authfail:650ecd10c6f2b575` (mesmo pseudônimo de todo o tráfego anterior desta rede); `pg_net` do
+  banco de staging ×3 (com XFF/X-Real-IP/X-Vercel-Forwarded-For forjados diferentes e sem cabeçalho) →
+  `authfail:4bd80ef0598437db` (count 3). Nenhuma chave é HMAC dos valores forjados, dos IPs A do edge, do IPv6 do
+  servidor (host sem AAAA ⇒ saída IPv4 NAT) nem de `unknown`. Conclusão: `client_ip` = `x-vercel-forwarded-for`
+  sobrescrito pela plataforma, por origem, não spoofável. Limite: o IPv4 literal do `pg_net` não aparece no Postgres nem
+  nos runtime logs da Vercel (sem campo de IP) e eco de terceiros estava fora do escopo — prova diferencial.
+  [evidência](evidence/spec219_r5_second_network.json). Sem mudança de schema; nenhuma Edge Function criada.
+* **SPEC-218/219.** O código da 218 está na `main`; `release/checklist.py --env staging` segue BLOQUEADO por
+  `legal_pages`, `open_p0_p1`, `environments_restricted`, `ci_green` (sha sem push), árvore suja e uma leitura
+  `kill_switch_store_reachable` com `OperationalError` local (passou na rodada anterior). 218 e 219 seguem `in-progress`.
+* **Rollback.** Promover `rpg-ia-master-staging-eovi9utqp-…vercel.app` (pré-onda, cap de texto desligado, mesmo
+  runtime DeepSeek) ou `vercel_env.py --no-text-cap` + novo deploy.

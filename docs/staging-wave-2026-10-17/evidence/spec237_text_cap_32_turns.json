@@ -1,0 +1,38 @@
+{
+  "spec": "SPEC-237 staging criterion (+ SPEC-219 R8 text cap on)",
+  "at": "2026-10-17T19:45Z/20:00Z",
+  "deployment": {
+    "url": "rpg-ia-master-staging-6wy6q129o (production alias rpg-ia-master-staging.vercel.app)",
+    "git_sha": "3250cdb (main 8823bb0 + vercel_env tooling commit)",
+    "health": {"profile": "hosted-supabase", "hardened": true, "sha_match": true},
+    "build": "Vercel installs from uv.lock (log: 'Installing required dependencies from uv.lock...'); uv.lock and requirements-vercel.txt both pin multidict 6.9.1, urllib3 2.8.0, langgraph-sdk 0.4.8",
+    "env_names_added": ["RPG_DAILY_SPEND_CAP_TEXT=1 (plain)"],
+    "env_kept": ["RPG_DAILY_SPEND_CAP_BRL=5"]
+  },
+  "spend_before_run_last_24h_usd": 0,
+  "run_32_turns": {
+    "user": "synthetic (created/deleted by admin API), cookie/CSRF/captcha-test login 200",
+    "new_game": {"status": 200, "simulated": false},
+    "turns": 32,
+    "status_counts": {"200": 32},
+    "daily_spend_cap_503": 0,
+    "sse_errors": 0,
+    "providers_used": {"deepseek": 32},
+    "narration_chars_min_max": [67, 1780],
+    "usage_events": {
+      "embedding_jina": {"n": 56, "cost_basis": "token_priced", "sum_usd": 0.000098},
+      "llm_deepseek": {"n": 80, "cost_basis": "estimated", "sum_usd": 0.104744}
+    },
+    "total_spend_usd": 0.104842,
+    "note": "pre-SPEC-237 the same 56 embeddings would have been 56 x US$1 (unknown-conservative-v1) and the R$5 text cap would 503 within the first turns"
+  },
+  "pricing_version_check_extra_2_turns": {
+    "embedding_jina": {"n": 11, "cost_basis": "token_priced", "billing_exact": true,
+                       "pricing_version": "embedding-2026-10-17-v1-8e04a9bb33e8be9b",
+                       "min_usd": "0.000000400", "max_usd": "0.000019950"},
+    "llm_deepseek": {"n": 10, "cost_basis": "estimated", "pricing_version": "2026-10-08-v1"},
+    "unknown_conservative_rows_last_2h": 0
+  },
+  "cleanup": {"games_deleted": 2, "synthetic_users_deleted": 2, "sweep_leftovers": 0},
+  "real_spend_estimate_usd": "~0.12 DeepSeek (within R$5/day)"
+}

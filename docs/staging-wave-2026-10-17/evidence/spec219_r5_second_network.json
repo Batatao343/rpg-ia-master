@@ -1,0 +1,51 @@
+{
+  "spec": "SPEC-219 R5",
+  "at": "2026-10-17T19:46Z",
+  "deployment": "rpg-ia-master-staging-6wy6q129o (git_sha 3250cdb = main 8823bb0 + staging tooling)",
+  "route": "GET /game/saves with cookie rpg_access=<garbage> -> 401 -> authfail bucket (SPEC-219 R6), key authfail:HMAC(client_ip)",
+  "networks": {
+    "network_1_local_isp": {
+      "requests": 2,
+      "forged_headers": {"X-Forwarded-For": "203.0.113.7", "X-Real-IP": "203.0.113.8", "X-Vercel-Forwarded-For": "203.0.113.9"},
+      "status": [401, 401],
+      "bucket_key": "authfail:650ecd10c6f2b575",
+      "bucket_count_after": 2,
+      "note": "same pseudonym as every earlier unforged request from this network (ip:650ecd10c6f2b575:* buckets); earlier wave matched it to HMAC(public IP of this network)"
+    },
+    "network_2_supabase_pg_net": {
+      "origin": "staging DB (uzeagzcyvxzrpjgrhaql, sa-east-1) via net.http_get, pg_net 0.19.5",
+      "requests": 3,
+      "forged_headers": [
+        {"X-Forwarded-For": "203.0.113.7", "X-Real-IP": "203.0.113.8", "X-Vercel-Forwarded-For": "203.0.113.9"},
+        {"X-Forwarded-For": "198.51.100.20, 198.51.100.21", "X-Real-IP": "198.51.100.22", "X-Vercel-Forwarded-For": "198.51.100.23"},
+        {}
+      ],
+      "net_http_response_ids": [4783, 4784, 4785],
+      "status": [401, 401, 401],
+      "bucket_key": "authfail:4bd80ef0598437db",
+      "bucket_count_after": 3
+    }
+  },
+  "hmac_of_forged_or_candidate_values_none_match": {
+    "203.0.113.7": "878182b2d393af90",
+    "203.0.113.8": "8674a399181fe975",
+    "203.0.113.9": "a8ad005f2d5f76af",
+    "198.51.100.20": "ff70c0aa12e50ba5",
+    "198.51.100.21": "4c0a87bc65c4e024",
+    "198.51.100.22": "c24454d7419af851",
+    "198.51.100.23": "c21bb25645558c52",
+    "198.51.100.20, 198.51.100.21": "e763909e218fe7e5",
+    "db_server_ipv6 (inet_server_addr)": "45f8a672c1f229c6",
+    "vercel_edge_A_216.198.79.2": "860fda675c12df3c",
+    "vercel_edge_A_64.29.17.2": "1c2b61062a400c93",
+    "127.0.0.1": "a7b64ddad0a7afd8",
+    "unknown (client.host fallback literal)": "53f1ff2f87c9cb4e"
+  },
+  "conclusion": [
+    "Two distinct networks produce two distinct, stable buckets (650ecd.. vs 4bd80e..): client_ip is per origin, not a shared edge/proxy IP.",
+    "Within each network the key is invariant to forged X-Forwarded-For, X-Real-IP and even a forged X-Vercel-Forwarded-For (3 pg_net requests with different/absent forged values -> one key, count 3): the platform overwrites x-vercel-forwarded-for with the real peer and the app ignores the spoofable headers.",
+    "The key is not HMAC of any forged value, of the Vercel edge IPs, of the DB server IPv6 (staging host has no AAAA, so pg_net egresses over Supabase IPv4 NAT), of 127.0.0.1 or of the 'unknown' fallback.",
+    "Limitation: the literal IPv4 egress of pg_net cannot be read from Postgres or Vercel runtime logs (no IP field) without a third-party IP echo, which was out of scope; identity is proven differentially."
+  ],
+  "cleanup": "authfail buckets expire with their 900 s window; no schema change; pg_net requests only to the staging URL"
+}

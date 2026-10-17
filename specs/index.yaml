@@ -4225,7 +4225,7 @@ specs:
   lineage_note: Authored from functional bug audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
 - id: SPEC-237
   slug: rate-card-embeddings-jina
-  status: in-progress
+  status: done
   path: specs/SPEC-237-rate-card-embeddings-jina.md
   created_commit: null
   created_at: '2026-10-17'

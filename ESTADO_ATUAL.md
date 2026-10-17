@@ -1,6 +1,7 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
-> **SPEC-237 `in-progress` (17/10):** embeddings Jina precificados por card versionado separado (`embedding-2026-10-17-v1`, US$ 0,05/1M verificado online — não 0,02) em vez do piso de US$ 1; wallet aceita o card; revisão Sol com 2 correções; falta redeploy no staging + `RPG_DAILY_SPEND_CAP_TEXT=1` com ≥30 turnos.
+> **SPEC-237 `done` (17/10):** embeddings Jina precificados por card versionado separado (`embedding-2026-10-17-v1`, US$ 0,05/1M) em vez do piso de US$ 1; staging redeployado (`3250cdb` = main `8823bb0` + tooling; deps do SPEC-225 instaladas via `uv.lock`) com `RPG_DAILY_SPEND_CAP_TEXT=1`: 32/32 turnos DeepSeek sem 503, 56 embeddings `token_priced` = US$ 0,0001.
+> **SPEC-219 R5 medido em 2ª rede (17/10):** `pg_net` do Supabase vs ISP local — baldes distintos por rede, invariantes a `X-Forwarded-For`/`X-Real-IP`/`X-Vercel-Forwarded-For` forjados. 219 segue `in-progress` só pela dependência SPEC-218 (`in-progress`: gate de release da SPEC-197).
 > **17/10 (tarde) — DeepSeek no staging (autorização do dono), branch `staging-ds`:** turnos reais 25/25
 > (antes, Groq free: 0/4 narrações reais); SPEC-236 §6.1 verde (falha DeepSeek = custo 0, fora do gasto;
 > §6.2/§6.3 não exercíveis, 236 segue `in-progress`); **gate da SPEC-214 com provider real = `GO` pela regra**
