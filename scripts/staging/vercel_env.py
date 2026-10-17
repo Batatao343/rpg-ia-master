@@ -39,10 +39,11 @@ NON_SECRET_LITERALS = {
     "RPG_AUTH_CAPTCHA_MODE": "gotrue",
     "RPG_AUTH_CAPTCHA_REQUIRED": "1",
     "RPG_TURNSTILE_SITE_KEY": TURNSTILE_TEST_SITE_KEY,
-    # Teto diario de gasto variavel (SPEC-197 R7 / SPEC-219 R8): 5 BRL, inclusive texto (turnos recusados
-    # quando o gasto do dia passa do teto). Mantem o custo do LLM real do staging minimo.
+    # Teto diario de gasto variavel (SPEC-197 R7): 5 BRL; o cron desliga imagem/STT ao passar.
+    # O cap de TEXTO (RPG_DAILY_SPEND_CAP_TEXT) fica DESLIGADO: o rate card nao tem Jina, cada embedding
+    # vira estimativa conservadora de US$ 1 e o cap recusaria todo turno (503) apos ~1 turno
+    # (achado do smoke 2026-10-17). O texto real fica limitado pelo free tier do Groq (sem cobranca).
     "RPG_DAILY_SPEND_CAP_BRL": "5",
-    "RPG_DAILY_SPEND_CAP_TEXT": "1",
     # STT (SPEC-186): synthetic pricing version seeded by synthetic_data.seed_wallet_prereqs; WAV only (no ffmpeg).
     "RPG_SPEECH_ENABLED": "1",
     "RPG_SPEECH_PRICING_VERSION": "spec197-restore-b",
@@ -51,7 +52,7 @@ NON_SECRET_LITERALS = {
 PREVIEW_LITERALS = {"RPG_RUNTIME_PROFILE": "hosted-supabase", "RPG_BIND_HOST": "0.0.0.0"}
 # Nomes que NAO podem continuar no projeto (o upsert nao apaga): RPG_FORCE_MOCK e proibido em hosted
 # (SPEC-218 boot fail-closed) e LLM_PROVIDER forcaria um provider unico fora de ROUTES.
-REMOVED_NAMES = ("RPG_FORCE_MOCK", "LLM_PROVIDER")
+REMOVED_NAMES = ("RPG_FORCE_MOCK", "LLM_PROVIDER", "RPG_DAILY_SPEND_CAP_TEXT")
 # SPEC-194: HMAC key for Play obfuscated account ids (>=32 chars). Pushed only when present in the env files.
 # SPEC-197 R6 voice: Groq only (no OPENAI_API_KEY => no paid STT fallback candidate).
 OPTIONAL_SECRET_FROM_FILE = ("RPG_PLAY_ACCOUNT_KEY",)

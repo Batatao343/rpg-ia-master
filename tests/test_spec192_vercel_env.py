@@ -64,5 +64,7 @@ def test_staging_runs_real_llm_with_a_daily_cap_and_never_mock():
     assert not set(FORBIDDEN_IN_HOSTED) & (prod.keys() | prev.keys())
     assert "RPG_FORCE_MOCK" in ve.REMOVED_NAMES and "LLM_PROVIDER" not in prod
     assert prod["GROQ_API_KEY"] == "v-GROQ_API_KEY" and len(prod["RPG_TELEMETRY_SECRET"]) > 0
-    assert float(prod["RPG_DAILY_SPEND_CAP_BRL"]) > 0 and prod["RPG_DAILY_SPEND_CAP_TEXT"] == "1"
+    assert float(prod["RPG_DAILY_SPEND_CAP_BRL"]) > 0
+    # cap de texto fora ate o rate card cobrir Jina (embedding sem card = US$ 1 estimado por chamada)
+    assert "RPG_DAILY_SPEND_CAP_TEXT" not in prod and "RPG_DAILY_SPEND_CAP_TEXT" in ve.REMOVED_NAMES
     assert {"GROQ_API_KEY", "RPG_TELEMETRY_SECRET"} <= ve.FORBIDDEN_IN_PREVIEW

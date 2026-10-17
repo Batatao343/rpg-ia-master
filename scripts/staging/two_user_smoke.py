@@ -1,7 +1,7 @@
 """SPEC-197 R6: two-user smoke on the deployed staging (no paid provider is called).
 
 Covers: login/refresh/logout, isolation A/B (state, saves, art quote, balance), server-side synthetic wallet
-credit + wallet sync, text turns (RPG_FORCE_MOCK on staging), image QUOTE (never generate), voice and Stripe
+credit + wallet sync, text turns (real Groq LLM on staging since 2026-10-17), image QUOTE (never generate), voice and Stripe
 (recorded honestly as not_configured / blocked when the deployment has no key), account delete.
 The synthetic wallet credit uses PostgresWallet.credit_verified_purchase (append-only: the pseudonymised
 ledger rows stay in staging, see docs/spec197/evidence/restore_wallet.json notes).
@@ -71,13 +71,13 @@ def run(base: str, env: dict[str, str]) -> dict:
         ck["login"]["ok"] = ck["login"]["a"] == 200 and ck["login"]["b"] == 200
         ck["new_game"] = {"a": a.new_game(), "b": b.new_game()}
         ck["new_game"]["ok"] = bool(a.game_id and b.game_id)
-        # text turns (staging runs RPG_FORCE_MOCK=1: the narrator is simulated, the pipeline is real)
+        # text turns (real LLM route on staging; 2 short turns per user)
         turns = {u.label: [stream_turn(u.c, base, u.csrf, u.game_id, t, str(uuid4()))
                            for t in ("Observo ao redor com cuidado.", "Examino o chão em busca de pistas.")]
                  for u in users}
         ck["text_turns"] = {k: [{"status": t["status"], "turn_count": t.get("turn_count"), "has_done": t["has_done"],
                                  "has_error": t["has_error"]} for t in v] for k, v in turns.items()}
-        ck["text_turns"]["note"] = "RPG_FORCE_MOCK=1 on staging: simulated narrator, real graph/persistence/SSE"
+        ck["text_turns"]["note"] = "staging runs the real LLM route (Groq) since 2026-10-17; real graph/persistence/SSE"
         ck["text_turns"]["ok"] = all(t["status"] == 200 and t["has_done"] and not t["has_error"]
                                      for v in turns.values() for t in v)
         # isolation A/B
