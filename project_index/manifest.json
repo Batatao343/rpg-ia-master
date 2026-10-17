@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "85b95029b29741622052b535b5ab75d1e2dff407",
+  "commit_sha": "93584ea82fae9813506a48468c45d0c54450d566",
   "edge_counts": {
-    "calls": 13531,
-    "contains": 591,
-    "defines": 7896,
-    "imports": 1260,
-    "likely_test_for": 791,
+    "calls": 13885,
+    "contains": 600,
+    "defines": 8046,
+    "imports": 1276,
+    "likely_test_for": 806,
     "route_to": 60
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:50c08a9d429bf6d8f369c1b08aa294e69061b59a613271445c30077b6ff1fdf3",
+  "graph_hash": "sha256:2ab39700ae431a766ed0286cc01b9385055a102628b16926aa8acc1d03c251ab",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -312,6 +312,7 @@
     "services/memory_retry.py",
     "services/memory_summary.py",
     "services/narrative_evidence.py",
+    "services/npc_knowledge.py",
     "services/npc_layers.py",
     "services/objectives.py",
     "services/operation_recovery.py",
@@ -341,6 +342,7 @@
     "services/turn_pipeline.py",
     "services/usage_metering.py",
     "services/visual_catalog.py",
+    "services/world_distance.py",
     "services/world_validators.py",
     "state.py",
     "tests/conftest.py",
@@ -349,6 +351,7 @@
     "tests/fakes/local_auth.py",
     "tests/fakes/local_image_finance.py",
     "tests/fakes/local_portrait.py",
+    "tests/spec215_helpers.py",
     "tests/test_account_api.py",
     "tests/test_account_auth_gotrue_local.py",
     "tests/test_account_auth_transport.py",
@@ -364,6 +367,7 @@
     "tests/test_agents_contract.py",
     "tests/test_aliados_combate.py",
     "tests/test_api_attempt_telemetry.py",
+    "tests/test_api_npc_knowledge_private.py",
     "tests/test_archived_state_persistence.py",
     "tests/test_archivist_facts.py",
     "tests/test_art_state_persistence.py",
@@ -430,6 +434,7 @@
     "tests/test_conflito_zonas.py",
     "tests/test_context_identity.py",
     "tests/test_context_identity_local.py",
+    "tests/test_context_npc_gate.py",
     "tests/test_context_sources_concurrency.py",
     "tests/test_contracts_llm.py",
     "tests/test_cutover_audit.py",
@@ -452,6 +457,7 @@
     "tests/test_eval_harness.py",
     "tests/test_eval_memory_context.py",
     "tests/test_eval_narrative_npc.py",
+    "tests/test_eval_npc_knowledge.py",
     "tests/test_eval_player_knowledge.py",
     "tests/test_eval_routing.py",
     "tests/test_eval_state_rules.py",
@@ -530,6 +536,8 @@
     "tests/test_npc_catalog_scope.py",
     "tests/test_npc_fallback.py",
     "tests/test_npc_identity_grounding.py",
+    "tests/test_npc_knowledge.py",
+    "tests/test_npc_knowledge_migration.py",
     "tests/test_npc_memory.py",
     "tests/test_observability_stack.py",
     "tests/test_oidc_identity.py",
@@ -638,6 +646,7 @@
     "tests/test_weather_global.py",
     "tests/test_worker_fence_local.py",
     "tests/test_worker_lease_lifecycle.py",
+    "tests/test_world_distance.py",
     "tests/test_world_event_proof.py",
     "tests/test_world_sim.py",
     "vercel_app.py",
@@ -751,14 +760,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 668,
+    "class": 672,
     "endpoint": 60,
-    "file": 697,
-    "function": 2467,
-    "method": 666,
-    "module": 591,
-    "test": 4095
+    "file": 706,
+    "function": 2517,
+    "method": 674,
+    "module": 600,
+    "test": 4183
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:cde3982d95c121d5ef26c1bbfbc1fa717f074a65197ce10059daeb6164156073"
+  "source_tree_hash": "sha256:c4960ddfce2c5b8c7a1b99f59589ef968feac967eae85f3caaf26a61abaec314"
 }
