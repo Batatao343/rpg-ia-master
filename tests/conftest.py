@@ -15,7 +15,11 @@ os.environ.setdefault("RPG_PLAY_ACCOUNT_KEY", "test-play-account-key-0123456789a
 
 # SPEC-218 R10: marcadores de plataforma/bind do ambiente do dev/CI nunca vazam para a suíte.
 _EXPOSURE_ENV = ("VERCEL", "PORT", "RAILWAY_ENVIRONMENT", "RENDER", "K_SERVICE", "FLY_APP_NAME",
-                 "RPG_BIND_HOST", "RPG_ALLOW_LEGACY_EXPOSED")
+                 "DYNO", "RPG_BIND_HOST", "RPG_HOST", "RPG_ALLOW_LEGACY_EXPOSED")
+# Revisao Astra: limpar TAMBEM no import do conftest — `import api` acontece na coleta
+# (antes de qualquer fixture), e o boot policy roda no import do api.
+for _name in _EXPOSURE_ENV:
+    os.environ.pop(_name, None)
 
 
 @pytest.fixture(autouse=True)

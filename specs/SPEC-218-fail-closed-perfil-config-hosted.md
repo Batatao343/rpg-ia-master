@@ -1,7 +1,7 @@
 # SPEC-218 — Fail-closed de perfil e configuração de segurança em deploy exposto
 
 > **Status:** `in-progress`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
 > **Depende de:** nenhuma · evolui SPEC-181 `done` e o checklist da SPEC-197 `in-progress` sem reabri-los (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212, SPEC-219, SPEC-224; gate de release da SPEC-197 (ordem final 2026-10-15)
 > **Origem:** auditoria de segurança 2026-10-15 — achados AUTHZ-01 (alta), SESS-06/AUTHZ-07, PAG-04, LLM-06, PRIV-08, AUTHZ-10/INFRA-06, INFRA-03, INFRA-04, INFRA-05 (ver `RELATORIO.md`)
@@ -107,12 +107,12 @@ Objetivo: **um processo que escuta fora de loopback ou roda em plataforma de hos
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R10 com testes nomeados acima verdes; testes da Etapa 0 registrados vermelhos no HEAD e verdes depois.
+- [x] R1–R10 com testes nomeados acima verdes; testes da Etapa 0 registrados vermelhos no HEAD e verdes depois.
 - [ ] `uv run pytest` verde (suíte completa offline), `ruff` verde, `scripts/release/checklist.py --env staging` verde contra `.env.staging` (sem imprimir valores).
-- [ ] Smoke local: `RPG_RUNTIME_PROFILE` ausente + `PORT=8000 uv run uvicorn api:app --host 0.0.0.0 --port 8000` → processo NÃO sobe, stderr com `legacy_profile_exposed` e sem valores de env. Sem `PORT`, em loopback → sobe como hoje.
+- [x] Smoke local: `RPG_RUNTIME_PROFILE` ausente + `PORT=8000 uv run uvicorn api:app --host 0.0.0.0 --port 8000` → processo NÃO sobe, stderr com `legacy_profile_exposed` e sem valores de env. Sem `PORT`, em loopback → sobe como hoje.
 - [ ] Staging Vercel (redeploy): `GET /health` devolve `profile=hosted-supabase`, `hardened=true`; `GET /openapi.json` = 404; smoke `scripts/post_deploy_smoke.py` verde.
-- [ ] Revisão Astra independente APPROVED (com tentativa explícita de contornar R2 via `RPG_BIND_HOST=127.0.0.1` + `--host 0.0.0.0`: deve falhar por `PORT`/marcador de plataforma; documentar o limite: processo sem NENHUM marcador e bind manual 0.0.0.0 continua responsabilidade do operador — ponto de decisão D-B).
-- [ ] Saves antigos continuam carregando (nenhuma mudança de schema).
+- [x] Revisão Astra independente APPROVED (com tentativa explícita de contornar R2 via `RPG_BIND_HOST=127.0.0.1` + `--host 0.0.0.0`: deve falhar por `PORT`/marcador de plataforma; documentar o limite: processo sem NENHUM marcador e bind manual 0.0.0.0 continua responsabilidade do operador — ponto de decisão D-B).
+- [x] Saves antigos continuam carregando (nenhuma mudança de schema).
 
 ## 6. Smoke test
 
@@ -139,3 +139,10 @@ Sem LLM real (zero custo): (1) boot negativo local (acima); (2) boot positivo `l
 - Transcrição (sem valores) do boot negativo local e do `cloud_doctor`/`checklist` em staging; `GET /health` e `GET /openapi.json` do staging após redeploy (com `git_sha`).
 - `docs/secXX/README.md` com: lista final de `HOSTED_SECURITY_REQUIREMENTS`, decisões D-A..D-D resolvidas, limite do D-B, e parecer Astra (`handoffs/`).
 - Atualização de `docs/spec197/risk-register.md` (novo risco fechado: "perfil legacy exposto por esquecimento de env") e de `ESTADO_ATUAL.md`/`ROADMAP.md`.
+
+## 10. Status da execução (2026-10-17, revisão Astra independente)
+
+- Revisão Astra independente **APPROVED** após correções (parecer em `handoffs/SPEC-218-ASTRA-independent-review.md`): conftest limpa marcadores já no import (a coleta importa `api` antes das fixtures; `PORT` no shell derrubava a suíte), `DYNO` (Heroku) e `RPG_HOST` não-loopback (`python api.py`) viraram marcadores, fixture portable alinhada ao OIDC da SPEC-220.
+- Bypass §5 verificado: `RPG_BIND_HOST=127.0.0.1` + `--host 0.0.0.0` falha pelo marcador da plataforma; limite D-B (processo sem nenhum marcador + bind manual 0.0.0.0) segue responsabilidade do operador.
+- Desvios: `RPG_EXPOSE_OPENAPI` é proibido em todo `hosted*` (R11 vence D-C: staging é `hosted-supabase`, então docs ficam off lá também); `local` mantém docs ligados (R6).
+- **Falta só (status `in-progress`):** critério 2 parte `checklist --env staging` e §6 itens 3–4 (redeploy staging + `/health` `hardened=true` + `/openapi.json` 404 + `cloud_doctor` todo `present`). Antes do redeploy o dono precisa: definir `RPG_TELEMETRY_SECRET` (≥32) no projeto Vercel/`.env.staging` e decidir o mock — `scripts/staging/vercel_env.py` ainda envia `RPG_FORCE_MOCK=1`, que agora é proibido em hosted (boot falha de propósito). Etapa 0 vermelha no HEAD não foi capturada separadamente.

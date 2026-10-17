@@ -32,3 +32,8 @@ Desvio: `local` mantem docs ligados (spec R6 diz "legacy/local nada muda"); `por
   proposito. Ajustar env remota + `vercel_env.py` e verificar `/health` (`hardened=true`), `/openapi.json` 404.
 - Revisao Astra independente, `checklist --env staging` contra `.env.staging`, atualizar risk-register da SPEC-197.
 - Evidencia vermelha da Etapa 0 no HEAD nao foi capturada separadamente (testes escritos junto da implementacao).
+
+## Revisao Astra independente (2026-10-17)
+Parecer: `handoffs/SPEC-218-ASTRA-independent-review.md` (APPROVED com correcoes). Correcoes: conftest limpa marcadores
+no import (coleta importa `api`); marcadores `DYNO` e `RPG_HOST`; fixture portable com OIDC completo (SPEC-220).
+Staging ainda precisa de `RPG_TELEMETRY_SECRET` e de remover `RPG_FORCE_MOCK` de `scripts/staging/vercel_env.py`.

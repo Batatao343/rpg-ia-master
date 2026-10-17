@@ -53,7 +53,7 @@ def without(name: str) -> dict[str, str]:
 
 
 # --- R1/R2: exposição e boot ------------------------------------------------
-@pytest.mark.parametrize("marker", ["VERCEL", "RAILWAY_ENVIRONMENT", "RENDER", "K_SERVICE", "FLY_APP_NAME", "PORT"])
+@pytest.mark.parametrize("marker", ["VERCEL", "RAILWAY_ENVIRONMENT", "RENDER", "K_SERVICE", "FLY_APP_NAME", "DYNO", "PORT"])
 def test_legacy_exposed_boot_fails(marker: str) -> None:
     with pytest.raises(RuntimeError, match="legacy_profile_exposed") as exc:
         assert_boot_policy({marker: "x"})
@@ -354,10 +354,51 @@ def test_local_profile_exposed_fails() -> None:
 def test_portable_profile_exposed_requires_hardening() -> None:
     base = {"RPG_RUNTIME_PROFILE": "portable", "PORT": "8000",
             "DATABASE_URL": "postgresql://u:p@db.example.com:5432/postgres",
-            "RPG_OIDC_USERINFO_URL": "https://id.example/userinfo", "RPG_OIDC_ISSUER": "https://id.example"}
+            "RPG_OIDC_USERINFO_URL": "https://id.example/userinfo", "RPG_OIDC_ISSUER": "https://id.example",
+            "RPG_OIDC_JWKS_URL": "https://id.example/jwks", "RPG_OIDC_AUDIENCE": "rpg"}
     with pytest.raises(ValueError, match="hosted_config_insecure"):
         assert_boot_policy(base)
     hardened = {**secure_env(), **base}
     for key in ("SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY", "SUPABASE_SERVICE_ROLE_KEY"):
         hardened.pop(key)
     assert_boot_policy(hardened)
+
+
+# --- Revisao Astra independente (2026-10-17) ---------------------------------
+def test_suite_collection_survives_exposure_markers_in_parent_env() -> None:
+    """R10: `import api` ocorre na COLETA (antes das fixtures autouse); o conftest
+    precisa limpar os marcadores ja no import, senao `PORT` do shell do dev/CI
+    derruba a suite inteira com legacy_profile_exposed."""
+    import os
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    env = {**os.environ, "PORT": "8000", "DYNO": "web.1", "RAILWAY_ENVIRONMENT": "production"}
+    env.pop("RPG_RUNTIME_PROFILE", None)
+    proc = subprocess.run(
+        [sys.executable, "-m", "pytest", "--collect-only", "-q", "-p", "no:cacheprovider",
+         "tests/test_account_api.py"],
+        cwd=root, env=env, capture_output=True, text=True, timeout=180,
+    )
+    assert proc.returncode == 0, proc.stdout[-2000:] + proc.stderr[-2000:]
+    assert "legacy_profile_exposed" not in proc.stdout + proc.stderr
+
+
+def test_bind_host_loopback_does_not_hide_platform_marker() -> None:
+    """Bypass exigido pela spec (§5): RPG_BIND_HOST=127.0.0.1 declarado + bind real
+    0.0.0.0 numa plataforma -> falha pelo marcador da plataforma."""
+    for marker in ("VERCEL", "RAILWAY_ENVIRONMENT", "RENDER", "K_SERVICE", "FLY_APP_NAME", "DYNO"):
+        env = {"RPG_BIND_HOST": "127.0.0.1", "PORT": "8000", marker: "x"}
+        with pytest.raises(RuntimeError, match="legacy_profile_exposed"):
+            assert_boot_policy(env)
+
+
+def test_rpg_host_non_loopback_is_exposure_marker() -> None:
+    """`python api.py` liga em RPG_HOST (A5). Bind declarado fora de loopback ali
+    tambem e exposicao conhecida pelo app -> legacy nao sobe."""
+    assert "RPG_HOST" in exposure_markers({"RPG_HOST": "0.0.0.0"})
+    assert exposure_markers({"RPG_HOST": "127.0.0.1"}) == set()
+    with pytest.raises(RuntimeError, match="legacy_profile_exposed: markers=RPG_HOST"):
+        assert_boot_policy({"RPG_HOST": "0.0.0.0"})

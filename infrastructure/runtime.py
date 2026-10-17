@@ -340,7 +340,7 @@ class RuntimeConfig:
 # SPEC-218: fail-closed de perfil/configuracao em deploy exposto
 # ---------------------------------------------------------------------------
 HOSTED_PROFILES = frozenset({"hosted", "hosted-supabase"})
-_PLATFORM_MARKERS = ("VERCEL", "RAILWAY_ENVIRONMENT", "RENDER", "K_SERVICE", "FLY_APP_NAME")
+_PLATFORM_MARKERS = ("VERCEL", "RAILWAY_ENVIRONMENT", "RENDER", "K_SERVICE", "FLY_APP_NAME", "DYNO")
 # Fonte unica (importada por scripts/release/checklist.py como FORBIDDEN_IN_PROD).
 FORBIDDEN_IN_HOSTED = (
     "RPG_FORCE_MOCK", "RPG_GOOGLE_PLAY_FAKE", "RPG_ADMIN_ALLOW_PROFILE",
@@ -374,6 +374,10 @@ def exposure_markers(env: Mapping[str, str]) -> set[str]:
     bind = str(env.get("RPG_BIND_HOST", "")).strip()
     if bind and not _loopback_host(bind):
         found.add("RPG_BIND_HOST")
+    # Revisao Astra: `python api.py` liga em RPG_HOST (api.py __main__).
+    run_host = str(env.get("RPG_HOST", "")).strip()
+    if run_host and not _loopback_host(run_host):
+        found.add("RPG_HOST")
     if str(env.get("PORT", "")).strip() and not (bind and _loopback_host(bind)):
         found.add("PORT")
     return found
