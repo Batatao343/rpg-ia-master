@@ -89,3 +89,6 @@
 .dossier .dossier__h, .dossier-row__sub, .dossier__behind { color: var(--muted); }
 .dossier .codex-knowledge--rumor, .dossier .codex-knowledge--suspicion,
 .dossier-row .codex-knowledge--rumor, .dossier-row .codex-knowledge--suspicion { color: var(--muted); }
+
+/* SPEC-211: rótulo secundário do Codex (--faint dava 4.08:1 sobre o painel; AA exige 4.5:1). */
+.ws-panel .hud__label--sub { color: var(--muted); }

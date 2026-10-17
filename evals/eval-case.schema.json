@@ -52,6 +52,7 @@
         "ranking",
         "narrative_claim",
         "player_knowledge",
+        "dossier_leak",
         "property",
         "judge"
       ],

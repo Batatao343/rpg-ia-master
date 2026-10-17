@@ -12,8 +12,10 @@ import subprocess
 from pathlib import Path
 from typing import Any, Iterable
 
-JOURNEY_COUNT = 29
-JOURNEY_RE = re.compile(r"^(F(?:0[1-9]|1[0-9]|2[0-9]))\s+")
+# F30-F34 are reserved for the SPEC-210 map journeys (authored on a parallel branch).
+JOURNEY_IDS = tuple(f"F{i:02d}" for i in (*range(1, 30), *range(35, 41)))
+JOURNEY_COUNT = len(JOURNEY_IDS)
+JOURNEY_RE = re.compile(r"^(F(?:0[1-9]|[1-9][0-9]))\s+")
 
 
 def _specs(suites: Iterable[dict[str, Any]]) -> Iterable[dict[str, Any]]:
@@ -57,7 +59,7 @@ def summarize(report: dict[str, Any]) -> dict[str, Any]:
         "frontend_horizontal_overflow_cases": 0 if journeys.get("F16") else 1,
         "frontend_a11y_serious_critical": joined.count("A11Y serious/critical:"),
     }
-    complete = set(journeys) == {f"F{i:02d}" for i in range(1, JOURNEY_COUNT + 1)}
+    complete = set(journeys) == set(JOURNEY_IDS)
     hard_pass = complete and metrics["frontend_critical_journey_pass_rate"] == 1.0 and all(
         value == 0 for key, value in metrics.items() if key != "frontend_critical_journey_pass_rate"
     )
@@ -80,7 +82,7 @@ def measurement_identity(root: Path) -> dict[str, str]:
     package = json.loads((root / "web/package.json").read_text(encoding="utf-8"))
     return {
         "product_sha": os.getenv("GITHUB_SHA") or git.stdout.strip(),
-        "evaluator_version": "1.10.0",
+        "evaluator_version": "1.12.0",
         "metrics_registry_hash": digest(root / "evals/metrics-registry.yaml"),
         "journey_manifest_hash": digest(root / "web/e2e/critical-journeys.yaml"),
         "platform": platform.platform(),

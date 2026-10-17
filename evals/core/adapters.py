@@ -1250,6 +1250,116 @@ class NpcKnowledgeAdapter:
                 os.environ["RPG_NPC_KNOWLEDGE"] = saved_env
 
 
+class DossierLeakAdapter:
+    """Observe the player-safe dossier payload and its leak oracles (SPEC-211)."""
+
+    adapter_id = "dossier_leak"
+
+    @staticmethod
+    def _payload(
+        state: dict[str, Any], overlay: Any, variant_exclusive: Any, profile: Any
+    ) -> dict[str, Any]:
+        from contextlib import ExitStack
+        from unittest import mock
+
+        from services import bestiary_knowledge, discovery
+        from services.dossier_visibility import DossiersResponseModel
+        from services.dossiers import build_dossiers
+
+        with ExitStack() as stack:
+            stack.enter_context(
+                mock.patch.dict(
+                    os.environ,
+                    {"RPG_RUNTIME_PROFILE": str(profile or "legacy")},
+                )
+            )
+            stack.enter_context(
+                mock.patch.object(
+                    bestiary_knowledge,
+                    "_load_all",
+                    lambda **_kw: copy.deepcopy(overlay or {}),
+                )
+            )
+            if variant_exclusive:
+                database = copy.deepcopy(discovery._bestiary_db())
+                for creature_id, card_ids in variant_exclusive.items():
+                    database[creature_id]["variant_exclusive_cards"] = list(card_ids)
+                stack.enter_context(
+                    mock.patch.object(discovery, "_bestiary_db", lambda: database)
+                )
+            built = build_dossiers(copy.deepcopy(state))
+        # Same serialization as GET /game/codex/dossiers (strict model, unset omitted).
+        return DossiersResponseModel.model_validate(built).model_dump(exclude_unset=True)
+
+    def execute(self, case: AdapterCase) -> AdapterOutput:
+        if not isinstance(case.input, dict):
+            raise AdapterError("dossier_leak requires object input")
+        operation = str(case.input.get("operation") or "project")
+        state = case.input.get("state")
+        if not isinstance(state, dict):
+            raise AdapterError("dossier_leak requires input.state object")
+        overlay = case.input.get("overlay")
+        variant = case.input.get("variant_exclusive")
+        profile = case.input.get("runtime_profile")
+
+        from services.dossier_visibility import assert_no_private_fields, leak_view
+        from services.player_knowledge import assert_no_player_leak
+
+        def dump(value: Any) -> str:
+            return json.dumps(value, ensure_ascii=False, sort_keys=True)
+
+        if operation == "paired_project":
+            other = case.input.get("counterpart_state")
+            if not isinstance(other, dict):
+                raise AdapterError("paired_project requires input.counterpart_state")
+            first = self._payload(state, overlay, variant, profile)
+            second = self._payload(other, overlay, variant, profile)
+            return AdapterOutput(
+                actual={"operation": operation, "payload_jsons": [dump(first), dump(second)]}
+            )
+        payload = self._payload(state, overlay, variant, profile)
+        if operation == "project":
+            sections = payload.get("sections") or {}
+            ids = {
+                name: [str(row.get("id")) for row in sections.get(name) or []]
+                for name in ("npcs", "locations", "factions", "secrets")
+            }
+            ids["bestiary"] = [str(row.get("id")) for row in payload.get("bestiary") or []]
+            creatures = {
+                str(row.get("id")): {"tier": row.get("tier"), "keys": sorted(row)}
+                for row in payload.get("bestiary") or []
+            }
+            return AdapterOutput(
+                actual={
+                    "operation": operation,
+                    "payload": copy.deepcopy(payload),
+                    "payload_json": dump(payload),
+                    "ids": ids,
+                    "creatures": creatures,
+                    "private_problems": sorted(assert_no_private_fields(payload)),
+                    "leak_problems": sorted(
+                        assert_no_player_leak(leak_view(payload), copy.deepcopy(state))
+                    ),
+                }
+            )
+        if operation == "oracle_mutation":
+            mutations = case.input.get("mutations")
+            if not isinstance(mutations, list):
+                raise AdapterError("oracle_mutation requires input.mutations list")
+            for mutation in mutations:
+                _apply_codex_mutation(payload, mutation)
+            return AdapterOutput(
+                actual={
+                    "operation": operation,
+                    "private_problems": sorted(assert_no_private_fields(payload)),
+                    "leak_problems": sorted(
+                        assert_no_player_leak(leak_view(payload), copy.deepcopy(state))
+                    ),
+                }
+            )
+        raise AdapterError(f"unsupported dossier_leak operation: {operation}")
+
+
 class AdapterRegistry:
     """Small explicit suite registry; unknown suites fail closed."""
 
@@ -1282,6 +1392,7 @@ def default_registry() -> AdapterRegistry:
             "generation_boundary": GenerationBoundaryAdapter(),
             "narrative_claims": NarrativeClaimAdapter(),
             "player_knowledge": PlayerKnowledgeAdapter(),
+            "dossier_leak": DossierLeakAdapter(),
             "encounter_manifest": EncounterManifestAdapter(),
             "npc_knowledge": NpcKnowledgeAdapter(),
         }
@@ -1300,6 +1411,7 @@ __all__ = [
     "PlaytestInvariantsAdapter",
     "NarrativeClaimAdapter",
     "PlayerKnowledgeAdapter",
+    "DossierLeakAdapter",
     "StateRulesAdapter",
     "RoutingAdapter",
     "MemoryWriteAdapter",

@@ -29,3 +29,9 @@ journeys:
   - { id: F27, name: deck_blocked_context, hard: true }
   - { id: F28, name: deck_keyboard, hard: true }
   - { id: F29, name: character_sheet_journey, hard: true }
+  - { id: F35, name: dossier_people_browse, hard: true }
+  - { id: F36, name: dossier_markers_no_blocked_counts, hard: true }
+  - { id: F37, name: dossier_certainty_labels, hard: true }
+  - { id: F38, name: dossier_bestiary_tiers, hard: true }
+  - { id: F39, name: dossier_endpoint_fallback, hard: true }
+  - { id: F40, name: dossier_keyboard_reduced_motion, hard: true }

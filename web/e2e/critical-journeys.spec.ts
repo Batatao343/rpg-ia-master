@@ -927,3 +927,212 @@ test("F29 character_sheet_journey", async ({ page, backend }) => {
   await expect(page.getByText("Tremor na mão")).toHaveCount(0);
   await assertA11y(page);
 });
+
+// --- SPEC-211: dossiês do Codex e do Bestiário (F35-F40) ---
+const dosStamp = (kind: string, label: string, certainty = "reported", turn = 4) => ({
+  knowledge_kind: kind, certainty, source_kind: "npc_claim", source_ref: "npc:npc_grum",
+  label, first_seen_turn: 1, last_updated_turn: turn, stale: false,
+});
+const dosBase = (id: string, kind: string, title: string, version: number, stamp = dosStamp("fact", "Fato confirmado", "confirmed")) => ({
+  id, kind, title, last_updated_turn: version, version, art: null, knowledge: stamp, notes: [],
+});
+const dosGrum = (version = 4, appears = true) => ({
+  ...dosBase("npc_grum", "npc", "Grum", version),
+  role: "Ferreiro", location: "Nova Arcádia", status: "", relationship: 8, disposition_label: "Amistoso",
+  knowledge_source: "met", revealed_traits: [],
+  claims: [
+    { text: "Forja lâminas para a guarda.", knowledge: dosStamp("rumor", "Rumor", "rumor") },
+    { text: "Deve dinheiro à Legião.", knowledge: dosStamp("suspicion", "Suspeita", "suspected") },
+  ],
+  appears_to_know: appears
+    ? [{ text: "Viu você entrar na ferraria.", knowledge: dosStamp("perception", "Percepção", "perceived") }]
+    : [],
+  encounters: [{ turn: 2, location_id: "", outcome: "primeiro contato" }],
+  last_seen_turn: 4,
+  body: "Ferreiro <img src=x onerror=window.__xss=1> **honesto**.",
+});
+const dosFaction = () => ({
+  ...dosBase("legiao_ferro", "faction", "Legião de Ferro", 6, dosStamp("report", "Relato")),
+  body: "", goal: "", knows_goal: false, region: "norte", disposition: "neutro", reputation: 3,
+  progress: null, intel_stale: true, stale_label: "informação defasada",
+});
+const dosCreature = (tier: number, extra: Record<string, unknown> = {}) => ({
+  ...dosBase(`enemy_t${tier}`, "creature", `Criatura ${"I".repeat(tier)}`, 3),
+  tier, tier_name: ["", "Avistada", "Encontrada", "Estudada", "Dominada"][tier], regions: ["nova_arcadia"],
+  first_seen_turn: 1, ...extra,
+});
+const dosPayload = (over: Record<string, unknown> = {}, sections: Record<string, unknown> = {}) => ({
+  version: 4, generated_at_turn: 5,
+  sections: { npcs: [dosGrum()], locations: [], factions: [], secrets: [], chronicle_index: [], ...sections },
+  bestiary: [], meta: { taxonomy_version: 1 }, ...over,
+});
+
+test("F35 dossier_people_browse", async ({ page, backend }) => {
+  await page.setViewportSize(DESKTOP);
+  backend.dossiers = dosPayload();
+  await openGame(page);
+  await openPeople(page);
+  const row = page.getByRole("button", { name: /Grum/ });
+  await expect(row.getByText("Novo")).toBeVisible();
+  await row.click();
+  const dossier = page.getByRole("article", { name: "Dossiê: Grum" });
+  await expect(dossier).toBeVisible();
+  await expect(dossier.getByText("Relação:")).toContainText("Amistoso");
+  await expect(dossier.getByText("O que você sabe")).toBeVisible();
+  await expect(dossier.getByText("O que ele parece saber")).toBeVisible();
+  await expect(dossier.getByText("Viu você entrar na ferraria.")).toBeVisible();
+  await expect(dossier.getByTestId("dossier-no-art")).toBeVisible();
+  // R13: corpo é texto, nunca HTML executável.
+  expect(await page.evaluate(() => (window as unknown as { __xss?: number }).__xss)).toBeUndefined();
+  await expect(dossier.locator("img")).toHaveCount(0);
+  await assertA11y(page);
+  // Esc volta à lista sem fechar o painel de contexto.
+  await page.keyboard.press("Escape");
+  await expect(dossier).toHaveCount(0);
+  await expect(page.getByRole("region", { name: "Painel de contexto" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Grum/ })).toBeFocused();
+  // Reload mantém o dossiê aberto.
+  await page.getByRole("button", { name: /Grum/ }).click();
+  await page.reload();
+  await openGame(page);
+  await openPeople(page);
+  await expect(page.getByRole("article", { name: "Dossiê: Grum" })).toBeVisible();
+});
+
+test("F36 dossier_markers_no_blocked_counts", async ({ page, backend }) => {
+  await page.setViewportSize(DESKTOP);
+  backend.dossiers = dosPayload();
+  await openGame(page);
+  await openPeople(page);
+  const row = page.getByRole("button", { name: /Grum/ });
+  await expect(row.getByText("Novo")).toBeVisible();
+  await row.click();
+  await page.getByRole("button", { name: /Voltar à lista/ }).click();
+  await expect(page.getByRole("button", { name: /Grum/ }).getByText("Novo")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /Grum/ }).getByText("Atualizado")).toHaveCount(0);
+  // Mesma versão após reload: nenhum selo reaparece.
+  await page.reload();
+  await openGame(page);
+  await openPeople(page);
+  await expect(page.getByRole("button", { name: /Grum/ }).getByText(/Novo|Atualizado/)).toHaveCount(0);
+  // Versão maior => Atualizado.
+  backend.dossiers = dosPayload({}, { npcs: [dosGrum(9)] });
+  await page.reload();
+  await openGame(page);
+  await openPeople(page);
+  await expect(page.getByRole("button", { name: /Grum/ }).getByText("Atualizado")).toBeVisible();
+  // Contadores só refletem dossiês visíveis; nenhuma menção a categorias bloqueadas.
+  const panel = page.getByRole("region", { name: "Painel de contexto" });
+  await expect(page.getByRole("tablist", { name: "Seções do Codex" })).not.toContainText(/oculto|bloquead|secret/i);
+  await expect(panel).not.toContainText(/oculto|bloquead|ocultas/i);
+  await assertA11y(page);
+});
+
+test("F37 dossier_certainty_labels", async ({ page, backend }) => {
+  await page.setViewportSize(DESKTOP);
+  backend.dossiers = dosPayload({}, { npcs: [dosGrum(4, false)], factions: [dosFaction()] });
+  await openGame(page);
+  await openPeople(page);
+  await page.getByRole("button", { name: /Grum/ }).click();
+  const dossier = page.getByRole("article", { name: "Dossiê: Grum" });
+  // Rótulos de certeza vêm do servidor; nada percebido => estado vazio honesto.
+  await expect(dossier.getByText("Rumor", { exact: true })).toBeVisible();
+  await expect(dossier.getByText("Suspeita", { exact: true })).toBeVisible();
+  await expect(dossier.getByText("Fato confirmado").first()).toBeVisible();
+  await expect(dossier.getByText("Nada percebido ainda.")).toBeVisible();
+  await expect(dossier.getByText("Percepção")).toHaveCount(0);
+  await page.keyboard.press("Escape");
+  // Facção com informação defasada: sem objetivo, sem progresso, com rótulo.
+  await page.getByRole("tablist", { name: "Seções do Codex" }).getByRole("tab", { name: "Fações" }).click();
+  await page.getByRole("button", { name: /Legião de Ferro/ }).last().click();
+  const faction = page.getByRole("article", { name: "Dossiê: Legião de Ferro" });
+  await expect(faction.getByText("informação defasada")).toBeVisible();
+  await expect(faction.getByText("Plano desconhecido")).toBeVisible();
+  await expect(faction.getByText(/Progresso conhecido/)).toHaveCount(0);
+  await assertA11y(page);
+});
+
+test("F38 dossier_bestiary_tiers", async ({ page, backend }) => {
+  await page.setViewportSize(DESKTOP);
+  backend.dossiers = dosPayload({
+    bestiary: [
+      dosCreature(1),
+      dosCreature(2, { description: "Roedor inchado.", type: "Minion" }),
+      dosCreature(3, { description: "Roedor inchado.", type: "Minion", max_hp: 12, defense: 9, attacks: ["Mordida"] }),
+      dosCreature(4, {
+        description: "Roedor inchado.", type: "Minion", max_hp: 12, defense: 9, attacks: ["Mordida"], loot: ["Dente"],
+        revealed_cards: [{ id: "bst_fuga_suja", name: "Fuga Suja" }], revealed_resistances: ["fogo"],
+      }),
+    ],
+  });
+  await openGame(page);
+  await page.getByRole("tab", { name: "Bestiário" }).click();
+  const open = async (title: string) => {
+    await page.getByRole("button", { name: new RegExp(title) }).first().click();
+    return page.getByRole("article", { name: `Dossiê: ${title}` });
+  };
+  const back = () => page.getByRole("button", { name: /Voltar à lista/ }).click();
+  let d = await open("Criatura I");
+  await expect(d.getByText(/HP |Ataques:|Loot:|Cartas reveladas|Resistências reveladas/)).toHaveCount(0);
+  await expect(d.getByText("Roedor inchado.")).toHaveCount(0);
+  await back();
+  d = await open("Criatura II");
+  await expect(d.getByText("Roedor inchado.")).toBeVisible();
+  await expect(d.getByText(/HP |Ataques:|Loot:/)).toHaveCount(0);
+  await back();
+  d = await open("Criatura III");
+  await expect(d.getByText("HP 12 · Defesa 9")).toBeVisible();
+  await expect(d.getByText(/Ataques: Mordida/)).toBeVisible();
+  await expect(d.getByText(/Loot:|Cartas reveladas/)).toHaveCount(0);
+  await back();
+  d = await open("Criatura IIII");
+  await expect(d.getByText("Loot: Dente")).toBeVisible();
+  await expect(d.getByText("Cartas reveladas: Fuga Suja")).toBeVisible();
+  await expect(d.getByText("Resistências reveladas: fogo")).toBeVisible();
+  // Nada de texto de dossiê escondido em title/data-*, nem "null" renderizado.
+  await expect(page.locator("[title*='bst_mordida'], [data-hidden], [data-secret]")).toHaveCount(0);
+  await expect(d).not.toContainText(/\bnull\b|undefined/);
+  await assertA11y(page);
+});
+
+test("F39 dossier_endpoint_fallback", async ({ page, backend }) => {
+  await page.setViewportSize(DESKTOP);
+  backend.dossiers = null;
+  await page.route("**/game/codex/dossiers**", (route) => route.fulfill({ status: 500, body: "{}" }));
+  backend.allowConsole(/500|Failed to load resource/);
+  backend.unexpectedAllowed.push(/\/game\/codex\/dossiers/);
+  await openGame(page);
+  // Endpoint novo indisponível: Pessoas volta à lista do HUD e o Bestiário ao estado vazio, sem erro bloqueante.
+  await openPeople(page);
+  await expect(page.getByText("Borin", { exact: true })).toBeVisible();
+  await expect(page.getByRole("article", { name: /^Dossiê:/ })).toHaveCount(0);
+  await page.getByRole("tab", { name: "Bestiário" }).click();
+  await expect(page.getByText("Nenhuma criatura registrada ainda.")).toBeVisible();
+  await assertA11y(page);
+});
+
+test("F40 dossier_keyboard_reduced_motion", async ({ page, backend }) => {
+  await page.setViewportSize({ width: 1100, height: 800 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  backend.dossiers = dosPayload({}, { npcs: [dosGrum(), { ...dosGrum(), id: "npc_ze", title: "Zé" }] });
+  await openGame(page);
+  await openPeople(page);
+  const grum = page.getByRole("button", { name: /Grum/ });
+  const box = await grum.boundingBox();
+  expect(box!.height).toBeGreaterThanOrEqual(44);
+  await grum.focus();
+  await page.keyboard.press("ArrowDown");
+  await expect(page.getByRole("button", { name: /Zé/ })).toBeFocused();
+  await page.keyboard.press("Home");
+  await expect(grum).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page.getByRole("article", { name: "Dossiê: Grum" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Voltar à lista/ })).toBeFocused();
+  await assertA11y(page);
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("button", { name: /Grum/ })).toBeFocused();
+  for (const [w, h] of [[320, 720], [390, 844]] as const) {
+    await page.setViewportSize({ width: w, height: h });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), `overflow ${w}px`).toBe(true);
+  }
+});

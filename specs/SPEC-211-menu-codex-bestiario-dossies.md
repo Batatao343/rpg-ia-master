@@ -1,6 +1,6 @@
 # SPEC-211 — Menus Codex e Bestiário como dossiês vivos
 
-> **Status:** `in-progress` — implementação + revisão Sol independente concluídas (17/10, [parecer](../handoffs/SPEC-211-SOL-independent-review.md)); falta só a autoria separada do eval de leak ([handoff](../handoffs/SPEC-211-eval-authoring.md)).
+> **Status:** `done` — implementação + revisão Sol independente (17/10, [parecer](../handoffs/SPEC-211-SOL-independent-review.md)) + eval de leak e jornadas F35–F40 autorados em tarefa separada ([handoff](../handoffs/SPEC-211-eval-authoring.md), [evidência](../docs/spec211/README.md)). Publicar exige aprovação do environment `eval-governance`.
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
 > **Depende de:** SPEC-204 `done` (shell), SPEC-206 `done` (rótulos de certeza), SPEC-208 `done` (tokens) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212 (ordem final 2026-10-15)

@@ -1,5 +1,5 @@
 schema_version: 1
-evaluator_version: 1.10.0
+evaluator_version: 1.12.0
 metrics:
   exact_match:
     direction: higher
@@ -262,4 +262,45 @@ metrics:
     denominator: all valid player_knowledge oracle_mutation cases executed; adapter errors count as zero
     exclusions:
       - projection cases
+    hard_limit: 1.0
+  dossier_leak_count:
+    direction: lower
+    kind: deterministic
+    blocking: true
+    unit: count
+    numerator: dossier projection cases whose allowlist oracle or SPEC-206 leak oracle is non-empty, or whose serialized payload keeps a fixture-labelled forbidden fragment (accent-folded)
+    denominator: all valid dossier_leak project and paired_project cases executed; adapter errors count as one leak
+    exclusions:
+      - oracle_mutation cases, which corrupt the payload on purpose to probe the oracles
+    hard_limit: 0.0
+  dossier_tier_key_accuracy:
+    direction: higher
+    kind: deterministic
+    blocking: true
+    unit: ratio
+    numerator: creature dossiers whose tier and key presence/absence match the fixture tier contract
+    denominator: dossier_leak project cases that declare a creature tier contract; adapter errors count as zero
+    exclusions:
+      - project cases without a creature tier contract
+      - oracle_mutation and paired_project cases
+    hard_limit: 1.0
+  dossier_indistinguishability:
+    direction: higher
+    kind: deterministic
+    blocking: true
+    unit: ratio
+    numerator: paired cases whose payload with the hidden entity is byte-identical to the payload without it
+    denominator: all valid dossier_leak paired_project cases executed; adapter errors count as zero
+    exclusions:
+      - project and oracle_mutation cases
+    hard_limit: 1.0
+  dossier_oracle_detection:
+    direction: higher
+    kind: deterministic
+    blocking: true
+    unit: ratio
+    numerator: oracle_mutation cases whose product oracles report exactly the fixture-labelled problem classes
+    denominator: all valid dossier_leak oracle_mutation cases executed; adapter errors count as zero
+    exclusions:
+      - project and paired_project cases
     hard_limit: 1.0

@@ -17,6 +17,7 @@ from evals.core.schemas import EvalCase, EvalCaseResult, EvalRunMetadata, EvalRu
 from evals.evaluators import (
     ExactEvaluator,
     MemoryWriteEvaluator,
+    DossierLeakEvaluator,
     NarrativeClaimEvaluator,
     PlayerKnowledgeEvaluator,
     ProjectionEvaluator,
@@ -239,6 +240,48 @@ def _metric_values(
         values["player_knowledge_oracle_detection"] = sum(
             _value(case, "player_knowledge_oracle_detection", 0.0) for case in mutated
         ) / len(mutated)
+    dossier_cases = [case for case in eligible if case.oracle == "dossier_leak"]
+    if dossier_cases:
+
+        def _dossier_cases(operations: tuple[str, ...]) -> list[EvalCase]:
+            return [
+                case
+                for case in dossier_cases
+                if isinstance(case.input, dict)
+                and (case.input.get("operation") or "project") in operations
+            ]
+
+        def _dossier_metric(case: EvalCase, name: str, missing: float) -> float:
+            result = result_by_id.get(case.id)
+            return result.metric_values.get(name, missing) if result else missing
+
+        def _dossier_mean(name: str, group: list[EvalCase]) -> float:
+            return sum(_dossier_metric(case, name, 0.0) for case in group) / len(group)
+
+        leaking = _dossier_cases(("project", "paired_project"))
+        if leaking:
+            values["dossier_leak_count"] = sum(
+                _dossier_metric(case, "dossier_leak_count", 1.0) for case in leaking
+            )
+        tiered = [
+            case
+            for case in _dossier_cases(("project",))
+            if isinstance(case.expected, dict) and bool(case.expected.get("creatures"))
+        ]
+        if tiered:
+            values["dossier_tier_key_accuracy"] = _dossier_mean(
+                "dossier_tier_key_accuracy", tiered
+            )
+        paired = _dossier_cases(("paired_project",))
+        if paired:
+            values["dossier_indistinguishability"] = _dossier_mean(
+                "dossier_indistinguishability", paired
+            )
+        mutated_dossier = _dossier_cases(("oracle_mutation",))
+        if mutated_dossier:
+            values["dossier_oracle_detection"] = _dossier_mean(
+                "dossier_oracle_detection", mutated_dossier
+            )
     return values
 
 
@@ -371,6 +414,7 @@ def run_eval(
         "ranking": RetrievalEvaluator(),
         "narrative_claim": NarrativeClaimEvaluator(),
         "player_knowledge": PlayerKnowledgeEvaluator(),
+        "dossier_leak": DossierLeakEvaluator(),
     }
     random_state = random.getstate()
     random.seed(seed)

@@ -3741,12 +3741,12 @@ specs:
   lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
 - id: SPEC-211
   slug: menu-codex-bestiario-dossies
-  status: in-progress
+  status: done
   path: specs/SPEC-211-menu-codex-bestiario-dossies.md
   created_commit: null
   created_at: '2026-10-15'
   completed_commit: null
-  completed_at: null
+  completed_at: '2026-10-17'
   completed_order: null
   depends_on:
   - SPEC-204
