@@ -8,6 +8,7 @@ comportamento do jogo — só mede.
 from __future__ import annotations
 
 import contextvars
+import logging
 import threading
 import time
 from contextlib import contextmanager
@@ -138,7 +139,10 @@ class TurnTimeline:
             self._log_hold = False
             fn, self._log_pending = self._log_pending, None
         if fn is not None:
-            fn()
+            try:
+                fn()
+            except Exception:   # roda no `finally` do stream: nunca pula turn_delivery
+                logging.getLogger(__name__).exception("linha rpg.turn adiada falhou")
 
     # --- marcas de entrega -------------------------------------------------
     def mark(self, name: str) -> None:

@@ -459,3 +459,26 @@ def test_stream_rpg_turn_line_carries_server_marks(client, caplog):
     assert line["transport"] == "stream"
     assert line["ack_server_ms"] is not None
     assert line["ack_server_ms"] <= line["ttfmc_server_ms"] <= line["ttlt_server_ms"]
+
+
+def test_held_rpg_turn_line_failure_never_breaks_delivery_bookkeeping():
+    """Revisao Sol (SPEC-212): a linha adiada roda no `finally` do stream; se ela
+    falhar, `turn_delivery`/publicacao da timeline nao podem ser pulados."""
+    from observability.latency import TurnTimeline
+
+    timeline = TurnTimeline(transport="stream")
+    timeline.hold_log()
+    calls = []
+
+    def boom():
+        calls.append("boom")
+        raise RuntimeError("log quebrado")
+
+    timeline.submit_log(boom)
+    assert calls == []                       # segurada ate a entrega terminar
+    timeline.release_log()                   # nao propaga
+    assert calls == ["boom"]
+    timeline.submit_log(lambda: calls.append("direto"))   # apos liberar: sai na hora
+    assert calls == ["boom", "direto"]
+    timeline.release_log()                   # idempotente, nada pendente
+    assert calls == ["boom", "direto"]

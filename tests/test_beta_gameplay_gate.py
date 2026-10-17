@@ -112,3 +112,44 @@ def test_markdown_has_latency_baseline():
         "turns": 14, "ttfmc_ms": {"p50": 10, "p95": 20}, "ttlt_ms": {"p50": 30, "p95": 40}}}})
     md = gate.to_markdown(gate.build_report([res], sha="c" * 40, dirty=[], strict=False))
     assert "TTFMC p50/p95 10/20" in md
+
+
+# --- revisao Sol (independente) -----------------------------------------------------------------------
+
+
+def test_known_issues_status_is_fail_closed():
+    """So `fechado` fecha: status ambiguo ("em andamento", vazio) conta como aberto."""
+    for status in ("em andamento", "parcial", "", "reaberto"):
+        text = KI_HEADER + f"| KI-1 | x | P2 | UX | bloqueia beta | {status} |\n"
+        assert gate.check_known_issues(text).status == "fail", status
+    text = KI_HEADER + "| KI-1 | x | P1 | R5 | bloqueia beta | Fechado — corrigido |\n"
+    assert gate.check_known_issues(text).status == "pass"
+
+
+def test_previous_reports_are_cleared_before_a_fresh_run(tmp_path):
+    """Relatorio/trace de execucao anterior nunca pode virar evidencia do SHA atual."""
+    reports, results = tmp_path / "reports", tmp_path / "results"
+    (results / "vertical").mkdir(parents=True)
+    reports.mkdir()
+    stale = [reports / "gate-f-desktop-1440.json", reports / "gate-f-desktop-1280.json",
+             reports / "gate-vertical.json", results / "vertical" / "vertical-trace-1440x900.json",
+             results / "vertical" / "vertical-trace-1280x800.json"]
+    for path in stale:
+        path.write_text("{}", encoding="utf-8")
+    keep = reports / "gate-api.log"
+    keep.write_text("log", encoding="utf-8")
+    gate.clear_previous(reports, results)
+    assert not any(p.exists() for p in stale)
+    assert keep.exists()
+    f, v, traces = gate.collect(gate.Deps(), reports, results)
+    assert v is None and not any(f.values()) and not any(traces.values())
+
+
+def test_strict_reuse_never_certifies(tmp_path, monkeypatch):
+    deps = gate.Deps(run=lambda args, **kw: (0, "abc\n") if args[:2] == ["git", "rev-parse"] else (0, ""),
+                     exists=lambda p: False)
+    monkeypatch.setattr(gate, "RESULTS", tmp_path)
+    monkeypatch.setattr(gate, "REPORTS", tmp_path)
+    gate.main(["--strict", "--reuse", "--evidence-dir", str(tmp_path / "ev")], deps)
+    written = json.loads(next((tmp_path / "ev").glob("gameplay-gate-*.json")).read_text(encoding="utf-8"))
+    assert "fresh_run" in written["failing"]

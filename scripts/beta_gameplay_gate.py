@@ -181,7 +181,7 @@ def check_known_issues(text: str | None) -> Result:
         return Result("known_issues_no_blockers", "fail", {"reason": "nenhuma linha KI-n na tabela"})
     blocking = []
     for row in rows:
-        is_open = row["status"].lower().startswith("aberto")
+        is_open = not row["status"].lower().startswith("fechado")   # fail-closed: so `fechado` fecha
         hits_core = bool(re.search(r"\bR[1-9]\b", row["impact"])) and row["priority"].upper() in ("P0", "P1")
         if is_open and ("bloqueia" in row["class"].lower() or hits_core):
             blocking.append(row["id"])
@@ -260,6 +260,16 @@ def collect(deps: Deps, reports_dir: Path | None = None,
     traces = {project: _load_json(results_dir / "vertical" / f"vertical-trace-{vp}.json", deps)
               for project, vp in VIEWPORTS.items()}
     return f_summaries, vertical, traces
+
+
+def clear_previous(reports_dir: Path | None = None, results_dir: Path | None = None) -> None:
+    """Apaga relatorios/traces de execucoes anteriores: nunca viram evidencia do SHA atual."""
+    reports_dir, results_dir = reports_dir or REPORTS, results_dir or RESULTS
+    stale = [reports_dir / f"gate-f-{project}.json" for project in VIEWPORTS]
+    stale.append(reports_dir / "gate-vertical.json")
+    stale += [results_dir / "vertical" / f"vertical-trace-{vp}.json" for vp in VIEWPORTS.values()]
+    for path in stale:
+        path.unlink(missing_ok=True)
 
 
 _CONFIG = """import {{ defineConfig, devices }} from "@playwright/test";
@@ -352,8 +362,12 @@ def main(argv: list[str] | None = None, deps: Deps | None = None) -> int:
     proc = None
     results: list[Result] = []
     try:
-        if not args.reuse:
+        if args.reuse:
+            # --reuse le relatorios de uma execucao anterior (SHA desconhecido): nunca certifica.
+            results.append(Result("fresh_run", "not_provisioned", {"reason": "--reuse nao certifica o SHA"}))
+        else:
             REPORTS.mkdir(parents=True, exist_ok=True)
+            clear_previous()
             proc, env, reason = provision(args.api_port, REPORTS / "gate-api.log")
             if reason:
                 results.append(Result("stack_provisioned", "not_provisioned", {"reason": reason}))
