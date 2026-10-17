@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "f83af29e0ae443498a4c308b71b7ff9b90508ca9",
+  "commit_sha": "fe8bc88e912eb56fa2f7815dd48415d1bcece95b",
   "edge_counts": {
-    "calls": 14691,
-    "contains": 629,
-    "defines": 8439,
-    "imports": 1370,
-    "likely_test_for": 855,
+    "calls": 15154,
+    "contains": 638,
+    "defines": 8689,
+    "imports": 1416,
+    "likely_test_for": 869,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:31015314e7a0804632ab6b560236fc0328f6888a3e5b4107fdbda43b6041071a",
+  "graph_hash": "sha256:50a3f4a4457b9b4481bcfc37f56b3e159833b418de3777536999c18f770e680c",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -113,6 +113,7 @@
     "infrastructure/account_read_model.py",
     "infrastructure/audit_source.py",
     "infrastructure/contracts.py",
+    "infrastructure/db_roles.py",
     "infrastructure/file_blob.py",
     "infrastructure/finops_reader.py",
     "infrastructure/google_play_payments.py",
@@ -232,6 +233,7 @@
     "scripts/staging/s192.py",
     "scripts/staging/schedule_cron.py",
     "scripts/staging/schema_diff.py",
+    "scripts/staging/security_wave_smoke.py",
     "scripts/staging/smoke_ab.py",
     "scripts/staging/sse_disconnect.py",
     "scripts/staging/synthetic_data.py",
@@ -247,6 +249,7 @@
     "scripts/verify_protected_eval_change.py",
     "scripts/verify_restore.py",
     "services/__init__.py",
+    "services/abuse_policy.py",
     "services/abyss_events.py",
     "services/account_security.py",
     "services/actor_lifecycle.py",
@@ -361,6 +364,7 @@
     "tests/fakes/local_image_finance.py",
     "tests/fakes/local_portrait.py",
     "tests/spec215_helpers.py",
+    "tests/test_abuse_policy.py",
     "tests/test_account_api.py",
     "tests/test_account_auth_gotrue_local.py",
     "tests/test_account_auth_transport.py",
@@ -397,6 +401,7 @@
     "tests/test_balance_early.py",
     "tests/test_beats_visibilidade.py",
     "tests/test_blob_contract.py",
+    "tests/test_boot_policy.py",
     "tests/test_browser_local.py",
     "tests/test_bug_api_pending_erros.py",
     "tests/test_bug_combate_modificadores.py",
@@ -450,6 +455,7 @@
     "tests/test_context_sources_concurrency.py",
     "tests/test_contracts_llm.py",
     "tests/test_cutover_audit.py",
+    "tests/test_daily_quota_postgres.py",
     "tests/test_death_flow.py",
     "tests/test_dev_stack.py",
     "tests/test_dossier_leak.py",
@@ -606,7 +612,9 @@
     "tests/test_resumo_budget_rigido.py",
     "tests/test_review_blockers_npc_preparation.py",
     "tests/test_review_high_integration.py",
+    "tests/test_rls_effective.py",
     "tests/test_rls_local.py",
+    "tests/test_rls_runtime_config.py",
     "tests/test_router_interlocutor.py",
     "tests/test_routing.py",
     "tests/test_routing_tiers.py",
@@ -614,6 +622,7 @@
     "tests/test_runtime_profiles.py",
     "tests/test_runtime_role_local.py",
     "tests/test_s3_blob.py",
+    "tests/test_session_boundary_authfail.py",
     "tests/test_session_hardening.py",
     "tests/test_session_hardening_local.py",
     "tests/test_shard_pricing.py",
@@ -811,14 +820,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 707,
+    "class": 724,
     "endpoint": 63,
-    "file": 757,
-    "function": 2600,
-    "method": 686,
-    "module": 629,
-    "test": 4446
+    "file": 766,
+    "function": 2652,
+    "method": 705,
+    "module": 638,
+    "test": 4608
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:a4427d9a4af4b5cb52fb24e72f8de6059b886c8d7004c7c0dd85163ff9e9539f"
+  "source_tree_hash": "sha256:ab36b4c98bac87c3549bf424c544e59e557d332bbbe8da30ab388e25cc2ba4c6"
 }
