@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "7150fd07e2b870eb0b192cf6a1e9c093ead1de62",
+  "commit_sha": "4f8afe4ba08bc7660017110134d47fe3e9bdcdde",
   "edge_counts": {
-    "calls": 15195,
-    "contains": 640,
-    "defines": 8710,
-    "imports": 1420,
-    "likely_test_for": 872,
+    "calls": 15314,
+    "contains": 647,
+    "defines": 8800,
+    "imports": 1428,
+    "likely_test_for": 877,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:7607f3698b8c148fbaef77d907a1672e1783d1f531d9ac25caceb634c48d0ee6",
+  "graph_hash": "sha256:fb697d687a38ce0818b4abe6972b99fe834fa266c33de4da64323aeaa2f5ab77",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -98,6 +98,7 @@
     "evals/evaluators/__init__.py",
     "evals/evaluators/dossier_leak.py",
     "evals/evaluators/exact.py",
+    "evals/evaluators/gameplay_gate.py",
     "evals/evaluators/memory.py",
     "evals/evaluators/narrative.py",
     "evals/evaluators/player_knowledge.py",
@@ -106,6 +107,7 @@
     "evals/experiments/__init__.py",
     "evals/experiments/jev_router_ab.py",
     "evals/experiments/jev_target_loot.py",
+    "evals/gameplay_scan.py",
     "game_engine.py",
     "gamedata.py",
     "infrastructure/__init__.py",
@@ -181,6 +183,7 @@
     "scripts/backup_local.py",
     "scripts/benchmark_turn_pipeline.py",
     "scripts/benchmark_turn_pipeline_real.py",
+    "scripts/beta_gameplay_gate.py",
     "scripts/browser_local.py",
     "scripts/chaos_test.py",
     "scripts/ci_eval_scope.py",
@@ -303,6 +306,7 @@
     "services/finops_job.py",
     "services/game_serialization.py",
     "services/game_transfer.py",
+    "services/gameplay_oracles.py",
     "services/google_play.py",
     "services/google_play_fake.py",
     "services/graph_resolver.py",
@@ -401,6 +405,7 @@
     "tests/test_balance_classes_v4_runtime.py",
     "tests/test_balance_early.py",
     "tests/test_beats_visibilidade.py",
+    "tests/test_beta_gameplay_gate.py",
     "tests/test_blob_contract.py",
     "tests/test_boot_policy.py",
     "tests/test_browser_local.py",
@@ -476,6 +481,7 @@
     "tests/test_eval_dossier_leak.py",
     "tests/test_eval_encounter_manifest.py",
     "tests/test_eval_frontend.py",
+    "tests/test_eval_gameplay_gate.py",
     "tests/test_eval_governance.py",
     "tests/test_eval_harness.py",
     "tests/test_eval_memory_context.py",
@@ -518,6 +524,7 @@
     "tests/test_fuga_progressiva_persistente.py",
     "tests/test_game_delete_purges_blobs.py",
     "tests/test_game_transfer_local.py",
+    "tests/test_gameplay_oracles.py",
     "tests/test_gitignore_contract.py",
     "tests/test_grounding_boundaries.py",
     "tests/test_hardening_mechanical_inputs.py",
@@ -701,6 +708,7 @@
     "web/e2e/diagnostics/spec201-capture.spec.ts",
     "web/e2e/dossiers.spec.ts",
     "web/e2e/effects.spec.ts",
+    "web/e2e/fixture-guard.spec.ts",
     "web/e2e/fixtures.ts",
     "web/e2e/image-quote.spec.ts",
     "web/e2e/interlocutor-speaker.spec.ts",
@@ -708,6 +716,9 @@
     "web/e2e/map-tab.spec.ts",
     "web/e2e/outcome-toast.spec.ts",
     "web/e2e/pending-discard.spec.ts",
+    "web/e2e/portrait-overlay.spec.ts",
+    "web/e2e/vertical-journey.spec.ts",
+    "web/e2e/vertical-support.ts",
     "web/e2e/visual-surfaces.spec.ts",
     "web/e2e/voice-input.spec.ts",
     "web/e2e/workspace-shell.spec.ts",
@@ -822,14 +833,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 724,
+    "class": 728,
     "endpoint": 63,
-    "file": 768,
-    "function": 2655,
-    "method": 705,
-    "module": 640,
-    "test": 4626
+    "file": 779,
+    "function": 2699,
+    "method": 711,
+    "module": 647,
+    "test": 4662
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:46f3a5754a6b9fa0f2b34212faa132c24908847ab01ded847d6df810bbd47dc7"
+  "source_tree_hash": "sha256:6bf98a4f19a6147e016448b089e82413a36ce3af4c15e17032d11ea9f566a992"
 }
