@@ -3996,7 +3996,8 @@ def _log_turn(state: dict, t0: float, eventos_antes: int, error: Optional[str],
               llm_events: Optional[List[dict]] = None, *,
               rejections_antes: int = 0,
               llm_attempts: Optional[List[dict]] = None,
-              latency_fields: Optional[Dict[str, Any]] = None) -> None:
+              latency_fields: Optional[Dict[str, Any]] = None,
+              latency_ms: Optional[int] = None) -> None:
     from observability.telemetry import correlation, pseudonym, safe_json
     _turn_logger.info(safe_json({
         "evt": "turn",
@@ -4004,7 +4005,8 @@ def _log_turn(state: dict, t0: float, eventos_antes: int, error: Optional[str],
         **correlation(),
         "turn": (state.get("world") or {}).get("turn_count", 0),
         "route": state.get("next", ""),
-        "latency_ms": int((time.monotonic() - t0) * 1000),
+        "latency_ms": (latency_ms if latency_ms is not None
+                       else int((time.monotonic() - t0) * 1000)),
         "events_applied": (len(state.get("event_log", [])) - eventos_antes) if not error else 0,
         "events_rejected": (
             max(0, len(state.get("event_rejections", []) or []) - rejections_antes)
@@ -4116,13 +4118,15 @@ def _run_turn_collected(state: dict, input_text: str,
             )
         timeline.finish()
         timeline.extra.setdefault("route_next", str(new_state.get("next", "") or ""))
-        _log_turn(
+        elapsed_ms = int((time.monotonic() - t0) * 1000)
+        timeline.submit_log(lambda: _log_turn(
             new_state, t0, eventos_antes, None, llm_events,
             rejections_antes=rejections_antes,
             llm_attempts=llm_attempts,
+            latency_ms=elapsed_ms,
             latency_fields=_latency_log_fields(
                 timeline, llm_events, llm_attempts,
-                action_id=action_id, input_text=input_text))
+                action_id=action_id, input_text=input_text)))
         from observability.metrics import metrics
         route_label = _turn_route(timeline)
         metrics.observe(
@@ -4452,9 +4456,11 @@ def _stream_turn(req: ActionRequest, accepted_game_id: str, principal=None,
     if timeline is None:
         timeline = _lat.TurnTimeline(transport="stream")
     outcome = {"value": "client_gone"}
+    timeline.hold_log()     # SPEC-212 R13: `rpg.turn` sai apos ttfmc/ttlt
     try:
         yield from _stream_turn_events(req, accepted_game_id, principal, timeline, outcome)
     finally:
+        timeline.release_log()
         _log_turn_delivery(timeline, outcome["value"])
         _publish_timeline(timeline, outcome["value"])
 

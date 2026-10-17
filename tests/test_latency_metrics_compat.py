@@ -437,3 +437,25 @@ def test_execute_graph_stream_full_state_equals_invoke():
     via_stream = execute_graph(real_graph, deepcopy(base), progress=seen.append)
     assert seen, "stream deve emitir chunks"
     assert _norm(via_stream) == _norm(via_invoke)
+
+
+def test_stream_rpg_turn_line_carries_server_marks(client, caplog):
+    """SPEC-212 R13: a linha `rpg.turn` de turno stream sai APOS ttfmc/ttlt (nao nula)."""
+    gid = _new_game(client)
+    with caplog.at_level(logging.INFO, logger="rpg.turn"):
+        with client.stream("POST", "/game/action/stream",
+                           json={"input_text": "olho", "game_id": gid}) as r:
+            _sse(r)
+    lines = []
+    for rec in caplog.records:
+        try:
+            data = json.loads(rec.getMessage())
+        except ValueError:
+            continue
+        if data.get("evt") == "turn":
+            lines.append(data)
+    assert len(lines) == 1, lines          # exatamente uma linha por turno
+    line = lines[0]
+    assert line["transport"] == "stream"
+    assert line["ack_server_ms"] is not None
+    assert line["ack_server_ms"] <= line["ttfmc_server_ms"] <= line["ttlt_server_ms"]

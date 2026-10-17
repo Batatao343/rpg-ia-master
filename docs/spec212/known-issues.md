@@ -1,0 +1,19 @@
+# SPEC-212 — Known issues do beta desktop (R17)
+
+Classificação: **bloqueia beta** reprova o gate (`known_issues_no_blockers`); **aceitável no beta** é
+registrado e não reprova. Item `P0/P1` aberto com impacto em R1–R9 reprova mesmo se classificado como aceitável.
+A tabela é lida por `scripts/beta_gameplay_gate.py` (linhas `KI-n`).
+
+| ID | Descrição | Prioridade | Impacto | Classificação | Status |
+|---|---|---|---|---|---|
+| KI-1 | Dado sem seed em produção: combate/desfecho da J-V1 são probabilísticos; a jornada é adaptativa (até 8 tentativas para abrir combate, 14 rodadas, 30 turnos para cair) e falha explícita se o desfecho não ocorrer. A spec (§3.1) pede determinismo por campanha-semente, **sem tocar a mecânica**; seed de teste no motor ficou fora (risco de vazar para produção). | P3 | R5 (flakiness residual) | aceitável no beta | aberto |
+| KI-2 | Aliado transitório em cena (ex.: Mestre Aldric) aparece na arena e nas Cartas de suporte, mas não consta em `encounter_view.participants`. O manifesto da SPEC-203 (R1) é construído de `state["enemies"]`; o oráculo de roster compara só os hostis. Incluir aliados é decisão de produto + nova Etapa 0. | P3 | R3 | aceitável no beta | aberto |
+| KI-3 | Beacon de latência do cliente aparece como `requestfailed net::ERR_ABORTED` no Chromium mesmo com 204 recebido. O cliente não usa `keepalive` (`sendClientLatency` é `fetch` comum); a causa não é uso indevido de `sendBeacon`. Tolerado só por regex exato na allowlist R10 (`VERTICAL_ALLOWLIST`); o dataset prova que `/game/action*` nunca é tolerado. Beacon só existe com `RPG_CLIENT_LATENCY_REPORT=1` (desligado por padrão). | P3 | R10 | aceitável no beta | aberto |
+| KI-4 | Carta de suporte `target_kind: self` com aliado em cena entra em mira (2 cliques). Correto para suporte; registrado como `card_target` no oráculo de gesto. | P4 | R4 | aceitável no beta | aberto |
+| KI-5 | Export de sessão de turno `transport=stream` marca `timing_partial` (a trilha de auditoria é gravada dentro do commit, antes das marcas de entrega). A linha `rpg.turn` (R13) já sai completa; só o `timings.jsonl` do export fica parcial. | P3 | R9 | aceitável no beta | aberto |
+| KI-6 | Gate rodado só com MockLLM; smoke com provider real é opt-in (spec §6) e não foi executado. O MockLLM esconde bugs de mapeamento de campos; contratos `-m llm_contract` seguem obrigatórios onde as dependências tocarem structured output. | P3 | R1–R9 | aceitável no beta | aberto |
+| KI-7 | Convite de testers condicionado a SPEC-218/219 `done` (D-212-5); o gate local não depende delas. | P2 | go do beta | aceitável no beta | aberto |
+| KI-8 | F16 móvel (320–768) segue como regressão não-bloqueante neste gate (D-212-2); Android/mobile é SPEC-216. | P3 | R14 | aceitável no beta | aberto |
+| KI-9 | Modal de nível cobria o botão "Continuar" do painel de desfecho. Corrigido: o desfecho vem primeiro e o modal de nível abre ao dispensá-lo (chip "⬆ Nível!" da topbar abre na hora). | P2 | R5, R6 | bloqueia beta | fechado |
+| KI-10 | `rpg.turn` de turno `transport=stream` saía com `ttfmc_server_ms`/`ttlt_server_ms` nulos. Corrigido: a linha só é emitida após as marcas de entrega (`TurnTimeline.hold_log/submit_log/release_log`); desconexão do cliente libera a linha com marcas nulas e `outcome=client_gone` no `turn_delivery`. | P1 | R13 | bloqueia beta | fechado |
+| KI-11 | J-V1 V07/V08 flaky (~50%): após `page.reload()` o `LevelUpModal` reabre (contrato Fase 4.1) quando a vitória subiu o herói de nível, e a jornada não resolve o modal antes de clicar nas abas; poll do Mapa não espera `Consultando o mapa…`. Defeito de autoria de eval (régua protegida): ver `handoffs/SPEC-212-etapa0-followup.md`. | P1 | R7, R8 | bloqueia beta | aberto |

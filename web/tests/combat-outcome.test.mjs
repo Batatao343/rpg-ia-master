@@ -25,3 +25,10 @@ test('SPEC-203: rewards só do recibo do turno de término', async () => {
   assert.equal(shouldShowResult(result, null), true);
   assert.equal(OUTCOME_TITLES.fled, 'Você escapou');
 });
+
+test('SPEC-212: modal de nível espera o painel de desfecho ser dispensado', async () => {
+  const { levelUpHeldByOutcome } = await load();
+  assert.equal(levelUpHeldByOutcome(result, null), true);      // painel visível: modal aguarda
+  assert.equal(levelUpHeldByOutcome(result, 'res-1'), false);  // "Continuar" clicado: modal abre
+  assert.equal(levelUpHeldByOutcome(null, null), false);       // sem desfecho: nada a esperar
+});

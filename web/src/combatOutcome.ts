@@ -35,3 +35,10 @@ export function rewardLines(result: CombatResultView, outcome?: Partial<TurnOutc
 export function shouldShowResult(result: CombatResultView | null, dismissedId: string | null): boolean {
   return !!result && result.result_event_id !== dismissedId;
 }
+
+/** SPEC-212: a vitória rende XP e o modal de nível (aria-modal) cobria o botão
+ *  "Continuar" do painel de desfecho. Sequência: desfecho primeiro, nível depois
+ *  (o chip "⬆ Nível!" da topbar segue disponível enquanto o modal espera). */
+export function levelUpHeldByOutcome(result: CombatResultView | null, dismissedId: string | null): boolean {
+  return shouldShowResult(result, dismissedId);
+}

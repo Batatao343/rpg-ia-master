@@ -29,6 +29,9 @@ interface Props {
   onEquip?: EquipFn;
   onPrepareCards?: (prepared: string[]) => Promise<string | null>;
   onOpenLevelUp?: () => void;
+  /** SPEC-212: desfecho do combate dispensado (elevado ao PlayScreen p/ sequenciar o modal de nível). */
+  dismissedResult?: string | null;
+  onDismissResult?: (resultEventId: string) => void;
 }
 
 function useViewportWidth(): number {
@@ -254,7 +257,8 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
             codexSection={codexSection} onCodexSection={setCodexSection}
             onSelectTab={openTab} onClose={showChat} onEscape={() => composerRef.current?.focus()}
             onAction={onAction} onEquip={onEquip}
-            onPrepareCards={props.onPrepareCards} onOpenLevelUp={props.onOpenLevelUp} />
+            onPrepareCards={props.onPrepareCards} onOpenLevelUp={props.onOpenLevelUp}
+            dismissedResult={props.dismissedResult} onDismissResult={props.onDismissResult} />
         </div>
         <Composer ref={composerRef} data={data} busy={busy} blocked={blocked}
           reactionCardId={reactionCardId} onAction={onAction} />

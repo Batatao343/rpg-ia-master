@@ -42,6 +42,8 @@ export interface ContextSurfaceProps {
   onEquip?: EquipFn;
   onPrepareCards?: (prepared: string[]) => Promise<string | null>;
   onOpenLevelUp?: () => void;
+  dismissedResult?: string | null;
+  onDismissResult?: (resultEventId: string) => void;
 }
 
 /** SPEC-204: UM painel de contexto com cinco abas. Abas já visitadas ficam montadas
@@ -101,7 +103,8 @@ function renderTab(id: ContextTab, props: ContextSurfaceProps): ReactNode {
     case "combate":
       return <CombateTab data={data} busy={busy} blocked={blocked} hitKey={hitKey} ended={props.combatEnded}
         reactionCardId={props.reactionCardId} onReaction={props.onReaction} onAction={props.onAction}
-        onPrepareCards={props.onPrepareCards} onOpenLevelUp={props.onOpenLevelUp} />;
+        onPrepareCards={props.onPrepareCards} onOpenLevelUp={props.onOpenLevelUp}
+        dismissedResult={props.dismissedResult} onDismissResult={props.onDismissResult} />;
     case "bestiario":
       return <BestiarioTab gameId={data?.game_id} turnCount={data?.world.turn_count} open={open}
         unavailable={simulation ? LAB_EMPTY : undefined} />;

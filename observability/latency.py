@@ -114,6 +114,31 @@ class TurnTimeline:
         self._pending_attempts: Dict[str, int] = {}
         self._llm_by_phase: Dict[str, int] = {}
         self.extra: Dict[str, Any] = {}
+        self._log_hold = False
+        self._log_pending: Optional[Callable[[], None]] = None
+
+    # --- linha rpg.turn adiada (SPEC-212 R13) ---------------------------------
+    def hold_log(self) -> None:
+        """Stream: segura a linha `rpg.turn` ate as marcas ttfmc/ttlt existirem."""
+        with self._lock:
+            self._log_hold = True
+
+    def submit_log(self, fn: Callable[[], None]) -> None:
+        """Emite `fn` ja, ou o guarda se a entrega ainda esta em curso."""
+        with self._lock:
+            if self._log_hold:
+                self._log_pending = fn
+                return
+        fn()
+
+    def release_log(self) -> None:
+        """Fim da entrega (ou desconexao): libera a linha guardada; o que chegar
+        depois (worker apos client_gone) sai direto em `submit_log`."""
+        with self._lock:
+            self._log_hold = False
+            fn, self._log_pending = self._log_pending, None
+        if fn is not None:
+            fn()
 
     # --- marcas de entrega -------------------------------------------------
     def mark(self, name: str) -> None:

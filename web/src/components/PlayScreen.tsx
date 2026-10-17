@@ -4,6 +4,7 @@ import { LevelUpModal, type LevelUpPick } from "./LevelUpModal";
 import { shards } from "./AccountScreen";
 import { Workspace, type WorkspaceHandle } from "../workspace/Workspace";
 import { useModalFocus } from "../workspace/useModalFocus";
+import { levelUpHeldByOutcome, resultFrom } from "../combatOutcome";
 
 interface Props {
   data: GameResponse | null;
@@ -27,6 +28,7 @@ interface Props {
  *  + overlays. Controles táticos vivem só na aba Combate do workspace. */
 export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction, onNew, onLevelUp, onEquip, onPrepareCards, onLogout, onAccount, accountBalance, owner = "legacy" }: Props) {
   const [luDismissed, setLuDismissed] = useState(false);
+  const [dismissedResult, setDismissedResult] = useState<string | null>(null);
   const [reading, setReading] = useState(false); // memorial: ler a crônica
   const workspace = useRef<WorkspaceHandle>(null);
 
@@ -51,7 +53,15 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
   const pending = data?.player_stats?.pending_choices ?? [];
   const pendingKey = pending[0]?.id ?? "";
   useEffect(() => setLuDismissed(false), [pendingKey]);
-  const showLevelUp = pending.length > 0 && !luDismissed && !blocked && !fighting;
+  // SPEC-212: o desfecho do combate vem primeiro; o modal de nível abre após "Continuar".
+  const outcomeFirst = levelUpHeldByOutcome(resultFrom(data?.combat_result), dismissedResult);
+  // Pedido explícito (chip/aba): abre o modal já, dispensando o painel de desfecho.
+  const openLevelUp = () => {
+    const res = resultFrom(data?.combat_result);
+    if (res) setDismissedResult(res.result_event_id);
+    setLuDismissed(false);
+  };
+  const showLevelUp = pending.length > 0 && !luDismissed && !blocked && !fighting && !outcomeFirst;
 
   return (
     <div className={"play" + (fighting ? " is-combat" : "")}>
@@ -71,7 +81,7 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
           {/* Fica montado com o modal aberto: o foco volta a ele ao fechar (R16). */}
           {pending.length > 0 && !blocked && (
             <button className="iconbtn iconbtn--levelup" type="button"
-                    onClick={() => setLuDismissed(false)}>
+                    onClick={openLevelUp}>
               ⬆ Nível!
             </button>
           )}
@@ -90,7 +100,8 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
       <Workspace key={data?.game_id ?? "sem-jogo"} ref={workspace} owner={owner} data={data} log={log}
         thinking={thinking} thinkingLabel={thinkingLabel} busy={busy} blocked={blocked}
         onAction={onAction} onEquip={onEquip}
-        onPrepareCards={onPrepareCards} onOpenLevelUp={() => setLuDismissed(false)} />
+        onPrepareCards={onPrepareCards} onOpenLevelUp={openLevelUp}
+        dismissedResult={dismissedResult} onDismissResult={setDismissedResult} />
 
       {showLevelUp && data && (
         <LevelUpModal

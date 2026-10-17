@@ -31,7 +31,7 @@ const isTyping = (el: EventTarget | null) => {
 
 /** SPEC-204 R10 + SPEC-205: único lugar dos controles táticos. Uma ação por gesto:
  *  carta/ação básica → (alvo) → envio. Todos os números vêm de `data.combat`. */
-export function CombateTab({ data, busy, blocked, hitKey, ended, reactionCardId, onReaction, onAction, onPrepareCards, onOpenLevelUp }: {
+export function CombateTab({ data, busy, blocked, hitKey, ended, reactionCardId, onReaction, onAction, onPrepareCards, onOpenLevelUp, dismissedResult, onDismissResult }: {
   data: GameResponse | null;
   busy: boolean;
   blocked: boolean;
@@ -44,9 +44,15 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, reactionCardId,
   /** SPEC-209: preparar Cartas fora de encontro; devolve a mensagem de erro (ou null). */
   onPrepareCards?: (prepared: string[]) => Promise<string | null>;
   onOpenLevelUp?: () => void;
+  /** SPEC-212: dispensa controlada pelo PlayScreen (sequencia o modal de nível); sem props = local. */
+  dismissedResult?: string | null;
+  onDismissResult?: (resultEventId: string) => void;
 }) {
   const combat = data?.combat;
-  const [dismissedResult, setDismissedResult] = useState<string | null>(null);
+  const [localDismissed, setLocalDismissed] = useState<string | null>(null);
+  const controlled = !!onDismissResult;
+  const dismissed = controlled ? (dismissedResult ?? null) : localDismissed;
+  const dismissResult = (id: string) => (controlled ? onDismissResult!(id) : setLocalDismissed(id));
   const combatResult = resultFrom(data?.combat_result);
   const fighting = !!combat?.active;
   const live = fighting && !!combat && !blocked;
@@ -175,9 +181,9 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, reactionCardId,
   return (
     <div className="ws-combat" ref={rootRef}>
       <p className="sr-only" aria-live="polite">{announce}</p>
-      {combatResult && shouldShowResult(combatResult, dismissedResult) && (
+      {combatResult && shouldShowResult(combatResult, dismissed) && (
         <CombatOutcomePanel result={combatResult} outcome={data?.turn_outcome}
-          onContinue={() => setDismissedResult(combatResult.result_event_id)} />
+          onContinue={() => dismissResult(combatResult.result_event_id)} />
       )}
       {!fighting && ended && (
         <p className="ws-combat__ended" role="note">Combate encerrado — o desfecho está na narrativa.</p>
