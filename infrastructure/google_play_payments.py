@@ -1,5 +1,6 @@
 """SPEC-194 idempotent Google Play fulfillment: verify -> credit -> consume."""
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 import logging
 import os
@@ -144,7 +145,7 @@ class PostgresPurchaseStore:
         self.pool, self.wallet = pool, PostgresWallet(pool)
 
     def sku_for_product(self, product_id):
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             row = db.execute("select sku_id,shard_milli,pricing_version_id from app.purchase_skus "
                              "where channel='google_play' and store_product_id=%s "
                              "order by created_at desc limit 1", (product_id,)).fetchone()
@@ -152,7 +153,7 @@ class PostgresPurchaseStore:
 
     def list_products(self):
         """Newest SKU per google_play product; shard amount only (never a price)."""
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             rows = db.execute("select distinct on (store_product_id) store_product_id,sku_id,shard_milli "
                               "from app.purchase_skus where channel='google_play' "
                               "order by store_product_id, created_at desc").fetchall()
@@ -160,14 +161,14 @@ class PostgresPurchaseStore:
                  "shard_milli": str(r["shard_milli"])} for r in rows]
 
     def owner_deleted(self, owner_id):
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             if db.execute("select to_regclass('app.account_deletions') as r").fetchone()["r"] is None:
                 return False
             return db.execute("select 1 from app.account_deletions where owner_id=%s",
                               (owner_id,)).fetchone() is not None
 
     def get_by_token(self, token_sha):
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             row = db.execute("select p.*,s.shard_milli from app.google_play_purchases p "
                              "join app.purchase_skus s using (sku_id) where token_sha256=%s",
                              (token_sha,)).fetchone()
@@ -175,7 +176,7 @@ class PostgresPurchaseStore:
 
     def fulfill(self, owner_id, sku, token, order_id, facts):
         sha = token_digest(token)
-        with self.pool.connection() as db, db.transaction():
+        with admin_connection(self.pool) as db, db.transaction():
             db.execute("select pg_advisory_xact_lock(hashtextextended(%s,194))", (sha,))
             row = db.execute("select * from app.google_play_purchases where token_sha256=%s or order_id=%s",
                              (sha, order_id)).fetchone()
@@ -201,7 +202,7 @@ class PostgresPurchaseStore:
         """Best-effort SPEC-195 pass (a void may have arrived first); the cron retries on failure."""
         try:
             from infrastructure.reconciliation import PostgresStore
-            with self.pool.connection() as db:  # nothing to apply unless a void/fee already arrived
+            with admin_connection(self.pool) as db:  # nothing to apply unless a void/fee already arrived
                 waiting = db.execute("select 1 from app.purchase_reconciliation_events where "
                                      "provider='google_play' and purchase_ref=%s limit 1", (order_id,)).fetchone()
             if waiting:
@@ -212,13 +213,13 @@ class PostgresPurchaseStore:
                 "immediate_reconcile_failed error=%s", type(exc).__name__)
 
     def set_state(self, token_sha, state):
-        with self.pool.connection() as db, db.transaction():
+        with admin_connection(self.pool) as db, db.transaction():
             db.execute("update app.google_play_purchases set state=%s,updated_at=now() "
                        "where token_sha256=%s and state not in ('consumed','consume_failed')", (state, token_sha))
 
     def record_consume_failure(self, token_sha, limit):
         """Count one poison attempt; at `limit` the row becomes terminal `consume_failed`."""
-        with self.pool.connection() as db, db.transaction():
+        with admin_connection(self.pool) as db, db.transaction():
             row = db.execute(
                 "update app.google_play_purchases set consume_attempts=consume_attempts+1,"
                 "state=case when consume_attempts+1>=%s then 'consume_failed' else 'fulfilled_unconsumed' end,"
@@ -227,7 +228,7 @@ class PostgresPurchaseStore:
         return row["state"] if row else self.get_by_token(token_sha)["state"]
 
     def unconsumed(self, limit):
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             return [dict(r) for r in db.execute(
                 "select * from app.google_play_purchases where state in ('fulfilled','fulfilled_unconsumed') "
                 # SPEC-222 R4: a deleted account's row loses its token; nothing left to consume.

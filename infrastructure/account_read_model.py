@@ -4,6 +4,7 @@ Commercial units are milli-Estilhas. Only settled wallet entries count as spend;
 usage telemetry is activity, not a charge.
 """
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
@@ -56,7 +57,7 @@ class PostgresAccountReader:
         self.pool = pool
 
     def balance(self, principal: Principal) -> dict:
-        with self.pool.connection() as connection:
+        with admin_connection(self.pool) as connection:
             row = connection.execute(
                 "select available_milli,reserved_milli from app.wallet_accounts where owner_id=%s",
                 (principal.user_id,),
@@ -68,7 +69,7 @@ class PostgresAccountReader:
                   limit: int = 20) -> dict:
         limit = _page_limit(limit)
         after = _cursor(cursor)
-        with self.pool.connection() as connection:
+        with admin_connection(self.pool) as connection:
             rows = connection.execute(
                 """select entry_id,entry_type,amount_milli,created_at from app.wallet_entries
                 where owner_id=%s and entry_type in ('purchase','refund','reversal')
@@ -87,7 +88,7 @@ class PostgresAccountReader:
               limit: int = 20) -> dict:
         limit = _page_limit(limit)
         after = _cursor(cursor)
-        with self.pool.connection() as connection:
+        with admin_connection(self.pool) as connection:
             rows = connection.execute(
                 f"""select u.event_id,u.created_at,u.game_id,{_category_sql()} as category,
                            o.kind as operation_kind
@@ -115,7 +116,7 @@ class PostgresAccountReader:
             hour=0, minute=0, second=0, microsecond=0)
         count = {"24h": 24, "7d": 7, "30d": 30}[period]
         start = end - unit * (count - 1)
-        with self.pool.connection() as connection:
+        with admin_connection(self.pool) as connection:
             rows = connection.execute(
                 """select date_trunc(%s,e.created_at at time zone 'UTC') at time zone 'UTC' as bucket,
                   case when r.reference_type='image' or o.kind='art' then 'image'
@@ -153,7 +154,7 @@ class PostgresAccountReader:
                      if e.get("role") == "narrator" and e.get("id")}
         if not narrators:
             return {}
-        with self.pool.connection() as connection:
+        with admin_connection(self.pool) as connection:
             rows = connection.execute(
                 """with selected as (
                   select t.operation_id,t.presentation_entry_id,t.timeline_epoch,t.llm_cost_usd
@@ -188,7 +189,7 @@ class PostgresAccountReader:
 
     def operation_cost(self, principal: Principal, game_id: UUID,
                        operation_id: UUID) -> dict | None:
-        with self.pool.connection() as connection:
+        with admin_connection(self.pool) as connection:
             row = connection.execute(
                 """with selected as (
                   select t.operation_id,t.presentation_entry_id,t.timeline_epoch,t.llm_cost_usd

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
+from contextvars import copy_context
 from collections.abc import Callable, Iterator
 from threading import Event, Thread
 
@@ -74,7 +75,9 @@ def keep_lease_alive(renew: Callable[[], None] | None, *,
         if renew is not None:
             tick()
             watch.check()
-            thread = Thread(target=loop, name="lease-heartbeat", daemon=True)
+            # SPEC-224: o renovador herda o principal do request, entao o UPDATE do lease roda
+            # sob `rpg_api` (RLS por owner) e nao no login de sessao.
+            thread = Thread(target=copy_context().run, args=(loop,), name="lease-heartbeat", daemon=True)
             thread.start()
         yield watch
         watch.check()

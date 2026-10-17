@@ -6,6 +6,7 @@ apaga os objetos; é idempotente (apagar objeto ausente é sucesso) e varre tamb
 prefixo da campanha para pegar uploads não registrados.
 """
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 from uuid import UUID, uuid4
 
@@ -62,7 +63,7 @@ def purge_game_blobs_job(pool, blob_store, payload: dict) -> dict:
     keys = {key for key in payload.get("object_keys") or [] if _in_prefix(key, prefix)}
     bucket = getattr(blob_store, "bucket", None)
     if bucket:
-        with pool.connection() as connection:
+        with admin_connection(pool) as connection:
             if connection.execute("select to_regclass('storage.objects') as r").fetchone()["r"]:
                 keys.update(row["name"] for row in connection.execute(
                     "select name from storage.objects where bucket_id=%s and starts_with(name,%s)",

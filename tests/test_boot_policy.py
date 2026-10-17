@@ -26,7 +26,11 @@ def secure_env(**over: str) -> dict[str, str]:
         "RPG_RUNTIME_PROFILE": "hosted-supabase",
         "RPG_BIND_HOST": "0.0.0.0",
         "DATABASE_URL": (
-            "postgresql://postgres.projectref:SEGREDO_DB@"
+            "postgresql://rpg_runtime.projectref:SEGREDO_DB@"
+            "aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
+        ),
+        "RPG_ADMIN_DATABASE_URL": (
+            "postgresql://rpg_admin.projectref:SEGREDO_ADMIN@"
             "aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
         ),
         "SUPABASE_URL": "https://projectref.supabase.co",

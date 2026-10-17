@@ -14,6 +14,11 @@ _principal: contextvars.ContextVar[Principal | None] = contextvars.ContextVar(
 )
 
 
+def active_principal() -> Principal | None:
+    """Principal do request ou None (sem levantar); usado pelo pool para escopar o RLS."""
+    return _principal.get()
+
+
 def current_principal(*, required: bool = True) -> Principal | None:
     principal = _principal.get()
     if required and principal is None:

@@ -48,7 +48,8 @@ PREVIEW_LITERALS = {"RPG_RUNTIME_PROFILE": "hosted-supabase", "RPG_BIND_HOST": "
 # SPEC-194: HMAC key for Play obfuscated account ids (>=32 chars). Pushed only when present in the env files.
 # SPEC-197 R6 voice: Groq only (no OPENAI_API_KEY => no paid STT fallback candidate).
 OPTIONAL_SECRET_FROM_FILE = ("RPG_PLAY_ACCOUNT_KEY", "GROQ_API_KEY")
-FORBIDDEN_IN_PREVIEW = frozenset(SECRET_FROM_FILE) | frozenset(OPTIONAL_SECRET_FROM_FILE)
+RLS_SECRETS = ("RPG_ADMIN_DATABASE_URL",)  # SPEC-224: so no modo RLS efetivo
+FORBIDDEN_IN_PREVIEW = frozenset(SECRET_FROM_FILE) | frozenset(OPTIONAL_SECRET_FROM_FILE) | frozenset(RLS_SECRETS)
 
 
 def _load_files() -> dict[str, str]:
@@ -71,10 +72,17 @@ def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST, use_admi
     for key in OPTIONAL_SECRET_FROM_FILE:
         if files.get(key):
             production[key] = files[key]
-    # SPEC-197 R-05: o runtime usa o papel de menor privilégio quando provisionado (runtime_role.py);
-    # `use_admin_dsn` mantém o DSN `postgres` (rollback).
+    # SPEC-197 R-05 + SPEC-224: o runtime usa o papel de menor privilégio (`rpg_runtime`) com RLS por request
+    # e um segundo DSN (`rpg_admin`) para workers/cron/wallet. `use_admin_dsn` e o rollback: DSN unico
+    # `postgres` e RPG_REQUEST_RLS=off (comportamento anterior). Sem papeis provisionados, idem.
     if files.get("RPG_RUNTIME_DATABASE_URL") and not use_admin_dsn:
+        if not files.get("RPG_ADMIN_DATABASE_URL"):
+            raise KeyError("ausentes em .env.staging/.env: RPG_ADMIN_DATABASE_URL "
+                           "(rode scripts/staging/runtime_role.py --role rpg_admin --apply)")
         production["DATABASE_URL"] = files["RPG_RUNTIME_DATABASE_URL"]
+        production["RPG_ADMIN_DATABASE_URL"] = files["RPG_ADMIN_DATABASE_URL"]
+    else:
+        production["RPG_REQUEST_RLS"] = "off"
     preview = dict(PREVIEW_LITERALS)
     assert not FORBIDDEN_IN_PREVIEW & preview.keys()
     return production, preview
@@ -123,7 +131,7 @@ def main(argv: list[str] | None = None) -> int:
     except KeyError as exc:
         print(exc.args[0], file=sys.stderr)
         return 1
-    secrets = frozenset(SECRET_FROM_FILE) | frozenset(OPTIONAL_SECRET_FROM_FILE)
+    secrets = frozenset(SECRET_FROM_FILE) | frozenset(OPTIONAL_SECRET_FROM_FILE) | frozenset(RLS_SECRETS)
     print("production:", ", ".join(sorted(production)))
     print("preview:", ", ".join(sorted(preview)), "(sem segredos de DB/serviço)")
     if args.dry_run:

@@ -1,6 +1,7 @@
 """BlobStore para Supabase Storage, usado somente pelo backend."""
 
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 import hashlib
 from io import BytesIO
@@ -24,7 +25,7 @@ class SupabaseBlobStore:
     def _account_active(self, owner: UUID) -> bool:
         if self.pool is None:
             return True
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             return not db.execute("select 1 from app.account_deletions where owner_id=%s", (owner,)).fetchone()
 
     def _headers(self, content_type: str | None = None) -> dict[str, str]:

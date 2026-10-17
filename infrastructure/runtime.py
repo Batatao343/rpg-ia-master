@@ -15,6 +15,8 @@ from typing import Callable, Mapping, NamedTuple
 from urllib.parse import parse_qsl, urlsplit
 from uuid import UUID
 
+from observability.telemetry import log_event as _log_event
+
 from infrastructure.contracts import (
     BlobStore,
     GameStore,
@@ -128,8 +130,8 @@ def hosted_supabase_dsn_ref(dsn: str) -> str:
     elif host.startswith("db.") and host.endswith(".supabase.co"):
         # Dedicated paid-plan pooler is also transaction mode on 6543.
         ref = host[len("db."):-len(".supabase.co")]
-        if user != "postgres":
-            raise ValueError("DATABASE_URL do pooler dedicado exige postgres")
+        if user not in {"postgres", "rpg_runtime", "rpg_admin"}:
+            raise ValueError("DATABASE_URL do pooler dedicado exige postgres, rpg_runtime ou rpg_admin")
     else:
         raise ValueError("DATABASE_URL exige host de pooler Supabase")
     if not ref or not all(ch.isascii() and (ch.islower() or ch.isdigit()) for ch in ref):
@@ -170,6 +172,10 @@ class RuntimeConfig:
     auth_mode: str
     bind_host: str
     database_url: str = field(default="", repr=False)
+    # SPEC-224: credencial de sistema (workers/cron/wallet/ciclo de conta). Ausente => mesmo DSN.
+    admin_database_url: str = field(default="", repr=False)
+    # SPEC-224 R3: `SET LOCAL ROLE rpg_api` por request. `RPG_REQUEST_RLS=off` e o rollback documentado.
+    request_rls: bool = True
     supabase_url: str = ""
     supabase_publishable_key: str = field(default="", repr=False)
     supabase_service_role_key: str = field(default="", repr=False)
@@ -221,6 +227,8 @@ class RuntimeConfig:
             auth_mode=values.get("RPG_AUTH_MODE", selected[6]).strip().lower(),
             bind_host=values.get("RPG_BIND_HOST", "127.0.0.1").strip().lower(),
             database_url=values.get("DATABASE_URL", "").strip(),
+            admin_database_url=values.get("RPG_ADMIN_DATABASE_URL", "").strip(),
+            request_rls=str(values.get("RPG_REQUEST_RLS", "on")).strip().lower() not in {"0", "off", "false", "no"},
             supabase_url=values.get("SUPABASE_URL", "").strip(),
             supabase_publishable_key=values.get("SUPABASE_PUBLISHABLE_KEY", "").strip(),
             supabase_service_role_key=values.get("SUPABASE_SERVICE_ROLE_KEY", "").strip(),
@@ -280,6 +288,8 @@ class RuntimeConfig:
                 raise ValueError(
                     "RPG_DB_POOL_TIMEOUT_SECONDS deve exceder 2x RPG_DB_CONNECT_TIMEOUT_SECONDS "
                     "(um failover de IP do pooler precisa caber)")
+        if self.profile in {"hosted", "hosted-supabase"} and self.request_rls:
+            self._validate_split_credentials()
         if self.profile in {"hosted", "hosted-supabase"}:
             if _unsafe_hosted_host(self.bind_host):
                 raise ValueError(f"perfil {self.profile} exige bind de serviço explícito")
@@ -334,6 +344,42 @@ class RuntimeConfig:
                     raise ValueError("service_role JWT aponta a projeto diferente")
         if self.supabase_service_role_key and self.supabase_service_role_key.startswith("VITE_"):
             raise ValueError("service role nunca pode usar namespace Vite")
+
+    def _validate_split_credentials(self) -> None:
+        """SPEC-224 R2: duas credenciais distintas; a de request nunca e superuser/postgres."""
+        def _user(dsn: str) -> str:
+            try:
+                return (urlsplit(dsn).username or "").strip().lower()
+            except ValueError:
+                return ""
+
+        request_user, admin_user = _user(self.database_url), _user(self.admin_database_url)
+        if not self.admin_database_url:
+            raise ValueError(
+                f"perfil {self.profile} exige RPG_ADMIN_DATABASE_URL (credencial de workers/cron); "
+                "rollback documentado: RPG_REQUEST_RLS=off")
+        if privileged_request_db_user(request_user):
+            raise ValueError(
+                "DATABASE_URL de request nao pode usar postgres/superuser/role de sistema: use o login "
+                "rpg_runtime (rollback documentado: RPG_REQUEST_RLS=off)")
+        if not admin_user or admin_user == request_user:
+            raise ValueError("RPG_ADMIN_DATABASE_URL deve usar um usuario diferente de DATABASE_URL")
+        if admin_user.partition(".")[0] == "rpg_runtime":
+            raise ValueError("RPG_ADMIN_DATABASE_URL nao pode usar o login de request rpg_runtime")
+        if self.profile == "hosted-supabase":
+            if hosted_supabase_dsn_ref(self.admin_database_url) != hosted_supabase_dsn_ref(self.database_url):
+                raise ValueError("RPG_ADMIN_DATABASE_URL e DATABASE_URL apontam a projetos diferentes")
+        elif _unsafe_hosted_host((urlsplit(self.admin_database_url).hostname or "").lower()):
+            raise ValueError("perfil hosted recusa RPG_ADMIN_DATABASE_URL loopback")
+
+
+def privileged_request_db_user(user: str) -> bool:
+    """SPEC-224: o usuario do DSN de request e de plataforma (superuser/BYPASSRLS) ou de sistema?
+
+    `rpg_admin` nem e membro de `rpg_api` (o SET ROLE falharia em todo request)."""
+    role = (user or "").strip().lower().partition(".")[0]
+    return (role in {"postgres", "supabase_admin", "service_role", "authenticator", "rpg_admin"}
+            or role.startswith(("supabase_", "pgbouncer")))
 
 
 # ---------------------------------------------------------------------------
@@ -572,14 +618,33 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
     from infrastructure.supabase_blob import SupabaseBlobStore
     from infrastructure.supabase_identity import SupabaseIdentityProvider
 
-    pool = PostgresPool(
-        config.database_url,
-        min_size=config.db_pool_min_size,
-        max_size=config.db_pool_max_size,
-        timeout=config.db_pool_timeout,
-        transaction_pooler=config.profile == "hosted-supabase",
-        connect_timeout=config.db_connect_timeout,
-    )
+    admin_pool = None
+    if config.admin_database_url and config.admin_database_url != config.database_url:
+        admin_pool = PostgresPool(
+            config.admin_database_url,
+            min_size=config.db_pool_min_size,
+            max_size=config.db_pool_max_size,
+            timeout=config.db_pool_timeout,
+            transaction_pooler=config.profile == "hosted-supabase",
+            connect_timeout=config.db_connect_timeout,
+        )
+    if not config.request_rls:
+        _log_event("runtime", "request_rls_disabled", level="warning", profile=config.profile)
+    try:
+        pool = PostgresPool(
+            config.database_url,
+            min_size=config.db_pool_min_size,
+            max_size=config.db_pool_max_size,
+            timeout=config.db_pool_timeout,
+            transaction_pooler=config.profile == "hosted-supabase",
+            connect_timeout=config.db_connect_timeout,
+            request_rls=config.request_rls,
+            admin_pool=admin_pool,
+        )
+    except Exception:
+        if admin_pool is not None:
+            admin_pool.close()
+        raise
     try:
         if config.blob_store == "supabase":
             if not config.supabase_url or not config.supabase_service_role_key:
@@ -635,6 +700,10 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
         memory_store = PgVectorMemoryStore(
             pool, embedder=embed_query, profile_id=configured_profile_id(),
         )
+        try:  # SPEC-224: o perfil e criado com a credencial de sistema; falha nao derruba o boot
+            memory_store.ensure_profile()
+        except Exception as exc:
+            _log_event("runtime", "embedding_profile_ensure_failed", level="warning", error=type(exc).__name__)
         return InfrastructureRuntime(
             config=config,
             game_store=PostgresGameStore(pool),

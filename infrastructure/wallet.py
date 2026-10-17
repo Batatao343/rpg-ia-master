@@ -5,9 +5,10 @@ trusted backend DB connection may mutate these tables.
 """
 
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection, system_scope
 
 from collections import Counter
-from contextlib import contextmanager, nullcontext
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from decimal import Decimal
@@ -146,7 +147,7 @@ class PostgresWallet:
         )
 
     def balance(self, principal: Principal) -> WalletBalance:
-        with self.pool.connection() as connection:
+        with admin_connection(self.pool) as connection:
             row = connection.execute(
                 "select available_milli,reserved_milli from app.wallet_accounts where owner_id=%s",
                 (principal.user_id,),
@@ -165,7 +166,7 @@ class PostgresWallet:
             raise WalletConflict("compra sem prova verificada")
         source = "payment:" + _reference(channel, 30)
         key = _reference(payment_id)
-        scope = self.pool.connection() if connection is None else nullcontext(connection)
+        scope = admin_connection(self.pool) if connection is None else system_scope(connection)
         with scope as connection, connection.transaction():
             sku = connection.execute(
                 "select sku_id,pricing_version_id,shard_milli,channel from app.purchase_skus where sku_id=%s",
@@ -205,7 +206,7 @@ class PostgresWallet:
         if kind not in ("refund", "reversal") or not isinstance(purchase_entry_id, UUID):
             raise WalletConflict("refund/reversal inválido")
         refund_key = _reference(refund_id)
-        scope = self.pool.connection() if connection is None else nullcontext(connection)
+        scope = admin_connection(self.pool) if connection is None else system_scope(connection)
         with scope as connection, connection.transaction():
             account = self._locked_account(connection, principal.user_id)
             source = connection.execute(
@@ -249,7 +250,7 @@ class PostgresWallet:
         if (not isinstance(actor_id, UUID) or not isinstance(reason, str)
                 or not 0 < len(reason) <= 500 or reason != reason.strip()):
             raise WalletConflict("ator/justificativa de ajuste ausente")
-        scope = self.pool.connection() if connection is None else nullcontext(connection)
+        scope = admin_connection(self.pool) if connection is None else system_scope(connection)
         with scope as connection, connection.transaction():
             account = self._locked_account(connection, principal.user_id)
             prior = connection.execute(
@@ -289,7 +290,7 @@ class PostgresWallet:
             if UUID(reference_id) != usage_operation_id:
                 raise WalletConflict("operation_id de usage divergente")
         at = at or datetime.now(timezone.utc)
-        scope = self.pool.connection() if connection is None else nullcontext(connection)
+        scope = admin_connection(self.pool) if connection is None else system_scope(connection)
         with scope as connection, connection.transaction():
             if usage_operation_id is not None:
                 operation = connection.execute(
@@ -362,7 +363,7 @@ class PostgresWallet:
         _reference(provider, 100)
         _reference(model, 150)
         at = at or datetime.now(timezone.utc)
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             row = self._locked_reservation(connection, principal, reservation_id)
             if row["fence_token"] != fence_token or row["status"] not in ("reserved", "effect_started"):
                 raise UncertainEffect("fence inválido ou efeito em reconciliação")
@@ -484,7 +485,7 @@ class PostgresWallet:
         ids = tuple(usage_event_ids)
         if not ids or len(ids) != len(set(ids)) or any(not isinstance(v, UUID) for v in ids):
             raise WalletConflict("usage IDs ausentes, repetidos ou inválidos")
-        scope = self.pool.connection() if connection is None else nullcontext(connection)
+        scope = admin_connection(self.pool) if connection is None else system_scope(connection)
         with scope as connection, connection.transaction():
             row = self._locked_reservation(connection, principal, reservation_id)
             if row["fence_token"] != fence_token:
@@ -567,7 +568,7 @@ class PostgresWallet:
         """Release only pre-dispatch holds; ticketed effects remain uncertain."""
         if not isinstance(new_fence_token, UUID):
             raise WalletConflict("novo fence token ausente")
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             # Match the existing lock order: operation before wallet account.
             preliminary = connection.execute(
                 "select usage_operation_id,owner_id from app.wallet_reservations "
@@ -605,7 +606,7 @@ class PostgresWallet:
 
     def release_pre_effect(self, principal: Principal, reservation_id: UUID, *,
                            fence_token: UUID, connection=None) -> WalletReservation:
-        scope = self.pool.connection() if connection is None else nullcontext(connection)
+        scope = admin_connection(self.pool) if connection is None else system_scope(connection)
         with scope as connection, connection.transaction():
             row = self._locked_reservation(connection, principal, reservation_id)
             if row["fence_token"] != fence_token:
@@ -631,7 +632,7 @@ class PostgresWallet:
             raise WalletConflict("reconciliação exige ator")
         evidence = _reference(evidence_reference)
         reason = f"provider_no_charge:{actor_id}:{evidence}"
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             row = self._locked_reservation(connection, principal, reservation_id)
             if row["fence_token"] != fence_token:
                 raise UncertainEffect("worker perdeu fence financeiro")

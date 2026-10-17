@@ -5,6 +5,7 @@ cliente). Jogo alheio e inexistente são indistinguíveis (None). Falha de uma
 fonte secundária vira `unavailable` com motivo — o export continua.
 """
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 from decimal import Decimal
 from typing import Any, Dict, List, Optional
@@ -28,7 +29,7 @@ class PostgresAuditSource:
 
     def load(self, game_id: UUID, *, owner_email: Optional[str] = None) -> Optional[AuditSource]:
         owner = self.principal.user_id
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             if db.execute("select 1 from app.account_deletions where owner_id=%s",
                           (owner,)).fetchone():
                 raise AccountDeleted("account_deleted")
@@ -41,7 +42,7 @@ class PostgresAuditSource:
                                *( [owner_email] if owner_email else [])}
         if owner_email is None:
             try:
-                with self.pool.connection() as db, db.transaction():
+                with admin_connection(self.pool) as db, db.transaction():
                     row = db.execute("select app.runtime_auth_email(%s) as email",
                                      (owner,)).fetchone()
                 owner_email = (row or {}).get("email") or None
@@ -51,7 +52,7 @@ class PostgresAuditSource:
                 source.owner_values.add(str(owner_email))
         source.owner_values.discard("")
         try:
-            with self.pool.connection() as db, db.transaction():
+            with admin_connection(self.pool) as db, db.transaction():
                 rows = db.execute(
                     """select operation_id, sequence, timeline_epoch, route, latency_ms,
                               llm_cost_usd, presentation_entry_id
@@ -61,7 +62,7 @@ class PostgresAuditSource:
         except Exception as exc:
             source.turns_reason = f"turns_read_failed:{type(exc).__name__}"
         try:
-            with self.pool.connection() as db, db.transaction():
+            with admin_connection(self.pool) as db, db.transaction():
                 rows = db.execute(
                     """select operation_id, sum(cost_usd) as cost from app.usage_events
                        where owner_id=%s and game_id=%s group by operation_id""",
@@ -70,7 +71,7 @@ class PostgresAuditSource:
         except Exception as exc:
             source.usage_reason = f"usage_read_failed:{type(exc).__name__}"
         try:
-            with self.pool.connection() as db, db.transaction():
+            with admin_connection(self.pool) as db, db.transaction():
                 rows = db.execute(
                     """select event_id, turn from app.game_events
                        where owner_id=%s and game_id=%s order by turn, event_id""",
@@ -82,7 +83,7 @@ class PostgresAuditSource:
         except Exception as exc:
             source.events_reason = f"events_read_failed:{type(exc).__name__}"
         try:
-            with self.pool.connection() as db, db.transaction():
+            with admin_connection(self.pool) as db, db.transaction():
                 rows = db.execute(
                     """select id, error_code from app.operations
                        where owner_id=%s and game_id=%s and kind='turn'

@@ -31,6 +31,7 @@ REQUIRED_ENV = {
     "staging": (
         "DATABASE_URL", "SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY", "SUPABASE_SERVICE_ROLE_KEY",
         "RPG_CRON_SECRET", "RPG_RUNTIME_PROFILE", "RPG_AUTH_CAPTCHA_MODE", "RPG_TURNSTILE_SITE_KEY",
+        "RPG_ADMIN_DATABASE_URL",  # SPEC-224: credencial de sistema (rpg_admin), distinta da de request
     ) + HOSTED_REQUIRED_ENV,  # SPEC-218: lista de seguranca vem de infrastructure.runtime (fonte unica)
 }
 REQUIRED_ENV["production"] = REQUIRED_ENV["staging"] + (

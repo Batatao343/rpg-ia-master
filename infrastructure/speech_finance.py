@@ -1,5 +1,6 @@
 """SPEC-186 finance orchestration; canonical writers remain coordinator/wallet."""
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 from datetime import datetime, timezone
 import os
@@ -27,7 +28,7 @@ class PostgresSpeechFinance:
         now = self.at or datetime.now(timezone.utc)
         require_speech_prices(now)
         version_id = os.getenv("RPG_SPEECH_PRICING_VERSION", "")
-        with self.pool.connection() as connection:
+        with admin_connection(self.pool) as connection:
             record = connection.execute("select * from app.pricing_versions where version_id=%s",
                                         (version_id,)).fetchone()
         if record is None:

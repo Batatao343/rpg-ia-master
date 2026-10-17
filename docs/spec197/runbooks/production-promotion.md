@@ -52,3 +52,10 @@ Env de producao (nomes; valores so no dashboard/CLI): `REQUIRED_ENV["production"
 Pins de processadores (devem constar no ambiente de producao para a lista da politica/Data Safety ser exata): `RPG_ROUTES` (JSON; somente DeepSeek + Groq) e `RPG_EMBEDDINGS=jina` (sem fallback para openai/ollama/gemini). Preview segue sem segredos (`vercel_env.py`).
 
 Pos-promocao: aquecer `/health`; agendar crons (`schedule_cron.py`, `finops`); smoke de dois usuarios (R6).
+
+## RLS efetivo (SPEC-224) — ordem obrigatoria antes do deploy
+1. Aplicar `20261017120000_rls_effective_storage_no_client_write.sql` (expand-only; cria `rpg_admin`, remove policies de escrita do Storage).
+2. `uv run python -m scripts.staging.runtime_role --role rpg_runtime --apply` e `--role rpg_admin --apply` (senhas so no `.env.*`).
+3. `vercel_env.py` envia `DATABASE_URL` (rpg_runtime), `RPG_ADMIN_DATABASE_URL` (rpg_admin) — o deploy sem a segunda env falha no boot (fail-closed).
+4. Deploy + `two_user_smoke` + 1 request com o log `pool.request_role_applied role=rpg_api`.
+5. Rollback imediato: `RPG_REQUEST_RLS=off` (e DSN `postgres`: `vercel_env.py --use-admin-dsn`). Detalhes: `docs/spec224/README.md`.

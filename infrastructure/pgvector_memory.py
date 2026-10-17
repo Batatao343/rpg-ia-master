@@ -1,6 +1,7 @@
 """MemoryStore PostgreSQL: fato bruto durável, vetor assíncrono e FTS fallback."""
 
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 import hashlib
 from collections.abc import Callable, Sequence
@@ -49,16 +50,38 @@ class PgVectorMemoryStore:
         self.dimensions = dimensions
         self._profile_ready = False
 
-    def _ensure_profile(self, connection) -> None:
-        """Garante a linha de `app.embedding_profiles` do perfil configurado."""
-        if self._profile_ready or self.profile_id == "local-1024":
-            return
+    def _insert_profile(self, connection) -> None:
         provider, _, rest = self.profile_id.partition("-")
         connection.execute(
             """insert into app.embedding_profiles(id,provider,model,dimensions,status,activated_at)
             values (%s,%s,%s,%s,'active',now()) on conflict (id) do nothing""",
             (self.profile_id, provider, rest, self.dimensions),
         )
+
+    def _ensure_profile(self, connection) -> None:
+        """Garante a linha de `app.embedding_profiles` do perfil configurado."""
+        if self._profile_ready or self.profile_id == "local-1024":
+            return
+        # SPEC-224: a role de request (`rpg_api`) so le `embedding_profiles`. Normalmente a linha ja
+        # existe (boot: `ensure_profile()` com credencial de sistema); se faltar, o insert e feito
+        # numa conexao de sistema propria (autonoma), nunca na conexao escopada ao owner.
+        if connection.execute("select 1 from app.embedding_profiles where id=%s",
+                              (self.profile_id,)).fetchone():
+            self._profile_ready = True
+            return
+        if getattr(self.pool, "_request_rls", False):
+            with admin_connection(self.pool) as system, system.transaction():
+                self._insert_profile(system)
+        else:
+            self._insert_profile(connection)
+        self._profile_ready = True
+
+    def ensure_profile(self) -> None:
+        """Cria o perfil de embedding com credencial de sistema (boot/worker)."""
+        if self.profile_id == "local-1024":
+            return
+        with admin_connection(self.pool) as connection, connection.transaction():
+            self._insert_profile(connection)
         self._profile_ready = True
 
     def migrate_legacy_profile(self, legacy: str = "local-1024") -> int:
@@ -69,9 +92,9 @@ class PgVectorMemoryStore:
         """
         if self.profile_id == legacy:
             return 0
-        with self.pool.connection() as connection, connection.transaction():
-            self._profile_ready = False
-            self._ensure_profile(connection)
+        with admin_connection(self.pool) as connection, connection.transaction():
+            self._insert_profile(connection)
+            self._profile_ready = True
             result = connection.execute(
                 "update app.memory_documents set embedding_profile_id=%s where embedding_profile_id=%s",
                 (self.profile_id, legacy),
@@ -168,7 +191,7 @@ class PgVectorMemoryStore:
 
     def set_embedding(self, document_id: str, values: Sequence[float], *, content_sha256: str) -> None:
         vector = vector_literal(values)
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             result = connection.execute(
                 """
                 update app.memory_documents set embedding=%s::extensions.vector,

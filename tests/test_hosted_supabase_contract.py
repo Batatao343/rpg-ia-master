@@ -16,7 +16,11 @@ def hosted_env() -> dict[str, str]:
         "RPG_RUNTIME_PROFILE": "hosted-supabase",
         "RPG_BIND_HOST": "0.0.0.0",
         "DATABASE_URL": (
-            "postgresql://postgres.projectref:DB_PASSWORD_SENTINEL@"
+            "postgresql://rpg_runtime.projectref:DB_PASSWORD_SENTINEL@"
+            "aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
+        ),
+        "RPG_ADMIN_DATABASE_URL": (
+            "postgresql://rpg_admin.projectref:ADMIN_PASSWORD_SENTINEL@"
             "aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
         ),
         "SUPABASE_URL": "https://projectref.supabase.co",
@@ -65,6 +69,7 @@ def test_new_profile_and_legacy_contracts() -> None:
     legacy_hosted = RuntimeConfig.from_env({
         "RPG_RUNTIME_PROFILE": "hosted", "RPG_BIND_HOST": "0.0.0.0",
         "RPG_ALLOW_INSECURE_HOSTED": "1",  # SPEC-218: o foco aqui e a topologia OIDC/S3
+        "RPG_REQUEST_RLS": "off",  # SPEC-224: DSN unico (sem credenciais separadas) fora do foco
         "DATABASE_URL": "postgresql://user:fake@db.example.com:5432/postgres",
         "RPG_OIDC_USERINFO_URL": "https://identity.example/userinfo",
         "RPG_OIDC_ISSUER": "https://identity.example",
@@ -260,11 +265,17 @@ def test_hosted_runtime_wires_supabase_auth_storage_and_single_pool(monkeypatch:
 
     monkeypatch.setattr(postgres, "PostgresPool", FakePool)
     built = runtime.build_database_runtime(RuntimeConfig.from_env(hosted_env()))
-    assert len(seen) == 1
-    assert seen[0][1] == {
+    # SPEC-224: um pool de request (rpg_runtime, RLS efetivo) + um pool de sistema (rpg_admin)
+    assert [dsn.split("@")[0].split("//")[1].split(":")[0] for dsn, _ in seen] == [
+        "rpg_admin.projectref", "rpg_runtime.projectref"]
+    admin_kwargs, request_kwargs = seen[0][1], seen[1][1]
+    assert admin_kwargs == {
         "min_size": 0, "max_size": 1, "timeout": 10.0, "transaction_pooler": True,
         "connect_timeout": 3.0,
     }
+    assert request_kwargs.pop("request_rls") is True
+    assert isinstance(request_kwargs.pop("admin_pool"), FakePool)
+    assert request_kwargs == admin_kwargs
     assert isinstance(built.identity_verifier, SupabaseIdentityProvider)
     assert isinstance(built.blob_store, SupabaseBlobStore)
     assert built.identity_verifier._key == hosted_env()["SUPABASE_PUBLISHABLE_KEY"]

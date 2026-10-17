@@ -15,6 +15,7 @@ Image reservations belong to their ``generate_dynamic_art`` job: only a dead/can
 A grace period keeps the sweep away from requests that are still finishing normally.
 """
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 import os
 from datetime import datetime, timedelta, timezone
@@ -41,7 +42,7 @@ def _candidates(pool, max_items: int, owner_id: UUID | None, grace: int) -> list
         owner_clause = " and r.owner_id=%s"
         params.append(owner_id)
     params.append(max_items)
-    with pool.connection() as connection:
+    with admin_connection(pool) as connection:
         rows = connection.execute(
             f"""select r.reservation_id,r.owner_id,r.reference_type,r.status,r.fence_token,
                        r.usage_operation_id,o.status as op_status,o.lease_until
@@ -56,7 +57,7 @@ def _candidates(pool, max_items: int, owner_id: UUID | None, grace: int) -> list
 
 
 def _resolve_image(pool, wallet, principal: Principal, row: dict) -> str:
-    with pool.connection() as connection, connection.transaction():
+    with admin_connection(pool) as connection, connection.transaction():
         art = connection.execute(
             """select g.generation_id,g.status,j.status as job_status
                from app.art_generations g
@@ -100,7 +101,7 @@ def _resolve_operation(pool, wallet, principal: Principal, row: dict) -> str:
     if (row.get("op_status") == "running" and lease_until is not None
             and lease_until > datetime.now(timezone.utc)):
         return "skipped"
-    with pool.connection() as connection:
+    with admin_connection(pool) as connection:
         tickets = connection.execute(
             "select count(*) as n from app.wallet_attempt_tickets where reservation_id=%s",
             (row["reservation_id"],)).fetchone()["n"]

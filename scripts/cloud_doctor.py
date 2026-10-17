@@ -13,6 +13,7 @@ from urllib.parse import urlsplit
 
 from infrastructure.runtime import (
     HOSTED_SECURITY_REQUIREMENTS, RuntimeConfig, _loopback_host, hosted_supabase_dsn_ref,
+    privileged_request_db_user,
 )
 
 
@@ -70,12 +71,25 @@ def diagnose(env: Mapping[str, str] | None = None) -> dict[str, object]:
         except ValueError:
             checks["dsn_shape"] = "invalid"
     if profile in {"hosted", "hosted-supabase"}:
+        # SPEC-224: so classes ("on"/"off", "present"/"missing", "least_privilege"/"superuser"), nunca DSN.
+        rls_on = values.get("RPG_REQUEST_RLS", "on").strip().lower() not in {"0", "off", "false", "no"}
+        checks["request_rls"] = "on" if rls_on else "off"
+        if rls_on:
+            checks["RPG_ADMIN_DATABASE_URL"] = "present" if values.get("RPG_ADMIN_DATABASE_URL", "").strip() else "missing"
+            try:
+                request_user = (urlsplit(values.get("DATABASE_URL", "")).username or "").lower()
+            except ValueError:
+                request_user = ""
+            checks["runtime_db_role"] = (
+                "superuser" if privileged_request_db_user(request_user) else "least_privilege"
+            )
+    if profile in {"hosted", "hosted-supabase"}:
         # SPEC-218: present/missing por requirement, nunca valores.
         for requirement in HOSTED_SECURITY_REQUIREMENTS:
             checks[f"security:{requirement.name}"] = "missing" if requirement.check(values) else "present"
     try:
         RuntimeConfig.from_env(values)
-        valid = profile != "invalid" and all(value not in {"missing", "invalid"} for value in checks.values())
+        valid = profile != "invalid" and all(value not in {"missing", "invalid", "superuser"} for value in checks.values())
     except ValueError:
         valid = False
     checks["profile_contract"] = "valid" if valid else "invalid"

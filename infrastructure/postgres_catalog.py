@@ -1,6 +1,7 @@
 """RuntimeCatalogStore Postgres com escopos e versionamento explícitos."""
 
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 from copy import deepcopy
 from typing import Any
@@ -50,7 +51,9 @@ class PostgresRuntimeCatalogStore:
         validate_scope(scope, owner_id, game_id)  # type: ignore[arg-type]
         digest = document_sha256(value)
         where, values = self._where(owner_id, game_id)
-        with self.pool.connection() as connection, connection.transaction():
+        # Escrita global nao e permitida a `rpg_api` (policy catalog_write_scoped): so sistema.
+        opener = admin_connection(self.pool) if scope == "global" else self.pool.connection()
+        with opener as connection, connection.transaction():
             current = connection.execute(
                 f"select id, document_sha256 from app.runtime_catalog where namespace=%s and item_key=%s and {where} for update",
                 (namespace, key, *values),

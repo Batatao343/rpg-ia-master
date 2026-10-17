@@ -5,6 +5,7 @@ Os prazos aqui (D-B, default da spec) são declarados na seção de retenção d
 orçamento do cron; o que sobrar sai no próximo ciclo. Saída: só contagens.
 """
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 BATCH = 1000
 OPERATIONS_DAYS = 90
@@ -65,7 +66,7 @@ _STATEMENTS: tuple[tuple[str, str], ...] = (
 def purge_expired(pool) -> dict[str, int]:
     """Apply every TTL once (bounded). Missing tables (older schema) are skipped."""
     result: dict[str, int] = {}
-    with pool.connection() as connection:
+    with admin_connection(pool) as connection:
         for name, sql in _STATEMENTS:
             table = name.removesuffix("_compacted")
             if connection.execute("select to_regclass(%s) as r", (f"app.{table}",)).fetchone()["r"] is None:

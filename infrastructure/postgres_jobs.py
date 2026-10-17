@@ -1,6 +1,7 @@
 """Fila Postgres com dedupe, SKIP LOCKED, fencing e retry/dead-letter."""
 
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 from contextlib import nullcontext
 
@@ -71,7 +72,7 @@ class PostgresJobQueue:
             return []
         lease_token = uuid4()
         interval = timedelta(seconds=self.lease_seconds)
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             # SPEC-236 R9: a handler that keeps killing its process (timeout/OOM) used to be
             # re-leased forever. Expired leases that already spent max_attempts go dead instead.
             connection.execute(
@@ -130,7 +131,7 @@ class PostgresJobQueue:
         resposta (modo A em perfil DB), sob o mesmo lease/fencing da fila."""
         lease_token = uuid4()
         interval = timedelta(seconds=self.lease_seconds)
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             row = connection.execute(
                 """
                 update app.jobs j set
@@ -157,7 +158,7 @@ class PostgresJobQueue:
         )
 
     def status(self, kind: str, dedupe_key: str) -> dict[str, Any] | None:
-        with self.pool.connection() as connection:
+        with admin_connection(self.pool) as connection:
             return connection.execute(
                 """select status, coalesce(lease_until > now(), false) as leased
                 from app.jobs where kind=%s and dedupe_key=%s""",
@@ -177,7 +178,7 @@ class PostgresJobQueue:
 
     def heartbeat(self, job_id: UUID, lease_token: UUID) -> None:
         interval = timedelta(seconds=self.lease_seconds)
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             self._require_running(connection, job_id, lease_token)
             connection.execute(
                 "update app.jobs set lease_until=now()+%s,updated_at=now() where id=%s",
@@ -185,7 +186,7 @@ class PostgresJobQueue:
             )
 
     def complete(self, job_id: UUID, lease_token: UUID, result: dict[str, Any]) -> None:
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             self._require_running(connection, job_id, lease_token)
             connection.execute(
                 """
@@ -196,7 +197,7 @@ class PostgresJobQueue:
             )
 
     def fail(self, job_id: UUID, lease_token: UUID, error_code: str) -> None:
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             row = self._require_running(connection, job_id, lease_token)
             terminal = int(row["attempts"]) >= int(row["max_attempts"])
             status = "dead" if terminal else "retry"
@@ -213,7 +214,7 @@ class PostgresJobQueue:
 
     def defer(self, job_id: UUID, lease_token: UUID, delay_seconds: float, reason: str) -> None:
         """Back to 'queued' for later WITHOUT burning the attempt (kill-switch pause, not failure)."""
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             self._require_running(connection, job_id, lease_token)
             connection.execute(
                 """
@@ -225,7 +226,7 @@ class PostgresJobQueue:
             )
 
     def cancel(self, job_id: UUID) -> bool:
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             result = connection.execute(
                 """
                 update app.jobs set status='cancelled',updated_at=now()

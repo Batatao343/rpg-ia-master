@@ -1,6 +1,7 @@
 """Read-only preview and fenced release of expired durable operations."""
 
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 from typing import Any
 from uuid import UUID
@@ -14,7 +15,7 @@ def orphan_operations(pool: PostgresPool, *, owner_id: UUID | None = None) -> li
     if owner_id is not None:
         owner_clause = " and owner_id=%s"
         params.append(owner_id)
-    with pool.connection() as connection:
+    with admin_connection(pool) as connection:
         rows = connection.execute(
             f"""select id,owner_id,game_id,kind,status,base_game_version,
                        started_at,heartbeat_at,lease_until,error_code
@@ -28,7 +29,7 @@ def orphan_operations(pool: PostgresPool, *, owner_id: UUID | None = None) -> li
 
 def abandon_expired(pool: PostgresPool, operation_id: UUID) -> bool:
     """Release exactly one expired operation; completed receipts are immutable."""
-    with pool.connection() as connection, connection.transaction():
+    with admin_connection(pool) as connection, connection.transaction():
         row = connection.execute(
             """update app.operations set status='abandoned',error_code='operator_abandoned',
                    lease_token=null,lease_until=null,finished_at=now()

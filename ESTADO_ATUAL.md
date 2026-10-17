@@ -4,6 +4,8 @@
 
 > **SPEC-236 `in-progress` (17/10):** FinOps/wallet/jobs corrigidos (falha sem usage custa 0 e sai do gasto, teto diário sem override cross-day, varredura de reservas órfãs, STT 4xx libera, refund parcial pré-crédito credita, poison jobs `dead`); revisão Sol+Astra APPROVED_WITH_FIXES (código degrada sem a migration, migration renomeada `20261017100000`, backoff no revive de job). **Falta:** aplicar a migration no staging + smoke real §6.
 
+> **SPEC-224 `in-progress` (17/10):** RLS efetivo — request de usuário roda como `rpg_api` com o owner do principal (`set_config` de role+claims por transação, +0,7–1 ms local), sistema/worker no pool `rpg_admin` (`RPG_ADMIN_DATABASE_URL`, boot `hosted*` fail-closed), efeitos de wallet no commit via `system_scope`, Storage sem policies de cliente; revisão Astra APPROVED (SQL direto em 41 tabelas sem vazamento; 4 correções). **Falta:** depende do merge da SPEC-218; aplicar migration `20261017120000` no staging, `runtime_role.py --role rpg_admin --apply` + re-rotação do `rpg_runtime`, `vercel_env.py` antes do deploy, `two_user_smoke` + log `role=rpg_api`, p95 do turno ≤ +5%, Security Advisor sem ERROR, fechar R-05.
+
 > **15–16/10 — 38 specs `draft` aguardando aprovação (SPEC-199–236); ordem em `proximas-specs/ORDEM_SPECS_2026-10-15.md`.**
 > 199–217 = onda "beta desktop" (pacote `proximas-specs/`, revisada por Opus); 218–225 = auditoria de segurança
 > (1 alta: perfil `legacy` sem auth é o default e `Procfile` escuta 0.0.0.0 → SPEC-218); 226–236 = auditoria de bugs

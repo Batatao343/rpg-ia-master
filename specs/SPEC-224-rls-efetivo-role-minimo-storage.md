@@ -1,7 +1,7 @@
 # SPEC-224 — RLS efetivo: role de menor privilégio, `SET ROLE` por request e policies de Storage sem escrita do cliente
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `in-progress` (código/migration/testes locais prontos em 2026-10-17; faltam os critérios de staging §5; revisão Astra APPROVED 2026-10-17; depende do merge da SPEC-218)
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
 > **Depende de:** SPEC-218 `done` (boot fail-closed) · SPEC-191 `done`. ATENÇÃO: o commit `8570d62` (SPEC-197 R-05) já criou o login `rpg_runtime` sem BYPASSRLS, porém com policies `runtime_all` por tabela, então o RLS por owner ainda NÃO é efetivo. Rebasear R1/R2 sobre esse estado: resta `SET LOCAL ROLE rpg_api` por request (R3–R5), pool admin separado (R2/R9) e Storage (R7) (ordem final 2026-10-15)
 > **Desbloqueia:** promoção a produção da SPEC-197 (R-05 de mitigado para fechado) (ordem final 2026-10-15)
 > **Origem:** auditoria de segurança 2026-10-15 — achados AUTHZ-02 (média, já rastreado como R-05 aberto), INFRA-02 (média)
@@ -78,9 +78,9 @@ Objetivo: duas credenciais com privilégios distintos (`rpg_runtime` para reques
 2. Registrar no README; fechar R-05 no risk-register.
 
 ## 5. Critérios de aceite
-- [ ] Etapa 0 vermelha no HEAD, verde ao final; R1–R9; `uv run pytest` e `-m infra_local` verdes; pgTAP verde no CI `audit-local`.
+- [x] Etapa 0 vermelha no HEAD, verde ao final; R1–R9; `uv run pytest` e `-m infra_local` verdes; pgTAP verde (rodado localmente no Postgres do Supabase local; o CI `audit-local` roda no push). Evidência: `docs/spec224/README.md`.
 - [ ] Staging com `rpg_runtime`: smoke de dois usuários verde; `select current_user` via `/metrics`-like debug NÃO — provar por log estruturado do pool (`role=rpg_api`) em 1 request; p95 do turno dentro de +5%.
-- [ ] Security Advisor do Supabase sem novo ERROR; revisão Astra APPROVED com tentativa explícita de acessar jogo de B com principal A via SQL direto no pool de usuário.
+- [ ] Security Advisor do Supabase sem novo ERROR; [x] revisão Astra APPROVED com tentativa explícita de acessar jogo de B com principal A via SQL direto no pool de usuário (2026-10-17, `handoffs/SPEC-224-ASTRA-independent-review.md`; falta só o Security Advisor no staging).
 - [ ] `docs/spec197/risk-register.md` R-05 → fechado.
 
 ## 6. Smoke test
@@ -99,3 +99,13 @@ Staging (sem LLM): login A e B; `GET /game/saves` de cada um; inspeção de 1 li
 
 ## 9. Evidência requerida
 - Saídas de `uv run pytest`, `-m infra_local`, pgTAP; vermelhos da Etapa 0; inventário R5 no README; log do pool no staging (pseudonimizado); medição p95 antes/depois; parecer Astra; `risk-register` R-05 fechado; `ESTADO_ATUAL.md`/`ROADMAP.md`.
+
+## 10. Execução (2026-10-17) — decisões e desvios
+- **Defaults de decisão usados:** D-A criar `rpg_admin` já no staging/local (migration `20261017120000`); D-B remover as 4 policies de Storage (inclui `select`; teste `test_account_lifecycle_local` ajustado: o cliente não lê Storage direto); D-C `SET LOCAL` por transação.
+- **`rpg_admin` sem BYPASSRLS:** `postgres` do Supabase não pode criar role com BYPASSRLS (PG16+ exige superuser); recebe policy permissiva `admin_all` + os mesmos grants do `rpg_runtime`, via `app.grant_runtime_access()` estendida. Produção pode trocar por BYPASSRLS fora da migration.
+- **R5 desvio:** `image_quotes`, `usage_events` e `account_read_model` usam o pool de **sistema** (tocam `wallet_*`/`kill_switches`, que `rpg_api` não acessa por desenho); filtro por owner segue em Python. Inventário completo em `docs/spec224/README.md` e travado por teste AST.
+- **API de pool:** além de `connection(as_admin=...)`, módulos de sistema usam `admin_connection(pool)` (`infrastructure/db_roles.py`), que degrada para `pool.connection()` em fakes de teste (sem alterar os ~25 fakes).
+- **Rollback:** `RPG_REQUEST_RLS=off` (`vercel_env.py --use-admin-dsn` aplica DSN `postgres` + flag). Em `hosted*` sem `RPG_ADMIN_DATABASE_URL` o boot falha fechado (R2).
+- **Revisão Astra (2026-10-17, APPROVED):** 4 correções — `db_roles.system_scope` para efeitos de wallet dentro da transação de request (confirm de quote no commit do turno e `restore_effects` quebravam com `InsufficientPrivilege` sob `rpg_api`; gatilhos diferidos da wallet checados ainda elevados), heartbeat de lease herdando o principal, boot recusando role de plataforma/`rpg_admin` no DSN de request, role+claims num único round trip (R8: +0,74–0,96 ms p50 local). Risco residual registrado: `rpg_runtime` mantém `runtime_all`, então conexão de request sem principal segue cross-tenant (follow-up: remover após medir no staging).
+- **Pendente (dono, staging):** (a) aplicar a migration no staging; (b) `scripts/staging/runtime_role.py --role rpg_admin --apply` e re-rotacionar `rpg_runtime`; (c) `vercel_env.py` (envia `RPG_ADMIN_DATABASE_URL`) ANTES do deploy; (d) `two_user_smoke` + log estruturado do pool (`pool.request_role_applied role=rpg_api`) em 1 request; (e) p95 do turno dentro de +5% (SPEC-200); (f) Security Advisor sem novo ERROR; (g) ~~revisão Astra~~ feita; (h) fechar R-05 no `risk-register`.
+

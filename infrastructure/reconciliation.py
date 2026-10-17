@@ -4,6 +4,7 @@ Both stores apply the SAME pure plan (services.purchase_reconciliation). The job
 plans are recomputed from the ledger under the owner lock, so replays post nothing.
 """
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 import logging
 import threading
@@ -331,7 +332,7 @@ class PostgresStore:
         self.pool = pool
 
     def insert_event(self, ev: Event) -> bool:
-        with self.pool.connection() as db, db.transaction():
+        with admin_connection(self.pool) as db, db.transaction():
             return self._insert(db, ev)
 
     @staticmethod
@@ -347,7 +348,7 @@ class PostgresStore:
 
         Rows with no financial effect get a skip marker so they are never re-selected."""
         added = 0
-        with self.pool.connection() as db, db.transaction():
+        with admin_connection(self.pool) as db, db.transaction():
             rows = db.execute("""select e.event_id,e.event_type,e.facts,e.provider_created
                 from app.stripe_events e where e.event_type = any(%s)
                 and not exists (select 1 from app.purchase_reconciliation_events r
@@ -377,7 +378,7 @@ class PostgresStore:
 
     def open_refs(self, limit):
         """Only DUE rows (pending, or parked past their backoff); new events sort first."""
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             rows = db.execute("""select provider,purchase_ref,
                   bool_or(status='pending') as fresh,min(received_at) as first
                 from app.purchase_reconciliation_events
@@ -386,7 +387,7 @@ class PostgresStore:
                 limit %s""", (limit,)).fetchall()
         refs = [(r["provider"], r["purchase_ref"]) for r in rows]
         if len(refs) < limit:  # orphan recovery: purchase credited after the ref was given up on
-            with self.pool.connection() as db:
+            with admin_connection(self.pool) as db:
                 rows = db.execute("""select distinct provider,purchase_ref
                     from app.purchase_reconciliation_events e where status='orphaned' and (
                       (provider='stripe' and exists (select 1 from app.payment_orders o
@@ -403,20 +404,20 @@ class PostgresStore:
         return refs
 
     def get_cursor(self, provider) -> int | None:
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             row = db.execute("select watermark_ms from app.purchase_reconciliation_cursors "
                              "where provider=%s", (provider,)).fetchone()
         return int(row["watermark_ms"]) if row else None
 
     def set_cursor(self, provider, value_ms) -> None:
-        with self.pool.connection() as db, db.transaction():
+        with admin_connection(self.pool) as db, db.transaction():
             db.execute("""insert into app.purchase_reconciliation_cursors(provider,watermark_ms)
                 values (%s,%s) on conflict (provider) do update set updated_at=now(),
                 watermark_ms=greatest(app.purchase_reconciliation_cursors.watermark_ms,excluded.watermark_ms)""",
                        (provider, value_ms))
 
     def parking_counts(self) -> dict:
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             rows = db.execute("""select status,count(*) as n from app.purchase_reconciliation_events
                 where status in ('parked','orphaned') group by status""").fetchall()
         return {r["status"]: int(r["n"]) for r in rows}
@@ -461,7 +462,7 @@ class PostgresStore:
     def reconcile(self, provider, ref) -> str:
         from infrastructure.wallet import PostgresWallet
         from infrastructure.wallet_debt import insert_debt_entry, settle_owner_debt
-        with self.pool.connection() as db, db.transaction():
+        with admin_connection(self.pool) as db, db.transaction():
             db.execute("select pg_advisory_xact_lock(hashtextextended(%s,195))", (f"{provider}:{ref}",))
             info = self._purchase(db, provider, ref)
             if info is None:

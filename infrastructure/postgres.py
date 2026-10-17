@@ -3,12 +3,14 @@
 from __future__ import annotations
 from observability.telemetry import log_event as _log_event
 
+import json
 from contextlib import contextmanager
 from datetime import UTC, datetime
 from typing import Any, Iterator
 from urllib.parse import parse_qs, urlsplit
 from uuid import UUID
 
+from infrastructure.db_roles import REQUEST_DB_ROLE, admin_connection  # noqa: F401  (re-export)
 from infrastructure.contracts import Conflict, NotFound, Principal, StaleVersion, StoredGame
 from services.game_serialization import (
     deserialize_game_state,
@@ -30,10 +32,36 @@ except ImportError:  # pragma: no cover - erro acionável no extra opcional
     dict_row = None  # type: ignore[assignment]
 
 
+_role_logged = False
+
+
+def _apply_request_role(connection: Connection, owner_id: UUID) -> None:
+    """SPEC-224 R3: escopa a transacao ao owner do request.
+
+    `SET LOCAL` vale so ate o fim da transacao (compativel com pooler transacional) e
+    `set_config(..., true)` e local pela mesma razao. As policies `to rpg_api` leem
+    `request.jwt.claim.sub` via `app.current_owner_id()`; a partir daqui um `select`
+    sem `where owner_id` so devolve linhas do owner."""
+    global _role_logged
+    owner = str(owner_id)
+    # Um unico round trip: `set_config('role', ..., true)` == `SET LOCAL ROLE` (o pooler cobra RTT
+    # por statement; a medicao local caiu de ~1,3 ms para ~0,7 ms por transacao).
+    connection.execute(
+        "select set_config('request.jwt.claim.sub', %s, true), "
+        "set_config('request.jwt.claims', %s, true), "
+        "set_config('role', %s, true)",
+        (owner, json.dumps({"sub": owner, "role": "authenticated"}), REQUEST_DB_ROLE),
+    )
+    if not _role_logged:  # uma linha por processo basta como prova operacional (sem ids)
+        _role_logged = True
+        _log_event("pool", "request_role_applied", role=REQUEST_DB_ROLE)
+
+
 class PostgresPool:
     def __init__(self, dsn: str, *, min_size: int = 0, max_size: int = 4,
                  timeout: float = 5.0, transaction_pooler: bool = False,
-                 connect_timeout: float = 5.0):
+                 connect_timeout: float = 5.0, request_rls: bool = False,
+                 admin_pool: "PostgresPool | None" = None):
         if ConnectionPool is None:
             raise RuntimeError("instale o extra postgres: uv sync --extra postgres")
         kwargs: dict[str, Any] = {"row_factory": dict_row, "connect_timeout": max(1, int(round(connect_timeout)))}
@@ -46,6 +74,11 @@ class PostgresPool:
         else:
             kwargs["options"] = "-c statement_timeout=15000 -c lock_timeout=5000"
         self._transaction_pooler = transaction_pooler
+        # request_rls: conexoes de request (principal presente) assumem `rpg_api`.
+        # admin_pool: credencial separada para worker/cron/sistema; ausente => mesmo pool
+        # (R9), sempre sem trocar de role.
+        self._request_rls = request_rls
+        self.admin_pool = admin_pool
         self._pool = ConnectionPool(
             conninfo=dsn,
             min_size=min_size,
@@ -56,17 +89,42 @@ class PostgresPool:
         )
 
     @contextmanager
-    def connection(self) -> Iterator[Connection]:
+    def _checkout(self, *, request_scoped: bool) -> Iterator[Connection]:
         with self._pool.connection() as connection:
             if self._transaction_pooler:
                 # SET LOCAL lives only for this transaction; the serverless
                 # transaction pooler must not retain session settings.
                 connection.execute("SET LOCAL statement_timeout = 15000")
                 connection.execute("SET LOCAL lock_timeout = 5000")
+            if request_scoped and self._request_rls:
+                from infrastructure.request_context import active_principal
+
+                principal = active_principal()
+                if principal is not None:
+                    _apply_request_role(connection, principal.user_id)
+            yield connection
+
+    @contextmanager
+    def connection(self, *, as_admin: bool = False) -> Iterator[Connection]:
+        """Conexao de request (RLS efetivo) ou, com `as_admin`, de sistema."""
+        if as_admin:
+            with self.admin_connection() as connection:
+                yield connection
+            return
+        with self._checkout(request_scoped=True) as connection:
+            yield connection
+
+    @contextmanager
+    def admin_connection(self) -> Iterator[Connection]:
+        """Worker/cron/ciclo de conta/wallet/rate-limit: nunca troca para `rpg_api`."""
+        target = self.admin_pool or self
+        with target._checkout(request_scoped=False) as connection:
             yield connection
 
     def close(self) -> None:
         self._pool.close()
+        if self.admin_pool is not None:
+            self.admin_pool.close()
 
 
 def _stored(row: dict[str, Any]) -> StoredGame:

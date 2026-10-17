@@ -29,6 +29,7 @@ def test_bind_host_accepted_by_runtime_validation(monkeypatch):
            "DATABASE_URL": "postgresql://postgres.abcdefghij:p@aws-0-sa-east-1.pooler.supabase.com:6543/postgres",
            "SUPABASE_URL": "https://abcdefghij.supabase.co",
            "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_x", "SUPABASE_SERVICE_ROLE_KEY": "sb_secret_y",
+           "RPG_REQUEST_RLS": "off",  # SPEC-224: DSN unico postgres (rollback); o foco aqui e so o bind
            "RPG_ALLOW_INSECURE_HOSTED": "1"}  # só o bind é o foco; hardening: tests/test_boot_policy.py
     assert RuntimeConfig.from_env(env).bind_host == "0.0.0.0"
 
@@ -38,7 +39,19 @@ def test_refuses_other_project(capsys):
 
 
 def test_runtime_dsn_replaces_admin_dsn_unless_rollback_requested():
+    files = {**FILES, "RPG_RUNTIME_DATABASE_URL": "postgresql://rpg_runtime.ref:x@h.pooler.supabase.com:6543/postgres",
+             "RPG_ADMIN_DATABASE_URL": "postgresql://rpg_admin.ref:y@h.pooler.supabase.com:6543/postgres"}
+    prod = ve.build_env(files)[0]
+    assert prod["DATABASE_URL"] == files["RPG_RUNTIME_DATABASE_URL"]
+    assert prod["RPG_ADMIN_DATABASE_URL"] == files["RPG_ADMIN_DATABASE_URL"] and "RPG_REQUEST_RLS" not in prod
+    rollback = ve.build_env(files, use_admin_dsn=True)[0]  # SPEC-224: DSN unico + RLS por request desligado
+    assert rollback["DATABASE_URL"] == FILES["DATABASE_URL"] and rollback["RPG_REQUEST_RLS"] == "off"
+    assert "RPG_ADMIN_DATABASE_URL" not in rollback
+    unprovisioned = ve.build_env(FILES)[0]
+    assert unprovisioned["DATABASE_URL"] == FILES["DATABASE_URL"] and unprovisioned["RPG_REQUEST_RLS"] == "off"
+
+
+def test_runtime_dsn_without_admin_dsn_refuses_to_deploy_a_boot_that_would_fail():
     files = {**FILES, "RPG_RUNTIME_DATABASE_URL": "postgresql://rpg_runtime.ref:x@h.pooler.supabase.com:6543/postgres"}
-    assert ve.build_env(files)[0]["DATABASE_URL"] == files["RPG_RUNTIME_DATABASE_URL"]
-    assert ve.build_env(files, use_admin_dsn=True)[0]["DATABASE_URL"] == FILES["DATABASE_URL"]
-    assert ve.build_env(FILES)[0]["DATABASE_URL"] == FILES["DATABASE_URL"]
+    with pytest.raises(KeyError, match="RPG_ADMIN_DATABASE_URL"):
+        ve.build_env(files)

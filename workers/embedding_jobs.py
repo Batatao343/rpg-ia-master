@@ -1,6 +1,7 @@
 """Handler idempotente para jobs de embedding."""
 
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 from collections.abc import Callable, Sequence
 
@@ -10,7 +11,7 @@ from infrastructure.pgvector_memory import PgVectorMemoryStore
 def embed_memory_job(store: PgVectorMemoryStore, payload: dict,
                      embedder: Callable[[str], Sequence[float]]) -> dict:
     memory_id = str(payload["memory_id"])
-    with store.pool.connection() as connection:
+    with admin_connection(store.pool) as connection:
         row = connection.execute(
             "select content,content_sha256,embedding_status from app.memory_documents where id=%s",
             (memory_id,),

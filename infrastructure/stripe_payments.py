@@ -4,6 +4,7 @@ The caller must authenticate raw bytes using verify_event before accept_event.
 Orders/SKUs own money and credit units; metadata is only an opaque lookup.
 """
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
@@ -84,7 +85,7 @@ class StripePayments:
 
     def skus(self) -> dict:
         items = []
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             for sku in self.settings.allowed_skus:
                 try:
                     quote = quote_published_sku(db, sku, at=self._now())
@@ -98,14 +99,14 @@ class StripePayments:
         return {"items": items}
 
     def order(self, owner: Principal, order_id: str) -> dict | None:
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             row = db.execute("select * from app.payment_orders where owner_id=%s and order_id=%s",
                              (owner.user_id, UUID(order_id))).fetchone()
         return _public(row) if row else None
 
     def close_deleted_owner_checkouts(self, owner_id: UUID) -> bool:
         """Provider-close open sessions before final erasure; retry safely."""
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             pending = db.execute("""select * from app.payment_orders where owner_id=%s
                 and status <> 'paid' and checkout_closed_at is null
                 order by created_at,order_id""", (owner_id,)).fetchall()
@@ -122,7 +123,7 @@ class StripePayments:
                 if not _id(session.get("id"), "cs_test_"):
                     raise StripeError("stripe_session_invalid")
                 session_id = session["id"]
-                with self.pool.connection() as db, db.transaction():
+                with admin_connection(self.pool) as db, db.transaction():
                     row = db.execute("select * from app.payment_orders where order_id=%s for update",
                                      (order["order_id"],)).fetchone()
                     if row["stripe_session_id"] not in (None, session_id):
@@ -130,7 +131,7 @@ class StripePayments:
                     db.execute("""update app.payment_orders set stripe_session_id=%s,checkout_url=null,
                         updated_at=now() where order_id=%s""", (session_id, order["order_id"]))
             closed = self.adapter.expire_session(session_id)
-            with self.pool.connection() as db, db.transaction():
+            with admin_connection(self.pool) as db, db.transaction():
                 row = db.execute("select * from app.payment_orders where order_id=%s for update",
                                  (order["order_id"],)).fetchone()
                 # A completed session may be awaiting its paid webhook. Preserve
@@ -141,7 +142,7 @@ class StripePayments:
                 db.execute("""update app.payment_orders set status=%s,checkout_url=null,
                     checkout_closed_at=now(),updated_at=now() where order_id=%s""",
                     (status, order["order_id"]))
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             return not db.execute("""select 1 from app.payment_orders where owner_id=%s
                 and status <> 'paid' and checkout_closed_at is null limit 1""",
                 (owner_id,)).fetchone()
@@ -165,7 +166,7 @@ class StripePayments:
         if sku_id not in self.settings.allowed_skus or not isinstance(request_id, UUID):
             raise StripeError("stripe_sku_not_allowed")
         now = self._now()
-        with self.pool.connection() as db, db.transaction():
+        with admin_connection(self.pool) as db, db.transaction():
             prior = db.execute("select * from app.payment_orders where owner_id=%s and request_id=%s for update",
                                (owner.user_id, request_id)).fetchone()
             if prior is None:
@@ -199,7 +200,7 @@ class StripePayments:
             amount = int(prior["gross_cents"])
         # No remote network within the financial transaction. A lost response can
         # be retried only within 23h, below Stripe's 24h idempotency retention.
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             if _account_deleted(db, owner.user_id):
                 raise StripeError("account_deleted")
         session = self.adapter.create_session(order_id, amount_cents=amount,
@@ -208,7 +209,7 @@ class StripePayments:
         if not _id(session.get("id"), "cs_test_") or not checkout_url_valid(session.get("url")):
             raise StripeError("stripe_session_invalid")
         deleted_after_create = False
-        with self.pool.connection() as db, db.transaction():
+        with admin_connection(self.pool) as db, db.transaction():
             row = db.execute("select * from app.payment_orders where order_id=%s for update", (UUID(order_id),)).fetchone()
             if row["stripe_session_id"] not in (None, session["id"]):
                 raise StripeError("stripe_checkout_session_conflict")
@@ -225,7 +226,7 @@ class StripePayments:
     def accept_event(self, event: dict, *, body_sha256: str) -> dict:
         facts = _facts(event)
         intent_for_fee = None
-        with self.pool.connection() as db, db.transaction():
+        with admin_connection(self.pool) as db, db.transaction():
             # This lock coordinates financial events with a Checkout that is
             # binding its payment_intent for the first time. Order locks alone
             # cannot serialize an initially orphan refund/dispute.
@@ -389,7 +390,7 @@ class StripePayments:
                    (status,row["order_id"]))
 
     def reconcile_fee(self, payment_intent: str) -> None:
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             existing = db.execute("select actual_fee_cents from app.payment_orders where stripe_payment_intent=%s",
                                   (payment_intent,)).fetchone()
         if not existing or existing["actual_fee_cents"] is not None:
@@ -400,7 +401,7 @@ class StripePayments:
             return
         if not economics:
             return
-        with self.pool.connection() as db, db.transaction():
+        with admin_connection(self.pool) as db, db.transaction():
             row = db.execute("select * from app.payment_orders where stripe_payment_intent=%s for update",
                              (payment_intent,)).fetchone()
             if (not row or economics.get("currency") != row["currency"]

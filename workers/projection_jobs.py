@@ -8,6 +8,7 @@ no commit (``require_job_fence``). Conflito → ``ProjectionStale`` (retry com
 backoff; o próximo turno, dentro da própria cerca, drena se ainda pendente).
 """
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 from typing import Any, Callable, Optional
 from uuid import UUID
@@ -38,7 +39,7 @@ def apply_projection(pool, payload: dict[str, Any], *,
 
     owner_id, game_id = UUID(str(payload["owner_id"])), UUID(str(payload["game_id"]))
     action_id, epoch = str(payload["action_id"]), int(payload["epoch"])
-    with pool.connection() as connection:
+    with admin_connection(pool) as connection:
         row = connection.execute(
             """select version,state,active_operation_id,
               coalesce(active_lease_until > now(), false) as busy
@@ -62,7 +63,7 @@ def apply_projection(pool, payload: dict[str, Any], *,
         drained = projections.run_pending(state, executor=executor)
         entry = drained["projection_state"]["summary"]
         document, digest, view = PostgresGameStore._prepare(drained)
-        with pool.connection() as connection, connection.transaction():
+        with admin_connection(pool) as connection, connection.transaction():
             require_job_fence(connection)
             current = connection.execute(
                 """select version,active_operation_id,

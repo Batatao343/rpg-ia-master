@@ -1,5 +1,6 @@
 """Durable owner-scoped erasure. Financial facts are deliberately separate."""
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 from uuid import UUID
 
@@ -114,7 +115,7 @@ class PostgresAccountLifecycle:
         return StripePayments(self.pool, settings, StripeTestAdapter(settings.secret_key))
 
     def export(self, principal: Principal) -> dict:
-        with self.pool.connection() as db, db.transaction():
+        with admin_connection(self.pool) as db, db.transaction():
             # Coordinate deletion/private writes; no caller-selected owner or auth rows.
             db.execute("select pg_advisory_xact_lock(hashtextextended(%s,190))", (str(principal.user_id),))
             if db.execute("select 1 from app.account_deletions where owner_id=%s", (principal.user_id,)).fetchone():
@@ -147,7 +148,7 @@ class PostgresAccountLifecycle:
         return downloads
 
     def begin(self, owner: UUID) -> None:
-        with self.pool.connection() as db, db.transaction():
+        with admin_connection(self.pool) as db, db.transaction():
             db.execute("select pg_advisory_xact_lock(hashtextextended(%s,190))", (str(owner),))
             if db.execute("select 1 from app.account_deletions where owner_id=%s", (owner,)).fetchone():
                 return
@@ -182,7 +183,7 @@ class PostgresAccountLifecycle:
                 values (%s,%s,now())""", (owner, sorted(keys)))
 
     def finish(self, owner: UUID) -> str:
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             row = db.execute("select * from app.account_deletions where owner_id=%s", (owner,)).fetchone()
         if not row:
             raise Unauthorized("account_delete_not_requested")
@@ -190,7 +191,7 @@ class PostgresAccountLifecycle:
             return "deleted"
         # A previously issued Checkout link remains payable even after we clear
         # its DB URL. Close every provider session before final account removal.
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             open_checkout = db.execute("""select 1 from app.payment_orders
                 where owner_id=%s and status <> 'paid'
                   and checkout_closed_at is null limit 1""", (owner,)).fetchone()
@@ -204,7 +205,7 @@ class PostgresAccountLifecycle:
                 # The financial order and tombstone remain for a later retry.
                 checkouts_closed = False
         # Sweep again: covers unregistered blobs uploaded immediately before denial.
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             extra = db.execute("select name from storage.objects where bucket_id=%s and starts_with(name,%s)",
                                (self.blobs.bucket, f"users/{owner}/")).fetchall()
         keys = set(row["blob_keys"]) | {item["name"] for item in extra}
@@ -214,7 +215,7 @@ class PostgresAccountLifecycle:
                 raise Unauthorized("invalid_blob_owner")
             if not self.blobs.delete(key):
                 blobs_deleted = False
-        with self.pool.connection() as db, db.transaction():
+        with admin_connection(self.pool) as db, db.transaction():
             db.execute("select pg_advisory_xact_lock(hashtextextended(%s,190))", (str(owner),))
             # Each explicit predicate uses only the owner authenticated before revocation.
             for table in _present_tables(db, PRIVATE_TABLES):
@@ -224,7 +225,7 @@ class PostgresAccountLifecycle:
         self.identity.delete_user(owner)
         if not (checkouts_closed and blobs_deleted):
             return "deleting"
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             db.execute("""update app.account_deletions set status='deleted',blob_keys='{}',completed_at=now()
                 where owner_id=%s""", (owner,))
         return "deleted"

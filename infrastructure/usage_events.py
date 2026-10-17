@@ -1,6 +1,7 @@
 """Append-only usage ledger writer, called inside the operation transaction."""
 
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 from collections.abc import Sequence
 from decimal import Decimal
@@ -150,7 +151,7 @@ def _append_job_attempt(pool, job, attempts: Sequence[dict], *, job_kind: str,
     from infrastructure.postgres_jobs import PostgresJobQueue
     from services.usage_metering import normalize_attempts
 
-    with pool.connection() as connection, connection.transaction():
+    with admin_connection(pool) as connection, connection.transaction():
         row = PostgresJobQueue._require_running(
             connection, job.job_id, job.lease_token)
         if row["kind"] != job_kind or row["owner_id"] is None:

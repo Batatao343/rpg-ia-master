@@ -1,5 +1,6 @@
 """Owner-confirmed image quotes. Wallet and art repository remain canonical writers."""
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection, system_scope
 
 from dataclasses import asdict
 from datetime import datetime, timedelta, timezone
@@ -37,7 +38,7 @@ class ImageQuoteRepository:
               brief: dict, model: str, profile_version: str, reformulation: bool = False) -> dict:
         now = self.at or datetime.now(timezone.utc)
         require_image_prices(model, now)
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             game = connection.execute(
                 "select coalesce((state->'continuity'->>'timeline_epoch')::integer,0) as timeline_epoch "
                 "from app.games where id=%s and owner_id=%s for share",
@@ -75,7 +76,7 @@ class ImageQuoteRepository:
 
     def get(self, principal: Principal, game_id: UUID, quote_id: UUID, *, connection=None) -> dict:
         if connection is None:
-            with self.pool.connection() as connection:
+            with admin_connection(self.pool) as connection:
                 return self.get(principal, game_id, quote_id, connection=connection)
         row = connection.execute(
             "select * from app.image_quotes where quote_id=%s and owner_id=%s and game_id=%s",
@@ -87,6 +88,14 @@ class ImageQuoteRepository:
 
     def confirm(self, principal: Principal, game_id: UUID, quote_id: UUID, *,
                 connection, epoch: int, version: int, queue) -> dict:
+        # SPEC-224: runs inside the request commit (rpg_api) but touches wallet tables that
+        # rpg_api cannot see; elevate only for this block, owner filters stay in Python.
+        with system_scope(connection):
+            return self._confirm(principal, game_id, quote_id, connection=connection,
+                                 epoch=epoch, version=version, queue=queue)
+
+    def _confirm(self, principal: Principal, game_id: UUID, quote_id: UUID, *,
+                 connection, epoch: int, version: int, queue) -> dict:
         # Lock the immutable quote to serialize independent confirmation requests.
         connection.execute("select quote_id from app.image_quotes where quote_id=%s for update", (quote_id,))
         quote = self.get(principal, game_id, quote_id, connection=connection)
@@ -131,7 +140,7 @@ class ImageQuoteRepository:
                 or job.request.dedupe_key != f"art:{generation_id}"
                 or job.request.owner_id != owner_id or job.request.game_id != game_id):
             raise Conflict("imagem exige job confirmado e fence ativo")
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             lock_art_game(connection, generation_id)
             require_job_fence(connection)
             row = connection.execute(
@@ -169,7 +178,7 @@ class ImageQuoteRepository:
 
         Past ``max_age`` since confirmation, a still pre-dispatch reservation is released and the
         generation fails with ``deferred_timeout``. A ticketed reservation is never touched here."""
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             lock_art_game(connection, generation_id)
             require_job_fence(connection)
             # Database clock on both sides: created_at defaults to now() at confirmation.
@@ -194,7 +203,7 @@ class ImageQuoteRepository:
 
     def hold_or_release(self, generation_id: UUID) -> None:
         """Pre-dispatch failure releases; any ticket or observed effect retains funds."""
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             lock_art_game(connection, generation_id)
             require_job_fence(connection)
             row = connection.execute("select * from app.art_generations where generation_id=%s for update", (generation_id,)).fetchone()

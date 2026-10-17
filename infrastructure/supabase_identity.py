@@ -1,6 +1,7 @@
 """Adapter mínimo do Supabase Auth via HTTP, injetável e sem SDK no browser."""
 
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 from datetime import UTC, datetime, timedelta
 import base64
@@ -178,7 +179,7 @@ class SupabaseIdentityProvider:
         """
         if self.pool is None:
             return False
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             # O pool real faz commit ao sair do contexto (psycopg_pool).
             db.execute("select app.runtime_revoke_auth(%s)", (user_id,))
         self._forget(user_id=user_id)
@@ -258,7 +259,7 @@ class SupabaseIdentityProvider:
             session_id = UUID(claims["session_id"])
         except (ValueError, KeyError, IndexError, TypeError):
             raise Unauthorized("sessão inválida") from None
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             active = db.execute("select app.runtime_session_active(%s,%s) as ok",
                                 (session_id, user_id)).fetchone()["ok"]
         if not active:

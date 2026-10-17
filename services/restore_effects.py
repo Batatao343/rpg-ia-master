@@ -37,16 +37,11 @@ def restore_effects(connection, *, principal, game_id, document: dict) -> None:
         and not(g.generation_id=any(%s::uuid[])) for update""",
         (game_id, principal.user_id, retained)).fetchall()
     if rows:
+        from infrastructure.db_roles import system_scope
         from infrastructure.wallet import PostgresWallet
         wallet = PostgresWallet(None)
-        for row in rows:
-            reservation = wallet._locked_reservation(connection, principal, row['wallet_reservation_id'])
-            if reservation['status'] == 'reserved':
-                wallet.release_pre_effect(principal, row['wallet_reservation_id'],
-                    fence_token=row['image_quote_id'], connection=connection)
-            else:
-                wallet.mark_uncertain(principal, row['wallet_reservation_id'],
-                    reason='image_timeline_abandoned', connection=connection)
+        with system_scope(connection):  # SPEC-224: wallet e vetada a rpg_api; owner filtrado em Python
+            _release_abandoned_holds(connection, wallet, principal, rows)
     connection.execute(
         """update app.art_generations set status='superseded',updated_at=now()
         where game_id=%s and owner_id=%s and not(generation_id=any(%s::uuid[]))""",
@@ -60,3 +55,14 @@ def restore_effects(connection, *, principal, game_id, document: dict) -> None:
     # Derived digests can be rebuilt from the restored canonical chronicle.
     connection.execute('delete from app.chronicle_digests where game_id=%s and owner_id=%s',
                        (game_id, principal.user_id))
+
+
+def _release_abandoned_holds(connection, wallet, principal, rows) -> None:
+    for row in rows:
+        reservation = wallet._locked_reservation(connection, principal, row['wallet_reservation_id'])
+        if reservation['status'] == 'reserved':
+            wallet.release_pre_effect(principal, row['wallet_reservation_id'],
+                fence_token=row['image_quote_id'], connection=connection)
+        else:
+            wallet.mark_uncertain(principal, row['wallet_reservation_id'],
+                reason='image_timeline_abandoned', connection=connection)

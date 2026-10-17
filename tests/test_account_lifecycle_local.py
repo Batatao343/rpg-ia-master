@@ -173,7 +173,8 @@ def test_stale_jwt_denied_in_backend_direct_wallet_and_storage(deletion_case,mon
                      (json.dumps({"sub":str(c.b.user_id),"session_id":str(c.sessions[1]),"role":"authenticated"}),))
         c.db.execute("set local role authenticated")
         assert len(c.db.execute("select * from public.rpg_wallet_balance()").fetchall())==1
-        assert c.db.execute("select 1 from storage.objects where name=%s",(c.keys[1],)).fetchone()
+        # SPEC-224 R7/D-B: o cliente nao le Storage direto (sem policy = deny); so o backend (service role)
+        assert c.db.execute("select 1 from storage.objects where name=%s",(c.keys[1],)).fetchone() is None
         c.db.execute("reset role")
 
 

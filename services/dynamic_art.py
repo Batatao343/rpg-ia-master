@@ -1,8 +1,8 @@
 """Registro durável e idempotente de gerações antes da chamada ao provider."""
 
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection, system_scope
 
-from contextlib import nullcontext
 
 import hashlib
 from typing import Any
@@ -35,7 +35,7 @@ class DynamicArtRepository:
         prompt = render_image_prompt(brief)
         prompt_hash = hashlib.sha256(prompt.encode()).hexdigest()
         anchor_hash = hashlib.sha256("\n".join(brief["reference_asset_ids"]).encode()).hexdigest()
-        scope = self.pool.connection() if connection is None else nullcontext(connection)
+        scope = admin_connection(self.pool) if connection is None else system_scope(connection)
         with scope as connection, connection.transaction():
             row = connection.execute(
                 """insert into app.art_generations
@@ -62,7 +62,7 @@ class DynamicArtRepository:
             return dict(row)
 
     def get(self, principal: Principal, generation_id: UUID) -> dict[str, Any] | None:
-        with self.pool.connection() as connection:
+        with admin_connection(self.pool) as connection:
             row = connection.execute(
                 """select g.*, w.status as financial_status, not exists (
                     select 1 from app.jobs j where j.kind='generate_dynamic_art'
@@ -78,7 +78,7 @@ class DynamicArtRepository:
 
     def begin(self, generation_id: UUID) -> bool:
         """Claim a generation once; ``False`` means it already completed."""
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             result = connection.execute(
                 """update app.art_generations set status='generating',
                 attempt_count=least(3,attempt_count+1),updated_at=now()
@@ -99,7 +99,7 @@ class DynamicArtRepository:
         return False
 
     def set_quality(self, principal: Principal, generation_id: UUID, *, approved: bool) -> None:
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             result = connection.execute(
                 """update app.art_generations set status=%s,updated_at=now()
                 where generation_id=%s and owner_id=%s and status in ('ready','rejected_quality')""",
@@ -155,7 +155,7 @@ class DynamicArtRepository:
         """Commit provider usage before image processing or blob I/O can fail."""
         from services.job_fence import require_job_fence
 
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             lock_art_game(connection, generation_id)
             require_job_fence(connection)
             generation = connection.execute(
@@ -169,7 +169,7 @@ class DynamicArtRepository:
     def complete(self, generation_id: UUID, *, asset_id: UUID,
                  result: dict[str, Any]) -> None:
         variants = list(result.get("variants") or [])
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             from services.job_fence import require_job_fence
 
             lock_art_game(connection, generation_id)
@@ -229,7 +229,7 @@ class DynamicArtRepository:
                         reason="image_usage_requires_reconciliation", connection=connection)
 
     def fail(self, generation_id: UUID, error_code: str, *, retryable: bool = True) -> None:
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             from services.job_fence import require_job_fence
 
             require_job_fence(connection)
@@ -241,7 +241,7 @@ class DynamicArtRepository:
             )
 
     def assets(self, principal: Principal, generation_id: UUID) -> list[dict[str, Any]]:
-        with self.pool.connection() as connection:
+        with admin_connection(self.pool) as connection:
             rows = connection.execute(
                 """select a.id,a.variant,a.object_key,a.mime_type,a.bytes,
                          a.width,a.height,a.sha256

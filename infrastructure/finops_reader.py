@@ -5,6 +5,7 @@ The Postgres reader must run on the privileged backend pool (same as reconciliat
 module and the pure aggregators; they never reach metrics, alerts or the cron response.
 """
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
@@ -48,7 +49,7 @@ class PostgresFinopsReader:
         self.pool = pool
 
     def pricing(self):
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             rows = db.execute("select * from app.pricing_versions order by created_at").fetchall()
         refs = {r["version_id"]: PricingRef(r["version_id"], Decimal(r["fx_usd_brl"]),
                                             _fees(r["channel_fees"])) for r in rows}
@@ -62,7 +63,7 @@ class PostgresFinopsReader:
         return refs, fresh
 
     def purchases(self, since, until):
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             rows = db.execute("""
                 select w.reference_id as ref, w.owner_id::text as owner_key, w.created_at,
                   s.sku_id, s.channel, s.pricing_version_id, s.gross_brl, s.shard_milli,
@@ -110,7 +111,7 @@ class PostgresFinopsReader:
         return out
 
     def owner_usage(self, since, until):
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             spend = "and counts_as_spend" if spend_schema_ready(db) else ""
             rows = db.execute(f"""select owner_id::text as owner_key, category, sum(cost_usd) as usd
                 from app.usage_events where created_at >= %s and created_at < %s
@@ -124,7 +125,7 @@ class PostgresFinopsReader:
         return {k: OwnerUsage(v) for k, v in acc.items()}
 
     def usage_groups(self, since, until):
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             spend = "counts_as_spend" if spend_schema_ready(db) else "true as counts_as_spend"
             rows = db.execute(f"""select provider, model, category, pricing_version, cost_basis,
                 outcome, {spend}, count(*) as n, sum(cost_usd) as usd from app.usage_events
@@ -138,7 +139,7 @@ class PostgresFinopsReader:
                 for r in rows]
 
     def ops_counts(self, since, until):
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             row = db.execute("""select
                 count(distinct e.operation_id) filter (where o.kind='turn') as turns,
                 count(*) filter (where e.category='image' and e.outcome = any(%s)) as images,
@@ -155,7 +156,7 @@ class PostgresFinopsReader:
                          Decimal(row["voice_cost"]))
 
     def wallet_mismatch(self):
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             row = db.execute("""select count(*) as n, coalesce(sum(d),0) as total from (
                 select abs(a.available_milli - coalesce(sum(e.available_delta),0))
                      + abs(a.reserved_milli - coalesce(sum(e.reserved_delta),0)) as d
@@ -165,7 +166,7 @@ class PostgresFinopsReader:
 
     def wallet_holds(self, now):
         """SPEC-236 R4/R10: (uncertain reservations, oldest age s, capped anomalies). Owner-free."""
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             anomalies = ("count(*) filter (where financial_anomaly_milli > 0)"
                          if has_column(db, "app.wallet_reservations", "financial_anomaly_milli")
                          else "0")
@@ -176,7 +177,7 @@ class PostgresFinopsReader:
         return int(row["n"] or 0), float(row["age"] or 0), int(row["anomalies"] or 0)
 
     def backlogs(self, now):
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             rows = db.execute("""select provider, count(*) as n,
                 extract(epoch from (%s - min(received_at))) as age
                 from app.purchase_reconciliation_events where status <> 'applied'
@@ -237,7 +238,7 @@ class PostgresFinopsEvaluationStore:
 
     def record(self, now, summary: dict, alerts: list[dict]) -> None:
         from psycopg.types.json import Jsonb
-        with self.pool.connection() as db:
+        with admin_connection(self.pool) as db:
             db.execute(
                 "insert into app.finops_evaluations"
                 "(evaluated_at, blocking_alerts, alert_count, summary, alerts) "

@@ -34,6 +34,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 # Imports do seu motor
 from main import app as game_graph
 import gamedata
+from infrastructure.db_roles import admin_connection
 import persistence as persistence_module
 from persistence import save_game_state, load_game_state, save_path, _serialize_messages, IncompatibleSaveError
 from infrastructure.contracts import (
@@ -262,7 +263,7 @@ def _boundary_principal(request: Request):
             raise Unauthorized("account_delete_not_requested")
         owner = proof_owner(request.cookies.get("rpg_recent"), "recent",
                             request.cookies[ACCESS_COOKIE])
-    with get_runtime().game_store.pool.connection() as db:
+    with admin_connection(get_runtime().game_store.pool) as db:  # SPEC-224: sem principal ainda
         requested = db.execute("select 1 from app.account_deletions where owner_id=%s",
                                (owner,)).fetchone()
     if not requested:
@@ -2200,7 +2201,7 @@ def _load_metrics_sql() -> None:
         runtime = get_runtime()
         pool = getattr(runtime.job_queue, "pool", None)
         if pool is not None:
-            with pool.connection() as connection:
+            with admin_connection(pool) as connection:  # SPEC-224: agregado cross-owner
                 rows = connection.execute(
                     """
                     select kind,status,count(*)::int as count,
@@ -3091,7 +3092,7 @@ def create_image_quote(game_id: str, req: ArtQuoteRequest):
         if req.offer_id:
             raise HTTPException(422, "player_offer_not_required")
         if req.reformulation:
-            with runtime.resources[0].connection() as connection:
+            with admin_connection(runtime.resources[0]) as connection:  # SPEC-224: le wallet
                 blocked = connection.execute(
                     """select 1 from app.art_generations g join app.wallet_reservations w
                     on w.reservation_id=g.wallet_reservation_id where g.game_id=%s and g.owner_id=%s

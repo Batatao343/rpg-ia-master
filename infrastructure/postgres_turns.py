@@ -1,6 +1,7 @@
 """Coordenação distribuída de mutações e rate limit em Postgres."""
 
 from __future__ import annotations
+from infrastructure.db_roles import admin_connection
 
 from datetime import timedelta
 from decimal import Decimal
@@ -582,7 +583,7 @@ class PostgresRateLimiter:
         if limit <= 0 or window_seconds <= 0:
             raise ValueError("limit e window_seconds precisam ser positivos")
         interval = timedelta(seconds=window_seconds)
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             row = connection.execute(
                 """
                 insert into app.rate_limit_buckets
@@ -609,7 +610,7 @@ class PostgresRateLimiter:
 
     def peek(self, key: str, *, limit: int, window_seconds: int) -> RateLimitDecision:
         """SPEC-220: inspect a bucket without consuming it (expired window = empty)."""
-        with self.pool.connection() as connection:
+        with admin_connection(self.pool) as connection:
             row = connection.execute(
                 """
                 select request_count,
@@ -626,7 +627,7 @@ class PostgresRateLimiter:
         return RateLimitDecision(True, limit - count, 0)
 
     def reset(self, key: str) -> None:
-        with self.pool.connection() as connection, connection.transaction():
+        with admin_connection(self.pool) as connection, connection.transaction():
             connection.execute("delete from app.rate_limit_buckets where bucket_key=%s", (key,))
 
 

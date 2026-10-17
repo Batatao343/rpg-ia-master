@@ -38,8 +38,8 @@ select is(
   (select count(*)::integer from pg_policies
    where schemaname = 'storage' and tablename = 'objects'
      and policyname like 'rpg_dynamic_%'),
-  4,
-  'storage has four owner-scoped policies'
+  0,
+  'storage grants the client no direct policy on rpg-dynamic (SPEC-224)'
 );
 select ok(
   not has_table_privilege('rpg_api', 'app.rate_limit_buckets', 'SELECT'),
