@@ -10,7 +10,7 @@ def test_production_has_runtime_contract_and_no_literal_leak_in_preview():
     prod, prev = ve.build_env(FILES)
     assert prod["RPG_RUNTIME_PROFILE"] == "hosted-supabase"
     assert prod["RPG_CORS_ORIGINS"] == f"https://{ve.PUBLIC_HOST}"
-    assert prod["RPG_COOKIE_SECURE"] == "1" and prod["RPG_FORCE_MOCK"] == "1"
+    assert prod["RPG_COOKIE_SECURE"] == "1"
     assert not ve.FORBIDDEN_IN_PREVIEW & prev.keys()
     assert not {"DATABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "RPG_CRON_SECRET"} & prev.keys()
 
@@ -55,3 +55,14 @@ def test_runtime_dsn_without_admin_dsn_refuses_to_deploy_a_boot_that_would_fail(
     files = {**FILES, "RPG_RUNTIME_DATABASE_URL": "postgresql://rpg_runtime.ref:x@h.pooler.supabase.com:6543/postgres"}
     with pytest.raises(KeyError, match="RPG_ADMIN_DATABASE_URL"):
         ve.build_env(files)
+
+
+def test_staging_runs_real_llm_with_a_daily_cap_and_never_mock():
+    """2026-10-17: staging sai do MockLLM (proibido em hosted, SPEC-218) para Groq real com teto diario."""
+    from infrastructure.runtime import FORBIDDEN_IN_HOSTED
+    prod, prev = ve.build_env(FILES)
+    assert not set(FORBIDDEN_IN_HOSTED) & (prod.keys() | prev.keys())
+    assert "RPG_FORCE_MOCK" in ve.REMOVED_NAMES and "LLM_PROVIDER" not in prod
+    assert prod["GROQ_API_KEY"] == "v-GROQ_API_KEY" and len(prod["RPG_TELEMETRY_SECRET"]) > 0
+    assert float(prod["RPG_DAILY_SPEND_CAP_BRL"]) > 0 and prod["RPG_DAILY_SPEND_CAP_TEXT"] == "1"
+    assert {"GROQ_API_KEY", "RPG_TELEMETRY_SECRET"} <= ve.FORBIDDEN_IN_PREVIEW

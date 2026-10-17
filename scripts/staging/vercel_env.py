@@ -28,6 +28,8 @@ ROOT = Path(__file__).resolve().parents[2]
 SECRET_FROM_FILE = (
     "DATABASE_URL", "SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY", "SUPABASE_SERVICE_ROLE_KEY",
     "RPG_SESSION_SECRET", "RPG_CRON_SECRET", "JINA_API_KEY",
+    "RPG_TELEMETRY_SECRET",  # SPEC-218/222: requisito hosted (pseudonimizacao de telemetria)
+    "GROQ_API_KEY",  # 2026-10-17: staging joga com LLM real (Groq); sem MockLLM em hosted (SPEC-218)
 )
 NON_SECRET_LITERALS = {
     "RPG_RUNTIME_PROFILE": "hosted-supabase",
@@ -37,17 +39,22 @@ NON_SECRET_LITERALS = {
     "RPG_AUTH_CAPTCHA_MODE": "gotrue",
     "RPG_AUTH_CAPTCHA_REQUIRED": "1",
     "RPG_TURNSTILE_SITE_KEY": TURNSTILE_TEST_SITE_KEY,
-    "RPG_FORCE_MOCK": "1",
+    # Teto diario de gasto variavel (SPEC-197 R7 / SPEC-219 R8): 5 BRL, inclusive texto (turnos recusados
+    # quando o gasto do dia passa do teto). Mantem o custo do LLM real do staging minimo.
+    "RPG_DAILY_SPEND_CAP_BRL": "5",
+    "RPG_DAILY_SPEND_CAP_TEXT": "1",
     # STT (SPEC-186): synthetic pricing version seeded by synthetic_data.seed_wallet_prereqs; WAV only (no ffmpeg).
     "RPG_SPEECH_ENABLED": "1",
     "RPG_SPEECH_PRICING_VERSION": "spec197-restore-b",
 }
 # Preview: só flags inertes. Sem DATABASE_URL/SUPABASE_*/RPG_*_SECRET.
-PREVIEW_LITERALS = {"RPG_RUNTIME_PROFILE": "hosted-supabase", "RPG_BIND_HOST": "0.0.0.0",
-                    "RPG_FORCE_MOCK": "1"}
+PREVIEW_LITERALS = {"RPG_RUNTIME_PROFILE": "hosted-supabase", "RPG_BIND_HOST": "0.0.0.0"}
+# Nomes que NAO podem continuar no projeto (o upsert nao apaga): RPG_FORCE_MOCK e proibido em hosted
+# (SPEC-218 boot fail-closed) e LLM_PROVIDER forcaria um provider unico fora de ROUTES.
+REMOVED_NAMES = ("RPG_FORCE_MOCK", "LLM_PROVIDER")
 # SPEC-194: HMAC key for Play obfuscated account ids (>=32 chars). Pushed only when present in the env files.
 # SPEC-197 R6 voice: Groq only (no OPENAI_API_KEY => no paid STT fallback candidate).
-OPTIONAL_SECRET_FROM_FILE = ("RPG_PLAY_ACCOUNT_KEY", "GROQ_API_KEY")
+OPTIONAL_SECRET_FROM_FILE = ("RPG_PLAY_ACCOUNT_KEY",)
 RLS_SECRETS = ("RPG_ADMIN_DATABASE_URL",)  # SPEC-224: so no modo RLS efetivo
 FORBIDDEN_IN_PREVIEW = frozenset(SECRET_FROM_FILE) | frozenset(OPTIONAL_SECRET_FROM_FILE) | frozenset(RLS_SECRETS)
 
@@ -85,6 +92,7 @@ def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST, use_admi
         production["RPG_REQUEST_RLS"] = "off"
     preview = dict(PREVIEW_LITERALS)
     assert not FORBIDDEN_IN_PREVIEW & preview.keys()
+    assert not set(REMOVED_NAMES) & (production.keys() | preview.keys())
     return production, preview
 
 
@@ -111,6 +119,22 @@ def push(token: str, project_id: str, team_id: str, target: str, values: Mapping
     return pushed
 
 
+def remove(token: str, project_id: str, team_id: str, names: tuple[str, ...]) -> list[str]:
+    """Apaga (todos os targets) as variaveis em ``names``; devolve 'NOME@target' apagados."""
+    headers = {"Authorization": f"Bearer {token}"}
+    base = f"https://api.vercel.com/v10/projects/{project_id}/env"
+    envs = httpx.get(base, params={"teamId": team_id}, headers=headers, timeout=60).json().get("envs", [])
+    removed = []
+    for env in envs:
+        if env.get("key") in names:
+            r = httpx.delete(f"https://api.vercel.com/v9/projects/{project_id}/env/{env['id']}",
+                             params={"teamId": team_id}, headers=headers, timeout=60)
+            if r.status_code >= 300:
+                raise RuntimeError(f"vercel env delete {env['key']}: HTTP {r.status_code}")
+            removed += [f"{env['key']}@{t}" for t in env.get("target") or []]
+    return removed
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--project-name", default=PROJECT_NAME)
@@ -134,6 +158,7 @@ def main(argv: list[str] | None = None) -> int:
     secrets = frozenset(SECRET_FROM_FILE) | frozenset(OPTIONAL_SECRET_FROM_FILE) | frozenset(RLS_SECRETS)
     print("production:", ", ".join(sorted(production)))
     print("preview:", ", ".join(sorted(preview)), "(sem segredos de DB/serviço)")
+    print("a remover:", ", ".join(REMOVED_NAMES))
     if args.dry_run:
         return 0
     token = files.get("VERCEL_TOKEN") or os.environ.get("VERCEL_TOKEN", "")
@@ -142,6 +167,8 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     push(token, link["projectId"], link["orgId"], "production", production, secrets)
     push(token, link["projectId"], link["orgId"], "preview", preview, secrets)
+    removed = remove(token, link["projectId"], link["orgId"], REMOVED_NAMES)
+    print("removidas:", ", ".join(removed) or "nenhuma")
     print("ok: variáveis enviadas")
     return 0
 
