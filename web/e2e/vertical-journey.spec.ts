@@ -173,8 +173,10 @@ test.describe("J-V1 jornada vertical", () => {
       const panel = page.locator(`[role="tabpanel"]:visible`).first();
       await expect(panel).toBeVisible();
       // as abas de dossiê carregam sob demanda: espera sair do estado "Consultando…".
-      await expect.poll(async () => (await panel.innerText()).toLowerCase().includes("consultando os registros"),
-        { message: `${tab}: ainda carregando` }).toBe(false);
+      await expect.poll(async () => {
+        const t = (await panel.innerText()).toLowerCase();
+        return t.includes("consultando os registros") || t.includes("consultando o mapa");
+      }, { message: `${tab}: ainda carregando` }).toBe(false);
       dump[tab] = await panel.innerText();
       surfaces[`tab.${label}.${tab.toLowerCase()}`] = dump[tab];
     }
@@ -185,6 +187,10 @@ test.describe("J-V1 jornada vertical", () => {
     await page.getByRole("heading", { name: "Continuar jornada" }).waitFor({ timeout: 30_000 });
     await page.getByRole("button", { name: new RegExp(`^${name}`) }).first().click();
     await composer().waitFor({ timeout: 30_000 });
+    // Escolha pendente reabre o LevelUpModal no reload (contrato Fase 4.1): dá tempo de ele montar e o resolve.
+    await page.getByRole("dialog", { name: /nível|level/i }).or(page.locator(".overlay--levelup"))
+      .first().waitFor({ state: "visible", timeout: 2_500 }).catch(() => undefined);
+    await settleLevelUp();
   }
 
   async function login() {

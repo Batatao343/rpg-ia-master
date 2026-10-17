@@ -17,6 +17,8 @@ function localChromium(): string | undefined {
 
 export default defineConfig({
   testDir: "./e2e",
+  // Execuções concorrentes/em loop isolam artefatos por RPG_PW_OUTPUT_DIR (padrão inalterado).
+  outputDir: process.env.RPG_PW_OUTPUT_DIR ?? "test-results",
   fullyParallel: false,
   timeout: 30_000,
   expect: { timeout: 8_000 },
