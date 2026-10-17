@@ -1,6 +1,6 @@
 # SPEC-215 — Conhecimento por NPC e propagação limitada de notícias
 
-> **Status:** `in-progress` (código + testes + smokes entregues; revisão Astra APPROVED_WITH_FOLLOWUPS; falta o dataset `npc_knowledge` — gate do §5, ver §10)
+> **Status:** `in-progress` (código + testes + smokes entregues; revisão Astra APPROVED_WITH_FOLLOWUPS; dataset `npc_knowledge` autorado; falta só regenerar o Project Index — ver §10)
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-202 `done` (interlocutor), SPEC-206 `done` (taxonomia), SPEC-214 `done` (cache de cena — recomendado), SPEC-223 `done` (mesmos `agents/npc.py`/`event_processor`; prova de eventos), SPEC-230 `done` (ciclo de vida do NPC) (ordem final 2026-10-15)
 > **Desbloqueia:** nada obrigatório (ordem final 2026-10-15)
@@ -280,7 +280,7 @@ artefato do dono, se aquela spec o aceitar via handoff — esta spec não o exig
 ## 5. Critérios de aceite
 
 - [x] R1–R14 cobertos pelos testes nomeados em §4, todos verdes.
-- [ ] Dataset `npc_knowledge` (tarefa separada) passa com `on`: zero teleporte, zero vazamento,
+- [x] Dataset `npc_knowledge` (tarefa separada, 39 casos, `docs/spec215/README.md`) passa com `on`: zero teleporte, zero vazamento,
       zero rumor promovido; `off` documentado como baseline (falha esperada nos casos de teleporte).
       → handoff em `handoffs/SPEC-215-eval-authoring.md` (evals/ protegido); oráculos já em pytest.
 - [x] `RPG_NPC_KNOWLEDGE=off` produz contexto de NPC idêntico ao HEAD (teste de snapshot).
@@ -369,5 +369,5 @@ jogador com `on` (memória privada do NPC fica); D3 = valores da tabela §3.3.
   invariante de teleporte e o raio a partir da origem.
 - Destinos por hop: locais com NPC registrado primeiro, depois os demais, por distância.
 
-**Pendente para `done`:** dataset `npc_knowledge` (autoria separada; gate do §5) e
-regeneração do Project Index (coordenador).
+**Pendente para `done`:** regeneração do Project Index (coordenador). O dataset
+`npc_knowledge` foi autorado (39 casos; publicar exige aprovação do environment `eval-governance`).

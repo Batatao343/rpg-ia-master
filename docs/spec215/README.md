@@ -60,4 +60,35 @@ Cenário dirigido (morte em Brekmar, NPC em Ophidia a 3 períodos, antes/depois 
 - Rumor = `memory_fact` `npc_claim`/`inference` do turno; como toda conversa com NPC
   gera um `npc_claim`, o volume de rumor é dominado por registros de diálogo
   (p=0,35, raio 5, 1 salto) — ajustar em `shadow` (D3).
-- Dataset `npc_knowledge` e revisão Astra independente: pendentes (tarefa separada).
+- Revisão Astra independente: APPROVED_WITH_FOLLOWUPS (`handoffs/SPEC-215-ASTRA-independent-review.md`).
+- Regenerar o Project Index segue com o coordenador (único item aberto para `done`).
+
+## Evals (autoria separada, 2026-10-16)
+Suíte dedicada `npc_knowledge` (não altera datasets antigos), conforme o
+[handoff](../../handoffs/SPEC-215-eval-authoring.md); nenhum código de produto alterado.
+- Dataset `evals/datasets/regression/npc_knowledge.jsonl`: **39 casos** fixture-authored,
+  determinísticos, sem LLM nem rede (RAG substituído por textos fixos; `SUBJECT_PARAMS` com p=1.0
+  fixa o sorteio). Oráculo `projection` (métrica `state_transition_pass_rate`).
+- `evals/core/adapters.py::NpcKnowledgeAdapter` só monta o estado e chama código de produto:
+  `npc_knowledge` (`turn_updates`, `deliver_due`, `record_player_told`, `inherit_local`),
+  round-trip `persistence`, `checkpoints.snapshot`, `context_builder.build_context_pack`
+  (gate real, `purpose="npc"`), invariantes `knowledge.*` do playtest e `api.format_response`.
+- Casos: entrega atrasada por distância/`due_clock` (antes/no/depois do due; checagem
+  `due ≥ origem + travel_periods + 1`), desconhecimento antes do due, reload e checkpoint antes e
+  depois do due, teto de 2 saltos, replay seeded, sem retroatividade; boato nunca vira fato
+  (`memory_facts`/`event_log`/`revealed_facts` intactos, rótulo `[BOATO]`); `secret_revealed` nunca em
+  `location_heard`, fila ou herança (regressão do achado 1 da Astra, inclusive save adulterado); assinatura
+  secreta em `npc_claim` sem link/fila/prompt; aresta remota `location_control_changed` oculta ao NPC
+  distante (achado 2); fala do jogador (R9: rel 5 só ouviu, rel 6 acredita, evento desconhecido e
+  `secret_revealed` sem link); NPC morto não testemunha nem recebe; prompt ≤ 8 linhas dentro do
+  orçamento; alias = nome = id; `off` sem efeito de ledger (pack idêntico, `turn_updates={}`);
+  save legado com `legacy_knowledge`; ledger fora da API pública; sondas de mutação dos oráculos
+  (`knowledge.teleport`, `knowledge.rumor_promoted`, entrega antecipada na fila) e controles limpos;
+  5 baselines `off` (onisciente) marcados `baseline-off`/`known-bad`.
+- Métricas com `on`: teleporte 0, vazamento 0, rumor promovido 0; suíte inteira `passed`
+  (`state_transition_pass_rate` 1.0).
+- CI: `--suite npc_knowledge` em `deterministic-evals` e `tests/test_eval_npc_knowledge.py` em
+  `backend-selective`. Relock pelo comando oficial (9 datasets): mudou só o hash do dataset novo e o de
+  `core/adapters.py`; `EVALUATOR_VERSION` inalterado.
+- **Publicar exige aprovação do environment `eval-governance`** (paths protegidos:
+  `evals/core`, `evals/datasets/regression`, `evals/manifest.lock.json`).

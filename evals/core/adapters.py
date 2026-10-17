@@ -994,6 +994,262 @@ class EncounterManifestAdapter:
         raise AdapterError(f"unknown encounter_manifest operation: {operation!r}")
 
 
+class NpcKnowledgeAdapter:
+    """Observe per-NPC knowledge, delayed propagation and prompt gating (SPEC-215).
+
+    Everything is computed by product code: `services.npc_knowledge` (ledger,
+    propagation, inheritance, `deliver_due`), `persistence` round-trip,
+    `services.checkpoints.snapshot`, `services.context_builder.build_context_pack`
+    (the real gate) and the playtest invariants. The adapter only builds the
+    fixture state, drives the declared steps and reports `actual`. RAG readers are
+    replaced by fixed strings (no embeddings, no network, no LLM); propagation
+    probability is pinned when `input.probability` says so.
+    """
+
+    adapter_id = "npc_knowledge"
+
+    _LABELS = ("[VIU]", "[OUVIU DE", "[BOATO")
+
+    @staticmethod
+    def _base_state() -> dict[str, Any]:
+        return {
+            "game_id": "eval-spec215",
+            "world": {
+                "turn_count": 7, "current_location": "Brekmar",
+                "current_location_id": "brekmar",
+                "world_clock": {"day": 2, "period": "Tarde"},
+            },
+            "player": {"name": "Eval", "xp": 0},
+            "event_log": [], "world_projection": {}, "memory_facts": [],
+            "chronicle": [], "party": [], "messages": [], "pending_world_events": [],
+            "npcs": {
+                "Lyra": {"name": "Lyra", "id": "npc_lyra", "home_location_id": "brekmar",
+                         "in_scene": True, "relationship": 5, "memory": []},
+                "Osric": {"name": "Osric", "id": "npc_osric", "home_location_id": "ophidia",
+                          "in_scene": False, "relationship": 5, "memory": []},
+            },
+            "knowledge_links": [], "knowledge_queue": [], "location_heard": {},
+        }
+
+    @staticmethod
+    def _roundtrip(state: dict[str, Any]) -> dict[str, Any]:
+        import persistence
+
+        raw = json.loads(json.dumps(
+            persistence._state_to_save_data(state, state["game_id"]), default=str))
+        return {**state, **persistence._raw_to_state(raw)}
+
+    @staticmethod
+    def _set_clock(state: dict[str, Any], clock: int) -> None:
+        import world_utils
+
+        day, idx = divmod(int(clock), len(world_utils.PERIODS))
+        state["world"] = {**state["world"], "world_clock": {
+            "day": day, "period": world_utils.PERIODS[idx]}}
+
+    @staticmethod
+    def _pack_text(state: dict[str, Any], npc_id: str, at: str | None) -> tuple[str, Any]:
+        from services import context_builder as cb
+
+        view = dict(state)
+        if at:
+            view["world"] = {**state["world"], "current_location_id": at,
+                             "current_location": at}
+        saved = (cb.RAG_AVAILABLE, cb.query_rag, cb.query_session_memory, cb.query_npc_memory)
+        cb.RAG_AVAILABLE = True
+        cb.query_rag = lambda *a, **k: "Lore publico fixo."
+        cb.query_session_memory = lambda *a, **k: "[CONFIRMADO] sessao do jogador"
+        cb.query_npc_memory = lambda *a, **k: "[RELATADO] memoria privada do npc"
+        try:
+            pack = cb.build_context_pack(view, query="noticias", purpose="npc",
+                                         game_id=str(state["game_id"]), npc_id=npc_id)
+        finally:
+            cb.RAG_AVAILABLE, cb.query_rag, cb.query_session_memory, cb.query_npc_memory = saved
+        text = "\n----\n".join([pack.world_state_block, pack.lore_block, pack.memory_block])
+        return text, pack
+
+    @staticmethod
+    def _violations(state: dict[str, Any]) -> list[str]:
+        from playtest import invariants as inv
+
+        return sorted({v.check_id for v in inv.check_all(state)
+                       if v.check_id.startswith("knowledge.")})
+
+    def _step(self, state: dict[str, Any], step: dict[str, Any], memo: dict[str, Any]) -> None:
+        from services import checkpoints
+        from services import npc_knowledge as nk
+
+        action = step.get("do")
+        if action == "turn":
+            state.update(nk.turn_updates(state))
+        elif action == "turn_twice":
+            first = nk.turn_updates(state)
+            memo["replay_identical"] = first == nk.turn_updates(copy.deepcopy(state))
+            state.update(first)
+        elif action in ("at_due", "set_clock"):
+            if action == "set_clock":
+                clock = int(step["clock"])
+            else:
+                due = [d for d in state["knowledge_queue"]
+                       if d["to_location_id"] == step["to_location"]]
+                if not due:
+                    raise AdapterError(f"no delivery to {step['to_location']!r} queued")
+                clock = int(due[0]["due_clock"]) + int(step.get("offset", 0))
+            self._set_clock(state, clock)
+            state.update(nk.deliver_due(state, clock))
+        elif action == "advance":
+            for _ in range(int(step["periods"])):
+                clock = nk.clock_index(state["world"]) + 1
+                self._set_clock(state, clock)
+                state.update(nk.deliver_due(state, clock))
+        elif action == "reload":
+            state.update(self._roundtrip(state))
+        elif action == "checkpoint":
+            snap = checkpoints.snapshot(state)
+            if snap is None:
+                raise AdapterError("checkpoint snapshot not ready")
+            snap.pop("_checkpoint_memory_snapshot", None)
+            state.update(self._roundtrip(snap))
+        elif action == "player_says":
+            clock = nk.clock_index(state["world"])
+            links = nk.record_player_told(state, str(step["npc"]), str(step["text"]), clock)
+            merged = nk.normalize_knowledge(
+                {"knowledge_links": [*state["knowledge_links"], *links]},
+                legacy_default=False)
+            state["knowledge_links"] = merged["knowledge_links"]
+        elif action == "create_npc":
+            row = copy.deepcopy(step["npc"])
+            row.setdefault("created_turn", int(state["world"]["turn_count"]))
+            state["npcs"] = {**state["npcs"], str(row["name"]): row}
+            state.update(nk.turn_updates(state))
+        elif action == "strip_ledger_reload":
+            import persistence
+
+            raw = json.loads(json.dumps(
+                persistence._state_to_save_data(state, state["game_id"]), default=str))
+            for key in ("knowledge_links", "knowledge_queue", "location_heard",
+                        "legacy_knowledge"):
+                raw.pop(key, None)
+            state.update(persistence._raw_to_state(raw))
+        else:
+            raise AdapterError(f"unknown npc_knowledge step: {action!r}")
+
+    def _observe(self, state: dict[str, Any], spec: dict[str, Any]) -> dict[str, Any]:
+        from services import npc_knowledge as nk
+
+        npc = str(spec["npc"])
+        text, pack = self._pack_text(state, npc, spec.get("at"))
+        lines = [ln for ln in text.splitlines() if ln.startswith(self._LABELS)]
+        out: dict[str, Any] = {
+            "labels": [ln.split("]")[0] + "]" for ln in lines],
+            "knows": {term: term in text for term in spec.get("terms") or []},
+            "relations": sorted(
+                f"{lk['subject_id']}:{lk['relation']}"
+                for lk in state["knowledge_links"]
+                if lk["holder_id"] in nk._holders_for(state, npc)),
+            "within_budget": pack.total_tokens_est <= int(3500 * 1.05),
+        }
+        fields = spec.get("fields") or ["labels", "knows", "relations"]
+        return {key: out[key] for key in fields}
+
+    def execute(self, case: AdapterCase) -> AdapterOutput:
+        if not isinstance(case.input, dict):
+            raise AdapterError("npc_knowledge requires object input")
+        from services import npc_knowledge as nk
+        from services.world_distance import travel_periods
+
+        data = case.input
+        operation = data.get("operation")
+        state = self._base_state()
+        for key, value in (data.get("state") or {}).items():
+            state[key] = copy.deepcopy(value)
+        mode = str(data.get("mode") or "on")
+
+        saved_env = os.environ.get("RPG_NPC_KNOWLEDGE")
+        saved_params = nk.SUBJECT_PARAMS
+        os.environ["RPG_NPC_KNOWLEDGE"] = mode
+        if data.get("probability") is not None:
+            nk.SUBJECT_PARAMS = {k: (float(data["probability"]), r, h)
+                                 for k, (_p, r, h) in saved_params.items()}
+        try:
+            if operation == "off_identity":
+                ledger = copy.deepcopy(data["ledger"])
+                npc = str(data["npc"])
+                bare, _ = self._pack_text(state, npc, data.get("at"))
+                with_ledger, _ = self._pack_text({**state, **ledger}, npc, data.get("at"))
+                before = copy.deepcopy(state)
+                return AdapterOutput(actual={
+                    "pack_identical": bare == with_ledger,
+                    "turn_updates": nk.turn_updates(state),
+                    "state_untouched": state == before,
+                    "context_gate_is_none": nk.context_gate(state, npc) is None,
+                })
+            if operation == "api_private":
+                import api
+                from services import npc_layers
+                from services.discovery import player_codex
+
+                state.update(copy.deepcopy(data["ledger"]))
+                payload = json.dumps(
+                    [api.format_response(state).model_dump(), player_codex(state),
+                     npc_layers.visible_npc_view(state.get("npcs") or {})],
+                    ensure_ascii=False, default=str)
+                markers = ["knowledge_links", "knowledge_queue", "location_heard",
+                           "legacy_knowledge", *data.get("markers", [])]
+                return AdapterOutput(actual={"leaked": sorted(m for m in markers
+                                                              if m in payload)})
+            if operation != "scenario":
+                raise AdapterError(f"unknown npc_knowledge operation: {operation!r}")
+
+            memo: dict[str, Any] = {}
+            before_facts = copy.deepcopy(state["memory_facts"])
+            before_events = copy.deepcopy(state["event_log"])
+            for step in data.get("steps") or []:
+                self._step(state, step, memo)
+            queue = state["knowledge_queue"]
+            origin_ok = all(
+                d.get("due_clock", 0) - d.get("origin_clock", 0)
+                >= (travel_periods(d["origin_location_id"], d["to_location_id"]) or 0) + 1
+                for d in queue if d.get("origin_location_id"))
+            watch = [str(w) for w in data.get("watch") or []]
+            actual: dict[str, Any] = {
+                "observations": {str(o["npc"]): self._observe(state, o)
+                                 for o in data.get("observe") or []},
+                "queue_len": len(queue),
+                "links_total": len(state["knowledge_links"]),
+                "max_hops": max([lk["hops"] for lk in state["knowledge_links"]] or [0]),
+                "hops_within_limit": all(
+                    lk["hops"] <= nk.MAX_HOPS for lk in state["knowledge_links"])
+                and all(d["hop"] <= nk.MAX_HOPS for d in queue),
+                "queue_due_after_travel": origin_ok,
+                "watch_in_heard": sorted(w for w in watch if any(
+                    w in subs for subs in state["location_heard"].values())),
+                "watch_in_queue": sorted(w for w in watch if any(
+                    d["subject_id"] == w for d in queue)),
+                "watch_in_links": sorted(w for w in watch if any(
+                    lk["subject_id"] == w for lk in state["knowledge_links"])),
+                "memory_facts_unchanged": state["memory_facts"] == before_facts,
+                "event_log_unchanged": state["event_log"] == before_events,
+                "revealed_facts_absent": "revealed_facts" not in (
+                    state["world_projection"] or {}),
+                "legacy_knowledge": bool(state.get("legacy_knowledge", False)),
+                "violations": self._violations(state),
+            }
+            if "replay_identical" in memo:
+                actual["replay_identical"] = memo["replay_identical"]
+            report = data.get("report")
+            if report:
+                actual = {key: actual[key] for key in ["observations", *report]
+                          if key in actual}
+            return AdapterOutput(actual=actual)
+        finally:
+            nk.SUBJECT_PARAMS = saved_params
+            if saved_env is None:
+                os.environ.pop("RPG_NPC_KNOWLEDGE", None)
+            else:
+                os.environ["RPG_NPC_KNOWLEDGE"] = saved_env
+
+
 class AdapterRegistry:
     """Small explicit suite registry; unknown suites fail closed."""
 
@@ -1027,6 +1283,7 @@ def default_registry() -> AdapterRegistry:
             "narrative_claims": NarrativeClaimAdapter(),
             "player_knowledge": PlayerKnowledgeAdapter(),
             "encounter_manifest": EncounterManifestAdapter(),
+            "npc_knowledge": NpcKnowledgeAdapter(),
         }
     )
 
@@ -1038,6 +1295,7 @@ __all__ = [
     "AdapterRegistry",
     "EvalAdapter",
     "EncounterManifestAdapter",
+    "NpcKnowledgeAdapter",
     "FixtureActualAdapter",
     "PlaytestInvariantsAdapter",
     "NarrativeClaimAdapter",
