@@ -13,6 +13,8 @@ export function GeneratedPortrait({ gameId, generationId }: { gameId: string; ge
   const [result, setResult] = useState<{ key: string; art: ArtStatus } | null>(null);
   const [expanded, setExpanded] = useState(false);
   const [error, setError] = useState('');
+  const [reload, setReload] = useState(0); // SPEC-209 R10: URL assinada expirada → refetch UMA vez
+  const [broken, setBroken] = useState(false);
   const key = `${gameId}:${generationId}`;
   useEffect(() => {
     if (!generationId) return;
@@ -34,10 +36,10 @@ export function GeneratedPortrait({ gameId, generationId }: { gameId: string; ge
     };
     void poll();
     return () => { active = false; controller.abort(); clearTimeout(timer); };
-  }, [gameId, generationId, key]);
+  }, [gameId, generationId, key, reload]);
   if (!generationId) return null;
   const art = result?.key === key ? result.art : null;
-  const image = art?.status === 'ready' ? art.assets?.find(a => a.variant === 'full') : null;
+  const image = art?.status === 'ready' && !broken ? art.assets?.find(a => a.variant === 'full') : null;
   const financeMessage = art?.financial_status === 'uncertain'
     ? 'Resultado financeiro incerto: o saldo segue reservado para conferência. A geração não será repetida automaticamente.'
     : art?.credits_held ? 'Saldo reservado até a conclusão financeira da imagem.' : null;
@@ -45,9 +47,10 @@ export function GeneratedPortrait({ gameId, generationId }: { gameId: string; ge
     {financeMessage && <p role="status">{financeMessage}</p>}
     {image ? <>
       <button type="button" className="card__select" onClick={() => setExpanded(true)} aria-label="Ampliar retrato do personagem">
-        <img src={image.url} width={image.width} height={image.height} alt="Retrato do personagem" />
+        <img src={image.url} width={image.width} height={image.height} alt="Retrato do personagem"
+          onError={() => { if (reload === 0) setReload(1); else setBroken(true); }} />
       </button>
       {expanded && <ArtworkDialog url={image.url} alt="Retrato do personagem" onClose={() => setExpanded(false)} />}
-    </> : <p role="status">{error || LABELS[art?.status || 'pending'] || 'Arte indisponível'}</p>}
+    </> : <p role="status">{(broken && 'Retrato indisponível no momento.') || error || LABELS[art?.status || 'pending'] || 'Arte indisponível'}</p>}
   </section>;
 }

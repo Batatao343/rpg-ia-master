@@ -290,6 +290,19 @@ export const postEquip = (payload: {
     body: JSON.stringify({ ...payload, action_id: crypto.randomUUID() }),
   });
 
+// SPEC-209 R4: preparar/trocar Cartas fora de combate (regra 100% no servidor).
+export interface PrepareCardsResult {
+  ok: boolean;
+  prepared_cards: string[];
+  cards: import("./types").CardView[];
+  prepared_slots: number;
+}
+export const postPrepareCards = (payload: { prepared: string[]; game_id?: string | null }) =>
+  req<PrepareCardsResult>("/game/cards/prepare", {
+    method: "POST",
+    body: JSON.stringify({ ...payload, action_id: crypto.randomUUID() }),
+  });
+
 export const postLevelUp = (payload: {
   choice_id: string;
   card_id?: string;

@@ -1005,6 +1005,8 @@ async def _rate_limit(request: Request, call_next):
     if limit > 0 and (request.url.path in ("/game/action", "/game/action/stream",
                                            "/game/new", "/game/combat-simulator",
                                            "/game/equip", "/game/levelup",
+                                           # SPEC-209 R4: preparar Cartas também muta o save
+                                           "/game/cards/prepare",
                                            # spec inicio-personalizado (R11): 1 SMART por chamada
                                            "/game/prologue",
                                            # SPEC-200 R10: balde PROPRIO (nao come o das acoes)
@@ -1175,6 +1177,12 @@ class EquipRequest(BaseModel):
     item_id: Optional[str] = None   # equipar este item
     unequip_slot: Optional[str] = None  # OU esvaziar este slot
     game_id: Optional[str] = None
+    action_id: Optional[str] = Field(default=None, max_length=36)
+
+class PrepareCardsRequest(BaseModel):
+    """SPEC-209 R4: prepara/troca Cartas fora de combate (validação 100% Python)."""
+    game_id: Optional[str] = None
+    prepared: List[str] = Field(default_factory=list, max_length=64)
     action_id: Optional[str] = Field(default=None, max_length=36)
 
 class LevelUpRequest(BaseModel):
@@ -1355,6 +1363,14 @@ def format_response(state: dict, *, cue_action_key: Optional[str] = None) -> Gam
             "level": player.get("level", 1),
             "xp": player.get("xp", 0),
             "cards": _cards_block(player),
+            # SPEC-209 R5/R9: aditivos — servidor decide se pode reorganizar; cicatrizes
+            # são a projeção pública do que já está no save (sem inventar turno).
+            "can_reorganize": _can_reorganize_view(state),
+            "prepared_slots": _prepared_slots(player),
+            "scars": _scars_view(player),
+            "subclass": str(player.get("subclass") or ""),
+            "virtue_cards": _virtue_cards_view(player),
+            "evolvable_card_ids": _evolvable_card_ids(player),
             "virtudes": dict(player.get("virtudes") or {}),
             "xp_next_level": progression.xp_to_next(int(player.get("level", 1) or 1)),
             "pending_choices": player.get("pending_choices", []) or [],
@@ -1427,6 +1443,50 @@ def _abyss_tier_view(player: dict) -> str:
         # SPEC-235 R8: sem Carga não há o que ocultar — chip some até acumular.
         return "?" if int(player.get("abyss_charge", 0) or 0) > 0 else "nenhum"
     return _cm.abyss_tier(player)
+
+
+def _can_reorganize_view(state: dict) -> Dict[str, Any]:
+    from services import cards
+    allowed, reason = cards.reorganize_status(state)
+    return {"allowed": bool(allowed), "reason": reason}
+
+
+def _prepared_slots(player: dict) -> int:
+    from services import cards
+    return int(cards.prepare_slots_for_level(player.get("level", 1)))
+
+
+def _virtue_cards_view(player: dict) -> List[Dict[str, Any]]:
+    from services import cards
+    out = []
+    for row in player.get("virtue_cards") or []:
+        cid = str(row.get("card_id") or "")
+        card = cards.get_card(cid) or {}
+        out.append({"card_id": cid, "name": card.get("name", cid),
+                    "type": str(card.get("tipo", "")), "description": card.get("descricao", ""),
+                    "virtude": str(row.get("virtude") or ""),
+                    "mastery": int(row.get("mastery", 0) or 0),
+                    "effective_stage": int(row.get("effective_stage", 0) or 0)})
+    return out
+
+
+def _evolvable_card_ids(player: dict) -> List[str]:
+    from services import cards
+    if int(player.get("level", 1) or 1) < 4:
+        return []
+    done = player.get("evolved_cards") or {}
+    return [cid for cid in player.get("known_cards") or []
+            if (cards.get_card(cid) or {}).get("evolucao") and cid not in done]
+
+
+def _scars_view(player: dict) -> List[Dict[str, str]]:
+    out = []
+    for scar in player.get("scars") or []:
+        if not isinstance(scar, dict):
+            continue
+        out.append({k: str(scar.get(k) or "") for k in (
+            "id", "origem", "consequencia_negativa", "habilidade_positiva_relacionada")})
+    return out
 
 
 def _cards_block(player: dict, *, prepared_only: bool = False) -> List[Dict[str, Any]]:
@@ -4380,6 +4440,50 @@ def game_equip(req: EquipRequest):
             response = {"ok": True, "equipment": player.get("equipment"),
                         "inventory": _inventory_block(player),
                         "derived": {"ac": stats["ac"], "attack": stats["attack"]}}
+            return _commit_state_mutation(
+                state, response, claim=claim, request_hash=request_hash,
+            )
+
+@app.post("/game/cards/prepare")
+def game_cards_prepare(req: PrepareCardsRequest):
+    """SPEC-209 R4: Preparação fora de combate. A regra mora em services.cards."""
+    from services import cards
+    lock = _game_lock(req.game_id) if not _database_profile() else nullcontext()
+    with lock:
+        file_to_load = _resolve_save_file(req.game_id)
+        state = load_game_state(file_to_load)
+        if not state:
+            raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+        claim, request_hash, receipt = _begin_state_mutation(
+            state, action_id=req.action_id, kind="equip",  # reaproveita o kind (CHECK do banco); hash do payload difere
+            payload=req.model_dump(mode="json", exclude={"action_id"}),
+        )
+        if receipt is not None:
+            return receipt
+        from infrastructure.runtime import get_runtime
+        from services.turn_execution import operation_scope
+        with operation_scope(get_runtime().turn_coordinator if claim else None, claim):
+            _reject_archived(state)
+            _reject_memorial(state)
+            if state.get("death_pending"):
+                raise HTTPException(409, "Resolva a queda antes desta alteração.")
+            if (state.get("combat_simulation") or {}).get("enabled"):
+                _fail_operation(claim, "simulation")
+                raise HTTPException(409, "O laboratório de combate não tem preparação persistente.")
+
+            probe = cards.with_location(state)  # `_location` só na cópia transitória
+            result = cards.set_prepared(probe, req.prepared)
+            if not result["ok"]:
+                _fail_operation(claim, "invalid_prepare")
+                allowed, reason = cards.reorganize_status(state)
+                status = 409 if not allowed else 400
+                raise HTTPException(status_code=status, detail=reason or result["error"])
+            state["player"] = probe["player"]
+            player = state["player"]
+            response = {"ok": True,
+                        "prepared_cards": list(player.get("prepared_cards") or []),
+                        "cards": _cards_block(player),
+                        "prepared_slots": _prepared_slots(player)}
             return _commit_state_mutation(
                 state, response, claim=claim, request_hash=request_hash,
             )

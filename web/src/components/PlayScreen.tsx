@@ -15,6 +15,7 @@ interface Props {
   onNew: () => void;
   onLevelUp: (choiceId: string, pick: LevelUpPick) => void;
   onEquip: (pick: { item_id?: string; unequip_slot?: string }) => void;
+  onPrepareCards?: (prepared: string[]) => Promise<string | null>;
   onLogout?: () => void;
   onAccount?: () => void;
   accountBalance?: string | null;
@@ -24,7 +25,7 @@ interface Props {
 
 /** SPEC-204: orquestrador da tela de jogo — topbar + workspace (chat + UM painel)
  *  + overlays. Controles táticos vivem só na aba Combate do workspace. */
-export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction, onNew, onLevelUp, onEquip, onLogout, onAccount, accountBalance, owner = "legacy" }: Props) {
+export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction, onNew, onLevelUp, onEquip, onPrepareCards, onLogout, onAccount, accountBalance, owner = "legacy" }: Props) {
   const [luDismissed, setLuDismissed] = useState(false);
   const [reading, setReading] = useState(false); // memorial: ler a crônica
   const workspace = useRef<WorkspaceHandle>(null);
@@ -88,7 +89,8 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
 
       <Workspace key={data?.game_id ?? "sem-jogo"} ref={workspace} owner={owner} data={data} log={log}
         thinking={thinking} thinkingLabel={thinkingLabel} busy={busy} blocked={blocked}
-        onAction={onAction} onEquip={onEquip} />
+        onAction={onAction} onEquip={onEquip}
+        onPrepareCards={onPrepareCards} onOpenLevelUp={() => setLuDismissed(false)} />
 
       {showLevelUp && data && (
         <LevelUpModal

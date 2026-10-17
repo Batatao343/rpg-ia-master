@@ -1,0 +1,44 @@
+/* SPEC-209: abas Combate (deck) e Personagem. Só tokens (SPEC-208); transform/opacity apenas. */
+.deck { display: flex; flex-direction: column; gap: 0.8rem; min-width: 0; }
+.deck__head { position: sticky; top: 0; z-index: 2; display: grid; gap: 0.3rem; padding: 0.4rem 0; background: var(--bg); }
+.deck__head .hud__label { margin: 0; }
+.deck__head .hud__label > span { margin-left: 0.45em; } /* flex colapsa o espaço entre rótulo e contagem */
+.deck__sync, .char-sync { color: var(--ink-soft); font-size: 0.72rem; text-transform: none; letter-spacing: 0; }
+.deck__msg { margin: 0; min-height: 1.1em; color: var(--ink-soft); font-size: 0.78rem; }
+.deck__note { margin: 0; color: var(--muted); font-size: 0.78rem; }
+.deck__levelup { justify-self: start; min-height: 44px; padding: 0.4rem 0.8rem; border: 1px solid var(--accent); border-radius: var(--r-md); background: var(--state-selected); color: var(--ink); cursor: pointer; }
+.deck__filters { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+.deck__filter, .deck__sub select { min-height: 44px; padding: 0.3rem 0.8rem; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--surface); color: var(--muted); cursor: pointer; font: inherit; }
+.deck__filter[aria-pressed="true"] { border-color: var(--accent); background: var(--state-selected); color: var(--ink); }
+.deck__list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 0.55rem; margin: 0; padding: 0; list-style: none; }
+.deck__list > .combat-empty { grid-column: 1 / -1; }
+.deck-card { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+.deck-card__btn { display: grid; gap: 0.3rem; flex: 1; min-height: 44px; padding: 0.6rem; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); color: var(--ink); text-align: left; font: inherit; cursor: pointer; transition: transform var(--dur-fast) var(--ease-out); }
+.deck-card__btn.is-static { cursor: default; }
+@media (hover: hover) { .deck-card__btn:not(.is-static):not([aria-disabled="true"]):hover { transform: translateY(-2px); border-color: var(--accent); } }
+.deck-card__btn:focus-visible, .deck__filter:focus-visible, .deck__levelup:focus-visible, .deck-card__evolve:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }
+.deck-card.is-prepared .deck-card__btn { border-color: var(--accent); background: var(--state-selected); }
+.deck-card__btn[aria-disabled="true"] { cursor: not-allowed; opacity: 0.7; }
+.deck-card.is-spent .deck-card__btn { opacity: 0.6; }
+.deck-card__top { display: flex; align-items: center; gap: 0.4rem; }
+.deck-card__kind { flex: 1; color: var(--ink-soft); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.deck-card__cost { font-weight: 700; color: var(--ink-soft); }
+.deck-card__cost small { font-weight: 400; color: var(--ink-soft); }
+.deck-card__name { font: 0.86rem var(--display); letter-spacing: 0.03em; }
+.deck-card__desc { color: var(--ink-soft); font-size: 0.78rem; line-height: 1.35; }
+.deck-card__meta { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+.deck-card__chip { padding: 0.1rem 0.45rem; border: 1px solid var(--line-soft); border-radius: var(--r-pill); color: var(--ink-soft); font-size: 0.66rem; text-transform: uppercase; }
+.deck-card__chip.is-rupture { border-color: #704199; color: #c99aee; }
+.deck-card__chip.is-evolved { border-color: var(--accent); color: var(--ink-soft); }
+.deck-card__chip.is-spent { border-color: var(--danger); color: var(--ink-soft); }
+.deck-card__state { color: var(--ink-soft); font-size: 0.7rem; }
+.deck-card__evolve { min-height: 44px; border: 1px solid var(--accent); border-radius: var(--r-md); background: transparent; color: var(--ink); cursor: pointer; }
+
+/* Personagem */
+.char-scars, .char-journey { display: grid; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
+.char-scar { padding: 0.55rem 0.65rem; border: 1px solid var(--danger); border-radius: var(--r-md); background: var(--danger-dim); }
+.char-scar p { margin: 0; font-size: 0.8rem; color: var(--ink-soft); }
+.char-scar__good { color: var(--ink); }
+.char-portrait { display: grid; gap: 0.4rem; }
+.char-journey__item { padding: 0.35rem 0; border-bottom: 1px solid var(--line-soft); color: var(--ink-soft); font-size: 0.82rem; }
+@media (prefers-reduced-motion: reduce) { .deck-card__btn { transition: none; transform: none !important; } }

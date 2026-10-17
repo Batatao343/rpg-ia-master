@@ -698,6 +698,27 @@ export function App() {
     }
   }
 
+  // SPEC-209 R4/R7: preparar Cartas. Devolve a mensagem do servidor (ou null) para a aba
+  // desfazer a mudança otimista; o estado canônico volta sempre do GET.
+  async function handlePrepareCards(prepared: string[]): Promise<string | null> {
+    if (busy || !gameId.current) return "Aguarde a ação em andamento.";
+    const generation = session.current, gid = gameId.current;
+    try {
+      const done = await api.postPrepareCards({ prepared, game_id: gid });
+      try {
+        const r = await api.getState(gid);
+        if (session.current === generation) setData(r);
+      } catch {
+        // A preparação já foi gravada: um GET falho não pode virar "recusado" (R13).
+        if (session.current === generation) setData((prev) => prev && prev.game_id === gid ? {
+          ...prev, player_stats: { ...prev.player_stats, cards: done.cards, prepared_slots: done.prepared_slots } } : prev);
+      }
+      return null;
+    } catch (err) {
+      return errMsg(err);
+    }
+  }
+
   // Fase 4.1: aplica escolha de level up e mescla o player atualizado no estado.
   async function handleLevelUp(choiceId: string, pick: LevelUpPick) {
     if (busy) return;
@@ -879,6 +900,7 @@ export function App() {
               onNew={handleNew}
               onLevelUp={handleLevelUp}
               onEquip={handleEquip}
+              onPrepareCards={handlePrepareCards}
               onLogout={authRequired ? handleLogout : undefined}
               onAccount={authRequired ? () => { accountReturn.current = "play"; setScreen("account"); } : undefined}
               accountBalance={accountBalance}

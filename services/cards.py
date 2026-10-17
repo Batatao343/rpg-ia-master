@@ -243,6 +243,36 @@ def can_reorganize(state: dict) -> bool:
     return danger <= _SAFE_DANGER
 
 
+def with_location(state: dict) -> dict:
+    """Cópia rasa do estado com `_location` resolvido do mapa (SPEC-209 R4).
+
+    Só para validar `can_reorganize` (tag `apex`); NUNCA devolver/persistir esta cópia."""
+    import gamedata
+    world = state.get("world") or {}
+    loc_id = world.get("current_location_id")
+    clone = dict(state)
+    loc = None
+    if loc_id:
+        try:
+            loc = gamedata.get_location(str(loc_id))
+        except Exception:
+            loc = None
+    clone["_location"] = loc if isinstance(loc, dict) else {}
+    return clone
+
+
+def reorganize_status(state: dict) -> tuple:
+    """(permitido, razão pt-BR) — mesma regra de `can_reorganize`, com explicação."""
+    probe = with_location(state)
+    if can_reorganize(probe):
+        return True, ""
+    if (state.get("combat") or {}).get("active"):
+        return False, "Não é possível reorganizar as Cartas em combate."
+    if _APEX_TAG in ((probe.get("_location") or {}).get("tags") or []):
+        return False, "Local perigoso demais (apex) para reorganizar as Cartas."
+    return False, "Perigo alto demais neste local para reorganizar as Cartas."
+
+
 def set_prepared(state: dict, prepared: List[str]) -> dict:
     """Aplica uma nova lista de preparadas. Valida: reorganização permitida,
     subconjunto do Acervo, dentro do limite do nível. Mantém card_usage."""

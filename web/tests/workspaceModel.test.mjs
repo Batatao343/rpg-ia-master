@@ -250,7 +250,7 @@ test('chat_session_store_is_keyed_by_game', async () => {
 
 test('legacy_tab_inventory_is_mounted_by_new_shell', () => {
   const read = (p) => readFileSync(fileURLToPath(new URL(p, import.meta.url)), 'utf8');
-  const shell = ['../src/workspace/ContextSurface.tsx', '../src/workspace/tabs/PersonagemTab.tsx',
+  const shell = ['../src/workspace/ContextSurface.tsx', '../src/workspace/tabs/PersonagemTab.tsx', '../src/components/tabs/CharacterTab.tsx',
     '../src/workspace/tabs/CombateTab.tsx', '../src/workspace/tabs/BestiarioTab.tsx']
     .map(read).join('\n');
   for (const name of ['FichaTab', 'CombatTab', 'PeopleTab', 'FactionsTab', 'QuestsTab', 'ChronicleTab',

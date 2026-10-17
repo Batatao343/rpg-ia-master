@@ -27,6 +27,8 @@ interface Props {
   blocked: boolean;
   onAction: (text: string, options?: ActionOptions) => void;
   onEquip?: EquipFn;
+  onPrepareCards?: (prepared: string[]) => Promise<string | null>;
+  onOpenLevelUp?: () => void;
 }
 
 function useViewportWidth(): number {
@@ -251,7 +253,8 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
             reactionCardId={reactionCardId} onReaction={setReaction}
             codexSection={codexSection} onCodexSection={setCodexSection}
             onSelectTab={openTab} onClose={showChat} onEscape={() => composerRef.current?.focus()}
-            onAction={onAction} onEquip={onEquip} />
+            onAction={onAction} onEquip={onEquip}
+            onPrepareCards={props.onPrepareCards} onOpenLevelUp={props.onOpenLevelUp} />
         </div>
         <Composer ref={composerRef} data={data} busy={busy} blocked={blocked}
           reactionCardId={reactionCardId} onAction={onAction} />

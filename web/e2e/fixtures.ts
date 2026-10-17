@@ -343,6 +343,16 @@ export class DeterministicBackend {
       state.player_stats.pending_choices = []; state.player_stats.level_up = {};
       return this.json(route, { ok: true, player_stats: { pending_choices: [], level_up: {}, level: state.player_stats.level } });
     }
+    if (path === "/game/cards/prepare") {  // SPEC-209: mesma regra do servidor (combate/limite/Acervo)
+      const gid = String(body?.game_id ?? "game-a"); const state = this.states.get(gid)!;
+      const wanted = ((body?.prepared as string[]) ?? []); const ps = state.player_stats;
+      if (state.combat.active || ps.can_reorganize?.allowed === false)
+        return this.json(route, { detail: ps.can_reorganize?.reason || "Não é possível reorganizar as Cartas em combate." }, 409);
+      if (wanted.some((id) => !ps.cards.some((c) => c.id === id))) return this.json(route, { detail: "Cartas fora do Acervo." }, 400);
+      if (wanted.length > (ps.prepared_slots ?? 0)) return this.json(route, { detail: `Máximo ${ps.prepared_slots} Cartas preparadas neste nível.` }, 400);
+      ps.cards = ps.cards.map((c) => ({ ...c, prepared: wanted.includes(c.id) }));
+      return this.json(route, { ok: true, prepared_cards: wanted, cards: ps.cards, prepared_slots: ps.prepared_slots });
+    }
     const artMatch = path.match(/^\/game\/([^/]+)\/art\/([^/]+)$/);
     if (artMatch) {
       this.artPolls += 1;

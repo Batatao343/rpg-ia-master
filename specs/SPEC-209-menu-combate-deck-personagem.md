@@ -1,7 +1,7 @@
 # SPEC-209 — Menu Combate (deck fora de encontro) e menu Personagem (ficha/Jornada)
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `in-progress`
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
 > **Depende de:** SPEC-203 `done` (desfecho), SPEC-204 `done` (shell), SPEC-205 `done` (gesto), SPEC-208 `done` (tokens), SPEC-227 `done` (inventário/equipamento íntegros) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212 (ordem final 2026-10-15)
 > **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15`, prompt 06 (partes Combate e Personagem)
@@ -82,17 +82,17 @@ Redesign da UI tática em encontro (SPEC-205); shell/split/resize (SPEC-204); ma
 8. `/qa`, `uv run pytest`, `npm run build`, atualizar ESTADO_ATUAL/ROADMAP, registrar evidência.
 
 ## 5. Critérios de aceite
-- [ ] Fora de combate, Acervo e Preparação aparecem com custo/frequência/Ruptura/evolução idênticos ao payload do servidor.
-- [ ] Preparar/trocar carta em local seguro persiste e sobrevive a reload; em combate/zona perigosa o controle está desabilitado com razão exibida e o servidor também rejeita (409).
-- [ ] Preparar acima do limite ou carta fora do Acervo é rejeitado pelo servidor sem alterar o save.
-- [ ] Evoluir A/B só via `LevelUpModal`; segunda evolução da mesma carta bloqueada (já coberto no motor).
-- [ ] Personagem mostra Virtudes, Vitalidade/Ferimentos, Entropia/Carga (Médico oculto), equipamento funcional, retrato canônico com fallback.
-- [ ] "Jornada" mostra quest pública e histórico de evolução; nenhum beat privado visível.
-- [ ] Nenhum scroll aninhado em 50%; teclado completo; axe sem violações serious/critical em 320/390/768/1440.
-- [ ] Troca de save e reload não mostram dados do jogo anterior.
-- [ ] `POST /game/cards/prepare` rejeita local `apex` (com `_location` injetada) e não persiste `_location`.
-- [ ] Pós-encontro, a aba Combate exibe `combat_result` (SPEC-203) e XP de `turn_outcome` (SPEC-199), sem número de XP vindo da prosa.
-- [ ] `uv run pytest` verde; `npm run build` verde; saves antigos (sem `scars`) carregam.
+- [x] Fora de combate, Acervo e Preparação aparecem com custo/frequência/Ruptura/evolução idênticos ao payload do servidor.
+- [x] Preparar/trocar carta em local seguro persiste e sobrevive a reload; em combate/zona perigosa o controle está desabilitado com razão exibida e o servidor também rejeita (409).
+- [x] Preparar acima do limite ou carta fora do Acervo é rejeitado pelo servidor sem alterar o save.
+- [x] Evoluir A/B só via `LevelUpModal`; segunda evolução da mesma carta bloqueada (já coberto no motor).
+- [x] Personagem mostra Virtudes, Vitalidade/Ferimentos, Entropia/Carga (Médico oculto), equipamento funcional, retrato canônico com fallback.
+- [x] "Jornada" mostra quest pública e histórico de evolução; nenhum beat privado visível.
+- [x] Nenhum scroll aninhado em 50%; teclado completo; axe sem violações serious/critical em 320/390/768/1440.
+- [x] Troca de save e reload não mostram dados do jogo anterior.
+- [x] `POST /game/cards/prepare` rejeita local `apex` (com `_location` injetada) e não persiste `_location`.
+- [x] Pós-encontro, a aba Combate exibe `combat_result` (SPEC-203) e XP de `turn_outcome` (SPEC-199), sem número de XP vindo da prosa.
+- [x] `uv run pytest` verde; `npm run build` verde; saves antigos (sem `scars`) carregam.
 
 ## 6. Smoke
 - Offline: `uv run pytest tests/test_cards_prepare_api.py` e suíte completa; `cd web && npm run build && npm test`.
@@ -113,3 +113,12 @@ Redesign da UI tática em encontro (SPEC-205); shell/split/resize (SPEC-204); ma
 
 ## 9. Evidência requerida
 Saída de `uv run pytest` e `npm run build`/Node; relatório Playwright com screenshots 390/1440 e split 50% (aba Combate fora de encontro, Personagem); amostra de payload `/game/state` com `can_reorganize`; resposta 400/409 de `/game/cards/prepare`; handoff de eval (`EVAL_AUTHORING_REQUIRED`) registrado em `handoffs/`.
+
+## 10. Execução (2026-10-17)
+- Evidência: [docs/spec209/README.md](../docs/spec209/README.md). Handoff de eval: [handoffs/SPEC-209-eval-authoring.md](../handoffs/SPEC-209-eval-authoring.md).
+- Defaults da §8 usados: reorganizar só em zona segura (perigo <= 3, sem apex), cicatrizes visíveis, apex ativado via `_location` transitória, histórico derivado sem log novo.
+- Desvios: (a) a rota reaproveita `kind="equip"` na operação (o CHECK do banco não permite kind novo sem migration); (b) `Hud.tsx` não foi esvaziado — `FichaTab`/`CombatTab` seguem exportados e são compostos por `CharacterTab`/`CombateTab`; (c) rótulo de tipo "Ação" em vez de "Ativa" (colisão com `getByText('Ativa')` do workspace-shell); (d) `reaction.present` (adiado da SPEC-208) não feito: exige janela de gatilho de reação emitida pelo backend.
+- Verificado: pytest completo exit 0; `npm run build`; 106 testes Node; Playwright Chromium (deck-character 7/7, workspace-shell, combat-gesture, combat-outcome, critical-journeys, visual-surfaces, effects, pending-discard, outcome-toast, interlocutor-speaker verdes; só falhas de Google Fonts, conhecidas).
+- Revisão Sol independente (2026-10-17, [parecer](../handoffs/SPEC-209-SOL-independent-review.md)): rota entrou no rate limit (faltava); "atualizando…" do R13 no deck e na ficha (+ bloqueio de 2º envio durante turno/salvamento); GET falho pós-preparação não vira "recusado"; axe 320/768, split 50% com uma única região rolável e screenshots 390/1440/split em `docs/spec209/evidence/`. `kind="equip"` reaproveitado foi julgado seguro (hash do payload separa as operações; teste infra_local adicionado) — sem migration.
+- **Pendente para `done`: só a autoria das jornadas F de eval** (tarefa separada, `handoffs/SPEC-209-eval-authoring.md`).
+

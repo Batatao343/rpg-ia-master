@@ -95,3 +95,23 @@ def test_two_simultaneous_mutations_commit_only_once(campaign):
         statuses = list(executor.map(mutate, [uuid4(), uuid4()]))
     assert sorted(statuses) == [200, 409]
     assert store.get(principal, game).version == before.version + 1
+
+
+def test_prepare_cards_shares_equip_kind_without_key_collision(campaign):
+    """SPEC-209 (revisão Sol): /game/cards/prepare reusa kind='equip' — o hash do
+    payload separa as operações: mesmo action_id em rota diferente → 409, replay → recibo."""
+    client, store, principal, game = campaign
+    operation = str(uuid4())
+    equip = client.post('/game/equip', json={'game_id': str(game), 'action_id': operation,
+                                             'unequip_slot': 'weapon'})
+    assert equip.status_code == 200, equip.text
+    crossed = client.post('/game/cards/prepare', json={'game_id': str(game),
+                          'action_id': operation, 'prepared': []})
+    assert crossed.status_code == 409
+    prep = {'game_id': str(game), 'action_id': str(uuid4()), 'prepared': []}
+    first = client.post('/game/cards/prepare', json=prep)
+    assert first.status_code == 200, first.text
+    version = store.get(principal, game).version
+    replay = client.post('/game/cards/prepare', json=prep)
+    assert replay.status_code == 200 and replay.json() == first.json()
+    assert store.get(principal, game).version == version

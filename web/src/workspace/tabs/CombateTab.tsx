@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ActionOptions, BasicActionView, CardView, GameResponse } from "../../types";
 import { CombatTab } from "../../components/Hud";
+import { CombatDeckTab } from "../../components/tabs/CombatDeckTab";
 import { CardHand } from "../../components/CardHand";
 import { ReactionPrompt } from "../../components/ReactionPrompt";
 import { CombatOutcomePanel } from "../../components/CombatOutcomePanel";
@@ -30,7 +31,7 @@ const isTyping = (el: EventTarget | null) => {
 
 /** SPEC-204 R10 + SPEC-205: único lugar dos controles táticos. Uma ação por gesto:
  *  carta/ação básica → (alvo) → envio. Todos os números vêm de `data.combat`. */
-export function CombateTab({ data, busy, blocked, hitKey, ended, reactionCardId, onReaction, onAction }: {
+export function CombateTab({ data, busy, blocked, hitKey, ended, reactionCardId, onReaction, onAction, onPrepareCards, onOpenLevelUp }: {
   data: GameResponse | null;
   busy: boolean;
   blocked: boolean;
@@ -40,6 +41,9 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, reactionCardId,
   reactionCardId?: string;
   onReaction: (cardId?: string) => void;
   onAction: (text: string, options?: ActionOptions) => void;
+  /** SPEC-209: preparar Cartas fora de encontro; devolve a mensagem de erro (ou null). */
+  onPrepareCards?: (prepared: string[]) => Promise<string | null>;
+  onOpenLevelUp?: () => void;
 }) {
   const combat = data?.combat;
   const [dismissedResult, setDismissedResult] = useState<string | null>(null);
@@ -210,6 +214,9 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, reactionCardId,
             })}
           </div>
         </>
+      )}
+      {!fighting && !data?.combat_simulation?.enabled && (
+        <CombatDeckTab stats={data?.player_stats} busy={busy} onPrepare={onPrepareCards} onOpenLevelUp={onOpenLevelUp} />
       )}
       <CombatTab c={combat} hitKey={hitKey} party={data?.party ?? []} arena={live} />
     </div>

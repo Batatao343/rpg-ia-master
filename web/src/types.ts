@@ -90,6 +90,22 @@ export interface PlayerStats {
   xp_next_level: number | null; // null = nível máximo
   pending_choices: PendingChoice[];
   level_up: LevelUpBlock;
+  /** SPEC-209: aditivos — ausentes em servidor antigo (UI degrada para somente leitura). */
+  can_reorganize?: { allowed: boolean; reason: string };
+  prepared_slots?: number;
+  subclass?: string;
+  scars?: ScarView[];
+  virtue_cards?: Array<{ card_id: string; name: string; type: string; description: string;
+    virtude: string; mastery: number; effective_stage: number }>;
+  evolvable_card_ids?: string[];
+}
+
+/** Cicatriz permanente (morte rica). O dado não tem turno de origem — nunca exibido. */
+export interface ScarView {
+  id: string;
+  origem: string;
+  consequencia_negativa: string;
+  habilidade_positiva_relacionada: string;
 }
 
 export interface NpcView {
