@@ -1404,6 +1404,44 @@ def check_projection_ahead(state: dict, prev: Optional[dict], turn: int) -> List
     return out
 
 
+def check_npc_knowledge(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
+    """SPEC-215: `knowledge.teleport` (notícia chegou antes da distância
+    permitir) e `knowledge.rumor_promoted` (rumor/mentira virou fato)."""
+    links = state.get("knowledge_links") or []
+    if not links:
+        return []
+    from services.world_distance import travel_periods
+    out: List[Violation] = []
+    for lk in links:
+        if not isinstance(lk, dict):
+            continue
+        origin, here = lk.get("origin_location_id"), lk.get("location_id")
+        o_clock, acquired = lk.get("origin_clock"), lk.get("acquired_clock")
+        if origin and here and isinstance(o_clock, int) and isinstance(acquired, int):
+            dist = travel_periods(str(origin), str(here))
+            if dist is not None and acquired < o_clock + dist:
+                out.append(_V("knowledge.teleport", "error", turn,
+                              f"{lk.get('holder_id')} soube de {lk.get('subject_id')} em "
+                              f"{here} no clock {acquired} < {o_clock}+{dist}",
+                              holder=lk.get("holder_id"), subject=lk.get("subject_id")))
+    rumor_ids = {lk.get("subject_id") for lk in links
+                 if isinstance(lk, dict) and lk.get("subject_kind") == "memory_fact"}
+    if rumor_ids:
+        event_ids = {ev.get("event_id") for ev in state.get("event_log") or []
+                     if isinstance(ev, dict)}
+        revealed = set(((state.get("world_projection") or {}).get("revealed_facts") or {}))
+        for mf in state.get("memory_facts") or []:
+            if not isinstance(mf, dict) or mf.get("memory_id") not in rumor_ids:
+                continue
+            mid = mf.get("memory_id")
+            promoted = (mf.get("provenance") in ("npc_claim", "inference")
+                        and mf.get("confidence") == "confirmed")
+            if promoted or mid in event_ids or mid in revealed:
+                out.append(_V("knowledge.rumor_promoted", "error", turn,
+                              f"rumor {mid} promovido a fato", subject=mid))
+    return out
+
+
 Check = Callable[[dict, Optional[dict], int], List[Violation]]
 
 CHECKS: List[Check] = [
@@ -1418,7 +1456,7 @@ CHECKS: List[Check] = [
     check_repeated_opening, check_interaction_no_progress, check_meta_leak,
     check_phantom_ally, check_false_player_death,
     check_encounter_identity, check_encounter_phase, check_unproven_event,
-    check_projection_ahead,
+    check_projection_ahead, check_npc_knowledge,
 ]
 
 

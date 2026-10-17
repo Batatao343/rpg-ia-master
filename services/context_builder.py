@@ -181,9 +181,15 @@ def render_event(event: Dict, projection: Optional[Dict] = None) -> str:
 # Coleta de fatos dinâmicos
 # --------------------------------------------------------------------------- #
 def collect_dynamic_facts(state: Dict, *, purpose: str, query: str,
-                          current_loc: str, scene_entities: List[str]) -> List[ScoredFact]:
+                          current_loc: str, scene_entities: List[str],
+                          knowledge_filter: Optional[set] = None) -> List[ScoredFact]:
     """Renderiza event_log + revealed_facts + edges + entities + summaries em
-    ScoredFacts (já pontuados). Não inclui lore/memória (essas vêm do RAG)."""
+    ScoredFacts (já pontuados). Não inclui lore/memória (essas vêm do RAG).
+
+    SPEC-215 R6: `knowledge_filter` (só `purpose="npc"` com o flag `on`) = ids
+    de assunto que o NPC sabe. Com filtro, eventos/segredos revelados saem do
+    bloco neutro (entram rotulados pelo ledger) e "morto" só aparece para quem
+    sabe da morte. `None` = comportamento anterior, byte a byte."""
     projection = state.get("world_projection", {}) or {}
     world = state.get("world", {}) or {}
     current_turn = int(world.get("turn_count", 0) or 0)
@@ -214,7 +220,17 @@ def collect_dynamic_facts(state: Dict, *, purpose: str, query: str,
         add(f"Quem controla {_name(loc_id)} agora: {_name(controller)}.",
             "current_state", impact=1.0, turns_ago=0, sid=f"ctrl:{loc_id}")
 
+    known_dead: set = set()
+    if knowledge_filter is not None:
+        known_dead = {
+            ev.get("target_id") for ev in (state.get("event_log", []) or [])
+            if isinstance(ev, dict) and ev.get("type") == "npc_killed"
+            and ev.get("event_id") in knowledge_filter
+        }
+
     for ev in (state.get("event_log", []) or [])[-100:]:
+        if knowledge_filter is not None:
+            break
         text = render_event(ev, projection)
         impact = _IMPACT_BY_TYPE.get(ev.get("type"), _DEFAULT_IMPACT)
         turns_ago = max(0, current_turn - int(ev.get("turn", 0) or 0))
@@ -222,6 +238,8 @@ def collect_dynamic_facts(state: Dict, *, purpose: str, query: str,
             sid=ev.get("event_id", ""))
 
     for eid, rf in (projection.get("revealed_facts", {}) or {}).items():
+        if knowledge_filter is not None:
+            break
         fact_txt = rf.get("fact", "")
         turn = int(rf.get("revealed_at_turn", 0) or 0)
         add(f"[turno {turn}] Revelado sobre {_name(rf.get('entity_id'))}: {fact_txt}",
@@ -241,6 +259,10 @@ def collect_dynamic_facts(state: Dict, *, purpose: str, query: str,
         if eid in seen_edges:
             continue
         seen_edges.add(eid)
+        # SPEC-215 R6/R3: aresta criada por evento só para quem sabe do evento.
+        if (knowledge_filter is not None and edge.get("created_by_event")
+                and edge.get("created_by_event") not in knowledge_filter):
+            continue
         rel = edge.get("type", "relação")
         add(f"{_name(edge.get('source'))} —{rel}→ {_name(edge.get('target'))}",
             "relations", impact=_DEFAULT_IMPACT, turns_ago=0, sid=eid)
@@ -248,6 +270,8 @@ def collect_dynamic_facts(state: Dict, *, purpose: str, query: str,
     # --- entities: EntityState notável (mortos, deslocados) ---
     for eid, est in (projection.get("entities", {}) or {}).items():
         alive = est.get("alive", True)
+        if knowledge_filter is not None and not alive and eid not in known_dead:
+            continue
         loc = est.get("location_id")
         status = "vivo" if alive else "morto"
         text = f"{_name(eid)}: {status}"
@@ -476,8 +500,25 @@ def _build_context_pack(state: Dict, query: str, purpose: str,
     if current_loc:
         scene_entities.append(current_loc)
 
+    # SPEC-215: gate de conhecimento por NPC. `off` → gate None (byte a byte).
+    gate = None
+    if purpose == "npc" and npc_id:
+        from services import npc_knowledge
+        gate = npc_knowledge.context_gate(state, npc_id)
+    gate_on = bool(gate) and gate["mode"] == "on"
     facts = collect_dynamic_facts(state, purpose=purpose, query=query,
-                                  current_loc=current_loc, scene_entities=scene_entities)
+                                  current_loc=current_loc, scene_entities=scene_entities,
+                                  knowledge_filter=gate["filter"] if gate_on else None)
+    if gate_on:
+        for index, (sid, line) in enumerate(gate["lines"]):
+            facts.append(ScoredFact(text=line, score=2.0 - index * 0.001,
+                                    section="current_state", source_id=sid))
+    elif gate:  # shadow: mede o que seria filtrado, sem alterar o prompt
+        gated = collect_dynamic_facts(state, purpose=purpose, query=query,
+                                      current_loc=current_loc, scene_entities=scene_entities,
+                                      knowledge_filter=gate["filter"])
+        npc_knowledge.log_shadow(npc_id, known=len(gate["lines"]),
+                                 filtered=max(0, len(facts) - len(gated)), total=len(facts))
 
     from services.context_sources import (
         EmbeddedContextQuery,
@@ -540,10 +581,12 @@ def _build_context_pack(state: Dict, query: str, purpose: str,
     # concorrem individualmente em seguida.
     from services.memory_summary import compact_summary
     summary = compact_summary(state.get("narrative_summary", ""))
-    if summary and not find_strict_unrevealed(summary, state):
+    # SPEC-215 D2: com `on`, resumo/ledger/memória de sessão do JOGADOR saem do
+    # prompt do NPC; fica a memória privada do NPC + lore público.
+    if summary and not gate_on and not find_strict_unrevealed(summary, state):
         add_memory_part(f"[RESUMO NARRATIVO | speculative] {summary}")
 
-    if game_id:
+    if game_id and not gate_on:
         session_memory = source_text.get("session", "")
         if session_memory:
             add_memory_part(session_memory, legacy_if_unlabeled=True)
@@ -555,11 +598,11 @@ def _build_context_pack(state: Dict, query: str, purpose: str,
     # NOVO para o mais antigo (o score decresce com a posicao).
     # O ledger auditável dá continuidade mesmo se o índice estiver temporariamente
     # indisponível. Conteúdo com assinatura secreta não revelada falha fechado.
-    for record in active_memory_facts(
+    for record in ([] if gate_on else active_memory_facts(
         state.get("memory_facts"),
         current_turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
         state=state,
-    )[-20:][::-1]:
+    )[-20:][::-1]):
         if find_strict_unrevealed(record["text"], state):
             continue
         add_memory_part(format_memory_fact(record))

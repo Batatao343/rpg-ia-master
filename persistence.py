@@ -550,6 +550,11 @@ def _projection_state(raw, state):
     return normalize_projection_state(raw, state)
 
 
+def _knowledge(raw, *, legacy_default):
+    from services.npc_knowledge import normalize_knowledge
+    return normalize_knowledge(raw, legacy_default=legacy_default)
+
+
 def _projection_plan(raw):
     from services.projections import normalize_plan
     return normalize_plan(raw)
@@ -600,6 +605,8 @@ def _state_to_save_data(state: Dict[str, Any], game_id: str) -> Dict[str, Any]:
         # SPEC-213 (aditivo, sem bump): versão canônica + status das projeções.
         "projection_state": _projection_state(state.get("projection_state"), state),
         "pending_derived": _projection_plan(state.get("pending_derived")),
+        # SPEC-215 (aditivo, sem bump): ledger privado de conhecimento por NPC.
+        **_knowledge(state, legacy_default=False),
         "art_generation_ledger": deepcopy(state.get("art_generation_ledger") or []),
         "art_arc_budgets": deepcopy(state.get("art_arc_budgets") or {}),
         "art_offers": deepcopy(state.get("art_offers") or []),
@@ -828,6 +835,8 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
         "rag_persistence_error": raw_data.get("rag_persistence_error"),
         "continuity": deepcopy(raw_data.get("continuity") or {}),
         "last_turn_outcome": deepcopy(raw_data.get("last_turn_outcome") or {}),
+        # SPEC-215 (aditivo, sem bump): save sem ledger → vazio + legacy_knowledge.
+        **_knowledge(raw_data, legacy_default=True),
         # SPEC-202 (aditivo, sem bump): save antigo/sem dict → {} (= narrador).
         "last_speaker": (deepcopy(raw_data["last_speaker"])
                          if isinstance(raw_data.get("last_speaker"), dict) else {}),

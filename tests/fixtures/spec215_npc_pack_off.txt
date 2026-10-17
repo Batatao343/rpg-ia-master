@@ -1,0 +1,104 @@
+<ESTADO_ATUAL_DO_MUNDO>
+Quem controla Nova Arcádia agora: Lorde Protetor Valerius.
+[turno 4] Lorde Protetor Valerius foi morto (por: player).
+Lorde Protetor Valerius —controls→ Nova Arcádia
+A Legião de Ferro —operates_in→ Nova Arcádia
+A Mão Sombria —operates_in→ Nova Arcádia
+Os Filhos da Chama Azul —operates_in→ Nova Arcádia
+A Guilda dos Corvos —operates_in→ Nova Arcádia
+Os Encapuzados da Fornalha —operates_in→ Nova Arcádia
+A Resistência Operária (os Martelos Partidos) —operates_in→ Nova Arcádia
+A Quadrilha dos Telhados —operates_in→ Nova Arcádia
+Grum —located_in→ Nova Arcádia
+Velha Magda —located_in→ Nova Arcádia
+O Cego —located_in→ Nova Arcádia
+Irena Prego-Frio —located_in→ Nova Arcádia
+Téo Chaminé —located_in→ Nova Arcádia
+Mara do Sétimo Sino —located_in→ Nova Arcádia
+Comandante Thrace —leads→ A Legião de Ferro
+Mestre-fundidor Kald —leads→ Os Encapuzados da Fornalha
+Bors Martelo-partido —leads→ A Resistência Operária (os Martelos Partidos)
+Pardal —leads→ A Quadrilha dos Telhados
+Os Filhos da Chama Azul —enemy_of→ A Legião de Ferro
+A Resistência Operária (os Martelos Partidos) —enemy_of→ A Legião de Ferro
+A Resistência Operária (os Martelos Partidos) —enemy_of→ Os Encapuzados da Fornalha
+Os Clãs de Combate —operates_in→ Skallgard e o Ermo Branco
+Os Clãs Tecnológicos —operates_in→ Skallgard e o Ermo Branco
+Os Renegados do Ermo —operates_in→ Skallgard e o Ermo Branco
+Vehkr Punho-de-gelo —leads→ Os Clãs de Combate
+Astrin Veia-fina —leads→ Os Clãs Tecnológicos
+Korrin Sem-clã —leads→ Os Renegados do Ermo
+Os Renegados do Ermo —enemy_of→ Os Clãs Tecnológicos
+Vorrnak —located_in→ Skallgard e o Ermo Branco
+O Poder de Kahen —controls→ Brekmar
+Kahen —leads→ O Poder de Kahen
+Os Três Sindicatos de Comércio —operates_in→ Brekmar
+Os Grupos Piratas Rivais —operates_in→ Brekmar
+Os Osshari de Brekmar —operates_in→ Brekmar
+Maré-funda —leads→ Os Osshari de Brekmar
+A Casa das Marés (o Domínio de Lyss) —located_in→ Brekmar
+As Cidades-estado Sobreviventes (Vaelorn e Solvhen) —operates_in→ A Pradaria das Ruínas
+Lady Aerwen —leads→ As Cidades-estado Sobreviventes (Vaelorn e Solvhen)
+Os Bandos Nômades —operates_in→ A Pradaria das Ruínas
+Groth Algema-fria —leads→ Os Mercadores de Escravos da Pradaria
+Os Mercadores de Escravos da Pradaria —operates_in→ A Pradaria das Ruínas
+Os Bandos Orc das Saídas Baixas —operates_in→ As Montanhas Afiadas
+Gruumsha Quebra-espinha —leads→ Os Bandos Orc das Saídas Baixas
+Os Goblins-mineiros —operates_in→ As Montanhas Afiadas
+Skriit Mil-olhos —leads→ Os Goblins-mineiros
+Os Últimos Anões do Reino —operates_in→ As Montanhas Afiadas
+Durgrim Último-martelo —leads→ Os Últimos Anões do Reino
+Os Druidas do Ciclo Cinzento —operates_in→ O Pântano da Melancolia
+Arcante Gresh —leads→ Os Druidas do Ciclo Cinzento
+Os Druidas-renegados —operates_in→ O Pântano da Melancolia
+Saelwen, a que Afundou —leads→ Os Druidas-renegados
+Os Druidas do Ciclo Cinzento —enemy_of→ Os Druidas-renegados
+A Colmeia dos Hospedeiros —controls→ A Selva de Xylos
+O que Ouve Mais Longe —leads→ A Colmeia dos Hospedeiros
+As Tribos dos Devoradores de Sol —operates_in→ O Deserto de Zhur
+Khatarn Olhos-de-obsidiana —leads→ As Tribos dos Devoradores de Sol
+Os Cultistas da Destilação —operates_in→ As Ruínas Submersas de Aethelgard
+Corvane, o Mestre-destilador —leads→ Os Cultistas da Destilação
+Os Mercadores de Curiosidades —operates_in→ O Cemitério de Leviatãs
+Ume Lodo-Claro —located_in→ O Pântano da Melancolia
+Padre Junco —located_in→ O Pântano da Melancolia
+Sira Candeia —located_in→ O Pântano da Melancolia
+Nahir Vidro-Manso —located_in→ O Deserto de Zhur
+Kessa Três-Sombras —located_in→ O Deserto de Zhur
+Orun Sal-Negro —located_in→ O Deserto de Zhur
+Eilin Folha-Oca —located_in→ A Floresta dos Sussurros
+Tomir Musgo —located_in→ A Floresta dos Sussurros
+Vaela do Ninho —located_in→ A Floresta dos Sussurros
+Jori Sete-Esporos —located_in→ A Selva de Xylos
+Mãe Aru —located_in→ A Selva de Xylos
+Pel Sem-Rosto —located_in→ A Selva de Xylos
+Runa Brasa-Branca —located_in→ Skallgard e o Ermo Branco
+Eirik Sem-Pegadas —located_in→ Skallgard e o Ermo Branco
+Solvi Cabo-Cobre —located_in→ Skallgard e o Ermo Branco
+Maeril Caco-Azul —located_in→ As Ruínas Submersas de Aethelgard
+Oren Último-Mapa —located_in→ As Ruínas Submersas de Aethelgard
+Tessa Ampola —located_in→ As Ruínas Submersas de Aethelgard
+Nami Cinza-Sal —located_in→ Ophidia
+Koro Remo-Curto —located_in→ Ophidia
+Iria Coral-Cego —located_in→ Ophidia
+Daro Osso-Cantante —located_in→ O Cemitério de Leviatãs
+Mãe Neris —located_in→ O Cemitério de Leviatãs
+Ulk Marfim —located_in→ O Cemitério de Leviatãs
+Brunna Ponte-Alta —located_in→ As Montanhas Afiadas
+Skek Eco-Curto —located_in→ As Montanhas Afiadas
+Odrin Calcário —located_in→ As Montanhas Afiadas
+Lio Bandeira-Vazia —located_in→ A Pradaria das Ruínas
+Hana Estribo —located_in→ A Pradaria das Ruínas
+Korso Pedra-Móvel —located_in→ A Pradaria das Ruínas
+Mina Sete-Taxas —located_in→ Brekmar
+Jax Corda-Seca —located_in→ Brekmar
+Varo Dois-Portos —located_in→ Brekmar
+Lorde Protetor Valerius: morto.
+</ESTADO_ATUAL_DO_MUNDO>
+----
+Lore público de Nova Arcádia.
+----
+[RESUMO NARRATIVO | speculative] O herói matou Valerius no porto e fugiu ferido.
+[CONFIRMADO | player_observation] sessão do jogador
+[RELATADO | npc_claim] memória do guarda
+[RELATO | player_observation | fonte turn:4 | turno 4] O herói viu Valerius cair.

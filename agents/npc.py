@@ -52,6 +52,16 @@ except ImportError:
     def query_npc_memory(*args, **kwargs): return ""
 
 
+# SPEC-215: texto do `world_state_block`. `off`/`shadow` mantêm o texto anterior
+# byte a byte; `on` fala só do que o personagem sabe (R6).
+_WORLD_TRUTH_NOTE_OFF = (
+    "(O mundo mudou desde que você o conheceu? O estado atual acima é a verdade de AGORA.)")
+_WORLD_TRUTH_NOTE_ON = (
+    "(Acima está SÓ o que você sabe do mundo: [VIU] = você presenciou; [OUVIU DE …] = "
+    "contaram e você acredita; [BOATO, não confirmado] = ouviu dizer, pode ser mentira. "
+    "Se não está aqui nem na sua memória, você não sabe.)")
+
+
 def _npc_id(npc_data: dict, name: str) -> str:
     """id estável do NPC para namespacing da memória vetorial."""
     return npc_data.get("id") or f"npc_{(name or 'desconhecido').lower().replace(' ', '_')}"
@@ -538,8 +548,31 @@ def npc_actor_node(state: GameState):
         npc_data.get("location")
         or state.get("world", {}).get("current_location", "")
         or "")
+    # SPEC-215: com o flag != off, a fala do jogador (R9) e a herança local de
+    # NPC recém-gerado (R10) entram no ledger ANTES do invoke. `off` = no-op.
+    from services import npc_knowledge
+    knowledge_mode = npc_knowledge.mode()
+    knowledge_new: list = []
+    pack_state = state
+    if knowledge_mode != "off":
+        try:
+            k_clock = npc_knowledge.clock_index(state.get("world") or {})
+            base_kstate = {**state, "npcs": {**npcs_db, npc_state_key: npc_data}}
+            if not from_state:
+                knowledge_new += npc_knowledge.inherit_local(
+                    base_kstate, npc_id, str(home_id or ""), k_clock)
+            told_state = {**base_kstate, "knowledge_links": [
+                *(state.get("knowledge_links") or []), *knowledge_new]}
+            knowledge_new += npc_knowledge.record_player_told(
+                told_state, npc_id, str(last_msg), k_clock)
+            if knowledge_new:
+                pack_state = {**state, "knowledge_links": [
+                    *(state.get("knowledge_links") or []), *knowledge_new]}
+        except Exception as exc:  # o turno segue; o gate falha fechado
+            print(f"⚠️ [npc_knowledge] {type(exc).__name__}: {exc}")
+            knowledge_new = []
     pack = build_context_pack(
-        state,
+        pack_state,
         query=f"{npc_data.get('name', npc_name)} {npc_location} {last_msg}".strip(),
                               purpose="npc", game_id=game_id, npc_id=npc_id)
     relevant_memory = pack.memory_block
@@ -604,7 +637,7 @@ def npc_actor_node(state: GameState):
     </LORE_PUBLICO_CANONICO>
     {objetivo_block}
     {pack.world_state_block}
-    (O mundo mudou desde que você o conheceu? O estado atual acima é a verdade de AGORA.)
+    {_WORLD_TRUTH_NOTE_ON if knowledge_mode == "on" else _WORLD_TRUTH_NOTE_OFF}
 
     <FACÇÕES_DO_MUNDO>
     {faccoes_mundo}
@@ -796,6 +829,10 @@ def npc_actor_node(state: GameState):
             )
         if quests_now != base_quests:
             updates["quests"] = quests_now
+        if knowledge_new:
+            updates["knowledge_links"] = npc_knowledge.normalize_knowledge(
+                {"knowledge_links": [*(state.get("knowledge_links") or []), *knowledge_new]},
+            )["knowledge_links"]
 
         return updates
     except Exception as e:

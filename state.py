@@ -399,6 +399,38 @@ class MemoryFact(TypedDict, total=False):
     vector_status: Literal["written", "pending", "failed"]  # SPEC-234
 
 
+class KnowledgeLink(TypedDict, total=False):
+    """SPEC-215: RELAÇÃO privada holder→assunto (nunca verdade nova, nunca na API)."""
+    link_id: str            # sha256(holder|subject|relation|acquired_clock)[:16]
+    holder_id: str          # "npc:<npc_id canônico>" | "loc:<location_id>"
+    subject_kind: Literal["event", "memory_fact"]
+    subject_id: str         # GameEvent.event_id | MemoryFact.memory_id
+    relation: Literal["observed_by", "told_to", "believed_by"]
+    source: str             # "world" | "player" | "npc:<id>" | "loc:<id>"
+    channel: Literal["witness", "messenger", "local_rumor", "player"]
+    hops: int               # 0 testemunha; <= MAX_HOPS
+    acquired_clock: int     # day*5 + period_index
+    acquired_turn: int
+    location_id: str        # onde o holder soube (auditoria/invariante)
+    origin_location_id: str  # onde o assunto aconteceu (mensageiro)
+    origin_clock: int
+
+
+class KnowledgeDelivery(TypedDict, total=False):
+    """SPEC-215: entrega agendada de notícia (fila FIFO por due_clock, teto 200)."""
+    delivery_id: str
+    subject_kind: str
+    subject_id: str
+    subject_type: str
+    from_location_id: str
+    to_location_id: str
+    hop: int
+    due_clock: int
+    created_turn: int
+    origin_location_id: str
+    origin_clock: int
+
+
 class WorldProjection(TypedDict, total=False):
     entities: Dict[str, EntityState]
     dynamic_edges: List[DynamicEdge]
@@ -526,3 +558,10 @@ class GameState(TypedDict):
     event_log: List[GameEvent]            # append-only; auditoria do que mudou
     world_projection: WorldProjection     # estado calculado a partir do event_log
     pending_world_events: List[Dict]      # propostas ainda não validadas (Fase 2.6)
+
+    # --- SPEC-215: conhecimento por NPC (ledger PRIVADO; dono services.npc_knowledge) ---
+    # Aditivo, sem bump de schema: save sem as chaves carrega vazio + legacy=True.
+    knowledge_links: List[KnowledgeLink]          # teto 2000
+    knowledge_queue: List[KnowledgeDelivery]      # teto 200
+    location_heard: Dict[str, List[str]]          # subject ids por local (teto 100/local)
+    legacy_knowledge: bool

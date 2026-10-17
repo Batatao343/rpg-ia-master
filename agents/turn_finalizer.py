@@ -29,6 +29,17 @@ def turn_finalizer_node(state: dict) -> dict:
     if combat.get("phase") == "ended" and result and not result.get("xp_event_ref"):
         updates["combat"] = {**combat, "result": {**result,
                                                   "xp_event_ref": outcome["receipt_id"]}}
+    # SPEC-215: ponto ÚNICO de entrega de notícias (depois de qualquer avanço de
+    # relógio do turno — viagem, descanso ou fuga). `off` = no-op; falha interna
+    # nunca derruba o turno.
+    try:
+        from services import npc_knowledge
+        if npc_knowledge.mode() != "off":
+            updates.update(npc_knowledge.turn_updates(state))
+    except Exception as exc:
+        import logging
+        logging.getLogger("rpg.npc_knowledge").warning(
+            "turn_updates falhou: %s", type(exc).__name__)
     if audit:
         updates['messages'] = Overwrite(messages)
         updates['evidence_rejections'] = [*(state.get('evidence_rejections') or []), *audit][-64:]

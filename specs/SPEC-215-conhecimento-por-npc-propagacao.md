@@ -1,7 +1,7 @@
 # SPEC-215 — Conhecimento por NPC e propagação limitada de notícias
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `in-progress` (código + testes + smokes entregues; revisão Astra APPROVED_WITH_FOLLOWUPS; falta o dataset `npc_knowledge` — gate do §5, ver §10)
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-202 `done` (interlocutor), SPEC-206 `done` (taxonomia), SPEC-214 `done` (cache de cena — recomendado), SPEC-223 `done` (mesmos `agents/npc.py`/`event_processor`; prova de eventos), SPEC-230 `done` (ciclo de vida do NPC) (ordem final 2026-10-15)
 > **Desbloqueia:** nada obrigatório (ordem final 2026-10-15)
 > **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 12 (parte b). Contexto histórico apenas: `historico-nao-executar/HISTORICO_SPEC-176*` (não executar).
@@ -279,15 +279,17 @@ artefato do dono, se aquela spec o aceitar via handoff — esta spec não o exig
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R14 cobertos pelos testes nomeados em §4, todos verdes.
+- [x] R1–R14 cobertos pelos testes nomeados em §4, todos verdes.
 - [ ] Dataset `npc_knowledge` (tarefa separada) passa com `on`: zero teleporte, zero vazamento,
       zero rumor promovido; `off` documentado como baseline (falha esperada nos casos de teleporte).
-- [ ] `RPG_NPC_KNOWLEDGE=off` produz contexto de NPC idêntico ao HEAD (teste de snapshot).
-- [ ] Save v8 carrega; round-trip v9 verde; nenhuma distribuição retroativa.
-- [ ] Nenhuma chamada LLM nova; nenhum `with_structured_output` novo.
-- [ ] Smoke offline 14 perfis × 30 turnos (`--all`) com `on`: zero erro, zero violação `error`.
+      → handoff em `handoffs/SPEC-215-eval-authoring.md` (evals/ protegido); oráculos já em pytest.
+- [x] `RPG_NPC_KNOWLEDGE=off` produz contexto de NPC idêntico ao HEAD (teste de snapshot).
+- [x] Save v8 carrega; round-trip verde (sem bump: v8 aditivo, ver §10); nenhuma distribuição retroativa.
+- [x] Nenhuma chamada LLM nova; nenhum `with_structured_output` novo.
+- [x] Smoke offline 14 perfis × 30 turnos (`--all`) com `on`: zero erro, zero violação `error`.
 - [ ] `uv run pytest` verde (suíte completa offline); Ruff verde; Project Index regenerado.
-- [ ] Revisão independente Astra APPROVED.
+      → pytest e Ruff verdes; Project Index fica com o coordenador.
+- [x] Revisão independente Astra APPROVED (APPROVED_WITH_FOLLOWUPS — `handoffs/SPEC-215-ASTRA-independent-review.md`).
 
 ## 6. Smoke
 
@@ -340,3 +342,32 @@ suficientes, cita o fato como notícia; e que nenhum segredo vaza. Sem long-run.
 - Teste round-trip com save v8 de fixture real.
 - Parecer Astra independente em `handoffs/SPEC-215-ASTRA-independent-review.md`.
 - Smoke real apenas se autorizado, com chamadas/custo registrados.
+
+## 10. Execução (2026-10-16)
+
+Evidência: [`docs/spec215/README.md`](../docs/spec215/README.md).
+
+**Defaults de decisão usados (§8):** D0 = P2; D1 = flag default `off`, promoção exige
+aprovação; D2 = excluir `narrative_summary`/`memory_facts`/memória de sessão do
+jogador com `on` (memória privada do NPC fica); D3 = valores da tabela §3.3.
+
+**Desvios:**
+- **SPEC-214 `NO_GO`** (`docs/spec214/gate.md`): não há cache de cena. A 214 era
+  "recomendada"; esta spec não depende dela.
+- **Sem bump de `SCHEMA_VERSION`** (regra da onda: o caso protegido
+  `state.persistence.migration-idempotent` fixa 8). `knowledge_links`,
+  `knowledge_queue`, `location_heard`, `legacy_knowledge` são aditivos; save sem as
+  chaves → ledger vazio + `legacy_knowledge=true`. Onde a spec diz "v8→v9", leia
+  "v8 aditivo".
+- **Testemunha/agendamento no `turn_finalizer`**, não no `event_processor`: eventos do
+  turno são `event.turn == world.turn_count` (garante R13 sem cursor) e a entrega
+  segue no mesmo ponto. Idempotente por `link_id`/`delivery_id`.
+- **R7 mais estrito:** conteúdo com assinatura não revelada nunca entra no prompt de
+  NPC algum (nem do observador direto); o link existe, o texto não.
+- Campos extras opcionais em `KnowledgeLink` (`location_id`, `origin_location_id`,
+  `origin_clock`) e `KnowledgeDelivery` (`subject_type`, `origin_*`) para o
+  invariante de teleporte e o raio a partir da origem.
+- Destinos por hop: locais com NPC registrado primeiro, depois os demais, por distância.
+
+**Pendente para `done`:** dataset `npc_knowledge` (autoria separada; gate do §5) e
+regeneração do Project Index (coordenador).
