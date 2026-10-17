@@ -218,7 +218,10 @@ def test_requirements_parity_with_release_checklist() -> None:
     assert set(HOSTED_REQUIRED_ENV) <= names
     for env in ("staging", "production"):
         assert set(HOSTED_REQUIRED_ENV) <= set(checklist.REQUIRED_ENV[env])
-    assert checklist.FORBIDDEN_IN_PROD == rt.FORBIDDEN_IN_HOSTED
+    # Produção proíbe tudo o que o boot hospedado proíbe; compras de teste do Play (SPEC-225 R8)
+    # ficam só na lista de produção porque o QA de staging (perfil hospedado) as liga.
+    assert set(rt.FORBIDDEN_IN_HOSTED) <= set(checklist.FORBIDDEN_IN_PROD)
+    assert set(checklist.FORBIDDEN_IN_PROD) - set(rt.FORBIDDEN_IN_HOSTED) <= {"RPG_PLAY_ACCEPT_TEST_PURCHASES"}
     for forbidden in ("RPG_ALLOW_INSECURE_HOSTED", "RPG_ALLOW_LEGACY_EXPOSED", "RPG_EXPOSE_OPENAPI"):
         assert forbidden in checklist.FORBIDDEN_IN_PROD
 
