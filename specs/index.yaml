@@ -3844,7 +3844,7 @@ specs:
   lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
 - id: SPEC-214
   slug: memoria-hierarquica-cache-cena
-  status: draft
+  status: in-progress
   path: specs/SPEC-214-memoria-hierarquica-cache-cena.md
   created_commit: null
   created_at: '2026-10-15'

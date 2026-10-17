@@ -1,7 +1,16 @@
 # SPEC-214 — Memória hierárquica: snapshot da cena ativa (L1), contexto do interlocutor/local (L2) e histórico sob demanda (L3)
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
+> **Status:** `in-progress` — implementação completa no branch `spec-214` (`5fe7a3c`, flag `RPG_SCENE_CACHE` default `off`), **não promovida**: A/B offline deu turn_total p50 −1,2% e contexto 0% (o arquivista invalida o cache quase todo turno), regra R13 falhou. Ver `docs/spec214/README.md`.
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
+> **Execução (2026-10-17):** dono autorizou executar esta onda; entrada pelo **Gate R1 `GO` com provider real**
+> ([gate-real-2026-10-17](../docs/spec214/gate-real-2026-10-17.md): context p95 762 ms ≥ 400 ms, share 3,94 %).
+> Implementado atrás de `RPG_SCENE_CACHE` (default `off`, byte a byte ao HEAD). A/B offline de três braços
+> **não atende R13** ⇒ decisão `off` (não promovido). Faltam: dataset de invalidação (EVAL_AUTHORING_REQUIRED,
+> [handoff](../handoffs/SPEC-214-eval-authoring.md)) e revisão Astra. Defaults §8: P1–P4 (todos o default).
+> Evidência: [docs/spec214/README.md](../docs/spec214/README.md).
+> **Desvios/precisões:** memória nova invalida só slots com sessão/NPC (slot só de lore sobrevive, leitura de R3);
+> fonte degradada não é cacheada; `turn_replay`/`rollback` via `note_turn_start` no início do turno; A/B usa
+> `--embed-ms` (latência injetada por embedding, ≈ p50 real) porque offline o embedding não existe.
 > **Gate R1:** gate não atingido em 2026-10-16; reavaliar com baseline real. `NO_GO` no baseline offline
 > (`--mode scaled --scale 1.0`, seed 214): context p50/p95 = 9/36 ms (`typical`) e 5/12 ms (`slow-tail`),
 > `context_share` 0,14 % / 0,08 % do TTLT p50. Default P1 aplicado. Nenhum código de produto escrito;
@@ -9,7 +18,7 @@
 > **Gate R1 com provider real (staging, 2026-10-17): `GO` pela regra** — DeepSeek + Jina, 20 turnos SSE:
 > context p50/p95 = 414/762 ms, TTLT p50/p95 = 10 487/14 774 ms, `context_share` 3,94 % (< 10 %) mas
 > `p95(context)` ≥ 400 ms ⇒ a condição de `NO_GO` não vale. Teto de ganho ~4 % do TTLT; amostra n = 20.
-> Spec segue `draft`, **sem implementação** até decisão do dono. Evidência: [docs/spec214/gate-real-2026-10-17.md](../docs/spec214/gate-real-2026-10-17.md).
+> (Nota de 2026-10-17: a decisão do dono veio depois — ver **Execução** acima.) Evidência: [docs/spec214/gate-real-2026-10-17.md](../docs/spec214/gate-real-2026-10-17.md).
 > **Depende de:** SPEC-200 `done` (baseline/gate), SPEC-213 `done` (cursor das projeções — recomendado), SPEC-234 `done` (ledger/resumo que não congela) · SPEC-005, SPEC-085, SPEC-146, SPEC-147, SPEC-149 e SPEC-170 `done` (insumos/régua, não reabertos) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-215, SPEC-217 (ordem final 2026-10-15)
 > **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 11
@@ -134,15 +143,15 @@ class SceneSnapshot:
 
 ## 5. Critérios de aceite
 
-- [x] `docs/spec214/gate.md` com decisão `GO`/`NO_GO` fundamentada no baseline SPEC-200. (`NO_GO` 2026-10-16, offline; reavaliar com baseline real)
-- [ ] (se GO) Snapshot puro, determinístico, sem beats privados; recomputação idêntica.
-- [ ] (se GO) Cada causa de invalidação de R5 tem teste verde; segredo filtrado na escrita e na leitura.
-- [ ] (se GO) `RPG_SCENE_CACHE=off` produz `ContextPack` idêntico ao HEAD (teste de paridade).
-- [ ] (se GO) Régua SPEC-170 sem regressão com `on`; dataset de invalidação 100% verde; `context_forbidden_leak_rate = 0`, `context_token_budget_violation = 0`.
-- [ ] (se GO) A/B offline pareado de três braços (`off`/`l1_only`/`on`) registrado; promoção só se R13 for atendido, senão default permanece `off`.
-- [ ] Nenhum campo novo em save; saves `SCHEMA_VERSION = 8` carregam sem migração.
-- [ ] `uv run pytest` verde (suíte completa offline); Ruff verde nos arquivos tocados.
-- [ ] Nenhum `with_structured_output` novo (se surgir, guard de FallbackLLM obrigatório).
+- [x] `docs/spec214/gate.md` com decisão `GO`/`NO_GO` fundamentada no baseline SPEC-200. (`NO_GO` 2026-10-16, offline; `GO` 2026-10-17 com provider real em `gate-real-2026-10-17.md`)
+- [x] (se GO) Snapshot puro, determinístico, sem beats privados; recomputação idêntica. (`tests/test_scene_snapshot.py`)
+- [x] (se GO) Cada causa de invalidação de R5 tem teste verde; segredo filtrado na escrita e na leitura. (`tests/test_context_cache.py`)
+- [x] (se GO) `RPG_SCENE_CACHE=off` produz `ContextPack` idêntico ao HEAD (teste de paridade; golden do HEAD `8823bb0`).
+- [ ] (se GO) Régua SPEC-170 sem regressão com `on`; dataset de invalidação 100% verde; `context_forbidden_leak_rate = 0`, `context_token_budget_violation = 0`. (Régua: igual a `off`, leak 0, budget 0 — mas o adapter não exercita a flag. **Falta** o dataset de invalidação: handoff.)
+- [x] (se GO) A/B offline pareado de três braços (`off`/`l1_only`/`on`) registrado; promoção só se R13 for atendido, senão default permanece `off`. (R13 não atendido: −1,2 % turn_total, 0 % context p50 ⇒ `off`.)
+- [x] Nenhum campo novo em save; saves `SCHEMA_VERSION = 8` carregam sem migração.
+- [x] `uv run pytest` verde (suíte completa offline: 3685 passed, 227 skipped); Ruff verde nos arquivos tocados.
+- [x] Nenhum `with_structured_output` novo (se surgir, guard de FallbackLLM obrigatório).
 
 ## 6. Smoke
 
