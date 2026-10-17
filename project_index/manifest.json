@@ -1,13 +1,13 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "6bbc5098da9f34e2091c43cc6a7778b166f34bf5",
+  "commit_sha": "8dc1aad53fb040bb4e493a699f874da2eaf1b825",
   "edge_counts": {
-    "calls": 13885,
-    "contains": 600,
-    "defines": 8046,
-    "imports": 1276,
-    "likely_test_for": 806,
-    "route_to": 60
+    "calls": 13968,
+    "contains": 601,
+    "defines": 8078,
+    "imports": 1277,
+    "likely_test_for": 807,
+    "route_to": 61
   },
   "excluded_prefixes": [
     ".agents",
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:ddce91965dde2352a70cf83dc20b6b1a426886c1224938ecb2ec5ec120c56cd4",
+  "graph_hash": "sha256:8d33ad2a57503d1af902a1a43a217059dab66aa7dabe93e2582adc30a075c441",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -400,6 +400,7 @@
     "tests/test_bug_mundo_perigo_luz_clima.py",
     "tests/test_bug_npc_ciclo_de_vida.py",
     "tests/test_campaign_grounding_deferred.py",
+    "tests/test_cards_prepare_api.py",
     "tests/test_chaos_local.py",
     "tests/test_checkout_integrity.py",
     "tests/test_checkpoint_memoria_transacional.py",
@@ -657,6 +658,7 @@
     "web/e2e/combat-gesture.spec.ts",
     "web/e2e/combat-outcome.spec.ts",
     "web/e2e/critical-journeys.spec.ts",
+    "web/e2e/deck-character.spec.ts",
     "web/e2e/diagnostics/spec201-capture.spec.ts",
     "web/e2e/effects.spec.ts",
     "web/e2e/fixtures.ts",
@@ -705,6 +707,10 @@
     "web/src/components/SceneArtwork.tsx",
     "web/src/components/SceneZones.tsx",
     "web/src/components/StoryLog.tsx",
+    "web/src/components/tabs/CharacterTab.tsx",
+    "web/src/components/tabs/CombatDeckTab.tsx",
+    "web/src/components/tabs/DeckCard.tsx",
+    "web/src/components/tabs/journey.ts",
     "web/src/components/TurnstileChallenge.tsx",
     "web/src/components/VisualArtwork.tsx",
     "web/src/components/WorldMap.tsx",
@@ -766,14 +772,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 672,
-    "endpoint": 60,
-    "file": 712,
-    "function": 2517,
+    "class": 673,
+    "endpoint": 61,
+    "file": 718,
+    "function": 2525,
     "method": 674,
-    "module": 600,
-    "test": 4183
+    "module": 601,
+    "test": 4206
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:0273536eecc0291bddb4482473dd59f77c98af93e42e919213c3064326568476"
+  "source_tree_hash": "sha256:e182edc73ac52af94548daebbaabd2acf8502e79a74ed67cb780e1b2ff72886f"
 }
