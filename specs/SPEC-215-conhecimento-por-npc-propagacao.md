@@ -1,6 +1,6 @@
 # SPEC-215 — Conhecimento por NPC e propagação limitada de notícias
 
-> **Status:** `in-progress` (código + testes + smokes entregues; revisão Astra APPROVED_WITH_FOLLOWUPS; dataset `npc_knowledge` autorado; falta só regenerar o Project Index — ver §10)
+> **Status:** `done` (código + testes + smokes entregues; revisão Astra APPROVED_WITH_FOLLOWUPS; dataset `npc_knowledge` autorado; Project Index regenerado pelo coordenador no land)
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-202 `done` (interlocutor), SPEC-206 `done` (taxonomia), SPEC-214 `done` (cache de cena — recomendado), SPEC-223 `done` (mesmos `agents/npc.py`/`event_processor`; prova de eventos), SPEC-230 `done` (ciclo de vida do NPC) (ordem final 2026-10-15)
 > **Desbloqueia:** nada obrigatório (ordem final 2026-10-15)
@@ -287,7 +287,7 @@ artefato do dono, se aquela spec o aceitar via handoff — esta spec não o exig
 - [x] Save v8 carrega; round-trip verde (sem bump: v8 aditivo, ver §10); nenhuma distribuição retroativa.
 - [x] Nenhuma chamada LLM nova; nenhum `with_structured_output` novo.
 - [x] Smoke offline 14 perfis × 30 turnos (`--all`) com `on`: zero erro, zero violação `error`.
-- [ ] `uv run pytest` verde (suíte completa offline); Ruff verde; Project Index regenerado.
+- [x] `uv run pytest` verde (suíte completa offline); Ruff verde; Project Index regenerado.
       → pytest e Ruff verdes; Project Index fica com o coordenador.
 - [x] Revisão independente Astra APPROVED (APPROVED_WITH_FOLLOWUPS — `handoffs/SPEC-215-ASTRA-independent-review.md`).
 
@@ -369,5 +369,5 @@ jogador com `on` (memória privada do NPC fica); D3 = valores da tabela §3.3.
   invariante de teleporte e o raio a partir da origem.
 - Destinos por hop: locais com NPC registrado primeiro, depois os demais, por distância.
 
-**Pendente para `done`:** regeneração do Project Index (coordenador). O dataset
+**Concluído:** Project Index regenerado pelo coordenador no land (commit de reindex logo após o merge). O dataset
 `npc_knowledge` foi autorado (39 casos; publicar exige aprovação do environment `eval-governance`).
