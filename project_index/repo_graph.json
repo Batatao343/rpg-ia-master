@@ -1,5 +1,5 @@
 {
-  "commit_sha": "80bea27f3b6221b6ec398a4dab97ebf459616a4f",
+  "commit_sha": "41e897413987d9838c325f2af4283d358e60f492",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -39419,7 +39419,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 76
+        "line": 78
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env._load_files",
@@ -39430,7 +39430,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 83
+        "line": 85
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.build_env",
@@ -39441,7 +39441,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 154
+        "line": 159
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.main",
@@ -39452,7 +39452,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 115
+        "line": 120
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.push",
@@ -39463,7 +39463,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 138
+        "line": 143
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.remove",
@@ -39474,7 +39474,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 61
+        "line": 63
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.stale_names",
@@ -99919,7 +99919,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec192_vercel_env.py",
-        "line": 83
+        "line": 86
       },
       "source": "module:tests.test_spec192_vercel_env",
       "target": "symbol:tests.test_spec192_vercel_env.test_deepseek_key_is_pushed_as_primary_secret_and_never_to_preview",
@@ -99996,7 +99996,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec192_vercel_env.py",
-        "line": 73
+        "line": 76
       },
       "source": "module:tests.test_spec192_vercel_env",
       "target": "symbol:tests.test_spec192_vercel_env.test_switching_rls_mode_deletes_the_other_mode_variable",
@@ -157570,7 +157570,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 170
+        "line": 177
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env._load_files",
@@ -157581,7 +157581,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 172
+        "line": 179
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.build_env",
@@ -157592,7 +157592,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 187
+        "line": 194
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.push",
@@ -157603,7 +157603,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 188
+        "line": 195
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.push",
@@ -157614,7 +157614,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 189
+        "line": 196
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.remove",
@@ -157625,7 +157625,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 180
+        "line": 187
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.stale_names",
@@ -157636,7 +157636,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 189
+        "line": 196
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.stale_names",
@@ -273818,17 +273818,6 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec192_vercel_env.py",
-        "line": 85
-      },
-      "source": "symbol:tests.test_spec192_vercel_env.test_deepseek_key_is_pushed_as_primary_secret_and_never_to_preview",
-      "target": "symbol:scripts.staging.vercel_env.build_env",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec192_vercel_env.py",
         "line": 88
       },
       "source": "symbol:tests.test_spec192_vercel_env.test_deepseek_key_is_pushed_as_primary_secret_and_never_to_preview",
@@ -273840,7 +273829,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec192_vercel_env.py",
-        "line": 90
+        "line": 91
+      },
+      "source": "symbol:tests.test_spec192_vercel_env.test_deepseek_key_is_pushed_as_primary_secret_and_never_to_preview",
+      "target": "symbol:scripts.staging.vercel_env.build_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec192_vercel_env.py",
+        "line": 93
       },
       "source": "symbol:tests.test_spec192_vercel_env.test_deepseek_key_is_pushed_as_primary_secret_and_never_to_preview",
       "target": "symbol:scripts.staging.vercel_env.build_env",
@@ -273939,7 +273939,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec192_vercel_env.py",
-        "line": 77
+        "line": 71
+      },
+      "source": "symbol:tests.test_spec192_vercel_env.test_staging_runs_real_llm_with_a_daily_cap_and_never_mock",
+      "target": "symbol:scripts.staging.vercel_env.build_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec192_vercel_env.py",
+        "line": 70
+      },
+      "source": "symbol:tests.test_spec192_vercel_env.test_staging_runs_real_llm_with_a_daily_cap_and_never_mock",
+      "target": "symbol:scripts.staging.vercel_env.stale_names",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec192_vercel_env.py",
+        "line": 72
+      },
+      "source": "symbol:tests.test_spec192_vercel_env.test_staging_runs_real_llm_with_a_daily_cap_and_never_mock",
+      "target": "symbol:scripts.staging.vercel_env.stale_names",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec192_vercel_env.py",
+        "line": 80
       },
       "source": "symbol:tests.test_spec192_vercel_env.test_switching_rls_mode_deletes_the_other_mode_variable",
       "target": "symbol:scripts.staging.vercel_env.build_env",
@@ -273950,7 +273983,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec192_vercel_env.py",
-        "line": 79
+        "line": 82
       },
       "source": "symbol:tests.test_spec192_vercel_env.test_switching_rls_mode_deletes_the_other_mode_variable",
       "target": "symbol:scripts.staging.vercel_env.build_env",
@@ -273961,7 +273994,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec192_vercel_env.py",
-        "line": 78
+        "line": 81
       },
       "source": "symbol:tests.test_spec192_vercel_env.test_switching_rls_mode_deletes_the_other_mode_variable",
       "target": "symbol:scripts.staging.vercel_env.stale_names",
@@ -273972,7 +274005,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec192_vercel_env.py",
-        "line": 80
+        "line": 83
       },
       "source": "symbol:tests.test_spec192_vercel_env.test_switching_rls_mode_deletes_the_other_mode_variable",
       "target": "symbol:scripts.staging.vercel_env.stale_names",
@@ -322116,42 +322149,42 @@
     {
       "id": "symbol:scripts.staging.vercel_env._load_files",
       "kind": "function",
-      "line": 76,
+      "line": 78,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env._load_files"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.build_env",
       "kind": "function",
-      "line": 83,
+      "line": 85,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.build_env"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.main",
       "kind": "function",
-      "line": 154,
+      "line": 159,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.main"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.push",
       "kind": "function",
-      "line": 115,
+      "line": 120,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.push"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.remove",
       "kind": "function",
-      "line": 138,
+      "line": 143,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.remove"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.stale_names",
       "kind": "function",
-      "line": 61,
+      "line": 63,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.stale_names"
     },
@@ -361253,7 +361286,7 @@
     {
       "id": "symbol:tests.test_spec192_vercel_env.test_deepseek_key_is_pushed_as_primary_secret_and_never_to_preview",
       "kind": "test",
-      "line": 83,
+      "line": 86,
       "path": "tests/test_spec192_vercel_env.py",
       "qualified_name": "tests.test_spec192_vercel_env.test_deepseek_key_is_pushed_as_primary_secret_and_never_to_preview"
     },
@@ -361302,7 +361335,7 @@
     {
       "id": "symbol:tests.test_spec192_vercel_env.test_switching_rls_mode_deletes_the_other_mode_variable",
       "kind": "test",
-      "line": 73,
+      "line": 76,
       "path": "tests/test_spec192_vercel_env.py",
       "qualified_name": "tests.test_spec192_vercel_env.test_switching_rls_mode_deletes_the_other_mode_variable"
     },
@@ -367202,5 +367235,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:0863ecfacc7f1793a2b496f5dd29f0e6ba756d8eabf780bc106b759ae45a0458"
+  "source_tree_hash": "sha256:76d4fde4db67d9db934307b5d9551d4d1b59f4b8724f8c3e61ff3a1fa58c05c2"
 }
