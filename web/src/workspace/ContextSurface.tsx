@@ -2,12 +2,12 @@ import { Component, useLayoutEffect, useRef, type ErrorInfo, type KeyboardEvent,
 import type { ActionOptions, GameResponse } from "../types";
 import { ChronicleTab, FactionsTab, PeopleTab, type EquipFn } from "../components/Hud";
 import { CodexCategory, CodexTab, DossierCategory, type CodexSection } from "../components/CodexTab";
-import { WorldMap } from "../components/WorldMap";
 import { RovingTablist } from "./RovingTablist";
 import { CONTEXT_TABS, TAB_LABELS, type ContextTab } from "./workspaceModel";
 import { PersonagemTab } from "./tabs/PersonagemTab";
 import { CombateTab } from "./tabs/CombateTab";
 import { BestiarioTab } from "./tabs/BestiarioTab";
+import { MapTab } from "./tabs/MapTab";
 
 const LAB_EMPTY = "Laboratório de combate: sem campanha, este registro fica vazio.";
 
@@ -110,17 +110,7 @@ function renderTab(id: ContextTab, props: ContextSurfaceProps): ReactNode {
       return (
         <div>
           <p className="hud__label">Mapa do mundo</p>
-          <WorldMap
-            visited={data?.world.visited ?? []}
-            currentId={data?.world.location_id ?? ""}
-            controlled={data?.world.controlled ?? {}}
-            dangerOverrides={data?.world.danger_overrides ?? {}}
-            markers={data?.quest.markers ?? []}
-            overlays={data?.world.map_overlays}
-            currentTurn={data?.world.turn_count ?? 0}
-            blockedRoutes={data?.world.blocked_routes ?? []}
-            onTravel={(location) => props.onAction(`Viajo para ${location.name}`)}
-          />
+          <MapTab data={data} busy={busy} blocked={blocked} open={open} onAction={props.onAction} />
         </div>
       );
     case "codex": {

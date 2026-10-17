@@ -132,11 +132,20 @@ def _database_profile() -> bool:
     return os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy"
 
 
+def _session_scoped_path(path: str, query) -> bool:
+    """Rotas com dado POR JOGO/conta: exigem sessão nos perfis com banco.
+    SPEC-210 (revisão Sol): `/data/map?game_id=` é a view filtrada de UM save —
+    sem a fronteira não haveria principal (404 sempre no perfil DB) nem no-store."""
+    if path.startswith(("/game", "/account", "/telemetry")):
+        return True
+    return path == "/data/map" and bool(query.get("game_id"))
+
+
 @app.middleware("http")
 async def _session_boundary(request: Request, call_next):
     """Auth/CSRF só nos perfis Postgres; legacy loopback permanece intacto."""
-    if not _database_profile() or not request.url.path.startswith(
-            ("/game", "/account", "/telemetry")):
+    if not _database_profile() or not _session_scoped_path(
+            request.url.path, request.query_params):
         return await call_next(request)
     from infrastructure.contracts import Unauthorized
     from infrastructure.request_context import reset_current_principal, set_current_principal
@@ -253,8 +262,9 @@ async def _correlation_boundary(request: Request, call_next):
         response.headers.setdefault("Referrer-Policy", "same-origin")
         response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(self), geolocation=()")
         response.headers.setdefault("X-Frame-Options", "DENY")
-        if request.url.path.startswith(("/game", "/account", "/auth")):
-            response.headers.setdefault("Cache-Control", "no-store")  # SPEC-221 R4
+        if request.url.path.startswith(("/game", "/account", "/auth")) or _session_scoped_path(
+                request.url.path, request.query_params):
+            response.headers.setdefault("Cache-Control", "no-store")  # SPEC-221 R4 / SPEC-210
         if os.getenv("RPG_COOKIE_SECURE", "0") == "1":
             response.headers.setdefault("Strict-Transport-Security",
                                         "max-age=63072000; includeSubDomains")
@@ -1918,19 +1928,8 @@ def _world_block(w: dict, projection: Optional[dict] = None, event_log: Optional
 
 
 def _interiors_block(loc_id: str) -> Dict[str, Any]:
-    from gamedata import get_location, interiors_of
-    loc = get_location(loc_id) or {}
-    here = [
-        {"id": i["id"], "name": i["name"], "danger": i.get("danger", 0),
-         "tags": i.get("tags", [])}
-        for i in interiors_of(loc_id)
-    ]
-    exit_to = None
-    if loc.get("kind") == "interior":
-        parent = get_location(loc.get("parent_id", "")) or {}
-        if parent:
-            exit_to = {"id": parent["id"], "name": parent["name"]}
-    return {"here": here, "exit_to": exit_to}
+    from services.map_view import interiors_block
+    return interiors_block(loc_id)
 
 # --- ENDPOINTS ---
 
@@ -2341,13 +2340,37 @@ def get_onboarding():
                             detail="Conteúdo de onboarding indisponível.")
     return data
 
+@app.get("/game/map")
+def get_game_map(game_id: Optional[str] = None):
+    """SPEC-210: mapa do JOGO com fog server-side (só visitados + adjacentes).
+
+    Mesmo guard de save de /game/state (UUID validado; 404 sem save; em perfis
+    com banco o carregamento já é escopado ao dono). Fail-closed: nenhum nome,
+    perigo, lore ou arte de local não alcançado sai daqui."""
+    from services.map_view import build_map_view
+    state = _load_unlocked_or_locked(_resolve_save_file(game_id), game_id)
+    if not state:
+        raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
+    return build_map_view(state)
+
+
 @app.get("/data/map")
-def get_world_map():
+def get_world_map(game_id: Optional[str] = None):
     """Grafo de locais (Fase 0) para o mapa com fog of war no frontend.
 
     spec mapa-sublocais (R7): interiores NÃO aparecem no mapa-múndi —
     são expostos como "Locais daqui" no bloco `world` de /game/state.
+
+    SPEC-210: com `game_id` devolve o mesmo formato, mas SÓ com os locais que
+    o jogador descobriu (visitados + adjacentes, sem lore/perigo dos adjacentes).
+    Sem `game_id` é o grafo global estático (CLI/smoke/legado).
     """
+    if game_id:
+        from services.map_view import legacy_filtered_map
+        state = _load_unlocked_or_locked(_resolve_save_file(game_id), game_id)
+        if not state:
+            raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
+        return legacy_filtered_map(state)
     data = dict(load_json_data("world_map.json") or {})
     data["locations"] = [
         loc for loc in data.get("locations", [])

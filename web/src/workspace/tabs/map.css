@@ -1,0 +1,19 @@
+/* SPEC-210 - aba Mapa. Sem animacao nova: o farol do local atual vem de styles.css (parado em combate). */
+.maptab { display: flex; flex-direction: column; gap: 0.7rem; min-width: 0; }
+.maptab__status { margin: 0; min-height: 1.1em; font-size: 0.74rem; color: var(--faint); }
+.maptab__canvas { max-height: 60vh; }
+.maptab__node { min-width: 44px; min-height: 44px; cursor: pointer; }
+.maptab__node:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--r-sm); }
+.maptab__node.is-selected .worldmap__label { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.maptab__node.is-adjacente .worldmap__dot { background: transparent; border-style: dashed; }
+.maptab__node.is-bloqueado .worldmap__dot { border-color: var(--danger); border-style: dotted; }
+/* texto de estado nunca em vermelho puro: contraste < 4.5:1 no fundo escuro (axe, revisao Sol) */
+.maptab__node.is-bloqueado .worldmap__label { color: var(--muted); text-decoration: line-through; }
+/* detalhe: parte do fluxo do painel (o painel e o UNICO scroll) */
+.maptab__detail { display: flex; flex-direction: column; gap: 0.4rem; padding: 0.7rem; border: 1px solid var(--line-soft); border-radius: var(--r-sm); background: var(--surface); }
+.maptab__name { margin: 0; font-family: var(--display); font-size: 1rem; color: var(--ink); }
+.maptab__meta { margin: 0; font-size: 0.82rem; color: var(--muted); }
+.maptab__lore { margin: 0; font-size: 0.88rem; line-height: 1.5; color: var(--muted); }
+.maptab__list { margin: 0; padding-left: 1.1rem; font-size: 0.85rem; color: var(--muted); }
+.maptab__travel { align-self: flex-start; min-height: 44px; }
+.maptab__reason { margin: 0; font-size: 0.78rem; color: var(--muted); }

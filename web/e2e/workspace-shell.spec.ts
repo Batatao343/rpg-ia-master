@@ -46,6 +46,34 @@ async function assertAtMostTwoSurfaces(page: Page) {
   await expect(page.locator(".tactical-dock, aside.hud")).toHaveCount(0);
 }
 
+// SPEC-210: o fixture protegido ainda nao serve GET /game/map (tarefa de eval). Em vez de engolir
+// o 404 no console, este spec (nao protegido) serve a view derivada do estado do proprio fixture.
+const MAP_NODES: Record<string, { name: string; coords: { x: number; y: number }; links: string[] }> = {
+  porto: { name: "Porto Cinzento", coords: { x: 30, y: 55 }, links: ["brumalta"] },
+  brumalta: { name: "Brumalta", coords: { x: 70, y: 35 }, links: ["porto"] },
+};
+test.beforeEach(async ({ page, backend }) => {
+  await page.route("**/game/map?*", (route) => {
+    const gid = new URL(route.request().url()).searchParams.get("game_id") ?? "";
+    const state = backend.states.get(gid);
+    if (!state) return route.fulfill({ status: 404, contentType: "application/json", body: '{"detail":"missing"}' });
+    const cur = state.world.location_id;
+    const visited = new Set<string>(state.world.visited);
+    const ids = new Set<string>([cur, ...visited, ...(MAP_NODES[cur]?.links ?? [])]);
+    const nodes = [...ids].filter((id) => MAP_NODES[id]).map((id) => {
+      const st = id === cur ? "atual" : visited.has(id) ? "visitado" : "adjacente";
+      const base = { id, state: st, name: MAP_NODES[id].name, coords: MAP_NODES[id].coords };
+      return st === "adjacente" ? { ...base, reachable: true }
+        : { ...base, reachable: st !== "atual", region_id: id, danger: 1, lore_seed: "", art: { location_id: id, scope: "placeholder", asset: null } };
+    });
+    const options = (MAP_NODES[cur]?.links ?? []).map((id) => ({ location_id: id, name: MAP_NODES[id].name, periods: 1, reachable: true, blocked: false, reason: "" }));
+    return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({
+      game_id: gid, turn_count: state.world.turn_count ?? 0, map_version: "fixture", current_id: cur, anchor_id: cur,
+      nodes, edges: [{ a: "brumalta", b: "porto", blocked: false }], interiors: { here: [], exit_to: null },
+      travel_options: options, travel_gate: { blocked: false, reason: "" }, looming_threat: "" }) });
+  });
+});
+
 test.describe("desktop 1440", () => {
   test.use({ viewport: { width: 1440, height: 900 } });
 

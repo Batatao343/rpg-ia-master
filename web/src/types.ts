@@ -946,4 +946,47 @@ export interface DossiersPayload {
     chronicle_index: ChronicleIndexEntry[];
   };
   bestiary: CreatureDossier[];
+// SPEC-210: mapa do jogo com fog server-side (GET /game/map?game_id=).
+export type MapNodeState = "atual" | "visitado" | "adjacente" | "bloqueado";
+
+export interface MapNodeView {
+  id: string;
+  state: MapNodeState;
+  name: string;
+  coords: { x: number; y: number };
+  reachable?: boolean;
+  reason?: string;
+  // Só em locais visitados (adjacentes chegam apenas com id/coords/name):
+  region_id?: string;
+  danger?: number;
+  lore_seed?: string;
+  art?: { location_id: string; scope: "exact" | "regional" | "placeholder"; asset: VisualAsset | null };
+  ruler?: string;
+  quest_target?: boolean;
+  threatened?: boolean;
+  threat_hint?: string;
+  contested?: boolean;
+}
+
+export interface MapTravelOption {
+  location_id: string;
+  name: string;
+  periods: number;
+  reachable: boolean;
+  blocked: boolean;
+  reason: string;
+}
+
+export interface MapView {
+  game_id: string;
+  turn_count: number;
+  map_version: string;
+  current_id: string;
+  anchor_id: string;
+  nodes: MapNodeView[];
+  edges: Array<{ a: string; b: string; blocked: boolean }>;
+  interiors: { here: Array<{ id: string; name: string; danger: number; tags: string[] }>; exit_to: { id: string; name: string } | null };
+  travel_options: MapTravelOption[];
+  travel_gate: { blocked: boolean; reason: string };
+  looming_threat: string;
 }

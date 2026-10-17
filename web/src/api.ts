@@ -12,6 +12,7 @@ import type {
   PrologueResponse,
   SaveSummary,
   WorldMapData,
+  MapView,
   VisualResponse,
 } from "./types";
 
@@ -102,7 +103,11 @@ export const postPrologue = (payload: CreatePayload) =>
     body: JSON.stringify(payload),
   });
 
-export const getMap = () => req<WorldMapData>("/data/map");
+// SPEC-210: com game_id o servidor devolve só o que o jogador descobriu (legado, mesmo formato).
+export const getMap = (gameId?: string) =>
+  req<WorldMapData>("/data/map" + (gameId ? "?game_id=" + encodeURIComponent(gameId) : ""));
+export const getGameMap = (gameId: string) =>
+  req<MapView>("/game/map?game_id=" + encodeURIComponent(gameId));
 
 export const newGame = (payload: CreatePayload) =>
   req<GameResponse>("/game/new", {

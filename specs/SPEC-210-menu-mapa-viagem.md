@@ -1,7 +1,7 @@
 # SPEC-210 — Menu Mapa e viagem como turno
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `in-progress`
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
 > **Depende de:** SPEC-204 `done` (shell), SPEC-208 `done` (tokens), SPEC-229 `done` (detecção de viagem), SPEC-233 `done` (perigo efetivo) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212 (ordem final 2026-10-15)
 > **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15`, prompt 06 (parte Mapa)
@@ -85,15 +85,15 @@ Sem `art` → placeholder; sem `travel_options` → botão usa só o nome (compo
 7. `/qa`, `uv run pytest`, `npm run build`; atualizar ESTADO_ATUAL/ROADMAP; evidência.
 
 ## 5. Critérios de aceite
-- [ ] Inspeção da rede: resposta do mapa de um jogo novo **não contém** nome/perigo/lore de locais não visitados nem não conectados; adjacentes só com `id/coords/name`.
-- [ ] `travel_options` só lista `connections` do local atual (+ pai de interior); nó visitado não conectado aparece sem botão Viajar.
-- [ ] Nós aparecem em exatamente um estado; atual, visitados, adjacentes e bloqueados distinguíveis sem depender de cor.
-- [ ] Tempo de viagem exibido bate com `world_utils.travel_cost` (teste em pares assimétricos e interior).
-- [ ] Clicar "Viajar" gera uma mensagem de chat e um turno normal; nenhuma mudança de localização ocorre sem resposta do turno.
-- [ ] Em combate/queda/memorial o botão está desabilitado com razão; ação forçada via API vira fuga (SPEC-038).
-- [ ] Arte de local aparece só para visitados; expiração/falha cai para regional/placeholder; reload preserva.
-- [ ] Mapa e detalhe usáveis a 50% sem scroll aninhado; navegação por teclado; reduced-motion respeitado.
-- [ ] Após turno, reload e troca de save, o mapa reflete o estado correto (sem dados do jogo anterior).
+- [x] Inspeção da rede: resposta do mapa de um jogo novo **não contém** nome/perigo/lore de locais não visitados nem não conectados; adjacentes só com `id/coords/name`.
+- [x] `travel_options` só lista `connections` do local atual (+ pai de interior); nó visitado não conectado aparece sem botão Viajar.
+- [x] Nós aparecem em exatamente um estado; atual, visitados, adjacentes e bloqueados distinguíveis sem depender de cor.
+- [x] Tempo de viagem exibido bate com `world_utils.travel_cost` (teste em pares assimétricos e interior).
+- [x] Clicar "Viajar" gera uma mensagem de chat e um turno normal; nenhuma mudança de localização ocorre sem resposta do turno.
+- [x] Em combate/queda/memorial o botão está desabilitado com razão; ação forçada via API vira fuga (SPEC-038).
+- [x] Arte de local aparece só para visitados; expiração/falha cai para regional/placeholder; reload preserva.
+- [x] Mapa e detalhe usáveis a 50% sem scroll aninhado; navegação por teclado; reduced-motion respeitado.
+- [x] Após turno, reload e troca de save, o mapa reflete o estado correto (sem dados do jogo anterior).
 
 ## 6. Smoke
 - Offline: `uv run pytest tests/test_map_view.py` + suíte completa; `cd web && npm run build && npm test`; `bash scripts/smoke_api.sh` estendido com `GET /game/map`.
@@ -114,3 +114,19 @@ Sem `art` → placeholder; sem `travel_options` → botão usa só o nome (compo
 
 ## 9. Evidência requerida
 Payload de `/game/map` de jogo novo e de jogo avançado (diff mostrando ausência de nomes não descobertos); saída de pytest/build/Node; screenshots Playwright full/50%/reload; trace de uma viagem (chat + turno + `visited`) e de uma tentativa em combate; relato de axe.
+
+## 10. Execução (2026-10-17)
+
+- **Defaults de decisão (§8):** 1(a) adjacentes com nome, sem perigo/lore/arte; 2 viagem a adjacente não visitado permitida, com custo; 3 split mantido (nada muda o modo).
+- **Fog server-side:** `GET /game/map?game_id=` (`services/map_view.py::build_map_view`, mesmo guard de `/game/state`: UUID, 404 sem save, escopo do dono nos perfis com banco). Achado de privacidade fechado também no legado: `GET /data/map?game_id=` devolve o mesmo formato SÓ com visitados + adjacentes (adjacente sem lore/perigo/conexões); sem `game_id` segue o grafo global estático (CLI/smoke/`post_deploy_smoke`).
+- **Desvios:** (1) R12: o fallback do cliente usa `/data/map?game_id=` (filtrado), nunca o grafo global; (2) `travel_gate` na view carrega a razão do gate de combate/queda/memorial/arquivado; (3) nó visitado não conectado leva `reachable:false` + `reason` no próprio nó (fora de `travel_options`); (4) interior: a âncora do mapa é o pai (`anchor_id`), interiores nunca viram nó; (5) R8: `VisualArtwork` cai para monograma em erro de imagem (sem refetch extra de URL); (6) `map_version` exclui `turn_count`.
+- **Eval:** `EVAL_AUTHORING_REQUIRED` cumprido como handoff (`handoffs/SPEC-210-eval-authoring.md`); F06/F13/`DeterministicBackend` não foram editados (o fixture não serve `/game/map`, então a aba cai no fallback legado e F06 segue verde).
+- Evidência: `docs/spec210/README.md`.
+
+## 11. Revisão independente Sol (2026-10-17)
+
+Veredito: aprovado com correções; status `in-progress` só porque F06/F13 (e, pelo 404 de `/game/map` no fixture, também F17/F18/F19) + `DeterministicBackend` dependem da tarefa de eval separada (`handoffs/SPEC-210-eval-authoring.md`). Parecer: `handoffs/SPEC-210-SOL-independent-review.md`.
+- `/data/map?game_id=` devolvia o JSON cru dos visitados (`treasure` do baú curado e `travel_times` citando IDs não alcançados): agora whitelist.
+- `/data/map?game_id=` ficava fora da fronteira de sessão dos perfis com banco (sem principal → 404 sempre, fallback R12 morto) e sem `no-store`: `_session_scoped_path` inclui a rota quando há `game_id`.
+- Dentro de interior a saída (travel_option do pai, custo 0) ficava bloqueada por "Você já está aqui.": liberada.
+- Razão de bloqueio/rótulo bloqueado em vermelho puro reprovavam contraste (axe) — mascarado porque o `allowConsole(404)` do `workspace-shell.spec.ts` deixava a aba no fallback legado; o spec agora serve `/game/map` derivado do estado do fixture (sem engolir console).

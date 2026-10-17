@@ -74,6 +74,18 @@ def creation_visuals() -> dict[str, dict[str, dict[str, Any]]]:
     }
 
 
+def location_visual(location_id: str) -> dict[str, Any]:
+    """SPEC-210 R8: arte de UM local por ID canonico (exact -> regional -> placeholder).
+    Quem chama garante que o local foi visitado; aqui nao ha checagem de fog."""
+    asset = visual_for("location", location_id)
+    scope = "exact"
+    if asset is None:
+        fallback_id = str(_cached_catalog().get("location_fallbacks", {}).get(location_id) or "")
+        asset = visual_for("location", fallback_id) if fallback_id else None
+        scope = "regional" if asset else "placeholder"
+    return {"location_id": location_id, "scope": scope, "asset": asset}
+
+
 def scene_visual(world: Mapping[str, Any]) -> dict[str, Any]:
     location_id = str(world.get("current_location_id") or "")
     location = gamedata.get_location(location_id) or {}

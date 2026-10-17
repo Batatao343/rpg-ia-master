@@ -19,6 +19,7 @@ export function WorldMap({
   currentTurn = 0,
   blockedRoutes = [],
   onTravel,
+  gameId,
 }: {
   visited: string[];
   currentId: string;
@@ -29,12 +30,13 @@ export function WorldMap({
   currentTurn?: number;
   blockedRoutes?: Array<{ a: string; b: string }>; // Fase 6.1
   onTravel?: (location: MapLocation) => void;
+  gameId?: string; // SPEC-210: fog server-side no fallback legado
 }) {
   const [map, setMap] = useState<WorldMapData | null>(null);
 
   useEffect(() => {
-    api.getMap().then(setMap).catch(() => setMap(null));
-  }, []);
+    api.getMap(gameId).then(setMap).catch(() => setMap(null));
+  }, [gameId]);
 
   if (!map) return null;
 
