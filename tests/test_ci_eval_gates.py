@@ -41,7 +41,7 @@ def test_private_holdout_contract_accepts_only_redacted_aggregates():
     good = {
         "schema_version": 1,
         "product_sha": "abcdef1",
-        "evaluator_version": "1.13.0",
+        "evaluator_version": "1.14.0",
         "dataset_hash": "sha256:" + "a" * 64,
         "case_count": 10,
         "metrics": {"route_accuracy": 0.9},
@@ -120,7 +120,7 @@ def test_frontend_artifact_carries_compatible_measurement_identity():
 
     identity = measurement_identity(ROOT)
     assert identity["product_sha"]
-    assert identity["evaluator_version"] == "1.13.0"
+    assert identity["evaluator_version"] == "1.14.0"
     assert identity["metrics_registry_hash"].startswith("sha256:")
     assert identity["journey_manifest_hash"].startswith("sha256:")
     assert identity["browser"] == "chromium"

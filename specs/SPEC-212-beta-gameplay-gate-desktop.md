@@ -196,6 +196,7 @@ Pré-condição: SPEC-199–211 `done` (nada aqui antecipa essas entregas).
 - **D-212-2:** F16 móvel (320–768) permanece como regressão não-bloqueante neste gate (recomendado, alinha D6/Android não bloqueia) vs. bloqueante. **Default: não-bloqueante.**
 - **D-212-3:** Gate roda em PR (path-filtered) além de `workflow_dispatch`. **Default: ambos; obrigatório (required check) apenas no SHA candidato ao go.**
 - **D-212-4:** Consentimento do tester/texto legal para export (D4) entra via handoff para SPEC-197, sem edição direta. **Default: handoff.**
+- **D-212-5 (registrada 2026-10-17, Etapa 0):** o dono autorizou executar a onda. SPEC-218/219 estão `in-progress` só nos itens de staging/GitHub; o código delas já está na `main`. O gate roda localmente (stack real + MockLLM) e **não convida testers**, então a dependência de 218/219 `done` condiciona **somente o convite de testers**, não a execução desta spec. **Default: executar; convidar só com 218/219 `done`.**
 
 ## 9. Evidência requerida
 

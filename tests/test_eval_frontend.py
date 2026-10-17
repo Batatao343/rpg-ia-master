@@ -6,7 +6,9 @@ from pathlib import Path
 
 import yaml
 
-from scripts.frontend_eval_report import JOURNEY_IDS, summarize
+from scripts.frontend_eval_report import (
+    JOURNEY_IDS, VERTICAL_IDS, VERTICAL_VIEWPORTS, summarize, summarize_vertical,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 WEB = ROOT / "web"
@@ -15,10 +17,49 @@ WEB = ROOT / "web"
 def test_frontend_manifest_and_playwright_suite_cover_every_registered_journey():
     manifest = yaml.safe_load((WEB / "e2e/critical-journeys.yaml").read_text(encoding="utf-8"))
     expected = list(JOURNEY_IDS)
-    assert [row["id"] for row in manifest["journeys"]] == expected
-    assert all(row["hard"] for row in manifest["journeys"])
+    rows = manifest["journeys"]
+    assert manifest["schema_version"] == 2
+    assert [row["id"] for row in rows if row.get("suite", "frontend") == "frontend"] == expected
+    assert all(row["hard"] for row in rows)
     source = (WEB / "e2e/critical-journeys.spec.ts").read_text(encoding="utf-8")
     assert re.findall(r'test\("(F\d{2}) ', source) == expected
+
+
+def test_vertical_manifest_and_spec_cover_v01_to_v09_on_both_desktop_viewports():
+    manifest = yaml.safe_load((WEB / "e2e/critical-journeys.yaml").read_text(encoding="utf-8"))
+    vertical = [row for row in manifest["journeys"] if row.get("suite") == "vertical"]
+    assert [row["id"] for row in vertical] == list(VERTICAL_IDS)
+    assert all(row["hard"] and row["viewports"] == ["1440x900", "1280x800"] for row in vertical)
+    source = (WEB / "e2e/vertical-journey.spec.ts").read_text(encoding="utf-8")
+    titles = re.findall(r'test\("(V\d{2}) (\w+)"', source)
+    assert [(i, n) for i, n in titles] == [(row["id"], row["name"]) for row in vertical]
+    assert "waitForTimeout(" not in (WEB / "e2e/vertical-support.ts").read_text(encoding="utf-8")
+    # A régua é o oráculo Python: a jornada só observa e entrega o trace.
+    assert "evals.gameplay_scan" in (WEB / "e2e/vertical-support.ts").read_text(encoding="utf-8")
+
+
+def _vertical_specs(failed: tuple[str, str] | None = None, drop: str | None = None) -> dict:
+    specs = []
+    for step in VERTICAL_IDS:
+        tests = []
+        for project in VERTICAL_VIEWPORTS:
+            if project == drop:
+                continue
+            status = "failed" if failed == (project, step) else "passed"
+            tests.append({"projectName": project, "results": [{"status": status}]})
+        specs.append({"title": f"{step} fixture", "tests": tests})
+    return {"suites": [{"specs": specs}]}
+
+
+def test_vertical_report_requires_every_step_on_both_viewports():
+    ok = summarize_vertical(_vertical_specs())
+    assert ok["hard_gates_passed"] is True
+    assert ok["journeys"]["registered"] == 18
+    assert ok["metrics"]["vertical_journey_pass_rate"] == 1.0
+    assert summarize_vertical(_vertical_specs(failed=("desktop-1280", "V09")))["hard_gates_passed"] is False
+    assert summarize_vertical(_vertical_specs(drop="desktop-1280"))["hard_gates_passed"] is False
+    # Os passos V não entram no relatório F (e vice-versa).
+    assert summarize(_vertical_specs())["journeys"]["executed"] == 0
 
 
 def test_frontend_suite_has_every_hard_gate_and_no_fixed_sleep():
@@ -46,6 +87,7 @@ def test_frontend_toolchain_and_visual_snapshot_are_pinned():
 def test_frontend_metrics_are_blocking_and_have_hard_limits():
     registry = yaml.safe_load((ROOT / "evals/metrics-registry.yaml").read_text(encoding="utf-8"))["metrics"]
     names = {
+        "vertical_journey_pass_rate",
         "frontend_critical_journey_pass_rate",
         "frontend_uncaught_page_errors",
         "frontend_unexpected_console_errors",

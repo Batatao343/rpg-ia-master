@@ -1360,6 +1360,27 @@ class DossierLeakAdapter:
         raise AdapterError(f"unsupported dossier_leak operation: {operation}")
 
 
+class GameplayGateAdapter:
+    """Run the ruler-owned gameplay-gate oracles over a fixture-authored trace (SPEC-212)."""
+
+    adapter_id = "gameplay_gate"
+
+    def execute(self, case: AdapterCase) -> AdapterOutput:
+        if not isinstance(case.input, dict):
+            raise AdapterError("gameplay_gate requires object input")
+        operation = str(case.input.get("operation") or "")
+        data = case.input.get("trace")
+        if not isinstance(data, dict):
+            raise AdapterError("gameplay_gate requires input.trace object")
+        from evals.evaluators.gameplay_gate import trace_problems
+
+        try:
+            problems = trace_problems(operation, copy.deepcopy(data))
+        except ValueError as error:
+            raise AdapterError(str(error)) from error
+        return AdapterOutput(actual={"operation": operation, "problems": problems})
+
+
 class AdapterRegistry:
     """Small explicit suite registry; unknown suites fail closed."""
 
@@ -1393,6 +1414,7 @@ def default_registry() -> AdapterRegistry:
             "narrative_claims": NarrativeClaimAdapter(),
             "player_knowledge": PlayerKnowledgeAdapter(),
             "dossier_leak": DossierLeakAdapter(),
+            "gameplay_gate": GameplayGateAdapter(),
             "encounter_manifest": EncounterManifestAdapter(),
             "npc_knowledge": NpcKnowledgeAdapter(),
         }
@@ -1412,6 +1434,7 @@ __all__ = [
     "NarrativeClaimAdapter",
     "PlayerKnowledgeAdapter",
     "DossierLeakAdapter",
+    "GameplayGateAdapter",
     "StateRulesAdapter",
     "RoutingAdapter",
     "MemoryWriteAdapter",

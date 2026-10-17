@@ -53,6 +53,7 @@
         "narrative_claim",
         "player_knowledge",
         "dossier_leak",
+        "gameplay_gate",
         "property",
         "judge"
       ],

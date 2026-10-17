@@ -18,6 +18,7 @@ from evals.evaluators import (
     ExactEvaluator,
     MemoryWriteEvaluator,
     DossierLeakEvaluator,
+    GameplayGateEvaluator,
     NarrativeClaimEvaluator,
     PlayerKnowledgeEvaluator,
     ProjectionEvaluator,
@@ -282,6 +283,22 @@ def _metric_values(
             values["dossier_oracle_detection"] = _dossier_mean(
                 "dossier_oracle_detection", mutated_dossier
             )
+    gate_cases = [case for case in eligible if case.oracle == "gameplay_gate"]
+    if gate_cases:
+
+        def _gate(case: EvalCase, name: str, missing: float) -> float:
+            result = result_by_id.get(case.id)
+            return result.metric_values.get(name, missing) if result else missing
+
+        values["gameplay_oracle_accuracy"] = sum(
+            _gate(case, "gameplay_oracle_accuracy", 0.0) for case in gate_cases
+        ) / len(gate_cases)
+        values["gameplay_oracle_missed_defects"] = sum(
+            _gate(case, "gameplay_oracle_missed_defects", 1.0) for case in gate_cases
+        )
+        values["gameplay_oracle_false_alarms"] = sum(
+            _gate(case, "gameplay_oracle_false_alarms", 1.0) for case in gate_cases
+        )
     return values
 
 
@@ -415,6 +432,7 @@ def run_eval(
         "narrative_claim": NarrativeClaimEvaluator(),
         "player_knowledge": PlayerKnowledgeEvaluator(),
         "dossier_leak": DossierLeakEvaluator(),
+        "gameplay_gate": GameplayGateEvaluator(),
     }
     random_state = random.getstate()
     random.seed(seed)

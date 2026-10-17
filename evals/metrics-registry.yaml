@@ -1,5 +1,5 @@
 schema_version: 1
-evaluator_version: 1.13.0
+evaluator_version: 1.14.0
 metrics:
   exact_match:
     direction: higher
@@ -303,4 +303,44 @@ metrics:
     denominator: all valid dossier_leak oracle_mutation cases executed; adapter errors count as zero
     exclusions:
       - project and paired_project cases
+    hard_limit: 1.0
+  gameplay_oracle_accuracy:
+    direction: higher
+    kind: deterministic
+    blocking: true
+    unit: ratio
+    numerator: gameplay-gate cases whose oracle reports exactly the fixture-labelled problem classes
+    denominator: all valid gameplay_gate cases executed; adapter errors count as zero
+    exclusions:
+      - none
+    hard_limit: 1.0
+  gameplay_oracle_missed_defects:
+    direction: lower
+    kind: deterministic
+    blocking: true
+    unit: count
+    numerator: known-bad gameplay-gate cases (labelled with at least one problem class) on which the oracle reports none of the labelled classes
+    denominator: all valid gameplay_gate cases executed; adapter errors count as one missed defect
+    exclusions:
+      - known-good cases
+    hard_limit: 0.0
+  gameplay_oracle_false_alarms:
+    direction: lower
+    kind: deterministic
+    blocking: true
+    unit: count
+    numerator: known-good gameplay-gate cases (labelled with no problem class) on which the oracle reports any problem
+    denominator: all valid gameplay_gate cases executed; adapter errors count as one false alarm
+    exclusions:
+      - known-bad cases
+    hard_limit: 0.0
+  vertical_journey_pass_rate:
+    direction: higher
+    kind: deterministic
+    blocking: true
+    unit: ratio
+    numerator: vertical journey steps (V01-V09) with a passed final result, summed over the required desktop viewports
+    denominator: nine steps times the two required desktop viewports (1440x900 and 1280x800); a missing step or viewport counts as not passed
+    exclusions:
+      - none
     hard_limit: 1.0

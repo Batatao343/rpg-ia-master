@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 journeys:
   - { id: F01, name: auth_signup_login, hard: true }
   - { id: F02, name: character_creation, hard: true }
@@ -36,3 +36,12 @@ journeys:
   - { id: F38, name: dossier_bestiary_tiers, hard: true }
   - { id: F39, name: dossier_endpoint_fallback, hard: true }
   - { id: F40, name: dossier_keyboard_reduced_motion, hard: true }
+  - { id: V01, name: create_character_and_open_chat, hard: true, suite: vertical, viewports: [1440x900, 1280x800] }
+  - { id: V02, name: interlocutor_narrator_vs_npc, hard: true, suite: vertical, viewports: [1440x900, 1280x800] }
+  - { id: V03, name: threat_opens_combat_split_with_manifest, hard: true, suite: vertical, viewports: [1440x900, 1280x800] }
+  - { id: V04, name: card_gesture_without_confirmation, hard: true, suite: vertical, viewports: [1440x900, 1280x800] }
+  - { id: V05, name: victory_and_defeat_outcomes, hard: true, suite: vertical, viewports: [1440x900, 1280x800] }
+  - { id: V06, name: xp_in_structured_ui_and_idempotent_receipt, hard: true, suite: vertical, viewports: [1440x900, 1280x800] }
+  - { id: V07, name: context_tabs_coherent_and_accessible, hard: true, suite: vertical, viewports: [1440x900, 1280x800] }
+  - { id: V08, name: save_reload_and_no_duplicate_turn, hard: true, suite: vertical, viewports: [1440x900, 1280x800] }
+  - { id: V09, name: audit_export_and_transversal_oracles, hard: true, suite: vertical, viewports: [1440x900, 1280x800] }
