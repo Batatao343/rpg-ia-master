@@ -231,10 +231,12 @@ test("SPEC-187 native Chromium MediaRecorder produces a browser audio Blob and r
     }
     Object.defineProperty(window, "MediaRecorder", { value: ObservedRecorder });
   });
-  let bytes = 0;
+  let bytes = 0; let contentType = ""; let header = "";
   await page.route("**/account/transcriptions", route => {
-    bytes = route.request().postDataBuffer()!.byteLength;
-    expect(route.request().headers()["content-type"]).toMatch(/^audio\/(webm|ogg|mp4)/);
+    const body = route.request().postDataBuffer()!;
+    bytes = body.byteLength;
+    contentType = route.request().headers()["content-type"] ?? "";
+    header = `${body.subarray(0, 4).toString("latin1")}${body.subarray(8, 12).toString("latin1")}`;
     return route.fulfill({ status: 200, contentType: "application/json", body: '{"text":"Transcript de fixture, sem chamada STT"}' });
   });
   await open(page); await page.getByRole("button", { name: "Gravar ação por voz" }).click();
@@ -242,6 +244,10 @@ test("SPEC-187 native Chromium MediaRecorder produces a browser audio Blob and r
   await page.getByRole("button", { name: "Parar gravação" }).click();
   await expect(page.getByLabel("Sua ação")).toHaveValue("Transcript de fixture, sem chamada STT");
   expect(bytes).toBeGreaterThan(100);
+  // A gravação nativa do navegador (webm/ogg/mp4) é transcodificada para WAV
+  // PCM16 antes do upload: o hosted não tem ffmpeg (src/voice/wav.ts).
+  expect(contentType).toMatch(/^audio\/wav/);
+  expect(header).toBe("RIFFWAVE");
   expect(await page.evaluate(() => (window as unknown as { nativeVoice: { track: MediaStreamTrack } }).nativeVoice.track.readyState)).toBe("ended");
   expect(backend.requests.filter(r => /\/game\/action/.test(r.path))).toHaveLength(0);
 });

@@ -1,4 +1,4 @@
-import { expect, test as base, type Page, type Route } from "@playwright/test";
+import { expect, test as base, type Page, type Request, type Route } from "@playwright/test";
 import type { GameResponse, SaveSummary } from "../src/types";
 
 const ART = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='360'%3E%3Crect width='100%25' height='100%25' fill='%23120f18'/%3E%3C/svg%3E";
@@ -99,6 +99,8 @@ export class DeterministicBackend {
   protectedBeforeAuth = 0;
   refreshCount = 0;
   unexpectedAllowed: RegExp[] = [];
+  /** Falhas inesperadas coletadas pelo guard global (verificadas no teardown). */
+  guardFailures: string[] = [];
   expectedConsole: RegExp[] = [];
   operations = new Map<string, { signature: string; response: GameResponse; gameId: string; ownerId: string }>();
   failNextTurn = false;
@@ -424,7 +426,7 @@ type Fixtures = { backend: DeterministicBackend };
 export const test = base.extend<Fixtures>({
   backend: [async ({ page }, use) => {
     const backend = new DeterministicBackend();
-    const failures: string[] = [];
+    const failures = backend.guardFailures;
     page.on("pageerror", (error) => failures.push(`pageerror: ${error.message}`));
     page.on("console", (message) => {
       if (message.type() === "error" && !backend.expectedConsole.some((p) => p.test(message.text()))) {
@@ -434,8 +436,40 @@ export const test = base.extend<Fixtures>({
     page.on("response", (response) => {
       if (response.status() >= 500 && !backend.unexpectedAllowed.some((p) => p.test(response.url()))) failures.push(`HTTP ${response.status()}: ${response.url()}`);
     });
+    // Uma navegação disparada pelo próprio teste (goto/reload) descarta o
+    // documento anterior e o Chromium aborta (net::ERR_ABORTED) o que ele ainda
+    // tinha em voo — boot da API, fontes. Isso não é falha da aplicação. Só
+    // ignoramos esse caso exato: requisição emitida antes do commit do novo
+    // documento de uma navegação do teste (o documento antigo segue pedindo
+    // fontes até o commit) e abortada depois dele. Abortos da própria app
+    // (AbortController, StrictMode) fora dessa janela seguem reprovando.
+    const issuedAt = new WeakMap<Request, number>();
+    let requestSeq = 0;
+    let testNavigating = false;
+    let navigationFence = -1;
+    // Abortos vistos durante a navegação só são julgados quando ela termina:
+    // o Chromium os reporta antes do commit que move a cerca.
+    let undecided: { seq: number; line: string }[] = [];
+    const decide = ({ seq, line }: { seq: number; line: string }) => { if (seq >= navigationFence) failures.push(line); };
+    page.on("request", (request) => { issuedAt.set(request, requestSeq++); });
+    page.on("framenavigated", (frame) => { if (testNavigating && frame === page.mainFrame()) navigationFence = requestSeq; });
+    for (const method of ["goto", "reload", "goBack", "goForward"] as const) {
+      const original = page[method].bind(page) as (...args: unknown[]) => Promise<unknown>;
+      (page as unknown as Record<string, unknown>)[method] = async (...args: unknown[]) => {
+        testNavigating = true;
+        try { return await original(...args); } finally {
+          testNavigating = false;
+          undecided.forEach(decide); undecided = [];
+        }
+      };
+    }
     page.on("requestfailed", (request) => {
-      if (!backend.unexpectedAllowed.some((p) => p.test(request.url()))) failures.push(`requestfailed: ${request.url()} (${request.failure()?.errorText})`);
+      if (backend.unexpectedAllowed.some((p) => p.test(request.url()))) return;
+      const errorText = request.failure()?.errorText ?? "";
+      const line = `requestfailed: ${request.url()} (${errorText})`;
+      if (errorText !== "net::ERR_ABORTED") return void failures.push(line);
+      const entry = { seq: issuedAt.get(request) ?? Number.POSITIVE_INFINITY, line };
+      if (testNavigating) undecided.push(entry); else decide(entry);
     });
     await backend.install(page);
     await use(backend);
