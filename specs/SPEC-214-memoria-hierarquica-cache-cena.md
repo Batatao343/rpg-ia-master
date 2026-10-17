@@ -1,7 +1,11 @@
 # SPEC-214 — Memória hierárquica: snapshot da cena ativa (L1), contexto do interlocutor/local (L2) e histórico sob demanda (L3)
 
 > **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
+> **Gate R1:** gate não atingido em 2026-10-16; reavaliar com baseline real. `NO_GO` no baseline offline
+> (`--mode scaled --scale 1.0`, seed 214): context p50/p95 = 9/36 ms (`typical`) e 5/12 ms (`slow-tail`),
+> `context_share` 0,14 % / 0,08 % do TTLT p50. Default P1 aplicado. Nenhum código de produto escrito;
+> limitação: offline não inclui embedding HTTP real. Evidência: [docs/spec214/gate.md](../docs/spec214/gate.md).
 > **Depende de:** SPEC-200 `done` (baseline/gate), SPEC-213 `done` (cursor das projeções — recomendado), SPEC-234 `done` (ledger/resumo que não congela) · SPEC-005, SPEC-085, SPEC-146, SPEC-147, SPEC-149 e SPEC-170 `done` (insumos/régua, não reabertos) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-215, SPEC-217 (ordem final 2026-10-15)
 > **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 11
@@ -126,7 +130,7 @@ class SceneSnapshot:
 
 ## 5. Critérios de aceite
 
-- [ ] `docs/spec214/gate.md` com decisão `GO`/`NO_GO` fundamentada no baseline SPEC-200.
+- [x] `docs/spec214/gate.md` com decisão `GO`/`NO_GO` fundamentada no baseline SPEC-200. (`NO_GO` 2026-10-16, offline; reavaliar com baseline real)
 - [ ] (se GO) Snapshot puro, determinístico, sem beats privados; recomputação idêntica.
 - [ ] (se GO) Cada causa de invalidação de R5 tem teste verde; segredo filtrado na escrita e na leitura.
 - [ ] (se GO) `RPG_SCENE_CACHE=off` produz `ContextPack` idêntico ao HEAD (teste de paridade).
