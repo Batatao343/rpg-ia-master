@@ -1,5 +1,5 @@
 {
-  "commit_sha": "93584ea82fae9813506a48468c45d0c54450d566",
+  "commit_sha": "6bbc5098da9f34e2091c43cc6a7778b166f34bf5",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -276174,6 +276174,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:web/e2e/effects.spec.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/e2e/effects.spec.ts",
+      "qualified_name": null
+    },
+    {
       "id": "file:web/e2e/fixtures.ts",
       "kind": "file",
       "line": 1,
@@ -276514,6 +276521,41 @@
       "kind": "file",
       "line": 1,
       "path": "web/src/components/ornaments.tsx",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/src/design/effects.registry.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/design/effects.registry.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/src/design/killswitch.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/design/killswitch.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/src/design/motion.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/design/motion.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/src/design/primitives.tsx",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/design/primitives.tsx",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/src/design/tokens.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/design/tokens.ts",
       "qualified_name": null
     },
     {
@@ -337355,5 +337397,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:c4960ddfce2c5b8c7a1b99f59589ef968feac967eae85f3caaf26a61abaec314"
+  "source_tree_hash": "sha256:0273536eecc0291bddb4482473dd59f77c98af93e42e919213c3064326568476"
 }
