@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "a81832f8fa310113e951db5ee9b1d6bd4072f2c1",
+  "commit_sha": "f83af29e0ae443498a4c308b71b7ff9b90508ca9",
   "edge_counts": {
-    "calls": 14631,
-    "contains": 625,
-    "defines": 8410,
-    "imports": 1362,
-    "likely_test_for": 854,
+    "calls": 14691,
+    "contains": 629,
+    "defines": 8439,
+    "imports": 1370,
+    "likely_test_for": 855,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:2148cd8168bbb7f8bea85b4ab6c780101249ae6d2ef79cdf2055c753ef19f7a9",
+  "graph_hash": "sha256:31015314e7a0804632ab6b560236fc0328f6888a3e5b4107fdbda43b6041071a",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -285,6 +285,7 @@
     "services/discovery.py",
     "services/dossier_visibility.py",
     "services/dossiers.py",
+    "services/dsn_cli.py",
     "services/dynamic_art.py",
     "services/ecology.py",
     "services/economy.py",
@@ -510,6 +511,7 @@
     "tests/test_fuga_progressiva_persistente.py",
     "tests/test_game_delete_purges_blobs.py",
     "tests/test_game_transfer_local.py",
+    "tests/test_gitignore_contract.py",
     "tests/test_grounding_boundaries.py",
     "tests/test_hardening_mechanical_inputs.py",
     "tests/test_hardening_persistencia_sse.py",
@@ -562,6 +564,7 @@
     "tests/test_onboarding.py",
     "tests/test_operation_recovery_local.py",
     "tests/test_operation_replay_boundaries.py",
+    "tests/test_ops_scripts_dsn_env.py",
     "tests/test_owner_tables_inventory.py",
     "tests/test_perfil_normal_invariantes.py",
     "tests/test_persistence_transient_lock.py",
@@ -670,6 +673,7 @@
     "tests/test_weather_global.py",
     "tests/test_worker_fence_local.py",
     "tests/test_worker_lease_lifecycle.py",
+    "tests/test_workflows_contract.py",
     "tests/test_world_distance.py",
     "tests/test_world_event_proof.py",
     "tests/test_world_sim.py",
@@ -809,12 +813,12 @@
     "artifact": 9,
     "class": 707,
     "endpoint": 63,
-    "file": 753,
-    "function": 2594,
+    "file": 757,
+    "function": 2600,
     "method": 686,
-    "module": 625,
-    "test": 4423
+    "module": 629,
+    "test": 4446
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:a80a12b6c521b86da31d032acc074e804867734b24d13c297eea08e0e1eb3ddb"
+  "source_tree_hash": "sha256:a4427d9a4af4b5cb52fb24e72f8de6059b886c8d7004c7c0dd85163ff9e9539f"
 }
