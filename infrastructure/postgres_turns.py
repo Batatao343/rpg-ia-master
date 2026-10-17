@@ -641,7 +641,9 @@ class PostgresDailyQuota:
         from services.abuse_policy import QuotaDecision, seconds_until_utc_midnight
         if limit <= 0:
             raise ValueError("limit precisa ser positivo")
-        with self.pool.connection() as connection, connection.transaction():
+        # Tabela backend-only (sem grant a rpg_api): sempre pelo pool de sistema, mesmo dentro de
+        # um request com RLS efetivo (SPEC-224), como o limitador de taxa.
+        with admin_connection(self.pool) as connection, connection.transaction():
             row = connection.execute(
                 "select allowed, used from app.bump_daily_counter(%s,%s,%s)",
                 (owner_id, cls, limit),

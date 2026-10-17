@@ -197,6 +197,15 @@ def test_full_runtime_user_paths_under_rpg_api_and_system_paths_on_admin_pool(wo
                 "rls_test_job", f"rls-{uuid4()}", {"x": 1}, owner_id=owner, game_id=new_game))
             # limitador (tabela vetada a rpg_api) funciona dentro do request via credencial de sistema
             assert runtime.rate_limiter.consume(f"rls-{uuid4()}", limit=5, window_seconds=60).allowed
+            # SPEC-219 x SPEC-224: a cota diaria (tabela vetada a rpg_api) tambem vai pelo pool de
+            # sistema; antes abria conexao de request, levava permission denied e o handler falhava aberto.
+            quota_owner = uuid4()
+            try:
+                assert runtime.daily_quota.bump(quota_owner, "turn", 1).allowed
+                assert not runtime.daily_quota.bump(quota_owner, "turn", 1).allowed
+            finally:
+                with psycopg.connect(world["admin_dsn"], autocommit=True) as cleanup:
+                    cleanup.execute("delete from app.owner_daily_counters where owner_id=%s", (quota_owner,))
         leased = runtime.job_queue.lease("rls-worker", {"rls_test_job"}, 5)
         assert [j.job_id for j in leased] == [job_id]
         runtime.job_queue.complete(leased[0].job_id, leased[0].lease_token, {"ok": True})
