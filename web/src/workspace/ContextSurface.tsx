@@ -1,7 +1,7 @@
 import { Component, useLayoutEffect, useRef, type ErrorInfo, type KeyboardEvent, type ReactNode } from "react";
 import type { ActionOptions, GameResponse } from "../types";
 import { ChronicleTab, FactionsTab, PeopleTab, type EquipFn } from "../components/Hud";
-import { CodexCategory, CodexTab, type CodexSection } from "../components/CodexTab";
+import { CodexCategory, CodexTab, DossierCategory, type CodexSection } from "../components/CodexTab";
 import { WorldMap } from "../components/WorldMap";
 import { RovingTablist } from "./RovingTablist";
 import { CONTEXT_TABS, TAB_LABELS, type ContextTab } from "./workspaceModel";
@@ -126,12 +126,24 @@ function renderTab(id: ContextTab, props: ContextSurfaceProps): ReactNode {
     case "codex": {
       const sections: CodexSection[] = [
         { id: "pessoas", label: "Pessoas", before: "characters",
-          render: () => <PeopleTab npcs={data?.npcs ?? []} /> },
+          // Sem dossiê de NPC (endpoint indisponível ou nenhum NPC visível ainda) mantém a lista do HUD;
+          // o servidor já filtra NPC oculto de `data.npcs` (`_npcs_block`).
+          render: (_codex, dossiers) => dossiers && dossiers.sections.npcs.length > 0 && data?.game_id ? (
+            <DossierCategory dossiers={dossiers} gameId={data.game_id} category="characters"
+              turnCount={data.world.turn_count} />
+          ) : <PeopleTab npcs={data?.npcs ?? []} /> },
         { id: "faccoes", label: "Fações", before: "secrets",
-          render: (codex) => (
+          render: (codex, dossiers) => (
             <>
               <FactionsTab factions={data?.factions ?? []} />
-              {codex && codex.factions.length > 0 && (
+              {dossiers && data?.game_id && dossiers.sections.factions.length > 0 && (
+                <div>
+                  <p className="hud__label hud__label--sub">Dossiês do Codex</p>
+                  <DossierCategory dossiers={dossiers} gameId={data.game_id} category="factions"
+                    turnCount={data.world.turn_count} />
+                </div>
+              )}
+              {!dossiers && codex && codex.factions.length > 0 && (
                 <div>
                   <p className="hud__label hud__label--sub">Registros do Codex</p>
                   <CodexCategory codex={codex} category="factions" />

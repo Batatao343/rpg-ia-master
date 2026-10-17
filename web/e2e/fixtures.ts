@@ -78,6 +78,7 @@ const deferred = (): Deferred => {
 };
 
 export class DeterministicBackend {
+  dossiers: unknown = null;
   authRequired = true;
   authenticated = true;
   userId = "fixture-user";
@@ -362,6 +363,8 @@ export class DeterministicBackend {
       return this.json(route, { status: "ready", placeholder: false, assets: [{ asset_id: "portrait", variant: "full", url: ART, width: 512, height: 768 }] });
     }
     if (path === "/game/chronicle/search") return this.json(route, { mode: "lexical_fallback", index_current: true, hits: [] });
+    // SPEC-211: dossiês (vazios por padrão; testes definem `backend.dossiers`).
+    if (path === "/game/codex/dossiers") return this.json(route, this.dossiers ?? { version: 0, generated_at_turn: 0, sections: { npcs: [], locations: [], factions: [], secrets: [], chronicle_index: [] }, bestiary: [], meta: { taxonomy_version: 1 } });
     if (path === "/game/codex") return this.json(route, { locations: [], factions: [], characters: [], creatures: [], secrets: [] });
     return this.json(route, { detail: `fixture route missing: ${path}` }, 404);
   }

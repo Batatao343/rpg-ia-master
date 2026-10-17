@@ -8,6 +8,7 @@ import type {
   GameResponse,
   OnboardingData,
   PlayerCodex,
+  DossiersPayload,
   PrologueResponse,
   SaveSummary,
   WorldMapData,
@@ -245,6 +246,10 @@ export interface ArtStatus { status: string; placeholder: boolean; financial_sta
 }> }
 export const getArtStatus = (game: string, generation: string, signal?: AbortSignal) => req<ArtStatus>(
   `/game/${encodeURIComponent(game)}/art/${encodeURIComponent(generation)}`, { signal });
+
+// SPEC-211: dossiês vivos (aditivo; o cliente cai para getCodex se falhar).
+export const getDossiers = (game_id: string) =>
+  req<DossiersPayload>("/game/codex/dossiers?game_id=" + encodeURIComponent(game_id));
 
 export const getCodex = (game_id: string) =>
   req<PlayerCodex>("/game/codex?game_id=" + encodeURIComponent(game_id));

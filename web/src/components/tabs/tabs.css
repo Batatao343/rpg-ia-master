@@ -42,3 +42,50 @@
 .char-portrait { display: grid; gap: 0.4rem; }
 .char-journey__item { padding: 0.35rem 0; border-bottom: 1px solid var(--line-soft); color: var(--ink-soft); font-size: 0.82rem; }
 @media (prefers-reduced-motion: reduce) { .deck-card__btn { transition: none; transform: none !important; } }
+
+/* SPEC-211: dossiês do Codex e do Bestiário. Sem animação própria (R9 SPEC-208):
+   só estados estáticos; reduced-motion e ?effects=off não mudam nada aqui. */
+.dossier-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+.dossier-row {
+  display: flex; align-items: center; gap: 0.6rem; width: 100%; min-height: 44px;
+  padding: 0.55rem 0.7rem; text-align: left; cursor: pointer;
+  border: 1px solid var(--line-soft); border-radius: 6px; background: transparent; color: var(--ink);
+}
+.dossier-row:hover { border-color: var(--line); background: var(--state-hover); }
+.dossier-row:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }
+.dossier-row__main { display: grid; gap: 0.1rem; min-width: 0; flex: 1; }
+.dossier-row__title { font-family: var(--display); font-size: 0.82rem; letter-spacing: 0.05em; text-transform: uppercase; overflow-wrap: anywhere; }
+.dossier-row__sub { font-size: 0.78rem; color: var(--faint); overflow-wrap: anywhere; }
+.dossier-row__flags { display: flex; flex-wrap: wrap; gap: 0.3rem; justify-content: flex-end; }
+.dossier-flag {
+  display: inline-block; padding: 0.02rem 0.45rem; border-radius: var(--r-pill);
+  font: 600 0.6rem var(--display); letter-spacing: 0.1em; text-transform: uppercase;
+}
+.dossier-flag--new { color: var(--on-accent); background: var(--accent); }
+.dossier-flag--updated { color: var(--accent); border: 1px solid var(--accent); }
+
+.dossier { display: grid; gap: 0.5rem; }
+.dossier__back {
+  justify-self: start; min-height: 44px; padding: 0.4rem 0.8rem; cursor: pointer;
+  border: 1px solid var(--line-soft); border-radius: 6px; background: transparent; color: var(--muted);
+}
+.dossier__back:hover { border-color: var(--accent); color: var(--accent); }
+.dossier__back:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }
+.dossier__head { display: grid; gap: 0.15rem; }
+.dossier__title { margin: 0; font-family: var(--display); font-size: 1rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); }
+.dossier__section { display: grid; gap: 0.25rem; margin-top: 0.4rem; }
+.dossier__h { margin: 0; font-family: var(--display); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); }
+.dossier__hint, .dossier__behind, .dossier__noart { margin: 0; font-size: 0.8rem; font-style: italic; color: var(--faint); }
+.dossier__noart { padding: 0.6rem; border: 1px dashed var(--line-soft); border-radius: 6px; }
+.dossier-seal {
+  flex: none; width: 1.8rem; height: 1.8rem; display: grid; place-items: center;
+  border: 1px solid var(--line); border-radius: 50%; font: 600 0.7rem var(--display); color: var(--accent);
+}
+.dossier-row--tier1 { opacity: 0.7; }
+.dossier-row--tier4 { border-color: var(--accent); }
+
+/* Contraste AA no painel de contexto: --faint (4.08:1) vira --muted dentro de dossiês. */
+.dossier .codex-entry__meta, .dossier .codex-entry__hint, .dossier .dossier__hint, .dossier .dossier__noart,
+.dossier .dossier__h, .dossier-row__sub, .dossier__behind { color: var(--muted); }
+.dossier .codex-knowledge--rumor, .dossier .codex-knowledge--suspicion,
+.dossier-row .codex-knowledge--rumor, .dossier-row .codex-knowledge--suspicion { color: var(--muted); }

@@ -830,3 +830,120 @@ export interface LogEntry {
   visual?: VisualCue | null;
   onTypewriterDone?: () => void;  // fim real da animação (SPEC-235 R7)
 }
+
+// --- SPEC-211: dossiês vivos (GET /game/codex/dossiers) ---
+export interface DossierArt {
+  asset_id: string;
+  alt: string;
+  placeholder_color?: string | null;
+  variants?: VisualAsset["variants"] | null;
+}
+
+export interface DossierClaim {
+  text: string;
+  knowledge: KnowledgeStamp;
+}
+
+export interface DossierEncounter {
+  turn: number;
+  location_id: string;
+  outcome: string;
+  encounter_id?: string | null;
+}
+
+export interface DossierBase {
+  id: string;
+  kind: "npc" | "location" | "faction" | "secret" | "creature";
+  title: string;
+  last_updated_turn: number;
+  version: number;
+  art: DossierArt | null;
+  knowledge: KnowledgeStamp;
+  notes: KnowledgeNote[];
+}
+
+export interface NpcDossier extends DossierBase {
+  kind: "npc";
+  role: string;
+  location: string;
+  status: string;
+  relationship: number;
+  disposition_label: string;
+  knowledge_source: string;
+  revealed_traits: Array<{ id: string; name: string; description?: string }>;
+  claims: DossierClaim[];
+  appears_to_know: DossierClaim[];
+  encounters: DossierEncounter[];
+  last_seen_turn: number | null;
+  body: string;
+}
+
+export interface LocationDossier extends DossierBase {
+  kind: "location";
+  body: string;
+  region: string;
+  npcs: string[];
+  creatures: string[];
+  events: DossierEncounter[];
+}
+
+export interface FactionDossier extends DossierBase {
+  kind: "faction";
+  body: string;
+  goal: string;
+  knows_goal: boolean;
+  region: string;
+  disposition: string;
+  reputation: number;
+  progress: number | null;
+  intel_stale: boolean;
+  stale_label: string;
+}
+
+export interface SecretDossier extends DossierBase {
+  kind: "secret";
+  fact: string;
+  entity_id: string;
+  turn: number;
+}
+
+export interface CreatureDossier extends DossierBase {
+  kind: "creature";
+  tier: number;
+  tier_name: string;
+  regions: string[];
+  rarity_note?: string | null;
+  first_seen_turn: number | null;
+  // Ausentes do JSON quando acima do tier (R6): sempre opcionais.
+  description?: string;
+  type?: string;
+  max_hp?: number | null;
+  defense?: number | null;
+  attacks?: Array<string | { name: string }>;
+  behavior?: Record<string, unknown>;
+  loot?: string[];
+  revealed_cards?: Array<{ id: string; name: string }>;
+  revealed_resistances?: string[];
+}
+
+export interface ChronicleIndexEntry {
+  chapter_id: string;
+  arc_title: string;
+  started_turn: number;
+  location: string;
+  entry_count: number;
+  entity_ids: string[];
+}
+
+export interface DossiersPayload {
+  version: number;
+  generated_at_turn: number;
+  sections: {
+    npcs: NpcDossier[];
+    locations: LocationDossier[];
+    factions: FactionDossier[];
+    secrets: SecretDossier[];
+    chronicle_index: ChronicleIndexEntry[];
+  };
+  bestiary: CreatureDossier[];
+}

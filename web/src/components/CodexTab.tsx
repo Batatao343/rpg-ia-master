@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { getCodex } from "../api";
 import { mdLite } from "../lib";
-import type { KnowledgeNote, KnowledgeStamp, PlayerCodex } from "../types";
-import { categoryCount, knowledgeBadgeText, knowledgeTooltip } from "../codexKnowledge";
+import type { DossiersPayload, PlayerCodex } from "../types";
+import { categoryCount } from "../codexKnowledge";
+import { isProjectionBehind } from "../dossiers";
+import { CertaintyBadge, KnowledgeNotes } from "./tabs/CertaintyBadge";
+import { DossierBrowser } from "./tabs/DossierBrowser";
+import { useDossiers } from "./tabs/useDossiers";
 import { RovingTablist } from "../workspace/RovingTablist";
 import { ArrivalLi, ArrivalsProvider, NO_ARRIVALS } from "../design/primitives";
 
@@ -18,32 +22,7 @@ const CATEGORIES: Array<[Category, string]> = [
 
 const TIER_ROMAN: Record<number, string> = { 1: "I", 2: "II", 3: "III", 4: "IV" };
 
-// SPEC-206: selo de conhecimento (fato/relato/rumor/suspeita/percepção).
-function KnowledgeBadge({ stamp }: { stamp?: KnowledgeStamp }) {
-  if (!stamp) return null;
-  return (
-    <span
-      className={"codex-knowledge codex-knowledge--" + stamp.knowledge_kind}
-      title={knowledgeTooltip(stamp)}
-      data-knowledge-kind={stamp.knowledge_kind}
-    >
-      {knowledgeBadgeText(stamp)}
-    </span>
-  );
-}
-
-function KnowledgeNotes({ notes }: { notes?: KnowledgeNote[] }) {
-  if (!notes?.length) return null;
-  return (
-    <ul className="codex-notes">
-      {notes.map((n) => (
-        <li key={n.memory_id} className="codex-note">
-          <KnowledgeBadge stamp={n} /> {n.text}
-        </li>
-      ))}
-    </ul>
-  );
-}
+const KnowledgeBadge = CertaintyBadge;
 
 /** Seção extra do Codex (SPEC-204 D1): Pessoas, Fações-reputação, Crônica. */
 export interface CodexSection {
@@ -51,7 +30,7 @@ export interface CodexSection {
   label: string;
   /** Insere a seção logo antes desta categoria (default: no fim). */
   before?: Category;
-  render: (codex: PlayerCodex | null) => ReactNode;
+  render: (codex: PlayerCodex | null, dossiers?: DossiersPayload | null) => ReactNode;
 }
 
 /** Codex do jogador (`GET /game/codex`) — compartilhado pelas abas Codex e Bestiário. */
@@ -112,7 +91,10 @@ export function CodexTab({
   section?: string;
   onSection?: (id: string) => void;
 }) {
-  const { codex, loading, arrivals } = usePlayerCodex(gameId, turnCount, open && !unavailable);
+  const live = open && !unavailable;
+  const { payload: dossiers, failed: dossiersFailed, arrivals: dossierArrivals } = useDossiers(gameId, turnCount, live);
+  // Endpoint novo indisponível => formato antigo (§3.4); com dossiês, o Codex antigo não é consultado.
+  const { codex, loading, arrivals } = usePlayerCodex(gameId, turnCount, live && dossiersFailed);
   const categories = CATEGORIES.filter(([id]) => !excludeCategories.includes(id));
   const order: string[] = [];
   for (const [id] of categories) {
@@ -137,7 +119,8 @@ export function CodexTab({
     const extraSection = sections.find((section) => section.id === id);
     if (extraSection) return { id, label: extraSection.label };
     const label = CATEGORIES.find(([cat]) => cat === id)?.[1] ?? id;
-    return { id, label: codex ? `${label} (${categoryCount(codex, id as Category)})` : label };
+    const n = dossiers ? dossierCount(dossiers, id as Category) : codex ? categoryCount(codex, id as Category) : null;
+    return { id, label: n === null ? label : `${label} (${n})` };
   });
   const extra = sections.find((section) => section.id === category);
 
@@ -147,8 +130,10 @@ export function CodexTab({
       <RovingTablist items={items} selected={category} onSelect={setCategory}
         label="Seções do Codex" idPrefix="codex" className="codex-cats" tabClassName="codex-cat" controlsActiveOnly />
       <div role="tabpanel" id={`codex-panel-${category}`} aria-labelledby={`codex-tab-${category}`} className="codex-section">
-        <ArrivalsProvider value={arrivals}>
-        {extra ? extra.render(codex) : loading && !codex ? (
+        <ArrivalsProvider value={dossiers ? dossierArrivals : arrivals}>
+        {extra ? extra.render(codex, dossiers) : dossiers && gameId && DOSSIER_CATEGORIES.includes(category as Category) ? (
+          <DossierCategory dossiers={dossiers} gameId={gameId} category={category as Category} turnCount={turnCount} />
+        ) : loading && !codex ? (
           <p className="combat-empty">Consultando os registros da jornada…</p>
         ) : !codex ? (
           <p className="combat-empty">Nada registrado ainda — explore o mundo.</p>
@@ -284,4 +269,37 @@ export function CodexCategory({ codex, category }: { codex: PlayerCodex; categor
       )}
     </>
   );
+}
+
+const DOSSIER_CATEGORIES: Category[] = ["locations", "factions", "characters", "secrets"];
+
+function dossierCount(d: DossiersPayload, category: Category): number {
+  const s = d.sections;
+  return category === "locations" ? s.locations.length : category === "factions" ? s.factions.length
+    : category === "characters" ? s.npcs.length : category === "secrets" ? s.secrets.length : d.bestiary.length;
+}
+
+/** SPEC-211: categorias do Codex servidas por dossiês (contagem só dos visíveis, R8). */
+export function DossierCategory({ dossiers, gameId, category, turnCount }: {
+  dossiers: DossiersPayload; gameId: string; category: Category; turnCount?: number;
+}) {
+  const behind = isProjectionBehind(dossiers, turnCount);
+  if (category === "locations") {
+    return <DossierBrowser gameId={gameId} tabId="locations" items={dossiers.sections.locations}
+      empty="Nenhum local visitado ainda." behind={behind}
+      subtitle={(l) => l.region || ""} />;
+  }
+  if (category === "characters") {
+    return <DossierBrowser gameId={gameId} tabId="characters" items={dossiers.sections.npcs}
+      empty="Nenhum personagem conhecido ainda." behind={behind}
+      subtitle={(n) => [n.role, n.location].filter(Boolean).join(" · ")} />;
+  }
+  if (category === "factions") {
+    return <DossierBrowser gameId={gameId} tabId="factions" items={dossiers.sections.factions}
+      empty="Nenhuma facção conhecida ainda." behind={behind}
+      subtitle={(f) => (f.knows_goal ? f.goal : "Plano desconhecido")} />;
+  }
+  return <DossierBrowser gameId={gameId} tabId="secrets" items={dossiers.sections.secrets}
+    empty="Nenhum segredo revelado ainda." behind={behind}
+    subtitle={(x) => `revelado no turno ${x.turn}`} />;
 }

@@ -1387,7 +1387,7 @@ def format_response(state: dict, *, cue_action_key: Optional[str] = None) -> Gam
         quest=_quest_block(state.get("campaign_plan") or {}, state.get("quests", []) or [],
                            state.get("world") or {}),
         combat=_combat_block(state),
-        npcs=_npcs_block(state.get("npcs", {}) or {}),
+        npcs=_npcs_block(state.get("npcs", {}) or {}, state),
         **_public_art_refs(state),
         chronicle=_chronicle_block(state.get("chronicle", []) or []),
         party=[{"name": c.get("name", "?"),
@@ -1696,10 +1696,17 @@ def _factions_block(factions: list, intel: dict, turn: int = 0,
     return out
 
 
-def _npcs_block(npcs: dict) -> List[Dict[str, Any]]:
+def _npcs_block(npcs: dict, state: Optional[dict] = None) -> List[Dict[str, Any]]:
     """Camada 2 (spec npcs-3-camadas): só NPCs conhecidos, com traits REVELADOS
-    — hidden_traits NUNCA sai pela API (R9)."""
+    — hidden_traits NUNCA sai pela API (R9). SPEC-211: com `state`, NPC de entidade
+    `hidden`/`secret` sem reveal aceito (regra fail-closed da SPEC-206) também some."""
     from services.npc_layers import visible_npc_view
+    if state is not None:
+        from services.entity_identity import resolve_npc_entity_id
+        from services.player_knowledge import entity_is_player_visible
+        npcs = {key: npc for key, npc in (npcs or {}).items()
+                if not isinstance(npc, dict)
+                or entity_is_player_visible(resolve_npc_entity_id(npc, str(npc.get("name", key))), state)}
     out = visible_npc_view(npcs)
     return out
 
@@ -2377,6 +2384,21 @@ def get_player_codex(game_id: Optional[str] = None):
     if not state:
         raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
     return player_codex(state)
+
+@app.get("/game/codex/dossiers")
+def get_codex_dossiers(response: Response, game_id: Optional[str] = None):
+    """SPEC-211 — dossiês vivos (NPC/local/facção/segredo/crônica + bestiário).
+    Projeção somente leitura sobre o save, sobre a projeção player-facing da
+    SPEC-206 (fail-closed). `GET /game/codex` segue inalterado."""
+    from services.dossier_visibility import DossiersResponseModel
+    from services.dossiers import build_dossiers
+    file_to_load = _resolve_save_file(game_id)
+    state = load_game_state(file_to_load)
+    if not state:
+        raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
+    response.headers["Cache-Control"] = "private, no-store"
+    # exclude_unset: chave acima do tier (R6) fica AUSENTE do JSON, nunca `null`.
+    return DossiersResponseModel.model_validate(build_dossiers(state)).model_dump(exclude_unset=True)
 
 @app.get('/game/history')
 def game_history(game_id: str, cursor: Optional[str] = None, limit: int = 50):

@@ -1,0 +1,164 @@
+{
+ "version": 6,
+ "generated_at_turn": 7,
+ "sections": {
+  "npcs": [
+   {
+    "id": "ferreiro",
+    "kind": "npc",
+    "title": "ferreiro",
+    "last_updated_turn": 0,
+    "version": 0,
+    "art": null,
+    "knowledge": {
+     "knowledge_kind": "fact",
+     "certainty": "confirmed",
+     "source_kind": "canonical_event",
+     "source_ref": "npc:ferreiro",
+     "label": "Fato confirmado",
+     "first_seen_turn": null,
+     "last_updated_turn": null,
+     "stale": false
+    },
+    "notes": [],
+    "role": "guarda",
+    "location": "Terras Cinzentas",
+    "status": "ativo",
+    "relationship": 3,
+    "disposition_label": "Desconfiado",
+    "knowledge_source": "met",
+    "revealed_traits": [],
+    "claims": [],
+    "appears_to_know": [],
+    "encounters": [],
+    "last_seen_turn": null,
+    "body": ""
+   }
+  ],
+  "locations": [
+   {
+    "id": "nova_arcadia",
+    "kind": "location",
+    "title": "Nova Arcádia",
+    "last_updated_turn": 0,
+    "version": 0,
+    "art": {
+     "asset_id": "VAL-ANCHOR-LOC-NOVA_ARCADIA-001",
+     "alt": "Arte de Nova Arcádia",
+     "placeholder_color": "#241d1a",
+     "variants": {
+      "thumbnail": {
+       "url": "/art/v1/location/nova-arcadia.2384513e2ad5.thumb.webp",
+       "width": 640,
+       "height": 360,
+       "bytes": 80850,
+       "sha256": "4abc3963e7633f0a17cc421ab979e262d71302d4295ec8e0b3b53000084804d9"
+      },
+      "display": {
+       "url": "/art/v1/location/nova-arcadia.2384513e2ad5.webp",
+       "width": 1280,
+       "height": 720,
+       "bytes": 356704,
+       "sha256": "29f5e4da09675bea55d2665944368bdcd4609f2216e6d20e656b1d9e5f255896"
+      }
+     }
+    },
+    "knowledge": {
+     "knowledge_kind": "fact",
+     "certainty": "confirmed",
+     "source_kind": "canonical_event",
+     "source_ref": "visited:nova_arcadia",
+     "label": "Fato confirmado",
+     "first_seen_turn": null,
+     "last_updated_turn": null,
+     "stale": false
+    },
+    "notes": [],
+    "body": "# NOVA ARCÁDIA\n\nA maior cidade de Valoria. Fundada das cinzas da Guerra do Céu Vermelho onde as rotas de suprimento da coalizão convergiam — não por planejamento, mas por inevitabilidade. Quem não tinha para onde ir parou aqui. A cidade cresceu ao redor disso.\n\nGovernada por Valerius sob o Código de Ferro. Dominada por humanos por número e fundação. O resto do mundo existe em relação a ela — como destino, como mercado, como fuga, como ameaça.\n\nGEOGRAFIA\nConstruída numa confluência de rios que fornece água potável e rotas comerciais naturais. Os rios chegam do norte e do leste, se encontram no centro onde o Anel Dourado fica — terreno mais alto, mais seco, primeiro a ser reivindicado por quem chegou com recursos. A cidade cresceu em direção aos rios e depois além deles, descendo em altitude conforme descia em classe social, até que o Anel de Lama fica literalmente na lama das margens que as águas inundam todo ano na chuva. Os mesmos rios que fornecem água potável para o Anel Dourado carregam o esgoto de toda a cidade para o Pântano da Melancolia a leste. A cidade bebe de um lado o que despeja do outro.\n\nMURALHAS E ACESSO\nMuralhas externas de pedra e obsidiana cercam o Anel Dourado e o Anel de Ferro completamente — construídas nos primeiros anos da cidade quando havia ameaça real de ataque, mantidas agora porque delimitam quem pertence ao interior e quem não pertence. O Anel de Lama fica do lado de fora dessas muralhas, tecnicamente não é parte oficial de Nova Arcádia. Na prática é onde a maioria da população vive.\n\nA Legião patrulha os portões que conectam os anéis e as entradas na muralha externa. Entrar no Anel de Ferro requer identificação — nome, origem, propósito. Entrar no Anel Dourado requer identificação, propósito aprovado e, na maioria dos casos, alguém de dentro que responda por você. Sair é irrestrito. A muralha foi construída para controlar quem entra, não quem sai.\n\nA ESTRUTURA DE CLASSES\nNova Arcádia é segregada por classe, não por raça. Um Elfo rico v",
+    "region": "",
+    "npcs": [],
+    "creatures": [],
+    "events": []
+   }
+  ],
+  "factions": [
+   {
+    "id": "legiao_ferro",
+    "kind": "faction",
+    "title": "A Legião de Ferro",
+    "last_updated_turn": 0,
+    "version": 0,
+    "art": null,
+    "knowledge": {
+     "knowledge_kind": "report",
+     "certainty": "reported",
+     "source_kind": "npc_claim",
+     "source_ref": "faction:legiao_ferro",
+     "label": "Relato",
+     "first_seen_turn": null,
+     "last_updated_turn": null,
+     "stale": false
+    },
+    "notes": [],
+    "body": "# A LEGIÃO DE FERRO\n\nPapel declarado: Manutenção da lei e ordem sob o Código de Ferro\nPapel real: Braço executivo do poder pessoal de Valerius\n\nOrigem: Soldados da Guerra do Céu Vermelho reaproveitados para policiamento urbano. Tornou-se instituição própria com hierarquia, quota e cultura específica.\n\nComo funciona: Hierarquia rígida. Quotas mensais de prisões e execuções — independente de haver crime suficiente. Punições codificadas: roubo = dedos, sedição = língua, magia não registrada = fogueira. O ramo dos Inquisidores do Código caça especificamente magos não registrados, usando artefatos que sugam Éter.\n\nCultura interna: Pragmatismo sem crueldade declarada. \"Demonstramos consequência porque a plebe entende dor, não abstração.\" Veteranos distinguem crimes reais de crimes de quota — mas cumprem ambos.\n\nLiderança: O Comandante Thrace comanda os anéis de Ferro e Lama; sua fé no Código começa a rachar ao notar que ele protege os poderosos e esmaga os fracos. Fehk (a Covardia) trabalha contra qualquer impulso seu de agir.\n\nRachaduras atuais: Korvus, um legionário que desertou ao receber ordem de executar inocentes, está foragido no Anel de Lama (protegido por Mãe Corva) e sabe segredos internos que incriminam o regime. Prova viva de que nem todo legionário é engrenagem.\n\nO que a Legião sabe sobre Valerius: Quase nada. A maioria nunca o viu. Obedece ao Código porque funciona — e porque desobedecer tem consequências que o Código especifica.\n\nPonto fraco: A Legião é leal ao Código, não a Valerius. Provar que Valerius viola o próprio Código tornaria a lealdade questão aberta — mas essa prova está enterrada fundo, e ele cuida para que continue assim. O Testamento Real no barril de Grum e o Diário de Nehla-equivalentes podem ser a alavanca.",
+    "goal": "Cumprir as quotas do Código de Ferro e caçar magos não registrados nos três anéis de Nova Arcádia.",
+    "knows_goal": true,
+    "region": "Nova Arcádia",
+    "disposition": "neutro",
+    "reputation": 0,
+    "progress": null,
+    "intel_stale": false,
+    "stale_label": ""
+   }
+  ],
+  "secrets": [],
+  "chronicle_index": [
+   {
+    "chapter_id": "244ef615a7dd5306bdee78bbaae6ecac",
+    "arc_title": "O início da jornada — Nova Arcádia",
+    "started_turn": 0,
+    "location": "Nova Arcádia",
+    "entry_count": 0,
+    "entity_ids": []
+   },
+   {
+    "chapter_id": "0097a6ac1a865a529f866dd7bc3b620b",
+    "arc_title": "A Verdade Enterrada",
+    "started_turn": 1,
+    "location": "Nova Arcádia",
+    "entry_count": 0,
+    "entity_ids": []
+   }
+  ]
+ },
+ "bestiary": [
+  {
+   "id": "enemy_lobo_sombrio",
+   "kind": "creature",
+   "title": "Lobo Sombrio",
+   "last_updated_turn": 6,
+   "version": 6,
+   "art": null,
+   "knowledge": {
+    "knowledge_kind": "fact",
+    "certainty": "confirmed",
+    "source_kind": "canonical_event",
+    "source_ref": "bestiary:enemy_lobo_sombrio",
+    "label": "Fato confirmado",
+    "first_seen_turn": 6,
+    "last_updated_turn": 6,
+    "stale": false
+   },
+   "notes": [],
+   "tier": 2,
+   "tier_name": "Encontrada",
+   "regions": [],
+   "first_seen_turn": 6,
+   "description": "Criatura hostil das ruínas.",
+   "type": "Minion"
+  }
+ ],
+ "meta": {
+  "taxonomy_version": 1
+ }
+}

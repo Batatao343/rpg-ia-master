@@ -352,6 +352,17 @@ for (const [width, height] of [[1440, 900], [1280, 720]] as const) {
         return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({
           locations: rows.map((r) => ({ ...r, internal_note: SENTINEL })), factions: [], characters: [], creatures: [], secrets: [] }) });
       });
+      // SPEC-211: o Codex agora lê os dossiês; o mesmo cenário chega por `/game/codex/dossiers`.
+      await page.route("**/game/codex/dossiers**", (route) => {
+        const stamp = { knowledge_kind: "fact", certainty: "confirmed", source_kind: "canonical_event", source_ref: "visited:x",
+          label: "Fato confirmado", first_seen_turn: null, last_updated_turn: null, stale: false };
+        const rows = [{ id: "porto", name: "Porto Cinzento" }, ...(backend.requests.some((r) => r.path.startsWith("/game/action")) ? [{ id: "brumalta", name: "Brumalta" }] : [])];
+        return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({
+          version: 0, generated_at_turn: 0, bestiary: [], meta: { taxonomy_version: 1 },
+          sections: { npcs: [], factions: [], secrets: [], chronicle_index: [],
+            locations: rows.map((r) => ({ id: r.id, kind: "location", title: r.name, last_updated_turn: 0, version: 0, art: null,
+              knowledge: stamp, notes: [], body: "", region: "", npcs: [], creatures: [], events: [], internal_note: SENTINEL })) } }) });
+      });
       await openGame(page);
       await tabs(page).getByRole("tab", { name: "Codex" }).click();
       await page.getByRole("tablist", { name: "Seções do Codex" }).getByRole("tab", { name: /^Locais/ }).click();

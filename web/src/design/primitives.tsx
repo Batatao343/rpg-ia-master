@@ -61,6 +61,7 @@ const EMPTY: ReadonlySet<string> = new Set();
 const ArrivalsContext = createContext<ReadonlySet<string>>(EMPTY);
 export const ArrivalsProvider = ArrivalsContext.Provider;
 export const NO_ARRIVALS = EMPTY;
+export const useArrivals = () => useContext(ArrivalsContext);
 
 export function ArrivalLi({ id, className, children }: { id: string; className?: string; children: ReactNode }) {
   const isNew = useContext(ArrivalsContext).has(id);

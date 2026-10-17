@@ -1,7 +1,7 @@
 # SPEC-211 — Menus Codex e Bestiário como dossiês vivos
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `in-progress` — implementação + revisão Sol independente concluídas (17/10, [parecer](../handoffs/SPEC-211-SOL-independent-review.md)); falta só a autoria separada do eval de leak ([handoff](../handoffs/SPEC-211-eval-authoring.md)).
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
 > **Depende de:** SPEC-204 `done` (shell), SPEC-206 `done` (rótulos de certeza), SPEC-208 `done` (tokens) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212 (ordem final 2026-10-15)
 > **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15`, prompt 06 (parte b — Codex e Bestiário)
@@ -123,18 +123,18 @@ CreatureDossier(Dossier) { tier, tier_name, regions[], rarity_note?,
 Registrar `handoffs/SPEC-211-eval-authoring.md` (casos de leak) para tarefa separada; abrir revisão Sol (`REVIEW_REQUIRED: true`), sem autoaprovação.
 
 ## 5. Critérios de aceite
-- [ ] `GET /game/codex/dossiers` implementado; `GET /game/codex` e rotas de crônica **inalterados** (testes de regressão verdes).
-- [ ] Todo dossiê traz `id`, `last_updated_turn`, `version` do backend; cliente não calcula versão.
-- [ ] `appears_to_know` derivado só de fatos públicos; teste com NPC de memória privada retorna vazio.
-- [ ] Nenhum payload contém `hidden_traits`, docs hidden/secret, cartas/resistências não reveladas, campos acima do tier; `assert_no_private_fields` verde nas fixtures.
-- [ ] Bestiário respeita os 4 tiers existentes; chaves acima do tier ausentes do JSON.
-- [ ] Crônica: busca e export preservados; navegação por capítulo no Codex.
-- [ ] "Novo/atualizado" por dossiê visível; nenhuma contagem/tooltip/prefetch de conteúdo oculto.
-- [ ] Arte só por ID canônico existente/permitido; fallback honesto; refetch após expirar.
-- [ ] Abas utilizáveis em tela cheia e 50%, teclado e reduced-motion; estado preservado entre abas.
-- [ ] `uv run pytest` verde (suíte completa offline); `npm run build` verde; Ruff verde; `uv run python scripts/validate_content.py` sem novos erros.
-- [ ] Saves antigos carregam (sem migração, projeção calculada); round-trip save→load→dossiê idêntico.
-- [ ] `EVAL_AUTHORING_REQUIRED` cumprido por tarefa separada antes de `done`; revisão Sol independente registrada.
+- [x] `GET /game/codex/dossiers` implementado; `GET /game/codex` e rotas de crônica **inalterados** (testes de regressão verdes).
+- [x] Todo dossiê traz `id`, `last_updated_turn`, `version` do backend; cliente não calcula versão.
+- [x] `appears_to_know` derivado só de fatos públicos; teste com NPC de memória privada retorna vazio.
+- [x] Nenhum payload contém `hidden_traits`, docs hidden/secret, cartas/resistências não reveladas, campos acima do tier; `assert_no_private_fields` verde nas fixtures.
+- [x] Bestiário respeita os 4 tiers existentes; chaves acima do tier ausentes do JSON.
+- [x] Crônica: busca e export preservados; navegação por capítulo no Codex.
+- [x] "Novo/atualizado" por dossiê visível; nenhuma contagem/tooltip/prefetch de conteúdo oculto.
+- [x] Arte só por ID canônico existente/permitido; fallback honesto; refetch após expirar.
+- [x] Abas utilizáveis em tela cheia e 50%, teclado e reduced-motion; estado preservado entre abas.
+- [x] `uv run pytest` verde (suíte completa offline); `npm run build` verde; Ruff verde; `uv run python scripts/validate_content.py` sem novos erros.
+- [x] Saves antigos carregam (sem migração, projeção calculada); round-trip save→load→dossiê idêntico.
+- [ ] `EVAL_AUTHORING_REQUIRED` cumprido por tarefa separada antes de `done` (pendente). Revisão Sol independente registrada em `handoffs/SPEC-211-SOL-independent-review.md` (17/10) — corrigiu chaves acima do tier saindo como `null` no JSON da API e leitura do overlay legado de bestiário em perfil com banco.
 
 ## 6. Smoke
 1. Offline (MockLLM, padrão): `uv run pytest tests/test_dossiers.py tests/test_dossiers_api.py tests/test_dossier_leak.py -q`; subir `uv run uvicorn api:app --port 8000`, criar jogo, 3 turnos com NPC e combate (`bash scripts/smoke_api.sh`), consultar `/game/codex/dossiers` e conferir ausência de campos privados.
