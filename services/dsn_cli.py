@@ -23,7 +23,7 @@ def resolve_dsn(parser: argparse.ArgumentParser, args: argparse.Namespace, *, de
     if args.dsn is not None:
         if not args.allow_dsn_argv:
             parser.error("--dsn expõe a senha em argv; use --dsn-env NOME (ou --allow-dsn-argv)")
-        print("aviso: DSN recebida por argv; prefira --dsn-env", file=sys.stderr)
+        sys.stderr.write("aviso: DSN recebida por argv; prefira --dsn-env\n")  # CLI de ops, não log de produção
         return args.dsn
     dsn = os.getenv(args.dsn_env, "")
     if dsn:
