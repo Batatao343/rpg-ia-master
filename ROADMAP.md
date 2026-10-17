@@ -1,5 +1,7 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **SPEC-219 `in-progress` (17/10):** cota por owner + anti-abuso — classes de rota com limite por IP e por owner (`services/abuse_policy.py`), cota diária de turnos 600/owner antes do grafo (replay por `action_id` não consome; POST/SSE 1×), balde `authfail` 60/15 min antes do verificador, pré-validação local do JWT + cache de 20 s do GoTrue (sessão no banco checada a cada request), IP real via `x-vercel-forwarded-for`/hops confiáveis, teto de 3 ordens abertas no checkout, cap de texto opt-in; revisão Sol APPROVED com 4 correções (export/exclusão degradam sem a migration, payload JWT aninhado não vira 500, cache não estende o `exp`, sem cookie não consome `authfail`). **Falta:** SPEC-218 aterrissar, aplicar `20261017110000_owner_daily_counters.sql` no staging, medição R5 do header de IP na Vercel e smoke §6.
+
 > **SPEC-236 `in-progress` (17/10):** FinOps/wallet/jobs corrigidos (falha sem usage custa 0 e sai do gasto, teto diário sem override cross-day, varredura de reservas órfãs, STT 4xx libera, refund parcial pré-crédito credita, poison jobs `dead`); revisão Sol+Astra APPROVED_WITH_FIXES (código degrada sem a migration, migration renomeada `20261017100000`, backoff no revive de job). **Falta:** aplicar a migration no staging + smoke real §6.
 
 > **15–16/10 — 38 specs `draft` aguardando aprovação (SPEC-199–236); ordem em `proximas-specs/ORDEM_SPECS_2026-10-15.md`.**

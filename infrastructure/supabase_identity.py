@@ -4,7 +4,11 @@ from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
 import base64
+import hashlib
 import json
+import os
+import threading
+import time
 from uuid import UUID
 
 import httpx
@@ -29,6 +33,8 @@ class SupabaseIdentityProvider:
         self.timeout = timeout
         self.pool = pool
         self._service_key = service_key
+        self._verified: dict[str, tuple[Principal, float]] = {}   # SPEC-219 R7
+        self._verified_lock = threading.Lock()
 
     def _headers(self, access_token: str | None = None) -> dict[str, str]:
         headers = {"apikey": self._key, "Content-Type": "application/json"}
@@ -125,6 +131,7 @@ class SupabaseIdentityProvider:
         response = httpx.delete(f"{self.base_url}/auth/v1/admin/users/{user_id}", headers=headers, timeout=self.timeout)
         if response.status_code not in (200, 204, 404):
             raise Unauthorized("account_delete_pending")
+        self._forget(user_id=user_id)
 
     def refresh(self, refresh_token: str) -> SessionTokens:
         response = httpx.post(
@@ -133,7 +140,9 @@ class SupabaseIdentityProvider:
         )
         if response.status_code != 200:
             raise Unauthorized("sessão inválida")
-        return self._tokens(response.json())
+        tokens = self._tokens(response.json())
+        self._forget(user_id=tokens.user_id)
+        return tokens
 
     def logout(self, access_token: str) -> None:
         response = httpx.post(
@@ -142,6 +151,12 @@ class SupabaseIdentityProvider:
         )
         if response.status_code not in (200, 204):
             raise Unauthorized("sessão inválida")
+        self._forget(access_token, self._cached_user(access_token))
+
+    def _cached_user(self, access_token: str) -> UUID | None:
+        with self._verified_lock:
+            hit = self._verified.get(hashlib.sha256(access_token.encode()).hexdigest())
+        return hit[0].user_id if hit else None
 
     def logout_via_refresh(self, refresh_token: str) -> bool:
         """SPEC-220 R1: access vencido => troca o refresh e revoga globalmente.
@@ -166,11 +181,90 @@ class SupabaseIdentityProvider:
         with self.pool.connection() as db:
             # O pool real faz commit ao sair do contexto (psycopg_pool).
             db.execute("select app.runtime_revoke_auth(%s)", (user_id,))
+        self._forget(user_id=user_id)
         return True
+
+    # --- SPEC-219 R7: pre-validacao local + cache curto ------------------------------------
+    CLOCK_SKEW_SECONDS = 60
+
+    def _cache_ttl(self) -> float:
+        try:
+            return max(0.0, float(os.getenv("RPG_VERIFY_CACHE_SECONDS", "20")))
+        except ValueError:
+            return 20.0
+
+    def _prevalidate(self, access_token: str) -> float:
+        """Corta lixo SEM rede: 3 segmentos base64url, ``exp`` futuro (+skew), ``aud`` e ``iss``.
+        A assinatura/revogacao continuam sendo decididas pelo GoTrue."""
+        parts = access_token.split(".")
+        if len(access_token) > 8192 or len(parts) != 3 or not all(parts):
+            raise Unauthorized("token inválido")
+        try:
+            encoded = parts[1]
+            claims = json.loads(base64.urlsafe_b64decode(encoded + "=" * (-len(encoded) % 4)))
+            exp = float(claims["exp"])
+        except (ValueError, KeyError, TypeError, RecursionError):  # payload aninhado = lixo, nunca 500
+            raise Unauthorized("token inválido") from None
+        if not isinstance(claims, dict) or exp + self.CLOCK_SKEW_SECONDS < time.time():
+            raise Unauthorized("token inválido")
+        issuer = claims.get("iss")
+        if claims.get("aud") != "authenticated" or not isinstance(issuer, str) \
+                or not issuer.startswith(f"{self.base_url}/auth/v1"):
+            raise Unauthorized("token inválido")
+        return exp
+
+    def _forget(self, access_token: str | None = None, user_id: UUID | None = None) -> None:
+        with self._verified_lock:
+            if access_token:
+                self._verified.pop(hashlib.sha256(access_token.encode()).hexdigest(), None)
+            if user_id is not None:
+                for key in [k for k, (p, _) in self._verified.items() if p.user_id == user_id]:
+                    del self._verified[key]
 
     def verify(self, access_token: str | None) -> Principal:
         if not access_token:
             raise Unauthorized("sessão ausente")
+        exp = self._prevalidate(access_token)
+        digest = hashlib.sha256(access_token.encode()).hexdigest()
+        ttl = self._cache_ttl()
+        principal = None
+        if ttl:
+            with self._verified_lock:
+                hit = self._verified.get(digest)
+            # Cache nunca estende a vida do token: so vale enquanto ``exp`` (sem skew) nao passou.
+            if hit and time.monotonic() - hit[1] < ttl and exp > time.time():
+                principal = hit[0]
+        if principal is None:
+            principal = self._verify_remote(access_token)       # so o GoTrue (assinatura/expiracao) e cacheado
+            if ttl:
+                with self._verified_lock:
+                    if len(self._verified) > 2048:
+                        self._verified.clear()
+                    self._verified[digest] = (principal, time.monotonic())
+        try:
+            self._check_session(access_token, principal.user_id)   # banco local: revogacao e imediata
+        except Unauthorized:
+            self._forget(access_token)
+            raise
+        return principal
+
+    def _check_session(self, access_token: str, user_id: UUID) -> None:
+        if self.pool is None:
+            return
+        # Claims are only read AFTER Supabase validates the bearer. Metadata is never authorization.
+        try:
+            encoded = access_token.split(".")[1]
+            claims = json.loads(base64.urlsafe_b64decode(encoded + "=" * (-len(encoded) % 4)))
+            session_id = UUID(claims["session_id"])
+        except (ValueError, KeyError, IndexError, TypeError):
+            raise Unauthorized("sessão inválida") from None
+        with self.pool.connection() as db:
+            active = db.execute("select app.runtime_session_active(%s,%s) as ok",
+                                (session_id, user_id)).fetchone()["ok"]
+        if not active:
+            raise Unauthorized("sessão revogada")
+
+    def _verify_remote(self, access_token: str) -> Principal:
         response = httpx.get(
             f"{self.base_url}/auth/v1/user", headers=self._headers(access_token),
             timeout=self.timeout,
@@ -178,17 +272,4 @@ class SupabaseIdentityProvider:
         if response.status_code != 200:
             raise Unauthorized("token inválido")
         user_id = UUID(str(response.json()["id"]))
-        if self.pool is not None:
-            # Claims are only read AFTER Supabase validates the bearer. Metadata is never authorization.
-            try:
-                encoded = access_token.split(".")[1]
-                claims = json.loads(base64.urlsafe_b64decode(encoded + "=" * (-len(encoded) % 4)))
-                session_id = UUID(claims["session_id"])
-            except (ValueError, KeyError, IndexError, TypeError):
-                raise Unauthorized("sessão inválida") from None
-            with self.pool.connection() as db:
-                active = db.execute("select app.runtime_session_active(%s,%s) as ok",
-                                    (session_id, user_id)).fetchone()["ok"]
-            if not active:
-                raise Unauthorized("sessão revogada")
         return Principal(user_id, f"{self.base_url}/auth/v1", str(user_id))

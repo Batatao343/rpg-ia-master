@@ -7,6 +7,7 @@ from contextlib import nullcontext
 import base64
 import json
 import os
+import time
 from pathlib import Path
 from types import SimpleNamespace
 from uuid import uuid4
@@ -145,7 +146,7 @@ def test_tombstone_fences_late_usage_event_write(deletion_case):
 def test_stale_jwt_denied_in_backend_direct_wallet_and_storage(deletion_case,monkeypatch):
     c=deletion_case
     def token(owner,session):
-        encoded=base64.urlsafe_b64encode(json.dumps({"session_id":str(session)}).encode()).decode().rstrip("=")
+        encoded=base64.urlsafe_b64encode(json.dumps({"session_id":str(session),"exp":time.time()+600,"aud":"authenticated","iss":"http://auth.test/auth/v1"}).encode()).decode().rstrip("=")
         return f"header.{encoded}.signature"
     provider=SupabaseIdentityProvider("http://auth.test","publishable",pool=c.pool)
     monkeypatch.setattr(httpx,"get",lambda *_args,**_kw: httpx.Response(200,json={"id":str(c.a.user_id)}))

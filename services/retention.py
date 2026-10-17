@@ -11,6 +11,7 @@ OPERATIONS_DAYS = 90
 JOBS_DAYS = 30
 USAGE_EVENTS_MONTHS = 13
 FINOPS_EVALUATIONS_DAYS = 180
+DAILY_COUNTERS_DAYS = 7
 ACCOUNT_DELETION_COMPACT_DAYS = 30
 ACCOUNT_DELETION_YEARS = 5
 
@@ -19,6 +20,7 @@ RETENTION_RULES: dict[str, str] = {
     "jobs": f"{JOBS_DAYS} dias após estado terminal",
     "usage_events": f"{USAGE_EVENTS_MONTHS} meses (prazo fiscal/contábil do consumo)",
     "finops_evaluations": f"{FINOPS_EVALUATIONS_DAYS} dias",
+    "owner_daily_counters": f"{DAILY_COUNTERS_DAYS} dias (contador técnico da cota diária, SPEC-219)",
     "account_deletions": (f"reduzida a owner_id e data após {ACCOUNT_DELETION_COMPACT_DAYS} dias; "
                           f"apagada após {ACCOUNT_DELETION_YEARS} anos"),
 }
@@ -43,6 +45,8 @@ _STATEMENTS: tuple[tuple[str, str], ...] = (
     ("finops_evaluations", f"""delete from app.finops_evaluations where evaluation_id in (
         select evaluation_id from app.finops_evaluations
         where evaluated_at < now() - interval '{FINOPS_EVALUATIONS_DAYS} days' limit {BATCH})"""),
+    ("owner_daily_counters", f"""delete from app.owner_daily_counters
+        where day < (now() at time zone 'utc')::date - {DAILY_COUNTERS_DAYS}"""),
     ("account_deletions_compacted", f"""update app.account_deletions
         set blob_keys = '{{}}', recovery_attempted_at = null, sessions_revoked_at = null,
             requested_at = completed_at

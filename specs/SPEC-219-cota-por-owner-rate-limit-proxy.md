@@ -1,6 +1,6 @@
 # SPEC-219 — Cota de custo por owner, cobertura do rate limit e IP real atrás de proxy
 
-> **Status:** `draft`
+> **Status:** `in-progress` (17/10: R1-R4, R6-R11 implementados e testados; revisao Sol APPROVED com 4 correcoes; faltam SPEC-218 aterrissar, migration no staging, medicao R5 e smoke §6 - ver §5 e `docs/spec219/README.md`)
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
 > **Depende de:** SPEC-218 `done` (processo exposto sempre em perfil DB) · evolui SPEC-182/185/196 `done` e SPEC-197 `in-progress` sem reabri-las (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212; gate da SPEC-197; follow-up de cobrança por turno (SPEC-185) (ordem final 2026-10-15)
@@ -108,12 +108,24 @@ Objetivo: (1) todo caminho com custo externo tem limite **por owner** (além do 
 
 ## 5. Critérios de aceite
 
-- [ ] Etapa 0 vermelha no HEAD e verde ao final; R1–R11 com testes verdes; `uv run pytest` completo verde; Node/`npm run build` verdes.
-- [ ] Tabela de classes × limites publicada em `docs/secXX/README.md` e em `.env.example`.
+- [x] Etapa 0 vermelha no HEAD e verde ao final; R1–R11 (exceto a medicao empirica R5) com testes verdes; `uv run pytest` completo verde (exit 0); Node (120 testes)/`npm run build` verdes.
+- [x] Tabela de classes × limites publicada em `docs/spec219/README.md` e em `.env.example`.
 - [ ] Medição R5 registrada (qual header carrega o IP real na Vercel) e `client_ip` validada contra ela.
-- [ ] Playtest offline `uv run python -m playtest run --all --turns 30` sem 429 (o harness usa `app.invoke`, não a API — confirmar que a cota não afeta o grafo; se o harness usar a API, elevar o limite via env no runner).
+- [x] Playtest offline: o harness usa `app.invoke` (nao a API); cota e limites vivem em `api.py`/`_execute_action`, fora do grafo - sem impacto (confirmado por leitura; nao reexecutado).
 - [ ] Smoke staging: usuário A 21 turnos/min → 429 no 21º; usuário B no mesmo IP joga normalmente; token inválido não aparece nos logs do Supabase Auth; `/game/chronicle/search` 11º/min → 429.
-- [ ] Revisão Sol independente APPROVED.
+- [x] Revisão Sol independente APPROVED (com 4 correcoes; `handoffs/SPEC-219-SOL-independent-review.md`).
+
+### Pendente para fechar a spec (evidencia a gerar no staging pelo dono/coordenador)
+
+- [ ] Medicao R5: `client.host` vs `x-vercel-forwarded-for` no log `rpg.http` (2 redes distintas) registrada no README e `client_ip` validada contra ela.
+- [ ] Aplicar `20261017110000_owner_daily_counters.sql` no staging ANTES do deploy.
+- [ ] Smoke staging (item acima) com a transcricao dos codigos/`Retry-After` e a metrica `rpg_rate_limited_total`.
+- [x] Revisao Sol independente APPROVED; parecer em `handoffs/SPEC-219-SOL-independent-review.md`.
+- [ ] SPEC-218 (`done`) aterrissar na `main` antes desta (esta branch esta empilhada sobre ela).
+
+### Desvios / decisoes (defaults da spec usados)
+
+D-A numeros da spec; D-B cap de texto OFF por padrao; D-C cache 20 s (so o GoTrue e cacheado - a checagem de sessao no banco roda a cada request, entao revogacao e imediata); D-D fora de escopo. `/game/art/brief` e `/game/combat-simulator` nao chamam LLM: so limite por minuto, sem cota diaria. Limite por owner de `/game/action*` fica dentro do handler (replay nao consome). Detalhes em `docs/spec219/README.md`.
 
 ## 6. Smoke test
 

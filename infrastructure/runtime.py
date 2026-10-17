@@ -537,6 +537,7 @@ class InfrastructureRuntime:
     rate_limiter: RateLimiter
     identity_verifier: IdentityVerifier
     resources: tuple[object, ...] = ()
+    daily_quota: object | None = None   # SPEC-219: bump(owner, class, limit); so perfis DB
 
 
 def build_legacy_runtime(config: RuntimeConfig | None = None) -> InfrastructureRuntime:
@@ -565,7 +566,9 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
     from infrastructure.postgres import PostgresGameStore, PostgresPool
     from infrastructure.postgres_catalog import PostgresRuntimeCatalogStore
     from infrastructure.postgres_jobs import PostgresJobQueue
-    from infrastructure.postgres_turns import PostgresRateLimiter, PostgresTurnCoordinator
+    from infrastructure.postgres_turns import (
+        PostgresDailyQuota, PostgresRateLimiter, PostgresTurnCoordinator,
+    )
     from infrastructure.supabase_blob import SupabaseBlobStore
     from infrastructure.supabase_identity import SupabaseIdentityProvider
 
@@ -641,6 +644,7 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
             turn_coordinator=PostgresTurnCoordinator(pool),
             job_queue=PostgresJobQueue(pool),
             rate_limiter=PostgresRateLimiter(pool),
+            daily_quota=PostgresDailyQuota(pool),
             identity_verifier=identity,
             resources=(pool,),
         )

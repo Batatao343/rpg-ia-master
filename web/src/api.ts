@@ -16,7 +16,7 @@ import type {
   VisualResponse,
 } from "./types";
 
-import { formatDetail, http, HttpError, uploadAudio } from "./http";
+import { formatDetail, http, HttpError, rateLimitNotice, uploadAudio } from "./http";
 import { setClientLatencyReport } from "./lib/turnLatency";
 export { HttpError } from "./http";
 export { refreshSessionOnce } from "./http";
@@ -173,6 +173,10 @@ export async function sendActionStream(
       if (payload.detail && typeof payload.detail === "object") {
         const formatted = formatDetail(payload.detail, "erro no stream");
         throw new HttpError(Number(payload.code || 500), formatted.code, formatted.message);
+      }
+      if (typeof payload.detail === "string") {
+        const notice = rateLimitNotice(payload.detail, payload.retry_after_seconds);   // SPEC-219
+        if (notice) throw new HttpError(Number(payload.code || 429), payload.detail, notice, payload.retry_after_seconds);
       }
       throw new HttpError(Number(payload.code || 500), "stream_error", payload.detail || "erro no stream");
     }

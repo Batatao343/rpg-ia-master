@@ -5,7 +5,7 @@
 
 ## Apagado na exclusão de conta
 
-`game_checkpoints`, `game_events`, `turns`, `art_generations`, `assets`, `chronicle_digests`, `memory_documents`, `runtime_catalog`, `usage_events`, `operations`, `jobs`, `games`, `image_quotes`.
+`game_checkpoints`, `game_events`, `turns`, `art_generations`, `assets`, `chronicle_digests`, `memory_documents`, `runtime_catalog`, `usage_events`, `operations`, `jobs`, `games`, `image_quotes`, `owner_daily_counters`.
 
 ## Retido após a exclusão (motivo legal e prazo)
 
@@ -30,4 +30,5 @@
 | `jobs` | 30 dias após estado terminal |
 | `usage_events` | 13 meses (prazo fiscal/contábil do consumo) |
 | `finops_evaluations` | 180 dias |
+| `owner_daily_counters` | 7 dias (contador técnico da cota diária, SPEC-219) |
 | `account_deletions` | reduzida a owner_id e data após 30 dias; apagada após 5 anos |

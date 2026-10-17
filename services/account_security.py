@@ -101,7 +101,10 @@ def _too_many(decision) -> None:
 
 
 def _remote(request) -> str:
-    return request.client.host if request and request.client else "unknown"
+    if request is None:
+        return "unknown"
+    from services.abuse_policy import client_ip  # SPEC-219 R4
+    return client_ip(request)
 
 
 def _login_failure_key(email: str, remote: str) -> str:

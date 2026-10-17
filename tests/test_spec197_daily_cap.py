@@ -157,3 +157,87 @@ def test_tz_offset_validation(monkeypatch, val):
     else:
         assert out["failed"] == 1 and out["daily_cap_error"] == "CapConfigError"
         assert "daily_spend_cap_error" in out["alert_kinds"] and out["blocking_alerts"] >= 1
+
+
+# --- SPEC-219 R8: cap de texto opt-in no caminho do turno ----------------------------------
+
+def test_model_switch_text_shortcut_expands_routes(monkeypatch):
+    from services.daily_spend_cap import cap_switches
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_MODEL_SWITCHES", "text")
+    keys = cap_switches()
+    assert set(CAP_SWITCHES) <= set(keys)
+    assert "model:deepseek/deepseek-v4-flash" in keys and "model:groq/openai/gpt-oss-120b" in keys
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_BRL", "1")
+    store = MemorySwitchStore()
+    res = evaluate_daily_cap(reader("5"), store, NOW, D("5"))
+    assert store.state["model:deepseek/deepseek-v4-flash"] is False
+    assert "model:deepseek/deepseek-v4-flash" in res.switched_off
+
+
+def test_text_cap_default_off_never_reads(monkeypatch):
+    from services import daily_spend_cap as cap
+    cap.reset_text_cap_cache()
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_BRL", "1")      # cap ligado, mas SEM RPG_DAILY_SPEND_CAP_TEXT
+    monkeypatch.delenv("RPG_DAILY_SPEND_CAP_TEXT", raising=False)
+
+    def boom():
+        raise AssertionError("nao deve ler")
+    assert cap.text_cap_exceeded(boom) is False
+
+
+def test_text_cap_exceeded_is_cached_and_fail_open(monkeypatch):
+    from services import daily_spend_cap as cap
+    cap.reset_text_cap_cache()
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_BRL", "50")
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_TEXT", "1")
+    reads = []
+
+    def factory():
+        reads.append(1)
+        return reader("20")                                   # R$ 100 > 50
+    clock = {"t": 1000.0}
+    assert cap.text_cap_exceeded(factory, now=NOW, clock=lambda: clock["t"]) is True
+    assert cap.text_cap_exceeded(factory, now=NOW, clock=lambda: clock["t"] + 10) is True
+    assert len(reads) == 1                                    # cache de 30 s
+    assert cap.text_cap_exceeded(factory, now=NOW, clock=lambda: clock["t"] + 31) is True
+    assert len(reads) == 2
+    cap.reset_text_cap_cache()
+
+    def broken():
+        raise RuntimeError("db down")
+    assert cap.text_cap_exceeded(broken, now=NOW) is False    # nao derruba o jogo
+    cap.reset_text_cap_cache()
+
+
+def test_text_cap_under_budget_allows(monkeypatch):
+    from services import daily_spend_cap as cap
+    cap.reset_text_cap_cache()
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_BRL", "50")
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_TEXT", "1")
+    assert cap.text_cap_exceeded(lambda: reader("1"), now=NOW) is False
+    cap.reset_text_cap_cache()
+
+
+def test_turn_returns_503_when_text_cap_exceeded(monkeypatch):
+    import api
+    from types import SimpleNamespace
+    from uuid import uuid4
+    from infrastructure.contracts import Principal
+    from infrastructure.request_context import reset_current_principal, set_current_principal
+    from services import daily_spend_cap as cap
+    cap.reset_text_cap_cache()
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_BRL", "1")
+    monkeypatch.setenv("RPG_DAILY_SPEND_CAP_TEXT", "1")
+    runtime = SimpleNamespace(game_store=SimpleNamespace(pool=None), rate_limiter=None, daily_quota=None)
+    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr("infrastructure.runtime.get_runtime", lambda: runtime)
+    monkeypatch.setattr("infrastructure.finops_reader.PostgresFinopsReader", lambda pool: reader("20"))
+    owner = uuid4()
+    token = set_current_principal(Principal(owner, "auth", str(owner)))
+    try:
+        with pytest.raises(api.QuotaExceeded) as exc:
+            api._enforce_owner_budget("turn")
+        assert exc.value.status_code == 503 and exc.value.detail == "daily_spend_cap"
+    finally:
+        reset_current_principal(token)
+        cap.reset_text_cap_cache()

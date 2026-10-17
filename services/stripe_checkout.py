@@ -19,6 +19,10 @@ class StripeError(ValueError):
     pass
 
 
+class OpenOrdersLimit(StripeError):
+    """SPEC-219 R2: ordens abertas demais para o owner (nao e falha do provedor)."""
+
+
 def verify_event(body: bytes, signature: str, secret: str, *, now: int | None = None) -> dict:
     """Authenticate exact bytes and timestamp before decoding any JSON fields."""
     if len(body) > MAX_WEBHOOK_BYTES or not secret.startswith("whsec_"):

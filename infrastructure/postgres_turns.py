@@ -628,3 +628,23 @@ class PostgresRateLimiter:
     def reset(self, key: str) -> None:
         with self.pool.connection() as connection, connection.transaction():
             connection.execute("delete from app.rate_limit_buckets where bucket_key=%s", (key,))
+
+
+class PostgresDailyQuota:
+    """SPEC-219 R3: cota diaria (dia UTC) por owner e classe, atomica no Postgres."""
+
+    def __init__(self, pool: PostgresPool) -> None:
+        self.pool = pool
+
+    def bump(self, owner_id: UUID, cls: str, limit: int, *, now=None):
+        from services.abuse_policy import QuotaDecision, seconds_until_utc_midnight
+        if limit <= 0:
+            raise ValueError("limit precisa ser positivo")
+        with self.pool.connection() as connection, connection.transaction():
+            row = connection.execute(
+                "select allowed, used from app.bump_daily_counter(%s,%s,%s)",
+                (owner_id, cls, limit),
+            ).fetchone()
+        allowed = bool(row["allowed"])
+        return QuotaDecision(allowed, int(row["used"]), limit,
+                             0 if allowed else seconds_until_utc_midnight(now))

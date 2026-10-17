@@ -145,3 +145,38 @@ test('SPEC-220: 403 csrf/origin asks for reload and never refreshes or expires t
   assert.deepEqual(events, []);
   delete globalThis.window;
 });
+
+test('SPEC-219: 429 de cota diaria vira aviso com horario e nao dispara refresh', async () => {
+  const { http, rateLimitNotice } = await load('http');
+  globalThis.document = { cookie: '' };
+  let calls = 0;
+  globalThis.fetch = async () => {
+    calls++;
+    return new Response(JSON.stringify({ detail: 'daily_quota_exceeded', scope: 'daily', retry_after_seconds: 3600 }),
+      { status: 429, headers: { 'Retry-After': '3600', 'Content-Type': 'application/json' } });
+  };
+  await assert.rejects(http('/game/action', { method: 'POST', body: '{}' }), (error) => {
+    assert.equal(error.status, 429);
+    assert.equal(error.code, 'daily_quota_exceeded');
+    assert.match(error.message, /^Cota diária de turnos atingida; volta às \d\d:\d\d\.$/);
+    assert.equal(error.retryAfterSeconds, 3600);
+    return true;
+  });
+  assert.equal(calls, 1);
+  const at = new Date(2026, 9, 17, 22, 30, 0);
+  assert.equal(rateLimitNotice('daily_quota_exceeded', 5400, at), 'Cota diária de turnos atingida; volta às 00:00.');
+  assert.match(rateLimitNotice('rate_limited', 12.2), /Aguarde 13 s/);
+  assert.equal(rateLimitNotice('qualquer_outro', 5), null);
+});
+
+test('SPEC-219: 429 rate_limited usa o header Retry-After quando o corpo nao traz', async () => {
+  const { http } = await load('http');
+  globalThis.document = { cookie: '' };
+  globalThis.fetch = async () => new Response(JSON.stringify({ detail: 'rate_limited' }),
+    { status: 429, headers: { 'Retry-After': '7' } });
+  await assert.rejects(http('/game/state'), (error) => {
+    assert.equal(error.retryAfterSeconds, 7);
+    assert.match(error.message, /Aguarde 7 s/);
+    return true;
+  });
+});

@@ -56,12 +56,69 @@ def tz_offset_hours() -> int:
 _MODEL_KEY = re.compile(r"^model:[a-z0-9_.-]+/[A-Za-z0-9_.:/-]+$")
 
 
+def _text_model_keys() -> list[str]:
+    """SPEC-219 R8: atalho ``text`` -> um kill switch por (provider, modelo) de ROUTES."""
+    from llm_setup import _load_routes
+    from services.kill_switches import model_key
+    keys: list[str] = []
+    for candidates in _load_routes().values():
+        for provider, model in candidates:
+            key = model_key(provider, model)
+            if _MODEL_KEY.match(key) and key not in keys:
+                keys.append(key)
+    return keys
+
+
 def cap_switches() -> tuple[str, ...]:
     extra = [k.strip() for k in os.getenv("RPG_DAILY_SPEND_CAP_MODEL_SWITCHES", "").split(",") if k.strip()]
-    bad = [k for k in extra if not _MODEL_KEY.match(k)]
+    expanded: list[str] = []
+    for k in extra:
+        expanded.extend(_text_model_keys() if k == "text" else [k])
+    bad = [k for k in expanded if not _MODEL_KEY.match(k)]
     if bad:
         raise CapConfigError("RPG_DAILY_SPEND_CAP_MODEL_SWITCHES entries must look like model:<provider>/<model>")
-    return CAP_SWITCHES + tuple(k for k in dict.fromkeys(extra) if k not in CAP_SWITCHES)
+    return CAP_SWITCHES + tuple(k for k in dict.fromkeys(expanded) if k not in CAP_SWITCHES)
+
+
+# --- SPEC-219 R8: leitura barata do cap no caminho do turno (opt-in) --------------------------
+TEXT_CAP_TTL_SECONDS = 30.0
+_text_cap_cache: tuple[float, bool] | None = None
+
+
+def text_cap_enabled() -> bool:
+    return cap_from_env() is not None and os.getenv("RPG_DAILY_SPEND_CAP_TEXT", "").strip() == "1"
+
+
+def reset_text_cap_cache() -> None:
+    global _text_cap_cache
+    _text_cap_cache = None
+
+
+def text_cap_exceeded(reader_factory, *, now: datetime | None = None,
+                      clock=None) -> bool:
+    """True quando o gasto do dia (BRL) estourou o cap E o cap de texto esta ligado.
+
+    Cache de 30 s por processo; qualquer falha de leitura NAO bloqueia turnos (fail-open) -- o
+    cron e os kill switches continuam sendo a fonte autoritativa."""
+    global _text_cap_cache
+    if not text_cap_enabled():
+        return False
+    import time as _time
+    tick = (clock or _time.monotonic)()
+    if _text_cap_cache is not None and tick < _text_cap_cache[0]:
+        return _text_cap_cache[1]
+    exceeded = False
+    try:
+        reader = reader_factory()
+        moment = now or datetime.now(timezone.utc)
+        refs, _fresh = reader.pricing()
+        fx = list(refs.values())[-1].fx_usd_brl if refs else DEFAULT_FX
+        res = evaluate_daily_cap(reader, None, moment, fx)
+        exceeded = bool(res.enabled and res.exceeded)
+    except Exception:
+        exceeded = False
+    _text_cap_cache = (tick + TEXT_CAP_TTL_SECONDS, exceeded)
+    return exceeded
 
 
 def _ts(v) -> datetime | None:

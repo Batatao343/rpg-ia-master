@@ -1,7 +1,23 @@
 import { isAndroidClient } from './native/platform';
 
 export class HttpError extends Error {
-  constructor(public status: number, public code: string, detail: string) { super(detail); }
+  constructor(public status: number, public code: string, detail: string,
+    public retryAfterSeconds?: number) { super(detail); }
+}
+
+/** SPEC-219: 429 de abuso vira aviso legivel, sem retry automatico. Retorna null se nao for um. */
+export function rateLimitNotice(code: string, retryAfterSeconds?: number, now: Date = new Date()): string | null {
+  const wait = Math.max(1, Math.ceil(Number(retryAfterSeconds) || 0));
+  if (code === 'daily_quota_exceeded') {
+    const back = new Date(now.getTime() + wait * 1000);
+    const hh = String(back.getHours()).padStart(2, '0');
+    const mm = String(back.getMinutes()).padStart(2, '0');
+    return `Cota diária de turnos atingida; volta às ${hh}:${mm}.`;
+  }
+  if (code === 'rate_limited') return `Muitas ações em pouco tempo. Aguarde ${wait} s e tente de novo.`;
+  if (code === 'daily_spend_cap') return 'O servidor atingiu o limite de custo de hoje. Tente novamente mais tarde.';
+  if (code === 'too_many_open_orders') return 'Há compras abertas demais. Conclua ou aguarde expirar antes de iniciar outra.';
+  return null;
 }
 
 let refreshing: Promise<void> | null = null;
@@ -49,11 +65,24 @@ export const STALE_PAGE_MESSAGE = 'A proteção desta página expirou. Recarregu
 async function errorFor(response: Response): Promise<HttpError> {
   const fallback = response.statusText || 'Falha na requisição';
   let formatted = { code: fallback, message: fallback };
-  try { formatted = formatDetail((await response.json()).detail, fallback); } catch { /* non-JSON */ }
+  let retryAfter: number | undefined;
+  try {
+    const body = await response.json();
+    formatted = formatDetail(body.detail, fallback);
+    if (typeof body.retry_after_seconds === 'number') retryAfter = body.retry_after_seconds;
+  } catch { /* non-JSON */ }
+  if (retryAfter === undefined) {
+    const header = Number(response.headers?.get?.('Retry-After'));
+    if (Number.isFinite(header) && header > 0) retryAfter = header;
+  }
+  if (response.status === 429 || response.status === 503) {
+    const notice = rateLimitNotice(formatted.code, retryAfter);
+    if (notice) return new HttpError(response.status, formatted.code, notice, retryAfter);
+  }
   if (response.status === 403 && STALE_PAGE_CODES.has(formatted.code)) {
     formatted = { code: formatted.code, message: STALE_PAGE_MESSAGE };
   }
-  return new HttpError(response.status, formatted.code, formatted.message);
+  return new HttpError(response.status, formatted.code, formatted.message, retryAfter);
 }
 
 // SPEC-193: one-shot cookie-session refresh used by the native boot (never loops).

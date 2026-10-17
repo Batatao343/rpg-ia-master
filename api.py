@@ -164,6 +164,9 @@ async def _session_boundary(request: Request, call_next):
 
     # SPEC-220 R8: o ``try`` cobre só identidade + CSRF; ``call_next`` fica fora,
     # então um ValueError do handler volta a ser 500 genérico (nunca 401).
+    blocked = _authfail_blocked(request)       # SPEC-219 R6: sem chamar o verificador
+    if blocked is not None:
+        return blocked
     try:
         principal = _boundary_principal(request)
         if request.method not in {"GET", "HEAD", "OPTIONS"}:
@@ -178,16 +181,63 @@ async def _session_boundary(request: Request, call_next):
     except CsrfError as exc:
         return JSONResponse({"detail": exc.code}, status_code=403)
     except Unauthorized as exc:
+        # Sem cookie nao ha verificacao a amplificar: visitante deslogado (bootstrap da SPA) nao
+        # consome o balde, so quem apresenta credencial invalida (SPEC-219 R6, revisao Sol).
+        throttled = _record_authfail(request) if request.cookies.get("rpg_access") else None
+        if throttled is not None:
+            return throttled
         return JSONResponse({"detail": public_auth_code(exc)}, status_code=401)
     except ValueError:  # segredo de sessão curto/ausente (CsrfSigner/proof)
         return JSONResponse({"detail": "server_misconfigured"}, status_code=503)
     token = set_current_principal(principal)
     try:
+        over = _owner_rate_limit(request, principal)   # SPEC-219 R2
+        if over is not None:
+            return over
         from observability.telemetry import correlation_scope
         with correlation_scope(owner_id=principal.user_id):
             return await call_next(request)
     finally:
         reset_current_principal(token)
+
+
+AUTHFAIL_LIMIT = (60, 900)                      # SPEC-219 R6: falhas de sessao por IP / 15 min
+_authfail_until: dict[str, float] = {}          # chave -> monotonic ate quando o IP segue bloqueado
+
+
+def _authfail_key(request: Request) -> str:
+    from observability.telemetry import pseudonym
+    return f"authfail:{pseudonym(_client_ip(request))}"
+
+
+def _authfail_blocked(request: Request) -> "JSONResponse | None":
+    until = _authfail_until.get(_authfail_key(request))
+    if until is None:
+        return None
+    remaining = until - time.monotonic()
+    if remaining <= 0:
+        _authfail_until.pop(_authfail_key(request), None)
+        return None
+    return _blocked_response("rate_limited", "authfail", int(remaining) + 1)
+
+
+def _record_authfail(request: Request) -> "JSONResponse | None":
+    """Consome o balde de falhas (compartilhado entre instancias); estourou => 429."""
+    from infrastructure.runtime import get_runtime
+    from services import abuse_policy
+    key = _authfail_key(request)
+    try:
+        decision = get_runtime().rate_limiter.consume(
+            key, limit=AUTHFAIL_LIMIT[0], window_seconds=AUTHFAIL_LIMIT[1])
+    except Exception:
+        return None
+    if decision.allowed:
+        return None
+    if len(_authfail_until) > 2000:
+        _authfail_until.clear()
+    _authfail_until[key] = time.monotonic() + decision.retry_after_seconds
+    abuse_policy.record_block("session", "authfail", ip=_client_ip(request))
+    return _blocked_response("rate_limited", "authfail", decision.retry_after_seconds)
 
 
 def _boundary_principal(request: Request):
@@ -476,7 +526,7 @@ def _auth_abuse(request: Request, *, action: str, email: str = "", captcha_token
     if action in {"signup", "reset", "verify"} or (
             captcha_mode == "gotrue" and action in {"login", "reauth"}):
         try:
-            validate_captcha(captcha_token, remote_ip=request.client.host if request.client else "unknown", action=action)
+            validate_captcha(captcha_token, remote_ip=_client_ip(request), action=action)
         except ValueError:
             raise HTTPException(503, "captcha_unavailable") from None
         except Unauthorized as exc:
@@ -1024,56 +1074,136 @@ async def _rate_limit_metrics(request: Request, call_next):
     return await call_next(request)
 
 
+def _client_ip(request: Request) -> str:
+    from services.abuse_policy import client_ip   # SPEC-219 R4
+    return client_ip(request)
+
+
+def _blocked_response(detail: str, scope: str, retry_after: int, *, status: int = 429) -> JSONResponse:
+    from services.abuse_policy import rate_limited_body
+    return JSONResponse(status_code=status, content=rate_limited_body(detail, scope, retry_after),
+                        headers={"Retry-After": str(max(1, int(retry_after)))})
+
+
 @app.middleware("http")
 async def _rate_limit(request: Request, call_next):
-    limit = _rate_limit_max()
-    if limit > 0 and request.url.path == "/metrics":
+    """SPEC-219 R1/R2: limite POR IP da classe da rota (o limite por owner vive em
+    ``_session_boundary``, que conhece o principal; turnos tem o dele em ``_enforce_owner_budget``)."""
+    if _rate_limit_max() > 0 and request.url.path == "/metrics":
         return await _rate_limit_metrics(request, call_next)
-    # Auditoria A2: equip/levelup também mutam o save — entram na janela.
-    if limit > 0 and (request.url.path in ("/game/action", "/game/action/stream",
-                                           "/game/new", "/game/combat-simulator",
-                                           "/game/equip", "/game/levelup",
-                                           # SPEC-209 R4: preparar Cartas também muta o save
-                                           "/game/cards/prepare",
-                                           # spec inicio-personalizado (R11): 1 SMART por chamada
-                                           "/game/prologue",
-                                           # SPEC-200 R10: balde PROPRIO (nao come o das acoes)
-                                           _CLIENT_LATENCY_PATH)
-                      # spec polish-sessao (R2): DELETE de save também é mutação
-                      or (request.method == "DELETE"
-                          and request.url.path.startswith("/game/save/"))):
-        ip = request.client.host if request.client else "?"
-        if request.url.path == _CLIENT_LATENCY_PATH:
-            ip = f"{ip}#latency"
-        if _database_profile():
-            from infrastructure.runtime import get_runtime
-            from observability.telemetry import pseudonym
-            decision = get_runtime().rate_limiter.consume(
-                f"ip:{pseudonym(ip)}", limit=limit,
-                window_seconds=int(_RATE_WINDOW_S),
-            )
-            if not decision.allowed:
-                return JSONResponse(
-                    status_code=429,
-                    content={"detail": "Muitas requisições — aguarde um instante."},
-                    headers={"Retry-After": str(decision.retry_after_seconds)},
-                )
-            return await call_next(request)
-        now = time.monotonic()
-        # Auditoria A8: teto no dict — descarta IPs com janela inteira vencida.
-        if len(_rate_hits) > 1000:
-            stale = [k for k, dq in _rate_hits.items()
-                     if not dq or now - dq[-1] > _RATE_WINDOW_S]
-            for k in stale:
-                del _rate_hits[k]
-        hits = _rate_hits[ip]
-        while hits and now - hits[0] > _RATE_WINDOW_S:
-            hits.popleft()
-        if len(hits) >= limit:
-            return JSONResponse(status_code=429,
-                                content={"detail": "Muitas requisições — aguarde um instante."})
-        hits.append(now)
+    from services import abuse_policy
+    cls = abuse_policy.classify(request.method, request.url.path)
+    if cls is None:
+        return await call_next(request)
+    ip_limit, _owner = abuse_policy.limits_for(cls)
+    if ip_limit <= 0:
+        return await call_next(request)
+    ip = _client_ip(request)
+    if _database_profile():
+        from infrastructure.runtime import get_runtime
+        from observability.telemetry import pseudonym
+        decision = get_runtime().rate_limiter.consume(
+            f"ip:{pseudonym(ip)}:{cls.name}", limit=ip_limit, window_seconds=cls.window_s)
+        if not decision.allowed:
+            abuse_policy.record_block(cls.name, "ip", ip=ip)
+            return _blocked_response("rate_limited", "ip", decision.retry_after_seconds)
+        return await call_next(request)
+    # legacy: janela deslizante em memoria (R11), mesma lista de classes.
+    now = time.monotonic()
+    # Auditoria A8: teto no dict -- descarta chaves com janela inteira vencida.
+    if len(_rate_hits) > 1000:
+        stale = [k for k, dq in _rate_hits.items() if not dq or now - dq[-1] > _RATE_WINDOW_S]
+        for k in stale:
+            del _rate_hits[k]
+    hits = _rate_hits[f"{ip}#{cls.name}"]
+    while hits and now - hits[0] > cls.window_s:
+        hits.popleft()
+    if len(hits) >= ip_limit:
+        abuse_policy.record_block(cls.name, "ip", ip=ip)
+        return _blocked_response("rate_limited", "ip", int(cls.window_s - (now - hits[0])) + 1)
+    hits.append(now)
     return await call_next(request)
+
+
+def _owner_rate_limit(request: Request, principal) -> "JSONResponse | None":
+    """SPEC-219 R2: limite por owner da classe (perfis DB). Falha do limitador NAO derruba a rota."""
+    from services import abuse_policy
+    cls = abuse_policy.classify(request.method, request.url.path)
+    if cls is None or request.url.path in _TURN_BUDGET_PATHS:
+        return None
+    _ip, owner_limit = abuse_policy.limits_for(cls)
+    if owner_limit <= 0:
+        return None
+    try:
+        from infrastructure.runtime import get_runtime
+        decision = get_runtime().rate_limiter.consume(
+            f"user:{principal.user_id}:{cls.name}", limit=owner_limit, window_seconds=cls.window_s)
+    except Exception:
+        return None
+    if decision.allowed:
+        return None
+    abuse_policy.record_block(cls.name, "owner", owner=principal.user_id)
+    return _blocked_response("rate_limited", "owner", decision.retry_after_seconds)
+
+
+# Turnos fazem a checagem por owner DEPOIS do replay por action_id (replay nao consome).
+_TURN_BUDGET_PATHS = frozenset({"/game/action", "/game/action/stream"})
+
+
+class QuotaExceeded(HTTPException):
+    """429/503 de abuso levantado dentro de um handler (corpo completo via exception_handler)."""
+
+    def __init__(self, detail: str, scope: str, retry_after: int, status_code: int = 429) -> None:
+        super().__init__(status_code=status_code, detail=detail,
+                         headers={"Retry-After": str(max(1, int(retry_after)))})
+        self.scope = scope
+        self.retry_after_seconds = int(retry_after)
+
+
+@app.exception_handler(QuotaExceeded)
+async def _quota_exceeded_handler(_request, exc: QuotaExceeded):
+    return _blocked_response(exc.detail, exc.scope, exc.retry_after_seconds, status=exc.status_code)
+
+
+def _enforce_owner_budget(cls_name: str, *, minute: bool = False, daily: bool = True) -> None:
+    """SPEC-219 R2/R3/R8: antes de gastar LLM. Perfis DB apenas (legacy = so IP, R11)."""
+    if not _database_profile():
+        return
+    from infrastructure.request_context import current_principal
+    from infrastructure.runtime import get_runtime
+    from services import abuse_policy
+    from services.daily_spend_cap import text_cap_exceeded
+    principal = current_principal()
+    runtime = get_runtime()
+    def _reader():
+        from infrastructure.finops_reader import PostgresFinopsReader
+        return PostgresFinopsReader(runtime.game_store.pool)
+
+    if text_cap_exceeded(_reader):
+        abuse_policy.record_block(cls_name, "cap", owner=principal.user_id)
+        raise QuotaExceeded("daily_spend_cap", "cap", abuse_policy.seconds_until_utc_midnight(), 503)
+    cls = abuse_policy.ROUTE_CLASSES[cls_name]
+    if minute:
+        _ip, owner_limit = abuse_policy.limits_for(cls)
+        if owner_limit > 0:
+            decision = runtime.rate_limiter.consume(
+                f"user:{principal.user_id}:{cls.name}", limit=owner_limit, window_seconds=cls.window_s)
+            if not decision.allowed:
+                abuse_policy.record_block(cls.name, "owner", owner=principal.user_id)
+                raise QuotaExceeded("rate_limited", "owner", decision.retry_after_seconds)
+    limit = abuse_policy.daily_quota_limit()
+    quota = getattr(runtime, "daily_quota", None)
+    if not daily or limit <= 0 or quota is None:
+        return
+    try:
+        verdict = quota.bump(principal.user_id, cls_name, limit)
+    except Exception:  # contador indisponivel nao pode derrubar o jogo (o IP/owner/min seguem valendo)
+        _log_event("api", "daily_quota_unavailable", level="warning")
+        return
+    if not verdict.allowed:
+        abuse_policy.record_block(cls_name, "daily", owner=principal.user_id)
+        raise QuotaExceeded("daily_quota_exceeded", "daily", verdict.retry_after_seconds)
+
 
 # --- MODELOS DE DADOS (DTOs) ---
 class CreateCharacterRequest(BaseModel):
@@ -2537,10 +2667,12 @@ def checkout_create(body: CheckoutRequest, request: Request):
     from infrastructure.request_context import current_principal
     from services.kill_switches import SwitchOff
     from services.shard_pricing import PricingUnavailable
-    from services.stripe_checkout import StripeError
+    from services.stripe_checkout import OpenOrdersLimit, StripeError
     try:
         return JSONResponse(_stripe_payments().checkout(current_principal(), body.sku_id, body.request_id),
                             headers={'Cache-Control': 'no-store'})
+    except OpenOrdersLimit:
+        raise QuotaExceeded('too_many_open_orders', 'owner', 60) from None
     except SwitchOff:
         raise HTTPException(503, 'new_purchases_disabled') from None
     except (StripeError, PricingUnavailable):
@@ -2819,6 +2951,7 @@ def game_prologue(req: CreateCharacterRequest):
         "backstory": req.backstory or "",
         "level": req.level,
     }
+    _enforce_owner_budget("llm_aux")    # SPEC-219 R3 (minuto/owner ja aplicado na fronteira)
     with _meter_auxiliary_operation("prologue"):
         scenario, mock = build_start_scenario(char_input)
     return {"scenario": scenario.model_dump(), "mock": mock}
@@ -3159,6 +3292,7 @@ def new_game(req: CreateCharacterRequest):
     attempt_token = _llm_attempt_events.set([])
     embedding_token = _embedding_attempt_events.set([])
     try:
+        _enforce_owner_budget("llm_aux")   # SPEC-219 R3; falha aqui encerra o claim (retry com a mesma chave)
         with operation_scope(get_runtime().turn_coordinator if claim else None, claim), effect_scope(), embedding_usage_scope(_embedding_telemetry_hook):
             return _create_game(req, claim)
     except Exception as exc:
@@ -4191,6 +4325,8 @@ def _execute_action(req: ActionRequest, *, progress=None, timeline=None,
             _reject_archived(state)
             if state.get("death_pending"):
                 raise HTTPException(409, "Você tombou. Resolva a tela de morte.")
+            # SPEC-219 R3/R10: 1 consumo por turno (POST e SSE), depois do replay por action_id.
+            _enforce_owner_budget("turn", minute=True)
             _apply_action_options(state, req)
             from services.projections import deferral_scope, projection_mode
             owner = _projection_owner()
@@ -4383,7 +4519,10 @@ def _stream_turn_events(req: ActionRequest, accepted_game_id: str, principal,
                 if not delivered["done"]:
                     q.put(("response", response))
         except HTTPException as exc:
-            q.put(("http_error", {"detail": exc.detail, "code": exc.status_code}))
+            payload = {"detail": exc.detail, "code": exc.status_code}
+            if isinstance(exc, QuotaExceeded):     # SPEC-219: cliente mostra "volta em HH:MM"
+                payload.update(scope=exc.scope, retry_after_seconds=exc.retry_after_seconds)
+            q.put(("http_error", payload))
         except Exception as exc:
             q.put(("exc", exc))
 

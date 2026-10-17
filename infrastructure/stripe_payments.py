@@ -16,7 +16,7 @@ from infrastructure.contracts import Principal
 from infrastructure.pricing_catalog import quote_published_sku
 from infrastructure.wallet import PostgresWallet
 from services.shard_pricing import PricingUnavailable
-from services.stripe_checkout import StripeError, StripeSettings, checkout_url_valid
+from services.stripe_checkout import OpenOrdersLimit, StripeError, StripeSettings, checkout_url_valid
 
 PAID_EVENTS = {"checkout.session.completed", "checkout.session.async_payment_succeeded"}
 FINANCIAL_EVENTS = {"charge.refunded", "charge.dispute.created", "charge.dispute.closed"}
@@ -146,6 +146,21 @@ class StripePayments:
                 and status <> 'paid' and checkout_closed_at is null limit 1""",
                 (owner_id,)).fetchone()
 
+    @staticmethod
+    def _guard_open_orders(db, owner_id: UUID, now: datetime) -> None:
+        import os
+        try:
+            limit = int(os.getenv("RPG_LIMIT_PAYMENTS_OPEN_ORDERS", "3"))
+        except ValueError:
+            limit = 3
+        if limit <= 0:
+            return
+        row = db.execute("""select count(*) as n from app.payment_orders
+            where owner_id=%s and status in ('created','checkout_pending') and expires_at > %s""",
+                         (owner_id, now)).fetchone()
+        if int(row["n"]) >= limit:
+            raise OpenOrdersLimit("stripe_open_orders_limit")
+
     def checkout(self, owner: Principal, sku_id: str, request_id: UUID) -> dict:
         if sku_id not in self.settings.allowed_skus or not isinstance(request_id, UUID):
             raise StripeError("stripe_sku_not_allowed")
@@ -156,6 +171,7 @@ class StripePayments:
             if prior is None:
                 from services.kill_switches import require_purchases  # SPEC-196: NEW orders only
                 require_purchases("stripe")
+                self._guard_open_orders(db, owner.user_id, now)   # SPEC-219: ordens abertas por owner
                 quote = quote_published_sku(db, sku_id, at=now)
                 if quote.channel != "web":
                     raise StripeError("stripe_sku_channel_invalid")

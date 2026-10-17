@@ -102,7 +102,7 @@ def test_purge_expired_respects_each_window_and_references():
         assert db.execute("select count(*) n from app.finops_evaluations "
                           "where evaluated_at < now()-interval '180 days'").fetchone()["n"] == 0
         assert set(RETENTION_RULES) == {"operations", "jobs", "usage_events", "finops_evaluations",
-                                        "account_deletions"}
+                                        "account_deletions", "owner_daily_counters"}  # SPEC-219
     finally:
         db.rollback()
         db.close()

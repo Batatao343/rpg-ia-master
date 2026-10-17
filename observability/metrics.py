@@ -50,6 +50,8 @@ LABELS = {
     "rpg_finops_kill_switch_off": {"kind"},
     "rpg_finops_evaluation_age_seconds": {"kind"},
     "rpg_kill_switch_load_errors_total": {"error"},
+    # SPEC-219 R9: bloqueio anti-abuso (class fechada; scope=ip|owner|daily|authfail|cap).
+    "rpg_rate_limited_total": {"class", "scope"},
 }
 
 

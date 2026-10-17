@@ -7,7 +7,7 @@ from infrastructure.contracts import Principal, Unauthorized
 
 PRIVATE_TABLES = ("game_checkpoints", "game_events", "turns", "art_generations", "assets",
                   "chronicle_digests", "memory_documents", "runtime_catalog", "usage_events",
-                  "operations", "jobs", "games", "image_quotes")
+                  "operations", "jobs", "games", "image_quotes", "owner_daily_counters")
 FINANCIAL_TABLES = ("wallet_accounts", "wallet_entries", "wallet_reservations",
                     "wallet_attempt_tickets", "wallet_settled_usage", "payment_orders",
                     "wallet_debt_entries", "purchase_reconciliation_state")
@@ -87,7 +87,17 @@ EXPORT_COLUMNS: dict[str, tuple[str, ...]] = {
                               "purchased_at", "google_state", "state", "voided_at", "void_reason",
                               "created_at", "updated_at"),
 }
+EXPORT_COLUMNS["owner_daily_counters"] = ("owner_id", "day", "class", "count", "updated_at")  # SPEC-219
 EXPORT_TABLES = PRIVATE_TABLES + FINANCIAL_TABLES + ("google_play_purchases",)
+# Tabelas cuja migration pode ainda nao estar aplicada quando o codigo sobe (deploy antes da
+# migration): export/exclusao as pulam se ausentes em vez de quebrar a conta inteira.
+OPTIONAL_TABLES = frozenset({"owner_daily_counters"})  # SPEC-219
+
+
+def _present_tables(db, tables) -> tuple[str, ...]:
+    missing = {t for t in tables if t in OPTIONAL_TABLES and db.execute(
+        "select to_regclass(%s) as r", (f"app.{t}",)).fetchone()["r"] is None}
+    return tuple(t for t in tables if t not in missing)
 
 
 class PostgresAccountLifecycle:
@@ -112,7 +122,7 @@ class PostgresAccountLifecycle:
             data = {table: db.execute(
                         f"select {', '.join(EXPORT_COLUMNS[table])} from app.{table} where owner_id=%s",
                         (principal.user_id,)).fetchall()
-                    for table in EXPORT_TABLES}
+                    for table in _present_tables(db, EXPORT_TABLES)}
             data["payment_financial_events"] = db.execute("""select f.financial_id,f.order_id,f.kind,
                 f.amount_cents,f.currency,f.outcome,f.created_at from app.payment_financial_events f
                 join app.payment_orders o on o.order_id=f.order_id where o.owner_id=%s""",
@@ -207,7 +217,7 @@ class PostgresAccountLifecycle:
         with self.pool.connection() as db, db.transaction():
             db.execute("select pg_advisory_xact_lock(hashtextextended(%s,190))", (str(owner),))
             # Each explicit predicate uses only the owner authenticated before revocation.
-            for table in PRIVATE_TABLES:
+            for table in _present_tables(db, PRIVATE_TABLES):
                 db.execute(f"delete from app.{table} where owner_id=%s", (owner,))
             # A retained financial row contains opaque IDs/numbers, no private prompt/data.
             db.execute("update app.payment_orders set checkout_url=null where owner_id=%s", (owner,))
