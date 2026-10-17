@@ -1226,7 +1226,9 @@ button.tchip { cursor: pointer; }
 
 /* choice.select (M01): o cartão inteiro é a área clicável; seleção tem marcador textual */
 .card { position: relative; }
-.card__select::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+/* Só dentro de um `.card` (posicionado): fora dele, o ::after absoluto subia até o primeiro
+   ancestral posicionado e cobria o workspace (ex.: ampliar retrato roubava o clique de "Chat"). */
+.card .card__select::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
 .card__chips { position: relative; z-index: 1; }
 article.card[data-selected="true"]::before {
   content: "Selecionado"; position: absolute; top: 0.5rem; right: 0.5rem; z-index: 2;

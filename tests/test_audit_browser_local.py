@@ -77,10 +77,15 @@ def test_authenticated_stream_reload_history_and_art_dialog(width, tmp_path):
             page.reload()
             page.get_by_role('button', name='Auditoria', exact=False).first.click()
             page.get_by_placeholder('O que você faz?', exact=False).wait_for(timeout=15_000)
+            # SPEC-204/209: the portrait lives in the Personagem tab of the context
+            # panel; below 1100px only one surface is shown, so open it explicitly.
+            page.get_by_role('button', name='☰ Ficha', exact=True).click()
             portrait = page.locator('.generated-portrait img')
             portrait.wait_for(state='attached')
             page.wait_for_function("document.querySelector('.generated-portrait img')?.naturalWidth > 0")
             assert portrait.evaluate('i => getComputedStyle(i).objectFit') == 'contain'
+            if width < 1100:
+                page.get_by_role('group', name='Modo de exibição').get_by_role('button', name='Chat', exact=True).click()
             assert page.locator('.topbar__right button').evaluate_all('''buttons => buttons.every((a, i) => {
                 const x = a.getBoundingClientRect();
                 return buttons.slice(i + 1).every(b => {
