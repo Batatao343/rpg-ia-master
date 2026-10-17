@@ -91,7 +91,7 @@ def test_api_commit_passes_one_normalized_consolidate_for_all_attempts(monkeypat
     assert len(captured["usage_events"]) == 3
     assert captured["llm_cost_usd"] == sum(
         (event.cost_usd for event in captured["usage_events"]), Decimal("0"))
-    assert captured["llm_cost_usd"] == Decimal("1.000345000")
+    assert captured["llm_cost_usd"] == Decimal("0.000345850")  # SPEC-237: Jina priced by tokens, not US$ 1
     assert state["_storage_version"] == 2
     assert "Texto privado" not in repr(captured["usage_events"])
 

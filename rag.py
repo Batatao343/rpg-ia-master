@@ -281,6 +281,19 @@ def _scoped_embeddings(provider: str, embeddings: Embeddings) -> Embeddings:
         embeddings, provider, _PROVIDER_MODELS.get(provider, "unknown"))
 
 
+def _has_token_usage(usage: object) -> bool:
+    if not isinstance(usage, dict):
+        return False
+    return any(isinstance(usage.get(key), int) and not isinstance(usage.get(key), bool)
+               and usage[key] >= 0 for key in ("prompt_tokens", "input_tokens", "total_tokens"))
+
+
+def _estimated_embedding_usage(values: List[str]) -> dict[str, int]:
+    """SPEC-237: no usage block -> conservative estimate (~2 chars/token), flagged; no text."""
+    chars = sum(len(value) for value in values)
+    return {"input_tokens": -(-chars // 2), "units_estimated": 1}
+
+
 class _JinaEmbeddingsHTTPX(Embeddings):
     """Cliente Jina pequeno, síncrono e com limite de rede explícito.
 
@@ -327,12 +340,14 @@ class _JinaEmbeddingsHTTPX(Embeddings):
                 try:
                     payload = response.json()
                 except ValueError:
-                    _emit_embedding_attempt("jina", self.model_name, "invalid_response")
+                    # SPEC-237: the provider answered (and may have billed) -> estimate, not US$ 1.
+                    _emit_embedding_attempt("jina", self.model_name, "invalid_response",
+                                            _estimated_embedding_usage(values))
                     raise
-                _emit_embedding_attempt(
-                    "jina", self.model_name, "response",
-                    payload.get("usage") if isinstance(payload, dict) else None,
-                )
+                usage = payload.get("usage") if isinstance(payload, dict) else None
+                if not _has_token_usage(usage):
+                    usage = _estimated_embedding_usage(values)
+                _emit_embedding_attempt("jina", self.model_name, "response", usage)
                 rows = payload.get("data") if isinstance(payload, dict) else None
                 if not isinstance(rows, list):
                     raise ValueError("resposta Jina sem lista 'data'")

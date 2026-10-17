@@ -13,6 +13,8 @@ from pathlib import Path
 from typing import Any, Literal, Mapping, Sequence
 from uuid import UUID, uuid5
 
+from services.embedding_pricing import EMBEDDING_PRICING_VERSION, embedding_cost
+
 
 _CARD = json.loads((Path(__file__).resolve().parents[1] /
                     "data/pricing/rate_card_2026-10-08.json").read_text(encoding="utf-8"))
@@ -95,6 +97,7 @@ def safe_provider_usage(value: object, *, image_generated: bool = False) -> dict
         "text_output_tokens": ("text_output_tokens",),
         "image_output_tokens": ("image_output_tokens",),
         "image_counter_error": ("image_counter_error",),
+        "units_estimated": ("units_estimated",),
     }
     safe: dict[str, int | str] = {}
     for field, keys in aliases.items():
@@ -183,6 +186,14 @@ def normalize_attempts(
         elif reported is not None:
             cost, basis, exact, version = (
                 reported, "provider_reported", True, "provider-reported-v1",
+            )
+        elif (category == "embedding" and inputs is not None and outputs is None
+              and (embedded := embedding_cost(provider, model, inputs)) is not None):
+            # SPEC-237: embeddings report input tokens only; priced by the embedding card.
+            guessed = reading.get("units_estimated") == 1
+            cost, basis, exact, version = (
+                embedded, "estimated" if guessed else "token_priced",
+                not guessed, EMBEDDING_PRICING_VERSION,
             )
         elif card and inputs is not None and outputs is not None:
             cost = _priced_cost(card, inputs, outputs, cached or 0)

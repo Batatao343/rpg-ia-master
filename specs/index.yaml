@@ -4223,3 +4223,18 @@ specs:
   tie_breaker: null
   lineage_ambiguous: false
   lineage_note: Authored from functional bug audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
+- id: SPEC-237
+  slug: rate-card-embeddings-jina
+  status: in-progress
+  path: specs/SPEC-237-rate-card-embeddings-jina.md
+  created_commit: null
+  created_at: '2026-10-17'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from staging wave 2026-10-17 (Jina missing from rate card); approved by owner for execution

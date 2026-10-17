@@ -139,4 +139,6 @@ def test_decision_image_and_audio_units_share_content_free_normalizer() -> None:
     assert audio_events[0].audio_units == 30
     assert embedding_events[0].input_units == 35
     assert all(event.cost_basis == "estimated" for event in
-               [*decision_events, *image_events, *audio_events, *embedding_events])
+               [*decision_events, *image_events, *audio_events])
+    # SPEC-237: Jina is on the embedding card, so it is priced by tokens, not estimated at US$ 1.
+    assert embedding_events[0].cost_basis == "token_priced"

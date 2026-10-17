@@ -1,0 +1,12 @@
+{
+  "version": "embedding-2026-10-17-v1",
+  "observed_at": "2026-10-17",
+  "models": {
+    "jina:jina-embeddings-v3": {
+      "mode": "tokens",
+      "input_per_million": "0.05",
+      "pricing_mode": "published_fixed",
+      "source": "Jina token packages since the 2025-05-06 pricing model: Standard US$ 50 / 1B tokens (US$ 0.05/1M), Premium US$ 500 / 11B (US$ 0.045/1M); the higher Standard rate is used. jina.ai/api-dashboard/pricing confirms the 2025-05-06 model; amounts per usagepricing.com/blueprint/jina-ai (observed 2026-08-27). Checked 2026-10-17."
+    }
+  }
+}

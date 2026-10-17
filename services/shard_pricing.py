@@ -291,7 +291,12 @@ def quote_usage(events: Sequence[UsageEvent], version: PricingVersion, *, at: da
         speech_rejected = (event.cost_basis == "definitive_no_charge" and event.cost_usd == 0
                            and event.category == "speech_to_text"
                            and event.pricing_version == SPEECH_PRICING_VERSION)
-        if event.cost_basis == "token_priced" and event.pricing_version != version.rate_card_version:
+        from services.embedding_pricing import EMBEDDING_PRICING_VERSION
+        # SPEC-237: embeddings are token-priced by their own immutable card, never the text card.
+        embedding_card = (event.cost_basis == "token_priced" and event.category == "embedding"
+                          and event.pricing_version == EMBEDDING_PRICING_VERSION)
+        if (event.cost_basis == "token_priced" and not embedding_card
+                and event.pricing_version != version.rate_card_version):
             raise PricingUnavailable("rate card de usage diverge da versão")
         if event.cost_basis not in {"token_priced", "provider_reported"} and not (
                 speech_card or image_card or speech_rejected):
