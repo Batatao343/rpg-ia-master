@@ -24,3 +24,8 @@ journeys:
   - { id: F22, name: combat_gesture_cancel, hard: true }
   - { id: F23, name: combat_gesture_keyboard, hard: true }
   - { id: F24, name: combat_invalid_target_reaim, hard: true }
+  - { id: F25, name: deck_prepare_persist, hard: true }
+  - { id: F26, name: deck_rejection_limit, hard: true }
+  - { id: F27, name: deck_blocked_context, hard: true }
+  - { id: F28, name: deck_keyboard, hard: true }
+  - { id: F29, name: character_sheet_journey, hard: true }

@@ -27,7 +27,7 @@ Frontend (`web/src/components/tabs/`)
 
 ## Limites / desvios
 - `reaction.present` (adiado pela SPEC-208) NÃO foi feito: exige janela de gatilho de reação emitida pelo backend; hoje a reação é declarada junto da ação.
-- Jornadas F (eval): autoria em tarefa separada (`handoffs/SPEC-209-eval-authoring.md`) — único item pendente.
+- Jornadas F (eval): autoradas (F25–F29, abaixo).
 - "Histórico de evolução" cobre nível e subclasse (marcos públicos da crônica); evoluções de Carta A/B aparecem como selo no deck, não na Jornada.
 - R13: "atualizando…" no cabeçalho do deck (salvando ou turno em andamento) e da ficha (turno em andamento); preparar fica bloqueado nesse intervalo.
 - Defaults de decisão do dono usados: reorganizar só em zona segura (perigo <= 3, sem apex); cicatrizes visíveis; apex ativado; histórico derivado sem log novo.
@@ -37,3 +37,15 @@ Frontend (`web/src/components/tabs/`)
 - `kind="equip"` reaproveitado: seguro — recibo indexado por (owner, operation_id, game, kind, request_hash); payloads distintos → mesmo action_id em outra rota = 409 `operation_request_mismatch`. Teste `infra_local` `test_prepare_cards_shares_equip_kind_without_key_collision` (skip offline). Sem migration.
 - Playwright (Chromium, `--workers=1`): axe 320/768 nas duas abas, split 50% com no máximo uma região rolável por aba, R13 com servidor atrasado; 65 testes verdes em deck-character/workspace-shell/combat-gesture/combat-outcome/critical-journeys.
 - Evidência: `evidence/1440-split50-combate.png`, `evidence/1440-split50-personagem.png`, `evidence/390-combate.png`, `evidence/390-personagem.png`.
+
+## Jornadas F (autoria de eval separada, 2026-10-17)
+- `web/e2e/critical-journeys.{yaml,spec.ts}`: F25 `deck_prepare_persist` (1 request `POST /game/cards/prepare` com `prepared` completo, servidor
+  confirma, custo base, reload persiste), F26 `deck_rejection_limit` (409: rollback `aria-pressed=false`, `.deck__msg`, save intocado; terceira carta
+  `aria-disabled` com "limite de 2", zero request), F27 `deck_blocked_context` (`can_reorganize.allowed=false`: razao em `.deck__note`, zero request;
+  combate ativo esconde o deck), F28 `deck_keyboard` (setas/Enter, sem overflow 320/390/768), F29 `character_sheet_journey` (subclasse, Cicatrizes so
+  quando existem, retrato/fallback, Jornada com "Evolução do herói" so de marcos, reload). Guards console/pageerror/5xx/requestfailed e Axe serious/critical.
+- Nao coberto: fluxo "Evoluir" (abre o `LevelUpModal` automaticamente com escolha pendente; ja coberto por F11 e `LevelUpModal`), `reaction.present`.
+- `scripts/frontend_eval_report.py` reconhece F01-F29 (`JOURNEY_COUNT = 29`); evaluator 1.9.0 -> 1.10.0; lock refeito por `python -m evals.core.governance lock`
+  (datasets inalterados); `governance check` verde. Publicar exige aprovacao do environment `eval-governance`.
+- Playwright Chromium `--workers=1` (portas 4198/8198, config temporaria removida): critical-journeys 29/29 (F13 falhou uma vez por
+  `fonts.googleapis.com` ERR_CONNECTION_CLOSED, passou na repeticao isolada) + deck-character 12/12.

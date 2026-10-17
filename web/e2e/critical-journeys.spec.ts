@@ -1,6 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "./fixtures";
 import type { Page } from "@playwright/test";
+import type { CardView } from "../src/types";
 
 async function assertA11y(page: Page) {
   const result = await new AxeBuilder({ page }).analyze();
@@ -765,5 +766,164 @@ test("F24 combat_invalid_target_reaim", async ({ page, backend }) => {
   expect(accepted.body!.action_id).not.toBe(rejected.body!.action_id);
   await expect(participant(page, "e1")).toContainText("2/6");
   expect(backend.states.get("game-a")!.combat.round).toBe(2);
+  await assertA11y(page);
+});
+
+// --- SPEC-209: deck fora de combate e ficha do personagem (F25-F29) ---
+const deckCard = (over: Partial<CardView> & { id: string; name: string }): CardView => ({
+  type: "ativa", description: `${over.name} de teste`, effect_kind: "damage", target_kind: "enemy", subclass: "",
+  prepared: false, cost: 2, base_cost: 2, frequency: "turno", spent: false, ready: false, has_rupture: false,
+  rupture_ready: false, trigger: "", evolved: null, ...over,
+});
+
+function seedDeck(backend: { states: Map<string, any> }, allowed = true, reason = "") {
+  const state = backend.states.get("game-a")!;
+  const ps = state.player_stats;
+  ps.cards = [
+    deckCard({ id: "golpe", name: "Golpe do Véu", prepared: true, has_rupture: true }),
+    deckCard({ id: "fenda", name: "Fenda", cost: 3, base_cost: 2 }),
+    deckCard({ id: "aparar", name: "Aparar", type: "reacao", trigger: "ao_ser_alvo" }),
+    deckCard({ id: "ecos", name: "Ecos", type: "passiva", frequency: "livre", cost: 0 }),
+  ];
+  ps.prepared_slots = 2;
+  ps.subclass = "Pacto do Cinzel";
+  ps.can_reorganize = { allowed, reason };
+  ps.scars = [{ id: "s1", origem: "Queda em Vorr", consequencia_negativa: "Tremor na mão", habilidade_positiva_relacionada: "Olhar frio" }];
+  state.chronicle = [{ chapter_id: "c1", title: "Cap", started_turn: 0, location: "Porto", entries: [
+    { text: "O herói alcançou o nível 2.", turn: 1, kind: "milestone" }, { text: "Ayla chegou.", turn: 0, kind: "milestone" }] }];
+}
+
+async function openDeck(page: Page) {
+  await page.goto("/");
+  await page.getByRole("heading", { name: "Continuar jornada" }).waitFor();
+  await page.getByRole("button", { name: /^Ayla/ }).click();
+  await page.getByRole("tab", { name: "Combate" }).click();
+  await expect(page.getByRole("heading", { name: /Preparação/ })).toBeVisible();
+}
+
+const deckBtn = (page: Page, name: string) => page.getByRole("button", { name: new RegExp(`^${name},`) }).last();
+const prepareCalls = (backend: { requests: Array<{ path: string; body: Record<string, unknown> | null }> }) =>
+  backend.requests.filter((r) => r.path === "/game/cards/prepare");
+const preparedHeading = (page: Page) => page.getByRole("heading", { name: /Preparação/ });
+
+test("F25 deck_prepare_persist", async ({ page, backend }) => {
+  await page.setViewportSize(DESKTOP);
+  seedDeck(backend);
+  await openDeck(page);
+  await expect(preparedHeading(page)).toContainText("1/2");
+  await expect(page.getByRole("button", { name: /^Golpe do Véu,/ }).first()).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByText("(base 2)").first()).toBeVisible();
+  await deckBtn(page, "Fenda").click();
+  await expect(preparedHeading(page)).toContainText("2/2");
+  await expect(deckBtn(page, "Fenda")).toHaveAttribute("aria-pressed", "true");
+  // Exatamente 1 request com a lista completa (confirmação do servidor, sem escrita paralela).
+  expect(prepareCalls(backend)).toHaveLength(1);
+  expect((prepareCalls(backend)[0].body!.prepared as string[]).slice().sort()).toEqual(["fenda", "golpe"]);
+  expect(backend.states.get("game-a")!.player_stats.cards.filter((c: CardView) => c.prepared).map((c: CardView) => c.id).sort())
+    .toEqual(["fenda", "golpe"]);
+  await page.reload();
+  await page.getByRole("button", { name: /^Ayla/ }).click();
+  await page.getByRole("tab", { name: "Combate" }).click();
+  await expect(preparedHeading(page)).toContainText("2/2");
+  await expect(deckBtn(page, "Fenda")).toHaveAttribute("aria-pressed", "true");
+  await assertA11y(page);
+});
+
+test("F26 deck_rejection_limit", async ({ page, backend }) => {
+  await page.setViewportSize(DESKTOP);
+  seedDeck(backend);
+  backend.allowConsole(/status of 409/);
+  let reject = true;
+  await page.route("**/game/cards/prepare", (route) => reject
+    ? route.fulfill({ status: 409, contentType: "application/json", body: JSON.stringify({ detail: "Local perigoso demais." }) })
+    : route.fallback());
+  await openDeck(page);
+  const before = JSON.stringify(backend.states.get("game-a")!.player_stats.cards);
+  await deckBtn(page, "Fenda").click();
+  // Rollback visual + mensagem anunciada em aria-live; save do servidor intocado.
+  await expect(page.locator(".deck__msg")).toContainText("Local perigoso demais.");
+  await expect(deckBtn(page, "Fenda")).toHaveAttribute("aria-pressed", "false");
+  await expect(preparedHeading(page)).toContainText("1/2");
+  expect(JSON.stringify(backend.states.get("game-a")!.player_stats.cards)).toBe(before);
+  // Limite: com 2/2 a terceira fica indisponível, com razão, sem request.
+  reject = false;
+  await deckBtn(page, "Fenda").click();
+  await expect(preparedHeading(page)).toContainText("2/2");
+  const calls = prepareCalls(backend).length;
+  const aparar = deckBtn(page, "Aparar");
+  await expect(aparar).toHaveAttribute("aria-disabled", "true");
+  await expect(aparar).toContainText("limite de 2");
+  await aparar.click({ force: true });
+  expect(prepareCalls(backend)).toHaveLength(calls);
+  await expect(preparedHeading(page)).toContainText("2/2");
+  await assertA11y(page);
+});
+
+test("F27 deck_blocked_context", async ({ page, backend }) => {
+  await page.setViewportSize(DESKTOP);
+  seedDeck(backend, false, "Local perigoso demais (apex) para reorganizar as Cartas.");
+  await openDeck(page);
+  await expect(page.locator(".deck__note")).toContainText("apex");
+  const fenda = deckBtn(page, "Fenda");
+  await expect(fenda).toHaveAttribute("aria-disabled", "true");
+  await fenda.click({ force: true });
+  expect(prepareCalls(backend)).toHaveLength(0);
+  await expect(preparedHeading(page)).toContainText("1/2");
+  await assertA11y(page);
+  // Em combate ativo o deck dá lugar à mão tática.
+  backend.armCombat("game-a");
+  await page.reload();
+  await page.getByRole("button", { name: /^Ayla/ }).click();
+  await page.getByRole("tab", { name: "Combate" }).click();
+  await expect(page.locator(".deck")).toHaveCount(0);
+  expect(prepareCalls(backend)).toHaveLength(0);
+});
+
+test("F28 deck_keyboard", async ({ page, backend }) => {
+  await page.setViewportSize(DESKTOP);
+  seedDeck(backend);
+  await openDeck(page);
+  await page.getByRole("button", { name: /^Golpe do Véu,/ }).first().focus();
+  await page.keyboard.press("ArrowRight");
+  expect(await page.evaluate(() => document.activeElement?.getAttribute("data-deck-card"))).not.toBeNull();
+  await deckBtn(page, "Fenda").focus();
+  await page.keyboard.press("Enter");
+  await expect(preparedHeading(page)).toContainText("2/2");
+  expect(prepareCalls(backend)).toHaveLength(1);
+  for (const [w, h] of [[320, 720], [390, 844], [768, 1024]] as const) {
+    await page.setViewportSize({ width: w, height: h });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), `overflow ${w}px`).toBe(true);
+  }
+  await assertA11y(page);
+});
+
+test("F29 character_sheet_journey", async ({ page, backend }) => {
+  await page.setViewportSize(DESKTOP);
+  seedDeck(backend);
+  await page.goto("/");
+  await page.getByRole("heading", { name: "Continuar jornada" }).waitFor();
+  await page.getByRole("button", { name: /^Ayla/ }).click();
+  await page.getByRole("tab", { name: "Personagem" }).click();
+  await expect(page.getByText(/Pacto do Cinzel/).first()).toBeVisible();
+  await expect(page.getByText("Cicatrizes")).toBeVisible();
+  await expect(page.getByText("Tremor na mão")).toBeVisible();
+  await expect(page.getByText("Olhar frio")).toBeVisible();
+  await expect(page.locator(".char-portrait")).toBeVisible();
+  await assertA11y(page);
+  await page.getByRole("tab", { name: /Jornada/ }).click();
+  await expect(page.getByText("Evolução do herói")).toBeVisible();
+  await expect(page.getByText("O herói alcançou o nível 2.")).toBeVisible();
+  await expect(page.getByText("Ayla chegou.")).toHaveCount(0);
+  await page.reload();
+  await page.getByRole("button", { name: /^Ayla/ }).click();
+  await page.getByRole("tab", { name: "Personagem" }).click();
+  await expect(page.getByText("Tremor na mão")).toBeVisible();
+  // Sem Cicatrizes a seção não aparece (nenhum dado antigo permanece).
+  backend.states.get("game-a")!.player_stats.scars = [];
+  await page.reload();
+  await page.getByRole("button", { name: /^Ayla/ }).click();
+  await page.getByRole("tab", { name: "Personagem" }).click();
+  await expect(page.getByText("Cicatrizes")).toHaveCount(0);
+  await expect(page.getByText("Tremor na mão")).toHaveCount(0);
   await assertA11y(page);
 });

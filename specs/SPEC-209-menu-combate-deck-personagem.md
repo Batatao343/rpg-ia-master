@@ -1,6 +1,6 @@
 # SPEC-209 — Menu Combate (deck fora de encontro) e menu Personagem (ficha/Jornada)
 
-> **Status:** `in-progress`
+> **Status:** `done`
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
 > **Depende de:** SPEC-203 `done` (desfecho), SPEC-204 `done` (shell), SPEC-205 `done` (gesto), SPEC-208 `done` (tokens), SPEC-227 `done` (inventário/equipamento íntegros) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212 (ordem final 2026-10-15)

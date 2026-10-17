@@ -3693,12 +3693,12 @@ specs:
   lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
 - id: SPEC-209
   slug: menu-combate-deck-personagem
-  status: in-progress
+  status: done
   path: specs/SPEC-209-menu-combate-deck-personagem.md
   created_commit: null
   created_at: '2026-10-15'
   completed_commit: null
-  completed_at: null
+  completed_at: '2026-10-17'
   completed_order: null
   depends_on:
   - SPEC-203

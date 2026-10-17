@@ -10,8 +10,8 @@
     "datasets/regression/routing_actions.jsonl": "sha256:ad6f48be2a66f1e5f5b55c5f61bdd9f457dcb611c2568fa0008d35fbf2596bb4",
     "datasets/regression/state_rules.jsonl": "sha256:4d465f9b7b5e365e9883f243aee2e14a9a1ac78e5f81b93d5350a6a8cf2b2733"
   },
-  "evaluator_version": "1.9.0",
-  "metrics_registry": "sha256:04421f039d958e31418b21216ece1f13cf7af4586104f1b4ac31c960e0bfe653",
+  "evaluator_version": "1.10.0",
+  "metrics_registry": "sha256:7858bd17b12050272e0e39a63c41640ae8c9f70e382418bb91fbafe3ab4dddcf",
   "metrics_schema_version": 1,
   "ruler_sources": {
     "__main__.py": "sha256:eb2ed6ea5aece574c9f0804c02806617aefddbd8faf9c236dab244b85c836643",
@@ -21,7 +21,7 @@
     "core/governance.py": "sha256:7d349216ac55315fb823a01b9a562493c372a9fea121b85b7b6a8b26d6994300",
     "core/hashing.py": "sha256:2f5cdff5235b59f94a94eb39a76e1114adbb4256917ee5533e3b7853ead6b620",
     "core/runner.py": "sha256:fc917512c4968dc9662575e2e4624f02bfdd54dab4753cca7dc740c13e9207ab",
-    "core/schemas.py": "sha256:a844c295c102dce550fc3a636965a2847dc302750ed54f51004b8c3fa8f652a6",
+    "core/schemas.py": "sha256:87327bee5878b35e51141cf8d4ada7e4c4ed333132086f5ad2e7c6d13fd445d8",
     "evaluators/__init__.py": "sha256:20f96e6f90c9918da7957b6e16168611c6aab679f0ac7ab82d7f81f077d23042",
     "evaluators/exact.py": "sha256:21c39d7a5bb19819115a4073c87d6c1d8471c15830120ab0cfd85be6a0f54e29",
     "evaluators/memory.py": "sha256:be0cd0bff8396bd8470bdc824ab9f30a984bc7a4156309a998625b95e4802a2d",

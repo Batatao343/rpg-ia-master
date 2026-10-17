@@ -12,8 +12,8 @@ import subprocess
 from pathlib import Path
 from typing import Any, Iterable
 
-JOURNEY_COUNT = 24
-JOURNEY_RE = re.compile(r"^(F(?:0[1-9]|1[0-9]|2[0-4]))\s+")
+JOURNEY_COUNT = 29
+JOURNEY_RE = re.compile(r"^(F(?:0[1-9]|1[0-9]|2[0-9]))\s+")
 
 
 def _specs(suites: Iterable[dict[str, Any]]) -> Iterable[dict[str, Any]]:
@@ -80,7 +80,7 @@ def measurement_identity(root: Path) -> dict[str, str]:
     package = json.loads((root / "web/package.json").read_text(encoding="utf-8"))
     return {
         "product_sha": os.getenv("GITHUB_SHA") or git.stdout.strip(),
-        "evaluator_version": "1.9.0",
+        "evaluator_version": "1.10.0",
         "metrics_registry_hash": digest(root / "evals/metrics-registry.yaml"),
         "journey_manifest_hash": digest(root / "web/e2e/critical-journeys.yaml"),
         "platform": platform.platform(),
