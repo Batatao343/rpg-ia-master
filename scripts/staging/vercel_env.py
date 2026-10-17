@@ -63,7 +63,12 @@ def stale_names(production: Mapping[str, str]) -> tuple[str, ...]:
     return REMOVED_NAMES + tuple(n for n in MODE_EXCLUSIVE if n not in production)
 # SPEC-194: HMAC key for Play obfuscated account ids (>=32 chars). Pushed only when present in the env files.
 # SPEC-197 R6 voice: Groq only (no OPENAI_API_KEY => no paid STT fallback candidate).
-OPTIONAL_SECRET_FROM_FILE = ("RPG_PLAY_ACCOUNT_KEY",)
+# 2026-10-17 (dono: "Sim, use a DeepSeek"): DEEPSEEK_API_KEY e o candidato PRIMARIO de ROUTES em todos os tiers;
+# Groq segue como fallback. Opcional: sem a chave o candidato e pulado e o Groq assume.
+OPTIONAL_SECRET_FROM_FILE = ("RPG_PLAY_ACCOUNT_KEY", "DEEPSEEK_API_KEY")
+# SPEC-236 §6.1: chave DeepSeek deliberadamente invalida (literal publico, nao e segredo) para forcar 1 falha
+# do primario + fallback Groq. Reverter com um push normal (o upsert regrava a chave real).
+INVALID_DEEPSEEK_KEY = "sk-spec236-smoke-invalid-key"
 RLS_SECRETS = ("RPG_ADMIN_DATABASE_URL",)  # SPEC-224: so no modo RLS efetivo
 FORBIDDEN_IN_PREVIEW = frozenset(SECRET_FROM_FILE) | frozenset(OPTIONAL_SECRET_FROM_FILE) | frozenset(RLS_SECRETS)
 
@@ -75,8 +80,8 @@ def _load_files() -> dict[str, str]:
     return merged
 
 
-def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST, use_admin_dsn: bool = False
-              ) -> tuple[dict[str, str], dict[str, str]]:
+def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST, use_admin_dsn: bool = False,
+              invalid_deepseek_key: bool = False) -> tuple[dict[str, str], dict[str, str]]:
     """Retorna (production, preview). Levanta KeyError com NOME do segredo ausente."""
     production = dict(NON_SECRET_LITERALS)
     production["RPG_CORS_ORIGINS"] = f"https://{public_host}"
@@ -88,6 +93,8 @@ def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST, use_admi
     for key in OPTIONAL_SECRET_FROM_FILE:
         if files.get(key):
             production[key] = files[key]
+    if invalid_deepseek_key:
+        production["DEEPSEEK_API_KEY"] = INVALID_DEEPSEEK_KEY
     # SPEC-197 R-05 + SPEC-224: o runtime usa o papel de menor privilégio (`rpg_runtime`) com RLS por request
     # e um segundo DSN (`rpg_admin`) para workers/cron/wallet. `use_admin_dsn` e o rollback: DSN unico
     # `postgres` e RPG_REQUEST_RLS=off (comportamento anterior). Sem papeis provisionados, idem.
@@ -150,6 +157,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--public-host", default=PUBLIC_HOST)
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--use-admin-dsn", action="store_true", help="rollback: DATABASE_URL = postgres")
+    ap.add_argument("--invalid-deepseek-key", action="store_true",
+                    help="SPEC-236 §6.1: envia uma chave DeepSeek invalida (forca fallback Groq); reverter sem a flag")
     args = ap.parse_args(argv)
     if args.project_name != PROJECT_NAME:
         print(f"recusado: projeto deve ser {PROJECT_NAME}", file=sys.stderr)
@@ -160,7 +169,8 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     files = _load_files()
     try:
-        production, preview = build_env(files, args.public_host, args.use_admin_dsn)
+        production, preview = build_env(files, args.public_host, args.use_admin_dsn,
+                                        args.invalid_deepseek_key)
     except KeyError as exc:
         print(exc.args[0], file=sys.stderr)
         return 1

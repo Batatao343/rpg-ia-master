@@ -78,3 +78,14 @@ def test_switching_rls_mode_deletes_the_other_mode_variable():
     assert "RPG_REQUEST_RLS" in ve.stale_names(rls) and "RPG_ADMIN_DATABASE_URL" not in ve.stale_names(rls)
     rollback = ve.build_env(files, use_admin_dsn=True)[0]
     assert "RPG_ADMIN_DATABASE_URL" in ve.stale_names(rollback) and "RPG_REQUEST_RLS" not in ve.stale_names(rollback)
+
+
+def test_deepseek_key_is_pushed_as_primary_secret_and_never_to_preview():
+    """2026-10-17: dono autorizou DeepSeek no staging (primario de ROUTES); Groq continua como fallback."""
+    prod, prev = ve.build_env({**FILES, "DEEPSEEK_API_KEY": "v-ds"})
+    assert prod["DEEPSEEK_API_KEY"] == "v-ds" and prod["GROQ_API_KEY"] == "v-GROQ_API_KEY"
+    assert "DEEPSEEK_API_KEY" in ve.FORBIDDEN_IN_PREVIEW and "DEEPSEEK_API_KEY" not in prev
+    assert "DEEPSEEK_API_KEY" not in ve.build_env(FILES)[0]  # opcional: sem a chave o Groq assume
+    # SPEC-236 §6.1: chave invalida temporaria (literal publico) forca a falha do primario
+    broken = ve.build_env({**FILES, "DEEPSEEK_API_KEY": "v-ds"}, invalid_deepseek_key=True)[0]
+    assert broken["DEEPSEEK_API_KEY"] == ve.INVALID_DEEPSEEK_KEY != "v-ds"
