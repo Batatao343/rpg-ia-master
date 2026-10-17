@@ -1,0 +1,146 @@
+{
+  "schema": 1,
+  "gate": "beta-gameplay-desktop",
+  "sha": "f0607e1a0605ba9a0703ecd79a1d0071e496a8dd",
+  "dirty_files": 0,
+  "ok": true,
+  "failing": [],
+  "strict": true,
+  "viewports": [
+    "1440x900",
+    "1280x800"
+  ],
+  "results": [
+    {
+      "name": "journeys_f01_f40",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "desktop-1440": {
+          "passed": 36,
+          "executed": 36,
+          "registered": 36,
+          "hard_gates": true
+        },
+        "desktop-1280": {
+          "passed": 36,
+          "executed": 36,
+          "registered": 36,
+          "hard_gates": true
+        }
+      }
+    },
+    {
+      "name": "vertical_v01_v09",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "steps": 9,
+        "passed": 18,
+        "registered": 18,
+        "per_viewport": {
+          "desktop-1440": 9,
+          "desktop-1280": 9
+        }
+      }
+    },
+    {
+      "name": "console_clean",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "problems": {},
+        "errors": 0
+      }
+    },
+    {
+      "name": "no_duplicate_turns",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "problems": {},
+        "action_ids": 18,
+        "duplicates": 0
+      }
+    },
+    {
+      "name": "no_secret_leak",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "problems": {},
+        "surfaces_scanned": 54,
+        "matches": 0
+      }
+    },
+    {
+      "name": "latency_present",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "problems": {},
+        "turns": {
+          "desktop-1440": 7,
+          "desktop-1280": 9
+        },
+        "baseline": {
+          "desktop-1440": {
+            "turns": 7,
+            "indicative": true,
+            "baseline_only": true,
+            "ttfmc_ms": {
+              "p50": 417,
+              "p95": 511
+            },
+            "ttlt_ms": {
+              "p50": 419,
+              "p95": 517
+            }
+          },
+          "desktop-1280": {
+            "turns": 9,
+            "indicative": true,
+            "baseline_only": true,
+            "ttfmc_ms": {
+              "p50": 189,
+              "p95": 310
+            },
+            "ttlt_ms": {
+              "p50": 191,
+              "p95": 313
+            }
+          }
+        },
+        "baseline_only": true,
+        "indicative": true
+      }
+    },
+    {
+      "name": "a11y_serious_critical",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "problems": {},
+        "tabs_scanned": 10
+      }
+    },
+    {
+      "name": "xp_speaker_roster_gesture",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "problems": {}
+      }
+    },
+    {
+      "name": "known_issues_no_blockers",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "issues": 11,
+        "blocking_open": 0,
+        "ids": []
+      }
+    }
+  ]
+}
