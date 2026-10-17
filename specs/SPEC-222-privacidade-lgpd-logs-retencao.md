@@ -1,7 +1,7 @@
 # SPEC-222 — Privacidade/LGPD: logs sem conteúdo de jogo, exclusão/export completos e transparência
 
-> **Status:** `in-progress` (código + testes locais entregues; faltam smoke em staging, texto legal pelo titular e revisão Sol)
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
+> **Status:** `in-progress` (código + testes locais + revisão Sol entregues; faltam: aplicar a migration `20261016120000_privacy_retention.sql` + smoke §6 em staging, e o texto legal da política pelo titular)
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
 > **Depende de:** nenhuma · evolui SPEC-190/194/195 `done`; complementa SPEC-197 R3/R-10 (ordem final 2026-10-15)
 > **Desbloqueia:** gate legal da SPEC-197; Data Safety da SPEC-198 (ordem final 2026-10-15)
 > **Origem:** auditoria de segurança 2026-10-15 — achados PRIV-01 (+PRIV-09), PRIV-02, PRIV-03, PRIV-04, PRIV-05 (parcial), PRIV-06, PRIV-07
@@ -74,7 +74,7 @@ Objetivo: o código passa a cumprir o que a política diz — e a política pass
 - [x] Etapa 0 vermelha no HEAD, verde ao final; R1–R10 cobertos; suíte Python/Node/e2e verdes; Postgres local verde. (R8/R10 do texto da política: ver desvios.)
 - [ ] Staging: turno real → logs da função Vercel sem texto do jogador (inspeção manual de 1 turno com sentinela); compra fake/teste → após consume `purchase_token IS NULL`; delete de campanha com arte → objeto some do bucket em ≤ 1 ciclo de cron; `/account/export` contém as novas tabelas sem token. **Pendente:** exige aplicar a migration `20261016120000_privacy_retention.sql` no staging e deploy (coordenador).
 - [ ] Política e Data Safety sem `<...>`; `web/dist/index.html` sem `fonts.googleapis.com`; signup com aceite + links. **Parcial:** `web/dist` sem Google Fonts ✔, signup com aceite + idade ✔, Data Safety alinhado ao código ✔; a política (`web/legal/`, texto legal SPEC-197) não é editada por agente — texto proposto em `handoffs/SPEC-222-legal-text.md`; os `<...>` do controlador/SMTP/domínio dependem do titular.
-- [ ] Revisão Sol independente APPROVED.
+- [x] Revisão Sol independente APPROVED (17/10, com correções — `handoffs/SPEC-222-SOL-independent-review.md`): declaração 18+ exigida pela API (`SignupRequest.age_confirmed: Literal[True]`, 422), job `purge_blobs` idempotente no FileBlobStore e sem chaves com `..`, 6 `print` novos de main (SPEC-209–215) migrados para `log_event`.
 
 ### Execução (2026-10-16) — defaults e desvios
 

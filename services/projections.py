@@ -25,6 +25,8 @@ from contextvars import ContextVar
 from copy import deepcopy
 from typing import Any, Callable, Dict, Iterator, List, Literal, Optional, TypedDict
 
+from observability.telemetry import log_event as _log_event
+
 MODE_ENV = "RPG_PROJECTION_MODE"
 WAIT_ENV = "RPG_PROJECTION_WAIT_SECONDS"
 DEFAULT_WAIT_SECONDS = 20.0
@@ -342,7 +344,7 @@ def run_pending(state: dict, *,
     try:
         result = dict(executor(state, plan) or {})
     except Exception as exc:
-        print(f"⚠️ [PROJECTION] derivado falhou: {type(exc).__name__}")
+        _log_event("projection", "derived_failed", level="warning", error=type(exc).__name__)
         error = "exception"
     if error is None and (clock() - started) > limit:
         error = "timeout"

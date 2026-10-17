@@ -570,7 +570,7 @@ def npc_actor_node(state: GameState):
                 pack_state = {**state, "knowledge_links": [
                     *(state.get("knowledge_links") or []), *knowledge_new]}
         except Exception as exc:  # o turno segue; o gate falha fechado
-            print(f"⚠️ [npc_knowledge] {type(exc).__name__}: {exc}")
+            _log_event("npc", "knowledge_failed", level="warning", error=type(exc).__name__)
             knowledge_new = []
     pack = build_context_pack(
         pack_state,

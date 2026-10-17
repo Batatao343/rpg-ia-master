@@ -65,6 +65,38 @@ def test_handler_failure_raises_so_the_queue_retries():
         purge_game_blobs_job(_Pool(_NoStorageDb()), _Blobs(fail=True), payload)
 
 
+def test_replay_on_file_store_treats_already_absent_object_as_purged(tmp_path):
+    """Retry after a partial purge (or an asset row whose upload never landed) must not
+    wedge the job: the file store reports ``False`` for a missing key."""
+    import hashlib
+    from io import BytesIO
+
+    from infrastructure.contracts import BlobMetadata
+    from infrastructure.file_blob import FileBlobStore
+
+    owner, game = uuid4(), uuid4()
+    store = FileBlobStore(tmp_path)
+    present = f"users/{owner}/games/{game}/npc/a.webp"
+    missing = f"users/{owner}/games/{game}/npc/never-uploaded.webp"
+    store.put(present, BytesIO(b"x"), BlobMetadata(owner, game, "image/webp",
+                                                    hashlib.sha256(b"x").hexdigest(), "npc"))
+    payload = {"owner_id": str(owner), "game_id": str(game), "object_keys": [present, missing]}
+    assert purge_game_blobs_job(_Pool(_NoStorageDb()), store, payload)["status"] == "purged"
+    assert purge_game_blobs_job(_Pool(_NoStorageDb()), store, payload)["status"] == "purged"
+    with pytest.raises(FileNotFoundError):
+        store.open(present)
+
+
+def test_handler_rejects_traversal_keys_even_inside_the_prefix():
+    owner, game = uuid4(), uuid4()
+    prefix = f"users/{owner}/games/{game}/"
+    blobs = _Blobs()
+    payload = {"owner_id": str(owner), "game_id": str(game),
+               "object_keys": [prefix + "../../../" + str(uuid4()) + "/x.webp", prefix + "ok.webp"]}
+    assert purge_game_blobs_job(_Pool(_NoStorageDb()), blobs, payload)["deleted"] == 1
+    assert blobs.deleted == [prefix + "ok.webp"]
+
+
 @pytest.mark.infra_local
 def test_delete_campaign_then_drain_leaves_no_object_in_prefix():
     psycopg = pytest.importorskip("psycopg")

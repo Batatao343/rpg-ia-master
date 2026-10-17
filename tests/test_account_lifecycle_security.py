@@ -67,7 +67,8 @@ def account_client(monkeypatch):
 def test_verify_signup_and_reset_messages_do_not_enumerate(account_client):
     client, identity, _, _ = account_client
     for email in ("exists@test.test", "absent@test.test"):
-        signup = client.post("/auth/signup", json={"email": email, "password": "long-password"})
+        signup = client.post("/auth/signup", json={"email": email, "password": "long-password",
+                                                     "age_confirmed": True})
         assert signup.status_code == 202 and signup.json() == {"authenticated": False,"message": GENERIC_MESSAGE}
         assert "rpg_access" not in signup.cookies
         for path in ("/auth/reset/request", "/auth/verify/request"):
@@ -114,10 +115,10 @@ def test_gotrue_mode_requires_config_and_forwards_fresh_tokens_without_proxy_con
     monkeypatch.setenv("RPG_AUTH_CAPTCHA_MODE","gotrue")
     monkeypatch.setenv("RPG_AUTH_CAPTCHA_REQUIRED","1")
     monkeypatch.delenv("RPG_TURNSTILE_SITE_KEY",raising=False)
-    assert client.post("/auth/signup",json={"email":"a@test.test","password":"password-123",
+    assert client.post("/auth/signup",json={"email":"a@test.test","password":"password-123","age_confirmed":True,
                                              "captcha_token":"signup-token"}).status_code==503
     monkeypatch.setenv("RPG_TURNSTILE_SITE_KEY","public-site-key")
-    assert client.post("/auth/signup",json={"email":"a@test.test","password":"password-123"}).status_code==403
+    assert client.post("/auth/signup",json={"email":"a@test.test","password":"password-123","age_confirmed":True}).status_code==403
     sent=[]
     monkeypatch.setattr(httpx,"post",lambda *_args,**_kwargs: pytest.fail("proxy must not consume token"))
     def signup(email,password,*,captcha_token):
@@ -131,7 +132,7 @@ def test_gotrue_mode_requires_config_and_forwards_fresh_tokens_without_proxy_con
     monkeypatch.setattr(identity,"signup",signup)
     monkeypatch.setattr(identity,"request_email",request_email)
     monkeypatch.setattr(identity,"login",login)
-    assert client.post("/auth/signup",json={"email":"a@test.test","password":"password-123",
+    assert client.post("/auth/signup",json={"email":"a@test.test","password":"password-123","age_confirmed":True,
                                              "captcha_token":"signup-token"}).status_code==202
     assert client.post("/auth/reset/request",json={"email":"a@test.test",
                                                     "captcha_token":"recover-token"}).status_code==202
@@ -295,3 +296,19 @@ def test_permissions_policy_allows_microphone_for_self(account_client):
     # getUserMedia depende de Permissions-Policy; CSP nao tem diretiva de microfone.
     csp = client.get("/health").headers.get("content-security-policy", "")
     assert "microphone" not in csp
+
+
+def test_signup_requires_server_side_age_confirmation(account_client, monkeypatch):
+    """SPEC-222 R9 (D-D): a declaração de 18+ é exigida pela API, não só pela UI."""
+    client, identity, _, _ = account_client
+    calls = []
+    original = identity.signup
+    monkeypatch.setattr(identity, "signup", lambda *a, **k: calls.append(1) or original(*a, **k))
+    for body in ({}, {"age_confirmed": False}, {"age_confirmed": "sim"}):
+        denied = client.post("/auth/signup", json={"email": "minor@test.test",
+                                                   "password": "long-password", **body})
+        assert denied.status_code == 422
+        assert not calls
+    ok = client.post("/auth/signup", json={"email": "adult@test.test", "password": "long-password",
+                                           "age_confirmed": True})
+    assert ok.status_code == 202 and calls == [1]

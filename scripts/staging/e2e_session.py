@@ -71,9 +71,10 @@ def run(base: str, env: dict) -> dict:
     try:
         mail = f"spec192-signup-{uuid4().hex[:8]}@example.invalid"
         pw = "Spec192-" + uuid4().hex
-        r_no = c.post(f"{base}/auth/signup", headers=_h(base), json={"email": mail, "password": pw})
+        r_no = c.post(f"{base}/auth/signup", headers=_h(base), json={"email": mail, "password": pw, "age_confirmed": True})
         r_ok = c.post(f"{base}/auth/signup", headers=_h(base),
-                      json={"email": mail, "password": pw, "captcha_token": s192.CAPTCHA_TEST})
+                      json={"email": mail, "password": pw, "age_confirmed": True,
+                            "captcha_token": s192.CAPTCHA_TEST})
         def gotrue_probe(token):
             body = {"email": f"spec192-probe-{uuid4().hex[:8]}@example.invalid", "password": pw}
             if token:

@@ -54,7 +54,9 @@ export const login = (email: string, password: string, captchaToken?: string) =>
 export const signup = (email: string, password: string, captchaToken?: string) =>
   req<AuthResponse>("/auth/signup", {
     method: "POST",
-    body: JSON.stringify({ email, password, ...(captchaToken ? { captcha_token: captchaToken } : {}) }),
+    // SPEC-222 R9: a API recusa (422) cadastro sem a declaração de 18+ marcada no formulário.
+    body: JSON.stringify({ email, password, age_confirmed: true,
+      ...(captchaToken ? { captcha_token: captchaToken } : {}) }),
   });
 // SPEC-220 R1: sob /auth/refresh para receber o cookie de refresh (path /auth/refresh)
 // e revogá-lo no servidor mesmo com o access vencido.

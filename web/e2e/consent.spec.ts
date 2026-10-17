@@ -9,7 +9,8 @@ test("SPEC-222 signup shows consent links and requires the age checkbox", async 
   backend.authenticated = false;
   await page.route("**/auth/config", route => route.fulfill(json(unauthenticated)));
   let signups = 0;
-  await page.route("**/auth/signup", route => { signups += 1; return route.fulfill(json({ authenticated: false,
+  let payload: Record<string, unknown> = {};
+  await page.route("**/auth/signup", route => { signups += 1; payload = route.request().postDataJSON(); return route.fulfill(json({ authenticated: false,
     message: "Se o endereço puder receber mensagens, enviaremos as instruções." }, 202)); });
   await page.goto("/");
   const legal = page.getByRole("navigation", { name: "Documentos legais" });
@@ -33,4 +34,5 @@ test("SPEC-222 signup shows consent links and requires the age checkbox", async 
   await submit.click();
   await expect(page.getByRole("status")).toContainText("Se o endereço puder receber mensagens");
   expect(signups).toBe(1);
+  expect(payload.age_confirmed).toBe(true); // a API recusa (422) sem a declaração
 });

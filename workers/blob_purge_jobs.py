@@ -19,10 +19,32 @@ def game_prefix(owner_id: UUID, game_id: UUID) -> str:
     return f"users/{owner_id}/games/{game_id}/"
 
 
+def _in_prefix(key: object, prefix: str) -> bool:
+    # Keys are opaque for S3/Supabase, but a file store resolves ``..``; never let a
+    # key that starts with the campaign prefix climb out of it.
+    return (isinstance(key, str) and key.startswith(prefix)
+            and ".." not in key.split("/") and "\\" not in key)
+
+
+def _deleted_or_absent(blob_store, key: str) -> bool:
+    if blob_store.delete(key):
+        return True
+    # The file store reports False for a key that is already gone (retry after a
+    # partial purge, or an asset row whose upload never landed). Only a definite
+    # FileNotFoundError counts as absent; any other failure keeps the job retrying.
+    try:
+        blob_store.open(key).close()
+    except FileNotFoundError:
+        return True
+    except Exception:
+        return False
+    return False
+
+
 def enqueue_game_blob_purge(connection, owner_id: UUID, game_id: UUID,
                             object_keys: list[str]) -> None:
     prefix = game_prefix(owner_id, game_id)
-    keys = sorted({key for key in object_keys if key.startswith(prefix)})
+    keys = sorted({key for key in object_keys if _in_prefix(key, prefix)})
     # game_id stays NULL: jobs.game_id cascades with the game being deleted.
     connection.execute(
         """insert into app.jobs (id,owner_id,game_id,kind,dedupe_key,status,payload,max_attempts)
@@ -37,16 +59,15 @@ def enqueue_game_blob_purge(connection, owner_id: UUID, game_id: UUID,
 def purge_game_blobs_job(pool, blob_store, payload: dict) -> dict:
     owner_id, game_id = UUID(str(payload["owner_id"])), UUID(str(payload["game_id"]))
     prefix = game_prefix(owner_id, game_id)
-    keys = {key for key in payload.get("object_keys") or [] if isinstance(key, str)
-            and key.startswith(prefix)}
+    keys = {key for key in payload.get("object_keys") or [] if _in_prefix(key, prefix)}
     bucket = getattr(blob_store, "bucket", None)
     if bucket:
         with pool.connection() as connection:
             if connection.execute("select to_regclass('storage.objects') as r").fetchone()["r"]:
                 keys.update(row["name"] for row in connection.execute(
                     "select name from storage.objects where bucket_id=%s and starts_with(name,%s)",
-                    (bucket, prefix)).fetchall())
-    failed = [key for key in sorted(keys) if not blob_store.delete(key)]
+                    (bucket, prefix)).fetchall() if _in_prefix(row["name"], prefix))
+    failed = [key for key in sorted(keys) if not _deleted_or_absent(blob_store, key)]
     if failed:
         raise RuntimeError("blob_purge_incomplete")  # retried by the queue
     return {"status": "purged", "deleted": len(keys)}

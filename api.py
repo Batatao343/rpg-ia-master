@@ -284,6 +284,9 @@ class AuthRequest(BaseModel):
 
 class SignupRequest(AuthRequest):
     password: str = Field(min_length=10, max_length=256)
+    # SPEC-222 R9 (D-D): declaração de 18+ exigida pela API (não só pela UI); sem ela, 422
+    # antes de qualquer chamada ao provedor de identidade.
+    age_confirmed: Literal[True]
 
 
 @app.get("/auth/config")
@@ -4053,7 +4056,7 @@ def _pre_drain_in_turn(state: dict) -> dict:
     try:
         return run_pending(state)
     except Exception as exc:
-        print(f"⚠️ [PROJECTION] pre_turn: {type(exc).__name__}")
+        _log_event("projection", "pre_turn_failed", level="warning", error=type(exc).__name__)
         return state
 
 
@@ -4083,7 +4086,7 @@ def _await_projection_db(state: dict, game_id: Optional[str]) -> dict:
             fresh = load_game_state(_resolve_save_file(game_id))
             return fresh or state
     except Exception as exc:
-        print(f"⚠️ [PROJECTION] await: {type(exc).__name__}")
+        _log_event("projection", "await_failed", level="warning", error=type(exc).__name__)
     return state
 
 
@@ -4111,7 +4114,7 @@ def _drain_projection_db(state: dict) -> None:
         JobWorker(runtime.job_queue, {projections.JOB_KIND: handler},
                   worker_id="api-post-response").run_leased(job)
     except Exception as exc:
-        print(f"⚠️ [PROJECTION] post_response(db): {type(exc).__name__}")
+        _log_event("projection", "post_response_db_failed", level="warning", error=type(exc).__name__)
 
 
 def _drain_projection(state: dict, *, where: str) -> dict:
@@ -4124,7 +4127,7 @@ def _drain_projection(state: dict, *, where: str) -> dict:
         _require_saved(drained, detail=f"projeção ({where})")
         return drained
     except Exception as exc:
-        print(f"⚠️ [PROJECTION] {where}: {type(exc).__name__}")
+        _log_event("projection", "drain_failed", level="warning", where=where, error=type(exc).__name__)
         return state
 
 
