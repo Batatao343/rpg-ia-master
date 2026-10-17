@@ -1,5 +1,5 @@
 {
-  "commit_sha": "f9591efa3c8b4829c99de328079f44446eefac4a",
+  "commit_sha": "8b6bcc7ea32060ebd9f265860520bfa979816a55",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -3255,6 +3255,17 @@
       },
       "source": "file:services/economy.py",
       "target": "module:services.economy",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/embedding_pricing.py",
+        "line": 1
+      },
+      "source": "file:services/embedding_pricing.py",
+      "target": "module:services.embedding_pricing",
       "type": "contains"
     },
     {
@@ -15861,6 +15872,50 @@
       },
       "source": "file:tests/test_spec236_races_local.py",
       "target": "module:tests.test_spec236_races_local",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 11
+      },
+      "source": "file:tests/test_spec237_embedding_pricing.py",
+      "target": "file:rag.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 12
+      },
+      "source": "file:tests/test_spec237_embedding_pricing.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 13
+      },
+      "source": "file:tests/test_spec237_embedding_pricing.py",
+      "target": "file:services/usage_metering.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 1
+      },
+      "source": "file:tests/test_spec237_embedding_pricing.py",
+      "target": "module:tests.test_spec237_embedding_pricing",
       "type": "contains"
     },
     {
@@ -33358,7 +33413,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 284
+        "line": 297
       },
       "source": "module:rag",
       "target": "symbol:rag._JinaEmbeddingsHTTPX",
@@ -33380,7 +33435,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 385
+        "line": 400
       },
       "source": "module:rag",
       "target": "symbol:rag._build_gemini",
@@ -33391,7 +33446,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 361
+        "line": 376
       },
       "source": "module:rag",
       "target": "symbol:rag._build_jina",
@@ -33402,7 +33457,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 380
+        "line": 395
       },
       "source": "module:rag",
       "target": "symbol:rag._build_ollama",
@@ -33413,7 +33468,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 375
+        "line": 390
       },
       "source": "module:rag",
       "target": "symbol:rag._build_openai",
@@ -33435,7 +33490,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 391
+        "line": 406
       },
       "source": "module:rag",
       "target": "symbol:rag._default_builders",
@@ -33446,7 +33501,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 410
+        "line": 425
       },
       "source": "module:rag",
       "target": "symbol:rag._dep_present",
@@ -33457,7 +33512,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 568
+        "line": 583
       },
       "source": "module:rag",
       "target": "symbol:rag._embeddings_for_index",
@@ -33490,7 +33545,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 747
+        "line": 291
+      },
+      "source": "module:rag",
+      "target": "symbol:rag._estimated_embedding_usage",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 762
       },
       "source": "module:rag",
       "target": "symbol:rag._format_documents",
@@ -33501,7 +33567,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 760
+        "line": 775
       },
       "source": "module:rag",
       "target": "symbol:rag._format_memory_documents",
@@ -33512,7 +33578,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1201
+        "line": 1216
       },
       "source": "module:rag",
       "target": "symbol:rag._get_npc_path",
@@ -33523,7 +33589,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 627
+        "line": 642
       },
       "source": "module:rag",
       "target": "symbol:rag._get_session_path",
@@ -33534,10 +33600,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 633
+        "line": 648
       },
       "source": "module:rag",
       "target": "symbol:rag._has_faiss_index",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 284
+      },
+      "source": "module:rag",
+      "target": "symbol:rag._has_token_usage",
       "type": "defines"
     },
     {
@@ -33556,7 +33633,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 405
+        "line": 420
       },
       "source": "module:rag",
       "target": "symbol:rag._jina_key",
@@ -33567,7 +33644,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 540
+        "line": 555
       },
       "source": "module:rag",
       "target": "symbol:rag._meta_path",
@@ -33578,7 +33655,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 504
+        "line": 519
       },
       "source": "module:rag",
       "target": "symbol:rag._note_degraded",
@@ -33589,7 +33666,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 422
+        "line": 437
       },
       "source": "module:rag",
       "target": "symbol:rag._provider_available",
@@ -33600,7 +33677,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 973
+        "line": 988
       },
       "source": "module:rag",
       "target": "symbol:rag._query_rag_impl",
@@ -33611,7 +33688,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 722
+        "line": 737
       },
       "source": "module:rag",
       "target": "symbol:rag._query_session_documents",
@@ -33633,7 +33710,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 560
+        "line": 575
       },
       "source": "module:rag",
       "target": "symbol:rag._read_meta",
@@ -33644,7 +33721,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 442
+        "line": 457
       },
       "source": "module:rag",
       "target": "symbol:rag._resolve_provider",
@@ -33666,7 +33743,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 604
+        "line": 619
       },
       "source": "module:rag",
       "target": "symbol:rag._save_index",
@@ -33688,7 +33765,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 544
+        "line": 559
       },
       "source": "module:rag",
       "target": "symbol:rag._write_meta",
@@ -33699,7 +33776,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 513
+        "line": 528
       },
       "source": "module:rag",
       "target": "symbol:rag.active_provider",
@@ -33710,7 +33787,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1065
+        "line": 1080
       },
       "source": "module:rag",
       "target": "symbol:rag.add_memory_to_session",
@@ -33721,7 +33798,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1208
+        "line": 1223
       },
       "source": "module:rag",
       "target": "symbol:rag.add_npc_memory",
@@ -33732,7 +33809,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 962
+        "line": 977
       },
       "source": "module:rag",
       "target": "symbol:rag.context_index_paths",
@@ -33743,7 +33820,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 480
+        "line": 495
       },
       "source": "module:rag",
       "target": "symbol:rag.embedding_profile_id",
@@ -33765,7 +33842,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 518
+        "line": 533
       },
       "source": "module:rag",
       "target": "symbol:rag.get_embeddings",
@@ -33776,7 +33853,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 455
+        "line": 470
       },
       "source": "module:rag",
       "target": "symbol:rag.get_embeddings_for",
@@ -33787,7 +33864,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 623
+        "line": 638
       },
       "source": "module:rag",
       "target": "symbol:rag.get_global_db_path",
@@ -33798,7 +33875,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1382
+        "line": 1397
       },
       "source": "module:rag",
       "target": "symbol:rag.ingest_file",
@@ -33809,7 +33886,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 820
+        "line": 835
       },
       "source": "module:rag",
       "target": "symbol:rag.prepare_shared_query_vector",
@@ -33820,7 +33897,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 654
+        "line": 669
       },
       "source": "module:rag",
       "target": "symbol:rag.query_faiss_evidence",
@@ -33831,7 +33908,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 867
+        "line": 882
       },
       "source": "module:rag",
       "target": "symbol:rag.query_global_by_vector",
@@ -33842,7 +33919,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 932
+        "line": 947
       },
       "source": "module:rag",
       "target": "symbol:rag.query_npc_by_vector",
@@ -33853,7 +33930,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1343
+        "line": 1358
       },
       "source": "module:rag",
       "target": "symbol:rag.query_npc_memory",
@@ -33864,7 +33941,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1042
+        "line": 1057
       },
       "source": "module:rag",
       "target": "symbol:rag.query_rag",
@@ -33875,7 +33952,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 902
+        "line": 917
       },
       "source": "module:rag",
       "target": "symbol:rag.query_session_by_vector",
@@ -33886,7 +33963,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 805
+        "line": 820
       },
       "source": "module:rag",
       "target": "symbol:rag.query_session_memory",
@@ -33897,7 +33974,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1409
+        "line": 1424
       },
       "source": "module:rag",
       "target": "symbol:rag.reindex_global",
@@ -33919,7 +33996,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 493
+        "line": 508
       },
       "source": "module:rag",
       "target": "symbol:rag.validate_pgvector_provider",
@@ -33930,7 +34007,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 646
+        "line": 661
       },
       "source": "module:rag",
       "target": "symbol:rag.vis_rank",
@@ -46667,6 +46744,17 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "services/embedding_pricing.py",
+        "line": 23
+      },
+      "source": "module:services.embedding_pricing",
+      "target": "symbol:services.embedding_pricing.embedding_cost",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "services/encounter_manifest.py",
         "line": 57
       },
@@ -53334,7 +53422,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 314
+        "line": 319
       },
       "source": "module:services.shard_pricing",
       "target": "symbol:services.shard_pricing.contribution_report",
@@ -53389,7 +53477,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 328
+        "line": 333
       },
       "source": "module:services.shard_pricing",
       "target": "symbol:services.shard_pricing.version_from_record",
@@ -54302,7 +54390,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 42
+        "line": 16
+      },
+      "source": "module:services.usage_metering",
+      "target": "module:services.embedding_pricing",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/usage_metering.py",
+        "line": 44
       },
       "source": "module:services.usage_metering",
       "target": "symbol:services.usage_metering.UsageEvent",
@@ -54313,7 +54412,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 73
+        "line": 75
       },
       "source": "module:services.usage_metering",
       "target": "symbol:services.usage_metering._money",
@@ -54324,7 +54423,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 67
+        "line": 69
       },
       "source": "module:services.usage_metering",
       "target": "symbol:services.usage_metering._nonnegative_int",
@@ -54335,7 +54434,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 126
+        "line": 129
       },
       "source": "module:services.usage_metering",
       "target": "symbol:services.usage_metering._priced_cost",
@@ -54346,7 +54445,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 236
+        "line": 247
       },
       "source": "module:services.usage_metering",
       "target": "symbol:services.usage_metering.decision_attempt",
@@ -54357,7 +54456,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 229
+        "line": 240
       },
       "source": "module:services.usage_metering",
       "target": "symbol:services.usage_metering.exact_billable_cost",
@@ -54368,7 +54467,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 146
+        "line": 149
       },
       "source": "module:services.usage_metering",
       "target": "symbol:services.usage_metering.normalize_attempts",
@@ -54379,7 +54478,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 224
+        "line": 235
       },
       "source": "module:services.usage_metering",
       "target": "symbol:services.usage_metering.operation_cost",
@@ -54390,7 +54489,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 136
+        "line": 139
       },
       "source": "module:services.usage_metering",
       "target": "symbol:services.usage_metering.reserve_next_attempt",
@@ -54401,7 +54500,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 83
+        "line": 85
       },
       "source": "module:services.usage_metering",
       "target": "symbol:services.usage_metering.safe_provider_usage",
@@ -54412,7 +54511,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 63
+        "line": 65
       },
       "source": "module:services.usage_metering",
       "target": "symbol:services.usage_metering.spend_counts",
@@ -103570,6 +103669,226 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 11
+      },
+      "source": "module:tests.test_spec237_embedding_pricing",
+      "target": "module:rag",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 12
+      },
+      "source": "module:tests.test_spec237_embedding_pricing",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 13
+      },
+      "source": "module:tests.test_spec237_embedding_pricing",
+      "target": "module:services.usage_metering",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 18
+      },
+      "source": "module:tests.test_spec237_embedding_pricing",
+      "target": "symbol:tests.test_spec237_embedding_pricing._attempt",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 23
+      },
+      "source": "module:tests.test_spec237_embedding_pricing",
+      "target": "symbol:tests.test_spec237_embedding_pricing._events",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 71
+      },
+      "source": "module:tests.test_spec237_embedding_pricing",
+      "target": "symbol:tests.test_spec237_embedding_pricing._jina",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 108
+      },
+      "source": "module:tests.test_spec237_embedding_pricing",
+      "target": "symbol:tests.test_spec237_embedding_pricing._version",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 54
+      },
+      "source": "module:tests.test_spec237_embedding_pricing",
+      "target": "symbol:tests.test_spec237_embedding_pricing.test_embedding_card_does_not_price_llm_category",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 41
+      },
+      "source": "module:tests.test_spec237_embedding_pricing",
+      "target": "symbol:tests.test_spec237_embedding_pricing.test_estimated_tokens_are_marked_estimated_but_still_priced_by_card",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 59
+      },
+      "source": "module:tests.test_spec237_embedding_pricing",
+      "target": "symbol:tests.test_spec237_embedding_pricing.test_failed_embedding_without_usage_is_still_no_spend",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 96
+      },
+      "source": "module:tests.test_spec237_embedding_pricing",
+      "target": "symbol:tests.test_spec237_embedding_pricing.test_forty_turns_of_offline_embedding_usage_stay_far_below_a_text_cap",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 28
+      },
+      "source": "module:tests.test_spec237_embedding_pricing",
+      "target": "symbol:tests.test_spec237_embedding_pricing.test_jina_embedding_is_priced_by_tokens_not_the_one_dollar_floor",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 87
+      },
+      "source": "module:tests.test_spec237_embedding_pricing",
+      "target": "symbol:tests.test_spec237_embedding_pricing.test_jina_response_with_usage_is_not_marked_estimated",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 77
+      },
+      "source": "module:tests.test_spec237_embedding_pricing",
+      "target": "symbol:tests.test_spec237_embedding_pricing.test_jina_response_without_usage_estimates_tokens_from_text_length",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 154
+      },
+      "source": "module:tests.test_spec237_embedding_pricing",
+      "target": "symbol:tests.test_spec237_embedding_pricing.test_jina_unparseable_body_is_estimated_not_the_one_dollar_floor",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 64
+      },
+      "source": "module:tests.test_spec237_embedding_pricing",
+      "target": "symbol:tests.test_spec237_embedding_pricing.test_main_rate_card_is_untouched_and_pinned",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 36
+      },
+      "source": "module:tests.test_spec237_embedding_pricing",
+      "target": "symbol:tests.test_spec237_embedding_pricing.test_small_embedding_is_fractions_of_a_cent",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 47
+      },
+      "source": "module:tests.test_spec237_embedding_pricing",
+      "target": "symbol:tests.test_spec237_embedding_pricing.test_unknown_embedding_model_still_fails_safe",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 126
+      },
+      "source": "module:tests.test_spec237_embedding_pricing",
+      "target": "symbol:tests.test_spec237_embedding_pricing.test_wallet_quote_accepts_exact_embedding_priced_by_the_embedding_card",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 141
+      },
+      "source": "module:tests.test_spec237_embedding_pricing",
+      "target": "symbol:tests.test_spec237_embedding_pricing.test_wallet_quote_rejects_embedding_card_outside_embedding_category",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec_index.py",
         "line": 47
       },
@@ -145217,7 +145536,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 293
+        "line": 306
       },
       "source": "symbol:rag._JinaEmbeddingsHTTPX",
       "target": "symbol:rag._JinaEmbeddingsHTTPX.__init__",
@@ -145228,7 +145547,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 307
+        "line": 320
       },
       "source": "symbol:rag._JinaEmbeddingsHTTPX",
       "target": "symbol:rag._JinaEmbeddingsHTTPX._embed",
@@ -145239,7 +145558,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 354
+        "line": 369
       },
       "source": "symbol:rag._JinaEmbeddingsHTTPX",
       "target": "symbol:rag._JinaEmbeddingsHTTPX.embed_documents",
@@ -145250,33 +145569,11 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 357
+        "line": 372
       },
       "source": "symbol:rag._JinaEmbeddingsHTTPX",
       "target": "symbol:rag._JinaEmbeddingsHTTPX.embed_query",
       "type": "defines"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "rag.py",
-        "line": 317
-      },
-      "source": "symbol:rag._JinaEmbeddingsHTTPX._embed",
-      "target": "symbol:rag._emit_embedding_attempt",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "rag.py",
-        "line": 325
-      },
-      "source": "symbol:rag._JinaEmbeddingsHTTPX._embed",
-      "target": "symbol:rag._emit_embedding_attempt",
-      "type": "calls"
     },
     {
       "confidence": "static_best_effort",
@@ -145294,7 +145591,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 332
+        "line": 338
       },
       "source": "symbol:rag._JinaEmbeddingsHTTPX._embed",
       "target": "symbol:rag._emit_embedding_attempt",
@@ -145305,10 +145602,65 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 346
+        "line": 344
       },
       "source": "symbol:rag._JinaEmbeddingsHTTPX._embed",
       "target": "symbol:rag._emit_embedding_attempt",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 350
+      },
+      "source": "symbol:rag._JinaEmbeddingsHTTPX._embed",
+      "target": "symbol:rag._emit_embedding_attempt",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 361
+      },
+      "source": "symbol:rag._JinaEmbeddingsHTTPX._embed",
+      "target": "symbol:rag._emit_embedding_attempt",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 345
+      },
+      "source": "symbol:rag._JinaEmbeddingsHTTPX._embed",
+      "target": "symbol:rag._estimated_embedding_usage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 349
+      },
+      "source": "symbol:rag._JinaEmbeddingsHTTPX._embed",
+      "target": "symbol:rag._estimated_embedding_usage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 348
+      },
+      "source": "symbol:rag._JinaEmbeddingsHTTPX._embed",
+      "target": "symbol:rag._has_token_usage",
       "type": "calls"
     },
     {
@@ -145393,7 +145745,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 367
+        "line": 382
       },
       "source": "symbol:rag._build_jina",
       "target": "symbol:rag._JinaEmbeddingsHTTPX",
@@ -145404,7 +145756,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 362
+        "line": 377
       },
       "source": "symbol:rag._build_jina",
       "target": "symbol:rag._jina_key",
@@ -145415,7 +145767,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 591
+        "line": 606
       },
       "source": "symbol:rag._embeddings_for_index",
       "target": "symbol:rag._note_degraded",
@@ -145426,7 +145778,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 599
+        "line": 614
       },
       "source": "symbol:rag._embeddings_for_index",
       "target": "symbol:rag._note_degraded",
@@ -145437,7 +145789,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 593
+        "line": 608
       },
       "source": "symbol:rag._embeddings_for_index",
       "target": "symbol:rag._provider_available",
@@ -145448,7 +145800,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 575
+        "line": 590
       },
       "source": "symbol:rag._embeddings_for_index",
       "target": "symbol:rag._read_meta",
@@ -145459,7 +145811,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 581
+        "line": 596
       },
       "source": "symbol:rag._embeddings_for_index",
       "target": "symbol:rag.get_embeddings",
@@ -145470,7 +145822,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 601
+        "line": 616
       },
       "source": "symbol:rag._embeddings_for_index",
       "target": "symbol:rag.get_embeddings_for",
@@ -145481,7 +145833,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 794
+        "line": 809
       },
       "source": "symbol:rag._format_memory_documents",
       "target": "symbol:services.memory_provenance.format_memory_fact",
@@ -145492,7 +145844,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 782
+        "line": 797
       },
       "source": "symbol:rag._format_memory_documents",
       "target": "symbol:services.memory_provenance.make_memory_fact",
@@ -145503,7 +145855,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 791
+        "line": 806
       },
       "source": "symbol:rag._format_memory_documents",
       "target": "symbol:services.memory_provenance.make_memory_fact",
@@ -145514,7 +145866,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1205
+        "line": 1220
       },
       "source": "symbol:rag._get_npc_path",
       "target": "symbol:rag._contained_storage_path",
@@ -145525,7 +145877,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1203
+        "line": 1218
       },
       "source": "symbol:rag._get_npc_path",
       "target": "symbol:rag._safe_storage_component",
@@ -145536,7 +145888,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1204
+        "line": 1219
       },
       "source": "symbol:rag._get_npc_path",
       "target": "symbol:rag._safe_storage_component",
@@ -145547,7 +145899,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 630
+        "line": 645
       },
       "source": "symbol:rag._get_session_path",
       "target": "symbol:rag._contained_storage_path",
@@ -145558,7 +145910,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 629
+        "line": 644
       },
       "source": "symbol:rag._get_session_path",
       "target": "symbol:rag._safe_storage_component",
@@ -145569,7 +145921,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 426
+        "line": 441
       },
       "source": "symbol:rag._provider_available",
       "target": "symbol:rag._dep_present",
@@ -145580,7 +145932,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 428
+        "line": 443
       },
       "source": "symbol:rag._provider_available",
       "target": "symbol:rag._dep_present",
@@ -145591,7 +145943,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 436
+        "line": 451
       },
       "source": "symbol:rag._provider_available",
       "target": "symbol:rag._dep_present",
@@ -145602,7 +145954,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 438
+        "line": 453
       },
       "source": "symbol:rag._provider_available",
       "target": "symbol:rag._dep_present",
@@ -145613,7 +145965,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 426
+        "line": 441
       },
       "source": "symbol:rag._provider_available",
       "target": "symbol:rag._jina_key",
@@ -145624,7 +145976,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1026
+        "line": 1041
       },
       "source": "symbol:rag._query_rag_impl",
       "target": "symbol:observability.telemetry.log_event",
@@ -145635,7 +145987,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1015
+        "line": 1030
       },
       "source": "symbol:rag._query_rag_impl",
       "target": "symbol:rag._embeddings_for_index",
@@ -145646,7 +145998,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1035
+        "line": 1050
       },
       "source": "symbol:rag._query_rag_impl",
       "target": "symbol:rag._format_documents",
@@ -145657,7 +146009,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1036
+        "line": 1051
       },
       "source": "symbol:rag._query_rag_impl",
       "target": "symbol:rag._format_memory_documents",
@@ -145668,7 +146020,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1031
+        "line": 1046
       },
       "source": "symbol:rag._query_rag_impl",
       "target": "symbol:rag._query_session_documents",
@@ -145679,7 +146031,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1013
+        "line": 1028
       },
       "source": "symbol:rag._query_rag_impl",
       "target": "symbol:rag.get_global_db_path",
@@ -145690,7 +146042,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1008
+        "line": 1023
       },
       "source": "symbol:rag._query_rag_impl",
       "target": "symbol:rag.vis_rank",
@@ -145701,7 +146053,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1022
+        "line": 1037
       },
       "source": "symbol:rag._query_rag_impl",
       "target": "symbol:rag.vis_rank",
@@ -145712,7 +146064,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 728
+        "line": 743
       },
       "source": "symbol:rag._query_session_documents",
       "target": "symbol:rag._embeddings_for_index",
@@ -145723,7 +146075,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 725
+        "line": 740
       },
       "source": "symbol:rag._query_session_documents",
       "target": "symbol:rag._get_session_path",
@@ -145734,7 +146086,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 726
+        "line": 741
       },
       "source": "symbol:rag._query_session_documents",
       "target": "symbol:rag._has_faiss_index",
@@ -145767,7 +146119,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 562
+        "line": 577
       },
       "source": "symbol:rag._read_meta",
       "target": "symbol:rag._meta_path",
@@ -145778,7 +146130,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 450
+        "line": 465
       },
       "source": "symbol:rag._resolve_provider",
       "target": "symbol:rag._provider_available",
@@ -145811,7 +146163,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 620
+        "line": 635
       },
       "source": "symbol:rag._save_index",
       "target": "symbol:rag._write_meta",
@@ -145833,7 +146185,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 550
+        "line": 565
       },
       "source": "symbol:rag._write_meta",
       "target": "symbol:rag._meta_path",
@@ -145844,7 +146196,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1173
+        "line": 1188
       },
       "source": "symbol:rag.add_memory_to_session",
       "target": "symbol:observability.telemetry.log_event",
@@ -145855,7 +146207,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1186
+        "line": 1201
       },
       "source": "symbol:rag.add_memory_to_session",
       "target": "symbol:observability.telemetry.log_event",
@@ -145866,10 +146218,43 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1129
+        "line": 1144
       },
       "source": "symbol:rag.add_memory_to_session",
       "target": "symbol:rag._embeddings_for_index",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 1138
+      },
+      "source": "symbol:rag.add_memory_to_session",
+      "target": "symbol:rag._get_session_path",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 1139
+      },
+      "source": "symbol:rag.add_memory_to_session",
+      "target": "symbol:rag._has_faiss_index",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 1089
+      },
+      "source": "symbol:rag.add_memory_to_session",
+      "target": "symbol:rag._rag_operation_result",
       "type": "calls"
     },
     {
@@ -145880,7 +146265,7 @@
         "line": 1123
       },
       "source": "symbol:rag.add_memory_to_session",
-      "target": "symbol:rag._get_session_path",
+      "target": "symbol:rag._rag_operation_result",
       "type": "calls"
     },
     {
@@ -145888,18 +146273,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1124
-      },
-      "source": "symbol:rag.add_memory_to_session",
-      "target": "symbol:rag._has_faiss_index",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "rag.py",
-        "line": 1074
+        "line": 1129
       },
       "source": "symbol:rag.add_memory_to_session",
       "target": "symbol:rag._rag_operation_result",
@@ -145910,7 +146284,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1108
+        "line": 1146
       },
       "source": "symbol:rag.add_memory_to_session",
       "target": "symbol:rag._rag_operation_result",
@@ -145921,7 +146295,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1114
+        "line": 1170
       },
       "source": "symbol:rag.add_memory_to_session",
       "target": "symbol:rag._rag_operation_result",
@@ -145932,7 +146306,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1131
+        "line": 1189
       },
       "source": "symbol:rag.add_memory_to_session",
       "target": "symbol:rag._rag_operation_result",
@@ -145943,7 +146317,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1155
+        "line": 1202
       },
       "source": "symbol:rag.add_memory_to_session",
       "target": "symbol:rag._rag_operation_result",
@@ -145954,10 +146328,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1174
+        "line": 1141
       },
       "source": "symbol:rag.add_memory_to_session",
-      "target": "symbol:rag._rag_operation_result",
+      "target": "symbol:rag._read_meta",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 1168
+      },
+      "source": "symbol:rag.add_memory_to_session",
+      "target": "symbol:rag._resolve_provider",
       "type": "calls"
     },
     {
@@ -145968,39 +146353,6 @@
         "line": 1187
       },
       "source": "symbol:rag.add_memory_to_session",
-      "target": "symbol:rag._rag_operation_result",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "rag.py",
-        "line": 1126
-      },
-      "source": "symbol:rag.add_memory_to_session",
-      "target": "symbol:rag._read_meta",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "rag.py",
-        "line": 1153
-      },
-      "source": "symbol:rag.add_memory_to_session",
-      "target": "symbol:rag._resolve_provider",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "rag.py",
-        "line": 1172
-      },
-      "source": "symbol:rag.add_memory_to_session",
       "target": "symbol:rag._save_index",
       "type": "calls"
     },
@@ -146009,7 +146361,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1153
+        "line": 1168
       },
       "source": "symbol:rag.add_memory_to_session",
       "target": "symbol:rag.active_provider",
@@ -146020,7 +146372,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1152
+        "line": 1167
       },
       "source": "symbol:rag.add_memory_to_session",
       "target": "symbol:rag.get_embeddings",
@@ -146031,7 +146383,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1316
+        "line": 1331
       },
       "source": "symbol:rag.add_npc_memory",
       "target": "symbol:observability.telemetry.log_event",
@@ -146042,7 +146394,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1329
+        "line": 1344
       },
       "source": "symbol:rag.add_npc_memory",
       "target": "symbol:observability.telemetry.log_event",
@@ -146053,10 +146405,43 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1272
+        "line": 1287
       },
       "source": "symbol:rag.add_npc_memory",
       "target": "symbol:rag._embeddings_for_index",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 1282
+      },
+      "source": "symbol:rag.add_npc_memory",
+      "target": "symbol:rag._get_npc_path",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 1283
+      },
+      "source": "symbol:rag.add_npc_memory",
+      "target": "symbol:rag._has_faiss_index",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 1233
+      },
+      "source": "symbol:rag.add_npc_memory",
+      "target": "symbol:rag._rag_operation_result",
       "type": "calls"
     },
     {
@@ -146067,7 +146452,7 @@
         "line": 1267
       },
       "source": "symbol:rag.add_npc_memory",
-      "target": "symbol:rag._get_npc_path",
+      "target": "symbol:rag._rag_operation_result",
       "type": "calls"
     },
     {
@@ -146075,18 +146460,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1268
-      },
-      "source": "symbol:rag.add_npc_memory",
-      "target": "symbol:rag._has_faiss_index",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "rag.py",
-        "line": 1218
+        "line": 1273
       },
       "source": "symbol:rag.add_npc_memory",
       "target": "symbol:rag._rag_operation_result",
@@ -146097,7 +146471,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1252
+        "line": 1289
       },
       "source": "symbol:rag.add_npc_memory",
       "target": "symbol:rag._rag_operation_result",
@@ -146108,7 +146482,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1258
+        "line": 1313
       },
       "source": "symbol:rag.add_npc_memory",
       "target": "symbol:rag._rag_operation_result",
@@ -146119,7 +146493,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1274
+        "line": 1332
       },
       "source": "symbol:rag.add_npc_memory",
       "target": "symbol:rag._rag_operation_result",
@@ -146130,7 +146504,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1298
+        "line": 1345
       },
       "source": "symbol:rag.add_npc_memory",
       "target": "symbol:rag._rag_operation_result",
@@ -146141,10 +146515,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1317
+        "line": 1284
       },
       "source": "symbol:rag.add_npc_memory",
-      "target": "symbol:rag._rag_operation_result",
+      "target": "symbol:rag._read_meta",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 1311
+      },
+      "source": "symbol:rag.add_npc_memory",
+      "target": "symbol:rag._resolve_provider",
       "type": "calls"
     },
     {
@@ -146155,39 +146540,6 @@
         "line": 1330
       },
       "source": "symbol:rag.add_npc_memory",
-      "target": "symbol:rag._rag_operation_result",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "rag.py",
-        "line": 1269
-      },
-      "source": "symbol:rag.add_npc_memory",
-      "target": "symbol:rag._read_meta",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "rag.py",
-        "line": 1296
-      },
-      "source": "symbol:rag.add_npc_memory",
-      "target": "symbol:rag._resolve_provider",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "rag.py",
-        "line": 1315
-      },
-      "source": "symbol:rag.add_npc_memory",
       "target": "symbol:rag._save_index",
       "type": "calls"
     },
@@ -146196,7 +146548,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1296
+        "line": 1311
       },
       "source": "symbol:rag.add_npc_memory",
       "target": "symbol:rag.active_provider",
@@ -146207,7 +146559,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1295
+        "line": 1310
       },
       "source": "symbol:rag.add_npc_memory",
       "target": "symbol:rag.get_embeddings",
@@ -146218,7 +146570,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 969
+        "line": 984
       },
       "source": "symbol:rag.context_index_paths",
       "target": "symbol:rag._get_npc_path",
@@ -146229,7 +146581,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 967
+        "line": 982
       },
       "source": "symbol:rag.context_index_paths",
       "target": "symbol:rag._get_session_path",
@@ -146240,7 +146592,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 965
+        "line": 980
       },
       "source": "symbol:rag.context_index_paths",
       "target": "symbol:rag.get_global_db_path",
@@ -146251,7 +146603,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 485
+        "line": 500
       },
       "source": "symbol:rag.embedding_profile_id",
       "target": "symbol:rag._resolve_provider",
@@ -146262,7 +146614,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 523
+        "line": 538
       },
       "source": "symbol:rag.get_embeddings",
       "target": "symbol:rag._resolve_provider",
@@ -146273,7 +146625,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 529
+        "line": 544
       },
       "source": "symbol:rag.get_embeddings",
       "target": "symbol:rag.get_embeddings_for",
@@ -146284,7 +146636,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 459
+        "line": 474
       },
       "source": "symbol:rag.get_embeddings_for",
       "target": "symbol:rag._scoped_embeddings",
@@ -146295,7 +146647,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 470
+        "line": 485
       },
       "source": "symbol:rag.get_embeddings_for",
       "target": "symbol:rag._scoped_embeddings",
@@ -146306,7 +146658,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1388
+        "line": 1403
       },
       "source": "symbol:rag.ingest_file",
       "target": "symbol:observability.telemetry.log_event",
@@ -146317,7 +146669,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1395
+        "line": 1410
       },
       "source": "symbol:rag.ingest_file",
       "target": "symbol:observability.telemetry.log_event",
@@ -146328,7 +146680,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1407
+        "line": 1422
       },
       "source": "symbol:rag.ingest_file",
       "target": "symbol:observability.telemetry.log_event",
@@ -146339,7 +146691,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1393
+        "line": 1408
       },
       "source": "symbol:rag.ingest_file",
       "target": "symbol:rag._resolve_provider",
@@ -146350,7 +146702,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1406
+        "line": 1421
       },
       "source": "symbol:rag.ingest_file",
       "target": "symbol:rag._save_index",
@@ -146361,7 +146713,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1391
+        "line": 1406
       },
       "source": "symbol:rag.ingest_file",
       "target": "symbol:rag.get_embeddings",
@@ -146372,7 +146724,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1404
+        "line": 1419
       },
       "source": "symbol:rag.ingest_file",
       "target": "symbol:rag.get_global_db_path",
@@ -146383,7 +146735,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 835
+        "line": 850
       },
       "source": "symbol:rag.prepare_shared_query_vector",
       "target": "symbol:rag._has_faiss_index",
@@ -146394,7 +146746,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 841
+        "line": 856
       },
       "source": "symbol:rag.prepare_shared_query_vector",
       "target": "symbol:rag._read_meta",
@@ -146405,7 +146757,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 824
+        "line": 839
       },
       "source": "symbol:rag.prepare_shared_query_vector",
       "target": "symbol:rag._resolve_provider",
@@ -146416,7 +146768,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 824
+        "line": 839
       },
       "source": "symbol:rag.prepare_shared_query_vector",
       "target": "symbol:rag.active_provider",
@@ -146427,7 +146779,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 823
+        "line": 838
       },
       "source": "symbol:rag.prepare_shared_query_vector",
       "target": "symbol:rag.get_embeddings",
@@ -146438,7 +146790,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 851
+        "line": 866
       },
       "source": "symbol:rag.prepare_shared_query_vector",
       "target": "symbol:rag.get_embeddings_for",
@@ -146449,7 +146801,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 709
+        "line": 724
       },
       "source": "symbol:rag.query_faiss_evidence",
       "target": "symbol:rag.RetrievedEvidence",
@@ -146460,7 +146812,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 677
+        "line": 692
       },
       "source": "symbol:rag.query_faiss_evidence",
       "target": "symbol:rag.vis_rank",
@@ -146471,7 +146823,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 687
+        "line": 702
       },
       "source": "symbol:rag.query_faiss_evidence",
       "target": "symbol:rag.vis_rank",
@@ -146482,7 +146834,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 882
+        "line": 897
       },
       "source": "symbol:rag.query_global_by_vector",
       "target": "symbol:rag._embeddings_for_index",
@@ -146493,7 +146845,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 895
+        "line": 910
       },
       "source": "symbol:rag.query_global_by_vector",
       "target": "symbol:rag._format_documents",
@@ -146504,7 +146856,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 880
+        "line": 895
       },
       "source": "symbol:rag.query_global_by_vector",
       "target": "symbol:rag._has_faiss_index",
@@ -146515,7 +146867,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 898
+        "line": 913
       },
       "source": "symbol:rag.query_global_by_vector",
       "target": "symbol:rag._note_degraded",
@@ -146526,7 +146878,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 876
+        "line": 891
       },
       "source": "symbol:rag.query_global_by_vector",
       "target": "symbol:rag.embedding_profile_id",
@@ -146537,7 +146889,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 879
+        "line": 894
       },
       "source": "symbol:rag.query_global_by_vector",
       "target": "symbol:rag.get_global_db_path",
@@ -146548,7 +146900,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 887
+        "line": 902
       },
       "source": "symbol:rag.query_global_by_vector",
       "target": "symbol:rag.query_faiss_evidence",
@@ -146559,54 +146911,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 947
+        "line": 962
       },
       "source": "symbol:rag.query_npc_by_vector",
       "target": "symbol:rag._embeddings_for_index",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "rag.py",
-        "line": 943
-      },
-      "source": "symbol:rag.query_npc_by_vector",
-      "target": "symbol:rag._format_memory_documents",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "rag.py",
-        "line": 955
-      },
-      "source": "symbol:rag.query_npc_by_vector",
-      "target": "symbol:rag._format_memory_documents",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "rag.py",
-        "line": 944
-      },
-      "source": "symbol:rag.query_npc_by_vector",
-      "target": "symbol:rag._get_npc_path",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "rag.py",
-        "line": 945
-      },
-      "source": "symbol:rag.query_npc_by_vector",
-      "target": "symbol:rag._has_faiss_index",
       "type": "calls"
     },
     {
@@ -146617,6 +146925,50 @@
         "line": 958
       },
       "source": "symbol:rag.query_npc_by_vector",
+      "target": "symbol:rag._format_memory_documents",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 970
+      },
+      "source": "symbol:rag.query_npc_by_vector",
+      "target": "symbol:rag._format_memory_documents",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 959
+      },
+      "source": "symbol:rag.query_npc_by_vector",
+      "target": "symbol:rag._get_npc_path",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 960
+      },
+      "source": "symbol:rag.query_npc_by_vector",
+      "target": "symbol:rag._has_faiss_index",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 973
+      },
+      "source": "symbol:rag.query_npc_by_vector",
       "target": "symbol:rag._note_degraded",
       "type": "calls"
     },
@@ -146625,7 +146977,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 941
+        "line": 956
       },
       "source": "symbol:rag.query_npc_by_vector",
       "target": "symbol:rag.embedding_profile_id",
@@ -146636,7 +146988,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 952
+        "line": 967
       },
       "source": "symbol:rag.query_npc_by_vector",
       "target": "symbol:rag.query_faiss_evidence",
@@ -146647,54 +146999,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1365
+        "line": 1380
       },
       "source": "symbol:rag.query_npc_memory",
       "target": "symbol:rag._embeddings_for_index",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "rag.py",
-        "line": 1359
-      },
-      "source": "symbol:rag.query_npc_memory",
-      "target": "symbol:rag._format_memory_documents",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "rag.py",
-        "line": 1377
-      },
-      "source": "symbol:rag.query_npc_memory",
-      "target": "symbol:rag._format_memory_documents",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "rag.py",
-        "line": 1361
-      },
-      "source": "symbol:rag.query_npc_memory",
-      "target": "symbol:rag._get_npc_path",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "rag.py",
-        "line": 1362
-      },
-      "source": "symbol:rag.query_npc_memory",
-      "target": "symbol:rag._has_faiss_index",
       "type": "calls"
     },
     {
@@ -146705,6 +147013,50 @@
         "line": 1374
       },
       "source": "symbol:rag.query_npc_memory",
+      "target": "symbol:rag._format_memory_documents",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 1392
+      },
+      "source": "symbol:rag.query_npc_memory",
+      "target": "symbol:rag._format_memory_documents",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 1376
+      },
+      "source": "symbol:rag.query_npc_memory",
+      "target": "symbol:rag._get_npc_path",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 1377
+      },
+      "source": "symbol:rag.query_npc_memory",
+      "target": "symbol:rag._has_faiss_index",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "rag.py",
+        "line": 1389
+      },
+      "source": "symbol:rag.query_npc_memory",
       "target": "symbol:rag._note_degraded",
       "type": "calls"
     },
@@ -146713,7 +147065,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1051
+        "line": 1066
       },
       "source": "symbol:rag.query_rag",
       "target": "symbol:rag._query_rag_impl",
@@ -146724,7 +147076,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 917
+        "line": 932
       },
       "source": "symbol:rag.query_session_by_vector",
       "target": "symbol:rag._embeddings_for_index",
@@ -146735,7 +147087,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 913
+        "line": 928
       },
       "source": "symbol:rag.query_session_by_vector",
       "target": "symbol:rag._format_memory_documents",
@@ -146746,7 +147098,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 925
+        "line": 940
       },
       "source": "symbol:rag.query_session_by_vector",
       "target": "symbol:rag._format_memory_documents",
@@ -146757,7 +147109,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 914
+        "line": 929
       },
       "source": "symbol:rag.query_session_by_vector",
       "target": "symbol:rag._get_session_path",
@@ -146768,7 +147120,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 915
+        "line": 930
       },
       "source": "symbol:rag.query_session_by_vector",
       "target": "symbol:rag._has_faiss_index",
@@ -146779,7 +147131,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 928
+        "line": 943
       },
       "source": "symbol:rag.query_session_by_vector",
       "target": "symbol:rag._note_degraded",
@@ -146790,7 +147142,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 911
+        "line": 926
       },
       "source": "symbol:rag.query_session_by_vector",
       "target": "symbol:rag.embedding_profile_id",
@@ -146801,7 +147153,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 922
+        "line": 937
       },
       "source": "symbol:rag.query_session_by_vector",
       "target": "symbol:rag.query_faiss_evidence",
@@ -146812,7 +147164,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 816
+        "line": 831
       },
       "source": "symbol:rag.query_session_memory",
       "target": "symbol:rag._format_memory_documents",
@@ -146823,7 +147175,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 817
+        "line": 832
       },
       "source": "symbol:rag.query_session_memory",
       "target": "symbol:rag._format_memory_documents",
@@ -146834,7 +147186,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 817
+        "line": 832
       },
       "source": "symbol:rag.query_session_memory",
       "target": "symbol:rag._query_session_documents",
@@ -146845,7 +147197,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1424
+        "line": 1439
       },
       "source": "symbol:rag.reindex_global",
       "target": "symbol:observability.telemetry.log_event",
@@ -146856,7 +147208,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1425
+        "line": 1440
       },
       "source": "symbol:rag.reindex_global",
       "target": "symbol:observability.telemetry.log_event",
@@ -146867,7 +147219,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1429
+        "line": 1444
       },
       "source": "symbol:rag.reindex_global",
       "target": "symbol:observability.telemetry.log_event",
@@ -146878,7 +147230,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1436
+        "line": 1451
       },
       "source": "symbol:rag.reindex_global",
       "target": "symbol:observability.telemetry.log_event",
@@ -146889,7 +147241,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 1434
+        "line": 1449
       },
       "source": "symbol:rag.reindex_global",
       "target": "symbol:rag.ingest_file",
@@ -146900,7 +147252,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "rag.py",
-        "line": 495
+        "line": 510
       },
       "source": "symbol:rag.validate_pgvector_provider",
       "target": "symbol:rag._resolve_provider",
@@ -181726,7 +182078,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 316
+        "line": 321
       },
       "source": "symbol:services.shard_pricing.contribution_report",
       "target": "symbol:services.shard_pricing._numeric",
@@ -181847,7 +182199,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 295
+        "line": 300
       },
       "source": "symbol:services.shard_pricing.quote_usage",
       "target": "symbol:services.shard_pricing.PricingUnavailable",
@@ -181858,7 +182210,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 298
+        "line": 303
       },
       "source": "symbol:services.shard_pricing.quote_usage",
       "target": "symbol:services.shard_pricing.PricingUnavailable",
@@ -181869,7 +182221,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 307
+        "line": 312
       },
       "source": "symbol:services.shard_pricing.quote_usage",
       "target": "symbol:services.shard_pricing.UsageQuote",
@@ -181880,7 +182232,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 299
+        "line": 304
       },
       "source": "symbol:services.shard_pricing.quote_usage",
       "target": "symbol:services.shard_pricing._numeric",
@@ -181891,7 +182243,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 305
+        "line": 310
       },
       "source": "symbol:services.shard_pricing.quote_usage",
       "target": "symbol:services.shard_pricing._ratio_units",
@@ -181902,7 +182254,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 357
+        "line": 362
       },
       "source": "symbol:services.shard_pricing.version_from_record",
       "target": "symbol:services.shard_pricing.ChannelFee",
@@ -181913,7 +182265,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 332
+        "line": 337
       },
       "source": "symbol:services.shard_pricing.version_from_record",
       "target": "symbol:services.shard_pricing.PricingUnavailable",
@@ -181924,7 +182276,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 336
+        "line": 341
       },
       "source": "symbol:services.shard_pricing.version_from_record",
       "target": "symbol:services.shard_pricing.PricingUnavailable",
@@ -181935,29 +182287,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 340
-      },
-      "source": "symbol:services.shard_pricing.version_from_record",
-      "target": "symbol:services.shard_pricing.PricingUnavailable",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/shard_pricing.py",
-        "line": 349
-      },
-      "source": "symbol:services.shard_pricing.version_from_record",
-      "target": "symbol:services.shard_pricing.PricingUnavailable",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/shard_pricing.py",
-        "line": 350
+        "line": 345
       },
       "source": "symbol:services.shard_pricing.version_from_record",
       "target": "symbol:services.shard_pricing.PricingUnavailable",
@@ -181979,7 +182309,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 360
+        "line": 355
+      },
+      "source": "symbol:services.shard_pricing.version_from_record",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 359
+      },
+      "source": "symbol:services.shard_pricing.version_from_record",
+      "target": "symbol:services.shard_pricing.PricingUnavailable",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/shard_pricing.py",
+        "line": 365
       },
       "source": "symbol:services.shard_pricing.version_from_record",
       "target": "symbol:services.shard_pricing.PricingVersion",
@@ -181990,7 +182342,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 334
+        "line": 339
       },
       "source": "symbol:services.shard_pricing.version_from_record",
       "target": "symbol:services.shard_pricing.version_from_record.decimal_text",
@@ -182001,7 +182353,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 352
+        "line": 357
       },
       "source": "symbol:services.shard_pricing.version_from_record",
       "target": "symbol:services.shard_pricing.version_from_record.seconds",
@@ -182012,7 +182364,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 342
+        "line": 347
       },
       "source": "symbol:services.shard_pricing.version_from_record",
       "target": "symbol:services.shard_pricing.version_from_record.when",
@@ -182023,7 +182375,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 336
+        "line": 341
       },
       "source": "symbol:services.shard_pricing.version_from_record.decimal_text",
       "target": "symbol:services.shard_pricing.PricingUnavailable",
@@ -182034,7 +182386,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 340
+        "line": 345
       },
       "source": "symbol:services.shard_pricing.version_from_record.decimal_text",
       "target": "symbol:services.shard_pricing.PricingUnavailable",
@@ -182045,7 +182397,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 354
+        "line": 359
       },
       "source": "symbol:services.shard_pricing.version_from_record.seconds",
       "target": "symbol:services.shard_pricing.PricingUnavailable",
@@ -182056,7 +182408,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 349
+        "line": 354
       },
       "source": "symbol:services.shard_pricing.version_from_record.when",
       "target": "symbol:services.shard_pricing.PricingUnavailable",
@@ -182067,7 +182419,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/shard_pricing.py",
-        "line": 350
+        "line": 355
       },
       "source": "symbol:services.shard_pricing.version_from_record.when",
       "target": "symbol:services.shard_pricing.PricingUnavailable",
@@ -183288,7 +183640,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 249
+        "line": 260
       },
       "source": "symbol:services.usage_metering.decision_attempt",
       "target": "symbol:services.usage_metering.safe_provider_usage",
@@ -183299,7 +183651,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 233
+        "line": 244
       },
       "source": "symbol:services.usage_metering.exact_billable_cost",
       "target": "symbol:services.usage_metering.operation_cost",
@@ -183310,7 +183662,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 201
+        "line": 191
+      },
+      "source": "symbol:services.usage_metering.normalize_attempts",
+      "target": "symbol:services.embedding_pricing.embedding_cost",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/usage_metering.py",
+        "line": 212
       },
       "source": "symbol:services.usage_metering.normalize_attempts",
       "target": "symbol:services.usage_metering.UsageEvent",
@@ -183321,43 +183684,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 174
+        "line": 177
       },
       "source": "symbol:services.usage_metering.normalize_attempts",
       "target": "symbol:services.usage_metering._money",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/usage_metering.py",
-        "line": 166
-      },
-      "source": "symbol:services.usage_metering.normalize_attempts",
-      "target": "symbol:services.usage_metering._nonnegative_int",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/usage_metering.py",
-        "line": 167
-      },
-      "source": "symbol:services.usage_metering.normalize_attempts",
-      "target": "symbol:services.usage_metering._nonnegative_int",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/usage_metering.py",
-        "line": 168
-      },
-      "source": "symbol:services.usage_metering.normalize_attempts",
-      "target": "symbol:services.usage_metering._nonnegative_int",
       "type": "calls"
     },
     {
@@ -183387,7 +183717,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 188
+        "line": 171
+      },
+      "source": "symbol:services.usage_metering.normalize_attempts",
+      "target": "symbol:services.usage_metering._nonnegative_int",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/usage_metering.py",
+        "line": 172
+      },
+      "source": "symbol:services.usage_metering.normalize_attempts",
+      "target": "symbol:services.usage_metering._nonnegative_int",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/usage_metering.py",
+        "line": 173
+      },
+      "source": "symbol:services.usage_metering.normalize_attempts",
+      "target": "symbol:services.usage_metering._nonnegative_int",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/usage_metering.py",
+        "line": 199
       },
       "source": "symbol:services.usage_metering.normalize_attempts",
       "target": "symbol:services.usage_metering._priced_cost",
@@ -183398,7 +183761,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 163
+        "line": 166
       },
       "source": "symbol:services.usage_metering.normalize_attempts",
       "target": "symbol:services.usage_metering.safe_provider_usage",
@@ -183409,7 +183772,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 219
+        "line": 230
       },
       "source": "symbol:services.usage_metering.normalize_attempts",
       "target": "symbol:services.usage_metering.spend_counts",
@@ -183420,7 +183783,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 142
+        "line": 145
       },
       "source": "symbol:services.usage_metering.reserve_next_attempt",
       "target": "symbol:services.usage_metering._priced_cost",
@@ -183431,7 +183794,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 120
+        "line": 123
       },
       "source": "symbol:services.usage_metering.safe_provider_usage",
       "target": "symbol:services.usage_metering._money",
@@ -183442,7 +183805,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 102
+        "line": 105
       },
       "source": "symbol:services.usage_metering.safe_provider_usage",
       "target": "symbol:services.usage_metering._nonnegative_int",
@@ -183453,7 +183816,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/usage_metering.py",
-        "line": 115
+        "line": 118
       },
       "source": "symbol:services.usage_metering.safe_provider_usage",
       "target": "symbol:services.usage_metering._nonnegative_int",
@@ -283948,6 +284311,347 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 24
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing._events",
+      "target": "symbol:services.usage_metering.normalize_attempts",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 72
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing._jina",
+      "target": "symbol:rag._JinaEmbeddingsHTTPX",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 55
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_embedding_card_does_not_price_llm_category",
+      "target": "symbol:tests.test_spec237_embedding_pricing._attempt",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 55
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_embedding_card_does_not_price_llm_category",
+      "target": "symbol:tests.test_spec237_embedding_pricing._events",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 42
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_estimated_tokens_are_marked_estimated_but_still_priced_by_card",
+      "target": "symbol:tests.test_spec237_embedding_pricing._attempt",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 42
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_estimated_tokens_are_marked_estimated_but_still_priced_by_card",
+      "target": "symbol:tests.test_spec237_embedding_pricing._events",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 60
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_failed_embedding_without_usage_is_still_no_spend",
+      "target": "symbol:tests.test_spec237_embedding_pricing._attempt",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 60
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_failed_embedding_without_usage_is_still_no_spend",
+      "target": "symbol:tests.test_spec237_embedding_pricing._events",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 100
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_forty_turns_of_offline_embedding_usage_stay_far_below_a_text_cap",
+      "target": "symbol:services.usage_metering.normalize_attempts",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 103
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_forty_turns_of_offline_embedding_usage_stay_far_below_a_text_cap",
+      "target": "symbol:services.usage_metering.operation_cost",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 101
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_forty_turns_of_offline_embedding_usage_stay_far_below_a_text_cap",
+      "target": "symbol:tests.test_spec237_embedding_pricing._attempt",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 29
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_jina_embedding_is_priced_by_tokens_not_the_one_dollar_floor",
+      "target": "symbol:tests.test_spec237_embedding_pricing._attempt",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 29
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_jina_embedding_is_priced_by_tokens_not_the_one_dollar_floor",
+      "target": "symbol:tests.test_spec237_embedding_pricing._events",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 91
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_jina_response_with_usage_is_not_marked_estimated",
+      "target": "symbol:rag.embedding_usage_scope",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 88
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_jina_response_with_usage_is_not_marked_estimated",
+      "target": "symbol:tests.test_spec237_embedding_pricing._jina",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 81
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_jina_response_without_usage_estimates_tokens_from_text_length",
+      "target": "symbol:rag.embedding_usage_scope",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 78
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_jina_response_without_usage_estimates_tokens_from_text_length",
+      "target": "symbol:tests.test_spec237_embedding_pricing._jina",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 157
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_jina_unparseable_body_is_estimated_not_the_one_dollar_floor",
+      "target": "symbol:rag.embedding_usage_scope",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 164
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_jina_unparseable_body_is_estimated_not_the_one_dollar_floor",
+      "target": "symbol:tests.test_spec237_embedding_pricing._events",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 155
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_jina_unparseable_body_is_estimated_not_the_one_dollar_floor",
+      "target": "symbol:tests.test_spec237_embedding_pricing._jina",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 37
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_small_embedding_is_fractions_of_a_cent",
+      "target": "symbol:tests.test_spec237_embedding_pricing._attempt",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 37
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_small_embedding_is_fractions_of_a_cent",
+      "target": "symbol:tests.test_spec237_embedding_pricing._events",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 48
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_unknown_embedding_model_still_fails_safe",
+      "target": "symbol:tests.test_spec237_embedding_pricing._attempt",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 48
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_unknown_embedding_model_still_fails_safe",
+      "target": "symbol:tests.test_spec237_embedding_pricing._events",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 131
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_wallet_quote_accepts_exact_embedding_priced_by_the_embedding_card",
+      "target": "symbol:services.usage_metering.normalize_attempts",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 135
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_wallet_quote_accepts_exact_embedding_priced_by_the_embedding_card",
+      "target": "symbol:tests.test_spec237_embedding_pricing._attempt",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 135
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_wallet_quote_accepts_exact_embedding_priced_by_the_embedding_card",
+      "target": "symbol:tests.test_spec237_embedding_pricing._events",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 130
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_wallet_quote_accepts_exact_embedding_priced_by_the_embedding_card",
+      "target": "symbol:tests.test_spec237_embedding_pricing._version",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 149
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_wallet_quote_rejects_embedding_card_outside_embedding_category",
+      "target": "symbol:tests.test_spec237_embedding_pricing._attempt",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 149
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_wallet_quote_rejects_embedding_card_outside_embedding_category",
+      "target": "symbol:tests.test_spec237_embedding_pricing._events",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec237_embedding_pricing.py",
+        "line": 148
+      },
+      "source": "symbol:tests.test_spec237_embedding_pricing.test_wallet_quote_rejects_embedding_card_outside_embedding_category",
+      "target": "symbol:tests.test_spec237_embedding_pricing._version",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec_index.py",
         "line": 49
       },
@@ -297349,6 +298053,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:services/embedding_pricing.py",
+      "kind": "file",
+      "line": 1,
+      "path": "services/embedding_pricing.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:services/encounter_manifest.py",
       "kind": "file",
       "line": 1,
@@ -299866,6 +300577,13 @@
       "kind": "file",
       "line": 1,
       "path": "tests/test_spec236_races_local.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_spec237_embedding_pricing.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_spec237_embedding_pricing.py",
       "qualified_name": null
     },
     {
@@ -302620,6 +303338,13 @@
       "qualified_name": "services.economy"
     },
     {
+      "id": "module:services.embedding_pricing",
+      "kind": "module",
+      "line": 1,
+      "path": "services/embedding_pricing.py",
+      "qualified_name": "services.embedding_pricing"
+    },
+    {
       "id": "module:services.encounter_manifest",
       "kind": "module",
       "line": 1,
@@ -305138,6 +305863,13 @@
       "line": 1,
       "path": "tests/test_spec236_races_local.py",
       "qualified_name": "tests.test_spec236_races_local"
+    },
+    {
+      "id": "module:tests.test_spec237_embedding_pricing",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_spec237_embedding_pricing.py",
+      "qualified_name": "tests.test_spec237_embedding_pricing"
     },
     {
       "id": "module:tests.test_spec_index",
@@ -317798,35 +318530,35 @@
     {
       "id": "symbol:rag._JinaEmbeddingsHTTPX",
       "kind": "class",
-      "line": 284,
+      "line": 297,
       "path": "rag.py",
       "qualified_name": "rag._JinaEmbeddingsHTTPX"
     },
     {
       "id": "symbol:rag._JinaEmbeddingsHTTPX.__init__",
       "kind": "method",
-      "line": 293,
+      "line": 306,
       "path": "rag.py",
       "qualified_name": "rag._JinaEmbeddingsHTTPX.__init__"
     },
     {
       "id": "symbol:rag._JinaEmbeddingsHTTPX._embed",
       "kind": "method",
-      "line": 307,
+      "line": 320,
       "path": "rag.py",
       "qualified_name": "rag._JinaEmbeddingsHTTPX._embed"
     },
     {
       "id": "symbol:rag._JinaEmbeddingsHTTPX.embed_documents",
       "kind": "method",
-      "line": 354,
+      "line": 369,
       "path": "rag.py",
       "qualified_name": "rag._JinaEmbeddingsHTTPX.embed_documents"
     },
     {
       "id": "symbol:rag._JinaEmbeddingsHTTPX.embed_query",
       "kind": "method",
-      "line": 357,
+      "line": 372,
       "path": "rag.py",
       "qualified_name": "rag._JinaEmbeddingsHTTPX.embed_query"
     },
@@ -317861,28 +318593,28 @@
     {
       "id": "symbol:rag._build_gemini",
       "kind": "function",
-      "line": 385,
+      "line": 400,
       "path": "rag.py",
       "qualified_name": "rag._build_gemini"
     },
     {
       "id": "symbol:rag._build_jina",
       "kind": "function",
-      "line": 361,
+      "line": 376,
       "path": "rag.py",
       "qualified_name": "rag._build_jina"
     },
     {
       "id": "symbol:rag._build_ollama",
       "kind": "function",
-      "line": 380,
+      "line": 395,
       "path": "rag.py",
       "qualified_name": "rag._build_ollama"
     },
     {
       "id": "symbol:rag._build_openai",
       "kind": "function",
-      "line": 375,
+      "line": 390,
       "path": "rag.py",
       "qualified_name": "rag._build_openai"
     },
@@ -317896,21 +318628,21 @@
     {
       "id": "symbol:rag._default_builders",
       "kind": "function",
-      "line": 391,
+      "line": 406,
       "path": "rag.py",
       "qualified_name": "rag._default_builders"
     },
     {
       "id": "symbol:rag._dep_present",
       "kind": "function",
-      "line": 410,
+      "line": 425,
       "path": "rag.py",
       "qualified_name": "rag._dep_present"
     },
     {
       "id": "symbol:rag._embeddings_for_index",
       "kind": "function",
-      "line": 568,
+      "line": 583,
       "path": "rag.py",
       "qualified_name": "rag._embeddings_for_index"
     },
@@ -317929,39 +318661,53 @@
       "qualified_name": "rag._emit_rag_operation"
     },
     {
+      "id": "symbol:rag._estimated_embedding_usage",
+      "kind": "function",
+      "line": 291,
+      "path": "rag.py",
+      "qualified_name": "rag._estimated_embedding_usage"
+    },
+    {
       "id": "symbol:rag._format_documents",
       "kind": "function",
-      "line": 747,
+      "line": 762,
       "path": "rag.py",
       "qualified_name": "rag._format_documents"
     },
     {
       "id": "symbol:rag._format_memory_documents",
       "kind": "function",
-      "line": 760,
+      "line": 775,
       "path": "rag.py",
       "qualified_name": "rag._format_memory_documents"
     },
     {
       "id": "symbol:rag._get_npc_path",
       "kind": "function",
-      "line": 1201,
+      "line": 1216,
       "path": "rag.py",
       "qualified_name": "rag._get_npc_path"
     },
     {
       "id": "symbol:rag._get_session_path",
       "kind": "function",
-      "line": 627,
+      "line": 642,
       "path": "rag.py",
       "qualified_name": "rag._get_session_path"
     },
     {
       "id": "symbol:rag._has_faiss_index",
       "kind": "function",
-      "line": 633,
+      "line": 648,
       "path": "rag.py",
       "qualified_name": "rag._has_faiss_index"
+    },
+    {
+      "id": "symbol:rag._has_token_usage",
+      "kind": "function",
+      "line": 284,
+      "path": "rag.py",
+      "qualified_name": "rag._has_token_usage"
     },
     {
       "id": "symbol:rag._is_windows_reserved",
@@ -317973,42 +318719,42 @@
     {
       "id": "symbol:rag._jina_key",
       "kind": "function",
-      "line": 405,
+      "line": 420,
       "path": "rag.py",
       "qualified_name": "rag._jina_key"
     },
     {
       "id": "symbol:rag._meta_path",
       "kind": "function",
-      "line": 540,
+      "line": 555,
       "path": "rag.py",
       "qualified_name": "rag._meta_path"
     },
     {
       "id": "symbol:rag._note_degraded",
       "kind": "function",
-      "line": 504,
+      "line": 519,
       "path": "rag.py",
       "qualified_name": "rag._note_degraded"
     },
     {
       "id": "symbol:rag._provider_available",
       "kind": "function",
-      "line": 422,
+      "line": 437,
       "path": "rag.py",
       "qualified_name": "rag._provider_available"
     },
     {
       "id": "symbol:rag._query_rag_impl",
       "kind": "function",
-      "line": 973,
+      "line": 988,
       "path": "rag.py",
       "qualified_name": "rag._query_rag_impl"
     },
     {
       "id": "symbol:rag._query_session_documents",
       "kind": "function",
-      "line": 722,
+      "line": 737,
       "path": "rag.py",
       "qualified_name": "rag._query_session_documents"
     },
@@ -318022,14 +318768,14 @@
     {
       "id": "symbol:rag._read_meta",
       "kind": "function",
-      "line": 560,
+      "line": 575,
       "path": "rag.py",
       "qualified_name": "rag._read_meta"
     },
     {
       "id": "symbol:rag._resolve_provider",
       "kind": "function",
-      "line": 442,
+      "line": 457,
       "path": "rag.py",
       "qualified_name": "rag._resolve_provider"
     },
@@ -318043,7 +318789,7 @@
     {
       "id": "symbol:rag._save_index",
       "kind": "function",
-      "line": 604,
+      "line": 619,
       "path": "rag.py",
       "qualified_name": "rag._save_index"
     },
@@ -318057,42 +318803,42 @@
     {
       "id": "symbol:rag._write_meta",
       "kind": "function",
-      "line": 544,
+      "line": 559,
       "path": "rag.py",
       "qualified_name": "rag._write_meta"
     },
     {
       "id": "symbol:rag.active_provider",
       "kind": "function",
-      "line": 513,
+      "line": 528,
       "path": "rag.py",
       "qualified_name": "rag.active_provider"
     },
     {
       "id": "symbol:rag.add_memory_to_session",
       "kind": "function",
-      "line": 1065,
+      "line": 1080,
       "path": "rag.py",
       "qualified_name": "rag.add_memory_to_session"
     },
     {
       "id": "symbol:rag.add_npc_memory",
       "kind": "function",
-      "line": 1208,
+      "line": 1223,
       "path": "rag.py",
       "qualified_name": "rag.add_npc_memory"
     },
     {
       "id": "symbol:rag.context_index_paths",
       "kind": "function",
-      "line": 962,
+      "line": 977,
       "path": "rag.py",
       "qualified_name": "rag.context_index_paths"
     },
     {
       "id": "symbol:rag.embedding_profile_id",
       "kind": "function",
-      "line": 480,
+      "line": 495,
       "path": "rag.py",
       "qualified_name": "rag.embedding_profile_id"
     },
@@ -318106,91 +318852,91 @@
     {
       "id": "symbol:rag.get_embeddings",
       "kind": "function",
-      "line": 518,
+      "line": 533,
       "path": "rag.py",
       "qualified_name": "rag.get_embeddings"
     },
     {
       "id": "symbol:rag.get_embeddings_for",
       "kind": "function",
-      "line": 455,
+      "line": 470,
       "path": "rag.py",
       "qualified_name": "rag.get_embeddings_for"
     },
     {
       "id": "symbol:rag.get_global_db_path",
       "kind": "function",
-      "line": 623,
+      "line": 638,
       "path": "rag.py",
       "qualified_name": "rag.get_global_db_path"
     },
     {
       "id": "symbol:rag.ingest_file",
       "kind": "function",
-      "line": 1382,
+      "line": 1397,
       "path": "rag.py",
       "qualified_name": "rag.ingest_file"
     },
     {
       "id": "symbol:rag.prepare_shared_query_vector",
       "kind": "function",
-      "line": 820,
+      "line": 835,
       "path": "rag.py",
       "qualified_name": "rag.prepare_shared_query_vector"
     },
     {
       "id": "symbol:rag.query_faiss_evidence",
       "kind": "function",
-      "line": 654,
+      "line": 669,
       "path": "rag.py",
       "qualified_name": "rag.query_faiss_evidence"
     },
     {
       "id": "symbol:rag.query_global_by_vector",
       "kind": "function",
-      "line": 867,
+      "line": 882,
       "path": "rag.py",
       "qualified_name": "rag.query_global_by_vector"
     },
     {
       "id": "symbol:rag.query_npc_by_vector",
       "kind": "function",
-      "line": 932,
+      "line": 947,
       "path": "rag.py",
       "qualified_name": "rag.query_npc_by_vector"
     },
     {
       "id": "symbol:rag.query_npc_memory",
       "kind": "function",
-      "line": 1343,
+      "line": 1358,
       "path": "rag.py",
       "qualified_name": "rag.query_npc_memory"
     },
     {
       "id": "symbol:rag.query_rag",
       "kind": "function",
-      "line": 1042,
+      "line": 1057,
       "path": "rag.py",
       "qualified_name": "rag.query_rag"
     },
     {
       "id": "symbol:rag.query_session_by_vector",
       "kind": "function",
-      "line": 902,
+      "line": 917,
       "path": "rag.py",
       "qualified_name": "rag.query_session_by_vector"
     },
     {
       "id": "symbol:rag.query_session_memory",
       "kind": "function",
-      "line": 805,
+      "line": 820,
       "path": "rag.py",
       "qualified_name": "rag.query_session_memory"
     },
     {
       "id": "symbol:rag.reindex_global",
       "kind": "function",
-      "line": 1409,
+      "line": 1424,
       "path": "rag.py",
       "qualified_name": "rag.reindex_global"
     },
@@ -318204,14 +318950,14 @@
     {
       "id": "symbol:rag.validate_pgvector_provider",
       "kind": "function",
-      "line": 493,
+      "line": 508,
       "path": "rag.py",
       "qualified_name": "rag.validate_pgvector_provider"
     },
     {
       "id": "symbol:rag.vis_rank",
       "kind": "function",
-      "line": 646,
+      "line": 661,
       "path": "rag.py",
       "qualified_name": "rag.vis_rank"
     },
@@ -325825,6 +326571,13 @@
       "qualified_name": "services.economy.unique_holder"
     },
     {
+      "id": "symbol:services.embedding_pricing.embedding_cost",
+      "kind": "function",
+      "line": 23,
+      "path": "services/embedding_pricing.py",
+      "qualified_name": "services.embedding_pricing.embedding_cost"
+    },
+    {
       "id": "symbol:services.encounter_manifest.EncounterCompositionEvent",
       "kind": "class",
       "line": 57,
@@ -330223,7 +330976,7 @@
     {
       "id": "symbol:services.shard_pricing.contribution_report",
       "kind": "function",
-      "line": 314,
+      "line": 319,
       "path": "services/shard_pricing.py",
       "qualified_name": "services.shard_pricing.contribution_report"
     },
@@ -330258,28 +331011,28 @@
     {
       "id": "symbol:services.shard_pricing.version_from_record",
       "kind": "function",
-      "line": 328,
+      "line": 333,
       "path": "services/shard_pricing.py",
       "qualified_name": "services.shard_pricing.version_from_record"
     },
     {
       "id": "symbol:services.shard_pricing.version_from_record.decimal_text",
       "kind": "function",
-      "line": 334,
+      "line": 339,
       "path": "services/shard_pricing.py",
       "qualified_name": "services.shard_pricing.version_from_record.decimal_text"
     },
     {
       "id": "symbol:services.shard_pricing.version_from_record.seconds",
       "kind": "function",
-      "line": 352,
+      "line": 357,
       "path": "services/shard_pricing.py",
       "qualified_name": "services.shard_pricing.version_from_record.seconds"
     },
     {
       "id": "symbol:services.shard_pricing.version_from_record.when",
       "kind": "function",
-      "line": 342,
+      "line": 347,
       "path": "services/shard_pricing.py",
       "qualified_name": "services.shard_pricing.version_from_record.when"
     },
@@ -330937,77 +331690,77 @@
     {
       "id": "symbol:services.usage_metering.UsageEvent",
       "kind": "class",
-      "line": 42,
+      "line": 44,
       "path": "services/usage_metering.py",
       "qualified_name": "services.usage_metering.UsageEvent"
     },
     {
       "id": "symbol:services.usage_metering._money",
       "kind": "function",
-      "line": 73,
+      "line": 75,
       "path": "services/usage_metering.py",
       "qualified_name": "services.usage_metering._money"
     },
     {
       "id": "symbol:services.usage_metering._nonnegative_int",
       "kind": "function",
-      "line": 67,
+      "line": 69,
       "path": "services/usage_metering.py",
       "qualified_name": "services.usage_metering._nonnegative_int"
     },
     {
       "id": "symbol:services.usage_metering._priced_cost",
       "kind": "function",
-      "line": 126,
+      "line": 129,
       "path": "services/usage_metering.py",
       "qualified_name": "services.usage_metering._priced_cost"
     },
     {
       "id": "symbol:services.usage_metering.decision_attempt",
       "kind": "function",
-      "line": 236,
+      "line": 247,
       "path": "services/usage_metering.py",
       "qualified_name": "services.usage_metering.decision_attempt"
     },
     {
       "id": "symbol:services.usage_metering.exact_billable_cost",
       "kind": "function",
-      "line": 229,
+      "line": 240,
       "path": "services/usage_metering.py",
       "qualified_name": "services.usage_metering.exact_billable_cost"
     },
     {
       "id": "symbol:services.usage_metering.normalize_attempts",
       "kind": "function",
-      "line": 146,
+      "line": 149,
       "path": "services/usage_metering.py",
       "qualified_name": "services.usage_metering.normalize_attempts"
     },
     {
       "id": "symbol:services.usage_metering.operation_cost",
       "kind": "function",
-      "line": 224,
+      "line": 235,
       "path": "services/usage_metering.py",
       "qualified_name": "services.usage_metering.operation_cost"
     },
     {
       "id": "symbol:services.usage_metering.reserve_next_attempt",
       "kind": "function",
-      "line": 136,
+      "line": 139,
       "path": "services/usage_metering.py",
       "qualified_name": "services.usage_metering.reserve_next_attempt"
     },
     {
       "id": "symbol:services.usage_metering.safe_provider_usage",
       "kind": "function",
-      "line": 83,
+      "line": 85,
       "path": "services/usage_metering.py",
       "qualified_name": "services.usage_metering.safe_provider_usage"
     },
     {
       "id": "symbol:services.usage_metering.spend_counts",
       "kind": "function",
-      "line": 63,
+      "line": 65,
       "path": "services/usage_metering.py",
       "qualified_name": "services.usage_metering.spend_counts"
     },
@@ -362869,6 +363622,125 @@
       "qualified_name": "tests.test_spec236_races_local.test_concurrent_workers_never_lease_a_poisoned_job"
     },
     {
+      "id": "symbol:tests.test_spec237_embedding_pricing._attempt",
+      "kind": "test",
+      "line": 18,
+      "path": "tests/test_spec237_embedding_pricing.py",
+      "qualified_name": "tests.test_spec237_embedding_pricing._attempt"
+    },
+    {
+      "id": "symbol:tests.test_spec237_embedding_pricing._events",
+      "kind": "test",
+      "line": 23,
+      "path": "tests/test_spec237_embedding_pricing.py",
+      "qualified_name": "tests.test_spec237_embedding_pricing._events"
+    },
+    {
+      "id": "symbol:tests.test_spec237_embedding_pricing._jina",
+      "kind": "test",
+      "line": 71,
+      "path": "tests/test_spec237_embedding_pricing.py",
+      "qualified_name": "tests.test_spec237_embedding_pricing._jina"
+    },
+    {
+      "id": "symbol:tests.test_spec237_embedding_pricing._version",
+      "kind": "test",
+      "line": 108,
+      "path": "tests/test_spec237_embedding_pricing.py",
+      "qualified_name": "tests.test_spec237_embedding_pricing._version"
+    },
+    {
+      "id": "symbol:tests.test_spec237_embedding_pricing.test_embedding_card_does_not_price_llm_category",
+      "kind": "test",
+      "line": 54,
+      "path": "tests/test_spec237_embedding_pricing.py",
+      "qualified_name": "tests.test_spec237_embedding_pricing.test_embedding_card_does_not_price_llm_category"
+    },
+    {
+      "id": "symbol:tests.test_spec237_embedding_pricing.test_estimated_tokens_are_marked_estimated_but_still_priced_by_card",
+      "kind": "test",
+      "line": 41,
+      "path": "tests/test_spec237_embedding_pricing.py",
+      "qualified_name": "tests.test_spec237_embedding_pricing.test_estimated_tokens_are_marked_estimated_but_still_priced_by_card"
+    },
+    {
+      "id": "symbol:tests.test_spec237_embedding_pricing.test_failed_embedding_without_usage_is_still_no_spend",
+      "kind": "test",
+      "line": 59,
+      "path": "tests/test_spec237_embedding_pricing.py",
+      "qualified_name": "tests.test_spec237_embedding_pricing.test_failed_embedding_without_usage_is_still_no_spend"
+    },
+    {
+      "id": "symbol:tests.test_spec237_embedding_pricing.test_forty_turns_of_offline_embedding_usage_stay_far_below_a_text_cap",
+      "kind": "test",
+      "line": 96,
+      "path": "tests/test_spec237_embedding_pricing.py",
+      "qualified_name": "tests.test_spec237_embedding_pricing.test_forty_turns_of_offline_embedding_usage_stay_far_below_a_text_cap"
+    },
+    {
+      "id": "symbol:tests.test_spec237_embedding_pricing.test_jina_embedding_is_priced_by_tokens_not_the_one_dollar_floor",
+      "kind": "test",
+      "line": 28,
+      "path": "tests/test_spec237_embedding_pricing.py",
+      "qualified_name": "tests.test_spec237_embedding_pricing.test_jina_embedding_is_priced_by_tokens_not_the_one_dollar_floor"
+    },
+    {
+      "id": "symbol:tests.test_spec237_embedding_pricing.test_jina_response_with_usage_is_not_marked_estimated",
+      "kind": "test",
+      "line": 87,
+      "path": "tests/test_spec237_embedding_pricing.py",
+      "qualified_name": "tests.test_spec237_embedding_pricing.test_jina_response_with_usage_is_not_marked_estimated"
+    },
+    {
+      "id": "symbol:tests.test_spec237_embedding_pricing.test_jina_response_without_usage_estimates_tokens_from_text_length",
+      "kind": "test",
+      "line": 77,
+      "path": "tests/test_spec237_embedding_pricing.py",
+      "qualified_name": "tests.test_spec237_embedding_pricing.test_jina_response_without_usage_estimates_tokens_from_text_length"
+    },
+    {
+      "id": "symbol:tests.test_spec237_embedding_pricing.test_jina_unparseable_body_is_estimated_not_the_one_dollar_floor",
+      "kind": "test",
+      "line": 154,
+      "path": "tests/test_spec237_embedding_pricing.py",
+      "qualified_name": "tests.test_spec237_embedding_pricing.test_jina_unparseable_body_is_estimated_not_the_one_dollar_floor"
+    },
+    {
+      "id": "symbol:tests.test_spec237_embedding_pricing.test_main_rate_card_is_untouched_and_pinned",
+      "kind": "test",
+      "line": 64,
+      "path": "tests/test_spec237_embedding_pricing.py",
+      "qualified_name": "tests.test_spec237_embedding_pricing.test_main_rate_card_is_untouched_and_pinned"
+    },
+    {
+      "id": "symbol:tests.test_spec237_embedding_pricing.test_small_embedding_is_fractions_of_a_cent",
+      "kind": "test",
+      "line": 36,
+      "path": "tests/test_spec237_embedding_pricing.py",
+      "qualified_name": "tests.test_spec237_embedding_pricing.test_small_embedding_is_fractions_of_a_cent"
+    },
+    {
+      "id": "symbol:tests.test_spec237_embedding_pricing.test_unknown_embedding_model_still_fails_safe",
+      "kind": "test",
+      "line": 47,
+      "path": "tests/test_spec237_embedding_pricing.py",
+      "qualified_name": "tests.test_spec237_embedding_pricing.test_unknown_embedding_model_still_fails_safe"
+    },
+    {
+      "id": "symbol:tests.test_spec237_embedding_pricing.test_wallet_quote_accepts_exact_embedding_priced_by_the_embedding_card",
+      "kind": "test",
+      "line": 126,
+      "path": "tests/test_spec237_embedding_pricing.py",
+      "qualified_name": "tests.test_spec237_embedding_pricing.test_wallet_quote_accepts_exact_embedding_priced_by_the_embedding_card"
+    },
+    {
+      "id": "symbol:tests.test_spec237_embedding_pricing.test_wallet_quote_rejects_embedding_card_outside_embedding_category",
+      "kind": "test",
+      "line": 141,
+      "path": "tests/test_spec237_embedding_pricing.py",
+      "qualified_name": "tests.test_spec237_embedding_pricing.test_wallet_quote_rejects_embedding_card_outside_embedding_category"
+    },
+    {
       "id": "symbol:tests.test_spec_index._apply",
       "kind": "test",
       "line": 47,
@@ -366279,5 +367151,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:0586ad19df9244af239bbe9471e04abdef2429178da9ed4949f5a99739c94451"
+  "source_tree_hash": "sha256:05c5604a74e1c453ffac97d2d53d6458db3e93605bbe40a0a9fdcbf590458ede"
 }

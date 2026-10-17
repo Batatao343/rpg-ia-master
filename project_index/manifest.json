@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "f9591efa3c8b4829c99de328079f44446eefac4a",
+  "commit_sha": "8b6bcc7ea32060ebd9f265860520bfa979816a55",
   "edge_counts": {
-    "calls": 15154,
-    "contains": 638,
-    "defines": 8689,
-    "imports": 1416,
-    "likely_test_for": 869,
+    "calls": 15189,
+    "contains": 640,
+    "defines": 8709,
+    "imports": 1420,
+    "likely_test_for": 872,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:8be678d6bb29d60875f1b1d7c2253df0de3fdf24871a85feb0ff3a38293d8f19",
+  "graph_hash": "sha256:6d372b6ec3e13a4bb6245426ba1104eba13e6f3e4638df7828b99c91ae995c45",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -292,6 +292,7 @@
     "services/dynamic_art.py",
     "services/ecology.py",
     "services/economy.py",
+    "services/embedding_pricing.py",
     "services/encounter_manifest.py",
     "services/encounter_preparation.py",
     "services/entity_identity.py",
@@ -652,6 +653,7 @@
     "tests/test_spec234_pgvector_profile_local.py",
     "tests/test_spec235_reclaim_local.py",
     "tests/test_spec236_races_local.py",
+    "tests/test_spec237_embedding_pricing.py",
     "tests/test_spec_index.py",
     "tests/test_spec_migration_safety.py",
     "tests/test_speech_api.py",
@@ -822,12 +824,12 @@
     "artifact": 9,
     "class": 724,
     "endpoint": 63,
-    "file": 766,
-    "function": 2652,
+    "file": 768,
+    "function": 2655,
     "method": 705,
-    "module": 638,
-    "test": 4608
+    "module": 640,
+    "test": 4625
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:0586ad19df9244af239bbe9471e04abdef2429178da9ed4949f5a99739c94451"
+  "source_tree_hash": "sha256:05c5604a74e1c453ffac97d2d53d6458db3e93605bbe40a0a9fdcbf590458ede"
 }
