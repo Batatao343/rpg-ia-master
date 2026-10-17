@@ -1,6 +1,6 @@
 # SPEC-224 — RLS efetivo: role de menor privilégio, `SET ROLE` por request e policies de Storage sem escrita do cliente
 
-> **Status:** `in-progress` (código/migration/testes locais prontos em 2026-10-17; faltam os critérios de staging §5; revisão Astra APPROVED 2026-10-17; depende do merge da SPEC-218)
+> **Status:** `done` (17/10: staging com `rpg_runtime`+`rpg_admin`, RLS por request efetivo; ver `docs/staging-wave-2026-10-17/README.md`. Merge depende da SPEC-218 aterrissar na `main` primeiro)
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
 > **Depende de:** SPEC-218 `done` (boot fail-closed) · SPEC-191 `done`. ATENÇÃO: o commit `8570d62` (SPEC-197 R-05) já criou o login `rpg_runtime` sem BYPASSRLS, porém com policies `runtime_all` por tabela, então o RLS por owner ainda NÃO é efetivo. Rebasear R1/R2 sobre esse estado: resta `SET LOCAL ROLE rpg_api` por request (R3–R5), pool admin separado (R2/R9) e Storage (R7) (ordem final 2026-10-15)
 > **Desbloqueia:** promoção a produção da SPEC-197 (R-05 de mitigado para fechado) (ordem final 2026-10-15)
@@ -79,9 +79,9 @@ Objetivo: duas credenciais com privilégios distintos (`rpg_runtime` para reques
 
 ## 5. Critérios de aceite
 - [x] Etapa 0 vermelha no HEAD, verde ao final; R1–R9; `uv run pytest` e `-m infra_local` verdes; pgTAP verde (rodado localmente no Postgres do Supabase local; o CI `audit-local` roda no push). Evidência: `docs/spec224/README.md`.
-- [ ] Staging com `rpg_runtime`: smoke de dois usuários verde; `select current_user` via `/metrics`-like debug NÃO — provar por log estruturado do pool (`role=rpg_api`) em 1 request; p95 do turno dentro de +5%.
-- [ ] Security Advisor do Supabase sem novo ERROR; [x] revisão Astra APPROVED com tentativa explícita de acessar jogo de B com principal A via SQL direto no pool de usuário (2026-10-17, `handoffs/SPEC-224-ASTRA-independent-review.md`; falta só o Security Advisor no staging).
-- [ ] `docs/spec197/risk-register.md` R-05 → fechado.
+- [x] Staging com `rpg_runtime`: smoke de dois usuários verde; `select current_user` via `/metrics`-like debug NÃO — provar por log estruturado do pool (`role=rpg_api`) em 1 request; p95 do turno dentro de +5%. **Staging 17/10:** `two_user_smoke` verde (404 cruzado em estado/ação/cotação); log `pool.request_role_applied role=rpg_api` em toda implantação com RLS e ausente no rollback; A/B no mesmo commit: turno SSE p95 2552 ms (RLS on, n=15) vs 3895 ms (off, n=10) — dentro de +5%, dominado pelo LLM; custo do `SET LOCAL ROLE` medido na fase `persistence`: +25–55 ms p50.
+- [x] Security Advisor do Supabase sem novo ERROR; [x] revisão Astra APPROVED com tentativa explícita de acessar jogo de B com principal A via SQL direto no pool de usuário (2026-10-17, `handoffs/SPEC-224-ASTRA-independent-review.md`; Security Advisor 17/10: 0 ERROR, 4 WARN pré-existentes).
+- [x] `docs/spec197/risk-register.md` R-05 → fechado. **Staging 17/10:** R-05 marcado fechado no registro.
 
 ## 6. Smoke test
 Staging (sem LLM): login A e B; `GET /game/saves` de cada um; inspeção de 1 linha de log do pool com `role=rpg_api`; tentativa de upload direto no Storage com JWT de A (ferramenta de teste, chave publishable do staging) → 403.

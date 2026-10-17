@@ -1,0 +1,123 @@
+{
+  "at": "2026-10-17T12:52:33.131679+00:00",
+  "base": "https://rpg-ia-master-staging.vercel.app",
+  "checks": {
+    "delete_account": {
+      "auth_user_still_exists": false,
+      "delete_body": {
+        "status": "deleted"
+      },
+      "delete_status": 200,
+      "ok": true,
+      "reauth": 200
+    },
+    "image_quote": {
+      "generate_called": false,
+      "has_credits": true,
+      "keys": [
+        "credits_milli",
+        "expires_at",
+        "pricing_version",
+        "quote_id",
+        "reformulation",
+        "type"
+      ],
+      "ok": true,
+      "status": 200
+    },
+    "isolation": {
+      "a_reads_b_state": 404,
+      "a_sees_only_own_save": true,
+      "b_acts_on_a_game": 404,
+      "b_quote_on_a_game": 404,
+      "b_reads_a_state": 404,
+      "b_sees_only_own_save": true,
+      "ok": true
+    },
+    "login": {
+      "a": 200,
+      "b": 200,
+      "ok": true
+    },
+    "logout": {
+      "ok": true,
+      "state_after": 401,
+      "status": 204
+    },
+    "new_game": {
+      "a": 200,
+      "b": 200,
+      "ok": true
+    },
+    "refresh": {
+      "ok": true,
+      "state_after": 200,
+      "status": 200
+    },
+    "stripe_test_purchase": {
+      "ok": true,
+      "result": "blocked: stripe_test_keys_missing",
+      "skus": null,
+      "skus_status": 503
+    },
+    "text_turns": {
+      "A": [
+        {
+          "has_done": true,
+          "has_error": false,
+          "status": 200,
+          "turn_count": 2
+        },
+        {
+          "has_done": true,
+          "has_error": false,
+          "status": 200,
+          "turn_count": 3
+        }
+      ],
+      "B": [
+        {
+          "has_done": true,
+          "has_error": false,
+          "status": 200,
+          "turn_count": 2
+        },
+        {
+          "has_done": true,
+          "has_error": false,
+          "status": 200,
+          "turn_count": 3
+        }
+      ],
+      "note": "RPG_FORCE_MOCK=1 on staging: simulated narrator, real graph/persistence/SSE",
+      "ok": true
+    },
+    "voice": {
+      "detail": "audio_decoder_unavailable",
+      "ok": true,
+      "result": "covered_by_voice_smoke (invalid-webm probe only)",
+      "status": 503
+    },
+    "wallet_sync": {
+      "a_after": "311",
+      "a_before": "0",
+      "b_after": "0",
+      "ok": true
+    }
+  },
+  "cleanup": {
+    "games_deleted_A": 0,
+    "games_deleted_B": 1,
+    "user_delete_status": {
+      "A": 404,
+      "B": 200
+    }
+  },
+  "deployed_git_sha": "871238cf7300d6cc596bc454837c38a1d44ff2ab",
+  "not_exercised": {
+    "image_generate": "not_called: paid provider (quote only)",
+    "stripe_test_purchase": "blocked: stripe_test_keys_missing",
+    "voice": "covered_by_voice_smoke (invalid-webm probe only)"
+  },
+  "ok": true
+}

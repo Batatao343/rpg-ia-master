@@ -1,6 +1,6 @@
 # SPEC-218 — Fail-closed de perfil e configuração de segurança em deploy exposto
 
-> **Status:** `in-progress`
+> **Status:** `in-progress` (17/10: staging redeployado e verde — `hardened=true`, OpenAPI 404, `post_deploy_smoke` verde; falta só o `release/checklist.py --env staging` verde, bloqueado por itens do gate de release da SPEC-197: páginas legais, riscos P0/P1 abertos e environments do GitHub — ver `docs/staging-wave-2026-10-17/README.md`)
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
 > **Depende de:** nenhuma · evolui SPEC-181 `done` e o checklist da SPEC-197 `in-progress` sem reabri-los (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212, SPEC-219, SPEC-224; gate de release da SPEC-197 (ordem final 2026-10-15)
@@ -108,9 +108,9 @@ Objetivo: **um processo que escuta fora de loopback ou roda em plataforma de hos
 ## 5. Critérios de aceite
 
 - [x] R1–R10 com testes nomeados acima verdes; testes da Etapa 0 registrados vermelhos no HEAD e verdes depois.
-- [ ] `uv run pytest` verde (suíte completa offline), `ruff` verde, `scripts/release/checklist.py --env staging` verde contra `.env.staging` (sem imprimir valores).
+- [ ] `uv run pytest` verde (suíte completa offline), `ruff` verde, `scripts/release/checklist.py --env staging` verde contra `.env.staging` (sem imprimir valores). **17/10:** pytest (3615 passed) e ruff verdes na branch integrada; checklist staging: checks de config verdes (migrations 28/28, env names sem proibidas, health_sha, kill switches, evals), resultado BLOQUEADO só por `legal_pages`, `open_p0_p1`, `environments_restricted` (gate SPEC-197) e árvore suja pela própria evidência.
 - [x] Smoke local: `RPG_RUNTIME_PROFILE` ausente + `PORT=8000 uv run uvicorn api:app --host 0.0.0.0 --port 8000` → processo NÃO sobe, stderr com `legacy_profile_exposed` e sem valores de env. Sem `PORT`, em loopback → sobe como hoje.
-- [ ] Staging Vercel (redeploy): `GET /health` devolve `profile=hosted-supabase`, `hardened=true`; `GET /openapi.json` = 404; smoke `scripts/post_deploy_smoke.py` verde.
+- [x] Staging Vercel (redeploy): `GET /health` devolve `profile=hosted-supabase`, `hardened=true`; `GET /openapi.json` = 404; smoke `scripts/post_deploy_smoke.py` verde. **Staging 17/10:** `/health` `profile=hosted-supabase`, `hardened=true`; `/openapi.json` e `/docs` = 404; `post_deploy_smoke.py` verde (`docs/staging-wave-2026-10-17/README.md`).
 - [x] Revisão Astra independente APPROVED (com tentativa explícita de contornar R2 via `RPG_BIND_HOST=127.0.0.1` + `--host 0.0.0.0`: deve falhar por `PORT`/marcador de plataforma; documentar o limite: processo sem NENHUM marcador e bind manual 0.0.0.0 continua responsabilidade do operador — ponto de decisão D-B).
 - [x] Saves antigos continuam carregando (nenhuma mudança de schema).
 

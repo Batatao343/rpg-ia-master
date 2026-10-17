@@ -1,0 +1,167 @@
+{
+  "at": "2026-10-17T13:16:31.587591+00:00",
+  "base": "https://rpg-ia-master-staging.vercel.app",
+  "caller_ip_pseudonym": "650ecd10c6f2b575",
+  "checks": {
+    "logins": {
+      "a": 200,
+      "b": 200,
+      "ok": true
+    },
+    "spec219_chronicle_search": {
+      "codes": [
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        429
+      ],
+      "ok": true,
+      "retry_after": "55"
+    },
+    "spec219_daily_counter": {
+      "ok": true,
+      "rows": [
+        {
+          "class": "llm_aux",
+          "count": 1
+        },
+        {
+          "class": "turn",
+          "count": 20
+        }
+      ]
+    },
+    "spec219_invalid_token": {
+      "ok": true,
+      "status": 401
+    },
+    "spec219_other_owner_same_ip": {
+      "new_game": 200,
+      "ok": true,
+      "status": 200
+    },
+    "spec219_owner_turn_minute": {
+      "body": {
+        "detail": "rate_limited",
+        "retry_after_seconds": 32,
+        "scope": "owner"
+      },
+      "codes": [
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        429
+      ],
+      "elapsed_s": 28.7,
+      "new_game": 200,
+      "ok": true,
+      "retry_after": "32"
+    },
+    "spec219_r5_ip_bucket": {
+      "bucket_classes": [
+        "embedding",
+        "export",
+        "llm_aux",
+        "quote",
+        "read_auth",
+        "stt",
+        "turn"
+      ],
+      "ok": true
+    },
+    "spec222_export": {
+      "has_owner_daily_counters": true,
+      "ok": true,
+      "purchase_token_key_present": false,
+      "reauth": 200,
+      "status": 200,
+      "tables": [
+        "art_generations",
+        "assets",
+        "chronicle_digests",
+        "game_checkpoints",
+        "game_events",
+        "games",
+        "google_play_purchases",
+        "image_quotes",
+        "jobs",
+        "memory_documents",
+        "operations",
+        "owner_daily_counters",
+        "payment_financial_events",
+        "payment_orders",
+        "purchase_reconciliation_state",
+        "runtime_catalog",
+        "turns",
+        "usage_events",
+        "wallet_accounts",
+        "wallet_attempt_tickets",
+        "wallet_debt_entries",
+        "wallet_entries",
+        "wallet_reservations",
+        "wallet_settled_usage"
+      ]
+    },
+    "spec236_usage_facts": {
+      "ok": true,
+      "rows": [
+        {
+          "cost": "0.000000000",
+          "cost_basis": "failed_no_usage",
+          "counts_as_spend": false,
+          "n": 28,
+          "outcome": "invoke_error"
+        },
+        {
+          "cost": "29.000000000",
+          "cost_basis": "estimated",
+          "counts_as_spend": true,
+          "n": 29,
+          "outcome": "response"
+        },
+        {
+          "cost": "0.004199726",
+          "cost_basis": "token_priced",
+          "counts_as_spend": true,
+          "n": 24,
+          "outcome": "success"
+        }
+      ]
+    }
+  },
+  "cleanup": {
+    "game_A": 1,
+    "game_B": 1,
+    "users": {
+      "A": 200,
+      "B": 200
+    }
+  },
+  "deployed_git_sha": "b9b0c753229d238399c056994c3113b045917d24",
+  "ok": true,
+  "sentinel": "SENTINELAFC450FD31A10"
+}

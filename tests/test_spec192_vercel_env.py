@@ -68,3 +68,13 @@ def test_staging_runs_real_llm_with_a_daily_cap_and_never_mock():
     # cap de texto fora ate o rate card cobrir Jina (embedding sem card = US$ 1 estimado por chamada)
     assert "RPG_DAILY_SPEND_CAP_TEXT" not in prod and "RPG_DAILY_SPEND_CAP_TEXT" in ve.REMOVED_NAMES
     assert {"GROQ_API_KEY", "RPG_TELEMETRY_SECRET"} <= ve.FORBIDDEN_IN_PREVIEW
+
+
+def test_switching_rls_mode_deletes_the_other_mode_variable():
+    """Rollback (--use-admin-dsn) e volta ao RLS: o upsert nao apaga, entao o par do outro modo sai."""
+    files = {**FILES, "RPG_RUNTIME_DATABASE_URL": "postgresql://rpg_runtime.ref:x@h.pooler.supabase.com:6543/postgres",
+             "RPG_ADMIN_DATABASE_URL": "postgresql://rpg_admin.ref:y@h.pooler.supabase.com:6543/postgres"}
+    rls = ve.build_env(files)[0]
+    assert "RPG_REQUEST_RLS" in ve.stale_names(rls) and "RPG_ADMIN_DATABASE_URL" not in ve.stale_names(rls)
+    rollback = ve.build_env(files, use_admin_dsn=True)[0]
+    assert "RPG_ADMIN_DATABASE_URL" in ve.stale_names(rollback) and "RPG_REQUEST_RLS" not in ve.stale_names(rollback)

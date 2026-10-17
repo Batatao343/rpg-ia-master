@@ -1,0 +1,28 @@
+{
+  "applied": false,
+  "diff": {
+    "password_min_length": {
+      "from": 6,
+      "to": 10
+    },
+    "rate_limit_email_sent": {
+      "from": 2,
+      "to": 10
+    },
+    "security_captcha_secret": {
+      "from": "<write-only>",
+      "to": "[REDACTED]"
+    },
+    "security_update_password_require_reauthentication": {
+      "from": false,
+      "to": true
+    },
+    "uri_allow_list": {
+      "from": "https://rpg-ia-master-staging.vercel.app/**,https://rpg-ia-master-staging-*.vercel.app/**,http://localhost:5173/**",
+      "to": "https://rpg-ia-master-staging.vercel.app"
+    }
+  },
+  "mode": "plan",
+  "project_ref": "uzeagzcyvxzrpjgrhaql",
+  "turnstile_test_keys": true
+}

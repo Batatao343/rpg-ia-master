@@ -1,0 +1,102 @@
+{
+  "base": "https://rpg-ia-master-staging.vercel.app",
+  "at": "2026-10-17T12:44:19.021674+00:00",
+  "checks": {
+    "health": {
+      "ok": true,
+      "status": 200,
+      "ms": 91,
+      "error": null,
+      "headers": {
+        "content-type": "application/json",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "x-vercel-cache": "MISS",
+        "x-vercel-id": "gru1::gru1::ztt4x-1792241065444-14f61033606c",
+        "server": "Vercel",
+        "strict-transport-security": "max-age=63072000; includeSubDomains",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "content-security-policy": "default-src 'self'; connect-src 'self' https://*.supabase.co https://challenges.cloudflare.com; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; img-src 'self' data: blob: https://*.supabase.co; style-src 'self' 'unsafe-inline'; font-src 'self' data:; media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'",
+        "referrer-policy": "same-origin"
+      }
+    },
+    "static_index": {
+      "ok": true,
+      "status": 200,
+      "ms": 34,
+      "error": null,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "x-vercel-cache": "MISS",
+        "x-vercel-id": "gru1::gru1::hqskw-1792241065822-22df4419a59b",
+        "server": "Vercel",
+        "strict-transport-security": "max-age=63072000; includeSubDomains",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "content-security-policy": "default-src 'self'; connect-src 'self' https://*.supabase.co https://challenges.cloudflare.com; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; img-src 'self' data: blob: https://*.supabase.co; style-src 'self' 'unsafe-inline'; font-src 'self' data:; media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'",
+        "referrer-policy": "same-origin"
+      }
+    },
+    "cron_jobs": {
+      "noauth_status": 401,
+      "auth_status": 200,
+      "ms": 59,
+      "body": {
+        "ok": true,
+        "processed": 0,
+        "stopped_reason": "empty",
+        "elapsed_s": 0.03,
+        "duration_s": 0.03
+      },
+      "ok": true
+    },
+    "cron_account-deletions": {
+      "noauth_status": 401,
+      "auth_status": 200,
+      "ms": 136,
+      "body": {
+        "ok": true,
+        "claimed": 0,
+        "deleted": 0,
+        "failed": 0,
+        "auth_buckets_purged": 0,
+        "duration_s": 0.106
+      },
+      "ok": true
+    },
+    "cron_operations": {
+      "noauth_status": 401,
+      "auth_status": 200,
+      "ms": 293,
+      "body": {
+        "ok": true,
+        "orphans_seen": 0,
+        "released": 0,
+        "wallet_seen": 0,
+        "wallet_released": 0,
+        "wallet_settled": 0,
+        "wallet_uncertain": 0,
+        "wallet_skipped": 0,
+        "wallet_errors": 0,
+        "purged_operations": 0,
+        "purged_jobs": 0,
+        "purged_usage_events": 0,
+        "purged_finops_evaluations": 0,
+        "purged_owner_daily_counters": 0,
+        "purged_account_deletions_compacted": 0,
+        "purged_account_deletions": 0,
+        "failed": 0,
+        "duration_s": 0.264
+      },
+      "ok": true
+    }
+  },
+  "first_request_ms": 91,
+  "warm_ms": {
+    "n": 10,
+    "p50": 29.5,
+    "max": 48
+  },
+  "ok": true
+}

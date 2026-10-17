@@ -3962,7 +3962,7 @@ specs:
   lineage_note: Authored from security audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
 - id: SPEC-220
   slug: sessao-logout-lockout-oidc
-  status: in-progress
+  status: done
   path: specs/SPEC-220-sessao-logout-lockout-oidc.md
   created_commit: null
   created_at: '2026-10-15'
@@ -4026,7 +4026,7 @@ specs:
   lineage_note: Authored from security audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
 - id: SPEC-224
   slug: rls-efetivo-role-minimo-storage
-  status: in-progress
+  status: done
   path: specs/SPEC-224-rls-efetivo-role-minimo-storage.md
   created_commit: null
   created_at: '2026-10-15'

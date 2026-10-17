@@ -1,0 +1,9 @@
+{
+  "source": "Supabase MCP get_advisors(security), project uzeagzcyvxzrpjgrhaql, 2026-10-17T13:07Z (after the 5 migrations)",
+  "error_count": 0,
+  "warn": [
+    {"name": "extension_in_public", "count": 1, "detail": "pg_net in public (pre-existing, SPEC-191)"},
+    {"name": "authenticated_security_definer_function_executable", "count": 3,
+     "detail": "public.rpg_current_session_active / rpg_wallet_balance / rpg_wallet_history: gated definer functions created on purpose (SPEC-191/220), pre-existing"}
+  ]
+}

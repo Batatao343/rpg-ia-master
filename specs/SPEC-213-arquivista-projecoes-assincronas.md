@@ -1,6 +1,6 @@
 # SPEC-213 — Arquivista: canônico síncrono e projeções derivadas fora do hot path
 
-> **Status:** `done` — gate §0 atingido em 2026-10-16 (offline, ver `docs/spec213/gate.md`); modo A
+> **Status:** `done` — gate §0 atingido em 2026-10-16 (offline, ver `docs/spec213/gate.md`); modo A **17/10:** migration `20261016121500_archive_projection_operations.sql` aplicada no staging (default segue `inline`; nada ativado).
 > (`post_response`) em legacy e perfis com banco (outbox `project_archive` em `app.jobs` + execução pela própria
 > API após responder; worker/cron e o próximo turno na cerca como fallbacks); revisão Astra independente com
 > correções; smokes browser (Chromium 1440) e real (8 turnos DeepSeek, US$ 0,032 est.) executados — evidência em

@@ -1,0 +1,16 @@
+{
+  "applied": false,
+  "diff": {
+    "rate_limit_email_sent": {
+      "from": 2,
+      "to": 10
+    },
+    "security_captcha_secret": {
+      "from": "<write-only>",
+      "to": "[REDACTED]"
+    }
+  },
+  "mode": "plan",
+  "project_ref": "uzeagzcyvxzrpjgrhaql",
+  "turnstile_test_keys": true
+}

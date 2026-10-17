@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "mode": "read-only",
+  "base_origin": "https://rpg-ia-master-staging.vercel.app",
+  "expected_git_sha": "871238cf7300d6cc596bc454837c38a1d44ff2ab",
+  "checks": {
+    "health": "passed",
+    "profile_hardened": "passed",
+    "git_sha": "871238cf7300d6cc596bc454837c38a1d44ff2ab",
+    "/auth/config": "passed",
+    "/data/options": "passed",
+    "/data/map": "passed"
+  },
+  "generated_at": "2026-10-17T12:44:20.880970+00:00"
+}

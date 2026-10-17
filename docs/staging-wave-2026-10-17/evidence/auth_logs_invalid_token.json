@@ -1,0 +1,7 @@
+{
+  "source": "Supabase MCP query_logs(auth_logs), 2026-10-17T12:55Z-13:00Z, grouped by path/method/status",
+  "invalid_access_cookie_request_at": "~12:58:50Z (security_wave_smoke_run1, spec219_invalid_token -> API 401)",
+  "gotrue_user_calls": {"GET /user 200": 3, "GET /user 401": 0},
+  "conclusion": "the malformed access token never reached GoTrue (rejected locally by the session boundary)",
+  "other_rows": {"POST /token 400": 11, "POST /token 200": 3, "POST /admin/users 200": 4, "DELETE /admin/users/<id> 200": 4, "POST /logout 204": 1}
+}

@@ -1,0 +1,158 @@
+{
+  "at": "2026-10-17T12:58:07.856855+00:00",
+  "base": "https://rpg-ia-master-staging.vercel.app",
+  "caller_ip_pseudonym": "650ecd10c6f2b575",
+  "checks": {
+    "spec219_chronicle_search": {
+      "codes": [
+        401,
+        401,
+        401,
+        401,
+        401,
+        401,
+        401,
+        401,
+        401,
+        401,
+        401
+      ],
+      "ok": false,
+      "retry_after": null
+    },
+    "spec219_daily_counter": {
+      "ok": false,
+      "rows": [
+        {
+          "class": "llm_aux",
+          "count": 1
+        },
+        {
+          "class": "turn",
+          "count": 17
+        }
+      ]
+    },
+    "spec219_invalid_token": {
+      "ok": true,
+      "status": 401
+    },
+    "spec219_other_owner_same_ip": {
+      "new_game": 401,
+      "ok": false,
+      "status": 401
+    },
+    "spec219_owner_turn_minute": {
+      "body": null,
+      "codes": [
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        503,
+        503,
+        503,
+        503
+      ],
+      "elapsed_s": 23.5,
+      "new_game": 200,
+      "ok": false,
+      "retry_after": null
+    },
+    "spec219_r5_ip_bucket": {
+      "bucket_classes": [
+        "embedding",
+        "export",
+        "llm_aux",
+        "quote",
+        "read_auth",
+        "stt",
+        "turn"
+      ],
+      "ok": true
+    },
+    "spec220_lockout": {
+      "codes": [
+        401,
+        401,
+        401,
+        401,
+        401,
+        401,
+        401,
+        401,
+        401,
+        401,
+        429
+      ],
+      "ok": true,
+      "retry_after": "898"
+    },
+    "spec220_logout_revokes_refresh": {
+      "had_refresh_cookie": true,
+      "login": 200,
+      "logout": 204,
+      "ok": true,
+      "refresh_with_old_token": 401
+    },
+    "spec222_export": {
+      "has_owner_daily_counters": false,
+      "ok": false,
+      "purchase_token_key_present": false,
+      "reauth": 403,
+      "status": 401,
+      "tables": []
+    },
+    "spec236_usage_facts": {
+      "ok": true,
+      "rows": [
+        {
+          "cost": "0.000000000",
+          "cost_basis": "failed_no_usage",
+          "counts_as_spend": false,
+          "n": 22,
+          "outcome": "invoke_error"
+        },
+        {
+          "cost": "23.000000000",
+          "cost_basis": "estimated",
+          "counts_as_spend": true,
+          "n": 23,
+          "outcome": "response"
+        },
+        {
+          "cost": "0.003604460",
+          "cost_basis": "token_priced",
+          "counts_as_spend": true,
+          "n": 20,
+          "outcome": "success"
+        }
+      ]
+    }
+  },
+  "cleanup": {
+    "game_A": 1,
+    "users": {
+      "A": 200,
+      "B": 200,
+      "K": 200,
+      "L": 200
+    }
+  },
+  "deployed_git_sha": "871238cf7300d6cc596bc454837c38a1d44ff2ab",
+  "ok": false,
+  "sentinel": "SENTINELA8FA450773ED3"
+}

@@ -1,10 +1,15 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
-> **SPEC-224 `in-progress` (17/10):** RLS efetivo — request de usuário roda como `rpg_api` com o owner do principal (`set_config` de role+claims por transação, +0,7–1 ms local), sistema/worker no pool `rpg_admin` (`RPG_ADMIN_DATABASE_URL`, boot `hosted*` fail-closed), efeitos de wallet no commit via `system_scope`, Storage sem policies de cliente; revisão Astra APPROVED (SQL direto em 41 tabelas sem vazamento; 4 correções). **Falta:** depende do merge da SPEC-218; aplicar migration `20261017120000` no staging, `runtime_role.py --role rpg_admin --apply` + re-rotação do `rpg_runtime`, `vercel_env.py` antes do deploy, `two_user_smoke` + log `role=rpg_api`, p95 do turno ≤ +5%, Security Advisor sem ERROR, fechar R-05.
-
-> **SPEC-219 `in-progress` (17/10):** cota por owner + anti-abuso — classes de rota com limite por IP e por owner (`services/abuse_policy.py`), cota diária de turnos 600/owner antes do grafo (replay por `action_id` não consome; POST/SSE 1×), balde `authfail` 60/15 min antes do verificador, pré-validação local do JWT + cache de 20 s do GoTrue (sessão no banco checada a cada request), IP real via `x-vercel-forwarded-for`/hops confiáveis, teto de 3 ordens abertas no checkout, cap de texto opt-in; revisão Sol APPROVED com 4 correções (export/exclusão degradam sem a migration, payload JWT aninhado não vira 500, cache não estende o `exp`, sem cookie não consome `authfail`). **Falta:** SPEC-218 aterrissar, aplicar `20261017110000_owner_daily_counters.sql` no staging, medição R5 do header de IP na Vercel e smoke §6.
-
-> **SPEC-236 `in-progress` (17/10):** FinOps/wallet/jobs corrigidos (falha sem usage custa 0 e sai do gasto, teto diário sem override cross-day, varredura de reservas órfãs, STT 4xx libera, refund parcial pré-crédito credita, poison jobs `dead`); revisão Sol+Astra APPROVED_WITH_FIXES (código degrada sem a migration, migration renomeada `20261017100000`, backoff no revive de job). **Falta:** aplicar a migration no staging + smoke real §6.
+> **17/10 — onda de staging (security/finops) aplicada no staging, branch `staging-wave` (não mergeada):**
+> 5 migrations no Supabase staging (28/28 em sync), `rpg_admin` + `rpg_runtime` rotacionados, RLS por request
+> efetivo, staging saiu do MockLLM para **Groq real** (free tier 8k TPM: muitos turnos caem na narração de erro),
+> `RPG_TELEMETRY_SECRET` e teto diário 5 BRL (cap de texto desligado — ver achado Jina). Smokes verdes:
+> post-deploy, e2e SSE ×5, sse_disconnect, dois usuários, logout/lockout, 429 por owner/turno e busca,
+> sentinela fora dos logs, export. Advisor 0 ERROR. **SPEC-220 e SPEC-224 `done`**; 218/219/222/236
+> `in-progress` (checklist de release; R5 2ª rede; compra fake/arte + texto legal; smoke §6 literal);
+> 213 com migration aplicada (segue `inline`). Defeito corrigido: cota diária da 219 falhava aberta sob o role
+> da 224. **Aberto:** rate card sem Jina → cada embedding conta US$ 1 de gasto estimado. Detalhes e rollback:
+> [docs/staging-wave-2026-10-17/README.md](docs/staging-wave-2026-10-17/README.md).
 
 > **15–16/10 — 38 specs `draft` aguardando aprovação (SPEC-199–236); ordem em `proximas-specs/ORDEM_SPECS_2026-10-15.md`.**
 > 199–217 = onda "beta desktop" (pacote `proximas-specs/`, revisada por Opus); 218–225 = auditoria de segurança

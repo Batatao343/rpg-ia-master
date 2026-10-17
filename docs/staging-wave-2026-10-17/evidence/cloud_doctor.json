@@ -1,0 +1,33 @@
+{
+  "checks": {
+    "DATABASE_URL": "present",
+    "RPG_ADMIN_DATABASE_URL": "present",
+    "RPG_AUTH_MODE": "valid",
+    "RPG_BIND_HOST": "present",
+    "RPG_BLOB_STORE": "valid",
+    "RPG_GAME_STORE": "valid",
+    "RPG_JOB_QUEUE": "valid",
+    "RPG_MEMORY_STORE": "valid",
+    "RPG_RATE_LIMIT_STORE": "valid",
+    "RPG_RUNTIME_CATALOG": "valid",
+    "SUPABASE_PUBLISHABLE_KEY": "present",
+    "SUPABASE_SERVICE_ROLE_KEY": "present",
+    "SUPABASE_URL": "present",
+    "dsn_shape": "valid",
+    "profile_contract": "valid",
+    "request_rls": "on",
+    "runtime_db_role": "least_privilege",
+    "security:FORBIDDEN_IN_HOSTED": "present",
+    "security:LLM_PROVIDER": "present",
+    "security:RPG_AUTH_CAPTCHA_REQUIRED": "present",
+    "security:RPG_AUTH_EMAIL_CONFIRMATION_REQUIRED": "present",
+    "security:RPG_COOKIE_SECURE": "present",
+    "security:RPG_CORS_ORIGINS": "present",
+    "security:RPG_NO_MOCK": "present",
+    "security:RPG_RATE_LIMIT": "present",
+    "security:RPG_SESSION_SECRET": "present",
+    "security:RPG_TELEMETRY_SECRET": "present"
+  },
+  "profile": "hosted-supabase",
+  "status": "ok"
+}

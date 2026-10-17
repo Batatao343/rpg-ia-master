@@ -1,6 +1,6 @@
 # SPEC-220 — Sessão: revogação no logout, erros 401 consistentes, lockout por e-mail e OIDC
 
-> **Status:** `in-progress` (implementação + gates locais + revisão Sol APPROVED; faltam o smoke staging §6 após deploy e a aplicação da `SESSION_POLICY` no Auth remoto pelo dono)
+> **Status:** `done` (17/10: `SESSION_POLICY` aplicada no Auth do staging — senha mín. 10, reautenticação p/ troca de senha, allow-list sem curinga; smoke staging verde: logout sem access revoga o refresh (401), lockout 429 na 11ª senha errada. Não exercido no staging: e-mail bombing de IPs distintos (1 rede só; coberto offline/GoTrue local). Ver `docs/staging-wave-2026-10-17/README.md`)
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** nenhuma · evolui SPEC-190/193 `done`; usa o `client_ip` da SPEC-219 se já existir, mas NÃO a exige (índice corrigido) (ordem final 2026-10-15)
 > **Desbloqueia:** gate da SPEC-197; ativação futura de OIDC (ordem final 2026-10-15)
@@ -102,7 +102,7 @@ Objetivo: "Sair" sempre encerra a sessão server-side (refresh incluído); rotas
 
 - [x] Etapa 0 vermelha no HEAD, verde ao final; R1–R7 cobertos; `uv run pytest` verde; GoTrue local (`-m infra_local`) verde no caso de logout.
 - [x] Nenhuma rota `/auth/*` devolve 5xx para entrada do cliente (teste fuzz leve: cookies/headers vazios, inválidos, CSRF errado).
-- [ ] Smoke staging: login → esperar/forçar expiração do access (ou apagar o cookie `rpg_access` no DevTools) → "Sair" → `POST /auth/refresh` manual com o refresh antigo = 401.
+- [x] Smoke staging: login → esperar/forçar expiração do access (ou apagar o cookie `rpg_access` no DevTools) → "Sair" → `POST /auth/refresh` manual com o refresh antigo = 401. **Staging 17/10:** login 200 → cookie `rpg_access` apagado → `POST /auth/refresh/logout` 204 → `POST /auth/refresh` com o refresh antigo = 401; lockout: 10×401 + 429 (`Retry-After` 898).
 - [x] 5 logins corretos seguidos do mesmo e-mail não geram 429; 11 senhas erradas geram 429; login correto depois de 3 erros zera o contador. (offline + GoTrue local; staging pendente)
 - [x] Revisão Sol independente APPROVED (2026-10-16, com correções — ver §10 e `handoffs/SPEC-220-SOL-independent-review.md`).
 

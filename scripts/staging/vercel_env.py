@@ -53,6 +53,14 @@ PREVIEW_LITERALS = {"RPG_RUNTIME_PROFILE": "hosted-supabase", "RPG_BIND_HOST": "
 # Nomes que NAO podem continuar no projeto (o upsert nao apaga): RPG_FORCE_MOCK e proibido em hosted
 # (SPEC-218 boot fail-closed) e LLM_PROVIDER forcaria um provider unico fora de ROUTES.
 REMOVED_NAMES = ("RPG_FORCE_MOCK", "LLM_PROVIDER", "RPG_DAILY_SPEND_CAP_TEXT")
+# Pares exclusivos do modo RLS (SPEC-224): ao alternar rollback <-> RLS o upsert deixaria a variavel do
+# outro modo para tras (ex.: RPG_REQUEST_RLS=off sobrevivendo a volta ao RLS efetivo).
+MODE_EXCLUSIVE = ("RPG_REQUEST_RLS", "RPG_ADMIN_DATABASE_URL")
+
+
+def stale_names(production: Mapping[str, str]) -> tuple[str, ...]:
+    """Variaveis a apagar do projeto: as removidas + as do outro modo RLS que nao estao em ``production``."""
+    return REMOVED_NAMES + tuple(n for n in MODE_EXCLUSIVE if n not in production)
 # SPEC-194: HMAC key for Play obfuscated account ids (>=32 chars). Pushed only when present in the env files.
 # SPEC-197 R6 voice: Groq only (no OPENAI_API_KEY => no paid STT fallback candidate).
 OPTIONAL_SECRET_FROM_FILE = ("RPG_PLAY_ACCOUNT_KEY",)
@@ -159,7 +167,7 @@ def main(argv: list[str] | None = None) -> int:
     secrets = frozenset(SECRET_FROM_FILE) | frozenset(OPTIONAL_SECRET_FROM_FILE) | frozenset(RLS_SECRETS)
     print("production:", ", ".join(sorted(production)))
     print("preview:", ", ".join(sorted(preview)), "(sem segredos de DB/serviço)")
-    print("a remover:", ", ".join(REMOVED_NAMES))
+    print("a remover:", ", ".join(stale_names(production)))
     if args.dry_run:
         return 0
     token = files.get("VERCEL_TOKEN") or os.environ.get("VERCEL_TOKEN", "")
@@ -168,7 +176,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     push(token, link["projectId"], link["orgId"], "production", production, secrets)
     push(token, link["projectId"], link["orgId"], "preview", preview, secrets)
-    removed = remove(token, link["projectId"], link["orgId"], REMOVED_NAMES)
+    removed = remove(token, link["projectId"], link["orgId"], stale_names(production))
     print("removidas:", ", ".join(removed) or "nenhuma")
     print("ok: variáveis enviadas")
     return 0
