@@ -112,6 +112,8 @@ export function WorldMap({
             key={loc.id}
             className={cls}
             data-danger={danger}
+            data-effect="map.marker"
+            data-effect-state={isCurrent ? "current" : known ? "travelable" : "fog"}
             style={{ left: loc.coords.x + "%", top: loc.coords.y + "%" }}
             title={title}
             aria-label={known ? `${loc.name}${isCurrent ? " (local atual)" : ""}` : "Região inexplorada"}

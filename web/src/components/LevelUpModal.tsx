@@ -132,7 +132,7 @@ export function LevelUpModal({ player, busy, onChoose, onLater }: Props) {
         )}
 
         <div className="lvlup__actions">
-          <button className="btn" type="button" onClick={onLater}
+          <button className="btn btn--ghost" type="button" onClick={onLater}
             disabled={busy || isSubclass}>Depois</button>
           <button className="btn btn--primary" type="button" disabled={busy || !picked}
             onClick={() => picked && onChoose(choice.id, picked)}>

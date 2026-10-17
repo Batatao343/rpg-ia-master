@@ -35,10 +35,20 @@ export default defineConfig({
     launchOptions: { executablePath: localChromium() },
   },
   webServer: {
-    command: "node ./node_modules/vite/bin/vite.js --host 127.0.0.1 --port 4173",
+    // RPG_E2E_SERVER=preview serve web/dist (medição de performance contra o build real).
+    command: process.env.RPG_E2E_SERVER === "preview"
+      ? "node ./node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 4173"
+      : "node ./node_modules/vite/bin/vite.js --host 127.0.0.1 --port 4173",
     url: "http://127.0.0.1:4173",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    // SPEC-208: só os efeitos precisam de movimento ligado; o resto da suíte segue em `reduce`.
+    { name: "chromium-motion", testMatch: /effects\.spec\.ts/,
+      use: { ...devices["Desktop Chrome"], reducedMotion: "no-preference",
+        // evidência de aceite (smoke §6): vídeo + trace só quando pedido
+        ...(process.env.RPG_EFFECTS_EVIDENCE ? { video: { mode: "on" as const, size: { width: 960, height: 600 } }, trace: "on" as const } : {}) } },
+  ],
 });

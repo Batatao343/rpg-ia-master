@@ -1,4 +1,5 @@
 import { useRef, type KeyboardEvent, type ReactNode } from "react";
+import { Selectable } from "../design/primitives";
 
 export interface TabItem<T extends string> {
   id: T;
@@ -53,7 +54,7 @@ export function RovingTablist<T extends string>({ items, selected, onSelect, lab
             className={[tabClassName, active ? "is-active" : "", item.className].filter(Boolean).join(" ")}
             onClick={() => onSelect(item.id)}
           >
-            {item.label}
+            <Selectable selected={active} layoutId={`${idPrefix}-indicator`}>{item.label}</Selectable>
           </button>
         );
       })}

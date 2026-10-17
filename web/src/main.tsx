@@ -3,6 +3,9 @@ import { createRoot } from "react-dom/client";
 import "./styles.css";
 import "./workspace.css";
 import { App } from "./App";
+import { initEffects } from "./design/motion";
+
+initEffects();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

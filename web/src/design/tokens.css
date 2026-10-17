@@ -1,0 +1,45 @@
+/* SPEC-208 R2: tokens de motion/cor/elevação (aditivos; nenhum token legado é renomeado).
+   Espelho em JS: tokens.ts (paridade testada em tests/design.test.mjs).
+   Faixas: instant <= 80ms · fast 120-160ms · base 200-280ms · slow <= 450ms. */
+:root {
+  /* duração */
+  --dur-instant: 80ms;
+  --dur-fast: 140ms;
+  --dur-base: 240ms;
+  --dur-slow: 420ms;
+
+  /* easing (--ease legado segue valendo; --ease-out é alias) */
+  --ease-out: var(--ease);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring-soft: cubic-bezier(0.34, 1.3, 0.64, 1);
+
+  /* elevação em degraus */
+  --elev-0: none;
+  --elev-1: 0 6px 18px -12px oklch(0 0 0 / 0.85);
+  --elev-2: 0 12px 28px -14px oklch(0 0 0 / 0.9), 0 0 0 1px var(--line-soft);
+  --elev-3: 0 18px 40px -16px oklch(0 0 0 / 0.95), 0 0 0 1px var(--accent);
+
+  /* estados de interação (derivados do acento/linha) */
+  --state-hover: color-mix(in oklch, var(--accent) 14%, transparent);
+  --state-pressed: color-mix(in oklch, var(--accent) 24%, transparent);
+  --state-selected: color-mix(in oklch, var(--accent) 18%, transparent);
+  --state-armed: color-mix(in oklch, var(--accent) 34%, transparent);
+  --state-disabled: color-mix(in oklch, var(--line-soft) 60%, transparent);
+
+  /* foco: valor de `outline` (independe de hover) */
+  --focus-ring: 2px solid var(--accent);
+
+  /* gaps da SPEC-201 (tokens referenciados e inexistentes) */
+  --danger-dim: oklch(0.30 0.10 25);
+  --ink-soft: oklch(0.82 0.022 82);
+}
+
+/* R10: kill switch (?effects=off | localStorage rpg.effects=off) — tudo estático */
+:root[data-effects="off"] *,
+:root[data-effects="off"] *::before,
+:root[data-effects="off"] *::after {
+  animation: none !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+:root[data-effects="off"] .ember-canvas { display: none; }

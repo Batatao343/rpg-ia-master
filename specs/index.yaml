@@ -3672,7 +3672,7 @@ specs:
   lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
 - id: SPEC-208
   slug: design-system-efeitos-implementacao
-  status: draft
+  status: done
   path: specs/SPEC-208-design-system-efeitos-implementacao.md
   created_commit: null
   created_at: '2026-10-15'

@@ -228,7 +228,10 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
                 <article
                   key={full.id}
                   className="card"
+                  data-effect="choice.select"
+                  data-effect-state={race === full.name ? "selected" : "idle"}
                   data-selected={race === full.name}
+                  onClick={() => setRace(full.name)}
                 >
                   <VisualArtwork asset={opts.visuals?.races?.[full.id] ?? null}
                     name={card?.name || full.name} className="card__art" variant="card" />
@@ -260,7 +263,10 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
                   <article
                     key={cls}
                     className="card"
+                    data-effect="choice.select"
+                    data-effect-state={className === cls ? "selected" : "idle"}
                     data-selected={className === cls}
+                    onClick={() => setClassName(cls)}
                   >
                     <VisualArtwork asset={opts.visuals?.classes?.[cls] ?? null}
                       name={cls} className="card__art" variant="card" />
@@ -289,6 +295,8 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
                   key={rid}
                   type="button"
                   className="card"
+                  data-effect="choice.select"
+                  data-effect-state={region === card.name ? "selected" : "idle"}
                   aria-pressed={region === card.name}
                   onClick={() => setRegion(card.name)}
                 >

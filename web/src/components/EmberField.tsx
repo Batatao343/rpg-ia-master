@@ -5,8 +5,8 @@ export function EmberField() {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
+    // ember.pause (M25, R9/R10): reage a preferência de movimento, aba oculta e kill switch.
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const canvas = ref.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -23,7 +23,7 @@ export function EmberField() {
       w = canvas!.clientWidth; h = canvas!.clientHeight;
       canvas!.width = w * dpr; canvas!.height = h * dpr;
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const count = Math.round((w * h) / 42000); // densidade modesta
+      const count = Math.min(40, Math.round((w * h) / 60000)); // densidade modesta + teto (R9)
       parts = Array.from({ length: count }, () => spawn(true));
     }
     function spawn(anywhere: boolean): P {
@@ -38,7 +38,17 @@ export function EmberField() {
       };
     }
 
-    function frame() {
+    // R9: não anima atrás do chat durante o combate (a leitura/mira tem prioridade).
+    const inCombat = () => !!document.querySelector(".play.is-combat");
+    const canRun = () => !mq.matches && document.visibilityState !== "hidden"
+      && document.documentElement.dataset.effects !== "off" && !inCombat();
+    let lastDraw = 0;
+    let poll = 0;
+    function frame(now: number) {
+      if (now - lastDraw < 33) { raf = requestAnimationFrame(frame); return; } // ~30 fps
+      lastDraw = now;
+      if (!canRun()) { raf = 0; ctx!.clearRect(0, 0, w, h); poll = window.setTimeout(sync, 500); return; }
+      canvas!.dataset.frames = String((Number(canvas!.dataset.frames) || 0) + 1);
       ctx!.clearRect(0, 0, w, h);
       for (const p of parts) {
         p.y -= p.vy;
@@ -49,20 +59,29 @@ export function EmberField() {
         ctx!.beginPath();
         ctx!.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx!.fillStyle = `oklch(0.78 0.13 70 / ${(p.a * flick).toFixed(3)})`;
-        ctx!.shadowBlur = 6;
-        ctx!.shadowColor = "oklch(0.72 0.12 70 / 0.6)";
         ctx!.fill();
       }
-      ctx!.shadowBlur = 0;
       raf = requestAnimationFrame(frame);
+    }
+
+    function sync() {
+      clearTimeout(poll);
+      if (canRun()) { if (!raf) raf = requestAnimationFrame(frame); }
+      else { cancelAnimationFrame(raf); raf = 0; ctx!.clearRect(0, 0, w, h); poll = window.setTimeout(sync, 500); }
     }
 
     resize();
     window.addEventListener("resize", resize);
-    raf = requestAnimationFrame(frame);
+    document.addEventListener("visibilitychange", sync);
+    mq.addEventListener?.("change", sync);
+    canvas.dataset.effect = "ember.pause";
+    sync();
     return () => {
       cancelAnimationFrame(raf);
+      clearTimeout(poll);
       window.removeEventListener("resize", resize);
+      document.removeEventListener("visibilitychange", sync);
+      mq.removeEventListener?.("change", sync);
     };
   }, []);
 

@@ -43,7 +43,7 @@
 .ws--split .ws-ctx-slot { grid-area: ctx; }
 .ws-composer { grid-area: composer; min-width: 0; }
 @media (prefers-reduced-motion: no-preference) {
-  .ws--split:not(.is-dragging) { transition: grid-template-columns 0.22s var(--ease); }
+  .ws--split:not(.is-dragging) { transition: grid-template-columns var(--dur-base) var(--ease-out); }
 }
 
 .ws-chat { min-width: 0; min-height: 0; display: flex; flex-direction: column; }

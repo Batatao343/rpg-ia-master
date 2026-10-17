@@ -1,9 +1,10 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { getCodex } from "../api";
 import { mdLite } from "../lib";
 import type { KnowledgeNote, KnowledgeStamp, PlayerCodex } from "../types";
 import { categoryCount, knowledgeBadgeText, knowledgeTooltip } from "../codexKnowledge";
 import { RovingTablist } from "../workspace/RovingTablist";
+import { ArrivalLi, ArrivalsProvider, NO_ARRIVALS } from "../design/primitives";
 
 type Category = "locations" | "factions" | "characters" | "creatures" | "secrets";
 
@@ -54,20 +55,40 @@ export interface CodexSection {
 }
 
 /** Codex do jogador (`GET /game/codex`) — compartilhado pelas abas Codex e Bestiário. */
+export function codexEntryIds(codex: PlayerCodex): Set<string> {
+  const ids = new Set<string>();
+  codex.locations.forEach((x) => ids.add(`loc:${x.id}`));
+  codex.factions.forEach((x) => ids.add(`fac:${x.id}`));
+  codex.characters.forEach((x) => ids.add(`chr:${x.name}`));
+  codex.creatures.forEach((x) => ids.add(`crt:${x.id}`));
+  codex.secrets.forEach((x) => ids.add(`sec:${x.turn}:${x.fact}`));
+  return ids;
+}
+
 export function usePlayerCodex(gameId: string | null | undefined, turnCount: number | undefined, open: boolean) {
   const [codex, setCodex] = useState<PlayerCodex | null>(null);
   const [loading, setLoading] = useState(false);
+  // codex.entry.reveal (M24): ids que chegaram do servidor DEPOIS da primeira leitura deste jogo.
+  const [arrivals, setArrivals] = useState<ReadonlySet<string>>(NO_ARRIVALS);
+  const known = useRef<{ gameId: string; ids: Set<string> } | null>(null);
   useEffect(() => {
     if (!open || !gameId) return;
     let active = true;
     setLoading(true);
     getCodex(gameId)
-      .then((value) => { if (active) setCodex(value); })
+      .then((value) => {
+        if (!active) return;
+        const ids = codexEntryIds(value);
+        const prev = known.current?.gameId === gameId ? known.current.ids : null;
+        setArrivals(prev ? new Set([...ids].filter((id) => !prev.has(id))) : NO_ARRIVALS);
+        known.current = { gameId, ids };
+        setCodex(value);
+      })
       .catch(() => { if (active) setCodex(null); })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, [open, gameId, turnCount]);
-  return { codex, loading };
+  return { codex, loading, arrivals };
 }
 
 export function CodexTab({
@@ -91,7 +112,7 @@ export function CodexTab({
   section?: string;
   onSection?: (id: string) => void;
 }) {
-  const { codex, loading } = usePlayerCodex(gameId, turnCount, open && !unavailable);
+  const { codex, loading, arrivals } = usePlayerCodex(gameId, turnCount, open && !unavailable);
   const categories = CATEGORIES.filter(([id]) => !excludeCategories.includes(id));
   const order: string[] = [];
   for (const [id] of categories) {
@@ -126,6 +147,7 @@ export function CodexTab({
       <RovingTablist items={items} selected={category} onSelect={setCategory}
         label="Seções do Codex" idPrefix="codex" className="codex-cats" tabClassName="codex-cat" controlsActiveOnly />
       <div role="tabpanel" id={`codex-panel-${category}`} aria-labelledby={`codex-tab-${category}`} className="codex-section">
+        <ArrivalsProvider value={arrivals}>
         {extra ? extra.render(codex) : loading && !codex ? (
           <p className="combat-empty">Consultando os registros da jornada…</p>
         ) : !codex ? (
@@ -133,6 +155,7 @@ export function CodexTab({
         ) : (
           <CodexCategory codex={codex} category={category as Category} />
         )}
+        </ArrivalsProvider>
       </div>
     </div>
   );
@@ -143,7 +166,7 @@ export function CreatureList({ creatures }: { creatures: PlayerCodex["creatures"
   return (
     <ul className="codex-list codex-list--beasts">
       {creatures.map((cr) => (
-        <li key={cr.id} className={"codex-entry codex-beast codex-beast--tier" + cr.tier}>
+        <ArrivalLi key={cr.id} id={`crt:${cr.id}`} className={"codex-entry codex-beast codex-beast--tier" + cr.tier}>
           <div className="codex-beast__top">
             <span className="codex-beast__seal" title={cr.tier_name}>{TIER_ROMAN[cr.tier]}</span>
             <div>
@@ -164,7 +187,7 @@ export function CreatureList({ creatures }: { creatures: PlayerCodex["creatures"
             <p className="codex-entry__meta">Loot: {cr.loot.join(", ")}</p>
           )}
           <KnowledgeNotes notes={cr.notes} />
-        </li>
+        </ArrivalLi>
       ))}
     </ul>
   );
@@ -177,13 +200,13 @@ export function CodexCategory({ codex, category }: { codex: PlayerCodex; categor
         codex.locations.length ? (
           <ul className="codex-list">
             {codex.locations.map((loc) => (
-              <li key={loc.id} className="codex-entry">
+              <ArrivalLi key={loc.id} id={`loc:${loc.id}`} className="codex-entry">
                 <p className="codex-entry__name">{loc.name} <KnowledgeBadge stamp={loc.knowledge} /></p>
                 {loc.body && (
                   <p className="codex-entry__body" dangerouslySetInnerHTML={{ __html: mdLite(loc.body) }} />
                 )}
                 <KnowledgeNotes notes={loc.notes} />
-              </li>
+              </ArrivalLi>
             ))}
           </ul>
         ) : (
@@ -195,7 +218,7 @@ export function CodexCategory({ codex, category }: { codex: PlayerCodex; categor
         codex.factions.length ? (
           <ul className="codex-list">
             {codex.factions.map((f) => (
-              <li key={f.id} className="codex-entry">
+              <ArrivalLi key={f.id} id={`fac:${f.id}`} className="codex-entry">
                 <p className="codex-entry__name">{f.name} <KnowledgeBadge stamp={f.knowledge} /></p>
                 <p className="codex-entry__meta">
                   {f.knows_goal ? f.goal : "Plano desconhecido — descubra com quem sabe."}
@@ -204,7 +227,7 @@ export function CodexCategory({ codex, category }: { codex: PlayerCodex; categor
                   <p className="codex-entry__body" dangerouslySetInnerHTML={{ __html: mdLite(f.body) }} />
                 )}
                 <KnowledgeNotes notes={f.notes} />
-              </li>
+              </ArrivalLi>
             ))}
           </ul>
         ) : (
@@ -216,7 +239,7 @@ export function CodexCategory({ codex, category }: { codex: PlayerCodex; categor
         codex.characters.length ? (
           <ul className="codex-list">
             {codex.characters.map((c, i) => (
-              <li key={i} className={"codex-entry" + (c.knowledge_source === "mentioned" ? " codex-entry--heard" : "")}>
+              <ArrivalLi key={i} id={`chr:${c.name}`} className={"codex-entry" + (c.knowledge_source === "mentioned" ? " codex-entry--heard" : "")}>
                 <p className="codex-entry__name">
                   {c.name}
                   {c.knowledge_source === "mentioned" && <span className="codex-entry__hint"> · ouviu falar</span>}
@@ -234,7 +257,7 @@ export function CodexCategory({ codex, category }: { codex: PlayerCodex; categor
                   <p className="codex-entry__body" dangerouslySetInnerHTML={{ __html: mdLite(c.body) }} />
                 )}
                 <KnowledgeNotes notes={c.notes} />
-              </li>
+              </ArrivalLi>
             ))}
           </ul>
         ) : (
@@ -248,11 +271,11 @@ export function CodexCategory({ codex, category }: { codex: PlayerCodex; categor
         codex.secrets.length ? (
           <ul className="codex-list">
             {codex.secrets.map((s, i) => (
-              <li key={i} className="codex-entry">
+              <ArrivalLi key={i} id={`sec:${s.turn}:${s.fact}`} className="codex-entry">
                 <p className="codex-entry__body">{s.fact}</p>
                 <p className="codex-entry__meta">revelado no turno {s.turn} <KnowledgeBadge stamp={s.knowledge} /></p>
                 <KnowledgeNotes notes={s.notes} />
-              </li>
+              </ArrivalLi>
             ))}
           </ul>
         ) : (

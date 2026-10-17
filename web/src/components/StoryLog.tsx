@@ -1,5 +1,4 @@
 import { Fragment, memo, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { motion } from "motion/react";
 import { mdLite, roleLabel } from "../lib";
 import { useTypewriter } from "../hooks/useTypewriter";
 import type { LogEntry } from "../types";
@@ -22,6 +21,9 @@ export const StoryLog = memo(function StoryLog({ entries, thinking, thinkingLabe
   const storyRef = useRef<HTMLElement>(null);
   const position = useRef({ top: initialScroll?.scrollTop ?? null, atBottom: initialScroll?.atBottom ?? true });
   const lastEntryId = useRef<number | null>(null);
+  // M09 (SPEC-208): nenhuma entrada anima — nem histórico/reload nem o bloco novo (o typewriter e o
+  // cursor já mostram o que chega). A fade do bloco novo foi medida e REJEITADA: sob CPU 4x somava ~1
+  // vsync ao p95 de frame do fluxo de chat (docs/spec208/README.md). Sem `filter`/`blur` em lista.
 
   // Restaura a posição ao montar e sempre que a superfície volta a aparecer.
   useLayoutEffect(() => {
@@ -104,12 +106,7 @@ function LogEntryItem({ entry }: { entry: LogEntry }) {
     || (entry.role === "narrator" && (entry.type !== "STORY" || entry.speaker?.kind === "npc"));
 
   return (
-    <motion.article
-      className={"msg msg--" + (entry.role === "player" ? "player" : entry.type.toLowerCase())}
-      initial={{ opacity: 0, y: 14, filter: "blur(3px)" }}
-      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-    >
+    <article className={"msg msg--" + (entry.role === "player" ? "player" : entry.type.toLowerCase())}>
       {entry.visual && <VisualArtwork asset={entry.visual.asset}
         name={entry.visual.subject_name} caption={entry.visual.caption}
         className="msg__visual" />}
@@ -129,6 +126,6 @@ function LogEntryItem({ entry }: { entry: LogEntry }) {
             {costText}{!settled ? " · Sem débito em Estilhas" : ""}
           </span>
         </span>}
-    </motion.article>
+    </article>
   );
 }

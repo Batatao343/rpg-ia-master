@@ -30,7 +30,7 @@ export function TargetChip({ p, aim, onPick }: {
         <strong>{p.name}</strong>
         {p.vit != null && p.max != null && <span className="tchip__vit">{`${p.vit}/${p.max}`}</span>}
       </span>
-      {pct !== null && <span className="tchip__bar" aria-hidden="true"><span style={{ width: pct + "%" }} /></span>}
+      {pct !== null && <span className="tchip__bar" aria-hidden="true" data-effect="hit.feedback" data-pct={pct}><span style={{ transform: `scaleX(${pct / 100})` }} /></span>}
       <span className="tchip__meta">
         {p.role === "enemy" && (p.esquiva != null ? `Esquiva ${p.esquiva}` : "Esquiva ?")}
         {p.role === "enemy" && p.protecao != null ? ` · Proteção ${p.protecao}` : ""}
@@ -46,11 +46,13 @@ export function TargetChip({ p, aim, onPick }: {
   );
   const cls = `tchip tchip--${p.role}${aim ? (aim.valid ? " is-valid" : " is-invalid") : ""}`;
   if (!aim) return <div className={cls} data-participant={p.id}>{body}</div>;
+  const effectState = aim.valid ? "valid" : "invalid";
   const label = aim.valid
     ? `Alvo: ${p.name}${p.vit != null ? `, Vitalidade ${p.vit} de ${p.max}` : ""}`
     : `${p.name}: alvo inválido${aim.reason ? ` — ${aim.reason}` : ""}`;
   return (
     <button type="button" className={cls} data-target={p.id} data-aim-safe aria-label={label}
+      data-effect="target.valid" data-effect-state={effectState}
       aria-disabled={!aim.valid || undefined} title={aim.valid ? undefined : aim.reason}
       onClick={() => { if (aim.valid) onPick(p.id); }}>
       {body}

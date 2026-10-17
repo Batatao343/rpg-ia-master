@@ -6,6 +6,7 @@ import { OutcomeToast } from "../components/OutcomeToast";
 import { OnboardingHint, onboardingDismissed } from "../components/OnboardingHint";
 import { useVoiceInput } from "../voice/useVoiceInput";
 import { getChatSession, setChatSession } from "./chatSessionStore";
+import { Pressable } from "../design/primitives";
 
 /** SPEC-204: superfície do chat — arte de cena, atalhos de lugar e a narrativa. */
 export function ChatSurface({ data, log, thinking, thinkingLabel, busy, blocked, active, onAction }: {
@@ -130,9 +131,10 @@ export const Composer = forwardRef<HTMLInputElement, {
         {voice.phase === "recording" ? "Parar" : "Voz"}
       </button>
       {/* SPEC-201 A13: estado pendente com texto e aria-busy, não só "…". */}
-      <button className="btn btn--primary" type="submit" disabled={busy || blocked} aria-label="Agir" aria-busy={busy}>
-        {busy ? "Enviando…" : fighting ? "Lutar" : "Agir"}
-      </button>
+      <Pressable variant="primary" type="submit" effect="chat.pending" disabled={busy || blocked} aria-label="Agir"
+        pending={busy} pendingLabel="Enviando…">
+        {fighting ? "Lutar" : "Agir"}
+      </Pressable>
       </div>
       <div className="voice-status" data-voice-state={voice.phase}>
         <span role={voice.phase === "error" ? "alert" : "status"} aria-live="polite" aria-atomic="true">

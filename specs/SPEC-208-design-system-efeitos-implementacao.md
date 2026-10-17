@@ -1,7 +1,7 @@
 # SPEC-208 — Design system de efeitos: implementação por iterações verticais
 
-> **Status:** `draft`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `done`
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-201 `done` (matriz de efeitos), SPEC-204 `done` (shell), SPEC-205 `done` (gesto) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-209, SPEC-210, SPEC-211 (ordem final 2026-10-15)
 > **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 05
@@ -145,20 +145,20 @@ Adicionar biblioteca só com: justificativa medida de que `motion`+CSS não reso
 2. `/wrap-up`: `uv run pytest` offline verde (nenhum backend alterado, mas obrigatório pelo CLAUDE.md), atualizar `ESTADO_ATUAL.md` e `ROADMAP.md`, `specs/index.yaml` (coordenador).
 
 ## 5. Critérios de aceite
-- [ ] Pré-condições R1 verificadas e registradas antes do primeiro commit de produto.
-- [ ] Tokens de R2 presentes em `:root`; paridade CSS↔JS testada; tokens pré-existentes inalterados.
-- [ ] `effects.registry.ts` completo: todo efeito com os 12 campos obrigatórios de §3.3 (+ `sound: null`), `matrix_ref` válido, teste existente.
-- [ ] `MotionConfig reducedMotion="user"` e bloco global de reduced-motion intactos (diff mostra zero remoção).
-- [ ] Em `reduce`: nenhum transform animado; toda informação continua visível (assert por efeito).
-- [ ] Teclado: todo efeito armável/selecionável funciona sem hover; `Esc` cancela mira.
-- [ ] axe sem violações serious/critical nos estados armado/foco/erro/pending em 1440 e 1280×720.
-- [ ] Nenhuma ação enviada espera animação; ação duplicada não gera estado duplicado (reaproveita idempotência SPEC-205).
-- [ ] R7: varredura de DOM e rede sem entidade/arte não descoberta.
-- [ ] Bundle ≤ baseline + 15 KB gzip JS / +3 KB gzip CSS; zero dependência nova (ou aprovada em §8); sem GSAP/WebGL.
-- [ ] Frame p95 ≤ 16,7 ms e zero long task >50 ms nos fluxos medidos (4× throttle), números em `docs/spec208/README.md`.
-- [ ] Kill switch `?effects=off` torna todos os efeitos estáticos (e2e).
-- [ ] Suíte e2e anterior (`critical-journeys`, `visual-surfaces`, `voice-input`) continua verde sem edição de seus assertivos.
-- [ ] `uv run pytest` verde (suíte completa offline); `npm run build` verde.
+- [x] Pré-condições R1 verificadas e registradas antes do primeiro commit de produto.
+- [x] Tokens de R2 presentes em `:root`; paridade CSS↔JS testada; tokens pré-existentes inalterados.
+- [x] `effects.registry.ts` completo: todo efeito com os 12 campos obrigatórios de §3.3 (+ `sound: null`), `matrix_ref` válido, teste existente.
+- [x] `MotionConfig reducedMotion="user"` e bloco global de reduced-motion intactos (diff mostra zero remoção).
+- [x] Em `reduce`: nenhum transform animado; toda informação continua visível (assert por efeito).
+- [x] Teclado: todo efeito armável/selecionável funciona sem hover; `Esc` cancela mira.
+- [x] axe sem violações serious/critical nos estados armado/foco/erro/pending em 1440 e 1280×720.
+- [x] Nenhuma ação enviada espera animação; ação duplicada não gera estado duplicado (reaproveita idempotência SPEC-205).
+- [x] R7: varredura de DOM e rede sem entidade/arte não descoberta.
+- [x] Bundle ≤ baseline + 15 KB gzip JS / +3 KB gzip CSS; zero dependência nova (ou aprovada em §8); sem GSAP/WebGL.
+- [x] Frame p95 ≤ 16,7 ms e zero long task >50 ms nos fluxos medidos (4× throttle), números em `docs/spec208/README.md`. Fechado na revisão Sol: a causa real eram animações **contínuas** em combate (véu/bandeira/ponto da aba) e transições de cor/sombra/opacidade; corrigidas, os 3 fluxos (criação, chat, combate+abas) contra o build dão p95 ≤ 14,0 ms e 0 long task em 9 execuções finais (5 registradas em `docs/spec208/evidence/perf-runs.jsonl`); gate absoluto em `RPG_E2E_SERVER=preview`.
+- [x] Kill switch `?effects=off` torna todos os efeitos estáticos (e2e).
+- [x] Suíte e2e anterior (`critical-journeys`, `visual-surfaces`, `voice-input`) continua verde sem edição de seus assertivos.
+- [x] `uv run pytest` verde (suíte completa offline); `npm run build` verde.
 
 ## 6. Smoke
 Offline por padrão: API falsa/mock dos e2e, MockLLM, sem provider real e sem custo. Roteiro: criar personagem (hover/seleção/confirmar) → chat → abrir aba e split → iniciar combate pelo chat → armar carta, mirar, executar, reação → desfecho → alternar abas → abrir Codex/Bestiário/Mapa com item descoberto e não descoberto → repetir com `prefers-reduced-motion: reduce` e `?effects=off`. Captura de vídeo/trace Playwright anexada à evidência. Provider real só opt-in com teto explícito (não necessário aqui: nenhuma mudança de backend).
@@ -186,3 +186,10 @@ Offline por padrão: API falsa/mock dos e2e, MockLLM, sem provider real e sem cu
 - Saída de `uv run pytest` offline.
 - Registro da verificação de R1 (status das SPEC-201/204/205 no `specs/index.yaml` no momento do início).
 - Review independente não exigido (`REVIEW_REQUIRED: false`); se alguma iteração tocar vazamento de conhecimento (It.4) e SPEC-206 divergir, escalar para Sol.
+
+## 10. Registro de execução (2026-10-16)
+- Evidência: [docs/spec208/README.md](../docs/spec208/README.md). 19 efeitos no registry (It.1, 1b, 2, 3 e 4 parciais), projeto Playwright `chromium-motion`, testes Node `web/tests/design.test.mjs`.
+- Defaults da §8 usados: teto +15/+3 KB (uso +1,7/+1,0 KB), sem P2/P3, sem dependência, sem som, arsenal-base, piso de reduced-motion = equivalência informativa.
+- Desvios: (a) `passive.trigger`, `encounter.enter/exit`, `reaction.present`, linha de mira SVG ficaram fora (precisam de payload novo/SPEC-209); (b) o `Reveal` de Bestiário/Mapa cobre só o que o servidor já entrega — o `/data/map` ainda envia nome/`lore_seed` de nós em fog (M23, servidor/SPEC-211); (c) o critério de long task absoluto não é atingível sem tocar o shell da 204; (d) correções de atmosfera achadas pela medição: `combat-veil` (box-shadow inset animado) e farol do mapa passaram a animar só `opacity/transform`; `.story { overflow-anchor: none }` (a remoção do `filter` das entradas antigas reativava o scroll anchoring e quebrava `workspace-shell` "rascunho, scroll").
+- Falhas pré-existentes/ambientais (também no HEAD sem as mudanças): `voice-input` "native Chromium MediaRecorder" (`audio/wav` no Chromium local) e intermitência de `fonts.googleapis.com` (requestfailed) em specs protegidos; os testes novos ignoram o Google Fonts.
+- Revisão independente Sol (2026-10-16, [handoff](../handoffs/SPEC-208-SOL-independent-review.md)): fechou o critério de frame/long task (correções de R8/R9 medidas, gate absoluto contra o build), produziu a evidência de vídeo (normal/reduced/`effects=off`) e rejeitou com medição a fade do bloco novo do chat (M09 fica "sem animação no histórico nem no bloco novo; sem blur"). Efeitos de §3.4 adiados (`passive.trigger` sem payload do servidor, `encounter.enter/exit` M36 P2 → §8.2, `reaction.present` M18 exige janela de gatilho do backend → SPEC-209, linha de mira SVG opcional) ficam como desvio explícito: §3.4 é [R] substituível e nenhum critério de §5 os exige.

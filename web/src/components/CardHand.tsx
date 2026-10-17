@@ -39,8 +39,9 @@ export function CardHand({ cards, enemies, busy, aimingCardId, ruptureId, detail
           const reasonText = plan.reason ? REASON_TEXT[plan.reason] : "";
           const verb = plan.mode === "aim" ? "escolha o alvo" : "um clique";
           return (
-            <div key={card.id} className={`combat-card-wrap${card.spent ? " is-spent" : ""}${rupturing ? " is-rupture" : ""}${aiming ? " is-aiming" : ""}`}>
+            <div key={card.id} data-effect="card.resolve" data-effect-state={card.spent ? "resolved" : "ready"} className={`combat-card-wrap${card.spent ? " is-spent" : ""}${rupturing ? " is-rupture" : ""}${aiming ? " is-aiming" : ""}`}>
               <button type="button" className="combat-card" data-card={card.id}
+                data-effect="card.arm" data-effect-state={aiming ? "armed" : blocked ? "blocked" : card.spent ? "spent" : "idle"}
                 aria-pressed={aiming} aria-disabled={blocked || undefined}
                 aria-describedby={detailId}
                 aria-keyshortcuts={index < 9 ? String(index + 1) : undefined}
