@@ -1,13 +1,13 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "9e5a4e7224bf75fb1931f3b5e1b9debe182e61f8",
+  "commit_sha": "e4a3864363e347a724ad74b3150d98e150122e6f",
   "edge_counts": {
-    "calls": 14193,
-    "contains": 608,
-    "defines": 8198,
-    "imports": 1300,
-    "likely_test_for": 822,
-    "route_to": 62
+    "calls": 14301,
+    "contains": 610,
+    "defines": 8232,
+    "imports": 1307,
+    "likely_test_for": 825,
+    "route_to": 63
   },
   "excluded_prefixes": [
     ".agents",
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:78424b1f40ea9f5a97725bda5c5c8a25f8a812c8a3a1af9c22c91f791b10e4b0",
+  "graph_hash": "sha256:e3ec9ce81d5e14d372ac30dbeb4bb4886fc0c3b4077936711035610e3d8f0c61",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -310,6 +310,7 @@
     "services/kill_switches.py",
     "services/lease_heartbeat.py",
     "services/local_backup.py",
+    "services/map_view.py",
     "services/memory_intents.py",
     "services/memory_provenance.py",
     "services/memory_retry.py",
@@ -528,6 +529,7 @@
     "tests/test_longrun_remediation_v4.py",
     "tests/test_loot_exploracao.py",
     "tests/test_loot_voice.py",
+    "tests/test_map_view.py",
     "tests/test_mapa_interiores.py",
     "tests/test_matrix_lock.py",
     "tests/test_matriz_a_contratos.py",
@@ -673,6 +675,7 @@
     "web/e2e/image-quote.spec.ts",
     "web/e2e/interlocutor-speaker.spec.ts",
     "web/e2e/latency.spec.ts",
+    "web/e2e/map-tab.spec.ts",
     "web/e2e/outcome-toast.spec.ts",
     "web/e2e/pending-discard.spec.ts",
     "web/e2e/visual-surfaces.spec.ts",
@@ -761,6 +764,8 @@
     "web/src/workspace/RovingTablist.tsx",
     "web/src/workspace/tabs/BestiarioTab.tsx",
     "web/src/workspace/tabs/CombateTab.tsx",
+    "web/src/workspace/tabs/mapModel.ts",
+    "web/src/workspace/tabs/MapTab.tsx",
     "web/src/workspace/tabs/PersonagemTab.tsx",
     "web/src/workspace/useModalFocus.ts",
     "web/src/workspace/Workspace.tsx",
@@ -787,13 +792,13 @@
   "node_counts": {
     "artifact": 9,
     "class": 692,
-    "endpoint": 62,
-    "file": 732,
-    "function": 2551,
+    "endpoint": 63,
+    "file": 737,
+    "function": 2561,
     "method": 678,
-    "module": 608,
-    "test": 4277
+    "module": 610,
+    "test": 4301
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:d934cd76e8da467cb1912ef5370cd5198c0b56346eede127421a8fb16c987a2c"
+  "source_tree_hash": "sha256:a5cd48da27842c517ce2ea65662e52fdc7d83e189c139f8efb6f753cac440084"
 }
