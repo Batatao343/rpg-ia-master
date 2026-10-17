@@ -16,7 +16,7 @@ test('markdown subset: headings, lists, tables, escaping', () => {
   assert.match(html, /<ul><li>x<\/li><\/ul>/);
 });
 
-test('builds the four static pages: RASCUNHO banner, no inline script, cross links', () => {
+test('builds the four static pages: published (no RASCUNHO), no placeholder, owner data, no inline script, cross links', () => {
   const dist = mkdtempSync(join(tmpdir(), 'legal-'));
   mkdirSync(join(dist, 'assets'));
   writeFileSync(join(dist, 'assets', 'index-abc.css'), 'body{}');
@@ -24,7 +24,9 @@ test('builds the four static pages: RASCUNHO banner, no inline script, cross lin
   assert.deepEqual(buildLegal({ dist, legalDir }), ['privacidade', 'termos', 'reembolso', 'suporte']);
   for (const p of PAGES) {
     const html = readFileSync(join(dist, p.slug, 'index.html'), 'utf8');
-    assert.match(html, /RASCUNHO/);
+    assert.doesNotMatch(html, /RASCUNHO/);
+    assert.doesNotMatch(html, /&lt;[^&\n]{1,80}?&gt;/);
+    assert.match(html, /Última atualização: 17\/10\/2026/);
     assert.match(html, /\/assets\/index-abc\.css/);
     assert.doesNotMatch(html, /<script|onclick=|javascript:/i);
     for (const q of PAGES) assert.ok(html.includes(`href="/${q.slug}/"`));

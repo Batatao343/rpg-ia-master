@@ -1,5 +1,5 @@
 {
-  "commit_sha": "e3ab9349f9fe61224a4026c60637ad8811c187fb",
+  "commit_sha": "d03072e6ef217da5a582c38633bffa8f51587e1f",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -103068,7 +103068,7 @@
         "line": 11
       },
       "source": "module:tests.test_spec197_legal_pages",
-      "target": "symbol:tests.test_spec197_legal_pages.test_legal_page_served_with_csp_and_draft_banner",
+      "target": "symbol:tests.test_spec197_legal_pages.test_legal_page_served_with_csp_and_published",
       "type": "defines"
     },
     {
@@ -363370,11 +363370,11 @@
       "qualified_name": "tests.test_spec197_daily_cap.test_under_cap_does_nothing"
     },
     {
-      "id": "symbol:tests.test_spec197_legal_pages.test_legal_page_served_with_csp_and_draft_banner",
+      "id": "symbol:tests.test_spec197_legal_pages.test_legal_page_served_with_csp_and_published",
       "kind": "test",
       "line": 11,
       "path": "tests/test_spec197_legal_pages.py",
-      "qualified_name": "tests.test_spec197_legal_pages.test_legal_page_served_with_csp_and_draft_banner"
+      "qualified_name": "tests.test_spec197_legal_pages.test_legal_page_served_with_csp_and_published"
     },
     {
       "id": "symbol:tests.test_spec197_runtime_role.test_dsn_uses_tenant_user_port_6543_and_passes_runtime_validation",
@@ -367235,5 +367235,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:76d4fde4db67d9db934307b5d9551d4d1b59f4b8724f8c3e61ff3a1fa58c05c2"
+  "source_tree_hash": "sha256:d7b42593063c7e2bb3766c66b7371bd23affa4242b54e40d046d8b91f1e06e1a"
 }

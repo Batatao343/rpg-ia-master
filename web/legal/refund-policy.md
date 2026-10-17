@@ -1,17 +1,15 @@
-# Politica de Reembolso - Valoria (RPG IA)
+---
+status: final
+---
+# Política de Reembolso - Valoria (RPG IA)
 
-> **RASCUNHO - revisar com o titular (e assessoria juridica) antes de publicar.** Reflete
-> `docs/spec195/refund-debt-policy.md`. Itens `<...>` a preencher.
+> Última atualização: 17/10/2026. Recomenda-se revisão por assessoria jurídica.
 
-1. **Direito de arrependimento (CDC art. 49).** Compras feitas online podem ser desistidas em ate 7 dias, **desde que as Estilhas da
-   compra nao tenham sido consumidas**; Estilhas ja gastas em turnos/voz/imagens nao retornam (servico ja prestado). `<confirmar tratamento do consumo parcial com assessoria>`.
-2. **Como pedir.** Web (Stripe): `suporte@<dominio-a-definir>` com e-mail da conta e data da compra; reembolso ao meio de pagamento original, prazo conforme a operadora.
-   Android: reembolso conforme as regras do Google Play (pedido pela Play Store; o Google pode reembolsar automaticamente em alguns casos).
-3. **Efeito no saldo.** Ao reembolsar, as Estilhas correspondentes sao retiradas do saldo disponivel (proporcional ao valor devolvido). Se parte ja foi gasta, o
-   saldo nao fica negativo: o excedente vira **divida** registrada no extrato.
-4. **Divida.** Enquanto houver divida, novos gastos pagos ficam bloqueados (leitura de campanhas continua gratis). Uma nova compra quita a divida primeiro.
-   Em caso de erro nosso, podemos perdoar a divida manualmente (ajuste auditado).
-5. **Disputas (chargeback).** Abrir disputa tem o mesmo efeito de reembolso; se a disputa for **ganha**, o credito retirado volta. Contate o suporte antes de abrir disputa: e mais rapido.
-6. **Falhas nossas.** Cobranca duplicada, compra sem credito ou servico pago que falhou: corrigimos creditando ou reembolsando, sem custo.
-7. **Beta.** Estilhas do beta: `<regra se o servico encerrar>`. Prazo de resposta do suporte: `<ex.: 2 dias uteis>`.
-8. **Historico.** O extrato e imutavel; correcoes entram como lancamentos compensatorios.
+1. **Direito de arrependimento (CDC art. 49).** Compras feitas online podem ser desistidas em até 7 dias, **desde que as Estilhas da compra não tenham sido consumidas**. Estilhas já gastas em turnos/voz/imagens **não são reembolsáveis** (serviço já prestado); se a compra foi parcialmente consumida, o reembolso cobre apenas a parte ainda não consumida.
+2. **Como pedir.** Web (Stripe): envie e-mail para guilherme.smedeiros1@gmail.com com o e-mail da conta e a data da compra; o reembolso é feito ao meio de pagamento original, com prazo conforme a operadora. Android: reembolso conforme as regras do Google Play (pedido pela Play Store; o Google pode reembolsar automaticamente em alguns casos).
+3. **Efeito no saldo.** Ao reembolsar, as Estilhas correspondentes são retiradas do saldo disponível (proporcional ao valor devolvido). Se parte já foi gasta, o saldo não fica negativo: o excedente vira **dívida** registrada no extrato.
+4. **Dívida.** Enquanto houver dívida, novos gastos pagos ficam bloqueados (leitura de campanhas continua grátis). Uma nova compra quita a dívida primeiro. Em caso de erro nosso, podemos perdoar a dívida manualmente (ajuste auditado).
+5. **Disputas (chargeback).** Abrir disputa tem o mesmo efeito de reembolso; se a disputa for **ganha**, o crédito retirado volta. Contate o suporte antes de abrir disputa: é mais rápido.
+6. **Falhas nossas.** Cobrança duplicada, compra sem crédito ou serviço pago que falhou: corrigimos creditando ou reembolsando, sem custo.
+7. **Resposta do suporte.** Respondemos em até 2 dias úteis.
+8. **Histórico.** O extrato é imutável; correções entram como lançamentos compensatórios.

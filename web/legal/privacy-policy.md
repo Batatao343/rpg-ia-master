@@ -1,75 +1,62 @@
-# Politica de Privacidade - Valoria (RPG IA)
+---
+status: final
+---
+# Política de Privacidade - Valoria (RPG IA)
 
-> **RASCUNHO - revisar com o titular (e assessoria juridica) antes de publicar.** Reflete a implementacao
-> verificada em SPEC-186/187/188/190/191/195. Itens entre `<...>` precisam ser preenchidos.
+> Última atualização: 17/10/2026. Recomenda-se revisão por assessoria jurídica.
 
-**Controlador:** `<razao social / nome do titular>`, CNPJ/CPF `<...>`. **Contato / encarregado (DPO):** `suporte@<dominio-a-definir>`.
-Ultima atualizacao: `<data>`.
+**Controlador:** Guilherme dos Santos Medeiros, pessoa física, CPF 491.209.558-39. **Contato para privacidade e suporte (encarregado):** guilherme.smedeiros1@gmail.com.
 
 ## 1. Dados que tratamos
-- **Conta:** e-mail e senha (a senha e tratada pelo Supabase Auth, nunca armazenada por nos em texto). Sessao via cookies
-  (access/refresh/CSRF) estritamente necessarios.
-- **Jogo:** personagens, campanhas, historico de turnos, memoria narrativa (texto e vetores), cronica, preferencias.
-- **Texto digitado** nos turnos: enviado a provedores de IA para gerar a narracao (secao 4).
-- **Voz:** o audio gravado e enviado para transcricao; **nao o armazenamos em nossos servidores** (nao e gravado
-  em banco, log ou armazenamento) e ele fica sujeito a retencao do provedor de transcricao (`<confirmar prazo>`), e a transcricao nao e retida pelo recibo da operacao (apenas o tipo e a marca
-  `result_retained=false`). O texto transcrito passa a ser um turno normal do jogo.
-- **Imagens:** retratos/cenas geradas por IA a partir de descricoes do jogo ficam em armazenamento privado do usuario;
-  voce nao envia fotos pessoais.
-- **Pagamentos:** pedidos, saldo de "Estilhas", extrato (entradas append-only), identificadores de compra e eventos de
-  pagamento sanitizados. **Dados de cartao nunca passam por nos**: sao tratados pelo Stripe (web) ou pelo Google Play (Android).
-- **Tecnicos:** logs de erro e metricas de uso/custo sem conteudo de jogo e sem e-mail/token; limites de taxa por IP e
-  por e-mail normalizado (hash) com expiracao em ate 24 h.
+- **Conta:** e-mail e senha (a senha é tratada pelo Supabase Auth, nunca armazenada por nós em texto). Sessão via cookies (acesso/refresh/CSRF) estritamente necessários.
+- **Jogo:** personagens, campanhas, histórico de turnos, memória narrativa (texto e vetores), crônica, preferências.
+- **Texto digitado** nos turnos: enviado a provedores de IA para gerar a narração (seção 4).
+- **Voz:** o áudio gravado é enviado para transcrição; **não o armazenamos em nossos servidores** (não é gravado em banco, log ou armazenamento) e fica sujeito à retenção do provedor de transcrição. A transcrição não é retida pelo recibo da operação (apenas o tipo e a marca `result_retained=false`). O texto transcrito passa a ser um turno normal do jogo.
+- **Imagens:** retratos/cenas geradas por IA a partir de descrições do jogo ficam em armazenamento privado do usuário; você não envia fotos pessoais.
+- **Pagamentos:** pedidos, saldo de "Estilhas", extrato (entradas append-only), identificadores de compra e eventos de pagamento sanitizados. **Dados de cartão nunca passam por nós**: são tratados pelo Stripe (web) ou pelo Google Play (Android).
+- **Técnicos:** logs de erro e métricas de uso/custo sem conteúdo de jogo e sem e-mail/token; limites de taxa por IP e por e-mail normalizado (hash) com expiração em até 24 h.
 
 ## 2. Finalidades e bases legais (LGPD, art. 7)
-Executar o contrato/servico (conta, jogo, creditos); legitimo interesse (seguranca, antifraude, prevencao de abuso,
-controle de custos); obrigacao legal/regulatoria (registros fiscais e financeiros); consentimento quando aplicavel
-(ex.: acesso ao microfone, concedido no navegador/dispositivo).
+Executar o contrato/serviço (conta, jogo, créditos); legítimo interesse (segurança, antifraude, prevenção de abuso, controle de custos); obrigação legal/regulatória (registros fiscais e financeiros); consentimento quando aplicável (ex.: acesso ao microfone, concedido no navegador/dispositivo).
 
 ## 3. Onde ficam os dados
-Banco e armazenamento: Supabase, regiao **sa-east-1 (Sao Paulo)**. Aplicacao: Vercel (regiao `gru1`, Sao Paulo, quando
-disponivel). Provedores de IA e pagamento podem processar dados fora do Brasil (transferencia internacional com as
-salvaguardas do art. 33 da LGPD).
+Banco e armazenamento: Supabase, região **sa-east-1 (São Paulo)**. Aplicação: Vercel (região `gru1`, São Paulo, quando disponível). Provedores de IA e pagamento podem processar dados fora do Brasil (transferência internacional com as salvaguardas do art. 33 da LGPD).
 
 ## 4. Operadores (processadores em nosso nome)
-Estes operadores tratam dados por nossa conta; para a Google Play Data Safety isso nao e "compartilhamento com terceiros".
+Estes operadores tratam dados por nossa conta; para a Google Play Data Safety isso não é "compartilhamento com terceiros".
+
 | Operador | Para que | Dados |
 |---|---|---|
-| Supabase | banco, autenticacao, armazenamento | conta, jogo, arquivos |
-| Vercel | hospedagem da aplicacao | requisicoes, logs tecnicos |
-| Provedores de LLM (DeepSeek e Groq, fixados em producao via `RPG_ROUTES`) | gerar narracao | texto do turno e contexto da campanha |
-| Provedor de transcricao (Groq `whisper-large-v3-turbo`; fallback OpenAI `gpt-4o-mini-transcribe`) | voz para texto | audio (retencao do provedor) |
-| Provedor de imagem (`<...>`) | gerar arte | descricao textual da cena |
-| Jina | embeddings da memoria | trechos de texto da campanha |
+| Supabase | banco, autenticação, armazenamento | conta, jogo, arquivos |
+| Vercel | hospedagem da aplicação | requisições, logs técnicos |
+| Provedores de LLM (DeepSeek e Groq) | gerar narração | texto do turno e contexto da campanha |
+| Groq (`whisper-large-v3-turbo`) | voz para texto (transcrição principal) | áudio (retenção do provedor) |
+| OpenAI (`gpt-4o-mini-transcribe`, transcrição de reserva) | voz para texto | áudio (retenção do provedor) |
+| OpenAI (GPT Image 2) | gerar retratos e cenas | descrição textual da aparência/cena e o retrato de referência do herói |
+| Jina | embeddings da memória | trechos de texto da campanha |
 | Cloudflare Turnstile | antibot em cadastro/login | sinais do navegador e IP |
-| Stripe / Google Play | pagamentos | dados de compra (cartao fica com eles) |
-| Provedor de e-mail transacional (`<definir SMTP>`) | confirmacao e recuperacao de conta | e-mail |
-Nao vendemos dados pessoais. Nao usamos o conteudo das suas campanhas para treinar modelos proprios; verifique os
-termos de retencao/treinamento de cada provedor de IA antes de publicar (`<confirmar>`).
+| Stripe / Google Play | pagamentos | dados de compra (cartão fica com eles) |
+| Provedor de e-mail transacional do serviço de autenticação | confirmação e recuperação de conta | e-mail |
 
-## 5. Retencao e exclusao
-- Dados de jogo e conta: mantidos enquanto a conta existir.
-- **Exclusao de conta** (no app, exige senha recente): encerra sessoes, apaga usuario, jogos, memoria, cronica, jobs,
-  arquivos e arte. Permanecem apenas, por obrigacao financeira e antifraude, o **extrato de creditos e eventos de pagamento
-  vinculados a um identificador opaco (UUID)**, sem e-mail, que nao autentica nem recria a conta. Prazo: `<definir, ex. 5 anos fiscais>`.
-- **Exportacao:** o app permite exportar seus dados (exige senha recente).
-- Buckets de limite de taxa expiram em ate 24 h; logs conforme a plataforma (`<dias>`).
+Não vendemos dados pessoais. Não usamos o conteúdo das suas campanhas para treinar modelos próprios. Cada provedor de IA aplica seus próprios termos de retenção e treinamento; consulte-os se tiver dúvidas.
+
+## 5. Retenção e exclusão
+- Dados de jogo e conta: mantidos enquanto a conta existir. Apagar uma campanha apaga também as imagens geradas para ela (até o próximo ciclo de limpeza automática).
+- **Exclusão de conta** (no app, exige senha recente): encerra sessões e apaga usuário, jogos, memória, crônica, jobs, arquivos, arte e o histórico técnico de uso. Permanecem, por obrigação contábil/fiscal, antifraude e defesa em disputas, **por 5 anos**, apenas registros financeiros vinculados a um identificador opaco (UUID), sem e-mail: extrato de créditos, reservas e débitos, pedidos de pagamento, estado de reconciliação e compras Google Play (sem o token de compra, que é anulado após o consumo; apenas número do pedido, produto e estado financeiro). Um registro mínimo de que a exclusão ocorreu (UUID e data) é mantido por 5 anos.
+- **Exportação:** o app exporta seus dados (exige senha recente), incluindo o extrato financeiro e links temporários (5 minutos) para baixar suas imagens.
+- **Metadados técnicos:** recibos de operações 90 dias; tarefas internas concluídas 30 dias; registro de consumo de IA 13 meses; avaliações financeiras agregadas 180 dias; contador técnico da cota diária 7 dias; limites de taxa até 24 h; logs da plataforma conforme o prazo padrão do provedor de hospedagem (sem conteúdo de jogo, sem e-mail/token).
 
 ## 6. Seus direitos (LGPD art. 18)
-Confirmacao e acesso, correcao, anonimizacao/bloqueio/eliminacao, portabilidade, informacao sobre compartilhamento,
-revogacao de consentimento e oposicao. Exercicio pelo app (exportar/excluir) ou por `suporte@<dominio-a-definir>`;
-resposta em ate 15 dias. Reclamacao a ANPD: gov.br/anpd.
+Confirmação e acesso, correção, anonimização/bloqueio/eliminação, portabilidade, informação sobre compartilhamento, revogação de consentimento e oposição. Exercício pelo app (exportar/excluir) ou por guilherme.smedeiros1@gmail.com; resposta em até 15 dias. Reclamação à ANPD: gov.br/anpd.
 
 ## 7. Cookies
-Apenas cookies essenciais: sessao de acesso, refresh e token CSRF (`HttpOnly`/`Secure` onde aplicavel). Sem cookies de
-publicidade ou analytics de terceiros. Armazenamento local do navegador guarda preferencias e acoes pendentes.
+Apenas cookies essenciais: sessão de acesso, refresh e token CSRF (`HttpOnly`/`Secure` onde aplicável). Sem cookies de publicidade ou analytics de terceiros. Armazenamento local do navegador guarda preferências e ações pendentes. O site não carrega recursos de terceiros para exibição (as fontes são servidas pelo próprio app), exceto o desafio antibot da Cloudflare no cadastro/login.
 
-## 8. Seguranca
-Isolamento por usuario no banco (RLS), segredos fora do codigo, CAPTCHA, limites de taxa, trilha append-only de
-creditos. Nenhum sistema e totalmente seguro; incidentes relevantes serao comunicados conforme a LGPD.
+## 8. Segurança
+Isolamento por usuário no banco (RLS), segredos fora do código, CAPTCHA, limites de taxa, trilha append-only de créditos. Nenhum sistema é totalmente seguro; incidentes relevantes serão comunicados conforme a LGPD.
 
 ## 9. Menores
-O servico e destinado a maiores de `<18/13?>` anos. `<definir>`.
+O serviço é destinado a maiores de 18 anos. O cadastro exige a declaração de idade mínima.
 
-## 10. Alteracoes
-Mudancas relevantes serao avisadas no app/e-mail antes de entrar em vigor.
+## 10. Alterações
+Mudanças relevantes serão avisadas no app/e-mail antes de entrar em vigor.
