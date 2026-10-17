@@ -65,8 +65,8 @@ def test_frontend_report_requires_every_registered_journey():
     summary = summarize({"suites": [{"specs": specs}]})
     assert summary["hard_gates_passed"] is True
     assert summary["metrics"]["frontend_critical_journey_pass_rate"] == 1.0
-    assert summary["journeys"]["registered"] == len(JOURNEY_IDS) == 35
-    missing = summarize({"suites": [{"specs": specs[:29]}]})
+    assert summary["journeys"]["registered"] == len(JOURNEY_IDS) == 36
+    missing = summarize({"suites": [{"specs": specs[:30]}]})
     assert missing["hard_gates_passed"] is False
     specs[-1]["tests"][0]["results"][0] = {
         "status": "failed", "error": {"message": "A11Y serious/critical: color-contrast"}

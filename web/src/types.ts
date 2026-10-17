@@ -946,6 +946,8 @@ export interface DossiersPayload {
     chronicle_index: ChronicleIndexEntry[];
   };
   bestiary: CreatureDossier[];
+}
+
 // SPEC-210: mapa do jogo com fog server-side (GET /game/map?game_id=).
 export type MapNodeState = "atual" | "visitado" | "adjacente" | "bloqueado";
 

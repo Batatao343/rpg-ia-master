@@ -77,6 +77,16 @@ const deferred = (): Deferred => {
   return { promise, resolve };
 };
 
+// SPEC-210: grafo do fixture. `docas_velhas` é adjacente ao porto; `torre_proibida` só toca Brumalta
+// (não alcançada). Os campos sentinela jamais podem chegar à rede/DOM enquanto o nó não for alcançado.
+export const MAP_UNREACHED = { name: "Torre Proibida", lore: "SEGREDO-LORE-TORRE", treasure: "BAU-SENTINELA-TORRE", travelTimeId: "ilha_sem_nome" };
+const MAP_GRAPH: Record<string, { name: string; coords: { x: number; y: number }; region_id: string; danger: number; lore_seed: string; links: string[] }> = {
+  porto: { name: "Porto Cinzento", coords: { x: 30, y: 55 }, region_id: "costa", danger: 1, lore_seed: "Cais sob névoa", links: ["brumalta", "docas_velhas"] },
+  brumalta: { name: "Brumalta", coords: { x: 70, y: 35 }, region_id: "serra", danger: 2, lore_seed: "Cidade muralhada", links: ["porto", "torre_proibida"] },
+  docas_velhas: { name: "Docas Velhas", coords: { x: 15, y: 70 }, region_id: "costa", danger: 3, lore_seed: "DOCAS-LORE-OCULTA", links: ["porto"] },
+  torre_proibida: { name: MAP_UNREACHED.name, coords: { x: 90, y: 10 }, region_id: "serra", danger: 5, lore_seed: MAP_UNREACHED.lore, links: ["brumalta"] },
+};
+
 export class DeterministicBackend {
   dossiers: unknown = null;
   authRequired = true;
@@ -239,6 +249,37 @@ export class DeterministicBackend {
     return current;
   }
 
+  // SPEC-210: GET /game/map com fog server-side (contrato de services/map_view.py). Grafo do
+  // fixture com nós NÃO alcançados que carregam dados sentinela: nada deles pode sair daqui.
+  private mapView(route: Route, gid: string) {
+    const state = this.states.get(gid);
+    if (!state) return this.json(route, { detail: "missing" }, 404);
+    const cur = state.world.location_id;
+    const visited = new Set<string>(state.world.visited);
+    visited.add(cur);
+    const ids = new Set<string>(visited);
+    for (const c of MAP_GRAPH[cur]?.links ?? []) ids.add(c);
+    const nodes = [...ids].filter((id) => MAP_GRAPH[id]).sort().map((id) => {
+      const g = MAP_GRAPH[id];
+      const st = id === cur ? "atual" : visited.has(id) ? "visitado" : "adjacente";
+      const base: Record<string, unknown> = { id, state: st, name: g.name, coords: g.coords };
+      if (st !== "atual") base.reachable = (MAP_GRAPH[cur]?.links ?? []).includes(id);
+      if (st !== "adjacente") Object.assign(base, { region_id: g.region_id, danger: g.danger, lore_seed: g.lore_seed, art: { location_id: id, scope: "placeholder", asset: null } });
+      return base;
+    });
+    const sent = new Set(nodes.map((n) => n.id as string));
+    const edges: { a: string; b: string; blocked: boolean }[] = [];
+    for (const id of sent) for (const c of MAP_GRAPH[id].links) if (sent.has(c) && id < c) edges.push({ a: id, b: c, blocked: false });
+    const travel_options = (MAP_GRAPH[cur]?.links ?? []).map((id) => ({ location_id: id, name: MAP_GRAPH[id].name, periods: 2, reachable: true, blocked: false, reason: "" }));
+    const content = JSON.stringify({ nodes, edges, travel_options });
+    const map_version = `fx-${[...content].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7).toString(16)}`;
+    return this.json(route, {
+      game_id: gid, turn_count: state.world.turn_count, map_version, current_id: cur, anchor_id: cur, nodes, edges,
+      interiors: { here: [], exit_to: null }, travel_options, travel_gate: { blocked: !!state.combat.active, reason: state.combat.active ? "Em combate: fuga é uma ação do encontro." : "" },
+      looming_threat: "",
+    });
+  }
+
   private async handleApi(route: Route) {
     const request = route.request();
     const url = new URL(request.url());
@@ -280,6 +321,7 @@ export class DeterministicBackend {
       classes: { "Devoto do Abismo": { tagline: "Guarda", description: "Encara o vazio.", playstyle: "Protege aliados." }, "Médico do Véu": { tagline: "Cirurgião", description: "Costura destinos.", playstyle: "Sustenta aliados." } },
       regions: { porto: { name: "Porto Cinzento", tagline: "Névoa", description: "Um cais antigo.", hook: "Um sino desapareceu.", bonus: "+1 rumor" }, brumalta: { name: "Brumalta", tagline: "Muralhas", description: "Cidade elevada.", hook: "Portões fechados.", bonus: "+1 defesa" } },
     });
+    if (path === "/game/map") return this.mapView(route, url.searchParams.get("game_id") ?? "");
     if (path === "/data/map") return this.json(route, { start_location: "porto", locations: [
       { id: "porto", name: "Porto Cinzento", region: "Costa", region_id: "costa", coords: { x: 30, y: 55 }, danger: 1, tags: [], connections: ["brumalta"], lore_seed: "Cais sob névoa", start: true },
       { id: "brumalta", name: "Brumalta", region: "Serra", region_id: "serra", coords: { x: 70, y: 35 }, danger: 2, tags: [], connections: ["porto"], lore_seed: "Cidade muralhada" },

@@ -1,6 +1,6 @@
 # SPEC-210 — Menu Mapa e viagem como turno
 
-> **Status:** `in-progress`
+> **Status:** `done`
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
 > **Depende de:** SPEC-204 `done` (shell), SPEC-208 `done` (tokens), SPEC-229 `done` (detecção de viagem), SPEC-233 `done` (perigo efetivo) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212 (ordem final 2026-10-15)

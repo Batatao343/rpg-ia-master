@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { test, expect } from "./fixtures";
+import { test, expect, MAP_UNREACHED } from "./fixtures";
 import type { Page } from "@playwright/test";
 import type { CardView } from "../src/types";
 
@@ -101,13 +101,20 @@ test("F05 idempotent_replay", async ({ page, backend }) => {
   await assertA11y(page);
 });
 
-test("F06 map_travel", async ({ page }) => {
+test("F06 map_travel", async ({ page, backend }) => {
   await openGame(page);
   await page.getByRole("button", { name: /Ficha/ }).click();
   await page.getByRole("tab", { name: "Mapa" }).click();
   const destination = page.getByRole("button", { name: "Brumalta" });
   await expect(destination).toBeEnabled();
+  // SPEC-210: clicar o nó SELECIONA (detalhe); a viagem exige o botão "Viajar" separado.
   await destination.click();
+  const travel = page.getByRole("button", { name: /^Viajar · \d+ períodos?/ });
+  await expect(travel).toBeEnabled();
+  expect(backend.requests.filter((r) => r.path.startsWith("/game/action"))).toHaveLength(0);
+  await travel.click();
+  const sent = backend.requests.filter((r) => r.path.startsWith("/game/action")).at(-1)!;
+  expect(JSON.stringify(sent.body ?? "")).toContain("Viajo para Brumalta");
   await expect(page.getByText("A trilha termina nos portões de Brumalta.")).toBeVisible();
   await expect(page.getByText("Brumalta", { exact: true }).first()).toBeVisible();
   await page.reload();
@@ -216,7 +223,7 @@ test("F13 session_expiry", async ({ page, backend }) => {
   backend.allowFailure(/\/game\/game-a\/art\/portrait-expiry$/);
   backend.allowConsole(/401 \(Unauthorized\)/);
   backend.states.get("game-a")!.portrait_generation_id = "portrait-expiry";
-  backend.expireConcurrently("/game/game-a/art/portrait-expiry", "/data/map");
+  backend.expireConcurrently("/game/game-a/art/portrait-expiry", "/game/map");
   await openGame(page);
   await page.getByRole("button", { name: /Ficha/ }).click();
   await page.getByRole("tab", { name: "Mapa" }).click();
@@ -925,6 +932,35 @@ test("F29 character_sheet_journey", async ({ page, backend }) => {
   await page.getByRole("tab", { name: "Personagem" }).click();
   await expect(page.getByText("Cicatrizes")).toHaveCount(0);
   await expect(page.getByText("Tremor na mão")).toHaveCount(0);
+  await assertA11y(page);
+});
+
+// --- SPEC-210: mapa com fog server-side (F30) --------------------------------------------------
+test("F30 map_fog_privacy", async ({ page, backend }) => {
+  const bodies: string[] = [];
+  page.on("response", async (r) => { if (new URL(r.url()).pathname.startsWith("/game/map") || new URL(r.url()).pathname === "/data/map") bodies.push(await r.text()); });
+  await openGame(page);
+  await page.getByRole("button", { name: /Ficha/ }).click();
+  await page.getByRole("tab", { name: "Mapa" }).click();
+  // Alcançados/adjacentes aparecem; "Docas Velhas" é adjacente ao porto (só placa: nome).
+  await expect(page.getByRole("button", { name: /Brumalta/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Docas Velhas/ })).toBeVisible();
+  // A view (e só ela) foi pedida; o legado /data/map global nunca é usado pelo cliente.
+  expect(backend.requests.some((r) => r.path === "/game/map")).toBe(true);
+  expect(backend.requests.some((r) => r.path === "/data/map")).toBe(false);
+  await expect.poll(() => bodies.length).toBeGreaterThan(0);
+  const net = bodies.join(" ");
+  // Nó adjacente: id/coords/nome apenas - nada de lore/perigo.
+  expect(net).toContain("Docas Velhas");
+  expect(net).not.toContain("DOCAS-LORE-OCULTA");
+  // Nó não alcançado (2 saltos): nenhuma pista na rede - nome, lore, id, tesouro, travel_times.
+  for (const leak of [MAP_UNREACHED.name, MAP_UNREACHED.lore, "torre_proibida", MAP_UNREACHED.treasure, MAP_UNREACHED.travelTimeId, "travel_times", "treasure"]) {
+    expect(net, `rede vazou: ${leak}`).not.toContain(leak);
+  }
+  const dom = await page.content();
+  for (const leak of [MAP_UNREACHED.name, MAP_UNREACHED.lore, "torre_proibida", MAP_UNREACHED.treasure, "DOCAS-LORE-OCULTA"]) {
+    expect(dom, `DOM vazou: ${leak}`).not.toContain(leak);
+  }
   await assertA11y(page);
 });
 

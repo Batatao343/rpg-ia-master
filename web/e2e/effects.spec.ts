@@ -384,25 +384,20 @@ for (const [width, height] of [[1440, 900], [1280, 720]] as const) {
       await a11y(page, "codex");
     });
 
-    test("map.marker: nó viajável tem cursor e halo; fog não vaza nome nem lore no DOM", async ({ page, backend }) => {
-      backend.states.get("game-a")!.world.visited = ["porto"]; // brumalta fica no fog
+    test("map.marker: nó viajável tem cursor e halo; nó não descoberto não existe no DOM (SPEC-210)", async ({ page, backend }) => {
+      backend.states.get("game-a")!.world.visited = ["porto"]; // brumalta e docas: só placa (adjacentes)
       await openGame(page);
       await tabs(page).getByRole("tab", { name: "Mapa" }).click();
-      const fog = page.locator('[data-effect="map.marker"][data-effect-state="fog"]');
-      await expect(fog).toHaveCount(1);
-      await expect(fog).toBeDisabled();
-      await expect(fog).toHaveAttribute("aria-label", "Região inexplorada");
-      expect(await page.locator("#ws-panel-mapa").innerHTML()).not.toMatch(/Brumalta|Cidade muralhada/);
-      // com o local conhecido, o nó vira viajável
-      backend.states.get("game-a")!.world.visited = ["porto", "brumalta"];
-      await composer(page).fill("olho ao redor");
-      await submit(page).click();
-      const node = page.locator('[data-effect="map.marker"][data-effect-state="travelable"]');
+      // O fog agora é server-side: nenhum marcador "fog" e nada de nó a 2 saltos no DOM.
+      await expect(page.locator('[data-effect="map.marker"][data-effect-state="fog"]')).toHaveCount(0);
+      const panelHtml = await page.locator("#ws-panel-mapa").innerHTML();
+      expect(panelHtml).not.toMatch(/Torre Proibida|torre_proibida|SEGREDO-LORE|DOCAS-LORE-OCULTA|Cidade muralhada/);
+      const node = page.locator('[data-effect="map.marker"][data-effect-state="travelable"][data-node-id="brumalta"]');
       await expect(node).toHaveCount(1);
       expect(await css(node, "cursor")).toBe("pointer");
       await node.locator(".worldmap__dot").hover();
       await expect.poll(() => css(node.locator(".worldmap__dot"), "box-shadow")).not.toBe("none");
-      await expect(page.locator('[data-effect="map.marker"][data-effect-state="current"]')).toBeDisabled();
+      await expect(page.locator('[data-effect="map.marker"][data-effect-state="current"]')).toHaveAttribute("aria-label", /local atual/);
       await a11y(page, "mapa");
     });
 

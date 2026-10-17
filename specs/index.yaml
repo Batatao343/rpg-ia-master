@@ -3718,7 +3718,7 @@ specs:
   lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
 - id: SPEC-210
   slug: menu-mapa-viagem
-  status: in-progress
+  status: done
   path: specs/SPEC-210-menu-mapa-viagem.md
   created_commit: null
   created_at: '2026-10-15'

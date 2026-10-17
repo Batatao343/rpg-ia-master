@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 # F30-F34 are reserved for the SPEC-210 map journeys (authored on a parallel branch).
-JOURNEY_IDS = tuple(f"F{i:02d}" for i in (*range(1, 30), *range(35, 41)))
+JOURNEY_IDS = tuple(f"F{i:02d}" for i in (*range(1, 31), *range(35, 41)))
 JOURNEY_COUNT = len(JOURNEY_IDS)
 JOURNEY_RE = re.compile(r"^(F(?:0[1-9]|[1-9][0-9]))\s+")
 
@@ -82,7 +82,7 @@ def measurement_identity(root: Path) -> dict[str, str]:
     package = json.loads((root / "web/package.json").read_text(encoding="utf-8"))
     return {
         "product_sha": os.getenv("GITHUB_SHA") or git.stdout.strip(),
-        "evaluator_version": "1.12.0",
+        "evaluator_version": "1.13.0",
         "metrics_registry_hash": digest(root / "evals/metrics-registry.yaml"),
         "journey_manifest_hash": digest(root / "web/e2e/critical-journeys.yaml"),
         "platform": platform.platform(),

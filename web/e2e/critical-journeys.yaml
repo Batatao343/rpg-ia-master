@@ -29,6 +29,7 @@ journeys:
   - { id: F27, name: deck_blocked_context, hard: true }
   - { id: F28, name: deck_keyboard, hard: true }
   - { id: F29, name: character_sheet_journey, hard: true }
+  - { id: F30, name: map_fog_privacy, hard: true }
   - { id: F35, name: dossier_people_browse, hard: true }
   - { id: F36, name: dossier_markers_no_blocked_counts, hard: true }
   - { id: F37, name: dossier_certainty_labels, hard: true }
