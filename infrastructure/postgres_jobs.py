@@ -18,6 +18,8 @@ from infrastructure.postgres import PostgresPool
 # SPEC-236 R9: a dead/cancelled job for a document that is still pending is revived on the next
 # enqueue of the same (kind, dedupe_key), but at most once per cooldown so an automatic
 # re-enqueue on every turn cannot turn a persistent failure back into a paid retry loop.
+# Sol review: the wait is max(cooldown, age the job had when it died), so it doubles per revival
+# (~15 min, 30 min, 1 h, 2 h, ...) instead of buying max_attempts paid calls every 15 min forever.
 DEAD_JOB_REVIVE_COOLDOWN = timedelta(minutes=15)
 
 
@@ -30,7 +32,7 @@ def revive_dead_job(connection, kind: str, dedupe_key: str,
           last_error_code=null, lease_token=null, lease_owner=null, lease_until=null,
           updated_at=now()
         where kind=%s and dedupe_key=%s and status in ('dead','cancelled')
-          and updated_at <= now() - %s
+          and updated_at <= now() - greatest(%s::interval, updated_at - created_at)
         """,
         (kind, dedupe_key, cooldown),
     )

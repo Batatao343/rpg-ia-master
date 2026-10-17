@@ -1,5 +1,7 @@
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
+> **SPEC-236 `in-progress` (17/10):** FinOps/wallet/jobs corrigidos (falha sem usage custa 0 e sai do gasto, teto diário sem override cross-day, varredura de reservas órfãs, STT 4xx libera, refund parcial pré-crédito credita, poison jobs `dead`); revisão Sol+Astra APPROVED_WITH_FIXES (código degrada sem a migration, migration renomeada `20261017100000`, backoff no revive de job). **Falta:** aplicar a migration no staging + smoke real §6.
+
 > **15–16/10 — 38 specs `draft` aguardando aprovação (SPEC-199–236); ordem em `proximas-specs/ORDEM_SPECS_2026-10-15.md`.**
 > 199–217 = onda "beta desktop" (pacote `proximas-specs/`, revisada por Opus); 218–225 = auditoria de segurança
 > (1 alta: perfil `legacy` sem auth é o default e `Procfile` escuta 0.0.0.0 → SPEC-218); 226–236 = auditoria de bugs

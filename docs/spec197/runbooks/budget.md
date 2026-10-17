@@ -56,7 +56,7 @@ Semanal: rate cards (`stale_rate_card`); modelo novo em `ROUTES` so apos card pu
 - Tentativa que falha SEM `usage` (402/429/timeout/5xx) e gravada com `cost_usd=0`,
   `cost_basis='failed_no_usage'`, `counts_as_spend=false`: fica auditavel, fora do teto diario, da margem e do custo do
   turno. O cron FinOps mostra a contagem em `provider_failures_no_usage[_by_provider]` (relatorio `finops-spend-v2`).
-  A migration `20261016100000` tirou do gasto as falhas historicas gravadas como US$ 1,00 (linhas preservadas).
+  A migration `20261017100000` tirou do gasto as falhas historicas gravadas como US$ 1,00 (linhas preservadas).
 - Retencao `uncertain` (alerta `wallet_uncertain_hold`): so resolver com prova do provedor de que a tentativa
   desconhecida nao foi cobrada: `scripts/admin_wallet_reconcile.py --owner <id> --reservation <id> --actor <uuid>
   --evidence <ref>` (dry-run) e depois `--apply --confirm-owner <id>`. Uso exato ja persistido e debitado, nunca

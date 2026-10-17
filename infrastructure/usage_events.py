@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+from decimal import Decimal
 from hashlib import sha256
 import json
 from uuid import UUID
@@ -35,6 +36,41 @@ def _event_digest(event: UsageEvent) -> str:
     return sha256(encoded).hexdigest()
 
 
+# SPEC-236 (Sol review): this code may be deployed before migration 20261017100000. Writers
+# and readers probe the catalog and degrade to the legacy schema instead of failing every turn.
+# A present column is cached for the process lifetime; absence is re-probed on each call.
+_COLUMNS_SEEN: set[tuple[str, str]] = set()
+
+# Schema-agnostic spend predicate (counts_as_spend derives from cost_basis by CHECK).
+NO_SPEND_SQL = "cost_basis not in ('failed_no_usage','definitive_no_charge')"
+
+
+def has_column(connection, table: str, column: str) -> bool:
+    key = (table, column)
+    if key in _COLUMNS_SEEN:
+        return True
+    row = connection.execute(
+        "select 1 as present from pg_catalog.pg_attribute where attrelid=to_regclass(%s) "
+        "and attname=%s and attnum>0 and not attisdropped", (table, column),
+    ).fetchone()
+    if row is not None:
+        _COLUMNS_SEEN.add(key)
+    return row is not None
+
+
+def spend_schema_ready(connection) -> bool:
+    return has_column(connection, "app.usage_events", "counts_as_spend")
+
+
+def _legacy_shape(event: UsageEvent) -> UsageEvent:
+    """Pre-migration CHECK only knows four bases: a no-spend fact becomes a zero-cost,
+    non-exact estimate (never US$ 1, never settleable)."""
+    from dataclasses import replace
+    if event.counts_as_spend:
+        return event
+    return replace(event, cost_usd=Decimal("0"), cost_basis="estimated", billing_exact=False)
+
+
 def append_usage_events(connection, *, owner_id: UUID, operation_id: UUID,
                         game_id: UUID | None, events: Sequence[UsageEvent]) -> None:
     """Insert facts exactly once; reject same logical attempt with changed facts."""
@@ -47,28 +83,36 @@ def append_usage_events(connection, *, owner_id: UUID, operation_id: UUID,
     if (operation is None or operation["owner_id"] != owner_id
             or operation["game_id"] != game_id):
         raise Conflict("usage attribution divergiu")
+    ready = spend_schema_ready(connection)
     for event in events:
         if event.operation_id != operation_id:
             raise Conflict("usage operation_id divergiu")
         digest = _event_digest(event)
+        # Pre-migration: legacy column list and CHECK. The digest stays the canonical event's
+        # so replays across the migration boundary agree.
+        stored = event if ready else _legacy_shape(event)
+        spend_column = ",counts_as_spend" if ready else ""
+        values = ",".join(["%s"] * (21 if ready else 20))
+        params = [
+            stored.event_id, stored.operation_id, owner_id, game_id,
+            stored.component, stored.attempt_ordinal, stored.category,
+            stored.provider, stored.model, stored.outcome, stored.input_units,
+            stored.output_units, stored.cached_units, stored.audio_units,
+            stored.image_units, stored.cost_usd, stored.cost_basis,
+            stored.pricing_version, stored.billing_exact, digest,
+        ]
+        if ready:
+            params.append(stored.counts_as_spend)
         row = connection.execute(
-            """insert into app.usage_events
+            f"""insert into app.usage_events
               (event_id,operation_id,owner_id,game_id,component,attempt_ordinal,
                category,provider,model,outcome,input_units,output_units,cached_units,
                audio_units,image_units,cost_usd,cost_basis,pricing_version,
-               billing_exact,event_sha256,counts_as_spend)
-            values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+               billing_exact,event_sha256{spend_column})
+            values ({values})
             on conflict (operation_id,component,attempt_ordinal) do nothing
             returning event_sha256""",
-            (
-                event.event_id, event.operation_id, owner_id, game_id,
-                event.component, event.attempt_ordinal, event.category,
-                event.provider, event.model, event.outcome, event.input_units,
-                event.output_units, event.cached_units, event.audio_units,
-                event.image_units, event.cost_usd, event.cost_basis,
-                event.pricing_version, event.billing_exact, digest,
-                event.counts_as_spend,
-            ),
+            tuple(params),
         ).fetchone()
         if row is not None:
             continue

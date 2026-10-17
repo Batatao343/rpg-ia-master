@@ -375,3 +375,9 @@ def test_wallet_hold_alerts_are_raised():
     kinds = set(out["alert_kinds"].split(","))
     assert {"wallet_uncertain_hold", "wallet_spend_anomaly"} <= kinds
     assert out["wallet_uncertain_holds"] == 2
+
+
+def test_stream_interrupted_keeps_its_audit_error_code():
+    """Sol review: renaming the post-first-chunk outcome must not degrade the audit export."""
+    from services.audit_trace import ERROR_CODES
+    assert ERROR_CODES["stream_interrupted"] == "llm_stream_error"

@@ -12,6 +12,7 @@ from decimal import Decimal
 from typing import Mapping, Protocol
 
 from services.finops import COST_GROUPS, FeeRate, OwnerUsage, PricingRef, PurchaseFact
+from infrastructure.usage_events import has_column, spend_schema_ready
 from services.finops_alerts import Backlog, Freshness, UsageGroup
 
 DURATION_STT_PROVIDERS = ("groq",)  # audio_units are milliseconds only for duration metering
@@ -110,9 +111,10 @@ class PostgresFinopsReader:
 
     def owner_usage(self, since, until):
         with self.pool.connection() as db:
-            rows = db.execute("""select owner_id::text as owner_key, category, sum(cost_usd) as usd
+            spend = "and counts_as_spend" if spend_schema_ready(db) else ""
+            rows = db.execute(f"""select owner_id::text as owner_key, category, sum(cost_usd) as usd
                 from app.usage_events where created_at >= %s and created_at < %s
-                  and counts_as_spend
+                  {spend}
                 group by 1,2""", (since, until)).fetchall()
         acc: dict[str, dict[str, Decimal]] = {}
         for r in rows:
@@ -123,8 +125,9 @@ class PostgresFinopsReader:
 
     def usage_groups(self, since, until):
         with self.pool.connection() as db:
-            rows = db.execute("""select provider, model, category, pricing_version, cost_basis,
-                outcome, counts_as_spend, count(*) as n, sum(cost_usd) as usd from app.usage_events
+            spend = "counts_as_spend" if spend_schema_ready(db) else "true as counts_as_spend"
+            rows = db.execute(f"""select provider, model, category, pricing_version, cost_basis,
+                outcome, {spend}, count(*) as n, sum(cost_usd) as usd from app.usage_events
                 where created_at >= %s and created_at < %s group by 1,2,3,4,5,6,7""",
                               (since, until)).fetchall()
         # SPEC-236 R2: non-spend groups keep their count (provider-failure panel) but never cost.
@@ -142,7 +145,8 @@ class PostgresFinopsReader:
                 coalesce(sum(e.audio_units) filter (where e.category='speech_to_text'
                     and e.provider = any(%s)),0) as voice_ms,
                 coalesce(sum(e.cost_usd) filter (where e.category='speech_to_text'
-                    and e.provider = any(%s) and e.counts_as_spend),0) as voice_cost
+                    and e.provider = any(%s)
+                    and e.cost_basis not in ('failed_no_usage','definitive_no_charge')),0) as voice_cost
                 from app.usage_events e join app.operations o on o.id=e.operation_id
                 where e.created_at >= %s and e.created_at < %s""",
                              (list(SUCCESS), list(DURATION_STT_PROVIDERS),
@@ -162,9 +166,12 @@ class PostgresFinopsReader:
     def wallet_holds(self, now):
         """SPEC-236 R4/R10: (uncertain reservations, oldest age s, capped anomalies). Owner-free."""
         with self.pool.connection() as db:
-            row = db.execute("""select count(*) filter (where status='uncertain') as n,
+            anomalies = ("count(*) filter (where financial_anomaly_milli > 0)"
+                         if has_column(db, "app.wallet_reservations", "financial_anomaly_milli")
+                         else "0")
+            row = db.execute(f"""select count(*) filter (where status='uncertain') as n,
                 extract(epoch from (%s - min(created_at) filter (where status='uncertain'))) as age,
-                count(*) filter (where financial_anomaly_milli > 0) as anomalies
+                {anomalies} as anomalies
                 from app.wallet_reservations""", (now,)).fetchone()
         return int(row["n"] or 0), float(row["age"] or 0), int(row["anomalies"] or 0)
 

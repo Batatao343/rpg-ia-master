@@ -272,7 +272,8 @@ class PostgresTurnCoordinator:
                 )
             # SPEC-236 R2: failures without usage are facts, not spend.
             ledger = connection.execute(
-                "select count(*) as n, coalesce(sum(cost_usd) filter (where counts_as_spend), 0)"
+                "select count(*) as n, coalesce(sum(cost_usd) filter (where cost_basis not in"
+                " ('failed_no_usage','definitive_no_charge')), 0)"
                 " as total from app.usage_events where operation_id=%s",
                 (claim.operation_id,),
             ).fetchone()

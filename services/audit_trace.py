@@ -32,6 +32,7 @@ ERROR_CODES = {
     "invoke_error": "llm_invoke_error",
     "invalid_structured": "structured_output_invalid",
     "stream_error": "llm_stream_error",
+    "stream_interrupted": "llm_stream_error",  # SPEC-236: cut after the first chunk
     "circuit_open": "llm_circuit_open",
     "build_error": "llm_build_error",
 }

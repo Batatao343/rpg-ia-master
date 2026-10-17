@@ -1,8 +1,10 @@
 # SPEC-236 — FinOps/wallet/jobs: custo fantasma de falhas, teto diário cross-day, reservas órfãs, STT incerto, refund parcial pré-crédito, lease e poison jobs
 
-> **Status:** `in-progress` — código + testes offline/Postgres local entregues (2026-10-16); faltam o smoke
-> real em staging (§6) e a revisão independente `Sol`/Astra (§9). Evidência: [docs/spec236/README.md](../docs/spec236/README.md).
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
+> **Status:** `in-progress` — código + testes offline/Postgres local entregues (2026-10-16); revisão independente
+> `Sol` (+Astra R1/R2/R5) **APPROVED_WITH_FIXES** em 2026-10-17 ([parecer](../handoffs/SPEC-236-SOL-independent-review.md)).
+> **Falta:** aplicar a migration `20261017100000_usage_counts_as_spend.sql` no staging e rodar o smoke real (§6).
+> Evidência: [docs/spec236/README.md](../docs/spec236/README.md).
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
 > **Depende de:** nenhuma · SPEC-182/184/186/188/189/195/196 `done` e o teto diário da SPEC-197 são corrigidos (ordem final 2026-10-15)
 > **Desbloqueia:** gate da SPEC-197/198 (custos e teto diário confiáveis); custo exato da SPEC-200 (ordem final 2026-10-15)
 > **Origem:** auditoria de bugs 2026-10-15 — achados BUG-08-01..08-09, 04-02, 04-03, 04-08 (`achados/08-billing-jobs.md`, `04-persistencia-concorrencia.md`)
@@ -108,7 +110,7 @@ de liberação/liquidação; refund parcial nunca bloqueia crédito; jobs com te
 ### Arquivos alterados
 
 - `services/usage_metering.py:140-176` — ramo `failed_no_usage` + `counts_as_spend` (R1); `infrastructure/usage_events.py`
-  + migration `supabase/migrations/2026101600_usage_counts_as_spend.sql` (R2); `infrastructure/finops_reader.py:112-139`,
+  + migration `supabase/migrations/20261017100000_usage_counts_as_spend.sql` (R2); `infrastructure/finops_reader.py:112-139`,
   `services/daily_spend_cap.py:124`, `services/finops_alerts.py`, `api.py:729`, `services/finops.py` (R2).
 - `services/daily_spend_cap.py:75-84` (R3).
 - `services/cron_internal.py`, `services/operation_recovery.py`, `infrastructure/wallet.py:546` (R4).
@@ -205,11 +207,21 @@ update app.usage_events set counts_as_spend=false
   de `art_generations` para imagem. A variável do teto é `RPG_DAILY_SPEND_CAP_BRL` (a spec citava `RPG_DAILY_CAP_BRL`);
   opt-out do fail-closed: `RPG_KILL_SWITCH_CAP_FAIL_OPEN=1`. O TTL do adiamento usa o relógio do banco
   (`art_generations.created_at`); falha ao checar o TTL mantém o adiamento (nunca quebra a pausa).
-- **R9:** reativação de job `dead`/`cancelled` tem cooldown de 15 min (`DEAD_JOB_REVIVE_COOLDOWN`) para que o
-  re-enqueue automático a cada turno não recrie um loop pago.
+- **R9:** reativação de job `dead`/`cancelled` espera `max(15 min, idade do job ao morrer)` (`DEAD_JOB_REVIVE_COOLDOWN`,
+  backoff exponencial — revisão Sol) para que o re-enqueue automático a cada turno não recrie um loop pago.
 
 ## 9. Evidência requerida
 
 - `uv run pytest` completo e `-m infra_local`; testes antes/depois; saída da migration 2×.
 - `docs/<spec>/README.md` com repros (`m.py`, `cap_repro.py`, `lease.py`) transcritas, relatório FinOps antes/depois e
   revisão `Sol` (+ Astra para R1/R2/R5).
+
+### Revisão independente (2026-10-17)
+
+- [x] Revisão `Sol` independente — APPROVED_WITH_FIXES ([parecer](../handoffs/SPEC-236-SOL-independent-review.md)).
+- [x] Astra (dinheiro R1/R2/R5) — sem defeito de contabilidade; ver parecer.
+- [x] Correções da revisão: degradação segura sem a migration (F1), migration renomeada para depois das da `main` (F2),
+      backoff exponencial no revive de job morto (F3), `stream_interrupted` no export de auditoria (F4); corridas reais
+      em `tests/test_spec236_races_local.py`.
+- [ ] Migration `20261017100000` aplicada no staging.
+- [ ] Smoke real §6 em staging.

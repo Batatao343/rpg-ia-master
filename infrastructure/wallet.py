@@ -34,6 +34,20 @@ class FinancialHold(WalletConflict, _PureFinancialHold):
     """SPEC-195: unsettled refund debt fences new paid operations."""
 
 
+
+def _record_anomaly(connection, reservation_id: UUID, excess: int) -> None:
+    """SPEC-236 R10: excess over the confirmed ceiling, recorded once. Before migration
+    20261017100000 the column is absent: the debit is still capped, only the record is logged."""
+    from infrastructure.usage_events import has_column
+    if has_column(connection, "app.wallet_reservations", "financial_anomaly_milli"):
+        connection.execute(
+            "update app.wallet_reservations set financial_anomaly_milli=%s "
+            "where reservation_id=%s", (excess, reservation_id))
+    else:
+        import logging
+        logging.getLogger("rpg.wallet").warning(
+            "wallet_spend_anomaly_unrecorded excess_milli=%s (migration pending)", excess)
+
 @contextmanager
 def _hold_guard():
     """Map the DB financial-hold trigger (SQLSTATE 42501 'financial_hold') to the app error."""
@@ -534,10 +548,7 @@ class PostgresWallet:
                         "where wallet_reservation_id=%s",
                         (excess, reservation_id),
                     )
-                connection.execute(
-                    "update app.wallet_reservations set financial_anomaly_milli=%s "
-                    "where reservation_id=%s", (excess, reservation_id),
-                )
+                _record_anomaly(connection, reservation_id, excess)
                 debit = int(row["ceiling_milli"])
             for event in events:
                 connection.execute(
@@ -655,10 +666,7 @@ class PostgresWallet:
                                 at=datetime.now(timezone.utc),
                                 authorized_snapshot=True).shard_milli_debited
             if debit > int(row["ceiling_milli"]):
-                connection.execute(
-                    "update app.wallet_reservations set financial_anomaly_milli=%s "
-                    "where reservation_id=%s",
-                    (debit - int(row["ceiling_milli"]), reservation_id))
+                _record_anomaly(connection, reservation_id, debit - int(row["ceiling_milli"]))
                 debit = int(row["ceiling_milli"])
             for event in exact:
                 connection.execute(

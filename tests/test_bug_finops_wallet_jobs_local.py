@@ -25,7 +25,7 @@ pytestmark = pytest.mark.infra_local
 AT = datetime(2026, 10, 12, 12, tzinfo=timezone.utc)
 GROQ = Candidate("groq", "whisper-large-v3-turbo")
 OPENAI = Candidate("openai", "gpt-4o-mini-transcribe")
-MIGRATION = Path("supabase/migrations/20261016100000_usage_counts_as_spend.sql")
+MIGRATION = Path("supabase/migrations/20261017100000_usage_counts_as_spend.sql")
 
 
 @pytest.fixture
@@ -470,3 +470,81 @@ def test_dead_image_job_reservation_is_released_by_sweep(image_case):
     assert (row["status"], row["error_code"], row["reservation_status"]) == (
         "failed", "job_dead_pre_dispatch", "released")
     assert c.wallet.balance(c.owner).available_milli == 1000 and _ledger(c) == (1000, 0)
+
+
+# --- Sol review: the code must degrade safely BEFORE the migration is applied --------------
+_LEGACY_SCHEMA = """
+alter table app.usage_events drop constraint if exists usage_events_no_spend_basis_check;
+drop index if exists app.usage_events_spend_created_idx;
+alter table app.usage_events drop column counts_as_spend;
+alter table app.usage_events drop constraint usage_events_cost_basis_check;
+alter table app.usage_events add constraint usage_events_cost_basis_check check (cost_basis in
+  ('provider_reported', 'token_priced', 'rate_card', 'estimated')) not valid;
+alter table app.wallet_reservations drop constraint if exists wallet_reservations_anomaly_check;
+alter table app.wallet_reservations drop column financial_anomaly_milli;
+"""
+
+
+def test_code_degrades_safely_without_the_migration(db_case, monkeypatch):
+    """Deploying this code before 20261017100000 must not break turns, FinOps, account or wallet."""
+    from infrastructure import usage_events as ue
+    from infrastructure.account_read_model import PostgresAccountReader
+    from infrastructure.finops_reader import PostgresFinopsReader
+    from infrastructure.usage_events import append_usage_events
+    from services.wallet_recovery import recover_wallet_reservations
+    c = db_case
+    c.db.execute(_LEGACY_SCHEMA)  # rolled back by the fixture
+    monkeypatch.setattr(ue, "_COLUMNS_SEEN", set())
+    op = _operation(c, "completed", "turn")
+    events = normalize_attempts([
+        {"provider": "deepseek", "model": "deepseek-v4-flash", "outcome": "invoke_error",
+         "network_attempted": True, "usage": None},
+        {"provider": "groq", "model": "openai/gpt-oss-120b", "outcome": "success",
+         "network_attempted": True, "usage": {"input_tokens": 10, "output_tokens": 5,
+                                              "provider_cost_usd": "5.00"}},
+    ], operation_id=op)
+    reservation = c.wallet.reserve(c.owner, reference_type="operation", reference_id=str(op),
+                                   pricing_version_id=c.version, ceiling_milli=20,
+                                   fence_token=uuid4(), usage_operation_id=op, at=AT)
+    c.wallet.admit_attempt(c.owner, reservation.reservation_id, fence_token=reservation.fence_token,
+                           attempt_key="a1", provider="groq", model="openai/gpt-oss-120b", at=AT)
+    append_usage_events(c.db, owner_id=c.owner.user_id, operation_id=op, game_id=None, events=events)
+    append_usage_events(c.db, owner_id=c.owner.user_id, operation_id=op, game_id=None, events=events)
+    rows = c.db.execute("select cost_usd,cost_basis,billing_exact from app.usage_events "
+                        "where operation_id=%s order by attempt_ordinal", (op,)).fetchall()
+    # legacy CHECK: the failed attempt is stored as a zero-cost estimate (never US$ 1)
+    assert [(r["cost_usd"], r["cost_basis"], r["billing_exact"]) for r in rows] == [
+        (Decimal("0"), "estimated", False), (Decimal("5.000000000"), "provider_reported", True)]
+    since = datetime(2000, 1, 1, tzinfo=timezone.utc)
+    until = datetime(2100, 1, 1, tzinfo=timezone.utc)
+    reader = PostgresFinopsReader(c.pool)
+    assert reader.usage_groups(since, until) and reader.owner_usage(since, until) is not None
+    reader.ops_counts(since, until)
+    assert reader.wallet_holds(datetime.now(timezone.utc))[2] == 0
+    PostgresAccountReader(c.pool).usage(c.owner)
+    # over-ceiling settle still caps (the anomaly column is simply absent)
+    done = c.wallet.settle_usage(c.owner, reservation.reservation_id,
+                                 fence_token=reservation.fence_token,
+                                 usage_event_ids=[events[1].event_id], at=AT)
+    assert done.status == "settled" and done.settled_milli == 20
+    assert recover_wallet_reservations(c.pool, owner_id=c.owner.user_id)["wallet_errors"] == 0
+    assert _ledger(c) == (980, 0)
+
+
+def test_dead_job_revival_backs_off_exponentially(db_case):
+    """Sol review: a persistently failing paid job (e.g. chronicle compression) is revived on
+    every turn's enqueue scan; a flat 15 min cooldown would buy max_attempts paid calls every
+    15 min forever. The wait now grows with the job's age (doubling), bounding revivals."""
+    from infrastructure.postgres_jobs import revive_dead_job
+    c = db_case
+    kind, key = "compress_chronicle", "spec236-backoff-" + uuid4().hex
+    c.db.execute("""insert into app.jobs(id,owner_id,kind,dedupe_key,status,payload,max_attempts,
+                    attempts,last_error_code,created_at,updated_at)
+                    values (%s,%s,%s,%s,'dead','{}'::jsonb,3,3,'provider',
+                            now()-interval '3 hours', now()-interval '1 hour')""",
+                 (uuid4(), c.owner.user_id, kind, key))
+    # lived 2 h before dying 1 h ago: must wait >= 2 h, not 15 min
+    assert revive_dead_job(c.db, kind, key) is False
+    c.db.execute("update app.jobs set updated_at=now()-interval '2 hours 30 minutes' "
+                 "where dedupe_key=%s", (key,))
+    assert revive_dead_job(c.db, kind, key) is True
