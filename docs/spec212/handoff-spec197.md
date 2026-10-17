@@ -21,10 +21,16 @@ O script valida o Supabase local, sobe `scripts/audit_local_server.py` (perfil `
 `RPG_CLIENT_LATENCY_REPORT=1`) em `--api-port` (default 8204) e o Vite em `--vite-port` (default 4204), gera configs
 Playwright temporárias (apagadas ao fim; `workers=1`), roda F01–F40 em `desktop-1440` e `desktop-1280` e a J-V1
 (V01–V09) nos dois viewports, aplica os oráculos da régua aos traces, confere `known-issues.md` e grava a evidência.
-`--reuse` só relê `web/test-results/` (útil para depurar o relatório; não substitui a execução).
+`--reuse` só relê relatórios anteriores (depuração) e **nunca certifica**: adiciona `fresh_run=not_provisioned`,
+que reprova em `--strict`. Uma execução nova apaga relatórios/traces anteriores antes de rodar.
 Saída: `{"ok": ..., "failing": [...], "json": ..., "md": ...}` e exit 1 se `ok` for falso.
 `dirty_files` é calculado **antes** de gerar qualquer arquivo; commite a evidência depois, em commit seguinte
 (o SHA avaliado é o do commit anterior à evidência).
+
+## Evidência certificada (2026-10-17)
+
+`docs/spec212/evidence/gameplay-gate-0666576fc421.json` — `ok: true`, `dirty_files: 0`, `strict: true`,
+SHA `0666576fc42124d5bef8b97c94c431ffb8aac351` (evidência commitada no commit seguinte, `9628f46`).
 
 ## Proposta de linha para o `decision-request` da SPEC-197
 

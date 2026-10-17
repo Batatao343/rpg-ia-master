@@ -1,5 +1,6 @@
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
+> **SPEC-212 `done` (17/10):** gate de gameplay do beta desktop — J-V1 (V01–V09) + F01–F40 em 1440x900/1280x800 contra stack real + MockLLM, oráculos console/duplicação/segredo/latência/a11y verdes; evidência `docs/spec212/evidence/gameplay-gate-0666576fc421.json` (`ok: true`, `dirty_files: 0`, strict); revisão Sol APPROVED com 4 correções. Convite de testers só com SPEC-218/219 `done`; publicar exige aprovação do environment `eval-governance`.
 > **SPEC-237 `done` (17/10):** embeddings Jina precificados por card versionado separado (`embedding-2026-10-17-v1`, US$ 0,05/1M) em vez do piso de US$ 1; staging redeployado (`3250cdb` = main `8823bb0` + tooling; deps do SPEC-225 instaladas via `uv.lock`) com `RPG_DAILY_SPEND_CAP_TEXT=1`: 32/32 turnos DeepSeek sem 503, 56 embeddings `token_priced` = US$ 0,0001.
 > **SPEC-219 R5 medido em 2ª rede (17/10):** `pg_net` do Supabase vs ISP local — baldes distintos por rede, invariantes a `X-Forwarded-For`/`X-Real-IP`/`X-Vercel-Forwarded-For` forjados. 219 segue `in-progress` só pela dependência SPEC-218 (`in-progress`: gate de release da SPEC-197).
 > **17/10 (tarde) — DeepSeek no staging (autorização do dono), branch `staging-ds`:** turnos reais 25/25

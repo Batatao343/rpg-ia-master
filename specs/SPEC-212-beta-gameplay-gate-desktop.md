@@ -1,7 +1,7 @@
 # SPEC-212 — Beta de gameplay desktop: gate de jornada vertical
 
-> **Status:** `in-progress`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Status:** `done`
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
 > **Depende de:** SPEC-199, 200, 202, 203, 204, 205, 206, 207, 209, 210, 211 (onda beta desktop) + SPEC-226..235 (bloqueadores de bug de gameplay/API) + SPEC-218, 219 (deploy exposto fail-closed e cota por owner antes de convidar testers) — todas `done` · leitura (não editar): SPEC-172 `done`, SPEC-173 `done`, SPEC-197 `in-progress` (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-216; go do beta pago (D6) via handoff para SPEC-197; convite de testers desktop (ordem final 2026-10-15)
 > **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 15
@@ -162,7 +162,7 @@ Pré-condição: SPEC-199–211 `done` (nada aqui antecipa essas entregas).
 ## 5. Critérios de aceite
 
 - [x] Etapa 0 concluída e relockada por tarefa separada; executor de produto não editou evaluator/expected/dataset protegido.
-- [ ] J-V1 (V01..V09) verde em 1440x900 e 1280x800 contra stack real + MockLLM. *(parcial: verde em execuções isoladas, incl. a do gate completo; V07/V08 flaky ~50% por defeito de autoria — `handoffs/SPEC-212-etapa0-followup.md`, KI-11)*
+- [x] J-V1 (V01..V09) verde em 1440x900 e 1280x800 contra stack real + MockLLM (gate `--strict` 18/18; V07/V08 corrigidos em `b435436`, corrida de V01 em `0666576`).
 - [x] F01–F16 (hoje F01–F40, 36 jornadas) verdes nos dois viewports desktop; F16 móvel não regrediu (gate local 2026-10-17, 36/36 por viewport).
 - [x] Zero `pageerror`/`console.error`/request inesperado em toda a execução (execução verde do gate).
 - [x] Zero turno duplicado (inclui replay de `action_id` e reload mid-SSE) (execução verde do gate).
@@ -170,8 +170,8 @@ Pré-condição: SPEC-199–211 `done` (nada aqui antecipa essas entregas).
 - [x] Latência (TTFMC/TTLT, nomes da SPEC-200) presente em 100% dos turnos (R13 corrigido: `rpg.turn` de stream sai após ttfmc/ttlt); p50/p95 baseline registrados (sem meta de valor).
 - [x] XP aparece na UI estruturada e não como número na prosa; export válido e redigido (execução verde do gate).
 - [x] Axe: zero `serious`/`critical` em cada aba, em ambos os viewports (execução verde do gate).
-- [ ] `docs/spec212/evidence/gameplay-gate-<sha12>.json` com `ok: true`, `dirty_files: 0`, SHA = HEAD avaliado. *(pendente: gerar após commit, árvore limpa: `uv run python scripts/beta_gameplay_gate.py --strict`; ver `docs/spec212/handoff-spec197.md`)*
-- [ ] `known-issues.md` sem bloqueador aberto (KI-11 aberto: V07/V08 flaky, autoria de eval); `handoff-spec197.md` entregue.
+- [x] `docs/spec212/evidence/gameplay-gate-0666576fc421.json` com `ok: true`, `dirty_files: 0`, `strict: true`, SHA = `0666576` (evidência commitada em `9628f46`, padrão documentado).
+- [x] `known-issues.md` sem bloqueador aberto (KI-9/10/11 fechados); `handoff-spec197.md` entregue com a evidência certificada.
 - [x] `uv run pytest` verde (suíte completa offline, exit 0, sem `test_project_index`); build `cd web && npm run build` verde; `uv run python scripts/validate_content.py` sem erros.
 - [x] Guard de FallbackLLM: não aplicável (nenhum structured output novo); confirmar na revisão.
 - [x] Saves antigos continuam carregando (nenhuma mudança de schema nesta spec).
@@ -212,4 +212,11 @@ Pré-condição: SPEC-199–211 `done` (nada aqui antecipa essas entregas).
 - **Desvio D-2:** modal de nível espera o painel de desfecho (`levelUpHeldByOutcome`); dispensa do desfecho elevada ao `PlayScreen`.
 - **Decisões documentadas sem código:** aliado fora do manifesto (contrato SPEC-203 é de `enemies`), dado sem seed (§3.1 proíbe tocar a mecânica), beacon `ERR_ABORTED` (cliente não usa `keepalive`; allowlist mantida). Ver `docs/spec212/known-issues.md`.
 - **Orquestrador:** `scripts/beta_gameplay_gate.py` + `services/gameplay_oracles.py` (mapa de nomes → régua). Playwright `workers=1` com configs temporárias; os projetos `desktop-1440/1280` são gerados pelo script (não alteram `web/playwright.config.ts`).
-- **Pendente para `done`:** correção de autoria do V07/V08 (follow-up) + relock; evidência `gameplay-gate-<sha12>.json` `ok: true` no commit; revisão Sol; aprovação `eval-governance` para publicar.
+- **Pendente para `done` (resolvido 2026-10-17):** correção de autoria do V07/V08 (follow-up) + relock; evidência `gameplay-gate-<sha12>.json` `ok: true` no commit; revisão Sol; aprovação `eval-governance` para publicar.
+
+## 11. Revisão Sol independente (2026-10-17)
+
+Parecer: `handoffs/SPEC-212-SOL-independent-review.md` — **APPROVED**. Correções do revisor em `2f3aacb`
+(known-issues fail-closed, evidência nunca de execução anterior/`--reuse`, linha `rpg.turn` adiada à prova de falha).
+Gate `--strict` verde em `0666576` (`ok: true`). D-212-5: o convite de testers segue condicionado a SPEC-218/219 `done`.
+Publicar exige aprovação do environment `eval-governance` (régua alterada: J-V1, dataset `gameplay_gate`, registry/lock).
