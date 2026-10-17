@@ -134,7 +134,8 @@ def test_voice_smoke_synthetic_wav_is_valid_pcm():
 def test_vercel_env_groq_and_speech_flags_production_only():
     from scripts.staging.vercel_env import build_env
     files = {k: "x" for k in ("DATABASE_URL", "SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY", "SUPABASE_SERVICE_ROLE_KEY",
-                              "RPG_SESSION_SECRET", "RPG_CRON_SECRET", "JINA_API_KEY", "GROQ_API_KEY")}
+                              "RPG_SESSION_SECRET", "RPG_CRON_SECRET", "JINA_API_KEY", "GROQ_API_KEY",
+                              "RPG_TELEMETRY_SECRET")}  # 2026-10-17: requisito hosted, agora obrigatorio
     prod, prev = build_env(files)
     assert prod["RPG_SPEECH_ENABLED"] == "1" and "GROQ_API_KEY" in prod and "OPENAI_API_KEY" not in prod
     assert "GROQ_API_KEY" not in prev and "RPG_SPEECH_ENABLED" not in prev
