@@ -45,11 +45,17 @@
 - YAML de todos os workflows e do dependabot parseado com `yaml.safe_load`. `actionlint` não está instalado; revisão manual.
 - Ruff nos arquivos tocados: verde.
 
-## Allowlist do pip-audit (vence em 2026-11-16)
+## pip-audit: allowlist removida (2026-10-17)
 
-Os cinco ids acima são ignorados explicitamente no step de `validate.yml`. Correção de fato: atualizar `urllib3`,
-`multidict` e `langgraph-sdk` no `uv.lock` (`uv lock --upgrade-package ...`), reexportar `requirements*.txt`
-e remover os ids da allowlist. Não foi feito nesta execução para não mudar dependências sem suíte completa dedicada.
+Os cinco advisories tinham correção compatível; o `uv.lock` foi atualizado com `uv lock --upgrade-package` (demais pins intactos) e `requirements*.txt` reexportados (pillow fica fora, como antes). O step de `validate.yml` roda `pip-audit` sem `--ignore-vuln`.
+
+| Advisory | Pacote | Ação |
+|---|---|---|
+| PYSEC-2026-4244 | multidict 6.7.1 | atualizado para 6.9.1 |
+| PYSEC-2026-4177/4176/4175 | urllib3 2.7.0 | atualizado para 2.8.0 |
+| PYSEC-2026-4240 | langgraph-sdk 0.4.3 | atualizado para 0.4.8 |
+
+Resultado: `pip-audit -r requirements.txt` = `No known vulnerabilities found`; `npm audit --omit=dev --audit-level=high` = 0 vulnerabilidades (sem mudança em `web/`, sem migração major do Vite). Sem advisories pendentes, não há prazo de revisão de allowlist.
 
 ## Environments do GitHub (R4, verificação manual)
 

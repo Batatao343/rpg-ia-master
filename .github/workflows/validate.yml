@@ -17,14 +17,9 @@ jobs:
       # A suíte cobre os builders opcionais usados pelas rotas reais:
       # DeepSeek/Groq/Qwen/MiniMax via OpenAI-compat e Anthropic no tier SMART.
       - run: uv sync --extra openai --extra anthropic --extra postgres
-      # SPEC-225 R6: CVEs conhecidos do lock (multidict, urllib3, langgraph-sdk), com prazo de
-      # revisão 2026-11-16. Remover cada id ao atualizar a dependência (uv lock --upgrade-package).
+      # SPEC-225 R6: sem allowlist; os 5 advisories (multidict, urllib3, langgraph-sdk) foram corrigidos no lock.
       - name: pip-audit (requirements.txt exportado do lock)
-        run: >-
-          uvx --from pip-audit==2.10.1 pip-audit -r requirements.txt --progress-spinner off
-          --ignore-vuln PYSEC-2026-4244 --ignore-vuln PYSEC-2026-4177
-          --ignore-vuln PYSEC-2026-4176 --ignore-vuln PYSEC-2026-4175
-          --ignore-vuln PYSEC-2026-4240
+        run: uvx --from pip-audit==2.10.1 pip-audit -r requirements.txt --progress-spinner off
       - run: uv run ruff check .
       - run: uv run python scripts/validate_content.py
       - run: uv run pytest -q

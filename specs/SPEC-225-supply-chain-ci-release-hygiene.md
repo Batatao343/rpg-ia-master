@@ -63,7 +63,7 @@ Objetivo: fechar a higiene preventiva com testes de contrato no CI e uma regra f
 
 ## 5. Critérios de aceite
 - [x] Etapa 0 vermelha, verde ao final; R1–R9 implementados; `uv run pytest` verde (ver evidência).
-- [ ] CI `validate` com gitleaks/pip-audit/npm audit verdes no PR (pendente: push/PR; pip-audit com allowlist de 5 ids, ver `docs/spec225/README.md`).
+- [ ] CI `validate` com gitleaks/pip-audit/npm audit verdes no PR (pendente: push/PR; pip-audit já sem allowlist: os 5 advisories foram corrigidos no lock em 2026-10-17, ver `docs/spec225/README.md`).
 - [x] `git check-ignore` confirma a lista.
 - [ ] Dependabot abriu PRs (pendente: push); Environments verificados e anotados (pendente: `eval-provider`/`eval-holdout`/`post-deploy-smoke` não existem no GitHub e `eval-governance` sem restrição de branch; ver evidência).
 - [x] Sem a env (teste unitário) → 409 e sem consume.
@@ -90,5 +90,5 @@ Sem LLM/pagamento real: CI do PR + `scripts/release/checklist.py --env staging` 
 - Desvios: `export_game_audit.py` recebeu `--dsn-env` (além dos seis listados em R7); `FORBIDDEN_IN_HOSTED` não existe no
   repo, então a env de teste entra em `FORBIDDEN_IN_PROD`; `.github/dependabot.yml` usa ecossistema `pip` em `requirements.txt`.
 - Defaults D-A/D-B/D-C aplicados como recomendados.
-- Achado que bloqueia o fechamento: pip-audit encontrou 5 advisories no lock (allowlist temporária com prazo 2026-11-16) e
+- Achado resolvido em 2026-10-17: os 5 advisories do pip-audit foram corrigidos no lock (allowlist removida). Segue bloqueando o fechamento:
   os Environments de GitHub não estão configurados como R4 pede.
