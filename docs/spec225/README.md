@@ -75,11 +75,24 @@ de qualquer ref pode usar secrets de Environment. A correção é configuração
 nesta execução. Depois de aplicar e reconferir com `gh api`, adicionar a linha `ENVIRONMENTS_VERIFIED: AAAA-MM-DD`
 neste arquivo; o checklist de release só passa com essa linha.
 
+### Verificação de 2026-10-17
+
+Aplicado pelo coordenador com autorização do dono (`gh api`, conta Batatao343):
+
+| Environment | Required reviewers | Deployment branches |
+|---|---|---|
+| `eval-governance` | Batatao343 | só `main` |
+| `eval-provider` | Batatao343 | só `main` |
+| `eval-holdout` | Batatao343 | só `main` |
+| `post-deploy-smoke` | — | só `main` |
+
+ENVIRONMENTS_VERIFIED: 2026-10-17
+
 ## Pendências (por que a spec segue `in-progress`)
 
-1. Environments acima (configuração no GitHub + `ENVIRONMENTS_VERIFIED`).
+1. ~~Environments~~ — aplicados e verificados em 2026-10-17.
 2. CI verde no PR com `secret-scan`, `npm-audit-full` e pip-audit: exige push/PR (não feito).
-3. Dependabot abrir PRs: exige push na `main`.
+3. ~~Dependabot~~ — abriu PRs após o push de 2026-10-17.
 4. Varredura do histórico completo com gitleaks: roda no `schedule` semanal; primeiro resultado ainda não observado.
 5. Staging com `RPG_PLAY_ACCEPT_TEST_PURCHASES=1` antes do deploy (runbook de R8; compra de license tester em staging
    não foi executada).
