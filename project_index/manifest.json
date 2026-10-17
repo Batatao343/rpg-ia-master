@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "e4a3864363e347a724ad74b3150d98e150122e6f",
+  "commit_sha": "db1a380b5e41b8c42c78048e218e419aabdeedc1",
   "edge_counts": {
-    "calls": 14301,
-    "contains": 610,
-    "defines": 8232,
-    "imports": 1307,
-    "likely_test_for": 825,
+    "calls": 14471,
+    "contains": 620,
+    "defines": 8292,
+    "imports": 1343,
+    "likely_test_for": 837,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:e3ec9ce81d5e14d372ac30dbeb4bb4886fc0c3b4077936711035610e3d8f0c61",
+  "graph_hash": "sha256:df2f6f40ffe67dd1ab6444ca6fb1f866d3e3e076389c79518d11588c40c5e320",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -191,6 +191,7 @@
     "scripts/frontend_eval_report.py",
     "scripts/gen_cards_v4.py",
     "scripts/gen_classes_v2.py",
+    "scripts/gen_retention_doc.py",
     "scripts/gen_tiers_5_plus.py",
     "scripts/gen_world_living_npcs.py",
     "scripts/import_visual_assets.py",
@@ -330,6 +331,7 @@
     "services/quest_log.py",
     "services/reactions.py",
     "services/restore_effects.py",
+    "services/retention.py",
     "services/rule_engine.py",
     "services/secret_signatures.py",
     "services/shard_pricing.py",
@@ -502,6 +504,7 @@
     "tests/test_frontend_auth_bootstrap.py",
     "tests/test_frontend_visual_contracts.py",
     "tests/test_fuga_progressiva_persistente.py",
+    "tests/test_game_delete_purges_blobs.py",
     "tests/test_game_transfer_local.py",
     "tests/test_grounding_boundaries.py",
     "tests/test_hardening_mechanical_inputs.py",
@@ -542,6 +545,7 @@
     "tests/test_mutation_api_local.py",
     "tests/test_mvp.py",
     "tests/test_narrative_evidence.py",
+    "tests/test_no_print_in_production.py",
     "tests/test_npc_camadas.py",
     "tests/test_npc_catalog_scope.py",
     "tests/test_npc_fallback.py",
@@ -554,6 +558,7 @@
     "tests/test_onboarding.py",
     "tests/test_operation_recovery_local.py",
     "tests/test_operation_replay_boundaries.py",
+    "tests/test_owner_tables_inventory.py",
     "tests/test_perfil_normal_invariantes.py",
     "tests/test_persistence_transient_lock.py",
     "tests/test_pgvector_memory.py",
@@ -625,6 +630,9 @@
     "tests/test_spec197_legal_pages.py",
     "tests/test_spec197_runtime_role.py",
     "tests/test_spec198_rename_package.py",
+    "tests/test_spec222_privacy_local.py",
+    "tests/test_spec222_retention_local.py",
+    "tests/test_spec222_transparency.py",
     "tests/test_spec234_pgvector_profile_local.py",
     "tests/test_spec235_reclaim_local.py",
     "tests/test_spec_index.py",
@@ -646,6 +654,7 @@
     "tests/test_transicoes_criticas_b1.py",
     "tests/test_turn_effects_atomicity.py",
     "tests/test_turn_latency_contract.py",
+    "tests/test_turn_logs_no_game_content.py",
     "tests/test_turn_outcome_endpoints.py",
     "tests/test_turn_pipeline_concurrency.py",
     "tests/test_usage_capture.py",
@@ -666,6 +675,7 @@
     "web/e2e/checkout.spec.ts",
     "web/e2e/combat-gesture.spec.ts",
     "web/e2e/combat-outcome.spec.ts",
+    "web/e2e/consent.spec.ts",
     "web/e2e/critical-journeys.spec.ts",
     "web/e2e/deck-character.spec.ts",
     "web/e2e/diagnostics/spec201-capture.spec.ts",
@@ -776,6 +786,7 @@
     "web/tests/voice-hook.fixture.tsx",
     "web/vite.config.ts",
     "workers/__init__.py",
+    "workers/blob_purge_jobs.py",
     "workers/chronicle_jobs.py",
     "workers/drain.py",
     "workers/dynamic_art_jobs.py",
@@ -791,14 +802,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 692,
+    "class": 698,
     "endpoint": 63,
-    "file": 737,
-    "function": 2561,
-    "method": 678,
-    "module": 610,
-    "test": 4301
+    "file": 748,
+    "function": 2570,
+    "method": 679,
+    "module": 620,
+    "test": 4345
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:a5cd48da27842c517ce2ea65662e52fdc7d83e189c139f8efb6f753cac440084"
+  "source_tree_hash": "sha256:c034aa4e2e3202ee250a1ce6c14ae27196431fc840e96f8760014a355a2c3ce4"
 }
