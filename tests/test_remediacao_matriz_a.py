@@ -57,16 +57,6 @@ def test_zero_fora_de_combate_nao_equivale_a_morte():
     assert invariants.check_actor_lifecycle(state, None, 7) == []
 
 
-def test_zero_em_combate_ou_fluxo_terminal_e_valido():
-    base = {"player": {"vitalidade": 0, "max_vitalidade": 12}}
-    assert invariants.check_zero_vitality_outside_terminal(
-        {**base, "combat": {"active": True}}, None, 1,
-    ) == []
-    assert invariants.check_zero_vitality_outside_terminal(
-        {**base, "combat": {"active": False}, "death_pending": True}, None, 1,
-    ) == []
-
-
 def test_warning_npc_exige_uso_mecanico_atual():
     remote = {
         "Pérola": {"created_turn": 2, "home_location_id": "brekmar", "in_scene": True}

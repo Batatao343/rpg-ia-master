@@ -1,6 +1,6 @@
 # SPEC-270 — Apagar o invariante de playtest aposentado
 
-> **Status:** `draft` · **Revisão independente 2026-10-18:** SAFE as written (ver §8)
+> **Status:** `done` · **Revisão independente 2026-10-18:** SAFE as written (ver §8)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Origem:** auditoria ponytail 2026-10-18 ([relatório](../docs/auditorias/ponytail-poda-2026-10-18.md))
 > **Depende de:** —

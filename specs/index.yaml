@@ -4794,7 +4794,7 @@ specs:
   lineage_note: Authored from auditoria ponytail 2026-10-18 (docs/auditorias/ponytail-poda-2026-10-18.md); draft awaiting approval
 - id: SPEC-270
   slug: poda-invariante-aposentado
-  status: draft
+  status: done
   path: specs/SPEC-270-poda-invariante-aposentado.md
   created_commit: null
   created_at: '2026-10-18'

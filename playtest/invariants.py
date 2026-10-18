@@ -1060,24 +1060,6 @@ def check_recycled_npc(state: dict, prev: Optional[dict], turn: int) -> List[Vio
     return out
 
 
-def check_zero_vitality_outside_terminal(
-    state: dict, prev: Optional[dict], turn: int,
-) -> List[Violation]:
-    """Vitalidade 0 só é jogável dentro do conflito ou do fluxo terminal."""
-    player = state.get("player") or {}
-    vitality = int(player.get("vitalidade", player.get("hp", 0)) or 0)
-    if vitality != 0:
-        return []
-    if (state.get("combat") or {}).get("active"):
-        return []
-    if state.get("death_pending") or state.get("game_over"):
-        return []
-    return [_V(
-        "player.zero_vitality_outside_terminal", "error", turn,
-        "protagonista com Vitalidade 0 saiu do combate sem fluxo terminal",
-    )]
-
-
 def check_actor_lifecycle(state: dict, prev: Optional[dict], turn: int) -> List[Violation]:
     """Life phase coherence; zero Vitality by itself is explicitly valid."""
     player = state.get("player") or {}
