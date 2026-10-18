@@ -253,6 +253,9 @@ def test_database_brief_tampering_fails_before_ticket(image_case):
 
 
 def test_expired_job_fence_cannot_dispatch_and_reclaimed_ticket_never_retries(image_case):
+    # SPEC-236 R9: an image job has max_attempts=1, so an expired lease after its only attempt goes
+    # `dead` (never re-leased). The stale fence still cannot dispatch, the ticket already issued is
+    # never reused, and the hold stays for the recovery sweep: no second effect, no charge/refund.
     from infrastructure.contracts import LeaseHeld
     c = image_case
     generation = confirm(c, issue(c))
@@ -260,15 +263,17 @@ def test_expired_job_fence_cannot_dispatch_and_reclaimed_ticket_never_retries(im
     with job_scope(first):
         c.repo.dispatch(generation["generation_id"], c.owner.user_id, c.game_id)
     c.db.execute("update app.jobs set lease_until=now()-interval '1 second' where id=%s", (first.job_id,))
-    second = lease(c, generation)
-    with job_scope(first), pytest.raises(LeaseHeld):
+    assert c.queue.lease("image-test", {"generate_dynamic_art"}, 1) == []
+    row = c.db.execute("select status,attempts,max_attempts,last_error_code from app.jobs where id=%s",
+                       (first.job_id,)).fetchone()
+    assert row == {"status": "dead", "attempts": 1, "max_attempts": 1, "last_error_code": "lease_expired_max_attempts"}
+    assert c.queue.lease("image-test", {"generate_dynamic_art"}, 1) == []
+    with job_scope(first), pytest.raises((LeaseHeld, Conflict)):
         c.repo.dispatch(generation["generation_id"], c.owner.user_id, c.game_id)
-    with job_scope(second):
-        with pytest.raises(Conflict):
-            c.repo.dispatch(generation["generation_id"], c.owner.user_id, c.game_id)
-        c.repo.hold_or_release(generation["generation_id"])
     assert c.repo.wallet.balance(c.owner).reserved_milli == 4
     assert c.db.execute("select count(*) as n from app.wallet_attempt_tickets where owner_id=%s", (c.owner.user_id,)).fetchone()["n"] == 1
+    assert not c.db.execute("select 1 from app.wallet_entries where owner_id=%s and entry_type in ('settle','release')",
+                            (c.owner.user_id,)).fetchone()
 
 
 def test_quote_rls_owner_select_only_and_no_client_mutation(image_case):
