@@ -15,7 +15,7 @@ DYING_FUNCTIONS = [
 
 # Helpers genéricos + sistema de classes Entropia/Carga (v4) + condições/passivas.
 SURVIVING_FUNCTIONS = [
-    "actor_mods", "normalize_attr", "roll_dice_numeric", "resolve_damage_formula",
+    "actor_mods", "normalize_attr", "roll_dice_numeric",
     "parse_condition", "tick_conditions", "player_passives",
     "entropy_config", "abyss_tier", "apply_entropy_trigger", "apply_scar",
     "apply_transformacao", "reduce_ally_abyss", "check_recidiva",

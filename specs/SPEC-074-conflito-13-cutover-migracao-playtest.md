@@ -269,3 +269,9 @@ de corte:
   ANTES da implementação — não inferir silenciosamente.
 - Volume de testes a auditar (~199+) é grande — não pular a Etapa 1
   (auditoria) achando que "dá pra ver na hora".
+
+---
+
+## Adendo SPEC-272 (2026-10-18)
+
+SPEC-272: `combat_mechanics.resolve_damage_formula` saiu da lista SOBREVIVE de `tests/test_cutover_audit.py` e do código — nenhum caminho de produção a chamava depois do cutover (o dano usa `roll_dice_numeric`).

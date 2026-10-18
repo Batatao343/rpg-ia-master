@@ -181,3 +181,9 @@ class Scar(TypedDict):
   de resiliência (CLAUDE.md, seção crítica) sem exceção.
 - Categorias de inimigo (R7) dependem do bestiário ter o campo `categoria`
   preenchido — placeholder aqui, conteúdo real em `conflito-15`.
+
+---
+
+## Adendo SPEC-272 (2026-10-18)
+
+Capacidades removidas pela SPEC-272 (nunca ligadas ao motor): `death_flow.resolve_surrender` e `death_flow.last_stand_pay`. Rendição continua 100% determinística, mas pelo perfil tático: `tactical_profile.pick_action` → ação `surrender` → `conflict_orchestrator` marca `surrendered` (nenhum perfil do bestiário usava os campos `rende_*`/`nunca_rende` que só `resolve_surrender` lia). A Última Ação de produção (`conflict_orchestrator._resolve_last_stands`) ignora custo de Carta/Entropia por contrato, então não há o que pagar; o critério "ignora recurso ausente, sem criar Ferimento" segue verdadeiro sem o helper. Mantidos e ainda NÃO ligados (decisão `manter` da SPEC-272, exigem declaração do jogador): `can_be_nonlethal`/`apply_nonlethal_finish` (golpe não-letal).

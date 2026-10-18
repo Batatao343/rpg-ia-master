@@ -4824,7 +4824,7 @@ specs:
   lineage_note: Authored from auditoria ponytail 2026-10-18 (docs/auditorias/ponytail-poda-2026-10-18.md); draft awaiting approval
 - id: SPEC-272
   slug: capacidades-conflito-so-testadas
-  status: draft
+  status: in-progress
   path: specs/SPEC-272-capacidades-conflito-so-testadas.md
   created_commit: null
   created_at: '2026-10-18'

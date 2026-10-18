@@ -100,16 +100,8 @@ def can_resume(chase: Optional[dict], fugitive_id: str,
 
 
 # ==========================================================================
-# Etapa 2 — condutor + dificuldade (R4)
+# Etapa 2 — dificuldade (R4) — condutor = protagonista, fixo em `agents.combat._attempt_flee`
 # ==========================================================================
-def chase_conductor(party: List[dict]) -> Optional[dict]:
-    """R4: o protagonista SEMPRE conduz a fuga da party."""
-    for m in party or []:
-        if m.get("is_player") or m.get("player") or m.get("protagonist"):
-            return m
-    return (party or [None])[0]
-
-
 def approach_virtude(approach: str) -> str:
     """R4: Virtude coerente com a abordagem de fuga (default Agilidade)."""
     return APPROACH_VIRTUDE.get(str(approach or "").lower(), "agilidade")

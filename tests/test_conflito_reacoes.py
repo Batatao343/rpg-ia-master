@@ -198,7 +198,8 @@ def test_guardar_desvantagem_nos_dois_lados():
     # ataque CONTRA quem Guarda → Desvantagem; ataque DE quem Guarda → Desvantagem (R8)
     assert cs.guard_defense_modifier(s, "player") == -1
     assert cs.guard_offense_modifier(s, "player") == -1
-    cs.stop_guard(s, "player")
+    # SPEC-232 R6: a Guarda expira no início do próximo turno de quem guardou.
+    cs.reset_turn_budget(s, "player")
     assert cs.guard_defense_modifier(s, "player") == 0
 
 

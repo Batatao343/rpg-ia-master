@@ -69,11 +69,6 @@ def test_prosa_nao_autoriza_perseguicao_sem_politica_fechada():
 # ==========================================================================
 # Etapa 2 — condutor + dificuldade (R4)
 # ==========================================================================
-def test_condutor_e_sempre_protagonista():
-    party = [{"name": "aliado"}, {"name": "herói", "is_player": True}]
-    assert chase.chase_conductor(party)["name"] == "herói"
-
-
 def test_dificuldade_depende_do_perseguidor_principal():
     lento = {"virtudes": {"agilidade": 1}}
     veloz = {"virtudes": {"agilidade": 5}}

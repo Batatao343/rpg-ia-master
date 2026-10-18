@@ -187,3 +187,9 @@ class AttackResolution(TypedDict):
   latência não pode regredir feio; hoje é ~3 chamadas/turno).
 - Toda a lógica de `combat_suggestions` (chips de UI, `combat_mechanics.py:1665`)
   precisa ser refeita em cima do novo pipeline — não é 1:1 com o antigo.
+
+---
+
+## Adendo SPEC-272 (2026-10-18)
+
+Capacidade removida pela SPEC-272 (nunca ligada ao motor): `net_advantage` e `multiply_principal` (`services/conflict_resolution.py`). O comportamento prometido segue valendo por outro caminho: Vantagem/Desvantagem somam +1/-1 e `roll_kept` só olha o sinal (cancelam-se, não acumulam); o multiplicador de Crítico do efeito principal é `efeito_principal_multiplicador` de `resolve_attack`, aplicado no dano (`conflict_orchestrator._basic_attack`). Os testes `test_vantagem_e_desvantagem_se_cancelam` (reescrito sobre `roll_kept`) e os de Crítico continuam cobrindo.

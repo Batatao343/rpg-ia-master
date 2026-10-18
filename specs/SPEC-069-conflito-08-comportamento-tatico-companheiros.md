@@ -166,3 +166,9 @@ class TacticalProfile(TypedDict):
   `agents/bestiary.py`).
 - `check_morale`/perfis fixos atuais têm ~199 testes de combate em cima — auditar
   quais migram vs. são substituídos integralmente.
+
+---
+
+## Adendo SPEC-272 (2026-10-18)
+
+SPEC-272 LIGOU a revelação de Cartas (R8) que só os testes usavam: `agents/combat._sync_enemy_knowledge` marca em `revealed_cards` toda Carta que o inimigo usou na rodada (aparece no painel de combate) e, no início do encontro, aplica o que o bestiário já sabe do arquétipo (`apply_persisted_knowledge`; instâncias ganham `archetype_id` = id do bestiário). Persistência/leitura do overlay compartilhado só no perfil `legacy` (mesmo fail-closed de `dossiers._revealed_for`). Ainda NÃO ligados (decisão `manter`): `reveal_resistance` (o sinal de resistência aplicada não sai dos 4 caminhos de dano), `get_or_generate_profile`/`generate_tactical_profile` (perfis autorais cobrem o bestiário), `player_retains_party_control`/`profile_takes_over` (sem perda de comando no motor).

@@ -142,3 +142,9 @@ class ReactionChain(TypedDict):
   LLM só narra o resultado consolidado).
 - Depende de `conflito-03` (zonas/distância) e `conflito-04` (ataque) estarem
   `done` — não paralelizar com elas.
+
+---
+
+## Adendo SPEC-272 (2026-10-18)
+
+Capacidade removida pela SPEC-272 (nunca ligada ao motor): `conflict_scene.stop_guard`. A Guarda expira no início do próximo turno de quem guardou (`reset_turn_budget`, SPEC-232 R6); "abandonar livremente antes de agir" não tem declaração de jogador no motor e não é mais oferecido. O teste de Guarda agora verifica a expiração por turno.

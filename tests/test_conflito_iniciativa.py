@@ -81,13 +81,6 @@ def test_supercritico_dupla_10():
     assert r["resultado"] == "supercritico" and r["efeito_principal_multiplicador"] == 3
 
 
-def test_efeito_principal_multiplicado_nao_secundario():
-    efeitos = [{"kind": "damage", "principal": True, "valor": 10},
-               {"kind": "apply_condition", "principal": False, "valor": 3}]
-    out = cr.multiply_principal(efeitos, 2)
-    assert out[0]["valor"] == 20 and out[1]["valor"] == 3
-
-
 # --------------------------------------------------------------------------
 # Etapa 3 — Vantagem / Desvantagem
 # --------------------------------------------------------------------------
@@ -104,13 +97,11 @@ def test_desvantagem_3d10_mantem_dois_menores():
 
 
 def test_vantagem_e_desvantagem_se_cancelam():
-    assert cr.net_advantage(1, 1) == 0
-    assert cr.net_advantage(1, 0) == 1
-    assert cr.net_advantage(0, 1) == -1
-    assert cr.net_advantage(2, 1) == 1   # magnitude não acumula, só o sinal
-    # net 0 -> rola 2d10 (não 3)
-    roll = cr.roll_kept(cr.net_advantage(1, 1), SeqRNG([4, 6]))
+    # O motor soma +1/-1 e `roll_kept` só olha o sinal (SPEC-272 removeu o
+    # helper `net_advantage`, nunca chamado): 1-1 = 0 -> 2d10; 2-1 -> Vantagem.
+    roll = cr.roll_kept(1 - 1, SeqRNG([4, 6]))
     assert len(roll["rolled"]) == 2
+    assert cr.roll_kept(2 - 1, SeqRNG([2, 7, 9]))["kept"] == [7, 9]
 
 
 # --------------------------------------------------------------------------

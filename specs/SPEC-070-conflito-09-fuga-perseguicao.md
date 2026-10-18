@@ -137,3 +137,9 @@ class AbandonOutcome(TypedDict):
 - Simulação de abandono precisa ser determinística por seed pra manter a garantia
   de reprodutibilidade do épico (doc 03, Cenário 53) — não introduzir
   `random.random()` sem seed.
+
+---
+
+## Adendo SPEC-272 (2026-10-18)
+
+SPEC-272: `chase_conductor` removido (nunca ligado) — o condutor é sempre o protagonista, fixo em `agents.combat._attempt_flee`, então R4 segue verdadeiro. O Teste de Sorte (R5) foi LIGADO: cada aliado em combate rola `luck_roll` e o saldo vira Vantagem/Desvantagem da fuga (`resolve_chase_round(companion_luck=...)`). Mantidos e ainda NÃO ligados (decisão `manter`, exigem declaração do jogador): `approach_virtude`, `abandon_companion`/`simulate_abandoned_companion`, `offer_sacrifice`, `chase_attack`.

@@ -187,9 +187,35 @@ def _instances(template: Dict, count: int, next_by_template: Dict[str, int]) -> 
         next_by_template[base_id] = number
         inst = dict(template)
         inst["id"] = f"{base_id}_{number}"
+        inst.setdefault("archetype_id", base_id)   # SPEC-272: chave do bestiário
         inst["name"] = (f"{template['name']} {number}" if count > 1 else template["name"])
         out.append(orch.ensure_combat_sheet(inst))
     return out
+
+
+def _sync_enemy_knowledge(enemies: List[Dict], *, load_persisted: bool = False) -> None:
+    """SPEC-272 (liga SPEC-069 R8): Carta que o inimigo já usou fica revelada no
+    painel de combate; no início do encontro, o que o bestiário já sabe do arquétipo
+    começa revelado. Persistir/ler o overlay compartilhado só no perfil `legacy` —
+    mesmo fail-closed de `dossiers._revealed_for` (escopo não é por dono/jogo)."""
+    import os
+    from services import bestiary_knowledge as bk
+    shared = os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() == "legacy"
+    for enemy in enemies:
+        if not isinstance(enemy, dict):
+            continue
+        try:
+            if load_persisted and shared:
+                bk.apply_persisted_knowledge(enemy)
+            for card_id in list(enemy.get("enemy_card_usage") or {}):
+                if bk.is_card_revealed(enemy, card_id):
+                    continue
+                if shared:
+                    bk.reveal_card(enemy, card_id)
+                else:
+                    enemy.setdefault("revealed_cards", []).append(card_id)
+        except Exception:  # revelação é cosmética: nunca derruba o turno
+            _log_event("combat", "enemy_knowledge_failed", level="warning")
 
 
 def _spawn_v4_enemies(messages: List, target_hint: str, state: Optional[Dict],
@@ -830,6 +856,7 @@ def combat_node(state: GameState):
             + [orch.ensure_combat_sheet(dict(a), is_ally=True) for a in
                party_mod.scene_allies(state, excluded=enemy_refs)]
         scene = _prepare_scene(state, enemies, player, allies)
+        _sync_enemy_knowledge(enemies, load_persisted=True)
         bestiary_knowledge = disc.record_encounter(bestiary_knowledge, enemies, turn)
         bk_changed = True
         from services.combat_origin import materialize
@@ -1051,6 +1078,7 @@ def combat_node(state: GameState):
                              declarations={_PLAYER_ID: decl},
                              prepared_abyss=scene.get("abyss_events"),
                              initiator=initiator, rng=rng)
+        _sync_enemy_knowledge(enemies)
         logs += weather_logs + out["logs"]
         # Gasto BRUTO da economia da Carta. O delta líquido antes/depois era
         # incorreto para classes cujo próprio uso repõe Entropia no mesmo turno.
@@ -1335,7 +1363,10 @@ def _attempt_flee(scene: dict, player: Dict, active: List[Dict], sides: dict, rn
     previous_track = chase_state.get("trilha")
     difficulty = chase.chase_difficulty(active[0]) if active else 12
     chase.resolve_chase_round(chase_state, condutor_virtude=virtude_value(player, "agilidade"),
-                              difficulty=difficulty, rng=rng)
+                              difficulty=difficulty,
+                              companion_luck=[chase.luck_roll(rng)
+                                              for _ in (sides or {}).get("ally") or []],
+                              rng=rng)
     chase_state["eligible"] = True
     if chase_state.get("escapou"):
         return FleeDecision(True, [f"{player.get('name', 'O herói')} rompe o cerco e FOGE do combate."], chase_state)

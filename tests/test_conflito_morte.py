@@ -49,17 +49,6 @@ def test_ultimo_critico_dispara_ultima_acao_imediata():
     assert res["entra_em_estado_terminal"] is True
 
 
-def test_ultima_acao_ignora_recurso_ausente_sem_criar_ferimento():
-    p = _full_criticos()
-    p["entropy"] = 1
-    p["vitalidade"] = 0
-    antes = len(p["ferimentos"]["critico"])
-    res = df.last_stand_pay(p, entropy=5, vitality=4)   # paga além do que tem
-    assert res["entropy"] == 0 and res["vitalidade"] == 0
-    assert res["wound_criado"] is False
-    assert len(p["ferimentos"]["critico"]) == antes    # NÃO cria Ferimento novo
-
-
 def test_ultima_acao_pode_declarar_ruptura():
     p = _full_criticos()
     res = df.trigger_last_stand(p, ruptura=True)
@@ -190,23 +179,6 @@ def test_golpe_final_pode_ser_nao_letal_se_forma_permitir():
     alvo = {"conscious": True}
     df.apply_nonlethal_finish(alvo)
     assert alvo["dead"] is False and alvo["incapacitated"] is True
-
-
-def test_rendicao_por_gatilho_de_perfil_sem_llm():
-    enemy = {"vitalidade": 2, "max_vitalidade": 20}
-    profile = {"rende_abaixo_de_vitalidade": 0.2}
-    assert df.resolve_surrender(enemy, profile) is True
-    assert enemy["surrendered"] is True
-    # fanático nunca se rende, mesmo com gatilho
-    fanatico = {"vitalidade": 1, "max_vitalidade": 20}
-    assert df.resolve_surrender(fanatico, {"rende_abaixo_de_vitalidade": 0.2,
-                                           "nunca_rende": True}) is False
-
-
-def test_rendicao_por_lider_caido():
-    enemy = {"vitalidade": 18, "max_vitalidade": 20}
-    profile = {"rende_com_lider_caido": True}
-    assert df.resolve_surrender(enemy, profile, {"leader_defeated": True}) is True
 
 
 def test_combate_nao_termina_por_interpretacao_livre():

@@ -109,19 +109,6 @@ def trigger_last_stand(participant: dict, *, acao: Optional[dict] = None,
     ).model_dump()
 
 
-def last_stand_pay(participant: dict, *, entropy: int = 0, vitality: int = 0) -> dict:
-    """R1: custo da Última Ação paga o que HOUVER; o déficit é ignorado e — ao
-    contrário do sacrifício comum (conflito-05) — NÃO cria Ferimento novo."""
-    ent = int(participant.get("entropy", 0) or 0)
-    participant["entropy"] = max(0, ent - int(entropy))
-    vit = int(participant.get("vitalidade", 0) or 0)
-    participant["vitalidade"] = max(0, vit - int(vitality))
-    import gamedata
-    gamedata.sync_legacy_hp_aliases(participant)
-    return {"entropy": participant["entropy"], "vitalidade": participant["vitalidade"],
-            "wound_criado": False}
-
-
 # ==========================================================================
 # Etapa 2 — Estado Terminal + morte/estabilização (R2/R3/R4)
 # ==========================================================================
@@ -319,41 +306,7 @@ def apply_nonlethal_finish(target: dict) -> dict:
     return {"dead": False, "incapacitated": True}
 
 
-# Gatilhos de rendição (R9) — todos determinísticos, sem LLM.
-def resolve_surrender(enemy: dict, profile: dict, scene_state: Optional[dict] = None) -> bool:
-    """R9: rendição 100% determinística pelo perfil tático. Gatilhos: líder
-    derrotado, Vitalidade muito baixa, aliados insuficientes, rota de fuga
-    bloqueada + objetivo impossível, medo/lealdade quebrada. Fanático (`nunca_rende`)
-    nunca se rende. Marca `enemy['surrendered']`."""
-    profile = profile or {}
-    scene = scene_state or {}
-    if profile.get("nunca_rende"):
-        return False
-
-    triggers = False
-    if profile.get("rende_com_lider_caido") and scene.get("leader_defeated"):
-        triggers = True
-    thr = profile.get("rende_abaixo_de_vitalidade")
-    if thr is not None:
-        maxv = int(enemy.get("max_vitalidade", 0) or 0)
-        vit = int(enemy.get("vitalidade", 0) or 0)
-        if maxv > 0 and (vit / maxv) <= float(thr):
-            triggers = True
-    min_allies = profile.get("rende_com_aliados_abaixo_de")
-    if min_allies is not None and int(scene.get("allies_remaining", 99)) < int(min_allies):
-        triggers = True
-    if (profile.get("rende_sem_fuga") and scene.get("escape_blocked")
-            and scene.get("objective_impossible")):
-        triggers = True
-    if profile.get("rende_com_medo") and scene.get("morale_broken"):
-        triggers = True
-
-    if triggers:
-        enemy["surrendered"] = True
-        enemy["conscious"] = enemy.get("conscious", True)
-    return triggers
-
-
+# Rendição (R9): via perfil tático — `tactical_profile.pick_action` → "surrender" (SPEC-272).
 def combat_should_end(sides_state: dict) -> dict:
     """R10: combate termina quando um lado não tem hostis ativos, todos fugiram,
     todos se renderam, o objetivo mecânico foi concluído, ou um gatilho preparado

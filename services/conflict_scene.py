@@ -423,14 +423,6 @@ def guard(scene: dict, participant_id: str, *, spend: bool = True) -> dict:
     return {"ok": True, "error": None, "log": f"{participant_id} assume a Guarda."}
 
 
-def stop_guard(scene: dict, participant_id: str) -> dict:
-    """Abandona a Guarda livremente antes de agir (perde a proteção). Não devolve Ação."""
-    pos = _pos(scene, participant_id)
-    if pos is not None:
-        pos["guarding"] = False
-    return {"ok": True, "error": None, "log": f"{participant_id} abandona a Guarda."}
-
-
 def is_guarding(scene: dict, participant_id: str) -> bool:
     return bool((_pos(scene, participant_id) or {}).get("guarding"))
 

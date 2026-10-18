@@ -77,29 +77,6 @@ def roll_kept(advantage: int, rng) -> Dict:
     return {"rolled": rolled, "kept": kept}
 
 
-def net_advantage(vantagem: int = 0, desvantagem: int = 0) -> int:
-    """R6: Vantagem e Desvantagem se cancelam; magnitude não acumula (só o sinal
-    importa). Retorna 1 (Vantagem), -1 (Desvantagem) ou 0 (cancelado/nenhuma)."""
-    if int(vantagem or 0) > int(desvantagem or 0):
-        return 1
-    if int(desvantagem or 0) > int(vantagem or 0):
-        return -1
-    return 0
-
-
-def multiply_principal(efeitos: List[dict], multiplicador: int) -> List[dict]:
-    """R5: em carta com vários efeitos, só o efeito marcado `principal` é
-    multiplicado. Multiplica `valor` numérico (fórmula em dados é conflito-05).
-    Retorna cópia; não muta a entrada."""
-    out = []
-    for ef in efeitos:
-        e = dict(ef)
-        if e.get("principal") and isinstance(e.get("valor"), (int, float)):
-            e["valor"] = e["valor"] * int(multiplicador)
-        out.append(e)
-    return out
-
-
 def _crit_from_kept(kept: List[int]) -> Optional[str]:
     """R5: dupla 1-9 nos dados MANTIDOS = Crítico; dupla 10 = Supercrítico."""
     a, b = kept[0], kept[1]

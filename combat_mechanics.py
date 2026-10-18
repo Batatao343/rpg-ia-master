@@ -104,22 +104,6 @@ def roll_dice_numeric(formula: str) -> Tuple[int, str]:
     return max(0, total), " ".join(details)
 
 
-def resolve_damage_formula(formula: str, actor: Dict) -> Tuple[int, str]:
-    """Substitui placeholders `str_mod`/`dex_mod`/... pelos mods reais e rola."""
-    mods = actor_mods(actor)
-    text = str(formula or "0")
-    for key, val in mods.items():
-        text = re.sub(rf"\b{key}_mod\b", str(val), text)
-    # placeholders que sobraram (ex.: nivel) -> 0
-    text = re.sub(r"\b[a-zA-Z_]+_mod\b", "0", text)
-    if not re.search(r"\d+d\d+", text):
-        # fórmula sem dados (só um número/buff) -> tenta inteiro
-        n = re.search(r"-?\d+", text)
-        v = int(n.group(0)) if n else 0
-        return max(0, v), text
-    return roll_dice_numeric(text)
-
-
 # --------------------------------------------------------------------------
 # Cura / recuperação de recurso (mecânica determinística; o engine não tinha)
 # --------------------------------------------------------------------------

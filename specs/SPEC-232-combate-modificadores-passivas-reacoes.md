@@ -186,3 +186,8 @@ e `gasto/turno` de Entropia (SPEC-059) registrados como novo baseline para a SPE
   saíram do pedido (sem consumidor no loop). Smoke real: 3/3 cenas válidas em 7,2 / 2,8 / 2,9 s.
 - Evidência e playtest antes/depois: [docs/spec232/README.md](../docs/spec232/README.md).
 
+---
+
+## Adendo SPEC-272 (2026-10-18)
+
+SPEC-272: o R1 cita `net_advantage`; o helper foi removido (nunca chamado). O `advantage` das condições já entra somado no `roll_kept`, que só considera o sinal — o comportamento descrito no R1 não muda.
