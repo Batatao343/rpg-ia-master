@@ -3844,7 +3844,7 @@ specs:
   lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
 - id: SPEC-214
   slug: memoria-hierarquica-cache-cena
-  status: in-progress
+  status: done
   path: specs/SPEC-214-memoria-hierarquica-cache-cena.md
   created_commit: null
   created_at: '2026-10-15'
@@ -3911,7 +3911,7 @@ specs:
   lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
 - id: SPEC-217
   slug: jev-reavaliacao-condicional
-  status: draft
+  status: approved
   path: specs/SPEC-217-jev-reavaliacao-condicional.md
   created_commit: null
   created_at: '2026-10-15'
@@ -3920,10 +3920,16 @@ specs:
   completed_order: null
   depends_on:
   - SPEC-200
-  - SPEC-214
+  - SPEC-177
+  - SPEC-178
+  - SPEC-179
+  - SPEC-180
   depends_on_raw:
   - SPEC-200
-  - SPEC-214
+  - SPEC-177
+  - SPEC-178
+  - SPEC-179
+  - SPEC-180
   depends_on_unresolved: []
   tie_breaker: null
   lineage_ambiguous: false

@@ -1,7 +1,7 @@
 # SPEC-214 — Memória hierárquica: snapshot da cena ativa (L1), contexto do interlocutor/local (L2) e histórico sob demanda (L3)
 
-> **Status:** `in-progress` — implementação completa no branch `spec-214` (`5fe7a3c`, flag `RPG_SCENE_CACHE` default `off`), **não promovida**: A/B offline deu turn_total p50 −1,2% e contexto 0% (o arquivista invalida o cache quase todo turno), regra R13 falhou. Ver `docs/spec214/README.md`.
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
+> **Status:** `done` — **decisão `NO_GO` por medição** (dono, 2026-10-18). Medições: A/B offline de três braços turn_total p50 **−1,2 %** e context p50 0 % (o arquivista invalida o cache quase todo turno) ⇒ R13 não atendida; com provider real o contexto é só **3,94 %** do TTLT p50 (teto de ganho ~0,4 s de ~10,5 s). O código fica no branch `spec-214` (`5fe7a3c`, flag `RPG_SCENE_CACHE` default `off`), **não mergeado** na main; dataset de invalidação e revisão Astra deixam de ser necessários (sem promoção). Hipótese (a) da SPEC-217 descartada. Ver `docs/spec214/README.md`.
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-18
 > **Execução (2026-10-17):** dono autorizou executar esta onda; entrada pelo **Gate R1 `GO` com provider real**
 > ([gate-real-2026-10-17](../docs/spec214/gate-real-2026-10-17.md): context p95 762 ms ≥ 400 ms, share 3,94 %).
 > Implementado atrás de `RPG_SCENE_CACHE` (default `off`, byte a byte ao HEAD). A/B offline de três braços
