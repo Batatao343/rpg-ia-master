@@ -22,6 +22,7 @@ DATA = ROOT / "evals/experiments/data"
 GRAPH = ROOT / "data/graph/entities.json"
 ROUTES = {"storyteller", "combat_agent", "npc_actor", "loot"}
 KINDS = {"route", "target"}
+LOOT_SOURCES = {"TREASURE", "SHOP", "CRAFT"}
 MIXES = {"npc_actor", "storyteller", "loot", "combat_agent", "ambiguous", "gate"}
 FROZEN_MIX = {"npc_actor": 5, "storyteller": 4, "loot": 3, "combat_agent": 2, "ambiguous": 2}
 
@@ -220,6 +221,23 @@ def probe_gate(case: dict[str, Any]) -> bool:
         router.get_llm = original
 
 
+def check_loot_oracle(fro: list[dict[str, Any]], errors: list[str]) -> None:
+    """SPEC-238 R9.7 sidecar: FROZEN loot-source labels, sealed by hash."""
+    path = DATA / "spec217_frozen_loot_oracle.json"
+    raw = path.read_bytes()
+    digest = "sha256:" + hashlib.sha256(raw).hexdigest()
+    recorded = (DATA / "spec217_frozen_loot_oracle.sha256").read_text(encoding="utf-8").strip()
+    if digest != recorded:
+        errors.append(f"loot oracle: hash mismatch (file {digest} != recorded {recorded})")
+    labels = json.loads(raw.decode("utf-8")).get("labels", {})
+    loot_ids = {c["id"] for c in fro if c["expected"]["route"] == "loot"}
+    if set(labels) != loot_ids:
+        errors.append(f"loot oracle: ids {sorted(labels)} != FROZEN loot cases {sorted(loot_ids)}")
+    for cid, lab in labels.items():
+        if lab.get("loot_source") not in LOOT_SOURCES or not str(lab.get("provenance", "")).strip():
+            errors.append(f"loot oracle: bad label for {cid}")
+
+
 def main() -> int:
     errors: list[str] = []
     graph = json.loads(GRAPH.read_text(encoding="utf-8"))
@@ -230,6 +248,7 @@ def main() -> int:
     check_schema(dev, "dev", graph_ids, errors)
     check_schema(fro, "frozen", graph_ids, errors)
     check_frozen(fro, errors)
+    check_loot_oracle(fro, errors)
     check_overlap(dev, fro, errors)
     sys.path.insert(0, str(ROOT))
     for c in [*dev, *fro]:
@@ -246,7 +265,7 @@ def main() -> int:
         for e in errors:
             print(" -", e)
         return 1
-    print("OK: hashes, schema, targets, frozen counts, non-overlap and gate probe")
+    print("OK: hashes, schema, targets, frozen counts, non-overlap, loot oracle and gate probe")
     return 0
 
 

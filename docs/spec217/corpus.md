@@ -16,3 +16,5 @@ Autorados sem chamada live. Local: `evals/experiments/data/` (fora de `evals/dat
 - Commit de congelamento: o commit que introduz `spec217_frozen.jsonl` (`git log --format=%H -1 -- evals/experiments/data/spec217_frozen.jsonl`).
 
 **FROZEN selado:** o executor da J1 NÃO deve abrir `spec217_frozen.jsonl` (só hash, contagem e prioridades acima). O verificador lê o arquivo mas é ferramenta do autor/revisor, não da J1.
+
+**Sidecar de fonte de loot do FROZEN (SPEC-238 R9.7, autorado antes da J2):** `evals/experiments/data/spec217_frozen_loot_oracle.json` (+ `.sha256`), rótulo `loot_source` (TREASURE/SHOP/CRAFT) dos 3 casos `loot` do FROZEN, com proveniência; `spec217_frozen.jsonl` não mudou. SHA-256 `d9c860ecad9e06bb2ccf38ad98b04d7fa3d8aa228326a8821be3ea546845c38d`. O verificador valida ids, rota `loot`, valores permitidos e hash.

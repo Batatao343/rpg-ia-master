@@ -1,0 +1,18 @@
+{
+  "labels": {
+    "spec217.frozen.p03": {
+      "loot_source": "TREASURE",
+      "provenance": "FROZEN case text/rationale (pick up an item): picking up a dropped item, no merchant or crafting verb => TREASURE (router default)"
+    },
+    "spec217.frozen.p07": {
+      "loot_source": "SHOP",
+      "provenance": "FROZEN case text/rationale (transactional verb to a merchant): buying from a merchant => SHOP"
+    },
+    "spec217.frozen.p13": {
+      "loot_source": "SHOP",
+      "provenance": "FROZEN case text/rationale (transactional verb to a smith): selling to an NPC trader => SHOP"
+    }
+  },
+  "purpose": "loot_source oracle for the 3 FROZEN loot cases (FROZEN corpus itself is sealed and unchanged)",
+  "spec": "SPEC-238"
+}
