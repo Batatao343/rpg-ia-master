@@ -33,3 +33,10 @@ test('login messages explain the actionable cases', async () => {
   assert.match(authErrorMessage(err(429, 'auth_rate_limit', { retryAfterSeconds: 600 }), 'email'), /10 min/);
   assert.match(authErrorMessage(new TypeError('Failed to fetch'), 'login'), /Tente novamente/);
 });
+
+test('SPEC-245: 503 auth_unavailable reads as service outage, not bad credentials', async () => {
+  const { authErrorMessage } = await load('lib/authErrors');
+  for (const flow of ['login', 'signup', 'email']) {
+    assert.match(authErrorMessage(err(503, 'auth_unavailable'), flow), /indisponível/);
+  }
+});

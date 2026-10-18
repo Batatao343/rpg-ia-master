@@ -27,6 +27,7 @@ export function authErrorMessage(error: unknown, flow: AuthFlow): string {
     case "origin_denied":
       return STALE_PAGE;
     case "captcha_unavailable":
+    case "auth_unavailable":   // SPEC-245 R1: GoTrue/JWKS fora do ar => 503
     case "server_misconfigured":
       return "O serviço de contas está indisponível no momento. Tente novamente mais tarde.";
     case "validation_error":

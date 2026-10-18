@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
 import sys
 from datetime import datetime, timezone
 from typing import Any, Mapping
@@ -47,7 +48,7 @@ class JsonLineFormatter(logging.Formatter):
         except (ValueError, TypeError):
             pass
         if data is None:
-            data = {"event": f"{record.name}.legacy", "message": redact(message)}
+            data = {"event": f"{record.name}.legacy", "message": _redact_legacy(message)}
         elif "event" not in data:
             data["event"] = data.get("evt") or f"{record.name}.event"
         for key, value in correlation().items():  # SPEC-240 R4: logs diretos também correlacionam
@@ -61,6 +62,19 @@ class JsonLineFormatter(logging.Formatter):
         data["ts"] = datetime.fromtimestamp(record.created, timezone.utc).isoformat(
             timespec="milliseconds").replace("+00:00", "Z")
         return json.dumps(data, ensure_ascii=False, sort_keys=True, default=str)
+
+
+_UUID_RE = re.compile(r"\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b")
+_IPV4_RE = re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b")
+
+
+def _redact_legacy(message: str) -> str:
+    """Logs legados ``%s`` não passam por ``pseudonym``: ids crus (UUID) viram pseudônimo
+    e IPv4 vira ``[IP]`` (revisão Sol SPEC-239/240)."""
+    from observability.telemetry import pseudonym
+    cleaned = _UUID_RE.sub(lambda m: "ref:" + pseudonym(m.group(0).lower()), message)
+    cleaned = _IPV4_RE.sub("[IP]", cleaned)
+    return redact(cleaned)
 
 
 def _parse_level(raw: str | None) -> tuple[int, bool]:

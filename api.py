@@ -387,8 +387,9 @@ _DOCS_PATHS = {"/docs", "/redoc", "/openapi.json", "/docs/oauth2-redirect"} if _
 _ACCESS_LOG_SKIP = frozenset({"/health", "/metrics"})
 # GET 2xx de polling/leitura: debug (anti-ruido); mutacoes e erros seguem em info/warning/error.
 _ACCESS_LOG_QUIET_GET = frozenset({
-    "/game/state", "/game/saves", "/game/map", "/game/codex", "/game/codex/dossiers",
+    "/game/state", "/game/saves", "/game/map", "/game/codex", "/game/codex/dossiers", "/auth/config",
 })
+_API_PREFIXES = ("/game", "/account", "/auth", "/payments", "/internal", "/telemetry", "/data")
 
 
 def _access_log(request: Request, route: str, status: int, started: float,
@@ -408,12 +409,13 @@ def _access_log(request: Request, route: str, status: int, started: float,
             level = "error"
         elif status >= 400:
             level = "warning"
-            if status == 404 and not path.startswith(
-                    ("/game", "/account", "/auth", "/payments", "/internal", "/telemetry", "/data")):
+            if status == 404 and not path.startswith(_API_PREFIXES):
                 level = "debug"
             elif status == 401 and not request.cookies.get("rpg_access"):
                 level = "debug"      # bootstrap da SPA sem cookie
-        elif request.method == "GET" and (path in _ACCESS_LOG_QUIET_GET or path.startswith("/data/")):
+        elif request.method == "GET" and (path in _ACCESS_LOG_QUIET_GET or path.startswith("/data/")
+                                          or not path.startswith(_API_PREFIXES)):
+            # leitura de polling e navegacao da SPA ("/", rotas client-side): debug (revisao Sol)
             level = "debug"
         _log_event(
             "http", "request", level=level, method=request.method, route=route, status=status,

@@ -53,7 +53,9 @@ def reject(event: str, reason: str, *, level: str = "warning", **fields: Any) ->
     """Uma linha ``auth.<event>`` + métrica ``rpg_auth_rejections_total{reason}``. Nunca levanta."""
     try:
         from observability.metrics import metrics
-        metrics.increment("rpg_auth_rejections_total", {"reason": str(reason)[:40]})
+        # Rótulo de métrica = só o prefixo fechado ("turnstile_error:<codes>" -> "turnstile_error");
+        # os códigos do provider ficam apenas na linha de log (cardinalidade limitada).
+        metrics.increment("rpg_auth_rejections_total", {"reason": str(reason).split(":", 1)[0][:40]})
         log_event("auth", event, level=level, reason=reason, **fields)
     except Exception:
         pass
