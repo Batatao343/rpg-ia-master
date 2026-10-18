@@ -95,8 +95,13 @@ def run(base: str, env: dict) -> dict:
             "app_no_token_status": r_no.status_code, "app_dummy_token_status": r_ok.status_code,
             "gotrue_no_token": probe_no, "gotrue_dummy_token": probe_dummy,
             "turnstile_real_secret": is_captcha_error(probe_dummy),
-            "note": "app answers 202 generic (anti-enumeration) whatever GoTrue says",
-            "ok": r_no.status_code >= 400 and r_ok.status_code in (200, 202) and is_captcha_error(probe_no)}
+            # Since the auth-debug fix (15cfd6a) the app answers 403 captcha_invalid when GoTrue rejects the
+            # token (real Turnstile secret); with the TEST secret the dummy token passes and the app answers
+            # the generic 202 (anti-enumeration).
+            "note": "real secret: dummy token -> 403 captcha_invalid; test secret: 202 generic",
+            "ok": r_no.status_code >= 400 and is_captcha_error(probe_no) and (
+                r_ok.status_code in (200, 202)
+                or (r_ok.status_code == 403 and is_captcha_error(probe_dummy)))}
         r = c.get(f"{base}/auth/config")
         cfg = r.json()
         ck["auth_config"] = {"status": r.status_code, "captcha_mode": (cfg.get("captcha") or {}).get("mode"),
