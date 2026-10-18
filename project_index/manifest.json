@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "300a1a5b6f14b2be551c70146a08959c1197fa7c",
+  "commit_sha": "15cfd6a60892613cdef7e2e530edcd4c5f0b0b31",
   "edge_counts": {
-    "calls": 16079,
-    "contains": 662,
-    "defines": 9120,
-    "imports": 1494,
-    "likely_test_for": 908,
+    "calls": 16106,
+    "contains": 663,
+    "defines": 9133,
+    "imports": 1499,
+    "likely_test_for": 913,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:ba43529cf5df3e25e259bff5c2f86b6a9eb81514ef3efe9dda35e978771063af",
+  "graph_hash": "sha256:d3951a236bed98bd23b1bb95f2247192278dfc308bac61075ea2a32f46a39c57",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -409,6 +409,7 @@
     "tests/test_audit_real_contracts.py",
     "tests/test_audit_redaction.py",
     "tests/test_audit_reward_contracts.py",
+    "tests/test_auth_gotrue_error_mapping.py",
     "tests/test_auth_sessions.py",
     "tests/test_backup_restore_local.py",
     "tests/test_balance_classes.py",
@@ -799,6 +800,7 @@
     "web/src/http.ts",
     "web/src/lib.ts",
     "web/src/lib/auditExport.ts",
+    "web/src/lib/authErrors.ts",
     "web/src/lib/turnLatency.ts",
     "web/src/main.tsx",
     "web/src/native/backPolicy.ts",
@@ -854,12 +856,12 @@
     "artifact": 9,
     "class": 749,
     "endpoint": 63,
-    "file": 798,
+    "file": 800,
     "function": 2837,
-    "method": 739,
-    "module": 662,
-    "test": 4795
+    "method": 740,
+    "module": 663,
+    "test": 4807
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:a3d63a6ffbe7fe645088c378ffec82dd545263497541fcf92c39118f2eaa7074"
+  "source_tree_hash": "sha256:e5649d860d6641b99c90396669a308e209dde0459bb3e694ec41bd64666409d2"
 }
