@@ -1,5 +1,5 @@
 {
-  "commit_sha": "9407451df90713c99308f51898c2c8e037557d0a",
+  "commit_sha": "300a1a5b6f14b2be551c70146a08959c1197fa7c",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -2606,6 +2606,17 @@
       },
       "source": "file:scripts/staging/incident_drill.py",
       "target": "module:scripts.staging.incident_drill",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 1
+      },
+      "source": "file:scripts/staging/jev_primary_measure.py",
+      "target": "module:scripts.staging.jev_primary_measure",
       "type": "contains"
     },
     {
@@ -40716,6 +40727,72 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 20
+      },
+      "source": "module:scripts.staging.jev_primary_measure",
+      "target": "module:scripts.staging",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 21
+      },
+      "source": "module:scripts.staging.jev_primary_measure",
+      "target": "module:scripts.staging",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 69
+      },
+      "source": "module:scripts.staging.jev_primary_measure",
+      "target": "symbol:scripts.staging.jev_primary_measure._router_timing",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 49
+      },
+      "source": "module:scripts.staging.jev_primary_measure",
+      "target": "symbol:scripts.staging.jev_primary_measure._stream_turn_keep_text",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 121
+      },
+      "source": "module:scripts.staging.jev_primary_measure",
+      "target": "symbol:scripts.staging.jev_primary_measure.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 82
+      },
+      "source": "module:scripts.staging.jev_primary_measure",
+      "target": "symbol:scripts.staging.jev_primary_measure.summarize",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
         "line": 25
       },
@@ -40750,7 +40827,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 199
+        "line": 207
       },
       "source": "module:scripts.staging.jev_shadow_measure",
       "target": "symbol:scripts.staging.jev_shadow_measure._iso_ms",
@@ -40772,7 +40849,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 218
+        "line": 226
       },
       "source": "module:scripts.staging.jev_shadow_measure",
       "target": "symbol:scripts.staging.jev_shadow_measure._pct",
@@ -40794,7 +40871,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 163
+        "line": 171
       },
       "source": "module:scripts.staging.jev_shadow_measure",
       "target": "symbol:scripts.staging.jev_shadow_measure.fetch_shadow_logs",
@@ -40805,7 +40882,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 206
+        "line": 214
       },
       "source": "module:scripts.staging.jev_shadow_measure",
       "target": "symbol:scripts.staging.jev_shadow_measure.join",
@@ -40816,7 +40893,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 281
+        "line": 289
       },
       "source": "module:scripts.staging.jev_shadow_measure",
       "target": "symbol:scripts.staging.jev_shadow_measure.main",
@@ -40838,7 +40915,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 222
+        "line": 230
       },
       "source": "module:scripts.staging.jev_shadow_measure",
       "target": "symbol:scripts.staging.jev_shadow_measure.summarize",
@@ -42268,7 +42345,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 92
+        "line": 96
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env._load_files",
@@ -42279,7 +42356,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 99
+        "line": 103
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.build_env",
@@ -42290,7 +42367,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 190
+        "line": 199
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.main",
@@ -42301,7 +42378,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 151
+        "line": 160
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.push",
@@ -42312,7 +42389,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 174
+        "line": 183
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.remove",
@@ -42323,7 +42400,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 72
+        "line": 76
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.stale_names",
@@ -103923,6 +104000,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec192_vercel_env.py",
+        "line": 137
+      },
+      "source": "module:tests.test_spec192_vercel_env",
+      "target": "symbol:tests.test_spec192_vercel_env.test_jev_router_primary_requires_owner_flag_and_stays_out_of_preview",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec192_vercel_env.py",
         "line": 109
       },
       "source": "module:tests.test_spec192_vercel_env",
@@ -163979,11 +164067,198 @@
       "type": "calls"
     },
     {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 72
+      },
+      "source": "symbol:scripts.staging.jev_primary_measure._router_timing",
+      "target": "symbol:scripts.staging.jev_primary_measure._router_timing.before_delete",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 73
+      },
+      "source": "symbol:scripts.staging.jev_primary_measure._router_timing",
+      "target": "symbol:scripts.staging.s192.query",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 73
+      },
+      "source": "symbol:scripts.staging.jev_primary_measure._router_timing.before_delete",
+      "target": "symbol:scripts.staging.s192.query",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 54
+      },
+      "source": "symbol:scripts.staging.jev_primary_measure._stream_turn_keep_text",
+      "target": "symbol:scripts.staging.jev_primary_measure._stream_turn_keep_text.parse",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 62
+      },
+      "source": "symbol:scripts.staging.jev_primary_measure._stream_turn_keep_text",
+      "target": "symbol:scripts.staging.projection_measure.stream_turn",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 135
+      },
+      "source": "symbol:scripts.staging.jev_primary_measure.main",
+      "target": "symbol:scripts.staging.jev_primary_measure._router_timing",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 148
+      },
+      "source": "symbol:scripts.staging.jev_primary_measure.main",
+      "target": "symbol:scripts.staging.jev_primary_measure.summarize",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 137
+      },
+      "source": "symbol:scripts.staging.jev_primary_measure.main",
+      "target": "symbol:scripts.staging.jev_shadow_measure.fetch_shadow_logs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 138
+      },
+      "source": "symbol:scripts.staging.jev_primary_measure.main",
+      "target": "symbol:scripts.staging.jev_shadow_measure.join",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 135
+      },
+      "source": "symbol:scripts.staging.jev_primary_measure.main",
+      "target": "symbol:scripts.staging.jev_shadow_measure.play",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 132
+      },
+      "source": "symbol:scripts.staging.jev_primary_measure.main",
+      "target": "symbol:scripts.staging.s192.load_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 148
+      },
+      "source": "symbol:scripts.staging.jev_primary_measure.main",
+      "target": "symbol:scripts.staging.s192.now_iso",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 93
+      },
+      "source": "symbol:scripts.staging.jev_primary_measure.summarize",
+      "target": "symbol:scripts.staging.jev_primary_measure.summarize.router",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 94
+      },
+      "source": "symbol:scripts.staging.jev_primary_measure.summarize",
+      "target": "symbol:scripts.staging.s192.stats",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 114
+      },
+      "source": "symbol:scripts.staging.jev_primary_measure.summarize",
+      "target": "symbol:scripts.staging.s192.stats",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 117
+      },
+      "source": "symbol:scripts.staging.jev_primary_measure.summarize",
+      "target": "symbol:scripts.staging.s192.stats",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_primary_measure.py",
+        "line": 94
+      },
+      "source": "symbol:scripts.staging.jev_primary_measure.summarize.router",
+      "target": "symbol:scripts.staging.s192.stats",
+      "type": "calls"
+    },
+    {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 219
+        "line": 227
       },
       "source": "symbol:scripts.staging.jev_shadow_measure._pct",
       "target": "symbol:scripts.staging.s192.pct",
@@ -164016,7 +164291,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 183
+        "line": 191
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.fetch_shadow_logs",
       "target": "symbol:scripts.staging.jev_shadow_measure._iso_ms",
@@ -164027,7 +164302,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 165
+        "line": 173
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.fetch_shadow_logs",
       "target": "symbol:scripts.staging.s192.vercel",
@@ -164038,7 +164313,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 304
+        "line": 312
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.main",
       "target": "symbol:scripts.staging.jev_shadow_measure.fetch_shadow_logs",
@@ -164049,7 +164324,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 305
+        "line": 313
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.main",
       "target": "symbol:scripts.staging.jev_shadow_measure.join",
@@ -164060,7 +164335,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 299
+        "line": 307
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.main",
       "target": "symbol:scripts.staging.jev_shadow_measure.play",
@@ -164071,7 +164346,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 306
+        "line": 314
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.main",
       "target": "symbol:scripts.staging.jev_shadow_measure.summarize",
@@ -164082,7 +164357,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 293
+        "line": 301
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.main",
       "target": "symbol:scripts.staging.s192.load_env",
@@ -164093,7 +164368,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 306
+        "line": 314
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.main",
       "target": "symbol:scripts.staging.s192.now_iso",
@@ -164104,7 +164379,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 132
+        "line": 134
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.play",
       "target": "symbol:scripts.staging.e2e_session._h",
@@ -164115,7 +164390,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 140
+        "line": 142
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.play",
       "target": "symbol:scripts.staging.jev_shadow_measure._now_ms",
@@ -164126,7 +164401,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 144
+        "line": 146
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.play",
       "target": "symbol:scripts.staging.jev_shadow_measure._now_ms",
@@ -164137,7 +164412,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 141
+        "line": 143
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.play",
       "target": "symbol:scripts.staging.jev_shadow_measure._stream",
@@ -164148,7 +164423,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 115
+        "line": 117
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.play",
       "target": "symbol:scripts.staging.s192.Admin",
@@ -164159,7 +164434,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 126
+        "line": 128
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.play",
       "target": "symbol:scripts.staging.s192.app_login",
@@ -164170,7 +164445,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 154
+        "line": 162
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.play",
       "target": "symbol:scripts.staging.s192.query",
@@ -164181,7 +164456,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 268
+        "line": 276
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.summarize",
       "target": "symbol:scripts.staging.jev_shadow_measure._pct",
@@ -164192,7 +164467,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 270
+        "line": 278
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.summarize",
       "target": "symbol:scripts.staging.jev_shadow_measure._pct",
@@ -164203,7 +164478,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 227
+        "line": 235
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.summarize",
       "target": "symbol:scripts.staging.jev_shadow_measure.summarize.full",
@@ -167074,7 +167349,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 212
+        "line": 223
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env._load_files",
@@ -167085,7 +167360,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 214
+        "line": 225
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.build_env",
@@ -167096,7 +167371,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 231
+        "line": 243
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.push",
@@ -167107,7 +167382,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 232
+        "line": 244
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.push",
@@ -167118,7 +167393,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 233
+        "line": 245
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.remove",
@@ -167129,7 +167404,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 224
+        "line": 236
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.stale_names",
@@ -167140,7 +167415,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 233
+        "line": 245
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.stale_names",
@@ -285720,6 +285995,61 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec192_vercel_env.py",
+        "line": 141
+      },
+      "source": "symbol:tests.test_spec192_vercel_env.test_jev_router_primary_requires_owner_flag_and_stays_out_of_preview",
+      "target": "symbol:scripts.staging.vercel_env.build_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec192_vercel_env.py",
+        "line": 142
+      },
+      "source": "symbol:tests.test_spec192_vercel_env.test_jev_router_primary_requires_owner_flag_and_stays_out_of_preview",
+      "target": "symbol:scripts.staging.vercel_env.build_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec192_vercel_env.py",
+        "line": 147
+      },
+      "source": "symbol:tests.test_spec192_vercel_env.test_jev_router_primary_requires_owner_flag_and_stays_out_of_preview",
+      "target": "symbol:scripts.staging.vercel_env.build_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec192_vercel_env.py",
+        "line": 146
+      },
+      "source": "symbol:tests.test_spec192_vercel_env.test_jev_router_primary_requires_owner_flag_and_stays_out_of_preview",
+      "target": "symbol:scripts.staging.vercel_env.stale_names",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec192_vercel_env.py",
+        "line": 149
+      },
+      "source": "symbol:tests.test_spec192_vercel_env.test_jev_router_primary_requires_owner_flag_and_stays_out_of_preview",
+      "target": "symbol:scripts.staging.vercel_env.stale_names",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec192_vercel_env.py",
         "line": 111
       },
       "source": "symbol:tests.test_spec192_vercel_env.test_jev_router_shadow_flag_and_off_deletes_it",
@@ -313073,6 +313403,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:scripts/staging/jev_primary_measure.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/staging/jev_primary_measure.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:scripts/staging/jev_shadow_measure.py",
       "kind": "file",
       "line": 1,
@@ -318559,6 +318896,13 @@
       "line": 1,
       "path": "scripts/staging/incident_drill.py",
       "qualified_name": "scripts.staging.incident_drill"
+    },
+    {
+      "id": "module:scripts.staging.jev_primary_measure",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/staging/jev_primary_measure.py",
+      "qualified_name": "scripts.staging.jev_primary_measure"
     },
     {
       "id": "module:scripts.staging.jev_shadow_measure",
@@ -338315,9 +338659,58 @@
       "qualified_name": "scripts.staging.incident_drill.rollback"
     },
     {
+      "id": "symbol:scripts.staging.jev_primary_measure._router_timing",
+      "kind": "function",
+      "line": 69,
+      "path": "scripts/staging/jev_primary_measure.py",
+      "qualified_name": "scripts.staging.jev_primary_measure._router_timing"
+    },
+    {
+      "id": "symbol:scripts.staging.jev_primary_measure._router_timing.before_delete",
+      "kind": "function",
+      "line": 72,
+      "path": "scripts/staging/jev_primary_measure.py",
+      "qualified_name": "scripts.staging.jev_primary_measure._router_timing.before_delete"
+    },
+    {
+      "id": "symbol:scripts.staging.jev_primary_measure._stream_turn_keep_text",
+      "kind": "function",
+      "line": 49,
+      "path": "scripts/staging/jev_primary_measure.py",
+      "qualified_name": "scripts.staging.jev_primary_measure._stream_turn_keep_text"
+    },
+    {
+      "id": "symbol:scripts.staging.jev_primary_measure._stream_turn_keep_text.parse",
+      "kind": "function",
+      "line": 54,
+      "path": "scripts/staging/jev_primary_measure.py",
+      "qualified_name": "scripts.staging.jev_primary_measure._stream_turn_keep_text.parse"
+    },
+    {
+      "id": "symbol:scripts.staging.jev_primary_measure.main",
+      "kind": "function",
+      "line": 121,
+      "path": "scripts/staging/jev_primary_measure.py",
+      "qualified_name": "scripts.staging.jev_primary_measure.main"
+    },
+    {
+      "id": "symbol:scripts.staging.jev_primary_measure.summarize",
+      "kind": "function",
+      "line": 82,
+      "path": "scripts/staging/jev_primary_measure.py",
+      "qualified_name": "scripts.staging.jev_primary_measure.summarize"
+    },
+    {
+      "id": "symbol:scripts.staging.jev_primary_measure.summarize.router",
+      "kind": "function",
+      "line": 93,
+      "path": "scripts/staging/jev_primary_measure.py",
+      "qualified_name": "scripts.staging.jev_primary_measure.summarize.router"
+    },
+    {
       "id": "symbol:scripts.staging.jev_shadow_measure._iso_ms",
       "kind": "function",
-      "line": 199,
+      "line": 207,
       "path": "scripts/staging/jev_shadow_measure.py",
       "qualified_name": "scripts.staging.jev_shadow_measure._iso_ms"
     },
@@ -338331,7 +338724,7 @@
     {
       "id": "symbol:scripts.staging.jev_shadow_measure._pct",
       "kind": "function",
-      "line": 218,
+      "line": 226,
       "path": "scripts/staging/jev_shadow_measure.py",
       "qualified_name": "scripts.staging.jev_shadow_measure._pct"
     },
@@ -338352,21 +338745,21 @@
     {
       "id": "symbol:scripts.staging.jev_shadow_measure.fetch_shadow_logs",
       "kind": "function",
-      "line": 163,
+      "line": 171,
       "path": "scripts/staging/jev_shadow_measure.py",
       "qualified_name": "scripts.staging.jev_shadow_measure.fetch_shadow_logs"
     },
     {
       "id": "symbol:scripts.staging.jev_shadow_measure.join",
       "kind": "function",
-      "line": 206,
+      "line": 214,
       "path": "scripts/staging/jev_shadow_measure.py",
       "qualified_name": "scripts.staging.jev_shadow_measure.join"
     },
     {
       "id": "symbol:scripts.staging.jev_shadow_measure.main",
       "kind": "function",
-      "line": 281,
+      "line": 289,
       "path": "scripts/staging/jev_shadow_measure.py",
       "qualified_name": "scripts.staging.jev_shadow_measure.main"
     },
@@ -338380,14 +338773,14 @@
     {
       "id": "symbol:scripts.staging.jev_shadow_measure.summarize",
       "kind": "function",
-      "line": 222,
+      "line": 230,
       "path": "scripts/staging/jev_shadow_measure.py",
       "qualified_name": "scripts.staging.jev_shadow_measure.summarize"
     },
     {
       "id": "symbol:scripts.staging.jev_shadow_measure.summarize.full",
       "kind": "function",
-      "line": 227,
+      "line": 235,
       "path": "scripts/staging/jev_shadow_measure.py",
       "qualified_name": "scripts.staging.jev_shadow_measure.summarize.full"
     },
@@ -339283,42 +339676,42 @@
     {
       "id": "symbol:scripts.staging.vercel_env._load_files",
       "kind": "function",
-      "line": 92,
+      "line": 96,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env._load_files"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.build_env",
       "kind": "function",
-      "line": 99,
+      "line": 103,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.build_env"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.main",
       "kind": "function",
-      "line": 190,
+      "line": 199,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.main"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.push",
       "kind": "function",
-      "line": 151,
+      "line": 160,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.push"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.remove",
       "kind": "function",
-      "line": 174,
+      "line": 183,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.remove"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.stale_names",
       "kind": "function",
-      "line": 72,
+      "line": 76,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.stale_names"
     },
@@ -379104,6 +379497,13 @@
       "qualified_name": "tests.test_spec192_vercel_env.test_deepseek_key_is_pushed_as_primary_secret_and_never_to_preview"
     },
     {
+      "id": "symbol:tests.test_spec192_vercel_env.test_jev_router_primary_requires_owner_flag_and_stays_out_of_preview",
+      "kind": "test",
+      "line": 137,
+      "path": "tests/test_spec192_vercel_env.py",
+      "qualified_name": "tests.test_spec192_vercel_env.test_jev_router_primary_requires_owner_flag_and_stays_out_of_preview"
+    },
+    {
       "id": "symbol:tests.test_spec192_vercel_env.test_jev_router_shadow_flag_and_off_deletes_it",
       "kind": "test",
       "line": 109,
@@ -385755,5 +386155,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:b416739fbe5f37c9b46a8ae7e8bbb8a986cbff45197d4d32b8c8d129f5a77235"
+  "source_tree_hash": "sha256:a3d63a6ffbe7fe645088c378ffec82dd545263497541fcf92c39118f2eaa7074"
 }

@@ -1,11 +1,11 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "9407451df90713c99308f51898c2c8e037557d0a",
+  "commit_sha": "300a1a5b6f14b2be551c70146a08959c1197fa7c",
   "edge_counts": {
-    "calls": 16060,
-    "contains": 661,
-    "defines": 9112,
-    "imports": 1492,
+    "calls": 16079,
+    "contains": 662,
+    "defines": 9120,
+    "imports": 1494,
     "likely_test_for": 908,
     "route_to": 63
   },
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:86ff7ec5340f54d51e04ab4d87e8faae3b87d49505c783cff39a007d96e5b7ec",
+  "graph_hash": "sha256:ba43529cf5df3e25e259bff5c2f86b6a9eb81514ef3efe9dda35e978771063af",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -233,6 +233,7 @@
     "scripts/staging/common.py",
     "scripts/staging/e2e_session.py",
     "scripts/staging/incident_drill.py",
+    "scripts/staging/jev_primary_measure.py",
     "scripts/staging/jev_shadow_measure.py",
     "scripts/staging/job_survival.py",
     "scripts/staging/measure.py",
@@ -853,12 +854,12 @@
     "artifact": 9,
     "class": 749,
     "endpoint": 63,
-    "file": 797,
-    "function": 2830,
+    "file": 798,
+    "function": 2837,
     "method": 739,
-    "module": 661,
-    "test": 4794
+    "module": 662,
+    "test": 4795
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:b416739fbe5f37c9b46a8ae7e8bbb8a986cbff45197d4d32b8c8d129f5a77235"
+  "source_tree_hash": "sha256:a3d63a6ffbe7fe645088c378ffec82dd545263497541fcf92c39118f2eaa7074"
 }

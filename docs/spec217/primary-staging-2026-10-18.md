@@ -110,5 +110,5 @@ As estranhezas vistas são de conteúdo e anteriores ao Jev:
 * **Alternativa:** promover `rpg-ia-master-staging-bi7io32h1-…vercel.app` (`cae84b2`, `off`).
 
 Evidência: [evidence/primary-staging-2026-10-18.json](evidence/primary-staging-2026-10-18.json) (SHA-256
-`73940c24…f9746e`). Contém só as ações sintéticas do driver, rótulos, booleanos e latências: nenhum id,
+`6e475819…6ee47d` (conteúdo LF do repo)). Contém só as ações sintéticas do driver, rótulos, booleanos e latências: nenhum id,
 e-mail, segredo ou narração.
