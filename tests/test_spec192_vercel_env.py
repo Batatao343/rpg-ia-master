@@ -132,3 +132,20 @@ def test_real_turnstile_site_key_and_optional_openai_key_stay_out_of_preview():
     prod, preview = vercel_env.build_env({**files, "TURNSTILE_SITE_KEY": "0x4real", "OPENAI_API_KEY": "sk-x"})
     assert prod["RPG_TURNSTILE_SITE_KEY"] == "0x4real" and prod["OPENAI_API_KEY"] == "sk-x"
     assert "OPENAI_API_KEY" not in preview and "OPENAI_API_KEY" in vercel_env.FORBIDDEN_IN_PREVIEW
+
+
+def test_jev_router_primary_requires_owner_flag_and_stays_out_of_preview():
+    """SPEC-217: primary so com aprovacao explicita do dono; off/shadow apagam a aprovacao."""
+    files = {**FILES, "TYPESAFE_API_KEY": "v-ts"}
+    with pytest.raises(ValueError):
+        ve.build_env(files, jev_router_mode="primary")
+    on, prev = ve.build_env(files, jev_router_mode="primary", owner_approved_primary=True)
+    assert on["RPG_JEV_ROUTER_MODE"] == "primary" and on["TYPESAFE_API_KEY"] == "v-ts"
+    assert on["RPG_JEV_ROUTER_PRIMARY_APPROVED"] == "1"
+    assert not {"RPG_JEV_ROUTER_MODE", "TYPESAFE_API_KEY", "RPG_JEV_ROUTER_PRIMARY_APPROVED"} & prev.keys()
+    assert "RPG_JEV_ROUTER_PRIMARY_APPROVED" not in ve.stale_names(on)
+    shadow = ve.build_env(files, jev_router_mode="shadow", owner_approved_primary=True)[0]
+    assert "RPG_JEV_ROUTER_PRIMARY_APPROVED" not in shadow
+    assert "RPG_JEV_ROUTER_PRIMARY_APPROVED" in ve.stale_names(shadow)
+    assert "o primary no staging" in ve.OWNER_PRIMARY_APPROVAL
+

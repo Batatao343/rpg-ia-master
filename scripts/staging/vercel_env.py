@@ -52,17 +52,21 @@ NON_SECRET_LITERALS = {
 PREVIEW_LITERALS = {"RPG_RUNTIME_PROFILE": "hosted-supabase", "RPG_BIND_HOST": "0.0.0.0"}
 # Nomes que NAO podem continuar no projeto (o upsert nao apaga): RPG_FORCE_MOCK e proibido em hosted
 # (SPEC-218 boot fail-closed) e LLM_PROVIDER forcaria um provider unico fora de ROUTES.
-# SPEC-217: RPG_JEV_ROUTER_PRIMARY_APPROVED e aprovacao exclusiva do dono para o Jev em `primary`; o staging
-# nunca a recebe (sempre apagada).
-REMOVED_NAMES = ("RPG_FORCE_MOCK", "LLM_PROVIDER", "RPG_JEV_ROUTER_PRIMARY_APPROVED")
+# SPEC-217: RPG_JEV_ROUTER_PRIMARY_APPROVED e aprovacao exclusiva do dono para o Jev em `primary`; so e enviada
+# com ``--jev-router-mode primary --owner-approved-primary`` (OPTIONAL_FLAGS: apagada em off/shadow).
+REMOVED_NAMES = ("RPG_FORCE_MOCK", "LLM_PROVIDER")
 # Pares exclusivos do modo RLS (SPEC-224): ao alternar rollback <-> RLS o upsert deixaria a variavel do
 # outro modo para tras (ex.: RPG_REQUEST_RLS=off sobrevivendo a volta ao RLS efetivo).
 MODE_EXCLUSIVE = ("RPG_REQUEST_RLS", "RPG_ADMIN_DATABASE_URL")
 # Flags opcionais: saem do projeto quando nao estao em ``production`` (ex.: --no-text-cap).
-OPTIONAL_FLAGS = ("RPG_DAILY_SPEND_CAP_TEXT", "RPG_PROJECTION_MODE", "RPG_JEV_ROUTER_MODE", "TYPESAFE_API_KEY")
+OPTIONAL_FLAGS = ("RPG_DAILY_SPEND_CAP_TEXT", "RPG_PROJECTION_MODE", "RPG_JEV_ROUTER_MODE", "TYPESAFE_API_KEY",
+                  "RPG_JEV_ROUTER_PRIMARY_APPROVED")
 # SPEC-217 R15: Jev no router. ``off`` (default) = variaveis ausentes; ``shadow`` observa sem mudar a rota e
-# envia a chave TypeSafe (secreta). ``primary`` nao e oferecido aqui (exige aprovacao separada do dono).
-JEV_ROUTER_MODES = ("off", "shadow")
+# envia a chave TypeSafe (secreta). ``primary`` exige ``owner_approved_primary`` (flag explicita
+# ``--owner-approved-primary``) e so vale para ESTE projeto de staging. Aprovacao do dono, 2026-10-18 (literal):
+# "já coloquei credito na OpenAi e pode ligar o primary no staging". Rollback: ``--jev-router-mode off`` + deploy.
+JEV_ROUTER_MODES = ("off", "shadow", "primary")
+OWNER_PRIMARY_APPROVAL = "2026-10-18: \"já coloquei credito na OpenAi e pode ligar o primary no staging\""
 JEV_KEY_FROM_FILE = ("TYPESAFE_API_KEY", "JEVMODEL_API_KEY")
 # SPEC-213: modo do arquivista. ``inline`` (default do produto) = variavel ausente; ``post_response`` tira os
 # derivados (resumo/memoria/cronica) do caminho do jogador. Rollback: --projection-mode inline.
@@ -100,12 +104,15 @@ def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST, use_admi
               invalid_deepseek_key: bool = False,
               text_cap: bool = True,
               projection_mode: str = "inline",
-              jev_router_mode: str = "off") -> tuple[dict[str, str], dict[str, str]]:
+              jev_router_mode: str = "off",
+              owner_approved_primary: bool = False) -> tuple[dict[str, str], dict[str, str]]:
     """Retorna (production, preview). Levanta KeyError com NOME do segredo ausente."""
     if projection_mode not in PROJECTION_MODES:
         raise ValueError(f"projection_mode invalido: {projection_mode}")
     if jev_router_mode not in JEV_ROUTER_MODES:
         raise ValueError(f"jev_router_mode invalido: {jev_router_mode}")
+    if jev_router_mode == "primary" and not owner_approved_primary:
+        raise ValueError("jev_router_mode=primary exige owner_approved_primary (aprovacao do dono)")
     production = dict(NON_SECRET_LITERALS)
     if not text_cap:
         production.pop("RPG_DAILY_SPEND_CAP_TEXT", None)
@@ -125,12 +132,14 @@ def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST, use_admi
             production[key] = files[key]
     if invalid_deepseek_key:
         production["DEEPSEEK_API_KEY"] = INVALID_DEEPSEEK_KEY
-    if jev_router_mode == "shadow":
+    if jev_router_mode in ("shadow", "primary"):
         key = next((files[k] for k in JEV_KEY_FROM_FILE if files.get(k)), None)
         if not key:
             raise KeyError("ausentes em .env.staging/.env: TYPESAFE_API_KEY (ou JEVMODEL_API_KEY)")
-        production["RPG_JEV_ROUTER_MODE"] = "shadow"
+        production["RPG_JEV_ROUTER_MODE"] = jev_router_mode
         production["TYPESAFE_API_KEY"] = key
+    if jev_router_mode == "primary":
+        production["RPG_JEV_ROUTER_PRIMARY_APPROVED"] = "1"
     # SPEC-197 R-05 + SPEC-224: o runtime usa o papel de menor privilégio (`rpg_runtime`) com RLS por request
     # e um segundo DSN (`rpg_admin`) para workers/cron/wallet. `use_admin_dsn` e o rollback: DSN unico
     # `postgres` e RPG_REQUEST_RLS=off (comportamento anterior). Sem papeis provisionados, idem.
@@ -199,8 +208,10 @@ def main(argv: list[str] | None = None) -> int:
                     help="rollback SPEC-237: desliga o cap diario de TEXTO (apaga RPG_DAILY_SPEND_CAP_TEXT)")
     ap.add_argument("--projection-mode", choices=PROJECTION_MODES, default="inline",
                     help="SPEC-213: post_response tira os derivados do arquivista do hot path; inline apaga a variavel")
-    ap.add_argument("--jev-router-mode", choices=JEV_ROUTER_MODES, default="off",
-                    help="SPEC-217 R15: shadow liga o Jev em observacao + chave TypeSafe; off apaga as duas")
+    ap.add_argument("--jev-router-mode", "--jev-router", choices=JEV_ROUTER_MODES, default="off",
+                    help="SPEC-217: shadow observa; primary decide (exige --owner-approved-primary); off apaga tudo")
+    ap.add_argument("--owner-approved-primary", action="store_true",
+                    help=f"SPEC-217: aprovacao do dono para primary no staging ({OWNER_PRIMARY_APPROVAL})")
     args = ap.parse_args(argv)
     if args.project_name != PROJECT_NAME:
         print(f"recusado: projeto deve ser {PROJECT_NAME}", file=sys.stderr)
@@ -214,8 +225,9 @@ def main(argv: list[str] | None = None) -> int:
         production, preview = build_env(files, args.public_host, args.use_admin_dsn,
                                         args.invalid_deepseek_key, text_cap=not args.no_text_cap,
                                         projection_mode=args.projection_mode,
-                                        jev_router_mode=args.jev_router_mode)
-    except KeyError as exc:
+                                        jev_router_mode=args.jev_router_mode,
+                                        owner_approved_primary=args.owner_approved_primary)
+    except (KeyError, ValueError) as exc:
         print(exc.args[0], file=sys.stderr)
         return 1
     secrets = FORBIDDEN_IN_PREVIEW

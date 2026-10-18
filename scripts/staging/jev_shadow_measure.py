@@ -111,12 +111,14 @@ def _stream(c: httpx.Client, base: str, csrf: str, game_id: str, text: str) -> d
     return row
 
 
-def play(base: str, env: dict, max_turns: int, think: float) -> tuple[list[dict], dict]:
+def play(base: str, env: dict, max_turns: int, think: float, sessions: list | None = None,
+         before_delete=None) -> tuple[list[dict], dict]:
+    """``before_delete(game_id) -> dict`` (opcional) roda antes de apagar cada jogo (ex.: ler timing)."""
     admin = s192.Admin(env)
     turns: list[dict] = []
     cleanup = {"games_deleted": 0, "users_deleted": 0, "errors": []}
     origins = json.loads((s192.common.ROOT / "data" / "origins.json").read_text(encoding="utf-8"))
-    for session_i, actions in enumerate(SESSIONS):
+    for session_i, actions in enumerate(sessions or SESSIONS):
         if len(turns) >= max_turns:
             break
         user = admin.create_user()
@@ -143,12 +145,18 @@ def play(base: str, env: dict, max_turns: int, think: float) -> tuple[list[dict]
                               "request_id": row["request_id"],
                               "start_ms": start, "end_ms": _now_ms(), "status": row["status"],
                               "has_error": row["has_error"], "done_ms": row.get("done"),
+                              "turn_count": row.get("turn_count"),
                               "narration_chars": row["narration_chars"]})
                 if row["status"] == 503:
                     cleanup["errors"].append("daily_spend_cap_or_503")
                     return turns, cleanup
                 time.sleep(think)
         finally:
+            if game_id and before_delete is not None:
+                try:
+                    cleanup.setdefault("per_game", {})[session_i] = before_delete(game_id)
+                except Exception as exc:  # noqa: BLE001
+                    cleanup["errors"].append(f"before_delete:{type(exc).__name__}")
             if game_id:
                 try:
                     cleanup["games_deleted"] += s192.query(env, lambda conn: conn.execute(
@@ -160,9 +168,9 @@ def play(base: str, env: dict, max_turns: int, think: float) -> tuple[list[dict]
     return turns, cleanup
 
 
-def fetch_shadow_logs(env: dict, since: str) -> list[dict]:
-    """``jev.shadow`` log lines as dicts with ``ts`` (ms) — only labels/booleans/latencies."""
-    out = s192.vercel(["logs", "--environment", "production", "--since", since, "--query", "jev.shadow",
+def fetch_shadow_logs(env: dict, since: str, event: str = "jev.shadow") -> list[dict]:
+    """``jev.<mode>`` log lines as dicts with ``ts`` (ms) — only labels/booleans/latencies."""
+    out = s192.vercel(["logs", "--environment", "production", "--since", since, "--query", event,
                        "--limit", "1000", "--json"], env, timeout=300)
     rows = []
     for line in (out.stdout or "").splitlines():
@@ -173,7 +181,7 @@ def fetch_shadow_logs(env: dict, since: str) -> list[dict]:
         data = item.get("data", item) if isinstance(item, dict) else {}
         message = str(data.get("message") or "")
         start = message.find("{")
-        if start < 0 or "jev.shadow" not in message:
+        if start < 0 or event not in message:
             continue
         try:
             payload = json.loads(message[start:])
