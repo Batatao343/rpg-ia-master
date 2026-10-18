@@ -1,5 +1,5 @@
 {
-  "commit_sha": "cae84b2708b4d64e8550ee3d7128b5a9ed91014a",
+  "commit_sha": "3e18035d5375701a6412b29a4909b14318bcb26c",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -52762,7 +52762,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 344
+        "line": 373
       },
       "source": "module:services.jev_rollout",
       "target": "symbol:services.jev_rollout._agreement",
@@ -52861,7 +52861,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 366
+        "line": 395
       },
       "source": "module:services.jev_rollout",
       "target": "symbol:services.jev_rollout.begin",
@@ -88633,10 +88633,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 243
+        "line": 260
       },
       "source": "module:tests.test_jev_router_port",
       "target": "symbol:tests.test_jev_router_port._reset_hook",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 243
+      },
+      "source": "module:tests.test_jev_router_port",
+      "target": "symbol:tests.test_jev_router_port._run_shadow",
       "type": "defines"
     },
     {
@@ -88699,10 +88710,32 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 350
+        "line": 367
       },
       "source": "module:tests.test_jev_router_port",
       "target": "symbol:tests.test_jev_router_port.test_kill_switch_returns_to_classify",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 464
+      },
+      "source": "module:tests.test_jev_router_port",
+      "target": "symbol:tests.test_jev_router_port.test_missing_key_falls_back_to_classify",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 481
+      },
+      "source": "module:tests.test_jev_router_port",
+      "target": "symbol:tests.test_jev_router_port.test_more_python_gates_precede_jev",
       "type": "defines"
     },
     {
@@ -88721,7 +88754,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 267
+        "line": 284
       },
       "source": "module:tests.test_jev_router_port",
       "target": "symbol:tests.test_jev_router_port.test_primary_covered_skips_classify",
@@ -88732,7 +88765,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 330
+        "line": 347
       },
       "source": "module:tests.test_jev_router_port",
       "target": "symbol:tests.test_jev_router_port.test_primary_error_falls_back_without_provider_text",
@@ -88743,7 +88776,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 286
+        "line": 303
       },
       "source": "module:tests.test_jev_router_port",
       "target": "symbol:tests.test_jev_router_port.test_primary_fallback_uses_classify",
@@ -88754,7 +88787,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 297
+        "line": 314
       },
       "source": "module:tests.test_jev_router_port",
       "target": "symbol:tests.test_jev_router_port.test_primary_requires_owner_approval_flag",
@@ -88765,7 +88798,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 317
+        "line": 334
       },
       "source": "module:tests.test_jev_router_port",
       "target": "symbol:tests.test_jev_router_port.test_primary_slow_jev_bounded_by_deadline",
@@ -88776,10 +88809,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 308
+        "line": 325
       },
       "source": "module:tests.test_jev_router_port",
       "target": "symbol:tests.test_jev_router_port.test_primary_uncalibrated_never_calls",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 451
+      },
+      "source": "module:tests.test_jev_router_port",
+      "target": "symbol:tests.test_jev_router_port.test_primary_unmapped_target_falls_back",
       "type": "defines"
     },
     {
@@ -88798,7 +88842,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 339
+        "line": 356
       },
       "source": "module:tests.test_jev_router_port",
       "target": "symbol:tests.test_jev_router_port.test_python_gates_precede_jev",
@@ -88820,7 +88864,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 412
+        "line": 492
       },
       "source": "module:tests.test_jev_router_port",
       "target": "symbol:tests.test_jev_router_port.test_shadow_classify_failure_still_observed",
@@ -88831,7 +88875,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 379
+        "line": 396
       },
       "source": "module:tests.test_jev_router_port",
       "target": "symbol:tests.test_jev_router_port.test_shadow_disagreement_and_combat",
@@ -88842,7 +88886,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 420
+        "line": 500
       },
       "source": "module:tests.test_jev_router_port",
       "target": "symbol:tests.test_jev_router_port.test_shadow_does_not_mutate_state",
@@ -88853,7 +88897,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 363
+        "line": 380
       },
       "source": "module:tests.test_jev_router_port",
       "target": "symbol:tests.test_jev_router_port.test_shadow_keeps_classify_and_logs_agreement_without_text",
@@ -88864,7 +88908,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 391
+        "line": 435
+      },
+      "source": "module:tests.test_jev_router_port",
+      "target": "symbol:tests.test_jev_router_port.test_shadow_late_jev_within_deadline_is_still_observed",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 408
       },
       "source": "module:tests.test_jev_router_port",
       "target": "symbol:tests.test_jev_router_port.test_shadow_loot_agreement",
@@ -88875,10 +88930,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 401
+        "line": 418
       },
       "source": "module:tests.test_jev_router_port",
-      "target": "symbol:tests.test_jev_router_port.test_shadow_slow_jev_does_not_delay_beyond_deadline",
+      "target": "symbol:tests.test_jev_router_port.test_shadow_slow_jev_never_delays_the_turn",
       "type": "defines"
     },
     {
@@ -185741,7 +185796,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 301
+        "line": 303
       },
       "source": "symbol:services.jev_rollout.JevPending",
       "target": "symbol:services.jev_rollout.JevPending._event",
@@ -185752,7 +185807,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 288
+        "line": 350
+      },
+      "source": "symbol:services.jev_rollout.JevPending",
+      "target": "symbol:services.jev_rollout.JevPending._observe_now",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 290
       },
       "source": "symbol:services.jev_rollout.JevPending",
       "target": "symbol:services.jev_rollout.JevPending._result",
@@ -185763,7 +185829,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 324
+        "line": 333
       },
       "source": "symbol:services.jev_rollout.JevPending",
       "target": "symbol:services.jev_rollout.JevPending.observe",
@@ -185774,7 +185840,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 312
+        "line": 315
       },
       "source": "symbol:services.jev_rollout.JevPending",
       "target": "symbol:services.jev_rollout.JevPending.primary_routing",
@@ -185785,7 +185851,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 304
+        "line": 308
       },
       "source": "symbol:services.jev_rollout.JevPending._event",
       "target": "symbol:services.jev_rollout.JevRolloutEvent",
@@ -185796,31 +185862,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 294
+        "line": 362
       },
-      "source": "symbol:services.jev_rollout.JevPending._result",
-      "target": "symbol:services.jev_rollout._Evaluation",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/jev_rollout.py",
-        "line": 297
-      },
-      "source": "symbol:services.jev_rollout.JevPending._result",
-      "target": "symbol:services.jev_rollout._Evaluation",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/jev_rollout.py",
-        "line": 333
-      },
-      "source": "symbol:services.jev_rollout.JevPending.observe",
+      "source": "symbol:services.jev_rollout.JevPending._observe_now",
       "target": "symbol:services.jev_rollout.JevRouting",
       "type": "calls"
     },
@@ -185829,9 +185873,20 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 336
+        "line": 357
       },
-      "source": "symbol:services.jev_rollout.JevPending.observe",
+      "source": "symbol:services.jev_rollout.JevPending._observe_now",
+      "target": "symbol:services.jev_rollout._Evaluation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 365
+      },
+      "source": "symbol:services.jev_rollout.JevPending._observe_now",
       "target": "symbol:services.jev_rollout._agreement",
       "type": "calls"
     },
@@ -185840,9 +185895,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 339
+        "line": 368
       },
-      "source": "symbol:services.jev_rollout.JevPending.observe",
+      "source": "symbol:services.jev_rollout.JevPending._observe_now",
       "target": "symbol:services.jev_rollout._emit",
       "type": "calls"
     },
@@ -185851,7 +185906,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 319
+        "line": 296
+      },
+      "source": "symbol:services.jev_rollout.JevPending._result",
+      "target": "symbol:services.jev_rollout._Evaluation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 299
+      },
+      "source": "symbol:services.jev_rollout.JevPending._result",
+      "target": "symbol:services.jev_rollout._Evaluation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 322
       },
       "source": "symbol:services.jev_rollout.JevPending.primary_routing",
       "target": "symbol:services.jev_rollout.JevRouting",
@@ -185862,7 +185939,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 317
+        "line": 320
       },
       "source": "symbol:services.jev_rollout.JevPending.primary_routing",
       "target": "symbol:services.jev_rollout._emit",
@@ -185873,7 +185950,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 321
+        "line": 327
       },
       "source": "symbol:services.jev_rollout.JevPending.primary_routing",
       "target": "symbol:services.jev_rollout._emit",
@@ -185884,7 +185961,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 354
+        "line": 330
+      },
+      "source": "symbol:services.jev_rollout.JevPending.primary_routing",
+      "target": "symbol:services.jev_rollout._emit",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 324
+      },
+      "source": "symbol:services.jev_rollout.JevPending.primary_routing",
+      "target": "symbol:services.jev_rollout.target_name_for_id",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 383
       },
       "source": "symbol:services.jev_rollout._agreement",
       "target": "symbol:services.jev_rollout.target_id_for_name",
@@ -185895,7 +185994,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 355
+        "line": 384
       },
       "source": "symbol:services.jev_rollout._agreement",
       "target": "symbol:services.jev_rollout.target_id_for_name",
@@ -185961,7 +186060,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 387
+        "line": 416
       },
       "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout.JevPending",
@@ -185972,7 +186071,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 376
+        "line": 405
       },
       "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout.JevRolloutEvent",
@@ -185983,7 +186082,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 379
+        "line": 408
       },
       "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout.JevRolloutEvent",
@@ -185994,7 +186093,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 382
+        "line": 411
       },
       "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout.JevRolloutEvent",
@@ -186005,7 +186104,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 376
+        "line": 405
       },
       "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout._emit",
@@ -186016,7 +186115,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 379
+        "line": 408
       },
       "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout._emit",
@@ -186027,7 +186126,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 382
+        "line": 411
       },
       "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout._emit",
@@ -186038,7 +186137,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 384
+        "line": 413
       },
       "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout._idempotency_key",
@@ -186049,7 +186148,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 375
+        "line": 404
       },
       "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout._jev_switched_off",
@@ -186060,7 +186159,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 386
+        "line": 415
       },
       "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout._pool",
@@ -186071,7 +186170,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 381
+        "line": 410
       },
       "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout._threshold",
@@ -186082,7 +186181,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 372
+        "line": 401
       },
       "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout.rollout_mode",
@@ -253776,10 +253875,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 245
+        "line": 262
       },
       "source": "symbol:tests.test_jev_router_port._reset_hook",
       "target": "symbol:services.jev_rollout.set_jev_rollout_telemetry_hook",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 249
+      },
+      "source": "symbol:tests.test_jev_router_port._run_shadow",
+      "target": "symbol:tests.test_jev_router_port.run_scenario",
       "type": "calls"
     },
     {
@@ -254018,7 +254128,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 351
+        "line": 368
       },
       "source": "symbol:tests.test_jev_router_port.test_kill_switch_returns_to_classify",
       "target": "symbol:tests.test_jev_router_port.FakeJev",
@@ -254029,7 +254139,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 354
+        "line": 371
       },
       "source": "symbol:tests.test_jev_router_port.test_kill_switch_returns_to_classify",
       "target": "symbol:tests.test_jev_router_port._scene",
@@ -254040,7 +254150,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 352
+        "line": 369
       },
       "source": "symbol:tests.test_jev_router_port.test_kill_switch_returns_to_classify",
       "target": "symbol:tests.test_jev_router_port._use",
@@ -254051,9 +254161,108 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 354
+        "line": 371
       },
       "source": "symbol:tests.test_jev_router_port.test_kill_switch_returns_to_classify",
+      "target": "symbol:tests.test_jev_router_port.run_scenario",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 475
+      },
+      "source": "symbol:tests.test_jev_router_port.test_missing_key_falls_back_to_classify",
+      "target": "symbol:services.jev_rollout.set_jev_rollout_telemetry_hook",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 476
+      },
+      "source": "symbol:tests.test_jev_router_port.test_missing_key_falls_back_to_classify",
+      "target": "symbol:tests.test_jev_router_port._scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 476
+      },
+      "source": "symbol:tests.test_jev_router_port.test_missing_key_falls_back_to_classify",
+      "target": "symbol:tests.test_jev_router_port.run_scenario",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 483
+      },
+      "source": "symbol:tests.test_jev_router_port.test_more_python_gates_precede_jev",
+      "target": "symbol:tests.test_jev_router_port.FakeJev",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 486
+      },
+      "source": "symbol:tests.test_jev_router_port.test_more_python_gates_precede_jev",
+      "target": "symbol:tests.test_jev_router_port._scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 487
+      },
+      "source": "symbol:tests.test_jev_router_port.test_more_python_gates_precede_jev",
+      "target": "symbol:tests.test_jev_router_port._scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 484
+      },
+      "source": "symbol:tests.test_jev_router_port.test_more_python_gates_precede_jev",
+      "target": "symbol:tests.test_jev_router_port._use",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 486
+      },
+      "source": "symbol:tests.test_jev_router_port.test_more_python_gates_precede_jev",
+      "target": "symbol:tests.test_jev_router_port.run_scenario",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 488
+      },
+      "source": "symbol:tests.test_jev_router_port.test_more_python_gates_precede_jev",
       "target": "symbol:tests.test_jev_router_port.run_scenario",
       "type": "calls"
     },
@@ -254128,7 +254337,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 269
+        "line": 286
       },
       "source": "symbol:tests.test_jev_router_port.test_primary_covered_skips_classify",
       "target": "symbol:tests.test_jev_router_port.FakeJev",
@@ -254139,7 +254348,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 271
+        "line": 288
       },
       "source": "symbol:tests.test_jev_router_port.test_primary_covered_skips_classify",
       "target": "symbol:tests.test_jev_router_port._scene",
@@ -254150,7 +254359,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 270
+        "line": 287
       },
       "source": "symbol:tests.test_jev_router_port.test_primary_covered_skips_classify",
       "target": "symbol:tests.test_jev_router_port._use",
@@ -254161,7 +254370,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 271
+        "line": 288
       },
       "source": "symbol:tests.test_jev_router_port.test_primary_covered_skips_classify",
       "target": "symbol:tests.test_jev_router_port.run_scenario",
@@ -254172,7 +254381,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 331
+        "line": 348
       },
       "source": "symbol:tests.test_jev_router_port.test_primary_error_falls_back_without_provider_text",
       "target": "symbol:services.jev_decision.JevTimeoutError",
@@ -254183,7 +254392,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 331
+        "line": 348
       },
       "source": "symbol:tests.test_jev_router_port.test_primary_error_falls_back_without_provider_text",
       "target": "symbol:tests.test_jev_router_port.FakeJev",
@@ -254194,7 +254403,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 333
+        "line": 350
       },
       "source": "symbol:tests.test_jev_router_port.test_primary_error_falls_back_without_provider_text",
       "target": "symbol:tests.test_jev_router_port._scene",
@@ -254205,7 +254414,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 332
+        "line": 349
       },
       "source": "symbol:tests.test_jev_router_port.test_primary_error_falls_back_without_provider_text",
       "target": "symbol:tests.test_jev_router_port._use",
@@ -254216,7 +254425,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 333
+        "line": 350
       },
       "source": "symbol:tests.test_jev_router_port.test_primary_error_falls_back_without_provider_text",
       "target": "symbol:tests.test_jev_router_port.run_scenario",
@@ -254227,7 +254436,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 288
+        "line": 305
       },
       "source": "symbol:tests.test_jev_router_port.test_primary_fallback_uses_classify",
       "target": "symbol:tests.test_jev_router_port.FakeJev",
@@ -254238,7 +254447,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 290
+        "line": 307
       },
       "source": "symbol:tests.test_jev_router_port.test_primary_fallback_uses_classify",
       "target": "symbol:tests.test_jev_router_port._scene",
@@ -254249,7 +254458,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 289
+        "line": 306
       },
       "source": "symbol:tests.test_jev_router_port.test_primary_fallback_uses_classify",
       "target": "symbol:tests.test_jev_router_port._use",
@@ -254260,7 +254469,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 290
+        "line": 307
       },
       "source": "symbol:tests.test_jev_router_port.test_primary_fallback_uses_classify",
       "target": "symbol:tests.test_jev_router_port.run_scenario",
@@ -254271,7 +254480,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 298
+        "line": 315
       },
       "source": "symbol:tests.test_jev_router_port.test_primary_requires_owner_approval_flag",
       "target": "symbol:tests.test_jev_router_port.FakeJev",
@@ -254282,75 +254491,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 300
+        "line": 317
       },
       "source": "symbol:tests.test_jev_router_port.test_primary_requires_owner_approval_flag",
-      "target": "symbol:tests.test_jev_router_port._scene",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 304
-      },
-      "source": "symbol:tests.test_jev_router_port.test_primary_requires_owner_approval_flag",
-      "target": "symbol:tests.test_jev_router_port._scene",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 299
-      },
-      "source": "symbol:tests.test_jev_router_port.test_primary_requires_owner_approval_flag",
-      "target": "symbol:tests.test_jev_router_port._use",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 300
-      },
-      "source": "symbol:tests.test_jev_router_port.test_primary_requires_owner_approval_flag",
-      "target": "symbol:tests.test_jev_router_port.run_scenario",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 304
-      },
-      "source": "symbol:tests.test_jev_router_port.test_primary_requires_owner_approval_flag",
-      "target": "symbol:tests.test_jev_router_port.run_scenario",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 320
-      },
-      "source": "symbol:tests.test_jev_router_port.test_primary_slow_jev_bounded_by_deadline",
-      "target": "symbol:tests.test_jev_router_port.FakeJev",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 323
-      },
-      "source": "symbol:tests.test_jev_router_port.test_primary_slow_jev_bounded_by_deadline",
       "target": "symbol:tests.test_jev_router_port._scene",
       "type": "calls"
     },
@@ -254361,40 +254504,7 @@
         "file": "tests/test_jev_router_port.py",
         "line": 321
       },
-      "source": "symbol:tests.test_jev_router_port.test_primary_slow_jev_bounded_by_deadline",
-      "target": "symbol:tests.test_jev_router_port._use",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 323
-      },
-      "source": "symbol:tests.test_jev_router_port.test_primary_slow_jev_bounded_by_deadline",
-      "target": "symbol:tests.test_jev_router_port.run_scenario",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 309
-      },
-      "source": "symbol:tests.test_jev_router_port.test_primary_uncalibrated_never_calls",
-      "target": "symbol:tests.test_jev_router_port.FakeJev",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 312
-      },
-      "source": "symbol:tests.test_jev_router_port.test_primary_uncalibrated_never_calls",
+      "source": "symbol:tests.test_jev_router_port.test_primary_requires_owner_approval_flag",
       "target": "symbol:tests.test_jev_router_port._scene",
       "type": "calls"
     },
@@ -254403,9 +254513,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 310
+        "line": 316
       },
-      "source": "symbol:tests.test_jev_router_port.test_primary_uncalibrated_never_calls",
+      "source": "symbol:tests.test_jev_router_port.test_primary_requires_owner_approval_flag",
       "target": "symbol:tests.test_jev_router_port._use",
       "type": "calls"
     },
@@ -254414,10 +254524,32 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 312
+        "line": 317
       },
-      "source": "symbol:tests.test_jev_router_port.test_primary_uncalibrated_never_calls",
+      "source": "symbol:tests.test_jev_router_port.test_primary_requires_owner_approval_flag",
       "target": "symbol:tests.test_jev_router_port.run_scenario",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 321
+      },
+      "source": "symbol:tests.test_jev_router_port.test_primary_requires_owner_approval_flag",
+      "target": "symbol:tests.test_jev_router_port.run_scenario",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 337
+      },
+      "source": "symbol:tests.test_jev_router_port.test_primary_slow_jev_bounded_by_deadline",
+      "target": "symbol:tests.test_jev_router_port.FakeJev",
       "type": "calls"
     },
     {
@@ -254427,6 +254559,127 @@
         "file": "tests/test_jev_router_port.py",
         "line": 340
       },
+      "source": "symbol:tests.test_jev_router_port.test_primary_slow_jev_bounded_by_deadline",
+      "target": "symbol:tests.test_jev_router_port._scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 338
+      },
+      "source": "symbol:tests.test_jev_router_port.test_primary_slow_jev_bounded_by_deadline",
+      "target": "symbol:tests.test_jev_router_port._use",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 340
+      },
+      "source": "symbol:tests.test_jev_router_port.test_primary_slow_jev_bounded_by_deadline",
+      "target": "symbol:tests.test_jev_router_port.run_scenario",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 326
+      },
+      "source": "symbol:tests.test_jev_router_port.test_primary_uncalibrated_never_calls",
+      "target": "symbol:tests.test_jev_router_port.FakeJev",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 329
+      },
+      "source": "symbol:tests.test_jev_router_port.test_primary_uncalibrated_never_calls",
+      "target": "symbol:tests.test_jev_router_port._scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 327
+      },
+      "source": "symbol:tests.test_jev_router_port.test_primary_uncalibrated_never_calls",
+      "target": "symbol:tests.test_jev_router_port._use",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 329
+      },
+      "source": "symbol:tests.test_jev_router_port.test_primary_uncalibrated_never_calls",
+      "target": "symbol:tests.test_jev_router_port.run_scenario",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 453
+      },
+      "source": "symbol:tests.test_jev_router_port.test_primary_unmapped_target_falls_back",
+      "target": "symbol:tests.test_jev_router_port.FakeJev",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 456
+      },
+      "source": "symbol:tests.test_jev_router_port.test_primary_unmapped_target_falls_back",
+      "target": "symbol:tests.test_jev_router_port._scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 454
+      },
+      "source": "symbol:tests.test_jev_router_port.test_primary_unmapped_target_falls_back",
+      "target": "symbol:tests.test_jev_router_port._use",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 456
+      },
+      "source": "symbol:tests.test_jev_router_port.test_primary_unmapped_target_falls_back",
+      "target": "symbol:tests.test_jev_router_port.run_scenario",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 357
+      },
       "source": "symbol:tests.test_jev_router_port.test_python_gates_precede_jev",
       "target": "symbol:tests.test_jev_router_port.FakeJev",
       "type": "calls"
@@ -254436,7 +254689,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 343
+        "line": 360
       },
       "source": "symbol:tests.test_jev_router_port.test_python_gates_precede_jev",
       "target": "symbol:tests.test_jev_router_port._scene",
@@ -254447,7 +254700,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 344
+        "line": 361
       },
       "source": "symbol:tests.test_jev_router_port.test_python_gates_precede_jev",
       "target": "symbol:tests.test_jev_router_port._scene",
@@ -254458,7 +254711,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 341
+        "line": 358
       },
       "source": "symbol:tests.test_jev_router_port.test_python_gates_precede_jev",
       "target": "symbol:tests.test_jev_router_port._use",
@@ -254469,7 +254722,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 343
+        "line": 360
       },
       "source": "symbol:tests.test_jev_router_port.test_python_gates_precede_jev",
       "target": "symbol:tests.test_jev_router_port.run_scenario",
@@ -254480,7 +254733,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 346
+        "line": 363
       },
       "source": "symbol:tests.test_jev_router_port.test_python_gates_precede_jev",
       "target": "symbol:tests.test_jev_router_port.run_scenario",
@@ -254513,7 +254766,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 413
+        "line": 493
       },
       "source": "symbol:tests.test_jev_router_port.test_shadow_classify_failure_still_observed",
       "target": "symbol:tests.test_jev_router_port.FakeJev",
@@ -254524,9 +254777,273 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 415
+        "line": 495
       },
       "source": "symbol:tests.test_jev_router_port.test_shadow_classify_failure_still_observed",
+      "target": "symbol:tests.test_jev_router_port._run_shadow",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 495
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_classify_failure_still_observed",
+      "target": "symbol:tests.test_jev_router_port._scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 494
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_classify_failure_still_observed",
+      "target": "symbol:tests.test_jev_router_port._use",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 397
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_disagreement_and_combat",
+      "target": "symbol:tests.test_jev_router_port.FakeJev",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 399
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_disagreement_and_combat",
+      "target": "symbol:tests.test_jev_router_port._run_shadow",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 403
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_disagreement_and_combat",
+      "target": "symbol:tests.test_jev_router_port._run_shadow",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 399
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_disagreement_and_combat",
+      "target": "symbol:tests.test_jev_router_port._scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 403
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_disagreement_and_combat",
+      "target": "symbol:tests.test_jev_router_port._scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 398
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_disagreement_and_combat",
+      "target": "symbol:tests.test_jev_router_port._use",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 503
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_does_not_mutate_state",
+      "target": "symbol:tests.test_jev_router_port.FakeJev",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 507
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_does_not_mutate_state",
+      "target": "symbol:tests.test_jev_router_port._run_shadow",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 505
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_does_not_mutate_state",
+      "target": "symbol:tests.test_jev_router_port._scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 504
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_does_not_mutate_state",
+      "target": "symbol:tests.test_jev_router_port._use",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 382
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_keeps_classify_and_logs_agreement_without_text",
+      "target": "symbol:tests.test_jev_router_port.FakeJev",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 385
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_keeps_classify_and_logs_agreement_without_text",
+      "target": "symbol:tests.test_jev_router_port._run_shadow",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 384
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_keeps_classify_and_logs_agreement_without_text",
+      "target": "symbol:tests.test_jev_router_port._scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 383
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_keeps_classify_and_logs_agreement_without_text",
+      "target": "symbol:tests.test_jev_router_port._use",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 438
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_late_jev_within_deadline_is_still_observed",
+      "target": "symbol:tests.test_jev_router_port.FakeJev",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 441
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_late_jev_within_deadline_is_still_observed",
+      "target": "symbol:tests.test_jev_router_port._scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 439
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_late_jev_within_deadline_is_still_observed",
+      "target": "symbol:tests.test_jev_router_port._use",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 441
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_late_jev_within_deadline_is_still_observed",
+      "target": "symbol:tests.test_jev_router_port.run_scenario",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 409
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_loot_agreement",
+      "target": "symbol:tests.test_jev_router_port.FakeJev",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 411
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_loot_agreement",
+      "target": "symbol:tests.test_jev_router_port._run_shadow",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 414
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_loot_agreement",
+      "target": "symbol:tests.test_jev_router_port._run_shadow",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 411
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_loot_agreement",
       "target": "symbol:tests.test_jev_router_port._scene",
       "type": "calls"
     },
@@ -254537,7 +255054,18 @@
         "file": "tests/test_jev_router_port.py",
         "line": 414
       },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_classify_failure_still_observed",
+      "source": "symbol:tests.test_jev_router_port.test_shadow_loot_agreement",
+      "target": "symbol:tests.test_jev_router_port._scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 410
+      },
+      "source": "symbol:tests.test_jev_router_port.test_shadow_loot_agreement",
       "target": "symbol:tests.test_jev_router_port._use",
       "type": "calls"
     },
@@ -254546,98 +255074,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 415
+        "line": 421
       },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_classify_failure_still_observed",
-      "target": "symbol:tests.test_jev_router_port.run_scenario",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 380
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_disagreement_and_combat",
+      "source": "symbol:tests.test_jev_router_port.test_shadow_slow_jev_never_delays_the_turn",
       "target": "symbol:tests.test_jev_router_port.FakeJev",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 382
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_disagreement_and_combat",
-      "target": "symbol:tests.test_jev_router_port._scene",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 386
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_disagreement_and_combat",
-      "target": "symbol:tests.test_jev_router_port._scene",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 381
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_disagreement_and_combat",
-      "target": "symbol:tests.test_jev_router_port._use",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 382
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_disagreement_and_combat",
-      "target": "symbol:tests.test_jev_router_port.run_scenario",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 386
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_disagreement_and_combat",
-      "target": "symbol:tests.test_jev_router_port.run_scenario",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 423
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_does_not_mutate_state",
-      "target": "symbol:tests.test_jev_router_port.FakeJev",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 425
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_does_not_mutate_state",
-      "target": "symbol:tests.test_jev_router_port._scene",
       "type": "calls"
     },
     {
@@ -254647,40 +255087,7 @@
         "file": "tests/test_jev_router_port.py",
         "line": 424
       },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_does_not_mutate_state",
-      "target": "symbol:tests.test_jev_router_port._use",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 427
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_does_not_mutate_state",
-      "target": "symbol:tests.test_jev_router_port.run_scenario",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 365
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_keeps_classify_and_logs_agreement_without_text",
-      "target": "symbol:tests.test_jev_router_port.FakeJev",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 367
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_keeps_classify_and_logs_agreement_without_text",
+      "source": "symbol:tests.test_jev_router_port.test_shadow_slow_jev_never_delays_the_turn",
       "target": "symbol:tests.test_jev_router_port._scene",
       "type": "calls"
     },
@@ -254689,9 +255096,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 366
+        "line": 422
       },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_keeps_classify_and_logs_agreement_without_text",
+      "source": "symbol:tests.test_jev_router_port.test_shadow_slow_jev_never_delays_the_turn",
       "target": "symbol:tests.test_jev_router_port._use",
       "type": "calls"
     },
@@ -254700,119 +255107,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 368
+        "line": 424
       },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_keeps_classify_and_logs_agreement_without_text",
-      "target": "symbol:tests.test_jev_router_port.run_scenario",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 392
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_loot_agreement",
-      "target": "symbol:tests.test_jev_router_port.FakeJev",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 394
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_loot_agreement",
-      "target": "symbol:tests.test_jev_router_port._scene",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 397
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_loot_agreement",
-      "target": "symbol:tests.test_jev_router_port._scene",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 393
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_loot_agreement",
-      "target": "symbol:tests.test_jev_router_port._use",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 394
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_loot_agreement",
-      "target": "symbol:tests.test_jev_router_port.run_scenario",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 397
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_loot_agreement",
-      "target": "symbol:tests.test_jev_router_port.run_scenario",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 403
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_slow_jev_does_not_delay_beyond_deadline",
-      "target": "symbol:tests.test_jev_router_port.FakeJev",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 406
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_slow_jev_does_not_delay_beyond_deadline",
-      "target": "symbol:tests.test_jev_router_port._scene",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 404
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_slow_jev_does_not_delay_beyond_deadline",
-      "target": "symbol:tests.test_jev_router_port._use",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_jev_router_port.py",
-        "line": 406
-      },
-      "source": "symbol:tests.test_jev_router_port.test_shadow_slow_jev_does_not_delay_beyond_deadline",
+      "source": "symbol:tests.test_jev_router_port.test_shadow_slow_jev_never_delays_the_turn",
       "target": "symbol:tests.test_jev_router_port.run_scenario",
       "type": "calls"
     },
@@ -345580,28 +345877,35 @@
     {
       "id": "symbol:services.jev_rollout.JevPending._event",
       "kind": "method",
-      "line": 301,
+      "line": 303,
       "path": "services/jev_rollout.py",
       "qualified_name": "services.jev_rollout.JevPending._event"
     },
     {
+      "id": "symbol:services.jev_rollout.JevPending._observe_now",
+      "kind": "method",
+      "line": 350,
+      "path": "services/jev_rollout.py",
+      "qualified_name": "services.jev_rollout.JevPending._observe_now"
+    },
+    {
       "id": "symbol:services.jev_rollout.JevPending._result",
       "kind": "method",
-      "line": 288,
+      "line": 290,
       "path": "services/jev_rollout.py",
       "qualified_name": "services.jev_rollout.JevPending._result"
     },
     {
       "id": "symbol:services.jev_rollout.JevPending.observe",
       "kind": "method",
-      "line": 324,
+      "line": 333,
       "path": "services/jev_rollout.py",
       "qualified_name": "services.jev_rollout.JevPending.observe"
     },
     {
       "id": "symbol:services.jev_rollout.JevPending.primary_routing",
       "kind": "method",
-      "line": 312,
+      "line": 315,
       "path": "services/jev_rollout.py",
       "qualified_name": "services.jev_rollout.JevPending.primary_routing"
     },
@@ -345629,7 +345933,7 @@
     {
       "id": "symbol:services.jev_rollout._agreement",
       "kind": "function",
-      "line": 344,
+      "line": 373,
       "path": "services/jev_rollout.py",
       "qualified_name": "services.jev_rollout._agreement"
     },
@@ -345692,7 +345996,7 @@
     {
       "id": "symbol:services.jev_rollout.begin",
       "kind": "function",
-      "line": 366,
+      "line": 395,
       "path": "services/jev_rollout.py",
       "qualified_name": "services.jev_rollout.begin"
     },
@@ -368715,9 +369019,16 @@
     {
       "id": "symbol:tests.test_jev_router_port._reset_hook",
       "kind": "test",
-      "line": 243,
+      "line": 260,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port._reset_hook"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_port._run_shadow",
+      "kind": "test",
+      "line": 243,
+      "path": "tests/test_jev_router_port.py",
+      "qualified_name": "tests.test_jev_router_port._run_shadow"
     },
     {
       "id": "symbol:tests.test_jev_router_port._scene",
@@ -368757,9 +369068,23 @@
     {
       "id": "symbol:tests.test_jev_router_port.test_kill_switch_returns_to_classify",
       "kind": "test",
-      "line": 350,
+      "line": 367,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port.test_kill_switch_returns_to_classify"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_port.test_missing_key_falls_back_to_classify",
+      "kind": "test",
+      "line": 464,
+      "path": "tests/test_jev_router_port.py",
+      "qualified_name": "tests.test_jev_router_port.test_missing_key_falls_back_to_classify"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_port.test_more_python_gates_precede_jev",
+      "kind": "test",
+      "line": 481,
+      "path": "tests/test_jev_router_port.py",
+      "qualified_name": "tests.test_jev_router_port.test_more_python_gates_precede_jev"
     },
     {
       "id": "symbol:tests.test_jev_router_port.test_off_is_byte_identical_to_pre_port_router",
@@ -368771,44 +369096,51 @@
     {
       "id": "symbol:tests.test_jev_router_port.test_primary_covered_skips_classify",
       "kind": "test",
-      "line": 267,
+      "line": 284,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port.test_primary_covered_skips_classify"
     },
     {
       "id": "symbol:tests.test_jev_router_port.test_primary_error_falls_back_without_provider_text",
       "kind": "test",
-      "line": 330,
+      "line": 347,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port.test_primary_error_falls_back_without_provider_text"
     },
     {
       "id": "symbol:tests.test_jev_router_port.test_primary_fallback_uses_classify",
       "kind": "test",
-      "line": 286,
+      "line": 303,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port.test_primary_fallback_uses_classify"
     },
     {
       "id": "symbol:tests.test_jev_router_port.test_primary_requires_owner_approval_flag",
       "kind": "test",
-      "line": 297,
+      "line": 314,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port.test_primary_requires_owner_approval_flag"
     },
     {
       "id": "symbol:tests.test_jev_router_port.test_primary_slow_jev_bounded_by_deadline",
       "kind": "test",
-      "line": 317,
+      "line": 334,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port.test_primary_slow_jev_bounded_by_deadline"
     },
     {
       "id": "symbol:tests.test_jev_router_port.test_primary_uncalibrated_never_calls",
       "kind": "test",
-      "line": 308,
+      "line": 325,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port.test_primary_uncalibrated_never_calls"
+    },
+    {
+      "id": "symbol:tests.test_jev_router_port.test_primary_unmapped_target_falls_back",
+      "kind": "test",
+      "line": 451,
+      "path": "tests/test_jev_router_port.py",
+      "qualified_name": "tests.test_jev_router_port.test_primary_unmapped_target_falls_back"
     },
     {
       "id": "symbol:tests.test_jev_router_port.test_production_uses_the_frozen_policy_and_calibration",
@@ -368820,7 +369152,7 @@
     {
       "id": "symbol:tests.test_jev_router_port.test_python_gates_precede_jev",
       "kind": "test",
-      "line": 339,
+      "line": 356,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port.test_python_gates_precede_jev"
     },
@@ -368834,44 +369166,51 @@
     {
       "id": "symbol:tests.test_jev_router_port.test_shadow_classify_failure_still_observed",
       "kind": "test",
-      "line": 412,
+      "line": 492,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port.test_shadow_classify_failure_still_observed"
     },
     {
       "id": "symbol:tests.test_jev_router_port.test_shadow_disagreement_and_combat",
       "kind": "test",
-      "line": 379,
+      "line": 396,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port.test_shadow_disagreement_and_combat"
     },
     {
       "id": "symbol:tests.test_jev_router_port.test_shadow_does_not_mutate_state",
       "kind": "test",
-      "line": 420,
+      "line": 500,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port.test_shadow_does_not_mutate_state"
     },
     {
       "id": "symbol:tests.test_jev_router_port.test_shadow_keeps_classify_and_logs_agreement_without_text",
       "kind": "test",
-      "line": 363,
+      "line": 380,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port.test_shadow_keeps_classify_and_logs_agreement_without_text"
     },
     {
+      "id": "symbol:tests.test_jev_router_port.test_shadow_late_jev_within_deadline_is_still_observed",
+      "kind": "test",
+      "line": 435,
+      "path": "tests/test_jev_router_port.py",
+      "qualified_name": "tests.test_jev_router_port.test_shadow_late_jev_within_deadline_is_still_observed"
+    },
+    {
       "id": "symbol:tests.test_jev_router_port.test_shadow_loot_agreement",
       "kind": "test",
-      "line": 391,
+      "line": 408,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port.test_shadow_loot_agreement"
     },
     {
-      "id": "symbol:tests.test_jev_router_port.test_shadow_slow_jev_does_not_delay_beyond_deadline",
+      "id": "symbol:tests.test_jev_router_port.test_shadow_slow_jev_never_delays_the_turn",
       "kind": "test",
-      "line": 401,
+      "line": 418,
       "path": "tests/test_jev_router_port.py",
-      "qualified_name": "tests.test_jev_router_port.test_shadow_slow_jev_does_not_delay_beyond_deadline"
+      "qualified_name": "tests.test_jev_router_port.test_shadow_slow_jev_never_delays_the_turn"
     },
     {
       "id": "symbol:tests.test_jev_router_port.test_target_id_name_parity_with_map_target_to_id",
@@ -385416,5 +385755,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:f395b1718cee4d7814a12d8139768669b2c1bed9e5bc878a7f782ca6d36a4095"
+  "source_tree_hash": "sha256:cda9e560685ac099ef42505aed2d139a578c4d4861df6c04cab57b02bbac2305"
 }

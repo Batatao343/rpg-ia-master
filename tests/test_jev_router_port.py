@@ -236,7 +236,24 @@ def _use(monkeypatch: pytest.MonkeyPatch, mode: str, backend: FakeJev,
     monkeypatch.setattr(jev_rollout, "_jev_switched_off", lambda: False)
     events: list[Any] = []
     jev_rollout.set_jev_rollout_telemetry_hook(events.append)
+    _SHADOW_EVENTS.append(events)
     return events
+
+
+def _run_shadow(monkeypatch: pytest.MonkeyPatch, state: dict[str, Any],
+                decision: dict[str, Any] | None, events: list[Any] | None = None,
+                ) -> tuple[Any, _LLM]:
+    """Shadow observes off the turn's path: wait for its (single) event."""
+    sink = events if events is not None else _SHADOW_EVENTS[-1]
+    before = len(sink)
+    result = run_scenario(monkeypatch, state, decision)
+    deadline = time.monotonic() + 3
+    while len(sink) == before and time.monotonic() < deadline:
+        time.sleep(0.01)
+    return result
+
+
+_SHADOW_EVENTS: list[list[Any]] = []
 
 
 @pytest.fixture(autouse=True)
@@ -365,7 +382,7 @@ def test_shadow_keeps_classify_and_logs_agreement_without_text(
     backend = FakeJev(route="npc_actor", target="npc_velha_magda")
     events = _use(monkeypatch, "shadow", backend, approved=False)
     state = _scene("Falo com a Velha Magda sobre o rio")
-    payload, llm = run_scenario(monkeypatch, state, {"route": "npc_actor", "target": "Magda"})
+    payload, llm = _run_shadow(monkeypatch, state, {"route": "npc_actor", "target": "Magda"})
     assert llm.calls == 1 and len(backend.calls) == 1
     assert payload["next"] == "npc_actor"
     event = events[-1]
@@ -379,11 +396,11 @@ def test_shadow_keeps_classify_and_logs_agreement_without_text(
 def test_shadow_disagreement_and_combat(monkeypatch: pytest.MonkeyPatch) -> None:
     backend = FakeJev(route="combat_agent", target="mon_lobo_cinzento")
     events = _use(monkeypatch, "shadow", backend)
-    payload, _llm = run_scenario(monkeypatch, _scene("Ataco o lobo"),
+    payload, _llm = _run_shadow(monkeypatch, _scene("Ataco o lobo"),
                                  {"route": "combat_agent", "target": "Velha Magda"})
     assert payload["combat_target"] == "Velha Magda"
     assert events[-1].agree_route is True and events[-1].agree_target is False
-    payload, _llm = run_scenario(monkeypatch, _scene("Ataco o lobo"), {"route": "storyteller"})
+    payload, _llm = _run_shadow(monkeypatch, _scene("Ataco o lobo"), {"route": "storyteller"})
     assert payload["next"] == "storyteller"
     assert events[-1].agree_route is False and events[-1].jev_route == "combat_agent"
 
@@ -391,28 +408,91 @@ def test_shadow_disagreement_and_combat(monkeypatch: pytest.MonkeyPatch) -> None
 def test_shadow_loot_agreement(monkeypatch: pytest.MonkeyPatch) -> None:
     backend = FakeJev(route="loot", loot_source="shop")
     events = _use(monkeypatch, "shadow", backend)
-    run_scenario(monkeypatch, _scene("Compro uma corda"),
+    _run_shadow(monkeypatch, _scene("Compro uma corda"),
                  {"route": "loot", "loot_context": "SHOP"})
     assert events[-1].agree_loot is True
-    run_scenario(monkeypatch, _scene("Compro uma corda"), {"route": "loot"})
+    _run_shadow(monkeypatch, _scene("Compro uma corda"), {"route": "loot"})
     assert events[-1].agree_loot is False
 
 
-def test_shadow_slow_jev_does_not_delay_beyond_deadline(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_shadow_slow_jev_never_delays_the_turn(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Astra R14 review: shadow does not wait for the Jev at all (not even up to the deadline)."""
     monkeypatch.setattr(jev_rollout, "JEV_DEADLINE_SECONDS", 0.2)
-    backend = FakeJev(delay=1.5)
+    backend = FakeJev(delay=0.6)
     events = _use(monkeypatch, "shadow", backend)
     start = time.monotonic()
     payload, llm = run_scenario(monkeypatch, _scene("Olho o altar"), {"route": "loot"})
-    assert time.monotonic() - start < 0.8
+    assert time.monotonic() - start < 0.15
     assert payload["next"] == "loot" and llm.calls == 1
+    assert not events  # observation still pending
+    deadline = time.monotonic() + 3
+    while not events and time.monotonic() < deadline:
+        time.sleep(0.02)
     assert events[-1].outcome == "timeout" and events[-1].covered is False
+    assert events[-1].wait_ms == 0 and events[-1].classify_route == "loot"
+
+
+def test_shadow_late_jev_within_deadline_is_still_observed(
+        monkeypatch: pytest.MonkeyPatch) -> None:
+    """CLASSIFY faster than the Jev: the late (in-deadline) answer is compared, no wait."""
+    backend = FakeJev(route="loot", loot_source="shop", delay=0.3)
+    events = _use(monkeypatch, "shadow", backend)
+    start = time.monotonic()
+    run_scenario(monkeypatch, _scene("Compro uma corda"),
+                 {"route": "loot", "loot_context": "SHOP"})
+    assert time.monotonic() - start < 0.2
+    deadline = time.monotonic() + 3
+    while not events and time.monotonic() < deadline:
+        time.sleep(0.02)
+    assert events[-1].outcome == "covered" and events[-1].agree_loot is True
+    assert events[-1].wait_ms == 0
+
+
+def test_primary_unmapped_target_falls_back(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Astra R14 review (6): a Jev actor ID the router cannot name never routes."""
+    backend = FakeJev(route="npc_actor", target="npc_velha_magda")
+    events = _use(monkeypatch, "primary", backend)
+    monkeypatch.setattr(jev_rollout, "target_name_for_id", lambda *_a, **_k: None)
+    payload, llm = run_scenario(monkeypatch, _scene("Falo com a Velha Magda"),
+                                {"route": "storyteller"})
+    assert llm.calls == 1 and len(backend.calls) == 1  # CLASSIFY decided this turn
+    assert payload.get("interlocutor_reason") != "jev"
+    assert events[-1].outcome == "fallback" and events[-1].reason == "target_unmapped"
+    assert events[-1].covered is False
+
+
+def test_missing_key_falls_back_to_classify(monkeypatch: pytest.MonkeyPatch) -> None:
+    """No TypeSafe key: configuration error -> CLASSIFY, no network, no retry."""
+    import services.jev_decision as jd
+
+    monkeypatch.setenv("RPG_JEV_ROUTER_MODE", "primary")
+    monkeypatch.setenv("RPG_JEV_ROUTER_PRIMARY_APPROVED", "1")
+    for name in ("TYPESAFE_API_KEY", "JEVMODEL_API_KEY", "JEV_API_KEY"):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setattr(jd, "load_dotenv", lambda *a, **k: False)
+    monkeypatch.setattr(jev_rollout, "_jev_switched_off", lambda: False)
+    events: list[Any] = []
+    jev_rollout.set_jev_rollout_telemetry_hook(events.append)
+    payload, llm = run_scenario(monkeypatch, _scene("Olho o altar"), {"route": "loot"})
+    assert llm.calls == 1 and payload["next"] == "loot"
+    assert events[-1].outcome == "configuration"
+
+
+def test_more_python_gates_precede_jev(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Explicit rest, scene description and an empty action never reach the Jev."""
+    backend = FakeJev(route="combat_agent", target="mon_lobo_cinzento")
+    _use(monkeypatch, "primary", backend)
+    for text in ("Descanso aqui", "Descrevo a cena", "O que vejo ao redor?"):
+        run_scenario(monkeypatch, _scene(text), {"route": "storyteller"})
+    empty = _scene("")
+    run_scenario(monkeypatch, empty, {"route": "storyteller"})
+    assert not backend.calls
 
 
 def test_shadow_classify_failure_still_observed(monkeypatch: pytest.MonkeyPatch) -> None:
     backend = FakeJev(route="storyteller")
     events = _use(monkeypatch, "shadow", backend)
-    payload, _llm = run_scenario(monkeypatch, _scene("Olho o altar"), None)
+    payload, _llm = _run_shadow(monkeypatch, _scene("Olho o altar"), None)
     assert payload["interlocutor_reason"] == "classify_fallback"
     assert events[-1].classify_route == "storyteller" and events[-1].agree_route is True
 
@@ -421,8 +501,9 @@ def test_shadow_does_not_mutate_state(monkeypatch: pytest.MonkeyPatch) -> None:
     from copy import deepcopy
 
     backend = FakeJev(route="npc_actor", target="npc_velha_magda")
-    _use(monkeypatch, "shadow", backend)
+    events = _use(monkeypatch, "shadow", backend)
     state = _scene("Falo com a Velha Magda")
     original = deepcopy(state)
-    run_scenario(monkeypatch, state, {"route": "npc_actor", "target": "Velha Magda"})
+    _run_shadow(monkeypatch, state, {"route": "npc_actor", "target": "Velha Magda"},
+                events=events)
     assert state == original

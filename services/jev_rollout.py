@@ -279,11 +279,13 @@ def _evaluate(state: Mapping[str, Any], action: str, backend: DecisionBackend | 
 class JevPending:
     """One turn's Jev evaluation, started before (primary) or alongside (shadow) CLASSIFY."""
 
-    def __init__(self, mode: RolloutMode, future: Future, started: float) -> None:
+    def __init__(self, mode: RolloutMode, future: Future, started: float,
+                 state: Mapping[str, Any] | None = None) -> None:
         self.mode = mode
         self._future = future
         self._started = started
         self._waited_ms = 0
+        self._state = state if state is not None else {}
 
     def _result(self) -> _Evaluation:
         remaining = max(0.0, self._started + JEV_DEADLINE_SECONDS - time.monotonic())
@@ -301,12 +303,13 @@ class JevPending:
     def _event(self, evaluation: _Evaluation, **extra: Any) -> JevRolloutEvent:
         decision = evaluation.decision or {}
         outcome = extra.pop("outcome", evaluation.outcome)
+        reason = extra.pop("reason", decision.get("reason"))
+        covered = extra.pop("covered", decision.get("source") == "jev")
         return JevRolloutEvent(
             self.mode, outcome, evaluation.model, evaluation.latency_ms,
             evaluation.input_tokens, evaluation.output_tokens, evaluation.cost_usd,
             evaluation.choice, evaluation.confidence,
-            reason=decision.get("reason"), covered=decision.get("source") == "jev",
-            wait_ms=self._waited_ms, **extra,
+            reason=reason, covered=covered, wait_ms=self._waited_ms, **extra,
         )
 
     def primary_routing(self) -> JevRouting | None:
@@ -318,15 +321,41 @@ class JevPending:
             return None
         routing = JevRouting(decision["route"], decision["target"], decision["loot_source"],
                              float(evaluation.confidence or 0.0))
+        if routing.target_id and target_name_for_id(self._state, routing.target_id) is None:
+            # Astra R14 review: an actor ID the router cannot name never reaches the
+            # payload as an empty target; CLASSIFY decides this turn instead.
+            _emit(self._event(evaluation, outcome="fallback", covered=False,
+                              reason="target_unmapped"))
+            return None
         _emit(self._event(evaluation, outcome="primary", jev_route=routing.route))
         return routing
 
     def observe(self, effective: Mapping[str, Any],
                 as_payload: Callable[[JevRouting], Mapping[str, Any]],
                 state: Mapping[str, Any]) -> None:
-        """Shadow: compare what primary would return with the effective payload."""
+        """Shadow: compare what primary would return with the effective payload.
+
+        Never waits: if the Jev is still running when CLASSIFY returns, the
+        comparison runs when it finishes (worker thread) and the turn proceeds.
+        """
+        if not self._future.done():
+            try:
+                self._future.add_done_callback(
+                    lambda _f: self._observe_now(effective, as_payload, state, late=True))
+            except Exception:
+                pass
+            return
+        self._observe_now(effective, as_payload, state)
+
+    def _observe_now(self, effective: Mapping[str, Any],
+                     as_payload: Callable[[JevRouting], Mapping[str, Any]],
+                     state: Mapping[str, Any], late: bool = False) -> None:
         try:
             evaluation = self._result()
+            if late and time.monotonic() - self._started > JEV_DEADLINE_SECONDS:
+                # Primary would have fallen back at the deadline: record it as such.
+                evaluation = _Evaluation(outcome="timeout", model=evaluation.model,
+                                         latency_ms=evaluation.latency_ms)
             decision = evaluation.decision
             extra: dict[str, Any] = {"classify_route": str(effective.get("next") or "")}
             if evaluation.outcome == "covered" and decision:
@@ -384,4 +413,4 @@ def begin(state: Mapping[str, Any], action: str, *,
     key = _idempotency_key(state, action)
     started = time.monotonic()
     future = _pool().submit(_evaluate, dict(state), action, backend, key)
-    return JevPending(mode, future, started)
+    return JevPending(mode, future, started, state)
