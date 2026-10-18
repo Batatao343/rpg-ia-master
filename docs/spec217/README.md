@@ -1,10 +1,6 @@
 # SPEC-217 — evidência
 
-Estado: **J1 concluída e congelada; revisão Astra APPROVED com emenda (guarda de combate ligada). J1b (SPEC-238, fonte do loot) concluída e adotada — nova política congelada aguardando revisão Astra antes da J2.** Nenhum
-GO/NO_GO ainda (só a J2 decide). Produção intacta: `RPG_JEV_ROUTER_MODE` default
-`off`, `PRIMARY_CALIBRATION=None`, `services/jev_rollout.py` sem mudança de
-comportamento (payload do rollout idêntico — campos novos do `DecisionState` são
-opcionais e ficam fora do fio quando não definidos).
+Estado: **J2 executada uma vez no FROZEN — veredito `GO` pela R9 pré-registrada** ([j2-result.md](j2-result.md)); aguarda revisão Astra do resultado. Nada ligado: produção intacta (`RPG_JEV_ROUTER_MODE` default `off`, `PRIMARY_CALIBRATION=None`, `services/jev_rollout.py` sem mudança de comportamento; campos novos do `DecisionState` são opcionais e ficam fora do fio quando não definidos).
 
 - Corpora: [corpus.md](corpus.md) (DEV `sha256:256d24bd…5f3d`; FROZEN
   `sha256:442725e5…9d48`, **não aberto** na J1 — só o hash do lock entra nos raws).
@@ -20,7 +16,8 @@ opcionais e ficam fora do fio quando não definidos).
 | J1 P2 (estrutura) | 8 | 0 | US$ 0,08 | — |
 | **J1 total** | **60** | **0** | **US$ 0,60** | 60 |
 | J1b (SPEC-238, loot) | 30 | 0 | US$ 0,30 | 30 |
-| Spec acumulada | 90 | 0 | US$ 0,90 | 190 / US$ 1,90 (era 160/1,60; emenda do dono 2026-10-18) |
+| J2 (sanidade 4 + réplicas 96) | 50 | 50 | US$ 1,00 | 100 |
+| Spec acumulada | 140 | 50 | US$ 1,90 | 190 / US$ 1,90 (era 160/1,60; emenda do dono 2026-10-18) |
 
 Ledger durável (incrementa antes de cada requisição):
 `evals/runs/jev-router-ab/spec217-j1/ledger.json` SHA-256
@@ -62,3 +59,14 @@ J1. Raw `b5a3a6d0…23bf`, summary `e884fb7b…c13a`. Detalhes em
 features de local DESLIGADAS na J2 (`FROZEN_J1B_LOCATION_FEATURES=False`). A J2 usa
 `frozen_j1b_request`/`frozen_loot_decision` e a R9.7 final (`r9_7_loot_source`: fonte de B
 contra o oráculo de fonte selado; sem oráculo, contra a fonte efetiva de A, fail-closed).
+
+
+## J2 — A/B confirmatório (FROZEN, execução única)
+
+Run `SPEC-217-J2-20261018T134801Z`, runner `evals/experiments/spec217_j2.py` (commit `3d1aca4`, árvore limpa, commitado antes da 1ª chamada). **GO**: rota A 45/48 vs B 48/48 (0 perdas pareadas), alvo 24/24 = 24/24, 0 escalada insegura, latência p50 1.480 → 238 ms (−1.242 ms), p95 1.806,6 → 1.655,3 ms (0,92×), gates 15/15 com 0 chamadas, 0 erro de provider, fonte do loot 9/9 (R9.7, oráculo selado). Cobertura do Jev 44/48. Detalhes: [j2-result.md](j2-result.md).
+
+| Artifact | SHA-256 |
+|---|---|
+| `evals/runs/jev-router-hybrid/20261018T134801Z/raw.json` | `f1a257a7830f99be5427925d7f2f4f7f8f2944a76a642f6a15148a7f51df3519` |
+| `evals/runs/jev-router-hybrid/20261018T134801Z/summary.json` | `454e814c3c76ad1c0cc2d2e016493babfc4ea0c614fa16f9ce26808024b18ef1` |
+| ledger após a J2 (190/190) | `5c2c32da8cb0710723c6791d482122833b1e963780912ef500eed4b7f9eb9cc1` |

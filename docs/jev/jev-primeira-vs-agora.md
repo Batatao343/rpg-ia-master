@@ -2,7 +2,7 @@
 
 Para: dono do projeto. Data: 2026-10-18.
 
-> **Aviso importante.** O teste confirmatório (**J2**) **ainda NÃO rodou**. Quando este documento diz "deu certo", refere-se apenas à fase de desenvolvimento (**DEV / J1**), em casos que já foram vistos durante o ajuste. Isso é um bom sinal, não uma prova. A prova é a J2.
+> **Atualização (18/10):** o teste confirmatório (**J2**) rodou uma única vez no corpus FROZEN e deu **GO** — ver "Resultado final" abaixo. As seções 5 e 6b continuam sendo resultados de desenvolvimento (DEV).
 
 ## 1. O que é o Jev e por que tentamos
 
@@ -121,9 +121,27 @@ CLASSIFY em todo loot que ele decidir.
 3. **Shadow em staging** (o Jev observa sem decidir), por pelo menos 50 turnos reais, só se a J2 der GO e com teto próprio autorizado por você.
 4. **`primary` em produção** só com sua aprovação separada. Até lá o Jev segue **desligado por padrão** e nada no jogo mudou.
 
+## Resultado final (J2, 18/10)
+
+A/B pareado no corpus FROZEN (16 casos elegíveis × 3 réplicas + 5 gates), rodado **uma vez**, 100 chamadas (50 Jev + 50 CLASSIFY). Regra pré-registrada: **GO** — todos os itens passaram.
+
+| Medida | CLASSIFY (hoje) | Híbrido (Jev + CLASSIFY de reserva) |
+|---|---:|---:|
+| Acerto de rota | 45/48 | **48/48** (0 perdas, 3 ganhos) |
+| Acerto de alvo | 24/24 | 24/24 |
+| Combate indevido | 0 | 0 |
+| Fonte do loot (contra o oráculo) | 6/9 | **9/9** |
+| Latência do router p50 | 1.480 ms | **238 ms** |
+| Latência do router p95 | 1.807 ms | 1.655 ms |
+| Erros de provedor | 0 | 0 |
+
+O Jev decidiu sozinho 44 de 48 vezes (92%); nas outras 4 (3 pela guarda de combate, 1 por confiança baixa) o CLASSIFY decidiu e acertou. Os 3 ganhos são um mesmo caso de compra que o CLASSIFY mandava para conversa. Orçamento da spec esgotado no limite: 190/190.
+
+**Nada mudou no jogo ainda.** Próximos passos: revisão independente (Astra) deste resultado; depois portar a estrutura para o código de produção **desligada** e congelar a calibração; então um **shadow em staging** (≥ 50 turnos reais, o Jev só observa) com teto que você precisa autorizar. Ligar o Jev de verdade (`primary`) continua exigindo sua aprovação separada.
+
 ## Fontes
 
 - `specs/SPEC-177..180` e `docs/spec177/`, `docs/spec178/`, `docs/spec179/`, `docs/spec180/` (README de cada)
 - `handoffs/SPEC-178-SOL-result-review.md`, `handoffs/SPEC-179-SOL-result-review.md`, `handoffs/SPEC-180-SOL-independent-review.md`
-- Branch `spec-217`: `specs/SPEC-217-jev-reavaliacao-condicional.md`, `docs/spec217/README.md`, `docs/spec217/j1-diagnostico.md`, `docs/spec217/j1-variantes.md`, `docs/spec217/corpus.md`
+- Branch `spec-217`: `specs/SPEC-217-jev-reavaliacao-condicional.md`, `docs/spec217/README.md`, `docs/spec217/j2-result.md`, `docs/spec217/j1-diagnostico.md`, `docs/spec217/j1-variantes.md`, `docs/spec217/corpus.md`
 - Latência do router (1.473 ms, ~13% do turno): `docs/spec214/gate-real-2026-10-17.md`

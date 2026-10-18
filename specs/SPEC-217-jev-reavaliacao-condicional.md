@@ -1,6 +1,6 @@
 # SPEC-217 — Reavaliação do Jev/TypeSafe no router: estruturação (J1) + A/B confirmatório (J2)
 
-> **Status:** `approved` — dono aprovou a execução em 2026-10-18 ("concordo com sua opção de especialista. teste o JEV agora."), incluindo chamadas reais Jev + CLASSIFY dentro do teto da §6, e pediu uma fase de melhoria da estruturação do Jev antes do teste ("vê se vc não consegue estruturar o JEV de uma maneira melhor para ele acertar mais também"). Reescrita em 2026-10-18 após o `NO_GO` da SPEC-214.
+> **Status:** `in-progress` — **J2 executada uma vez em 2026-10-18: `GO` pela R9** ([j2-result](../docs/spec217/j2-result.md); run `SPEC-217-J2-20261018T134801Z`, 190/190 chamadas). Pela §4 passo 7, GO não encerra a spec: faltam revisão Astra do resultado e R14 (porte atrás de `off` + `PRIMARY_CALIBRATION`); R15 (shadow) exige autorização própria. Aprovação original: dono aprovou a execução em 2026-10-18 ("concordo com sua opção de especialista. teste o JEV agora."), incluindo chamadas reais Jev + CLASSIFY dentro do teto da §6, e pediu uma fase de melhoria da estruturação do Jev antes do teste ("vê se vc não consegue estruturar o JEV de uma maneira melhor para ele acertar mais também"). Reescrita em 2026-10-18 após o `NO_GO` da SPEC-214.
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-200 `done` (baseline de latência) · SPEC-177, SPEC-178, SPEC-179, SPEC-180 `done` (adapter, A/Bs anteriores, rollout `off|shadow|primary`)
 > **Desbloqueia:** nada obrigatório
@@ -48,6 +48,8 @@ Rótulos: **[F]** fato observado · **[D]** decisão do dono · **[H]** hipótes
 
 ### J2 — A/B confirmatório (FROZEN, uma vez)
 
+**Resultado (2026-10-18):** `GO` — R9.1 A 45/48 vs B 48/48 (0 perdas); R9.2 24/24 = 24/24; R9.3 0; R9.4 p50 1.480 → 238 ms, p95 0,92×; R9.5 15/15, 0 chamadas; R9.6 0 erro; R9.7 9/9. Runner `evals/experiments/spec217_j2.py` (`3d1aca4`), [j2-result](../docs/spec217/j2-result.md).
+
 - **R7 — Braços.** A = caminho atual (gates Python → CLASSIFY, contrato completo do router). B = política híbrida congelada na J1, calculada a partir das mesmas chamadas: gates Python iguais; Jev; se confiante e representável na estrutura congelada, usa Jev; senão usa o resultado CLASSIFY do mesmo caso e réplica. Latência de B no fallback = soma das chamadas Jev + CLASSIFY. Se a estrutura tiver dois estágios, os dois contam na latência e no orçamento.
 - **R8 — Réplicas e pareamento.** 3 réplicas; em cada réplica cada caso elegível recebe as chamadas de ambos os braços na mesma ordem embaralhada por seed declarada; casos resolvidos por gate Python fazem 0 chamadas. O FROZEN é usado uma única vez; repetir exige nova autorização do dono e é reportado como tal.
 - **R9 — Regra de decisão (pré-registrada, todas obrigatórias para GO):**
@@ -90,14 +92,14 @@ Hipótese (a) cache de cena vs RAG profundo (descartada: SPEC-214 `NO_GO`); even
 
 ## 5. Critérios de aceite
 
-- [ ] DEV e FROZEN congelados antes da J1, sem sobreposição verificada; executor não os alterou e não leu o FROZEN antes da J2.
-- [ ] Diagnóstico J1 e registro completo de variantes com score DEV e chamadas gastas.
-- [ ] Estrutura e `τ` congelados em commit antes da J2, com revisão Astra.
+- [x] DEV e FROZEN congelados antes da J1, sem sobreposição verificada; executor não os alterou e não leu o FROZEN antes da J2.
+- [x] Diagnóstico J1 e registro completo de variantes com score DEV e chamadas gastas.
+- [x] Estrutura e `τ` congelados em commit antes da J2, com revisão Astra.
 - [ ] Testes do passo 2 verdes; `uv run pytest` verde.
-- [ ] J1 ≤ 60 chamadas; total ≤ 160 chamadas e ≤ US$ 1,60 de reserva, ou interrupção por R10 registrada.
-- [ ] Raw/summary com SHA-256; summary reproduzido offline.
-- [ ] Decisão GO/NO_GO aplicando a R9 sem reinterpretação; revisão Astra aprovada.
-- [ ] Default `off` preservado; nenhuma mudança de schema/rotas de produção.
+- [x] J1 ≤ 60 chamadas; total ≤ 160 chamadas e ≤ US$ 1,60 de reserva, ou interrupção por R10 registrada. (Teto emendado 190/US$ 1,90; usado 190: J1 60 + J1b 30 + J2 100.)
+- [x] Raw/summary com SHA-256; summary reproduzido offline.
+- [ ] Decisão GO/NO_GO aplicando a R9 sem reinterpretação; revisão Astra aprovada. (Decisão: `GO`; revisão Astra pendente.)
+- [x] Default `off` preservado; nenhuma mudança de schema/rotas de produção.
 
 ## 6. Smoke / orçamento
 

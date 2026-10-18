@@ -52,6 +52,8 @@ Rótulos: **[F]** fato · **[D]** decisão do dono · **[H]** hipótese · **[R]
 - [x] `uv run pytest`: 3 falhas, todas conhecidas e pré-existentes (2 `test_project_index` por índice stale; `test_spec197_checklist::test_real_register_r12_not_closed`, branch anterior a `71ed042` da main); `ruff check .` verde.
 - [x] Default `off` preservado.
 
+**J2 (SPEC-217, 2026-10-18):** R9.7 verde — nas 9 observações de loot decididas pelo Jev, fonte = oráculo selado 9/9 (CLASSIFY 6/9 contra o mesmo oráculo, por rotear 3× para `npc_actor`). Veredito geral da J2: `GO` ([j2-result](../docs/spec217/j2-result.md)).
+
 ## 5. Riscos
 
 - DEV pequeno (13 loot) e já visto: a confirmação é a J2 no FROZEN (3 casos loot), com a R9.7.
