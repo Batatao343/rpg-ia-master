@@ -52,6 +52,15 @@ class SupabaseIdentityProvider:
             user_id,
         )
 
+    @staticmethod
+    def _gotrue_error(response: httpx.Response) -> str:
+        """GoTrue ``error_code`` (``""`` se ausente/não-JSON). Nunca sai na resposta pública."""
+        try:
+            payload = response.json()
+        except ValueError:
+            return ""
+        return str(payload.get("error_code") or "") if isinstance(payload, dict) else ""
+
     def login(self, email: str, password: str, *, captcha_token: str | None = None) -> SessionTokens:
         body = {"email": email, "password": password}
         if captcha_token is not None:
@@ -62,6 +71,11 @@ class SupabaseIdentityProvider:
             timeout=self.timeout,
         )
         if response.status_code != 200:
+            code = self._gotrue_error(response)
+            if code == "email_not_confirmed":  # GoTrue só responde isso com a senha correta
+                raise Unauthorized("email_not_confirmed")
+            if code == "captcha_failed":
+                raise Unauthorized("captcha_invalid")
             raise Unauthorized("credenciais inválidas")
         return self._tokens(response.json())
 
@@ -74,6 +88,8 @@ class SupabaseIdentityProvider:
             json=body, timeout=self.timeout,
         )
         if response.status_code not in (200, 201):
+            if self._gotrue_error(response) == "captcha_failed":
+                raise Unauthorized("captcha_invalid")
             raise Unauthorized("não foi possível criar a conta")
         payload = response.json()
         if not payload.get("access_token"):
@@ -89,6 +105,8 @@ class SupabaseIdentityProvider:
         response = httpx.post(f"{self.base_url}/auth/v1/{endpoint}", headers=self._headers(),
                               json=body, timeout=self.timeout)
         if response.status_code not in (200, 201, 202, 204):
+            if self._gotrue_error(response) == "captcha_failed":
+                raise Unauthorized("captcha_invalid")  # independe da conta: não enumera
             raise AuthEmailDeliveryError(f"{response.status_code // 100}xx")
 
     def verify_email(self, token_hash: str, *, recovery: bool = False) -> SessionTokens:

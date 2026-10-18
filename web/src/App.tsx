@@ -21,6 +21,7 @@ import { DeathModal } from "./components/DeathModal";
 import type { LevelUpPick } from "./components/LevelUpModal";
 import { CombatSimulatorScreen } from "./components/CombatSimulatorScreen";
 import { AuthScreen, hasEmailActionLink } from "./components/AuthScreen";
+import { authErrorMessage } from "./lib/authErrors";
 import { AccountScreen, shards } from "./components/AccountScreen";
 
 import { ImageQuoteDialog } from "./components/ImageQuoteDialog";
@@ -233,7 +234,7 @@ export function App() {
       }
       await completeAuthenticatedSession();
     } catch (error) {
-      setAuthError(errMsg(error));
+      setAuthError(authErrorMessage(error, create ? "signup" : "login"));
     } finally {
       setBusy(false);
     }
@@ -822,7 +823,8 @@ export function App() {
         ) : screen === "auth" ? (
           <motion.div key="auth" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <AuthScreen busy={busy} onLogin={handleLogin} onAuthenticated={completeAuthenticatedSession}
-              config={authConfig} error={authError} notice={authNotice} />
+              config={authConfig} error={authError} notice={authNotice}
+              onClearMessages={() => { setAuthError(""); setAuthNotice(""); }} />
           </motion.div>
         ) : screen === "account" ? (
           <motion.div key="account" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>

@@ -305,3 +305,29 @@ test("SPEC-190 native GoTrue CAPTCHA sends fresh tokens for login and each reaut
   expect((reauthBodies[0] as { captcha_token: string }).captcha_token)
     .not.toBe((reauthBodies[1] as { captcha_token: string }).captcha_token);
 });
+
+test("auth debug 2026-10-18: login errors are readable and do not leak into recovery", async ({ page, backend }) => {
+  backend.authenticated = false;
+  backend.allowConsole(/status of 401/);
+  let loginCode = "email_not_confirmed";
+  await page.route("**/auth/config", route => route.fulfill(json(unauthenticated)));
+  await page.route("**/auth/login", route => route.fulfill(json({ detail: loginCode }, 401)));
+  await page.route("**/auth/reset/request", route => route.fulfill(json({ message: "Instruções enviadas." }, 202)));
+  await page.goto("/");
+  await page.getByLabel("E-mail").fill("dono@example.test");
+  await page.getByLabel("Senha", { exact: true }).fill("SenhaSegura123!");
+  await page.getByRole("button", { name: "Entrar", exact: true }).click();
+  await expect(page.getByRole("alert")).toContainText("Confirme seu e-mail");
+  loginCode = "credentials_invalid";
+  await page.getByRole("button", { name: "Entrar", exact: true }).click();
+  await expect(page.getByRole("alert")).toHaveText("E-mail ou senha incorretos.");
+  await expect(page.getByText("credentials_invalid")).toHaveCount(0);
+
+  await page.getByRole("button", { name: "Esqueci minha senha" }).click();
+  await expect(page.getByRole("alert")).toHaveCount(0);
+  await page.getByLabel("E-mail").fill("dono@example.test");
+  await page.getByRole("button", { name: "Enviar recuperação" }).click();
+  await expect(page.getByRole("status")).toContainText("Se o endereço puder receber mensagens");
+  await expect(page.getByRole("alert")).toHaveCount(0);
+  await expect(page.locator("body")).not.toContainText(/[a-z]+_[a-z]+_?[a-z]*/);
+});

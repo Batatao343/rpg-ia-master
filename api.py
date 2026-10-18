@@ -445,9 +445,13 @@ def auth_login(body: AuthRequest, request: Request, response: Response):
         else:
             tokens = provider.login(body.email, body.password)
     except Unauthorized as exc:
-        # SPEC-220 R4: só a falha de credencial conta no bucket por e-mail.
-        auth_limit(runtime, request, action="login", email=body.email, stage="failure")
-        raise HTTPException(status_code=401, detail=public_auth_code(exc)) from None
+        code = public_auth_code(exc)
+        if code == "captcha_invalid":
+            raise HTTPException(status_code=403, detail=code) from None
+        if code == "credentials_invalid":
+            # SPEC-220 R4: só a falha de credencial conta no bucket por e-mail.
+            auth_limit(runtime, request, action="login", email=body.email, stage="failure")
+        raise HTTPException(status_code=401, detail=code) from None
     auth_success(runtime, action="login", email=body.email, request=request)
     try:
         provider.verify(tokens.access_token)
@@ -482,6 +486,8 @@ def auth_signup(body: SignupRequest, request: Request, response: Response):
         csrf = _set_session_cookies(response, tokens, request=request)
         return {"authenticated": True, "csrf_token": csrf}
     except Unauthorized as exc:
+        if public_auth_code(exc) == "captcha_invalid":
+            raise HTTPException(status_code=403, detail="captcha_invalid") from None
         if _email_confirmation_required():
             response.status_code = 202
             return {"authenticated": False, "message": GENERIC_MESSAGE}
@@ -555,6 +561,7 @@ def auth_email_request(body: EmailRequest, request: Request):
     import httpx
     import logging
     from services.account_security import GENERIC_MESSAGE
+    from infrastructure.contracts import Unauthorized
     from infrastructure.supabase_identity import AuthEmailDeliveryError
     from observability.metrics import metrics
     from observability.telemetry import correlation, safe_json
@@ -569,6 +576,9 @@ def auth_email_request(body: EmailRequest, request: Request):
                                                     captcha_token=body.captcha_token)
         else:
             runtime.identity_verifier.request_email(body.email, recovery=recovery)
+    except Unauthorized as exc:
+        # Captcha recusado pelo GoTrue não depende da conta: dizer isso não enumera.
+        raise HTTPException(403, public_auth_code(exc)) from None
     except (AuthEmailDeliveryError, httpx.HTTPError) as exc:
         status_class = exc.status_class if isinstance(exc, AuthEmailDeliveryError) else "network"
         metrics.increment("rpg_auth_email_delivery_failures_total",

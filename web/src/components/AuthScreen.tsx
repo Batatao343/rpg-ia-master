@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import * as api from "../api";
 import { Frame } from "./ornaments";
 import { TurnstileChallenge } from "./TurnstileChallenge";
+import { authErrorMessage } from "../lib/authErrors";
 
 type Mode = "login" | "signup" | "reset_request" | "verify_request" | "verify_link" | "reset_link";
 
@@ -19,13 +20,15 @@ const emailLink = typeof window === "undefined" ? null : readEmailLink();
 export const hasEmailActionLink = emailLink !== null;
 const genericEmailNotice = "Se o endereço puder receber mensagens, enviaremos as instruções.";
 
-export function AuthScreen({ busy, onLogin, onAuthenticated, config, error, notice }: {
+export function AuthScreen({ busy, onLogin, onAuthenticated, config, error, notice, onClearMessages }: {
   busy: boolean;
   onLogin: (email: string, password: string, create: boolean, captchaToken?: string) => Promise<void>;
   onAuthenticated: () => Promise<void>;
   config?: api.AuthConfig;
   error?: string;
   notice?: string;
+  /** Limpa erro/aviso vindos do pai (ex.: falha de login) ao trocar de tela. */
+  onClearMessages?: () => void;
 }) {
   const [mode, setMode] = useState<Mode>(emailLink?.mode ?? "login");
   const [tokenHash, setTokenHash] = useState(emailLink?.tokenHash ?? "");
@@ -47,13 +50,14 @@ export function AuthScreen({ busy, onLogin, onAuthenticated, config, error, noti
 
   function switchMode(next: Mode) {
     setMode(next); setLocalError(""); setLocalNotice(""); setCaptchaToken("");
+    onClearMessages?.();
     setCaptchaRevision(value => value + 1);
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (working || (needsCaptcha && !captchaToken) || (mode === "signup" && !ageConfirmed)) return;
-    setLocalError(""); setLocalNotice("");
+    setLocalError(""); setLocalNotice(""); onClearMessages?.();
     try {
       if (mode === "login" || mode === "signup") {
         await onLogin(email, password, mode === "signup", captchaToken || undefined);
@@ -80,9 +84,7 @@ export function AuthScreen({ busy, onLogin, onAuthenticated, config, error, noti
     } catch (cause) {
       const linkError = mode === "verify_link" || mode === "reset_link";
       setLocalError(linkError ? "Link inválido ou expirado. Solicite um novo e-mail."
-        : cause instanceof api.HttpError && cause.status === 429
-          ? "Muitas tentativas. Aguarde alguns minutos."
-          : "Não foi possível concluir agora. Tente novamente mais tarde.");
+        : authErrorMessage(cause, "email"));
     } finally {
       setLocalBusy(false);
       if (needsCaptcha) { setCaptchaToken(""); setCaptchaRevision(value => value + 1); }

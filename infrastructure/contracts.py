@@ -40,6 +40,9 @@ AUTH_ERROR_CODES = frozenset({
     "captcha_required", "captcha_invalid", "recent_session_required",
     "account_delete_not_requested", "credentials_invalid", "link_invalid_or_expired",
     "signup_failed", "password_reset_failed", "account_deleted", "server_misconfigured",
+    # Auth debug 2026-10-18: GoTrue says "e-mail não confirmado" só após a senha conferir
+    # (sem enumeração); captcha recusado pelo GoTrue não é falha de credencial.
+    "email_not_confirmed",
 })
 _AUTH_CODE_ALIASES = {
     "sessão ausente": "session_missing", "token ausente": "session_missing",
