@@ -5,6 +5,7 @@ import { isNativeApp, isAndroidClient } from "./native/platform";
 import { playAdapter } from "./purchases";
 import { installNativeLifecycle } from "./native/lifecycle";
 import { decideBack } from "./native/backPolicy";
+import { offChatSurface, returnToChat } from "./workspace/mobileSurface";
 import { safeStorage } from "./safeStorage";
 import { preparePending, loadPending, clearPending, clearOwner as clearPendingOwner, shouldClearPending, type PendingOperation } from "./pendingOperation";
 import { clearWorkspaceOwner } from "./workspace/workspaceStorage";
@@ -111,7 +112,8 @@ export function App() {
     let dispose: () => void = () => {};
     let cancelled = false;
     void installNativeLifecycle({
-      onBack: () => decideBack(nativeCtx.current.screen, nativeCtx.current.busy, !!nativeCtx.current.pending),
+      onBack: () => decideBack(nativeCtx.current.screen, nativeCtx.current.busy, !!nativeCtx.current.pending, offChatSurface()),
+      onBackToChat: () => { returnToChat(); },
       onBackNavigate: () => setScreen(nativeCtx.current.screen === "account" ? accountReturn.current : (nativeCtx.current.hasSaves ? "saves" : "create")),
       onResume: () => { void resumeSession(); },
     }).then(d => { if (cancelled) d(); else dispose = d; }).catch(() => {});
@@ -883,7 +885,7 @@ export function App() {
             />
           </motion.div>
         ) : (
-          <motion.div
+          <motion.div className="play-shell"
             key="play"
             initial={{ y: 10 }}
             animate={{ y: 0 }}

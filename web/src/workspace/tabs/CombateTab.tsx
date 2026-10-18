@@ -31,13 +31,15 @@ const isTyping = (el: EventTarget | null) => {
 
 /** SPEC-204 R10 + SPEC-205: único lugar dos controles táticos. Uma ação por gesto:
  *  carta/ação básica → (alvo) → envio. Todos os números vêm de `data.combat`. */
-export function CombateTab({ data, busy, blocked, hitKey, ended, reactionCardId, onReaction, onAction, onPrepareCards, onOpenLevelUp, dismissedResult, onDismissResult }: {
+export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, reactionCardId, onReaction, onAction, onPrepareCards, onOpenLevelUp, dismissedResult, onDismissResult }: {
   data: GameResponse | null;
   busy: boolean;
   blocked: boolean;
   hitKey: number;
   /** O combate terminou nesta sessão e o jogador ainda não navegou (D2). */
   ended?: boolean;
+  /** SPEC-216: toque — "Cancelar mira" no lugar de Esc e "Detalhes" no lugar de hover. */
+  touch?: boolean;
   reactionCardId?: string;
   onReaction: (cardId?: string) => void;
   onAction: (text: string, options?: ActionOptions) => void;
@@ -195,14 +197,14 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, reactionCardId,
             <span>{state.phase === "aiming" ? `Mirando ${aimLabel}: escolha um alvo`
               : state.phase === "submitting" ? "Enviando…" : "Escolha uma carta ou ação"}</span>
             {state.phase === "aiming" && (
-              <button type="button" className="aimbar__cancel" onClick={() => targeting.cancel()}>Cancelar (Esc)</button>
+              <button type="button" className="aimbar__cancel" onClick={() => targeting.cancel()}>{touch ? "Cancelar mira" : "Cancelar (Esc)"}</button>
             )}
           </div>
           <CardHand cards={cards} enemies={enemies} busy={locked}
             aimingCardId={aimingCard?.id} ruptureId={ruptureId} detailId={DETAIL_ID}
             onToggleRupture={(id) => setRuptureId((cur) => (cur === id ? null : id))}
-            onGesture={gestureCard} onDetail={setDetailId} />
-          <CardTooltip card={detailCard} id={DETAIL_ID} />
+            onGesture={gestureCard} onDetail={setDetailId} touch={touch} detailOpenId={detailId} />
+          <CardTooltip card={detailCard} id={DETAIL_ID} touch={touch} />
           <ReactionPrompt cards={cards} selected={reactionCardId} disabled={busy} onSelect={onReaction} />
           <div className="actionchips ws-combat__maneuvers" role="group" aria-label="Manobras táticas" data-aim-safe>
             {basics.map((action) => {

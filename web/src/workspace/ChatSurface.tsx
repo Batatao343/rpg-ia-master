@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useState } from "react";
+import { forwardRef, useCallback, useEffect, useState } from "react";
 import type { ActionOptions, GameResponse, LogEntry, TurnOutcome } from "../types";
 import { StoryLog } from "../components/StoryLog";
 import { SceneArtwork } from "../components/SceneArtwork";
@@ -9,7 +9,7 @@ import { getChatSession, setChatSession } from "./chatSessionStore";
 import { Pressable } from "../design/primitives";
 
 /** SPEC-204: superfície do chat — arte de cena, atalhos de lugar e a narrativa. */
-export function ChatSurface({ data, log, thinking, thinkingLabel, busy, blocked, active, onAction }: {
+export function ChatSurface({ data, log, thinking, thinkingLabel, busy, blocked, active, onAction, mobile = false, onOpenCombat }: {
   data: GameResponse | null;
   log: LogEntry[];
   thinking: boolean;
@@ -18,6 +18,9 @@ export function ChatSurface({ data, log, thinking, thinkingLabel, busy, blocked,
   blocked: boolean;
   active: boolean;
   onAction: (text: string, options?: ActionOptions) => void;
+  /** SPEC-216: mobile mostra "Ir para o combate" no chat enquanto o encontro esta ativo. */
+  mobile?: boolean;
+  onOpenCombat?: () => void;
 }) {
   const gameId = data?.game_id;
   const fighting = !!data?.combat?.active;
@@ -57,6 +60,11 @@ export function ChatSurface({ data, log, thinking, thinkingLabel, busy, blocked,
           initialScroll={initialScroll}
           onScrollPosition={onScrollPosition} />
       </div>
+      {mobile && fighting && !blocked && onOpenCombat && (
+        <button type="button" className="btn btn--primary ws-chat__combat" onClick={onOpenCombat}>
+          Ir para o combate
+        </button>
+      )}
     </section>
   );
 }
@@ -69,7 +77,9 @@ export const Composer = forwardRef<HTMLInputElement, {
   blocked: boolean;
   reactionCardId?: string;
   onAction: (text: string, options?: ActionOptions) => void;
-}>(function Composer({ data, busy, blocked, reactionCardId, onAction }, inputRef) {
+  /** SPEC-216: mobile em outra superficie — composer some e o microfone e liberado. */
+  offSurface?: boolean;
+}>(function Composer({ data, busy, blocked, reactionCardId, onAction, offSurface = false }, inputRef) {
   const gameId = data?.game_id;
   const [input, setInputState] = useState(() => getChatSession(gameId).draft);
   const setInput = (update: string | ((current: string) => string)) => {
@@ -81,6 +91,10 @@ export const Composer = forwardRef<HTMLInputElement, {
   };
   const voice = useVoiceInput(text => setInput(current => current ? `${current}${/\s$/.test(current) ? "" : " "}${text}` : text), gameId);
   const voiceActive = voice.requesting || ["recording", "uploading", "transcribing"].includes(voice.phase);
+  // R5: trocar de superficie com a voz ativa libera o microfone e nao envia nada.
+  useEffect(() => { if (offSurface && voiceActive) voice.cancel(); },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [offSurface]);
   const gameOver = !!data?.game_over;
   const deathPending = !!data?.death_pending;
   const simulation = !!data?.combat_simulation?.enabled;
@@ -99,7 +113,7 @@ export const Composer = forwardRef<HTMLInputElement, {
   }
 
   return (
-    <form className="actionbar ws-composer" onSubmit={submit}>
+    <form className={"actionbar ws-composer" + (offSurface ? " is-offsurface" : "")} onSubmit={submit}>
       <div className="actionbar__composer">
       <input
         ref={inputRef}

@@ -1,7 +1,8 @@
 import { isNativeApp } from './platform';
 
 export interface NativeHandlers {
-  onBack: () => 'ignore' | 'back' | 'minimize';
+  onBack: () => 'ignore' | 'back' | 'minimize' | 'chat';
+  onBackToChat?: () => void;
   onBackNavigate: () => void;
   onResume: () => void;
 }
@@ -13,6 +14,7 @@ export async function installNativeLifecycle(h: NativeHandlers): Promise<() => v
   const back = await App.addListener('backButton', () => {
     const decision = h.onBack();
     if (decision === 'back') h.onBackNavigate();
+    else if (decision === 'chat') h.onBackToChat?.();
     else if (decision === 'minimize') void App.minimizeApp();
   });
   const state = await App.addListener('appStateChange', ({ isActive }) => { if (isActive) h.onResume(); });

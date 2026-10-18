@@ -4,6 +4,9 @@ import type { ActionOptions, GameResponse, LogEntry } from "../types";
 import { useVitalityHit, type EquipFn } from "../components/Hud";
 import { ChatSurface, Composer } from "./ChatSurface";
 import { ContextSurface } from "./ContextSurface";
+import { MobileTabBar } from "../components/MobileTabBar";
+import { SURFACE_LABELS, isMobileViewport, mobileSurface, registerBackBridge, shouldAutoOpenCombat, type Surface } from "./mobileSurface";
+import { useVisualViewport } from "./useVisualViewport";
 import { getChatSession, setChatSession } from "./chatSessionStore";
 import { loadWorkspace, saveWorkspace } from "./workspaceStorage";
 import {
@@ -70,6 +73,9 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
   });
   const viewport = useViewportWidth();
   const single = viewport < SPLIT_MIN_VIEWPORT;
+  const mobile = isMobileViewport(viewport);
+  const surface: Surface = mobileSurface(state, viewport);
+  const keyboardOpen = useVisualViewport(mobile);
   const mode = effectiveMode(state, viewport);
   const chatVisible = mode !== "context";
   const contextVisible = mode !== "chat";
@@ -83,6 +89,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
   const rootRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const composerRef = useRef<HTMLInputElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
   const [gridWidth, setGridWidth] = useState(0);
 
   // Abas montam na primeira visita visível e depois só se escondem (R7).
@@ -106,12 +113,38 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
   }, [data?.combat?.cards, reactionCardId]);
 
   // R10 (D2): início de combate abre Combate (nunca terceira coluna); fim mantém a aba.
+  // SPEC-216 §8 P4: no mobile, o encontro que COMECA depois da montagem so troca para Combate
+  // depois que a narracao do inicio foi renderizada (o botao "Ir para o combate" fica no chat).
   const wasFighting = useRef(false);
+  const mounted = useRef(false);
+  const [awaitingNarration, setAwaitingNarration] = useState(false);
   useEffect(() => {
-    if (fighting && !wasFighting.current) { setCombatEnded(false); dispatch({ type: "combat_started" }); }
-    if (!fighting && wasFighting.current) { setCombatEnded(true); dispatch({ type: "combat_ended" }); }
+    if (fighting && !wasFighting.current) {
+      setCombatEnded(false);
+      if (mobile && mounted.current) setAwaitingNarration(true);
+      else dispatch({ type: "combat_started" });
+    }
+    if (!fighting && wasFighting.current) {
+      setCombatEnded(true); setAwaitingNarration(false); dispatch({ type: "combat_ended" });
+    }
     wasFighting.current = fighting;
+    mounted.current = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fighting]);
+  const streamingNow = log.some((entry) => entry.streaming);
+  useEffect(() => {
+    if (!awaitingNarration || !shouldAutoOpenCombat(false, true, !thinking && !streamingNow)) return;
+    let second = 0;
+    const first = requestAnimationFrame(() => { second = requestAnimationFrame(() => {
+      setAwaitingNarration(false); dispatch({ type: "combat_started" });
+    }); });
+    return () => { cancelAnimationFrame(first); cancelAnimationFrame(second); };
+  }, [awaitingNarration, thinking, streamingNow, log]);
+  useEffect(() => {
+    if (!awaitingNarration) return;
+    const timer = setTimeout(() => { setAwaitingNarration(false); dispatch({ type: "combat_started" }); }, 2500);
+    return () => clearTimeout(timer);
+  }, [awaitingNarration]);
   useEffect(() => { if (state.tab !== "combate") setCombatEnded(false); }, [state.tab]);
 
   useEffect(() => {
@@ -212,18 +245,44 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
     dispatch(single ? { type: "close_context", single } : { type: "set_mode", mode: "chat" });
   };
   const showContext = () => dispatch(single ? { type: "open_tab", tab: state.tab, single } : { type: "set_mode", mode: "context" });
+  const selectSurface = (target: Surface) => { if (target === "chat") showChat(); else openTab(target); };
+
+  // R8: a cada troca de superficie o foco vai ao titulo (nao na montagem inicial).
+  const firstSurface = useRef(true);
+  useEffect(() => {
+    if (firstSurface.current) { firstSurface.current = false; return; }
+    if (mobile) titleRef.current?.focus({ preventScroll: true });
+  }, [surface, mobile]);
+  const surfaceRef = useRef(surface);
+  surfaceRef.current = surface;
+  const showChatRef = useRef(showChat);
+  showChatRef.current = showChat;
+  useEffect(() => registerBackBridge({
+    offChat: () => mobile && surfaceRef.current !== "chat",
+    toChat: () => showChatRef.current(),
+  }), [mobile]);
 
   const p = data?.player_stats;
   const style = { "--ws-ratio": String(ratio) } as CSSProperties;
 
+  const stats = (
+    <div className="ws-bar__status">
+      <span className="ws-stat ws-stat--hp">Vitalidade <b>{p?.vitalidade ?? 0}/{p?.max_vitalidade ?? 0}</b></span>
+      {(p?.max_entropy ?? 0) > 0 && <span className="ws-stat ws-stat--entropy">Entropia <b>{p?.entropy ?? 0}/{p?.max_entropy ?? 0}</b></span>}
+      {fighting && <span className="ws-stat ws-stat--fight">em combate</span>}
+    </div>
+  );
+
   return (
-    <div className="ws-root" ref={rootRef}>
-      <div className="ws-bar" role="group" aria-label="Estado e navegação do painel">
-        <div className="ws-bar__status">
-          <span className="ws-stat ws-stat--hp">Vitalidade <b>{p?.vitalidade ?? 0}/{p?.max_vitalidade ?? 0}</b></span>
-          {(p?.max_entropy ?? 0) > 0 && <span className="ws-stat ws-stat--entropy">Entropia <b>{p?.entropy ?? 0}/{p?.max_entropy ?? 0}</b></span>}
-          {fighting && <span className="ws-stat ws-stat--fight">em combate</span>}
+    <div className={"ws-root" + (mobile ? " ws-root--mobile" : "")} ref={rootRef}>
+      {mobile ? (
+        <div className="ws-mhead">
+          <h2 className="ws-mhead__title" data-testid="surface-title" tabIndex={-1} ref={titleRef}>{SURFACE_LABELS[surface]}</h2>
+          {stats}
         </div>
+      ) : (
+      <div className="ws-bar" role="group" aria-label="Estado e navegação do painel">
+        {stats}
         <div className="ws-bar__nav">
           <button type="button" className="iconbtn" aria-label="Voltar para a aba anterior"
             disabled={state.cursor <= 0} onClick={() => dispatch({ type: "back" })}>‹</button>
@@ -238,10 +297,12 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
           </div>
         </div>
       </div>
+      )}
 
       <div className={`ws ws--${mode}${isDragging ? " is-dragging" : ""}`} data-mode={mode} ref={gridRef} style={style}>
         <ChatSurface data={data} log={log} thinking={thinking} thinkingLabel={thinkingLabel}
-          busy={busy} blocked={blocked} active={chatVisible} onAction={onAction} />
+          busy={busy} blocked={blocked} active={chatVisible} onAction={onAction}
+          mobile={mobile} onOpenCombat={() => openTab("combate")} />
         {mode === "split" && (
           <div className="ws-sep" role="separator" aria-orientation="vertical" tabIndex={0}
             aria-label="Redimensionar chat e painel" aria-controls="ws-context"
@@ -252,7 +313,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
         )}
         <div id="ws-context" className="ws-ctx-slot" hidden={!contextVisible}>
           <ContextSurface data={data} active={contextVisible} tab={state.tab} visited={visited.current}
-            busy={busy} blocked={blocked} hitKey={hitKey} combatEnded={combatEnded}
+            busy={busy} blocked={blocked} hitKey={hitKey} combatEnded={combatEnded} mobile={mobile}
             reactionCardId={reactionCardId} onReaction={setReaction}
             codexSection={codexSection} onCodexSection={setCodexSection}
             onSelectTab={openTab} onClose={showChat} onEscape={() => composerRef.current?.focus()}
@@ -261,8 +322,9 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
             dismissedResult={props.dismissedResult} onDismissResult={props.onDismissResult} />
         </div>
         <Composer ref={composerRef} data={data} busy={busy} blocked={blocked}
-          reactionCardId={reactionCardId} onAction={onAction} />
+          reactionCardId={reactionCardId} onAction={onAction} offSurface={mobile && surface !== "chat"} />
       </div>
+      {mobile && <MobileTabBar surface={surface} fighting={fighting} hidden={keyboardOpen} onSelect={selectSurface} />}
     </div>
   );
 });

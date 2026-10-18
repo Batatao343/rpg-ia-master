@@ -31,6 +31,8 @@ export interface ContextSurfaceProps {
   blocked: boolean;
   hitKey: number;
   combatEnded: boolean;
+  /** SPEC-216: uma superficie por vez; a barra inferior substitui as abas e o "x". */
+  mobile?: boolean;
   reactionCardId?: string;
   codexSection?: string;
   onCodexSection: (id: string) => void;
@@ -69,7 +71,7 @@ export function ContextSurface(props: ContextSurfaceProps) {
 
   return (
     <section className="ws-ctx" aria-label="Painel de contexto" hidden={!active} onKeyDown={onKeyDown}>
-      <div className="ws-ctx__head">
+      {!props.mobile && <div className="ws-ctx__head">
         <RovingTablist<ContextTab>
           items={CONTEXT_TABS.map((id) => ({
             id, label: TAB_LABELS[id],
@@ -78,9 +80,10 @@ export function ContextSurface(props: ContextSurfaceProps) {
           selected={tab} onSelect={onSelectTab} label="Abas do painel" idPrefix="ws"
           className="tabs ws-tabs" tabClassName="tab" />
         <button type="button" className="iconbtn ws-ctx__close" aria-label="Fechar ficha" onClick={onClose}>×</button>
-      </div>
+      </div>}
       {CONTEXT_TABS.map((id) => (
-        <div key={id} role="tabpanel" id={`ws-panel-${id}`} aria-labelledby={`ws-tab-${id}`}
+        <div key={id} id={`ws-panel-${id}`}
+          {...(props.mobile ? { role: "region", "aria-label": TAB_LABELS[id] } : { role: "tabpanel", "aria-labelledby": `ws-tab-${id}` })}
           className="tabpanel ws-panel" tabIndex={0} hidden={id !== tab}
           ref={(node) => { if (node) panels.current.set(id, node); else panels.current.delete(id); }}
           onScroll={(event) => {
@@ -101,7 +104,7 @@ function renderTab(id: ContextTab, props: ContextSurfaceProps): ReactNode {
     case "personagem":
       return <PersonagemTab data={data} hitKey={hitKey} onEquip={props.onEquip} busy={busy} />;
     case "combate":
-      return <CombateTab data={data} busy={busy} blocked={blocked} hitKey={hitKey} ended={props.combatEnded}
+      return <CombateTab data={data} busy={busy} blocked={blocked} hitKey={hitKey} ended={props.combatEnded} touch={!!props.mobile}
         reactionCardId={props.reactionCardId} onReaction={props.onReaction} onAction={props.onAction}
         onPrepareCards={props.onPrepareCards} onOpenLevelUp={props.onOpenLevelUp}
         dismissedResult={props.dismissedResult} onDismissResult={props.onDismissResult} />;

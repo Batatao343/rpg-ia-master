@@ -11,6 +11,9 @@ interface Props {
   onToggleRupture: (cardId: string) => void;
   onGesture: (card: CardView, trigger: HTMLElement) => void;
   onDetail: (cardId: string | null) => void;
+  /** SPEC-216: sem hover/foco-detalhe; um botao "Detalhes de X" abre o painel por toque. */
+  touch?: boolean;
+  detailOpenId?: string | null;
 }
 
 const FREQ_SHORT: Record<string, string> = {
@@ -19,7 +22,7 @@ const FREQ_SHORT: Record<string, string> = {
 };
 
 /** SPEC-205: a carta É o gesto. Com alvo → mira; sem alvo → um clique. Sem select, sem "Jogar". */
-export function CardHand({ cards, enemies, busy, aimingCardId, ruptureId, detailId, onToggleRupture, onGesture, onDetail }: Props) {
+export function CardHand({ cards, enemies, busy, aimingCardId, ruptureId, detailId, onToggleRupture, onGesture, onDetail, touch = false, detailOpenId = null }: Props) {
   const activeCards = cards.filter((card) => card.type === "ativa");
   if (!activeCards.length) return null;
   return (
@@ -46,8 +49,10 @@ export function CardHand({ cards, enemies, busy, aimingCardId, ruptureId, detail
                 aria-describedby={detailId}
                 aria-keyshortcuts={index < 9 ? String(index + 1) : undefined}
                 aria-label={`Jogar Carta ${card.name}, ${card.cost} de Entropia${blocked && reasonText ? `, indisponível: ${reasonText}` : `, ${verb}`}`}
-                onMouseEnter={() => onDetail(card.id)} onMouseLeave={() => onDetail(null)}
-                onFocus={() => onDetail(card.id)} onBlur={() => onDetail(null)}
+                {...(touch ? {} : {
+                  onMouseEnter: () => onDetail(card.id), onMouseLeave: () => onDetail(null),
+                  onFocus: () => onDetail(card.id), onBlur: () => onDetail(null),
+                })}
                 onClick={(event) => { if (!blocked || aiming) onGesture(card, event.currentTarget); }}>
                 <span className="combat-card__top">
                   <span className="combat-card__cost" title="Custo de Entropia">{card.cost}E</span>
@@ -60,6 +65,12 @@ export function CardHand({ cards, enemies, busy, aimingCardId, ruptureId, detail
                   {card.evolved ? ` · Caminho ${card.evolved}` : ""}
                 </span>
               </button>
+              {touch && (
+                <button type="button" className="combat-card__details" aria-expanded={detailOpenId === card.id}
+                  aria-controls={detailId} onClick={() => onDetail(detailOpenId === card.id ? null : card.id)}>
+                  {`Detalhes de ${card.name}`}
+                </button>
+              )}
               {card.has_rupture && (
                 <button type="button" className="combat-card__rupture" aria-pressed={rupturing}
                   aria-disabled={busy || !card.rupture_ready || undefined}

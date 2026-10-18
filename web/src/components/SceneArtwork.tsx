@@ -1,9 +1,10 @@
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import type { SceneVisual } from "../types";
 import { useState } from 'react';
 import { ArtworkDialog } from './ArtworkDialog';
 
 export function SceneArtwork({ scene }: { scene?: SceneVisual | null }) {
+  const reduce = useReducedMotion(); // SPEC-216 R8: opacidade tambem fica estatica com reduced motion
   const [failedKey, setFailedKey] = useState<string | null>(null);
   const [expandedKey, setExpandedKey] = useState<string | null>(null);
   if (!scene?.asset) return null;
@@ -21,7 +22,7 @@ export function SceneArtwork({ scene }: { scene?: SceneVisual | null }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.45 }}
+          transition={{ duration: reduce ? 0 : 0.45 }}
           onError={() => setFailedKey(key)}
         />}
       </AnimatePresence>

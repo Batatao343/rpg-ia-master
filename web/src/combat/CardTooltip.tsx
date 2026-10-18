@@ -11,10 +11,10 @@ const FREQ_LABEL: Record<string, string> = {
 
 /** SPEC-205 R13: painel de detalhe da carta (hover e foco). Fixo — nunca cobre outra carta.
  *  Todos os números vêm do payload do servidor. */
-export function CardTooltip({ card, id }: { card: CardView | null; id: string }) {
+export function CardTooltip({ card, id, touch = false }: { card: CardView | null; id: string; touch?: boolean }) {
   return (
     <div id={id} className="card-detail" data-aim-safe>
-      {!card ? <p className="card-detail__hint">Passe o mouse ou foque uma carta para ver custo, limite e efeito.</p> : (
+      {!card ? <p className="card-detail__hint">{touch ? "Toque em Detalhes de uma carta para ver custo, limite e efeito." : "Passe o mouse ou foque uma carta para ver custo, limite e efeito."}</p> : (
         <>
           <p className="card-detail__title"><strong>{card.name}</strong></p>
           <p>

@@ -1,6 +1,6 @@
 # SPEC-216 — Mobile single-pane (uma superfície por vez)
 
-> **Status:** `draft`
+> **Status:** `in-progress`
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
 > **Depende de:** SPEC-204 `done` (workspace), SPEC-205 `done` (mira direta), SPEC-212 `done` (gate desktop) (ordem final 2026-10-15)
 > **Desbloqueia:** evidência mobile para SPEC-198 (ordem final 2026-10-15)
@@ -71,14 +71,14 @@ Cada etapa: `cd web && npm run build && npm test && npx playwright test e2e/mobi
 
 ## 5. Critérios de aceite
 
-- [ ] Jornadas mobile (eval congelado) passam em 320x568 e 390x844 sem overflow, com teclado/áudio/toque.
-- [ ] Nenhuma viewport mobile exibe chat e painel lado a lado.
-- [ ] Draft, scroll e ação pendente sobrevivem a troca de superfície e a voltar.
-- [ ] Combate/mira por toque completos sem hover/drag; payload idêntico ao desktop.
-- [ ] Reduced motion, foco e `aria-current` verificados; axe sem serious/critical.
+- [x] Jornadas mobile (eval congelado) passam em 320x568 e 390x844 sem overflow, com teclado/áudio/toque.
+- [x] Nenhuma viewport mobile exibe chat e painel lado a lado.
+- [x] Draft, scroll e ação pendente sobrevivem a troca de superfície e a voltar.
+- [x] Combate/mira por toque completos sem hover/drag; payload idêntico ao desktop.
+- [x] Reduced motion, foco e `aria-current` verificados; axe sem serious/critical.
 - [ ] Smoke WebView no AVD documentado.
 - [ ] Nenhuma mudança de API/save/regra; testes desktop (SPEC-204/205/212) verdes.
-- [ ] `uv run pytest` e `npm run build` verdes; testes Node do cliente verdes.
+- [x] `uv run pytest` e `npm run build` verdes; testes Node do cliente verdes.
 
 ## 6. Smoke
 
@@ -101,3 +101,7 @@ Offline/MockLLM e API determinística: criar jogo, trocar superfícies, iniciar 
 ## 9. Evidência requerida
 
 Relatório Playwright mobile (JSON + screenshots), saída de Node/pytest/build, screenshots/vídeo do AVD, diff provando ausência de mudança de API/save, ESTADO_ATUAL/ROADMAP atualizados.
+
+## 10. Execução (2026-10-17)
+
+Implementado conforme §3 (defaults §8 usados: breakpoint 900px, barra obrigatória, troca automática após a narração). Pendentes: smoke AVD (Etapa 5) e adaptação dos testes desktop < 900px listados em `handoffs/SPEC-216-eval-followup.md` (critério 'testes desktop verdes' ainda aberto). Evidência: `docs/spec216/README.md`.

@@ -3890,7 +3890,7 @@ specs:
   lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
 - id: SPEC-216
   slug: mobile-single-pane
-  status: draft
+  status: in-progress
   path: specs/SPEC-216-mobile-single-pane.md
   created_commit: null
   created_at: '2026-10-15'
