@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "62a0a636f46fe8d3d4296019229723365a0d95a7",
+  "commit_sha": "e42e2bbf91f71b6da96703d91ba71e0a910b1bab",
   "edge_counts": {
-    "calls": 16100,
-    "contains": 662,
-    "defines": 9110,
-    "imports": 1498,
-    "likely_test_for": 913,
+    "calls": 16107,
+    "contains": 663,
+    "defines": 9111,
+    "imports": 1501,
+    "likely_test_for": 916,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:34d8fc3d864566345cd54b820100af48b5db12ae9b690d7652994bac2349f922",
+  "graph_hash": "sha256:c6caa0599f8600b25b0f5ed96bb53ab5e9447f8ce4e51ec3485f9713ed118792",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -676,6 +676,7 @@
     "tests/test_spec236_races_local.py",
     "tests/test_spec237_embedding_pricing.py",
     "tests/test_spec238_loot.py",
+    "tests/test_spec272_conflito_ligado.py",
     "tests/test_spec_index.py",
     "tests/test_spec_migration_safety.py",
     "tests/test_speech_api.py",
@@ -853,14 +854,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 746,
+    "class": 747,
     "endpoint": 63,
-    "file": 799,
-    "function": 2825,
+    "file": 800,
+    "function": 2819,
     "method": 730,
-    "module": 662,
-    "test": 4809
+    "module": 663,
+    "test": 4815
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:e0fb8b5eb975b3b90e89ea829bf2763c939e6cee5a2035eca6aeb92cc1f1963f"
+  "source_tree_hash": "sha256:51c5981aca6588c1ab575d96d19712d7be1a664ec344f87f896fe5c032d629b7"
 }
