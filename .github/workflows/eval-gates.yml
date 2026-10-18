@@ -31,7 +31,7 @@ jobs:
           --base "$BASE_SHA" --head "$HEAD_SHA"
           --manifest readiness_artifacts/evals/change-scope.json
           --github-output "$GITHUB_OUTPUT"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: eval-change-scope
           path: readiness_artifacts/evals/change-scope.json
@@ -79,7 +79,7 @@ jobs:
           --suite npc_knowledge
           --run-id ci-${{ github.run_id }}-${{ github.run_attempt }}
           --output readiness_artifacts/evals
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: deterministic-evals-${{ github.run_id }}-${{ github.run_attempt }}
@@ -101,7 +101,7 @@ jobs:
           tests/test_eval_memory_context.py tests/test_eval_narrative_npc.py
           tests/test_eval_player_knowledge.py tests/test_eval_dossier_leak.py tests/test_eval_gameplay_gate.py tests/test_eval_encounter_manifest.py tests/test_eval_npc_knowledge.py
       - run: uv run python -m playtest run --all --turns 3
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: backend-selective-${{ github.run_id }}-${{ github.run_attempt }}
@@ -142,7 +142,7 @@ jobs:
           uv run python scripts/frontend_eval_report.py
           web/test-results/results.json --suite mobile
           --output readiness_artifacts/evals/frontend-mobile.json --check
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: frontend-evals-${{ github.run_id }}-${{ github.run_attempt }}
