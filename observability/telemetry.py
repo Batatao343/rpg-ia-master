@@ -103,6 +103,29 @@ def log_event(area: str, event: str, *, level: str = "info", **fields: Any) -> N
         safe_json({**correlation(), "event": f"{area}.{event}", **fields}))
 
 
+def safe_stack(exc: BaseException, limit: int = 5) -> list[str]:
+    """``modulo:linha`` dos ``limit`` frames mais internos do codigo do projeto.
+
+    Nunca inclui a mensagem da excecao, linhas de codigo ou valores locais."""
+    import traceback
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    frames: list[str] = []
+    try:
+        for frame in traceback.extract_tb(exc.__traceback__):
+            try:
+                rel = Path(frame.filename).resolve().relative_to(root)
+            except (ValueError, OSError):
+                continue
+            if rel.parts and rel.parts[0] in {".venv", "node_modules", "site-packages"}:
+                continue
+            frames.append(f"{rel.as_posix()}:{frame.lineno}")
+    except Exception:
+        return []
+    return frames[-limit:][::-1]
+
+
 def correlation() -> dict[str, str]:
     return dict(_correlation.get())
 
@@ -128,6 +151,16 @@ def correlation_scope(**values: object) -> Iterator[dict[str, str]]:
     token = _correlation.set(current)
     try:
         yield current
+    finally:
+        _correlation.reset(token)
+
+
+@contextmanager
+def request_scope(request_id: str) -> Iterator[dict[str, str]]:
+    """Raiz de uma requisicao: parte de um contexto LIMPO (nao herda game/action de fora)."""
+    token = _correlation.set({"request_id": str(request_id)[:128]})
+    try:
+        yield correlation()
     finally:
         _correlation.reset(token)
 

@@ -268,7 +268,7 @@ def test_login_success_resets_email_bucket(hardened):
 def test_login_failure_response_is_closed_code(hardened):
     client, _, _ = hardened
     out = _login(client, "wrong-password")
-    assert out.json() == {"detail": "credentials_invalid"}
+    assert {k: v for k, v in out.json().items() if k != "request_id"} == {"detail": "credentials_invalid"}
 
 
 def test_signup_bucket_is_email_ip_composite():

@@ -1,6 +1,6 @@
 # SPEC-241 — Access log por requisição e handler global de exceção com request_id
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P0**.
+> **Status:** `in-progress` — implementado em 2026-10-18 (branch `logs-p0`); falta a revisão Sol obrigatória e o smoke em staging.
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-239, SPEC-240
 > **Desbloqueia:** SPEC-242, SPEC-243
@@ -55,12 +55,12 @@ R1–R4.
 
 ## 5. Critérios de aceite
 
-- [ ] Toda resposta tem `X-Request-ID`; toda 5xx tem linha `error` com `request_id`.
-- [ ] Sem `str(exc)` em log.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Toda resposta tem `X-Request-ID`; toda 5xx tem linha `error` com `request_id`.
+- [x] Sem `str(exc)` em log.
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] `uv run pytest` verde (suíte completa offline).
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -72,3 +72,13 @@ R1–R4.
 - Volume: 1 linha/requisição — polling (`/game/state`, `/account/*`) pode dominar; usar `debug` para GETs 2xx de polling conhecidos se a medição do smoke indicar.
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## 8. Notas de implementação
+
+- `_correlation_boundary` agora e o middleware MAIS EXTERNO (registrado depois de `_rate_limit`), entao 401/403/413/429 dos middlewares internos tambem recebem `X-Request-ID` e entram no access log; a raiz usa `request_scope` (contexto limpo, sem herdar game/action de fora).
+- `http.request` (info 2xx/3xx, warning 4xx, error 5xx; debug para 404 de rota nao-API, 401 sem cookie e GET 2xx de polling: `/game/state`, `/game/saves`, `/game/map`, `/game/codex*`, `/data/*`). `/health`, `/metrics` e assets estaticos nao logam.
+- 500 nao tratado e capturado no proprio middleware (dentro do escopo de correlacao): `http.unhandled_exception` com `error_type` + `stack` (`safe_stack`: `modulo:linha` dos 5 frames internos do projeto, sem mensagem) e corpo `{detail, code:internal_error, request_id}`.
+- Handlers de `HTTPException` e `RequestValidationError` preservam o corpo e acrescentam `request_id` (corpo + header); 422 loga so os `loc`. Handlers especificos (QuotaExceeded etc.) nao foram alterados (header presente).
+- Desvio: `error_code` no access log so e preenchido quando o erro passou por esses handlers (detail ja em formato de codigo); respostas montadas diretamente por middlewares (ex.: boundary de sessao) saem com `error_code=null` ate a SPEC-245/242.
+- Testes existentes que comparavam o corpo de erro inteiro (`test_auth_gotrue_error_mapping`, `test_session_hardening`, `test_speech_api`) passaram a ignorar `request_id` (campo aditivo da R3).
+- Pendente: smoke em staging (404/401/422/409/500) e revisao Sol.

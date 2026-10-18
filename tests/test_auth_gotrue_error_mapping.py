@@ -87,11 +87,11 @@ def test_login_route_reports_unconfirmed_and_captcha_without_lockout(account_cli
     # Many non-credential failures must not lock the address out (only credential failures count).
     for _ in range(8):
         r = client.post("/auth/login", json=body)
-        assert r.status_code == 401 and r.json() == {"detail": "email_not_confirmed"}
+        assert r.status_code == 401 and {k: v for k, v in r.json().items() if k != "request_id"} == {"detail": "email_not_confirmed"}
     outcome["code"] = "captcha_invalid"
     for _ in range(8):
         r = client.post("/auth/login", json=body)
-        assert r.status_code == 403 and r.json() == {"detail": "captcha_invalid"}
+        assert r.status_code == 403 and {k: v for k, v in r.json().items() if k != "request_id"} == {"detail": "captcha_invalid"}
     outcome["code"] = None
     assert client.post("/auth/login", json=body).status_code == 200
 
@@ -106,10 +106,10 @@ def test_signup_and_reset_routes_report_captcha_failure_not_generic_success(acco
     monkeypatch.setattr(identity, "request_email", captcha_failed)
     r = client.post("/auth/signup", json={"email": "a@test.test", "password": "password-123",
                                           "age_confirmed": True, "captcha_token": "t"})
-    assert r.status_code == 403 and r.json() == {"detail": "captcha_invalid"}
+    assert r.status_code == 403 and {k: v for k, v in r.json().items() if k != "request_id"} == {"detail": "captcha_invalid"}
     for path in ("/auth/reset/request", "/auth/verify/request"):
         r = client.post(path, json={"email": "a@test.test", "captcha_token": "t"})
-        assert r.status_code == 403 and r.json() == {"detail": "captcha_invalid"}
+        assert r.status_code == 403 and {k: v for k, v in r.json().items() if k != "request_id"} == {"detail": "captcha_invalid"}
 
     def other_failure(*_args, **_kwargs):
         raise Unauthorized("não foi possível criar a conta")

@@ -53,7 +53,9 @@ class JsonLineFormatter(logging.Formatter):
         for key, value in correlation().items():  # SPEC-240 R4: logs diretos também correlacionam
             data.setdefault(key, value)
         if record.exc_info and record.exc_info[0] is not None:
+            from observability.telemetry import safe_stack
             data.setdefault("error_type", record.exc_info[0].__name__)
+            data.setdefault("stack", safe_stack(record.exc_info[1]) if record.exc_info[1] else [])
         data["level"] = record.levelname.lower()
         data["logger"] = record.name
         data["ts"] = datetime.fromtimestamp(record.created, timezone.utc).isoformat(

@@ -22,7 +22,9 @@ from collections import Counter, defaultdict, deque
 from copy import deepcopy
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, StreamingResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Any, Dict, Iterator, List, Literal, Optional
@@ -79,6 +81,53 @@ app = FastAPI(
     redoc_url="/redoc" if _DOCS_ON else None,
     openapi_url="/openapi.json" if _DOCS_ON else None,
 )
+
+
+
+def _current_request_id() -> str | None:
+    from observability.telemetry import correlation
+    return correlation().get("request_id")
+
+
+_CODE_RE = None
+
+
+def _error_code_of(detail: Any) -> str | None:
+    """Codigo curto/fechado quando o detail JA e um codigo (nunca prosa)."""
+    global _CODE_RE
+    import re
+    _CODE_RE = _CODE_RE or re.compile(r"^[a-z][a-z0-9_.]{1,63}$")
+    return detail if isinstance(detail, str) and _CODE_RE.match(detail) else None
+
+
+@app.exception_handler(StarletteHTTPException)
+async def _http_exception_handler(request: Request, exc: StarletteHTTPException):
+    """SPEC-241 R3: corpo atual preservado + request_id (corpo e header)."""
+    request.state.error_code = _error_code_of(exc.detail)
+    rid = _current_request_id()
+    body: dict[str, Any] = {"detail": exc.detail}
+    if rid:
+        body["request_id"] = rid
+    headers = dict(exc.headers or {})
+    if rid:
+        headers["X-Request-ID"] = rid
+    return JSONResponse(body, status_code=exc.status_code, headers=headers or None)
+
+
+@app.exception_handler(RequestValidationError)
+async def _validation_exception_handler(request: Request, exc: RequestValidationError):
+    """SPEC-241 R3: 422 com o corpo padrao + request_id; o log leva so os ``loc`` (sem valores)."""
+    from fastapi.encoders import jsonable_encoder
+    request.state.error_code = "validation_failed"
+    errors = exc.errors()
+    _log_event("http", "validation_failed", level="warning", method=request.method,
+               locs=[".".join(str(p) for p in e.get("loc", ())) for e in errors][:20],
+               error_count=len(errors))
+    rid = _current_request_id()
+    body: dict[str, Any] = {"detail": jsonable_encoder(errors)}
+    if rid:
+        body["request_id"] = rid
+    return JSONResponse(body, status_code=422)
 
 
 @app.exception_handler(IncompatibleSaveError)
@@ -195,7 +244,8 @@ async def _session_boundary(request: Request, call_next):
         if over is not None:
             return over
         from observability.telemetry import correlation_scope
-        with correlation_scope(owner_id=principal.user_id):
+        with correlation_scope(owner_id=principal.user_id) as _corr:
+            request.state.owner_ref = _corr.get("owner_ref")   # SPEC-241: access log
             return await call_next(request)
     finally:
         reset_current_principal(token)
@@ -286,23 +336,75 @@ CONTENT_SECURITY_POLICY = (
 _DOCS_PATHS = {"/docs", "/redoc", "/openapi.json", "/docs/oauth2-redirect"} if _DOCS_ON else set()
 
 
-@app.middleware("http")
+_ACCESS_LOG_SKIP = frozenset({"/health", "/metrics"})
+# GET 2xx de polling/leitura: debug (anti-ruido); mutacoes e erros seguem em info/warning/error.
+_ACCESS_LOG_QUIET_GET = frozenset({
+    "/game/state", "/game/saves", "/game/map", "/game/codex", "/game/codex/dossiers",
+})
+
+
+def _access_log(request: Request, route: str, status: int, started: float,
+                request_id: str) -> None:
+    """SPEC-241 R1: uma linha ``http.request`` por requisicao de API. Nunca levanta."""
+    try:
+        path = request.url.path
+        if path in _ACCESS_LOG_SKIP:
+            return
+        last = path.rsplit("/", 1)[-1]
+        if path.startswith("/assets/") or ("." in last and status < 400):
+            return  # arquivos estaticos do bundle web
+        client = request.headers.get("x-rpg-client", "").strip().lower()
+        client = client if client in {"web", "android"} else "unknown"
+        level = "info"
+        if status >= 500:
+            level = "error"
+        elif status >= 400:
+            level = "warning"
+            if status == 404 and not path.startswith(
+                    ("/game", "/account", "/auth", "/payments", "/internal", "/telemetry", "/data")):
+                level = "debug"
+            elif status == 401 and not request.cookies.get("rpg_access"):
+                level = "debug"      # bootstrap da SPA sem cookie
+        elif request.method == "GET" and (path in _ACCESS_LOG_QUIET_GET or path.startswith("/data/")):
+            level = "debug"
+        _log_event(
+            "http", "request", level=level, method=request.method, route=route, status=status,
+            duration_ms=int((time.perf_counter() - started) * 1000), request_id=request_id,
+            owner_ref=getattr(request.state, "owner_ref", None), client=client,
+            error_code=getattr(request.state, "error_code", None))
+    except Exception:
+        pass
+
+
+def _unhandled_response(request: Request, route: str, exc: Exception, request_id: str) -> JSONResponse:
+    """SPEC-241 R2: 500 com request_id; log com classe + frames, nunca a mensagem."""
+    from observability.telemetry import safe_stack
+    request.state.error_code = "internal_error"
+    _log_event("http", "unhandled_exception", level="error", route=route,
+               method=request.method, error_type=type(exc).__name__,
+               stack=safe_stack(exc), request_id=request_id)
+    return JSONResponse(status_code=500, content={
+        "detail": "internal_error", "code": "internal_error", "request_id": request_id})
+
+
 async def _correlation_boundary(request: Request, call_next):
     import re
     import time
     from observability.metrics import metrics
-    from observability.telemetry import correlation_scope, new_request_id, span
+    from observability.telemetry import new_request_id, request_scope, span
 
     request_id = new_request_id(request.headers.get("x-request-id"))
     started = time.perf_counter()
     route = re.sub(
         r"/[0-9a-fA-F]{8}-[0-9a-fA-F-]{27,36}(?=/|$)", "/{id}", request.url.path,
     )
-    with correlation_scope(request_id=request_id), span(
+    with request_scope(request_id), span(
         "http.request", route=route, method=request.method,
     ):
         try:
             response = await call_next(request)
+        except Exception as exc:
+            response = _unhandled_response(request, route, exc, request_id)
         except BaseException:
             metrics.increment(
                 "rpg_http_requests_total",
@@ -319,6 +421,7 @@ async def _correlation_boundary(request: Request, call_next):
             "rpg_http_duration_seconds", {"route": route},
             time.perf_counter() - started,
         )
+        _access_log(request, route, response.status_code, started, request_id)
         response.headers["X-Request-ID"] = request_id
         response.headers.setdefault("X-Content-Type-Options", "nosniff")
         response.headers.setdefault("Referrer-Policy", "same-origin")
@@ -1130,6 +1233,11 @@ async def _rate_limit(request: Request, call_next):
         return _blocked_response("rate_limited", "ip", int(cls.window_s - (now - hits[0])) + 1)
     hits.append(now)
     return await call_next(request)
+
+
+# SPEC-241 R4: registrado por ULTIMO => middleware mais externo; todo retorno (inclusive 401/403/
+# 413/429 vindos dos middlewares internos) recebe X-Request-ID e entra no access log.
+app.middleware("http")(_correlation_boundary)
 
 
 def _owner_rate_limit(request: Request, principal) -> "JSONResponse | None":
