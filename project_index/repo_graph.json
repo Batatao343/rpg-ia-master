@@ -1,5 +1,5 @@
 {
-  "commit_sha": "fcc18b598602bade91a843cde04bc0cbefea3266",
+  "commit_sha": "cae84b2708b4d64e8550ee3d7128b5a9ed91014a",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -40750,7 +40750,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 170
+        "line": 199
       },
       "source": "module:scripts.staging.jev_shadow_measure",
       "target": "symbol:scripts.staging.jev_shadow_measure._iso_ms",
@@ -40772,7 +40772,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 187
+        "line": 218
       },
       "source": "module:scripts.staging.jev_shadow_measure",
       "target": "symbol:scripts.staging.jev_shadow_measure._pct",
@@ -40783,7 +40783,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 145
+        "line": 97
+      },
+      "source": "module:scripts.staging.jev_shadow_measure",
+      "target": "symbol:scripts.staging.jev_shadow_measure._stream",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_shadow_measure.py",
+        "line": 163
       },
       "source": "module:scripts.staging.jev_shadow_measure",
       "target": "symbol:scripts.staging.jev_shadow_measure.fetch_shadow_logs",
@@ -40794,7 +40805,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 177
+        "line": 206
       },
       "source": "module:scripts.staging.jev_shadow_measure",
       "target": "symbol:scripts.staging.jev_shadow_measure.join",
@@ -40805,7 +40816,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 250
+        "line": 281
       },
       "source": "module:scripts.staging.jev_shadow_measure",
       "target": "symbol:scripts.staging.jev_shadow_measure.main",
@@ -40816,7 +40827,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 97
+        "line": 114
       },
       "source": "module:scripts.staging.jev_shadow_measure",
       "target": "symbol:scripts.staging.jev_shadow_measure.play",
@@ -40827,7 +40838,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 191
+        "line": 222
       },
       "source": "module:scripts.staging.jev_shadow_measure",
       "target": "symbol:scripts.staging.jev_shadow_measure.summarize",
@@ -163917,10 +163928,32 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 188
+        "line": 219
       },
       "source": "symbol:scripts.staging.jev_shadow_measure._pct",
       "target": "symbol:scripts.staging.s192.pct",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_shadow_measure.py",
+        "line": 101
+      },
+      "source": "symbol:scripts.staging.jev_shadow_measure._stream",
+      "target": "symbol:scripts.staging.jev_shadow_measure._stream.hook",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/jev_shadow_measure.py",
+        "line": 107
+      },
+      "source": "symbol:scripts.staging.jev_shadow_measure._stream",
+      "target": "symbol:scripts.staging.projection_measure.stream_turn",
       "type": "calls"
     },
     {
@@ -163928,7 +163961,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 165
+        "line": 183
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.fetch_shadow_logs",
       "target": "symbol:scripts.staging.jev_shadow_measure._iso_ms",
@@ -163939,7 +163972,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 147
+        "line": 165
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.fetch_shadow_logs",
       "target": "symbol:scripts.staging.s192.vercel",
@@ -163950,7 +163983,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 273
+        "line": 304
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.main",
       "target": "symbol:scripts.staging.jev_shadow_measure.fetch_shadow_logs",
@@ -163961,7 +163994,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 274
+        "line": 305
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.main",
       "target": "symbol:scripts.staging.jev_shadow_measure.join",
@@ -163972,7 +164005,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 268
+        "line": 299
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.main",
       "target": "symbol:scripts.staging.jev_shadow_measure.play",
@@ -163983,7 +164016,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 275
+        "line": 306
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.main",
       "target": "symbol:scripts.staging.jev_shadow_measure.summarize",
@@ -163994,7 +164027,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 262
+        "line": 293
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.main",
       "target": "symbol:scripts.staging.s192.load_env",
@@ -164005,7 +164038,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 275
+        "line": 306
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.main",
       "target": "symbol:scripts.staging.s192.now_iso",
@@ -164016,7 +164049,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 115
+        "line": 132
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.play",
       "target": "symbol:scripts.staging.e2e_session._h",
@@ -164027,7 +164060,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 123
+        "line": 140
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.play",
       "target": "symbol:scripts.staging.jev_shadow_measure._now_ms",
@@ -164038,7 +164071,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 126
+        "line": 144
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.play",
       "target": "symbol:scripts.staging.jev_shadow_measure._now_ms",
@@ -164049,10 +164082,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 124
+        "line": 141
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.play",
-      "target": "symbol:scripts.staging.projection_measure.stream_turn",
+      "target": "symbol:scripts.staging.jev_shadow_measure._stream",
       "type": "calls"
     },
     {
@@ -164060,7 +164093,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 98
+        "line": 115
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.play",
       "target": "symbol:scripts.staging.s192.Admin",
@@ -164071,7 +164104,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 109
+        "line": 126
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.play",
       "target": "symbol:scripts.staging.s192.app_login",
@@ -164082,7 +164115,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 136
+        "line": 154
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.play",
       "target": "symbol:scripts.staging.s192.query",
@@ -164093,7 +164126,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 237
+        "line": 268
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.summarize",
       "target": "symbol:scripts.staging.jev_shadow_measure._pct",
@@ -164104,7 +164137,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 239
+        "line": 270
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.summarize",
       "target": "symbol:scripts.staging.jev_shadow_measure._pct",
@@ -164115,7 +164148,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/jev_shadow_measure.py",
-        "line": 196
+        "line": 227
       },
       "source": "symbol:scripts.staging.jev_shadow_measure.summarize",
       "target": "symbol:scripts.staging.jev_shadow_measure.summarize.full",
@@ -337987,7 +338020,7 @@
     {
       "id": "symbol:scripts.staging.jev_shadow_measure._iso_ms",
       "kind": "function",
-      "line": 170,
+      "line": 199,
       "path": "scripts/staging/jev_shadow_measure.py",
       "qualified_name": "scripts.staging.jev_shadow_measure._iso_ms"
     },
@@ -338001,49 +338034,63 @@
     {
       "id": "symbol:scripts.staging.jev_shadow_measure._pct",
       "kind": "function",
-      "line": 187,
+      "line": 218,
       "path": "scripts/staging/jev_shadow_measure.py",
       "qualified_name": "scripts.staging.jev_shadow_measure._pct"
     },
     {
+      "id": "symbol:scripts.staging.jev_shadow_measure._stream",
+      "kind": "function",
+      "line": 97,
+      "path": "scripts/staging/jev_shadow_measure.py",
+      "qualified_name": "scripts.staging.jev_shadow_measure._stream"
+    },
+    {
+      "id": "symbol:scripts.staging.jev_shadow_measure._stream.hook",
+      "kind": "function",
+      "line": 101,
+      "path": "scripts/staging/jev_shadow_measure.py",
+      "qualified_name": "scripts.staging.jev_shadow_measure._stream.hook"
+    },
+    {
       "id": "symbol:scripts.staging.jev_shadow_measure.fetch_shadow_logs",
       "kind": "function",
-      "line": 145,
+      "line": 163,
       "path": "scripts/staging/jev_shadow_measure.py",
       "qualified_name": "scripts.staging.jev_shadow_measure.fetch_shadow_logs"
     },
     {
       "id": "symbol:scripts.staging.jev_shadow_measure.join",
       "kind": "function",
-      "line": 177,
+      "line": 206,
       "path": "scripts/staging/jev_shadow_measure.py",
       "qualified_name": "scripts.staging.jev_shadow_measure.join"
     },
     {
       "id": "symbol:scripts.staging.jev_shadow_measure.main",
       "kind": "function",
-      "line": 250,
+      "line": 281,
       "path": "scripts/staging/jev_shadow_measure.py",
       "qualified_name": "scripts.staging.jev_shadow_measure.main"
     },
     {
       "id": "symbol:scripts.staging.jev_shadow_measure.play",
       "kind": "function",
-      "line": 97,
+      "line": 114,
       "path": "scripts/staging/jev_shadow_measure.py",
       "qualified_name": "scripts.staging.jev_shadow_measure.play"
     },
     {
       "id": "symbol:scripts.staging.jev_shadow_measure.summarize",
       "kind": "function",
-      "line": 191,
+      "line": 222,
       "path": "scripts/staging/jev_shadow_measure.py",
       "qualified_name": "scripts.staging.jev_shadow_measure.summarize"
     },
     {
       "id": "symbol:scripts.staging.jev_shadow_measure.summarize.full",
       "kind": "function",
-      "line": 196,
+      "line": 227,
       "path": "scripts/staging/jev_shadow_measure.py",
       "qualified_name": "scripts.staging.jev_shadow_measure.summarize.full"
     },
@@ -385369,5 +385416,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:190b53ef30cd4ed364c6db44ee625c6dda5a2c184abb21c13f8222172862486a"
+  "source_tree_hash": "sha256:f395b1718cee4d7814a12d8139768669b2c1bed9e5bc878a7f782ca6d36a4095"
 }

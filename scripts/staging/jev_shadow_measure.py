@@ -94,6 +94,23 @@ def _now_ms() -> int:
     return int(time.time() * 1000)
 
 
+def _stream(c: httpx.Client, base: str, csrf: str, game_id: str, text: str) -> dict:
+    """One SSE turn; keeps the Vercel request id (``x-vercel-id`` suffix = log ``requestId``)."""
+    ids: list[str] = []
+
+    def hook(response: httpx.Response) -> None:
+        if response.request.url.path.endswith("/game/action/stream"):
+            ids.append(response.headers.get("x-vercel-id", "").split("::")[-1])
+
+    c.event_hooks["response"] = [hook]
+    try:
+        row = stream_turn(c, base, csrf, game_id, text)
+    finally:
+        c.event_hooks["response"] = []
+    row["request_id"] = ids[-1] if ids else ""
+    return row
+
+
 def play(base: str, env: dict, max_turns: int, think: float) -> tuple[list[dict], dict]:
     admin = s192.Admin(env)
     turns: list[dict] = []
@@ -121,8 +138,9 @@ def play(base: str, env: dict, max_turns: int, think: float) -> tuple[list[dict]
                 if len(turns) >= max_turns:
                     break
                 start = _now_ms()
-                row = stream_turn(c, base, csrf, game_id, text)
+                row = _stream(c, base, csrf, game_id, text)
                 turns.append({"session": session_i, "category": category, "action": text,
+                              "request_id": row["request_id"],
                               "start_ms": start, "end_ms": _now_ms(), "status": row["status"],
                               "has_error": row["has_error"], "done_ms": row.get("done"),
                               "narration_chars": row["narration_chars"]})
@@ -163,8 +181,19 @@ def fetch_shadow_logs(env: dict, since: str) -> list[dict]:
             continue
         ts = data.get("timestamp") or item.get("timestamp")
         payload["ts"] = int(ts) if isinstance(ts, (int, float)) else _iso_ms(str(ts or ""))
+        payload["request_id"] = str(data.get("requestId") or "")
+        payload["_path"] = str(data.get("requestPath") or "")
         rows.append(payload)
-    return sorted(rows, key=lambda r: r.get("ts") or 0)
+    # Fluid compute: a line printed while a concurrent request (e.g. the per-minute cron) shares the
+    # instance can come back once per request. Same timestamp + same fields = one Jev call; keep the copy
+    # attributed to the turn (``/game/action/stream``).
+    unique: dict[tuple, dict] = {}
+    for row in sorted(rows, key=lambda r: r["_path"] != "/game/action/stream"):
+        key = (row.get("ts"), *(str(row.get(k)) for k in sorted(row) if k not in {"request_id", "_path", "ts"}))
+        unique.setdefault(key, row)
+    for row in unique.values():
+        row.pop("_path", None)
+    return sorted(unique.values(), key=lambda r: r.get("ts") or 0)
 
 
 def _iso_ms(value: str) -> int:
@@ -175,12 +204,14 @@ def _iso_ms(value: str) -> int:
 
 
 def join(turns: list[dict], logs: list[dict]) -> list[dict]:
+    """By Vercel request id (exact); a turn whose router took a Python gate has no line."""
     for turn in turns:
-        hits = [log for log in logs if turn["start_ms"] - 2000 <= (log.get("ts") or 0) <= turn["end_ms"] + 2000
+        hits = [log for log in logs if turn.get("request_id") and log.get("request_id") == turn["request_id"]
                 and not log.get("_used")]
         if hits:
             hits[0]["_used"] = True
-            turn["shadow"] = {k: v for k, v in hits[0].items() if k not in {"_used"}}
+            turn["shadow"] = {k: v for k, v in hits[0].items() if k not in {"_used", "request_id"}}
+        turn.pop("request_id", None)
     return turns
 
 
@@ -224,8 +255,8 @@ def summarize(turns: list[dict], logs: list[dict]) -> dict:
     waits = [float(o.get("wait_ms") or 0) for o in obs]
     return {
         "turns": len(turns), "turns_ok": sum(t["status"] == 200 and not t["has_error"] for t in turns),
-        "shadow_log_lines": len(logs), "observations_joined": len(obs),
-        "jev_calls_upper_bound": len(logs),
+        "shadow_log_lines_unique": len(logs), "observations_joined": len(obs),
+        "jev_calls": len(logs),
         "covered": len(covered), "coverage": round(len(covered) / len(obs), 4) if obs else None,
         "agreement_route": round(len(agree_route) / len(covered), 4) if covered else None,
         "agreement_all": round(len(agree_all) / len(covered), 4) if covered else None,
@@ -262,8 +293,8 @@ def main(argv=None) -> int:
     env = s192.load_env()
     started = time.time()
     if a.turns_file:
-        turns = json.loads(open(a.turns_file, encoding="utf-8").read())["turns"]
-        cleanup = {}
+        saved = json.loads(open(a.turns_file, encoding="utf-8").read())
+        turns, cleanup = saved["turns"], saved.get("cleanup") or {}
     else:
         turns, cleanup = play(a.base, env, a.max_turns, a.think)
         with open(a.out + ".turns.json", "w", encoding="utf-8") as fh:

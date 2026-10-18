@@ -1,5 +1,7 @@
 # SPEC-217 — evidência
 
+Estado (atualizado): revisão Astra J2 `APPROVED`. R14 foi portado em `cae84b2`, desligado por default. O shadow no staging passou: 96,3 % de concordância e zero escalada para combate ([shadow-staging-2026-10-18.md](shadow-staging-2026-10-18.md)). Falta a revisão Astra do porte; `primary` depende do dono. O parágrafo a seguir é o estado antes do porte.
+
 Estado: **J2 executada uma vez no FROZEN — veredito `GO` pela R9 pré-registrada** ([j2-result.md](j2-result.md)); aguarda revisão Astra do resultado. Nada ligado: produção intacta (`RPG_JEV_ROUTER_MODE` default `off`, `PRIMARY_CALIBRATION=None`, `services/jev_rollout.py` sem mudança de comportamento; campos novos do `DecisionState` são opcionais e ficam fora do fio quando não definidos).
 
 - Corpora: [corpus.md](corpus.md) (DEV `sha256:256d24bd…5f3d`; FROZEN

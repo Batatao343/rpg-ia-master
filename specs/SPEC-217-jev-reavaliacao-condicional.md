@@ -1,6 +1,6 @@
 # SPEC-217 — Reavaliação do Jev/TypeSafe no router: estruturação (J1) + A/B confirmatório (J2)
 
-> **Status:** `in-progress` — **J2 executada uma vez em 2026-10-18: `GO` pela R9** ([j2-result](../docs/spec217/j2-result.md); run `SPEC-217-J2-20261018T134801Z`, 190/190 chamadas). Pela §4 passo 7, GO não encerra a spec: faltam revisão Astra do resultado e R14 (porte atrás de `off` + `PRIMARY_CALIBRATION`); R15 (shadow) exige autorização própria. Aprovação original: dono aprovou a execução em 2026-10-18 ("concordo com sua opção de especialista. teste o JEV agora."), incluindo chamadas reais Jev + CLASSIFY dentro do teto da §6, e pediu uma fase de melhoria da estruturação do Jev antes do teste ("vê se vc não consegue estruturar o JEV de uma maneira melhor para ele acertar mais também"). Reescrita em 2026-10-18 após o `NO_GO` da SPEC-214.
+> **Status:** `in-progress` — **J2 `GO` (2026-10-18), revisão Astra J2 `APPROVED`; R14 portado; R15 shadow no staging atendido** ([shadow-staging](../docs/spec217/shadow-staging-2026-10-18.md)). O porte está no commit `cae84b2`. Ele importa a política congelada, define `PRIMARY_CALIBRATION=("SPEC-217-J2-20261018T134801Z", 0.50)`, fixa prazo de 1 s, deixa `off` idêntico byte a byte e mantém `primary` atrás de `RPG_JEV_ROUTER_PRIMARY_APPROVED=1`, que é exclusivo do dono. Shadow com 58 turnos reais e 55 chamadas observadas: concordância **52/54 = 96,3 %** nos cobertos, zero escalada para combate, Jev p50 251 / p95 292 ms, espera adicionada 0 ms. O staging voltou a `off`. **Falta só a revisão Astra do commit do porte (R14)**; `primary` exige aprovação separada do dono. Histórico: J2 executada uma vez ([j2-result](../docs/spec217/j2-result.md); run `SPEC-217-J2-20261018T134801Z`, 190/190 chamadas). Aprovação original: o dono aprovou a execução em 2026-10-18 ("concordo com sua opção de especialista. teste o JEV agora.") e pediu melhoria da estruturação ("vê se vc não consegue estruturar o JEV de uma maneira melhor para ele acertar mais também"). Shadow autorizado pelo dono em 2026-10-18 ("pode o shadow"; ~60 chamadas Jev ≈ US$ 0,60; só staging). Reescrita em 2026-10-18 após o `NO_GO` da SPEC-214.
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-200 `done` (baseline de latência) · SPEC-177, SPEC-178, SPEC-179, SPEC-180 `done` (adapter, A/Bs anteriores, rollout `off|shadow|primary`)
 > **Desbloqueia:** nada obrigatório
@@ -95,11 +95,13 @@ Hipótese (a) cache de cena vs RAG profundo (descartada: SPEC-214 `NO_GO`); even
 - [x] DEV e FROZEN congelados antes da J1, sem sobreposição verificada; executor não os alterou e não leu o FROZEN antes da J2.
 - [x] Diagnóstico J1 e registro completo de variantes com score DEV e chamadas gastas.
 - [x] Estrutura e `τ` congelados em commit antes da J2, com revisão Astra.
-- [ ] Testes do passo 2 verdes; `uv run pytest` verde.
+- [x] Testes do passo 2 verdes; `uv run pytest` verde. (2026-10-18, após R14/R15: 3.838 passed, 227 skipped, 15 deselected; ruff verde.)
 - [x] J1 ≤ 60 chamadas; total ≤ 160 chamadas e ≤ US$ 1,60 de reserva, ou interrupção por R10 registrada. (Teto emendado 190/US$ 1,90; usado 190: J1 60 + J1b 30 + J2 100.)
 - [x] Raw/summary com SHA-256; summary reproduzido offline.
-- [ ] Decisão GO/NO_GO aplicando a R9 sem reinterpretação; revisão Astra aprovada. (Decisão: `GO`; revisão Astra pendente.)
-- [x] Default `off` preservado; nenhuma mudança de schema/rotas de produção.
+- [x] Decisão GO/NO_GO aplicando a R9 sem reinterpretação; revisão Astra aprovada. (Decisão: `GO`; [revisão Astra J2](../handoffs/SPEC-217-ASTRA-J2-review.md) `APPROVED`.)
+- [x] Default `off` preservado; nenhuma mudança de schema/rotas de produção. (Após o R14, `off` é idêntico byte a byte ao router anterior, coberto por teste com payloads dourados.)
+- [x] R14: estrutura portada atrás de `off` + `PRIMARY_CALIBRATION` congelada (`cae84b2`); digests J1/J1b fixados em teste. Revisão Astra do commit **pendente**.
+- [x] R15: shadow no staging com ≥ 50 turnos reais (58 turnos, 55 observações): concordância 96,3 % ≥ 95 % e zero escalada insegura; teto próprio respeitado (56/60 chamadas Jev). Staging de volta a `off`.
 
 ## 6. Smoke / orçamento
 
@@ -121,7 +123,7 @@ Hipótese (a) cache de cena vs RAG profundo (descartada: SPEC-214 `NO_GO`); even
 
 1. Teto: **decidido** — 160 chamadas / US$ 1,60 no total (J1 ≤ 60) (2026-10-18); **emendado** para 190 / US$ 1,90 com J1b ≤ 30 (SPEC-238, 2026-10-18).
 2. Fase J1 de estruturação: **decidida** (2026-10-18).
-3. Shadow em staging (R15): teto a autorizar só se a J2 der GO.
+3. Shadow em staging (R15): **autorizado e executado** em 2026-10-18 (~60 chamadas Jev, só staging): atendido.
 4. `primary` em produção: aprovação separada após o shadow.
 
 ## 9. Evidência requerida

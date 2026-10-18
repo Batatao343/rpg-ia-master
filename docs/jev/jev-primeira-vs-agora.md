@@ -139,6 +139,22 @@ O Jev decidiu sozinho 44 de 48 vezes (92%); nas outras 4 (3 pela guarda de comba
 
 **Nada mudou no jogo ainda.** Próximos passos: revisão independente (Astra) deste resultado; depois portar a estrutura para o código de produção **desligada** e congelar a calibração; então um **shadow em staging** (≥ 50 turnos reais, o Jev só observa) com teto que você precisa autorizar. Ligar o Jev de verdade (`primary`) continua exigindo sua aprovação separada.
 
+## Shadow no staging (18/10)
+
+A estrutura vencedora foi para o código de produção **desligada** (`off` é idêntico ao router de antes). A calibração da J2 ficou congelada. Depois ela rodou em **shadow** no staging: o Jev decidia em paralelo, sem mudar nada, enquanto o classificador atual continuava no comando.
+
+| Medida | Resultado |
+|---|---|
+| Turnos reais | 58 (55 chamaram o Jev; 3 foram decididos por regras em Python) |
+| O Jev decidiria sozinho | 54 de 55 (98 %) |
+| Concordância com o classificador atual | **52 de 54 (96,3 %)**, critério ≥ 95 % |
+| Combate indevido | **0** |
+| Latência do Jev no servidor | p50 251 ms, p95 292 ms (o classificador leva ~1,5 s) |
+| Atraso no turno | 0 ms |
+| Chamadas | 56 de 60 autorizadas |
+
+As 2 discordâncias foram o classificador atual mandando "inspeciono a carroça" e "examino um objeto" para itens. O Jev disse narração, que era o certo. O staging **voltou para desligado**. Ligar o Jev de verdade (`primary`) ainda depende de uma revisão independente do código portado e da sua aprovação. Detalhes: `docs/spec217/shadow-staging-2026-10-18.md` (branch `spec-217`).
+
 ## Fontes
 
 - `specs/SPEC-177..180` e `docs/spec177/`, `docs/spec178/`, `docs/spec179/`, `docs/spec180/` (README de cada)
