@@ -34,6 +34,15 @@ async function open(page: Page) {
   await page.getByRole("tab", { name: "Combate" }).click();
 }
 
+// SPEC-216: < 900px é uma superfície por vez (barra "Superfícies"); >= 900px seguem as abas do painel.
+async function goSurface(page: Page, name: "Combate" | "Personagem") {
+  if ((page.viewportSize()?.width ?? 1440) < 900) {
+    await page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name, exact: true }).click();
+  } else {
+    await page.getByRole("tab", { name }).click();
+  }
+}
+
 const card = (page: Page, name: string) => page.getByRole("button", { name: new RegExp(`^${name},`) });
 
 async function a11y(page: Page) {
@@ -119,7 +128,7 @@ test.describe("personagem", () => {
       await page.getByRole("heading", { name: "Continuar jornada" }).waitFor();
       await page.getByRole("button", { name: /^Ayla/ }).click();
       if (w < 700) await page.getByRole("button", { name: /Ficha/ }).click();
-      await page.getByRole("tab", { name: "Personagem" }).click();
+      await goSurface(page, "Personagem");
       await expect(page.getByText("Cicatrizes")).toBeVisible();
       await expect(page.getByText("Tremor na mão")).toBeVisible();
       await expect(page.locator(".char-portrait")).toBeVisible(); // fallback honesto (sem retrato gerado)
@@ -150,8 +159,8 @@ async function openTab(page: Page, w: number, tab: "Combate" | "Personagem") {
   await page.goto("/");
   await page.getByRole("heading", { name: "Continuar jornada" }).waitFor();
   await page.getByRole("button", { name: /^Ayla/ }).click();
-  if (w < 1000) await page.getByRole("button", { name: /Ficha/ }).click(); // < split: painel único
-  await page.getByRole("tab", { name: tab }).click();
+  if (w >= 900 && w < 1000) await page.getByRole("button", { name: /Ficha/ }).click(); // < split: painel único
+  await goSurface(page, tab);
 }
 
 for (const [w, h] of [[320, 720], [768, 1024]] as const) {
@@ -161,7 +170,7 @@ for (const [w, h] of [[320, 720], [768, 1024]] as const) {
     await openTab(page, w, "Combate");
     await expect(page.getByRole("heading", { name: /Preparação/ })).toBeVisible();
     await a11y(page);
-    await page.getByRole("tab", { name: "Personagem" }).click();
+    await goSurface(page, "Personagem");
     await expect(page.getByText("Cicatrizes")).toBeVisible();
     await a11y(page);
     await page.getByRole("tab", { name: /Jornada/ }).click();
@@ -192,7 +201,7 @@ test("evidência 390: deck e ficha", async ({ page, backend }) => {
   await openTab(page, 390, "Combate");
   await expect(page.getByRole("heading", { name: /Preparação/ })).toBeVisible();
   await page.screenshot({ path: `${EVIDENCE}/390-combate.png`, scale: "css" });
-  await page.getByRole("tab", { name: "Personagem" }).click();
+  await goSurface(page, "Personagem");
   await expect(page.getByText("Cicatrizes")).toBeVisible();
   await page.screenshot({ path: `${EVIDENCE}/390-personagem.png`, scale: "css" });
 });

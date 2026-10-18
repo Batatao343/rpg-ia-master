@@ -277,10 +277,18 @@ test("F16 responsive_navigation", async ({ page }) => {
     const [a, b] = await Promise.all([logout.boundingBox(), ficha.boundingBox()]);
     expect(a && b && (a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y)).toBeTruthy();
     await ficha.click();
-    await expect(page.getByRole("tab", { name: "Mapa" })).toBeVisible();
-    await expect(page.getByPlaceholder(/O que você faz/)).toBeVisible();
-    if (viewport.width <= 480) await page.getByRole("button", { name: "Fechar ficha" }).click();
-    else await ficha.click();
+    if (viewport.width < 900) {
+      // SPEC-216: uma superfície por vez; a Ficha abre Personagem e a barra "Superfícies" volta ao Chat.
+      const bar = page.getByRole("navigation", { name: "Superfícies" });
+      await expect(page.getByTestId("surface-title")).toHaveText("Personagem");
+      await expect(bar.getByRole("button", { name: "Mapa", exact: true })).toBeVisible();
+      await bar.getByRole("button", { name: "Chat", exact: true }).click();
+      await expect(page.getByPlaceholder(/O que você faz/)).toBeVisible();
+    } else {
+      await expect(page.getByRole("tab", { name: "Mapa" })).toBeVisible();
+      await expect(page.getByPlaceholder(/O que você faz/)).toBeVisible();
+      await ficha.click();
+    }
   }
   await assertA11y(page);
 });
@@ -406,6 +414,10 @@ test("F17 workspace_modes", async ({ page, backend }) => {
     await expect(modeButton(page, "Dividido")).toHaveCount(0);
     await expect(divider(page)).toHaveCount(0);
     expect((await chatRegion(page).isVisible()) !== (await contextRegion(page).isVisible())).toBe(true);
+    // SPEC-216: o composer vive só na superfície Chat; volta a ela pela barra "Superfícies".
+    // (o level-up pendente reabre após o reload e cobre a barra: Esc o dispensa, como em R16)
+    if (await page.getByRole("dialog").count()) await page.keyboard.press("Escape");
+    await page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Chat", exact: true }).click();
     await expect(composerBox(page)).toBeVisible();
     await expectNoOverflow(page);
   }

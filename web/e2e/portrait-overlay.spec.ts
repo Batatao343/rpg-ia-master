@@ -25,10 +25,11 @@ for (const width of [390, 1440]) {
     });
     expect(hitsOutside).toBe(0);
 
-    if (width < 1100) {
-      const chat = page.getByRole("group", { name: "Modo de exibição" }).getByRole("button", { name: "Chat", exact: true });
+    if (width < 900) {
+      // SPEC-216: a barra "Superfícies" substitui o grupo "Modo de exibição".
+      const chat = page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Chat", exact: true });
       await chat.click({ timeout: 3_000 });
-      await expect(chat).toHaveAttribute("aria-pressed", "true");
+      await expect(chat).toHaveAttribute("aria-current", "page");
     }
     await expect(page.getByRole("dialog")).toHaveCount(0);
   });

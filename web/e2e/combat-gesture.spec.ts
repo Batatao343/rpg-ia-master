@@ -130,7 +130,7 @@ for (const width of [1440, 390]) {
       const result = await new AxeBuilder({ page }).analyze();
       expect(result.violations.filter((v) => v.impact === "critical" || v.impact === "serious")).toEqual([]);
       backend.releaseStream();
-      if (width < 1100) await page.getByRole("group", { name: "Modo de exibição" }).getByRole("button", { name: "Chat", exact: true }).click();
+      if (width < 900) await page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Chat", exact: true }).click();
       await expect(page.getByText("O último saqueador cai; o combate termina.")).toBeVisible();
       expect(actions(backend)).toHaveLength(1);
     });
@@ -138,7 +138,12 @@ for (const width of [1440, 390]) {
     test("tooltip no foco sem cobrir cartas", async ({ page, backend }) => {
       setupCombat(backend);
       await openGame(page);
-      await card(page, "Golpe do Véu").focus();
+      if (width < 900) {
+        // SPEC-216: sem hover/foco em toque; o detalhe abre por "Detalhes de <Carta>".
+        await panel(page).getByRole("button", { name: "Detalhes de Golpe do Véu" }).click();
+      } else {
+        await card(page, "Golpe do Véu").focus();
+      }
       await expect(panel(page).locator(".card-detail")).toContainText("Custo: 1E");
       await expect(panel(page).locator(".card-detail")).toContainText("1× por turno");
       const boxes = await panel(page).locator(".combat-card").evaluateAll((els) => els.map((e) => e.getBoundingClientRect().toJSON()));

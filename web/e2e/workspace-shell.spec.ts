@@ -364,14 +364,18 @@ test.describe("telefone 390", () => {
     await page.getByRole("button", { name: /Ficha/ }).click();
     await expect(context(page)).toBeVisible();
     await expect(chat(page)).toBeHidden();
-    await expect(composer(page)).toBeVisible();
-    await page.getByRole("tab", { name: "Mapa" }).click();
+    // SPEC-216: o composer vive só na superfície Chat; a barra "Superfícies" navega entre as superfícies.
+    const bar = page.getByRole("navigation", { name: "Superfícies" });
+    await expect(page.getByTestId("surface-title")).toHaveText("Personagem");
+    await expect(composer(page)).toBeHidden();
+    await bar.getByRole("button", { name: "Mapa", exact: true }).click();
     await expect(page.getByRole("button", { name: "Brumalta" })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
     await page.screenshot({ path: `${SHOTS}/390-contexto.png` });
     await assertA11y(page);
-    await page.getByRole("button", { name: "Fechar ficha" }).click();
+    await bar.getByRole("button", { name: "Chat", exact: true }).click();
     await expect(chat(page)).toBeVisible();
+    await expect(composer(page)).toBeVisible();
     // A preferência split ficou gravada: em 1440 volta a dividir.
     await page.setViewportSize({ width: 1440, height: 900 });
     await expect(separator(page)).toBeVisible();
@@ -384,9 +388,11 @@ test.describe("telefone 390", () => {
     state.combat.enemies = [{ id: "e1", name: "Saqueador", hp: 6, max_hp: 6, vitalidade: 6, max_vitalidade: 6, esquiva: 9, protecao: 0, integridade_atual: null, integridade_max: null, recursos_visiveis: {}, conditions: [], revealed_cards: [], revealed_resistances: [] }];
     await openGame(page);
     await expect(page.getByRole("heading", { name: "Sua mão" })).toBeVisible();
-    await expect(composer(page)).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
     await assertA11y(page);
+    // SPEC-216: o composer vive só no Chat; a barra "Superfícies" leva até ele.
+    await page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Chat", exact: true }).click();
+    await expect(composer(page)).toBeVisible();
   });
 });
 
