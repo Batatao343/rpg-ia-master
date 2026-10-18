@@ -72,3 +72,4 @@ google-services.json
 *service-account*.json
 keystore.properties
 signing.properties
+pytest*.log
