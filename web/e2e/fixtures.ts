@@ -214,6 +214,11 @@ export class DeterministicBackend {
     current.continuity = { ...(current.continuity!), canonical_turn: current.world.turn_count };
     if (this.combatHit(current, body)) {
       // SPEC-205: resolvido acima (dano determinístico no alvo declarado).
+    } else if (/emboscada/i.test(input) && !current.combat.active) {
+      // SPEC-216: encontro começa pelo chat (combat.active falso -> verdadeiro).
+      this.states.set(gid, current);
+      this.armCombat(gid, [["e1", "Saqueador"], ["e2", "Bandoleiro"]]);
+      current.message = "Saqueadores saltam da névoa; o combate começa."; current.message_type = "COMBAT";
     } else if (/Brumalta/i.test(input)) {
       current.current_location = "Brumalta"; current.world.location = "Brumalta"; current.world.location_id = "brumalta";
       current.message = "A trilha termina nos portões de Brumalta.";

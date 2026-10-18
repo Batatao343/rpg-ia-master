@@ -20,6 +20,10 @@ JOURNEY_RE = re.compile(r"^(F(?:0[1-9]|[1-9][0-9]))\s+")
 VERTICAL_IDS = tuple(f"V{i:02d}" for i in range(1, 10))
 VERTICAL_RE = re.compile(r"^(V(?:0[1-9]))\s+")
 VERTICAL_VIEWPORTS = ("desktop-1440", "desktop-1280")
+# SPEC-216: jornadas mobile single-pane M01-M07, um resultado por projeto/viewport mobile (toque).
+MOBILE_IDS = tuple(f"M{i:02d}" for i in range(1, 8))
+MOBILE_RE = re.compile(r"^(M(?:0[1-9]))\s+")
+MOBILE_VIEWPORTS = ("mobile-320", "mobile-390")
 
 
 def _specs(suites: Iterable[dict[str, Any]]) -> Iterable[dict[str, Any]]:
@@ -115,6 +119,45 @@ def summarize_vertical(report: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def summarize_mobile(report: dict[str, Any]) -> dict[str, Any]:
+    """M01..M07 por projeto Playwright mobile. Todo viewport exigido, toda jornada `passed`."""
+
+    by_project: dict[str, dict[str, bool]] = {}
+    for spec in _specs(report.get("suites", [])):
+        match = MOBILE_RE.match(str(spec.get("title", "")))
+        if not match:
+            continue
+        for test in spec.get("tests", []):
+            results = test.get("results", [])
+            passed = bool(results) and results[-1].get("status") == "passed"
+            project = str(test.get("projectName") or "default")
+            by_project.setdefault(project, {})[match.group(1)] = passed
+    expected = {(project, step) for project in MOBILE_VIEWPORTS for step in MOBILE_IDS}
+    seen = {(project, step) for project, steps in by_project.items() for step in steps}
+    passed_n = sum(1 for (project, step) in expected if by_project.get(project, {}).get(step))
+    rate = passed_n / len(expected)
+    messages = "\n".join(_messages(report))
+    metrics = {
+        "mobile_journey_pass_rate": rate,
+        "frontend_uncaught_page_errors": messages.count("pageerror:"),
+        "frontend_unexpected_console_errors": messages.count("console.error:"),
+        "frontend_unexpected_failed_requests": messages.count("requestfailed:"),
+        "frontend_unexpected_5xx_responses": len(re.findall(r"HTTP 5\d\d:", messages)),
+        "frontend_a11y_serious_critical": messages.count("A11Y serious/critical:"),
+    }
+    hard_pass = expected <= seen and rate == 1.0 and all(
+        value == 0 for key, value in metrics.items() if key != "mobile_journey_pass_rate")
+    return {
+        "schema_version": 1,
+        "source": "playwright-json",
+        "suite": "mobile",
+        "journeys": {"registered": len(expected), "executed": len(seen & expected), "passed": passed_n,
+                     "results": {p: by_project.get(p, {}) for p in MOBILE_VIEWPORTS}},
+        "metrics": metrics,
+        "hard_gates_passed": hard_pass,
+    }
+
+
 def measurement_identity(root: Path) -> dict[str, str]:
     def digest(path: Path) -> str:
         return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
@@ -125,7 +168,7 @@ def measurement_identity(root: Path) -> dict[str, str]:
     package = json.loads((root / "web/package.json").read_text(encoding="utf-8"))
     return {
         "product_sha": os.getenv("GITHUB_SHA") or git.stdout.strip(),
-        "evaluator_version": "1.14.0",
+        "evaluator_version": "1.15.0",
         "metrics_registry_hash": digest(root / "evals/metrics-registry.yaml"),
         "journey_manifest_hash": digest(root / "web/e2e/critical-journeys.yaml"),
         "platform": platform.platform(),
@@ -139,11 +182,11 @@ def main() -> int:
     parser.add_argument("report", type=Path)
     parser.add_argument("--output", type=Path)
     parser.add_argument("--check", action="store_true")
-    parser.add_argument("--suite", choices=("frontend", "vertical"), default="frontend")
+    parser.add_argument("--suite", choices=("frontend", "vertical", "mobile"), default="frontend")
     parser.add_argument("--root", type=Path, default=Path.cwd())
     args = parser.parse_args()
     report = json.loads(args.report.read_text(encoding="utf-8"))
-    summary = summarize_vertical(report) if args.suite == "vertical" else summarize(report)
+    summary = {"vertical": summarize_vertical, "mobile": summarize_mobile}.get(args.suite, summarize)(report)
     summary["measurement_identity"] = measurement_identity(args.root.resolve())
     encoded = json.dumps(summary, ensure_ascii=False, indent=2) + "\n"
     if args.output:

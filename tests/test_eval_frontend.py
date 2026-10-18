@@ -7,7 +7,8 @@ from pathlib import Path
 import yaml
 
 from scripts.frontend_eval_report import (
-    JOURNEY_IDS, VERTICAL_IDS, VERTICAL_VIEWPORTS, summarize, summarize_vertical,
+    JOURNEY_IDS, MOBILE_IDS, MOBILE_VIEWPORTS, VERTICAL_IDS, VERTICAL_VIEWPORTS,
+    summarize, summarize_mobile, summarize_vertical,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -36,6 +37,46 @@ def test_vertical_manifest_and_spec_cover_v01_to_v09_on_both_desktop_viewports()
     assert "waitForTimeout(" not in (WEB / "e2e/vertical-support.ts").read_text(encoding="utf-8")
     # A régua é o oráculo Python: a jornada só observa e entrega o trace.
     assert "evals.gameplay_scan" in (WEB / "e2e/vertical-support.ts").read_text(encoding="utf-8")
+
+
+def test_mobile_manifest_and_spec_cover_m01_to_m07_on_both_mobile_viewports():
+    manifest = yaml.safe_load((WEB / "e2e/critical-journeys.yaml").read_text(encoding="utf-8"))
+    mobile = [row for row in manifest["journeys"] if row.get("suite") == "mobile"]
+    assert [row["id"] for row in mobile] == list(MOBILE_IDS)
+    assert all(row["hard"] and row["viewports"] == ["320x568", "390x844"] for row in mobile)
+    source = (WEB / "e2e/mobile-single-pane.spec.ts").read_text(encoding="utf-8")
+    titles = re.findall(r'test\("(M\d{2}) (\w+)"', source)
+    assert titles == [(row["id"], row["name"]) for row in mobile]
+    # SPEC-216 R7: toque, nunca hover/drag; sem sleep fixo.
+    assert not re.search(r"\.hover\(|dragTo\(|waitForTimeout\(", source)
+    config = (WEB / "playwright.config.ts").read_text(encoding="utf-8")
+    assert '"mobile-320"' in config and '"mobile-390"' in config and "mobile-single-pane" in config
+    # F/V não podem enxergar as jornadas M (e vice-versa): conjuntos disjuntos.
+    assert not set(MOBILE_IDS) & (set(JOURNEY_IDS) | set(VERTICAL_IDS))
+
+
+def _mobile_specs(failed: tuple[str, str] | None = None, drop: str | None = None) -> dict:
+    specs = []
+    for step in MOBILE_IDS:
+        tests = []
+        for project in MOBILE_VIEWPORTS:
+            if project == drop:
+                continue
+            status = "failed" if failed == (project, step) else "passed"
+            tests.append({"projectName": project, "results": [{"status": status}]})
+        specs.append({"title": f"{step} fixture", "tests": tests})
+    return {"suites": [{"specs": specs}]}
+
+
+def test_mobile_report_requires_every_journey_on_both_viewports():
+    ok = summarize_mobile(_mobile_specs())
+    assert ok["hard_gates_passed"] is True
+    assert ok["journeys"]["registered"] == 14
+    assert ok["metrics"]["mobile_journey_pass_rate"] == 1.0
+    assert summarize_mobile(_mobile_specs(failed=("mobile-320", "M05")))["hard_gates_passed"] is False
+    assert summarize_mobile(_mobile_specs(drop="mobile-390"))["hard_gates_passed"] is False
+    assert summarize(_mobile_specs())["journeys"]["executed"] == 0
+    assert summarize_vertical(_mobile_specs())["journeys"]["passed"] == 0
 
 
 def _vertical_specs(failed: tuple[str, str] | None = None, drop: str | None = None) -> dict:
@@ -88,6 +129,7 @@ def test_frontend_metrics_are_blocking_and_have_hard_limits():
     registry = yaml.safe_load((ROOT / "evals/metrics-registry.yaml").read_text(encoding="utf-8"))["metrics"]
     names = {
         "vertical_journey_pass_rate",
+        "mobile_journey_pass_rate",
         "frontend_critical_journey_pass_rate",
         "frontend_uncaught_page_errors",
         "frontend_unexpected_console_errors",

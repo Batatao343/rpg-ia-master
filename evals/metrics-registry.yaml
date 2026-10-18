@@ -1,5 +1,5 @@
 schema_version: 1
-evaluator_version: 1.14.0
+evaluator_version: 1.15.0
 metrics:
   exact_match:
     direction: higher
@@ -341,6 +341,16 @@ metrics:
     unit: ratio
     numerator: vertical journey steps (V01-V09) with a passed final result, summed over the required desktop viewports
     denominator: nine steps times the two required desktop viewports (1440x900 and 1280x800); a missing step or viewport counts as not passed
+    exclusions:
+      - none
+    hard_limit: 1.0
+  mobile_journey_pass_rate:
+    direction: higher
+    kind: deterministic
+    blocking: true
+    unit: ratio
+    numerator: mobile single-pane journeys (M01-M07) with a passed final result, summed over the required mobile viewports
+    denominator: seven journeys times the two required mobile viewports (320x568 and 390x844, touch); a missing journey or viewport counts as not passed
     exclusions:
       - none
     hard_limit: 1.0

@@ -138,11 +138,16 @@ jobs:
           uv run python scripts/frontend_eval_report.py
           web/test-results/results.json
           --output readiness_artifacts/evals/frontend.json --check
+      - run: >-
+          uv run python scripts/frontend_eval_report.py
+          web/test-results/results.json --suite mobile
+          --output readiness_artifacts/evals/frontend-mobile.json --check
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()
         with:
           name: frontend-evals-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             readiness_artifacts/evals/frontend.json
+            readiness_artifacts/evals/frontend-mobile.json
             web/test-results/
           if-no-files-found: error

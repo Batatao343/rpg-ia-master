@@ -10,7 +10,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 from evals.core.hashing import case_selection_hash
 
 
-EVALUATOR_VERSION = "1.14.0"
+EVALUATOR_VERSION = "1.15.0"
 
 OracleKind = Literal[
     "exact",

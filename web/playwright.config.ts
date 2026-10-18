@@ -46,7 +46,12 @@ export default defineConfig({
     timeout: 120_000,
   },
   projects: [
-    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    { name: "chromium", testIgnore: /mobile-single-pane\.spec\.ts/, use: { ...devices["Desktop Chrome"] } },
+    // SPEC-216: jornadas M01-M07, uma vez por viewport mobile (toque, sem hover); chromium empacotado.
+    ...[{ name: "mobile-320", width: 320, height: 568 }, { name: "mobile-390", width: 390, height: 844 }].map((v) => ({
+      name: v.name, testMatch: /mobile-single-pane\.spec\.ts/,
+      use: { ...devices["Pixel 5"], actionTimeout: 8_000, viewport: { width: v.width, height: v.height }, reducedMotion: "reduce" as const },
+    })),
     // SPEC-208: só os efeitos precisam de movimento ligado; o resto da suíte segue em `reduce`.
     { name: "chromium-motion", testMatch: /effects\.spec\.ts/,
       use: { ...devices["Desktop Chrome"], reducedMotion: "no-preference",

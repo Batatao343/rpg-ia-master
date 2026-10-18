@@ -45,3 +45,10 @@ journeys:
   - { id: V07, name: context_tabs_coherent_and_accessible, hard: true, suite: vertical, viewports: [1440x900, 1280x800] }
   - { id: V08, name: save_reload_and_no_duplicate_turn, hard: true, suite: vertical, viewports: [1440x900, 1280x800] }
   - { id: V09, name: audit_export_and_transversal_oracles, hard: true, suite: vertical, viewports: [1440x900, 1280x800] }
+  - { id: M01, name: one_surface_visible, hard: true, suite: mobile, viewports: [320x568, 390x844] }
+  - { id: M02, name: switch_and_back_preserves_state, hard: true, suite: mobile, viewports: [320x568, 390x844] }
+  - { id: M03, name: composer_visible_with_virtual_keyboard, hard: true, suite: mobile, viewports: [320x568, 390x844] }
+  - { id: M04, name: voice_flow_and_mic_release, hard: true, suite: mobile, viewports: [320x568, 390x844] }
+  - { id: M05, name: combat_own_screen_and_outcome_in_chat, hard: true, suite: mobile, viewports: [320x568, 390x844] }
+  - { id: M06, name: touch_targeting_same_payload_as_desktop, hard: true, suite: mobile, viewports: [320x568, 390x844] }
+  - { id: M07, name: reduced_motion_focus_aria_and_a11y, hard: true, suite: mobile, viewports: [320x568, 390x844] }
