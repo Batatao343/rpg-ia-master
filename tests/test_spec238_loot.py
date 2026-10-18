@@ -249,3 +249,15 @@ def test_selection_requires_zero_errors_and_coverage_gain() -> None:
 def test_j1b_never_references_frozen_content() -> None:
     source = Path(loot.__file__).read_text(encoding="utf-8")
     assert "spec217_frozen.jsonl" not in source
+
+
+def test_frozen_j1b_digest_matches_code(monkeypatch: pytest.MonkeyPatch) -> None:
+    """R7: the J1b freeze pins the J1 digest, the loot question, the guard and code."""
+    frozen = loot.FROZEN_J1B_POLICY
+    assert frozen.variant_id == "plain+target+guard@0.50+lootsrc+lguard@0.50"
+    assert frozen.base == hybrid.FROZEN_J1_POLICY
+    assert loot.structure_digest(frozen) == loot.FROZEN_J1B_STRUCTURE_DIGEST
+    assert loot.structure_digest(LootPolicy(loot_guard=False)) != loot.FROZEN_J1B_STRUCTURE_DIGEST
+    assert loot.structure_digest(LootPolicy(loot_tau=0.55)) != loot.FROZEN_J1B_STRUCTURE_DIGEST
+    monkeypatch.setattr(hybrid, "_source", lambda fn: "edited")  # J1 code edit breaks it too
+    assert loot.structure_digest(frozen) != loot.FROZEN_J1B_STRUCTURE_DIGEST

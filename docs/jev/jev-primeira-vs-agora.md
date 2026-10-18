@@ -80,16 +80,37 @@ Estimativa para o turno: o Jev resolve ~67% sozinho, a ~260 ms; no resto, soma o
 
 | Limite | Detalhe |
 |---|---|
-| **Loot cai para o CLASSIFY** | 13 dos 52 casos (25%). Uma nova spec está tratando disso |
+| ~~Loot cai para o CLASSIFY~~ | Resolvido no DEV pela SPEC-238 (seção 6b) |
 | 2 abstenções | O Jev se declarou inseguro; correto, mas reduz cobertura |
 | 2 alvos não representáveis | Mais de 20 opções ou ator sem ID canônico; vão ao CLASSIFY |
 | DEV não discrimina bem | Nenhuma variante errou nos cobertos, então não distingue `plain` de `rich` |
 | Latência híbrida é estimada | Usa o p50 do CLASSIFY de um teste anterior |
 | Custo real | Segue indisponível; só reserva interna |
 
+## 6b. Loot (SPEC-238, J1b — somente DEV)
+
+Você pediu que o Jev cobrisse o loot também. Agora, na **mesma** requisição (sem
+chamada extra), o Jev também diz de onde vem o item: **achado** (TREASURE), **loja**
+(SHOP) ou **fabricação** (CRAFT). Um guard em Python confere com os verbos (pegar/
+vasculhar, comprar/vender, forjar/fabricar) e com o local (mercador ou oficina no
+mapa); se não bater, ou se a confiança for baixa, vai para o CLASSIFY.
+
+| Medida (30 casos DEV, 30 chamadas) | Antes (loot → CLASSIFY) | Depois |
+|---|---:|---:|
+| Casos que o Jev decide sozinho | 15/30 | **28/30** |
+| Loot com fonte correta | — | **13/13** |
+| Erros (rota, alvo ou fonte) | 0 | **0** |
+| Conversa/combate/história: mesma resposta da J1 | — | 17/17 |
+| Latência do Jev (p50) | 247 ms | 262 ms |
+
+No DEV inteiro a cobertura projetada sobe de 35/52 (67%) para **48/52 (92%)**.
+Orçamento da spec: 90 de 190 chamadas usadas (você aprovou +30). Mesmo aviso: é DEV;
+a prova é a J2, que agora também exige que a fonte do loot do Jev bata com a do
+CLASSIFY em todo loot que ele decidir.
+
 ## 7. O que vem agora
 
-1. **Revisão independente (Astra)** do congelamento da J1.
+1. **Revisão independente (Astra)** do congelamento da J1 (feita, aprovada) e do novo congelamento com loot (SPEC-238, pendente).
 2. **J2, A/B confirmatório** no corpus FROZEN, rodado **uma única vez**, 3 réplicas, 100 chamadas no máximo. Só dá GO se **todos** os itens valerem:
    - acerto de rota no máximo 2,5 pontos abaixo do CLASSIFY e no máximo 1 perda pareada;
    - alvo ao menos igual, sempre entre os candidatos da cena;

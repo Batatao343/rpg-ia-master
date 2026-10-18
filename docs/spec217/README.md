@@ -1,6 +1,6 @@
 # SPEC-217 — evidência
 
-Estado: **J1 concluída e congelada; revisão Astra APPROVED com emenda (guarda de combate ligada) — J2 liberada após implementar os requisitos do parecer.** Nenhum
+Estado: **J1 concluída e congelada; revisão Astra APPROVED com emenda (guarda de combate ligada). J1b (SPEC-238, fonte do loot) concluída e adotada — nova política congelada aguardando revisão Astra antes da J2.** Nenhum
 GO/NO_GO ainda (só a J2 decide). Produção intacta: `RPG_JEV_ROUTER_MODE` default
 `off`, `PRIMARY_CALIBRATION=None`, `services/jev_rollout.py` sem mudança de
 comportamento (payload do rollout idêntico — campos novos do `DecisionState` são
@@ -10,6 +10,7 @@ opcionais e ficam fora do fio quando não definidos).
   `sha256:442725e5…9d48`, **não aberto** na J1 — só o hash do lock entra nos raws).
 - Diagnóstico J1: [j1-diagnostico.md](j1-diagnostico.md).
 - Variantes e resultados J1: [j1-variantes.md](j1-variantes.md).
+- J1b, estágio de fonte do loot (SPEC-238): [j1b-loot.md](j1b-loot.md).
 
 ## Orçamento
 
@@ -18,7 +19,8 @@ opcionais e ficam fora do fio quando não definidos).
 | J1 P1 (triagem) | 52 | 0 | US$ 0,52 | — |
 | J1 P2 (estrutura) | 8 | 0 | US$ 0,08 | — |
 | **J1 total** | **60** | **0** | **US$ 0,60** | 60 |
-| Spec acumulada | 60 | 0 | US$ 0,60 | 160 / US$ 1,60 |
+| J1b (SPEC-238, loot) | 30 | 0 | US$ 0,30 | 30 |
+| Spec acumulada | 90 | 0 | US$ 0,90 | 190 / US$ 1,90 (era 160/1,60; emenda do dono 2026-10-18) |
 
 Ledger durável (incrementa antes de cada requisição):
 `evals/runs/jev-router-ab/spec217-j1/ledger.json` SHA-256
@@ -47,3 +49,14 @@ em `evals/experiments/jev_router_hybrid.py`, travado por
 `tests/test_spec217_j1.py::test_frozen_structure_digest_matches_code`.
 Revisão: [handoffs/SPEC-217-J1-for-Astra.md](../../handoffs/SPEC-217-J1-for-Astra.md).
 Parecer: [handoffs/SPEC-217-ASTRA-J1-review.md](../../handoffs/SPEC-217-ASTRA-J1-review.md) — APPROVED; hash anterior `950917…4b81` (sem guarda, sem código no digest) superado.
+
+## J1b — fonte do loot (SPEC-238)
+
+Adotada `plain+target+guard@0.50+lootsrc+lguard@0.50` (`FROZEN_J1B_POLICY` em
+`evals/experiments/spec238_loot.py`, digest
+`sha256:1f6a5982d5b72c36c9bc67ddfaf3723eea19753ebe7cc0a713454247e61d70f0`):
+amostra DEV de 30 casos, cobertura 15/30 → **28/30**, loot 13/13 com fonte correta,
+0 erro de rota/alvo/fonte, 0 escalada insegura, rota/alvo dos não-loot idênticos à
+J1. Raw `b5a3a6d0…23bf`, summary `e884fb7b…c13a`. Detalhes em
+[j1b-loot.md](j1b-loot.md). **A J2 deve usar `j1b_request`/`FROZEN_J1B_POLICY` e a
+R9.7 (fonte de B = `loot_context` de A nos loot cobertos) — após revisão Astra.**

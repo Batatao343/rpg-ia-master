@@ -45,4 +45,46 @@ tiver oráculo de fonte, 0 erro.
 
 ## Resultados
 
-_(preenchido após o run)_
+**Run** `SPEC-238-J1b-20261018T130603Z` (DEV, produto `bc9f8ca` = commit do
+pré-registro, árvore limpa). **30/30 chamadas Jev**, 0 CLASSIFY, 0 erro de provider,
+`max_retries=0`, modelo `jev-1.13.0`; uso 26.156 tokens de entrada / 3.666 de saída;
+custo real `unavailable`. Ledger: J1 60 + J1b 30 = **90/190** (reserva US$ 0,90).
+
+| Política (sobre as mesmas 30 respostas) | Cobertura | Loot cobertos | Erros rota/alvo/fonte cob. | Escalada insegura | Fallback |
+|---|---:|---:|---:|---:|---|
+| Baseline J1 `plain+target+guard@0.50` (loot ⇒ CLASSIFY) | 15/30 | 0/13 | 0 / 0 / — | 0 | loot 13, abst. 1, alvo n/repr. 1 |
+| **`+lootsrc+lguard@0.50` (adotada)** | **28/30** | **13/13** | **0 / 0 / 0** | **0** | abst. 1, alvo n/repr. 1 |
+| demais 17 variantes da grade (guard on/off × τ_loot 0,50…0,90) | 28/30 | 13/13 | 0 / 0 / 0 | 0 | idem |
+
+- Fonte do loot: 13/13 corretas (TREASURE 5, SHOP 5, CRAFT 3), confiança da fonte
+  1,00 em todas; rota `loot` com confiança 0,96–1,00. O guard nunca disparou.
+- Não-loot (17): rota igual à da P1 da J1 em **17/17**, alvo igual em **12/12**;
+  `loot_source` respondeu `none` em 17/17 (0,79–1,00). Nenhuma regressão de rota.
+- Latência Jev p50 **261,5 ms** / p95 **306,2 ms** (P2 da J1 sem a pergunta extra:
+  247 / 286,55 ms) — a pergunta extra custa ~15–20 ms.
+- Cobertura projetada no DEV inteiro (52 elegíveis): 35 da J1 + 13 loot = **48/52
+  (92 %)**, antes 35/52 (67 %). Projeção assume não-loot inalterado (17/17
+  concordaram na amostra).
+
+**Decisão (regra pré-registrada):** todas as 18 variantes adotáveis e empatadas;
+desempate guard ligado → τ_loot 0,50 ⇒ **adotada `plain+target+guard@0.50+lootsrc+lguard@0.50`**.
+Congelada em `evals/experiments/spec238_loot.py` (`FROZEN_J1B_POLICY`), digest
+`sha256:1f6a5982d5b72c36c9bc67ddfaf3723eea19753ebe7cc0a713454247e61d70f0`
+(inclui o digest J1 `80225d16…10f5`, a pergunta de fonte, o guard e o código das
+features; teste `test_frozen_j1b_digest_matches_code`). Revisão Astra pendente:
+[handoffs/SPEC-238-for-Astra.md](../../handoffs/SPEC-238-for-Astra.md).
+
+**Artifacts** (gitignored, `evals/runs/jev-router-ab/spec238-j1b/20261018T130603Z/`;
+cópia no scratchpad da sessão), summary reproduzido offline com hash idêntico
+(`python -m evals.experiments.spec238_loot --phase summarize --run-dir <dir>`):
+
+| Arquivo | SHA-256 |
+|---|---|
+| raw.json | `b5a3a6d05a4189a28a9a767d6997fd1ce595a86528d2844562220916808f23bf` |
+| summary.json | `e884fb7b9838563d17484bf556fa1a6da1ea8b95aa2131322fdf90d119c5d13a` |
+| ledger.json (após J1b) | `eb67f1047cfa0da066ef66ecc4d1fc3c3acd910ecae714eed34a7b3250543627` |
+
+**Limitações:** DEV pequeno e já visto; no DEV o local é sempre desconhecido, então
+`merchant_here`/`craft_station` não foram exercitados (o guard decidiu só por verbo);
+o DEV não discrimina guard on/off nem τ_loot. A confirmação é a J2 (3 casos loot no
+FROZEN) com a R9.7.

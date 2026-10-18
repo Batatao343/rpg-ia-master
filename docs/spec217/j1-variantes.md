@@ -129,3 +129,9 @@ mesma; a P2 continua válida.
 - Cobertura máxima é limitada pelo contrato: 13/52 DEV são `loot` (fallback por
   escopo). No FROZEN o mix declarado é loot 3/16.
 - Exemplos do label set `rich` foram escritos sem copiar frases do DEV.
+
+## J1b — estágio de fonte do loot (SPEC-238)
+
+A política acima (loot ⇒ CLASSIFY) foi estendida pela J1b: mesma requisição + pergunta
+`loot_source`, guard Python de verbo/local. DEV (30 chamadas): cobertura 15/30 → 28/30,
+0 erro. Registro completo, regra pré-registrada e hashes em [j1b-loot.md](j1b-loot.md).

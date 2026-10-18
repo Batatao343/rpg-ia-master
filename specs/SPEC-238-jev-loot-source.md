@@ -1,6 +1,6 @@
 # SPEC-238 — Jev decide a fonte do loot (J1b da SPEC-217)
 
-> **Status:** `approved` — dono, 2026-10-18: "boa, cria uma spec para o jev cobrir o loot e vamos usar ele também". A aprovação inclui a execução e o aumento de orçamento proposto: **+30 chamadas live (~US$ 0,30)**, teto total da SPEC-217 de 160/US$ 1,60 para **190/US$ 1,90**.
+> **Status:** `in-progress` (J1b executada e adotada; aguardando revisão Astra) — dono, 2026-10-18: "boa, cria uma spec para o jev cobrir o loot e vamos usar ele também". A aprovação inclui a execução e o aumento de orçamento proposto: **+30 chamadas live (~US$ 0,30)**, teto total da SPEC-217 de 160/US$ 1,60 para **190/US$ 1,90**.
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-217 J1 congelada (`plain+target+guard@0.50`, digest `sha256:80225d16…10f5`, revisão Astra APPROVED)
 > **Desbloqueia:** J2 da SPEC-217 com a política que cobre loot (se adotada)
@@ -42,12 +42,12 @@ Rótulos: **[F]** fato · **[D]** decisão do dono · **[H]** hipótese · **[R]
 
 ## 4. Critérios de aceite
 
-- [ ] Spec, pré-registro e testes commitados antes da primeira chamada live.
-- [ ] J1b ≤ 30 chamadas; total ≤ 190; ou parada por erro registrada.
-- [ ] Raw/summary com SHA-256; summary reproduzido offline.
-- [ ] Decisão de adoção aplicando a R7 sem reinterpretação; se adotada, novo digest travado por teste e handoff Astra.
-- [ ] `uv run pytest` e `ruff` verdes (exceto falhas conhecidas documentadas).
-- [ ] Default `off` preservado.
+- [x] Spec, pré-registro e testes commitados antes da primeira chamada live (`bc9f8ca`).
+- [x] J1b 30/30 chamadas; total 90/190; zero erro de provider.
+- [x] Raw/summary com SHA-256; summary reproduzido offline ([j1b-loot.md](../docs/spec217/j1b-loot.md)).
+- [x] Adotada pela R7 (28/30 vs 15/30, 0 erro); digest `sha256:1f6a5982…70f0` travado por teste; handoff [SPEC-238-for-Astra](../handoffs/SPEC-238-for-Astra.md). Revisão Astra pendente.
+- [x] `uv run pytest`: 3 falhas, todas conhecidas e pré-existentes (2 `test_project_index` por índice stale; `test_spec197_checklist::test_real_register_r12_not_closed`, branch anterior a `71ed042` da main); `ruff check .` verde.
+- [x] Default `off` preservado.
 
 ## 5. Riscos
 

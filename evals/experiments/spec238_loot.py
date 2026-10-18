@@ -280,6 +280,17 @@ def structure_digest(policy: LootPolicy) -> str:
     })
 
 
+# J1b freeze (SPEC-238 R7) — chosen by the pre-registered rule on DEV
+# (run SPEC-238-J1b-20261018T130603Z): 28/30 covered vs baseline 15/30, 13/13
+# loot covered, 0 route/target/source errors, 0 unsafe. Every grid variant tied;
+# tie-break = guard on, loot τ 0.50. Changing anything hashed invalidates the
+# freeze and needs a new Astra review before J2.
+FROZEN_J1B_POLICY = LootPolicy(loot_stage=True, loot_guard=True, loot_tau=0.50)
+FROZEN_J1B_STRUCTURE_DIGEST = (
+    "sha256:1f6a5982d5b72c36c9bc67ddfaf3723eea19753ebe7cc0a713454247e61d70f0"
+)
+
+
 # ---------------------------------------------------------------------------
 # Ledger + live runner (DEV only)
 # ---------------------------------------------------------------------------
