@@ -96,6 +96,10 @@ def configure_logging(env: Mapping[str, str] | None = None) -> None:
         handler.setFormatter(JsonLineFormatter())
         setattr(handler, _MARK, True)
         logger.addHandler(handler)
+    # Revisão Sol (smoke Vercel): o root logger da Vercel publica ``httpx`` em INFO — uma linha
+    # não-JSON por chamada de provider, com a URL inteira (~4/turno). Só em debug.
+    for noisy in ("httpx", "httpcore"):
+        logging.getLogger(noisy).setLevel(logging.DEBUG if level <= logging.DEBUG else logging.WARNING)
     prefix = "RPG_LOG_LEVEL_"
     for key, value in env.items():
         if key.startswith(prefix) and len(key) > len(prefix):

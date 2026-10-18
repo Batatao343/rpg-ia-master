@@ -546,7 +546,7 @@ def get_embeddings() -> Optional[object]:
         _active_provider_name = None
         return None
     _active_provider_name = provider
-    _LOG.info("Embeddings ativos: %s (%s).", provider, _PROVIDER_MODELS.get(provider, "?"))
+    _LOG.debug("Embeddings ativos: %s (%s).", provider, _PROVIDER_MODELS.get(provider, "?"))
     return emb
 
 

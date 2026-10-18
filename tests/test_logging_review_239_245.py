@@ -159,3 +159,12 @@ def test_spa_navigation_and_config_reads_are_debug(client, capsys):
     assert lines["review-spa-2"]["level"] == "debug"
     if "review-spa-1" in lines:   # "/" só existe com web/dist presente
         assert lines["review-spa-1"]["level"] == "debug"
+
+
+def test_httpx_request_lines_quiet_unless_debug():
+    import logging
+    logging_setup.configure_logging({"RPG_LOG_LEVEL": "info", "RPG_LOG_PROPAGATE": "1"})
+    assert not logging.getLogger("httpx").isEnabledFor(logging.INFO)
+    logging_setup.configure_logging({"RPG_LOG_LEVEL": "debug", "RPG_LOG_PROPAGATE": "1"})
+    assert logging.getLogger("httpx").isEnabledFor(logging.INFO)
+    logging_setup.configure_logging({"RPG_LOG_LEVEL": "info", "RPG_LOG_PROPAGATE": "1"})
