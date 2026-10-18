@@ -172,9 +172,9 @@ def record_block(cls: str, scope: str, *, owner: Any = None, ip: str | None = No
         from observability.metrics import metrics
         from observability.telemetry import pseudonym
         metrics.increment("rpg_rate_limited_total", {"class": cls, "scope": scope})
-        import logging
-        logging.getLogger("rpg.abuse").warning(
-            "blocked class=%s scope=%s owner=%s ip=%s", cls, scope,
-            pseudonym(owner) if owner else "-", pseudonym(ip) if ip else "-")
+        from observability.telemetry import log_event
+        log_event("abuse", "blocked", level="warning", cls=cls, scope=scope,
+                  owner_ref=pseudonym(owner) if owner else None,
+                  ip_ref=pseudonym(ip) if ip else None)
     except Exception:
         pass

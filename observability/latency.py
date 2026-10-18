@@ -141,7 +141,7 @@ class TurnTimeline:
             try:
                 fn()
             except Exception:   # roda no `finally` do stream: nunca pula turn_delivery
-                logging.getLogger(__name__).exception("linha rpg.turn adiada falhou")
+                logging.getLogger("rpg.latency").exception("linha rpg.turn adiada falhou")
 
     # --- marcas de entrega -------------------------------------------------
     def mark(self, name: str) -> None:

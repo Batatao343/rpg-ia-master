@@ -837,14 +837,11 @@ def _revoke_session(identity, access: str | None, refresh: str | None) -> None:
             "error_type": type(exc).__name__, "request_id": correlation().get("request_id"),
         }))
 
-# Fase 10 (R7): 1 linha JSON por turno no stderr (base de observabilidade).
+# Fase 10 (R7) + SPEC-239: 1 linha JSON por turno; handler central em stdout.
+from observability.logging_setup import configure_logging
+
+configure_logging()
 _turn_logger = logging.getLogger("rpg.turn")
-if not _turn_logger.handlers:
-    _handler = logging.StreamHandler(sys.stderr)
-    _handler.setFormatter(logging.Formatter("%(message)s"))
-    _turn_logger.addHandler(_handler)
-    _turn_logger.setLevel(logging.INFO)
-    _turn_logger.propagate = False
 
 
 # spec streaming-turno-sse (R5): telemetria de LLM em PRODUÇÃO — o hook do
@@ -2147,7 +2144,7 @@ def client_latency(report: ClientLatencyReport):
             metrics.observe("rpg_turn_last_content_seconds",
                             {"route": route, "source": "client"}, report.ttlt_ms / 1000)
         _turn_logger.info(safe_json({
-            "evt": "client_latency", "action_ref": pseudonym(report.action_id),
+            "event": "client_latency", "evt": "client_latency", "action_ref": pseudonym(report.action_id),
             "transport": report.transport, "ack_ms": report.ack_ms,
             "first_phase_ms": report.first_phase_ms, "ttfmc_ms": report.ttfmc_ms,
             "ttlt_ms": report.ttlt_ms, "state_ms": report.state_ms,
@@ -3992,7 +3989,7 @@ def _log_turn(state: dict, t0: float, eventos_antes: int, error: Optional[str],
               latency_ms: Optional[int] = None) -> None:
     from observability.telemetry import correlation, pseudonym, safe_json
     _turn_logger.info(safe_json({
-        "evt": "turn",
+        "event": "turn", "evt": "turn",
         "game_id_ref": pseudonym(state.get("game_id", "?")),
         **correlation(),
         "turn": (state.get("world") or {}).get("turn_count", 0),
@@ -4463,7 +4460,7 @@ def _log_turn_delivery(timeline, outcome: str) -> None:
     try:
         from observability.telemetry import safe_json
         _turn_logger.info(safe_json({
-            "evt": "turn_delivery",
+            "event": "turn_delivery", "evt": "turn_delivery",
             "action_ref": timeline.extra.get("action_ref"),
             "transport": timeline.transport,
             "pseudo_streaming": True,

@@ -160,6 +160,8 @@ def build_handlers():
 
 
 def main() -> int:
+    from observability.logging_setup import configure_logging
+    configure_logging()
     parser = argparse.ArgumentParser()
     parser.add_argument("--worker-id", default="local-worker-1")
     parser.add_argument("--once", action="store_true")

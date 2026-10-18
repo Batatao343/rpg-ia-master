@@ -4263,7 +4263,7 @@ specs:
   lineage_note: Owner 2026-10-18 asked Jev to cover loot too (J1b of SPEC-217); approved with +30 live calls, SPEC-217 cap 190/US$1.90
 - id: SPEC-239
   slug: logging-config-central
-  status: draft
+  status: in-progress
   path: specs/SPEC-239-logging-config-central.md
   created_commit: null
   created_at: '2026-10-18'

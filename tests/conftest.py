@@ -9,6 +9,8 @@ import pytest
 os.environ.setdefault("RPG_FORCE_MOCK", "1")
 # Fase 10: rate limit da API desligado na suíte (TestClient compartilha IP).
 os.environ.setdefault("RPG_RATE_LIMIT", "0")
+# SPEC-239: records de rpg.* propagam ao root para o caplog ver.
+os.environ.setdefault("RPG_LOG_PROPAGATE", "1")
 # SPEC-194: HMAC key for Play obfuscated account ids (tests that need it absent delenv it).
 os.environ.setdefault("RPG_PLAY_ACCOUNT_KEY", "test-play-account-key-0123456789abcdef")
 

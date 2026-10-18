@@ -1456,7 +1456,8 @@ if __name__ == "__main__":
     # (main.py já faz isso no fluxo do jogo; aqui rodamos standalone).
     import sys
     # SPEC-222: o CLI de reindexação mostra os eventos rpg.rag/rpg.codex no terminal.
-    logging.basicConfig(level=logging.INFO, stream=sys.stdout, format="%(name)s %(message)s")
+    from observability.logging_setup import configure_logging
+    configure_logging()
     for _stream in (sys.stdout, sys.stderr):
         try:
             _stream.reconfigure(encoding="utf-8")

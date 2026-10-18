@@ -1,6 +1,6 @@
 # SPEC-239 — Configuração central de logging (handler JSON para todo `rpg.*`)
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P0**.
+> **Status:** `in-progress` — implementado em 2026-10-18 (branch `logs-p0`); falta a revisão Sol obrigatória e o smoke em staging.
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** nenhuma
 > **Desbloqueia:** todas as specs 240–262 (sem isto, linhas `info` nunca chegam à Vercel)
@@ -59,13 +59,13 @@ módulo + chamadas nos entrypoints; remover handler manual do `rpg.turn`.
 
 ## 5. Critérios de aceite
 
-- [ ] Toda linha `rpg.*` em stdout é JSON com `event`, `level`, `logger`, `ts`.
-- [ ] Nenhuma linha duplicada de `rpg.turn`.
-- [ ] `RPG_LOG_LEVEL` documentado em `.env.example`.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Toda linha `rpg.*` em stdout é JSON com `event`, `level`, `logger`, `ts`.
+- [x] Nenhuma linha duplicada de `rpg.turn`.
+- [x] `RPG_LOG_LEVEL` documentado em `.env.example`.
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] `uv run pytest` verde (suíte completa offline).
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -78,3 +78,11 @@ módulo + chamadas nos entrypoints; remover handler manual do `rpg.turn`.
 - Volume de log sobe (info passa a sair): medir no smoke; `RPG_LOG_LEVEL=warning` é o rollback sem deploy de código.
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## 8. Notas de implementação
+
+- `configure_logging()` em `observability/logging_setup.py` (handler stdout JSON dinamico, idempotente, `RPG_LOG_LEVEL` e `RPG_LOG_LEVEL_<AREA>`); chamado em `api.py`, `vercel_app.py`, `workers/run_worker.py`, `rag.py` (CLI).
+- `propagate=False` em producao; `RPG_LOG_PROPAGATE=1` (setado em `tests/conftest.py`) deixa o caplog ver os registros.
+- `rpg.turn` agora emite `event` e mantem `evt` como alias (1 release). `abuse_policy.record_block` passou a `log_event('abuse','blocked')` (campos `owner_ref`/`ip_ref` pseudonimos).
+- Excecao em log legado: so `error_type` (sem traceback/mensagem).
+- Pendente: smoke em staging (linhas/turno) e revisao Sol.

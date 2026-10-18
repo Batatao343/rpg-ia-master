@@ -9,4 +9,8 @@ from infrastructure.runtime import apply_serverless_defaults
 
 apply_serverless_defaults()
 
+from observability.logging_setup import configure_logging
+
+configure_logging()
+
 from api import app  # noqa: E402,F401  (FastAPI instance exigida pela Vercel)
