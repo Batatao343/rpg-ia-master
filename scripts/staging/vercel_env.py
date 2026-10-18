@@ -57,7 +57,10 @@ REMOVED_NAMES = ("RPG_FORCE_MOCK", "LLM_PROVIDER")
 # outro modo para tras (ex.: RPG_REQUEST_RLS=off sobrevivendo a volta ao RLS efetivo).
 MODE_EXCLUSIVE = ("RPG_REQUEST_RLS", "RPG_ADMIN_DATABASE_URL")
 # Flags opcionais: saem do projeto quando nao estao em ``production`` (ex.: --no-text-cap).
-OPTIONAL_FLAGS = ("RPG_DAILY_SPEND_CAP_TEXT",)
+OPTIONAL_FLAGS = ("RPG_DAILY_SPEND_CAP_TEXT", "RPG_PROJECTION_MODE")
+# SPEC-213: modo do arquivista. ``inline`` (default do produto) = variavel ausente; ``post_response`` tira os
+# derivados (resumo/memoria/cronica) do caminho do jogador. Rollback: --projection-mode inline.
+PROJECTION_MODES = ("inline", "post_response")
 
 
 def stale_names(production: Mapping[str, str]) -> tuple[str, ...]:
@@ -84,11 +87,16 @@ def _load_files() -> dict[str, str]:
 
 def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST, use_admin_dsn: bool = False,
               invalid_deepseek_key: bool = False,
-              text_cap: bool = True) -> tuple[dict[str, str], dict[str, str]]:
+              text_cap: bool = True,
+              projection_mode: str = "inline") -> tuple[dict[str, str], dict[str, str]]:
     """Retorna (production, preview). Levanta KeyError com NOME do segredo ausente."""
+    if projection_mode not in PROJECTION_MODES:
+        raise ValueError(f"projection_mode invalido: {projection_mode}")
     production = dict(NON_SECRET_LITERALS)
     if not text_cap:
         production.pop("RPG_DAILY_SPEND_CAP_TEXT", None)
+    if projection_mode != "inline":
+        production["RPG_PROJECTION_MODE"] = projection_mode
     production["RPG_CORS_ORIGINS"] = f"https://{public_host}"
     missing = [k for k in SECRET_FROM_FILE if not files.get(k)]
     if missing:
@@ -166,6 +174,8 @@ def main(argv: list[str] | None = None) -> int:
                     help="SPEC-236 §6.1: envia uma chave DeepSeek invalida (forca fallback Groq); reverter sem a flag")
     ap.add_argument("--no-text-cap", action="store_true",
                     help="rollback SPEC-237: desliga o cap diario de TEXTO (apaga RPG_DAILY_SPEND_CAP_TEXT)")
+    ap.add_argument("--projection-mode", choices=PROJECTION_MODES, default="inline",
+                    help="SPEC-213: post_response tira os derivados do arquivista do hot path; inline apaga a variavel")
     args = ap.parse_args(argv)
     if args.project_name != PROJECT_NAME:
         print(f"recusado: projeto deve ser {PROJECT_NAME}", file=sys.stderr)
@@ -177,7 +187,8 @@ def main(argv: list[str] | None = None) -> int:
     files = _load_files()
     try:
         production, preview = build_env(files, args.public_host, args.use_admin_dsn,
-                                        args.invalid_deepseek_key, text_cap=not args.no_text_cap)
+                                        args.invalid_deepseek_key, text_cap=not args.no_text_cap,
+                                        projection_mode=args.projection_mode)
     except KeyError as exc:
         print(exc.args[0], file=sys.stderr)
         return 1

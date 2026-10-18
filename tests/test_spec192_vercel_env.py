@@ -92,3 +92,15 @@ def test_deepseek_key_is_pushed_as_primary_secret_and_never_to_preview():
     # SPEC-236 §6.1: chave invalida temporaria (literal publico) forca a falha do primario
     broken = ve.build_env({**FILES, "DEEPSEEK_API_KEY": "v-ds"}, invalid_deepseek_key=True)[0]
     assert broken["DEEPSEEK_API_KEY"] == ve.INVALID_DEEPSEEK_KEY != "v-ds"
+
+
+def test_projection_mode_flag_sets_post_response_and_inline_deletes_it():
+    """SPEC-213 rollout no staging: post_response e opt-in; inline (default) apaga a variavel."""
+    from services import projections
+    inline = ve.build_env(FILES)[0]
+    assert "RPG_PROJECTION_MODE" not in inline and "RPG_PROJECTION_MODE" in ve.stale_names(inline)
+    on, prev = ve.build_env(FILES, projection_mode="post_response")
+    assert on[projections.MODE_ENV] == "post_response" and "RPG_PROJECTION_MODE" not in prev
+    assert "RPG_PROJECTION_MODE" not in ve.stale_names(on)
+    with pytest.raises(ValueError):
+        ve.build_env(FILES, projection_mode="job")
