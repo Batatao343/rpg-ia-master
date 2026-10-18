@@ -73,3 +73,7 @@ google-services.json
 keystore.properties
 signing.properties
 pytest*.log
+
+# SPEC-266: MP4 renderizados fora do git (insumos de video/public ficam)
+docs/descricao_projeto/brag-output/brag-25s.mp4
+docs/descricao_projeto/rpg-ia-master-linkedin-3min-narrado.mp4

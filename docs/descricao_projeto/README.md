@@ -4,8 +4,8 @@ Dois materiais que explicam o rpg-ia-master inteiro, gerados a partir da mesma e
 
 | Arquivo | O que é |
 |---|---|
-| `brag-output/brag.mp4` | **Vídeo promocional de 45 s** (ritmo de leitura; versão rápida de 25 s em `brag-25s.mp4`) (feito com a skill /brag): app real em uso, trilha e efeitos, sem narração. Thumbnail em `brag.jpg`, texto do post em `share-copy.txt`, roteiro em `brag-plan.md`. Fonte: `video/src/brag/Brag.tsx` (composição `Brag`). |
-| `rpg-ia-master-linkedin-3min-narrado.mp4` | Corte de 3 minutos para redes sociais (12 cenas, legendas embutidas para autoplay sem som). Roteiro em `roteiro_linkedin.json`. |
+| `brag-output/brag.mp4` | **Vídeo promocional de 45 s** (ritmo de leitura; versão rápida de 25 s `brag-25s.mp4`, removida do git: re-renderize com a composição `Brag` do projeto `video/`) (feito com a skill /brag): app real em uso, trilha e efeitos, sem narração. Thumbnail em `brag.jpg`, texto do post em `share-copy.txt`, roteiro em `brag-plan.md`. Fonte: `video/src/brag/Brag.tsx` (composição `Brag`). |
+| `rpg-ia-master-linkedin-3min-narrado.mp4` (removido do git; re-renderize com o script `timeline:linkedin` + `remotion render` em `video/`) | Corte de 3 minutos para redes sociais (12 cenas, legendas embutidas para autoplay sem som). Roteiro em `roteiro_linkedin.json`. |
 | `rpg-ia-explicado-completo.mp4` | Vídeo explicativo completo (~132 min, 1080p, 19 capítulos, 239 cenas) com narração pt-BR e legendas. |
 | `guia_interativo.html` | Guia pedagógico em um único HTML: 23 capítulos, diagramas clicáveis, passo a passo animado, calculadoras com as fórmulas reais (ataque, preço, orçamento de encontro, pontuação de contexto), simulador do roteamento de LLM e quizzes. Abra direto no navegador. |
 | `roteiro.md` / `roteiro.json` | Roteiro do vídeo (versão legível e versão que alimenta o Remotion). |

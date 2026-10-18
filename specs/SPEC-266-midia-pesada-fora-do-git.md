@@ -1,6 +1,6 @@
 # SPEC-266 — Tirar mídia pesada de marketing do git
 
-> **Status:** `draft` · **Revisão independente 2026-10-18:** SAFE WITH CHANGES (só os 2 MP4 renderizados saem; insumos do Remotion e pacote `proximas-specs` ficam; ver §8)
+> **Status:** `done` · **Revisão independente 2026-10-18:** SAFE WITH CHANGES (só os 2 MP4 renderizados saem; insumos do Remotion e pacote `proximas-specs` ficam; ver §8)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Origem:** auditoria ponytail 2026-10-18 ([relatório](../docs/auditorias/ponytail-poda-2026-10-18.md))
 > **Depende de:** decisão do dono sobre onde guardar os vídeos (Release do GitHub, Drive, LFS)
@@ -60,11 +60,11 @@ os índices FAISS; `project_index/repo_graph.json` (ver relatório, "não podar 
 
 ## 5. Critérios de aceite
 
-- [ ] `git ls-files docs/descricao_projeto | xargs -I{} git cat-file -s HEAD:{}` sem arquivo > 1 MB
-- [ ] `uv run python -m project_index check` verde após regenerar em checkout limpo
-- [ ] `uv run pytest` verde (nenhum teste lê esses arquivos)
-- [ ] Links novos abrem; `git grep -nE "brag-25s|linkedin-3min-narrado"` sem link para arquivo removido
-- [ ] `cd docs/descricao_projeto/video && npx remotion compositions src/index.ts` (ou equivalente) ainda
+- [x] `git ls-files docs/descricao_projeto | xargs -I{} git cat-file -s HEAD:{}` sem arquivo > 1 MB
+- [x] `uv run python -m project_index check` verde após regenerar em checkout limpo
+- [x] `uv run pytest` verde (nenhum teste lê esses arquivos)
+- [x] Links novos abrem; `git grep -nE "brag-25s|linkedin-3min-narrado"` sem link para arquivo removido
+- [x] `cd docs/descricao_projeto/video && npx remotion compositions src/index.ts` (ou equivalente) ainda
       resolve os `staticFile` (insumos presentes)
 
 ## 6. Smoke
@@ -91,3 +91,7 @@ Achados:
 3. O pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/` tem `MANIFEST_SHA256.txt` cobrindo
    `previas/` e `historico-nao-executar/`, e SPEC-202/203/205 linkam `historico-nao-executar/`. Fica inteiro.
 - O deploy não é afetado (`.vercelignore` e `vercel.json` excluem `docs/**`).
+
+## 9. Execução 2026-10-18
+
+Dono aprovou ("faça as podas"). Removidos do tree os 2 MP4 renderizados (~35 MB); `.gitignore` restrito a esses 2 caminhos; README de `docs/descricao_projeto/` diz como re-renderizar (composição `Brag` / `timeline:linkedin` em `video/`). Insumos (`crossing_the_chasm.mp3`, `brag/play.mp4`) e `proximas-specs` intactos; histórico não reescrito. Upload para hospedagem externa/SHA-256 não feito (arquivos locais ficam no disco do dono, só untracked). Aceite do `project_index check` depende de regeneração pelo coordenador.

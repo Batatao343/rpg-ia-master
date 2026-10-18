@@ -4734,7 +4734,7 @@ specs:
   lineage_note: Authored from auditoria ponytail 2026-10-18 (docs/auditorias/ponytail-poda-2026-10-18.md); draft awaiting approval
 - id: SPEC-266
   slug: midia-pesada-fora-do-git
-  status: draft
+  status: done
   path: specs/SPEC-266-midia-pesada-fora-do-git.md
   created_commit: null
   created_at: '2026-10-18'
