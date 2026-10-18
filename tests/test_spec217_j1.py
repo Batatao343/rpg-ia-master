@@ -240,6 +240,40 @@ def test_decision_state_rejects_unbounded_scene() -> None:
 
 def test_frozen_structure_digest_matches_code() -> None:
     """R6: the J1 freeze covers questions, target stage, verbs, features and τ."""
-    assert hybrid.FROZEN_J1_POLICY.variant_id == "plain+target@0.50"
+    assert hybrid.FROZEN_J1_POLICY.variant_id == "plain+target+guard@0.50"
     assert hybrid.structure_digest(hybrid.FROZEN_J1_POLICY) == hybrid.FROZEN_J1_STRUCTURE_DIGEST
     assert hybrid.structure_digest(Policy("rich", True, False)) != hybrid.FROZEN_J1_STRUCTURE_DIGEST
+    assert hybrid.structure_digest(Policy("plain", True, False)) != hybrid.FROZEN_J1_STRUCTURE_DIGEST
+
+
+def test_frozen_digest_pins_decision_code(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Astra J1 review: editing the policy/feature code invalidates the freeze."""
+    monkeypatch.setattr(hybrid, "_source", lambda fn: "edited")
+    assert hybrid.structure_digest(hybrid.FROZEN_J1_POLICY) != hybrid.FROZEN_J1_STRUCTURE_DIGEST
+
+
+@pytest.mark.parametrize("verbs", [(), ("talk",), ("observe",), ("move", "talk")])
+def test_frozen_policy_never_accepts_combat_without_attack_verb(verbs) -> None:
+    """R9.3 guard: an unprovoked Jev combat_agent always goes to arm A's CLASSIFY."""
+    decision = hybrid_decision(route=_route("combat_agent", 0.99), target=_route("npc_x", 0.99),
+                               verbs=verbs, in_combat=False, target_status="ok",
+                               policy=hybrid.FROZEN_J1_POLICY)
+    assert decision["source"] == "fallback" and decision["reason"] == "combat_guard"
+    attack = hybrid_decision(route=_route("combat_agent", 0.99), target=_route("npc_x", 0.99),
+                             verbs=("attack",), in_combat=False, target_status="ok",
+                             policy=hybrid.FROZEN_J1_POLICY)
+    assert attack["source"] == "jev" and attack["route"] == "combat_agent"
+
+
+def test_frozen_policy_sends_loot_to_classify() -> None:
+    decision = hybrid_decision(route=_route("loot", 0.99), target=None, verbs=("trade",),
+                               in_combat=False, target_status="no_candidates",
+                               policy=hybrid.FROZEN_J1_POLICY)
+    assert decision["reason"] == "loot_context_out_of_scope"
+
+
+def test_production_rollout_payload_unchanged_with_active_npc() -> None:
+    state = {"world": {"current_location": "X"}, "active_npc_name": "Corvo",
+             "npcs": NPCS, "combat": {"active": False}}
+    body = rollout_request(state, "FALO COM CORVO").wire_body()
+    assert set(body["state"]) <= {"action", "location_id", "in_combat", "active_npc"}

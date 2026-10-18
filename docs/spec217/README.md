@@ -1,6 +1,6 @@
 # SPEC-217 — evidência
 
-Estado: **J1 concluída e congelada; aguarda revisão Astra antes da J2.** Nenhum
+Estado: **J1 concluída e congelada; revisão Astra APPROVED com emenda (guarda de combate ligada) — J2 liberada após implementar os requisitos do parecer.** Nenhum
 GO/NO_GO ainda (só a J2 decide). Produção intacta: `RPG_JEV_ROUTER_MODE` default
 `off`, `PRIMARY_CALIBRATION=None`, `services/jev_rollout.py` sem mudança de
 comportamento (payload do rollout idêntico — campos novos do `DecisionState` são
@@ -41,8 +41,9 @@ Produto avaliado: commit `c5a721c7618667d1a9d2cd08d8b2315fe092e933`, árvore lim
 
 ## Congelamento (R6)
 
-`FROZEN_J1_POLICY = plain+target@0.50` (sem guarda de combate, `loot`→CLASSIFY),
-hash de estrutura `sha256:950917371fe7c1c46326996d5adaa518e10f1c1e6e8c778103a9cf88a4d44b81`
+`FROZEN_J1_POLICY = plain+target+guard@0.50` (emenda Astra: guarda de combate ligada; `loot`→CLASSIFY),
+hash de estrutura `sha256:80225d161ff31f226919c67b34195bdd864d5aece3c5dfc95f411093f3dd10f5`
 em `evals/experiments/jev_router_hybrid.py`, travado por
 `tests/test_spec217_j1.py::test_frozen_structure_digest_matches_code`.
 Revisão: [handoffs/SPEC-217-J1-for-Astra.md](../../handoffs/SPEC-217-J1-for-Astra.md).
+Parecer: [handoffs/SPEC-217-ASTRA-J1-review.md](../../handoffs/SPEC-217-ASTRA-J1-review.md) — APPROVED; hash anterior `950917…4b81` (sem guarda, sem código no digest) superado.

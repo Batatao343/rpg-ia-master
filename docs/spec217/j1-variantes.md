@@ -106,12 +106,19 @@ alvo**. Latência Jev p50 **247 ms**, p95 **286,55 ms** (`FALO COM CORVO` → `n
 
 ### Congelado para a J2
 
-`FROZEN_J1_POLICY = Policy(label_set="plain", with_target=True, combat_guard=False, tau=0.50)`
+`FROZEN_J1_POLICY = Policy(label_set="plain", with_target=True, combat_guard=True, tau=0.50)`
 em `evals/experiments/jev_router_hybrid.py`; hash da estrutura (perguntas, alvo,
-léxico de verbos, features, política) `sha256:950917371fe7c1c46326996d5adaa518e10f1c1e6e8c778103a9cf88a4d44b81`
+léxico de verbos, features, política) `sha256:80225d161ff31f226919c67b34195bdd864d5aece3c5dfc95f411093f3dd10f5`
 (teste `test_frozen_structure_digest_matches_code`). Chamadas por caso elegível na
 J2: **1 Jev** (rota e alvo na mesma requisição) + 1 CLASSIFY ⇒ `4 + 16×2×3 = 100`
 cabe no teto J2 sem reduzir o FROZEN.
+
+**Emenda da revisão Astra (pós-seleção, sem dado novo):** a regra pré-registrada
+escolheu `plain+target@0,50` (sem guarda) por desempate de simplicidade; a guarda
+empatou em todas as métricas DEV (nunca disparou). A revisão ligou a guarda pela
+perda assimétrica da R9.3 e reforçou o digest com o código das features/política
+— ver [parecer](../../handoffs/SPEC-217-ASTRA-J1-review.md). A requisição ao Jev é a
+mesma; a P2 continua válida.
 
 ### Limitações
 

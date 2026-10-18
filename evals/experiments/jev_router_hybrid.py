@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 import hashlib
+import inspect
 import json
 from pathlib import Path
 import re
@@ -513,7 +514,20 @@ def structure_digest(policy: Policy) -> str:
         "verb_patterns": [[name, pattern.pattern] for name, pattern in _VERB_PATTERNS],
         "features": "decision_state(features=True): casefold action, scene_view (SPEC-179 "
                     "_target_options filter, ≤20, aliases ≤4), last_speaker id, verbs",
+        # Astra J1 review: also pin the code that builds the wire state and
+        # decides, so a silent edit to the filter/policy logic breaks the freeze.
+        "decision_code": {fn.__name__: _source(fn) for fn in _frozen_code()},
     })
+
+
+def _source(fn: Any) -> str:
+    """Function source with LF endings (stable across Windows/Linux checkouts)."""
+    return inspect.getsource(fn).replace("\r\n", "\n")
+
+
+def _frozen_code() -> tuple[Any, ...]:
+    return (normalize_action, _fold, extract_verbs, scene_view, decision_state,
+            target_question, frozen_request, hybrid_decision, _target_options)
 
 
 # ---------------------------------------------------------------------------
@@ -522,7 +536,16 @@ def structure_digest(policy: Policy) -> str:
 # Changing anything hashed below invalidates the freeze and requires a new
 # Astra review before J2.
 # ---------------------------------------------------------------------------
-FROZEN_J1_POLICY = Policy(label_set="plain", with_target=True, combat_guard=False, tau=0.50)
+# Astra J1 review (handoffs/SPEC-217-ASTRA-J1-review.md): the combat guard is
+# enabled. It tied with "no guard" on every DEV decision (it never fired), so
+# DEV carries no information either way; the pre-registered tie-break was a
+# simplicity preference, overridden on the spec's asymmetric loss (R9.3: any
+# wrong combat decision => NO_GO). A guarded case falls back to the same
+# CLASSIFY answer as arm A, so the guard can cost coverage/latency but never a
+# paired route loss.
+FROZEN_J1_POLICY = Policy(label_set="plain", with_target=True, combat_guard=True, tau=0.50)
 FROZEN_J1_STRUCTURE_DIGEST = (
-    "sha256:950917371fe7c1c46326996d5adaa518e10f1c1e6e8c778103a9cf88a4d44b81"
+    "sha256:80225d161ff31f226919c67b34195bdd864d5aece3c5dfc95f411093f3dd10f5"
 )
+# Superseded by the Astra review (guard off, code not pinned):
+# sha256:950917371fe7c1c46326996d5adaa518e10f1c1e6e8c778103a9cf88a4d44b81
