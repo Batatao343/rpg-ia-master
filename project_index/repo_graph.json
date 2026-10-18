@@ -1,5 +1,5 @@
 {
-  "commit_sha": "4f8afe4ba08bc7660017110134d47fe3e9bdcdde",
+  "commit_sha": "231472a7de3c33913c09cc81935d5b9e3a475f1a",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -35580,7 +35580,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/frontend_eval_report.py",
-        "line": 31
+        "line": 35
       },
       "source": "module:scripts.frontend_eval_report",
       "target": "symbol:scripts.frontend_eval_report._messages",
@@ -35591,7 +35591,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/frontend_eval_report.py",
-        "line": 25
+        "line": 29
       },
       "source": "module:scripts.frontend_eval_report",
       "target": "symbol:scripts.frontend_eval_report._specs",
@@ -35602,7 +35602,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/frontend_eval_report.py",
-        "line": 137
+        "line": 180
       },
       "source": "module:scripts.frontend_eval_report",
       "target": "symbol:scripts.frontend_eval_report.main",
@@ -35613,7 +35613,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/frontend_eval_report.py",
-        "line": 118
+        "line": 161
       },
       "source": "module:scripts.frontend_eval_report",
       "target": "symbol:scripts.frontend_eval_report.measurement_identity",
@@ -35624,7 +35624,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/frontend_eval_report.py",
-        "line": 43
+        "line": 47
       },
       "source": "module:scripts.frontend_eval_report",
       "target": "symbol:scripts.frontend_eval_report.summarize",
@@ -35635,7 +35635,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/frontend_eval_report.py",
-        "line": 79
+        "line": 122
+      },
+      "source": "module:scripts.frontend_eval_report",
+      "target": "symbol:scripts.frontend_eval_report.summarize_mobile",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/frontend_eval_report.py",
+        "line": 83
       },
       "source": "module:scripts.frontend_eval_report",
       "target": "symbol:scripts.frontend_eval_report.summarize_vertical",
@@ -74388,7 +74399,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_frontend.py",
-        "line": 41
+        "line": 58
+      },
+      "source": "module:tests.test_eval_frontend",
+      "target": "symbol:tests.test_eval_frontend._mobile_specs",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_eval_frontend.py",
+        "line": 82
       },
       "source": "module:tests.test_eval_frontend",
       "target": "symbol:tests.test_eval_frontend._vertical_specs",
@@ -74399,7 +74421,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_frontend.py",
-        "line": 17
+        "line": 18
       },
       "source": "module:tests.test_eval_frontend",
       "target": "symbol:tests.test_eval_frontend.test_frontend_manifest_and_playwright_suite_cover_every_registered_journey",
@@ -74410,7 +74432,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_frontend.py",
-        "line": 87
+        "line": 128
       },
       "source": "module:tests.test_eval_frontend",
       "target": "symbol:tests.test_eval_frontend.test_frontend_metrics_are_blocking_and_have_hard_limits",
@@ -74421,7 +74443,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_frontend.py",
-        "line": 103
+        "line": 145
       },
       "source": "module:tests.test_eval_frontend",
       "target": "symbol:tests.test_eval_frontend.test_frontend_report_requires_every_registered_journey",
@@ -74432,7 +74454,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_frontend.py",
-        "line": 65
+        "line": 106
       },
       "source": "module:tests.test_eval_frontend",
       "target": "symbol:tests.test_eval_frontend.test_frontend_suite_has_every_hard_gate_and_no_fixed_sleep",
@@ -74443,7 +74465,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_frontend.py",
-        "line": 77
+        "line": 118
       },
       "source": "module:tests.test_eval_frontend",
       "target": "symbol:tests.test_eval_frontend.test_frontend_toolchain_and_visual_snapshot_are_pinned",
@@ -74454,7 +74476,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_frontend.py",
-        "line": 28
+        "line": 42
+      },
+      "source": "module:tests.test_eval_frontend",
+      "target": "symbol:tests.test_eval_frontend.test_mobile_manifest_and_spec_cover_m01_to_m07_on_both_mobile_viewports",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_eval_frontend.py",
+        "line": 71
+      },
+      "source": "module:tests.test_eval_frontend",
+      "target": "symbol:tests.test_eval_frontend.test_mobile_report_requires_every_journey_on_both_viewports",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_eval_frontend.py",
+        "line": 29
       },
       "source": "module:tests.test_eval_frontend",
       "target": "symbol:tests.test_eval_frontend.test_vertical_manifest_and_spec_cover_v01_to_v09_on_both_desktop_viewports",
@@ -74465,7 +74509,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_frontend.py",
-        "line": 54
+        "line": 95
       },
       "source": "module:tests.test_eval_frontend",
       "target": "symbol:tests.test_eval_frontend.test_vertical_report_requires_every_step_on_both_viewports",
@@ -150277,7 +150321,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/frontend_eval_report.py",
-        "line": 35
+        "line": 39
       },
       "source": "symbol:scripts.frontend_eval_report._messages",
       "target": "symbol:scripts.frontend_eval_report._specs",
@@ -150288,7 +150332,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/frontend_eval_report.py",
-        "line": 28
+        "line": 32
       },
       "source": "symbol:scripts.frontend_eval_report._specs",
       "target": "symbol:scripts.frontend_eval_report._specs",
@@ -150299,32 +150343,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/frontend_eval_report.py",
-        "line": 147
+        "line": 190
       },
       "source": "symbol:scripts.frontend_eval_report.main",
       "target": "symbol:scripts.frontend_eval_report.measurement_identity",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/frontend_eval_report.py",
-        "line": 146
-      },
-      "source": "symbol:scripts.frontend_eval_report.main",
-      "target": "symbol:scripts.frontend_eval_report.summarize",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/frontend_eval_report.py",
-        "line": 146
-      },
-      "source": "symbol:scripts.frontend_eval_report.main",
-      "target": "symbol:scripts.frontend_eval_report.summarize_vertical",
       "type": "calls"
     },
     {
@@ -150332,7 +150354,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/frontend_eval_report.py",
-        "line": 119
+        "line": 162
       },
       "source": "symbol:scripts.frontend_eval_report.measurement_identity",
       "target": "symbol:scripts.frontend_eval_report.measurement_identity.digest",
@@ -150343,7 +150365,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/frontend_eval_report.py",
-        "line": 53
+        "line": 57
       },
       "source": "symbol:scripts.frontend_eval_report.summarize",
       "target": "symbol:scripts.frontend_eval_report._messages",
@@ -150354,7 +150376,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/frontend_eval_report.py",
-        "line": 45
+        "line": 49
       },
       "source": "symbol:scripts.frontend_eval_report.summarize",
       "target": "symbol:scripts.frontend_eval_report._specs",
@@ -150365,7 +150387,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/frontend_eval_report.py",
-        "line": 96
+        "line": 139
+      },
+      "source": "symbol:scripts.frontend_eval_report.summarize_mobile",
+      "target": "symbol:scripts.frontend_eval_report._messages",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/frontend_eval_report.py",
+        "line": 126
+      },
+      "source": "symbol:scripts.frontend_eval_report.summarize_mobile",
+      "target": "symbol:scripts.frontend_eval_report._specs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/frontend_eval_report.py",
+        "line": 100
       },
       "source": "symbol:scripts.frontend_eval_report.summarize_vertical",
       "target": "symbol:scripts.frontend_eval_report._messages",
@@ -150376,7 +150420,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/frontend_eval_report.py",
-        "line": 83
+        "line": 87
       },
       "source": "symbol:scripts.frontend_eval_report.summarize_vertical",
       "target": "symbol:scripts.frontend_eval_report._specs",
@@ -224505,7 +224549,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_frontend.py",
-        "line": 107
+        "line": 149
       },
       "source": "symbol:tests.test_eval_frontend.test_frontend_report_requires_every_registered_journey",
       "target": "symbol:scripts.frontend_eval_report.summarize",
@@ -224516,7 +224560,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_frontend.py",
-        "line": 111
+        "line": 153
       },
       "source": "symbol:tests.test_eval_frontend.test_frontend_report_requires_every_registered_journey",
       "target": "symbol:scripts.frontend_eval_report.summarize",
@@ -224527,7 +224571,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_frontend.py",
-        "line": 116
+        "line": 158
       },
       "source": "symbol:tests.test_eval_frontend.test_frontend_report_requires_every_registered_journey",
       "target": "symbol:scripts.frontend_eval_report.summarize",
@@ -224538,7 +224582,117 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_frontend.py",
-        "line": 62
+        "line": 78
+      },
+      "source": "symbol:tests.test_eval_frontend.test_mobile_report_requires_every_journey_on_both_viewports",
+      "target": "symbol:scripts.frontend_eval_report.summarize",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_eval_frontend.py",
+        "line": 72
+      },
+      "source": "symbol:tests.test_eval_frontend.test_mobile_report_requires_every_journey_on_both_viewports",
+      "target": "symbol:scripts.frontend_eval_report.summarize_mobile",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_eval_frontend.py",
+        "line": 76
+      },
+      "source": "symbol:tests.test_eval_frontend.test_mobile_report_requires_every_journey_on_both_viewports",
+      "target": "symbol:scripts.frontend_eval_report.summarize_mobile",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_eval_frontend.py",
+        "line": 77
+      },
+      "source": "symbol:tests.test_eval_frontend.test_mobile_report_requires_every_journey_on_both_viewports",
+      "target": "symbol:scripts.frontend_eval_report.summarize_mobile",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_eval_frontend.py",
+        "line": 79
+      },
+      "source": "symbol:tests.test_eval_frontend.test_mobile_report_requires_every_journey_on_both_viewports",
+      "target": "symbol:scripts.frontend_eval_report.summarize_vertical",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_eval_frontend.py",
+        "line": 72
+      },
+      "source": "symbol:tests.test_eval_frontend.test_mobile_report_requires_every_journey_on_both_viewports",
+      "target": "symbol:tests.test_eval_frontend._mobile_specs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_eval_frontend.py",
+        "line": 76
+      },
+      "source": "symbol:tests.test_eval_frontend.test_mobile_report_requires_every_journey_on_both_viewports",
+      "target": "symbol:tests.test_eval_frontend._mobile_specs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_eval_frontend.py",
+        "line": 77
+      },
+      "source": "symbol:tests.test_eval_frontend.test_mobile_report_requires_every_journey_on_both_viewports",
+      "target": "symbol:tests.test_eval_frontend._mobile_specs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_eval_frontend.py",
+        "line": 78
+      },
+      "source": "symbol:tests.test_eval_frontend.test_mobile_report_requires_every_journey_on_both_viewports",
+      "target": "symbol:tests.test_eval_frontend._mobile_specs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_eval_frontend.py",
+        "line": 79
+      },
+      "source": "symbol:tests.test_eval_frontend.test_mobile_report_requires_every_journey_on_both_viewports",
+      "target": "symbol:tests.test_eval_frontend._mobile_specs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_eval_frontend.py",
+        "line": 103
       },
       "source": "symbol:tests.test_eval_frontend.test_vertical_report_requires_every_step_on_both_viewports",
       "target": "symbol:scripts.frontend_eval_report.summarize",
@@ -224549,7 +224703,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_frontend.py",
-        "line": 55
+        "line": 96
       },
       "source": "symbol:tests.test_eval_frontend.test_vertical_report_requires_every_step_on_both_viewports",
       "target": "symbol:scripts.frontend_eval_report.summarize_vertical",
@@ -224560,7 +224714,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_frontend.py",
-        "line": 59
+        "line": 100
       },
       "source": "symbol:tests.test_eval_frontend.test_vertical_report_requires_every_step_on_both_viewports",
       "target": "symbol:scripts.frontend_eval_report.summarize_vertical",
@@ -224571,7 +224725,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_frontend.py",
-        "line": 60
+        "line": 101
       },
       "source": "symbol:tests.test_eval_frontend.test_vertical_report_requires_every_step_on_both_viewports",
       "target": "symbol:scripts.frontend_eval_report.summarize_vertical",
@@ -224582,7 +224736,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_frontend.py",
-        "line": 55
+        "line": 96
       },
       "source": "symbol:tests.test_eval_frontend.test_vertical_report_requires_every_step_on_both_viewports",
       "target": "symbol:tests.test_eval_frontend._vertical_specs",
@@ -224593,7 +224747,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_frontend.py",
-        "line": 59
+        "line": 100
       },
       "source": "symbol:tests.test_eval_frontend.test_vertical_report_requires_every_step_on_both_viewports",
       "target": "symbol:tests.test_eval_frontend._vertical_specs",
@@ -224604,7 +224758,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_frontend.py",
-        "line": 60
+        "line": 101
       },
       "source": "symbol:tests.test_eval_frontend.test_vertical_report_requires_every_step_on_both_viewports",
       "target": "symbol:tests.test_eval_frontend._vertical_specs",
@@ -224615,7 +224769,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_frontend.py",
-        "line": 62
+        "line": 103
       },
       "source": "symbol:tests.test_eval_frontend.test_vertical_report_requires_every_step_on_both_viewports",
       "target": "symbol:tests.test_eval_frontend._vertical_specs",
@@ -303603,6 +303757,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:web/e2e/mobile-single-pane.spec.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/e2e/mobile-single-pane.spec.ts",
+      "qualified_name": null
+    },
+    {
       "id": "file:web/e2e/outcome-toast.spec.ts",
       "kind": "file",
       "line": 1,
@@ -303838,6 +303999,13 @@
       "kind": "file",
       "line": 1,
       "path": "web/src/components/LevelUpModal.tsx",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/src/components/MobileTabBar.tsx",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/components/MobileTabBar.tsx",
       "qualified_name": null
     },
     {
@@ -304226,6 +304394,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:web/src/workspace/mobileSurface.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/workspace/mobileSurface.ts",
+      "qualified_name": null
+    },
+    {
       "id": "file:web/src/workspace/tabs/BestiarioTab.tsx",
       "kind": "file",
       "line": 1,
@@ -304265,6 +304440,13 @@
       "kind": "file",
       "line": 1,
       "path": "web/src/workspace/useModalFocus.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/src/workspace/useVisualViewport.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/workspace/useVisualViewport.ts",
       "qualified_name": null
     },
     {
@@ -322491,49 +322673,56 @@
     {
       "id": "symbol:scripts.frontend_eval_report._messages",
       "kind": "function",
-      "line": 31,
+      "line": 35,
       "path": "scripts/frontend_eval_report.py",
       "qualified_name": "scripts.frontend_eval_report._messages"
     },
     {
       "id": "symbol:scripts.frontend_eval_report._specs",
       "kind": "function",
-      "line": 25,
+      "line": 29,
       "path": "scripts/frontend_eval_report.py",
       "qualified_name": "scripts.frontend_eval_report._specs"
     },
     {
       "id": "symbol:scripts.frontend_eval_report.main",
       "kind": "function",
-      "line": 137,
+      "line": 180,
       "path": "scripts/frontend_eval_report.py",
       "qualified_name": "scripts.frontend_eval_report.main"
     },
     {
       "id": "symbol:scripts.frontend_eval_report.measurement_identity",
       "kind": "function",
-      "line": 118,
+      "line": 161,
       "path": "scripts/frontend_eval_report.py",
       "qualified_name": "scripts.frontend_eval_report.measurement_identity"
     },
     {
       "id": "symbol:scripts.frontend_eval_report.measurement_identity.digest",
       "kind": "function",
-      "line": 119,
+      "line": 162,
       "path": "scripts/frontend_eval_report.py",
       "qualified_name": "scripts.frontend_eval_report.measurement_identity.digest"
     },
     {
       "id": "symbol:scripts.frontend_eval_report.summarize",
       "kind": "function",
-      "line": 43,
+      "line": 47,
       "path": "scripts/frontend_eval_report.py",
       "qualified_name": "scripts.frontend_eval_report.summarize"
     },
     {
+      "id": "symbol:scripts.frontend_eval_report.summarize_mobile",
+      "kind": "function",
+      "line": 122,
+      "path": "scripts/frontend_eval_report.py",
+      "qualified_name": "scripts.frontend_eval_report.summarize_mobile"
+    },
+    {
       "id": "symbol:scripts.frontend_eval_report.summarize_vertical",
       "kind": "function",
-      "line": 79,
+      "line": 83,
       "path": "scripts/frontend_eval_report.py",
       "qualified_name": "scripts.frontend_eval_report.summarize_vertical"
     },
@@ -347192,58 +347381,79 @@
       "qualified_name": "tests.test_eval_encounter_manifest.test_corpus_passes_fully"
     },
     {
+      "id": "symbol:tests.test_eval_frontend._mobile_specs",
+      "kind": "test",
+      "line": 58,
+      "path": "tests/test_eval_frontend.py",
+      "qualified_name": "tests.test_eval_frontend._mobile_specs"
+    },
+    {
       "id": "symbol:tests.test_eval_frontend._vertical_specs",
       "kind": "test",
-      "line": 41,
+      "line": 82,
       "path": "tests/test_eval_frontend.py",
       "qualified_name": "tests.test_eval_frontend._vertical_specs"
     },
     {
       "id": "symbol:tests.test_eval_frontend.test_frontend_manifest_and_playwright_suite_cover_every_registered_journey",
       "kind": "test",
-      "line": 17,
+      "line": 18,
       "path": "tests/test_eval_frontend.py",
       "qualified_name": "tests.test_eval_frontend.test_frontend_manifest_and_playwright_suite_cover_every_registered_journey"
     },
     {
       "id": "symbol:tests.test_eval_frontend.test_frontend_metrics_are_blocking_and_have_hard_limits",
       "kind": "test",
-      "line": 87,
+      "line": 128,
       "path": "tests/test_eval_frontend.py",
       "qualified_name": "tests.test_eval_frontend.test_frontend_metrics_are_blocking_and_have_hard_limits"
     },
     {
       "id": "symbol:tests.test_eval_frontend.test_frontend_report_requires_every_registered_journey",
       "kind": "test",
-      "line": 103,
+      "line": 145,
       "path": "tests/test_eval_frontend.py",
       "qualified_name": "tests.test_eval_frontend.test_frontend_report_requires_every_registered_journey"
     },
     {
       "id": "symbol:tests.test_eval_frontend.test_frontend_suite_has_every_hard_gate_and_no_fixed_sleep",
       "kind": "test",
-      "line": 65,
+      "line": 106,
       "path": "tests/test_eval_frontend.py",
       "qualified_name": "tests.test_eval_frontend.test_frontend_suite_has_every_hard_gate_and_no_fixed_sleep"
     },
     {
       "id": "symbol:tests.test_eval_frontend.test_frontend_toolchain_and_visual_snapshot_are_pinned",
       "kind": "test",
-      "line": 77,
+      "line": 118,
       "path": "tests/test_eval_frontend.py",
       "qualified_name": "tests.test_eval_frontend.test_frontend_toolchain_and_visual_snapshot_are_pinned"
     },
     {
+      "id": "symbol:tests.test_eval_frontend.test_mobile_manifest_and_spec_cover_m01_to_m07_on_both_mobile_viewports",
+      "kind": "test",
+      "line": 42,
+      "path": "tests/test_eval_frontend.py",
+      "qualified_name": "tests.test_eval_frontend.test_mobile_manifest_and_spec_cover_m01_to_m07_on_both_mobile_viewports"
+    },
+    {
+      "id": "symbol:tests.test_eval_frontend.test_mobile_report_requires_every_journey_on_both_viewports",
+      "kind": "test",
+      "line": 71,
+      "path": "tests/test_eval_frontend.py",
+      "qualified_name": "tests.test_eval_frontend.test_mobile_report_requires_every_journey_on_both_viewports"
+    },
+    {
       "id": "symbol:tests.test_eval_frontend.test_vertical_manifest_and_spec_cover_v01_to_v09_on_both_desktop_viewports",
       "kind": "test",
-      "line": 28,
+      "line": 29,
       "path": "tests/test_eval_frontend.py",
       "qualified_name": "tests.test_eval_frontend.test_vertical_manifest_and_spec_cover_v01_to_v09_on_both_desktop_viewports"
     },
     {
       "id": "symbol:tests.test_eval_frontend.test_vertical_report_requires_every_step_on_both_viewports",
       "kind": "test",
-      "line": 54,
+      "line": 95,
       "path": "tests/test_eval_frontend.py",
       "qualified_name": "tests.test_eval_frontend.test_vertical_report_requires_every_step_on_both_viewports"
     },
@@ -370510,5 +370720,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:6bf98a4f19a6147e016448b089e82413a36ce3af4c15e17032d11ea9f566a992"
+  "source_tree_hash": "sha256:b43634f0a5813dc869b758d3655863eb75a457a7edd4d3664c0433174cc36b20"
 }

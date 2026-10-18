@@ -1,10 +1,10 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "4f8afe4ba08bc7660017110134d47fe3e9bdcdde",
+  "commit_sha": "231472a7de3c33913c09cc81935d5b9e3a475f1a",
   "edge_counts": {
-    "calls": 15314,
+    "calls": 15324,
     "contains": 647,
-    "defines": 8800,
+    "defines": 8804,
     "imports": 1428,
     "likely_test_for": 877,
     "route_to": 63
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:fb697d687a38ce0818b4abe6972b99fe834fa266c33de4da64323aeaa2f5ab77",
+  "graph_hash": "sha256:de891f542b1d3e370778211b8cab2a35fb726db65da7b92aa8cbffa516aae950",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -714,6 +714,7 @@
     "web/e2e/interlocutor-speaker.spec.ts",
     "web/e2e/latency.spec.ts",
     "web/e2e/map-tab.spec.ts",
+    "web/e2e/mobile-single-pane.spec.ts",
     "web/e2e/outcome-toast.spec.ts",
     "web/e2e/pending-discard.spec.ts",
     "web/e2e/portrait-overlay.spec.ts",
@@ -749,6 +750,7 @@
     "web/src/components/Hud.tsx",
     "web/src/components/ImageQuoteDialog.tsx",
     "web/src/components/LevelUpModal.tsx",
+    "web/src/components/MobileTabBar.tsx",
     "web/src/components/OnboardingHint.tsx",
     "web/src/components/ornaments.tsx",
     "web/src/components/OutcomeToast.tsx",
@@ -802,6 +804,7 @@
     "web/src/workspace/chatSessionStore.ts",
     "web/src/workspace/ChatSurface.tsx",
     "web/src/workspace/ContextSurface.tsx",
+    "web/src/workspace/mobileSurface.ts",
     "web/src/workspace/RovingTablist.tsx",
     "web/src/workspace/tabs/BestiarioTab.tsx",
     "web/src/workspace/tabs/CombateTab.tsx",
@@ -809,6 +812,7 @@
     "web/src/workspace/tabs/MapTab.tsx",
     "web/src/workspace/tabs/PersonagemTab.tsx",
     "web/src/workspace/useModalFocus.ts",
+    "web/src/workspace/useVisualViewport.ts",
     "web/src/workspace/Workspace.tsx",
     "web/src/workspace/workspaceModel.ts",
     "web/src/workspace/workspaceStorage.ts",
@@ -835,12 +839,12 @@
     "artifact": 9,
     "class": 728,
     "endpoint": 63,
-    "file": 779,
-    "function": 2699,
+    "file": 783,
+    "function": 2700,
     "method": 711,
     "module": 647,
-    "test": 4662
+    "test": 4665
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:6bf98a4f19a6147e016448b089e82413a36ce3af4c15e17032d11ea9f566a992"
+  "source_tree_hash": "sha256:b43634f0a5813dc869b758d3655863eb75a457a7edd4d3664c0433174cc36b20"
 }
