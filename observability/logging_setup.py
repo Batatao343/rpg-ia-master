@@ -84,6 +84,18 @@ def _parse_level(raw: str | None) -> tuple[int, bool]:
     return (level, True) if level is not None else (logging.INFO, False)
 
 
+class _MinLevelFilter(logging.Filter):
+    def __init__(self) -> None:
+        super().__init__()
+        self.min_level = logging.WARNING
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        return record.levelno >= self.min_level
+
+
+_QUIET_THIRD_PARTY = _MinLevelFilter()
+
+
 def configure_logging(env: Mapping[str, str] | None = None) -> None:
     env = os.environ if env is None else env
     logger = logging.getLogger(_ROOT)
@@ -98,8 +110,12 @@ def configure_logging(env: Mapping[str, str] | None = None) -> None:
         logger.addHandler(handler)
     # Revisão Sol (smoke Vercel): o root logger da Vercel publica ``httpx`` em INFO — uma linha
     # não-JSON por chamada de provider, com a URL inteira (~4/turno). Só em debug.
+    # Filtro (não só nível): o SDK ``openai`` re-sobe ``httpx`` para INFO no import (OPENAI_LOG).
+    _QUIET_THIRD_PARTY.min_level = logging.DEBUG if level <= logging.DEBUG else logging.WARNING
     for noisy in ("httpx", "httpcore"):
-        logging.getLogger(noisy).setLevel(logging.DEBUG if level <= logging.DEBUG else logging.WARNING)
+        noisy_logger = logging.getLogger(noisy)
+        if _QUIET_THIRD_PARTY not in noisy_logger.filters:
+            noisy_logger.addFilter(_QUIET_THIRD_PARTY)
     prefix = "RPG_LOG_LEVEL_"
     for key, value in env.items():
         if key.startswith(prefix) and len(key) > len(prefix):
