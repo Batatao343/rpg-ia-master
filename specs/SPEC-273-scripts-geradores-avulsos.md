@@ -1,6 +1,6 @@
 # SPEC-273 — Aposentar geradores de uso único e unir os leitores de .env dos scripts
 
-> **Status:** `draft` · **Revisão independente 2026-10-18:** UNSAFE as written — **não recomendado apagar os geradores**: os dois são passos obrigatórios da pipeline de autoria (ver §8)
+> **Status:** `draft` — **NÃO RECOMENDADA (decisão do dono 2026-10-18: não executar)**. Revisão independente 2026-10-18: UNSAFE — os dois geradores são passos obrigatórios da pipeline de autoria (ver §8).
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Origem:** auditoria ponytail 2026-10-18 ([relatório](../docs/auditorias/ponytail-poda-2026-10-18.md))
 > **Depende de:** —
