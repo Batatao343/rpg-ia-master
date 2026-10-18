@@ -4261,3 +4261,429 @@ specs:
   tie_breaker: null
   lineage_ambiguous: false
   lineage_note: Owner 2026-10-18 asked Jev to cover loot too (J1b of SPEC-217); approved with +30 live calls, SPEC-217 cap 190/US$1.90
+- id: SPEC-239
+  slug: logging-config-central
+  status: draft
+  path: specs/SPEC-239-logging-config-central.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P0
+- id: SPEC-240
+  slug: correlacao-automatica-logs
+  status: draft
+  path: specs/SPEC-240-correlacao-automatica-logs.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-239
+  depends_on_raw:
+  - SPEC-239
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P0
+- id: SPEC-241
+  slug: api-access-log-handler-global
+  status: draft
+  path: specs/SPEC-241-api-access-log-handler-global.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-239
+  - SPEC-240
+  depends_on_raw:
+  - SPEC-239
+  - SPEC-240
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P0
+- id: SPEC-242
+  slug: envelope-erro-api-codigos-estaveis
+  status: draft
+  path: specs/SPEC-242-envelope-erro-api-codigos-estaveis.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-241
+  depends_on_raw:
+  - SPEC-241
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P1
+- id: SPEC-243
+  slug: frontend-codigo-suporte-mapa-erros
+  status: draft
+  path: specs/SPEC-243-frontend-codigo-suporte-mapa-erros.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-241
+  - SPEC-242
+  depends_on_raw:
+  - SPEC-241
+  - SPEC-242
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P1
+- id: SPEC-244
+  slug: frontend-captura-erros-cliente
+  status: draft
+  path: specs/SPEC-244-frontend-captura-erros-cliente.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-243
+  depends_on_raw:
+  - SPEC-243
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P2
+- id: SPEC-245
+  slug: auth-rejeicoes-logadas
+  status: draft
+  path: specs/SPEC-245-auth-rejeicoes-logadas.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-239
+  - SPEC-240
+  depends_on_raw:
+  - SPEC-239
+  - SPEC-240
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P0
+- id: SPEC-246
+  slug: abuso-rate-limit-413-logs
+  status: draft
+  path: specs/SPEC-246-abuso-rate-limit-413-logs.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-239
+  - SPEC-240
+  depends_on_raw:
+  - SPEC-239
+  - SPEC-240
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P2
+- id: SPEC-247
+  slug: turno-roteamento-sse-conflitos-logs
+  status: draft
+  path: specs/SPEC-247-turno-roteamento-sse-conflitos-logs.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-240
+  depends_on_raw:
+  - SPEC-240
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P1
+- id: SPEC-248
+  slug: llm-roteamento-logs-estruturados
+  status: draft
+  path: specs/SPEC-248-llm-roteamento-logs-estruturados.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-239
+  - SPEC-240
+  depends_on_raw:
+  - SPEC-239
+  - SPEC-240
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P1
+- id: SPEC-249
+  slug: boot-log-runtime
+  status: draft
+  path: specs/SPEC-249-boot-log-runtime.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-239
+  depends_on_raw:
+  - SPEC-239
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P1
+- id: SPEC-250
+  slug: fallbacks-silenciosos-grafo
+  status: draft
+  path: specs/SPEC-250-fallbacks-silenciosos-grafo.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-240
+  depends_on_raw:
+  - SPEC-240
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P1
+- id: SPEC-251
+  slug: trace-mecanico-conflito
+  status: draft
+  path: specs/SPEC-251-trace-mecanico-conflito.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-239
+  - SPEC-240
+  depends_on_raw:
+  - SPEC-239
+  - SPEC-240
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P2
+- id: SPEC-252
+  slug: rejeicoes-mundo-economia-campanha-logs
+  status: draft
+  path: specs/SPEC-252-rejeicoes-mundo-economia-campanha-logs.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-240
+  - SPEC-250
+  depends_on_raw:
+  - SPEC-240
+  - SPEC-250
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P2
+- id: SPEC-253
+  slug: persistencia-migracao-checkpoint-logs
+  status: draft
+  path: specs/SPEC-253-persistencia-migracao-checkpoint-logs.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-240
+  depends_on_raw:
+  - SPEC-240
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P2
+- id: SPEC-254
+  slug: postgres-lease-pool-logs
+  status: draft
+  path: specs/SPEC-254-postgres-lease-pool-logs.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-240
+  depends_on_raw:
+  - SPEC-240
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P1
+- id: SPEC-255
+  slug: jobs-worker-logs-correlacao
+  status: draft
+  path: specs/SPEC-255-jobs-worker-logs-correlacao.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-240
+  - SPEC-254
+  depends_on_raw:
+  - SPEC-240
+  - SPEC-254
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P1
+- id: SPEC-256
+  slug: cron-run-id-logs
+  status: draft
+  path: specs/SPEC-256-cron-run-id-logs.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-255
+  depends_on_raw:
+  - SPEC-255
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P2
+- id: SPEC-257
+  slug: pagamentos-webhook-play-wallet-logs
+  status: draft
+  path: specs/SPEC-257-pagamentos-webhook-play-wallet-logs.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-240
+  depends_on_raw:
+  - SPEC-240
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P1
+- id: SPEC-258
+  slug: providers-midia-embeddings-logs
+  status: draft
+  path: specs/SPEC-258-providers-midia-embeddings-logs.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-240
+  - SPEC-248
+  depends_on_raw:
+  - SPEC-240
+  - SPEC-248
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P2
+- id: SPEC-259
+  slug: android-shell-logs-billing
+  status: draft
+  path: specs/SPEC-259-android-shell-logs-billing.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-244
+  - SPEC-261
+  depends_on_raw:
+  - SPEC-244
+  - SPEC-261
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P3
+- id: SPEC-260
+  slug: tooling-traceback-smoke-ci
+  status: draft
+  path: specs/SPEC-260-tooling-traceback-smoke-ci.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on: []
+  depends_on_raw: []
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P3
+- id: SPEC-261
+  slug: build-id-cliente-servidor
+  status: draft
+  path: specs/SPEC-261-build-id-cliente-servidor.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-249
+  depends_on_raw:
+  - SPEC-249
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P2
+- id: SPEC-262
+  slug: runbook-debug-operador
+  status: draft
+  path: specs/SPEC-262-runbook-debug-operador.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-239
+  - SPEC-240
+  depends_on_raw:
+  - SPEC-239
+  - SPEC-240
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P1
