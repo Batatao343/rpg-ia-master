@@ -17,6 +17,10 @@ def test_vercel_json_shape():
     fn = cfg["functions"]["vercel_app.py"]
     assert 1 <= fn["maxDuration"] <= 300  # teto Hobby (Fluid compute)
     assert "observability" not in fn["excludeFiles"]  # pacote Python importado por api.py
+    # SPEC-217 R14: o rollout do Jev importa a politica congelada de evals/experiments (+ evals/core).
+    globs = fn["excludeFiles"].strip("{}").split(",")
+    assert "evals/**" not in globs and "evals/experiments/**" not in globs
+    assert "evals/core/**" not in globs
     sse = [h for h in cfg["headers"] if h["source"] == "/game/action/stream"]
     assert sse and {"key": "X-Accel-Buffering", "value": "no"} in sse[0]["headers"]
 

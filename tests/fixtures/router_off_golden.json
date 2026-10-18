@@ -1,0 +1,336 @@
+{
+ "classify_raises": {
+  "classify_calls": 1,
+  "payload": {
+   "active_npc_name": null,
+   "combat_encounter_hint": null,
+   "combat_origin_hint": null,
+   "combat_target": null,
+   "combat_target_ref": null,
+   "interlocutor_reason": "classify_fallback",
+   "loot_source": null,
+   "mediated_subject_id": null,
+   "next": "storyteller",
+   "npc_fallback_hint": null,
+   "world": {
+    "current_location": "Brekmar",
+    "current_location_id": "brekmar",
+    "turn_count": 10
+   }
+  }
+ },
+ "combat_active": {
+  "classify_calls": 0,
+  "payload": {
+   "combat": {
+    "active": true,
+    "idle_turns": 1,
+    "round": 2
+   },
+   "interlocutor_reason": null,
+   "mediated_subject_id": null,
+   "next": "combat_agent",
+   "world": {
+    "current_location": "Brekmar",
+    "current_location_id": "brekmar",
+    "turn_count": 10
+   }
+  }
+ },
+ "combat_free": {
+  "classify_calls": 1,
+  "payload": {
+   "active_npc_name": null,
+   "combat_encounter_hint": null,
+   "combat_origin_hint": "player_provoked",
+   "combat_target": "Inimigos",
+   "combat_target_ref": null,
+   "interlocutor_reason": "classify_story",
+   "loot_source": null,
+   "mediated_subject_id": null,
+   "messages": [
+    {
+     "content": "SYSTEM: COMBAT START. TARGET_HINT: Inimigos",
+     "type": "system"
+    }
+   ],
+   "next": "combat_agent",
+   "npc_fallback_hint": null,
+   "world": {
+    "current_location": "Brekmar",
+    "current_location_id": "brekmar",
+    "turn_count": 10
+   }
+  }
+ },
+ "combat_npc": {
+  "classify_calls": 1,
+  "payload": {
+   "active_npc_name": null,
+   "combat_encounter_hint": null,
+   "combat_origin_hint": "player_provoked",
+   "combat_target": "Velha Magda",
+   "combat_target_ref": "npc:Velha Magda",
+   "interlocutor_reason": "classify_story",
+   "loot_source": null,
+   "mediated_subject_id": null,
+   "messages": [
+    {
+     "content": "SYSTEM: COMBAT START. TARGET_HINT: Velha Magda",
+     "type": "system"
+    }
+   ],
+   "next": "combat_agent",
+   "npc_fallback_hint": null,
+   "world": {
+    "current_location": "Brekmar",
+    "current_location_id": "brekmar",
+    "turn_count": 10
+   }
+  }
+ },
+ "combat_regional": {
+  "classify_calls": 1,
+  "payload": {
+   "active_npc_name": null,
+   "combat_encounter_hint": null,
+   "combat_origin_hint": "regional_danger",
+   "combat_target": "Lobo",
+   "combat_target_ref": null,
+   "interlocutor_reason": "classify_story",
+   "loot_source": null,
+   "mediated_subject_id": null,
+   "messages": [
+    {
+     "content": "SYSTEM: COMBAT START. TARGET_HINT: Lobo",
+     "type": "system"
+    }
+   ],
+   "next": "combat_agent",
+   "npc_fallback_hint": null,
+   "world": {
+    "current_location": "Brekmar",
+    "current_location_id": "brekmar",
+    "turn_count": 10
+   }
+  }
+ },
+ "loot_default": {
+  "classify_calls": 1,
+  "payload": {
+   "active_npc_name": null,
+   "combat_encounter_hint": null,
+   "combat_origin_hint": null,
+   "combat_target": null,
+   "combat_target_ref": null,
+   "interlocutor_reason": "classify_story",
+   "loot_source": "TREASURE",
+   "mediated_subject_id": null,
+   "next": "loot",
+   "npc_fallback_hint": null,
+   "world": {
+    "current_location": "Brekmar",
+    "current_location_id": "brekmar",
+    "turn_count": 10
+   }
+  }
+ },
+ "loot_shop": {
+  "classify_calls": 1,
+  "payload": {
+   "active_npc_name": null,
+   "combat_encounter_hint": null,
+   "combat_origin_hint": null,
+   "combat_target": null,
+   "combat_target_ref": null,
+   "interlocutor_reason": "classify_story",
+   "loot_source": "SHOP",
+   "mediated_subject_id": null,
+   "next": "loot",
+   "npc_fallback_hint": null,
+   "world": {
+    "current_location": "Brekmar",
+    "current_location_id": "brekmar",
+    "turn_count": 10
+   }
+  }
+ },
+ "meta_gate": {
+  "classify_calls": 0,
+  "payload": {
+   "active_npc_name": null,
+   "combat_encounter_hint": null,
+   "combat_origin_hint": null,
+   "combat_target": null,
+   "combat_target_ref": null,
+   "interlocutor_reason": "meta_to_narrator",
+   "loot_source": null,
+   "mediated_subject_id": "npc_velha_magda",
+   "next": "storyteller",
+   "npc_fallback_hint": null,
+   "world": {
+    "current_location": "Brekmar",
+    "current_location_id": "brekmar",
+    "turn_count": 10
+   }
+  }
+ },
+ "none": {
+  "classify_calls": 1,
+  "payload": {
+   "active_npc_name": null,
+   "combat_encounter_hint": null,
+   "combat_origin_hint": null,
+   "combat_target": null,
+   "combat_target_ref": null,
+   "interlocutor_reason": "classify_story",
+   "loot_source": null,
+   "mediated_subject_id": null,
+   "next": "storyteller",
+   "npc_fallback_hint": null,
+   "world": {
+    "current_location": "Brekmar",
+    "current_location_id": "brekmar",
+    "turn_count": 10
+   }
+  }
+ },
+ "npc_named": {
+  "classify_calls": 1,
+  "payload": {
+   "active_npc_name": "Brunna Ponte-Alta",
+   "combat_encounter_hint": null,
+   "combat_origin_hint": null,
+   "combat_target": null,
+   "combat_target_ref": null,
+   "interlocutor_reason": "direct_address",
+   "loot_source": null,
+   "mediated_subject_id": null,
+   "next": "npc_actor",
+   "npc_fallback_hint": null,
+   "world": {
+    "current_location": "Brekmar",
+    "current_location_id": "brekmar",
+    "turn_count": 10
+   }
+  }
+ },
+ "npc_unknown": {
+  "classify_calls": 1,
+  "payload": {
+   "active_npc_name": null,
+   "combat_encounter_hint": null,
+   "combat_origin_hint": null,
+   "combat_target": null,
+   "combat_target_ref": null,
+   "interlocutor_reason": "npc_unknown_absent",
+   "loot_source": null,
+   "mediated_subject_id": null,
+   "next": "storyteller",
+   "npc_fallback_hint": "Falo com o estranho",
+   "world": {
+    "current_location": "Brekmar",
+    "current_location_id": "brekmar",
+    "turn_count": 10
+   }
+  }
+ },
+ "resume_combat": {
+  "classify_calls": 1,
+  "payload": {
+   "active_npc_name": null,
+   "combat": {
+    "active": false,
+    "explore_resumed": true,
+    "outcome": "victory",
+    "phase": "ended",
+    "result": {
+     "outcome": "victory"
+    }
+   },
+   "combat_encounter_hint": null,
+   "combat_origin_hint": null,
+   "combat_target": null,
+   "combat_target_ref": null,
+   "interlocutor_reason": "classify_story",
+   "loot_source": null,
+   "mediated_subject_id": null,
+   "next": "storyteller",
+   "npc_fallback_hint": null,
+   "world": {
+    "current_location": "Brekmar",
+    "current_location_id": "brekmar",
+    "turn_count": 10
+   }
+  }
+ },
+ "resume_npc": {
+  "classify_calls": 1,
+  "payload": {
+   "active_npc_name": "Brunna Ponte-Alta",
+   "combat": {
+    "active": false,
+    "explore_resumed": true,
+    "outcome": "victory",
+    "phase": "ended",
+    "result": {
+     "outcome": "victory"
+    }
+   },
+   "combat_encounter_hint": null,
+   "combat_origin_hint": null,
+   "combat_target": null,
+   "combat_target_ref": null,
+   "interlocutor_reason": "direct_address",
+   "loot_source": null,
+   "mediated_subject_id": null,
+   "next": "npc_actor",
+   "npc_fallback_hint": null,
+   "world": {
+    "current_location": "Brekmar",
+    "current_location_id": "brekmar",
+    "turn_count": 10
+   }
+  }
+ },
+ "story": {
+  "classify_calls": 1,
+  "payload": {
+   "active_npc_name": null,
+   "combat_encounter_hint": null,
+   "combat_origin_hint": null,
+   "combat_target": null,
+   "combat_target_ref": null,
+   "interlocutor_reason": "classify_story",
+   "loot_source": null,
+   "mediated_subject_id": null,
+   "next": "storyteller",
+   "npc_fallback_hint": null,
+   "world": {
+    "current_location": "Brekmar",
+    "current_location_id": "brekmar",
+    "turn_count": 10
+   }
+  }
+ },
+ "travel_gate": {
+  "classify_calls": 0,
+  "payload": {
+   "active_npc_name": null,
+   "combat_encounter_hint": null,
+   "combat_origin_hint": null,
+   "combat_target": null,
+   "combat_target_ref": null,
+   "interlocutor_reason": null,
+   "loot_source": null,
+   "mediated_subject_id": null,
+   "next": "storyteller",
+   "npc_fallback_hint": null,
+   "world": {
+    "current_location": "Brekmar",
+    "current_location_id": "brekmar",
+    "turn_count": 10
+   }
+  }
+ }
+}

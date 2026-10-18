@@ -106,6 +106,24 @@ def test_projection_mode_flag_sets_post_response_and_inline_deletes_it():
         ve.build_env(FILES, projection_mode="job")
 
 
+def test_jev_router_shadow_flag_and_off_deletes_it():
+    """SPEC-217 R15: shadow envia modo + chave TypeSafe (secreta); off apaga; primary nunca."""
+    off = ve.build_env(FILES)[0]
+    assert "RPG_JEV_ROUTER_MODE" not in off and "TYPESAFE_API_KEY" not in off
+    assert {"RPG_JEV_ROUTER_MODE", "TYPESAFE_API_KEY",
+            "RPG_JEV_ROUTER_PRIMARY_APPROVED"} <= set(ve.stale_names(off))
+    with pytest.raises(KeyError) as e:
+        ve.build_env(FILES, jev_router_mode="shadow")
+    assert "TYPESAFE_API_KEY" in str(e.value)
+    on, prev = ve.build_env({**FILES, "JEVMODEL_API_KEY": "v-jev"}, jev_router_mode="shadow")
+    assert on["RPG_JEV_ROUTER_MODE"] == "shadow" and on["TYPESAFE_API_KEY"] == "v-jev"
+    assert "TYPESAFE_API_KEY" in ve.FORBIDDEN_IN_PREVIEW and not ve.FORBIDDEN_IN_PREVIEW & prev.keys()
+    assert "RPG_JEV_ROUTER_PRIMARY_APPROVED" not in on
+    assert "RPG_JEV_ROUTER_MODE" not in ve.stale_names(on)
+    with pytest.raises(ValueError):
+        ve.build_env(FILES, jev_router_mode="primary")
+
+
 def test_real_turnstile_site_key_and_optional_openai_key_stay_out_of_preview():
     from scripts.staging import vercel_env
     files = {k: "v" for k in vercel_env.SECRET_FROM_FILE}

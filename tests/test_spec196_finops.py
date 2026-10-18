@@ -315,7 +315,7 @@ def test_jev_switch_returns_to_current_classifier(monkeypatch):
     jev_rollout.set_jev_rollout_telemetry_hook(events.append)
     try:
         ks.set_switches(ks.KillSwitches(ks.MemorySwitchStore({ks.JEV: False}), ttl=0))
-        assert jev_rollout.decide_route({}, "olho") is None
+        assert jev_rollout.begin({}, "olho") is None
         assert events and events[0].outcome == "kill_switch"
     finally:
         jev_rollout.set_jev_rollout_telemetry_hook(None)

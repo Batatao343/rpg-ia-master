@@ -15,7 +15,7 @@ from evals.experiments.spec238_loot import (
     loot_hybrid_decision,
 )
 from services.jev_decision import ChoiceAnswer, DecisionResult, DecisionState
-from services.jev_rollout import _request as rollout_request
+from services.jev_rollout import frozen_request as rollout_request
 
 
 def _ans(choice: str, confidence: float = 0.9) -> dict:
@@ -114,9 +114,11 @@ def test_j1b_request_keeps_the_j1_route_and_target_questions() -> None:
     assert j1b["state"] == j1["state"]  # unknown location: no loot features on the wire
 
 
-def test_production_rollout_payload_still_unchanged() -> None:
-    body = rollout_request({"world": {"current_location": "X"}}, "compro").wire_body()
-    assert set(body["state"]) == {"action", "location_id", "in_combat"}
+def test_production_rollout_payload_is_frozen_without_location() -> None:
+    # SPEC-217 R14: production sends the J2 request; location features stay off.
+    body = rollout_request({"world": {"current_location_id": "brekmar"}}, "compro").wire_body()
+    assert "loot_source" in body["questions"]
+    assert "merchant_here" not in body["state"] and "craft_station" not in body["state"]
 
 
 def test_oracle_matches_its_sources_and_covers_every_dev_loot_case() -> None:

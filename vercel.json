@@ -7,7 +7,7 @@
   "functions": {
     "vercel_app.py": {
       "maxDuration": 300,
-      "excludeFiles": "{tests/**,docs/**,specs/**,playtest/**,evals/**,web/node_modules/**,web/src/**,web/public/**,web/e2e/**,scripts/staging/**,saves*/**,.venv/**,.tmp/**}"
+      "excludeFiles": "{tests/**,docs/**,specs/**,playtest/**,evals/runs/**,evals/datasets/**,evals/experiments/data/**,web/node_modules/**,web/src/**,web/public/**,web/e2e/**,scripts/staging/**,saves*/**,.venv/**,.tmp/**}"
     }
   },
   "headers": [

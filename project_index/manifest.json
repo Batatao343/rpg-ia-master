@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "014a0c29bd7044da2df0a69d00a28798f3c6c6f8",
+  "commit_sha": "fcc18b598602bade91a843cde04bc0cbefea3266",
   "edge_counts": {
-    "calls": 15393,
-    "contains": 651,
-    "defines": 8835,
-    "imports": 1446,
-    "likely_test_for": 888,
+    "calls": 16038,
+    "contains": 661,
+    "defines": 9104,
+    "imports": 1492,
+    "likely_test_for": 908,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:9332614fca29decd367bee3c694ae53af030cac50f4b3c1b2d402befed69fece",
+  "graph_hash": "sha256:1a69a300bf1074182b0c77d1acad6f33e4d1f5f71bba22a9d091cce716d196b1",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -106,7 +106,12 @@
     "evals/evaluators/routing.py",
     "evals/experiments/__init__.py",
     "evals/experiments/jev_router_ab.py",
+    "evals/experiments/jev_router_hybrid.py",
     "evals/experiments/jev_target_loot.py",
+    "evals/experiments/spec217_corpus_check.py",
+    "evals/experiments/spec217_j1.py",
+    "evals/experiments/spec217_j2.py",
+    "evals/experiments/spec238_loot.py",
     "evals/gameplay_scan.py",
     "game_engine.py",
     "gamedata.py",
@@ -228,6 +233,7 @@
     "scripts/staging/common.py",
     "scripts/staging/e2e_session.py",
     "scripts/staging/incident_drill.py",
+    "scripts/staging/jev_shadow_measure.py",
     "scripts/staging/job_survival.py",
     "scripts/staging/measure.py",
     "scripts/staging/migrations.py",
@@ -544,6 +550,7 @@
     "tests/test_jev_decision_backend.py",
     "tests/test_jev_rollout.py",
     "tests/test_jev_router_ab_experiment.py",
+    "tests/test_jev_router_port.py",
     "tests/test_jev_target_loot_experiment.py",
     "tests/test_latency_baseline_offline.py",
     "tests/test_latency_client_endpoint.py",
@@ -658,6 +665,8 @@
     "tests/test_spec197_legal_pages.py",
     "tests/test_spec197_runtime_role.py",
     "tests/test_spec198_rename_package.py",
+    "tests/test_spec217_j1.py",
+    "tests/test_spec217_j2.py",
     "tests/test_spec222_privacy_local.py",
     "tests/test_spec222_retention_local.py",
     "tests/test_spec222_transparency.py",
@@ -665,6 +674,7 @@
     "tests/test_spec235_reclaim_local.py",
     "tests/test_spec236_races_local.py",
     "tests/test_spec237_embedding_pricing.py",
+    "tests/test_spec238_loot.py",
     "tests/test_spec_index.py",
     "tests/test_spec_migration_safety.py",
     "tests/test_speech_api.py",
@@ -841,14 +851,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 729,
+    "class": 749,
     "endpoint": 63,
-    "file": 787,
-    "function": 2715,
-    "method": 716,
-    "module": 651,
-    "test": 4675
+    "file": 797,
+    "function": 2828,
+    "method": 738,
+    "module": 661,
+    "test": 4789
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:378e1b4ab4439d3c34ff130e3e66998fd73368ed3e329ca9d1dd0fc914a28c37"
+  "source_tree_hash": "sha256:190b53ef30cd4ed364c6db44ee625c6dda5a2c184abb21c13f8222172862486a"
 }

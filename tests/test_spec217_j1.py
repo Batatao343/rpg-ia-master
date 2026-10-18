@@ -17,7 +17,7 @@ from evals.experiments.spec217_j1 import BudgetExhausted, CallLedger, run_phase
 from services.jev_decision import (
     ChoiceAnswer, DecisionRequest, DecisionResult, DecisionState, JevRateLimitError,
 )
-from services.jev_rollout import _request as rollout_request
+from services.jev_rollout import frozen_request as rollout_request
 
 
 NPCS = {
@@ -54,9 +54,13 @@ def test_verb_flags_are_a_closed_lexicon(action: str, verbs: tuple[str, ...]) ->
     assert extract_verbs(action) == verbs
 
 
-def test_production_rollout_payload_is_unchanged() -> None:
-    body = rollout_request({"world": {"current_location": "X"}}, "olho").wire_body()
-    assert set(body["state"]) == {"action", "location_id", "in_combat"}
+def test_production_rollout_payload_is_the_frozen_request() -> None:
+    # SPEC-217 R14: production now sends the frozen J2 request (was the SPEC-180 one).
+    from evals.experiments.spec238_loot import frozen_j1b_request
+    state = {"world": {"current_location": "X"}}
+    body = rollout_request(state, "olho").wire_body()
+    assert body == frozen_j1b_request({"action": "olho", "state": state}).wire_body()
+    assert "merchant_here" not in body["state"] and "craft_station" not in body["state"]
 
 
 def test_two_stage_target_restricted_to_scene_candidates() -> None:
@@ -272,8 +276,10 @@ def test_frozen_policy_sends_loot_to_classify() -> None:
     assert decision["reason"] == "loot_context_out_of_scope"
 
 
-def test_production_rollout_payload_unchanged_with_active_npc() -> None:
+def test_production_rollout_payload_is_frozen_with_active_npc() -> None:
+    from evals.experiments.spec238_loot import frozen_j1b_request
     state = {"world": {"current_location": "X"}, "active_npc_name": "Corvo",
              "npcs": NPCS, "combat": {"active": False}}
     body = rollout_request(state, "FALO COM CORVO").wire_body()
-    assert set(body["state"]) <= {"action", "location_id", "in_combat", "active_npc"}
+    assert body == frozen_j1b_request({"action": "FALO COM CORVO", "state": state}).wire_body()
+    assert body["state"]["last_speaker"] == "npc_corvo_rapido"

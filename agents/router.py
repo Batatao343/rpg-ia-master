@@ -194,13 +194,6 @@ def dm_router_node(state: GameState):
             and not _EXPLICIT_HOSTILITY_RE.search(last_human)):
         return _resumed(_base_route_payload(RouteType.STORY, world))
 
-    # SPEC-180: Jev is opt-in and limited to decisions its closed contract can
-    # fully represent. Shadow never supplies a route; every other result uses
-    # the existing CLASSIFY path. Python gates above retain precedence.
-    from services.jev_rollout import decide_route
-    if decide_route(state, last_human) == RouteType.STORY.value:
-        return _resumed(_base_route_payload(RouteType.STORY, world))
-
     # SPEC-202 R2/R3: meta-pergunta ao narrador e descrição de cena são decididas
     # em Python, SEM chamar o CLASSIFY (zero invoke).
     from services import interlocutor
@@ -208,6 +201,39 @@ def dm_router_node(state: GameState):
     if pre is not None:
         return _resumed(_interlocutor_payload(pre, world))
 
+    # SPEC-217 R14 (rollout SPEC-180): the Jev runs only AFTER every Python gate.
+    # ``off`` (default) returns None with no side effect. Primary decides when the
+    # frozen J2 policy covers the turn; shadow only observes the CLASSIFY result.
+    from services import jev_rollout
+    pending = jev_rollout.begin(state, last_human)
+    if pending is not None and pending.mode == "primary":
+        routing = pending.primary_routing()
+        if routing is not None:
+            return _finalize(state, last_human, world, _jev_decision(state, routing),
+                             _resumed, resume_explore)
+
+    payload = _classify(state, messages, last_human, world, loc, _resumed, resume_explore)
+    if pending is not None and pending.mode == "shadow":
+        pending.observe(payload, lambda routing: _finalize(
+            state, last_human, world, _jev_decision(state, routing), _resumed,
+            resume_explore), state)
+    return payload
+
+
+def _jev_decision(state: GameState, routing) -> RouterDecision:
+    """A covered Jev decision as a RouterDecision (scene ID -> router target name)."""
+    from services.jev_rollout import target_name_for_id
+    return RouterDecision(
+        route=RouteType(routing.route), loot_context=routing.loot_source,
+        target=target_name_for_id(state, routing.target_id),
+        reasoning="jev", confidence=routing.confidence,
+    )
+
+
+def _classify(state: GameState, messages, last_human: str, world: dict, loc,
+              _resumed, resume_explore: bool) -> dict:
+    """The CLASSIFY path (behaviour unchanged by SPEC-217)."""
+    from services import interlocutor
     scene_names = ", ".join(
         interlocutor.canonical_npc_name(state, key)
         for key in interlocutor.scene_keys(state)) or "ninguém"
@@ -244,7 +270,13 @@ def dm_router_node(state: GameState):
     if not isinstance(decision, RouterDecision):
         return _resumed({**_base_route_payload(RouteType.STORY, world),
                          "interlocutor_reason": "classify_fallback"})
+    return _finalize(state, last_human, world, decision, _resumed, resume_explore)
 
+
+def _finalize(state: GameState, last_human: str, world: dict, decision: RouterDecision,
+              _resumed, resume_explore: bool) -> dict:
+    """Router payload from a RouterDecision (CLASSIFY, or a covered Jev decision)."""
+    from services import interlocutor
     # RouteType.NONE ("nenhuma intenção clara": input sem ação, lixo ou injeção)
     # NÃO é um nó do grafo — o mapping condicional de main.py só conhece
     # storyteller/combat/npc/loot/END. O LLM real ESCOLHE NONE para a entrada do

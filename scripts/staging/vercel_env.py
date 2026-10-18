@@ -52,12 +52,18 @@ NON_SECRET_LITERALS = {
 PREVIEW_LITERALS = {"RPG_RUNTIME_PROFILE": "hosted-supabase", "RPG_BIND_HOST": "0.0.0.0"}
 # Nomes que NAO podem continuar no projeto (o upsert nao apaga): RPG_FORCE_MOCK e proibido em hosted
 # (SPEC-218 boot fail-closed) e LLM_PROVIDER forcaria um provider unico fora de ROUTES.
-REMOVED_NAMES = ("RPG_FORCE_MOCK", "LLM_PROVIDER")
+# SPEC-217: RPG_JEV_ROUTER_PRIMARY_APPROVED e aprovacao exclusiva do dono para o Jev em `primary`; o staging
+# nunca a recebe (sempre apagada).
+REMOVED_NAMES = ("RPG_FORCE_MOCK", "LLM_PROVIDER", "RPG_JEV_ROUTER_PRIMARY_APPROVED")
 # Pares exclusivos do modo RLS (SPEC-224): ao alternar rollback <-> RLS o upsert deixaria a variavel do
 # outro modo para tras (ex.: RPG_REQUEST_RLS=off sobrevivendo a volta ao RLS efetivo).
 MODE_EXCLUSIVE = ("RPG_REQUEST_RLS", "RPG_ADMIN_DATABASE_URL")
 # Flags opcionais: saem do projeto quando nao estao em ``production`` (ex.: --no-text-cap).
-OPTIONAL_FLAGS = ("RPG_DAILY_SPEND_CAP_TEXT", "RPG_PROJECTION_MODE")
+OPTIONAL_FLAGS = ("RPG_DAILY_SPEND_CAP_TEXT", "RPG_PROJECTION_MODE", "RPG_JEV_ROUTER_MODE", "TYPESAFE_API_KEY")
+# SPEC-217 R15: Jev no router. ``off`` (default) = variaveis ausentes; ``shadow`` observa sem mudar a rota e
+# envia a chave TypeSafe (secreta). ``primary`` nao e oferecido aqui (exige aprovacao separada do dono).
+JEV_ROUTER_MODES = ("off", "shadow")
+JEV_KEY_FROM_FILE = ("TYPESAFE_API_KEY", "JEVMODEL_API_KEY")
 # SPEC-213: modo do arquivista. ``inline`` (default do produto) = variavel ausente; ``post_response`` tira os
 # derivados (resumo/memoria/cronica) do caminho do jogador. Rollback: --projection-mode inline.
 PROJECTION_MODES = ("inline", "post_response")
@@ -78,7 +84,9 @@ SITE_KEY_FROM_FILE = ("RPG_TURNSTILE_SITE_KEY", "TURNSTILE_SITE_KEY")
 # do primario + fallback Groq. Reverter com um push normal (o upsert regrava a chave real).
 INVALID_DEEPSEEK_KEY = "sk-spec236-smoke-invalid-key"
 RLS_SECRETS = ("RPG_ADMIN_DATABASE_URL",)  # SPEC-224: so no modo RLS efetivo
-FORBIDDEN_IN_PREVIEW = frozenset(SECRET_FROM_FILE) | frozenset(OPTIONAL_SECRET_FROM_FILE) | frozenset(RLS_SECRETS)
+JEV_SECRETS = ("TYPESAFE_API_KEY",)  # SPEC-217 R15: so com --jev-router-mode shadow
+FORBIDDEN_IN_PREVIEW = (frozenset(SECRET_FROM_FILE) | frozenset(OPTIONAL_SECRET_FROM_FILE)
+                        | frozenset(RLS_SECRETS) | frozenset(JEV_SECRETS))
 
 
 def _load_files() -> dict[str, str]:
@@ -91,10 +99,13 @@ def _load_files() -> dict[str, str]:
 def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST, use_admin_dsn: bool = False,
               invalid_deepseek_key: bool = False,
               text_cap: bool = True,
-              projection_mode: str = "inline") -> tuple[dict[str, str], dict[str, str]]:
+              projection_mode: str = "inline",
+              jev_router_mode: str = "off") -> tuple[dict[str, str], dict[str, str]]:
     """Retorna (production, preview). Levanta KeyError com NOME do segredo ausente."""
     if projection_mode not in PROJECTION_MODES:
         raise ValueError(f"projection_mode invalido: {projection_mode}")
+    if jev_router_mode not in JEV_ROUTER_MODES:
+        raise ValueError(f"jev_router_mode invalido: {jev_router_mode}")
     production = dict(NON_SECRET_LITERALS)
     if not text_cap:
         production.pop("RPG_DAILY_SPEND_CAP_TEXT", None)
@@ -114,6 +125,12 @@ def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST, use_admi
             production[key] = files[key]
     if invalid_deepseek_key:
         production["DEEPSEEK_API_KEY"] = INVALID_DEEPSEEK_KEY
+    if jev_router_mode == "shadow":
+        key = next((files[k] for k in JEV_KEY_FROM_FILE if files.get(k)), None)
+        if not key:
+            raise KeyError("ausentes em .env.staging/.env: TYPESAFE_API_KEY (ou JEVMODEL_API_KEY)")
+        production["RPG_JEV_ROUTER_MODE"] = "shadow"
+        production["TYPESAFE_API_KEY"] = key
     # SPEC-197 R-05 + SPEC-224: o runtime usa o papel de menor privilégio (`rpg_runtime`) com RLS por request
     # e um segundo DSN (`rpg_admin`) para workers/cron/wallet. `use_admin_dsn` e o rollback: DSN unico
     # `postgres` e RPG_REQUEST_RLS=off (comportamento anterior). Sem papeis provisionados, idem.
@@ -182,6 +199,8 @@ def main(argv: list[str] | None = None) -> int:
                     help="rollback SPEC-237: desliga o cap diario de TEXTO (apaga RPG_DAILY_SPEND_CAP_TEXT)")
     ap.add_argument("--projection-mode", choices=PROJECTION_MODES, default="inline",
                     help="SPEC-213: post_response tira os derivados do arquivista do hot path; inline apaga a variavel")
+    ap.add_argument("--jev-router-mode", choices=JEV_ROUTER_MODES, default="off",
+                    help="SPEC-217 R15: shadow liga o Jev em observacao + chave TypeSafe; off apaga as duas")
     args = ap.parse_args(argv)
     if args.project_name != PROJECT_NAME:
         print(f"recusado: projeto deve ser {PROJECT_NAME}", file=sys.stderr)
@@ -194,11 +213,12 @@ def main(argv: list[str] | None = None) -> int:
     try:
         production, preview = build_env(files, args.public_host, args.use_admin_dsn,
                                         args.invalid_deepseek_key, text_cap=not args.no_text_cap,
-                                        projection_mode=args.projection_mode)
+                                        projection_mode=args.projection_mode,
+                                        jev_router_mode=args.jev_router_mode)
     except KeyError as exc:
         print(exc.args[0], file=sys.stderr)
         return 1
-    secrets = frozenset(SECRET_FROM_FILE) | frozenset(OPTIONAL_SECRET_FROM_FILE) | frozenset(RLS_SECRETS)
+    secrets = FORBIDDEN_IN_PREVIEW
     print("production:", ", ".join(sorted(production)))
     print("preview:", ", ".join(sorted(preview)), "(sem segredos de DB/serviço)")
     print("a remover:", ", ".join(stale_names(production)))

@@ -34,13 +34,22 @@ def test_ordem_precedencia_preservada(monkeypatch):
     assert out["next"] == RouteType.STORY.value
     assert out["interlocutor_reason"] is None and llm.calls == 0
 
-    # Jev (quando decide STORY) continua antes da política
+    # SPEC-217 R14: o Jev roda DEPOIS dos gates Python (pre_classify incluso) e,
+    # em primary coberto, pula o CLASSIFY; o payload passa pela mesma política.
     import services.jev_rollout as jev
     calls = []
-    monkeypatch.setattr(jev, "decide_route",
-                        lambda s, t: calls.append(t) or RouteType.STORY.value)
+
+    class _Primary:
+        mode = "primary"
+
+        def primary_routing(self):
+            return jev.JevRouting("storyteller", None, None, 0.9)
+
+    monkeypatch.setattr(jev, "begin", lambda s, t: calls.append(t) or _Primary())
+    out = dm_router_node(_state("Narrador, a Brunna parece mentir?"))
+    assert out["next"] == RouteType.STORY.value and not calls and llm.calls == 0
     out = dm_router_node(_state("Brunna, você viu o barco?"))
-    assert out["next"] == RouteType.STORY.value and calls and llm.calls == 0
+    assert out["next"] == RouteType.NPC.value and calls and llm.calls == 0
 
 
 CASES = [
