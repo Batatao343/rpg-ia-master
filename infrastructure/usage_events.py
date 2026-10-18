@@ -42,9 +42,6 @@ def _event_digest(event: UsageEvent) -> str:
 # A present column is cached for the process lifetime; absence is re-probed on each call.
 _COLUMNS_SEEN: set[tuple[str, str]] = set()
 
-# Schema-agnostic spend predicate (counts_as_spend derives from cost_basis by CHECK).
-NO_SPEND_SQL = "cost_basis not in ('failed_no_usage','definitive_no_charge')"
-
 
 def has_column(connection, table: str, column: str) -> bool:
     key = (table, column)

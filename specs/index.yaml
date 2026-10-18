@@ -4779,7 +4779,7 @@ specs:
   lineage_note: Authored from auditoria ponytail 2026-10-18 (docs/auditorias/ponytail-poda-2026-10-18.md); draft awaiting approval
 - id: SPEC-269
   slug: poda-simbolos-mortos-infra
-  status: draft
+  status: done
   path: specs/SPEC-269-poda-simbolos-mortos-infra.md
   created_commit: null
   created_at: '2026-10-18'

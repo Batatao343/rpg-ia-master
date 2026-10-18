@@ -1,6 +1,6 @@
 # SPEC-269 — Apagar símbolos e módulos mortos de infraestrutura
 
-> **Status:** `draft` · **Revisão independente 2026-10-18:** SAFE WITH CHANGES (`file_blob.py` e `sweep_synthetic_users` saem da lista; ver §8)
+> **Status:** `done` · **Revisão independente 2026-10-18:** SAFE WITH CHANGES (`file_blob.py` e `sweep_synthetic_users` saem da lista; ver §8)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Origem:** auditoria ponytail 2026-10-18 ([relatório](../docs/auditorias/ponytail-poda-2026-10-18.md))
 > **Depende de:** —

@@ -24,7 +24,6 @@ RETAINED_WITH_REASON: dict[str, str] = {
     "account_deletions": ("prova da exclusão (tombstone reduzido a owner_id e data após 30 dias) "
                           "— 5 anos, prazo prescricional"),
 }
-GOOGLE_STATE_RETAINED_KEYS = ("purchase_state", "consumption_state", "purchase_type", "quantity")
 EXPORT_SIGNED_URL_SECONDS = 300
 # SPEC-222 R5: colunas explícitas (fim do select *). Colunas técnicas internas
 # (leases, fencing, hashes de requisição, payload/resultado de jobs, vetores,

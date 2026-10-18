@@ -18,7 +18,6 @@ from typing import Mapping, Sequence
 from services.usage_metering import RATE_CARD_VERSION, UsageEvent
 
 
-SHARD_MILLI_PER_SHARD = 1000
 TARGET_MARGIN_RATE = Decimal("0.05")
 BRL_CENT = Decimal("0.01")
 MAX_SHARD_MILLI = 2**63 - 1

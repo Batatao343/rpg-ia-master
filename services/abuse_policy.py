@@ -46,7 +46,6 @@ ROUTE_CLASSES: dict[str, RouteClass] = {c.name: c for c in (
 )}
 
 LEGACY_DEFAULT_ENV = "RPG_RATE_LIMIT"
-DAILY_CLASSES = ("turn", "llm_aux")
 
 
 def classify(method: str, path: str) -> RouteClass | None:

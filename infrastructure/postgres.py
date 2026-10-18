@@ -63,7 +63,7 @@ class PostgresPool:
                  connect_timeout: float = 5.0, request_rls: bool = False,
                  admin_pool: "PostgresPool | None" = None):
         if ConnectionPool is None:
-            raise RuntimeError("instale o extra postgres: uv sync --extra postgres")
+            raise RuntimeError("instale psycopg: uv sync")
         kwargs: dict[str, Any] = {"row_factory": dict_row, "connect_timeout": max(1, int(round(connect_timeout)))}
         if transaction_pooler:
             # Supavisor transaction mode cannot preserve prepared/session state.

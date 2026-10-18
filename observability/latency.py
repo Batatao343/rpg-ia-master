@@ -38,7 +38,6 @@ NODE_PHASE: Dict[str, TurnPhase] = {
     "archivist": TurnPhase.ARCHIVIST,
 }
 
-MARKS = ("accepted", "first_phase", "ttfmc", "ttlt", "state")
 
 # Estratificação por tamanho de entrada (R17) — limiares fixos e documentados.
 INPUT_SHORT_MAX = 40
@@ -268,15 +267,6 @@ _current: contextvars.ContextVar[Optional[TurnTimeline]] = contextvars.ContextVa
 
 def current_timeline() -> Optional[TurnTimeline]:
     return _current.get()
-
-
-@contextmanager
-def timeline_scope(timeline: Optional[TurnTimeline]) -> Iterator[None]:
-    token = _current.set(timeline)
-    try:
-        yield
-    finally:
-        _current.reset(token)
 
 
 @contextmanager

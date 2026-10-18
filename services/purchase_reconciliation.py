@@ -10,9 +10,8 @@ from dataclasses import dataclass
 STRIPE, GOOGLE = "stripe", "google_play"
 KINDS = {"refund", "dispute_open", "dispute_won", "dispute_lost", "voided", "revoked",
          "fee_reconciled"}
-STRIPE_STATES = ("created", "paid", "refunded_partial", "refunded_full", "disputed",
-                 "dispute_won", "dispute_lost")
-GOOGLE_STATES = ("pending", "purchased", "fulfilled", "consumed", "voided", "revoked")
+# Estados Stripe: created, paid, refunded_partial, refunded_full, disputed, dispute_won, dispute_lost.
+# Estados Google: pending, purchased, fulfilled, consumed, voided, revoked.
 # Closed transition tables: nothing returns to created/paid; refunded_full and voided/revoked
 # are terminal (voided and revoked are the same financial outcome).
 STRIPE_TRANSITIONS = {

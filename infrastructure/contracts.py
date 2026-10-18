@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime
 from io import BufferedIOBase
-from typing import Any, BinaryIO, Literal, Mapping, Protocol, Sequence
+from typing import Any, BinaryIO, Literal, Mapping, Protocol
 from uuid import UUID
 
 
@@ -92,8 +92,6 @@ class JobDeferred(InfrastructureError):
         self.delay_seconds = delay_seconds
 
 
-class PersistenceUnavailable(InfrastructureError):
-    pass
 
 
 @dataclass(frozen=True)
@@ -306,10 +304,6 @@ class IdentityVerifier(Protocol):
     def verify(self, credential: str | None) -> Principal: ...
 
 
-def ensure_binary_stream(payload: BinaryIO) -> BinaryIO:
-    if not hasattr(payload, "read"):
-        raise TypeError("payload precisa ser um stream binário")
-    return payload
 
 
 def validate_scope(
@@ -326,7 +320,3 @@ def validate_scope(
         raise ValueError("combinação inválida de scope/owner_id/game_id")
 
 
-def require_unique_document_ids(documents: Sequence[MemoryDocument]) -> None:
-    ids = [document.document_id for document in documents]
-    if len(ids) != len(set(ids)):
-        raise Conflict("document_id duplicado")

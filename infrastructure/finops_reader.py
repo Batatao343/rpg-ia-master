@@ -8,9 +8,9 @@ from __future__ import annotations
 from infrastructure.db_roles import admin_connection
 
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
+from datetime import timedelta
 from decimal import Decimal
-from typing import Mapping, Protocol
+from typing import Mapping
 
 from services.finops import COST_GROUPS, FeeRate, OwnerUsage, PricingRef, PurchaseFact
 from infrastructure.usage_events import has_column, spend_schema_ready
@@ -28,15 +28,6 @@ class OpsCounts:
     voice_cost_usd: Decimal = Decimal("0")
 
 
-class FinopsReader(Protocol):
-    def pricing(self) -> tuple[dict[str, PricingRef], list[Freshness]]: ...
-    def purchases(self, since: datetime, until: datetime) -> list[PurchaseFact]: ...
-    def owner_usage(self, since: datetime, until: datetime) -> dict[str, OwnerUsage]: ...
-    def usage_groups(self, since: datetime, until: datetime) -> list[UsageGroup]: ...
-    def ops_counts(self, since: datetime, until: datetime) -> OpsCounts: ...
-    def wallet_mismatch(self) -> tuple[int, int]: ...
-    def backlogs(self, now: datetime) -> list[Backlog]: ...
-    def wallet_holds(self, now: datetime) -> tuple[int, float, int]: ...
 
 
 def _fees(raw: Mapping) -> dict[str, FeeRate]:

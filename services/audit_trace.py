@@ -36,8 +36,6 @@ ERROR_CODES = {
     "circuit_open": "llm_circuit_open",
     "build_error": "llm_build_error",
 }
-EXTRA_ERROR_CODES = ("event_rejected", "narrative_rejected", "memory_rejected",
-                     "turn_failed", "llm_other_error")
 
 _refs: contextvars.ContextVar[Optional[List[Dict[str, Any]]]] = contextvars.ContextVar(
     "rpg_audit_context_refs", default=None)
