@@ -39,6 +39,7 @@ import gamedata
 from infrastructure.db_roles import admin_connection
 import persistence as persistence_module
 from persistence import save_game_state, load_game_state, save_path, _serialize_messages, IncompatibleSaveError
+from infrastructure.contracts import AuthUnavailable
 from infrastructure.contracts import (
     CsrfError, SessionSecretError, Unauthorized as _Unauthorized, public_auth_code,
 )
@@ -141,14 +142,42 @@ async def _incompatible_save_handler(_request, _exc):
 
 
 @app.exception_handler(_Unauthorized)
-async def _unauthorized_handler(_request, exc):
-    """SPEC-220 R3: 401 com código fechado; a mensagem interna fica só no servidor."""
-    return JSONResponse(status_code=401, content={"detail": public_auth_code(exc)})
+async def _unauthorized_handler(request, exc):
+    """SPEC-220 R3: 401 com código fechado; a mensagem interna fica só no servidor
+    (SPEC-245 R2: ...mas agora vai para o log, como motivo fechado)."""
+    from observability.auth_log import reject, session_reason
+    code = public_auth_code(exc)
+    request.state.error_code = code
+    reject("session_rejected", session_reason(exc), route=request.url.path, public_code=code,
+           source="handler")
+    return JSONResponse(status_code=401, content={"detail": code})
+
+
+@app.exception_handler(AuthUnavailable)
+async def _auth_unavailable_handler(request, _exc):
+    """SPEC-245 R1: GoTrue/JWKS fora do ar ou lento => 503 fechado, nunca 500."""
+    request.state.error_code = "auth_unavailable"
+    return JSONResponse(status_code=503, content={"detail": "auth_unavailable"},
+                        headers={"Retry-After": "5"})
+
+
+def _log_csrf_rejection(request: Request, code: str) -> None:
+    """SPEC-245 R3: motivo fechado; a origem só aparece se estiver na allowlist."""
+    from observability.auth_log import origin_host, reject
+    from services.auth_sessions import CSRF_COOKIE
+    reason = code
+    if code == "csrf_invalid" and (
+            not request.cookies.get(CSRF_COOKIE) or not request.headers.get("x-csrf-token")):
+        reason = "csrf_missing"
+    reject("csrf_rejected", reason, route=request.url.path, method=request.method,
+           origin_host=origin_host(request.headers.get("origin"), _CORS_ORIGINS))
 
 
 @app.exception_handler(CsrfError)
-async def _csrf_handler(_request, exc):
+async def _csrf_handler(request, exc):
     """SPEC-220 R10: Origin/CSRF => 403, para o cliente não disparar refresh/logout."""
+    request.state.error_code = exc.code
+    _log_csrf_rejection(request, exc.code)
     return JSONResponse(status_code=403, content={"detail": exc.code})
 
 
@@ -228,15 +257,34 @@ async def _session_boundary(request: Request, call_next):
                 allowed_origins=set(_CORS_ORIGINS), signer=signer,
             )
     except CsrfError as exc:
+        request.state.error_code = exc.code
+        _log_csrf_rejection(request, exc.code)
         return JSONResponse({"detail": exc.code}, status_code=403)
+    except AuthUnavailable:
+        from observability.auth_log import reject
+        request.state.error_code = "auth_unavailable"
+        reject("session_rejected", "upstream_unavailable", route=request.url.path,
+               public_code="auth_unavailable", source="boundary")
+        return JSONResponse({"detail": "auth_unavailable"}, status_code=503,
+                            headers={"Retry-After": "5"})
     except Unauthorized as exc:
         # Sem cookie nao ha verificacao a amplificar: visitante deslogado (bootstrap da SPA) nao
         # consome o balde, so quem apresenta credencial invalida (SPEC-219 R6, revisao Sol).
+        from observability.auth_log import reject, session_reason
+        code = public_auth_code(exc)
+        request.state.error_code = code
+        reject("session_rejected", session_reason(exc), level=(
+            "warning" if request.cookies.get("rpg_access") else "debug"),
+            route=request.url.path, public_code=code, source="boundary")
         throttled = _record_authfail(request) if request.cookies.get("rpg_access") else None
         if throttled is not None:
             return throttled
-        return JSONResponse({"detail": public_auth_code(exc)}, status_code=401)
+        return JSONResponse({"detail": code}, status_code=401)
     except ValueError:  # segredo de sessão curto/ausente (CsrfSigner/proof)
+        from observability.auth_log import reject
+        request.state.error_code = "server_misconfigured"
+        reject("session_rejected", "server_misconfigured", route=request.url.path,
+               public_code="server_misconfigured", source="boundary", level="error")
         return JSONResponse({"detail": "server_misconfigured"}, status_code=503)
     token = set_current_principal(principal)
     try:
@@ -618,6 +666,7 @@ def _lifecycle_runtime():
 def _require_allowed_origin(request: Request) -> None:
     """SPEC-220 R5: rotas públicas de /auth só aceitam Origin da allowlist."""
     if request.headers.get("origin") not in _CORS_ORIGINS:
+        _log_csrf_rejection(request, "origin_denied")
         raise HTTPException(403, "origin_denied")
 
 

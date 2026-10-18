@@ -4,6 +4,7 @@ from __future__ import annotations
 import hashlib
 import hmac
 import os
+import re
 import time
 from urllib.parse import urlsplit
 from uuid import UUID
@@ -44,37 +45,73 @@ def captcha_config() -> dict:
             "mode": mode}
 
 
+_TURNSTILE_CODE_RE = re.compile(r"^[a-z0-9-]{1,40}$")
+
+
+def _captcha_reject(reason: str, action: str, **extra: object) -> None:
+    from observability.auth_log import reject
+    reject("captcha_rejected", reason, op=action, **extra)
+
+
+def _turnstile_codes(result: dict) -> list[str]:
+    raw = result.get("error-codes") if isinstance(result, dict) else None
+    if not isinstance(raw, list):
+        return []
+    return [c for c in raw if isinstance(c, str) and _TURNSTILE_CODE_RE.match(c)][:5]
+
+
 def validate_captcha(token: str | None, *, remote_ip: str, action: str) -> None:
     config = captcha_config()
     mode = config["mode"]
     if mode not in {"app", "gotrue"}:
+        _captcha_reject("server_misconfigured", action)
         raise ValueError("captcha_unavailable")
     if mode == "gotrue":
         # GoTrue is publicly reachable with the publishable key. Its native
         # Turnstile verifier must consume this single-use token; the proxy only
         # enforces presence/configuration and forwards it unchanged.
         if not config["required"] or not config["site_key"]:
+            _captcha_reject("server_misconfigured", action)
             raise ValueError("captcha_unavailable")
         if not token:
+            _captcha_reject("missing", action)
             raise Unauthorized("captcha_required")
         return
     if not config["required"]:
         return
     secret = os.getenv("RPG_TURNSTILE_SECRET", "").strip()
     if not secret or not config["site_key"]:
+        _captcha_reject("server_misconfigured", action)
         raise ValueError("captcha_unavailable")
     if not token:
+        _captcha_reject("missing", action)
         raise Unauthorized("captcha_required")
     try:
         response = httpx.post("https://challenges.cloudflare.com/turnstile/v0/siteverify",
                               data={"secret": secret, "response": token, "remoteip": remote_ip}, timeout=5)
-        result = response.json() if response.status_code == 200 else {}
+        if response.status_code != 200:
+            # Queda/erro da Cloudflare != token inválido (SPEC-245 R4); o código público segue fail-closed.
+            _captcha_reject("provider_unavailable", action, upstream_status=response.status_code)
+            raise Unauthorized("captcha_invalid")
+        result = response.json()
         hosts = {urlsplit(origin.strip()).hostname for origin in os.getenv(
             "RPG_CORS_ORIGINS", "http://localhost:8000,http://localhost:5173").split(",")}
-        if (not result.get("success") or result.get("hostname") not in hosts
-                or result.get("action") != action):
+        if not isinstance(result, dict) or not result.get("success"):
+            codes = _turnstile_codes(result)
+            _captcha_reject("turnstile_error:" + ",".join(codes) if codes else "turnstile_error",
+                            action)
             raise Unauthorized("captcha_invalid")
-    except (httpx.HTTPError, ValueError):
+        if result.get("hostname") not in hosts:
+            _captcha_reject("hostname_mismatch", action)
+            raise Unauthorized("captcha_invalid")
+        if result.get("action") != action:
+            _captcha_reject("action_mismatch", action)
+            raise Unauthorized("captcha_invalid")
+    except httpx.HTTPError as exc:
+        _captcha_reject("provider_unavailable", action, error_type=type(exc).__name__)
+        raise Unauthorized("captcha_invalid") from None
+    except ValueError:
+        _captcha_reject("provider_unavailable", action, error_type="ValueError")
         raise Unauthorized("captcha_invalid") from None
 
 
@@ -94,9 +131,11 @@ def _normal(email: str) -> str:
     return email.strip().casefold()
 
 
-def _too_many(decision) -> None:
+def _too_many(decision, *, action: str = "auth", bucket: str = "ip", key: str = "") -> None:
     if not decision.allowed:
         from fastapi import HTTPException
+        from observability.auth_log import rate_limited
+        rate_limited(action, bucket, key, decision.retry_after_seconds)   # SPEC-245 R5
         raise HTTPException(429, "auth_rate_limit", headers={"Retry-After": str(decision.retry_after_seconds)})
 
 
@@ -125,24 +164,33 @@ def auth_limit(runtime, request, *, action: str, email: str = "", stage: str = "
     limiter = runtime.rate_limiter
     if stage == "failure":
         if action == "login" and address:
-            _too_many(limiter.consume(_login_failure_key(address, remote), limit=LOGIN_EMAIL_FAILURES[0],
-                                      window_seconds=LOGIN_EMAIL_FAILURES[1]))
+            key = _login_failure_key(address, remote)
+            _too_many(limiter.consume(key, limit=LOGIN_EMAIL_FAILURES[0],
+                                      window_seconds=LOGIN_EMAIL_FAILURES[1]),
+                      action=action, bucket="email", key=key)
         return
-    _too_many(limiter.consume(f"auth:{action}:ip:{_digest(remote)}", limit=IP_ATTEMPTS[0],
-                              window_seconds=IP_ATTEMPTS[1]))
+    ip_key = f"auth:{action}:ip:{_digest(remote)}"
+    _too_many(limiter.consume(ip_key, limit=IP_ATTEMPTS[0], window_seconds=IP_ATTEMPTS[1]),
+              action=action, bucket="ip", key=ip_key)
     if not address:
         return
     if action == "login":
         peek = getattr(limiter, "peek", None)
         if peek is not None:
-            _too_many(peek(_login_failure_key(address, remote), limit=LOGIN_EMAIL_FAILURES[0],
-                           window_seconds=LOGIN_EMAIL_FAILURES[1]))
+            key = _login_failure_key(address, remote)
+            _too_many(peek(key, limit=LOGIN_EMAIL_FAILURES[0],
+                           window_seconds=LOGIN_EMAIL_FAILURES[1]),
+                      action=action, bucket="email", key=key)
         return
     digest = _digest(address)
-    _too_many(limiter.consume(f"auth:{action}:emailip:{digest}:{_digest(remote)}",
-                              limit=EMAIL_IP_ATTEMPTS[0], window_seconds=EMAIL_IP_ATTEMPTS[1]))
-    _too_many(limiter.consume(f"auth:{action}:email:{digest}", limit=EMAIL_ONLY_ATTEMPTS[0],
-                              window_seconds=EMAIL_ONLY_ATTEMPTS[1]))
+    pair_key = f"auth:{action}:emailip:{digest}:{_digest(remote)}"
+    _too_many(limiter.consume(pair_key, limit=EMAIL_IP_ATTEMPTS[0],
+                              window_seconds=EMAIL_IP_ATTEMPTS[1]),
+              action=action, bucket="email", key=pair_key)
+    email_key = f"auth:{action}:email:{digest}"
+    _too_many(limiter.consume(email_key, limit=EMAIL_ONLY_ATTEMPTS[0],
+                              window_seconds=EMAIL_ONLY_ATTEMPTS[1]),
+              action=action, bucket="email", key=email_key)
 
 
 def auth_success(runtime, *, action: str, email: str, request=None) -> None:

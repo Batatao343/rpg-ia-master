@@ -26,7 +26,15 @@ class Conflict(InfrastructureError):
 
 
 class Unauthorized(InfrastructureError):
-    pass
+    """401 de sessão/credencial. ``reason`` (SPEC-245) é o motivo interno fechado, só para log."""
+
+    def __init__(self, *args: object, reason: str | None = None) -> None:
+        super().__init__(*args)
+        self.reason = reason
+
+
+class AuthUnavailable(InfrastructureError):
+    """Auth upstream (GoTrue/JWKS) fora do ar ou lento: 503 ``auth_unavailable`` (SPEC-245 R1)."""
 
 
 class Forbidden(InfrastructureError):
@@ -43,6 +51,7 @@ AUTH_ERROR_CODES = frozenset({
     # Auth debug 2026-10-18: GoTrue says "e-mail não confirmado" só após a senha conferir
     # (sem enumeração); captcha recusado pelo GoTrue não é falha de credencial.
     "email_not_confirmed",
+    "auth_unavailable",
 })
 _AUTH_CODE_ALIASES = {
     "sessão ausente": "session_missing", "token ausente": "session_missing",

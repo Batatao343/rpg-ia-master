@@ -52,6 +52,8 @@ LABELS = {
     "rpg_kill_switch_load_errors_total": {"error"},
     # SPEC-219 R9: bloqueio anti-abuso (class fechada; scope=ip|owner|daily|authfail|cap).
     "rpg_rate_limited_total": {"class", "scope"},
+    # SPEC-245: rejeições de auth por motivo interno fechado (nunca e-mail/IP/token).
+    "rpg_auth_rejections_total": {"reason"},
 }
 
 

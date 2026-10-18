@@ -1,6 +1,6 @@
 # SPEC-245 — Auth: toda rejeição logada com motivo interno (GoTrue, sessão, CSRF/Origin, captcha, lockout)
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P0**.
+> **Status:** `in-progress` — implementado em 2026-10-18 (branch `logs-p0`); falta a revisão Sol obrigatória e o smoke em staging.
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-239, SPEC-240; branch `auth-debug` mergeada (mapeia `email_not_confirmed`/`captcha_failed` — esta spec só adiciona LOG, não muda mapeamento)
 > **Desbloqueia:** SPEC-262 (runbook auth)
@@ -57,13 +57,13 @@ R1–R7.
 
 ## 5. Critérios de aceite
 
-- [ ] Cada rejeição de auth tem 1 linha com `reason`/`upstream_code` e `request_id`.
-- [ ] Nenhum e-mail/IP cru em log (teste).
-- [ ] Timeout do GoTrue ⇒ 503 `auth_unavailable`, não 500.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Cada rejeição de auth tem 1 linha com `reason`/`upstream_code` e `request_id`.
+- [x] Nenhum e-mail/IP cru em log (teste).
+- [x] Timeout do GoTrue ⇒ 503 `auth_unavailable`, não 500.
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] `uv run pytest` verde (suíte completa offline).
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -74,3 +74,13 @@ R1–R7.
 - Volume em ataque de força bruta: `auth.rate_limited` é amostrado (1 linha por `key_ref` por minuto) — contagem completa fica na métrica.
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## 8. Notas de implementação
+
+- Novo `observability/auth_log.py` (catalogo fechado de motivos, `reject`, `origin_host`, `rate_limited` amostrado 1 linha/key_ref/min) + metrica `rpg_auth_rejections_total{reason}`.
+- `Unauthorized` ganhou `reason` opcional (so log); novo `AuthUnavailable` -> 503 `auth_unavailable` (codigo publico novo em `AUTH_ERROR_CODES`, `Retry-After: 5`).
+- `SupabaseIdentityProvider._request`: toda chamada ao GoTrue emite `auth.upstream` (op, upstream_status, upstream_code do catalogo fechado ou `other`/`none`, duration_ms, public_code); timeout/erro de rede -> status 0 + `error_type` + 503. Sucesso em info (verify_token e reauth_logout em debug, para nao inundar). Mapeamento publico de codigos inalterado.
+- `auth.session_rejected` no boundary e no handler de `Unauthorized` (reason: missing|expired|bad_signature|bad_aud_iss|revoked|session_invalid|upstream_rejected|server_misconfigured|unknown_kid|jwks_unavailable|bad_iss|bad_aud|upstream_unavailable); sem cookie de acesso o nivel e debug (bootstrap da SPA). `auth.csrf_rejected` (origin_denied|csrf_invalid|csrf_missing; `origin_host` so se na allowlist, senao `other`/`none`). `auth.captcha_rejected` (missing|turnstile_error:<codes sanitizados>|hostname_mismatch|action_mismatch|provider_unavailable|server_misconfigured). OIDC com reasons fechados.
+- Desvio: o campo `action` do spec virou `op` nas linhas de captcha/rate_limited porque `action` e chave sensivel do `redact` (SPEC-222).
+- Desvio: `key_ref` = HMAC (`pseudonym`) da chave de armazenamento do limiter (que ja contem digests sem sal); a chave crua nunca sai.
+- Pendente: smoke em staging (senha errada, conta nao confirmada, refresh expirado, POST sem CSRF) e revisao Sol obrigatoria.

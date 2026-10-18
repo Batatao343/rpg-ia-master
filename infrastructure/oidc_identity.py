@@ -81,7 +81,7 @@ class OidcIdentityProvider:
                 except (httpx.HTTPError, ValueError, AttributeError):
                     keys = None
                 if not isinstance(keys, list):
-                    raise Unauthorized("provedor de identidade indisponível")
+                    raise Unauthorized("provedor de identidade indisponível", reason="jwks_unavailable")
                 self._keys = {str(k.get("kid", "")): k for k in keys if isinstance(k, dict)}
                 self._fetched_at = self._clock()
             return self._keys
@@ -91,7 +91,7 @@ class OidcIdentityProvider:
         if key is None:  # rotação de chave no IdP: um refetch, depois falha
             key = self._jwks(force=True).get(kid)
         if key is None:
-            raise Unauthorized("token inválido")
+            raise Unauthorized("token inválido", reason="unknown_kid")
         return key
 
     @staticmethod
@@ -139,18 +139,18 @@ class OidcIdentityProvider:
         claims = self._claims(access_token)
         now = self._clock()
         if str(claims.get("iss") or "").rstrip("/") != self.issuer:
-            raise Unauthorized("token inválido")  # iss obrigatório e exato
+            raise Unauthorized("token inválido", reason="bad_iss")  # iss obrigatório e exato
         audiences = claims.get("aud")
         audiences = [audiences] if isinstance(audiences, str) else (
             audiences if isinstance(audiences, list) else [])
         if self.audience not in audiences and claims.get("azp") != self.audience:
-            raise Unauthorized("token inválido")
+            raise Unauthorized("token inválido", reason="bad_aud")
         exp, nbf = claims.get("exp"), claims.get("nbf", now)
         for value in (exp, nbf):  # NumericDate: número finito, nunca bool/string
             if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
                 raise Unauthorized("token inválido")
         if exp <= now - CLOCK_SKEW_SECONDS or nbf > now + CLOCK_SKEW_SECONDS:
-            raise Unauthorized("token inválido")
+            raise Unauthorized("token inválido", reason="expired")
         if "email_verified" in claims and claims["email_verified"] is not True:
             raise Unauthorized("token inválido")
         subject = str(claims.get("sub") or "").strip()
