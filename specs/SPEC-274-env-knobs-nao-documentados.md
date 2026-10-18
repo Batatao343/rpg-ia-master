@@ -1,6 +1,6 @@
 # SPEC-274 — Trocar variáveis de ambiente que ninguém define por constantes
 
-> **Status:** `draft` · **Revisão independente 2026-10-18:** SAFE WITH CHANGES — escopo invertido: documentar, não transformar em constante (ver §8)
+> **Status:** `done` · **Revisão independente 2026-10-18:** SAFE WITH CHANGES — escopo invertido: documentar, não transformar em constante (ver §8)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Origem:** auditoria ponytail 2026-10-18 ([relatório](../docs/auditorias/ponytail-poda-2026-10-18.md))
 > **Depende de:** confirmação de quem opera o staging (Vercel env / Supabase cron) de que nenhuma está setada

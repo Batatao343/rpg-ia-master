@@ -4854,7 +4854,7 @@ specs:
   lineage_note: Authored from auditoria ponytail 2026-10-18 (docs/auditorias/ponytail-poda-2026-10-18.md); draft awaiting approval
 - id: SPEC-274
   slug: env-knobs-nao-documentados
-  status: draft
+  status: done
   path: specs/SPEC-274-env-knobs-nao-documentados.md
   created_commit: null
   created_at: '2026-10-18'

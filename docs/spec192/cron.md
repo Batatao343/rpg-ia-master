@@ -19,6 +19,9 @@ heartbeat e fencing do `JobQueue` Postgres são os mesmos do worker local.
   `RPG_CRON_MAX_DURATION_SECONDS` (default 60 = `maxDuration` da função; orçamento
   efetivo = min(budget, maxDuration - 5)), `RPG_CRON_MAX_JOBS` (default 50).
   `account-deletions` exige `RPG_RUNTIME_PROFILE=hosted-supabase`.
+  Tamanho de lote (SPEC-274): `RPG_CRON_MAX_RECONCILE` (default 100, reconciliação de compras)
+  e `RPG_CRON_MAX_WALLET_RECOVERY` (default 50, recuperação de wallet); reduza num incidente
+  sem redeploy.
 - Resposta: só contagens/durações, ex. `{"ok":true,"processed":3,"stopped_reason":"empty","duration_s":1.2}`.
   Falha de tarefa -> HTTP 500: exceção = `cron_task_failed`; falhas contadas (`failed>0`, ex. exclusão de conta)
   = o mesmo corpo só-contagens com `"ok":false` e HTTP 500. Em ambos o pg_net registra status != 2xx.
