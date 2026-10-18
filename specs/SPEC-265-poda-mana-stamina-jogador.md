@@ -1,6 +1,6 @@
 # SPEC-265 — Remover o recurso legado mana/stamina do jogador
 
-> **Status:** `in-progress` · **Revisão independente 2026-10-18:** SAFE WITH CHANGES (tokens CSS, fixtures e2e, `mana_bonus`, fallback do HUD; ver §8)
+> **Status:** `done` (revisão Sol APPROVED, [handoff](../handoffs/SPEC-265-SOL-review.md)) · **Revisão independente 2026-10-18:** SAFE WITH CHANGES (tokens CSS, fixtures e2e, `mana_bonus`, fallback do HUD; ver §8)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Origem:** auditoria ponytail 2026-10-18 ([relatório](../docs/auditorias/ponytail-poda-2026-10-18.md))
 > **Depende de:** —

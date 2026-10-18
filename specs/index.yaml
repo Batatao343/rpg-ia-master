@@ -4719,7 +4719,7 @@ specs:
   lineage_note: Authored from auditoria ponytail 2026-10-18 (docs/auditorias/ponytail-poda-2026-10-18.md); draft awaiting approval
 - id: SPEC-265
   slug: poda-mana-stamina-jogador
-  status: in-progress
+  status: done
   path: specs/SPEC-265-poda-mana-stamina-jogador.md
   created_commit: null
   created_at: '2026-10-18'
