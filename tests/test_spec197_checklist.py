@@ -157,8 +157,14 @@ def test_closed_status_is_exact_token(tmp_path: Path):
 
 
 def test_real_register_r12_not_closed():
+    # R-12 (crons em produção) não pode virar "fechado" sem agendamento em prod; o dono
+    # aceitou o risco para o beta em 18/10, então "aceito" só vale com o aceite registrado.
     rows = {r["id"]: r for r in c.parse_risks(c.ROOT / "docs" / "spec197" / "risk-register.md")}
-    assert rows["R-12"]["status"] == "mitigado"
+    status = rows["R-12"]["status"]
+    assert status in {"mitigado", "aceito"}
+    if status == "aceito":
+        text = (c.ROOT / "docs" / "spec197" / "risk-register.md").read_text(encoding="utf-8")
+        assert "aceito r-12 para o Beta" in text
 
 
 def test_production_requires_daily_cap_env():
