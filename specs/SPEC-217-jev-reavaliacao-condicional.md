@@ -60,7 +60,7 @@ Rótulos: **[F]** fato observado · **[D]** decisão do dono · **[H]** hipótes
 
 ### Comuns
 
-- **R10 — Teto e parada.** Total da spec (J1 + J2, incluindo sanidade): **160 chamadas externas** e **US$ 1,60** de reserva (US$ 0,01/chamada, regra de parada — não é custo real). Qualquer erro HTTP, de autenticação, quota, timeout ou resposta inválida, inclusive se a cascata de fallback do CLASSIFY "salvar" a resposta, **interrompe o run** sem score. Retomada só com nova autorização do dono, contando contra o mesmo teto.
+- **R10 — Teto e parada.** Total da spec (J1 + J1b + J2, incluindo sanidade): **190 chamadas externas** e **US$ 1,90** de reserva (era 160/US$ 1,60; emenda de 2026-10-18, ver §6) (US$ 0,01/chamada, regra de parada — não é custo real). Qualquer erro HTTP, de autenticação, quota, timeout ou resposta inválida, inclusive se a cascata de fallback do CLASSIFY "salvar" a resposta, **interrompe o run** sem score. Retomada só com nova autorização do dono, contando contra o mesmo teto.
 - **R11 — Artifacts.** Raw gravado antes do score; summary reproduzível offline a partir do raw; SHA-256 em `docs/spec217/README.md`, como na SPEC-178/179. Gravar em diretório temporário fora do OneDrive e copiar para `evals/runs/jev-router-hybrid/<timestamp>/` (gitignored) conferindo hashes. Vale para cada execução da J1 e para a J2.
 - **R12 — Fronteira.** Só o DTO `DecisionState` cruza para a TypeSafe: sem segredo, PII, lore oculto ou texto de prompt interno. Jev nunca decide fato canônico, aplica evento, move ouro/HP ou libera segredo; validação Python mantém precedência.
 - **R13 — Produção intacta.** Default `RPG_JEV_ROUTER_MODE=off`; nenhuma mudança de schema de save; J1/J2 não alteram o comportamento de `services/jev_rollout.py` nem rotas de produção. Estruturas novas vivem no experimento; portar para o rollout só após GO.
@@ -101,7 +101,8 @@ Hipótese (a) cache de cena vs RAG profundo (descartada: SPEC-214 `NO_GO`); even
 ## 6. Smoke / orçamento
 
 - **Offline:** testes do passo 2 + summary reproduzido do raw.
-- **Live (autorizado pelo dono em 2026-10-18):** teto **160 chamadas / US$ 1,60** no total desta spec. Divisão: **J1 ≤ 60**; **J2 ≤ 100** (4 de sanidade + réplicas). Com estrutura de um estágio, `4 + N × 2 × 3 ≤ 100` ⇒ **N ≤ 16 casos elegíveis** no FROZEN; com dois estágios, contar a chamada extra por caso com alvo. O handoff dimensiona o FROZEN para caber; se a estrutura congelada exigir mais chamadas do que cabem, reduzir casos do FROZEN **antes** de qualquer leitura de conteúdo (por seleção determinística por seed declarada), nunca réplicas. Saldo não usado da J1 não aumenta a J2 sem registro explícito.
+- **Live (autorizado pelo dono em 2026-10-18):** teto **190 chamadas / US$ 1,90** no total desta spec. Divisão: **J1 ≤ 60**; **J1b ≤ 30** (estágio de fonte do loot, [SPEC-238](SPEC-238-jev-loot-source.md), só DEV); **J2 ≤ 100** (4 de sanidade + réplicas), inalterada.
+- **Emenda de orçamento (2026-10-18):** o dono aprovou +30 chamadas (~US$ 0,30) para a J1b — "boa, cria uma spec para o jev cobrir o loot e vamos usar ele também" — elevando o teto de 160/US$ 1,60 para 190/US$ 1,90. O saldo da J1b não migra para a J2. Com estrutura de um estágio, `4 + N × 2 × 3 ≤ 100` ⇒ **N ≤ 16 casos elegíveis** no FROZEN; com dois estágios, contar a chamada extra por caso com alvo. O handoff dimensiona o FROZEN para caber; se a estrutura congelada exigir mais chamadas do que cabem, reduzir casos do FROZEN **antes** de qualquer leitura de conteúdo (por seleção determinística por seed declarada), nunca réplicas. Saldo não usado da J1 não aumenta a J2 sem registro explícito.
 - **Shadow em staging (R15):** fora deste teto; exige autorização própria.
 
 ## 7. Riscos & compatibilidade
@@ -115,7 +116,7 @@ Hipótese (a) cache de cena vs RAG profundo (descartada: SPEC-214 `NO_GO`); even
 
 ## 8. Pontos de decisão do dono
 
-1. Teto: **decidido** — 160 chamadas / US$ 1,60 no total (J1 ≤ 60) (2026-10-18).
+1. Teto: **decidido** — 160 chamadas / US$ 1,60 no total (J1 ≤ 60) (2026-10-18); **emendado** para 190 / US$ 1,90 com J1b ≤ 30 (SPEC-238, 2026-10-18).
 2. Fase J1 de estruturação: **decidida** (2026-10-18).
 3. Shadow em staging (R15): teto a autorizar só se a J2 der GO.
 4. `primary` em produção: aprovação separada após o shadow.

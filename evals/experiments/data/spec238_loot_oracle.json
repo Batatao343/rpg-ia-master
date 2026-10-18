@@ -1,0 +1,58 @@
+{
+  "labels": {
+    "spec217.dev.loot.buy.01": {
+      "loot_source": "SHOP",
+      "provenance": "synthetic DEV rationale: transactional verb to a merchant: loot (SHOP) wins over npc_actor"
+    },
+    "spec217.dev.loot.pick.01": {
+      "loot_source": "TREASURE",
+      "provenance": "synthetic DEV rationale: pick up an item"
+    },
+    "spec217.dev.loot.sell.01": {
+      "loot_source": "SHOP",
+      "provenance": "synthetic DEV rationale: transactional verb to a smith: loot (SHOP)"
+    },
+    "spec217.dev.reg.loot.craft.forge": {
+      "loot_source": "CRAFT",
+      "provenance": "evals/datasets/regression/routing_actions.jsonl#routing.loot.craft.forge"
+    },
+    "spec217.dev.reg.loot.craft.keyword": {
+      "loot_source": "CRAFT",
+      "provenance": "evals/datasets/regression/routing_actions.jsonl#routing.loot.craft.keyword"
+    },
+    "spec217.dev.reg.loot.shop.buy": {
+      "loot_source": "SHOP",
+      "provenance": "evals/datasets/regression/routing_actions.jsonl#routing.loot.shop.buy"
+    },
+    "spec217.dev.reg.loot.shop.sell": {
+      "loot_source": "SHOP",
+      "provenance": "evals/datasets/regression/routing_actions.jsonl#routing.loot.shop.sell"
+    },
+    "spec217.dev.reg.loot.treasure.base": {
+      "loot_source": "TREASURE",
+      "provenance": "evals/datasets/regression/routing_actions.jsonl#routing.loot.treasure.base"
+    },
+    "spec217.dev.reg.loot.treasure.case": {
+      "loot_source": "TREASURE",
+      "provenance": "evals/datasets/regression/routing_actions.jsonl#routing.loot.treasure.case"
+    },
+    "spec217.dev.reg.loot.treasure.chest": {
+      "loot_source": "TREASURE",
+      "provenance": "evals/datasets/regression/routing_actions.jsonl#routing.loot.treasure.chest"
+    },
+    "spec217.dev.s179.loot.craft": {
+      "loot_source": "CRAFT",
+      "provenance": "evals/experiments/data/spec179_corpus.jsonl#loot.craft"
+    },
+    "spec217.dev.s179.loot.shop": {
+      "loot_source": "SHOP",
+      "provenance": "evals/experiments/data/spec179_corpus.jsonl#loot.shop"
+    },
+    "spec217.dev.s179.loot.treasure": {
+      "loot_source": "TREASURE",
+      "provenance": "evals/experiments/data/spec179_corpus.jsonl#loot.treasure"
+    }
+  },
+  "purpose": "loot_source oracle for the 13 DEV loot cases (DEV corpus itself is sealed and unchanged)",
+  "spec": "SPEC-238"
+}

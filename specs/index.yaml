@@ -4244,3 +4244,20 @@ specs:
   tie_breaker: null
   lineage_ambiguous: false
   lineage_note: Authored from staging wave 2026-10-17 (Jina missing from rate card); approved by owner for execution
+- id: SPEC-238
+  slug: jev-loot-source
+  status: approved
+  path: specs/SPEC-238-jev-loot-source.md
+  created_commit: null
+  created_at: '2026-10-18'
+  completed_commit: null
+  completed_at: null
+  completed_order: null
+  depends_on:
+  - SPEC-217
+  depends_on_raw:
+  - SPEC-217
+  depends_on_unresolved: []
+  tie_breaker: null
+  lineage_ambiguous: false
+  lineage_note: Owner 2026-10-18 asked Jev to cover loot too (J1b of SPEC-217); approved with +30 live calls, SPEC-217 cap 190/US$1.90

@@ -59,6 +59,10 @@ class DecisionState(_ClosedModel):
     scene: tuple[SceneActor, ...] | None = Field(default=None, max_length=20)
     last_speaker: str | None = Field(default=None, max_length=64)
     verbs: tuple[SceneVerb, ...] | None = Field(default=None, max_length=8)
+    # SPEC-238: public location facts for the loot-source stage (merchant
+    # catalog / world-map craft tags); None = unknown location, off the wire.
+    merchant_here: bool | None = None
+    craft_station: bool | None = None
 
 
 class ChoiceQuestion(_ClosedModel):
