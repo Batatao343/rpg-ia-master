@@ -1,11 +1,11 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "421dd6d959d4fc44899b19d6033ba482cd290836",
+  "commit_sha": "263df16eb4fdfeb3e0721d2ed1ae224408c79115",
   "edge_counts": {
-    "calls": 16106,
-    "contains": 663,
-    "defines": 9133,
-    "imports": 1499,
+    "calls": 16096,
+    "contains": 662,
+    "defines": 9106,
+    "imports": 1498,
     "likely_test_for": 913,
     "route_to": 63
   },
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:ab1627a16f9ead6037193d71d7cddff4d389bc38514ccbbd7dbe88bf240d493e",
+  "graph_hash": "sha256:58d830d30ae93c7619afec018ebc1c4fab25d35aec050982bc162d4aca12eae9",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -143,7 +143,6 @@
     "infrastructure/stripe_payments.py",
     "infrastructure/supabase_blob.py",
     "infrastructure/supabase_identity.py",
-    "infrastructure/testing.py",
     "infrastructure/usage_events.py",
     "infrastructure/wallet.py",
     "infrastructure/wallet_debt.py",
@@ -854,14 +853,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 749,
+    "class": 745,
     "endpoint": 63,
-    "file": 800,
-    "function": 2837,
-    "method": 740,
-    "module": 663,
-    "test": 4807
+    "file": 799,
+    "function": 2825,
+    "method": 730,
+    "module": 662,
+    "test": 4806
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:e5649d860d6641b99c90396669a308e209dde0459bb3e694ec41bd64666409d2"
+  "source_tree_hash": "sha256:a2e4fae2c02c457856222bcc3b2ed8e4ee4b6aa4bf80998563043ac7f4e8b9c1"
 }
