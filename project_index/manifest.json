@@ -1,11 +1,11 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "295af8e7a9acff8f866d41da1f2193b022476b94",
+  "commit_sha": "014a0c29bd7044da2df0a69d00a28798f3c6c6f8",
   "edge_counts": {
-    "calls": 15365,
-    "contains": 650,
-    "defines": 8819,
-    "imports": 1441,
+    "calls": 15393,
+    "contains": 651,
+    "defines": 8835,
+    "imports": 1446,
     "likely_test_for": 888,
     "route_to": 63
   },
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:3301637bbbc2fcbebeb4a2921cfd3a33c7b4e21c0524f50f75451aab28f64b08",
+  "graph_hash": "sha256:9332614fca29decd367bee3c694ae53af030cac50f4b3c1b2d402befed69fece",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -240,6 +240,7 @@
     "scripts/staging/security_wave_smoke.py",
     "scripts/staging/smoke_ab.py",
     "scripts/staging/sse_disconnect.py",
+    "scripts/staging/stt_fallback_smoke.py",
     "scripts/staging/synthetic_data.py",
     "scripts/staging/two_user_smoke.py",
     "scripts/staging/vercel_env.py",
@@ -840,14 +841,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 728,
+    "class": 729,
     "endpoint": 63,
-    "file": 786,
-    "function": 2709,
-    "method": 711,
-    "module": 650,
-    "test": 4671
+    "file": 787,
+    "function": 2715,
+    "method": 716,
+    "module": 651,
+    "test": 4675
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:a0de56ee866fd80b754fef53965487545f8358c048d0d3aa7567cd2d3aef90df"
+  "source_tree_hash": "sha256:378e1b4ab4439d3c34ff130e3e66998fd73368ed3e329ca9d1dd0fc914a28c37"
 }

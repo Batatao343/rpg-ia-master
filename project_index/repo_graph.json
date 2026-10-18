@@ -1,5 +1,5 @@
 {
-  "commit_sha": "295af8e7a9acff8f866d41da1f2193b022476b94",
+  "commit_sha": "014a0c29bd7044da2df0a69d00a28798f3c6c6f8",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -2683,6 +2683,17 @@
       },
       "source": "file:scripts/staging/sse_disconnect.py",
       "target": "module:scripts.staging.sse_disconnect",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 1
+      },
+      "source": "file:scripts/staging/stt_fallback_smoke.py",
+      "target": "module:scripts.staging.stt_fallback_smoke",
       "type": "contains"
     },
     {
@@ -38330,7 +38341,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 17
+        "line": 25
       },
       "source": "module:scripts.staging.auth_config",
       "target": "module:scripts.staging",
@@ -38341,7 +38352,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 89
+        "line": 136
       },
       "source": "module:scripts.staging.auth_config",
       "target": "symbol:scripts.staging.auth_config.AuthConfigClient",
@@ -38352,7 +38363,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 51
+        "line": 95
       },
       "source": "module:scripts.staging.auth_config",
       "target": "symbol:scripts.staging.auth_config.desired_config",
@@ -38363,7 +38374,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 73
+        "line": 120
       },
       "source": "module:scripts.staging.auth_config",
       "target": "symbol:scripts.staging.auth_config.diff_config",
@@ -38374,7 +38385,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 135
+        "line": 185
       },
       "source": "module:scripts.staging.auth_config",
       "target": "symbol:scripts.staging.auth_config.main",
@@ -38385,7 +38396,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 84
+        "line": 131
       },
       "source": "module:scripts.staging.auth_config",
       "target": "symbol:scripts.staging.auth_config.redacted_diff",
@@ -38396,7 +38407,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 111
+        "line": 158
       },
       "source": "module:scripts.staging.auth_config",
       "target": "symbol:scripts.staging.auth_config.run",
@@ -38407,7 +38418,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 42
+        "line": 70
+      },
+      "source": "module:scripts.staging.auth_config",
+      "target": "symbol:scripts.staging.auth_config.smtp_config",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/auth_config.py",
+        "line": 84
+      },
+      "source": "module:scripts.staging.auth_config",
+      "target": "symbol:scripts.staging.auth_config.template_config",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/auth_config.py",
+        "line": 61
       },
       "source": "module:scripts.staging.auth_config",
       "target": "symbol:scripts.staging.auth_config.validate_redirects",
@@ -38847,7 +38880,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/e2e_session.py",
-        "line": 179
+        "line": 185
       },
       "source": "module:scripts.staging.e2e_session",
       "target": "symbol:scripts.staging.e2e_session.main",
@@ -39001,7 +39034,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 89
+        "line": 88
       },
       "source": "module:scripts.staging.job_survival",
       "target": "symbol:scripts.staging.job_survival.exactly_once",
@@ -39012,7 +39045,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 79
+        "line": 78
       },
       "source": "module:scripts.staging.job_survival",
       "target": "symbol:scripts.staging.job_survival.job_state",
@@ -39023,7 +39056,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 187
+        "line": 186
       },
       "source": "module:scripts.staging.job_survival",
       "target": "symbol:scripts.staging.job_survival.main",
@@ -39034,7 +39067,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 64
+        "line": 63
       },
       "source": "module:scripts.staging.job_survival",
       "target": "symbol:scripts.staging.job_survival.make_job",
@@ -39056,7 +39089,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 107
+        "line": 106
       },
       "source": "module:scripts.staging.job_survival",
       "target": "symbol:scripts.staging.job_survival.phase_a",
@@ -39067,7 +39100,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 144
+        "line": 143
       },
       "source": "module:scripts.staging.job_survival",
       "target": "symbol:scripts.staging.job_survival.phase_b",
@@ -39078,7 +39111,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 47
+        "line": 46
       },
       "source": "module:scripts.staging.job_survival",
       "target": "symbol:scripts.staging.job_survival.purge_owner",
@@ -39089,7 +39122,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 95
+        "line": 94
       },
       "source": "module:scripts.staging.job_survival",
       "target": "symbol:scripts.staging.job_survival.wait_for",
@@ -39430,7 +39463,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/projection_measure.py",
-        "line": 225
+        "line": 224
       },
       "source": "module:scripts.staging.projection_measure",
       "target": "symbol:scripts.staging.projection_measure.main",
@@ -39540,6 +39573,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/s192.py",
+        "line": 144
+      },
+      "source": "module:scripts.staging.s192",
+      "target": "symbol:scripts.staging.s192.app_login",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/s192.py",
         "line": 77
       },
       "source": "module:scripts.staging.s192",
@@ -39551,7 +39595,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/s192.py",
-        "line": 140
+        "line": 160
       },
       "source": "module:scripts.staging.s192",
       "target": "symbol:scripts.staging.s192.db",
@@ -39628,7 +39672,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/s192.py",
-        "line": 153
+        "line": 173
       },
       "source": "module:scripts.staging.s192",
       "target": "symbol:scripts.staging.s192.query",
@@ -39650,6 +39694,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/s192.py",
+        "line": 139
+      },
+      "source": "module:scripts.staging.s192",
+      "target": "symbol:scripts.staging.s192.smoke_captcha",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/s192.py",
         "line": 50
       },
       "source": "module:scripts.staging.s192",
@@ -39661,7 +39716,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/s192.py",
-        "line": 130
+        "line": 150
       },
       "source": "module:scripts.staging.s192",
       "target": "symbol:scripts.staging.s192.sweep_synthetic_users",
@@ -39672,7 +39727,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/s192.py",
-        "line": 175
+        "line": 195
       },
       "source": "module:scripts.staging.s192",
       "target": "symbol:scripts.staging.s192.timed",
@@ -39683,7 +39738,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/s192.py",
-        "line": 167
+        "line": 187
       },
       "source": "module:scripts.staging.s192",
       "target": "symbol:scripts.staging.s192.vercel",
@@ -40112,7 +40167,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/sse_disconnect.py",
-        "line": 88
+        "line": 87
       },
       "source": "module:scripts.staging.sse_disconnect",
       "target": "symbol:scripts.staging.sse_disconnect.main",
@@ -40127,6 +40182,94 @@
       },
       "source": "module:scripts.staging.sse_disconnect",
       "target": "symbol:scripts.staging.sse_disconnect.run",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 19
+      },
+      "source": "module:scripts.staging.stt_fallback_smoke",
+      "target": "module:scripts.staging",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 20
+      },
+      "source": "module:scripts.staging.stt_fallback_smoke",
+      "target": "module:scripts.staging.e2e_session",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 21
+      },
+      "source": "module:scripts.staging.stt_fallback_smoke",
+      "target": "module:scripts.staging.synthetic_data",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 22
+      },
+      "source": "module:scripts.staging.stt_fallback_smoke",
+      "target": "module:scripts.staging.two_user_smoke",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 23
+      },
+      "source": "module:scripts.staging.stt_fallback_smoke",
+      "target": "module:scripts.staging.voice_smoke",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 29
+      },
+      "source": "module:scripts.staging.stt_fallback_smoke",
+      "target": "symbol:scripts.staging.stt_fallback_smoke.GroqBurst",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 128
+      },
+      "source": "module:scripts.staging.stt_fallback_smoke",
+      "target": "symbol:scripts.staging.stt_fallback_smoke.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 70
+      },
+      "source": "module:scripts.staging.stt_fallback_smoke",
+      "target": "symbol:scripts.staging.stt_fallback_smoke.run",
       "type": "defines"
     },
     {
@@ -40277,7 +40420,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/two_user_smoke.py",
-        "line": 166
+        "line": 165
       },
       "source": "module:scripts.staging.two_user_smoke",
       "target": "symbol:scripts.staging.two_user_smoke.main",
@@ -40288,7 +40431,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/two_user_smoke.py",
-        "line": 56
+        "line": 55
       },
       "source": "module:scripts.staging.two_user_smoke",
       "target": "symbol:scripts.staging.two_user_smoke.run",
@@ -40299,7 +40442,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 81
+        "line": 84
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env._load_files",
@@ -40310,7 +40453,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 88
+        "line": 91
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.build_env",
@@ -40321,7 +40464,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 167
+        "line": 173
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.main",
@@ -40332,7 +40475,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 128
+        "line": 134
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.push",
@@ -40343,7 +40486,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 151
+        "line": 157
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.remove",
@@ -100788,10 +100931,32 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec191_staging_tools.py",
+        "line": 302
+      },
+      "source": "module:tests.test_spec191_staging_tools",
+      "target": "symbol:tests.test_spec191_staging_tools.test_auth_config_apply_sends_smtp_before_email_rate_limit_and_redacts_pass",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec191_staging_tools.py",
         "line": 64
       },
       "source": "module:tests.test_spec191_staging_tools",
       "target": "symbol:tests.test_spec191_staging_tools.test_auth_config_plan_and_apply_payload",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec191_staging_tools.py",
+        "line": 287
+      },
+      "source": "module:tests.test_spec191_staging_tools",
+      "target": "symbol:tests.test_spec191_staging_tools.test_auth_config_smtp_from_env_all_or_nothing_and_templates_from_repo",
       "type": "defines"
     },
     {
@@ -101485,6 +101650,17 @@
       },
       "source": "module:tests.test_spec192_vercel_env",
       "target": "symbol:tests.test_spec192_vercel_env.test_projection_mode_flag_sets_post_response_and_inline_deletes_it",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec192_vercel_env.py",
+        "line": 109
+      },
+      "source": "module:tests.test_spec192_vercel_env",
+      "target": "symbol:tests.test_spec192_vercel_env.test_real_turnstile_site_key_and_optional_openai_key_stay_out_of_preview",
       "type": "defines"
     },
     {
@@ -155711,7 +155887,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/account_deletion_recovery.py",
-        "line": 143
+        "line": 142
       },
       "source": "symbol:scripts.staging.account_deletion_recovery.main",
       "target": "symbol:scripts.staging.account_deletion_recovery.cron_call",
@@ -155722,7 +155898,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/account_deletion_recovery.py",
-        "line": 150
+        "line": 149
       },
       "source": "symbol:scripts.staging.account_deletion_recovery.main",
       "target": "symbol:scripts.staging.account_deletion_recovery.log_message",
@@ -155733,7 +155909,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/account_deletion_recovery.py",
-        "line": 103
+        "line": 102
       },
       "source": "symbol:scripts.staging.account_deletion_recovery.main",
       "target": "symbol:scripts.staging.account_deletion_recovery.owner_footprint",
@@ -155744,7 +155920,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/account_deletion_recovery.py",
-        "line": 106
+        "line": 105
       },
       "source": "symbol:scripts.staging.account_deletion_recovery.main",
       "target": "symbol:scripts.staging.account_deletion_recovery.owner_footprint",
@@ -155755,7 +155931,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/account_deletion_recovery.py",
-        "line": 121
+        "line": 120
       },
       "source": "symbol:scripts.staging.account_deletion_recovery.main",
       "target": "symbol:scripts.staging.account_deletion_recovery.owner_footprint",
@@ -155766,7 +155942,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/account_deletion_recovery.py",
-        "line": 123
+        "line": 122
       },
       "source": "symbol:scripts.staging.account_deletion_recovery.main",
       "target": "symbol:scripts.staging.account_deletion_recovery.recovered",
@@ -155777,7 +155953,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/account_deletion_recovery.py",
-        "line": 137
+        "line": 136
       },
       "source": "symbol:scripts.staging.account_deletion_recovery.main",
       "target": "symbol:scripts.staging.account_deletion_recovery.recovered",
@@ -155788,18 +155964,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/account_deletion_recovery.py",
-        "line": 93
-      },
-      "source": "symbol:scripts.staging.account_deletion_recovery.main",
-      "target": "symbol:scripts.staging.e2e_session._h",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/account_deletion_recovery.py",
-        "line": 97
+        "line": 96
       },
       "source": "symbol:scripts.staging.account_deletion_recovery.main",
       "target": "symbol:scripts.staging.e2e_session._h",
@@ -155821,7 +155986,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/account_deletion_recovery.py",
-        "line": 102
+        "line": 93
+      },
+      "source": "symbol:scripts.staging.account_deletion_recovery.main",
+      "target": "symbol:scripts.staging.s192.app_login",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/account_deletion_recovery.py",
+        "line": 101
       },
       "source": "symbol:scripts.staging.account_deletion_recovery.main",
       "target": "symbol:scripts.staging.s192.db",
@@ -155832,7 +156008,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/account_deletion_recovery.py",
-        "line": 105
+        "line": 104
       },
       "source": "symbol:scripts.staging.account_deletion_recovery.main",
       "target": "symbol:scripts.staging.s192.db",
@@ -155843,7 +156019,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/account_deletion_recovery.py",
-        "line": 157
+        "line": 156
       },
       "source": "symbol:scripts.staging.account_deletion_recovery.main",
       "target": "symbol:scripts.staging.s192.evidence",
@@ -155854,7 +156030,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/account_deletion_recovery.py",
-        "line": 159
+        "line": 158
       },
       "source": "symbol:scripts.staging.account_deletion_recovery.main",
       "target": "symbol:scripts.staging.s192.evidence",
@@ -155887,7 +156063,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/account_deletion_recovery.py",
-        "line": 122
+        "line": 121
       },
       "source": "symbol:scripts.staging.account_deletion_recovery.main",
       "target": "symbol:scripts.staging.s192.query",
@@ -155898,7 +156074,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/account_deletion_recovery.py",
-        "line": 133
+        "line": 132
       },
       "source": "symbol:scripts.staging.account_deletion_recovery.main",
       "target": "symbol:scripts.staging.s192.query",
@@ -155909,7 +156085,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/account_deletion_recovery.py",
-        "line": 153
+        "line": 152
       },
       "source": "symbol:scripts.staging.account_deletion_recovery.main",
       "target": "symbol:scripts.staging.s192.query",
@@ -155920,7 +156096,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/account_deletion_recovery.py",
-        "line": 145
+        "line": 144
       },
       "source": "symbol:scripts.staging.account_deletion_recovery.main",
       "target": "symbol:scripts.staging.s192.vercel",
@@ -155931,7 +156107,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 90
+        "line": 137
       },
       "source": "symbol:scripts.staging.auth_config.AuthConfigClient",
       "target": "symbol:scripts.staging.auth_config.AuthConfigClient.__init__",
@@ -155942,7 +156118,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 95
+        "line": 142
       },
       "source": "symbol:scripts.staging.auth_config.AuthConfigClient",
       "target": "symbol:scripts.staging.auth_config.AuthConfigClient.get",
@@ -155953,7 +156129,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 100
+        "line": 147
       },
       "source": "symbol:scripts.staging.auth_config.AuthConfigClient",
       "target": "symbol:scripts.staging.auth_config.AuthConfigClient.patch",
@@ -155964,7 +156140,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 105
+        "line": 152
       },
       "source": "symbol:scripts.staging.auth_config.AuthConfigClient",
       "target": "symbol:scripts.staging.auth_config.AuthConfigClient.try_patch",
@@ -155975,7 +156151,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 108
+        "line": 155
       },
       "source": "symbol:scripts.staging.auth_config.AuthConfigClient.try_patch",
       "target": "symbol:scripts.staging.common.redact",
@@ -155986,7 +156162,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 59
+        "line": 113
+      },
+      "source": "symbol:scripts.staging.auth_config.desired_config",
+      "target": "symbol:scripts.staging.auth_config.smtp_config",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/auth_config.py",
+        "line": 114
+      },
+      "source": "symbol:scripts.staging.auth_config.desired_config",
+      "target": "symbol:scripts.staging.auth_config.template_config",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/auth_config.py",
+        "line": 104
       },
       "source": "symbol:scripts.staging.auth_config.desired_config",
       "target": "symbol:scripts.staging.auth_config.validate_redirects",
@@ -155997,7 +156195,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 54
+        "line": 99
       },
       "source": "symbol:scripts.staging.auth_config.desired_config",
       "target": "symbol:scripts.staging.common.GuardError",
@@ -156008,7 +156206,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 57
+        "line": 102
       },
       "source": "symbol:scripts.staging.auth_config.desired_config",
       "target": "symbol:scripts.staging.common.GuardError",
@@ -156019,7 +156217,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 144
+        "line": 194
       },
       "source": "symbol:scripts.staging.auth_config.main",
       "target": "symbol:scripts.staging.auth_config.run",
@@ -156030,7 +156228,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 139
+        "line": 189
       },
       "source": "symbol:scripts.staging.auth_config.main",
       "target": "symbol:scripts.staging.common.add_guard_args",
@@ -156041,7 +156239,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 136
+        "line": 186
       },
       "source": "symbol:scripts.staging.auth_config.main",
       "target": "symbol:scripts.staging.common.load_dotenv_quietly",
@@ -156052,7 +156250,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 143
+        "line": 193
       },
       "source": "symbol:scripts.staging.auth_config.main",
       "target": "symbol:scripts.staging.common.require_staging",
@@ -156063,7 +156261,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 145
+        "line": 195
       },
       "source": "symbol:scripts.staging.auth_config.main",
       "target": "symbol:scripts.staging.common.write_evidence",
@@ -156074,7 +156272,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 113
+        "line": 160
       },
       "source": "symbol:scripts.staging.auth_config.run",
       "target": "symbol:scripts.staging.auth_config.AuthConfigClient",
@@ -156085,7 +156283,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 114
+        "line": 161
       },
       "source": "symbol:scripts.staging.auth_config.run",
       "target": "symbol:scripts.staging.auth_config.desired_config",
@@ -156096,7 +156294,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 115
+        "line": 162
       },
       "source": "symbol:scripts.staging.auth_config.run",
       "target": "symbol:scripts.staging.auth_config.diff_config",
@@ -156107,7 +156305,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 130
+        "line": 180
       },
       "source": "symbol:scripts.staging.auth_config.run",
       "target": "symbol:scripts.staging.auth_config.diff_config",
@@ -156118,7 +156316,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 116
+        "line": 163
       },
       "source": "symbol:scripts.staging.auth_config.run",
       "target": "symbol:scripts.staging.auth_config.redacted_diff",
@@ -156129,7 +156327,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 113
+        "line": 160
       },
       "source": "symbol:scripts.staging.auth_config.run",
       "target": "symbol:scripts.staging.common.env_required",
@@ -156140,7 +156338,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 46
+        "line": 78
+      },
+      "source": "symbol:scripts.staging.auth_config.smtp_config",
+      "target": "symbol:scripts.staging.common.GuardError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/auth_config.py",
+        "line": 80
+      },
+      "source": "symbol:scripts.staging.auth_config.smtp_config",
+      "target": "symbol:scripts.staging.common.GuardError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/auth_config.py",
+        "line": 65
       },
       "source": "symbol:scripts.staging.auth_config.validate_redirects",
       "target": "symbol:scripts.staging.common.GuardError",
@@ -156151,7 +156371,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/auth_config.py",
-        "line": 48
+        "line": 67
       },
       "source": "symbol:scripts.staging.auth_config.validate_redirects",
       "target": "symbol:scripts.staging.common.GuardError",
@@ -156899,7 +157119,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/e2e_session.py",
-        "line": 183
+        "line": 189
       },
       "source": "symbol:scripts.staging.e2e_session.main",
       "target": "symbol:scripts.staging.e2e_session.run",
@@ -156910,7 +157130,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/e2e_session.py",
-        "line": 184
+        "line": 190
       },
       "source": "symbol:scripts.staging.e2e_session.main",
       "target": "symbol:scripts.staging.s192.evidence",
@@ -156921,7 +157141,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/e2e_session.py",
-        "line": 183
+        "line": 189
       },
       "source": "symbol:scripts.staging.e2e_session.main",
       "target": "symbol:scripts.staging.s192.load_env",
@@ -156954,7 +157174,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/e2e_session.py",
-        "line": 103
+        "line": 106
       },
       "source": "symbol:scripts.staging.e2e_session.run",
       "target": "symbol:scripts.staging.e2e_session._h",
@@ -156965,7 +157185,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/e2e_session.py",
-        "line": 105
+        "line": 108
       },
       "source": "symbol:scripts.staging.e2e_session.run",
       "target": "symbol:scripts.staging.e2e_session._h",
@@ -156976,7 +157196,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/e2e_session.py",
-        "line": 130
+        "line": 136
       },
       "source": "symbol:scripts.staging.e2e_session.run",
       "target": "symbol:scripts.staging.e2e_session._h",
@@ -156987,32 +157207,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/e2e_session.py",
-        "line": 159
+        "line": 165
       },
       "source": "symbol:scripts.staging.e2e_session.run",
       "target": "symbol:scripts.staging.e2e_session._h",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/e2e_session.py",
-        "line": 145
-      },
-      "source": "symbol:scripts.staging.e2e_session.run",
-      "target": "symbol:scripts.staging.e2e_session.stream_turn",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/e2e_session.py",
-        "line": 152
-      },
-      "source": "symbol:scripts.staging.e2e_session.run",
-      "target": "symbol:scripts.staging.e2e_session.stream_turn",
       "type": "calls"
     },
     {
@@ -157021,6 +157219,28 @@
         "extractor": "python_ast",
         "file": "scripts/staging/e2e_session.py",
         "line": 151
+      },
+      "source": "symbol:scripts.staging.e2e_session.run",
+      "target": "symbol:scripts.staging.e2e_session.stream_turn",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/e2e_session.py",
+        "line": 158
+      },
+      "source": "symbol:scripts.staging.e2e_session.run",
+      "target": "symbol:scripts.staging.e2e_session.stream_turn",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/e2e_session.py",
+        "line": 157
       },
       "source": "symbol:scripts.staging.e2e_session.run",
       "target": "symbol:scripts.staging.e2e_session.turns_ok",
@@ -157042,7 +157262,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/e2e_session.py",
-        "line": 108
+        "line": 110
+      },
+      "source": "symbol:scripts.staging.e2e_session.run",
+      "target": "symbol:scripts.staging.s192.app_login",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/e2e_session.py",
+        "line": 113
       },
       "source": "symbol:scripts.staging.e2e_session.run",
       "target": "symbol:scripts.staging.s192.cookie_flags",
@@ -157053,7 +157284,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/e2e_session.py",
-        "line": 160
+        "line": 166
       },
       "source": "symbol:scripts.staging.e2e_session.run",
       "target": "symbol:scripts.staging.s192.cookie_flags",
@@ -157075,7 +157306,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/e2e_session.py",
-        "line": 167
+        "line": 173
       },
       "source": "symbol:scripts.staging.e2e_session.run",
       "target": "symbol:scripts.staging.s192.db",
@@ -157086,7 +157317,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/e2e_session.py",
-        "line": 113
+        "line": 119
       },
       "source": "symbol:scripts.staging.e2e_session.run",
       "target": "symbol:scripts.staging.s192.json_has_bearer",
@@ -157097,7 +157328,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/e2e_session.py",
-        "line": 138
+        "line": 144
       },
       "source": "symbol:scripts.staging.e2e_session.run",
       "target": "symbol:scripts.staging.s192.json_has_bearer",
@@ -157108,7 +157339,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/e2e_session.py",
-        "line": 157
+        "line": 163
       },
       "source": "symbol:scripts.staging.e2e_session.run",
       "target": "symbol:scripts.staging.s192.json_has_bearer",
@@ -157130,7 +157361,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/e2e_session.py",
-        "line": 149
+        "line": 155
       },
       "source": "symbol:scripts.staging.e2e_session.run",
       "target": "symbol:scripts.staging.s192.stats",
@@ -157141,7 +157372,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/e2e_session.py",
-        "line": 150
+        "line": 156
       },
       "source": "symbol:scripts.staging.e2e_session.run",
       "target": "symbol:scripts.staging.s192.stats",
@@ -157438,7 +157669,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 193
+        "line": 192
       },
       "source": "symbol:scripts.staging.job_survival.main",
       "target": "symbol:scripts.staging.job_survival.make_owner",
@@ -157449,7 +157680,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 195
+        "line": 194
       },
       "source": "symbol:scripts.staging.job_survival.main",
       "target": "symbol:scripts.staging.job_survival.phase_a",
@@ -157460,7 +157691,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 197
+        "line": 196
       },
       "source": "symbol:scripts.staging.job_survival.main",
       "target": "symbol:scripts.staging.job_survival.phase_b",
@@ -157471,7 +157702,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 199
+        "line": 198
       },
       "source": "symbol:scripts.staging.job_survival.main",
       "target": "symbol:scripts.staging.job_survival.purge_owner",
@@ -157482,7 +157713,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 201
+        "line": 200
       },
       "source": "symbol:scripts.staging.job_survival.main",
       "target": "symbol:scripts.staging.s192.evidence",
@@ -157493,7 +157724,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 191
+        "line": 190
       },
       "source": "symbol:scripts.staging.job_survival.main",
       "target": "symbol:scripts.staging.s192.load_env",
@@ -157504,7 +157735,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 192
+        "line": 191
       },
       "source": "symbol:scripts.staging.job_survival.main",
       "target": "symbol:scripts.staging.s192.now_iso",
@@ -157526,65 +157757,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 140
+        "line": 36
+      },
+      "source": "symbol:scripts.staging.job_survival.make_owner",
+      "target": "symbol:scripts.staging.s192.app_login",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/job_survival.py",
+        "line": 139
       },
       "source": "symbol:scripts.staging.job_survival.phase_a",
       "target": "symbol:scripts.staging.job_survival.exactly_once",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/job_survival.py",
-        "line": 119
-      },
-      "source": "symbol:scripts.staging.job_survival.phase_a",
-      "target": "symbol:scripts.staging.job_survival.job_state",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/job_survival.py",
-        "line": 136
-      },
-      "source": "symbol:scripts.staging.job_survival.phase_a",
-      "target": "symbol:scripts.staging.job_survival.job_state",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/job_survival.py",
-        "line": 113
-      },
-      "source": "symbol:scripts.staging.job_survival.phase_a",
-      "target": "symbol:scripts.staging.job_survival.make_job",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/job_survival.py",
-        "line": 120
-      },
-      "source": "symbol:scripts.staging.job_survival.phase_a",
-      "target": "symbol:scripts.staging.job_survival.wait_for",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/job_survival.py",
-        "line": 112
-      },
-      "source": "symbol:scripts.staging.job_survival.phase_a",
-      "target": "symbol:scripts.staging.s192.db",
       "type": "calls"
     },
     {
@@ -157595,7 +157782,7 @@
         "line": 118
       },
       "source": "symbol:scripts.staging.job_survival.phase_a",
-      "target": "symbol:scripts.staging.s192.db",
+      "target": "symbol:scripts.staging.job_survival.job_state",
       "type": "calls"
     },
     {
@@ -157606,6 +157793,39 @@
         "line": 135
       },
       "source": "symbol:scripts.staging.job_survival.phase_a",
+      "target": "symbol:scripts.staging.job_survival.job_state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/job_survival.py",
+        "line": 112
+      },
+      "source": "symbol:scripts.staging.job_survival.phase_a",
+      "target": "symbol:scripts.staging.job_survival.make_job",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/job_survival.py",
+        "line": 119
+      },
+      "source": "symbol:scripts.staging.job_survival.phase_a",
+      "target": "symbol:scripts.staging.job_survival.wait_for",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/job_survival.py",
+        "line": 111
+      },
+      "source": "symbol:scripts.staging.job_survival.phase_a",
       "target": "symbol:scripts.staging.s192.db",
       "type": "calls"
     },
@@ -157614,7 +157834,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 184
+        "line": 117
+      },
+      "source": "symbol:scripts.staging.job_survival.phase_a",
+      "target": "symbol:scripts.staging.s192.db",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/job_survival.py",
+        "line": 134
+      },
+      "source": "symbol:scripts.staging.job_survival.phase_a",
+      "target": "symbol:scripts.staging.s192.db",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/job_survival.py",
+        "line": 183
       },
       "source": "symbol:scripts.staging.job_survival.phase_b",
       "target": "symbol:scripts.staging.job_survival.exactly_once",
@@ -157625,7 +157867,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 173
+        "line": 172
       },
       "source": "symbol:scripts.staging.job_survival.phase_b",
       "target": "symbol:scripts.staging.job_survival.job_state",
@@ -157636,54 +157878,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 160
+        "line": 159
       },
       "source": "symbol:scripts.staging.job_survival.phase_b",
       "target": "symbol:scripts.staging.job_survival.make_job",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/job_survival.py",
-        "line": 167
-      },
-      "source": "symbol:scripts.staging.job_survival.phase_b",
-      "target": "symbol:scripts.staging.job_survival.make_job",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/job_survival.py",
-        "line": 148
-      },
-      "source": "symbol:scripts.staging.job_survival.phase_b",
-      "target": "symbol:scripts.staging.job_survival.phase_b.run_deploy",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/job_survival.py",
-        "line": 171
-      },
-      "source": "symbol:scripts.staging.job_survival.phase_b",
-      "target": "symbol:scripts.staging.job_survival.wait_for",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/job_survival.py",
-        "line": 158
-      },
-      "source": "symbol:scripts.staging.job_survival.phase_b",
-      "target": "symbol:scripts.staging.s192.db",
       "type": "calls"
     },
     {
@@ -157694,7 +157892,29 @@
         "line": 166
       },
       "source": "symbol:scripts.staging.job_survival.phase_b",
-      "target": "symbol:scripts.staging.s192.db",
+      "target": "symbol:scripts.staging.job_survival.make_job",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/job_survival.py",
+        "line": 147
+      },
+      "source": "symbol:scripts.staging.job_survival.phase_b",
+      "target": "symbol:scripts.staging.job_survival.phase_b.run_deploy",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/job_survival.py",
+        "line": 170
+      },
+      "source": "symbol:scripts.staging.job_survival.phase_b",
+      "target": "symbol:scripts.staging.job_survival.wait_for",
       "type": "calls"
     },
     {
@@ -157702,7 +157922,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 172
+        "line": 157
       },
       "source": "symbol:scripts.staging.job_survival.phase_b",
       "target": "symbol:scripts.staging.s192.db",
@@ -157713,7 +157933,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 151
+        "line": 165
+      },
+      "source": "symbol:scripts.staging.job_survival.phase_b",
+      "target": "symbol:scripts.staging.s192.db",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/job_survival.py",
+        "line": 171
+      },
+      "source": "symbol:scripts.staging.job_survival.phase_b",
+      "target": "symbol:scripts.staging.s192.db",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/job_survival.py",
+        "line": 150
       },
       "source": "symbol:scripts.staging.job_survival.phase_b",
       "target": "symbol:scripts.staging.s192.vercel",
@@ -157724,7 +157966,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 151
+        "line": 150
       },
       "source": "symbol:scripts.staging.job_survival.phase_b.run_deploy",
       "target": "symbol:scripts.staging.s192.vercel",
@@ -157735,7 +157977,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 48
+        "line": 47
       },
       "source": "symbol:scripts.staging.job_survival.purge_owner",
       "target": "symbol:scripts.staging.job_survival.purge_owner.go",
@@ -157746,7 +157988,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 60
+        "line": 59
       },
       "source": "symbol:scripts.staging.job_survival.purge_owner",
       "target": "symbol:scripts.staging.s192.query",
@@ -157757,7 +157999,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 100
+        "line": 99
       },
       "source": "symbol:scripts.staging.job_survival.wait_for",
       "target": "symbol:scripts.staging.job_survival.job_state",
@@ -157768,7 +158010,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/job_survival.py",
-        "line": 99
+        "line": 98
       },
       "source": "symbol:scripts.staging.job_survival.wait_for",
       "target": "symbol:scripts.staging.s192.db",
@@ -157779,7 +158021,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/measure.py",
-        "line": 65
+        "line": 68
       },
       "source": "symbol:scripts.staging.measure.main",
       "target": "symbol:scripts.staging.e2e_session._h",
@@ -157790,18 +158032,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/measure.py",
-        "line": 69
-      },
-      "source": "symbol:scripts.staging.measure.main",
-      "target": "symbol:scripts.staging.e2e_session._h",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/measure.py",
-        "line": 98
+        "line": 97
       },
       "source": "symbol:scripts.staging.measure.main",
       "target": "symbol:scripts.staging.measure.bundle_mb_from_events",
@@ -157845,7 +158076,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/measure.py",
-        "line": 67
+        "line": 66
       },
       "source": "symbol:scripts.staging.measure.main",
       "target": "symbol:scripts.staging.measure.timed_get",
@@ -157867,7 +158098,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/measure.py",
-        "line": 106
+        "line": 65
+      },
+      "source": "symbol:scripts.staging.measure.main",
+      "target": "symbol:scripts.staging.s192.app_login",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/measure.py",
+        "line": 105
       },
       "source": "symbol:scripts.staging.measure.main",
       "target": "symbol:scripts.staging.s192.evidence",
@@ -157911,7 +158153,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/measure.py",
-        "line": 68
+        "line": 67
       },
       "source": "symbol:scripts.staging.measure.main",
       "target": "symbol:scripts.staging.s192.stats",
@@ -157922,7 +158164,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/measure.py",
-        "line": 81
+        "line": 80
       },
       "source": "symbol:scripts.staging.measure.main",
       "target": "symbol:scripts.staging.s192.stats",
@@ -158384,7 +158626,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/projection_measure.py",
-        "line": 234
+        "line": 233
       },
       "source": "symbol:scripts.staging.projection_measure.main",
       "target": "symbol:scripts.staging.projection_measure.run",
@@ -158395,7 +158637,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/projection_measure.py",
-        "line": 234
+        "line": 233
       },
       "source": "symbol:scripts.staging.projection_measure.main",
       "target": "symbol:scripts.staging.s192.load_env",
@@ -158406,7 +158648,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/projection_measure.py",
-        "line": 160
+        "line": 165
       },
       "source": "symbol:scripts.staging.projection_measure.run",
       "target": "symbol:scripts.staging.e2e_session._h",
@@ -158417,10 +158659,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/projection_measure.py",
-        "line": 166
+        "line": 189
       },
       "source": "symbol:scripts.staging.projection_measure.run",
-      "target": "symbol:scripts.staging.e2e_session._h",
+      "target": "symbol:scripts.staging.projection_measure._db_snapshot",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/projection_measure.py",
+        "line": 192
+      },
+      "source": "symbol:scripts.staging.projection_measure.run",
+      "target": "symbol:scripts.staging.projection_measure._db_snapshot",
       "type": "calls"
     },
     {
@@ -158431,7 +158684,7 @@
         "line": 190
       },
       "source": "symbol:scripts.staging.projection_measure.run",
-      "target": "symbol:scripts.staging.projection_measure._db_snapshot",
+      "target": "symbol:scripts.staging.projection_measure._settled",
       "type": "calls"
     },
     {
@@ -158439,18 +158692,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/projection_measure.py",
-        "line": 193
-      },
-      "source": "symbol:scripts.staging.projection_measure.run",
-      "target": "symbol:scripts.staging.projection_measure._db_snapshot",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/projection_measure.py",
-        "line": 191
+        "line": 195
       },
       "source": "symbol:scripts.staging.projection_measure.run",
       "target": "symbol:scripts.staging.projection_measure._settled",
@@ -158461,18 +158703,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/projection_measure.py",
-        "line": 196
-      },
-      "source": "symbol:scripts.staging.projection_measure.run",
-      "target": "symbol:scripts.staging.projection_measure._settled",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/projection_measure.py",
-        "line": 178
+        "line": 177
       },
       "source": "symbol:scripts.staging.projection_measure.run",
       "target": "symbol:scripts.staging.projection_measure._stats",
@@ -158483,7 +158714,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/projection_measure.py",
-        "line": 174
+        "line": 173
       },
       "source": "symbol:scripts.staging.projection_measure.run",
       "target": "symbol:scripts.staging.projection_measure.stream_turn",
@@ -158505,6 +158736,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/projection_measure.py",
+        "line": 160
+      },
+      "source": "symbol:scripts.staging.projection_measure.run",
+      "target": "symbol:scripts.staging.s192.app_login",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/projection_measure.py",
         "line": 156
       },
       "source": "symbol:scripts.staging.projection_measure.run",
@@ -158516,7 +158758,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/projection_measure.py",
-        "line": 216
+        "line": 215
       },
       "source": "symbol:scripts.staging.projection_measure.run",
       "target": "symbol:scripts.staging.s192.query",
@@ -158703,7 +158945,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/s192.py",
-        "line": 106
+        "line": 114
       },
       "source": "symbol:scripts.staging.s192.Admin",
       "target": "symbol:scripts.staging.s192.Admin.__init__",
@@ -158714,7 +158956,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/s192.py",
-        "line": 115
+        "line": 123
       },
       "source": "symbol:scripts.staging.s192.Admin",
       "target": "symbol:scripts.staging.s192.Admin.create_user",
@@ -158725,7 +158967,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/s192.py",
-        "line": 123
+        "line": 132
       },
       "source": "symbol:scripts.staging.s192.Admin",
       "target": "symbol:scripts.staging.s192.Admin.delete_user",
@@ -158736,7 +158978,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/s192.py",
-        "line": 112
+        "line": 120
       },
       "source": "symbol:scripts.staging.s192.Admin",
       "target": "symbol:scripts.staging.s192.Admin.headers",
@@ -158747,7 +158989,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/s192.py",
-        "line": 126
+        "line": 135
       },
       "source": "symbol:scripts.staging.s192.Admin",
       "target": "symbol:scripts.staging.s192.Admin.user_exists",
@@ -158769,7 +159011,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/s192.py",
-        "line": 159
+        "line": 179
       },
       "source": "symbol:scripts.staging.s192.query",
       "target": "symbol:scripts.staging.s192.db",
@@ -158791,7 +159033,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/s192.py",
-        "line": 132
+        "line": 152
       },
       "source": "symbol:scripts.staging.s192.sweep_synthetic_users",
       "target": "symbol:scripts.staging.s192.Admin",
@@ -158802,7 +159044,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/s192.py",
-        "line": 134
+        "line": 154
       },
       "source": "symbol:scripts.staging.s192.sweep_synthetic_users",
       "target": "symbol:scripts.staging.s192.db",
@@ -159103,6 +159345,17 @@
       },
       "source": "symbol:scripts.staging.security_wave_smoke.run",
       "target": "symbol:scripts.staging.s192.now_iso",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/security_wave_smoke.py",
+        "line": 119
+      },
+      "source": "symbol:scripts.staging.security_wave_smoke.run",
+      "target": "symbol:scripts.staging.s192.smoke_captcha",
       "type": "calls"
     },
     {
@@ -159561,7 +159814,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/sse_disconnect.py",
-        "line": 93
+        "line": 92
       },
       "source": "symbol:scripts.staging.sse_disconnect.main",
       "target": "symbol:scripts.staging.s192.evidence",
@@ -159572,7 +159825,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/sse_disconnect.py",
-        "line": 92
+        "line": 91
       },
       "source": "symbol:scripts.staging.sse_disconnect.main",
       "target": "symbol:scripts.staging.s192.load_env",
@@ -159583,7 +159836,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/sse_disconnect.py",
-        "line": 92
+        "line": 91
       },
       "source": "symbol:scripts.staging.sse_disconnect.main",
       "target": "symbol:scripts.staging.sse_disconnect.run",
@@ -159594,7 +159847,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/sse_disconnect.py",
-        "line": 34
+        "line": 36
       },
       "source": "symbol:scripts.staging.sse_disconnect.run",
       "target": "symbol:scripts.staging.e2e_session._h",
@@ -159605,7 +159858,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/sse_disconnect.py",
-        "line": 37
+        "line": 48
       },
       "source": "symbol:scripts.staging.sse_disconnect.run",
       "target": "symbol:scripts.staging.e2e_session._h",
@@ -159616,18 +159869,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/sse_disconnect.py",
-        "line": 49
-      },
-      "source": "symbol:scripts.staging.sse_disconnect.run",
-      "target": "symbol:scripts.staging.e2e_session._h",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/staging/sse_disconnect.py",
-        "line": 65
+        "line": 64
       },
       "source": "symbol:scripts.staging.sse_disconnect.run",
       "target": "symbol:scripts.staging.e2e_session._h",
@@ -159649,7 +159891,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/sse_disconnect.py",
-        "line": 77
+        "line": 33
+      },
+      "source": "symbol:scripts.staging.sse_disconnect.run",
+      "target": "symbol:scripts.staging.s192.app_login",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/sse_disconnect.py",
+        "line": 76
       },
       "source": "symbol:scripts.staging.sse_disconnect.run",
       "target": "symbol:scripts.staging.s192.db",
@@ -159671,10 +159924,175 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/sse_disconnect.py",
-        "line": 73
+        "line": 72
       },
       "source": "symbol:scripts.staging.sse_disconnect.run",
       "target": "symbol:scripts.staging.sse_disconnect.exactly_one_turn",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 32
+      },
+      "source": "symbol:scripts.staging.stt_fallback_smoke.GroqBurst",
+      "target": "symbol:scripts.staging.stt_fallback_smoke.GroqBurst.__init__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 60
+      },
+      "source": "symbol:scripts.staging.stt_fallback_smoke.GroqBurst",
+      "target": "symbol:scripts.staging.stt_fallback_smoke.GroqBurst.keep_saturated",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 39
+      },
+      "source": "symbol:scripts.staging.stt_fallback_smoke.GroqBurst",
+      "target": "symbol:scripts.staging.stt_fallback_smoke.GroqBurst.one",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 53
+      },
+      "source": "symbol:scripts.staging.stt_fallback_smoke.GroqBurst",
+      "target": "symbol:scripts.staging.stt_fallback_smoke.GroqBurst.until_429",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 37
+      },
+      "source": "symbol:scripts.staging.stt_fallback_smoke.GroqBurst.__init__",
+      "target": "symbol:scripts.staging.voice_smoke.synthetic_wav",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 61
+      },
+      "source": "symbol:scripts.staging.stt_fallback_smoke.GroqBurst.keep_saturated",
+      "target": "symbol:scripts.staging.stt_fallback_smoke.GroqBurst.keep_saturated.loop",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 135
+      },
+      "source": "symbol:scripts.staging.stt_fallback_smoke.main",
+      "target": "symbol:scripts.staging.s192.load_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 135
+      },
+      "source": "symbol:scripts.staging.stt_fallback_smoke.main",
+      "target": "symbol:scripts.staging.stt_fallback_smoke.run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 94
+      },
+      "source": "symbol:scripts.staging.stt_fallback_smoke.run",
+      "target": "symbol:scripts.staging.e2e_session._h",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 74
+      },
+      "source": "symbol:scripts.staging.stt_fallback_smoke.run",
+      "target": "symbol:scripts.staging.s192.Admin",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 104
+      },
+      "source": "symbol:scripts.staging.stt_fallback_smoke.run",
+      "target": "symbol:scripts.staging.s192.db",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 75
+      },
+      "source": "symbol:scripts.staging.stt_fallback_smoke.run",
+      "target": "symbol:scripts.staging.s192.now_iso",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 80
+      },
+      "source": "symbol:scripts.staging.stt_fallback_smoke.run",
+      "target": "symbol:scripts.staging.stt_fallback_smoke.GroqBurst",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 84
+      },
+      "source": "symbol:scripts.staging.stt_fallback_smoke.run",
+      "target": "symbol:scripts.staging.synthetic_data.seed_wallet_prereqs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/stt_fallback_smoke.py",
+        "line": 78
+      },
+      "source": "symbol:scripts.staging.stt_fallback_smoke.run",
+      "target": "symbol:scripts.staging.two_user_smoke.User",
       "type": "calls"
     },
     {
@@ -159935,7 +160353,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/two_user_smoke.py",
-        "line": 49
+        "line": 48
       },
       "source": "symbol:scripts.staging.two_user_smoke.User",
       "target": "symbol:scripts.staging.two_user_smoke.User.get",
@@ -159957,7 +160375,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/two_user_smoke.py",
-        "line": 40
+        "line": 39
       },
       "source": "symbol:scripts.staging.two_user_smoke.User",
       "target": "symbol:scripts.staging.two_user_smoke.User.new_game",
@@ -159968,7 +160386,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/two_user_smoke.py",
-        "line": 52
+        "line": 51
       },
       "source": "symbol:scripts.staging.two_user_smoke.User",
       "target": "symbol:scripts.staging.two_user_smoke.User.post",
@@ -159982,7 +160400,7 @@
         "line": 34
       },
       "source": "symbol:scripts.staging.two_user_smoke.User.login",
-      "target": "symbol:scripts.staging.e2e_session._h",
+      "target": "symbol:scripts.staging.s192.app_login",
       "type": "calls"
     },
     {
@@ -159990,7 +160408,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/two_user_smoke.py",
-        "line": 43
+        "line": 42
       },
       "source": "symbol:scripts.staging.two_user_smoke.User.new_game",
       "target": "symbol:scripts.staging.e2e_session._h",
@@ -160001,7 +160419,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/two_user_smoke.py",
-        "line": 53
+        "line": 52
       },
       "source": "symbol:scripts.staging.two_user_smoke.User.post",
       "target": "symbol:scripts.staging.e2e_session._h",
@@ -160012,7 +160430,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/two_user_smoke.py",
-        "line": 171
+        "line": 170
       },
       "source": "symbol:scripts.staging.two_user_smoke.main",
       "target": "symbol:scripts.staging.s192.load_env",
@@ -160023,7 +160441,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/two_user_smoke.py",
-        "line": 171
+        "line": 170
       },
       "source": "symbol:scripts.staging.two_user_smoke.main",
       "target": "symbol:scripts.staging.two_user_smoke.run",
@@ -160034,7 +160452,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/two_user_smoke.py",
-        "line": 75
+        "line": 74
       },
       "source": "symbol:scripts.staging.two_user_smoke.run",
       "target": "symbol:scripts.staging.e2e_session.stream_turn",
@@ -160045,7 +160463,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/two_user_smoke.py",
-        "line": 61
+        "line": 60
       },
       "source": "symbol:scripts.staging.two_user_smoke.run",
       "target": "symbol:scripts.staging.s192.Admin",
@@ -160056,7 +160474,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/two_user_smoke.py",
-        "line": 148
+        "line": 147
       },
       "source": "symbol:scripts.staging.two_user_smoke.run",
       "target": "symbol:scripts.staging.s192.db",
@@ -160067,7 +160485,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/two_user_smoke.py",
-        "line": 62
+        "line": 61
       },
       "source": "symbol:scripts.staging.two_user_smoke.run",
       "target": "symbol:scripts.staging.s192.now_iso",
@@ -160078,7 +160496,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/two_user_smoke.py",
-        "line": 98
+        "line": 135
+      },
+      "source": "symbol:scripts.staging.two_user_smoke.run",
+      "target": "symbol:scripts.staging.s192.smoke_captcha",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/two_user_smoke.py",
+        "line": 97
       },
       "source": "symbol:scripts.staging.two_user_smoke.run",
       "target": "symbol:scripts.staging.synthetic_data.seed_wallet_prereqs",
@@ -160089,7 +160518,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/two_user_smoke.py",
-        "line": 66
+        "line": 65
       },
       "source": "symbol:scripts.staging.two_user_smoke.run",
       "target": "symbol:scripts.staging.two_user_smoke.User",
@@ -160100,7 +160529,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 187
+        "line": 193
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env._load_files",
@@ -160111,7 +160540,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 189
+        "line": 195
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.build_env",
@@ -160122,7 +160551,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 205
+        "line": 211
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.push",
@@ -160133,7 +160562,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 206
+        "line": 212
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.push",
@@ -160144,7 +160573,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 207
+        "line": 213
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.remove",
@@ -160155,7 +160584,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 198
+        "line": 204
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.stale_names",
@@ -160166,7 +160595,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 207
+        "line": 213
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.stale_names",
@@ -275666,6 +276095,39 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec191_staging_tools.py",
+        "line": 315
+      },
+      "source": "symbol:tests.test_spec191_staging_tools.test_auth_config_apply_sends_smtp_before_email_rate_limit_and_redacts_pass",
+      "target": "symbol:scripts.staging.auth_config.run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec191_staging_tools.py",
+        "line": 315
+      },
+      "source": "symbol:tests.test_spec191_staging_tools.test_auth_config_apply_sends_smtp_before_email_rate_limit_and_redacts_pass",
+      "target": "symbol:tests.test_spec191_staging_tools._env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec191_staging_tools.py",
+        "line": 306
+      },
+      "source": "symbol:tests.test_spec191_staging_tools.test_auth_config_apply_sends_smtp_before_email_rate_limit_and_redacts_pass",
+      "target": "symbol:tests.test_spec191_staging_tools.test_auth_config_apply_sends_smtp_before_email_rate_limit_and_redacts_pass.handler",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec191_staging_tools.py",
         "line": 77
       },
       "source": "symbol:tests.test_spec191_staging_tools.test_auth_config_plan_and_apply_payload",
@@ -275715,6 +276177,94 @@
       "source": "symbol:tests.test_spec191_staging_tools.test_auth_config_plan_and_apply_payload",
       "target": "symbol:tests.test_spec191_staging_tools.test_auth_config_plan_and_apply_payload.handler",
       "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec191_staging_tools.py",
+        "line": 288
+      },
+      "source": "symbol:tests.test_spec191_staging_tools.test_auth_config_smtp_from_env_all_or_nothing_and_templates_from_repo",
+      "target": "symbol:scripts.staging.auth_config.desired_config",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec191_staging_tools.py",
+        "line": 289
+      },
+      "source": "symbol:tests.test_spec191_staging_tools.test_auth_config_smtp_from_env_all_or_nothing_and_templates_from_repo",
+      "target": "symbol:scripts.staging.auth_config.desired_config",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec191_staging_tools.py",
+        "line": 294
+      },
+      "source": "symbol:tests.test_spec191_staging_tools.test_auth_config_smtp_from_env_all_or_nothing_and_templates_from_repo",
+      "target": "symbol:scripts.staging.auth_config.desired_config",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec191_staging_tools.py",
+        "line": 299
+      },
+      "source": "symbol:tests.test_spec191_staging_tools.test_auth_config_smtp_from_env_all_or_nothing_and_templates_from_repo",
+      "target": "symbol:scripts.staging.auth_config.desired_config",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec191_staging_tools.py",
+        "line": 288
+      },
+      "source": "symbol:tests.test_spec191_staging_tools.test_auth_config_smtp_from_env_all_or_nothing_and_templates_from_repo",
+      "target": "symbol:tests.test_spec191_staging_tools._env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec191_staging_tools.py",
+        "line": 289
+      },
+      "source": "symbol:tests.test_spec191_staging_tools.test_auth_config_smtp_from_env_all_or_nothing_and_templates_from_repo",
+      "target": "symbol:tests.test_spec191_staging_tools._env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec191_staging_tools.py",
+        "line": 294
+      },
+      "source": "symbol:tests.test_spec191_staging_tools.test_auth_config_smtp_from_env_all_or_nothing_and_templates_from_repo",
+      "target": "symbol:tests.test_spec191_staging_tools._env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec191_staging_tools.py",
+        "line": 298
+      },
+      "source": "symbol:tests.test_spec191_staging_tools.test_auth_config_smtp_from_env_all_or_nothing_and_templates_from_repo",
+      "target": "symbol:tests.test_spec191_staging_tools._env",
+      "type": "calls"
     },
     {
       "confidence": "static_best_effort",
@@ -301352,6 +301902,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:scripts/staging/stt_fallback_smoke.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/staging/stt_fallback_smoke.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:scripts/staging/synthetic_data.py",
       "kind": "file",
       "line": 1,
@@ -306761,6 +307318,13 @@
       "line": 1,
       "path": "scripts/staging/sse_disconnect.py",
       "qualified_name": "scripts.staging.sse_disconnect"
+    },
+    {
+      "id": "module:scripts.staging.stt_fallback_smoke",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/staging/stt_fallback_smoke.py",
+      "qualified_name": "scripts.staging.stt_fallback_smoke"
     },
     {
       "id": "module:scripts.staging.synthetic_data",
@@ -325126,77 +325690,91 @@
     {
       "id": "symbol:scripts.staging.auth_config.AuthConfigClient",
       "kind": "class",
-      "line": 89,
+      "line": 136,
       "path": "scripts/staging/auth_config.py",
       "qualified_name": "scripts.staging.auth_config.AuthConfigClient"
     },
     {
       "id": "symbol:scripts.staging.auth_config.AuthConfigClient.__init__",
       "kind": "method",
-      "line": 90,
+      "line": 137,
       "path": "scripts/staging/auth_config.py",
       "qualified_name": "scripts.staging.auth_config.AuthConfigClient.__init__"
     },
     {
       "id": "symbol:scripts.staging.auth_config.AuthConfigClient.get",
       "kind": "method",
-      "line": 95,
+      "line": 142,
       "path": "scripts/staging/auth_config.py",
       "qualified_name": "scripts.staging.auth_config.AuthConfigClient.get"
     },
     {
       "id": "symbol:scripts.staging.auth_config.AuthConfigClient.patch",
       "kind": "method",
-      "line": 100,
+      "line": 147,
       "path": "scripts/staging/auth_config.py",
       "qualified_name": "scripts.staging.auth_config.AuthConfigClient.patch"
     },
     {
       "id": "symbol:scripts.staging.auth_config.AuthConfigClient.try_patch",
       "kind": "method",
-      "line": 105,
+      "line": 152,
       "path": "scripts/staging/auth_config.py",
       "qualified_name": "scripts.staging.auth_config.AuthConfigClient.try_patch"
     },
     {
       "id": "symbol:scripts.staging.auth_config.desired_config",
       "kind": "function",
-      "line": 51,
+      "line": 95,
       "path": "scripts/staging/auth_config.py",
       "qualified_name": "scripts.staging.auth_config.desired_config"
     },
     {
       "id": "symbol:scripts.staging.auth_config.diff_config",
       "kind": "function",
-      "line": 73,
+      "line": 120,
       "path": "scripts/staging/auth_config.py",
       "qualified_name": "scripts.staging.auth_config.diff_config"
     },
     {
       "id": "symbol:scripts.staging.auth_config.main",
       "kind": "function",
-      "line": 135,
+      "line": 185,
       "path": "scripts/staging/auth_config.py",
       "qualified_name": "scripts.staging.auth_config.main"
     },
     {
       "id": "symbol:scripts.staging.auth_config.redacted_diff",
       "kind": "function",
-      "line": 84,
+      "line": 131,
       "path": "scripts/staging/auth_config.py",
       "qualified_name": "scripts.staging.auth_config.redacted_diff"
     },
     {
       "id": "symbol:scripts.staging.auth_config.run",
       "kind": "function",
-      "line": 111,
+      "line": 158,
       "path": "scripts/staging/auth_config.py",
       "qualified_name": "scripts.staging.auth_config.run"
     },
     {
+      "id": "symbol:scripts.staging.auth_config.smtp_config",
+      "kind": "function",
+      "line": 70,
+      "path": "scripts/staging/auth_config.py",
+      "qualified_name": "scripts.staging.auth_config.smtp_config"
+    },
+    {
+      "id": "symbol:scripts.staging.auth_config.template_config",
+      "kind": "function",
+      "line": 84,
+      "path": "scripts/staging/auth_config.py",
+      "qualified_name": "scripts.staging.auth_config.template_config"
+    },
+    {
       "id": "symbol:scripts.staging.auth_config.validate_redirects",
       "kind": "function",
-      "line": 42,
+      "line": 61,
       "path": "scripts/staging/auth_config.py",
       "qualified_name": "scripts.staging.auth_config.validate_redirects"
     },
@@ -325427,7 +326005,7 @@
     {
       "id": "symbol:scripts.staging.e2e_session.main",
       "kind": "function",
-      "line": 179,
+      "line": 185,
       "path": "scripts/staging/e2e_session.py",
       "qualified_name": "scripts.staging.e2e_session.main"
     },
@@ -325504,28 +326082,28 @@
     {
       "id": "symbol:scripts.staging.job_survival.exactly_once",
       "kind": "function",
-      "line": 89,
+      "line": 88,
       "path": "scripts/staging/job_survival.py",
       "qualified_name": "scripts.staging.job_survival.exactly_once"
     },
     {
       "id": "symbol:scripts.staging.job_survival.job_state",
       "kind": "function",
-      "line": 79,
+      "line": 78,
       "path": "scripts/staging/job_survival.py",
       "qualified_name": "scripts.staging.job_survival.job_state"
     },
     {
       "id": "symbol:scripts.staging.job_survival.main",
       "kind": "function",
-      "line": 187,
+      "line": 186,
       "path": "scripts/staging/job_survival.py",
       "qualified_name": "scripts.staging.job_survival.main"
     },
     {
       "id": "symbol:scripts.staging.job_survival.make_job",
       "kind": "function",
-      "line": 64,
+      "line": 63,
       "path": "scripts/staging/job_survival.py",
       "qualified_name": "scripts.staging.job_survival.make_job"
     },
@@ -325539,42 +326117,42 @@
     {
       "id": "symbol:scripts.staging.job_survival.phase_a",
       "kind": "function",
-      "line": 107,
+      "line": 106,
       "path": "scripts/staging/job_survival.py",
       "qualified_name": "scripts.staging.job_survival.phase_a"
     },
     {
       "id": "symbol:scripts.staging.job_survival.phase_b",
       "kind": "function",
-      "line": 144,
+      "line": 143,
       "path": "scripts/staging/job_survival.py",
       "qualified_name": "scripts.staging.job_survival.phase_b"
     },
     {
       "id": "symbol:scripts.staging.job_survival.phase_b.run_deploy",
       "kind": "function",
-      "line": 148,
+      "line": 147,
       "path": "scripts/staging/job_survival.py",
       "qualified_name": "scripts.staging.job_survival.phase_b.run_deploy"
     },
     {
       "id": "symbol:scripts.staging.job_survival.purge_owner",
       "kind": "function",
-      "line": 47,
+      "line": 46,
       "path": "scripts/staging/job_survival.py",
       "qualified_name": "scripts.staging.job_survival.purge_owner"
     },
     {
       "id": "symbol:scripts.staging.job_survival.purge_owner.go",
       "kind": "function",
-      "line": 48,
+      "line": 47,
       "path": "scripts/staging/job_survival.py",
       "qualified_name": "scripts.staging.job_survival.purge_owner.go"
     },
     {
       "id": "symbol:scripts.staging.job_survival.wait_for",
       "kind": "function",
-      "line": 95,
+      "line": 94,
       "path": "scripts/staging/job_survival.py",
       "qualified_name": "scripts.staging.job_survival.wait_for"
     },
@@ -325749,7 +326327,7 @@
     {
       "id": "symbol:scripts.staging.projection_measure.main",
       "kind": "function",
-      "line": 225,
+      "line": 224,
       "path": "scripts/staging/projection_measure.py",
       "qualified_name": "scripts.staging.projection_measure.main"
     },
@@ -325805,37 +326383,44 @@
     {
       "id": "symbol:scripts.staging.s192.Admin.__init__",
       "kind": "method",
-      "line": 106,
+      "line": 114,
       "path": "scripts/staging/s192.py",
       "qualified_name": "scripts.staging.s192.Admin.__init__"
     },
     {
       "id": "symbol:scripts.staging.s192.Admin.create_user",
       "kind": "method",
-      "line": 115,
+      "line": 123,
       "path": "scripts/staging/s192.py",
       "qualified_name": "scripts.staging.s192.Admin.create_user"
     },
     {
       "id": "symbol:scripts.staging.s192.Admin.delete_user",
       "kind": "method",
-      "line": 123,
+      "line": 132,
       "path": "scripts/staging/s192.py",
       "qualified_name": "scripts.staging.s192.Admin.delete_user"
     },
     {
       "id": "symbol:scripts.staging.s192.Admin.headers",
       "kind": "method",
-      "line": 112,
+      "line": 120,
       "path": "scripts/staging/s192.py",
       "qualified_name": "scripts.staging.s192.Admin.headers"
     },
     {
       "id": "symbol:scripts.staging.s192.Admin.user_exists",
       "kind": "method",
-      "line": 126,
+      "line": 135,
       "path": "scripts/staging/s192.py",
       "qualified_name": "scripts.staging.s192.Admin.user_exists"
+    },
+    {
+      "id": "symbol:scripts.staging.s192.app_login",
+      "kind": "function",
+      "line": 144,
+      "path": "scripts/staging/s192.py",
+      "qualified_name": "scripts.staging.s192.app_login"
     },
     {
       "id": "symbol:scripts.staging.s192.cookie_flags",
@@ -325847,7 +326432,7 @@
     {
       "id": "symbol:scripts.staging.s192.db",
       "kind": "function",
-      "line": 140,
+      "line": 160,
       "path": "scripts/staging/s192.py",
       "qualified_name": "scripts.staging.s192.db"
     },
@@ -325896,7 +326481,7 @@
     {
       "id": "symbol:scripts.staging.s192.query",
       "kind": "function",
-      "line": 153,
+      "line": 173,
       "path": "scripts/staging/s192.py",
       "qualified_name": "scripts.staging.s192.query"
     },
@@ -325908,6 +326493,13 @@
       "qualified_name": "scripts.staging.s192.sequence_summary"
     },
     {
+      "id": "symbol:scripts.staging.s192.smoke_captcha",
+      "kind": "function",
+      "line": 139,
+      "path": "scripts/staging/s192.py",
+      "qualified_name": "scripts.staging.s192.smoke_captcha"
+    },
+    {
       "id": "symbol:scripts.staging.s192.stats",
       "kind": "function",
       "line": 50,
@@ -325917,21 +326509,21 @@
     {
       "id": "symbol:scripts.staging.s192.sweep_synthetic_users",
       "kind": "function",
-      "line": 130,
+      "line": 150,
       "path": "scripts/staging/s192.py",
       "qualified_name": "scripts.staging.s192.sweep_synthetic_users"
     },
     {
       "id": "symbol:scripts.staging.s192.timed",
       "kind": "function",
-      "line": 175,
+      "line": 195,
       "path": "scripts/staging/s192.py",
       "qualified_name": "scripts.staging.s192.timed"
     },
     {
       "id": "symbol:scripts.staging.s192.vercel",
       "kind": "function",
-      "line": 167,
+      "line": 187,
       "path": "scripts/staging/s192.py",
       "qualified_name": "scripts.staging.s192.vercel"
     },
@@ -326197,7 +326789,7 @@
     {
       "id": "symbol:scripts.staging.sse_disconnect.main",
       "kind": "function",
-      "line": 88,
+      "line": 87,
       "path": "scripts/staging/sse_disconnect.py",
       "qualified_name": "scripts.staging.sse_disconnect.main"
     },
@@ -326207,6 +326799,62 @@
       "line": 26,
       "path": "scripts/staging/sse_disconnect.py",
       "qualified_name": "scripts.staging.sse_disconnect.run"
+    },
+    {
+      "id": "symbol:scripts.staging.stt_fallback_smoke.GroqBurst",
+      "kind": "class",
+      "line": 29,
+      "path": "scripts/staging/stt_fallback_smoke.py",
+      "qualified_name": "scripts.staging.stt_fallback_smoke.GroqBurst"
+    },
+    {
+      "id": "symbol:scripts.staging.stt_fallback_smoke.GroqBurst.__init__",
+      "kind": "method",
+      "line": 32,
+      "path": "scripts/staging/stt_fallback_smoke.py",
+      "qualified_name": "scripts.staging.stt_fallback_smoke.GroqBurst.__init__"
+    },
+    {
+      "id": "symbol:scripts.staging.stt_fallback_smoke.GroqBurst.keep_saturated",
+      "kind": "method",
+      "line": 60,
+      "path": "scripts/staging/stt_fallback_smoke.py",
+      "qualified_name": "scripts.staging.stt_fallback_smoke.GroqBurst.keep_saturated"
+    },
+    {
+      "id": "symbol:scripts.staging.stt_fallback_smoke.GroqBurst.keep_saturated.loop",
+      "kind": "method",
+      "line": 61,
+      "path": "scripts/staging/stt_fallback_smoke.py",
+      "qualified_name": "scripts.staging.stt_fallback_smoke.GroqBurst.keep_saturated.loop"
+    },
+    {
+      "id": "symbol:scripts.staging.stt_fallback_smoke.GroqBurst.one",
+      "kind": "method",
+      "line": 39,
+      "path": "scripts/staging/stt_fallback_smoke.py",
+      "qualified_name": "scripts.staging.stt_fallback_smoke.GroqBurst.one"
+    },
+    {
+      "id": "symbol:scripts.staging.stt_fallback_smoke.GroqBurst.until_429",
+      "kind": "method",
+      "line": 53,
+      "path": "scripts/staging/stt_fallback_smoke.py",
+      "qualified_name": "scripts.staging.stt_fallback_smoke.GroqBurst.until_429"
+    },
+    {
+      "id": "symbol:scripts.staging.stt_fallback_smoke.main",
+      "kind": "function",
+      "line": 128,
+      "path": "scripts/staging/stt_fallback_smoke.py",
+      "qualified_name": "scripts.staging.stt_fallback_smoke.main"
+    },
+    {
+      "id": "symbol:scripts.staging.stt_fallback_smoke.run",
+      "kind": "function",
+      "line": 70,
+      "path": "scripts/staging/stt_fallback_smoke.py",
+      "qualified_name": "scripts.staging.stt_fallback_smoke.run"
     },
     {
       "id": "symbol:scripts.staging.synthetic_data.build_manifest",
@@ -326281,7 +326929,7 @@
     {
       "id": "symbol:scripts.staging.two_user_smoke.User.get",
       "kind": "method",
-      "line": 49,
+      "line": 48,
       "path": "scripts/staging/two_user_smoke.py",
       "qualified_name": "scripts.staging.two_user_smoke.User.get"
     },
@@ -326295,63 +326943,63 @@
     {
       "id": "symbol:scripts.staging.two_user_smoke.User.new_game",
       "kind": "method",
-      "line": 40,
+      "line": 39,
       "path": "scripts/staging/two_user_smoke.py",
       "qualified_name": "scripts.staging.two_user_smoke.User.new_game"
     },
     {
       "id": "symbol:scripts.staging.two_user_smoke.User.post",
       "kind": "method",
-      "line": 52,
+      "line": 51,
       "path": "scripts/staging/two_user_smoke.py",
       "qualified_name": "scripts.staging.two_user_smoke.User.post"
     },
     {
       "id": "symbol:scripts.staging.two_user_smoke.main",
       "kind": "function",
-      "line": 166,
+      "line": 165,
       "path": "scripts/staging/two_user_smoke.py",
       "qualified_name": "scripts.staging.two_user_smoke.main"
     },
     {
       "id": "symbol:scripts.staging.two_user_smoke.run",
       "kind": "function",
-      "line": 56,
+      "line": 55,
       "path": "scripts/staging/two_user_smoke.py",
       "qualified_name": "scripts.staging.two_user_smoke.run"
     },
     {
       "id": "symbol:scripts.staging.vercel_env._load_files",
       "kind": "function",
-      "line": 81,
+      "line": 84,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env._load_files"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.build_env",
       "kind": "function",
-      "line": 88,
+      "line": 91,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.build_env"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.main",
       "kind": "function",
-      "line": 167,
+      "line": 173,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.main"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.push",
       "kind": "function",
-      "line": 128,
+      "line": 134,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.push"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.remove",
       "kind": "function",
-      "line": 151,
+      "line": 157,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.remove"
     },
@@ -365171,6 +365819,20 @@
       "qualified_name": "tests.test_spec191_staging_tools.test_assert_ref_in_requires_every_target"
     },
     {
+      "id": "symbol:tests.test_spec191_staging_tools.test_auth_config_apply_sends_smtp_before_email_rate_limit_and_redacts_pass",
+      "kind": "test",
+      "line": 302,
+      "path": "tests/test_spec191_staging_tools.py",
+      "qualified_name": "tests.test_spec191_staging_tools.test_auth_config_apply_sends_smtp_before_email_rate_limit_and_redacts_pass"
+    },
+    {
+      "id": "symbol:tests.test_spec191_staging_tools.test_auth_config_apply_sends_smtp_before_email_rate_limit_and_redacts_pass.handler",
+      "kind": "test",
+      "line": 306,
+      "path": "tests/test_spec191_staging_tools.py",
+      "qualified_name": "tests.test_spec191_staging_tools.test_auth_config_apply_sends_smtp_before_email_rate_limit_and_redacts_pass.handler"
+    },
+    {
       "id": "symbol:tests.test_spec191_staging_tools.test_auth_config_plan_and_apply_payload",
       "kind": "test",
       "line": 64,
@@ -365183,6 +365845,13 @@
       "line": 68,
       "path": "tests/test_spec191_staging_tools.py",
       "qualified_name": "tests.test_spec191_staging_tools.test_auth_config_plan_and_apply_payload.handler"
+    },
+    {
+      "id": "symbol:tests.test_spec191_staging_tools.test_auth_config_smtp_from_env_all_or_nothing_and_templates_from_repo",
+      "kind": "test",
+      "line": 287,
+      "path": "tests/test_spec191_staging_tools.py",
+      "qualified_name": "tests.test_spec191_staging_tools.test_auth_config_smtp_from_env_all_or_nothing_and_templates_from_repo"
     },
     {
       "id": "symbol:tests.test_spec191_staging_tools.test_backup_compare_state_and_disposable_guard",
@@ -365848,6 +366517,13 @@
       "line": 97,
       "path": "tests/test_spec192_vercel_env.py",
       "qualified_name": "tests.test_spec192_vercel_env.test_projection_mode_flag_sets_post_response_and_inline_deletes_it"
+    },
+    {
+      "id": "symbol:tests.test_spec192_vercel_env.test_real_turnstile_site_key_and_optional_openai_key_stay_out_of_preview",
+      "kind": "test",
+      "line": 109,
+      "path": "tests/test_spec192_vercel_env.py",
+      "qualified_name": "tests.test_spec192_vercel_env.test_real_turnstile_site_key_and_optional_openai_key_stay_out_of_preview"
     },
     {
       "id": "symbol:tests.test_spec192_vercel_env.test_refuses_other_project",
@@ -371780,5 +372456,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:a0de56ee866fd80b754fef53965487545f8358c048d0d3aa7567cd2d3aef90df"
+  "source_tree_hash": "sha256:378e1b4ab4439d3c34ff130e3e66998fd73368ed3e329ca9d1dd0fc914a28c37"
 }
