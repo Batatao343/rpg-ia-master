@@ -18,3 +18,4 @@ Procfile text eol=lf
 *.jpg binary
 *.jpeg binary
 *.zip binary
+*.sha256 text eol=lf

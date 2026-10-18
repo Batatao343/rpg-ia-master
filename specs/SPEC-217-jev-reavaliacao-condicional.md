@@ -34,6 +34,7 @@ Rótulos: **[F]** fato observado · **[D]** decisão do dono · **[H]** hipótes
 ### Corpora e separação
 
 - **R1 — Dois corpora sem sobreposição.** Autorados e congelados (SHA-256 + commit) por tarefa separada **antes** da J1, conforme o handoff: **DEV** (casos de desenvolvimento já vistos — rota da regressão `routing_actions`, corpus SPEC-179 — mais sintéticos novos) e **FROZEN** (confirmatório, só casos novos). Um verificador checa ausência de sobreposição por `id`, por ação normalizada (casefold, sem acento/pontuação) e por fixture. O executor da J1/J2 não lê o conteúdo do FROZEN antes do run J2 (só o hash e a contagem) e não altera nenhum dos dois.
+  **Selo (autoria concluída):** DEV sha256 `256d24bd53a8eda63daf0d6cd15d413ddd2c844b5f57771df8753ce6e5305f3d`, FROZEN sha256 `442725e5dca9be7ed71c9abaa730cc7b61fd15180a04d4a290545794621d9d48`; detalhes em [docs/spec217/corpus.md](../docs/spec217/corpus.md). O executor da J1 **não deve ler** `evals/experiments/data/spec217_frozen.jsonl`.
 
 ### J1 — estruturação do Jev (DEV)
 
