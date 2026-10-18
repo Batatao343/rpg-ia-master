@@ -27,6 +27,7 @@ from services.google_play import (
 )
 from services.purchase_reconciliation import GOOGLE, STRIPE, Event
 from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256
+from tests.fakes.local_pricing import installed_card_max_age_seconds
 from services.usage_metering import RATE_CARD_VERSION
 
 pytestmark = pytest.mark.infra_local
@@ -70,9 +71,9 @@ def lab():
             (version_id,shard_budget_unit_brl,fx_usd_brl,fx_source,fx_observed_at,fx_max_age_seconds,
              fx_buffer_rate,rate_card_version,rate_card_sha256,rate_card_source,
              rate_card_observed_at,rate_card_max_age_seconds,channel_fees)
-            values (%s,0.03,5,'lab',%s,864000,0.1,%s,%s,'lab',%s,864000,%s)""",
+            values (%s,0.03,5,'lab',%s,864000,0.1,%s,%s,'lab',%s,%s,%s)""",
                   (version, at, RATE_CARD_VERSION, INSTALLED_RATE_CARD_SHA256,
-                   INSTALLED_RATE_CARD_OBSERVED_AT,
+                   INSTALLED_RATE_CARD_OBSERVED_AT, installed_card_max_age_seconds(),
                    Jsonb({"web": {"percentage": "0.04", "fixed_brl": "0.20"},
                           "google_play": {"percentage": "0.15", "fixed_brl": "0"}})))
         for sku, channel, store_id in ((web_sku, "web", web_sku), (gp_sku, "google_play", product)):

@@ -16,6 +16,7 @@ def fund_audit_portrait(user_id: UUID) -> None:
     from infrastructure.postgres import PostgresPool
     from infrastructure.wallet import PostgresWallet
     from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256
+    from tests.fakes.local_pricing import installed_card_max_age_seconds
     from services.usage_metering import RATE_CARD_VERSION
     status = _supabase_status()
     db_url = status["DB_URL"]
@@ -35,10 +36,10 @@ def fund_audit_portrait(user_id: UUID) -> None:
                  fx_max_age_seconds,fx_buffer_rate,rate_card_version,rate_card_sha256,
                  rate_card_source,rate_card_observed_at,rate_card_max_age_seconds,channel_fees)
                 values (%s,0.03,5,'synthetic local audit',%s,864000,0.1,%s,%s,
-                        'installed local rate card',%s,864000,%s)
+                        'installed local rate card',%s,%s,%s)
                 on conflict (version_id) do nothing""",
                 (version_id, now, RATE_CARD_VERSION, INSTALLED_RATE_CARD_SHA256,
-                 INSTALLED_RATE_CARD_OBSERVED_AT,
+                 INSTALLED_RATE_CARD_OBSERVED_AT, installed_card_max_age_seconds(),
                  Jsonb({"web": {"percentage": "0.04", "fixed_brl": "0.20"}})))
             connection.execute("""insert into app.image_price_profiles
                 (profile_id,pricing_version_id,model,size,max_provider_usd,source,expires_at)

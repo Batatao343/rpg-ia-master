@@ -18,6 +18,7 @@ from infrastructure.contracts import Principal
 from infrastructure.postgres import PostgresPool
 from infrastructure.stripe_payments import StripePayments
 from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256
+from tests.fakes.local_pricing import installed_card_max_age_seconds
 from services.stripe_checkout import StripeSettings
 from services.usage_metering import RATE_CARD_VERSION
 from tests.test_stripe_checkout_local import FakeStripe, checkout, deliver, event
@@ -58,8 +59,8 @@ def concurrent_payments():
                 (version_id,shard_budget_unit_brl,fx_usd_brl,fx_source,fx_observed_at,fx_max_age_seconds,
                  fx_buffer_rate,rate_card_version,rate_card_sha256,rate_card_source,
                  rate_card_observed_at,rate_card_max_age_seconds,channel_fees)
-                values (%s,0.03,5,'test',%s,864000,0.1,%s,%s,'test',%s,864000,%s)""",
-                (version,at,RATE_CARD_VERSION,INSTALLED_RATE_CARD_SHA256,INSTALLED_RATE_CARD_OBSERVED_AT,
+                values (%s,0.03,5,'test',%s,864000,0.1,%s,%s,'test',%s,%s,%s)""",
+                (version,at,RATE_CARD_VERSION,INSTALLED_RATE_CARD_SHA256,INSTALLED_RATE_CARD_OBSERVED_AT, installed_card_max_age_seconds(),
                  Jsonb({"web": {"percentage": "0.04", "fixed_brl": "0.20"}})))
             db.execute("""insert into app.purchase_skus
                 (sku_id,pricing_version_id,channel,store_product_id,gross_brl,shard_milli)

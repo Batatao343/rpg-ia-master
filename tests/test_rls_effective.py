@@ -233,6 +233,7 @@ def _image_quote_case(world, monkeypatch):
     from services.art_triggers import ArtGenerationRequest
     from services.image_quotes import ImageQuoteRepository
     from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256
+    from tests.fakes.local_pricing import installed_card_max_age_seconds
     from services.usage_metering import RATE_CARD_VERSION
 
     at = datetime(2026, 10, 12, 12, tzinfo=timezone.utc)
@@ -249,9 +250,9 @@ def _image_quote_case(world, monkeypatch):
           (version_id,shard_budget_unit_brl,fx_usd_brl,fx_source,fx_observed_at,fx_max_age_seconds,
            fx_buffer_rate,rate_card_version,rate_card_sha256,rate_card_source,
            rate_card_observed_at,rate_card_max_age_seconds,channel_fees)
-          values (%s,0.03,5,'test',%s,864000,0.1,%s,%s,'test',%s,864000,%s)""",
+          values (%s,0.03,5,'test',%s,864000,0.1,%s,%s,'test',%s,%s,%s)""",
           (version_id, at, RATE_CARD_VERSION, INSTALLED_RATE_CARD_SHA256,
-           INSTALLED_RATE_CARD_OBSERVED_AT, Jsonb({"web": {"percentage": "0.04", "fixed_brl": "0.20"}})))
+           INSTALLED_RATE_CARD_OBSERVED_AT, installed_card_max_age_seconds(), Jsonb({"web": {"percentage": "0.04", "fixed_brl": "0.20"}})))
         admin.execute("""insert into app.image_price_profiles
           (profile_id,pricing_version_id,model,size,max_provider_usd,source,expires_at)
           values (%s,%s,'gpt-image-2-2026-04-21','1024x1536',0.02,'synthetic rls test only',%s)""",

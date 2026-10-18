@@ -84,7 +84,10 @@ def test_authenticated_stream_reload_history_and_art_dialog(width, tmp_path):
             portrait.wait_for(state='attached')
             page.wait_for_function("document.querySelector('.generated-portrait img')?.naturalWidth > 0")
             assert portrait.evaluate('i => getComputedStyle(i).objectFit') == 'contain'
-            if width < 1100:
+            if width < 900:
+                # SPEC-216: one surface at a time; the "Superfícies" bar returns to Chat.
+                page.get_by_role('navigation', name='Superfícies').get_by_role('button', name='Chat', exact=True).click()
+            elif width < 1100:
                 page.get_by_role('group', name='Modo de exibição').get_by_role('button', name='Chat', exact=True).click()
             assert page.locator('.topbar__right button').evaluate_all('''buttons => buttons.every((a, i) => {
                 const x = a.getBoundingClientRect();

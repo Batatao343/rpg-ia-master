@@ -20,6 +20,7 @@ from services.dynamic_art import DynamicArtRepository
 from services.image_quotes import ImageQuoteRepository, public_quote
 from services.job_fence import job_scope
 from services.shard_pricing import INSTALLED_RATE_CARD_SHA256, INSTALLED_RATE_CARD_OBSERVED_AT
+from tests.fakes.local_pricing import installed_card_max_age_seconds
 from services.usage_metering import RATE_CARD_VERSION
 from tests.fakes.fake_image_generator import FakeImageGenerator
 from workers.dynamic_art_jobs import generate_dynamic_art_job
@@ -59,9 +60,9 @@ def image_case(monkeypatch):
               (version_id,shard_budget_unit_brl,fx_usd_brl,fx_source,fx_observed_at,fx_max_age_seconds,
                fx_buffer_rate,rate_card_version,rate_card_sha256,rate_card_source,
                rate_card_observed_at,rate_card_max_age_seconds,channel_fees)
-              values (%s,0.03,5,'test',%s,864000,0.1,%s,%s,'test',%s,864000,%s)""",
+              values (%s,0.03,5,'test',%s,864000,0.1,%s,%s,'test',%s,%s,%s)""",
               (version_id, at, RATE_CARD_VERSION, INSTALLED_RATE_CARD_SHA256,
-               INSTALLED_RATE_CARD_OBSERVED_AT, Jsonb({"web": {"percentage": "0.04", "fixed_brl": "0.20"}})))
+               INSTALLED_RATE_CARD_OBSERVED_AT, installed_card_max_age_seconds(at), Jsonb({"web": {"percentage": "0.04", "fixed_brl": "0.20"}})))
             connection.execute("""insert into app.image_price_profiles
               (profile_id,pricing_version_id,model,size,max_provider_usd,source,expires_at)
               values (%s,%s,'gpt-image-2-2026-04-21','1024x1536',0.02,'synthetic test only',%s)""",
@@ -462,7 +463,10 @@ def test_stale_image_card_fails_before_ticket_and_releases_safe_hold(image_case)
     c = image_case
     generation = confirm(c, issue(c))
     job = lease(c, generation)
-    c.repo.at = c.at + timedelta(days=8)
+    from services.image_pricing import _CARD
+    from services.shard_pricing import rate_card_max_age
+    # Past the image card's own window (SPEC-236: 30 d default), not the pricing version's.
+    c.repo.at = datetime.fromisoformat(_CARD["observed_at"]) + rate_card_max_age() + timedelta(days=1)
     with job_scope(job):
         with pytest.raises(PricingUnavailable):
             c.repo.dispatch(generation["generation_id"], c.owner.user_id, c.game_id)
