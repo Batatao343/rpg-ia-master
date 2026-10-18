@@ -1,5 +1,5 @@
 {
-  "commit_sha": "16cf2cd09eb9f91ef626da081d14841d5027156b",
+  "commit_sha": "295af8e7a9acff8f866d41da1f2193b022476b94",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -104154,7 +104154,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 215
+        "line": 221
       },
       "source": "module:tests.test_spec197_checklist",
       "target": "symbol:tests.test_spec197_checklist.test_environments_require_dated_manual_verification",
@@ -104165,7 +104165,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 168
+        "line": 174
       },
       "source": "module:tests.test_spec197_checklist",
       "target": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
@@ -104187,7 +104187,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 207
+        "line": 213
       },
       "source": "module:tests.test_spec197_checklist",
       "target": "symbol:tests.test_spec197_checklist.test_gitleaks_main_uses_last_completed_validate_run",
@@ -104231,7 +104231,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 175
+        "line": 181
       },
       "source": "module:tests.test_spec197_checklist",
       "target": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
@@ -104253,7 +104253,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 191
+        "line": 197
       },
       "source": "module:tests.test_spec197_checklist",
       "target": "symbol:tests.test_spec197_checklist.test_prod_forbids_play_test_purchase_env",
@@ -104264,7 +104264,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 164
+        "line": 170
       },
       "source": "module:tests.test_spec197_checklist",
       "target": "symbol:tests.test_spec197_checklist.test_production_requires_daily_cap_env",
@@ -104330,7 +104330,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 197
+        "line": 203
       },
       "source": "module:tests.test_spec197_checklist",
       "target": "symbol:tests.test_spec197_checklist.test_workflow_hygiene_passes_on_repo_and_flags_unpinned",
@@ -285522,42 +285522,196 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
+        "line": 223
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_environments_require_dated_manual_verification",
+      "target": "symbol:scripts.release.checklist.check_environments_verified",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 225
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_environments_require_dated_manual_verification",
+      "target": "symbol:scripts.release.checklist.check_environments_verified",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 227
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_environments_require_dated_manual_verification",
+      "target": "symbol:scripts.release.checklist.check_environments_verified",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 176
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 177
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 178
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 175
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
+      "target": "symbol:scripts.release.checklist.check_finops_config",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 176
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
+      "target": "symbol:scripts.release.checklist.check_finops_config",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 177
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
+      "target": "symbol:scripts.release.checklist.check_finops_config",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 178
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
+      "target": "symbol:scripts.release.checklist.check_finops_config",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 34
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 36
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 34
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
+      "target": "symbol:scripts.release.checklist.check_git",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 36
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
+      "target": "symbol:scripts.release.checklist.check_git",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 34
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
+      "target": "symbol:tests.test_spec197_checklist.fake_run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 36
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
+      "target": "symbol:tests.test_spec197_checklist.fake_run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
+        "line": 215
+      },
+      "source": "symbol:tests.test_spec197_checklist.test_gitleaks_main_uses_last_completed_validate_run",
+      "target": "symbol:scripts.release.checklist.Deps",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec197_checklist.py",
         "line": 217
       },
-      "source": "symbol:tests.test_spec197_checklist.test_environments_require_dated_manual_verification",
-      "target": "symbol:scripts.release.checklist.check_environments_verified",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec197_checklist.py",
-        "line": 219
-      },
-      "source": "symbol:tests.test_spec197_checklist.test_environments_require_dated_manual_verification",
-      "target": "symbol:scripts.release.checklist.check_environments_verified",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec197_checklist.py",
-        "line": 221
-      },
-      "source": "symbol:tests.test_spec197_checklist.test_environments_require_dated_manual_verification",
-      "target": "symbol:scripts.release.checklist.check_environments_verified",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec197_checklist.py",
-        "line": 170
-      },
-      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
+      "source": "symbol:tests.test_spec197_checklist.test_gitleaks_main_uses_last_completed_validate_run",
       "target": "symbol:scripts.release.checklist.Deps",
       "type": "calls"
     },
@@ -285566,139 +285720,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 171
-      },
-      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
-      "target": "symbol:scripts.release.checklist.Deps",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec197_checklist.py",
-        "line": 172
-      },
-      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
-      "target": "symbol:scripts.release.checklist.Deps",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec197_checklist.py",
-        "line": 169
-      },
-      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
-      "target": "symbol:scripts.release.checklist.check_finops_config",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec197_checklist.py",
-        "line": 170
-      },
-      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
-      "target": "symbol:scripts.release.checklist.check_finops_config",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec197_checklist.py",
-        "line": 171
-      },
-      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
-      "target": "symbol:scripts.release.checklist.check_finops_config",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec197_checklist.py",
-        "line": 172
-      },
-      "source": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
-      "target": "symbol:scripts.release.checklist.check_finops_config",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec197_checklist.py",
-        "line": 34
-      },
-      "source": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
-      "target": "symbol:scripts.release.checklist.Deps",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec197_checklist.py",
-        "line": 36
-      },
-      "source": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
-      "target": "symbol:scripts.release.checklist.Deps",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec197_checklist.py",
-        "line": 34
-      },
-      "source": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
-      "target": "symbol:scripts.release.checklist.check_git",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec197_checklist.py",
-        "line": 36
-      },
-      "source": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
-      "target": "symbol:scripts.release.checklist.check_git",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec197_checklist.py",
-        "line": 34
-      },
-      "source": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
-      "target": "symbol:tests.test_spec197_checklist.fake_run",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec197_checklist.py",
-        "line": 36
-      },
-      "source": "symbol:tests.test_spec197_checklist.test_git_dirty_fails",
-      "target": "symbol:tests.test_spec197_checklist.fake_run",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec197_checklist.py",
-        "line": 209
+        "line": 218
       },
       "source": "symbol:tests.test_spec197_checklist.test_gitleaks_main_uses_last_completed_validate_run",
       "target": "symbol:scripts.release.checklist.Deps",
@@ -285709,29 +285731,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 211
-      },
-      "source": "symbol:tests.test_spec197_checklist.test_gitleaks_main_uses_last_completed_validate_run",
-      "target": "symbol:scripts.release.checklist.Deps",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec197_checklist.py",
-        "line": 212
-      },
-      "source": "symbol:tests.test_spec197_checklist.test_gitleaks_main_uses_last_completed_validate_run",
-      "target": "symbol:scripts.release.checklist.Deps",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec197_checklist.py",
-        "line": 209
+        "line": 215
       },
       "source": "symbol:tests.test_spec197_checklist.test_gitleaks_main_uses_last_completed_validate_run",
       "target": "symbol:scripts.release.checklist.check_gitleaks_main",
@@ -285742,7 +285742,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 211
+        "line": 217
       },
       "source": "symbol:tests.test_spec197_checklist.test_gitleaks_main_uses_last_completed_validate_run",
       "target": "symbol:scripts.release.checklist.check_gitleaks_main",
@@ -285753,7 +285753,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 212
+        "line": 218
       },
       "source": "symbol:tests.test_spec197_checklist.test_gitleaks_main_uses_last_completed_validate_run",
       "target": "symbol:scripts.release.checklist.check_gitleaks_main",
@@ -286050,7 +286050,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 181
+        "line": 187
       },
       "source": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
       "target": "symbol:scripts.release.checklist.Deps",
@@ -286061,7 +286061,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 184
+        "line": 190
       },
       "source": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
       "target": "symbol:scripts.release.checklist.Deps",
@@ -286072,7 +286072,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 186
+        "line": 192
       },
       "source": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
       "target": "symbol:scripts.release.checklist.Deps",
@@ -286083,7 +286083,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 181
+        "line": 187
       },
       "source": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
       "target": "symbol:scripts.release.checklist.check_legal",
@@ -286094,7 +286094,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 184
+        "line": 190
       },
       "source": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
       "target": "symbol:scripts.release.checklist.check_legal",
@@ -286105,7 +286105,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 186
+        "line": 192
       },
       "source": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
       "target": "symbol:scripts.release.checklist.check_legal",
@@ -286116,7 +286116,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 181
+        "line": 187
       },
       "source": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
       "target": "symbol:tests.test_spec197_checklist.http",
@@ -286127,7 +286127,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 184
+        "line": 190
       },
       "source": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
       "target": "symbol:tests.test_spec197_checklist.http",
@@ -286138,7 +286138,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 186
+        "line": 192
       },
       "source": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
       "target": "symbol:tests.test_spec197_checklist.http",
@@ -286248,7 +286248,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 193
+        "line": 199
       },
       "source": "symbol:tests.test_spec197_checklist.test_prod_forbids_play_test_purchase_env",
       "target": "symbol:scripts.release.checklist.Deps",
@@ -286259,7 +286259,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 193
+        "line": 199
       },
       "source": "symbol:tests.test_spec197_checklist.test_prod_forbids_play_test_purchase_env",
       "target": "symbol:scripts.release.checklist.check_env_names",
@@ -286281,7 +286281,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 160
+        "line": 162
       },
       "source": "symbol:tests.test_spec197_checklist.test_real_register_r12_not_closed",
       "target": "symbol:scripts.release.checklist.parse_risks",
@@ -286402,7 +286402,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 198
+        "line": 204
       },
       "source": "symbol:tests.test_spec197_checklist.test_workflow_hygiene_passes_on_repo_and_flags_unpinned",
       "target": "symbol:scripts.release.checklist.check_workflow_hygiene",
@@ -286413,7 +286413,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_checklist.py",
-        "line": 201
+        "line": 207
       },
       "source": "symbol:tests.test_spec197_checklist.test_workflow_hygiene_passes_on_repo_and_flags_unpinned",
       "target": "symbol:scripts.release.checklist.check_workflow_hygiene",
@@ -367616,14 +367616,14 @@
     {
       "id": "symbol:tests.test_spec197_checklist.test_environments_require_dated_manual_verification",
       "kind": "test",
-      "line": 215,
+      "line": 221,
       "path": "tests/test_spec197_checklist.py",
       "qualified_name": "tests.test_spec197_checklist.test_environments_require_dated_manual_verification"
     },
     {
       "id": "symbol:tests.test_spec197_checklist.test_finops_cron_must_be_active",
       "kind": "test",
-      "line": 168,
+      "line": 174,
       "path": "tests/test_spec197_checklist.py",
       "qualified_name": "tests.test_spec197_checklist.test_finops_cron_must_be_active"
     },
@@ -367637,7 +367637,7 @@
     {
       "id": "symbol:tests.test_spec197_checklist.test_gitleaks_main_uses_last_completed_validate_run",
       "kind": "test",
-      "line": 207,
+      "line": 213,
       "path": "tests/test_spec197_checklist.py",
       "qualified_name": "tests.test_spec197_checklist.test_gitleaks_main_uses_last_completed_validate_run"
     },
@@ -367672,7 +367672,7 @@
     {
       "id": "symbol:tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders",
       "kind": "test",
-      "line": 175,
+      "line": 181,
       "path": "tests/test_spec197_checklist.py",
       "qualified_name": "tests.test_spec197_checklist.test_legal_rejects_draft_and_placeholders"
     },
@@ -367693,14 +367693,14 @@
     {
       "id": "symbol:tests.test_spec197_checklist.test_prod_forbids_play_test_purchase_env",
       "kind": "test",
-      "line": 191,
+      "line": 197,
       "path": "tests/test_spec197_checklist.py",
       "qualified_name": "tests.test_spec197_checklist.test_prod_forbids_play_test_purchase_env"
     },
     {
       "id": "symbol:tests.test_spec197_checklist.test_production_requires_daily_cap_env",
       "kind": "test",
-      "line": 164,
+      "line": 170,
       "path": "tests/test_spec197_checklist.py",
       "qualified_name": "tests.test_spec197_checklist.test_production_requires_daily_cap_env"
     },
@@ -367742,7 +367742,7 @@
     {
       "id": "symbol:tests.test_spec197_checklist.test_workflow_hygiene_passes_on_repo_and_flags_unpinned",
       "kind": "test",
-      "line": 197,
+      "line": 203,
       "path": "tests/test_spec197_checklist.py",
       "qualified_name": "tests.test_spec197_checklist.test_workflow_hygiene_passes_on_repo_and_flags_unpinned"
     },
@@ -371780,5 +371780,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:bdb48c2e0beee3c48292add09694e307b20669b7879d856ce14fa32be7d23fc2"
+  "source_tree_hash": "sha256:a0de56ee866fd80b754fef53965487545f8358c048d0d3aa7567cd2d3aef90df"
 }
