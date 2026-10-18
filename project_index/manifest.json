@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "e42e2bbf91f71b6da96703d91ba71e0a910b1bab",
+  "commit_sha": "ab0aba8190e2253468ecf6d299ae0f128190215a",
   "edge_counts": {
-    "calls": 16107,
-    "contains": 663,
-    "defines": 9111,
-    "imports": 1501,
-    "likely_test_for": 916,
+    "calls": 16283,
+    "contains": 670,
+    "defines": 9220,
+    "imports": 1518,
+    "likely_test_for": 928,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:c6caa0599f8600b25b0f5ed96bb53ab5e9447f8ce4e51ec3485f9713ed118792",
+  "graph_hash": "sha256:5582c6da2289ea27813504f05fbd1dc6bc8fdd9f278c678a29adea5abcd6e64a",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -151,7 +151,9 @@
     "main.py",
     "mock_llm.py",
     "observability/__init__.py",
+    "observability/auth_log.py",
     "observability/latency.py",
+    "observability/logging_setup.py",
     "observability/metrics.py",
     "observability/telemetry.py",
     "party.py",
@@ -393,6 +395,7 @@
     "tests/test_account_read_model_local.py",
     "tests/test_agents_contract.py",
     "tests/test_aliados_combate.py",
+    "tests/test_api_access_log.py",
     "tests/test_api_attempt_telemetry.py",
     "tests/test_api_npc_knowledge_private.py",
     "tests/test_archived_state_persistence.py",
@@ -409,6 +412,7 @@
     "tests/test_audit_redaction.py",
     "tests/test_audit_reward_contracts.py",
     "tests/test_auth_gotrue_error_mapping.py",
+    "tests/test_auth_logging.py",
     "tests/test_auth_sessions.py",
     "tests/test_backup_restore_local.py",
     "tests/test_balance_classes.py",
@@ -560,6 +564,9 @@
     "tests/test_letalidade_early.py",
     "tests/test_local_atomic_retry.py",
     "tests/test_local_pricing_fixture.py",
+    "tests/test_log_correlation.py",
+    "tests/test_logging_review_239_245.py",
+    "tests/test_logging_setup.py",
     "tests/test_longrun_remediation_v3.py",
     "tests/test_longrun_remediation_v4.py",
     "tests/test_loot_exploracao.py",
@@ -854,14 +861,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 747,
+    "class": 751,
     "endpoint": 63,
-    "file": 800,
-    "function": 2819,
-    "method": 730,
-    "module": 663,
-    "test": 4815
+    "file": 807,
+    "function": 2845,
+    "method": 737,
+    "module": 670,
+    "test": 4886
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:51c5981aca6588c1ab575d96d19712d7be1a664ec344f87f896fe5c032d629b7"
+  "source_tree_hash": "sha256:ead301f766e8cc9dcbff4d23fb024069f0f70143d02547d4a643488dcc5286fe"
 }
