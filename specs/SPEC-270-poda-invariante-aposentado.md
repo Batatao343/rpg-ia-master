@@ -1,6 +1,6 @@
 # SPEC-270 — Apagar o invariante de playtest aposentado
 
-> **Status:** `draft`
+> **Status:** `draft` · **Revisão independente 2026-10-18:** SAFE as written (ver §8)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Origem:** auditoria ponytail 2026-10-18 ([relatório](../docs/auditorias/ponytail-poda-2026-10-18.md))
 > **Depende de:** —
@@ -40,3 +40,14 @@ de `explore_06_qualidade.md:143` acha que roda.
 ## 7. Riscos & compatibilidade
 
 Risco **nulo** no runtime. Rollback: `git revert`.
+
+## 8. Revisão independente 2026-10-18
+
+Revisor: Opus (Astra-style, adversarial), worktree `prune-review` @ `0784ff4`, a pedido do dono.
+
+**Veredito: SAFE as written.**
+
+- `git grep check_zero_vitality_outside_terminal`: definição + `tests/test_remediacao_matriz_a.py:62-67` + docs.
+- A string do código `player.zero_vitality_outside_terminal` só aparece em relatórios históricos
+  (`docs/playtests/*`, guia interativo); nenhum dataset/registry de `evals/` nem o `playtest/report.py` a
+  usa como chave. Os relatórios históricos continuam corretos como registro do passado.

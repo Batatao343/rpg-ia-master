@@ -1,6 +1,6 @@
 # SPEC-264 — Remover arquivos soltos versionados por engano
 
-> **Status:** `draft`
+> **Status:** `draft` · **Revisão independente 2026-10-18:** SAFE as written (ver §8)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Origem:** auditoria ponytail 2026-10-18 ([relatório](../docs/auditorias/ponytail-poda-2026-10-18.md))
 > **Depende de:** —
@@ -47,3 +47,16 @@ Nenhum smoke LLM necessário (não toca runtime).
 ## 7. Riscos & compatibilidade
 
 Risco **nulo** para o runtime. Rollback: `git revert`.
+
+## 8. Revisão independente 2026-10-18
+
+Revisor: Opus (Astra-style, adversarial), worktree `prune-review` @ `0784ff4`, a pedido do dono.
+
+**Veredito: SAFE as written.**
+
+- `git grep "pytest216\|gallery\|20251205_6e7458"` fora do relatório/spec: vazio.
+- Nenhum código varre `assets/` por glob (`rglob/glob/iterdir/listdir/walk` + `asset` em `.py`: vazio);
+  o catálogo visual é explícito (`services/visual_catalog.py`, `scripts/import_visual_assets.py`).
+  O PNG veio do primeiro commit (`cc49748`).
+- `project_index/generator.py:33` exclui `assets` do índice: sem efeito no grafo, mas regenerar o índice
+  segue no aceite.

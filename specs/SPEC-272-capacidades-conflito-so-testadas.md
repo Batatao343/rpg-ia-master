@@ -1,6 +1,6 @@
 # SPEC-272 — Decidir: ligar ou apagar capacidades do conflito que só os testes usam
 
-> **Status:** `draft`
+> **Status:** `draft` · **Revisão independente 2026-10-18:** SAFE WITH CHANGES — decisão item a item continua obrigatória; apagar exige adendo nas specs `done` de origem (ver §8)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Origem:** auditoria ponytail 2026-10-18 ([relatório](../docs/auditorias/ponytail-poda-2026-10-18.md))
 > **Depende de:** decisão do dono, por capacidade (ligar no motor ou apagar)
@@ -42,6 +42,23 @@ no commit da auditoria.
 - **R3** — Antes de apagar, confirmar com grep que nenhum chamador apareceu desde a
   auditoria e que a função não é alcançada por nome (dicionário de handlers, `HANDLED_KINDS`).
 - **R4** — Se `test_cutover_audit.py` passar a listar só itens apagados, apagar o teste também.
+- **R5** *(revisão)* — Cada capacidade apagada foi **entregue como requisito** de uma spec `done`
+  (SPEC-064 cena, SPEC-065 resolução, SPEC-068 morte/rendição/captura, SPEC-069 perfil tático,
+  SPEC-070 fuga/perseguição, SPEC-072 preparação de encontro, SPEC-073 resumo canônico, SPEC-075 Cartas). Apagar = acrescentar à spec de origem uma linha
+  "capacidade removida pela SPEC-272 (nunca ligada ao motor)" para não deixar critério de aceite
+  `done` falso, e atualizar `docs/design/CARTAS.md:59` se `suggested_virtue_cards` sair.
+- **R6** *(revisão)* — Efeitos em cascata a decidir junto:
+  `get_or_generate_profile` é o único chamador de `generate_tactical_profile` (`tactical_profile.py:423`):
+  apagar o primeiro torna o gerador LLM da SPEC-069 inteiro órfão. `suggested_virtue_cards` é o
+  único leitor de `data/cards/virtude_sugeridas.json` (gerado por `gen_cards_v4.py:806`, testado
+  por `test_conflito_autoria_cartas.py:145`): apagar deixa dado + gerador sem consumidor.
+  `fire_reinforcement` tem follow-up registrado na SPEC-226:165 (id de instância único ao ligar
+  reforços): se apagar, encerrar esse follow-up.
+- **R7** *(revisão)* — Antes de decidir, tratar o conjunto como achado do mesmo tipo da SPEC-050
+  (mecânica entregue e morta), não como lixo: o default sugerido é **ligar** o que o jogador
+  esperaria ver (rendição, golpe não-letal, abandono de companheiro, revelação persistente do
+  bestiário) e **apagar** só helpers sem valor de jogo (`net_advantage`, `multiply_principal`,
+  `luck_roll` isolado, `resolve_damage_formula`).
 
 ### Fora de escopo
 
@@ -62,3 +79,23 @@ Para o que for apagado: 1 campanha `combate` de 10 turnos com DeepSeek; zero err
 ## 7. Riscos & compatibilidade
 
 Risco **médio**: o grep não enxerga chamadas montadas em string. Rollback: `git revert`.
+
+## 8. Revisão independente 2026-10-18
+
+Revisor: Opus (Astra-style, adversarial), worktree `prune-review` @ `0784ff4`, a pedido do dono.
+
+**Veredito: SAFE WITH CHANGES** (a spec já exige decisão do dono por item; o risco é decidir "apagar" sem
+saber o que mais cai junto).
+
+Verificado: as 35 funções da tabela têm **zero** chamadores fora de `tests/` (nem na própria módulo, nem em
+`evals/`, JSON/YAML, `HANDLED_KINDS`). A cutover conflito-13 está `done`, então nada delas está reservado
+a ela; `stop_guard` deixou de ser necessário porque `reset_turn_budget` já zera `guarding`
+(`conflict_scene.py:65`, correção da SPEC-232).
+
+Achados (viraram R5–R7):
+1. Cada função é requisito entregue de spec `done` (064/065/068/069/070/072/073/075). Apagar sem adendo deixa
+   critério de aceite `done` falso.
+2. Cascatas: `get_or_generate_profile` → `generate_tactical_profile` (gerador LLM da SPEC-069) inteiro órfão;
+   `suggested_virtue_cards` → `virtude_sugeridas.json` + parte do `gen_cards_v4.py` sem consumidor e
+   `docs/design/CARTAS.md:59` desatualizado; `fire_reinforcement` tem follow-up aberto na SPEC-226:165.
+3. É o mesmo padrão "entregue e nunca ligado" da SPEC-050; recomendação: ligar o que tem valor de jogo.

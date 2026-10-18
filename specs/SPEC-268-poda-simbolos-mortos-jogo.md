@@ -1,6 +1,6 @@
 # SPEC-268 — Apagar símbolos mortos do motor de jogo
 
-> **Status:** `draft`
+> **Status:** `draft` · **Revisão independente 2026-10-18:** SAFE WITH CHANGES (`_APEX_TAG` fica; `save_custom_artifact` opcional; ver §8)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Origem:** auditoria ponytail 2026-10-18 ([relatório](../docs/auditorias/ponytail-poda-2026-10-18.md))
 > **Depende de:** —
@@ -19,7 +19,7 @@ reconfirmado com `git grep -w <nome>`; os únicos outros hits estão em docs/spe
 
 | Símbolo | Local | Linhas | Nota |
 |---|---|---|---|
-| `last_safe_location` | `world_utils.py:766` (+ `_SAFE_LOC_TAGS` e `_APEX_TAG` se ficarem órfãos) | ~23 | resto do "O Saque", aposentado na sessão 23 |
+| `last_safe_location` | `world_utils.py:766` (+ `_SAFE_LOC_TAGS`; **`_APEX_TAG` fica**: `world_utils.py:573,799` usam) | ~23 | resto do "O Saque", aposentado na sessão 23 |
 | `make_armor`, `make_shield` | `gamedata.py:225,235` | ~14 | |
 | `cards_at_patamar` | `services/cards.py:184` | 7 | |
 | `FactionIntel` | `state.py:271` | 6 | TypedDict sem uso |
@@ -30,7 +30,7 @@ reconfirmado com `git grep -w <nome>`; os únicos outros hits estão em docs/spe
 | `ENCOUNTER_COOLDOWN_TURNS` | `services/npc_layers.py:150` | 1 | |
 | `PURSUIT_POLICIES`, `TIPOS`, `RESISTENCIAS` | `services/tactical_profile.py:154,20,21` | 3 | |
 | `_write_checkpoint_if_due` | `api.py:3846` | ~13 | helper privado sem chamador |
-| `save_custom_artifact` | `gamedata.py:54` | ~23 | só `tests/test_runtime_cache.py:97` chama; o loot não grava mais item custom. Apagar junto a assert do teste, mantendo o teste do overlay de runtime por outro caminho |
+| `save_custom_artifact` *(opcional, revisão)* | `gamedata.py:54` | ~23 | só `tests/test_runtime_cache.py:97` chama; é o único escritor do overlay `custom_artifact` (SPEC-051). Apagar remove `test_custom_artifact_no_overlay` inteiro; o overlay genérico segue coberto pelo teste de NPC (`:85-92`). Se o dono preferir manter o gancho para loot custom futuro, sai da lista |
 
 Total estimado: **~100 linhas**.
 
@@ -65,3 +65,20 @@ Nenhum smoke LLM (código morto não roda).
 ## 7. Riscos & compatibilidade
 
 Risco **baixo**. Sem efeito em save/schema. Rollback: `git revert`.
+
+## 8. Revisão independente 2026-10-18
+
+Revisor: Opus (Astra-style, adversarial), worktree `prune-review` @ `0784ff4`, a pedido do dono.
+
+**Veredito: SAFE WITH CHANGES.**
+
+Verificado com `git grep -nw` (fora de docs/specs/handoffs/proximas-specs/índice): cada símbolo da tabela
+só aparece na definição, exceto os abaixo. Sem uso dinâmico: os únicos `getattr(` sobre módulo em produção
+são `playtest/latency_llm.py:185` (`get_llm`) e `playtest/runner.py:631` (lista explícita); nenhum `make_*`
+montado em string. `_write_checkpoint_if_due` está superado pelos caminhos de checkpoint em
+`api.py:3454/3522/3786` (sem perda de funcionalidade).
+
+Achados:
+1. `_APEX_TAG` **não fica órfão**: `world_utils.py:573,799` usam (e `services/cards.py` tem cópia própria).
+   A tabela agora diz para mantê-lo.
+2. `save_custom_artifact` é o único escritor do overlay `custom_artifact` da SPEC-051; virou item opcional.

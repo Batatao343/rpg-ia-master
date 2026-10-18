@@ -96,14 +96,26 @@ fora do checkout.
 
 ## Ordem sugerida
 
-1. **SPEC-264** (arquivos soltos), **SPEC-270** (invariante), **SPEC-271** (exports web): nulo risco, minutos.
-2. **SPEC-268** e **SPEC-269** (símbolos mortos): mecânico, grep + ruff.
-3. **SPEC-263** (deps): mede bundle Vercel antes/depois.
-4. **SPEC-267** (frontend legado) e **SPEC-273** (geradores).
-5. **SPEC-274** (env knobs): depende de checar o painel da Vercel.
-6. **SPEC-265** (mana/stamina): muda o contrato JSON, com revisão.
-7. **SPEC-266** (mídia): depende de o dono escolher onde guardar.
-8. **SPEC-272** (capacidades só-testadas): decisão do dono, item por item.
+> **Revisada em 2026-10-18** pela revisão independente
+> ([handoff](../../handoffs/PONYTAIL-specs-review-2026-10-18.md)). Cada spec traz uma §8 com a evidência.
+> Correções de fato a este relatório: `infrastructure/file_blob.py` **é importado por 5 testes**
+> (linha 9 da tabela); `sweep_synthetic_users` é ferramenta de staging; `currentPurchaseAdapter` é o
+> gancho da SPEC-198; os geradores da linha 13 são passos obrigatórios da pipeline de autoria e os
+> leitores de `.env` já usam `python-dotenv`; `crossing_the_chasm.mp3` e `brag/play.mp4` são insumos
+> do projeto Remotion; os `requirements*.txt` estão defasados do lock (falta `pillow`).
+
+1. **SPEC-264** (arquivos soltos) e **SPEC-270** (invariante): SAFE como escritas, minutos.
+2. **SPEC-271** (exports web, agora só 3) e **SPEC-268** (símbolos de jogo, `_APEX_TAG` fica).
+3. **SPEC-269** (infra, sem `file_blob.py` e `sweep_synthetic_users`).
+4. **SPEC-263** (deps): mantém `requirements.txt`, corrige o drift do `pillow`; mede bundle Vercel antes/depois.
+5. **SPEC-267** (frontend legado): rodar a suíte local sem `web/dist` antes do PR (é como o CI roda).
+6. **SPEC-274** (env knobs): agora só documentação; pode ir a qualquer momento.
+7. **SPEC-265** (mana/stamina): muda o contrato JSON; preserva tokens CSS; revisão Astra.
+8. **SPEC-266** (mídia): só os 2 MP4 renderizados; depende de o dono escolher onde guardar.
+9. **SPEC-272** (capacidades só-testadas): decisão do dono item a item, com adendo nas specs `done` de origem.
+10. ~~SPEC-273~~ **não executar como escrita** (UNSAFE): apagar `gen_tiers_5_plus.py`/`gen_world_living_npcs.py`
+    quebra a regeneração de `classes.json`/Cartas tardias e das 36 entidades `npc_mv_*`. Se for adiante,
+    só como documentação da pipeline em `docs/guias/AUTORIA.md`.
 
 Toda spec que mexe em `.py` termina com o Project Index regenerado em checkout limpo
 (o gate de CI acusa staleness).

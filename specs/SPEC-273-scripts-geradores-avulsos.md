@@ -1,6 +1,6 @@
 # SPEC-273 — Aposentar geradores de uso único e unir os leitores de .env dos scripts
 
-> **Status:** `draft`
+> **Status:** `draft` · **Revisão independente 2026-10-18:** UNSAFE as written — **não recomendado apagar os geradores**: os dois são passos obrigatórios da pipeline de autoria (ver §8)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Origem:** auditoria ponytail 2026-10-18 ([relatório](../docs/auditorias/ponytail-poda-2026-10-18.md))
 > **Depende de:** —
@@ -30,9 +30,14 @@ O projeto já depende de `python-dotenv`.
 - **R1** — Confirmar que os dados gerados não são regerados por esses scripts: rodar cada
   um em diretório temporário (sem gravar no repo) **ou** checar se o docstring diz que é a
   fonte de verdade. Se algum for fonte de verdade, ele fica e vai para `docs/guias/AUTORIA.md`.
-- **R2** — Os que não forem fonte: `git rm`.
-- **R3** — Trocar os dois leitores por `dotenv.dotenv_values(path)` mantendo o comportamento
-  (precedência env > arquivo, se existir hoje) e os testes de `tests/test_spec192_staging_scripts.py`.
+- **R2** — *(revisado)* **Nenhum dos dois sai.** Ambos são fonte (ver §8). Em vez de `git rm`,
+  documentar a ordem da pipeline em `docs/guias/AUTORIA.md`:
+  `gen_classes_v2.py` → `gen_cards_v4.py` → `gen_tiers_5_plus.py`; e `migrate_lore_nova.py` →
+  `gen_world_living_npcs.py`.
+- **R3** — *(revisado)* Premissa falsa: os dois leitores **já usam** `dotenv.dotenv_values`
+  (`scripts/staging/s192.py:27-31`, `scripts/release/checklist.py:340-345`). O que existe é a mesma
+  função de 5 linhas (merge `.env` + `.env.staging`, ignora vazio) duplicada. Opcional: mover para
+  `scripts/staging/common.py` (que `s192.py` já importa) e importar de lá no checklist. Ganho ~5 linhas.
 
 ### Fora de escopo
 
@@ -48,3 +53,25 @@ ferramentas de operação citadas por runbooks da SPEC-197. Avaliar à parte com
 ## 7. Riscos & compatibilidade
 
 Risco **baixo**: perder a receita de geração. O histórico git guarda o script. Rollback: `git revert`.
+
+## 8. Revisão independente 2026-10-18
+
+Revisor: Opus (Astra-style, adversarial), worktree `prune-review` @ `0784ff4`, a pedido do dono.
+
+**Veredito: UNSAFE as written — não recomendado apagar os geradores.**
+
+Achados:
+1. **`gen_tiers_5_plus.py` é passo obrigatório depois de `gen_classes_v2.py`/`gen_cards_v4.py`.** Ele
+   pós-processa `data/classes.json` (`late_entropy_curve`, `branches.*.playstyle/tradeoff/preview_card_ids`)
+   e carimba `tier/level_req/apex` em todas as Cartas de `data/cards/*.json` (`:103-144`). Nenhum dos
+   geradores documentados no CLAUDE.md emite esses campos (`grep` = 0), e o runtime os lê
+   (`progression.py:67,73,219`; `web/src/types.ts:55`). Rodar o caminho de autoria documentado sem ele
+   quebra o nível 9–20 e os previews de subclasse. Docstring: "Autoria reproduzível".
+2. **`gen_world_living_npcs.py` é passo obrigatório depois de `migrate_lore_nova.py`.** As 36 entidades
+   `npc_mv_*` vivem só em `data/graph/entities.json` (72 hits; 0 em `entities_extra.json`), e o
+   `migrate_lore_nova.py` "REGERA ... `entities.json` do zero" a partir de `lore_nova/`. Os `.md` sobrevivem
+   (`curated: true`), mas as entidades somem do grafo até rodar o gerador de novo.
+3. R3 partia de premissa falsa: `checklist.py:340` e `s192.py:26` já usam `dotenv.dotenv_values`.
+
+Recomendação: trocar a spec por "documentar a ordem da pipeline em `docs/guias/AUTORIA.md`" (R2 revisado)
+e, opcionalmente, deduplicar o leitor de `.env` em `scripts/staging/common.py`.
