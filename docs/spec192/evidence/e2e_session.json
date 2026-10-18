@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-16T03:55:47.929589+00:00",
+  "at": "2026-10-18T13:52:59.270223+00:00",
   "base": "https://rpg-ia-master-staging.vercel.app",
   "checks": {
     "auth_config": {
@@ -33,13 +33,6 @@
           "samesite": "lax",
           "secure": false
         },
-        "rpg_recent": {
-          "deleted": false,
-          "httponly": true,
-          "path": "/",
-          "samesite": "strict",
-          "secure": true
-        },
         "rpg_refresh": {
           "deleted": false,
           "httponly": true,
@@ -51,7 +44,7 @@
     },
     "csrf_enforced": {
       "ok": true,
-      "status_without_header": 401
+      "status_without_header": 403
     },
     "login": {
       "authenticated": true,
@@ -61,12 +54,13 @@
         "rpg_access",
         "rpg_csrf",
         "rpg_deletion",
-        "rpg_recent",
         "rpg_refresh"
       ],
+      "dummy_captcha_status": 401,
       "ok": true,
       "origin_missing_status": 403,
-      "status": 200
+      "status": 200,
+      "via": "verify_link"
     },
     "logout": {
       "cleared": [
@@ -82,9 +76,9 @@
     },
     "new_game": {
       "body_has_bearer": false,
-      "ms": 1949,
+      "ms": 19191,
       "ok": true,
-      "simulated": true,
+      "simulated": false,
       "status": 200,
       "turn_count": 1
     },
@@ -93,7 +87,7 @@
       "retry": {
         "has_done": true,
         "has_error": false,
-        "narration_chars": 274,
+        "narration_chars": 1633,
         "sequence": [
           "accepted",
           "visual",
@@ -103,8 +97,8 @@
         "session_actions": 5,
         "state": true,
         "status": 200,
-        "total_ms": 258.6,
-        "ttfb_ms": 186.6,
+        "total_ms": 261.1,
+        "ttfb_ms": 162.9,
         "turn_count": 6
       }
     },
@@ -112,15 +106,16 @@
       "app_dummy_token_status": 202,
       "app_no_token_status": 403,
       "gotrue_dummy_token": {
-        "error_code": "email_address_invalid",
+        "error_code": "captcha_failed",
         "status": 400
       },
       "gotrue_no_token": {
         "error_code": "captcha_failed",
         "status": 400
       },
-      "note": "app answers 202 generic (anti-enumeration); Supabase built-in SMTP rate limit (429 over_email_send_rate_limit) means a user may not be created, but it is returned AFTER captcha passes",
-      "ok": true
+      "note": "app answers 202 generic (anti-enumeration) whatever GoTrue says",
+      "ok": true,
+      "turnstile_real_secret": true
     },
     "sse_turns": {
       "expected_turn_counts": [
@@ -139,22 +134,22 @@
       ],
       "ok": true,
       "total_ms": {
-        "max_ms": 1398.7,
+        "max_ms": 10464.4,
         "n": 5,
-        "p50_ms": 940.9,
-        "p95_ms": 1398.7
+        "p50_ms": 8750.3,
+        "p95_ms": 10464.4
       },
       "ttfb_ms": {
-        "max_ms": 341.0,
+        "max_ms": 307.3,
         "n": 5,
-        "p50_ms": 191.8,
-        "p95_ms": 341.0
+        "p50_ms": 220.6,
+        "p95_ms": 307.3
       },
       "turns": [
         {
           "has_done": true,
           "has_error": false,
-          "narration_chars": 244,
+          "narration_chars": 1494,
           "sequence": [
             "accepted",
             "phase",
@@ -167,14 +162,14 @@
           "session_actions": 1,
           "state": true,
           "status": 200,
-          "total_ms": 893.6,
-          "ttfb_ms": 191.8,
+          "total_ms": 10261.5,
+          "ttfb_ms": 177.0,
           "turn_count": 2
         },
         {
           "has_done": true,
           "has_error": false,
-          "narration_chars": 308,
+          "narration_chars": 1164,
           "sequence": [
             "accepted",
             "phase",
@@ -187,14 +182,14 @@
           "session_actions": 2,
           "state": true,
           "status": 200,
-          "total_ms": 940.9,
-          "ttfb_ms": 189.1,
+          "total_ms": 5920.7,
+          "ttfb_ms": 220.6,
           "turn_count": 3
         },
         {
           "has_done": true,
           "has_error": false,
-          "narration_chars": 118,
+          "narration_chars": 551,
           "sequence": [
             "accepted",
             "phase",
@@ -207,14 +202,14 @@
           "session_actions": 3,
           "state": true,
           "status": 200,
-          "total_ms": 1398.7,
-          "ttfb_ms": 341.0,
+          "total_ms": 8750.3,
+          "ttfb_ms": 158.8,
           "turn_count": 4
         },
         {
           "has_done": true,
           "has_error": false,
-          "narration_chars": 308,
+          "narration_chars": 263,
           "sequence": [
             "accepted",
             "phase",
@@ -227,14 +222,14 @@
           "session_actions": 4,
           "state": true,
           "status": 200,
-          "total_ms": 1000.9,
-          "ttfb_ms": 190.2,
+          "total_ms": 7127.2,
+          "ttfb_ms": 307.3,
           "turn_count": 5
         },
         {
           "has_done": true,
           "has_error": false,
-          "narration_chars": 274,
+          "narration_chars": 1633,
           "sequence": [
             "accepted",
             "phase",
@@ -247,8 +242,8 @@
           "session_actions": 5,
           "state": true,
           "status": 200,
-          "total_ms": 824.6,
-          "ttfb_ms": 193.3,
+          "total_ms": 10464.4,
+          "ttfb_ms": 238.7,
           "turn_count": 6
         }
       ]

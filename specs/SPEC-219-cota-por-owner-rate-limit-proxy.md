@@ -1,6 +1,6 @@
 # SPEC-219 — Cota de custo por owner, cobertura do rate limit e IP real atrás de proxy
 
-> **Status:** `in-progress` (18/10 tarde: segue esperando só a SPEC-218 `done`, que agora depende apenas de `ci_green` após o push da `main`. 18/10: único pendente segue sendo a SPEC-218 `done`; o gate da SPEC-218 agora só espera R-02 (SMTP) e R-12 (cron de producao) no checklist staging — ver SPEC-218. 17/10: todos os critérios próprios verdes no staging.)
+> **Status:** `done` (**18/10:** SPEC-218 `done` (checklist staging 14/14 em 83bba61); todos os critérios verdes. Ressalva: R5 2ª rede medido por prova diferencial via `pg_net` (IPv4 literal de saída não legível). Histórico: 18/10 tarde: segue esperando só a SPEC-218 `done`, que agora depende apenas de `ci_green` após o push da `main`. 18/10: único pendente segue sendo a SPEC-218 `done`; o gate da SPEC-218 agora só espera R-02 (SMTP) e R-12 (cron de producao) no checklist staging — ver SPEC-218. 17/10: todos os critérios próprios verdes no staging.)
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
 > **Depende de:** SPEC-218 `done` (processo exposto sempre em perfil DB) · evolui SPEC-182/185/196 `done` e SPEC-197 `in-progress` sem reabri-las (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212; gate da SPEC-197; follow-up de cobrança por turno (SPEC-185) (ordem final 2026-10-15)
@@ -121,7 +121,7 @@ Objetivo: (1) todo caminho com custo externo tem limite **por owner** (além do 
 - [x] Aplicar `20261017110000_owner_daily_counters.sql` no staging ANTES do deploy. **Staging 17/10:** aplicada antes do deploy; histórico 28/28.
 - [x] Smoke staging (item acima) com a transcricao dos codigos/`Retry-After` e a metrica `rpg_rate_limited_total`. **Staging 17/10:** códigos/`Retry-After` transcritos no README da onda; `/metrics` exige `RPG_METRICS_TOKEN` (não configurado no staging), então a métrica foi evidenciada pelo log `rpg.abuse blocked class=turn|embedding scope=owner` emitido pelo mesmo `record_block` que incrementa `rpg_rate_limited_total`.
 - [x] Revisao Sol independente APPROVED; parecer em `handoffs/SPEC-219-SOL-independent-review.md`.
-- [ ] SPEC-218 (`done`) aterrissar na `main` antes desta. **17/10:** codigo da 218 ja esta na `main`; a 218 segue `in-progress` (so o `release/checklist.py --env staging` pendente por gate da SPEC-197), entao a 219 nao fecha ainda.
+- [x] SPEC-218 (`done`) aterrissar na `main` antes desta. **17/10:** codigo da 218 ja esta na `main`; a 218 segue `in-progress` (so o `release/checklist.py --env staging` pendente por gate da SPEC-197), entao a 219 nao fecha ainda.
 
 ### Desvios / decisoes (defaults da spec usados)
 

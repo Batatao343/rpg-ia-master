@@ -3930,7 +3930,7 @@ specs:
   lineage_note: Authored from proximas-specs package 2026-10-15 (beta desktop wave); draft awaiting approval
 - id: SPEC-218
   slug: fail-closed-perfil-config-hosted
-  status: in-progress
+  status: done
   path: specs/SPEC-218-fail-closed-perfil-config-hosted.md
   created_commit: null
   created_at: '2026-10-15'
@@ -3945,7 +3945,7 @@ specs:
   lineage_note: Authored from security audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
 - id: SPEC-219
   slug: cota-por-owner-rate-limit-proxy
-  status: in-progress
+  status: done
   path: specs/SPEC-219-cota-por-owner-rate-limit-proxy.md
   created_commit: null
   created_at: '2026-10-15'

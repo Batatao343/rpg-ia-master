@@ -1,0 +1,157 @@
+{
+  "schema": 1,
+  "env": "staging",
+  "sha": "83bba61efed7a095b9868ffd5e25c990a04b13bd",
+  "base_url": "https://rpg-ia-master-staging.vercel.app",
+  "ok": true,
+  "failing": [],
+  "strict": false,
+  "results": [
+    {
+      "name": "git_clean_tree",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "sha": "83bba61efed7a095b9868ffd5e25c990a04b13bd",
+        "dirty_files": 0
+      }
+    },
+    {
+      "name": "specs_176_196_done",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "not_done": {},
+        "checked": 21
+      }
+    },
+    {
+      "name": "ci_green",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "runs": 3,
+        "not_green": []
+      }
+    },
+    {
+      "name": "migrations_drift",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "local_count": 28,
+        "remote_count": 28,
+        "pending": [],
+        "remote_only": [],
+        "version_mismatch": []
+      }
+    },
+    {
+      "name": "eval_locks_unchanged",
+      "status": "pass",
+      "blocking": true,
+      "detail": "eval governance valid: 11 dataset(s)"
+    },
+    {
+      "name": "budget_alert_config_present",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "missing": [],
+        "rpg_cron_finops_active": true
+      }
+    },
+    {
+      "name": "kill_switch_store_reachable",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "switches_recorded": 1,
+        "switched_off": []
+      }
+    },
+    {
+      "name": "health_sha",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "http": 200,
+        "deployed_sha": "83bba61efed7a095b9868ffd5e25c990a04b13bd",
+        "expected": "83bba61efed7a095b9868ffd5e25c990a04b13bd"
+      }
+    },
+    {
+      "name": "vercel_env_names",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "missing": [],
+        "forbidden_present": []
+      }
+    },
+    {
+      "name": "legal_pages",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "urls": [
+          "privacy",
+          "refund",
+          "support",
+          "terms"
+        ],
+        "problems": {}
+      }
+    },
+    {
+      "name": "open_p0_p1",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "open_p0_p1": [],
+        "p2_awaiting_acceptance": [
+          "R-15",
+          "R-16",
+          "R-17",
+          "R-18",
+          "R-19",
+          "R-20",
+          "R-21",
+          "R-22",
+          "R-23",
+          "R-24",
+          "R-25",
+          "R-26",
+          "R-27",
+          "R-28"
+        ],
+        "total": 28
+      }
+    },
+    {
+      "name": "workflows_permissions_pins",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "files": 5
+      }
+    },
+    {
+      "name": "gitleaks_main_green",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "head": "83bba61efed7",
+        "conclusion": "success"
+      }
+    },
+    {
+      "name": "environments_restricted",
+      "status": "pass",
+      "blocking": true,
+      "detail": {
+        "verified_on": "2026-10-17"
+      }
+    }
+  ]
+}
