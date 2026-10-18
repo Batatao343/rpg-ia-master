@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "231472a7de3c33913c09cc81935d5b9e3a475f1a",
+  "commit_sha": "5b66dbf281d781d2026e72d16442ce1f9bb1ea3c",
   "edge_counts": {
-    "calls": 15324,
-    "contains": 647,
-    "defines": 8804,
-    "imports": 1428,
-    "likely_test_for": 877,
+    "calls": 15337,
+    "contains": 649,
+    "defines": 8809,
+    "imports": 1439,
+    "likely_test_for": 888,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:de891f542b1d3e370778211b8cab2a35fb726db65da7b92aa8cbffa516aae950",
+  "graph_hash": "sha256:7be96c80cca0a273b8d2cefe9d1210ec02c3686006d3c0898898c9f85406d694",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -368,6 +368,7 @@
     "tests/fakes/local_auth.py",
     "tests/fakes/local_image_finance.py",
     "tests/fakes/local_portrait.py",
+    "tests/fakes/local_pricing.py",
     "tests/spec215_helpers.py",
     "tests/test_abuse_policy.py",
     "tests/test_account_api.py",
@@ -548,6 +549,7 @@
     "tests/test_latency_timeline.py",
     "tests/test_letalidade_early.py",
     "tests/test_local_atomic_retry.py",
+    "tests/test_local_pricing_fixture.py",
     "tests/test_longrun_remediation_v3.py",
     "tests/test_longrun_remediation_v4.py",
     "tests/test_loot_exploracao.py",
@@ -839,12 +841,12 @@
     "artifact": 9,
     "class": 728,
     "endpoint": 63,
-    "file": 783,
+    "file": 785,
     "function": 2700,
     "method": 711,
-    "module": 647,
-    "test": 4665
+    "module": 649,
+    "test": 4670
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:b43634f0a5813dc869b758d3655863eb75a457a7edd4d3664c0433174cc36b20"
+  "source_tree_hash": "sha256:afba17d966e1aba53d8c275227f8e8f54e68f260c20acb60c363da5375900826"
 }
