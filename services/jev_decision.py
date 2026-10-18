@@ -30,13 +30,35 @@ class _ClosedModel(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
 
+SceneVerb = Literal["talk", "attack", "trade", "craft", "take", "move", "observe", "rest"]
+_SceneText = Annotated[str, Field(min_length=1, max_length=64)]
+
+
+class SceneActor(_ClosedModel):
+    """A visible, public actor already filtered by Python (SPEC-217 R3/R12)."""
+
+    id: str = Field(pattern=r"^[A-Za-z_][A-Za-z0-9_]{0,63}$")
+    name: _SceneText
+    kind: Literal["npc", "enemy"]
+    aliases: tuple[_SceneText, ...] = Field(default=(), max_length=4)
+    hostile: bool = False
+
+
 class DecisionState(_ClosedModel):
-    """Small, explicit input for decision experiments; never a GameState dump."""
+    """Small, explicit input for decision experiments; never a GameState dump.
+
+    SPEC-217 adds optional, bounded features derived in Python from public
+    state. They default to ``None`` and are dropped from the wire when unset, so
+    the SPEC-180 rollout payload is unchanged.
+    """
 
     action: str = Field(min_length=1, max_length=4000)
     location_id: str | None = Field(default=None, max_length=128)
     in_combat: bool = False
     active_npc: str | None = Field(default=None, max_length=128)
+    scene: tuple[SceneActor, ...] | None = Field(default=None, max_length=20)
+    last_speaker: str | None = Field(default=None, max_length=64)
+    verbs: tuple[SceneVerb, ...] | None = Field(default=None, max_length=8)
 
 
 class ChoiceQuestion(_ClosedModel):

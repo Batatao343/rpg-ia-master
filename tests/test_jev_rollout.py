@@ -134,10 +134,11 @@ def test_primary_threshold_unrepresentable_error_and_idempotency(monkeypatch: py
         "low_confidence", "payload_unrepresentable", "error", "primary", "primary",
     ]
     assert good.calls[0][1]["idempotency_key"] == good.calls[1][1]["idempotency_key"]
-    assert good.calls[0][0].state.model_dump() == {
-        "action": "Olho o altar", "location_id": "Vila",
-        "in_combat": False, "active_npc": None,
+    # SPEC-217 optional features stay unset: the wire payload is unchanged.
+    assert good.calls[0][0].state.model_dump(exclude_none=True) == {
+        "action": "Olho o altar", "location_id": "Vila", "in_combat": False,
     }
+    assert good.calls[0][0].state.active_npc is None
     assert s == original
 
 
