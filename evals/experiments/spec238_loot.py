@@ -268,26 +268,100 @@ def summarize(raw: Mapping[str, Any], cases: list[Case], oracle: Mapping[str, st
 # Freeze (filled after the J1b decision)
 # ---------------------------------------------------------------------------
 
-def structure_digest(policy: LootPolicy) -> str:
-    """J1 frozen digest + everything the loot stage sends or decides with."""
-    return digest_of({
-        "j1_structure_digest": hybrid.structure_digest(policy.base),
-        "policy": {**asdict(policy), "base": asdict(policy.base)},
-        "loot_source_question": LOOT_SOURCE_QUESTION.model_dump(),
-        "decision_code": {fn.__name__: inspect.getsource(fn).replace("\r\n", "\n")
-                          for fn in (loot_features, j1b_request, loot_guard_ok,
-                                     loot_hybrid_decision, merchants_at)},
-    })
-
-
 # J1b freeze (SPEC-238 R7) — chosen by the pre-registered rule on DEV
 # (run SPEC-238-J1b-20261018T130603Z): 28/30 covered vs baseline 15/30, 13/13
 # loot covered, 0 route/target/source errors, 0 unsafe. Every grid variant tied;
 # tie-break = guard on, loot τ 0.50. Changing anything hashed invalidates the
 # freeze and needs a new Astra review before J2.
 FROZEN_J1B_POLICY = LootPolicy(loot_stage=True, loot_guard=True, loot_tau=0.50)
+
+# Astra review (handoffs/SPEC-238-ASTRA-review.md): location features stay OFF
+# in J2. DEV never carried a location (every J1b request went without
+# merchant_here/craft_station and the guard decided by verb only), while every
+# FROZEN fixture has one. Turning them on in J2 would send a request shape DEV
+# never measured and open a guard relaxation (SHOP/CRAFT accepted without a
+# trade/craft verb) with zero evidence. Off = the J2 request and guard are
+# exactly what the J1b run measured. Not data tuning: DEV holds no information
+# about the features (all None).
+FROZEN_J1B_LOCATION_FEATURES = False
+
+
+def frozen_j1b_request(case_input: Mapping[str, Any]) -> DecisionRequest:
+    """J2 arm-B request: the J1b request without the (unmeasured) location features."""
+    request = j1b_request(case_input, FROZEN_J1B_POLICY.base)
+    if FROZEN_J1B_LOCATION_FEATURES:
+        return request
+    state = request.state.model_copy(update={"merchant_here": None, "craft_station": None})
+    return DecisionRequest(state=state, questions=request.questions)
+
+
+def frozen_loot_decision(*, route: Mapping[str, Any] | None, target: Mapping[str, Any] | None,
+                         loot_source: Mapping[str, Any] | None, verbs: tuple[str, ...],
+                         in_combat: bool, target_status: str,
+                         merchant_here: bool | None = None,
+                         craft_station: bool | None = None) -> dict[str, Any]:
+    """J2 arm-B decision under the frozen J1b policy (location never relaxes the guard)."""
+    if not FROZEN_J1B_LOCATION_FEATURES:
+        merchant_here = craft_station = None
+    return loot_hybrid_decision(route=route, target=target, loot_source=loot_source, verbs=verbs,
+                                in_combat=in_combat, target_status=target_status,
+                                merchant_here=merchant_here, craft_station=craft_station,
+                                policy=FROZEN_J1B_POLICY)
+
+
+def r9_7_loot_source(observations: list[Mapping[str, Any]]) -> dict[str, Any]:
+    """SPEC-217 J2 rule R9.7 (pre-registered by the SPEC-238 Astra review).
+
+    Each observation (one case x replicate) carries ``b_source`` ("jev" or
+    "fallback"), ``b_route``, ``b_loot_source``, ``a_route``, ``a_loot_source``
+    (A's *effective* source: ``loot_context or "TREASURE"`` when A routes loot,
+    else None) and ``oracle_loot_source`` (sealed FROZEN source label, or None
+    when no oracle exists for the case). Scope: B decided by the Jev with route
+    ``loot``. Reference = the oracle when present (judged against the expected
+    label, like route/target); otherwise A's effective source, and an
+    observation where A did not route to loot is unverifiable and fails closed.
+    """
+    checked = errors = unverifiable = 0
+    failures: list[dict[str, Any]] = []
+    for obs in observations:
+        if obs.get("b_source") != "jev" or obs.get("b_route") != "loot":
+            continue
+        checked += 1
+        oracle = obs.get("oracle_loot_source")
+        if oracle is not None:
+            ok = obs.get("b_loot_source") == oracle
+        elif obs.get("a_route") == "loot" and obs.get("a_loot_source"):
+            ok = obs.get("b_loot_source") == obs.get("a_loot_source")
+        else:
+            ok = False
+            unverifiable += 1
+        if not ok:
+            errors += 1
+            failures.append({k: obs.get(k) for k in ("case_id", "replicate", "b_loot_source",
+                                                      "a_route", "a_loot_source",
+                                                      "oracle_loot_source")})
+    return {"rule": "R9.7", "checked": checked, "errors": errors,
+            "unverifiable": unverifiable, "failures": failures, "pass": errors == 0}
+
+
+def structure_digest(policy: LootPolicy) -> str:
+    """J1 frozen digest + everything the loot stage sends or decides with."""
+    return digest_of({
+        "j1_structure_digest": hybrid.structure_digest(policy.base),
+        "policy": {**asdict(policy), "base": asdict(policy.base)},
+        "loot_source_question": LOOT_SOURCE_QUESTION.model_dump(),
+        "location_features": FROZEN_J1B_LOCATION_FEATURES,
+        "decision_code": {fn.__name__: inspect.getsource(fn).replace("\r\n", "\n")
+                          for fn in (loot_features, j1b_request, loot_guard_ok,
+                                     loot_hybrid_decision, merchants_at,
+                                     frozen_j1b_request, frozen_loot_decision,
+                                     r9_7_loot_source)},
+    })
+
+
+# Superseded by the Astra emenda: sha256:1f6a5982…70f0 (location features on).
 FROZEN_J1B_STRUCTURE_DIGEST = (
-    "sha256:1f6a5982d5b72c36c9bc67ddfaf3723eea19753ebe7cc0a713454247e61d70f0"
+    "sha256:75635c8994f8a421989653e1383052017feccde024ceaab731da69e739ef2247"
 )
 
 

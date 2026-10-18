@@ -70,6 +70,8 @@ custo real `unavailable`. Ledger: J1 60 + J1b 30 = **90/190** (reserva US$ 0,90)
 desempate guard ligado → τ_loot 0,50 ⇒ **adotada `plain+target+guard@0.50+lootsrc+lguard@0.50`**.
 Congelada em `evals/experiments/spec238_loot.py` (`FROZEN_J1B_POLICY`), digest
 `sha256:1f6a5982d5b72c36c9bc67ddfaf3723eea19753ebe7cc0a713454247e61d70f0`
+(superado pela emenda Astra: `sha256:75635c8994f8a421989653e1383052017feccde024ceaab731da69e739ef2247`, features de local desligadas na J2 — a requisição J2
+é byte a byte a medida nas 30 chamadas DEV)
 (inclui o digest J1 `80225d16…10f5`, a pergunta de fonte, o guard e o código das
 features; teste `test_frozen_j1b_digest_matches_code`). Revisão Astra pendente:
 [handoffs/SPEC-238-for-Astra.md](../../handoffs/SPEC-238-for-Astra.md).

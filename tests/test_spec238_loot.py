@@ -261,3 +261,86 @@ def test_frozen_j1b_digest_matches_code(monkeypatch: pytest.MonkeyPatch) -> None
     assert loot.structure_digest(LootPolicy(loot_tau=0.55)) != loot.FROZEN_J1B_STRUCTURE_DIGEST
     monkeypatch.setattr(hybrid, "_source", lambda fn: "edited")  # J1 code edit breaks it too
     assert loot.structure_digest(frozen) != loot.FROZEN_J1B_STRUCTURE_DIGEST
+
+
+# ---------------------------------------------------------------------------
+# Astra review (handoffs/SPEC-238-ASTRA-review.md)
+# ---------------------------------------------------------------------------
+
+@pytest.mark.parametrize(("source", "verbs"), [
+    ("SHOP", ("take",)), ("CRAFT", ("take",)), ("SHOP", ()), ("CRAFT", ("trade",)),
+])
+def test_guard_fails_closed_without_location(source, verbs) -> None:
+    """Unknown location (None) never satisfies SHOP/CRAFT; only a verb can."""
+    assert not loot_guard_ok(source, verbs, None, None)
+    assert not loot_guard_ok(source, verbs, False, False)
+
+
+def test_dev_never_exercised_location_features() -> None:
+    """Every J1b DEV sample case had an unknown location: the run measured verb-only."""
+    cases, _ = hybrid.load_dev_cases()
+    for case in j1b_sample(eligible_cases(cases)):
+        assert loot_features(case.input.get("state") or {}) == {
+            "merchant_here": None, "craft_station": None}, case.id
+
+
+def test_frozen_j2_request_drops_location_features() -> None:
+    assert loot.FROZEN_J1B_LOCATION_FEATURES is False
+    case_input = {"action": "Pego a espada", "state": {
+        "world": {"current_location_id": "na_anel_dourado"}}}
+    assert j1b_request(case_input).wire_body()["state"]["merchant_here"] is True
+    frozen = loot.frozen_j1b_request(case_input).wire_body()
+    assert "merchant_here" not in frozen["state"] and "craft_station" not in frozen["state"]
+    j1 = hybrid.frozen_request(case_input, hybrid.FROZEN_J1_POLICY).wire_body()
+    assert frozen["state"] == j1["state"]
+    assert frozen["questions"]["route"] == j1["questions"]["route"]
+    assert frozen["questions"]["loot_source"] == loot.LOOT_SOURCE_QUESTION.model_dump(
+        exclude_none=True)
+
+
+def test_frozen_j2_decision_ignores_location_relaxation() -> None:
+    kwargs = dict(route=_ans("loot"), target=None, verbs=("take",), in_combat=False,
+                  target_status="no_candidates", merchant_here=True, craft_station=True)
+    assert loot.frozen_loot_decision(loot_source=_ans("shop"), **kwargs)["reason"] == "loot_guard"
+    assert loot.frozen_loot_decision(loot_source=_ans("craft"), **kwargs)["reason"] == "loot_guard"
+    ok = loot.frozen_loot_decision(loot_source=_ans("treasure"), **kwargs)
+    assert ok["source"] == "jev" and ok["loot_source"] == "TREASURE"
+    traded = loot.frozen_loot_decision(loot_source=_ans("shop"), **{**kwargs, "verbs": ("trade",)})
+    assert traded["loot_source"] == "SHOP"
+
+
+def _obs(**kw):
+    base = {"case_id": "c", "replicate": 1, "b_source": "jev", "b_route": "loot",
+            "b_loot_source": "SHOP", "a_route": "loot", "a_loot_source": "SHOP",
+            "oracle_loot_source": None}
+    return {**base, **kw}
+
+
+def test_r9_7_prefers_the_oracle_label() -> None:
+    assert loot.r9_7_loot_source([_obs(oracle_loot_source="SHOP", a_loot_source="TREASURE")])["pass"]
+    bad = loot.r9_7_loot_source([_obs(oracle_loot_source="TREASURE")])
+    assert not bad["pass"] and bad["errors"] == 1  # A agreeing with B does not save it
+
+
+def test_r9_7_falls_back_to_arm_a_and_fails_closed() -> None:
+    assert loot.r9_7_loot_source([_obs()])["pass"]
+    assert not loot.r9_7_loot_source([_obs(a_loot_source="CRAFT")])["pass"]
+    unverifiable = loot.r9_7_loot_source([_obs(a_route="npc_actor", a_loot_source=None)])
+    assert not unverifiable["pass"] and unverifiable["unverifiable"] == 1
+
+
+def test_r9_7_scope_is_jev_covered_loot_only() -> None:
+    result = loot.r9_7_loot_source([
+        _obs(b_source="fallback", b_loot_source="CRAFT"),
+        _obs(b_route="npc_actor", b_loot_source=None),
+    ])
+    assert result == {"rule": "R9.7", "checked": 0, "errors": 0, "unverifiable": 0,
+                      "failures": [], "pass": True}
+
+
+def test_frozen_j2_request_equals_the_measured_dev_requests() -> None:
+    """On DEV (no location) the J2 request is exactly the J1b request that was run."""
+    cases, _ = hybrid.load_dev_cases()
+    for case in j1b_sample(eligible_cases(cases)):
+        assert (loot.frozen_j1b_request(case.input).wire_body()
+                == j1b_request(case.input).wire_body()), case.id

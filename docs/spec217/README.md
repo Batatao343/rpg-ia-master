@@ -54,9 +54,11 @@ Parecer: [handoffs/SPEC-217-ASTRA-J1-review.md](../../handoffs/SPEC-217-ASTRA-J1
 
 Adotada `plain+target+guard@0.50+lootsrc+lguard@0.50` (`FROZEN_J1B_POLICY` em
 `evals/experiments/spec238_loot.py`, digest
-`sha256:1f6a5982d5b72c36c9bc67ddfaf3723eea19753ebe7cc0a713454247e61d70f0`):
+`sha256:75635c8994f8a421989653e1383052017feccde024ceaab731da69e739ef2247` após a emenda Astra; o digest do executor `1f6a5982…70f0` foi superado):
 amostra DEV de 30 casos, cobertura 15/30 → **28/30**, loot 13/13 com fonte correta,
 0 erro de rota/alvo/fonte, 0 escalada insegura, rota/alvo dos não-loot idênticos à
 J1. Raw `b5a3a6d0…23bf`, summary `e884fb7b…c13a`. Detalhes em
-[j1b-loot.md](j1b-loot.md). **A J2 deve usar `j1b_request`/`FROZEN_J1B_POLICY` e a
-R9.7 (fonte de B = `loot_context` de A nos loot cobertos) — após revisão Astra.**
+[j1b-loot.md](j1b-loot.md). **Revisão Astra APPROVED com emenda** ([parecer](../../handoffs/SPEC-238-ASTRA-review.md)):
+features de local DESLIGADAS na J2 (`FROZEN_J1B_LOCATION_FEATURES=False`). A J2 usa
+`frozen_j1b_request`/`frozen_loot_decision` e a R9.7 final (`r9_7_loot_source`: fonte de B
+contra o oráculo de fonte selado; sem oráculo, contra a fonte efetiva de A, fail-closed).

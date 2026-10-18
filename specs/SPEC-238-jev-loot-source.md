@@ -1,6 +1,6 @@
 # SPEC-238 — Jev decide a fonte do loot (J1b da SPEC-217)
 
-> **Status:** `in-progress` (J1b executada e adotada; aguardando revisão Astra) — dono, 2026-10-18: "boa, cria uma spec para o jev cobrir o loot e vamos usar ele também". A aprovação inclui a execução e o aumento de orçamento proposto: **+30 chamadas live (~US$ 0,30)**, teto total da SPEC-217 de 160/US$ 1,60 para **190/US$ 1,90**.
+> **Status:** `done` (J1b executada e adotada; revisão Astra APPROVED com emenda — [parecer](../handoffs/SPEC-238-ASTRA-review.md)) — dono, 2026-10-18: "boa, cria uma spec para o jev cobrir o loot e vamos usar ele também". A aprovação inclui a execução e o aumento de orçamento proposto: **+30 chamadas live (~US$ 0,30)**, teto total da SPEC-217 de 160/US$ 1,60 para **190/US$ 1,90**.
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-217 J1 congelada (`plain+target+guard@0.50`, digest `sha256:80225d16…10f5`, revisão Astra APPROVED)
 > **Desbloqueia:** J2 da SPEC-217 com a política que cobre loot (se adotada)
@@ -29,6 +29,8 @@ Rótulos: **[F]** fato · **[D]** decisão do dono · **[H]** hipótese · **[R]
 - **R6 — J1b live (só DEV).** ≤ 30 chamadas Jev, zero CLASSIFY; ledger compartilhado da SPEC-217 (`j1b_calls` ≤ 30, total ≤ 190); qualquer erro de provider para o run sem score; `max_retries=0`. Raw antes do score; summary reproduzível offline; hashes registrados; cópia dos artifacts para o scratchpad.
 - **R7 — Adoção.** Adota se existir variante com **0 erro de fonte coberto, 0 erro de rota/alvo coberto, 0 escalada insegura e cobertura > baseline** (a política J1 sem estágio, sobre as mesmas respostas). Adotada ⇒ congelar `FROZEN_J1B_POLICY` + digest (inclui o digest J1 e o código do estágio) com teste, atualizar docs e handoff Astra. Não adotada ⇒ a política J1 aprovada continua sendo a da J2, com o porquê documentado.
 - **R8 — J2.** Não rodar a J2 aqui. Orçamento da J2 inalterado (≤ 100; uma chamada Jev por caso). Se adotada, a J2 acrescenta (pré-registrado agora): **R9.7** — nos casos FROZEN em que B cobre `loot`, a fonte de B deve igualar a `loot_context` do CLASSIFY (braço A) do mesmo caso/réplica, 0 divergência; e, se o FROZEN tiver oráculo de fonte, 0 erro. Falhou ⇒ `NO_GO`.
+  **R9.7 final (emenda Astra):** referência = oráculo de fonte selado do FROZEN (como rota/alvo, julgados contra o rótulo esperado); o FROZEN foi autorado só com `route/target`, então o oráculo é um sidecar autorado antes da J2 pelo papel de autoria (o executor não abre o FROZEN). Sem sidecar, referência = fonte efetiva de A (`loot_context or "TREASURE"`), e observação com A fora de `loot` é erro (fail-closed). Função pura `r9_7_loot_source`, coberta pelo digest.
+- **R8b — Emenda Astra: features de local desligadas na J2.** `FROZEN_J1B_LOCATION_FEATURES = False`: a J2 usa `frozen_j1b_request` (sem `merchant_here`/`craft_station`) e `frozen_loot_decision` (guard só por verbo). O DEV nunca carregou local; o FROZEN sempre carrega. Ligar as features enviaria um formato de requisição não medido e abriria um relaxamento do guard sem evidência.
 - **R9 — Produção intacta.** `RPG_JEV_ROUTER_MODE` default `off`, `PRIMARY_CALIBRATION=None`, `services/jev_rollout.py` sem mudança de comportamento; nenhuma mudança de schema de save.
 
 ### Fora de escopo
@@ -45,7 +47,7 @@ Rótulos: **[F]** fato · **[D]** decisão do dono · **[H]** hipótese · **[R]
 - [x] Spec, pré-registro e testes commitados antes da primeira chamada live (`bc9f8ca`).
 - [x] J1b 30/30 chamadas; total 90/190; zero erro de provider.
 - [x] Raw/summary com SHA-256; summary reproduzido offline ([j1b-loot.md](../docs/spec217/j1b-loot.md)).
-- [x] Adotada pela R7 (28/30 vs 15/30, 0 erro); digest `sha256:1f6a5982…70f0` travado por teste; handoff [SPEC-238-for-Astra](../handoffs/SPEC-238-for-Astra.md). Revisão Astra pendente.
+- [x] Adotada pela R7 (28/30 vs 15/30, 0 erro); digest `sha256:1f6a5982…70f0` travado por teste; handoff [SPEC-238-for-Astra](../handoffs/SPEC-238-for-Astra.md). Revisão Astra APPROVED com emenda; digest final `sha256:75635c8994f8a421989653e1383052017feccde024ceaab731da69e739ef2247`.
 - [x] `uv run pytest`: 3 falhas, todas conhecidas e pré-existentes (2 `test_project_index` por índice stale; `test_spec197_checklist::test_real_register_r12_not_closed`, branch anterior a `71ed042` da main); `ruff check .` verde.
 - [x] Default `off` preservado.
 
