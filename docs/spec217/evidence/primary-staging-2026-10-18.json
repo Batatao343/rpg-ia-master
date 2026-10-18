@@ -1,0 +1,666 @@
+{
+  "at": "2026-10-18T17:41:51.544285+00:00",
+  "cleanup": {
+    "errors": [],
+    "games_deleted": 2,
+    "users_deleted": 2
+  },
+  "summary": {
+    "fallback_reasons": {
+      "target_low_confidence": 1
+    },
+    "jev_calls": 22,
+    "jev_decided": 18,
+    "jev_decided_share_of_calls": 0.9474,
+    "jev_decided_share_of_turns": 0.9,
+    "jev_latency_ms": {
+      "max_ms": 304.0,
+      "n": 19,
+      "p50_ms": 259.0,
+      "p95_ms": 304.0
+    },
+    "jev_observations_joined": 19,
+    "label_to_jev_route": {
+      "combat->combat_agent": 2,
+      "loot_craft->loot": 2,
+      "loot_shop->loot": 3,
+      "loot_take->loot": 3,
+      "story->storyteller": 5,
+      "talk->npc_actor": 3
+    },
+    "outcomes": {
+      "fallback": 1,
+      "primary": 18
+    },
+    "python_gate_turns": 1,
+    "router_phase_ms": {
+      "all": {
+        "max_ms": 1633,
+        "n": 20,
+        "p50_ms": 277.0,
+        "p95_ms": 323
+      },
+      "classify_fallback": {
+        "max_ms": 1633,
+        "n": 1,
+        "p50_ms": 1633,
+        "p95_ms": 1633
+      },
+      "jev_decided": {
+        "max_ms": 323,
+        "n": 18,
+        "p50_ms": 277.0,
+        "p95_ms": 323
+      },
+      "python_gate": {
+        "max_ms": 1,
+        "n": 1,
+        "p50_ms": 1,
+        "p95_ms": 1
+      }
+    },
+    "router_wait_for_jev_ms": {
+      "max_ms": 305.0,
+      "n": 19,
+      "p50_ms": 259.0,
+      "p95_ms": 305.0
+    },
+    "turn_ttlt_ms": {
+      "max_ms": 17200.4,
+      "n": 20,
+      "p50_ms": 7235.2,
+      "p95_ms": 14805.9
+    },
+    "turns": 20,
+    "turns_ok": 20
+  },
+  "turns": [
+    {
+      "action": "Examino os muros da cidade com atenção.",
+      "category": "story",
+      "done_ms": 5898.0,
+      "end_ms": 1792345081962,
+      "has_error": false,
+      "jev": {
+        "choice": "storyteller",
+        "confidence": 1.0,
+        "covered": true,
+        "event": "jev.primary",
+        "input_tokens": 764,
+        "jev_route": "storyteller",
+        "latency_ms": 236,
+        "model": "jev-1.13.0",
+        "outcome": "primary",
+        "output_tokens": 103,
+        "ts": 1792345083394,
+        "wait_ms": 236
+      },
+      "narration_chars": 1663,
+      "providers": [
+        "deepseek"
+      ],
+      "router_ms": 254,
+      "session": 0,
+      "start_ms": 1792345076061,
+      "status": 200,
+      "turn_count": 2
+    },
+    {
+      "action": "Pergunto ao guarda se há trabalho para um viajante.",
+      "category": "talk",
+      "done_ms": 11148.6,
+      "end_ms": 1792345094112,
+      "has_error": false,
+      "jev": {
+        "choice": "npc_actor",
+        "confidence": 1.0,
+        "covered": true,
+        "event": "jev.primary",
+        "input_tokens": 766,
+        "jev_route": "npc_actor",
+        "latency_ms": 259,
+        "model": "jev-1.13.0",
+        "outcome": "primary",
+        "output_tokens": 102,
+        "ts": 1792345090350,
+        "wait_ms": 259
+      },
+      "narration_chars": 522,
+      "providers": [
+        "deepseek"
+      ],
+      "router_ms": 277,
+      "session": 0,
+      "start_ms": 1792345082962,
+      "status": 200,
+      "turn_count": 3
+    },
+    {
+      "action": "Procuro um mercador e compro uma tocha.",
+      "category": "loot_shop",
+      "done_ms": 5830.0,
+      "end_ms": 1792345100945,
+      "has_error": false,
+      "jev": {
+        "choice": "loot",
+        "confidence": 1.0,
+        "covered": true,
+        "event": "jev.primary",
+        "input_tokens": 962,
+        "jev_route": "loot",
+        "latency_ms": 238,
+        "model": "jev-1.13.0",
+        "outcome": "primary",
+        "output_tokens": 131,
+        "ts": 1792345102454,
+        "wait_ms": 239
+      },
+      "narration_chars": 169,
+      "providers": [
+        "deepseek"
+      ],
+      "router_ms": 240,
+      "session": 0,
+      "start_ms": 1792345095113,
+      "status": 200,
+      "turn_count": 4
+    },
+    {
+      "action": "Inspeciono a carroça abandonada perto do portão.",
+      "category": "story",
+      "done_ms": 5139.9,
+      "end_ms": 1792345107087,
+      "has_error": false,
+      "jev": {
+        "choice": "storyteller",
+        "confidence": 0.99,
+        "covered": true,
+        "event": "jev.primary",
+        "input_tokens": 962,
+        "jev_route": "storyteller",
+        "latency_ms": 279,
+        "model": "jev-1.13.0",
+        "outcome": "primary",
+        "output_tokens": 133,
+        "ts": 1792345109309,
+        "wait_ms": 279
+      },
+      "narration_chars": 1227,
+      "providers": [
+        "deepseek"
+      ],
+      "router_ms": 298,
+      "session": 0,
+      "start_ms": 1792345101945,
+      "status": 200,
+      "turn_count": 5
+    },
+    {
+      "action": "Fabrico bandagens com o tecido limpo que carrego.",
+      "category": "loot_craft",
+      "done_ms": 6490.8,
+      "end_ms": 1792345114580,
+      "has_error": false,
+      "jev": {
+        "choice": "loot",
+        "confidence": 0.97,
+        "covered": true,
+        "event": "jev.primary",
+        "input_tokens": 961,
+        "jev_route": "loot",
+        "latency_ms": 274,
+        "model": "jev-1.13.0",
+        "outcome": "primary",
+        "output_tokens": 131,
+        "ts": 1792345115513,
+        "wait_ms": 274
+      },
+      "narration_chars": 200,
+      "providers": [
+        "deepseek"
+      ],
+      "router_ms": 293,
+      "session": 0,
+      "start_ms": 1792345108088,
+      "status": 200,
+      "turn_count": 6
+    },
+    {
+      "action": "Vasculho o baú esquecido no canto da estalagem.",
+      "category": "loot_take",
+      "done_ms": 5108.4,
+      "end_ms": 1792345120690,
+      "has_error": false,
+      "jev": {
+        "choice": "loot",
+        "confidence": 1.0,
+        "covered": true,
+        "event": "jev.primary",
+        "input_tokens": 963,
+        "jev_route": "loot",
+        "latency_ms": 268,
+        "model": "jev-1.13.0",
+        "outcome": "primary",
+        "output_tokens": 133,
+        "ts": 1792345122923,
+        "wait_ms": 268
+      },
+      "narration_chars": 216,
+      "providers": [
+        "deepseek"
+      ],
+      "router_ms": 286,
+      "session": 0,
+      "start_ms": 1792345115580,
+      "status": 200,
+      "turn_count": 7
+    },
+    {
+      "action": "Pergunto ao taverneiro que rumores correm pela estrada.",
+      "category": "talk",
+      "done_ms": 14360.1,
+      "end_ms": 1792345136054,
+      "has_error": false,
+      "jev": {
+        "choice": "npc_actor",
+        "confidence": 1.0,
+        "covered": true,
+        "event": "jev.primary",
+        "input_tokens": 962,
+        "jev_route": "npc_actor",
+        "latency_ms": 254,
+        "model": "jev-1.13.0",
+        "outcome": "primary",
+        "output_tokens": 132,
+        "ts": 1792345129024,
+        "wait_ms": 254
+      },
+      "narration_chars": 921,
+      "providers": [
+        "deepseek"
+      ],
+      "router_ms": 271,
+      "session": 0,
+      "start_ms": 1792345121691,
+      "status": 200,
+      "turn_count": 8
+    },
+    {
+      "action": "Vendo a adaga velha ao mercador.",
+      "category": "loot_shop",
+      "done_ms": 6798.4,
+      "end_ms": 1792345143855,
+      "has_error": false,
+      "jev": {
+        "choice": "loot",
+        "confidence": 1.0,
+        "covered": true,
+        "event": "jev.primary",
+        "input_tokens": 1038,
+        "jev_route": "loot",
+        "latency_ms": 244,
+        "model": "jev-1.13.0",
+        "outcome": "primary",
+        "output_tokens": 142,
+        "ts": 1792345144585,
+        "wait_ms": 245
+      },
+      "narration_chars": 281,
+      "providers": [
+        "deepseek"
+      ],
+      "router_ms": 288,
+      "session": 0,
+      "start_ms": 1792345137055,
+      "status": 200,
+      "turn_count": 9
+    },
+    {
+      "action": "Viajo para a próxima cidade.",
+      "category": "travel",
+      "done_ms": 8157.5,
+      "end_ms": 1792345153015,
+      "has_error": false,
+      "jev": null,
+      "narration_chars": 1565,
+      "providers": [
+        "deepseek"
+      ],
+      "router_ms": 1,
+      "session": 0,
+      "start_ms": 1792345144856,
+      "status": 200,
+      "turn_count": 10
+    },
+    {
+      "action": "Saco a espada e ataco o bandido mais próximo.",
+      "category": "combat",
+      "done_ms": 12186.7,
+      "end_ms": 1792345166204,
+      "has_error": false,
+      "jev": {
+        "choice": "combat_agent",
+        "confidence": 0.97,
+        "covered": true,
+        "event": "jev.primary",
+        "input_tokens": 1042,
+        "jev_route": "combat_agent",
+        "latency_ms": 233,
+        "model": "jev-1.13.0",
+        "outcome": "primary",
+        "output_tokens": 143,
+        "ts": 1792345161345,
+        "wait_ms": 233
+      },
+      "narration_chars": 664,
+      "providers": [
+        "deepseek"
+      ],
+      "router_ms": 251,
+      "session": 0,
+      "start_ms": 1792345154016,
+      "status": 200,
+      "turn_count": 11
+    },
+    {
+      "action": "Examino um objeto estranho na banca do mercado.",
+      "category": "story",
+      "done_ms": 17200.4,
+      "end_ms": 1792345202287,
+      "has_error": false,
+      "jev": {
+        "choice": "storyteller",
+        "confidence": 1.0,
+        "covered": true,
+        "event": "jev.primary",
+        "input_tokens": 768,
+        "jev_route": "storyteller",
+        "latency_ms": 246,
+        "model": "jev-1.13.0",
+        "outcome": "primary",
+        "output_tokens": 103,
+        "ts": 1792345192389,
+        "wait_ms": 247
+      },
+      "narration_chars": 1892,
+      "providers": [
+        "deepseek"
+      ],
+      "router_ms": 249,
+      "session": 1,
+      "start_ms": 1792345185084,
+      "status": 200,
+      "turn_count": 2
+    },
+    {
+      "action": "Cumprimento o ferreiro e pergunto quanto custa consertar meu escudo.",
+      "category": "talk",
+      "done_ms": 8820.2,
+      "end_ms": 1792345212109,
+      "has_error": false,
+      "jev": {
+        "choice": "npc_actor",
+        "confidence": 0.97,
+        "covered": true,
+        "event": "jev.primary",
+        "input_tokens": 993,
+        "jev_route": "npc_actor",
+        "latency_ms": 246,
+        "model": "jev-1.13.0",
+        "outcome": "primary",
+        "output_tokens": 137,
+        "ts": 1792345210715,
+        "wait_ms": 246
+      },
+      "narration_chars": 674,
+      "providers": [
+        "deepseek"
+      ],
+      "router_ms": 267,
+      "session": 1,
+      "start_ms": 1792345203287,
+      "status": 200,
+      "turn_count": 3
+    },
+    {
+      "action": "Compro uma poção de cura.",
+      "category": "loot_shop",
+      "done_ms": 6480.2,
+      "end_ms": 1792345219591,
+      "has_error": false,
+      "jev": {
+        "choice": "loot",
+        "confidence": 1.0,
+        "covered": true,
+        "event": "jev.primary",
+        "input_tokens": 983,
+        "jev_route": "loot",
+        "latency_ms": 292,
+        "model": "jev-1.13.0",
+        "outcome": "primary",
+        "output_tokens": 136,
+        "ts": 1792345220498,
+        "wait_ms": 292
+      },
+      "narration_chars": 210,
+      "providers": [
+        "deepseek"
+      ],
+      "router_ms": 311,
+      "session": 1,
+      "start_ms": 1792345213109,
+      "status": 200,
+      "turn_count": 4
+    },
+    {
+      "action": "Pego a moeda caída no chão.",
+      "category": "loot_take",
+      "done_ms": 4758.9,
+      "end_ms": 1792345225352,
+      "has_error": false,
+      "jev": {
+        "choice": "loot",
+        "confidence": 1.0,
+        "covered": true,
+        "event": "jev.primary",
+        "input_tokens": 983,
+        "jev_route": "loot",
+        "latency_ms": 291,
+        "model": "jev-1.13.0",
+        "outcome": "primary",
+        "output_tokens": 138,
+        "ts": 1792345227972,
+        "wait_ms": 291
+      },
+      "narration_chars": 187,
+      "providers": [
+        "deepseek"
+      ],
+      "router_ms": 310,
+      "session": 1,
+      "start_ms": 1792345220591,
+      "status": 200,
+      "turn_count": 5
+    },
+    {
+      "action": "Investigo as pegadas perto da porta.",
+      "category": "story",
+      "done_ms": 8810.0,
+      "end_ms": 1792345235163,
+      "has_error": false,
+      "jev": {
+        "choice": "storyteller",
+        "confidence": 1.0,
+        "covered": true,
+        "event": "jev.primary",
+        "input_tokens": 984,
+        "jev_route": "storyteller",
+        "latency_ms": 304,
+        "model": "jev-1.13.0",
+        "outcome": "primary",
+        "output_tokens": 138,
+        "ts": 1792345233818,
+        "wait_ms": 305
+      },
+      "narration_chars": 1088,
+      "providers": [
+        "deepseek"
+      ],
+      "router_ms": 323,
+      "session": 1,
+      "start_ms": 1792345226352,
+      "status": 200,
+      "turn_count": 6
+    },
+    {
+      "action": "Forjo uma ponta de flecha na bigorna.",
+      "category": "loot_craft",
+      "done_ms": 6003.3,
+      "end_ms": 1792345242170,
+      "has_error": false,
+      "jev": {
+        "choice": "loot",
+        "confidence": 0.97,
+        "covered": true,
+        "event": "jev.primary",
+        "input_tokens": 985,
+        "jev_route": "loot",
+        "latency_ms": 275,
+        "model": "jev-1.13.0",
+        "outcome": "primary",
+        "output_tokens": 136,
+        "ts": 1792345243547,
+        "wait_ms": 275
+      },
+      "narration_chars": 226,
+      "providers": [
+        "deepseek"
+      ],
+      "router_ms": 277,
+      "session": 1,
+      "start_ms": 1792345236165,
+      "status": 200,
+      "turn_count": 7
+    },
+    {
+      "action": "Converso com a mulher na praça sobre o que houve com a vila.",
+      "category": "talk",
+      "done_ms": 10138.0,
+      "end_ms": 1792345253309,
+      "has_error": false,
+      "jev": {
+        "choice": "npc_actor",
+        "confidence": 1.0,
+        "covered": false,
+        "event": "jev.primary",
+        "input_tokens": 991,
+        "latency_ms": 260,
+        "model": "jev-1.13.0",
+        "outcome": "fallback",
+        "output_tokens": 144,
+        "reason": "target_low_confidence",
+        "ts": 1792345250516,
+        "wait_ms": 260
+      },
+      "narration_chars": 894,
+      "providers": [
+        "deepseek"
+      ],
+      "router_ms": 1633,
+      "session": 1,
+      "start_ms": 1792345243170,
+      "status": 200,
+      "turn_count": 8
+    },
+    {
+      "action": "Abro a caixa trancada que encontrei.",
+      "category": "loot_take",
+      "done_ms": 6185.8,
+      "end_ms": 1792345260497,
+      "has_error": false,
+      "jev": {
+        "choice": "loot",
+        "confidence": 1.0,
+        "covered": true,
+        "event": "jev.primary",
+        "input_tokens": 986,
+        "jev_route": "loot",
+        "latency_ms": 235,
+        "model": "jev-1.13.0",
+        "outcome": "primary",
+        "output_tokens": 138,
+        "ts": 1792345262044,
+        "wait_ms": 235
+      },
+      "narration_chars": 253,
+      "providers": [
+        "deepseek"
+      ],
+      "router_ms": 254,
+      "session": 1,
+      "start_ms": 1792345254310,
+      "status": 200,
+      "turn_count": 9
+    },
+    {
+      "action": "Sigo a trilha até a floresta.",
+      "category": "story",
+      "done_ms": 7672.1,
+      "end_ms": 1792345269172,
+      "has_error": false,
+      "jev": {
+        "choice": "storyteller",
+        "confidence": 1.0,
+        "covered": true,
+        "event": "jev.primary",
+        "input_tokens": 985,
+        "jev_route": "storyteller",
+        "latency_ms": 281,
+        "model": "jev-1.13.0",
+        "outcome": "primary",
+        "output_tokens": 138,
+        "ts": 1792345268898,
+        "wait_ms": 281
+      },
+      "narration_chars": 1728,
+      "providers": [
+        "deepseek"
+      ],
+      "router_ms": 300,
+      "session": 1,
+      "start_ms": 1792345261498,
+      "status": 200,
+      "turn_count": 10
+    },
+    {
+      "action": "Ataco o lobo que avança contra mim.",
+      "category": "combat",
+      "done_ms": 14805.9,
+      "end_ms": 1792345284979,
+      "has_error": false,
+      "jev": {
+        "choice": "combat_agent",
+        "confidence": 0.99,
+        "covered": true,
+        "event": "jev.primary",
+        "input_tokens": 985,
+        "jev_route": "combat_agent",
+        "latency_ms": 246,
+        "model": "jev-1.13.0",
+        "outcome": "primary",
+        "output_tokens": 137,
+        "ts": 1792345277586,
+        "wait_ms": 246
+      },
+      "narration_chars": 604,
+      "providers": [
+        "deepseek"
+      ],
+      "router_ms": 264,
+      "session": 1,
+      "start_ms": 1792345270173,
+      "status": 200,
+      "turn_count": 11
+    }
+  ]
+}

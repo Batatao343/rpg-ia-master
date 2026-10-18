@@ -175,3 +175,15 @@ Branch `staging-keys` (main `f2516b2` + tooling), sem push. Deploy de produção
   custo 0, reserva `settled`, `reserved_milli=0`. [evidência](evidence/spec236_s63_stt_fallback.json)
 * **Checklist** (`f2516b2`, URLs legais): 13/14; só `ci_green` (sha não enviado ao GitHub).
   [relatório](../spec197/evidence/checklist-f2516b20976a.md)
+
+## Adendo 2026-10-18 (noite) — Jev `primary` e SPEC-236 §6.3 com crédito OpenAI
+
+Dono (18/10): "já coloquei credito na OpenAi e pode ligar o primary no staging". Branch `staging-primary` (main
+`1c44409` + tooling `c3bab62`), sem push. Deploy `gnlwq6evi`, `/health` com o sha, `hardened=true`, `e2e_session` verde.
+
+* **Jev `primary` ligado e mantido.** Comando: `vercel_env.py --jev-router primary --owner-approved-primary`.
+  Em 20 turnos reais: 18 decididos pelo Jev, 1 fallback, 0 erro. Router p50 277 ms (antes ≈ 1,47 s).
+  [primary-staging](../spec217/primary-staging-2026-10-18.md). Rollback: kill switch `decision_backend:jev` ou
+  `--jev-router off` + redeploy.
+* **SPEC-236 §6.3 verde.** Groq 429 real (29/49) → OpenAI `success` (US$ 0,00013625, `rate_card`), reserva `settled`,
+  `reserved_milli=0`. [evidência](evidence/spec236_s63_stt_fallback_openai.json). §6.2 segue não exercido.

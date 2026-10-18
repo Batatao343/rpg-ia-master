@@ -1,0 +1,263 @@
+{
+  "at": "2026-10-18T17:35:54.040847+00:00",
+  "base": "https://rpg-ia-master-staging.vercel.app",
+  "checks": {
+    "auth_config": {
+      "authenticated": false,
+      "captcha_mode": "gotrue",
+      "required": true,
+      "status": 200
+    },
+    "cookie_flags": {
+      "note": "rpg_access is SameSite=Lax by design; rpg_csrf is JS-readable by design (double-submit); rpg_deletion entry is a clearing Set-Cookie",
+      "ok": true,
+      "set_on_login": {
+        "rpg_access": {
+          "deleted": false,
+          "httponly": true,
+          "path": "/",
+          "samesite": "lax",
+          "secure": true
+        },
+        "rpg_csrf": {
+          "deleted": false,
+          "httponly": false,
+          "path": "/",
+          "samesite": "strict",
+          "secure": true
+        },
+        "rpg_deletion": {
+          "deleted": true,
+          "httponly": false,
+          "path": "/account/delete",
+          "samesite": "lax",
+          "secure": false
+        },
+        "rpg_refresh": {
+          "deleted": false,
+          "httponly": true,
+          "path": "/auth/refresh",
+          "samesite": "strict",
+          "secure": true
+        }
+      }
+    },
+    "csrf_enforced": {
+      "ok": true,
+      "status_without_header": 403
+    },
+    "login": {
+      "authenticated": true,
+      "body_has_bearer": false,
+      "captcha_missing_status": 403,
+      "cookie_names": [
+        "rpg_access",
+        "rpg_csrf",
+        "rpg_deletion",
+        "rpg_refresh"
+      ],
+      "dummy_captcha_status": 401,
+      "ok": true,
+      "origin_missing_status": 403,
+      "status": 200,
+      "via": "verify_link"
+    },
+    "logout": {
+      "cleared": [
+        "rpg_access",
+        "rpg_csrf",
+        "rpg_deletion",
+        "rpg_recent",
+        "rpg_refresh"
+      ],
+      "ok": true,
+      "state_after_status": 401,
+      "status": 204
+    },
+    "new_game": {
+      "body_has_bearer": false,
+      "ms": 22748,
+      "ok": true,
+      "simulated": false,
+      "status": 200,
+      "turn_count": 1
+    },
+    "retry_same_action_id": {
+      "ok": true,
+      "retry": {
+        "has_done": true,
+        "has_error": false,
+        "narration_chars": 1514,
+        "sequence": [
+          "accepted",
+          "visual",
+          "narrative",
+          "state"
+        ],
+        "session_actions": 5,
+        "state": true,
+        "status": 200,
+        "total_ms": 201.9,
+        "ttfb_ms": 135.5,
+        "turn_count": 6
+      }
+    },
+    "signup_captcha": {
+      "app_dummy_token_status": 202,
+      "app_no_token_status": 403,
+      "gotrue_dummy_token": {
+        "error_code": "captcha_failed",
+        "status": 400
+      },
+      "gotrue_no_token": {
+        "error_code": "captcha_failed",
+        "status": 400
+      },
+      "note": "app answers 202 generic (anti-enumeration) whatever GoTrue says",
+      "ok": true,
+      "turnstile_real_secret": true
+    },
+    "sse_turns": {
+      "expected_turn_counts": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "observed_turn_counts": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "ok": true,
+      "total_ms": {
+        "max_ms": 10648.0,
+        "n": 5,
+        "p50_ms": 6131.6,
+        "p95_ms": 10648.0
+      },
+      "ttfb_ms": {
+        "max_ms": 196.7,
+        "n": 5,
+        "p50_ms": 167.6,
+        "p95_ms": 196.7
+      },
+      "turns": [
+        {
+          "has_done": true,
+          "has_error": false,
+          "narration_chars": 1748,
+          "sequence": [
+            "accepted",
+            "phase",
+            "route",
+            "phase",
+            "visual",
+            "narrative",
+            "state"
+          ],
+          "session_actions": 1,
+          "state": true,
+          "status": 200,
+          "total_ms": 5759.3,
+          "ttfb_ms": 184.2,
+          "turn_count": 2
+        },
+        {
+          "has_done": true,
+          "has_error": false,
+          "narration_chars": 1569,
+          "sequence": [
+            "accepted",
+            "phase",
+            "route",
+            "phase",
+            "visual",
+            "narrative",
+            "state"
+          ],
+          "session_actions": 2,
+          "state": true,
+          "status": 200,
+          "total_ms": 5951.0,
+          "ttfb_ms": 167.6,
+          "turn_count": 3
+        },
+        {
+          "has_done": true,
+          "has_error": false,
+          "narration_chars": 509,
+          "sequence": [
+            "accepted",
+            "phase",
+            "route",
+            "phase",
+            "visual",
+            "narrative",
+            "state"
+          ],
+          "session_actions": 3,
+          "state": true,
+          "status": 200,
+          "total_ms": 6953.7,
+          "ttfb_ms": 148.8,
+          "turn_count": 4
+        },
+        {
+          "has_done": true,
+          "has_error": false,
+          "narration_chars": 1648,
+          "sequence": [
+            "accepted",
+            "phase",
+            "route",
+            "phase",
+            "visual",
+            "narrative",
+            "state"
+          ],
+          "session_actions": 4,
+          "state": true,
+          "status": 200,
+          "total_ms": 6131.6,
+          "ttfb_ms": 122.7,
+          "turn_count": 5
+        },
+        {
+          "has_done": true,
+          "has_error": false,
+          "narration_chars": 1514,
+          "sequence": [
+            "accepted",
+            "phase",
+            "route",
+            "phase",
+            "visual",
+            "narrative",
+            "state"
+          ],
+          "session_actions": 5,
+          "state": true,
+          "status": 200,
+          "total_ms": 10648.0,
+          "ttfb_ms": 196.7,
+          "turn_count": 6
+        }
+      ]
+    },
+    "state": {
+      "body_has_bearer": false,
+      "ok": true,
+      "status": 200,
+      "turn_count": 6
+    }
+  },
+  "cleanup": {
+    "games_deleted": 1,
+    "user_delete_status": 200
+  },
+  "ok": true
+}

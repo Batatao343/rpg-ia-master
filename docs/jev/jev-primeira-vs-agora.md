@@ -155,6 +155,23 @@ A estrutura vencedora foi para o código de produção **desligada** (`off` é i
 
 As 2 discordâncias foram o classificador atual mandando "inspeciono a carroça" e "examino um objeto" para itens. O Jev disse narração, que era o certo. O staging **voltou para desligado**. Ligar o Jev de verdade (`primary`) ainda depende de uma revisão independente do código portado e da sua aprovação. Detalhes: `docs/spec217/shadow-staging-2026-10-18.md` (branch `spec-217`).
 
+## Primary no staging (18/10)
+
+Você aprovou (“pode ligar o primary no staging”), e o Jev passou a **decidir de verdade** no staging. Foram 20 turnos reais variados: conversa, combate, loja, fabricação, tesouro, inspeção e viagem.
+
+| Medida | Resultado |
+|---|---|
+| Turnos sem erro | 20 de 20 |
+| Decididos pelo Jev | 18 de 20 (90 %) |
+| Fallback para o classificador | 1 (confiança baixa no alvo da conversa) |
+| Viagem | 1, decidida por regra em Python |
+| Timeouts e erros | 0 |
+| Tempo do router | **~0,28 s** (antes ~1,5 s com o classificador) |
+| Tempo do turno inteiro (p50) | ~7,2 s |
+| Chamadas Jev | 22 (≈ US$ 0,22 pela reserva) |
+
+Nenhuma narração mostrou erro de rota, e o primary **ficou ligado** no staging. Para desligar sem deploy, use o kill switch `decision_backend:jev`. Para desligar de vez, rode `vercel_env.py --jev-router off` e faça um redeploy. Detalhes: `docs/spec217/primary-staging-2026-10-18.md`.
+
 ## Fontes
 
 - `specs/SPEC-177..180` e `docs/spec177/`, `docs/spec178/`, `docs/spec179/`, `docs/spec180/` (README de cada)
