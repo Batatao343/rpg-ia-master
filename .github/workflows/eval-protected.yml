@@ -27,7 +27,7 @@ jobs:
         with:
           persist-credentials: false
       - uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5.4.1
-      - run: uv sync --extra openai --extra anthropic
+      - run: uv sync --extra anthropic
       - name: Require protected provider key
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}

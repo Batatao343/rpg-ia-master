@@ -1,6 +1,6 @@
 """SPEC-192: estima o tamanho descomprimido do bundle Python da Vercel.
 
-Instala requirements-vercel.txt (wheels Linux) num diretório temporário e soma
+Instala requirements.txt (wheels Linux) num diretório temporário e soma
 com o código/dados do app (respeitando .vercelignore de forma aproximada).
 Limite Python: 500 MB descomprimido (docs Vercel, Functions limits, 2026-08-24).
 """
@@ -50,7 +50,7 @@ def main() -> int:
     try:
         cmd = [
             "uv", "pip", "install", "--target", str(target), "-r",
-            str(ROOT / "requirements-vercel.txt"),
+            str(ROOT / "requirements.txt"),
             "--python-platform", "x86_64-manylinux_2_28", "--python-version", "3.13",
             "--no-cache" if "--no-cache" in sys.argv else "--quiet",
         ]

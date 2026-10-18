@@ -293,7 +293,7 @@ def _build_openai(provider: str, temperature: float, model: str) -> "BaseLanguag
     try:
         from langchain_openai import ChatOpenAI
     except ImportError as e:
-        raise ImportError("langchain-openai não instalado (uv sync --extra openai)") from e
+        raise ImportError("langchain-openai não instalado (uv sync)") from e
 
     key_env = PROVIDER_KEY_ENV.get(provider, "OPENAI_API_KEY")
     api_key = os.getenv(key_env)

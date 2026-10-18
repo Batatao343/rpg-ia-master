@@ -16,7 +16,7 @@ jobs:
       - uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5.4.1
       # A suíte cobre os builders opcionais usados pelas rotas reais:
       # DeepSeek/Groq/Qwen/MiniMax via OpenAI-compat e Anthropic no tier SMART.
-      - run: uv sync --extra openai --extra anthropic --extra postgres
+      - run: uv sync --extra anthropic
       # SPEC-225 R6: sem allowlist; os 5 advisories (multidict, urllib3, langgraph-sdk) foram corrigidos no lock.
       - name: pip-audit (requirements.txt exportado do lock)
         run: uvx --from pip-audit==2.10.1 pip-audit -r requirements.txt --progress-spinner off

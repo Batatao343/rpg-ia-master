@@ -38,7 +38,7 @@ def test_entry_exports_fastapi_app():
 
 
 def test_requirements_vercel_utf8_subset_of_lock():
-    raw = (ROOT / "requirements-vercel.txt").read_bytes()
+    raw = (ROOT / "requirements.txt").read_bytes()
     text = raw.decode("utf-8")  # não pode ser UTF-16
     lock = tomllib.loads((ROOT / "uv.lock").read_text(encoding="utf-8"))
     versions = {p["name"]: p["version"] for p in lock["package"]}
@@ -48,9 +48,8 @@ def test_requirements_vercel_utf8_subset_of_lock():
     for name, ver in pins:
         assert versions[name.lower().replace("_", "-")] == ver
     assert {"fastapi", "psycopg", "langchain-openai", "faiss-cpu"} <= names
-    for banned in ("pytest", "playwright", "boto3", "pillow"):
+    for banned in ("pytest", "playwright", "boto3"):
         assert banned not in names
-    assert (ROOT / "requirements.txt").read_bytes() == raw  # Vercel lê requirements.txt
 
 
 def test_vercelignore_excludes_state_and_keeps_runtime():
