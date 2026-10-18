@@ -4263,7 +4263,7 @@ specs:
   lineage_note: Owner 2026-10-18 asked Jev to cover loot too (J1b of SPEC-217); approved with +30 live calls, SPEC-217 cap 190/US$1.90
 - id: SPEC-239
   slug: logging-config-central
-  status: in-progress
+  status: done
   path: specs/SPEC-239-logging-config-central.md
   created_commit: null
   created_at: '2026-10-18'
@@ -4278,7 +4278,7 @@ specs:
   lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P0
 - id: SPEC-240
   slug: correlacao-automatica-logs
-  status: in-progress
+  status: done
   path: specs/SPEC-240-correlacao-automatica-logs.md
   created_commit: null
   created_at: '2026-10-18'
@@ -4295,7 +4295,7 @@ specs:
   lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P0
 - id: SPEC-241
   slug: api-access-log-handler-global
-  status: in-progress
+  status: done
   path: specs/SPEC-241-api-access-log-handler-global.md
   created_commit: null
   created_at: '2026-10-18'
@@ -4367,7 +4367,7 @@ specs:
   lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P2
 - id: SPEC-245
   slug: auth-rejeicoes-logadas
-  status: in-progress
+  status: done
   path: specs/SPEC-245-auth-rejeicoes-logadas.md
   created_commit: null
   created_at: '2026-10-18'
