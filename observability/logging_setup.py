@@ -112,7 +112,7 @@ def configure_logging(env: Mapping[str, str] | None = None) -> None:
     # não-JSON por chamada de provider, com a URL inteira (~4/turno). Só em debug.
     # Filtro (não só nível): o SDK ``openai`` re-sobe ``httpx`` para INFO no import (OPENAI_LOG).
     _QUIET_THIRD_PARTY.min_level = logging.DEBUG if level <= logging.DEBUG else logging.WARNING
-    for noisy in ("httpx", "httpcore"):
+    for noisy in ("httpx", "httpcore", "httpx2"):   # httpx2 = cliente HTTP do SDK openai
         noisy_logger = logging.getLogger(noisy)
         if _QUIET_THIRD_PARTY not in noisy_logger.filters:
             noisy_logger.addFilter(_QUIET_THIRD_PARTY)

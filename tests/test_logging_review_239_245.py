@@ -164,7 +164,7 @@ def test_spa_navigation_and_config_reads_are_debug(client, capsys):
 def test_httpx_request_lines_quiet_unless_debug():
     import logging
     logging_setup.configure_logging({"RPG_LOG_LEVEL": "info", "RPG_LOG_PROPAGATE": "1"})
-    httpx_logger = logging.getLogger("httpx")
+    httpx_logger = logging.getLogger("httpx2")   # cliente do SDK openai (DeepSeek)
     httpx_logger.setLevel(logging.INFO)          # o SDK openai faz isto no import (OPENAI_LOG)
     rec = httpx_logger.makeRecord("httpx", logging.INFO, __file__, 1, "HTTP Request: x", (), None)
     assert not httpx_logger.filter(rec)
