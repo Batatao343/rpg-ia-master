@@ -51,7 +51,7 @@ os índices FAISS; `project_index/repo_graph.json` (ver relatório, "não podar 
 - [ ] `git ls-files docs/descricao_projeto | xargs -I{} git cat-file -s HEAD:{}` sem arquivo > 1 MB
 - [ ] `uv run python -m project_index check` verde após regenerar em checkout limpo
 - [ ] `uv run pytest` verde (nenhum teste lê esses arquivos)
-- [ ] Links novos abrem; checagem de links markdown (`scripts/normalize_specs.py --check`) sem link quebrado
+- [ ] Links novos abrem; `git grep -nE "brag-25s|linkedin-3min|crossing_the_chasm|brag/play.mp4"` sem link para arquivo removido
 
 ## 6. Smoke
 
