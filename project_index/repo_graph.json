@@ -1,5 +1,5 @@
 {
-  "commit_sha": "5b66dbf281d781d2026e72d16442ce1f9bb1ea3c",
+  "commit_sha": "d7e258db686daa6c06c13df750d474a029f2ce9d",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -84794,7 +84794,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 308
+        "line": 313
       },
       "source": "module:tests.test_image_quotes_local",
       "target": "symbol:tests.test_image_quotes_local.bind_api",
@@ -84860,7 +84860,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 326
+        "line": 331
       },
       "source": "module:tests.test_image_quotes_local",
       "target": "symbol:tests.test_image_quotes_local.test_api_canonical_commit_reserves_and_enqueues_once_and_round_trips_state",
@@ -84871,7 +84871,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 347
+        "line": 352
       },
       "source": "module:tests.test_image_quotes_local",
       "target": "symbol:tests.test_image_quotes_local.test_api_failed_atomic_commit_preserves_original_game_and_releases_operation_lease",
@@ -84948,7 +84948,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 384
+        "line": 389
       },
       "source": "module:tests.test_image_quotes_local",
       "target": "symbol:tests.test_image_quotes_local.test_npc_and_scene_confirmation_and_uncertain_result_survive_reopen",
@@ -84981,7 +84981,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 274
+        "line": 279
       },
       "source": "module:tests.test_image_quotes_local",
       "target": "symbol:tests.test_image_quotes_local.test_quote_rls_owner_select_only_and_no_client_mutation",
@@ -84992,7 +84992,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 425
+        "line": 430
       },
       "source": "module:tests.test_image_quotes_local",
       "target": "symbol:tests.test_image_quotes_local.test_real_adapter_documented_token_response_settles_without_provider_cost",
@@ -85003,7 +85003,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 292
+        "line": 297
       },
       "source": "module:tests.test_image_quotes_local",
       "target": "symbol:tests.test_image_quotes_local.test_real_worker_configuration_failure_releases_before_ticket",
@@ -85014,7 +85014,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 367
+        "line": 372
       },
       "source": "module:tests.test_image_quotes_local",
       "target": "symbol:tests.test_image_quotes_local.test_restore_releases_only_pre_ticket_images_and_keeps_uncertain_holds",
@@ -85025,7 +85025,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 461
+        "line": 466
       },
       "source": "module:tests.test_image_quotes_local",
       "target": "symbol:tests.test_image_quotes_local.test_stale_image_card_fails_before_ticket_and_releases_safe_hold",
@@ -242523,7 +242523,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 315
+        "line": 320
       },
       "source": "symbol:tests.test_image_quotes_local.bind_api",
       "target": "symbol:tests.test_image_quotes_local.bind_api.loaded",
@@ -242666,7 +242666,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 329
+        "line": 334
       },
       "source": "symbol:tests.test_image_quotes_local.test_api_canonical_commit_reserves_and_enqueues_once_and_round_trips_state",
       "target": "symbol:tests.test_image_quotes_local.bind_api",
@@ -242677,7 +242677,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 351
+        "line": 356
       },
       "source": "symbol:tests.test_image_quotes_local.test_api_failed_atomic_commit_preserves_original_game_and_releases_operation_lease",
       "target": "symbol:tests.test_image_quotes_local.bind_api",
@@ -242842,7 +242842,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 260
+        "line": 263
       },
       "source": "symbol:tests.test_image_quotes_local.test_expired_job_fence_cannot_dispatch_and_reclaimed_ticket_never_retries",
       "target": "symbol:services.job_fence.job_scope",
@@ -242853,7 +242853,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 264
+        "line": 271
       },
       "source": "symbol:tests.test_image_quotes_local.test_expired_job_fence_cannot_dispatch_and_reclaimed_ticket_never_retries",
       "target": "symbol:services.job_fence.job_scope",
@@ -242864,18 +242864,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 266
-      },
-      "source": "symbol:tests.test_image_quotes_local.test_expired_job_fence_cannot_dispatch_and_reclaimed_ticket_never_retries",
-      "target": "symbol:services.job_fence.job_scope",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_image_quotes_local.py",
-        "line": 258
+        "line": 261
       },
       "source": "symbol:tests.test_image_quotes_local.test_expired_job_fence_cannot_dispatch_and_reclaimed_ticket_never_retries",
       "target": "symbol:tests.test_image_quotes_local.confirm",
@@ -242886,7 +242875,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 258
+        "line": 261
       },
       "source": "symbol:tests.test_image_quotes_local.test_expired_job_fence_cannot_dispatch_and_reclaimed_ticket_never_retries",
       "target": "symbol:tests.test_image_quotes_local.issue",
@@ -242897,18 +242886,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 259
-      },
-      "source": "symbol:tests.test_image_quotes_local.test_expired_job_fence_cannot_dispatch_and_reclaimed_ticket_never_retries",
-      "target": "symbol:tests.test_image_quotes_local.lease",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_image_quotes_local.py",
-        "line": 263
+        "line": 262
       },
       "source": "symbol:tests.test_image_quotes_local.test_expired_job_fence_cannot_dispatch_and_reclaimed_ticket_never_retries",
       "target": "symbol:tests.test_image_quotes_local.lease",
@@ -242996,7 +242974,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 403
+        "line": 408
       },
       "source": "symbol:tests.test_image_quotes_local.test_npc_and_scene_confirmation_and_uncertain_result_survive_reopen",
       "target": "symbol:services.art_triggers.ArtGenerationRequest",
@@ -243007,7 +242985,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 406
+        "line": 411
       },
       "source": "symbol:tests.test_image_quotes_local.test_npc_and_scene_confirmation_and_uncertain_result_survive_reopen",
       "target": "symbol:tests.test_image_quotes_local.bind_api",
@@ -243018,7 +242996,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 415
+        "line": 420
       },
       "source": "symbol:tests.test_image_quotes_local.test_npc_and_scene_confirmation_and_uncertain_result_survive_reopen",
       "target": "symbol:tests.test_image_quotes_local.lease",
@@ -243029,7 +243007,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 415
+        "line": 420
       },
       "source": "symbol:tests.test_image_quotes_local.test_npc_and_scene_confirmation_and_uncertain_result_survive_reopen",
       "target": "symbol:tests.test_image_quotes_local.run",
@@ -243139,7 +243117,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 276
+        "line": 281
       },
       "source": "symbol:tests.test_image_quotes_local.test_quote_rls_owner_select_only_and_no_client_mutation",
       "target": "symbol:tests.test_image_quotes_local.issue",
@@ -243150,7 +243128,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 449
+        "line": 454
       },
       "source": "symbol:tests.test_image_quotes_local.test_real_adapter_documented_token_response_settles_without_provider_cost",
       "target": "symbol:services.job_fence.job_scope",
@@ -243161,7 +243139,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 436
+        "line": 441
       },
       "source": "symbol:tests.test_image_quotes_local.test_real_adapter_documented_token_response_settles_without_provider_cost",
       "target": "symbol:tests.fakes.fake_image_generator.FakeImageGenerator",
@@ -243172,7 +243150,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 434
+        "line": 439
       },
       "source": "symbol:tests.test_image_quotes_local.test_real_adapter_documented_token_response_settles_without_provider_cost",
       "target": "symbol:tests.test_image_quotes_local.confirm",
@@ -243183,7 +243161,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 434
+        "line": 439
       },
       "source": "symbol:tests.test_image_quotes_local.test_real_adapter_documented_token_response_settles_without_provider_cost",
       "target": "symbol:tests.test_image_quotes_local.issue",
@@ -243194,7 +243172,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 435
+        "line": 440
       },
       "source": "symbol:tests.test_image_quotes_local.test_real_adapter_documented_token_response_settles_without_provider_cost",
       "target": "symbol:tests.test_image_quotes_local.lease",
@@ -243205,7 +243183,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 438
+        "line": 443
       },
       "source": "symbol:tests.test_image_quotes_local.test_real_adapter_documented_token_response_settles_without_provider_cost",
       "target": "symbol:tests.test_image_quotes_local.test_real_adapter_documented_token_response_settles_without_provider_cost.post",
@@ -243216,42 +243194,42 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
+        "line": 307
+      },
+      "source": "symbol:tests.test_image_quotes_local.test_real_worker_configuration_failure_releases_before_ticket",
+      "target": "symbol:services.job_fence.job_scope",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_image_quotes_local.py",
+        "line": 301
+      },
+      "source": "symbol:tests.test_image_quotes_local.test_real_worker_configuration_failure_releases_before_ticket",
+      "target": "symbol:tests.test_image_quotes_local.confirm",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_image_quotes_local.py",
+        "line": 301
+      },
+      "source": "symbol:tests.test_image_quotes_local.test_real_worker_configuration_failure_releases_before_ticket",
+      "target": "symbol:tests.test_image_quotes_local.issue",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_image_quotes_local.py",
         "line": 302
       },
       "source": "symbol:tests.test_image_quotes_local.test_real_worker_configuration_failure_releases_before_ticket",
-      "target": "symbol:services.job_fence.job_scope",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_image_quotes_local.py",
-        "line": 296
-      },
-      "source": "symbol:tests.test_image_quotes_local.test_real_worker_configuration_failure_releases_before_ticket",
-      "target": "symbol:tests.test_image_quotes_local.confirm",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_image_quotes_local.py",
-        "line": 296
-      },
-      "source": "symbol:tests.test_image_quotes_local.test_real_worker_configuration_failure_releases_before_ticket",
-      "target": "symbol:tests.test_image_quotes_local.issue",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_image_quotes_local.py",
-        "line": 297
-      },
-      "source": "symbol:tests.test_image_quotes_local.test_real_worker_configuration_failure_releases_before_ticket",
       "target": "symbol:tests.test_image_quotes_local.lease",
       "type": "calls"
     },
@@ -243260,7 +243238,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 372
+        "line": 377
       },
       "source": "symbol:tests.test_image_quotes_local.test_restore_releases_only_pre_ticket_images_and_keeps_uncertain_holds",
       "target": "symbol:services.job_fence.job_scope",
@@ -243271,7 +243249,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 370
+        "line": 375
       },
       "source": "symbol:tests.test_image_quotes_local.test_restore_releases_only_pre_ticket_images_and_keeps_uncertain_holds",
       "target": "symbol:tests.test_image_quotes_local.confirm",
@@ -243282,7 +243260,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 370
+        "line": 375
       },
       "source": "symbol:tests.test_image_quotes_local.test_restore_releases_only_pre_ticket_images_and_keeps_uncertain_holds",
       "target": "symbol:tests.test_image_quotes_local.issue",
@@ -243293,10 +243271,43 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
-        "line": 372
+        "line": 377
       },
       "source": "symbol:tests.test_image_quotes_local.test_restore_releases_only_pre_ticket_images_and_keeps_uncertain_holds",
       "target": "symbol:tests.test_image_quotes_local.lease",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_image_quotes_local.py",
+        "line": 475
+      },
+      "source": "symbol:tests.test_image_quotes_local.test_stale_image_card_fails_before_ticket_and_releases_safe_hold",
+      "target": "symbol:services.job_fence.job_scope",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_image_quotes_local.py",
+        "line": 469
+      },
+      "source": "symbol:tests.test_image_quotes_local.test_stale_image_card_fails_before_ticket_and_releases_safe_hold",
+      "target": "symbol:tests.test_image_quotes_local.confirm",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_image_quotes_local.py",
+        "line": 469
+      },
+      "source": "symbol:tests.test_image_quotes_local.test_stale_image_card_fails_before_ticket_and_releases_safe_hold",
+      "target": "symbol:tests.test_image_quotes_local.issue",
       "type": "calls"
     },
     {
@@ -243305,39 +243316,6 @@
         "extractor": "python_ast",
         "file": "tests/test_image_quotes_local.py",
         "line": 470
-      },
-      "source": "symbol:tests.test_image_quotes_local.test_stale_image_card_fails_before_ticket_and_releases_safe_hold",
-      "target": "symbol:services.job_fence.job_scope",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_image_quotes_local.py",
-        "line": 464
-      },
-      "source": "symbol:tests.test_image_quotes_local.test_stale_image_card_fails_before_ticket_and_releases_safe_hold",
-      "target": "symbol:tests.test_image_quotes_local.confirm",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_image_quotes_local.py",
-        "line": 464
-      },
-      "source": "symbol:tests.test_image_quotes_local.test_stale_image_card_fails_before_ticket_and_releases_safe_hold",
-      "target": "symbol:tests.test_image_quotes_local.issue",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_image_quotes_local.py",
-        "line": 465
       },
       "source": "symbol:tests.test_image_quotes_local.test_stale_image_card_fails_before_ticket_and_releases_safe_hold",
       "target": "symbol:tests.test_image_quotes_local.lease",
@@ -354187,14 +354165,14 @@
     {
       "id": "symbol:tests.test_image_quotes_local.bind_api",
       "kind": "test",
-      "line": 308,
+      "line": 313,
       "path": "tests/test_image_quotes_local.py",
       "qualified_name": "tests.test_image_quotes_local.bind_api"
     },
     {
       "id": "symbol:tests.test_image_quotes_local.bind_api.loaded",
       "kind": "test",
-      "line": 315,
+      "line": 320,
       "path": "tests/test_image_quotes_local.py",
       "qualified_name": "tests.test_image_quotes_local.bind_api.loaded"
     },
@@ -354250,14 +354228,14 @@
     {
       "id": "symbol:tests.test_image_quotes_local.test_api_canonical_commit_reserves_and_enqueues_once_and_round_trips_state",
       "kind": "test",
-      "line": 326,
+      "line": 331,
       "path": "tests/test_image_quotes_local.py",
       "qualified_name": "tests.test_image_quotes_local.test_api_canonical_commit_reserves_and_enqueues_once_and_round_trips_state"
     },
     {
       "id": "symbol:tests.test_image_quotes_local.test_api_failed_atomic_commit_preserves_original_game_and_releases_operation_lease",
       "kind": "test",
-      "line": 347,
+      "line": 352,
       "path": "tests/test_image_quotes_local.py",
       "qualified_name": "tests.test_image_quotes_local.test_api_failed_atomic_commit_preserves_original_game_and_releases_operation_lease"
     },
@@ -354320,7 +354298,7 @@
     {
       "id": "symbol:tests.test_image_quotes_local.test_npc_and_scene_confirmation_and_uncertain_result_survive_reopen",
       "kind": "test",
-      "line": 384,
+      "line": 389,
       "path": "tests/test_image_quotes_local.py",
       "qualified_name": "tests.test_image_quotes_local.test_npc_and_scene_confirmation_and_uncertain_result_survive_reopen"
     },
@@ -354341,42 +354319,42 @@
     {
       "id": "symbol:tests.test_image_quotes_local.test_quote_rls_owner_select_only_and_no_client_mutation",
       "kind": "test",
-      "line": 274,
+      "line": 279,
       "path": "tests/test_image_quotes_local.py",
       "qualified_name": "tests.test_image_quotes_local.test_quote_rls_owner_select_only_and_no_client_mutation"
     },
     {
       "id": "symbol:tests.test_image_quotes_local.test_real_adapter_documented_token_response_settles_without_provider_cost",
       "kind": "test",
-      "line": 425,
+      "line": 430,
       "path": "tests/test_image_quotes_local.py",
       "qualified_name": "tests.test_image_quotes_local.test_real_adapter_documented_token_response_settles_without_provider_cost"
     },
     {
       "id": "symbol:tests.test_image_quotes_local.test_real_adapter_documented_token_response_settles_without_provider_cost.post",
       "kind": "test",
-      "line": 438,
+      "line": 443,
       "path": "tests/test_image_quotes_local.py",
       "qualified_name": "tests.test_image_quotes_local.test_real_adapter_documented_token_response_settles_without_provider_cost.post"
     },
     {
       "id": "symbol:tests.test_image_quotes_local.test_real_worker_configuration_failure_releases_before_ticket",
       "kind": "test",
-      "line": 292,
+      "line": 297,
       "path": "tests/test_image_quotes_local.py",
       "qualified_name": "tests.test_image_quotes_local.test_real_worker_configuration_failure_releases_before_ticket"
     },
     {
       "id": "symbol:tests.test_image_quotes_local.test_restore_releases_only_pre_ticket_images_and_keeps_uncertain_holds",
       "kind": "test",
-      "line": 367,
+      "line": 372,
       "path": "tests/test_image_quotes_local.py",
       "qualified_name": "tests.test_image_quotes_local.test_restore_releases_only_pre_ticket_images_and_keeps_uncertain_holds"
     },
     {
       "id": "symbol:tests.test_image_quotes_local.test_stale_image_card_fails_before_ticket_and_releases_safe_hold",
       "kind": "test",
-      "line": 461,
+      "line": 466,
       "path": "tests/test_image_quotes_local.py",
       "qualified_name": "tests.test_image_quotes_local.test_stale_image_card_fails_before_ticket_and_releases_safe_hold"
     },
@@ -371245,5 +371223,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:afba17d966e1aba53d8c275227f8e8f54e68f260c20acb60c363da5375900826"
+  "source_tree_hash": "sha256:e17f3001c6f0204a3d5fa99c9e8c5b9dc02cd151380c2e9b2af32fb6b34ecde6"
 }
