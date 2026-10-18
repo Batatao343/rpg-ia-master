@@ -59,4 +59,66 @@ elegíveis da regressão; erros = `FALO COM CORVO`→`combat_agent` (2/3); p50
 
 ## Resultados
 
-(preenchido após a P1/P2 — ver abaixo)
+**Chamadas: 60/60 da J1** (P1 52 + P2 8; 60/160 do total da spec), zero CLASSIFY,
+zero erro de provider, `max_retries=0`. Reserva interna US$ 0,60 (regra de parada,
+não custo). Custo real `unavailable` (o endpoint devolve só uso: P1 69.513 tokens de
+entrada / 10.114 de saída; P2 6.418 / 796). Modelo resolvido: `jev-1.13.0` em todas.
+Produto: commit `c5a721c` (árvore limpa, `product_dirty=false`).
+
+### P1 — triagem (52 elegíveis DEV, run `SPEC-217-J1-p1-20261018T122448Z`)
+
+Acurácia standalone de rota (argmax, `none`→`storyteller`): **legacy 51/52**
+(erro: `Guardo o arco na mochila`→`loot`), **plain 52/52**, **rich 52/52**. Zero
+falso positivo de combate nos três. Os casos da SPEC-178/179 que o Jev errava
+agora acertam: `FALO COM CORVO` (rota 1,00 / alvo 0,98), `target.alias` (alvo 1,00),
+`target.enemy` (alvo 0,62).
+
+| Variante (política) | Cobertura | Erros rota cob. | Erros alvo cob. | Escalada insegura | Fallback (motivos) | Jev p50/p95 ms* | Híbrido estim. p50/p95 ms |
+|---|---:|---:|---:|---:|---|---:|---:|
+| legacy@0,50 (rota só) | 5/52 | 0 | 0 | 0 | sem estágio de alvo 30, loot 14, abst. 3 | 247 / 288,7 | 1.716 / 1.760,6 |
+| plain@0,50 (rota só) | 7/52 | 0 | 0 | 0 | sem estágio de alvo 30, loot 13, abst. 2 | 247 / 288,7 | 1.715,5 / 1.760,6 |
+| rich@0,50 (rota só) | 6/52 | 0 | 0 | 0 | sem estágio de alvo 30, loot 13, abst. 2, baixa conf. 1 | 247 / 288,7 | 1.716 / 1.760,6 |
+| legacy+target@0,50 | 33/52 | 0 | 0 | 0 | loot 14 (inclui o erro `Guardo o arco`→loot), abst. 3, alvo n/repr. 2 | 247 / 288,7 | 262 / 1.740,05 |
+| legacy+target@0,70 / 0,90 | 31 / 30 | 0 | 0 | 0 | + baixa confiança | 247 / 288,7 | 269,5 / 1.750–1.755 |
+| **plain+target@0,50** | **35/52 (67,3 %)** | **0** | **0 (25 casos)** | **0** | loot 13, abst. 2, alvo n/repr. 2 | 247 / 288,7 | **260,5 / 1.740,05** |
+| plain+target@0,70 / 0,90 | 34 / 32 | 0 | 0 | 0 | + baixa confiança (alvo `enemy` 0,62) | 247 / 288,7 | 260,5 / 1.750–1.755 |
+| rich+target@0,50 / 0,70 / 0,90 | 34 / 33 / 27 | 0 | 0 | 0 | + baixa confiança (12 em τ 0,90) | 247 / 288,7 | 261–281,5 / 1.740–1.761 |
+| *(+guard em qualquer linha)* | idêntico | — | — | — | guarda nunca disparou no DEV | — | — |
+
+\* P1 envia 3–4 perguntas por chamada; é limite superior da latência de uma
+estrutura. Rota-só não muda com τ até 0,90 (cobertura igual). Todas as 108 políticas constam em `summary.json` (campo `variants`);
+grade τ completa 0,50…0,90 em passos de 0,05. A guarda de combate não mudou
+nenhuma decisão no DEV (todo `combat_agent` do Jev veio com `verbs∋attack`), logo
+cada variante `+guard` empata com a sua base.
+
+**Seleção (regra pré-registrada):** viáveis = todas (0 insegura, 0 erro). Maior
+cobertura = 35 (`plain+target@0,50` e `plain+target+guard@0,50`); desempate
+"sem guarda antes de com" ⇒ **`plain+target@0,50`**. Manter: `plain+target`;
+descartar: rota-só (cobertura ≤ 7/52, híbrido mais lento que A), `legacy` (1 erro
+standalone, menor cobertura), `rich` (menor cobertura; confiança cai em loot/craft).
+
+### P2 — estrutura exata (8 casos DEV `critical`, run `SPEC-217-J1-p2-20261018T122535Z`)
+
+Requisição real congelada (1 pergunta de rota `plain` + alvo): **8/8 cobertos,
+0 erro de rota/alvo, 0 escalada insegura**, concordância com a P1 **8/8 rota e 8/8
+alvo**. Latência Jev p50 **247 ms**, p95 **286,55 ms** (`FALO COM CORVO` → `npc_actor`
+1,00, alvo `npc_corvo_rapido`).
+
+### Congelado para a J2
+
+`FROZEN_J1_POLICY = Policy(label_set="plain", with_target=True, combat_guard=False, tau=0.50)`
+em `evals/experiments/jev_router_hybrid.py`; hash da estrutura (perguntas, alvo,
+léxico de verbos, features, política) `sha256:950917371fe7c1c46326996d5adaa518e10f1c1e6e8c778103a9cf88a4d44b81`
+(teste `test_frozen_structure_digest_matches_code`). Chamadas por caso elegível na
+J2: **1 Jev** (rota e alvo na mesma requisição) + 1 CLASSIFY ⇒ `4 + 16×2×3 = 100`
+cabe no teto J2 sem reduzir o FROZEN.
+
+### Limitações
+
+- DEV tem 52 elegíveis e nenhuma variante errou nos cobertos: o DEV não discrimina
+  bem entre `plain` e `rich`; a confirmação é o FROZEN (nunca visto).
+- A latência híbrida é **estimativa** (CLASSIFY = p50 de 1.473 ms da fase router no
+  gate real da SPEC-214, não medido aqui); medida de estação de trabalho.
+- Cobertura máxima é limitada pelo contrato: 13/52 DEV são `loot` (fallback por
+  escopo). No FROZEN o mix declarado é loot 3/16.
+- Exemplos do label set `rich` foram escritos sem copiar frases do DEV.

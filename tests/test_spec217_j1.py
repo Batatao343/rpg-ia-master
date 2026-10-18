@@ -236,3 +236,10 @@ def test_decision_state_rejects_unbounded_scene() -> None:
         DecisionState(action="x", scene=tuple({**actor, "id": f"npc_{i}"} for i in range(21)))
     with pytest.raises(ValueError):
         DecisionState(action="x", scene=({**actor, "id": "bad id"},))
+
+
+def test_frozen_structure_digest_matches_code() -> None:
+    """R6: the J1 freeze covers questions, target stage, verbs, features and τ."""
+    assert hybrid.FROZEN_J1_POLICY.variant_id == "plain+target@0.50"
+    assert hybrid.structure_digest(hybrid.FROZEN_J1_POLICY) == hybrid.FROZEN_J1_STRUCTURE_DIGEST
+    assert hybrid.structure_digest(Policy("rich", True, False)) != hybrid.FROZEN_J1_STRUCTURE_DIGEST

@@ -474,3 +474,55 @@ def canonical_json(value: Any) -> bytes:
 
 def digest_of(value: Any) -> str:
     return "sha256:" + hashlib.sha256(canonical_json(value)).hexdigest()
+
+
+def summarize_p2(raw: Mapping[str, Any], p1_raw: Mapping[str, Any], cases: list[Case]) -> dict[str, Any]:
+    """P2 = exact frozen-candidate request on DEV critical cases; agreement vs P1."""
+    policy = Policy(**raw["policy"])
+    expected = {case.id: case.expected for case in cases}
+    critical = {case.id: case.critical for case in cases}
+    rows = [row for row in raw["p2"]["rows"] if row.get("answers")]
+    p1 = {row["case_id"]: row for row in p1_raw["p1"]["rows"]}
+    agreement = []
+    for row in rows:
+        before = p1[row["case_id"]]["answers"]
+        agreement.append({
+            "case_id": row["case_id"],
+            "route_p1": before[f"route_{policy.label_set}"]["choice"],
+            "route_p2": row["answers"]["route"]["choice"],
+            "target_p1": (before.get("target") or {}).get("choice"),
+            "target_p2": (row["answers"].get("target") or {}).get("choice"),
+        })
+    return {
+        "evidence_type": "development (DEV critical cases, J1 P2)", "promotion": False,
+        "variant_id": policy.variant_id, "structure_digest": structure_digest(policy),
+        "score": score_policy(rows, expected, critical, policy),
+        "agreement_with_p1": agreement,
+        "route_agreement": sum(a["route_p1"] == a["route_p2"] for a in agreement),
+        "target_agreement": sum(a["target_p1"] == a["target_p2"] for a in agreement),
+    }
+
+
+def structure_digest(policy: Policy) -> str:
+    """Hash of everything the frozen structure sends or decides with."""
+    return digest_of({
+        "policy": asdict(policy),
+        "route_question": ROUTE_QUESTIONS[policy.label_set].model_dump(),
+        "target_instructions": _TARGET_INSTRUCTIONS,
+        "target_none": "Nenhum ator de state.scene é o alvo da ação",
+        "verb_patterns": [[name, pattern.pattern] for name, pattern in _VERB_PATTERNS],
+        "features": "decision_state(features=True): casefold action, scene_view (SPEC-179 "
+                    "_target_options filter, ≤20, aliases ≤4), last_speaker id, verbs",
+    })
+
+
+# ---------------------------------------------------------------------------
+# J1 freeze (R6) — chosen by the pre-registered rule on DEV P1
+# (run SPEC-217-J1-p1-20261018T122448Z), confirmed by P2 (8/8 agreement).
+# Changing anything hashed below invalidates the freeze and requires a new
+# Astra review before J2.
+# ---------------------------------------------------------------------------
+FROZEN_J1_POLICY = Policy(label_set="plain", with_target=True, combat_guard=False, tau=0.50)
+FROZEN_J1_STRUCTURE_DIGEST = (
+    "sha256:950917371fe7c1c46326996d5adaa518e10f1c1e6e8c778103a9cf88a4d44b81"
+)

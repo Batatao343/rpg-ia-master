@@ -27,7 +27,7 @@ from evals.experiments.jev_router_ab import _eligible, _write_json
 from evals.experiments.jev_router_hybrid import (
     J1_CALL_CAP, ROOT, RESERVED_USD_PER_CALL, TOTAL_CALL_CAP, Case, Policy,
     digest_of, frozen_lock_digest, frozen_request, load_dev_cases, scene_view,
-    screening_request, extract_verbs, summarize,
+    screening_request, extract_verbs, summarize, summarize_p2,
 )
 from services.jev_decision import (
     ChoiceAnswer, DecisionBackend, DecisionRequest, JevDecisionBackend, JevError,
@@ -165,9 +165,10 @@ def eligible_cases(cases: list[Case]) -> list[Case]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--phase", choices=("p1", "p2", "summarize"), required=True)
+    parser.add_argument("--phase", choices=("p1", "p2", "summarize", "summarize-p2"), required=True)
     parser.add_argument("--env-file", type=Path)
     parser.add_argument("--p1-dir", type=Path, help="P1 run directory (p2/summarize)")
+    parser.add_argument("--p2-dir", type=Path, help="P2 run directory (summarize-p2)")
     args = parser.parse_args()
     cases, digest = load_dev_cases()
     if args.phase == "summarize":
@@ -178,6 +179,15 @@ def main() -> None:
         print(json.dumps({"summary": str(args.p1_dir / "summary.json"),
                           "raw_sha256": sha256_file(args.p1_dir / "raw.json"),
                           "summary_sha256": sha256_file(args.p1_dir / "summary.json")}))
+        return
+    if args.phase == "summarize-p2":
+        p1_raw = json.loads((args.p1_dir / "raw.json").read_text(encoding="utf-8"))
+        p2_raw = json.loads((args.p2_dir / "raw.json").read_text(encoding="utf-8"))
+        if p2_raw["status"] != "complete":
+            raise SystemExit("P2 raw is not complete; no score")
+        _write_json(args.p2_dir / "summary.json", summarize_p2(p2_raw, p1_raw, cases))
+        print(json.dumps({"raw_sha256": sha256_file(args.p2_dir / "raw.json"),
+                          "summary_sha256": sha256_file(args.p2_dir / "summary.json")}))
         return
     if args.env_file:
         load_dotenv(args.env_file, override=False)
