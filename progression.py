@@ -19,7 +19,6 @@ from typing import Dict, List, Optional, Tuple
 import gamedata
 from gamedata import CLASSES, XP_TABLE
 
-XP_BY_TIER = {"minion": 50, "elite": 200, "boss": 1000}
 # SPEC-226 R7: XP por categoria canônica (fonte v4).
 XP_BY_CATEGORIA = {"lacaio": 50, "padrao": 100, "elite": 200, "chefe": 1000, "nomeado": 1000}
 XP_PER_BEAT = 150

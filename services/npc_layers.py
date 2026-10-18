@@ -146,10 +146,6 @@ def npcs_in_scene(state: Dict) -> List[str]:
     return out
 
 
-# spec encontros-dedupe (R2): NPC gerado descartável não reaparece por N turnos.
-ENCOUNTER_COOLDOWN_TURNS = 20
-
-
 def npcs_for_context(state: Dict) -> List[str]:
     """spec encontros-dedupe (R1/R2): NPCs elegíveis para o CONTEXTO do narrador.
     Entram: quem está `in_scene`, membros de party, e NPCs VINCULADOS ao local

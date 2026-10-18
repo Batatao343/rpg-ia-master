@@ -268,14 +268,6 @@ class Faction(TypedDict, total=False):
     defeated: bool            # eliminada por outra facção (Fase 2 — sai de jogo)
 
 
-class FactionIntel(TypedDict, total=False):
-    """O que o JOGADOR sabe sobre uma facção (não-onisciência). Chave = faction_id."""
-    known: bool               # existência revelada (só por NPC que sabe)
-    knows_goal: bool          # objetivo/plano revelado
-    progress_seen: int        # SNAPSHOT do progresso no momento em que soube (fica defasado)
-    intel_turn: int           # turno em que o snapshot foi obtido (p/ marcar defasagem)
-
-
 class BestiaryKnowledge(TypedDict, total=False):
     """O que o JOGADOR sabe sobre uma criatura do bestiário. Chave = id de data/bestiary.json."""
     seen: int               # avistada/citada em alerta ou hint de encontro (rumor)

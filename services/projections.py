@@ -247,11 +247,6 @@ def has_pending(state: dict) -> bool:
     return normalize_plan(state.get("pending_derived")) is not None
 
 
-def pending_projections(state: dict) -> List[str]:
-    ps = normalize_projection_state(state.get("projection_state"), state)
-    return [name for name in PROJECTIONS if ps[name]["status"] in ("pending", "stale", "failed")]
-
-
 def projection_status_view(state: dict) -> dict:
     """R13: só status/versões, nunca conteúdo."""
     ps = normalize_projection_state(state.get("projection_state"), state)

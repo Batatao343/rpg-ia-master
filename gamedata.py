@@ -222,24 +222,6 @@ DANO_FISICO = ("cortante", "perfurante", "impactante")
 DANO_SOBRENATURAL = ("igneo", "gelido", "eletrico", "arcano", "corrosivo", "abissal")
 
 
-def make_armor(categoria: str) -> dict:
-    """Instancia uma armadura pela categoria (R5), Integridade cheia."""
-    base = ARMADURAS.get(categoria, ARMADURAS["leve"])
-    return {"categoria": categoria, "protecao": base["protecao"],
-            "integridade_max": base["integridade_max"],
-            "integridade_atual": base["integridade_max"],
-            "penalidade_esquiva": base["penalidade_esquiva"],
-            "reducoes_max": base["reducoes_max"], "comprometida": False}
-
-
-def make_shield(categoria: str) -> dict:
-    base = ESCUDOS.get(categoria, ESCUDOS["broquel"])
-    return {"categoria": categoria, "protecao": base["protecao"],
-            "integridade_max": base["integridade_max"],
-            "integridade_atual": base["integridade_max"],
-            "requisito_forca": base["requisito_forca"], "comprometida": False}
-
-
 # Cartas preparadas por faixa de nível (spec conflito-02 R2).
 def prepared_slots_for_level(level) -> int:
     try:

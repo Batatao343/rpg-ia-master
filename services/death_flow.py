@@ -109,12 +109,6 @@ def trigger_last_stand(participant: dict, *, acao: Optional[dict] = None,
     ).model_dump()
 
 
-def last_stand_roll(rng=None) -> dict:
-    """Vantagem extrema (R1): 3 dados, mantém os 2 melhores (mesma engine da
-    Vantagem, mas sempre concedida). Crítico por dupla vale normalmente."""
-    return roll_kept(1, rng)
-
-
 def last_stand_pay(participant: dict, *, entropy: int = 0, vitality: int = 0) -> dict:
     """R1: custo da Última Ação paga o que HOUVER; o déficit é ignorado e — ao
     contrário do sacrifício comum (conflito-05) — NÃO cria Ferimento novo."""

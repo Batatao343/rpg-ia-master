@@ -16,9 +16,6 @@ from typing import Dict, List, Literal, Optional
 
 from pydantic import BaseModel, Field
 
-# Tipos de comportamento (R3) e resistência a ordens (R4).
-TIPOS = ("obrigatorio", "oferta", "restricao", "autonomo")
-RESISTENCIAS = ("flexivel", "resistente", "absoluta", "autonoma")
 TACTICAL_ACTION_KEYS = frozenset({
     "attack", "protect", "stabilize", "flank", "control", "support",
     "flee", "surrender",
@@ -151,7 +148,6 @@ _ENEMY_ARCHETYPE_ACTIONS: Dict[str, Dict[str, str]] = {
     },
 }
 ENEMY_TACTICAL_ARCHETYPES = frozenset(_ENEMY_ARCHETYPE_ACTIONS)
-PURSUIT_POLICIES = frozenset({"persegue", "nao_persegue"})
 _PURSUIT_BY_ARCHETYPE = {
     archetype: (
         "persegue" if archetype in {

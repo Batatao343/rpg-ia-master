@@ -171,7 +171,3 @@ def trigger_event(event: dict, scene_state: Optional[dict] = None, *,
         "cargas_gastas": cargas, "signature": ABYSS_SIGNATURE,
         "log": f"[ABISMO] {cargas} Carga(s) gasta(s). {ABYSS_SIGNATURE}",
     }
-
-
-def abyss_signature() -> str:
-    return ABYSS_SIGNATURE

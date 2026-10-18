@@ -81,7 +81,6 @@ app = FastAPI(
 )
 
 
-
 @app.exception_handler(IncompatibleSaveError)
 async def _incompatible_save_handler(_request, _exc):
     """SPEC-228 R9: save de schema mais novo é recusado, nunca regravado."""
@@ -1878,8 +1877,6 @@ def _npcs_block(npcs: dict, state: Optional[dict] = None) -> List[Dict[str, Any]
                 or entity_is_player_visible(resolve_npc_entity_id(npc, str(npc.get("name", key))), state)}
     out = visible_npc_view(npcs)
     return out
-
-
 
 
 def _simulation_manifest(enemies: list, game_id: str, scene: dict) -> dict:
@@ -3841,21 +3838,6 @@ def _commit_turn(
     )
     state["_storage_version"] = version
     _schedule_chronicle_jobs(state)
-
-
-def _write_checkpoint_if_due(state: dict, prev: dict) -> None:
-    if (state.get("combat_simulation") or {}).get("enabled"):
-        return
-    from services import checkpoints as _cp
-    if _cp.should_checkpoint(state, prev):
-        from services.continuity import mark_checkpoint
-        state["continuity"] = mark_checkpoint(
-            state.get("continuity"),
-            canonical_turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
-        )
-        if not _cp.maybe_write(state, prev=prev):
-            raise RuntimeError("falha ao persistir checkpoint")
-        _require_saved(state, detail="marcador de checkpoint")
 
 
 def _apply_action_options(state: dict, req: ActionRequest) -> None:

@@ -181,15 +181,6 @@ def virtue_cards_pool() -> List[dict]:
     return [c for c in _load_cards().values() if c.get("tipo") == "virtude"]
 
 
-def cards_at_patamar(class_name: str, subclass: str, patamar: str) -> List[dict]:
-    """Cartas de uma classe (tronco + subclasse) de um patamar específico."""
-    out = []
-    for c in cards_for_class(class_name, subclass):
-        if c.get("patamar") == patamar:
-            out.append(c)
-    return out
-
-
 _VIRTUE_SUGGESTIONS: Optional[Dict[str, List[str]]] = None
 
 
