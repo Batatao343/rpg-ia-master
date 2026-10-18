@@ -411,6 +411,10 @@ def begin(state: Mapping[str, Any], action: str, *,
         _emit(JevRolloutEvent(mode, "uncalibrated_threshold", None, 0, None, None, None))
         return None
     key = _idempotency_key(state, action)
+    # Cold lazy imports of the frozen policy (~0.5 s, more on a loaded Windows box)
+    # must not be charged to the turn's deadline: warm them before the clock starts,
+    # otherwise the first turn spuriously times out instead of e.g. "configuration".
+    _frozen()
     started = time.monotonic()
     future = _pool().submit(_evaluate, dict(state), action, backend, key)
     return JevPending(mode, future, started, state)

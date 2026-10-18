@@ -478,6 +478,28 @@ def test_missing_key_falls_back_to_classify(monkeypatch: pytest.MonkeyPatch) -> 
     assert events[-1].outcome == "configuration"
 
 
+def test_frozen_policy_import_is_outside_the_deadline(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Cold imports run before the deadline clock starts (was the flaky timeout)."""
+    order: list[str] = []
+    real_frozen, real_monotonic = jev_rollout._frozen, jev_rollout.time.monotonic
+
+    def frozen() -> Any:
+        order.append("frozen")
+        return real_frozen()
+
+    class _Clock:
+        def monotonic(self) -> float:
+            order.append("clock")
+            return real_monotonic()
+
+    monkeypatch.setenv("RPG_JEV_ROUTER_MODE", "shadow")
+    monkeypatch.setattr(jev_rollout, "_jev_switched_off", lambda: False)
+    monkeypatch.setattr(jev_rollout, "_frozen", frozen)
+    monkeypatch.setattr(jev_rollout, "time", _Clock())
+    jev_rollout.begin(_scene("Olho o altar"), "Olho o altar", backend=FakeJev(route="storyteller"))
+    assert order[:2] == ["frozen", "clock"]
+
+
 def test_more_python_gates_precede_jev(monkeypatch: pytest.MonkeyPatch) -> None:
     """Explicit rest, scene description and an empty action never reach the Jev."""
     backend = FakeJev(route="combat_agent", target="mon_lobo_cinzento")
