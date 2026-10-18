@@ -1,0 +1,621 @@
+{
+  "at": "2026-10-18T12:07:15.990062+00:00",
+  "checks": {
+    "all_ok": true,
+    "canonical_version_strictly_monotonic": true,
+    "derived_landed": true,
+    "no_duplicate_jobs": true,
+    "no_duplicate_memory": true,
+    "reload_chronicle_visible": false,
+    "status_seen_in_responses": [
+      "completed",
+      "pending"
+    ],
+    "turn_counts_consecutive": true
+  },
+  "cleanup": {
+    "games_deleted": 1,
+    "user_delete_status": 200
+  },
+  "client": {
+    "ack": {
+      "max": 19370.0,
+      "n": 15,
+      "p50": 365.9,
+      "p95": 19370.0
+    },
+    "close": {
+      "max": 28345.9,
+      "n": 15,
+      "p50": 10835.1,
+      "p95": 28345.9
+    },
+    "done": {
+      "max": 28345.6,
+      "n": 15,
+      "p50": 10830.5,
+      "p95": 28345.6
+    },
+    "first_chunk": {
+      "max": 28345.6,
+      "n": 15,
+      "p50": 10830.1,
+      "p95": 28345.6
+    },
+    "state": {
+      "max": 28345.6,
+      "n": 15,
+      "p50": 10833.9,
+      "p95": 28345.6
+    }
+  },
+  "db": {
+    "jobs": {
+      "attempts_max": 1,
+      "by_status": {
+        "succeeded": 11
+      },
+      "created_to_final_ms": {
+        "max": 29420.3,
+        "n": 11,
+        "p50": 11802.5,
+        "p95": 29420.3
+      },
+      "distinct_keys": 11,
+      "errors": [],
+      "lease_owners": [
+        "None"
+      ],
+      "n": 11
+    },
+    "memory_rows": {
+      "distinct_content": 17,
+      "n": 17
+    },
+    "pending_derived": false,
+    "projection_state": {
+      "canonical_version": 15,
+      "chronicle": {
+        "projected_version": 15,
+        "status": "completed"
+      },
+      "memory": {
+        "projected_version": 15,
+        "status": "completed"
+      },
+      "summary": {
+        "projected_version": 15,
+        "status": "completed"
+      }
+    },
+    "summary_chars": 1038,
+    "timing": [
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 83,
+        "phase_ms": {
+          "archivist": 8,
+          "context": 403,
+          "narrator": 9975,
+          "other": 343,
+          "persistence": null,
+          "router": 1
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 2
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 80,
+        "phase_ms": {
+          "archivist": 7,
+          "context": 372,
+          "narrator": 3155,
+          "other": 376,
+          "persistence": null,
+          "router": 1557
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 3
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 3330,
+        "phase_ms": {
+          "archivist": 5,
+          "context": 478,
+          "narrator": 3463,
+          "other": 3582,
+          "persistence": null,
+          "router": 1264
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 4
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 2875,
+        "phase_ms": {
+          "archivist": 3,
+          "context": 0,
+          "narrator": 1254,
+          "other": 3178,
+          "persistence": null,
+          "router": 1498
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 5
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 81,
+        "phase_ms": {
+          "archivist": 3,
+          "context": 0,
+          "narrator": 1156,
+          "other": 375,
+          "persistence": null,
+          "router": 1463
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 6
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 3305,
+        "phase_ms": {
+          "archivist": 18,
+          "context": 499,
+          "narrator": 3846,
+          "other": 3574,
+          "persistence": null,
+          "router": 1542
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 7
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 3078,
+        "phase_ms": {
+          "archivist": 8,
+          "context": 464,
+          "narrator": 5077,
+          "other": 3385,
+          "persistence": null,
+          "router": 1761
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 8
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 4911,
+        "phase_ms": {
+          "archivist": 10,
+          "context": 448,
+          "narrator": 4379,
+          "other": 5184,
+          "persistence": null,
+          "router": 1366
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 9
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 83,
+        "phase_ms": {
+          "archivist": 7,
+          "context": 424,
+          "narrator": 3390,
+          "other": 395,
+          "persistence": null,
+          "router": 1299
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 10
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 4452,
+        "phase_ms": {
+          "archivist": 7,
+          "context": 416,
+          "narrator": 8935,
+          "other": 4728,
+          "persistence": null,
+          "router": 2017
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 11
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 3797,
+        "phase_ms": {
+          "archivist": 3,
+          "context": 0,
+          "narrator": 1531,
+          "other": 4123,
+          "persistence": null,
+          "router": 1309
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 12
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 84,
+        "phase_ms": {
+          "archivist": 6,
+          "context": 454,
+          "narrator": 7336,
+          "other": 353,
+          "persistence": null,
+          "router": 1615
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 13
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 3558,
+        "phase_ms": {
+          "archivist": 10,
+          "context": 406,
+          "narrator": 6066,
+          "other": 3880,
+          "persistence": null,
+          "router": 1
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 14
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 2222,
+        "phase_ms": {
+          "archivist": 10,
+          "context": 717,
+          "narrator": 4015,
+          "other": 2598,
+          "persistence": null,
+          "router": 1581
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 15
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 86,
+        "phase_ms": {
+          "archivist": 11,
+          "context": 1014,
+          "narrator": 5497,
+          "other": 522,
+          "persistence": null,
+          "router": 5854
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 16
+      }
+    ]
+  },
+  "label": "post_response",
+  "new_game": {
+    "simulated": false,
+    "status": 200
+  },
+  "reload": {
+    "chronicle_chapters": 2,
+    "chronicle_entries": 0,
+    "projections": {
+      "canonical_version": 15,
+      "chronicle": {
+        "projected_version": 15,
+        "status": "completed"
+      },
+      "memory": {
+        "projected_version": 15,
+        "status": "completed"
+      },
+      "summary": {
+        "projected_version": 15,
+        "status": "completed"
+      }
+    },
+    "status": 200,
+    "summary_chars": 1038
+  },
+  "settle_s": 0.5,
+  "think_s": 8.0,
+  "turns": [
+    {
+      "ack": 182.3,
+      "canonical_version": 1,
+      "close": 11046.4,
+      "done": 11046.1,
+      "first_chunk": 11046.0,
+      "has_error": false,
+      "narration_chars": 1080,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 11046.1,
+      "status": 200,
+      "turn_count": 2
+    },
+    {
+      "ack": 432.1,
+      "canonical_version": 2,
+      "close": 6000.7,
+      "done": 6000.3,
+      "first_chunk": 6000.2,
+      "has_error": false,
+      "narration_chars": 665,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 6000.3,
+      "status": 200,
+      "turn_count": 3
+    },
+    {
+      "ack": 291.3,
+      "canonical_version": 3,
+      "close": 9185.7,
+      "done": 9185.5,
+      "first_chunk": 9185.4,
+      "has_error": false,
+      "narration_chars": 699,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 9185.5,
+      "status": 200,
+      "turn_count": 4
+    },
+    {
+      "ack": 330.2,
+      "canonical_version": 4,
+      "close": 6332.3,
+      "done": 6332.0,
+      "first_chunk": 6332.0,
+      "has_error": false,
+      "narration_chars": 245,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 6332.0,
+      "status": 200,
+      "turn_count": 5
+    },
+    {
+      "ack": 19370.0,
+      "canonical_version": 5,
+      "close": 22447.8,
+      "done": 22447.5,
+      "first_chunk": 22447.5,
+      "has_error": false,
+      "narration_chars": 208,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 22447.5,
+      "status": 200,
+      "turn_count": 6
+    },
+    {
+      "ack": 261.8,
+      "canonical_version": 6,
+      "close": 9832.4,
+      "done": 9832.2,
+      "first_chunk": 9832.1,
+      "has_error": false,
+      "narration_chars": 1014,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 9832.2,
+      "status": 200,
+      "turn_count": 7
+    },
+    {
+      "ack": 472.0,
+      "canonical_version": 7,
+      "close": 11279.7,
+      "done": 11279.4,
+      "first_chunk": 11279.3,
+      "has_error": false,
+      "narration_chars": 1126,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 11279.4,
+      "status": 200,
+      "turn_count": 8
+    },
+    {
+      "ack": 307.8,
+      "canonical_version": 8,
+      "close": 11779.5,
+      "done": 11778.9,
+      "first_chunk": 11774.3,
+      "has_error": false,
+      "narration_chars": 1704,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 11778.9,
+      "status": 200,
+      "turn_count": 9
+    },
+    {
+      "ack": 468.2,
+      "canonical_version": 9,
+      "close": 6114.7,
+      "done": 6114.5,
+      "first_chunk": 6114.5,
+      "has_error": false,
+      "narration_chars": 870,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 6114.5,
+      "status": 200,
+      "turn_count": 10
+    },
+    {
+      "ack": 277.0,
+      "canonical_version": 10,
+      "close": 16514.8,
+      "done": 16514.1,
+      "first_chunk": 16514.1,
+      "has_error": false,
+      "narration_chars": 876,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 16514.1,
+      "status": 200,
+      "turn_count": 11
+    },
+    {
+      "ack": 407.8,
+      "canonical_version": 11,
+      "close": 7369.3,
+      "done": 7369.1,
+      "first_chunk": 7369.1,
+      "has_error": false,
+      "narration_chars": 182,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 7369.1,
+      "status": 200,
+      "turn_count": 12
+    },
+    {
+      "ack": 508.4,
+      "canonical_version": 12,
+      "close": 10411.3,
+      "done": 10410.7,
+      "first_chunk": 10410.7,
+      "has_error": false,
+      "narration_chars": 593,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 10410.7,
+      "status": 200,
+      "turn_count": 13
+    },
+    {
+      "ack": 353.0,
+      "canonical_version": 13,
+      "close": 10835.1,
+      "done": 10830.5,
+      "first_chunk": 10830.1,
+      "has_error": false,
+      "narration_chars": 1440,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 10833.9,
+      "status": 200,
+      "turn_count": 14
+    },
+    {
+      "ack": 19314.6,
+      "canonical_version": 14,
+      "close": 28345.9,
+      "done": 28345.6,
+      "first_chunk": 28345.6,
+      "has_error": false,
+      "narration_chars": 1487,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 28345.6,
+      "status": 200,
+      "turn_count": 15
+    },
+    {
+      "ack": 365.9,
+      "canonical_version": 15,
+      "close": 13226.3,
+      "done": 13225.8,
+      "first_chunk": 13225.7,
+      "has_error": false,
+      "narration_chars": 1620,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 13225.8,
+      "status": 200,
+      "turn_count": 16
+    }
+  ],
+  "turns_requested": 15
+}

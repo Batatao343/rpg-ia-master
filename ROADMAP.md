@@ -1,3 +1,5 @@
+> **18/10 — SPEC-213 medida no staging (DeepSeek, 30 turnos por modo): `post_response` NÃO compensa no Vercel** — p50 visível 10,9 s × 11,1 s (`inline`), p95 28,3 × 25,5 s; o arquivista sai do turno mas a instância congela após a resposta e o SMART vira `lock_wait` (~3 s) do turno seguinte. Corretude ok (23 jobs `succeeded`, versão monotônica, sem duplicata). Staging permanece `inline`; `vercel_env.py --projection-mode`. [Medição](docs/spec213/staging-measure-2026-10-18.md).
+
 > **18/10 — gate de release (SPEC-197) no staging:** deploy a3f87e6 (`hardened=true`, páginas `/privacidade` `/termos` `/reembolso` `/suporte` finais no ar); riscos R-01/03/06/07/09/11/13 `aceito` pelo titular (declaração de 18/10), R-10 e R-14 `fechado` com evidência; `checklist --env staging` bloqueado só por R-02 (SMTP, chave Resend pendente) e R-12 (cron em produção inexistente). SPEC-218/219 seguem `in-progress` por isso.
 > **17/10 — SPEC-216 `done` (mobile single-pane + smoke AVD):** evidência em `docs/spec216/`; publicar exige aprovação do environment `eval-governance`.
 

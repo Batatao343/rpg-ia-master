@@ -1,0 +1,624 @@
+{
+  "at": "2026-10-18T12:14:03.023037+00:00",
+  "checks": {
+    "all_ok": true,
+    "canonical_version_strictly_monotonic": true,
+    "derived_landed": true,
+    "no_duplicate_jobs": true,
+    "no_duplicate_memory": true,
+    "reload_chronicle_visible": false,
+    "status_seen_in_responses": [
+      "completed",
+      "pending"
+    ],
+    "turn_counts_consecutive": true
+  },
+  "cleanup": {
+    "games_deleted": 1,
+    "user_delete_status": 200
+  },
+  "client": {
+    "ack": {
+      "max": 58906.3,
+      "n": 15,
+      "p50": 312.4,
+      "p95": 58906.3
+    },
+    "close": {
+      "max": 65558.8,
+      "n": 15,
+      "p50": 11473.9,
+      "p95": 65558.8
+    },
+    "done": {
+      "max": 65558.3,
+      "n": 15,
+      "p50": 11472.4,
+      "p95": 65558.3
+    },
+    "first_chunk": {
+      "max": 65558.3,
+      "n": 15,
+      "p50": 11472.3,
+      "p95": 65558.3
+    },
+    "state": {
+      "max": 65558.3,
+      "n": 15,
+      "p50": 11472.4,
+      "p95": 65558.3
+    }
+  },
+  "db": {
+    "archivist_runs": 0,
+    "chronicle_entries_by_kind": {},
+    "evidence_rejections_by_channel": {},
+    "jobs": {
+      "attempts_max": 1,
+      "by_status": {
+        "succeeded": 12
+      },
+      "created_to_final_ms": {
+        "max": 66819.7,
+        "n": 12,
+        "p50": 12083.8,
+        "p95": 66819.7
+      },
+      "distinct_keys": 12,
+      "errors": [],
+      "lease_owners": [
+        "None"
+      ],
+      "n": 12
+    },
+    "memory_rows": {
+      "distinct_content": 22,
+      "n": 22
+    },
+    "pending_derived": false,
+    "projection_state": {
+      "canonical_version": 15,
+      "chronicle": {
+        "projected_version": 15,
+        "status": "completed"
+      },
+      "memory": {
+        "projected_version": 15,
+        "status": "completed"
+      },
+      "summary": {
+        "projected_version": 15,
+        "status": "completed"
+      }
+    },
+    "summary_chars": 770,
+    "timing": [
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 86,
+        "phase_ms": {
+          "archivist": 8,
+          "context": 507,
+          "narrator": 10978,
+          "other": 335,
+          "persistence": null,
+          "router": 1
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 2
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 89,
+        "phase_ms": {
+          "archivist": 7,
+          "context": 444,
+          "narrator": 3657,
+          "other": 390,
+          "persistence": null,
+          "router": 1776
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 3
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 3019,
+        "phase_ms": {
+          "archivist": 6,
+          "context": 372,
+          "narrator": 3894,
+          "other": 3283,
+          "persistence": null,
+          "router": 1385
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 4
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 3518,
+        "phase_ms": {
+          "archivist": 3,
+          "context": 0,
+          "narrator": 1080,
+          "other": 3820,
+          "persistence": null,
+          "router": 1250
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 5
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 81,
+        "phase_ms": {
+          "archivist": 3,
+          "context": 0,
+          "narrator": 1216,
+          "other": 374,
+          "persistence": null,
+          "router": 1544
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 6
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 3325,
+        "phase_ms": {
+          "archivist": 7,
+          "context": 415,
+          "narrator": 4125,
+          "other": 3588,
+          "persistence": null,
+          "router": 1094
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 7
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 81,
+        "phase_ms": {
+          "archivist": 9,
+          "context": 474,
+          "narrator": 4293,
+          "other": 383,
+          "persistence": null,
+          "router": 1411
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 8
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 3764,
+        "phase_ms": {
+          "archivist": 9,
+          "context": 382,
+          "narrator": 4422,
+          "other": 4041,
+          "persistence": null,
+          "router": 1251
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 9
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 3551,
+        "phase_ms": {
+          "archivist": 10,
+          "context": 537,
+          "narrator": 9905,
+          "other": 3862,
+          "persistence": null,
+          "router": 1175
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 10
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 4633,
+        "phase_ms": {
+          "archivist": 7,
+          "context": 609,
+          "narrator": 4009,
+          "other": 4907,
+          "persistence": null,
+          "router": 1518
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 11
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 4027,
+        "phase_ms": {
+          "archivist": 3,
+          "context": 0,
+          "narrator": 1396,
+          "other": 4359,
+          "persistence": null,
+          "router": 1411
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 12
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 83,
+        "phase_ms": {
+          "archivist": 7,
+          "context": 440,
+          "narrator": 7882,
+          "other": 354,
+          "persistence": null,
+          "router": 1482
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 13
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 4202,
+        "phase_ms": {
+          "archivist": 9,
+          "context": 416,
+          "narrator": 6427,
+          "other": 4544,
+          "persistence": null,
+          "router": 1
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 14
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 3135,
+        "phase_ms": {
+          "archivist": 12,
+          "context": 608,
+          "narrator": 4323,
+          "other": 3432,
+          "persistence": null,
+          "router": 1640
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 15
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 57,
+        "phase_ms": {
+          "archivist": 20,
+          "context": 1057,
+          "narrator": 5220,
+          "other": 385,
+          "persistence": null,
+          "router": 7023
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 16
+      }
+    ]
+  },
+  "label": "post_response_2",
+  "new_game": {
+    "simulated": false,
+    "status": 200
+  },
+  "reload": {
+    "chronicle_chapters": 2,
+    "chronicle_entries": 0,
+    "projections": {
+      "canonical_version": 15,
+      "chronicle": {
+        "projected_version": 15,
+        "status": "completed"
+      },
+      "memory": {
+        "projected_version": 15,
+        "status": "completed"
+      },
+      "summary": {
+        "projected_version": 15,
+        "status": "completed"
+      }
+    },
+    "status": 200,
+    "summary_chars": 770
+  },
+  "settle_s": 0.4,
+  "think_s": 8.0,
+  "turns": [
+    {
+      "ack": 166.1,
+      "canonical_version": 1,
+      "close": 12092.7,
+      "done": 12091.9,
+      "first_chunk": 12091.8,
+      "has_error": false,
+      "narration_chars": 1154,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 12091.9,
+      "status": 200,
+      "turn_count": 2
+    },
+    {
+      "ack": 256.9,
+      "canonical_version": 2,
+      "close": 6644.3,
+      "done": 6644.0,
+      "first_chunk": 6644.0,
+      "has_error": false,
+      "narration_chars": 953,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 6644.0,
+      "status": 200,
+      "turn_count": 3
+    },
+    {
+      "ack": 267.3,
+      "canonical_version": 3,
+      "close": 9307.6,
+      "done": 9307.3,
+      "first_chunk": 9307.3,
+      "has_error": false,
+      "narration_chars": 865,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 9307.3,
+      "status": 200,
+      "turn_count": 4
+    },
+    {
+      "ack": 19287.6,
+      "canonical_version": 4,
+      "close": 25515.9,
+      "done": 25515.2,
+      "first_chunk": 25515.1,
+      "has_error": false,
+      "narration_chars": 245,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 25515.2,
+      "status": 200,
+      "turn_count": 5
+    },
+    {
+      "ack": 19360.6,
+      "canonical_version": 5,
+      "close": 22579.2,
+      "done": 22578.1,
+      "first_chunk": 22578.1,
+      "has_error": false,
+      "narration_chars": 268,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 22578.1,
+      "status": 200,
+      "turn_count": 6
+    },
+    {
+      "ack": 312.6,
+      "canonical_version": 6,
+      "close": 9640.6,
+      "done": 9640.3,
+      "first_chunk": 9640.3,
+      "has_error": false,
+      "narration_chars": 765,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 9640.3,
+      "status": 200,
+      "turn_count": 7
+    },
+    {
+      "ack": 58906.3,
+      "canonical_version": 7,
+      "close": 65558.8,
+      "done": 65558.3,
+      "first_chunk": 65558.3,
+      "has_error": false,
+      "narration_chars": 995,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 65558.3,
+      "status": 200,
+      "turn_count": 8
+    },
+    {
+      "ack": 285.8,
+      "canonical_version": 8,
+      "close": 10471.5,
+      "done": 10468.7,
+      "first_chunk": 10468.4,
+      "has_error": false,
+      "narration_chars": 1604,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 10470.8,
+      "status": 200,
+      "turn_count": 9
+    },
+    {
+      "ack": 483.1,
+      "canonical_version": 9,
+      "close": 16114.4,
+      "done": 16113.7,
+      "first_chunk": 16113.6,
+      "has_error": false,
+      "narration_chars": 1346,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 16113.7,
+      "status": 200,
+      "turn_count": 10
+    },
+    {
+      "ack": 306.4,
+      "canonical_version": 10,
+      "close": 11473.9,
+      "done": 11472.4,
+      "first_chunk": 11472.3,
+      "has_error": false,
+      "narration_chars": 983,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 11472.4,
+      "status": 200,
+      "turn_count": 11
+    },
+    {
+      "ack": 297.1,
+      "canonical_version": 11,
+      "close": 7544.2,
+      "done": 7543.5,
+      "first_chunk": 7543.5,
+      "has_error": false,
+      "narration_chars": 213,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 7543.5,
+      "status": 200,
+      "turn_count": 12
+    },
+    {
+      "ack": 394.7,
+      "canonical_version": 12,
+      "close": 10707.6,
+      "done": 10707.1,
+      "first_chunk": 10707.1,
+      "has_error": false,
+      "narration_chars": 618,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 10707.1,
+      "status": 200,
+      "turn_count": 13
+    },
+    {
+      "ack": 312.4,
+      "canonical_version": 13,
+      "close": 11810.8,
+      "done": 11810.2,
+      "first_chunk": 11810.1,
+      "has_error": false,
+      "narration_chars": 1599,
+      "projection_status": {
+        "chronicle": "pending",
+        "memory": "pending",
+        "summary": "pending"
+      },
+      "state": 11810.2,
+      "status": 200,
+      "turn_count": 14
+    },
+    {
+      "ack": 360.8,
+      "canonical_version": 14,
+      "close": 10473.9,
+      "done": 10472.9,
+      "first_chunk": 10468.5,
+      "has_error": false,
+      "narration_chars": 1730,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 10472.9,
+      "status": 200,
+      "turn_count": 15
+    },
+    {
+      "ack": 248.9,
+      "canonical_version": 15,
+      "close": 14128.4,
+      "done": 14127.8,
+      "first_chunk": 14127.7,
+      "has_error": false,
+      "narration_chars": 1707,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 14127.8,
+      "status": 200,
+      "turn_count": 16
+    }
+  ],
+  "turns_requested": 15
+}

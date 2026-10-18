@@ -1,0 +1,616 @@
+{
+  "at": "2026-10-18T12:00:01.613447+00:00",
+  "checks": {
+    "all_ok": true,
+    "canonical_version_strictly_monotonic": true,
+    "derived_landed": true,
+    "no_duplicate_jobs": true,
+    "no_duplicate_memory": true,
+    "reload_chronicle_visible": true,
+    "status_seen_in_responses": [
+      "completed"
+    ],
+    "turn_counts_consecutive": true
+  },
+  "cleanup": {
+    "games_deleted": 1,
+    "user_delete_status": 200
+  },
+  "client": {
+    "ack": {
+      "max": 4786.4,
+      "n": 15,
+      "p50": 250.1,
+      "p95": 4786.4
+    },
+    "close": {
+      "max": 19323.9,
+      "n": 15,
+      "p50": 11511.3,
+      "p95": 19323.9
+    },
+    "done": {
+      "max": 19321.2,
+      "n": 15,
+      "p50": 11510.8,
+      "p95": 19321.2
+    },
+    "first_chunk": {
+      "max": 19321.2,
+      "n": 15,
+      "p50": 11510.7,
+      "p95": 19321.2
+    },
+    "state": {
+      "max": 19323.1,
+      "n": 15,
+      "p50": 11510.8,
+      "p95": 19323.1
+    }
+  },
+  "db": {
+    "jobs": {
+      "attempts_max": 0,
+      "by_status": {},
+      "created_to_final_ms": {
+        "max": null,
+        "n": 0,
+        "p50": null,
+        "p95": null
+      },
+      "distinct_keys": 0,
+      "errors": [],
+      "lease_owners": [],
+      "n": 0
+    },
+    "memory_rows": {
+      "distinct_content": 33,
+      "n": 33
+    },
+    "pending_derived": false,
+    "projection_state": {
+      "canonical_version": 15,
+      "chronicle": {
+        "projected_version": 15,
+        "status": "completed"
+      },
+      "memory": {
+        "projected_version": 15,
+        "status": "completed"
+      },
+      "summary": {
+        "projected_version": 15,
+        "status": "completed"
+      }
+    },
+    "summary_chars": 982,
+    "timing": [
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 54,
+        "phase_ms": {
+          "archivist": 19,
+          "context": 333,
+          "narrator": 16378,
+          "other": 224,
+          "persistence": null,
+          "router": 1
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 2
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 54,
+        "phase_ms": {
+          "archivist": 11,
+          "context": 478,
+          "narrator": 8914,
+          "other": 261,
+          "persistence": null,
+          "router": 1367
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 3
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 56,
+        "phase_ms": {
+          "archivist": 11,
+          "context": 351,
+          "narrator": 3776,
+          "other": 242,
+          "persistence": null,
+          "router": 1189
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 4
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 55,
+        "phase_ms": {
+          "archivist": 3341,
+          "context": 0,
+          "narrator": 1316,
+          "other": 261,
+          "persistence": null,
+          "router": 1329
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 5
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 61,
+        "phase_ms": {
+          "archivist": 3621,
+          "context": 0,
+          "narrator": 1362,
+          "other": 242,
+          "persistence": null,
+          "router": 1578
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 6
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 55,
+        "phase_ms": {
+          "archivist": 4073,
+          "context": 424,
+          "narrator": 3925,
+          "other": 322,
+          "persistence": null,
+          "router": 2748
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 7
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 54,
+        "phase_ms": {
+          "archivist": 4996,
+          "context": 434,
+          "narrator": 11780,
+          "other": 251,
+          "persistence": null,
+          "router": 1508
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 8
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 58,
+        "phase_ms": {
+          "archivist": 3828,
+          "context": 392,
+          "narrator": 11396,
+          "other": 293,
+          "persistence": null,
+          "router": 1711
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 9
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 55,
+        "phase_ms": {
+          "archivist": 14,
+          "context": 608,
+          "narrator": 8033,
+          "other": 251,
+          "persistence": null,
+          "router": 1141
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 10
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 106,
+        "phase_ms": {
+          "archivist": 3568,
+          "context": 583,
+          "narrator": 3378,
+          "other": 504,
+          "persistence": null,
+          "router": 1417
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 11
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 56,
+        "phase_ms": {
+          "archivist": 3108,
+          "context": 0,
+          "narrator": 1096,
+          "other": 262,
+          "persistence": null,
+          "router": 1063
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 12
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 55,
+        "phase_ms": {
+          "archivist": 3418,
+          "context": 435,
+          "narrator": 6816,
+          "other": 289,
+          "persistence": null,
+          "router": 1391
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 13
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 59,
+        "phase_ms": {
+          "archivist": 3117,
+          "context": 504,
+          "narrator": 5421,
+          "other": 283,
+          "persistence": null,
+          "router": 1
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 14
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 59,
+        "phase_ms": {
+          "archivist": 17,
+          "context": 654,
+          "narrator": 3160,
+          "other": 309,
+          "persistence": null,
+          "router": 1364
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 15
+      },
+      {
+        "llm_failed_attempts": 0,
+        "lock_wait_ms": 59,
+        "phase_ms": {
+          "archivist": 4177,
+          "context": 985,
+          "narrator": 5081,
+          "other": 287,
+          "persistence": null,
+          "router": 4955
+        },
+        "providers": [
+          "deepseek"
+        ],
+        "turn": 16
+      }
+    ]
+  },
+  "label": "inline",
+  "new_game": {
+    "simulated": false,
+    "status": 200
+  },
+  "reload": {
+    "chronicle_chapters": 2,
+    "chronicle_entries": 3,
+    "projections": {
+      "canonical_version": 15,
+      "chronicle": {
+        "projected_version": 15,
+        "status": "completed"
+      },
+      "memory": {
+        "projected_version": 15,
+        "status": "completed"
+      },
+      "summary": {
+        "projected_version": 15,
+        "status": "completed"
+      }
+    },
+    "status": 200,
+    "summary_chars": 982
+  },
+  "settle_s": 0.6,
+  "think_s": 8.0,
+  "turns": [
+    {
+      "ack": 137.3,
+      "canonical_version": 1,
+      "close": 17172.4,
+      "done": 17171.9,
+      "first_chunk": 17171.8,
+      "has_error": false,
+      "narration_chars": 1429,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 17171.9,
+      "status": 200,
+      "turn_count": 2
+    },
+    {
+      "ack": 404.3,
+      "canonical_version": 2,
+      "close": 11511.3,
+      "done": 11510.8,
+      "first_chunk": 11510.7,
+      "has_error": false,
+      "narration_chars": 1332,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 11510.8,
+      "status": 200,
+      "turn_count": 3
+    },
+    {
+      "ack": 174.9,
+      "canonical_version": 3,
+      "close": 5811.9,
+      "done": 5811.5,
+      "first_chunk": 5811.5,
+      "has_error": false,
+      "narration_chars": 1291,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 5811.5,
+      "status": 200,
+      "turn_count": 4
+    },
+    {
+      "ack": 250.1,
+      "canonical_version": 4,
+      "close": 6578.6,
+      "done": 6578.1,
+      "first_chunk": 6578.1,
+      "has_error": false,
+      "narration_chars": 226,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 6578.1,
+      "status": 200,
+      "turn_count": 5
+    },
+    {
+      "ack": 4786.4,
+      "canonical_version": 5,
+      "close": 11637.8,
+      "done": 11637.3,
+      "first_chunk": 11637.2,
+      "has_error": false,
+      "narration_chars": 290,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 11637.3,
+      "status": 200,
+      "turn_count": 6
+    },
+    {
+      "ack": 259.0,
+      "canonical_version": 6,
+      "close": 11837.8,
+      "done": 11837.5,
+      "first_chunk": 11837.5,
+      "has_error": false,
+      "narration_chars": 1322,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 11837.5,
+      "status": 200,
+      "turn_count": 7
+    },
+    {
+      "ack": 176.5,
+      "canonical_version": 7,
+      "close": 19323.9,
+      "done": 19321.2,
+      "first_chunk": 19321.2,
+      "has_error": false,
+      "narration_chars": 1751,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 19323.1,
+      "status": 200,
+      "turn_count": 8
+    },
+    {
+      "ack": 252.8,
+      "canonical_version": 8,
+      "close": 17994.1,
+      "done": 17991.4,
+      "first_chunk": 17991.3,
+      "has_error": false,
+      "narration_chars": 1475,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 17993.3,
+      "status": 200,
+      "turn_count": 9
+    },
+    {
+      "ack": 231.0,
+      "canonical_version": 9,
+      "close": 10390.2,
+      "done": 10389.0,
+      "first_chunk": 10388.9,
+      "has_error": false,
+      "narration_chars": 1106,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 10389.0,
+      "status": 200,
+      "turn_count": 10
+    },
+    {
+      "ack": 350.9,
+      "canonical_version": 10,
+      "close": 9954.0,
+      "done": 9953.3,
+      "first_chunk": 9953.3,
+      "has_error": false,
+      "narration_chars": 702,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 9953.4,
+      "status": 200,
+      "turn_count": 11
+    },
+    {
+      "ack": 456.1,
+      "canonical_version": 11,
+      "close": 6117.9,
+      "done": 6117.5,
+      "first_chunk": 6117.5,
+      "has_error": false,
+      "narration_chars": 262,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 6117.5,
+      "status": 200,
+      "turn_count": 12
+    },
+    {
+      "ack": 158.6,
+      "canonical_version": 12,
+      "close": 12622.8,
+      "done": 12622.4,
+      "first_chunk": 12622.4,
+      "has_error": false,
+      "narration_chars": 550,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 12622.4,
+      "status": 200,
+      "turn_count": 13
+    },
+    {
+      "ack": 245.7,
+      "canonical_version": 13,
+      "close": 9662.5,
+      "done": 9661.9,
+      "first_chunk": 9661.8,
+      "has_error": false,
+      "narration_chars": 1255,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 9661.9,
+      "status": 200,
+      "turn_count": 14
+    },
+    {
+      "ack": 183.8,
+      "canonical_version": 14,
+      "close": 5780.9,
+      "done": 5777.7,
+      "first_chunk": 5777.7,
+      "has_error": false,
+      "narration_chars": 1391,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 5780.4,
+      "status": 200,
+      "turn_count": 15
+    },
+    {
+      "ack": 253.8,
+      "canonical_version": 15,
+      "close": 15876.6,
+      "done": 15873.6,
+      "first_chunk": 15873.5,
+      "has_error": false,
+      "narration_chars": 1500,
+      "projection_status": {
+        "chronicle": "completed",
+        "memory": "completed",
+        "summary": "completed"
+      },
+      "state": 15873.7,
+      "status": 200,
+      "turn_count": 16
+    }
+  ],
+  "turns_requested": 15
+}

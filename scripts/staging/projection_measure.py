@@ -125,8 +125,20 @@ def _db_snapshot(env: dict, game_id: str) -> dict:
         "pending_derived": bool(st.get("pending_derived")),
         "memory_rows": {"n": mem["n"], "distinct_content": mem["distinct_n"]},
         "summary_chars": len(st.get("narrative_summary") or ""),
+        "chronicle_entries_by_kind": _count([e.get("kind") for ch in st.get("chronicle") or []
+                                             for e in ch.get("entries") or []]),
+        "evidence_rejections_by_channel": _count([r.get("channel") for r in st.get("evidence_rejections") or []
+                                                  if isinstance(r, dict)]),
+        "archivist_runs": sum(1 for t in timing if ((t.get("phase_ms") or {}).get("archivist") or 0) > 500),
         "timing": timing,
     }
+
+
+def _count(values: list) -> dict:
+    out: dict = {}
+    for v in values:
+        out[str(v)] = out.get(str(v), 0) + 1
+    return out
 
 
 def _settled(snap: dict) -> bool:
@@ -191,7 +203,12 @@ def run(base: str, env: dict, label: str, turns: int, think: float, settle_s: fl
                          "chronicle_chapters": len(chron),
                          "chronicle_entries": sum(len(ch.get("entries") or []) for ch in chron),
                          "summary_chars": len(st.get("narrative_summary") or "")}
-        out["checks"]["reload_chronicle_visible"] = r.status_code == 200 and out["reload"]["chronicle_entries"] > 0
+        # Entradas de prosa sao raras (o LLM quase nunca devolve chronicle_entry) e marcos dependem de eventos:
+        # o que se confere e a cronica servida no reload com a projecao concluida na versao canonica.
+        rp = (st.get("projections") or {}).get("chronicle") or {}
+        out["checks"]["reload_chronicle_visible"] = (
+            r.status_code == 200 and out["reload"]["chronicle_chapters"] > 0 and rp.get("status") == "completed"
+            and rp.get("projected_version") == (st.get("projections") or {}).get("canonical_version"))
     finally:
         cleanup: dict = {}
         if game_id:

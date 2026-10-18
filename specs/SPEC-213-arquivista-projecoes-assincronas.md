@@ -1,6 +1,6 @@
 # SPEC-213 — Arquivista: canônico síncrono e projeções derivadas fora do hot path
 
-> **Status:** `done` — gate §0 atingido em 2026-10-16 (offline, ver `docs/spec213/gate.md`); modo A **17/10:** migration `20261016121500_archive_projection_operations.sql` aplicada no staging (default segue `inline`; nada ativado).
+> **Status:** `done` — gate §0 atingido em 2026-10-16 (offline, ver `docs/spec213/gate.md`); modo A **17/10:** migration `20261016121500_archive_projection_operations.sql` aplicada no staging (default segue `inline`; nada ativado). **18/10:** medido no staging com DeepSeek (30×30 turnos, leitura de 8 s): `post_response` não melhora a latência visível (p50 `done` 10,9 s × 11,1 s; p95 28,3 × 25,5 s) porque a Vercel congela a drenagem pós-resposta e o SMART vira espera do próximo turno (`lock_wait` p50 3,0 s); corretude ok → staging fica `inline` ([medição](../docs/spec213/staging-measure-2026-10-18.md)).
 > (`post_response`) em legacy e perfis com banco (outbox `project_archive` em `app.jobs` + execução pela própria
 > API após responder; worker/cron e o próximo turno na cerca como fallbacks); revisão Astra independente com
 > correções; smokes browser (Chromium 1440) e real (8 turnos DeepSeek, US$ 0,032 est.) executados — evidência em
