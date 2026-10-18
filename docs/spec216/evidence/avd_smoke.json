@@ -1,0 +1,59 @@
+{
+  "avd": "rpg34 (android-34 google_apis x86_64)",
+  "target": "http://10.0.2.2:8765 (API local, MockLLM, perfil legacy; debug sync)",
+  "driver": "CDP cru sobre adb forward (WebView 113)",
+  "checks": {
+    "surface_bar_visible": {
+      "pass": true,
+      "buttons": [
+        "Chat",
+        "Codex",
+        "Personagem",
+        "Combate",
+        "Bestiário",
+        "Mapa"
+      ],
+      "h": 48.761905670166016,
+      "platform": "android"
+    },
+    "single_surface_chat": {
+      "pass": true
+    },
+    "keyboard_keeps_composer_visible": {
+      "pass": true,
+      "vvh": 530.2857055664062,
+      "ih": 530,
+      "focused": true,
+      "field": [
+        471.5,
+        521.5
+      ],
+      "act": [
+        471.5,
+        521.5
+      ],
+      "imeShown": true,
+      "ime_resized_viewport": true,
+      "statusbar_px": 128
+    },
+    "back_returns_to_chat": {
+      "pass": true,
+      "onMap": "page",
+      "chatCur": "page",
+      "appAlive": true,
+      "titleAfterBack": "Chat"
+    },
+    "voice_permission_release": {
+      "pass": null,
+      "status": "not_verifiable_local",
+      "detail": {
+        "secure": false,
+        "mediaDevices": "undefined",
+        "hasVoiceButton": true
+      },
+      "reason": "origem http://10.0.2.2 nao e contexto seguro no WebView; liberar microfone na troca de superficie segue coberto no Chromium (M04, mobile-320/390) e o microfone foi verificado em https no smoke SPEC-193 v2 (emulator_smoke_v2.json)",
+      "record_audio_granted_in_apk": true
+    }
+  },
+  "at": "2026-10-18T01:47:25.394Z"
+}

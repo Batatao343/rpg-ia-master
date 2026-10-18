@@ -18,9 +18,23 @@
 - Playwright (Chromium empacotado, `mobile-320`/`mobile-390`, `--workers=1`): M01–M07 = 14/14, 3 execuções consecutivas verdes.
 - `npm test`: 124/124 (inclui `tests/mobileSurface.test.mjs`, 5 testes); `npm run build` verde.
 - Desktop (projeto `chromium`): F01–F15 e F18–F40 verdes; pytest completo ver spec.
-- Falham só por contrato antigo < 900px: F16, F17, combat-gesture@390 (2), combat-outcome@390, workspace-shell "telefone 390" (2)
-  -> `handoffs/SPEC-216-eval-followup.md` (precisam de adaptação de eval por tarefa separada).
+- Testes < 900px adaptados ao contrato mobile (F16, F17, combat-gesture@390, combat-outcome@390, workspace-shell "telefone 390",
+  deck-character 320/390/768, portrait-overlay@390): traduzidos, não removidos (barra "Superfícies", foco no título, "Detalhes de <Carta>").
+  Governança: `evals.core.governance check` verde sem relock (specs de jornada não entram no manifesto).
+- Suíte Playwright completa como no CI (Chromium empacotado, 2 workers, todos os projetos): 0 falhas exceto 2 de `account-lifecycle`
+  (SPEC-190), que falham igual em `main` (verificado em worktree de main). `npm test` 124/124, build verde, pytest só com os 2 de staleness do project_index.
 
 ## Limites
-- Smoke WebView/AVD (Etapa 5) não executado nesta sessão; critério segue aberto. Screenshots: `evidence/` (320 e 390).
+- Screenshots Chromium: `evidence/` (320 e 390).
+
+## Smoke WebView/AVD (Etapa 5) — `evidence/avd_smoke.json`, `avd-01-chat-bar.png`, `avd-02-keyboard.png`
+AVD `rpg34` (android-34), APK debug (`CAP_BUILD=debug CAP_SERVER_URL=http://10.0.2.2:8765 npx cap sync android`, JDK 21), API LOCAL (MockLLM, perfil legacy),
+WebView dirigido por CDP cru (o `connectOverCDP` do Playwright não conecta ao WebView 113). Resultados:
+- Barra "Superfícies" com 6 botões, `platform=android`, exatamente uma superfície visível (chat): PASS.
+- Teclado (toque real via adb, IME real): o WebView encolhe (viewport 842 -> 530) e campo + Agir ficam inteiros acima do teclado: PASS.
+- Voltar do Android: Mapa -> voltar -> Chat (título "Chat"), app vivo: PASS.
+- Liberação do microfone na troca de superfície: NÃO verificável neste alvo. `http://10.0.2.2` não é contexto seguro
+  (`navigator.mediaDevices` indefinido) e o sync debug só libera cleartext para 10.0.2.2 (`http://localhost` cai em chrome-error).
+  Coberto no Chromium (M04, mobile-320/390) e o `getUserMedia` real em https foi provado no smoke SPEC-193 v2. Para fechar no WebView
+  seria preciso apontar o sync para o staging https (fora do escopo "API local").
 - Hysteresis do breakpoint não necessária: o chat não remonta ao girar (mesma árvore).

@@ -1,3 +1,5 @@
+> **17/10 — SPEC-216 `done` (mobile single-pane + smoke AVD):** evidência em `docs/spec216/`; publicar exige aprovação do environment `eval-governance`.
+
 # ROADMAP — RPG IA (Revisado 2026-09-27)
 
 > **SPEC-212 `done` (17/10):** gate de gameplay do beta desktop — J-V1 (V01–V09) + F01–F40 em 1440x900/1280x800 contra stack real + MockLLM, oráculos console/duplicação/segredo/latência/a11y verdes; evidência `docs/spec212/evidence/gameplay-gate-0666576fc421.json` (`ok: true`, `dirty_files: 0`, strict); revisão Sol APPROVED com 4 correções. Convite de testers só com SPEC-218/219 `done`; publicar exige aprovação do environment `eval-governance`.

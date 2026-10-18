@@ -1,3 +1,5 @@
+> **17/10 — SPEC-216 `done`:** mobile single-pane (< 900px, barra "Superfícies"); journeys < 900px adaptadas, Playwright completo 0 falhas (exceto 2 `account-lifecycle` que falham igual em main), smoke AVD rpg34 contra API local (barra, teclado, voltar ok; liberação do mic só no Chromium, WebView local não é contexto seguro). Publicar exige aprovação do environment `eval-governance`.
+
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código
 
 > **SPEC-212 `done` (17/10):** gate de gameplay do beta desktop — J-V1 (V01–V09) + F01–F40 em 1440x900/1280x800 contra stack real + MockLLM, oráculos console/duplicação/segredo/latência/a11y verdes; evidência `docs/spec212/evidence/gameplay-gate-0666576fc421.json` (`ok: true`, `dirty_files: 0`, strict); revisão Sol APPROVED com 4 correções. Convite de testers só com SPEC-218/219 `done`; publicar exige aprovação do environment `eval-governance`.
