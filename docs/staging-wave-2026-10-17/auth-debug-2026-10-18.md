@@ -60,6 +60,9 @@ não bate com ela.
   "verificação anti-robô expirou", 429 com minutos); erro/aviso do pai é limpo ao trocar de tela e
   ao enviar.
 
+Depois de corrigir o SMTP, entrar com a conta não confirmada mostra "Confirme seu e-mail…" em vez
+de `credentials_invalid`.
+
 ## Verificação
 
 - `tests/test_auth_gotrue_error_mapping.py` (11 casos, vermelhos antes / verdes depois), suítes de
@@ -68,16 +71,21 @@ não bate com ela.
 - Playwright local `e2e/account-lifecycle.spec.ts` 9/9, incluindo o fluxo do dono (login não
   confirmado → senha errada → "Esqueci minha senha" sem alerta herdado → aviso genérico, nenhum
   `snake_case` na página).
-- Staging (Playwright, sem passar do Turnstile): `/auth/config` gotrue+captcha required,
-  `/health` `git_sha c3bab62` (branch `staging-primary` do outro agente); POST direto
-  `/auth/reset/request` sem token → 403 `captcha_required` (fail-closed ok).
+- Staging antes do deploy: `/auth/config` gotrue+captcha required, `git_sha c3bab62`.
 
 ## Deploy
 
-**Não feito.** O deploy de produção do staging (22 min antes) é `c3bab62` de `staging-primary`,
-com o outro agente medindo o Jev `primary`. A correção de código não destrava o dono (a causa
-bloqueante é o SMTP); incluir `auth-debug` no próximo deploy do staging (cherry-pick sobre
-`staging-primary` ou após o merge na `main`), mantendo o env atual.
+Depois que o outro agente terminou (Jev `primary` no ar, commits na `main` `4d60cf7`), `auth-debug`
+foi rebaseado na `main` e publicado com `vercel deploy --prod -e GIT_SHA=9763ef6` (deploy
+`rpg-ia-master-staging-lkq7km6zl`). Nenhum env var tocado (`RPG_JEV_ROUTER_MODE`,
+`RPG_JEV_ROUTER_PRIMARY_APPROVED`, `TYPESAFE_API_KEY` seguem os da Vercel). Rollback:
+`npx vercel@64.2.0 promote https://rpg-ia-master-staging-gnlwq6evi-guilherme-medeiros-projects.vercel.app`.
+
+Verificação no staging: `/health` `git_sha 9763ef6`; Playwright abre "Recuperar acesso" sem alerta
+herdado e o bundle servido contém as mensagens novas; POST direto `/auth/reset/request` e
+`/auth/login` sem token → 403 `captcha_required` (Turnstile continua obrigatório). Os caminhos
+`email_not_confirmed`/`captcha_invalid` vindos do GoTrue não foram exercitados no staging (exigem
+Turnstile real) — cobertos pelos testes locais e pelo clique do dono abaixo.
 
 ## O que o dono precisa fazer
 
