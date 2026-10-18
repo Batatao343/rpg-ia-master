@@ -205,6 +205,12 @@ def _sync_enemy_knowledge(enemies: List[Dict], *, load_persisted: bool = False) 
         if not isinstance(enemy, dict):
             continue
         try:
+            # Revisão SPEC-272: reforço do orçamento (`fill_encounter`) e saves
+            # antigos não passam por `_instances`; sem isso a chave do overlay
+            # viraria o id da instância (`goblin_3`), poluindo o bestiário.
+            if not enemy.get("archetype_id") and enemy.get("id"):
+                from services.encounter_manifest import _base_id
+                enemy["archetype_id"] = _base_id(enemy["id"])
             if load_persisted and shared:
                 bk.apply_persisted_knowledge(enemy)
             for card_id in list(enemy.get("enemy_card_usage") or {}):

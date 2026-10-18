@@ -101,3 +101,14 @@ def test_combat_node_revela_carta_usada_na_rodada(monkeypatch):
     g1 = next(e for e in out["enemies"] if e["id"] == "g1")
     assert "bst_toque_gelido" in g1["revealed_cards"]
     assert "bst_toque_gelido" in bk._load_all()["goblin"]["revealed_cards"]
+
+
+def test_instancia_sem_archetype_id_usa_id_base_no_overlay(monkeypatch):
+    """Revisão: reforço do orçamento (`fill_encounter`) e saves antigos chegam sem
+    `archetype_id`; a chave persistida é o id do bestiário, não o da instância."""
+    monkeypatch.setenv("RPG_RUNTIME_PROFILE", "legacy")
+    enemy = {"id": "goblin_3", "enemy_card_usage": {"bst_toque_gelido": {"turno": 1}}}
+    combat._sync_enemy_knowledge([enemy])
+    data = bk._load_all()
+    assert "goblin" in data and "goblin_3" not in data
+    assert enemy["archetype_id"] == "goblin"

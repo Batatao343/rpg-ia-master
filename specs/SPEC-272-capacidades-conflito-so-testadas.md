@@ -1,6 +1,6 @@
 # SPEC-272 — Decidir: ligar ou apagar capacidades do conflito que só os testes usam
 
-> **Status:** `in-progress` (REVIEW_REQUIRED — aguarda revisão Astra/Opus) · **Revisão independente 2026-10-18:** SAFE WITH CHANGES — decisão item a item continua obrigatória; apagar exige adendo nas specs `done` de origem (ver §8)
+> **Status:** `done` (revisão independente Opus 2026-10-18 APPROVED — [handoff](../handoffs/SPEC-272-review.md)) · **Revisão independente 2026-10-18:** SAFE WITH CHANGES — decisão item a item continua obrigatória; apagar exige adendo nas specs `done` de origem (ver §8)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Origem:** auditoria ponytail 2026-10-18 ([relatório](../docs/auditorias/ponytail-poda-2026-10-18.md))
 > **Depende de:** decisão do dono, por capacidade (ligar no motor ou apagar)
@@ -69,9 +69,9 @@ Mudar a regra de qualquer mecânica que está ligada.
 - [x] Tabela de decisão preenchida (§9; dono aprovou "faça as podas" em 2026-10-18 com default da revisão: ligar o que tem valor de jogo, apagar só helper sem valor)
 - [x] `uv run pytest` verde (ver §9)
 - [x] Playtest MockLLM sem violação: `--all --turns 3` (14 perfis) e `--profile combate --turns 200`, 0 erro / 0 violação (o brief desta execução pediu esses dois em vez de `--all --turns 30`)
-- [ ] Corpus de evals `encounter_manifest` via `evals` CLI — não rodado nesta execução (régua intocada; coordenador)
+- [x] Corpus de evals `encounter_manifest` via `evals` CLI — passed, 31 casos (revisão)
 - [ ] Project Index regenerado em checkout limpo — coordenador
-- [ ] Revisão independente (REVIEW_REQUIRED) e smoke real §6 (DeepSeek, 10 turnos `combate`) — pendentes
+- [x] Revisão independente APPROVED (1 correção: `archetype_id` de reforço/save antigo) e smoke real §6 — 10/10 DeepSeek, 0 erro/0 violação, ~US$ 0,0053. Obs.: `combate --turns 200` em checkout limpo tem `combat.no_progress` pré-existente (main 133 × branch 130) — ver handoff
 
 ## 6. Smoke
 
