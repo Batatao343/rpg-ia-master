@@ -98,28 +98,63 @@ def log_event(area: str, event: str, *, level: str = "info", **fields: Any) -> N
     assim passam por ``safe_json``/``redact``.
     """
     logging.getLogger(f"rpg.{area}").log(
-        _LEVELS.get(level, logging.INFO), safe_json({"event": f"{area}.{event}", **fields}))
+        _LEVELS.get(level, logging.INFO),
+        # SPEC-240 R1: correlacao automatica; campos explicitos do chamador vencem.
+        safe_json({**correlation(), "event": f"{area}.{event}", **fields}))
 
 
 def correlation() -> dict[str, str]:
     return dict(_correlation.get())
 
 
-@contextmanager
-def correlation_scope(**values: object) -> Iterator[dict[str, str]]:
-    current = correlation()
+def _merge_correlation(current: dict[str, str], values: Mapping[str, object]) -> None:
     for key, value in values.items():
         if value is None:
             continue
         if key in {"owner_id", "game_id"}:
-            current[f"{key}_ref"] = pseudonym(value)
+            ref = pseudonym(value)
+            current[f"{key}_ref"] = ref                       # nome legado (1 release)
+            current[f"{key[:-3]}_ref"] = ref                  # owner_ref / game_ref
+        elif key == "action_id":
+            current["action_ref"] = pseudonym(value)          # id cru nunca entra
         else:
             current[key] = str(value)[:128]
+
+
+@contextmanager
+def correlation_scope(**values: object) -> Iterator[dict[str, str]]:
+    current = correlation()
+    _merge_correlation(current, values)
     token = _correlation.set(current)
     try:
         yield current
     finally:
         _correlation.reset(token)
+
+
+def bind_correlation(**values: object) -> None:
+    """Acrescenta campos ao contexto ATUAL sem escopo (vale ate o fim desta tarefa/thread).
+
+    Usado no inicio dos handlers sincronos (rodam em contexto proprio por request)."""
+    current = correlation()
+    _merge_correlation(current, values)
+    _correlation.set(current)
+
+
+def contextualize(fn):
+    """Captura o contexto de correlacao agora e o aplica quando ``fn`` rodar em outra thread
+    (``Thread(target=contextualize(f))``, ``pool.submit(contextualize(f))``, callbacks)."""
+    ctx = contextvars.copy_context()
+
+    def _runner(*args: Any, **kwargs: Any) -> Any:
+        return ctx.copy().run(fn, *args, **kwargs)
+
+    return _runner
+
+
+def run_with_context(fn, *args: Any, **kwargs: Any) -> Any:
+    """Executa ``fn`` ja em uma copia do contexto atual (equivale a ``contextualize(fn)(...)``)."""
+    return contextualize(fn)(*args, **kwargs)
 
 
 @dataclass

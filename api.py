@@ -3290,6 +3290,7 @@ def new_game(req: CreateCharacterRequest):
     from rag import embedding_usage_scope
     from services.turn_execution import operation_scope
     from services.turn_effects import effect_scope
+    _bind_corr(None, getattr(req, "action_id", None))
     claim, request_hash, prior = _begin_create_operation(req)
     if prior is not None:
         return prior
@@ -4292,6 +4293,7 @@ def _execute_action(req: ActionRequest, *, progress=None, timeline=None,
                 req = req.model_copy(update={"game_id": stem})
         except ValueError:
             pass
+    _bind_corr(req.game_id, req.action_id)
     lock = _game_lock(req.game_id) if not _database_profile() else nullcontext()
     lock_wait_started = _lat.now()
     with lock:
@@ -4358,6 +4360,15 @@ def _publish_timeline(timeline, outcome: str) -> None:
         pass
 
 
+def _bind_corr(game_id=None, action_id=None) -> None:
+    """SPEC-240 R2: game_ref/action_ref no contexto de log do handler (nunca o id cru)."""
+    try:
+        from observability.telemetry import bind_correlation
+        bind_correlation(game_id=game_id, action_id=action_id)
+    except Exception:
+        pass
+
+
 @app.post("/game/action", response_model=GameResponse)
 def game_action(req: ActionRequest):
     from observability import latency as _lat
@@ -4382,6 +4393,7 @@ def game_death(req: DeathChoiceRequest):
     """spec checkpoints-morte (D2): resolve a tela de morte.
     - `continue` → restaura do checkpoint (ou do início da sessão, D7); a saga segue.
     - `accept`   → memorial (game_over): a crônica encerra por escolha do jogador."""
+    _bind_corr(req.game_id, req.action_id)
     lock = _game_lock(req.game_id) if not _database_profile() else nullcontext()
     with lock:
         file_to_load = _resolve_save_file(req.game_id)
@@ -4522,7 +4534,9 @@ def _stream_turn_events(req: ActionRequest, accepted_game_id: str, principal,
         except Exception as exc:
             q.put(("exc", exc))
 
-    threading.Thread(target=_worker, daemon=True).start()
+    from observability.telemetry import contextualize
+    # SPEC-240 R3: a thread do SSE herda request_id/game_ref/action_ref da requisicao.
+    threading.Thread(target=contextualize(_worker), daemon=True).start()
 
     def _observe_delivery(mark: str, metric: str) -> None:
         try:
@@ -4604,6 +4618,7 @@ def game_action_stream(req: ActionRequest):
 def game_equip(req: EquipRequest):
     """Fase 4.3: equipar/desequipar — validação 100% Python (inventory.equip)."""
     import inventory as inv_mod
+    _bind_corr(req.game_id, req.action_id)
     lock = _game_lock(req.game_id) if not _database_profile() else nullcontext()
     with lock:
         file_to_load = _resolve_save_file(req.game_id)
@@ -4649,6 +4664,7 @@ def game_equip(req: EquipRequest):
 def game_cards_prepare(req: PrepareCardsRequest):
     """SPEC-209 R4: Preparação fora de combate. A regra mora em services.cards."""
     from services import cards
+    _bind_corr(req.game_id, req.action_id)
     lock = _game_lock(req.game_id) if not _database_profile() else nullcontext()
     with lock:
         file_to_load = _resolve_save_file(req.game_id)
@@ -4696,6 +4712,7 @@ def game_levelup(req: LevelUpRequest):
     Validação 100% server-side (progression.apply_choice): escolha inexistente,
     habilidade inelegível (classe/nível/pré-requisito/ramo rival) ou atributo
     inválido → 400 e o save fica intocado."""
+    _bind_corr(req.game_id, getattr(req, "action_id", None))
     lock = _game_lock(req.game_id) if not _database_profile() else nullcontext()
     with lock:
         file_to_load = _resolve_save_file(req.game_id)

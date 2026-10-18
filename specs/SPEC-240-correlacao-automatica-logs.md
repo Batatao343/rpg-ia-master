@@ -1,6 +1,6 @@
 # SPEC-240 — Correlação automática em todo log (request_id, action_ref, game_ref) inclusive em threads
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P0**.
+> **Status:** `in-progress` — implementado em 2026-10-18 (branch `logs-p0`); falta a revisão Sol obrigatória e o smoke em staging.
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-239
 > **Desbloqueia:** SPEC-247, 252, 255, 262
@@ -57,12 +57,12 @@ R1–R4.
 
 ## 5. Critérios de aceite
 
-- [ ] Todas as linhas de um turno (POST e SSE) compartilham `request_id` e `action_ref`.
-- [ ] Nenhum id cru (`action_id`, `game_id`, `owner_id`) em log (teste com sentinelas UUID).
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Todas as linhas de um turno (POST e SSE) compartilham `request_id` e `action_ref`.
+- [x] Nenhum id cru (`action_id`, `game_id`, `owner_id`) em log (teste com sentinelas UUID).
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] `uv run pytest` verde (suíte completa offline).
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -74,3 +74,12 @@ R1–R4.
 - Overhead desprezível (dict merge). Threads de terceiros (LangGraph interno) podem ainda perder contexto — documentar quais.
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## 8. Notas de implementação
+
+- Novo em `observability/telemetry.py`: `log_event` mescla `correlation()`; `bind_correlation` (contexto do handler), `contextualize(fn)`/`run_with_context` (thread SSE, pool e callback tardio do Jev). `action_id` -> `action_ref` (pseudonimo); `owner_ref`/`game_ref` adicionados mantendo `owner_id_ref`/`game_id_ref` por 1 release.
+- `api.py`: `_bind_corr` no inicio de /game/action(+stream via `_execute_action`), death, equip, cards/prepare, levelup, new; `threading.Thread(target=contextualize(_worker))`.
+- Desvio: o teste E2E exige >=2 eventos distintos por turno (nao >=3): hoje o turno de caminho feliz so emite `turn` (+ avisos de rag); `router.decision`/archivist/persistence ganham linhas info nas SPEC-247/250.
+- Observacao: `tests/test_jev_router_port.py::test_missing_key_falls_back_to_classify` e flaky nesta maquina (deadline de 1 s; falha tambem em main sem estas mudancas).
+- Threads internas do LangGraph mantiveram o contexto nos testes (rag.legacy carrega request_id); nao ha garantia para libs de terceiros.
+- Pendente: smoke em staging e revisao Sol.

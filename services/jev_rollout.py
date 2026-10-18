@@ -340,8 +340,9 @@ class JevPending:
         """
         if not self._future.done():
             try:
-                self._future.add_done_callback(
-                    lambda _f: self._observe_now(effective, as_payload, state, late=True))
+                from observability.telemetry import contextualize
+                self._future.add_done_callback(contextualize(
+                    lambda _f: self._observe_now(effective, as_payload, state, late=True)))
             except Exception:
                 pass
             return
@@ -416,5 +417,6 @@ def begin(state: Mapping[str, Any], action: str, *,
     # otherwise the first turn spuriously times out instead of e.g. "configuration".
     _frozen()
     started = time.monotonic()
-    future = _pool().submit(_evaluate, dict(state), action, backend, key)
+    from observability.telemetry import contextualize  # SPEC-240: request_id/action_ref na thread
+    future = _pool().submit(contextualize(_evaluate), dict(state), action, backend, key)
     return JevPending(mode, future, started, state)
