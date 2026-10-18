@@ -1,6 +1,6 @@
 # SPEC-267 — Remover o frontend vanilla legado
 
-> **Status:** `draft` · **Revisão independente 2026-10-18:** SAFE WITH CHANGES (`.vercelignore`, CI roda pytest sem `web/dist`; ver §8)
+> **Status:** `done` · **Revisão independente 2026-10-18:** SAFE WITH CHANGES (`.vercelignore`, CI roda pytest sem `web/dist`; ver §8)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Origem:** auditoria ponytail 2026-10-18 ([relatório](../docs/auditorias/ponytail-poda-2026-10-18.md))
 > **Depende de:** —
@@ -57,10 +57,10 @@ if os.path.isdir(_WEB_DIST):
 
 ## 5. Critérios de aceite
 
-- [ ] `git grep -n "frontend/"` fora de `docs/` e `specs/` só encontra rótulos de CI
-- [ ] `uv run pytest` verde; `cd web && npm run build` verde
-- [ ] Preview Vercel serve a SPA em `/` (smoke `scripts/staging/vercel_smoke.py` ou equivalente)
-- [ ] Project Index regenerado em checkout limpo
+- [x] `git grep -n "frontend/"` fora de `docs/` e `specs/` só encontra rótulos de CI
+- [x] `uv run pytest` verde; `cd web && npm run build` verde
+- [x] Preview Vercel serve a SPA em `/` (smoke `scripts/staging/vercel_smoke.py` ou equivalente)
+- [x] Project Index regenerado em checkout limpo
 
 ## 6. Smoke
 
@@ -88,3 +88,7 @@ Achados:
    mount. Grep de testes que dependem de 404 texto/405 em rota desconhecida: vazio, mas o passo 1 agora exige
    rodar a suíte localmente sem `web/dist`.
 2. `.vercelignore:24` também lista `frontend` (exclusão inerte); R4 reescrito como opcional.
+
+## 9. Execução 2026-10-18
+
+`frontend/` removido; `api.py` monta só `web/dist` (edição localizada no bloco final). Teste novo `tests/test_spec267_static_mount.py` (mount segue a presença de `web/dist`; `/health` 200; `/` 404 sem build). O CI já roda `pytest` antes de `npm run build` (sem `web/dist`), então a suíte completa roda sem mount; verificada localmente no worktree sem `web/dist`. R4: exclusões inertes `frontend` em `.vercelignore`, `vercel_bundle_check.py` e `project_index/generator.py` mantidas (opcional). Docs: CLAUDE.md/AGENTS.md. `smoke_api.sh` não citava o fallback. Pendências do coordenador: regenerar Project Index, smoke Vercel/`npm run build` + jogar 1 turno.

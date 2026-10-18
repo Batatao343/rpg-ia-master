@@ -5078,12 +5078,11 @@ def export_chronicle(game_id: Optional[str] = None):
 
 # --- FRONTEND ESTÁTICO ---
 # Servido na raiz "/". As rotas de API acima têm precedência sobre o mount.
-# Prefere a build do app React (web/dist); cai para o frontend vanilla se não houver build.
+# SPEC-267: só serve a build do app React (web/dist). Sem build a API sobe sem UI (`cd web && npm run build`).
 _ROOT = os.path.dirname(os.path.abspath(__file__))
 _WEB_DIST = os.path.join(_ROOT, "web", "dist")
-_FRONTEND_DIR = _WEB_DIST if os.path.isdir(_WEB_DIST) else os.path.join(_ROOT, "frontend")
-if os.path.isdir(_FRONTEND_DIR):
-    app.mount("/", StaticFiles(directory=_FRONTEND_DIR, html=True), name="frontend")
+if os.path.isdir(_WEB_DIST):
+    app.mount("/", StaticFiles(directory=_WEB_DIST, html=True), name="frontend")
 
 if __name__ == "__main__":
     # Auditoria A5: default local-only (API não tem auth até a Fase 10b).

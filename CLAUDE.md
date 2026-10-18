@@ -55,7 +55,7 @@ força o mock mesmo com chave (usado pela suíte); `RPG_NO_MOCK=1` força o `Fal
 
 **Frontend (Fase 1):** o cliente principal é um app **React + Vite + TypeScript** em `web/`
 (tom dark medieval/The Witcher; `motion` p/ animações). A API serve `web/dist` na raiz quando
-existe, senão cai no `frontend/` vanilla (legado). Build e dev:
+existe (sem build a API sobe sem UI; o `frontend/` vanilla foi removido, SPEC-267). Build e dev:
 
 ```bash
 cd web && npm install          # uma vez (Node ≥20)
@@ -199,9 +199,8 @@ services/conflict_orchestrator.py # NÚCLEO atual: Cartas, 2d10, Reações, Vita
 world_utils.py        # Fase 0: relógio, viagem (fog of war), descanso — determinístico, sem LLM
 character_creator.py  # cria ficha do player (IA + JSON oficial); guard de fallback
 game_engine.py        # CLI interativo (wizard + loop)
-api.py                # FastAPI REST (/game/new, /game/action, /game/state, /data/map) + serve web/dist|frontend/
+api.py                # FastAPI REST (/game/new, /game/action, /game/state, /data/map) + serve web/dist
 web/                  # FRONTEND PRINCIPAL — React+Vite+TS (src/, build em web/dist; tom Witcher; motion)
-frontend/             # web vanilla legado (zero build) — fallback se web/dist não existir
 # --- agentes (nós do grafo) ---
 agents/
   router.py           # dm_router_node — classifica intenção + seta NPC/loot/combat
