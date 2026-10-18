@@ -33,8 +33,7 @@ def make_owner(env) -> dict:
     admin = s192.Admin(env)
     user = admin.create_user()
     c = httpx.Client(timeout=120, transport=httpx.HTTPTransport(retries=3))
-    r = c.post(s192.BASE + "/auth/login", headers=_h(s192.BASE), json={
-        "email": user["email"], "password": user["password"], "captcha_token": s192.CAPTCHA_TEST})
+    r = s192.app_login(c, s192.BASE, user)
     csrf = r.json()["csrf_token"]
     origins = json.loads((s192.common.ROOT / "data" / "origins.json").read_text(encoding="utf-8"))
     g = c.post(s192.BASE + "/game/new", headers=_h(s192.BASE, csrf), json={

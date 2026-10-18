@@ -67,10 +67,13 @@ def stale_names(production: Mapping[str, str]) -> tuple[str, ...]:
     """Variaveis a apagar: as removidas + as do outro modo RLS/flags opcionais ausentes de ``production``."""
     return REMOVED_NAMES + tuple(n for n in MODE_EXCLUSIVE + OPTIONAL_FLAGS if n not in production)
 # SPEC-194: HMAC key for Play obfuscated account ids (>=32 chars). Pushed only when present in the env files.
-# SPEC-197 R6 voice: Groq only (no OPENAI_API_KEY => no paid STT fallback candidate).
+# SPEC-197 R6 voice: Groq primary. 2026-10-18 (dono): OPENAI_API_KEY opcional entra no staging (fallback pago de
+# STT/imagem, SPEC-236 §6.3); sem a chave nao ha candidato pago.
 # 2026-10-17 (dono: "Sim, use a DeepSeek"): DEEPSEEK_API_KEY e o candidato PRIMARIO de ROUTES em todos os tiers;
 # Groq segue como fallback. Opcional: sem a chave o candidato e pulado e o Groq assume.
-OPTIONAL_SECRET_FROM_FILE = ("RPG_PLAY_ACCOUNT_KEY", "DEEPSEEK_API_KEY")
+OPTIONAL_SECRET_FROM_FILE = ("RPG_PLAY_ACCOUNT_KEY", "DEEPSEEK_API_KEY", "OPENAI_API_KEY")
+# R-01: site key real do Turnstile (publica) quando o operador a tem; senao a de teste da Cloudflare.
+SITE_KEY_FROM_FILE = ("RPG_TURNSTILE_SITE_KEY", "TURNSTILE_SITE_KEY")
 # SPEC-236 §6.1: chave DeepSeek deliberadamente invalida (literal publico, nao e segredo) para forcar 1 falha
 # do primario + fallback Groq. Reverter com um push normal (o upsert regrava a chave real).
 INVALID_DEEPSEEK_KEY = "sk-spec236-smoke-invalid-key"
@@ -98,6 +101,9 @@ def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST, use_admi
     if projection_mode != "inline":
         production["RPG_PROJECTION_MODE"] = projection_mode
     production["RPG_CORS_ORIGINS"] = f"https://{public_host}"
+    site_key = next((files[k] for k in SITE_KEY_FROM_FILE if files.get(k)), None)
+    if site_key:
+        production["RPG_TURNSTILE_SITE_KEY"] = site_key
     missing = [k for k in SECRET_FROM_FILE if not files.get(k)]
     if missing:
         raise KeyError(f"ausentes em .env.staging/.env: {', '.join(missing)}")

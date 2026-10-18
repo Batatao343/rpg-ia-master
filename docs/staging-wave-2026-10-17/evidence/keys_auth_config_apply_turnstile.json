@@ -1,0 +1,19 @@
+{
+  "applied": true,
+  "diff": {
+    "security_captcha_secret": {
+      "from": "<write-only>",
+      "to": "[REDACTED]"
+    },
+    "smtp_pass": {
+      "from": "<write-only>",
+      "to": "[REDACTED]"
+    }
+  },
+  "failures": {},
+  "mode": "apply",
+  "project_ref": "uzeagzcyvxzrpjgrhaql",
+  "remaining": [],
+  "turnstile_test_keys": false,
+  "verified": true
+}

@@ -31,8 +31,7 @@ class User:
         self.game_id = ""
 
     def login(self) -> int:
-        r = self.c.post(f"{self.base}/auth/login", headers=_h(self.base), json={
-            "email": self.info["email"], "password": self.info["password"], "captcha_token": s192.CAPTCHA_TEST})
+        r = s192.app_login(self.c, self.base, self.info)
         body = r.json() if r.status_code == 200 else {}
         self.csrf = body.get("csrf_token") or self.c.cookies.get("rpg_csrf") or ""
         return r.status_code
@@ -133,7 +132,7 @@ def run(base: str, env: dict[str, str]) -> dict:
         lo = b.post("/auth/logout")
         ck["logout"] = {"status": lo.status_code, "state_after": b.get("/game/state", params={"game_id": b.game_id}).status_code}
         ck["logout"]["ok"] = lo.status_code in (200, 204) and ck["logout"]["state_after"] == 401
-        ra = a.post("/auth/reauth", {"password": a.info["password"], "captcha_token": s192.CAPTCHA_TEST})
+        ra = a.post("/auth/reauth", {"password": a.info["password"], "captcha_token": s192.smoke_captcha()})
         dr = a.post("/account/delete", {"confirmation": "EXCLUIR"}) if ra.status_code == 200 else None
         gone = admin.user_exists(a.id)
         ck["delete_account"] = {"reauth": ra.status_code, "delete_status": dr.status_code if dr is not None else None,

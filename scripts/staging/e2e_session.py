@@ -86,14 +86,17 @@ def run(base: str, env: dict) -> dict:
             for row in conn.execute("select id from auth.users where email like 'spec192-probe-%%' or email=%s", (mail,)).fetchall():
                 admin.delete_user(str(row["id"]))
         captcha_codes = {"captcha_failed", "captcha_verification_failed", "captcha_token_missing"}
+
+        def is_captcha_error(p: dict) -> bool:
+            return p["status"] >= 400 and (p["error_code"] in captcha_codes or "captcha" in str(p["error_code"]))
+        # R-01: with the real Turnstile secret GoTrue must reject the dummy token too; with Cloudflare's
+        # always-pass TEST secret it is accepted (then any later error is SMTP/quota, never captcha).
         ck["signup_captcha"] = {
             "app_no_token_status": r_no.status_code, "app_dummy_token_status": r_ok.status_code,
             "gotrue_no_token": probe_no, "gotrue_dummy_token": probe_dummy,
-            "note": "app answers 202 generic (anti-enumeration); Supabase built-in SMTP rate limit (429 "
-                    "over_email_send_rate_limit) means a user may not be created, but it is returned AFTER captcha passes",
-            "ok": r_no.status_code >= 400 and r_ok.status_code in (200, 202)
-            and (probe_no["status"] >= 400 and (probe_no["error_code"] in captcha_codes or "captcha" in str(probe_no["error_code"])))
-            and probe_dummy["error_code"] not in captcha_codes and "captcha" not in str(probe_dummy["error_code"])}
+            "turnstile_real_secret": is_captcha_error(probe_dummy),
+            "note": "app answers 202 generic (anti-enumeration) whatever GoTrue says",
+            "ok": r_no.status_code >= 400 and r_ok.status_code in (200, 202) and is_captcha_error(probe_no)}
         r = c.get(f"{base}/auth/config")
         cfg = r.json()
         ck["auth_config"] = {"status": r.status_code, "captcha_mode": (cfg.get("captcha") or {}).get("mode"),
@@ -102,13 +105,16 @@ def run(base: str, env: dict) -> dict:
         r_noorigin = c.post(f"{base}/auth/login", headers={"Content-Type": "application/json"}, json=creds)
         r_nocaptcha = c.post(f"{base}/auth/login", headers=_h(base),
                              json={"email": user["email"], "password": user["password"]})
-        r = c.post(f"{base}/auth/login", headers=_h(base), json=creds)
+        r_dummy = c.post(f"{base}/auth/login", headers=_h(base), json=creds)
+        # Session through the email-confirmation link (the path a real user takes; no captcha by design).
+        r = s192.app_login(c, base, user)
         login_body = r.json() if r.status_code == 200 else {}
         csrf = login_body.get("csrf_token") or c.cookies.get("rpg_csrf") or ""
         cookies_set = s192.cookie_flags(r.headers.get_list("set-cookie"))
         secret_cookie_vals = [v for k, v in c.cookies.items() if k in ("rpg_access", "rpg_refresh")]
         ck["login"] = {"status": r.status_code, "origin_missing_status": r_noorigin.status_code,
                        "captcha_missing_status": r_nocaptcha.status_code,
+                       "dummy_captcha_status": r_dummy.status_code, "via": "verify_link",
                        "authenticated": login_body.get("authenticated"), "cookie_names": sorted(cookies_set),
                        "body_has_bearer": s192.json_has_bearer(login_body, secret_cookie_vals),
                        "ok": r.status_code == 200 and r_noorigin.status_code >= 400 and r_nocaptcha.status_code >= 400}

@@ -1,6 +1,6 @@
 # SPEC-219 — Cota de custo por owner, cobertura do rate limit e IP real atrás de proxy
 
-> **Status:** `in-progress` (18/10: único pendente segue sendo a SPEC-218 `done`; o gate da SPEC-218 agora só espera R-02 (SMTP) e R-12 (cron de producao) no checklist staging — ver SPEC-218. 17/10: todos os critérios próprios verdes no staging.)
+> **Status:** `in-progress` (18/10 tarde: segue esperando só a SPEC-218 `done`, que agora depende apenas de `ci_green` após o push da `main`. 18/10: único pendente segue sendo a SPEC-218 `done`; o gate da SPEC-218 agora só espera R-02 (SMTP) e R-12 (cron de producao) no checklist staging — ver SPEC-218. 17/10: todos os critérios próprios verdes no staging.)
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
 > **Depende de:** SPEC-218 `done` (processo exposto sempre em perfil DB) · evolui SPEC-182/185/196 `done` e SPEC-197 `in-progress` sem reabri-las (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212; gate da SPEC-197; follow-up de cobrança por turno (SPEC-185) (ordem final 2026-10-15)

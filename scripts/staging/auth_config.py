@@ -3,13 +3,21 @@
 Field names verified against https://api.supabase.com/api/v1-json
 (UpdateAuthConfigBody): mailer_autoconfirm, security_captcha_enabled,
 security_captcha_provider, security_captcha_secret, site_url, uri_allow_list,
-rate_limit_{email_sent,verify,token_refresh,otp,anonymous_users}.
+rate_limit_{email_sent,verify,token_refresh,otp,anonymous_users},
+smtp_{host,port,user,pass,admin_email,sender_name}, mailer_subjects_*, mailer_templates_*_content.
+
+SMTP (R-02): every value comes from the environment (``.env.staging``), never from this file:
+RPG_STAGING_SMTP_{HOST,PORT,USER,PASS,ADMIN_EMAIL,SENDER_NAME}. All six or none (none = keep
+whatever the project has). ``rate_limit_email_sent`` is only accepted by the API with custom SMTP.
+Email templates/subjects are the repo's ``supabase/templates`` + ``supabase/config.toml`` (links
+``#auth_action=...&token_hash=`` consumed by the web client), so local and staging send the same mail.
 """
 
 from __future__ import annotations
 
 import argparse
 import os
+import tomllib
 from typing import Any, Mapping
 
 import httpx
@@ -27,7 +35,18 @@ RATE_LIMITS = {
     "rate_limit_otp": 30,
     "rate_limit_anonymous_users": 10,
 }
-SECRET_FIELDS = {"security_captcha_secret"}
+SECRET_FIELDS = {"security_captcha_secret", "smtp_pass"}
+SMTP_ENV = {
+    "smtp_host": "RPG_STAGING_SMTP_HOST",
+    "smtp_port": "RPG_STAGING_SMTP_PORT",
+    "smtp_user": "RPG_STAGING_SMTP_USER",
+    "smtp_pass": "RPG_STAGING_SMTP_PASS",
+    "smtp_admin_email": "RPG_STAGING_SMTP_ADMIN_EMAIL",
+    "smtp_sender_name": "RPG_STAGING_SMTP_SENDER_NAME",
+}
+# Turnstile secret: the operator's .env.staging may carry Cloudflare's own name for it.
+TURNSTILE_SECRET_ENV = ("RPG_STAGING_TURNSTILE_SECRET", "TURNSTILE_SECRET_KEY")
+TEMPLATES = {"confirmation": "confirmation", "recovery": "recovery"}
 # SPEC-220 R9 (INFRA-07): política de senha/sessão declarada e diffada, nunca default implícito.
 SESSION_POLICY = {
     "password_min_length": 10,
@@ -48,8 +67,34 @@ def validate_redirects(redirects: list[str]) -> None:
             raise common.GuardError(f"uri_allow_list http:// fora de localhost recusado: {url}")
 
 
+def smtp_config(env: Mapping[str, str]) -> dict[str, str]:
+    """SMTP fields from env: all six or none. Partial config is refused (half-configured mail = no mail)."""
+    values = {field: (env.get(name) or "").strip() for field, name in SMTP_ENV.items()}
+    present = [SMTP_ENV[k] for k, v in values.items() if v]
+    if not present:
+        return {}
+    missing = [SMTP_ENV[k] for k, v in values.items() if not v]
+    if missing:
+        raise common.GuardError("SMTP parcial recusado; faltam: " + ", ".join(missing))
+    if not values["smtp_port"].isdigit():
+        raise common.GuardError("RPG_STAGING_SMTP_PORT precisa ser numerica")
+    return values
+
+
+def template_config(root=common.ROOT) -> dict[str, str]:
+    """Subjects/bodies from supabase/config.toml + supabase/templates (single source with local)."""
+    cfg = tomllib.loads((root / "supabase" / "config.toml").read_text(encoding="utf-8"))
+    out: dict[str, str] = {}
+    for name, api_name in TEMPLATES.items():
+        tpl = cfg["auth"]["email"]["template"][name]
+        out[f"mailer_subjects_{api_name}"] = tpl["subject"]
+        out[f"mailer_templates_{api_name}_content"] = (root / tpl["content_path"]).read_text(encoding="utf-8")
+    return out
+
+
 def desired_config(env: Mapping[str, str], turnstile_test_keys: bool = False) -> dict[str, Any]:
-    secret = env.get("RPG_STAGING_TURNSTILE_SECRET") or (TURNSTILE_TEST_SECRET if turnstile_test_keys else "")
+    secret = next((env[k] for k in TURNSTILE_SECRET_ENV if env.get(k)), "") or (
+        TURNSTILE_TEST_SECRET if turnstile_test_keys else "")
     if not secret:
         raise common.GuardError("RPG_STAGING_TURNSTILE_SECRET ausente (ou use --turnstile-test-keys)")
     site = env.get("RPG_STAGING_SITE_URL")
@@ -65,6 +110,8 @@ def desired_config(env: Mapping[str, str], turnstile_test_keys: bool = False) ->
         "site_url": site,
         "uri_allow_list": ",".join(redirects),
     }
+    cfg.update(smtp_config(env))
+    cfg.update(template_config())
     cfg.update(RATE_LIMITS)
     cfg.update(SESSION_POLICY)
     return cfg
@@ -119,9 +166,12 @@ def run(mode: str, ref: str, env: Mapping[str, str], client: httpx.Client | None
         # Field groups are applied separately so one plan-gated field (e.g. an
         # email rate limit that requires custom SMTP) cannot block the rest.
         failures: dict[str, Any] = {}
+        # SMTP goes in one PATCH and before the singles, so rate_limit_email_sent (needs custom SMTP)
+        # is applied after the SMTP it depends on.
         captcha = [k for k in diff if k.startswith("security_captcha")]
-        groups = [captcha] if captcha else []
-        groups += [[k] for k in diff if k not in captcha]
+        smtp = [k for k in diff if k.startswith("smtp_")]
+        groups = [g for g in (captcha, smtp) if g]
+        groups += [[k] for k in diff if k not in captcha and k not in smtp]
         for group in groups:
             status, err = api.try_patch({k: want[k] for k in group})
             if status >= 400:

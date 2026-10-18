@@ -90,8 +90,7 @@ def main(argv=None) -> int:
     uid, fake = user["id"], str(uuid4())
     c = httpx.Client(timeout=120, transport=httpx.HTTPTransport(retries=3))
     try:
-        r = c.post(a.base + "/auth/login", headers=_h(a.base), json={
-            "email": user["email"], "password": user["password"], "captcha_token": s192.CAPTCHA_TEST})
+        r = s192.app_login(c, a.base, user)
         csrf = r.json()["csrf_token"]
         origins = json.loads((s192.common.ROOT / "data" / "origins.json").read_text(encoding="utf-8"))
         g = c.post(a.base + "/game/new", headers=_h(a.base, csrf), json={

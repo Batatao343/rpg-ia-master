@@ -153,3 +153,25 @@ Vercel `rpg-ia-master-staging`).
   `kill_switch_store_reachable` com `OperationalError` local (passou na rodada anterior). 218 e 219 seguem `in-progress`.
 * **Rollback.** Promover `rpg-ia-master-staging-eovi9utqp-…vercel.app` (pré-onda, cap de texto desligado, mesmo
   runtime DeepSeek) ou `vercel_env.py --no-text-cap` + novo deploy.
+
+## Adendo 2026-10-18 (tarde) — chaves reais: SMTP (R-02), Turnstile (R-01), OpenAI (SPEC-236 §6.3)
+
+Branch `staging-keys` (main `f2516b2` + tooling), sem push. Deploy de produção do staging = `f2516b2` (`/health` com o sha,
+`hardened=true`, site key real em `/auth/config`).
+
+* **R-02 `fechado`.** `auth_config.py` agora aplica SMTP de `.env.staging` (`RPG_STAGING_SMTP_*`, tudo-ou-nada) e os
+  templates/assuntos de `supabase/templates` + `config.toml`; `rate_limit_email_sent` 2→10/h aceito. A chave "Full access"
+  entregue é na verdade só-envio (`restricted_api_key` em `/api-keys`), então virou a senha SMTP direto e nenhuma chave
+  nova foi criada. Signup → confirmação → `/auth/verify` 200; reset ×2 → `/auth/reset/confirm` 200 → login 200; e-mails
+  conferidos na caixa do titular, sem variável não resolvida; usuário apagado. Modo teste: destinatário ≠ titular → Resend
+  550 → GoTrue 500. [evidência](evidence/keys_r02_smtp_resend.json)
+* **R-01 (segue `aceito`).** Secret real no Supabase Auth, site key real na Vercel. `siteverify` confirma o secret; widget
+  renderiza no host; GoTrue/app rejeitam sem token e com token falso. O Turnstile bloqueia o Chrome automatizado, então o
+  200 com token humano depende de 1 cadastro manual. Smokes trocaram login por senha (precisa de captcha) por
+  `generate_link`(signup) + `POST /auth/verify` (`s192.app_login`); `/auth/reauth` usa `RPG_STAGING_SMOKE_CAPTCHA_TOKEN`
+  quando exportado. `e2e_session` verde com as chaves reais. [evidência](evidence/keys_r01_turnstile.json)
+* **SPEC-236 §6.3.** `scripts/staging/stt_fallback_smoke.py`: burst no Groq (45 req, 24×429) + 1 transcrição pelo app →
+  Groq 429 `definitive_no_charge` → OpenAI 429 `insufficient_quota` (conta sem crédito) → 502 `speech_provider_failed`,
+  custo 0, reserva `settled`, `reserved_milli=0`. [evidência](evidence/spec236_s63_stt_fallback.json)
+* **Checklist** (`f2516b2`, URLs legais): 13/14; só `ci_green` (sha não enviado ao GitHub).
+  [relatório](../spec197/evidence/checklist-f2516b20976a.md)

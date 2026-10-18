@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-18",
+  "risk": "R-01",
+  "applied": {"supabase_auth": "security_captcha_secret = real Turnstile secret (auth_config apply; verified=true)",
+              "vercel": "RPG_TURNSTILE_SITE_KEY = real site key (public: 0x4AAAAAAFaJcL9Dy_uAm4Dl), deploy f2516b2 (/health git_sha f2516b20976a, hardened=true)"},
+  "secret_validity_siteverify": {"real_secret_dummy_token": "invalid-input-response", "bogus_secret_dummy_token": "invalid-input-secret"},
+  "server_enforcement": {"app_signup_no_token": 403, "app_signup_dummy_token": "202 generic (GoTrue rejected)",
+                         "gotrue_signup_no_token": "400 captcha_failed", "gotrue_signup_dummy_token": "400 captcha_failed",
+                         "app_login_no_token": 403, "app_login_dummy_token": 401},
+  "widget": {"renders_on": "https://rpg-ia-master-staging.vercel.app (no domain error, checkbox 'Confirme que é humano')",
+             "automated_solve": "blocked: headless and headed Chrome via Playwright never get a token; clicking the checkbox triggers error-callback ('Não foi possível carregar a verificação')"},
+  "not_verified": "200 with a human-solved token (needs one manual signup by the owner on the staging site)",
+  "smokes": "e2e_session green with real keys (session via generate_link + /auth/verify), see keys_e2e_session_real_turnstile.json"
+}

@@ -1,0 +1,59 @@
+{
+  "at": "2026-10-18T13:12:59.547933+00:00",
+  "base": "https://rpg-ia-master-staging.vercel.app",
+  "checks": {
+    "groq_burst": {
+      "ok": true,
+      "reached_429": true,
+      "requests": 45,
+      "status_counts": {
+        "200": 21,
+        "429": 24
+      }
+    },
+    "login": {
+      "ok": true,
+      "status": 200
+    },
+    "transcription": {
+      "billing_status": null,
+      "detail": "speech_provider_failed",
+      "ok": false,
+      "status": 502,
+      "transcript_chars": 0
+    },
+    "usage_events": {
+      "ok": false,
+      "rows": [
+        {
+          "attempt_ordinal": 0,
+          "cost_basis": "definitive_no_charge",
+          "cost_usd": "0.000000000",
+          "counts_as_spend": false,
+          "outcome": "rejected",
+          "provider": "groq"
+        },
+        {
+          "attempt_ordinal": 1,
+          "cost_basis": "definitive_no_charge",
+          "cost_usd": "0.000000000",
+          "counts_as_spend": false,
+          "outcome": "rejected",
+          "provider": "openai"
+        }
+      ]
+    },
+    "wallet": {
+      "available_after": "311",
+      "available_before": "311",
+      "ok": true,
+      "reservation_status": "settled",
+      "reserved_after": "0"
+    }
+  },
+  "cleanup": {
+    "user_delete_status": 200
+  },
+  "deployed_git_sha": "f2516b20976a4205b92056349dc6b3110a8de61c",
+  "ok": false
+}

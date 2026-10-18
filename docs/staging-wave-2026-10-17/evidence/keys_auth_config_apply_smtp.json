@@ -1,0 +1,59 @@
+{
+  "applied": true,
+  "diff": {
+    "mailer_subjects_confirmation": {
+      "from": "Confirm Your Signup",
+      "to": "Confirme seu e-mail em Valoria"
+    },
+    "mailer_subjects_recovery": {
+      "from": "Reset Your Password",
+      "to": "Recupere seu acesso a Valoria"
+    },
+    "mailer_templates_confirmation_content": {
+      "from": "<h2>Confirm your signup</h2>\n\n<p>Follow this link to confirm your user:</p>\n<p><a href=\"{{ .ConfirmationURL }}\">Confirm your mail</a></p>",
+      "to": "<!doctype html>\n<html lang=\"pt-BR\">\n  <body>\n    <p>Confirme seu e-mail para acessar Valoria.</p>\n    <p><a href=\"{{ .SiteURL }}/#auth_action=verify&amp;token_hash={{ .TokenHash }}\">Confirmar e-mail</a></p>\n    <p>Se você não criou esta conta, ignore esta mensagem.</p>\n  </body>\n</html>\n"
+    },
+    "mailer_templates_recovery_content": {
+      "from": "<h2>Reset Password</h2>\n\n<p>Follow this link to reset the password for your user:</p>\n<p><a href=\"{{ .ConfirmationURL }}\">Reset Password</a></p>",
+      "to": "<!doctype html>\n<html lang=\"pt-BR\">\n  <body>\n    <p>Recebemos uma solicitação para redefinir sua senha em Valoria.</p>\n    <p><a href=\"{{ .SiteURL }}/#auth_action=recovery&amp;token_hash={{ .TokenHash }}\">Criar nova senha</a></p>\n    <p>Se você não pediu a recuperação, ignore esta mensagem.</p>\n  </body>\n</html>\n"
+    },
+    "rate_limit_email_sent": {
+      "from": 2,
+      "to": 10
+    },
+    "security_captcha_secret": {
+      "from": "<write-only>",
+      "to": "[REDACTED]"
+    },
+    "smtp_admin_email": {
+      "from": null,
+      "to": "email:4e69d735baaf"
+    },
+    "smtp_host": {
+      "from": null,
+      "to": "smtp.resend.com"
+    },
+    "smtp_pass": {
+      "from": "<write-only>",
+      "to": "[REDACTED]"
+    },
+    "smtp_port": {
+      "from": null,
+      "to": "465"
+    },
+    "smtp_sender_name": {
+      "from": null,
+      "to": "Valoria"
+    },
+    "smtp_user": {
+      "from": null,
+      "to": "resend"
+    }
+  },
+  "failures": {},
+  "mode": "apply",
+  "project_ref": "uzeagzcyvxzrpjgrhaql",
+  "remaining": [],
+  "turnstile_test_keys": false,
+  "verified": true
+}

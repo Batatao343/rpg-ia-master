@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-18T12:50:00Z/12:58:00Z",
+  "spec": "SPEC-197 R4 / risk R-02",
+  "smtp": {"provider": "Resend (test mode, no verified domain)", "host": "smtp.resend.com", "port": "465 (SSL)",
+           "user": "resend", "pass": "[REDACTED: Resend key with sending_access only]",
+           "sender_name": "Valoria", "admin_email": "onboarding@resend.dev",
+           "applied_by": "scripts/staging/auth_config.py apply (values from .env.staging RPG_STAGING_SMTP_*)",
+           "verified": true, "rate_limit_email_sent": {"from": 2, "to": 10, "accepted": true},
+           "templates": "supabase/templates/{confirmation,recovery}.html + subjects from supabase/config.toml"},
+  "resend_key_note": "the key supplied as 'Full access' is restricted (API 401 restricted_api_key on /api-keys and /domains): it is already sending-only, so it is used directly as SMTP password; no extra key created; Resend API /emails listing not available with it -> delivery verified in the recipient mailbox (Gmail) instead",
+  "flows_owner_address": {
+    "recipient": "owner address (the only one Resend test mode delivers to)",
+    "signup": {"app_status": 202, "gotrue": "/signup 200 user_confirmation_requested", "mail_delivered": true,
+               "subject": "Confirme seu e-mail em Valoria", "link": "https://rpg-ia-master-staging.vercel.app/#auth_action=verify&token_hash=<56 hex>",
+               "unresolved_template_vars": 0, "app_verify_status": 200, "email_confirmed": true},
+    "reset": {"app_status": 202, "gotrue": "/recover 200 x2", "mail_delivered": 2,
+              "subject": "Recupere seu acesso a Valoria", "link": "https://rpg-ia-master-staging.vercel.app/#auth_action=recovery&token_hash=<56 hex>",
+              "unresolved_template_vars": 0, "app_reset_confirm_status": 200, "login_with_new_password": 200},
+    "cleanup": {"auth_user_deleted": 200, "remaining_rows": 0}
+  },
+  "non_owner_recipient": {"example.invalid": "GoTrue /signup 500 unexpected_failure: Resend 550 'You can only send testing emails to your own email address' (user not created)",
+                          "delivered+tag@resend.dev": "GoTrue /signup 200 (Resend test address accepted); user deleted"},
+  "smoke_tooling": "synthetic users no longer depend on mail: s192.Admin.create_user uses admin generate_link(signup) (no mail sent) and app_login() posts the token hash to /auth/verify",
+  "limit": "Resend test mode: only the account owner's address receives mail until a domain is verified and RPG_STAGING_SMTP_ADMIN_EMAIL moves to it"
+}

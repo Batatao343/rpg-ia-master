@@ -25,6 +25,8 @@
 > da 224. **Aberto:** rate card sem Jina → cada embedding conta US$ 1 de gasto estimado. Detalhes e rollback:
 > [docs/staging-wave-2026-10-17/README.md](docs/staging-wave-2026-10-17/README.md).
 
+> **18/10 (tarde) — chaves reais no staging:** R-02 `fechado` (SMTP Resend em modo teste, remetente "Valoria"; `rate_limit_email_sent` 10/h; signup+confirmação e reset ponta a ponta com o e-mail do titular; templates do repo) e Turnstile real (secret no Supabase Auth, site key no deploy f2516b2; sem token/token falso → 400/403; 200 com token humano pendente — automação bloqueada, R-01 segue `aceito`). Smokes abrem sessão por `generate_link`+`/auth/verify`. `OPENAI_API_KEY` no staging, mas conta sem créditos (SPEC-236 §6.3: 429 Groq real → OpenAI 429 `insufficient_quota`, custo 0, reserva 0). `checklist --env staging` 13/14: só `ci_green` (main local não enviada). Specs 218/219/222/236 seguem `in-progress`. Evidência: `docs/staging-wave-2026-10-17/evidence/keys_*`.
+
 > **15–16/10 — 38 specs `draft` aguardando aprovação (SPEC-199–236); ordem em `proximas-specs/ORDEM_SPECS_2026-10-15.md`.**
 > 199–217 = onda "beta desktop" (pacote `proximas-specs/`, revisada por Opus); 218–225 = auditoria de segurança
 > (1 alta: perfil `legacy` sem auth é o default e `Procfile` escuta 0.0.0.0 → SPEC-218); 226–236 = auditoria de bugs

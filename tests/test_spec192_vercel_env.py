@@ -104,3 +104,13 @@ def test_projection_mode_flag_sets_post_response_and_inline_deletes_it():
     assert "RPG_PROJECTION_MODE" not in ve.stale_names(on)
     with pytest.raises(ValueError):
         ve.build_env(FILES, projection_mode="job")
+
+
+def test_real_turnstile_site_key_and_optional_openai_key_stay_out_of_preview():
+    from scripts.staging import vercel_env
+    files = {k: "v" for k in vercel_env.SECRET_FROM_FILE}
+    prod, _ = vercel_env.build_env(files)
+    assert prod["RPG_TURNSTILE_SITE_KEY"] == vercel_env.TURNSTILE_TEST_SITE_KEY and "OPENAI_API_KEY" not in prod
+    prod, preview = vercel_env.build_env({**files, "TURNSTILE_SITE_KEY": "0x4real", "OPENAI_API_KEY": "sk-x"})
+    assert prod["RPG_TURNSTILE_SITE_KEY"] == "0x4real" and prod["OPENAI_API_KEY"] == "sk-x"
+    assert "OPENAI_API_KEY" not in preview and "OPENAI_API_KEY" in vercel_env.FORBIDDEN_IN_PREVIEW

@@ -157,8 +157,7 @@ def run(base: str, env: dict, label: str, turns: int, think: float, settle_s: fl
     game_id = ""
     c = httpx.Client(timeout=60, follow_redirects=False, transport=httpx.HTTPTransport(retries=3))
     try:
-        r = c.post(f"{base}/auth/login", headers=_h(base),
-                   json={"email": user["email"], "password": user["password"], "captcha_token": s192.CAPTCHA_TEST})
+        r = s192.app_login(c, base, user)
         csrf = (r.json() if r.status_code == 200 else {}).get("csrf_token") or c.cookies.get("rpg_csrf") or ""
         origins = json.loads((s192.common.ROOT / "data" / "origins.json").read_text(encoding="utf-8"))
         body = {"name": "Spec213 Heroi", "race": origins["races"][0]["name"], "class_name": "Devoto do Abismo",

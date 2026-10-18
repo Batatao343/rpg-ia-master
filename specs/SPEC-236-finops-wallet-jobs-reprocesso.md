@@ -8,7 +8,8 @@
 > retroativo no audit imutável não permitido no staging; sem chave OpenAI p/ fallback de STT) — seguem cobertos
 > pelos testes offline/`infra_local`. Status segue `in-progress`.
 > Evidência: [docs/spec236/README.md](../docs/spec236/README.md).
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
+> **18/10 (OpenAI no staging):** §6.3 exercido com 429 REAL do Groq (burst de 45 req com a chave do staging, 24×429) → fallback OpenAI tentado, mas a conta OpenAI respondeu 429 `insufficient_quota` (sem créditos): as 2 tentativas = `definitive_no_charge`, custo 0, `counts_as_spend=false`, reserva `settled` e `reserved_milli=0`, saldo intacto; transcrição pelo fallback **não** ocorreu (falta crédito na OpenAI). §6.2 segue não exercido (a spec não prevê dispensa). Status segue `in-progress`. Evidência: `docs/staging-wave-2026-10-17/evidence/spec236_s63_stt_fallback.json`.
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-18
 > **Depende de:** nenhuma · SPEC-182/184/186/188/189/195/196 `done` e o teto diário da SPEC-197 são corrigidos (ordem final 2026-10-15)
 > **Desbloqueia:** gate da SPEC-197/198 (custos e teto diário confiáveis); custo exato da SPEC-200 (ordem final 2026-10-15)
 > **Origem:** auditoria de bugs 2026-10-15 — achados BUG-08-01..08-09, 04-02, 04-03, 04-08 (`achados/08-billing-jobs.md`, `04-persistencia-concorrencia.md`)

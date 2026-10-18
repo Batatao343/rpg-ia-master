@@ -101,7 +101,15 @@ def sequence_summary(events: list[dict]) -> list[str]:
 
 
 class Admin:
-    """Synthetic Auth users through the Admin API (email_confirm=true)."""
+    """Synthetic Auth users through the Admin API.
+
+    R-01 (real Turnstile on staging): password login needs a browser-solved captcha, so synthetic users
+    are created with ``generate_link`` type ``signup`` (no email is sent) and enter through the SAME path a
+    real user takes after clicking the confirmation email: ``POST /auth/verify`` with the token hash (no
+    captcha there by design). R-02 (Resend in test mode) is untouched: nothing is mailed to the
+    ``@example.invalid`` addresses. Flows that need a captcha (``/auth/reauth``, password login probes)
+    use ``RPG_STAGING_SMOKE_CAPTCHA_TOKEN`` when given (fresh, browser-solved) or the dummy token.
+    """
 
     def __init__(self, env: dict[str, str]):
         self.url = env["SUPABASE_URL"].rstrip("/")
@@ -115,16 +123,28 @@ class Admin:
     def create_user(self) -> dict:
         email = f"spec192-{uuid4().hex[:10]}@example.invalid"
         password = secrets.token_urlsafe(24)
-        r = self.http.post(f"{self.url}/auth/v1/admin/users", headers=self.headers,
-                           json={"email": email, "password": password, "email_confirm": True})
+        r = self.http.post(f"{self.url}/auth/v1/admin/generate_link", headers=self.headers,
+                           json={"type": "signup", "email": email, "password": password})
         r.raise_for_status()
-        return {"id": r.json()["id"], "email": email, "password": password}
+        body = r.json()
+        return {"id": body["id"], "email": email, "password": password, "token_hash": body["hashed_token"]}
 
     def delete_user(self, uid: str) -> int:
         return self.http.delete(f"{self.url}/auth/v1/admin/users/{uid}", headers=self.headers).status_code
 
     def user_exists(self, uid: str) -> bool:
         return self.http.get(f"{self.url}/auth/v1/admin/users/{uid}", headers=self.headers).status_code == 200
+
+
+def smoke_captcha() -> str:
+    """Captcha for flows that cannot avoid it: a fresh browser-solved token if exported, else the dummy."""
+    return os.environ.get("RPG_STAGING_SMOKE_CAPTCHA_TOKEN") or CAPTCHA_TEST
+
+
+def app_login(c: httpx.Client, base: str, user: dict) -> httpx.Response:
+    """Open an app session (cookies + CSRF) for a synthetic user via the email-confirmation link path."""
+    return c.post(f"{base}/auth/verify", headers={"Origin": base, "Content-Type": "application/json"},
+                  json={"token_hash": user["token_hash"], "type": "signup"})
 
 
 def sweep_synthetic_users(env: dict[str, str]) -> int:

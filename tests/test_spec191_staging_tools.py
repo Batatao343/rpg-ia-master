@@ -277,3 +277,44 @@ def test_per_ip_summary_counts_stalls():
     summary = smoke_ab.per_ip_summary(_rows([30.0] * 7, errors=[5001.0, 5002.0, 12.0]), 5)
     assert summary["n"] == 10 and summary["errors"] == 3 and summary["timeouts"] == 2
     assert summary["timeout_rate"] == 0.2 and summary["error_types"] == ["ConnectionTimeout"]
+
+
+_SMTP = {"RPG_STAGING_SMTP_HOST": "smtp.example.test", "RPG_STAGING_SMTP_PORT": "465",
+         "RPG_STAGING_SMTP_USER": "mailer", "RPG_STAGING_SMTP_PASS": "smtp-secret",
+         "RPG_STAGING_SMTP_ADMIN_EMAIL": "noreply@example.test", "RPG_STAGING_SMTP_SENDER_NAME": "Valoria"}
+
+
+def test_auth_config_smtp_from_env_all_or_nothing_and_templates_from_repo():
+    assert not any(k.startswith("smtp_") for k in auth_config.desired_config(_env()))
+    cfg = auth_config.desired_config({**_env(), **_SMTP})
+    assert cfg["smtp_host"] == "smtp.example.test" and cfg["smtp_pass"] == "smtp-secret"
+    assert cfg["smtp_sender_name"] == "Valoria" and cfg["rate_limit_email_sent"] >= 1
+    partial = {k: v for k, v in _SMTP.items() if k != "RPG_STAGING_SMTP_PASS"}
+    with pytest.raises(SystemExit):
+        auth_config.desired_config({**_env(), **partial})
+    for name in ("confirmation", "recovery"):
+        body = cfg[f"mailer_templates_{name}_content"]
+        assert "{{ .TokenHash }}" in body and "ConfirmationURL" not in body and "Valoria" in cfg[f"mailer_subjects_{name}"]
+    alias = {k: v for k, v in _env().items() if k != "RPG_STAGING_TURNSTILE_SECRET"} | {"TURNSTILE_SECRET_KEY": "cf"}
+    assert auth_config.desired_config(alias)["security_captcha_secret"] == "cf"
+
+
+def test_auth_config_apply_sends_smtp_before_email_rate_limit_and_redacts_pass():
+    state: dict = {}
+    patches = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.method == "PATCH":
+            body = json.loads(request.content)
+            patches.append(sorted(body))
+            if "rate_limit_email_sent" in body and not state.get("smtp_host"):
+                return httpx.Response(400, json={"message": "custom SMTP required"})
+            state.update({k: v for k, v in body.items() if k not in auth_config.SECRET_FIELDS})
+        return httpx.Response(200, json=state)
+
+    result = auth_config.run("apply", REF, {**_env(), **_SMTP}, httpx.Client(transport=httpx.MockTransport(handler)))
+    smtp_idx = next(i for i, p in enumerate(patches) if "smtp_host" in p)
+    rl_idx = next(i for i, p in enumerate(patches) if p == ["rate_limit_email_sent"])
+    assert smtp_idx < rl_idx and set(patches[smtp_idx]) == set(auth_config.SMTP_ENV)
+    assert result["verified"] and not result["failures"]
+    assert "smtp-secret" not in json.dumps(result)

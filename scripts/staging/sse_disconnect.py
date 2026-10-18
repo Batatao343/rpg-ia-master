@@ -30,8 +30,7 @@ def run(base: str, env: dict) -> dict:
     game_ids: list[str] = []
     c = httpx.Client(timeout=60, follow_redirects=False, transport=httpx.HTTPTransport(retries=3))
     try:
-        creds = {"email": user["email"], "password": user["password"], "captcha_token": s192.CAPTCHA_TEST}
-        r = c.post(f"{base}/auth/login", headers=_h(base), json=creds)
+        r = s192.app_login(c, base, user)
         csrf = (r.json() if r.status_code == 200 else {}).get("csrf_token") or c.cookies.get("rpg_csrf") or ""
         origins = json.loads((s192.common.ROOT / "data" / "origins.json").read_text(encoding="utf-8"))
         r = c.post(f"{base}/game/new", headers=_h(base, csrf), timeout=180, json={

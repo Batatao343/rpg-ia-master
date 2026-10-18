@@ -116,7 +116,7 @@ def run(base: str, env: dict[str, str], *, auth220: bool = True) -> dict:
                                           "ok": codes[-1] == 429 and 429 not in codes[:-1]}
 
         # --- SPEC-222: export with the new tables, no purchase token --------------------------
-        ra = b.post("/auth/reauth", {"password": b.info["password"], "captcha_token": s192.CAPTCHA_TEST})
+        ra = b.post("/auth/reauth", {"password": b.info["password"], "captcha_token": s192.smoke_captcha()})
         ex = b.get("/account/export", timeout=120)
         body = ex.json() if ex.status_code == 200 else {}
         tables = sorted((body.get("tables") or body.get("data") or {}).keys()) if isinstance(body, dict) else []

@@ -62,8 +62,7 @@ def main(argv=None) -> int:
     admin = s192.Admin(env)
     user = admin.create_user()
     try:
-        r = c.post(a.base + "/auth/login", headers=_h(a.base), json={
-            "email": user["email"], "password": user["password"], "captcha_token": s192.CAPTCHA_TEST})
+        r = s192.app_login(c, a.base, user)
         dbms = [timed_get(c, a.base + "/game/saves")[1] for _ in range(20)]
         out["db_route_game_saves_warm"] = {**s192.stats(dbms), "login_status": r.status_code}
         c.post(a.base + "/auth/logout", headers=_h(a.base, r.json().get("csrf_token")))

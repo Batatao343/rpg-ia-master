@@ -1,6 +1,6 @@
 # SPEC-222 — Privacidade/LGPD: logs sem conteúdo de jogo, exclusão/export completos e transparência
 
-> **Status:** `in-progress` (17/10: migration `20261016120000` aplicada no staging; smoke parcial verde — sentinela ausente dos logs da função, `/account/export` com as tabelas novas e sem `purchase_token`. Faltam: compra fake/teste (Play fake é proibido em hosted) e delete de campanha com arte (sem gerador pago no staging), e o texto legal da política pelo titular)
+> **Status:** `in-progress` (18/10: SMTP próprio no staging (Resend, modo teste) e páginas legais finais publicadas; seguem pendentes compra fake/teste com `purchase_token IS NULL`, delete de campanha com arte (o staging agora tem `OPENAI_API_KEY`, mas a conta OpenAI está sem créditos — 429 `insufficient_quota`) e o domínio de produção. 17/10: migration `20261016120000` aplicada no staging; smoke parcial verde — sentinela ausente dos logs da função, `/account/export` com as tabelas novas e sem `purchase_token`. Faltam: compra fake/teste (Play fake é proibido em hosted) e delete de campanha com arte (sem gerador pago no staging), e o texto legal da política pelo titular)
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
 > **Depende de:** nenhuma · evolui SPEC-190/194/195 `done`; complementa SPEC-197 R3/R-10 (ordem final 2026-10-15)
 > **Desbloqueia:** gate legal da SPEC-197; Data Safety da SPEC-198 (ordem final 2026-10-15)
