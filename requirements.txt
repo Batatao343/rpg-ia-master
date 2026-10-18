@@ -111,7 +111,7 @@ langchain-core==1.6.0
     #   rpg-ia-master
 langchain-google-genai==4.3.4
     # via rpg-ia-master
-langchain-openai==1.6.0
+langchain-openai==1.7.2
     # via rpg-ia-master
 langchain-protocol==0.0.18
     # via
