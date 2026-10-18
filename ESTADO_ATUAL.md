@@ -1,3 +1,4 @@
+> **18/10 — gate de release (SPEC-197) no staging:** deploy a3f87e6 (`hardened=true`, páginas `/privacidade` `/termos` `/reembolso` `/suporte` finais no ar); riscos R-01/03/06/07/09/11/13 `aceito` pelo titular (declaração de 18/10), R-10 e R-14 `fechado` com evidência; `checklist --env staging` bloqueado só por R-02 (SMTP, chave Resend pendente) e R-12 (cron em produção inexistente). SPEC-218/219 seguem `in-progress` por isso.
 > **17/10 — SPEC-216 `done`:** mobile single-pane (< 900px, barra "Superfícies"); journeys < 900px adaptadas, Playwright completo 0 falhas (exceto 2 `account-lifecycle` que falham igual em main), smoke AVD rpg34 contra API local (barra, teclado, voltar ok; liberação do mic só no Chromium, WebView local não é contexto seguro). Publicar exige aprovação do environment `eval-governance`.
 
 # ESTADO_ATUAL.md — Handoff para a próxima sessão de código

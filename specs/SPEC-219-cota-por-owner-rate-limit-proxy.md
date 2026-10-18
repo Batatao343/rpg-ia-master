@@ -1,6 +1,6 @@
 # SPEC-219 — Cota de custo por owner, cobertura do rate limit e IP real atrás de proxy
 
-> **Status:** `in-progress` (17/10: todos os critérios próprios verdes no staging — R5 medido em 2 redes (ISP local + `pg_net` do Supabase), cap de texto R8 ligado com 32 turnos sem 503; código da SPEC-218 já está na `main`. Único pendente: a dependência SPEC-218 virar `done`, que espera itens do gate de release da SPEC-197 (páginas legais, riscos P0/P1, environments do GitHub, CI do sha). Ver `docs/staging-wave-2026-10-17/README.md`)
+> **Status:** `in-progress` (18/10: único pendente segue sendo a SPEC-218 `done`; o gate da SPEC-218 agora só espera R-02 (SMTP) e R-12 (cron de producao) no checklist staging — ver SPEC-218. 17/10: todos os critérios próprios verdes no staging.)
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
 > **Depende de:** SPEC-218 `done` (processo exposto sempre em perfil DB) · evolui SPEC-182/185/196 `done` e SPEC-197 `in-progress` sem reabri-las (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212; gate da SPEC-197; follow-up de cobrança por turno (SPEC-185) (ordem final 2026-10-15)
