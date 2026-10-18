@@ -1,6 +1,6 @@
 # SPEC-271 — Apagar exports mortos do cliente web
 
-> **Status:** `draft` · **Revisão independente 2026-10-18:** SAFE WITH CHANGES (`currentPurchaseAdapter` sai da lista; ver §8)
+> **Status:** `done` · **Revisão independente 2026-10-18:** SAFE WITH CHANGES (`currentPurchaseAdapter` sai da lista; ver §8)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Origem:** auditoria ponytail 2026-10-18 ([relatório](../docs/auditorias/ponytail-poda-2026-10-18.md))
 > **Depende de:** —

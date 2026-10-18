@@ -274,10 +274,6 @@ export const deleteSave = (game_id: string) =>
     headers: { "Idempotency-Key": crypto.randomUUID() },
   });
 
-// spec polish-sessao (R5): URL de download da crônica (.txt).
-export const chronicleExportUrl = (game_id: string) =>
-  "/game/chronicle/export?game_id=" + encodeURIComponent(game_id);
-
 export const searchChronicle = (
   payload: { game_id: string; query: string; top_k?: number },
   signal?: AbortSignal,

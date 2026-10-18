@@ -117,6 +117,3 @@ export function basicPayload(action: BasicActionView, targetId: string | undefin
   return [text, { action_kind: action.kind, maneuver: action.maneuver, target_id: targetId,
     reaction_card_id: reaction || undefined }];
 }
-
-/** Ataque básico para servidor antigo (sem `basic_actions`). */
-export const LEGACY_ATTACK: BasicActionView = { kind: "attack", valid_targets: [], invalid_reason: null, cost: 0 };

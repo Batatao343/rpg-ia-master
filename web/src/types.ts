@@ -5,13 +5,6 @@
 // não é ação de combate clicável; ganham selo na ficha.
 export type AbilityKind = "active" | "passive" | "utility";
 
-export interface AbilityRef {
-  id: string;
-  name: string;
-  branch: string | null;
-  kind?: AbilityKind;
-}
-
 export interface PendingChoice {
   id: string;
   level: number;
