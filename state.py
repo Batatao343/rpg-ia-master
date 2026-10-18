@@ -125,10 +125,6 @@ class PlayerStats(TypedDict, total=False):
     race: str
     hp: int                         # alias legado derivado de vitalidade
     max_hp: int                     # alias legado derivado de max_vitalidade
-    mana: int
-    max_mana: int
-    stamina: int
-    max_stamina: int
     # spec refatoracao-sistema-classes: Entropia = pool ÚNICO das 5 classes novas
     # (substitui mana+stamina do jogador; inimigos seguem em mana/stamina).
     # Recompõe integral no descanso. Carga do Abismo = recurso de longo prazo

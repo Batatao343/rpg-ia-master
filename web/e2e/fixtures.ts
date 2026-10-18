@@ -16,7 +16,7 @@ export function gameState(gameId = "game-a", name = "Ayla"): GameResponse {
     player_stats: {
       name, class_name: "Devoto do Abismo", race: "Humano", hp: 20, max_hp: 20,
       vitalidade: 20, max_vitalidade: 20, ferimentos: {}, dead: false, estado_terminal: false,
-      mana: 0, max_mana: 0, stamina: 0, max_stamina: 0, entropy: 8, max_entropy: 10,
+      entropy: 8, max_entropy: 10,
       abyss_charge: 0, abyss_tier: "nenhum", defense: 12, gold: 25, level: 1, xp: 0,
       cards: [card("golpe", "Golpe do Véu"), card("aparar", "Aparar", "reacao")],
       virtudes: { forca: 2, agilidade: 2, corpo: 2, mente: 2, carisma: 2 }, xp_next_level: 100,

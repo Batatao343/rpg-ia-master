@@ -45,8 +45,6 @@ def check_vitals(state: dict, prev: Optional[dict], turn: int) -> List[Violation
         # check_vitality_consistency.
         for res, cap in (
             ("vitalidade", "max_vitalidade"),
-            ("mana", "max_mana"),
-            ("stamina", "max_stamina"),
         ):
             cur = entity.get(res)
             mx = entity.get(cap)

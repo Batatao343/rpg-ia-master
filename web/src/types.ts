@@ -65,10 +65,6 @@ export interface PlayerStats {
   ferimentos: Record<string, Array<Record<string, unknown>>>;
   dead: boolean;
   estado_terminal: boolean;
-  mana: number;
-  max_mana: number;
-  stamina: number;
-  max_stamina: number;
   // spec refatoracao-sistema-classes: Entropia (pool das 5 Posturas) + Carga do Abismo.
   entropy?: number;
   max_entropy?: number;

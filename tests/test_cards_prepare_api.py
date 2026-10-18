@@ -110,6 +110,8 @@ def test_apex_409_com_location_injetada(client):
     assert "apex" in r.text.lower() or "perigos" in r.text.lower()
     ps = _state_resp(client, gid)["player_stats"]
     assert ps["can_reorganize"]["allowed"] is False and ps["can_reorganize"]["reason"]
+    # SPEC-265: recurso legado mana/stamina saiu da view pública do jogador
+    assert not {"mana", "max_mana", "stamina", "max_stamina"} & set(ps)
 
 
 def test_location_transitoria_nao_persistida(client):

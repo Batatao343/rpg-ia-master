@@ -1672,10 +1672,6 @@ def format_response(state: dict, *, cue_action_key: Optional[str] = None) -> Gam
             # aliases públicos derivados — nunca lidos de volta como mecânica
             "hp": vitality,
             "max_hp": max_vitality,
-            "mana": player.get("mana", 0),
-            "max_mana": player.get("max_mana", 0),
-            "stamina": player.get("stamina", 0),
-            "max_stamina": player.get("max_stamina", 0),
             # spec refatoracao-sistema-classes (R11): Entropia (barra) + Carga do
             # Abismo (chip por patamar). Médico é oculto (abyss.hidden) → label vago.
             "entropy": player.get("entropy", 0),

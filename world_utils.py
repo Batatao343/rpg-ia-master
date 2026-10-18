@@ -287,11 +287,6 @@ def apply_rest(player: dict, world: dict, allies: list = None) -> Tuple[dict, di
             player["conscious"] = False
         gamedata.sync_legacy_hp_aliases(player)
 
-    for res, mx in (("mana", "max_mana"), ("stamina", "max_stamina")):
-        if mx in player:
-            ceiling = player.get(mx, 0)
-            recover = max(1, ceiling // 2)
-            player[res] = min(ceiling, player.get(res, 0) + recover)
     if not is_v4 and "max_hp" in player:
         # Compatibilidade isolada com fichas arquivadas.
         ceiling = int(player.get("max_hp", 0) or 0)

@@ -517,8 +517,6 @@ select {
 .bar__fill { height: 100%; width: 100%; border-radius: var(--r-pill); transition: width 0.55s var(--ease), background 0.3s var(--ease); }
 .bar[data-kind="hp"] .bar__fill { background: linear-gradient(90deg, var(--danger), var(--danger-bright)); box-shadow: 0 0 12px -2px var(--danger-glow); }
 .bar[data-kind="hp"].is-low .bar__fill { animation: throb 1.3s var(--ease) infinite; }
-.bar[data-kind="mana"] .bar__fill { background: var(--mana); box-shadow: 0 0 12px -3px var(--mana); }
-.bar[data-kind="stamina"] .bar__fill { background: var(--stamina); box-shadow: 0 0 12px -3px var(--stamina); }
 /* spec refatoracao-sistema-classes: Entropia — roxo-abissal (pool das 5 Posturas) */
 .bar[data-kind="entropy"] .bar__fill { background: linear-gradient(90deg, #6d3b9e, #a15be0); box-shadow: 0 0 12px -2px #8a4fd0; }
 .bar.is-hit { animation: barhit 0.5s var(--ease); }

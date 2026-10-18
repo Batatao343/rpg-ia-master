@@ -1,6 +1,6 @@
 # SPEC-265 — Remover o recurso legado mana/stamina do jogador
 
-> **Status:** `draft` · **Revisão independente 2026-10-18:** SAFE WITH CHANGES (tokens CSS, fixtures e2e, `mana_bonus`, fallback do HUD; ver §8)
+> **Status:** `in-progress` · **Revisão independente 2026-10-18:** SAFE WITH CHANGES (tokens CSS, fixtures e2e, `mana_bonus`, fallback do HUD; ver §8)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Origem:** auditoria ponytail 2026-10-18 ([relatório](../docs/auditorias/ponytail-poda-2026-10-18.md))
 > **Depende de:** —
@@ -117,3 +117,9 @@ Achados que mudaram a spec:
 4. `data/origins.json` tem `mana_bonus` **e** `stamina_bonus`: os dois chips do `CreateScreen` ficam (R4 corrigido).
 5. `EnemyStats` (`state.py:194-195`) e 19 criaturas do bestiário mantêm `mana`/`stamina`; a lista de
    fixtures de teste do R5 omitia ~10 arquivos, a maioria com chaves de inimigo que devem ficar.
+
+## 9. Execução 2026-10-18
+
+Implementado (R1–R5 revisados): removidos `max_mana/max_stamina` e `mana/stamina` do jogador em `state.py` (`EnemyStats` intacto), `world_utils.apply_rest`, view `/game/state` (`format_response`: perde `mana`, `max_mana`, `stamina`, `max_stamina`, sempre 0), `playtest/invariants.bounds`, `web/src/types.ts`, HUD (R1c: sempre desenha a barra de Entropia, 0/0 se não houver; o chip de Carga segue gated por `max_entropy>0`), regras CSS `.bar[data-kind=mana|stamina]`, fixture `web/e2e/fixtures.ts`. Mantidos: tokens `--mana/--stamina` (R1a), `persistence._MIGRATIONS` (R2), inimigos/bestiário (R3), chips `mana_bonus/stamina_bonus` da criação (R4). Testes: `test_fase0` ajustado; `test_cards_prepare_api` assevera a ausência das 4 chaves na view; demais fixtures de jogador com chaves extras ficam (opcional). Nenhum arquivo protegido de eval editado (nenhum dataset/jornada cita mana).
+
+Verificado: pytest completo, ruff, `npm test` 126/126, `npm run build`, Playwright chromium (critical-journeys F01–F35 incl. HUD, deck-character, combat-gesture, workspace-shell). **Status `in-progress`**: REVIEW_REQUIRED (Astra/Sol) pendente; mudança de contrato da API documentada acima; falta teste de componente do HUD 0/0 (sem harness de componente — coberto só por tsc/e2e) e smoke manual 390/1440 px.

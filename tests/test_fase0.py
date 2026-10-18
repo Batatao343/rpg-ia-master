@@ -72,11 +72,11 @@ def test_apply_travel_reveals_and_advances():
 # Descanso
 # --------------------------------------------------------------------------
 def test_apply_rest_heals_and_passes_time():
-    player = {"hp": 1, "max_hp": 40, "mana": 0, "max_mana": 10, "stamina": 0, "max_stamina": 20}
+    player = {"hp": 1, "max_hp": 40}
     w = wu.ensure_world({"current_location_id": "nova_arcadia"})
     p2, w2 = wu.apply_rest(player, w)
     assert p2["hp"] > 1 and p2["hp"] <= 40
-    assert p2["stamina"] > 0
+    assert "stamina" not in p2 and "mana" not in p2  # SPEC-265
     assert w2["world_clock"] != w["world_clock"]
 
 

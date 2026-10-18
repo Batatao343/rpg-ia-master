@@ -36,16 +36,8 @@ export function FichaTab({ data, hpHitKey, onEquip, busy }: {
       <div className="bars">
         <Bar kind="hp" label="Vitalidade" cur={p?.vitalidade ?? 0} max={p?.max_vitalidade ?? 0}
              low={vitalityLow} hitKey={hpHitKey} />
-        {/* spec refatoracao-sistema-classes: Entropia é o pool das 5 Posturas.
-            Saves antigos sem Entropia (mana/stamina) mantêm as barras legadas. */}
-        {(p?.max_entropy ?? 0) > 0 ? (
-          <Bar kind="entropy" label="Entropia" cur={p?.entropy ?? 0} max={p?.max_entropy ?? 0} />
-        ) : (
-          <>
-            <Bar kind="mana" label="Mana" cur={p?.mana ?? 0} max={p?.max_mana ?? 0} />
-            <Bar kind="stamina" label="Vigor" cur={p?.stamina ?? 0} max={p?.max_stamina ?? 0} />
-          </>
-        )}
+        {/* spec refatoracao-sistema-classes: Entropia é o pool das 5 Posturas (SPEC-265: sem barras legadas). */}
+        <Bar kind="entropy" label="Entropia" cur={p?.entropy ?? 0} max={p?.max_entropy ?? 0} />
       </div>
       {(p?.max_entropy ?? 0) > 0 && <AbyssChip tier={p?.abyss_tier} charge={p?.abyss_charge ?? 0} />}
 
@@ -493,7 +485,7 @@ function Combat({ c, hitKey, cds, arena }: { c: CombatBlock; hitKey: number; cds
 function Bar({
   kind, label, cur, max, low, hitKey,
 }: {
-  kind: "hp" | "mana" | "stamina" | "entropy"; label: string; cur: number; max: number; low?: boolean; hitKey?: number;
+  kind: "hp" | "entropy"; label: string; cur: number; max: number; low?: boolean; hitKey?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const first = useRef(true);
