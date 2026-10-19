@@ -145,7 +145,7 @@ def test_timeout_is_terminal_and_does_not_leak_request() -> None:
 
 def test_total_deadline_rejects_slow_success() -> None:
     def handler(_request: httpx.Request) -> httpx.Response:
-        time.sleep(0.2)
+        time.sleep(0.8)  # far beyond the 0.02 s deadline
         return httpx.Response(200, json=FIXTURE)
 
     with httpx.Client(transport=httpx.MockTransport(handler)) as client:
@@ -155,13 +155,13 @@ def test_total_deadline_rejects_slow_success() -> None:
         start = time.monotonic()
         with pytest.raises(JevTimeoutError):
             backend.decide(_request())
-        assert time.monotonic() - start < 0.15
+        assert time.monotonic() - start < 0.5  # did not wait for the slow side (margin for loaded CI)
 
 
 def test_total_deadline_covers_response_parsing() -> None:
     class SlowJsonResponse(httpx.Response):
         def json(self, **kwargs):
-            time.sleep(0.2)
+            time.sleep(0.8)  # far beyond the 0.02 s deadline
             return FIXTURE
 
     with httpx.Client(transport=httpx.MockTransport(lambda _: SlowJsonResponse(200))) as client:
@@ -171,7 +171,7 @@ def test_total_deadline_covers_response_parsing() -> None:
         start = time.monotonic()
         with pytest.raises(JevTimeoutError):
             backend.decide(_request())
-        assert time.monotonic() - start < 0.15
+        assert time.monotonic() - start < 0.5  # did not wait for the slow side (margin for loaded CI)
 
 
 def test_timed_out_worker_is_quarantined_and_close_blocks_new_calls() -> None:
