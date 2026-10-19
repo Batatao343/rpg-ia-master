@@ -12,6 +12,7 @@ from uuid import UUID
 
 from infrastructure.contracts import Principal
 from infrastructure.postgres import PostgresPool
+from infrastructure.usage_events import has_column
 
 
 def _category_sql(alias: str = "u") -> str:
@@ -89,10 +90,13 @@ class PostgresAccountReader:
         limit = _page_limit(limit)
         after = _cursor(cursor)
         with admin_connection(self.pool) as connection:
+            # SPEC-279: usage of a deleted campaign stays listed (operation gone, kind snapshot kept).
+            kind = ("coalesce(u.operation_kind,o.kind)"
+                    if has_column(connection, "app.usage_events", "operation_kind") else "o.kind")
             rows = connection.execute(
                 f"""select u.event_id,u.created_at,u.game_id,{_category_sql()} as category,
-                           o.kind as operation_kind
-                    from app.usage_events u join app.operations o
+                           {kind} as operation_kind
+                    from app.usage_events u left join app.operations o
                       on o.id=u.operation_id and o.owner_id=u.owner_id
                     where u.owner_id=%s
                       and (%s::timestamptz is null or (u.created_at,u.event_id) < (%s,%s::uuid))

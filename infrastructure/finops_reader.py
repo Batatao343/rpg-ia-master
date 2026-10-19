@@ -131,15 +131,19 @@ class PostgresFinopsReader:
 
     def ops_counts(self, since, until):
         with admin_connection(self.pool) as db:
-            row = db.execute("""select
-                count(distinct e.operation_id) filter (where o.kind='turn') as turns,
+            # SPEC-279: a deleted campaign keeps its usage (operation row gone, id kept); the
+            # kind snapshot keeps it counted. Pre-migration schema falls back to the join.
+            kind = ("coalesce(e.operation_kind,o.kind)"
+                    if has_column(db, "app.usage_events", "operation_kind") else "o.kind")
+            row = db.execute(f"""select
+                count(distinct e.operation_id) filter (where {kind}='turn') as turns,
                 count(*) filter (where e.category='image' and e.outcome = any(%s)) as images,
                 coalesce(sum(e.audio_units) filter (where e.category='speech_to_text'
                     and e.provider = any(%s)),0) as voice_ms,
                 coalesce(sum(e.cost_usd) filter (where e.category='speech_to_text'
                     and e.provider = any(%s)
                     and e.cost_basis not in ('failed_no_usage','definitive_no_charge')),0) as voice_cost
-                from app.usage_events e join app.operations o on o.id=e.operation_id
+                from app.usage_events e left join app.operations o on o.id=e.operation_id
                 where e.created_at >= %s and e.created_at < %s""",
                              (list(SUCCESS), list(DURATION_STT_PROVIDERS),
                               list(DURATION_STT_PROVIDERS), since, until)).fetchone()
