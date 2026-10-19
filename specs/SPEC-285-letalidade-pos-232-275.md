@@ -1,6 +1,6 @@
 # SPEC-285 — Letalidade pós-232/275/283: medir → decidir → ajustar
 
-> **Status:** `approved` (aprovada sob a autorização do dono de 19/10 para tudo que não exige ação externa dele; a meta da §2 é decisão do coordenador sob essa autorização)
+> **Status:** `done` (revisão Opus APPROVED em 2026-10-19; aprovada sob a autorização do dono de 19/10 para tudo que não exige ação externa dele; a meta da §2 é decisão do coordenador sob essa autorização)
 > **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
 > **Origem:** SPEC-232 ("letalidade sobe — rebalancear"), SPEC-275 (quebra de impasse) e SPEC-283 §8 (medição 0,564 → 0,598 no playtest; 0,707 → 0,730 na arena)
 > **Depende de:** SPEC-232, SPEC-275, SPEC-283 e SPEC-286 (`done`)
@@ -128,7 +128,9 @@ Por isso a meta é composta. É decisão do coordenador sob a autorização do d
   - `_resolve_actor_turn`: quando o ator está fora do lado inimigo, usa
     `acao.kind == "card"` e mira alguém do mesmo lado, cada `cards_used` vira um
     evento para `_extend_ally_defense` (R3). A própria função filtra o tipo
-    defensivo, o alvo diferente do ator e o alvo que já agiu.
+    defensivo, o alvo diferente do ator e o alvo que já agiu. Carta de companheiro
+    que já saiu em `enemy_support_cards` (estendida pelo caminho da SPEC-283) é
+    pulada, sem dupla contagem (achado da revisão).
 - `scripts/migrate_bestiary_v4.py`: `bst_toque_gelido` passa a
   `{"kind": "dot", "dano_base": 3, "duracao": 3}`. Regenerado, o diff em
   `data/cards/bestiario.json` é de 1 linha. O gerador é idempotente no resto.
@@ -163,8 +165,8 @@ Por isso a meta é composta. É decisão do coordenador sob a autorização do d
   nível 5, bot `cartas`), dentro do ruído.
 - [x] M5: 0 `combat.no_progress` em 12 × 200 turnos; parity de Cartas e lint de
   conteúdo verdes
-- [ ] Revisão independente Opus ([handoff](../handoffs/SPEC-285-review.md))
-- [ ] `uv run pytest` verde (suíte completa)
+- [x] Revisão independente Opus ([handoff](../handoffs/SPEC-285-review.md)): APPROVED com 1 correção P1 (dupla extensão em companheiro) e 1 P2
+- [x] `uv run pytest` verde (suíte completa; só falhas de índice stale, regenerado no pouso)
 - [x] Saves antigos continuam carregando (sem schema novo)
 
 ## 7. Smoke real
