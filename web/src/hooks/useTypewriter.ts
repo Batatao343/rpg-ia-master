@@ -19,10 +19,11 @@ export function typewriterStep(text: string, idx: number, rand: number = Math.ra
 export function useTypewriter(text: string, enabled: boolean = true, onDone?: () => void) {
   const [displayedText, setDisplayedText] = useState(() => typewriterInitial(text, enabled));
   const doneRef = useRef(onDone);
-  doneRef.current = onDone;
+  useEffect(() => { doneRef.current = onDone; });
 
   useEffect(() => {
     if (!enabled || !text) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza estado com sistema externo (fetch/timer/DOM/assinatura) ao montar/trocar a chave; derivar em render mudaria o fluxo de carregamento
       setDisplayedText(text);
       if (enabled) doneRef.current?.();
       return;

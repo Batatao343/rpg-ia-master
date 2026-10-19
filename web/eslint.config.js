@@ -1,5 +1,4 @@
-// ESLint flat config (workspace #10). Introduced non-blocking: CI runs it with
-// continue-on-error until the existing findings reach zero; then flip to blocking.
+// ESLint flat config (workspace #10). Bloqueante no CI (SPEC-284): zero achados.
 import js from "@eslint/js";
 import globals from "globals";
 import jsxA11y from "eslint-plugin-jsx-a11y";

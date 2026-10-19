@@ -232,7 +232,6 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
                   data-effect="choice.select"
                   data-effect-state={race === full.name ? "selected" : "idle"}
                   data-selected={race === full.name}
-                  onClick={() => setRace(full.name)}
                 >
                   <VisualArtwork asset={opts.visuals?.races?.[full.id] ?? null}
                     name={card?.name || full.name} className="card__art" variant="card" />
@@ -267,7 +266,6 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
                     data-effect="choice.select"
                     data-effect-state={className === cls ? "selected" : "idle"}
                     data-selected={className === cls}
-                    onClick={() => setClassName(cls)}
                   >
                     <VisualArtwork asset={opts.visuals?.classes?.[cls] ?? null}
                       name={cls} className="card__art" variant="card" />
@@ -364,7 +362,7 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
             )}
 
             <div className="field">
-              <label>Nível inicial</label>
+              <span className="field__label">Nível inicial</span>
               <div className="segmented" role="radiogroup" aria-label="Nível inicial">
                 {LEVELS.map((l) => (
                   <button

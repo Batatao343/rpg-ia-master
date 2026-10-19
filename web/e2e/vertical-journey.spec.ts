@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- oráculo de e2e: percorre payloads JSON dinâmicos do servidor real, sem schema tipado (SPEC-212). */
 // SPEC-212: jornada vertical J-V1 (V01..V09) contra a stack REAL com MockLLM.
 // Uma sessão contínua: criar -> conversar -> combater -> vencer/morrer -> abas -> salvar/reabrir ->
 // exportar. Os asserts de régua (duplicação, segredo, latência, XP, a11y...) vêm do oráculo Python

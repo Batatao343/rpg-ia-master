@@ -56,6 +56,7 @@ export const StoryLog = memo(function StoryLog({ entries, thinking, thinkingLabe
   const streaming = entries.some((entry) => entry.streaming);
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- região rolável precisa ser focável por teclado (WCAG 2.1.1)
     <section className="story" aria-label="Narrativa" ref={storyRef} tabIndex={0} onScroll={onScroll}>
       {/* SPEC-201 A08: um anúncio por bloco novo; aria-busy segura a leitura enquanto o texto escorre. */}
       <div className="log" role="log" aria-live="polite" aria-relevant="additions" aria-busy={streaming || thinking}>

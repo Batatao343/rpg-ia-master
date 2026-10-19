@@ -100,6 +100,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
     const before = prevPhase.current;
     prevPhase.current = state.phase;
     if (state.phase === "aiming") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza estado com sistema externo (fetch/timer/DOM/assinatura) ao montar/trocar a chave; derivar em render mudaria o fluxo de carregamento
       setAnnounce(`Mirando ${aimLabel}: escolha um alvo.`);
       rootRef.current?.querySelector<HTMLElement>("button[data-target].is-valid")?.focus();
     } else if (before === "aiming" && state.phase === "idle") {
@@ -111,6 +112,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
 
   const lastResult = combat?.last_player_action?.result;
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza estado com sistema externo (fetch/timer/DOM/assinatura) ao montar/trocar a chave; derivar em render mudaria o fluxo de carregamento
     if (combat?.round && lastResult) setAnnounce(`Resultado da rodada ${combat.round}: ${lastResult}.`);
   }, [combat?.round, lastResult]);
 

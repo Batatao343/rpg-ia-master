@@ -1,4 +1,4 @@
-import { Component, type ErrorInfo, type ReactNode } from "react";
+import { Component, type ReactNode } from "react";
 import { newRequestId } from "../http";
 import { reportClientError } from "../lib/clientErrors";
 import { SupportCode } from "./SupportCode";
@@ -13,7 +13,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, State> {
     return { failed: true };
   }
 
-  componentDidCatch(error: Error, _info: ErrorInfo): void {
+  componentDidCatch(error: Error): void {
     const supportId = newRequestId();
     this.setState({ supportId });
     reportClientError({ kind: "render", error, code: "render_failed", requestId: supportId });

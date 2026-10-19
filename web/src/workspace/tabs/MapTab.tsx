@@ -38,6 +38,7 @@ export function MapTab({ data, busy, blocked, open, onAction }: {
     // Troca de save: nunca mostrar o mapa do jogo anterior.
     if (viewGame.current !== gameId) { setView(null); setSelected(null); setFailed(false); }
     viewGame.current = gameId;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza estado com sistema externo (fetch/timer/DOM/assinatura) ao montar/trocar a chave; derivar em render mudaria o fluxo de carregamento
     setLoading(true);
     api.getGameMap(gameId)
       .then((v) => { if (alive) { setView(v); setStale(false); setFailed(false); } })
@@ -94,6 +95,7 @@ function MapBody({ view, stale, loading, busy, blocked, selected, onSelect, onAc
         {stale ? "Mapa desatualizado: mostrando o último estado conhecido." : loading ? "Atualizando…" : ""}
       </p>
       {view.looming_threat && <p className="worldmap__banner">⚠ {view.looming_threat}</p>}
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- atalho de teclado delegado: só reage a teclas que borbulham de controles focáveis internos */}
       <div className="worldmap maptab__canvas" role="group" aria-label="Mapa da jornada" onKeyDown={onKeyDown}>
         <svg className="worldmap__edges" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
           {view.edges.map((e) => {

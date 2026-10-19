@@ -3,7 +3,7 @@ import { MAX_AUDIO_BYTES, MAX_RECORDING_MS, type RecorderAdapter, type Recording
 export type VoicePhase = "idle" | "recording" | "uploading" | "transcribing" | "error";
 export interface VoiceState { phase: VoicePhase; seconds: number; requesting: boolean; message: string }
 export type Transcribe = (audio: Blob, signal: AbortSignal, uploaded: () => void) => Promise<string>;
-const idle = (): VoiceState => ({ phase: "idle", seconds: 0, requesting: false, message: "" });
+export const idle = (): VoiceState => ({ phase: "idle", seconds: 0, requesting: false, message: "" });
 
 /** Owns one ephemeral capture/request. Generation fencing discards late callbacks. */
 export class VoiceController {

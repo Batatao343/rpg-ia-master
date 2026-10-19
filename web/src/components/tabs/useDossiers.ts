@@ -16,6 +16,7 @@ export function useDossiers(gameId: string | null | undefined, turnCount: number
   useEffect(() => {
     if (!open || !gameId) return;
     let active = true;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza estado com sistema externo (fetch/timer/DOM/assinatura) ao montar/trocar a chave; derivar em render mudaria o fluxo de carregamento
     setLoading(true);
     getDossiers(gameId)
       .then((payload) => {

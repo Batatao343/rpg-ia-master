@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import type { ActionOptions, GameResponse, LogEntry } from "../types";
 import { LevelUpModal, type LevelUpPick } from "./LevelUpModal";
 import { shards } from "./AccountScreen";
@@ -27,7 +27,7 @@ interface Props {
 /** SPEC-204: orquestrador da tela de jogo — topbar + workspace (chat + UM painel)
  *  + overlays. Controles táticos vivem só na aba Combate do workspace. */
 export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction, onNew, onLevelUp, onEquip, onPrepareCards, onLogout, onAccount, accountBalance, owner = "legacy" }: Props) {
-  const [luDismissed, setLuDismissed] = useState(false);
+  const [luDismissedKey, setLuDismissedKey] = useState<string | null>(null);
   const [dismissedResult, setDismissedResult] = useState<string | null>(null);
   const [reading, setReading] = useState(false); // memorial: ler a crônica
   const workspace = useRef<WorkspaceHandle>(null);
@@ -52,14 +52,14 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
   // Fase 4.1: escolha pendente reabre o modal quando MUDA (novo level up).
   const pending = data?.player_stats?.pending_choices ?? [];
   const pendingKey = pending[0]?.id ?? "";
-  useEffect(() => setLuDismissed(false), [pendingKey]);
+  const luDismissed = luDismissedKey === pendingKey;
   // SPEC-212: o desfecho do combate vem primeiro; o modal de nível abre após "Continuar".
   const outcomeFirst = levelUpHeldByOutcome(resultFrom(data?.combat_result), dismissedResult);
   // Pedido explícito (chip/aba): abre o modal já, dispensando o painel de desfecho.
   const openLevelUp = () => {
     const res = resultFrom(data?.combat_result);
     if (res) setDismissedResult(res.result_event_id);
-    setLuDismissed(false);
+    setLuDismissedKey(null);
   };
   const showLevelUp = pending.length > 0 && !luDismissed && !blocked && !fighting && !outcomeFirst;
 
@@ -109,7 +109,7 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
           player={data.player_stats}
           busy={busy}
           onChoose={onLevelUp}
-          onLater={() => setLuDismissed(true)}
+          onLater={() => setLuDismissedKey(pendingKey)}
         />
       )}
 

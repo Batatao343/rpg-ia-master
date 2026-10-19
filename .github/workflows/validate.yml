@@ -85,14 +85,11 @@ jobs:
         working-directory: web
       - run: npm test
         working-directory: web
-      # Workspace #10: tipagem de e2e/tests e ESLint entram não bloqueantes até zerar
-      # os achados existentes (25 erros de tsc, ~90 de eslint em 2026-10-19).
+      # SPEC-284: tipagem de e2e/tests e ESLint são bloqueantes (zerados em 2026-10-19).
       - run: npm run typecheck:e2e
         working-directory: web
-        continue-on-error: true
       - run: npm run lint
         working-directory: web
-        continue-on-error: true
       - run: npm run build
         working-directory: web
 

@@ -182,7 +182,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .form { display: grid; gap: 1.1rem; margin-top: 1.4rem; }
 .form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
 .field { display: grid; gap: 0.4rem; }
-.field > label {
+.field > label,
+.field > .field__label {
   font-family: var(--display); font-size: 0.72rem; font-weight: 600;
   letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
 }

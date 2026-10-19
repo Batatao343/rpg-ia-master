@@ -20,11 +20,11 @@ export function encodeWav(samples: Float32Array, sampleRate = WAV_SAMPLE_RATE): 
 /** Decodes with Web Audio and resamples to mono 16 kHz. Any failure returns the original blob. */
 export async function transcodeToWav(blob: Blob): Promise<Blob> {
   if (blob.type.split(";")[0].trim().toLowerCase() === "audio/wav") return blob;
-  const g = globalThis as any;
-  const Ctx = g.AudioContext || g.webkitAudioContext;
-  const Offline = g.OfflineAudioContext || g.webkitOfflineAudioContext;
+  const g = globalThis as unknown as Record<string, typeof AudioContext | typeof OfflineAudioContext | undefined>;
+  const Ctx = (g.AudioContext || g.webkitAudioContext) as typeof AudioContext | undefined;
+  const Offline = (g.OfflineAudioContext || g.webkitOfflineAudioContext) as typeof OfflineAudioContext | undefined;
   if (!Ctx || !Offline) return blob;
-  let ctx: any;
+  let ctx: AudioContext | undefined;
   try {
     ctx = new Ctx();
     const decoded = await ctx.decodeAudioData(await blob.arrayBuffer());

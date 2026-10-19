@@ -7,11 +7,14 @@ export function ImageQuoteDialog({ quote, busy, error, onConfirm, onCancel }: {
   onConfirm: () => void; onCancel: () => void;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
-  const [now, setNow] = useState(Date.now());
+  const cancelRef = useRef<HTMLButtonElement>(null);
+  const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
-    dialog.current?.showModal();
+    const node = dialog.current;
+    node?.showModal();
+    cancelRef.current?.focus(); // ação segura (Cancelar) recebe o foco inicial
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
-    return () => { window.clearInterval(timer); dialog.current?.close(); };
+    return () => { window.clearInterval(timer); node?.close(); };
   }, [quote.quote_id]);
   const expired = now >= Date.parse(quote.expires_at);
   const cost = shards(quote.credits_milli);
@@ -24,7 +27,7 @@ export function ImageQuoteDialog({ quote, busy, error, onConfirm, onCancel }: {
     {expired && <p role="status">Cotação expirada. Feche e solicite uma nova cotação.</p>}
     {error && <p role="alert">{error}</p>}
     <div className="image-quote-actions">
-      <button type="button" className="btn btn--ghost" disabled={busy} onClick={onCancel} autoFocus>Cancelar</button>
+      <button type="button" className="btn btn--ghost" disabled={busy} onClick={onCancel} ref={cancelRef}>Cancelar</button>
       <button type="button" className="btn" disabled={busy || expired} onClick={onConfirm}>
         {busy ? "Reservando…" : `Confirmar até ${cost} Estilhas`}
       </button>

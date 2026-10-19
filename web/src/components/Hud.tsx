@@ -249,6 +249,7 @@ export function ChronicleTab({ chapters, gameId, projectionStatus }: {
   useEffect(() => {
     const normalized = query.trim();
     if (!gameId || normalized.length < 2) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza estado com sistema externo (fetch/timer/DOM/assinatura) ao montar/trocar a chave; derivar em render mudaria o fluxo de carregamento
       setHits([]);
       setSearchMode("");
       return;

@@ -162,7 +162,7 @@ export class DeterministicBackend {
     if (!this.combatHits || !current.combat.active || !body || (!body.card_id && !body.action_kind)) return false;
     const card = current.combat.cards.find((c) => c.id === body.card_id);
     current.combat.round += 1; current.message_type = "COMBAT";
-    if (card) current.player_stats.entropy -= card.cost;
+    if (card) current.player_stats.entropy = (current.player_stats.entropy ?? 0) - card.cost;
     if (card?.target_kind === "self") {
       current.message = `Você usa ${card.name} e recupera o fôlego.`;
       return true;

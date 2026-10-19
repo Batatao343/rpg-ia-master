@@ -6,7 +6,7 @@ const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]), select
  *  nele, Esc opcional e devolução do foco ao elemento de origem ao fechar. */
 export function useModalFocus(ref: RefObject<HTMLElement | null>, onEscape?: () => void) {
   const escape = useRef(onEscape);
-  escape.current = onEscape;
+  useEffect(() => { escape.current = onEscape; });
   useEffect(() => {
     const node = ref.current;
     if (!node) return;

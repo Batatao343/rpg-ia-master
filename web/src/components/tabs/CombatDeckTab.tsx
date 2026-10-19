@@ -85,6 +85,7 @@ export function CombatDeckTab({ stats, busy = false, onPrepare, onOpenLevelUp }:
   ];
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- atalho de teclado delegado: só reage a teclas que borbulham de controles focáveis internos
     <section className="deck" onKeyDown={arrowNav} aria-label="Acervo e preparação de Cartas">
       <header className="deck__head">
         <h2 className="hud__label">Preparação <span className="muted">{preparedIds.length}/{slots || "—"}</span>

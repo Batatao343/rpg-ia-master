@@ -1,4 +1,3 @@
-import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { VisualArtwork } from '../src/components/VisualArtwork';
 import { SceneArtwork } from '../src/components/SceneArtwork';

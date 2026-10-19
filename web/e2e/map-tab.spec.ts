@@ -56,7 +56,7 @@ for (const [name, viewport] of [["full", { width: 1440, height: 900 }], ["half",
     expect(blocking.map((v) => v.id + v.help)).toEqual([]);
     await travel.click();
     await expect.poll(() => backend.requests.filter((r) => r.path === "/game/action" || r.path === "/game/action/stream").length).toBeGreaterThan(0);
-    const sent = backend.requests.filter((r) => r.path.startsWith("/game/action")).at(-1)!;
+    const sent = backend.requests.filter((r) => r.path.startsWith("/game/action")).slice(-1)[0]!;
     expect(JSON.stringify(sent.body ?? "")).toContain("Viajo para Brumalta");
   });
 }

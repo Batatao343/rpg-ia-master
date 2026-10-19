@@ -41,22 +41,25 @@ function DossierBrowserInner<T extends DossierBase>({ gameId, tabId, items, empt
   // Marca como visto a versão atual do dossiê aberto (nunca altera a versão do servidor).
   useEffect(() => {
     if (!current) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza estado com sistema externo (fetch/timer/DOM/assinatura) ao montar/trocar a chave; derivar em render mudaria o fluxo de carregamento
     setSeen((prev) => {
       const next = withSeen(prev, current);
       if (next !== prev) saveSeen(safeStorage, gameId, tabId, next);
       return next;
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- deps deliberadas: o efeito deve reexecutar só nestas chaves (callbacks/valores recriados a cada render não podem disparar de novo)
   }, [current?.id, current?.version, gameId, tabId]);
 
   function open(id: string | null) {
     if (id) lastOpened.current = id;
     setOpenId(id);
-    try { id ? safeStorage.set(openKey(gameId, tabId), id) : safeStorage.remove(openKey(gameId, tabId)); } catch { /* conveniência */ }
+    try { if (id) safeStorage.set(openKey(gameId, tabId), id); else safeStorage.remove(openKey(gameId, tabId)); } catch { /* conveniência */ }
   }
 
   // Ao abrir o dossiê o foco vai para "Voltar" (a linha clicada desmonta): Esc/teclado seguem funcionando.
   useEffect(() => {
     if (current) backRef.current?.focus();
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- deps deliberadas: o efeito deve reexecutar só nestas chaves (callbacks/valores recriados a cada render não podem disparar de novo)
   }, [current?.id]);
 
   // Ao voltar, devolve o foco à linha que estava aberta.
@@ -85,6 +88,7 @@ function DossierBrowserInner<T extends DossierBase>({ gameId, tabId, items, empt
 
   if (current) {
     return (
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- atalho de teclado delegado: só reage a teclas que borbulham de controles focáveis internos
       <article className="dossier" aria-label={`Dossiê: ${current.title}`} onKeyDown={onDetailKey}>
         <button type="button" className="dossier__back" ref={backRef} onClick={() => open(null)}>← Voltar à lista</button>
         <DossierDetail item={current} />
@@ -96,6 +100,7 @@ function DossierBrowserInner<T extends DossierBase>({ gameId, tabId, items, empt
   return (
     <>
       {behind && <p className="dossier__behind">Atualizando…</p>}
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- atalho de teclado delegado: só reage a teclas que borbulham de controles focáveis internos */}
       <ul className="dossier-list" onKeyDown={onListKey}>
         {items.map((item) => {
           // Chegou agora (animação "Novo" do codex.entry.reveal) => não repete o selo textual.

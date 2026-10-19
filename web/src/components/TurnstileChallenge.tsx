@@ -31,13 +31,14 @@ export function TurnstileChallenge({ siteKey, required, action, revision, onToke
   const container = useRef<HTMLDivElement>(null);
   const onTokenRef = useRef(onToken);
   const [failed, setFailed] = useState(false);
-  onTokenRef.current = onToken;
+  useEffect(() => { onTokenRef.current = onToken; });
 
   useEffect(() => {
     if (!required || !siteKey) return;
     let active = true;
     let widgetId: string | null = null;
     onTokenRef.current("");
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza estado com sistema externo (fetch/timer/DOM/assinatura) ao montar/trocar a chave; derivar em render mudaria o fluxo de carregamento
     setFailed(false);
     void loadTurnstile().then(api => {
       if (!active || !container.current) return;

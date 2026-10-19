@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- oráculo de e2e: percorre payloads JSON dinâmicos do servidor real, sem schema tipado (SPEC-212). */
 // SPEC-212 (Etapa 0, autoria de eval): suporte da jornada vertical J-V1.
 // A régua mora em evals/evaluators/gameplay_gate.py; aqui só coletamos o que a jornada
 // observa (trace) e entregamos ao oráculo Python. Nada daqui altera estado de jogo fora das

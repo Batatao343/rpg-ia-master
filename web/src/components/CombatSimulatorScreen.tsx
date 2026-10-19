@@ -91,7 +91,7 @@ export function CombatSimulatorScreen({ busy, onStart, onBack, onError }: Props)
                 </select>
               </div>
               <div className="field">
-                <label>Nível</label>
+                <span className="field__label">Nível</span>
                 <div className="segmented" role="radiogroup" aria-label="Nível da simulação">
                   {options.levels.map((levelOption) => (
                     <button
@@ -126,7 +126,7 @@ export function CombatSimulatorScreen({ busy, onStart, onBack, onError }: Props)
             </div>
 
             <div className="field">
-              <label>Quantidade</label>
+              <span className="field__label">Quantidade</span>
               <div className="segmented" role="radiogroup" aria-label="Quantidade de inimigos">
                 {options.quantities.map((quantityOption) => (
                   <button

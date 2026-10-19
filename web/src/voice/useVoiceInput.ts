@@ -1,15 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { transcribeAudio } from "../api";
-import { VoiceController } from "./controller";
+import { VoiceController, idle } from "./controller";
 import { webRecorder } from "./recorder";
 
 export function useVoiceInput(onTranscript: (text: string) => void, sessionKey: string | undefined) {
   const callback = useRef(onTranscript);
-  callback.current = onTranscript;
+  useEffect(() => { callback.current = onTranscript; });
+  const [state, setState] = useState(idle);
+  // eslint-disable-next-line react-hooks/refs -- callbacks do controller leem o ref apenas em eventos, nunca no render
   const [controller] = useState(() => new VoiceController(webRecorder, transcribeAudio,
     state => setState(state), text => callback.current(text)));
-  const [state, setState] = useState(controller.state);
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza estado com sistema externo (fetch/timer/DOM/assinatura) ao montar/trocar a chave; derivar em render mudaria o fluxo de carregamento
     setState(controller.state);
     const leave = () => {
       if (controller.state.requesting || ["recording", "uploading", "transcribing"].includes(controller.state.phase)) controller.cancel();

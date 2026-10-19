@@ -24,7 +24,7 @@ export interface PlayBillingPlugin {
   getProducts(o: { productIds: string[] }): Promise<{ products: StoreProductDetails[] }>;
   purchase(o: { productId: string; obfuscatedAccountId: string }): Promise<{ started?: boolean; cancelled?: boolean; alreadyOwned?: boolean }>;
   queryPendingPurchases(): Promise<{ purchases: PlayPurchaseEvent[] }>;
-  addListener(name: string, cb: (e: any) => void): Promise<unknown> | unknown;
+  addListener(name: string, cb: (e: never) => void): Promise<unknown> | unknown;
 }
 export interface GoogleBackend {
   profile(): Promise<{ obfuscated_account_id?: string; purchases_disabled?: boolean }>;
@@ -36,7 +36,7 @@ export interface GoogleBackend {
 export const NOT_AVAILABLE = 'play_billing_plugin_unavailable';
 
 export function nativePlayBilling(): PlayBillingPlugin | null {
-  const cap = (globalThis as any).Capacitor;
+  const cap = (globalThis as { Capacitor?: { registerPlugin?: (n: string) => PlayBillingPlugin } }).Capacitor;
   try { return cap?.registerPlugin ? cap.registerPlugin('PlayBilling') : null; } catch { return null; }
 }
 

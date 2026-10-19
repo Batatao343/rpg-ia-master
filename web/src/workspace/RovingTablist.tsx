@@ -38,6 +38,7 @@ export function RovingTablist<T extends string>({ items, selected, onSelect, lab
   }
 
   return (
+    // eslint-disable-next-line jsx-a11y/interactive-supports-focus -- foco roving: o tablist delega o foco aos botões role=tab (tabIndex 0/-1)
     <div role="tablist" aria-label={label} className={className} onKeyDown={onKeyDown}>
       {items.map((item) => {
         const active = item.id === selected;

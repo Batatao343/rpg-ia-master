@@ -14,7 +14,7 @@ export function CombatOutcomePanel({ result, outcome, onContinue }: Props) {
   const rewards = rewardLines(result, outcome);
   return (
     <section className={`combat-outcome combat-outcome--${result.outcome}`}
-             role="region" aria-label="Desfecho do combate">
+             aria-label="Desfecho do combate">
       <h2 className="combat-outcome__title">{OUTCOME_TITLES[result.outcome] ?? result.outcome}</h2>
       <ul className="combat-outcome__cast">
         {casualtyLines(result).map((line, i) => <li key={`${i}-${line}`}>{line}</li>)}

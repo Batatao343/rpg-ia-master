@@ -72,9 +72,9 @@ export function Arena({ combat, party, aim, onPick }: {
   }
 
   return (
-    <section className="arena" aria-label="Arena de combate" data-aim-safe onKeyDown={onKeyDown}>
+    <section className="arena" aria-label="Arena de combate" data-aim-safe>
       {turnOrder && <p className="arena__turn">{`Rodada ${combat.round} · iniciativa: ${turnOrder}`}</p>}
-      <div className="arena__zones">
+      <div className="arena__zones" role="toolbar" aria-label="Alvos do combate" tabIndex={-1} onKeyDown={onKeyDown}>
         {groups.map((g) => (
           <article key={g.id} className="arena__zone" aria-label={`Zona: ${g.name}`}>
             <h4>{g.name}</h4>

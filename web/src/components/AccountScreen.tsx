@@ -108,6 +108,7 @@ export function AccountScreen({ onBack, onBalanceChange, lifecycleAvailable, cap
     let current = true;
     const controller = startRead();
     const generation = financialGeneration.current;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza estado com sistema externo (fetch/timer/DOM/assinatura) ao montar/trocar a chave; derivar em render mudaria o fluxo de carregamento
     setLoading(true); setError(false);
     void Promise.all([api.getAccountBalance(controller.signal), api.getAccountSeries(period, controller.signal),
       api.getAccountUsage(undefined, controller.signal), api.getAccountPurchases(undefined, controller.signal)]).then(([b, s, u, p]) => {
@@ -119,6 +120,7 @@ export function AccountScreen({ onBack, onBalanceChange, lifecycleAvailable, cap
     }).catch(() => { if (current && !deletionStarted.current) { setError(true); setLoading(false); } })
       .finally(() => stopRead(controller));
     return () => { current = false; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- deps deliberadas: o efeito deve reexecutar só nestas chaves (callbacks/valores recriados a cada render não podem disparar de novo)
   }, [period]);
 
   useEffect(() => {
@@ -151,6 +153,7 @@ export function AccountScreen({ onBack, onBalanceChange, lifecycleAvailable, cap
       if (active && !deletionStarted.current) { setSkus([]); setCheckoutAvailable(false); }
     }).finally(() => { stopRead(controller); if (active && !deletionStarted.current) setCheckoutLoading(false); });
     return () => { active = false; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- deps deliberadas: o efeito deve reexecutar só nestas chaves (callbacks/valores recriados a cada render não podem disparar de novo)
   }, []);
 
   useEffect(() => {
@@ -179,6 +182,7 @@ export function AccountScreen({ onBack, onBalanceChange, lifecycleAvailable, cap
     };
     void poll();
     return () => { active = false; abort.abort(); stopRead(abort); clearTimeout(timer); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- deps deliberadas: o efeito deve reexecutar só nestas chaves (callbacks/valores recriados a cada render não podem disparar de novo)
   }, [returnOrderId, orderRefresh, deletionPending]);
 
   async function beginCheckout(sku: api.CheckoutSku) {

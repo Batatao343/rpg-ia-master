@@ -9,6 +9,7 @@ export function useVisualViewport(enabled: boolean): boolean {
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   useEffect(() => {
     const root = document.documentElement;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza estado com sistema externo (fetch/timer/DOM/assinatura) ao montar/trocar a chave; derivar em render mudaria o fluxo de carregamento
     if (!enabled) { root.style.removeProperty("--app-vh"); setKeyboardOpen(false); return; }
     const vv = window.visualViewport;
     let baseline = 0;

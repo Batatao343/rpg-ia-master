@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect, MAP_UNREACHED } from "./fixtures";
 import type { Page } from "@playwright/test";
-import type { CardView } from "../src/types";
+import type { CardView, GameResponse } from "../src/types";
 
 async function assertA11y(page: Page) {
   const result = await new AxeBuilder({ page }).analyze();
@@ -115,7 +115,7 @@ test("F06 map_travel", async ({ page, backend }) => {
   expect(backend.requests.filter((r) => r.path.startsWith("/game/action"))).toHaveLength(0);
   await travel.click();
   await expect.poll(() => backend.requests.filter((r) => r.path.startsWith("/game/action")).length).toBeGreaterThan(0);
-  const sent = backend.requests.filter((r) => r.path.startsWith("/game/action")).at(-1)!;
+  const sent = backend.requests.filter((r) => r.path.startsWith("/game/action")).slice(-1)[0]!;
   expect(JSON.stringify(sent.body ?? "")).toContain("Viajo para Brumalta");
   await expect(page.getByText("A trilha termina nos portões de Brumalta.")).toBeVisible();
   await expect(page.getByText("Brumalta", { exact: true }).first()).toBeVisible();
@@ -797,7 +797,7 @@ const deckCard = (over: Partial<CardView> & { id: string; name: string }): CardV
   rupture_ready: false, trigger: "", evolved: null, ...over,
 });
 
-function seedDeck(backend: { states: Map<string, any> }, allowed = true, reason = "") {
+function seedDeck(backend: { states: Map<string, GameResponse> }, allowed = true, reason = "") {
   const state = backend.states.get("game-a")!;
   const ps = state.player_stats;
   ps.cards = [

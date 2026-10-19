@@ -93,8 +93,8 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
   const [gridWidth, setGridWidth] = useState(0);
 
   // Abas montam na primeira visita visível e depois só se escondem (R7).
-  const visited = useRef(new Set<ContextTab>());
-  if (contextVisible) visited.current.add(state.tab);
+  const [visited, setVisited] = useState<ReadonlySet<ContextTab>>(() => new Set());
+  if (contextVisible && !visited.has(state.tab)) setVisited(new Set(visited).add(state.tab));
 
   useImperativeHandle(ref, () => ({
     openTab(tab, options) {
@@ -108,6 +108,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
   // Reação selecionada some quando a Carta deixa de estar pronta.
   useEffect(() => {
     const selected = data?.combat?.cards?.find((card) => card.id === reactionCardId);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza estado com sistema externo (fetch/timer/DOM/assinatura) ao montar/trocar a chave; derivar em render mudaria o fluxo de carregamento
     if (reactionCardId && (!selected || !selected.ready)) setReaction(undefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.combat?.cards, reactionCardId]);
@@ -145,6 +146,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
     const timer = setTimeout(() => { setAwaitingNarration(false); dispatch({ type: "combat_started" }); }, 2500);
     return () => clearTimeout(timer);
   }, [awaitingNarration]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza estado com sistema externo (fetch/timer/DOM/assinatura) ao montar/trocar a chave; derivar em render mudaria o fluxo de carregamento
   useEffect(() => { if (state.tab !== "combate") setCombatEnded(false); }, [state.tab]);
 
   useEffect(() => {
@@ -254,9 +256,9 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
     if (mobile) titleRef.current?.focus({ preventScroll: true });
   }, [surface, mobile]);
   const surfaceRef = useRef(surface);
-  surfaceRef.current = surface;
+  useEffect(() => { surfaceRef.current = surface; });
   const showChatRef = useRef(showChat);
-  showChatRef.current = showChat;
+  useEffect(() => { showChatRef.current = showChat; });
   useEffect(() => registerBackBridge({
     offChat: () => mobile && surfaceRef.current !== "chat",
     toChat: () => showChatRef.current(),
@@ -304,6 +306,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
           busy={busy} blocked={blocked} active={chatVisible} onAction={onAction}
           mobile={mobile} onOpenCombat={() => openTab("combate")} />
         {mode === "split" && (
+          // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex -- separador redimensionável (window splitter) focável com setas, padrão WAI-ARIA
           <div className="ws-sep" role="separator" aria-orientation="vertical" tabIndex={0}
             aria-label="Redimensionar chat e painel" aria-controls="ws-context"
             aria-valuenow={Math.round(ratio * 100)} aria-valuemin={minPct} aria-valuemax={maxPct}
@@ -312,7 +315,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
             onDoubleClick={() => dispatch({ type: "set_ratio", ratio: 0.5 })} />
         )}
         <div id="ws-context" className="ws-ctx-slot" hidden={!contextVisible}>
-          <ContextSurface data={data} active={contextVisible} tab={state.tab} visited={visited.current}
+          <ContextSurface data={data} active={contextVisible} tab={state.tab} visited={visited}
             busy={busy} blocked={blocked} hitKey={hitKey} combatEnded={combatEnded} mobile={mobile}
             reactionCardId={reactionCardId} onReaction={setReaction}
             codexSection={codexSection} onCodexSection={setCodexSection}

@@ -121,6 +121,7 @@ export function App() {
       onResume: () => { void resumeSession(); },
     }).then(d => { if (cancelled) d(); else dispose = d; }).catch(() => {});
     return () => { cancelled = true; dispose(); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- deps deliberadas: o efeito deve reexecutar só nestas chaves (callbacks/valores recriados a cada render não podem disparar de novo)
   }, []);
 
   // Resume never re-sends: it re-validates the cookie session and reconciles a persisted pending

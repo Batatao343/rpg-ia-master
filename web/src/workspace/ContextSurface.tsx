@@ -1,4 +1,4 @@
-import { Component, useLayoutEffect, useRef, type ErrorInfo, type KeyboardEvent, type ReactNode } from "react";
+import { Component, useLayoutEffect, useRef, type KeyboardEvent, type ReactNode } from "react";
 import type { ActionOptions, GameResponse } from "../types";
 import { ChronicleTab, FactionsTab, PeopleTab, type EquipFn } from "../components/Hud";
 import { CodexCategory, CodexTab, DossierCategory, type CodexSection } from "../components/CodexTab";
@@ -14,7 +14,7 @@ const LAB_EMPTY = "Laboratório de combate: sem campanha, este registro fica vaz
 class PanelBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
   static getDerivedStateFromError() { return { failed: true }; }
-  componentDidCatch(_error: Error, _info: ErrorInfo) { /* o chat segue intacto */ }
+  componentDidCatch() { /* o chat segue intacto */ }
   render() {
     return this.state.failed
       ? <p className="combat-empty" role="alert">Este painel falhou ao carregar. O chat continua disponível.</p>
@@ -70,6 +70,7 @@ export function ContextSurface(props: ContextSurfaceProps) {
   }
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- atalho de teclado delegado: só reage a teclas que borbulham de controles focáveis internos
     <section className="ws-ctx" aria-label="Painel de contexto" hidden={!active} onKeyDown={onKeyDown}>
       {!props.mobile && <div className="ws-ctx__head">
         <RovingTablist<ContextTab>
@@ -84,6 +85,7 @@ export function ContextSurface(props: ContextSurfaceProps) {
       {CONTEXT_TABS.map((id) => (
         <div key={id} id={`ws-panel-${id}`}
           {...(props.mobile ? { role: "region", "aria-label": TAB_LABELS[id] } : { role: "tabpanel", "aria-labelledby": `ws-tab-${id}` })}
+          // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- região rolável precisa ser focável por teclado (WCAG 2.1.1)
           className="tabpanel ws-panel" tabIndex={0} hidden={id !== tab}
           ref={(node) => { if (node) panels.current.set(id, node); else panels.current.delete(id); }}
           onScroll={(event) => {

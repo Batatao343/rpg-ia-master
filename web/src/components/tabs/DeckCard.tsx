@@ -66,6 +66,7 @@ export function DeckCard({ card, preparable, blockedReason, evolvable, onToggle,
           {head}
         </button>
       ) : (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- carta estática (não interativa) precisa ser alcançável pelo teclado para a navegação por setas do Acervo
         <div className="deck-card__btn is-static" data-deck-card tabIndex={0}
           aria-label={`${card.name}, ${typeLabel}, ${state}`}>
           {head}
