@@ -7,6 +7,8 @@
 
 ## 2026-10-19 — onda: workspace, logs P2/P3, frontend majors, staging (222/236/279/280)
 
+- **19/10 — SPEC-283 `done`:** IA inimiga usa as 8 Cartas de suporte ativas do bestiário (proteção/buffs/reposicionar) em si ou num aliado do lado inimigo; determinística, alvo validado, custo/frequência cobrados; nunca mira o jogador; pulada sob silêncio/Provocação/quebra de impasse; suporte no próprio lado não abre Reação. `combate --turns 200` 9 seeds: 0 `no_progress`. Letalidade playtest 0,564 → 0,598, arena 0,707 → 0,730. Revisão Opus CHANGES_REQUIRED → corrigida ([parecer](handoffs/SPEC-283-review.md)). Achado: herói inconsciente prende o perfil `combate` (JSONL `route ''`).
+
 - **19/10 — Ruff degraus 2–3:** `I` e `UP` (py313, só fixes seguros; 173 restantes no baseline gerado) + `ruff format` no repo (~720 arquivos) e `ruff format --check` no CI/pre-commit. Fora do format e de I/UP: régua de eval, `evals/experiments` (digests congelados das SPEC-217/238 hasheiam o código-fonte), `data/`, `lore_nova/`, `faiss_*`; `merchants_at` com `fmt: off`; `# silent-ok` mantidos na linha anterior ao `except`.
 
 - **19/10 — SPEC-259 `done` + staging `65c0f23`:** a versão do app Android agora chega no access log (`app_version=1.0.0+1`, `client=android`): a leitura do plugin `App` tenta de novo por até 3 s sem bloquear o boot. Smoke no AVD `rpg34` verde. Staging redeployado em `65c0f23` (Jev `primary`, teto R$ 5; post_deploy/vercel_smoke/e2e verdes); 1ª chamada Jev pós-deploy 285 ms, sem timeout (SPEC-281).
