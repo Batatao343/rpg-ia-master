@@ -1,10 +1,10 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "b3ddda48a8b9283dd1cc03d2c8d0183be9acff6a",
+  "commit_sha": "b7d4aebaad57b96f7ee8847cf8e4e5fce45733b6",
   "edge_counts": {
-    "calls": 17501,
-    "contains": 729,
-    "defines": 9918,
+    "calls": 17537,
+    "contains": 730,
+    "defines": 9948,
     "imports": 1616,
     "likely_test_for": 997,
     "route_to": 63
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:8d4914eef352388b6df1d17f114e890120973dcf2c56e1799e870f81fcf16c74",
+  "graph_hash": "sha256:e8175662fbc8223ab91a11ff412ac5fed0686bcb36cafb0c9aaf4b94c72b3321",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -740,6 +740,7 @@
     "tests/test_spec286_heroi_inconsciente.py",
     "tests/test_spec287_encounter_scale.py",
     "tests/test_spec288_causa_morte.py",
+    "tests/test_spec290_chefe_sobrevivencia.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -929,14 +930,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 790,
+    "class": 795,
     "endpoint": 63,
-    "file": 875,
-    "function": 3051,
+    "file": 876,
+    "function": 3053,
     "method": 750,
-    "module": 729,
-    "test": 5326
+    "module": 730,
+    "test": 5349
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:4c8b020719bd124cac8a771e0986b48f5c4758be65f90fff5149cab383dbe66d"
+  "source_tree_hash": "sha256:34c9f3496592163e9ca431d4ad28f497ee737f61a08f38331201831277ac3f43"
 }
