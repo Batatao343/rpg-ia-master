@@ -124,6 +124,48 @@ def test_player_protection_on_self_unchanged():
     assert not conds or conds[0]["duration"] <= 1
 
 
+def test_companion_support_card_on_player_extends_once():
+    """Revisão R3: companheiro (não-player) com Carta de bestiário já é estendido
+    pelo caminho da SPEC-283; o ramo novo do lado do jogador não soma de novo."""
+    calls = []
+    original = orch._extend_ally_defense
+
+    def spy(ev, actors_by_id, out):
+        before = [c.get("duration") for c in actors_by_id["player"]["active_conditions"]]
+        original(ev, actors_by_id, out)
+        after = [c.get("duration") for c in actors_by_id["player"]["active_conditions"]]
+        calls.append(before != after)
+
+    scene, actors, sides = _world()
+    actors["npc"]["cartas"] = ["bst_postura_muralha"]
+    actors["npc"]["virtudes"]["agilidade"] = 5
+    actors["player"]["virtudes"]["agilidade"] = 0
+    orch._extend_ally_defense = spy
+    try:
+        out = orch.run_round(
+            scene,
+            actors,
+            sides,
+            {"player": actors["player"]},
+            declarations={
+                "player": _pass("player"),
+                "npc": ct.TurnDeclaration(
+                    actor_id="npc",
+                    acao=ct.TurnStep(
+                        kind="card", card_id="bst_postura_muralha", target_id="player"
+                    ),
+                ),
+                "wolf": _pass("wolf"),
+            },
+            initiator="heroes",
+            rng=random.Random(0),
+        )
+    finally:
+        orch._extend_ally_defense = original
+    assert out["resolved_turns"].index("npc") < out["resolved_turns"].index("player")
+    assert sum(calls) == 1
+
+
 # --- R4: Controle tático nega exatamente UM turno do alvo ---------------------
 
 
@@ -199,7 +241,9 @@ def _card_total_damage(card: dict) -> int:
     efeito = card.get("efeito") or {}
     base = int(efeito.get("dano_base") or 0)
     if efeito.get("kind") == "dot":
-        return base + base * max(1, int(efeito.get("duracao") or 1))
+        # O tick usa a mesma precedência do motor (`valor` > `dano_base`).
+        tick = ct._effect_amount(efeito)
+        return base + tick * max(1, int(efeito.get("duracao") or 1))
     return base
 
 

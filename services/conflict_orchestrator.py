@@ -1396,11 +1396,18 @@ def _resolve_actor_turn(
         )
     if actor_id not in set(sides.get("enemy", [])) and acao is not None and acao.kind == "card":
         # SPEC-285 R3: simetria da SPEC-283 R2 — proteção que o lado do JOGADOR
-        # põe num aliado que ainda vai agir também ganha +1 turno.
+        # põe num aliado que ainda vai agir também ganha +1 turno. Companheiro
+        # (não-player) com Carta de bestiário já sai em `enemy_support_cards` e
+        # foi estendido acima — não estende de novo (sem dupla contagem).
+        already = {
+            (ev.get("actor_id"), ev.get("card_id")) for ev in sub.get("enemy_support_cards") or []
+        }
         for used in sub.get("cards_used", []):
             if used.get("actor_id") != actor_id or acao.target_id not in _same_side_ids(
                 actor_id, sides
             ):
+                continue
+            if (used.get("actor_id"), used.get("card_id")) in already:
                 continue
             _extend_ally_defense(
                 {
