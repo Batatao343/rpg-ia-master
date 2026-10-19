@@ -63,7 +63,7 @@ devolvem o parágrafo no hand-back. Ao abrir a próxima onda, mova estas notas p
 
 - **19/10 (onda):** workspace, logs P2/P3 (+ staging), SPEC-222 delete com arte, SPEC-236 §6.2 dia 1, SPEC-276 (Vite 8/Playwright 1.64), SPEC-278 (React 19), SPEC-279/280 (gasto sobrevive ao delete; órfãos) — todos na main com CI verde. Detalhe por frente em `CHANGELOG.md` § 2026-10-19. Pendente: SPEC-236 §6.2 dia 2 (20/10, [roteiro](docs/staging-wave-2026-10-17/spec236-s62-plano.md)).
 
-- **19/10 (onda, cont.):** SPEC-225/259/277/281/282/283/284/286/285/288 `done` (283: IA inimiga usa Cartas de suporte; letalidade 0,564 → 0,598 → SPEC-285); workspace 2ª passada + Ruff `I`/`UP`/format (CI exige `ruff format --check`); aiohttp 3.14.5 (CVE); staging em `65c0f23` (Jev primary, teto R$ 5). Detalhe em `CHANGELOG.md` § 2026-10-19.
+- **19/10 (onda, cont.):** SPEC-225/259/277/281/282/283/284/286/285/288/287 `done` (283: IA inimiga usa Cartas de suporte; letalidade 0,564 → 0,598 → SPEC-285); workspace 2ª passada + Ruff `I`/`UP`/format (CI exige `ruff format --check`); aiohttp 3.14.5 (CVE); staging em `65c0f23` (Jev primary, teto R$ 5). Detalhe em `CHANGELOG.md` § 2026-10-19.
 
 ## Como rodar
 
