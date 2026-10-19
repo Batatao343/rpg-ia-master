@@ -16,12 +16,28 @@ from collections.abc import Iterator, Mapping
 from uuid import uuid4
 
 _correlation: contextvars.ContextVar[dict[str, str]] = contextvars.ContextVar(
-    "rpg_correlation", default={},
+    "rpg_correlation",
+    default={},
 )
 _SENSITIVE_KEYS = {
-    "authorization", "cookie", "set-cookie", "access_token", "refresh_token",
-    "jwt", "password", "email", "prompt", "input_text", "action", "narrative",
-    "state", "save", "signed_url", "url", "private_brief", "payload",
+    "authorization",
+    "cookie",
+    "set-cookie",
+    "access_token",
+    "refresh_token",
+    "jwt",
+    "password",
+    "email",
+    "prompt",
+    "input_text",
+    "action",
+    "narrative",
+    "state",
+    "save",
+    "signed_url",
+    "url",
+    "private_brief",
+    "payload",
 }
 _TOKEN_RE = re.compile(r"(?i)bearer\s+[a-z0-9._~+/=-]+")
 _EMAIL_RE = re.compile(r"(?i)\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b")
@@ -46,9 +62,13 @@ def _native_tracer() -> Any:
         from opentelemetry.sdk.trace import TracerProvider
         from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
-        provider = TracerProvider(resource=Resource.create({
-            "service.name": os.getenv("OTEL_SERVICE_NAME", "valoria-api")[:100],
-        }))
+        provider = TracerProvider(
+            resource=Resource.create(
+                {
+                    "service.name": os.getenv("OTEL_SERVICE_NAME", "valoria-api")[:100],
+                }
+            )
+        )
         provider.add_span_processor(BatchSpanProcessor(OTLPSpanExporter(endpoint=endpoint)))
         trace.set_tracer_provider(provider)
         _otel_tracer = trace.get_tracer("valoria")
@@ -86,8 +106,12 @@ def safe_json(event: Mapping[str, Any]) -> str:
     return json.dumps(redact(event), ensure_ascii=False, sort_keys=True, default=str)
 
 
-_LEVELS = {"debug": logging.DEBUG, "info": logging.INFO, "warning": logging.WARNING,
-           "error": logging.ERROR}
+_LEVELS = {
+    "debug": logging.DEBUG,
+    "info": logging.INFO,
+    "warning": logging.WARNING,
+    "error": logging.ERROR,
+}
 
 
 def log_event(area: str, event: str, *, level: str = "info", **fields: Any) -> None:
@@ -100,19 +124,36 @@ def log_event(area: str, event: str, *, level: str = "info", **fields: Any) -> N
     logging.getLogger(f"rpg.{area}").log(
         _LEVELS.get(level, logging.INFO),
         # SPEC-240 R1: correlacao automatica; campos explicitos do chamador vencem.
-        safe_json({**correlation(), "event": f"{area}.{event}", **fields}))
+        safe_json({**correlation(), "event": f"{area}.{event}", **fields}),
+    )
 
 
 _PROVIDER_CAPABILITIES = {"stt", "image", "embedding"}
-_PROVIDER_OUTCOMES = {"success", "http_error", "timeout", "transport_error", "invalid_response",
-                      "refused", "circuit_open", "kill_switch"}
+_PROVIDER_OUTCOMES = {
+    "success",
+    "http_error",
+    "timeout",
+    "transport_error",
+    "invalid_response",
+    "refused",
+    "circuit_open",
+    "kill_switch",
+}
 _COST_BASES = {"exact", "estimated", "unknown"}
 
 
-def log_provider_attempt(capability: str, provider: str, model: str, outcome: str, *,
-                         http_status: int | None = None, latency_ms: float | None = None,
-                         attempt: int = 1, fell_back: bool = False,
-                         cost_basis: str = "unknown") -> None:
+def log_provider_attempt(
+    capability: str,
+    provider: str,
+    model: str,
+    outcome: str,
+    *,
+    http_status: int | None = None,
+    latency_ms: float | None = None,
+    attempt: int = 1,
+    fell_back: bool = False,
+    cost_basis: str = "unknown",
+) -> None:
     """SPEC-258 R1/R2: ``provider.attempt`` (debug no sucesso, warning na falha) + metricas
     ``rpg_provider_*``. Todos os campos sao de conjunto fechado/numericos; nunca conteudo
     (audio, prompt, texto embeddado, URL, corpo de resposta). Nunca levanta."""
@@ -122,17 +163,35 @@ def log_provider_attempt(capability: str, provider: str, model: str, outcome: st
         capability = capability if capability in _PROVIDER_CAPABILITIES else "other"
         outcome = outcome if outcome in _PROVIDER_OUTCOMES else "transport_error"
         cost_basis = cost_basis if cost_basis in _COST_BASES else "unknown"
-        status = http_status if isinstance(http_status, int) and not isinstance(http_status, bool) else None
-        metrics.increment("rpg_provider_attempts_total",
-                          {"capability": capability, "provider": provider, "outcome": outcome})
+        status = (
+            http_status
+            if isinstance(http_status, int) and not isinstance(http_status, bool)
+            else None
+        )
+        metrics.increment(
+            "rpg_provider_attempts_total",
+            {"capability": capability, "provider": provider, "outcome": outcome},
+        )
         if latency_ms is not None:
-            metrics.observe("rpg_provider_duration_seconds",
-                            {"capability": capability, "provider": provider}, latency_ms / 1000.0)
-        log_event("provider", "attempt", level="debug" if outcome == "success" else "warning",
-                  capability=capability, provider=provider, model=model, outcome=outcome,
-                  http_status=status,
-                  latency_ms=round(latency_ms, 1) if latency_ms is not None else None,
-                  attempt=attempt, fell_back=bool(fell_back), cost_basis=cost_basis)
+            metrics.observe(
+                "rpg_provider_duration_seconds",
+                {"capability": capability, "provider": provider},
+                latency_ms / 1000.0,
+            )
+        log_event(
+            "provider",
+            "attempt",
+            level="debug" if outcome == "success" else "warning",
+            capability=capability,
+            provider=provider,
+            model=model,
+            outcome=outcome,
+            http_status=status,
+            latency_ms=round(latency_ms, 1) if latency_ms is not None else None,
+            attempt=attempt,
+            fell_back=bool(fell_back),
+            cost_basis=cost_basis,
+        )
     except Exception:  # silent-ok: telemetria de provider nunca derruba a chamada
         pass
 
@@ -147,7 +206,8 @@ class _FallbackBucket(list):
 
 
 _fallbacks: contextvars.ContextVar[_FallbackBucket | None] = contextvars.ContextVar(
-    "rpg_turn_fallbacks", default=None)
+    "rpg_turn_fallbacks", default=None
+)
 
 
 def begin_fallbacks() -> tuple[contextvars.Token, list[str]]:
@@ -217,10 +277,10 @@ def _merge_correlation(current: dict[str, str], values: Mapping[str, object]) ->
             continue
         if key in {"owner_id", "game_id"}:
             ref = pseudonym(value)
-            current[f"{key}_ref"] = ref                       # nome legado (1 release)
-            current[f"{key[:-3]}_ref"] = ref                  # owner_ref / game_ref
+            current[f"{key}_ref"] = ref  # nome legado (1 release)
+            current[f"{key[:-3]}_ref"] = ref  # owner_ref / game_ref
         elif key == "action_id":
-            current["action_ref"] = pseudonym(value)          # id cru nunca entra
+            current["action_ref"] = pseudonym(value)  # id cru nunca entra
         else:
             current[key] = str(value)[:128]
 
@@ -261,6 +321,7 @@ def with_node(name: str, fn):
     def _wrapped(*args: Any, **kwargs: Any) -> Any:
         with node_scope(name):
             return fn(*args, **kwargs)
+
     return _wrapped
 
 

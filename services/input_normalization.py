@@ -7,16 +7,18 @@ sentinelas de provider (por exemplo, ``"null"``) como entidades reais.
 
 from typing import Optional
 
-_EMPTY_ENTITY_REFS = frozenset({
-    "null",
-    "none",
-    "nil",
-    "n/a",
-    "undefined",
-    "nenhum",
-    "ninguém",
-    "ninguem",
-})
+_EMPTY_ENTITY_REFS = frozenset(
+    {
+        "null",
+        "none",
+        "nil",
+        "n/a",
+        "undefined",
+        "nenhum",
+        "ninguém",
+        "ninguem",
+    }
+)
 
 
 def optional_entity_ref(value: object) -> str | None:

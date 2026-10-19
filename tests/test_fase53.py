@@ -1,4 +1,5 @@
 """Suíte da Fase 5.3 — telemetria + relatório agregado (offline, MockLLM)."""
+
 import glob
 import json
 import os
@@ -7,6 +8,7 @@ from playtest import pricing, report, telemetry
 from playtest.runner import run_campaign
 
 # --- Etapa 1 — telemetria por turno + summary ------------------------------
+
 
 def test_jsonl_uma_linha_por_turno(tmp_path, monkeypatch):
     monkeypatch.setattr(telemetry, "PLAYTEST_RUNS_DIR", str(tmp_path))
@@ -25,15 +27,31 @@ def test_summary_campos_obrigatorios(tmp_path, monkeypatch):
     monkeypatch.setattr(telemetry, "PLAYTEST_RUNS_DIR", str(tmp_path))
     res = run_campaign("explorador", turns=5, seed=1)
     summ = telemetry.persist_campaign("run1", res)
-    for campo in ("profile", "seed", "turns_completed", "errors", "violations",
-                  "routes", "latency_ms", "deaths", "final_level", "final_gold",
-                  "locations_visited", "quests", "llm_requests_by_provider",
-                  "cost_usd_total", "cost_usd_by_tier", "fell_back_turns", "mock"):
+    for campo in (
+        "profile",
+        "seed",
+        "turns_completed",
+        "errors",
+        "violations",
+        "routes",
+        "latency_ms",
+        "deaths",
+        "final_level",
+        "final_gold",
+        "locations_visited",
+        "quests",
+        "llm_requests_by_provider",
+        "cost_usd_total",
+        "cost_usd_by_tier",
+        "fell_back_turns",
+        "mock",
+    ):
         assert campo in summ, campo
 
 
 def test_violacao_aparece_no_turno_e_no_summary(tmp_path, monkeypatch):
     import main
+
     monkeypatch.setattr(telemetry, "PLAYTEST_RUNS_DIR", str(tmp_path))
 
     class _Corrupt:
@@ -59,23 +77,37 @@ def test_violacao_aparece_no_turno_e_no_summary(tmp_path, monkeypatch):
 
 # --- Etapa 2 — agregação + relatório ---------------------------------------
 
+
 def _synthetic_run(dirpath, profile, seed, errors=0, violations=None):
     os.makedirs(dirpath, exist_ok=True)
     summ = {
-        "profile": profile, "seed": seed, "turns_completed": 10, "errors": errors,
-        "violations": violations or {}, "routes": {"storyteller": 8, "combat_agent": 2},
-        "latency_ms": {"p50": 30, "p95": 90}, "deaths": 0, "final_level": 2,
-        "final_gold": 40, "locations_visited": 5, "quests": {"created": 1, "completed": 0},
-        "llm_requests_by_provider": {"groq": 10}, "cost_usd_total": 0.05,
-        "cost_usd_by_tier": {"fast": 0.03, "smart": 0.02}, "fell_back_turns": 1, "mock": False,
+        "profile": profile,
+        "seed": seed,
+        "turns_completed": 10,
+        "errors": errors,
+        "violations": violations or {},
+        "routes": {"storyteller": 8, "combat_agent": 2},
+        "latency_ms": {"p50": 30, "p95": 90},
+        "deaths": 0,
+        "final_level": 2,
+        "final_gold": 40,
+        "locations_visited": 5,
+        "quests": {"created": 1, "completed": 0},
+        "llm_requests_by_provider": {"groq": 10},
+        "cost_usd_total": 0.05,
+        "cost_usd_by_tier": {"fast": 0.03, "smart": 0.02},
+        "fell_back_turns": 1,
+        "mock": False,
     }
     with open(os.path.join(dirpath, f"{profile}_{seed}.summary.json"), "w", encoding="utf-8") as f:
         json.dump(summ, f)
     with open(os.path.join(dirpath, f"{profile}_{seed}.jsonl"), "w", encoding="utf-8") as f:
         for t in range(1, 11):
             err = "boom" if (errors and t == 2) else None
-            f.write(json.dumps({"turn": t, "route": "storyteller", "error": err,
-                                "violations": []}) + "\n")
+            f.write(
+                json.dumps({"turn": t, "route": "storyteller", "error": err, "violations": []})
+                + "\n"
+            )
 
 
 def test_aggregate_cruza_campanhas(tmp_path):
@@ -110,6 +142,7 @@ def test_baseline_gera_deltas(tmp_path):
 
 # --- Etapa 3 — teto de orçamento + custo -----------------------------------
 
+
 def test_custo_por_modelo_da_tabela():
     # 1M tokens de entrada, 0 de saída → exatamente o preço_in do modelo.
     assert pricing.estimate_cost("gemini-pro-latest", 1_000_000, 0) == 1.25
@@ -137,6 +170,7 @@ def _emit_wrapper(main_mod, monkeypatch):
 
 def test_max_requests_aborta_educadamente(monkeypatch):
     import main
+
     _emit_wrapper(main, monkeypatch)
     res = run_campaign("explorador", turns=10, seed=1, max_requests=3)
     assert res.aborted_reason is not None
@@ -146,6 +180,7 @@ def test_max_requests_aborta_educadamente(monkeypatch):
 
 def test_max_cost_aborta_educadamente(monkeypatch):
     import main
+
     _emit_wrapper(main, monkeypatch)
     # cada invoke ~0.00024 USD; teto baixo aborta em poucos turnos.
     res = run_campaign("explorador", turns=20, seed=1, max_cost=0.0005)

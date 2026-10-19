@@ -1,15 +1,22 @@
 """SPEC-230 R2: todo `with_structured_output(` precisa de guard `isinstance(`
 na mesma função (FallbackLLM devolve AIMessage, que e Pydantic valido e nao
 estoura no model_dump)."""
+
 import ast
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-FILES = (list((ROOT / "agents").glob("*.py")) + list((ROOT / "services").glob("*.py"))
-         + [ROOT / "character_creator.py", ROOT / "api.py"])
+FILES = (
+    list((ROOT / "agents").glob("*.py"))
+    + list((ROOT / "services").glob("*.py"))
+    + [ROOT / "character_creator.py", ROOT / "api.py"]
+)
 # allowlist justificada: (arquivo, funcao) -> motivo
 ALLOW: dict[tuple[str, str], str] = {
-    ("campaign_manager.py", "_invoke"): "helper fino; o chamador valida isinstance(plan, CampaignPlanModel)",
+    (
+        "campaign_manager.py",
+        "_invoke",
+    ): "helper fino; o chamador valida isinstance(plan, CampaignPlanModel)",
 }
 
 
@@ -23,8 +30,11 @@ def _sites():
             if not isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 continue
             seg = ast.get_source_segment(src, fn) or ""
-            own = [n for n in ast.walk(fn)
-                   if isinstance(n, ast.Attribute) and n.attr == "with_structured_output"]
+            own = [
+                n
+                for n in ast.walk(fn)
+                if isinstance(n, ast.Attribute) and n.attr == "with_structured_output"
+            ]
             if own:
                 yield path.name, fn.name, seg
 

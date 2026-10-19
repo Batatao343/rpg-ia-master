@@ -21,7 +21,9 @@ class JobWorker:
         self.handlers = dict(handlers)
         self.worker_id = worker_id
         self.stop_event = threading.Event()
-        self.stats: Counter[str] = Counter()     # SPEC-255 R4: completed/failed/dead/deferred/lease_lost
+        self.stats: Counter[str] = (
+            Counter()
+        )  # SPEC-255 R4: completed/failed/dead/deferred/lease_lost
 
     def run_once(self, *, limit: int = 10) -> int:
         if self.stop_event.is_set() or limit <= 0:
@@ -39,10 +41,14 @@ class JobWorker:
     def _run(self, job: LeasedJob) -> None:
         """SPEC-255 R2: o job roda dentro da correlacao do request que o criou."""
         from observability.telemetry import correlation_scope, pseudonym
+
         trace = job.request.trace or {}
-        with correlation_scope(job_ref=pseudonym(job.job_id), job_kind=job.request.kind,
-                               request_id=trace.get("request_id"),
-                               action_ref=trace.get("action_ref")):
+        with correlation_scope(
+            job_ref=pseudonym(job.job_id),
+            job_kind=job.request.kind,
+            request_id=trace.get("request_id"),
+            action_ref=trace.get("action_ref"),
+        ):
             self._run_scoped(job)
 
     def _run_scoped(self, job: LeasedJob) -> None:
@@ -65,8 +71,13 @@ class JobWorker:
                 lease.check()
             self.queue.complete(job.job_id, job.lease_token, result)
             self.stats["completed"] += 1
-            log_event("job", "completed", kind=kind, attempt=attempt,
-                      duration_ms=int((time.monotonic() - started) * 1000))
+            log_event(
+                "job",
+                "completed",
+                kind=kind,
+                attempt=attempt,
+                duration_ms=int((time.monotonic() - started) * 1000),
+            )
         except LeaseHeld:
             self.stats["lease_lost"] += 1
             log_event("job", "lease_lost", level="warning", kind=kind, attempt=attempt)
@@ -79,8 +90,14 @@ class JobWorker:
                 else:
                     self.queue.fail(job.job_id, job.lease_token, str(exc.reason)[:100])
                 self.stats["deferred"] += 1
-                log_event("job", "deferred", kind=kind, attempt=attempt, reason=str(exc.reason)[:60],
-                          delay_s=int(exc.delay_seconds))
+                log_event(
+                    "job",
+                    "deferred",
+                    kind=kind,
+                    attempt=attempt,
+                    reason=str(exc.reason)[:60],
+                    delay_s=int(exc.delay_seconds),
+                )
             except LeaseHeld:
                 self.stats["lease_lost"] += 1
                 log_event("job", "lease_lost", level="warning", kind=kind, attempt=attempt)
@@ -99,13 +116,30 @@ class JobWorker:
             if status is None:
                 status = "dead" if attempt >= int(job.request.max_attempts) else "retry"
             self.stats["failed"] += 1
-            log_event("job", "failed", level="warning", kind=kind, attempt=attempt,
-                      error_type=type(exc).__name__, error_code=code, will_retry=status == "retry",
-                      next_run_in_s=int((outcome or {}).get("next_run_in_s", 0)) if isinstance(outcome, dict) else 0)
+            log_event(
+                "job",
+                "failed",
+                level="warning",
+                kind=kind,
+                attempt=attempt,
+                error_type=type(exc).__name__,
+                error_code=code,
+                will_retry=status == "retry",
+                next_run_in_s=int((outcome or {}).get("next_run_in_s", 0))
+                if isinstance(outcome, dict)
+                else 0,
+            )
             if status == "dead":
                 self.stats["dead"] += 1
-                log_event("job", "dead", level="error", kind=kind, attempt=attempt,
-                          reason="max_attempts", error_code=code)
+                log_event(
+                    "job",
+                    "dead",
+                    level="error",
+                    kind=kind,
+                    attempt=attempt,
+                    reason="max_attempts",
+                    error_code=code,
+                )
             return
 
     def request_stop(self) -> None:

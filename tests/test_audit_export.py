@@ -1,4 +1,5 @@
 """SPEC-207 Etapas 2–3: trilha por turno (ring buffer) + builder ZIP determinístico."""
+
 from __future__ import annotations
 
 import hashlib
@@ -25,22 +26,39 @@ from services.audit_export import (
 from services.audit_redaction import PRIVATE_LABEL
 
 GEN_AT = "2026-10-16T00:00:00Z"
-REF_KEYS = {"source_id", "section", "visibility", "purpose", "npc_id",
-            "knowledge_kind", "certainty", "source_kind"}
+REF_KEYS = {
+    "source_id",
+    "section",
+    "visibility",
+    "purpose",
+    "npc_id",
+    "knowledge_kind",
+    "certainty",
+    "source_kind",
+}
 
 
 @pytest.fixture()
 def client(monkeypatch):
     import api
+
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
     api._rate_hits.clear()
     return TestClient(api.app)
 
 
 def _new_game(client) -> str:
-    r = client.post("/game/new", json={
-        "name": "Auditada", "race": "Humano", "class_name": "Sangromante",
-        "region": "Nova Arcádia", "level": 1, "backstory": ""})
+    r = client.post(
+        "/game/new",
+        json={
+            "name": "Auditada",
+            "race": "Humano",
+            "class_name": "Sangromante",
+            "region": "Nova Arcádia",
+            "level": 1,
+            "backstory": "",
+        },
+    )
     assert r.status_code == 200, r.text
     return r.json()["game_id"]
 
@@ -48,10 +66,15 @@ def _new_game(client) -> str:
 @pytest.fixture()
 def played(client):
     gid = _new_game(client)
-    for text in ("Olho ao redor da praça.", "Falo com o taverneiro sobre boatos.",
-                 "Meu email é jogador.real@example.com, me chame em (11) 98765-4321."):
-        r = client.post("/game/action", json={"input_text": text, "game_id": gid,
-                                              "action_id": str(uuid.uuid4())})
+    for text in (
+        "Olho ao redor da praça.",
+        "Falo com o taverneiro sobre boatos.",
+        "Meu email é jogador.real@example.com, me chame em (11) 98765-4321.",
+    ):
+        r = client.post(
+            "/game/action",
+            json={"input_text": text, "game_id": gid, "action_id": str(uuid.uuid4())},
+        )
         assert r.status_code == 200, r.text
     state = persistence.load_game_state(persistence.save_path(gid))
     assert state is not None
@@ -83,8 +106,9 @@ def test_trace_ring_buffer_caps_at_limit(monkeypatch):
     state = {"game_id": "g", "world": {"turn_count": 0}, "player": {}}
     for i in range(5):
         state["world"]["turn_count"] = i
-        audit_trace.record_turn_trace(state, previous_state=dict(state), action_id=f"a{i}",
-                                      context_refs=[])
+        audit_trace.record_turn_trace(
+            state, previous_state=dict(state), action_id=f"a{i}", context_refs=[]
+        )
     assert [row["turn"] for row in state["audit_trace"]] == [2, 3, 4]
     # cabe no orçamento de tamanho por turno (estimativa da spec: 0,5–2 KB)
     monkeypatch.delenv("RPG_AUDIT_TRACE_MAX")
@@ -114,13 +138,18 @@ def test_real_turn_trace_fits_size_budget(played, monkeypatch):
     monkeypatch.setenv("RPG_AUDIT_TRACE_MAX", "5")
     tail = audit_trace.normalize_audit_trace(ring)
     assert len(tail) == 5 and "ids_prev" not in json.dumps(tail[0])
-    assert list(audit_trace.iter_context_refs(audit_trace.expand_trace(tail)[0])) ==         list(audit_trace.iter_context_refs(back[-5]))
+    assert list(audit_trace.iter_context_refs(audit_trace.expand_trace(tail)[0])) == list(
+        audit_trace.iter_context_refs(back[-5])
+    )
 
 
 def test_context_refs_have_no_text(played):
     _gid, state = played
-    refs = [ref for row in audit_trace.expand_trace(state["audit_trace"])
-            for ref in audit_trace.iter_context_refs(row)]
+    refs = [
+        ref
+        for row in audit_trace.expand_trace(state["audit_trace"])
+        for ref in audit_trace.iter_context_refs(row)
+    ]
     assert refs, "turnos reais devem registrar refs do ContextPack"
     for ref in refs:
         assert set(ref) <= REF_KEYS
@@ -130,9 +159,13 @@ def test_context_refs_have_no_text(played):
 
 def test_context_pack_exposes_refs_without_text():
     from services.context_builder import ContextBudget, ScoredFact, assemble_pack
-    pack = assemble_pack([ScoredFact("O porto arde.", 1.0, "current_state", "ev1")],
-                         ContextBudget(), lore_text="Lore canônico longo.",
-                         memory_text="[RELATO | npc_claim | turno 2] Magda diz algo.")
+
+    pack = assemble_pack(
+        [ScoredFact("O porto arde.", 1.0, "current_state", "ev1")],
+        ContextBudget(),
+        lore_text="Lore canônico longo.",
+        memory_text="[RELATO | npc_claim | turno 2] Magda diz algo.",
+    )
     sections = {ref["section"]: ref for ref in pack.context_refs}
     assert set(sections) == {"current_state", "lore", "session_memory"}
     assert sections["session_memory"]["source_kind"] == "npc_claim"
@@ -144,6 +177,7 @@ def test_context_pack_exposes_refs_without_text():
 def test_save_v8_loads_with_empty_audit_trace(played):
     _gid, state = played
     from services.game_serialization import serialize_game_state
+
     raw = serialize_game_state(state)
     assert raw["schema_version"] == 8 == persistence.SCHEMA_VERSION
     legacy = json.loads(json.dumps(raw))
@@ -158,8 +192,10 @@ def test_trace_written_once_per_action_id(client):
     gid = _new_game(client)
     action = str(uuid.uuid4())
     for _ in range(2):
-        r = client.post("/game/action", json={"input_text": "Descanso um pouco.",
-                                              "game_id": gid, "action_id": action})
+        r = client.post(
+            "/game/action",
+            json={"input_text": "Descanso um pouco.", "game_id": gid, "action_id": action},
+        )
         assert r.status_code == 200
     state = persistence.load_game_state(persistence.save_path(gid))
     assert len(state["audit_trace"]) == 1
@@ -171,6 +207,7 @@ def test_trace_written_once_per_action_id(client):
 
 def test_trace_timing_uses_spec200_field_names():
     from observability.latency import FakeClock, TurnPhase, TurnTimeline
+
     clock = FakeClock()
     timeline = TurnTimeline(clock, transport="stream")
     timeline.mark("accepted")
@@ -178,12 +215,29 @@ def test_trace_timing_uses_spec200_field_names():
         clock.advance(0.3)
     with timeline.phase(TurnPhase.PERSISTENCE):
         snap = audit_trace.timing_snapshot(timeline)
-    assert list(snap) == ["transport", "execution_mode", "ack_server_ms", "ttfmc_server_ms",
-                          "ttlt_server_ms", "phase_ms", "lock_wait_ms", "llm_attempts",
-                          "llm_fallbacks", "llm_failed_attempts", "providers_used",
-                          "cost_basis", "input_size"]
-    assert set(snap["phase_ms"]) == {"router", "context", "narrator", "archivist",
-                                     "persistence", "other"}
+    assert list(snap) == [
+        "transport",
+        "execution_mode",
+        "ack_server_ms",
+        "ttfmc_server_ms",
+        "ttlt_server_ms",
+        "phase_ms",
+        "lock_wait_ms",
+        "llm_attempts",
+        "llm_fallbacks",
+        "llm_failed_attempts",
+        "providers_used",
+        "cost_basis",
+        "input_size",
+    ]
+    assert set(snap["phase_ms"]) == {
+        "router",
+        "context",
+        "narrator",
+        "archivist",
+        "persistence",
+        "other",
+    }
     assert snap["phase_ms"]["persistence"] is None and snap["phase_ms"]["router"] == 300
     assert snap["transport"] == "stream"
     assert audit_trace.timing_snapshot(None) is None
@@ -194,35 +248,78 @@ def _crafted_state():
         "game_id": str(uuid.uuid4()),
         "world": {"turn_count": 2, "current_location_id": "nova_arcadia"},
         "player": {"gold": 10},
-        "campaign_plan": {"arc_title": "Arco", "climax": "O pacto é revelado",
-                          "beats": [{"description": "Beat secreto", "status": "pending"}]},
+        "campaign_plan": {
+            "arc_title": "Arco",
+            "climax": "O pacto é revelado",
+            "beats": [{"description": "Beat secreto", "status": "pending"}],
+        },
         "presentation_history": [
             {"id": "p1", "turn": 1, "epoch": 0, "role": "player", "text": "oi"},
-            {"id": "n1", "turn": 1, "epoch": 0, "role": "narrator", "text": "Olá.",
-             "speaker_kind": "npc", "speaker_id": "npc_magda"},
+            {
+                "id": "n1",
+                "turn": 1,
+                "epoch": 0,
+                "role": "narrator",
+                "text": "Olá.",
+                "speaker_kind": "npc",
+                "speaker_id": "npc_magda",
+            },
             {"id": "p2", "turn": 2, "epoch": 0, "role": "player", "text": "e aí"},
             {"id": "n2", "turn": 2, "epoch": 0, "role": "narrator", "text": "Silêncio."},
         ],
-        "audit_trace": [{
-            "turn": 1, "epoch": 0, "action_ref": "aaaa", "speaker": "npc:npc_magda",
-            "context_refs": [
-                {"source_id": "memory_content_x", "section": "session_memory",
-                 "visibility": "public", "purpose": "npc", "knowledge_kind": "report",
-                 "certainty": "reported", "source_kind": "npc_claim"},
-                {"source_id": "lore_content_y", "section": "lore", "visibility": "hidden",
-                 "purpose": "story", "knowledge_kind": "fact", "certainty": "confirmed",
-                 "source_kind": "canonical_event"},
-                {"source_id": "plan_z", "section": "lore", "visibility": "public",
-                 "purpose": "story", "knowledge_kind": "invented", "certainty": "sure",
-                 "source_kind": "llm"},
-            ],
-            "delta": {"player.gold": {"before": 5, "after": 10}},
-            "errors": [{"code": "structured_output_invalid", "node": None, "tier": "fast",
-                        "recovered": True, "fallback": "provider_next", "error_class": None,
-                        "message": "Traceback com segredo"}],
-            "timing": None, "timing_partial": False,
-            "revealed_secret_ids": [], "reveal_criteria_diverge": False,
-        }],
+        "audit_trace": [
+            {
+                "turn": 1,
+                "epoch": 0,
+                "action_ref": "aaaa",
+                "speaker": "npc:npc_magda",
+                "context_refs": [
+                    {
+                        "source_id": "memory_content_x",
+                        "section": "session_memory",
+                        "visibility": "public",
+                        "purpose": "npc",
+                        "knowledge_kind": "report",
+                        "certainty": "reported",
+                        "source_kind": "npc_claim",
+                    },
+                    {
+                        "source_id": "lore_content_y",
+                        "section": "lore",
+                        "visibility": "hidden",
+                        "purpose": "story",
+                        "knowledge_kind": "fact",
+                        "certainty": "confirmed",
+                        "source_kind": "canonical_event",
+                    },
+                    {
+                        "source_id": "plan_z",
+                        "section": "lore",
+                        "visibility": "public",
+                        "purpose": "story",
+                        "knowledge_kind": "invented",
+                        "certainty": "sure",
+                        "source_kind": "llm",
+                    },
+                ],
+                "delta": {"player.gold": {"before": 5, "after": 10}},
+                "errors": [
+                    {
+                        "code": "structured_output_invalid",
+                        "node": None,
+                        "tier": "fast",
+                        "recovered": True,
+                        "fallback": "provider_next",
+                        "error_class": None,
+                        "message": "Traceback com segredo",
+                    }
+                ],
+                "timing": None,
+                "timing_partial": False,
+                "revealed_secret_ids": [],
+                "reveal_criteria_diverge": False,
+            }
+        ],
     }
 
 
@@ -237,24 +334,35 @@ def test_knowledge_visibility_values_match_spec206():
     assert first["speaker"] == "npc:npc_magda"
     public, private, invalid = first["items"]
     assert (public["knowledge_kind"], public["certainty"], public["source_kind"]) == (
-        "report", "reported", "npc_claim")
+        "report",
+        "reported",
+        "npc_claim",
+    )
     assert private["visibility"] == "hidden"
     assert private["knowledge_kind"] is None and private["certainty"] is None
     assert private["source_kind"] is None and private["private_label"] == PRIVATE_LABEL
     assert invalid["knowledge_kind"] is None  # fora do enum nunca sai
     assert "private_label" not in public
-    assert rows[1] == {"turn_ref": "t:0:2", "speaker": "narrator", "items": None,
-                       "context_refs_unavailable": True}
+    assert rows[1] == {
+        "turn_ref": "t:0:2",
+        "speaker": "narrator",
+        "items": None,
+        "context_refs_unavailable": True,
+    }
 
 
 def test_revealed_ids_use_accepted_secret_ids():
-    state = {"player": {"known_secrets": ["pacto_valerius"]},
-             "narrative_summary": "Magda contou do pacto com Valerius.", "event_log": []}
+    state = {
+        "player": {"known_secrets": ["pacto_valerius"]},
+        "narrative_summary": "Magda contou do pacto com Valerius.",
+        "event_log": [],
+    }
     status = audit_trace.reveal_status(state)
     assert status["revealed_secret_ids"] == []
     assert status["reveal_criteria_diverge"] is True
-    state["event_log"] = [{"type": "secret_revealed", "target_id": "pacto_valerius",
-                           "event_id": "e1"}]
+    state["event_log"] = [
+        {"type": "secret_revealed", "target_id": "pacto_valerius", "event_id": "e1"}
+    ]
     status = audit_trace.reveal_status(state)
     assert "pacto_valerius" in status["revealed_secret_ids"]
 
@@ -290,30 +398,48 @@ def test_manifest_hashes_match(played):
 def test_same_input_same_bytes(played):
     _gid, state = played
     assert bundle_zip(_source(state), generated_at=GEN_AT) == bundle_zip(
-        _source(state), generated_at=GEN_AT)
+        _source(state), generated_at=GEN_AT
+    )
 
 
 def test_sessions_ordered_by_sequence():
     state = _crafted_state()
-    turns = [{"operation_id": str(uuid.uuid4()), "sequence": 9, "presentation_entry_id": "n1",
-              "route": "npc_actor", "latency_ms": 10, "llm_cost_usd": None},
-             {"operation_id": str(uuid.uuid4()), "sequence": 4, "presentation_entry_id": "n2",
-              "route": "storyteller", "latency_ms": 20, "llm_cost_usd": None}]
+    turns = [
+        {
+            "operation_id": str(uuid.uuid4()),
+            "sequence": 9,
+            "presentation_entry_id": "n1",
+            "route": "npc_actor",
+            "latency_ms": 10,
+            "llm_cost_usd": None,
+        },
+        {
+            "operation_id": str(uuid.uuid4()),
+            "sequence": 4,
+            "presentation_entry_id": "n2",
+            "route": "storyteller",
+            "latency_ms": 20,
+            "llm_cost_usd": None,
+        },
+    ]
     cost = {turns[0]["operation_id"]: "0.00002", turns[1]["operation_id"]: "0.00001"}
-    files = build_audit_bundle(_source(state, turns=turns, usage_cost=cost),
-                               generated_at=GEN_AT).files
+    files = build_audit_bundle(
+        _source(state, turns=turns, usage_cost=cost), generated_at=GEN_AT
+    ).files
     rows = _lines(files, "sessions/0.jsonl")
     assert [r["sequence"] for r in rows] == [4, 9]
     assert rows[0]["cost_usd"] == "0.00001" and rows[1]["cost_usd"] == "0.00002"
-    assert all(turns[0]["operation_id"] not in f.decode(errors="ignore")
-               for f in files.values())
+    assert all(turns[0]["operation_id"] not in f.decode(errors="ignore") for f in files.values())
 
 
 def test_private_items_only_with_label(played):
     _gid, state = played
     state = dict(state)
-    state["campaign_plan"] = {"arc_title": "A", "climax": "pacto com valerius",
-                              "beats": [{"description": "segredo", "status": "pending"}]}
+    state["campaign_plan"] = {
+        "arc_title": "A",
+        "climax": "pacto com valerius",
+        "beats": [{"description": "segredo", "status": "pending"}],
+    }
     files = build_audit_bundle(_source(state), generated_at=GEN_AT).files
     final = json.loads(files["state/final_snapshot.json"])
     assert final["private_reference"]["label"] == PRIVATE_LABEL
@@ -329,15 +455,17 @@ def test_private_items_only_with_label(played):
 
 def test_truncation_marks_manifest():
     state = _crafted_state()
-    bundle = build_audit_bundle(_source(state), limits=AuditLimits(max_turns=1),
-                                generated_at=GEN_AT)
+    bundle = build_audit_bundle(
+        _source(state), limits=AuditLimits(max_turns=1), generated_at=GEN_AT
+    )
     assert bundle.manifest["truncated"] is True
     assert bundle.manifest["truncation_reason"] == "max_turns"
     assert bundle.manifest["turn_count"] == 1
     assert bundle.manifest["range"]["first_turn_ref"] == "t:0:2"
     full = len(write_zip(build_audit_bundle(_source(state), generated_at=GEN_AT).files))
-    small = build_audit_bundle(_source(state), limits=AuditLimits(max_bytes=full - 1),
-                               generated_at=GEN_AT)
+    small = build_audit_bundle(
+        _source(state), limits=AuditLimits(max_bytes=full - 1), generated_at=GEN_AT
+    )
     assert small.manifest["truncated"] is True
     assert small.manifest["truncation_reason"] == "max_bytes"
     assert len(write_zip(small.files)) <= full - 1
@@ -349,22 +477,36 @@ def test_zip_pii_scan_clean(played):
     owner = uuid.uuid4()
     email = "dono.conta@example.net"
     state = json.loads(json.dumps(state, default=str))
-    state["presentation_history"].append({
-        "id": "nx", "turn": 99, "epoch": 0, "role": "narrator",
-        "text": f"Conta {owner} de {email} via 192.168.0.10 Bearer tok.en.x "
-                "https://x.supabase.co/storage/v1/object/sign/a?token=t"})
+    state["presentation_history"].append(
+        {
+            "id": "nx",
+            "turn": 99,
+            "epoch": 0,
+            "role": "narrator",
+            "text": f"Conta {owner} de {email} via 192.168.0.10 Bearer tok.en.x "
+            "https://x.supabase.co/storage/v1/object/sign/a?token=t",
+        }
+    )
     source = _source(state, owner_values={str(owner), email})
     data = bundle_zip(source, generated_at=GEN_AT)
     assert verify_audit_zip(data, owner_values={str(owner), email}) == []
     blob = b"".join(_zip_files(data).values()).decode(errors="ignore")
-    for needle in (str(owner), owner.hex, email, "jogador.real@example.com",
-                   "98765-4321", "192.168.0.10", "token=t"):
+    for needle in (
+        str(owner),
+        owner.hex,
+        email,
+        "jogador.real@example.com",
+        "98765-4321",
+        "192.168.0.10",
+        "token=t",
+    ):
         assert needle not in blob
 
 
 def test_redaction_failure_fails_closed(monkeypatch):
     import services.audit_export as ae
     from services.audit_redaction import AuditRedactionError
+
     monkeypatch.setattr(ae, "scan_pii", lambda *_a, **_k: ["email"])
     with pytest.raises(AuditRedactionError):
         build_audit_bundle(_source(_crafted_state()), generated_at=GEN_AT)
@@ -386,6 +528,7 @@ def test_no_llm_called(played, monkeypatch):
 
     def boom(*_a, **_k):
         raise AssertionError("export não pode chamar LLM/embedding")
+
     monkeypatch.setattr(llm_setup, "get_llm", boom)
     monkeypatch.setattr(rag, "query_rag", boom, raising=False)
     monkeypatch.setattr(rag, "get_embeddings", boom, raising=False)
@@ -402,7 +545,8 @@ def test_audit_docs_runtime_copy_matches_repo():
     root = Path(__file__).resolve().parent.parent
     for name in ("AUDITOR_PROMPT.md", "README_SCHEMA.md"):
         assert (root / "docs/auditoria" / name).read_bytes() == (
-            root / "data/auditoria" / name).read_bytes()
+            root / "data/auditoria" / name
+        ).read_bytes()
 
 
 def test_readme_schema_documents_real_fields(played):
@@ -417,8 +561,19 @@ def test_readme_schema_documents_real_fields(played):
     for key in keys:
         assert f"`{key}`" in readme, key
     prompt = files["AUDITOR_PROMPT.md"].decode()
-    for key in ("severity", "category", "session_ref", "turn_ref", "expected", "observed",
-                "evidence_refs", "hypothesis", "confidence", "eval_proposal", "cluster_id"):
+    for key in (
+        "severity",
+        "category",
+        "session_ref",
+        "turn_ref",
+        "expected",
+        "observed",
+        "evidence_refs",
+        "hypothesis",
+        "confidence",
+        "eval_proposal",
+        "cluster_id",
+    ):
         assert f'"{key}"' in prompt
 
 
@@ -431,6 +586,7 @@ def test_legacy_profile_404(client):
 def test_cli_exports_local_save(played, tmp_path):
     gid, state = played
     from scripts.export_game_audit import main
+
     save = Path(persistence.save_path(gid))
     out = tmp_path / "audit.zip"
     assert main(["--save", str(save), "--output", str(out), "--generated-at", GEN_AT]) == 0
@@ -443,10 +599,19 @@ def test_adversarial_player_text_and_raw_game_id_never_in_zip():
     gid = uuid.UUID(state["game_id"])
     state["presentation_history"][0]["text"] = (
         f"cpf 123.456.789-09, zap 11987654321, AKIAIOSFODNN7EXAMPLE, fe80::1ff:fe23:4567:890a, "
-        f"senha: hunter22, ghp_abcdefghijklmnopqrstuvwxyz0123456789, jogo {gid.hex}")
+        f"senha: hunter22, ghp_abcdefghijklmnopqrstuvwxyz0123456789, jogo {gid.hex}"
+    )
     data = bundle_zip(_source(state), generated_at=GEN_AT)
     assert verify_audit_zip(data) == []
     blob = b"".join(_zip_files(data).values()).decode(errors="ignore")
-    for needle in ("123.456.789-09", "11987654321", "AKIAIOSFODNN7", "fe80::1ff", "hunter22",
-                   "ghp_abcdef", gid.hex, str(gid)):
+    for needle in (
+        "123.456.789-09",
+        "11987654321",
+        "AKIAIOSFODNN7",
+        "fe80::1ff",
+        "hunter22",
+        "ghp_abcdef",
+        gid.hex,
+        str(gid),
+    ):
         assert needle not in blob, needle

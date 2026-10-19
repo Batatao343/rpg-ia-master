@@ -1,4 +1,5 @@
 """SPEC-225 R2/R3/R4: workflows com permissions mínimas, sem pull_request_target e actions pinadas por SHA."""
+
 import re
 from pathlib import Path
 
@@ -42,5 +43,7 @@ def test_external_actions_are_pinned_by_sha_with_tag_comment(path):
 def test_eval_protected_first_checkout_does_not_persist_credentials():
     data = _load(ROOT / ".github" / "workflows" / "eval-protected.yml")
     for job in data["jobs"].values():
-        first = next(s for s in job["steps"] if str(s.get("uses", "")).startswith("actions/checkout"))
+        first = next(
+            s for s in job["steps"] if str(s.get("uses", "")).startswith("actions/checkout")
+        )
         assert first.get("with", {}).get("persist-credentials") is False

@@ -2,6 +2,7 @@
 Fase 6.5 — Clima com efeito real: cadeias por região e mecânica.
 Spec: specs/SPEC-021-fase-6.5-clima-com-efeito.md. 100% offline.
 """
+
 import random
 
 import pytest
@@ -31,9 +32,15 @@ class _FixedRng:
 
 
 def _world(region_loc="pantano_melancolia", **over):
-    w = {"current_location_id": region_loc, "current_location": region_loc,
-         "world_clock": {"day": 1, "period": "Manhã"}, "turn_count": 3,
-         "danger_level": 3, "weather_state": None, "weather": ""}
+    w = {
+        "current_location_id": region_loc,
+        "current_location": region_loc,
+        "world_clock": {"day": 1, "period": "Manhã"},
+        "turn_count": 3,
+        "danger_level": 3,
+        "weather_state": None,
+        "weather": "",
+    }
     w.update(over)
     return w
 
@@ -41,6 +48,7 @@ def _world(region_loc="pantano_melancolia", **over):
 # ---------------------------------------------------------------------------
 # Etapa 1 — cadeias por região
 # ---------------------------------------------------------------------------
+
 
 def test_advance_weather_cadeia_da_regiao():
     w = _world()
@@ -64,6 +72,7 @@ def test_starting_world_tem_clima_canonico():
 # Etapa 2 — efeitos como leitura (nunca condição gravada)
 # ---------------------------------------------------------------------------
 
+
 def test_miasma_efeitos_e_abrigo_anula():
     w = _world(weather_state="miasma")
     fx = wu.weather_effects(w)
@@ -85,13 +94,13 @@ def test_rest_block_nega_descanso():
     p = {"name": "T", "hp": 5, "max_hp": 30}
     p2, w2 = wu.apply_rest(p, w)
     assert p2["hp"] == 5  # NADA recuperado
-    p3, _ = wu.apply_rest({"name": "T", "hp": 5, "max_hp": 30},
-                          _world(weather_state="nublado"))
+    p3, _ = wu.apply_rest({"name": "T", "hp": 5, "max_hp": 30}, _world(weather_state="nublado"))
     assert p3["hp"] > 5
 
 
 def test_nevasca_encarece_viagem():
     from gamedata import get_location
+
     w = _world(region_loc="skallgard", weather_state="nevasca")
     dest = get_location("sk_fortaleza_vorr") or get_location("skallgard")
     day_period_antes = dict(w["world_clock"])
@@ -112,43 +121,84 @@ def test_deteccao_sofre_com_neblina():
 # Etapa 3 — combate simétrico
 # ---------------------------------------------------------------------------
 
+
 def test_env_attack_mod_simetrico():
     import combat_mechanics as cm
-    p = {"name": "T", "attributes": {"str": 10, "dex": 10}, "inventory": [],
-         "equipment": {"weapon": None, "armor": None, "accessory": None},
-         "active_conditions": [], "attack_bonus": 0, "_env_attack_mod": -1}
-    assert cm.compute_player_combat_stats(p)["attack"] == \
-        cm.compute_player_combat_stats({**p, "_env_attack_mod": 0})["attack"] - 1
+
+    p = {
+        "name": "T",
+        "attributes": {"str": 10, "dex": 10},
+        "inventory": [],
+        "equipment": {"weapon": None, "armor": None, "accessory": None},
+        "active_conditions": [],
+        "attack_bonus": 0,
+        "_env_attack_mod": -1,
+    }
+    assert (
+        cm.compute_player_combat_stats(p)["attack"]
+        == cm.compute_player_combat_stats({**p, "_env_attack_mod": 0})["attack"] - 1
+    )
 
 
 def test_dot_outdoor_no_combate(monkeypatch):
     from langchain_core.messages import HumanMessage, SystemMessage
 
     from agents import combat as cbt
+
     monkeypatch.setattr(cbt, "_narrate", lambda *a, **k: "ok")
-    enemy = {"id": "e1", "name": "Orc", "type": "Minion", "hp": 30, "max_hp": 30,
-             "defense": 30, "status": "ativo", "attributes": {"dex": 10},
-             "active_conditions": [],
-             "attacks": [{"name": "G", "bonus": -20, "damage": "1d1"}],
-             "stamina": 0, "mana": 0, "attack_mod": 0}
-    state = {"messages": [SystemMessage(content="COMBAT START."),
-                          HumanMessage(content="luto")],
-             "player": {"name": "T", "class_name": "", "hp": 30, "max_hp": 30,
-                        "mana": 0, "max_mana": 0, "stamina": 10, "max_stamina": 10,
-                        "attributes": {"str": 10, "dex": 10}, "inventory": [],
-                        "equipment": {"weapon": None, "armor": None, "accessory": None},
-                        "known_abilities": ["ataque_basico"], "defense": 30,
-                        "attack_bonus": 0, "active_conditions": [],
-                        "ability_cooldowns": {}, "pending_choices": [], "xp": 0,
-                        "level": 1},
-             "enemies": [enemy], "combat": {}, "combat_target": "Orc",
-             "world": {"turn_count": 3, "current_location": "Pântano",
-                       "current_location_id": "pantano_melancolia",
-                       "weather_state": "miasma", "world_clock": {"day": 1}},
-             "bestiary_knowledge": {}, "pending_world_events": [], "party": [],
-             "combat_declaration": {
-                 "actor_id": "player",
-                 "acao": {"kind": "attack", "target_id": "e1"}}}
+    enemy = {
+        "id": "e1",
+        "name": "Orc",
+        "type": "Minion",
+        "hp": 30,
+        "max_hp": 30,
+        "defense": 30,
+        "status": "ativo",
+        "attributes": {"dex": 10},
+        "active_conditions": [],
+        "attacks": [{"name": "G", "bonus": -20, "damage": "1d1"}],
+        "stamina": 0,
+        "mana": 0,
+        "attack_mod": 0,
+    }
+    state = {
+        "messages": [SystemMessage(content="COMBAT START."), HumanMessage(content="luto")],
+        "player": {
+            "name": "T",
+            "class_name": "",
+            "hp": 30,
+            "max_hp": 30,
+            "mana": 0,
+            "max_mana": 0,
+            "stamina": 10,
+            "max_stamina": 10,
+            "attributes": {"str": 10, "dex": 10},
+            "inventory": [],
+            "equipment": {"weapon": None, "armor": None, "accessory": None},
+            "known_abilities": ["ataque_basico"],
+            "defense": 30,
+            "attack_bonus": 0,
+            "active_conditions": [],
+            "ability_cooldowns": {},
+            "pending_choices": [],
+            "xp": 0,
+            "level": 1,
+        },
+        "enemies": [enemy],
+        "combat": {},
+        "combat_target": "Orc",
+        "world": {
+            "turn_count": 3,
+            "current_location": "Pântano",
+            "current_location_id": "pantano_melancolia",
+            "weather_state": "miasma",
+            "world_clock": {"day": 1},
+        },
+        "bestiary_knowledge": {},
+        "pending_world_events": [],
+        "party": [],
+        "combat_declaration": {"actor_id": "player", "acao": {"kind": "attack", "target_id": "e1"}},
+    }
     out = cbt.combat_node(state)
     assert out["player"]["hp"] < 30  # miasma mordeu (defense 30 impede hit normal)
 
@@ -156,6 +206,7 @@ def test_dot_outdoor_no_combate(monkeypatch):
 # ---------------------------------------------------------------------------
 # Etapa 4 — fenômeno global (lista curada; sem canal LLM ainda)
 # ---------------------------------------------------------------------------
+
 
 def test_fenomeno_global_da_lista_e_expira():
     w = _world(weather_state="nublado")

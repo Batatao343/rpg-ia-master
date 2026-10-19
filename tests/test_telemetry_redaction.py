@@ -31,7 +31,8 @@ def test_metricas_rejeitam_labels_de_alta_cardinalidade():
     metrics.increment("rpg_turn_commits_total", {"outcome": "ok"})
     try:
         metrics.increment(
-            "rpg_turn_commits_total", {"outcome": "ok", "game_id": "raw"},
+            "rpg_turn_commits_total",
+            {"outcome": "ok", "game_id": "raw"},
         )
     except ValueError as exc:
         assert "labels" in str(exc)

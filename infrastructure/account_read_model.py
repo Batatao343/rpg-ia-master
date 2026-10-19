@@ -3,6 +3,7 @@
 Commercial units are milli-Estilhas. Only settled wallet entries count as spend;
 usage telemetry is activity, not a charge.
 """
+
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone, UTC
@@ -16,8 +17,10 @@ from infrastructure.usage_events import has_column
 
 
 def _category_sql(alias: str = "u") -> str:
-    return (f"case when {alias}.category='image' then 'image' "
-            f"when {alias}.category='speech_to_text' then 'voice' else 'game' end")
+    return (
+        f"case when {alias}.category='image' then 'image' "
+        f"when {alias}.category='speech_to_text' then 'voice' else 'game' end"
+    )
 
 
 def _page_limit(limit: int) -> int:
@@ -63,11 +66,14 @@ class PostgresAccountReader:
                 "select available_milli,reserved_milli from app.wallet_accounts where owner_id=%s",
                 (principal.user_id,),
             ).fetchone()
-        return {"available_milli": str(row["available_milli"]) if row else "0",
-                "reserved_milli": str(row["reserved_milli"]) if row else "0"}
+        return {
+            "available_milli": str(row["available_milli"]) if row else "0",
+            "reserved_milli": str(row["reserved_milli"]) if row else "0",
+        }
 
-    def purchases(self, principal: Principal, *, cursor: str | None = None,
-                  limit: int = 20) -> dict:
+    def purchases(
+        self, principal: Principal, *, cursor: str | None = None, limit: int = 20
+    ) -> dict:
         limit = _page_limit(limit)
         after = _cursor(cursor)
         with admin_connection(self.pool) as connection:
@@ -76,23 +82,36 @@ class PostgresAccountReader:
                 where owner_id=%s and entry_type in ('purchase','refund','reversal')
                   and (%s::timestamptz is null or (created_at,entry_id) < (%s,%s::uuid))
                 order by created_at desc,entry_id desc limit %s""",
-                (principal.user_id, after[0] if after else None,
-                 after[0] if after else None, after[1] if after else None, limit + 1),
+                (
+                    principal.user_id,
+                    after[0] if after else None,
+                    after[0] if after else None,
+                    after[1] if after else None,
+                    limit + 1,
+                ),
             ).fetchall()
         page = _page(rows, limit, "entry_id")
-        page["items"] = [{"id": str(r["entry_id"]), "kind": r["entry_type"],
-                          "amount_milli": str(r["amount_milli"]),
-                          "created_at": r["created_at"].isoformat()} for r in page["items"]]
+        page["items"] = [
+            {
+                "id": str(r["entry_id"]),
+                "kind": r["entry_type"],
+                "amount_milli": str(r["amount_milli"]),
+                "created_at": r["created_at"].isoformat(),
+            }
+            for r in page["items"]
+        ]
         return page
 
-    def usage(self, principal: Principal, *, cursor: str | None = None,
-              limit: int = 20) -> dict:
+    def usage(self, principal: Principal, *, cursor: str | None = None, limit: int = 20) -> dict:
         limit = _page_limit(limit)
         after = _cursor(cursor)
         with admin_connection(self.pool) as connection:
             # SPEC-279: usage of a deleted campaign stays listed (operation gone, kind snapshot kept).
-            kind = ("coalesce(u.operation_kind,o.kind)"
-                    if has_column(connection, "app.usage_events", "operation_kind") else "o.kind")
+            kind = (
+                "coalesce(u.operation_kind,o.kind)"
+                if has_column(connection, "app.usage_events", "operation_kind")
+                else "o.kind"
+            )
             rows = connection.execute(
                 f"""select u.event_id,u.created_at,u.game_id,{_category_sql()} as category,
                            {kind} as operation_kind
@@ -101,13 +120,24 @@ class PostgresAccountReader:
                     where u.owner_id=%s
                       and (%s::timestamptz is null or (u.created_at,u.event_id) < (%s,%s::uuid))
                     order by u.created_at desc,u.event_id desc limit %s""",
-                (principal.user_id, after[0] if after else None,
-                 after[0] if after else None, after[1] if after else None, limit + 1),
+                (
+                    principal.user_id,
+                    after[0] if after else None,
+                    after[0] if after else None,
+                    after[1] if after else None,
+                    limit + 1,
+                ),
             ).fetchall()
         page = _page(rows, limit, "event_id")
-        page["items"] = [{"id": str(r["event_id"]), "category": r["category"],
-                          "operation": r["operation_kind"],
-                          "created_at": r["created_at"].isoformat()} for r in page["items"]]
+        page["items"] = [
+            {
+                "id": str(r["event_id"]),
+                "category": r["category"],
+                "operation": r["operation_kind"],
+                "created_at": r["created_at"].isoformat(),
+            }
+            for r in page["items"]
+        ]
         return page
 
     def series(self, principal: Principal, period: str, *, now: datetime | None = None) -> dict:
@@ -116,8 +146,11 @@ class PostgresAccountReader:
         now = (now or datetime.now(UTC)).astimezone(UTC)
         hourly = period == "24h"
         unit = timedelta(hours=1) if hourly else timedelta(days=1)
-        end = now.replace(minute=0, second=0, microsecond=0) if hourly else now.replace(
-            hour=0, minute=0, second=0, microsecond=0)
+        end = (
+            now.replace(minute=0, second=0, microsecond=0)
+            if hourly
+            else now.replace(hour=0, minute=0, second=0, microsecond=0)
+        )
         count = {"24h": 24, "7d": 7, "30d": 30}[period]
         start = end - unit * (count - 1)
         with admin_connection(self.pool) as connection:
@@ -136,8 +169,9 @@ class PostgresAccountReader:
                 group by 1,2""",
                 ("hour" if hourly else "day", principal.user_id, start, end + unit),
             ).fetchall()
-        totals = {(r["bucket"].astimezone(UTC), r["category"]):
-                  int(r["amount_milli"]) for r in rows}
+        totals = {
+            (r["bucket"].astimezone(UTC), r["category"]): int(r["amount_milli"]) for r in rows
+        }
         points = []
         category_totals = {cat: 0 for cat in ("game", "image", "voice")}
         for i in range(count):
@@ -145,17 +179,28 @@ class PostgresAccountReader:
             amounts = {cat: totals.get((bucket, cat), 0) for cat in category_totals}
             for cat, amount in amounts.items():
                 category_totals[cat] += amount
-            points.append({"start": bucket.isoformat(),
-                           **{cat: str(amount) for cat, amount in amounts.items()},
-                           "total": str(sum(amounts.values()))})
-        return {"period": period, "unit": "milli_shard",
-                "totals": {cat: str(amount) for cat, amount in category_totals.items()},
-                "points": points}
+            points.append(
+                {
+                    "start": bucket.isoformat(),
+                    **{cat: str(amount) for cat, amount in amounts.items()},
+                    "total": str(sum(amounts.values())),
+                }
+            )
+        return {
+            "period": period,
+            "unit": "milli_shard",
+            "totals": {cat: str(amount) for cat, amount in category_totals.items()},
+            "points": points,
+        }
 
-    def history_costs(self, principal: Principal, game_id: UUID,
-                      entries: list[dict]) -> dict[str, dict]:
-        narrators = {str(e["id"]): int(e.get("epoch", 0)) for e in entries
-                     if e.get("role") == "narrator" and e.get("id")}
+    def history_costs(
+        self, principal: Principal, game_id: UUID, entries: list[dict]
+    ) -> dict[str, dict]:
+        narrators = {
+            str(e["id"]): int(e.get("epoch", 0))
+            for e in entries
+            if e.get("role") == "narrator" and e.get("id")
+        }
         if not narrators:
             return {}
         with admin_connection(self.pool) as connection:
@@ -180,19 +225,22 @@ class PostgresAccountReader:
                   settled.cost_milli,usage_basis.events,usage_basis.exact
                 from selected s left join settled on settled.operation_id=s.operation_id
                   left join usage_basis on usage_basis.operation_id=s.operation_id""",
-                (principal.user_id, game_id, list(narrators),
-                 principal.user_id, principal.user_id),
+                (principal.user_id, game_id, list(narrators), principal.user_id, principal.user_id),
             ).fetchall()
-        return {r["presentation_entry_id"]: {
-                    "cost_milli": str(r["cost_milli"]) if r["cost_milli"] is not None else None,
-                    "technical_cost_usd": _usd(r["llm_cost_usd"]),
-                    "technical_cost_basis": "usage_ledger" if r["events"] else "turn_fallback",
-                    "technical_cost_exact": bool(r["events"] and r["exact"]),
-                }
-                for r in rows if narrators.get(r["presentation_entry_id"]) == r["timeline_epoch"]}
+        return {
+            r["presentation_entry_id"]: {
+                "cost_milli": str(r["cost_milli"]) if r["cost_milli"] is not None else None,
+                "technical_cost_usd": _usd(r["llm_cost_usd"]),
+                "technical_cost_basis": "usage_ledger" if r["events"] else "turn_fallback",
+                "technical_cost_exact": bool(r["events"] and r["exact"]),
+            }
+            for r in rows
+            if narrators.get(r["presentation_entry_id"]) == r["timeline_epoch"]
+        }
 
-    def operation_cost(self, principal: Principal, game_id: UUID,
-                       operation_id: UUID) -> dict | None:
+    def operation_cost(
+        self, principal: Principal, game_id: UUID, operation_id: UUID
+    ) -> dict | None:
         with admin_connection(self.pool) as connection:
             row = connection.execute(
                 """with selected as (
@@ -214,14 +262,15 @@ class PostgresAccountReader:
                   settled.cost_milli,usage_basis.events,usage_basis.exact
                 from selected s left join settled on settled.operation_id=s.operation_id
                   left join usage_basis on usage_basis.operation_id=s.operation_id""",
-                (principal.user_id, game_id, operation_id,
-                 principal.user_id, principal.user_id),
+                (principal.user_id, game_id, operation_id, principal.user_id, principal.user_id),
             ).fetchone()
         if row is None:
             return None
-        return {"history_id": row["presentation_entry_id"],
-                "epoch": row["timeline_epoch"],
-                "cost_milli": str(row["cost_milli"]) if row["cost_milli"] is not None else None,
-                "technical_cost_usd": _usd(row["llm_cost_usd"]),
-                "technical_cost_basis": "usage_ledger" if row["events"] else "turn_fallback",
-                "technical_cost_exact": bool(row["events"] and row["exact"])}
+        return {
+            "history_id": row["presentation_entry_id"],
+            "epoch": row["timeline_epoch"],
+            "cost_milli": str(row["cost_milli"]) if row["cost_milli"] is not None else None,
+            "technical_cost_usd": _usd(row["llm_cost_usd"]),
+            "technical_cost_basis": "usage_ledger" if row["events"] else "turn_fallback",
+            "technical_cost_exact": bool(row["events"] and row["exact"]),
+        }

@@ -5,6 +5,7 @@ altera estado: só lê valores já calculados. Sem escopo aberto, `record_step` 
 Privacidade (SPEC-222): refs são ids de catálogo (regex fechada) ou "player"; nenhum
 nome, texto livre ou mensagem de exceção entra num passo.
 """
+
 from __future__ import annotations
 
 import contextvars
@@ -13,25 +14,41 @@ from contextlib import contextmanager
 from typing import Any, Dict, List, Optional
 from collections.abc import Iterator
 
-KINDS = frozenset({"initiative", "attack", "save", "damage", "reaction", "condition",
-                   "death_stage", "flee", "target_redirect"})
+KINDS = frozenset(
+    {
+        "initiative",
+        "attack",
+        "save",
+        "damage",
+        "reaction",
+        "condition",
+        "death_stage",
+        "flee",
+        "target_redirect",
+    }
+)
 MAX_STEPS = 64
 _TOKEN = re.compile(r"^[a-z0-9][a-z0-9_.:\-]{0,63}$")
-_DEATH_RANK = {"last_stand": 1, "terminal": 2, "stabilization_failed": 3,
-               "revived": 3, "dead": 4}
+_DEATH_RANK = {"last_stand": 1, "terminal": 2, "stabilization_failed": 3, "revived": 3, "dead": 4}
 
 _bucket: contextvars.ContextVar[_Bucket | None] = contextvars.ContextVar(
-    "rpg_mechanics_trace", default=None)
+    "rpg_mechanics_trace", default=None
+)
 
 
 class _Bucket:
     def __init__(self, recording: bool = True) -> None:
-        self.recording = recording   # revisao P2/P3: so grava dentro do escopo do combate
+        self.recording = recording  # revisao P2/P3: so grava dentro do escopo do combate
         self.steps: list[dict[str, Any]] = []
         self.truncated = 0
         self.agg: dict[str, Any] = {
-            "rounds": 0, "player_damage_taken": 0, "enemy_damage_dealt": 0,
-            "reactions": 0, "death_stage_reached": None, "target_redirects": 0}
+            "rounds": 0,
+            "player_damage_taken": 0,
+            "enemy_damage_dealt": 0,
+            "reactions": 0,
+            "death_stage_reached": None,
+            "target_redirects": 0,
+        }
 
 
 @contextmanager
@@ -93,20 +110,37 @@ def _num(value: Any) -> int | None:
         return None
 
 
-def record_step(kind: str, *, actor: Any = None, target: Any = None, dice: Any = None,
-                kept: Any = None, modifier: Any = None, dc_or_defense: Any = None,
-                result: Any = None, amount: Any = None, card_id: Any = None,
-                reason: Any = None) -> None:
+def record_step(
+    kind: str,
+    *,
+    actor: Any = None,
+    target: Any = None,
+    dice: Any = None,
+    kept: Any = None,
+    modifier: Any = None,
+    dc_or_defense: Any = None,
+    result: Any = None,
+    amount: Any = None,
+    card_id: Any = None,
+    reason: Any = None,
+) -> None:
     bucket = _bucket.get()
     if bucket is None or not bucket.recording or kind not in KINDS:
         return
     try:
-        step: dict[str, Any] = {"kind": kind, "actor_ref": ref_of(actor),
-                                "target_ref": ref_of(target), "dice": _ints(dice),
-                                "kept": _ints(kept), "modifier": _num(modifier),
-                                "dc_or_defense": _num(dc_or_defense),
-                                "result": token(result), "amount": _num(amount),
-                                "card_id": token(card_id), "reason": token(reason)}
+        step: dict[str, Any] = {
+            "kind": kind,
+            "actor_ref": ref_of(actor),
+            "target_ref": ref_of(target),
+            "dice": _ints(dice),
+            "kept": _ints(kept),
+            "modifier": _num(modifier),
+            "dc_or_defense": _num(dc_or_defense),
+            "result": token(result),
+            "amount": _num(amount),
+            "card_id": token(card_id),
+            "reason": token(reason),
+        }
         agg = bucket.agg
         if kind == "initiative":
             agg["rounds"] += 1
@@ -151,6 +185,13 @@ def emit_turn_logs() -> None:
     if snap is None or agg is None:
         return
     from observability.telemetry import log_event
-    log_event("combat", "mechanics", level="debug", steps=snap["steps"],
-              step_count=len(snap["steps"]), truncated=snap["truncated"])
+
+    log_event(
+        "combat",
+        "mechanics",
+        level="debug",
+        steps=snap["steps"],
+        step_count=len(snap["steps"]),
+        truncated=snap["truncated"],
+    )
     log_event("combat", "summary", level="info", **agg)

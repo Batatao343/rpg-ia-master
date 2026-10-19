@@ -44,7 +44,9 @@ def broken_links(root: Path, files: list[Path]) -> list[str]:
 
 
 def tracked_markdown(root: Path) -> list[Path]:
-    out = subprocess.run(["git", "ls-files", "-z", "*.md"], cwd=root, capture_output=True, check=True)
+    out = subprocess.run(
+        ["git", "ls-files", "-z", "*.md"], cwd=root, capture_output=True, check=True
+    )
     return [root / name for name in out.stdout.decode("utf-8").split("\0") if name]
 
 
@@ -60,7 +62,11 @@ def main(argv: list[str] | None = None) -> int:
         args.write_baseline.write_text("".join(f"{line}\n" for line in found), encoding="utf-8")
     known = set()
     if args.baseline and args.baseline.exists():
-        known = {line.strip() for line in args.baseline.read_text(encoding="utf-8").splitlines() if line.strip()}
+        known = {
+            line.strip()
+            for line in args.baseline.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        }
     new = [line for line in found if line not in known]
     for line in new:
         print(f"broken link: {line}")

@@ -31,15 +31,25 @@ def make_owner(env) -> dict:
     import httpx
 
     from scripts.staging.e2e_session import _h
+
     admin = s192.Admin(env)
     user = admin.create_user()
     c = httpx.Client(timeout=120, transport=httpx.HTTPTransport(retries=3))
     r = s192.app_login(c, s192.BASE, user)
     csrf = r.json()["csrf_token"]
     origins = json.loads((s192.common.ROOT / "data" / "origins.json").read_text(encoding="utf-8"))
-    g = c.post(s192.BASE + "/game/new", headers=_h(s192.BASE, csrf), json={
-        "name": "Spec192 Job", "race": origins["races"][0]["name"], "class_name": "Devoto do Abismo",
-        "region": origins["regions"][0]["name"], "level": 1, "action_id": str(uuid4())})
+    g = c.post(
+        s192.BASE + "/game/new",
+        headers=_h(s192.BASE, csrf),
+        json={
+            "name": "Spec192 Job",
+            "race": origins["races"][0]["name"],
+            "class_name": "Devoto do Abismo",
+            "region": origins["regions"][0]["name"],
+            "level": 1,
+            "action_id": str(uuid4()),
+        },
+    )
     g.raise_for_status()
     return {"uid": user["id"], "game_id": g.json()["game_id"], "admin": admin}
 
@@ -47,16 +57,26 @@ def make_owner(env) -> dict:
 def purge_owner(env, owner: dict) -> dict:
     def go(conn):
         n = {}
-        tables = [r["table_name"] for r in conn.execute(
-            """select table_name from information_schema.columns where table_schema='app'
-               and column_name='owner_id' and table_name <> 'account_deletions'""").fetchall()]
+        tables = [
+            r["table_name"]
+            for r in conn.execute(
+                """select table_name from information_schema.columns where table_schema='app'
+               and column_name='owner_id' and table_name <> 'account_deletions'"""
+            ).fetchall()
+        ]
         for _ in range(3):  # FK order is unknown: retry until stable
             for t in tables:
                 try:
-                    n[t] = n.get(t, 0) + conn.execute(f"delete from app.{t} where owner_id=%s", (owner["uid"],)).rowcount
+                    n[t] = (
+                        n.get(t, 0)
+                        + conn.execute(
+                            f"delete from app.{t} where owner_id=%s", (owner["uid"],)
+                        ).rowcount
+                    )
                 except Exception:  # noqa: BLE001
                     pass
         return {k: v for k, v in n.items() if v}
+
     rows = s192.query(env, go)
     return {"rows_deleted": rows, "user_delete_status": owner["admin"].delete_user(owner["uid"])}
 
@@ -65,31 +85,64 @@ def make_job(conn, owner: dict, text: str | None = None) -> dict:
     doc_id = f"spec192-{uuid4().hex}"
     text = text or f"Registro sintetico de teste {doc_id}."
     digest = hashlib.sha256(text.encode()).hexdigest()
-    conn.execute("""insert into app.memory_documents(id,owner_id,game_id,scope,content,content_sha256,metadata,
+    conn.execute(
+        """insert into app.memory_documents(id,owner_id,game_id,scope,content,content_sha256,metadata,
                     canonical_entity_ids,visibility,timeline_epoch,embedding_profile_id)
                     values (%s,%s,%s,'session',%s,%s,'{}'::jsonb,'{}','public',0,%s)""",
-                 (doc_id, owner["uid"], owner["game_id"], text, digest, PROFILE))
-    job_id = conn.execute("""insert into app.jobs(id,owner_id,game_id,kind,dedupe_key,status,payload,max_attempts)
+        (doc_id, owner["uid"], owner["game_id"], text, digest, PROFILE),
+    )
+    job_id = conn.execute(
+        """insert into app.jobs(id,owner_id,game_id,kind,dedupe_key,status,payload,max_attempts)
         values (gen_random_uuid(),%s,%s,'embed_memory',%s,'queued',%s,5) returning id""",
-                          (owner["uid"], owner["game_id"], doc_id, Jsonb({"memory_id": doc_id, "content_sha256": digest, "profile_id": PROFILE,
-                                          "timeline_epoch": 0}))).fetchone()["id"]
+        (
+            owner["uid"],
+            owner["game_id"],
+            doc_id,
+            Jsonb(
+                {
+                    "memory_id": doc_id,
+                    "content_sha256": digest,
+                    "profile_id": PROFILE,
+                    "timeline_epoch": 0,
+                }
+            ),
+        ),
+    ).fetchone()["id"]
     return {"doc_id": doc_id, "job_id": job_id}
 
 
 def job_state(conn, ref: dict) -> dict:
-    j = conn.execute("select status,attempts,lease_token is not null leased,last_error_code from app.jobs where id=%s",
-                     (ref["job_id"],)).fetchone() or {}
-    d = conn.execute("select embedding_status from app.memory_documents where id=%s", (ref["doc_id"],)).fetchall()
-    n = conn.execute("select count(*) n from app.jobs where kind='embed_memory' and dedupe_key=%s",
-                     (ref["doc_id"],)).fetchone()["n"]
-    return {**{k: v for k, v in j.items()}, "documents": len(d), "embedding_status": d[0]["embedding_status"] if d else None,
-            "jobs_for_doc": n}
+    j = (
+        conn.execute(
+            "select status,attempts,lease_token is not null leased,last_error_code from app.jobs where id=%s",
+            (ref["job_id"],),
+        ).fetchone()
+        or {}
+    )
+    d = conn.execute(
+        "select embedding_status from app.memory_documents where id=%s", (ref["doc_id"],)
+    ).fetchall()
+    n = conn.execute(
+        "select count(*) n from app.jobs where kind='embed_memory' and dedupe_key=%s",
+        (ref["doc_id"],),
+    ).fetchone()["n"]
+    return {
+        **{k: v for k, v in j.items()},
+        "documents": len(d),
+        "embedding_status": d[0]["embedding_status"] if d else None,
+        "jobs_for_doc": n,
+    }
 
 
 def exactly_once(state: dict, max_attempts: int = 2) -> bool:
-    return (state.get("status") == "succeeded" and not state.get("leased") and state.get("documents") == 1
-            and state.get("embedding_status") == "ready" and state.get("jobs_for_doc") == 1
-            and 1 <= state.get("attempts", 0) <= max_attempts)
+    return (
+        state.get("status") == "succeeded"
+        and not state.get("leased")
+        and state.get("documents") == 1
+        and state.get("embedding_status") == "ready"
+        and state.get("jobs_for_doc") == 1
+        and 1 <= state.get("attempts", 0) <= max_attempts
+    )
 
 
 def wait_for(env, ref: dict, timeout: int) -> dict:
@@ -110,21 +163,33 @@ def phase_a(env, owner: dict) -> dict:
 
     from infrastructure.contracts import LeaseHeld
     from infrastructure.postgres_jobs import PostgresJobQueue
+
     with s192.db(env) as conn:
         ref = make_job(conn, owner)
-        stale = conn.execute("""update app.jobs set status='running',attempts=1,lease_token=gen_random_uuid(),
+        stale = conn.execute(
+            """update app.jobs set status='running',attempts=1,lease_token=gen_random_uuid(),
             lease_owner='spec192-crashed-worker',lease_until=now()+interval '25 seconds'
-            where id=%s returning lease_token""", (ref["job_id"],)).fetchone()["lease_token"]
+            where id=%s returning lease_token""",
+            (ref["job_id"],),
+        ).fetchone()["lease_token"]
     time.sleep(12)
     with s192.db(env) as conn:
         during = job_state(conn, ref)  # cron ticked inside the lease window -> must not steal it
     final = wait_for(env, ref, 180)
-    pool = ConnectionPool(env["RPG_STAGING_DB_URL"], min_size=1, max_size=1, kwargs={"row_factory": dict_row}, open=True)
+    pool = ConnectionPool(
+        env["RPG_STAGING_DB_URL"],
+        min_size=1,
+        max_size=1,
+        kwargs={"row_factory": dict_row},
+        open=True,
+    )
     queue = PostgresJobQueue(pool)
     fenced = {}
-    for name, call in (("complete", lambda: queue.complete(ref["job_id"], stale, {"zombie": True})),
-                       ("fail", lambda: queue.fail(ref["job_id"], stale, "zombie")),
-                       ("heartbeat", lambda: queue.heartbeat(ref["job_id"], stale))):
+    for name, call in (
+        ("complete", lambda: queue.complete(ref["job_id"], stale, {"zombie": True})),
+        ("fail", lambda: queue.fail(ref["job_id"], stale, "zombie")),
+        ("heartbeat", lambda: queue.heartbeat(ref["job_id"], stale)),
+    ):
         try:
             call()
             fenced[name] = "ACCEPTED"
@@ -137,9 +202,16 @@ def phase_a(env, owner: dict) -> dict:
         final_row = job_state(conn, ref)
         conn.execute("delete from app.jobs where id=%s", (ref["job_id"],))
         conn.execute("delete from app.memory_documents where id=%s", (ref["doc_id"],))
-    return {"during_lease_window": during, "after_expiry": final, "stale_token_calls": fenced,
-            "ok": during.get("status") == "running" and during.get("attempts") == 1 and exactly_once(final_row)
-            and final_row["attempts"] == 2 and all(v == "LeaseHeld" for v in fenced.values())}
+    return {
+        "during_lease_window": during,
+        "after_expiry": final,
+        "stale_token_calls": fenced,
+        "ok": during.get("status") == "running"
+        and during.get("attempts") == 1
+        and exactly_once(final_row)
+        and final_row["attempts"] == 2
+        and all(v == "LeaseHeld" for v in fenced.values()),
+    }
 
 
 def phase_b(env, owner: dict, n_jobs: int = 4) -> dict:
@@ -172,17 +244,27 @@ def phase_b(env, owner: dict, n_jobs: int = 4) -> dict:
     finals = [wait_for(env, r, 180) for r in refs]
     with s192.db(env) as conn:
         states = [job_state(conn, r) for r in refs]
-        http = conn.execute("""select status_code, count(*) n from net._http_response where created >= %s
-                               group by 1 order by 1""", (w0,)).fetchall()
-        runs = conn.execute("""select d.status, count(*) n from cron.job_run_details d join cron.job j using(jobid)
-                               where j.jobname='rpg-cron-jobs' and d.start_time >= %s group by 1""", (w0,)).fetchall()
+        http = conn.execute(
+            """select status_code, count(*) n from net._http_response where created >= %s
+                               group by 1 order by 1""",
+            (w0,),
+        ).fetchall()
+        runs = conn.execute(
+            """select d.status, count(*) n from cron.job_run_details d join cron.job j using(jobid)
+                               where j.jobname='rpg-cron-jobs' and d.start_time >= %s group by 1""",
+            (w0,),
+        ).fetchall()
         for r in refs:
             conn.execute("delete from app.jobs where id=%s", (r["job_id"],))
             conn.execute("delete from app.memory_documents where id=%s", (r["doc_id"],))
-    return {"deploy": deploy, "jobs": states, "waited": [f["waited_s"] for f in finals],
-            "http_status_counts_during_window": [dict(h) for h in http],
-            "cron_runs_during_window": [dict(x) for x in runs],
-            "ok": bool(deploy.get("returncode") == 0) and all(exactly_once(s, 2) for s in states)}
+    return {
+        "deploy": deploy,
+        "jobs": states,
+        "waited": [f["waited_s"] for f in finals],
+        "http_status_counts_during_window": [dict(h) for h in http],
+        "cron_runs_during_window": [dict(x) for x in runs],
+        "ok": bool(deploy.get("returncode") == 0) and all(exactly_once(s, 2) for s in states),
+    }
 
 
 def main(argv=None) -> int:

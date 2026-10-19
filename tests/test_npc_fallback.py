@@ -2,6 +2,7 @@
 
 Offline/determinístico. Ver specs/SPEC-041-npc-fallback-sem-alvo.md.
 """
+
 from langchain_core.messages import HumanMessage
 
 from agents.npc import _mission_hint_block, npc_actor_node
@@ -9,6 +10,7 @@ from agents.storyteller import _npc_fallback_clause
 from services.npc_layers import npcs_in_scene
 
 # --- R1: resolução de alvo (npcs_in_scene) ----------------------------------
+
 
 def test_npcs_in_scene_inclui_npc_e_party_exclui_waiting():
     state = {
@@ -19,16 +21,20 @@ def test_npcs_in_scene_inclui_npc_e_party_exclui_waiting():
         ],
     }
     got = npcs_in_scene(state)
-    assert "Velho Tomás" in got          # in_scene
-    assert "Bruxa" not in got            # fora de cena
-    assert "Gorim" in got                # aliado presente
-    assert "Lyra" not in got             # waiting
+    assert "Velho Tomás" in got  # in_scene
+    assert "Bruxa" not in got  # fora de cena
+    assert "Gorim" in got  # aliado presente
+    assert "Lyra" not in got  # waiting
 
 
 def test_sem_nome_escolhe_npc_em_cena():
-    state = {"messages": [HumanMessage(content="Pergunto a quem estiver por perto")],
-             "npcs": {"Velho Tomás": {"in_scene": True}}, "party": [],
-             "world": {"current_location": "Praça"}, "game_id": "g"}
+    state = {
+        "messages": [HumanMessage(content="Pergunto a quem estiver por perto")],
+        "npcs": {"Velho Tomás": {"in_scene": True}},
+        "party": [],
+        "world": {"current_location": "Praça"},
+        "game_id": "g",
+    }
     # com NPC em cena, npcs_in_scene resolve o alvo (não cai no fallback)
     assert npcs_in_scene(state)[0] == "Velho Tomás"
 
@@ -41,9 +47,15 @@ def test_sem_nome_escolhe_party_gorim():
 
 # --- R2: fallback para o storyteller (nunca "Ninguém responde") -------------
 
+
 def test_sem_candidato_roteia_storyteller():
-    state = {"messages": [HumanMessage(content="Chamo por ajuda no ermo vazio")],
-             "npcs": {}, "party": [], "world": {"current_location": "Ermo"}, "game_id": "g"}
+    state = {
+        "messages": [HumanMessage(content="Chamo por ajuda no ermo vazio")],
+        "npcs": {},
+        "party": [],
+        "world": {"current_location": "Ermo"},
+        "game_id": "g",
+    }
     out = npc_actor_node(state)
     assert out.get("next") == "storyteller"
     assert out.get("npc_fallback_hint")
@@ -64,6 +76,7 @@ def test_npc_fallback_clause_ausente_sem_hint():
 def test_grafo_npc_actor_liga_no_storyteller():
     # A aresta condicional npc_actor→storyteller existe no grafo compilado.
     from main import build_game_graph
+
     g = build_game_graph()
     edges = g.get_graph().edges
     pares = {(e.source, e.target) for e in edges}
@@ -73,10 +86,16 @@ def test_grafo_npc_actor_liga_no_storyteller():
 
 # --- R4: pergunta de missão usa o beat --------------------------------------
 
+
 def test_pergunta_de_missao_usa_objetivo_publico_sem_vazar_beat():
-    state = {"campaign_plan": {"beats": [
-        {"description": "Encontre o mercador desaparecido nas docas", "status": "pending"}],
-        "current_step": 0}}
+    state = {
+        "campaign_plan": {
+            "beats": [
+                {"description": "Encontre o mercador desaparecido nas docas", "status": "pending"}
+            ],
+            "current_step": 0,
+        }
+    }
     block = _mission_hint_block(state, "o que a missão exige agora?")
     assert "Investigue os acontecimentos" in block
     assert "mercador desaparecido" not in block

@@ -107,6 +107,7 @@ def forced_encounter_danger(loc: dict, danger_real: int, player_level: int) -> i
     """eff = danger_real se zona apex, senão min(danger_real, (nível+3)//2).
     Só a FORÇA do encontro escala; o TRIGGER continua no danger real."""
 
+
 # playtest/profiles.py
 class Quester(_Base):
     @staticmethod

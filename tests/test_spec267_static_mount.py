@@ -1,4 +1,5 @@
 """SPEC-267 — a API só serve web/dist; sem build não há UI de fallback (o CI roda pytest antes do build)."""
+
 import os
 
 from fastapi.testclient import TestClient

@@ -96,10 +96,13 @@ def get_entity(entity_id: str) -> dict | None:
     return load_entities().get(entity_id)
 
 
-def resolve_edges(projection: dict | None, *,
-                  entity_id: str | None = None,
-                  edge_type: str | None = None,
-                  include_hidden: bool = False) -> list[dict]:
+def resolve_edges(
+    projection: dict | None,
+    *,
+    entity_id: str | None = None,
+    edge_type: str | None = None,
+    include_hidden: bool = False,
+) -> list[dict]:
     """Edges efetivas AGORA: base − disabled + dynamic, com filtro de visibilidade.
 
     - `entity_id`: só edges onde a entidade é source ou target.
@@ -109,9 +112,7 @@ def resolve_edges(projection: dict | None, *,
     projection = projection or {}
     disabled_ids = {d.get("edge_id") for d in projection.get("disabled_edges", [])}
 
-    effective: list[dict] = [
-        e for e in load_base_edges() if e.get("id") not in disabled_ids
-    ]
+    effective: list[dict] = [e for e in load_base_edges() if e.get("id") not in disabled_ids]
     # SPEC-233 R4: desativações (`edge_id`) valem também para edges dinâmicas (`dyn_*`).
     effective.extend(
         e for e in projection.get("dynamic_edges", []) if e.get("id") not in disabled_ids
@@ -129,8 +130,9 @@ def resolve_edges(projection: dict | None, *,
     return result
 
 
-def get_current_controller(location_id: str, projection: dict | None,
-                           include_hidden: bool = True) -> str | None:
+def get_current_controller(
+    location_id: str, projection: dict | None, include_hidden: bool = True
+) -> str | None:
     """Quem controla o local AGORA. Dynamic edge vence base (é mais recente).
 
     Default (`include_hidden=True`) é a verdade do mundo, considera edges hidden/

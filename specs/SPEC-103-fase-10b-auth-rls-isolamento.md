@@ -86,11 +86,12 @@ proteção CSRF. A service role nunca chega ao frontend.
 ```python
 @dataclass(frozen=True)
 class AuthPrincipal:
-    user_id: UUID       # JWT sub verificado
+    user_id: UUID  # JWT sub verificado
     issuer: str
     audience: tuple[str, ...]
     session_id: str | None
     expires_at: datetime
+
 
 def require_principal(request: Request) -> AuthPrincipal: ...
 def require_csrf(request: Request, principal: AuthPrincipal) -> None: ...

@@ -12,21 +12,34 @@ mais o Ataque de Oportunidade UNIVERSAL, que fica FORA do limite de cadeia comum
 ADITIVO como 03/04/05: entrega o motor puro + testes; a fiação no nó de combate
 (consulta da janela antes de resolver o ataque) acontece no cutover (conflito-13).
 """
+
 from typing import Dict, List, Optional
 
 # Gatilhos reconhecidos (R1/R2). Carta de reação declara `gatilho`; a ação em curso
 # (ou uma reação anterior, R2) precisa casar. Vocabulário FECHADO — gatilho fora
 # dele nunca casa (mesma filosofia do catálogo de efeitos da conflito-03).
-GATILHOS = frozenset({
-    "sempre", "ao_ser_atacado", "ao_ser_alvo", "aliado_atacado",
-    "inimigo_se_move", "inimigo_ataca", "ao_sofrer_dano",
-    # SPEC-232 R4: gatilhos autorados nas Cartas (conflito-14/17/tiers 5+) que
-    # antes caíam fora do vocabulário e nunca disparavam. Cada um lê um campo
-    # determinístico da ação declarada (montado pelo orquestrador).
-    "ao_ser_alvo_distancia", "ao_inimigo_engajar", "ao_sofrer_dano_sobrenatural",
-    "ao_ser_flanqueado", "ao_aliado_ser_atacado", "aliado_cai",
-    "ao_aliado_perder_acao", "apos_auto_dano",
-})
+GATILHOS = frozenset(
+    {
+        "sempre",
+        "ao_ser_atacado",
+        "ao_ser_alvo",
+        "aliado_atacado",
+        "inimigo_se_move",
+        "inimigo_ataca",
+        "ao_sofrer_dano",
+        # SPEC-232 R4: gatilhos autorados nas Cartas (conflito-14/17/tiers 5+) que
+        # antes caíam fora do vocabulário e nunca disparavam. Cada um lê um campo
+        # determinístico da ação declarada (montado pelo orquestrador).
+        "ao_ser_alvo_distancia",
+        "ao_inimigo_engajar",
+        "ao_sofrer_dano_sobrenatural",
+        "ao_ser_flanqueado",
+        "ao_aliado_ser_atacado",
+        "aliado_cai",
+        "ao_aliado_perder_acao",
+        "apos_auto_dano",
+    }
+)
 
 
 # --------------------------------------------------------------------------
@@ -49,8 +62,7 @@ def gatilho_matches(card: dict, action: dict, reactor_id: str) -> bool:
         return kind == "attack" and reactor_id in targets
     if g == "ao_ser_alvo":
         return reactor_id in targets
-    if g in ("aliado_atacado", "ao_aliado_ser_atacado", "aliado_cai",
-             "ao_aliado_perder_acao"):
+    if g in ("aliado_atacado", "ao_aliado_ser_atacado", "aliado_cai", "ao_aliado_perder_acao"):
         allies = set((action.get("allies_of") or {}).get(reactor_id, [])) - {reactor_id}
         hit = [t for t in targets if t in allies]
         if kind != "attack" or not hit:
@@ -75,7 +87,8 @@ def gatilho_matches(card: dict, action: dict, reactor_id: str) -> bool:
         return kind in ("move", "disengage_fail", "flee")
     if g == "inimigo_ataca":
         return kind == "attack" and action.get("actor") not in (
-            (action.get("allies_of") or {}).get(reactor_id, []) + [reactor_id])
+            (action.get("allies_of") or {}).get(reactor_id, []) + [reactor_id]
+        )
     return False
 
 
@@ -87,9 +100,9 @@ def open_reaction_window(declared_action: dict) -> dict:
     A declaração original não muda mais depois disso."""
     return {
         "triggering_action": dict(declared_action or {}),
-        "used_common_reaction": [],   # participant_ids que já gastaram a comum (R3)
-        "used_cards": [],             # [participant_id, card_id] — não repete na cadeia (R3)
-        "links": [],                  # reações resolvidas, na ordem oferecida
+        "used_common_reaction": [],  # participant_ids que já gastaram a comum (R3)
+        "used_cards": [],  # [participant_id, card_id] — não repete na cadeia (R3)
+        "links": [],  # reações resolvidas, na ordem oferecida
         "closed": False,
     }
 
@@ -105,9 +118,15 @@ def _reaction_action(card: dict, participant_id: str) -> dict:
     }
 
 
-def offer_reaction(chain: dict, participant_id: str, card_id: str, *,
-                   card: dict | None = None, reactor: dict | None = None,
-                   respond_to_link: int | None = None) -> bool:
+def offer_reaction(
+    chain: dict,
+    participant_id: str,
+    card_id: str,
+    *,
+    card: dict | None = None,
+    reactor: dict | None = None,
+    respond_to_link: int | None = None,
+) -> bool:
     """Oferece uma reação COMUM na cadeia. Valida, nesta ordem (R1/R2/R3):
       1. cadeia aberta;
       2. Carta existe e é `tipo == "reacao"`;
@@ -145,15 +164,22 @@ def offer_reaction(chain: dict, participant_id: str, card_id: str, *,
             return False
         reactor["entropy"] = int(reactor.get("entropy", 0)) - custo
 
-    chain["links"].append({
-        "participant": participant_id, "card_id": card_id, "custo": custo,
-        "common": True, "action": _reaction_action(c, participant_id),
-    })
+    chain["links"].append(
+        {
+            "participant": participant_id,
+            "card_id": card_id,
+            "custo": custo,
+            "common": True,
+            "action": _reaction_action(c, participant_id),
+        }
+    )
     chain["used_common_reaction"].append(participant_id)
     chain["used_cards"].append(pair)
     from services import mechanics_trace as mt
-    mt.record_step("reaction", actor=participant_id, card_id=card_id, amount=custo,
-                   result="offered")
+
+    mt.record_step(
+        "reaction", actor=participant_id, card_id=card_id, amount=custo, result="offered"
+    )
     return True
 
 
@@ -167,9 +193,14 @@ def resolve_chain(chain: dict) -> list[dict]:
 # --------------------------------------------------------------------------
 # Ordem de reação (R4)
 # --------------------------------------------------------------------------
-def reaction_order(candidates: list[str], action: dict, *,
-                   stats_by_id: dict[str, dict] | None = None,
-                   target_allies: list[str] = (), actor_allies: list[str] = ()) -> list[str]:
+def reaction_order(
+    candidates: list[str],
+    action: dict,
+    *,
+    stats_by_id: dict[str, dict] | None = None,
+    target_allies: list[str] = (),
+    actor_allies: list[str] = (),
+) -> list[str]:
     """R4: ordena candidatos por prioridade — alvo direto → aliados do alvo →
     aliados do ator → maior Agilidade → id (desempate estável)."""
     targets = set(action.get("targets") or [])
@@ -186,7 +217,7 @@ def reaction_order(candidates: list[str], action: dict, *,
         return 3
 
     def agilidade(c: str) -> int:
-        v = ((stats.get(c) or {}).get("virtudes") or {})
+        v = (stats.get(c) or {}).get("virtudes") or {}
         try:
             return int(v.get("agilidade", 0) or 0)
         except (TypeError, ValueError):
@@ -198,9 +229,13 @@ def reaction_order(candidates: list[str], action: dict, *,
 # --------------------------------------------------------------------------
 # Ataque de Oportunidade (R5) — universal, FORA do limite de cadeia comum
 # --------------------------------------------------------------------------
-def trigger_opportunity_attack(scene: dict, leaving_id: str, *,
-                               allies: list[str] = (),
-                               stats_by_id: dict[str, dict] | None = None) -> list[dict]:
+def trigger_opportunity_attack(
+    scene: dict,
+    leaving_id: str,
+    *,
+    allies: list[str] = (),
+    stats_by_id: dict[str, dict] | None = None,
+) -> list[dict]:
     """R5: quem abandona um Engajamento SEM Desengajar provoca um Ataque de
     Oportunidade de CADA inimigo Engajado, consciente e capaz. Não conta pro limite
     de reação comum — cada apto faz o seu. Vale nos dois sentidos (party ou inimigo
@@ -220,11 +255,16 @@ def trigger_opportunity_attack(scene: dict, leaving_id: str, *,
         s = stats.get(other) or {}
         if not s.get("conscious", True) or s.get("incapacitated"):
             continue
-        out.append({
-            "attacker": other, "target": leaving_id,
-            "kind": "opportunity_attack", "counts_common": False,
-        })
+        out.append(
+            {
+                "attacker": other,
+                "target": leaving_id,
+                "kind": "opportunity_attack",
+                "counts_common": False,
+            }
+        )
         from services import mechanics_trace as mt
+
         mt.record_step("reaction", actor=other, target=leaving_id, result="opportunity_attack")
     return out
 
@@ -234,4 +274,5 @@ def trigger_opportunity_attack(scene: dict, leaving_id: str, *,
 # --------------------------------------------------------------------------
 def _get_card(card_id: str) -> dict | None:
     from services import cards
+
     return cards.get_card(card_id)

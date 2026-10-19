@@ -4,6 +4,7 @@ A1 level sem bound · A2 memorial em equip/levelup · A3 save_game_state com
 game_id cru · A4 flag simulated · A6 500 vazando str(e) · A7 input gigante ·
 A8 dict do rate limit sem teto. (A5 = default de bind, linha de config.)
 """
+
 import time
 import uuid
 from collections import deque
@@ -17,6 +18,7 @@ import persistence
 @pytest.fixture()
 def client():
     import api
+
     api._rate_hits.clear()
     return TestClient(api.app)
 
@@ -31,11 +33,19 @@ def saves_dir(tmp_path, monkeypatch):
 def _estado_minimo(game_id: str, game_over: bool = False) -> dict:
     return {
         "game_id": game_id,
-        "player": {"name": "T", "class_name": "Guerreiro", "level": 1,
-                   "inventory": [], "known_abilities": ["ataque_basico"],
-                   "equipment": {"weapon": None, "armor": None, "accessory": None}},
-        "world": {"current_location": "Nova Arcádia", "current_location_id": "nova_arcadia",
-                  "turn_count": 1},
+        "player": {
+            "name": "T",
+            "class_name": "Guerreiro",
+            "level": 1,
+            "inventory": [],
+            "known_abilities": ["ataque_basico"],
+            "equipment": {"weapon": None, "armor": None, "accessory": None},
+        },
+        "world": {
+            "current_location": "Nova Arcádia",
+            "current_location_id": "nova_arcadia",
+            "turn_count": 1,
+        },
         "messages": [],
         "game_over": game_over,
     }
@@ -43,9 +53,15 @@ def _estado_minimo(game_id: str, game_over: bool = False) -> dict:
 
 # --- A1: /game/new valida level na borda ------------------------------------
 
+
 def _payload_new(level):
-    return {"name": "Teste", "race": "Humano", "class_name": "Guerreiro",
-            "region": "Nova Arcádia", "level": level}
+    return {
+        "name": "Teste",
+        "race": "Humano",
+        "class_name": "Guerreiro",
+        "region": "Nova Arcádia",
+        "level": level,
+    }
 
 
 def test_new_game_level_negativo_e_422(client):
@@ -59,6 +75,7 @@ def test_new_game_level_zero_e_gigante_sao_422(client):
 
 
 # --- A2: memorial (game_over) barra equip/levelup ---------------------------
+
 
 def test_equip_e_levelup_em_memorial_devolvem_409(client, saves_dir):
     gid = str(uuid.uuid4())
@@ -79,11 +96,12 @@ def test_equip_em_save_vivo_nao_e_409(client, saves_dir):
 
 # --- A3: save_game_state nunca escreve fora de saves/ -----------------------
 
+
 def test_save_game_state_sanitiza_game_id_malicioso(saves_dir, tmp_path):
     assert persistence.save_game_state(_estado_minimo("../../evil"))
     escritos = list(saves_dir.glob("*.json"))
     assert len(escritos) == 1
-    assert escritos[0].name == "evil.json"          # separadores/dots removidos
+    assert escritos[0].name == "evil.json"  # separadores/dots removidos
     assert not (saves_dir.parent / "evil.json").exists()
 
 
@@ -100,14 +118,17 @@ def test_save_game_state_legado_autosave_preservado(saves_dir):
 
 # --- A4: flag simulated espelha o get_llm -----------------------------------
 
+
 def _limpa_env_llm(monkeypatch):
     from llm_setup import PROVIDER_KEY_ENV
+
     for var in ("RPG_FORCE_MOCK", "RPG_NO_MOCK", "LLM_PROVIDER", *PROVIDER_KEY_ENV.values()):
         monkeypatch.delenv(var, raising=False)
 
 
 def test_is_simulated_sem_key_nenhuma(monkeypatch):
     from llm_setup import is_simulated
+
     _limpa_env_llm(monkeypatch)
     assert is_simulated() is True
 
@@ -115,6 +136,7 @@ def test_is_simulated_sem_key_nenhuma(monkeypatch):
 def test_is_simulated_groq_sem_google_e_real(monkeypatch):
     # O bug A4: só GROQ_API_KEY (jogo 100% real no Groq) reportava simulated=True.
     from llm_setup import is_simulated
+
     _limpa_env_llm(monkeypatch)
     monkeypatch.setenv("GROQ_API_KEY", "gsk_fake")
     assert is_simulated() is False
@@ -122,6 +144,7 @@ def test_is_simulated_groq_sem_google_e_real(monkeypatch):
 
 def test_is_simulated_force_mock_vence(monkeypatch):
     from llm_setup import is_simulated
+
     _limpa_env_llm(monkeypatch)
     monkeypatch.setenv("GROQ_API_KEY", "gsk_fake")
     monkeypatch.setenv("RPG_FORCE_MOCK", "1")
@@ -130,14 +153,16 @@ def test_is_simulated_force_mock_vence(monkeypatch):
 
 def test_is_simulated_provider_legado_gemini_sem_key(monkeypatch):
     from llm_setup import is_simulated
+
     _limpa_env_llm(monkeypatch)
     monkeypatch.setenv("LLM_PROVIDER", "gemini")
-    assert is_simulated() is True   # LLM_PROVIDER=gemini sem GOOGLE_API_KEY → MockLLM
+    assert is_simulated() is True  # LLM_PROVIDER=gemini sem GOOGLE_API_KEY → MockLLM
     monkeypatch.setenv("GOOGLE_API_KEY", "fake")
     assert is_simulated() is False
 
 
 # --- A6: 500 não vaza detalhe interno ---------------------------------------
+
 
 def test_500_no_action_nao_vaza_excecao(client, saves_dir, monkeypatch):
     import api
@@ -157,6 +182,7 @@ def test_500_no_action_nao_vaza_excecao(client, saves_dir, monkeypatch):
 
 # --- A7: input_text com teto -------------------------------------------------
 
+
 def test_action_input_gigante_e_422(client):
     r = client.post("/game/action", json={"input_text": "a" * 5000})
     assert r.status_code == 422
@@ -164,8 +190,10 @@ def test_action_input_gigante_e_422(client):
 
 # --- A8: dict do rate limit tem teto ----------------------------------------
 
+
 def test_rate_hits_poda_ips_vencidos(monkeypatch):
     import api
+
     monkeypatch.setenv("RPG_RATE_LIMIT", "30")
     api._rate_hits.clear()
     velho = time.monotonic() - 2 * api._RATE_WINDOW_S

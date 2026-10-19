@@ -119,14 +119,16 @@ Princípio: **estado auditável** — playtest sem número vira anedota.
 def write_turn(fp, record: dict) -> None: ...
 def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict: ...
 
+
 # playtest/report.py
 @dataclass
 class RunReport:
     run_id: str
-    campaigns: list[dict]          # summaries
+    campaigns: list[dict]  # summaries
     top_violations: list[tuple[str, int]]
     top_errors: list[tuple[str, int]]
-    deltas: Optional[dict]         # vs baseline (None sem baseline)
+    deltas: Optional[dict]  # vs baseline (None sem baseline)
+
 
 def aggregate(run_dir: str, baseline_dir: str | None = None) -> RunReport: ...
 def render_markdown(report: RunReport) -> str: ...

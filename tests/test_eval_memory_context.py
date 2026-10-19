@@ -37,14 +37,20 @@ def test_faiss_trace_preserves_distinct_chunks_with_the_same_entity_id() -> None
             assert vector == [1.0, 0.0]
             self.requested_k = k
             return [
-                (Document(
-                    page_content="Valerius governa a cidade.",
-                    metadata={"id": "npc_valerius", "visibility": "public"},
-                ), 0.1),
-                (Document(
-                    page_content="Valerius teme a Rede Carmesim.",
-                    metadata={"id": "npc_valerius", "visibility": "secret"},
-                ), 0.2),
+                (
+                    Document(
+                        page_content="Valerius governa a cidade.",
+                        metadata={"id": "npc_valerius", "visibility": "public"},
+                    ),
+                    0.1,
+                ),
+                (
+                    Document(
+                        page_content="Valerius teme a Rede Carmesim.",
+                        metadata={"id": "npc_valerius", "visibility": "secret"},
+                    ),
+                    0.2,
+                ),
             ]
 
     index = SameEntityIndex()
@@ -82,18 +88,20 @@ def test_memory_context_dataset_emits_layered_metrics_and_metadata() -> None:
 
     assert result.passed is True
     assert len(result.results) == 27
-    assert result.metric_values == pytest.approx({
-        "exact_match": 1.0,
-        "memory_write_precision": 1.0,
-        "memory_recall_at_1": 3.5 / 6,
-        "memory_recall_at_3": 1.0,
-        "memory_recall_at_5": 1.0,
-        "memory_mrr": 5.0 / 6,
-        "context_recall_at_5": 1.0,
-        "context_forbidden_leak_rate": 0.0,
-        "secret_leak_count": 0.0,
-        "context_token_budget_violation": 0.0,
-    })
+    assert result.metric_values == pytest.approx(
+        {
+            "exact_match": 1.0,
+            "memory_write_precision": 1.0,
+            "memory_recall_at_1": 3.5 / 6,
+            "memory_recall_at_3": 1.0,
+            "memory_recall_at_5": 1.0,
+            "memory_mrr": 5.0 / 6,
+            "context_recall_at_5": 1.0,
+            "context_forbidden_leak_rate": 0.0,
+            "secret_leak_count": 0.0,
+            "context_token_budget_violation": 0.0,
+        }
+    )
     assert result.aggregates == {
         "layer_outcomes": {
             "store": {"passed": 11, "failed": 0, "error": 0},
@@ -127,21 +135,27 @@ def test_context_trace_exposes_ids_and_drop_reasons_without_story_text() -> None
     )
     by_id = {case.case_id: case.actual for case in result.results}
 
-    assert by_id["context.budget.discards-low-score"]["discarded_evidence"] == [{
-        "id": "event-low",
-        "section": "current_state",
-        "reason": "section_or_global_budget",
-    }]
-    assert by_id["context.trace.unknown-section"]["discarded_evidence"] == [{
-        "id": "unknown-evidence",
-        "section": "unsupported",
-        "reason": "unknown_section",
-    }]
-    assert by_id["context.trace.visibility-reason"]["discarded_evidence"] == [{
-        "id": "secret-rejected",
-        "section": "session_memory",
-        "reason": "visibility",
-    }]
+    assert by_id["context.budget.discards-low-score"]["discarded_evidence"] == [
+        {
+            "id": "event-low",
+            "section": "current_state",
+            "reason": "section_or_global_budget",
+        }
+    ]
+    assert by_id["context.trace.unknown-section"]["discarded_evidence"] == [
+        {
+            "id": "unknown-evidence",
+            "section": "unsupported",
+            "reason": "unknown_section",
+        }
+    ]
+    assert by_id["context.trace.visibility-reason"]["discarded_evidence"] == [
+        {
+            "id": "secret-rejected",
+            "section": "session_memory",
+            "reason": "visibility",
+        }
+    ]
     assert by_id["memory.generate.boundary"] == {
         "layer": "generate",
         "memory_context_scored": False,
@@ -242,9 +256,7 @@ def test_ranking_miss_is_measured_but_not_blocking_before_baseline() -> None:
     assert result.passed is True
     assert result.metric_values["memory_recall_at_5"] == 0.0
     assert result.metric_values["memory_mrr"] == 0.0
-    assert result.results[0].diagnostics == [
-        "required evidence absent from top 5: fact-brother"
-    ]
+    assert result.results[0].diagnostics == ["required evidence absent from top 5: fact-brother"]
 
 
 def test_ranking_adapter_error_stays_in_metric_denominator() -> None:

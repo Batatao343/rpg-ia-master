@@ -21,10 +21,19 @@ def test_objetivo_publico_nao_expoe_beat_privado():
 
 
 def test_objetivo_publico_prioriza_side_quest_ativa():
-    view = objectives.public_objective({}, [{
-        "id": "q1", "title": "A Ponte Partida", "description": "Inspecione os pilares.",
-        "status": "active", "location_id": "ponte",
-    }], {"current_location": "Campo"})
+    view = objectives.public_objective(
+        {},
+        [
+            {
+                "id": "q1",
+                "title": "A Ponte Partida",
+                "description": "Inspecione os pilares.",
+                "status": "active",
+                "location_id": "ponte",
+            }
+        ],
+        {"current_location": "Campo"},
+    )
     assert view["source"] == "side_quest"
     assert view["quest_id"] == "q1"
     assert view["objective"] == "Inspecione os pilares."
@@ -33,10 +42,17 @@ def test_objetivo_publico_prioriza_side_quest_ativa():
 def test_quest_tem_progresso_e_recompensa_idempotentes(monkeypatch):
     monkeypatch.setattr(quest_log, "_valid_location_ids", lambda: {"ponte"})
     monkeypatch.setattr(quest_log, "_valid_entity_ids", lambda: set())
-    quests, created = quest_log.register_proposed_quests([], [{
-        "title": "A Ponte Partida", "description": "Inspecione os pilares.",
-        "location_id": "ponte",
-    }], turn=3)
+    quests, created = quest_log.register_proposed_quests(
+        [],
+        [
+            {
+                "title": "A Ponte Partida",
+                "description": "Inspecione os pilares.",
+                "location_id": "ponte",
+            }
+        ],
+        turn=3,
+    )
     assert created[0]["progress_log"] == [{"kind": "created", "turn": 3, "detail": ""}]
 
     progressed = quest_log.sync_location_progress(quests, "ponte", turn=4)
@@ -52,13 +68,20 @@ def test_quest_tem_progresso_e_recompensa_idempotentes(monkeypatch):
 
 
 def test_direcao_social_usa_destino_canonico(monkeypatch):
-    monkeypatch.setattr("gamedata.get_connections", lambda _loc: [
-        {"id": "mercado", "name": "Mercado Velho", "danger": 1},
-    ])
-    hint = social_direction.build_social_direction({
-        "world": {"current_location_id": "ermo", "current_location": "Ermo"},
-        "npcs": {}, "quests": [], "campaign_plan": {},
-    })
+    monkeypatch.setattr(
+        "gamedata.get_connections",
+        lambda _loc: [
+            {"id": "mercado", "name": "Mercado Velho", "danger": 1},
+        ],
+    )
+    hint = social_direction.build_social_direction(
+        {
+            "world": {"current_location_id": "ermo", "current_location": "Ermo"},
+            "npcs": {},
+            "quests": [],
+            "campaign_plan": {},
+        }
+    )
     assert "Mercado Velho" in hint
 
 
@@ -66,16 +89,22 @@ def test_origem_de_combate_tem_vocabulario_fechado_e_prioriza_cena_nova():
     assert combat_origin.normalize("qualquer") == "unknown"
     assert combat_origin.from_encounter({"reason": "reinforcements"}, {}) == "regional_danger"
     assert combat_origin.from_encounter({}, {"chase": {"active": True}}) == "pursuit_recurrence"
-    assert combat_origin.materialize(
-        {"origin": "travel_encounter"}, "player_provoked"
-    ) == "player_provoked"
+    assert (
+        combat_origin.materialize({"origin": "travel_encounter"}, "player_provoked")
+        == "player_provoked"
+    )
 
 
 def test_restore_preserva_metatempo_e_registra_consequencia():
     checkpoint = {
-        "game_id": "g", "world": {"turn_count": 10, "current_location": "Ponte"},
-        "continuity": {"session_action_count": 10, "timeline_epoch": 0,
-                       "last_checkpoint_turn": 10, "death_history": []},
+        "game_id": "g",
+        "world": {"turn_count": 10, "current_location": "Ponte"},
+        "continuity": {
+            "session_action_count": 10,
+            "timeline_epoch": 0,
+            "last_checkpoint_turn": 10,
+            "death_history": [],
+        },
         "death_pending": False,
     }
     dead = deepcopy(checkpoint)
@@ -101,8 +130,13 @@ def test_continuidade_migrada_e_incrementada_sem_confundir_turno():
     assert bumped["session_action_count"] == 9
     assert bumped["timeline_epoch"] == 0
     first_player_action = continuity.advance_action(
-        {"session_action_count": 0, "timeline_epoch": 0,
-         "last_checkpoint_turn": 1, "death_history": []}, canonical_turn=2,
+        {
+            "session_action_count": 0,
+            "timeline_epoch": 0,
+            "last_checkpoint_turn": 1,
+            "death_history": [],
+        },
+        canonical_turn=2,
     )
     assert first_player_action["session_action_count"] == 1
 
@@ -122,8 +156,13 @@ def test_turn_record_serializa_latencia_origem_e_tres_relogios():
 
 def test_inferencia_repetida_nao_se_promove_sozinha():
     from services.memory_provenance import commit_memory_facts
-    fact = {"text": "Talvez a torre esteja vazia", "provenance": "inference",
-            "confidence": "speculative", "source_turn": 1}
+
+    fact = {
+        "text": "Talvez a torre esteja vazia",
+        "provenance": "inference",
+        "confidence": "speculative",
+        "source_turn": 1,
+    }
     ledger, promotions = commit_memory_facts([fact], [{**fact, "source_turn": 2}])
     assert ledger[0]["confidence"] == "speculative"
     assert promotions == 0

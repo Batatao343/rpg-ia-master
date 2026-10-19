@@ -67,7 +67,10 @@ def test_decisao_fuga_bloqueada_nao_e_progresso():
     assert isinstance(decision, combat.FleeDecision)
     assert not decision.eligible and not decision.escaped
     outcome = combat._canonical_player_action(
-        None, {}, flee_requested=True, chase_state=decision.chase,
+        None,
+        {},
+        flee_requested=True,
+        chase_state=decision.chase,
     )
     assert outcome["result"] == "flee_blocked"
 
@@ -88,16 +91,18 @@ def test_boundary_e_checkpoint_recusam_toda_transicao_critica():
 
 
 def test_restore_sanitiza_checkpoint_legado_envenenado_da_b1():
-    poisoned = _state(player=_player(
-        dead=False,
-        conscious=False,
-        last_stand_pending=True,
-        ferimentos={
-            "leve": [],
-            "grave": [],
-            "critico": [{"regiao": "torso", "tipo": "perfurante"}],
-        },
-    ))
+    poisoned = _state(
+        player=_player(
+            dead=False,
+            conscious=False,
+            last_stand_pending=True,
+            ferimentos={
+                "leve": [],
+                "grave": [],
+                "critico": [{"regiao": "torso", "tipo": "perfurante"}],
+            },
+        )
+    )
     dead = _state(player=_player(dead=True), death_pending=True)
 
     restored = checkpoints.resolve_death_choice(
@@ -116,11 +121,13 @@ def test_restore_sanitiza_checkpoint_legado_envenenado_da_b1():
 def test_load_sanitiza_save_legado_orfao_da_b1():
     from persistence import _raw_to_state, _state_to_save_data
 
-    poisoned = _state(player=_player(
-        conscious=False,
-        last_stand_pending=True,
-        ferimentos={"leve": [], "grave": [], "critico": [{"regiao": "torso"}]},
-    ))
+    poisoned = _state(
+        player=_player(
+            conscious=False,
+            last_stand_pending=True,
+            ferimentos={"leve": [], "grave": [], "critico": [{"regiao": "torso"}]},
+        )
+    )
     raw = _state_to_save_data(poisoned, poisoned["game_id"])
 
     loaded = _raw_to_state(raw)
@@ -132,11 +139,13 @@ def test_load_sanitiza_save_legado_orfao_da_b1():
 
 
 def test_guard_repara_transicao_orfa_uma_vez_sem_consumir_turno():
-    state = _state(player=_player(
-        conscious=False,
-        last_stand_pending=True,
-        ferimentos={"leve": [], "grave": [], "critico": [{"regiao": "torso"}]},
-    ))
+    state = _state(
+        player=_player(
+            conscious=False,
+            last_stand_pending=True,
+            ferimentos={"leve": [], "grave": [], "critico": [{"regiao": "torso"}]},
+        )
+    )
     state["messages"] = [HumanMessage(content="Descanso e aguardo socorro.")]
 
     first = action_guard_node(state)
@@ -147,8 +156,11 @@ def test_guard_repara_transicao_orfa_uma_vez_sem_consumir_turno():
     assert "world" not in first
 
     repaired = {**state, **first}
-    repaired["messages"] = [*state["messages"], *first["messages"],
-                            HumanMessage(content="Descanso e aguardo socorro.")]
+    repaired["messages"] = [
+        *state["messages"],
+        *first["messages"],
+        HumanMessage(content="Descanso e aguardo socorro."),
+    ]
     second = action_guard_node(repaired)
     assert second["action_guard_blocked"] is False
     assert second["last_action_outcome"]["code"] == "recovery_requested"
@@ -159,22 +171,22 @@ def test_finalizer_usa_readiness_e_recusa_boundary_orfao():
     stable["messages"] = []
     stable_out = turn_finalizer_node(stable)["last_turn_outcome"]
     assert stable_out["transition_readiness"] == {
-        "ready": True, "code": "ready", "phase": "active",
+        "ready": True,
+        "code": "ready",
+        "phase": "active",
     }
 
     combat_state = _state(combat={"active": True})
     combat_state["messages"] = []
     assert (
-        turn_finalizer_node(combat_state)["last_turn_outcome"]
-        ["transition_readiness"]["code"]
+        turn_finalizer_node(combat_state)["last_turn_outcome"]["transition_readiness"]["code"]
         == "combat_active"
     )
 
     death_choice = _state(death_pending=True)
     death_choice["messages"] = []
     assert (
-        turn_finalizer_node(death_choice)["last_turn_outcome"]
-        ["transition_readiness"]["code"]
+        turn_finalizer_node(death_choice)["last_turn_outcome"]["transition_readiness"]["code"]
         == "transition_death_pending"
     )
 
@@ -221,9 +233,7 @@ def test_morte_confirmada_continua_canonica_e_separada():
 
     assert summary["caidos"] == []
     assert summary["mortos"] == ["Playtest-normal"]
-    assert conflict_summary.summary_facts(summary) == [
-        "Playtest-normal morreu no conflito."
-    ]
+    assert conflict_summary.summary_facts(summary) == ["Playtest-normal morreu no conflito."]
 
 
 def test_cronica_da_queda_nao_afirma_recuperacao_antes_da_escolha():
@@ -243,19 +253,23 @@ def test_invariante_curta_detecta_falso_fato_de_morte_na_queda():
     before["event_log"] = []
     before["memory_facts"] = []
     after = _state(player=_player(name="Playtest-normal"), death_pending=True)
-    after["event_log"] = [{
-        "event_id": "down-1", "type": "player_downed", "turn": 199,
-    }]
-    after["memory_facts"] = [{
-        "memory_id": "bad-1",
-        "text": "Playtest-normal morreu no conflito.",
-    }]
+    after["event_log"] = [
+        {
+            "event_id": "down-1",
+            "type": "player_downed",
+            "turn": 199,
+        }
+    ]
+    after["memory_facts"] = [
+        {
+            "memory_id": "bad-1",
+            "text": "Playtest-normal morreu no conflito.",
+        }
+    ]
 
     violations = check_false_player_death(after, before, 199)
 
-    assert [violation.check_id for violation in violations] == [
-        "narrative.false_player_death"
-    ]
+    assert [violation.check_id for violation in violations] == ["narrative.false_player_death"]
 
 
 def test_invariante_aceita_queda_e_morte_confirmada():
@@ -264,18 +278,25 @@ def test_invariante_aceita_queda_e_morte_confirmada():
     before = {**_state(), "event_log": [], "memory_facts": []}
     downed = _state(player=_player(name="Playtest-normal"), death_pending=True)
     downed["event_log"] = [{"event_id": "down", "type": "player_downed"}]
-    downed["memory_facts"] = [{
-        "memory_id": "good", "text": "Playtest-normal caiu no conflito.",
-    }]
+    downed["memory_facts"] = [
+        {
+            "memory_id": "good",
+            "text": "Playtest-normal caiu no conflito.",
+        }
+    ]
     assert check_false_player_death(downed, before, 1) == []
 
     memorial = {**downed, "game_over": True}
     memorial["event_log"] = [
-        *downed["event_log"], {"event_id": "died", "type": "player_died"},
+        *downed["event_log"],
+        {"event_id": "died", "type": "player_died"},
     ]
-    memorial["memory_facts"] = [{
-        "memory_id": "death", "text": "Playtest-normal morreu no conflito.",
-    }]
+    memorial["memory_facts"] = [
+        {
+            "memory_id": "death",
+            "text": "Playtest-normal morreu no conflito.",
+        }
+    ]
     assert check_false_player_death(memorial, before, 2) == []
 
 
@@ -283,16 +304,24 @@ def test_memoria_recusa_morte_do_player_sem_evento_terminal():
     from services.memory_provenance import make_memory_fact, validate_memory_fact
 
     state = _state(player=_player(name="Playtest-normal"), death_pending=True)
-    state["event_log"] = [{
-        "event_id": "down-1", "type": "player_downed", "target_id": "player",
-    }]
+    state["event_log"] = [
+        {
+            "event_id": "down-1",
+            "type": "player_downed",
+            "target_id": "player",
+        }
+    ]
     bad = make_memory_fact(
         "Playtest-normal morreu no conflito.",
-        provenance="canonical_event", source_id="down-1", source_turn=199,
+        provenance="canonical_event",
+        source_id="down-1",
+        source_turn=199,
     )
     good = make_memory_fact(
         "Playtest-normal caiu no conflito e aguarda recuperação.",
-        provenance="canonical_event", source_id="down-1", source_turn=199,
+        provenance="canonical_event",
+        source_id="down-1",
+        source_turn=199,
     )
 
     assert validate_memory_fact(bad, state)[1] == "player_downed_not_dead"
@@ -307,11 +336,15 @@ def test_contexto_omite_fato_legado_falso_sem_apagar_o_ledger():
     state["event_log"] = [{"event_id": "down", "type": "player_downed"}]
     bad = make_memory_fact(
         "Playtest-normal morreu no conflito.",
-        provenance="canonical_event", source_id="down", source_turn=10,
+        provenance="canonical_event",
+        source_id="down",
+        source_turn=10,
     )
     good = make_memory_fact(
         "Playtest-normal caiu no conflito.",
-        provenance="canonical_event", source_id="down", source_turn=10,
+        provenance="canonical_event",
+        source_id="down",
+        source_turn=10,
     )
     ledger = [bad, good]
 

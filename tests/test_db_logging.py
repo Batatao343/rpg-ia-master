@@ -1,4 +1,5 @@
 """SPEC-254: logs do Postgres (lease/versao/pool/timeouts) sem SQL, parametros, DSN ou host."""
+
 import ast
 import json
 import uuid
@@ -82,12 +83,19 @@ def _fake_pool():
             yield object()
 
     pool = object.__new__(PostgresPool)
-    pool._pool, pool._transaction_pooler, pool._request_rls, pool.admin_pool = _Fake(), False, False, None
+    pool._pool, pool._transaction_pooler, pool._request_rls, pool.admin_pool = (
+        _Fake(),
+        False,
+        False,
+        None,
+    )
     return pool
 
 
-@pytest.mark.parametrize("exc_class,event", [(_QueryCanceled, "db.statement_timeout"),
-                                             (_LockNotAvailable, "db.lock_timeout")])
+@pytest.mark.parametrize(
+    "exc_class,event",
+    [(_QueryCanceled, "db.statement_timeout"), (_LockNotAvailable, "db.lock_timeout")],
+)
 def test_statement_and_lock_timeout_logged(capsys, exc_class, event):
     pool = _fake_pool()
 
@@ -123,7 +131,9 @@ def test_fast_query_is_not_slow(capsys, monkeypatch):
 
 def test_conflict_log_uses_pseudonyms(capsys):
     op, game = uuid.uuid4(), uuid.uuid4()
-    db_log.conflict("lease_conflict", "fence_invalid", op_kind="turn", operation_id=op, game_id=game)
+    db_log.conflict(
+        "lease_conflict", "fence_invalid", op_kind="turn", operation_id=op, game_id=game
+    )
     out = capsys.readouterr().out
     (line,) = [json.loads(x) for x in out.splitlines() if "db.lease_conflict" in x]
     assert line["reason"] == "fence_invalid" and line["op_kind"] == "turn"
@@ -138,15 +148,24 @@ def _raise_sites(path):
         body = getattr(node, "body", None)
         if isinstance(body, list):
             for idx, stmt in enumerate(body):
-                if (isinstance(stmt, ast.Raise) and isinstance(stmt.exc, ast.Call)
-                        and getattr(stmt.exc.func, "id", "") in {"LeaseHeld", "StaleVersion"}):
+                if (
+                    isinstance(stmt, ast.Raise)
+                    and isinstance(stmt.exc, ast.Call)
+                    and getattr(stmt.exc.func, "id", "") in {"LeaseHeld", "StaleVersion"}
+                ):
                     prev = body[idx - 1] if idx else None
                     sites.append((stmt.lineno, prev))
     return sites
 
 
-@pytest.mark.parametrize("path", ["infrastructure/postgres_turns.py", "infrastructure/postgres_jobs.py",
-                                  "services/lease_heartbeat.py"])
+@pytest.mark.parametrize(
+    "path",
+    [
+        "infrastructure/postgres_turns.py",
+        "infrastructure/postgres_jobs.py",
+        "services/lease_heartbeat.py",
+    ],
+)
 def test_every_lease_or_version_raise_is_logged(path):
     sites = _raise_sites(path)
     assert sites, path
@@ -156,10 +175,20 @@ def test_every_lease_or_version_raise_is_logged(path):
 
 
 def test_postgres_modules_do_not_log_sql():
-    for path in ("infrastructure/postgres.py", "infrastructure/postgres_turns.py",
-                 "infrastructure/postgres_jobs.py", "infrastructure/db_log.py"):
+    for path in (
+        "infrastructure/postgres.py",
+        "infrastructure/postgres_turns.py",
+        "infrastructure/postgres_jobs.py",
+        "infrastructure/db_log.py",
+    ):
         tree = ast.parse((ROOT / path).read_text(encoding="utf-8"))
         for node in ast.walk(tree):
-            if isinstance(node, ast.Call) and getattr(node.func, "id", "") in {"log_event", "_log_event"}:
+            if isinstance(node, ast.Call) and getattr(node.func, "id", "") in {
+                "log_event",
+                "_log_event",
+            }:
                 for kw in node.keywords:
-                    assert kw.arg not in {"sql", "query", "params", "dsn", "host"}, (path, node.lineno)
+                    assert kw.arg not in {"sql", "query", "params", "dsn", "host"}, (
+                        path,
+                        node.lineno,
+                    )

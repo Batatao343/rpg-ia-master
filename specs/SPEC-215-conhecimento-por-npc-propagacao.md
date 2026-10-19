@@ -167,22 +167,27 @@ Nenhum valor novo de `KnowledgeKind`/`MemoryConfidence` é criado aqui.
 
 ```python
 class KnowledgeLink(TypedDict, total=False):
-    link_id: str            # sha256(holder|subject|relation|acquired_clock)[:16]
-    holder_id: str          # "npc:<npc_id canônico>" | "loc:<location_id>"
+    link_id: str  # sha256(holder|subject|relation|acquired_clock)[:16]
+    holder_id: str  # "npc:<npc_id canônico>" | "loc:<location_id>"
     subject_kind: Literal["event", "memory_fact"]
-    subject_id: str         # GameEvent.event_id | MemoryFact.memory_id
+    subject_id: str  # GameEvent.event_id | MemoryFact.memory_id
     relation: Literal["observed_by", "told_to", "believed_by"]
-    source: str             # "world" | "player" | "npc:<id>" | "loc:<id>"
+    source: str  # "world" | "player" | "npc:<id>" | "loc:<id>"
     channel: Literal["witness", "messenger", "local_rumor", "player"]
-    hops: int               # 0 testemunha; ≤ MAX_HOPS
-    acquired_clock: int     # day*5 + period_index (advance_clock)
+    hops: int  # 0 testemunha; ≤ MAX_HOPS
+    acquired_clock: int  # day*5 + period_index (advance_clock)
     acquired_turn: int
+
 
 class KnowledgeDelivery(TypedDict, total=False):
     delivery_id: str
-    subject_kind: str; subject_id: str
-    from_location_id: str; to_location_id: str
-    hop: int; due_clock: int; created_turn: int
+    subject_kind: str
+    subject_id: str
+    from_location_id: str
+    to_location_id: str
+    hop: int
+    due_clock: int
+    created_turn: int
 ```
 
 `GameState`: `knowledge_links: List[KnowledgeLink]` (teto `MAX_KNOWLEDGE_LINKS=2000`, despejo dos

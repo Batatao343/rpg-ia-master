@@ -35,16 +35,18 @@ def _player() -> dict:
 
 
 def _conflict_summary() -> dict:
-    return summary_service.build_summary([
-        _player(),
-        {
-            "id": "brutamontes",
-            "name": "Brutamontes",
-            "dead": True,
-            "conscious": False,
-            "ferimentos": {"leve": [], "grave": [], "critico": []},
-        },
-    ])
+    return summary_service.build_summary(
+        [
+            _player(),
+            {
+                "id": "brutamontes",
+                "name": "Brutamontes",
+                "dead": True,
+                "conscious": False,
+                "ferimentos": {"leve": [], "grave": [], "critico": []},
+            },
+        ]
+    )
 
 
 class _HallucinatingLootLLM:
@@ -55,9 +57,7 @@ class _HallucinatingLootLLM:
 
     def invoke(self, messages):
         self.human_context = str(messages[-1].content)
-        return AIMessage(
-            content="Você encontra a Espada Solar e recolhe 9999 moedas de ouro."
-        )
+        return AIMessage(content="Você encontra a Espada Solar e recolhe 9999 moedas de ouro.")
 
 
 def test_loot_enriquece_summary_antes_da_narracao_e_rejeita_extra(monkeypatch):
@@ -82,24 +82,24 @@ def test_loot_enriquece_summary_antes_da_narracao_e_rejeita_extra(monkeypatch):
         },
     )
 
-    out = loot.loot_node({
-        "player": _player(),
-        "world": {
-            "current_location_id": "ponte",
-            "danger_level": 1,
-            "turn_count": 3,
-        },
-        "combat": {"encounter_level": 4},
-        "conflict_summary": _conflict_summary(),
-        "loot_source": "TREASURE",
-        "messages": [HumanMessage(content="Vasculho os corpos.")],
-        "world_projection": {},
-        "bestiary_knowledge": {},
-    })
+    out = loot.loot_node(
+        {
+            "player": _player(),
+            "world": {
+                "current_location_id": "ponte",
+                "danger_level": 1,
+                "turn_count": 3,
+            },
+            "combat": {"encounter_level": 4},
+            "conflict_summary": _conflict_summary(),
+            "loot_source": "TREASURE",
+            "messages": [HumanMessage(content="Vasculho os corpos.")],
+            "world_projection": {},
+            "bestiary_knowledge": {},
+        }
+    )
 
-    assert out["conflict_summary"]["loot_obtido"] == [
-        {"kind": "gold", "amount": 7}
-    ]
+    assert out["conflict_summary"]["loot_obtido"] == [{"kind": "gold", "amount": 7}]
     # O prompt já recebeu o resultado aplicado, não o summary pré-loot.
     assert "Espólio: 7 ouro." in llm.human_context
     rendered = out["messages"][0].content
@@ -139,24 +139,26 @@ def test_combat_sem_inimigo_ativo_produz_summary_antes_do_loot():
         "npcs": [],
     }
 
-    out = combat.combat_node({
-        "messages": [HumanMessage(content="O combate já terminou.")],
-        "player": _player(),
-        "enemies": [dead_enemy],
-        "combat": {
-            "active": True,
-            "round": 3,
-            "scene": scene,
-            "encounter_level": 4,
-        },
-        "world": {
-            "turn_count": 5,
-            "current_location": "Ponte",
-            "current_location_id": "ponte",
-        },
-        "party": [],
-        "npcs": {},
-    })
+    out = combat.combat_node(
+        {
+            "messages": [HumanMessage(content="O combate já terminou.")],
+            "player": _player(),
+            "enemies": [dead_enemy],
+            "combat": {
+                "active": True,
+                "round": 3,
+                "scene": scene,
+                "encounter_level": 4,
+            },
+            "world": {
+                "turn_count": 5,
+                "current_location": "Ponte",
+                "current_location_id": "ponte",
+            },
+            "party": [],
+            "npcs": {},
+        }
+    )
 
     assert out["next"] == "loot"
     assert out["combat"]["active"] is False

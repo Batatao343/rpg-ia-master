@@ -1,4 +1,5 @@
 """Principal and correlation must survive every context acquisition boundary."""
+
 from __future__ import annotations
 
 import asyncio
@@ -26,6 +27,7 @@ def _principal() -> Principal:
 @pytest.mark.parametrize("mode", ["serial", "parallel", "async"])
 def test_real_rag_readers_keep_request_identity(monkeypatch, mode: str) -> None:
     import rag
+
     monkeypatch.setenv("RPG_RUNTIME_PROFILE", "portable")
     principal = _principal()
     game_id = uuid4()
@@ -37,17 +39,23 @@ def test_real_rag_readers_keep_request_identity(monkeypatch, mode: str) -> None:
         requests.append(request.scope)
         return [SimpleNamespace(text=request.scope)]
 
-    monkeypatch.setattr("infrastructure.runtime.get_runtime", lambda: SimpleNamespace(
-        memory_store=SimpleNamespace(query=query)))
-    readers = {"session": lambda: rag.query_session_memory("x", str(game_id)),
-               "npc": lambda: rag.query_npc_memory(str(game_id), "npc_a", "x")}
+    monkeypatch.setattr(
+        "infrastructure.runtime.get_runtime",
+        lambda: SimpleNamespace(memory_store=SimpleNamespace(query=query)),
+    )
+    readers = {
+        "session": lambda: rag.query_session_memory("x", str(game_id)),
+        "npc": lambda: rag.query_npc_memory(str(game_id), "npc_a", "x"),
+    }
     args = dict(game_id=str(game_id), npc_id="npc_a", readers=readers)
     with principal_scope(principal):
         embedded = EmbeddedContextQuery("x", None, None, None)
         if mode == "async":
             results = asyncio.run(acquire_context_sources_async(embedded, **args))
         else:
-            results = acquire_context_sources(embedded, max_workers=1 if mode == "serial" else 3, **args)
+            results = acquire_context_sources(
+                embedded, max_workers=1 if mode == "serial" else 3, **args
+            )
         assert current_principal() == principal
     assert [result.status for result in results] == ["ok", "ok"]
     assert sorted(requests) == ["npc", "session"]
@@ -73,9 +81,13 @@ def test_reader_context_mutation_is_isolated_from_siblings_and_caller(workers: i
 
     try:
         with principal_scope(principal):
-            results = acquire_context_sources(EmbeddedContextQuery("x", None, None, None),
-                game_id=str(uuid4()), npc_id=None, max_workers=workers,
-                readers={"lore": mutate, "session": read})
+            results = acquire_context_sources(
+                EmbeddedContextQuery("x", None, None, None),
+                game_id=str(uuid4()),
+                npc_id=None,
+                max_workers=workers,
+                readers={"lore": mutate, "session": read},
+            )
             assert current_principal() == principal
             assert trace.get() == "original"
         assert [row.text for row in results] == ["mutated", "original"]
@@ -90,9 +102,14 @@ def test_simultaneous_users_never_share_principal() -> None:
         def read() -> str:
             barrier.wait()
             return str(current_principal().user_id)
+
         with principal_scope(principal):
-            rows = acquire_context_sources(EmbeddedContextQuery("x", None, None, None),
-                game_id=str(uuid4()), npc_id="npc_a", readers={"session": read, "npc": read})
+            rows = acquire_context_sources(
+                EmbeddedContextQuery("x", None, None, None),
+                game_id=str(uuid4()),
+                npc_id="npc_a",
+                readers={"session": read, "npc": read},
+            )
         return [row.text for row in rows]
 
     principals = [_principal(), _principal()]
@@ -104,8 +121,13 @@ def test_simultaneous_users_never_share_principal() -> None:
 
 def test_missing_principal_still_fails_closed() -> None:
     with principal_scope(None):
-        rows = acquire_context_sources(EmbeddedContextQuery("x", None, None, None),
-            game_id=str(uuid4()), npc_id="npc_a", readers={
+        rows = acquire_context_sources(
+            EmbeddedContextQuery("x", None, None, None),
+            game_id=str(uuid4()),
+            npc_id="npc_a",
+            readers={
                 "session": lambda: str(current_principal().user_id),
-                "npc": lambda: str(current_principal().user_id)})
+                "npc": lambda: str(current_principal().user_id),
+            },
+        )
     assert [row.error_code for row in rows] == ["Unauthorized", "Unauthorized"]

@@ -41,8 +41,7 @@ from infrastructure.contracts import (
 )
 
 
-def _replace_with_retry(source: str | Path, destination: str | Path,
-                        *, attempts: int = 6) -> None:
+def _replace_with_retry(source: str | Path, destination: str | Path, *, attempts: int = 6) -> None:
     """Tolera locks efêmeros de antivírus/OneDrive sem perder atomicidade."""
     last_error: PermissionError | None = None
     for attempt in range(attempts):
@@ -52,7 +51,7 @@ def _replace_with_retry(source: str | Path, destination: str | Path,
         except PermissionError as exc:
             last_error = exc
             if attempt + 1 < attempts:
-                time.sleep(0.01 * (2 ** attempt))
+                time.sleep(0.01 * (2**attempt))
     assert last_error is not None
     raise last_error
 
@@ -290,9 +289,7 @@ class LegacyRuntimeCatalogStore:
         if path is not None and owner_id is None and game_id is None:
             value = self._load_path(path).get(key)
             return deepcopy(value) if isinstance(value, dict) else None
-        return self._scoped_store().get(
-            namespace, key, owner_id=owner_id, game_id=game_id
-        )
+        return self._scoped_store().get(namespace, key, owner_id=owner_id, game_id=game_id)
 
     def list(
         self,
@@ -357,7 +354,11 @@ class InMemoryMemoryStore:
 
 def _safe_blob_key(key: str) -> PurePosixPath:
     candidate = PurePosixPath(key)
-    if candidate.is_absolute() or not candidate.parts or any(part in ("", ".", "..") for part in candidate.parts):
+    if (
+        candidate.is_absolute()
+        or not candidate.parts
+        or any(part in ("", ".", "..") for part in candidate.parts)
+    ):
         raise ValueError("object key inválida")
     if "\\" in key:
         raise ValueError("object key deve usar separador POSIX")
@@ -403,7 +404,9 @@ class FileBlobStore:
                 except OSError:
                     pass
                 raise
-        return BlobRef(key=key, sha256=digest, size_bytes=len(data), content_type=metadata.content_type)
+        return BlobRef(
+            key=key, sha256=digest, size_bytes=len(data), content_type=metadata.content_type
+        )
 
     def open(self, key: str) -> io.BufferedReader:
         return self._path(key).open("rb")
@@ -448,13 +451,17 @@ class InlineJobQueue:
             if dedupe in self._dedupe:
                 return self._dedupe[dedupe]
             job_id = uuid4()
-            if job.trace is None:     # SPEC-255 R1: correlacao do request de origem
+            if job.trace is None:  # SPEC-255 R1: correlacao do request de origem
                 from dataclasses import replace
 
                 from observability.telemetry import correlation
+
                 current = correlation()
-                job = replace(job, trace={k: current[k] for k in ("request_id", "action_ref")
-                                          if current.get(k)} or None)
+                job = replace(
+                    job,
+                    trace={k: current[k] for k in ("request_id", "action_ref") if current.get(k)}
+                    or None,
+                )
             self._jobs[job_id] = _Queued(job_id=job_id, request=job)
             self._dedupe[dedupe] = job_id
             self._order.append(job_id)

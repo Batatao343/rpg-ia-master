@@ -1,4 +1,5 @@
 """Canonical actor lifecycle and action eligibility (pure Python)."""
+
 from __future__ import annotations
 
 import copy
@@ -158,19 +159,36 @@ def orphan_transition(state: dict) -> TransitionReadiness | None:
 def evaluate_action(state: dict, action: str) -> ActionEligibility:
     phase = classify_actor(state)
     if (state.get("combat") or {}).get("active"):
-        return {"phase": phase.value, "allowed": True, "code": "combat_resolution",
-                "action_kind": "normal", "message": ""}
+        return {
+            "phase": phase.value,
+            "allowed": True,
+            "code": "combat_resolution",
+            "action_kind": "normal",
+            "message": "",
+        }
     if phase == ActorPhase.ACTIVE:
-        return {"phase": phase.value, "allowed": True, "code": "ok",
-                "action_kind": "normal", "message": ""}
+        return {
+            "phase": phase.value,
+            "allowed": True,
+            "code": "ok",
+            "action_kind": "normal",
+            "message": "",
+        }
     normalized_action = "".join(
-        char for char in unicodedata.normalize("NFKD", str(action or ""))
+        char
+        for char in unicodedata.normalize("NFKD", str(action or ""))
         if not unicodedata.combining(char)
     ).strip()
-    if (phase in {ActorPhase.UNCONSCIOUS, ActorPhase.INCAPACITATED}
-            and _RECOVERY.fullmatch(normalized_action)):
-        return {"phase": phase.value, "allowed": True, "code": "recovery_requested",
-                "action_kind": "recovery", "message": ""}
+    if phase in {ActorPhase.UNCONSCIOUS, ActorPhase.INCAPACITATED} and _RECOVERY.fullmatch(
+        normalized_action
+    ):
+        return {
+            "phase": phase.value,
+            "allowed": True,
+            "code": "recovery_requested",
+            "action_kind": "recovery",
+            "message": "",
+        }
     messages = {
         ActorPhase.UNCONSCIOUS: (
             "Você está inconsciente. Declare descanso, tratamento ou aguarde socorro; "
@@ -182,5 +200,10 @@ def evaluate_action(state: dict, action: str) -> ActionEligibility:
         ActorPhase.DEATH_PENDING: "Escolha continuar do checkpoint ou aceitar o fim.",
         ActorPhase.DEAD: "Esta campanha terminou e permanece como memorial.",
     }
-    return {"phase": phase.value, "allowed": False, "code": f"blocked_{phase.value}",
-            "action_kind": "none", "message": messages[phase]}
+    return {
+        "phase": phase.value,
+        "allowed": False,
+        "code": f"blocked_{phase.value}",
+        "action_kind": "none",
+        "message": messages[phase],
+    }

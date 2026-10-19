@@ -6,6 +6,7 @@ invariante `knowledge.secret_leak` (playtest) quanto pelo `campaign_manager`
 (sanitização determinística do texto do beat, R2). Também expõe uma heurística
 barata de idioma (R4). Zero LLM — tudo determinístico.
 """
+
 from __future__ import annotations
 
 import re
@@ -15,23 +16,31 @@ from typing import Dict, List, Optional, Tuple
 # Curadas dos docs `visibility: hidden`. Movidas de playtest/invariants.py (R1).
 SECRET_SIGNATURES: dict[str, list[str]] = {
     "pacto_valerius": [
-        "pacto com valerius", "pacto com daruun", "consumiu a família",
-        "cedeu a família", "em troca de imortalidade",
+        "pacto com valerius",
+        "pacto com daruun",
+        "consumiu a família",
+        "cedeu a família",
+        "em troca de imortalidade",
     ],
     "rede_carmesim": [
-        "rede carmesim pode despertar", "despertar dentro de uma geração",
+        "rede carmesim pode despertar",
+        "despertar dentro de uma geração",
         # a iminência calculada (Nehla/Astrin) — só vive nos docs `hidden`.
-        "décadas para meses", "acelerando mais rápido do que admitem",
+        "décadas para meses",
+        "acelerando mais rápido do que admitem",
     ],
     "arauto_identidade": [
-        "aprendiz élfico que destruiu aethelgard", "fundido com a energia liberada",
+        "aprendiz élfico que destruiu aethelgard",
+        "fundido com a energia liberada",
         "almas das vítimas das câmaras",
     ],
     "rei_subterraneo": [
-        "verme-primordial das raízes do mundo", "medo do verme",
+        "verme-primordial das raízes do mundo",
+        "medo do verme",
         "rei se aquietou por medo",
     ],
 }
+
 
 # SPEC-234 R3: chave de segredo -> IDs REAIS de entidade do grafo que, quando alvo
 # de um `secret_revealed` aceito, liberam o segredo. (D-A: `pacto_valerius` mapeia
@@ -41,7 +50,9 @@ def _load_secret_entity_ids() -> dict[str, frozenset]:
     import json
     import os
 
-    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "data", "secret_entities.json")
+    path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), os.pardir, "data", "secret_entities.json"
+    )
     try:
         with open(path, encoding="utf-8") as fh:
             raw = json.load(fh)
@@ -88,7 +99,7 @@ def revealed_corpus(state: dict) -> str:
         parts.append(str(f))
     # (3) conhecimento diegético já adquirido pelo jogador
     parts.append(str(state.get("narrative_summary", "") or ""))
-    known = ((state.get("player") or {}).get("known_secrets") or [])
+    known = (state.get("player") or {}).get("known_secrets") or []
     if isinstance(known, (list, tuple)):
         parts.extend(str(k) for k in known)
     return " ".join(parts).lower()
@@ -123,10 +134,12 @@ def sanitize_beat(text: str, state: dict) -> str:
 
 _EN_STOPWORDS = re.compile(
     r"\b(the|of|and|to|with|from|explore|mysteries|secret|ancient|reveal|"
-    r"uncover|beneath|shadow|forest|castle|king|dark)\b")
+    r"uncover|beneath|shadow|forest|castle|king|dark)\b"
+)
 _PT_STOPWORDS = re.compile(
     r"\b(de|da|do|das|dos|que|com|para|uma|um|os|as|você|voce|é|ao|na|no|"
-    r"pelo|pela|sua|seu|ele|ela|revele|descubra|investigue)\b")
+    r"pelo|pela|sua|seu|ele|ela|revele|descubra|investigue)\b"
+)
 _ACCENTS = re.compile(r"[áàâãéêíóôõúüç]", re.IGNORECASE)
 
 

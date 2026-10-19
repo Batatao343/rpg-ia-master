@@ -104,14 +104,15 @@ de cada criatura do bestiário (`conflito-15`); UI de Ferimentos localizados
 **Schemas:**
 ```python
 class Armor(TypedDict):
-    categoria: Literal["leve","media","pesada"]
+    categoria: Literal["leve", "media", "pesada"]
     protecao: int
     integridade_max: int
     integridade_atual: int
     comprometida: bool
 
+
 class Wound(TypedDict):
-    categoria: Literal["leve","grave","critico"]
+    categoria: Literal["leve", "grave", "critico"]
     regiao: str
     suprimida: bool  # tratada, aguardando remoção no descanso longo
 ```

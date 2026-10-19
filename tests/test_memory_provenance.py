@@ -1,4 +1,5 @@
 """Contratos da spec hardening-memoria-proveniencia."""
+
 from __future__ import annotations
 
 from types import SimpleNamespace
@@ -29,11 +30,13 @@ from services.memory_provenance import (
 def _inventory_grounding_state(*, has_diary: bool = False) -> dict:
     inventory = [{"id": "pocao_cura", "qty": 1}]
     if has_diary:
-        inventory.append({
-            "id": "item_desconhecido",
-            "qty": 1,
-            "display_name": "Diário da Casa Vesper",
-        })
+        inventory.append(
+            {
+                "id": "item_desconhecido",
+                "qty": 1,
+                "display_name": "Diário da Casa Vesper",
+            }
+        )
     return {
         "player": {"name": "Ceslo", "inventory": inventory},
         "world": {"turn_count": 104},
@@ -56,16 +59,18 @@ def test_posse_fantasma_da_matriz_b_falha_fechado() -> None:
         "claim_kind": "rejected_item",
     }
     fact = make_memory_fact(
-        bad, provenance="inference", source_id="archivist:104", source_turn=104,
+        bad,
+        provenance="inference",
+        source_id="archivist:104",
+        source_turn=104,
     )
     accepted, reason = validate_memory_fact(fact, state)
     assert accepted is None
-    assert reason == (
-        "inventory_possession_contradiction:Diário da Casa Vesper"
-    )
+    assert reason == ("inventory_possession_contradiction:Diário da Casa Vesper")
 
     clean, rejected = sanitize_inventory_grounding(
-        f"Ceslo segue atento. {bad} A busca continua.", state,
+        f"Ceslo segue atento. {bad} A busca continua.",
+        state,
     )
     assert clean == "Ceslo segue atento. A busca continua."
     assert rejected[0]["item_name"] == "Diário da Casa Vesper"
@@ -73,15 +78,27 @@ def test_posse_fantasma_da_matriz_b_falha_fechado() -> None:
 
 def test_posse_real_prevalece_e_posse_de_npc_nao_e_confundida() -> None:
     acquired = _inventory_grounding_state(has_diary=True)
-    assert inventory_possession_contradiction(
-        "Ceslo carrega o Diário da Casa Vesper.", acquired,
-    ) is None
-    assert inventory_possession_contradiction(
-        "Iris carrega o Diário da Casa Vesper.", _inventory_grounding_state(),
-    ) is None
-    assert inventory_possession_contradiction(
-        "O viajante carrega uma Poção de Cura Menor.", _inventory_grounding_state(),
-    ) is None
+    assert (
+        inventory_possession_contradiction(
+            "Ceslo carrega o Diário da Casa Vesper.",
+            acquired,
+        )
+        is None
+    )
+    assert (
+        inventory_possession_contradiction(
+            "Iris carrega o Diário da Casa Vesper.",
+            _inventory_grounding_state(),
+        )
+        is None
+    )
+    assert (
+        inventory_possession_contradiction(
+            "O viajante carrega uma Poção de Cura Menor.",
+            _inventory_grounding_state(),
+        )
+        is None
+    )
 
 
 def test_posse_fantasma_some_do_contexto_e_dispara_invariante(monkeypatch) -> None:
@@ -89,7 +106,10 @@ def test_posse_fantasma_some_do_contexto_e_dispara_invariante(monkeypatch) -> No
 
     bad_text = "O viajante carrega o Diário da Casa Vesper."
     bad = make_memory_fact(
-        bad_text, provenance="inference", source_id="archivist:104", source_turn=104,
+        bad_text,
+        provenance="inference",
+        source_id="archivist:104",
+        source_turn=104,
     )
     state = {
         **_inventory_grounding_state(),
@@ -99,7 +119,9 @@ def test_posse_fantasma_some_do_contexto_e_dispara_invariante(monkeypatch) -> No
     }
     monkeypatch.setattr(context_builder, "query_rag", lambda *_a, **_k: "")
     monkeypatch.setattr(
-        context_builder, "query_session_memory", lambda *_a, **_k: bad_text,
+        context_builder,
+        "query_session_memory",
+        lambda *_a, **_k: bad_text,
     )
     pack = build_context_pack(state, "diário", "story", game_id="game-1")
     assert "Diário da Casa Vesper" not in pack.memory_block
@@ -111,7 +133,8 @@ def test_posse_fantasma_some_do_contexto_e_dispara_invariante(monkeypatch) -> No
 def test_roundtrip_preserva_rejeicoes_de_item_e_save_antigo_inicia_vazio() -> None:
     state = _inventory_grounding_state()
     raw = persistence._state_to_save_data(
-        {"game_id": "save-memory", **state}, "save-memory",
+        {"game_id": "save-memory", **state},
+        "save-memory",
     )
     assert persistence._raw_to_state(raw)["rejected_item_claims"] == [
         "Diário da Casa Vesper",
@@ -143,14 +166,16 @@ def test_archivist_quarentena_posse_fantasma_em_fato_e_resumo(monkeypatch) -> No
         "add_memory_to_session",
         lambda _game_id, facts, **_kwargs: writes.append(list(facts)) or True,
     )
-    out = archivist.archive_node({
-        **_inventory_grounding_state(),
-        "game_id": "inventory-grounding",
-        "archive_due": True,
-        "messages": [],
-        "narrative_summary": "Ceslo investiga a Casa Vesper.",
-        "memory_facts": [],
-    })
+    out = archivist.archive_node(
+        {
+            **_inventory_grounding_state(),
+            "game_id": "inventory-grounding",
+            "archive_due": True,
+            "messages": [],
+            "narrative_summary": "Ceslo investiga a Casa Vesper.",
+            "memory_facts": [],
+        }
+    )
     assert writes == []
     assert out["memory_facts"] == []
     assert out["narrative_summary"] == "Ceslo investiga a Casa Vesper."
@@ -169,12 +194,18 @@ def test_grounding_de_local_rejeita_b1_sem_bloquear_viagem_legitima() -> None:
         "expected_region": "Nova Arcádia",
         "claimed_region": "Brekmar",
     }
-    assert canonical_location_contradiction(
-        "Ceslo viajou do Anel Dourado para Brekmar pela estrada antiga."
-    ) is None
+    assert (
+        canonical_location_contradiction(
+            "Ceslo viajou do Anel Dourado para Brekmar pela estrada antiga."
+        )
+        is None
+    )
 
     fact = make_memory_fact(
-        bad, provenance="inference", source_id="archivist:49", source_turn=49,
+        bad,
+        provenance="inference",
+        source_id="archivist:49",
+        source_turn=49,
     )
     accepted, reason = validate_memory_fact(fact, {"event_log": []})
     assert accepted is None
@@ -186,7 +217,10 @@ def test_grounding_de_local_quarentena_ledger_e_dispara_invariante(monkeypatch) 
 
     text = "O Anel Dourado é um bairro alto de Brekmar."
     bad = make_memory_fact(
-        text, provenance="inference", source_id="archivist:49", source_turn=49,
+        text,
+        provenance="inference",
+        source_id="archivist:49",
+        source_turn=49,
     )
     state = {
         "world": {
@@ -200,7 +234,9 @@ def test_grounding_de_local_quarentena_ledger_e_dispara_invariante(monkeypatch) 
     }
     monkeypatch.setattr(context_builder, "query_rag", lambda *_a, **_k: "")
     monkeypatch.setattr(
-        context_builder, "query_session_memory", lambda *_a, **_k: text,
+        context_builder,
+        "query_session_memory",
+        lambda *_a, **_k: text,
     )
     pack = build_context_pack(state, "Anel Dourado", "story", game_id="game-1")
     assert text not in pack.memory_block
@@ -232,18 +268,20 @@ def test_archivist_rejeita_fato_e_resumo_com_regiao_errada(monkeypatch) -> None:
         "add_memory_to_session",
         lambda _game_id, facts, **_kwargs: writes.append(list(facts)) or True,
     )
-    out = archivist.archive_node({
-        "game_id": "grounding-memory",
-        "world": {
-            "turn_count": 49,
-            "current_location_id": "na_anel_dourado",
-            "current_location": "Anel Dourado",
-        },
-        "archive_due": True,
-        "messages": [],
-        "narrative_summary": "Ceslo investiga o Anel Dourado.",
-        "memory_facts": [],
-    })
+    out = archivist.archive_node(
+        {
+            "game_id": "grounding-memory",
+            "world": {
+                "turn_count": 49,
+                "current_location_id": "na_anel_dourado",
+                "current_location": "Anel Dourado",
+            },
+            "archive_due": True,
+            "messages": [],
+            "narrative_summary": "Ceslo investiga o Anel Dourado.",
+            "memory_facts": [],
+        }
+    )
     assert writes == []
     assert out["memory_facts"] == []
     assert out["narrative_summary"] == "Ceslo investiga o Anel Dourado."
@@ -266,11 +304,13 @@ def _event(event_id: str = "evt-1", *, event_type: str = "npc_killed") -> dict:
 
 def test_schema_fecha_enums_e_memoria_legada_perde_autoridade() -> None:
     with pytest.raises(ValidationError):
-        MemoryFactRecord.model_validate({
-            "text": "algo",
-            "provenance": "certeza_do_narrador",
-            "confidence": "absoluta",
-        })
+        MemoryFactRecord.model_validate(
+            {
+                "text": "algo",
+                "provenance": "certeza_do_narrador",
+                "confidence": "absoluta",
+            }
+        )
 
     [legacy] = normalize_memory_facts(["A ponte caiu."])
     assert legacy["provenance"] == "legacy_unverified"
@@ -279,15 +319,22 @@ def test_schema_fecha_enums_e_memoria_legada_perde_autoridade() -> None:
 
 
 def test_roundtrip_save_preserva_ledger_e_migra_string_legada_lazy() -> None:
-    raw = persistence._state_to_save_data({
-        "game_id": "save-memory",
-        "player": {},
-        "memory_facts": ["Um save antigo lembrava da ponte."],
-        "pending_memory_facts": [make_memory_fact(
-            "Um relato aguarda retry.", provenance="npc_claim",
-            source_id="npc:iris", source_turn=8,
-        )],
-    }, "save-memory")
+    raw = persistence._state_to_save_data(
+        {
+            "game_id": "save-memory",
+            "player": {},
+            "memory_facts": ["Um save antigo lembrava da ponte."],
+            "pending_memory_facts": [
+                make_memory_fact(
+                    "Um relato aguarda retry.",
+                    provenance="npc_claim",
+                    source_id="npc:iris",
+                    source_turn=8,
+                )
+            ],
+        },
+        "save-memory",
+    )
     loaded = persistence._raw_to_state(raw)
     assert loaded["memory_facts"][0]["provenance"] == "legacy_unverified"
     assert loaded["memory_facts"][0]["confidence"] == "speculative"
@@ -296,14 +343,19 @@ def test_roundtrip_save_preserva_ledger_e_migra_string_legada_lazy() -> None:
 
 def test_documentos_faiss_usam_metadata_e_legado_fica_nao_verificado() -> None:
     confirmed = make_memory_fact(
-        "A ponte caiu.", provenance="canonical_event",
-        source_id="evt-ponte", source_turn=3,
+        "A ponte caiu.",
+        provenance="canonical_event",
+        source_id="evt-ponte",
+        source_turn=3,
     )
     from services.memory_provenance import memory_metadata
-    rendered = rag._format_memory_documents([
-        SimpleNamespace(page_content="A ponte caiu.", metadata=memory_metadata(confirmed)),
-        SimpleNamespace(page_content="A memória antiga existe.", metadata={}),
-    ])
+
+    rendered = rag._format_memory_documents(
+        [
+            SimpleNamespace(page_content="A ponte caiu.", metadata=memory_metadata(confirmed)),
+            SimpleNamespace(page_content="A memória antiga existe.", metadata={}),
+        ]
+    )
     assert "[CONFIRMADO | canonical_event | fonte evt-ponte | turno 3]" in rendered
     assert "[NÃO VERIFICADO | legacy_unverified] A memória antiga existe." in rendered
 
@@ -356,10 +408,16 @@ def test_segredo_exige_secret_revealed_aceito_para_o_mesmo_id() -> None:
 
 def test_commit_idempotente_promove_mesmo_texto_uma_vez() -> None:
     rumor = make_memory_fact(
-        "A ponte caiu.", provenance="npc_claim", source_id="npc:iris", source_turn=2,
+        "A ponte caiu.",
+        provenance="npc_claim",
+        source_id="npc:iris",
+        source_turn=2,
     )
     confirmed = make_memory_fact(
-        "A ponte caiu.", provenance="canonical_event", source_id="evt-ponte", source_turn=3,
+        "A ponte caiu.",
+        provenance="canonical_event",
+        source_id="evt-ponte",
+        source_turn=3,
     )
     ledger, promotions = commit_memory_facts([rumor], [confirmed, confirmed])
     assert len(ledger) == 1
@@ -422,19 +480,27 @@ def test_contexto_rotula_ledger_e_memoria_vetorial_legada(monkeypatch) -> None:
 
     monkeypatch.setattr(context_builder, "query_rag", lambda *_a, **_k: "")
     monkeypatch.setattr(
-        context_builder, "query_session_memory", lambda *_a, **_k: "Memória antiga.",
+        context_builder,
+        "query_session_memory",
+        lambda *_a, **_k: "Memória antiga.",
     )
     pack = build_context_pack(
         {
             "world": {},
             "npcs": {},
             "narrative_summary": "O herói desconfia do castelo.",
-            "memory_facts": [make_memory_fact(
-                "A ponte caiu.", provenance="canonical_event",
-                source_id="evt-ponte", source_turn=3,
-            )],
+            "memory_facts": [
+                make_memory_fact(
+                    "A ponte caiu.",
+                    provenance="canonical_event",
+                    source_id="evt-ponte",
+                    source_turn=3,
+                )
+            ],
         },
-        "ponte", "story", game_id="game-1",
+        "ponte",
+        "story",
+        game_id="game-1",
     )
     assert "[CONFIRMADO | canonical_event | fonte evt-ponte | turno 3]" in pack.memory_block
     assert "[NÃO VERIFICADO | legacy_unverified] Memória antiga." in pack.memory_block
@@ -445,15 +511,17 @@ def test_invariante_e_jsonl_expoem_memoria_sem_fonte() -> None:
     state = {
         "world": {"turn_count": 7},
         "player": {},
-        "memory_facts": [{
-            "memory_id": "bad",
-            "text": "Virou cânone sem prova.",
-            "provenance": "canonical_event",
-            "confidence": "confirmed",
-            "source_id": None,
-            "source_turn": 7,
-            "canonical_entity_ids": [],
-        }],
+        "memory_facts": [
+            {
+                "memory_id": "bad",
+                "text": "Virou cânone sem prova.",
+                "provenance": "canonical_event",
+                "confidence": "confirmed",
+                "source_id": None,
+                "source_turn": 7,
+                "canonical_entity_ids": [],
+            }
+        ],
         "memory_rejections": [{"reason": "unrevealed_secret:x"}],
         "memory_promotions": [{"memory_id": "promoted"}],
     }
@@ -477,11 +545,13 @@ def test_summary_conta_proveniencia_dos_writes_de_startup() -> None:
         history=[],
         final_state={"player": {}, "world": {}, "event_log": []},
         save_path="",
-        startup_rag_events=[{
-            "operation": "add_session_memory",
-            "success": True,
-            "provenance_counts": {"inference": 4},
-        }],
+        startup_rag_events=[
+            {
+                "operation": "add_session_memory",
+                "success": True,
+                "provenance_counts": {"inference": 4},
+            }
+        ],
     )
     summary = build_summary(result, [])
     assert summary["memory"]["writes_by_provenance"] == {"inference": 4}

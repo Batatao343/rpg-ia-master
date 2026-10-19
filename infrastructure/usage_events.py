@@ -49,7 +49,8 @@ def has_column(connection, table: str, column: str) -> bool:
         return True
     row = connection.execute(
         "select 1 as present from pg_catalog.pg_attribute where attrelid=to_regclass(%s) "
-        "and attname=%s and attnum>0 and not attisdropped", (table, column),
+        "and attname=%s and attnum>0 and not attisdropped",
+        (table, column),
     ).fetchone()
     if row is not None:
         _COLUMNS_SEEN.add(key)
@@ -64,13 +65,20 @@ def _legacy_shape(event: UsageEvent) -> UsageEvent:
     """Pre-migration CHECK only knows four bases: a no-spend fact becomes a zero-cost,
     non-exact estimate (never US$ 1, never settleable)."""
     from dataclasses import replace
+
     if event.counts_as_spend:
         return event
     return replace(event, cost_usd=Decimal("0"), cost_basis="estimated", billing_exact=False)
 
 
-def append_usage_events(connection, *, owner_id: UUID, operation_id: UUID,
-                        game_id: UUID | None, events: Sequence[UsageEvent]) -> None:
+def append_usage_events(
+    connection,
+    *,
+    owner_id: UUID,
+    operation_id: UUID,
+    game_id: UUID | None,
+    events: Sequence[UsageEvent],
+) -> None:
     """Insert facts exactly once; reject same logical attempt with changed facts."""
     if not events:
         return
@@ -78,8 +86,7 @@ def append_usage_events(connection, *, owner_id: UUID, operation_id: UUID,
         "select owner_id,game_id from app.operations where id=%s for update",
         (operation_id,),
     ).fetchone()
-    if (operation is None or operation["owner_id"] != owner_id
-            or operation["game_id"] != game_id):
+    if operation is None or operation["owner_id"] != owner_id or operation["game_id"] != game_id:
         raise Conflict("usage attribution divergiu")
     ready = spend_schema_ready(connection)
     for event in events:
@@ -92,12 +99,26 @@ def append_usage_events(connection, *, owner_id: UUID, operation_id: UUID,
         spend_column = ",counts_as_spend" if ready else ""
         values = ",".join(["%s"] * (21 if ready else 20))
         params = [
-            stored.event_id, stored.operation_id, owner_id, game_id,
-            stored.component, stored.attempt_ordinal, stored.category,
-            stored.provider, stored.model, stored.outcome, stored.input_units,
-            stored.output_units, stored.cached_units, stored.audio_units,
-            stored.image_units, stored.cost_usd, stored.cost_basis,
-            stored.pricing_version, stored.billing_exact, digest,
+            stored.event_id,
+            stored.operation_id,
+            owner_id,
+            game_id,
+            stored.component,
+            stored.attempt_ordinal,
+            stored.category,
+            stored.provider,
+            stored.model,
+            stored.outcome,
+            stored.input_units,
+            stored.output_units,
+            stored.cached_units,
+            stored.audio_units,
+            stored.image_units,
+            stored.cost_usd,
+            stored.cost_basis,
+            stored.pricing_version,
+            stored.billing_exact,
+            digest,
         ]
         if ready:
             params.append(stored.counts_as_spend)
@@ -125,32 +146,50 @@ def append_usage_events(connection, *, owner_id: UUID, operation_id: UUID,
 
 def append_embedding_job_attempt(pool, job, attempts: Sequence[dict]) -> None:
     """Record each provider response under a fenced embedding job operation."""
-    _append_job_attempt(pool, job, attempts, job_kind="embed_memory",
-                        operation_kind="embedding", category="embedding")
+    _append_job_attempt(
+        pool,
+        job,
+        attempts,
+        job_kind="embed_memory",
+        operation_kind="embedding",
+        category="embedding",
+    )
 
 
 def append_chronicle_job_attempt(pool, job, attempts: Sequence[dict]) -> None:
     """Record SMART compression calls, including fallback and retry attempts."""
-    _append_job_attempt(pool, job, attempts, job_kind="compress_chronicle",
-                        operation_kind="chronicle_compress", category="llm")
+    _append_job_attempt(
+        pool,
+        job,
+        attempts,
+        job_kind="compress_chronicle",
+        operation_kind="chronicle_compress",
+        category="llm",
+    )
 
 
 def append_projection_job_attempt(pool, job, attempts: Sequence[dict]) -> None:
     """SPEC-213: chamadas SMART da projeção adiada do arquivista (modo B/A-DB)."""
-    _append_job_attempt(pool, job, attempts, job_kind="project_archive",
-                        operation_kind="archive_projection", category="llm")
+    _append_job_attempt(
+        pool,
+        job,
+        attempts,
+        job_kind="project_archive",
+        operation_kind="archive_projection",
+        category="llm",
+    )
 
 
-def _append_job_attempt(pool, job, attempts: Sequence[dict], *, job_kind: str,
-                        operation_kind: str, category: str) -> None:
+def _append_job_attempt(
+    pool, job, attempts: Sequence[dict], *, job_kind: str, operation_kind: str, category: str
+) -> None:
     if not attempts:
         return
     from infrastructure.postgres_jobs import PostgresJobQueue
     from services.usage_metering import normalize_attempts
 
     with admin_connection(pool) as connection, connection.transaction():
-        row = PostgresJobQueue._require_running(
-            connection, job.job_id, job.lease_token)
+        row = PostgresJobQueue._require_running(connection, job.job_id, job.lease_token)
         if row["kind"] != job_kind or row["owner_id"] is None:
             raise Conflict("job de usage sem owner")
         request_hash = sha256(
@@ -168,15 +207,22 @@ def _append_job_attempt(pool, job, attempts: Sequence[dict], *, job_kind: str,
             where id=%s and owner_id=%s and game_id is not distinct from %s""",
             (job.job_id, row["owner_id"], row["game_id"]),
         ).fetchone()
-        if (not operation or operation["kind"] != operation_kind
-                or operation["request_sha256"] != request_hash):
+        if (
+            not operation
+            or operation["kind"] != operation_kind
+            or operation["request_sha256"] != request_hash
+        ):
             raise Conflict("operação de usage divergiu")
         events = normalize_attempts(
-            attempts, operation_id=job.job_id,
-            component=f"{category}:{job.attempt}", category=category,
+            attempts,
+            operation_id=job.job_id,
+            component=f"{category}:{job.attempt}",
+            category=category,
         )
         append_usage_events(
-            connection, owner_id=row["owner_id"],
-            operation_id=job.job_id, game_id=row["game_id"],
+            connection,
+            owner_id=row["owner_id"],
+            operation_id=job.job_id,
+            game_id=row["game_id"],
             events=events[-1:],
         )

@@ -112,8 +112,14 @@ pin de embeddings respeita o override; contexto prioriza relevância+recência e
 
 ```python
 class MemoryFact(TypedDict, total=False):
-    memory_id: str; text: str; provenance: str; confidence: float; source_turn: int
-    vector_status: Literal["written", "pending", "failed"]      # novo, default "written" para legado
+    memory_id: str
+    text: str
+    provenance: str
+    confidence: float
+    source_turn: int
+    vector_status: Literal["written", "pending", "failed"]  # novo, default "written" para legado
+
+
 SECRET_ENTITY_IDS: dict[str, frozenset[str]]
 ```
 

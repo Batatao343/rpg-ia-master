@@ -1,4 +1,5 @@
 """SPEC-275: impasse eterno — inimigo oculto com Carta de suporte recusada."""
+
 from __future__ import annotations
 
 import copy
@@ -8,22 +9,37 @@ from services import conflict_orchestrator as orch
 from services import conflict_scene as cs
 from services import conflict_turn as ct
 
-SUPPORT_A = "bst_carregar_ruina"   # reposicionar (suporte)
-SUPPORT_B = "bst_coro_colmeia"     # buff_acerto (suporte)
+SUPPORT_A = "bst_carregar_ruina"  # reposicionar (suporte)
+SUPPORT_B = "bst_coro_colmeia"  # buff_acerto (suporte)
 
 
 def _player(**kw):
-    p = {"id": "player", "name": "Herói", "is_player": True, "class_name": "Devoto do Abismo",
-         "virtudes": {"forca": 4, "agilidade": 3, "corpo": 3, "mente": 1, "carisma": 1},
-         "entropy": 10, "max_entropy": 10, "abyss_charge": 0}
+    p = {
+        "id": "player",
+        "name": "Herói",
+        "is_player": True,
+        "class_name": "Devoto do Abismo",
+        "virtudes": {"forca": 4, "agilidade": 3, "corpo": 3, "mente": 1, "carisma": 1},
+        "entropy": 10,
+        "max_entropy": 10,
+        "abyss_charge": 0,
+    }
     p.update(kw)
     return orch.ensure_combat_sheet(p, is_player=True)
 
 
 def _enemy(eid="viuva", cards=(SUPPORT_A,), **kw):
-    e = {"id": eid, "name": eid, "type": "Minion", "hp": 12, "max_hp": 12, "ac": 11,
-         "entropy": 10, "cartas": list(cards),
-         "attributes": {"str": 10, "dex": 12, "con": 10, "int": 8, "wis": 8, "cha": 6}}
+    e = {
+        "id": eid,
+        "name": eid,
+        "type": "Minion",
+        "hp": 12,
+        "max_hp": 12,
+        "ac": 11,
+        "entropy": 10,
+        "cartas": list(cards),
+        "attributes": {"str": 10, "dex": 12, "con": 10, "int": 8, "wis": 8, "cha": 6},
+    }
     e.update(kw)
     return orch.ensure_combat_sheet(e)
 
@@ -66,9 +82,14 @@ def test_enemy_refused_declaration_falls_back_once():
     scene, actors, sides = _world(hidden=False)
     step = ct.TurnStep(kind="card", card_id=SUPPORT_A, target_id="player")
     decl = ct.TurnDeclaration(actor_id="viuva", acao=step)
-    out = orch.run_round(scene, actors, sides, {"player": actors["player"]},
-                         declarations={"player": _pass_decl()["player"], "viuva": decl},
-                         rng=random.Random(3))
+    out = orch.run_round(
+        scene,
+        actors,
+        sides,
+        {"player": actors["player"]},
+        declarations={"player": _pass_decl()["player"], "viuva": decl},
+        rng=random.Random(3),
+    )
     assert any(a["actor_id"] == "viuva" for a in out["attacks"])
     assert [f["event"] for f in out["enemy_fallbacks"]] == ["enemy_declaration_fallback"]
     # o motivo técnico fica na telemetria, não na prosa enviada ao narrador
@@ -82,8 +103,9 @@ def test_hidden_ambusher_attacks_visible_player():
     rng = random.Random(5)
     attacks = []
     for _ in range(3):
-        out = orch.run_round(scene, actors, sides, {"player": actors["player"]},
-                             declarations=_pass_decl(), rng=rng)
+        out = orch.run_round(
+            scene, actors, sides, {"player": actors["player"]}, declarations=_pass_decl(), rng=rng
+        )
         attacks += out["attacks"]
     assert any(a["target_id"] == "player" for a in attacks)
 
@@ -124,9 +146,17 @@ def test_player_refusal_still_free():
     before = actors["player"]["entropy"]
     out = {"logs": [], "attacks": [], "cards_used": []}
     step = ct.TurnStep(kind="attack", target_id="viuva")
-    ct._resolve_attack_step(scene, actors["player"], "player", actors, step, out,
-                            state={"player": actors["player"]}, rng=random.Random(2),
-                            sides=sides)
+    ct._resolve_attack_step(
+        scene,
+        actors["player"],
+        "player",
+        actors,
+        step,
+        out,
+        state={"player": actors["player"]},
+        rng=random.Random(2),
+        sides=sides,
+    )
     assert out["attacks"] == []
     assert any("sem posição conhecida" in line for line in out["logs"])
     assert actors["player"]["entropy"] == before
@@ -147,6 +177,7 @@ def test_enemy_support_card_targets_own_side():
 
 
 # --- revisão Astra (2026-10-19) ---------------------------------------------
+
 
 def test_forced_attack_is_not_cancelled_by_hide_card():
     """R5: o inimigo forçado a atacar não pode gastar a ação se escondendo de novo
@@ -170,8 +201,14 @@ def test_run_round_stalemate_break_is_structured_and_narratable():
         # o jogador apenas espera; o inimigo oculto também não fere (cego p/ player)
         scene["positions"]["player"]["hidden_from"] = ["viuva"]
         scene["positions"]["player"]["ocultacao"] = "escondido"
-        out = orch.run_round(scene, actors, sides, {"player": actors["player"]},
-                             declarations=_pass_decl(), rng=random.Random(7))
+        out = orch.run_round(
+            scene,
+            actors,
+            sides,
+            {"player": actors["player"]},
+            declarations=_pass_decl(),
+            rng=random.Random(7),
+        )
         if out.get("stalemate_events"):
             break
     assert out["stalemate_events"][0]["outcome"] == "fled"
@@ -182,20 +219,22 @@ def test_run_round_stalemate_break_is_structured_and_narratable():
 
 def test_stalemate_counter_survives_save_load_roundtrip():
     import json
+
     scene, actors, sides = _world(("brute",))
     for _ in range(orch.STALEMATE_ROUNDS - 1):
         orch._stalemate_guard(scene, actors, sides)
-    scene = json.loads(json.dumps(scene))           # save/load é JSON
+    scene = json.loads(json.dumps(scene))  # save/load é JSON
     actors = json.loads(json.dumps(actors))
     assert orch._stalemate_guard(scene, actors, sides) == []
     assert scene["stalemate"]["rounds"] == orch.STALEMATE_ROUNDS
-    assert orch._stalemate_guard(scene, actors, sides)   # K+1 quebra
+    assert orch._stalemate_guard(scene, actors, sides)  # K+1 quebra
 
 
 def test_real_llm_campaign_keeps_random_game_id():
     """R6: id derivado do seed só no mock — em --real a memória vetorial da sessão
     (fora de saves_playtest) seria herdada por outra campanha com o mesmo seed."""
     from playtest.runner import _build_initial_state
+
     a = _build_initial_state("combate", 3)["game_id"]
     b = _build_initial_state("combate", 3)["game_id"]
     assert a == b

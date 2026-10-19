@@ -26,8 +26,9 @@ class PostgresRuntimeCatalogStore:
             return "scope='user' and owner_id=%s and game_id is null", (owner_id,)
         return "scope='global' and owner_id is null and game_id is null", ()
 
-    def get(self, namespace: str, key: str, *, owner_id: UUID | None,
-            game_id: UUID | None) -> dict[str, Any] | None:
+    def get(
+        self, namespace: str, key: str, *, owner_id: UUID | None, game_id: UUID | None
+    ) -> dict[str, Any] | None:
         where, values = self._where(owner_id, game_id)
         with self.pool.connection() as connection:
             row = connection.execute(
@@ -36,8 +37,9 @@ class PostgresRuntimeCatalogStore:
             ).fetchone()
             return deepcopy(row["document"]) if row else None
 
-    def list(self, namespace: str, *, owner_id: UUID | None,
-             game_id: UUID | None) -> dict[str, dict[str, Any]]:
+    def list(
+        self, namespace: str, *, owner_id: UUID | None, game_id: UUID | None
+    ) -> dict[str, dict[str, Any]]:
         where, values = self._where(owner_id, game_id)
         with self.pool.connection() as connection:
             rows = connection.execute(
@@ -46,8 +48,16 @@ class PostgresRuntimeCatalogStore:
             ).fetchall()
             return {row["item_key"]: deepcopy(row["document"]) for row in rows}
 
-    def put(self, namespace: str, key: str, value: dict[str, Any], *, scope: str,
-            owner_id: UUID | None, game_id: UUID | None) -> None:
+    def put(
+        self,
+        namespace: str,
+        key: str,
+        value: dict[str, Any],
+        *,
+        scope: str,
+        owner_id: UUID | None,
+        game_id: UUID | None,
+    ) -> None:
         validate_scope(scope, owner_id, game_id)  # type: ignore[arg-type]
         digest = document_sha256(value)
         where, values = self._where(owner_id, game_id)

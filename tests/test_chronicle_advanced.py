@@ -8,13 +8,20 @@ from services.chronicle_compression import chapter_source_hash, compress_chapter
 
 def test_ids_estaveis_e_raw_intocado_na_compressao():
     chronicle = open_chapter([], title="Arco", turn=1, location="Porto")
-    chronicle = append_entry(chronicle, text="O selo caiu.", turn=2, kind="milestone", event_id="e1")
+    chronicle = append_entry(
+        chronicle, text="O selo caiu.", turn=2, kind="milestone", event_id="e1"
+    )
     normalized = ensure_chronicle_ids(chronicle, game_id="g")
     assert ensure_chronicle_ids(normalized, game_id="g") == normalized
     raw = deepcopy(normalized)
+
     class Fallback:
-        def with_structured_output(self, _schema): return self
-        def invoke(self, _messages): return AIMessage(content="erro")
+        def with_structured_output(self, _schema):
+            return self
+
+        def invoke(self, _messages):
+            return AIMessage(content="erro")
+
     digest = compress_chapter(normalized[0], llm=Fallback())
     assert normalized == raw
     assert digest["status"] == "extractive_fallback"

@@ -81,8 +81,9 @@ LLM (`conflito-12`); Reações durante perseguição além das já definidas em
 **Schema:**
 ```python
 class AbandonOutcome(TypedDict):
-    resultado: Literal["fuga","captura","rendicao","esconderijo",
-                        "combate","morte","reencontro_futuro"]
+    resultado: Literal[
+        "fuga", "captura", "rendicao", "esconderijo", "combate", "morte", "reencontro_futuro"
+    ]
     fatos_relacionais: List[str]  # pra conflito-12 (resumo canônico)
 ```
 

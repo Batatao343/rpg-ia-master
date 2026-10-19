@@ -86,7 +86,9 @@ def test_onboarding_no_hidden_entities():
     """R9 — cards não citam entidades cujo doc do Codex é hidden/secret."""
     import glob
 
-    base = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "codex")
+    base = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "codex"
+    )
     hidden_names: set[str] = set()
     for path in glob.glob(os.path.join(base, "**", "*.md"), recursive=True):
         with open(path, encoding="utf-8") as f:

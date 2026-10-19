@@ -52,8 +52,11 @@ def scan(path: Path) -> dict[str, object]:
             message = item.get("message") or {}
             if kind == "assistant":
                 usage = message.get("usage") or {}
-                total = (usage.get("input_tokens", 0) + usage.get("cache_read_input_tokens", 0)
-                         + usage.get("cache_creation_input_tokens", 0))
+                total = (
+                    usage.get("input_tokens", 0)
+                    + usage.get("cache_read_input_tokens", 0)
+                    + usage.get("cache_creation_input_tokens", 0)
+                )
                 if total:
                     contexts.append(total)
                 if message.get("model"):
@@ -82,13 +85,19 @@ def scan(path: Path) -> dict[str, object]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("session", type=Path)
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
     session = scan(args.session)
     agents_dir = args.session.with_suffix("") / "subagents"
-    agents = [scan(path) for path in sorted(agents_dir.glob("agent-*.jsonl"))] if agents_dir.is_dir() else []
+    agents = (
+        [scan(path) for path in sorted(agents_dir.glob("agent-*.jsonl"))]
+        if agents_dir.is_dir()
+        else []
+    )
     total_results = session["tool_result_chars"] + sum(a["tool_result_chars"] for a in agents)
     big = session["big_result_chars"] + sum(a["big_result_chars"] for a in agents)
     report = {
@@ -106,8 +115,13 @@ def main(argv: list[str] | None = None) -> int:
     if args.json:
         print(json.dumps(report, indent=2))
     else:
-        targets = {"first_context_tokens": "< 70000", "median_context_tokens": "< 300000",
-                   "full_suite_runs": "< 30/onda", "stop_hook_summaries": "0", "big_tool_result_share": "< 0.15"}
+        targets = {
+            "first_context_tokens": "< 70000",
+            "median_context_tokens": "< 300000",
+            "full_suite_runs": "< 30/onda",
+            "stop_hook_summaries": "0",
+            "big_tool_result_share": "< 0.15",
+        }
         for key, value in report.items():
             print(f"{key:<24} {value}" + (f"   (meta {targets[key]})" if key in targets else ""))
     return 0

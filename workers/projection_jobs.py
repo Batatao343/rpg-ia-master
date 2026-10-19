@@ -7,6 +7,7 @@ operação com lease vigente pode estar ativa e o fencing token do job é exigid
 no commit (``require_job_fence``). Conflito → ``ProjectionStale`` (retry com
 backoff; o próximo turno, dentro da própria cerca, drena se ainda pendente).
 """
+
 from __future__ import annotations
 
 from typing import Any, Optional
@@ -28,9 +29,13 @@ class ProjectionRetry(RuntimeError):
     error_code = "projection_failed"
 
 
-def apply_projection(pool, payload: dict[str, Any], *,
-                     executor: Callable[[dict, dict], dict] | None = None,
-                     memory_store: Any = None) -> dict[str, Any]:
+def apply_projection(
+    pool,
+    payload: dict[str, Any],
+    *,
+    executor: Callable[[dict, dict], dict] | None = None,
+    memory_store: Any = None,
+) -> dict[str, Any]:
     from infrastructure.contracts import Principal
     from infrastructure.postgres import PostgresGameStore
     from infrastructure.request_context import principal_scope
@@ -73,8 +78,11 @@ def apply_projection(pool, payload: dict[str, Any], *,
                 from app.games where id=%s and owner_id=%s for update""",
                 (game_id, owner_id),
             ).fetchone()
-            if (not current or int(current["version"]) != version
-                    or (current["active_operation_id"] is not None and current["busy"])):
+            if (
+                not current
+                or int(current["version"]) != version
+                or (current["active_operation_id"] is not None and current["busy"])
+            ):
                 raise ProjectionStale("versão/operação do jogo mudou")
             updated = connection.execute(
                 """update app.games set
@@ -95,15 +103,25 @@ def apply_projection(pool, payload: dict[str, Any], *,
                         PgVectorMemoryStore,
                         configured_profile_id,
                     )
+
                     memory_store = PgVectorMemoryStore(pool, profile_id=configured_profile_id())
-                effects.flush(connection, memory_store=memory_store, principal=principal,
-                              game_id=game_id, epoch=epoch, version=new_version)
+                effects.flush(
+                    connection,
+                    memory_store=memory_store,
+                    principal=principal,
+                    game_id=game_id,
+                    epoch=epoch,
+                    version=new_version,
+                )
     if drained.get("pending_derived") is not None:
         # Falha retentável já registrada no documento (attempts/last_error_code):
         # a fila reagenda com backoff (R12).
         raise ProjectionRetry(entry.get("last_error_code") or "exception")
-    return {"status": entry["status"], "projected_version": entry["projected_version"],
-            "game_version": new_version}
+    return {
+        "status": entry["status"],
+        "projected_version": entry["projected_version"],
+        "game_version": new_version,
+    }
 
 
 def make_handler(pool, memory_store=None) -> Callable[[dict[str, Any]], dict[str, Any]]:
@@ -119,12 +137,15 @@ def make_handler(pool, memory_store=None) -> Callable[[dict[str, Any]], dict[str
         capture_errors: list[Exception] = []
 
         def capture(event) -> None:
-            attempts.append({
-                "provider": event.provider, "model": event.model,
-                "outcome": event.outcome,
-                "network_attempted": event.outcome not in {"build_error", "circuit_open"},
-                "usage": dict(event.usage) if event.usage else None,
-            })
+            attempts.append(
+                {
+                    "provider": event.provider,
+                    "model": event.model,
+                    "outcome": event.outcome,
+                    "network_attempted": event.outcome not in {"build_error", "circuit_open"},
+                    "usage": dict(event.usage) if event.usage else None,
+                }
+            )
             if job is not None:
                 try:
                     append_projection_job_attempt(pool, job, attempts)
@@ -142,9 +163,20 @@ def make_handler(pool, memory_store=None) -> Callable[[dict[str, Any]], dict[str
 
 def _game_update_params(document, digest, view, game_id, owner_id, version):
     from psycopg.types.json import Jsonb
+
     return (
-        int(document["schema_version"]), Jsonb(document), digest,
-        view["status"], view["player_name"], view["class_name"], view["player_level"],
-        view["location_name"], view["world_day"], view["game_over"],
-        view["combat_simulation"], game_id, owner_id, version,
+        int(document["schema_version"]),
+        Jsonb(document),
+        digest,
+        view["status"],
+        view["player_name"],
+        view["class_name"],
+        view["player_level"],
+        view["location_name"],
+        view["world_day"],
+        view["game_over"],
+        view["combat_simulation"],
+        game_id,
+        owner_id,
+        version,
     )

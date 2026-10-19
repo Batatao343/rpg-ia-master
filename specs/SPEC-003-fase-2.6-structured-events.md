@@ -82,12 +82,16 @@ EventType = Literal[
     "faction_relation_changed",
 ]
 
+
 class ProposedWorldEvent(BaseModel):
     type: EventType
     actor_id: str = Field(default="player", description="Quem causou. 'player' ou id canônico.")
     target_id: str = Field(description="Entidade afetada — id EXATO de entities.json.")
     detail: str = Field(default="", description="1 frase objetiva do que aconteceu.")
-    payload: Dict = Field(default_factory=dict, description="Dados extras por tipo (ex.: new_controller_id).")
+    payload: Dict = Field(
+        default_factory=dict, description="Dados extras por tipo (ex.: new_controller_id)."
+    )
+
 
 class WorldChangeProposal(BaseModel):
     events: List[ProposedWorldEvent] = Field(default_factory=list)
@@ -171,10 +175,15 @@ Após resolução do round, para cada inimigo com `status == "morto"` neste roun
 `id` (ou match por `aliases` via `entities.json`) seja canônico:
 
 ```python
-pending.append({
-    "type": "npc_killed", "actor_id": "player", "target_id": canonical_id,
-    "detail": f"{enemy['name']} morto em combate", "payload": {}, 
-})
+pending.append(
+    {
+        "type": "npc_killed",
+        "actor_id": "player",
+        "target_id": canonical_id,
+        "detail": f"{enemy['name']} morto em combate",
+        "payload": {},
+    }
+)
 ```
 
 Sem LLM: o motor já sabe quem morreu. Inimigos genéricos (spawn de bestiário sem id
@@ -186,6 +195,7 @@ Primeira coisa no `archive_node`:
 
 ```python
 from services.event_processor import process_pending_events
+
 event_updates = process_pending_events(state)
 ```
 

@@ -1,11 +1,16 @@
 """Vocabulário e classificação determinística da causa de um conflito."""
+
 from __future__ import annotations
 
 from typing import Any, Dict
 
 ORIGINS = {
-    "player_provoked", "travel_encounter", "regional_danger", "arc_pressure",
-    "pursuit_recurrence", "unknown",
+    "player_provoked",
+    "travel_encounter",
+    "regional_danger",
+    "arc_pressure",
+    "pursuit_recurrence",
+    "unknown",
 }
 
 
@@ -14,8 +19,9 @@ def normalize(value: object) -> str:
     return value if value in ORIGINS else "unknown"
 
 
-def from_encounter(encounter: dict[str, Any] | None, world: dict[str, Any] | None,
-                   *, trigger: str = "travel") -> str:
+def from_encounter(
+    encounter: dict[str, Any] | None, world: dict[str, Any] | None, *, trigger: str = "travel"
+) -> str:
     encounter, world = encounter or {}, world or {}
     if (world.get("chase") or {}).get("active") or encounter.get("reason") == "recurrence":
         return "pursuit_recurrence"

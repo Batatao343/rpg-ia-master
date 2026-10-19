@@ -14,6 +14,7 @@ Convenções:
 - Evento level_up segue o shape de proposta do pipeline 2.6 (gerado 100% em
   Python, padrão reputation_changed da 3.4 — o validator rejeita se o LLM propuser).
 """
+
 from typing import Dict, List, Optional, Tuple
 
 import gamedata
@@ -40,6 +41,7 @@ def xp_for_kills(dead_enemies: list[dict]) -> int:
     total = 0
     for e in dead_enemies or []:
         from combat_mechanics import normalize_categoria
+
         total += XP_BY_CATEGORIA[normalize_categoria(e)]
     return total
 
@@ -80,12 +82,15 @@ def _append_choice_once(player: dict, choice: dict) -> None:
 
 def _apex_card_id(player: dict) -> str | None:
     from services.cards import cards_for_class
+
     branch = player.get("subclass")
     if not branch:
         return None
-    matches = [card["id"] for card in cards_for_class(
-        str(player.get("class_name", "")), str(branch))
-        if card.get("apex") and card.get("subclasse") == branch]
+    matches = [
+        card["id"]
+        for card in cards_for_class(str(player.get("class_name", "")), str(branch))
+        if card.get("apex") and card.get("subclasse") == branch
+    ]
     return matches[0] if len(matches) == 1 else None
 
 
@@ -107,8 +112,9 @@ def grant_apex_if_due(player: dict, new_level: int) -> tuple[dict, str | None]:
     return p, None
 
 
-def grant_xp(player: dict, amount: int, *,
-             classes_db: dict | None = None) -> tuple[dict, list[dict]]:
+def grant_xp(
+    player: dict, amount: int, *, classes_db: dict | None = None
+) -> tuple[dict, list[dict]]:
     """Soma XP e processa level ups (multi-level em sequência).
 
     Retorna (player_atualizado, eventos level_up). Por nível: máximos sobem pela
@@ -149,38 +155,52 @@ def grant_xp(player: dict, amount: int, *,
             hp_delta = gains.get("hp", 0)
             if hp_delta:
                 p["max_hp"] = int(p.get("max_hp", 0) or 0) + hp_delta
-                p["hp"] = min(
-                    p["max_hp"], int(p.get("hp", 0) or 0) + hp_delta)
+                p["hp"] = min(p["max_hp"], int(p.get("hp", 0) or 0) + hp_delta)
         # spec conflito-02/13: a cada nível, nova Carta OU evolução.
         if new_level == 3 and not p.get("subclass"):
-            _append_choice_once(
-                p, {"id": "lvl3-subclass", "level": 3, "kind": "subclass"})
+            _append_choice_once(p, {"id": "lvl3-subclass", "level": 3, "kind": "subclass"})
         if new_level != 20:
             _append_choice_once(
-                p, {"id": f"lvl{new_level}-carta", "level": new_level, "kind": "carta"})
+                p, {"id": f"lvl{new_level}-carta", "level": new_level, "kind": "carta"}
+            )
         # R3: níveis 2/4/6/8/10 dão +1 numa Virtude (escolha do jogador)
         if new_level in gamedata.NIVEIS_GANHO_VIRTUDE:
             _append_choice_once(
-                p, {"id": f"lvl{new_level}-virtude", "level": new_level, "kind": "virtude"})
+                p, {"id": f"lvl{new_level}-virtude", "level": new_level, "kind": "virtude"}
+            )
         if new_level in gamedata.NIVEIS_MAESTRIA_VIRTUDE:
-            _append_choice_once(p, {
-                "id": f"lvl{new_level}-virtue-mastery", "level": new_level,
-                "kind": "virtue_mastery",
-            })
+            _append_choice_once(
+                p,
+                {
+                    "id": f"lvl{new_level}-virtue-mastery",
+                    "level": new_level,
+                    "kind": "virtue_mastery",
+                },
+            )
         apex_id = None
         if new_level == 20:
             p, apex_id = grant_apex_if_due(p, new_level)
-        events.append({
-            "type": "level_up", "actor_id": "player", "target_id": "player",
-            "detail": f"{p.get('name', 'O herói')} alcançou o nível {new_level}",
-            "payload": {"new_level": new_level}, "source": "progression",
-        })
+        events.append(
+            {
+                "type": "level_up",
+                "actor_id": "player",
+                "target_id": "player",
+                "detail": f"{p.get('name', 'O herói')} alcançou o nível {new_level}",
+                "payload": {"new_level": new_level},
+                "source": "progression",
+            }
+        )
         if apex_id:
-            events.append({
-                "type": "class_apex_unlocked", "actor_id": "player", "target_id": apex_id,
-                "detail": f"Ápice de classe desbloqueado: {apex_id}",
-                "payload": {"new_level": 20, "card_id": apex_id}, "source": "progression",
-            })
+            events.append(
+                {
+                    "type": "class_apex_unlocked",
+                    "actor_id": "player",
+                    "target_id": apex_id,
+                    "detail": f"Ápice de classe desbloqueado: {apex_id}",
+                    "payload": {"new_level": 20, "card_id": apex_id},
+                    "source": "progression",
+                }
+            )
     if is_v4:
         gamedata.sync_legacy_hp_aliases(p)
     return p, events
@@ -195,6 +215,7 @@ def player_branch(player: dict, *, abilities_db: dict | None = None) -> str | No
         return str(player["subclass"])
     if abilities_db is None:
         from services.cards import all_cards
+
         db = all_cards()
     else:
         db = abilities_db
@@ -209,38 +230,46 @@ def eligible_subclasses(player: dict) -> list[dict]:
     class_data = CLASSES.get(str(player.get("class_name", ""))) or {}
     result = []
     for subclass_id, branch in (class_data.get("branches") or {}).items():
-        result.append({
-            "id": subclass_id,
-            "name": branch.get("name", subclass_id),
-            "identity": branch.get("identity", ""),
-            "playstyle": branch.get("playstyle", ""),
-            "tradeoff": branch.get("tradeoff", ""),
-            "preview_card_ids": list(branch.get("preview_card_ids") or []),
-        })
+        result.append(
+            {
+                "id": subclass_id,
+                "name": branch.get("name", subclass_id),
+                "identity": branch.get("identity", ""),
+                "playstyle": branch.get("playstyle", ""),
+                "tradeoff": branch.get("tradeoff", ""),
+                "preview_card_ids": list(branch.get("preview_card_ids") or []),
+            }
+        )
     return result
 
 
 def eligible_cards(player: dict) -> list[str]:
     """Cartas ainda não conhecidas da classe e da subclasse já escolhida."""
     from services import cards
+
     known = set(player.get("known_cards") or [])
     branch = str(player.get("subclass") or "") or None
     level = int(player.get("level", 1) or 1)
     subclass_pending = any(
-        row.get("kind") == "subclass" for row in player.get("pending_choices") or [])
+        row.get("kind") == "subclass" for row in player.get("pending_choices") or []
+    )
     return [
-        c["id"] for c in cards.cards_for_class(str(player.get("class_name", "")), branch or "")
+        c["id"]
+        for c in cards.cards_for_class(str(player.get("class_name", "")), branch or "")
         if c["id"] not in known
         and int(c.get("level_req", 1) or 1) <= level
         and not c.get("apex")
-        and (not c.get("subclasse") or (
-            level >= 3 and branch and not subclass_pending and c.get("subclasse") == branch))
+        and (
+            not c.get("subclasse")
+            or (level >= 3 and branch and not subclass_pending and c.get("subclasse") == branch)
+        )
     ]
 
 
 def effective_virtue_card_stage(card_choice: dict) -> int:
-    return max(1, min(5, int(card_choice.get("estagio", 1) or 1)
-                      + int(card_choice.get("mastery", 0) or 0)))
+    return max(
+        1, min(5, int(card_choice.get("estagio", 1) or 1) + int(card_choice.get("mastery", 0) or 0))
+    )
 
 
 def normalize_player_progression(player: dict) -> dict:
@@ -261,38 +290,47 @@ def normalize_player_progression(player: dict) -> dict:
             p["subclass"] = inferred
             p["progression_grants"].append(f"legacy:subclass:{inferred}")
         else:
-            _append_choice_once(
-                p, {"id": "lvl3-subclass", "level": 3, "kind": "subclass"})
+            _append_choice_once(p, {"id": "lvl3-subclass", "level": 3, "kind": "subclass"})
     if level < 3:
         p.pop("subclass", None)
     for mastery_level in gamedata.NIVEIS_MAESTRIA_VIRTUDE:
         prefix = f"lvl{mastery_level}:virtue-mastery:"
         pending_id = f"lvl{mastery_level}-virtue-mastery"
-        if (level >= mastery_level
-                and not any(key.startswith(prefix) for key in p["progression_grants"])
-                and not any(row.get("id") == pending_id for row in p["pending_choices"])):
-            _append_choice_once(p, {
-                "id": pending_id, "level": mastery_level, "kind": "virtue_mastery",
-            })
+        if (
+            level >= mastery_level
+            and not any(key.startswith(prefix) for key in p["progression_grants"])
+            and not any(row.get("id") == pending_id for row in p["pending_choices"])
+        ):
+            _append_choice_once(
+                p,
+                {
+                    "id": pending_id,
+                    "level": mastery_level,
+                    "kind": "virtue_mastery",
+                },
+            )
     if 11 <= level < 20:
-        _append_choice_once(
-            p, {"id": f"lvl{level}-carta", "level": level, "kind": "carta"})
+        _append_choice_once(p, {"id": f"lvl{level}-carta", "level": level, "kind": "carta"})
     if level == 20:
         p, _ = grant_apex_if_due(p, level)
     p["progression_grants"] = list(dict.fromkeys(p["progression_grants"]))
     return p
 
 
-def apply_choice(player: dict, choice_id: str, *,
-                 ability_id: str | None = None,
-                 attr: str | None = None,
-                 virtude: str | None = None,
-                 card_id: str | None = None,
-                 evolve_card_id: str | None = None,
-                 caminho: str | None = None,
-                 virtue_card_id: str | None = None,
-                 subclass_id: str | None = None,
-                 abilities_db: dict | None = None) -> tuple[dict, str | None]:
+def apply_choice(
+    player: dict,
+    choice_id: str,
+    *,
+    ability_id: str | None = None,
+    attr: str | None = None,
+    virtude: str | None = None,
+    card_id: str | None = None,
+    evolve_card_id: str | None = None,
+    caminho: str | None = None,
+    virtue_card_id: str | None = None,
+    subclass_id: str | None = None,
+    abilities_db: dict | None = None,
+) -> tuple[dict, str | None]:
     """Valida e consome UMA pending_choice. Retorna (player, erro|None).
 
     Erro deixa o player ORIGINAL intocado (validação server-side do /game/levelup)."""
@@ -301,8 +339,7 @@ def apply_choice(player: dict, choice_id: str, *,
     if choice is None:
         return player, f"Escolha '{choice_id}' não está pendente."
 
-    first_required = next(
-        (row for row in pending if row.get("kind") == "subclass"), None)
+    first_required = next((row for row in pending if row.get("kind") == "subclass"), None)
     if first_required and choice.get("kind") != "subclass":
         return player, "Escolha a subclasse antes das demais opções deste nível."
 
@@ -317,16 +354,20 @@ def apply_choice(player: dict, choice_id: str, *,
         grants = list(p.get("progression_grants") or [])
         grants.append(f"lvl3:subclass:{subclass_id}")
         p["progression_grants"] = list(dict.fromkeys(grants))
-        p["progression_events"] = list(p.get("progression_events") or []) + [{
-            "type": "subclass_chosen", "subclass_id": subclass_id,
-            "level": int(p.get("level", 3) or 3),
-        }]
+        p["progression_events"] = list(p.get("progression_events") or []) + [
+            {
+                "type": "subclass_chosen",
+                "subclass_id": subclass_id,
+                "level": int(p.get("level", 3) or 3),
+            }
+        ]
     elif choice.get("kind") == "virtude":
         # spec conflito-01 R3: +1 numa Virtude, teto 5, recalcula Vitalidade na hora
         key = gamedata.normalize_virtude(virtude or attr or "")
         if key not in gamedata.VIRTUDES:
-            return player, (f"Virtude '{virtude or attr}' inválida "
-                            f"(use {'/'.join(gamedata.VIRTUDES)}).")
+            return player, (
+                f"Virtude '{virtude or attr}' inválida (use {'/'.join(gamedata.VIRTUDES)})."
+            )
         virts = dict(p.get("virtudes") or {})
         atual = int(virts.get(key, 0) or 0)
         if atual >= gamedata.VIRTUDE_MAX:
@@ -338,6 +379,7 @@ def apply_choice(player: dict, choice_id: str, *,
     elif choice.get("kind") == "carta":
         # spec conflito-02 R4: UMA escolha por nível — nova Carta XOR evolução
         from services import cards as cards_svc
+
         if card_id and (evolve_card_id or caminho):
             return player, "Escolha nova Carta OU evolução, não ambas."
         if card_id:
@@ -357,8 +399,7 @@ def apply_choice(player: dict, choice_id: str, *,
             return player, "Escolha de Carta exige card_id (nova) ou evolve_card_id+caminho."
     elif choice.get("kind") == "virtue_mastery":
         virtue_cards = [dict(row) for row in p.get("virtue_cards") or []]
-        selected = next(
-            (row for row in virtue_cards if row.get("card_id") == virtue_card_id), None)
+        selected = next((row for row in virtue_cards if row.get("card_id") == virtue_card_id), None)
         if not selected:
             return player, "Escolha uma das Cartas de Virtude permanentes."
         mastery = int(selected.get("mastery", 0) or 0)
@@ -380,9 +421,13 @@ def apply_choice(player: dict, choice_id: str, *,
     if choice.get("kind") == "subclass" and int(p.get("level", 1) or 1) >= 20:
         p, apex_id = grant_apex_if_due(p, 20)
         if apex_id:
-            p["progression_events"] = list(p.get("progression_events") or []) + [{
-                "type": "class_apex_unlocked", "card_id": apex_id, "level": 20,
-            }]
+            p["progression_events"] = list(p.get("progression_events") or []) + [
+                {
+                    "type": "class_apex_unlocked",
+                    "card_id": apex_id,
+                    "level": 20,
+                }
+            ]
     return p, None
 
 
@@ -400,21 +445,31 @@ def auto_resolve_choices(player: dict, *, max_passes: int = 25) -> dict:
             kwargs: dict[str, str] = {}
             if kind == "virtude":
                 virtues = p.get("virtudes") or {}
-                eligible = [k for k in gamedata.VIRTUDES
-                            if int(virtues.get(k, 0) or 0) < gamedata.VIRTUDE_MAX]
+                eligible = [
+                    k
+                    for k in gamedata.VIRTUDES
+                    if int(virtues.get(k, 0) or 0) < gamedata.VIRTUDE_MAX
+                ]
                 if eligible:
                     kwargs["virtude"] = min(
-                        eligible, key=lambda k: (int(virtues.get(k, 0) or 0), k))
+                        eligible, key=lambda k: (int(virtues.get(k, 0) or 0), k)
+                    )
             elif kind == "subclass":
                 subs = eligible_subclasses(p)
                 if subs:
                     kwargs["subclass_id"] = str(subs[0]["id"])
             elif kind == "virtue_mastery":
-                vcs = [r for r in p.get("virtue_cards") or []
-                       if int(r.get("mastery", 0) or 0) < 2]
+                vcs = [r for r in p.get("virtue_cards") or [] if int(r.get("mastery", 0) or 0) < 2]
                 if vcs:
-                    kwargs["virtue_card_id"] = str(min(vcs, key=lambda r: (
-                        int(r.get("mastery", 0) or 0), str(r.get("card_id", ""))))["card_id"])
+                    kwargs["virtue_card_id"] = str(
+                        min(
+                            vcs,
+                            key=lambda r: (
+                                int(r.get("mastery", 0) or 0),
+                                str(r.get("card_id", "")),
+                            ),
+                        )["card_id"]
+                    )
             elif kind == "carta":
                 elig = sorted(eligible_cards(p))
                 if elig:
@@ -422,8 +477,10 @@ def auto_resolve_choices(player: dict, *, max_passes: int = 25) -> dict:
                 else:
                     evolved = p.get("evolved_cards") or {}
                     evolvable = sorted(
-                        c for c in (p.get("known_cards") or [])
-                        if c not in evolved and (cards.get_card(c) or {}).get("evolucao"))
+                        c
+                        for c in (p.get("known_cards") or [])
+                        if c not in evolved and (cards.get_card(c) or {}).get("evolucao")
+                    )
                     if evolvable:
                         kwargs.update(evolve_card_id=evolvable[0], caminho="A")
             if not kwargs:
@@ -435,7 +492,10 @@ def auto_resolve_choices(player: dict, *, max_passes: int = 25) -> dict:
         if not applied_any or not p.get("pending_choices"):
             break
     known = list(dict.fromkeys(p.get("known_cards") or []))
-    ranked = sorted(known, key=lambda c: (
-        int((cards.get_card(c) or {}).get("level_req", 1) or 1), c), reverse=True)
-    p["prepared_cards"] = ranked[:gamedata.prepared_slots_for_level(p.get("level", 1))]
+    ranked = sorted(
+        known,
+        key=lambda c: (int((cards.get_card(c) or {}).get("level_req", 1) or 1), c),
+        reverse=True,
+    )
+    p["prepared_cards"] = ranked[: gamedata.prepared_slots_for_level(p.get("level", 1))]
     return p

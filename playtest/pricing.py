@@ -9,6 +9,7 @@ oficial. MockLLM não dispara o hook → custo 0.
 Preços (USD por 1M tokens, in/out) — tabela curada, editável sem deploy. Modelo
 desconhecido cai no default conservador.
 """
+
 from __future__ import annotations
 
 from typing import List
@@ -38,8 +39,9 @@ _EST_TOKENS_IN = 1200
 _EST_TOKENS_OUT = 400
 
 
-def estimate_cost(model: str, tokens_in: int = _EST_TOKENS_IN,
-                  tokens_out: int = _EST_TOKENS_OUT) -> float:
+def estimate_cost(
+    model: str, tokens_in: int = _EST_TOKENS_IN, tokens_out: int = _EST_TOKENS_OUT
+) -> float:
     """Custo estimado (USD) de 1 invoke do modelo."""
     price_in, price_out = PRICE_PER_MTOK.get(model or "", _DEFAULT_PRICE)
     return (tokens_in * price_in + tokens_out * price_out) / 1_000_000.0

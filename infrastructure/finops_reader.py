@@ -4,6 +4,7 @@ The Postgres reader must run on the privileged backend pool (same as reconciliat
 ``usage_events``/``wallet_entries`` are RLS-forced per owner. Owner ids stay inside this
 module and the pure aggregators; they never reach metrics, alerts or the cron response.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -28,11 +29,11 @@ class OpsCounts:
     voice_cost_usd: Decimal = Decimal("0")
 
 
-
-
 def _fees(raw: Mapping) -> dict[str, FeeRate]:
-    return {str(ch): FeeRate(Decimal(str(v["percentage"])), Decimal(str(v["fixed_brl"])))
-            for ch, v in raw.items()}
+    return {
+        str(ch): FeeRate(Decimal(str(v["percentage"])), Decimal(str(v["fixed_brl"])))
+        for ch, v in raw.items()
+    }
 
 
 class PostgresFinopsReader:
@@ -42,20 +43,31 @@ class PostgresFinopsReader:
     def pricing(self):
         with admin_connection(self.pool) as db:
             rows = db.execute("select * from app.pricing_versions order by created_at").fetchall()
-        refs = {r["version_id"]: PricingRef(r["version_id"], Decimal(r["fx_usd_brl"]),
-                                            _fees(r["channel_fees"])) for r in rows}
+        refs = {
+            r["version_id"]: PricingRef(
+                r["version_id"], Decimal(r["fx_usd_brl"]), _fees(r["channel_fees"])
+            )
+            for r in rows
+        }
         fresh: list[Freshness] = []
         if rows:  # only the newest version authorizes new sales
             last = rows[-1]
-            fresh = [Freshness("fx", last["fx_observed_at"],
-                               timedelta(seconds=last["fx_max_age_seconds"])),
-                     Freshness("rate_card", last["rate_card_observed_at"],
-                               timedelta(seconds=last["rate_card_max_age_seconds"]))]
+            fresh = [
+                Freshness(
+                    "fx", last["fx_observed_at"], timedelta(seconds=last["fx_max_age_seconds"])
+                ),
+                Freshness(
+                    "rate_card",
+                    last["rate_card_observed_at"],
+                    timedelta(seconds=last["rate_card_max_age_seconds"]),
+                ),
+            ]
         return refs, fresh
 
     def purchases(self, since, until):
         with admin_connection(self.pool) as db:
-            rows = db.execute("""
+            rows = db.execute(
+                """
                 select w.reference_id as ref, w.owner_id::text as owner_key, w.created_at,
                   s.sku_id, s.channel, s.pricing_version_id, s.gross_brl, s.shard_milli,
                   w.amount_milli as purchase_milli,
@@ -84,7 +96,9 @@ class PostgresFinopsReader:
                   ) as fee_cents
                 from app.wallet_entries w join app.purchase_skus s on s.sku_id=w.sku_id
                 where w.entry_type='purchase' and w.created_at >= %s and w.created_at < %s
-                """, (since, until)).fetchall()
+                """,
+                (since, until),
+            ).fetchall()
         out = []
         for r in rows:
             gross = Decimal(r["gross_brl"])
@@ -93,21 +107,34 @@ class PostgresFinopsReader:
             if purchase_milli > 0 and int(r["reversed_milli"] or 0) > 0:
                 share = min(Decimal(int(r["reversed_milli"])) / Decimal(purchase_milli), Decimal(1))
                 reversed_brl = (gross * share).quantize(Decimal("0.0001"))
-            out.append(PurchaseFact(
-                r["ref"], r["channel"], r["sku_id"], r["pricing_version_id"], r["owner_key"],
-                r["created_at"], gross, int(r["shard_milli"]),
-                None if r["fee_cents"] is None else Decimal(r["fee_cents"]) / 100, r["first_at"],
-                Decimal("0") if r["disputed"] else reversed_brl,
-                reversed_brl if r["disputed"] else Decimal("0")))
+            out.append(
+                PurchaseFact(
+                    r["ref"],
+                    r["channel"],
+                    r["sku_id"],
+                    r["pricing_version_id"],
+                    r["owner_key"],
+                    r["created_at"],
+                    gross,
+                    int(r["shard_milli"]),
+                    None if r["fee_cents"] is None else Decimal(r["fee_cents"]) / 100,
+                    r["first_at"],
+                    Decimal("0") if r["disputed"] else reversed_brl,
+                    reversed_brl if r["disputed"] else Decimal("0"),
+                )
+            )
         return out
 
     def owner_usage(self, since, until):
         with admin_connection(self.pool) as db:
             spend = "and counts_as_spend" if spend_schema_ready(db) else ""
-            rows = db.execute(f"""select owner_id::text as owner_key, category, sum(cost_usd) as usd
+            rows = db.execute(
+                f"""select owner_id::text as owner_key, category, sum(cost_usd) as usd
                 from app.usage_events where created_at >= %s and created_at < %s
                   {spend}
-                group by 1,2""", (since, until)).fetchall()
+                group by 1,2""",
+                (since, until),
+            ).fetchall()
         acc: dict[str, dict[str, Decimal]] = {}
         for r in rows:
             group = COST_GROUPS.get(r["category"], "other")
@@ -118,24 +145,39 @@ class PostgresFinopsReader:
     def usage_groups(self, since, until):
         with admin_connection(self.pool) as db:
             spend = "counts_as_spend" if spend_schema_ready(db) else "true as counts_as_spend"
-            rows = db.execute(f"""select provider, model, category, pricing_version, cost_basis,
+            rows = db.execute(
+                f"""select provider, model, category, pricing_version, cost_basis,
                 outcome, {spend}, count(*) as n, sum(cost_usd) as usd from app.usage_events
                 where created_at >= %s and created_at < %s group by 1,2,3,4,5,6,7""",
-                              (since, until)).fetchall()
+                (since, until),
+            ).fetchall()
         # SPEC-236 R2: non-spend groups keep their count (provider-failure panel) but never cost.
-        return [UsageGroup(r["provider"], r["model"], r["category"], r["pricing_version"],
-                           r["cost_basis"], r["outcome"], int(r["n"]),
-                           Decimal(r["usd"]) if r["counts_as_spend"] else Decimal("0"),
-                           bool(r["counts_as_spend"]))
-                for r in rows]
+        return [
+            UsageGroup(
+                r["provider"],
+                r["model"],
+                r["category"],
+                r["pricing_version"],
+                r["cost_basis"],
+                r["outcome"],
+                int(r["n"]),
+                Decimal(r["usd"]) if r["counts_as_spend"] else Decimal("0"),
+                bool(r["counts_as_spend"]),
+            )
+            for r in rows
+        ]
 
     def ops_counts(self, since, until):
         with admin_connection(self.pool) as db:
             # SPEC-279: a deleted campaign keeps its usage (operation row gone, id kept); the
             # kind snapshot keeps it counted. Pre-migration schema falls back to the join.
-            kind = ("coalesce(e.operation_kind,o.kind)"
-                    if has_column(db, "app.usage_events", "operation_kind") else "o.kind")
-            row = db.execute(f"""select
+            kind = (
+                "coalesce(e.operation_kind,o.kind)"
+                if has_column(db, "app.usage_events", "operation_kind")
+                else "o.kind"
+            )
+            row = db.execute(
+                f"""select
                 count(distinct e.operation_id) filter (where {kind}='turn') as turns,
                 count(*) filter (where e.category='image' and e.outcome = any(%s)) as images,
                 coalesce(sum(e.audio_units) filter (where e.category='speech_to_text'
@@ -145,10 +187,17 @@ class PostgresFinopsReader:
                     and e.cost_basis not in ('failed_no_usage','definitive_no_charge')),0) as voice_cost
                 from app.usage_events e left join app.operations o on o.id=e.operation_id
                 where e.created_at >= %s and e.created_at < %s""",
-                             (list(SUCCESS), list(DURATION_STT_PROVIDERS),
-                              list(DURATION_STT_PROVIDERS), since, until)).fetchone()
-        return OpsCounts(int(row["turns"]), int(row["images"]), int(row["voice_ms"]),
-                         Decimal(row["voice_cost"]))
+                (
+                    list(SUCCESS),
+                    list(DURATION_STT_PROVIDERS),
+                    list(DURATION_STT_PROVIDERS),
+                    since,
+                    until,
+                ),
+            ).fetchone()
+        return OpsCounts(
+            int(row["turns"]), int(row["images"]), int(row["voice_ms"]), Decimal(row["voice_cost"])
+        )
 
     def wallet_mismatch(self):
         with admin_connection(self.pool) as db:
@@ -162,25 +211,35 @@ class PostgresFinopsReader:
     def wallet_holds(self, now):
         """SPEC-236 R4/R10: (uncertain reservations, oldest age s, capped anomalies). Owner-free."""
         with admin_connection(self.pool) as db:
-            anomalies = ("count(*) filter (where financial_anomaly_milli > 0)"
-                         if has_column(db, "app.wallet_reservations", "financial_anomaly_milli")
-                         else "0")
-            row = db.execute(f"""select count(*) filter (where status='uncertain') as n,
+            anomalies = (
+                "count(*) filter (where financial_anomaly_milli > 0)"
+                if has_column(db, "app.wallet_reservations", "financial_anomaly_milli")
+                else "0"
+            )
+            row = db.execute(
+                f"""select count(*) filter (where status='uncertain') as n,
                 extract(epoch from (%s - min(created_at) filter (where status='uncertain'))) as age,
                 {anomalies} as anomalies
-                from app.wallet_reservations""", (now,)).fetchone()
+                from app.wallet_reservations""",
+                (now,),
+            ).fetchone()
         return int(row["n"] or 0), float(row["age"] or 0), int(row["anomalies"] or 0)
 
     def backlogs(self, now):
         with admin_connection(self.pool) as db:
-            rows = db.execute("""select provider, count(*) as n,
+            rows = db.execute(
+                """select provider, count(*) as n,
                 extract(epoch from (%s - min(received_at))) as age
                 from app.purchase_reconciliation_events where status <> 'applied'
-                group by provider""", (now,)).fetchall()
-            stuck = db.execute("""select count(*) as n,
+                group by provider""",
+                (now,),
+            ).fetchall()
+            stuck = db.execute(
+                """select count(*) as n,
                 extract(epoch from (%s - min(updated_at))) as age
                 from app.payment_orders where status='reconciliation_required'""",
-                               (now,)).fetchone()
+                (now,),
+            ).fetchone()
         out = [Backlog(r["provider"], int(r["n"]), float(r["age"] or 0)) for r in rows]
         if stuck and stuck["n"]:
             out.append(Backlog("stripe", int(stuck["n"]), float(stuck["age"] or 0)))
@@ -190,6 +249,7 @@ class PostgresFinopsReader:
 @dataclass
 class FakeFinopsReader:
     """In-memory reader for tests/sims."""
+
     pricing_refs: dict[str, PricingRef] = field(default_factory=dict)
     freshness: list[Freshness] = field(default_factory=list)
     purchase_facts: list[PurchaseFact] = field(default_factory=list)
@@ -233,10 +293,17 @@ class PostgresFinopsEvaluationStore:
 
     def record(self, now, summary: dict, alerts: list[dict]) -> None:
         from psycopg.types.json import Jsonb
+
         with admin_connection(self.pool) as db:
             db.execute(
                 "insert into app.finops_evaluations"
                 "(evaluated_at, blocking_alerts, alert_count, summary, alerts) "
                 "values (%s,%s,%s,%s,%s)",
-                (now, int(summary.get("blocking_alerts", 0)), len(alerts),
-                 Jsonb(summary), Jsonb(alerts)))
+                (
+                    now,
+                    int(summary.get("blocking_alerts", 0)),
+                    len(alerts),
+                    Jsonb(summary),
+                    Jsonb(alerts),
+                ),
+            )

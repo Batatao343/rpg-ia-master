@@ -1,4 +1,5 @@
 """SPEC-202 Etapa 2 — fiação da política de interlocutor no router e no ator."""
+
 from __future__ import annotations
 
 import pytest
@@ -24,6 +25,7 @@ def test_ordem_precedencia_preservada(monkeypatch):
 
     # recovery
     import services.actor_lifecycle as lifecycle
+
     monkeypatch.setattr(lifecycle, "is_recovery_turn", lambda _s: True)
     out = dm_router_node(_state("Brunna, me ajude"))
     assert out["next"] == RouteType.STORY.value and llm.calls == 0
@@ -37,6 +39,7 @@ def test_ordem_precedencia_preservada(monkeypatch):
     # SPEC-217 R14: o Jev roda DEPOIS dos gates Python (pre_classify incluso) e,
     # em primary coberto, pula o CLASSIFY; o payload passa pela mesma política.
     import services.jev_rollout as jev
+
     calls = []
 
     class _Primary:
@@ -105,18 +108,24 @@ def test_classify_falho_rotula_fallback(monkeypatch):
 
 def test_npc_actor_nao_gera_npc_sem_generic_role(monkeypatch):
     import agents.npc as npc_mod
+
     generated = []
-    monkeypatch.setattr(npc_mod, "generate_new_npc",
-                        lambda name, context="": generated.append(name) or {
-                            "name": "Orsolya", "role": "Taverneira", "persona": "seca",
-                            "memory": []})
+    monkeypatch.setattr(
+        npc_mod,
+        "generate_new_npc",
+        lambda name, context="": (
+            generated.append(name)
+            or {"name": "Orsolya", "role": "Taverneira", "persona": "seca", "memory": []}
+        ),
+    )
     st = {**_state("Falo com o taverneiro"), "npcs": {}}
 
     out = npc_mod.npc_actor_node({**st, "active_npc_name": "taverneiro"})
     assert out.get("next") == "storyteller" and not generated
 
-    out = npc_mod.npc_actor_node({**st, "active_npc_name": "taverneiro",
-                                  "interlocutor_reason": "generic_role_spawn"})
+    out = npc_mod.npc_actor_node(
+        {**st, "active_npc_name": "taverneiro", "interlocutor_reason": "generic_role_spawn"}
+    )
     assert generated == ["taverneiro"]
     assert str(out["messages"][0].content).startswith("**Orsolya:**")
     assert out["active_npc_name"] in out["npcs"]
@@ -124,6 +133,7 @@ def test_npc_actor_nao_gera_npc_sem_generic_role(monkeypatch):
 
 def test_party_command_preservado(monkeypatch):
     import agents.npc as npc_mod
+
     llm = _install(monkeypatch, RouteType.NPC, "Brunna")
     st = _state("Brunna, junte-se a mim")
     route = dm_router_node(st)
@@ -135,13 +145,23 @@ def test_party_command_preservado(monkeypatch):
 
 def test_suite_existente_router_payload_zerado(monkeypatch):
     _install(monkeypatch, RouteType.STORY)
-    out = dm_router_node({"messages": [HumanMessage(content="acao")],
-                          "world": {"current_location": "Ponte"}, "npcs": {},
-                          "combat": None})
+    out = dm_router_node(
+        {
+            "messages": [HumanMessage(content="acao")],
+            "world": {"current_location": "Ponte"},
+            "npcs": {},
+            "combat": None,
+        }
+    )
     assert out["active_npc_name"] is None and out["mediated_subject_id"] is None
     assert out["interlocutor_reason"] == "classify_story"
 
 
 def test_router_decision_schema_intacto():
     assert set(RouterDecision.model_fields) == {
-        "route", "loot_context", "target", "reasoning", "confidence"}
+        "route",
+        "loot_context",
+        "target",
+        "reasoning",
+        "confidence",
+    }

@@ -9,19 +9,29 @@ livre depois do início). NÃO resolve dano/efeito — isso é conflito-04/05.
 A ConflictScene serializável mora em `combat["scene"]`; o envelope mantém apenas
 metadados de rodada/lifecycle necessários à API.
 """
+
 from typing import Dict, List, Optional
 
 # --- Eixos independentes -----------------------------------------------------
-DISTANCES = ("proximo", "distante", "separado")   # 3 estágios (R2)
-POSTURAS = ("protegido", "neutro", "exposto")      # 3 estados (R2)
-OCULTACOES = ("visivel", "escondido")              # 2 estados (R2)
+DISTANCES = ("proximo", "distante", "separado")  # 3 estágios (R2)
+POSTURAS = ("protegido", "neutro", "exposto")  # 3 estados (R2)
+OCULTACOES = ("visivel", "escondido")  # 2 estados (R2)
 
 # --- Catálogo FECHADO de efeitos (R6) — compartilhado com conflito-10/11 ------
-EFFECT_KINDS = frozenset({
-    "alter_terrain", "block_route", "unblock_route", "damage",
-    "request_reaction", "apply_condition", "reposition",
-    "spawn_reinforcement", "destroy_object", "change_environment_condition",
-})
+EFFECT_KINDS = frozenset(
+    {
+        "alter_terrain",
+        "block_route",
+        "unblock_route",
+        "damage",
+        "request_reaction",
+        "apply_condition",
+        "reposition",
+        "spawn_reinforcement",
+        "destroy_object",
+        "change_environment_condition",
+    }
+)
 
 _COST_STATES = ("pre_acao", "pos_acao", "acao")
 _TACTICAL_MODIFIERS = frozenset({"protected", "attack_advantage"})
@@ -104,8 +114,7 @@ def advance_tactical_state(scene: dict) -> int:
     return current
 
 
-def grant_tactical_modifier(scene: dict, kind: str, participant_id: str,
-                            source_id: str) -> bool:
+def grant_tactical_modifier(scene: dict, kind: str, participant_id: str, source_id: str) -> bool:
     """Concede um único modificador fechado, substituindo o anterior sem stack."""
     if kind not in _TACTICAL_MODIFIERS:
         return False
@@ -127,8 +136,7 @@ def has_tactical_modifier(scene: dict, kind: str, participant_id: str) -> bool:
     return participant_id in _tactical_state(scene)["modifiers"][kind]
 
 
-def consume_tactical_attack_modifier(scene: dict, attacker_id: str,
-                                     target_id: str) -> int:
+def consume_tactical_attack_modifier(scene: dict, attacker_id: str, target_id: str) -> int:
     """Consome Vantagem de apoio e proteção do alvo no próximo ataque aplicável."""
     state = _tactical_state(scene)
     modifier = 0
@@ -139,20 +147,16 @@ def consume_tactical_attack_modifier(scene: dict, attacker_id: str,
     return 1 if modifier > 0 else (-1 if modifier < 0 else 0)
 
 
-def set_tactical_cooldown(scene: dict, participant_id: str,
-                          action_key: str, turns: int) -> None:
+def set_tactical_cooldown(scene: dict, participant_id: str, action_key: str, turns: int) -> None:
     if participant_id not in (scene.get("positions") or {}):
         return
     bounded = max(1, min(_TACTICAL_MAX_COOLDOWN, int(turns or 1)))
-    _tactical_state(scene)["cooldowns"].setdefault(participant_id, {})[
-        str(action_key)] = bounded
+    _tactical_state(scene)["cooldowns"].setdefault(participant_id, {})[str(action_key)] = bounded
 
 
 def tactical_cooldown(scene: dict, participant_id: str, action_key: str) -> int:
     return int(
-        (_tactical_state(scene)["cooldowns"].get(participant_id) or {}).get(
-            str(action_key), 0)
-        or 0
+        (_tactical_state(scene)["cooldowns"].get(participant_id) or {}).get(str(action_key), 0) or 0
     )
 
 
@@ -173,31 +177,43 @@ def new_scene(zones: list[dict] | None = None) -> dict:
     }
 
 
-def place(scene: dict, participant_id: str, *, zone_id: str = "z0",
-          distance_state: str = "proximo", postura: str = "neutro",
-          ocultacao: str = "visivel") -> dict:
+def place(
+    scene: dict,
+    participant_id: str,
+    *,
+    zone_id: str = "z0",
+    distance_state: str = "proximo",
+    postura: str = "neutro",
+    ocultacao: str = "visivel",
+) -> dict:
     """Posiciona um participante. Bloqueado se a cena já está congelada (R8) —
     participantes entram na preparação, não no meio do conflito."""
     if scene.get("frozen"):
-        return {"ok": False, "error": "Cena congelada: participante não entra fora de gatilho.", "log": ""}
+        return {
+            "ok": False,
+            "error": "Cena congelada: participante não entra fora de gatilho.",
+            "log": "",
+        }
     scene.setdefault("positions", {})[participant_id] = {
         "zone_id": zone_id,
         "distance_state": distance_state if distance_state in DISTANCES else "proximo",
-        "postura": {"state": postura if postura in POSTURAS else "neutro",
-                    "mode": "sustentado", "cause": None},
+        "postura": {
+            "state": postura if postura in POSTURAS else "neutro",
+            "mode": "sustentado",
+            "cause": None,
+        },
         "ocultacao": ocultacao if ocultacao in OCULTACOES else "visivel",
         "engaged_with": [],
         "budget": dict(TURN_BUDGET),
         "guarding": False,
-        "hidden_from": [],   # observadores que perderam a posição (Escondido relativo, R9)
-        "approx_from": [],   # observadores com posição APROXIMADA (atacam com Desvantagem, R10)
+        "hidden_from": [],  # observadores que perderam a posição (Escondido relativo, R9)
+        "approx_from": [],  # observadores com posição APROXIMADA (atacam com Desvantagem, R10)
     }
     return {"ok": True, "error": None, "log": f"{participant_id} posicionado."}
 
 
 # --- Distância (R3) ----------------------------------------------------------
-def move_distance(scene: dict, participant_id: str, direction: str,
-                  via: str = "pre") -> dict:
+def move_distance(scene: dict, participant_id: str, direction: str, via: str = "pre") -> dict:
     """Move 1 estágio de Distância por Pré-Ação OU Pós-Ação (R3). Usar as duas no
     mesmo turno = 2 chamadas = atravessa 2 estágios. `direction`: aproximar|afastar."""
     pos = (scene.get("positions") or {}).get(participant_id)
@@ -214,8 +230,13 @@ def move_distance(scene: dict, participant_id: str, direction: str,
     pos["distance_state"] = DISTANCES[idx]
     # R11: mudar de estágio de Distância encerra o Escondido (não é ajuste pequeno).
     _reveal(pos)
-    return {"ok": True, "error": None, "distance_state": DISTANCES[idx],
-            "via": via, "log": f"{participant_id} -> {DISTANCES[idx]} ({via})"}
+    return {
+        "ok": True,
+        "error": None,
+        "distance_state": DISTANCES[idx],
+        "via": via,
+        "log": f"{participant_id} -> {DISTANCES[idx]} ({via})",
+    }
 
 
 # --- Engajamento (relação separada da distância, R2/R6/R7) -------------------
@@ -262,8 +283,14 @@ def is_engaged(scene: dict, a: str, b: str) -> bool:
 
 
 # --- Postura / Ocultação (R4) ------------------------------------------------
-def set_postura(scene: dict, participant_id: str, state: str, *,
-                mode: str = "sustentado", cause: str | None = None) -> dict:
+def set_postura(
+    scene: dict,
+    participant_id: str,
+    state: str,
+    *,
+    mode: str = "sustentado",
+    cause: str | None = None,
+) -> dict:
     """Protegido/Exposto momentâneo (só o próximo ataque) ou sustentado (persiste
     enquanto a causa concreta existir)."""
     pos = (scene.get("positions") or {}).get(participant_id)
@@ -271,9 +298,11 @@ def set_postura(scene: dict, participant_id: str, state: str, *,
         return {"ok": False, "error": f"{participant_id} não está na cena.", "log": ""}
     if state not in POSTURAS:
         return {"ok": False, "error": f"Postura inválida: {state}.", "log": ""}
-    pos["postura"] = {"state": state,
-                      "mode": "momentaneo" if mode == "momentaneo" else "sustentado",
-                      "cause": cause}
+    pos["postura"] = {
+        "state": state,
+        "mode": "momentaneo" if mode == "momentaneo" else "sustentado",
+        "cause": cause,
+    }
     return {"ok": True, "error": None, "log": f"{participant_id}: {state} ({mode})."}
 
 
@@ -323,13 +352,19 @@ def visible_objects(scene: dict) -> list[dict]:
             continue
         if o.get("secret") and not o.get("discovered"):
             continue
-        out.append({
-            "id": o.get("id"), "name": o.get("name"),
-            "distance_state": o.get("distance_state"), "zone_id": o.get("zone_id"),
-            "interactions": [{"label": it.get("label"), "cost": it.get("cost")}
-                             for it in o.get("interactions", [])],
-            "uses_remaining": o.get("uses_remaining"),
-        })
+        out.append(
+            {
+                "id": o.get("id"),
+                "name": o.get("name"),
+                "distance_state": o.get("distance_state"),
+                "zone_id": o.get("zone_id"),
+                "interactions": [
+                    {"label": it.get("label"), "cost": it.get("cost")}
+                    for it in o.get("interactions", [])
+                ],
+                "uses_remaining": o.get("uses_remaining"),
+            }
+        )
     return out
 
 
@@ -348,8 +383,9 @@ def _find_object(scene: dict, object_id: str) -> dict | None:
     return None
 
 
-def apply_object_interaction(scene: dict, object_id: str, interaction_label: str,
-                             actor_id: str) -> dict:
+def apply_object_interaction(
+    scene: dict, object_id: str, interaction_label: str, actor_id: str
+) -> dict:
     """Executa uma interação de objeto: devolve o EffectSpec (validado contra o
     catálogo fechado) e decrementa usos/destrói. NÃO resolve o efeito (conflito-04)."""
     obj = _find_object(scene, object_id)
@@ -359,10 +395,18 @@ def apply_object_interaction(scene: dict, object_id: str, interaction_label: str
         return {"ok": False, "error": "Objeto secreto ainda não descoberto.", "effect": None}
     it = next((i for i in obj.get("interactions", []) if i.get("label") == interaction_label), None)
     if not it:
-        return {"ok": False, "error": f"Interação '{interaction_label}' inexistente.", "effect": None}
+        return {
+            "ok": False,
+            "error": f"Interação '{interaction_label}' inexistente.",
+            "effect": None,
+        }
     effect = it.get("effect") or {}
     if not validate_effect_kind(effect):
-        return {"ok": False, "error": f"Efeito fora do catálogo: {effect.get('kind')!r}.", "effect": None}
+        return {
+            "ok": False,
+            "error": f"Efeito fora do catálogo: {effect.get('kind')!r}.",
+            "effect": None,
+        }
 
     left = obj.get("uses_remaining")
     if left is not None:
@@ -373,8 +417,12 @@ def apply_object_interaction(scene: dict, object_id: str, interaction_label: str
             obj["destroyed"] = True
     if effect.get("kind") == "destroy_object":
         obj["destroyed"] = True
-    return {"ok": True, "error": None, "effect": effect,
-            "log": f"{actor_id} usa '{interaction_label}' em '{obj.get('name', object_id)}'."}
+    return {
+        "ok": True,
+        "error": None,
+        "effect": effect,
+        "log": f"{actor_id} usa '{interaction_label}' em '{obj.get('name', object_id)}'.",
+    }
 
 
 # --- Cena congelada (R8) -----------------------------------------------------
@@ -397,16 +445,21 @@ def add_reinforcement_trigger(scene: dict, trigger: dict) -> dict:
 def fire_reinforcement(scene: dict, trigger_id: str) -> dict:
     """Dispara um gatilho de reforço preparado — a única via de entrada de novos
     elementos numa cena congelada (R8)."""
-    trig = next((t for t in scene.get("reinforcement_triggers", [])
-                 if t.get("id") == trigger_id), None)
+    trig = next(
+        (t for t in scene.get("reinforcement_triggers", []) if t.get("id") == trigger_id), None
+    )
     if not trig:
         return {"ok": False, "error": f"Gatilho '{trigger_id}' não foi preparado.", "effect": None}
     for obj in trig.get("objects", []) or []:
         add_object(scene, obj, from_trigger=True)
     for pid, ppos in (trig.get("participants") or {}).items():
         scene.setdefault("positions", {})[pid] = ppos
-    return {"ok": True, "error": None, "log": f"Reforço '{trigger_id}' disparado.",
-            "effect": {"kind": "spawn_reinforcement", "params": {"trigger": trigger_id}}}
+    return {
+        "ok": True,
+        "error": None,
+        "log": f"Reforço '{trigger_id}' disparado.",
+        "effect": {"kind": "spawn_reinforcement", "params": {"trigger": trigger_id}},
+    }
 
 
 # --- Guardar (R8) ------------------------------------------------------------
@@ -446,8 +499,14 @@ def _reveal(pos: dict) -> None:
     pos.pop("hide_source", None)
 
 
-def hide(scene: dict, participant_id: str, *, source: str | None = None,
-         observers: list[str] | None = None, spend: bool = True) -> dict:
+def hide(
+    scene: dict,
+    participant_id: str,
+    *,
+    source: str | None = None,
+    observers: list[str] | None = None,
+    spend: bool = True,
+) -> dict:
     """R9: Esconder-se custa a Ação e EXIGE fonte plausível (escuridão, fumaça,
     vegetação, multidão, cobertura, obstáculo). Ocultação é RELATIVA — fica
     Escondido de `observers` (default: todos os outros da cena)."""
@@ -455,13 +514,18 @@ def hide(scene: dict, participant_id: str, *, source: str | None = None,
     if not pos:
         return {"ok": False, "error": f"{participant_id} não está na cena.", "log": ""}
     if not source or not str(source).strip():
-        return {"ok": False,
-                "error": "Esconder-se exige fonte plausível (escuridão, fumaça, cobertura...).",
-                "log": ""}
+        return {
+            "ok": False,
+            "error": "Esconder-se exige fonte plausível (escuridão, fumaça, cobertura...).",
+            "log": "",
+        }
     if spend and not _spend_budget(pos, "acao"):
         return {"ok": False, "error": f"{participant_id} sem Ação para Esconder-se.", "log": ""}
-    obs = list(observers) if observers is not None else [
-        o for o in (scene.get("positions") or {}) if o != participant_id]
+    obs = (
+        list(observers)
+        if observers is not None
+        else [o for o in (scene.get("positions") or {}) if o != participant_id]
+    )
     pos["ocultacao"] = "escondido"
     pos["hidden_from"] = list(obs)
     pos["approx_from"] = []
@@ -479,8 +543,9 @@ def has_approx_position(scene: dict, participant_id: str, observer_id: str) -> b
     return observer_id in ((_pos(scene, participant_id) or {}).get("approx_from") or [])
 
 
-def search(scene: dict, searcher_id: str, target_id: str, *,
-           found: bool = True, spend: bool = True) -> dict:
+def search(
+    scene: dict, searcher_id: str, target_id: str, *, found: bool = True, spend: bool = True
+) -> dict:
     """R10: Procurar custa a Ação. Encontrar deixa o alvo Visível SÓ para quem
     procurou (remove-o do Escondido/aproximado daquele observador)."""
     sp = _pos(scene, searcher_id)
@@ -488,10 +553,19 @@ def search(scene: dict, searcher_id: str, target_id: str, *,
     if not sp or not tp:
         return {"ok": False, "error": "Participante ausente da cena.", "found": False, "log": ""}
     if spend and not _spend_budget(sp, "acao"):
-        return {"ok": False, "error": f"{searcher_id} sem Ação para Procurar.", "found": False, "log": ""}
+        return {
+            "ok": False,
+            "error": f"{searcher_id} sem Ação para Procurar.",
+            "found": False,
+            "log": "",
+        }
     if not found:
-        return {"ok": True, "error": None, "found": False,
-                "log": f"{searcher_id} procura, mas não encontra."}
+        return {
+            "ok": True,
+            "error": None,
+            "found": False,
+            "log": f"{searcher_id} procura, mas não encontra.",
+        }
     for key in ("hidden_from", "approx_from"):
         lst = tp.get(key) or []
         if searcher_id in lst:
@@ -499,12 +573,12 @@ def search(scene: dict, searcher_id: str, target_id: str, *,
         tp[key] = lst
     if not tp["hidden_from"]:
         tp["ocultacao"] = "visivel"
-    return {"ok": True, "error": None, "found": True,
-            "log": f"{searcher_id} encontra {target_id}."}
+    return {"ok": True, "error": None, "found": True, "log": f"{searcher_id} encontra {target_id}."}
 
 
-def alert_party(scene: dict, alerter_id: str, target_id: str, party_ids: list[str], *,
-                spend: bool = True) -> dict:
+def alert_party(
+    scene: dict, alerter_id: str, target_id: str, party_ids: list[str], *, spend: bool = True
+) -> dict:
     """R10: alertar a party custa Pré/Pós-Ação e PROPAGA a posição APROXIMADA do
     escondido para todos os aliados (podem atacar com Desvantagem — não o revela)."""
     ap = _pos(scene, alerter_id)
@@ -516,7 +590,7 @@ def alert_party(scene: dict, alerter_id: str, target_id: str, party_ids: list[st
     hidden = set(tp.get("hidden_from") or [])
     approx = set(tp.get("approx_from") or [])
     for pid in party_ids:
-        if pid in hidden:            # ainda não o VÊ, mas agora tem a posição aproximada
+        if pid in hidden:  # ainda não o VÊ, mas agora tem a posição aproximada
             approx.add(pid)
     tp["approx_from"] = sorted(approx)
     return {"ok": True, "error": None, "log": f"{alerter_id} alerta a party sobre {target_id}."}

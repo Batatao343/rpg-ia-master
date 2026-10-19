@@ -4,6 +4,7 @@ Auth is established by API login (Turnstile test token) and cookies are handed t
 the voice flow itself runs through the real UI. Asserts WAV upload, 200, transcript in the composer,
 and no auto-submit. No emails/secrets/transcript text are written to the evidence.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -24,7 +25,12 @@ def _chrome() -> str | None:
     """Installed Chromium may differ from the version Playwright expects; use any local chrome.exe."""
     import glob
     import os
-    hits = sorted(glob.glob(os.path.expandvars(r"%LOCALAPPDATA%/ms-playwright/chromium-*/chrome-win64/chrome.exe")))
+
+    hits = sorted(
+        glob.glob(
+            os.path.expandvars(r"%LOCALAPPDATA%/ms-playwright/chromium-*/chrome-win64/chrome.exe")
+        )
+    )
     return hits[-1] if hits else None
 
 
@@ -34,6 +40,7 @@ def run(base: str, env: dict[str, str]) -> dict:
     from infrastructure.contracts import Principal
     from infrastructure.postgres import PostgresPool
     from infrastructure.wallet import PostgresWallet
+
     admin = s192.Admin(env)
     out: dict = {"base": base, "at": s192.now_iso(), "checks": {}}
     ck = out["checks"]
@@ -45,19 +52,41 @@ def run(base: str, env: dict[str, str]) -> dict:
         seed_wallet_prereqs(env["RPG_STAGING_DB_URL"])
         pool = PostgresPool(env["RPG_STAGING_DB_URL"])
         PostgresWallet(pool).credit_verified_purchase(
-            Principal(UUID(u.id), "supabase", u.id), channel="web",
-            payment_id="pi_spec197_bvoice_" + uuid4().hex[:12], sku_id=WALLET_SKU, verified=True)
+            Principal(UUID(u.id), "supabase", u.id),
+            channel="web",
+            payment_id="pi_spec197_bvoice_" + uuid4().hex[:12],
+            sku_id=WALLET_SKU,
+            verified=True,
+        )
         host = urlparse(base).hostname
-        cookies = [{"name": c.name, "value": c.value, "domain": host, "path": "/", "secure": True,
-                    "httpOnly": c.name != "rpg_csrf", "sameSite": "Lax"} for c in u.c.cookies.jar]
+        cookies = [
+            {
+                "name": c.name,
+                "value": c.value,
+                "domain": host,
+                "path": "/",
+                "secure": True,
+                "httpOnly": c.name != "rpg_csrf",
+                "sameSite": "Lax",
+            }
+            for c in u.c.cookies.jar
+        ]
         ck["cookies_transferred"] = {"count": len(cookies), "ok": len(cookies) > 0}
         wav = Path(tempfile.mkdtemp()) / "mic.wav"
         wav.write_bytes(synthetic_wav(4.0))
         tr: dict = {}
         with sync_playwright() as p:
-            br = p.chromium.launch(executable_path=_chrome(), args=["--use-fake-device-for-media-stream", "--use-fake-ui-for-media-stream",
-                                         f"--use-file-for-fake-audio-capture={wav}"])
-            ctx = br.new_context(permissions=["microphone"], viewport={"width": 1280, "height": 900})
+            br = p.chromium.launch(
+                executable_path=_chrome(),
+                args=[
+                    "--use-fake-device-for-media-stream",
+                    "--use-fake-ui-for-media-stream",
+                    f"--use-file-for-fake-audio-capture={wav}",
+                ],
+            )
+            ctx = br.new_context(
+                permissions=["microphone"], viewport={"width": 1280, "height": 900}
+            )
             ctx.add_cookies(cookies)
             page = ctx.new_page()
             sent_actions: list[str] = []
@@ -65,10 +94,21 @@ def run(base: str, env: dict[str, str]) -> dict:
             def on_resp(resp):
                 if resp.url.endswith("/account/transcriptions"):
                     req = resp.request
-                    tr.update(status=resp.status, content_type=(req.headers.get("content-type") or "").split(";")[0],
-                              bytes=len(req.post_data_buffer or b""))
+                    tr.update(
+                        status=resp.status,
+                        content_type=(req.headers.get("content-type") or "").split(";")[0],
+                        bytes=len(req.post_data_buffer or b""),
+                    )
+
             page.on("response", on_resp)
-            page.on("request", lambda r: sent_actions.append(r.url) if "/game/action" in r.url and r.method == "POST" else None)
+            page.on(
+                "request",
+                lambda r: (
+                    sent_actions.append(r.url)
+                    if "/game/action" in r.url and r.method == "POST"
+                    else None
+                ),
+            )
             page.add_init_script(f"localStorage.setItem('cronicas_game_id','{u.game_id}')")
             page.goto(base, wait_until="networkidle", timeout=60000)
             box = page.get_by_label("Sua ação")
@@ -89,11 +129,18 @@ def run(base: str, env: dict[str, str]) -> dict:
             page.wait_for_timeout(1500)
             text = box.input_value()
             state = page.locator("[data-voice-state]").get_attribute("data-voice-state")
-            ck["upload"] = {"status": tr.get("status"), "content_type": tr.get("content_type"), "bytes": tr.get("bytes"),
-                            "ok": tr.get("status") == 200 and tr.get("content_type") == "audio/wav"}
-            ck["composer"] = {"transcript_chars": len(text), "voice_state_after": state,
-                              "auto_sent_actions": len(sent_actions),
-                              "note": "tone-only audio: empty/short transcript is possible; insertion checked via chars>0 or non-error state"}
+            ck["upload"] = {
+                "status": tr.get("status"),
+                "content_type": tr.get("content_type"),
+                "bytes": tr.get("bytes"),
+                "ok": tr.get("status") == 200 and tr.get("content_type") == "audio/wav",
+            }
+            ck["composer"] = {
+                "transcript_chars": len(text),
+                "voice_state_after": state,
+                "auto_sent_actions": len(sent_actions),
+                "note": "tone-only audio: empty/short transcript is possible; insertion checked via chars>0 or non-error state",
+            }
             ck["composer"]["ok"] = len(sent_actions) == 0 and state != "error"
             ck["composer"]["transcript_inserted"] = len(text) > 0
             br.close()

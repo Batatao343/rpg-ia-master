@@ -3,6 +3,7 @@
 Invoked by Supabase pg_cron + pg_net with ``Authorization: Bearer <RPG_CRON_SECRET>``.
 Responses carry only counts/durations, never owner ids or emails.
 """
+
 from __future__ import annotations
 
 import hmac
@@ -69,6 +70,7 @@ def budget_seconds() -> float:
 
 def _runtime():
     from infrastructure.runtime import get_runtime
+
     return get_runtime()
 
 
@@ -79,6 +81,7 @@ def _bump_persisted(task: str, ok: bool) -> int | None:
         if pool is None:
             return None  # legacy/test profile: in-process counter only
         from infrastructure.db_roles import admin_connection
+
         with admin_connection(pool) as connection:
             row = connection.execute(
                 "insert into app.cron_run_state (task, consecutive_failures, last_outcome) "
@@ -87,11 +90,13 @@ def _bump_persisted(task: str, ok: bool) -> int | None:
                 "else app.cron_run_state.consecutive_failures + 1 end, "
                 "last_outcome = excluded.last_outcome, updated_at = now() "
                 "returning consecutive_failures",
-                (task, 0 if ok else 1, "ok" if ok else "failed", ok)).fetchone()
+                (task, 0 if ok else 1, "ok" if ok else "failed", ok),
+            ).fetchone()
         return int(row["consecutive_failures"] if isinstance(row, dict) else row[0])
     except Exception as exc:
-        log_event("cron", "state_unavailable", level="warning", task=task,
-                  error_type=type(exc).__name__)
+        log_event(
+            "cron", "state_unavailable", level="warning", task=task, error_type=type(exc).__name__
+        )
         return None
 
 
@@ -102,19 +107,38 @@ def _record(task: str, ok: bool, started: float, **fields: Any) -> None:
     persisted = _bump_persisted(task, ok)
     if persisted is not None:
         consecutive = persisted
-    level = logging.ERROR if consecutive >= FAILURE_ALERT_AT else (
-        logging.INFO if ok else logging.WARNING)
-    _log.log(level, safe_json({
-        **correlation(),  # carries run_id
-        "event": "rpg.cron", "task": task, "outcome": "ok" if ok else "failed",
-        "consecutive_failures": consecutive,
-        "duration_s": round(time.monotonic() - started, 3), **fields}))
+    level = (
+        logging.ERROR
+        if consecutive >= FAILURE_ALERT_AT
+        else (logging.INFO if ok else logging.WARNING)
+    )
+    _log.log(
+        level,
+        safe_json(
+            {
+                **correlation(),  # carries run_id
+                "event": "rpg.cron",
+                "task": task,
+                "outcome": "ok" if ok else "failed",
+                "consecutive_failures": consecutive,
+                "duration_s": round(time.monotonic() - started, 3),
+                **fields,
+            }
+        ),
+    )
 
 
 def item_failed(task: str, item_kind: str, item_id: object, exc: BaseException) -> None:
     """SPEC-256 R4: one warning per failed item; id only as pseudonym, error as class name."""
-    log_event("cron", "item_failed", level="warning", task=task, item_kind=item_kind,
-              item_ref=pseudonym(item_id), error_type=type(exc).__name__)
+    log_event(
+        "cron",
+        "item_failed",
+        level="warning",
+        task=task,
+        item_kind=item_kind,
+        item_ref=pseudonym(item_id),
+        error_type=type(exc).__name__,
+    )
 
 
 def _run(task: str, fn: Callable[[], dict[str, Any]]) -> dict[str, Any]:
@@ -128,13 +152,24 @@ def _run_scoped(task: str, fn: Callable[[], dict[str, Any]]) -> dict[str, Any]:
     try:
         result = fn()
     except Exception as exc:
-        log_event("cron", "failed", level="error", task=task, error_type=type(exc).__name__,
-                  stack=safe_stack(exc), duration_s=round(time.monotonic() - started, 3))
+        log_event(
+            "cron",
+            "failed",
+            level="error",
+            task=task,
+            error_type=type(exc).__name__,
+            stack=safe_stack(exc),
+            duration_s=round(time.monotonic() - started, 3),
+        )
         _record(task, False, started, error_type=type(exc).__name__)
         raise HTTPException(500, "cron_task_failed") from None
     failed = int(result.get("failed", 0))
-    _record(task, failed == 0, started, **{k: v for k, v in result.items()
-                                           if isinstance(v, (int, float, str))})
+    _record(
+        task,
+        failed == 0,
+        started,
+        **{k: v for k, v in result.items() if isinstance(v, (int, float, str))},
+    )
     body = {"ok": failed == 0, **result, "duration_s": round(time.monotonic() - started, 3)}
     if failed:  # non-2xx so pg_net's _http_response.status_code flags the run (count-only body)
         return JSONResponse(body, status_code=500)
@@ -147,8 +182,13 @@ def cron_jobs(request: Request):
 
     def task():
         from workers.drain import drain_jobs
-        return drain_jobs(budget_seconds(), max_jobs=int(os.getenv("RPG_CRON_MAX_JOBS", "50")),
-                          worker_id=f"cron-{os.getpid()}")
+
+        return drain_jobs(
+            budget_seconds(),
+            max_jobs=int(os.getenv("RPG_CRON_MAX_JOBS", "50")),
+            worker_id=f"cron-{os.getpid()}",
+        )
+
     return _run("jobs", task)
 
 
@@ -158,14 +198,19 @@ def cron_account_deletions(request: Request):
 
     def task():
         from scripts.recover_account_deletions import run_recovery_batch
+
         runtime = _runtime()
         if os.getenv("RPG_RUNTIME_PROFILE", "").strip().lower() != "hosted-supabase":
             raise RuntimeError("profile")
         payload = run_recovery_batch(runtime, 10)  # batch mode set explicitly; SKIP LOCKED dedups
         deleted = sum(1 for r in payload["results"] if r["status"] == "deleted")
-        return {"claimed": payload["count"], "deleted": deleted,
-                "failed": payload["count"] - deleted,
-                "auth_buckets_purged": payload["auth_buckets_purged"]}
+        return {
+            "claimed": payload["count"],
+            "deleted": deleted,
+            "failed": payload["count"] - deleted,
+            "auth_buckets_purged": payload["auth_buckets_purged"],
+        }
+
     return _run("account_deletions", task)
 
 
@@ -177,18 +222,21 @@ def cron_operations(request: Request):
         from services.operation_recovery import recover_expired
         from services.retention import purge_expired
         from services.wallet_recovery import recover_wallet_reservations
+
         pool = _runtime().game_store.pool
         released = recover_expired(pool, 50)
         # SPEC-236 R4: abandoned operations no longer strand wallet reservations. A sweep
         # failure never hides the operations result; it is reported (non-2xx) instead.
         try:
             wallet = recover_wallet_reservations(
-                pool, int(os.getenv("RPG_CRON_MAX_WALLET_RECOVERY", "50")))
+                pool, int(os.getenv("RPG_CRON_MAX_WALLET_RECOVERY", "50"))
+            )
         except Exception as exc:
             item_failed("operations", "wallet_reservation", "sweep", exc)
             wallet = {"wallet_errors": 1, "wallet_sweep_error": type(exc).__name__}
         # SPEC-222 R7: TTL of terminal technical metadata, count-only output.
         return {**released, **wallet, **purge_expired(pool), "failed": wallet["wallet_errors"]}
+
     return _run("operations", task)
 
 
@@ -197,6 +245,7 @@ def _reconciler():
     from infrastructure.google_play_payments import GooglePlayPurchases, PostgresPurchaseStore
     from infrastructure.reconciliation import PostgresStore, Reconciler
     from services.google_play import GooglePlayClient, GooglePlayError, GooglePlaySettings
+
     pool = _runtime().game_store.pool
     try:
         client = GooglePlayClient(GooglePlaySettings.from_env())
@@ -212,6 +261,7 @@ def cron_reconciliation(request: Request):
 
     def task():
         from services.google_play import GooglePlayError
+
         job = _reconciler()
         google_new, google_error = 0, 0
         try:  # a Google outage must not block Stripe/parked reconciliation
@@ -220,15 +270,24 @@ def cron_reconciliation(request: Request):
             google_error = 1
         result = job.reconcile_batch(int(os.getenv("RPG_CRON_MAX_RECONCILE", "100")))
         from observability.metrics import metrics
+
         for status in ("parked", "orphaned"):
-            metrics.set_gauge("rpg_reconciliation_events", {"status": status}, result[f"{status}_total"])
-        return {**result, "google_voided_new": google_new, "google_poll_errors": google_error,
-                "failed": result["failed"] + google_error}
+            metrics.set_gauge(
+                "rpg_reconciliation_events", {"status": status}, result[f"{status}_total"]
+            )
+        return {
+            **result,
+            "google_voided_new": google_new,
+            "google_poll_errors": google_error,
+            "failed": result["failed"] + google_error,
+        }
+
     return _run("reconciliation", task)
 
 
 def _finops_reader():
     from infrastructure.finops_reader import PostgresFinopsReader
+
     return PostgresFinopsReader(_runtime().game_store.pool)
 
 
@@ -236,6 +295,7 @@ def _finops_recorder():
     """Persist each evaluation (app.finops_evaluations) for SQL/pg_cron staleness checks."""
     try:
         from infrastructure.finops_reader import PostgresFinopsEvaluationStore
+
         return PostgresFinopsEvaluationStore(_runtime().game_store.pool)
     except Exception as exc:  # no Postgres pool (legacy profile): evaluation still runs
         item_failed("finops", "finops", "recorder", exc)
@@ -249,5 +309,7 @@ def cron_finops(request: Request):
 
     def task():
         from services.finops_job import run_finops
+
         return run_finops(_finops_reader(), recorder=_finops_recorder())
+
     return _run("finops", task)

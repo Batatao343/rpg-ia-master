@@ -205,19 +205,21 @@ O script sobrescreve a saída ao rodar de novo — curadoria manual (aliases,
 
 ```python
 class GameEvent(TypedDict, total=False):
-    event_id: str      # uuid4 hex
-    turn: int          # world.turn_count no momento do evento
-    type: str          # "npc_killed" | "secret_revealed" | "location_control_changed" | ...
-    actor_id: str      # quem causou ("player", npc id, faction id, "system")
-    target_id: str     # entidade afetada (id canônico)
-    payload: Dict      # dados específicos do tipo
-    source: str        # "combat" | "storyteller" | "rule_engine" | "system" | "test"
+    event_id: str  # uuid4 hex
+    turn: int  # world.turn_count no momento do evento
+    type: str  # "npc_killed" | "secret_revealed" | "location_control_changed" | ...
+    actor_id: str  # quem causou ("player", npc id, faction id, "system")
+    target_id: str  # entidade afetada (id canônico)
+    payload: Dict  # dados específicos do tipo
+    source: str  # "combat" | "storyteller" | "rule_engine" | "system" | "test"
+
 
 class EntityState(TypedDict, total=False):
     alive: bool
     location_id: str
-    stability: int         # fações: -100..100
-    extra: Dict            # estado adicional por componente
+    stability: int  # fações: -100..100
+    extra: Dict  # estado adicional por componente
+
 
 class DynamicEdge(TypedDict, total=False):
     id: str
@@ -226,9 +228,11 @@ class DynamicEdge(TypedDict, total=False):
     target: str
     created_by_event: str  # event_id de origem (auditoria)
 
+
 class DisabledEdge(TypedDict, total=False):
-    edge_id: str           # id da edge base desativada
+    edge_id: str  # id da edge base desativada
     disabled_by_event: str
+
 
 class RevealedFact(TypedDict, total=False):
     entity_id: str
@@ -236,12 +240,13 @@ class RevealedFact(TypedDict, total=False):
     revealed_at_turn: int
     revealed_by_event: str
 
+
 class WorldProjection(TypedDict, total=False):
     entities: Dict[str, EntityState]
     dynamic_edges: List[DynamicEdge]
     disabled_edges: List[DisabledEdge]
-    revealed_facts: Dict[str, RevealedFact]     # chave = event_id revelador
-    location_summaries: Dict[str, str]          # loc_id -> resumo dinâmico curto
+    revealed_facts: Dict[str, RevealedFact]  # chave = event_id revelador
+    location_summaries: Dict[str, str]  # loc_id -> resumo dinâmico curto
 ```
 
 No `GameState`:
@@ -249,7 +254,7 @@ No `GameState`:
 ```python
 event_log: List[GameEvent]
 world_projection: WorldProjection
-pending_world_events: List[Dict]   # propostas ainda não validadas (Fase 2.6)
+pending_world_events: List[Dict]  # propostas ainda não validadas (Fase 2.6)
 ```
 
 ### `services/graph_resolver.py` — assinaturas

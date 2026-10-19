@@ -113,13 +113,11 @@ class Metrics:
     def snapshot(self) -> dict[str, float]:
         with self._lock:
             result: dict[str, float] = {
-                f"{name}{dict(labels)}": value
-                for (name, labels), value in self._values.items()
+                f"{name}{dict(labels)}": value for (name, labels), value in self._values.items()
             }
-            result.update({
-                f"{name}{dict(labels)}": value
-                for (name, labels), value in self._gauges.items()
-            })
+            result.update(
+                {f"{name}{dict(labels)}": value for (name, labels), value in self._gauges.items()}
+            )
             for (name, labels), values in self._observations.items():
                 prefix = f"{name}{dict(labels)}"
                 result[f"{prefix}.count"] = len(values)
@@ -155,10 +153,7 @@ class Metrics:
                 lines.append(f"{safe_name}_count{rendered} {len(values)}")
                 lines.append(f"{safe_name}_sum{rendered} {sum(values)}")
                 lines.append(f"{safe_name}_max{rendered} {max(ordered, default=0.0)}")
-                lines.append(
-                    f"{safe_name}_p95{rendered} "
-                    f"{ordered[p95_index] if ordered else 0.0}"
-                )
+                lines.append(f"{safe_name}_p95{rendered} {ordered[p95_index] if ordered else 0.0}")
         return "\n".join(lines) + "\n"
 
 

@@ -173,7 +173,10 @@ def test_comparison_accepts_compatible_runs_and_rejects_identity_drift(tmp_path:
     assert comparison["deltas"] == {"exact_match": 0.0}
 
     incompatible = current.model_copy(
-        update={"run_id": "incompatible", "metadata": current.metadata.model_copy(update={"seed": 99})}
+        update={
+            "run_id": "incompatible",
+            "metadata": current.metadata.model_copy(update={"seed": 99}),
+        }
     )
     incompatible_path, _ = write_run(incompatible, tmp_path)
     with pytest.raises(GovernanceError, match="seed"):
@@ -281,8 +284,18 @@ def test_cli_stdout_has_no_errors_key_content_for_clean_run(
     monkeypatch.setattr(
         sys,
         "argv",
-        ["evals", "--root", str(ROOT), "run", "--dataset", HARNESS_DATASET,
-         "--run-id", "cli-clean", "--output", str(tmp_path)],
+        [
+            "evals",
+            "--root",
+            str(ROOT),
+            "run",
+            "--dataset",
+            HARNESS_DATASET,
+            "--run-id",
+            "cli-clean",
+            "--output",
+            str(tmp_path),
+        ],
     )
     assert main() == 0
     captured = capsys.readouterr()

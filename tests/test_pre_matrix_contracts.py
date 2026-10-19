@@ -1,4 +1,5 @@
 """Independent regression oracles from the pre-matrix audit; no provider calls."""
+
 from __future__ import annotations
 
 import copy
@@ -20,10 +21,14 @@ from services.memory_provenance import (
 from services.turn_outcome import render_player_message
 
 
-@pytest.mark.parametrize("action", [
-    "Viajo para a Pradaria das Ruínas para pedir ajuda",
-    "Descanso e depois ataco o guarda", "Peço ajuda e saqueio o baú",
-])
+@pytest.mark.parametrize(
+    "action",
+    [
+        "Viajo para a Pradaria das Ruínas para pedir ajuda",
+        "Descanso e depois ataco o guarda",
+        "Peço ajuda e saqueio o baú",
+    ],
+)
 def test_recovery_does_not_authorize_mixed_physical_actions(action: str) -> None:
     assert evaluate_action({"player": {"conscious": False}}, action)["allowed"] is False
 
@@ -67,10 +72,14 @@ def test_lifecycle_oracle_does_not_trust_the_guard_decision() -> None:
     from playtest.invariants import check_actor_lifecycle
 
     before = {"player": {"conscious": False}, "world": {"current_location_id": "nova_arcadia"}}
-    after = {**before, "world": {"current_location_id": "pradaria_ruinas"},
-             "last_action_outcome": {"allowed": True, "action_kind": "recovery"}}
+    after = {
+        **before,
+        "world": {"current_location_id": "pradaria_ruinas"},
+        "last_action_outcome": {"allowed": True, "action_kind": "recovery"},
+    }
     assert [v.check_id for v in check_actor_lifecycle(after, before, 1)] == [
-        "player.action_while_incapacitated"]
+        "player.action_while_incapacitated"
+    ]
 
 
 def test_receipt_marker_is_not_authority_and_render_is_idempotent() -> None:
@@ -87,61 +96,94 @@ def test_gold_gain_does_not_contradict_no_item_gain() -> None:
     assert "Nenhum item foi obtido." in text
 
 
-@pytest.mark.parametrize("text", [
-    "O viajante não carrega o Diário de Vesper.",
-    "O viajante conta que Kess carrega o Diário de Vesper.",
-    "O viajante carrega uma tocha e Kess possui o Diário de Vesper.",
-])
+@pytest.mark.parametrize(
+    "text",
+    [
+        "O viajante não carrega o Diário de Vesper.",
+        "O viajante conta que Kess carrega o Diário de Vesper.",
+        "O viajante carrega uma tocha e Kess possui o Diário de Vesper.",
+    ],
+)
 def test_inventory_rejects_neither_negation_nor_npc_possession(text: str) -> None:
-    state = {"player": {"name": "Ari", "inventory": []},
-             "npcs": {"Kess": {"name": "Kess"}},
-             "rejected_item_claims": ["Diário de Vesper"]}
+    state = {
+        "player": {"name": "Ari", "inventory": []},
+        "npcs": {"Kess": {"name": "Kess"}},
+        "rejected_item_claims": ["Diário de Vesper"],
+    }
     assert inventory_possession_contradiction(text, state) is None
 
 
 def test_inventory_still_rejects_direct_positive_claim() -> None:
-    state = {"player": {"name": "Ari", "inventory": []},
-             "rejected_item_claims": ["Diário de Vesper"]}
+    state = {
+        "player": {"name": "Ari", "inventory": []},
+        "rejected_item_claims": ["Diário de Vesper"],
+    }
     assert inventory_possession_contradiction("Ari carrega o Diário de Vesper.", state)
 
 
 @pytest.mark.parametrize("text", ["Ari morreu no conflito.", "O herói morreu no conflito."])
 def test_quest_event_cannot_prove_player_death(text: str) -> None:
-    state = {"player": {"name": "Ari"},
-             "event_log": [{"event_id": "quest1", "type": "quest_completed"}]}
+    state = {
+        "player": {"name": "Ari"},
+        "event_log": [{"event_id": "quest1", "type": "quest_completed"}],
+    }
     fact = make_memory_fact(text, provenance="canonical_event", source_id="quest1", source_turn=1)
     assert validate_memory_fact(fact, state)[0] is None
 
 
-@pytest.mark.parametrize("text", [
-    "Ari não morreu no conflito.", "Ari nunca esteve morto.",
-])
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Ari não morreu no conflito.",
+        "Ari nunca esteve morto.",
+    ],
+)
 def test_negated_death_remains_valid(text: str) -> None:
-    state = {"player": {"name": "Ari"},
-             "event_log": [{"event_id": "down", "type": "player_downed"}]}
+    state = {
+        "player": {"name": "Ari"},
+        "event_log": [{"event_id": "down", "type": "player_downed"}],
+    }
     fact = make_memory_fact(text, provenance="canonical_event", source_id="down", source_turn=1)
     assert validate_memory_fact(fact, state)[0] is not None
 
 
-@pytest.mark.parametrize("target, epoch, accepted", [
-    ("player", 1, True), ("npc_kess", 1, False), ("player", 0, False),
-])
+@pytest.mark.parametrize(
+    "target, epoch, accepted",
+    [
+        ("player", 1, True),
+        ("npc_kess", 1, False),
+        ("player", 0, False),
+    ],
+)
 def test_terminal_evidence_belongs_to_player_and_current_timeline(target, epoch, accepted) -> None:
-    state = {"player": {"name": "Ari"}, "continuity": {"timeline_epoch": 1},
-             "event_log": [{"event_id": "death", "type": "player_died",
-                            "target_id": target, "timeline_epoch": epoch}]}
-    fact = make_memory_fact("Ari morreu no conflito.", provenance="canonical_event",
-                            source_id="death", source_turn=1)
+    state = {
+        "player": {"name": "Ari"},
+        "continuity": {"timeline_epoch": 1},
+        "event_log": [
+            {
+                "event_id": "death",
+                "type": "player_died",
+                "target_id": target,
+                "timeline_epoch": epoch,
+            }
+        ],
+    }
+    fact = make_memory_fact(
+        "Ari morreu no conflito.", provenance="canonical_event", source_id="death", source_turn=1
+    )
     assert (validate_memory_fact(fact, state)[0] is not None) is accepted
 
 
 def test_death_invariant_does_not_require_a_downed_event() -> None:
     from playtest.invariants import check_false_player_death
 
-    state = {"player": {"name": "Ari"}, "memory_facts": [
-        {"memory_id": "bad", "text": "Ari morreu no conflito."}]}
+    state = {
+        "player": {"name": "Ari"},
+        "memory_facts": [{"memory_id": "bad", "text": "Ari morreu no conflito."}],
+    }
     assert [v.check_id for v in check_false_player_death(state, {}, 1)] == [
-        "narrative.false_player_death"]
+        "narrative.false_player_death"
+    ]
 
 
 @pytest.mark.parametrize("order", list(itertools.permutations(range(3))))
@@ -172,27 +214,38 @@ def test_cosmetic_prefix_does_not_hide_repeated_dialogue() -> None:
     dialogue = "Não tenho nada novo para contar sobre essa missão."
     previous = semantic_opening(dialogue, words=12)
     rendered = vary_repeated_opening(dialogue, [previous], salt="audit")
-    state = {"messages": [AIMessage(content=f'**Kess:** "{text}"')
-                           for text in (dialogue, dialogue, rendered)]}
+    state = {
+        "messages": [
+            AIMessage(content=f'**Kess:** "{text}"') for text in (dialogue, dialogue, rendered)
+        ]
+    }
     assert [v.check_id for v in check_repeated_opening(state, None, 3)] == [
-        "narrative.repeated_opening"]
+        "narrative.repeated_opening"
+    ]
 
 
 class _Expected(BaseModel):
     value: str
 
 
-@pytest.mark.parametrize("raw, expected", [
-    (AIMessage(content="", tool_calls=[{"id": "1", "name": "WrongSchema", "args": {}}]), "wrong_tool"),
-    (AIMessage(content='{"other": 1}'), "schema_validation"),
-    (AIMessage(content=""), "no_tool_call"),
-])
+@pytest.mark.parametrize(
+    "raw, expected",
+    [
+        (
+            AIMessage(content="", tool_calls=[{"id": "1", "name": "WrongSchema", "args": {}}]),
+            "wrong_tool",
+        ),
+        (AIMessage(content='{"other": 1}'), "schema_validation"),
+        (AIMessage(content=""), "no_tool_call"),
+    ],
+)
 def test_structured_failures_have_distinct_causes(raw: AIMessage, expected: str) -> None:
     from llm_setup import ModelTier, RoutedLLM
 
     llm = RoutedLLM(ModelTier.SMART, 0.0, []).with_structured_output(_Expected)
     _, code, _ = llm._normalize_internal_structured_result(
-        {"raw": raw, "parsed": None, "parsing_error": None})
+        {"raw": raw, "parsed": None, "parsing_error": None}
+    )
     assert code == expected
 
 
@@ -215,17 +268,33 @@ def test_matrix_stops_before_next_campaign_on_failure(monkeypatch, failure: str)
     def campaign(profile, **kwargs):
         assert kwargs["stop_on_error"] is True
         calls.append(profile)
-        return SimpleNamespace(profile=profile, errors=["bad"] if failure == "turn" else [],
-                               aborted_reason=None, turns_completed=1 if failure == "incomplete" else 200)
+        return SimpleNamespace(
+            profile=profile,
+            errors=["bad"] if failure == "turn" else [],
+            aborted_reason=None,
+            turns_completed=1 if failure == "incomplete" else 200,
+        )
 
     monkeypatch.setattr(cli, "run_campaign", campaign)
-    monkeypatch.setattr(telemetry, "persist_campaign", lambda *a, **k: {
-        "error_violations": int(failure == "invariant"),
-        "observability_errors": int(failure == "observability"),
-    })
-    args = SimpleNamespace(real=False, max_cost=.25, max_requests=800, start_index=1,
-                           turns=200, routes_profile=None, groq_min_interval=0,
-                           label="B", turn_timeout=None)
+    monkeypatch.setattr(
+        telemetry,
+        "persist_campaign",
+        lambda *a, **k: {
+            "error_violations": int(failure == "invariant"),
+            "observability_errors": int(failure == "observability"),
+        },
+    )
+    args = SimpleNamespace(
+        real=False,
+        max_cost=0.25,
+        max_requests=800,
+        start_index=1,
+        turns=200,
+        routes_profile=None,
+        groq_min_interval=0,
+        label="B",
+        turn_timeout=None,
+    )
     assert cli._run_matrix_suite(args) == 1
     assert len(calls) == 1
     assert finished[0]["status"] == "failed"
@@ -234,21 +303,33 @@ def test_matrix_stops_before_next_campaign_on_failure(monkeypatch, failure: str)
 def test_matrix_campaign_stops_at_first_bad_turn(monkeypatch) -> None:
     from playtest import runner
 
-    monkeypatch.setattr(runner, "_run_invariants", lambda *a, **k: [{
-        "check_id": "audit.injected", "severity": "error", "turn": 1,
-        "message": "synthetic violation", "details": {},
-    }])
+    monkeypatch.setattr(
+        runner,
+        "_run_invariants",
+        lambda *a, **k: [
+            {
+                "check_id": "audit.injected",
+                "severity": "error",
+                "turn": 1,
+                "message": "synthetic violation",
+                "details": {},
+            }
+        ],
+    )
     result = runner.run_campaign("normal", turns=3, seed=9, stop_on_error=True)
     assert result.turns_completed == 1
     assert result.aborted_reason == "contract_failure (turno 1)"
     assert result.history[0].violation_details[0]["check_id"] == "audit.injected"
 
 
-@pytest.mark.parametrize("text, invalid", [
-    ("Anel Dourado, bairro alto de Brekmar.", True),
-    ("Anel Dourado fica em Nova Arcádia.", False),
-    ("Viajo do Anel Dourado para Brekmar.", False),
-    ("Anel Dourado não fica em Brekmar.", False),
-])
+@pytest.mark.parametrize(
+    "text, invalid",
+    [
+        ("Anel Dourado, bairro alto de Brekmar.", True),
+        ("Anel Dourado fica em Nova Arcádia.", False),
+        ("Viajo do Anel Dourado para Brekmar.", False),
+        ("Anel Dourado não fica em Brekmar.", False),
+    ],
+)
 def test_location_corpus_has_independent_expected_results(text: str, invalid: bool) -> None:
     assert bool(canonical_location_contradiction(text)) is invalid

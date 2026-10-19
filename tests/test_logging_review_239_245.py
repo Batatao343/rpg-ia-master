@@ -1,5 +1,6 @@
 """Revisão independente SPEC-239/240/241/245: sentinelas de privacidade num turno completo,
 isolamento de contexto entre requisições concorrentes e cardinalidade de métrica."""
+
 import json
 import threading
 import uuid
@@ -26,10 +27,12 @@ SENT_EMAIL = "sentinela.review@example.com"
 @pytest.fixture()
 def client(monkeypatch):
     import api
+
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
     api._rate_hits.clear()
     logging_setup.configure_logging({"RPG_LOG_LEVEL": "debug", "RPG_LOG_PROPAGATE": "1"})
     from fastapi.testclient import TestClient
+
     return TestClient(api.app)
 
 
@@ -44,17 +47,32 @@ def _json_lines(out: str) -> list[dict]:
 
 
 def test_full_turn_has_no_pii_sentinels(client, capsys):
-    r = client.post("/game/new", json={
-        "name": SENT_NAME, "race": "Humano", "class_name": "Sangromante",
-        "region": "Nova Arcádia", "level": 1, "backstory": SENT_TEXT})
+    r = client.post(
+        "/game/new",
+        json={
+            "name": SENT_NAME,
+            "race": "Humano",
+            "class_name": "Sangromante",
+            "region": "Nova Arcádia",
+            "level": 1,
+            "backstory": SENT_TEXT,
+        },
+    )
     assert r.status_code == 200, r.text
     gid = r.json()["game_id"]
     action = str(uuid.uuid4())
-    headers = {"X-Forwarded-For": SENT_IP, "Authorization": f"Bearer {SENT_TOKEN}",
-               "Cookie": f"rpg_access={SENT_TOKEN}", "X-Request-ID": "review-req-1"}
+    headers = {
+        "X-Forwarded-For": SENT_IP,
+        "Authorization": f"Bearer {SENT_TOKEN}",
+        "Cookie": f"rpg_access={SENT_TOKEN}",
+        "X-Request-ID": "review-req-1",
+    }
     for path in ("/game/action", "/game/action/stream"):
-        body = {"input_text": f"olho ao redor {SENT_TEXT} {SENT_EMAIL}", "game_id": gid,
-                "action_id": action if path == "/game/action" else str(uuid.uuid4())}
+        body = {
+            "input_text": f"olho ao redor {SENT_TEXT} {SENT_EMAIL}",
+            "game_id": gid,
+            "action_id": action if path == "/game/action" else str(uuid.uuid4()),
+        }
         with client.stream("POST", path, headers=headers, json=body) as resp:
             for _ in resp.iter_lines():
                 pass
@@ -70,16 +88,29 @@ def test_full_turn_has_no_pii_sentinels(client, capsys):
 
 def test_turn_info_volume_is_bounded(client, capsys):
     logging_setup.configure_logging({"RPG_LOG_LEVEL": "info", "RPG_LOG_PROPAGATE": "1"})
-    gid = client.post("/game/new", json={
-        "name": "Vol", "race": "Humano", "class_name": "Sangromante",
-        "region": "Nova Arcádia", "level": 1, "backstory": ""}).json()["game_id"]
+    gid = client.post(
+        "/game/new",
+        json={
+            "name": "Vol",
+            "race": "Humano",
+            "class_name": "Sangromante",
+            "region": "Nova Arcádia",
+            "level": 1,
+            "backstory": "",
+        },
+    ).json()["game_id"]
     capsys.readouterr()
-    r = client.post("/game/action", headers={"X-Request-ID": "review-vol-1"},
-                    json={"input_text": "olho ao redor", "game_id": gid,
-                          "action_id": str(uuid.uuid4())})
+    r = client.post(
+        "/game/action",
+        headers={"X-Request-ID": "review-vol-1"},
+        json={"input_text": "olho ao redor", "game_id": gid, "action_id": str(uuid.uuid4())},
+    )
     assert r.status_code == 200
-    mine = [line for line in _json_lines(capsys.readouterr().out)
-            if line.get("request_id") == "review-vol-1"]
+    mine = [
+        line
+        for line in _json_lines(capsys.readouterr().out)
+        if line.get("request_id") == "review-vol-1"
+    ]
     # Estimativa revisada: ~4-10 linhas info por turno (MockLLM). Teto generoso contra regressão.
     assert 1 <= len(mine) <= 25, [line.get("event") for line in mine]
 
@@ -87,7 +118,7 @@ def test_turn_info_volume_is_bounded(client, capsys):
 def test_threadpool_reuse_does_not_bleed_context():
     """Starlette roda handlers síncronos em threads reutilizadas: o bind de um request
     não pode aparecer no seguinte (anyio copia o contexto por chamada)."""
-    limiter = anyio.CapacityLimiter(1)   # força a MESMA thread worker
+    limiter = anyio.CapacityLimiter(1)  # força a MESMA thread worker
     seen: list[dict] = []
 
     def handler_a():
@@ -123,8 +154,9 @@ def test_concurrent_threads_keep_own_context(capsys):
         t.start()
     for t in threads:
         t.join()
-    probes = [line for line in _json_lines(capsys.readouterr().out)
-              if line.get("event") == "review.probe"]
+    probes = [
+        line for line in _json_lines(capsys.readouterr().out) if line.get("event") == "review.probe"
+    ]
     assert len(probes) == 8
     for line in probes:
         i = line["idx"]
@@ -135,6 +167,7 @@ def test_turnstile_reason_metric_label_is_closed(monkeypatch):
     """Cardinalidade: códigos arbitrários do Turnstile não viram rótulo de métrica."""
     from observability import auth_log
     from observability.metrics import metrics
+
     labels: list[dict] = []
     monkeypatch.setattr(metrics, "increment", lambda name, lab=None, *a, **k: labels.append(lab))
     for i in range(30):
@@ -145,9 +178,12 @@ def test_turnstile_reason_metric_label_is_closed(monkeypatch):
 
 def test_legacy_messages_redact_raw_ids_and_ip(capsys):
     import logging
+
     logging_setup.configure_logging({"RPG_LOG_LEVEL": "debug", "RPG_LOG_PROPAGATE": "1"})
     gid = str(uuid.uuid4())
-    logging.getLogger("rpg.encounter").warning("encounter.manifest_rebuilt game=%s ip=%s", gid, SENT_IP)
+    logging.getLogger("rpg.encounter").warning(
+        "encounter.manifest_rebuilt game=%s ip=%s", gid, SENT_IP
+    )
     out = capsys.readouterr().out
     assert gid not in out and SENT_IP not in out
     assert "manifest_rebuilt" in out
@@ -158,18 +194,22 @@ def test_spa_navigation_and_config_reads_are_debug(client, capsys):
     capsys.readouterr()
     client.get("/", headers={"X-Request-ID": "review-spa-1"})
     client.get("/auth/config", headers={"X-Request-ID": "review-spa-2"})
-    lines = {line["request_id"]: line for line in _json_lines(capsys.readouterr().out)
-             if line.get("event") == "http.request"}
+    lines = {
+        line["request_id"]: line
+        for line in _json_lines(capsys.readouterr().out)
+        if line.get("event") == "http.request"
+    }
     assert lines["review-spa-2"]["level"] == "debug"
-    if "review-spa-1" in lines:   # "/" só existe com web/dist presente
+    if "review-spa-1" in lines:  # "/" só existe com web/dist presente
         assert lines["review-spa-1"]["level"] == "debug"
 
 
 def test_httpx_request_lines_quiet_unless_debug():
     import logging
+
     logging_setup.configure_logging({"RPG_LOG_LEVEL": "info", "RPG_LOG_PROPAGATE": "1"})
-    httpx_logger = logging.getLogger("httpx2")   # cliente do SDK openai (DeepSeek)
-    httpx_logger.setLevel(logging.INFO)          # o SDK openai faz isto no import (OPENAI_LOG)
+    httpx_logger = logging.getLogger("httpx2")  # cliente do SDK openai (DeepSeek)
+    httpx_logger.setLevel(logging.INFO)  # o SDK openai faz isto no import (OPENAI_LOG)
     rec = httpx_logger.makeRecord("httpx", logging.INFO, __file__, 1, "HTTP Request: x", (), None)
     assert not httpx_logger.filter(rec)
     logging_setup.configure_logging({"RPG_LOG_LEVEL": "debug", "RPG_LOG_PROPAGATE": "1"})

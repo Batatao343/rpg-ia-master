@@ -25,6 +25,7 @@ _JWT = re.compile(r"eyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]*")
 
 def load_env() -> dict[str, str]:
     from dotenv import dotenv_values
+
     merged: dict[str, str] = {}
     for n in (".env", ".env.staging"):
         merged.update({k: v for k, v in dotenv_values(common.ROOT / n).items() if v})
@@ -48,8 +49,12 @@ def pct(values: list[float], p: float) -> float | None:
 
 
 def stats(values: list[float]) -> dict:
-    return {"n": len(values), "p50_ms": round(statistics.median(values), 1) if values else None,
-            "p95_ms": pct(values, 95), "max_ms": round(max(values), 1) if values else None}
+    return {
+        "n": len(values),
+        "p50_ms": round(statistics.median(values), 1) if values else None,
+        "p95_ms": pct(values, 95),
+        "max_ms": round(max(values), 1) if values else None,
+    }
 
 
 def parse_sse(lines) -> list[dict]:
@@ -79,10 +84,17 @@ def cookie_flags(set_cookie_headers: list[str]) -> dict[str, dict]:
     for h in set_cookie_headers:
         parts = [p.strip() for p in h.split(";")]
         name = parts[0].split("=", 1)[0]
-        attrs = {p.split("=", 1)[0].lower(): (p.split("=", 1)[1] if "=" in p else True) for p in parts[1:]}
-        out[name] = {"secure": "secure" in attrs, "httponly": "httponly" in attrs,
-                     "samesite": str(attrs.get("samesite", "")).lower(), "path": attrs.get("path"),
-                     "deleted": attrs.get("max-age") == "0" or "1970" in str(attrs.get("expires", ""))}
+        attrs = {
+            p.split("=", 1)[0].lower(): (p.split("=", 1)[1] if "=" in p else True)
+            for p in parts[1:]
+        }
+        out[name] = {
+            "secure": "secure" in attrs,
+            "httponly": "httponly" in attrs,
+            "samesite": str(attrs.get("samesite", "")).lower(),
+            "path": attrs.get("path"),
+            "deleted": attrs.get("max-age") == "0" or "1970" in str(attrs.get("expires", "")),
+        }
     return out
 
 
@@ -123,17 +135,30 @@ class Admin:
     def create_user(self) -> dict:
         email = f"spec192-{uuid4().hex[:10]}@example.invalid"
         password = secrets.token_urlsafe(24)
-        r = self.http.post(f"{self.url}/auth/v1/admin/generate_link", headers=self.headers,
-                           json={"type": "signup", "email": email, "password": password})
+        r = self.http.post(
+            f"{self.url}/auth/v1/admin/generate_link",
+            headers=self.headers,
+            json={"type": "signup", "email": email, "password": password},
+        )
         r.raise_for_status()
         body = r.json()
-        return {"id": body["id"], "email": email, "password": password, "token_hash": body["hashed_token"]}
+        return {
+            "id": body["id"],
+            "email": email,
+            "password": password,
+            "token_hash": body["hashed_token"],
+        }
 
     def delete_user(self, uid: str) -> int:
-        return self.http.delete(f"{self.url}/auth/v1/admin/users/{uid}", headers=self.headers).status_code
+        return self.http.delete(
+            f"{self.url}/auth/v1/admin/users/{uid}", headers=self.headers
+        ).status_code
 
     def user_exists(self, uid: str) -> bool:
-        return self.http.get(f"{self.url}/auth/v1/admin/users/{uid}", headers=self.headers).status_code == 200
+        return (
+            self.http.get(f"{self.url}/auth/v1/admin/users/{uid}", headers=self.headers).status_code
+            == 200
+        )
 
 
 def smoke_captcha() -> str:
@@ -143,8 +168,11 @@ def smoke_captcha() -> str:
 
 def app_login(c: httpx.Client, base: str, user: dict) -> httpx.Response:
     """Open an app session (cookies + CSRF) for a synthetic user via the email-confirmation link path."""
-    return c.post(f"{base}/auth/verify", headers={"Origin": base, "Content-Type": "application/json"},
-                  json={"token_hash": user["token_hash"], "type": "signup"})
+    return c.post(
+        f"{base}/auth/verify",
+        headers={"Origin": base, "Content-Type": "application/json"},
+        json={"token_hash": user["token_hash"], "type": "signup"},
+    )
 
 
 def sweep_synthetic_users(env: dict[str, str]) -> int:
@@ -152,7 +180,9 @@ def sweep_synthetic_users(env: dict[str, str]) -> int:
     admin = Admin(env)
     n = 0
     with db(env) as conn:
-        for row in conn.execute("select id from auth.users where email like 'spec192-%%@example.invalid'").fetchall():
+        for row in conn.execute(
+            "select id from auth.users where email like 'spec192-%%@example.invalid'"
+        ).fetchall():
             n += admin.delete_user(str(row["id"])) in (200, 204)
     return n
 
@@ -160,10 +190,13 @@ def sweep_synthetic_users(env: dict[str, str]) -> int:
 def db(env: dict[str, str]):
     import psycopg
     from psycopg.rows import dict_row
+
     last: Exception | None = None
     for attempt in range(5):  # the local network resets pooler connections now and then
         try:
-            return psycopg.connect(env["RPG_STAGING_DB_URL"], row_factory=dict_row, autocommit=True, connect_timeout=15)
+            return psycopg.connect(
+                env["RPG_STAGING_DB_URL"], row_factory=dict_row, autocommit=True, connect_timeout=15
+            )
         except psycopg.OperationalError as exc:
             last = exc
             time.sleep(1 + attempt)
@@ -173,6 +206,7 @@ def db(env: dict[str, str]):
 def query(env: dict[str, str], fn, retries: int = 4):
     """Run ``fn(conn)`` on a fresh connection, retrying transient connection failures."""
     import psycopg
+
     last: Exception | None = None
     for attempt in range(retries):
         try:
@@ -186,8 +220,17 @@ def query(env: dict[str, str], fn, retries: int = 4):
 
 def _head_sha() -> str:
     try:
-        out = subprocess.run(["git", "rev-parse", "HEAD"], cwd=common.ROOT, capture_output=True,
-                             text=True, timeout=10).stdout.strip().lower()
+        out = (
+            subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                cwd=common.ROOT,
+                capture_output=True,
+                text=True,
+                timeout=10,
+            )
+            .stdout.strip()
+            .lower()
+        )
     except (OSError, subprocess.SubprocessError):
         return ""
     return out if len(out) == 40 and all(c in "0123456789abcdef" for c in out) else ""
@@ -206,9 +249,16 @@ def vercel(args: list[str], env: dict[str, str], timeout: int = 900) -> subproce
     """Run npx vercel with the token injected via subprocess env (never in argv)."""
     args = deploy_args(args, _head_sha())
     e = {**os.environ, "VERCEL_TOKEN": env.get("VERCEL_TOKEN", "")}
-    return subprocess.run(["npx.cmd" if os.name == "nt" else "npx", "--yes", "vercel@64.2.0", *args],
-                          cwd=common.ROOT, env=e, capture_output=True, text=True, timeout=timeout,
-                          encoding="utf-8", errors="replace")
+    return subprocess.run(
+        ["npx.cmd" if os.name == "nt" else "npx", "--yes", "vercel@64.2.0", *args],
+        cwd=common.ROOT,
+        env=e,
+        capture_output=True,
+        text=True,
+        timeout=timeout,
+        encoding="utf-8",
+        errors="replace",
+    )
 
 
 def timed(fn):

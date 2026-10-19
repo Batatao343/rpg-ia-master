@@ -1,4 +1,5 @@
 """SPEC-211 R10 — não-vazamento de dossiês (fixtures; o eval protegido é à parte)."""
+
 from __future__ import annotations
 
 import copy
@@ -16,24 +17,56 @@ HIDDEN_NAME = "Verme-Primordial das Raízes do Mundo"
 
 def _state(**extra):
     base = {
-        "game_id": "pytest_leak211", "narrative_summary": "", "messages": [],
+        "game_id": "pytest_leak211",
+        "narrative_summary": "",
+        "messages": [],
         "player": {"name": "T", "class_name": "Devoto do Abismo", "race": "Humano"},
-        "world": {"current_location_id": "nova_arcadia", "turn_count": 20,
-                  "visited": ["nova_arcadia", HIDDEN_LOC]},
-        "npcs": {"Grum": {"name": "Grum", "role": "Ferreiro", "location": "Nova Arcádia",
-                          "knowledge_source": "met", "created_turn": 1, "last_seen_turn": 9,
-                          "hidden_traits": ["traco_oculto_x"], "revealed_traits": [],
-                          "memory": ["PRIVADO-NPC: o cofre misterioso"],
-                          "npc_secrets": ["SEGREDO-NPC"]}},
-        "factions": [], "faction_intel": {},
-        "bestiary_knowledge": {RATO: {"seen": 2, "fought": 2, "defeated": 7,
-                                      "first_seen_turn": 3, "last_update_turn": 15}},
-        "event_log": [], "world_projection": {}, "chronicle": [],
+        "world": {
+            "current_location_id": "nova_arcadia",
+            "turn_count": 20,
+            "visited": ["nova_arcadia", HIDDEN_LOC],
+        },
+        "npcs": {
+            "Grum": {
+                "name": "Grum",
+                "role": "Ferreiro",
+                "location": "Nova Arcádia",
+                "knowledge_source": "met",
+                "created_turn": 1,
+                "last_seen_turn": 9,
+                "hidden_traits": ["traco_oculto_x"],
+                "revealed_traits": [],
+                "memory": ["PRIVADO-NPC: o cofre misterioso"],
+                "npc_secrets": ["SEGREDO-NPC"],
+            }
+        },
+        "factions": [],
+        "faction_intel": {},
+        "bestiary_knowledge": {
+            RATO: {
+                "seen": 2,
+                "fought": 2,
+                "defeated": 7,
+                "first_seen_turn": 3,
+                "last_update_turn": 15,
+            }
+        },
+        "event_log": [],
+        "world_projection": {},
+        "chronicle": [],
         "memory_facts": [
-            mp.make_memory_fact("Vi Grum fumar o cachimbo.", provenance="player_observation",
-                                source_turn=4, canonical_entity_ids=["npc_grum"]),
-            mp.make_memory_fact("Algo desperta sob a montanha.", provenance="player_observation",
-                                source_turn=5, canonical_entity_ids=[HIDDEN_LOC]),
+            mp.make_memory_fact(
+                "Vi Grum fumar o cachimbo.",
+                provenance="player_observation",
+                source_turn=4,
+                canonical_entity_ids=["npc_grum"],
+            ),
+            mp.make_memory_fact(
+                "Algo desperta sob a montanha.",
+                provenance="player_observation",
+                source_turn=5,
+                canonical_entity_ids=[HIDDEN_LOC],
+            ),
         ],
     }
     base.update(extra)
@@ -49,13 +82,32 @@ def test_oraculos_verdes_sobre_payload_completo():
 
 def test_assert_no_player_leak_spec206_verde_apos_reveal():
     state = _state(
-        event_log=[{"event_id": "r1", "type": "secret_revealed", "target_id": HIDDEN_LOC, "turn": 7,
-                    "payload": {"detail": "x"}},
-                   {"event_id": "r2", "type": "secret_revealed",
-                    "target_id": "mon_rei_subterraneo", "payload": {}}],
-        world_projection={"revealed_facts": {"r1": {
-            "entity_id": HIDDEN_LOC, "fact": "Desperta sob a montanha.",
-            "revealed_at_turn": 7, "revealed_by_event": "r1"}}})
+        event_log=[
+            {
+                "event_id": "r1",
+                "type": "secret_revealed",
+                "target_id": HIDDEN_LOC,
+                "turn": 7,
+                "payload": {"detail": "x"},
+            },
+            {
+                "event_id": "r2",
+                "type": "secret_revealed",
+                "target_id": "mon_rei_subterraneo",
+                "payload": {},
+            },
+        ],
+        world_projection={
+            "revealed_facts": {
+                "r1": {
+                    "entity_id": HIDDEN_LOC,
+                    "fact": "Desperta sob a montanha.",
+                    "revealed_at_turn": 7,
+                    "revealed_by_event": "r1",
+                }
+            }
+        },
+    )
     payload = dz.build_dossiers(state)
     assert HIDDEN_LOC in json.dumps(payload)  # revelado: agora visível
     assert pk.assert_no_player_leak(leak_view(payload), state) == []
@@ -77,6 +129,7 @@ def test_trait_oculto_e_memoria_privada_nunca_trafegam():
 
 def test_carta_nao_revelada_nao_trafega(monkeypatch):
     from services import bestiary_knowledge as bk
+
     monkeypatch.setattr(bk, "_load_all", lambda **kw: {})
     blob = json.dumps(dz.build_dossiers(_state()), ensure_ascii=False)
     assert "bst_mordida_infecciosa" not in blob and "tactical_profile" not in blob
@@ -111,5 +164,6 @@ def test_sem_llm_na_projecao(monkeypatch):
 
     def boom(*a, **k):
         raise AssertionError("LLM chamado")
+
     monkeypatch.setattr(llm_setup, "get_llm", boom)
     dz.build_dossiers(_state())

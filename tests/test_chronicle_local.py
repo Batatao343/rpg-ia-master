@@ -40,15 +40,19 @@ def test_compressao_overlay_e_busca_lexical_da_cronica_local():
     chronicle = open_chapter([], title="Arco", turn=0, location="Cais")
     for turn in range(20):
         chronicle = append_entry(
-            chronicle, text=f"O mercador negociou âmbar no cais {turn}.",
-            turn=turn, kind="prose",
+            chronicle,
+            text=f"O mercador negociou âmbar no cais {turn}.",
+            turn=turn,
+            kind="prose",
         )
     state = {
-        "game_id": str(game_id), "messages": [], "event_log": [],
+        "game_id": str(game_id),
+        "messages": [],
+        "event_log": [],
         "player": {"name": "Iria", "class_name": "Devoto", "level": 1},
-        "world": {"current_location": "Cais", "turn_count": 20,
-                  "world_clock": {"day": 1}},
-        "continuity": {"timeline_epoch": 0}, "chronicle": chronicle,
+        "world": {"current_location": "Cais", "turn_count": 20, "world_clock": {"day": 1}},
+        "continuity": {"timeline_epoch": 0},
+        "chronicle": chronicle,
     }
     store.create(principal, state)
     assert repository.enqueue_due(principal, state) == 1
@@ -56,16 +60,22 @@ def test_compressao_overlay_e_busca_lexical_da_cronica_local():
     # Isolate this fixture from jobs left by an interrupted local smoke.
     kind = f"chronicle-test-{game_id}"
     with pool.connection() as connection, connection.transaction():
-        connection.execute('update app.jobs set kind=%s where game_id=%s', (kind, game_id))
+        connection.execute("update app.jobs set kind=%s where game_id=%s", (kind, game_id))
     job = queue.lease("chronicle-test", {kind}, 1)[0]
     digest = compress_chronicle_job(job.request.payload, llm=_Fallback())
     repository.complete(job.request.payload, digest)
     queue.complete(job.job_id, job.lease_token, {"status": digest["status"]})
     overlaid = repository.overlay(principal, state)
     assert overlaid["chronicle"][0]["digest"]["covered_entry_count"] == 20
-    found = memory.query(MemoryQuery(
-        "mercador âmbar", "chronicle", principal=principal, game_id=game_id, k=3,
-    ))
+    found = memory.query(
+        MemoryQuery(
+            "mercador âmbar",
+            "chronicle",
+            principal=principal,
+            game_id=game_id,
+            k=3,
+        )
+    )
     assert found and all(row.metadata["chapter_id"] for row in found)
     store.delete(principal, game_id)
     pool.close()

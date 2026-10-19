@@ -4,6 +4,7 @@ Offline/determinístico. Cobre a cadência (D1), o slot único (D5), o round-tri
 em disco e a resolução da tela de morte (D2/D7). O flip do fluxo em combat.py +
 endpoint API + tela são o vertical seguinte.
 """
+
 import uuid
 
 import pytest
@@ -22,17 +23,30 @@ def saves_dir(tmp_path, monkeypatch):
 def _state(game_id, turn=5, danger=2, loc="pantano", gold=50):
     return {
         "game_id": game_id,
-        "player": {"name": "Herói", "class_name": "Sangromante", "level": 2,
-                   "hp": 20, "max_hp": 30, "gold": gold, "inventory": [],
-                   "known_abilities": ["ataque_basico"]},
-        "world": {"current_location_id": loc, "current_location": loc,
-                  "turn_count": turn, "danger_level": danger, "visited": [loc]},
+        "player": {
+            "name": "Herói",
+            "class_name": "Sangromante",
+            "level": 2,
+            "hp": 20,
+            "max_hp": 30,
+            "gold": gold,
+            "inventory": [],
+            "known_abilities": ["ataque_basico"],
+        },
+        "world": {
+            "current_location_id": loc,
+            "current_location": loc,
+            "turn_count": turn,
+            "danger_level": danger,
+            "visited": [loc],
+        },
         "messages": [HumanMessage(content="ação"), AIMessage(content="narração")],
         "campaign_plan": {"beats": []},
     }
 
 
 # --- D5/round-trip: slot único em disco --------------------------------------
+
 
 def test_save_load_checkpoint_roundtrip(saves_dir):
     gid = str(uuid.uuid4())
@@ -69,6 +83,7 @@ def test_checkpoint_nao_colide_com_save_vivo(saves_dir):
 
 # --- D1: cadência ------------------------------------------------------------
 
+
 def test_should_checkpoint_a_cada_10_turnos():
     assert cp.should_checkpoint(_state("g", turn=10)) is True
     assert cp.should_checkpoint(_state("g", turn=20)) is True
@@ -99,6 +114,7 @@ def test_should_checkpoint_nao_grava_em_morte():
 
 # --- D2/D7: resolução da tela de morte ---------------------------------------
 
+
 def test_resolve_accept_vira_memorial():
     st = _state("g")
     st["death_pending"] = True
@@ -118,8 +134,8 @@ def test_resolve_continue_restaura_checkpoint_em_memoria():
     st = _state("g", turn=15, gold=0)  # morreu depois, com menos ouro
     st["death_pending"] = True
     out = cp.resolve_death_choice(st, "continue", checkpoint=snap)
-    assert out["player"]["gold"] == 200          # voltou ao checkpoint
-    assert out["world"]["turn_count"] == 10       # progresso desde ali perdido (D3)
+    assert out["player"]["gold"] == 200  # voltou ao checkpoint
+    assert out["world"]["turn_count"] == 10  # progresso desde ali perdido (D3)
     assert out["death_pending"] is False and out["game_over"] is False
 
 

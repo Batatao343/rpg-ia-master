@@ -35,8 +35,12 @@ def test_s3_obedece_contrato_blob_e_preserva_metadata_scoped():
     payload = b"webp-fixture"
     owner_id, game_id = uuid4(), uuid4()
     metadata = BlobMetadata(
-        owner_id, game_id, "image/webp", hashlib.sha256(payload).hexdigest(),
-        "npc_portrait", len(payload),
+        owner_id,
+        game_id,
+        "image/webp",
+        hashlib.sha256(payload).hexdigest(),
+        "npc_portrait",
+        len(payload),
     )
     ref = store.put("users/a/art.webp", BytesIO(payload), metadata)
     assert store.open(ref.key).read() == payload
@@ -50,7 +54,8 @@ def test_s3_recusa_hash_e_expiracao_invalidos():
     store = S3BlobStore(FakeS3(), "private")
     with pytest.raises(Conflict):
         store.put(
-            "x", BytesIO(b"x"),
+            "x",
+            BytesIO(b"x"),
             BlobMetadata(uuid4(), uuid4(), "image/webp", "0" * 64, "test", 1),
         )
     with pytest.raises(ValueError):

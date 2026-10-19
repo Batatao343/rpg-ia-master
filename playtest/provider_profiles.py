@@ -1,4 +1,5 @@
 """Perfis de rota e controle de capacidade exclusivos do playtest real."""
+
 from __future__ import annotations
 
 import json
@@ -87,13 +88,12 @@ class ProviderPacer:
         else:
             provider = str(getattr(event, "provider", "") or "")
             model = str(getattr(event, "model", "") or "")
-            status = str(
-                getattr(event, "status", None)
-                or getattr(event, "outcome", "")
-                or ""
-            )
+            status = str(getattr(event, "status", None) or getattr(event, "outcome", "") or "")
         network_attempt = status in {
-            "success", "invoke_error", "invalid_structured", "stream_error",
+            "success",
+            "invoke_error",
+            "invalid_structured",
+            "stream_error",
             "stream_interrupted",
         }
         if provider != "groq" or model != "openai/gpt-oss-120b" or not network_attempt:
@@ -111,12 +111,16 @@ def preflight_real_routes(*, min_groq_interval_seconds: float = 0.0) -> dict:
     events: list[dict] = []
 
     def hook(event: object) -> None:
-        events.append({
-            "provider": str(getattr(event, "provider", "") or ""),
-            "model": str(getattr(event, "model", "") or ""),
-            "tier": str(getattr(getattr(event, "tier", ""), "value", getattr(event, "tier", ""))),
-            "status": str(getattr(event, "outcome", "") or ""),
-        })
+        events.append(
+            {
+                "provider": str(getattr(event, "provider", "") or ""),
+                "model": str(getattr(event, "model", "") or ""),
+                "tier": str(
+                    getattr(getattr(event, "tier", ""), "value", getattr(event, "tier", ""))
+                ),
+                "status": str(getattr(event, "outcome", "") or ""),
+            }
+        )
         pacer.observe(event)
 
     llm_setup.reset_llm_circuit_breakers()
@@ -130,13 +134,16 @@ def preflight_real_routes(*, min_groq_interval_seconds: float = 0.0) -> dict:
                     HumanMessage(content="Prepare uma resposta estruturada."),
                     AIMessage(content="Contexto de prefill para contrato SMART."),
                 ]
-            result = llm_setup.get_llm(
-                temperature=0.0, tier=tier,
-            ).with_structured_output(_PreflightResponse).invoke(messages)
-            if not isinstance(result, _PreflightResponse):
-                raise ProviderPreflightError(
-                    f"tier {tier.value} sem structured output real"
+            result = (
+                llm_setup.get_llm(
+                    temperature=0.0,
+                    tier=tier,
                 )
+                .with_structured_output(_PreflightResponse)
+                .invoke(messages)
+            )
+            if not isinstance(result, _PreflightResponse):
+                raise ProviderPreflightError(f"tier {tier.value} sem structured output real")
             passed.append(tier.value)
     finally:
         llm_setup.set_llm_attempt_telemetry_hook(None)

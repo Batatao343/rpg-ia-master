@@ -9,6 +9,7 @@ Estratégia: um preenchedor genérico introspecta qualquer modelo Pydantic e
 fabrica valores por tipo; "overrides" por modelo injetam conteúdo temático
 (narrativa, roteamento, fichas) onde a qualidade importa.
 """
+
 import random
 import re
 import typing
@@ -70,6 +71,7 @@ def _last_human(messages) -> str:
             # SPEC-223 R5: a entrada chega delimitada; o mock lê o texto cru
             # (fixtures não dependem do delimitador).
             from services.prompt_guard import unwrap_player_input
+
             return unwrap_player_input(getattr(m, "content", ""))
     return ""
 
@@ -152,31 +154,104 @@ def _route_decision(model, messages):
         except Exception:
             return list(enum_cls)[0]
 
-    combat = ["atac", "golpe", "luto", "luta", "mato", "mata", "espada", "lâmina",
-              "lamina", "soco", "chute", "dispar", "flecha", "enfrent", "mira", "esfaque"]
-    npc = ["fal", "pergunt", "convers", "cumpriment", "negoci", "saúd", "saud",
-           "respond", "grit", "digo", "peço", "peco"]
-    loot = ["peg", "vasculh", "baú", "bau", "saque", "loot", "recolh", "abro",
-            "compr", "vend", "forj", "craft"]
+    combat = [
+        "atac",
+        "golpe",
+        "luto",
+        "luta",
+        "mato",
+        "mata",
+        "espada",
+        "lâmina",
+        "lamina",
+        "soco",
+        "chute",
+        "dispar",
+        "flecha",
+        "enfrent",
+        "mira",
+        "esfaque",
+    ]
+    npc = [
+        "fal",
+        "pergunt",
+        "convers",
+        "cumpriment",
+        "negoci",
+        "saúd",
+        "saud",
+        "respond",
+        "grit",
+        "digo",
+        "peço",
+        "peco",
+    ]
+    loot = [
+        "peg",
+        "vasculh",
+        "baú",
+        "bau",
+        "saque",
+        "loot",
+        "recolh",
+        "abro",
+        "compr",
+        "vend",
+        "forj",
+        "craft",
+    ]
 
     if any(k in txt for k in combat):
-        return _fill(model, {"route": route("combat_agent"), "target": "Inimigo",
-                             "reasoning": "[simulado] intenção de combate", "confidence": 0.9,
-                             "loot_context": None})
+        return _fill(
+            model,
+            {
+                "route": route("combat_agent"),
+                "target": "Inimigo",
+                "reasoning": "[simulado] intenção de combate",
+                "confidence": 0.9,
+                "loot_context": None,
+            },
+        )
     if any(k in txt for k in loot):
-        ctx = "SHOP" if ("compr" in txt or "vend" in txt) else "CRAFT" if "forj" in txt or "craft" in txt else "TREASURE"
-        return _fill(model, {"route": route("loot"), "loot_context": ctx,
-                             "reasoning": "[simulado] intenção de saque/comércio", "confidence": 0.85,
-                             "target": None})
+        ctx = (
+            "SHOP"
+            if ("compr" in txt or "vend" in txt)
+            else "CRAFT"
+            if "forj" in txt or "craft" in txt
+            else "TREASURE"
+        )
+        return _fill(
+            model,
+            {
+                "route": route("loot"),
+                "loot_context": ctx,
+                "reasoning": "[simulado] intenção de saque/comércio",
+                "confidence": 0.85,
+                "target": None,
+            },
+        )
     if any(k in txt for k in npc):
-        explicit_target = next(
-            (name for name in _NPC_NAMES if name.lower() in txt), None)
-        return _fill(model, {"route": route("npc_actor"),
-                             "target": explicit_target or random.choice(_NPC_NAMES),
-                             "reasoning": "[simulado] intenção social", "confidence": 0.8,
-                             "loot_context": None})
-    return _fill(model, {"route": route("storyteller"), "reasoning": "[simulado] exploração",
-                         "confidence": 0.8, "target": None, "loot_context": None})
+        explicit_target = next((name for name in _NPC_NAMES if name.lower() in txt), None)
+        return _fill(
+            model,
+            {
+                "route": route("npc_actor"),
+                "target": explicit_target or random.choice(_NPC_NAMES),
+                "reasoning": "[simulado] intenção social",
+                "confidence": 0.8,
+                "loot_context": None,
+            },
+        )
+    return _fill(
+        model,
+        {
+            "route": route("storyteller"),
+            "reasoning": "[simulado] exploração",
+            "confidence": 0.8,
+            "target": None,
+            "loot_context": None,
+        },
+    )
 
 
 _MOCK_FACTION_ID = "legiao_ferro"  # id real de data/factions.json (modo simulado)
@@ -199,11 +274,16 @@ def _story_update(model, messages):
         # SPEC-223: missão dada AQUI aponta para o local da cena (id do bloco
         # <ENTIDADES_CANONICAS>), para o progresso Python poder prová-la.
         loc_match = re.search(r"- id=(\S+) · [^\n]*· location", todo_texto)
-        quests = [{"title": "Recuperar o medalhão perdido",
-                   "description": "Um estranho pediu ajuda para achar uma relíquia.",
-                   "origin_name": "Um estranho encapuzado", "origin_entity_id": "",
-                   "location_id": loc_match.group(1) if loc_match else "",
-                   "reward_hint": "algumas moedas"}]
+        quests = [
+            {
+                "title": "Recuperar o medalhão perdido",
+                "description": "Um estranho pediu ajuda para achar uma relíquia.",
+                "origin_name": "Um estranho encapuzado",
+                "origin_entity_id": "",
+                "location_id": loc_match.group(1) if loc_match else "",
+                "reward_hint": "algumas moedas",
+            }
+        ]
     # Fase 5: se o prompt lista quests ATIVAS (bloco "- id=<id> · ..."), ~50% das
     # vezes propõe a CONCLUSÃO de uma delas. Sem isto o harness offline nunca
     # fecha quest (mock só criava, nunca completava — achado do playtest).
@@ -218,17 +298,31 @@ def _story_update(model, messages):
     bloco = quests_match.group(1) if quests_match else ""
     quest_ids = (
         re.findall(r"- id=(\S+) ·[^\n]*prova: ok", bloco)
-        if "prova:" in bloco else re.findall(r"- id=(\S+) ·", bloco)
+        if "prova:" in bloco
+        else re.findall(r"- id=(\S+) ·", bloco)
     )
     if quest_ids and random.random() < 0.5:
         qid = random.choice(quest_ids)
-        proposed_events = [{"type": "quest_completed", "target_id": qid,
-                            "actor_id": "player", "payload": {"quest_id": qid}}]
+        proposed_events = [
+            {
+                "type": "quest_completed",
+                "target_id": qid,
+                "actor_id": "player",
+                "payload": {"quest_id": qid},
+            }
+        ]
     # Avança o beat ~30% das vezes para a UI de objetivos progredir no modo simulado.
-    return _fill(model, {"narrative": narrative, "introduced_npcs": [],
-                         "faction_impacts": impacts, "proposed_quests": quests,
-                         "proposed_events": proposed_events,
-                         "beat_completed": random.random() < 0.30})
+    return _fill(
+        model,
+        {
+            "narrative": narrative,
+            "introduced_npcs": [],
+            "faction_impacts": impacts,
+            "proposed_quests": quests,
+            "proposed_events": proposed_events,
+            "beat_completed": random.random() < 0.30,
+        },
+    )
 
 
 _WORLD_RUMORS = [
@@ -240,17 +334,27 @@ _WORLD_RUMORS = [
 
 
 def _world_pulse(model, messages):
-    return _fill(model, {"rumor": random.choice(_WORLD_RUMORS),
-                         "fact": "Forças do mundo se moveram nos bastidores enquanto o tempo passava.",
-                         "danger_shift": 0})
+    return _fill(
+        model,
+        {
+            "rumor": random.choice(_WORLD_RUMORS),
+            "fact": "Forças do mundo se moveram nos bastidores enquanto o tempo passava.",
+            "danger_shift": 0,
+        },
+    )
 
 
 def _campaign_plan(model, messages):
-    return _fill(model, {"location": "Terras Cinzentas",
-                         "beats": list(_BEATS),
-                         "climax": "Um confronto final contra a verdade enterrada no local.",
-                         # Fase 3.1: título estável (não fragmenta capítulos no modo simulado)
-                         "arc_title": "A Verdade Enterrada"})
+    return _fill(
+        model,
+        {
+            "location": "Terras Cinzentas",
+            "beats": list(_BEATS),
+            "climax": "Um confronto final contra a verdade enterrada no local.",
+            # Fase 3.1: título estável (não fragmenta capítulos no modo simulado)
+            "arc_title": "A Verdade Enterrada",
+        },
+    )
 
 
 _BARD_LINES = [
@@ -262,8 +366,10 @@ _BARD_LINES = [
 
 
 def _memory_update(model, messages):
-    overrides = {"new_summary": "A jornada segue por terras sombrias; a tensão cresce.",
-                 "important_facts": []}
+    overrides = {
+        "new_summary": "A jornada segue por terras sombrias; a tensão cresce.",
+        "important_facts": [],
+    }
     # ~45% dos turnos rendem uma linha de menestrel (para a Crônica progredir no modo simulado).
     if "chronicle_entry" in getattr(model, "model_fields", {}) and random.random() < 0.45:
         overrides["chronicle_entry"] = random.choice(_BARD_LINES)
@@ -272,19 +378,30 @@ def _memory_update(model, messages):
 
 def _player_stats(model, messages):
     attrs = {k: random.randint(9, 15) for k in ["str", "dex", "con", "int", "wis", "cha"]}
-    return _fill(model, {"attributes": attrs,
-                         "inventory": ["Espada Gasta", "Capa Esfarrapada", "Ração de Viagem"],
-                         "flavor_abilities": ["Golpe Firme", "Olhar Atento"]})
+    return _fill(
+        model,
+        {
+            "attributes": attrs,
+            "inventory": ["Espada Gasta", "Capa Esfarrapada", "Ração de Viagem"],
+            "flavor_abilities": ["Golpe Firme", "Olhar Atento"],
+        },
+    )
 
 
 def _npc_schema(model, messages):
     name = random.choice(_NPC_NAMES)
-    return _fill(model, {"name": name, "role": random.choice(_NPC_ROLES),
-                         "persona": "Desconfiado, cansado, fala pouco e cobra caro.",
-                         "appearance": "Figura encapuzada de olhos atentos.",
-                         "location": "Terras Cinzentas",
-                         "attributes": {"str": 10, "dex": 11, "con": 10, "int": 12, "wis": 13, "cha": 11},
-                         "combat_stats": {"hp": 12, "ac": 11, "attacks": []}})
+    return _fill(
+        model,
+        {
+            "name": name,
+            "role": random.choice(_NPC_ROLES),
+            "persona": "Desconfiado, cansado, fala pouco e cobra caro.",
+            "appearance": "Figura encapuzada de olhos atentos.",
+            "location": "Terras Cinzentas",
+            "attributes": {"str": 10, "dex": 11, "con": 10, "int": 12, "wis": 13, "cha": 11},
+            "combat_stats": {"hp": 12, "ac": 11, "attacks": []},
+        },
+    )
 
 
 def _npc_response(model, messages):
@@ -296,29 +413,45 @@ def _npc_response(model, messages):
     friendly = any(k in txt for k in ("elogio", "amizade", "confian", "parceria"))
     quests = []
     if re.search(r"\b(?:tarefa|miss[aã]o|trabalho|favor)\s+concret[oa]\b", txt):
-        quests = [{
-            "title": "Investigar o silêncio das estradas",
-            "description": "Descobrir por que viajantes desapareceram perto da cidade.",
-            "origin_name": "",
-            "origin_entity_id": "",
-            "location_id": "",
-            "reward_hint": "informação e algumas moedas",
-        }]
-    return _fill(model, {"dialogue": random.choice(_NPC_LINES),
-                         "action_description": random.choice(_NPC_ACTIONS),
-                         "memory_update": "Conversou com o herói.",
-                         "relationship_change": 1 if friendly else random.choice([-1, 0, 0, 1]),
-                         "faction_reveals": reveals,
-                         "proposed_quests": quests})
+        quests = [
+            {
+                "title": "Investigar o silêncio das estradas",
+                "description": "Descobrir por que viajantes desapareceram perto da cidade.",
+                "origin_name": "",
+                "origin_entity_id": "",
+                "location_id": "",
+                "reward_hint": "informação e algumas moedas",
+            }
+        ]
+    return _fill(
+        model,
+        {
+            "dialogue": random.choice(_NPC_LINES),
+            "action_description": random.choice(_NPC_ACTIONS),
+            "memory_update": "Conversou com o herói.",
+            "relationship_change": 1 if friendly else random.choice([-1, 0, 0, 1]),
+            "faction_reveals": reveals,
+            "proposed_quests": quests,
+        },
+    )
 
 
 def _enemy_schema(model, messages):
     name = random.choice(_ENEMY_NAMES)
-    return _fill(model, {"name": name, "description": "Criatura hostil das ruínas.",
-                         "categoria": "lacaio", "arquetipo": "agil",
-                         "estilo_ataque": "corpo_a_corpo",
-                         "nome_ataque": "Ataque",
-                         "abilities": [], "loot": [], "regions": []})
+    return _fill(
+        model,
+        {
+            "name": name,
+            "description": "Criatura hostil das ruínas.",
+            "categoria": "lacaio",
+            "arquetipo": "agil",
+            "estilo_ataque": "corpo_a_corpo",
+            "nome_ataque": "Ataque",
+            "abilities": [],
+            "loot": [],
+            "regions": [],
+        },
+    )
 
 
 def _encounter_scanner(model, messages):
@@ -326,8 +459,9 @@ def _encounter_scanner(model, messages):
     name = next((n for n in _ENEMY_NAMES if n.lower() in hint.lower()), random.choice(_ENEMY_NAMES))
     item_cls = _list_item_cls(model, "detected_enemies")
     detected = [_fill(item_cls, {"name": name, "count": random.randint(1, 2)})] if item_cls else []
-    return _fill(model, {"detected_enemies": detected,
-                         "flavor_text": f"{name} surge das sombras, rosnando."})
+    return _fill(
+        model, {"detected_enemies": detected, "flavor_text": f"{name} surge das sombras, rosnando."}
+    )
 
 
 def _loot_schema(model, messages):
@@ -335,29 +469,71 @@ def _loot_schema(model, messages):
     items = []
     if item_cls:
         nm, iid, typ = random.choice(_ITEM_NAMES)
-        items = [_fill(item_cls, {"name": nm, "item_id": iid, "description": "Achado nas ruínas.",
-                                  "type": typ, "rarity": "common", "gold_value": random.randint(5, 40),
-                                  "combat_stats": {}, "mechanics": {}})]
-    return _fill(model, {"items": items, "gold": random.randint(5, 50),
-                         "narrative": "Você vasculha os destroços e encontra algo de valor."})
+        items = [
+            _fill(
+                item_cls,
+                {
+                    "name": nm,
+                    "item_id": iid,
+                    "description": "Achado nas ruínas.",
+                    "type": typ,
+                    "rarity": "common",
+                    "gold_value": random.randint(5, 40),
+                    "combat_stats": {},
+                    "mechanics": {},
+                },
+            )
+        ]
+    return _fill(
+        model,
+        {
+            "items": items,
+            "gold": random.randint(5, 50),
+            "narrative": "Você vasculha os destroços e encontra algo de valor.",
+        },
+    )
 
 
 def _item_generation(model, messages):
     nm, iid, typ = random.choice(_ITEM_NAMES)
-    return _fill(model, {"name": nm, "item_id": iid, "description": "Item simulado.",
-                         "type": typ, "rarity": "common", "gold_value": random.randint(5, 40),
-                         "combat_stats": {}, "mechanics": {}})
+    return _fill(
+        model,
+        {
+            "name": nm,
+            "item_id": iid,
+            "description": "Item simulado.",
+            "type": typ,
+            "rarity": "common",
+            "gold_value": random.randint(5, 40),
+            "combat_stats": {},
+            "mechanics": {},
+        },
+    )
 
 
 def _transaction(model, messages):
-    return _fill(model, {"success": True, "message": "O mercador resmunga, mas fecha negócio.",
-                         "items_to_remove": [], "gold_cost": 0, "new_item": None})
+    return _fill(
+        model,
+        {
+            "success": True,
+            "message": "O mercador resmunga, mas fecha negócio.",
+            "items_to_remove": [],
+            "gold_cost": 0,
+            "new_item": None,
+        },
+    )
 
 
 def _ruling(model, messages):
-    return _fill(model, {"is_allowed": True, "dice_formula": "1d20+2",
-                         "mechanical_effect": "Efeito padrão (simulado).",
-                         "flavor_text": "Ação resolvida pelas regras."})
+    return _fill(
+        model,
+        {
+            "is_allowed": True,
+            "dice_formula": "1d20+2",
+            "mechanical_effect": "Efeito padrão (simulado).",
+            "flavor_text": "Ação resolvida pelas regras.",
+        },
+    )
 
 
 def _entity_match(model, messages):
@@ -382,6 +558,7 @@ def _trade_intent(model, messages):
             return "".join(c for c in n if not unicodedata.combining(c)).lower()
 
         from gamedata import ARTIFACTS_DB, load_json_data
+
         folded_txt = _fold(txt)
         candidates = [a.get("name", "") for a in ARTIFACTS_DB.values()]
         candidates += [rid.replace("_", " ") for rid in (load_json_data("recipes.json") or {})]
@@ -400,6 +577,7 @@ def _combat_action(model, messages):
     card_id = ""
     try:
         from services.cards import all_cards
+
         for aid, a in all_cards().items():
             nm = str(a.get("name", "")).lower()
             if (aid.replace("_", " ") in txt) or (nm and nm in txt):
@@ -407,8 +585,9 @@ def _combat_action(model, messages):
                 break
     except Exception:
         pass
-    return _fill(model, {"kind": "card" if card_id else "attack",
-                         "card_id": card_id, "target_id": ""})
+    return _fill(
+        model, {"kind": "card" if card_id else "attack", "card_id": card_id, "target_id": ""}
+    )
 
 
 def _start_scenario(model, messages):
@@ -417,30 +596,38 @@ def _start_scenario(model, messages):
     npc_cls = _list_item_cls(model, "seed_npcs")
     npcs = []
     if npc_cls:
-        npcs = [_fill(npc_cls, {
-            "name": "Mestre Aldric",
-            "role": "mentor endividado",
-            "attitude": "aliado",
-            "persona": "Velho mercenário que deve um favor antigo à família do herói; "
-                       "direto, protetor, fala pouco e cobra menos ainda.",
-        })]
-    return _fill(model, {
-        "prologue": "Você chega com pouco mais que o nome que carrega e uma dívida "
-                    "que não é sua. A estrada ficou para trás; a cidade à frente não "
-                    "promete nada — e é exatamente por isso que você veio. Alguém aqui "
-                    "sabe de onde você veio. Resta descobrir quem, e quanto isso custa.",
-        "opening_scene_brief": "O herói chega ao local inicial no fim da tarde; um "
-                               "conhecido do passado o aguarda com um aviso e uma "
-                               "proposta. Tensão: alguém o seguiu até aqui.",
-        "arc_title": "Dívidas de Sangue",
-        "beats": [
-            "Apresente Mestre Aldric e o aviso que ele carrega.",
-            "O jogador descobre quem o seguiu até a região.",
-            "Uma escolha: pagar a dívida antiga ou enfrentá-la.",
-        ],
-        "climax": "O confronto com o credor do passado — em aço ou em palavras.",
-        "seed_npcs": npcs,
-    })
+        npcs = [
+            _fill(
+                npc_cls,
+                {
+                    "name": "Mestre Aldric",
+                    "role": "mentor endividado",
+                    "attitude": "aliado",
+                    "persona": "Velho mercenário que deve um favor antigo à família do herói; "
+                    "direto, protetor, fala pouco e cobra menos ainda.",
+                },
+            )
+        ]
+    return _fill(
+        model,
+        {
+            "prologue": "Você chega com pouco mais que o nome que carrega e uma dívida "
+            "que não é sua. A estrada ficou para trás; a cidade à frente não "
+            "promete nada — e é exatamente por isso que você veio. Alguém aqui "
+            "sabe de onde você veio. Resta descobrir quem, e quanto isso custa.",
+            "opening_scene_brief": "O herói chega ao local inicial no fim da tarde; um "
+            "conhecido do passado o aguarda com um aviso e uma "
+            "proposta. Tensão: alguém o seguiu até aqui.",
+            "arc_title": "Dívidas de Sangue",
+            "beats": [
+                "Apresente Mestre Aldric e o aviso que ele carrega.",
+                "O jogador descobre quem o seguiu até a região.",
+                "Uma escolha: pagar a dívida antiga ou enfrentá-la.",
+            ],
+            "climax": "O confronto com o credor do passado — em aço ou em palavras.",
+            "seed_npcs": npcs,
+        },
+    )
 
 
 _DISPATCH = {

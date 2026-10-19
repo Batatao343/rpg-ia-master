@@ -1,4 +1,5 @@
 """Identidade canônica de entidades visuais — nunca depende da prosa da LLM."""
+
 from __future__ import annotations
 
 import re
@@ -52,10 +53,21 @@ def find_runtime_npc_key(
 
 
 _NPC_DYNAMIC_FIELDS = {
-    "home_location_id", "location", "in_scene", "last_seen_turn",
-    "last_interaction", "status", "relationship", "interaction_count",
-    "known_by_player", "knowledge_source", "active_conditions",
-    "vitalidade", "max_vitalidade", "ferimentos", "ferimento_espacos",
+    "home_location_id",
+    "location",
+    "in_scene",
+    "last_seen_turn",
+    "last_interaction",
+    "status",
+    "relationship",
+    "interaction_count",
+    "known_by_player",
+    "knowledge_source",
+    "active_conditions",
+    "vitalidade",
+    "max_vitalidade",
+    "ferimentos",
+    "ferimento_espacos",
 }
 
 
@@ -74,20 +86,25 @@ def _merge_runtime_npc(primary: dict, incoming: dict) -> dict:
     ):
         primary, incoming = incoming, primary
     merged = dict(primary)
-    merged["aliases"] = sorted(
-        runtime_npc_aliases("", primary) | runtime_npc_aliases("", incoming)
-    )
+    merged["aliases"] = sorted(runtime_npc_aliases("", primary) | runtime_npc_aliases("", incoming))
     for key, value in incoming.items():
         if key not in merged or merged[key] in (None, "", [], {}):
             merged[key] = value
-    primary_seen = int(primary.get("last_seen_turn", -1)) if primary.get("last_seen_turn") is not None else -1
-    incoming_seen = int(incoming.get("last_seen_turn", -1)) if incoming.get("last_seen_turn") is not None else -1
+    primary_seen = (
+        int(primary.get("last_seen_turn", -1)) if primary.get("last_seen_turn") is not None else -1
+    )
+    incoming_seen = (
+        int(incoming.get("last_seen_turn", -1))
+        if incoming.get("last_seen_turn") is not None
+        else -1
+    )
     if incoming_seen >= primary_seen:
         for key in _NPC_DYNAMIC_FIELDS:
             if key in incoming:
                 merged[key] = incoming[key]
     created = [
-        int(value) for value in (primary.get("created_turn"), incoming.get("created_turn"))
+        int(value)
+        for value in (primary.get("created_turn"), incoming.get("created_turn"))
         if isinstance(value, int)
     ]
     if created:
@@ -98,9 +115,9 @@ def _merge_runtime_npc(primary: dict, incoming: dict) -> dict:
             *list(incoming.get(field) or []),
         ]
         if values:
-            merged[field] = list(dict.fromkeys(
-                value for value in values if isinstance(value, str) and value
-            ))
+            merged[field] = list(
+                dict.fromkeys(value for value in values if isinstance(value, str) and value)
+            )
     return merged
 
 
@@ -123,9 +140,16 @@ def coalesce_runtime_npcs(npcs: Mapping[str, Any] | None) -> dict[str, Any]:
             # first runtime key, not the incidental order of the alias rows.
             while True:
                 aliases = runtime_npc_aliases(existing, merged)
-                linked = next((other for other, value in out.items()
-                               if other != existing and isinstance(value, Mapping)
-                               and aliases & runtime_npc_aliases(other, value)), None)
+                linked = next(
+                    (
+                        other
+                        for other, value in out.items()
+                        if other != existing
+                        and isinstance(value, Mapping)
+                        and aliases & runtime_npc_aliases(other, value)
+                    ),
+                    None,
+                )
                 if linked is None:
                     break
                 merged = _merge_runtime_npc(merged, dict(out.pop(linked)))

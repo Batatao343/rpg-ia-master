@@ -1,4 +1,5 @@
 """SPEC-249: linha de boot, avisos de config e falha de construção do runtime."""
+
 import json
 
 import pytest
@@ -36,8 +37,15 @@ def test_boot_logged_once(capsys, monkeypatch):
     assert line["git_sha"] == "abcdef012345" and line["llm_mode"] == "routes"
     assert "deepseek" in line["llm_providers_with_key"]
     assert line["instance_ref"] == boot.INSTANCE_REF
-    for key in ("profile", "hardened", "embedding_provider", "jev_mode", "projection_mode",
-                "log_level", "cold_start_ms"):
+    for key in (
+        "profile",
+        "hardened",
+        "embedding_provider",
+        "jev_mode",
+        "projection_mode",
+        "log_level",
+        "cold_start_ms",
+    ):
         assert key in line
 
 
@@ -63,6 +71,7 @@ def test_missing_telemetry_secret_warns(capsys, monkeypatch):
 
 def test_every_line_has_instance_ref(capsys):
     from observability.telemetry import log_event
+
     log_event("x", "y")
     assert _lines(capsys)[0]["instance_ref"] == boot.INSTANCE_REF
 
@@ -76,7 +85,11 @@ def test_pool_failure_logged(capsys, monkeypatch):
 
     monkeypatch.setattr(RuntimeConfig, "validate", lambda self: None)
     monkeypatch.setattr(postgres, "PostgresPool", boom)
-    cfg = RuntimeConfig.from_env({"RPG_RUNTIME_PROFILE": "local"}) if hasattr(RuntimeConfig, "from_env") else None
+    cfg = (
+        RuntimeConfig.from_env({"RPG_RUNTIME_PROFILE": "local"})
+        if hasattr(RuntimeConfig, "from_env")
+        else None
+    )
     with pytest.raises(ConnectionError):
         build_database_runtime(cfg)
     out = capsys.readouterr().out

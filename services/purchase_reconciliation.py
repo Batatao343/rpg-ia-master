@@ -3,13 +3,21 @@
 No I/O. The claim for a purchase is a pure function of the SET of normalized provider events
 (cumulative maxima + terminal-status-wins), so arrival order and duplicates cannot change it.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
 
 STRIPE, GOOGLE = "stripe", "google_play"
-KINDS = {"refund", "dispute_open", "dispute_won", "dispute_lost", "voided", "revoked",
-         "fee_reconciled"}
+KINDS = {
+    "refund",
+    "dispute_open",
+    "dispute_won",
+    "dispute_lost",
+    "voided",
+    "revoked",
+    "fee_reconciled",
+}
 # Estados Stripe: created, paid, refunded_partial, refunded_full, disputed, dispute_won, dispute_lost.
 # Estados Google: pending, purchased, fulfilled, consumed, voided, revoked.
 # Closed transition tables: nothing returns to created/paid; refunded_full and voided/revoked
@@ -28,7 +36,8 @@ GOOGLE_TRANSITIONS = {
     "purchased": {"fulfilled", "consumed", "voided", "revoked"},
     "fulfilled": {"consumed", "voided", "revoked"},
     "consumed": {"voided", "revoked"},
-    "voided": set(), "revoked": set(),
+    "voided": set(),
+    "revoked": set(),
 }
 TRANSITIONS = {STRIPE: STRIPE_TRANSITIONS, GOOGLE: GOOGLE_TRANSITIONS}
 # voidedReason (Google VoidedPurchase): 0 Other, 1 Remorse, 2 Not_received, 3 Defective,
@@ -62,25 +71,32 @@ class Event:
     provider: str
     event_id: str
     kind: str
-    ref: str                      # Stripe payment_intent / Google order_id
+    ref: str  # Stripe payment_intent / Google order_id
     amount_cents: int | None = None
-    sub_id: str | None = None     # dispute id / charge id
+    sub_id: str | None = None  # dispute id / charge id
     created: int = 0
     reason: int | None = None
 
     def __post_init__(self):
-        if self.provider not in TRANSITIONS or self.kind not in KINDS or not self.event_id or not self.ref:
+        if (
+            self.provider not in TRANSITIONS
+            or self.kind not in KINDS
+            or not self.event_id
+            or not self.ref
+        ):
             raise ReconciliationError("event_invalid")
-        if self.amount_cents is not None and (isinstance(self.amount_cents, bool)
-                                               or not isinstance(self.amount_cents, int)
-                                               or self.amount_cents < 0):
+        if self.amount_cents is not None and (
+            isinstance(self.amount_cents, bool)
+            or not isinstance(self.amount_cents, int)
+            or self.amount_cents < 0
+        ):
             raise ReconciliationError("event_amount_invalid")
 
 
 @dataclass(frozen=True)
 class Facts:
     refunded_cents: int = 0
-    disputes: tuple = ()          # ((dispute_id, amount_cents, status), ...) sorted
+    disputes: tuple = ()  # ((dispute_id, amount_cents, status), ...) sorted
     voided: bool = False
     revoked: bool = False
     fee_cents: int | None = None
@@ -114,8 +130,9 @@ def fold(events) -> Facts:
             key = (ev.created, ev.event_id)
             if fee_key is None or key > fee_key:
                 fee_key, fee = key, ev.amount_cents
-    return Facts(refunded, tuple(sorted((k, v[0], v[1]) for k, v in disputes.items())),
-                 voided, revoked, fee)
+    return Facts(
+        refunded, tuple(sorted((k, v[0], v[1]) for k, v in disputes.items())), voided, revoked, fee
+    )
 
 
 def reversed_cents(facts: Facts, gross_cents: int) -> int:
@@ -156,17 +173,22 @@ def google_state(facts: Facts, row_state: str | None) -> str:
     return "fulfilled" if row_state else "pending"
 
 
-def derive_state(provider: str, facts: Facts, *, gross_cents: int, row_state: str | None = None) -> str:
-    return stripe_state(facts, gross_cents) if provider == STRIPE else google_state(facts, row_state)
+def derive_state(
+    provider: str, facts: Facts, *, gross_cents: int, row_state: str | None = None
+) -> str:
+    return (
+        stripe_state(facts, gross_cents) if provider == STRIPE else google_state(facts, row_state)
+    )
 
 
 @dataclass(frozen=True)
 class Ledger:
     """Per-purchase + owner snapshot read under the account lock."""
+
     available_milli: int
-    applied_milli: int            # clawed + debt opened - released (credit and debt) - forgive_close
-    outstanding_debt_milli: int   # this purchase's open debt not yet settled/released/forgiven
-    forgiven_milli: int = 0       # debt forgiven by an admin and not yet closed by a release
+    applied_milli: int  # clawed + debt opened - released (credit and debt) - forgive_close
+    outstanding_debt_milli: int  # this purchase's open debt not yet settled/released/forgiven
+    forgiven_milli: int = 0  # debt forgiven by an admin and not yet closed by a release
 
 
 @dataclass(frozen=True)
@@ -175,12 +197,17 @@ class Plan:
     debt_open: int = 0
     debt_release: int = 0
     credit_release: int = 0
-    forgive_close: int = 0        # released portion that was forgiven: closes it, returns no money
+    forgive_close: int = 0  # released portion that was forgiven: closes it, returns no money
 
     @property
     def empty(self) -> bool:
-        return not (self.clawback or self.debt_open or self.debt_release or self.credit_release
-                    or self.forgive_close)
+        return not (
+            self.clawback
+            or self.debt_open
+            or self.debt_release
+            or self.credit_release
+            or self.forgive_close
+        )
 
 
 def plan_adjustment(target: int, ledger: Ledger) -> Plan:
@@ -193,8 +220,12 @@ def plan_adjustment(target: int, ledger: Ledger) -> Plan:
         debt = min(back, max(ledger.outstanding_debt_milli, 0))
         rest = back - debt
         # Only money actually taken from the wallet (clawed or paid via settlement) can return.
-        money = max(0, ledger.applied_milli - max(ledger.outstanding_debt_milli, 0)
-                    - max(ledger.forgiven_milli, 0))
+        money = max(
+            0,
+            ledger.applied_milli
+            - max(ledger.outstanding_debt_milli, 0)
+            - max(ledger.forgiven_milli, 0),
+        )
         credit = min(rest, money)
         return Plan(debt_release=debt, credit_release=credit, forgive_close=rest - credit)
     return Plan()
@@ -206,20 +237,37 @@ def settlement_amount(debt_milli: int, available_milli: int) -> int:
 
 # ---- provider normalization -------------------------------------------------------------
 
-def normalize_stripe_event(event_type: str, event_id: str, facts: dict, created: int = 0) -> Event | None:
+
+def normalize_stripe_event(
+    event_type: str, event_id: str, facts: dict, created: int = 0
+) -> Event | None:
     """Map a sanitized app.stripe_events row to a normalized event (None = no financial effect)."""
     ref = facts.get("payment_intent")
     if not ref:
         return None
     status = facts.get("dispute_status")
     if event_type == "charge.refunded":
-        return Event(STRIPE, event_id, "refund", ref, facts.get("amount_refunded") or 0,
-                     facts.get("object_id"), created)
+        return Event(
+            STRIPE,
+            event_id,
+            "refund",
+            ref,
+            facts.get("amount_refunded") or 0,
+            facts.get("object_id"),
+            created,
+        )
     if event_type == "charge.dispute.created":
         if status is None or str(status).startswith("warning_") or status == "prevented":
             return None  # inquiry: no funds withdrawn
-        return Event(STRIPE, event_id, "dispute_open", ref, facts.get("amount") or 0,
-                     facts.get("object_id"), created)
+        return Event(
+            STRIPE,
+            event_id,
+            "dispute_open",
+            ref,
+            facts.get("amount") or 0,
+            facts.get("object_id"),
+            created,
+        )
     if event_type == "charge.dispute.closed":
         if status == "lost":
             kind = "dispute_lost"
@@ -227,7 +275,9 @@ def normalize_stripe_event(event_type: str, event_id: str, facts: dict, created:
             kind = "dispute_won"
         else:
             return None
-        return Event(STRIPE, event_id, kind, ref, facts.get("amount") or 0, facts.get("object_id"), created)
+        return Event(
+            STRIPE, event_id, kind, ref, facts.get("amount") or 0, facts.get("object_id"), created
+        )
     return None
 
 

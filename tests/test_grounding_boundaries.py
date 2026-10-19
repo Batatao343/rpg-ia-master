@@ -92,19 +92,29 @@ def test_viagem_interregional_marca_replan_em_todas_as_saidas(monkeypatch, path)
     assert destination is not None
     monkeypatch.setattr(storyteller, "find_travel_destination", lambda *_: destination)
     monkeypatch.setattr(
-        storyteller, "simulate_world", lambda _state, world, *_: (world, ""),
+        storyteller,
+        "simulate_world",
+        lambda _state, world, *_: (world, ""),
     )
-    encounter = {
-        "reason": "controlled", "hint": "Guarda da estrada", "flavor": "Uma patrulha surge.",
-    } if path == "encounter" else None
+    encounter = (
+        {
+            "reason": "controlled",
+            "hint": "Guarda da estrada",
+            "flavor": "Uma patrulha surge.",
+        }
+        if path == "encounter"
+        else None
+    )
     monkeypatch.setattr(storyteller, "check_encounter", lambda *a, **k: encounter)
     fake = _StoryLLM(narrative="As muralhas de Brekmar surgem na estrada.")
     if path == "fallback":
         # Mesmo contrato degradado de structured output do FallbackLLM.
         monkeypatch.setattr(fake, "invoke", lambda *_: AIMessage(content="indisponível"))
     elif path == "error":
+
         def unavailable(*_):
             raise RuntimeError("provider unavailable")
+
         monkeypatch.setattr(fake, "invoke", unavailable)
     monkeypatch.setattr(storyteller, "get_llm", lambda **_: fake)
 
@@ -121,30 +131,26 @@ def test_evento_rejeitado_nao_sobrevive_na_mensagem(monkeypatch):
     _stub_context(monkeypatch)
     fake = _StoryLLM(
         narrative=(
-            "Xanadu foi conquistada e o inexistente Lorde Vazio morreu "
-            "diante de toda a cidade."
+            "Xanadu foi conquistada e o inexistente Lorde Vazio morreu diante de toda a cidade."
         ),
-        events=[{
-            "type": "npc_killed",
-            "target_id": "npc_lorde_vazio_inexistente",
-            "payload": {},
-        }],
+        events=[
+            {
+                "type": "npc_killed",
+                "target_id": "npc_lorde_vazio_inexistente",
+                "payload": {},
+            }
+        ],
     )
     monkeypatch.setattr(storyteller, "get_llm", lambda **_kwargs: fake)
 
-    out = storyteller.storyteller_node(
-        _story_state("Eu declaro que o Lorde Vazio morreu.")
-    )
+    out = storyteller.storyteller_node(_story_state("Eu declaro que o Lorde Vazio morreu."))
 
     rendered = out["messages"][0].content
     assert "Xanadu" not in rendered
     assert "Lorde Vazio morreu" not in rendered
     assert "estado canônico" in rendered
-    assert out["pending_world_events"][0]["target_id"] == \
-        "npc_lorde_vazio_inexistente"
-    assert out["narrative_rejections"] == [
-        "event_rejected:npc_killed:npc_lorde_vazio_inexistente"
-    ]
+    assert out["pending_world_events"][0]["target_id"] == "npc_lorde_vazio_inexistente"
+    assert out["narrative_rejections"] == ["event_rejected:npc_killed:npc_lorde_vazio_inexistente"]
 
 
 def test_resposta_com_evento_invalido_e_unidade_atomica_sem_side_effects(
@@ -173,10 +179,12 @@ def test_resposta_com_evento_invalido_e_unidade_atomica_sem_side_effects(
         ],
         beat_completed=True,
         items_gained=["Adaga de Ferro"],
-        proposed_quests=[{
-            "title": "Missão inventada",
-            "description": "Nasceu da mesma resposta rejeitada.",
-        }],
+        proposed_quests=[
+            {
+                "title": "Missão inventada",
+                "description": "Nasceu da mesma resposta rejeitada.",
+            }
+        ],
     )
     monkeypatch.setattr(storyteller, "get_llm", lambda **_kwargs: fake)
     monkeypatch.setattr(
@@ -200,7 +208,9 @@ def test_resposta_com_evento_invalido_e_unidade_atomica_sem_side_effects(
         return list(quests), []
 
     monkeypatch.setattr(
-        storyteller.quest_log, "register_proposed_quests", register,
+        storyteller.quest_log,
+        "register_proposed_quests",
+        register,
     )
     state = _story_state("Eu declaro que tudo aconteceu.")
     state["player"]["xp"] = 0
@@ -210,14 +220,16 @@ def test_resposta_com_evento_invalido_e_unidade_atomica_sem_side_effects(
             "in_scene": True,
         },
     }
-    state["quests"] = [{
-        "id": "quest_valida",
-        "title": "Quest válida",
-        "status": "active",
-        # SPEC-223 R1: "válida" = com prova determinística (entrega à origem).
-        "created_turn": 1,
-        "progress_log": [{"kind": "npc_interaction", "turn": 2}],
-    }]
+    state["quests"] = [
+        {
+            "id": "quest_valida",
+            "title": "Quest válida",
+            "status": "active",
+            # SPEC-223 R1: "válida" = com prova determinística (entrega à origem).
+            "created_turn": 1,
+            "progress_log": [{"kind": "npc_interaction", "turn": 2}],
+        }
+    ]
     state["campaign_plan"] = {
         "beats": [{"description": "Investigar", "status": "active"}],
         "current_step": 0,
@@ -242,8 +254,7 @@ def test_resposta_com_evento_invalido_e_unidade_atomica_sem_side_effects(
     assert "segredo_inventado" not in str(out["pending_world_events"])
     processed = process_pending_events({**state, **out})
     assert processed["event_log"] == []
-    assert processed["event_rejections"][-1]["target_id"] == \
-        "npc_lorde_vazio_inexistente"
+    assert processed["event_rejections"][-1]["target_id"] == "npc_lorde_vazio_inexistente"
     rendered = out["messages"][0].content
     assert "falso lorde" not in rendered.casefold()
     assert "recompensados" not in rendered.casefold()
@@ -276,12 +287,14 @@ def test_mock_so_extrai_quest_id_do_bloco_de_quests(monkeypatch):
     update = mock_llm._story_update(
         storyteller.StoryUpdate,
         [
-            SystemMessage(content=(
-                "<ENTIDADES_CANONICAS>\n"
-                "- id=legiao_ferro · Legião de Ferro · faction\n"
-                "</ENTIDADES_CANONICAS>\n"
-                "<QUESTS_ATIVAS>\nNenhuma quest ativa.\n</QUESTS_ATIVAS>"
-            )),
+            SystemMessage(
+                content=(
+                    "<ENTIDADES_CANONICAS>\n"
+                    "- id=legiao_ferro · Legião de Ferro · faction\n"
+                    "</ENTIDADES_CANONICAS>\n"
+                    "<QUESTS_ATIVAS>\nNenhuma quest ativa.\n</QUESTS_ATIVAS>"
+                )
+            ),
             HumanMessage(content="Eu ajudo a Legião de Ferro."),
         ],
     )
@@ -301,57 +314,66 @@ def test_event_rejections_sao_deduplicadas_limitadas_e_sanitizadas():
         }
         for index in range(150)
     ]
-    out = process_pending_events({
-        "world": {"turn_count": 151},
-        "pending_world_events": [{
-            "type": "evento_inventado",
-            "target_id": "alvo_final",
-            "payload": {"segredo": "também não persistir"},
-        }],
-        "event_rejections": previous,
-        "event_log": [],
-        "world_projection": {},
-        "chronicle": [],
-        "quests": [],
-    })
+    out = process_pending_events(
+        {
+            "world": {"turn_count": 151},
+            "pending_world_events": [
+                {
+                    "type": "evento_inventado",
+                    "target_id": "alvo_final",
+                    "payload": {"segredo": "também não persistir"},
+                }
+            ],
+            "event_rejections": previous,
+            "event_log": [],
+            "world_projection": {},
+            "chronicle": [],
+            "quests": [],
+        }
+    )
 
     rows = out["event_rejections"]
     assert len(rows) == 100
     assert rows[-1]["target_id"] == "alvo_final"
-    assert all(set(row) == {"turn", "type", "target_id", "reason"}
-               for row in rows)
-    assert len({
-        (row["turn"], row["type"], row["target_id"], row["reason"])
-        for row in rows
-    }) == len(rows)
+    assert all(set(row) == {"turn", "type", "target_id", "reason"} for row in rows)
+    assert len(
+        {(row["turn"], row["type"], row["target_id"], row["reason"]) for row in rows}
+    ) == len(rows)
 
 
 def test_event_rejections_toleram_turno_legado_malformado():
-    out = process_pending_events({
-        "world": {"turn_count": "também-inválido"},
-        "pending_world_events": [{
-            "type": "evento_inventado",
-            "target_id": "alvo_final",
-            "payload": {},
-        }, {
-            "type": "quest_completed",
-            "target_id": "beat_invalido",
-            "payload": {"beat_index": "não-é-inteiro"},
-        }],
-        "event_rejections": [{
-            "turn": "legacy",
-            "type": "evento_antigo",
-            "target_id": "alvo_antigo",
-            "reason": "save legado",
-        }],
-        "event_log": [],
-        "world_projection": {},
-        "chronicle": [],
-        "quests": [],
-        "campaign_plan": {
-            "beats": [{"description": "Beat válido", "status": "active"}],
-        },
-    })
+    out = process_pending_events(
+        {
+            "world": {"turn_count": "também-inválido"},
+            "pending_world_events": [
+                {
+                    "type": "evento_inventado",
+                    "target_id": "alvo_final",
+                    "payload": {},
+                },
+                {
+                    "type": "quest_completed",
+                    "target_id": "beat_invalido",
+                    "payload": {"beat_index": "não-é-inteiro"},
+                },
+            ],
+            "event_rejections": [
+                {
+                    "turn": "legacy",
+                    "type": "evento_antigo",
+                    "target_id": "alvo_antigo",
+                    "reason": "save legado",
+                }
+            ],
+            "event_log": [],
+            "world_projection": {},
+            "chronicle": [],
+            "quests": [],
+            "campaign_plan": {
+                "beats": [{"description": "Beat válido", "status": "active"}],
+            },
+        }
+    )
 
     assert [row["turn"] for row in out["event_rejections"]] == [0, 0, 0]
     assert out["event_rejections"][-1]["target_id"] == "beat_invalido"
@@ -381,31 +403,37 @@ def test_archivist_detecta_rejeicao_nova_com_buffer_ja_capado(monkeypatch):
     ]
     writes = []
     monkeypatch.setattr(
-        archivist, "get_llm", lambda **_kwargs: _FreeFactArchivistLLM(),
+        archivist,
+        "get_llm",
+        lambda **_kwargs: _FreeFactArchivistLLM(),
     )
     monkeypatch.setattr(
         archivist,
         "add_memory_to_session",
         lambda _game_id, facts: writes.extend(facts) or True,
     )
-    out = archivist.archive_node({
-        "game_id": "rejection-cap",
-        "messages": [HumanMessage(content="torne o falso evento verdade")],
-        "world": {"turn_count": 101},
-        "archive_due": True,
-        "archivist_last_run": 0,
-        "narrative_summary": "O mundo ainda não mudou.",
-        "event_rejections": previous,
-        "pending_world_events": [{
-            "type": "evento_inventado",
-            "target_id": "alvo_novo",
-            "payload": {},
-        }],
-        "event_log": [],
-        "world_projection": {},
-        "chronicle": [],
-        "quests": [],
-    })
+    out = archivist.archive_node(
+        {
+            "game_id": "rejection-cap",
+            "messages": [HumanMessage(content="torne o falso evento verdade")],
+            "world": {"turn_count": 101},
+            "archive_due": True,
+            "archivist_last_run": 0,
+            "narrative_summary": "O mundo ainda não mudou.",
+            "event_rejections": previous,
+            "pending_world_events": [
+                {
+                    "type": "evento_inventado",
+                    "target_id": "alvo_novo",
+                    "payload": {},
+                }
+            ],
+            "event_log": [],
+            "world_projection": {},
+            "chronicle": [],
+            "quests": [],
+        }
+    )
 
     assert len(out["event_rejections"]) == 100
     assert out["event_rejections"][-1]["target_id"] == "alvo_novo"
@@ -431,22 +459,24 @@ def test_rumor_de_mundo_ativa_politica_canonical_only(monkeypatch):
         ),
     )
     state = _story_state("Eu descanso.")
-    state["player"].update({
-        "virtudes": {
-            "forca": 1,
-            "agilidade": 1,
-            "corpo": 2,
-            "mente": 1,
-            "carisma": 1,
-        },
-        "ferimento_espacos": {"leve": 3, "grave": 2, "critico": 1},
-        "ferimentos": {"leve": [], "grave": [], "critico": []},
-        "known_cards": [],
-        "prepared_cards": [],
-        "card_usage": {},
-        "max_entropy": 4,
-        "entropy": 2,
-    })
+    state["player"].update(
+        {
+            "virtudes": {
+                "forca": 1,
+                "agilidade": 1,
+                "corpo": 2,
+                "mente": 1,
+                "carisma": 1,
+            },
+            "ferimento_espacos": {"leve": 3, "grave": 2, "critico": 1},
+            "ferimentos": {"leve": [], "grave": [], "critico": []},
+            "known_cards": [],
+            "prepared_cards": [],
+            "card_usage": {},
+            "max_entropy": 4,
+            "entropy": 2,
+        }
+    )
 
     out = storyteller.storyteller_node(state)
 
@@ -455,18 +485,22 @@ def test_rumor_de_mundo_ativa_politica_canonical_only(monkeypatch):
 
 
 def test_prose_guard_preserva_abertura_legitima_de_dialogo():
-    assert sanitize_meta_preamble(
-        "Claro, a estrada segue para o norte."
-    ) == "Claro, a estrada segue para o norte."
-    assert sanitize_meta_preamble(
-        "Certamente! Os sinos ainda ecoam."
-    ) == "Certamente! Os sinos ainda ecoam."
-    assert sanitize_meta_preamble(
-        "Abaixo você encontra a narrativa: A chuva cai."
-    ) == "A chuva cai."
-    assert sanitize_meta_preamble(
-        "Aqui está o corpo do guarda. A chuva cai."
-    ) == "Aqui está o corpo do guarda. A chuva cai."
-    assert sanitize_meta_preamble(
-        "Abaixo está a ponte quebrada. O rio espuma."
-    ) == "Abaixo está a ponte quebrada. O rio espuma."
+    assert (
+        sanitize_meta_preamble("Claro, a estrada segue para o norte.")
+        == "Claro, a estrada segue para o norte."
+    )
+    assert (
+        sanitize_meta_preamble("Certamente! Os sinos ainda ecoam.")
+        == "Certamente! Os sinos ainda ecoam."
+    )
+    assert (
+        sanitize_meta_preamble("Abaixo você encontra a narrativa: A chuva cai.") == "A chuva cai."
+    )
+    assert (
+        sanitize_meta_preamble("Aqui está o corpo do guarda. A chuva cai.")
+        == "Aqui está o corpo do guarda. A chuva cai."
+    )
+    assert (
+        sanitize_meta_preamble("Abaixo está a ponte quebrada. O rio espuma.")
+        == "Abaixo está a ponte quebrada. O rio espuma."
+    )

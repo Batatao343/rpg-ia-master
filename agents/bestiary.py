@@ -3,6 +3,7 @@ agents/bestiary.py
 Gerador de Inimigos V8 (Refatorado Check-First + RAG).
 Correção: Prompt reforçado para garantir lista de ataques estruturada.
 """
+
 import json
 import os
 import re
@@ -19,11 +20,15 @@ from observability.telemetry import log_event as _log_event
 try:
     from rag import query_rag
 except ImportError:
-    def query_rag(*args, **kwargs): return ""
+
+    def query_rag(*args, **kwargs):
+        return ""
+
 
 from agents.librarian import find_existing_entity
 
 BESTIARY_FILE = "data/bestiary.json"
+
 
 # --- SCHEMA ---------------------------------------------------------------
 # A IA descreve o CONCEITO. Nenhum número mecânico atravessa esta fronteira;
@@ -39,7 +44,10 @@ class EnemySchema(BaseModel):
     nome_ataque: str = "Ataque"
     abilities: list[str] = Field(default_factory=list)
     loot: list[str] = Field(default_factory=list)
-    regions: list[str] = Field(default_factory=list, description="Ids das regiões onde a criatura ocorre (ex.: 'skallgard')")
+    regions: list[str] = Field(
+        default_factory=list,
+        description="Ids das regiões onde a criatura ocorre (ex.: 'skallgard')",
+    )
 
 
 _VIRTUDE_TEMPLATES: dict[str, dict[str, int]] = {
@@ -52,7 +60,10 @@ _VIRTUDE_TEMPLATES: dict[str, dict[str, int]] = {
 _CATEGORY_BONUS = {"lacaio": -1, "padrao": 0, "elite": 1, "chefe": 2}
 _LEGACY_TYPE = {"lacaio": "Minion", "padrao": "Standard", "elite": "Elite", "chefe": "BOSS"}
 _ATTACK_TYPE = {
-    "corpo_a_corpo": "melee", "distancia": "ranged", "magico": "magic", "area": "area",
+    "corpo_a_corpo": "melee",
+    "distancia": "ranged",
+    "magico": "magic",
+    "area": "area",
 }
 
 
@@ -69,21 +80,31 @@ def _profile_for_archetype(archetype: str) -> dict:
         "mistico": "Prioriza controle e mantém distância quando possível.",
         "equilibrado": "Ataca o alvo mais ameaçador sem abandonar a posição.",
     }
-    return {"priorities": [{
-        "trigger": "sempre", "tipo": "obrigatorio",
-        "action_hint": hints.get(archetype, hints["equilibrado"]),
-        "resistance": "flexivel", "blocks": [],
-    }]}
+    return {
+        "priorities": [
+            {
+                "trigger": "sempre",
+                "tipo": "obrigatorio",
+                "action_hint": hints.get(archetype, hints["equilibrado"]),
+                "resistance": "flexivel",
+                "blocks": [],
+            }
+        ]
+    }
 
 
-def materialize_enemy_concept(concept: dict | EnemySchema, *,
-                              encounter_level: int = 1) -> dict:
+def materialize_enemy_concept(concept: dict | EnemySchema, *, encounter_level: int = 1) -> dict:
     """Converte conceito categórico em ficha v4. Ignora deliberadamente qualquer
     HP/AC/atributo/dano livre que exista no dict de entrada."""
     raw = concept.model_dump() if isinstance(concept, EnemySchema) else dict(concept or {})
     category_alias = {
-        "minion": "lacaio", "standard": "padrao", "boss": "chefe",
-        "lacaio": "lacaio", "padrao": "padrao", "elite": "elite", "chefe": "chefe",
+        "minion": "lacaio",
+        "standard": "padrao",
+        "boss": "chefe",
+        "lacaio": "lacaio",
+        "padrao": "padrao",
+        "elite": "elite",
+        "chefe": "chefe",
     }
     category = category_alias.get(
         str(raw.get("categoria") or raw.get("type") or "padrao").strip().lower(),
@@ -109,6 +130,7 @@ def materialize_enemy_concept(concept: dict | EnemySchema, *,
     corpo = virtues["corpo"]
     max_vitality = gamedata.vitalidade_para_corpo(corpo)
     from services.conflict_resolution import compute_esquiva
+
     esquiva = compute_esquiva({"virtudes": virtues}, include_modifiers=False)
     name = str(raw.get("name") or "Inimigo Desconhecido").strip() or "Inimigo Desconhecido"
     attack_name = str(raw.get("nome_ataque") or "Ataque").strip() or "Ataque"
@@ -128,8 +150,7 @@ def materialize_enemy_concept(concept: dict | EnemySchema, *,
         "active_conditions": [],
         "tactical_profile": _profile_for_archetype(archetype),
         "cartas": ["bst_defesa_instintiva"],
-        "attacks": [{"name": attack_name, "type": _ATTACK_TYPE[style],
-                     "potency": "moderado"}],
+        "attacks": [{"name": attack_name, "type": _ATTACK_TYPE[style], "potency": "moderado"}],
         "abilities": list(raw.get("abilities") or []),
         "loot": list(raw.get("loot") or []),
         "regions": list(raw.get("regions") or []),
@@ -141,19 +162,24 @@ def materialize_enemy_concept(concept: dict | EnemySchema, *,
     }
     return data
 
+
 # --- PERSISTÊNCIA (spec isolar-cache-runtime) -------------------------------
 # data/bestiary.json = base CURADA (2.5b), READ-ONLY em runtime. Criatura gerada
 # pelo LLM vai pro OVERLAY gitignored (RPG_RUNTIME_CACHE_DIR/bestiary_runtime.json).
 
+
 def _overlay_path() -> str:
     from gamedata import runtime_cache_path
+
     return runtime_cache_path("bestiary_runtime.json")
 
 
 def _read_json(path: str) -> dict:
-    if not os.path.exists(path): return {}
+    if not os.path.exists(path):
+        return {}
     try:
-        with open(path, encoding='utf-8') as f: return json.load(f)
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
     except Exception as e:
         _log_event("bestiary", "read_failed", level="warning", error=type(e).__name__)
         return {}
@@ -178,20 +204,27 @@ def save_enemy(data: dict):
 
     # Usa ID se existir, senão gera slug
     key = data.get("id", data["name"].lower().replace(" ", "_"))
-    if "id" not in data: data["id"] = key
+    if "id" not in data:
+        data["id"] = key
 
     from agents.npc import catalog_owner_id
 
     owner = catalog_owner_id()  # SPEC-223 R7: escopo do dono em perfis com principal
     get_runtime().runtime_catalog.put(
-        "bestiary_template", key, data,
-        scope="user" if owner else "global", owner_id=owner, game_id=None,
+        "bestiary_template",
+        key,
+        data,
+        scope="user" if owner else "global",
+        owner_id=owner,
+        game_id=None,
     )
+
 
 def _infer_tier_from_name(name: str) -> ModelTier:
     """SPEC-223 R7 (D-C): nome vindo do jogador não escala para SMART."""
     del name
     return ModelTier.FAST
+
 
 # --- GERADOR ---
 def template_by_id(enemy_id: str, *, encounter_level: int = 1) -> dict | None:
@@ -213,24 +246,24 @@ def template_by_id(enemy_id: str, *, encounter_level: int = 1) -> dict | None:
     return normalized
 
 
-def generate_new_enemy(name: str, context: str = "", *,
-                       encounter_level: int = 1) -> dict:
+def generate_new_enemy(name: str, context: str = "", *, encounter_level: int = 1) -> dict:
     from services.prompt_guard import sanitize_entity_name
+
     name = sanitize_entity_name(name) or "Criatura"  # SPEC-223 R7
     # 1. CHECK-FIRST
     db = load_bestiary()
     existing_ids = list(db.keys())
-    
+
     found_id = find_existing_entity(name, "Monster", existing_ids)
     if found_id:
         _log_event("bestiary", "cache_hit", level="debug", entity_id=found_id)
         data = dict(db[found_id])
-        
+
         # Auto-correção de legado
         if "id" not in data:
-             _log_event("bestiary", "legacy_monster_without_id", level="info")
-             data["id"] = found_id
-             save_enemy(data)
+            _log_event("bestiary", "legacy_monster_without_id", level="info")
+            data["id"] = found_id
+            save_enemy(data)
 
         if data.get("virtudes") and data.get("max_vitalidade") is not None:
             data["vitalidade"] = int(data.get("max_vitalidade") or 0)
@@ -245,37 +278,48 @@ def generate_new_enemy(name: str, context: str = "", *,
 
     # 2. GERAÇÃO
     _log_event("bestiary", "creating", level="info")
-    
+
     lore = query_rag(f"{name} {context}", index_name="lore")
-    if not lore: lore = "Standard RPG Monster."
+    if not lore:
+        lore = "Standard RPG Monster."
 
     llm = get_llm(temperature=0.5, tier=_infer_tier_from_name(name))
-    
-    sys_msg = SystemMessage(content=f"""
+
+    sys_msg = SystemMessage(
+        content=f"""
     <role>Designer narrativo de criaturas de Valoria</role>
     <lore_context>{lore}</lore_context>
 
     Descreva apenas identidade, categoria, arquétipo, estilo e flavor.
     NUNCA forneça HP, AC, Virtudes, bônus, dano, duração, dificuldade ou qualquer
     outro número mecânico. A ficha é calculada exclusivamente pelo motor Python.
-    """)
-    
+    """
+    )
+
     try:
         designer = llm.with_structured_output(EnemySchema)
-        res = designer.invoke([sys_msg, HumanMessage(content=f"Create monster: {name}. Context: {context}")])
+        res = designer.invoke(
+            [sys_msg, HumanMessage(content=f"Create monster: {name}. Context: {context}")]
+        )
         if not isinstance(res, EnemySchema):
             raise TypeError(f"structured output inválido: {type(res).__name__}")
         data = materialize_enemy_concept(res, encounter_level=encounter_level)
 
         save_enemy(data)
         return data
-        
+
     except Exception as e:
         _log_event("bestiary", "generation_failed", level="error", error=type(e).__name__)
         # Fallback de segurança para não quebrar o jogo
-        return materialize_enemy_concept({
-            "name": name, "id": f"fallback_{_slug(name)}",
-            "description": "Criatura genérica materializada pelo fallback seguro.",
-            "categoria": "lacaio", "arquetipo": "equilibrado",
-            "estilo_ataque": "corpo_a_corpo", "nome_ataque": "Ataque Básico",
-        }, encounter_level=encounter_level)
+        return materialize_enemy_concept(
+            {
+                "name": name,
+                "id": f"fallback_{_slug(name)}",
+                "description": "Criatura genérica materializada pelo fallback seguro.",
+                "categoria": "lacaio",
+                "arquetipo": "equilibrado",
+                "estilo_ataque": "corpo_a_corpo",
+                "nome_ataque": "Ataque Básico",
+            },
+            encounter_level=encounter_level,
+        )

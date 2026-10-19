@@ -7,6 +7,7 @@ via `_targetable`/`occlusion_attack_modifier`) — o frontend nunca recalcula re
 Ids de alvo: `"player"`, `enemy.id` (= `participant_id` do manifesto SPEC-203) e
 `id`/nome de aliado (party formal ou transitório de cena).
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -21,9 +22,16 @@ PLAYER_ID = "player"
 # Enum fechado (R8). `out_of_zone` é reservado: a cena atual não impõe restrição
 # de alcance a Cartas, então hoje nunca é emitido (ver spec, R8).
 INVALID_REASONS = (
-    "not_prepared", "spent_frequency", "no_entropy", "cooldown",
-    "no_valid_target", "target_dead", "target_hidden", "out_of_zone",
-    "not_your_turn", "combat_inactive",
+    "not_prepared",
+    "spent_frequency",
+    "no_entropy",
+    "cooldown",
+    "no_valid_target",
+    "target_dead",
+    "target_hidden",
+    "out_of_zone",
+    "not_your_turn",
+    "combat_inactive",
 )
 
 MANEUVERS = ("engajar", "desengajar", "guardar", "esconder", "procurar")
@@ -37,8 +45,7 @@ class TargetingResult:
     invalid_reason: str | None = None
 
     def as_dict(self) -> dict:
-        return {"valid_targets": list(self.valid_targets),
-                "invalid_reason": self.invalid_reason}
+        return {"valid_targets": list(self.valid_targets), "invalid_reason": self.invalid_reason}
 
 
 def _enemies(state: dict) -> list[dict]:
@@ -52,6 +59,7 @@ def _enemy_id(enemy: dict) -> str:
 def friendly_ids(state: dict) -> list[str]:
     """Herói + aliados presentes (party ativa e aliados transitórios de cena)."""
     import party as party_mod
+
     ids = [PLAYER_ID]
     for ally in party_mod.backfill_party(state.get("party") or []):
         if isinstance(ally, dict) and ally.get("active") and _targetable(ally):
@@ -59,8 +67,7 @@ def friendly_ids(state: dict) -> list[str]:
     meta = state.get("combat") or {}
     enemy_refs = [str(v) for e in _enemies(state) for v in (e.get("id"), e.get("name")) if v]
     # Mesma regra do motor (agents/combat.py): lista vazia também recalcula.
-    transient = (meta.get("scene_allies")
-                 or party_mod.scene_allies(state, excluded=enemy_refs))
+    transient = meta.get("scene_allies") or party_mod.scene_allies(state, excluded=enemy_refs)
     for ally in transient or []:
         if isinstance(ally, dict) and _targetable(ally):
             aid = str(ally.get("id") or ally.get("name"))
@@ -116,6 +123,7 @@ def valid_targets_for_card(state: dict, card_id: str) -> TargetingResult:
     if not cards.can_use_card(player, card_id):
         return TargetingResult([], "no_entropy")
     import combat_mechanics as cm
+
     if cm.has_control(player, "silence"):
         # Bloqueio temporário (silêncio): o motor recusaria a Carta.
         return TargetingResult([], "cooldown")
@@ -128,8 +136,7 @@ def valid_targets_for_card(state: dict, card_id: str) -> TargetingResult:
     return result
 
 
-def basic_action_targeting(state: dict, kind: str,
-                           maneuver: str | None = None) -> TargetingResult:
+def basic_action_targeting(state: dict, kind: str, maneuver: str | None = None) -> TargetingResult:
     """Ataque básico, passar, fugir e manobras táticas."""
     gate = _combat_gate(state)
     if gate:
@@ -143,9 +150,7 @@ def basic_actions(state: dict) -> list[dict]:
     """`combat.basic_actions[]` (R7): ataque, manobras, passar e fugir."""
     out: list[dict] = []
     for kind, maneuver in (
-        [("attack", None)]
-        + [("maneuver", m) for m in MANEUVERS]
-        + [("pass", None), ("flee", None)]
+        [("attack", None)] + [("maneuver", m) for m in MANEUVERS] + [("pass", None), ("flee", None)]
     ):
         row: dict = {"kind": kind}
         if maneuver:
@@ -160,8 +165,14 @@ def card_targeting(state: dict, card_id: str) -> dict:
     return valid_targets_for_card(state, card_id).as_dict()
 
 
-def check_declared_target(state: dict, *, card_id: str | None, action_kind: str | None,
-                          maneuver: str | None, target_id: str | None) -> str | None:
+def check_declared_target(
+    state: dict,
+    *,
+    card_id: str | None,
+    action_kind: str | None,
+    maneuver: str | None,
+    target_id: str | None,
+) -> str | None:
     """R9: motivo de rejeição de borda para um `target_id` explícito, ou None.
 
     Só rejeita por razão relativa ao ALVO (alvo fora da lista ou sem alvo
@@ -181,4 +192,4 @@ def check_declared_target(state: dict, *, card_id: str | None, action_kind: str 
         if result.valid_targets or result.invalid_reason:
             return result.invalid_reason or "no_valid_target"
         return "no_valid_target"
-    return None   # economia/estado: o motor decide sem cobrar
+    return None  # economia/estado: o motor decide sem cobrar

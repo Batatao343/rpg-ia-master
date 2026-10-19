@@ -20,10 +20,13 @@ from services.content_validator import validate_visibility
 # Etapa 1 — split_npc_secrets
 # ---------------------------------------------------------------------------
 
+
 def test_split_move_historia_real():
-    body = ("Papel: taverneiro da vila.\n\n"
-            "História real: fez pacto com Daruun.\n\n"
-            "Aparência: gordo e simpático.")
+    body = (
+        "Papel: taverneiro da vila.\n\n"
+        "História real: fez pacto com Daruun.\n\n"
+        "Aparência: gordo e simpático."
+    )
     publico, secreto = split_npc_secrets(body)
     assert "pacto com Daruun" not in publico
     assert "pacto com Daruun" in secreto
@@ -70,9 +73,17 @@ def test_split_rumor_verdadeiro_e_secreto():
 # Etapa 2 — migrate escreve o doc paralelo
 # ---------------------------------------------------------------------------
 
-_LORE_VAZIO = ("locations.txt", "factions.txt", "races.txt", "creatures.txt",
-               "items.txt", "secrets.txt", "faction_perspectives.txt",
-               "rumors.txt", "daily_life.txt")
+_LORE_VAZIO = (
+    "locations.txt",
+    "factions.txt",
+    "races.txt",
+    "creatures.txt",
+    "items.txt",
+    "secrets.txt",
+    "faction_perspectives.txt",
+    "rumors.txt",
+    "daily_life.txt",
+)
 
 
 def _run_migrate(tmp_path, monkeypatch, npcs_txt: str):
@@ -145,6 +156,7 @@ def test_segredo_nao_registra_entidade(tmp_path, monkeypatch):
 # Etapa 3 — lint anti-regressão
 # ---------------------------------------------------------------------------
 
+
 def _write_md(codex_dir, fname: str, front: dict, body: str) -> str:
     os.makedirs(codex_dir, exist_ok=True)
     path = os.path.join(codex_dir, fname)
@@ -165,32 +177,36 @@ def _graph_vazio(tmp_path) -> str:
 
 
 def _front(entity_id: str, etype: str = "npc", vis: str = "public") -> dict:
-    return {"id": entity_id, "type": etype, "name": entity_id,
-            "tags": [], "visibility": vis}
+    return {"id": entity_id, "type": etype, "name": entity_id, "tags": [], "visibility": vis}
 
 
 def test_lint_public_com_rotulo_secreto_erro(tmp_path):
     codex = str(tmp_path / "codex")
-    _write_md(codex, "npc_x.md", _front("npc_x"),
-              "Papel: guarda.\n\nMotivação real: trair o rei.")
+    _write_md(codex, "npc_x.md", _front("npc_x"), "Papel: guarda.\n\nMotivação real: trair o rei.")
     findings = validate_visibility(codex, _graph_vazio(tmp_path))
     assert any(f.severity == "error" and "rótulo secreto" in f.message for f in findings)
 
 
 def test_lint_npc_secret_public_erro(tmp_path):
     codex = str(tmp_path / "codex")
-    _write_md(codex, "npc_x_segredo.md",
-              _front("npc_x_segredo", etype="npc_secret", vis="public"),
-              "Verdade: tudo mentira.")
+    _write_md(
+        codex,
+        "npc_x_segredo.md",
+        _front("npc_x_segredo", etype="npc_secret", vis="public"),
+        "Verdade: tudo mentira.",
+    )
     findings = validate_visibility(codex, _graph_vazio(tmp_path))
     assert any(f.severity == "error" and "npc_secret" in f.message for f in findings)
 
 
 def test_lint_npc_secret_hidden_ok(tmp_path):
     codex = str(tmp_path / "codex")
-    _write_md(codex, "npc_x_segredo.md",
-              _front("npc_x_segredo", etype="npc_secret", vis="hidden"),
-              "Verdade: tudo mentira.")
+    _write_md(
+        codex,
+        "npc_x_segredo.md",
+        _front("npc_x_segredo", etype="npc_secret", vis="hidden"),
+        "Verdade: tudo mentira.",
+    )
     findings = validate_visibility(codex, _graph_vazio(tmp_path))
     assert [f for f in findings if f.severity == "error"] == []
 
@@ -198,8 +214,9 @@ def test_lint_npc_secret_hidden_ok(tmp_path):
 def test_lint_rotulo_em_doc_hidden_de_npc_nao_acusa(tmp_path):
     # o rótulo só é proibido em doc PÚBLICO de NPC
     codex = str(tmp_path / "codex")
-    _write_md(codex, "npc_x.md", _front("npc_x", vis="hidden"),
-              "História real: oculta de propósito.")
+    _write_md(
+        codex, "npc_x.md", _front("npc_x", vis="hidden"), "História real: oculta de propósito."
+    )
     findings = validate_visibility(codex, _graph_vazio(tmp_path))
     assert [f for f in findings if f.severity == "error"] == []
 
@@ -207,6 +224,7 @@ def test_lint_rotulo_em_doc_hidden_de_npc_nao_acusa(tmp_path):
 # ---------------------------------------------------------------------------
 # Etapa 4 — dado real (roda sobre data/codex/ regenerado)
 # ---------------------------------------------------------------------------
+
 
 def test_valerius_publico_sem_pacto():
     path = os.path.join("data", "codex", "npcs", "npc_valerius.md")
@@ -230,6 +248,7 @@ def test_valerius_segredo_hidden():
 
 def test_codex_body_nao_vaza_segredo():
     from services.codex_loader import clear_codex_index_cache, codex_body
+
     clear_codex_index_cache()
     assert codex_body("npc_valerius_segredo") == ""
     publico = codex_body("npc_valerius")

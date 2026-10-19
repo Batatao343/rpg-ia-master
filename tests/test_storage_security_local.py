@@ -17,9 +17,14 @@ pytestmark = [pytest.mark.infra_local, pytest.mark.security_local]
 
 
 def _env() -> tuple[str, str, str]:
-    values = tuple(os.getenv(name, "") for name in (
-        "SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY", "SUPABASE_SERVICE_ROLE_KEY",
-    ))
+    values = tuple(
+        os.getenv(name, "")
+        for name in (
+            "SUPABASE_URL",
+            "SUPABASE_PUBLISHABLE_KEY",
+            "SUPABASE_SERVICE_ROLE_KEY",
+        )
+    )
     if not all(values):
         pytest.skip("env local Supabase ausente")
     return values  # type: ignore[return-value]
@@ -40,7 +45,8 @@ def _token(base: str, publishable: str, email: str, password: str) -> str:
     response = httpx.post(
         f"{base}/auth/v1/token?grant_type=password",
         headers={"apikey": publishable},
-        json={"email": email, "password": password}, timeout=10,
+        json={"email": email, "password": password},
+        timeout=10,
     )
     response.raise_for_status()
     return str(response.json()["access_token"])
@@ -70,7 +76,8 @@ def test_bucket_privado_isola_objeto_a_b_e_signed_url_expira():
         digest = hashlib.sha256(payload).hexdigest()
         key = f"users/{owner_a}/games/{game_id}/npc/test/{uuid4()}.full.{digest[:12]}.webp"
         store.put(
-            key, BytesIO(payload),
+            key,
+            BytesIO(payload),
             BlobMetadata(owner_a, game_id, "image/webp", digest, "security_test", len(payload)),
         )
         assert store.open(key).read() == payload

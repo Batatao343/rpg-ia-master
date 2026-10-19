@@ -10,7 +10,10 @@ def test_readiness_exige_g0_g7_e_produz_json_markdown(tmp_path):
     output = tmp_path / "report"
     for gate in GATES:
         record_gate(
-            gates, gate, status="passed", command=f"run {gate}",
+            gates,
+            gate,
+            status="passed",
+            command=f"run {gate}",
             evidence=f"{gate} green",
         )
     report = build_report(gates, output)
@@ -21,7 +24,10 @@ def test_readiness_exige_g0_g7_e_produz_json_markdown(tmp_path):
 
 def test_readiness_falha_com_gate_ausente_e_redige_evidencia(tmp_path):
     record_gate(
-        tmp_path, "G0", status="passed", command="pytest",
+        tmp_path,
+        "G0",
+        status="passed",
+        command="pytest",
         evidence="Bearer secret.jwt.token hero@example.com",
     )
     raw = (tmp_path / "g0.json").read_text()

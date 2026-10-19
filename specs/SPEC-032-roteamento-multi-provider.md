@@ -150,28 +150,32 @@ lista é a Anthropic (builder novo, dep opcional).
 ```python
 # llm_setup.py
 class ModelTier(Enum):
-    CLASSIFY = "classify"   # menor/rápido: router, parse estruturado (temp 0)
-    FAST = "fast"           # narração/roleplay
-    SMART = "smart"         # coerência: campanha, archivist, criador
+    CLASSIFY = "classify"  # menor/rápido: router, parse estruturado (temp 0)
+    FAST = "fast"  # narração/roleplay
+    SMART = "smart"  # coerência: campanha, archivist, criador
 
-Candidate = tuple[str, str]                 # (provider, model)
-ROUTES: dict[ModelTier, list[Candidate]]    # R11
-PROVIDER_ENDPOINTS: dict[str, str]          # provider -> base_url OpenAI-compat
-PROVIDER_KEY_ENV: dict[str, str]            # provider -> nome da env da key
+
+Candidate = tuple[str, str]  # (provider, model)
+ROUTES: dict[ModelTier, list[Candidate]]  # R11
+PROVIDER_ENDPOINTS: dict[str, str]  # provider -> base_url OpenAI-compat
+PROVIDER_KEY_ENV: dict[str, str]  # provider -> nome da env da key
+
 
 class RoutedLLM:
     """Embrulha candidatos ordenados; fallback em tempo de invoke.
     Último recurso: AIMessage de erro (nunca levanta) — guard segue obrigatório.
     """
-    def __init__(self, tier: ModelTier, temperature: float,
-                 candidates: list[Candidate]): ...
+
+    def __init__(self, tier: ModelTier, temperature: float, candidates: list[Candidate]): ...
     def with_structured_output(self, schema, **kw) -> "RoutedLLM": ...
     def bind_tools(self, *a, **kw) -> "RoutedLLM": ...
     def with_retry(self, *a, **kw) -> "RoutedLLM": ...
-    def invoke(self, input): ...            # tenta candidatos em ordem
-    def stream(self, input): ...            # idem; 1º candidato que não levanta
+    def invoke(self, input): ...  # tenta candidatos em ordem
+    def stream(self, input): ...  # idem; 1º candidato que não levanta
+
 
 def set_llm_telemetry_hook(fn: Callable[[str, str, ModelTier, int, bool], None] | None) -> None: ...
+
 
 def get_llm(temperature: float = 0.1, tier: ModelTier = ModelTier.FAST) -> RoutedLLM: ...
 ```

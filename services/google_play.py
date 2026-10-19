@@ -4,6 +4,7 @@ Everything the Android app sends (product id, purchase token, order id) is
 untrusted. Only the Google Play Developer API response, fetched with the
 service account kept in the backend environment, is evidence of a purchase.
 """
+
 from __future__ import annotations
 
 import base64
@@ -33,7 +34,7 @@ ORDER_RE = re.compile(r"[A-Za-z0-9._\-]{1,128}")
 class GooglePlayError(ValueError):
     """Stable machine code in args[0]; never carries provider payloads."""
 
-    upstream_status: int = 0     # SPEC-257 R2: HTTP status da Play API quando houver (so o numero)
+    upstream_status: int = 0  # SPEC-257 R2: HTTP status da Play API quando houver (so o numero)
 
 
 def _account_key() -> bytes:
@@ -49,7 +50,9 @@ def obfuscated_account_id(owner_id) -> str:
     HMAC-SHA256(RPG_PLAY_ACCOUNT_KEY, "rpg-play-v1:" + owner_id), hex (64 chars): not derivable from
     the owner id alone, so a client cannot mint another account's id.
     """
-    return hmac.new(_account_key(), b"rpg-play-v1:" + str(owner_id).encode(), hashlib.sha256).hexdigest()
+    return hmac.new(
+        _account_key(), b"rpg-play-v1:" + str(owner_id).encode(), hashlib.sha256
+    ).hexdigest()
 
 
 def token_digest(purchase_token: str) -> str:
@@ -59,6 +62,7 @@ def token_digest(purchase_token: str) -> str:
 @dataclass(frozen=True)
 class ProductPurchase:
     """Sanitized subset of androidpublisher purchases.products resource."""
+
     product_id: str
     order_id: str | None
     purchase_state: int
@@ -83,18 +87,29 @@ class ProductPurchase:
             if isinstance(value, bool) or not isinstance(value, int):
                 raise GooglePlayError("google_play_response_invalid")
             return value
+
         order, account = data.get("orderId"), data.get("obfuscatedExternalAccountId")
-        return cls(data["productId"], order if isinstance(order, str) else None,
-                   num("purchaseState", -1), num("consumptionState", 0),
-                   num("acknowledgementState", 0), num("quantity", 1),
-                   num("purchaseTimeMillis"), account if isinstance(account, str) else None,
-                   num("purchaseType"))
+        return cls(
+            data["productId"],
+            order if isinstance(order, str) else None,
+            num("purchaseState", -1),
+            num("consumptionState", 0),
+            num("acknowledgementState", 0),
+            num("quantity", 1),
+            num("purchaseTimeMillis"),
+            account if isinstance(account, str) else None,
+            num("purchaseType"),
+        )
 
     def snapshot(self) -> dict:
         """Sanitized state persisted for SPEC-195 reconciliation (no token/PII)."""
-        return {"purchase_state": self.purchase_state, "consumption_state": self.consumption_state,
-                "acknowledgement_state": self.acknowledgement_state, "quantity": self.quantity,
-                "purchase_type": self.purchase_type}
+        return {
+            "purchase_state": self.purchase_state,
+            "consumption_state": self.consumption_state,
+            "acknowledgement_state": self.acknowledgement_state,
+            "quantity": self.quantity,
+            "purchase_type": self.purchase_type,
+        }
 
 
 @dataclass(frozen=True)
@@ -110,9 +125,12 @@ class GooglePlaySettings:
             if raw and not raw.startswith("{"):
                 raw = Path(raw).read_text(encoding="utf-8")
             account = json.loads(raw)
-            if (not re.fullmatch(r"[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)+", package)
-                    or not isinstance(account, dict) or not account.get("private_key")
-                    or not account.get("client_email")):
+            if (
+                not re.fullmatch(r"[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)+", package)
+                or not isinstance(account, dict)
+                or not account.get("private_key")
+                or not account.get("client_email")
+            ):
                 raise ValueError
         except (OSError, ValueError, TypeError) as exc:
             raise GooglePlayError("google_play_unconfigured") from exc
@@ -126,7 +144,10 @@ _shared_lock = threading.Lock()
 def shared_client() -> GooglePlayClient:
     """Per-process client (keeps the OAuth bearer between requests). Rebuilt if the env changes."""
     global _shared
-    key = (os.getenv("GOOGLE_PLAY_PACKAGE_NAME", ""), os.getenv("GOOGLE_PLAY_SERVICE_ACCOUNT_JSON", ""))
+    key = (
+        os.getenv("GOOGLE_PLAY_PACKAGE_NAME", ""),
+        os.getenv("GOOGLE_PLAY_SERVICE_ACCOUNT_JSON", ""),
+    )
     with _shared_lock:
         if _shared is None or _shared[0] != key:
             _shared = (key, GooglePlayClient(GooglePlaySettings.from_env()))
@@ -147,31 +168,54 @@ class GooglePlayClient:
 
         def b64(raw: bytes) -> bytes:
             return base64.urlsafe_b64encode(raw).rstrip(b"=")
+
         now = int(self.clock())
-        claims = {"iss": self.settings.service_account["client_email"], "scope": SCOPE,
-                  "aud": TOKEN_URL, "iat": now, "exp": now + 3600}
-        signing = b64(json.dumps({"alg": "RS256", "typ": "JWT"}).encode()) + b"." + \
-            b64(json.dumps(claims, separators=(",", ":")).encode())
+        claims = {
+            "iss": self.settings.service_account["client_email"],
+            "scope": SCOPE,
+            "aud": TOKEN_URL,
+            "iat": now,
+            "exp": now + 3600,
+        }
+        signing = (
+            b64(json.dumps({"alg": "RS256", "typ": "JWT"}).encode())
+            + b"."
+            + b64(json.dumps(claims, separators=(",", ":")).encode())
+        )
         key = serialization.load_pem_private_key(
-            self.settings.service_account["private_key"].encode(), password=None)
-        return (signing + b"." + b64(key.sign(signing, padding.PKCS1v15(), hashes.SHA256()))).decode()
+            self.settings.service_account["private_key"].encode(), password=None
+        )
+        return (
+            signing + b"." + b64(key.sign(signing, padding.PKCS1v15(), hashes.SHA256()))
+        ).decode()
 
     def _headers(self, client: httpx.Client) -> dict:
         with self._bearer_lock:  # one token refresh at a time; reused until expiry-60s
             if self._bearer is None or self._bearer[1] <= self.clock() + 60:
-                response = client.post(TOKEN_URL, data={
-                    "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
-                    "assertion": self._assertion()})
+                response = client.post(
+                    TOKEN_URL,
+                    data={
+                        "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
+                        "assertion": self._assertion(),
+                    },
+                )
                 response.raise_for_status()
                 body = response.json()
-                self._bearer = (body["access_token"], self.clock() + int(body.get("expires_in", 3000)))
+                self._bearer = (
+                    body["access_token"],
+                    self.clock() + int(body.get("expires_in", 3000)),
+                )
             return {"Authorization": "Bearer " + self._bearer[0]}
 
     def _call(self, method: str, product_id: str, token: str, suffix: str = "", *, body=None):
-        url = (f"{API_ROOT}/{quote(self.settings.package_name, safe='')}/purchases/products/"
-               f"{quote(product_id, safe='')}/tokens/{quote(token, safe='')}{suffix}")
+        url = (
+            f"{API_ROOT}/{quote(self.settings.package_name, safe='')}/purchases/products/"
+            f"{quote(product_id, safe='')}/tokens/{quote(token, safe='')}{suffix}"
+        )
         try:
-            with httpx.Client(transport=self.transport, timeout=15, follow_redirects=False) as client:
+            with httpx.Client(
+                transport=self.transport, timeout=15, follow_redirects=False
+            ) as client:
                 response = client.request(method, url, headers=self._headers(client), json=body)
                 if response.status_code in (400, 404, 410):
                     err = GooglePlayError("google_play_purchase_not_found")
@@ -197,8 +241,14 @@ class GooglePlayClient:
     def acknowledge(self, product_id: str, token: str) -> None:
         self._call("POST", product_id, token, ":acknowledge", body={})
 
-    def list_voided_events(self, start_ms: int | None = None, end_ms: int | None = None,
-                           *, max_pages: int = 5, page_size: int = 1000):
+    def list_voided_events(
+        self,
+        start_ms: int | None = None,
+        end_ms: int | None = None,
+        *,
+        max_pages: int = 5,
+        page_size: int = 1000,
+    ):
         """purchases.voidedpurchases.list -> normalized SPEC-195 events.
 
         GET .../applications/{package}/purchases/voidedpurchases. startTime cannot be older than
@@ -208,16 +258,23 @@ class GooglePlayClient:
         type=0 (in-app only) is the default; consumables only.
         """
         from services.purchase_reconciliation import normalize_google_voided
+
         now_ms = int(self.clock() * 1000)
         end_ms = min(end_ms or now_ms, now_ms)
         start_ms = max(start_ms or 0, end_ms - 30 * 86400 * 1000 + 60_000)
         url = f"{API_ROOT}/{quote(self.settings.package_name, safe='')}/purchases/voidedpurchases"
-        params: dict = {"startTime": start_ms, "endTime": end_ms, "type": 0,
-                        "maxResults": page_size}
+        params: dict = {
+            "startTime": start_ms,
+            "endTime": end_ms,
+            "type": 0,
+            "maxResults": page_size,
+        }
         events = []
         self.last_poll_complete = False  # True only when pagination ended before max_pages ran out
         try:
-            with httpx.Client(transport=self.transport, timeout=15, follow_redirects=False) as client:
+            with httpx.Client(
+                transport=self.transport, timeout=15, follow_redirects=False
+            ) as client:
                 for _ in range(max_pages):
                     response = client.get(url, headers=self._headers(client), params=params)
                     response.raise_for_status()

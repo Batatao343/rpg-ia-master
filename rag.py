@@ -13,6 +13,7 @@ ao construir). Cada índice grava `embeddings_meta.json` e fica PINADO ao
 provider que o gerou; abrir com outro provider é proibido (índice desativado
 com aviso; re-index para trocar). Ver specs/SPEC-039-embeddings-provider.md.
 """
+
 import hashlib
 import json
 import logging
@@ -42,7 +43,8 @@ load_dotenv(override=True)  # .env canônico (sobrepõe env var do SO)
 
 _LOG = logging.getLogger("rpg.rag")
 _embedding_usage_hook: ContextVar[Callable[[dict], None] | None] = ContextVar(
-    "embedding_usage_hook", default=None)
+    "embedding_usage_hook", default=None
+)
 
 
 @contextmanager
@@ -54,24 +56,34 @@ def embedding_usage_scope(hook: Callable[[dict], None]) -> Iterator[None]:
         _embedding_usage_hook.reset(token)
 
 
-def _emit_embedding_attempt(provider: str, model: str, outcome: str,
-                            usage: object = None) -> None:
+def _emit_embedding_attempt(provider: str, model: str, outcome: str, usage: object = None) -> None:
     hook = _embedding_usage_hook.get()
     if hook is None:
         return
     from services.usage_metering import safe_provider_usage
 
     reading = safe_provider_usage(usage)
-    if ("input_tokens" not in reading and isinstance(usage, dict)
-            and isinstance(usage.get("total_tokens"), int)
-            and not isinstance(usage["total_tokens"], bool)
-            and usage["total_tokens"] >= 0):
+    if (
+        "input_tokens" not in reading
+        and isinstance(usage, dict)
+        and isinstance(usage.get("total_tokens"), int)
+        and not isinstance(usage["total_tokens"], bool)
+        and usage["total_tokens"] >= 0
+    ):
         reading["input_tokens"] = usage["total_tokens"]
-    hook({"provider": provider, "model": model, "outcome": outcome,
-          "network_attempted": True, "usage": reading})
+    hook(
+        {
+            "provider": provider,
+            "model": model,
+            "outcome": outcome,
+            "network_attempted": True,
+            "usage": reading,
+        }
+    )
+
 
 # Configurações de Caminho
-SAVES_DIR = "data/saves_memory" # Pasta onde ficam os vetores dos saves individuais
+SAVES_DIR = "data/saves_memory"  # Pasta onde ficam os vetores dos saves individuais
 _META_FILE = "embeddings_meta.json"
 
 # Cadeia ordenada: primário → ... → último fallback. Gemini SEMPRE por último
@@ -88,7 +100,7 @@ _PROVIDER_MODELS: dict[str, str] = {
 # Provider assumido por índice LEGADO (gerado antes da meta) — histórico Google.
 _LEGACY_PROVIDER = "gemini"
 
-_embeddings_cache: dict[str, object] = {}   # provider -> objeto de embeddings
+_embeddings_cache: dict[str, object] = {}  # provider -> objeto de embeddings
 _active_provider_name: str | None = None  # provider resolvido para ESCRITA
 
 
@@ -130,8 +142,7 @@ class RetrievedEvidence:
 _RAG_OPERATION_HOOK: Callable[[RAGOperationEvent], None] | None = None
 
 
-def set_rag_operation_hook(
-        fn: Callable[[RAGOperationEvent], None] | None) -> None:
+def set_rag_operation_hook(fn: Callable[[RAGOperationEvent], None] | None) -> None:
     """Registra callback para cada ``add_*``; ``None`` desliga o hook."""
     global _RAG_OPERATION_HOOK
     _RAG_OPERATION_HOOK = fn
@@ -148,46 +159,52 @@ def _emit_rag_operation(event: RAGOperationEvent) -> None:
 
 
 def _rag_operation_result(
-        operation: RAGOperation,
-        success: bool,
-        *,
-        game_id: str,
-        npc_id: str | None,
-        path: str,
-        facts_count: int,
-        provider: str | None,
-        error: str | None,
-        metadatas: list[dict] | None = None,
+    operation: RAGOperation,
+    success: bool,
+    *,
+    game_id: str,
+    npc_id: str | None,
+    path: str,
+    facts_count: int,
+    provider: str | None,
+    error: str | None,
+    metadatas: list[dict] | None = None,
 ) -> bool:
-    provenance_counts = dict(Counter(
-        str(metadata.get("memory_provenance") or "legacy_unverified")
-        for metadata in (metadatas or [])
-        if isinstance(metadata, dict)
-    ))
-    _emit_rag_operation(RAGOperationEvent(
-        operation=operation,
-        success=success,
-        game_id=game_id,
-        npc_id=npc_id,
-        path=path,
-        facts_count=facts_count,
-        provider=provider,
-        error=error,
-        provenance_counts=provenance_counts,
-    ))
+    provenance_counts = dict(
+        Counter(
+            str(metadata.get("memory_provenance") or "legacy_unverified")
+            for metadata in (metadatas or [])
+            if isinstance(metadata, dict)
+        )
+    )
+    _emit_rag_operation(
+        RAGOperationEvent(
+            operation=operation,
+            success=success,
+            game_id=game_id,
+            npc_id=npc_id,
+            path=path,
+            facts_count=facts_count,
+            provider=provider,
+            error=error,
+            provenance_counts=provenance_counts,
+        )
+    )
     return success
 
 
 _SAFE_COMPONENT_RE = re.compile(r"^[A-Za-z0-9_-]{1,96}$")
-_WINDOWS_RESERVED_NAMES = frozenset({
-    "con",
-    "prn",
-    "aux",
-    "nul",
-    "clock$",
-    *(f"com{i}" for i in range(1, 10)),
-    *(f"lpt{i}" for i in range(1, 10)),
-})
+_WINDOWS_RESERVED_NAMES = frozenset(
+    {
+        "con",
+        "prn",
+        "aux",
+        "nul",
+        "clock$",
+        *(f"com{i}" for i in range(1, 10)),
+        *(f"lpt{i}" for i in range(1, 10)),
+    }
+)
 
 
 def _is_windows_reserved(value: str) -> bool:
@@ -210,11 +227,7 @@ def _safe_storage_component(value: object, prefix: str) -> str:
     ):
         return raw
 
-    ascii_value = (
-        unicodedata.normalize("NFKD", raw)
-        .encode("ascii", "ignore")
-        .decode("ascii")
-    )
+    ascii_value = unicodedata.normalize("NFKD", raw).encode("ascii", "ignore").decode("ascii")
     slug = re.sub(r"[^A-Za-z0-9_-]+", "_", ascii_value)
     slug = re.sub(r"_+", "_", slug).strip("._-")
     safe_prefix = re.sub(r"[^A-Za-z0-9_-]+", "_", prefix).strip("_-") or "id"
@@ -279,15 +292,16 @@ class _ScopedMeteredEmbeddings(Embeddings):
 def _scoped_embeddings(provider: str, embeddings: Embeddings) -> Embeddings:
     if provider == "jina" or _embedding_usage_hook.get() is None:
         return embeddings
-    return _ScopedMeteredEmbeddings(
-        embeddings, provider, _PROVIDER_MODELS.get(provider, "unknown"))
+    return _ScopedMeteredEmbeddings(embeddings, provider, _PROVIDER_MODELS.get(provider, "unknown"))
 
 
 def _has_token_usage(usage: object) -> bool:
     if not isinstance(usage, dict):
         return False
-    return any(isinstance(usage.get(key), int) and not isinstance(usage.get(key), bool)
-               and usage[key] >= 0 for key in ("prompt_tokens", "input_tokens", "total_tokens"))
+    return any(
+        isinstance(usage.get(key), int) and not isinstance(usage.get(key), bool) and usage[key] >= 0
+        for key in ("prompt_tokens", "input_tokens", "total_tokens")
+    )
 
 
 def _estimated_embedding_usage(values: list[str]) -> dict[str, int]:
@@ -305,9 +319,15 @@ class _JinaEmbeddingsHTTPX(Embeddings):
     vetoriais em um índice FAISS pinado.
     """
 
-    def __init__(self, *, api_key: str, model_name: str,
-                 timeout_seconds: float = 30.0, max_attempts: int = 2,
-                 client: httpx.Client | None = None) -> None:
+    def __init__(
+        self,
+        *,
+        api_key: str,
+        model_name: str,
+        timeout_seconds: float = 30.0,
+        max_attempts: int = 2,
+        client: httpx.Client | None = None,
+    ) -> None:
         self.model_name = model_name
         self.max_attempts = max(1, int(max_attempts))
         self._client = client or httpx.Client(
@@ -319,15 +339,23 @@ class _JinaEmbeddingsHTTPX(Embeddings):
             timeout=httpx.Timeout(max(0.1, float(timeout_seconds))),
         )
 
-    def _log_attempt(self, outcome: str, attempt: int, started: float,
-                     http_status: int | None) -> None:
+    def _log_attempt(
+        self, outcome: str, attempt: int, started: float, http_status: int | None
+    ) -> None:
         # SPEC-258: so metadados (nunca o texto embeddado nem URL).
         from observability.telemetry import log_provider_attempt
-        log_provider_attempt("embedding", "jina", self.model_name, outcome,
-                             http_status=http_status,
-                             latency_ms=(time.perf_counter() - started) * 1000,
-                             attempt=attempt + 1, fell_back=False,
-                             cost_basis="exact" if outcome == "success" else "unknown")
+
+        log_provider_attempt(
+            "embedding",
+            "jina",
+            self.model_name,
+            outcome,
+            http_status=http_status,
+            latency_ms=(time.perf_counter() - started) * 1000,
+            attempt=attempt + 1,
+            fell_back=False,
+            cost_basis="exact" if outcome == "success" else "unknown",
+        )
 
     def _embed(self, values: list[str]) -> list[list[float]]:
         last_error: Exception | None = None
@@ -338,8 +366,10 @@ class _JinaEmbeddingsHTTPX(Embeddings):
                     _JINA_API_URL,
                     json={"input": values, "model": self.model_name},
                 )
-                if (response.status_code in _TRANSIENT_EMBEDDING_STATUS
-                        and attempt + 1 < self.max_attempts):
+                if (
+                    response.status_code in _TRANSIENT_EMBEDDING_STATUS
+                    and attempt + 1 < self.max_attempts
+                ):
                     _emit_embedding_attempt("jina", self.model_name, "http_error")
                     self._log_attempt("http_error", attempt, started, response.status_code)
                     last_error = httpx.HTTPStatusError(
@@ -356,8 +386,12 @@ class _JinaEmbeddingsHTTPX(Embeddings):
                     payload = response.json()
                 except ValueError:
                     # SPEC-237: the provider answered (and may have billed) -> estimate, not US$ 1.
-                    _emit_embedding_attempt("jina", self.model_name, "invalid_response",
-                                            _estimated_embedding_usage(values))
+                    _emit_embedding_attempt(
+                        "jina",
+                        self.model_name,
+                        "invalid_response",
+                        _estimated_embedding_usage(values),
+                    )
                     self._log_attempt("invalid_response", attempt, started, response.status_code)
                     raise
                 usage = payload.get("usage") if isinstance(payload, dict) else None
@@ -370,14 +404,19 @@ class _JinaEmbeddingsHTTPX(Embeddings):
                     raise ValueError("resposta Jina sem lista 'data'")
                 ordered = sorted(rows, key=lambda row: int(row["index"]))
                 vectors = [row.get("embedding") for row in ordered]
-                if (len(vectors) != len(values)
-                        or any(not isinstance(vector, list) for vector in vectors)):
+                if len(vectors) != len(values) or any(
+                    not isinstance(vector, list) for vector in vectors
+                ):
                     raise ValueError("resposta Jina com embeddings inválidos")
                 return vectors
             except httpx.TransportError as exc:
                 _emit_embedding_attempt("jina", self.model_name, "transport_error")
-                self._log_attempt("timeout" if isinstance(exc, httpx.TimeoutException)
-                                  else "transport_error", attempt, started, None)
+                self._log_attempt(
+                    "timeout" if isinstance(exc, httpx.TimeoutException) else "transport_error",
+                    attempt,
+                    started,
+                    None,
+                )
                 last_error = exc
                 if attempt + 1 >= self.max_attempts:
                     raise
@@ -408,17 +447,20 @@ def _build_jina():
 
 def _build_openai():
     from langchain_openai import OpenAIEmbeddings
+
     return OpenAIEmbeddings(model="text-embedding-3-small", dimensions=1024)
 
 
 def _build_ollama():
     from langchain_ollama import OllamaEmbeddings
+
     return OllamaEmbeddings(model="bge-m3")
 
 
 def _build_gemini():
     # gemini-embedding-001 é o estável atual (text-embedding-004 saiu do v1beta).
     from langchain_google_genai import GoogleGenerativeAIEmbeddings
+
     return GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
 
 
@@ -436,6 +478,7 @@ _EMBEDDING_BUILDERS: dict[str, Callable[[], object]] = _default_builders()
 
 # --- Disponibilidade + resolução da cadeia ----------------------------------
 
+
 def _jina_key() -> str:
     """Helper unico da credencial Jina (SPEC-234 R4): API_KEY ou AUTH_TOKEN."""
     return os.getenv("JINA_API_KEY") or os.getenv("JINA_AUTH_TOKEN") or ""
@@ -444,6 +487,7 @@ def _jina_key() -> str:
 def _dep_present(provider: str) -> bool:
     """True se a dependência Python do provider está instalada."""
     import importlib.util as _u
+
     mod = {
         "jina": "langchain_community.embeddings",
         "openai": "langchain_openai",
@@ -465,9 +509,7 @@ def _provider_available(provider: str) -> bool:
         # A rota automática exige host explícito; RPG_EMBEDDINGS=ollama segue
         # como opt-in e é tratado antes desta função.
         override = (os.getenv("RPG_EMBEDDINGS") or "").strip().lower()
-        return (
-            bool(os.getenv("OLLAMA_HOST")) or override == "ollama"
-        ) and _dep_present("ollama")
+        return (bool(os.getenv("OLLAMA_HOST")) or override == "ollama") and _dep_present("ollama")
     if provider == "gemini":
         return bool(os.getenv("GOOGLE_API_KEY")) and _dep_present("gemini")
     return False
@@ -506,7 +548,10 @@ def get_embeddings_for(provider: str) -> object | None:
 
 # SPEC-234 R9: dimensao do vetor por provider (o pgvector so aceita 1024).
 _PROVIDER_DIMS: dict[str, int] = {
-    "jina": 1024, "openai": 1024, "ollama": 1024, "gemini": 3072,
+    "jina": 1024,
+    "openai": 1024,
+    "ollama": 1024,
+    "gemini": 3072,
 }
 PGVECTOR_DIMENSIONS = 1024
 
@@ -539,6 +584,7 @@ def _note_degraded(source: str) -> None:
     """Metrica `rpg_rag_degraded_total{source}` junto do WARNING (R10)."""
     try:
         from observability.metrics import metrics
+
         metrics.increment("rpg_rag_degraded_total", {"source": source})
     except Exception:  # pragma: no cover - telemetria nunca derruba a consulta
         pass
@@ -556,8 +602,10 @@ def get_embeddings() -> object | None:
     global _active_provider_name
     provider = _resolve_provider()
     if provider is None:
-        _LOG.warning("Embeddings desativados: nenhum provider configurado "
-                     "(defina JINA_API_KEY/OPENAI_API_KEY/GOOGLE_API_KEY ou Ollama).")
+        _LOG.warning(
+            "Embeddings desativados: nenhum provider configurado "
+            "(defina JINA_API_KEY/OPENAI_API_KEY/GOOGLE_API_KEY ou Ollama)."
+        )
         _active_provider_name = None
         return None
     emb = get_embeddings_for(provider)
@@ -571,6 +619,7 @@ def get_embeddings() -> object | None:
 
 # --- Meta por índice (pin) --------------------------------------------------
 
+
 def _meta_path(dir_path: str) -> str:
     return os.path.join(dir_path, _META_FILE)
 
@@ -582,9 +631,11 @@ def _write_meta(dir_path: str, provider: str) -> bool:
             raise ValueError("provider de embeddings ausente")
         os.makedirs(dir_path, exist_ok=True)
         with open(_meta_path(dir_path), "w", encoding="utf-8") as fh:
-            json.dump({"provider": provider,
-                       "model": _PROVIDER_MODELS.get(provider, "?")},
-                      fh, ensure_ascii=False)
+            json.dump(
+                {"provider": provider, "model": _PROVIDER_MODELS.get(provider, "?")},
+                fh,
+                ensure_ascii=False,
+            )
         return True
     except Exception as exc:
         _LOG.warning("Embeddings: falha ao gravar meta em %s: %s", dir_path, exc)
@@ -599,10 +650,17 @@ def _read_meta(dir_path: str) -> dict | None:
         return None
     except Exception as exc:
         from observability.telemetry import log_event
+
         base = os.path.basename(os.path.normpath(dir_path))
         index = base if base in ("faiss_lore_index", "faiss_rules_index") else "session"
-        log_event("rag", "meta_unreadable", level="warning", index=index,
-                  error_type=type(exc).__name__, fallback_provider="gemini")
+        log_event(
+            "rag",
+            "meta_unreadable",
+            level="warning",
+            index=index,
+            error_type=type(exc).__name__,
+            fallback_provider="gemini",
+        )
         return None
 
 
@@ -627,7 +685,9 @@ def _embeddings_for_index(dir_path: str) -> object | None:
             _LOG.warning(
                 "Índice '%s' gerado com o modelo '%s' (atual '%s') — índice "
                 "DESATIVADO para não misturar vetores. Re-indexe.",
-                dir_path, meta.get("model"), expected,
+                dir_path,
+                meta.get("model"),
+                expected,
             )
             _note_degraded("index_disabled")
             return None
@@ -635,7 +695,8 @@ def _embeddings_for_index(dir_path: str) -> object | None:
         _LOG.warning(
             "Índice '%s' pinado no provider '%s', indisponível agora — índice "
             "DESATIVADO. Reponha a key ou re-indexe (uv run python rag.py).",
-            dir_path, provider,
+            dir_path,
+            provider,
         )
         _note_degraded("index_disabled")
         return None
@@ -648,6 +709,7 @@ def _save_index(db, path: str, provider: str) -> None:
     # para uma falha no meio nao deixar o indice meio escrito.
     import shutil
     import tempfile
+
     parent = os.path.dirname(os.path.abspath(path)) or "."
     os.makedirs(parent, exist_ok=True)
     tmp = tempfile.mkdtemp(prefix=".idx-", dir=parent)
@@ -661,9 +723,11 @@ def _save_index(db, path: str, provider: str) -> None:
     if not _write_meta(path, provider):
         raise OSError(f"falha ao gravar metadata do índice em {path}")
 
+
 def get_global_db_path(index_name: str) -> str:
     """Retorna o nome da pasta do índice GLOBAL (lore ou rules)."""
     return f"faiss_{index_name}_index"
+
 
 def _get_session_path(game_id: str) -> str:
     """Retorna o caminho da pasta de memória da SESSÃO específica."""
@@ -679,6 +743,7 @@ def _has_faiss_index(path: str) -> bool:
     Checar o dir levaria `add_memory_to_session` ao ramo de load e a um
     FileIOReader ('could not open .../index.faiss for reading')."""
     return os.path.isfile(os.path.join(path, "index.faiss"))
+
 
 # --- Visibilidade do Codex (Fase 2.5): public < hidden < secret ---
 _VIS_ORDER = {"public": 0, "hidden": 1, "secret": 2}
@@ -729,11 +794,7 @@ def query_faiss_evidence(
             continue
         content = str(getattr(document, "page_content", "") or "")
         content_digest = hashlib.sha256(content.encode("utf-8")).hexdigest()[:24]
-        evidence_id = str(
-            metadata.get("evidence_id")
-            or metadata.get("memory_id")
-            or ""
-        ).strip()
+        evidence_id = str(metadata.get("evidence_id") or metadata.get("memory_id") or "").strip()
         if not evidence_id:
             entity_id = str(metadata.get("entity_id") or metadata.get("id") or "").strip()
             if entity_id:
@@ -747,14 +808,16 @@ def query_faiss_evidence(
                 continue
             evidence_id = chunk_id
         seen_ids.add(evidence_id)
-        evidence.append(RetrievedEvidence(
-            id=evidence_id,
-            source=str(metadata.get("source") or source),
-            score=-float(distance),
-            text=content,
-            visibility=visibility,
-            metadata=metadata,
-        ))
+        evidence.append(
+            RetrievedEvidence(
+                id=evidence_id,
+                source=str(metadata.get("source") or source),
+                score=-float(distance),
+                text=content,
+                visibility=visibility,
+                metadata=metadata,
+            )
+        )
         if len(evidence) >= k:
             break
     return evidence
@@ -789,9 +852,7 @@ def _format_documents(documents: list) -> str:
     seen = set()
     final_text = []
     for doc in documents:
-        content = str(
-            getattr(doc, "page_content", None) or getattr(doc, "text", "") or ""
-        ).strip()
+        content = str(getattr(doc, "page_content", None) or getattr(doc, "text", "") or "").strip()
         if content and content not in seen:
             seen.add(content)
             final_text.append(content)
@@ -808,9 +869,7 @@ def _format_memory_documents(documents: list) -> str:
     by_text: dict[str, tuple[int, str]] = {}
     order: list[str] = []
     for doc in documents:
-        content = str(
-            getattr(doc, "page_content", None) or getattr(doc, "text", "") or ""
-        ).strip()
+        content = str(getattr(doc, "page_content", None) or getattr(doc, "text", "") or "").strip()
         if not content:
             continue
         metadata = dict(getattr(doc, "metadata", {}) or {})
@@ -830,7 +889,8 @@ def _format_memory_documents(documents: list) -> str:
             )
         except Exception:
             record = make_memory_fact(
-                content, provenance="legacy_unverified",
+                content,
+                provenance="legacy_unverified",
             )
         rendered = format_memory_fact(record)
         key = content.casefold()
@@ -850,15 +910,22 @@ def query_session_memory(query: str, game_id: str) -> str:
         from infrastructure.request_context import current_principal
         from infrastructure.runtime import get_runtime
 
-        documents = get_runtime().memory_store.query(MemoryQuery(
-            text=query, scope="session", principal=current_principal(),
-            game_id=uuid.UUID(str(game_id)), k=6,
-        ))
+        documents = get_runtime().memory_store.query(
+            MemoryQuery(
+                text=query,
+                scope="session",
+                principal=current_principal(),
+                game_id=uuid.UUID(str(game_id)),
+                k=6,
+            )
+        )
         return _format_memory_documents(documents)  # SPEC-234 R9
     return _format_memory_documents(_query_session_documents(query, game_id, k=6))
 
 
-def prepare_shared_query_vector(query: str, paths: list[str]) -> tuple[list[float] | None, str | None, str | None]:
+def prepare_shared_query_vector(
+    query: str, paths: list[str]
+) -> tuple[list[float] | None, str | None, str | None]:
     """Embed once when every existing FAISS scope uses the same pinned profile."""
     if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
         embeddings = get_embeddings()
@@ -905,17 +972,23 @@ def prepare_shared_query_vector(query: str, paths: list[str]) -> tuple[list[floa
     return vector, provider, _PROVIDER_MODELS.get(provider)
 
 
-def query_global_by_vector(vector: list[float], index_name: str = "lore",
-                           max_visibility: str = "public") -> str:
+def query_global_by_vector(
+    vector: list[float], index_name: str = "lore", max_visibility: str = "public"
+) -> str:
     if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
         from infrastructure.contracts import MemoryQuery
         from infrastructure.runtime import get_runtime
 
-        documents = get_runtime().memory_store.query(MemoryQuery(
-            text="", scope="rules" if index_name == "rules" else "lore",
-            max_visibility=max_visibility, k=2, vector=tuple(vector),
-            embedding_profile_id=embedding_profile_id(),
-        ))
+        documents = get_runtime().memory_store.query(
+            MemoryQuery(
+                text="",
+                scope="rules" if index_name == "rules" else "lore",
+                max_visibility=max_visibility,
+                k=2,
+                vector=tuple(vector),
+                embedding_profile_id=embedding_profile_id(),
+            )
+        )
         return "\n---\n".join(document.text for document in documents if document.text)
     path = get_global_db_path(index_name)
     if not vector or not _has_faiss_index(path):
@@ -946,11 +1019,17 @@ def query_session_by_vector(vector: list[float], game_id: str, *, k: int = 6) ->
         from infrastructure.request_context import current_principal
         from infrastructure.runtime import get_runtime
 
-        documents = get_runtime().memory_store.query(MemoryQuery(
-            text="", scope="session", principal=current_principal(),
-            game_id=uuid.UUID(str(game_id)), k=k, vector=tuple(vector),
-            embedding_profile_id=embedding_profile_id(),
-        ))
+        documents = get_runtime().memory_store.query(
+            MemoryQuery(
+                text="",
+                scope="session",
+                principal=current_principal(),
+                game_id=uuid.UUID(str(game_id)),
+                k=k,
+                vector=tuple(vector),
+                embedding_profile_id=embedding_profile_id(),
+            )
+        )
         return _format_memory_documents(documents)  # SPEC-234 R9
     path = _get_session_path(game_id)
     if not vector or not _has_faiss_index(path):
@@ -960,9 +1039,7 @@ def query_session_by_vector(vector: list[float], game_id: str, *, k: int = 6) ->
         return ""
     try:
         db = FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
-        evidence = query_faiss_evidence(
-            db, vector, k=k, source="session"
-        )
+        evidence = query_faiss_evidence(db, vector, k=k, source="session")
         return _format_memory_documents(evidence)
     except Exception:
         _LOG.warning("RAG: consulta degradada (rpg.rag.degraded)", exc_info=True)
@@ -976,11 +1053,18 @@ def query_npc_by_vector(vector: list[float], game_id: str, npc_id: str, *, k: in
         from infrastructure.request_context import current_principal
         from infrastructure.runtime import get_runtime
 
-        documents = get_runtime().memory_store.query(MemoryQuery(
-            text="", scope="npc", principal=current_principal(),
-            game_id=uuid.UUID(str(game_id)), npc_id=npc_id, k=k,
-            vector=tuple(vector), embedding_profile_id=embedding_profile_id(),
-        ))
+        documents = get_runtime().memory_store.query(
+            MemoryQuery(
+                text="",
+                scope="npc",
+                principal=current_principal(),
+                game_id=uuid.UUID(str(game_id)),
+                npc_id=npc_id,
+                k=k,
+                vector=tuple(vector),
+                embedding_profile_id=embedding_profile_id(),
+            )
+        )
         return _format_memory_documents(documents)  # SPEC-234 R9
     path = _get_npc_path(game_id, npc_id)
     if not vector or not _has_faiss_index(path):
@@ -990,9 +1074,7 @@ def query_npc_by_vector(vector: list[float], game_id: str, npc_id: str, *, k: in
         return ""
     try:
         db = FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
-        evidence = query_faiss_evidence(
-            db, vector, k=k, source="npc"
-        )
+        evidence = query_faiss_evidence(db, vector, k=k, source="npc")
         return _format_memory_documents(evidence)
     except Exception:
         _LOG.warning("RAG: consulta degradada (rpg.rag.degraded)", exc_info=True)
@@ -1000,9 +1082,9 @@ def query_npc_by_vector(vector: list[float], game_id: str, npc_id: str, *, k: in
         return ""
 
 
-def context_index_paths(*, game_id: str | None = None,
-                        npc_id: str | None = None,
-                        index_name: str = "lore") -> list[str]:
+def context_index_paths(
+    *, game_id: str | None = None, npc_id: str | None = None, index_name: str = "lore"
+) -> list[str]:
     paths = [get_global_db_path(index_name)]
     if game_id:
         paths.append(_get_session_path(game_id))
@@ -1011,8 +1093,9 @@ def context_index_paths(*, game_id: str | None = None,
     return paths
 
 
-def _query_rag_impl(query: str, index_name: str = "lore", game_id: str | None = None,
-                    max_visibility: str = "public") -> str:
+def _query_rag_impl(
+    query: str, index_name: str = "lore", game_id: str | None = None, max_visibility: str = "public"
+) -> str:
     """
     Busca contexto de forma híbrida:
     1. Índice Global (Lore/Regras) - Imutável durante o jogo.
@@ -1028,20 +1111,29 @@ def _query_rag_impl(query: str, index_name: str = "lore", game_id: str | None = 
         from infrastructure.runtime import get_runtime
 
         store = get_runtime().memory_store
-        global_docs = store.query(MemoryQuery(
-            text=query, scope="rules" if index_name == "rules" else "lore",
-            max_visibility=max_visibility, k=2,
-        ))
+        global_docs = store.query(
+            MemoryQuery(
+                text=query,
+                scope="rules" if index_name == "rules" else "lore",
+                max_visibility=max_visibility,
+                k=2,
+            )
+        )
         session_docs = []
         if game_id:
             principal = current_principal()
-            session_docs = store.query(MemoryQuery(
-                text=query, scope="session", principal=principal,
-                game_id=uuid.UUID(str(game_id)), max_visibility=max_visibility, k=2,
-            ))
+            session_docs = store.query(
+                MemoryQuery(
+                    text=query,
+                    scope="session",
+                    principal=principal,
+                    game_id=uuid.UUID(str(game_id)),
+                    max_visibility=max_visibility,
+                    k=2,
+                )
+            )
         return "\n---\n".join(
-            document.text for document in [*global_docs, *session_docs]
-            if document.text
+            document.text for document in [*global_docs, *session_docs] if document.text
         )
 
     global_results = []
@@ -1056,15 +1148,22 @@ def _query_rag_impl(query: str, index_name: str = "lore", game_id: str | None = 
         embeddings = _embeddings_for_index(global_path)
         if embeddings:
             try:
-                global_db = FAISS.load_local(global_path, embeddings, allow_dangerous_deserialization=True)
+                global_db = FAISS.load_local(
+                    global_path, embeddings, allow_dangerous_deserialization=True
+                )
                 candidatos = global_db.similarity_search(query, k=6)
                 visiveis = [
-                    d for d in candidatos
-                    if vis_rank(d.metadata.get("visibility")) <= max_rank
+                    d for d in candidatos if vis_rank(d.metadata.get("visibility")) <= max_rank
                 ]
                 global_results.extend(visiveis[:2])
             except Exception as e:
-                _log_event("rag", "global_index_read_failed", level="warning", index=index_name, error=type(e).__name__)
+                _log_event(
+                    "rag",
+                    "global_index_read_failed",
+                    level="warning",
+                    index=index_name,
+                    error=type(e).__name__,
+                )
 
     # 2. Busca na Sessão (Se houver game_id)
     # A memória da sessão é agnóstica ao index_name (é tudo "memória do jogo")
@@ -1072,22 +1171,26 @@ def _query_rag_impl(query: str, index_name: str = "lore", game_id: str | None = 
         session_results.extend(_query_session_documents(query, game_id, k=6))
 
     parts = [
-        part for part in (
+        part
+        for part in (
             _format_documents(global_results),
             _format_memory_documents(session_results),
-        ) if part
+        )
+        if part
     ]
     return "\n---\n".join(parts)
 
 
-def query_rag(query: str, index_name: str = "lore", game_id: str | None = None,
-              max_visibility: str = "public") -> str:
+def query_rag(
+    query: str, index_name: str = "lore", game_id: str | None = None, max_visibility: str = "public"
+) -> str:
     """Boundary observável da busca híbrida, sem expor consulta nem IDs."""
     started = time.perf_counter()
     scope = "session" if game_id else ("rules" if index_name == "rules" else "lore")
     outcome = "ok"
     try:
         from observability.telemetry import span
+
         with span("rag.query", scope=scope):
             return _query_rag_impl(query, index_name, game_id, max_visibility)
     except Exception:
@@ -1096,12 +1199,15 @@ def query_rag(query: str, index_name: str = "lore", game_id: str | None = None,
     finally:
         try:
             from observability.metrics import metrics
+
             metrics.observe(
-                "rpg_rag_duration_seconds", {"scope": scope, "outcome": outcome},
+                "rpg_rag_duration_seconds",
+                {"scope": scope, "outcome": outcome},
                 time.perf_counter() - started,
             )
         except Exception:
             pass
+
 
 def add_memory_to_session(
     game_id: str,
@@ -1136,27 +1242,42 @@ def add_memory_to_session(
             store = get_runtime().memory_store
             for index, text in enumerate(texts):
                 metadata = dict((metadatas or [{}] * len(texts))[index] or {})
-                digest = hashlib.sha256(
-                    f"{game_id}:{text}:{metadata}".encode()
-                ).hexdigest()
-                store.stage(MemoryWriteIntent(
-                    document=MemoryDocument(
-                        document_id=f"session:{digest}", text=str(text),
-                        scope="session", metadata=metadata,
-                    ),
-                    principal=principal, game_id=uuid.UUID(str(game_id)),
-                    timeline_epoch=int(metadata.get("timeline_epoch", 0) or 0),
-                ))
+                digest = hashlib.sha256(f"{game_id}:{text}:{metadata}".encode()).hexdigest()
+                store.stage(
+                    MemoryWriteIntent(
+                        document=MemoryDocument(
+                            document_id=f"session:{digest}",
+                            text=str(text),
+                            scope="session",
+                            metadata=metadata,
+                        ),
+                        principal=principal,
+                        game_id=uuid.UUID(str(game_id)),
+                        timeline_epoch=int(metadata.get("timeline_epoch", 0) or 0),
+                    )
+                )
             return _rag_operation_result(
-                "add_session_memory", True, game_id=game_id, npc_id=None,
-                path="postgres://app.memory_documents", facts_count=facts_count,
-                provider="pgvector", error=None, metadatas=metadatas,
+                "add_session_memory",
+                True,
+                game_id=game_id,
+                npc_id=None,
+                path="postgres://app.memory_documents",
+                facts_count=facts_count,
+                provider="pgvector",
+                error=None,
+                metadatas=metadatas,
             )
         except Exception as exc:
             return _rag_operation_result(
-                "add_session_memory", False, game_id=game_id, npc_id=None,
-                path="postgres://app.memory_documents", facts_count=facts_count,
-                provider="pgvector", error=type(exc).__name__, metadatas=metadatas,
+                "add_session_memory",
+                False,
+                game_id=game_id,
+                npc_id=None,
+                path="postgres://app.memory_documents",
+                facts_count=facts_count,
+                provider="pgvector",
+                error=type(exc).__name__,
+                metadatas=metadatas,
             )
 
     session_path = ""
@@ -1165,9 +1286,7 @@ def add_memory_to_session(
         session_path = _get_session_path(game_id)
         if _has_faiss_index(session_path):
             # Índice existente: usa somente o provider pinado.
-            provider = (_read_meta(session_path) or {}).get(
-                "provider", _LEGACY_PROVIDER
-            )
+            provider = (_read_meta(session_path) or {}).get("provider", _LEGACY_PROVIDER)
             embeddings = _embeddings_for_index(session_path)
             if not embeddings:
                 return _rag_operation_result(
@@ -1238,7 +1357,9 @@ def add_memory_to_session(
             metadatas=metadatas,
         )
 
+
 # --- MEMÓRIA DE NPC VETORIZADA (namespace por game_id + npc_id) ---
+
 
 def _get_npc_path(game_id: str, npc_id: str) -> str:
     """Pasta do índice FAISS de UM npc dentro da sessão."""
@@ -1282,25 +1403,42 @@ def add_npc_memory(
                 digest = hashlib.sha256(
                     f"{game_id}:{npc_id}:{text}:{metadata}".encode()
                 ).hexdigest()
-                store.stage(MemoryWriteIntent(
-                    document=MemoryDocument(
-                        document_id=f"npc:{digest}", text=str(text),
-                        scope="npc", metadata=metadata,
-                    ),
-                    principal=principal, game_id=uuid.UUID(str(game_id)),
-                    npc_id=npc_id,
-                    timeline_epoch=int(metadata.get("timeline_epoch", 0) or 0),
-                ))
+                store.stage(
+                    MemoryWriteIntent(
+                        document=MemoryDocument(
+                            document_id=f"npc:{digest}",
+                            text=str(text),
+                            scope="npc",
+                            metadata=metadata,
+                        ),
+                        principal=principal,
+                        game_id=uuid.UUID(str(game_id)),
+                        npc_id=npc_id,
+                        timeline_epoch=int(metadata.get("timeline_epoch", 0) or 0),
+                    )
+                )
             return _rag_operation_result(
-                "add_npc_memory", True, game_id=game_id, npc_id=npc_id,
-                path="postgres://app.memory_documents", facts_count=facts_count,
-                provider="pgvector", error=None, metadatas=metadatas,
+                "add_npc_memory",
+                True,
+                game_id=game_id,
+                npc_id=npc_id,
+                path="postgres://app.memory_documents",
+                facts_count=facts_count,
+                provider="pgvector",
+                error=None,
+                metadatas=metadatas,
             )
         except Exception as exc:
             return _rag_operation_result(
-                "add_npc_memory", False, game_id=game_id, npc_id=npc_id,
-                path="postgres://app.memory_documents", facts_count=facts_count,
-                provider="pgvector", error=type(exc).__name__, metadatas=metadatas,
+                "add_npc_memory",
+                False,
+                game_id=game_id,
+                npc_id=npc_id,
+                path="postgres://app.memory_documents",
+                facts_count=facts_count,
+                provider="pgvector",
+                error=type(exc).__name__,
+                metadatas=metadatas,
             )
 
     npc_path = ""
@@ -1308,9 +1446,7 @@ def add_npc_memory(
     try:
         npc_path = _get_npc_path(game_id, npc_id)
         if _has_faiss_index(npc_path):
-            provider = (_read_meta(npc_path) or {}).get(
-                "provider", _LEGACY_PROVIDER
-            )
+            provider = (_read_meta(npc_path) or {}).get("provider", _LEGACY_PROVIDER)
             embeddings = _embeddings_for_index(npc_path)
             if not embeddings:
                 return _rag_operation_result(
@@ -1394,10 +1530,16 @@ def query_npc_memory(game_id: str, npc_id: str, query: str, k: int = 3) -> str:
         from infrastructure.request_context import current_principal
         from infrastructure.runtime import get_runtime
 
-        documents = get_runtime().memory_store.query(MemoryQuery(
-            text=query, scope="npc", principal=current_principal(),
-            game_id=uuid.UUID(str(game_id)), npc_id=npc_id, k=k,
-        ))
+        documents = get_runtime().memory_store.query(
+            MemoryQuery(
+                text=query,
+                scope="npc",
+                principal=current_principal(),
+                game_id=uuid.UUID(str(game_id)),
+                npc_id=npc_id,
+                k=k,
+            )
+        )
         return _format_memory_documents(documents)  # SPEC-234 R9
 
     npc_path = _get_npc_path(game_id, npc_id)
@@ -1421,6 +1563,7 @@ def query_npc_memory(game_id: str, npc_id: str, query: str, k: int = 3) -> str:
 
 # --- FUNÇÕES DE UTILIDADE (Setup Inicial) ---
 
+
 def ingest_file(file_path: str, index_name: str):
     """
     Ingere um arquivo de texto para criar os índices GLOBAIS (lore/rules).
@@ -1431,12 +1574,13 @@ def ingest_file(file_path: str, index_name: str):
         return
 
     embeddings = get_embeddings()
-    if embeddings is None: return
+    if embeddings is None:
+        return
     provider = _resolve_provider()
 
     _log_event("rag", "ingest_started", level="info", index=index_name, provider=provider)
 
-    loader = TextLoader(file_path, encoding='utf-8')
+    loader = TextLoader(file_path, encoding="utf-8")
     docs = loader.load()
 
     splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
@@ -1447,6 +1591,7 @@ def ingest_file(file_path: str, index_name: str):
     db = FAISS.from_documents(chunks, embeddings)
     _save_index(db, path, provider)
     _log_event("rag", "ingest_done", level="info", index=index_name)
+
 
 def reindex_global() -> None:
     """Re-gera os índices globais (lore do Codex + regras).
@@ -1463,13 +1608,21 @@ def reindex_global() -> None:
     errors = [f for f in findings if f.severity == "error"]
     if errors:
         for f in errors:
-            _log_event("rag", "lint_error", level="error", validator=f.validator, path=f.path, message=f.message)
+            _log_event(
+                "rag",
+                "lint_error",
+                level="error",
+                validator=f.validator,
+                path=f.path,
+                message=f.message,
+            )
         _log_event("rag", "reindex_aborted", level="error", lint_errors=len(errors))
         sys.exit(1)
 
     # Fase 2.5: lore vem do Codex (data/codex/); world_lore.txt foi removido na 2.5b (R5).
     _log_event("rag", "reindex_started", level="info")
     from services.codex_loader import ingest_codex
+
     ingest_codex()
     rules_path = os.path.join("data", "rules.txt")
     if os.path.exists(rules_path):
@@ -1485,6 +1638,7 @@ if __name__ == "__main__":
 
     # SPEC-222: o CLI de reindexação mostra os eventos rpg.rag/rpg.codex no terminal.
     from observability.logging_setup import configure_logging
+
     configure_logging()
     for _stream in (sys.stdout, sys.stderr):
         try:

@@ -5,6 +5,7 @@ Grava, por campanha de playtest, 1 JSONL (uma linha por turno, shape do logger
 com métricas agregadas. Tudo em `playtest_runs/{run_id}/` (gitignored). Funções
 puras sobre `CampaignResult` + `TurnRecord`; zero dependência nova.
 """
+
 from __future__ import annotations
 
 import glob
@@ -78,7 +79,9 @@ def _pid_is_alive(pid: int) -> bool:
 
             process_query_limited_information = 0x1000
             handle = ctypes.windll.kernel32.OpenProcess(
-                process_query_limited_information, False, value,
+                process_query_limited_information,
+                False,
+                value,
             )
             if handle:
                 ctypes.windll.kernel32.CloseHandle(handle)
@@ -136,8 +139,7 @@ def begin_run(
             "turns_per_campaign": int(turns),
             "seed": int(seed),
             "seeds_by_profile": {
-                str(profile): int(value)
-                for profile, value in (seeds_by_profile or {}).items()
+                str(profile): int(value) for profile, value in (seeds_by_profile or {}).items()
             },
             "real": bool(real),
             "class_name": class_name,
@@ -147,9 +149,7 @@ def begin_run(
             "campaign_matrix": list(campaign_matrix or []),
             "routes_profile": routes_profile,
             "provider_min_interval_seconds": float(provider_min_interval_seconds or 0.0),
-            "require_all_llm_invocations_successful": bool(
-                require_all_llm_invocations_successful
-            ),
+            "require_all_llm_invocations_successful": bool(require_all_llm_invocations_successful),
         },
         "campaigns": {},
     }
@@ -157,8 +157,7 @@ def begin_run(
     return meta
 
 
-def recover_stale_runs(*, max_age_seconds: int = 21600,
-                       now: datetime | None = None) -> list[str]:
+def recover_stale_runs(*, max_age_seconds: int = 21600, now: datetime | None = None) -> list[str]:
     """Fecha manifestos ``running`` antigos deixados por processo interrompido.
 
     Runs recentes são preservadas para não interferir em outro playtest ativo.
@@ -175,9 +174,9 @@ def recover_stale_runs(*, max_age_seconds: int = 21600,
         if same_host and _pid_is_alive(owner.get("pid", 0)):
             continue
         try:
-            last_seen = datetime.fromisoformat(str(
-                meta.get("heartbeat_at") or meta.get("created_at") or ""
-            ))
+            last_seen = datetime.fromisoformat(
+                str(meta.get("heartbeat_at") or meta.get("created_at") or "")
+            )
             age = (current - last_seen).total_seconds()
         except (TypeError, ValueError):
             try:
@@ -221,23 +220,18 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
     expected_real = bool(expected.get("real"))
     expected_invariants = bool(expected.get("invariants_enabled", True))
     campaigns = [
-        value for value in (meta.get("campaigns") or {}).values()
-        if isinstance(value, dict)
+        value for value in (meta.get("campaigns") or {}).values() if isinstance(value, dict)
     ]
     by_profile: dict[str, list[dict]] = {}
     for campaign in campaigns:
         by_profile.setdefault(str(campaign.get("profile") or ""), []).append(campaign)
 
-    missing_profiles = [
-        profile for profile in expected_profiles if not by_profile.get(profile)
-    ]
+    missing_profiles = [profile for profile in expected_profiles if not by_profile.get(profile)]
     duplicate_profiles = sorted(
-        profile for profile in expected_profiles
-        if len(by_profile.get(profile, [])) > 1
+        profile for profile in expected_profiles if len(by_profile.get(profile, [])) > 1
     )
     unexpected_profiles = sorted(
-        profile for profile in by_profile
-        if profile not in set(expected_profiles)
+        profile for profile in by_profile if profile not in set(expected_profiles)
     )
     incomplete_campaigns: list[dict] = []
     missing_summaries: list[str] = []
@@ -254,17 +248,17 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
     if expected_turns <= 0:
         configuration_errors.append("turnos esperados devem ser positivos")
     if not expected_invariants:
-        configuration_errors.append(
-            "invariantes desabilitadas: run formal não pode ser aceita"
-        )
+        configuration_errors.append("invariantes desabilitadas: run formal não pode ser aceita")
 
     def mismatch(profile: str, field: str, expected_value, actual_value) -> None:
-        artifact_mismatches.append({
-            "profile": profile,
-            "field": field,
-            "expected": expected_value,
-            "actual": actual_value,
-        })
+        artifact_mismatches.append(
+            {
+                "profile": profile,
+                "field": field,
+                "expected": expected_value,
+                "actual": actual_value,
+            }
+        )
 
     def load_json_artifact(path: str) -> tuple[dict | None, str | None]:
         try:
@@ -289,15 +283,9 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
             try:
                 value = json.loads(line)
             except Exception as exc:
-                return rows, (
-                    f"linha {line_number}: {type(exc).__name__}: "
-                    f"{str(exc)[:160]}"
-                )
+                return rows, (f"linha {line_number}: {type(exc).__name__}: {str(exc)[:160]}")
             if not isinstance(value, dict):
-                return rows, (
-                    f"linha {line_number}: raiz {type(value).__name__}, "
-                    "esperado objeto"
-                )
+                return rows, (f"linha {line_number}: raiz {type(value).__name__}, esperado objeto")
             rows.append(value)
         return rows, None
 
@@ -313,11 +301,13 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
             else:
                 summary, summary_error = load_json_artifact(summary_path)
                 if summary_error:
-                    invalid_summaries.append({
-                        "profile": profile,
-                        "file": summary_name,
-                        "error": summary_error,
-                    })
+                    invalid_summaries.append(
+                        {
+                            "profile": profile,
+                            "file": summary_name,
+                            "error": summary_error,
+                        }
+                    )
                     reasons.append("summary inválido")
 
             jsonl_name = str(campaign.get("jsonl_file") or "")
@@ -329,29 +319,23 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
             else:
                 rows, jsonl_error = load_jsonl_artifact(jsonl_path)
                 if jsonl_error:
-                    invalid_jsonls.append({
-                        "profile": profile,
-                        "file": jsonl_name,
-                        "error": jsonl_error,
-                    })
+                    invalid_jsonls.append(
+                        {
+                            "profile": profile,
+                            "file": jsonl_name,
+                            "error": jsonl_error,
+                        }
+                    )
                     reasons.append("JSONL inválido")
 
             completed = int(campaign.get("turns_completed", 0) or 0)
-            requested = int(
-                campaign.get("turns_requested", expected_turns) or expected_turns
-            )
+            requested = int(campaign.get("turns_requested", expected_turns) or expected_turns)
             campaign_errors = int(campaign.get("errors", 0) or 0)
-            campaign_error_violations = int(
-                campaign.get("error_violations", 0) or 0
-            )
-            campaign_observability_errors = int(
-                campaign.get("observability_errors", 0) or 0
-            )
+            campaign_error_violations = int(campaign.get("error_violations", 0) or 0)
+            campaign_observability_errors = int(campaign.get("observability_errors", 0) or 0)
             campaign_aborted = bool(campaign.get("aborted_reason"))
 
-            if completed != requested or (
-                expected_turns and completed != expected_turns
-            ):
+            if completed != requested or (expected_turns and completed != expected_turns):
                 reasons.append("contagem de turnos da campanha diverge")
             if campaign_errors:
                 reasons.append("campanha contém erros")
@@ -369,9 +353,7 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
                     "profile": profile,
                     "seed": expected_seeds.get(profile, expected_seed),
                     "turns_requested": expected_turns,
-                    "turns_completed": (
-                        completed if campaign_aborted else expected_turns
-                    ),
+                    "turns_completed": (completed if campaign_aborted else expected_turns),
                     "errors": campaign_errors,
                     "error_violations": campaign_error_violations,
                     "observability_errors": campaign_observability_errors,
@@ -381,29 +363,22 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
                 for field, expected_value in scalar_contract.items():
                     actual_value = summary.get(field)
                     if actual_value != expected_value:
-                        mismatch(profile, f"summary.{field}",
-                                 expected_value, actual_value)
+                        mismatch(profile, f"summary.{field}", expected_value, actual_value)
                         reasons.append(f"summary.{field} diverge")
                 if expected_real:
                     if summary.get("mock") is not False:
-                        mismatch(profile, "summary.mock", False,
-                                 summary.get("mock"))
+                        mismatch(profile, "summary.mock", False, summary.get("mock"))
                         reasons.append("summary não comprova modo real")
                     if int(summary.get("llm_network_successes", 0) or 0) < 1:
-                        configuration_errors.append(
-                            f"{profile}: run real sem sucesso de rede LLM"
-                        )
+                        configuration_errors.append(f"{profile}: run real sem sucesso de rede LLM")
                         reasons.append("nenhum sucesso de rede LLM")
-                    if int(
-                        summary.get("startup_llm_network_successes", 0) or 0
-                    ) < 1:
+                    if int(summary.get("startup_llm_network_successes", 0) or 0) < 1:
                         configuration_errors.append(
                             f"{profile}: startup real sem sucesso de rede LLM"
                         )
                         reasons.append("startup sem sucesso de rede LLM")
-                if (
-                    bool(expected.get("require_all_llm_invocations_successful"))
-                    and int(summary.get("terminal_llm_invocations", 0) or 0)
+                if bool(expected.get("require_all_llm_invocations_successful")) and int(
+                    summary.get("terminal_llm_invocations", 0) or 0
                 ):
                     configuration_errors.append(
                         f"{profile}: invocação LLM terminal em run LLM-only"
@@ -412,101 +387,111 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
 
                 expected_jsonl_rows = completed if campaign_aborted else expected_turns
                 if len(rows) != expected_jsonl_rows:
-                    invalid_jsonls.append({
-                        "profile": profile,
-                        "file": jsonl_name,
-                        "error": (
-                            f"{len(rows)} linhas/turnos, "
-                            f"esperado {expected_jsonl_rows}"
-                        ),
-                    })
+                    invalid_jsonls.append(
+                        {
+                            "profile": profile,
+                            "file": jsonl_name,
+                            "error": (f"{len(rows)} linhas/turnos, esperado {expected_jsonl_rows}"),
+                        }
+                    )
                     reasons.append("contagem de linhas do JSONL diverge")
                 if rows:
                     turns_seen = [row.get("turn") for row in rows]
                     expected_sequence = list(range(1, len(rows) + 1))
                     if turns_seen != expected_sequence:
-                        invalid_jsonls.append({
-                            "profile": profile,
-                            "file": jsonl_name,
-                            "error": (
-                                f"sequência de turnos {turns_seen!r}, "
-                                f"esperado {expected_sequence!r}"
-                            ),
-                        })
+                        invalid_jsonls.append(
+                            {
+                                "profile": profile,
+                                "file": jsonl_name,
+                                "error": (
+                                    f"sequência de turnos {turns_seen!r}, "
+                                    f"esperado {expected_sequence!r}"
+                                ),
+                            }
+                        )
                         reasons.append("sequência de turnos do JSONL diverge")
                     required_row_fields = {
-                        "turn", "game_id", "save_path", "route",
-                        "nodes_executed", "decision",
-                        "resolved_action", "error", "violations",
-                        "violation_details", "llm_events", "rag_events",
-                        "player_vitality", "player_max_vitality",
-                        "player_wounds", "enemy_wounds",
-                        "conflict_wounds", "reactions",
+                        "turn",
+                        "game_id",
+                        "save_path",
+                        "route",
+                        "nodes_executed",
+                        "decision",
+                        "resolved_action",
+                        "error",
+                        "violations",
+                        "violation_details",
+                        "llm_events",
+                        "rag_events",
+                        "player_vitality",
+                        "player_max_vitality",
+                        "player_wounds",
+                        "enemy_wounds",
+                        "conflict_wounds",
+                        "reactions",
                     }
                     for row_index, row in enumerate(rows, start=1):
                         absent = sorted(required_row_fields - set(row))
                         if absent:
-                            invalid_jsonls.append({
-                                "profile": profile,
-                                "file": jsonl_name,
-                                "error": (
-                                    f"linha {row_index}: campos ausentes "
-                                    f"{', '.join(absent)}"
-                                ),
-                            })
+                            invalid_jsonls.append(
+                                {
+                                    "profile": profile,
+                                    "file": jsonl_name,
+                                    "error": (
+                                        f"linha {row_index}: campos ausentes {', '.join(absent)}"
+                                    ),
+                                }
+                            )
                             reasons.append("JSONL sem campos obrigatórios")
                             break
                         row_contract_errors: list[str] = []
                         if row.get("route") not in {
-                            "storyteller", "combat_agent", "npc_actor", "loot",
+                            "storyteller",
+                            "combat_agent",
+                            "npc_actor",
+                            "loot",
                             "timeout",
                         }:
-                            row_contract_errors.append(
-                                f"route inválida {row.get('route')!r}"
-                            )
+                            row_contract_errors.append(f"route inválida {row.get('route')!r}")
                         nodes = row.get("nodes_executed")
                         if not isinstance(nodes, list):
-                            row_contract_errors.append(
-                                "nodes_executed inválido"
-                            )
+                            row_contract_errors.append("nodes_executed inválido")
                         elif row.get("route") != "timeout" and not nodes:
                             row_contract_errors.append("nodes_executed vazio")
                         elif row.get("route") != "timeout" and "archivist" not in nodes:
-                            row_contract_errors.append(
-                                "archivist ausente de nodes_executed"
-                            )
+                            row_contract_errors.append("archivist ausente de nodes_executed")
                         decision = row.get("decision")
                         if not isinstance(decision, dict):
                             row_contract_errors.append("decision não é objeto")
                         elif row.get("action") != decision.get("text"):
-                            row_contract_errors.append(
-                                "action diverge de decision.text"
-                            )
+                            row_contract_errors.append("action diverge de decision.text")
                         for list_field in (
-                            "llm_events", "rag_events", "reactions",
-                            "violations", "violation_details",
+                            "llm_events",
+                            "rag_events",
+                            "reactions",
+                            "violations",
+                            "violation_details",
                         ):
                             if not isinstance(row.get(list_field), list):
-                                row_contract_errors.append(
-                                    f"{list_field} não é lista"
-                                )
+                                row_contract_errors.append(f"{list_field} não é lista")
                         for dict_field in (
-                            "resolved_action", "player_wounds",
-                            "enemy_wounds", "conflict_wounds",
+                            "resolved_action",
+                            "player_wounds",
+                            "enemy_wounds",
+                            "conflict_wounds",
                         ):
                             if not isinstance(row.get(dict_field), dict):
-                                row_contract_errors.append(
-                                    f"{dict_field} não é objeto"
-                                )
+                                row_contract_errors.append(f"{dict_field} não é objeto")
                         if row_contract_errors:
-                            invalid_jsonls.append({
-                                "profile": profile,
-                                "file": jsonl_name,
-                                "error": (
-                                    f"linha {row_index}: "
-                                    + "; ".join(row_contract_errors)
-                                ),
-                            })
+                            invalid_jsonls.append(
+                                {
+                                    "profile": profile,
+                                    "file": jsonl_name,
+                                    "error": (
+                                        f"linha {row_index}: " + "; ".join(row_contract_errors)
+                                    ),
+                                }
+                            )
                             reasons.append("contrato de linha JSONL inválido")
                         if row.get("game_id") != summary.get("game_id"):
                             mismatch(
@@ -526,44 +511,38 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
                             reasons.append("save_path do JSONL diverge")
                     row_errors = len([row for row in rows if row.get("error")])
                     if row_errors != int(summary.get("errors", 0) or 0):
-                        mismatch(profile, "jsonl.errors",
-                                 int(summary.get("errors", 0) or 0), row_errors)
+                        mismatch(
+                            profile, "jsonl.errors", int(summary.get("errors", 0) or 0), row_errors
+                        )
                         reasons.append("erros JSONL divergem do summary")
-                    row_error_violations = len([
-                        detail
-                        for row in rows
-                        for detail in (row.get("violation_details") or [])
-                        if isinstance(detail, dict)
-                        and detail.get("severity") == "error"
-                    ])
-                    if row_error_violations != int(
-                        summary.get("error_violations", 0) or 0
-                    ):
+                    row_error_violations = len(
+                        [
+                            detail
+                            for row in rows
+                            for detail in (row.get("violation_details") or [])
+                            if isinstance(detail, dict) and detail.get("severity") == "error"
+                        ]
+                    )
+                    if row_error_violations != int(summary.get("error_violations", 0) or 0):
                         mismatch(
                             profile,
                             "jsonl.error_violations",
                             int(summary.get("error_violations", 0) or 0),
                             row_error_violations,
                         )
-                        reasons.append(
-                            "invariantes error do JSONL divergem do summary"
-                        )
+                        reasons.append("invariantes error do JSONL divergem do summary")
                     row_routes = Counter(
-                        str(row.get("route") or "")
-                        for row in rows if row.get("route")
+                        str(row.get("route") or "") for row in rows if row.get("route")
                     )
                     if dict(row_routes) != dict(summary.get("routes") or {}):
-                        mismatch(profile, "jsonl.routes",
-                                 summary.get("routes") or {}, dict(row_routes))
+                        mismatch(
+                            profile, "jsonl.routes", summary.get("routes") or {}, dict(row_routes)
+                        )
                         reasons.append("rotas JSONL divergem do summary")
                     row_violations = Counter(
-                        str(check_id)
-                        for row in rows
-                        for check_id in (row.get("violations") or [])
+                        str(check_id) for row in rows for check_id in (row.get("violations") or [])
                     )
-                    if dict(row_violations) != dict(
-                        summary.get("violations") or {}
-                    ):
+                    if dict(row_violations) != dict(summary.get("violations") or {}):
                         mismatch(
                             profile,
                             "jsonl.violations",
@@ -577,12 +556,10 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
                 summary_game_id = str(summary.get("game_id") or "")
                 campaign_game_id = str(campaign.get("game_id") or "")
                 if summary_save != campaign_save:
-                    mismatch(profile, "save_path",
-                             campaign_save, summary_save)
+                    mismatch(profile, "save_path", campaign_save, summary_save)
                     reasons.append("vínculo de save diverge")
                 if summary_game_id != campaign_game_id:
-                    mismatch(profile, "game_id",
-                             campaign_game_id, summary_game_id)
+                    mismatch(profile, "game_id", campaign_game_id, summary_game_id)
                     reasons.append("game_id diverge")
 
             save_path = str(campaign.get("save_path") or "")
@@ -592,15 +569,15 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
             else:
                 save_data, save_error = load_json_artifact(save_path)
                 if save_error:
-                    invalid_saves.append({
-                        "profile": profile,
-                        "file": save_path,
-                        "error": save_error,
-                    })
+                    invalid_saves.append(
+                        {
+                            "profile": profile,
+                            "file": save_path,
+                            "error": save_error,
+                        }
+                    )
                     reasons.append("save final inválido")
-                elif str(save_data.get("game_id") or "") != str(
-                    campaign.get("game_id") or ""
-                ):
+                elif str(save_data.get("game_id") or "") != str(campaign.get("game_id") or ""):
                     mismatch(
                         profile,
                         "save.game_id",
@@ -609,19 +586,19 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
                     )
                     reasons.append("game_id do save diverge")
 
-            if (
-                reasons
-            ):
-                incomplete_campaigns.append({
-                    "profile": profile,
-                    "turns_completed": completed,
-                    "turns_expected": expected_turns or requested,
-                    "errors": campaign_errors,
-                    "aborted_reason": campaign.get("aborted_reason"),
-                    "error_violations": campaign_error_violations,
-                    "observability_errors": campaign_observability_errors,
-                    "reasons": list(dict.fromkeys(reasons)),
-                })
+            if reasons:
+                incomplete_campaigns.append(
+                    {
+                        "profile": profile,
+                        "turns_completed": completed,
+                        "turns_expected": expected_turns or requested,
+                        "errors": campaign_errors,
+                        "aborted_reason": campaign.get("aborted_reason"),
+                        "error_violations": campaign_error_violations,
+                        "observability_errors": campaign_observability_errors,
+                        "reasons": list(dict.fromkeys(reasons)),
+                    }
+                )
 
     declared_summaries = {
         str(campaign.get("summary_file") or "")
@@ -634,32 +611,34 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
         if campaign.get("jsonl_file")
     }
     actual_summaries = {
-        os.path.basename(path)
-        for path in glob.glob(os.path.join(directory, "*.summary.json"))
+        os.path.basename(path) for path in glob.glob(os.path.join(directory, "*.summary.json"))
     }
     actual_jsonls = {
-        os.path.basename(path)
-        for path in glob.glob(os.path.join(directory, "*.jsonl"))
+        os.path.basename(path) for path in glob.glob(os.path.join(directory, "*.jsonl"))
     }
     unexpected_summaries = sorted(actual_summaries - declared_summaries)
     unexpected_jsonls = sorted(actual_jsonls - declared_jsonls)
 
-    data_complete = bool(expected_profiles) and expected_turns > 0 and not (
-        missing_profiles
-        or duplicate_profiles
-        or unexpected_profiles
-        or len(campaigns) != len(expected_profiles)
-        or incomplete_campaigns
-        or missing_summaries
-        or invalid_summaries
-        or missing_jsonls
-        or invalid_jsonls
-        or missing_saves
-        or invalid_saves
-        or artifact_mismatches
-        or configuration_errors
-        or unexpected_summaries
-        or unexpected_jsonls
+    data_complete = (
+        bool(expected_profiles)
+        and expected_turns > 0
+        and not (
+            missing_profiles
+            or duplicate_profiles
+            or unexpected_profiles
+            or len(campaigns) != len(expected_profiles)
+            or incomplete_campaigns
+            or missing_summaries
+            or invalid_summaries
+            or missing_jsonls
+            or invalid_jsonls
+            or missing_saves
+            or invalid_saves
+            or artifact_mismatches
+            or configuration_errors
+            or unexpected_summaries
+            or unexpected_jsonls
+        )
     )
     return {
         "data_complete": data_complete,
@@ -685,11 +664,7 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
 
 def inspect_run(run_id_or_dir: str) -> dict:
     """Inspeciona o manifesto sem confiar apenas no campo `status` gravado."""
-    directory = (
-        run_id_or_dir
-        if os.path.isdir(run_id_or_dir)
-        else run_dir(run_id_or_dir)
-    )
+    directory = run_id_or_dir if os.path.isdir(run_id_or_dir) else run_dir(run_id_or_dir)
     meta = _read_json(os.path.join(directory, RUN_META_FILENAME))
     if not meta:
         return {
@@ -729,8 +704,7 @@ def inspect_run(run_id_or_dir: str) -> dict:
     }
 
 
-def finish_run(run_id: str, *, status: str = "complete",
-               reason: str | None = None) -> dict:
+def finish_run(run_id: str, *, status: str = "complete", reason: str | None = None) -> dict:
     """Fecha o manifesto; `complete` só é verdadeiro se os artefatos provarem."""
     path = _meta_path(run_id)
     meta = _read_json(path)
@@ -753,6 +727,7 @@ def finish_run(run_id: str, *, status: str = "complete",
 
 
 # --- registros por turno ----------------------------------------------------
+
 
 def turn_to_record(rec: TurnRecord) -> dict:
     """TurnRecord -> dict serializável (1 linha do JSONL)."""
@@ -837,10 +812,12 @@ def turn_to_record(rec: TurnRecord) -> dict:
         "model": rec.model,
         "tier": rec.tier,
         "fell_back": rec.fell_back,
-        "cost_usd": round(pricing.turn_cost([
-            event for event in rec.llm_events
-            if event.get("network_attempted", True)
-        ]), 6),
+        "cost_usd": round(
+            pricing.turn_cost(
+                [event for event in rec.llm_events if event.get("network_attempted", True)]
+            ),
+            6,
+        ),
     }
 
 
@@ -865,7 +842,7 @@ def _min_active_entropy_cost(player: dict) -> int:
     except Exception:
         return 0
     costs: list[int] = []
-    for aid in (player.get("prepared_cards") or []):
+    for aid in player.get("prepared_cards") or []:
         ab = cards.get_card(str(aid))
         if not isinstance(ab, dict):
             continue
@@ -906,53 +883,42 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
 
     # Inclui criação/abertura e CADA candidato. Build skip é tentativa, mas não
     # request nem custo; falha que chegou à rede entra no lower bound.
-    startup_llm_events = list(
-        getattr(result, "startup_llm_events", []) or []
-    )
+    startup_llm_events = list(getattr(result, "startup_llm_events", []) or [])
     all_llm_events = startup_llm_events + [
         event
         for rec in result.history
         for event in (rec.llm_events or [])
         if isinstance(event, dict)
     ]
-    network_llm_events = [
-        event for event in all_llm_events
-        if event.get("network_attempted", True)
-    ]
+    network_llm_events = [event for event in all_llm_events if event.get("network_attempted", True)]
     for event in network_llm_events:
         provider = event.get("provider") or "?"
         providers[provider] = providers.get(provider, 0) + 1
         tier = event.get("tier") or "?"
         cost_by_tier[tier] = round(
-            cost_by_tier.get(tier, 0.0)
-            + pricing.estimate_cost(event.get("model", "")),
+            cost_by_tier.get(tier, 0.0) + pricing.estimate_cost(event.get("model", "")),
             6,
         )
-    llm_successes = len([
-        event for event in all_llm_events
-        if event.get("status", "success") == "success"
-    ])
-    llm_skipped = len([
-        event for event in all_llm_events
-        if event.get("status") == "circuit_open"
-    ])
+    llm_successes = len(
+        [event for event in all_llm_events if event.get("status", "success") == "success"]
+    )
+    llm_skipped = len([event for event in all_llm_events if event.get("status") == "circuit_open"])
     llm_attempts = len(all_llm_events)
     llm_failures = llm_attempts - llm_successes - llm_skipped
-    llm_network_successes = len([
-        event for event in network_llm_events
-        if event.get("status", "success") == "success"
-    ])
-    startup_llm_network_successes = len([
-        event for event in startup_llm_events
-        if event.get("network_attempted", True)
-        and event.get("status", "success") == "success"
-    ])
+    llm_network_successes = len(
+        [event for event in network_llm_events if event.get("status", "success") == "success"]
+    )
+    startup_llm_network_successes = len(
+        [
+            event
+            for event in startup_llm_events
+            if event.get("network_attempted", True) and event.get("status", "success") == "success"
+        ]
+    )
     cost_total = pricing.turn_cost(network_llm_events)
 
     memory_writes_by_provenance: Counter = Counter()
-    startup_rag_events = list(
-        getattr(result, "startup_rag_events", []) or []
-    )
+    startup_rag_events = list(getattr(result, "startup_rag_events", []) or [])
     all_rag_events = startup_rag_events + [
         event
         for rec in result.history
@@ -962,19 +928,17 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
     for event in startup_rag_events:
         if not event.get("success"):
             continue
-        memory_writes_by_provenance.update({
-            str(key): int(value or 0)
-            for key, value in dict(
-                event.get("provenance_counts") or {}
-            ).items()
-        })
+        memory_writes_by_provenance.update(
+            {
+                str(key): int(value or 0)
+                for key, value in dict(event.get("provenance_counts") or {}).items()
+            }
+        )
     rag_operations: dict[str, int] = {}
     for event in all_rag_events:
         operation = str(event.get("operation") or "?")
         rag_operations[operation] = rag_operations.get(operation, 0) + 1
-    rag_failures = len([
-        event for event in all_rag_events if not event.get("success", False)
-    ])
+    rag_failures = len([event for event in all_rag_events if not event.get("success", False)])
     startup_missing = bool(not result.mock and not startup_llm_events)
     observability_errors = rag_failures + int(startup_missing)
 
@@ -982,57 +946,68 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
     world = final.get("world", {}) or {}
     player = final.get("player", {}) or {}
     quests = [q for q in (final.get("quests") or []) if isinstance(q, dict)]
-    final_memory_by_provenance = dict(
-        turn_records[-1].get("memory_by_provenance") or {}
-    ) if turn_records else {}
-    final_memory_by_confidence = dict(
-        turn_records[-1].get("memory_by_confidence") or {}
-    ) if turn_records else {}
-    final_memory_rejections = int(
-        turn_records[-1].get("memory_rejections", 0) or 0
-    ) if turn_records else 0
-    final_memory_promotions = int(
-        turn_records[-1].get("memory_promotions", 0) or 0
-    ) if turn_records else 0
+    final_memory_by_provenance = (
+        dict(turn_records[-1].get("memory_by_provenance") or {}) if turn_records else {}
+    )
+    final_memory_by_confidence = (
+        dict(turn_records[-1].get("memory_by_confidence") or {}) if turn_records else {}
+    )
+    final_memory_rejections = (
+        int(turn_records[-1].get("memory_rejections", 0) or 0) if turn_records else 0
+    )
+    final_memory_promotions = (
+        int(turn_records[-1].get("memory_promotions", 0) or 0) if turn_records else 0
+    )
     for record in turn_records:
-        memory_writes_by_provenance.update({
-            str(key): int(value or 0)
-            for key, value in dict(
-                record.get("memory_writes_by_provenance") or {}
-            ).items()
-        })
+        memory_writes_by_provenance.update(
+            {
+                str(key): int(value or 0)
+                for key, value in dict(record.get("memory_writes_by_provenance") or {}).items()
+            }
+        )
 
     # Morte canônica: log do runner; para saves antigos, somente marcadores
     # terminais explícitos permitem inferência. HP/Vitalidade zero isolados não.
     continuity_deaths = [
-        row for row in ((final.get("continuity") or {}).get("death_history") or [])
+        row
+        for row in ((final.get("continuity") or {}).get("death_history") or [])
         if isinstance(row, dict)
     ]
     deaths_log = list(getattr(result, "deaths_log", []) or [])
     if not deaths_log and continuity_deaths:
-        deaths_log = [{
-            "turn": row.get("session_action"),
-            "session_action": row.get("session_action"),
-            "canonical_turn": row.get("death_turn"),
-            "timeline_epoch": row.get("epoch"),
-            "location": row.get("location"),
-            "location_id": row.get("location_id"),
-            "cause": row.get("cause"),
-        } for row in continuity_deaths]
+        deaths_log = [
+            {
+                "turn": row.get("session_action"),
+                "session_action": row.get("session_action"),
+                "canonical_turn": row.get("death_turn"),
+                "timeline_epoch": row.get("epoch"),
+                "location": row.get("location"),
+                "location_id": row.get("location_id"),
+                "cause": row.get("cause"),
+            }
+            for row in continuity_deaths
+        ]
     if not deaths_log and (final.get("death_pending") or final.get("game_over")):
         death_ev = next(
-            (ev for ev in reversed(final.get("event_log") or [])
-             if isinstance(ev, dict) and ev.get("type") in ("player_died", "player_downed")), None)
-        death_payload = (death_ev or {}).get("payload", {}) or {}
-        deaths_log = [{
-            "turn": (
-                (death_ev or {}).get("turn")
-                or (turn_records[-1].get("turn") if turn_records else None)
+            (
+                ev
+                for ev in reversed(final.get("event_log") or [])
+                if isinstance(ev, dict) and ev.get("type") in ("player_died", "player_downed")
             ),
-            "location": death_payload.get("location"),
-            "location_id": (final.get("world") or {}).get("current_location_id"),
-            "cause": death_payload.get("killer"),
-        }]
+            None,
+        )
+        death_payload = (death_ev or {}).get("payload", {}) or {}
+        deaths_log = [
+            {
+                "turn": (
+                    (death_ev or {}).get("turn")
+                    or (turn_records[-1].get("turn") if turn_records else None)
+                ),
+                "location": death_payload.get("location"),
+                "location_id": (final.get("world") or {}).get("current_location_id"),
+                "cause": death_payload.get("killer"),
+            }
+        ]
 
     # spec balanceamento-early-game (R5): métricas de balanço da campanha.
     first_death = deaths_log[0] if deaths_log else {}
@@ -1040,31 +1015,28 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
     first_death_turn = first_death.get("turn")
     death_location = first_death.get("location") or None
     death_cause = first_death.get("cause") or None
-    downed_count = (
-        len(continuity_deaths) if continuity_deaths else len(deaths_log)
-    )
+    downed_count = len(continuity_deaths) if continuity_deaths else len(deaths_log)
     replan_count = len([r for r in turn_records if r.get("replanned")])
-    combat_turns = len([
-        r for r in turn_records
-        if r.get("combat_executed") or r.get("route") == "combat_agent"
-    ])
+    combat_turns = len(
+        [r for r in turn_records if r.get("combat_executed") or r.get("route") == "combat_agent"]
+    )
     terminal_llm_invocations = terminal_llm_invocation_count(all_llm_events)
     quest_requests = len([r for r in turn_records if r.get("quest_requested")])
     from playtest.metrics import quest_request_conversion_count
+
     quest_request_conversions = quest_request_conversion_count(
-        turn_records, window=3,
+        turn_records,
+        window=3,
     )
     experience_balance = {
         "combat_turns": combat_turns,
         "combat_turn_pct": (
-            round(100.0 * combat_turns / len(turn_records), 1)
-            if turn_records else None
+            round(100.0 * combat_turns / len(turn_records), 1) if turn_records else None
         ),
         "quest_requests": quest_requests,
         "quest_request_conversions": quest_request_conversions,
         "quest_conversion_pct": (
-            round(100.0 * quest_request_conversions / quest_requests, 1)
-            if quest_requests else None
+            round(100.0 * quest_request_conversions / quest_requests, 1) if quest_requests else None
         ),
     }
     node_samples: dict[str, list[int]] = {}
@@ -1082,7 +1054,8 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
         for node, values in sorted(node_samples.items())
     }
     combat_origins = Counter(
-        str(row.get("combat_origin") or "unknown") for row in turn_records
+        str(row.get("combat_origin") or "unknown")
+        for row in turn_records
         if row.get("combat_started")
     )
     started_conflicts = [
@@ -1090,14 +1063,16 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
             str(row.get("conflict_instance_id") or f"legacy:{row.get('turn')}"),
             int(row.get("timeline_epoch", 0) or 0),
         )
-        for row in turn_records if row.get("combat_started")
+        for row in turn_records
+        if row.get("combat_started")
     ]
     ended_conflicts = [
         (
             str(row.get("conflict_instance_id") or f"legacy:{row.get('turn')}"),
             int(row.get("timeline_epoch", 0) or 0),
         )
-        for row in turn_records if row.get("combat_ended")
+        for row in turn_records
+        if row.get("combat_ended")
     ]
     combat_end_hp_pcts: list[float] = []
     prev_combat = False
@@ -1105,32 +1080,23 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
         now_combat = bool(r.get("combat_active"))
         ended = bool(r.get("combat_ended")) or (
             (not now_combat)
-            and (
-                prev_combat
-                or r.get("combat_executed")
-                or r.get("route") == "combat_agent"
-            )
+            and (prev_combat or r.get("combat_executed") or r.get("route") == "combat_agent")
         )
-        mx = int(
-            r.get("player_max_vitality", r.get("player_max_hp", 0)) or 0
-        )
+        mx = int(r.get("player_max_vitality", r.get("player_max_hp", 0)) or 0)
         if ended and mx > 0:
-            current = int(
-                r.get("player_vitality", r.get("player_hp", 0)) or 0
-            )
+            current = int(r.get("player_vitality", r.get("player_hp", 0)) or 0)
             combat_end_hp_pcts.append(100.0 * current / mx)
         prev_combat = now_combat
     avg_hp_pct_after_combat = (
-        round(sum(combat_end_hp_pcts) / len(combat_end_hp_pcts), 1)
-        if combat_end_hp_pcts else None)
+        round(sum(combat_end_hp_pcts) / len(combat_end_hp_pcts), 1) if combat_end_hp_pcts else None
+    )
 
     # spec playtest-agente-curioso-entropia (R4): economia de Entropia medida por
     # GASTO, não por snapshot. Turno de combate = rota combat_agent (o gasto só é
     # fiel aí; ver runner._fill_state_metrics). O snapshot antigo era degenerado
     # (o gatilho reenche ao teto → flooding 100% / starvation 0% sempre).
     combat_rows = [
-        r for r in turn_records
-        if r.get("combat_executed") or r.get("route") == "combat_agent"
+        r for r in turn_records if r.get("combat_executed") or r.get("route") == "combat_agent"
     ]
 
     def _pct(n: int, d: int):
@@ -1142,7 +1108,8 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
     # poção, fuga, manobra e passe como desperdício de Entropia, inflando
     # flooding justamente quando o agente jogava defensivamente.
     basic_turns = [
-        r for r in combat_rows
+        r
+        for r in combat_rows
         if not r.get("used_active_ability")
         and str((r.get("resolved_action") or {}).get("kind") or "") == "attack"
     ]
@@ -1153,18 +1120,34 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
     # starvation REDEFINIDO: turno de combate que NÃO usou ativa E tinha Entropia
     # abaixo do menor custo de ativa conhecida (recurso faltou p/ agir).
     min_active_cost = _min_active_entropy_cost(player)
-    starvation = _pct(
-        len([r for r in basic_turns
-             if int(r.get("max_entropy", 0) or 0) > 0
-             and int(r.get("entropy", 0) or 0) < min_active_cost]),
-        n_combat) if min_active_cost > 0 else None
+    starvation = (
+        _pct(
+            len(
+                [
+                    r
+                    for r in basic_turns
+                    if int(r.get("max_entropy", 0) or 0) > 0
+                    and int(r.get("entropy", 0) or 0) < min_active_cost
+                ]
+            ),
+            n_combat,
+        )
+        if min_active_cost > 0
+        else None
+    )
     # flooding REDEFINIDO: turno que terminou com ataque básico E Entropia cheia
     # (recurso sobrou e não foi usado — gatilho/pool irrelevante).
     flooding = _pct(
-        len([r for r in basic_turns
-             if int(r.get("max_entropy", 0) or 0) > 0
-             and int(r.get("entropy", 0) or 0) == int(r.get("max_entropy", 0) or 0)]),
-        n_combat)
+        len(
+            [
+                r
+                for r in basic_turns
+                if int(r.get("max_entropy", 0) or 0) > 0
+                and int(r.get("entropy", 0) or 0) == int(r.get("max_entropy", 0) or 0)
+            ]
+        ),
+        n_combat,
+    )
     peak_charge = max((int(r.get("abyss_charge", 0) or 0) for r in turn_records), default=0)
     class_mechanics = Counter(
         str(event.get("kind"))
@@ -1174,34 +1157,37 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
     )
     try:
         from combat_mechanics import abyss_tier
+
         final_tier = abyss_tier(player)
     except Exception:
         final_tier = ""
 
     economy_rows = [
-        dict(row.get("economy_action") or {}) for row in turn_records
-        if row.get("economy_action")
+        dict(row.get("economy_action") or {}) for row in turn_records if row.get("economy_action")
     ]
     successful_economy = [row for row in economy_rows if row.get("ok")]
     modes = Counter(str(row.get("mode") or "unknown") for row in successful_economy)
     refusal_reasons = Counter(
         str(row.get("reason_code") or row.get("reason") or "unknown")
-        for row in economy_rows if not row.get("ok")
+        for row in economy_rows
+        if not row.get("ok")
     )
     market_rows = [
-        dict(row.get("market_snapshot") or {}) for row in turn_records
-        if row.get("market_snapshot")
+        dict(row.get("market_snapshot") or {}) for row in turn_records if row.get("market_snapshot")
     ]
     market_ids = {
-        str(row.get("merchant_id")) for row in [*economy_rows, *market_rows]
+        str(row.get("merchant_id"))
+        for row in [*economy_rows, *market_rows]
         if row.get("merchant_id")
     }
     location_ids = {
-        str(row.get("location_id")) for row in [*economy_rows, *market_rows]
+        str(row.get("location_id"))
+        for row in [*economy_rows, *market_rows]
         if row.get("location_id")
     }
     try:
         from gamedata import get_location
+
         region_ids = {
             str((get_location(location_id) or {}).get("region_id") or location_id)
             for location_id in location_ids
@@ -1220,9 +1206,7 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
             lots = acquisition.setdefault(item_id, [])
             for _ in range(qty):
                 realized_margin += unit - (lots.pop(0) if lots else unit)
-    family_counts = Counter(
-        str(row.get("action_family") or "unknown") for row in turn_records
-    )
+    family_counts = Counter(str(row.get("action_family") or "unknown") for row in turn_records)
     family_pct = {
         family: round(100.0 * count / max(1, len(turn_records)), 1)
         for family, count in sorted(family_counts.items())
@@ -1256,11 +1240,21 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
         "locations": len(location_ids),
         "regions": len(region_ids),
         "items": len({str(row.get("item_id")) for row in economy_rows if row.get("item_id")}),
-        "purchase_cost": sum(-int(row.get("gold_delta", 0) or 0) for row in successful_economy if row.get("mode") == "buy"),
-        "sales_revenue": sum(int(row.get("gold_delta", 0) or 0) for row in successful_economy if row.get("mode") == "sell"),
+        "purchase_cost": sum(
+            -int(row.get("gold_delta", 0) or 0)
+            for row in successful_economy
+            if row.get("mode") == "buy"
+        ),
+        "sales_revenue": sum(
+            int(row.get("gold_delta", 0) or 0)
+            for row in successful_economy
+            if row.get("mode") == "sell"
+        ),
         "realized_margin": realized_margin,
         "turnover": sum(abs(int(row.get("gold_delta", 0) or 0)) for row in successful_economy),
-        "final_net_worth": int(turn_records[-1].get("net_worth_after", 0) or 0) if turn_records else 0,
+        "final_net_worth": int(turn_records[-1].get("net_worth_after", 0) or 0)
+        if turn_records
+        else 0,
         "restocks_observed": restocks_observed,
         "action_families": dict(sorted(family_counts.items())),
         "action_family_pct": family_pct,
@@ -1269,8 +1263,7 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
     return {
         "game_id": str(final.get("game_id") or ""),
         "save_path": (
-            os.path.abspath(result.save_path)
-            if getattr(result, "save_path", "") else ""
+            os.path.abspath(result.save_path) if getattr(result, "save_path", "") else ""
         ),
         "profile": result.profile,
         "scenario": getattr(result, "scenario", None),
@@ -1290,20 +1283,24 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
             "mechanic_activations": dict(sorted(class_mechanics.items())),
         },
         "turns_completed": result.turns_completed,
-        "turns_requested": int(
-            getattr(result, "turns_requested", 0) or result.turns_completed
-        ),
+        "turns_requested": int(getattr(result, "turns_requested", 0) or result.turns_completed),
         "errors": len(result.errors),
         "violations": violations,
         "violation_samples": violation_samples,
-        "error_violations": len([
-            violation for violation in (result.violations or [])
-            if violation.get("severity") == "error"
-        ]),
-        "warning_violations": len([
-            violation for violation in (result.violations or [])
-            if violation.get("severity") == "warning"
-        ]),
+        "error_violations": len(
+            [
+                violation
+                for violation in (result.violations or [])
+                if violation.get("severity") == "error"
+            ]
+        ),
+        "warning_violations": len(
+            [
+                violation
+                for violation in (result.violations or [])
+                if violation.get("severity") == "warning"
+            ]
+        ),
         "routes": routes,
         "latency_ms": {"p50": _percentile(latencies, 50), "p95": _percentile(latencies, 95)},
         "node_latency_ms": node_latency,
@@ -1325,8 +1322,9 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
         "experience_balance": experience_balance,
         "combat_origins": dict(sorted(combat_origins.items())),
         "continuity": {
-            "session_action_count": int((final.get("continuity") or {}).get(
-                "session_action_count", len(turn_records)) or 0),
+            "session_action_count": int(
+                (final.get("continuity") or {}).get("session_action_count", len(turn_records)) or 0
+            ),
             "canonical_turn": int(world.get("turn_count", 0) or 0),
             "timeline_epoch": int((final.get("continuity") or {}).get("timeline_epoch", 0) or 0),
         },
@@ -1357,15 +1355,21 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
             "by_provenance": final_memory_by_provenance,
             "by_confidence": final_memory_by_confidence,
             "authority_pct": (
-                round(100.0 * (
-                    int(final_memory_by_confidence.get("confirmed", 0) or 0)
-                    + int(final_memory_by_confidence.get("reported", 0) or 0)
-                ) / sum(int(v or 0) for v in final_memory_by_confidence.values()), 1)
-                if sum(int(v or 0) for v in final_memory_by_confidence.values()) else None
+                round(
+                    100.0
+                    * (
+                        int(final_memory_by_confidence.get("confirmed", 0) or 0)
+                        + int(final_memory_by_confidence.get("reported", 0) or 0)
+                    )
+                    / sum(int(v or 0) for v in final_memory_by_confidence.values()),
+                    1,
+                )
+                if sum(int(v or 0) for v in final_memory_by_confidence.values())
+                else None
             ),
-            "stale_speculative": int(
-                turn_records[-1].get("stale_speculative_memories", 0) or 0
-            ) if turn_records else 0,
+            "stale_speculative": int(turn_records[-1].get("stale_speculative_memories", 0) or 0)
+            if turn_records
+            else 0,
             "writes_by_provenance": dict(memory_writes_by_provenance),
             "rejections": final_memory_rejections,
             "promotions": final_memory_promotions,
@@ -1379,10 +1383,9 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
         "llm_network_successes": llm_network_successes,
         "terminal_llm_invocations": terminal_llm_invocations,
         "startup_llm_attempts": len(startup_llm_events),
-        "startup_llm_skipped": len([
-            event for event in startup_llm_events
-            if event.get("status") == "circuit_open"
-        ]),
+        "startup_llm_skipped": len(
+            [event for event in startup_llm_events if event.get("status") == "circuit_open"]
+        ),
         "startup_llm_network_successes": startup_llm_network_successes,
         "startup_llm_missing": startup_missing,
         "startup_llm_events": startup_llm_events,
@@ -1396,32 +1399,22 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
         "observability_errors": observability_errors,
         "mock": result.mock,
         "aborted_reason": result.aborted_reason,
-        "invariants_enabled": bool(
-            getattr(result, "invariants_enabled", True)
-        ),
+        "invariants_enabled": bool(getattr(result, "invariants_enabled", True)),
         "combat_coverage": {
-            "executed_turns": len([
-                record for record in turn_records
-                if record.get("combat_executed")
-            ]),
+            "executed_turns": len(
+                [record for record in turn_records if record.get("combat_executed")]
+            ),
             "started": len(set(started_conflicts)),
             "ended": len(set(ended_conflicts)),
             "replayed_starts": len(started_conflicts) - len(set(started_conflicts)),
             "timeline_epochs": len({epoch for _identity, epoch in started_conflicts}),
-            "reactions": sum(
-                len(record.get("reactions") or [])
-                for record in turn_records
-            ),
-            "tactics": sum(
-                len(record.get("last_tactics") or [])
-                for record in turn_records
-            ),
+            "reactions": sum(len(record.get("reactions") or []) for record in turn_records),
+            "tactics": sum(len(record.get("last_tactics") or []) for record in turn_records),
         },
     }
 
 
-def persist_campaign(run_id: str, result: CampaignResult,
-                     stem: str | None = None) -> dict:
+def persist_campaign(run_id: str, result: CampaignResult, stem: str | None = None) -> dict:
     """Escreve `{stem}.jsonl` + `{stem}.summary.json` no run (default
     `{profile}_{seed}`; runs por CLASSE passam stem próprio p/ não colidir —
     spec balanceamento-classes-pos-playtest). Devolve o summary."""
@@ -1430,10 +1423,7 @@ def persist_campaign(run_id: str, result: CampaignResult,
     stem = stem or f"{result.profile}_{result.seed}"
     turn_records = [turn_to_record(r) for r in result.history]
     game_id = str((result.final_state or {}).get("game_id") or "")
-    linked_save_path = (
-        os.path.abspath(result.save_path)
-        if getattr(result, "save_path", "") else ""
-    )
+    linked_save_path = os.path.abspath(result.save_path) if getattr(result, "save_path", "") else ""
     for record in turn_records:
         # A linha deve ser auditável sem depender do nome do arquivo ou de um
         # join implícito pelo profile.
@@ -1454,13 +1444,9 @@ def persist_campaign(run_id: str, result: CampaignResult,
         expected = meta.get("expected") or {}
         formal_invariants = bool(expected.get("invariants_enabled", True))
         requires_real = bool(expected.get("real"))
-        requested = int(
-            getattr(result, "turns_requested", 0) or result.turns_completed
-        )
+        requested = int(getattr(result, "turns_requested", 0) or result.turns_completed)
         error_violations = int(summary.get("error_violations", 0) or 0)
-        observability_errors = int(
-            summary.get("observability_errors", 0) or 0
-        )
+        observability_errors = int(summary.get("observability_errors", 0) or 0)
         campaign_ok = (
             result.turns_completed == requested
             and not result.errors
@@ -1474,9 +1460,7 @@ def persist_campaign(run_id: str, result: CampaignResult,
                 or (
                     summary.get("mock") is False
                     and int(summary.get("llm_network_successes", 0) or 0) > 0
-                    and int(
-                        summary.get("startup_llm_network_successes", 0) or 0
-                    ) > 0
+                    and int(summary.get("startup_llm_network_successes", 0) or 0) > 0
                 )
             )
         )
@@ -1494,16 +1478,12 @@ def persist_campaign(run_id: str, result: CampaignResult,
             "jsonl_file": f"{stem}.jsonl",
             "errors": len(result.errors),
             "error_violations": error_violations,
-            "warning_violations": int(
-                summary.get("warning_violations", 0) or 0
-            ),
+            "warning_violations": int(summary.get("warning_violations", 0) or 0),
             "observability_errors": observability_errors,
             "aborted_reason": result.aborted_reason,
             "mock": bool(summary.get("mock")),
             "invariants_enabled": bool(summary.get("invariants_enabled")),
-            "llm_network_successes": int(
-                summary.get("llm_network_successes", 0) or 0
-            ),
+            "llm_network_successes": int(summary.get("llm_network_successes", 0) or 0),
             "startup_llm_network_successes": int(
                 summary.get("startup_llm_network_successes", 0) or 0
             ),

@@ -1,4 +1,5 @@
 """SPEC-241: access log por requisição + handler global de exceção com request_id."""
+
 import json
 
 import pytest
@@ -9,10 +10,12 @@ from observability import logging_setup
 @pytest.fixture()
 def client(monkeypatch):
     import api
+
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
     api._rate_hits.clear()
     logging_setup.configure_logging({"RPG_LOG_LEVEL": "debug", "RPG_LOG_PROPAGATE": "1"})
     from fastapi.testclient import TestClient
+
     return TestClient(api.app, raise_server_exceptions=False)
 
 
@@ -61,7 +64,7 @@ def test_unhandled_exception_logged_with_request_id(client, capsys):
         raise RuntimeError("segredo-XYZ")
 
     api.app.add_api_route("/__boom", boom, methods=["GET"])
-    route = api.app.router.routes.pop()          # o mount estatico "/" captura tudo: vai na frente
+    route = api.app.router.routes.pop()  # o mount estatico "/" captura tudo: vai na frente
     api.app.router.routes.insert(0, route)
 
     capsys.readouterr()
@@ -85,6 +88,7 @@ def test_unhandled_exception_logged_with_request_id(client, capsys):
 
 def test_stack_has_no_exception_message():
     from observability.telemetry import safe_stack
+
     try:
         raise ValueError("token=abc123-secret")
     except ValueError as exc:
@@ -94,8 +98,11 @@ def test_stack_has_no_exception_message():
 
 
 def test_http_exception_body_gets_request_id(client):
-    r = client.get("/game/state", params={"game_id": "00000000-0000-4000-8000-000000000000"},
-                   headers={"X-Request-ID": "http-exc-0001"})
+    r = client.get(
+        "/game/state",
+        params={"game_id": "00000000-0000-4000-8000-000000000000"},
+        headers={"X-Request-ID": "http-exc-0001"},
+    )
     assert r.status_code == 404
     body = r.json()
     assert body["request_id"] == "http-exc-0001" and body["detail"]
@@ -104,21 +111,31 @@ def test_http_exception_body_gets_request_id(client):
 
 def test_validation_error_logs_loc_not_values(client, capsys):
     capsys.readouterr()
-    r = client.post("/game/action", headers={"X-Request-ID": "valid-req-0001"},
-                    json={"input_text": 12345, "game_id": "SENTINEL-VALUE-QQQ"})
+    r = client.post(
+        "/game/action",
+        headers={"X-Request-ID": "valid-req-0001"},
+        json={"input_text": 12345, "game_id": "SENTINEL-VALUE-QQQ"},
+    )
     assert r.status_code == 422 and r.json()["request_id"] == "valid-req-0001"
     out = capsys.readouterr().out
     assert "SENTINEL-VALUE-QQQ" not in out
-    ev = next(json.loads(x) for x in out.splitlines()
-              if x.startswith("{") and '"http.validation_failed"' in x)
+    ev = next(
+        json.loads(x)
+        for x in out.splitlines()
+        if x.startswith("{") and '"http.validation_failed"' in x
+    )
     assert any("input_text" in loc for loc in ev["locs"])
 
 
 def test_request_id_header_on_413_and_429(client, monkeypatch):
-    r = client.post("/game/new", content=b"x" * (70 * 1024),
-                    headers={"content-type": "application/json", "X-Request-ID": "big-req-00001"})
+    r = client.post(
+        "/game/new",
+        content=b"x" * (70 * 1024),
+        headers={"content-type": "application/json", "X-Request-ID": "big-req-00001"},
+    )
     assert r.status_code == 413 and r.headers["X-Request-ID"] == "big-req-00001"
     import api
+
     monkeypatch.setenv("RPG_RATE_LIMIT", "1")
     api._rate_hits.clear()
     codes = []
@@ -131,8 +148,10 @@ def test_request_id_header_on_413_and_429(client, monkeypatch):
 
 def test_request_id_header_on_session_401(monkeypatch):
     import api
+
     monkeypatch.setenv("RPG_RUNTIME_PROFILE", "hosted")
     from fastapi.testclient import TestClient
+
     c = TestClient(api.app, raise_server_exceptions=False)
     r = c.get("/game/saves", headers={"X-Request-ID": "sess-req-0001"})
     assert r.status_code in (401, 403, 503)
@@ -169,9 +188,17 @@ def test_app_version_logged(client, capsys):
 def test_deploy_args_inject_git_sha():
     """SPEC-261 R3: vercel deploy pelos scripts de staging leva GIT_SHA (runtime + build)."""
     from scripts.staging.s192 import deploy_args
+
     sha = "a" * 40
     assert deploy_args(["deploy", "--prod", "--yes"], sha) == [
-        "deploy", "--prod", "--yes", "-e", f"GIT_SHA={sha}", "--build-env", f"GIT_SHA={sha}"]
+        "deploy",
+        "--prod",
+        "--yes",
+        "-e",
+        f"GIT_SHA={sha}",
+        "--build-env",
+        f"GIT_SHA={sha}",
+    ]
     assert deploy_args(["env", "ls"], sha) == ["env", "ls"]
     assert deploy_args(["deploy"], "") == ["deploy"]
     assert deploy_args(["deploy", "-e", "GIT_SHA=x"], sha) == ["deploy", "-e", "GIT_SHA=x"]

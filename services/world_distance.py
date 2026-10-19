@@ -4,6 +4,7 @@ Reaproveita a regra de custo de `world_utils.travel_cost` (travel_times do nó
 atual, fallback simétrico, interior = 0, sem entrada = 1). Puro e cacheado: o
 mapa é imutável durante o jogo.
 """
+
 from __future__ import annotations
 
 import heapq
@@ -15,8 +16,10 @@ import gamedata
 
 def _edge_cost(from_id: str, to_id: str) -> int:
     import world_utils
-    return world_utils.travel_cost({"current_location_id": from_id},
-                                   gamedata.get_location(to_id) or {"id": to_id})
+
+    return world_utils.travel_cost(
+        {"current_location_id": from_id}, gamedata.get_location(to_id) or {"id": to_id}
+    )
 
 
 @lru_cache(maxsize=64)

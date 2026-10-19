@@ -7,6 +7,7 @@ Writes docs/spec197/evidence/checklist-<sha>.json and a markdown summary next to
 Exit code 1 when any blocking check fails (status fail). `skip`/`not_provisioned` do not block
 by themselves but are listed; `--strict` turns them into failures (use for the final beta gate).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -30,20 +31,45 @@ OK_SPEC_STATUSES = {"done"}
 # Env NAMES that must exist in the Vercel project (target production) before beta.
 REQUIRED_ENV = {
     "staging": (
-        "DATABASE_URL", "SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY", "SUPABASE_SERVICE_ROLE_KEY",
-        "RPG_CRON_SECRET", "RPG_RUNTIME_PROFILE", "RPG_AUTH_CAPTCHA_MODE", "RPG_TURNSTILE_SITE_KEY",
+        "DATABASE_URL",
+        "SUPABASE_URL",
+        "SUPABASE_PUBLISHABLE_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "RPG_CRON_SECRET",
+        "RPG_RUNTIME_PROFILE",
+        "RPG_AUTH_CAPTCHA_MODE",
+        "RPG_TURNSTILE_SITE_KEY",
         "RPG_ADMIN_DATABASE_URL",  # SPEC-224: credencial de sistema (rpg_admin), distinta da de request
-    ) + HOSTED_REQUIRED_ENV,  # SPEC-218: lista de seguranca vem de infrastructure.runtime (fonte unica)
+    )
+    + HOSTED_REQUIRED_ENV,  # SPEC-218: lista de seguranca vem de infrastructure.runtime (fonte unica)
 }
 REQUIRED_ENV["production"] = REQUIRED_ENV["staging"] + (
-    "STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET", "RPG_CHECKOUT_ORIGIN", "JINA_API_KEY",
-    "DEEPSEEK_API_KEY", "GROQ_API_KEY", "RPG_DAILY_SPEND_CAP_BRL",
+    "STRIPE_SECRET_KEY",
+    "STRIPE_WEBHOOK_SECRET",
+    "RPG_CHECKOUT_ORIGIN",
+    "JINA_API_KEY",
+    "DEEPSEEK_API_KEY",
+    "GROQ_API_KEY",
+    "RPG_DAILY_SPEND_CAP_BRL",
 )
 # SPEC-218: mock/fake Play/overrides de laboratorio fora de producao; SPEC-225 R8: compras de teste.
-FORBIDDEN_IN_PROD = tuple(dict.fromkeys(
-    (*FORBIDDEN_IN_HOSTED, "RPG_FORCE_MOCK", "RPG_GOOGLE_PLAY_FAKE", "RPG_PLAY_ACCEPT_TEST_PURCHASES")))
+FORBIDDEN_IN_PROD = tuple(
+    dict.fromkeys(
+        (
+            *FORBIDDEN_IN_HOSTED,
+            "RPG_FORCE_MOCK",
+            "RPG_GOOGLE_PLAY_FAKE",
+            "RPG_PLAY_ACCEPT_TEST_PURCHASES",
+        )
+    )
+)
 RISK_ROW = re.compile(r"^\|\s*(R-\d+)\s*\|(.+)\|\s*$")
-CLOSED = ("fechado", "closed", "aceito", "accepted")  # exact status tokens ("fechado (staging)" does not count)
+CLOSED = (
+    "fechado",
+    "closed",
+    "aceito",
+    "accepted",
+)  # exact status tokens ("fechado (staging)" does not count)
 DRAFT_MARKERS = ("RASCUNHO",)
 PLACEHOLDER = re.compile(r"&lt;[^&\n]{1,80}?&gt;")  # built pages escape literal <...>
 
@@ -56,7 +82,12 @@ class Result:
     blocking: bool = True
 
     def as_dict(self) -> dict:
-        return {"name": self.name, "status": self.status, "blocking": self.blocking, "detail": self.detail}
+        return {
+            "name": self.name,
+            "status": self.status,
+            "blocking": self.blocking,
+            "detail": self.detail,
+        }
 
 
 def _run(args: list[str]) -> tuple[int, str]:
@@ -66,6 +97,7 @@ def _run(args: list[str]) -> tuple[int, str]:
 
 def _http_get(url: str) -> tuple[int, Any]:
     import httpx
+
     r = httpx.get(url, timeout=15, follow_redirects=False)
     try:
         body: Any = r.json()
@@ -77,12 +109,15 @@ def _http_get(url: str) -> tuple[int, Any]:
 @dataclass
 class Deps:
     """Side-effect seams so tests run offline."""
+
     run: Callable[[list[str]], tuple[int, str]] = field(default=_run)
     http_get: Callable[[str], tuple[int, Any]] = field(default=_http_get)
     remote_migrations: Callable[[str], list[dict] | None] | None = None  # env -> rows | None
     vercel_env_names: Callable[[str], set[str] | None] | None = None  # env -> names | None
     kill_switch_load: Callable[[str], dict | None] | None = None  # env -> {key: enabled} | None
-    finops_cron_active: Callable[[str], bool | None] | None = None  # env -> rpg-cron-finops active? | None (no DSN)
+    finops_cron_active: Callable[[str], bool | None] | None = (
+        None  # env -> rpg-cron-finops active? | None (no DSN)
+    )
 
 
 # ---------------------------------------------------------------- checks
@@ -93,36 +128,61 @@ def check_git(deps: Deps) -> tuple[Result, str]:
         return Result("git_clean_tree", "fail", "no HEAD"), "unknown"
     _, porcelain = deps.run(["git", "status", "--porcelain"])
     dirty = [ln for ln in porcelain.splitlines() if ln.strip()]
-    return Result("git_clean_tree", "pass" if not dirty else "fail",
-                  {"sha": sha, "dirty_files": len(dirty)}), sha
+    return Result(
+        "git_clean_tree", "pass" if not dirty else "fail", {"sha": sha, "dirty_files": len(dirty)}
+    ), sha
 
 
 def check_specs(index_path: Path = ROOT / "specs" / "index.yaml") -> Result:
     import yaml
+
     data = yaml.safe_load(index_path.read_text(encoding="utf-8"))
     found = {s["id"]: s["status"] for s in data["specs"]}
-    bad = {f"SPEC-{n}": found.get(f"SPEC-{n}", "missing") for n in SPEC_RANGE
-           if found.get(f"SPEC-{n}", "missing") not in OK_SPEC_STATUSES}
-    return Result("specs_176_196_done", "pass" if not bad else "fail",
-                  {"not_done": bad, "checked": len(SPEC_RANGE)})
+    bad = {
+        f"SPEC-{n}": found.get(f"SPEC-{n}", "missing")
+        for n in SPEC_RANGE
+        if found.get(f"SPEC-{n}", "missing") not in OK_SPEC_STATUSES
+    }
+    return Result(
+        "specs_176_196_done",
+        "pass" if not bad else "fail",
+        {"not_done": bad, "checked": len(SPEC_RANGE)},
+    )
 
 
 def check_ci(sha: str, deps: Deps) -> Result:
-    rc, out = deps.run(["gh", "run", "list", "--commit", sha, "--json",
-                        "name,status,conclusion,workflowName,databaseId"])
+    rc, out = deps.run(
+        [
+            "gh",
+            "run",
+            "list",
+            "--commit",
+            sha,
+            "--json",
+            "name,status,conclusion,workflowName,databaseId",
+        ]
+    )
     if rc != 0:
         return Result("ci_green", "skip", "gh unavailable or unauthenticated")
     runs = json.loads(out or "[]")
     if not runs:
         return Result("ci_green", "fail", "no CI runs for this sha (push + wait required)")
-    bad = [{"workflow": r.get("workflowName") or r.get("name"), "status": r.get("status"),
-            "conclusion": r.get("conclusion")} for r in runs
-           if r.get("status") != "completed" or r.get("conclusion") not in {"success", "skipped", "neutral"}]
+    bad = [
+        {
+            "workflow": r.get("workflowName") or r.get("name"),
+            "status": r.get("status"),
+            "conclusion": r.get("conclusion"),
+        }
+        for r in runs
+        if r.get("status") != "completed"
+        or r.get("conclusion") not in {"success", "skipped", "neutral"}
+    ]
     return Result("ci_green", "pass" if not bad else "fail", {"runs": len(runs), "not_green": bad})
 
 
 def check_migrations(env: str, deps: Deps, directory: Path | None = None) -> Result:
     from scripts.staging import migrations as mig
+
     if deps.remote_migrations is None:
         return Result("migrations_drift", "skip", "no remote reader configured")
     try:
@@ -132,8 +192,14 @@ def check_migrations(env: str, deps: Deps, directory: Path | None = None) -> Res
     if remote is None:
         return Result("migrations_drift", "not_provisioned", f"no database target for {env}")
     st = mig.plan_status(mig.local_migrations(directory or mig.MIGRATIONS_DIR), remote)
-    return Result("migrations_drift", "pass" if st["in_sync"] else "fail",
-                  {k: st[k] for k in ("local_count", "remote_count", "pending", "remote_only", "version_mismatch")})
+    return Result(
+        "migrations_drift",
+        "pass" if st["in_sync"] else "fail",
+        {
+            k: st[k]
+            for k in ("local_count", "remote_count", "pending", "remote_only", "version_mismatch")
+        },
+    )
 
 
 def check_eval_locks(deps: Deps) -> Result:
@@ -141,22 +207,40 @@ def check_eval_locks(deps: Deps) -> Result:
     return Result("eval_locks_unchanged", "pass" if rc == 0 else "fail", out.strip()[-300:])
 
 
-def check_finops_config(root: Path = ROOT, env: str = "staging", deps: Deps | None = None) -> Result:
-    need = ["observability/alerts/finops.yml", "docs/spec196/README.md", "services/kill_switches.py",
-            "scripts/admin_kill_switch.py", "data/finops_fixed_costs.json"]
+def check_finops_config(
+    root: Path = ROOT, env: str = "staging", deps: Deps | None = None
+) -> Result:
+    need = [
+        "observability/alerts/finops.yml",
+        "docs/spec196/README.md",
+        "services/kill_switches.py",
+        "scripts/admin_kill_switch.py",
+        "data/finops_fixed_costs.json",
+    ]
     missing = [p for p in need if not (root / p).exists()]
     if missing:
         return Result("budget_alert_config_present", "fail", {"missing": missing})
     if deps is None or deps.finops_cron_active is None:
-        return Result("budget_alert_config_present", "skip", "files present; cron.job not verified (no DB reader)")
+        return Result(
+            "budget_alert_config_present",
+            "skip",
+            "files present; cron.job not verified (no DB reader)",
+        )
     try:
         active = deps.finops_cron_active(env)
     except Exception as exc:  # noqa: BLE001
-        return Result("budget_alert_config_present", "fail", f"cron.job read failed: {type(exc).__name__}")
+        return Result(
+            "budget_alert_config_present", "fail", f"cron.job read failed: {type(exc).__name__}"
+        )
     if active is None:
-        return Result("budget_alert_config_present", "skip", f"files present; no database target for {env}")
-    return Result("budget_alert_config_present", "pass" if active else "fail",
-                  {"missing": [], "rpg_cron_finops_active": active})
+        return Result(
+            "budget_alert_config_present", "skip", f"files present; no database target for {env}"
+        )
+    return Result(
+        "budget_alert_config_present",
+        "pass" if active else "fail",
+        {"missing": [], "rpg_cron_finops_active": active},
+    )
 
 
 def check_kill_switch(env: str, deps: Deps) -> Result:
@@ -165,11 +249,21 @@ def check_kill_switch(env: str, deps: Deps) -> Result:
     try:
         state = deps.kill_switch_load(env)
     except Exception as exc:  # noqa: BLE001
-        return Result("kill_switch_store_reachable", "fail", f"store unreadable: {type(exc).__name__}")
+        return Result(
+            "kill_switch_store_reachable", "fail", f"store unreadable: {type(exc).__name__}"
+        )
     if state is None:
-        return Result("kill_switch_store_reachable", "not_provisioned", f"no database target for {env}")
-    return Result("kill_switch_store_reachable", "pass",
-                  {"switches_recorded": len(state), "switched_off": sorted(k for k, v in state.items() if not v)})
+        return Result(
+            "kill_switch_store_reachable", "not_provisioned", f"no database target for {env}"
+        )
+    return Result(
+        "kill_switch_store_reachable",
+        "pass",
+        {
+            "switches_recorded": len(state),
+            "switched_off": sorted(k for k, v in state.items() if not v),
+        },
+    )
 
 
 def check_health(base_url: str | None, sha: str, deps: Deps) -> Result:
@@ -181,7 +275,9 @@ def check_health(base_url: str | None, sha: str, deps: Deps) -> Result:
         return Result("health_sha", "fail", f"unreachable: {type(exc).__name__}")
     got = str(body.get("git_sha") or "") if isinstance(body, dict) else ""
     ok = code == 200 and bool(got) and (sha.startswith(got) or got.startswith(sha))
-    return Result("health_sha", "pass" if ok else "fail", {"http": code, "deployed_sha": got, "expected": sha})
+    return Result(
+        "health_sha", "pass" if ok else "fail", {"http": code, "deployed_sha": got, "expected": sha}
+    )
 
 
 def check_env_names(env: str, deps: Deps) -> Result:
@@ -195,8 +291,11 @@ def check_env_names(env: str, deps: Deps) -> Result:
         return Result("vercel_env_names", "not_provisioned", f"no vercel project for {env}")
     missing = [n for n in REQUIRED_ENV[env] if n not in names]
     forbidden = [n for n in FORBIDDEN_IN_PROD if env == "production" and n in names]
-    return Result("vercel_env_names", "pass" if not missing and not forbidden else "fail",
-                  {"missing": missing, "forbidden_present": forbidden})
+    return Result(
+        "vercel_env_names",
+        "pass" if not missing and not forbidden else "fail",
+        {"missing": missing, "forbidden_present": forbidden},
+    )
 
 
 WORKFLOW_DIR = ROOT / ".github" / "workflows"
@@ -220,14 +319,30 @@ def check_workflow_hygiene(directory: Path = WORKFLOW_DIR) -> Result:
                 found.append(f"action sem SHA: {match.group(1)}")
         if found:
             problems[path.name] = found
-    return Result("workflows_permissions_pins", "pass" if not problems else "fail",
-                  {"problems": problems} if problems else {"files": len(list(directory.glob("*.yml")))})
+    return Result(
+        "workflows_permissions_pins",
+        "pass" if not problems else "fail",
+        {"problems": problems} if problems else {"files": len(list(directory.glob("*.yml")))},
+    )
 
 
 def check_gitleaks_main(deps: Deps) -> Result:
     """SPEC-225 R5/R9: o último run concluído do workflow validate na main (inclui secret-scan) está verde."""
-    rc, out = deps.run(["gh", "run", "list", "--workflow", "validate", "--branch", "main", "--limit", "5",
-                        "--json", "status,conclusion,headSha"])
+    rc, out = deps.run(
+        [
+            "gh",
+            "run",
+            "list",
+            "--workflow",
+            "validate",
+            "--branch",
+            "main",
+            "--limit",
+            "5",
+            "--json",
+            "status,conclusion,headSha",
+        ]
+    )
     if rc != 0:
         return Result("gitleaks_main_green", "skip", "gh unavailable or unauthenticated")
     try:
@@ -237,8 +352,11 @@ def check_gitleaks_main(deps: Deps) -> Result:
     if not runs:
         return Result("gitleaks_main_green", "not_provisioned", "no completed validate run on main")
     last = runs[0]
-    return Result("gitleaks_main_green", "pass" if last.get("conclusion") == "success" else "fail",
-                  {"head": str(last.get("headSha", ""))[:12], "conclusion": last.get("conclusion")})
+    return Result(
+        "gitleaks_main_green",
+        "pass" if last.get("conclusion") == "success" else "fail",
+        {"head": str(last.get("headSha", ""))[:12], "conclusion": last.get("conclusion")},
+    )
 
 
 def check_environments_verified(path: Path = ROOT / "docs" / "spec225" / "README.md") -> Result:
@@ -247,13 +365,21 @@ def check_environments_verified(path: Path = ROOT / "docs" / "spec225" / "README
         return Result("environments_restricted", "fail", "docs/spec225/README.md ausente")
     match = ENVIRONMENTS_VERIFIED.search(path.read_text(encoding="utf-8"))
     if not match:
-        return Result("environments_restricted", "fail", "verificação manual pendente (ENVIRONMENTS_VERIFIED: AAAA-MM-DD)")
+        return Result(
+            "environments_restricted",
+            "fail",
+            "verificação manual pendente (ENVIRONMENTS_VERIFIED: AAAA-MM-DD)",
+        )
     return Result("environments_restricted", "pass", {"verified_on": match.group(1)})
 
 
 def check_legal(urls: dict[str, str], deps: Deps, *, allow_draft: bool = False) -> Result:
     if not urls:
-        return Result("legal_pages", "fail", "no privacy/terms/support/refund URLs configured (--legal-url name=url)")
+        return Result(
+            "legal_pages",
+            "fail",
+            "no privacy/terms/support/refund URLs configured (--legal-url name=url)",
+        )
     bad: dict[str, str] = {}
     for name, url in urls.items():
         try:
@@ -271,7 +397,9 @@ def check_legal(urls: dict[str, str], deps: Deps, *, allow_draft: bool = False) 
     missing = [n for n in ("privacy", "terms", "support", "refund") if n not in urls]
     if missing:
         bad["missing_names"] = ",".join(missing)
-    return Result("legal_pages", "pass" if not bad else "fail", {"urls": sorted(urls), "problems": bad})
+    return Result(
+        "legal_pages", "pass" if not bad else "fail", {"urls": sorted(urls), "problems": bad}
+    )
 
 
 def parse_risks(path: Path) -> list[dict]:
@@ -285,8 +413,14 @@ def parse_risks(path: Path) -> list[dict]:
             continue
         cells = [c.strip() for c in m.group(2).split("|")]
         if len(cells) >= 4 and cells[0].upper() in {"P0", "P1", "P2"}:
-            rows.append({"id": m.group(1), "severity": cells[0].upper(), "title": cells[1],
-                         "status": cells[3].lower()})
+            rows.append(
+                {
+                    "id": m.group(1),
+                    "severity": cells[0].upper(),
+                    "title": cells[1],
+                    "status": cells[3].lower(),
+                }
+            )
     return rows
 
 
@@ -294,25 +428,61 @@ def check_risks(path: Path | None = None) -> Result:
     rows = parse_risks(path or ROOT / "docs" / "spec197" / "risk-register.md")
     if not rows:
         return Result("open_p0_p1", "fail", "risk register missing or empty")
-    open_bad = [r["id"] for r in rows if r["severity"] in {"P0", "P1"} and r["status"] not in CLOSED]
+    open_bad = [
+        r["id"] for r in rows if r["severity"] in {"P0", "P1"} and r["status"] not in CLOSED
+    ]
     open_p2 = [r["id"] for r in rows if r["severity"] == "P2" and r["status"] not in CLOSED]
-    return Result("open_p0_p1", "pass" if not open_bad else "fail",
-                  {"open_p0_p1": open_bad, "p2_awaiting_acceptance": open_p2, "total": len(rows)})
+    return Result(
+        "open_p0_p1",
+        "pass" if not open_bad else "fail",
+        {"open_p0_p1": open_bad, "p2_awaiting_acceptance": open_p2, "total": len(rows)},
+    )
 
 
 # ---------------------------------------------------------------- orchestration
-def run_checklist(env: str, base_url: str | None, legal_urls: dict[str, str], deps: Deps,
-                  *, strict: bool = False, allow_draft_legal: bool = False, risk_path: Path | None = None) -> dict:
+def run_checklist(
+    env: str,
+    base_url: str | None,
+    legal_urls: dict[str, str],
+    deps: Deps,
+    *,
+    strict: bool = False,
+    allow_draft_legal: bool = False,
+    risk_path: Path | None = None,
+) -> dict:
     git, sha = check_git(deps)
-    results = [git, check_specs(), check_ci(sha, deps), check_migrations(env, deps),
-               check_eval_locks(deps), check_finops_config(env=env, deps=deps), check_kill_switch(env, deps),
-               check_health(base_url, sha, deps), check_env_names(env, deps),
-               check_legal(legal_urls, deps, allow_draft=allow_draft_legal), check_risks(risk_path),
-               check_workflow_hygiene(), check_gitleaks_main(deps), check_environments_verified()]
-    failing = [r.name for r in results if r.blocking and (
-        r.status == "fail" or (strict and r.status in {"skip", "not_provisioned"}))]
-    return {"schema": 1, "env": env, "sha": sha, "base_url": base_url, "ok": not failing,
-            "failing": failing, "strict": strict, "results": [r.as_dict() for r in results]}
+    results = [
+        git,
+        check_specs(),
+        check_ci(sha, deps),
+        check_migrations(env, deps),
+        check_eval_locks(deps),
+        check_finops_config(env=env, deps=deps),
+        check_kill_switch(env, deps),
+        check_health(base_url, sha, deps),
+        check_env_names(env, deps),
+        check_legal(legal_urls, deps, allow_draft=allow_draft_legal),
+        check_risks(risk_path),
+        check_workflow_hygiene(),
+        check_gitleaks_main(deps),
+        check_environments_verified(),
+    ]
+    failing = [
+        r.name
+        for r in results
+        if r.blocking
+        and (r.status == "fail" or (strict and r.status in {"skip", "not_provisioned"}))
+    ]
+    return {
+        "schema": 1,
+        "env": env,
+        "sha": sha,
+        "base_url": base_url,
+        "ok": not failing,
+        "failing": failing,
+        "strict": strict,
+        "results": [r.as_dict() for r in results],
+    }
 
 
 def to_markdown(report: dict) -> str:
@@ -320,8 +490,14 @@ def to_markdown(report: dict) -> str:
     head = f"Resultado: **{'APROVADO' if report['ok'] else 'BLOQUEADO'}**"
     if report["failing"]:
         head += f" (falhas: {', '.join(report['failing'])})"
-    lines = [f"# Release checklist - {report['env']} @ {report['sha'][:12]}", "", head, "",
-             "| check | status | detalhe |", "|---|---|---|"]
+    lines = [
+        f"# Release checklist - {report['env']} @ {report['sha'][:12]}",
+        "",
+        head,
+        "",
+        "| check | status | detalhe |",
+        "|---|---|---|",
+    ]
     for r in report["results"]:
         detail = json.dumps(r["detail"], ensure_ascii=False)[:160].replace("|", "/")
         lines.append(f"| {r['name']} | {icon.get(r['status'], r['status'])} | {detail} |")
@@ -330,7 +506,9 @@ def to_markdown(report: dict) -> str:
 
 def write_report(report: dict, out_dir: Path = EVIDENCE) -> tuple[Path, Path]:
     out_dir.mkdir(parents=True, exist_ok=True)
-    stem = f"checklist-{report['sha'][:12]}" + ("" if report["env"] == "staging" else f"-{report['env']}")
+    stem = f"checklist-{report['sha'][:12]}" + (
+        "" if report["env"] == "staging" else f"-{report['env']}"
+    )
     j, m = out_dir / f"{stem}.json", out_dir / f"{stem}.md"
     j.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     m.write_text(to_markdown(report), encoding="utf-8")
@@ -340,6 +518,7 @@ def write_report(report: dict, out_dir: Path = EVIDENCE) -> tuple[Path, Path]:
 # ---------------------------------------------------------------- real readers (names/rows only)
 def _dotenv() -> dict[str, str]:
     from dotenv import dotenv_values
+
     merged: dict[str, str] = {}
     for n in (".env", ".env.staging"):
         merged.update({k: v for k, v in dotenv_values(ROOT / n).items() if v})
@@ -353,6 +532,7 @@ def real_remote_migrations(env: str) -> list[dict] | None:
     import psycopg
 
     from scripts.staging import migrations as mig
+
     with psycopg.connect(dsn, autocommit=True) as conn:
         return mig.fetch_remote(conn)
 
@@ -363,9 +543,14 @@ def real_vercel_env_names(env: str) -> set[str] | None:
     if env != "staging" or not token or not link.exists():
         return None
     import httpx
+
     meta = json.loads(link.read_text(encoding="utf-8"))
-    r = httpx.get(f"https://api.vercel.com/v10/projects/{meta['projectId']}/env",
-                  params={"teamId": meta["orgId"]}, headers={"Authorization": f"Bearer {token}"}, timeout=30)
+    r = httpx.get(
+        f"https://api.vercel.com/v10/projects/{meta['projectId']}/env",
+        params={"teamId": meta["orgId"]},
+        headers={"Authorization": f"Bearer {token}"},
+        timeout=30,
+    )
     r.raise_for_status()
     return {e["key"] for e in r.json().get("envs", []) if "production" in (e.get("target") or [])}
 
@@ -375,6 +560,7 @@ def real_kill_switch_load(env: str) -> dict | None:
     if not dsn:
         return None
     import psycopg
+
     with psycopg.connect(dsn, autocommit=True) as conn:
         rows = conn.execute("select key, enabled from app.kill_switches").fetchall()
         return {k: bool(v) for k, v in rows}
@@ -385,8 +571,11 @@ def real_finops_cron_active(env: str) -> bool | None:
     if not dsn:
         return None
     import psycopg
+
     with psycopg.connect(dsn, autocommit=True) as conn:
-        row = conn.execute("select 1 from cron.job where jobname = 'rpg-cron-finops' and active").fetchone()
+        row = conn.execute(
+            "select 1 from cron.job where jobname = 'rpg-cron-finops' and active"
+        ).fetchone()
         return row is not None
 
 
@@ -396,15 +585,23 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--base-url")
     ap.add_argument("--legal-url", action="append", default=[], metavar="NAME=URL")
     ap.add_argument("--strict", action="store_true")
-    ap.add_argument("--allow-draft-legal", action="store_true",
-                    help="staging only: accept RASCUNHO banner / <placeholders> in legal pages")
+    ap.add_argument(
+        "--allow-draft-legal",
+        action="store_true",
+        help="staging only: accept RASCUNHO banner / <placeholders> in legal pages",
+    )
     ap.add_argument("--out-dir", type=Path, default=EVIDENCE)
     a = ap.parse_args(argv)
     legal = dict(x.split("=", 1) for x in a.legal_url if "=" in x)
-    deps = Deps(remote_migrations=real_remote_migrations, vercel_env_names=real_vercel_env_names,
-                kill_switch_load=real_kill_switch_load,
-                finops_cron_active=real_finops_cron_active)
-    report = run_checklist(a.env, a.base_url, legal, deps, strict=a.strict, allow_draft_legal=a.allow_draft_legal)
+    deps = Deps(
+        remote_migrations=real_remote_migrations,
+        vercel_env_names=real_vercel_env_names,
+        kill_switch_load=real_kill_switch_load,
+        finops_cron_active=real_finops_cron_active,
+    )
+    report = run_checklist(
+        a.env, a.base_url, legal, deps, strict=a.strict, allow_draft_legal=a.allow_draft_legal
+    )
     j, m = write_report(report, a.out_dir)
     print(m.read_text(encoding="utf-8"))
     print(f"evidence: {j}")

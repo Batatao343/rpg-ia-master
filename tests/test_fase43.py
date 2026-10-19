@@ -2,6 +2,7 @@
 Fase 4.3 — Inventário estruturado, equipamento e itens usáveis em combate.
 Spec: specs/SPEC-013-fase-4.3-inventario-equipamento.md. 100% offline.
 """
+
 import copy
 
 import pytest
@@ -13,14 +14,27 @@ from gamedata import ARTIFACTS_DB, CLASSES
 
 def make_player(**over):
     p = {
-        "name": "Testo", "class_name": "Cavaleiro da Vigília", "race": "Humano",
-        "level": 1, "xp": 0, "hp": 20, "max_hp": 30,
-        "mana": 5, "max_mana": 5, "stamina": 20, "max_stamina": 20,
-        "gold": 10, "attributes": {"str": 14, "dex": 12, "con": 14,
-                                   "int": 10, "wis": 10, "cha": 10},
-        "inventory": [], "equipment": {"weapon": None, "armor": None, "accessory": None},
-        "known_abilities": ["ataque_basico"], "defense": 12, "attack_bonus": 0,
-        "active_conditions": [], "ability_cooldowns": {}, "pending_choices": [],
+        "name": "Testo",
+        "class_name": "Cavaleiro da Vigília",
+        "race": "Humano",
+        "level": 1,
+        "xp": 0,
+        "hp": 20,
+        "max_hp": 30,
+        "mana": 5,
+        "max_mana": 5,
+        "stamina": 20,
+        "max_stamina": 20,
+        "gold": 10,
+        "attributes": {"str": 14, "dex": 12, "con": 14, "int": 10, "wis": 10, "cha": 10},
+        "inventory": [],
+        "equipment": {"weapon": None, "armor": None, "accessory": None},
+        "known_abilities": ["ataque_basico"],
+        "defense": 12,
+        "attack_bonus": 0,
+        "active_conditions": [],
+        "ability_cooldowns": {},
+        "pending_choices": [],
     }
     p.update(over)
     return p
@@ -29,6 +43,7 @@ def make_player(**over):
 # ---------------------------------------------------------------------------
 # Etapa 1 — inventory.py núcleo
 # ---------------------------------------------------------------------------
+
 
 def test_add_stack_consumivel():
     out = inv.add_item([], "pocao_cura", 1)
@@ -86,6 +101,7 @@ def test_backfill_idempotente():
 # Etapa 2 — equipamento
 # ---------------------------------------------------------------------------
 
+
 def test_equip_slot_correto():
     p = make_player(inventory=inv.add_item([], "espada_gasta", 1))
     out, err = inv.equip(p, "espada_gasta")
@@ -103,9 +119,9 @@ def test_equip_tipo_errado_e_ausente():
 def test_stats_leem_so_slots():
     itens = inv.add_item(inv.add_item([], "espada_gasta", 1), "escudo_amassado", 1)
     sem_equipar = make_player(inventory=itens)
-    com_espada = make_player(inventory=itens,
-                             equipment={"weapon": "espada_gasta", "armor": None,
-                                        "accessory": None})
+    com_espada = make_player(
+        inventory=itens, equipment={"weapon": "espada_gasta", "armor": None, "accessory": None}
+    )
     s0 = cm.compute_player_combat_stats(sem_equipar)
     s1 = cm.compute_player_combat_stats(com_espada)
     assert s1["attack"] == s0["attack"] + 1  # arma equipada conta
@@ -116,9 +132,17 @@ def test_stats_leem_so_slots():
 def test_arma_inicial_da_bonus():
     """Bug histórico fechado: criador entrega arma canônica equipada com bônus."""
     from character_creator import create_player_character
-    sheet = create_player_character({
-        "name": "T", "class_name": "Devoto do Abismo", "race": "Humano",
-        "region": "Nova Arcádia", "backstory": "", "level": "1"})
+
+    sheet = create_player_character(
+        {
+            "name": "T",
+            "class_name": "Devoto do Abismo",
+            "race": "Humano",
+            "region": "Nova Arcádia",
+            "backstory": "",
+            "level": "1",
+        }
+    )
     assert sheet["equipment"]["weapon"] == "espada_gasta"
     stats = cm.compute_player_combat_stats(sheet)
     base = dict(sheet, equipment={"weapon": None, "armor": None, "accessory": None})
@@ -138,6 +162,7 @@ def test_starting_equipment_resolve_no_db():
 # ---------------------------------------------------------------------------
 # Etapa 4 — item usável em combate
 # ---------------------------------------------------------------------------
+
 
 def test_pocao_cura_em_combate(monkeypatch):
     monkeypatch.setattr(cm.random, "randint", lambda a, b: 2)
@@ -167,25 +192,49 @@ def test_parse_item_id_no_combate(monkeypatch):
     from langchain_core.messages import HumanMessage
 
     from agents import combat as cbt
+
     monkeypatch.setattr(cbt, "_narrate", lambda *a, **k: "Fim.")
 
     p = make_player(hp=10, inventory=inv.add_item([], "pocao_cura", 1))
-    p.update({"virtudes": {"forca": 2, "agilidade": 2, "corpo": 3,
-                           "mente": 1, "carisma": 1},
-              "vitalidade": 10, "max_vitalidade": 30,
-              "ferimento_espacos": {"leve": 3, "grave": 2, "critico": 1},
-              "ferimentos": {"leve": [], "grave": [], "critico": []}})
-    enemy = {"id": "e1", "name": "Rato", "type": "Minion", "hp": 50, "max_hp": 50,
-             "defense": 30, "status": "ativo", "attributes": {"dex": 1},
-             "active_conditions": [], "attacks": [{"name": "M", "bonus": -20, "damage": "1d1"}],
-             "stamina": 0, "mana": 0, "attack_mod": 0, "abilities": []}
-    state = {"messages": [HumanMessage(content="bebo a poção")], "player": p,
-             "enemies": [enemy], "combat": {"round": 1, "active": True},
-             "combat_target": "Rato", "world": {"turn_count": 1},
-             "bestiary_knowledge": {}, "pending_world_events": [],
-             "combat_declaration": {
-                 "actor_id": "player",
-                 "acao": {"kind": "item", "item_id": "pocao_cura"}}}
+    p.update(
+        {
+            "virtudes": {"forca": 2, "agilidade": 2, "corpo": 3, "mente": 1, "carisma": 1},
+            "vitalidade": 10,
+            "max_vitalidade": 30,
+            "ferimento_espacos": {"leve": 3, "grave": 2, "critico": 1},
+            "ferimentos": {"leve": [], "grave": [], "critico": []},
+        }
+    )
+    enemy = {
+        "id": "e1",
+        "name": "Rato",
+        "type": "Minion",
+        "hp": 50,
+        "max_hp": 50,
+        "defense": 30,
+        "status": "ativo",
+        "attributes": {"dex": 1},
+        "active_conditions": [],
+        "attacks": [{"name": "M", "bonus": -20, "damage": "1d1"}],
+        "stamina": 0,
+        "mana": 0,
+        "attack_mod": 0,
+        "abilities": [],
+    }
+    state = {
+        "messages": [HumanMessage(content="bebo a poção")],
+        "player": p,
+        "enemies": [enemy],
+        "combat": {"round": 1, "active": True},
+        "combat_target": "Rato",
+        "world": {"turn_count": 1},
+        "bestiary_knowledge": {},
+        "pending_world_events": [],
+        "combat_declaration": {
+            "actor_id": "player",
+            "acao": {"kind": "item", "item_id": "pocao_cura"},
+        },
+    }
     out = cbt.combat_node(state)
     assert inv.get_qty(out["player"]["inventory"], "pocao_cura") == 0
 
@@ -193,6 +242,7 @@ def test_parse_item_id_no_combate(monkeypatch):
 # ---------------------------------------------------------------------------
 # Etapa 5 — item narrado entra no inventário (validado, nunca fantasma)
 # ---------------------------------------------------------------------------
+
 
 def test_items_gained_resolve(monkeypatch):
     import agents.storyteller as st
@@ -203,19 +253,33 @@ def test_items_gained_resolve(monkeypatch):
             return self
 
         def invoke(self, _msgs):
-            return self._m(narrative="O ferreiro te entrega uma adaga.",
-                           introduced_npcs=[],
-                           items_gained=["Adaga de Ferro", "Espada Flamejante do Caos"])
+            return self._m(
+                narrative="O ferreiro te entrega uma adaga.",
+                introduced_npcs=[],
+                items_gained=["Adaga de Ferro", "Espada Flamejante do Caos"],
+            )
 
     monkeypatch.setattr(st, "get_llm", lambda *a, **k: _FakeStoryLLM())
     from langchain_core.messages import HumanMessage
-    state = {"messages": [HumanMessage(content="aceito a adaga")],
-             "player": make_player(), "world": {"turn_count": 3},
-             "factions": [], "npcs": {}, "quests": [],
-             "campaign_plan": {"beats": [{"description": "b", "status": "pending"}],
-                               "current_step": 0, "location": "x", "climax": "y",
-                               "last_planned_turn": 0},
-             "world_projection": {}, "event_log": [], "pending_world_events": []}
+
+    state = {
+        "messages": [HumanMessage(content="aceito a adaga")],
+        "player": make_player(),
+        "world": {"turn_count": 3},
+        "factions": [],
+        "npcs": {},
+        "quests": [],
+        "campaign_plan": {
+            "beats": [{"description": "b", "status": "pending"}],
+            "current_step": 0,
+            "location": "x",
+            "climax": "y",
+            "last_planned_turn": 0,
+        },
+        "world_projection": {},
+        "event_log": [],
+        "pending_world_events": [],
+    }
     out = st.storyteller_node(state)
     got = out["player"]["inventory"]
     assert inv.get_qty(got, "adaga_ferro") == 1
@@ -231,10 +295,14 @@ def test_items_gained_resolve(monkeypatch):
 # API
 # ---------------------------------------------------------------------------
 
+
 def test_inventory_block_nome_canonico():
     import api as api_mod
-    p = make_player(inventory=inv.add_item([], "pocao_cura", 3),
-                    equipment={"weapon": None, "armor": None, "accessory": None})
+
+    p = make_player(
+        inventory=inv.add_item([], "pocao_cura", 3),
+        equipment={"weapon": None, "armor": None, "accessory": None},
+    )
     block = api_mod._inventory_block(p)
     assert block[0]["name"] == "Poção de Cura Menor"  # nome do DB, não title(id)
     assert block[0]["qty"] == 3 and block[0]["type"] == "consumable"

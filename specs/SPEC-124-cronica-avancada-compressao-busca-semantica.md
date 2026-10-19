@@ -118,7 +118,7 @@ class ChronicleDigest(TypedDict, total=False):
     version: int
     source_hash: str
     profile_version: str
-    status: str                 # pending|ready|failed|extractive_fallback
+    status: str  # pending|ready|failed|extractive_fallback
     covered_entry_count: int
     from_turn: int
     to_turn: int
@@ -129,6 +129,7 @@ class ChronicleDigest(TypedDict, total=False):
     quests: list[str]
     unique_items: list[str]
     milestone_entry_ids: list[str]
+
 
 class ChronicleChapter(TypedDict, total=False):
     chapter_id: str
@@ -190,12 +191,13 @@ class ChronicleDocument:
     to_turn: int
     metadata: dict[str, Any]
 
+
 class ChronicleSearchStore(Protocol):
     def upsert(self, documents: Sequence[ChronicleDocument]) -> None: ...
-    def search(self, *, owner_id: str, game_id: str, timeline_epoch: int,
-               query: str, top_k: int) -> list[SearchCandidate]: ...
-    def discard_after_epoch(self, *, owner_id: str, game_id: str,
-                            timeline_epoch: int) -> None: ...
+    def search(
+        self, *, owner_id: str, game_id: str, timeline_epoch: int, query: str, top_k: int
+    ) -> list[SearchCandidate]: ...
+    def discard_after_epoch(self, *, owner_id: str, game_id: str, timeline_epoch: int) -> None: ...
 ```
 
 FAISS implementa compatibilidade `legacy`; pgvector/FTS é o perfil local/hosted.
@@ -226,6 +228,7 @@ class ChronicleSearchRequest(BaseModel):
     query: str = Field(min_length=2, max_length=300)
     top_k: int = Field(5, ge=1, le=10)
 
+
 class ChronicleSearchHit(BaseModel):
     chapter_id: str
     chapter_title: str
@@ -236,6 +239,7 @@ class ChronicleSearchHit(BaseModel):
     entry_ids: list[str]
     event_ids: list[str]
     match_kind: Literal["semantic", "lexical", "hybrid"]
+
 
 class ChronicleSearchResponse(BaseModel):
     mode: Literal["hybrid", "semantic", "lexical_fallback"]

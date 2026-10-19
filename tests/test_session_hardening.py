@@ -1,4 +1,5 @@
 """SPEC-220: logout revoga refresh, erros 401/403 fechados, lockout só por falha, Origin no login."""
+
 from __future__ import annotations
 
 import ast
@@ -81,6 +82,7 @@ def _csrf(client) -> dict:
 
 # --- R1/R2: logout ----------------------------------------------------------
 
+
 def test_logout_with_expired_access_leaves_no_500(hardened):
     client, identity, _ = hardened
     headers = _csrf(client)
@@ -97,7 +99,7 @@ def test_logout_expired_access_uses_refresh_then_global_logout(hardened):
     out = client.post("/auth/refresh/logout", headers=headers)
     assert out.status_code == 204
     assert identity.refreshed == ["r1"]
-    assert identity.logged_out == ["fresh"]          # access derivado do refresh
+    assert identity.logged_out == ["fresh"]  # access derivado do refresh
     assert identity.revoked_all == [identity.owner]  # D-A: defesa extra
     set_cookies = out.headers.get_list("set-cookie")
     assert any(h.startswith("rpg_refresh=") and "Max-Age=0" in h for h in set_cookies)
@@ -128,12 +130,14 @@ def test_logout_revoke_all_when_available(hardened):
 
 def test_logout_upstream_failure_never_500(hardened, monkeypatch):
     import httpx
+
     client, identity, _ = hardened
     headers = _csrf(client)
     client.cookies.set("rpg_access", "good")
 
     def down(_access):
         raise httpx.ConnectError("auth upstream down")
+
     monkeypatch.setattr(identity, "logout", down)
     assert client.post("/auth/logout", headers=headers).status_code == 204
 
@@ -144,10 +148,14 @@ def test_logout_bad_csrf_403(hardened):
     out = client.post("/auth/logout", headers={"X-CSRF-Token": "forged"})
     assert out.status_code == 403 and out.json()["detail"] == "csrf_invalid"
     no_origin = client.post("/auth/logout", headers={"Origin": ""})
-    assert no_origin.status_code == 403 and no_origin.json()["detail"] in {"origin_denied", "csrf_invalid"}
+    assert no_origin.status_code == 403 and no_origin.json()["detail"] in {
+        "origin_denied",
+        "csrf_invalid",
+    }
 
 
 # --- R3/R8/R10: códigos fechados ----------------------------------------------
+
 
 def test_session_boundary_401_code_only(hardened):
     client, _, _ = hardened
@@ -205,8 +213,12 @@ def test_auth_error_codes_closed_set():
         except (SyntaxError, UnicodeDecodeError):
             continue
         for node in ast.walk(tree):
-            if (isinstance(node, ast.Call) and getattr(node.func, "id", None) in {"Unauthorized", "CsrfError"}
-                    and node.args and isinstance(node.args[0], ast.Constant)):
+            if (
+                isinstance(node, ast.Call)
+                and getattr(node.func, "id", None) in {"Unauthorized", "CsrfError"}
+                and node.args
+                and isinstance(node.args[0], ast.Constant)
+            ):
                 literals.add(node.args[0].value)
     assert literals, "AST scan must find Unauthorized(...) call sites"
     for literal in literals:
@@ -218,21 +230,38 @@ def test_auth_error_codes_closed_set():
 def test_auth_routes_never_5xx_on_client_garbage(hardened):
     client, _, _ = hardened
     cases = [
-        ("/auth/logout", {}), ("/auth/refresh/logout", {}), ("/auth/refresh", {}),
+        ("/auth/logout", {}),
+        ("/auth/refresh/logout", {}),
+        ("/auth/refresh", {}),
         ("/auth/reauth", {"password": "whatever-123"}),
     ]
-    for cookies in ({}, {"rpg_access": ""}, {"rpg_access": "garbage", "rpg_csrf": "a.b"},
-                    {"rpg_refresh": "x", "rpg_csrf": ""}):
+    for cookies in (
+        {},
+        {"rpg_access": ""},
+        {"rpg_access": "garbage", "rpg_csrf": "a.b"},
+        {"rpg_refresh": "x", "rpg_csrf": ""},
+    ):
         client.cookies.clear()
         for key, value in cookies.items():
             client.cookies.set(key, value)
-        for headers in ({}, {"X-CSRF-Token": ""}, {"X-CSRF-Token": "a.b"}, {"Origin": "https://evil.test"}):
+        for headers in (
+            {},
+            {"X-CSRF-Token": ""},
+            {"X-CSRF-Token": "a.b"},
+            {"Origin": "https://evil.test"},
+        ):
             for path, body in cases:
                 out = client.post(path, json=body, headers=headers)
-                assert out.status_code < 500 or out.status_code == 404, (path, cookies, headers, out.text)
+                assert out.status_code < 500 or out.status_code == 404, (
+                    path,
+                    cookies,
+                    headers,
+                    out.text,
+                )
 
 
 # --- R4: lockout só por falha ---------------------------------------------------
+
 
 def _login(client, password="correct-password", email="victim@test.test"):
     return client.post("/auth/login", json={"email": email, "password": password})
@@ -251,7 +280,7 @@ def test_login_failures_lock_after_10(hardened):
     locked = _login(client, "wrong-password")
     assert locked.status_code == 429 and locked.json()["detail"] == "auth_rate_limit"
     calls = len(identity.logins)
-    assert _login(client).status_code == 429      # bloqueado antes de tocar o IdP
+    assert _login(client).status_code == 429  # bloqueado antes de tocar o IdP
     assert len(identity.logins) == calls
 
 
@@ -280,6 +309,7 @@ def test_signup_bucket_is_email_ip_composite():
 
     def req(ip):
         return SimpleNamespace(client=SimpleNamespace(host=ip))
+
     for _ in range(5):
         auth_limit(runtime, req("10.0.0.1"), action="signup", email="v@test.test")
     with pytest.raises(HTTPException) as exc:
@@ -295,14 +325,26 @@ def test_reset_email_only_bucket_blocks_bombing_from_many_ips():
 
     runtime = SimpleNamespace(rate_limiter=MemoryRateLimiter())
     for index in range(20):
-        auth_limit(runtime, SimpleNamespace(client=SimpleNamespace(host=f"10.1.0.{index}")),
-                   action="reset", email="v@test.test")
+        auth_limit(
+            runtime,
+            SimpleNamespace(client=SimpleNamespace(host=f"10.1.0.{index}")),
+            action="reset",
+            email="v@test.test",
+        )
     with pytest.raises(HTTPException):
-        auth_limit(runtime, SimpleNamespace(client=SimpleNamespace(host="10.1.1.1")),
-                   action="reset", email="v@test.test")
+        auth_limit(
+            runtime,
+            SimpleNamespace(client=SimpleNamespace(host="10.1.1.1")),
+            action="reset",
+            email="v@test.test",
+        )
     # O bucket de reset nunca bloqueia o login da vítima.
-    auth_limit(runtime, SimpleNamespace(client=SimpleNamespace(host="10.1.1.1")),
-               action="login", email="v@test.test")
+    auth_limit(
+        runtime,
+        SimpleNamespace(client=SimpleNamespace(host="10.1.1.1")),
+        action="login",
+        email="v@test.test",
+    )
 
 
 def test_bucket_keys_cover_new_address_derived_buckets():
@@ -316,28 +358,53 @@ def test_bucket_keys_cover_new_address_derived_buckets():
 
 # --- R5: Origin no login modo app ----------------------------------------------
 
+
 def test_login_app_mode_requires_origin(hardened):
     client, identity, _ = hardened
     for origin in ("", "https://evil.test"):
-        out = client.post("/auth/login", json={"email": "a@test.test", "password": "correct-password"},
-                          headers={"Origin": origin})
+        out = client.post(
+            "/auth/login",
+            json={"email": "a@test.test", "password": "correct-password"},
+            headers={"Origin": origin},
+        )
         assert out.status_code == 403 and out.json()["detail"] == "origin_denied"
     assert identity.logins == []
 
 
 # --- R9: senha mínima ---------------------------------------------------------
 
+
 def test_signup_requires_10_chars_but_login_keeps_legacy_passwords(hardened, monkeypatch):
     client, identity, _ = hardened
-    assert client.post("/auth/signup", json={"email": "n@test.test", "password": "123456789"}).status_code == 422
-    monkeypatch.setattr(identity, "login", lambda email, password: SessionTokens(
-        "good", "r1", datetime.now(UTC) + timedelta(hours=1), identity.owner))
-    assert client.post("/auth/login", json={"email": "o@test.test", "password": "8chars!!"}).status_code == 200
-    assert client.post("/auth/reset/confirm", json={"token_hash": "x" * 12,
-                                                    "new_password": "123456789"}).status_code == 422
+    assert (
+        client.post(
+            "/auth/signup", json={"email": "n@test.test", "password": "123456789"}
+        ).status_code
+        == 422
+    )
+    monkeypatch.setattr(
+        identity,
+        "login",
+        lambda email, password: SessionTokens(
+            "good", "r1", datetime.now(UTC) + timedelta(hours=1), identity.owner
+        ),
+    )
+    assert (
+        client.post(
+            "/auth/login", json={"email": "o@test.test", "password": "8chars!!"}
+        ).status_code
+        == 200
+    )
+    assert (
+        client.post(
+            "/auth/reset/confirm", json={"token_hash": "x" * 12, "new_password": "123456789"}
+        ).status_code
+        == 422
+    )
 
 
 # --- R9: política declarada do Auth remoto (passo do dono aplicar) -------------
+
 
 def test_staging_auth_config_declares_session_policy_and_rejects_loose_redirects():
     from scripts.staging import auth_config, common
@@ -352,8 +419,12 @@ def test_staging_auth_config_declares_session_policy_and_rejects_loose_redirects
     for bad in ("https://*.example.app", "http://stg.example.app/cb"):
         with pytest.raises((common.GuardError, SystemExit)):
             auth_config.desired_config({**env, "RPG_STAGING_REDIRECT_URLS": bad})
-    auth_config.desired_config({**env, "RPG_STAGING_REDIRECT_URLS": "http://localhost:5173,https://stg.example.app"})
-    toml = (Path(__file__).resolve().parents[1] / "supabase" / "config.toml").read_text(encoding="utf-8")
+    auth_config.desired_config(
+        {**env, "RPG_STAGING_REDIRECT_URLS": "http://localhost:5173,https://stg.example.app"}
+    )
+    toml = (Path(__file__).resolve().parents[1] / "supabase" / "config.toml").read_text(
+        encoding="utf-8"
+    )
     assert "minimum_password_length = 10" in toml
 
 

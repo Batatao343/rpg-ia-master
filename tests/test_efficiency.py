@@ -2,6 +2,7 @@
 Otimização de chamadas/tokens de LLM (pente fino): cadência do arquivista, catálogo de combate
 filtrado, dedup do librarian sem LLM. Offline/determinístico.
 """
+
 import agents.archivist as arch
 import agents.combat as combat
 import agents.librarian as lib
@@ -30,8 +31,7 @@ def test_archive_node_skips_llm_when_not_due(monkeypatch):
 
 # --- Combate: catálogo só do necessário ---
 def test_card_catalog_for_filters_to_prepared():
-    cat = combat._prepared_cards_catalog(
-        {"prepared_cards": ["dev_golpe_convite"]})
+    cat = combat._prepared_cards_catalog({"prepared_cards": ["dev_golpe_convite"]})
     assert "dev_golpe_convite" in cat
     assert "san_corte_troca" not in cat
 
@@ -40,14 +40,21 @@ def test_card_catalog_for_filters_to_prepared():
 def test_librarian_no_llm_when_clearly_new(monkeypatch):
     def _boom(*a, **k):
         raise AssertionError("LLM não deveria ser chamado para entidade claramente nova")
+
     monkeypatch.setattr(lib, "get_llm", _boom)
     # nenhum token em comum com os ids existentes → entidade nova, sem LLM
-    assert lib.find_existing_entity("Dragão Vermelho Antigo", "Monster",
-                                    ["npc_guarda_bran", "item_espada_gasta"]) is None
+    assert (
+        lib.find_existing_entity(
+            "Dragão Vermelho Antigo", "Monster", ["npc_guarda_bran", "item_espada_gasta"]
+        )
+        is None
+    )
 
 
 def test_librarian_exact_slug_match_no_llm(monkeypatch):
-    monkeypatch.setattr(lib, "get_llm", lambda *a, **k: (_ for _ in ()).throw(AssertionError("sem LLM")))
+    monkeypatch.setattr(
+        lib, "get_llm", lambda *a, **k: (_ for _ in ()).throw(AssertionError("sem LLM"))
+    )
     assert lib.find_existing_entity("npc varg", "NPC", ["npc_varg"]) == "npc_varg"
 
 
@@ -60,7 +67,9 @@ def test_librarian_token_overlap_builds_candidate(monkeypatch):
         existing_id = "npc_varg_acougueiro"
 
     class _FakeLLM:
-        def with_structured_output(self, *_a, **_k): return self
+        def with_structured_output(self, *_a, **_k):
+            return self
+
         def invoke(self, *_a, **_k):
             seen["called"] = True
             return _FakeMatch()

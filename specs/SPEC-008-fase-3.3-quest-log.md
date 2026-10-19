@@ -105,16 +105,17 @@ cascata 2.7). Milestones na crônica saem de graça (templates da 3.1).
 ```python
 # state.py
 class Quest(TypedDict, total=False):
-    id: str                 # uuid4 hex
+    id: str  # uuid4 hex
     title: str
     description: str
-    status: str             # "active" | "completed" | "failed"
-    origin_name: str        # quem/o que originou (nome exibível)
-    origin_entity_id: str   # id canônico se houver (habilita R4); "" senão
-    location_id: str        # alvo no mapa ("" se não aplicável)
+    status: str  # "active" | "completed" | "failed"
+    origin_name: str  # quem/o que originou (nome exibível)
+    origin_entity_id: str  # id canônico se houver (habilita R4); "" senão
+    location_id: str  # alvo no mapa ("" se não aplicável)
     created_turn: int
     resolved_turn: int
-    reward_hint: str        # texto livre ("o ferreiro prometeu 50 moedas")
+    reward_hint: str  # texto livre ("o ferreiro prometeu 50 moedas")
+
 
 # services/structured_outputs.py
 class ProposedQuest(BaseModel):
@@ -162,8 +163,9 @@ def _v_quest_completed(ev, state, proj):
     qid = ev.payload.get("quest_id")
     if qid:
         ativas = {q["id"] for q in state.get("quests", []) if q.get("status") == "active"}
-        return ValidationResult(qid in ativas, None if qid in ativas
-                                else f"quest_id {qid} não é quest ativa")
+        return ValidationResult(
+            qid in ativas, None if qid in ativas else f"quest_id {qid} não é quest ativa"
+        )
     # modo beat (comportamento atual) permanece
     ...
 ```

@@ -24,31 +24,54 @@ def test_langgraph_plan_and_route_overlap_with_disjoint_updates(monkeypatch):
             time.sleep(0.05)
             intervals[name] = (started, time.perf_counter())
             return update
+
         return run
 
     monkeypatch.setenv("RPG_TURN_EXECUTION", "concurrent")
-    monkeypatch.setattr(main, "campaign_manager_node", branch("plan", {
-        "campaign_plan": {"location": "Nova Arcádia", "beats": []},
-        "needs_replan": False,
-    }))
-    monkeypatch.setattr(main, "route_intent_node", branch("route", {
-        "next": "storyteller",
-    }))
-    monkeypatch.setattr(main, "storyteller_node", lambda _state: {
-        "messages": [AIMessage(content="Cena pronta.")],
-    })
+    monkeypatch.setattr(
+        main,
+        "campaign_manager_node",
+        branch(
+            "plan",
+            {
+                "campaign_plan": {"location": "Nova Arcádia", "beats": []},
+                "needs_replan": False,
+            },
+        ),
+    )
+    monkeypatch.setattr(
+        main,
+        "route_intent_node",
+        branch(
+            "route",
+            {
+                "next": "storyteller",
+            },
+        ),
+    )
+    monkeypatch.setattr(
+        main,
+        "storyteller_node",
+        lambda _state: {
+            "messages": [AIMessage(content="Cena pronta.")],
+        },
+    )
     monkeypatch.setattr(main, "archive_node", lambda _state: {})
     monkeypatch.setattr(main, "turn_finalizer_node", lambda _state: {})
     graph = main.build_game_graph()
     state = {
         "game_id": "concurrent-turn",
-        "player": {"conscious": True, "gold": 0, "xp": 0, "level": 1,
-                   "inventory": []},
-        "world": {"turn_count": 0, "current_location": "Nova Arcádia",
-                  "current_location_id": "nova_arcadia"},
-        "continuity": {}, "combat": {"active": False},
+        "player": {"conscious": True, "gold": 0, "xp": 0, "level": 1, "inventory": []},
+        "world": {
+            "turn_count": 0,
+            "current_location": "Nova Arcádia",
+            "current_location_id": "nova_arcadia",
+        },
+        "continuity": {},
+        "combat": {"active": False},
         "messages": [HumanMessage(content="Observo a praça")],
-        "quests": [], "event_log": [],
+        "quests": [],
+        "event_log": [],
     }
 
     final = graph.invoke(state)
@@ -123,11 +146,13 @@ def test_world_pulse_proposal_is_pure_and_apply_is_single_commit(monkeypatch):
 
 
 def test_stage_metrics_distinguish_critical_path_work_and_overlap():
-    summary = summarize_stage_intervals([
-        StageInterval("plan", 0, 80),
-        StageInterval("route", 10, 60),
-        StageInterval("dispatch", 80, 90),
-    ])
+    summary = summarize_stage_intervals(
+        [
+            StageInterval("plan", 0, 80),
+            StageInterval("route", 10, 60),
+            StageInterval("dispatch", 80, 90),
+        ]
+    )
     assert summary == {
         "critical_path_ms": 90,
         "work_ms": 140,
@@ -155,18 +180,24 @@ def test_sequential_and_concurrent_graphs_have_same_canonical_result(monkeypatch
 
     monkeypatch.setattr(main, "campaign_manager_node", plan)
     monkeypatch.setattr(main, "route_intent_node", route)
-    monkeypatch.setattr(main, "storyteller_node", lambda _state: {
-        "messages": [AIMessage(content="Resultado estável.")],
-    })
+    monkeypatch.setattr(
+        main,
+        "storyteller_node",
+        lambda _state: {
+            "messages": [AIMessage(content="Resultado estável.")],
+        },
+    )
     monkeypatch.setattr(main, "archive_node", lambda _state: {})
     monkeypatch.setattr(main, "turn_finalizer_node", lambda _state: {})
     state = {
-        "game_id": "equivalence", "player": {"conscious": True},
-        "world": {"turn_count": 0, "current_location_id": "brekmar",
-                  "current_location": "Brekmar"},
-        "continuity": {}, "combat": {"active": False},
+        "game_id": "equivalence",
+        "player": {"conscious": True},
+        "world": {"turn_count": 0, "current_location_id": "brekmar", "current_location": "Brekmar"},
+        "continuity": {},
+        "combat": {"active": False},
         "messages": [HumanMessage(content="Observo")],
-        "quests": [], "event_log": [],
+        "quests": [],
+        "event_log": [],
     }
 
     monkeypatch.setenv("RPG_TURN_EXECUTION", "sequential")
@@ -210,14 +241,17 @@ def test_plan_refresh_is_deferred_during_active_combat(monkeypatch):
     from agents import campaign_manager
 
     monkeypatch.setattr(
-        campaign_manager, "_build_plan",
+        campaign_manager,
+        "_build_plan",
         lambda _state: (_ for _ in ()).throw(AssertionError("SMART não deve rodar")),
     )
     state = {
         "game_id": "combat-replan",
         "world": {"turn_count": 12, "current_location": "Brekmar"},
-        "continuity": {}, "turn_prepared": True,
-        "combat": {"active": True}, "needs_replan": True,
+        "continuity": {},
+        "turn_prepared": True,
+        "combat": {"active": True},
+        "needs_replan": True,
         "campaign_plan": {"location": "Brekmar", "beats": []},
     }
 

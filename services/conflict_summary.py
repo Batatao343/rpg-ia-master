@@ -9,6 +9,7 @@ só decide o que passar como `danger` (Nível do Encontro em vez de `danger_leve
 ADITIVO: módulo novo + testes. O consumo em `agents/loot.py`/`agents/archivist.py`
 é o cutover (conflito-13).
 """
+
 import hashlib
 import json
 import re
@@ -45,7 +46,8 @@ class ConflictSummary(BaseModel):
     def _ensure_identity(self):
         if not str(self.conflict_id or "").strip():
             self.conflict_id = ensure_conflict_id(
-                self.model_dump(), turn=self.conflict_turn,
+                self.model_dump(),
+                turn=self.conflict_turn,
             )
         return self
 
@@ -118,12 +120,16 @@ def _flatten_wounds(p: dict) -> list[dict]:
 # ==========================================================================
 # Etapa 1 — build_summary (R2/R4)
 # ==========================================================================
-def build_summary(participants: list[dict], *, scene: dict | None = None,
-                  chase_state: dict | None = None,
-                  death_outcomes: list[dict] | None = None,
-                  loot_result: list[dict] | None = None,
-                  resources_spent: dict[str, int] | None = None,
-                  extras: dict | None = None) -> dict:
+def build_summary(
+    participants: list[dict],
+    *,
+    scene: dict | None = None,
+    chase_state: dict | None = None,
+    death_outcomes: list[dict] | None = None,
+    loot_result: list[dict] | None = None,
+    resources_spent: dict[str, int] | None = None,
+    extras: dict | None = None,
+) -> dict:
     """R2/R4: monta o resumo canônico a partir do estado FINAL já resolvido (sem
     LLM). `participants` traz o estado de cada um (dead/conscious/surrendered/fled/
     captured/incapacitated/ferimentos/scar_pending). `extras` cobre os campos
@@ -135,15 +141,12 @@ def build_summary(participants: list[dict], *, scene: dict | None = None,
         conflict_turn = int(raw_turn) if raw_turn is not None else None
     except (TypeError, ValueError):
         conflict_turn = None
-    explicit_id = str(
-        extras.get("conflict_id") or extras.get("id") or ""
-    ).strip()
+    explicit_id = str(extras.get("conflict_id") or extras.get("id") or "").strip()
 
-    downed_ids = {
-        str(value) for value in extras.get("downed_ids") or [] if str(value)
-    }
+    downed_ids = {str(value) for value in extras.get("downed_ids") or [] if str(value)}
     caidos = [
-        _pid(p) for p in participants
+        _pid(p)
+        for p in participants
         if str(p.get("id") or "") in downed_ids or _pid(p) in downed_ids
     ]
     mortos = [_pid(p) for p in participants if p.get("dead") and _pid(p) not in caidos]
@@ -157,33 +160,32 @@ def build_summary(participants: list[dict], *, scene: dict | None = None,
     resist = list(extras.get("resistencias_descobertas") or [])
     objetos_usados = list(extras.get("objetos_utilizados") or [])
     if scene:
-        for e in (scene.get("enemies") or []):
+        for e in scene.get("enemies") or []:
             cartas += [c for c in (e.get("revealed_cards") or []) if c not in cartas]
             resist += [r for r in (e.get("revealed_resistances") or []) if r not in resist]
-        for o in (scene.get("objects") or []):
+        for o in scene.get("objects") or []:
             if o.get("destroyed"):
                 nome = o.get("name") or o.get("id")
                 if nome and nome not in objetos_usados:
                     objetos_usados.append(nome)
 
     fatos_rel = list(extras.get("fatos_de_relacao") or [])
-    for out in (death_outcomes or []):
+    for out in death_outcomes or []:
         fatos_rel += [f for f in (out.get("fatos_relacionais") or []) if f not in fatos_rel]
 
     summary = ConflictSummary(
         conflict_id=explicit_id,
         conflict_turn=conflict_turn,
         participantes=[_pid(p) for p in participants],
-        sobreviventes=[
-            _pid(p) for p in participants
-            if not p.get("dead") or _pid(p) in caidos
-        ],
+        sobreviventes=[_pid(p) for p in participants if not p.get("dead") or _pid(p) in caidos],
         mortos=mortos,
         caidos=caidos,
-        inconscientes=[_pid(p) for p in participants
-                       if (_pid(p) in caidos or not p.get("dead"))
-                       and (not p.get("conscious", True)
-                            or p.get("incapacitated") or _pid(p) in caidos)],
+        inconscientes=[
+            _pid(p)
+            for p in participants
+            if (_pid(p) in caidos or not p.get("dead"))
+            and (not p.get("conscious", True) or p.get("incapacitated") or _pid(p) in caidos)
+        ],
         rendidos=[_pid(p) for p in participants if p.get("surrendered")],
         fugitivos=fugitivos,
         capturados=[_pid(p) for p in participants if p.get("captured")],
@@ -208,15 +210,24 @@ def build_summary(participants: list[dict], *, scene: dict | None = None,
 # ==========================================================================
 # Etapa 2 — integração de loot (R1) — reaproveita economy.roll_loot como está
 # ==========================================================================
-def loot_context(summary: dict, *, region_id: str = "default",
-                 encounter_level: int | None = None, danger_level: int = 1) -> dict:
+def loot_context(
+    summary: dict,
+    *,
+    region_id: str = "default",
+    encounter_level: int | None = None,
+    danger_level: int = 1,
+) -> dict:
     """R1: parâmetros pro loot a partir do resultado do conflito. A raridade passa
     a refletir o Nível do Encontro (`conflito-11`) quando disponível, no lugar do
     `danger_level` bruto — MAS `economy.roll_loot(region_id, danger, ...)` fica
     intacta: só muda o número que entra em `danger`."""
     danger = int(encounter_level) if encounter_level is not None else int(danger_level or 1)
-    return {"loot_source": "TREASURE", "region_id": region_id, "danger": danger,
-            "mortos": list(summary.get("mortos") or [])}
+    return {
+        "loot_source": "TREASURE",
+        "region_id": region_id,
+        "danger": danger,
+        "mortos": list(summary.get("mortos") or []),
+    }
 
 
 # ==========================================================================
@@ -237,10 +248,14 @@ def validate_narrative_consistency(summary: dict, proposed: dict) -> dict:
             violations.append(f"'{nome}' está morto no resumo — narrativa não pode revivê-lo.")
     for nome in proposed.get("libertados") or []:
         if nome in capturados and not novo:
-            violations.append(f"'{nome}' foi capturado — não pode ser libertado sem novo acontecimento.")
+            violations.append(
+                f"'{nome}' foi capturado — não pode ser libertado sem novo acontecimento."
+            )
     for cenario in proposed.get("cenario_restaurado") or []:
         if cenario in set(summary.get("mudancas_permanentes_cenario") or []) and not novo:
-            violations.append(f"Mudança de cenário '{cenario}' é permanente — não pode ser restaurada.")
+            violations.append(
+                f"Mudança de cenário '{cenario}' é permanente — não pode ser restaurada."
+            )
     return {"ok": not violations, "violations": violations}
 
 
@@ -314,6 +329,7 @@ def validate_narrative_text(summary: dict, text: str) -> dict:
     violations: list[str] = []
     alive_terms = r"\b(vivo|viva|sobrevive|sobreviveu|ergueu-se|levanta-se|escapa|foge|fugiu)\b"
     free_terms = r"\b(livre|liberto|liberta|libertado|libertada|escapa|foge|fugiu)\b"
+
     def _subject_hit(key: str, terms: str) -> bool:
         # SPEC-229 R6: o verbo precisa ter o nome como sujeito na MESMA oração
         # (<= 3 tokens entre ambos, sem ponto/; /vírgula entre eles).

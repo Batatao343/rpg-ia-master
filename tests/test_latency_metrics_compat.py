@@ -1,4 +1,5 @@
 """SPEC-200 Etapas 2/3 — metricas, compatibilidade e linha `rpg.turn` aditiva."""
+
 from __future__ import annotations
 
 import json
@@ -33,9 +34,17 @@ def client(monkeypatch):
 
 
 def _new_game(client) -> str:
-    r = client.post("/game/new", json={
-        "name": "Lat", "race": "Humano", "class_name": "Sangromante",
-        "region": "Nova Arcádia", "level": 1, "backstory": ""})
+    r = client.post(
+        "/game/new",
+        json={
+            "name": "Lat",
+            "race": "Humano",
+            "class_name": "Sangromante",
+            "region": "Nova Arcádia",
+            "level": 1,
+            "backstory": "",
+        },
+    )
     assert r.status_code == 200, r.text
     return r.json()["game_id"]
 
@@ -56,12 +65,28 @@ def _snap(prefix: str) -> dict:
     return {k: v for k, v in metrics.snapshot().items() if k.startswith(prefix)}
 
 
-def _attempt(tier=ModelTier.FAST, *, outcome="success", usage=None, fell_back=False,
-             provider="deepseek", latency_ms=10, index=0):
+def _attempt(
+    tier=ModelTier.FAST,
+    *,
+    outcome="success",
+    usage=None,
+    fell_back=False,
+    provider="deepseek",
+    latency_ms=10,
+    index=0,
+):
     return LLMAttemptEvent(
-        provider=provider, model="m", tier=tier, attempt_index=index,
-        latency_ms=latency_ms, fell_back=fell_back, outcome=outcome, error=None,
-        structured=False, usage=usage)
+        provider=provider,
+        model="m",
+        tier=tier,
+        attempt_index=index,
+        latency_ms=latency_ms,
+        fell_back=fell_back,
+        outcome=outcome,
+        error=None,
+        structured=False,
+        usage=usage,
+    )
 
 
 class _Graph:
@@ -78,15 +103,20 @@ class _Graph:
             self.advance()
         out = deepcopy(current)
         out["world"]["turn_count"] = int(out["world"].get("turn_count", 0)) + 1
-        out["messages"] = list(out.get("messages") or []) + [AIMessage(content="Texto do narrador.")]
+        out["messages"] = list(out.get("messages") or []) + [
+            AIMessage(content="Texto do narrador.")
+        ]
         yield "updates", {"archivist": {}}
         yield "values", out
 
 
 def _state(gid: str) -> dict:
     req = api.CombatSimulatorRequest(
-        class_name=next(iter(api.gamedata.CLASSES)), level=1,
-        enemy_id=next(iter(api.gamedata.BESTIARY)), quantity=1)
+        class_name=next(iter(api.gamedata.CLASSES)),
+        level=1,
+        enemy_id=next(iter(api.gamedata.BESTIARY)),
+        quantity=1,
+    )
     state = api._build_combat_simulator_state(req)
     state["game_id"] = gid
     state["combat_simulation"] = {"enabled": False}
@@ -96,8 +126,11 @@ def _state(gid: str) -> dict:
 
 
 def _turn_lines(caplog) -> list:
-    return [json.loads(r.getMessage()) for r in caplog.records
-            if r.name == "rpg.turn" and '"evt": "turn"' in r.getMessage().replace('":"', '": "')]
+    return [
+        json.loads(r.getMessage())
+        for r in caplog.records
+        if r.name == "rpg.turn" and '"evt": "turn"' in r.getMessage().replace('":"', '": "')
+    ]
 
 
 def _run_post_turn(monkeypatch, caplog, graph, text="avanço", gid=None):
@@ -106,25 +139,34 @@ def _run_post_turn(monkeypatch, caplog, graph, text="avanço", gid=None):
     monkeypatch.setattr(api, "game_graph", graph)
     caplog.set_level(logging.INFO, logger="rpg.turn")
     with TestClient(api.app) as c:
-        r = c.post("/game/action", json={"game_id": gid, "input_text": text,
-                                          "action_id": str(uuid.uuid4())})
+        r = c.post(
+            "/game/action",
+            json={"game_id": gid, "input_text": text, "action_id": str(uuid.uuid4())},
+        )
     assert r.status_code == 200, r.text
-    return [json.loads(rec.getMessage()) for rec in caplog.records
-            if rec.name == "rpg.turn" and json.loads(rec.getMessage()).get("evt") == "turn"]
+    return [
+        json.loads(rec.getMessage())
+        for rec in caplog.records
+        if rec.name == "rpg.turn" and json.loads(rec.getMessage()).get("evt") == "turn"
+    ]
 
 
 # --- compat de metricas ------------------------------------------------------
+
 
 def test_old_sse_metric_still_registered_and_observed(client):
     assert "rpg_sse_first_event_seconds" in LABELS
     gid = _new_game(client)
     before = _snap("rpg_sse_first_event_seconds").get(
-        "rpg_sse_first_event_seconds{'route': '/game/action/stream'}.count", 0)
-    with client.stream("POST", "/game/action/stream",
-                       json={"input_text": "olho ao redor", "game_id": gid}) as r:
+        "rpg_sse_first_event_seconds{'route': '/game/action/stream'}.count", 0
+    )
+    with client.stream(
+        "POST", "/game/action/stream", json={"input_text": "olho ao redor", "game_id": gid}
+    ) as r:
         _sse(r)
     after = _snap("rpg_sse_first_event_seconds")[
-        "rpg_sse_first_event_seconds{'route': '/game/action/stream'}.count"]
+        "rpg_sse_first_event_seconds{'route': '/game/action/stream'}.count"
+    ]
     assert after == before + 1
 
 
@@ -136,7 +178,7 @@ def test_ack_metric_measures_after_yield(client, monkeypatch):
     real_load = api.load_game_state
 
     def slow_load(*args, **kwargs):
-        clock.advance(1.5)             # atraso injetado no handler, antes do stream
+        clock.advance(1.5)  # atraso injetado no handler, antes do stream
         return real_load(*args, **kwargs)
 
     monkeypatch.setattr(api, "load_game_state", slow_load)
@@ -145,8 +187,9 @@ def test_ack_metric_measures_after_yield(client, monkeypatch):
     ack_before = _snap("rpg_sse_ack_seconds").get(ack_key + ".sum", 0.0)
     old_before = _snap("rpg_sse_first_event_seconds").get(old_key + ".sum", 0.0)
     try:
-        with client.stream("POST", "/game/action/stream",
-                           json={"input_text": "olho", "game_id": gid}) as r:
+        with client.stream(
+            "POST", "/game/action/stream", json={"input_text": "olho", "game_id": gid}
+        ) as r:
             _sse(r)
     finally:
         lat.set_clock(None)
@@ -157,8 +200,12 @@ def test_ack_metric_measures_after_yield(client, monkeypatch):
 
 
 def test_labels_closed_for_new_metrics():
-    for name in ("rpg_sse_ack_seconds", "rpg_turn_phase_seconds",
-                 "rpg_turn_first_content_seconds", "rpg_turn_last_content_seconds"):
+    for name in (
+        "rpg_sse_ack_seconds",
+        "rpg_turn_phase_seconds",
+        "rpg_turn_first_content_seconds",
+        "rpg_turn_last_content_seconds",
+    ):
         assert name in LABELS
     with pytest.raises(ValueError):
         metrics.observe("rpg_sse_ack_seconds", {"route": "/x", "game_id": "g"}, 1.0)
@@ -171,8 +218,9 @@ def test_turn_duration_route_stream(client):
     gid = _new_game(client)
     key = "rpg_turn_duration_seconds{'outcome': 'ok', 'route': '/game/action/stream', 'simulated': 'true'}.count"
     before = _snap("rpg_turn_duration_seconds").get(key, 0)
-    with client.stream("POST", "/game/action/stream",
-                       json={"input_text": "olho", "game_id": gid}) as r:
+    with client.stream(
+        "POST", "/game/action/stream", json={"input_text": "olho", "game_id": gid}
+    ) as r:
         _sse(r)
     assert _snap("rpg_turn_duration_seconds")[key] == before + 1
     r = client.post("/game/action", json={"input_text": "olho", "game_id": gid})
@@ -183,15 +231,18 @@ def test_turn_duration_route_stream(client):
 
 def test_stream_server_marks_and_content_metrics(client):
     gid = _new_game(client)
-    first = "rpg_turn_first_content_seconds{'route': '/game/action/stream', 'source': 'server'}.count"
+    first = (
+        "rpg_turn_first_content_seconds{'route': '/game/action/stream', 'source': 'server'}.count"
+    )
     last = first.replace("first", "last")
     f0 = _snap("rpg_turn_first_content_seconds").get(first, 0)
     l0 = _snap("rpg_turn_last_content_seconds").get(last, 0)
     records = []
     lat.add_sink(records.append)
     try:
-        with client.stream("POST", "/game/action/stream",
-                           json={"input_text": "olho", "game_id": gid}) as r:
+        with client.stream(
+            "POST", "/game/action/stream", json={"input_text": "olho", "game_id": gid}
+        ) as r:
             _sse(r)
     finally:
         lat.remove_sink(records.append)
@@ -200,8 +251,15 @@ def test_stream_server_marks_and_content_metrics(client):
     rec = records[-1]
     assert rec["transport"] == "stream" and rec["outcome"] == "ok"
     assert rec["ack_server_ms"] is not None
-    assert rec["ack_server_ms"] <= rec["ttfmc_server_ms"] <= rec["ttlt_server_ms"] <= rec["state_server_ms"]
-    assert abs(sum(rec["phase_ms"].values()) - rec["total_ms"]) <= 1 or rec["total_ms"] >= sum(rec["phase_ms"].values())
+    assert (
+        rec["ack_server_ms"]
+        <= rec["ttfmc_server_ms"]
+        <= rec["ttlt_server_ms"]
+        <= rec["state_server_ms"]
+    )
+    assert abs(sum(rec["phase_ms"].values()) - rec["total_ms"]) <= 1 or rec["total_ms"] >= sum(
+        rec["phase_ms"].values()
+    )
 
 
 def test_alert_expression_unchanged_and_route_agnostic():
@@ -215,33 +273,69 @@ def test_promtool_alert_fixture_unchanged():
     promtool = shutil.which("promtool")
     if promtool is None:
         pytest.skip("promtool indisponivel neste ambiente (fixture local.test.yml inalterada)")
-    done = subprocess.run([promtool, "test", "rules", "observability/alerts/local.test.yml"],
-                          cwd=ROOT, capture_output=True, text=True)
+    done = subprocess.run(
+        [promtool, "test", "rules", "observability/alerts/local.test.yml"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
     assert done.returncode == 0, done.stdout + done.stderr
 
 
 # --- linha rpg.turn ----------------------------------------------------------
 
+
 def test_rpg_turn_line_additive_fields(monkeypatch, caplog):
     usage = {"input_tokens": 100, "output_tokens": 50, "cached_tokens": 40}
-    graph = _Graph([
-        _attempt(ModelTier.CLASSIFY, usage=usage),
-        _attempt(ModelTier.FAST, outcome="invoke_error", provider="groq"),
-        _attempt(ModelTier.FAST, usage=usage, fell_back=True, index=1),
-    ])
+    graph = _Graph(
+        [
+            _attempt(ModelTier.CLASSIFY, usage=usage),
+            _attempt(ModelTier.FAST, outcome="invoke_error", provider="groq"),
+            _attempt(ModelTier.FAST, usage=usage, fell_back=True, index=1),
+        ]
+    )
     gid = str(uuid.uuid4())
     secret_text = "texto-secreto-do-jogador-xyz"
     lines = _run_post_turn(monkeypatch, caplog, graph, text=secret_text, gid=gid)
     line = lines[-1]
-    for old in ("evt", "game_id_ref", "turn", "route", "latency_ms", "events_applied",
-                "llm_calls", "llm_attempts", "llm_failures", "cost_usd_est", "cost_basis"):
+    for old in (
+        "evt",
+        "game_id_ref",
+        "turn",
+        "route",
+        "latency_ms",
+        "events_applied",
+        "llm_calls",
+        "llm_attempts",
+        "llm_failures",
+        "cost_usd_est",
+        "cost_basis",
+    ):
         assert old in line
-    for new in ("action_ref", "transport", "pseudo_streaming", "ack_server_ms",
-                "ttfmc_server_ms", "ttlt_server_ms", "phase_ms", "execution_mode",
-                "llm_fallbacks", "llm_failed_attempts", "providers_used", "cost_usd",
-                "cost_usd_basis", "lock_wait_ms", "llm_by_tier", "llm_by_phase",
-                "cached_tokens", "cache_hit_ratio", "input_chars", "input_size",
-                "rag_cache", "attribution"):
+    for new in (
+        "action_ref",
+        "transport",
+        "pseudo_streaming",
+        "ack_server_ms",
+        "ttfmc_server_ms",
+        "ttlt_server_ms",
+        "phase_ms",
+        "execution_mode",
+        "llm_fallbacks",
+        "llm_failed_attempts",
+        "providers_used",
+        "cost_usd",
+        "cost_usd_basis",
+        "lock_wait_ms",
+        "llm_by_tier",
+        "llm_by_phase",
+        "cached_tokens",
+        "cache_hit_ratio",
+        "input_chars",
+        "input_size",
+        "rag_cache",
+        "attribution",
+    ):
         assert new in line, new
     assert line["transport"] == "post" and line["ttfmc_server_ms"] is None
     assert set(line["phase_ms"]) == set(lat.PHASES)
@@ -262,8 +356,12 @@ def test_cost_unavailable_not_zero(monkeypatch, caplog):
 
 
 def test_fallback_counts_from_attempts(monkeypatch, caplog):
-    graph = _Graph([_attempt(outcome="invoke_error"), _attempt(fell_back=True, index=1,
-                    usage={"input_tokens": 5, "output_tokens": 5})])
+    graph = _Graph(
+        [
+            _attempt(outcome="invoke_error"),
+            _attempt(fell_back=True, index=1, usage={"input_tokens": 5, "output_tokens": 5}),
+        ]
+    )
     line = _run_post_turn(monkeypatch, caplog, graph)[-1]
     assert (line["llm_fallbacks"], line["llm_failed_attempts"]) == (1, 1)
     assert line["cost_usd_basis"] == "partial"
@@ -273,7 +371,7 @@ def test_llm_attempt_attributed_to_phase(monkeypatch, caplog):
     graph = _Graph([_attempt(), _attempt(), _attempt(ModelTier.SMART)])
     line = _run_post_turn(monkeypatch, caplog, graph)[-1]
     assert sum(line["llm_by_phase"].values()) == 3
-    assert line["llm_by_phase"].get("archivist") == 3   # atribuido ao no que reporta a seguir
+    assert line["llm_by_phase"].get("archivist") == 3  # atribuido ao no que reporta a seguir
 
 
 def test_lock_wait_measured(monkeypatch, caplog):
@@ -291,8 +389,10 @@ def test_lock_wait_measured(monkeypatch, caplog):
     def run():
         holder_has.wait(2)
         with TestClient(api.app) as c:
-            c.post("/game/action", json={"game_id": gid, "input_text": "x",
-                                         "action_id": str(uuid.uuid4())})
+            c.post(
+                "/game/action",
+                json={"game_id": gid, "input_text": "x", "action_id": str(uuid.uuid4())},
+            )
         done.set()
 
     lock.acquire()
@@ -302,6 +402,7 @@ def test_lock_wait_measured(monkeypatch, caplog):
     try:
         # espera ate o worker bloquear no lock, entao avanca o relogio virtual
         import time
+
         time.sleep(0.3)
         clock.advance(2.0)
     finally:
@@ -309,8 +410,11 @@ def test_lock_wait_measured(monkeypatch, caplog):
     thread.join(5)
     lat.set_clock(None)
     assert done.is_set()
-    lines = [json.loads(r.getMessage()) for r in caplog.records
-             if r.name == "rpg.turn" and json.loads(r.getMessage()).get("evt") == "turn"]
+    lines = [
+        json.loads(r.getMessage())
+        for r in caplog.records
+        if r.name == "rpg.turn" and json.loads(r.getMessage()).get("evt") == "turn"
+    ]
     assert lines[-1]["lock_wait_ms"] >= 2000
 
 
@@ -325,6 +429,7 @@ def test_instrumentation_equivalence(monkeypatch):
     """R16: mesmo estado final e mesmas mensagens com e sem timeline explicita."""
     from main import app as real_graph
     from playtest.runner import _build_initial_state
+
     outputs = []
     for with_timeline in (False, True):
         random.seed(7)
@@ -335,8 +440,14 @@ def test_instrumentation_equivalence(monkeypatch):
         random.seed(11)
         response = api._run_turn(state, "olho ao redor", str(uuid.uuid4()), **kwargs)
         saved = persistence.load_game_state(persistence.save_path(state["game_id"]))
-        outputs.append((response.message, saved["world"]["turn_count"],
-                        saved["player"]["gold"], saved["player"]["vitalidade"]))
+        outputs.append(
+            (
+                response.message,
+                saved["world"]["turn_count"],
+                saved["player"]["gold"],
+                saved["player"]["vitalidade"],
+            )
+        )
     assert outputs[0] == outputs[1]
 
 
@@ -369,6 +480,7 @@ def test_disconnect_mid_stream_single_turn(monkeypatch):
     assert records[-1]["ack_server_ms"] is not None
     assert records[-1]["ttfmc_server_ms"] is None and records[-1]["ttlt_server_ms"] is None
     import time
+
     deadline = time.monotonic() + 2
     while time.monotonic() < deadline:
         # load pode ver o arquivo no meio do os.replace (Windows) -> None; tenta de novo.
@@ -380,6 +492,7 @@ def test_disconnect_mid_stream_single_turn(monkeypatch):
 
 
 # --- revisao Sol: POST via stream x invoke ------------------------------------
+
 
 def test_post_stream_mid_failure_matches_invoke_failure(monkeypatch):
     """Excecao no MEIO do stream (apos updates) = mesma semantica do invoke que
@@ -421,6 +534,7 @@ def test_execute_graph_stream_full_state_equals_invoke():
     from main import app as real_graph
     from playtest.runner import _build_initial_state
     from services.turn_execution import execute_graph
+
     base = _build_initial_state("explorador", 3)
     base["game_id"] = str(uuid.uuid4())
     base["messages"] = list(base.get("messages") or [])
@@ -443,8 +557,9 @@ def test_stream_rpg_turn_line_carries_server_marks(client, caplog):
     """SPEC-212 R13: a linha `rpg.turn` de turno stream sai APOS ttfmc/ttlt (nao nula)."""
     gid = _new_game(client)
     with caplog.at_level(logging.INFO, logger="rpg.turn"):
-        with client.stream("POST", "/game/action/stream",
-                           json={"input_text": "olho", "game_id": gid}) as r:
+        with client.stream(
+            "POST", "/game/action/stream", json={"input_text": "olho", "game_id": gid}
+        ) as r:
             _sse(r)
     lines = []
     for rec in caplog.records:
@@ -454,7 +569,7 @@ def test_stream_rpg_turn_line_carries_server_marks(client, caplog):
             continue
         if data.get("evt") == "turn":
             lines.append(data)
-    assert len(lines) == 1, lines          # exatamente uma linha por turno
+    assert len(lines) == 1, lines  # exatamente uma linha por turno
     line = lines[0]
     assert line["transport"] == "stream"
     assert line["ack_server_ms"] is not None
@@ -475,10 +590,10 @@ def test_held_rpg_turn_line_failure_never_breaks_delivery_bookkeeping():
         raise RuntimeError("log quebrado")
 
     timeline.submit_log(boom)
-    assert calls == []                       # segurada ate a entrega terminar
-    timeline.release_log()                   # nao propaga
+    assert calls == []  # segurada ate a entrega terminar
+    timeline.release_log()  # nao propaga
     assert calls == ["boom"]
-    timeline.submit_log(lambda: calls.append("direto"))   # apos liberar: sai na hora
+    timeline.submit_log(lambda: calls.append("direto"))  # apos liberar: sai na hora
     assert calls == ["boom", "direto"]
-    timeline.release_log()                   # idempotente, nada pendente
+    timeline.release_log()  # idempotente, nada pendente
     assert calls == ["boom", "direto"]

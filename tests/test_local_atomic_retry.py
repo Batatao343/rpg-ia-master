@@ -8,7 +8,8 @@ from infrastructure.local_adapters import _atomic_json
 
 
 def test_atomic_json_repete_replace_bloqueado_temporariamente(
-    tmp_path: Path, monkeypatch,
+    tmp_path: Path,
+    monkeypatch,
 ) -> None:
     destination = tmp_path / "catalog.json"
     real_replace = os.replace

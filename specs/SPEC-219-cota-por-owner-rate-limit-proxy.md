@@ -67,10 +67,20 @@ Objetivo: (1) todo caminho com custo externo tem limite **por owner** (além do 
 - **Schemas**
   ```python
   class RouteClass(NamedTuple):
-      name: str; pattern: re.Pattern[str]; methods: frozenset[str]
-      ip_limit: int; owner_limit: int; window_s: int; daily_quota: bool
+      name: str
+      pattern: re.Pattern[str]
+      methods: frozenset[str]
+      ip_limit: int
+      owner_limit: int
+      window_s: int
+      daily_quota: bool
+
+
   class QuotaDecision(NamedTuple):
-      allowed: bool; count: int; limit: int; retry_after_seconds: int
+      allowed: bool
+      count: int
+      limit: int
+      retry_after_seconds: int
   ```
 - **Resposta 429** (JSON, sem ids): `{"detail": "rate_limited" | "daily_quota_exceeded", "scope": "ip|owner|daily|authfail", "retry_after_seconds": N}` + header `Retry-After`.
 

@@ -1,4 +1,5 @@
 """Pure preparation and disjoint branch adapters for a game turn."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -41,7 +42,8 @@ def prepare_turn(state: dict) -> tuple[dict, TurnPreparation]:
     from services.continuity import advance_action
 
     continuity = advance_action(
-        state.get("continuity"), canonical_turn=world["turn_count"],
+        state.get("continuity"),
+        canonical_turn=world["turn_count"],
     )
     prepared = TurnPreparation(
         game_id=str(state.get("game_id") or ""),
@@ -73,7 +75,9 @@ def route_intent_node(state: dict) -> dict:
     with span("turn.route"):
         update = dict(dm_router_node(state) or {})
     update.pop("world", None)
-    update.update({"route_source": None, "route_fallback_reason": None, **last_decision()})   # SPEC-247: route_source / route_fallback_reason -> rpg.turn
+    update.update(
+        {"route_source": None, "route_fallback_reason": None, **last_decision()}
+    )  # SPEC-247: route_source / route_fallback_reason -> rpg.turn
     return update
 
 

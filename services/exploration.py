@@ -12,6 +12,7 @@ Regras da spec:
   pode conter único (via claim engine).
 - R6: mecânica é Python — o narrador só descreve o que a função concedeu.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -33,8 +34,9 @@ def discovery_chance(danger: int) -> float:
     return min(0.5, 0.12 + 0.08 * max(1, int(danger or 1)))
 
 
-def roll_discovery(world: dict, loc: dict, player_level: int,
-                   rng: random.Random | None = None) -> dict | None:
+def roll_discovery(
+    world: dict, loc: dict, player_level: int, rng: random.Random | None = None
+) -> dict | None:
     """Achado ambiental na PRIMEIRA visita (o caller garante o fog of war).
     Devolve {item_id, qty, gold, rarity} ou None. Passiva NUNCA concede único."""
     rng = rng or random.Random()
@@ -48,13 +50,13 @@ def roll_discovery(world: dict, loc: dict, player_level: int,
     item_id = roll.get("item_id")
     if item_id:
         from inventory import is_unique
-        if is_unique(item_id):        # R2b: único só via baú curado, nunca passivo
+
+        if is_unique(item_id):  # R2b: único só via baú curado, nunca passivo
             item_id = None
     gold = int(roll.get("gold", 0) or 0)
     if not item_id and gold <= 0:
         return None
-    return {"item_id": item_id, "qty": 1, "gold": gold,
-            "rarity": roll.get("rarity", "comum")}
+    return {"item_id": item_id, "qty": 1, "gold": gold, "rarity": roll.get("rarity", "comum")}
 
 
 def resolve_treasure(world: dict, loc: dict) -> dict | None:
@@ -76,10 +78,12 @@ def resolve_treasure(world: dict, loc: dict) -> dict | None:
     return {"items": items, "gold": gold, "loc_id": loc_id}
 
 
-def _grant_items(player: dict, item_ids: list[str],
-                 projection: dict | None = None) -> tuple[list[str], list]:
+def _grant_items(
+    player: dict, item_ids: list[str], projection: dict | None = None
+) -> tuple[list[str], list]:
     """Adiciona itens ao inventário; devolve (labels, eventos de claim de único)."""
     from inventory import add_item, is_unique, item_display, make_entry
+
     labels: list[str] = []
     unique_events: list = []
     for iid in item_ids:
@@ -92,11 +96,16 @@ def _grant_items(player: dict, item_ids: list[str],
     return labels, unique_events
 
 
-def discover_on_arrival(player: dict, world: dict, loc: dict, player_level: int,
-                        rng: random.Random | None = None,
-                        projection: dict | None = None,
-                        *, first_visit: bool = True,
-                        ) -> tuple[str, list]:
+def discover_on_arrival(
+    player: dict,
+    world: dict,
+    loc: dict,
+    player_level: int,
+    rng: random.Random | None = None,
+    projection: dict | None = None,
+    *,
+    first_visit: bool = True,
+) -> tuple[str, list]:
     """Entrypoint do storyteller ao CHEGAR num local novo. Resolve baú curado
     (prioridade) OU achado ambiental, MUTA player.inventory/gold + world (marca
     looted), e devolve (nota_para_o_narrador, eventos_de_claim). Nota "" = nada."""
@@ -108,10 +117,16 @@ def discover_on_arrival(player: dict, world: dict, loc: dict, player_level: int,
         if tre["gold"]:
             player["gold"] = int(player.get("gold", 0) or 0) + int(tre["gold"])
         world["looted_locations"] = list(world.get("looted_locations") or []) + [tre["loc_id"]]
-        partes = [p for p in ([", ".join(labels)] if labels else [])
-                  + ([f"{tre['gold']} de ouro"] if tre["gold"] else [])]
-        return (f"O jogador ENCONTROU um baú/esconderijo em {loc.get('name','o local')}: "
-                f"{' e '.join(partes)}. Descreva o achado.", unique_events)
+        partes = [
+            p
+            for p in ([", ".join(labels)] if labels else [])
+            + ([f"{tre['gold']} de ouro"] if tre["gold"] else [])
+        ]
+        return (
+            f"O jogador ENCONTROU um baú/esconderijo em {loc.get('name', 'o local')}: "
+            f"{' e '.join(partes)}. Descreva o achado.",
+            unique_events,
+        )
     # 2) achado ambiental (SPEC-226 R5: só na 1ª visita — fog of war).
     if not first_visit:
         return ("", [])
@@ -123,7 +138,11 @@ def discover_on_arrival(player: dict, world: dict, loc: dict, player_level: int,
         labels, unique_events = _grant_items(player, [disc["item_id"]], projection)
     if disc["gold"]:
         player["gold"] = int(player.get("gold", 0) or 0) + int(disc["gold"])
-    partes = ([", ".join(labels)] if labels else []) \
-        + ([f"{disc['gold']} de ouro"] if disc["gold"] else [])
-    return (f"Ao explorar {loc.get('name','o local')}, o jogador ENCONTROU: "
-            f"{' e '.join(partes)}. Descreva o achado modesto.", unique_events)
+    partes = ([", ".join(labels)] if labels else []) + (
+        [f"{disc['gold']} de ouro"] if disc["gold"] else []
+    )
+    return (
+        f"Ao explorar {loc.get('name', 'o local')}, o jogador ENCONTROU: "
+        f"{' e '.join(partes)}. Descreva o achado modesto.",
+        unique_events,
+    )

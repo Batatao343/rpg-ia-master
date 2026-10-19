@@ -5,6 +5,7 @@ Companion = ficha estilo bestiário resolvida pelo MESMO motor dos inimigos
 (perfis 2.5b via resolve_ally_turn). O LLM nunca decide se um NPC aceita
 juntar-se: gate determinístico (relationship + teto + fação hostil).
 """
+
 import re
 import unicodedata
 from copy import deepcopy
@@ -15,18 +16,25 @@ from services import graph_resolver as gr
 
 COMPANION_TEMPLATES: dict[str, dict] = load_json_data("companions.json") or {}
 
-RECRUIT_MIN_REL = 7   # relationship 0..10 (escala da Fase 2)
+RECRUIT_MIN_REL = 7  # relationship 0..10 (escala da Fase 2)
 RECRUIT_MIN_INTERACTIONS = 2  # SPEC-223 R4: vínculo exige convivência registrada
 MAX_ACTIVE = 3
 
 
 class RecruitmentDecision(TypedDict):
     ok: bool
-    code: Literal["ok", "relationship_too_low", "party_full", "already_member", "hostile",
-                  "too_few_interactions"]
+    code: Literal[
+        "ok",
+        "relationship_too_low",
+        "party_full",
+        "already_member",
+        "hostile",
+        "too_few_interactions",
+    ]
     relationship: int
     required_relationship: int
     public_hint: str
+
 
 # spec aliados-em-combate: um NPC amigo EM CENA luta ao seu lado neste combate
 # SEM precisar do compromisso de recrutamento (rel>=7). Limiar acima do neutro
@@ -36,8 +44,16 @@ SCENE_ALLY_MIN_REL = 6
 MAX_SCENE_ALLIES = 2
 
 _ARCHETYPE_WORDS = {
-    "guerreiro": ("guerreir", "soldado", "guarda", "legion", "mercenari", "lutador",
-                  "veteran", "capit"),
+    "guerreiro": (
+        "guerreir",
+        "soldado",
+        "guarda",
+        "legion",
+        "mercenari",
+        "lutador",
+        "veteran",
+        "capit",
+    ),
     "arqueiro": ("arqueir", "caçador", "cacador", "batedor", "rastreador", "sentinela"),
     "curandeiro": ("curandeir", "médic", "medic", "alquimist", "botic", "enfermeir"),
     "mago": ("mag", "arcanist", "feiticeir", "brux", "erudit", "sábi", "sabi"),
@@ -87,10 +103,7 @@ def _archetype_for(npc: dict) -> str:
 
 
 def _has_complete_v4_sheet(npc: dict) -> bool:
-    if not all(
-        field in npc and npc[field] is not None
-        for field in _NPC_V4_REQUIRED_FIELDS
-    ):
+    if not all(field in npc and npc[field] is not None for field in _NPC_V4_REQUIRED_FIELDS):
         return False
     if not isinstance(npc.get("virtudes"), dict) or not npc["virtudes"]:
         return False
@@ -158,9 +171,7 @@ def _legacy_npc_sheet(npc: dict, name: str) -> dict:
     if isinstance(wounds, dict):
         sheet["ferimentos"] = {
             category: deepcopy(
-                wounds.get(category)
-                if isinstance(wounds.get(category), list)
-                else []
+                wounds.get(category) if isinstance(wounds.get(category), list) else []
             )
             for category in ("leve", "grave", "critico")
         }
@@ -184,11 +195,7 @@ def _legacy_npc_sheet(npc: dict, name: str) -> dict:
 def _npc_v4_sheet(npc: dict, name: str) -> dict:
     if not _has_complete_v4_sheet(npc):
         return _legacy_npc_sheet(npc, name)
-    return {
-        field: deepcopy(npc[field])
-        for field in _NPC_V4_COPY_FIELDS
-        if field in npc
-    }
+    return {field: deepcopy(npc[field]) for field in _NPC_V4_COPY_FIELDS if field in npc}
 
 
 def make_companion_from_npc(npc: dict, name: str) -> dict:
@@ -200,19 +207,13 @@ def make_companion_from_npc(npc: dict, name: str) -> dict:
     """
     source = npc or {}
     arch = _archetype_for(source)
-    tpl = deepcopy(
-        COMPANION_TEMPLATES.get(arch)
-        or COMPANION_TEMPLATES.get("capanga")
-        or {}
-    )
+    tpl = deepcopy(COMPANION_TEMPLATES.get(arch) or COMPANION_TEMPLATES.get("capanga") or {})
     sheet = _npc_v4_sheet(source, name)
     comp = {
         "id": source.get("id") or f"comp_{_fold(name).replace(' ', '_')}",
         "name": name,
         "archetype": arch,
-        "attributes": deepcopy(
-            tpl.get("attributes") or {"str": 10, "dex": 10, "con": 10}
-        ),
+        "attributes": deepcopy(tpl.get("attributes") or {"str": 10, "dex": 10, "con": 10}),
         "attacks": deepcopy(tpl.get("attacks") or []),
         "behavior": deepcopy(tpl.get("behavior") or {"profile": "tatico"}),
         "active": True,
@@ -222,23 +223,32 @@ def make_companion_from_npc(npc: dict, name: str) -> dict:
         **sheet,
     }
     if not comp["attacks"]:
-        comp["attacks"] = [{
-            "name": "Golpe",
-            "type": "melee",
-            "bonus": 2,
-            "damage": "1d6",
-        }]
+        comp["attacks"] = [
+            {
+                "name": "Golpe",
+                "type": "melee",
+                "bonus": 2,
+                "damage": "1d6",
+            }
+        ]
     from services.conflict_orchestrator import ensure_combat_sheet
+
     normalized = ensure_combat_sheet(comp, is_ally=True)
     normalized["defense"] = int(normalized["esquiva"])
     return normalized
 
 
 def active_allies(state: dict) -> list[dict]:
-    return [c for c in (state.get("party") or [])
-            if c.get("active") and c.get("status", "ativo") == "ativo"
-            and not c.get("dead") and not c.get("fled")
-            and not c.get("surrendered") and c.get("conscious", True)]
+    return [
+        c
+        for c in (state.get("party") or [])
+        if c.get("active")
+        and c.get("status", "ativo") == "ativo"
+        and not c.get("dead")
+        and not c.get("fled")
+        and not c.get("surrendered")
+        and c.get("conscious", True)
+    ]
 
 
 def _relationship(npc: dict) -> int:
@@ -254,12 +264,16 @@ def scene_allies(state: dict, *, excluded: list[str] | None = None) -> list[dict
     não-hostil ∧ ainda não é companheiro. Teto MAX_SCENE_ALLIES. Não persiste
     em party (R3); some ao fim do combate. O LLM não decide nada aqui."""
     from services.npc_layers import is_in_scene
+
     excluded_folded = {_fold(value) for value in (excluded or []) if value}
-    hostile = {f.get("id") for f in (state.get("factions") or [])
-               if isinstance(f, dict) and f.get("disposition") == "hostil"}
+    hostile = {
+        f.get("id")
+        for f in (state.get("factions") or [])
+        if isinstance(f, dict) and f.get("disposition") == "hostil"
+    }
     already = set()
     loc = str((state.get("world") or {}).get("current_location_id") or "")
-    for c in (state.get("party") or []):
+    for c in state.get("party") or []:
         if isinstance(c, dict):
             already.add(c.get("origin_npc") or "")
             already.add(c.get("name") or "")
@@ -300,32 +314,40 @@ def recruitment_decision(state: dict, npc_name: str) -> RecruitmentDecision:
     # SPEC-232 R2: Carta de Virtude `bonus_social_por_estagio` facilita persuadir.
     import combat_mechanics as cm
     from services.npc_layers import trait_dc_modifier
+
     social = max(0, int(cm.passive_modifiers(state.get("player") or {}).get("social", 0) or 0))
     required = max(3, min(10, RECRUIT_MIN_REL + trait_dc_modifier(npc, "persuasao") - social))
 
     def result(ok: bool, code: str, hint: str) -> RecruitmentDecision:
-        return {"ok": ok, "code": code, "relationship": rel,
-                "required_relationship": required, "public_hint": hint}  # type: ignore[typeddict-item]
+        return {
+            "ok": ok,
+            "code": code,
+            "relationship": rel,
+            "required_relationship": required,
+            "public_hint": hint,
+        }  # type: ignore[typeddict-item]
 
     aliases = runtime_npc_aliases(str(npc_key), npc)
     if any(
-        isinstance(c, dict)
-        and bool(aliases & runtime_npc_aliases(str(c.get("name") or ""), c))
+        isinstance(c, dict) and bool(aliases & runtime_npc_aliases(str(c.get("name") or ""), c))
         for c in state.get("party") or []
     ):
         return result(False, "already_member", f"{display_name} já anda com você.")
     if len(active_allies(state)) >= MAX_ACTIVE:
         return result(False, "party_full", f"Seu grupo já está cheio ({MAX_ACTIVE} companheiros).")
     fac_id = npc.get("faction") or ""
-    if any(f.get("id") == fac_id and f.get("disposition") == "hostil"
-           for f in state.get("factions") or [] if fac_id):
+    if any(
+        f.get("id") == fac_id and f.get("disposition") == "hostil"
+        for f in state.get("factions") or []
+        if fac_id
+    ):
         return result(False, "hostile", f"{display_name} serve a um poder hostil a você.")
     if rel < required:
-        return result(False, "relationship_too_low",
-                      f"{display_name} ainda não confia o bastante em você.")
+        return result(
+            False, "relationship_too_low", f"{display_name} ainda não confia o bastante em você."
+        )
     if interaction_count(npc) < RECRUIT_MIN_INTERACTIONS:
-        return result(False, "too_few_interactions",
-                      f"{display_name} mal te conhece ainda.")
+        return result(False, "too_few_interactions", f"{display_name} mal te conhece ainda.")
     return result(True, "ok", "")
 
 
@@ -390,7 +412,12 @@ def set_following(state: dict, name: str) -> tuple[list[dict], bool]:
 
 
 PARTY_COMMANDS = (
-    (re.compile(r"\b(junte-se|junta(-se)?\s+a\s+mim|venha comigo|vem comigo|recruto|se junte)\b", re.I), "recruit"),
+    (
+        re.compile(
+            r"\b(junte-se|junta(-se)?\s+a\s+mim|venha comigo|vem comigo|recruto|se junte)\b", re.I
+        ),
+        "recruit",
+    ),
     (re.compile(r"\b(dispenso|pode ir embora|est[áa] dispensad)", re.I), "dismiss"),
     (re.compile(r"\b(espere aqui|aguarde aqui|fique aqui)\b", re.I), "wait"),
     (re.compile(r"\b(siga-me|me siga|vamos, )\b", re.I), "follow"),
@@ -421,12 +448,11 @@ def backfill_party(party: list) -> list[dict]:
         c.setdefault("active_conditions", [])
         if "status" not in c:
             c["status"] = (
-                "ativo"
-                if c.get("vitalidade") is not None or int(c.get("hp", 1)) > 0
-                else "morto"
+                "ativo" if c.get("vitalidade") is not None or int(c.get("hp", 1)) > 0 else "morto"
             )
         c.setdefault("origin_npc", "")
         c.setdefault("waiting_at", "")
         from services.conflict_orchestrator import ensure_combat_sheet
+
         out.append(ensure_combat_sheet(c))
     return out

@@ -50,7 +50,7 @@ def is_wrapped(text: object) -> bool:
     # Só é wrapper NOSSO se o miolo estiver escapado (sem `<`/`>` crus): o
     # jogador digitar as tags nas pontas, com outra fechando no meio, não pode
     # pular o escape (bypass do delimitador — revisão Sol).
-    inner = value[len(_OPEN):len(value) - len(_CLOSE)]
+    inner = value[len(_OPEN) : len(value) - len(_CLOSE)]
     return "<" not in inner and ">" not in inner
 
 
@@ -67,7 +67,7 @@ def unwrap_player_input(text: object) -> str:
     value = str(text or "")
     if not is_wrapped(value):
         return value
-    return _unescape(value[len(_OPEN):-len(_CLOSE)])
+    return _unescape(value[len(_OPEN) : -len(_CLOSE)])
 
 
 def guard_messages(messages: Iterable) -> list:
@@ -77,8 +77,7 @@ def guard_messages(messages: Iterable) -> list:
     out: list = []
     for message in messages or []:
         if isinstance(message, HumanMessage) and isinstance(message.content, str):
-            out.append(message.model_copy(
-                update={"content": wrap_player_input(message.content)}))
+            out.append(message.model_copy(update={"content": wrap_player_input(message.content)}))
         else:
             out.append(message)
     return out

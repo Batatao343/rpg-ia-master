@@ -33,9 +33,9 @@ def traits_catalog() -> dict[str, dict]:
     return _traits_cache
 
 
-def roll_hidden_traits(npc_id: str, game_id: str,
-                       k_range: tuple[int, int] = (1, 3),
-                       region_tag: str = "") -> list[str]:
+def roll_hidden_traits(
+    npc_id: str, game_id: str, k_range: tuple[int, int] = (1, 3), region_tag: str = ""
+) -> list[str]:
     """Sorteio determinístico de traits ocultos (R3).
 
     Seed = sha256(npc_id + game_id): mesmo NPC no mesmo save sorteia IGUAL
@@ -60,8 +60,9 @@ def roll_hidden_traits(npc_id: str, game_id: str,
     return escolhidos
 
 
-def ensure_npc_fields(npc: dict, game_id: str, home_location_id: str = "",
-                      in_scene: bool | None = None) -> dict:
+def ensure_npc_fields(
+    npc: dict, game_id: str, home_location_id: str = "", in_scene: bool | None = None
+) -> dict:
     """Backfill idempotente dos campos de camada (R1). Não sobrescreve existentes.
 
     `in_scene=None` preserva o valor atual (ausente = legado, tratado como
@@ -76,7 +77,8 @@ def ensure_npc_fields(npc: dict, game_id: str, home_location_id: str = "",
     if "hidden_traits" not in npc:
         npc_id = npc.get("id") or npc.get("name", "npc")
         npc["hidden_traits"] = roll_hidden_traits(
-            str(npc_id), str(game_id), region_tag=str(home_location_id))
+            str(npc_id), str(game_id), region_tag=str(home_location_id)
+        )
     if in_scene is not None:
         npc["in_scene"] = in_scene
     return npc
@@ -97,22 +99,21 @@ def npc_alive(npc: dict, *, projection: dict | None = None) -> bool:
     return True
 
 
-def apply_npc_death(state_npcs: dict, party: list, name_or_id: str,
-                    turn: int) -> tuple[dict, list]:
+def apply_npc_death(state_npcs: dict, party: list, name_or_id: str, turn: int) -> tuple[dict, list]:
     """SPEC-230 R4: sincroniza a morte em `state.npcs` e `party` (puro).
     D-B default: companheiro morto é REMOVIDO da party (memorial fica na
     crônica via milestone do evento)."""
     from services.entity_identity import find_runtime_npc_key, runtime_npc_aliases
+
     npcs = dict(state_npcs or {})
     key = find_runtime_npc_key(npcs, name_or_id)
     aliases = runtime_npc_aliases(name_or_id, npcs.get(key) if key else None)
     if key is not None:
-        npcs[key] = {**npcs[key], "status": "morto", "in_scene": False,
-                     "died_turn": int(turn or 0)}
+        npcs[key] = {**npcs[key], "status": "morto", "in_scene": False, "died_turn": int(turn or 0)}
     new_party = [
-        c for c in (party or [])
-        if not (isinstance(c, dict)
-                and aliases & runtime_npc_aliases(str(c.get("name") or ""), c))
+        c
+        for c in (party or [])
+        if not (isinstance(c, dict) and aliases & runtime_npc_aliases(str(c.get("name") or ""), c))
     ]
     return npcs, new_party
 
@@ -135,13 +136,22 @@ def npcs_in_scene(state: dict) -> list[str]:
     loc = str((state.get("world") or {}).get("current_location_id") or "")
     for name, npc in (state.get("npcs") or {}).items():
         home = str(npc.get("home_location_id") or "") if isinstance(npc, dict) else ""
-        if (isinstance(npc, dict) and is_in_scene(npc)
-                and (not home or not loc or home == loc) and name not in out):
+        if (
+            isinstance(npc, dict)
+            and is_in_scene(npc)
+            and (not home or not loc or home == loc)
+            and name not in out
+        ):
             out.append(name)
     for c in state.get("party") or []:
-        if (isinstance(c, dict) and c.get("active") and npc_alive(c)
-                and c.get("status", "ativo") == "ativo"
-                and c.get("name") and c.get("name") not in out):
+        if (
+            isinstance(c, dict)
+            and c.get("active")
+            and npc_alive(c)
+            and c.get("status", "ativo") == "ativo"
+            and c.get("name")
+            and c.get("name") not in out
+        ):
             out.append(c["name"])
     return out
 
@@ -155,8 +165,9 @@ def npcs_for_context(state: dict) -> list[str]:
     (`home_location_id` vazio) só aparece se `in_scene`/party."""
     world = state.get("world") or {}
     loc = world.get("current_location_id", "") or ""
-    party_names = {c.get("name") for c in (state.get("party") or [])
-                   if isinstance(c, dict) and npc_alive(c)}
+    party_names = {
+        c.get("name") for c in (state.get("party") or []) if isinstance(c, dict) and npc_alive(c)
+    }
     out: list[str] = []
     for name, npc in (state.get("npcs") or {}).items():
         if not isinstance(npc, dict) or not npc_alive(npc):
@@ -220,8 +231,13 @@ def trait_names(trait_ids: list[str]) -> list[dict]:
     for tid in trait_ids or []:
         trait = catalog.get(tid)
         if trait:
-            out.append({"id": tid, "name": trait.get("name", tid),
-                        "description": trait.get("description", "")})
+            out.append(
+                {
+                    "id": tid,
+                    "name": trait.get("name", tid),
+                    "description": trait.get("description", ""),
+                }
+            )
     return out
 
 
@@ -234,16 +250,18 @@ def visible_npc_view(npcs: dict[str, dict]) -> list[dict]:
         if not npc.get("known_by_player", True):
             continue
         mem = npc.get("memory") or []
-        out.append({
-            "name": npc.get("name", key),
-            "role": npc.get("role", ""),
-            "location": npc.get("location", ""),
-            "home_location_id": npc.get("home_location_id", ""),
-            "relationship": npc.get("relationship", 5),
-            "knowledge_source": npc.get("knowledge_source", "met"),
-            "in_scene": bool(npc.get("in_scene", False)) and npc_alive(npc),
-            "status": "morto" if not npc_alive(npc) else str(npc.get("status") or ""),
-            "revealed_traits": trait_names(npc.get("revealed_traits") or []),
-            "last_memory": mem[-1] if isinstance(mem, list) and mem else "",
-        })
+        out.append(
+            {
+                "name": npc.get("name", key),
+                "role": npc.get("role", ""),
+                "location": npc.get("location", ""),
+                "home_location_id": npc.get("home_location_id", ""),
+                "relationship": npc.get("relationship", 5),
+                "knowledge_source": npc.get("knowledge_source", "met"),
+                "in_scene": bool(npc.get("in_scene", False)) and npc_alive(npc),
+                "status": "morto" if not npc_alive(npc) else str(npc.get("status") or ""),
+                "revealed_traits": trait_names(npc.get("revealed_traits") or []),
+                "last_memory": mem[-1] if isinstance(mem, list) and mem else "",
+            }
+        )
     return out

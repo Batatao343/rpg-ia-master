@@ -29,9 +29,22 @@ def _assert_empty_target() -> None:
       (select count(*) from storage.objects)
     """
     result = subprocess.run(
-        ["docker", "exec", DB_CONTAINER, "psql", "-At", "-U", "postgres",
-         "-d", "postgres", "-c", query],
-        check=True, capture_output=True, text=True,
+        [
+            "docker",
+            "exec",
+            DB_CONTAINER,
+            "psql",
+            "-At",
+            "-U",
+            "postgres",
+            "-d",
+            "postgres",
+            "-c",
+            query,
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
     )
     if int(result.stdout.strip()) != 0:
         raise RuntimeError("restore recusado: alvo local não está vazio")
@@ -51,8 +64,10 @@ def run(backup: Path) -> None:
             command += ["--clean", "--if-exists"]
         command += ["--no-owner", "-U", "postgres", "-d", "postgres"]
         result = subprocess.run(
-            command, input=(backup / dump_name).read_bytes(),
-            check=False, capture_output=True,
+            command,
+            input=(backup / dump_name).read_bytes(),
+            check=False,
+            capture_output=True,
         )
         if result.returncode:
             detail = result.stderr.decode(errors="replace")
@@ -62,18 +77,21 @@ def run(backup: Path) -> None:
                 "permission denied for table buckets_vectors",
                 "permission denied for table vector_indexes",
             }
-            if dump_name != "database_platform_data.dump" or not errors or any(
-                error not in tolerated for error in errors
+            if (
+                dump_name != "database_platform_data.dump"
+                or not errors
+                or any(error not in tolerated for error in errors)
             ):
                 raise RuntimeError(f"restore falhou em {dump_name}: {detail}")
     subprocess.run(
         ["docker", "exec", STORAGE_CONTAINER, "sh", "-c", "find /mnt -mindepth 1 -delete"],
-        check=True, capture_output=True,
+        check=True,
+        capture_output=True,
     )
     subprocess.run(
-        ["docker", "cp", str((backup / "objects").resolve()) + "/.",
-         f"{STORAGE_CONTAINER}:/mnt"],
-        check=True, capture_output=True,
+        ["docker", "cp", str((backup / "objects").resolve()) + "/.", f"{STORAGE_CONTAINER}:/mnt"],
+        check=True,
+        capture_output=True,
     )
 
 

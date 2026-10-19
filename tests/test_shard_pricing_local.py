@@ -32,7 +32,12 @@ def test_catalog_roundtrip_immutable_and_backend_read_only() -> None:
     now = datetime(2026, 10, 8, 12, tzinfo=UTC)
     card_observed = INSTALLED_RATE_CARD_OBSERVED_AT
     with psycopg.connect(dsn, row_factory=dict_row) as connection:
-        if connection.execute("select to_regclass('app.pricing_versions') as table_name").fetchone()["table_name"] is None:
+        if (
+            connection.execute(
+                "select to_regclass('app.pricing_versions') as table_name"
+            ).fetchone()["table_name"]
+            is None
+        ):
             pytest.skip("migration SPEC-183 não aplicada")
         with pytest.raises(_Rollback):
             with connection.transaction():
@@ -43,10 +48,26 @@ def test_catalog_roundtrip_immutable_and_backend_read_only() -> None:
                      rate_card_version,rate_card_sha256,rate_card_source,rate_card_observed_at,
                      rate_card_max_age_seconds,channel_fees)
                     values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
-                    (version_id, "0.03", "5", "simulated FX", now, 86400, "0.10",
-                     RATE_CARD_VERSION, INSTALLED_RATE_CARD_SHA256, "installed rate card", card_observed, 86400,
-                     Jsonb({"web": {"percentage": "0.04", "fixed_brl": "0.20"},
-                            "play": {"percentage": "0.10", "fixed_brl": "0"}})),
+                    (
+                        version_id,
+                        "0.03",
+                        "5",
+                        "simulated FX",
+                        now,
+                        86400,
+                        "0.10",
+                        RATE_CARD_VERSION,
+                        INSTALLED_RATE_CARD_SHA256,
+                        "installed rate card",
+                        card_observed,
+                        86400,
+                        Jsonb(
+                            {
+                                "web": {"percentage": "0.04", "fixed_brl": "0.20"},
+                                "play": {"percentage": "0.10", "fixed_brl": "0"},
+                            }
+                        ),
+                    ),
                 )
                 connection.execute(
                     """insert into app.purchase_skus
@@ -66,7 +87,9 @@ def test_catalog_roundtrip_immutable_and_backend_read_only() -> None:
                         )
                 with pytest.raises(psycopg.Error):
                     with connection.transaction():
-                        connection.execute("delete from app.purchase_skus where sku_id=%s", (sku_id,))
+                        connection.execute(
+                            "delete from app.purchase_skus where sku_id=%s", (sku_id,)
+                        )
                 with pytest.raises(psycopg.Error):
                     with connection.transaction():
                         connection.execute(
@@ -86,9 +109,13 @@ def test_catalog_roundtrip_immutable_and_backend_read_only() -> None:
                 with pytest.raises(psycopg.Error):
                     with connection.transaction():
                         connection.execute("set local role rpg_api")
-                        assert connection.execute(
-                            "select sku_id from app.purchase_skus where sku_id=%s", (sku_id,),
-                        ).fetchone()["sku_id"] == sku_id
+                        assert (
+                            connection.execute(
+                                "select sku_id from app.purchase_skus where sku_id=%s",
+                                (sku_id,),
+                            ).fetchone()["sku_id"]
+                            == sku_id
+                        )
                         connection.execute(
                             "insert into app.purchase_skus "
                             "(sku_id,pricing_version_id,channel,store_product_id,gross_brl,shard_milli) "

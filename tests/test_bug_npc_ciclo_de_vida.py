@@ -1,4 +1,5 @@
 """SPEC-230 — NPC: guard de geração, ciclo de vida e relação em Python."""
+
 import logging
 
 from langchain_core.messages import AIMessage, HumanMessage
@@ -40,11 +41,23 @@ def test_generate_new_npc_valid_llm_still_saves(monkeypatch):
             return self
 
         def invoke(self, *_a, **_k):
-            return npc_mod.NPCSchema(**{
-                "name": "Borin", "role": "Ferreiro", "persona": "Taciturno",
-                "location": "Praça", "appearance": "Robusto",
-                "attributes": {"str": 12, "dex": 10, "con": 12, "int": 10, "wis": 10, "cha": 10},
-            })
+            return npc_mod.NPCSchema(
+                **{
+                    "name": "Borin",
+                    "role": "Ferreiro",
+                    "persona": "Taciturno",
+                    "location": "Praça",
+                    "appearance": "Robusto",
+                    "attributes": {
+                        "str": 12,
+                        "dex": 10,
+                        "con": 12,
+                        "int": 10,
+                        "wis": 10,
+                        "cha": 10,
+                    },
+                }
+            )
 
     _patch_gen(monkeypatch, _OK(), saved)
     data = npc_mod.generate_new_npc("Borin", "Local: Praça")
@@ -54,11 +67,13 @@ def test_generate_new_npc_valid_llm_still_saves(monkeypatch):
 
 def test_dead_npc_not_in_scene_or_context():
     grum = {"status": "morto", "in_scene": False, "home_location_id": "nova_arcadia"}
-    st = {"npcs": {"Grum": grum}, "party": [],
-          "world": {"current_location_id": "nova_arcadia"}}
+    st = {"npcs": {"Grum": grum}, "party": [], "world": {"current_location_id": "nova_arcadia"}}
     assert npc_layers.npcs_for_context(st) == []
-    st2 = {"npcs": {"Grum": {**grum, "in_scene": True}}, "party": [],
-           "world": {"current_location_id": "nova_arcadia"}}
+    st2 = {
+        "npcs": {"Grum": {**grum, "in_scene": True}},
+        "party": [],
+        "world": {"current_location_id": "nova_arcadia"},
+    }
     assert npc_layers.npcs_in_scene(st2) == []
     assert not npc_layers.npc_alive({"dead": True})
     view = npc_layers.visible_npc_view({"Grum": {**grum, "name": "Grum"}})
@@ -66,10 +81,14 @@ def test_dead_npc_not_in_scene_or_context():
 
 
 def test_npc_actor_dead_target_says_dead():
-    st = {"messages": [HumanMessage(content="Falo com Grum")],
-          "active_npc_name": "Grum", "game_id": "g",
-          "npcs": {"Grum": {"name": "Grum", "status": "morto", "in_scene": True}},
-          "party": [], "world": {"current_location": "Praça", "current_location_id": "praca"}}
+    st = {
+        "messages": [HumanMessage(content="Falo com Grum")],
+        "active_npc_name": "Grum",
+        "game_id": "g",
+        "npcs": {"Grum": {"name": "Grum", "status": "morto", "in_scene": True}},
+        "party": [],
+        "world": {"current_location": "Praça", "current_location_id": "praca"},
+    }
     out = npc_actor_node(st)
     assert "morto" in out["messages"][0].content
 
@@ -78,7 +97,9 @@ def test_npc_killed_syncs_state_npcs_and_party():
     npcs, party = npc_layers.apply_npc_death(
         {"Valerius": {"name": "Valerius", "id": "npc_valerius", "in_scene": True}},
         [{"name": "Valerius", "active": True}, {"name": "Gorim", "active": True}],
-        "npc_valerius", 7)
+        "npc_valerius",
+        7,
+    )
     assert npcs["Valerius"]["status"] == "morto" and npcs["Valerius"]["in_scene"] is False
     assert npcs["Valerius"]["died_turn"] == 7
     assert [c["name"] for c in party] == ["Gorim"]
@@ -87,13 +108,17 @@ def test_npc_killed_syncs_state_npcs_and_party():
 def test_process_pending_events_npc_killed_syncs(monkeypatch):
     from services import event_processor as ep
     from services.world_validators import ValidationResult
+
     monkeypatch.setattr(ep, "validate_proposal", lambda *a, **k: ValidationResult(True))
     state = {
-        "pending_world_events": [{"type": "npc_killed", "actor_id": "player",
-                                  "target_id": "npc_valerius"}],
+        "pending_world_events": [
+            {"type": "npc_killed", "actor_id": "player", "target_id": "npc_valerius"}
+        ],
         "npcs": {"Valerius": {"name": "Valerius", "id": "npc_valerius", "in_scene": True}},
         "party": [{"name": "Valerius", "active": True}],
-        "world": {"turn_count": 3}, "event_log": [], "world_projection": {},
+        "world": {"turn_count": 3},
+        "event_log": [],
+        "world_projection": {},
     }
     out = ep.process_pending_events(state)
     assert out["npcs"]["Valerius"]["status"] == "morto"
@@ -101,16 +126,21 @@ def test_process_pending_events_npc_killed_syncs(monkeypatch):
 
 
 def test_waiting_companion_only_talks_at_waiting_location():
-    st = {"messages": [HumanMessage(content="Oi Lyra")], "active_npc_name": "Lyra",
-          "game_id": "g", "npcs": {},
-          "party": [{"name": "Lyra", "active": False, "waiting_at": "Brekmar"}],
-          "world": {"current_location": "Pântano", "current_location_id": "pantano"}}
+    st = {
+        "messages": [HumanMessage(content="Oi Lyra")],
+        "active_npc_name": "Lyra",
+        "game_id": "g",
+        "npcs": {},
+        "party": [{"name": "Lyra", "active": False, "waiting_at": "Brekmar"}],
+        "world": {"current_location": "Pântano", "current_location_id": "pantano"},
+    }
     out = npc_actor_node(st)
     assert "não está aqui" in out["messages"][0].content
 
 
 def test_relationship_zero_is_zero():
     import party
+
     npc = {"name": "Ark", "relationship": 0, "traits": []}
     st = {"npcs": {"Ark": npc}, "party": [], "factions": []}
     d = party.recruitment_decision(st, "Ark")
@@ -129,15 +159,18 @@ def test_relationship_change_clamped(caplog):
 
 def test_npc_fallback_hint_cleared():
     from agents.router import RouteType, _base_route_payload
+
     p = _base_route_payload(RouteType.STORY, {})
     assert "npc_fallback_hint" in p and p["npc_fallback_hint"] is None
 
 
 def test_load_npc_db_discards_broken_entries(monkeypatch, caplog):
     good = {"id": "npc_a", "name": "A", "role": "Ferreiro", "persona": "x"}
-    raw = {"A": good,
-           "B": {"id": "npc_b", "name": "B", "role": None, "persona": None},
-           "C": {"id": "fallback", "name": "C", "role": "Desconhecido", "persona": "Genérico"}}
+    raw = {
+        "A": good,
+        "B": {"id": "npc_b", "name": "B", "role": None, "persona": None},
+        "C": {"id": "fallback", "name": "C", "role": "Desconhecido", "persona": "Genérico"},
+    }
     monkeypatch.setattr(npc_mod, "_load_npc_db_raw", lambda: raw)
     with caplog.at_level(logging.WARNING):
         db = npc_mod.load_npc_db()
@@ -147,6 +180,7 @@ def test_load_npc_db_discards_broken_entries(monkeypatch, caplog):
 
 def test_smoke_invalid_structured_output_leaves_cache_clean(monkeypatch, tmp_path):
     import json
+
     f = tmp_path / "npc.json"
     f.write_text("{}", encoding="utf-8")
     monkeypatch.setattr(npc_mod, "NPC_DB_FILE", str(f))

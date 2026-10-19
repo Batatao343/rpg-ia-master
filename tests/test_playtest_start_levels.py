@@ -11,7 +11,9 @@ from services.cards import get_card
 @pytest.mark.parametrize("level", [1, 3, 9, 20])
 def test_estado_inicial_respeita_nivel_e_resolve_escolhas(level):
     state = _build_initial_state(
-        "normal", seed=6200 + level, class_name="Devoto do Abismo",
+        "normal",
+        seed=6200 + level,
+        class_name="Devoto do Abismo",
         start_level=level,
     )
     player = state["player"]
@@ -49,7 +51,10 @@ def test_continuacao_da_matriz_preserva_cauda_canonica():
 
     assert [case["index"] for case in selected] == list(range(5, 11))
     assert selected[0] == {
-        "index": 5, "profile": "comerciante", "class_name": "Corruptor",
-        "start_level": 9, "seed": 6204,
+        "index": 5,
+        "profile": "comerciante",
+        "class_name": "Corruptor",
+        "start_level": 9,
+        "seed": 6204,
     }
     assert select_matrix_cases() == LONGRUN_MATRIX

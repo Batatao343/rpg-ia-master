@@ -1,4 +1,5 @@
 """SPEC-248: logs estruturados do roteamento LLM (tentativa, esgotamento, Mock/Fallback)."""
+
 import json
 
 import pytest
@@ -31,6 +32,7 @@ class _Client:
         if self.behavior == "401":
             raise _Err("401 Unauthorized", 401)
         from langchain_core.messages import AIMessage
+
         return AIMessage(content="ok")
 
     def stream(self, _input):
@@ -78,12 +80,12 @@ def test_failed_attempt_logs_status_and_latency(capsys, monkeypatch):
 
 def test_circuit_open_logged(capsys, monkeypatch):
     llm = _routed(monkeypatch, ["401", "ok"])
-    llm.invoke([HumanMessage(content="a")])      # 401 abre o circuito
+    llm.invoke([HumanMessage(content="a")])  # 401 abre o circuito
     capsys.readouterr()
     llm.invoke([HumanMessage(content="b")])
     attempts = [x for x in _lines(capsys) if x["event"] == "llm.attempt"]
     assert attempts[0]["outcome"] == "circuit_open" and attempts[0]["level"] == "warning"
-    assert "Unauthorized" not in json.dumps(attempts)      # texto do provider fica fora do log
+    assert "Unauthorized" not in json.dumps(attempts)  # texto do provider fica fora do log
 
 
 def test_kill_switch_logged(capsys, monkeypatch):
@@ -109,7 +111,9 @@ def test_stream_failure_logs_http_status(capsys, monkeypatch):
     llm = _routed(monkeypatch, ["ok", "ok"])
     list(llm.stream([HumanMessage(content="a")]))
     attempts = [x for x in _lines(capsys) if x["event"] == "llm.attempt"]
-    assert attempts and attempts[0]["outcome"] == "stream_error" and attempts[0]["http_status"] == 500
+    assert (
+        attempts and attempts[0]["outcome"] == "stream_error" and attempts[0]["http_status"] == 500
+    )
 
 
 def test_mock_selected_logged_once(capsys, monkeypatch):
@@ -158,11 +162,28 @@ def test_no_prompt_in_llm_logs(capsys, monkeypatch):
 
 def test_turn_line_aggregates_errors_and_http_statuses():
     import api
+
     attempts = [
-        {"provider": "p1", "model": "m", "tier": "fast", "outcome": "invoke_error", "network_attempted": True,
-         "error_type": "_Err", "http_status": 429, "usage": None},
-        {"provider": "p2", "model": "m", "tier": "fast", "outcome": "success", "network_attempted": True,
-         "error_type": None, "http_status": 0, "usage": None},
+        {
+            "provider": "p1",
+            "model": "m",
+            "tier": "fast",
+            "outcome": "invoke_error",
+            "network_attempted": True,
+            "error_type": "_Err",
+            "http_status": 429,
+            "usage": None,
+        },
+        {
+            "provider": "p2",
+            "model": "m",
+            "tier": "fast",
+            "outcome": "success",
+            "network_attempted": True,
+            "error_type": None,
+            "http_status": 0,
+            "usage": None,
+        },
     ]
     fields = api._llm_log_fields([{"provider": "p2", "fell_back": True}], attempts)
     assert fields["llm_errors"] == {"_Err": 1} and fields["llm_http_statuses"] == {"429": 1}

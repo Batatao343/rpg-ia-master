@@ -8,6 +8,7 @@ profundidade — nunca como única barreira (a barreira é a projeção em
 
 Vocabulário de conhecimento = SPEC-206 (`KnowledgeStamp`), reutilizado literal.
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, Optional
@@ -150,11 +151,23 @@ class DossiersResponseModel(_Strict):
 
 
 # Chaves de estado privado que NUNCA podem aparecer em nenhum nível do payload.
-FORBIDDEN_KEYS = frozenset({
-    "hidden_traits", "memory", "last_memory", "npc_secrets", "secret",
-    "secrets_known", "variant_exclusive_cards", "tactical_profile",
-    "cartas", "resistances", "vulnerabilities", "immunities", "virtudes",
-})
+FORBIDDEN_KEYS = frozenset(
+    {
+        "hidden_traits",
+        "memory",
+        "last_memory",
+        "npc_secrets",
+        "secret",
+        "secrets_known",
+        "variant_exclusive_cards",
+        "tactical_profile",
+        "cartas",
+        "resistances",
+        "vulnerabilities",
+        "immunities",
+        "virtudes",
+    }
+)
 
 
 def _walk(value: Any, path: str, out: list[str]) -> None:
@@ -191,9 +204,13 @@ def leak_view(payload: Mapping) -> dict:
     view["characters"] = list(sections.get("npcs") or [])
     view["creatures"] = list(payload.get("bestiary") or [])
     view["secrets"] = list(sections.get("secrets") or [])
-    view["meta"] = {"counts": {
-        "locations": len(view["locations"]), "factions": len(view["factions"]),
-        "characters": len(view["characters"]), "creatures": len(view["creatures"]),
-        "secrets": len(view["secrets"]),
-    }}
+    view["meta"] = {
+        "counts": {
+            "locations": len(view["locations"]),
+            "factions": len(view["factions"]),
+            "characters": len(view["characters"]),
+            "creatures": len(view["creatures"]),
+            "secrets": len(view["secrets"]),
+        }
+    }
     return view

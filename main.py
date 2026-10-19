@@ -36,9 +36,10 @@ from state import GameState
 
 load_dotenv(override=True)  # .env canônico (sobrepõe env var do SO)
 
+
 def build_game_graph():
     """Constrói e compila o grafo de estados do jogo."""
-    
+
     workflow = StateGraph(GameState)
 
     # 1. Adicionar Nós
@@ -48,7 +49,7 @@ def build_game_graph():
     workflow.add_node("combat_agent", with_node("combat_agent", combat_node))
     workflow.add_node("npc_actor", with_node("npc_actor", npc_actor_node))
     workflow.add_node("loot_agent", with_node("loot_agent", loot_node))
-    workflow.add_node("archivist", with_node("archivist", archive_node)) # <--- NOVO
+    workflow.add_node("archivist", with_node("archivist", archive_node))  # <--- NOVO
     workflow.add_node("action_guard", with_node("action_guard", action_guard_node))
     workflow.add_node("turn_finalizer", with_node("turn_finalizer", turn_finalizer_node))
     workflow.add_node("turn_prepare", with_node("turn_prepare", turn_prepare_node))
@@ -64,12 +65,20 @@ def build_game_graph():
     # jogador escolher Continuar (restaura) ou Aceitar (memorial).
     workflow.add_conditional_edges(
         START,
-        lambda s: "__end__" if (
-            s.get("game_over") or s.get("death_pending") or s.get("archived")
-            # SPEC-233 R9: laboratório encerrado não segue como campanha.
-            or ((s.get("combat_simulation") or {}).get("enabled")
-                and not (s.get("combat") or {}).get("active"))
-        ) else "action_guard",
+        lambda s: (
+            "__end__"
+            if (
+                s.get("game_over")
+                or s.get("death_pending")
+                or s.get("archived")
+                # SPEC-233 R9: laboratório encerrado não segue como campanha.
+                or (
+                    (s.get("combat_simulation") or {}).get("enabled")
+                    and not (s.get("combat") or {}).get("active")
+                )
+            )
+            else "action_guard"
+        ),
         {"__end__": END, "action_guard": "action_guard"},
     )
     workflow.add_conditional_edges(
@@ -131,7 +140,9 @@ def build_game_graph():
         lambda state: (
             "__end__"
             if (state.get("combat_simulation") or {}).get("enabled")
-            else "loot_agent" if state.get("next") == "loot" else "archivist"
+            else "loot_agent"
+            if state.get("next") == "loot"
+            else "archivist"
         ),
         {
             "loot_agent": "loot_agent",
@@ -139,12 +150,13 @@ def build_game_graph():
             "__end__": END,
         },
     )
-    
+
     workflow.add_edge("archivist", "turn_finalizer")
     workflow.add_edge("turn_finalizer", END)
 
     # Compila o grafo
     return workflow.compile()
+
 
 # Instância global
 app = build_game_graph()

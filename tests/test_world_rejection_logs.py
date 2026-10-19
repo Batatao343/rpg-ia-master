@@ -1,4 +1,5 @@
 """SPEC-252: rejeicoes do mundo, guarda narrativa, economia e replanejamento com motivo em log."""
+
 import json
 
 import pytest
@@ -26,16 +27,27 @@ def _events(capsys, name):
 
 
 def _state():
-    return {"world": {"turn_count": 3, "current_location_id": "nova_arcadia"},
-            "event_log": [], "world_projection": {}, "quests": [], "pending_world_events": []}
+    return {
+        "world": {"turn_count": 3, "current_location_id": "nova_arcadia"},
+        "event_log": [],
+        "world_projection": {},
+        "quests": [],
+        "pending_world_events": [],
+    }
 
 
 def test_rejection_has_reason_code(capsys):
     from services.event_processor import process_pending_events
+
     st = _state()
     st["pending_world_events"] = [
-        {"type": "npc_killed", "target_id": f"{SENT} nome livre", "actor_id": "player",
-         "detail": SENT, "payload": {}},
+        {
+            "type": "npc_killed",
+            "target_id": f"{SENT} nome livre",
+            "actor_id": "player",
+            "detail": SENT,
+            "payload": {},
+        },
         {"type": "quest_completed", "target_id": "q1", "actor_id": "player", "payload": {}},
     ]
     capsys.readouterr()
@@ -43,8 +55,13 @@ def test_rejection_has_reason_code(capsys):
     lines = _events(capsys, "event.proposal_rejected")
     assert len(lines) == 2
     from services.world_validators import REASON_CODES
+
     for ln in lines:
-        assert ln["reason_code"] in REASON_CODES and ln["source"] in ("llm", "rule", "prevalidation")
+        assert ln["reason_code"] in REASON_CODES and ln["source"] in (
+            "llm",
+            "rule",
+            "prevalidation",
+        )
         assert "target_ref" not in ln  # nome livre / id de quest nao e id de catalogo
         assert SENT not in json.dumps(ln)
     assert {ln["reason_code"] for ln in lines} == {"unknown_target", "invalid_payload"}
@@ -52,6 +69,7 @@ def test_rejection_has_reason_code(capsys):
 
 def test_reason_code_mapping_and_unknown_is_other():
     from services import world_validators as wv
+
     assert wv.reason_code(f"{wv.UNPROVEN_PREFIX}: x") == "unproven"
     assert wv.reason_code(f"{wv.LIMIT_PREFIX}: cooldown de 3 turnos") == "cooldown"
     assert wv.reason_code("duplicata: a/b") == "duplicate"
@@ -61,6 +79,7 @@ def test_reason_code_mapping_and_unknown_is_other():
 
 def test_trade_refused_logged(capsys):
     from services import economy
+
     capsys.readouterr()
     economy.log_trade("buy", {"ok": False, "reason": f"Ouro insuficiente (1/50). {SENT}"})
     economy.log_trade("buy", {"ok": True, "item_id": "inexistente-no-catalogo", "gold_delta": -5})
@@ -73,14 +92,18 @@ def test_trade_refused_logged(capsys):
 
 def test_unique_conflict_logged(capsys):
     from services import economy
+
     capsys.readouterr()
-    economy.log_trade("craft", {"ok": False,
-                                "reason": "Esse artefato já existe no mundo — não há como forjar outro."})
+    economy.log_trade(
+        "craft",
+        {"ok": False, "reason": "Esse artefato já existe no mundo — não há como forjar outro."},
+    )
     assert _events(capsys, "economy.trade")[0]["reason_code"] == "unique_conflict"
 
 
 def test_unique_conflict_event_level(capsys):
     from services import economy
+
     capsys.readouterr()
     economy.log_trade("craft", {"ok": False, "reason": "Esse artefato já existe no mundo"})
     out = [json.loads(ln) for ln in capsys.readouterr().out.splitlines() if ln.startswith("{")]
@@ -90,28 +113,53 @@ def test_unique_conflict_event_level(capsys):
 
 def test_replan_reason_logged(capsys):
     from agents import campaign_manager as cm
+
     assert cm._replan_reason({"needs_replan": True}) == "needs_replan"
     assert cm._replan_reason({"world": {}}) == "first_plan"
-    assert cm._replan_reason({"world": {"current_location": "a"},
-                              "campaign_plan": {"location": "a", "beats": []}}) == "periodic"
-    assert cm._replan_reason({"world": {"current_location": "a", "turn_count": 3},
-                              "campaign_plan": {"location": "a", "beats": [], "current_step": 0,
-                                                "last_planned_turn": 2}}) == "arc_finished"
+    assert (
+        cm._replan_reason(
+            {"world": {"current_location": "a"}, "campaign_plan": {"location": "a", "beats": []}}
+        )
+        == "periodic"
+    )
+    assert (
+        cm._replan_reason(
+            {
+                "world": {"current_location": "a", "turn_count": 3},
+                "campaign_plan": {
+                    "location": "a",
+                    "beats": [],
+                    "current_step": 0,
+                    "last_planned_turn": 2,
+                },
+            }
+        )
+        == "arc_finished"
+    )
 
 
 def test_replan_event_emitted(capsys, monkeypatch):
     from agents import campaign_manager as cm
-    plan = {"location": "Nova Arcádia", "beats": [{"description": "x", "status": "pending"}],
-            "climax": "c", "current_step": 0, "last_planned_turn": 1, "arc_title": "Arco"}
+
+    plan = {
+        "location": "Nova Arcádia",
+        "beats": [{"description": "x", "status": "pending"}],
+        "climax": "c",
+        "current_step": 0,
+        "last_planned_turn": 1,
+        "arc_title": "Arco",
+    }
 
     def fake(state, info=None):
         if info is not None:
             info["outcome"] = "template"
         return plan
+
     monkeypatch.setattr(cm, "_build_plan", fake)
     capsys.readouterr()
-    cm.campaign_manager_node({"world": {"turn_count": 0, "current_location": "Nova Arcádia"},
-                              "messages": []})
+    cm.campaign_manager_node(
+        {"world": {"turn_count": 0, "current_location": "Nova Arcádia"}, "messages": []}
+    )
     line = _events(capsys, "campaign.replan")[0]
     assert line["reason"] == "first_plan" and line["outcome"] == "template"
 
@@ -119,13 +167,16 @@ def test_replan_event_emitted(capsys, monkeypatch):
 def test_narrative_rejected_counts(capsys):
     from agents.storyteller import _log_narrative_rejected
     from observability.telemetry import begin_fallbacks, end_fallbacks
+
     tok, bucket = begin_fallbacks()
     try:
         capsys.readouterr()
         _log_narrative_rejected("item", ["unknown_item", "unknown_item", "unique_claimed"])
         lines = _events(capsys, "narrative.rejected")
         assert {(ln["kind"], ln["reason_code"], ln["count"]) for ln in lines} == {
-            ("item", "unknown_item", 2), ("item", "unique_claimed", 1)}
+            ("item", "unknown_item", 2),
+            ("item", "unique_claimed", 1),
+        }
         assert bucket.counters == {"item": 3}
     finally:
         end_fallbacks(tok)
@@ -133,6 +184,7 @@ def test_narrative_rejected_counts(capsys):
 
 def test_no_free_text(capsys):
     from agents.storyteller import _log_narrative_rejected
+
     capsys.readouterr()
     _log_narrative_rejected("event", ["unproven"])
     assert SENT not in capsys.readouterr().out
@@ -140,10 +192,12 @@ def test_no_free_text(capsys):
 
 def _literal_text(node):
     import ast
+
     if isinstance(node, ast.Constant) and isinstance(node.value, str):
         return node.value
     if isinstance(node, ast.JoinedStr):
         from services import world_validators as wv
+
         consts = {"UNPROVEN_PREFIX": wv.UNPROVEN_PREFIX, "LIMIT_PREFIX": wv.LIMIT_PREFIX}
         parts = []
         for v in node.values:
@@ -161,11 +215,18 @@ def _rejection_messages(path, kind):
     ``{"ok": False, "reason": msg}``."""
     import ast
     from pathlib import Path
+
     tree = ast.parse(Path(path).read_text(encoding="utf-8"))
     out = []
     for node in ast.walk(tree):
-        if kind == "validator" and isinstance(node, ast.Call) and getattr(node.func, "id", "") == "ValidationResult" \
-                and len(node.args) >= 2 and isinstance(node.args[0], ast.Constant) and node.args[0].value is False:
+        if (
+            kind == "validator"
+            and isinstance(node, ast.Call)
+            and getattr(node.func, "id", "") == "ValidationResult"
+            and len(node.args) >= 2
+            and isinstance(node.args[0], ast.Constant)
+            and node.args[0].value is False
+        ):
             out.append(_literal_text(node.args[1]))
         if kind == "trade" and isinstance(node, ast.Dict):
             keys = [k.value if isinstance(k, ast.Constant) else None for k in node.keys]
@@ -179,14 +240,17 @@ def _rejection_messages(path, kind):
 def test_every_real_validator_message_has_a_code():
     """Revisao P2/P3: mensagem de recusa reescrita nao pode cair em ``other`` em silencio."""
     from services.world_validators import reason_code
-    msgs = (_rejection_messages("services/world_validators.py", "validator")
-            + _rejection_messages("services/event_processor.py", "validator"))
+
+    msgs = _rejection_messages("services/world_validators.py", "validator") + _rejection_messages(
+        "services/event_processor.py", "validator"
+    )
     assert len(msgs) >= 10
     assert [m for m in msgs if reason_code(m) == "other"] == []
 
 
 def test_every_real_trade_refusal_has_a_code():
     from services.economy import trade_reason_code
+
     msgs = _rejection_messages("services/economy.py", "trade")
     assert len(msgs) >= 10
     assert [m for m in msgs if trade_reason_code(m) == "other"] == []

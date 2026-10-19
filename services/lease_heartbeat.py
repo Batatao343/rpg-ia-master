@@ -1,4 +1,5 @@
 """Bounded renewal lifecycle. The database fence remains the final authority."""
+
 from __future__ import annotations
 
 from collections.abc import Callable, Iterator
@@ -36,16 +37,21 @@ class LeaseWatch:
                 if self._confirm_completed():
                     self.committed.set()
                     return
-            except Exception:  # silent-ok: desfecho desconhecido => resultado conservador lease_lost
+            except (
+                Exception
+            ):  # silent-ok: desfecho desconhecido => resultado conservador lease_lost
                 pass
-        _db_conflict("lease_conflict", "lease_lost", op_kind="heartbeat")      # SPEC-254 R1
+        _db_conflict("lease_conflict", "lease_lost", op_kind="heartbeat")  # SPEC-254 R1
         raise LeaseHeld("lease_lost")
 
 
 @contextmanager
-def keep_lease_alive(renew: Callable[[], None] | None, *,
-                    interval_seconds: float = 20,
-                    confirm_completed: Callable[[], bool] | None = None) -> Iterator[LeaseWatch]:
+def keep_lease_alive(
+    renew: Callable[[], None] | None,
+    *,
+    interval_seconds: float = 20,
+    confirm_completed: Callable[[], bool] | None = None,
+) -> Iterator[LeaseWatch]:
     if interval_seconds <= 0:
         raise ValueError("positive heartbeat interval required")
     watch, stop = LeaseWatch(confirm_completed), Event()
@@ -53,6 +59,7 @@ def keep_lease_alive(renew: Callable[[], None] | None, *,
 
     def tick() -> bool:
         from observability.metrics import metrics
+
         if watch.committed.is_set():
             return False  # stop renewing after the durable commit
         try:
@@ -66,6 +73,7 @@ def keep_lease_alive(renew: Callable[[], None] | None, *,
             watch.lost.set()
             metrics.increment("rpg_lease_renewals_total", {"outcome": "lost"})
             from observability.telemetry import log_event
+
             log_event("db", "lease_renewal_failed", level="warning", error_type=type(exc).__name__)
             return False
 
@@ -81,7 +89,9 @@ def keep_lease_alive(renew: Callable[[], None] | None, *,
             watch.check()
             # SPEC-224: o renovador herda o principal do request, entao o UPDATE do lease roda
             # sob `rpg_api` (RLS por owner) e nao no login de sessao.
-            thread = Thread(target=copy_context().run, args=(loop,), name="lease-heartbeat", daemon=True)
+            thread = Thread(
+                target=copy_context().run, args=(loop,), name="lease-heartbeat", daemon=True
+            )
             thread.start()
         yield watch
         watch.check()

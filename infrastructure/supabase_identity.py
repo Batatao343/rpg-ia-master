@@ -27,14 +27,21 @@ class AuthEmailDeliveryError(Exception):
 
 
 class SupabaseIdentityProvider:
-    def __init__(self, base_url: str, publishable_key: str, *, timeout: float = 8.0,
-                 pool=None, service_key: str = "") -> None:
+    def __init__(
+        self,
+        base_url: str,
+        publishable_key: str,
+        *,
+        timeout: float = 8.0,
+        pool=None,
+        service_key: str = "",
+    ) -> None:
         self.base_url = base_url.rstrip("/")
         self._key = publishable_key
         self.timeout = timeout
         self.pool = pool
         self._service_key = service_key
-        self._verified: dict[str, tuple[Principal, float]] = {}   # SPEC-219 R7
+        self._verified: dict[str, tuple[Principal, float]] = {}  # SPEC-219 R7
         self._verified_lock = threading.Lock()
 
     def _headers(self, access_token: str | None = None) -> dict[str, str]:
@@ -43,21 +50,38 @@ class SupabaseIdentityProvider:
             headers["Authorization"] = f"Bearer {access_token}"
         return headers
 
-    def _request(self, op: str, method: str, url: str, *, public: str = "",
-                 special: dict | None = None, ok: tuple = (200,), quiet: bool = False,
-                 **kwargs) -> httpx.Response:
+    def _request(
+        self,
+        op: str,
+        method: str,
+        url: str,
+        *,
+        public: str = "",
+        special: dict | None = None,
+        ok: tuple = (200,),
+        quiet: bool = False,
+        **kwargs,
+    ) -> httpx.Response:
         """SPEC-245 R1: toda chamada ao GoTrue vira ``auth.upstream`` (op, status, error_code
         do catálogo fechado, duração, código público). Timeout/erro de rede => ``AuthUnavailable``
         (503), nunca 500. Nunca registra corpo, e-mail ou token."""
         from observability.auth_log import upstream_code
         from observability.telemetry import log_event
+
         started = time.monotonic()
         try:
             response = getattr(httpx, method)(url, **kwargs)
         except httpx.HTTPError as exc:
-            log_event("auth", "upstream", level="error", op=op, upstream_status=0,
-                      error_type=type(exc).__name__, public_code="auth_unavailable",
-                      duration_ms=int((time.monotonic() - started) * 1000))
+            log_event(
+                "auth",
+                "upstream",
+                level="error",
+                op=op,
+                upstream_status=0,
+                error_type=type(exc).__name__,
+                public_code="auth_unavailable",
+                duration_ms=int((time.monotonic() - started) * 1000),
+            )
             raise AuthUnavailable("auth_unavailable") from None
         status = response.status_code
         fields: dict = {}
@@ -65,18 +89,28 @@ class SupabaseIdentityProvider:
             level = "debug" if quiet else "info"
         else:
             code = self._gotrue_error(response)
-            fields = {"upstream_code": upstream_code(code),
-                      "public_code": (special or {}).get(code, public)}
+            fields = {
+                "upstream_code": upstream_code(code),
+                "public_code": (special or {}).get(code, public),
+            }
             level = "error" if status >= 500 else "warning"
-        log_event("auth", "upstream", level=level, op=op, upstream_status=status,
-                  duration_ms=int((time.monotonic() - started) * 1000), **fields)
+        log_event(
+            "auth",
+            "upstream",
+            level=level,
+            op=op,
+            upstream_status=status,
+            duration_ms=int((time.monotonic() - started) * 1000),
+            **fields,
+        )
         return response
 
     @staticmethod
     def _tokens(payload: dict) -> SessionTokens:
         user_id = UUID(str((payload.get("user") or {})["id"]))
         return SessionTokens(
-            str(payload["access_token"]), str(payload["refresh_token"]),
+            str(payload["access_token"]),
+            str(payload["refresh_token"]),
             datetime.now(UTC) + timedelta(seconds=int(payload.get("expires_in", 3600))),
             user_id,
         )
@@ -90,15 +124,24 @@ class SupabaseIdentityProvider:
             return ""
         return str(payload.get("error_code") or "") if isinstance(payload, dict) else ""
 
-    def login(self, email: str, password: str, *, captcha_token: str | None = None) -> SessionTokens:
+    def login(
+        self, email: str, password: str, *, captcha_token: str | None = None
+    ) -> SessionTokens:
         body = {"email": email, "password": password}
         if captcha_token is not None:
             body["gotrue_meta_security"] = {"captcha_token": captcha_token}
         response = self._request(
-            "login", "post", f"{self.base_url}/auth/v1/token?grant_type=password",
+            "login",
+            "post",
+            f"{self.base_url}/auth/v1/token?grant_type=password",
             public="credentials_invalid",
-            special={"email_not_confirmed": "email_not_confirmed", "captcha_failed": "captcha_invalid"},
-            headers=self._headers(), json=body, timeout=self.timeout,
+            special={
+                "email_not_confirmed": "email_not_confirmed",
+                "captcha_failed": "captcha_invalid",
+            },
+            headers=self._headers(),
+            json=body,
+            timeout=self.timeout,
         )
         if response.status_code != 200:
             code = self._gotrue_error(response)
@@ -109,14 +152,22 @@ class SupabaseIdentityProvider:
             raise Unauthorized("credenciais inválidas")
         return self._tokens(response.json())
 
-    def signup(self, email: str, password: str, *, captcha_token: str | None = None) -> SessionTokens | None:
+    def signup(
+        self, email: str, password: str, *, captcha_token: str | None = None
+    ) -> SessionTokens | None:
         body = {"email": email, "password": password}
         if captcha_token is not None:
             body["gotrue_meta_security"] = {"captcha_token": captcha_token}
         response = self._request(
-            "signup", "post", f"{self.base_url}/auth/v1/signup", ok=(200, 201),
-            public="signup_failed", special={"captcha_failed": "captcha_invalid"},
-            headers=self._headers(), json=body, timeout=self.timeout,
+            "signup",
+            "post",
+            f"{self.base_url}/auth/v1/signup",
+            ok=(200, 201),
+            public="signup_failed",
+            special={"captcha_failed": "captcha_invalid"},
+            headers=self._headers(),
+            json=body,
+            timeout=self.timeout,
         )
         if response.status_code not in (200, 201):
             if self._gotrue_error(response) == "captcha_failed":
@@ -127,17 +178,25 @@ class SupabaseIdentityProvider:
             return None
         return self._tokens(payload)
 
-    def request_email(self, email: str, *, recovery: bool, captcha_token: str | None = None) -> None:
+    def request_email(
+        self, email: str, *, recovery: bool, captcha_token: str | None = None
+    ) -> None:
         endpoint = "recover" if recovery else "resend"
         body = {"email": email} if recovery else {"email": email, "type": "signup"}
         if captcha_token is not None:
             body["gotrue_meta_security"] = {"captcha_token": captcha_token}
         # Response is deliberately ignored: existence/confirmation/quota share a contract.
         response = self._request(
-            "recover" if recovery else "resend", "post", f"{self.base_url}/auth/v1/{endpoint}",
-            ok=(200, 201, 202, 204), public="email_delivery_failed",
+            "recover" if recovery else "resend",
+            "post",
+            f"{self.base_url}/auth/v1/{endpoint}",
+            ok=(200, 201, 202, 204),
+            public="email_delivery_failed",
             special={"captcha_failed": "captcha_invalid"},
-            headers=self._headers(), json=body, timeout=self.timeout)
+            headers=self._headers(),
+            json=body,
+            timeout=self.timeout,
+        )
         if response.status_code not in (200, 201, 202, 204):
             if self._gotrue_error(response) == "captcha_failed":
                 raise Unauthorized("captcha_invalid")  # independe da conta: não enumera
@@ -145,10 +204,14 @@ class SupabaseIdentityProvider:
 
     def verify_email(self, token_hash: str, *, recovery: bool = False) -> SessionTokens:
         response = self._request(
-            "verify", "post", f"{self.base_url}/auth/v1/verify", public="link_invalid_or_expired",
+            "verify",
+            "post",
+            f"{self.base_url}/auth/v1/verify",
+            public="link_invalid_or_expired",
             headers=self._headers(),
             json={"token_hash": token_hash, "type": "recovery" if recovery else "signup"},
-            timeout=self.timeout)
+            timeout=self.timeout,
+        )
         if response.status_code != 200:
             raise Unauthorized("link_invalid_or_expired")
         return self._tokens(response.json())
@@ -157,18 +220,30 @@ class SupabaseIdentityProvider:
         tokens = self.verify_email(token_hash, recovery=True)
         self.verify(tokens.access_token)  # Reject tombstones/revoked session before mutation.
         response = self._request(
-            "reset", "put", f"{self.base_url}/auth/v1/user", public="password_reset_failed",
-            headers=self._headers(tokens.access_token), json={"password": password},
-            timeout=self.timeout)
+            "reset",
+            "put",
+            f"{self.base_url}/auth/v1/user",
+            public="password_reset_failed",
+            headers=self._headers(tokens.access_token),
+            json={"password": password},
+            timeout=self.timeout,
+        )
         if response.status_code != 200:
             raise Unauthorized("password_reset_failed")
         self.logout(tokens.access_token)
 
-    def reauthenticate(self, access_token: str, password: str, *, captcha_token: str | None = None) -> UUID:
+    def reauthenticate(
+        self, access_token: str, password: str, *, captcha_token: str | None = None
+    ) -> UUID:
         original = self.verify(access_token)
         response = self._request(
-            "reauth_user", "get", f"{self.base_url}/auth/v1/user", public="credentials_invalid",
-            headers=self._headers(access_token), timeout=self.timeout)
+            "reauth_user",
+            "get",
+            f"{self.base_url}/auth/v1/user",
+            public="credentials_invalid",
+            headers=self._headers(access_token),
+            timeout=self.timeout,
+        )
         email = response.json().get("email") if response.status_code == 200 else None
         if not email:
             raise Unauthorized("credenciais inválidas")
@@ -179,9 +254,15 @@ class SupabaseIdentityProvider:
             return original.user_id
         finally:
             # Remove only the temporary password-grant session, retain current session.
-            self._request("reauth_logout", "post", f"{self.base_url}/auth/v1/logout?scope=local",
-                          ok=(200, 204), quiet=True, headers=self._headers(tokens.access_token),
-                          timeout=self.timeout)
+            self._request(
+                "reauth_logout",
+                "post",
+                f"{self.base_url}/auth/v1/logout?scope=local",
+                ok=(200, 204),
+                quiet=True,
+                headers=self._headers(tokens.access_token),
+                timeout=self.timeout,
+            )
 
     def delete_user(self, user_id: UUID) -> None:
         if not self._service_key:
@@ -190,17 +271,27 @@ class SupabaseIdentityProvider:
         if not self._service_key.startswith("sb_secret_"):
             headers["Authorization"] = f"Bearer {self._service_key}"
         response = self._request(
-            "delete", "delete", f"{self.base_url}/auth/v1/admin/users/{user_id}",
-            ok=(200, 204, 404), public="account_delete_pending", headers=headers, timeout=self.timeout)
+            "delete",
+            "delete",
+            f"{self.base_url}/auth/v1/admin/users/{user_id}",
+            ok=(200, 204, 404),
+            public="account_delete_pending",
+            headers=headers,
+            timeout=self.timeout,
+        )
         if response.status_code not in (200, 204, 404):
             raise Unauthorized("account_delete_pending")
         self._forget(user_id=user_id)
 
     def refresh(self, refresh_token: str) -> SessionTokens:
         response = self._request(
-            "refresh", "post", f"{self.base_url}/auth/v1/token?grant_type=refresh_token",
-            public="session_invalid", headers=self._headers(),
-            json={"refresh_token": refresh_token}, timeout=self.timeout,
+            "refresh",
+            "post",
+            f"{self.base_url}/auth/v1/token?grant_type=refresh_token",
+            public="session_invalid",
+            headers=self._headers(),
+            json={"refresh_token": refresh_token},
+            timeout=self.timeout,
         )
         if response.status_code != 200:
             raise Unauthorized("sessão inválida")
@@ -210,8 +301,13 @@ class SupabaseIdentityProvider:
 
     def logout(self, access_token: str) -> None:
         response = self._request(
-            "logout", "post", f"{self.base_url}/auth/v1/logout?scope=global", ok=(200, 204),
-            public="session_invalid", headers=self._headers(access_token), timeout=self.timeout,
+            "logout",
+            "post",
+            f"{self.base_url}/auth/v1/logout?scope=global",
+            ok=(200, 204),
+            public="session_invalid",
+            headers=self._headers(access_token),
+            timeout=self.timeout,
         )
         if response.status_code not in (200, 204):
             raise Unauthorized("sessão inválida")
@@ -267,15 +363,23 @@ class SupabaseIdentityProvider:
             encoded = parts[1]
             claims = json.loads(base64.urlsafe_b64decode(encoded + "=" * (-len(encoded) % 4)))
             exp = float(claims["exp"])
-        except (ValueError, KeyError, TypeError, RecursionError):  # payload aninhado = lixo, nunca 500
+        except (
+            ValueError,
+            KeyError,
+            TypeError,
+            RecursionError,
+        ):  # payload aninhado = lixo, nunca 500
             raise Unauthorized("token inválido", reason="bad_signature") from None
         if not isinstance(claims, dict):
             raise Unauthorized("token inválido", reason="bad_signature")
         if exp + self.CLOCK_SKEW_SECONDS < time.time():
             raise Unauthorized("token inválido", reason="expired")
         issuer = claims.get("iss")
-        if claims.get("aud") != "authenticated" or not isinstance(issuer, str) \
-                or not issuer.startswith(f"{self.base_url}/auth/v1"):
+        if (
+            claims.get("aud") != "authenticated"
+            or not isinstance(issuer, str)
+            or not issuer.startswith(f"{self.base_url}/auth/v1")
+        ):
             raise Unauthorized("token inválido", reason="bad_aud_iss")
         return exp
 
@@ -301,14 +405,18 @@ class SupabaseIdentityProvider:
             if hit and time.monotonic() - hit[1] < ttl and exp > time.time():
                 principal = hit[0]
         if principal is None:
-            principal = self._verify_remote(access_token)       # so o GoTrue (assinatura/expiracao) e cacheado
+            principal = self._verify_remote(
+                access_token
+            )  # so o GoTrue (assinatura/expiracao) e cacheado
             if ttl:
                 with self._verified_lock:
                     if len(self._verified) > 2048:
                         self._verified.clear()
                     self._verified[digest] = (principal, time.monotonic())
         try:
-            self._check_session(access_token, principal.user_id)   # banco local: revogacao e imediata
+            self._check_session(
+                access_token, principal.user_id
+            )  # banco local: revogacao e imediata
         except Unauthorized:
             self._forget(access_token)
             raise
@@ -325,15 +433,21 @@ class SupabaseIdentityProvider:
         except (ValueError, KeyError, IndexError, TypeError):
             raise Unauthorized("sessão inválida") from None
         with admin_connection(self.pool) as db:
-            active = db.execute("select app.runtime_session_active(%s,%s) as ok",
-                                (session_id, user_id)).fetchone()["ok"]
+            active = db.execute(
+                "select app.runtime_session_active(%s,%s) as ok", (session_id, user_id)
+            ).fetchone()["ok"]
         if not active:
             raise Unauthorized("sessão revogada")
 
     def _verify_remote(self, access_token: str) -> Principal:
         response = self._request(
-            "verify_token", "get", f"{self.base_url}/auth/v1/user", public="session_invalid",
-            quiet=True, headers=self._headers(access_token), timeout=self.timeout,
+            "verify_token",
+            "get",
+            f"{self.base_url}/auth/v1/user",
+            public="session_invalid",
+            quiet=True,
+            headers=self._headers(access_token),
+            timeout=self.timeout,
         )
         if response.status_code != 200:
             raise Unauthorized("token inválido", reason="upstream_rejected")

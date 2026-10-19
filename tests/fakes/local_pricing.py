@@ -5,6 +5,7 @@ card, so a fixed window makes every local fixture expire N days after that card
 was observed. Fixtures instead cover the card's current age plus a margin. The
 production guard (installed card + its own published window) is untouched.
 """
+
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone, UTC

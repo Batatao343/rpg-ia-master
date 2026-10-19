@@ -46,8 +46,16 @@ def _safe_url(url: str, label: str) -> str:
 
 
 class OidcIdentityProvider:
-    def __init__(self, userinfo_url: str, issuer: str, *, jwks_url: str = "", audience: str = "",
-                 timeout: float = 8.0, clock=time.time) -> None:
+    def __init__(
+        self,
+        userinfo_url: str,
+        issuer: str,
+        *,
+        jwks_url: str = "",
+        audience: str = "",
+        timeout: float = 8.0,
+        clock=time.time,
+    ) -> None:
         self.issuer = _safe_url(issuer, "issuer").rstrip("/")
         self.userinfo_url = _safe_url(userinfo_url, "UserInfo") if userinfo_url.strip() else ""
         if not jwks_url.strip() or not audience.strip():
@@ -81,7 +89,9 @@ class OidcIdentityProvider:
                 except (httpx.HTTPError, ValueError, AttributeError):
                     keys = None
                 if not isinstance(keys, list):
-                    raise Unauthorized("provedor de identidade indisponível", reason="jwks_unavailable")
+                    raise Unauthorized(
+                        "provedor de identidade indisponível", reason="jwks_unavailable"
+                    )
                 self._keys = {str(k.get("kid", "")): k for k in keys if isinstance(k, dict)}
                 self._fetched_at = self._clock()
             return self._keys
@@ -105,9 +115,11 @@ class OidcIdentityProvider:
                 if len(signature) != 64:
                     raise Unauthorized("token inválido")
                 public = ec.EllipticCurvePublicNumbers(
-                    _int(jwk["x"]), _int(jwk["y"]), ec.SECP256R1()).public_key()
-                der = encode_dss_signature(int.from_bytes(signature[:32], "big"),
-                                           int.from_bytes(signature[32:], "big"))
+                    _int(jwk["x"]), _int(jwk["y"]), ec.SECP256R1()
+                ).public_key()
+                der = encode_dss_signature(
+                    int.from_bytes(signature[:32], "big"), int.from_bytes(signature[32:], "big")
+                )
                 public.verify(der, signing_input, ec.ECDSA(hashes.SHA256()))
                 return
         except (InvalidSignature, KeyError, ValueError, TypeError):
@@ -141,13 +153,20 @@ class OidcIdentityProvider:
         if str(claims.get("iss") or "").rstrip("/") != self.issuer:
             raise Unauthorized("token inválido", reason="bad_iss")  # iss obrigatório e exato
         audiences = claims.get("aud")
-        audiences = [audiences] if isinstance(audiences, str) else (
-            audiences if isinstance(audiences, list) else [])
+        audiences = (
+            [audiences]
+            if isinstance(audiences, str)
+            else (audiences if isinstance(audiences, list) else [])
+        )
         if self.audience not in audiences and claims.get("azp") != self.audience:
             raise Unauthorized("token inválido", reason="bad_aud")
         exp, nbf = claims.get("exp"), claims.get("nbf", now)
         for value in (exp, nbf):  # NumericDate: número finito, nunca bool/string
-            if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+            if (
+                isinstance(value, bool)
+                or not isinstance(value, (int, float))
+                or not math.isfinite(value)
+            ):
                 raise Unauthorized("token inválido")
         if exp <= now - CLOCK_SKEW_SECONDS or nbf > now + CLOCK_SKEW_SECONDS:
             raise Unauthorized("token inválido", reason="expired")
@@ -162,8 +181,11 @@ class OidcIdentityProvider:
 
     def _userinfo_matches(self, access_token: str, subject: str) -> None:
         try:
-            response = httpx.get(self.userinfo_url, headers={"Authorization": f"Bearer {access_token}"},
-                                 timeout=self.timeout)
+            response = httpx.get(
+                self.userinfo_url,
+                headers={"Authorization": f"Bearer {access_token}"},
+                timeout=self.timeout,
+            )
             payload = response.json() if response.status_code == 200 else {}
         except (httpx.HTTPError, ValueError) as exc:
             raise Unauthorized("provedor de identidade indisponível") from exc

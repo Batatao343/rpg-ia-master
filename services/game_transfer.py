@@ -35,12 +35,20 @@ def _preview(path: Path) -> tuple[SavePreview, dict[str, Any] | None]:
         document = serialize_game_state(state)
         game_id = str(UUID(str(document["game_id"])))
         return SavePreview(
-            str(path), game_id, "valid", document_sha256(document),
-            bool(document.get("archived")), None,
+            str(path),
+            game_id,
+            "valid",
+            document_sha256(document),
+            bool(document.get("archived")),
+            None,
         ), state
     except Exception as exc:
         return SavePreview(
-            str(path), None, "corrupt", None, False,
+            str(path),
+            None,
+            "corrupt",
+            None,
+            False,
             f"{type(exc).__name__}: {exc}",
         ), None
 
@@ -91,9 +99,7 @@ def import_saves(
                 existing_hash = document_sha256(serialize_game_state(existing.state))
                 if existing_hash != preview.sha256:
                     raise Conflict(f"colisão divergente no game_id {game_id}")
-                row["status"] = (
-                    "journal_skip" if str(game_id) in completed else "already_present"
-                )
+                row["status"] = "journal_skip" if str(game_id) in completed else "already_present"
         report.append(row)
         if journal_path and not dry_run and row["status"] in {"imported", "already_present"}:
             journal_path.parent.mkdir(parents=True, exist_ok=True)
@@ -112,18 +118,24 @@ def export_game(pool: PostgresPool, principal: Principal, game_id: UUID) -> dict
     checkpoint = store.get_checkpoint(principal, game_id)
     checkpoint_doc = serialize_game_state(checkpoint) if checkpoint else None
     with pool.connection() as connection:
-        events = [dict(row) for row in connection.execute(
-            """select event_id,turn,event_type,payload,source,event_sha256
+        events = [
+            dict(row)
+            for row in connection.execute(
+                """select event_id,turn,event_type,payload,source,event_sha256
             from app.game_events where game_id=%s and owner_id=%s
             order by turn,event_id""",
-            (game_id, principal.user_id),
-        ).fetchall()]
-        catalog = [dict(row) for row in connection.execute(
-            """select namespace,item_key,scope,document,document_sha256,version,provenance
+                (game_id, principal.user_id),
+            ).fetchall()
+        ]
+        catalog = [
+            dict(row)
+            for row in connection.execute(
+                """select namespace,item_key,scope,document,document_sha256,version,provenance
             from app.runtime_catalog where owner_id=%s and game_id=%s
             order by namespace,item_key""",
-            (principal.user_id, game_id),
-        ).fetchall()]
+                (principal.user_id, game_id),
+            ).fetchall()
+        ]
     return {
         "format": "valoria-game-export-v1",
         "game_id": str(game_id),

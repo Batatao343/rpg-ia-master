@@ -6,11 +6,20 @@ from services import cards
 
 def _player(**over):
     player = {
-        "name": "Ava", "class_name": "Devoto do Abismo", "level": 1, "xp": 0,
-        "hp": 30, "max_hp": 30, "entropy": 16, "max_entropy": 16,
+        "name": "Ava",
+        "class_name": "Devoto do Abismo",
+        "level": 1,
+        "xp": 0,
+        "hp": 30,
+        "max_hp": 30,
+        "entropy": 16,
+        "max_entropy": 16,
         "virtudes": {"forca": 2, "agilidade": 2, "corpo": 3, "mente": 1, "carisma": 2},
-        "known_cards": ["dev_golpe_convite"], "prepared_cards": ["dev_golpe_convite"],
-        "card_usage": {}, "virtue_cards": [], "evolved_cards": {},
+        "known_cards": ["dev_golpe_convite"],
+        "prepared_cards": ["dev_golpe_convite"],
+        "card_usage": {},
+        "virtue_cards": [],
+        "evolved_cards": {},
         "pending_choices": [],
     }
     player.update(over)
@@ -25,8 +34,7 @@ def test_level_up_oferece_carta_e_virtude():
 
 
 def test_nivel_tres_oferece_subclasse_explica_e_carta():
-    player, _ = pg.grant_xp(
-        _player(level=2, xp=pg.XP_TABLE[2]), pg.XP_TABLE[3] - pg.XP_TABLE[2])
+    player, _ = pg.grant_xp(_player(level=2, xp=pg.XP_TABLE[2]), pg.XP_TABLE[3] - pg.XP_TABLE[2])
     assert [choice["kind"] for choice in player["pending_choices"]] == ["subclass", "carta"]
 
 
@@ -39,8 +47,9 @@ def test_eligible_cards_respeita_classe_e_subclasse():
     eligible = pg.eligible_cards(player)
     assert "dev_golpe_convite" not in eligible
     assert "dev_cons_liturgia" in eligible
-    assert not any((cards.get_card(cid) or {}).get("subclasse") not in ("", "consagrado")
-                   for cid in eligible)
+    assert not any(
+        (cards.get_card(cid) or {}).get("subclasse") not in ("", "consagrado") for cid in eligible
+    )
 
 
 def test_apply_choice_nova_carta():

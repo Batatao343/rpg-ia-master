@@ -80,7 +80,9 @@ def test_escrita_atomica_preserva_save_anterior_quando_replace_falha(tmp_path, m
     assert persistence.save_game_state(_state(gid, gold=10))
     original = (tmp_path / f"{gid}.json").read_text(encoding="utf-8")
 
-    monkeypatch.setattr(persistence.os, "replace", lambda *_a, **_k: (_ for _ in ()).throw(OSError("boom")))
+    monkeypatch.setattr(
+        persistence.os, "replace", lambda *_a, **_k: (_ for _ in ()).throw(OSError("boom"))
+    )
     assert persistence.save_game_state(_state(gid, gold=999)) is False
     assert (tmp_path / f"{gid}.json").read_text(encoding="utf-8") == original
     assert not list(tmp_path.glob("*.tmp"))
@@ -139,11 +141,12 @@ def test_mutacoes_do_mesmo_jogo_sao_serializadas(monkeypatch):
     responses = []
 
     def send():
-        responses.append(TestClient(api.app).post(
-            "/game/action",
-            json={"game_id": gid, "input_text": "avanço",
-                  "action_id": str(uuid.uuid4())},
-        ))
+        responses.append(
+            TestClient(api.app).post(
+                "/game/action",
+                json={"game_id": gid, "input_text": "avanço", "action_id": str(uuid.uuid4())},
+            )
+        )
 
     threads = [threading.Thread(target=send) for _ in range(2)]
     for thread in threads:
@@ -214,9 +217,15 @@ def test_falha_de_persistencia_no_turno_retorna_500(monkeypatch):
 
 def test_circuit_open_nao_conta_rede_falha_ou_custo():
     event = LLMAttemptEvent(
-        provider="deepseek", model="deepseek-v4-flash", tier=ModelTier.FAST,
-        attempt_index=0, latency_ms=0, fell_back=False,
-        outcome="circuit_open", error="quota", structured=False,
+        provider="deepseek",
+        model="deepseek-v4-flash",
+        tier=ModelTier.FAST,
+        attempt_index=0,
+        latency_ms=0,
+        fell_back=False,
+        outcome="circuit_open",
+        error="quota",
+        structured=False,
     )
     token = api._llm_attempt_events.set([])
     try:
@@ -232,13 +241,17 @@ def test_circuit_open_nao_conta_rede_falha_ou_custo():
 
 def test_criacao_rejeita_opcoes_fora_dos_catalogos():
     base = {
-        "name": "Teste", "race": "Humano",
+        "name": "Teste",
+        "race": "Humano",
         "class_name": next(iter(api.gamedata.CLASSES)),
         "region": (api.load_json_data("origins.json")["regions"])[0]["name"],
         "level": 1,
     }
-    for field, value in (("class_name", "Batedor das Fronteiras"),
-                         ("race", "Marciano"), ("region", "Lua")):
+    for field, value in (
+        ("class_name", "Batedor das Fronteiras"),
+        ("race", "Marciano"),
+        ("region", "Lua"),
+    ):
         payload = {**base, field: value}
         try:
             api.CreateCharacterRequest(**payload)
@@ -250,4 +263,5 @@ def test_criacao_rejeita_opcoes_fora_dos_catalogos():
 def test_fixture_global_isola_diretorios_de_runtime(tmp_path):
     assert os.path.abspath(persistence.SAVES_DIR).startswith(os.path.abspath(str(tmp_path)))
     import rag
+
     assert os.path.abspath(rag.SAVES_DIR).startswith(os.path.abspath(str(tmp_path)))

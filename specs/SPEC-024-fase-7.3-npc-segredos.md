@@ -85,6 +85,7 @@ o que falta é o conteúdo estar do lado certo da cerca.
 # scripts/migrate_lore_nova.py
 _NPC_SECRET_LABELS: frozenset[str]  # R2, normalizado (sem acento, casefold)
 
+
 def split_npc_secrets(body: str) -> Tuple[str, str]:
     """Divide o corpo de um NPC em (publico, secreto) por rótulo de parágrafo.
 

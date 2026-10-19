@@ -29,15 +29,21 @@ def _fresh_graph_cache():
 # Etapa 1 — resolvedor seguro + conditions
 # ---------------------------------------------------------------------------
 
+
 def _ctx(**over):
     base = {
-        "event": {"type": "npc_killed", "target_id": "npc_valerius",
-                  "payload": {"new_controller_id": "legiao_ferro"}},
+        "event": {
+            "type": "npc_killed",
+            "target_id": "npc_valerius",
+            "payload": {"new_controller_id": "legiao_ferro"},
+        },
         "target": {"id": "npc_valerius", "type": "npc", "tags": ["governante"]},
         "component": {
             "faction_member": {"faction_id": "selo_palido"},
-            "power_vacuum_trigger": {"base_instability_delta": -45,
-                                     "rival_factions": ["culto_clareira", "outra"]},
+            "power_vacuum_trigger": {
+                "base_instability_delta": -45,
+                "rival_factions": ["culto_clareira", "outra"],
+            },
         },
     }
     base.update(over)
@@ -49,8 +55,10 @@ def test_resolve_component_path():
 
 
 def test_resolve_index():
-    assert re_.resolve_path(
-        "component:power_vacuum_trigger.rival_factions[0]", _ctx()) == "culto_clareira"
+    assert (
+        re_.resolve_path("component:power_vacuum_trigger.rival_factions[0]", _ctx())
+        == "culto_clareira"
+    )
 
 
 def test_resolve_literais():
@@ -105,6 +113,7 @@ def test_conditions_vazias_casam():
 # Etapa 2 — ações + run_rules
 # ---------------------------------------------------------------------------
 
+
 def _st(**over):
     base = {"world_projection": {}, "factions": []}
     base.update(over)
@@ -128,8 +137,12 @@ def test_adjust_stability_espelha_em_state_factions():
 
 def test_emit_event_gera_derivado():
     st = _st()
-    action = {"op": "emit_event", "type": "location_control_changed",
-              "targets": ["nova_arcadia"], "payload": {"new_controller_id": "mao_sombria"}}
+    action = {
+        "op": "emit_event",
+        "type": "location_control_changed",
+        "targets": ["nova_arcadia"],
+        "payload": {"new_controller_id": "mao_sombria"},
+    }
     ev = {"target_id": "npc_valerius", "actor_id": "player"}
     out = re_.execute_action(action, ev, st)
     assert len(out) == 1
@@ -140,10 +153,13 @@ def test_emit_event_gera_derivado():
 
 
 def test_op_desconhecido_nao_quebra():
-    re_._rules_cache = [{
-        "id": "rule_bugada", "trigger": "npc_killed",
-        "actions": [{"op": "op_inventado", "foo": "bar"}],
-    }]
+    re_._rules_cache = [
+        {
+            "id": "rule_bugada",
+            "trigger": "npc_killed",
+            "actions": [{"op": "op_inventado", "foo": "bar"}],
+        }
+    ]
     ev = {"type": "npc_killed", "target_id": "npc_grum", "payload": {}}
     # não levanta; regra é descartada
     assert re_.run_rules(ev, _st()) == []
@@ -151,10 +167,13 @@ def test_op_desconhecido_nao_quebra():
 
 def test_profundidade_maxima():
     """Regra que emite um evento do MESMO tipo que a dispara → recursão limitada a depth 2."""
-    re_._rules_cache = [{
-        "id": "rule_loop", "trigger": "npc_killed",
-        "actions": [{"op": "emit_event", "type": "npc_killed", "targets": ["npc_grum"]}],
-    }]
+    re_._rules_cache = [
+        {
+            "id": "rule_loop",
+            "trigger": "npc_killed",
+            "actions": [{"op": "emit_event", "type": "npc_killed", "targets": ["npc_grum"]}],
+        }
+    ]
     ev = {"type": "npc_killed", "target_id": "npc_grum", "payload": {}}
     derived = re_.run_rules(ev, _st())
     # depth0 emite d1(depth1); d1 emite d2(depth2); d2 para → 2 derivados, sem loop infinito.
@@ -166,10 +185,20 @@ def test_profundidade_maxima():
 # Etapa 3 — dados: world_rules.json + components.json (overlay)
 # ---------------------------------------------------------------------------
 
-_WHITELIST_OPS = {"set_entity_state", "adjust_faction_stability",
-                  "disable_controls_edges", "create_dynamic_edge", "emit_event"}
-_KNOWN_TRIGGERS = {"npc_killed", "secret_revealed", "location_control_changed",
-                   "quest_completed", "faction_relation_changed"}
+_WHITELIST_OPS = {
+    "set_entity_state",
+    "adjust_faction_stability",
+    "disable_controls_edges",
+    "create_dynamic_edge",
+    "emit_event",
+}
+_KNOWN_TRIGGERS = {
+    "npc_killed",
+    "secret_revealed",
+    "location_control_changed",
+    "quest_completed",
+    "faction_relation_changed",
+}
 
 
 def test_rules_json_valido():
@@ -194,6 +223,7 @@ def test_lideres_tem_componentes_completos():
     """Toda entidade em components.json com power_vacuum_trigger deve liderar uma fação
     (edge leads) OU controlar um local (edge controls); successor_id, se presente, existe."""
     import json
+
     with open("data/graph/components.json", encoding="utf-8") as f:
         comps = json.load(f)
     for eid, cmp in comps.items():
@@ -222,8 +252,15 @@ def _kill(npc_id: str, **over) -> dict:
         "world_projection": {},
         "event_log": [],
         "factions": [],
-        "pending_world_events": [{"type": "npc_killed", "actor_id": "player",
-                                  "target_id": npc_id, "payload": {}, "source": "combat"}],
+        "pending_world_events": [
+            {
+                "type": "npc_killed",
+                "actor_id": "player",
+                "target_id": npc_id,
+                "payload": {},
+                "source": "combat",
+            }
+        ],
     }
     st.update(over)
     return process_pending_events(st)
@@ -236,8 +273,10 @@ def test_morte_de_lider_dispara_cascata():
     # evento base + derivado auditável
     assert any(e["type"] == "npc_killed" and e["target_id"] == "npc_valerius" for e in log)
     derived = [e for e in log if e.get("source") == "rule_engine"]
-    assert any(e["type"] == "location_control_changed" and e["target_id"] == "nova_arcadia"
-               for e in derived), "cascata não gerou location_control_changed"
+    assert any(
+        e["type"] == "location_control_changed" and e["target_id"] == "nova_arcadia"
+        for e in derived
+    ), "cascata não gerou location_control_changed"
     # controle do local mudou para o rival (override = mao_sombria)
     assert gr.get_current_controller("nova_arcadia", proj) == "mao_sombria"
     # cascata depth-2: rule_control_change_ripple bumpou a stability do novo dono
@@ -254,8 +293,9 @@ def test_mesma_regra_dois_lideres():
         out = _kill(npc)
         proj = out["world_projection"]
         derived = [e for e in out["event_log"] if e.get("source") == "rule_engine"]
-        assert any(e["type"] == "location_control_changed" and e["target_id"] == loc
-                   for e in derived), f"{npc} não trocou controle de {loc}"
+        assert any(
+            e["type"] == "location_control_changed" and e["target_id"] == loc for e in derived
+        ), f"{npc} não trocou controle de {loc}"
         # fação liderada perdeu stability (delta -50, clamp)
         assert proj["entities"][faction]["stability"] < 0
         # o local mudou de dono
@@ -272,6 +312,7 @@ def test_npc_comum_so_marca_morto():
 def test_codigo_nao_menciona_valerius():
     """R7/aceite: nenhum id de NPC específico hardcoded em services/ ou agents/."""
     import pathlib
+
     root = pathlib.Path(".")
     for folder in ("services", "agents"):
         for py in (root / folder).rglob("*.py"):
@@ -284,8 +325,9 @@ def test_save_antigo_sem_projection_nao_quebra():
     st = {
         "world": {"turn_count": 1},
         "event_log": [],
-        "pending_world_events": [{"type": "npc_killed", "target_id": "npc_grum", "payload": {},
-                                "source": "combat"}],
+        "pending_world_events": [
+            {"type": "npc_killed", "target_id": "npc_grum", "payload": {}, "source": "combat"}
+        ],
     }
     out = process_pending_events(st)  # não levanta
     assert out["world_projection"]["entities"]["npc_grum"]["alive"] is False

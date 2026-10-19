@@ -13,6 +13,7 @@ Evidence holds only names, statuses, counts and pseudonyms (no secrets, no playe
   lists the new tables and no purchase token.
 * SPEC-236: failed attempts in usage_events are zero-cost facts outside spend.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -29,39 +30,64 @@ from scripts.staging.two_user_smoke import User
 
 
 def _turn(u: User, text: str) -> httpx.Response:
-    return u.post("/game/action", {"input_text": text, "game_id": u.game_id, "action_id": str(uuid4())},
-                  timeout=180)
+    return u.post(
+        "/game/action",
+        {"input_text": text, "game_id": u.game_id, "action_id": str(uuid4())},
+        timeout=180,
+    )
 
 
 def _auth220(base: str, admin, users: list, ck: dict) -> None:
     """SPEC-220. The login budget per IP is 20/15 min: run it apart from the turn part."""
-    lo = User(base, admin, "L"); users.append(lo)
+    lo = User(base, admin, "L")
+    users.append(lo)
     login = lo.login()
-    old_refresh = lo.c.cookies.get("rpg_refresh", path="/auth/refresh") or lo.c.cookies.get("rpg_refresh")
+    old_refresh = lo.c.cookies.get("rpg_refresh", path="/auth/refresh") or lo.c.cookies.get(
+        "rpg_refresh"
+    )
     lo.c.cookies.delete("rpg_access")
     out_status = lo.post("/auth/refresh/logout").status_code
     replay = httpx.Client(timeout=60)
-    replay.cookies.set("rpg_refresh", old_refresh or "", domain=httpx.URL(base).host, path="/auth/refresh")
+    replay.cookies.set(
+        "rpg_refresh", old_refresh or "", domain=httpx.URL(base).host, path="/auth/refresh"
+    )
     replay.cookies.set("rpg_csrf", lo.csrf, domain=httpx.URL(base).host, path="/")
-    refreshed = replay.post(f"{base}/auth/refresh", headers={"Origin": base, "X-CSRF-Token": lo.csrf}).status_code
+    refreshed = replay.post(
+        f"{base}/auth/refresh", headers={"Origin": base, "X-CSRF-Token": lo.csrf}
+    ).status_code
     ck["spec220_logout_revokes_refresh"] = {
-        "login": login, "had_refresh_cookie": bool(old_refresh), "logout": out_status,
-        "refresh_with_old_token": refreshed, "ok": login == 200 and bool(old_refresh)
-        and out_status == 204 and refreshed == 401}
+        "login": login,
+        "had_refresh_cookie": bool(old_refresh),
+        "logout": out_status,
+        "refresh_with_old_token": refreshed,
+        "ok": login == 200 and bool(old_refresh) and out_status == 204 and refreshed == 401,
+    }
 
     # --- SPEC-220: lockout after wrong passwords ------------------------------------------
-    lk = User(base, admin, "K"); users.append(lk)
+    lk = User(base, admin, "K")
+    users.append(lk)
     codes = []
     for _ in range(11):
-        r = lk.c.post(f"{base}/auth/login", headers={"Origin": base}, json={
-            "email": lk.info["email"], "password": "wrong-password-xx", "captcha_token": s192.CAPTCHA_TEST})
+        r = lk.c.post(
+            f"{base}/auth/login",
+            headers={"Origin": base},
+            json={
+                "email": lk.info["email"],
+                "password": "wrong-password-xx",
+                "captcha_token": s192.CAPTCHA_TEST,
+            },
+        )
         codes.append(r.status_code)
-    ck["spec220_lockout"] = {"codes": codes, "retry_after": r.headers.get("Retry-After"),
-                             "ok": codes[-1] == 429 and all(c in (400, 401, 429) for c in codes)}
+    ck["spec220_lockout"] = {
+        "codes": codes,
+        "retry_after": r.headers.get("Retry-After"),
+        "ok": codes[-1] == 429 and all(c in (400, 401, 429) for c in codes),
+    }
 
 
 def run(base: str, env: dict[str, str], *, auth220: bool = True) -> dict:
     from observability.telemetry import pseudonym
+
     admin = s192.Admin(env)
     secret = env.get("RPG_TELEMETRY_SECRET", "")
     out: dict = {"base": base, "at": s192.now_iso(), "checks": {}}
@@ -78,8 +104,10 @@ def run(base: str, env: dict[str, str], *, auth220: bool = True) -> dict:
             _auth220(base, admin, users, ck)
 
         # --- SPEC-219: owner minute budget on turns + sentinel turn ---------------------------
-        a = User(base, admin, "A"); users.append(a)
-        b = User(base, admin, "B"); users.append(b)
+        a = User(base, admin, "A")
+        users.append(a)
+        b = User(base, admin, "B")
+        users.append(b)
         ck["logins"] = {"a": a.login(), "b": b.login()}
         ck["logins"]["ok"] = ck["logins"]["a"] == 200 and ck["logins"]["b"] == 200
         new_a, new_b = a.new_game(), b.new_game()
@@ -94,56 +122,93 @@ def run(base: str, env: dict[str, str], *, auth220: bool = True) -> dict:
                 break
         elapsed = round(time.monotonic() - started, 1)
         ck["spec219_owner_turn_minute"] = {
-            "new_game": new_a, "codes": codes, "elapsed_s": elapsed, "retry_after": retry_after,
+            "new_game": new_a,
+            "codes": codes,
+            "elapsed_s": elapsed,
+            "retry_after": retry_after,
             "body": body if codes[-1] == 429 else None,
-            "ok": len(codes) == 21 and codes[-1] == 429 and all(c == 200 for c in codes[:-1])
-            and bool(retry_after)}
+            "ok": len(codes) == 21
+            and codes[-1] == 429
+            and all(c == 200 for c in codes[:-1])
+            and bool(retry_after),
+        }
         rb = _turn(b, "Observo ao redor.")
-        ck["spec219_other_owner_same_ip"] = {"new_game": new_b, "status": rb.status_code, "ok": rb.status_code == 200}
+        ck["spec219_other_owner_same_ip"] = {
+            "new_game": new_b,
+            "status": rb.status_code,
+            "ok": rb.status_code == 200,
+        }
 
         # invalid access token: 401, rejected locally (Auth log check is done separately)
         bad = httpx.Client(timeout=30)
-        bad.cookies.set("rpg_access", "not-a-jwt-" + secrets.token_hex(8), domain=httpx.URL(base).host, path="/")
+        bad.cookies.set(
+            "rpg_access", "not-a-jwt-" + secrets.token_hex(8), domain=httpx.URL(base).host, path="/"
+        )
         st = bad.get(f"{base}/game/saves").status_code
         ck["spec219_invalid_token"] = {"status": st, "ok": st == 401}
 
         # chronicle search: embedding class 10/min per owner
         codes = []
         for _ in range(11):
-            r = b.post("/game/chronicle/search", {"game_id": b.game_id, "query": "taverna"}, timeout=60)
+            r = b.post(
+                "/game/chronicle/search", {"game_id": b.game_id, "query": "taverna"}, timeout=60
+            )
             codes.append(r.status_code)
-        ck["spec219_chronicle_search"] = {"codes": codes, "retry_after": r.headers.get("Retry-After"),
-                                          "ok": codes[-1] == 429 and 429 not in codes[:-1]}
+        ck["spec219_chronicle_search"] = {
+            "codes": codes,
+            "retry_after": r.headers.get("Retry-After"),
+            "ok": codes[-1] == 429 and 429 not in codes[:-1],
+        }
 
         # --- SPEC-222: export with the new tables, no purchase token --------------------------
-        ra = b.post("/auth/reauth", {"password": b.info["password"], "captcha_token": s192.smoke_captcha()})
+        ra = b.post(
+            "/auth/reauth", {"password": b.info["password"], "captcha_token": s192.smoke_captcha()}
+        )
         ex = b.get("/account/export", timeout=120)
         body = ex.json() if ex.status_code == 200 else {}
-        tables = sorted((body.get("tables") or body.get("data") or {}).keys()) if isinstance(body, dict) else []
+        tables = (
+            sorted((body.get("tables") or body.get("data") or {}).keys())
+            if isinstance(body, dict)
+            else []
+        )
         raw = ex.text if ex.status_code == 200 else ""
-        ck["spec222_export"] = {"reauth": ra.status_code, "status": ex.status_code, "tables": tables,
-                                "has_owner_daily_counters": "owner_daily_counters" in raw,
-                                "purchase_token_key_present": '"purchase_token"' in raw,
-                                "ok": ex.status_code == 200 and '"purchase_token"' not in raw}
+        ck["spec222_export"] = {
+            "reauth": ra.status_code,
+            "status": ex.status_code,
+            "tables": tables,
+            "has_owner_daily_counters": "owner_daily_counters" in raw,
+            "purchase_token_key_present": '"purchase_token"' in raw,
+            "ok": ex.status_code == 200 and '"purchase_token"' not in raw,
+        }
 
         # --- DB-side checks (system DSN, read-only) -------------------------------------------
         with s192.db(env) as conn:
             usage = conn.execute(
                 """select outcome, cost_basis, counts_as_spend, count(*) n, coalesce(sum(cost_usd),0)::text cost
-                   from app.usage_events where owner_id = %s group by 1,2,3 order by 1""", (a.id,)).fetchall()
-            daily = conn.execute("select class, count from app.owner_daily_counters where owner_id = %s",
-                                 (a.id,)).fetchall()
+                   from app.usage_events where owner_id = %s group by 1,2,3 order by 1""",
+                (a.id,),
+            ).fetchall()
+            daily = conn.execute(
+                "select class, count from app.owner_daily_counters where owner_id = %s", (a.id,)
+            ).fetchall()
             buckets = conn.execute(
                 "select bucket_key from app.rate_limit_buckets where bucket_key like %s",
-                (f"ip:{ip_ref}:%",)).fetchall()
+                (f"ip:{ip_ref}:%",),
+            ).fetchall()
         ck["spec236_usage_facts"] = {
             "rows": [dict(r) for r in usage],
             # every non-spend fact is zero-cost; at least one fact exists for the 20 turns
-            "ok": bool(usage) and all(r["counts_as_spend"] or Decimal(r["cost"]) == 0 for r in usage)}
-        ck["spec219_daily_counter"] = {"rows": [dict(r) for r in daily],
-                                       "ok": any(r["class"] == "turn" and r["count"] >= 20 for r in daily)}
-        ck["spec219_r5_ip_bucket"] = {"bucket_classes": sorted(r["bucket_key"].split(":")[-1] for r in buckets),
-                                      "ok": bool(buckets)}
+            "ok": bool(usage)
+            and all(r["counts_as_spend"] or Decimal(r["cost"]) == 0 for r in usage),
+        }
+        ck["spec219_daily_counter"] = {
+            "rows": [dict(r) for r in daily],
+            "ok": any(r["class"] == "turn" and r["count"] >= 20 for r in daily),
+        }
+        ck["spec219_r5_ip_bucket"] = {
+            "bucket_classes": sorted(r["bucket_key"].split(":")[-1] for r in buckets),
+            "ok": bool(buckets),
+        }
     finally:
         cleanup = {}
         try:
@@ -151,7 +216,8 @@ def run(base: str, env: dict[str, str], *, auth220: bool = True) -> dict:
                 for u in users:
                     if u.game_id:
                         cleanup[f"game_{u.label}"] = conn.execute(
-                            "delete from app.games where id::text=%s", (u.game_id,)).rowcount
+                            "delete from app.games where id::text=%s", (u.game_id,)
+                        ).rowcount
         except Exception as exc:  # noqa: BLE001
             cleanup["games_error"] = type(exc).__name__
         cleanup["users"] = {u.label: admin.delete_user(u.id) for u in users}

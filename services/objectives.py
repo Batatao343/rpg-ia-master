@@ -1,12 +1,14 @@
 """Representação pública de objetivos, separada dos beats privados do diretor."""
+
 from __future__ import annotations
 
 from typing import Any, Dict
 from collections.abc import Iterable
 
 
-def public_objective(plan: dict[str, Any] | None, quests: Iterable[dict] | None,
-                     world: dict[str, Any] | None) -> dict[str, Any]:
+def public_objective(
+    plan: dict[str, Any] | None, quests: Iterable[dict] | None, world: dict[str, Any] | None
+) -> dict[str, Any]:
     """Deriva uma direção segura sem copiar beat/clímax do ``CampaignPlan``."""
     active = next(
         (q for q in (quests or []) if isinstance(q, dict) and q.get("status") == "active"),

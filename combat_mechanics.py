@@ -4,6 +4,7 @@ O motor de rodada vive em `services/conflict_orchestrator.py`; este módulo rete
 somente dados/condições, passivas de classe/item e Entropia/Carga do Abismo.
 O antigo pipeline d20+AC/cooldowns foi removido pela spec conflito-13.
 """
+
 import random
 import re
 from typing import Dict, List, Optional, Tuple
@@ -14,12 +15,21 @@ from gamedata import ARTIFACTS_DB, CLASSES
 _CONTROL_NAMES = {"stun": "Atordoado", "root": "Enredado", "fear": "Medo"}
 
 _ATTR_ALIASES = {
-    "strength": "str", "força": "str", "forca": "str",
-    "dexterity": "dex", "destreza": "dex",
-    "constitution": "con", "constituição": "con", "constituicao": "con",
-    "intelligence": "int", "inteligência": "int", "inteligencia": "int",
-    "wisdom": "wis", "sabedoria": "wis",
-    "charisma": "cha", "carisma": "cha",
+    "strength": "str",
+    "força": "str",
+    "forca": "str",
+    "dexterity": "dex",
+    "destreza": "dex",
+    "constitution": "con",
+    "constituição": "con",
+    "constituicao": "con",
+    "intelligence": "int",
+    "inteligência": "int",
+    "inteligencia": "int",
+    "wisdom": "wis",
+    "sabedoria": "wis",
+    "charisma": "cha",
+    "carisma": "cha",
 }
 
 
@@ -109,12 +119,6 @@ def roll_dice_numeric(formula: str) -> tuple[int, str]:
 # --------------------------------------------------------------------------
 
 
-
-
-
-
-
-
 # --------------------------------------------------------------------------
 # Condições / DoT
 # --------------------------------------------------------------------------
@@ -152,8 +156,7 @@ def parse_condition(text: str, source: str = "") -> dict:
     if m_stat and not dot:
         delta = int(m_stat.group(1).replace(" ", ""))
         word = m_stat.group(2)
-        cond["stat"] = ("damage" if "dano" in word
-                        else "ac" if "defesa" in word else "attack")
+        cond["stat"] = "damage" if "dano" in word else "ac" if "defesa" in word else "attack"
         cond["delta"] = delta
     if re.search(r"atordoa|dominad", low):
         cond["control"] = "stun"
@@ -200,11 +203,16 @@ def class_passives(entity: dict) -> list[dict]:
 # Estáticas viram {trigger:"always", stat, delta}; as de gatilho (custo e
 # frequência próprios, tier 7/8) viram {trigger:on_attack|on_hit|on_hit_taken}.
 _PASSIVE_STAT_BY_KIND = {
-    "buff_dano": "damage", "buff_defesa": "ac", "buff_esquiva": "ac",
-    "buff_acerto": "attack", "buff_iniciativa": "initiative", "buff_dot": "dot",
-    "buff_cura": "heal", "protecao": "protection",
+    "buff_dano": "damage",
+    "buff_defesa": "ac",
+    "buff_esquiva": "ac",
+    "buff_acerto": "attack",
+    "buff_iniciativa": "initiative",
+    "buff_dot": "dot",
+    "buff_cura": "heal",
+    "protecao": "protection",
 }
-_STAGE_BONUS = {   # kind -> (stat, Virtude cujo Estágio escala o bônus)
+_STAGE_BONUS = {  # kind -> (stat, Virtude cujo Estágio escala o bônus)
     "bonus_dano_por_estagio": ("damage", "forca"),
     "bonus_esquiva_por_estagio": ("ac", "agilidade"),
     "bonus_iniciativa_por_estagio": ("initiative", "agilidade"),
@@ -213,8 +221,12 @@ _STAGE_BONUS = {   # kind -> (stat, Virtude cujo Estágio escala o bônus)
     "bonus_social_por_estagio": ("social", "carisma"),
     "bonus_cura_por_estagio": ("heal", "mente"),
 }
-_TRIGGERED_PASSIVE = {"vantagem": "on_attack", "dano": "on_hit",
-                      "aplicar_condicao": "on_hit", "contra_ataque": "on_hit_taken"}
+_TRIGGERED_PASSIVE = {
+    "vantagem": "on_attack",
+    "dano": "on_hit",
+    "aplicar_condicao": "on_hit",
+    "contra_ataque": "on_hit_taken",
+}
 
 
 def _card_effect_value(effect: dict) -> int:
@@ -236,6 +248,7 @@ def _virtue_value(entity: dict, key: str) -> int:
 
 def _normalize_card_passive(card: dict, entity: dict, *, mastery: int = 0) -> dict | None:
     from gamedata import normalize_virtude, virtue_card_stage
+
     effect = card.get("efeito") or {}
     kind = str(effect.get("kind") or "")
     cid = card.get("id")
@@ -243,26 +256,35 @@ def _normalize_card_passive(card: dict, entity: dict, *, mastery: int = 0) -> di
     if kind in _STAGE_BONUS:
         stat, vkey = _STAGE_BONUS[kind]
         related = normalize_virtude(card.get("virtude_relacionada") or "") or vkey
-        stage = max(1, min(5, virtue_card_stage(_virtue_value(entity, related))
-                           + int(mastery or 0)))
+        stage = max(
+            1, min(5, virtue_card_stage(_virtue_value(entity, related)) + int(mastery or 0))
+        )
         delta = (value if effect.get("valor") is not None else 1) * stage
         if stat == "perception":
-            return {"trigger": "perception", "delta": delta, "kind": kind,
-                    "source_card": cid}
-        return {"trigger": "always", "stat": stat, "delta": delta, "kind": kind,
-                "source_card": cid}
+            return {"trigger": "perception", "delta": delta, "kind": kind, "source_card": cid}
+        return {"trigger": "always", "stat": stat, "delta": delta, "kind": kind, "source_card": cid}
     if kind == "perception":
         return {"trigger": "perception", "delta": value, "kind": kind, "source_card": cid}
     if kind in _PASSIVE_STAT_BY_KIND:
-        return {"trigger": "always", "stat": _PASSIVE_STAT_BY_KIND[kind], "delta": value,
-                "kind": kind, "source_card": cid}
+        return {
+            "trigger": "always",
+            "stat": _PASSIVE_STAT_BY_KIND[kind],
+            "delta": value,
+            "kind": kind,
+            "source_card": cid,
+        }
     if kind in _TRIGGERED_PASSIVE:
-        return {"trigger": _TRIGGERED_PASSIVE[kind], "kind": kind, "value": value,
-                "source_card": cid, "cost": int(card.get("custo_entropia", 0) or 0),
-                "frequency": str(card.get("frequencia", "livre")),
-                "condicao": effect.get("condicao"),
-                "duration": int(effect.get("duracao", effect.get("duration", 1)) or 1),
-                "damage_type": effect.get("dano_tipo") or effect.get("damage_type")}
+        return {
+            "trigger": _TRIGGERED_PASSIVE[kind],
+            "kind": kind,
+            "value": value,
+            "source_card": cid,
+            "cost": int(card.get("custo_entropia", 0) or 0),
+            "frequency": str(card.get("frequencia", "livre")),
+            "condicao": effect.get("condicao"),
+            "duration": int(effect.get("duracao", effect.get("duration", 1)) or 1),
+            "damage_type": effect.get("dano_tipo") or effect.get("damage_type"),
+        }
     return None
 
 
@@ -275,6 +297,7 @@ def learned_passives(entity: dict, *, abilities_db=None) -> list[dict]:
     valor VIVO da Virtude relacionada + Maestria (não do snapshot da criação).
     """
     from services import cards as cards_svc
+
     db = abilities_db
     lookup = (lambda cid: db.get(cid)) if db is not None else cards_svc.get_card
     out: list[dict] = []
@@ -311,6 +334,7 @@ def equipped_ids(entity: dict) -> list[str]:
     """SPEC-227 R5: ids dos slots de equipamento COM posse no inventário —
     slot órfão (item vendido/perdido) não dá bônus nem passiva."""
     from inventory import equipped_items
+
     return equipped_items(entity)
 
 
@@ -324,14 +348,16 @@ def item_passives(entity: dict, *, artifacts_db=None) -> list[dict]:
     if isinstance(equipment, dict):
         ids = equipped_ids(entity)
     else:
-        ids = [e.get("id") if isinstance(e, dict) else e
-               for e in (entity.get("inventory") or [])]
+        ids = [e.get("id") if isinstance(e, dict) else e for e in (entity.get("inventory") or [])]
     out: list[dict] = []
     for iid in ids:
         item = db.get(iid) or {}
         # só passivas TIPADAS (dict); legado tem strings de flavor (ex.: 'corda')
-        out.extend(pe for pe in (item.get("mechanics") or {}).get("passive_effects") or []
-                   if isinstance(pe, dict))
+        out.extend(
+            pe
+            for pe in (item.get("mechanics") or {}).get("passive_effects") or []
+            if isinstance(pe, dict)
+        )
     return out
 
 
@@ -339,13 +365,26 @@ def player_passives(entity: dict, *, abilities_db=None) -> list[dict]:
     """Passivas efetivas do JOGADOR: classe + aprendidas na árvore (R2) + itens
     equipados (spec itens-vivos-e-luz R1). Callsites de combate do jogador leem
     daqui; inimigos seguem em class_passives (inimigo não tem árvore nem slots)."""
-    return (class_passives(entity)
-            + learned_passives(entity, abilities_db=abilities_db)
-            + item_passives(entity))
+    return (
+        class_passives(entity)
+        + learned_passives(entity, abilities_db=abilities_db)
+        + item_passives(entity)
+    )
 
 
-MODIFIER_STATS = ("damage", "ac", "attack", "save", "protection", "advantage",
-                  "initiative", "dot", "heal", "vitality", "social")
+MODIFIER_STATS = (
+    "damage",
+    "ac",
+    "attack",
+    "save",
+    "protection",
+    "advantage",
+    "initiative",
+    "dot",
+    "heal",
+    "vitality",
+    "social",
+)
 
 
 def condition_modifiers(entity: dict) -> dict[str, int]:
@@ -371,8 +410,11 @@ def passive_modifiers(entity: dict) -> dict[str, int]:
     """SPEC-232 R2: soma das passivas ESTÁTICAS (Cartas passiva/virtude + itens
     equipados + classe) por stat. Inimigo só tem Cartas embutidas."""
     out = {k: 0 for k in MODIFIER_STATS}
-    sources = (player_passives(entity) if entity.get("is_player")
-               else class_passives(entity) + learned_passives(entity))
+    sources = (
+        player_passives(entity)
+        if entity.get("is_player")
+        else class_passives(entity) + learned_passives(entity)
+    )
     for pe in sources:
         stat = pe.get("stat")
         trig = pe.get("trigger")
@@ -399,6 +441,7 @@ def combat_modifiers(entity: dict) -> dict[str, int]:
 
 def _fold(text: str) -> str:
     import unicodedata
+
     raw = unicodedata.normalize("NFKD", str(text or "")).encode("ascii", "ignore").decode()
     return raw.strip().lower()
 
@@ -425,8 +468,7 @@ def triggered_passives(entity: dict, trigger: str) -> list[dict]:
 
 def has_control(entity: dict, kind: str) -> bool:
     """Fase 4.2: True se há condição de controle ativa ("stun"/"root"/"fear")."""
-    return any(c.get("control") == kind
-               for c in entity.get("active_conditions", []) or [])
+    return any(c.get("control") == kind for c in entity.get("active_conditions", []) or [])
 
 
 def is_condition_resisted(entity: dict, cond_name: str) -> bool:
@@ -434,8 +476,11 @@ def is_condition_resisted(entity: dict, cond_name: str) -> bool:
     (racial 2.5b em `condition_resists` OU passiva de classe 4.2 trigger=resist)."""
     name = str(cond_name or "").lower()
     resists = [str(r).lower() for r in entity.get("condition_resists", []) or []]
-    resists += [str(pe.get("name", "")).lower() for pe in player_passives(entity)
-                if pe.get("trigger") == "resist"]
+    resists += [
+        str(pe.get("name", "")).lower()
+        for pe in player_passives(entity)
+        if pe.get("trigger") == "resist"
+    ]
     return any(r and r in name for r in resists)
 
 
@@ -445,15 +490,17 @@ def apply_condition(entity: dict, cond: dict) -> str:
     Fase 2.5b: resists raciais (`entity["condition_resists"]`) anulam a condição
     por substring do nome (ex.: Anão da Fuligem ignora 'veneno')."""
     if is_condition_resisted(entity, cond.get("name", "")):
-        return f"{entity.get('name','Alvo')} resiste a {cond.get('name','condição')} (trait racial)"
+        return (
+            f"{entity.get('name', 'Alvo')} resiste a {cond.get('name', 'condição')} (trait racial)"
+        )
     conds = entity.setdefault("active_conditions", [])
     for c in conds:
         if c.get("name", "").lower() == cond.get("name", "").lower():
             c["duration"] = max(c.get("duration", 0), cond.get("duration", 0))
             c["dot"] = max(c.get("dot", 0), cond.get("dot", 0))
-            return f"{entity.get('name','Alvo')}: condição {cond['name']} renovada"
+            return f"{entity.get('name', 'Alvo')}: condição {cond['name']} renovada"
     conds.append(dict(cond))
-    return f"{entity.get('name','Alvo')}: ganha condição {cond['name']}"
+    return f"{entity.get('name', 'Alvo')}: ganha condição {cond['name']}"
 
 
 def tick_conditions(entity: dict, *, rng=None) -> list[str]:
@@ -466,6 +513,7 @@ def tick_conditions(entity: dict, *, rng=None) -> list[str]:
         if dot > 0:
             if entity.get("vitalidade") is not None:
                 from services.conflict_damage import resolve_damage_and_wounds
+
                 dres = resolve_damage_and_wounds(
                     entity,
                     damage_base=dot,
@@ -477,23 +525,26 @@ def tick_conditions(entity: dict, *, rng=None) -> list[str]:
                     rng=rng,
                 )
                 logs.append(
-                    f"{name} sofre {dot} de {c.get('name','condição')} "
-                    f"(Vitalidade {dres['vitalidade']})")
+                    f"{name} sofre {dot} de {c.get('name', 'condição')} "
+                    f"(Vitalidade {dres['vitalidade']})"
+                )
             else:
                 # Compatibilidade estrita com fichas anteriores ao cutover.
                 entity["hp"] = max(0, int(entity.get("hp", 0)) - dot)
                 logs.append(
-                    f"{name} sofre {dot} de {c.get('name','condição')} "
-                    f"(HP {entity['hp']})")
+                    f"{name} sofre {dot} de {c.get('name', 'condição')} (HP {entity['hp']})"
+                )
         c["duration"] = int(c.get("duration", 0)) - 1
         if c["duration"] > 0:
             survivors.append(c)
         else:
-            logs.append(f"{name}: {c.get('name','condição')} terminou")
+            logs.append(f"{name}: {c.get('name', 'condição')} terminou")
     entity["active_conditions"] = survivors
-    if (entity.get("vitalidade") is None
-            and int(entity.get("hp", 1)) <= 0
-            and entity.get("status") == "ativo"):
+    if (
+        entity.get("vitalidade") is None
+        and int(entity.get("hp", 1)) <= 0
+        and entity.get("status") == "ativo"
+    ):
         entity["status"] = "morto"
         logs.append(f"{name} sucumbe aos efeitos.")
     return logs
@@ -507,12 +558,6 @@ def tick_conditions(entity: dict, *, rng=None) -> list[str]:
 # --------------------------------------------------------------------------
 # Recursos / cooldowns
 # --------------------------------------------------------------------------
-
-
-
-
-
-
 
 
 # --------------------------------------------------------------------------
@@ -534,21 +579,38 @@ _DOC_ONLY_SPECIAL_RULES = {
     # kinds informativos: a mecânica vive em outro lugar —
     # heal_abyss = efeito reduce_ally_abyss da purga_da_carga;
     # domain_decay = overrides de entropy_trigger por branch do Corruptor.
-    "heal_abyss", "domain_decay",
+    "heal_abyss",
+    "domain_decay",
 }
 HANDLED_KINDS: dict[str, set] = {
-    "entropy_trigger": {"on_damage_taken", "on_self_harm", "on_decay_nearby",
-                        "on_channel", "on_ally_suffer"},
-    "special_rule": {"taunt_scales_with_entropy", "blood_leak", "boiler"}
-                    | _DOC_ONLY_SPECIAL_RULES,
+    "entropy_trigger": {
+        "on_damage_taken",
+        "on_self_harm",
+        "on_decay_nearby",
+        "on_channel",
+        "on_ally_suffer",
+    },
+    "special_rule": {"taunt_scales_with_entropy", "blood_leak", "boiler"} | _DOC_ONLY_SPECIAL_RULES,
     "consequence": {"insonia", "cicatriz", "transformacao", "dependencia", "recidiva"},
     "effect": {"buff", "debuff", "dot", "control", "heal", "reduce_ally_abyss"},
-    "passive_trigger": {"always", "damage_type", "resist", "initiative_attr",
-                        "heal_bonus_low", "melee_retaliate", "basic_attack_dot",
-                        "hp_as_mana", "entropy_max_bonus", "entropy_on_kill",
-                        "entropy_cost_reduction", "charge_discount", "carga_embrace",
-                        # spec itens-vivos-e-luz: passivas de item
-                        "perception", "light"},
+    "passive_trigger": {
+        "always",
+        "damage_type",
+        "resist",
+        "initiative_attr",
+        "heal_bonus_low",
+        "melee_retaliate",
+        "basic_attack_dot",
+        "hp_as_mana",
+        "entropy_max_bonus",
+        "entropy_on_kill",
+        "entropy_cost_reduction",
+        "charge_discount",
+        "carga_embrace",
+        # spec itens-vivos-e-luz: passivas de item
+        "perception",
+        "light",
+    },
 }
 
 
@@ -556,6 +618,7 @@ def _abilities_db(explicit=None) -> dict:
     if explicit is not None:
         return explicit
     from services.cards import all_cards
+
     return all_cards()
 
 
@@ -597,11 +660,14 @@ def entropy_config(player: dict, *, classes_db=None, abilities_db=None) -> dict:
 def abyss_tier(player: dict, *, classes_db=None) -> str:
     """'nenhum'|'leve'|'moderado'|'severo' a partir de abyss_charge + thresholds."""
     charge = int(player.get("abyss_charge", 0) or 0)
-    thr = (entropy_config(player, classes_db=classes_db).get("abyss") or {}).get(
-        "thresholds") or {"leve": 1, "moderado": 4, "severo": 7}
+    thr = (entropy_config(player, classes_db=classes_db).get("abyss") or {}).get("thresholds") or {
+        "leve": 1,
+        "moderado": 4,
+        "severo": 7,
+    }
     tier = "nenhum"
     for name in ("leve", "moderado", "severo"):
-        if charge >= int(thr.get(name, 10 ** 9)):
+        if charge >= int(thr.get(name, 10**9)):
             tier = name
     return tier
 
@@ -615,8 +681,9 @@ def reset_entropy_turn(player: dict) -> None:
     player["_entropy_trigger_turn"] = 0
 
 
-def apply_entropy_trigger(player: dict, event: dict, logs: list[str] | None = None,
-                          *, classes_db=None, abilities_db=None) -> list[str]:
+def apply_entropy_trigger(
+    player: dict, event: dict, logs: list[str] | None = None, *, classes_db=None, abilities_db=None
+) -> list[str]:
     """Aciona o gatilho da classe se `event["kind"]` casa. Soma Entropia (clamp em
     max_entropy) e Carga (charge_per, respeitando per_turn_cap por turno). Muta player.
     `event` = {"kind": ..., "amount"?: int, "decay_kind"?: str}."""
@@ -626,7 +693,7 @@ def apply_entropy_trigger(player: dict, event: dict, logs: list[str] | None = No
     kind = trig.get("kind")
     if not kind or event.get("kind") != kind:
         return logs
-    cap = int(trig.get("per_turn_cap", 10 ** 9) or 10 ** 9)
+    cap = int(trig.get("per_turn_cap", 10**9) or 10**9)
     used = int(player.get("_entropy_trigger_turn", 0) or 0)
     if used >= cap:
         return logs
@@ -665,14 +732,14 @@ def apply_entropy_trigger(player: dict, event: dict, logs: list[str] | None = No
         if passive_cap is None or charge_before < int(passive_cap):
             player["abyss_charge"] = charge_before + charge_per
             if passive_cap is not None:
-                player["abyss_charge"] = min(
-                    int(passive_cap), int(player["abyss_charge"])
-                )
+                player["abyss_charge"] = min(int(passive_cap), int(player["abyss_charge"]))
     player["_entropy_trigger_turn"] = used + 1
     if kind == "on_self_harm" and gained:
         player["_blood_entropy"] = int(player.get("_blood_entropy", 0) or 0) + gained
-    logs.append(f"{player.get('name', 'Herói')}: +{gained} Entropia ({kind}); "
-                f"Carga do Abismo {player.get('abyss_charge', 0)}")
+    logs.append(
+        f"{player.get('name', 'Herói')}: +{gained} Entropia ({kind}); "
+        f"Carga do Abismo {player.get('abyss_charge', 0)}"
+    )
     return logs
 
 
@@ -687,8 +754,7 @@ def taunt_aggro_multiplier(player: dict, *, classes_db=None) -> float:
     return 1.0 + min(cap, per * int(player.get("entropy", 0) or 0))
 
 
-def apply_blood_leak(player: dict, logs: list[str] | None = None,
-                     *, classes_db=None) -> list[str]:
+def apply_blood_leak(player: dict, logs: list[str] | None = None, *, classes_db=None) -> list[str]:
     """Sangromante: ao ser acertado, vaza leak_frac da Entropia de sangue não gasta."""
     logs = logs if logs is not None else []
     sr = entropy_config(player, classes_db=classes_db).get("special_rule") or {}
@@ -716,8 +782,9 @@ def arm_boiler(player: dict, ability: dict, *, classes_db=None) -> None:
         player["_cool_deadline"] = int(sr.get("cool_deadline", 3) or 3)
 
 
-def tick_boiler(player: dict, logs: list[str] | None = None,
-                *, classes_db=None, rng=None) -> list[str]:
+def tick_boiler(
+    player: dict, logs: list[str] | None = None, *, classes_db=None, rng=None
+) -> list[str]:
     """Arcanista: decrementa o prazo da caldeira; estoura (auto-dano) se vencer
     sem vazão. Chamar 1x por round do Arcanista."""
     logs = logs if logs is not None else []
@@ -729,6 +796,7 @@ def tick_boiler(player: dict, logs: list[str] | None = None,
         dmg, _det = roll_dice_numeric(str(sr.get("overload_damage", "2d6")))
         if player.get("vitalidade") is not None:
             from services.conflict_damage import resolve_damage_and_wounds
+
             dres = resolve_damage_and_wounds(
                 player,
                 damage_base=dmg,
@@ -745,15 +813,16 @@ def tick_boiler(player: dict, logs: list[str] | None = None,
             player["hp"] = max(0, int(player.get("hp", 0) or 0) - dmg)
             life_label = f"HP {player['hp']}"
         player.pop("_cool_deadline", None)
-        logs.append(f"{player.get('name', 'Herói')}: a caldeira ESTOURA — "
-                    f"{dmg} de auto-dano ({life_label}).")
+        logs.append(
+            f"{player.get('name', 'Herói')}: a caldeira ESTOURA — "
+            f"{dmg} de auto-dano ({life_label})."
+        )
     else:
         player["_cool_deadline"] = deadline
     return logs
 
 
-def reduce_ally_abyss(medic: dict, ally: dict, amount: int,
-                      *, cost: int = 2) -> tuple[bool, str]:
+def reduce_ally_abyss(medic: dict, ally: dict, amount: int, *, cost: int = 2) -> tuple[bool, str]:
     """R9 — Médico gasta Entropia p/ reduzir a Carga do Abismo de um ALIADO.
     Único da classe. Determinístico. Retorna (ok, log)."""
     if medic.get("class_name") != "Médico de Campo":
@@ -763,13 +832,16 @@ def reduce_ally_abyss(medic: dict, ally: dict, amount: int,
     medic["entropy"] = int(medic.get("entropy", 0)) - cost
     before = int(ally.get("abyss_charge", 0) or 0)
     ally["abyss_charge"] = max(0, before - int(amount))
-    return True, (f"{medic.get('name', 'Médico')} purga {before - ally['abyss_charge']} "
-                  f"de Carga de {ally.get('name', 'aliado')}.")
+    return True, (
+        f"{medic.get('name', 'Médico')} purga {before - ally['abyss_charge']} "
+        f"de Carga de {ally.get('name', 'aliado')}."
+    )
 
 
 # --- Consequências de Carga (§3.6) -----------------------------------------
-def apply_scar(player: dict, ability: dict, logs: list[str] | None = None,
-               *, classes_db=None) -> list[str]:
+def apply_scar(
+    player: dict, ability: dict, logs: list[str] | None = None, *, classes_db=None
+) -> list[str]:
     """Sangromante — Cicatriz: habilidade `peak` reduz max_hp PERMANENTE + soma Carga."""
     logs = logs if logs is not None else []
     ab = entropy_config(player, classes_db=classes_db).get("abyss") or {}
@@ -778,17 +850,18 @@ def apply_scar(player: dict, ability: dict, logs: list[str] | None = None,
     loss = int((ab.get("params") or {}).get("scar_hp_loss", 3) or 3)
     if player.get("vitalidade") is not None or player.get("virtudes"):
         import gamedata
-        player["vitalidade_max_penalty"] = (
-            int(player.get("vitalidade_max_penalty", 0) or 0) + loss
-        )
+
+        player["vitalidade_max_penalty"] = int(player.get("vitalidade_max_penalty", 0) or 0) + loss
         gamedata.sync_vitality(player)
     else:
         # Ficha pré-v4 isolada: mantém o comportamento de leitura histórica.
         player["max_hp"] = max(1, int(player.get("max_hp", 1) or 1) - loss)
         player["hp"] = min(int(player.get("hp", 0) or 0), player["max_hp"])
     player["abyss_charge"] = int(player.get("abyss_charge", 0) or 0) + 1
-    logs.append(f"{player.get('name', 'Herói')}: o golpe de pico deixa CICATRIZ "
-                f"(−{loss} Vitalidade máx, Carga {player['abyss_charge']}).")
+    logs.append(
+        f"{player.get('name', 'Herói')}: o golpe de pico deixa CICATRIZ "
+        f"(−{loss} Vitalidade máx, Carga {player['abyss_charge']})."
+    )
     return logs
 
 
@@ -801,14 +874,17 @@ def dependencia_cost(player: dict, cost: int, *, classes_db=None) -> int:
     if ab.get("consequence") != "dependencia":
         return cost
     has_weapon = bool((player.get("equipment") or {}).get("weapon"))
-    if not has_weapon and _tier_index(abyss_tier(player, classes_db=classes_db)) >= _tier_index("moderado"):
+    if not has_weapon and _tier_index(abyss_tier(player, classes_db=classes_db)) >= _tier_index(
+        "moderado"
+    ):
         mult = float((ab.get("params") or {}).get("no_instrument_cost_mult", 1.0) or 1.0)
         return int(round(cost * mult))
     return cost
 
 
-def apply_transformacao(player: dict, logs: list[str] | None = None,
-                        *, classes_db=None, abilities_db=None) -> list[str]:
+def apply_transformacao(
+    player: dict, logs: list[str] | None = None, *, classes_db=None, abilities_db=None
+) -> list[str]:
     """Corruptor — Transformação: por patamar, um debuff conforme o domínio (branch)."""
     logs = logs if logs is not None else []
     ab = entropy_config(player, classes_db=classes_db, abilities_db=abilities_db).get("abyss") or {}
@@ -821,32 +897,41 @@ def apply_transformacao(player: dict, logs: list[str] | None = None,
     kind = ((ab.get("params") or {}).get("debuff") or {}).get(branch, "defense_penalty")
     mag = {"leve": 1, "moderado": 2, "severo": 3}.get(tier, 1)
     if kind == "save_penalty":
-        cond = {"name": "Transformação (Vontade)", "dot": 0, "duration": 2,
-                "stat": "save", "delta": -mag}
+        cond = {
+            "name": "Transformação (Vontade)",
+            "dot": 0,
+            "duration": 2,
+            "stat": "save",
+            "delta": -mag,
+        }
     elif kind == "extra_dot":
         cond = {"name": "Transformação (Podridão)", "dot": mag, "duration": 2}
     else:  # defense_penalty
-        cond = {"name": "Transformação (Def)", "dot": 0, "duration": 2,
-                "stat": "ac", "delta": -mag}
+        cond = {"name": "Transformação (Def)", "dot": 0, "duration": 2, "stat": "ac", "delta": -mag}
     msg = apply_condition(player, cond)
     # spec fiacao (R2): chamada a cada round do Corruptor — renovação silenciosa
     # (loga só quando a condição ENTRA, senão o log repete todo round).
     if "renovada" not in msg:
-        logs.append(f"{player.get('name', 'Herói')}: Transformação ({kind}) "
-                    f"do domínio {branch} [{tier}].")
+        logs.append(
+            f"{player.get('name', 'Herói')}: Transformação ({kind}) do domínio {branch} [{tier}]."
+        )
     return logs
 
 
-def apply_entropy_on_kill(player: dict, dead_count: int,
-                          logs: list[str] | None = None) -> list[str]:
+def apply_entropy_on_kill(
+    player: dict, dead_count: int, logs: list[str] | None = None
+) -> list[str]:
     """spec arvores-habilidade-classes: passiva entropy_on_kill — matar inimigo
     devolve Entropia (amount × mortos, clamp em max_entropy). Sem Carga (não é
     gatilho de classe — é colheita)."""
     logs = logs if logs is not None else []
     if dead_count <= 0:
         return logs
-    amount = sum(int(pe.get("amount", 1) or 1) for pe in player_passives(player)
-                 if pe.get("trigger") == "entropy_on_kill")
+    amount = sum(
+        int(pe.get("amount", 1) or 1)
+        for pe in player_passives(player)
+        if pe.get("trigger") == "entropy_on_kill"
+    )
     if amount <= 0:
         return logs
     mx = int(player.get("max_entropy", 0) or 0)
@@ -858,12 +943,9 @@ def apply_entropy_on_kill(player: dict, dead_count: int,
     return logs
 
 
-
-
-
-
-def check_recidiva(player: dict, logs: list[str] | None = None,
-                   *, classes_db=None) -> tuple[list[str], dict | None]:
+def check_recidiva(
+    player: dict, logs: list[str] | None = None, *, classes_db=None
+) -> tuple[list[str], dict | None]:
     """Médico — Recidiva: oculta até cruzar 'severo'; então UM colapso (condição
     forte + evento de crônica). Flag _recidiva_fired impede repetir."""
     logs = logs if logs is not None else []
@@ -874,12 +956,18 @@ def check_recidiva(player: dict, logs: list[str] | None = None,
     if _tier_index(abyss_tier(player, classes_db=classes_db)) < _tier_index(collapse_at):
         return logs, None
     player["_recidiva_fired"] = True
-    apply_condition(player, {"name": "Colapso", "dot": 0, "duration": 3,
-                             "stat": "attack", "delta": -4})
+    apply_condition(
+        player, {"name": "Colapso", "dot": 0, "duration": 3, "stat": "attack", "delta": -4}
+    )
     logs.append(f"{player.get('name', 'Médico')}: a Recidiva oculta ESTOURA — colapso.")
-    event = {"type": "abyss_collapse", "actor_id": "player", "target_id": "player",
-             "detail": f"A Carga oculta de {player.get('name', 'o Médico')} estourou em colapso",
-             "payload": {}, "source": "combat"}
+    event = {
+        "type": "abyss_collapse",
+        "actor_id": "player",
+        "target_id": "player",
+        "detail": f"A Carga oculta de {player.get('name', 'o Médico')} estourou em colapso",
+        "payload": {},
+        "source": "combat",
+    }
     return logs, event
 
 
@@ -900,8 +988,9 @@ def compute_player_combat_stats(player: dict) -> dict:
         equipped_ids_ = equipped_ids(player)
     else:
         # legado: inventário de strings OU estruturado ({id, qty}) sem slots
-        equipped_ids_ = [e.get("id") if isinstance(e, dict) else e
-                        for e in (player.get("inventory") or [])]
+        equipped_ids_ = [
+            e.get("id") if isinstance(e, dict) else e for e in (player.get("inventory") or [])
+        ]
 
     for item_id in equipped_ids_:
         item = ARTIFACTS_DB.get(item_id)
@@ -954,8 +1043,6 @@ def compute_player_combat_stats(player: dict) -> dict:
     }
 
 
-
-
 # --------------------------------------------------------------------------
 # Resolução de turnos
 # --------------------------------------------------------------------------
@@ -970,22 +1057,43 @@ def _condition_from_effect(eff: dict, source: str) -> dict | None:
         stat = eff.get("stat")
         label = {"damage": "Dano", "ac": "Defesa", "attack": "Acerto", "save": "Save"}.get(stat, "")
         signed = f"+{delta}" if delta >= 0 else str(delta)
-        return {"name": f"{source} ({signed} {label})".strip(), "dot": 0, "duration": dur,
-                "source": source, "stat": stat, "delta": delta}
+        return {
+            "name": f"{source} ({signed} {label})".strip(),
+            "dot": 0,
+            "duration": dur,
+            "source": source,
+            "stat": stat,
+            "delta": delta,
+        }
     if kind == "control":
         ckind = str(eff.get("control") or "stun")
-        return {"name": _CONTROL_NAMES.get(ckind, ckind), "dot": 0, "duration": dur,
-                "source": source, "control": ckind}
+        return {
+            "name": _CONTROL_NAMES.get(ckind, ckind),
+            "dot": 0,
+            "duration": dur,
+            "source": source,
+            "control": ckind,
+        }
     return None
 
 
 # SPEC-226 R7: categoria canônica (fonte única p/ XP de abate e custo de orçamento).
 _CATEGORIA_CANON = {
-    "minion": "lacaio", "lacaio": "lacaio", "trivial": "lacaio",
-    "padrao": "padrao", "standard": "padrao", "normal": "padrao", "grunt": "padrao",
-    "elite": "elite", "veterano": "elite",
-    "boss": "chefe", "chefe": "chefe", "chefao": "chefe",
-    "nomeado": "nomeado", "named": "nomeado", "unico": "nomeado",
+    "minion": "lacaio",
+    "lacaio": "lacaio",
+    "trivial": "lacaio",
+    "padrao": "padrao",
+    "standard": "padrao",
+    "normal": "padrao",
+    "grunt": "padrao",
+    "elite": "elite",
+    "veterano": "elite",
+    "boss": "chefe",
+    "chefe": "chefe",
+    "chefao": "chefe",
+    "nomeado": "nomeado",
+    "named": "nomeado",
+    "unico": "nomeado",
 }
 
 
@@ -997,4 +1105,3 @@ def normalize_categoria(sheet: dict) -> str:
         if raw in _CATEGORIA_CANON:
             return _CATEGORIA_CANON[raw]
     return "lacaio"
-

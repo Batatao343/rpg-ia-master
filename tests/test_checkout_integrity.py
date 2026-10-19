@@ -25,17 +25,24 @@ def _git(repo: Path, *args: str) -> bytes:
 
 
 @pytest.mark.parametrize("autocrlf", ["true", "false"])
-def test_checkout_preserves_exact_ruler_and_source_bytes(
-    tmp_path: Path, autocrlf: str
-) -> None:
+def test_checkout_preserves_exact_ruler_and_source_bytes(tmp_path: Path, autocrlf: str) -> None:
     origin = tmp_path / "origin"
     origin.mkdir()
     shutil.copyfile(ROOT / ".gitattributes", origin / ".gitattributes")
-    shutil.copytree(ROOT / "evals", origin / "evals", ignore=shutil.ignore_patterns("__pycache__", "runs"))
+    shutil.copytree(
+        ROOT / "evals", origin / "evals", ignore=shutil.ignore_patterns("__pycache__", "runs")
+    )
     # Exercise every extension/name discovered by Project Index, plus binary art.
     samples = [
-        "sample.py", "sample.ts", "sample.tsx", "sample.js", "sample.jsx",
-        "pyproject.toml", "package.json", "Procfile", ".github/workflows/test.yml",
+        "sample.py",
+        "sample.ts",
+        "sample.tsx",
+        "sample.js",
+        "sample.jsx",
+        "pyproject.toml",
+        "package.json",
+        "Procfile",
+        ".github/workflows/test.yml",
         ".github/workflows/test.yaml",
     ]
     for relative in samples:
@@ -62,7 +69,11 @@ def test_checkout_preserves_exact_ruler_and_source_bytes(
     validate_repository(checkout / "evals")
     for relative in [*samples, "sample.webp"]:
         assert sha256_file(checkout / relative) == sha256_file(origin / relative)
-    assert _git(checkout, "check-attr", "eol", "--", "evals/datasets/regression/narrative_npc.jsonl").strip().endswith(b"eol: lf")
+    assert (
+        _git(checkout, "check-attr", "eol", "--", "evals/datasets/regression/narrative_npc.jsonl")
+        .strip()
+        .endswith(b"eol: lf")
+    )
 
 
 def test_line_ending_tampering_still_fails_closed(tmp_path: Path) -> None:

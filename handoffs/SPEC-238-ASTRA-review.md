@@ -12,10 +12,12 @@ Política final que a J2 testa:
 ```python
 FROZEN_J1B_POLICY = LootPolicy(loot_stage=True, loot_guard=True, loot_tau=0.50)
 # variant_id = "plain+target+guard@0.50+lootsrc+lguard@0.50" (base = FROZEN_J1_POLICY, digest J1 80225d16…10f5)
-FROZEN_J1B_LOCATION_FEATURES = False          # emenda Astra
+FROZEN_J1B_LOCATION_FEATURES = False  # emenda Astra
 # braço B: frozen_j1b_request(case.input) + frozen_loot_decision(...)
 # regra:   r9_7_loot_source(observations)
-FROZEN_J1B_STRUCTURE_DIGEST = "sha256:75635c8994f8a421989653e1383052017feccde024ceaab731da69e739ef2247"
+FROZEN_J1B_STRUCTURE_DIGEST = (
+    "sha256:75635c8994f8a421989653e1383052017feccde024ceaab731da69e739ef2247"
+)
 ```
 
 O digest do executor `1f6a5982…70f0` fica **superado**. O novo digest cobre o digest J1,

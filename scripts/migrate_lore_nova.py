@@ -81,13 +81,30 @@ _LOCATION_KEYWORDS = [
     ("brekmar", "brekmar"),
 ]
 
-_SMALL_WORDS = {"de", "da", "do", "das", "dos", "e", "a", "o", "as", "os", "em", "no", "na", "que", "sem", "sob", "com"}
+_SMALL_WORDS = {
+    "de",
+    "da",
+    "do",
+    "das",
+    "dos",
+    "e",
+    "a",
+    "o",
+    "as",
+    "os",
+    "em",
+    "no",
+    "na",
+    "que",
+    "sem",
+    "sob",
+    "com",
+}
 
 
 def _strip_accents(text: str) -> str:
     return "".join(
-        ch for ch in unicodedata.normalize("NFD", text)
-        if unicodedata.category(ch) != "Mn"
+        ch for ch in unicodedata.normalize("NFD", text) if unicodedata.category(ch) != "Mn"
     )
 
 
@@ -103,6 +120,7 @@ def slugify(text: str, drop_stopwords: bool = True) -> str:
 
 def smart_title(text: str) -> str:
     """'GRUM — TAVERNEIRO' -> 'Grum — Taverneiro' preservando conectivos minúsculos."""
+
     def fix_word(w: str, first: bool) -> str:
         lw = w.lower()
         if not first and lw in _SMALL_WORDS:
@@ -215,17 +233,19 @@ def parse_categoria_blocks(path: str) -> list[Block]:
 # granularidade tem de ser por parágrafo, não por era inteira. Ver plano da ingestão.
 _TIMELINE_HIDDEN_CLUSTERS = [
     # Era 5: o aprendiz destrói Aethelgard e vira o Arauto da Névoa
-    ("em aethelgard, o aprendiz havia parado de subir",
-     "que nunca mais consegue produzir linguagem"),
+    (
+        "em aethelgard, o aprendiz havia parado de subir",
+        "que nunca mais consegue produzir linguagem",
+    ),
     # Era 5: despertar do Rei Subterrâneo (queda do Reino Anão)
-    ("nas profundezas das montanhas afiadas, os anoes haviam descido longe demais",
-     "algo que escolheu ficar onde voce nao pode mais voltar"),
+    (
+        "nas profundezas das montanhas afiadas, os anoes haviam descido longe demais",
+        "algo que escolheu ficar onde voce nao pode mais voltar",
+    ),
     # Era 6: pacto Valerius <-> Daruun (consumir a família / Código de Ferro)
-    ("daruun nao buscou valerius",
-     "a primeira consequencia visivel do pacto"),
+    ("daruun nao buscou valerius", "a primeira consequencia visivel do pacto"),
     # Era 7: despertar da Rede Carmesim sob Skallgard
-    ("no norte, algo diferente estava acontecendo",
-     "o que acontece se a chama se apagar"),
+    ("no norte, algo diferente estava acontecendo", "o que acontece se a chama se apagar"),
 ]
 
 
@@ -233,9 +253,9 @@ _TIMELINE_HIDDEN_CLUSTERS = [
 class TimelineSection:
     era: int
     era_title: str
-    seq: int          # índice da subseção dentro da era (1-based)
+    seq: int  # índice da subseção dentro da era (1-based)
     body: str
-    visibility: str   # "public" | "hidden"
+    visibility: str  # "public" | "hidden"
 
 
 def _split_paragraphs(era_body: list[str]) -> list[str]:
@@ -274,7 +294,7 @@ def parse_timeline(path: str) -> list[TimelineSection]:
     sections: list[TimelineSection] = []
     for i, (start, era_num, era_title) in enumerate(era_starts):
         end = era_starts[i + 1][0] if i + 1 < len(era_starts) else len(lines)
-        paras = _split_paragraphs(lines[start + 1:end])
+        paras = _split_paragraphs(lines[start + 1 : end])
         plains = [_strip_accents(p).lower() for p in paras]
 
         # marca parágrafos hidden por cluster (start_ph .. end_ph, inclusive)
@@ -299,16 +319,24 @@ def parse_timeline(path: str) -> list[TimelineSection]:
                 run_hidden = h
             else:
                 seq += 1
-                sections.append(TimelineSection(
-                    era_num, era_title, seq, "\n\n".join(run),
-                    "hidden" if run_hidden else "public"))
+                sections.append(
+                    TimelineSection(
+                        era_num,
+                        era_title,
+                        seq,
+                        "\n\n".join(run),
+                        "hidden" if run_hidden else "public",
+                    )
+                )
                 run = [p]
                 run_hidden = h
         if run:
             seq += 1
-            sections.append(TimelineSection(
-                era_num, era_title, seq, "\n\n".join(run),
-                "hidden" if run_hidden else "public"))
+            sections.append(
+                TimelineSection(
+                    era_num, era_title, seq, "\n\n".join(run), "hidden" if run_hidden else "public"
+                )
+            )
     return sections
 
 
@@ -347,10 +375,12 @@ def parse_marker_entries(path: str, marker: str) -> list[tuple[str, str, str, st
         body_lines: list[str] = []
         while i < len(lines):
             nxt = lines[i]
-            if (nxt.startswith("[") and re.match(r"^\[(CRIATURA|MATERIAL|ITEM|CATEGORIA)", nxt)) \
-                    or nxt.strip().upper().startswith("LOCAL:") \
-                    or re.match(r"^=+\s*[^=]+?\s*=+$", nxt.strip()) \
-                    or _DIVIDER_RE.match(nxt):
+            if (
+                (nxt.startswith("[") and re.match(r"^\[(CRIATURA|MATERIAL|ITEM|CATEGORIA)", nxt))
+                or nxt.strip().upper().startswith("LOCAL:")
+                or re.match(r"^=+\s*[^=]+?\s*=+$", nxt.strip())
+                or _DIVIDER_RE.match(nxt)
+            ):
                 break
             body_lines.append(nxt)
             i += 1
@@ -364,6 +394,7 @@ def parse_marker_entries(path: str, marker: str) -> list[tuple[str, str, str, st
 # ---------------------------------------------------------------------------
 # Escrita do Codex
 # ---------------------------------------------------------------------------
+
 
 def write_codex_file(folder: str, frontmatter: dict, body: str) -> str:
     os.makedirs(os.path.join(CODEX_DIR, folder), exist_ok=True)
@@ -394,6 +425,7 @@ def _parse_md(path: str) -> tuple[dict, str]:
 # ---------------------------------------------------------------------------
 # Segredos de NPC (Fase 7.3)
 # ---------------------------------------------------------------------------
+
 
 def split_npc_secrets(body: str) -> tuple[str, str]:
     """Divide o corpo de um NPC em (publico, secreto) por rótulo de parágrafo.
@@ -455,8 +487,9 @@ def _codex_paths_by_id(codex_dir: str) -> dict[str, str]:
     return mapping
 
 
-def apply_overrides(entities: dict[str, dict], overrides: dict,
-                    codex_dir: str = CODEX_DIR) -> list[str]:
+def apply_overrides(
+    entities: dict[str, dict], overrides: dict, codex_dir: str = CODEX_DIR
+) -> list[str]:
     """Aplica patches nos .md gerados e no dict de entidades.
 
     Precedência: gerado < override. Arquivo `curated: true` nunca recebe
@@ -535,8 +568,14 @@ def main() -> dict[str, dict]:
 
     entities: dict[str, dict] = {}
 
-    def register(entity_id: str, etype: str, name: str, tags: list[str],
-                 visibility: str = "public", aliases: list[str] | None = None) -> None:
+    def register(
+        entity_id: str,
+        etype: str,
+        name: str,
+        tags: list[str],
+        visibility: str = "public",
+        aliases: list[str] | None = None,
+    ) -> None:
         entities[entity_id] = {
             "id": entity_id,
             "type": etype,
@@ -557,10 +596,18 @@ def main() -> dict[str, dict]:
             name = "Skallgard e o Ermo Branco"
             aliases = ["Skallgard", "Ermo Branco"]
         register(loc_id, "location", name, blk.tags, aliases=aliases)
-        write_codex_file("locations", {
-            "id": loc_id, "type": "location", "name": name,
-            "aliases": aliases, "tags": blk.tags, "visibility": "public",
-        }, f"# {blk.title}\n\n{blk.body}")
+        write_codex_file(
+            "locations",
+            {
+                "id": loc_id,
+                "type": "location",
+                "name": name,
+                "aliases": aliases,
+                "tags": blk.tags,
+                "visibility": "public",
+            },
+            f"# {blk.title}\n\n{blk.body}",
+        )
 
     # --- factions.txt — 1 md por fação ------------------------------------------
     for blk in parse_categoria_blocks(os.path.join(LORE_DIR, "factions.txt")):
@@ -569,11 +616,19 @@ def main() -> dict[str, dict]:
         region = resolve_location(blk.section or " ".join(blk.tags))
         related = [region] if region else []
         register(fac_id, "faction", name, blk.tags)
-        write_codex_file("factions", {
-            "id": fac_id, "type": "faction", "name": name, "aliases": [],
-            "tags": blk.tags, "visibility": "public",
-            "related_entities": related,
-        }, f"# {blk.title}\n\n{blk.body}")
+        write_codex_file(
+            "factions",
+            {
+                "id": fac_id,
+                "type": "faction",
+                "name": name,
+                "aliases": [],
+                "tags": blk.tags,
+                "visibility": "public",
+                "related_entities": related,
+            },
+            f"# {blk.title}\n\n{blk.body}",
+        )
 
     # --- npcs.txt — 1 md por NPC (inclui demônios e dragões) --------------------
     # Fase 7.3: parágrafos de rótulo secreto (História real, Motivação real...)
@@ -595,20 +650,35 @@ def main() -> dict[str, dict]:
         region = resolve_location(" ".join(blk.tags) + " " + blk.section)
         register(npc_id, "npc", name, extra_tags)
         publico, secreto = split_npc_secrets(blk.body)
-        write_codex_file("npcs", {
-            "id": npc_id, "type": "npc", "name": name, "aliases": [],
-            "tags": extra_tags, "visibility": "public",
-            "related_entities": [region] if region else [],
-        }, f"# {blk.title}\n\n{publico}")
+        write_codex_file(
+            "npcs",
+            {
+                "id": npc_id,
+                "type": "npc",
+                "name": name,
+                "aliases": [],
+                "tags": extra_tags,
+                "visibility": "public",
+                "related_entities": [region] if region else [],
+            },
+            f"# {blk.title}\n\n{publico}",
+        )
         n_npcs += 1
         if secreto:
             # NÃO registra entidade (mesmo padrão de secrets/ e timeline/)
-            write_codex_file(os.path.join("npcs", "segredos"), {
-                "id": f"{npc_id}_segredo", "type": "npc_secret",
-                "name": f"{name} — Segredos", "aliases": [],
-                "tags": extra_tags, "visibility": "hidden",
-                "related_entities": [npc_id],
-            }, f"# {blk.title} — O QUE NÃO É DITO\n\n{secreto}")
+            write_codex_file(
+                os.path.join("npcs", "segredos"),
+                {
+                    "id": f"{npc_id}_segredo",
+                    "type": "npc_secret",
+                    "name": f"{name} — Segredos",
+                    "aliases": [],
+                    "tags": extra_tags,
+                    "visibility": "hidden",
+                    "related_entities": [npc_id],
+                },
+                f"# {blk.title} — O QUE NÃO É DITO\n\n{secreto}",
+            )
             n_npc_segredos += 1
     print(f"NPCs: {n_npcs}, com doc de segredo: {n_npc_segredos}")
 
@@ -617,84 +687,151 @@ def main() -> dict[str, dict]:
         race_id = unique_id(f"race_{slugify(blk.title)}", set(entities))
         name = smart_title(blk.title.split("—")[0].strip())
         register(race_id, "race", name, blk.tags)
-        write_codex_file("races", {
-            "id": race_id, "type": "race", "name": name, "aliases": [],
-            "tags": blk.tags, "visibility": "public",
-        }, f"# {blk.title}\n\n{blk.body}")
+        write_codex_file(
+            "races",
+            {
+                "id": race_id,
+                "type": "race",
+                "name": name,
+                "aliases": [],
+                "tags": blk.tags,
+                "visibility": "public",
+            },
+            f"# {blk.title}\n\n{blk.body}",
+        )
 
     # --- creatures.txt — primordiais (blocos) + [CRIATURA:] --------------------
     for blk in parse_categoria_blocks(os.path.join(LORE_DIR, "creatures.txt")):
         mon_id = unique_id(f"mon_{slugify(blk.title)}", set(entities))
         name = smart_title(blk.title)
         register(mon_id, "monster", name, blk.tags + ["primordial"])
-        write_codex_file("monsters", {
-            "id": mon_id, "type": "monster", "name": name, "aliases": [],
-            "tags": blk.tags + ["primordial"], "visibility": "public",
-        }, f"# {blk.title}\n\n{blk.body}")
+        write_codex_file(
+            "monsters",
+            {
+                "id": mon_id,
+                "type": "monster",
+                "name": name,
+                "aliases": [],
+                "tags": blk.tags + ["primordial"],
+                "visibility": "public",
+            },
+            f"# {blk.title}\n\n{blk.body}",
+        )
 
     for name, body, local, section in parse_marker_entries(
-            os.path.join(LORE_DIR, "creatures.txt"), "CRIATURA"):
+        os.path.join(LORE_DIR, "creatures.txt"), "CRIATURA"
+    ):
         loc_id = resolve_location(local) or ""
         base = f"mon_{slugify(name, drop_stopwords=False)}"
         mon_id = unique_id(base, set(entities), fallback_suffix=loc_id)
         tags = [t for t in (loc_id, slugify(section, drop_stopwords=False)) if t]
         register(mon_id, "monster", name, tags)
-        write_codex_file("monsters", {
-            "id": mon_id, "type": "monster", "name": name, "aliases": [],
-            "tags": tags, "visibility": "public",
-            "related_entities": [loc_id] if loc_id else [],
-        }, f"# {name}\n\n{body}")
+        write_codex_file(
+            "monsters",
+            {
+                "id": mon_id,
+                "type": "monster",
+                "name": name,
+                "aliases": [],
+                "tags": tags,
+                "visibility": "public",
+                "related_entities": [loc_id] if loc_id else [],
+            },
+            f"# {name}\n\n{body}",
+        )
 
     # --- items.txt — artefatos únicos viram entidade; resto agrupa por região ---
     grouped_items: dict[str, list[str]] = {}
     for marker in ("MATERIAL", "ITEM"):
         for name, body, local, section in parse_marker_entries(
-                os.path.join(LORE_DIR, "items.txt"), marker):
+            os.path.join(LORE_DIR, "items.txt"), marker
+        ):
             loc_id = resolve_location(local) or "diversos"
             if marker == "ITEM" and "ARTEFATO" in body.split("\n", 1)[0].upper():
                 body_rest = body.split("\n", 1)[1] if "\n" in body else ""
                 art_id = unique_id(f"art_{slugify(name)}", set(entities), fallback_suffix=loc_id)
                 register(art_id, "artifact", name, [loc_id, "artefato_unico"])
-                write_codex_file("items", {
-                    "id": art_id, "type": "artifact", "name": name, "aliases": [],
-                    "tags": [loc_id, "artefato_unico"], "visibility": "public",
-                    "related_entities": [loc_id] if loc_id != "diversos" else [],
-                }, f"# {name} [ARTEFATO ÚNICO]\n\n{body_rest.strip()}")
+                write_codex_file(
+                    "items",
+                    {
+                        "id": art_id,
+                        "type": "artifact",
+                        "name": name,
+                        "aliases": [],
+                        "tags": [loc_id, "artefato_unico"],
+                        "visibility": "public",
+                        "related_entities": [loc_id] if loc_id != "diversos" else [],
+                    },
+                    f"# {name} [ARTEFATO ÚNICO]\n\n{body_rest.strip()}",
+                )
             else:
                 kind = "MATERIAL" if marker == "MATERIAL" else "ITEM"
                 grouped_items.setdefault(loc_id, []).append(f"## [{kind}] {name}\n\n{body}")
     for loc_id, parts in grouped_items.items():
-        write_codex_file("items", {
-            "id": f"story_itens_{loc_id}", "type": "items", "name": f"Itens e materiais — {loc_id}",
-            "aliases": [], "tags": [loc_id], "visibility": "public",
-            "related_entities": [loc_id] if loc_id != "diversos" else [],
-        }, "\n\n---\n\n".join(parts))
+        write_codex_file(
+            "items",
+            {
+                "id": f"story_itens_{loc_id}",
+                "type": "items",
+                "name": f"Itens e materiais — {loc_id}",
+                "aliases": [],
+                "tags": [loc_id],
+                "visibility": "public",
+                "related_entities": [loc_id] if loc_id != "diversos" else [],
+            },
+            "\n\n---\n\n".join(parts),
+        )
 
     # --- secrets.txt — 1 md por segredo, visibility: secret ---------------------
     used_secret_ids: set = set()
     for blk in parse_categoria_blocks(os.path.join(LORE_DIR, "secrets.txt")):
         title_core = blk.title.split("—", 1)[-1].strip()
-        sec_id = unique_id(f"secret_{slugify(title_core)[:60].rstrip('_')}", used_secret_ids | set(entities))
+        sec_id = unique_id(
+            f"secret_{slugify(title_core)[:60].rstrip('_')}", used_secret_ids | set(entities)
+        )
         used_secret_ids.add(sec_id)
-        write_codex_file("secrets", {
-            "id": sec_id, "type": "secret", "name": smart_title(title_core),
-            "aliases": [], "tags": blk.tags, "visibility": "secret",
-        }, f"# {blk.title}\n\n{blk.body}")
+        write_codex_file(
+            "secrets",
+            {
+                "id": sec_id,
+                "type": "secret",
+                "name": smart_title(title_core),
+                "aliases": [],
+                "tags": blk.tags,
+                "visibility": "secret",
+            },
+            f"# {blk.title}\n\n{blk.body}",
+        )
 
     # --- faction_perspectives.txt — 1 md por bloco, visibility: hidden ----------
     used_persp: set = set()
     fac_by_slug = {e["id"]: e for e in entities.values() if e["type"] == "faction"}
     for blk in parse_categoria_blocks(os.path.join(LORE_DIR, "faction_perspectives.txt")):
-        fac_tag = next((t.split(":", 1)[1].strip() for t in blk.tags if t.lower().startswith("facção")), "")
-        sobre = next((t.split(":", 1)[1].strip() for t in blk.tags if t.lower().startswith("sobre")), "")
+        fac_tag = next(
+            (t.split(":", 1)[1].strip() for t in blk.tags if t.lower().startswith("facção")), ""
+        )
+        sobre = next(
+            (t.split(":", 1)[1].strip() for t in blk.tags if t.lower().startswith("sobre")), ""
+        )
         fac_id = slugify(fac_tag) if fac_tag else ""
-        pid = unique_id(f"story_perspectiva_{fac_id or 'geral'}_{slugify(sobre, drop_stopwords=False) or 'geral'}", used_persp)
+        pid = unique_id(
+            f"story_perspectiva_{fac_id or 'geral'}_{slugify(sobre, drop_stopwords=False) or 'geral'}",
+            used_persp,
+        )
         used_persp.add(pid)
-        write_codex_file(os.path.join("factions", "perspectivas"), {
-            "id": pid, "type": "perspective", "name": smart_title(blk.title),
-            "aliases": [], "tags": blk.tags, "visibility": "hidden",
-            "related_entities": [fac_id] if fac_id in fac_by_slug else [],
-        }, f"# {blk.title}\n\n{blk.body}")
+        write_codex_file(
+            os.path.join("factions", "perspectivas"),
+            {
+                "id": pid,
+                "type": "perspective",
+                "name": smart_title(blk.title),
+                "aliases": [],
+                "tags": blk.tags,
+                "visibility": "hidden",
+                "related_entities": [fac_id] if fac_id in fac_by_slug else [],
+            },
+            f"# {blk.title}\n\n{blk.body}",
+        )
 
     # --- rumors.txt / daily_life.txt — agrupados por região ---------------------
     for fname, folder, prefix, nome in (
@@ -705,14 +842,22 @@ def main() -> dict[str, dict]:
         for blk in parse_categoria_blocks(os.path.join(LORE_DIR, fname)):
             loc_id = resolve_location(" ".join(blk.tags)) or "diversos"
             grouped.setdefault(loc_id, []).append(
-                f"## {blk.title}\n[TAGS: {', '.join(blk.tags)}]\n\n{blk.body}")
+                f"## {blk.title}\n[TAGS: {', '.join(blk.tags)}]\n\n{blk.body}"
+            )
         for loc_id, parts in grouped.items():
-            write_codex_file(folder, {
-                "id": f"{prefix}_{loc_id}", "type": "world_story",
-                "name": f"{nome} — {loc_id}", "aliases": [], "tags": [loc_id],
-                "visibility": "public",
-                "related_entities": [loc_id] if loc_id != "diversos" else [],
-            }, "\n\n---\n\n".join(parts))
+            write_codex_file(
+                folder,
+                {
+                    "id": f"{prefix}_{loc_id}",
+                    "type": "world_story",
+                    "name": f"{nome} — {loc_id}",
+                    "aliases": [],
+                    "tags": [loc_id],
+                    "visibility": "public",
+                    "related_entities": [loc_id] if loc_id != "diversos" else [],
+                },
+                "\n\n---\n\n".join(parts),
+            )
 
     # --- timeline_completa.txt — 1 md por subseção de era (NÃO registra entidade) ---
     timeline_path = os.path.join(LORE_DIR, "timeline_completa.txt")
@@ -720,18 +865,26 @@ def main() -> dict[str, dict]:
         used_timeline: set = set()
         for sec in parse_timeline(timeline_path):
             head_words = "_".join(sec.body.split()[:6])
-            base = f"timeline_e{sec.era}_{sec.seq}_{slugify(head_words, drop_stopwords=False)}"[:70].rstrip("_")
+            base = f"timeline_e{sec.era}_{sec.seq}_{slugify(head_words, drop_stopwords=False)}"[
+                :70
+            ].rstrip("_")
             tid = unique_id(base, used_timeline)
             used_timeline.add(tid)
             body = sec.body
             if sec.seq == 1:
                 body = f"# ERA {sec.era} — {sec.era_title}\n\n{body}"
-            write_codex_file("timeline", {
-                "id": tid, "type": "timeline",
-                "name": f"Era {sec.era} — {smart_title(sec.era_title)} ({sec.seq})",
-                "aliases": [], "tags": ["timeline", f"era_{sec.era}"],
-                "visibility": sec.visibility,
-            }, body)
+            write_codex_file(
+                "timeline",
+                {
+                    "id": tid,
+                    "type": "timeline",
+                    "name": f"Era {sec.era} — {smart_title(sec.era_title)} ({sec.seq})",
+                    "aliases": [],
+                    "tags": ["timeline", f"era_{sec.era}"],
+                    "visibility": sec.visibility,
+                },
+                body,
+            )
 
     # --- curadoria migration-safe (Fase 7.2) --------------------------------------
     orfaos = apply_overrides(entities, load_overrides(), CODEX_DIR)

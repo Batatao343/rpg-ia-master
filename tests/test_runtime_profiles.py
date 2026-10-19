@@ -19,9 +19,13 @@ def test_hosted_falha_fechado_com_filesystem_auth_ou_sem_db():
     with pytest.raises(ValueError, match="DATABASE_URL"):
         RuntimeConfig.from_env(base)
     with pytest.raises(ValueError, match="autenticação"):
-        RuntimeConfig.from_env({**base, "DATABASE_URL": "postgresql://local", "RPG_AUTH_MODE": "disabled"})
+        RuntimeConfig.from_env(
+            {**base, "DATABASE_URL": "postgresql://local", "RPG_AUTH_MODE": "disabled"}
+        )
     with pytest.raises(ValueError, match="filesystem"):
-        RuntimeConfig.from_env({**base, "DATABASE_URL": "postgresql://local", "RPG_BLOB_STORE": "file"})
+        RuntimeConfig.from_env(
+            {**base, "DATABASE_URL": "postgresql://local", "RPG_BLOB_STORE": "file"}
+        )
 
 
 def test_local_aceita_stack_completa():
@@ -39,12 +43,15 @@ def test_portable_exige_oidc_e_s3_sem_supabase():
     }
     with pytest.raises(ValueError, match="RPG_OIDC_JWKS_URL"):  # SPEC-220 R6
         RuntimeConfig.from_env(base)
-    config = RuntimeConfig.from_env({
-        **base,
-        "RPG_OIDC_USERINFO_URL": "https://identity.example/userinfo",
-        "RPG_OIDC_ISSUER": "https://identity.example",
-        "RPG_OIDC_JWKS_URL": "https://identity.example/jwks", "RPG_OIDC_AUDIENCE": "rpg-api",
-    })
+    config = RuntimeConfig.from_env(
+        {
+            **base,
+            "RPG_OIDC_USERINFO_URL": "https://identity.example/userinfo",
+            "RPG_OIDC_ISSUER": "https://identity.example",
+            "RPG_OIDC_JWKS_URL": "https://identity.example/jwks",
+            "RPG_OIDC_AUDIENCE": "rpg-api",
+        }
+    )
     assert config.blob_store == "s3"
     assert config.auth_mode == "oidc"
     assert config.supabase_url == ""

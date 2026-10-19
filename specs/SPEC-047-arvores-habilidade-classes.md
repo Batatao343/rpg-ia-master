@@ -123,6 +123,7 @@ Sobre o schema atual (`name`, `category`, `cost`, `resource_type`,
 def learned_passives(player: Dict, *, abilities_db=None) -> List[Dict]:
     """passive_effects de toda habilidade ability_kind=='passive' em known_abilities."""
 
+
 def player_passives(player: Dict, *, abilities_db=None) -> List[Dict]:
     """class_passives(player) + learned_passives(player). Usada nos callsites do
     JOGADOR (damage_bonus, condition_modifiers, iniciativa, retaliação, cura).

@@ -3,6 +3,7 @@ world_utils.py
 Mecânica de mundo da Fase 0: relógio, viagem entre locais (fog of war) e descanso.
 Tudo determinístico (sem LLM) — funciona igual no modo simulado.
 """
+
 from typing import Optional, Tuple
 
 import gamedata
@@ -11,9 +12,25 @@ PERIODS = ["Amanhecer", "Manhã", "Tarde", "Anoitecer", "Noite"]
 
 # Pistas de intenção
 _REST_WORDS = ["descans", "dormir", "durmo", "acamp", "repous", "pernoit", "descabel"]
-_TRAVEL_CUES = ["vou", "viaj", "ir para", "ir até", "ir a", "sigo para", "sigo até",
-                "caminho para", "rumo a", "parto", "vamos para", "seguir para",
-                "me dirijo", "atravesso para", "voltar para", "volto para", "viajo"]
+_TRAVEL_CUES = [
+    "vou",
+    "viaj",
+    "ir para",
+    "ir até",
+    "ir a",
+    "sigo para",
+    "sigo até",
+    "caminho para",
+    "rumo a",
+    "parto",
+    "vamos para",
+    "seguir para",
+    "me dirijo",
+    "atravesso para",
+    "voltar para",
+    "volto para",
+    "viajo",
+]
 
 
 def ensure_world(world: dict) -> dict:
@@ -64,6 +81,7 @@ def is_rest(text: str) -> bool:
 def _fold_txt(s: str) -> str:
     """lower + sem acento — 'Pantano' tem que casar 'Pântano' (smoke 2026-07-05)."""
     import unicodedata
+
     nfkd = unicodedata.normalize("NFKD", str(s or ""))
     return "".join(c for c in nfkd if not unicodedata.combining(c)).lower()
 
@@ -73,9 +91,7 @@ _TRAVEL_VERBS = (
     r"me\s+dirijo|atravesso|atravessar|volto|voltar|retorno|retornar|fujo|fugir|"
     r"entro|entrar|saio|sair"
 )
-_TRAVEL_PREPS = (
-    r"rumo\s+a|em\s+direcao\s+a|para|pra|pro|ate|aos|ao|as|a|em|nos|nas|no|na"
-)
+_TRAVEL_PREPS = r"rumo\s+a|em\s+direcao\s+a|para|pra|pro|ate|aos|ao|as|a|em|nos|nas|no|na"
 _ARTICLES = {"o", "a", "os", "as", "do", "da", "dos", "das", "um", "uma"}
 _TRAVEL_RE = None
 
@@ -106,11 +122,15 @@ def is_travel_intent(text: str, world: dict | None = None) -> bool:
     "sigo em frente", "vou até a fogueira") NÃO é viagem.
     """
     import re
+
     global _TRAVEL_RE
     if _TRAVEL_RE is None:
         _TRAVEL_RE = re.compile(
-            r"\b(?:" + _TRAVEL_VERBS + r")\b((?:\s+\w+){0,3}?)\s+(?:" + _TRAVEL_PREPS +
-            r")\b(?P<rest>(?:\s+\w+)*)"
+            r"\b(?:"
+            + _TRAVEL_VERBS
+            + r")\b((?:\s+\w+){0,3}?)\s+(?:"
+            + _TRAVEL_PREPS
+            + r")\b(?P<rest>(?:\s+\w+)*)"
         )
     orig_words = re.findall(r"\w+", str(text or ""))
     folded = " ".join(_fold_txt(w) for w in orig_words)
@@ -142,10 +162,9 @@ def invalid_travel_message(world: dict, text: str) -> str:
     """Recusa determinística para destino explícito que não é uma saída válida."""
     if not is_travel_intent(text, world) or find_travel_destination(world, text) is not None:
         return ""
-    current = (
-        gamedata.get_location(world.get("current_location_id", ""))
-        or {"name": world.get("current_location", "local atual")}
-    )
+    current = gamedata.get_location(world.get("current_location_id", "")) or {
+        "name": world.get("current_location", "local atual")
+    }
     exits = gamedata.get_connections(world.get("current_location_id"))
     labels = ", ".join(str(loc.get("name", loc.get("id", "?"))) for loc in exits)
     if not labels:
@@ -206,8 +225,11 @@ def apply_travel(world: dict, dest: dict) -> dict:
         visited.append(dest["id"])
     world["visited"] = visited
     # SPEC-233 R1: perigo EFETIVO do destino (danger_overrides vence o base do mapa).
-    world["danger_level"] = (_effective_danger(world, dest["id"]) if dest.get("id")
-                             else dest.get("danger", world.get("danger_level", 1)))
+    world["danger_level"] = (
+        _effective_danger(world, dest["id"])
+        if dest.get("id")
+        else dest.get("danger", world.get("danger_level", 1))
+    )
     if cost > 0:
         advance_clock(world, cost)
         # Fase 6.5: período mudou -> clima transiciona; clima bravo encarece a viagem
@@ -238,6 +260,7 @@ def apply_rest(player: dict, world: dict, allies: list = None) -> tuple[dict, di
     player = dict(player)
     # Insônia (Devoto): fração de cura da Vitalidade cai por patamar de Carga.
     import combat_mechanics as cm
+
     hp_factor = 1.0
     _ab = cm.entropy_config(player).get("abyss") or {}
     if _ab.get("consequence") == "insonia":
@@ -252,9 +275,9 @@ def apply_rest(player: dict, world: dict, allies: list = None) -> tuple[dict, di
         ceiling = int(player.get("max_vitalidade", 0) or 0)
         recover = max(1, ceiling // 2)
         recover = max(1, int(recover * hp_factor)) if hp_factor > 0 else 0
-        player["vitalidade"] = min(
-            ceiling, int(player.get("vitalidade", 0) or 0) + recover)
+        player["vitalidade"] = min(ceiling, int(player.get("vitalidade", 0) or 0) + recover)
         from services import conflict_damage
+
         conflict_damage.rest_treat_wounds(
             player,
             rest="longo",
@@ -268,16 +291,17 @@ def apply_rest(player: dict, world: dict, allies: list = None) -> tuple[dict, di
             if defense:
                 conflict_damage.recover_integrity(defense, "longo")
         from services import cards
+
         cards.reset_card_usage({"player": player}, "descanso_longo")
         from services import death_flow
+
         recovery_state = death_flow.post_combat_consciousness(player)
         # Um Crítico continua exigindo tratamento especializado para ser removido,
         # mas o descanso longo em segurança que devolveu Vitalidade é uma
         # intervenção suficiente para o sobrevivente recobrar a consciência. Sem
         # esta transição, personagens solo ficavam presos para sempre entre
         # conflitos: inconscientes, vivos e sem uma ação possível de tratamento.
-        if (recovery_state == "inconsciente"
-                and int(player.get("vitalidade", 0) or 0) > 0):
+        if recovery_state == "inconsciente" and int(player.get("vitalidade", 0) or 0) > 0:
             recovery_state = "tratavel"
         player["post_combat_state"] = recovery_state
         if recovery_state in ("acordado", "tratavel"):
@@ -306,6 +330,7 @@ def apply_rest(player: dict, world: dict, allies: list = None) -> tuple[dict, di
 
 
 # --- Fase 2: fações com objetivos próprios (mundo vivo, determinístico) ---
+
 
 def ensure_factions(factions) -> list:
     """Backfill/normaliza a lista de fações (compat com saves sem o campo)."""
@@ -343,17 +368,20 @@ def advance_factions(factions, periods: int = 1) -> tuple[list, list]:
             f["progress"] = min(100, f.get("progress", 0) + f.get("pace", 3) * periods)
             if f["progress"] >= 100 and not f.get("completed", False):
                 f["completed"] = True
-                events.append({
-                    "id": f.get("id"),
-                    "name": f.get("name"),
-                    "goal": f.get("goal", ""),
-                    "disposition": f.get("disposition", "neutro"),
-                })
+                events.append(
+                    {
+                        "id": f.get("id"),
+                        "name": f.get("name"),
+                        "goal": f.get("goal", ""),
+                        "disposition": f.get("disposition", "neutro"),
+                    }
+                )
         new_list.append(f)
     return new_list, events
 
 
 # --- Fase 2 / Etapa B: ascensão — concluir objetivo muda o MUNDO (determinístico) ---
+
 
 def _raise_danger(world: dict, loc_id: str) -> None:
     """Sobe o perigo de um local em +1 (teto 4), via override de runtime."""
@@ -430,9 +458,11 @@ def resolve_faction_completions(factions, world, events, intel) -> tuple[list, d
 
     note = ""
     if notes:
-        note = ("\n".join(notes) +
-                "\nNarre estas consequências como algo que o jogador PERCEBE no mundo; "
-                "NÃO revele nomes de facções que ele ainda não conhece.")
+        note = (
+            "\n".join(notes)
+            + "\nNarre estas consequências como algo que o jogador PERCEBE no mundo; "
+            "NÃO revele nomes de facções que ele ainda não conhece."
+        )
     return list(by_id.values()), world, note
 
 
@@ -455,8 +485,7 @@ def ensure_faction_intel(intel) -> dict:
     return out
 
 
-def apply_faction_reveal(intel, factions, faction_id: str, level: str,
-                         turn: int = 0) -> dict:
+def apply_faction_reveal(intel, factions, faction_id: str, level: str, turn: int = 0) -> dict:
     """
     Aplica uma revelação de NPC ao conhecimento do jogador (determinístico, em camadas).
     level: 'existencia' | 'objetivo' | 'progresso'. id fora das fações = no-op.
@@ -485,9 +514,9 @@ def apply_faction_reveal(intel, factions, faction_id: str, level: str,
 # --- Fase 2: reputação muda por AÇÃO do jogador (determinístico) ---
 # Convenção: a IA só identifica fação + direção; o VALOR do delta é fixo aqui.
 
-REP_STEP = 12                       # delta fixo por ação (Python decide, não o LLM)
+REP_STEP = 12  # delta fixo por ação (Python decide, não o LLM)
 REP_MIN, REP_MAX = -100, 100
-_ALIADO_AT, _HOSTIL_AT = 40, -40    # limiares de disposição derivada da reputação
+_ALIADO_AT, _HOSTIL_AT = 40, -40  # limiares de disposição derivada da reputação
 
 _POS_CUES = ("ajud", "ajudo", "ajudou", "alia", "aliar", "favor", "apoi", "salv", "defend", "+")
 _NEG_CUES = ("prejud", "trai", "traiu", "sabot", "atac", "rouba", "mata", "destr", "contra", "-")
@@ -511,8 +540,9 @@ def _direction_sign(direction: str) -> int:
     return 0
 
 
-def apply_reputation(factions, faction_id: str, direction: str,
-                     step: int = REP_STEP) -> tuple[list, dict | None]:
+def apply_reputation(
+    factions, faction_id: str, direction: str, step: int = REP_STEP
+) -> tuple[list, dict | None]:
     """
     Aplica delta FIXO de reputação a uma fação identificada pelo id.
     direction: 'ajudou' (+) | 'prejudicou' (-). Clampa em [-100, 100] e
@@ -536,8 +566,10 @@ def apply_reputation(factions, faction_id: str, direction: str,
             f["reputation"] = new_rep
             f["disposition"] = _disposition_for(new_rep)
             event = {
-                "id": f.get("id"), "name": f.get("name"),
-                "reputation": new_rep, "disposition": f["disposition"],
+                "id": f.get("id"),
+                "name": f.get("name"),
+                "reputation": new_rep,
+                "disposition": f["disposition"],
                 "direction": "ajudou" if sign > 0 else "prejudicou",
                 "delta": new_rep - old,
             }
@@ -553,9 +585,9 @@ _ENCOUNTER_COOLDOWN = 2  # turnos mínimos entre encontros automáticos (anti-sp
 # laço de recuperação (HP travado, descanso interrompido por encontro). Nível
 # baixo ganha: descanso CONFIÁVEL em zona não-apex de perigo baixo + cadência de
 # encontro mais espaçada (espaço pra viajar/curar entre lutas). Determinístico.
-EARLY_GAME_LEVEL = 3          # até este nível (inclusive) valem as regras de recuperação
-RECOVERY_SAFE_DANGER = 3      # descanso NÃO sorteia encontro se danger <= isto (e não-apex)
-_EARLY_COOLDOWN_BONUS = 2     # +turnos no cooldown de encontro quando nível <= EARLY_GAME_LEVEL
+EARLY_GAME_LEVEL = 3  # até este nível (inclusive) valem as regras de recuperação
+RECOVERY_SAFE_DANGER = 3  # descanso NÃO sorteia encontro se danger <= isto (e não-apex)
+_EARLY_COOLDOWN_BONUS = 2  # +turnos no cooldown de encontro quando nível <= EARLY_GAME_LEVEL
 
 
 def recovery_rest_safe(player_level: int, danger_now: int, loc: dict) -> bool:
@@ -639,8 +671,9 @@ def _hostile_ruler(world: dict, factions, loc_id: str):
 _ALERT_TTL = 6  # turnos de validade de um alerta de fuga
 
 
-def register_flee_alert(world: dict, fled_hint: str, faction_id=None, turn: int = 0,
-                         enemy_id: str = "") -> dict:
+def register_flee_alert(
+    world: dict, fled_hint: str, faction_id=None, turn: int = 0, enemy_id: str = ""
+) -> dict:
     """
     Fase 2.5b (R10): registra que um inimigo FUGIU do combate — ele pode voltar
     com reforços. O alerta vale para a REGIÃO atual por ~_ALERT_TTL turnos e é
@@ -653,15 +686,18 @@ def register_flee_alert(world: dict, fled_hint: str, faction_id=None, turn: int 
     loc = gamedata.get_location(world.get("current_location_id", "")) or {}
     # nome-base sem sufixo de instância ("Soldado da Legião 2" -> "Soldado da Legião")
     import re as _re
+
     hint = _re.sub(r"\s+\d+$", "", str(fled_hint or "o fugitivo")).strip()
     alerts = list(world.get("threat_alerts") or [])
-    alerts.append({
-        "region_id": loc.get("region_id", world.get("current_location_id", "")),
-        "hint": hint,
-        "faction_id": faction_id,
-        "turn": int(turn),
-        "enemy_id": enemy_id or "",
-    })
+    alerts.append(
+        {
+            "region_id": loc.get("region_id", world.get("current_location_id", "")),
+            "hint": hint,
+            "faction_id": faction_id,
+            "turn": int(turn),
+            "enemy_id": enemy_id or "",
+        }
+    )
     world["threat_alerts"] = alerts
     return world
 
@@ -689,9 +725,16 @@ def _bestiary_by_faction(faction_id: str):
     return None
 
 
-def pick_encounter_enemy(loc: dict, danger: int, turn: int = 0, faction_id: str = "",
-                         *, bestiary_knowledge: dict = None, projection: dict = None,
-                         rng=None):
+def pick_encounter_enemy(
+    loc: dict,
+    danger: int,
+    turn: int = 0,
+    faction_id: str = "",
+    *,
+    bestiary_knowledge: dict = None,
+    projection: dict = None,
+    rng=None,
+):
     """
     Fase 2.5b (R11): sorteio DETERMINÍSTICO de criatura concreta do bestiário.
     - facção informada -> combatente daquela facção (se curado);
@@ -714,8 +757,11 @@ def pick_encounter_enemy(loc: dict, danger: int, turn: int = 0, faction_id: str 
     region_id = (loc or {}).get("region_id", "")
     if not region_id:
         return None
-    pool = [e for e in (gamedata.BESTIARY or {}).values()
-            if region_id in (e.get("regions") or []) and "BOSS" not in str(e.get("type", "")).upper()]
+    pool = [
+        e
+        for e in (gamedata.BESTIARY or {}).values()
+        if region_id in (e.get("regions") or []) and "BOSS" not in str(e.get("type", "")).upper()
+    ]
     if not pool:
         return None
 
@@ -735,10 +781,13 @@ def pick_encounter_enemy(loc: dict, danger: int, turn: int = 0, faction_id: str 
 
     # --- Fase 6.3: sorteio ponderado -------------------------------------
     from services import ecology as eco3
+
     loc_id = (loc or {}).get("id", "")
-    weights = [eco3.hunt_pressure(e.get("id", ""), bestiary_knowledge, turn)
-               * eco3.faction_boost(e, loc_id, projection)
-               for e in pool]
+    weights = [
+        eco3.hunt_pressure(e.get("id", ""), bestiary_knowledge, turn)
+        * eco3.faction_boost(e, loc_id, projection)
+        for e in pool
+    ]
 
     # fauna local rareada -> no máx. 1 migrante entra no sorteio (peso 0.5)
     avg = sum(weights) / max(1, len(weights))
@@ -770,9 +819,15 @@ def forced_encounter_danger(loc: dict, danger_real: int, player_level: int) -> i
     return max(1, min(danger_real, (lvl + 3) // 2))
 
 
-def check_encounter(world: dict, factions, intel, turn: int = 0,
-                    bestiary_knowledge: dict = None, projection: dict = None,
-                    player_level: int = 1):
+def check_encounter(
+    world: dict,
+    factions,
+    intel,
+    turn: int = 0,
+    bestiary_knowledge: dict = None,
+    projection: dict = None,
+    player_level: int = 1,
+):
     """
     Gatilho DETERMINÍSTICO de encontro ao entrar/descansar num local perigoso.
     Dispara se: alerta de fuga ativo na região (reforços — R10); OU looming_threat
@@ -788,8 +843,9 @@ def check_encounter(world: dict, factions, intel, turn: int = 0,
     intel = ensure_faction_intel(intel)
     # spec letalidade-early-game-v2 (alavanca 1): cooldown maior no early-game —
     # menos combate forçado de volta-a-volta, espaço pra recuperar entre lutas.
-    cooldown = _ENCOUNTER_COOLDOWN + (_EARLY_COOLDOWN_BONUS
-                                      if int(player_level or 1) <= EARLY_GAME_LEVEL else 0)
+    cooldown = _ENCOUNTER_COOLDOWN + (
+        _EARLY_COOLDOWN_BONUS if int(player_level or 1) <= EARLY_GAME_LEVEL else 0
+    )
     world.pop("encounter_eff_danger", None)  # SPEC-233 R5: flag one-shot nunca gruda
     if turn - int(world.get("last_encounter_turn", -99)) < cooldown:
         return None
@@ -805,6 +861,7 @@ def check_encounter(world: dict, factions, intel, turn: int = 0,
     # escalado pelo nível — salvo zona apex. Carimba p/ o combat spawn consumir
     # (one-shot, como encounter_surprise). Deliberado/scripted não passa por aqui.
     eff = forced_encounter_danger(loc, danger, player_level)
+
     # SPEC-233 R5: só carimba quando devolve um encontro (ver _stamp).
     def _stamp(result):
         world["encounter_eff_danger"] = eff
@@ -814,38 +871,68 @@ def check_encounter(world: dict, factions, intel, turn: int = 0,
     alert = _pop_active_alert(world, loc, turn)
     if alert:
         hint = alert.get("hint", "os que fugiram")
-        return _stamp({"hint": hint,
+        return _stamp(
+            {
+                "hint": hint,
                 "flavor": f"Eles voltaram — e não vieram sós. {hint} lidera o grupo que te cerca.",
                 "reason": "reinforcements",
-                "enemy_id": alert.get("enemy_id", "")})
+                "enemy_id": alert.get("enemy_id", ""),
+            }
+        )
 
     if ruler:
         fid = ruler.get("id")
-        entry = pick_encounter_enemy(loc, eff, turn, faction_id=fid,
-                                     bestiary_knowledge=bestiary_knowledge,
-                                     projection=projection)
+        entry = pick_encounter_enemy(
+            loc,
+            eff,
+            turn,
+            faction_id=fid,
+            bestiary_knowledge=bestiary_knowledge,
+            projection=projection,
+        )
         if intel.get(fid, {}).get("known"):
             who = ruler.get("name")
             hint = f"{entry['name']} ({who})" if entry else f"asseclas armados da {who}"
             flavor = f"Aço da {who} barra o caminho — eles cobram a passagem em sangue."
         else:
-            hint = entry.get("name") if entry else "homens armados sob uma bandeira que você não reconhece"
+            hint = (
+                entry.get("name")
+                if entry
+                else "homens armados sob uma bandeira que você não reconhece"
+            )
             flavor = "Homens armados sob uma bandeira estranha cercam você sem dar explicações."
-        return _stamp({"hint": hint, "flavor": flavor, "reason": "controlled",
-                "enemy_id": entry.get("id", "") if entry else ""})
+        return _stamp(
+            {
+                "hint": hint,
+                "flavor": flavor,
+                "reason": "controlled",
+                "enemy_id": entry.get("id", "") if entry else "",
+            }
+        )
 
     if threat and danger >= 3:
-        return _stamp({"hint": f"criatura ligada a: {threat}", "flavor": str(threat),
-                "reason": "looming_threat", "enemy_id": ""})
+        return _stamp(
+            {
+                "hint": f"criatura ligada a: {threat}",
+                "flavor": str(threat),
+                "reason": "looming_threat",
+                "enemy_id": "",
+            }
+        )
 
     if danger >= 4:
-        entry = pick_encounter_enemy(loc, eff, turn,
-                                     bestiary_knowledge=bestiary_knowledge,
-                                     projection=projection)
+        entry = pick_encounter_enemy(
+            loc, eff, turn, bestiary_knowledge=bestiary_knowledge, projection=projection
+        )
         hint = entry.get("name") if entry else f"feras/perigos de {region}"
-        return _stamp({"hint": hint, "enemy_id": entry.get("id", "") if entry else "",
+        return _stamp(
+            {
+                "hint": hint,
+                "enemy_id": entry.get("id", "") if entry else "",
                 "flavor": f"O perigo de {region} se materializa: algo hostil avança sobre você.",
-                "reason": "high_danger"})
+                "reason": "high_danger",
+            }
+        )
 
     return None
 
@@ -859,14 +946,15 @@ _SHELTER_TAGS = {"cidade", "urbano", "abrigo", "seguro"}
 
 def _weather_table(region_id: str) -> dict:
     from gamedata import load_json_data
+
     db = load_json_data("weather.json") or {}
     return db.get(region_id) or db.get("default") or {}
 
 
 # spec weather-global-vivo: chance sistêmica de iniciar um fenômeno GLOBAL por
 # período sem evento ativo (determinístico via rng; escala com danger_level).
-GLOBAL_WEATHER_BASE_CHANCE = 0.06   # [BALANCEAR] por período sem evento ativo
-GLOBAL_WEATHER_DANGER_STEP = 0.03   # [BALANCEAR] +chance por nível de perigo >1
+GLOBAL_WEATHER_BASE_CHANCE = 0.06  # [BALANCEAR] por período sem evento ativo
+GLOBAL_WEATHER_DANGER_STEP = 0.03  # [BALANCEAR] +chance por nível de perigo >1
 
 
 def maybe_start_global_weather(world: dict, rng=None) -> str | None:
@@ -874,10 +962,12 @@ def maybe_start_global_weather(world: dict, rng=None) -> str | None:
     (weather.json:global_events). Chance = base + step×(danger−1). Determinístico
     via `rng`. Reusa trigger_global_weather. Retorna a desc do evento ou None."""
     import random as _random
+
     rng = rng or _random
     if world.get("weather_global"):
         return None
     from gamedata import load_json_data
+
     events = list(((load_json_data("weather.json") or {}).get("global_events") or {}).keys())
     if not events:
         return None
@@ -903,8 +993,10 @@ def advance_weather(world: dict, rng=None, *, steps: int = 1) -> dict:
 
 def _advance_weather_once(world: dict, rng=None) -> dict:
     import random as _random
+
     rng = rng or _random
     from gamedata import get_location
+
     loc = get_location(world.get("current_location_id", "")) or {}
     table = _weather_table(loc.get("region_id", "default"))
     states = table.get("states") or {}
@@ -922,8 +1014,7 @@ def _advance_weather_once(world: dict, rng=None) -> dict:
     if cur not in states:
         cur = table.get("start") or next(iter(states))
     trans = states[cur].get("transitions") or {cur: 100}
-    nxt = rng.choices(list(trans.keys()),
-                      weights=[max(0, int(w)) for w in trans.values()], k=1)[0]
+    nxt = rng.choices(list(trans.keys()), weights=[max(0, int(w)) for w in trans.values()], k=1)[0]
     world["weather_state"] = nxt if nxt in states else cur
     world["weather"] = states[world["weather_state"]].get("label", world["weather_state"])
     return world
@@ -932,8 +1023,8 @@ def _advance_weather_once(world: dict, rng=None) -> dict:
 # spec itens-vivos-e-luz: sistema de LUZ determinístico.
 DARK_PERIODS = {"Anoitecer", "Noite"}
 _DARK_TAGS = {"dark", "masmorra", "caverna", "subterraneo"}
-DARK_PERCEPTION_PENALTY = -3   # [BALANCEAR] escuro sem luz: percepção
-DARK_COMBAT_PENALTY = -1       # [BALANCEAR] escuro sem luz: acerto (simétrico)
+DARK_PERCEPTION_PENALTY = -3  # [BALANCEAR] escuro sem luz: percepção
+DARK_COMBAT_PENALTY = -1  # [BALANCEAR] escuro sem luz: acerto (simétrico)
 
 
 def _has_light_source(player: dict) -> bool:
@@ -941,19 +1032,21 @@ def _has_light_source(player: dict) -> bool:
     `{trigger:"light"}` OU tag `luz` (tocha/lanterna) no equipamento OU inventário
     (diferente das passivas de combate, que só contam equipadas — luz você carrega)."""
     import combat_mechanics as _cm
+
     db = _cm.ARTIFACTS_DB
     ids = []
     eq = player.get("equipment")
     if isinstance(eq, dict):
         ids += [v for v in eq.values() if v]
-    ids += [e.get("id") if isinstance(e, dict) else e
-            for e in (player.get("inventory") or [])]
+    ids += [e.get("id") if isinstance(e, dict) else e for e in (player.get("inventory") or [])]
     for iid in ids:
         item = db.get(iid) or {}
         if "luz" in (item.get("tags") or []) or "luz" in (item.get("economy_tags") or []):
             return True
-        if any(isinstance(pe, dict) and pe.get("trigger") == "light"
-               for pe in (item.get("mechanics") or {}).get("passive_effects") or []):
+        if any(
+            isinstance(pe, dict) and pe.get("trigger") == "light"
+            for pe in (item.get("mechanics") or {}).get("passive_effects") or []
+        ):
             return True
     return False
 
@@ -963,6 +1056,7 @@ def light_level(world: dict, player: dict) -> dict:
     `dark`, E não abrigado/urbano (cidade tem tochas). Fonte de luz anula o escuro.
     Retorna {dark, lit, perception_mod, combat_mod, label}. Puro (sem RNG)."""
     from gamedata import get_location
+
     loc = get_location(world.get("current_location_id", "")) or {}
     tags = set(loc.get("tags") or [])
     sheltered = bool(_SHELTER_TAGS & tags)
@@ -973,33 +1067,64 @@ def light_level(world: dict, player: dict) -> dict:
     naturally_dark = (period in DARK_PERIODS) or structurally_dark
     dark = naturally_dark and (structurally_dark or not sheltered)
     if dark and _has_light_source(player):
-        return {"dark": False, "natural_dark": True, "lit": True,
-                "perception_mod": 0, "combat_mod": 0,
-                "label": "iluminado pela sua luz"}
+        return {
+            "dark": False,
+            "natural_dark": True,
+            "lit": True,
+            "perception_mod": 0,
+            "combat_mod": 0,
+            "label": "iluminado pela sua luz",
+        }
     if dark:
-        return {"dark": True, "natural_dark": True, "lit": False,
-                "perception_mod": DARK_PERCEPTION_PENALTY,
-                "combat_mod": DARK_COMBAT_PENALTY, "label": "escuridão"}
-    return {"dark": False, "natural_dark": False, "lit": True,
-            "perception_mod": 0, "combat_mod": 0,
-            "label": "claro"}
+        return {
+            "dark": True,
+            "natural_dark": True,
+            "lit": False,
+            "perception_mod": DARK_PERCEPTION_PENALTY,
+            "combat_mod": DARK_COMBAT_PENALTY,
+            "label": "escuridão",
+        }
+    return {
+        "dark": False,
+        "natural_dark": False,
+        "lit": True,
+        "perception_mod": 0,
+        "combat_mod": 0,
+        "label": "claro",
+    }
 
 
 def weather_effects(world: dict, loc: dict = None) -> dict:
     """Efeitos mecânicos do clima ATUAL (leitura pontual, Fase 6.5).
     Local com tag de abrigo/urbano anula dot_outdoor e rest_block."""
     from gamedata import get_location
+
     loc = loc if loc is not None else (get_location(world.get("current_location_id", "")) or {})
     table = _weather_table((loc or {}).get("region_id", "default"))
     state = (table.get("states") or {}).get(world.get("weather_state") or "", {})
     g = world.get("weather_global") or {}
     if g:
         from gamedata import load_json_data
-        gdef = ((load_json_data("weather.json") or {}).get("global_events") or {}) \
-            .get(g.get("id", ""), {})
-        state = {**state, **{k: v for k, v in gdef.items()
-                             if k in ("perception_mod", "combat_attack_mod",
-                                      "dot_outdoor", "rest_block", "travel_cost_extra", "label")}}
+
+        gdef = ((load_json_data("weather.json") or {}).get("global_events") or {}).get(
+            g.get("id", ""), {}
+        )
+        state = {
+            **state,
+            **{
+                k: v
+                for k, v in gdef.items()
+                if k
+                in (
+                    "perception_mod",
+                    "combat_attack_mod",
+                    "dot_outdoor",
+                    "rest_block",
+                    "travel_cost_extra",
+                    "label",
+                )
+            },
+        }
     sheltered = bool(_SHELTER_TAGS & set((loc or {}).get("tags") or []))
     return {
         "label": state.get("label", world.get("weather", "")),
@@ -1015,11 +1140,11 @@ def trigger_global_weather(world: dict, event_id: str) -> tuple:
     """Fenômeno global da LISTA CURADA (weather.json). Id fora da lista -> (world,
     None). Gancho p/ clímax de campanha; sem canal LLM ainda (desvio da spec)."""
     from gamedata import load_json_data
+
     gdef = ((load_json_data("weather.json") or {}).get("global_events") or {}).get(event_id)
     if not gdef:
         return world, None
-    world["weather_global"] = {"id": event_id,
-                               "periods_left": int(gdef.get("duration_periods", 2))}
+    world["weather_global"] = {"id": event_id, "periods_left": int(gdef.get("duration_periods", 2))}
     return world, gdef.get("desc", gdef.get("label", event_id))
 
 
@@ -1031,21 +1156,25 @@ _ENCOUNTER_TYPES_HIGH = (("combat", 60), ("trap", 20), ("social", 10), ("track",
 TRAP_DODGE_XP = 25
 
 
-def detection_check(player: dict, danger: int, rng=None,
-                    perception_mod: int = 0) -> dict:
+def detection_check(player: dict, danger: int, rng=None, perception_mod: int = 0) -> dict:
     """Fase 6.4 (R1): d20 + mod WIS (+ bônus racial de save WIS) vs DC 8+2×danger.
     Percebeu -> vantagem (embosca); falhou -> surpreendido (inimigo age antes).
     Fase 6.5: `perception_mod` do clima (neblina -3 etc.) soma na rolagem."""
     import random as _random
+
     rng = rng or _random
     from combat_mechanics import actor_mods, player_passives
+
     # spec conflito-01: percepção usa Mente (Virtude) via ponte actor_mods -> "wis".
     wis = actor_mods(player).get("wis", 0)
     save_b = player.get("racial_save_bonus") or {}
     wis += int(save_b.get("mente", save_b.get("wis", 0)) or 0)
     # spec itens-vivos-e-luz (R2): passiva `perception` de classe/habilidade/item
-    perc = sum(int(pe.get("delta", 0) or 0) for pe in player_passives(player)
-               if pe.get("trigger") == "perception")
+    perc = sum(
+        int(pe.get("delta", 0) or 0)
+        for pe in player_passives(player)
+        if pe.get("trigger") == "perception"
+    )
     roll = rng.randint(1, 20) + wis + perc + int(perception_mod or 0)
     dc = 8 + 2 * max(1, min(4, int(danger or 1)))
     return {"perceived": roll >= dc, "roll": roll, "dc": dc}
@@ -1054,18 +1183,21 @@ def detection_check(player: dict, danger: int, rng=None,
 def roll_encounter_type(danger: int, rng=None) -> str:
     """Fase 6.4 (R2): nem todo perigo é combate. Distribuição por danger."""
     import random as _random
+
     rng = rng or _random
     table = _ENCOUNTER_TYPES_LOW if int(danger or 1) <= 2 else _ENCOUNTER_TYPES_HIGH
     kinds, weights = zip(*table)
     return rng.choices(list(kinds), weights=list(weights), k=1)[0]
 
 
-def resolve_trap(player: dict, loc: dict, danger: int, rng=None, *,
-                 helper: dict | None = None) -> tuple:
+def resolve_trap(
+    player: dict, loc: dict, danger: int, rng=None, *, helper: dict | None = None
+) -> tuple:
     """Fase 6.4 (R3): armadilha 100%% Python — save vs DC 10+2×danger; falha =
     {danger}d6 + condição temática da região (data/traps.json); sucesso = XP de
     esquiva. Retorna (player_atualizado, logs, trap_dict)."""
     import random as _random
+
     rng = rng or _random
     import combat_mechanics as cm
     from gamedata import load_json_data
@@ -1084,6 +1216,7 @@ def resolve_trap(player: dict, loc: dict, danger: int, rng=None, *,
     is_v4 = p.get("vitalidade") is not None or isinstance(p.get("virtudes"), dict)
     if is_v4:
         from services.conflict_resolution import virtude_value
+
         virtue = {
             "str": "forca",
             "dex": "agilidade",
@@ -1100,12 +1233,16 @@ def resolve_trap(player: dict, loc: dict, danger: int, rng=None, *,
     logs = [f"⚠ {trap['name']}! {trap.get('desc', '')}"]
     if roll >= dc:
         from progression import grant_xp
+
         p, lvl_events = grant_xp(p, TRAP_DODGE_XP)
-        logs.append(f"{p.get('name', 'O herói')} ESQUIVA (save {roll} vs CD {dc}) — +{TRAP_DODGE_XP} XP.")
+        logs.append(
+            f"{p.get('name', 'O herói')} ESQUIVA (save {roll} vs CD {dc}) — +{TRAP_DODGE_XP} XP."
+        )
         return p, logs, {"trap": trap, "dodged": True, "level_up_events": lvl_events}
     if is_v4:
         gamedata.sync_vitality(p)
         from services.conflict_damage import resolve_damage_and_wounds
+
         # Conversão categórica da escala d6 antiga para a escala Vitalidade 6–16.
         dmg = {1: 2, 2: 3, 3: 4, 4: 5}[danger]
         dres = resolve_damage_and_wounds(
@@ -1117,10 +1254,10 @@ def resolve_trap(player: dict, loc: dict, danger: int, rng=None, *,
         )
         logs.append(
             f"{p.get('name', 'O herói')} falha (save {roll} vs CD {dc}): "
-            f"{dmg} de dano (Vitalidade {p['vitalidade']}); "
-            + "; ".join(dres["log"])
+            f"{dmg} de dano (Vitalidade {p['vitalidade']}); " + "; ".join(dres["log"])
         )
         from services import death_flow
+
         terminal_triggered = False
         stabilization = None
         if death_flow.should_trigger_last_stand(p):
@@ -1128,13 +1265,17 @@ def resolve_trap(player: dict, loc: dict, danger: int, rng=None, *,
             death_flow.trigger_last_stand(p)
             death_flow.enter_terminal_state(p)
             stabilization = death_flow.attempt_stabilization(
-                p, helper, rng=rng,
+                p,
+                helper,
+                rng=rng,
                 has_kit=bool((helper or {}).get("has_kit")),
                 is_medico="medic" in str((helper or {}).get("class_name", "")).lower(),
             )
             if p.get("estado_terminal") and not stabilization.get("dead"):
                 stabilization = death_flow.attempt_stabilization(
-                    p, helper, rng=rng,
+                    p,
+                    helper,
+                    rng=rng,
                     has_kit=bool((helper or {}).get("has_kit")),
                     is_medico="medic" in str((helper or {}).get("class_name", "")).lower(),
                 )
@@ -1154,8 +1295,10 @@ def resolve_trap(player: dict, loc: dict, danger: int, rng=None, *,
     else:
         dmg, detail = cm.roll_dice_numeric(f"{danger}d6")
         p["hp"] = max(0, int(p.get("hp", 0)) - dmg)
-        logs.append(f"{p.get('name', 'O herói')} falha (save {roll} vs CD {dc}): "
-                    f"{dmg} de dano (HP {p['hp']}) [{detail}]")
+        logs.append(
+            f"{p.get('name', 'O herói')} falha (save {roll} vs CD {dc}): "
+            f"{dmg} de dano (HP {p['hp']}) [{detail}]"
+        )
     cond = trap.get("condition")
     if cond and not p.get("dead"):
         p.setdefault("active_conditions", [])
@@ -1170,16 +1313,21 @@ def resolve_track(state_bk: dict, loc: dict, danger: int, turn: int, rng=None) -
     e/ou marca pista de tesouro (próximo TREASURE da região rola banda alta).
     Retorna (bestiary_knowledge, note, treasure_hint: bool)."""
     from services import discovery as disc
+
     entry = pick_encounter_enemy(loc, danger, turn)
     note = "Você encontra rastros antigos, ilegíveis."
     bk = state_bk or {}
     if entry:
         bk = disc.record_rumor(bk, entry.get("id", ""), turn)
-        note = (f"Rastros frescos de {entry.get('name', 'algo grande')} — "
-                "você grava os sinais na memória (Codex atualizado).")
-    treasure = bool((rng or __import__('random')).randint(0, 1))
+        note = (
+            f"Rastros frescos de {entry.get('name', 'algo grande')} — "
+            "você grava os sinais na memória (Codex atualizado)."
+        )
+    treasure = bool((rng or __import__("random")).randint(0, 1))
     if treasure:
-        note += " Entre as marcas, sinais de carga abandonada — algo valioso ficou para trás por perto."
+        note += (
+            " Entre as marcas, sinais de carga abandonada — algo valioso ficou para trás por perto."
+        )
     return bk, note, treasure
 
 

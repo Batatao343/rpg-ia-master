@@ -19,18 +19,28 @@ def _state(game_id):
         "schema_version": 8,
         "game_id": str(game_id),
         "player": {
-            "name": "Transferência", "class_name": "Devoto do Abismo", "level": 1,
-            "virtudes": {"corpo": 2}, "vitalidade": 18, "max_vitalidade": 18,
+            "name": "Transferência",
+            "class_name": "Devoto do Abismo",
+            "level": 1,
+            "virtudes": {"corpo": 2},
+            "vitalidade": 18,
+            "max_vitalidade": 18,
         },
         "world": {
-            "current_location": "Nova Arcádia", "turn_count": 0,
+            "current_location": "Nova Arcádia",
+            "turn_count": 0,
             "world_clock": {"day": 1, "period": "Manhã"},
         },
         "messages": [],
-        "event_log": [{
-            "event_id": "transfer-evt", "turn": 0, "type": "campaign_started",
-            "payload": {"source": "fixture"}, "source": "test",
-        }],
+        "event_log": [
+            {
+                "event_id": "transfer-evt",
+                "turn": 0,
+                "type": "campaign_started",
+                "payload": {"source": "fixture"},
+                "source": "test",
+            }
+        ],
     }
 
 

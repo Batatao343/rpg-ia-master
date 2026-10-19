@@ -17,8 +17,12 @@ from collections.abc import Mapping
 
 from observability.telemetry import correlation, redact
 
-_LEVELS = {"debug": logging.DEBUG, "info": logging.INFO, "warning": logging.WARNING,
-           "error": logging.ERROR}
+_LEVELS = {
+    "debug": logging.DEBUG,
+    "info": logging.INFO,
+    "warning": logging.WARNING,
+    "error": logging.ERROR,
+}
 _ROOT = "rpg"
 _MARK = "_rpg_json_handler"
 
@@ -56,18 +60,25 @@ class JsonLineFormatter(logging.Formatter):
             data.setdefault(key, value)
         if record.exc_info and record.exc_info[0] is not None:
             from observability.telemetry import safe_stack
+
             data.setdefault("error_type", record.exc_info[0].__name__)
             data.setdefault("stack", safe_stack(record.exc_info[1]) if record.exc_info[1] else [])
         from observability.boot import INSTANCE_REF  # SPEC-249 R4
+
         data.setdefault("instance_ref", INSTANCE_REF)
         data["level"] = record.levelname.lower()
         data["logger"] = record.name
-        data["ts"] = datetime.fromtimestamp(record.created, UTC).isoformat(
-            timespec="milliseconds").replace("+00:00", "Z")
+        data["ts"] = (
+            datetime.fromtimestamp(record.created, UTC)
+            .isoformat(timespec="milliseconds")
+            .replace("+00:00", "Z")
+        )
         return json.dumps(data, ensure_ascii=False, sort_keys=True, default=str)
 
 
-_UUID_RE = re.compile(r"\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b")
+_UUID_RE = re.compile(
+    r"\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b"
+)
 _IPV4_RE = re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b")
 
 
@@ -75,6 +86,7 @@ def _redact_legacy(message: str) -> str:
     """Logs legados ``%s`` não passam por ``pseudonym``: ids crus (UUID) viram pseudônimo
     e IPv4 vira ``[IP]`` (revisão Sol SPEC-239/240)."""
     from observability.telemetry import pseudonym
+
     cleaned = _UUID_RE.sub(lambda m: "ref:" + pseudonym(m.group(0).lower()), message)
     cleaned = _IPV4_RE.sub("[IP]", cleaned)
     return redact(cleaned)
@@ -115,7 +127,7 @@ def configure_logging(env: Mapping[str, str] | None = None) -> None:
     # não-JSON por chamada de provider, com a URL inteira (~4/turno). Só em debug.
     # Filtro (não só nível): o SDK ``openai`` re-sobe ``httpx`` para INFO no import (OPENAI_LOG).
     _QUIET_THIRD_PARTY.min_level = logging.DEBUG if level <= logging.DEBUG else logging.WARNING
-    for noisy in ("httpx", "httpcore", "httpx2"):   # httpx2 = cliente HTTP do SDK openai
+    for noisy in ("httpx", "httpcore", "httpx2"):  # httpx2 = cliente HTTP do SDK openai
         noisy_logger = logging.getLogger(noisy)
         if _QUIET_THIRD_PARTY not in noisy_logger.filters:
             noisy_logger.addFilter(_QUIET_THIRD_PARTY)
@@ -124,7 +136,8 @@ def configure_logging(env: Mapping[str, str] | None = None) -> None:
         if key.startswith(prefix) and len(key) > len(prefix):
             area_level = _LEVELS.get(str(value).strip().lower())
             if area_level is not None:
-                logging.getLogger(f"{_ROOT}.{key[len(prefix):].lower()}").setLevel(area_level)
+                logging.getLogger(f"{_ROOT}.{key[len(prefix) :].lower()}").setLevel(area_level)
     if not valid:
         from observability.telemetry import log_event
+
         log_event("logging", "config_invalid_level", level="warning", fallback="info")

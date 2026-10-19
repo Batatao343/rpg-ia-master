@@ -17,16 +17,27 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from services.content_validator import CODEX_DIR, GRAPH_DIR, validate_all
 
-_ORDEM = ("frontmatter", "ids", "references", "aliases", "visibility", "overrides",
-          "encoding", "cards", "bestiary", "visual_assets")
+_ORDEM = (
+    "frontmatter",
+    "ids",
+    "references",
+    "aliases",
+    "visibility",
+    "overrides",
+    "encoding",
+    "cards",
+    "bestiary",
+    "visual_assets",
+)
 
 
 def main(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) -> int:
     # Overrides ficam AO LADO do codex (`<pai>/codex_overrides.yaml`) — assim
     # validar um codex arbitrário (ex.: fixture de teste) não pega o overrides
     # real do repo (id de override viraria "órfão" falso).
-    overrides_path = os.path.join(os.path.dirname(os.path.abspath(codex_dir)),
-                                  "codex_overrides.yaml")
+    overrides_path = os.path.join(
+        os.path.dirname(os.path.abspath(codex_dir)), "codex_overrides.yaml"
+    )
     findings = validate_all(codex_dir, graph_dir, overrides_path=overrides_path)
     por_validador: dict[str, list] = {}
     for f in findings:

@@ -31,6 +31,7 @@ def action_guard_node(state: dict) -> dict:
             ),
         }
         from services.interlocutor import speaker_for_turn
+
         return {
             "action_guard_blocked": True,
             "last_action_outcome": decision,
@@ -43,11 +44,18 @@ def action_guard_node(state: dict) -> dict:
         }
     decision = evaluate_action(state, _latest_human_text(state))
     if decision["allowed"]:
-        return {"action_guard_blocked": False, "turn_baseline": capture_baseline(state),
-                "last_action_outcome": dict(decision)}
+        return {
+            "action_guard_blocked": False,
+            "turn_baseline": capture_baseline(state),
+            "last_action_outcome": dict(decision),
+        }
     from services.interlocutor import speaker_for_turn
+
     # SPEC-202 R9: recusa determinística → speaker `system` (o grafo encerra
     # sem turn_finalizer; preserva last_npc p/ continuidade).
-    return {"action_guard_blocked": True, "last_action_outcome": dict(decision),
-            "messages": [AIMessage(content=decision["message"])],
-            "last_speaker": speaker_for_turn({**state, "last_action_outcome": decision})}
+    return {
+        "action_guard_blocked": True,
+        "last_action_outcome": dict(decision),
+        "messages": [AIMessage(content=decision["message"])],
+        "last_speaker": speaker_for_turn({**state, "last_action_outcome": decision}),
+    }

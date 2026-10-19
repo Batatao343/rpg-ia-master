@@ -49,7 +49,10 @@ def test_public_market_snapshot_is_read_only_and_uses_canonical_prices():
     potion = next(q for q in snapshot["quotes"] if q["item_id"] == "pocao_cura")
     merchant = economy.MERCHANTS[snapshot["merchant_id"]]
     assert potion["buy_price"] == economy.price(
-        "pocao_cura", mode="buy", state=state, merchant=merchant,
+        "pocao_cura",
+        mode="buy",
+        state=state,
+        merchant=merchant,
     )
     assert potion["sell_price"] < potion["buy_price"]
 
@@ -103,11 +106,12 @@ def test_transaction_conservation_detects_corrupt_gold_delta():
         "stock_after": [{"item_id": "corda", "stock": 2}],
     }
     violations = check_contextual(
-        _state(), None, 4, {"economy_action": outcome, "net_worth_after": 110},
+        _state(),
+        None,
+        4,
+        {"economy_action": outcome, "net_worth_after": 110},
     )
-    assert "economy.transaction_conservation" in {
-        violation.check_id for violation in violations
-    }
+    assert "economy.transaction_conservation" in {violation.check_id for violation in violations}
 
 
 def test_transaction_conservation_sums_duplicate_non_stackable_entries():
@@ -129,7 +133,10 @@ def test_transaction_conservation_sums_duplicate_non_stackable_entries():
     }
 
     violations = check_contextual(
-        _state(), None, 4, {"economy_action": outcome, "net_worth_after": 110},
+        _state(),
+        None,
+        4,
+        {"economy_action": outcome, "net_worth_after": 110},
     )
 
     assert "economy.transaction_conservation" not in {
@@ -153,9 +160,15 @@ def test_merchant_mix_contains_all_normal_play_families():
 def test_merchant_overexploration_switches_to_normal_social_or_quest_action(monkeypatch):
     profile = Comerciante()
     profile.reset()
-    profile.action_counts.update({
-        "economy": 35, "exploration": 40, "quest": 8, "social": 8, "survival": 9,
-    })
+    profile.action_counts.update(
+        {
+            "economy": 35,
+            "exploration": 40,
+            "quest": 8,
+            "social": 8,
+            "survival": 9,
+        }
+    )
     state = _state("rota_sem_mercado")
     monkeypatch.setattr(profile_module, "_connections", lambda _location: [])
     before_exploration = profile.action_counts["exploration"]
@@ -200,10 +213,13 @@ def test_merchant_learns_to_avoid_observed_location_when_no_travel_was_planned(
 def test_merchant_avoids_fatal_travel_destination_not_rollback_source(monkeypatch):
     profile = Comerciante()
     profile.reset()
-    monkeypatch.setattr(profile_module, "_connections", lambda _location: [
-        {"id": "pradaria_ruinas", "name": "Pradaria das Ruínas", "danger": 3,
-         "tags": []},
-    ])
+    monkeypatch.setattr(
+        profile_module,
+        "_connections",
+        lambda _location: [
+            {"id": "pradaria_ruinas", "name": "Pradaria das Ruínas", "danger": 3, "tags": []},
+        ],
+    )
     departed = _state("nova_arcadia")
     departed["continuity"] = {"timeline_epoch": 0}
     profile.decide(departed, random.Random(3))
@@ -220,13 +236,23 @@ def test_merchant_avoids_fatal_travel_destination_not_rollback_source(monkeypatc
 def test_merchant_prefers_low_risk_route_after_survival_pressure(monkeypatch):
     profile = Comerciante()
     profile.reset()
-    profile.action_counts.update({
-        "economy": 30, "exploration": 20, "social": 10, "quest": 10, "survival": 30,
-    })
-    monkeypatch.setattr(profile_module, "_connections", lambda _location: [
-        {"id": "perigo", "name": "Desfiladeiro Mortal", "danger": 5, "tags": []},
-        {"id": "seguro", "name": "Estrada Segura", "danger": 1, "tags": []},
-    ])
+    profile.action_counts.update(
+        {
+            "economy": 30,
+            "exploration": 20,
+            "social": 10,
+            "quest": 10,
+            "survival": 30,
+        }
+    )
+    monkeypatch.setattr(
+        profile_module,
+        "_connections",
+        lambda _location: [
+            {"id": "perigo", "name": "Desfiladeiro Mortal", "danger": 5, "tags": []},
+            {"id": "seguro", "name": "Estrada Segura", "danger": 1, "tags": []},
+        ],
+    )
     state = _state("origem")
     state["world"]["visited"] = ["origem", "perigo", "seguro"]
 

@@ -46,7 +46,13 @@ def _repo(tmp_path: Path) -> Path:
 
 def _apply(repo: Path, count: int) -> list[normalizer.SpecRecord]:
     records, source_sha, shallow = normalizer.build_plan(repo, expected_count=count)
-    normalizer._apply(repo, records, source_sha, shallow, repo / "docs" / "auditorias" / "specs-migration-report.md")
+    normalizer._apply(
+        repo,
+        records,
+        source_sha,
+        shallow,
+        repo / "docs" / "auditorias" / "specs-migration-report.md",
+    )
     return records
 
 
@@ -61,12 +67,23 @@ def test_migration_tie_done_evidence_relative_references_and_idempotence(tmp_pat
     _write(repo / "specs" / "npcs-3-camadas-traits.md", "# traits\n\n> **Status:** `done`\n")
     _write(repo / "specs" / "TEMPLATE.md", "# template\n")
     first_commit = _commit(repo, "create historical specs")
-    _write(repo / "docs" / "nested" / "links.md", "[beta](../../specs/beta.md)\n[traits](../../specs/npcs-3-camadas.md)\n")
+    _write(
+        repo / "docs" / "nested" / "links.md",
+        "[beta](../../specs/beta.md)\n[traits](../../specs/npcs-3-camadas.md)\n",
+    )
     _write(repo / "specs" / "beta.md", "# beta\n\n> **Status:** `done`\n> **Depende de:** —\n")
     done_commit = _commit(repo, "complete beta")
 
     dry_run = subprocess.run(
-        [sys.executable, str(Path(normalizer.__file__)), "--dry-run", "--repo", str(repo), "--expected-count", "3"],
+        [
+            sys.executable,
+            str(Path(normalizer.__file__)),
+            "--dry-run",
+            "--repo",
+            str(repo),
+            "--expected-count",
+            "3",
+        ],
         check=True,
         capture_output=True,
         text=True,
@@ -93,7 +110,15 @@ def test_migration_tie_done_evidence_relative_references_and_idempotence(tmp_pat
     assert "../../specs/SPEC-003-npcs-3-camadas-traits.md" in links
 
     check = subprocess.run(
-        [sys.executable, str(Path(normalizer.__file__)), "--check", "--repo", str(repo), "--expected-count", "3"],
+        [
+            sys.executable,
+            str(Path(normalizer.__file__)),
+            "--check",
+            "--repo",
+            str(repo),
+            "--expected-count",
+            "3",
+        ],
         capture_output=True,
         text=True,
     )
@@ -104,7 +129,16 @@ def test_migration_tie_done_evidence_relative_references_and_idempotence(tmp_pat
     assert [entry["id"] for entry in index["specs"]] == ["SPEC-001", "SPEC-002", "SPEC-003"]
 
     records_again = _apply(repo, 3)
-    assert normalizer._check(repo, records_again, done_commit, False, repo / "docs" / "auditorias" / "specs-migration-report.md") == []
+    assert (
+        normalizer._check(
+            repo,
+            records_again,
+            done_commit,
+            False,
+            repo / "docs" / "auditorias" / "specs-migration-report.md",
+        )
+        == []
+    )
 
 
 def test_followed_rename_uses_original_creation_and_first_done_blob(tmp_path: Path) -> None:
@@ -131,11 +165,19 @@ def test_check_reports_broken_internal_markdown_link(tmp_path: Path) -> None:
     _write(repo / "docs" / "broken.md", "[missing](missing.md)\n")
 
     records, source_sha, shallow = normalizer.build_plan(repo, expected_count=1)
-    errors = normalizer._check(repo, records, source_sha, shallow, repo / "docs" / "auditorias" / "specs-migration-report.md")
+    errors = normalizer._check(
+        repo,
+        records,
+        source_sha,
+        shallow,
+        repo / "docs" / "auditorias" / "specs-migration-report.md",
+    )
     assert any("broken Markdown link" in error for error in errors)
 
 
-def test_committed_migration_rechecks_git_anchor_and_rejects_tampered_provenance(tmp_path: Path) -> None:
+def test_committed_migration_rechecks_git_anchor_and_rejects_tampered_provenance(
+    tmp_path: Path,
+) -> None:
     repo = _repo(tmp_path)
     _write(repo / "specs" / "only.md", "# only\n\n> **Status:** `done`\n")
     anchor = _commit(repo, "create historical spec")
@@ -147,7 +189,10 @@ def test_committed_migration_rechecks_git_anchor_and_rejects_tampered_provenance
     assert records[0].created_commit == anchor
 
     index_path = repo / "specs" / "index.yaml"
-    _write(index_path, _read(index_path).replace(f"created_commit: {anchor}", f"created_commit: {'0' * 40}"))
+    _write(
+        index_path,
+        _read(index_path).replace(f"created_commit: {anchor}", f"created_commit: {'0' * 40}"),
+    )
     with pytest.raises(normalizer.MigrationError, match="provenance was altered"):
         normalizer.build_plan(repo, expected_count=1)
 

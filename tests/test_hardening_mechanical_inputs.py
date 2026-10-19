@@ -26,11 +26,13 @@ def _canonical_v4_npc(extreme: int = 9999) -> dict:
         "combat_stats": {
             "hp": extreme,
             "ac": extreme,
-            "attacks": [{
-                "name": "Golpe adulterado",
-                "bonus": extreme,
-                "damage": f"{extreme}d{extreme}",
-            }],
+            "attacks": [
+                {
+                    "name": "Golpe adulterado",
+                    "bonus": extreme,
+                    "damage": f"{extreme}d{extreme}",
+                }
+            ],
         },
         # Ficha v4 canônica e já danificada.
         "virtudes": {
@@ -55,14 +57,16 @@ def _canonical_v4_npc(extreme: int = 9999) -> dict:
         "status": "ativo",
         "tactical_archetype": "guardiao",
         "tactical_profile": {
-            "priorities": [{
-                "trigger": "aliado_em_perigo",
-                "tipo": "obrigatorio",
-                "action_key": "protect",
-                "action_hint": "Protege o aliado em perigo.",
-                "resistance": "flexivel",
-                "blocks": [],
-            }],
+            "priorities": [
+                {
+                    "trigger": "aliado_em_perigo",
+                    "tipo": "obrigatorio",
+                    "action_key": "protect",
+                    "action_hint": "Protege o aliado em perigo.",
+                    "resistance": "flexivel",
+                    "blocks": [],
+                }
+            ],
         },
         "known_cards": ["interpor_escudo"],
     }
@@ -95,10 +99,7 @@ def test_companion_copia_ficha_v4_e_ignora_extremos_legados(extreme):
     companion["ferimentos"]["leve"].append({"regiao": "perna"})
     companion["tactical_profile"]["priorities"][0]["action_key"] = "flee"
     assert len(npc["ferimentos"]["leve"]) == 1
-    assert (
-        npc["tactical_profile"]["priorities"][0]["action_key"]
-        == "protect"
-    )
+    assert npc["tactical_profile"]["priorities"][0]["action_key"] == "protect"
 
 
 def test_recrutamento_e_aliado_transitorio_preservam_ficha_v4_danificada():
@@ -128,21 +129,24 @@ def test_recrutamento_e_aliado_transitorio_preservam_ficha_v4_danificada():
 
 def test_companion_legado_ignora_numeros_livres_e_materializa_ficha_segura():
     def materialize(extreme):
-        return party_mod.make_companion_from_npc({
-            "id": f"npc_legacy_{extreme}",
-            "role": "Curandeira de campanha",
-            "persona": "Cuida dos feridos.",
-            "attributes": {
-                "str": extreme,
-                "dex": extreme,
-                "con": extreme,
+        return party_mod.make_companion_from_npc(
+            {
+                "id": f"npc_legacy_{extreme}",
+                "role": "Curandeira de campanha",
+                "persona": "Cuida dos feridos.",
+                "attributes": {
+                    "str": extreme,
+                    "dex": extreme,
+                    "con": extreme,
+                },
+                "combat_stats": {
+                    "hp": extreme,
+                    "ac": extreme,
+                    "attacks": [{"bonus": extreme, "damage": "9999d9999"}],
+                },
             },
-            "combat_stats": {
-                "hp": extreme,
-                "ac": extreme,
-                "attacks": [{"bonus": extreme, "damage": "9999d9999"}],
-            },
-        }, "Mara")
+            "Mara",
+        )
 
     positive = materialize(9999)
     negative = materialize(-9999)
@@ -172,10 +176,7 @@ def test_companion_legado_ignora_numeros_livres_e_materializa_ficha_segura():
         "dex": 9999,
         "con": 9999,
     }
-    assert all(
-        attack.get("damage") != "9999d9999"
-        for attack in positive["attacks"]
-    )
+    assert all(attack.get("damage") != "9999d9999" for attack in positive["attacks"])
 
 
 def test_companion_legado_incompleto_preserva_dano_e_ferimentos_existentes():
@@ -184,14 +185,17 @@ def test_companion_legado_incompleto_preserva_dano_e_ferimentos_existentes():
         "grave": [],
         "critico": [],
     }
-    companion = party_mod.make_companion_from_npc({
-        "id": "npc_legacy_hurt",
-        "role": "Guarda",
-        "vitalidade": 3,
-        "ferimentos": wounds,
-        "attributes": {"con": 9999, "dex": 9999},
-        "combat_stats": {"hp": 9999, "ac": 9999},
-    }, "Bors")
+    companion = party_mod.make_companion_from_npc(
+        {
+            "id": "npc_legacy_hurt",
+            "role": "Guarda",
+            "vitalidade": 3,
+            "ferimentos": wounds,
+            "attributes": {"con": 9999, "dex": 9999},
+            "combat_stats": {"hp": 9999, "ac": 9999},
+        },
+        "Bors",
+    )
 
     assert companion["vitalidade"] == 3
     assert companion["hp"] == 3
@@ -202,18 +206,20 @@ def test_companion_legado_incompleto_preserva_dano_e_ferimentos_existentes():
 
 def test_enemy_schema_rejeita_hp_ac_atributos_e_dano_livres():
     with pytest.raises(ValidationError):
-        EnemySchema.model_validate({
-            "name": "Colosso",
-            "description": "ameaça",
-            "categoria": "elite",
-            "arquetipo": "bruto",
-            "estilo_ataque": "corpo_a_corpo",
-            "nome_ataque": "Punho",
-            "hp": 9999,
-            "ac": 9999,
-            "attributes": {"str": 9999},
-            "damage": "9999d9999",
-        })
+        EnemySchema.model_validate(
+            {
+                "name": "Colosso",
+                "description": "ameaça",
+                "categoria": "elite",
+                "arquetipo": "bruto",
+                "estilo_ataque": "corpo_a_corpo",
+                "nome_ataque": "Punho",
+                "hp": 9999,
+                "ac": 9999,
+                "attributes": {"str": 9999},
+                "damage": "9999d9999",
+            }
+        )
 
 
 def test_factory_ignora_numeros_livres_e_materializa_por_categoria():
@@ -263,15 +269,21 @@ def test_effect_target_outside_scene_is_rejected():
 def test_validate_rejects_numeric_effect_that_skipped_materialization():
     scene = {
         "encounter_level": 2,
-        "objects": [{
-            "id": "braseiro",
-            "base_narrativa": "braseiro citado",
-            "interactions": [{
-                "label": "derrubar",
-                "effect": {"kind": "damage",
-                           "params": {"target": "player", "amount": 9999}},
-            }],
-        }],
+        "objects": [
+            {
+                "id": "braseiro",
+                "base_narrativa": "braseiro citado",
+                "interactions": [
+                    {
+                        "label": "derrubar",
+                        "effect": {
+                            "kind": "damage",
+                            "params": {"target": "player", "amount": 9999},
+                        },
+                    }
+                ],
+            }
+        ],
         "abyss_events": [],
     }
     result = prep.validate_preparation(scene)
@@ -293,18 +305,22 @@ class _PreparedLLM:
 def test_prepare_encounter_neutralizes_numeric_input_from_llm():
     proposed = prep.PreparedScene(
         zones=[{"id": "z0", "name": "Ponte", "connections": []}],
-        objects=[{
-            "id": "braseiro",
-            "base_narrativa": "braseiro citado na ponte",
-            "interactions": [{
-                "label": "derrubar",
-                "effect": {
-                    "kind": "damage",
-                    "potency": "fraco",
-                    "params": {"target": "player", "amount": 9999},
-                },
-            }],
-        }],
+        objects=[
+            {
+                "id": "braseiro",
+                "base_narrativa": "braseiro citado na ponte",
+                "interactions": [
+                    {
+                        "label": "derrubar",
+                        "effect": {
+                            "kind": "damage",
+                            "potency": "fraco",
+                            "params": {"target": "player", "amount": 9999},
+                        },
+                    }
+                ],
+            }
+        ],
     )
     scene = prep.prepare_encounter(
         {"location": "Ponte", "encounter_level": 4, "enemies": [], "npcs": []},
@@ -318,18 +334,22 @@ def test_prepare_encounter_neutralizes_numeric_input_from_llm():
 def test_prepare_encounter_invalid_target_falls_back_safely():
     proposed = prep.PreparedScene(
         zones=[{"id": "z0", "name": "Ponte", "connections": []}],
-        objects=[{
-            "id": "braseiro",
-            "base_narrativa": "braseiro citado na ponte",
-            "interactions": [{
-                "label": "derrubar",
-                "effect": {
-                    "kind": "damage",
-                    "potency": "forte",
-                    "params": {"target": "npc_inventado", "amount": 9999},
-                },
-            }],
-        }],
+        objects=[
+            {
+                "id": "braseiro",
+                "base_narrativa": "braseiro citado na ponte",
+                "interactions": [
+                    {
+                        "label": "derrubar",
+                        "effect": {
+                            "kind": "damage",
+                            "potency": "forte",
+                            "params": {"target": "npc_inventado", "amount": 9999},
+                        },
+                    }
+                ],
+            }
+        ],
     )
     scene = prep.prepare_encounter(
         {"location": "Ponte", "encounter_level": 2, "enemies": [], "npcs": []},

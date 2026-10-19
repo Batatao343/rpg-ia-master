@@ -32,13 +32,30 @@ def safe_entity_id(value: str) -> str:
     return normalized
 
 
-def object_key(*, owner_id: UUID, game_id: UUID, asset_kind: str, entity_id: str,
-               asset_id: UUID, variant: str, sha256: str) -> str:
-    if variant not in VARIANTS or asset_kind not in {"player","npc","location","item","monster","epic"}:
+def object_key(
+    *,
+    owner_id: UUID,
+    game_id: UUID,
+    asset_kind: str,
+    entity_id: str,
+    asset_id: UUID,
+    variant: str,
+    sha256: str,
+) -> str:
+    if variant not in VARIANTS or asset_kind not in {
+        "player",
+        "npc",
+        "location",
+        "item",
+        "monster",
+        "epic",
+    }:
         raise ValueError("tipo/variante inválido")
     entity = safe_entity_id(entity_id)
-    return (f"users/{owner_id}/games/{game_id}/{asset_kind}/{entity}/"
-            f"{asset_id}.{variant}.{sha256[:12]}.webp")
+    return (
+        f"users/{owner_id}/games/{game_id}/{asset_kind}/{entity}/"
+        f"{asset_id}.{variant}.{sha256[:12]}.webp"
+    )
 
 
 def process_image(payload: bytes) -> list[ProcessedAsset]:
@@ -54,6 +71,7 @@ def process_image(payload: bytes) -> list[ProcessedAsset]:
             clean = source.convert("RGB")
     except (UnidentifiedImageError, OSError) as exc:
         from observability.telemetry import log_event
+
         log_event("image", "processing_failed", level="warning", error_type=type(exc).__name__)
         raise ValueError("conteúdo não é uma imagem válida") from exc
     result: list[ProcessedAsset] = []
@@ -63,9 +81,15 @@ def process_image(payload: bytes) -> list[ProcessedAsset]:
         output = BytesIO()
         image.save(output, format="WEBP", quality=88, method=6, exif=b"")
         data = output.getvalue()
-        result.append(ProcessedAsset(
-            variant, data, hashlib.sha256(data).hexdigest(), image.width, image.height,
-        ))
+        result.append(
+            ProcessedAsset(
+                variant,
+                data,
+                hashlib.sha256(data).hexdigest(),
+                image.width,
+                image.height,
+            )
+        )
     return result
 
 

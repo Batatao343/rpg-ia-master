@@ -1,6 +1,7 @@
 """SPEC-195 review-fix regressions against the local Postgres lab (RPG_TEST_DATABASE_URL).
 
 Every test runs on the rolled-back single-connection fixture (`lab_rb`)."""
+
 from __future__ import annotations
 
 from uuid import uuid4
@@ -28,8 +29,13 @@ pytestmark = pytest.mark.infra_local
 
 
 def spend_all(lab, owner):
-    lab.wallet.adjust_admin(owner, adjustment_id=str(uuid4()), signed_milli=-balance(lab, owner),
-                            actor_id=uuid4(), reason="spent for test")
+    lab.wallet.adjust_admin(
+        owner,
+        adjustment_id=str(uuid4()),
+        signed_milli=-balance(lab, owner),
+        actor_id=uuid4(),
+        reason="spent for test",
+    )
 
 
 def run(lab, ref, *events):
@@ -92,8 +98,11 @@ def test_h2_orphaned_after_max_attempts(lab_rb):
     outcome = None
     for _ in range(PARK_MAX_ATTEMPTS):
         with lab.pool.connection() as db:
-            db.execute("update app.purchase_reconciliation_events set next_attempt_at=now() "
-                       "where purchase_ref=%s", (ref,))
+            db.execute(
+                "update app.purchase_reconciliation_events set next_attempt_at=now() "
+                "where purchase_ref=%s",
+                (ref,),
+            )
         outcome = lab.store.reconcile(STRIPE, ref)
     assert outcome == "orphaned"
     assert ref not in [r for _, r in lab.store.open_refs(1000)]
@@ -104,17 +113,27 @@ def test_h2_stripe_event_without_financial_effect_is_marked_once(lab_rb):
     lab = lab_rb
     eid = "evt_inquiry_" + uuid4().hex
     with lab.pool.connection() as db:
-        db.execute("""insert into app.stripe_events(event_id,event_type,body_sha256,provider_created,facts)
+        db.execute(
+            """insert into app.stripe_events(event_id,event_type,body_sha256,provider_created,facts)
             values (%s,'charge.dispute.created',%s,1,%s::jsonb)""",
-                   (eid, "a" * 64, '{"payment_intent":"pi_x","dispute_status":"warning_needs_response"}'))
+            (eid, "a" * 64, '{"payment_intent":"pi_x","dispute_status":"warning_needs_response"}'),
+        )
     lab.store.ingest_backlog(1000)
     with lab.pool.connection() as db:
-        skip = db.execute("select count(*) as n from app.purchase_reconciliation_skips "
-                          "where provider_event_id=%s", (eid,)).fetchone()["n"]
-        events = db.execute("select count(*) as n from app.purchase_reconciliation_events "
-                            "where provider_event_id=%s", (eid,)).fetchone()["n"]
+        skip = db.execute(
+            "select count(*) as n from app.purchase_reconciliation_skips "
+            "where provider_event_id=%s",
+            (eid,),
+        ).fetchone()["n"]
+        events = db.execute(
+            "select count(*) as n from app.purchase_reconciliation_events "
+            "where provider_event_id=%s",
+            (eid,),
+        ).fetchone()["n"]
     assert (skip, events) == (1, 0)
-    assert lab.store.ingest_backlog(1000) == 0  # not re-selected, no duplicate marker (pk would fail)
+    assert (
+        lab.store.ingest_backlog(1000) == 0
+    )  # not re-selected, no duplicate marker (pk would fail)
 
 
 def test_m1_forgiven_debt_released_by_won_dispute_is_not_credited(lab_rb):
@@ -125,15 +144,24 @@ def test_m1_forgiven_debt_released_by_won_dispute_is_not_credited(lab_rb):
     run(lab, ref, ev("dispute_open", ref, 1, GROSS_CENTS, "du_1"))
     assert debt(lab, owner) == SHARD
     with lab.pool.connection() as db:
-        assert forgive_debt(db, owner.user_id, SHARD, reference="INC-M1", actor_id=uuid4(),
-                            reason="goodwill") == SHARD
+        assert (
+            forgive_debt(
+                db, owner.user_id, SHARD, reference="INC-M1", actor_id=uuid4(), reason="goodwill"
+            )
+            == SHARD
+        )
     assert debt(lab, owner) == 0
     run(lab, ref, ev("dispute_won", ref, 2, GROSS_CENTS, "du_1"))
     assert (balance(lab, owner), debt(lab, owner)) == (0, 0)  # nothing was taken, nothing returns
     with lab.pool.connection() as db:
-        assert db.execute("select coalesce(sum(amount_milli),0) as s from app.wallet_debt_entries "
-                          "where owner_id=%s and kind='forgive_close'",
-                          (owner.user_id,)).fetchone()["s"] == SHARD
+        assert (
+            db.execute(
+                "select coalesce(sum(amount_milli),0) as s from app.wallet_debt_entries "
+                "where owner_id=%s and kind='forgive_close'",
+                (owner.user_id,),
+            ).fetchone()["s"]
+            == SHARD
+        )
     assert run(lab, ref) == "applied" and (balance(lab, owner), debt(lab, owner)) == (0, 0)
 
 
@@ -141,29 +169,44 @@ def test_m1_partial_credit_returns_only_what_was_clawed(lab_rb):
     lab = lab_rb
     owner = Principal(uuid4(), "test", "m1b")
     ref = web_purchase(lab, owner)
-    lab.wallet.adjust_admin(owner, adjustment_id=str(uuid4()), signed_milli=-200, actor_id=uuid4(),
-                            reason="spent for test")
+    lab.wallet.adjust_admin(
+        owner,
+        adjustment_id=str(uuid4()),
+        signed_milli=-200,
+        actor_id=uuid4(),
+        reason="spent for test",
+    )
     run(lab, ref, ev("dispute_open", ref, 1, GROSS_CENTS, "du_1"))  # claw SHARD-200, debt 200
     with lab.pool.connection() as db:
-        forgive_debt(db, owner.user_id, 200, reference="INC-M1B", actor_id=uuid4(), reason="goodwill")
+        forgive_debt(
+            db, owner.user_id, 200, reference="INC-M1B", actor_id=uuid4(), reason="goodwill"
+        )
     run(lab, ref, ev("dispute_won", ref, 2, GROSS_CENTS, "du_1"))
     assert (balance(lab, owner), debt(lab, owner)) == (SHARD - 200, 0)
 
 
 def test_l2_state_transitions_are_recorded_append_only(lab_rb):
     import psycopg
+
     lab = lab_rb
     owner = Principal(uuid4(), "test", "l2")
     ref = web_purchase(lab, owner)
     run(lab, ref, ev("dispute_open", ref, 1, GROSS_CENTS, "du_1"))
     run(lab, ref, ev("dispute_won", ref, 2, GROSS_CENTS, "du_1"))
     with lab.pool.connection() as db:
-        rows = db.execute("select old_state,new_state from app.purchase_reconciliation_transitions "
-                          "where purchase_ref=%s order by created_at, new_state", (ref,)).fetchall()
-        assert {(r["old_state"], r["new_state"]) for r in rows} == {("paid", "disputed"),
-                                                                    ("disputed", "dispute_won")}
+        rows = db.execute(
+            "select old_state,new_state from app.purchase_reconciliation_transitions "
+            "where purchase_ref=%s order by created_at, new_state",
+            (ref,),
+        ).fetchall()
+        assert {(r["old_state"], r["new_state"]) for r in rows} == {
+            ("paid", "disputed"),
+            ("disputed", "dispute_won"),
+        }
         with pytest.raises(psycopg.Error), db.transaction():
-            db.execute("delete from app.purchase_reconciliation_transitions where purchase_ref=%s", (ref,))
+            db.execute(
+                "delete from app.purchase_reconciliation_transitions where purchase_ref=%s", (ref,)
+            )
 
 
 def test_l5_db_financial_hold_trigger_maps_to_app_error(lab_rb):
@@ -174,10 +217,12 @@ def test_l5_db_financial_hold_trigger_maps_to_app_error(lab_rb):
     run(lab, ref, ev("refund", ref, 1, GROSS_CENTS, "ch_1"))
     assert debt(lab, owner) > 0
     with lab.pool.connection() as db, pytest.raises(FinancialHold), db.transaction(), _hold_guard():
-        db.execute("""insert into app.wallet_reservations
+        db.execute(
+            """insert into app.wallet_reservations
             (reservation_id,owner_id,reference_type,reference_id,pricing_version_id,fence_token,ceiling_milli)
             values (%s,%s,'other',%s,%s,%s,1)""",
-                   (uuid4(), owner.user_id, str(uuid4()), lab.version, uuid4()))
+            (uuid4(), owner.user_id, str(uuid4()), lab.version, uuid4()),
+        )
     with pytest.raises(FinancialHold):
         reserve(lab, owner, 1)
 

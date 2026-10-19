@@ -74,11 +74,15 @@ def _log_proposal_rejected(proposal: dict, reason: str) -> None:
 
         from services.structured_outputs import EventType
         from services.world_validators import catalog_ref, reason_code, rejection_source
+
         etype = str(proposal.get("type") or "")
         if etype not in get_args(EventType):
             etype = "other"
-        fields = {"type": etype, "reason_code": reason_code(reason),
-                  "source": rejection_source(proposal)}
+        fields = {
+            "type": etype,
+            "reason_code": reason_code(reason),
+            "source": rejection_source(proposal),
+        }
         ref = catalog_ref(proposal.get("target_id"))
         if ref:
             fields["target_ref"] = ref
@@ -94,24 +98,28 @@ def _record_rejection_metric(proposal: dict, reason: str) -> None:
 
         from observability.metrics import metrics
         from services.structured_outputs import EventType
+
         etype = str(proposal.get("type") or "")
         if etype not in get_args(EventType):
             etype = "other"
-        metrics.increment("rpg_world_events_rejected_total",
-                          {"type": etype, "reason_class": reason_class(reason)})
+        metrics.increment(
+            "rpg_world_events_rejected_total", {"type": etype, "reason_class": reason_class(reason)}
+        )
     except Exception:  # silent-ok: metrica best-effort; a rejeicao ja esta em event_rejections
         pass
 
 
-def _canonicalize_proposal(proposal: dict, state: dict | None = None,
-                           projection: dict | None = None) -> dict:
+def _canonicalize_proposal(
+    proposal: dict, state: dict | None = None, projection: dict | None = None
+) -> dict:
     """SPEC-223 R2: o LLM só SINALIZA a revelação; o texto vem do grafo
     (restrito às edges ancoradas na cena quando o alvo não está nela)."""
     if proposal.get("type") != "secret_revealed" or is_engine_proposal(proposal):
         return proposal
     anchors = scene_anchor_ids(state) if state is not None else None
     detail = canonical_secret_detail(
-        str(proposal.get("target_id") or ""), projection or {}, anchors)
+        str(proposal.get("target_id") or ""), projection or {}, anchors
+    )
     payload = {**(proposal.get("payload") or {}), "detail": detail}
     return {**proposal, "detail": detail, "payload": payload}
 
@@ -147,49 +155,62 @@ def apply_event(event: dict, projection: dict) -> dict:
                 proj.setdefault("disabled_edges", []).append(
                     {"edge_id": edge["id"], "disabled_by_event": event_id}
                 )
-        proj.setdefault("dynamic_edges", []).append({
-            "id": f"dyn_{event_id[:12]}",
-            "source": new_controller,
-            "type": "controls",
-            "target": target,
-            "created_by_event": event_id,
-        })
+        proj.setdefault("dynamic_edges", []).append(
+            {
+                "id": f"dyn_{event_id[:12]}",
+                "source": new_controller,
+                "type": "controls",
+                "target": target,
+                "created_by_event": event_id,
+            }
+        )
 
     elif etype == "faction_relation_changed":
         other = payload.get("other_faction_id") or event.get("actor_id")
         relation = payload.get("relation") or event.get("detail", "")
-        proj.setdefault("dynamic_edges", []).append({
-            "id": f"dyn_{event_id[:12]}",
-            "source": target,
-            "type": relation,
-            "target": other,
-            "created_by_event": event_id,
-        })
+        proj.setdefault("dynamic_edges", []).append(
+            {
+                "id": f"dyn_{event_id[:12]}",
+                "source": target,
+                "type": relation,
+                "target": other,
+                "created_by_event": event_id,
+            }
+        )
 
     elif etype == "route_blocked":
         # Fase 6.1: par não-direcionado; dedupe defensivo (validator já barra)
         pair = frozenset((target, payload.get("other_location_id")))
         routes = proj.setdefault("blocked_routes", [])
         if not any(frozenset((r.get("a"), r.get("b"))) == pair for r in routes):
-            routes.append({"a": target, "b": payload.get("other_location_id"),
-                           "blocked_by_event": event_id})
+            routes.append(
+                {"a": target, "b": payload.get("other_location_id"), "blocked_by_event": event_id}
+            )
 
     elif etype == "unique_item_claimed":
         # Fase 6.2: um por mundo — registra o dono atual (claim re-escreve holder)
         uniques = proj.setdefault("unique_items", {})
-        uniques[target] = {"holder": payload.get("holder", "player"),
-                           "event_id": event_id, "turn": turn}
+        uniques[target] = {
+            "holder": payload.get("holder", "player"),
+            "event_id": event_id,
+            "turn": turn,
+        }
 
     elif etype == "unique_item_lost":
         uniques = proj.setdefault("unique_items", {})
-        uniques[target] = {"holder": payload.get("holder", "unknown"),
-                           "event_id": event_id, "turn": turn}
+        uniques[target] = {
+            "holder": payload.get("holder", "unknown"),
+            "event_id": event_id,
+            "turn": turn,
+        }
 
     elif etype == "route_cleared":
         pair = frozenset((target, payload.get("other_location_id")))
         proj["blocked_routes"] = [
-            r for r in proj.get("blocked_routes", []) or []
-            if frozenset((r.get("a"), r.get("b"))) != pair]
+            r
+            for r in proj.get("blocked_routes", []) or []
+            if frozenset((r.get("a"), r.get("b"))) != pair
+        ]
 
     # quest_completed: nada na projection — o registro no event_log já é o efeito.
 
@@ -238,7 +259,9 @@ def prevalidate_event_batch(
         working["quests"] = quests
         try:
             result = validate_proposal(raw_proposal, working)
-        except Exception as exc:  # silent-ok: vira ValidationResult(False) => event_rejections + metrica
+        except (
+            Exception
+        ) as exc:  # silent-ok: vira ValidationResult(False) => event_rejections + metrica
             result = ValidationResult(False, f"proposta malformada: {exc}")
         results.append(result)
         if not result.ok:
@@ -277,10 +300,15 @@ def _revert_reputation(factions: list, proposal: dict) -> list:
     if not delta:
         return factions
     from world_utils import REP_MAX, REP_MIN, _disposition_for
+
     out = []
     for f in factions:
         f = dict(f) if isinstance(f, dict) else f
-        if isinstance(f, dict) and f.get("id") == proposal.get("target_id")                 and int(f.get("reputation", 0) or 0) == new_value:
+        if (
+            isinstance(f, dict)
+            and f.get("id") == proposal.get("target_id")
+            and int(f.get("reputation", 0) or 0) == new_value
+        ):
             old = max(REP_MIN, min(REP_MAX, new_value - delta))
             f["reputation"] = old
             f["disposition"] = _disposition_for(old)
@@ -318,8 +346,13 @@ def process_pending_events(state: dict) -> dict:
         nonlocal chronicle, chronicle_changed
         milestone = render_milestone(ev, proj)
         if milestone:
-            chronicle = append_entry(chronicle, text=milestone, turn=ev.get("turn", 0),
-                                     kind="milestone", event_id=ev["event_id"])
+            chronicle = append_entry(
+                chronicle,
+                text=milestone,
+                turn=ev.get("turn", 0),
+                kind="milestone",
+                event_id=ev["event_id"],
+            )
             chronicle_changed = True
 
     # Estado de trabalho: valida cada proposta contra o já-aplicado nesta rodada
@@ -335,26 +368,35 @@ def process_pending_events(state: dict) -> dict:
             # descartado na fronteira narrativa; nunca tente promovê-lo de novo.
             result = ValidationResult(
                 False,
-                str(proposal.get("_prevalidation_reason")
-                    or "rejeitada na pré-validação narrativa")[:240],
+                str(
+                    proposal.get("_prevalidation_reason") or "rejeitada na pré-validação narrativa"
+                )[:240],
             )
         else:
             try:
                 result = validate_proposal(raw_proposal, working)
-            except Exception as exc:  # silent-ok: vira ValidationResult(False) => event_rejections + metrica
+            except (
+                Exception
+            ) as exc:  # silent-ok: vira ValidationResult(False) => event_rejections + metrica
                 result = ValidationResult(False, f"proposta malformada: {exc}")
         if not result.ok:
             _log_proposal_rejected(proposal, result.reason)
-            event_rejections = _bounded_rejections([*event_rejections, {
-                "turn": turn,
-                "type": str(proposal.get("type") or ""),
-                "target_id": str(proposal.get("target_id") or ""),
-                "reason": str(result.reason or "")[:240],
-            }])
+            event_rejections = _bounded_rejections(
+                [
+                    *event_rejections,
+                    {
+                        "turn": turn,
+                        "type": str(proposal.get("type") or ""),
+                        "target_id": str(proposal.get("target_id") or ""),
+                        "reason": str(result.reason or "")[:240],
+                    },
+                ]
+            )
             _record_rejection_metric(proposal, result.reason)
             if proposal.get("type") == "reputation_changed":
                 factions_reverted = _revert_reputation(
-                    factions_reverted if factions_reverted is not None
+                    factions_reverted
+                    if factions_reverted is not None
                     else list(state.get("factions") or []),
                     proposal,
                 )
@@ -371,8 +413,7 @@ def process_pending_events(state: dict) -> dict:
                 origem = next((q for q in quests if q.get("id") == qid), None)
                 if origem:
                     event["payload"]["quest_title"] = origem.get("title", "")
-                was_active = any(q.get("id") == qid and q.get("status") == "active"
-                                 for q in quests)
+                was_active = any(q.get("id") == qid and q.get("status") == "active" for q in quests)
                 quests, delivered = quest_log.complete_quest_with_reward(quests, qid, turn)
                 quest_reward_gold += delivered
                 quests_changed = True
@@ -380,7 +421,9 @@ def process_pending_events(state: dict) -> dict:
                     quests_completed += 1
                 working["quests"] = quests
 
-        _log_event("event", "applied", level="debug", type=event['type'], event_id=event['event_id'][:8])
+        _log_event(
+            "event", "applied", level="debug", type=event["type"], event_id=event["event_id"][:8]
+        )
         _chronicle_milestone(event, projection)  # Fase 3.1: evento aplicado → crônica
 
         # Fase 2.7: cascata sistêmica. run_rules muta a projection in place e recursa
@@ -391,7 +434,7 @@ def process_pending_events(state: dict) -> dict:
             event_log.append(d)
             if d.get("type") == "npc_killed":
                 killed_targets.append(d.get("target_id"))
-            _log_event("rule", "derived", level="debug", type=d['type'], event_id=d['event_id'][:8])
+            _log_event("rule", "derived", level="debug", type=d["type"], event_id=d["event_id"][:8])
             _chronicle_milestone(d, working["world_projection"])
         projection = working["world_projection"]
 
@@ -418,12 +461,15 @@ def process_pending_events(state: dict) -> dict:
     # motor (sãos por construção) — entram direto no log + crônica, sem revalidar.
     if quests_completed:
         from progression import XP_PER_QUEST, grant_xp
-        player, lvl_props = grant_xp(dict(state.get("player") or {}),
-                                     XP_PER_QUEST * quests_completed)
+
+        player, lvl_props = grant_xp(
+            dict(state.get("player") or {}), XP_PER_QUEST * quests_completed
+        )
         player["gold"] = int(player.get("gold", 0) or 0) + quest_reward_gold
         updates["player"] = player
         # SPEC-226 R10: cada conclusão é um ganho individual (XP e ouro).
         from services.turn_outcome import record_gain
+
         bl = state.get("turn_baseline")
         for _ in range(quests_completed):
             bl = record_gain(bl, "xp", XP_PER_QUEST, "quest")
@@ -434,7 +480,7 @@ def process_pending_events(state: dict) -> dict:
         for prop in lvl_props:
             ev = _build_event(prop, turn)
             event_log.append(ev)
-            _log_event("xp", "level_up", level="info", new_level=ev['payload'].get('new_level'))
+            _log_event("xp", "level_up", level="info", new_level=ev["payload"].get("new_level"))
             _chronicle_milestone(ev, projection)
 
     if factions_reverted is not None and factions_reverted != list(state.get("factions") or []):
@@ -442,6 +488,7 @@ def process_pending_events(state: dict) -> dict:
 
     if killed_targets:
         from services.npc_layers import apply_npc_death
+
         npcs_now, party_now = state.get("npcs") or {}, state.get("party") or []
         for tid in killed_targets:
             if tid:
@@ -454,9 +501,6 @@ def process_pending_events(state: dict) -> dict:
         updates["chronicle"] = chronicle
     if quests_changed:
         updates["quests"] = quests
-    if (
-        len(event_rejections) != rejection_count_before
-        or event_rejections != original_rejections
-    ):
+    if len(event_rejections) != rejection_count_before or event_rejections != original_rejections:
         updates["event_rejections"] = event_rejections
     return updates

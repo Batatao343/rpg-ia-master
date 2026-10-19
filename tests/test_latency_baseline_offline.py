@@ -1,4 +1,5 @@
 """SPEC-200 Etapa 5 — baseline offline repetivel (MockLLM + latencia injetada + relogio virtual)."""
+
 from __future__ import annotations
 
 import hashlib
@@ -17,9 +18,25 @@ from scripts import latency_baseline as lb  # noqa: E402
 
 
 def _run(tmp_path, name, *, journeys="J1,J6", reps=2, seed=200, profile="typical"):
-    rc = lb.main(["run", "--journeys", journeys, "--reps", str(reps), "--seed", str(seed),
-                  "--profile", profile, "--mode", "virtual",
-                  "--out-dir", str(tmp_path), "--run-id", name])
+    rc = lb.main(
+        [
+            "run",
+            "--journeys",
+            journeys,
+            "--reps",
+            str(reps),
+            "--seed",
+            str(seed),
+            "--profile",
+            profile,
+            "--mode",
+            "virtual",
+            "--out-dir",
+            str(tmp_path),
+            "--run-id",
+            name,
+        ]
+    )
     assert rc == 0
     return tmp_path / name
 
@@ -32,8 +49,8 @@ def test_injected_latency_recovered_in_phases(tmp_path):
     """flat-fast e sem jitter: a fase reflete exatamente a latencia injetada."""
     summary = _summary(_run(tmp_path, "ff", profile="flat-fast", journeys="J1"))
     phases = summary["journeys"]["J1_story_simple"]["phases"]
-    assert phases["router"]["p50"] == 50          # 1 chamada CLASSIFY
-    assert phases["narrator"]["p50"] == 100       # 1 chamada FAST
+    assert phases["router"]["p50"] == 50  # 1 chamada CLASSIFY
+    assert phases["narrator"]["p50"] == 100  # 1 chamada FAST
     block = summary["journeys"]["J1_story_simple"]
     # soma das fases == total (+-1 ms) em cada registro => tambem nos percentis agregados
     assert block["total"]["p50"] >= phases["router"]["p50"] + phases["narrator"]["p50"]
@@ -44,15 +61,17 @@ def test_injected_latency_recovered_in_phases(tmp_path):
 def test_typical_profile_within_declared_jitter(tmp_path):
     summary = _summary(_run(tmp_path, "typ", journeys="J1", reps=3))
     narrator = summary["journeys"]["J1_story_simple"]["phases"]["narrator"]["p50"]
-    assert 2000 <= narrator <= 3000               # FAST 2500 ms +-20%
+    assert 2000 <= narrator <= 3000  # FAST 2500 ms +-20%
     router = summary["journeys"]["J1_story_simple"]["phases"]["router"]["p50"]
-    assert 240 <= router <= 360                   # CLASSIFY 300 ms +-20%
+    assert 240 <= router <= 360  # CLASSIFY 300 ms +-20%
 
 
 def test_records_sum_phases_to_total(tmp_path):
     run_dir = _run(tmp_path, "sum", journeys="J1", reps=2)
-    rows = [json.loads(line) for line in
-            (run_dir / "records.jsonl").read_text(encoding="utf-8").splitlines()]
+    rows = [
+        json.loads(line)
+        for line in (run_dir / "records.jsonl").read_text(encoding="utf-8").splitlines()
+    ]
     assert rows
     for row in rows:
         assert abs(sum(row["phase_ms"].values()) - row["total_ms"]) <= 1
@@ -67,7 +86,7 @@ def test_same_seed_same_summary(tmp_path):
     digest = lambda d: hashlib.sha256((d / "summary.json").read_bytes()).hexdigest()  # noqa: E731
     assert digest(a) == digest(b)
     c = _run(tmp_path, "c", seed=201)
-    assert digest(a) != digest(c)                 # outra seed => outro jitter
+    assert digest(a) != digest(c)  # outra seed => outro jitter
 
 
 def test_fallback_once_profile_counts_fallbacks(tmp_path):
@@ -80,6 +99,7 @@ def test_fallback_once_profile_counts_fallbacks(tmp_path):
 
 def test_install_is_reversible():
     import llm_setup
+
     before = latency_llm._ORIGINAL or llm_setup.get_llm
     ctx = latency_llm.LatencyContext(profile="flat-fast", mode="virtual", clock=lambda: 0.0)
     latency_llm.install(ctx)
@@ -96,12 +116,23 @@ def test_profile_unknown_rejected():
 
 
 def _fake_summary(**fp):
-    base = {"git_sha": "aaa", "mode": "offline-virtual", "profile": "typical",
-            "execution_mode": "sequential", "python": "3.13", "pseudo_streaming": True,
-            "journeys": ["J1"], "journeys_version": 1, "schema_version": 1}
+    base = {
+        "git_sha": "aaa",
+        "mode": "offline-virtual",
+        "profile": "typical",
+        "execution_mode": "sequential",
+        "python": "3.13",
+        "pseudo_streaming": True,
+        "journeys": ["J1"],
+        "journeys_version": 1,
+        "schema_version": 1,
+    }
     base.update(fp)
-    block = {"ttfmc": {"p50": 1, "p95": 2}, "ttlt": {"p50": 1, "p95": 2},
-             "total": {"p50": 1, "p95": 2}}
+    block = {
+        "ttfmc": {"p50": 1, "p95": 2},
+        "ttlt": {"p50": 1, "p95": 2},
+        "total": {"p50": 1, "p95": 2},
+    }
     return {"fingerprint": base, "journeys": {"J1": block}, "overall": block}
 
 
@@ -125,11 +156,11 @@ def test_real_mode_refuses_without_caps(monkeypatch):
     message = str(exc.value)
     assert lb.REAL_ENV in message and "--max-requests" in message and "--max-cost" in message
     monkeypatch.setenv(lb.REAL_ENV, "1")
-    with pytest.raises(SystemExit):                      # autorizado, mas sem tetos
+    with pytest.raises(SystemExit):  # autorizado, mas sem tetos
         lb.main(["run", "--real", "--journeys", "J1", "--reps", "1"])
     with pytest.raises(SystemExit):
         lb.main(["run", "--real", "--max-requests", "10", "--journeys", "J1"])
-    assert built == []                                   # nada foi construido/executado
+    assert built == []  # nada foi construido/executado
 
 
 def test_report_renders_ttft_note_and_strata(tmp_path):

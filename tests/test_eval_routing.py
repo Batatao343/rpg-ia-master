@@ -143,10 +143,6 @@ def test_known_bad_candidate_route_fails_without_oracle_access() -> None:
 
     assert result.passed is False
     assert result.metric_values == {"route_accuracy": 0.0, "target_accuracy": 1.0}
-    assert result.aggregates == {
-        "route_confusion_matrix": {"storyteller": {"loot": 1}}
-    }
-    assert result.results[0].diagnostics == [
-        "route mismatch: expected 'storyteller', got 'loot'"
-    ]
+    assert result.aggregates == {"route_confusion_matrix": {"storyteller": {"loot": 1}}}
+    assert result.results[0].diagnostics == ["route mismatch: expected 'storyteller', got 'loot'"]
     assert result.hard_failures == ["case failed: routing.story.travel.base"]

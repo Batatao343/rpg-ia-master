@@ -37,19 +37,23 @@ class FinancialHold(WalletConflict, _PureFinancialHold):
     """SPEC-195: unsettled refund debt fences new paid operations."""
 
 
-
 def _record_anomaly(connection, reservation_id: UUID, excess: int) -> None:
     """SPEC-236 R10: excess over the confirmed ceiling, recorded once. Before migration
     20261017100000 the column is absent: the debit is still capped, only the record is logged."""
     from infrastructure.usage_events import has_column
+
     if has_column(connection, "app.wallet_reservations", "financial_anomaly_milli"):
         connection.execute(
-            "update app.wallet_reservations set financial_anomaly_milli=%s "
-            "where reservation_id=%s", (excess, reservation_id))
+            "update app.wallet_reservations set financial_anomaly_milli=%s where reservation_id=%s",
+            (excess, reservation_id),
+        )
     else:
         import logging
+
         logging.getLogger("rpg.wallet").warning(
-            "wallet_spend_anomaly_unrecorded excess_milli=%s (migration pending)", excess)
+            "wallet_spend_anomaly_unrecorded excess_milli=%s (migration pending)", excess
+        )
+
 
 @contextmanager
 def _hold_guard():
@@ -109,10 +113,17 @@ def _reference(value: str, maximum: int = 160) -> str:
 
 def _reservation(row) -> WalletReservation:
     return WalletReservation(
-        row["reservation_id"], row["owner_id"], row["reference_type"],
-        row["reference_id"], row["pricing_version_id"], int(row["ceiling_milli"]),
-        int(row["settled_milli"]), int(row["released_milli"]), row["status"],
-        row["fence_token"], tuple(row["usage_event_ids"]),
+        row["reservation_id"],
+        row["owner_id"],
+        row["reference_type"],
+        row["reference_id"],
+        row["pricing_version_id"],
+        int(row["ceiling_milli"]),
+        int(row["settled_milli"]),
+        int(row["released_milli"]),
+        row["status"],
+        row["fence_token"],
+        tuple(row["usage_event_ids"]),
     )
 
 
@@ -127,25 +138,50 @@ class PostgresWallet:
             (owner_id,),
         )
         return connection.execute(
-            "select * from app.wallet_accounts where owner_id=%s for update", (owner_id,),
+            "select * from app.wallet_accounts where owner_id=%s for update",
+            (owner_id,),
         ).fetchone()
 
     @staticmethod
-    def _post(connection, owner_id: UUID, entry_type: str, reference_type: str,
-              reference_id: str, amount: int, available_delta: int,
-              reserved_delta: int, *, reservation_id: UUID | None = None,
-              pricing_version_id: str | None = None, sku_id: str | None = None,
-              related_entry_id: UUID | None = None, reason: str | None = None,
-              actor_id: UUID | None = None) -> None:
+    def _post(
+        connection,
+        owner_id: UUID,
+        entry_type: str,
+        reference_type: str,
+        reference_id: str,
+        amount: int,
+        available_delta: int,
+        reserved_delta: int,
+        *,
+        reservation_id: UUID | None = None,
+        pricing_version_id: str | None = None,
+        sku_id: str | None = None,
+        related_entry_id: UUID | None = None,
+        reason: str | None = None,
+        actor_id: UUID | None = None,
+    ) -> None:
         connection.execute(
             """insert into app.wallet_entries
             (entry_id,owner_id,entry_type,reference_type,reference_id,reservation_id,
              related_entry_id,pricing_version_id,sku_id,amount_milli,available_delta,
              reserved_delta,reason,actor_id)
             values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
-            (uuid4(), owner_id, entry_type, reference_type, reference_id,
-             reservation_id, related_entry_id, pricing_version_id, sku_id,
-             amount, available_delta, reserved_delta, reason, actor_id),
+            (
+                uuid4(),
+                owner_id,
+                entry_type,
+                reference_type,
+                reference_id,
+                reservation_id,
+                related_entry_id,
+                pricing_version_id,
+                sku_id,
+                amount,
+                available_delta,
+                reserved_delta,
+                reason,
+                actor_id,
+            ),
         )
 
     def balance(self, principal: Principal) -> WalletBalance:
@@ -154,11 +190,22 @@ class PostgresWallet:
                 "select available_milli,reserved_milli from app.wallet_accounts where owner_id=%s",
                 (principal.user_id,),
             ).fetchone()
-        return WalletBalance(int(row["available_milli"]), int(row["reserved_milli"])) if row else WalletBalance(0, 0)
+        return (
+            WalletBalance(int(row["available_milli"]), int(row["reserved_milli"]))
+            if row
+            else WalletBalance(0, 0)
+        )
 
-    def credit_verified_purchase(self, principal: Principal, *, channel: str,
-                                 payment_id: str, sku_id: str, verified: bool,
-                                 connection=None) -> WalletBalance:
+    def credit_verified_purchase(
+        self,
+        principal: Principal,
+        *,
+        channel: str,
+        payment_id: str,
+        sku_id: str,
+        verified: bool,
+        connection=None,
+    ) -> WalletBalance:
         """Credit an externally verified payment once, using server-side SKU units.
 
         SPEC-189 authenticates Stripe raw events before calling this method.
@@ -183,13 +230,28 @@ class PostgresWallet:
                 (source, key),
             ).fetchone()
             if prior:
-                if prior["owner_id"] != principal.user_id or prior["sku_id"] != sku_id or int(prior["amount_milli"]) != int(sku["shard_milli"]):
+                if (
+                    prior["owner_id"] != principal.user_id
+                    or prior["sku_id"] != sku_id
+                    or int(prior["amount_milli"]) != int(sku["shard_milli"])
+                ):
                     raise WalletConflict("payment id reutilizado com compra divergente")
-                return WalletBalance(int(account["available_milli"]), int(account["reserved_milli"]))
+                return WalletBalance(
+                    int(account["available_milli"]), int(account["reserved_milli"])
+                )
             amount = _positive_amount(int(sku["shard_milli"]))
-            self._post(connection, principal.user_id, "purchase", source, key,
-                       amount, amount, 0, pricing_version_id=sku["pricing_version_id"],
-                       sku_id=sku_id)
+            self._post(
+                connection,
+                principal.user_id,
+                "purchase",
+                source,
+                key,
+                amount,
+                amount,
+                0,
+                pricing_version_id=sku["pricing_version_id"],
+                sku_id=sku_id,
+            )
             row = connection.execute(
                 "update app.wallet_accounts set available_milli=available_milli+%s,updated_at=now() "
                 "where owner_id=%s returning available_milli,reserved_milli",
@@ -199,11 +261,19 @@ class PostgresWallet:
             if settle_owner_debt(connection, principal.user_id):
                 row = connection.execute(
                     "select available_milli,reserved_milli from app.wallet_accounts where owner_id=%s",
-                    (principal.user_id,)).fetchone()
+                    (principal.user_id,),
+                ).fetchone()
             return WalletBalance(int(row["available_milli"]), int(row["reserved_milli"]))
 
-    def refund_purchase(self, principal: Principal, *, purchase_entry_id: UUID,
-                        refund_id: str, kind: str = "refund", connection=None) -> WalletBalance:
+    def refund_purchase(
+        self,
+        principal: Principal,
+        *,
+        purchase_entry_id: UUID,
+        refund_id: str,
+        kind: str = "refund",
+        connection=None,
+    ) -> WalletBalance:
         """Full purchase refund/reversal once; fail if spent funds are unavailable."""
         if kind not in ("refund", "reversal") or not isinstance(purchase_entry_id, UUID):
             raise WalletConflict("refund/reversal inválido")
@@ -224,15 +294,29 @@ class PostgresWallet:
                 (purchase_entry_id,),
             ).fetchone()
             if prior:
-                if (prior["entry_type"] != kind or prior["reference_id"] != refund_key
-                        or prior["related_entry_id"] != purchase_entry_id):
+                if (
+                    prior["entry_type"] != kind
+                    or prior["reference_id"] != refund_key
+                    or prior["related_entry_id"] != purchase_entry_id
+                ):
                     raise WalletConflict("compra já devolvida por outra referência")
-                return WalletBalance(int(account["available_milli"]), int(account["reserved_milli"]))
+                return WalletBalance(
+                    int(account["available_milli"]), int(account["reserved_milli"])
+                )
             amount = int(source["amount_milli"])
             if int(account["available_milli"]) < amount:
                 raise InsufficientShards("refund exige saldo disponível; sem overdraft")
-            self._post(connection, principal.user_id, kind, "purchase_refund", refund_key,
-                       amount, -amount, 0, related_entry_id=purchase_entry_id)
+            self._post(
+                connection,
+                principal.user_id,
+                kind,
+                "purchase_refund",
+                refund_key,
+                amount,
+                -amount,
+                0,
+                related_entry_id=purchase_entry_id,
+            )
             row = connection.execute(
                 "update app.wallet_accounts set available_milli=available_milli-%s,updated_at=now() "
                 "where owner_id=%s returning available_milli,reserved_milli",
@@ -240,17 +324,27 @@ class PostgresWallet:
             ).fetchone()
             return WalletBalance(int(row["available_milli"]), int(row["reserved_milli"]))
 
-    def adjust_admin(self, principal: Principal, *, adjustment_id: str,
-                     signed_milli: int, actor_id: UUID, reason: str,
-                     connection=None) -> WalletBalance:
+    def adjust_admin(
+        self,
+        principal: Principal,
+        *,
+        adjustment_id: str,
+        signed_milli: int,
+        actor_id: UUID,
+        reason: str,
+        connection=None,
+    ) -> WalletBalance:
         """Audited manual correction with a stable replay key and hard no-overdraft."""
         _reference(adjustment_id)
-        if (isinstance(signed_milli, bool) or not isinstance(signed_milli, int)
-                or signed_milli == 0):
+        if isinstance(signed_milli, bool) or not isinstance(signed_milli, int) or signed_milli == 0:
             raise WalletConflict("ajuste inválido")
         amount = _positive_amount(abs(signed_milli))
-        if (not isinstance(actor_id, UUID) or not isinstance(reason, str)
-                or not 0 < len(reason) <= 500 or reason != reason.strip()):
+        if (
+            not isinstance(actor_id, UUID)
+            or not isinstance(reason, str)
+            or not 0 < len(reason) <= 500
+            or reason != reason.strip()
+        ):
             raise WalletConflict("ator/justificativa de ajuste ausente")
         scope = admin_connection(self.pool) if connection is None else system_scope(connection)
         with scope as connection, connection.transaction():
@@ -262,15 +356,29 @@ class PostgresWallet:
                 (principal.user_id, adjustment_id),
             ).fetchone()
             if prior:
-                if (prior["available_delta"] != signed_milli or prior["actor_id"] != actor_id
-                        or prior["reason"] != reason):
+                if (
+                    prior["available_delta"] != signed_milli
+                    or prior["actor_id"] != actor_id
+                    or prior["reason"] != reason
+                ):
                     raise WalletConflict("ajuste replay divergente")
-                return WalletBalance(int(account["available_milli"]), int(account["reserved_milli"]))
+                return WalletBalance(
+                    int(account["available_milli"]), int(account["reserved_milli"])
+                )
             if signed_milli < 0 and int(account["available_milli"]) < amount:
                 raise InsufficientShards("ajuste consumiria reserva/saldo inexistente")
-            self._post(connection, principal.user_id, "adjustment_admin", "admin",
-                       adjustment_id, amount, signed_milli, 0,
-                       reason=reason, actor_id=actor_id)
+            self._post(
+                connection,
+                principal.user_id,
+                "adjustment_admin",
+                "admin",
+                adjustment_id,
+                amount,
+                signed_milli,
+                0,
+                reason=reason,
+                actor_id=actor_id,
+            )
             row = connection.execute(
                 "update app.wallet_accounts set available_milli=available_milli+%s,updated_at=now() "
                 "where owner_id=%s returning available_milli,reserved_milli",
@@ -278,10 +386,19 @@ class PostgresWallet:
             ).fetchone()
             return WalletBalance(int(row["available_milli"]), int(row["reserved_milli"]))
 
-    def reserve(self, principal: Principal, *, reference_type: str, reference_id: str,
-                pricing_version_id: str, ceiling_milli: int, fence_token: UUID,
-                usage_operation_id: UUID | None = None,
-                at: datetime | None = None, connection=None) -> WalletReservation:
+    def reserve(
+        self,
+        principal: Principal,
+        *,
+        reference_type: str,
+        reference_id: str,
+        pricing_version_id: str,
+        ceiling_milli: int,
+        fence_token: UUID,
+        usage_operation_id: UUID | None = None,
+        at: datetime | None = None,
+        connection=None,
+    ) -> WalletReservation:
         _positive_amount(ceiling_milli)
         if reference_type not in {"operation", "image", "speech_to_text", "embedding", "other"}:
             raise WalletConflict("tipo de referência inválido")
@@ -302,7 +419,8 @@ class PostgresWallet:
                 if operation is None or operation["owner_id"] != principal.user_id:
                     raise WalletConflict("operation não pertence ao owner")
             version_row = connection.execute(
-                "select * from app.pricing_versions where version_id=%s", (pricing_version_id,),
+                "select * from app.pricing_versions where version_id=%s",
+                (pricing_version_id,),
             ).fetchone()
             if version_row is None:
                 raise PricingUnavailable("versão de pricing ausente")
@@ -314,10 +432,12 @@ class PostgresWallet:
                 (principal.user_id, reference_type, reference_id),
             ).fetchone()
             if prior:
-                if (prior["pricing_version_id"] != pricing_version_id
-                        or prior["ceiling_milli"] != ceiling_milli
-                        or prior["fence_token"] != fence_token
-                        or prior["usage_operation_id"] != usage_operation_id):
+                if (
+                    prior["pricing_version_id"] != pricing_version_id
+                    or prior["ceiling_milli"] != ceiling_milli
+                    or prior["fence_token"] != fence_token
+                    or prior["usage_operation_id"] != usage_operation_id
+                ):
                     raise WalletConflict("reservation replay divergente")
                 return _reservation(prior)
             if owner_debt(connection, principal.user_id) > 0:
@@ -331,21 +451,40 @@ class PostgresWallet:
                     (reservation_id,owner_id,reference_type,reference_id,usage_operation_id,
                      pricing_version_id,fence_token,ceiling_milli)
                     values (%s,%s,%s,%s,%s,%s,%s,%s)""",
-                    (reservation_id, principal.user_id, reference_type, reference_id,
-                     usage_operation_id, pricing_version_id, fence_token, ceiling_milli),
+                    (
+                        reservation_id,
+                        principal.user_id,
+                        reference_type,
+                        reference_id,
+                        usage_operation_id,
+                        pricing_version_id,
+                        fence_token,
+                        ceiling_milli,
+                    ),
                 )
             connection.execute(
                 "update app.wallet_accounts set available_milli=available_milli-%s, "
                 "reserved_milli=reserved_milli+%s,updated_at=now() where owner_id=%s",
                 (ceiling_milli, ceiling_milli, principal.user_id),
             )
-            self._post(connection, principal.user_id, "reserve", "reservation",
-                       str(reservation_id), ceiling_milli, -ceiling_milli, ceiling_milli,
-                       reservation_id=reservation_id, pricing_version_id=pricing_version_id)
-            return _reservation(connection.execute(
-                "select * from app.wallet_reservations where reservation_id=%s",
-                (reservation_id,),
-            ).fetchone())
+            self._post(
+                connection,
+                principal.user_id,
+                "reserve",
+                "reservation",
+                str(reservation_id),
+                ceiling_milli,
+                -ceiling_milli,
+                ceiling_milli,
+                reservation_id=reservation_id,
+                pricing_version_id=pricing_version_id,
+            )
+            return _reservation(
+                connection.execute(
+                    "select * from app.wallet_reservations where reservation_id=%s",
+                    (reservation_id,),
+                ).fetchone()
+            )
 
     def _locked_reservation(self, connection, principal: Principal, reservation_id: UUID):
         self._locked_account(connection, principal.user_id)
@@ -357,9 +496,17 @@ class PostgresWallet:
             raise WalletConflict("reserva não pertence ao owner")
         return row
 
-    def admit_attempt(self, principal: Principal, reservation_id: UUID, *,
-                      fence_token: UUID, attempt_key: str, provider: str,
-                      model: str, at: datetime | None = None) -> int:
+    def admit_attempt(
+        self,
+        principal: Principal,
+        reservation_id: UUID,
+        *,
+        fence_token: UUID,
+        attempt_key: str,
+        provider: str,
+        model: str,
+        at: datetime | None = None,
+    ) -> int:
         """Commit a worst-case ticket before a network provider call."""
         _reference(attempt_key)
         _reference(provider, 100)
@@ -367,15 +514,21 @@ class PostgresWallet:
         at = at or datetime.now(UTC)
         with admin_connection(self.pool) as connection, connection.transaction():
             row = self._locked_reservation(connection, principal, reservation_id)
-            if row["fence_token"] != fence_token or row["status"] not in ("reserved", "effect_started"):
+            if row["fence_token"] != fence_token or row["status"] not in (
+                "reserved",
+                "effect_started",
+            ):
                 raise UncertainEffect("fence inválido ou efeito em reconciliação")
             prior = connection.execute(
                 "select * from app.wallet_attempt_tickets where reservation_id=%s and attempt_key=%s",
                 (reservation_id, attempt_key),
             ).fetchone()
             if prior:
-                if (prior["provider"] != provider or prior["model"] != model
-                        or prior["fence_token"] != fence_token):
+                if (
+                    prior["provider"] != provider
+                    or prior["model"] != model
+                    or prior["fence_token"] != fence_token
+                ):
                     raise WalletConflict("attempt replay divergente")
                 # A replayed ticket must never dispatch the network call again.
                 raise UncertainEffect("attempt já tinha ticket; reconciliar antes de retry")
@@ -400,17 +553,34 @@ class PostgresWallet:
                     (ticket_id,reservation_id,owner_id,attempt_key,provider,model,
                      max_liability_milli,fence_token)
                     values (%s,%s,%s,%s,%s,%s,%s,%s)""",
-                    (uuid4(), reservation_id, principal.user_id, attempt_key,
-                     provider, model, liability, fence_token),
+                    (
+                        uuid4(),
+                        reservation_id,
+                        principal.user_id,
+                        attempt_key,
+                        provider,
+                        model,
+                        liability,
+                        fence_token,
+                    ),
                 )
             connection.execute(
                 "update app.wallet_reservations set status='effect_started' "
-                "where reservation_id=%s", (reservation_id,),
+                "where reservation_id=%s",
+                (reservation_id,),
             )
             return liability
 
-    def _terminal_transfer(self, connection, row, settled: int, usage_ids: Sequence[UUID],
-                           *, status: str, reason: str | None = None) -> WalletReservation:
+    def _terminal_transfer(
+        self,
+        connection,
+        row,
+        settled: int,
+        usage_ids: Sequence[UUID],
+        *,
+        status: str,
+        reason: str | None = None,
+    ) -> WalletReservation:
         ceiling = int(row["ceiling_milli"])
         if settled < 0 or settled > ceiling:
             raise SpendCeilingExceeded("settlement excede reserva")
@@ -418,32 +588,60 @@ class PostgresWallet:
         owner_id = row["owner_id"]
         reservation_id = row["reservation_id"]
         if settled:
-            self._post(connection, owner_id, "settle", "reservation", str(reservation_id),
-                       settled, 0, -settled, reservation_id=reservation_id,
-                       pricing_version_id=row["pricing_version_id"])
+            self._post(
+                connection,
+                owner_id,
+                "settle",
+                "reservation",
+                str(reservation_id),
+                settled,
+                0,
+                -settled,
+                reservation_id=reservation_id,
+                pricing_version_id=row["pricing_version_id"],
+            )
         if released:
-            self._post(connection, owner_id, "release", "reservation", str(reservation_id),
-                       released, released, -released, reservation_id=reservation_id,
-                       pricing_version_id=row["pricing_version_id"], reason=reason)
+            self._post(
+                connection,
+                owner_id,
+                "release",
+                "reservation",
+                str(reservation_id),
+                released,
+                released,
+                -released,
+                reservation_id=reservation_id,
+                pricing_version_id=row["pricing_version_id"],
+                reason=reason,
+            )
         connection.execute(
             "update app.wallet_accounts set available_milli=available_milli+%s, "
             "reserved_milli=reserved_milli-%s,updated_at=now() where owner_id=%s",
             (released, ceiling, owner_id),
         )
-        result = _reservation(connection.execute(
-            """update app.wallet_reservations set settled_milli=%s,released_milli=%s,
+        result = _reservation(
+            connection.execute(
+                """update app.wallet_reservations set settled_milli=%s,released_milli=%s,
                status=%s,usage_event_ids=%s,reconciliation_reason=%s,finished_at=now()
                where reservation_id=%s returning *""",
-            (settled, released, status, list(usage_ids), reason, reservation_id),
-        ).fetchone())
+                (settled, released, status, list(usage_ids), reason, reservation_id),
+            ).fetchone()
+        )
         if released:
             # SPEC-195 rule 5: returned credit pays refund debt (settlement never DEPENDS on a
             # release, it merely also runs here so a hold cannot outlive available credit).
             settle_owner_debt(connection, owner_id)
         return result
 
-    def admit_image_attempt(self, principal: Principal, reservation_id: UUID, *,
-                            quote_id: UUID, generation_id: UUID, connection) -> None:
+    def admit_image_attempt(
+        self,
+        principal: Principal,
+        reservation_id: UUID,
+        *,
+        quote_id: UUID,
+        generation_id: UUID,
+        connection,
+    ) -> None:
         """Authorize exactly one image dispatch from immutable, confirmed DB facts."""
         row = self._locked_reservation(connection, principal, reservation_id)
         quote = connection.execute(
@@ -452,37 +650,60 @@ class PostgresWallet:
             where q.quote_id=%s and q.owner_id=%s and g.generation_id=%s""",
             (reservation_id, quote_id, principal.user_id, generation_id),
         ).fetchone()
-        if (not quote or row["reference_type"] != "image" or row["reference_id"] != str(quote_id)
-                or row["status"] != "reserved" or row["fence_token"] != quote_id
-                or row["ceiling_milli"] != quote["credits_milli"]
-                or row["pricing_version_id"] != quote["pricing_version_id"]
-                or row["usage_operation_id"] != generation_id):
+        if (
+            not quote
+            or row["reference_type"] != "image"
+            or row["reference_id"] != str(quote_id)
+            or row["status"] != "reserved"
+            or row["fence_token"] != quote_id
+            or row["ceiling_milli"] != quote["credits_milli"]
+            or row["pricing_version_id"] != quote["pricing_version_id"]
+            or row["usage_operation_id"] != generation_id
+        ):
             raise UncertainEffect("reserva de imagem não está disponível")
         with _hold_guard():
             connection.execute(
                 """insert into app.wallet_attempt_tickets
                 (ticket_id,reservation_id,owner_id,attempt_key,provider,model,max_liability_milli,fence_token)
                 values (%s,%s,%s,'image:1','openai',%s,%s,%s)""",
-                (uuid4(), reservation_id, principal.user_id, quote["model"], quote["credits_milli"], quote_id),
+                (
+                    uuid4(),
+                    reservation_id,
+                    principal.user_id,
+                    quote["model"],
+                    quote["credits_milli"],
+                    quote_id,
+                ),
             )
-        connection.execute("update app.wallet_reservations set status='effect_started' where reservation_id=%s",
-                           (reservation_id,))
+        connection.execute(
+            "update app.wallet_reservations set status='effect_started' where reservation_id=%s",
+            (reservation_id,),
+        )
 
-    def mark_uncertain(self, principal: Principal, reservation_id: UUID, *,
-                       reason: str, connection) -> str:
+    def mark_uncertain(
+        self, principal: Principal, reservation_id: UUID, *, reason: str, connection
+    ) -> str:
         """Retain a ticketed hold without changing its financial fence or refunding."""
         row = self._locked_reservation(connection, principal, reservation_id)
         if row["status"] in {"effect_started", "uncertain"}:
             connection.execute(
                 "update app.wallet_reservations set status='uncertain',reconciliation_reason=%s where reservation_id=%s",
-                (_reference(reason), reservation_id))
+                (_reference(reason), reservation_id),
+            )
             return "uncertain"
         return row["status"]
 
-    def settle_usage(self, principal: Principal, reservation_id: UUID, *,
-                     fence_token: UUID, usage_event_ids: Sequence[UUID],
-                     at: datetime | None = None, connection=None,
-                     cap_confirmed_image: bool = False) -> WalletReservation:
+    def settle_usage(
+        self,
+        principal: Principal,
+        reservation_id: UUID,
+        *,
+        fence_token: UUID,
+        usage_event_ids: Sequence[UUID],
+        at: datetime | None = None,
+        connection=None,
+        cap_confirmed_image: bool = False,
+    ) -> WalletReservation:
         """Atomically settle exact, persisted usage and release the remainder."""
         ids = tuple(usage_event_ids)
         if not ids or len(ids) != len(set(ids)) or any(not isinstance(v, UUID) for v in ids):
@@ -513,24 +734,42 @@ class PostgresWallet:
             if len(events) != len(ids) or len(events) != len(tickets):
                 raise UncertainEffect("usage incompleto para os tickets emitidos")
             if Counter((e["provider"], e["model"]) for e in events) != Counter(
-                    (t["provider"], t["model"]) for t in tickets):
+                (t["provider"], t["model"]) for t in tickets
+            ):
                 raise UncertainEffect("usage não corresponde aos tickets")
-            readings = [UsageEvent(
-                e["event_id"], e["operation_id"], e["component"],
-                e["attempt_ordinal"], e["category"], e["provider"], e["model"],
-                e["outcome"], e["input_units"], e["output_units"],
-                e["cached_units"], e["audio_units"], e["image_units"],
-                Decimal(e["cost_usd"]), e["cost_basis"],
-                e["pricing_version"], e["billing_exact"],
-                bool(e.get("counts_as_spend", True)),
-            ) for e in events]
+            readings = [
+                UsageEvent(
+                    e["event_id"],
+                    e["operation_id"],
+                    e["component"],
+                    e["attempt_ordinal"],
+                    e["category"],
+                    e["provider"],
+                    e["model"],
+                    e["outcome"],
+                    e["input_units"],
+                    e["output_units"],
+                    e["cached_units"],
+                    e["audio_units"],
+                    e["image_units"],
+                    Decimal(e["cost_usd"]),
+                    e["cost_basis"],
+                    e["pricing_version"],
+                    e["billing_exact"],
+                    bool(e.get("counts_as_spend", True)),
+                )
+                for e in events
+            ]
             version_row = connection.execute(
                 "select * from app.pricing_versions where version_id=%s",
                 (row["pricing_version_id"],),
             ).fetchone()
-            quote = quote_usage(readings, version_from_record(version_row),
-                                at=at or datetime.now(UTC),
-                                authorized_snapshot=True)
+            quote = quote_usage(
+                readings,
+                version_from_record(version_row),
+                at=at or datetime.now(UTC),
+                authorized_snapshot=True,
+            )
             debit = quote.shard_milli_debited
             if cap_confirmed_image:
                 image = connection.execute(
@@ -558,15 +797,21 @@ class PostgresWallet:
                     """insert into app.wallet_settled_usage
                     (usage_event_id,reservation_id,owner_id,event_sha256,cost_usd,
                      cost_basis,pricing_version) values (%s,%s,%s,%s,%s,%s,%s)""",
-                    (event["event_id"], reservation_id, principal.user_id,
-                     event["event_sha256"], event["cost_usd"],
-                     event["cost_basis"], event["pricing_version"]),
+                    (
+                        event["event_id"],
+                        reservation_id,
+                        principal.user_id,
+                        event["event_sha256"],
+                        event["cost_usd"],
+                        event["cost_basis"],
+                        event["pricing_version"],
+                    ),
                 )
-            return self._terminal_transfer(connection, row, debit,
-                                           ids, status="settled")
+            return self._terminal_transfer(connection, row, debit, ids, status="settled")
 
-    def recover(self, principal: Principal, reservation_id: UUID, *,
-                new_fence_token: UUID) -> WalletReservation:
+    def recover(
+        self, principal: Principal, reservation_id: UUID, *, new_fence_token: UUID
+    ) -> WalletReservation:
         """Release only pre-dispatch holds; ticketed effects remain uncertain."""
         if not isinstance(new_fence_token, UUID):
             raise WalletConflict("novo fence token ausente")
@@ -574,7 +819,8 @@ class PostgresWallet:
             # Match the existing lock order: operation before wallet account.
             preliminary = connection.execute(
                 "select usage_operation_id,owner_id from app.wallet_reservations "
-                "where reservation_id=%s", (reservation_id,),
+                "where reservation_id=%s",
+                (reservation_id,),
             ).fetchone()
             if preliminary is None or preliminary["owner_id"] != principal.user_id:
                 raise WalletConflict("reserva não pertence ao owner")
@@ -585,8 +831,11 @@ class PostgresWallet:
                 ).fetchone()
                 if operation is None or operation["owner_id"] != principal.user_id:
                     raise UncertainEffect("operation ausente; reconciliação manual necessária")
-                if (operation["status"] == "running" and operation["lease_until"] is not None
-                        and operation["lease_until"] > datetime.now(UTC)):
+                if (
+                    operation["status"] == "running"
+                    and operation["lease_until"] is not None
+                    and operation["lease_until"] > datetime.now(UTC)
+                ):
                     raise UncertainEffect("lease de operação ainda ativo")
             row = self._locked_reservation(connection, principal, reservation_id)
             if row["status"] in ("settled", "released"):
@@ -596,18 +845,22 @@ class PostgresWallet:
                 (reservation_id,),
             ).fetchone()
             if tickets:
-                return _reservation(connection.execute(
-                    "update app.wallet_reservations set fence_token=%s,status='uncertain' "
-                    "where reservation_id=%s returning *",
-                    (new_fence_token, reservation_id),
-                ).fetchone())
+                return _reservation(
+                    connection.execute(
+                        "update app.wallet_reservations set fence_token=%s,status='uncertain' "
+                        "where reservation_id=%s returning *",
+                        (new_fence_token, reservation_id),
+                    ).fetchone()
+                )
             if row["status"] != "reserved":
                 raise UncertainEffect("estado de efeito inconsistente")
-            return self._terminal_transfer(connection, row, 0, (), status="released",
-                                           reason="recovery_pre_dispatch")
+            return self._terminal_transfer(
+                connection, row, 0, (), status="released", reason="recovery_pre_dispatch"
+            )
 
-    def release_pre_effect(self, principal: Principal, reservation_id: UUID, *,
-                           fence_token: UUID, connection=None) -> WalletReservation:
+    def release_pre_effect(
+        self, principal: Principal, reservation_id: UUID, *, fence_token: UUID, connection=None
+    ) -> WalletReservation:
         scope = admin_connection(self.pool) if connection is None else system_scope(connection)
         with scope as connection, connection.transaction():
             row = self._locked_reservation(connection, principal, reservation_id)
@@ -617,12 +870,19 @@ class PostgresWallet:
                 return _reservation(row)
             if row["status"] != "reserved":
                 raise UncertainEffect("ticket emitido; liberação automática proibida")
-            return self._terminal_transfer(connection, row, 0, (), status="released",
-                                           reason="pre_dispatch_failure")
+            return self._terminal_transfer(
+                connection, row, 0, (), status="released", reason="pre_dispatch_failure"
+            )
 
-    def reconcile_proven_no_charge(self, principal: Principal, reservation_id: UUID, *,
-                                   fence_token: UUID, actor_id: UUID,
-                                   evidence_reference: str) -> WalletReservation:
+    def reconcile_proven_no_charge(
+        self,
+        principal: Principal,
+        reservation_id: UUID,
+        *,
+        fence_token: UUID,
+        actor_id: UUID,
+        evidence_reference: str,
+    ) -> WalletReservation:
         """Manual release only after an operator verifies provider no-charge proof.
 
         Never invoked from a failed operation, timeout or client request alone.
@@ -652,22 +912,42 @@ class PostgresWallet:
                     (row["usage_operation_id"], principal.user_id),
                 ).fetchall()
             if not exact:
-                return self._terminal_transfer(connection, row, 0, (),
-                                               status="released", reason=reason)
-            readings = [UsageEvent(
-                e["event_id"], e["operation_id"], e["component"], e["attempt_ordinal"],
-                e["category"], e["provider"], e["model"], e["outcome"], e["input_units"],
-                e["output_units"], e["cached_units"], e["audio_units"], e["image_units"],
-                Decimal(e["cost_usd"]), e["cost_basis"], e["pricing_version"],
-                e["billing_exact"], bool(e.get("counts_as_spend", True)),
-            ) for e in exact]
+                return self._terminal_transfer(
+                    connection, row, 0, (), status="released", reason=reason
+                )
+            readings = [
+                UsageEvent(
+                    e["event_id"],
+                    e["operation_id"],
+                    e["component"],
+                    e["attempt_ordinal"],
+                    e["category"],
+                    e["provider"],
+                    e["model"],
+                    e["outcome"],
+                    e["input_units"],
+                    e["output_units"],
+                    e["cached_units"],
+                    e["audio_units"],
+                    e["image_units"],
+                    Decimal(e["cost_usd"]),
+                    e["cost_basis"],
+                    e["pricing_version"],
+                    e["billing_exact"],
+                    bool(e.get("counts_as_spend", True)),
+                )
+                for e in exact
+            ]
             version_row = connection.execute(
                 "select * from app.pricing_versions where version_id=%s",
                 (row["pricing_version_id"],),
             ).fetchone()
-            debit = quote_usage(readings, version_from_record(version_row),
-                                at=datetime.now(UTC),
-                                authorized_snapshot=True).shard_milli_debited
+            debit = quote_usage(
+                readings,
+                version_from_record(version_row),
+                at=datetime.now(UTC),
+                authorized_snapshot=True,
+            ).shard_milli_debited
             if debit > int(row["ceiling_milli"]):
                 _record_anomaly(connection, reservation_id, debit - int(row["ceiling_milli"]))
                 debit = int(row["ceiling_milli"])
@@ -676,18 +956,30 @@ class PostgresWallet:
                     """insert into app.wallet_settled_usage
                     (usage_event_id,reservation_id,owner_id,event_sha256,cost_usd,
                      cost_basis,pricing_version) values (%s,%s,%s,%s,%s,%s,%s)""",
-                    (event["event_id"], reservation_id, principal.user_id,
-                     event["event_sha256"], event["cost_usd"],
-                     event["cost_basis"], event["pricing_version"]),
+                    (
+                        event["event_id"],
+                        reservation_id,
+                        principal.user_id,
+                        event["event_sha256"],
+                        event["cost_usd"],
+                        event["cost_basis"],
+                        event["pricing_version"],
+                    ),
                 )
-            return self._terminal_transfer(connection, row, debit,
-                                           [e["event_id"] for e in exact],
-                                           status="settled", reason=reason)
+            return self._terminal_transfer(
+                connection,
+                row,
+                debit,
+                [e["event_id"] for e in exact],
+                status="settled",
+                reason=reason,
+            )
 
 
 @contextmanager
-def wallet_spend_scope(wallet: PostgresWallet, principal: Principal,
-                       reservation_id: UUID, fence_token: UUID) -> Iterator[None]:
+def wallet_spend_scope(
+    wallet: PostgresWallet, principal: Principal, reservation_id: UUID, fence_token: UUID
+) -> Iterator[None]:
     """Bind the durable ceiling to routed LLM dispatch, without enabling billing.
 
     The caller must reserve first and later settle/reconcile; ordinary API
@@ -696,8 +988,14 @@ def wallet_spend_scope(wallet: PostgresWallet, principal: Principal,
     from llm_setup import llm_spend_guard_scope
 
     def admit(provider: str, model: str) -> None:
-        wallet.admit_attempt(principal, reservation_id, fence_token=fence_token,
-                             attempt_key=str(uuid4()), provider=provider, model=model)
+        wallet.admit_attempt(
+            principal,
+            reservation_id,
+            fence_token=fence_token,
+            attempt_key=str(uuid4()),
+            provider=provider,
+            model=model,
+        )
 
     with llm_spend_guard_scope(admit):
         yield

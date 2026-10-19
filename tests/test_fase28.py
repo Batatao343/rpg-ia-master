@@ -5,6 +5,7 @@ Ids canônicos reais de data/graph/entities.json usados aqui:
   npc_valerius → controla nova_arcadia (não lidera fação)
   mao_sombria (fação), nova_arcadia (local)
 """
+
 import uuid
 
 import pytest
@@ -83,8 +84,14 @@ def test_sobra_de_cota_rola():
 # Etapa 2 — coleta de fatos dinâmicos
 # --------------------------------------------------------------------------- #
 def test_event_vira_frase():
-    ev = {"event_id": uuid.uuid4().hex, "turn": 3, "type": "npc_killed",
-          "actor_id": "player", "target_id": "npc_valerius", "payload": {}}
+    ev = {
+        "event_id": uuid.uuid4().hex,
+        "turn": 3,
+        "type": "npc_killed",
+        "actor_id": "player",
+        "target_id": "npc_valerius",
+        "payload": {},
+    }
     text = cb.render_event(ev)
     assert text.startswith("[turno 3]")
     nome = gr.get_entity("npc_valerius")["name"]
@@ -97,27 +104,38 @@ def test_render_event_tipo_desconhecido_vazio():
 
 
 def test_secret_so_se_revelado():
-    rf = {"entity_id": "npc_valerius", "fact": "conspira contra a coroa",
-          "revealed_at_turn": 4, "revealed_by_event": "e1"}
+    rf = {
+        "entity_id": "npc_valerius",
+        "fact": "conspira contra a coroa",
+        "revealed_at_turn": 4,
+        "revealed_by_event": "e1",
+    }
     com = _state(world_projection={"revealed_facts": {"e1": rf}})
-    facts_com = cb.collect_dynamic_facts(com, purpose="story", query="q",
-                                         current_loc="nova_arcadia", scene_entities=[])
+    facts_com = cb.collect_dynamic_facts(
+        com, purpose="story", query="q", current_loc="nova_arcadia", scene_entities=[]
+    )
     assert any("conspira" in f.text for f in facts_com)
 
     sem = _state(world_projection={"revealed_facts": {}})
-    facts_sem = cb.collect_dynamic_facts(sem, purpose="story", query="q",
-                                         current_loc="nova_arcadia", scene_entities=[])
+    facts_sem = cb.collect_dynamic_facts(
+        sem, purpose="story", query="q", current_loc="nova_arcadia", scene_entities=[]
+    )
     assert not any("conspira" in f.text for f in facts_sem)
 
 
 def test_50_eventos_top5():
     eventos = [
-        {"event_id": uuid.uuid4().hex, "turn": t, "type": "npc_killed",
-         "actor_id": "player", "target_id": "npc_valerius", "payload": {}}
+        {
+            "event_id": uuid.uuid4().hex,
+            "turn": t,
+            "type": "npc_killed",
+            "actor_id": "player",
+            "target_id": "npc_valerius",
+            "payload": {},
+        }
         for t in range(1, 51)
     ]
-    st = _state(world={"turn_count": 50, "current_location": "nova_arcadia"},
-                event_log=eventos)
+    st = _state(world={"turn_count": 50, "current_location": "nova_arcadia"}, event_log=eventos)
     pack = cb.build_context_pack(st, query="nova_arcadia", purpose="story", token_budget=200)
     assert pack.dropped > 0, "50 eventos em budget apertado devem estourar a cota"
     assert pack.total_tokens_est <= 200 * 1.05
@@ -163,12 +181,24 @@ class _CapturingLLM:
 
 def _story_state():
     from langchain_core.messages import HumanMessage
-    st = _state(game_id="pytest28", narrative_summary="", messages=[
-        HumanMessage(content="olho ao redor")],
-        factions=[], faction_intel={}, player={"name": "T", "class_name": "Guerreiro"},
-        campaign_plan={})
-    st["world"] = {"current_location": "nova_arcadia", "turn_count": 5,
-                   "time_of_day": "Dia", "weather": "Neutro", "danger_level": 1, "quest_plan": []}
+
+    st = _state(
+        game_id="pytest28",
+        narrative_summary="",
+        messages=[HumanMessage(content="olho ao redor")],
+        factions=[],
+        faction_intel={},
+        player={"name": "T", "class_name": "Guerreiro"},
+        campaign_plan={},
+    )
+    st["world"] = {
+        "current_location": "nova_arcadia",
+        "turn_count": 5,
+        "time_of_day": "Dia",
+        "weather": "Neutro",
+        "danger_level": 1,
+        "quest_plan": [],
+    }
     return st
 
 
@@ -219,16 +249,32 @@ def test_npc_usa_pack(monkeypatch):
     class _NPCLLM(_CapturingLLM):
         def invoke(self, msgs):
             self.captured = str(msgs[0].content)
-            return self._model(dialogue="oi", action_description="", memory_update="",
-                               relationship_change=0, faction_reveals=[])
+            return self._model(
+                dialogue="oi",
+                action_description="",
+                memory_update="",
+                relationship_change=0,
+                faction_reveals=[],
+            )
 
     npc_llm = _NPCLLM()
     monkeypatch.setattr(npc, "get_llm", lambda *a, **k: npc_llm)
 
-    st = _state(active_npc_name="Guarda", game_id="pytest28",
-                npcs={"Guarda": {"name": "Guarda", "role": "guarda", "persona": "rude",
-                                 "location": "nova_arcadia", "memory": [], "relationship": 5}},
-                messages=[HumanMessage(content="quem manda aqui?")])
+    st = _state(
+        active_npc_name="Guarda",
+        game_id="pytest28",
+        npcs={
+            "Guarda": {
+                "name": "Guarda",
+                "role": "guarda",
+                "persona": "rude",
+                "location": "nova_arcadia",
+                "memory": [],
+                "relationship": 5,
+            }
+        },
+        messages=[HumanMessage(content="quem manda aqui?")],
+    )
     npc.npc_actor_node(st)
     assert calls.get("purpose") == "npc"
     assert "<ESTADO_ATUAL_DO_MUNDO>" in npc_llm.captured
@@ -248,15 +294,24 @@ def test_combat_pack_budget_1200(monkeypatch):
     monkeypatch.setattr(combat, "build_context_pack", spy)
     # _narrate cai no fallback determinístico com FallbackLLM (não chama rede)
     from llm_setup import FallbackLLM
+
     monkeypatch.setattr(combat, "get_llm", lambda *a, **k: FallbackLLM("x"))
 
     player = {"name": "T", "hp": 10, "max_hp": 10}
-    txt = combat._narrate(player, [], ["golpe"], None, "ataco", True,
-                          "<ESTADO_ATUAL_DO_MUNDO>\nx\n</ESTADO_ATUAL_DO_MUNDO>")
+    txt = combat._narrate(
+        player,
+        [],
+        ["golpe"],
+        None,
+        "ataco",
+        True,
+        "<ESTADO_ATUAL_DO_MUNDO>\nx\n</ESTADO_ATUAL_DO_MUNDO>",
+    )
     assert isinstance(txt, str) and txt  # narração de fallback não quebra com world_ctx
     # confirma que combat_node pede budget 1200 (via spy no build direto)
-    pack = combat.build_context_pack(_state(), query="q", purpose="combat_narration",
-                                     token_budget=1200)
+    pack = combat.build_context_pack(
+        _state(), query="q", purpose="combat_narration", token_budget=1200
+    )
     assert calls["budget"] == 1200 and calls["purpose"] == "combat_narration"
 
 

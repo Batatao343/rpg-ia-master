@@ -122,12 +122,14 @@ data: {"game_id": "3f2a...", "message": "...", "player_stats": {...}, ...}
 **Assinaturas**
 ```python
 # api.py
-def _run_turn(state: dict, input_text: str) -> "GameResponse": ...   # POST clássico
-def _stream_turn(state: dict, input_text: str) -> Iterator[str]: ... # gerador SSE
+def _run_turn(state: dict, input_text: str) -> "GameResponse": ...  # POST clássico
+def _stream_turn(state: dict, input_text: str) -> Iterator[str]: ...  # gerador SSE
+
 
 # telemetria (R5)
-def _telemetry_hook(provider: str, model: str, tier: str,
-                    latency_ms: int, fell_back: bool) -> None: ...
+def _telemetry_hook(
+    provider: str, model: str, tier: str, latency_ms: int, fell_back: bool
+) -> None: ...
 ```
 
 **Nota LangGraph:** `stream_mode="updates"` devolve `{node_name: partial_state}`

@@ -38,7 +38,8 @@ class ChronicleRepository:
         game_id = UUID(str(state["game_id"]))
         epoch = self._epoch(state)
         chapters = ensure_chronicle_ids(
-            state.get("chronicle") or [], game_id=str(game_id),
+            state.get("chronicle") or [],
+            game_id=str(game_id),
         )
         queued = 0
         for index, chapter in enumerate(chapters):
@@ -55,8 +56,14 @@ class ChronicleRepository:
                     values(%s,%s,%s,%s,%s,%s,'pending','{}'::jsonb)
                     on conflict(game_id,timeline_epoch,chapter_id,source_hash,profile_version)
                     do nothing returning id""",
-                    (principal.user_id, game_id, epoch, chapter["chapter_id"],
-                     source_hash, PROFILE_VERSION),
+                    (
+                        principal.user_id,
+                        game_id,
+                        epoch,
+                        chapter["chapter_id"],
+                        source_hash,
+                        PROFILE_VERSION,
+                    ),
                 ).fetchone()
                 if not row:
                     # SPEC-236 R9: digest still pending but its job died -> revive (cooldown).
@@ -68,6 +75,7 @@ class ChronicleRepository:
                     ).fetchone()
                     if pending:
                         from infrastructure.postgres_jobs import revive_dead_job
+
                         if revive_dead_job(connection, "compress_chronicle", dedupe):
                             queued += 1
                     continue
@@ -77,12 +85,19 @@ class ChronicleRepository:
                     values(%s,%s,%s,'compress_chronicle',%s,'queued',%s,3)
                     on conflict(kind,dedupe_key) do nothing""",
                     (
-                        uuid4(), principal.user_id, game_id, dedupe,
-                        Jsonb({
-                            "owner_id": str(principal.user_id), "game_id": str(game_id),
-                            "timeline_epoch": epoch, "chapter": chapter,
-                            "source_hash": source_hash,
-                        }),
+                        uuid4(),
+                        principal.user_id,
+                        game_id,
+                        dedupe,
+                        Jsonb(
+                            {
+                                "owner_id": str(principal.user_id),
+                                "game_id": str(game_id),
+                                "timeline_epoch": epoch,
+                                "chapter": chapter,
+                                "source_hash": source_hash,
+                            }
+                        ),
                     ),
                 )
                 queued += 1
@@ -101,58 +116,87 @@ class ChronicleRepository:
             from services.job_fence import require_job_fence
 
             game = connection.execute(
-                'select state,version from app.games where id=%s and owner_id=%s for update',
+                "select state,version from app.games where id=%s and owner_id=%s for update",
                 (game_id, owner_id),
             ).fetchone()
-            if not game or self._epoch(game['state']) != epoch:
+            if not game or self._epoch(game["state"]) != epoch:
                 raise ValueError("chronicle timeline was superseded")
             require_job_fence(connection)
             result = connection.execute(
                 """update app.chronicle_digests set status=%s,digest=%s
                 where owner_id=%s and game_id=%s and timeline_epoch=%s
                   and chapter_id=%s and source_hash=%s and profile_version=%s""",
-                (status, Jsonb(digest), owner_id, game_id, epoch,
-                 chapter["chapter_id"], source_hash, PROFILE_VERSION),
+                (
+                    status,
+                    Jsonb(digest),
+                    owner_id,
+                    game_id,
+                    epoch,
+                    chapter["chapter_id"],
+                    source_hash,
+                    PROFILE_VERSION,
+                ),
             )
             if result.rowcount != 1:
                 raise ValueError("reserva de digest não encontrada")
             principal = Principal(owner_id, "worker", str(owner_id))
             common = {
-                "chapter_id": chapter["chapter_id"], "visibility": "public",
+                "chapter_id": chapter["chapter_id"],
+                "visibility": "public",
                 "source_hash": source_hash,
                 "commit_version": game["version"],
             }
             for entry in chapter.get("entries") or []:
-                self.memory.stage_on(connection, MemoryWriteIntent(
-                    MemoryDocument(
-                        f"chronicle:{game_id}:{epoch}:entry:{entry['entry_id']}",
-                        str(entry.get("text", "")), "chronicle",
-                        {**common, "source_kind": "entry",
-                         "domain_document_id": entry["entry_id"],
-                         "entry_id": entry["entry_id"], "event_id": entry.get("event_id"),
-                         "from_turn": int(entry.get("turn", 0) or 0),
-                         "to_turn": int(entry.get("turn", 0) or 0)},
+                self.memory.stage_on(
+                    connection,
+                    MemoryWriteIntent(
+                        MemoryDocument(
+                            f"chronicle:{game_id}:{epoch}:entry:{entry['entry_id']}",
+                            str(entry.get("text", "")),
+                            "chronicle",
+                            {
+                                **common,
+                                "source_kind": "entry",
+                                "domain_document_id": entry["entry_id"],
+                                "entry_id": entry["entry_id"],
+                                "event_id": entry.get("event_id"),
+                                "from_turn": int(entry.get("turn", 0) or 0),
+                                "to_turn": int(entry.get("turn", 0) or 0),
+                            },
+                        ),
+                        principal,
+                        game_id,
+                        timeline_epoch=epoch,
                     ),
-                    principal, game_id, timeline_epoch=epoch,
-                ))
-            self.memory.stage_on(connection, MemoryWriteIntent(
-                MemoryDocument(
-                    f"chronicle:{game_id}:{epoch}:digest:{chapter['chapter_id']}:{source_hash}",
-                    str(digest.get("summary", "")), "chronicle",
-                    {**common, "source_kind": "digest",
-                     "domain_document_id": f"{chapter['chapter_id']}:digest",
-                     "from_turn": int(digest.get("from_turn", 0) or 0),
-                     "to_turn": int(digest.get("to_turn", 0) or 0)},
+                )
+            self.memory.stage_on(
+                connection,
+                MemoryWriteIntent(
+                    MemoryDocument(
+                        f"chronicle:{game_id}:{epoch}:digest:{chapter['chapter_id']}:{source_hash}",
+                        str(digest.get("summary", "")),
+                        "chronicle",
+                        {
+                            **common,
+                            "source_kind": "digest",
+                            "domain_document_id": f"{chapter['chapter_id']}:digest",
+                            "from_turn": int(digest.get("from_turn", 0) or 0),
+                            "to_turn": int(digest.get("to_turn", 0) or 0),
+                        },
+                    ),
+                    principal,
+                    game_id,
+                    timeline_epoch=epoch,
                 ),
-                principal, game_id, timeline_epoch=epoch,
-            ))
+            )
 
     def overlay(self, principal: Principal, state: dict[str, Any]) -> dict[str, Any]:
         result = deepcopy(state)
         game_id = UUID(str(result["game_id"]))
         epoch = self._epoch(result)
         chapters = ensure_chronicle_ids(
-            result.get("chronicle") or [], game_id=str(game_id),
+            result.get("chronicle") or [],
+            game_id=str(game_id),
         )
         with self.pool.connection() as connection:
             rows = connection.execute(
@@ -162,8 +206,7 @@ class ChronicleRepository:
                 order by created_at desc""",
                 (principal.user_id, game_id, epoch),
             ).fetchall()
-        by_key = {(row["chapter_id"], row["source_hash"]): dict(row["digest"])
-                  for row in rows}
+        by_key = {(row["chapter_id"], row["source_hash"]): dict(row["digest"]) for row in rows}
         for chapter in chapters:
             digest = by_key.get((chapter["chapter_id"], chapter_source_hash(chapter)))
             if digest:
@@ -172,19 +215,32 @@ class ChronicleRepository:
         return result
 
     def semantic_candidates(
-        self, principal: Principal, game_id: UUID, query: str, *, top_k: int,
+        self,
+        principal: Principal,
+        game_id: UUID,
+        query: str,
+        *,
+        top_k: int,
     ) -> list[ChronicleCandidate]:
-        docs = self.memory.query(MemoryQuery(
-            query, "chronicle", principal=principal, game_id=game_id, k=top_k,
-        ))
+        docs = self.memory.query(
+            MemoryQuery(
+                query,
+                "chronicle",
+                principal=principal,
+                game_id=game_id,
+                k=top_k,
+            )
+        )
         candidates = []
         for doc in docs:
             if doc.metadata.get("retrieval") != "semantic":
                 continue
-            candidates.append(ChronicleCandidate(
-                str(doc.metadata.get("domain_document_id") or doc.document_id),
-                str(doc.metadata.get("chapter_id") or ""),
-                str(doc.metadata.get("source_kind") or "entry"),
-                float(doc.score or 0.0),
-            ))
+            candidates.append(
+                ChronicleCandidate(
+                    str(doc.metadata.get("domain_document_id") or doc.document_id),
+                    str(doc.metadata.get("chapter_id") or ""),
+                    str(doc.metadata.get("source_kind") or "entry"),
+                    float(doc.score or 0.0),
+                )
+            )
         return candidates

@@ -127,8 +127,10 @@ def apply_downed(player: dict, world: dict) -> tuple[dict, dict, list[dict], str
     """-> (player_atualizado, world_atualizado, eventos_gerados, nota_mecanica)
     eventos_gerados = [player_downed] + [unique_item_lost por único saqueado]"""
 
+
 # world_utils.py
 def last_safe_location(world: dict) -> str: ...
+
 
 # campaign_manager.py
 def _same_region(loc_id_a: str, loc_id_b: str) -> bool: ...

@@ -21,9 +21,16 @@ def _legacy_story_gate(monkeypatch: pytest.MonkeyPatch) -> None:
     import re
 
     from agents import router
-    monkeypatch.setattr(router, "_EXPLICIT_STORY_RE", re.compile(
-        r"\b(?:descans\w*|durm\w*|acamp\w*|viaj\w*|vou\s+para|sigo\s+para)\b", re.IGNORECASE))
+
+    monkeypatch.setattr(
+        router,
+        "_EXPLICIT_STORY_RE",
+        re.compile(
+            r"\b(?:descans\w*|durm\w*|acamp\w*|viaj\w*|vou\s+para|sigo\s+para)\b", re.IGNORECASE
+        ),
+    )
     monkeypatch.setattr(router, "_EXPLICIT_HOSTILITY_RE", re.compile(r"(?!x)x"), raising=True)
+
 
 from services.jev_decision import ChoiceAnswer, DecisionResult, Usage
 
@@ -40,16 +47,24 @@ def test_corpus_is_frozen_before_any_provider_call() -> None:
     assert sum(case.measure == "loot_context" for case in cases) == 4
     pre = experiment.preflight()
     assert [row["id"] for row in pre["cases"]] == [case.id for case in cases]
-    assert {row["id"]: row["unrepresentable_reason"] for row in pre["cases"]
-            if row["unrepresentable_reason"]} == {
-                "target.over20": "experiment_target_cap_20",
+    assert {
+        row["id"]: row["unrepresentable_reason"]
+        for row in pre["cases"]
+        if row["unrepresentable_reason"]
+    } == {
+        "target.over20": "experiment_target_cap_20",
         "target.missing_id": "visible_actor_without_canonical_id",
     }
     assert experiment._required_calls(pre["cases"]) == 25
-    assert next(row for row in pre["cases"] if row["id"] == "target.missing_id")["classifier_eligible"] is False
+    assert (
+        next(row for row in pre["cases"] if row["id"] == "target.missing_id")["classifier_eligible"]
+        is False
+    )
 
 
-def test_mismatched_corpus_lock_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_mismatched_corpus_lock_fails_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     lock = tmp_path / "wrong.sha256"
     lock.write_text("sha256:" + "0" * 64 + "\n", encoding="utf-8")
     monkeypatch.setattr(experiment, "CORPUS_LOCK", lock)
@@ -73,7 +88,12 @@ def test_only_visible_canonical_scene_ids_become_target_options() -> None:
     offscene = experiment._target_options(_case("target.offscene").input["state"])
     alias = experiment._target_options(_case("target.alias").input["state"])
     enemy = experiment._target_options(_case("target.enemy").input["state"])
-    assert secret.candidate_ids == offscene.candidate_ids == alias.candidate_ids == ("npc_corvo_rapido",)
+    assert (
+        secret.candidate_ids
+        == offscene.candidate_ids
+        == alias.candidate_ids
+        == ("npc_corvo_rapido",)
+    )
     assert "npc_sombra" not in secret.criteria
     assert "Sombra" not in str(secret.criteria)
     assert "npc_velha_magda" not in offscene.criteria
@@ -84,10 +104,22 @@ def test_only_visible_canonical_scene_ids_become_target_options() -> None:
 
 
 def test_ambiguous_alias_and_unknown_target_fail_closed() -> None:
-    state = {"npcs": {
-        "Corvo": {"id": "npc_corvo_rapido", "name": "Corvo", "aliases": ["Velho"], "in_scene": True},
-        "Magda": {"id": "npc_velha_magda", "name": "Magda", "aliases": ["Velho"], "in_scene": True},
-    }}
+    state = {
+        "npcs": {
+            "Corvo": {
+                "id": "npc_corvo_rapido",
+                "name": "Corvo",
+                "aliases": ["Velho"],
+                "in_scene": True,
+            },
+            "Magda": {
+                "id": "npc_velha_magda",
+                "name": "Magda",
+                "aliases": ["Velho"],
+                "in_scene": True,
+            },
+        }
+    }
     options = experiment._target_options(state)
     assert experiment.canonical_target("Velho", options) == "unknown"
     assert experiment.canonical_target("Nome que não existe", options) == "unknown"
@@ -96,23 +128,39 @@ def test_ambiguous_alias_and_unknown_target_fail_closed() -> None:
 
 def test_graph_identity_and_visibility_override_untrusted_runtime_id() -> None:
     canonical = "npc_corvo_rapido"
-    state = {"npcs": {"Corvo Rápido": {
-        "id": "npc_spoof", "name": "Corvo Rápido", "in_scene": True,
-    }}}
+    state = {
+        "npcs": {
+            "Corvo Rápido": {
+                "id": "npc_spoof",
+                "name": "Corvo Rápido",
+                "in_scene": True,
+            }
+        }
+    }
     assert experiment._target_options(state).candidate_ids == (canonical,)
     state["world_projection"] = {"entities": {canonical: {"alive": False}}}
     assert experiment._target_options(state).candidate_ids == ()
     state["world_projection"] = {}
-    state["combat"] = {"scene": {"positions": {
-        canonical: {"hidden_from": ["player"], "ocultacao": "escondido"},
-    }}}
+    state["combat"] = {
+        "scene": {
+            "positions": {
+                canonical: {"hidden_from": ["player"], "ocultacao": "escondido"},
+            }
+        }
+    }
     assert experiment._target_options(state).candidate_ids == ()
 
 
 def test_conflicting_known_graph_id_is_unrepresentable() -> None:
-    state = {"npcs": {"Corvo Rápido": {
-        "id": "npc_velha_magda", "name": "Corvo Rápido", "in_scene": True,
-    }}}
+    state = {
+        "npcs": {
+            "Corvo Rápido": {
+                "id": "npc_velha_magda",
+                "name": "Corvo Rápido",
+                "in_scene": True,
+            }
+        }
+    }
     options = experiment._target_options(state)
     assert options.candidate_ids == ()
     assert options.unrepresentable_reason == "conflicting_canonical_identity"
@@ -120,37 +168,67 @@ def test_conflicting_known_graph_id_is_unrepresentable() -> None:
 
 def test_hidden_enemy_is_not_an_option() -> None:
     state = _case("target.enemy").input["state"]
-    state["combat"] = {"scene": {"positions": {
-        "enemy_guarda": {"hidden_from": ["player"], "ocultacao": "escondido"},
-    }}}
+    state["combat"] = {
+        "scene": {
+            "positions": {
+                "enemy_guarda": {"hidden_from": ["player"], "ocultacao": "escondido"},
+            }
+        }
+    }
     assert experiment._target_options(state).candidate_ids == ()
 
 
 def test_hiding_from_another_observer_keeps_enemy_visible_to_player() -> None:
     state = _case("target.enemy").input["state"]
-    state["combat"] = {"scene": {"positions": {
-        "enemy_guarda": {"hidden_from": ["other_observer"], "ocultacao": "escondido"},
-    }}}
+    state["combat"] = {
+        "scene": {
+            "positions": {
+                "enemy_guarda": {"hidden_from": ["other_observer"], "ocultacao": "escondido"},
+            }
+        }
+    }
     assert experiment._target_options(state).candidate_ids == ("enemy_guarda",)
 
 
 def test_present_ally_wins_over_offscene_npc_cache_row() -> None:
-    state = {"npcs": {"Corvo": {
-        "id": "npc_offscene", "name": "Corvo", "in_scene": False,
-    }}, "party": [{
-        "id": "npc_corvo_rapido", "name": "Corvo", "active": True, "status": "ativo",
-    }]}
+    state = {
+        "npcs": {
+            "Corvo": {
+                "id": "npc_offscene",
+                "name": "Corvo",
+                "in_scene": False,
+            }
+        },
+        "party": [
+            {
+                "id": "npc_corvo_rapido",
+                "name": "Corvo",
+                "active": True,
+                "status": "ativo",
+            }
+        ],
+    }
     assert experiment._target_options(state).candidate_ids == ("npc_corvo_rapido",)
 
 
 def test_spoof_id_cannot_expose_graph_secret(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(experiment, "resolve_npc_entity_id", lambda *_args: "npc_secret")
-    monkeypatch.setattr(experiment.graph_resolver, "get_entity", lambda entity_id: (
-        {"type": "npc", "visibility": "secret"} if entity_id == "npc_secret" else None
-    ))
-    state = {"npcs": {"Sombra": {
-        "id": "npc_spoof", "name": "Sombra", "in_scene": True,
-    }}}
+    monkeypatch.setattr(
+        experiment.graph_resolver,
+        "get_entity",
+        lambda entity_id: (
+            {"type": "npc", "visibility": "secret"} if entity_id == "npc_secret" else None
+        ),
+    )
+    state = {
+        "npcs": {
+            "Sombra": {
+                "id": "npc_spoof",
+                "name": "Sombra",
+                "in_scene": True,
+            }
+        }
+    }
     options = experiment._target_options(state)
     assert options.candidate_ids == ()
     assert "Sombra" not in str(options.criteria)
@@ -160,10 +238,15 @@ def test_spoof_id_cannot_expose_graph_secret(monkeypatch: pytest.MonkeyPatch) ->
 def test_classify_auth_failure_blocks_even_after_fallback(monkeypatch: pytest.MonkeyPatch) -> None:
     @contextmanager
     def captured(_budget: Budget):
-        yield {"attempts": [
-            {"provider": "deepseek", "model": "primary", "outcome": "error"},
-            {"provider": "groq", "model": "fallback", "outcome": "success"},
-        ], "confidence": 0.9, "usage_rows": [], "fatal_sanity_error": True}
+        yield {
+            "attempts": [
+                {"provider": "deepseek", "model": "primary", "outcome": "error"},
+                {"provider": "groq", "model": "fallback", "outcome": "success"},
+            ],
+            "confidence": 0.9,
+            "usage_rows": [],
+            "fatal_sanity_error": True,
+        }
 
     class Adapter:
         def execute(self, _candidate: object):
@@ -180,30 +263,50 @@ def test_jev_response_survives_reported_cost_block() -> None:
     class Backend:
         def decide(self, *_args: object, **_kwargs: object) -> DecisionResult:
             return DecisionResult(
-                model="jev-test", answers={"loot_context": ChoiceAnswer(
-                    type="choice", choice="SHOP", probabilities={"SHOP": 1.0}, confidence=1.0,
-                )}, usage=Usage(input_tokens=11, output_tokens=2), correlation_id="test",
-                latency_ms=10, cost_usd=2.0,
+                model="jev-test",
+                answers={
+                    "loot_context": ChoiceAnswer(
+                        type="choice",
+                        choice="SHOP",
+                        probabilities={"SHOP": 1.0},
+                        confidence=1.0,
+                    )
+                },
+                usage=Usage(input_tokens=11, output_tokens=2),
+                correlation_id="test",
+                latency_ms=10,
+                cost_usd=2.0,
             )
 
     with pytest.raises(ExperimentBlocked, match="reported spending") as blocked:
-        experiment._arm_b(_case("loot.shop"), None, Backend(),
-                          Budget(max_calls=1, max_cost_usd=1), "test-run")
+        experiment._arm_b(
+            _case("loot.shop"), None, Backend(), Budget(max_calls=1, max_cost_usd=1), "test-run"
+        )
     assert blocked.value.record["choice"] == "SHOP"
     assert blocked.value.record["model"] == "jev-test"
     assert blocked.value.record["usage"]["input_tokens"] == 11
 
 
-def test_python_gate_current_router_needs_zero_provider_calls(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_python_gate_current_router_needs_zero_provider_calls(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     @contextmanager
     def captured(_budget: Budget):
         yield {"attempts": [], "confidence": None, "usage_rows": [], "fatal_sanity_error": False}
 
     class GateAdapter:
         def execute(self, _candidate: object):
-            return type("Response", (), {"actual": {
-                "route": "storyteller", "target": None, "loot_context": None,
-            }})()
+            return type(
+                "Response",
+                (),
+                {
+                    "actual": {
+                        "route": "storyteller",
+                        "target": None,
+                        "loot_context": None,
+                    }
+                },
+            )()
 
     monkeypatch.setattr(experiment, "_capture_classify", captured)
     monkeypatch.setattr(experiment, "RoutingAdapter", GateAdapter)
@@ -231,7 +334,10 @@ def test_resume_allows_its_own_review_evidence(monkeypatch: pytest.MonkeyPatch) 
         if args[1] == "merge-base":
             return subprocess.CompletedProcess(args, 0, "", "")
         return subprocess.CompletedProcess(
-            args, 0, "handoffs/SPEC-179-SOL-recovery-review.md\n", "",
+            args,
+            0,
+            "handoffs/SPEC-179-SOL-recovery-review.md\n",
+            "",
         )
 
     monkeypatch.setattr(experiment.subprocess, "run", git_probe)
@@ -248,18 +354,33 @@ def test_over_twenty_is_reported_without_truncating_candidates() -> None:
 
 def test_score_keeps_unrepresentable_in_semantic_denominator() -> None:
     cases = [_case("target.one_npc"), _case("target.over20"), _case("loot.shop")]
-    raw = {"rows": [
-        {"case_id": "target.one_npc", "measure": "target", "status": "paired",
-         "candidate_ids": ["npc_corvo_rapido"],
-         "a": {"choice": "npc_corvo_rapido", "error": None},
-         "b": {"choice": "unknown", "error": None}},
-        {"case_id": "target.over20", "measure": "target", "status": "unrepresentable",
-         "candidate_ids": ["enemy_21"], "reason": "experiment_target_cap_20"},
-        {"case_id": "loot.shop", "measure": "loot_context", "status": "paired",
-         "candidate_ids": [],
-         "a": {"choice": "SHOP", "error": None},
-         "b": {"choice": "SHOP", "error": None}},
-    ]}
+    raw = {
+        "rows": [
+            {
+                "case_id": "target.one_npc",
+                "measure": "target",
+                "status": "paired",
+                "candidate_ids": ["npc_corvo_rapido"],
+                "a": {"choice": "npc_corvo_rapido", "error": None},
+                "b": {"choice": "unknown", "error": None},
+            },
+            {
+                "case_id": "target.over20",
+                "measure": "target",
+                "status": "unrepresentable",
+                "candidate_ids": ["enemy_21"],
+                "reason": "experiment_target_cap_20",
+            },
+            {
+                "case_id": "loot.shop",
+                "measure": "loot_context",
+                "status": "paired",
+                "candidate_ids": [],
+                "a": {"choice": "SHOP", "error": None},
+                "b": {"choice": "SHOP", "error": None},
+            },
+        ]
+    }
     summary = experiment.score(raw, cases)
     assert summary["target"]["semantic_count"] == 2
     assert summary["target"]["representable_count"] == 1
@@ -272,7 +393,8 @@ def test_score_keeps_unrepresentable_in_semantic_denominator() -> None:
 
 
 def test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.delenv("RPG_FORCE_MOCK", raising=False)
     monkeypatch.delenv("RPG_NO_MOCK", raising=False)
@@ -295,8 +417,13 @@ def test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider(
         budget.consume()
         return {"choice": "none", "error": None}
 
-    def arm_b(case: experiment.ExperimentCase, _options: object,
-              _backend: object, budget: Budget, _run_id: str) -> dict:
+    def arm_b(
+        case: experiment.ExperimentCase,
+        _options: object,
+        _backend: object,
+        budget: Budget,
+        _run_id: str,
+    ) -> dict:
         calls.append("b:" + case.id)
         budget.consume()
         return {"choice": "none", "error": None}
@@ -322,14 +449,18 @@ def test_raw_is_durable_before_scoring_and_unrepresentable_never_calls_provider(
     assert "a:target.missing_id" in calls
     assert "b:target.over20" not in calls
     assert "b:target.missing_id" not in calls
-    assert all(row.get("fallback", {}).get("fallback_from") == "a"
-               for row in raw["rows"] if row["status"] == "unrepresentable")
+    assert all(
+        row.get("fallback", {}).get("fallback_from") == "a"
+        for row in raw["rows"]
+        if row["status"] == "unrepresentable"
+    )
     assert len(raw["rows"]) == 14
     assert (output_dir / "summary.json").exists()
 
 
 def test_live_rejects_dirty_checkout_before_backend_or_artifacts(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.delenv("RPG_FORCE_MOCK", raising=False)
     monkeypatch.delenv("RPG_NO_MOCK", raising=False)
@@ -347,7 +478,8 @@ def test_live_rejects_dirty_checkout_before_backend_or_artifacts(
 
 
 def test_resume_preserves_prior_raw_and_cumulative_budget(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.delenv("RPG_FORCE_MOCK", raising=False)
     monkeypatch.delenv("RPG_NO_MOCK", raising=False)
@@ -356,26 +488,44 @@ def test_resume_preserves_prior_raw_and_cumulative_budget(
     prepared = experiment.preflight()["cases"]
     rows = []
     for case, pre in zip(cases[:10], prepared[:10], strict=True):
-        row = {"case_id": case.id, "measure": case.measure,
-               "candidate_ids": pre["candidate_ids"],
-               "filtered_hidden_count": pre["filtered_hidden_count"]}
+        row = {
+            "case_id": case.id,
+            "measure": case.measure,
+            "candidate_ids": pre["candidate_ids"],
+            "filtered_hidden_count": pre["filtered_hidden_count"],
+        }
         if case.id == "target.missing_id":
-            row.update(status="unrepresentable", reason=pre["unrepresentable_reason"],
-                       a={"error": "CLASSIFY has no real decision", "attempts": []})
+            row.update(
+                status="unrepresentable",
+                reason=pre["unrepresentable_reason"],
+                a={"error": "CLASSIFY has no real decision", "attempts": []},
+            )
         elif case.id == "target.over20":
-            row.update(status="unrepresentable", reason=pre["unrepresentable_reason"],
-                       a={"choice": "unknown", "attempts": [{"outcome": "success"}], "error": None},
-                       fallback={"choice": "unknown", "fallback_from": "a"})
+            row.update(
+                status="unrepresentable",
+                reason=pre["unrepresentable_reason"],
+                a={"choice": "unknown", "attempts": [{"outcome": "success"}], "error": None},
+                fallback={"choice": "unknown", "fallback_from": "a"},
+            )
         else:
-            row.update(status="paired",
-                       a={"choice": "none", "attempts": [{"outcome": "success"}], "error": None},
-                       b={"choice": "none", "attempts": [{"outcome": "success"}], "error": None})
+            row.update(
+                status="paired",
+                a={"choice": "none", "attempts": [{"outcome": "success"}], "error": None},
+                b={"choice": "none", "attempts": [{"outcome": "success"}], "error": None},
+            )
         rows.append(row)
-    prior = {"run_id": "prior", "product_sha": "prior-sha", "product_tree_hash": "prior-tree",
-             "product_dirty": False,
-             "status": "blocked-by-provider", "blocker": "CLASSIFY gate misread",
-             "corpus_hash": digest, "case_order": [case.id for case in cases],
-             "budget": asdict(Budget(max_calls=40, max_cost_usd=0.40, calls=17)), "rows": rows}
+    prior = {
+        "run_id": "prior",
+        "product_sha": "prior-sha",
+        "product_tree_hash": "prior-tree",
+        "product_dirty": False,
+        "status": "blocked-by-provider",
+        "blocker": "CLASSIFY gate misread",
+        "corpus_hash": digest,
+        "case_order": [case.id for case in cases],
+        "budget": asdict(Budget(max_calls=40, max_cost_usd=0.40, calls=17)),
+        "rows": rows,
+    }
     source_path = tmp_path / "prior-raw.json"
     source_path.write_text(json.dumps(prior), encoding="utf-8")
     original_bytes = source_path.read_bytes()
@@ -398,11 +548,20 @@ def test_resume_preserves_prior_raw_and_cumulative_budget(
         calls.append("a:" + case.id)
         if case.id != "target.missing_id":
             budget.consume()
-        return {"choice": "none", "provider": "python_gate" if case.id == "target.missing_id" else "test",
-                "attempts": [], "error": None}
+        return {
+            "choice": "none",
+            "provider": "python_gate" if case.id == "target.missing_id" else "test",
+            "attempts": [],
+            "error": None,
+        }
 
-    def arm_b(case: experiment.ExperimentCase, _options: object,
-              _backend: object, budget: Budget, _run_id: str) -> dict:
+    def arm_b(
+        case: experiment.ExperimentCase,
+        _options: object,
+        _backend: object,
+        budget: Budget,
+        _run_id: str,
+    ) -> dict:
         calls.append("b:" + case.id)
         budget.consume()
         return {"choice": "none", "attempts": [], "error": None}
@@ -410,21 +569,39 @@ def test_resume_preserves_prior_raw_and_cumulative_budget(
     monkeypatch.setattr(experiment, "JevDecisionBackend", OfflineBackend)
     monkeypatch.setattr(experiment, "_arm_a", arm_a)
     monkeypatch.setattr(experiment, "_arm_b", arm_b)
-    monkeypatch.setattr(experiment, "repository_identity", lambda _root: ("new-sha", "new-tree", False))
+    monkeypatch.setattr(
+        experiment, "repository_identity", lambda _root: ("new-sha", "new-tree", False)
+    )
     output_dir = tmp_path / "resumed"
     with pytest.raises(ExperimentBlocked, match="raw hash differs"):
-        experiment.run(output_dir, Budget(max_calls=40, max_cost_usd=0.40),
-                       resume_from=source_path, resume_sha256="sha256:" + "0" * 64)
+        experiment.run(
+            output_dir,
+            Budget(max_calls=40, max_cost_usd=0.40),
+            resume_from=source_path,
+            resume_sha256="sha256:" + "0" * 64,
+        )
     assert not output_dir.exists()
-    raw = experiment.run(output_dir, Budget(max_calls=40, max_cost_usd=0.40),
-                         resume_from=source_path, resume_sha256=source_hash)
+    raw = experiment.run(
+        output_dir,
+        Budget(max_calls=40, max_cost_usd=0.40),
+        resume_from=source_path,
+        resume_sha256=source_hash,
+    )
     assert raw["status"] == "complete"
     assert raw["budget"]["calls"] == 25
     assert raw["resumed_from"]["calls_before_resume"] == 17
     assert raw["rows"][9]["a_before_resume"]["error"] == "CLASSIFY has no real decision"
     assert raw["rows"][9]["a"]["provider"] == "python_gate"
-    assert calls == ["a:target.missing_id",
-                     "a:loot.treasure", "b:loot.treasure", "a:loot.shop", "b:loot.shop",
-                     "a:loot.craft", "b:loot.craft", "a:loot.none", "b:loot.none"]
+    assert calls == [
+        "a:target.missing_id",
+        "a:loot.treasure",
+        "b:loot.treasure",
+        "a:loot.shop",
+        "b:loot.shop",
+        "a:loot.craft",
+        "b:loot.craft",
+        "a:loot.none",
+        "b:loot.none",
+    ]
     assert source_path.read_bytes() == original_bytes
     assert (output_dir / "summary.json").exists()

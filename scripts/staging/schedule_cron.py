@@ -47,25 +47,37 @@ def job_command(url: str, name: str = "") -> str:
 
 def plan(base: str) -> list[tuple[str, str, str]]:
     base = base.rstrip("/")
-    return [(name, schedule, job_command(base + path, name)) for name, schedule, path in JOBS] + [WATCHDOG]
+    return [(name, schedule, job_command(base + path, name)) for name, schedule, path in JOBS] + [
+        WATCHDOG
+    ]
 
 
 def apply(conn, base: str, cron_secret: str) -> dict:
     out: dict = {"extensions": {}, "jobs": []}
     for ext in EXTENSIONS:
         conn.execute(f"create extension if not exists {ext}")
-    out["extensions"] = {r["extname"]: r["extversion"] for r in conn.execute(
-        "select extname, extversion from pg_extension where extname = any(%s)", (list(EXTENSIONS),)).fetchall()}
+    out["extensions"] = {
+        r["extname"]: r["extversion"]
+        for r in conn.execute(
+            "select extname, extversion from pg_extension where extname = any(%s)",
+            (list(EXTENSIONS),),
+        ).fetchall()
+    }
     row = conn.execute("select id from vault.secrets where name = %s", (SECRET_NAME,)).fetchone()
     if row:
         conn.execute("select vault.update_secret(%s, %s)", (row["id"], cron_secret))
         out["vault"] = "updated"
     else:
-        conn.execute("select vault.create_secret(%s, %s, %s)", (cron_secret, SECRET_NAME, "SPEC-192 cron bearer"))
+        conn.execute(
+            "select vault.create_secret(%s, %s, %s)",
+            (cron_secret, SECRET_NAME, "SPEC-192 cron bearer"),
+        )
         out["vault"] = "created"
     for name, schedule, command in plan(base):
         conn.execute("select cron.unschedule(jobid) from cron.job where jobname = %s", (name,))
-        jid = conn.execute("select cron.schedule(%s, %s, %s) as jobid", (name, schedule, command)).fetchone()["jobid"]
+        jid = conn.execute(
+            "select cron.schedule(%s, %s, %s) as jobid", (name, schedule, command)
+        ).fetchone()["jobid"]
         out["jobs"].append({"name": name, "schedule": schedule, "jobid": jid})
     return out
 
@@ -77,11 +89,17 @@ def main(argv=None) -> int:
     env = s192.load_env()
     with s192.db(env) as conn:
         res = apply(conn, a.base, env["RPG_CRON_SECRET"])
-        res["scheduled_rows"] = [dict(r) for r in conn.execute(
-            "select jobname, schedule, active from cron.job where jobname like 'rpg-cron-%' order by jobname").fetchall()]
+        res["scheduled_rows"] = [
+            dict(r)
+            for r in conn.execute(
+                "select jobname, schedule, active from cron.job where jobname like 'rpg-cron-%' order by jobname"
+            ).fetchall()
+        ]
     res.update({"at": s192.now_iso(), "base": a.base})
     s192.evidence("cron_schedule", res)
-    print(json.dumps({k: v for k, v in res.items() if k in ("extensions", "vault", "scheduled_rows")}))
+    print(
+        json.dumps({k: v for k, v in res.items() if k in ("extensions", "vault", "scheduled_rows")})
+    )
     return 0
 
 

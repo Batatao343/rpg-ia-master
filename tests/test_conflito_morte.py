@@ -11,6 +11,7 @@ from services import death_flow as df
 
 class _Rng:
     """rng determinístico: retorna sempre o mínimo (fail) ou o máximo (success)."""
+
     def __init__(self, high):
         self.high = high
 
@@ -23,11 +24,17 @@ def _player(corpo=2, criticos=0, **over):
     fer = {"leve": [], "grave": [], "critico": []}
     for i in range(criticos):
         fer["critico"].append({"categoria": "critico", "regiao": f"r{i}", "suprimida": False})
-    p = {"is_player": True, "class_name": "Devoto do Abismo",
-         "virtudes": {"corpo": corpo, "mente": 2, "agilidade": 1, "forca": 1, "carisma": 1},
-         "vitalidade": 0, "max_vitalidade": gamedata.vitalidade_para_corpo(corpo),
-         "ferimento_espacos": espacos, "ferimentos": fer,
-         "entropy": 0, "abyss_charge": 0}
+    p = {
+        "is_player": True,
+        "class_name": "Devoto do Abismo",
+        "virtudes": {"corpo": corpo, "mente": 2, "agilidade": 1, "forca": 1, "carisma": 1},
+        "vitalidade": 0,
+        "max_vitalidade": gamedata.vitalidade_para_corpo(corpo),
+        "ferimento_espacos": espacos,
+        "ferimentos": fer,
+        "entropy": 0,
+        "abyss_charge": 0,
+    }
     p.update(over)
     return p
 
@@ -53,7 +60,7 @@ def test_ultima_acao_pode_declarar_ruptura():
     p = _full_criticos()
     res = df.trigger_last_stand(p, ruptura=True)
     assert res["ruptura_declarada"] is True
-    assert p["abyss_charge"] == 1                       # Carga gerada normalmente
+    assert p["abyss_charge"] == 1  # Carga gerada normalmente
 
 
 # ==========================================================================
@@ -98,7 +105,7 @@ def test_aliado_improvisado_sucesso_volta_com_1_vitalidade():
     df.enter_terminal_state(p)
     res = df.attempt_stabilization(p, {"virtudes": {"mente": 5}}, rng=_Rng(high=True))
     assert res["revived"] is True and res["auto"] is False
-    assert p["vitalidade"] == 1                         # improvisado = 1 Vitalidade
+    assert p["vitalidade"] == 1  # improvisado = 1 Vitalidade
 
 
 # ==========================================================================
@@ -140,7 +147,7 @@ def test_gerar_cicatriz_com_fallbackllm_nao_estoura_e_limpa_pendencia():
     scar = df.generate_scar(p, FallbackLLM("sem chave"))
     assert scar["consequencia_negativa"] and scar["habilidade_positiva_relacionada"]
     assert p["scars"] == [scar]
-    assert p["scar_pending"] is False                   # não recusável, mas resolvida
+    assert p["scar_pending"] is False  # não recusável, mas resolvida
 
 
 # ==========================================================================
@@ -153,18 +160,27 @@ def test_lacaio_removido_por_qualquer_ferimento():
 
 
 def test_padrao_derrotado_sem_estado_terminal():
-    padrao = {"categoria": "padrao", "ferimentos": {"critico": [{"regiao": "x"}]},
-              "ferimento_espacos": {"leve": 2, "grave": 2, "critico": 1}}
+    padrao = {
+        "categoria": "padrao",
+        "ferimentos": {"critico": [{"regiao": "x"}]},
+        "ferimento_espacos": {"leve": 2, "grave": 2, "critico": 1},
+    }
     assert df.uses_full_death_flow(padrao) is False
-    assert df.should_trigger_last_stand(padrao) is False   # sem Última Ação
+    assert df.should_trigger_last_stand(padrao) is False  # sem Última Ação
 
 
 def test_elite_chefe_usa_sistema_completo():
     espacos = gamedata.espacos_ferimento_para_corpo(3)
-    chefe = {"categoria": "chefe", "virtudes": {"corpo": 3},
-             "ferimento_espacos": espacos,
-             "ferimentos": {"leve": [], "grave": [],
-                            "critico": [{"regiao": f"r{i}"} for i in range(espacos["critico"])]}}
+    chefe = {
+        "categoria": "chefe",
+        "virtudes": {"corpo": 3},
+        "ferimento_espacos": espacos,
+        "ferimentos": {
+            "leve": [],
+            "grave": [],
+            "critico": [{"regiao": f"r{i}"} for i in range(espacos["critico"])],
+        },
+    }
     assert df.uses_full_death_flow(chefe) is True
     assert df.should_trigger_last_stand(chefe) is True
 

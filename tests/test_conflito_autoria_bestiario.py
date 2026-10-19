@@ -5,6 +5,7 @@
 resistências tipadas, perfil tático rico com regra de fuga/rendição, Cartas por
 criatura (≥1 assinatura oculta) e a integração com a revelação da conflito-08.
 """
+
 import json
 import os
 
@@ -26,7 +27,7 @@ def _hidden_card_ids():
         if not fn.endswith(".json"):
             continue
         with open(os.path.join("data", "cards", fn), encoding="utf-8") as f:
-            for c in (json.load(f).get("cards") or []):
+            for c in json.load(f).get("cards") or []:
                 if c.get("oculta"):
                     ids.add(c["id"])
     return ids
@@ -40,7 +41,9 @@ HIDDEN = _hidden_card_ids()
 # --------------------------------------------------------------------------
 def test_todas_criaturas_tem_categoria_valida():
     for cre in CREATURES:
-        assert cre.get("categoria") in CATS, f"{cre.get('name')}: categoria {cre.get('categoria')!r}"
+        assert cre.get("categoria") in CATS, (
+            f"{cre.get('name')}: categoria {cre.get('categoria')!r}"
+        )
 
 
 def test_regions_preservado_da_migracao():
@@ -72,20 +75,19 @@ def test_toda_criatura_tem_pelo_menos_uma_prioridade_obrigatoria():
     for cre in CREATURES:
         prio = (cre.get("tactical_profile") or {}).get("priorities") or []
         assert prio, f"{cre['name']}: sem prioridades"
-        assert any(p.get("tipo") == "obrigatorio" for p in prio), \
+        assert any(p.get("tipo") == "obrigatorio" for p in prio), (
             f"{cre['name']}: nenhuma prioridade obrigatória"
+        )
 
 
 def test_nenhuma_criatura_sem_regra_de_fuga_ou_rendicao_explicita():
     FLEE = ("foge", "fug", "recua", "rende", "reagrupa", "recuar", "abandona", "some")
     for cre in CREATURES:
         prio = (cre.get("tactical_profile") or {}).get("priorities") or []
-        tem_fuga = any(any(k in str(p.get("action_hint", "")).lower() for k in FLEE)
-                       for p in prio)
+        tem_fuga = any(any(k in str(p.get("action_hint", "")).lower() for k in FLEE) for p in prio)
         # não-fuga só é aceitável se INTENCIONAL (resistência absoluta = luta até a morte)
         intencional = any(str(p.get("resistance")) == "absoluta" for p in prio)
-        assert tem_fuga or intencional, \
-            f"{cre['name']}: burra até a morte sem ser intencional"
+        assert tem_fuga or intencional, f"{cre['name']}: burra até a morte sem ser intencional"
 
 
 def test_perfil_e_reusado_sem_llm():
@@ -130,7 +132,7 @@ def test_resistencias_usam_tipos_validos_de_dano():
             srcs = src if isinstance(src, list) else [src]
             assert all(s in RESIST_SRC for s in srcs), f"{cre['name']}: fonte {src!r}"
             achou += 1
-        for t in (cre.get("immunities") or []):
+        for t in cre.get("immunities") or []:
             assert t in DANO_VALIDO, f"{cre['name']}: imunidade {t!r}"
     assert achou >= 10, "nenhuma resistência temática migrada?"
 
@@ -155,9 +157,10 @@ def test_criatura_tem_pelo_menos_uma_carta_especial():
 
 def test_cartas_referenciadas_existem():
     from services import cards
+
     todas = set(cards.all_cards())
     for cre in CREATURES:
-        for cid in (cre.get("cartas") or []):
+        for cid in cre.get("cartas") or []:
             assert cid in todas, f"{cre['name']}: Carta '{cid}' inexistente"
 
 
@@ -179,17 +182,29 @@ def test_carta_comeca_oculta_ate_primeiro_uso():
 # --------------------------------------------------------------------------
 def test_lint_do_bestiario_real_sem_erro():
     from services.content_validator import validate_bestiary
+
     assert validate_bestiary() == []
 
 
 def test_lint_pega_bestiario_ruim(tmp_path):
     from services.content_validator import validate_bestiary
+
     bad = tmp_path / "bestiary.json"
-    bad.write_text(json.dumps({
-        "x": {"name": "X", "categoria": "invalida", "virtudes": {"corpo": 9},
-              "max_vitalidade": 999, "tactical_profile": {"priorities": []},
-              "cartas": []},
-    }), encoding="utf-8")
+    bad.write_text(
+        json.dumps(
+            {
+                "x": {
+                    "name": "X",
+                    "categoria": "invalida",
+                    "virtudes": {"corpo": 9},
+                    "max_vitalidade": 999,
+                    "tactical_profile": {"priorities": []},
+                    "cartas": [],
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
     findings = validate_bestiary(str(bad), os.path.join("data", "cards"))
     msgs = " ".join(f.message for f in findings)
     assert "categoria" in msgs and "Virtude" in msgs and "sem Cartas" in msgs

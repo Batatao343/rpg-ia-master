@@ -1,4 +1,5 @@
 """SPEC-262 R2: scripts/log_ref.py devolve o mesmo pseudonimo do servidor e protege o segredo."""
+
 import importlib.util
 import uuid
 from pathlib import Path
@@ -32,7 +33,7 @@ def test_uppercase_uuid_is_canonicalized(capsys):
 
 def test_refuses_without_secret(capsys, tmp_path, monkeypatch):
     module = _load()
-    monkeypatch.setattr(module, "ROOT", tmp_path)        # sem .env
+    monkeypatch.setattr(module, "ROOT", tmp_path)  # sem .env
     assert module.main(["action", str(uuid.uuid4())], {}) == 3
     assert "ausente" in capsys.readouterr().err
 
@@ -52,6 +53,7 @@ def test_secret_never_accepted_from_argv(capsys):
 
 def test_secret_from_stdin(monkeypatch, capsys):
     import io
+
     module = _load()
     user = str(uuid.uuid4())
     monkeypatch.setattr("sys.stdin", io.StringIO(SECRET + "\n"))

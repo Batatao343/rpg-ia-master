@@ -101,6 +101,7 @@ def test_sync_player_vitals_clampa_ao_maximo():
 
 def test_enemy_virtudes_aceita_none():
     from state import EnemyStats  # noqa: F401 — só garante import do schema
+
     inimigo = {"id": "e1", "name": "Verme", "hp": 5, "max_hp": 5, "virtudes": None}
     assert inimigo["virtudes"] is None
 
@@ -110,35 +111,49 @@ def test_enemy_virtudes_aceita_none():
 # --------------------------------------------------------------------------
 def test_valida_distribuicao_correta():
     from character_creator import validate_virtude_distribution
+
     # nenhuma exceção
-    validate_virtude_distribution({"mente": 4, "agilidade": 3, "forca": 2, "carisma": 1, "corpo": 1})
+    validate_virtude_distribution(
+        {"mente": 4, "agilidade": 3, "forca": 2, "carisma": 1, "corpo": 1}
+    )
 
 
 def test_valida_distribuicao_soma_errada():
     from character_creator import validate_virtude_distribution
+
     with pytest.raises(ValueError):
-        validate_virtude_distribution({"mente": 4, "agilidade": 4, "forca": 2, "carisma": 1, "corpo": 1})
+        validate_virtude_distribution(
+            {"mente": 4, "agilidade": 4, "forca": 2, "carisma": 1, "corpo": 1}
+        )
 
 
 def test_valida_distribuicao_faltando_chave():
     from character_creator import validate_virtude_distribution
+
     with pytest.raises(ValueError):
         validate_virtude_distribution({"mente": 4, "agilidade": 3, "forca": 2, "carisma": 1})
 
 
 def test_valida_distribuicao_chave_extra_dnd():
     from character_creator import validate_virtude_distribution
+
     with pytest.raises(ValueError):
         validate_virtude_distribution({"str": 4, "dex": 3, "con": 2, "int": 1, "wis": 1})
 
 
 def test_criacao_usa_virtudes_do_jogador():
     from character_creator import create_player_character
+
     escolha = {"mente": 1, "agilidade": 1, "forca": 4, "carisma": 2, "corpo": 3}
-    sheet = create_player_character({
-        "name": "Bruta", "class_name": "Devoto do Abismo", "race": "Humano",
-        "level": "1", "virtudes": escolha,
-    })
+    sheet = create_player_character(
+        {
+            "name": "Bruta",
+            "class_name": "Devoto do Abismo",
+            "race": "Humano",
+            "level": "1",
+            "virtudes": escolha,
+        }
+    )
     assert sheet["virtudes"]["forca"] == 4
     assert sheet["virtudes"]["corpo"] == 3
     # Corpo 3 -> 12 + bônus de Postura 6; espaços continuam derivados só de Corpo.
@@ -151,9 +166,15 @@ def test_criacao_usa_virtudes_do_jogador():
 
 def test_criacao_sem_virtudes_usa_recomendacao_da_classe():
     from character_creator import create_player_character
-    sheet = create_player_character({
-        "name": "Arcano", "class_name": "Arcanista Cinzento", "race": "Humano", "level": "1",
-    })
+
+    sheet = create_player_character(
+        {
+            "name": "Arcano",
+            "class_name": "Arcanista Cinzento",
+            "race": "Humano",
+            "level": "1",
+        }
+    )
     # recomendação do Arcanista: mente 4 (primária)
     assert sheet["virtudes"]["mente"] == 4
     assert sorted(sheet["virtudes"].values()) == [1, 1, 2, 3, 4]
@@ -161,20 +182,30 @@ def test_criacao_sem_virtudes_usa_recomendacao_da_classe():
 
 def test_criacao_distribuicao_invalida_rejeitada():
     from character_creator import create_player_character
+
     with pytest.raises(ValueError):
-        create_player_character({
-            "name": "X", "class_name": "Devoto do Abismo", "race": "Humano", "level": "1",
-            "virtudes": {"mente": 5, "agilidade": 3, "forca": 2, "carisma": 1, "corpo": 1},
-        })
+        create_player_character(
+            {
+                "name": "X",
+                "class_name": "Devoto do Abismo",
+                "race": "Humano",
+                "level": "1",
+                "virtudes": {"mente": 5, "agilidade": 3, "forca": 2, "carisma": 1, "corpo": 1},
+            }
+        )
 
 
 # --------------------------------------------------------------------------
 # Etapa 4 — Progressão por nível par (+1 Virtude, teto 5, recalc)
 # --------------------------------------------------------------------------
 def _player_lvl(level=3, corpo=2, vit=None):
-    p = {"class_name": "Devoto do Abismo", "level": level, "xp": 0,
-         "virtudes": {"mente": 1, "agilidade": 1, "forca": 4, "carisma": 1, "corpo": corpo},
-         "pending_choices": []}
+    p = {
+        "class_name": "Devoto do Abismo",
+        "level": level,
+        "xp": 0,
+        "virtudes": {"mente": 1, "agilidade": 1, "forca": 4, "carisma": 1, "corpo": corpo},
+        "pending_choices": [],
+    }
     gamedata.sync_player_vitals(p, heal_to_full=True)
     if vit is not None:
         p["vitalidade"] = vit
@@ -183,6 +214,7 @@ def _player_lvl(level=3, corpo=2, vit=None):
 
 def test_nivel_par_oferece_escolha_de_virtude():
     from progression import XP_TABLE, grant_xp
+
     p = _player_lvl(level=3)
     p, events = grant_xp(p, XP_TABLE[4])  # sobe para nível 4
     assert p["level"] == 4
@@ -192,6 +224,7 @@ def test_nivel_par_oferece_escolha_de_virtude():
 
 def test_nivel_impar_nao_oferece_virtude():
     from progression import XP_TABLE, grant_xp
+
     p = _player_lvl(level=2)
     p, _ = grant_xp(p, XP_TABLE[3])  # sobe para nível 3 (ímpar)
     assert p["level"] == 3
@@ -201,6 +234,7 @@ def test_nivel_impar_nao_oferece_virtude():
 
 def test_subir_corpo_aumenta_vitalidade_na_hora():
     from progression import apply_choice
+
     p = _player_lvl(level=4, corpo=2)  # Vitalidade 10 + bônus de Postura 6
     p["pending_choices"] = [{"id": "lvl4-virtude", "level": 4, "kind": "virtude"}]
     assert p["max_vitalidade"] == 16
@@ -212,6 +246,7 @@ def test_subir_corpo_aumenta_vitalidade_na_hora():
 
 def test_virtude_acima_do_teto_rejeitada():
     from progression import apply_choice
+
     p = _player_lvl(level=4, corpo=2)
     p["virtudes"]["forca"] = 5  # já no teto
     p["pending_choices"] = [{"id": "lvl4-virtude", "level": 4, "kind": "virtude"}]
@@ -222,6 +257,7 @@ def test_virtude_acima_do_teto_rejeitada():
 
 def test_nivel_maximo_e_vinte():
     import progression
+
     assert progression.MAX_LEVEL == 20
 
 
@@ -230,11 +266,17 @@ def test_nivel_maximo_e_vinte():
 # --------------------------------------------------------------------------
 def test_migracao_v3_marca_arquivado_sem_converter():
     import persistence
+
     raw = {
         "schema_version": 3,
-        "player": {"name": "Velho", "class_name": "Sangromante", "level": 3,
-                   "attributes": {"str": 14, "dex": 16, "con": 12, "int": 8, "wis": 10, "cha": 12},
-                   "hp": 20, "max_hp": 20},
+        "player": {
+            "name": "Velho",
+            "class_name": "Sangromante",
+            "level": 3,
+            "attributes": {"str": 14, "dex": 16, "con": 12, "int": 8, "wis": 10, "cha": 12},
+            "hp": 20,
+            "max_hp": 20,
+        },
     }
     out = persistence.migrate_state(raw)
     assert out["schema_version"] == persistence.SCHEMA_VERSION
@@ -261,9 +303,14 @@ def test_acao_em_save_arquivado_recusa_sem_crash(tmp_path, monkeypatch):
     raw_v3 = {
         "schema_version": 3,
         "game_id": gid,
-        "player": {"name": "Antigo", "class_name": "Devoto do Abismo", "level": 2,
-                   "attributes": {"str": 16, "dex": 10, "con": 16, "int": 8, "wis": 12, "cha": 14},
-                   "hp": 30, "max_hp": 30},
+        "player": {
+            "name": "Antigo",
+            "class_name": "Devoto do Abismo",
+            "level": 2,
+            "attributes": {"str": 16, "dex": 10, "con": 16, "int": 8, "wis": 12, "cha": 14},
+            "hp": 30,
+            "max_hp": 30,
+        },
         "world": {"current_location": "Ruínas", "turn_count": 5},
         "message_history": [{"type": "human", "content": "olá"}],
     }

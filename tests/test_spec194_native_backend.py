@@ -1,4 +1,5 @@
 """SPEC-194 native-side backend: android Stripe refusal, products route, local fake, SKU seed plan."""
+
 from types import SimpleNamespace
 from uuid import uuid4
 
@@ -36,11 +37,20 @@ def test_google_products_route_lists_ids_without_price(checkout_http, monkeypatc
     c = checkout_http
     h = _auth(c)
     rows = [{"product_id": "estilhas_pack_small", "sku_id": "gp_a", "shard_milli": "5000"}]
-    monkeypatch.setattr("infrastructure.google_play_payments.PostgresPurchaseStore.__init__", lambda self, pool: None)
-    monkeypatch.setattr("infrastructure.google_play_payments.PostgresPurchaseStore.list_products", lambda self: rows)
-    monkeypatch.setattr("infrastructure.runtime.get_runtime", lambda: SimpleNamespace(
-        identity_verifier=SimpleNamespace(verify=lambda cookie: Principal(uuid4(), "t", "o")),
-        game_store=SimpleNamespace(pool=None)))
+    monkeypatch.setattr(
+        "infrastructure.google_play_payments.PostgresPurchaseStore.__init__",
+        lambda self, pool: None,
+    )
+    monkeypatch.setattr(
+        "infrastructure.google_play_payments.PostgresPurchaseStore.list_products", lambda self: rows
+    )
+    monkeypatch.setattr(
+        "infrastructure.runtime.get_runtime",
+        lambda: SimpleNamespace(
+            identity_verifier=SimpleNamespace(verify=lambda cookie: Principal(uuid4(), "t", "o")),
+            game_store=SimpleNamespace(pool=None),
+        ),
+    )
     r = c.client.get("/account/purchases/google/products", headers=h)
     assert r.status_code == 200 and r.json() == {"items": rows}
     assert "gross" not in r.text and "price" not in r.text
@@ -64,19 +74,40 @@ def test_fake_client_drives_verify_credit_once_and_rejects_foreign_account():
     token = f"{FAKE_PREFIX}{obfuscated_account_id(who.user_id)}-0001"
     out = svc.verify(who, "estilhas_pack_small", token)
     assert out["consumed"] and store.wallet[who.user_id] == 5000
-    assert svc.verify(who, "estilhas_pack_small", token)["consumed"] and store.wallet[who.user_id] == 5000
+    assert (
+        svc.verify(who, "estilhas_pack_small", token)["consumed"]
+        and store.wallet[who.user_id] == 5000
+    )
     other = Principal(uuid4(), "t", "o")
     with pytest.raises(Exception, match="google_play_account_mismatch"):
-        svc.verify(other, "estilhas_pack_small", f"{FAKE_PREFIX}{obfuscated_account_id(who.user_id)}-0002")
+        svc.verify(
+            other, "estilhas_pack_small", f"{FAKE_PREFIX}{obfuscated_account_id(who.user_id)}-0002"
+        )
 
 
 def test_seed_plan_mirrors_only_versions_with_google_fee_and_is_idempotent():
     from scripts.seed_google_play_skus import plan, product_id_for
-    rows = [{"sku_id": "Pack-Small", "pricing_version_id": "v1", "gross_brl": "9.90", "shard_milli": 5000,
-             "channel_fees": {"web": {}, "google_play": {}}},
-            {"sku_id": "old", "pricing_version_id": "v0", "gross_brl": "1", "shard_milli": 1, "channel_fees": {"web": {}}}]
+
+    rows = [
+        {
+            "sku_id": "Pack-Small",
+            "pricing_version_id": "v1",
+            "gross_brl": "9.90",
+            "shard_milli": 5000,
+            "channel_fees": {"web": {}, "google_play": {}},
+        },
+        {
+            "sku_id": "old",
+            "pricing_version_id": "v0",
+            "gross_brl": "1",
+            "shard_milli": 1,
+            "channel_fees": {"web": {}},
+        },
+    ]
     p = plan(rows, set())
-    assert p[0]["store_product_id"] == "pack-small".replace("-", "_") == product_id_for("Pack-Small")
+    assert (
+        p[0]["store_product_id"] == "pack-small".replace("-", "_") == product_id_for("Pack-Small")
+    )
     assert p[0]["channel"] == "google_play" and not p[0]["exists"]
     assert p[1]["reason"] == "pricing_version_without_google_play_fee"
     assert plan(rows, {"pack_small"})[0]["exists"] is True
@@ -103,8 +134,12 @@ def test_checklist_forbids_fake_play_flag_in_production():
 
 def test_api_google_play_refuses_fake_flag_on_vercel_and_missing_key(monkeypatch):
     from fastapi import HTTPException
+
     monkeypatch.setattr(api, "_database_profile", lambda: True)
-    monkeypatch.setattr("infrastructure.runtime.get_runtime", lambda: type("R", (), {"game_store": type("G", (), {"pool": None})()})())
+    monkeypatch.setattr(
+        "infrastructure.runtime.get_runtime",
+        lambda: type("R", (), {"game_store": type("G", (), {"pool": None})()})(),
+    )
     monkeypatch.setenv("RPG_GOOGLE_PLAY_FAKE", "1")
     monkeypatch.setenv("RPG_RUNTIME_PROFILE", "hosted-supabase")
     with pytest.raises(HTTPException) as info:
@@ -116,7 +151,7 @@ def test_api_google_play_refuses_fake_flag_on_vercel_and_missing_key(monkeypatch
         api._google_play()
     assert info.value.status_code == 503 and info.value.detail == "google_play_unconfigured"
     monkeypatch.setenv("RPG_PLAY_ACCOUNT_KEY", "k" * 32)
-    assert api._google_play() is not None   # local + flag + key: fake client allowed
+    assert api._google_play() is not None  # local + flag + key: fake client allowed
 
 
 def test_verify_maps_wallet_conflict_to_409(monkeypatch):
@@ -127,8 +162,13 @@ def test_verify_maps_wallet_conflict_to_409(monkeypatch):
     class Boom:
         def verify(self, *a):
             raise WalletConflict("x")
+
     monkeypatch.setattr(api, "_google_play", lambda: Boom())
-    monkeypatch.setattr("infrastructure.request_context.current_principal", lambda: Principal(uuid4(), "t", "o"))
+    monkeypatch.setattr(
+        "infrastructure.request_context.current_principal", lambda: Principal(uuid4(), "t", "o")
+    )
     with pytest.raises(HTTPException) as info:
-        api.google_play_verify(api.GooglePlayVerifyRequest(product_id="p1", purchase_token="t" * 20))
+        api.google_play_verify(
+            api.GooglePlayVerifyRequest(product_id="p1", purchase_token="t" * 20)
+        )
     assert info.value.status_code == 409 and info.value.detail == "google_play_wallet_conflict"

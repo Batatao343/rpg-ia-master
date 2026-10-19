@@ -16,9 +16,17 @@ from services.content_validator import (
 ROOT = Path(__file__).resolve().parents[1]
 CLASS_FILES = ("devoto", "sangromante", "corruptor", "arcanista", "medico")
 HUB_REGIONS = {
-    "nova_arcadia", "pantano_melancolia", "deserto_zhur",
-    "floresta_sussurros", "selva_xylos", "skallgard", "aethelgard",
-    "ophidia", "costa_negra", "montanhas_afiadas", "pradaria_ruinas",
+    "nova_arcadia",
+    "pantano_melancolia",
+    "deserto_zhur",
+    "floresta_sussurros",
+    "selva_xylos",
+    "skallgard",
+    "aethelgard",
+    "ophidia",
+    "costa_negra",
+    "montanhas_afiadas",
+    "pradaria_ruinas",
     "brekmar",
 }
 

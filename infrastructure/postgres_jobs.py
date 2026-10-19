@@ -24,8 +24,9 @@ from infrastructure.postgres import PostgresPool
 DEAD_JOB_REVIVE_COOLDOWN = timedelta(minutes=15)
 
 
-def revive_dead_job(connection, kind: str, dedupe_key: str,
-                    cooldown: timedelta = DEAD_JOB_REVIVE_COOLDOWN) -> bool:
+def revive_dead_job(
+    connection, kind: str, dedupe_key: str, cooldown: timedelta = DEAD_JOB_REVIVE_COOLDOWN
+) -> bool:
     """Requeue a dead/cancelled job with fresh attempts; True when one was revived."""
     result = connection.execute(
         """
@@ -46,6 +47,7 @@ _TRACE_KEYS = ("request_id", "action_ref")
 def _current_trace() -> dict[str, str] | None:
     """SPEC-255 R1: correlacao do request atual (somente ids; nunca conteudo)."""
     from observability.telemetry import correlation
+
     current = correlation()
     trace = {key: current[key] for key in _TRACE_KEYS if current.get(key)}
     return trace or None
@@ -55,26 +57,36 @@ def _split_trace(payload: dict[str, Any] | None) -> tuple[dict[str, Any], dict[s
     """Separa ``_trace`` do payload do handler (jobs antigos nao o tem)."""
     data = dict(payload or {})
     raw = data.pop("_trace", None)
-    trace = ({key: str(raw[key])[:128] for key in _TRACE_KEYS if isinstance(raw, dict) and raw.get(key)}
-             if isinstance(raw, dict) else None)
+    trace = (
+        {key: str(raw[key])[:128] for key in _TRACE_KEYS if isinstance(raw, dict) and raw.get(key)}
+        if isinstance(raw, dict)
+        else None
+    )
     return data, (trace or None)
 
 
 def _job_ref(job_id: Any) -> str:
     from observability.telemetry import pseudonym
+
     return pseudonym(job_id)
 
 
 def _request_from_row(row: dict[str, Any]) -> JobRequest:
     payload, trace = _split_trace(row["payload"])
     return JobRequest(
-        kind=row["kind"], dedupe_key=row["dedupe_key"], payload=payload,
-        owner_id=row["owner_id"], game_id=row["game_id"],
-        max_attempts=row["max_attempts"], trace=trace)
+        kind=row["kind"],
+        dedupe_key=row["dedupe_key"],
+        payload=payload,
+        owner_id=row["owner_id"],
+        game_id=row["game_id"],
+        max_attempts=row["max_attempts"],
+        trace=trace,
+    )
 
 
 def _log_dead(job_id: Any, reason: str) -> None:
     from observability.telemetry import log_event
+
     log_event("job", "dead", level="error", job_ref=_job_ref(job_id), reason=reason)
 
 
@@ -102,8 +114,13 @@ class PostgresJobQueue:
                 returning id
                 """,
                 (
-                    job_id, job.owner_id, job.game_id, job.kind, job.dedupe_key,
-                    Jsonb(stored_payload), job.max_attempts,
+                    job_id,
+                    job.owner_id,
+                    job.game_id,
+                    job.kind,
+                    job.dedupe_key,
+                    Jsonb(stored_payload),
+                    job.max_attempts,
                 ),
             ).fetchone()
             return row["id"]
@@ -133,7 +150,7 @@ class PostgresJobQueue:
                 """,
                 (list(kinds),),
             ).fetchall()
-            for dead_row in dead_rows:      # SPEC-255 R5: antes so existia em SQL
+            for dead_row in dead_rows:  # SPEC-255 R5: antes so existia em SQL
                 _log_dead(dead_row["id"], "lease_expired_max_attempts")
             rows = connection.execute(
                 """
@@ -190,7 +207,8 @@ class PostgresJobQueue:
         if not row:
             return None
         return LeasedJob(
-            job_id=row["id"], lease_token=row["lease_token"],
+            job_id=row["id"],
+            lease_token=row["lease_token"],
             request=_request_from_row(row),
             attempt=row["attempts"],
         )
@@ -206,7 +224,8 @@ class PostgresJobQueue:
     @staticmethod
     def _require_running(connection, job_id: UUID, lease_token: UUID) -> dict[str, Any]:
         row = connection.execute(
-            "select * from app.jobs where id=%s for update", (job_id,),
+            "select * from app.jobs where id=%s for update",
+            (job_id,),
         ).fetchone()
         if not row:
             raise NotFound("job não encontrado")

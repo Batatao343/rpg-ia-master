@@ -21,8 +21,7 @@ def test_rls_isola_games_e_role_nao_tem_bypass():
              player_level,location_name,world_day,game_over,combat_simulation)
             values (%s,%s,3,jsonb_build_object('game_id',%s::text),%s,'active','A','Devoto',1,'Teste',1,false,false),
                    (%s,%s,3,jsonb_build_object('game_id',%s::text),%s,'active','B','Devoto',1,'Teste',1,false,false)""",
-            (game_a, owner_a, str(game_a), 'a' * 64,
-             game_b, owner_b, str(game_b), 'b' * 64),
+            (game_a, owner_a, str(game_a), "a" * 64, game_b, owner_b, str(game_b), "b" * 64),
         )
         row = admin.execute("select rolbypassrls from pg_roles where rolname='rpg_api'").fetchone()
         assert row == (False,)
@@ -30,10 +29,16 @@ def test_rls_isola_games_e_role_nao_tem_bypass():
         with psycopg.connect(dsn) as connection:
             with connection.transaction():
                 connection.execute("set local role rpg_api")
-                connection.execute("select set_config('request.jwt.claim.sub', %s, true)", (str(owner_a),))
-                assert connection.execute("select id from app.games order by id").fetchall() == [(game_a,)]
+                connection.execute(
+                    "select set_config('request.jwt.claim.sub', %s, true)", (str(owner_a),)
+                )
+                assert connection.execute("select id from app.games order by id").fetchall() == [
+                    (game_a,)
+                ]
                 with pytest.raises(psycopg.errors.InsufficientPrivilege):
-                    connection.execute("update app.games set owner_id=%s where id=%s", (owner_b, game_a))
+                    connection.execute(
+                        "update app.games set owner_id=%s where id=%s", (owner_b, game_a)
+                    )
     finally:
         with psycopg.connect(dsn) as admin:
             admin.execute("delete from app.games where id in (%s,%s)", (game_a, game_b))

@@ -18,9 +18,16 @@ LOCAL_PROJECT = "rpg-ia-master-local"
 
 def _assert_local_container(container: str) -> None:
     project = subprocess.run(
-        ["docker", "inspect", container, "--format",
-         '{{ index .Config.Labels "com.supabase.cli.project" }}'],
-        check=True, capture_output=True, text=True,
+        [
+            "docker",
+            "inspect",
+            container,
+            "--format",
+            '{{ index .Config.Labels "com.supabase.cli.project" }}',
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
     ).stdout.strip()
     if project != LOCAL_PROJECT:
         raise RuntimeError(f"container fora do laboratório local: {container}")
@@ -29,33 +36,67 @@ def _assert_local_container(container: str) -> None:
 def run(destination: Path) -> dict:
     _assert_local_container(DB_CONTAINER)
     _assert_local_container(STORAGE_CONTAINER)
-    copy_sources(destination, [
-        (Path("supabase/migrations"), "config/migrations"),
-        (Path("data/dynamic_art_profiles.json"), "config/dynamic_art_profiles.json"),
-    ])
+    copy_sources(
+        destination,
+        [
+            (Path("supabase/migrations"), "config/migrations"),
+            (Path("data/dynamic_art_profiles.json"), "config/dynamic_art_profiles.json"),
+        ],
+    )
     app_dump = subprocess.run(
-        ["docker", "exec", DB_CONTAINER, "pg_dump", "-Fc", "-U", "postgres",
-         "--schema", "app", "postgres"],
-        check=True, capture_output=True,
+        [
+            "docker",
+            "exec",
+            DB_CONTAINER,
+            "pg_dump",
+            "-Fc",
+            "-U",
+            "postgres",
+            "--schema",
+            "app",
+            "postgres",
+        ],
+        check=True,
+        capture_output=True,
     ).stdout
     platform_dump = subprocess.run(
-        ["docker", "exec", DB_CONTAINER, "pg_dump", "-Fc", "-a", "-U", "postgres",
-         "--schema", "auth", "--schema", "storage",
-         "--exclude-table-data", "auth.schema_migrations",
-         "--exclude-table-data", "auth.audit_log_entries",
-         "--exclude-table-data", "storage.migrations",
-         "--exclude-table-data", "storage.buckets",
-         "--exclude-table-data", "storage.buckets_vectors",
-         "--exclude-table-data", "storage.vector_indexes",
-         "postgres"],
-        check=True, capture_output=True,
+        [
+            "docker",
+            "exec",
+            DB_CONTAINER,
+            "pg_dump",
+            "-Fc",
+            "-a",
+            "-U",
+            "postgres",
+            "--schema",
+            "auth",
+            "--schema",
+            "storage",
+            "--exclude-table-data",
+            "auth.schema_migrations",
+            "--exclude-table-data",
+            "auth.audit_log_entries",
+            "--exclude-table-data",
+            "storage.migrations",
+            "--exclude-table-data",
+            "storage.buckets",
+            "--exclude-table-data",
+            "storage.buckets_vectors",
+            "--exclude-table-data",
+            "storage.vector_indexes",
+            "postgres",
+        ],
+        check=True,
+        capture_output=True,
     ).stdout
     (destination / "database_app.dump").write_bytes(app_dump)
     (destination / "database_platform_data.dump").write_bytes(platform_dump)
     objects = destination / "objects"
     objects.mkdir()
     subprocess.run(
-        ["docker", "cp", f"{STORAGE_CONTAINER}:/mnt/.", str(objects)], check=True,
+        ["docker", "cp", f"{STORAGE_CONTAINER}:/mnt/.", str(objects)],
+        check=True,
         capture_output=True,
     )
     return write_manifest(destination)

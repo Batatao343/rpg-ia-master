@@ -9,6 +9,7 @@ verdade viva vence o canônico quando conflitam.
 100% determinístico: zero chamada LLM extra (só o `query_rag` que os agentes já
 faziam, agora aqui dentro e com try/except). Spec: specs/SPEC-005-fase-2.8-context-builder.md.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -27,10 +28,10 @@ from services.memory_provenance import (
 
 try:  # RAG é opcional (offline / sem embeddings a busca falha graciosamente)
     import rag as _rag
+
     query_npc_memory = _rag.query_npc_memory
     query_rag = _rag.query_rag
-    query_session_memory = getattr(
-        _rag, "query_session_memory", lambda *_a, **_k: "")
+    query_session_memory = getattr(_rag, "query_session_memory", lambda *_a, **_k: "")
     RAG_AVAILABLE = True
 except Exception:  # pragma: no cover - defensivo
     RAG_AVAILABLE = False
@@ -55,7 +56,7 @@ _IMPACT_BY_TYPE = {
     "npc_killed": 1.0,
     "location_control_changed": 1.0,
     "secret_revealed": 0.8,
-    "route_blocked": 0.8,   # Fase 6.1: rota fechada muda a cena (comércio/viagem)
+    "route_blocked": 0.8,  # Fase 6.1: rota fechada muda a cena (comércio/viagem)
     "route_cleared": 0.6,
 }
 _DEFAULT_IMPACT = 0.4
@@ -78,14 +79,16 @@ _WORD = re.compile(r"[\wáàâãéêíóôõúüç]+", re.IGNORECASE)
 @dataclass
 class ContextBudget:
     max_tokens: int = 3500
-    reserved: dict[str, float] = field(default_factory=lambda: {
-        "current_state": 0.25,
-        "active_location": 0.20,
-        "relations": 0.15,
-        "entities": 0.15,
-        "lore": 0.15,
-        "session_memory": 0.10,
-    })
+    reserved: dict[str, float] = field(
+        default_factory=lambda: {
+            "current_state": 0.25,
+            "active_location": 0.20,
+            "relations": 0.15,
+            "entities": 0.15,
+            "lore": 0.15,
+            "session_memory": 0.10,
+        }
+    )
     max_visibility: str = "public"
 
 
@@ -123,8 +126,15 @@ def _terms(s: str) -> set:
     return {w.lower() for w in _WORD.findall(s or "") if len(w) > 2}
 
 
-def score_fact(fact_text: str, *, query: str, current_loc: str,
-               scene_entities: list[str], impact: float, turns_ago: int) -> float:
+def score_fact(
+    fact_text: str,
+    *,
+    query: str,
+    current_loc: str,
+    scene_entities: list[str],
+    impact: float,
+    turns_ago: int,
+) -> float:
     """Score composto (0..~1) de um fato dinâmico. Sem embeddings — barato/offline."""
     fact_terms = _terms(fact_text)
     q_terms = _terms(query)
@@ -142,8 +152,13 @@ def score_fact(fact_text: str, *, query: str, current_loc: str,
 
     recency = max(0.0, 1.0 - turns_ago / 50.0)
 
-    return (0.35 * relevance + 0.25 * location_match + 0.20 * entity_match
-            + 0.10 * impact + 0.10 * recency)
+    return (
+        0.35 * relevance
+        + 0.25 * location_match
+        + 0.20 * entity_match
+        + 0.10 * impact
+        + 0.10 * recency
+    )
 
 
 # --------------------------------------------------------------------------- #
@@ -180,9 +195,15 @@ def render_event(event: dict, projection: dict | None = None) -> str:
 # --------------------------------------------------------------------------- #
 # Coleta de fatos dinâmicos
 # --------------------------------------------------------------------------- #
-def collect_dynamic_facts(state: dict, *, purpose: str, query: str,
-                          current_loc: str, scene_entities: list[str],
-                          knowledge_filter: set | None = None) -> list[ScoredFact]:
+def collect_dynamic_facts(
+    state: dict,
+    *,
+    purpose: str,
+    query: str,
+    current_loc: str,
+    scene_entities: list[str],
+    knowledge_filter: set | None = None,
+) -> list[ScoredFact]:
     """Renderiza event_log + revealed_facts + edges + entities + summaries em
     ScoredFacts (já pontuados). Não inclui lore/memória (essas vêm do RAG).
 
@@ -200,13 +221,21 @@ def collect_dynamic_facts(state: dict, *, purpose: str, query: str,
     def add(text: str, section: str, *, impact: float, turns_ago: int, sid: str = ""):
         if not text:
             return
-        facts.append(ScoredFact(
-            text=text,
-            score=score_fact(text, query=query, current_loc=current_loc,
-                             scene_entities=scene_entities, impact=impact, turns_ago=turns_ago),
-            section=section,
-            source_id=sid,
-        ))
+        facts.append(
+            ScoredFact(
+                text=text,
+                score=score_fact(
+                    text,
+                    query=query,
+                    current_loc=current_loc,
+                    scene_entities=scene_entities,
+                    impact=impact,
+                    turns_ago=turns_ago,
+                ),
+                section=section,
+                source_id=sid,
+            )
+        )
 
     # --- current_state: quem controla o local + eventos ocorridos + segredos revelados ---
     # SPEC-234 R6: o grafo e indexado por ID; o nome so serve para scoring/texto.
@@ -214,17 +243,25 @@ def collect_dynamic_facts(state: dict, *, purpose: str, query: str,
     loc_id = str(world.get("current_location_id") or "") or current_loc
     controller = (
         gr.get_current_controller(loc_id, projection, include_hidden=include_hidden)
-        if loc_id else None
+        if loc_id
+        else None
     )
     if controller:
-        add(f"Quem controla {_name(loc_id)} agora: {_name(controller)}.",
-            "current_state", impact=1.0, turns_ago=0, sid=f"ctrl:{loc_id}")
+        add(
+            f"Quem controla {_name(loc_id)} agora: {_name(controller)}.",
+            "current_state",
+            impact=1.0,
+            turns_ago=0,
+            sid=f"ctrl:{loc_id}",
+        )
 
     known_dead: set = set()
     if knowledge_filter is not None:
         known_dead = {
-            ev.get("target_id") for ev in (state.get("event_log", []) or [])
-            if isinstance(ev, dict) and ev.get("type") == "npc_killed"
+            ev.get("target_id")
+            for ev in (state.get("event_log", []) or [])
+            if isinstance(ev, dict)
+            and ev.get("type") == "npc_killed"
             and ev.get("event_id") in knowledge_filter
         }
 
@@ -234,23 +271,32 @@ def collect_dynamic_facts(state: dict, *, purpose: str, query: str,
         text = render_event(ev, projection)
         impact = _IMPACT_BY_TYPE.get(ev.get("type"), _DEFAULT_IMPACT)
         turns_ago = max(0, current_turn - int(ev.get("turn", 0) or 0))
-        add(text, "current_state", impact=impact, turns_ago=turns_ago,
-            sid=ev.get("event_id", ""))
+        add(text, "current_state", impact=impact, turns_ago=turns_ago, sid=ev.get("event_id", ""))
 
     for eid, rf in (projection.get("revealed_facts", {}) or {}).items():
         if knowledge_filter is not None:
             break
         fact_txt = rf.get("fact", "")
         turn = int(rf.get("revealed_at_turn", 0) or 0)
-        add(f"[turno {turn}] Revelado sobre {_name(rf.get('entity_id'))}: {fact_txt}",
-            "current_state", impact=0.8, turns_ago=max(0, current_turn - turn), sid=eid)
+        add(
+            f"[turno {turn}] Revelado sobre {_name(rf.get('entity_id'))}: {fact_txt}",
+            "current_state",
+            impact=0.8,
+            turns_ago=max(0, current_turn - turn),
+            sid=eid,
+        )
 
     # --- active_location: resumo dinâmico do local atual ---
     summaries = projection.get("location_summaries", {}) or {}
     summ = summaries.get(loc_id) or summaries.get(current_loc)
     if summ:
-        add(f"Local {_name(loc_id)}: {summ}", "active_location",
-            impact=0.6, turns_ago=0, sid=f"summ:{loc_id}")
+        add(
+            f"Local {_name(loc_id)}: {summ}",
+            "active_location",
+            impact=0.6,
+            turns_ago=0,
+            sid=f"summ:{loc_id}",
+        )
 
     # --- relations: edges efetivas relevantes ao local/cena ---
     seen_edges = set()
@@ -260,12 +306,20 @@ def collect_dynamic_facts(state: dict, *, purpose: str, query: str,
             continue
         seen_edges.add(eid)
         # SPEC-215 R6/R3: aresta criada por evento só para quem sabe do evento.
-        if (knowledge_filter is not None and edge.get("created_by_event")
-                and edge.get("created_by_event") not in knowledge_filter):
+        if (
+            knowledge_filter is not None
+            and edge.get("created_by_event")
+            and edge.get("created_by_event") not in knowledge_filter
+        ):
             continue
         rel = edge.get("type", "relação")
-        add(f"{_name(edge.get('source'))} —{rel}→ {_name(edge.get('target'))}",
-            "relations", impact=_DEFAULT_IMPACT, turns_ago=0, sid=eid)
+        add(
+            f"{_name(edge.get('source'))} —{rel}→ {_name(edge.get('target'))}",
+            "relations",
+            impact=_DEFAULT_IMPACT,
+            turns_ago=0,
+            sid=eid,
+        )
 
     # --- entities: EntityState notável (mortos, deslocados) ---
     for eid, est in (projection.get("entities", {}) or {}).items():
@@ -297,11 +351,13 @@ def _assemble(facts: list[ScoredFact], budget: ContextBudget):
         if visibility_rank.get(f.visibility, 3) > maximum_visibility:
             visibility_dropped += 1
             if f.source_id:
-                discarded_evidence.append({
-                    "id": f.source_id,
-                    "section": f.section,
-                    "reason": "visibility",
-                })
+                discarded_evidence.append(
+                    {
+                        "id": f.source_id,
+                        "section": f.section,
+                        "reason": "visibility",
+                    }
+                )
             continue
         by_section.setdefault(f.section, []).append(f)
     for lst in by_section.values():
@@ -326,11 +382,13 @@ def _assemble(facts: list[ScoredFact], budget: ContextBudget):
             else:
                 dropped += 1
                 if fct.source_id:
-                    discarded_evidence.append({
-                        "id": fct.source_id,
-                        "section": section,
-                        "reason": "section_or_global_budget",
-                    })
+                    discarded_evidence.append(
+                        {
+                            "id": fct.source_id,
+                            "section": section,
+                            "reason": "section_or_global_budget",
+                        }
+                    )
         chosen[section] = picked
         carry = max(0.0, quota - section_used)
 
@@ -356,24 +414,25 @@ def _block(facts: list[ScoredFact]) -> str:
     return "\n".join(f.text for f in facts)
 
 
-def assemble_pack(facts: list[ScoredFact], budget: ContextBudget,
-                  lore_text: str = "", memory_text: str = "") -> ContextPack:
+def assemble_pack(
+    facts: list[ScoredFact], budget: ContextBudget, lore_text: str = "", memory_text: str = ""
+) -> ContextPack:
     """Ranqueia + orça + renderiza os três blocos do ContextPack.
 
     Lore entra como bloco canônico. Memória é particionada para que um resumo ou
     resultado RAG grande não torne a seção inteira indivisível e descartável."""
     facts = list(facts)
     if lore_text:
-        lore_id = "lore_content_" + hashlib.sha256(
-            lore_text.encode("utf-8")
-        ).hexdigest()[:24]
-        facts.append(ScoredFact(
-            text=lore_text,
-            score=1.0,
-            section="lore",
-            source_id=lore_id,
-            visibility="public",
-        ))
+        lore_id = "lore_content_" + hashlib.sha256(lore_text.encode("utf-8")).hexdigest()[:24]
+        facts.append(
+            ScoredFact(
+                text=lore_text,
+                score=1.0,
+                section="lore",
+                source_id=lore_id,
+                visibility="public",
+            )
+        )
     if memory_text:
         chunks: list[str] = []
         for line in (part.strip() for part in memory_text.splitlines()):
@@ -388,22 +447,23 @@ def assemble_pack(facts: list[ScoredFact], budget: ContextBudget,
             if line:
                 chunks.append(line)
         for index, chunk in enumerate(chunks):
-            memory_id = "memory_content_" + hashlib.sha256(
-                chunk.encode("utf-8")
-            ).hexdigest()[:24]
-            facts.append(ScoredFact(
-                text=chunk,
-                score=1.0 - min(index, 1000) * 0.0001,
-                section="session_memory",
-                source_id=memory_id,
-                visibility="public",
-            ))
+            memory_id = "memory_content_" + hashlib.sha256(chunk.encode("utf-8")).hexdigest()[:24]
+            facts.append(
+                ScoredFact(
+                    text=chunk,
+                    score=1.0 - min(index, 1000) * 0.0001,
+                    section="session_memory",
+                    source_id=memory_id,
+                    visibility="public",
+                )
+            )
 
     chosen, used_total, dropped, discarded_evidence = _assemble(facts, budget)
 
-    ws_body = "\n".join(
-        _block(chosen.get(sec, [])) for sec in _WS_SECTIONS if chosen.get(sec)
-    ) or "Sem mudanças registradas no mundo (estado canônico vale)."
+    ws_body = (
+        "\n".join(_block(chosen.get(sec, [])) for sec in _WS_SECTIONS if chosen.get(sec))
+        or "Sem mudanças registradas no mundo (estado canônico vale)."
+    )
     world_state_block = f"<ESTADO_ATUAL_DO_MUNDO>\n{ws_body}\n</ESTADO_ATUAL_DO_MUNDO>"
     lore_block = _block(chosen.get("lore", []))
     memory_block = _block(chosen.get("session_memory", []))
@@ -415,9 +475,14 @@ def assemble_pack(facts: list[ScoredFact], budget: ContextBudget,
     ]
 
     from services.audit_trace import classify_fact
+
     context_refs = [
-        classify_fact(section=fact.section, source_id=fact.source_id,
-                      visibility=fact.visibility, text=fact.text)
+        classify_fact(
+            section=fact.section,
+            source_id=fact.source_id,
+            visibility=fact.visibility,
+            text=fact.text,
+        )
         for section in budget.reserved
         for fact in chosen.get(section, [])
         if fact.source_id
@@ -445,6 +510,7 @@ def utility_context_block(player: dict, *, abilities_db=None) -> str:
     se o herói não tem nenhuma — o storyteller omite o bloco."""
     if abilities_db is None:
         from services.cards import all_cards
+
         db = all_cards()
     else:
         # Nome do argumento preservado por compatibilidade de testes/callers; no
@@ -461,32 +527,47 @@ def utility_context_block(player: dict, *, abilities_db=None) -> str:
         lines.append(f"- {label}: {hint}" if hint else f"- {label}")
     if not lines:
         return ""
-    return ("<CAPACIDADES_DO_HEROI>\n"
-            "O herói POSSUI estas capacidades fora de combate (narre o uso quando a "
-            "ação do jogador as invocar; NÃO conceda capacidades fora desta lista):\n"
-            + "\n".join(lines) + "\n</CAPACIDADES_DO_HEROI>")
+    return (
+        "<CAPACIDADES_DO_HEROI>\n"
+        "O herói POSSUI estas capacidades fora de combate (narre o uso quando a "
+        "ação do jogador as invocar; NÃO conceda capacidades fora desta lista):\n"
+        + "\n".join(lines)
+        + "\n</CAPACIDADES_DO_HEROI>"
+    )
 
 
 # --------------------------------------------------------------------------- #
 # Entrada pública
 # --------------------------------------------------------------------------- #
-def build_context_pack(state: dict, query: str, purpose: str,
-                       token_budget: int = 3500, game_id: str | None = None,
-                       npc_id: str | None = None) -> ContextPack:
+def build_context_pack(
+    state: dict,
+    query: str,
+    purpose: str,
+    token_budget: int = 3500,
+    game_id: str | None = None,
+    npc_id: str | None = None,
+) -> ContextPack:
     """SPEC-200: mede a fase `context` (no-op sem timeline). Sem mudar comportamento."""
     from observability.latency import TurnPhase
     from observability.latency import phase as _phase
+
     with _phase(TurnPhase.CONTEXT):
         pack = _build_context_pack(state, query, purpose, token_budget, game_id, npc_id)
     # SPEC-207 R7: refs do contexto visto vão ao coletor do turno (no-op fora do turno).
     from services.audit_trace import note_context
+
     note_context(pack, purpose=purpose, npc_id=npc_id)
     return pack
 
 
-def _build_context_pack(state: dict, query: str, purpose: str,
-                        token_budget: int = 3500, game_id: str | None = None,
-                        npc_id: str | None = None) -> ContextPack:
+def _build_context_pack(
+    state: dict,
+    query: str,
+    purpose: str,
+    token_budget: int = 3500,
+    game_id: str | None = None,
+    npc_id: str | None = None,
+) -> ContextPack:
     """Monta o ContextPack. Lore canônico e memória de sessão são buscados e
     rotulados separadamente; `npc_id` inclui ainda a memória privada do NPC."""
     if purpose not in PURPOSES:
@@ -497,6 +578,7 @@ def _build_context_pack(state: dict, query: str, purpose: str,
     # spec encontros-dedupe (R1): NPCs vinculados ao local/em cena/party — não
     # arrasta NPC gerado de outra cena para os fatos deste contexto.
     from services.npc_layers import npcs_for_context
+
     scene_entities = npcs_for_context(state)
     if current_loc:
         scene_entities.append(current_loc)
@@ -505,21 +587,39 @@ def _build_context_pack(state: dict, query: str, purpose: str,
     gate = None
     if purpose == "npc" and npc_id:
         from services import npc_knowledge
+
         gate = npc_knowledge.context_gate(state, npc_id)
     gate_on = bool(gate) and gate["mode"] == "on"
-    facts = collect_dynamic_facts(state, purpose=purpose, query=query,
-                                  current_loc=current_loc, scene_entities=scene_entities,
-                                  knowledge_filter=gate["filter"] if gate_on else None)
+    facts = collect_dynamic_facts(
+        state,
+        purpose=purpose,
+        query=query,
+        current_loc=current_loc,
+        scene_entities=scene_entities,
+        knowledge_filter=gate["filter"] if gate_on else None,
+    )
     if gate_on:
         for index, (sid, line) in enumerate(gate["lines"]):
-            facts.append(ScoredFact(text=line, score=2.0 - index * 0.001,
-                                    section="current_state", source_id=sid))
+            facts.append(
+                ScoredFact(
+                    text=line, score=2.0 - index * 0.001, section="current_state", source_id=sid
+                )
+            )
     elif gate:  # shadow: mede o que seria filtrado, sem alterar o prompt
-        gated = collect_dynamic_facts(state, purpose=purpose, query=query,
-                                      current_loc=current_loc, scene_entities=scene_entities,
-                                      knowledge_filter=gate["filter"])
-        npc_knowledge.log_shadow(npc_id, known=len(gate["lines"]),
-                                 filtered=max(0, len(facts) - len(gated)), total=len(facts))
+        gated = collect_dynamic_facts(
+            state,
+            purpose=purpose,
+            query=query,
+            current_loc=current_loc,
+            scene_entities=scene_entities,
+            knowledge_filter=gate["filter"],
+        )
+        npc_knowledge.log_shadow(
+            npc_id,
+            known=len(gate["lines"]),
+            filtered=max(0, len(facts) - len(gated)),
+            total=len(facts),
+        )
 
     from services.context_sources import (
         EmbeddedContextQuery,
@@ -533,9 +633,13 @@ def _build_context_pack(state: dict, query: str, purpose: str,
         or query_session_memory is not getattr(_rag, "query_session_memory", None)
         or query_npc_memory is not getattr(_rag, "query_npc_memory", None)
     ):
-        custom_readers = {"lore": lambda: query_rag(
-            query, index_name="lore", max_visibility="public",
-        )}
+        custom_readers = {
+            "lore": lambda: query_rag(
+                query,
+                index_name="lore",
+                max_visibility="public",
+            )
+        }
         if game_id:
             custom_readers["session"] = lambda: query_session_memory(query, game_id)
         if game_id and npc_id:
@@ -552,7 +656,10 @@ def _build_context_pack(state: dict, query: str, purpose: str,
     except ValueError:
         workers = 3
     acquired = acquire_context_sources(
-        embedded, game_id=game_id, npc_id=npc_id, max_workers=workers,
+        embedded,
+        game_id=game_id,
+        npc_id=npc_id,
+        max_workers=workers,
         readers=custom_readers,
     )
     source_text = {result.source: result.text for result in acquired}
@@ -565,12 +672,9 @@ def _build_context_pack(state: dict, query: str, purpose: str,
     def add_memory_part(text: str, *, legacy_if_unlabeled: bool = False) -> None:
         clean = str(text or "").strip()
         from services.narrative_evidence import build_evidence, validate_narrative
-        clean = validate_narrative(clean, build_evidence(state), channel='context').text
-        if (
-            not clean
-            or clean in seen_memory_text
-            or find_strict_unrevealed(clean, state)
-        ):
+
+        clean = validate_narrative(clean, build_evidence(state), channel="context").text
+        if not clean or clean in seen_memory_text or find_strict_unrevealed(clean, state):
             return
         # O índice pré-spec devolve texto cru; jamais lhe atribuímos autoridade.
         if legacy_if_unlabeled and not clean.startswith("["):
@@ -581,6 +685,7 @@ def _build_context_pack(state: dict, query: str, purpose: str,
     # O resumo curto é o primeiro candidato da quota; fatos duráveis ainda
     # concorrem individualmente em seguida.
     from services.memory_summary import compact_summary
+
     summary = compact_summary(state.get("narrative_summary", ""))
     # SPEC-215 D2: com `on`, resumo/ledger/memória de sessão do JOGADOR saem do
     # prompt do NPC; fica a memória privada do NPC + lore público.
@@ -599,11 +704,15 @@ def _build_context_pack(state: dict, query: str, purpose: str,
     # NOVO para o mais antigo (o score decresce com a posicao).
     # O ledger auditável dá continuidade mesmo se o índice estiver temporariamente
     # indisponível. Conteúdo com assinatura secreta não revelada falha fechado.
-    for record in ([] if gate_on else active_memory_facts(
-        state.get("memory_facts"),
-        current_turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
-        state=state,
-    )[-20:][::-1]):
+    for record in (
+        []
+        if gate_on
+        else active_memory_facts(
+            state.get("memory_facts"),
+            current_turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
+            state=state,
+        )[-20:][::-1]
+    ):
         if find_strict_unrevealed(record["text"], state):
             continue
         add_memory_part(format_memory_fact(record))
@@ -613,18 +722,19 @@ def _build_context_pack(state: dict, query: str, purpose: str,
     return assemble_pack(facts, budget, lore_text=lore_text, memory_text=memory_text)
 
 
-def active_memory_facts(rows, *, current_turn: int,
-                        state: dict | None = None) -> list[dict]:
+def active_memory_facts(rows, *, current_turn: int, state: dict | None = None) -> list[dict]:
     """Contexto ativo: especulação não confirmada expira após 20 turnos."""
     records = normalize_memory_facts(rows)
     from services.narrative_evidence import build_evidence, validate_narrative
+
     evidence = build_evidence(state or {})
     return [
-        record for record in records
+        record
+        for record in records
         if not (
             record.get("confidence") == "speculative"
             and record.get("source_turn") is not None
             and int(current_turn) - int(record.get("source_turn") or 0) >= 20
         )
-        and not validate_narrative(record['text'], evidence, channel='context').rejections
+        and not validate_narrative(record["text"], evidence, channel="context").rejections
     ]

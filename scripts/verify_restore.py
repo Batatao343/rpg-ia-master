@@ -20,9 +20,11 @@ def run(dsn: str) -> dict[str, int]:
         with pool.connection() as connection:
             counts = {}
             for table in ("games", "game_checkpoints", "memory_documents", "assets", "jobs"):
-                counts[table] = int(connection.execute(
-                    f"select count(*) as n from app.{table}",  # tabela é allowlist fixa
-                ).fetchone()["n"])
+                counts[table] = int(
+                    connection.execute(
+                        f"select count(*) as n from app.{table}",  # tabela é allowlist fixa
+                    ).fetchone()["n"]
+                )
             invalid = connection.execute(
                 "select count(*) as n from app.games where length(state_sha256)<>64",
             ).fetchone()["n"]

@@ -15,7 +15,9 @@ ROOT = Path(__file__).resolve().parents[2]
 REDACTED = "[REDACTED]"
 _SECRET_KEY = re.compile(
     r"(secret|token|password|passwd|apikey|api_key|authorization|service_role|dsn|database_url|"
-    r"jwt|signedurl|signed_url|access_key|publishable)", re.I)
+    r"jwt|signedurl|signed_url|access_key|publishable)",
+    re.I,
+)
 _EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 _JWT = re.compile(r"eyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]*")
 _URL_CRED = re.compile(r"(postgres(?:ql)?://[^:/\s]+:)[^@\s]+(@)")
@@ -72,6 +74,7 @@ def target_matches_ref(ref: str, value: str) -> bool:
     """Strict: hostname is `<ref>.supabase.co` (or a subdomain, e.g. db.<ref>.supabase.co) OR the DSN
     username is `<role>.<ref>` (Supavisor tenant form, e.g. postgres.<ref>). Substring matches are refused."""
     from urllib.parse import unquote, urlsplit
+
     try:
         u = urlsplit(value or "")
         host = (u.hostname or "").lower()
@@ -94,6 +97,7 @@ def assert_ref_in(ref: str, **targets: str) -> None:
 def split_dsn_password(dsn: str) -> tuple[str, str | None]:
     """Return (dsn without password, password) so the secret never travels on argv."""
     from urllib.parse import quote, unquote, urlsplit, urlunsplit
+
     u = urlsplit(dsn)
     if u.password is None:
         return dsn, None
@@ -113,8 +117,11 @@ def add_guard_args(parser: argparse.ArgumentParser) -> None:
 def write_evidence(name: str, payload: dict, out: str | Path | None = None) -> Path:
     path = Path(out) if out else ROOT / "docs" / "spec191" / "evidence" / f"{name}.json"
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(redact(payload), ensure_ascii=False, indent=2, sort_keys=True, default=str) + "\n",
-                    encoding="utf-8")
+    path.write_text(
+        json.dumps(redact(payload), ensure_ascii=False, indent=2, sort_keys=True, default=str)
+        + "\n",
+        encoding="utf-8",
+    )
     return path
 
 
@@ -134,6 +141,7 @@ def load_dotenv_quietly() -> None:
     """
     try:
         from dotenv import load_dotenv
+
         load_dotenv(ROOT / ".env.staging", override=False)
         load_dotenv(ROOT / ".env", override=False)
     except Exception:  # noqa: BLE001 - optional convenience

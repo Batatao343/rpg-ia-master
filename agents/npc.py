@@ -3,6 +3,7 @@ agents/npc.py
 Gerador de NPCs com Persistência, Memória, RAG e Filtro de Ignorância.
 Contém tanto a fábrica de NPCs (generate_new_npc) quanto o ator (npc_actor_node).
 """
+
 import inspect
 import json
 import logging
@@ -47,22 +48,31 @@ from world_utils import apply_faction_reveal, ensure_faction_intel, ensure_facti
 # Fallback para RAG
 try:
     from rag import add_npc_memory, query_npc_memory, query_rag
+
     RAG_AVAILABLE = True
 except ImportError:
     RAG_AVAILABLE = False
-    def query_rag(*args, **kwargs): return ""
-    def add_npc_memory(*args, **kwargs): return None
-    def query_npc_memory(*args, **kwargs): return ""
+
+    def query_rag(*args, **kwargs):
+        return ""
+
+    def add_npc_memory(*args, **kwargs):
+        return None
+
+    def query_npc_memory(*args, **kwargs):
+        return ""
 
 
 # SPEC-215: texto do `world_state_block`. `off`/`shadow` mantêm o texto anterior
 # byte a byte; `on` fala só do que o personagem sabe (R6).
 _WORLD_TRUTH_NOTE_OFF = (
-    "(O mundo mudou desde que você o conheceu? O estado atual acima é a verdade de AGORA.)")
+    "(O mundo mudou desde que você o conheceu? O estado atual acima é a verdade de AGORA.)"
+)
 _WORLD_TRUTH_NOTE_ON = (
     "(Acima está SÓ o que você sabe do mundo: [VIU] = você presenciou; [OUVIU DE …] = "
     "contaram e você acredita; [BOATO, não confirmado] = ouviu dizer, pode ser mentira. "
-    "Se não está aqui nem na sua memória, você não sabe.)")
+    "Se não está aqui nem na sua memória, você não sabe.)"
+)
 
 
 def _npc_id(npc_data: dict, name: str) -> str:
@@ -70,16 +80,25 @@ def _npc_id(npc_data: dict, name: str) -> str:
     return npc_data.get("id") or f"npc_{(name or 'desconhecido').lower().replace(' ', '_')}"
 
 
-def _interaction_outcome(state: dict, *, kind: str, subject_id: str,
-                         code: str, progressed: bool) -> dict:
+def _interaction_outcome(
+    state: dict, *, kind: str, subject_id: str, code: str, progressed: bool
+) -> dict:
     fingerprint = f"{kind}:{subject_id}:{code}"
     previous = state.get("last_interaction_outcome") or {}
-    repeat = (int(previous.get("repeat_count", 0) or 0) + 1
-              if previous.get("fingerprint") == fingerprint and not progressed else 1)
-    return {"kind": kind, "subject_id": subject_id, "code": code,
-            "progressed": progressed, "fingerprint": fingerprint,
-            "repeat_count": repeat,
-            "turn": int((state.get("world") or {}).get("turn_count", 0) or 0)}
+    repeat = (
+        int(previous.get("repeat_count", 0) or 0) + 1
+        if previous.get("fingerprint") == fingerprint and not progressed
+        else 1
+    )
+    return {
+        "kind": kind,
+        "subject_id": subject_id,
+        "code": code,
+        "progressed": progressed,
+        "fingerprint": fingerprint,
+        "repeat_count": repeat,
+        "turn": int((state.get("world") or {}).get("turn_count", 0) or 0),
+    }
 
 
 def _canonical_npc_id(name: str) -> str:
@@ -90,15 +109,21 @@ def _canonical_npc_id(name: str) -> str:
     `_v_npc_killed`, que só aceita npc_killed contra ids canônicos).
     """
     from services.entity_identity import resolve_npc_entity_id
+
     return resolve_npc_entity_id({}, name) or ""
+
 
 # Importa Librarian para verificar duplicatas
 try:
     from agents.librarian import find_existing_entity
 except ImportError:
-    def find_existing_entity(*args, **kwargs): return None
+
+    def find_existing_entity(*args, **kwargs):
+        return None
+
 
 NPC_DB_FILE = "data/npc_database.json"
+
 
 # --- SCHEMAS ---
 class NPCSchema(BaseModel):
@@ -110,15 +135,20 @@ class NPCSchema(BaseModel):
     initial_relationship: int = 5
     attributes: dict[str, int] = Field(
         description="Stats base: str, dex, con, int, wis, cha. Padrão humano é 10.",
-        json_schema_extra={"example": {"str": 10, "dex": 12, "con": 10, "int": 14, "wis": 16, "cha": 18}}
+        json_schema_extra={
+            "example": {"str": 10, "dex": 12, "con": 10, "int": 14, "wis": 16, "cha": 18}
+        },
     )
-    combat_stats: dict = Field(description="HP, AC e Attacks", default={"hp": 10, "ac": 10, "attacks": []})
+    combat_stats: dict = Field(
+        description="HP, AC e Attacks", default={"hp": 10, "ac": 10, "attacks": []}
+    )
+
 
 class FactionReveal(BaseModel):
     faction_id: str = Field(description="id EXATO de uma facção listada em <FACÇÕES_DO_MUNDO>.")
     reveal_level: str = Field(
         description="O QUANTO este NPC revelou: 'existencia' (citou a facção), "
-                    "'objetivo' (contou o plano) ou 'progresso' (sabe quão perto está)."
+        "'objetivo' (contou o plano) ou 'progresso' (sabe quão perto está)."
     )
 
 
@@ -133,7 +163,9 @@ class NPCResponse(BaseModel):
     # A truncagem roda antes da validação: valor fora da faixa nunca derruba a
     # resposta inteira (padrão SPEC-045), só é clampado.
     relationship_change: int = Field(
-        0, ge=-RELATIONSHIP_STEP_CAP, le=RELATIONSHIP_STEP_CAP,
+        0,
+        ge=-RELATIONSHIP_STEP_CAP,
+        le=RELATIONSHIP_STEP_CAP,
         description="Variação da relação NESTE turno: -1, 0 ou +1.",
     )
 
@@ -141,6 +173,7 @@ class NPCResponse(BaseModel):
     @classmethod
     def _clamp_relationship(cls, value):
         return clamp_relationship_change(value)
+
     faction_reveals: list[FactionReveal] = Field(
         default_factory=list,
         description=(
@@ -159,13 +192,16 @@ class NPCResponse(BaseModel):
         ),
     )
 
+
 # --- PERSISTÊNCIA (spec isolar-cache-runtime) -------------------------------
 # O cache de NPCs gerados mora no overlay runtime gitignored; o arquivo antigo
 # data/npc_database.json vira LEGADO (fallback de leitura até o 1º save, que
 # migra o conteúdo inteiro pro overlay).
 
+
 def _npc_db_path() -> str:
     from gamedata import runtime_cache_path
+
     return runtime_cache_path("npc_database.json")
 
 
@@ -178,14 +214,18 @@ def clamp_relationship_change(delta, who: str = "") -> int:
     clamped = max(-RELATIONSHIP_STEP_CAP, min(RELATIONSHIP_STEP_CAP, delta))
     if clamped != delta:
         logging.getLogger("rpg.npc.relationship_clamped").info(
-            "npc=%s proposed=%s applied=%s", who, delta, clamped)
+            "npc=%s proposed=%s applied=%s", who, delta, clamped
+        )
     return clamped
 
 
 def _npc_entry_broken(entry) -> bool:
-    return (not isinstance(entry, dict) or entry.get("id") == "fallback"
-            or ("role" in entry and not entry["role"])
-            or ("persona" in entry and not entry["persona"]))
+    return (
+        not isinstance(entry, dict)
+        or entry.get("id") == "fallback"
+        or ("role" in entry and not entry["role"])
+        or ("persona" in entry and not entry["persona"])
+    )
 
 
 def load_npc_db():
@@ -195,7 +235,9 @@ def load_npc_db():
     if len(clean) != len(raw):
         logging.getLogger("rpg.npc").warning(
             "npc_database: %d entrada(s) quebrada(s) descartada(s): %s",
-            len(raw) - len(clean), sorted(set(raw) - set(clean)))
+            len(raw) - len(clean),
+            sorted(set(raw) - set(clean)),
+        )
     return clean
 
 
@@ -206,6 +248,7 @@ def catalog_owner_id():
     principal: ``None`` → catálogo global local (comportamento histórico)."""
     try:
         from infrastructure.request_context import current_principal
+
         principal = current_principal(required=False)
     except Exception:  # silent-ok: sem principal e o caso esperado em legacy/CLI
         principal = None
@@ -216,7 +259,7 @@ def _load_legacy_npc_file() -> dict:
     if not os.path.exists(NPC_DB_FILE):
         return {}
     try:
-        with open(NPC_DB_FILE, encoding='utf-8') as f:
+        with open(NPC_DB_FILE, encoding="utf-8") as f:
             return json.load(f)
     except Exception as e:
         _log_event("npc", "db_read_failed", level="warning", error=type(e).__name__)
@@ -227,8 +270,7 @@ def _load_npc_db_raw():
     from infrastructure.runtime import get_runtime
 
     store = get_runtime().runtime_catalog
-    shared = store.list("npc_template", owner_id=None, game_id=None) \
-        or _load_legacy_npc_file()
+    shared = store.list("npc_template", owner_id=None, game_id=None) or _load_legacy_npc_file()
     owner = catalog_owner_id()
     if owner is None:
         return shared
@@ -243,7 +285,8 @@ def save_npc_template(data):
     from infrastructure.runtime import get_runtime
 
     key = data.get("id", f"npc_{data['name'].lower().replace(' ', '_')}")
-    if "id" not in data: data["id"] = key
+    if "id" not in data:
+        data["id"] = key
 
     # Garante atributos mínimos
     if "attributes" not in data:
@@ -258,8 +301,9 @@ def save_npc_template(data):
     if not store.list("npc_template", owner_id=None, game_id=None):
         for item_id, item in _load_legacy_npc_file().items():
             if item_id != key and not _npc_entry_broken(item):
-                store.put("npc_template", item_id, item,
-                          scope="global", owner_id=None, game_id=None)
+                store.put(
+                    "npc_template", item_id, item, scope="global", owner_id=None, game_id=None
+                )
     store.put("npc_template", key, data, scope="global", owner_id=None, game_id=None)
 
 
@@ -306,6 +350,7 @@ def _infer_tier_from_name(name: str) -> ModelTier:
     del name
     return ModelTier.FAST
 
+
 # --- FÁBRICA DE NPCs (A FUNÇÃO QUE FALTAVA) ---
 def generate_new_npc(name, context=""):
     """
@@ -313,11 +358,12 @@ def generate_new_npc(name, context=""):
     Usado pelo Storyteller para popular o mundo dinamicamente.
     """
     from services.prompt_guard import sanitize_entity_name
+
     name = sanitize_entity_name(name) or "Desconhecido"  # SPEC-223 R7
     # 1. CHECK-FIRST: Verifica se já existe
     db = load_npc_db()
     existing_ids = list(db.keys())
-    
+
     found_id = find_existing_entity(name, "NPC", existing_ids)
     if found_id:
         _log_event("npc", "cache_hit", level="debug")
@@ -334,20 +380,24 @@ def generate_new_npc(name, context=""):
     # 2. GERAÇÃO
     _log_event("npc", "creating", level="info")
     lore_info = query_rag(f"{name} {context}", index_name="lore")
-    
+
     llm = get_llm(temperature=0.7, tier=_infer_tier_from_name(name))
-    
+
     try:
         designer = llm.with_structured_output(NPCSchema)
-        res = designer.invoke([
-            SystemMessage(content=f"""
+        res = designer.invoke(
+            [
+                SystemMessage(
+                    content=f"""
             <role>RPG Character Designer</role>
             <lore>{lore_info}</lore>
             <task>Create NPC '{name}'. Include all 6 attributes and a detailed persona.</task>
-            """), 
-            HumanMessage(content=f"Context: {context}")
-        ])
-        
+            """
+                ),
+                HumanMessage(content=f"Context: {context}"),
+            ]
+        )
+
         if not isinstance(res, NPCSchema):  # SPEC-230 R1: FallbackLLM -> AIMessage
             raise TypeError("structured output inválido (FallbackLLM)")
         data = res.model_dump()
@@ -355,15 +405,18 @@ def generate_new_npc(name, context=""):
         # MockLLM) podem devolver outro nome apesar do schema estar válido.
         data["name"] = name
         data["id"] = f"npc_{name.lower().replace(' ', '_')}"
-        
-    except Exception as e: 
+
+    except Exception as e:
         _log_event("npc", "generation_failed", level="error", error=type(e).__name__)
         # Fallback de segurança
         data = {
-            "name": name, "role": "Desconhecido", "id": "fallback", "persona": "Genérico",
+            "name": name,
+            "role": "Desconhecido",
+            "id": "fallback",
+            "persona": "Genérico",
             "initial_relationship": 5,
-            "attributes": {"str":10, "dex":10, "con":10, "int":10, "wis":10, "cha":10},
-            "combat_stats": {"hp": 10, "ac": 10, "attacks": []}
+            "attributes": {"str": 10, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10},
+            "combat_stats": {"hp": 10, "ac": 10, "attacks": []},
         }
 
     data = _materialize_npc_combat_sheet(data)
@@ -375,8 +428,10 @@ def generate_new_npc(name, context=""):
         _log_event("npc", "db_persist_failed", level="warning", error=type(exc).__name__)
     return data
 
+
 _MISSION_RE = re.compile(
-    r"miss|objetiv|quest|o que.*(faç|faz|devo)|para onde|pr[óo]ximo passo|tarefa|rumo")
+    r"miss|objetiv|quest|o que.*(faç|faz|devo)|para onde|pr[óo]ximo passo|tarefa|rumo"
+)
 
 
 def _mission_hint_block(state: GameState, last_msg: str) -> str:
@@ -387,12 +442,17 @@ def _mission_hint_block(state: GameState, last_msg: str) -> str:
     if not _MISSION_RE.search((last_msg or "").lower()):
         return ""
     from services.objectives import public_objective
+
     desc = public_objective(
-        state.get("campaign_plan"), state.get("quests"), state.get("world"),
+        state.get("campaign_plan"),
+        state.get("quests"),
+        state.get("world"),
     )["objective"]
-    return (f"\n    <OBJETIVO_ATUAL>\n    O rumo público agora: {desc}\n"
-            "    Se o jogador perguntar o que fazer/aonde ir, oriente com isto "
-            "(do seu jeito, pela sua persona).\n    </OBJETIVO_ATUAL>\n")
+    return (
+        f"\n    <OBJETIVO_ATUAL>\n    O rumo público agora: {desc}\n"
+        "    Se o jogador perguntar o que fazer/aonde ir, oriente com isto "
+        "(do seu jeito, pela sua persona).\n    </OBJETIVO_ATUAL>\n"
+    )
 
 
 # --- NÓ DE ATUAÇÃO (COM FILTRO DE IGNORÂNCIA) ---
@@ -432,21 +492,34 @@ def npc_actor_node(state: GameState):
     # está sempre com o jogador (estado próprio, 4.5). ---
     target_aliases = runtime_npc_aliases(npc_state_key or npc_name, npc_data)
     member = next(
-        (c for c in state.get("party") or []
-         if isinstance(c, dict)
-         and bool(target_aliases & runtime_npc_aliases(str(c.get("name") or ""), c))),
+        (
+            c
+            for c in state.get("party") or []
+            if isinstance(c, dict)
+            and bool(target_aliases & runtime_npc_aliases(str(c.get("name") or ""), c))
+        ),
         None,
     )
     # SPEC-230 R3/R5: morto não conversa; membro esperando só fala no próprio local.
     if (member is not None and not npc_layers.npc_alive(member)) or (
-            from_state and not npc_layers.npc_alive(npc_data)):
+        from_state and not npc_layers.npc_alive(npc_data)
+    ):
         dname = (npc_data or member or {}).get("name") or npc_state_key or npc_name
-        return {"messages": [AIMessage(content=f"{dname} está morto. Não há resposta — só o silêncio onde antes havia uma voz.")],
-                "interlocutor_reason": "npc_absent_known"}
+        return {
+            "messages": [
+                AIMessage(
+                    content=f"{dname} está morto. Não há resposta — só o silêncio onde antes havia uma voz."
+                )
+            ],
+            "interlocutor_reason": "npc_absent_known",
+        }
     in_party = False
     if member is not None:
         cur = state.get("world", {}) or {}
-        here = {str(cur.get("current_location") or ""), str(cur.get("current_location_id") or "")} - {""}
+        here = {
+            str(cur.get("current_location") or ""),
+            str(cur.get("current_location_id") or ""),
+        } - {""}
         waiting = str(member.get("waiting_at") or "")
         if member.get("active", True) or not waiting:
             in_party = bool(member.get("active")) or not waiting
@@ -454,26 +527,38 @@ def npc_actor_node(state: GameState):
             in_party = waiting in here
         if not in_party:
             dname = member.get("name") or npc_name
-            return {"messages": [AIMessage(
-                content=f"🗣️ {dname} não está aqui. Está esperando em {waiting}.")],
-                "interlocutor_reason": "npc_absent_known"}
+            return {
+                "messages": [
+                    AIMessage(content=f"🗣️ {dname} não está aqui. Está esperando em {waiting}.")
+                ],
+                "interlocutor_reason": "npc_absent_known",
+            }
     if from_state and not in_party and not npc_layers.is_in_scene(npc_data):
         home = npc_data.get("home_location_id") or npc_data.get("location", "")
         hint = f" Foi visto pela última vez em {home}." if home else ""
         display_name = npc_data.get("name") or npc_state_key or npc_name
-        return {"messages": [AIMessage(content=f"🗣️ {display_name} não está aqui.{hint}")],
-                "interlocutor_reason": "npc_absent_known"}
+        return {
+            "messages": [AIMessage(content=f"🗣️ {display_name} não está aqui.{hint}")],
+            "interlocutor_reason": "npc_absent_known",
+        }
 
     # SPEC-202 R5/R6: alvo sem ficha no estado/party NUNCA vira identidade nova,
     # exceto papel genérico autorizado pelo router (generic_role_spawn, P2).
     # Companheiro de party sem ficha segue o caminho antigo (persona gerada p/ um
     # membro que JÁ existe — não é identidade nova). O
     # narrador explica a ausência (SPEC-041 R2) — nenhum NPC fala em 1ª pessoa.
-    if not npc_data and member is None and (
-            state.get("interlocutor_reason") != "generic_role_spawn"):
+    if (
+        not npc_data
+        and member is None
+        and (state.get("interlocutor_reason") != "generic_role_spawn")
+    ):
         action = str(getattr(messages[-1], "content", "")) if messages else ""
-        return {"next": "storyteller", "npc_fallback_hint": action or npc_name,
-                "active_npc_name": None, "interlocutor_reason": "npc_unknown_absent"}
+        return {
+            "next": "storyteller",
+            "npc_fallback_hint": action or npc_name,
+            "active_npc_name": None,
+            "interlocutor_reason": "npc_unknown_absent",
+        }
     if not npc_data:
         db = load_npc_db()
         db_key = find_runtime_npc_key(db, npc_name)
@@ -491,9 +576,11 @@ def npc_actor_node(state: GameState):
     # Campos de camada + traits seeded (R1/R3); quem chegou aqui está na cena.
     home_id = state.get("world", {}).get("current_location_id", "")
     npc_data = npc_layers.ensure_npc_fields(
-        npc_data, str(state.get("game_id", "")),
+        npc_data,
+        str(state.get("game_id", "")),
         home_location_id=npc_data.get("home_location_id") or home_id,
-        in_scene=True if not from_state else None)
+        in_scene=True if not from_state else None,
+    )
     npc_data["known_by_player"] = True
 
     # O NPC NÃO é uma wikipédia: age por persona + memória própria (sem dump de lore global).
@@ -502,43 +589,75 @@ def npc_actor_node(state: GameState):
     # --- Fase 4.5: comandos de party são DETERMINÍSTICOS (gate em Python; o LLM
     # nunca decide se o NPC aceita — no máximo narraria; aqui nem precisa dele). ---
     import party as party_mod
+
     cmd = party_mod.detect_party_command(str(last_msg))
     if cmd:
         loc = state.get("world", {}).get("current_location", "")
         if cmd == "recruit":
             decision = party_mod.recruitment_decision(
-                {**state, "npcs": {**npcs_db, npc_name: npc_data}}, npc_name)
+                {**state, "npcs": {**npcs_db, npc_name: npc_data}}, npc_name
+            )
             new_party, reason = party_mod.recruit(
-                {**state, "npcs": {**npcs_db, npc_name: npc_data}}, npc_name)
+                {**state, "npcs": {**npcs_db, npc_name: npc_data}}, npc_name
+            )
             if new_party is None:
-                return {"messages": [AIMessage(content=f'🗣️ {npc_name} recusa: "{reason}"')],
-                        "last_interaction_outcome": _interaction_outcome(
-                            state, kind="recruit", subject_id=_npc_id(npc_data, npc_name),
-                            code=decision["code"], progressed=False),
-                        "archive_due": True}
-            return {"party": new_party,
+                return {
+                    "messages": [AIMessage(content=f'🗣️ {npc_name} recusa: "{reason}"')],
                     "last_interaction_outcome": _interaction_outcome(
-                        state, kind="recruit", subject_id=_npc_id(npc_data, npc_name),
-                        code="ok", progressed=True),
-                    "messages": [AIMessage(content=(
-                        f"🗣️ {npc_name} ajeita o equipamento e assente. "
-                        f'"Estou com você." ({npc_name} junta-se ao grupo.)'))],
-                    "archive_due": True}
+                        state,
+                        kind="recruit",
+                        subject_id=_npc_id(npc_data, npc_name),
+                        code=decision["code"],
+                        progressed=False,
+                    ),
+                    "archive_due": True,
+                }
+            return {
+                "party": new_party,
+                "last_interaction_outcome": _interaction_outcome(
+                    state,
+                    kind="recruit",
+                    subject_id=_npc_id(npc_data, npc_name),
+                    code="ok",
+                    progressed=True,
+                ),
+                "messages": [
+                    AIMessage(
+                        content=(
+                            f"🗣️ {npc_name} ajeita o equipamento e assente. "
+                            f'"Estou com você." ({npc_name} junta-se ao grupo.)'
+                        )
+                    )
+                ],
+                "archive_due": True,
+            }
         if cmd == "dismiss":
             new_party, found = party_mod.dismiss(state, npc_name)
-            msg = (f"{npc_name} assente e segue o próprio caminho."
-                   if found else f"{npc_name} não está no seu grupo.")
-            return {"party": new_party, "messages": [AIMessage(content=f"🗣️ {msg}")],
-                    "archive_due": found}
+            msg = (
+                f"{npc_name} assente e segue o próprio caminho."
+                if found
+                else f"{npc_name} não está no seu grupo."
+            )
+            return {
+                "party": new_party,
+                "messages": [AIMessage(content=f"🗣️ {msg}")],
+                "archive_due": found,
+            }
         if cmd == "wait":
             new_party, found = party_mod.set_waiting(state, npc_name, loc)
-            msg = (f"{npc_name} monta guarda em {loc} e espera."
-                   if found else f"{npc_name} não está no seu grupo.")
+            msg = (
+                f"{npc_name} monta guarda em {loc} e espera."
+                if found
+                else f"{npc_name} não está no seu grupo."
+            )
             return {"party": new_party, "messages": [AIMessage(content=f"🗣️ {msg}")]}
         if cmd == "follow":
             new_party, found = party_mod.set_following(state, npc_name)
-            msg = (f"{npc_name} retoma a marcha ao seu lado."
-                   if found else f"{npc_name} não está no seu grupo.")
+            msg = (
+                f"{npc_name} retoma a marcha ao seu lado."
+                if found
+                else f"{npc_name} não está no seu grupo."
+            )
             return {"party": new_party, "messages": [AIMessage(content=f"🗣️ {msg}")]}
 
     # Memória vetorizada DESTE npc: recupera por relevância o que viveu com o jogador
@@ -548,12 +667,12 @@ def npc_actor_node(state: GameState):
     # Fase 2.8: pack centraliza memória do NPC + estado atual do mundo (NPC ciente de
     # mudanças: líder morto, controle trocado). purpose="npc".
     npc_location = str(
-        npc_data.get("location")
-        or state.get("world", {}).get("current_location", "")
-        or "")
+        npc_data.get("location") or state.get("world", {}).get("current_location", "") or ""
+    )
     # SPEC-215: com o flag != off, a fala do jogador (R9) e a herança local de
     # NPC recém-gerado (R10) entram no ledger ANTES do invoke. `off` = no-op.
     from services import npc_knowledge
+
     knowledge_mode = npc_knowledge.mode()
     knowledge_new: list = []
     pack_state = state
@@ -563,31 +682,44 @@ def npc_actor_node(state: GameState):
             base_kstate = {**state, "npcs": {**npcs_db, npc_state_key: npc_data}}
             if not from_state:
                 knowledge_new += npc_knowledge.inherit_local(
-                    base_kstate, npc_id, str(home_id or ""), k_clock)
-            told_state = {**base_kstate, "knowledge_links": [
-                *(state.get("knowledge_links") or []), *knowledge_new]}
+                    base_kstate, npc_id, str(home_id or ""), k_clock
+                )
+            told_state = {
+                **base_kstate,
+                "knowledge_links": [*(state.get("knowledge_links") or []), *knowledge_new],
+            }
             knowledge_new += npc_knowledge.record_player_told(
-                told_state, npc_id, str(last_msg), k_clock)
+                told_state, npc_id, str(last_msg), k_clock
+            )
             if knowledge_new:
-                pack_state = {**state, "knowledge_links": [
-                    *(state.get("knowledge_links") or []), *knowledge_new]}
+                pack_state = {
+                    **state,
+                    "knowledge_links": [*(state.get("knowledge_links") or []), *knowledge_new],
+                }
         except Exception as exc:  # o turno segue; o gate falha fechado
             _log_event("npc", "knowledge_failed", level="warning", error=type(exc).__name__)
             knowledge_new = []
     pack = build_context_pack(
         pack_state,
         query=f"{npc_data.get('name', npc_name)} {npc_location} {last_msg}".strip(),
-                              purpose="npc", game_id=game_id, npc_id=npc_id)
+        purpose="npc",
+        game_id=game_id,
+        npc_id=npc_id,
+    )
     relevant_memory = pack.memory_block
     public_lore = pack.lore_block
 
     # Fações do mundo: o NPC PODE saber delas (e revelar ao jogador). O conhecimento do
     # jogador (faction_intel) só avança por aqui — fora daqui ele não é onisciente.
     factions = ensure_factions(state.get("factions"))
-    faccoes_mundo = "\n".join(
-        f"- id={f.get('id')} · {f.get('name')} ({f.get('region','')}) · plano: {f.get('goal','')}"
-        for f in factions if not f.get("defeated")
-    ) or "Nenhuma facção conhecida no mundo."
+    faccoes_mundo = (
+        "\n".join(
+            f"- id={f.get('id')} · {f.get('name')} ({f.get('region', '')}) · plano: {f.get('goal', '')}"
+            for f in factions
+            if not f.get("defeated")
+        )
+        or "Nenhuma facção conhecida no mundo."
+    )
 
     llm = get_llm(temperature=0.8, tier=ModelTier.FAST)
 
@@ -612,19 +744,24 @@ def npc_actor_node(state: GameState):
     # perguntava "o que a missão exige agora?").
     objetivo_block = _mission_hint_block(state, str(last_msg))
 
-    system_msg = SystemMessage(content=f"""
+    system_msg = SystemMessage(
+        content=f"""
     <ROLE>
-    Você é {npc_data.get('name')}.
-    Ocupação: {npc_data.get('role')}.
-    Persona: {npc_data.get('persona')}.
-    Local: {npc_data.get('location')}.
+    Você é {npc_data.get("name")}.
+    Ocupação: {npc_data.get("role")}.
+    Persona: {npc_data.get("persona")}.
+    Local: {npc_data.get("location")}.
     Traços que o jogador JÁ percebeu em você (aja de acordo): {
-        ", ".join(t["name"] + " — " + t["description"]
-                  for t in npc_layers.trait_names(npc_data.get("revealed_traits") or [])) or "—"}
+            ", ".join(
+                t["name"] + " — " + t["description"]
+                for t in npc_layers.trait_names(npc_data.get("revealed_traits") or [])
+            )
+            or "—"
+        }
     </ROLE>
 
     <MEMORIA>
-    {npc_data.get('memory', [])[-3:]}
+    {npc_data.get("memory", [])[-3:]}
     </MEMORIA>
 
     <SUA_ULTIMA_FALA>
@@ -669,7 +806,8 @@ def npc_actor_node(state: GameState):
        ângulo, demonstre impaciência ("já te disse..."), ou avance a conversa.
     {openings_clause(aberturas_recentes)}
     6. {PLAYER_INPUT_RULE}
-    """)
+    """
+    )
 
     try:
         actor = llm.with_structured_output(NPCResponse)
@@ -683,32 +821,33 @@ def npc_actor_node(state: GameState):
             dialogue,
             aberturas_recentes,
             salt=(
-                f"{game_id}:{npc_id}:"
-                f"{int((state.get('world') or {}).get('turn_count', 0) or 0)}"
+                f"{game_id}:{npc_id}:{int((state.get('world') or {}).get('turn_count', 0) or 0)}"
             ),
         )
         dialogue_transition = (
-            varied_dialogue[:-len(dialogue)]
+            varied_dialogue[: -len(dialogue)]
             if dialogue and varied_dialogue.endswith(dialogue)
             else ""
         )
         action_description = sanitize_meta_preamble(res.action_description)
-        
+
         # Atualiza memória e relação (com guardas contra chaves ausentes)
-        turn = state.get('world', {}).get('turn_count', 0)
+        turn = state.get("world", {}).get("turn_count", 0)
         delta = clamp_relationship_change(res.relationship_change, npc_data.get("name", npc_name))
-        rel_now = npc_data.get('relationship')
+        rel_now = npc_data.get("relationship")
         rel_now = 5 if rel_now is None else int(rel_now)
-        npc_data['relationship'] = max(0, min(10, rel_now + delta))
-        npc_data.setdefault('memory', [])
+        npc_data["relationship"] = max(0, min(10, rel_now + delta))
+        npc_data.setdefault("memory", [])
         # Memória registra a EXPERIÊNCIA observável (fala/resposta), não promove
         # `memory_update` livre da IA a verdade canônica.
         player_said = str(last_msg).strip().replace("\n", " ")[:180]
         npc_said = str(dialogue).strip().replace("\n", " ")[:240]
-        fato = (f'Turno {turn}: o jogador disse "{player_said}"; '
-                f'{npc_data.get("name", npc_name)} respondeu "{npc_said}".')
-        npc_data['memory'].append(fato)
-        npc_data['memory'] = npc_data['memory'][-20:]  # SPEC-234 R11
+        fato = (
+            f'Turno {turn}: o jogador disse "{player_said}"; '
+            f'{npc_data.get("name", npc_name)} respondeu "{npc_said}".'
+        )
+        npc_data["memory"].append(fato)
+        npc_data["memory"] = npc_data["memory"][-20:]  # SPEC-234 R11
 
         # spec npcs-3-camadas (R7): interação conta; trait maduro é revelado (Python).
         npc_data, trait_revelados = npc_layers.tick_interaction(npc_data)
@@ -716,7 +855,8 @@ def npc_actor_node(state: GameState):
         if trait_revelados:
             nomes = [t["name"] for t in npc_layers.trait_names(trait_revelados)]
             reveal_note = "\n" + "\n".join(
-                f"*(Você percebe que {npc_data.get('name', npc_name)} é {n}.)*" for n in nomes)
+                f"*(Você percebe que {npc_data.get('name', npc_name)} é {n}.)*" for n in nomes
+            )
 
         # Memória de longo prazo: vetoriza o fato no índice deste npc (inerte sem chave).
         rag_ok = True
@@ -732,27 +872,32 @@ def npc_actor_node(state: GameState):
                 )
                 parameters = inspect.signature(add_npc_memory).parameters.values()
                 accepts_metadata = any(
-                    parameter.name == "metadatas"
-                    or parameter.kind == inspect.Parameter.VAR_KEYWORD
+                    parameter.name == "metadatas" or parameter.kind == inspect.Parameter.VAR_KEYWORD
                     for parameter in parameters
                 )
                 if accepts_metadata:
-                    rag_ok = add_npc_memory(
-                        game_id, npc_id, [fato],
-                        metadatas=[memory_metadata(record)],
-                    ) is not False
+                    rag_ok = (
+                        add_npc_memory(
+                            game_id,
+                            npc_id,
+                            [fato],
+                            metadatas=[memory_metadata(record)],
+                        )
+                        is not False
+                    )
                 else:
                     rag_ok = add_npc_memory(game_id, npc_id, [fato]) is not False
             except Exception as exc:
                 from observability.telemetry import log_fallback
+
                 log_fallback("npc", "rag_unavailable", exc)
                 rag_ok = False
-        pending_npc_memory = normalize_pending_npc_memory(
-            state.get("pending_npc_memory")
-        )
+        pending_npc_memory = normalize_pending_npc_memory(state.get("pending_npc_memory"))
         if not rag_ok:
             pending_npc_memory = enqueue_npc_memory(
-                pending_npc_memory, npc_id, fato,
+                pending_npc_memory,
+                npc_id,
+                fato,
             )
         memory_error = state.get("rag_persistence_error")
         if not rag_ok:
@@ -769,19 +914,23 @@ def npc_actor_node(state: GameState):
         # exclusivamente na fila operation-scoped para o archivist tentar depois.
         memory_facts = normalize_memory_facts(state.get("memory_facts"))
         memory_promotions = bounded_audit_rows(
-            state.get("memory_promotions"), limit=MAX_MEMORY_PROMOTIONS,
+            state.get("memory_promotions"),
+            limit=MAX_MEMORY_PROMOTIONS,
         )
         if rag_ok and record is not None:
             memory_facts, promoted = commit_memory_facts(memory_facts, [record])
             if promoted:
-                memory_promotions = bounded_audit_rows([
-                    *memory_promotions,
-                    {
-                        "turn": int(turn),
-                        "count": promoted,
-                        "reason": "npc_claim_direct_write",
-                    },
-                ], limit=MAX_MEMORY_PROMOTIONS)
+                memory_promotions = bounded_audit_rows(
+                    [
+                        *memory_promotions,
+                        {
+                            "turn": int(turn),
+                            "count": promoted,
+                            "reason": "npc_claim_direct_write",
+                        },
+                    ],
+                    limit=MAX_MEMORY_PROMOTIONS,
+                )
 
         # Atualiza o estado global
         new_npcs = npcs_db.copy()
@@ -791,14 +940,22 @@ def npc_actor_node(state: GameState):
         intel = ensure_faction_intel(state.get("faction_intel"))
         for rev in getattr(res, "faction_reveals", []) or []:
             intel = apply_faction_reveal(
-                intel, factions, getattr(rev, "faction_id", ""), getattr(rev, "reveal_level", ""), turn
+                intel,
+                factions,
+                getattr(rev, "faction_id", ""),
+                getattr(rev, "reveal_level", ""),
+                turn,
             )
 
         updates = {
-            "messages": [AIMessage(content=(
-                f"**{npc_data['name']}:** {dialogue_transition}"
-                f"\"{dialogue}\"\n*({action_description})*{reveal_note}"
-            ))],
+            "messages": [
+                AIMessage(
+                    content=(
+                        f"**{npc_data['name']}:** {dialogue_transition}"
+                        f'"{dialogue}"\n*({action_description})*{reveal_note}'
+                    )
+                )
+            ],
             "npcs": new_npcs,
             # SPEC-202 R9: chave de estado de quem falou (speaker canônico).
             "active_npc_name": npc_state_key,
@@ -819,7 +976,8 @@ def npc_actor_node(state: GameState):
         # (entrega/retorno à origem) — registrada antes de novas propostas.
         base_quests = list(state.get("quests", []) or [])
         quests_now = quest_log.sync_npc_interaction(
-            base_quests, npc_data.get("name", npc_name), turn=int(turn or 0))
+            base_quests, npc_data.get("name", npc_name), turn=int(turn or 0)
+        )
         proposals = getattr(res, "proposed_quests", []) or []
         if proposals:
             canonical_id = _canonical_npc_id(npc_data.get("name", npc_name))

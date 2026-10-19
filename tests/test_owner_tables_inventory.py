@@ -3,6 +3,7 @@
 Read-only contra o Postgres local: nenhuma tabela nova por owner pode nascer fora de
 PRIVATE_TABLES (apagada) ∪ FINANCIAL_TABLES/RETAINED_WITH_REASON (retida com motivo).
 """
+
 from __future__ import annotations
 
 import os
@@ -33,17 +34,26 @@ def test_every_owner_table_is_covered_by_account_lifecycle():
     if not dsn:
         pytest.skip("RPG_TEST_DATABASE_URL ausente")
     with psycopg.connect(dsn) as db:
-        owner_tables = {row[0] for row in db.execute(
-            """select c.table_name from information_schema.columns c
+        owner_tables = {
+            row[0]
+            for row in db.execute(
+                """select c.table_name from information_schema.columns c
                join information_schema.tables t
                  on t.table_schema=c.table_schema and t.table_name=c.table_name
                where c.table_schema='app' and c.column_name='owner_id'
-                 and t.table_type='BASE TABLE'""").fetchall()}
+                 and t.table_type='BASE TABLE'"""
+            ).fetchall()
+        }
         columns = {}
         for table in EXPORT_COLUMNS:
-            columns[table] = {row[0] for row in db.execute(
-                "select column_name from information_schema.columns where table_schema='app' "
-                "and table_name=%s", (table,)).fetchall()}
+            columns[table] = {
+                row[0]
+                for row in db.execute(
+                    "select column_name from information_schema.columns where table_schema='app' "
+                    "and table_name=%s",
+                    (table,),
+                ).fetchall()
+            }
     covered = set(PRIVATE_TABLES) | set(FINANCIAL_TABLES) | set(RETAINED_WITH_REASON)
     assert owner_tables - covered == set(), "tabela por owner sem destino na exclusão/retenção"
     # Every exported table must exist and every listed column must be real.

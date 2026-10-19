@@ -22,8 +22,10 @@ from services import conflict_scene
 
 def test_inimigo_escondido_nao_repete_carta_de_esconder():
     actor = {
-        "id": "cervo", "cartas": ["bst_mimetismo_morto", "bst_toque_gelido"],
-        "entropy": 4, "enemy_card_usage": {},
+        "id": "cervo",
+        "cartas": ["bst_mimetismo_morto", "bst_toque_gelido"],
+        "entropy": 4,
+        "enemy_card_usage": {},
     }
     scene = conflict_scene.new_scene()
     conflict_scene.place(scene, "cervo")
@@ -36,14 +38,21 @@ def test_inimigo_escondido_nao_repete_carta_de_esconder():
 
 def test_inimigo_visivel_pode_usar_carta_de_esconder():
     actor = {
-        "id": "cervo", "cartas": ["bst_mimetismo_morto"],
-        "entropy": 4, "enemy_card_usage": {},
+        "id": "cervo",
+        "cartas": ["bst_mimetismo_morto"],
+        "entropy": 4,
+        "enemy_card_usage": {},
     }
     scene = conflict_scene.new_scene()
     conflict_scene.place(scene, "cervo")
-    assert orchestrator._enemy_offensive_card(
-        actor, scene=scene, actor_id="cervo",
-    ) == "bst_mimetismo_morto"
+    assert (
+        orchestrator._enemy_offensive_card(
+            actor,
+            scene=scene,
+            actor_id="cervo",
+        )
+        == "bst_mimetismo_morto"
+    )
 
 
 def test_fuga_usa_fase_de_vida_e_nao_vitalidade_como_morte():
@@ -55,18 +64,20 @@ def test_fuga_usa_fase_de_vida_e_nao_vitalidade_como_morte():
 def test_zero_fora_de_combate_nao_equivale_a_morte():
     state = {
         "player": {"vitalidade": 0, "max_vitalidade": 12},
-        "combat": {"active": False}, "death_pending": False, "game_over": False,
+        "combat": {"active": False},
+        "death_pending": False,
+        "game_over": False,
     }
     assert invariants.check_actor_lifecycle(state, None, 7) == []
 
 
 def test_warning_npc_exige_uso_mecanico_atual():
-    remote = {
-        "Pérola": {"created_turn": 2, "home_location_id": "brekmar", "in_scene": True}
-    }
+    remote = {"Pérola": {"created_turn": 2, "home_location_id": "brekmar", "in_scene": True}}
     memory_only = {
-        "world": {"current_location_id": "nova_arcadia"}, "npcs": remote,
-        "party": [], "messages": [AIMessage(content="Você lembra o que Pérola disse.")],
+        "world": {"current_location_id": "nova_arcadia"},
+        "npcs": remote,
+        "party": [],
+        "messages": [AIMessage(content="Você lembra o que Pérola disse.")],
     }
     assert invariants.check_recycled_npc(memory_only, None, 20) == []
 
@@ -82,10 +93,20 @@ def test_relatorio_lista_todas_as_mortes_da_campanha():
         {"turn": 38, "location": "O Trono", "cause": "Arpoador"},
     ]
     report = RunReport(
-        run_id="matrix-a", campaigns=[{
-            "profile": "explorador", "seed": 6201, "deaths": 3,
-            "deaths_log": deaths, "latency_ms": {},
-        }], top_violations=[], top_errors=[], deltas=None, mock_any=False,
+        run_id="matrix-a",
+        campaigns=[
+            {
+                "profile": "explorador",
+                "seed": 6201,
+                "deaths": 3,
+                "deaths_log": deaths,
+                "latency_ms": {},
+            }
+        ],
+        top_violations=[],
+        top_errors=[],
+        deltas=None,
+        mock_any=False,
     )
     markdown = render_markdown(report)
     deaths_section = markdown.split("## Mortes", 1)[1].split("## Violações", 1)[0]
@@ -96,9 +117,9 @@ def test_relatorio_lista_todas_as_mortes_da_campanha():
 def test_preset_groq_free_nao_tem_outro_provider():
     routes = get_routes_profile("groq-free")
     assert set(routes) == {"classify", "fast", "smart"}
-    assert {
-        provider for candidates in routes.values() for provider, _model in candidates
-    } == {"groq"}
+    assert {provider for candidates in routes.values() for provider, _model in candidates} == {
+        "groq"
+    }
     assert routes["classify"] == [["groq", "openai/gpt-oss-20b"]]
     assert routes["fast"][-1] == ["groq", "openai/gpt-oss-20b"]
     assert routes["smart"][-1] == ["groq", "openai/gpt-oss-20b"]
@@ -108,10 +129,7 @@ def test_preset_deepseek_pago_isola_v4_flash_nos_tres_tiers():
     routes = get_routes_profile("deepseek-paid")
 
     assert set(routes) == {"classify", "fast", "smart"}
-    assert all(
-        candidates == [["deepseek", "deepseek-v4-flash"]]
-        for candidates in routes.values()
-    )
+    assert all(candidates == [["deepseek", "deepseek-v4-flash"]] for candidates in routes.values())
 
 
 def test_preset_deepseek_pago_aplica_e_restaura_timeout(monkeypatch):
@@ -139,28 +157,50 @@ def test_pacer_espaca_apenas_sucesso_groq_120b():
         now[0] += seconds
 
     pacer = ProviderPacer(
-        min_interval_seconds=12, clock=lambda: now[0], sleeper=sleep,
+        min_interval_seconds=12,
+        clock=lambda: now[0],
+        sleeper=sleep,
     )
-    pacer.observe({
-        "provider": "groq", "model": "openai/gpt-oss-120b", "status": "success",
-    })
-    pacer.observe({
-        "provider": "groq", "model": "openai/gpt-oss-120b", "status": "success",
-    })
-    pacer.observe({
-        "provider": "groq", "model": "openai/gpt-oss-20b", "status": "success",
-    })
-    pacer.observe({
-        "provider": "deepseek", "model": "openai/gpt-oss-120b", "status": "success",
-    })
+    pacer.observe(
+        {
+            "provider": "groq",
+            "model": "openai/gpt-oss-120b",
+            "status": "success",
+        }
+    )
+    pacer.observe(
+        {
+            "provider": "groq",
+            "model": "openai/gpt-oss-120b",
+            "status": "success",
+        }
+    )
+    pacer.observe(
+        {
+            "provider": "groq",
+            "model": "openai/gpt-oss-20b",
+            "status": "success",
+        }
+    )
+    pacer.observe(
+        {
+            "provider": "deepseek",
+            "model": "openai/gpt-oss-120b",
+            "status": "success",
+        }
+    )
     assert sleeps == [12.0, 12.0]
 
 
 def test_pacer_desligado_nao_dorme():
     pacer = ProviderPacer(min_interval_seconds=0, sleeper=lambda _seconds: 1 / 0)
-    pacer.observe({
-        "provider": "groq", "model": "openai/gpt-oss-120b", "status": "success",
-    })
+    pacer.observe(
+        {
+            "provider": "groq",
+            "model": "openai/gpt-oss-120b",
+            "status": "success",
+        }
+    )
 
 
 def test_preflight_prova_os_tres_tiers(monkeypatch):
@@ -240,7 +280,9 @@ def test_matrix_real_para_apos_primeira_falha_llm_terminal(monkeypatch):
     begin = {}
     monkeypatch.setattr(telemetry, "new_run_id", lambda: "run-strict")
     monkeypatch.setattr(
-        telemetry, "begin_run", lambda *args, **kwargs: begin.update(kwargs),
+        telemetry,
+        "begin_run",
+        lambda *args, **kwargs: begin.update(kwargs),
     )
     monkeypatch.setattr(telemetry, "touch_run", lambda *_args, **_kwargs: True)
     monkeypatch.setattr(telemetry, "run_dir", lambda run_id: run_id)
@@ -271,9 +313,14 @@ def test_matrix_real_para_apos_primeira_falha_llm_terminal(monkeypatch):
 
     monkeypatch.setattr(cli, "run_campaign", fake_run)
     args = SimpleNamespace(
-        label="A", turns=200, real=True, max_cost=0.25,
-        max_requests=800, routes_profile="groq-free",
-        groq_min_interval=12.0, turn_timeout=120.0,
+        label="A",
+        turns=200,
+        real=True,
+        max_cost=0.25,
+        max_requests=800,
+        routes_profile="groq-free",
+        groq_min_interval=12.0,
+        turn_timeout=120.0,
     )
 
     assert cli._run_matrix_suite(args) == 1
@@ -293,34 +340,53 @@ def test_continuacao_matriz_inicia_no_indice_solicitado(monkeypatch):
     begin = {}
     monkeypatch.setattr(telemetry, "new_run_id", lambda: "run-continuacao")
     monkeypatch.setattr(
-        telemetry, "begin_run", lambda *args, **kwargs: begin.update(kwargs),
+        telemetry,
+        "begin_run",
+        lambda *args, **kwargs: begin.update(kwargs),
     )
     monkeypatch.setattr(telemetry, "touch_run", lambda *_args, **_kwargs: True)
     monkeypatch.setattr(telemetry, "run_dir", lambda run_id: run_id)
     monkeypatch.setattr(telemetry, "finish_run", lambda *_args, **_kwargs: {})
     monkeypatch.setattr(
-        telemetry, "persist_campaign",
+        telemetry,
+        "persist_campaign",
         lambda *_args, **_kwargs: {"error_violations": 0, "observability_errors": 0},
     )
 
     def fake_run(profile, **kwargs):
         calls.append((profile, kwargs))
         return CampaignResult(
-            profile=profile, seed=kwargs["seed"], turns_completed=1,
-            errors=[], history=[], final_state={}, save_path="", mock=False,
+            profile=profile,
+            seed=kwargs["seed"],
+            turns_completed=1,
+            errors=[],
+            history=[],
+            final_state={},
+            save_path="",
+            mock=False,
             turns_requested=1,
         )
 
     monkeypatch.setattr(cli, "run_campaign", fake_run)
     args = SimpleNamespace(
-        label="A", turns=1, real=True, max_cost=0.25,
-        max_requests=800, routes_profile="deepseek-paid",
-        groq_min_interval=0.0, turn_timeout=120.0, start_index=5,
+        label="A",
+        turns=1,
+        real=True,
+        max_cost=0.25,
+        max_requests=800,
+        routes_profile="deepseek-paid",
+        groq_min_interval=0.0,
+        turn_timeout=120.0,
+        start_index=5,
     )
 
     assert cli._run_matrix_suite(args) == 0
     assert [profile for profile, _kwargs in calls] == [
-        "comerciante", "quester", "recrutador", "fujao",
-        "secret_rusher", "loot_abuser",
+        "comerciante",
+        "quester",
+        "recrutador",
+        "fujao",
+        "secret_rusher",
+        "loot_abuser",
     ]
     assert [row["index"] for row in begin["campaign_matrix"]] == list(range(5, 11))

@@ -3,6 +3,7 @@
 Eles não entram em ``PROFILES``/``--all``. O objetivo é provar uma vertical
 específica sem esperar que a simulação sorteie NPC ou mercador adequados.
 """
+
 from __future__ import annotations
 
 import copy
@@ -56,15 +57,15 @@ def prepare(name: str, state: dict) -> dict:
     prepared = copy.deepcopy(dict(state or {}))
     if name == "recrutamento":
         prepared["world"] = _move_world(
-            prepared.get("world") or {}, "montanhas_afiadas",
+            prepared.get("world") or {},
+            "montanhas_afiadas",
         )
         npcs = copy.deepcopy(prepared.get("npcs") or {})
         npcs[RECRUIT_NPC_NAME] = {
             "id": RECRUIT_NPC_ID,
             "name": RECRUIT_NPC_NAME,
             "persona": (
-                "Guia veterana das passagens móveis; direta, leal e avessa a "
-                "promessas vazias."
+                "Guia veterana das passagens móveis; direta, leal e avessa a promessas vazias."
             ),
             "relationship": 10,
             # SPEC-223 R4: recrutar exige >= 2 conversas registradas.
@@ -78,18 +79,21 @@ def prepare(name: str, state: dict) -> dict:
         }
         prepared["npcs"] = npcs
         prepared["party"] = [
-            ally for ally in (prepared.get("party") or [])
+            ally
+            for ally in (prepared.get("party") or [])
             if str(ally.get("name") or "") != RECRUIT_NPC_NAME
         ]
         return prepared
 
     prepared["world"] = _move_world(
-        prepared.get("world") or {}, "na_anel_dourado",
+        prepared.get("world") or {},
+        "na_anel_dourado",
     )
     player = copy.deepcopy(prepared.get("player") or {})
     player["gold"] = TRADE_START_GOLD
     player["inventory"] = [
-        item for item in (player.get("inventory") or [])
+        item
+        for item in (player.get("inventory") or [])
         if str(item.get("id") or "") != "pocao_cura"
     ]
     prepared["player"] = player
@@ -103,10 +107,7 @@ def decision_for(name: str, turn: int, state: dict) -> ProfileDecision | None:
         return None
     if name == "recrutamento":
         return ProfileDecision(
-            text=(
-                f"Peço que {RECRUIT_NPC_NAME} se junte a mim na jornada e "
-                "venha comigo."
-            ),
+            text=(f"Peço que {RECRUIT_NPC_NAME} se junte a mim na jornada e venha comigo."),
             mode="free_text",
         )
     return ProfileDecision(
@@ -134,28 +135,30 @@ def oracle_violations(name: str, result) -> list[dict]:
         import party
 
         if any(
-            str(ally.get("name") or "") == RECRUIT_NPC_NAME
-            for ally in party.active_allies(state)
+            str(ally.get("name") or "") == RECRUIT_NPC_NAME for ally in party.active_allies(state)
         ):
             return []
-        return [_violation(
-            "smoke.recruitment_not_observed",
-            f"{RECRUIT_NPC_NAME} não entrou na party ativa.",
-            turn,
-        )]
+        return [
+            _violation(
+                "smoke.recruitment_not_observed",
+                f"{RECRUIT_NPC_NAME} não entrou na party ativa.",
+                turn,
+            )
+        ]
 
     player = state.get("player") or {}
     has_potion = any(
-        str(item.get("id") or "") == "pocao_cura"
-        and int(item.get("qty", 0) or 0) >= 1
+        str(item.get("id") or "") == "pocao_cura" and int(item.get("qty", 0) or 0) >= 1
         for item in (player.get("inventory") or [])
         if isinstance(item, dict)
     )
     spent_gold = int(player.get("gold", TRADE_START_GOLD) or 0) < TRADE_START_GOLD
     if has_potion and spent_gold:
         return []
-    return [_violation(
-        "smoke.trade_not_observed",
-        "Compra dirigida não reduziu ouro e adicionou poção ao inventário.",
-        turn,
-    )]
+    return [
+        _violation(
+            "smoke.trade_not_observed",
+            "Compra dirigida não reduziu ouro e adicionou poção ao inventário.",
+            turn,
+        )
+    ]

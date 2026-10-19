@@ -20,13 +20,15 @@ from services.usage_metering import RATE_CARD_VERSION, UsageEvent
 TARGET_MARGIN_RATE = Decimal("0.05")
 BRL_CENT = Decimal("0.01")
 MAX_SHARD_MILLI = 2**63 - 1
-_INSTALLED_CARD_PATH = (Path(__file__).resolve().parents[1] /
-                        "data/pricing/rate_card_2026-10-08.json")
+_INSTALLED_CARD_PATH = (
+    Path(__file__).resolve().parents[1] / "data/pricing/rate_card_2026-10-08.json"
+)
 _INSTALLED_CARD_BYTES = _INSTALLED_CARD_PATH.read_bytes()
 INSTALLED_RATE_CARD_SHA256 = sha256(_INSTALLED_CARD_BYTES).hexdigest()
 INSTALLED_RATE_CARD_OBSERVED_AT = datetime.combine(
     datetime.fromisoformat(json.loads(_INSTALLED_CARD_BYTES)["observed_at"]).date(),
-    time.min, tzinfo=UTC,
+    time.min,
+    tzinfo=UTC,
 )
 
 
@@ -39,6 +41,7 @@ def rate_card_max_age() -> timedelta:
     ``RPG_RATE_CARD_MAX_AGE_DAYS`` (1..365). An invalid value falls back to the default instead
     of silently widening the window."""
     import os
+
     raw = os.getenv("RPG_RATE_CARD_MAX_AGE_DAYS", "").strip()
     try:
         days = int(raw) if raw else DEFAULT_RATE_CARD_MAX_AGE_DAYS
@@ -65,7 +68,7 @@ def _numeric(value: Decimal, precision: int, scale: int) -> Decimal:
     """Enforce the matching Postgres NUMERIC bound without Decimal rounding."""
     _decimal(value)
     numerator, denominator = value.as_integer_ratio()
-    if numerator * 10**scale % denominator or numerator >= denominator * 10**(precision - scale):
+    if numerator * 10**scale % denominator or numerator >= denominator * 10 ** (precision - scale):
         raise PricingUnavailable("valor fora da escala/precisão financeira")
     return value
 
@@ -130,12 +133,20 @@ class PricingVersion:
         _numeric(self.fx_buffer_rate, 8, 6)
         if self.fx_buffer_rate > 1:
             raise PricingUnavailable("buffer FX inválido")
-        if any(not isinstance(item, str) or not item for item in (
-            self.fx_source, self.rate_card_source, self.rate_card_version,
-        )):
+        if any(
+            not isinstance(item, str) or not item
+            for item in (
+                self.fx_source,
+                self.rate_card_source,
+                self.rate_card_version,
+            )
+        ):
             raise PricingUnavailable("fonte FX/rate card ausente")
-        if (not isinstance(self.rate_card_sha256, str) or len(self.rate_card_sha256) != 64
-                or any(char not in "0123456789abcdef" for char in self.rate_card_sha256)):
+        if (
+            not isinstance(self.rate_card_sha256, str)
+            or len(self.rate_card_sha256) != 64
+            or any(char not in "0123456789abcdef" for char in self.rate_card_sha256)
+        ):
             raise PricingUnavailable("hash do rate card inválido")
         _utc(self.fx_observed_at)
         _utc(self.rate_card_observed_at)
@@ -146,9 +157,16 @@ class PricingVersion:
         channels = [fee.channel for fee in self.channel_fees]
         if len(channels) != len(set(channels)):
             raise PricingUnavailable("fee de canal duplicada")
-        object.__setattr__(self, "channel_fees", tuple(sorted(
-            self.channel_fees, key=lambda fee: fee.channel,
-        )))
+        object.__setattr__(
+            self,
+            "channel_fees",
+            tuple(
+                sorted(
+                    self.channel_fees,
+                    key=lambda fee: fee.channel,
+                )
+            ),
+        )
 
     def require_fresh(self, at: datetime) -> None:
         if self.rate_card_version != RATE_CARD_VERSION:
@@ -167,7 +185,10 @@ class PricingVersion:
                 raise PricingUnavailable(f"{label} ausente ou stale")
 
     def fee_for(self, channel: str) -> ChannelFee:
-        return next((fee for fee in self.channel_fees if fee.channel == channel), None) or _missing_fee()
+        return (
+            next((fee for fee in self.channel_fees if fee.channel == channel), None)
+            or _missing_fee()
+        )
 
 
 def _missing_fee() -> ChannelFee:
@@ -187,8 +208,11 @@ class PurchaseSku:
             raise PricingUnavailable("SKU incompleto")
         _decimal(self.gross_brl, positive=True)
         _numeric(self.gross_brl, 18, 2)
-        if (isinstance(self.shard_milli, bool) or not isinstance(self.shard_milli, int)
-                or not 0 < self.shard_milli <= MAX_SHARD_MILLI):
+        if (
+            isinstance(self.shard_milli, bool)
+            or not isinstance(self.shard_milli, int)
+            or not 0 < self.shard_milli <= MAX_SHARD_MILLI
+        ):
             raise PricingUnavailable("quantidade de Estilhas inválida")
 
 
@@ -232,10 +256,12 @@ def quote_purchase(sku: PurchaseSku, version: PricingVersion, *, at: datetime) -
     with localcontext() as context:
         context.prec = 100
         channel_fee = (sku.gross_brl * fee.percentage + fee.fixed_brl).quantize(
-            BRL_CENT, rounding=ROUND_CEILING,
+            BRL_CENT,
+            rounding=ROUND_CEILING,
         )
         target_margin = (sku.gross_brl * TARGET_MARGIN_RATE).quantize(
-            BRL_CENT, rounding=ROUND_CEILING,
+            BRL_CENT,
+            rounding=ROUND_CEILING,
         )
         tax = Decimal("0")
         budget = sku.gross_brl - channel_fee - target_margin - tax
@@ -247,8 +273,17 @@ def quote_purchase(sku: PurchaseSku, version: PricingVersion, *, at: datetime) -
         allocated = version.shard_budget_unit_brl * grant
         reserve = budget - allocated
         return PurchaseQuote(
-            version.version_id, sku.sku_id, sku.channel, sku.gross_brl,
-            channel_fee, target_margin, tax, budget, grant, allocated, reserve,
+            version.version_id,
+            sku.sku_id,
+            sku.channel,
+            sku.gross_brl,
+            channel_fee,
+            target_margin,
+            tax,
+            budget,
+            grant,
+            allocated,
+            reserve,
             sku.gross_brl - channel_fee - tax - allocated,
         )
 
@@ -263,8 +298,13 @@ def quote_attempt_ceiling(cost_usd: Decimal, version: PricingVersion, *, at: dat
         return max(1, _ratio_units(buffered_brl, version.shard_budget_unit_brl, ceiling=True))
 
 
-def quote_usage(events: Sequence[UsageEvent], version: PricingVersion, *, at: datetime,
-                authorized_snapshot: bool = False) -> UsageQuote:
+def quote_usage(
+    events: Sequence[UsageEvent],
+    version: PricingVersion,
+    *,
+    at: datetime,
+    authorized_snapshot: bool = False,
+) -> UsageQuote:
     """Debit ceil(exact provider cost converted with versioned buffered FX)."""
     # A previously authorized reservation may settle after FX/card expiry. Its
     # immutable pricing row and persisted exact usage, not a current quote,
@@ -279,25 +319,44 @@ def quote_usage(events: Sequence[UsageEvent], version: PricingVersion, *, at: da
         raise PricingUnavailable("usage de operações diferentes")
     for event in events:
         from services.speech_pricing import SPEECH_PRICING_VERSION
-        speech_card = (event.cost_basis == "rate_card" and
-                       event.category == "speech_to_text" and
-                       event.pricing_version == SPEECH_PRICING_VERSION)
+
+        speech_card = (
+            event.cost_basis == "rate_card"
+            and event.category == "speech_to_text"
+            and event.pricing_version == SPEECH_PRICING_VERSION
+        )
         from services.image_pricing import IMAGE_PRICING_VERSION
-        image_card = (event.cost_basis == "rate_card" and event.category == "image"
-                      and event.provider == "openai" and event.pricing_version == IMAGE_PRICING_VERSION)
+
+        image_card = (
+            event.cost_basis == "rate_card"
+            and event.category == "image"
+            and event.provider == "openai"
+            and event.pricing_version == IMAGE_PRICING_VERSION
+        )
         # SPEC-236 R5: a received STT rejection (4xx/429) is an exact zero, never spend.
-        speech_rejected = (event.cost_basis == "definitive_no_charge" and event.cost_usd == 0
-                           and event.category == "speech_to_text"
-                           and event.pricing_version == SPEECH_PRICING_VERSION)
+        speech_rejected = (
+            event.cost_basis == "definitive_no_charge"
+            and event.cost_usd == 0
+            and event.category == "speech_to_text"
+            and event.pricing_version == SPEECH_PRICING_VERSION
+        )
         from services.embedding_pricing import EMBEDDING_PRICING_VERSION
+
         # SPEC-237: embeddings are token-priced by their own immutable card, never the text card.
-        embedding_card = (event.cost_basis == "token_priced" and event.category == "embedding"
-                          and event.pricing_version == EMBEDDING_PRICING_VERSION)
-        if (event.cost_basis == "token_priced" and not embedding_card
-                and event.pricing_version != version.rate_card_version):
+        embedding_card = (
+            event.cost_basis == "token_priced"
+            and event.category == "embedding"
+            and event.pricing_version == EMBEDDING_PRICING_VERSION
+        )
+        if (
+            event.cost_basis == "token_priced"
+            and not embedding_card
+            and event.pricing_version != version.rate_card_version
+        ):
             raise PricingUnavailable("rate card de usage diverge da versão")
         if event.cost_basis not in {"token_priced", "provider_reported"} and not (
-                speech_card or image_card or speech_rejected):
+            speech_card or image_card or speech_rejected
+        ):
             raise PricingUnavailable("origem de custo não faturável")
         _numeric(event.cost_usd, 18, 9)
     with localcontext() as context:
@@ -308,9 +367,15 @@ def quote_usage(events: Sequence[UsageEvent], version: PricingVersion, *, at: da
         debit = _ratio_units(variable_brl, version.shard_budget_unit_brl, ceiling=True)
         reserved = version.shard_budget_unit_brl * debit
         return UsageQuote(
-            version.version_id, tuple(str(event.event_id) for event in events),
-            tuple(sorted({event.pricing_version for event in events})), total_usd,
-            buffered_fx, variable_brl, debit, reserved, reserved - variable_brl,
+            version.version_id,
+            tuple(str(event.event_id) for event in events),
+            tuple(sorted({event.pricing_version for event in events})),
+            total_usd,
+            buffered_fx,
+            variable_brl,
+            debit,
+            reserved,
+            reserved - variable_brl,
         )
 
 
@@ -322,8 +387,12 @@ def contribution_report(quotes: Sequence[PurchaseQuote], *, fixed_infra_brl: Dec
         return {
             "gross_brl": sum((q.gross_brl for q in quotes), Decimal("0")),
             "channel_fee_brl": sum((q.channel_fee_brl for q in quotes), Decimal("0")),
-            "variable_budget_allocated_brl": sum((q.allocated_budget_brl for q in quotes), Decimal("0")),
-            "contribution_margin_brl": sum((q.contribution_margin_brl for q in quotes), Decimal("0")),
+            "variable_budget_allocated_brl": sum(
+                (q.allocated_budget_brl for q in quotes), Decimal("0")
+            ),
+            "contribution_margin_brl": sum(
+                (q.contribution_margin_brl for q in quotes), Decimal("0")
+            ),
             "fixed_infra_brl": fixed_infra_brl,
         }
 
@@ -357,9 +426,14 @@ def version_from_record(record: Mapping) -> PricingVersion:
             raise PricingUnavailable("idade máxima inválida")
         return timedelta(seconds=value)
 
-    channel_fees = tuple(ChannelFee(
-        str(channel), decimal_text(fee["percentage"]), decimal_text(fee["fixed_brl"]),
-    ) for channel, fee in sorted(fees.items()))
+    channel_fees = tuple(
+        ChannelFee(
+            str(channel),
+            decimal_text(fee["percentage"]),
+            decimal_text(fee["fixed_brl"]),
+        )
+        for channel, fee in sorted(fees.items())
+    )
     return PricingVersion(
         version_id=record["version_id"],
         shard_budget_unit_brl=decimal_text(record["shard_budget_unit_brl"]),

@@ -88,30 +88,47 @@ Princípio: **mecânica é Python** — o testador também. Um perfil é uma fun
 # playtest/profiles.py
 class Profile(Protocol):
     name: str
+
     def next_action(self, state: dict, rng: random.Random) -> str: ...
 
+
 PROFILES: Dict[str, Profile]  # os 10 do R2
+
 
 # playtest/runner.py
 @dataclass
 class TurnRecord:
-    turn: int; action: str; route: str; latency_ms: int
+    turn: int
+    action: str
+    route: str
+    latency_ms: int
     # roteamento-multi-provider: qual provider/modelo/tier serviu o turno
     # (via set_llm_telemetry_hook). None no MockLLM. `route` = rota do GRAFO
     # (storyteller/combat/...), NÃO o tier — não confundir.
-    provider: Optional[str] = None; model: Optional[str] = None
-    tier: Optional[str] = None; fell_back: bool = False
+    provider: Optional[str] = None
+    model: Optional[str] = None
+    tier: Optional[str] = None
+    fell_back: bool = False
+
 
 @dataclass
 class CampaignResult:
-    profile: str; seed: int; turns_completed: int
-    errors: List[dict]; history: List[TurnRecord]
-    final_state: dict; save_path: str
+    profile: str
+    seed: int
+    turns_completed: int
+    errors: List[dict]
+    history: List[TurnRecord]
+    final_state: dict
+    save_path: str
 
-def run_campaign(profile: str, turns: int = 50, seed: int = 0,
-                 use_real_llm: bool = False,
-                 on_turn_end: Optional[Callable[[dict, int], None]] = None
-                 ) -> CampaignResult: ...
+
+def run_campaign(
+    profile: str,
+    turns: int = 50,
+    seed: int = 0,
+    use_real_llm: bool = False,
+    on_turn_end: Optional[Callable[[dict, int], None]] = None,
+) -> CampaignResult: ...
 ```
 
 Perfis leem o estado como um jogador leria a tela: última AIMessage, HUD

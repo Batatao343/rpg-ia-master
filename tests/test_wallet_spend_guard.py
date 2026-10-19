@@ -27,12 +27,13 @@ class _Client:
 
 def test_guard_blocks_invoke_before_provider_network(monkeypatch):
     calls = []
-    monkeypatch.setattr(llm_setup, "_get_cached_client",
-                        lambda _p, model, _t: _Client(calls, model))
-    route = llm_setup.RoutedLLM(llm_setup.ModelTier.FAST, 0,
-                                [("guard-test", "first")])
-    with llm_setup.llm_spend_guard_scope(lambda *_: (_ for _ in ()).throw(
-            RuntimeError("ceiling exhausted"))):
+    monkeypatch.setattr(
+        llm_setup, "_get_cached_client", lambda _p, model, _t: _Client(calls, model)
+    )
+    route = llm_setup.RoutedLLM(llm_setup.ModelTier.FAST, 0, [("guard-test", "first")])
+    with llm_setup.llm_spend_guard_scope(
+        lambda *_: (_ for _ in ()).throw(RuntimeError("ceiling exhausted"))
+    ):
         with pytest.raises(RuntimeError, match="ceiling exhausted"):
             route.invoke("prompt")
     assert calls == []
@@ -41,10 +42,14 @@ def test_guard_blocks_invoke_before_provider_network(monkeypatch):
 def test_guard_runs_again_for_fallback_and_stops_when_ceiling_exhausted(monkeypatch):
     calls = []
     permits = []
-    monkeypatch.setattr(llm_setup, "_get_cached_client",
-                        lambda _p, model, _t: _Client(calls, model, fail=model == "first"))
-    route = llm_setup.RoutedLLM(llm_setup.ModelTier.FAST, 0,
-                                [("guard-test", "first"), ("guard-test", "second")])
+    monkeypatch.setattr(
+        llm_setup,
+        "_get_cached_client",
+        lambda _p, model, _t: _Client(calls, model, fail=model == "first"),
+    )
+    route = llm_setup.RoutedLLM(
+        llm_setup.ModelTier.FAST, 0, [("guard-test", "first"), ("guard-test", "second")]
+    )
 
     def permit(_provider, model):
         permits.append(model)
@@ -60,12 +65,13 @@ def test_guard_runs_again_for_fallback_and_stops_when_ceiling_exhausted(monkeypa
 
 def test_stream_guard_blocks_before_first_chunk(monkeypatch):
     calls = []
-    monkeypatch.setattr(llm_setup, "_get_cached_client",
-                        lambda _p, model, _t: _Client(calls, model))
-    route = llm_setup.RoutedLLM(llm_setup.ModelTier.FAST, 0,
-                                [("guard-test", "stream")])
-    with llm_setup.llm_spend_guard_scope(lambda *_: (_ for _ in ()).throw(
-            RuntimeError("no ticket"))):
+    monkeypatch.setattr(
+        llm_setup, "_get_cached_client", lambda _p, model, _t: _Client(calls, model)
+    )
+    route = llm_setup.RoutedLLM(llm_setup.ModelTier.FAST, 0, [("guard-test", "stream")])
+    with llm_setup.llm_spend_guard_scope(
+        lambda *_: (_ for _ in ()).throw(RuntimeError("no ticket"))
+    ):
         with pytest.raises(RuntimeError, match="no ticket"):
             list(route.stream("prompt"))
     assert calls == []

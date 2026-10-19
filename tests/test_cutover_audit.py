@@ -7,18 +7,34 @@ import combat_mechanics
 
 # Motor d20+AC antigo — substituído pelos services novos (conflito-04/07/08).
 DYING_FUNCTIONS = [
-    "resolve_player_action", "resolve_enemy_turn", "resolve_ally_turn",
-    "roll_initiative", "get_behavior", "choose_enemy_attack", "pick_target",
-    "check_morale", "usable_enemy_abilities", "apply_boss_phase",
+    "resolve_player_action",
+    "resolve_enemy_turn",
+    "resolve_ally_turn",
+    "roll_initiative",
+    "get_behavior",
+    "choose_enemy_attack",
+    "pick_target",
+    "check_morale",
+    "usable_enemy_abilities",
+    "apply_boss_phase",
     "combat_suggestions",
 ]
 
 # Helpers genéricos + sistema de classes Entropia/Carga (v4) + condições/passivas.
 SURVIVING_FUNCTIONS = [
-    "actor_mods", "normalize_attr", "roll_dice_numeric",
-    "parse_condition", "tick_conditions", "player_passives",
-    "entropy_config", "abyss_tier", "apply_entropy_trigger", "apply_scar",
-    "apply_transformacao", "reduce_ally_abyss", "check_recidiva",
+    "actor_mods",
+    "normalize_attr",
+    "roll_dice_numeric",
+    "parse_condition",
+    "tick_conditions",
+    "player_passives",
+    "entropy_config",
+    "abyss_tier",
+    "apply_entropy_trigger",
+    "apply_scar",
+    "apply_transformacao",
+    "reduce_ally_abyss",
+    "check_recidiva",
     "compute_player_combat_stats",
 ]
 

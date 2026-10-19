@@ -3,6 +3,7 @@
 100% offline e determinístico. O mapa real é usado para distâncias:
 brekmar -3-> ophidia; nova_arcadia -2-> brekmar.
 """
+
 from __future__ import annotations
 
 import copy
@@ -13,8 +14,15 @@ from langchain_core.messages import AIMessage
 
 from services import npc_knowledge as nk
 
-KILL = {"event_id": "ev_kill_1", "turn": 7, "type": "npc_killed", "actor_id": "player",
-        "target_id": "npc_valerius", "payload": {}, "source": "combat"}
+KILL = {
+    "event_id": "ev_kill_1",
+    "turn": 7,
+    "type": "npc_killed",
+    "actor_id": "player",
+    "target_id": "npc_valerius",
+    "payload": {},
+    "source": "combat",
+}
 
 
 @pytest.fixture(autouse=True)
@@ -33,18 +41,31 @@ def always(monkeypatch):
 def _state(**over) -> dict:
     base = {
         "game_id": "spec215-unit",
-        "world": {"turn_count": 7, "current_location": "Brekmar",
-                  "current_location_id": "brekmar",
-                  "world_clock": {"day": 2, "period": "Tarde"}},  # clock 12
+        "world": {
+            "turn_count": 7,
+            "current_location": "Brekmar",
+            "current_location_id": "brekmar",
+            "world_clock": {"day": 2, "period": "Tarde"},
+        },  # clock 12
         "event_log": [],
         "world_projection": {},
         "memory_facts": [],
         "chronicle": [],
         "npcs": {
-            "Lyra": {"name": "Lyra", "id": "npc_lyra", "home_location_id": "brekmar",
-                     "in_scene": True, "relationship": 5},
-            "Osric": {"name": "Osric", "id": "npc_osric", "home_location_id": "ophidia",
-                      "in_scene": False, "relationship": 5},
+            "Lyra": {
+                "name": "Lyra",
+                "id": "npc_lyra",
+                "home_location_id": "brekmar",
+                "in_scene": True,
+                "relationship": 5,
+            },
+            "Osric": {
+                "name": "Osric",
+                "id": "npc_osric",
+                "home_location_id": "ophidia",
+                "in_scene": False,
+                "relationship": 5,
+            },
         },
         "party": [],
         "knowledge_links": [],
@@ -88,8 +109,9 @@ def test_party_present_witness():
 
 
 def test_waiting_party_member_not_witness():
-    st = _state(party=[{"name": "Bram", "active": False, "status": "ativo",
-                        "waiting_at": "Ophidia"}])
+    st = _state(
+        party=[{"name": "Bram", "active": False, "status": "ativo", "waiting_at": "Ophidia"}]
+    )
     links = nk.record_witnesses(st, KILL, "brekmar", 12)
     assert not _relations(links, nk.holder_id(st, "Bram"))
 
@@ -124,6 +146,7 @@ def test_messenger_delivers_after_distance(always):
 
 def test_no_delivery_before_due_after_save_load(always):
     import persistence
+
     st = _after_kill_turn()
     d = _delivery_to(st, "ophidia")
     raw = json.loads(json.dumps(persistence._state_to_save_data(st, "spec215-unit")))
@@ -159,10 +182,12 @@ def test_max_hops_two(always):
     assert st["knowledge_links"]
     assert max(lk["hops"] for lk in st["knowledge_links"]) <= nk.MAX_HOPS
     assert any(lk["hops"] == 2 for lk in st["knowledge_links"]) or any(
-        "ev_kill_1" in subs for subs in st["location_heard"].values())
+        "ev_kill_1" in subs for subs in st["location_heard"].values()
+    )
     assert not st["knowledge_queue"]  # hop 2 não agenda hop 3
     # raio respeitado: nenhum local fora do raio do tipo ouviu.
     from services.world_distance import travel_periods
+
     radius = nk.SUBJECT_PARAMS["npc_killed"][1]
     for loc, subs in st["location_heard"].items():
         if "ev_kill_1" in subs:
@@ -170,19 +195,52 @@ def test_max_hops_two(always):
 
 
 def test_queue_and_link_caps():
-    links = [{"link_id": f"l{i}", "holder_id": f"npc:n{i}", "subject_kind": "event",
-              "subject_id": f"e{i}", "relation": "told_to", "source": "world",
-              "channel": "messenger", "hops": 1, "acquired_clock": i, "acquired_turn": i}
-             for i in range(nk.MAX_KNOWLEDGE_LINKS + 50)]
-    links.append({"link_id": "obs", "holder_id": "npc:old", "subject_kind": "event",
-                  "subject_id": "e_old", "relation": "observed_by", "source": "world",
-                  "channel": "witness", "hops": 0, "acquired_clock": -5, "acquired_turn": 0})
-    queue = [{"delivery_id": f"d{i}", "subject_kind": "event", "subject_id": "e",
-              "from_location_id": "brekmar", "to_location_id": "ophidia", "hop": 1,
-              "due_clock": 1000 - i, "created_turn": 1} for i in range(nk.MAX_QUEUE + 30)]
+    links = [
+        {
+            "link_id": f"l{i}",
+            "holder_id": f"npc:n{i}",
+            "subject_kind": "event",
+            "subject_id": f"e{i}",
+            "relation": "told_to",
+            "source": "world",
+            "channel": "messenger",
+            "hops": 1,
+            "acquired_clock": i,
+            "acquired_turn": i,
+        }
+        for i in range(nk.MAX_KNOWLEDGE_LINKS + 50)
+    ]
+    links.append(
+        {
+            "link_id": "obs",
+            "holder_id": "npc:old",
+            "subject_kind": "event",
+            "subject_id": "e_old",
+            "relation": "observed_by",
+            "source": "world",
+            "channel": "witness",
+            "hops": 0,
+            "acquired_clock": -5,
+            "acquired_turn": 0,
+        }
+    )
+    queue = [
+        {
+            "delivery_id": f"d{i}",
+            "subject_kind": "event",
+            "subject_id": "e",
+            "from_location_id": "brekmar",
+            "to_location_id": "ophidia",
+            "hop": 1,
+            "due_clock": 1000 - i,
+            "created_turn": 1,
+        }
+        for i in range(nk.MAX_QUEUE + 30)
+    ]
     heard = {"ophidia": [f"s{i}" for i in range(nk.MAX_HEARD_PER_LOCATION + 10)]}
-    out = nk.normalize_knowledge({"knowledge_links": links, "knowledge_queue": queue,
-                                  "location_heard": heard})
+    out = nk.normalize_knowledge(
+        {"knowledge_links": links, "knowledge_queue": queue, "location_heard": heard}
+    )
     assert len(out["knowledge_links"]) == nk.MAX_KNOWLEDGE_LINKS
     assert any(lk["link_id"] == "obs" for lk in out["knowledge_links"])  # observed preservado
     assert len(out["knowledge_queue"]) == nk.MAX_QUEUE
@@ -194,12 +252,18 @@ def test_queue_and_link_caps():
 def test_npc_created_later_inherits_only_delivered(always):
     st = _after_kill_turn()
     d = _delivery_to(st, "ophidia")
-    pending = {**d, "delivery_id": "pend", "subject_id": "ev_pendente",
-               "due_clock": d["due_clock"] + 50}
+    pending = {
+        **d,
+        "delivery_id": "pend",
+        "subject_id": "ev_pendente",
+        "due_clock": d["due_clock"] + 50,
+    }
     st["knowledge_queue"] = [*st["knowledge_queue"], pending]
     st = _merge(st, nk.deliver_due(st, d["due_clock"]))
-    st["npcs"] = {**st["npcs"], "Nova": {"name": "Nova", "id": "npc_nova",
-                                         "home_location_id": "ophidia"}}
+    st["npcs"] = {
+        **st["npcs"],
+        "Nova": {"name": "Nova", "id": "npc_nova", "home_location_id": "ophidia"},
+    }
     links = nk.inherit_local(st, "npc_nova", "ophidia", d["due_clock"] + 1)
     subjects = {lk["subject_id"] for lk in links}
     assert subjects == {"ev_kill_1"}
@@ -208,18 +272,32 @@ def test_npc_created_later_inherits_only_delivered(always):
 
 # ------------------------------------------------------------------ rumor/mentira (R5)
 def _claim(text="O ferreiro envenenou o poço.", mid="mem_claim_1", **over):
-    row = {"memory_id": mid, "text": text, "provenance": "npc_claim",
-           "confidence": "reported", "source_id": "npc:npc_lyra", "source_turn": 7,
-           "canonical_entity_ids": ["npc_lyra"]}
+    row = {
+        "memory_id": mid,
+        "text": text,
+        "provenance": "npc_claim",
+        "confidence": "reported",
+        "source_id": "npc:npc_lyra",
+        "source_turn": 7,
+        "canonical_entity_ids": ["npc_lyra"],
+    }
     row.update(over)
     return row
 
 
 def test_npc_claim_never_promoted(always):
-    st = _state(memory_facts=[_claim()],
-                npcs={**_state()["npcs"],
-                      "Tom": {"name": "Tom", "id": "npc_tom", "home_location_id": "brekmar",
-                              "in_scene": True}})
+    st = _state(
+        memory_facts=[_claim()],
+        npcs={
+            **_state()["npcs"],
+            "Tom": {
+                "name": "Tom",
+                "id": "npc_tom",
+                "home_location_id": "brekmar",
+                "in_scene": True,
+            },
+        },
+    )
     before = copy.deepcopy(st)
     out = _merge(st, nk.turn_updates(st))
     for _clock in range(12, 40):
@@ -230,15 +308,26 @@ def test_npc_claim_never_promoted(always):
     assert any(lk["subject_id"] == "mem_claim_1" for lk in out["knowledge_links"])
     lines = [line for _sid, line in nk.knowledge_lines(out, "npc_tom")]
     assert lines and all(line.startswith("[BOATO") for line in lines)
-    assert not any(lk["holder_id"] == LYRA for lk in out["knowledge_links"]
-                   if lk["subject_id"] == "mem_claim_1")  # quem disse não "aprende"
+    assert not any(
+        lk["holder_id"] == LYRA
+        for lk in out["knowledge_links"]
+        if lk["subject_id"] == "mem_claim_1"
+    )  # quem disse não "aprende"
 
 
 def test_lie_believed_stays_in_relation():
-    st = _state(memory_facts=[_claim()],
-                npcs={**_state()["npcs"],
-                      "Tom": {"name": "Tom", "id": "npc_tom", "home_location_id": "brekmar",
-                              "in_scene": True}})
+    st = _state(
+        memory_facts=[_claim()],
+        npcs={
+            **_state()["npcs"],
+            "Tom": {
+                "name": "Tom",
+                "id": "npc_tom",
+                "home_location_id": "brekmar",
+                "in_scene": True,
+            },
+        },
+    )
     out = _merge(st, nk.turn_updates(st))
     rel = _relations(out["knowledge_links"], "npc:npc_tom")
     assert ("mem_claim_1", "believed_by") in rel
@@ -247,8 +336,14 @@ def test_lie_believed_stays_in_relation():
 
 
 def _player_knows_kill(**over):
-    chronicle = [{"chapter_id": "c1", "entries": [
-        {"text": "Valerius caiu.", "turn": 6, "kind": "milestone", "event_id": "ev_kill_1"}]}]
+    chronicle = [
+        {
+            "chapter_id": "c1",
+            "entries": [
+                {"text": "Valerius caiu.", "turn": 6, "kind": "milestone", "event_id": "ev_kill_1"}
+            ],
+        }
+    ]
     return _state(event_log=[{**KILL, "turn": 6}], chronicle=chronicle, **over)
 
 
@@ -277,9 +372,19 @@ SECRET_TXT = "Dizem que a rede carmesim pode despertar em breve."
 
 
 def test_secret_not_propagated(always):
-    st = _state(memory_facts=[_claim(text=SECRET_TXT, mid="mem_secret")],
-                event_log=[{"event_id": "ev_sec", "turn": 7, "type": "secret_revealed",
-                            "target_id": "npc_valerius", "payload": {}, "source": "storyteller"}])
+    st = _state(
+        memory_facts=[_claim(text=SECRET_TXT, mid="mem_secret")],
+        event_log=[
+            {
+                "event_id": "ev_sec",
+                "turn": 7,
+                "type": "secret_revealed",
+                "target_id": "npc_valerius",
+                "payload": {},
+                "source": "storyteller",
+            }
+        ],
+    )
     out = _merge(st, nk.turn_updates(st))
     assert not any(d["subject_id"] in {"mem_secret", "ev_sec"} for d in out["knowledge_queue"])
     assert not any(lk["subject_id"] == "mem_secret" for lk in out["knowledge_links"])
@@ -287,19 +392,41 @@ def test_secret_not_propagated(always):
 
 def test_secret_absent_from_other_npc_context():
     st = _state(memory_facts=[_claim(text=SECRET_TXT, mid="mem_secret")])
-    st["knowledge_links"] = [{
-        "link_id": "x", "holder_id": OSRIC, "subject_kind": "memory_fact",
-        "subject_id": "mem_secret", "relation": "told_to", "source": "loc:brekmar",
-        "channel": "messenger", "hops": 1, "acquired_clock": 5, "acquired_turn": 3}]
+    st["knowledge_links"] = [
+        {
+            "link_id": "x",
+            "holder_id": OSRIC,
+            "subject_kind": "memory_fact",
+            "subject_id": "mem_secret",
+            "relation": "told_to",
+            "source": "loc:brekmar",
+            "channel": "messenger",
+            "hops": 1,
+            "acquired_clock": 5,
+            "acquired_turn": 3,
+        }
+    ]
     assert nk.knowledge_lines(st, "npc_osric") == []
     assert "carmesim" not in nk.npc_knowledge_block(st, "npc_osric")
 
 
 # ------------------------------------------------------------------ cronologia/identidade (R12)
 def test_links_ordered_by_clock():
-    rows = [{"link_id": n, "holder_id": LYRA, "subject_kind": "event", "subject_id": "ev_kill_1",
-             "relation": "told_to", "source": "world", "channel": "messenger", "hops": 1,
-             "acquired_clock": c, "acquired_turn": 1} for n, c in (("b", 9), ("a", 3), ("c", 30))]
+    rows = [
+        {
+            "link_id": n,
+            "holder_id": LYRA,
+            "subject_kind": "event",
+            "subject_id": "ev_kill_1",
+            "relation": "told_to",
+            "source": "world",
+            "channel": "messenger",
+            "hops": 1,
+            "acquired_clock": c,
+            "acquired_turn": 1,
+        }
+        for n, c in (("b", 9), ("a", 3), ("c", 30))
+    ]
     out = nk.normalize_knowledge({"knowledge_links": rows})["knowledge_links"]
     assert [lk["acquired_clock"] for lk in out] == [3, 9, 30]
     # nunca "sabe antes": link com clock futuro não entra no contexto.
@@ -308,36 +435,59 @@ def test_links_ordered_by_clock():
 
 
 def test_identity_alias_holder_merge():
-    st = _state(npcs={"Brunna Ponte-Alta": {"name": "Brunna Ponte-Alta", "id": "npc_brunna",
-                                             "aliases": ["a barqueira"],
-                                             "home_location_id": "brekmar", "in_scene": True}})
-    assert nk.holder_id(st, "a barqueira") == nk.holder_id(st, "Brunna Ponte-Alta") \
-        == nk.holder_id(st, "npc_brunna") == "npc:npc_brunna"
+    st = _state(
+        npcs={
+            "Brunna Ponte-Alta": {
+                "name": "Brunna Ponte-Alta",
+                "id": "npc_brunna",
+                "aliases": ["a barqueira"],
+                "home_location_id": "brekmar",
+                "in_scene": True,
+            }
+        }
+    )
+    assert (
+        nk.holder_id(st, "a barqueira")
+        == nk.holder_id(st, "Brunna Ponte-Alta")
+        == nk.holder_id(st, "npc_brunna")
+        == "npc:npc_brunna"
+    )
     st["knowledge_links"] = nk.record_witnesses(st, KILL, "brekmar", 12)
     assert nk.known_subject_ids(st, "a barqueira")["observed"] == {"ev_kill_1"}
 
 
 # ------------------------------------------------------------------ entrega no finalizer (8b)
 def _finalizer_state(**over):
-    st = _state(messages=[AIMessage(content="Você foge pela estrada.")],
-                player={"xp": 0}, enemies=[], **over)
+    st = _state(
+        messages=[AIMessage(content="Você foge pela estrada.")],
+        player={"xp": 0},
+        enemies=[],
+        **over,
+    )
     return st
 
 
 def test_flee_travel_triggers_delivery(always):
     from agents.turn_finalizer import turn_finalizer_node
+
     base = _after_kill_turn()
     d = _delivery_to(base, "ophidia")
     day, idx = divmod(d["due_clock"], 5)
     import world_utils
+
     # fuga de combate avançou o relógio até o due (sem storyteller no turno).
-    st = _finalizer_state(knowledge_queue=base["knowledge_queue"],
-                          knowledge_links=base["knowledge_links"],
-                          location_heard=base["location_heard"],
-                          event_log=base["event_log"],
-                          world={**base["world"], "turn_count": 8,
-                                 "current_location_id": "nova_arcadia",
-                                 "world_clock": {"day": day, "period": world_utils.PERIODS[idx]}})
+    st = _finalizer_state(
+        knowledge_queue=base["knowledge_queue"],
+        knowledge_links=base["knowledge_links"],
+        location_heard=base["location_heard"],
+        event_log=base["event_log"],
+        world={
+            **base["world"],
+            "turn_count": 8,
+            "current_location_id": "nova_arcadia",
+            "world_clock": {"day": day, "period": world_utils.PERIODS[idx]},
+        },
+    )
     out = turn_finalizer_node(st)
     assert ("ev_kill_1", "told_to") in _relations(out["knowledge_links"], OSRIC)
 
@@ -354,6 +504,7 @@ def test_deliver_due_idempotent_twice_same_turn(always):
 
 def test_finalizer_off_is_noop(monkeypatch, always):
     from agents.turn_finalizer import turn_finalizer_node
+
     monkeypatch.setenv("RPG_NPC_KNOWLEDGE", "off")
     out = turn_finalizer_node(_finalizer_state(event_log=[dict(KILL)]))
     assert not any(k.startswith("knowledge_") or k == "location_heard" for k in out)
@@ -364,6 +515,7 @@ def test_finalizer_survives_internal_error(monkeypatch):
 
     def boom(_state):
         raise RuntimeError("ledger quebrado")
+
     monkeypatch.setattr(nk, "turn_updates", boom)
     out = turn_finalizer_node(_finalizer_state(event_log=[dict(KILL)]))
     assert "last_turn_outcome" in out
@@ -379,28 +531,50 @@ def test_legacy_events_never_distributed(always):
 # ------------------------------------------------------------------ invariantes (passo 10)
 def test_invariant_teleport_and_rumor_promoted():
     from playtest import invariants as inv
-    bad_link = {"link_id": "t", "holder_id": OSRIC, "subject_kind": "event",
-                "subject_id": "ev_kill_1", "relation": "told_to", "source": "loc:brekmar",
-                "channel": "messenger", "hops": 1, "acquired_clock": 13, "acquired_turn": 7,
-                "origin_location_id": "brekmar", "origin_clock": 12, "location_id": "ophidia"}
+
+    bad_link = {
+        "link_id": "t",
+        "holder_id": OSRIC,
+        "subject_kind": "event",
+        "subject_id": "ev_kill_1",
+        "relation": "told_to",
+        "source": "loc:brekmar",
+        "channel": "messenger",
+        "hops": 1,
+        "acquired_clock": 13,
+        "acquired_turn": 7,
+        "origin_location_id": "brekmar",
+        "origin_clock": 12,
+        "location_id": "ophidia",
+    }
     st = _state(knowledge_links=[bad_link])
     ids = {v.check_id for v in inv.check_all(st)}
     assert "knowledge.teleport" in ids
     ok = {**bad_link, "acquired_clock": 16}
-    assert "knowledge.teleport" not in {v.check_id for v in inv.check_all(
-        _state(knowledge_links=[ok]))}
+    assert "knowledge.teleport" not in {
+        v.check_id for v in inv.check_all(_state(knowledge_links=[ok]))
+    }
     promoted = _claim(confidence="confirmed")
-    st2 = _state(memory_facts=[promoted], knowledge_links=[{
-        **ok, "subject_kind": "memory_fact", "subject_id": "mem_claim_1"}])
+    st2 = _state(
+        memory_facts=[promoted],
+        knowledge_links=[{**ok, "subject_kind": "memory_fact", "subject_id": "mem_claim_1"}],
+    )
     assert "knowledge.rumor_promoted" in {v.check_id for v in inv.check_all(st2)}
-    clean = _state(memory_facts=[_claim()], knowledge_links=[{
-        **ok, "subject_kind": "memory_fact", "subject_id": "mem_claim_1"}])
+    clean = _state(
+        memory_facts=[_claim()],
+        knowledge_links=[{**ok, "subject_kind": "memory_fact", "subject_id": "mem_claim_1"}],
+    )
     assert "knowledge.rumor_promoted" not in {v.check_id for v in inv.check_all(clean)}
 
 
 def test_mode_parsing(monkeypatch):
-    for raw, want in (("on", "on"), ("SHADOW", "shadow"), ("off", "off"),
-                      ("", "off"), ("lixo", "off")):
+    for raw, want in (
+        ("on", "on"),
+        ("SHADOW", "shadow"),
+        ("off", "off"),
+        ("", "off"),
+        ("lixo", "off"),
+    ):
         monkeypatch.setenv("RPG_NPC_KNOWLEDGE", raw)
         assert nk.mode() == want
     monkeypatch.delenv("RPG_NPC_KNOWLEDGE")
@@ -411,16 +585,32 @@ def test_mode_parsing(monkeypatch):
 def test_witness_only_secret_never_heard_nor_inherited(always):
     """R7: `secret_revealed` é só testemunhável — não entra em `location_heard`
     nem é herdado como rumor local por NPC criado depois no mesmo local."""
-    ev = {"event_id": "ev_secret_1", "turn": 7, "type": "secret_revealed",
-          "actor_id": "player", "target_id": "brekmar",
-          "payload": {"location_id": "brekmar", "detail": "fato revelado"}}
-    st = _state(event_log=[ev], world_projection={"revealed_facts": {
-        "ev_secret_1": {"entity_id": "brekmar", "fact": "fato revelado",
-                        "revealed_at_turn": 7}}})
+    ev = {
+        "event_id": "ev_secret_1",
+        "turn": 7,
+        "type": "secret_revealed",
+        "actor_id": "player",
+        "target_id": "brekmar",
+        "payload": {"location_id": "brekmar", "detail": "fato revelado"},
+    }
+    st = _state(
+        event_log=[ev],
+        world_projection={
+            "revealed_facts": {
+                "ev_secret_1": {
+                    "entity_id": "brekmar",
+                    "fact": "fato revelado",
+                    "revealed_at_turn": 7,
+                }
+            }
+        },
+    )
     st = _merge(st, nk.turn_updates(st))
     assert "ev_secret_1" not in (st.get("location_heard") or {}).get("brekmar", [])
     assert not [d for d in st.get("knowledge_queue") or [] if d["subject_id"] == "ev_secret_1"]
     st["location_heard"] = {"brekmar": ["ev_secret_1"]}  # save adulterado/antigo
-    st["npcs"] = {**st["npcs"], "Nova": {"name": "Nova", "id": "npc_nova",
-                                         "home_location_id": "brekmar"}}
+    st["npcs"] = {
+        **st["npcs"],
+        "Nova": {"name": "Nova", "id": "npc_nova", "home_location_id": "brekmar"},
+    }
     assert nk.inherit_local(st, "npc_nova", "brekmar", 13) == []

@@ -11,6 +11,7 @@ providers' prepaid balances (R-11), NOT by this cap. Opt in to also cutting expe
 with ``RPG_DAILY_SPEND_CAP_MODEL_SWITCHES=model:<provider>/<model>,...``.
 A human re-enable the same day is respected (no re-trip) until the cap day rolls over.
 """
+
 from __future__ import annotations
 
 import os
@@ -47,7 +48,9 @@ def tz_offset_hours() -> int:
     try:
         hours = int(raw)
     except ValueError:
-        raise CapConfigError("RPG_DAILY_SPEND_TZ_OFFSET_HOURS must be an integer in -12..14") from None
+        raise CapConfigError(
+            "RPG_DAILY_SPEND_TZ_OFFSET_HOURS must be an integer in -12..14"
+        ) from None
     if not -12 <= hours <= 14:
         raise CapConfigError("RPG_DAILY_SPEND_TZ_OFFSET_HOURS must be an integer in -12..14")
     return hours
@@ -60,6 +63,7 @@ def _text_model_keys() -> list[str]:
     """SPEC-219 R8: atalho ``text`` -> um kill switch por (provider, modelo) de ROUTES."""
     from llm_setup import _load_routes
     from services.kill_switches import model_key
+
     keys: list[str] = []
     for candidates in _load_routes().values():
         for provider, model in candidates:
@@ -70,13 +74,19 @@ def _text_model_keys() -> list[str]:
 
 
 def cap_switches() -> tuple[str, ...]:
-    extra = [k.strip() for k in os.getenv("RPG_DAILY_SPEND_CAP_MODEL_SWITCHES", "").split(",") if k.strip()]
+    extra = [
+        k.strip()
+        for k in os.getenv("RPG_DAILY_SPEND_CAP_MODEL_SWITCHES", "").split(",")
+        if k.strip()
+    ]
     expanded: list[str] = []
     for k in extra:
         expanded.extend(_text_model_keys() if k == "text" else [k])
     bad = [k for k in expanded if not _MODEL_KEY.match(k)]
     if bad:
-        raise CapConfigError("RPG_DAILY_SPEND_CAP_MODEL_SWITCHES entries must look like model:<provider>/<model>")
+        raise CapConfigError(
+            "RPG_DAILY_SPEND_CAP_MODEL_SWITCHES entries must look like model:<provider>/<model>"
+        )
     return CAP_SWITCHES + tuple(k for k in dict.fromkeys(expanded) if k not in CAP_SWITCHES)
 
 
@@ -94,8 +104,7 @@ def reset_text_cap_cache() -> None:
     _text_cap_cache = None
 
 
-def text_cap_exceeded(reader_factory, *, now: datetime | None = None,
-                      clock=None) -> bool:
+def text_cap_exceeded(reader_factory, *, now: datetime | None = None, clock=None) -> bool:
     """True quando o gasto do dia (BRL) estourou o cap E o cap de texto esta ligado.
 
     Cache de 30 s por processo; qualquer falha de leitura NAO bloqueia turnos (fail-open) -- o
@@ -104,6 +113,7 @@ def text_cap_exceeded(reader_factory, *, now: datetime | None = None,
     if not text_cap_enabled():
         return False
     import time as _time
+
     tick = (clock or _time.monotonic)()
     if _text_cap_cache is not None and tick < _text_cap_cache[0]:
         return _text_cap_cache[1]
@@ -143,9 +153,14 @@ def _manually_reenabled(store, key: str, since: datetime) -> bool:
     # from a previous cap day plus a re-enable this morning must NOT disarm today's cap.
     def same_day_trip(row) -> bool:
         trip_at = _ts(row.get("at") or row.get("created_at"))
-        return (row.get("actor_id") == ACTOR and row.get("enabled") is False
-                and trip_at is not None and since <= trip_at <= at
-                and trip_at < since + timedelta(days=1))
+        return (
+            row.get("actor_id") == ACTOR
+            and row.get("enabled") is False
+            and trip_at is not None
+            and since <= trip_at <= at
+            and trip_at < since + timedelta(days=1)
+        )
+
     return any(same_day_trip(a) for a in rows[1:])
 
 
@@ -171,15 +186,20 @@ class CapResult:
     alerts: list[Alert] = field(default_factory=list)
 
     def summary(self) -> dict:
-        return {"daily_cap_enabled": self.enabled, "daily_spent_brl": float(round(self.spent_brl, 4)),
-                "daily_cap_brl": None if self.cap_brl is None else float(self.cap_brl),
-                "daily_cap_exceeded": self.exceeded, "daily_cap_switched_off": ",".join(self.switched_off),
-                "daily_cap_manual_override": ",".join(self.manual_override),
-                "daily_cap_error": self.error}
+        return {
+            "daily_cap_enabled": self.enabled,
+            "daily_spent_brl": float(round(self.spent_brl, 4)),
+            "daily_cap_brl": None if self.cap_brl is None else float(self.cap_brl),
+            "daily_cap_exceeded": self.exceeded,
+            "daily_cap_switched_off": ",".join(self.switched_off),
+            "daily_cap_manual_override": ",".join(self.manual_override),
+            "daily_cap_error": self.error,
+        }
 
 
-def evaluate_daily_cap(reader, store, now: datetime, fx_usd_brl: Decimal | None,
-                       cap_brl: Decimal | None = None) -> CapResult:
+def evaluate_daily_cap(
+    reader, store, now: datetime, fx_usd_brl: Decimal | None, cap_brl: Decimal | None = None
+) -> CapResult:
     cap = cap_brl if cap_brl is not None else cap_from_env()
     res = CapResult(enabled=cap is not None, cap_brl=cap)
     if cap is None:
@@ -187,8 +207,9 @@ def evaluate_daily_cap(reader, store, now: datetime, fx_usd_brl: Decimal | None,
     fx = fx_usd_brl or DEFAULT_FX
     since = day_start(now)
     # SPEC-236 R2: a provider failure without usage is not spend; it can never trip the cap.
-    usd = sum((g.cost_usd for g in reader.usage_groups(since, now) if g.counts_as_spend),
-              Decimal("0"))
+    usd = sum(
+        (g.cost_usd for g in reader.usage_groups(since, now) if g.counts_as_spend), Decimal("0")
+    )
     res.spent_brl = usd * fx
     res.exceeded = res.spent_brl > cap
     if not res.exceeded:
@@ -207,8 +228,19 @@ def evaluate_daily_cap(reader, store, now: datetime, fx_usd_brl: Decimal | None,
             continue
         store.set(key, False, actor_id=ACTOR, reason=reason)
         res.switched_off.append(key)
-    res.alerts.append(Alert(
-        "daily_spend_cap", reason + "; switches off: " + ",".join(res.switched_off + res.already_off)
-        + ("; manual re-enable respected: " + ",".join(res.manual_override) if res.manual_override else ""),
-        value=float(res.spent_brl), blocking=True))
+    res.alerts.append(
+        Alert(
+            "daily_spend_cap",
+            reason
+            + "; switches off: "
+            + ",".join(res.switched_off + res.already_off)
+            + (
+                "; manual re-enable respected: " + ",".join(res.manual_override)
+                if res.manual_override
+                else ""
+            ),
+            value=float(res.spent_brl),
+            blocking=True,
+        )
+    )
     return res

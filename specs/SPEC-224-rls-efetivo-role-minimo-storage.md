@@ -51,6 +51,8 @@ Objetivo: duas credenciais com privilégios distintos (`rpg_runtime` para reques
   ```python
   class PostgresPool:
       def connection(self, *, as_admin: bool = False) -> ContextManager[psycopg.Connection]: ...
+
+
   def _apply_request_role(conn: psycopg.Connection, owner_id: UUID) -> None: ...
   ```
 - **SQL de request (R3):**

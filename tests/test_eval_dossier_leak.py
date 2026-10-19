@@ -30,18 +30,33 @@ def test_corpus_covers_the_spec_211_evidence_list() -> None:
     assert {case.oracle for case in cases} == {"dossier_leak"}
     assert {case.suite for case in cases} == {"dossier_leak"}
     assert {case.input["operation"] for case in cases} == {
-        "project", "paired_project", "oracle_mutation",
+        "project",
+        "paired_project",
+        "oracle_mutation",
     }
     tags = {tag for case in cases for tag in case.tags}
     assert {
-        "hidden", "npc", "private", "bestiary", "tier", "overlay", "profile", "faction",
-        "stale", "chronicle", "paired", "reveal", "oracle", "mutation", "art", "count",
-        "known-good", "known-bad",
+        "hidden",
+        "npc",
+        "private",
+        "bestiary",
+        "tier",
+        "overlay",
+        "profile",
+        "faction",
+        "stale",
+        "chronicle",
+        "paired",
+        "reveal",
+        "oracle",
+        "mutation",
+        "art",
+        "count",
+        "known-good",
+        "known-bad",
     } <= tags
     tiers = {
-        spec["tier"]
-        for case in cases
-        for spec in (case.expected.get("creatures") or {}).values()
+        spec["tier"] for case in cases for spec in (case.expected.get("creatures") or {}).values()
     }
     assert tiers == {1, 2, 3, 4}
     assert all(case.description and case.created_from for case in cases)
@@ -147,8 +162,10 @@ def test_hidden_entity_changing_the_payload_fails_indistinguishability() -> None
             if case.input["operation"] == "paired_project":
                 first = json.loads(actual["payload_jsons"][0])
                 first["version"] = first["version"] + 1
-                actual["payload_jsons"] = [json.dumps(first, sort_keys=True),
-                                           actual["payload_jsons"][1]]
+                actual["payload_jsons"] = [
+                    json.dumps(first, sort_keys=True),
+                    actual["payload_jsons"][1],
+                ]
             return AdapterOutput(actual=actual)
 
     result = run_eval(
@@ -164,9 +181,7 @@ def test_hidden_entity_changing_the_payload_fails_indistinguishability() -> None
 
 
 def test_blind_product_oracles_fail_detection(monkeypatch) -> None:
-    monkeypatch.setattr(
-        "services.dossier_visibility.assert_no_private_fields", lambda _payload: []
-    )
+    monkeypatch.setattr("services.dossier_visibility.assert_no_private_fields", lambda _payload: [])
     monkeypatch.setattr(
         "services.player_knowledge.assert_no_player_leak", lambda _codex, _state: []
     )

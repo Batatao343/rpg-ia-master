@@ -79,14 +79,14 @@ class JevRolloutEvent:
     cost_usd: float | None
     choice: str | None = None
     confidence: float | None = None
-    reason: str | None = None          # fallback reason of the frozen policy
-    covered: bool | None = None        # the Jev would decide this turn
-    jev_route: str | None = None       # effective route if the Jev decided
+    reason: str | None = None  # fallback reason of the frozen policy
+    covered: bool | None = None  # the Jev would decide this turn
+    jev_route: str | None = None  # effective route if the Jev decided
     classify_route: str | None = None  # effective route the router returned
     agree_route: bool | None = None
     agree_target: bool | None = None
     agree_loot: bool | None = None
-    wait_ms: int | None = None         # wall time the turn waited for the Jev
+    wait_ms: int | None = None  # wall time the turn waited for the Jev
 
 
 _telemetry_hook: Callable[[JevRolloutEvent], None] | None = None
@@ -102,10 +102,17 @@ def set_jev_rollout_telemetry_hook(
 def _emit(event: JevRolloutEvent) -> None:
     try:
         from observability.telemetry import log_event
-        log_event("jev", event.mode, level="info", **{
-            key: value for key, value in event.__dict__.items()
-            if key != "mode" and value is not None
-        })
+
+        log_event(
+            "jev",
+            event.mode,
+            level="info",
+            **{
+                key: value
+                for key, value in event.__dict__.items()
+                if key != "mode" and value is not None
+            },
+        )
     except Exception:  # silent-ok: telemetria do shadow nunca afeta o turno
         pass
     if _telemetry_hook is not None:
@@ -138,6 +145,7 @@ def _idempotency_key(state: Mapping[str, object], action: str) -> str:
 def _jev_switched_off() -> bool:
     try:
         from services.kill_switches import JEV, get_switches
+
         return not get_switches().is_enabled(JEV)
     except Exception:  # silent-ok: kill switch indisponivel => Jev segue o modo configurado
         return False
@@ -147,10 +155,12 @@ def _jev_switched_off() -> bool:
 # Frozen policy (imported, never copied)
 # ---------------------------------------------------------------------------
 
+
 def _frozen() -> tuple[Any, Any]:
     """Lazy import: keeps ``off`` free of the experiment modules."""
     from evals.experiments import jev_router_hybrid as hybrid
     from evals.experiments import spec238_loot as loot
+
     return hybrid, loot
 
 
@@ -160,14 +170,17 @@ def frozen_request(state: Mapping[str, Any], action: str) -> Any:
     return loot.frozen_j1b_request({"action": action, "state": state})
 
 
-def frozen_decision(state: Mapping[str, Any], action: str,
-                    answers: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
+def frozen_decision(
+    state: Mapping[str, Any], action: str, answers: Mapping[str, Mapping[str, Any]]
+) -> dict[str, Any]:
     """The J2 arm-B decision for these answers (route/target/loot_source)."""
     hybrid, loot = _frozen()
     view = hybrid.scene_view(state)
     return loot.frozen_loot_decision(
-        route=answers.get("route"), target=answers.get("target"),
-        loot_source=answers.get("loot_source"), verbs=hybrid.extract_verbs(action),
+        route=answers.get("route"),
+        target=answers.get("target"),
+        loot_source=answers.get("loot_source"),
+        verbs=hybrid.extract_verbs(action),
         in_combat=bool((state.get("combat") or {}).get("active")),
         target_status=view.target_status,
     )
@@ -183,14 +196,20 @@ def target_name_for_id(state: Mapping[str, Any], actor_id: str | None) -> str | 
     if not actor_id:
         return None
     from services.entity_identity import resolve_npc_entity_id
+
     for key, row in (state.get("npcs") or {}).items():
-        if isinstance(row, dict) and (
-                resolve_npc_entity_id(row, key) or str(row.get("id") or "")) == actor_id:
+        if (
+            isinstance(row, dict)
+            and (resolve_npc_entity_id(row, key) or str(row.get("id") or "")) == actor_id
+        ):
             return str(key)
     for member in state.get("party") or []:
-        if isinstance(member, dict) and member.get("name") and (
-                resolve_npc_entity_id(member, member["name"])
-                or str(member.get("id") or "")) == actor_id:
+        if (
+            isinstance(member, dict)
+            and member.get("name")
+            and (resolve_npc_entity_id(member, member["name"]) or str(member.get("id") or ""))
+            == actor_id
+        ):
             return str(member["name"])
     for enemy in state.get("enemies") or []:
         if isinstance(enemy, dict) and str(enemy.get("id") or "") == actor_id:
@@ -201,6 +220,7 @@ def target_name_for_id(state: Mapping[str, Any], actor_id: str | None) -> str | 
 def target_id_for_name(state: Mapping[str, Any], name: str | None) -> str | None:
     """Router target name -> scene actor ID (the J2 ``map_target_to_id``)."""
     from evals.experiments.spec217_j2 import map_target_to_id
+
     return map_target_to_id(state, name)
 
 
@@ -230,6 +250,7 @@ def warm_client() -> Any:
     with _lock:
         if _client is None:
             import httpx
+
             _client = httpx.Client()
         return _client
 
@@ -237,8 +258,10 @@ def warm_client() -> Any:
 def _default_backend() -> DecisionBackend:
     """Shared HTTP client (connection reuse); a cheap adapter per call."""
     return JevDecisionBackend(
-        client=warm_client(), timeout_seconds=JEV_DEADLINE_SECONDS,
-        total_timeout_seconds=JEV_DEADLINE_SECONDS, max_retries=0,
+        client=warm_client(),
+        timeout_seconds=JEV_DEADLINE_SECONDS,
+        total_timeout_seconds=JEV_DEADLINE_SECONDS,
+        max_retries=0,
     )
 
 
@@ -255,8 +278,9 @@ class _Evaluation:
     latency_ms: int = 0
 
 
-def _evaluate(state: Mapping[str, Any], action: str, backend: DecisionBackend | None,
-              key: str) -> _Evaluation:
+def _evaluate(
+    state: Mapping[str, Any], action: str, backend: DecisionBackend | None, key: str
+) -> _Evaluation:
     start = time.monotonic()
     result = _Evaluation(outcome="error")
     try:
@@ -289,8 +313,13 @@ def _evaluate(state: Mapping[str, Any], action: str, backend: DecisionBackend | 
 class JevPending:
     """One turn's Jev evaluation, started before (primary) or alongside (shadow) CLASSIFY."""
 
-    def __init__(self, mode: RolloutMode, future: Future, started: float,
-                 state: Mapping[str, Any] | None = None) -> None:
+    def __init__(
+        self,
+        mode: RolloutMode,
+        future: Future,
+        started: float,
+        state: Mapping[str, Any] | None = None,
+    ) -> None:
         self.mode = mode
         self._future = future
         self._started = started
@@ -303,8 +332,9 @@ class JevPending:
         try:
             evaluation = self._future.result(timeout=remaining)
         except FutureTimeout:
-            evaluation = _Evaluation(outcome="timeout",
-                                     latency_ms=round(JEV_DEADLINE_SECONDS * 1000))
+            evaluation = _Evaluation(
+                outcome="timeout", latency_ms=round(JEV_DEADLINE_SECONDS * 1000)
+            )
         except Exception:  # silent-ok: outcome="error" vai no evento jev.*
             evaluation = _Evaluation(outcome="error")
         self._waited_ms = round((time.monotonic() - before) * 1000)
@@ -316,10 +346,19 @@ class JevPending:
         reason = extra.pop("reason", decision.get("reason"))
         covered = extra.pop("covered", decision.get("source") == "jev")
         return JevRolloutEvent(
-            self.mode, outcome, evaluation.model, evaluation.latency_ms,
-            evaluation.input_tokens, evaluation.output_tokens, evaluation.cost_usd,
-            evaluation.choice, evaluation.confidence,
-            reason=reason, covered=covered, wait_ms=self._waited_ms, **extra,
+            self.mode,
+            outcome,
+            evaluation.model,
+            evaluation.latency_ms,
+            evaluation.input_tokens,
+            evaluation.output_tokens,
+            evaluation.cost_usd,
+            evaluation.choice,
+            evaluation.confidence,
+            reason=reason,
+            covered=covered,
+            wait_ms=self._waited_ms,
+            **extra,
         )
 
     def primary_routing(self) -> JevRouting | None:
@@ -329,20 +368,28 @@ class JevPending:
         if evaluation.outcome != "covered" or not decision:
             _emit(self._event(evaluation))
             return None
-        routing = JevRouting(decision["route"], decision["target"], decision["loot_source"],
-                             float(evaluation.confidence or 0.0))
+        routing = JevRouting(
+            decision["route"],
+            decision["target"],
+            decision["loot_source"],
+            float(evaluation.confidence or 0.0),
+        )
         if routing.target_id and target_name_for_id(self._state, routing.target_id) is None:
             # Astra R14 review: an actor ID the router cannot name never reaches the
             # payload as an empty target; CLASSIFY decides this turn instead.
-            _emit(self._event(evaluation, outcome="fallback", covered=False,
-                              reason="target_unmapped"))
+            _emit(
+                self._event(evaluation, outcome="fallback", covered=False, reason="target_unmapped")
+            )
             return None
         _emit(self._event(evaluation, outcome="primary", jev_route=routing.route))
         return routing
 
-    def observe(self, effective: Mapping[str, Any],
-                as_payload: Callable[[JevRouting], Mapping[str, Any]],
-                state: Mapping[str, Any]) -> None:
+    def observe(
+        self,
+        effective: Mapping[str, Any],
+        as_payload: Callable[[JevRouting], Mapping[str, Any]],
+        state: Mapping[str, Any],
+    ) -> None:
         """Shadow: compare what primary would return with the effective payload.
 
         Never waits: if the Jev is still running when CLASSIFY returns, the
@@ -351,60 +398,86 @@ class JevPending:
         if not self._future.done():
             try:
                 from observability.telemetry import contextualize
-                self._future.add_done_callback(contextualize(
-                    lambda _f: self._observe_now(effective, as_payload, state, late=True)))
+
+                self._future.add_done_callback(
+                    contextualize(
+                        lambda _f: self._observe_now(effective, as_payload, state, late=True)
+                    )
+                )
             except Exception:  # silent-ok: observador do shadow
                 pass
             return
         self._observe_now(effective, as_payload, state)
 
-    def _observe_now(self, effective: Mapping[str, Any],
-                     as_payload: Callable[[JevRouting], Mapping[str, Any]],
-                     state: Mapping[str, Any], late: bool = False) -> None:
+    def _observe_now(
+        self,
+        effective: Mapping[str, Any],
+        as_payload: Callable[[JevRouting], Mapping[str, Any]],
+        state: Mapping[str, Any],
+        late: bool = False,
+    ) -> None:
         try:
             evaluation = self._result()
             if late and time.monotonic() - self._started > JEV_DEADLINE_SECONDS:
                 # Primary would have fallen back at the deadline: record it as such.
-                evaluation = _Evaluation(outcome="timeout", model=evaluation.model,
-                                         latency_ms=evaluation.latency_ms)
+                evaluation = _Evaluation(
+                    outcome="timeout", model=evaluation.model, latency_ms=evaluation.latency_ms
+                )
             decision = evaluation.decision
             extra: dict[str, Any] = {"classify_route": str(effective.get("next") or "")}
             if evaluation.outcome == "covered" and decision:
-                routing = JevRouting(decision["route"], decision["target"],
-                                     decision["loot_source"], float(evaluation.confidence or 0.0))
+                routing = JevRouting(
+                    decision["route"],
+                    decision["target"],
+                    decision["loot_source"],
+                    float(evaluation.confidence or 0.0),
+                )
                 try:
                     extra.update(_agreement(state, effective, as_payload(routing)))
                 except Exception:  # silent-ok: observacao preservada sem a concordancia
-                    extra["jev_route"] = routing.route  # agreement unavailable, keep the observation
+                    extra["jev_route"] = (
+                        routing.route
+                    )  # agreement unavailable, keep the observation
             _emit(self._event(evaluation, **extra))
         except Exception:  # silent-ok: shadow never affects the turn
             pass
 
 
-def _agreement(state: Mapping[str, Any], effective: Mapping[str, Any],
-               jev: Mapping[str, Any]) -> dict[str, Any]:
+def _agreement(
+    state: Mapping[str, Any], effective: Mapping[str, Any], jev: Mapping[str, Any]
+) -> dict[str, Any]:
     route_a, route_b = effective.get("next"), jev.get("next")
     same_route = route_a == route_b
     if route_b == "npc_actor":
         agree_target: bool | None = same_route and (
-            effective.get("active_npc_name") == jev.get("active_npc_name"))
+            effective.get("active_npc_name") == jev.get("active_npc_name")
+        )
     elif route_b == "combat_agent":
         try:
             agree_target = same_route and (
                 target_id_for_name(state, effective.get("combat_target"))
-                == target_id_for_name(state, jev.get("combat_target")))
+                == target_id_for_name(state, jev.get("combat_target"))
+            )
         except Exception:  # silent-ok: concordancia de alvo indisponivel => None
             agree_target = None
     else:
         agree_target = None
-    agree_loot = (same_route and effective.get("loot_source") == jev.get("loot_source")
-                  if route_b == "loot" else None)
-    return {"jev_route": str(route_b or ""), "agree_route": same_route,
-            "agree_target": agree_target, "agree_loot": agree_loot}
+    agree_loot = (
+        same_route and effective.get("loot_source") == jev.get("loot_source")
+        if route_b == "loot"
+        else None
+    )
+    return {
+        "jev_route": str(route_b or ""),
+        "agree_route": same_route,
+        "agree_target": agree_target,
+        "agree_loot": agree_loot,
+    }
 
 
-def begin(state: Mapping[str, Any], action: str, *,
-          backend: DecisionBackend | None = None) -> JevPending | None:
+def begin(
+    state: Mapping[str, Any], action: str, *, backend: DecisionBackend | None = None
+) -> JevPending | None:
     """Start this turn's Jev evaluation, or ``None`` (off/kill switch/not approved).
 
     ``off`` returns before touching anything else (byte-identical router).
@@ -437,5 +510,6 @@ def begin(state: Mapping[str, Any], action: str, *,
             pass  # build failure must never break the turn (same as before SPEC-281)
     started = time.monotonic()
     from observability.telemetry import contextualize  # SPEC-240: request_id/action_ref na thread
+
     future = _pool().submit(contextualize(_evaluate), dict(state), action, backend, key)
     return JevPending(mode, future, started, state)

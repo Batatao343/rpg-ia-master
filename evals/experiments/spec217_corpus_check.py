@@ -72,8 +72,12 @@ def enemies(case: dict[str, Any]) -> list[dict[str, Any]]:
 def visible_candidates(case: dict[str, Any]) -> set[str]:
     out = set()
     for n in npcs(case):
-        if (n.get("id") and n.get("in_scene") and n.get("known_by_player", True)
-                and n.get("visibility") not in ("hidden", "secret")):
+        if (
+            n.get("id")
+            and n.get("in_scene")
+            and n.get("known_by_player", True)
+            and n.get("visibility") not in ("hidden", "secret")
+        ):
             out.add(n["id"])
     for e in enemies(case):
         if e.get("id") and e.get("in_scene", True) and e.get("status", "ativo") == "ativo":
@@ -81,14 +85,26 @@ def visible_candidates(case: dict[str, Any]) -> set[str]:
     return out
 
 
-def check_schema(cases: list[dict[str, Any]], split: str, graph_ids: set[str], errors: list[str]) -> None:
+def check_schema(
+    cases: list[dict[str, Any]], split: str, graph_ids: set[str], errors: list[str]
+) -> None:
     seen: set[str] = set()
     for c in cases:
         cid = c.get("id", "?")
         if cid in seen:
             errors.append(f"{split}: duplicate id {cid}")
         seen.add(cid)
-        need = {"id", "split", "kind", "input", "expected", "python_gate", "critical", "origin", "rationale"}
+        need = {
+            "id",
+            "split",
+            "kind",
+            "input",
+            "expected",
+            "python_gate",
+            "critical",
+            "origin",
+            "rationale",
+        }
         if need - c.keys():
             errors.append(f"{cid}: missing fields {sorted(need - c.keys())}")
             continue
@@ -108,8 +124,11 @@ def check_schema(cases: list[dict[str, Any]], split: str, graph_ids: set[str], e
             if tgt.startswith("npc_") and tgt not in graph_ids:
                 errors.append(f"{cid}: target {tgt} not a public graph entity")
         for n in npcs(c):
-            if (n.get("id", "").startswith("npc_") and n["id"] not in graph_ids
-                    and n.get("visibility") not in ("hidden", "secret")):
+            if (
+                n.get("id", "").startswith("npc_")
+                and n["id"] not in graph_ids
+                and n.get("visibility") not in ("hidden", "secret")
+            ):
                 errors.append(f"{cid}: npc id {n['id']} not a public graph entity")
         if c["critical"] not in (None, "combat_escalation"):
             errors.append(f"{cid}: bad critical")
@@ -148,8 +167,10 @@ def check_frozen(cases: list[dict[str, Any]], errors: list[str]) -> None:
     for c in cases:
         t = c["expected"]["target"]
         for n in npcs(c):
-            if n.get("id") == t and any(norm(a) in norm(c["input"]["action"]) and norm(a) != norm(n["name"])
-                                         for a in n.get("aliases", [])):
+            if n.get("id") == t and any(
+                norm(a) in norm(c["input"]["action"]) and norm(a) != norm(n["name"])
+                for a in n.get("aliases", [])
+            ):
                 alias_hits += 1
     if alias_hits < 2:
         errors.append(f"frozen: need >=2 alias-target cases, got {alias_hits}")
@@ -208,8 +229,16 @@ def probe_gate(case: dict[str, Any]) -> bool:
     def reached(*_a: Any, **_k: Any) -> Any:
         raise _Reached
 
-    probe = AdapterCase(id="probe", suite="routing", description="", fixture=None,
-                        input=copy.deepcopy(case["input"]), tags=(), source="", created_from=None)
+    probe = AdapterCase(
+        id="probe",
+        suite="routing",
+        description="",
+        fixture=None,
+        input=copy.deepcopy(case["input"]),
+        tags=(),
+        source="",
+        created_from=None,
+    )
     try:
         router.get_llm = reached
         try:
@@ -253,13 +282,17 @@ def main() -> int:
     sys.path.insert(0, str(ROOT))
     for c in [*dev, *fro]:
         if probe_gate(c) != c["python_gate"]:
-            errors.append(f"{c['id']}: python_gate={c['python_gate']} but router probe says {not c['python_gate']}")
+            errors.append(
+                f"{c['id']}: python_gate={c['python_gate']} but router probe says {not c['python_gate']}"
+            )
     for name, cases in (("dev", dev), ("frozen", fro)):
         routes = Counter(c["expected"]["route"] for c in cases)
         kinds = Counter(c["kind"] for c in cases)
         gates = sum(c["python_gate"] for c in cases)
-        print(f"{name}: n={len(cases)} routes={dict(routes)} kinds={dict(kinds)} python_gate={gates} "
-              f"critical={sum(bool(c['critical']) for c in cases)}")
+        print(
+            f"{name}: n={len(cases)} routes={dict(routes)} kinds={dict(kinds)} python_gate={gates} "
+            f"critical={sum(bool(c['critical']) for c in cases)}"
+        )
     if errors:
         print(f"FAIL ({len(errors)}):")
         for e in errors:

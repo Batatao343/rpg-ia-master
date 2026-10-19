@@ -24,6 +24,7 @@ def test_context_query_embeds_once_and_sources_overlap_in_stable_order(monkeypat
         def run():
             barrier.wait()
             return value
+
         return run
 
     results = context_sources.acquire_context_sources(
@@ -51,6 +52,7 @@ def test_context_source_failure_is_isolated_and_limit_one_is_serial():
         def run():
             order.append(source)
             return source
+
         return run
 
     def fail():
@@ -76,6 +78,7 @@ def test_context_async_uses_same_order_and_keeps_event_loop_responsive():
         def run():
             threading.Event().wait(0.04)
             return value
+
         return run
 
     async def scenario():
@@ -89,8 +92,12 @@ def test_context_async_uses_same_order_and_keeps_event_loop_responsive():
 
         results, _ = await asyncio.gather(
             context_sources.acquire_context_sources_async(
-                query, game_id="g", npc_id="n", readers={
-                    "npc": slow("npc"), "lore": slow("lore"),
+                query,
+                game_id="g",
+                npc_id="n",
+                readers={
+                    "npc": slow("npc"),
+                    "lore": slow("lore"),
                     "session": slow("session"),
                 },
             ),
@@ -108,23 +115,31 @@ def test_failed_shared_embedding_does_not_retry_once_per_scope(monkeypatch):
 
     calls = []
     monkeypatch.setattr(
-        rag, "query_rag",
+        rag,
+        "query_rag",
         lambda *_args, **_kwargs: calls.append("lore") or "unexpected",
     )
     monkeypatch.setattr(
-        rag, "query_session_memory",
+        rag,
+        "query_session_memory",
         lambda *_args, **_kwargs: calls.append("session") or "unexpected",
     )
     monkeypatch.setattr(
-        rag, "query_npc_memory",
+        rag,
+        "query_npc_memory",
         lambda *_args, **_kwargs: calls.append("npc") or "unexpected",
     )
     query = context_sources.EmbeddedContextQuery(
-        "x", None, "jina", "jina-embeddings-v3",
+        "x",
+        None,
+        "jina",
+        "jina-embeddings-v3",
     )
 
     results = context_sources.acquire_context_sources(
-        query, game_id="g", npc_id="n",
+        query,
+        game_id="g",
+        npc_id="n",
     )
 
     assert calls == []
@@ -154,7 +169,10 @@ def test_global_context_limit_bounds_different_requests(monkeypatch):
 
     def acquire():
         return context_sources.acquire_context_sources(
-            query, game_id=None, npc_id=None, max_workers=1,
+            query,
+            game_id=None,
+            npc_id=None,
+            max_workers=1,
             readers={"lore": reader},
         )
 
@@ -173,11 +191,18 @@ def test_shared_embedding_refuses_same_provider_with_different_model(monkeypatch
 
     monkeypatch.setenv("RPG_RUNTIME_PROFILE", "legacy")
     monkeypatch.setattr(rag, "_has_faiss_index", lambda _path: True)
-    monkeypatch.setattr(rag, "_read_meta", lambda path: {
-        "provider": "jina", "model": "jina-embeddings-v3" if path == "lore" else "obsolete",
-    })
+    monkeypatch.setattr(
+        rag,
+        "_read_meta",
+        lambda path: {
+            "provider": "jina",
+            "model": "jina-embeddings-v3" if path == "lore" else "obsolete",
+        },
+    )
+
     def forbidden(_provider):
         raise AssertionError("Não deve chamar embeddings incompatíveis")
+
     monkeypatch.setattr(rag, "get_embeddings_for", forbidden)
 
     vector, provider, _model = rag.prepare_shared_query_vector("ponte", ["lore", "session"])
@@ -191,11 +216,21 @@ def test_shared_embedding_refuses_explicit_dimension_mismatch(monkeypatch):
 
     monkeypatch.setenv("RPG_RUNTIME_PROFILE", "legacy")
     monkeypatch.setattr(rag, "_has_faiss_index", lambda _path: True)
-    monkeypatch.setattr(rag, "_read_meta", lambda _path: {
-        "provider": "jina", "model": "jina-embeddings-v3", "dimensions": 1024,
-    })
-    monkeypatch.setattr(rag, "get_embeddings_for", lambda _provider: SimpleNamespace(
-        embed_query=lambda _text: [0.1, 0.2],
-    ))
+    monkeypatch.setattr(
+        rag,
+        "_read_meta",
+        lambda _path: {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "dimensions": 1024,
+        },
+    )
+    monkeypatch.setattr(
+        rag,
+        "get_embeddings_for",
+        lambda _provider: SimpleNamespace(
+            embed_query=lambda _text: [0.1, 0.2],
+        ),
+    )
     vector, provider, _model = rag.prepare_shared_query_vector("ponte", ["lore"])
     assert vector is None and provider == "jina"

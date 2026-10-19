@@ -2,6 +2,7 @@
 
 Offline/determinístico (MockLLM via conftest). Ver specs/SPEC-038-combate-lifecycle.md.
 """
+
 import random
 
 from langchain_core.messages import HumanMessage
@@ -10,37 +11,63 @@ import agents.combat as combat
 from agents.router import dm_router_node
 from playtest import invariants as inv
 
-_LOC = "pantano_melancolia"      # tem conexões no mapa de Valoria
+_LOC = "pantano_melancolia"  # tem conexões no mapa de Valoria
 _DEST_ID = "pm_profundezas"
 _DEST_NAME = "Profundezas do Pântano"
 
 
 def _world():
-    return {"current_location": "Pântano da Melancolia", "current_location_id": _LOC,
-            "turn_count": 3, "danger_level": 2, "visited": [_LOC]}
+    return {
+        "current_location": "Pântano da Melancolia",
+        "current_location_id": _LOC,
+        "turn_count": 3,
+        "danger_level": 2,
+        "visited": [_LOC],
+    }
 
 
 def _player(rooted=False):
     conds = [{"name": "Raízes", "control": "root", "duration": 3}] if rooted else []
-    return {"name": "Kael", "class_name": "Guerreiro", "hp": 30, "max_hp": 30,
-            "stamina": 12, "max_stamina": 12, "mana": 0,
-            "attributes": {"str": 16, "dex": 14, "con": 12},
-            "inventory": [], "attack_bonus": 0, "known_abilities": ["ataque_basico"],
-            "active_conditions": conds, "ability_cooldowns": {}}
+    return {
+        "name": "Kael",
+        "class_name": "Guerreiro",
+        "hp": 30,
+        "max_hp": 30,
+        "stamina": 12,
+        "max_stamina": 12,
+        "mana": 0,
+        "attributes": {"str": 16, "dex": 14, "con": 12},
+        "inventory": [],
+        "attack_bonus": 0,
+        "known_abilities": ["ataque_basico"],
+        "active_conditions": conds,
+        "ability_cooldowns": {},
+    }
 
 
 def _enemy(hp=14):
-    return {"id": "goblin_1", "name": "Goblin 1", "hp": hp, "max_hp": hp, "defense": 11,
-            "status": "ativo", "attributes": {"dex": 12, "con": 10},
-            "attacks": [{"name": "Adaga", "bonus": 3, "damage": "1d4+1"}],
-            "active_conditions": []}
+    return {
+        "id": "goblin_1",
+        "name": "Goblin 1",
+        "hp": hp,
+        "max_hp": hp,
+        "defense": 11,
+        "status": "ativo",
+        "attributes": {"dex": 12, "con": 10},
+        "attacks": [{"name": "Adaga", "bonus": 3, "damage": "1d4+1"}],
+        "active_conditions": [],
+    }
 
 
 # --- Etapa 1: gate do router ------------------------------------------------
 
+
 def test_viagem_em_combate_vira_fuga():
-    state = {"combat": {"active": True}, "world": _world(),
-             "messages": [HumanMessage(content=f"Viajo para {_DEST_NAME}")]}
+    state = {
+        "combat": {"active": True},
+        "world": _world(),
+        "messages": [HumanMessage(content=f"Viajo para {_DEST_NAME}")],
+    }
     out = dm_router_node(state)
     assert out["next"] == "combat_agent"
     assert out.get("combat_flee_attempt") is True
@@ -80,31 +107,46 @@ def test_ataque_estruturado_em_inimigo_com_nome_de_local_nao_vira_fuga():
 
 
 def test_npc_em_combate_e_bloqueado():
-    state = {"combat": {"active": True}, "world": _world(), "npcs": {"Guarda": {}},
-             "messages": [HumanMessage(content="Converso com o guarda sobre o clima")]}
+    state = {
+        "combat": {"active": True},
+        "world": _world(),
+        "npcs": {"Guarda": {}},
+        "messages": [HumanMessage(content="Converso com o guarda sobre o clima")],
+    }
     out = dm_router_node(state)
-    assert out["next"] == "combat_agent"        # R2: npc bloqueado durante combate
-    assert not out.get("combat_flee_attempt")   # não é viagem
+    assert out["next"] == "combat_agent"  # R2: npc bloqueado durante combate
+    assert not out.get("combat_flee_attempt")  # não é viagem
 
 
 def test_combate_sem_ativo_usa_llm_normal():
     # Sem combate ativo, o gate NÃO intercepta (fluxo LLM/mock normal).
-    state = {"combat": {"active": False}, "world": _world(),
-             "messages": [HumanMessage(content="Observo o horizonte")]}
+    state = {
+        "combat": {"active": False},
+        "world": _world(),
+        "messages": [HumanMessage(content="Observo o horizonte")],
+    }
     out = dm_router_node(state)
     assert out["next"] in ("storyteller", "combat_agent", "npc_actor", "loot")
 
 
 # --- Etapa 2: fuga-viagem + R5 ----------------------------------------------
 
+
 def test_fuga_sucesso_viaja_e_limpa_combate():
     random.seed(3)
-    state = {"game_id": "flee", "messages": [HumanMessage(content=f"Viajo para {_DEST_NAME}")],
-             "player": _player(), "enemies": [_enemy()], "combat": {"active": True},
-             "world": _world(), "party": [],
-             "combat_flee_attempt": True, "combat_flee_destination": _DEST_ID}
+    state = {
+        "game_id": "flee",
+        "messages": [HumanMessage(content=f"Viajo para {_DEST_NAME}")],
+        "player": _player(),
+        "enemies": [_enemy()],
+        "combat": {"active": True},
+        "world": _world(),
+        "party": [],
+        "combat_flee_attempt": True,
+        "combat_flee_destination": _DEST_ID,
+    }
     out = combat.combat_node(state)
-    assert not out.get("combat", {}).get("active")          # combate limpo
+    assert not out.get("combat", {}).get("active")  # combate limpo
     assert out.get("enemies") == []
     assert out["world"]["current_location_id"] == _DEST_ID  # viajou no mesmo turno
     assert int(out["player"]["hp"]) > 0
@@ -113,10 +155,17 @@ def test_fuga_sucesso_viaja_e_limpa_combate():
 
 def test_fuga_falha_enredado_inimigos_agem():
     random.seed(1)
-    state = {"game_id": "rooted", "messages": [HumanMessage(content=f"Viajo para {_DEST_NAME}")],
-             "player": _player(rooted=True), "enemies": [_enemy()], "combat": {"active": True},
-             "world": _world(), "party": [],
-             "combat_flee_attempt": True, "combat_flee_destination": _DEST_ID}
+    state = {
+        "game_id": "rooted",
+        "messages": [HumanMessage(content=f"Viajo para {_DEST_NAME}")],
+        "player": _player(rooted=True),
+        "enemies": [_enemy()],
+        "combat": {"active": True},
+        "world": _world(),
+        "party": [],
+        "combat_flee_attempt": True,
+        "combat_flee_destination": _DEST_ID,
+    }
     out = combat.combat_node(state)
     # enredado NÃO foge → combate segue, NÃO teleporta (world inalterado = ausente
     # no dict parcial, ou com o mesmo local)
@@ -127,10 +176,16 @@ def test_fuga_falha_enredado_inimigos_agem():
 def test_fim_de_combate_zera_estado():
     # R5: herói foge (texto) com inimigo VIVO → active=False, enemies=[], target=None.
     random.seed(2)
-    state = {"game_id": "r5", "messages": [HumanMessage(content="fujo e corro daqui")],
-             "player": _player(), "enemies": [_enemy(hp=30)], "combat": {"active": True},
-             "combat_target": "Goblin 1",
-             "world": _world(), "party": []}
+    state = {
+        "game_id": "r5",
+        "messages": [HumanMessage(content="fujo e corro daqui")],
+        "player": _player(),
+        "enemies": [_enemy(hp=30)],
+        "combat": {"active": True},
+        "combat_target": "Goblin 1",
+        "world": _world(),
+        "party": [],
+    }
     out = combat.combat_node(state)
     assert out.get("combat", {}).get("active") is False
     assert out.get("enemies") == []
@@ -138,6 +193,7 @@ def test_fim_de_combate_zera_estado():
 
 
 # --- Etapa 3: expiração (R3) + invariante (R4) ------------------------------
+
 
 def test_combate_orfao_expira_em_3_turnos():
     combat_state = {"active": True}
@@ -155,8 +211,11 @@ def test_combate_orfao_expira_em_3_turnos():
 
 def test_router_reseta_idle_seria_zerado_pelo_combat_node():
     # 1ª chamada: combate segue (idle=1), rota combat_agent.
-    state = {"combat": {"active": True}, "world": _world(),
-             "messages": [HumanMessage(content="ataco o inimigo")]}
+    state = {
+        "combat": {"active": True},
+        "world": _world(),
+        "messages": [HumanMessage(content="ataco o inimigo")],
+    }
     out = dm_router_node(state)
     assert out["next"] == "combat_agent"
     assert out["combat"]["idle_turns"] == 1
@@ -176,17 +235,24 @@ def test_invariante_combat_zombie_nao_dispara_normal():
 
 # --- spec npc-in-scene-viagem (R1): fuga zera a cena ------------------------
 
+
 def test_fuga_reseta_in_scene():
     # NPC gerado in_scene no local de origem; herói foge para outro local →
     # o NPC não teleporta junto (in_scene=False no destino).
     random.seed(3)
-    npcs = {"Sobrevivente": {"created_turn": 2, "in_scene": True,
-                             "home_location_id": _LOC}}
-    state = {"game_id": "flee_scene",
-             "messages": [HumanMessage(content=f"Viajo para {_DEST_NAME}")],
-             "player": _player(), "enemies": [_enemy()], "combat": {"active": True},
-             "world": _world(), "party": [], "npcs": npcs,
-             "combat_flee_attempt": True, "combat_flee_destination": _DEST_ID}
+    npcs = {"Sobrevivente": {"created_turn": 2, "in_scene": True, "home_location_id": _LOC}}
+    state = {
+        "game_id": "flee_scene",
+        "messages": [HumanMessage(content=f"Viajo para {_DEST_NAME}")],
+        "player": _player(),
+        "enemies": [_enemy()],
+        "combat": {"active": True},
+        "world": _world(),
+        "party": [],
+        "npcs": npcs,
+        "combat_flee_attempt": True,
+        "combat_flee_destination": _DEST_ID,
+    }
     out = combat.combat_node(state)
     assert out["world"]["current_location_id"] == _DEST_ID
     assert out["npcs"]["Sobrevivente"]["in_scene"] is False

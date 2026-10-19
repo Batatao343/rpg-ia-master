@@ -1,5 +1,6 @@
 """SPEC-234 - memoria/RAG/arquivista: resiliencia a indice indisponivel,
 segredos por ID de entidade, override de embeddings, resumo nunca vazio."""
+
 from __future__ import annotations
 
 import json
@@ -36,13 +37,17 @@ class _LLM:
                     important_facts=[f"Fato distinto numero {outer.calls}."],
                     chronicle_entry="",
                 )
+
         return _S()
 
 
 def _state(turn, **extra):
     base = {
-        "game_id": "mem-res", "world": {"turn_count": turn},
-        "messages": [], "narrative_summary": "Antes.", "archive_due": True,
+        "game_id": "mem-res",
+        "world": {"turn_count": turn},
+        "messages": [],
+        "narrative_summary": "Antes.",
+        "archive_due": True,
     }
     base.update(extra)
     return base
@@ -69,8 +74,11 @@ def test_archivist_index_down_emits_degraded_metric(monkeypatch):
     from observability.metrics import metrics
 
     def _count():
-        return sum(v for k, v in metrics.snapshot().items()
-                   if "rpg_rag_degraded_total" in k and "session_write" in k)
+        return sum(
+            v
+            for k, v in metrics.snapshot().items()
+            if "rpg_rag_degraded_total" in k and "session_write" in k
+        )
 
     llm = _LLM()
     monkeypatch.setattr(archivist, "get_llm", lambda **_k: llm)
@@ -101,34 +109,43 @@ def test_context_uses_ledger_when_index_down(monkeypatch):
 
     monkeypatch.setattr(context_builder, "query_rag", lambda *_a, **_k: "")
     monkeypatch.setattr(context_builder, "query_session_memory", lambda *_a, **_k: "")
-    fact = make_memory_fact("A ponte de Brekmar caiu.", provenance="player_observation",
-                            source_id="obs:1", source_turn=2)
+    fact = make_memory_fact(
+        "A ponte de Brekmar caiu.",
+        provenance="player_observation",
+        source_id="obs:1",
+        source_turn=2,
+    )
     fact["vector_status"] = "pending"
     pack = build_context_pack(
         {"world": {"turn_count": 3}, "npcs": {}, "memory_facts": [fact]},
-        "ponte", "story", game_id="g",
+        "ponte",
+        "story",
+        game_id="g",
     )
     assert "ponte de Brekmar" in pack.memory_block
 
 
 # --- R3 -------------------------------------------------------------------
 def test_secret_revealed_by_entity_id_unlocks():
-    reveal = {"event_id": "e1", "type": "secret_revealed", "turn": 3,
-              "target_id": "mon_rei_subterraneo", "payload": {}}
+    reveal = {
+        "event_id": "e1",
+        "type": "secret_revealed",
+        "turn": 3,
+        "target_id": "mon_rei_subterraneo",
+        "payload": {},
+    }
     state = {"event_log": [reveal]}
     text = "O verme-primordial das raízes do mundo desperta."
     assert find_strict_unrevealed(text, {"event_log": []}) == "rei_subterraneo"
     assert find_strict_unrevealed(text, state) is None
     assert "rei_subterraneo" in accepted_secret_ids(state)
-    fact = make_memory_fact(text, provenance="canonical_event",
-                            source_id="e1", source_turn=3)
+    fact = make_memory_fact(text, provenance="canonical_event", source_id="e1", source_turn=3)
     accepted, reason = validate_memory_fact(fact, state)
     assert reason is None and accepted is not None
 
 
 def test_secret_entity_ids_exist_in_graph():
-    entities = json.loads(
-        pathlib.Path("data/graph/entities.json").read_text(encoding="utf-8"))
+    entities = json.loads(pathlib.Path("data/graph/entities.json").read_text(encoding="utf-8"))
     rows = entities if isinstance(entities, list) else list(entities.values())
     ids = {e["id"] for e in rows}
     assert set(SECRET_ENTITY_IDS) == set(SECRET_SIGNATURES)
@@ -153,6 +170,7 @@ def test_summary_never_empty_or_error(monkeypatch):
 
         def invoke(self, _m):
             from langchain_core.messages import AIMessage
+
             return AIMessage(content="Erro: nenhum provider configurado.")
 
     monkeypatch.setattr(archivist, "get_llm", lambda **_k: _Fallback())
@@ -169,9 +187,14 @@ def test_controller_by_id_without_hidden_leak(monkeypatch):
 
     monkeypatch.setattr(context_builder, "query_rag", lambda *_a, **_k: "")
     monkeypatch.setattr(context_builder, "query_session_memory", lambda *_a, **_k: "")
-    state = {"world": {"current_location": "Montanhas Afiadas",
-                       "current_location_id": "montanhas_afiadas", "turn_count": 1},
-             "npcs": {}}
+    state = {
+        "world": {
+            "current_location": "Montanhas Afiadas",
+            "current_location_id": "montanhas_afiadas",
+            "turn_count": 1,
+        },
+        "npcs": {},
+    }
     narrator = build_context_pack(state, "montanhas", "story", game_id=None)
     planner = build_context_pack(state, "montanhas", "planning", game_id=None)
     all_narrator = narrator.world_state_block + narrator.memory_block
@@ -182,9 +205,14 @@ def test_controller_by_id_without_hidden_leak(monkeypatch):
 
 # --- R7 -------------------------------------------------------------------
 def test_search_chronicle_stale_candidate():
-    chronicle = [{"chapter_id": "c1", "title": "T", "started_turn": 1,
-                  "entries": [{"entry_id": "c1:e1", "text": "A ponte caiu.", "turn": 1,
-                               "kind": "prose"}]}]
+    chronicle = [
+        {
+            "chapter_id": "c1",
+            "title": "T",
+            "started_turn": 1,
+            "entries": [{"entry_id": "c1:e1", "text": "A ponte caiu.", "turn": 1, "kind": "prose"}],
+        }
+    ]
     stale = [ChronicleCandidate("c1:digest", "c1", "digest", 0.9)]
     out = search_chronicle(chronicle, "ponte", semantic=stale)
     assert all(hit["chapter_id"] == "c1" for hit in out["hits"])
@@ -195,14 +223,26 @@ def test_memory_budget_prefers_recent_and_relevant(monkeypatch):
     from services import context_builder
 
     monkeypatch.setattr(context_builder, "query_rag", lambda *_a, **_k: "")
-    monkeypatch.setattr(context_builder, "query_session_memory",
-                        lambda *_a, **_k: "[RELEVANTE] O mercador guarda a chave.")
-    facts = [make_memory_fact(f"Fato antigo numero {i} sobre coisas variadas e longas " * 3,
-                              provenance="player_observation", source_id=f"o:{i}",
-                              source_turn=i) for i in range(1, 21)]
+    monkeypatch.setattr(
+        context_builder,
+        "query_session_memory",
+        lambda *_a, **_k: "[RELEVANTE] O mercador guarda a chave.",
+    )
+    facts = [
+        make_memory_fact(
+            f"Fato antigo numero {i} sobre coisas variadas e longas " * 3,
+            provenance="player_observation",
+            source_id=f"o:{i}",
+            source_turn=i,
+        )
+        for i in range(1, 21)
+    ]
     pack = build_context_pack(
         {"world": {"turn_count": 25}, "npcs": {}, "memory_facts": facts},
-        "mercador", "story", token_budget=1500, game_id="g",
+        "mercador",
+        "story",
+        token_budget=1500,
+        game_id="g",
     )
     assert "RELEVANTE" in pack.memory_block
     assert "numero 20 " in pack.memory_block
@@ -271,9 +311,13 @@ def test_pgvector_rejects_wrong_dimension_and_isolates_profiles():
     assert any(p == ("jina-jina-embeddings-v3-1024", "local-1024") for _, p in conn.sql)
     # consulta com perfil diferente do adapter e recusada
     from infrastructure.contracts import MemoryQuery
+
     with pytest.raises(ValueError, match="incompat"):
-        store.query(MemoryQuery(text="", scope="lore", vector=(0.0,) * 1024,
-                                embedding_profile_id="outro-perfil"))
+        store.query(
+            MemoryQuery(
+                text="", scope="lore", vector=(0.0,) * 1024, embedding_profile_id="outro-perfil"
+            )
+        )
 
 
 def test_rag_degraded_metric_emitted(monkeypatch, tmp_path):
@@ -344,9 +388,13 @@ def test_pending_vector_survives_save_reload_and_flushes_once(monkeypatch):
 
 def test_payload_secret_id_cannot_unlock_other_secret():
     """Só o `target_id` validado libera segredo; ids no payload vêm do LLM."""
-    reveal = {"event_id": "e1", "type": "secret_revealed", "turn": 3,
-              "target_id": "mon_rede_carmesim",
-              "payload": {"secret_id": "rei_subterraneo", "id": "npc_valerius"}}
+    reveal = {
+        "event_id": "e1",
+        "type": "secret_revealed",
+        "turn": 3,
+        "target_id": "mon_rede_carmesim",
+        "payload": {"secret_id": "rei_subterraneo", "id": "npc_valerius"},
+    }
     ids = accepted_secret_ids({"event_log": [reveal]})
     assert "rede_carmesim" in ids
     assert "rei_subterraneo" not in ids and "pacto_valerius" not in ids

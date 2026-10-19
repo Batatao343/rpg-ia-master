@@ -1,4 +1,5 @@
 """SPEC-207 Etapa 1: redaction fail-closed do pacote de auditoria."""
+
 from __future__ import annotations
 
 import uuid
@@ -7,9 +8,11 @@ from services.audit_redaction import redact_record, scan_pii, scrub_text
 
 
 def test_scrub_email_phone_url():
-    text = ("me ache em ana.souza@example.com ou (11) 98765-4321, "
-            "+55 11 98765 4321, link https://x.supabase.co/storage/v1/object/sign/a.png?token=abc "
-            "e https://h.example/p?signature=zz")
+    text = (
+        "me ache em ana.souza@example.com ou (11) 98765-4321, "
+        "+55 11 98765 4321, link https://x.supabase.co/storage/v1/object/sign/a.png?token=abc "
+        "e https://h.example/p?signature=zz"
+    )
     out = scrub_text(text)
     assert "example.com" not in out and "98765" not in out
     assert "token=abc" not in out and "signature=zz" not in out
@@ -28,21 +31,29 @@ def test_owner_values_never_survive():
     spec = {"a": {"b": ("list", "scalar")}}
     out = redact_record(record, spec=spec, owner_values={str(owner), email})
     flat = str(out)
-    assert str(owner) not in flat and owner.hex not in flat and email.casefold() not in flat.casefold()
+    assert (
+        str(owner) not in flat and owner.hex not in flat and email.casefold() not in flat.casefold()
+    )
     assert "[REDACTED:owner]" in flat
 
 
 def test_unknown_key_dropped():
-    out = redact_record({"keep": 1, "owner_id": "x", "nested": {"ok": "a", "ip": "1.2.3.4"}},
-                        spec={"keep": "scalar", "nested": {"ok": "scalar"}})
+    out = redact_record(
+        {"keep": 1, "owner_id": "x", "nested": {"ok": "a", "ip": "1.2.3.4"}},
+        spec={"keep": "scalar", "nested": {"ok": "scalar"}},
+    )
     assert out == {"keep": 1, "nested": {"ok": "a"}}
 
 
 def test_audio_and_tokens_dropped():
     out = redact_record(
-        {"text": "Bearer abc.def.ghi sk-ABCDEFGHIJKLMNOPQRST eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.c2lnbmF0dXJl",
-         "audio": b"RIFF....WAVE", "transcript": "voz crua"},
-        spec={"text": "scalar"})
+        {
+            "text": "Bearer abc.def.ghi sk-ABCDEFGHIJKLMNOPQRST eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.c2lnbmF0dXJl",
+            "audio": b"RIFF....WAVE",
+            "transcript": "voz crua",
+        },
+        spec={"text": "scalar"},
+    )
     assert set(out) == {"text"}
     assert "abc.def" not in out["text"] and "sk-ABC" not in out["text"] and "eyJ" not in out["text"]
     # objeto não escalar em campo escalar cai (nunca é copiado)
@@ -91,6 +102,7 @@ def test_adversarial_pii_is_scrubbed(text, needle):
 
 def test_hex_hashes_and_game_numbers_not_flagged():
     import hashlib
+
     for i in range(300):  # hashes hex com longas sequências de dígitos não são PII
         assert scan_pii(hashlib.sha256(str(i).encode()).hexdigest()) == []
     keep = "Às 12:30 do dia 3, 50 moedas; lore_content_123456789012345678901234; v1.2.3"

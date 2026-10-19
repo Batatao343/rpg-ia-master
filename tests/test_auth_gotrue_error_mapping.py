@@ -5,6 +5,7 @@ Staging evidence: an unconfirmed account logged in with the right password and g
 (and counted toward the per-address lockout). Neither case depends on account existence for
 captcha, and ``email_not_confirmed`` is only returned by GoTrue after the password matched.
 """
+
 from datetime import UTC, datetime, timedelta
 
 import httpx
@@ -18,15 +19,20 @@ from tests.test_account_lifecycle_security import account_client  # noqa: F401  
 
 
 def gotrue(status, error_code, msg="x"):
-    return lambda url, **_kwargs: httpx.Response(status, json={"code": status, "error_code": error_code, "msg": msg})
+    return lambda url, **_kwargs: httpx.Response(
+        status, json={"code": status, "error_code": error_code, "msg": msg}
+    )
 
 
-@pytest.mark.parametrize("error_code,expected", [
-    ("email_not_confirmed", "email_not_confirmed"),
-    ("captcha_failed", "captcha_invalid"),
-    ("invalid_credentials", "credentials_invalid"),
-    ("unexpected_failure", "credentials_invalid"),
-])
+@pytest.mark.parametrize(
+    "error_code,expected",
+    [
+        ("email_not_confirmed", "email_not_confirmed"),
+        ("captcha_failed", "captcha_invalid"),
+        ("invalid_credentials", "credentials_invalid"),
+        ("unexpected_failure", "credentials_invalid"),
+    ],
+)
 def test_login_maps_gotrue_error_codes(monkeypatch, error_code, expected):
     monkeypatch.setattr(httpx, "post", gotrue(400, error_code))
     identity = SupabaseIdentityProvider("https://auth.test", "publishable")
@@ -36,9 +42,13 @@ def test_login_maps_gotrue_error_codes(monkeypatch, error_code, expected):
 
 
 def test_login_non_json_failure_is_credentials_invalid(monkeypatch):
-    monkeypatch.setattr(httpx, "post", lambda url, **_kw: httpx.Response(502, text="<html>bad gateway</html>"))
+    monkeypatch.setattr(
+        httpx, "post", lambda url, **_kw: httpx.Response(502, text="<html>bad gateway</html>")
+    )
     with pytest.raises(Unauthorized) as exc:
-        SupabaseIdentityProvider("https://auth.test", "publishable").login("a@example.test", "pw-12345678")
+        SupabaseIdentityProvider("https://auth.test", "publishable").login(
+            "a@example.test", "pw-12345678"
+        )
     assert public_auth_code(exc.value) == "credentials_invalid"
 
 
@@ -55,10 +65,13 @@ def test_signup_and_email_requests_surface_captcha_failure(monkeypatch):
 
 
 def test_email_request_smtp_failure_stays_a_delivery_error(monkeypatch):
-    monkeypatch.setattr(httpx, "post", gotrue(500, "unexpected_failure", '535 "Authentication credentials invalid"'))
+    monkeypatch.setattr(
+        httpx, "post", gotrue(500, "unexpected_failure", '535 "Authentication credentials invalid"')
+    )
     with pytest.raises(AuthEmailDeliveryError) as exc:
         SupabaseIdentityProvider("https://auth.test", "publishable").request_email(
-            "a@example.test", recovery=True, captcha_token="t")
+            "a@example.test", recovery=True, captcha_token="t"
+        )
     assert exc.value.status_class == "5xx"
 
 
@@ -80,8 +93,13 @@ def test_login_route_reports_unconfirmed_and_captcha_without_lockout(account_cli
     def login(email, password, *, captcha_token):
         if outcome["code"]:
             raise Unauthorized(outcome["code"])
-        return SessionTokens("a", "refresh-private", datetime.now(UTC) + timedelta(hours=1),
-                             identity.verify("a").user_id)
+        return SessionTokens(
+            "a",
+            "refresh-private",
+            datetime.now(UTC) + timedelta(hours=1),
+            identity.verify("a").user_id,
+        )
+
     monkeypatch.setattr(identity, "login", login)
     body = {"email": "a@test.test", "password": "password-123", "captcha_token": "t"}
     # Many non-credential failures must not lock the address out (only credential failures count).
@@ -96,16 +114,26 @@ def test_login_route_reports_unconfirmed_and_captcha_without_lockout(account_cli
     assert client.post("/auth/login", json=body).status_code == 200
 
 
-def test_signup_and_reset_routes_report_captcha_failure_not_generic_success(account_client, monkeypatch):  # noqa: F811
+def test_signup_and_reset_routes_report_captcha_failure_not_generic_success(
+    account_client, monkeypatch
+):  # noqa: F811
     client, identity, _, _ = account_client
     _gotrue_mode(monkeypatch)
 
     def captcha_failed(*_args, **_kwargs):
         raise Unauthorized("captcha_invalid")
+
     monkeypatch.setattr(identity, "signup", captcha_failed)
     monkeypatch.setattr(identity, "request_email", captcha_failed)
-    r = client.post("/auth/signup", json={"email": "a@test.test", "password": "password-123",
-                                          "age_confirmed": True, "captcha_token": "t"})
+    r = client.post(
+        "/auth/signup",
+        json={
+            "email": "a@test.test",
+            "password": "password-123",
+            "age_confirmed": True,
+            "captcha_token": "t",
+        },
+    )
     assert r.status_code == 403 and r.json()["detail"] == "captcha_invalid"
     for path in ("/auth/reset/request", "/auth/verify/request"):
         r = client.post(path, json={"email": "a@test.test", "captcha_token": "t"})
@@ -113,7 +141,15 @@ def test_signup_and_reset_routes_report_captcha_failure_not_generic_success(acco
 
     def other_failure(*_args, **_kwargs):
         raise Unauthorized("não foi possível criar a conta")
+
     monkeypatch.setattr(identity, "signup", other_failure)
-    r = client.post("/auth/signup", json={"email": "a@test.test", "password": "password-123",
-                                          "age_confirmed": True, "captcha_token": "t"})
+    r = client.post(
+        "/auth/signup",
+        json={
+            "email": "a@test.test",
+            "password": "password-123",
+            "age_confirmed": True,
+            "captcha_token": "t",
+        },
+    )
     assert r.status_code == 202 and r.json()["message"] == GENERIC_MESSAGE

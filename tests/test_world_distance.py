@@ -1,4 +1,5 @@
 """SPEC-215 §4 passo 1 — distância em períodos (Dijkstra sobre travel_times)."""
+
 import gamedata
 import world_utils
 from services.world_distance import travel_periods
@@ -6,8 +7,9 @@ from services.world_distance import travel_periods
 
 def test_adjacent_equals_travel_cost():
     for dest_id in ("brekmar", "deserto_zhur", "pantano_melancolia"):
-        cost = world_utils.travel_cost({"current_location_id": "nova_arcadia"},
-                                       gamedata.get_location(dest_id))
+        cost = world_utils.travel_cost(
+            {"current_location_id": "nova_arcadia"}, gamedata.get_location(dest_id)
+        )
         assert travel_periods("nova_arcadia", dest_id) == cost
 
 

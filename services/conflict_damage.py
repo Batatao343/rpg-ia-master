@@ -8,6 +8,7 @@ Ferimentos e efeitos secundários.
 Opera sobre `target["vitalidade"]` e `target["ferimentos"]` (schema da
 conflito-01). Reusa `Condition` para Sangramento (evita DoT paralelo).
 """
+
 import random
 import unicodedata
 from typing import Dict, List, Optional
@@ -47,11 +48,7 @@ def _fold_region(value: object) -> str:
 
 def anatomical_regions(target: dict) -> list[str]:
     """Regiões válidas da anatomia da ficha, com fallback humanoide fechado."""
-    raw = (
-        target.get("regioes_anatomicas")
-        or target.get("hit_regions")
-        or target.get("anatomia")
-    )
+    raw = target.get("regioes_anatomicas") or target.get("hit_regions") or target.get("anatomia")
     if isinstance(raw, dict):
         raw = raw.get("regioes") or raw.get("regions") or list(raw)
     if not isinstance(raw, (list, tuple)) or not raw:
@@ -81,8 +78,7 @@ def is_valid_hit_region(target: dict, region: object) -> bool:
     return canonical_hit_region(target, region) is not None
 
 
-def select_hit_region(target: dict, directed_region: object = None, *,
-                      rng=None) -> str:
+def select_hit_region(target: dict, directed_region: object = None, *, rng=None) -> str:
     """Seleciona região canônica. Direcionamento inválido cai no sorteio seguro."""
     directed = canonical_hit_region(target, directed_region)
     if directed is not None:
@@ -175,10 +171,10 @@ def net_resistance(sources: list[str]) -> int:
         seen.add(s)
         m = gamedata.RESIST_MODIFIER.get(s, 0)
         if m < 0:
-            res = min(res, m)      # mantém a mais forte (não soma ilimitado)
+            res = min(res, m)  # mantém a mais forte (não soma ilimitado)
         elif m > 0:
             vuln = max(vuln, m)
-    return res + vuln              # compensam-se pela intensidade
+    return res + vuln  # compensam-se pela intensidade
 
 
 def _resist_modifier(target: dict, dtype: str, ignore_resistance: bool) -> int:
@@ -201,14 +197,19 @@ def _active_defense(target: dict, use_shield: bool) -> dict | None:
     return target.get("armor")
 
 
-def _resolve_damage_and_wounds(target: dict, *, damage_base: int,
-                              damage_type: str = "cortante", crit_mult: int = 1,
-                              directed_region: str | None = None,
-                              ignore_resistance: bool = False,
-                              use_shield: bool = False,
-                              defensavel: bool = True,
-                              bypass_armor: bool = False,
-                              rng=None) -> dict:
+def _resolve_damage_and_wounds(
+    target: dict,
+    *,
+    damage_base: int,
+    damage_type: str = "cortante",
+    crit_mult: int = 1,
+    directed_region: str | None = None,
+    ignore_resistance: bool = False,
+    use_shield: bool = False,
+    defensavel: bool = True,
+    bypass_armor: bool = False,
+    rng=None,
+) -> dict:
     """Resolve o dano na ORDEM FIXA (R8). Retorna a matemática completa (R9).
 
     SPEC-232 R7: `bypass_armor=True` (DoT, clima, auto-dano) ignora armadura,
@@ -227,11 +228,18 @@ def _resolve_damage_and_wounds(target: dict, *, damage_base: int,
     # (2) Imunidade / Resistência / Vulnerabilidade
     if not ignore_resistance and dtype in (target.get("immunities") or []):
         gamedata.sync_legacy_hp_aliases(target)
-        return {"dano_final": 0, "excedente": 0, "imune": True, "wound": None,
-                "protegido": False, "resultado": "imune", "secondary": [],
-                "log": log + ["Imunidade: dano 0"],
-                "vitalidade": int(target.get("vitalidade", 0)),
-                "regiao": region}
+        return {
+            "dano_final": 0,
+            "excedente": 0,
+            "imune": True,
+            "wound": None,
+            "protegido": False,
+            "resultado": "imune",
+            "secondary": [],
+            "log": log + ["Imunidade: dano 0"],
+            "vitalidade": int(target.get("vitalidade", 0)),
+            "regiao": region,
+        }
     mod = _resist_modifier(target, dtype, ignore_resistance)
     if mod:
         dano = max(0, dano + mod)
@@ -245,6 +253,7 @@ def _resolve_damage_and_wounds(target: dict, *, damage_base: int,
     cond_prot = 0
     if not bypass_armor:
         from combat_mechanics import combat_modifiers
+
         cond_prot = int(combat_modifiers(target).get("protection", 0) or 0)
     armor_applied = False
     if defense and not defense.get("comprometida"):
@@ -253,7 +262,7 @@ def _resolve_damage_and_wounds(target: dict, *, damage_base: int,
             armor_applied = True
             protecao = max(0, int(defense.get("protecao", 0)) + cond_prot)
             if dtype == "perfurante":
-                protecao = max(0, protecao - 1)   # R2
+                protecao = max(0, protecao - 1)  # R2
             absorbed = min(dano, protecao)
             if absorbed > 0:
                 dano -= absorbed
@@ -262,7 +271,7 @@ def _resolve_damage_and_wounds(target: dict, *, damage_base: int,
             # Integridade reduz dano adicional até reducoes_max (R5). Só armadura
             # com `reducoes_max` explícito gasta Integridade extra; escudo = 0.
             reducoes_max = int(defense.get("reducoes_max", 0))
-            custo = 2 if dtype == "corrosivo" else 1   # Corrosivo custa 2× (R3)
+            custo = 2 if dtype == "corrosivo" else 1  # Corrosivo custa 2× (R3)
             integ = int(defense.get("integridade_atual", 0))
             reduzido = 0
             while reduzido < reducoes_max and dano > 0 and integ >= custo:
@@ -272,7 +281,7 @@ def _resolve_damage_and_wounds(target: dict, *, damage_base: int,
             if reduzido:
                 log.append(f"Integridade -{reduzido} dano (gasta {reduzido * custo})")
             if protegido and dtype == "impactante" and integ > 0:
-                integ -= 1                         # R2: Integridade extra
+                integ -= 1  # R2: Integridade extra
                 log.append("Impactante: -1 Integridade extra")
             defense["integridade_atual"] = max(0, integ)
             if defense["integridade_atual"] <= 0 and not defense.get("comprometida"):
@@ -307,7 +316,7 @@ def _resolve_damage_and_wounds(target: dict, *, damage_base: int,
             wound = apply_wound(target, categoria, region)
             suffix = "" if wound.get("aplicado", True) else " (capacidade cheia)"
             log.append(f"Ferimento {wound['categoria']} em {region}{suffix}")
-            if dtype == "cortante":               # R2: Sangramento ao ferir
+            if dtype == "cortante":  # R2: Sangramento ao ferir
                 _apply_sangramento(target, secondary)
 
     # flags sobrenaturais condicionadas a atravessar (R3)
@@ -325,13 +334,24 @@ def _resolve_damage_and_wounds(target: dict, *, damage_base: int,
     if dtype == "arcano":
         secondary.append({"kind": "remove_temp_buff"})
 
-    resultado = "imune" if False else ("sem_efeito" if dano == 0 and excedente == 0 and not protegido
-                                       else "dano")
+    resultado = (
+        "imune"
+        if False
+        else ("sem_efeito" if dano == 0 and excedente == 0 and not protegido else "dano")
+    )
     gamedata.sync_legacy_hp_aliases(target)
-    return {"dano_final": dano, "excedente": excedente, "imune": False,
-            "wound": wound, "protegido": protegido, "resultado": resultado,
-            "secondary": secondary, "vitalidade": target["vitalidade"],
-            "regiao": region, "log": log}
+    return {
+        "dano_final": dano,
+        "excedente": excedente,
+        "imune": False,
+        "wound": wound,
+        "protegido": protegido,
+        "resultado": resultado,
+        "secondary": secondary,
+        "vitalidade": target["vitalidade"],
+        "regiao": region,
+        "log": log,
+    }
 
 
 def resolve_damage_and_wounds(target: dict, **kwargs) -> dict:
@@ -339,12 +359,17 @@ def resolve_damage_and_wounds(target: dict, **kwargs) -> dict:
     de trace SPEC-251 (só leitura do resultado; sem RNG)."""
     res = _resolve_damage_and_wounds(target, **kwargs)
     from services import mechanics_trace as mt
+
     wound = res.get("wound") or {}
     cat = mt.token(f"ferimento_{wound.get('categoria')}") if wound else None
-    mt.record_step("damage", target=target, amount=res.get("dano_final"),
-                   modifier=res.get("excedente"),
-                   result=cat or res.get("resultado"),
-                   reason=str(kwargs.get("damage_type") or "").lower() or None)
+    mt.record_step(
+        "damage",
+        target=target,
+        amount=res.get("dano_final"),
+        modifier=res.get("excedente"),
+        result=cat or res.get("resultado"),
+        reason=str(kwargs.get("damage_type") or "").lower() or None,
+    )
     return res
 
 
@@ -396,8 +421,9 @@ def recover_integrity(defense: dict, rest: str = "curto") -> None:
         defense["comprometida"] = False
 
 
-def rest_treat_wounds(target: dict, rest: str = "curto", *,
-                      has_kit: bool = False, is_medic: bool = False) -> dict:
+def rest_treat_wounds(
+    target: dict, rest: str = "curto", *, has_kit: bool = False, is_medic: bool = False
+) -> dict:
     """R11: descanso curto/longo remove Leve; Grave precisa kit (suprime + agenda,
     1 carga); Crítico só o Médico com kit trata de fato (2 cargas), comum estabiliza."""
     fer = target.setdefault("ferimentos", {"leve": [], "grave": [], "critico": []})

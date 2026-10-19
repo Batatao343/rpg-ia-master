@@ -1,4 +1,5 @@
 """SPEC-237: Jina embeddings are priced by tokens from a versioned embedding rate card."""
+
 from __future__ import annotations
 
 from decimal import Decimal
@@ -16,13 +17,17 @@ OP = UUID("00000000-0000-0000-0000-000000000237")
 
 
 def _attempt(provider="jina", model="jina-embeddings-v3", usage=None, outcome="response"):
-    return {"provider": provider, "model": model, "outcome": outcome,
-            "network_attempted": True, "usage": usage if usage is not None else {}}
+    return {
+        "provider": provider,
+        "model": model,
+        "outcome": outcome,
+        "network_attempted": True,
+        "usage": usage if usage is not None else {},
+    }
 
 
 def _events(attempts, category="embedding"):
-    return normalize_attempts(attempts, operation_id=OP, component="embedding:x",
-                              category=category)
+    return normalize_attempts(attempts, operation_id=OP, component="embedding:x", category=category)
 
 
 def test_jina_embedding_is_priced_by_tokens_not_the_one_dollar_floor():
@@ -45,8 +50,13 @@ def test_estimated_tokens_are_marked_estimated_but_still_priced_by_card():
 
 
 def test_unknown_embedding_model_still_fails_safe():
-    [event] = _events([_attempt(provider="gemini", model="models/gemini-embedding-001",
-                                usage={"input_tokens": 10})])
+    [event] = _events(
+        [
+            _attempt(
+                provider="gemini", model="models/gemini-embedding-001", usage={"input_tokens": 10}
+            )
+        ]
+    )
     assert event.cost_usd == Decimal("1.000000000")
     assert event.pricing_version == "unknown-conservative-v1"
 
@@ -63,6 +73,7 @@ def test_failed_embedding_without_usage_is_still_no_spend():
 
 def test_main_rate_card_is_untouched_and_pinned():
     from services.shard_pricing import INSTALLED_RATE_CARD_SHA256
+
     path = Path(__file__).resolve().parents[1] / "data/pricing/rate_card_2026-10-08.json"
     assert sha256(path.read_bytes()).hexdigest() == INSTALLED_RATE_CARD_SHA256
     assert "jina" not in path.read_text(encoding="utf-8")
@@ -70,13 +81,16 @@ def test_main_rate_card_is_untouched_and_pinned():
 
 def _jina(handler):
     return rag._JinaEmbeddingsHTTPX(
-        api_key="k", model_name="jina-embeddings-v3",
-        client=httpx.Client(transport=httpx.MockTransport(handler)))
+        api_key="k",
+        model_name="jina-embeddings-v3",
+        client=httpx.Client(transport=httpx.MockTransport(handler)),
+    )
 
 
 def test_jina_response_without_usage_estimates_tokens_from_text_length():
-    emb = _jina(lambda r: httpx.Response(
-        200, request=r, json={"data": [{"index": 0, "embedding": [0.1]}]}))
+    emb = _jina(
+        lambda r: httpx.Response(200, request=r, json={"data": [{"index": 0, "embedding": [0.1]}]})
+    )
     captured: list[dict] = []
     with rag.embedding_usage_scope(captured.append):
         emb.embed_query("a" * 100)
@@ -85,8 +99,13 @@ def test_jina_response_without_usage_estimates_tokens_from_text_length():
 
 
 def test_jina_response_with_usage_is_not_marked_estimated():
-    emb = _jina(lambda r: httpx.Response(200, request=r, json={
-        "data": [{"index": 0, "embedding": [0.1]}], "usage": {"total_tokens": 17}}))
+    emb = _jina(
+        lambda r: httpx.Response(
+            200,
+            request=r,
+            json={"data": [{"index": 0, "embedding": [0.1]}], "usage": {"total_tokens": 17}},
+        )
+    )
     captured: list[dict] = []
     with rag.embedding_usage_scope(captured.append):
         emb.embed_query("hello")
@@ -99,7 +118,10 @@ def test_forty_turns_of_offline_embedding_usage_stay_far_below_a_text_cap():
     for turn in range(40):
         events = normalize_attempts(
             [_attempt(usage={"input_tokens": 3000}) for _ in range(3)],
-            operation_id=uuid4(), component=f"embedding:{turn}", category="embedding")
+            operation_id=uuid4(),
+            component=f"embedding:{turn}",
+            category="embedding",
+        )
         total += operation_cost(events)
     assert total < Decimal("0.05")  # ~US$ 0.018; a 5 BRL cap is ~US$ 0.9
 
@@ -119,12 +141,20 @@ def _version():
     from services.usage_metering import RATE_CARD_VERSION
 
     return at, PricingVersion(
-        version_id="sim-237", shard_budget_unit_brl=Decimal("0.03"), fx_usd_brl=Decimal("5"),
-        fx_source="sim", fx_observed_at=at, fx_max_age=timedelta(days=1),
-        fx_buffer_rate=Decimal("0.10"), rate_card_version=RATE_CARD_VERSION,
-        rate_card_sha256=INSTALLED_RATE_CARD_SHA256, rate_card_source="installed",
-        rate_card_observed_at=at, rate_card_max_age=timedelta(days=1),
-        channel_fees=(ChannelFee("web", Decimal("0.04"), Decimal("0.20")),))
+        version_id="sim-237",
+        shard_budget_unit_brl=Decimal("0.03"),
+        fx_usd_brl=Decimal("5"),
+        fx_source="sim",
+        fx_observed_at=at,
+        fx_max_age=timedelta(days=1),
+        fx_buffer_rate=Decimal("0.10"),
+        rate_card_version=RATE_CARD_VERSION,
+        rate_card_sha256=INSTALLED_RATE_CARD_SHA256,
+        rate_card_source="installed",
+        rate_card_observed_at=at,
+        rate_card_max_age=timedelta(days=1),
+        channel_fees=(ChannelFee("web", Decimal("0.04"), Decimal("0.20")),),
+    )
 
 
 def test_wallet_quote_accepts_exact_embedding_priced_by_the_embedding_card():
@@ -133,9 +163,18 @@ def test_wallet_quote_accepts_exact_embedding_priced_by_the_embedding_card():
 
     at, version = _version()
     [llm] = normalize_attempts(
-        [{"provider": "groq", "model": "openai/gpt-oss-20b", "outcome": "success",
-          "network_attempted": True, "usage": {"input_tokens": 100, "output_tokens": 10}}],
-        operation_id=OP, component="llm")
+        [
+            {
+                "provider": "groq",
+                "model": "openai/gpt-oss-20b",
+                "outcome": "success",
+                "network_attempted": True,
+                "usage": {"input_tokens": 100, "output_tokens": 10},
+            }
+        ],
+        operation_id=OP,
+        component="llm",
+    )
     [emb] = _events([_attempt(usage={"input_tokens": 1000})])
     quote = quote_usage([llm, emb], version, at=at)
     assert quote.provider_cost_usd == llm.cost_usd + emb.cost_usd

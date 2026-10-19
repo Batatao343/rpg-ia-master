@@ -8,6 +8,7 @@ pela substituição dos valores reais do dono (`owner_values`).
 Não reusa `observability.telemetry.redact`: seu `_SENSITIVE_KEYS` apaga
 `action`/`narrative`/`state`, que aqui são justamente o conteúdo desejado.
 """
+
 from __future__ import annotations
 
 import re
@@ -19,21 +20,26 @@ PRIVATE_LABEL = "privado — referência de auditoria"
 # Ordem importa: URL assinada e tokens antes de e-mail/UUID (que podem estar dentro deles).
 _SIGNED_URL = re.compile(
     r"(?i)https?://\S*(?:[?&](?:token|signature|sig|expires|access_token|key|x-amz-[a-z-]+)=|"
-    r"/storage/v1/object/sign/)\S*")
+    r"/storage/v1/object/sign/)\S*"
+)
 _BEARER = re.compile(r"(?i)bearer\s+[a-z0-9._~+/=-]+")
 _JWT = re.compile(r"\beyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{4,}\b")
 _API_KEY = re.compile(
     r"\b(?:sk-[A-Za-z0-9_-]{16,}|gsk_[A-Za-z0-9]{16,}|AIza[0-9A-Za-z_-]{20,}|"
     r"sk_(?:live|test)_[A-Za-z0-9]{10,}|rk_(?:live|test)_[A-Za-z0-9]{10,}|"
     r"whsec_[A-Za-z0-9]{10,}|jina_[A-Za-z0-9]{16,}|(?:AKIA|ASIA)[A-Z0-9]{16}|"
-    r"gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|xox[abposr]-[A-Za-z0-9-]{8,})\b")
+    r"gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|xox[abposr]-[A-Za-z0-9-]{8,})\b"
+)
 # Revisão Astra: `nome=valor` / `nome: valor` de credencial (cookie, senha, chave, token).
 _SECRET_ASSIGN = re.compile(
     r"(?i)\b(?:set-cookie|cookie|rpg_[a-z_]+|password|passwd|senha|secret|api[_-]?key|"
-    r"access[_-]?token|refresh[_-]?token|client[_-]?secret)\s*[:=]\s*[^\s;,]+")
+    r"access[_-]?token|refresh[_-]?token|client[_-]?secret)\s*[:=]\s*[^\s;,]+"
+)
 _EMAIL = re.compile(r"(?i)\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b")
 # Ponto final de frase depois do IP não pode impedir o casamento (revisão Astra).
-_IPV4 = re.compile(r"(?<!\d)(?<!\d\.)(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)(?!\d|\.\d)")
+_IPV4 = re.compile(
+    r"(?<!\d)(?<!\d\.)(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)(?!\d|\.\d)"
+)
 _IPV6 = re.compile(r"(?i)(?<![0-9a-f:])(?:[0-9a-f]{1,4}:){7}[0-9a-f]{1,4}(?![0-9a-f:])")
 _UUID = re.compile(r"(?i)\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b")
 # Telefone exige forma de telefone (+DDI, (DDD) ou separadores): número cru de
@@ -42,7 +48,8 @@ _PHONE = re.compile(
     r"(?<![\w+.,])(?:\+\d{1,3}[\s.-]?(?:\(?\d{2,3}\)?[\s.-]?)?\d{4,5}[\s.-]?\d{4}"
     r"|\(\d{2,3}\)\s?\d{4,5}[\s.-]?\d{4}"
     r"|\d{2,3}[\s.-]\d{4,5}[\s.-]\d{4}"
-    r"|\d{4,5}-\d{4})(?!\w)")
+    r"|\d{4,5}-\d{4})(?!\w)"
+)
 _URL_WITH_CREDENTIALS = re.compile(r"(?i)\b[a-z][a-z0-9+.-]*://[^\s/:@]+:[^\s/@]+@\S+")
 # Documentos BR, cartão e número cru de 11 dígitos (celular/CPF sem máscara). As bordas
 # excluem letras/_ para não casar trechos de hashes hex nem ids `*_content_<hex>`.
@@ -51,7 +58,8 @@ _CNPJ = re.compile(r"(?<![\w.])\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}(?!\w)")
 _CARD = re.compile(r"(?<![\w.])(?:\d{4}[ -]){3}\d{1,7}(?![\w])|(?<![\w.])\d{13,19}(?![\w]|\.\d)")
 _RAW_DIGITS = re.compile(r"(?<![\w.])\d{11}(?![\w]|\.\d)")
 _IPV6_COMPRESSED = re.compile(
-    r"(?i)(?<![0-9a-f:])(?:(?:[0-9a-f]{1,4}:){1,7}|:):(?:[0-9a-f]{1,4}(?::[0-9a-f]{1,4}){0,6})?(?![0-9a-f:])")
+    r"(?i)(?<![0-9a-f:])(?:(?:[0-9a-f]{1,4}:){1,7}|:):(?:[0-9a-f]{1,4}(?::[0-9a-f]{1,4}){0,6})?(?![0-9a-f:])"
+)
 
 _SCRUBBERS: tuple[tuple[re.Pattern, str], ...] = (
     (_URL_WITH_CREDENTIALS, "url"),
@@ -124,8 +132,10 @@ def _projected(value: Any, owner_forms: list[str], depth: int = 0) -> Any:
     if depth > 6:
         return None
     if isinstance(value, Mapping):
-        return {_clean_string(k, owner_forms): _projected(v, owner_forms, depth + 1)
-                for k, v in value.items()}
+        return {
+            _clean_string(k, owner_forms): _projected(v, owner_forms, depth + 1)
+            for k, v in value.items()
+        }
     if isinstance(value, (list, tuple)):
         return [_projected(v, owner_forms, depth + 1) for v in value]
     return _scalar(value, owner_forms)
@@ -143,13 +153,15 @@ def _apply(value: Any, spec: Spec, owner_forms: list[str]) -> Any:
     if isinstance(spec, tuple) and len(spec) == 2 and spec[0] == "map":
         if not isinstance(value, Mapping):
             return None
-        return {_clean_string(k, owner_forms): _apply(v, spec[1], owner_forms)
-                for k, v in value.items()}
+        return {
+            _clean_string(k, owner_forms): _apply(v, spec[1], owner_forms) for k, v in value.items()
+        }
     if isinstance(spec, Mapping):
         if not isinstance(value, Mapping):
             return None
-        return {key: _apply(value[key], sub, owner_forms)
-                for key, sub in spec.items() if key in value}
+        return {
+            key: _apply(value[key], sub, owner_forms) for key, sub in spec.items() if key in value
+        }
     raise AuditRedactionError(f"spec de allowlist inválida: {spec!r}")
 
 
@@ -159,7 +171,8 @@ def redact_record(obj: Any, *, spec: Spec, owner_values: Iterable[str] = ()) -> 
 
 
 _SCAN: tuple[tuple[re.Pattern, str], ...] = tuple(
-    (pattern, kind) for pattern, kind in _SCRUBBERS if pattern is not _PHONE)
+    (pattern, kind) for pattern, kind in _SCRUBBERS if pattern is not _PHONE
+)
 _AUDIO_MARKERS = re.compile(r"(?i)data:audio/|\b(?:RIFF....WAVE|OggS|ftypM4A)")
 
 

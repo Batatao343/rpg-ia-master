@@ -84,16 +84,27 @@ def test_a_paranoid_oracle_is_caught_by_the_dataset(monkeypatch) -> None:
 
 def test_stream_turn_requires_closed_server_ttfmc_but_post_may_be_null() -> None:
     server = {
-        "transport": "stream", "pseudo_streaming": True, "ack_server_ms": 5,
-        "ttfmc_server_ms": None, "ttlt_server_ms": None,
+        "transport": "stream",
+        "pseudo_streaming": True,
+        "ack_server_ms": 5,
+        "ttfmc_server_ms": None,
+        "ttlt_server_ms": None,
         "phase_ms": {"router": 1, "context": 1, "narrator": 1, "archivist": 1, "persistence": 1},
     }
     client = {"ack_ms": 1, "first_phase_ms": 2, "ttfmc_ms": 3, "ttlt_ms": 4, "state_ms": 5}
-    stream = {"turns": [{"action_id": "a", "transport": "stream", "client": client, "server": server}]}
-    post = {"turns": [{
-        "action_id": "b", "transport": "post", "client": {k: 9 for k in ("ack_ms", "ttfmc_ms", "ttlt_ms", "state_ms")},
-        "server": {**server, "transport": "post", "ack_server_ms": None},
-    }]}
+    stream = {
+        "turns": [{"action_id": "a", "transport": "stream", "client": client, "server": server}]
+    }
+    post = {
+        "turns": [
+            {
+                "action_id": "b",
+                "transport": "post",
+                "client": {k: 9 for k in ("ack_ms", "ttfmc_ms", "ttlt_ms", "state_ms")},
+                "server": {**server, "transport": "post", "ack_server_ms": None},
+            }
+        ]
+    }
 
     assert trace_problems("latency", stream) == ["latency:null_server_stream"]
     assert trace_problems("latency", post) == []
@@ -109,14 +120,31 @@ def test_latency_baseline_is_nearest_rank_and_indicative_below_twenty_turns() ->
 
 
 def test_scan_cli_exits_nonzero_on_a_duplicated_turn() -> None:
-    clean = {"turns": {"turns": [{"action_id": "a", "accepted": True, "receipt_id": "r", "world_turn_after": 1,
-                                  "xp_after": 0}], "world_turn_delta": 1, "history_player_delta": 1}}
+    clean = {
+        "turns": {
+            "turns": [
+                {
+                    "action_id": "a",
+                    "accepted": True,
+                    "receipt_id": "r",
+                    "world_turn_after": 1,
+                    "xp_after": 0,
+                }
+            ],
+            "world_turn_delta": 1,
+            "history_player_delta": 1,
+        }
+    }
     dirty = {"turns": {**clean["turns"], "world_turn_delta": 2}}
 
     def run(trace: dict) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
-            [sys.executable, "-m", "evals.gameplay_scan"], cwd=ROOT, input=json.dumps(trace),
-            capture_output=True, text=True, check=False,
+            [sys.executable, "-m", "evals.gameplay_scan"],
+            cwd=ROOT,
+            input=json.dumps(trace),
+            capture_output=True,
+            text=True,
+            check=False,
         )
 
     ok = run(clean)

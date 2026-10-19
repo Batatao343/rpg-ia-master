@@ -43,40 +43,56 @@ def plan_repair(local: list[dict], remote: list[dict]) -> dict:
                 orphans.append(row["version"])  # collision: refuse to touch
             else:
                 renames.append({"name": row["name"], "from": row["version"], "to": want})
-    pending = [r["version"] for r in local
-               if r["version"] not in {x["version"] for x in remote}
-               and r["name"] not in {x["name"] for x in remote}]
-    return {"renames": renames, "remote_only": orphans, "pending": pending,
-            "local_versions": sorted(local_versions)}
+    pending = [
+        r["version"]
+        for r in local
+        if r["version"] not in {x["version"] for x in remote}
+        and r["name"] not in {x["name"] for x in remote}
+    ]
+    return {
+        "renames": renames,
+        "remote_only": orphans,
+        "pending": pending,
+        "local_versions": sorted(local_versions),
+    }
 
 
 def plan_status(local: list[dict], remote: list[dict]) -> dict:
     p = plan_repair(local, remote)
     applied = {r["version"] for r in remote}
     return {
-        "local_count": len(local), "remote_count": len(remote),
+        "local_count": len(local),
+        "remote_count": len(remote),
         "in_sync": not p["renames"] and not p["pending"] and not p["remote_only"],
-        "version_mismatch": p["renames"], "pending": p["pending"], "remote_only": p["remote_only"],
+        "version_mismatch": p["renames"],
+        "pending": p["pending"],
+        "remote_only": p["remote_only"],
         "applied_matching": sorted(v for v in applied if v in p["local_versions"]),
     }
 
 
 def fetch_remote(cur: Any) -> list[dict]:
     # psycopg Connection.execute and Cursor.execute both return a cursor.
-    rows = cur.execute("select version, name from supabase_migrations.schema_migrations order by version").fetchall()
+    rows = cur.execute(
+        "select version, name from supabase_migrations.schema_migrations order by version"
+    ).fetchall()
     return [{"version": v, "name": n} for v, n in rows]
 
 
 def ensure_history(cur: Any) -> None:
     cur.execute("create schema if not exists supabase_migrations")
-    cur.execute("create table if not exists supabase_migrations.schema_migrations "
-                "(version text primary key, statements text[], name text)")
+    cur.execute(
+        "create table if not exists supabase_migrations.schema_migrations "
+        "(version text primary key, statements text[], name text)"
+    )
 
 
 def apply_repair(cur: Any, renames: list[dict]) -> int:
     for r in renames:
-        cur.execute("update supabase_migrations.schema_migrations set version=%s where version=%s and name=%s",
-                    (r["to"], r["from"], r["name"]))
+        cur.execute(
+            "update supabase_migrations.schema_migrations set version=%s where version=%s and name=%s",
+            (r["to"], r["from"], r["name"]),
+        )
     return len(renames)
 
 
@@ -88,14 +104,18 @@ def apply_push(conn: Any, local: list[dict], pending: list[str]) -> list[str]:
         sql = row["path"].read_text(encoding="utf-8")
         with conn.transaction():
             conn.execute(sql)
-            conn.execute("insert into supabase_migrations.schema_migrations (version, statements, name) "
-                         "values (%s, %s, %s)", (row["version"], [sql], row["name"]))
+            conn.execute(
+                "insert into supabase_migrations.schema_migrations (version, statements, name) "
+                "values (%s, %s, %s)",
+                (row["version"], [sql], row["name"]),
+            )
         done.append(row["version"])
     return done
 
 
 def run(mode: str, dsn: str, apply: bool = False, directory: Path = MIGRATIONS_DIR) -> dict:
     import psycopg
+
     local = local_migrations(directory)
     with psycopg.connect(dsn, autocommit=True) as conn:
         if mode == "push":
@@ -105,7 +125,11 @@ def run(mode: str, dsn: str, apply: bool = False, directory: Path = MIGRATIONS_D
             remote = fetch_remote(conn)
         except psycopg.errors.UndefinedTable:
             remote = []
-        result: dict[str, Any] = {"mode": mode, "applied": False, "status": plan_status(local, remote)}
+        result: dict[str, Any] = {
+            "mode": mode,
+            "applied": False,
+            "status": plan_status(local, remote),
+        }
         plan = plan_repair(local, remote)
         if mode == "repair":
             result["plan"] = plan["renames"]
@@ -116,7 +140,9 @@ def run(mode: str, dsn: str, apply: bool = False, directory: Path = MIGRATIONS_D
                 result["status_after"] = plan_status(local, fetch_remote(conn))
         elif mode == "push":
             if plan["renames"]:
-                raise common.GuardError("versoes divergentes: rode `repair --apply` antes de `push`")
+                raise common.GuardError(
+                    "versoes divergentes: rode `repair --apply` antes de `push`"
+                )
             result["plan"] = plan["pending"]
             if apply and plan["pending"]:
                 result["pushed"] = apply_push(conn, local, plan["pending"])

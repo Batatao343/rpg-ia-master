@@ -26,10 +26,13 @@ DEFAULT_DSN = "postgresql://postgres:postgres@127.0.0.1:55322/postgres"
 
 def _state(game_id: UUID, name: str = "Carga") -> dict:
     return {
-        "game_id": str(game_id), "messages": [], "event_log": [],
+        "game_id": str(game_id),
+        "messages": [],
+        "event_log": [],
         "player": {"name": name, "class_name": "Devoto", "level": 1},
         "world": {
-            "current_location": "Laboratório", "turn_count": 0,
+            "current_location": "Laboratório",
+            "turn_count": 0,
             "world_clock": {"day": 1},
         },
     }
@@ -54,7 +57,10 @@ def _commit_task(dsn: str, owner: str, game: str, operation: str) -> dict:
         if not stored:
             raise RuntimeError("jogo de carga não encontrado")
         claim = coordinator.claim(
-            principal, operation_id, game_id=game_id, kind="turn",
+            principal,
+            operation_id,
+            game_id=game_id,
+            kind="turn",
             request_hash=hashlib.sha256(str(operation_id).encode()).hexdigest(),
             base_version=stored.version,
         )
@@ -64,13 +70,17 @@ def _commit_task(dsn: str, owner: str, game: str, operation: str) -> dict:
         )
         commit_started = time.perf_counter()
         version, _ = coordinator.commit_game(
-            principal, claim, changed,
+            principal,
+            claim,
+            changed,
             receipt={"ok": True, "operation_id": str(operation_id)},
             input_sha256=hashlib.sha256(b"load").hexdigest(),
-            latency_ms=0, llm_cost_usd=0.0,
+            latency_ms=0,
+            llm_cost_usd=0.0,
         )
         return {
-            "status": "committed", "version": version,
+            "status": "committed",
+            "version": version,
             "commit_latency_ms": (time.perf_counter() - commit_started) * 1000,
             "end_to_end_latency_ms": (time.perf_counter() - started) * 1000,
         }
@@ -116,8 +126,9 @@ def _job_worker(dsn: str, worker_id: str, kind: str) -> dict:
         pool.close()
 
 
-def run(dsn: str = DEFAULT_DSN, *, workers: int = 2, operations: int = 12,
-        output: Path | None = None) -> dict:
+def run(
+    dsn: str = DEFAULT_DSN, *, workers: int = 2, operations: int = 12, output: Path | None = None
+) -> dict:
     if workers < 2 or operations < workers:
         raise ValueError("carga exige ao menos 2 workers e operações >= workers")
     pool = PostgresPool(dsn, max_size=4)
@@ -138,50 +149,73 @@ def run(dsn: str = DEFAULT_DSN, *, workers: int = 2, operations: int = 12,
             for principal, game_id in games[:operations]
         ]
         with ProcessPoolExecutor(max_workers=workers) as executor:
-            commit_results = list(executor.map(
-                _commit_task,
-                [row[0] for row in tasks], [row[1] for row in tasks],
-                [row[2] for row in tasks], [row[3] for row in tasks],
-            ))
+            commit_results = list(
+                executor.map(
+                    _commit_task,
+                    [row[0] for row in tasks],
+                    [row[1] for row in tasks],
+                    [row[2] for row in tasks],
+                    [row[3] for row in tasks],
+                )
+            )
 
         duplicate_principal, duplicate_game = games[-1]
         duplicate_operation = uuid4()
         duplicate_args = (
-            dsn, str(duplicate_principal.user_id), str(duplicate_game),
+            dsn,
+            str(duplicate_principal.user_id),
+            str(duplicate_game),
             str(duplicate_operation),
         )
         with ProcessPoolExecutor(max_workers=2) as executor:
-            duplicate_results = list(executor.map(
-                _idempotent_task,
-                [duplicate_args[0]] * 2, [duplicate_args[1]] * 2,
-                [duplicate_args[2]] * 2, [duplicate_args[3]] * 2,
-            ))
+            duplicate_results = list(
+                executor.map(
+                    _idempotent_task,
+                    [duplicate_args[0]] * 2,
+                    [duplicate_args[1]] * 2,
+                    [duplicate_args[2]] * 2,
+                    [duplicate_args[3]] * 2,
+                )
+            )
 
         queue = PostgresJobQueue(pool)
-        job_ids = [queue.enqueue(JobRequest(
-            kind, f"{kind}-{index}", {"index": index},
-            owner_id=games[index % len(games)][0].user_id,
-            game_id=games[index % len(games)][1],
-        )) for index in range(operations)]
+        job_ids = [
+            queue.enqueue(
+                JobRequest(
+                    kind,
+                    f"{kind}-{index}",
+                    {"index": index},
+                    owner_id=games[index % len(games)][0].user_id,
+                    game_id=games[index % len(games)][1],
+                )
+            )
+            for index in range(operations)
+        ]
         with ProcessPoolExecutor(max_workers=workers) as executor:
-            job_results = list(executor.map(
-                _job_worker, [dsn] * workers,
-                [f"worker-{index}" for index in range(workers)], [kind] * workers,
-            ))
+            job_results = list(
+                executor.map(
+                    _job_worker,
+                    [dsn] * workers,
+                    [f"worker-{index}" for index in range(workers)],
+                    [kind] * workers,
+                )
+            )
 
         commit_latencies = [float(row["commit_latency_ms"]) for row in commit_results]
-        end_to_end_latencies = [
-            float(row["end_to_end_latency_ms"]) for row in commit_results
-        ]
+        end_to_end_latencies = [float(row["end_to_end_latency_ms"]) for row in commit_results]
         with pool.connection() as connection:
-            succeeded = int(connection.execute(
-                "select count(*) as n from app.jobs where id=any(%s) and status='succeeded'",
-                (job_ids,),
-            ).fetchone()["n"])
-            duplicate_turns = int(connection.execute(
-                "select count(*) as n from app.turns where operation_id=%s",
-                (duplicate_operation,),
-            ).fetchone()["n"])
+            succeeded = int(
+                connection.execute(
+                    "select count(*) as n from app.jobs where id=any(%s) and status='succeeded'",
+                    (job_ids,),
+                ).fetchone()["n"]
+            )
+            duplicate_turns = int(
+                connection.execute(
+                    "select count(*) as n from app.turns where operation_id=%s",
+                    (duplicate_operation,),
+                ).fetchone()["n"]
+            )
         statuses = sorted(row["status"] for row in duplicate_results)
         errors = []
         if any(row["status"] != "committed" for row in commit_results):
@@ -236,13 +270,23 @@ def main() -> int:
     parser.add_argument("--workers", type=int, default=2)
     parser.add_argument("--operations", type=int, default=12)
     parser.add_argument(
-        "--output", type=Path, default=Path("readiness_artifacts/load_test.json"),
+        "--output",
+        type=Path,
+        default=Path("readiness_artifacts/load_test.json"),
     )
     args = parser.parse_args()
     dsn = resolve_dsn(parser, args, default_dsn=DEFAULT_DSN)
-    print(json.dumps(run(
-        dsn, workers=args.workers, operations=args.operations, output=args.output,
-    ), ensure_ascii=False))
+    print(
+        json.dumps(
+            run(
+                dsn,
+                workers=args.workers,
+                operations=args.operations,
+                output=args.output,
+            ),
+            ensure_ascii=False,
+        )
+    )
     return 0
 
 

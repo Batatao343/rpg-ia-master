@@ -25,6 +25,7 @@ from services.content_validator import validate_overrides
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _write_md(codex_dir, fname: str, front: dict, body: str = "Corpo.") -> str:
     os.makedirs(codex_dir, exist_ok=True)
     path = os.path.join(codex_dir, fname)
@@ -35,21 +36,34 @@ def _write_md(codex_dir, fname: str, front: dict, body: str = "Corpo.") -> str:
 
 
 def _front(entity_id: str, **extra) -> dict:
-    base = {"id": entity_id, "type": "npc", "name": entity_id.title(),
-            "aliases": [], "tags": ["gerada"], "visibility": "public"}
+    base = {
+        "id": entity_id,
+        "type": "npc",
+        "name": entity_id.title(),
+        "aliases": [],
+        "tags": ["gerada"],
+        "visibility": "public",
+    }
     base.update(extra)
     return base
 
 
 def _ent(entity_id: str, etype: str = "npc") -> dict:
-    return {"id": entity_id, "type": etype, "name": entity_id.title(),
-            "aliases": [], "tags": ["gerada"], "visibility": "public",
-            "components": {}}
+    return {
+        "id": entity_id,
+        "type": etype,
+        "name": entity_id.title(),
+        "aliases": [],
+        "tags": ["gerada"],
+        "visibility": "public",
+        "components": {},
+    }
 
 
 # ---------------------------------------------------------------------------
 # Etapa 1 — overrides no migrate
 # ---------------------------------------------------------------------------
+
 
 def test_override_aliases_sobrevive_regeracao(tmp_path):
     codex = str(tmp_path / "codex")
@@ -82,10 +96,17 @@ def test_override_patcha_entities_dict(tmp_path):
     codex = str(tmp_path / "codex")
     _write_md(codex, "npc_grum.md", _front("npc_grum"))
     entities = {"npc_grum": _ent("npc_grum")}
-    apply_overrides(entities, {"npc_grum": {
-        "aliases": ["O Taverneiro"], "visibility": "hidden",
-        "tags_extra": ["Lendário Demais"],
-    }}, codex)
+    apply_overrides(
+        entities,
+        {
+            "npc_grum": {
+                "aliases": ["O Taverneiro"],
+                "visibility": "hidden",
+                "tags_extra": ["Lendário Demais"],
+            }
+        },
+        codex,
+    )
     ent = entities["npc_grum"]
     assert ent["aliases"] == ["O Taverneiro"]
     assert ent["visibility"] == "hidden"
@@ -114,6 +135,7 @@ def test_load_overrides_le_yaml(tmp_path):
 # Etapa 2 — curated preservado
 # ---------------------------------------------------------------------------
 
+
 def test_curated_detectado(tmp_path):
     codex = str(tmp_path / "codex")
     path_curated = _write_md(codex, "npc_manual.md", _front("npc_manual", curated=True))
@@ -125,6 +147,7 @@ def test_curated_detectado(tmp_path):
 def test_curated_sobrevive_ao_delete_loop(tmp_path, monkeypatch):
     # reproduz o loop de delete do main() sobre um codex dir temporário
     import scripts.migrate_lore_nova as migrate
+
     codex = str(tmp_path / "codex")
     path_curated = _write_md(codex, "npc_manual.md", _front("npc_manual", curated=True))
     path_gerado = _write_md(codex, "npc_gerado.md", _front("npc_gerado"))
@@ -144,14 +167,14 @@ def test_curated_sobrevive_ao_delete_loop(tmp_path, monkeypatch):
 
 def test_override_em_curated_e_ignorado(tmp_path):
     codex = str(tmp_path / "codex")
-    path = _write_md(codex, "npc_manual.md", _front("npc_manual", curated=True),
-                     body="Manual.")
+    path = _write_md(codex, "npc_manual.md", _front("npc_manual", curated=True), body="Manual.")
     entities = {"npc_manual": _ent("npc_manual")}
-    apply_overrides(entities, {"npc_manual": {"aliases": ["Hackeado"],
-                                              "append_body": "Não entra."}}, codex)
+    apply_overrides(
+        entities, {"npc_manual": {"aliases": ["Hackeado"], "append_body": "Não entra."}}, codex
+    )
     fm, body = parse_codex_file(path)
-    assert fm["aliases"] == []          # intacto
-    assert body == "Manual."            # intacto
+    assert fm["aliases"] == []  # intacto
+    assert body == "Manual."  # intacto
     assert entities["npc_manual"]["aliases"] == []
 
 
@@ -159,12 +182,16 @@ def test_override_em_curated_e_ignorado(tmp_path):
 # Etapa 3 — lint de overrides
 # ---------------------------------------------------------------------------
 
+
 def _write_graph(graph_dir, entities=None, extra=None) -> str:
     os.makedirs(graph_dir, exist_ok=True)
-    for fname, conteudo in (("entities.json", entities or {}),
-                            ("entities_extra.json", extra or {}),
-                            ("components.json", {}), ("edges.json", []),
-                            ("relation_types.json", {})):
+    for fname, conteudo in (
+        ("entities.json", entities or {}),
+        ("entities_extra.json", extra or {}),
+        ("components.json", {}),
+        ("edges.json", []),
+        ("relation_types.json", {}),
+    ):
         with open(os.path.join(graph_dir, fname), "w", encoding="utf-8") as f:
             json.dump(conteudo, f, ensure_ascii=False)
     return str(graph_dir)
@@ -197,8 +224,7 @@ def test_validate_overrides_ok(tmp_path):
 def test_override_em_curated_vira_aviso(tmp_path):
     codex = str(tmp_path / "codex")
     _write_md(codex, "npc_manual.md", _front("npc_manual", curated=True))
-    graph = _write_graph(tmp_path / "graph",
-                         extra={"npc_manual": _ent("npc_manual")})
+    graph = _write_graph(tmp_path / "graph", extra={"npc_manual": _ent("npc_manual")})
     ov = _write_yaml(tmp_path, {"npc_manual": {"aliases": ["X"]}})
     findings = validate_overrides(codex, ov, graph)
     assert any(f.severity == "warning" and "curated" in f.message for f in findings)
@@ -215,8 +241,7 @@ def test_curated_sem_entidade_gera_aviso(tmp_path):
 
 def test_curated_agregador_nao_gera_aviso(tmp_path):
     codex = str(tmp_path / "codex")
-    _write_md(codex, "story_notas.md",
-              _front("story_notas", type="world_story", curated=True))
+    _write_md(codex, "story_notas.md", _front("story_notas", type="world_story", curated=True))
     graph = _write_graph(tmp_path / "graph")
     ov = _write_yaml(tmp_path, {})
     assert validate_overrides(codex, ov, graph) == []
@@ -226,18 +251,27 @@ def test_curated_agregador_nao_gera_aviso(tmp_path):
 # Etapa 4 — gate no reindex
 # ---------------------------------------------------------------------------
 
+
 def test_reindex_aborta_com_erro_de_lint(monkeypatch, caplog):
     import rag
     from services import content_validator
     from services.content_validator import Finding
 
-    monkeypatch.setattr(content_validator, "validate_all", lambda: [
-        Finding("references", "error", "data/graph/edges.json", "e_x",
-                "target 'nada' não existe nas entidades"),
-    ])
+    monkeypatch.setattr(
+        content_validator,
+        "validate_all",
+        lambda: [
+            Finding(
+                "references",
+                "error",
+                "data/graph/edges.json",
+                "e_x",
+                "target 'nada' não existe nas entidades",
+            ),
+        ],
+    )
     chamado = {"embeddings": False}
-    monkeypatch.setattr(rag, "get_embeddings",
-                        lambda: chamado.__setitem__("embeddings", True))
+    monkeypatch.setattr(rag, "get_embeddings", lambda: chamado.__setitem__("embeddings", True))
 
     caplog.set_level("ERROR", logger="rpg.rag")
     with pytest.raises(SystemExit) as exc:
@@ -264,15 +298,16 @@ def test_templates_existem_e_tem_frontmatter_valido():
             text = f.read()
         assert text.startswith("---"), f"{fname}: sem frontmatter"
         for campo in ("id:", "type:", "name:", "tags:", "visibility:", "curated: true"):
-            assert re.search(rf"^{campo}", text, re.MULTILINE), \
+            assert re.search(rf"^{campo}", text, re.MULTILINE), (
                 f"{fname}: frontmatter sem '{campo}'"
+            )
 
 
 def test_templates_fora_do_codex_dir():
     from services.codex_loader import CODEX_DIR
+
     for root, _dirs, files in os.walk(CODEX_DIR):
         for fname in files:
             with open(os.path.join(root, fname), encoding="utf-8") as f:
                 inicio = f.read(400)
-            assert "<slug" not in inicio, \
-                f"template vazou para dentro de {CODEX_DIR}: {fname}"
+            assert "<slug" not in inicio, f"template vazou para dentro de {CODEX_DIR}: {fname}"

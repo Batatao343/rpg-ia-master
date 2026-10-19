@@ -1,6 +1,7 @@
 """Suíte da spec balanceamento-early-game — métricas de balanceamento (R5),
 tuning de spawn nível 1 (R2), derrota narrada "O Saque" (R3) e pacing de
 replan (R4). Tudo offline/MockLLM (conftest força RPG_FORCE_MOCK=1)."""
+
 import json
 import os
 
@@ -9,46 +10,57 @@ from playtest.runner import run_campaign
 
 # --- Etapa 1 — métricas R5 no summary/report --------------------------------
 
+
 def test_summary_tem_metricas_de_balanceamento(tmp_path, monkeypatch):
     monkeypatch.setattr(telemetry, "PLAYTEST_RUNS_DIR", str(tmp_path))
     res = run_campaign("combate", turns=6, seed=42)
     summ = telemetry.persist_campaign("run1", res)
-    for campo in ("first_death_turn", "downed_count", "avg_hp_pct_after_combat",
-                  "replan_count"):
+    for campo in ("first_death_turn", "downed_count", "avg_hp_pct_after_combat", "replan_count"):
         assert campo in summ, campo
     assert summ["first_death_turn"] is None or isinstance(summ["first_death_turn"], int)
     assert isinstance(summ["downed_count"], int)
-    assert summ["avg_hp_pct_after_combat"] is None or (
-        0 <= summ["avg_hp_pct_after_combat"] <= 100)
+    assert summ["avg_hp_pct_after_combat"] is None or (0 <= summ["avg_hp_pct_after_combat"] <= 100)
     assert isinstance(summ["replan_count"], int)
     # JSONL por turno carrega os campos crus que alimentam as métricas
     jsonl = os.path.join(str(tmp_path), "run1", f"{res.profile}_{res.seed}.jsonl")
     with open(jsonl, encoding="utf-8") as f:
         recs = [json.loads(l) for l in f if l.strip()]
-    assert all("player_max_hp" in r and "combat_active" in r and "replanned" in r
-               for r in recs)
+    assert all("player_max_hp" in r and "combat_active" in r and "replanned" in r for r in recs)
 
 
-def _synthetic_balance_run(dirpath, profile, seed, first_death=None, downed=0,
-                           hp_pct=55.0, replans=3):
+def _synthetic_balance_run(
+    dirpath, profile, seed, first_death=None, downed=0, hp_pct=55.0, replans=3
+):
     os.makedirs(dirpath, exist_ok=True)
     summ = {
-        "profile": profile, "seed": seed, "turns_completed": 10, "errors": 0,
-        "violations": {}, "routes": {"storyteller": 8, "combat_agent": 2},
-        "latency_ms": {"p50": 30, "p95": 90}, "deaths": 1 if first_death else 0,
-        "final_level": 2, "final_gold": 40, "locations_visited": 5,
+        "profile": profile,
+        "seed": seed,
+        "turns_completed": 10,
+        "errors": 0,
+        "violations": {},
+        "routes": {"storyteller": 8, "combat_agent": 2},
+        "latency_ms": {"p50": 30, "p95": 90},
+        "deaths": 1 if first_death else 0,
+        "final_level": 2,
+        "final_gold": 40,
+        "locations_visited": 5,
         "quests": {"created": 1, "completed": 0},
-        "llm_requests_by_provider": {}, "cost_usd_total": 0.0,
-        "cost_usd_by_tier": {}, "fell_back_turns": 0, "mock": True,
-        "first_death_turn": first_death, "downed_count": downed,
-        "avg_hp_pct_after_combat": hp_pct, "replan_count": replans,
+        "llm_requests_by_provider": {},
+        "cost_usd_total": 0.0,
+        "cost_usd_by_tier": {},
+        "fell_back_turns": 0,
+        "mock": True,
+        "first_death_turn": first_death,
+        "downed_count": downed,
+        "avg_hp_pct_after_combat": hp_pct,
+        "replan_count": replans,
     }
-    with open(os.path.join(dirpath, f"{profile}_{seed}.summary.json"), "w",
-              encoding="utf-8") as f:
+    with open(os.path.join(dirpath, f"{profile}_{seed}.summary.json"), "w", encoding="utf-8") as f:
         json.dump(summ, f)
 
 
 # --- Etapa 2 — tuning de spawn nível 1 (R2) ---------------------------------
+
 
 def _elite(i):
     return {"id": f"elite_{i}", "name": f"Elite {i}", "type": "elite", "hp": 30, "max_hp": 30}
@@ -60,8 +72,8 @@ def _minion(i):
 
 def test_encontro_forcado_nivel1_max_um_elite():
     import encounter_budget as eb
-    kept, _ = eb.clamp_encounter([_elite(1), _elite(2), _minion(1)], budget=99,
-                                 player_level=1)
+
+    kept, _ = eb.clamp_encounter([_elite(1), _elite(2), _minion(1)], budget=99, player_level=1)
     elites = [e for e in kept if eb.tier_cost(e) == eb.TIER_COST["elite"]]
     assert len(elites) == 1
     # nível 2+ segue sem o clamp extra
@@ -75,6 +87,7 @@ def test_encontro_forcado_nivel1_max_um_elite():
 
 def test_piso_de_hp_das_classes_frageis():
     from gamedata import CLASSES
+
     for cls in CLASSES.values() if isinstance(CLASSES, dict) else CLASSES:
         data = cls if isinstance(cls, dict) else CLASSES[cls]
         assert int(data["base_stats"]["hp"]) >= 22, data
@@ -95,17 +108,19 @@ def test_report_compara_metricas_no_baseline(tmp_path):
 
 # --- Etapa 3 — derrota narrada "O Saque" (R3) --------------------------------
 
+
 def _world(loc_id="pm_profundezas", visited=None):
     import world_utils as wu
-    w = wu.ensure_world({"current_location_id": loc_id,
-                         "visited": visited or ["nova_arcadia", loc_id]})
+
+    w = wu.ensure_world(
+        {"current_location_id": loc_id, "visited": visited or ["nova_arcadia", loc_id]}
+    )
     from gamedata import get_location
+
     loc = get_location(loc_id) or {}
     w["current_location"] = loc.get("name", loc_id)
     w["danger_level"] = loc.get("danger", 1)
     return w
-
-
 
 
 # (spec checkpoints-morte: os testes de death_outcome/apply_downed/O Saque foram
@@ -114,8 +129,14 @@ def _world(loc_id="pm_profundezas", visited=None):
 
 def test_validator_rejeita_player_downed_proposto_por_llm():
     from services.world_validators import validate_proposal
-    prop = {"type": "player_downed", "actor_id": "player", "target_id": "player",
-            "detail": "caiu", "payload": {}}  # proposta de LLM: sem source
+
+    prop = {
+        "type": "player_downed",
+        "actor_id": "player",
+        "target_id": "player",
+        "detail": "caiu",
+        "payload": {},
+    }  # proposta de LLM: sem source
     res = validate_proposal(prop, {"world": {"turn_count": 1}, "event_log": []})
     assert not res.ok
     # com source="combat" (motor) passa — e só 1x por campanha
@@ -123,29 +144,39 @@ def test_validator_rejeita_player_downed_proposto_por_llm():
     assert validate_proposal(prop_engine, {"world": {"turn_count": 1}, "event_log": []}).ok
     log_com_downed = [{"type": "player_downed", "target_id": "player"}]
     assert not validate_proposal(
-        prop_engine, {"world": {"turn_count": 2}, "event_log": log_com_downed}).ok
+        prop_engine, {"world": {"turn_count": 2}, "event_log": log_com_downed}
+    ).ok
 
 
 # --- Etapa 4 — pacing de replan (R4) -----------------------------------------
 
+
 def _plan(location, beats_status=("done", "pending"), last_planned=0):
-    return {"location": location,
-            "beats": [{"description": f"b{i}", "status": s}
-                      for i, s in enumerate(beats_status)],
-            "climax": "x", "current_step": 1, "last_planned_turn": last_planned,
-            "arc_title": "Arco de teste"}
+    return {
+        "location": location,
+        "beats": [{"description": f"b{i}", "status": s} for i, s in enumerate(beats_status)],
+        "climax": "x",
+        "current_step": 1,
+        "last_planned_turn": last_planned,
+        "arc_title": "Arco de teste",
+    }
 
 
 def _cm_state(plan, current_location, turn=5, needs_replan=False):
-    return {"world": {"current_location": current_location, "turn_count": turn},
-            "campaign_plan": plan, "needs_replan": needs_replan}
+    return {
+        "world": {"current_location": current_location, "turn_count": turn},
+        "campaign_plan": plan,
+        "needs_replan": needs_replan,
+    }
 
 
 def test_viagem_intra_regiao_nao_replaneja():
     from agents.campaign_manager import _should_replan
+
     # Nova Arcádia → Anel Dourado (mesmo hub/região) com beat concluído
     st = _cm_state(_plan("Nova Arcádia"), "Anel Dourado", turn=5)
     from gamedata import get_location
+
     anel = get_location("na_anel_dourado")
     st["world"]["current_location"] = anel["name"]
     assert _should_replan(st) is False
@@ -154,26 +185,30 @@ def test_viagem_intra_regiao_nao_replaneja():
 def test_viagem_para_regiao_nova_replaneja():
     from agents.campaign_manager import _should_replan
     from gamedata import get_location
+
     pantano = get_location("pantano_melancolia")
-    st = _cm_state(_plan("Nova Arcádia", beats_status=("done", "pending")),
-                   pantano["name"], turn=5)
+    st = _cm_state(_plan("Nova Arcádia", beats_status=("done", "pending")), pantano["name"], turn=5)
     assert _should_replan(st) is True
     # Região nova invalida o grounding mesmo em arco recém-começado.
-    st2 = _cm_state(_plan("Nova Arcádia", beats_status=("pending", "pending")),
-                    pantano["name"], turn=5)
+    st2 = _cm_state(
+        _plan("Nova Arcádia", beats_status=("pending", "pending")), pantano["name"], turn=5
+    )
     st2["campaign_plan"]["current_step"] = 0
     assert _should_replan(st2) is True
 
 
 def test_local_de_plano_irresoluvel_nao_replaneja_por_viagem():
     from agents.campaign_manager import _should_replan
-    st = _cm_state(_plan("Terras Cinzentas", beats_status=("done", "pending")),
-                   "Nova Arcádia", turn=5)
+
+    st = _cm_state(
+        _plan("Terras Cinzentas", beats_status=("done", "pending")), "Nova Arcádia", turn=5
+    )
     assert _should_replan(st) is False
 
 
 def test_intervalo_15_turnos():
     from agents.campaign_manager import REPLAN_INTERVAL, _should_replan
+
     assert REPLAN_INTERVAL == 15
     plan = _plan("Nova Arcádia", beats_status=("pending", "pending"), last_planned=0)
     plan["current_step"] = 0
@@ -185,6 +220,7 @@ def test_intervalo_15_turnos():
 
 def test_needs_replan_explicito_continua_imediato():
     from agents.campaign_manager import _should_replan
+
     plan = _plan("Nova Arcádia", beats_status=("pending", "pending"), last_planned=4)
     plan["current_step"] = 0
     st = _cm_state(plan, "Nova Arcádia", turn=5, needs_replan=True)
@@ -195,6 +231,7 @@ def test_combate_nao_morre_nivel1_mock_seed42():
     """Meta R2/R3: na rodada mock 50t seed 42, a PRIMEIRA queda do `combate`
     nunca vira memorial fora de apex — vira O Saque e a campanha continua."""
     from playtest.runner import run_campaign
+
     res = run_campaign("combate", turns=50, seed=42)
     final = res.final_state
     log = final.get("event_log") or []
@@ -214,12 +251,15 @@ def test_combate_nao_morre_nivel1_mock_seed42():
 def test_combate_downed_end_to_end_mock():
     """Fluxo integrado: HP=0 na 1ª queda → downed (sem game_over), campanha segue."""
     from playtest.runner import run_campaign
+
     res = run_campaign("agressivo", turns=20, seed=42)
     final = res.final_state
     downs = [e for e in (final.get("event_log") or []) if e.get("type") == "player_downed"]
-    deaths_lvl1 = [r for r in res.history
-                   if r.player_max_hp and r.player_hp <= 0 and r.player_level == 1
-                   and final.get("game_over")]
+    deaths_lvl1 = [
+        r
+        for r in res.history
+        if r.player_max_hp and r.player_hp <= 0 and r.player_level == 1 and final.get("game_over")
+    ]
     # agressivo caía no turno 8 do baseline; agora a 1ª queda vira Saque
     assert len(downs) <= 1
     if downs:

@@ -1,4 +1,5 @@
 """SPEC-255: logs do worker de jobs, correlacao com o request de origem e contagem no drain."""
+
 import json
 import uuid
 from contextlib import contextmanager
@@ -57,9 +58,18 @@ class _Queue:
 
 
 def _job(kind="project_archive", trace=None, attempt=1, max_attempts=3):
-    return LeasedJob(job_id=uuid.uuid4(), lease_token=uuid.uuid4(), attempt=attempt,
-                     request=JobRequest(kind=kind, dedupe_key="k", payload={"texto": SENT},
-                                        max_attempts=max_attempts, trace=trace))
+    return LeasedJob(
+        job_id=uuid.uuid4(),
+        lease_token=uuid.uuid4(),
+        attempt=attempt,
+        request=JobRequest(
+            kind=kind,
+            dedupe_key="k",
+            payload={"texto": SENT},
+            max_attempts=max_attempts,
+            trace=trace,
+        ),
+    )
 
 
 def _worker(queue, handler):
@@ -73,7 +83,7 @@ def test_job_failure_logs_class_and_retry(capsys):
         raise ValueError(f"segredo {SENT}")
 
     _worker(queue, boom)._run(_job())
-    assert queue.failed == ["exc:ValueError"]                    # nunca so "handler_error"
+    assert queue.failed == ["exc:ValueError"]  # nunca so "handler_error"
     (failed,) = [x for x in _lines(capsys) if x["event"] == "job.failed"]
     assert failed["error_type"] == "ValueError" and failed["error_code"] == "exc:ValueError"
     assert failed["will_retry"] is True and failed["next_run_in_s"] == 4 and failed["attempt"] == 1
@@ -111,7 +121,9 @@ def test_job_inherits_request_id_from_enqueue(capsys):
     _worker(queue, lambda payload: {"ok": True})._run(_job(trace=trace))
     lines = _lines(capsys)
     assert [x["event"] for x in lines] == ["job.started", "job.completed"]
-    assert all(x["request_id"] == "turn-req-0001" and x["action_ref"] == "abcd1234abcd1234" for x in lines)
+    assert all(
+        x["request_id"] == "turn-req-0001" and x["action_ref"] == "abcd1234abcd1234" for x in lines
+    )
     done = lines[1]
     assert done["level"] == "info" and done["duration_ms"] >= 0 and done["attempt"] == 1
     assert SENT not in json.dumps(lines)
@@ -136,6 +148,7 @@ def test_deferred_and_lease_lost_logged(capsys):
 
 def test_drain_counts_failures(capsys):
     from workers.drain import drain_jobs
+
     queue = _Queue(fail_result={"status": "dead", "next_run_in_s": 0})
     queue.leased = [_job(), _job(), _job()]
     calls = {"n": 0}
@@ -153,6 +166,7 @@ def test_drain_counts_failures(capsys):
 
 def test_old_payload_without_trace_ok():
     from infrastructure.postgres_jobs import _split_trace
+
     payload, trace = _split_trace({"a": 1})
     assert payload == {"a": 1} and trace is None
     payload, trace = _split_trace({"a": 1, "_trace": {"request_id": "r1234567", "x": "no"}})
@@ -185,6 +199,7 @@ class _Conn:
 
 def test_lease_expiry_dead_logged(capsys, monkeypatch):
     from infrastructure import postgres_jobs
+
     dead_id = uuid.uuid4()
     conn = _Conn([[{"id": dead_id}], []])
 
@@ -203,10 +218,13 @@ def test_lease_expiry_dead_logged(capsys, monkeypatch):
 
 def test_enqueue_stores_trace_inside_payload(monkeypatch):
     from infrastructure import postgres_jobs
+
     conn = _Conn([[{"id": uuid.uuid4()}]])
     queue = postgres_jobs.PostgresJobQueue(pool=object(), lease_seconds=90)
     with correlation_scope(request_id="origin-req-0001", action_id=str(uuid.uuid4())):
-        queue.enqueue(JobRequest(kind="project_archive", dedupe_key="k", payload={"a": 1}), connection=conn)
+        queue.enqueue(
+            JobRequest(kind="project_archive", dedupe_key="k", payload={"a": 1}), connection=conn
+        )
     stored = conn.calls[0][1][5].obj
     assert stored["a"] == 1 and stored["_trace"]["request_id"] == "origin-req-0001"
     assert stored["_trace"]["action_ref"]

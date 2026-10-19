@@ -94,10 +94,12 @@ import pytest
 
 pytestmark = pytest.mark.llm_contract
 
+
 @pytest.fixture(autouse=True)
 def _real_llm(monkeypatch):
     monkeypatch.delenv("RPG_FORCE_MOCK", raising=False)
     # invalida caches de llm_setup se houver
+
 
 def test_router_classifica_combate():  # _BUDGET: 1 request FAST
     state = _estado_minimo(acao="Desembainho a espada e ataco o goblin!")

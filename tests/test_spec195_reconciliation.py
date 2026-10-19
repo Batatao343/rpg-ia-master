@@ -1,5 +1,6 @@
 """SPEC-195 offline contracts: golden vectors (docs/spec195/refund-debt-policy.md), state
 machines, idempotency, order independence, debt hold. Postgres store tests skip without a DSN."""
+
 import itertools
 import os
 from uuid import uuid4
@@ -54,14 +55,20 @@ def check_invariants(store, owner):
     entries = [e for e in store.entries if e["owner"] == owner]
     amt = lambda t: sum(e["amount"] for e in entries if e["type"] == t)  # noqa: E731
     assert store.available(owner) >= 0 and store.debt_of(owner) >= 0
-    assert store.available(owner) == (amt("purchase") + amt("claw_release") - amt("clawback")
-                                      - amt("debt_settlement") - amt("reserve"))
+    assert store.available(owner) == (
+        amt("purchase")
+        + amt("claw_release")
+        - amt("clawback")
+        - amt("debt_settlement")
+        - amt("reserve")
+    )
     debt = [d for d in store.debt if d["owner"] == owner]
     kind = lambda k: sum(d["amount"] for d in debt if d["kind"] == k)  # noqa: E731
     assert store.debt_of(owner) == kind("open") - kind("settle") - kind("release")
 
 
 # ------------------------------------------------------------------ golden vectors
+
 
 def test_v1_full_refund_unspent():
     store, owner, rec = setup()
@@ -185,9 +192,14 @@ def test_v13_fee_reconciled_separate_record_dedup():
 
 # ------------------------------------------------------------------ properties
 
-EVENT_SET = [ev("refund", 1, 200), ev("dispute_open", 2, 100, "du_1"),
-             ev("dispute_lost", 3, 100, "du_1"), ev("refund", 4, 350),
-             ev("dispute_open", 5, 150, "du_2"), ev("dispute_won", 6, 150, "du_2")]
+EVENT_SET = [
+    ev("refund", 1, 200),
+    ev("dispute_open", 2, 100, "du_1"),
+    ev("dispute_lost", 3, 100, "du_1"),
+    ev("refund", 4, 350),
+    ev("dispute_open", 5, 150, "du_2"),
+    ev("dispute_won", 6, 150, "du_2"),
+]
 
 
 @pytest.mark.parametrize("spent", [0, 2500, 5000])
@@ -246,14 +258,27 @@ def test_state_machines_are_closed():
 
 # ------------------------------------------------------------------ normalization / jobs
 
+
 def test_normalize_stripe_events():
-    refund = normalize_stripe_event("charge.refunded", "evt_a", {
-        "payment_intent": "pi_1", "amount_refunded": 200, "object_id": "ch_1"})
+    refund = normalize_stripe_event(
+        "charge.refunded",
+        "evt_a",
+        {"payment_intent": "pi_1", "amount_refunded": 200, "object_id": "ch_1"},
+    )
     assert (refund.kind, refund.amount_cents) == ("refund", 200)
-    assert normalize_stripe_event("charge.dispute.created", "e", {
-        "payment_intent": "pi_1", "dispute_status": "warning_needs_response", "amount": 5}) is None
-    closed = normalize_stripe_event("charge.dispute.closed", "e", {
-        "payment_intent": "pi_1", "dispute_status": "won", "amount": 500, "object_id": "du_1"})
+    assert (
+        normalize_stripe_event(
+            "charge.dispute.created",
+            "e",
+            {"payment_intent": "pi_1", "dispute_status": "warning_needs_response", "amount": 5},
+        )
+        is None
+    )
+    closed = normalize_stripe_event(
+        "charge.dispute.closed",
+        "e",
+        {"payment_intent": "pi_1", "dispute_status": "won", "amount": 500, "object_id": "du_1"},
+    )
     assert closed.kind == "dispute_won"
     assert normalize_stripe_event("charge.refunded", "e", {"payment_intent": None}) is None
 
@@ -278,7 +303,9 @@ class _Purchases:
 
 def test_batch_polls_google_dedups_and_retries_unconsumed():
     store, owner, _ = setup(spent=1000, provider=GOOGLE, ref="GPA.7")
-    voided = normalize_google_voided({"orderId": "GPA.7", "voidedTimeMillis": "5", "voidedReason": 1})
+    voided = normalize_google_voided(
+        {"orderId": "GPA.7", "voidedTimeMillis": "5", "voidedReason": 1}
+    )
     purchases = _Purchases()
     rec = Reconciler(store, _Google([voided]), purchases)
     assert rec.poll_google_voided() == 1
@@ -298,12 +325,29 @@ def test_google_client_lists_voided_with_pagination():
             return httpx.Response(200, json={"access_token": "t", "expires_in": 3000})
         seen.append(dict(request.url.params))
         if "token" not in request.url.params:
-            return httpx.Response(200, json={"voidedPurchases": [
-                {"orderId": "GPA.1", "voidedTimeMillis": "10", "voidedReason": 6, "voidedSource": 2}],
-                "tokenPagination": {"nextPageToken": "n1"}})
-        return httpx.Response(200, json={"voidedPurchases": [{"orderId": "GPA.2", "voidedTimeMillis": "11"}]})
-    client = GooglePlayClient(GooglePlaySettings("com.x.y", {"private_key": "k", "client_email": "e"}),
-                              transport=httpx.MockTransport(handler), clock=lambda: 2_000_000_000)
+            return httpx.Response(
+                200,
+                json={
+                    "voidedPurchases": [
+                        {
+                            "orderId": "GPA.1",
+                            "voidedTimeMillis": "10",
+                            "voidedReason": 6,
+                            "voidedSource": 2,
+                        }
+                    ],
+                    "tokenPagination": {"nextPageToken": "n1"},
+                },
+            )
+        return httpx.Response(
+            200, json={"voidedPurchases": [{"orderId": "GPA.2", "voidedTimeMillis": "11"}]}
+        )
+
+    client = GooglePlayClient(
+        GooglePlaySettings("com.x.y", {"private_key": "k", "client_email": "e"}),
+        transport=httpx.MockTransport(handler),
+        clock=lambda: 2_000_000_000,
+    )
     client._assertion = lambda: "jwt"
     events = client.list_voided_events()
     assert [e.kind for e in events] == ["revoked", "voided"]
@@ -318,6 +362,7 @@ def test_cron_reconciliation_route(monkeypatch):
     from fastapi.testclient import TestClient
 
     from services import cron_internal
+
     monkeypatch.setenv("RPG_CRON_SECRET", "s" * 40)
     store, owner, _ = setup(spent=3000)
     rec = Reconciler(store, _Google([]), _Purchases())
@@ -327,23 +372,37 @@ def test_cron_reconciliation_route(monkeypatch):
     app.include_router(cron_internal.router)
     client = TestClient(app)
     assert client.post("/internal/cron/reconciliation").status_code == 401
-    body = client.post("/internal/cron/reconciliation", headers={"Authorization": "Bearer " + "s" * 40}).json()
+    body = client.post(
+        "/internal/cron/reconciliation", headers={"Authorization": "Bearer " + "s" * 40}
+    ).json()
     assert body["ok"] and body["applied"] == 1 and state(store, owner) == (0, 3000)
 
 
 def test_admin_cli_requires_audit_fields_and_confirmation():
     from scripts import admin_wallet_adjust as cli
+
     parser = cli.build_parser()
     owner = str(uuid4())
-    base = ["credit", "--owner", owner, "--amount-milli", "10", "--actor", str(uuid4()),
-            "--reason", "r", "--reference", "INC-1"]
+    base = [
+        "credit",
+        "--owner",
+        owner,
+        "--amount-milli",
+        "10",
+        "--actor",
+        str(uuid4()),
+        "--reason",
+        "r",
+        "--reference",
+        "INC-1",
+    ]
     args = parser.parse_args(base)
     cli.validate(args, parser)
     assert args.apply is False  # dry-run default
     for missing in ("--actor", "--reason", "--reference"):
         argv = list(base)
         i = argv.index(missing)
-        del argv[i:i + 2]
+        del argv[i : i + 2]
         with pytest.raises(SystemExit):
             parser.parse_args(argv)
     with pytest.raises(SystemExit):
@@ -354,6 +413,7 @@ def test_admin_cli_requires_audit_fields_and_confirmation():
 
 def test_no_public_endpoint_for_adjustment():
     import api
+
     paths = {getattr(r, "path", "") for r in api.app.routes}
     assert not any("adjust" in p or "forgive" in p for p in paths)
 
@@ -361,6 +421,7 @@ def test_no_public_endpoint_for_adjustment():
 @pytest.mark.skipif(not os.getenv("RPG_TEST_DATABASE_URL"), reason="RPG_TEST_DATABASE_URL absent")
 def test_postgres_store_requires_migration_applied():
     import psycopg
+
     with psycopg.connect(os.environ["RPG_TEST_DATABASE_URL"]) as db:
         row = db.execute("select to_regclass('app.wallet_debt_entries')").fetchone()
     assert row[0] is not None
@@ -368,11 +429,12 @@ def test_postgres_store_requires_migration_applied():
 
 # ------------------------------------------------------------------ review fixes (H1/H2/M1/M3/L6)
 
+
 def test_h1_debt_only_passes_never_collide_on_reference_ids():
     store, owner, rec = setup(spent=5000)  # everything spent: available 0
-    apply(rec, ev("refund", 1, 200))       # debt 2000
+    apply(rec, ev("refund", 1, 200))  # debt 2000
     assert state(store, owner) == (0, 2000)
-    apply(rec, ev("refund", 2, 500))       # +3000 debt, second debt-only pass
+    apply(rec, ev("refund", 2, 500))  # +3000 debt, second debt-only pass
     assert state(store, owner) == (0, 5000)
     refs = [(d["owner"], d["kind"], d["ref"]) for d in store.debt]
     assert len(refs) == len(set(refs))
@@ -385,7 +447,7 @@ def test_h1_open_then_won_then_refund_with_zero_available():
     assert state(store, owner) == (0, 5000)
     apply(rec, ev("dispute_won", 2, 500, "du_1"))
     assert state(store, owner) == (0, 0)
-    apply(rec, ev("refund", 3, 500))       # reopens the debt: reference ids must be fresh
+    apply(rec, ev("refund", 3, 500))  # reopens the debt: reference ids must be fresh
     assert state(store, owner) == (0, 5000)
     check_invariants(store, owner)
 
@@ -414,6 +476,7 @@ def test_h2_unresolvable_events_do_not_starve_new_refunds():
 
 def test_h2_parked_event_becomes_orphaned_after_max_attempts():
     from services.purchase_reconciliation import PARK_MAX_ATTEMPTS
+
     clock = [1000.0]
     store = MemoryStore(clock=lambda: clock[0])
     rec = Reconciler(store)
@@ -423,7 +486,10 @@ def test_h2_parked_event_becomes_orphaned_after_max_attempts():
         out = rec.reconcile_batch()
         outcomes.append((out["parked"], out["orphaned"]))
         clock[0] += 7 * 3600  # beyond the backoff cap
-    assert sum(o for _, o in outcomes) == 1 and store.parking_counts() == {"parked": 0, "orphaned": 1}
+    assert sum(o for _, o in outcomes) == 1 and store.parking_counts() == {
+        "parked": 0,
+        "orphaned": 1,
+    }
     assert rec.reconcile_batch()["orphaned_total"] == 1 and store.open_refs(10) == []
 
 
@@ -451,10 +517,21 @@ def test_m1_partial_forgive_then_release_splits_debt_forgive_and_credit():
 
 
 def test_m3_revoke_reasons_follow_google_enum():
-    for reason, kind in ((5, "revoked"), (6, "revoked"), (7, "revoked"),
-                         (8, "voided"), (0, "voided"), (1, "voided"), (2, "voided"), (3, "voided"),
-                         (4, "voided"), (99, "voided")):
-        e = normalize_google_voided({"orderId": "GPA.9", "voidedTimeMillis": "1", "voidedReason": reason})
+    for reason, kind in (
+        (5, "revoked"),
+        (6, "revoked"),
+        (7, "revoked"),
+        (8, "voided"),
+        (0, "voided"),
+        (1, "voided"),
+        (2, "voided"),
+        (3, "voided"),
+        (4, "voided"),
+        (99, "voided"),
+    ):
+        e = normalize_google_voided(
+            {"orderId": "GPA.9", "voidedTimeMillis": "1", "voidedReason": reason}
+        )
         assert e.kind == kind, reason
 
 
@@ -464,19 +541,33 @@ def test_l6_settlement_order_is_oldest_purchase_first_then_key():
     for ref in ("pi_b", "pi_a"):
         store.credit_purchase(owner, STRIPE, ref, 1000, 100)
         store.spend(owner, 1000)
-    apply(rec, ev("refund", "b", 100, ref="pi_b"))   # b opens first (older)
+    apply(rec, ev("refund", "b", 100, ref="pi_b"))  # b opens first (older)
     apply(rec, ev("refund", "a", 100, ref="pi_a"))
     store.credit_purchase(owner, STRIPE, "pi_c", 1500, 150)
     settles = [d for d in store.debt if d["kind"] == "settle"]
-    assert [d["key"] for d in settles] == ["stripe:pi_b", "stripe:pi_a"][:len(settles)]
+    assert [d["key"] for d in settles] == ["stripe:pi_b", "stripe:pi_a"][: len(settles)]
     assert settles[0]["amount"] == 1000 and settles[1]["amount"] == 500
 
 
 def test_l4_cli_rejects_like_wildcards_in_reference():
     from scripts import admin_wallet_adjust as cli
+
     parser = cli.build_parser()
     for bad in ("INC%", "INC_1"):
-        args = parser.parse_args(["forgive-debt", "--owner", str(uuid4()), "--amount-milli", "1",
-                                  "--actor", str(uuid4()), "--reason", "r", "--reference", bad])
+        args = parser.parse_args(
+            [
+                "forgive-debt",
+                "--owner",
+                str(uuid4()),
+                "--amount-milli",
+                "1",
+                "--actor",
+                str(uuid4()),
+                "--reason",
+                "r",
+                "--reference",
+                bad,
+            ]
+        )
         with pytest.raises(SystemExit):
             cli.validate(args, parser)

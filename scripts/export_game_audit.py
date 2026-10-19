@@ -24,8 +24,12 @@ def _build_sha() -> str:
     if env:
         return env
     try:
-        return subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True,
-                              check=True, timeout=10).stdout.strip() or "unknown"
+        return (
+            subprocess.run(
+                ["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=True, timeout=10
+            ).stdout.strip()
+            or "unknown"
+        )
     except Exception:
         return "unknown"
 
@@ -33,11 +37,15 @@ def _build_sha() -> str:
 def source_from_save(path: Path):
     from persistence import _raw_to_state
     from services.audit_export import AuditSource
+
     raw = json.loads(path.read_text(encoding="utf-8"))
     state = _raw_to_state(raw)
-    return AuditSource(game_id=str(state.get("game_id") or path.stem), state=state,
-                       turns_reason="no_database_local_save",
-                       usage_reason="no_database_local_save")
+    return AuditSource(
+        game_id=str(state.get("game_id") or path.stem),
+        state=state,
+        turns_reason="no_database_local_save",
+        usage_reason="no_database_local_save",
+    )
 
 
 def main(argv=None) -> int:
@@ -50,6 +58,7 @@ def main(argv=None) -> int:
     parser.add_argument("--generated-at", default=None)
     args = parser.parse_args(argv)
     from services.audit_export import bundle_zip, verify_audit_zip
+
     if args.save:
         source = source_from_save(args.save)
     else:
@@ -58,10 +67,13 @@ def main(argv=None) -> int:
         from infrastructure.audit_source import PostgresAuditSource
         from infrastructure.contracts import Principal
         from infrastructure.postgres import PostgresGameStore, PostgresPool
+
         pool = PostgresPool(resolve_dsn(parser, args))
         try:
             principal = Principal(args.owner, "export", str(args.owner), local=True)
-            source = PostgresAuditSource(pool, PostgresGameStore(pool), principal).load(args.game_id)
+            source = PostgresAuditSource(pool, PostgresGameStore(pool), principal).load(
+                args.game_id
+            )
         finally:
             pool.close()
         if source is None:

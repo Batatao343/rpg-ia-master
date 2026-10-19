@@ -1,4 +1,5 @@
 """SPEC-222 R10: regenera docs/spec222/retencao.md a partir do código."""
+
 from __future__ import annotations
 
 import sys

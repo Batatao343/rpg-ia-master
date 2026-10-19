@@ -1,4 +1,5 @@
 """SPEC-225 R1: .gitignore cobre segredos locais preventivos e não ignora o template."""
+
 import shutil
 import subprocess
 from pathlib import Path
@@ -8,15 +9,27 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 
 MUST_IGNORE = [
-    ".env.local", ".env.production", ".env.production.local", "x.keystore", "k.jks",
-    "google-services.json", "backend-service-account-prod.json", "server.pem", "server.key",
-    "cert.p12", "cert.pfx", "keystore.properties", "signing.properties",
+    ".env.local",
+    ".env.production",
+    ".env.production.local",
+    "x.keystore",
+    "k.jks",
+    "google-services.json",
+    "backend-service-account-prod.json",
+    "server.pem",
+    "server.key",
+    "cert.p12",
+    "cert.pfx",
+    "keystore.properties",
+    "signing.properties",
 ]
 MUST_TRACK = [".env.example"]
 
 
 def _git_ignored(name: str) -> bool:
-    result = subprocess.run(["git", "check-ignore", "-q", "--", name], cwd=ROOT, capture_output=True)
+    result = subprocess.run(
+        ["git", "check-ignore", "-q", "--", name], cwd=ROOT, capture_output=True
+    )
     if result.returncode not in (0, 1):
         pytest.skip("git indisponível para check-ignore")
     return result.returncode == 0

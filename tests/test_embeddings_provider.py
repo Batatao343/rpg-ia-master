@@ -4,6 +4,7 @@ Tudo offline: usa embedding fake determinístico (sem rede). A cadeia de
 resolução é controlada por env keys (monkeypatch), o builder por um registro
 fake. Ver specs/SPEC-039-embeddings-provider.md.
 """
+
 import hashlib
 import json
 import os
@@ -56,6 +57,7 @@ def _isolate(monkeypatch):
 
 # --- Etapa 1: cadeia de resolução -------------------------------------------
 
+
 def test_cadeia_resolve_primeiro_com_key(monkeypatch):
     monkeypatch.setenv("JINA_API_KEY", "x")
     monkeypatch.setenv("GOOGLE_API_KEY", "x")
@@ -80,9 +82,9 @@ def test_sem_key_nenhuma_desativa(monkeypatch):
 
 
 def test_override_rpg_embeddings_forca_provider(monkeypatch):
-    monkeypatch.setenv("JINA_API_KEY", "x")          # jina seria o primário
+    monkeypatch.setenv("JINA_API_KEY", "x")  # jina seria o primário
     monkeypatch.setenv("OPENAI_API_KEY", "x")
-    monkeypatch.setenv("RPG_EMBEDDINGS", "openai")   # força openai
+    monkeypatch.setenv("RPG_EMBEDDINGS", "openai")  # força openai
     assert rag._resolve_provider() == "openai"
     emb = rag.get_embeddings()
     assert isinstance(emb, FakeEmbeddings) and emb.tag == "openai"
@@ -90,6 +92,7 @@ def test_override_rpg_embeddings_forca_provider(monkeypatch):
 
 
 # --- Hardening de rede Jina (smoke real 2026-08-02) ------------------------
+
 
 def test_jina_repete_timeout_uma_vez_e_retorna_vetor():
     calls = 0
@@ -107,7 +110,9 @@ def test_jina_repete_timeout_uma_vez_e_retorna_vetor():
 
     client = httpx.Client(transport=httpx.MockTransport(handler))
     emb = rag._JinaEmbeddingsHTTPX(
-        api_key="segredo", model_name="jina-test", client=client,
+        api_key="segredo",
+        model_name="jina-test",
+        client=client,
         max_attempts=2,
     )
 
@@ -125,7 +130,9 @@ def test_jina_timeout_final_e_finito():
 
     client = httpx.Client(transport=httpx.MockTransport(handler))
     emb = rag._JinaEmbeddingsHTTPX(
-        api_key="segredo", model_name="jina-test", client=client,
+        api_key="segredo",
+        model_name="jina-test",
+        client=client,
         max_attempts=2,
     )
 
@@ -144,7 +151,9 @@ def test_jina_erro_nao_transitorio_nao_repete():
 
     client = httpx.Client(transport=httpx.MockTransport(handler))
     emb = rag._JinaEmbeddingsHTTPX(
-        api_key="segredo", model_name="jina-test", client=client,
+        api_key="segredo",
+        model_name="jina-test",
+        client=client,
         max_attempts=2,
     )
 
@@ -161,15 +170,24 @@ def test_jina_usage_scope_captures_each_request_without_text():
         calls += 1
         if calls == 1:
             return httpx.Response(429, request=request, json={"detail": "SECRET_PROMPT"})
-        return httpx.Response(200, request=request, json={
-            "data": [{"index": 0, "embedding": [0.1, 0.2]}],
-            "usage": {"prompt_tokens": 17, "total_tokens": 17,
-                      "private_text": "SECRET_NARRATIVE"},
-        })
+        return httpx.Response(
+            200,
+            request=request,
+            json={
+                "data": [{"index": 0, "embedding": [0.1, 0.2]}],
+                "usage": {
+                    "prompt_tokens": 17,
+                    "total_tokens": 17,
+                    "private_text": "SECRET_NARRATIVE",
+                },
+            },
+        )
 
     client = httpx.Client(transport=httpx.MockTransport(handler))
     emb = rag._JinaEmbeddingsHTTPX(
-        api_key="secret-key", model_name="jina-test", client=client,
+        api_key="secret-key",
+        model_name="jina-test",
+        client=client,
         max_attempts=2,
     )
     captured = []
@@ -185,15 +203,21 @@ def test_opaque_embedding_sdk_is_metered_only_inside_operation_scope():
     with rag.embedding_usage_scope(captured.append):
         embedding = rag.get_embeddings_for("openai")
         assert embedding.embed_query("SECRET_TEXT")
-    assert captured == [{
-        "provider": "openai", "model": "text-embedding-3-small",
-        "outcome": "response", "network_attempted": True, "usage": {},
-    }]
+    assert captured == [
+        {
+            "provider": "openai",
+            "model": "text-embedding-3-small",
+            "outcome": "response",
+            "network_attempted": True,
+            "usage": {},
+        }
+    ]
     assert isinstance(rag.get_embeddings_for("openai"), FakeEmbeddings)
     assert "SECRET" not in repr(captured)
 
 
 # --- Etapa 1: meta por índice + pin -----------------------------------------
+
 
 def test_meta_round_trip(tmp_path):
     rag._write_meta(str(tmp_path), "jina")
@@ -225,8 +249,9 @@ def test_meta_indisponivel_desativa_indice_com_warning(tmp_path, monkeypatch, ca
     with caplog.at_level("WARNING", logger="rpg.rag"):
         emb = rag._embeddings_for_index(str(tmp_path))
     assert emb is None
-    assert any("reindex" in r.message.lower() or "indispon" in r.message.lower()
-               for r in caplog.records)
+    assert any(
+        "reindex" in r.message.lower() or "indispon" in r.message.lower() for r in caplog.records
+    )
 
 
 def test_indice_legado_sem_meta_assume_gemini(tmp_path, monkeypatch):
@@ -238,6 +263,7 @@ def test_indice_legado_sem_meta_assume_gemini(tmp_path, monkeypatch):
 
 # --- Etapa 2: builder real do Jina (sem rede) -------------------------------
 
+
 def test_jina_builder_sem_key_desativa(monkeypatch):
     # Builder real: sem JINA_API_KEY, jina fica indisponível na cadeia.
     monkeypatch.setattr(rag, "_EMBEDDING_BUILDERS", rag._default_builders())
@@ -245,6 +271,7 @@ def test_jina_builder_sem_key_desativa(monkeypatch):
 
 
 # --- Round-trip ingest→query com fake, ponta a ponta ------------------------
+
 
 def test_ingest_e_query_round_trip(tmp_path, monkeypatch):
     monkeypatch.setenv("JINA_API_KEY", "x")
@@ -255,6 +282,7 @@ def test_ingest_e_query_round_trip(tmp_path, monkeypatch):
 
 
 # --- SPEC-234 R4: override + alias de credencial ----------------------------
+
 
 def test_embeddings_override_reopens_pinned_index(tmp_path, monkeypatch):
     monkeypatch.setattr(rag, "_dep_present", lambda _p: True)
@@ -275,5 +303,6 @@ def test_index_with_other_model_is_disabled(tmp_path, monkeypatch):
     monkeypatch.setenv("JINA_API_KEY", "x")
     monkeypatch.setattr(rag, "_dep_present", lambda _p: True)
     (tmp_path / "embeddings_meta.json").write_text(
-        json.dumps({"provider": "jina", "model": "outro-modelo"}), encoding="utf-8")
+        json.dumps({"provider": "jina", "model": "outro-modelo"}), encoding="utf-8"
+    )
     assert rag._embeddings_for_index(str(tmp_path)) is None

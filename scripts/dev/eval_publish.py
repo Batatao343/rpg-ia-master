@@ -31,7 +31,9 @@ PRODUCT_FILES = {"api.py", "main.py", "state.py", "persistence.py", "llm_setup.p
 
 
 def _run(*args: str) -> tuple[int, str]:
-    result = subprocess.run(args, capture_output=True, text=True, encoding="utf-8", errors="replace", cwd=ROOT)
+    result = subprocess.run(
+        args, capture_output=True, text=True, encoding="utf-8", errors="replace", cwd=ROOT
+    )
     return result.returncode, result.stdout.strip()
 
 
@@ -44,7 +46,9 @@ def approval_command(repo: str, run_id: str, environment_id: str) -> str:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--base", default="origin/main")
     parser.add_argument("--allow-mixed", action="store_true")
     parser.add_argument("--watch", action="store_true")
@@ -68,7 +72,9 @@ def main(argv: list[str] | None = None) -> int:
 
     code, remote = _run("git", "branch", "-r", "--contains", head)
     if code or not remote:
-        print("HEAD is not on the remote yet. After review, push it (coordinator decision), then rerun.")
+        print(
+            "HEAD is not on the remote yet. After review, push it (coordinator decision), then rerun."
+        )
         return 0
 
     code, repo = _run("gh", "repo", "view", "--json", "nameWithOwner", "--jq", ".nameWithOwner")
@@ -76,8 +82,17 @@ def main(argv: list[str] | None = None) -> int:
         print("gh unavailable/unauthenticated; open the eval-gates run in the browser to approve")
         return 0
     code, runs = _run(
-        "gh", "run", "list", "--workflow", "eval-gates.yml", "--commit", head,
-        "--json", "databaseId,status", "--limit", "1",
+        "gh",
+        "run",
+        "list",
+        "--workflow",
+        "eval-gates.yml",
+        "--commit",
+        head,
+        "--json",
+        "databaseId,status",
+        "--limit",
+        "1",
     )
     listed = json.loads(runs or "[]") if code == 0 else []
     if not listed:
@@ -86,10 +101,15 @@ def main(argv: list[str] | None = None) -> int:
     run_id = str(listed[0]["databaseId"])
     print(f"run: https://github.com/{repo}/actions/runs/{run_id} ({listed[0]['status']})")
     code, pending = _run(
-        "gh", "api", f"repos/{repo}/actions/runs/{run_id}/pending_deployments",
-        "--jq", '.[] | "\\(.environment.id) \\(.environment.name)"',
+        "gh",
+        "api",
+        f"repos/{repo}/actions/runs/{run_id}/pending_deployments",
+        "--jq",
+        '.[] | "\\(.environment.id) \\(.environment.name)"',
     )
-    waiting = [line.split(" ", 1) for line in pending.splitlines() if line.strip()] if code == 0 else []
+    waiting = (
+        [line.split(" ", 1) for line in pending.splitlines() if line.strip()] if code == 0 else []
+    )
     for environment_id, name in waiting:
         print(f"waiting on environment {name!r}. OWNER approves in the GitHub app/page, or runs:")
         print(f"  {approval_command(repo, run_id, environment_id)}")

@@ -27,11 +27,13 @@ def build_manifest(root: Path) -> dict:
     for path in sorted(item for item in root.rglob("*") if item.is_file()):
         if path.name == "manifest.json":
             continue
-        files.append({
-            "path": path.relative_to(root).as_posix(),
-            "size": path.stat().st_size,
-            "sha256": sha256_file(path),
-        })
+        files.append(
+            {
+                "path": path.relative_to(root).as_posix(),
+                "size": path.stat().st_size,
+                "sha256": sha256_file(path),
+            }
+        )
     return {
         "version": MANIFEST_VERSION,
         "created_at": datetime.now(UTC).isoformat(),

@@ -14,7 +14,9 @@ SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "normalize_specs.py"
 
 def _git(repo: Path, *args: str) -> None:
     subprocess.run(
-        ["git", "-C", str(repo), *args], check=True, capture_output=True,
+        ["git", "-C", str(repo), *args],
+        check=True,
+        capture_output=True,
         env={**os.environ, "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_NOSYSTEM": "1"},
     )
 
@@ -30,8 +32,7 @@ def _repository(tmp_path: Path) -> Path:
         b"# Alpha\r\n\r\n> **Status:** `done`\r\n> **Depende de:** nenhuma\r\n"
     )
     (repo / "specs/beta.md").write_bytes(
-        b"# Beta\r\n\r\n> **Status:** `draft`\r\n"
-        b"> **Depende de:** [alpha](./alpha.md)\r\n"
+        b"# Beta\r\n\r\n> **Status:** `draft`\r\n> **Depende de:** [alpha](./alpha.md)\r\n"
     )
     _git(repo, "add", ".")
     _git(repo, "commit", "-m", "historical specs")
@@ -41,7 +42,9 @@ def _repository(tmp_path: Path) -> Path:
 def _migrate(repo: Path, action: str) -> None:
     result = subprocess.run(
         [sys.executable, str(SCRIPT), "--repo", str(repo), "--expected-count", "2", action],
-        capture_output=True, text=True, encoding="utf-8",
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
         env={**os.environ, "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_NOSYSTEM": "1"},
     )
     assert result.returncode == 0, result.stdout + result.stderr
@@ -51,8 +54,10 @@ def test_migration_preserves_private_untracked_data_and_spec_line_endings(tmp_pa
     repo = _repository(tmp_path)
     original = (repo / "specs/alpha.md").read_bytes()
     private_paths = [
-        ".claude/settings.local.json", "saves/session.json",
-        "data/codex/private.md", "lore_nova/private.txt",
+        ".claude/settings.local.json",
+        "saves/session.json",
+        "data/codex/private.md",
+        "lore_nova/private.txt",
     ]
     for name in private_paths:
         path = repo / name
@@ -61,8 +66,10 @@ def test_migration_preserves_private_untracked_data_and_spec_line_endings(tmp_pa
     _migrate(repo, "--apply")
     _migrate(repo, "--check")
     assert (repo / "specs/SPEC-001-alpha.md").read_bytes() == original
-    assert (repo / "specs/SPEC-002-beta.md").read_bytes().endswith(
-        b"> **Depende de:** [alpha](./SPEC-001-alpha.md)\r\n"
+    assert (
+        (repo / "specs/SPEC-002-beta.md")
+        .read_bytes()
+        .endswith(b"> **Depende de:** [alpha](./SPEC-001-alpha.md)\r\n")
     )
     for name in private_paths:
         assert (repo / name).read_bytes() == b"private reference: specs/alpha.md\r\n"

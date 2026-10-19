@@ -3,6 +3,7 @@
 Os helpers de ``combat_mechanics`` isolados não bastam: estes testes atravessam
 o orquestrador/economia reais para impedir novo corte de fios em futuros cutovers.
 """
+
 import random
 
 import combat_mechanics as cm
@@ -21,21 +22,27 @@ def _scene(*actor_ids: str) -> dict:
 
 
 def _player(class_name: str, card_id: str | None = None, **overrides) -> dict:
-    player = orch.ensure_combat_sheet({
-        "id": "player",
-        "name": class_name,
-        "is_player": True,
-        "class_name": class_name,
-        "virtudes": {
-            "forca": 20, "agilidade": 20, "corpo": 5,
-            "mente": 20, "carisma": 20,
+    player = orch.ensure_combat_sheet(
+        {
+            "id": "player",
+            "name": class_name,
+            "is_player": True,
+            "class_name": class_name,
+            "virtudes": {
+                "forca": 20,
+                "agilidade": 20,
+                "corpo": 5,
+                "mente": 20,
+                "carisma": 20,
+            },
+            "entropy": 0,
+            "max_entropy": 30,
+            "abyss_charge": 0,
+            "known_cards": [card_id] if card_id else [],
+            "prepared_cards": [card_id] if card_id else [],
         },
-        "entropy": 0,
-        "max_entropy": 30,
-        "abyss_charge": 0,
-        "known_cards": [card_id] if card_id else [],
-        "prepared_cards": [card_id] if card_id else [],
-    }, is_player=True)
+        is_player=True,
+    )
     player.update(overrides)
     # Mantém os ataques inimigos determinísticos sem acoplar o teste a uma seed
     # específica do 2d10; ataques de Carta usam Mente/Carisma nos casos abaixo.
@@ -44,18 +51,23 @@ def _player(class_name: str, card_id: str | None = None, **overrides) -> dict:
 
 
 def _enemy(enemy_id: str = "enemy", **overrides) -> dict:
-    enemy = orch.ensure_combat_sheet({
-        "id": enemy_id,
-        "name": "Carrasco",
-        "categoria": "chefe",
-        "virtudes": {
-            "forca": 20, "agilidade": 0, "corpo": 5,
-            "mente": 0, "carisma": 0,
-        },
-        "vitalidade": 80,
-        "max_vitalidade": 80,
-        "dano_base_arma": 8,
-    })
+    enemy = orch.ensure_combat_sheet(
+        {
+            "id": enemy_id,
+            "name": "Carrasco",
+            "categoria": "chefe",
+            "virtudes": {
+                "forca": 20,
+                "agilidade": 0,
+                "corpo": 5,
+                "mente": 0,
+                "carisma": 0,
+            },
+            "vitalidade": 80,
+            "max_vitalidade": 80,
+            "dano_base_arma": 8,
+        }
+    )
     enemy.update(overrides)
     return enemy
 
@@ -77,17 +89,20 @@ def _run(player: dict, enemy: dict, declaration: ct.TurnDeclaration) -> dict:
     if enemy.get("_inert"):
         # SPEC-232 R5: alvo rendido não é mais alvo válido de Carta ofensiva;
         # o boneco de treino fica no conflito, mas passa o turno.
-        declarations["enemy"] = ct.TurnDeclaration(
-            actor_id="enemy", acao=ct.TurnStep(kind="pass"))
+        declarations["enemy"] = ct.TurnDeclaration(actor_id="enemy", acao=ct.TurnStep(kind="pass"))
     elif not enemy.get("surrendered"):
         declarations["enemy"] = ct.TurnDeclaration(
             actor_id="enemy",
             acao=ct.TurnStep(kind="attack", target_id="player"),
         )
     return orch.run_round(
-        _scene(*actors), actors, {"hero": ["player"], "enemy": ["enemy"]},
-        {"player": player}, declarations=declarations,
-        initiator="heroes", rng=random.Random(4),
+        _scene(*actors),
+        actors,
+        {"hero": ["player"], "enemy": ["enemy"]},
+        {"player": player},
+        declarations=declarations,
+        initiator="heroes",
+        rng=random.Random(4),
     )
 
 
@@ -105,8 +120,12 @@ def test_devoto_recebe_entropia_e_carga_pelo_dano_real_da_rodada():
 def test_sangromante_carta_v4_paga_auto_dano_e_dispara_cicatriz_de_pico():
     card_id = "san_exp_credencial"
     player = _player(
-        "Sangromante", card_id, subclass="exposto", entropy=10,
-        vitalidade=40, max_vitalidade=40,
+        "Sangromante",
+        card_id,
+        subclass="exposto",
+        entropy=10,
+        vitalidade=40,
+        max_vitalidade=40,
     )
     enemy = _enemy(_inert=True)
 
@@ -121,8 +140,12 @@ def test_sangromante_carta_v4_paga_auto_dano_e_dispara_cicatriz_de_pico():
 
 def test_sangromante_vaza_entropia_de_sangue_quando_inimigo_acerta():
     player = _player(
-        "Sangromante", entropy=8, max_entropy=30, _blood_entropy=8,
-        vitalidade=60, max_vitalidade=60,
+        "Sangromante",
+        entropy=8,
+        max_entropy=30,
+        _blood_entropy=8,
+        vitalidade=60,
+        max_vitalidade=60,
     )
 
     out = _run(player, _enemy(), _pass())
@@ -163,8 +186,11 @@ def test_arcanista_canaliza_arma_e_resfria_caldeira_com_cartas_v4():
 
 def test_dependencia_altera_custo_real_da_carta_no_motor_de_economia():
     player = _player(
-        "Arcanista Cinzento", "arc_descarga", entropy=10,
-        abyss_charge=4, equipment={},
+        "Arcanista Cinzento",
+        "arc_descarga",
+        entropy=10,
+        abyss_charge=4,
+        equipment={},
     )
     state = {"player": player}
 
@@ -177,25 +203,34 @@ def test_dependencia_altera_custo_real_da_carta_no_motor_de_economia():
 
 def test_medico_ganha_recurso_quando_aliado_sofre_na_rodada_real():
     player = _player("Médico de Campo", entropy=0)
-    ally = orch.ensure_combat_sheet({
-        "id": "ally", "name": "Batedor", "categoria": "nomeado",
-        "virtudes": {"forca": 1, "agilidade": 30, "corpo": 5, "mente": 1, "carisma": 1},
-        "vitalidade": 60, "max_vitalidade": 60,
-    })
+    ally = orch.ensure_combat_sheet(
+        {
+            "id": "ally",
+            "name": "Batedor",
+            "categoria": "nomeado",
+            "virtudes": {"forca": 1, "agilidade": 30, "corpo": 5, "mente": 1, "carisma": 1},
+            "vitalidade": 60,
+            "max_vitalidade": 60,
+        }
+    )
     ally["virtudes"]["agilidade"] = -10
     enemy = _enemy()
     actors = {"player": player, "ally": ally, "enemy": enemy}
 
     out = orch.run_round(
-        _scene(*actors), actors,
+        _scene(*actors),
+        actors,
         {"hero": ["player"], "ally": ["ally"], "enemy": ["enemy"]},
-        {"player": player}, declarations={
+        {"player": player},
+        declarations={
             "player": _pass(),
             "ally": ct.TurnDeclaration(actor_id="ally", acao=ct.TurnStep(kind="pass")),
             "enemy": ct.TurnDeclaration(
-                actor_id="enemy", acao=ct.TurnStep(kind="attack", target_id="ally")),
+                actor_id="enemy", acao=ct.TurnStep(kind="attack", target_id="ally")
+            ),
         },
-        initiator="heroes", rng=random.Random(4),
+        initiator="heroes",
+        rng=random.Random(4),
     )
 
     assert player["entropy"] == 1
@@ -214,14 +249,21 @@ def test_provocacao_do_devoto_redireciona_alvo_inimigo():
     ally["id"] = "ally"
     ally["is_player"] = False
     enemy = _enemy()
-    enemy["active_conditions"] = [{
-        "name": "Provocação do Abismo", "duration": 2, "dot": 0,
-        "control": "taunt", "source_actor_id": "player",
-    }]
+    enemy["active_conditions"] = [
+        {
+            "name": "Provocação do Abismo",
+            "duration": 2,
+            "dot": 0,
+            "control": "taunt",
+            "source_actor_id": "player",
+        }
+    ]
     actors = {"player": devoto, "ally": ally, "enemy": enemy}
 
     declaration = orch.enemy_declaration(
-        _scene(*actors), "enemy", actors,
+        _scene(*actors),
+        "enemy",
+        actors,
         {"hero": ["player"], "ally": ["ally"], "enemy": ["enemy"]},
         rng=_AlwaysTaunt(),
     )

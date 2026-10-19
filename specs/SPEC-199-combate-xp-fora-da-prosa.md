@@ -78,9 +78,10 @@ class PublicOutcome(TypedDict, total=False):
     level_delta: int
     level_after: int
     gold_delta: int
-    items_gained: list[dict]      # [{"id": str, "name": str, "qty": int}]
+    items_gained: list[dict]  # [{"id": str, "name": str, "qty": int}]
     quests_completed: list[dict]  # [{"id": str, "title": str}]
-    source: str                   # combat|loot|story|quest|mixed|none
+    source: str  # combat|loot|story|quest|mixed|none
+
 
 def public_outcome(outcome: dict) -> PublicOutcome: ...
 def strip_receipt(text: str) -> str: ...

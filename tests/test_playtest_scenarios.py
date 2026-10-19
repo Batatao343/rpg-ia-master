@@ -1,4 +1,5 @@
 """Smokes dirigidos de recrutamento e comércio."""
+
 from __future__ import annotations
 
 from types import SimpleNamespace
@@ -49,9 +50,12 @@ def test_oraculo_recrutamento_passa_e_falha():
         )
     ]
 
-    assert scenarios.oracle_violations(
-        "recrutamento", SimpleNamespace(final_state=recruited, turns_completed=1)
-    ) == []
+    assert (
+        scenarios.oracle_violations(
+            "recrutamento", SimpleNamespace(final_state=recruited, turns_completed=1)
+        )
+        == []
+    )
     failure = scenarios.oracle_violations(
         "recrutamento", SimpleNamespace(final_state=_base_state(), turns_completed=1)
     )
@@ -62,7 +66,8 @@ def test_oraculo_recrutamento_passa_e_falha():
 def test_cenario_comercio_prepara_mercador_estoque_e_baseline():
     state = scenarios.prepare("comercio", _base_state())
     merchant_id, stock = economy.merchant_stock(
-        state, state["world"]["current_location_id"],
+        state,
+        state["world"]["current_location_id"],
     )
     decision = scenarios.decision_for("comercio", 1, state)
 
@@ -81,9 +86,12 @@ def test_oraculo_comercio_exige_ouro_e_item():
     assert outcome["ok"] is True
     bought = {**state, "player": outcome["player"], "world": outcome["world"]}
 
-    assert scenarios.oracle_violations(
-        "comercio", SimpleNamespace(final_state=bought, turns_completed=1)
-    ) == []
+    assert (
+        scenarios.oracle_violations(
+            "comercio", SimpleNamespace(final_state=bought, turns_completed=1)
+        )
+        == []
+    )
     failure = scenarios.oracle_violations(
         "comercio", SimpleNamespace(final_state=state, turns_completed=1)
     )
@@ -105,7 +113,8 @@ def test_catalogo_rejeita_cenario_desconhecido():
     [("recrutamento", "recrutador"), ("comercio", "comerciante")],
 )
 def test_cenario_dirigido_percorre_grafo_offline_com_oraculo_verde(
-    scenario, profile,
+    scenario,
+    profile,
 ):
     result = run_campaign(
         profile,

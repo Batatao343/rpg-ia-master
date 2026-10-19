@@ -7,6 +7,7 @@ from services import conflict_resolution as cr
 
 class SeqRNG:
     """RNG determinístico: randint devolve a sequência dada, em ordem."""
+
     def __init__(self, seq):
         self.seq = list(seq)
         self.i = 0
@@ -18,8 +19,15 @@ class SeqRNG:
 
 
 def _actor(ag=1, forca=1, mente=1, corpo=1, carisma=1, **over):
-    a = {"virtudes": {"agilidade": ag, "forca": forca, "mente": mente,
-                      "corpo": corpo, "carisma": carisma}}
+    a = {
+        "virtudes": {
+            "agilidade": ag,
+            "forca": forca,
+            "mente": mente,
+            "corpo": corpo,
+            "carisma": carisma,
+        }
+    }
     a.update(over)
     return a
 
@@ -62,22 +70,23 @@ def test_ataque_normal_2d10_mais_virtude():
 
 
 def test_ataque_erro_abaixo_da_esquiva():
-    r = cr.resolve_attack(_actor(forca=0), _actor(ag=5), virtude_key="forca",
-                          rng=SeqRNG([2, 3]))
+    r = cr.resolve_attack(_actor(forca=0), _actor(ag=5), virtude_key="forca", rng=SeqRNG([2, 3]))
     assert r["resultado"] == "erro" and r["acerto"] is False
 
 
 def test_critico_dupla_1a9():
     # dupla 5-5 = Crítico automático mesmo contra Esquiva altíssima
-    r = cr.resolve_attack(_actor(forca=1), _actor(ag=5), virtude_key="forca",
-                          esquiva=99, rng=SeqRNG([5, 5]))
+    r = cr.resolve_attack(
+        _actor(forca=1), _actor(ag=5), virtude_key="forca", esquiva=99, rng=SeqRNG([5, 5])
+    )
     assert r["resultado"] == "critico" and r["acerto"] is True
     assert r["efeito_principal_multiplicador"] == 2
 
 
 def test_supercritico_dupla_10():
-    r = cr.resolve_attack(_actor(forca=1), _actor(), virtude_key="forca",
-                          esquiva=99, rng=SeqRNG([10, 10]))
+    r = cr.resolve_attack(
+        _actor(forca=1), _actor(), virtude_key="forca", esquiva=99, rng=SeqRNG([10, 10])
+    )
     assert r["resultado"] == "supercritico" and r["efeito_principal_multiplicador"] == 3
 
 
@@ -85,14 +94,26 @@ def test_supercritico_dupla_10():
 # Etapa 3 — Vantagem / Desvantagem
 # --------------------------------------------------------------------------
 def test_vantagem_3d10_mantem_dois_maiores():
-    r = cr.resolve_attack(_actor(forca=0), _actor(), virtude_key="forca",
-                          advantage=1, esquiva=99, rng=SeqRNG([2, 7, 9]))
+    r = cr.resolve_attack(
+        _actor(forca=0),
+        _actor(),
+        virtude_key="forca",
+        advantage=1,
+        esquiva=99,
+        rng=SeqRNG([2, 7, 9]),
+    )
     assert r["dice_rolled"] == [2, 7, 9] and r["dice_kept"] == [7, 9]
 
 
 def test_desvantagem_3d10_mantem_dois_menores():
-    r = cr.resolve_attack(_actor(forca=0), _actor(), virtude_key="forca",
-                          advantage=-1, esquiva=99, rng=SeqRNG([2, 7, 9]))
+    r = cr.resolve_attack(
+        _actor(forca=0),
+        _actor(),
+        virtude_key="forca",
+        advantage=-1,
+        esquiva=99,
+        rng=SeqRNG([2, 7, 9]),
+    )
     assert r["dice_kept"] == [2, 7]
 
 
@@ -125,8 +146,13 @@ def test_empate_resultado_puro():
 
 
 def test_dificuldades_base_corretas():
-    assert cr.DIFICULDADES == {"facil": 9, "comum": 12, "dificil": 15,
-                               "extremo": 18, "quase_impossivel": 21}
+    assert cr.DIFICULDADES == {
+        "facil": 9,
+        "comum": 12,
+        "dificil": 15,
+        "extremo": 18,
+        "quase_impossivel": 21,
+    }
 
 
 def test_ataque_nao_usa_matriz_de_consequencia():
@@ -139,21 +165,32 @@ def test_ataque_nao_usa_matriz_de_consequencia():
 # --------------------------------------------------------------------------
 def test_ruptura_ataque_concede_vantagem():
     # ruptura -> advantage +1 -> rola 3 dados
-    r = cr.resolve_attack(_actor(forca=0), _actor(), virtude_key="forca",
-                          ruptura=True, esquiva=99, rng=SeqRNG([2, 7, 9]))
+    r = cr.resolve_attack(
+        _actor(forca=0),
+        _actor(),
+        virtude_key="forca",
+        ruptura=True,
+        esquiva=99,
+        rng=SeqRNG([2, 7, 9]),
+    )
     assert len(r["dice_rolled"]) == 3 and r["dice_kept"] == [7, 9]
     assert r["ruptura"] is True
 
 
 def test_ruptura_teste_geral_dois_impeto_mantem_maior():
-    r = cr.general_test(_actor(mente=1), "mente", "comum", ruptura=True,
-                        rng=SeqRNG([4, 9, 3]))
+    r = cr.general_test(_actor(mente=1), "mente", "comum", ruptura=True, rng=SeqRNG([4, 9, 3]))
     assert r["impetos_rolados"] == [4, 9] and r["impeto"] == 9
     assert r["pressagio"] == 3
 
 
 def test_ruptura_e_critico_acumulam():
     # 3 dados (vantagem por ruptura), mantém [5,5] -> Crítico + ruptura
-    r = cr.resolve_attack(_actor(forca=1), _actor(), virtude_key="forca",
-                          ruptura=True, esquiva=99, rng=SeqRNG([5, 5, 2]))
+    r = cr.resolve_attack(
+        _actor(forca=1),
+        _actor(),
+        virtude_key="forca",
+        ruptura=True,
+        esquiva=99,
+        rng=SeqRNG([5, 5, 2]),
+    )
     assert r["resultado"] == "critico" and r["ruptura"] is True

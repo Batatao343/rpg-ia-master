@@ -1,4 +1,5 @@
 """SPEC-239: configuração central de logging."""
+
 import json
 import logging
 

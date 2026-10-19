@@ -95,7 +95,9 @@ def symbol(root: Path, name: str, limit: int = 12) -> dict[str, Any]:
         for node in graph["nodes"]
         if needle in _normalized(node.get("qualified_name") or node.get("id") or "")
     ]
-    matches.sort(key=lambda row: (0 if _normalized(row.get("qualified_name")) == needle else 1, row["id"]))
+    matches.sort(
+        key=lambda row: (0 if _normalized(row.get("qualified_name")) == needle else 1, row["id"])
+    )
     results = matches[: _limit(limit)]
     return {"symbol": name, "count": len(results), "results": _bounded(results, _limit(limit))}
 
@@ -104,9 +106,7 @@ def impact(root: Path, name: str, limit: int = 20) -> dict[str, Any]:
     graph, _ = check_index(root)
     matches = symbol(root, name, limit=_limit(limit))["results"]
     ids = {node["id"] for node in matches}
-    related = [
-        edge for edge in graph["edges"] if edge["source"] in ids or edge["target"] in ids
-    ]
+    related = [edge for edge in graph["edges"] if edge["source"] in ids or edge["target"] in ids]
     related.sort(key=lambda row: (row["source"], row["target"], row["type"]))
     results = related[: _limit(limit)]
     return {"symbol": name, "matched_nodes": matches, "count": len(results), "edges": results}

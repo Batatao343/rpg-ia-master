@@ -26,12 +26,19 @@ def main() -> int:
             changed = abandon_expired(pool, args.abandon)
         else:
             changed = False
-        print(json.dumps({
-            "mode": "apply" if args.apply else "preview",
-            "orphan_count": len(before),
-            "operations": before,
-            "changed": changed,
-        }, ensure_ascii=False, indent=2, default=str))
+        print(
+            json.dumps(
+                {
+                    "mode": "apply" if args.apply else "preview",
+                    "orphan_count": len(before),
+                    "operations": before,
+                    "changed": changed,
+                },
+                ensure_ascii=False,
+                indent=2,
+                default=str,
+            )
+        )
     finally:
         pool.close()
     return 0

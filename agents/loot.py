@@ -6,6 +6,7 @@ resultado; preços, estoques, receitas e raridade de drop resolvem em Python
 (services/economy.py). O antigo TransactionResult (LLM decidia sucesso, preço
 e itens) morreu aqui.
 """
+
 import random
 import re
 import unicodedata
@@ -25,6 +26,7 @@ from state import GameState
 
 class TradeIntent(BaseModel):
     """A IA traduz a fala livre em UMA transação canônica (Python resolve)."""
+
     mode: Literal["buy", "sell", "craft", "observe"] = Field(
         description="buy=comprar, sell=vender, craft=forjar/criar, observe=consultar sem transacionar."
     )
@@ -48,8 +50,7 @@ def _validated_narrative(canonical_summary: dict, proposed_text: str) -> str:
     sistema.
     """
     proposed = str(proposed_text or "").strip()
-    checked = conflict_summary_service.narrative_or_fallback(
-        canonical_summary, proposed)
+    checked = conflict_summary_service.narrative_or_fallback(canonical_summary, proposed)
     if checked != proposed:
         return checked
     if canonical_summary.get("loot_obtido"):
@@ -60,19 +61,31 @@ def _validated_narrative(canonical_summary: dict, proposed_text: str) -> str:
 def _parse_trade_intent(state: GameState, loot_source: str, text: str) -> TradeIntent:
     """FAST + guard de FallbackLLM (isinstance). Fallback: heurística por fonte."""
     folded = "".join(
-        ch for ch in unicodedata.normalize("NFD", str(text or "").lower())
+        ch
+        for ch in unicodedata.normalize("NFD", str(text or "").lower())
         if not unicodedata.combining(ch)
     )
     # Uma intenção transacional explícita vence palavras como "preço"/"estoque".
-    explicit_mode = next((mode for mode, pattern in (
-        ("sell", r"\b(?:vendo|vender|venda)\b"),
-        ("craft", r"\b(?:forjo|forjar|fabrico|fabricar|crio|criar|melhoro|melhorar)\b"),
-        ("buy", r"\b(?:compro|comprar|compra|adquiro|adquirir)\b"),
-    ) if re.search(pattern, folded)), None)
-    if explicit_mode is None and loot_source == "SHOP" and re.search(
-        r"\b(?:examino|confiro|consulto|observo|reviso|anoto|comparo|"
-        r"estoque|precos?|margem|ofertas?|escassez|catalogo|cotacao)\b",
-        folded,
+    explicit_mode = next(
+        (
+            mode
+            for mode, pattern in (
+                ("sell", r"\b(?:vendo|vender|venda)\b"),
+                ("craft", r"\b(?:forjo|forjar|fabrico|fabricar|crio|criar|melhoro|melhorar)\b"),
+                ("buy", r"\b(?:compro|comprar|compra|adquiro|adquirir)\b"),
+            )
+            if re.search(pattern, folded)
+        ),
+        None,
+    )
+    if (
+        explicit_mode is None
+        and loot_source == "SHOP"
+        and re.search(
+            r"\b(?:examino|confiro|consulto|observo|reviso|anoto|comparo|"
+            r"estoque|precos?|margem|ofertas?|escassez|catalogo|cotacao)\b",
+            folded,
+        )
     ):
         return TradeIntent(mode="observe", item_ref="mercado", qty=1)
 
@@ -80,13 +93,17 @@ def _parse_trade_intent(state: GameState, loot_source: str, text: str) -> TradeI
     fallback = TradeIntent(mode=default_mode, item_ref=text[:60] or "item", qty=1)
     try:
         llm = get_llm(temperature=0.0, tier=ModelTier.CLASSIFY)
-        sys = SystemMessage(content=(
-            "Você identifica transações de RPG. Classifique a fala do jogador em "
-            "buy (comprar do mercador), sell (vender item próprio) ou craft "
-            "(forjar/criar/melhorar). item_ref = o nome do item/receita citado. "
-            f"Contexto da cena: {loot_source}."))
+        sys = SystemMessage(
+            content=(
+                "Você identifica transações de RPG. Classifique a fala do jogador em "
+                "buy (comprar do mercador), sell (vender item próprio) ou craft "
+                "(forjar/criar/melhorar). item_ref = o nome do item/receita citado. "
+                f"Contexto da cena: {loot_source}."
+            )
+        )
         res = llm.with_structured_output(TradeIntent).invoke(
-            [sys, HumanMessage(content=text or "negociar")])
+            [sys, HumanMessage(content=text or "negociar")]
+        )
         if isinstance(res, TradeIntent) and res.item_ref:
             return res.model_copy(update={"mode": explicit_mode}) if explicit_mode else res
     except Exception as e:
@@ -94,8 +111,7 @@ def _parse_trade_intent(state: GameState, loot_source: str, text: str) -> TradeI
     return fallback
 
 
-def _narrate(context: str, fallback_text: str,
-             canonical_summary: dict | None = None) -> str:
+def _narrate(context: str, fallback_text: str, canonical_summary: dict | None = None) -> str:
     """1 chamada SMART para prosa curta; qualquer falha cai no texto mecânico."""
     try:
         llm = get_llm(temperature=0.6, tier=ModelTier.FAST)
@@ -107,18 +123,18 @@ def _narrate(context: str, fallback_text: str,
             "quantidade, item ou aquisição; o resultado exato será anexado pelo "
             "motor."
             if canonical_summary and canonical_summary.get("loot_obtido")
-            else
-            "Narre em 1-2 frases, tom dark fantasy (Valoria), o resultado MECÂNICO "
+            else "Narre em 1-2 frases, tom dark fantasy (Valoria), o resultado MECÂNICO "
             "do jogador. NÃO altere números nem invente itens extras."
         )
-        res = llm.invoke([
-            SystemMessage(content=instruction),
-            HumanMessage(content=context),
-        ])
+        res = llm.invoke(
+            [
+                SystemMessage(content=instruction),
+                HumanMessage(content=context),
+            ]
+        )
         text = getattr(res, "content", "") or ""
         if isinstance(text, list):  # Gemini pode devolver parts (smoke 2026-07-05)
-            text = " ".join(p.get("text", "") if isinstance(p, dict) else str(p)
-                            for p in text)
+            text = " ".join(p.get("text", "") if isinstance(p, dict) else str(p) for p in text)
         text = prose_guard.sanitize_meta_preamble(str(text))
         if text:
             if canonical_summary:
@@ -127,8 +143,7 @@ def _narrate(context: str, fallback_text: str,
     except Exception as e:
         _log_event("loot", "narrate_failed", level="warning", error=type(e).__name__)
     fallback = prose_guard.sanitize_meta_preamble(fallback_text)
-    return (_validated_narrative(canonical_summary, fallback)
-            if canonical_summary else fallback)
+    return _validated_narrative(canonical_summary, fallback) if canonical_summary else fallback
 
 
 def _player_facing_message(prose: str, system: str) -> str:
@@ -182,8 +197,7 @@ def loot_node(state: GameState):
         if intent.mode == "craft":
             outcome = economy.execute_craft(work_state, intent.item_ref)
         else:
-            outcome = economy.execute_trade(work_state, intent.mode,
-                                            intent.item_ref, intent.qty)
+            outcome = economy.execute_trade(work_state, intent.mode, intent.item_ref, intent.qty)
 
         economy.log_trade(intent.mode, outcome)  # SPEC-252 R3
         public_action = {
@@ -198,41 +212,45 @@ def loot_node(state: GameState):
             "qty": int(outcome.get("qty", intent.qty) or 1),
             "ok": bool(outcome.get("ok")),
             "reason": str(outcome.get("reason") or ""),
-            "reason_code": (
-                "ok" if outcome.get("ok") else "rejected"
-            ),
+            "reason_code": ("ok" if outcome.get("ok") else "rejected"),
             "location_id": str(world.get("current_location_id") or ""),
-            "merchant_id": (
-                market_before.get("merchant_id") if market_before else None
-            ),
+            "merchant_id": (market_before.get("merchant_id") if market_before else None),
             "gold_before": gold_before,
-            "gold_after": int(
-                (outcome.get("player") or player).get("gold", gold_before) or 0
-            ),
+            "gold_after": int((outcome.get("player") or player).get("gold", gold_before) or 0),
             "gold_delta": int(outcome.get("gold_delta", 0) or 0),
             "unequipped": list(outcome.get("unequipped") or []),
             "inventory_before": inventory_before,
-            "inventory_after": list(
-                (outcome.get("player") or player).get("inventory") or []
-            ),
+            "inventory_after": list((outcome.get("player") or player).get("inventory") or []),
             "stock_before": market_before.get("quotes", []) if market_before else [],
         }
 
         if not outcome.get("ok"):
-            msg = _narrate(f"TRANSAÇÃO RECUSADA: {outcome.get('reason')}",
-                           f"🚫 {outcome.get('reason')}")
-            return {"messages": [AIMessage(content=_player_facing_message(
-                        msg, f"[SISTEMA] {outcome.get('reason')}"))],
-                    "world": world, "loot_source": None, "archive_due": True,
-                    "last_economy_action": public_action}
+            msg = _narrate(
+                f"TRANSAÇÃO RECUSADA: {outcome.get('reason')}", f"🚫 {outcome.get('reason')}"
+            )
+            return {
+                "messages": [
+                    AIMessage(
+                        content=_player_facing_message(msg, f"[SISTEMA] {outcome.get('reason')}")
+                    )
+                ],
+                "world": world,
+                "loot_source": None,
+                "archive_due": True,
+                "last_economy_action": public_action,
+            }
 
         delta = int(outcome.get("gold_delta", 0))
         item_delta = -int(outcome["qty"]) if outcome["mode"] == "sell" else int(outcome["qty"])
-        sistema = (f"[SISTEMA] {item_delta:+d}x {outcome['item_name']}"
-                   f" | Ouro {'+' if delta >= 0 else ''}{delta}"
-                   f" (total {outcome['player'].get('gold', 0)})")
-        resumo = (f"{outcome['mode'].upper()}: {outcome['qty']}x {outcome['item_name']}, "
-                  f"ouro {delta:+d}, ouro final {outcome['player'].get('gold', 0)}")
+        sistema = (
+            f"[SISTEMA] {item_delta:+d}x {outcome['item_name']}"
+            f" | Ouro {'+' if delta >= 0 else ''}{delta}"
+            f" (total {outcome['player'].get('gold', 0)})"
+        )
+        resumo = (
+            f"{outcome['mode'].upper()}: {outcome['qty']}x {outcome['item_name']}, "
+            f"ouro {delta:+d}, ouro final {outcome['player'].get('gold', 0)}"
+        )
         msg = _narrate(resumo, "O negócio se fecha sem cerimônia.")
         result = {
             "player": outcome["player"],
@@ -243,11 +261,14 @@ def loot_node(state: GameState):
             "last_economy_action": {
                 **public_action,
                 "stock_after": (
-                    economy.public_market_snapshot({
-                        **work_state,
-                        "player": outcome["player"],
-                        "world": outcome.get("world", world),
-                    }) or {}
+                    economy.public_market_snapshot(
+                        {
+                            **work_state,
+                            "player": outcome["player"],
+                            "world": outcome.get("world", world),
+                        }
+                    )
+                    or {}
                 ).get("quotes", []),
             },
         }
@@ -257,8 +278,9 @@ def loot_node(state: GameState):
             result["turn_baseline"] = _bl
         # Fase 6.2: posse de item único muda de mãos → evento do motor na fila
         if outcome.get("pending_events"):
-            result["pending_world_events"] = (state.get("pending_world_events", []) or []) \
-                + outcome["pending_events"]
+            result["pending_world_events"] = (
+                state.get("pending_world_events", []) or []
+            ) + outcome["pending_events"]
         return result
 
     # =========================================================
@@ -276,17 +298,22 @@ def loot_node(state: GameState):
     danger = int(loot_ctx["danger"])
     # Fase 6.4: pista de rastro descoberta na estrada melhora ESTE baú (one-shot)
     boost = bool(world.pop("treasure_hint", False))
-    roll = economy.roll_loot(region_id, danger, random.Random(),
-                             projection=state.get("world_projection"),
-                             bestiary_knowledge=state.get("bestiary_knowledge"),
-                             turn=int(world.get("turn_count", 0) or 0),
-                             boost=boost)
+    roll = economy.roll_loot(
+        region_id,
+        danger,
+        random.Random(),
+        projection=state.get("world_projection"),
+        bestiary_knowledge=state.get("bestiary_knowledge"),
+        turn=int(world.get("turn_count", 0) or 0),
+        boost=boost,
+    )
 
     player["gold"] = int(player.get("gold", 0)) + int(roll["gold"])
     achado = f"+{roll['gold']} de ouro"
     unique_events = []
     if roll["item_id"]:
         from inventory import add_item, is_unique, item_display, make_entry
+
         player["inventory"] = add_item(player["inventory"], roll["item_id"], 1)
         achado = f"{item_display(make_entry(roll['item_id']))} ({roll['rarity']}) e {achado}"
         if is_unique(roll["item_id"]):  # Fase 6.2: achou um único — fato do mundo
@@ -298,15 +325,21 @@ def loot_node(state: GameState):
     if int(roll["gold"]):
         loot_entries.append({"kind": "gold", "amount": int(roll["gold"])})
     if roll["item_id"]:
-        loot_entries.append({
-            "kind": "item", "item_id": str(roll["item_id"]),
-            "qty": 1, "rarity": str(roll["rarity"]),
-        })
+        loot_entries.append(
+            {
+                "kind": "item",
+                "item_id": str(roll["item_id"]),
+                "qty": 1,
+                "rarity": str(roll["rarity"]),
+            }
+        )
     if conflict_summary:
         conflict_summary["loot_obtido"] = loot_entries
     canonical_context = (
         conflict_summary_service.canonical_summary_text(conflict_summary)
-        if conflict_summary else "")
+        if conflict_summary
+        else ""
+    )
     msg = _narrate(
         f"FATOS CANÔNICOS DO CONFLITO: {canonical_context}\n"
         f"O jogador vasculha {loc.get('name', 'o local')} "
@@ -327,5 +360,7 @@ def loot_node(state: GameState):
     if _bl is not state.get("turn_baseline"):
         result["turn_baseline"] = _bl
     if unique_events:
-        result["pending_world_events"] = (state.get("pending_world_events", []) or []) + unique_events
+        result["pending_world_events"] = (
+            state.get("pending_world_events", []) or []
+        ) + unique_events
     return result

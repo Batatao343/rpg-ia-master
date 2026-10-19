@@ -12,31 +12,45 @@ from services import encounter_preparation as prep
 from services import tactical_profile as tp
 
 
-def _actor(actor_id: str, archetype: str, *, category: str = "companheiro",
-           agility: int = 2, body: int = 3, **over) -> dict:
-    actor = prep.build_npc_combat_sheet({
-        "id": actor_id,
-        "name": actor_id,
-        "role": "Pessoa",
-        "persona": "",
-        "categoria": category,
-        "virtudes": {
-            "forca": 2,
-            "agilidade": agility,
-            "corpo": body,
-            "mente": 3,
-            "carisma": 2,
-        },
-        "tactical_archetype": archetype,
-    })
+def _actor(
+    actor_id: str,
+    archetype: str,
+    *,
+    category: str = "companheiro",
+    agility: int = 2,
+    body: int = 3,
+    **over,
+) -> dict:
+    actor = prep.build_npc_combat_sheet(
+        {
+            "id": actor_id,
+            "name": actor_id,
+            "role": "Pessoa",
+            "persona": "",
+            "categoria": category,
+            "virtudes": {
+                "forca": 2,
+                "agilidade": agility,
+                "corpo": body,
+                "mente": 3,
+                "carisma": 2,
+            },
+            "tactical_archetype": archetype,
+        }
+    )
     actor.update(over)
     return orch.ensure_combat_sheet(actor)
 
 
 def _player(**over) -> dict:
     player = _actor(
-        "player", "equilibrado", category="companheiro", agility=2, body=4,
-        is_player=True, class_name="Sangromante",
+        "player",
+        "equilibrado",
+        category="companheiro",
+        agility=2,
+        body=4,
+        is_player=True,
+        class_name="Sangromante",
     )
     player.update(over)
     return orch.ensure_combat_sheet(player, is_player=True)
@@ -66,7 +80,8 @@ def _attack(actor_id: str, target_id: str) -> ct.TurnDeclaration:
 
 def _tactics(out: dict, actor_id: str, action_key: str) -> list[dict]:
     return [
-        item for item in out.get("tactics", [])
+        item
+        for item in out.get("tactics", [])
         if item.get("actor_id") == actor_id and item.get("action_key") == action_key
     ]
 
@@ -81,7 +96,9 @@ def test_guardiao_protege_aliado_em_perigo_e_modificador_e_consumido():
     sides = {"hero": ["player"], "ally": ["guard", "ward"], "enemy": ["foe"]}
 
     out = orch.run_round(
-        scene, actors, sides,
+        scene,
+        actors,
+        sides,
         declarations={
             "player": _pass("player"),
             "ward": _pass("ward"),
@@ -119,8 +136,11 @@ def test_suporte_estabiliza_aliado_terminal_com_acao_propria():
     player = _player()
     medic = _actor("medic", "suporte", agility=4, has_kit=True)
     ward = _actor(
-        "ward", "combatente", agility=1,
-        estado_terminal=True, vitalidade=0,
+        "ward",
+        "combatente",
+        agility=1,
+        estado_terminal=True,
+        vitalidade=0,
     )
     foe = _actor("foe", "combatente", category="padrao")
     scene = _scene("player", "medic", "ward", "foe")
@@ -128,7 +148,9 @@ def test_suporte_estabiliza_aliado_terminal_com_acao_propria():
     sides = {"hero": ["player"], "ally": ["medic", "ward"], "enemy": ["foe"]}
 
     out = orch.run_round(
-        scene, actors, sides,
+        scene,
+        actors,
+        sides,
         declarations={"player": _pass("player"), "foe": _pass("foe")},
         initiator="heroes",
         rng=random.Random(7),
@@ -150,7 +172,9 @@ def test_batedor_flanqueia_e_so_no_turno_seguinte_ataca_com_vantagem():
     sides = {"hero": ["player"], "enemy": ["scout"]}
 
     first = orch.run_round(
-        scene, actors, sides,
+        scene,
+        actors,
+        sides,
         declarations={"player": _pass("player")},
         initiator="enemy",
         rng=random.Random(3),
@@ -160,7 +184,9 @@ def test_batedor_flanqueia_e_so_no_turno_seguinte_ataca_com_vantagem():
     assert cs.is_hidden_from(scene, "scout", "player")
 
     second = orch.run_round(
-        scene, actors, sides,
+        scene,
+        actors,
+        sides,
         declarations={"player": _pass("player")},
         initiator="enemy",
         rng=random.Random(4),
@@ -178,7 +204,9 @@ def test_mistico_controla_um_turno_e_respeita_cooldown_fechado():
     sides = {"hero": ["player"], "enemy": ["mystic"]}
 
     first = orch.run_round(
-        scene, actors, sides,
+        scene,
+        actors,
+        sides,
         declarations={"player": _pass("player")},
         initiator="enemy",
         rng=random.Random(5),
@@ -188,7 +216,9 @@ def test_mistico_controla_um_turno_e_respeita_cooldown_fechado():
     assert "player" not in first["resolved_turns"]
 
     second = orch.run_round(
-        scene, actors, sides,
+        scene,
+        actors,
+        sides,
         declarations={"player": _pass("player")},
         initiator="enemy",
         rng=random.Random(6),
@@ -207,7 +237,9 @@ def test_estrategista_apoia_combatente_e_vantagem_nao_empilha():
     sides = {"hero": ["player"], "enemy": ["strategist", "fighter"]}
 
     out = orch.run_round(
-        scene, actors, sides,
+        scene,
+        actors,
+        sides,
         declarations={"player": _pass("player")},
         initiator="enemy",
         rng=random.Random(8),
@@ -224,15 +256,20 @@ def test_estrategista_apoia_combatente_e_vantagem_nao_empilha():
 def test_oportunista_com_vitalidade_baixa_recua_sem_atacar():
     player = _player()
     coward = _actor(
-        "coward", "oportunista", category="padrao",
-        vitalidade=2, max_vitalidade=12,
+        "coward",
+        "oportunista",
+        category="padrao",
+        vitalidade=2,
+        max_vitalidade=12,
     )
     scene = _scene("player", "coward")
     actors = {"player": player, "coward": coward}
     sides = {"hero": ["player"], "enemy": ["coward"]}
 
     out = orch.run_round(
-        scene, actors, sides,
+        scene,
+        actors,
+        sides,
         declarations={"player": _pass("player")},
         initiator="enemy",
         rng=random.Random(9),
@@ -243,7 +280,9 @@ def test_oportunista_com_vitalidade_baixa_recua_sem_atacar():
     assert not any(a["actor_id"] == "coward" for a in out["attacks"])
 
     escaped = orch.run_round(
-        scene, actors, sides,
+        scene,
+        actors,
+        sides,
         declarations={"player": _pass("player")},
         initiator="enemy",
         rng=random.Random(10),
@@ -261,7 +300,9 @@ def test_combatente_continua_usando_ataque_mecanico():
     sides = {"hero": ["player"], "enemy": ["fighter"]}
 
     out = orch.run_round(
-        scene, actors, sides,
+        scene,
+        actors,
+        sides,
         declarations={"player": _pass("player")},
         initiator="enemy",
         rng=random.Random(10),
@@ -286,22 +327,31 @@ def test_combatente_continua_usando_ataque_mecanico():
         ("tatico", "cercado", "flee"),
     ],
 )
-def test_perfis_curados_recebem_action_key_por_tabela_fechada(
-        archetype, trigger, action_key):
-    actor = orch.ensure_combat_sheet({
-        "id": archetype,
-        "name": archetype,
-        "arquetipo": archetype,
-        "tactical_profile": {"priorities": [{
-            "trigger": trigger,
-            # Texto contraditório não pode dirigir a mecânica.
-            "action_hint": "Inventa uma ação divina sem limite.",
-            "tipo": "obrigatorio",
-        }]},
-        "virtudes": {
-            "forca": 2, "agilidade": 2, "corpo": 2, "mente": 2, "carisma": 1,
-        },
-    })
+def test_perfis_curados_recebem_action_key_por_tabela_fechada(archetype, trigger, action_key):
+    actor = orch.ensure_combat_sheet(
+        {
+            "id": archetype,
+            "name": archetype,
+            "arquetipo": archetype,
+            "tactical_profile": {
+                "priorities": [
+                    {
+                        "trigger": trigger,
+                        # Texto contraditório não pode dirigir a mecânica.
+                        "action_hint": "Inventa uma ação divina sem limite.",
+                        "tipo": "obrigatorio",
+                    }
+                ]
+            },
+            "virtudes": {
+                "forca": 2,
+                "agilidade": 2,
+                "corpo": 2,
+                "mente": 2,
+                "carisma": 1,
+            },
+        }
+    )
 
     assert actor["tactical_profile"]["priorities"][0]["action_key"] == action_key
 
@@ -310,8 +360,11 @@ def test_gatilhos_curados_sao_derivados_apenas_do_estado_canonico():
     player = _player(vitalidade=2)
     ally = _actor("hero_ally", "combatente")
     hunter = _actor(
-        "hunter", "combatente", category="padrao",
-        vitalidade=2, max_vitalidade=12,
+        "hunter",
+        "combatente",
+        category="padrao",
+        vitalidade=2,
+        max_vitalidade=12,
     )
     dead_a = _actor("dead_a", "combatente", category="padrao", dead=True)
     dead_b = _actor("dead_b", "combatente", category="padrao", dead=True)
@@ -331,12 +384,16 @@ def test_gatilhos_curados_sao_derivados_apenas_do_estado_canonico():
         "enemy": ["hunter", "dead_a", "dead_b"],
     }
 
-    derived = orch.derive_tactical_scene_state(
-        scene, "hunter", actors, sides)
+    derived = orch.derive_tactical_scene_state(scene, "hunter", actors, sides)
 
     for trigger in (
-        "sozinho", "muito_ferido", "alvo_vulneravel", "cercado",
-        "matilha_quebrada", "descoberto", "plano_falhou",
+        "sozinho",
+        "muito_ferido",
+        "alvo_vulneravel",
+        "cercado",
+        "matilha_quebrada",
+        "descoberto",
+        "plano_falhou",
     ):
         assert derived[trigger] is True
     assert derived["_vulnerable_enemy_target"] == "player"
@@ -344,15 +401,21 @@ def test_gatilhos_curados_sao_derivados_apenas_do_estado_canonico():
 
 def test_conjurador_curado_controla_sem_ler_action_hint():
     player = _player()
-    caster = orch.ensure_combat_sheet({
-        **_actor("caster", "combatente", category="padrao", agility=4),
-        "arquetipo": "conjurador",
-        "tactical_profile": {"priorities": [{
-            "trigger": "sempre",
-            "action_hint": "Texto ornamental sem verbo mecânico.",
-            "tipo": "obrigatorio",
-        }]},
-    })
+    caster = orch.ensure_combat_sheet(
+        {
+            **_actor("caster", "combatente", category="padrao", agility=4),
+            "arquetipo": "conjurador",
+            "tactical_profile": {
+                "priorities": [
+                    {
+                        "trigger": "sempre",
+                        "action_hint": "Texto ornamental sem verbo mecânico.",
+                        "tipo": "obrigatorio",
+                    }
+                ]
+            },
+        }
+    )
     scene = _scene("player", "caster")
     declaration = orch.enemy_declaration(
         scene,
@@ -367,15 +430,21 @@ def test_conjurador_curado_controla_sem_ler_action_hint():
 
 def test_covarde_curado_sozinho_rende_por_trigger_canonico():
     player = _player()
-    coward = orch.ensure_combat_sheet({
-        **_actor("coward", "combatente", category="padrao"),
-        "arquetipo": "covarde_oportunista",
-        "tactical_profile": {"priorities": [{
-            "trigger": "sozinho",
-            "action_hint": "Texto sem semântica mecânica.",
-            "tipo": "obrigatorio",
-        }]},
-    })
+    coward = orch.ensure_combat_sheet(
+        {
+            **_actor("coward", "combatente", category="padrao"),
+            "arquetipo": "covarde_oportunista",
+            "tactical_profile": {
+                "priorities": [
+                    {
+                        "trigger": "sozinho",
+                        "action_hint": "Texto sem semântica mecânica.",
+                        "tipo": "obrigatorio",
+                    }
+                ]
+            },
+        }
+    )
     scene = _scene("player", "coward")
     declaration = orch.enemy_declaration(
         scene,
@@ -396,7 +465,8 @@ class _MinimumRng:
 def test_estabilizacao_tatica_nao_duplica_tentativa_automatica_no_round():
     medic = _actor("medic", "suporte")
     ward = _actor(
-        "ward", "combatente",
+        "ward",
+        "combatente",
         estado_terminal=True,
         vitalidade=0,
         stabilization_attempts=0,
@@ -444,8 +514,7 @@ def test_todo_bestiario_curado_normaliza_para_action_keys_fechadas():
     # conflito-17 é aditiva: preserva as 84 migradas e acrescenta o lote vivo.
     assert len(curated) >= 120
     assert {
-        str(entry.get("arquetipo") or "")
-        for entry in curated.values()
+        str(entry.get("arquetipo") or "") for entry in curated.values()
     } <= tp.ENEMY_TACTICAL_ARCHETYPES
 
     for enemy_id, raw in curated.items():
@@ -453,15 +522,17 @@ def test_todo_bestiario_curado_normaliza_para_action_keys_fechadas():
         priorities = actor["tactical_profile"]["priorities"]
         assert priorities, enemy_id
         assert all(
-            priority.get("action_key") in tp.TACTICAL_ACTION_KEYS
-            for priority in priorities
+            priority.get("action_key") in tp.TACTICAL_ACTION_KEYS for priority in priorities
         ), enemy_id
 
 
 def test_estado_terminal_falha_uma_vez_e_tenta_de_novo_na_rodada_seguinte():
     helper = _actor("helper", "suporte")
     ward = _actor(
-        "ward", "combatente", estado_terminal=True, vitalidade=0,
+        "ward",
+        "combatente",
+        estado_terminal=True,
+        vitalidade=0,
         stabilization_attempts=0,
     )
     actors = {"helper": helper, "ward": ward}
@@ -485,7 +556,8 @@ def test_sobrevivente_do_last_stand_so_morre_ao_receber_novo_dano():
     survivor = _player(
         last_stand_resolved=True,
         ferimentos={
-            "leve": [], "grave": [],
+            "leve": [],
+            "grave": [],
             "critico": [{"regiao": "torso"}, {"regiao": "cabeca"}],
         },
         ferimento_espacos={"leve": 3, "grave": 3, "critico": 2},
@@ -503,8 +575,11 @@ def test_sobrevivente_do_last_stand_so_morre_ao_receber_novo_dano():
 def test_cartas_inimigas_usam_catalogo_e_economia_propria_com_reacao_uma_vez():
     player = _player(vitalidade=30, max_vitalidade=30)
     enemy = _actor(
-        "predator", "predador", category="padrao",
-        vitalidade=30, max_vitalidade=30,
+        "predator",
+        "predador",
+        category="padrao",
+        vitalidade=30,
+        max_vitalidade=30,
     )
     enemy["cartas"] = ["bst_bote_certeiro", "bst_defesa_instintiva"]
     enemy["entropy"] = 4
@@ -514,24 +589,24 @@ def test_cartas_inimigas_usam_catalogo_e_economia_propria_com_reacao_uma_vez():
     player_prepared = list(player.get("prepared_cards") or [])
 
     first = orch.run_round(
-        scene, actors, sides,
+        scene,
+        actors,
+        sides,
         declarations={"player": _attack("player", "predator")},
-        initiator="heroes", rng=random.Random(21),
+        initiator="heroes",
+        rng=random.Random(21),
     )
-    assert [item["card_id"] for item in first["reactions"]] == [
-        "bst_defesa_instintiva"
-    ]
-    assert enemy["enemy_card_usage"]["bst_defesa_instintiva"][
-        "used_this_scene"
-    ] == 1
+    assert [item["card_id"] for item in first["reactions"]] == ["bst_defesa_instintiva"]
+    assert enemy["enemy_card_usage"]["bst_defesa_instintiva"]["used_this_scene"] == 1
     assert player.get("prepared_cards", []) == player_prepared
 
     second = orch.run_round(
-        scene, actors, sides,
+        scene,
+        actors,
+        sides,
         declarations={"player": _attack("player", "predator")},
-        initiator="heroes", rng=random.Random(22),
+        initiator="heroes",
+        rng=random.Random(22),
     )
     assert second["reactions"] == []
-    assert enemy["enemy_card_usage"]["bst_bote_certeiro"][
-        "used_this_scene"
-    ] == 1
+    assert enemy["enemy_card_usage"]["bst_bote_certeiro"]["used_this_scene"] == 1

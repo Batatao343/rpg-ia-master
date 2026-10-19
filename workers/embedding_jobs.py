@@ -8,8 +8,9 @@ from infrastructure.db_roles import admin_connection
 from infrastructure.pgvector_memory import PgVectorMemoryStore
 
 
-def embed_memory_job(store: PgVectorMemoryStore, payload: dict,
-                     embedder: Callable[[str], Sequence[float]]) -> dict:
+def embed_memory_job(
+    store: PgVectorMemoryStore, payload: dict, embedder: Callable[[str], Sequence[float]]
+) -> dict:
     memory_id = str(payload["memory_id"])
     with admin_connection(store.pool) as connection:
         row = connection.execute(
@@ -18,8 +19,8 @@ def embed_memory_job(store: PgVectorMemoryStore, payload: dict,
         ).fetchone()
     if not row:
         return {"status": "missing"}
-    if row['embedding_status'] == 'discarded':
-        return {'status': 'discarded'}
+    if row["embedding_status"] == "discarded":
+        return {"status": "discarded"}
     if row["embedding_status"] == "ready":
         return {"status": "already_ready"}
     values = embedder(row["content"])

@@ -30,9 +30,23 @@ def test_corpus_covers_the_spec_206_evidence_list() -> None:
     assert {case.input["operation"] for case in cases} == {"project", "oracle_mutation"}
     tags = {tag for case in cases for tag in case.tags}
     assert {
-        "hidden", "reveal", "payload", "prose", "rumor", "repeat", "legacy", "bestiary",
-        "npc", "faction", "note", "signature", "normalization", "count", "oracle",
-        "known-good", "known-bad",
+        "hidden",
+        "reveal",
+        "payload",
+        "prose",
+        "rumor",
+        "repeat",
+        "legacy",
+        "bestiary",
+        "npc",
+        "faction",
+        "note",
+        "signature",
+        "normalization",
+        "count",
+        "oracle",
+        "known-good",
+        "known-bad",
     } <= tags
     oracle_classes = {
         item
@@ -40,9 +54,14 @@ def test_corpus_covers_the_spec_206_evidence_list() -> None:
         if case.input["operation"] == "oracle_mutation"
         for item in case.expected["oracle_problem_classes"]
     }
-    assert {"a:hidden_entity", "b:secret_signature", "c:count_mismatch",
-            "c:meta_counts_missing", "d:fact_without_source",
-            "d:kind_outside_taxonomy"} <= oracle_classes
+    assert {
+        "a:hidden_entity",
+        "b:secret_signature",
+        "c:count_mismatch",
+        "c:meta_counts_missing",
+        "d:fact_without_source",
+        "d:kind_outside_taxonomy",
+    } <= oracle_classes
     assert all(case.description and case.created_from for case in cases)
 
 
@@ -200,8 +219,10 @@ def test_adapter_error_counts_as_a_leak_not_a_pass() -> None:
 
 @pytest.mark.parametrize(
     ("raw", "folded"),
-    [("Verme-Primordial das Raízes\n do  Mundo", "verme-primordial das raizes do mundo"),
-     ("ASCENSÃO", "ascensao")],
+    [
+        ("Verme-Primordial das Raízes\n do  Mundo", "verme-primordial das raizes do mundo"),
+        ("ASCENSÃO", "ascensao"),
+    ],
 )
 def test_evaluator_fold_is_accent_and_whitespace_insensitive(raw: str, folded: str) -> None:
     assert fold_text(raw) == folded

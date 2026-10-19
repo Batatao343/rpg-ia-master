@@ -2,6 +2,7 @@
 Fase 4.4 — Economia determinística: craft, mercadores, preços e loot tables.
 Spec: specs/SPEC-014-fase-4.4-economia-deterministica.md. 100% offline.
 """
+
 import random
 
 import pytest
@@ -13,11 +14,23 @@ from services import economy as eco
 
 def make_state(**over):
     s = {
-        "player": {"name": "T", "class_name": "Cavaleiro da Vigília", "gold": 500,
-                   "inventory": [], "hp": 30, "max_hp": 30},
-        "world": {"current_location_id": "skallgard", "current_location": "Skallgard",
-                  "world_clock": {"day": 1, "period": "Manhã"}, "danger_level": 1},
-        "world_projection": {}, "factions": [], "event_log": [],
+        "player": {
+            "name": "T",
+            "class_name": "Cavaleiro da Vigília",
+            "gold": 500,
+            "inventory": [],
+            "hp": 30,
+            "max_hp": 30,
+        },
+        "world": {
+            "current_location_id": "skallgard",
+            "current_location": "Skallgard",
+            "world_clock": {"day": 1, "period": "Manhã"},
+            "danger_level": 1,
+        },
+        "world_projection": {},
+        "factions": [],
+        "event_log": [],
     }
     s.update(over)
     return s
@@ -26,6 +39,7 @@ def make_state(**over):
 # ---------------------------------------------------------------------------
 # Etapa 1 — dados/schema
 # ---------------------------------------------------------------------------
+
 
 def test_recipes_schema():
     assert eco.RECIPES
@@ -64,6 +78,7 @@ def test_craft_tags_no_mapa():
 # Etapa 2 — preços
 # ---------------------------------------------------------------------------
 
+
 def test_price_por_raridade_e_arredonda_5():
     s = make_state()
     p = eco.price("espada_aco_temperado", mode="buy", state=s)
@@ -73,21 +88,33 @@ def test_price_por_raridade_e_arredonda_5():
 def test_price_mod_regional_abundante():
     # minerio_ferro tem tag mineracao; skallgard idem -> 0.6
     s_sk = make_state()
-    s_na = make_state(world={"current_location_id": "nova_arcadia",
-                             "world_clock": {"day": 1, "period": "Manhã"}})
-    assert eco.price("minerio_ferro", mode="buy", state=s_sk) < \
-        eco.price("minerio_ferro", mode="buy", state=s_na)
+    s_na = make_state(
+        world={"current_location_id": "nova_arcadia", "world_clock": {"day": 1, "period": "Manhã"}}
+    )
+    assert eco.price("minerio_ferro", mode="buy", state=s_sk) < eco.price(
+        "minerio_ferro", mode="buy", state=s_na
+    )
 
 
 def test_price_reputacao_hostil_sobe():
-    proj = {"dynamic_edges": [{"id": "d1", "source": "clas_combate",
-                               "type": "controls", "target": "skallgard",
-                               "created_by_event": "e1"}]}
-    hostil = make_state(world_projection=proj,
-                        factions=[{"id": "clas_combate", "disposition": "hostil"}])
+    proj = {
+        "dynamic_edges": [
+            {
+                "id": "d1",
+                "source": "clas_combate",
+                "type": "controls",
+                "target": "skallgard",
+                "created_by_event": "e1",
+            }
+        ]
+    }
+    hostil = make_state(
+        world_projection=proj, factions=[{"id": "clas_combate", "disposition": "hostil"}]
+    )
     neutro = make_state()
-    assert eco.price("espada_aco_temperado", mode="buy", state=hostil) > \
-        eco.price("espada_aco_temperado", mode="buy", state=neutro)
+    assert eco.price("espada_aco_temperado", mode="buy", state=hostil) > eco.price(
+        "espada_aco_temperado", mode="buy", state=neutro
+    )
 
 
 def test_venda_metade():
@@ -100,6 +127,7 @@ def test_venda_metade():
 # ---------------------------------------------------------------------------
 # Etapa 3 — mercadores/estoque persistente
 # ---------------------------------------------------------------------------
+
 
 def test_estoque_inicializa_e_compra_esgota():
     s = make_state()
@@ -131,11 +159,20 @@ def test_restock_por_dias():
 
 
 def test_hostil_esconde_raros():
-    proj = {"dynamic_edges": [{"id": "d1", "source": "clas_combate",
-                               "type": "controls", "target": "skallgard",
-                               "created_by_event": "e1"}]}
-    s = make_state(world_projection=proj,
-                   factions=[{"id": "clas_combate", "disposition": "hostil"}])
+    proj = {
+        "dynamic_edges": [
+            {
+                "id": "d1",
+                "source": "clas_combate",
+                "type": "controls",
+                "target": "skallgard",
+                "created_by_event": "e1",
+            }
+        ]
+    }
+    s = make_state(
+        world_projection=proj, factions=[{"id": "clas_combate", "disposition": "hostil"}]
+    )
     # incomum (rank 1) continua; se houvesse raro sumiria — valida o filtro por rank
     _, stock = eco.merchant_stock(s, "skallgard")
     ranks = [eco._RARITY_RANK.get(str(ARTIFACTS_DB[i]["rarity"]).lower(), 0) for i in stock]
@@ -162,10 +199,10 @@ def test_venda_sinal_do_ouro_sempre_positivo():
 # Etapa 4 — craft
 # ---------------------------------------------------------------------------
 
+
 def test_craft_ok_consome_e_cria():
     s = make_state()
-    s["player"]["inventory"] = inv.add_item(
-        inv.add_item([], "espada_gasta", 1), "minerio_ferro", 2)
+    s["player"]["inventory"] = inv.add_item(inv.add_item([], "espada_gasta", 1), "minerio_ferro", 2)
     out = eco.execute_craft(s, "lâmina temperada")
     assert out["ok"], out
     got = out["player"]["inventory"]
@@ -187,8 +224,7 @@ def test_craft_sem_ingrediente_falha():
 def test_craft_local_errado_falha():
     s = make_state()
     s["world"]["current_location_id"] = "deserto_zhur"  # sem forja
-    s["player"]["inventory"] = inv.add_item(
-        inv.add_item([], "espada_gasta", 1), "minerio_ferro", 2)
+    s["player"]["inventory"] = inv.add_item(inv.add_item([], "espada_gasta", 1), "minerio_ferro", 2)
     out = eco.execute_craft(s, "lamina temperada")
     assert not out["ok"] and "forja" in out["reason"]
 
@@ -196,6 +232,7 @@ def test_craft_local_errado_falha():
 # ---------------------------------------------------------------------------
 # Etapa 5 — drop tables
 # ---------------------------------------------------------------------------
+
 
 def test_roll_loot_respeita_pesos_e_pool():
     rng = random.Random(42)
@@ -219,8 +256,10 @@ def test_regiao_sem_tabela_usa_default():
 # Etapa 6 — loot_node reescrito (MockLLM, e2e offline)
 # ---------------------------------------------------------------------------
 
+
 def _node_state(loot_source, text, **over):
     from langchain_core.messages import HumanMessage
+
     s = make_state(**over)
     s["messages"] = [HumanMessage(content=text)]
     s["loot_source"] = loot_source
@@ -229,6 +268,7 @@ def _node_state(loot_source, text, **over):
 
 def test_buy_e2e_mock():
     from agents.loot import loot_node
+
     s = _node_state("SHOP", "quero comprar minerio de ferro")
     out = loot_node(s)
     assert inv.get_qty(out["player"]["inventory"], "minerio_ferro") >= 1
@@ -237,6 +277,7 @@ def test_buy_e2e_mock():
 
 def test_sell_e2e_mock():
     from agents.loot import loot_node
+
     s = _node_state("SHOP", "vendo minha adaga de ferro")
     s["player"]["inventory"] = inv.add_item([], "adaga_ferro", 1)
     out = loot_node(s)
@@ -245,6 +286,7 @@ def test_sell_e2e_mock():
 
 def test_craft_e2e_mock_sem_ingrediente():
     from agents.loot import loot_node
+
     s = _node_state("CRAFT", "quero forjar a lamina temperada")
     out = loot_node(s)
     # falha narrada, player intocado (sem chave 'player' no retorno de falha)
@@ -254,6 +296,7 @@ def test_craft_e2e_mock_sem_ingrediente():
 
 def test_treasure_usa_tabela():
     from agents.loot import loot_node
+
     s = _node_state("TREASURE", "abro o baú")
     out = loot_node(s)
     assert out["player"]["gold"] >= 500  # ouro nunca negativo no tesouro

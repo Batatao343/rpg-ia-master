@@ -47,21 +47,36 @@ def main(argv: list[str] | None = None) -> int:
         if not isinstance(sku_data["gross_brl"], str):
             raise PricingUnavailable("preço do SKU precisa ser texto decimal")
         sku = PurchaseSku(
-            sku_data["sku_id"], sku_data["channel"],
-            Decimal(sku_data["gross_brl"]), sku_data["shard_milli"],
+            sku_data["sku_id"],
+            sku_data["channel"],
+            Decimal(sku_data["gross_brl"]),
+            sku_data["shard_milli"],
             sku_data["pricing_version"],
         )
-        at = datetime.fromisoformat(args.at.replace("Z", "+00:00")) if args.at else datetime.now(UTC)
+        at = (
+            datetime.fromisoformat(args.at.replace("Z", "+00:00")) if args.at else datetime.now(UTC)
+        )
         purchase = quote_purchase(sku, version, at=at)
         report = contribution_report([purchase], fixed_infra_brl=Decimal(args.fixed_infra_brl))
         result: dict = {"simulation_only": True, "purchase": asdict(purchase), "report": report}
         if args.usage_usd is not None:
             simulated = UsageEvent(
-                event_id=uuid4(), operation_id=uuid4(), component="cli-simulation",
-                attempt_ordinal=0, category="other", provider="simulated", model="simulated",
-                outcome="success", input_units=None, output_units=None, cached_units=None,
-                audio_units=None, image_units=None, cost_usd=Decimal(args.usage_usd),
-                cost_basis="provider_reported", pricing_version="cli-simulation",
+                event_id=uuid4(),
+                operation_id=uuid4(),
+                component="cli-simulation",
+                attempt_ordinal=0,
+                category="other",
+                provider="simulated",
+                model="simulated",
+                outcome="success",
+                input_units=None,
+                output_units=None,
+                cached_units=None,
+                audio_units=None,
+                image_units=None,
+                cost_usd=Decimal(args.usage_usd),
+                cost_basis="provider_reported",
+                pricing_version="cli-simulation",
                 billing_exact=True,
             )
             result["usage_assumption"] = "synthetic provider-reported cost; not billable evidence"

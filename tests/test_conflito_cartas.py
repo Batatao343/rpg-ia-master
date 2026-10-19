@@ -11,11 +11,16 @@ from services import cards
 
 def _state(**player_over):
     player = {
-        "class_name": "Devoto do Abismo", "level": 1,
-        "entropy": 14, "max_entropy": 14, "abyss_charge": 0,
+        "class_name": "Devoto do Abismo",
+        "level": 1,
+        "entropy": 14,
+        "max_entropy": 14,
+        "abyss_charge": 0,
         "known_cards": ["golpe_devoto", "muralha_viva", "conviccao_passiva"],
         "prepared_cards": ["golpe_devoto", "muralha_viva"],
-        "card_usage": {}, "virtue_cards": [], "evolved_cards": {},
+        "card_usage": {},
+        "virtue_cards": [],
+        "evolved_cards": {},
     }
     player.update(player_over)
     return {"player": player, "world": {"danger_level": 1}, "combat": {"active": False}}
@@ -80,8 +85,8 @@ def test_use_card_precisa_estar_preparada():
 
 def test_reset_turno_nao_libera_carta_de_cena():
     st = _state()
-    cards.use_card(st, "muralha_viva")            # 1×cena
-    cards.reset_card_usage(st, "turno")           # reset de turno NÃO zera cena
+    cards.use_card(st, "muralha_viva")  # 1×cena
+    cards.reset_card_usage(st, "turno")  # reset de turno NÃO zera cena
     r = cards.use_card(st, "muralha_viva")
     assert not r["ok"]
 
@@ -117,11 +122,20 @@ def test_reorganizar_rejeita_carta_fora_do_acervo():
 
 
 def test_reorganizar_respeita_limite_do_nivel():
-    st = _state(level=1, known_cards=["golpe_devoto", "muralha_viva", "conviccao_passiva",
-                                      "corte_sangrento", "hemorragia"])
+    st = _state(
+        level=1,
+        known_cards=[
+            "golpe_devoto",
+            "muralha_viva",
+            "conviccao_passiva",
+            "corte_sangrento",
+            "hemorragia",
+        ],
+    )
     # nível 1 = 4 slots; tentar 5 falha
-    r = cards.set_prepared(st, ["golpe_devoto", "muralha_viva", "conviccao_passiva",
-                                "corte_sangrento", "hemorragia"])
+    r = cards.set_prepared(
+        st, ["golpe_devoto", "muralha_viva", "conviccao_passiva", "corte_sangrento", "hemorragia"]
+    )
     assert not r["ok"] and "Máximo 4" in r["error"]
 
 
@@ -157,8 +171,8 @@ def test_ruptura_gera_carga_mesmo_pagando_custo():
     st = _state(entropy=10, abyss_charge=0)
     r = cards.use_ruptura(st, "muralha_viva")  # custo 3, tem ruptura
     assert r["ok"], r
-    assert st["player"]["entropy"] == 7          # custo pago da Entropia
-    assert st["player"]["abyss_charge"] == 1     # +1 Carga
+    assert st["player"]["entropy"] == 7  # custo pago da Entropia
+    assert st["player"]["abyss_charge"] == 1  # +1 Carga
 
 
 def test_ruptura_carga_nova_nao_paga_a_propria():
@@ -184,13 +198,20 @@ def test_ruptura_sem_ruptura_na_carta():
 # --------------------------------------------------------------------------
 def test_criacao_monta_acervo_e_preparadas():
     import os
+
     os.environ["RPG_FORCE_MOCK"] = "1"
     from character_creator import create_player_character
-    sheet = create_player_character({
-        "name": "Vael", "class_name": "Corruptor", "race": "Humano",
-        "region": "Nova Arcádia", "level": 1,
-        "virtudes": {"mente": 4, "corpo": 3, "agilidade": 2, "carisma": 1, "forca": 1},
-    })
+
+    sheet = create_player_character(
+        {
+            "name": "Vael",
+            "class_name": "Corruptor",
+            "race": "Humano",
+            "region": "Nova Arcádia",
+            "level": 1,
+            "virtudes": {"mente": 4, "corpo": 3, "agilidade": 2, "carisma": 1, "forca": 1},
+        }
+    )
     assert len(sheet["known_cards"]) == 6
     assert len(sheet["prepared_cards"]) == 4
     assert set(sheet["prepared_cards"]) <= set(sheet["known_cards"])
@@ -201,17 +222,26 @@ def test_criacao_monta_acervo_e_preparadas():
 
 def test_criacao_medico_prioriza_cartas_autorais_v4():
     import os
+
     os.environ["RPG_FORCE_MOCK"] = "1"
     from character_creator import create_player_character
 
-    sheet = create_player_character({
-        "name": "Iria", "class_name": "Médico de Campo", "race": "Humano",
-        "region": "Nova Arcádia", "level": 1,
-        "virtudes": {
-            "mente": 4, "carisma": 3, "corpo": 2,
-            "agilidade": 1, "forca": 1,
-        },
-    })
+    sheet = create_player_character(
+        {
+            "name": "Iria",
+            "class_name": "Médico de Campo",
+            "race": "Humano",
+            "region": "Nova Arcádia",
+            "level": 1,
+            "virtudes": {
+                "mente": 4,
+                "carisma": 3,
+                "corpo": 2,
+                "agilidade": 1,
+                "forca": 1,
+            },
+        }
+    )
 
     assert sheet["prepared_cards"][:2] == ["med_sutura", "med_torniquete"]
     assert "sutura_rapida" not in sheet["prepared_cards"]
@@ -219,16 +249,23 @@ def test_criacao_medico_prioriza_cartas_autorais_v4():
 
 def test_criacao_carta_de_virtude_estagio_pela_virtude():
     import os
+
     os.environ["RPG_FORCE_MOCK"] = "1"
     from character_creator import create_player_character
-    sheet = create_player_character({
-        "name": "Bruta", "class_name": "Devoto do Abismo", "race": "Humano", "level": 1,
-        "virtudes": {"forca": 4, "corpo": 3, "carisma": 2, "mente": 1, "agilidade": 1},
-        "virtue_cards": ["vc_forca_bruta", "vc_mente_lucida"],
-    })
+
+    sheet = create_player_character(
+        {
+            "name": "Bruta",
+            "class_name": "Devoto do Abismo",
+            "race": "Humano",
+            "level": 1,
+            "virtudes": {"forca": 4, "corpo": 3, "carisma": 2, "mente": 1, "agilidade": 1},
+            "virtue_cards": ["vc_forca_bruta", "vc_mente_lucida"],
+        }
+    )
     by_id = {vc["card_id"]: vc for vc in sheet["virtue_cards"]}
-    assert by_id["vc_forca_bruta"]["estagio"] == 2   # forca 4 -> Estágio II
-    assert by_id["vc_mente_lucida"]["estagio"] == 1   # mente 1 -> Estágio I
+    assert by_id["vc_forca_bruta"]["estagio"] == 2  # forca 4 -> Estágio II
+    assert by_id["vc_mente_lucida"]["estagio"] == 1  # mente 1 -> Estágio I
 
 
 # --------------------------------------------------------------------------
@@ -236,18 +273,32 @@ def test_criacao_carta_de_virtude_estagio_pela_virtude():
 # --------------------------------------------------------------------------
 def test_levelup_oferece_escolha_de_carta():
     from progression import XP_TABLE, grant_xp
-    p = {"class_name": "Devoto do Abismo", "level": 1, "xp": 0, "max_hp": 40, "hp": 40,
-         "max_entropy": 14, "entropy": 14, "virtudes": {"forca": 4, "corpo": 3,
-         "carisma": 2, "mente": 1, "agilidade": 1}, "pending_choices": [],
-         "known_cards": ["golpe_devoto"]}
+
+    p = {
+        "class_name": "Devoto do Abismo",
+        "level": 1,
+        "xp": 0,
+        "max_hp": 40,
+        "hp": 40,
+        "max_entropy": 14,
+        "entropy": 14,
+        "virtudes": {"forca": 4, "corpo": 3, "carisma": 2, "mente": 1, "agilidade": 1},
+        "pending_choices": [],
+        "known_cards": ["golpe_devoto"],
+    }
     p, _ = grant_xp(p, XP_TABLE[2])
     assert any(c["kind"] == "carta" for c in p["pending_choices"])
 
 
 def test_apply_choice_carta_nova():
     from progression import apply_choice
-    p = {"class_name": "Devoto do Abismo", "level": 2, "known_cards": ["golpe_devoto"],
-         "pending_choices": [{"id": "lvl2-carta", "level": 2, "kind": "carta"}]}
+
+    p = {
+        "class_name": "Devoto do Abismo",
+        "level": 2,
+        "known_cards": ["golpe_devoto"],
+        "pending_choices": [{"id": "lvl2-carta", "level": 2, "kind": "carta"}],
+    }
     out, err = apply_choice(p, "lvl2-carta", card_id="dev_muralha_viva")
     assert err is None
     assert "dev_muralha_viva" in out["known_cards"]
@@ -256,19 +307,30 @@ def test_apply_choice_carta_nova():
 
 def test_apply_choice_carta_nova_ou_evolucao_exclusivo():
     from progression import apply_choice
-    p = {"class_name": "Devoto do Abismo", "level": 4, "known_cards": ["golpe_devoto"],
-         "evolved_cards": {},
-         "pending_choices": [{"id": "lvl4-carta", "level": 4, "kind": "carta"}]}
-    out, err = apply_choice(p, "lvl4-carta", card_id="muralha_viva",
-                            evolve_card_id="golpe_devoto", caminho="A")
+
+    p = {
+        "class_name": "Devoto do Abismo",
+        "level": 4,
+        "known_cards": ["golpe_devoto"],
+        "evolved_cards": {},
+        "pending_choices": [{"id": "lvl4-carta", "level": 4, "kind": "carta"}],
+    }
+    out, err = apply_choice(
+        p, "lvl4-carta", card_id="muralha_viva", evolve_card_id="golpe_devoto", caminho="A"
+    )
     assert err is not None  # não pode as duas
 
 
 def test_apply_choice_carta_evolucao():
     from progression import apply_choice
-    p = {"class_name": "Devoto do Abismo", "level": 4, "known_cards": ["golpe_devoto"],
-         "evolved_cards": {},
-         "pending_choices": [{"id": "lvl4-carta", "level": 4, "kind": "carta"}]}
+
+    p = {
+        "class_name": "Devoto do Abismo",
+        "level": 4,
+        "known_cards": ["golpe_devoto"],
+        "evolved_cards": {},
+        "pending_choices": [{"id": "lvl4-carta", "level": 4, "kind": "carta"}],
+    }
     out, err = apply_choice(p, "lvl4-carta", evolve_card_id="golpe_devoto", caminho="B")
     assert err is None
     assert out["evolved_cards"]["golpe_devoto"] == "B"

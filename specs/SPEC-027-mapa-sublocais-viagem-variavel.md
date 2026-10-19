@@ -120,9 +120,11 @@ def travel_cost(world: dict, dest: dict) -> int:
     """Custo em períodos da conexão atual->dest (R1: travel_times, fallback
     simétrico, default 1). Interior -> sempre 0."""
 
+
 def apply_travel(world: dict, dest: dict) -> dict:
     """Como hoje, mas: custo = travel_cost; custo 0 pula advance_clock/
     advance_weather/extra de clima; custo N vira o relógio N vezes."""
+
 
 # gamedata.py
 def interiors_of(loc_id: str) -> list[dict]: ...

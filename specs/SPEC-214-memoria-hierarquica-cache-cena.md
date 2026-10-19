@@ -89,19 +89,19 @@ Rótulos: **[F]** fato observado no source do HEAD `6b94f66` · **[D]** decisão
 ```python
 @dataclass(frozen=True)
 class SceneSnapshot:
-    schema: int                    # SNAPSHOT_SCHEMA
-    key: str                       # sha256 hex de key_parts canônicos
-    key_parts: tuple               # (game_id, epoch, location_id, npc_id, combat_active, round, quest_id, ckpt_turn, deaths, memory_version, revealed_hash)
+    schema: int  # SNAPSHOT_SCHEMA
+    key: str  # sha256 hex de key_parts canônicos
+    key_parts: tuple  # (game_id, epoch, location_id, npc_id, combat_active, round, quest_id, ckpt_turn, deaths, memory_version, revealed_hash)
     location: str
     present_npcs: tuple[str, ...]  # ordenado
     interlocutor: str | None
     interlocutor_relation: int | None
-    threats: tuple                 # (danger_level, n_enemies_alive)
-    recent_events: tuple[str, ...] # event_ids da cena, ≤5
+    threats: tuple  # (danger_level, n_enemies_alive)
+    recent_events: tuple[str, ...]  # event_ids da cena, ≤5
     revealed_secret_ids: tuple[str, ...]
-    combat: tuple | None           # (round, ((enemy_id, name, vit, max_vit), ...))
+    combat: tuple | None  # (round, ((enemy_id, name, vit, max_vit), ...))
     public_objective: str | None
-    clock: str                     # "dia N, período"
+    clock: str  # "dia N, período"
     weather_light: str
 ```
 `L2Entry = {lore_block, session_block, npc_block, evidence_ids, revealed_set_hash, created_turn}`.

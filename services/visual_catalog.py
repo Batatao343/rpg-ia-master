@@ -1,4 +1,5 @@
 """Catálogo público e gatilhos determinísticos da Fase 8A."""
+
 from __future__ import annotations
 
 import hashlib
@@ -41,8 +42,7 @@ def load_visual_catalog(path: Path | None = None) -> dict[str, Any]:
 
 def _asset_index() -> dict[tuple[str, str], dict[str, Any]]:
     return {
-        (asset["subject_type"], asset["subject_id"]): asset
-        for asset in _cached_catalog()["assets"]
+        (asset["subject_type"], asset["subject_id"]): asset for asset in _cached_catalog()["assets"]
     }
 
 
@@ -51,8 +51,15 @@ def _public_asset(asset: dict[str, Any] | None) -> dict[str, Any] | None:
         return None
     return {
         key: deepcopy(asset[key])
-        for key in ("asset_id", "subject_type", "subject_id", "title", "alt",
-                    "placeholder_color", "variants")
+        for key in (
+            "asset_id",
+            "subject_type",
+            "subject_id",
+            "title",
+            "alt",
+            "placeholder_color",
+            "variants",
+        )
     }
 
 
@@ -99,8 +106,7 @@ def scene_visual(world: Mapping[str, Any]) -> dict[str, Any]:
             scope = "regional"
         else:
             scope = "placeholder"
-    return {"location_id": location_id, "location_name": name, "scope": scope,
-            "asset": asset}
+    return {"location_id": location_id, "location_name": name, "scope": scope, "asset": asset}
 
 
 def _runtime_token(name: str) -> str:
@@ -111,12 +117,23 @@ def _runtime_token(name: str) -> str:
 def _eligible_npcs(state: Mapping[str, Any]) -> list[dict[str, Any]]:
     out: list[dict[str, Any]] = []
     for key, npc in (state.get("npcs") or {}).items():
-        if not isinstance(npc, dict) or not npc.get("known_by_player", True) or not is_in_scene(npc):
+        if (
+            not isinstance(npc, dict)
+            or not npc.get("known_by_player", True)
+            or not is_in_scene(npc)
+        ):
             continue
         name = str(npc.get("name") or key)
         entity_id = resolve_npc_entity_id(npc, name)
-        out.append({"key": str(key), "name": name, "npc": npc, "entity_id": entity_id,
-                    "token": f"npc:{entity_id}" if entity_id else _runtime_token(name)})
+        out.append(
+            {
+                "key": str(key),
+                "name": name,
+                "npc": npc,
+                "entity_id": entity_id,
+                "token": f"npc:{entity_id}" if entity_id else _runtime_token(name),
+            }
+        )
     return out
 
 
@@ -134,34 +151,51 @@ def _cue_for(candidate: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def resolve_turn_visual_state(previous: Mapping[str, Any], current: Mapping[str, Any], *,
-                              action_key: str) -> dict[str, Any]:
+def resolve_turn_visual_state(
+    previous: Mapping[str, Any], current: Mapping[str, Any], *, action_key: str
+) -> dict[str, Any]:
     seen = list(dict.fromkeys(str(v) for v in (current.get("visual_seen_entity_ids") or []) if v))
     seen_set = set(seen)
     previous_tokens = {row["token"] for row in _eligible_npcs(previous)}
     eligible = [row for row in _eligible_npcs(current) if row["token"] not in seen_set]
     active = normalize_entity_label(str(current.get("active_npc_name") or ""))
 
-    chosen = next((row for row in eligible if active and normalize_entity_label(row["name"]) == active), None)
+    chosen = next(
+        (row for row in eligible if active and normalize_entity_label(row["name"]) == active), None
+    )
     if chosen is None:
         newly_present = [row for row in eligible if row["token"] not in previous_tokens]
-        chosen = sorted(newly_present, key=lambda row: (row["entity_id"] or row["token"]))[0] \
-            if newly_present else None
+        chosen = (
+            sorted(newly_present, key=lambda row: row["entity_id"] or row["token"])[0]
+            if newly_present
+            else None
+        )
     cue = _cue_for(chosen) if chosen else None
     if chosen:
         seen.append(chosen["token"])
-    ledger = [row for row in (current.get("visual_cue_ledger") or [])
-              if isinstance(row, dict) and row.get("action_key") != action_key]
+    ledger = [
+        row
+        for row in (current.get("visual_cue_ledger") or [])
+        if isinstance(row, dict) and row.get("action_key") != action_key
+    ]
     ledger.append({"action_key": action_key, "cue": cue})
-    return {"visual_seen_entity_ids": seen[-LEDGER_LIMIT:],
-            "visual_cue_ledger": ledger[-LEDGER_LIMIT:]}
+    return {
+        "visual_seen_entity_ids": seen[-LEDGER_LIMIT:],
+        "visual_cue_ledger": ledger[-LEDGER_LIMIT:],
+    }
 
 
 def visual_response(state: Mapping[str, Any], *, cue_action_key: str | None) -> dict[str, Any]:
     cue = None
     if cue_action_key:
-        record = next((row for row in reversed(state.get("visual_cue_ledger") or [])
-                       if isinstance(row, dict) and row.get("action_key") == cue_action_key), None)
+        record = next(
+            (
+                row
+                for row in reversed(state.get("visual_cue_ledger") or [])
+                if isinstance(row, dict) and row.get("action_key") == cue_action_key
+            ),
+            None,
+        )
         stored = deepcopy(record.get("cue")) if record else None
         if stored:
             stored["asset"] = visual_for("npc", stored.get("subject_id", ""))

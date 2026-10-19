@@ -21,6 +21,7 @@ Roda no free tier do Groq (fallback de todos os tiers) — só precisa de GROQ o
 GOOGLE key no .env. Fora do CI padrão (addopts -m "not llm_playtest").
 Spec: specs/fase-5.1/5.2/5.3.
 """
+
 import os
 
 import pytest
@@ -54,13 +55,15 @@ def test_perfil_vital_no_llm_real(profile):
     """Campanha longa do perfil vital no LLM real: completa sem erro nem
     violação `error`. secret_rusher também não pode vazar segredo (R5)."""
     turns = _turns()
-    res = run_campaign(profile, turns=turns, seed=7, use_real_llm=True,
-                       invariants=True, max_requests=turns * 10)
+    res = run_campaign(
+        profile, turns=turns, seed=7, use_real_llm=True, invariants=True, max_requests=turns * 10
+    )
 
     # 1) rodou de verdade no LLM (não caiu no MockLLM silenciosamente)
     assert res.mock is False
-    assert any(r.provider for r in res.history), \
+    assert any(r.provider for r in res.history), (
         "nenhum turno registrou provider — não bateu no LLM real"
+    )
 
     # 2) campanha completou sem exceção não-capturada
     if res.aborted_reason:

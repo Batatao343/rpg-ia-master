@@ -11,7 +11,14 @@ FORBIDDEN_KEYS = {"input", "expected", "fixture", "prompt", "cases", "case_resul
 
 
 def validate(payload: dict[str, Any]) -> None:
-    required = {"schema_version", "product_sha", "evaluator_version", "dataset_hash", "case_count", "metrics"}
+    required = {
+        "schema_version",
+        "product_sha",
+        "evaluator_version",
+        "dataset_hash",
+        "case_count",
+        "metrics",
+    }
     if payload.keys() & FORBIDDEN_KEYS:
         raise ValueError("holdout aggregate exposes case-level data")
     if not required <= payload.keys() or payload.get("schema_version") != 1:
@@ -20,7 +27,10 @@ def validate(payload: dict[str, Any]) -> None:
         raise ValueError("holdout case_count must be positive")
     if not isinstance(payload["metrics"], dict) or not payload["metrics"]:
         raise ValueError("holdout metrics must be a non-empty object")
-    if any(not isinstance(value, (int, float)) or isinstance(value, bool) for value in payload["metrics"].values()):
+    if any(
+        not isinstance(value, (int, float)) or isinstance(value, bool)
+        for value in payload["metrics"].values()
+    ):
         raise ValueError("holdout metrics must be numeric aggregates")
     encoded = json.dumps(payload, ensure_ascii=False)
     if len(encoded.encode("utf-8")) > 65_536:

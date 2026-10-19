@@ -3,6 +3,7 @@
 Reuses JobWorker/JobQueue unchanged, so Postgres leases, heartbeat and fencing
 keep guarding every job; this only bounds *how long* we keep leasing.
 """
+
 from __future__ import annotations
 
 import time
@@ -52,9 +53,14 @@ def drain_jobs(
         processed += 1
     after = dict(getattr(worker, "stats", None) or {})
 
-    def delta(key: str) -> int:        # SPEC-255 R4: o cron deriva o outcome daqui
+    def delta(key: str) -> int:  # SPEC-255 R4: o cron deriva o outcome daqui
         return int(after.get(key, 0)) - int(before.get(key, 0))
 
-    return {"processed": processed, "stopped_reason": reason,
-            "elapsed_s": round(clock() - started, 3),
-            "failed": delta("failed"), "dead": delta("dead"), "deferred": delta("deferred")}
+    return {
+        "processed": processed,
+        "stopped_reason": reason,
+        "elapsed_s": round(clock() - started, 3),
+        "failed": delta("failed"),
+        "dead": delta("dead"),
+        "deferred": delta("deferred"),
+    }

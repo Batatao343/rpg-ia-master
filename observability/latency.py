@@ -100,8 +100,9 @@ def remove_sink(fn: Callable[[dict[str, Any]], None]) -> None:
 class TurnTimeline:
     """Marcas de entrega + acumulador de fases exclusivas (thread-safe)."""
 
-    def __init__(self, clock: Callable[[], float] | None = None, *,
-                 transport: str = "post") -> None:
+    def __init__(
+        self, clock: Callable[[], float] | None = None, *, transport: str = "post"
+    ) -> None:
         self._clock = clock or _clock_source
         self._lock = threading.RLock()
         self.transport = transport
@@ -141,7 +142,7 @@ class TurnTimeline:
         if fn is not None:
             try:
                 fn()
-            except Exception:   # roda no `finally` do stream: nunca pula turn_delivery
+            except Exception:  # roda no `finally` do stream: nunca pula turn_delivery
                 logging.getLogger("rpg.latency").exception("linha rpg.turn adiada falhou")
 
     # --- marcas de entrega -------------------------------------------------
@@ -263,7 +264,8 @@ class TurnTimeline:
 PSEUDO_STREAMING = True
 
 _current: contextvars.ContextVar[TurnTimeline | None] = contextvars.ContextVar(
-    "rpg_turn_timeline", default=None)
+    "rpg_turn_timeline", default=None
+)
 
 
 def current_timeline() -> TurnTimeline | None:
@@ -324,8 +326,11 @@ def summarize_phases(records: list[dict[str, Any]]) -> dict[str, dict[str, float
     grand = sum(totals) or 1
     for p in PHASES:
         vals = [int((r.get("phase_ms") or {}).get(p, 0)) for r in records]
-        out[p] = {"p50": percentile(vals, 50), "p95": percentile(vals, 95),
-                  "share": round(sum(vals) / grand, 4)}
+        out[p] = {
+            "p50": percentile(vals, 50),
+            "p95": percentile(vals, 95),
+            "share": round(sum(vals) / grand, 4),
+        }
     return out
 
 

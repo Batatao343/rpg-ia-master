@@ -1,4 +1,5 @@
 """SPEC-197 R3: legal pages are served by the app (static, CSP-compatible; published, no draft banner after SPEC-222 owner data)."""
+
 from pathlib import Path
 
 import pytest
@@ -12,6 +13,7 @@ def test_legal_page_served_with_csp_and_published(slug):
     from fastapi.testclient import TestClient
 
     import api
+
     r = TestClient(api.app).get(f"/{slug}/")
     assert r.status_code == 200 and "RASCUNHO" not in r.text
     assert "17/10/2026" in r.text

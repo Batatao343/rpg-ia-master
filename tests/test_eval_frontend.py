@@ -79,7 +79,9 @@ def test_mobile_report_requires_every_journey_on_both_viewports():
     assert ok["hard_gates_passed"] is True
     assert ok["journeys"]["registered"] == 14
     assert ok["metrics"]["mobile_journey_pass_rate"] == 1.0
-    assert summarize_mobile(_mobile_specs(failed=("mobile-320", "M05")))["hard_gates_passed"] is False
+    assert (
+        summarize_mobile(_mobile_specs(failed=("mobile-320", "M05")))["hard_gates_passed"] is False
+    )
     assert summarize_mobile(_mobile_specs(drop="mobile-390"))["hard_gates_passed"] is False
     assert summarize(_mobile_specs())["journeys"]["executed"] == 0
     assert summarize_vertical(_mobile_specs())["journeys"]["passed"] == 0
@@ -103,7 +105,10 @@ def test_vertical_report_requires_every_step_on_both_viewports():
     assert ok["hard_gates_passed"] is True
     assert ok["journeys"]["registered"] == 18
     assert ok["metrics"]["vertical_journey_pass_rate"] == 1.0
-    assert summarize_vertical(_vertical_specs(failed=("desktop-1280", "V09")))["hard_gates_passed"] is False
+    assert (
+        summarize_vertical(_vertical_specs(failed=("desktop-1280", "V09")))["hard_gates_passed"]
+        is False
+    )
     assert summarize_vertical(_vertical_specs(drop="desktop-1280"))["hard_gates_passed"] is False
     # Os passos V não entram no relatório F (e vice-versa).
     assert summarize(_vertical_specs())["journeys"]["executed"] == 0
@@ -112,12 +117,22 @@ def test_vertical_report_requires_every_step_on_both_viewports():
 def test_frontend_suite_has_every_hard_gate_and_no_fixed_sleep():
     source = (WEB / "e2e/fixtures.ts").read_text(encoding="utf-8")
     journeys = (WEB / "e2e/critical-journeys.spec.ts").read_text(encoding="utf-8")
-    for contract in ("pageerror", 'message.type() === "error"', "response.status() >= 500", "requestfailed"):
+    for contract in (
+        "pageerror",
+        'message.type() === "error"',
+        "response.status() >= 500",
+        "requestfailed",
+    ):
         assert contract in source
     assert "AxeBuilder" in journeys
     assert "scrollWidth <= document.documentElement.clientWidth" in journeys
     assert "waitForTimeout(" not in source + journeys
-    for viewport in ("320, height: 568", "390, height: 844", "768, height: 1024", "1440, height: 900"):
+    for viewport in (
+        "320, height: 568",
+        "390, height: 844",
+        "768, height: 1024",
+        "1440, height: 900",
+    ):
         assert viewport in journeys
 
 
@@ -132,7 +147,9 @@ def test_frontend_toolchain_and_visual_snapshot_are_pinned():
 
 
 def test_frontend_metrics_are_blocking_and_have_hard_limits():
-    registry = yaml.safe_load((ROOT / "evals/metrics-registry.yaml").read_text(encoding="utf-8"))["metrics"]
+    registry = yaml.safe_load((ROOT / "evals/metrics-registry.yaml").read_text(encoding="utf-8"))[
+        "metrics"
+    ]
     names = {
         "vertical_journey_pass_rate",
         "mobile_journey_pass_rate",
@@ -151,7 +168,9 @@ def test_frontend_metrics_are_blocking_and_have_hard_limits():
 def test_frontend_report_requires_every_registered_journey():
     specs = []
     for journey_id in JOURNEY_IDS:
-        specs.append({"title": f"{journey_id} fixture", "tests": [{"results": [{"status": "passed"}]}]})
+        specs.append(
+            {"title": f"{journey_id} fixture", "tests": [{"results": [{"status": "passed"}]}]}
+        )
     summary = summarize({"suites": [{"specs": specs}]})
     assert summary["hard_gates_passed"] is True
     assert summary["metrics"]["frontend_critical_journey_pass_rate"] == 1.0
@@ -159,7 +178,8 @@ def test_frontend_report_requires_every_registered_journey():
     missing = summarize({"suites": [{"specs": specs[:30]}]})
     assert missing["hard_gates_passed"] is False
     specs[-1]["tests"][0]["results"][0] = {
-        "status": "failed", "error": {"message": "A11Y serious/critical: color-contrast"}
+        "status": "failed",
+        "error": {"message": "A11Y serious/critical: color-contrast"},
     }
     failed = summarize({"suites": [{"specs": specs}]})
     assert failed["hard_gates_passed"] is False

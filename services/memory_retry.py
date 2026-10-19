@@ -4,6 +4,7 @@ Cada entrada representa exatamente uma operação ``add_npc_memory``. A fila é
 pequena, deduplicada e não carrega texto livre além do fato observável já
 sanitizado pelo nó de NPC.
 """
+
 from __future__ import annotations
 
 from typing import Dict, List
@@ -41,21 +42,25 @@ def normalize_pending_npc_memory(rows: Iterable | None) -> list[dict]:
             if not fact or identity in seen:
                 continue
             seen.add(identity)
-            normalized.append({
-                "operation": "add_npc_memory",
-                "npc_id": npc_id,
-                "facts": [fact],
-            })
+            normalized.append(
+                {
+                    "operation": "add_npc_memory",
+                    "npc_id": npc_id,
+                    "facts": [fact],
+                }
+            )
     return normalized[-MAX_PENDING_NPC_MEMORY:]
 
 
 def enqueue_npc_memory(rows: Iterable | None, npc_id: str, fact: str) -> list[dict]:
     """Anexa uma escrita sem duplicá-la e reaplica o limite da fila."""
-    return normalize_pending_npc_memory([
-        *normalize_pending_npc_memory(rows),
-        {
-            "operation": "add_npc_memory",
-            "npc_id": npc_id,
-            "facts": [fact],
-        },
-    ])
+    return normalize_pending_npc_memory(
+        [
+            *normalize_pending_npc_memory(rows),
+            {
+                "operation": "add_npc_memory",
+                "npc_id": npc_id,
+                "facts": [fact],
+            },
+        ]
+    )

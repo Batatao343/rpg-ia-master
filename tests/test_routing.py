@@ -7,6 +7,7 @@ Convenção CRÍTICA testada aqui: quando TODOS os candidatos falham, o RoutedLL
 devolve um `AIMessage` (nunca levanta) — o guard `isinstance`/`try` do nó segue
 obrigatório (o RoutedLLM não mascara isso).
 """
+
 import json
 
 import pytest
@@ -140,15 +141,13 @@ def test_classify_tier_existe():
 
 def test_deepseek_usa_identificador_v4_nao_alias_descontinuado():
     for tier in (ModelTier.CLASSIFY, ModelTier.FAST, ModelTier.SMART):
-        deepseek = [model for provider, model in llm_setup.ROUTES[tier]
-                    if provider == "deepseek"]
+        deepseek = [model for provider, model in llm_setup.ROUTES[tier] if provider == "deepseek"]
         assert deepseek == ["deepseek-v4-flash"]
         assert "deepseek-chat" not in deepseek
 
 
 def test_fast_usa_modelo_groq_disponivel():
-    groq = [model for provider, model in llm_setup.ROUTES[ModelTier.FAST]
-            if provider == "groq"]
+    groq = [model for provider, model in llm_setup.ROUTES[ModelTier.FAST] if provider == "groq"]
     assert groq == ["openai/gpt-oss-120b"]
     assert "llama-3.3-70b-versatile" not in groq
 
@@ -177,7 +176,8 @@ def test_deepseek_timeout_curto_por_padrao(monkeypatch):
 
     captured = {}
     monkeypatch.setattr(
-        langchain_openai, "ChatOpenAI",
+        langchain_openai,
+        "ChatOpenAI",
         lambda **kwargs: captured.update(kwargs) or object(),
     )
     monkeypatch.setenv("DEEPSEEK_API_KEY", "test-key")
@@ -196,11 +196,13 @@ def test_timeout_global_tambem_alcanca_anthropic_e_gemini(monkeypatch):
     anthropic_kwargs = {}
     gemini_kwargs = {}
     monkeypatch.setattr(
-        langchain_anthropic, "ChatAnthropic",
+        langchain_anthropic,
+        "ChatAnthropic",
         lambda **kwargs: anthropic_kwargs.update(kwargs) or object(),
     )
     monkeypatch.setattr(
-        langchain_google_genai, "ChatGoogleGenerativeAI",
+        langchain_google_genai,
+        "ChatGoogleGenerativeAI",
         lambda **kwargs: gemini_kwargs.update(kwargs) or object(),
     )
     monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
@@ -321,13 +323,17 @@ def test_structured_invalido_repete_duas_vezes_no_mesmo_provider(monkeypatch):
     set_llm_attempt_telemetry_hook(events.append)
     original = [HumanMessage(content="classifique")]
 
-    result = RoutedLLM(
-        ModelTier.CLASSIFY, 0.0, [("p1", "m1")]
-    ).with_structured_output(_Tiny).invoke(original)
+    result = (
+        RoutedLLM(ModelTier.CLASSIFY, 0.0, [("p1", "m1")])
+        .with_structured_output(_Tiny)
+        .invoke(original)
+    )
 
     assert isinstance(result, _Tiny)
     assert [event.outcome for event in events] == [
-        "invalid_structured", "invalid_structured", "success",
+        "invalid_structured",
+        "invalid_structured",
+        "success",
     ]
     assert [event.attempt_index for event in events] == [0, 1, 2]
     assert [event.fell_back for event in events] == [False, False, False]
@@ -342,19 +348,22 @@ def test_structured_retry_esgotado_avanca_proximo_provider(monkeypatch):
         "p1": _FakeClient("p1", "none"),
         "p2": _FakeClient("p2", "ok"),
     }
-    monkeypatch.setattr(
-        llm_setup, "_build_client", lambda provider, *_args: clients[provider]
-    )
+    monkeypatch.setattr(llm_setup, "_build_client", lambda provider, *_args: clients[provider])
     events = []
     set_llm_attempt_telemetry_hook(events.append)
 
-    result = RoutedLLM(
-        ModelTier.CLASSIFY, 0.0, [("p1", "m1"), ("p2", "m2")]
-    ).with_structured_output(_Tiny).invoke([HumanMessage(content="classifique")])
+    result = (
+        RoutedLLM(ModelTier.CLASSIFY, 0.0, [("p1", "m1"), ("p2", "m2")])
+        .with_structured_output(_Tiny)
+        .invoke([HumanMessage(content="classifique")])
+    )
 
     assert isinstance(result, _Tiny)
     assert [event.outcome for event in events] == [
-        "invalid_structured", "invalid_structured", "invalid_structured", "success",
+        "invalid_structured",
+        "invalid_structured",
+        "invalid_structured",
+        "success",
     ]
     assert [event.attempt_index for event in events] == [0, 1, 2, 3]
     assert [event.fell_back for event in events] == [False, False, False, True]
@@ -365,15 +374,15 @@ def test_invoke_error_nao_repete_no_mesmo_provider(monkeypatch):
         "p1": _FakeClient("p1", "raise"),
         "p2": _FakeClient("p2", "ok"),
     }
-    monkeypatch.setattr(
-        llm_setup, "_build_client", lambda provider, *_args: clients[provider]
-    )
+    monkeypatch.setattr(llm_setup, "_build_client", lambda provider, *_args: clients[provider])
     events = []
     set_llm_attempt_telemetry_hook(events.append)
 
-    result = RoutedLLM(
-        ModelTier.CLASSIFY, 0.0, [("p1", "m1"), ("p2", "m2")]
-    ).with_structured_output(_Tiny).invoke([HumanMessage(content="classifique")])
+    result = (
+        RoutedLLM(ModelTier.CLASSIFY, 0.0, [("p1", "m1"), ("p2", "m2")])
+        .with_structured_output(_Tiny)
+        .invoke([HumanMessage(content="classifique")])
+    )
 
     assert isinstance(result, _Tiny)
     assert [event.outcome for event in events] == ["invoke_error", "success"]
@@ -381,8 +390,7 @@ def test_invoke_error_nao_repete_no_mesmo_provider(monkeypatch):
 
 
 @pytest.mark.parametrize("invalid_behavior", ["none", "wrong"])
-def test_structured_output_invalido_tenta_proximo_provider(
-        monkeypatch, invalid_behavior):
+def test_structured_output_invalido_tenta_proximo_provider(monkeypatch, invalid_behavior):
     _install_fakes(monkeypatch, {"p1": invalid_behavior, "p2": "ok"})
     tentativas = []
     sucessos_legados = []
@@ -396,7 +404,10 @@ def test_structured_output_invalido_tenta_proximo_provider(
 
     assert isinstance(res, _Tiny)
     assert [event.outcome for event in tentativas] == [
-        "invalid_structured", "invalid_structured", "invalid_structured", "success",
+        "invalid_structured",
+        "invalid_structured",
+        "invalid_structured",
+        "success",
     ]
     assert tentativas[0].structured is True
     assert tentativas[1].fell_back is False
@@ -421,7 +432,10 @@ def test_structured_include_raw_exige_parsed_tipado_e_sem_erro(monkeypatch):
     assert isinstance(res["parsed"], _Tiny)
     assert res["parsing_error"] is None
     assert [event.outcome for event in tentativas] == [
-        "invalid_structured", "invalid_structured", "invalid_structured", "success",
+        "invalid_structured",
+        "invalid_structured",
+        "invalid_structured",
+        "success",
     ]
 
 
@@ -430,9 +444,11 @@ def test_structured_recupera_json_raw_sem_nova_request(monkeypatch):
     tentativas = []
     set_llm_attempt_telemetry_hook(tentativas.append)
 
-    result = RoutedLLM(
-        ModelTier.SMART, 0.0, [("p1", "m1")]
-    ).with_structured_output(_Tiny).invoke([HumanMessage(content="planeje")])
+    result = (
+        RoutedLLM(ModelTier.SMART, 0.0, [("p1", "m1")])
+        .with_structured_output(_Tiny)
+        .invoke([HumanMessage(content="planeje")])
+    )
 
     assert result == _Tiny(value="recuperado")
     assert len(tentativas) == 1
@@ -445,9 +461,9 @@ def test_plain_invoke_nao_rejeita_none(monkeypatch):
     tentativas = []
     set_llm_attempt_telemetry_hook(tentativas.append)
 
-    res = RoutedLLM(
-        ModelTier.FAST, 0.1, [("p1", "m1"), ("p2", "m2")]
-    ).invoke([HumanMessage(content="oi")])
+    res = RoutedLLM(ModelTier.FAST, 0.1, [("p1", "m1"), ("p2", "m2")]).invoke(
+        [HumanMessage(content="oi")]
+    )
 
     assert res is None, "pos-condicao vale somente para structured output Pydantic"
     assert [event.outcome for event in tentativas] == ["success"]
@@ -460,13 +476,16 @@ def test_hook_de_tentativas_observa_build_e_invoke_falhos(monkeypatch):
     set_llm_attempt_telemetry_hook(tentativas.append)
 
     res = RoutedLLM(
-        ModelTier.FAST, 0.1,
+        ModelTier.FAST,
+        0.1,
         [("p1", "m1"), ("p2", "m2"), ("p3", "m3")],
     ).invoke([HumanMessage(content="oi")])
 
     assert res.content == "resposta de p3"
     assert [event.outcome for event in tentativas] == [
-        "build_error", "invoke_error", "success",
+        "build_error",
+        "invoke_error",
+        "success",
     ]
     assert tentativas[0].provider == "p1"
     assert tentativas[0].attempt_index == 0
@@ -556,6 +575,7 @@ def test_import_error_pula_candidato(monkeypatch):
 
 class _RecFake(_FakeClient):
     """Registra os kwargs de with_structured_output para inspeção."""
+
     def __init__(self, tag, sink):
         super().__init__(tag, "ok")
         self._sink = sink
@@ -571,7 +591,8 @@ def test_openai_compat_injeta_function_calling(monkeypatch):
     sink = {}
     monkeypatch.setattr(llm_setup, "_build_client", lambda p, m, t: _RecFake(p, sink))
     RoutedLLM(ModelTier.FAST, 0.1, [("groq", "m")]).with_structured_output(_Tiny).invoke(
-        [HumanMessage(content="x")])
+        [HumanMessage(content="x")]
+    )
     assert sink["kwargs"].get("method") == "function_calling"
 
 
@@ -584,7 +605,8 @@ def test_openai_compat_structured_adiciona_instrucao_apos_ai_message(monkeypatch
             return super().invoke(input)
 
     monkeypatch.setattr(
-        llm_setup, "_build_client",
+        llm_setup,
+        "_build_client",
         lambda p, m, t: RecordingClient(p),
     )
     original = [
@@ -592,9 +614,15 @@ def test_openai_compat_structured_adiciona_instrucao_apos_ai_message(monkeypatch
         AIMessage(content="contexto narrativo"),
     ]
 
-    result = RoutedLLM(
-        ModelTier.SMART, 0.1, [("groq", "m")],
-    ).with_structured_output(_Tiny).invoke(original)
+    result = (
+        RoutedLLM(
+            ModelTier.SMART,
+            0.1,
+            [("groq", "m")],
+        )
+        .with_structured_output(_Tiny)
+        .invoke(original)
+    )
 
     assert isinstance(result, _Tiny)
     assert original[-1].content == "contexto narrativo"
@@ -607,7 +635,8 @@ def test_gemini_nao_recebe_function_calling(monkeypatch):
     sink = {}
     monkeypatch.setattr(llm_setup, "_build_client", lambda p, m, t: _RecFake(p, sink))
     RoutedLLM(ModelTier.FAST, 0.1, [("gemini", "m")]).with_structured_output(_Tiny).invoke(
-        [HumanMessage(content="x")])
+        [HumanMessage(content="x")]
+    )
     assert "method" not in sink["kwargs"]
 
 
@@ -616,7 +645,8 @@ def test_method_explicito_nao_e_sobrescrito(monkeypatch):
     sink = {}
     monkeypatch.setattr(llm_setup, "_build_client", lambda p, m, t: _RecFake(p, sink))
     RoutedLLM(ModelTier.FAST, 0.1, [("groq", "m")]).with_structured_output(
-        _Tiny, method="json_mode").invoke([HumanMessage(content="x")])
+        _Tiny, method="json_mode"
+    ).invoke([HumanMessage(content="x")])
     assert sink["kwargs"].get("method") == "json_mode"
 
 
@@ -624,6 +654,7 @@ def test_anthropic_pulado_sem_dep():
     """_build_anthropic sem a dep levanta ImportError (⇒ candidato pulado no RoutedLLM)."""
     try:
         import langchain_anthropic  # noqa: F401
+
         pytest.skip("langchain-anthropic instalado — caso SEM dep não aplicável")
     except ImportError:
         pass

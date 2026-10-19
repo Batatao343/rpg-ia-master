@@ -1,4 +1,5 @@
 """SPEC-202 Etapa 4 — `speaker` canônico em POST/SSE/state/history + saves."""
+
 from __future__ import annotations
 
 import json
@@ -12,31 +13,52 @@ import persistence
 from services import interlocutor as itl
 
 FIXTURE = os.path.join(os.path.dirname(__file__), "fixtures", "save_v8_pre_spec202.json")
-BRUNNA = {"kind": "npc", "id": "npc_mv_brunna_ponte_alta", "name": "Brunna Ponte-Alta",
-          "reason": "direct_address"}
+BRUNNA = {
+    "kind": "npc",
+    "id": "npc_mv_brunna_ponte_alta",
+    "name": "Brunna Ponte-Alta",
+    "reason": "direct_address",
+}
 
 
 @pytest.fixture()
 def client(monkeypatch):
     import api
+
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
     api._rate_hits.clear()
     from fastapi.testclient import TestClient
+
     return TestClient(api.app)
 
 
 def _new_game_with_brunna(client) -> str:
-    r = client.post("/game/new", json={
-        "name": "Falante", "race": "Humano", "class_name": "Sangromante",
-        "region": "Nova Arcádia", "level": 1, "backstory": ""})
+    r = client.post(
+        "/game/new",
+        json={
+            "name": "Falante",
+            "race": "Humano",
+            "class_name": "Sangromante",
+            "region": "Nova Arcádia",
+            "level": 1,
+            "backstory": "",
+        },
+    )
     assert r.status_code == 200, r.text
     gid = r.json()["game_id"]
     state = persistence.load_game_state(persistence.save_path(gid))
     loc_id = state["world"].get("current_location_id", "")
-    state["npcs"] = {"Brunna Ponte-Alta": {
-        "name": "Brunna Ponte-Alta", "role": "Barqueira", "in_scene": True,
-        "home_location_id": loc_id, "relationship": 5, "memory": [],
-        "known_by_player": True}}
+    state["npcs"] = {
+        "Brunna Ponte-Alta": {
+            "name": "Brunna Ponte-Alta",
+            "role": "Barqueira",
+            "in_scene": True,
+            "home_location_id": loc_id,
+            "relationship": 5,
+            "memory": [],
+            "known_by_player": True,
+        }
+    }
     assert persistence.save_game_state(state)
     return gid
 
@@ -46,9 +68,9 @@ def _read_sse(resp) -> list:
     for line in resp.iter_lines():
         line = line.decode() if isinstance(line, bytes) else line
         if line.startswith("event: "):
-            name = line[len("event: "):].strip()
+            name = line[len("event: ") :].strip()
         elif line.startswith("data: ") and name:
-            events.append((name, json.loads(line[len("data: "):])))
+            events.append((name, json.loads(line[len("data: ") :])))
             name = None
     return events
 
@@ -61,8 +83,9 @@ def test_speaker_em_post_e_sse_identicos(client):
     assert post.json()["speaker"] == BRUNNA
 
     gid_sse = _new_game_with_brunna(client)
-    with client.stream("POST", "/game/action/stream",
-                       json={"input_text": text, "game_id": gid_sse}) as resp:
+    with client.stream(
+        "POST", "/game/action/stream", json={"input_text": text, "game_id": gid_sse}
+    ) as resp:
         events = _read_sse(resp)
     final = next(d for e, d in events if e == "state")
     assert final["speaker"] == BRUNNA
@@ -73,28 +96,46 @@ def test_speaker_em_post_e_sse_identicos(client):
         history = client.get("/game/history", params={"game_id": gid}).json()["entries"]
         last = [row for row in history if row["role"] == "narrator"][-1]
         assert (last["speaker_kind"], last["speaker_id"], last["speaker_name"]) == (
-            "npc", BRUNNA["id"], BRUNNA["name"])
+            "npc",
+            BRUNNA["id"],
+            BRUNNA["name"],
+        )
 
 
 def test_meta_turno_api_speaker_narrador(client):
     gid = _new_game_with_brunna(client)
-    r = client.post("/game/action", json={
-        "input_text": "Pergunto ao narrador o que a Brunna sente", "game_id": gid})
+    r = client.post(
+        "/game/action",
+        json={"input_text": "Pergunto ao narrador o que a Brunna sente", "game_id": gid},
+    )
     assert r.status_code == 200, r.text
-    assert r.json()["speaker"] == {"kind": "narrator", "id": "narrator",
-                                   "name": "Narrador", "reason": "meta_to_narrator"}
+    assert r.json()["speaker"] == {
+        "kind": "narrator",
+        "id": "narrator",
+        "name": "Narrador",
+        "reason": "meta_to_narrator",
+    }
     assert not r.json()["message"].startswith("**Brunna")
 
 
 def test_speaker_id_estavel_entre_aliases():
-    base = {"world": {"turn_count": 3, "current_location_id": "brekmar"},
-            "npcs": {"Brunna Ponte-Alta": {"name": "Brunna Ponte-Alta", "in_scene": True,
-                                           "home_location_id": "brekmar"}},
-            "party": [], "next": "npc_actor"}
+    base = {
+        "world": {"turn_count": 3, "current_location_id": "brekmar"},
+        "npcs": {
+            "Brunna Ponte-Alta": {
+                "name": "Brunna Ponte-Alta",
+                "in_scene": True,
+                "home_location_id": "brekmar",
+            }
+        },
+        "party": [],
+        "next": "npc_actor",
+    }
     ids = set()
     for ref in ("Brunna Ponte-Alta", "brunna ponte alta", "npc_brunna_ponte_alta"):
-        sp = itl.speaker_for_turn({**base, "active_npc_name": ref,
-                                   "interlocutor_reason": "direct_address"})
+        sp = itl.speaker_for_turn(
+            {**base, "active_npc_name": ref, "interlocutor_reason": "direct_address"}
+        )
         ids.add((sp["id"], sp["name"]))
     assert ids == {("npc_mv_brunna_ponte_alta", "Brunna Ponte-Alta")}
 
@@ -128,6 +169,7 @@ def test_history_legado_sem_speaker_carrega(tmp_path):
     assert state is not None
     assert itl.response_speaker(state)["kind"] == "narrator"
     from services.presentation_history import history_page
+
     page = history_page(state)
     for row in page["entries"]:
         if row["role"] == "narrator":
@@ -150,16 +192,21 @@ def test_history_legado_sem_speaker_carrega(tmp_path):
 
 
 def test_load_v8_npc_legado_sem_id_e_last_speaker_invalido(tmp_path):
-    raw = {"schema_version": 8, "game_id": "00000000-0000-0000-0000-000000000202",
-           "last_speaker": "lixo",
-           "presentation_history": [
-               {"id": "a", "role": "narrator", "type": "NPC", "text": "**X:** oi"},
-               {"id": "b", "role": "player", "type": "STORY", "text": "oi"}]}
+    raw = {
+        "schema_version": 8,
+        "game_id": "00000000-0000-0000-0000-000000000202",
+        "last_speaker": "lixo",
+        "presentation_history": [
+            {"id": "a", "role": "narrator", "type": "NPC", "text": "**X:** oi"},
+            {"id": "b", "role": "player", "type": "STORY", "text": "oi"},
+        ],
+    }
     assert persistence.migrate_state(deepcopy(raw)) == raw  # sem migração nova
     state = persistence.load_game_state(_write(tmp_path, raw))
     assert state["last_speaker"] == {}
     assert itl.response_speaker(state)["kind"] == "narrator"
     from services.presentation_history import history_page
+
     rows = history_page(state)["entries"]
     npc = next(r for r in rows if r["id"] == "a")
     assert npc["speaker_kind"] == "npc" and npc["speaker_id"] == ""
@@ -168,17 +215,33 @@ def test_load_v8_npc_legado_sem_id_e_last_speaker_invalido(tmp_path):
 
 def test_recusa_de_acao_speaker_system(monkeypatch):
     import agents.action_guard as guard
+
     monkeypatch.setattr(guard, "orphan_transition", lambda _s: None)
-    monkeypatch.setattr(guard, "evaluate_action", lambda _s, _a: {
-        "phase": "unconscious", "allowed": False, "code": "blocked_unconscious",
-        "action_kind": "none", "message": "Você está inconsciente."})
+    monkeypatch.setattr(
+        guard,
+        "evaluate_action",
+        lambda _s, _a: {
+            "phase": "unconscious",
+            "allowed": False,
+            "code": "blocked_unconscious",
+            "action_kind": "none",
+            "message": "Você está inconsciente.",
+        },
+    )
     previous = {**BRUNNA, "turn": 2, "state_key": "Brunna Ponte-Alta"}
-    state = {"messages": [HumanMessage(content="Ataco o dragão")],
-             "world": {"turn_count": 2}, "last_speaker": previous}
+    state = {
+        "messages": [HumanMessage(content="Ataco o dragão")],
+        "world": {"turn_count": 2},
+        "last_speaker": previous,
+    }
     out = guard.action_guard_node(state)
     assert out["action_guard_blocked"] is True
     assert out["last_speaker"]["kind"] == "system"
     assert out["last_speaker"]["last_npc"]["state_key"] == "Brunna Ponte-Alta"
     merged = {**state, **out}
-    assert itl.response_speaker(merged) == {"kind": "system", "id": "system",
-                                            "name": "Sistema", "reason": "action_refused"}
+    assert itl.response_speaker(merged) == {
+        "kind": "system",
+        "id": "system",
+        "name": "Sistema",
+        "reason": "action_refused",
+    }

@@ -67,9 +67,7 @@ class _DecisionLLM:
 
 
 def _route(monkeypatch, decision, **state_overrides):
-    monkeypatch.setattr(
-        router_mod, "get_llm", lambda *_args, **_kwargs: _DecisionLLM(decision)
-    )
+    monkeypatch.setattr(router_mod, "get_llm", lambda *_args, **_kwargs: _DecisionLLM(decision))
     state = {
         "messages": [HumanMessage(content="acao")],
         "world": {"current_location": "Ponte"},
@@ -146,9 +144,7 @@ def test_router_npc_sem_alvo_nao_escolhe_conhecido_fora_de_cena(monkeypatch):
 def test_npc_actor_nao_reativa_npc_null_de_save_legado(monkeypatch):
     from services import npc_layers
 
-    monkeypatch.setattr(
-        npc_layers, "npcs_in_scene", lambda _state: [" null ", "N/A"]
-    )
+    monkeypatch.setattr(npc_layers, "npcs_in_scene", lambda _state: [" null ", "N/A"])
 
     def _must_not_generate(*_args, **_kwargs):
         raise AssertionError("sentinela nao pode gerar ou carregar NPC")
@@ -223,9 +219,7 @@ def test_cache_npc_v4_preserva_estado_de_combate(monkeypatch):
         "combat_stats": {"hp": 10, "ac": 10, "attacks": []},
     }
     monkeypatch.setattr(npc_mod, "load_npc_db", lambda: {"npc_aria": cached})
-    monkeypatch.setattr(
-        npc_mod, "find_existing_entity", lambda *_args, **_kwargs: "npc_aria"
-    )
+    monkeypatch.setattr(npc_mod, "find_existing_entity", lambda *_args, **_kwargs: "npc_aria")
 
     def _must_not_save(_data):
         raise AssertionError("cache v4 completo nao deve ser rematerializado")

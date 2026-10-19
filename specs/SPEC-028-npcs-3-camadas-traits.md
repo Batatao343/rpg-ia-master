@@ -130,15 +130,19 @@ código+dado, o LLM só interpreta o que já foi revelado).
 def roll_hidden_traits(npc_id: str, game_id: str, k_range=(1, 3)) -> list[str]:
     """Sorteio seeded (hash npc_id+game_id) do catálogo. Puro."""
 
+
 def tick_interaction(npc: dict) -> tuple[dict, list[str]]:
     """interaction_count+=1; move traits maduros p/ revealed.
     Retorna (npc_atualizado, ids_revelados_neste_turno)."""
 
+
 def reset_scene(npcs: dict) -> dict:
     """in_scene=False para todos (chamado na viagem)."""
 
+
 def visible_npc_view(npcs: dict) -> list[dict]:
     """Camada 2 p/ API: só known_by_player, SEM hidden_traits."""
+
 
 def trait_dc_modifier(npc: dict, contexto: str) -> int:
     """Soma dc_modifiers (hidden + revealed) do NPC para o contexto."""

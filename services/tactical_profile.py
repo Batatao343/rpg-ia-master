@@ -10,103 +10,196 @@ ADITIVO (como 03-07): módulo novo + testes. A remoção de `get_behavior`/perfi
 fixos de `combat_mechanics.py` e a fiação em `agents/bestiary.py` vão no cutover
 (conflito-13); aqui o motor puro convive com o antigo.
 """
+
 import unicodedata
 from copy import deepcopy
 from typing import Dict, List, Literal, Optional
 
 from pydantic import BaseModel, Field
 
-TACTICAL_ACTION_KEYS = frozenset({
-    "attack", "protect", "stabilize", "flank", "control", "support",
-    "flee", "surrender",
-})
+TACTICAL_ACTION_KEYS = frozenset(
+    {
+        "attack",
+        "protect",
+        "stabilize",
+        "flank",
+        "control",
+        "support",
+        "flee",
+        "surrender",
+    }
+)
 
 # Condições que RETIRAM o comando do jogador sobre um personagem (R6).
-LOSS_OF_COMMAND = frozenset({
-    "medo", "confusao", "confusão", "controle_mental", "controle mental",
-    "dominado", "enfeiticado", "separado",
-})
+LOSS_OF_COMMAND = frozenset(
+    {
+        "medo",
+        "confusao",
+        "confusão",
+        "controle_mental",
+        "controle mental",
+        "dominado",
+        "enfeiticado",
+        "separado",
+    }
+)
 
 # Arquétipos mecânicos de NPC são um catálogo fechado. Role/persona só escolhem
 # uma entrada; nunca produzem diretamente uma regra de combate.
 NPC_TACTICAL_FALLBACK = "equilibrado"
 _NPC_TACTICAL_PROFILES: dict[str, dict] = {
-    "guardiao": {"priorities": [
-        {"trigger": "aliado_em_perigo", "tipo": "obrigatorio",
-         "action_key": "protect",
-         "action_hint": "Protege o aliado em perigo e intercepta a ameaça.",
-         "resistance": "resistente", "blocks": []},
-        {"trigger": "sempre", "tipo": "obrigatorio",
-         "action_key": "attack",
-         "action_hint": "Mantém a posição e ataca quem ameaça seus protegidos.",
-         "resistance": "resistente", "blocks": []},
-    ]},
-    "combatente": {"priorities": [
-        {"trigger": "sempre", "tipo": "obrigatorio",
-         "action_key": "attack",
-         "action_hint": "Engaja o alvo mais próximo e sustenta a pressão.",
-         "resistance": "flexivel", "blocks": []},
-    ]},
-    "batedor": {"priorities": [
-        {"trigger": "sem_flanco", "tipo": "obrigatorio",
-         "action_key": "flank",
-         "action_hint": "Busca uma posição de flanco antes de atacar.",
-         "resistance": "flexivel", "blocks": []},
-        {"trigger": "sempre", "tipo": "obrigatorio",
-         "action_key": "attack",
-         "action_hint": "Ataca o alvo exposto a partir do flanco.",
-         "resistance": "flexivel", "blocks": []},
-    ]},
-    "mistico": {"priorities": [
-        {"trigger": "controle_disponivel", "tipo": "obrigatorio",
-         "action_key": "control",
-         "action_hint": "Impõe controle místico sobre a ameaça prioritária.",
-         "resistance": "resistente", "blocks": []},
-        {"trigger": "sempre", "tipo": "obrigatorio",
-         "action_key": "attack",
-         "action_hint": "Ataca à distância enquanto recompõe seu controle.",
-         "resistance": "resistente", "blocks": []},
-    ]},
-    "suporte": {"priorities": [
-        {"trigger": "aliado_terminal", "tipo": "obrigatorio",
-         "action_key": "stabilize",
-         "action_hint": "Estabiliza imediatamente o aliado em Estado Terminal.",
-         "resistance": "resistente", "blocks": []},
-        {"trigger": "aliado_ferido", "tipo": "obrigatorio",
-         "action_key": "support",
-         "action_hint": "Trata o aliado ferido e o mantém na luta.",
-         "resistance": "resistente", "blocks": []},
-        {"trigger": "sempre", "tipo": "obrigatorio",
-         "action_key": "attack",
-         "action_hint": "Ataca mantendo distância quando ninguém precisa de auxílio.",
-         "resistance": "resistente", "blocks": []},
-    ]},
-    "estrategista": {"priorities": [
-        {"trigger": "aliado_disponivel", "tipo": "obrigatorio",
-         "action_key": "support",
-         "action_hint": "Coordena o aliado para abrir uma vantagem tática.",
-         "resistance": "resistente", "blocks": []},
-        {"trigger": "sempre", "tipo": "obrigatorio",
-         "action_key": "attack",
-         "action_hint": "Ataca o alvo prioritário quando não há aliado para coordenar.",
-         "resistance": "resistente", "blocks": []},
-    ]},
-    "oportunista": {"priorities": [
-        {"trigger": "vitalidade_baixa", "tipo": "obrigatorio",
-         "action_key": "flee",
-         "action_hint": "Foge do combate quando a sobrevivência está em risco.",
-         "resistance": "flexivel", "blocks": []},
-        {"trigger": "sempre", "tipo": "obrigatorio",
-         "action_key": "attack",
-         "action_hint": "Ataca o alvo vulnerável e evita confronto desfavorável.",
-         "resistance": "flexivel", "blocks": []},
-    ]},
-    NPC_TACTICAL_FALLBACK: {"priorities": [
-        {"trigger": "sempre", "tipo": "obrigatorio",
-         "action_key": "attack",
-         "action_hint": "Ataca a ameaça principal sem abandonar uma posição segura.",
-         "resistance": "flexivel", "blocks": []},
-    ]},
+    "guardiao": {
+        "priorities": [
+            {
+                "trigger": "aliado_em_perigo",
+                "tipo": "obrigatorio",
+                "action_key": "protect",
+                "action_hint": "Protege o aliado em perigo e intercepta a ameaça.",
+                "resistance": "resistente",
+                "blocks": [],
+            },
+            {
+                "trigger": "sempre",
+                "tipo": "obrigatorio",
+                "action_key": "attack",
+                "action_hint": "Mantém a posição e ataca quem ameaça seus protegidos.",
+                "resistance": "resistente",
+                "blocks": [],
+            },
+        ]
+    },
+    "combatente": {
+        "priorities": [
+            {
+                "trigger": "sempre",
+                "tipo": "obrigatorio",
+                "action_key": "attack",
+                "action_hint": "Engaja o alvo mais próximo e sustenta a pressão.",
+                "resistance": "flexivel",
+                "blocks": [],
+            },
+        ]
+    },
+    "batedor": {
+        "priorities": [
+            {
+                "trigger": "sem_flanco",
+                "tipo": "obrigatorio",
+                "action_key": "flank",
+                "action_hint": "Busca uma posição de flanco antes de atacar.",
+                "resistance": "flexivel",
+                "blocks": [],
+            },
+            {
+                "trigger": "sempre",
+                "tipo": "obrigatorio",
+                "action_key": "attack",
+                "action_hint": "Ataca o alvo exposto a partir do flanco.",
+                "resistance": "flexivel",
+                "blocks": [],
+            },
+        ]
+    },
+    "mistico": {
+        "priorities": [
+            {
+                "trigger": "controle_disponivel",
+                "tipo": "obrigatorio",
+                "action_key": "control",
+                "action_hint": "Impõe controle místico sobre a ameaça prioritária.",
+                "resistance": "resistente",
+                "blocks": [],
+            },
+            {
+                "trigger": "sempre",
+                "tipo": "obrigatorio",
+                "action_key": "attack",
+                "action_hint": "Ataca à distância enquanto recompõe seu controle.",
+                "resistance": "resistente",
+                "blocks": [],
+            },
+        ]
+    },
+    "suporte": {
+        "priorities": [
+            {
+                "trigger": "aliado_terminal",
+                "tipo": "obrigatorio",
+                "action_key": "stabilize",
+                "action_hint": "Estabiliza imediatamente o aliado em Estado Terminal.",
+                "resistance": "resistente",
+                "blocks": [],
+            },
+            {
+                "trigger": "aliado_ferido",
+                "tipo": "obrigatorio",
+                "action_key": "support",
+                "action_hint": "Trata o aliado ferido e o mantém na luta.",
+                "resistance": "resistente",
+                "blocks": [],
+            },
+            {
+                "trigger": "sempre",
+                "tipo": "obrigatorio",
+                "action_key": "attack",
+                "action_hint": "Ataca mantendo distância quando ninguém precisa de auxílio.",
+                "resistance": "resistente",
+                "blocks": [],
+            },
+        ]
+    },
+    "estrategista": {
+        "priorities": [
+            {
+                "trigger": "aliado_disponivel",
+                "tipo": "obrigatorio",
+                "action_key": "support",
+                "action_hint": "Coordena o aliado para abrir uma vantagem tática.",
+                "resistance": "resistente",
+                "blocks": [],
+            },
+            {
+                "trigger": "sempre",
+                "tipo": "obrigatorio",
+                "action_key": "attack",
+                "action_hint": "Ataca o alvo prioritário quando não há aliado para coordenar.",
+                "resistance": "resistente",
+                "blocks": [],
+            },
+        ]
+    },
+    "oportunista": {
+        "priorities": [
+            {
+                "trigger": "vitalidade_baixa",
+                "tipo": "obrigatorio",
+                "action_key": "flee",
+                "action_hint": "Foge do combate quando a sobrevivência está em risco.",
+                "resistance": "flexivel",
+                "blocks": [],
+            },
+            {
+                "trigger": "sempre",
+                "tipo": "obrigatorio",
+                "action_key": "attack",
+                "action_hint": "Ataca o alvo vulnerável e evita confronto desfavorável.",
+                "resistance": "flexivel",
+                "blocks": [],
+            },
+        ]
+    },
+    NPC_TACTICAL_FALLBACK: {
+        "priorities": [
+            {
+                "trigger": "sempre",
+                "tipo": "obrigatorio",
+                "action_key": "attack",
+                "action_hint": "Ataca a ameaça principal sem abandonar uma posição segura.",
+                "resistance": "flexivel",
+                "blocks": [],
+            },
+        ]
+    },
 }
 NPC_TACTICAL_ARCHETYPES = frozenset(_NPC_TACTICAL_PROFILES)
 
@@ -119,72 +212,154 @@ _ENEMY_ARCHETYPE_ACTIONS: dict[str, dict[str, str]] = {
     "mistico": {"sempre": "control"},
     # Arquétipos curados de data/bestiary.json.
     "conjurador": {
-        "cercado": "flee", "muito_ferido": "flee", "sempre": "control",
+        "cercado": "flee",
+        "muito_ferido": "flee",
+        "sempre": "control",
     },
     "covarde_oportunista": {
-        "sozinho": "surrender", "muito_ferido": "flee",
-        "alvo_vulneravel": "flank", "sempre": "flank",
+        "sozinho": "surrender",
+        "muito_ferido": "flee",
+        "alvo_vulneravel": "flank",
+        "sempre": "flank",
     },
     "emboscador": {
-        "descoberto": "flank", "muito_ferido": "flee", "sempre": "attack",
+        "descoberto": "flank",
+        "muito_ferido": "flee",
+        "sempre": "attack",
     },
     "guardiao": {"muito_ferido": "protect", "sempre": "attack"},
     "lider_matilha": {
-        "matilha_quebrada": "flee", "alvo_vulneravel": "support",
+        "matilha_quebrada": "flee",
+        "alvo_vulneravel": "support",
         "sempre": "support",
     },
     "morto_vivo_implacavel": {"sempre": "attack"},
     "predador": {
-        "muito_ferido": "flee", "alvo_vulneravel": "attack",
+        "muito_ferido": "flee",
+        "alvo_vulneravel": "attack",
         "sempre": "attack",
     },
     "predador_apice": {
-        "plano_falhou": "flee", "alvo_vulneravel": "attack",
+        "plano_falhou": "flee",
+        "alvo_vulneravel": "attack",
         "sempre": "attack",
     },
     "tatico": {
-        "cercado": "flee", "muito_ferido": "flee",
-        "alvo_vulneravel": "attack", "sempre": "attack",
+        "cercado": "flee",
+        "muito_ferido": "flee",
+        "alvo_vulneravel": "attack",
+        "sempre": "attack",
     },
 }
 ENEMY_TACTICAL_ARCHETYPES = frozenset(_ENEMY_ARCHETYPE_ACTIONS)
 _PURSUIT_BY_ARCHETYPE = {
     archetype: (
-        "persegue" if archetype in {
-            "predador", "predador_apice", "lider_matilha",
-            "morto_vivo_implacavel", "emboscador", "agil", "bruto",
-        } else "nao_persegue"
+        "persegue"
+        if archetype
+        in {
+            "predador",
+            "predador_apice",
+            "lider_matilha",
+            "morto_vivo_implacavel",
+            "emboscador",
+            "agil",
+            "bruto",
+        }
+        else "nao_persegue"
     )
     for archetype in ENEMY_TACTICAL_ARCHETYPES
 }
 
 _NPC_ARCHETYPE_RULES = (
-    ("guardiao", (
-        "guarda", "guardiao", "sentinela", "protetor", "escolta",
-        "defensor", "paladino", "vigia",
-    )),
-    ("suporte", (
-        "curandeir", "medic", "herbal", "enfermeir", "clerig", "apoio",
-    )),
-    ("mistico", (
-        "mago", "maga", "feiticeir", "brux", "ocult", "xama", "oracul",
-        "alquim", "ritual",
-    )),
-    ("batedor", (
-        "batedor", "explorador", "patrulheir", "arqueir", "cacador",
-        "ladin", "assassin", "espiao", "furtiv", "agil",
-    )),
-    ("estrategista", (
-        "capitao", "comandante", "estrateg", "conselheir", "diplomat",
-        "lider", "lideranca", "tatic",
-    )),
-    ("oportunista", (
-        "mercador", "comerciante", "contraband", "trapaceir", "vigar",
-        "covard", "sobreviv",
-    )),
-    ("combatente", (
-        "guerreir", "soldad", "mercen", "gladiador", "lutador", "barbar",
-    )),
+    (
+        "guardiao",
+        (
+            "guarda",
+            "guardiao",
+            "sentinela",
+            "protetor",
+            "escolta",
+            "defensor",
+            "paladino",
+            "vigia",
+        ),
+    ),
+    (
+        "suporte",
+        (
+            "curandeir",
+            "medic",
+            "herbal",
+            "enfermeir",
+            "clerig",
+            "apoio",
+        ),
+    ),
+    (
+        "mistico",
+        (
+            "mago",
+            "maga",
+            "feiticeir",
+            "brux",
+            "ocult",
+            "xama",
+            "oracul",
+            "alquim",
+            "ritual",
+        ),
+    ),
+    (
+        "batedor",
+        (
+            "batedor",
+            "explorador",
+            "patrulheir",
+            "arqueir",
+            "cacador",
+            "ladin",
+            "assassin",
+            "espiao",
+            "furtiv",
+            "agil",
+        ),
+    ),
+    (
+        "estrategista",
+        (
+            "capitao",
+            "comandante",
+            "estrateg",
+            "conselheir",
+            "diplomat",
+            "lider",
+            "lideranca",
+            "tatic",
+        ),
+    ),
+    (
+        "oportunista",
+        (
+            "mercador",
+            "comerciante",
+            "contraband",
+            "trapaceir",
+            "vigar",
+            "covard",
+            "sobreviv",
+        ),
+    ),
+    (
+        "combatente",
+        (
+            "guerreir",
+            "soldad",
+            "mercen",
+            "gladiador",
+            "lutador",
+            "barbar",
+        ),
+    ),
 )
 
 
@@ -212,9 +387,7 @@ def pick_action(profile: dict, scene_state: dict | None = None) -> dict:
             tipo = pr.get("tipo", "obrigatorio")
             return {
                 "action_key": (
-                    pr.get("action_key")
-                    if pr.get("action_key") in TACTICAL_ACTION_KEYS
-                    else None
+                    pr.get("action_key") if pr.get("action_key") in TACTICAL_ACTION_KEYS else None
                 ),
                 "action_hint": pr.get("action_hint", ""),
                 "tipo": tipo,
@@ -224,8 +397,14 @@ def pick_action(profile: dict, scene_state: dict | None = None) -> dict:
                 "autonomous": tipo == "autonomo",
                 "matched": True,
             }
-    return {"action_key": None, "action_hint": "", "tipo": None, "matched": False,
-            "requires_player_choice": False, "autonomous": False}
+    return {
+        "action_key": None,
+        "action_hint": "",
+        "tipo": None,
+        "matched": False,
+        "requires_player_choice": False,
+        "autonomous": False,
+    }
 
 
 # ==========================================================================
@@ -246,12 +425,15 @@ def validate_companion_order(companion: dict, order: dict) -> dict:
             continue
         resist = str(pr.get("resistance", "flexivel")).lower()
         if resist == "flexivel":
-            continue                                   # contrariável normalmente
+            continue  # contrariável normalmente
         if resist == "resistente" and order.get("leverage"):
-            continue                                   # lealdade/efeito apropriado
-        return {"accepted": False, "return_choice_to_player": True,
-                "resistance": resist,
-                "reason": pr.get("action_hint") or "O companheiro recusa a ordem."}
+            continue  # lealdade/efeito apropriado
+        return {
+            "accepted": False,
+            "return_choice_to_player": True,
+            "resistance": resist,
+            "reason": pr.get("action_hint") or "O companheiro recusa a ordem.",
+        }
     return {"accepted": True, "return_choice_to_player": False, "reason": ""}
 
 
@@ -293,8 +475,14 @@ class PriorityModel(BaseModel):
     trigger: str
     tipo: Literal["obrigatorio", "oferta", "restricao", "autonomo"] = "obrigatorio"
     action_key: Literal[
-        "attack", "protect", "stabilize", "flank", "control", "support",
-        "flee", "surrender",
+        "attack",
+        "protect",
+        "stabilize",
+        "flank",
+        "control",
+        "support",
+        "flee",
+        "surrender",
     ] = "attack"
     action_hint: str = ""
     resistance: Literal["flexivel", "resistente", "absoluta", "autonoma"] = "flexivel"
@@ -306,10 +494,18 @@ class TacticalProfileModel(BaseModel):
 
 
 def _default_profile() -> dict:
-    return {"priorities": [{"trigger": "sempre", "tipo": "obrigatorio",
-                            "action_key": "attack",
-                            "action_hint": "Ataca o alvo mais próximo e mais ameaçador.",
-                            "resistance": "flexivel", "blocks": []}]}
+    return {
+        "priorities": [
+            {
+                "trigger": "sempre",
+                "tipo": "obrigatorio",
+                "action_key": "attack",
+                "action_hint": "Ataca o alvo mais próximo e mais ameaçador.",
+                "resistance": "flexivel",
+                "blocks": [],
+            }
+        ]
+    }
 
 
 def _normalize_archetype(value: object) -> str:
@@ -327,11 +523,9 @@ def infer_npc_tactical_archetype(npc: dict) -> str:
     explicit = npc.get("tactical_archetype")
     if explicit is not None and str(explicit).strip():
         candidate = _normalize_archetype(explicit)
-        return (candidate if candidate in NPC_TACTICAL_ARCHETYPES
-                else NPC_TACTICAL_FALLBACK)
+        return candidate if candidate in NPC_TACTICAL_ARCHETYPES else NPC_TACTICAL_FALLBACK
 
-    text = _normalize_archetype(
-        f"{npc.get('role', '')} {npc.get('persona', '')}")
+    text = _normalize_archetype(f"{npc.get('role', '')} {npc.get('persona', '')}")
     for archetype, keywords in _NPC_ARCHETYPE_RULES:
         if any(keyword in text for keyword in keywords):
             return archetype
@@ -358,9 +552,7 @@ def normalize_runtime_profile(actor: dict, profile: dict | None = None) -> dict:
     actions = _ENEMY_ARCHETYPE_ACTIONS.get(archetype)
     if not actions:
         return normalized
-    normalized["pursuit_policy"] = _PURSUIT_BY_ARCHETYPE.get(
-        archetype, "nao_persegue"
-    )
+    normalized["pursuit_policy"] = _PURSUIT_BY_ARCHETYPE.get(archetype, "nao_persegue")
     fallback = actions.get("sempre", "attack")
     for priority in normalized.get("priorities", []) or []:
         if not isinstance(priority, dict):
@@ -378,9 +570,7 @@ def legacy_action_key(action_hint: object) -> str:
     Só fuga/rendição têm vocabulário permitido; qualquer outra prosa vira ataque
     normal. Nenhuma mecânica nova é inferida do texto de apresentação.
     """
-    tokens = {
-        token for token in _normalize_archetype(action_hint).split("_") if token
-    }
+    tokens = {token for token in _normalize_archetype(action_hint).split("_") if token}
     if tokens & {"rende", "rendicao", "implora"}:
         return "surrender"
     if tokens & {"foge", "fugir", "recua", "escapa"}:
@@ -409,8 +599,9 @@ def generate_tactical_profile(archetype: str, llm, *, context: dict | None = Non
     return _default_profile()
 
 
-def get_or_generate_profile(entry: dict, archetype: str, llm, *,
-                            context: dict | None = None) -> dict:
+def get_or_generate_profile(
+    entry: dict, archetype: str, llm, *, context: dict | None = None
+) -> dict:
     """Cacheia agressivamente (risco §7): se a ficha JÁ tem `tactical_profile`,
     reusa sem tocar no LLM; senão gera 1× e grava na ficha."""
     existing = entry.get("tactical_profile")

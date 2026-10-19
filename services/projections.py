@@ -15,6 +15,7 @@ Invariantes:
 
 Nenhuma chamada LLM nova: o executor reaproveita ``agents.archivist``.
 """
+
 from __future__ import annotations
 
 import os
@@ -91,6 +92,7 @@ def deferral_active() -> bool:
 
 # --- estado -------------------------------------------------------------------
 
+
 def _int(value: Any, default: int = 0) -> int:
     try:
         return max(0, int(value))
@@ -100,6 +102,7 @@ def _int(value: Any, default: int = 0) -> int:
 
 def _continuity(state: dict) -> tuple[int, int]:
     from services.continuity import normalize
+
     world_turn = _int((state.get("world") or {}).get("turn_count", 0))
     meta = normalize(state.get("continuity"), canonical_turn=world_turn)
     return int(meta["session_action_count"]), int(meta["timeline_epoch"])
@@ -144,8 +147,7 @@ def normalize_plan(raw: Any) -> dict | None:
             "turn": _int(raw.get("turn")),
             "epoch": _int(raw.get("epoch")),
             "canonical_version": (
-                _int(raw["canonical_version"]) if raw.get("canonical_version") is not None
-                else None
+                _int(raw["canonical_version"]) if raw.get("canonical_version") is not None else None
             ),
             "action_id": str(raw["action_id"])[:64] if raw.get("action_id") else None,
         }
@@ -153,12 +155,17 @@ def normalize_plan(raw: Any) -> dict | None:
         return None
 
 
-def make_plan(*, new_event_ids: list[str], new_rejections: bool, turn: int,
-              epoch: int) -> dict:
-    return normalize_plan({
-        "new_event_ids": list(new_event_ids), "new_rejections": new_rejections,
-        "turn": turn, "epoch": epoch, "canonical_version": None, "action_id": None,
-    })  # type: ignore[return-value]
+def make_plan(*, new_event_ids: list[str], new_rejections: bool, turn: int, epoch: int) -> dict:
+    return normalize_plan(
+        {
+            "new_event_ids": list(new_event_ids),
+            "new_rejections": new_rejections,
+            "turn": turn,
+            "epoch": epoch,
+            "canonical_version": None,
+            "action_id": None,
+        }
+    )  # type: ignore[return-value]
 
 
 def stamp_commit(state: dict, action_id: str | None) -> dict:
@@ -178,10 +185,13 @@ def stamp_commit(state: dict, action_id: str | None) -> dict:
         plan["epoch"] = epoch
         plan["action_id"] = (action_id or f"turn:{canonical}")[:64]
         for name in PROJECTIONS:
-            ps[name].update(status="pending", action_id=plan["action_id"],
-                            attempts=0, last_error_code=None,
-                            projected_version=min(ps[name]["projected_version"],
-                                                  canonical - 1))
+            ps[name].update(
+                status="pending",
+                action_id=plan["action_id"],
+                attempts=0,
+                last_error_code=None,
+                projected_version=min(ps[name]["projected_version"], canonical - 1),
+            )
         state["pending_derived"] = plan
     else:
         if plan is None:
@@ -198,8 +208,11 @@ def reconcile(state: dict) -> dict:
     """R7b: projeção pendente de outra época é cancelada (nunca aplicada)."""
     ps = normalize_projection_state(state.get("projection_state"), state)
     plan = normalize_plan(state.get("pending_derived"))
-    if plan is not None and plan["canonical_version"] is not None \
-            and plan["epoch"] != ps["timeline_epoch"]:
+    if (
+        plan is not None
+        and plan["canonical_version"] is not None
+        and plan["epoch"] != ps["timeline_epoch"]
+    ):
         for name in PROJECTIONS:
             ps[name].update(status="failed", last_error_code="epoch_mismatch")
         plan = None
@@ -253,9 +266,10 @@ def projection_status_view(state: dict) -> dict:
     ps = normalize_projection_state(state.get("projection_state"), state)
     return {
         "canonical_version": ps["canonical_version"],
-        **{name: {"status": ps[name]["status"],
-                  "projected_version": ps[name]["projected_version"]}
-           for name in PROJECTIONS},
+        **{
+            name: {"status": ps[name]["status"], "projected_version": ps[name]["projected_version"]}
+            for name in PROJECTIONS
+        },
     }
 
 
@@ -275,6 +289,7 @@ def strip_dead_npc_presence(text: str, state: dict) -> tuple[str, list[dict]]:
     from services.memory_provenance import _fold
     from services.narrative_evidence import QUALIFIED_MARKER
     from services.npc_layers import npc_alive
+
     projection = state.get("world_projection") or {}
     names = []
     for key, npc in (state.get("npcs") or {}).items():
@@ -306,10 +321,14 @@ def strip_dead_npc_presence(text: str, state: dict) -> tuple[str, list[dict]]:
 
 # --- execução ------------------------------------------------------------------
 
-def run_pending(state: dict, *,
-                executor: Callable[[dict, dict], dict] | None = None,
-                clock: Callable[[], float] = time.monotonic,
-                timeout: float | None = None) -> dict:
+
+def run_pending(
+    state: dict,
+    *,
+    executor: Callable[[dict, dict], dict] | None = None,
+    clock: Callable[[], float] = time.monotonic,
+    timeout: float | None = None,
+) -> dict:
     """Executa a projeção pendente sobre o estado CANÔNICO atual (modo A).
 
     Deve ser chamado pelo dono do lock do turno. Nunca levanta: falha vira
@@ -324,10 +343,13 @@ def run_pending(state: dict, *,
     if version is None:
         version = ps["canonical_version"]
     applied = max(ps[name]["projected_version"] for name in PROJECTIONS)
-    already = all(ps[name]["action_id"] == plan["action_id"]
-                  and ps[name]["status"] == "completed" for name in PROJECTIONS)
-    if already or (version < applied and any(
-            ps[name]["status"] == "completed" for name in PROJECTIONS)):
+    already = all(
+        ps[name]["action_id"] == plan["action_id"] and ps[name]["status"] == "completed"
+        for name in PROJECTIONS
+    )
+    if already or (
+        version < applied and any(ps[name]["status"] == "completed" for name in PROJECTIONS)
+    ):
         # R5/R8: versão mais velha que a aplicada ou mesma ação já aplicada.
         state["pending_derived"] = None
         return state
@@ -363,8 +385,12 @@ def run_pending(state: dict, *,
     new_state = {**state, **result}
     status = "stale" if ps["canonical_version"] > version else "completed"
     for name in PROJECTIONS:
-        ps[name].update(status=status, projected_version=version,
-                        action_id=plan["action_id"], last_error_code=None)
+        ps[name].update(
+            status=status,
+            projected_version=version,
+            action_id=plan["action_id"],
+            last_error_code=None,
+        )
     if status == "stale":
         # R5: existe turno mais novo; a próxima passada do arquivista reagenda.
         new_state["archive_due"] = True

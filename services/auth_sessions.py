@@ -73,8 +73,11 @@ def validate_mutation_request(
         raise CsrfError("origin_denied") from None
     if f"{parts.scheme}://{parts.netloc}" not in allowed_origins:
         raise CsrfError("origin_denied")
-    if not cookie_token or not header_token or not hmac.compare_digest(
-            cookie_token.encode(), header_token.encode()):
+    if (
+        not cookie_token
+        or not header_token
+        or not hmac.compare_digest(cookie_token.encode(), header_token.encode())
+    ):
         raise CsrfError("csrf_invalid")
     if not signer.verify(cookie_token):
         raise CsrfError("csrf_invalid")

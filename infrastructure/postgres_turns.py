@@ -26,8 +26,9 @@ from infrastructure.postgres import PostgresPool
 from services.usage_metering import UsageEvent
 
 
-def reclaimable(existing: Mapping[str, Any], *, game_id: UUID | None, kind: str,
-                base_version: int | None) -> bool:
+def reclaimable(
+    existing: Mapping[str, Any], *, game_id: UUID | None, kind: str, base_version: int | None
+) -> bool:
     """SPEC-235 R1: may an existing operation row be re-claimed by the same key?
 
     Same game/kind is always required. A different base version is tolerated only
@@ -41,8 +42,15 @@ def reclaimable(existing: Mapping[str, Any], *, game_id: UUID | None, kind: str,
     return existing["base_game_version"] == base_version
 
 
-def enqueue_projection_outbox(connection, pool, *, principal: Principal, game_id: UUID,
-                              document: Mapping[str, Any], epoch_advanced: bool) -> None:
+def enqueue_projection_outbox(
+    connection,
+    pool,
+    *,
+    principal: Principal,
+    game_id: UUID,
+    document: Mapping[str, Any],
+    epoch_advanced: bool,
+) -> None:
     """SPEC-213 R9(b)/R7b: na MESMA transação do commit, cancela projeções de
     época antiga (restore) e enfileira ``project_archive`` do derivado adiado."""
     from infrastructure.contracts import JobRequest
@@ -59,12 +67,17 @@ def enqueue_projection_outbox(connection, pool, *, principal: Principal, game_id
     payload = projections.job_payload(dict(document))
     if payload is None:
         return
-    PostgresJobQueue(pool).enqueue(JobRequest(
-        projections.JOB_KIND,
-        projections.dedupe_key(game_id, payload["epoch"], payload["action_id"]),
-        {**payload, "owner_id": str(principal.user_id)},
-        owner_id=principal.user_id, game_id=game_id, max_attempts=5,
-    ), connection=connection)
+    PostgresJobQueue(pool).enqueue(
+        JobRequest(
+            projections.JOB_KIND,
+            projections.dedupe_key(game_id, payload["epoch"], payload["action_id"]),
+            {**payload, "owner_id": str(principal.user_id)},
+            owner_id=principal.user_id,
+            game_id=game_id,
+            max_attempts=5,
+        ),
+        connection=connection,
+    )
 
 
 class PostgresTurnCoordinator:
@@ -94,14 +107,20 @@ class PostgresTurnCoordinator:
             # deadlock while upgrading to FOR UPDATE.
             if game_id is not None:
                 game = connection.execute(
-                    "select * from app.games where id=%s and owner_id=%s" +
-                    (" for update" if exclusive else ""),
+                    "select * from app.games where id=%s and owner_id=%s"
+                    + (" for update" if exclusive else ""),
                     (game_id, principal.user_id),
                 ).fetchone()
                 if not game:
                     raise NotFound("campanha não encontrada")
                 if base_version is not None and int(game["version"]) != int(base_version):
-                    _db_conflict("stale_version", "base_version", op_kind=kind, operation_id=operation_id, game_id=game_id)
+                    _db_conflict(
+                        "stale_version",
+                        "base_version",
+                        op_kind=kind,
+                        operation_id=operation_id,
+                        game_id=game_id,
+                    )
                     raise StaleVersion("versão base da operação divergiu")
                 if exclusive and game["active_operation_id"] not in (None, operation_id):
                     fresh = connection.execute(
@@ -109,7 +128,13 @@ class PostgresTurnCoordinator:
                         (game["active_lease_until"],),
                     ).fetchone()["fresh"]
                     if fresh:
-                        _db_conflict("lease_conflict", "game_busy", op_kind=kind, operation_id=operation_id, game_id=game_id)
+                        _db_conflict(
+                            "lease_conflict",
+                            "game_busy",
+                            op_kind=kind,
+                            operation_id=operation_id,
+                            game_id=game_id,
+                        )
                         raise LeaseHeld("game_busy")
             inserted = connection.execute(
                 """
@@ -121,8 +146,14 @@ class PostgresTurnCoordinator:
                 returning id
                 """,
                 (
-                    operation_id, principal.user_id, game_id, kind, base_version,
-                    token, interval, request_hash,
+                    operation_id,
+                    principal.user_id,
+                    game_id,
+                    kind,
+                    base_version,
+                    token,
+                    interval,
+                    request_hash,
                 ),
             ).fetchone()
             existing = connection.execute(
@@ -130,24 +161,55 @@ class PostgresTurnCoordinator:
                 (operation_id,),
             ).fetchone()
             if not existing or existing["owner_id"] != principal.user_id:
-                _db_conflict("idempotency_conflict", "key_unavailable", op_kind=kind, operation_id=operation_id, game_id=game_id)
+                _db_conflict(
+                    "idempotency_conflict",
+                    "key_unavailable",
+                    op_kind=kind,
+                    operation_id=operation_id,
+                    game_id=game_id,
+                )
                 raise Conflict("idempotency key indisponível")
             if not inserted:
                 if existing["request_sha256"] != request_hash:
-                    _db_conflict("idempotency_conflict", "request_mismatch", op_kind=kind, operation_id=operation_id, game_id=game_id)
+                    _db_conflict(
+                        "idempotency_conflict",
+                        "request_mismatch",
+                        op_kind=kind,
+                        operation_id=operation_id,
+                        game_id=game_id,
+                    )
                     raise Conflict("idempotency key reutilizada com request divergente")
                 if not reclaimable(existing, game_id=game_id, kind=kind, base_version=base_version):
-                    _db_conflict("idempotency_conflict", "operation_mismatch", op_kind=kind, operation_id=operation_id, game_id=game_id)
+                    _db_conflict(
+                        "idempotency_conflict",
+                        "operation_mismatch",
+                        op_kind=kind,
+                        operation_id=operation_id,
+                        game_id=game_id,
+                    )
                     raise Conflict("idempotency key reutilizada com operação divergente")
                 if existing["status"] == "completed":
-                    _db_conflict("idempotency_conflict", "completed", op_kind=kind, operation_id=operation_id, game_id=game_id)
+                    _db_conflict(
+                        "idempotency_conflict",
+                        "completed",
+                        op_kind=kind,
+                        operation_id=operation_id,
+                        game_id=game_id,
+                    )
                     raise Conflict("operation_completed")
                 if existing["status"] == "running" and existing["lease_until"] is not None:
                     fresh = connection.execute(
-                        "select %s > now() as fresh", (existing["lease_until"],),
+                        "select %s > now() as fresh",
+                        (existing["lease_until"],),
                     ).fetchone()["fresh"]
                     if fresh:
-                        _db_conflict("lease_conflict", "operation_in_progress", op_kind=kind, operation_id=operation_id, game_id=game_id)
+                        _db_conflict(
+                            "lease_conflict",
+                            "operation_in_progress",
+                            op_kind=kind,
+                            operation_id=operation_id,
+                            game_id=game_id,
+                        )
                         raise LeaseHeld("operation_in_progress")
                 connection.execute(
                     """
@@ -198,7 +260,7 @@ class PostgresTurnCoordinator:
             raise Conflict("game_id do documento divergiu")
         with self.pool.connection() as connection, connection.transaction():
             previous = connection.execute(
-                'select state from app.games where id=%s and owner_id=%s for update',
+                "select state from app.games where id=%s and owner_id=%s for update",
                 (claim.game_id, principal.user_id),
             ).fetchone()
             operation = connection.execute(
@@ -206,16 +268,29 @@ class PostgresTurnCoordinator:
                 where id=%s and owner_id=%s for update""",
                 (claim.operation_id, principal.user_id),
             ).fetchone()
-            if (not operation or operation["status"] != "running"
-                    or operation["lease_token"] != claim.lease_token):
-                _db_conflict("lease_conflict", "fence_invalid", op_kind='commit_game', operation_id=claim.operation_id, game_id=claim.game_id)
+            if (
+                not operation
+                or operation["status"] != "running"
+                or operation["lease_token"] != claim.lease_token
+            ):
+                _db_conflict(
+                    "lease_conflict",
+                    "fence_invalid",
+                    op_kind="commit_game",
+                    operation_id=claim.operation_id,
+                    game_id=claim.game_id,
+                )
                 raise LeaseHeld("fencing token inválido")
-            old_epoch = int(((previous or {}).get('state', {}).get('continuity') or {}).get('timeline_epoch', 0))
-            new_epoch = int((document.get('continuity') or {}).get('timeline_epoch', 0))
+            old_epoch = int(
+                ((previous or {}).get("state", {}).get("continuity") or {}).get("timeline_epoch", 0)
+            )
+            new_epoch = int((document.get("continuity") or {}).get("timeline_epoch", 0))
             if new_epoch > old_epoch:
                 from services.restore_effects import restore_effects
-                restore_effects(connection, principal=principal, game_id=claim.game_id,
-                               document=document)
+
+                restore_effects(
+                    connection, principal=principal, game_id=claim.game_id, document=document
+                )
             row = connection.execute(
                 """update app.games set
                   schema_version=%s,version=version+1,state=%s,state_sha256=%s,
@@ -226,34 +301,60 @@ class PostgresTurnCoordinator:
                   and active_operation_id=%s and active_lease_token=%s
                 returning version""",
                 (
-                    int(document["schema_version"]), Jsonb(document), digest,
-                    projection["status"], projection["player_name"],
-                    projection["class_name"], projection["player_level"],
-                    projection["location_name"], projection["world_day"],
-                    projection["game_over"], projection["combat_simulation"],
-                    claim.game_id, principal.user_id, claim.base_version,
-                    claim.operation_id, claim.lease_token,
+                    int(document["schema_version"]),
+                    Jsonb(document),
+                    digest,
+                    projection["status"],
+                    projection["player_name"],
+                    projection["class_name"],
+                    projection["player_level"],
+                    projection["location_name"],
+                    projection["world_day"],
+                    projection["game_over"],
+                    projection["combat_simulation"],
+                    claim.game_id,
+                    principal.user_id,
+                    claim.base_version,
+                    claim.operation_id,
+                    claim.lease_token,
                 ),
             ).fetchone()
             if not row:
-                _db_conflict("stale_version", "commit_divergence", op_kind='commit_game', operation_id=claim.operation_id, game_id=claim.game_id)
+                _db_conflict(
+                    "stale_version",
+                    "commit_divergence",
+                    op_kind="commit_game",
+                    operation_id=claim.operation_id,
+                    game_id=claim.game_id,
+                )
                 raise StaleVersion("versão/lease do jogo divergiu no commit")
             committed_version = int(row["version"])
             from infrastructure.pgvector_memory import PgVectorMemoryStore, configured_profile_id
             from services.turn_effects import current_effects
+
             effects = current_effects()
             if effects is not None:
-                effects.flush(connection, memory_store=PgVectorMemoryStore(
-                    self.pool, profile_id=configured_profile_id()),
-                    principal=principal, game_id=claim.game_id,
-                    epoch=int((document.get('continuity') or {}).get('timeline_epoch', 0)),
-                    version=committed_version)
+                effects.flush(
+                    connection,
+                    memory_store=PgVectorMemoryStore(self.pool, profile_id=configured_profile_id()),
+                    principal=principal,
+                    game_id=claim.game_id,
+                    epoch=int((document.get("continuity") or {}).get("timeline_epoch", 0)),
+                    version=committed_version,
+                )
             PostgresGameStore._insert_events(
-                connection, principal.user_id, claim.game_id, document,
+                connection,
+                principal.user_id,
+                claim.game_id,
+                document,
             )
             enqueue_projection_outbox(
-                connection, self.pool, principal=principal, game_id=claim.game_id,
-                document=document, epoch_advanced=new_epoch > old_epoch,
+                connection,
+                self.pool,
+                principal=principal,
+                game_id=claim.game_id,
+                document=document,
+                epoch_advanced=new_epoch > old_epoch,
             )
             world = document.get("world") or {}
             continuity = document.get("continuity") or {}
@@ -271,18 +372,24 @@ class PostgresTurnCoordinator:
                       state=excluded.state,state_sha256=excluded.state_sha256,
                       created_at=now()""",
                     (
-                        claim.game_id, principal.user_id, committed_version,
+                        claim.game_id,
+                        principal.user_id,
+                        committed_version,
                         int(world.get("turn_count", 0) or 0),
                         int(continuity.get("timeline_epoch", 0) or 0),
                         committed_version,
-                        Jsonb(document), digest,
+                        Jsonb(document),
+                        digest,
                     ),
                 )
             if usage_events:
                 from infrastructure.usage_events import append_usage_events
+
                 append_usage_events(
-                    connection, owner_id=principal.user_id,
-                    operation_id=claim.operation_id, game_id=claim.game_id,
+                    connection,
+                    owner_id=principal.user_id,
+                    operation_id=claim.operation_id,
+                    game_id=claim.game_id,
                     events=usage_events,
                 )
             # SPEC-236 R2: failures without usage are facts, not spend.
@@ -294,7 +401,8 @@ class PostgresTurnCoordinator:
             ).fetchone()
             ledger_cost = ledger["total"] if ledger["n"] else None
             consolidated_cost = (
-                ledger_cost if ledger_cost is not None
+                ledger_cost
+                if ledger_cost is not None
                 else max(Decimal("0"), Decimal(str(llm_cost_usd)))
             )
             if record_turn:
@@ -306,11 +414,18 @@ class PostgresTurnCoordinator:
                    presentation_entry_id)
                 values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
                     (
-                        claim.operation_id, claim.game_id, principal.user_id, sequence,
+                        claim.operation_id,
+                        claim.game_id,
+                        principal.user_id,
+                        sequence,
                         int(continuity.get("timeline_epoch", 0) or 0),
-                        str(document.get("next") or ""), input_sha256,
-                        claim.base_version, committed_version, max(0, int(latency_ms)),
-                        consolidated_cost, presentation_entry_id,
+                        str(document.get("next") or ""),
+                        input_sha256,
+                        claim.base_version,
+                        committed_version,
+                        max(0, int(latency_ms)),
+                        consolidated_cost,
+                        presentation_entry_id,
                     ),
                 )
             persisted_receipt = dict(receipt)
@@ -320,8 +435,12 @@ class PostgresTurnCoordinator:
                   committed_game_version=%s,receipt=%s,lease_token=null,
                   lease_until=null,finished_at=now()
                 where id=%s and status='running' and lease_token=%s""",
-                (committed_version, Jsonb(persisted_receipt),
-                 claim.operation_id, claim.lease_token),
+                (
+                    committed_version,
+                    Jsonb(persisted_receipt),
+                    claim.operation_id,
+                    claim.lease_token,
+                ),
             )
             connection.execute(
                 """update app.games set active_operation_id=null,
@@ -333,8 +452,13 @@ class PostgresTurnCoordinator:
 
     @_timed("turn.commit_create")
     def commit_create(
-        self, principal: Principal, claim: OperationClaim, state: dict[str, Any],
-        *, receipt: Mapping[str, Any], checkpoint: bool = True,
+        self,
+        principal: Principal,
+        claim: OperationClaim,
+        state: dict[str, Any],
+        *,
+        receipt: Mapping[str, Any],
+        checkpoint: bool = True,
         usage_events: Sequence[UsageEvent] = (),
     ) -> tuple[int, dict[str, Any]]:
         """Cria campanha, eventos, checkpoint inicial e recibo atomicamente."""
@@ -350,9 +474,18 @@ class PostgresTurnCoordinator:
                 where id=%s and owner_id=%s for update""",
                 (claim.operation_id, principal.user_id),
             ).fetchone()
-            if (not operation or operation["status"] != "running"
-                    or operation["lease_token"] != claim.lease_token):
-                _db_conflict("lease_conflict", "fence_invalid", op_kind='commit_create', operation_id=claim.operation_id, game_id=claim.game_id)
+            if (
+                not operation
+                or operation["status"] != "running"
+                or operation["lease_token"] != claim.lease_token
+            ):
+                _db_conflict(
+                    "lease_conflict",
+                    "fence_invalid",
+                    op_kind="commit_create",
+                    operation_id=claim.operation_id,
+                    game_id=claim.game_id,
+                )
                 raise LeaseHeld("fencing token inválido")
             row = connection.execute(
                 """insert into app.games
@@ -361,24 +494,35 @@ class PostgresTurnCoordinator:
                 values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                 returning version""",
                 (
-                    game_id, principal.user_id, int(document["schema_version"]),
-                    Jsonb(document), digest, projection["status"],
-                    projection["player_name"], projection["class_name"],
-                    projection["player_level"], projection["location_name"],
-                    projection["world_day"], projection["game_over"],
+                    game_id,
+                    principal.user_id,
+                    int(document["schema_version"]),
+                    Jsonb(document),
+                    digest,
+                    projection["status"],
+                    projection["player_name"],
+                    projection["class_name"],
+                    projection["player_level"],
+                    projection["location_name"],
+                    projection["world_day"],
+                    projection["game_over"],
                     projection["combat_simulation"],
                 ),
             ).fetchone()
             version = int(row["version"])
             from infrastructure.pgvector_memory import PgVectorMemoryStore, configured_profile_id
             from services.turn_effects import current_effects
+
             effects = current_effects()
             if effects is not None:
-                effects.flush(connection, memory_store=PgVectorMemoryStore(
-                    self.pool, profile_id=configured_profile_id()),
-                    principal=principal, game_id=game_id,
-                    epoch=int((document.get('continuity') or {}).get('timeline_epoch', 0)),
-                    version=version)
+                effects.flush(
+                    connection,
+                    memory_store=PgVectorMemoryStore(self.pool, profile_id=configured_profile_id()),
+                    principal=principal,
+                    game_id=game_id,
+                    epoch=int((document.get("continuity") or {}).get("timeline_epoch", 0)),
+                    version=version,
+                )
             PostgresGameStore._insert_events(connection, principal.user_id, game_id, document)
             if checkpoint:
                 world = document.get("world") or {}
@@ -388,10 +532,16 @@ class PostgresTurnCoordinator:
                       (game_id,owner_id,game_version,canonical_turn,timeline_epoch,
                        memory_commit_version,state,state_sha256)
                     values(%s,%s,%s,%s,%s,%s,%s,%s)""",
-                    (game_id, principal.user_id, version,
-                     int(world.get("turn_count", 0) or 0),
-                     int(continuity.get("timeline_epoch", 0) or 0),
-                     version, Jsonb(document), digest),
+                    (
+                        game_id,
+                        principal.user_id,
+                        version,
+                        int(world.get("turn_count", 0) or 0),
+                        int(continuity.get("timeline_epoch", 0) or 0),
+                        version,
+                        Jsonb(document),
+                        digest,
+                    ),
                 )
             persisted_receipt = dict(receipt)
             persisted_receipt["committed_version"] = version
@@ -400,20 +550,35 @@ class PostgresTurnCoordinator:
                   committed_game_version=%s,receipt=%s,lease_token=null,
                   lease_until=null,finished_at=now()
                 where id=%s and owner_id=%s and lease_token=%s""",
-                (game_id, version, Jsonb(persisted_receipt), claim.operation_id,
-                 principal.user_id, claim.lease_token),
+                (
+                    game_id,
+                    version,
+                    Jsonb(persisted_receipt),
+                    claim.operation_id,
+                    principal.user_id,
+                    claim.lease_token,
+                ),
             )
             if usage_events:
                 from infrastructure.usage_events import append_usage_events
-                append_usage_events(connection, owner_id=principal.user_id,
-                                    operation_id=claim.operation_id,
-                                    game_id=game_id, events=usage_events)
+
+                append_usage_events(
+                    connection,
+                    owner_id=principal.user_id,
+                    operation_id=claim.operation_id,
+                    game_id=game_id,
+                    events=usage_events,
+                )
         return version, persisted_receipt
 
     @_timed("turn.commit_delete")
     def commit_delete(
-        self, principal: Principal, claim: OperationClaim, game_id: UUID,
-        *, receipt: Mapping[str, Any],
+        self,
+        principal: Principal,
+        claim: OperationClaim,
+        game_id: UUID,
+        *,
+        receipt: Mapping[str, Any],
     ) -> dict[str, Any]:
         if claim.game_id is not None:
             raise ValueError("delete usa operação desacoplada para preservar o recibo")
@@ -423,16 +588,28 @@ class PostgresTurnCoordinator:
                 where id=%s and owner_id=%s for update""",
                 (claim.operation_id, principal.user_id),
             ).fetchone()
-            if (not operation or operation["status"] != "running"
-                    or operation["lease_token"] != claim.lease_token):
-                _db_conflict("lease_conflict", "fence_invalid", op_kind='commit_delete', operation_id=claim.operation_id, game_id=claim.game_id)
+            if (
+                not operation
+                or operation["status"] != "running"
+                or operation["lease_token"] != claim.lease_token
+            ):
+                _db_conflict(
+                    "lease_conflict",
+                    "fence_invalid",
+                    op_kind="commit_delete",
+                    operation_id=claim.operation_id,
+                    game_id=claim.game_id,
+                )
                 raise LeaseHeld("fencing token inválido")
             # SPEC-222 R6: asset rows cascade with the game, so the object keys are
             # captured first and handed to a durable purge job in the same commit.
-            object_keys = [row["object_key"] for row in connection.execute(
-                "select object_key from app.assets where game_id=%s and owner_id=%s",
-                (game_id, principal.user_id),
-            ).fetchall()]
+            object_keys = [
+                row["object_key"]
+                for row in connection.execute(
+                    "select object_key from app.assets where game_id=%s and owner_id=%s",
+                    (game_id, principal.user_id),
+                ).fetchall()
+            ]
             deleted = connection.execute(
                 "delete from app.games where id=%s and owner_id=%s",
                 (game_id, principal.user_id),
@@ -440,21 +617,27 @@ class PostgresTurnCoordinator:
             if deleted.rowcount != 1:
                 raise NotFound("campanha não encontrada")
             from workers.blob_purge_jobs import enqueue_game_blob_purge
+
             enqueue_game_blob_purge(connection, principal.user_id, game_id, object_keys)
             persisted = dict(receipt)
             connection.execute(
                 """update app.operations set status='completed',receipt=%s,
                   lease_token=null,lease_until=null,finished_at=now()
                 where id=%s and owner_id=%s and lease_token=%s""",
-                (Jsonb(persisted), claim.operation_id, principal.user_id,
-                 claim.lease_token),
+                (Jsonb(persisted), claim.operation_id, principal.user_id, claim.lease_token),
             )
         return persisted
 
     @_timed("turn.receipt")
-    def receipt(self, principal: Principal, operation_id: UUID, *,
-                game_id: UUID | None = None, kind: str | None = None,
-                request_hash: str | None = None) -> dict[str, Any] | None:
+    def receipt(
+        self,
+        principal: Principal,
+        operation_id: UUID,
+        *,
+        game_id: UUID | None = None,
+        kind: str | None = None,
+        request_hash: str | None = None,
+    ) -> dict[str, Any] | None:
         with self.pool.connection() as connection:
             row = connection.execute(
                 "select status,receipt,game_id,kind,request_sha256 from app.operations where id=%s and owner_id=%s",
@@ -465,16 +648,25 @@ class PostgresTurnCoordinator:
             if kind is not None:
                 # Creation acquires an ID before a campaign exists; completion
                 # fills game_id. Kind/hash still bind that initial request.
-                if (row['kind'] != kind or row['request_sha256'] != request_hash
-                        or (kind != 'new_game' and row['game_id'] != game_id)):
-                    _db_conflict("idempotency_conflict", "request_mismatch", op_kind=kind, operation_id=operation_id)
-                    raise Conflict('operation_request_mismatch')
+                if (
+                    row["kind"] != kind
+                    or row["request_sha256"] != request_hash
+                    or (kind != "new_game" and row["game_id"] != game_id)
+                ):
+                    _db_conflict(
+                        "idempotency_conflict",
+                        "request_mismatch",
+                        op_kind=kind,
+                        operation_id=operation_id,
+                    )
+                    raise Conflict("operation_request_mismatch")
             return row["receipt"] if row["status"] == "completed" else None
 
     @staticmethod
     def _status(connection, claim: OperationClaim) -> str | None:
         row = connection.execute(
-            "select status from app.operations where id=%s", (claim.operation_id,),
+            "select status from app.operations where id=%s",
+            (claim.operation_id,),
         ).fetchone()
         return row["status"] if row else None
 
@@ -489,7 +681,8 @@ class PostgresTurnCoordinator:
         with self.pool.connection() as connection, connection.transaction():
             if claim.game_id is not None:
                 connection.execute(
-                    "select id from app.games where id=%s for update", (claim.game_id,),
+                    "select id from app.games where id=%s for update",
+                    (claim.game_id,),
                 ).fetchone()
             result = connection.execute(
                 """
@@ -503,7 +696,13 @@ class PostgresTurnCoordinator:
                 # transaction that stores the receipt. A tick that lands after it is benign.
                 if self._status(connection, claim) == "completed":
                     return
-                _db_conflict("lease_conflict", "fence_invalid", op_kind='heartbeat', operation_id=claim.operation_id, game_id=claim.game_id)
+                _db_conflict(
+                    "lease_conflict",
+                    "fence_invalid",
+                    op_kind="heartbeat",
+                    operation_id=claim.operation_id,
+                    game_id=claim.game_id,
+                )
                 raise LeaseHeld("fencing token inválido")
             if claim.game_id is not None:
                 connection.execute(
@@ -515,13 +714,19 @@ class PostgresTurnCoordinator:
                 )
 
     @_timed("turn.complete")
-    def complete(self, claim: OperationClaim, *, committed_version: int | None,
-                 receipt: Mapping[str, Any],
-                 usage_events: Sequence[UsageEvent] = ()) -> dict[str, Any]:
+    def complete(
+        self,
+        claim: OperationClaim,
+        *,
+        committed_version: int | None,
+        receipt: Mapping[str, Any],
+        usage_events: Sequence[UsageEvent] = (),
+    ) -> dict[str, Any]:
         with self.pool.connection() as connection, connection.transaction():
             if claim.game_id is not None:
                 connection.execute(
-                    "select id from app.games where id=%s for update", (claim.game_id,),
+                    "select id from app.games where id=%s for update",
+                    (claim.game_id,),
                 ).fetchone()
             operation = connection.execute(
                 """select owner_id,game_id from app.operations
@@ -529,13 +734,24 @@ class PostgresTurnCoordinator:
                 (claim.operation_id, claim.lease_token),
             ).fetchone()
             if operation is None or operation["game_id"] != claim.game_id:
-                _db_conflict("lease_conflict", "fence_invalid", op_kind='complete', operation_id=claim.operation_id, game_id=claim.game_id)
+                _db_conflict(
+                    "lease_conflict",
+                    "fence_invalid",
+                    op_kind="complete",
+                    operation_id=claim.operation_id,
+                    game_id=claim.game_id,
+                )
                 raise LeaseHeld("fencing token inválido")
             if usage_events:
                 from infrastructure.usage_events import append_usage_events
-                append_usage_events(connection, owner_id=operation["owner_id"],
-                                    operation_id=claim.operation_id,
-                                    game_id=claim.game_id, events=usage_events)
+
+                append_usage_events(
+                    connection,
+                    owner_id=operation["owner_id"],
+                    operation_id=claim.operation_id,
+                    game_id=claim.game_id,
+                    events=usage_events,
+                )
             result = connection.execute(
                 """
                 update app.operations set status='completed',committed_game_version=%s,
@@ -545,7 +761,13 @@ class PostgresTurnCoordinator:
                 (committed_version, Jsonb(dict(receipt)), claim.operation_id, claim.lease_token),
             )
             if result.rowcount != 1:
-                _db_conflict("lease_conflict", "worker_late", op_kind='complete', operation_id=claim.operation_id, game_id=claim.game_id)
+                _db_conflict(
+                    "lease_conflict",
+                    "worker_late",
+                    op_kind="complete",
+                    operation_id=claim.operation_id,
+                    game_id=claim.game_id,
+                )
                 raise LeaseHeld("worker atrasado não pode confirmar")
             if claim.game_id is not None:
                 connection.execute(
@@ -559,12 +781,14 @@ class PostgresTurnCoordinator:
         return dict(receipt)
 
     @_timed("turn.fail")
-    def fail(self, claim: OperationClaim, error_code: str,
-             *, usage_events: Sequence[UsageEvent] = ()) -> None:
+    def fail(
+        self, claim: OperationClaim, error_code: str, *, usage_events: Sequence[UsageEvent] = ()
+    ) -> None:
         with self.pool.connection() as connection, connection.transaction():
             if claim.game_id is not None:
                 connection.execute(
-                    "select id from app.games where id=%s for update", (claim.game_id,),
+                    "select id from app.games where id=%s for update",
+                    (claim.game_id,),
                 ).fetchone()
             operation = connection.execute(
                 """select owner_id,game_id from app.operations
@@ -572,13 +796,22 @@ class PostgresTurnCoordinator:
                 (claim.operation_id, claim.lease_token),
             ).fetchone()
             if operation is None or operation["game_id"] != claim.game_id:
-                _db_conflict("lease_conflict", "fence_invalid", op_kind='fail', operation_id=claim.operation_id, game_id=claim.game_id)
+                _db_conflict(
+                    "lease_conflict",
+                    "fence_invalid",
+                    op_kind="fail",
+                    operation_id=claim.operation_id,
+                    game_id=claim.game_id,
+                )
                 raise LeaseHeld("fencing token inválido")
             if usage_events:
                 from infrastructure.usage_events import append_usage_events
+
                 append_usage_events(
-                    connection, owner_id=operation["owner_id"],
-                    operation_id=claim.operation_id, game_id=claim.game_id,
+                    connection,
+                    owner_id=operation["owner_id"],
+                    operation_id=claim.operation_id,
+                    game_id=claim.game_id,
                     events=usage_events,
                 )
             result = connection.execute(
@@ -590,7 +823,13 @@ class PostgresTurnCoordinator:
                 (error_code[:100], claim.operation_id, claim.lease_token),
             )
             if result.rowcount != 1:
-                _db_conflict("lease_conflict", "fence_invalid", op_kind='fail', operation_id=claim.operation_id, game_id=claim.game_id)
+                _db_conflict(
+                    "lease_conflict",
+                    "fence_invalid",
+                    op_kind="fail",
+                    operation_id=claim.operation_id,
+                    game_id=claim.game_id,
+                )
                 raise LeaseHeld("fencing token inválido")
             if claim.game_id is not None:
                 connection.execute(
@@ -633,8 +872,9 @@ class PostgresRateLimiter:
                 (key, window_seconds, interval, interval, interval),
             ).fetchone()
         count = int(row["request_count"])
-        return RateLimitDecision(count <= limit, max(0, limit - count),
-                                 int(row["retry_after"]) if count > limit else 0)
+        return RateLimitDecision(
+            count <= limit, max(0, limit - count), int(row["retry_after"]) if count > limit else 0
+        )
 
     def peek(self, key: str, *, limit: int, window_seconds: int) -> RateLimitDecision:
         """SPEC-220: inspect a bucket without consuming it (expired window = empty)."""
@@ -667,6 +907,7 @@ class PostgresDailyQuota:
 
     def bump(self, owner_id: UUID, cls: str, limit: int, *, now=None):
         from services.abuse_policy import QuotaDecision, seconds_until_utc_midnight
+
         if limit <= 0:
             raise ValueError("limit precisa ser positivo")
         # Tabela backend-only (sem grant a rpg_api): sempre pelo pool de sistema, mesmo dentro de
@@ -677,5 +918,6 @@ class PostgresDailyQuota:
                 (owner_id, cls, limit),
             ).fetchone()
         allowed = bool(row["allowed"])
-        return QuotaDecision(allowed, int(row["used"]), limit,
-                             0 if allowed else seconds_until_utc_midnight(now))
+        return QuotaDecision(
+            allowed, int(row["used"]), limit, 0 if allowed else seconds_until_utc_midnight(now)
+        )

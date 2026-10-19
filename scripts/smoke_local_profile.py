@@ -27,8 +27,11 @@ def _create_local_user(email: str, password: str) -> None:
 
 def _login(client: TestClient, email: str, password: str) -> str:
     # SPEC-220 R5: login exige Origin da allowlist.
-    response = client.post("/auth/login", json={"email": email, "password": password},
-                           headers={"Origin": "http://localhost:5173"})
+    response = client.post(
+        "/auth/login",
+        json={"email": email, "password": password},
+        headers={"Origin": "http://localhost:5173"},
+    )
     if response.status_code != 200:
         raise RuntimeError(f"login local falhou: {response.status_code}")
     return str(response.json()["csrf_token"])
@@ -38,16 +41,20 @@ def run() -> dict[str, object]:
     required = ("SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY", "SUPABASE_SERVICE_ROLE_KEY")
     if any(not os.getenv(key) for key in required):
         raise RuntimeError("env local Supabase incompleta")
-    os.environ.update({
-        "RPG_RUNTIME_PROFILE": "local",
-        "DATABASE_URL": os.getenv(
-            "DATABASE_URL", "postgresql://postgres:postgres@127.0.0.1:55322/postgres",
-        ),
-        "RPG_SESSION_SECRET": "local-smoke-secret-32-characters-minimum",
-        "RPG_FORCE_MOCK": "1",
-        "RPG_CORS_ORIGINS": "http://localhost:5173",
-    })
+    os.environ.update(
+        {
+            "RPG_RUNTIME_PROFILE": "local",
+            "DATABASE_URL": os.getenv(
+                "DATABASE_URL",
+                "postgresql://postgres:postgres@127.0.0.1:55322/postgres",
+            ),
+            "RPG_SESSION_SECRET": "local-smoke-secret-32-characters-minimum",
+            "RPG_FORCE_MOCK": "1",
+            "RPG_CORS_ORIGINS": "http://localhost:5173",
+        }
+    )
     from infrastructure.runtime import reset_runtime
+
     reset_runtime()
     import api
 
@@ -63,23 +70,36 @@ def run() -> dict[str, object]:
         headers = {"Origin": "http://localhost:5173", "X-CSRF-Token": csrf_a}
         options = client_a.get("/data/options").json()
         region = str(options["regions"][0])
-        response = client_a.post("/game/new", headers=headers, json={
-            "name": "Smoke A", "race": options["races"][0],
-            "class_name": options["classes"][0], "region": region,
-            "level": 1, "backstory": "", "action_id": str(uuid4()),
-        })
+        response = client_a.post(
+            "/game/new",
+            headers=headers,
+            json={
+                "name": "Smoke A",
+                "race": options["races"][0],
+                "class_name": options["classes"][0],
+                "region": region,
+                "level": 1,
+                "backstory": "",
+                "action_id": str(uuid4()),
+            },
+        )
         if response.status_code != 200:
-            raise RuntimeError(f"new game local falhou: {response.status_code} {response.text[:200]}")
+            raise RuntimeError(
+                f"new game local falhou: {response.status_code} {response.text[:200]}"
+            )
         game_id = str(response.json()["game_id"])
         assert client_a.get(f"/game/state?game_id={game_id}").status_code == 200
         action_id = str(uuid4())
         action_payload = {
-            "game_id": game_id, "action_id": action_id,
+            "game_id": game_id,
+            "action_id": action_id,
             "input_text": "Observo a praça e converso com quem estiver por perto.",
         }
         action = client_a.post("/game/action/stream", headers=headers, json=action_payload)
         assert action.status_code == 200 and "event: state" in action.text
-        confirmed_turn = client_a.get(f"/game/state?game_id={game_id}").json()["world"]["turn_count"]
+        confirmed_turn = client_a.get(f"/game/state?game_id={game_id}").json()["world"][
+            "turn_count"
+        ]
         retry = client_a.post("/game/action", headers=headers, json=action_payload)
         assert retry.status_code == 200
         assert retry.json()["world"]["turn_count"] == confirmed_turn
@@ -90,8 +110,8 @@ def run() -> dict[str, object]:
         assert isolated.status_code == 404
     reset_runtime()
     from observability.telemetry import pseudonym
-    return {"auth": True, "turn": True, "owner_isolation": True,
-            "game_id_ref": pseudonym(game_id)}
+
+    return {"auth": True, "turn": True, "owner_isolation": True, "game_id_ref": pseudonym(game_id)}
 
 
 if __name__ == "__main__":

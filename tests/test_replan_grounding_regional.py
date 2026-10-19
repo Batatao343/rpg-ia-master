@@ -8,8 +8,7 @@ def _plan(location: str, statuses=("pending", "pending")) -> dict:
     return {
         "location": location,
         "beats": [
-            {"description": f"beat {i}", "status": status}
-            for i, status in enumerate(statuses)
+            {"description": f"beat {i}", "status": status} for i, status in enumerate(statuses)
         ],
         "climax": "clímax",
         "current_step": 0,
@@ -50,13 +49,18 @@ def test_build_plan_ancora_local_atual_mesmo_se_llm_inventar_outro(monkeypatch):
             return response
 
     monkeypatch.setattr(cm, "get_llm", lambda *a, **k: _LLM())
-    monkeypatch.setattr(cm, "build_context_pack", lambda *a, **k: type(
-        "Pack", (), {"lore_block": "", "world_state_block": ""})())
-    plan = cm._build_plan({
-        "world": {"current_location": "Brekmar", "turn_count": 3},
-        "messages": [],
-        "campaign_plan": {},
-    })
+    monkeypatch.setattr(
+        cm,
+        "build_context_pack",
+        lambda *a, **k: type("Pack", (), {"lore_block": "", "world_state_block": ""})(),
+    )
+    plan = cm._build_plan(
+        {
+            "world": {"current_location": "Brekmar", "turn_count": 3},
+            "messages": [],
+            "campaign_plan": {},
+        }
+    )
     assert plan["location"] == "Brekmar"
 
 

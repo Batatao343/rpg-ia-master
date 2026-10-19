@@ -23,8 +23,7 @@ def quest_request_conversion_count(records: Iterable, *, window: int = 3) -> int
     for index, row in enumerate(rows):
         delta = max(
             0,
-            int(_field(row, "quests_after", 0) or 0)
-            - int(_field(row, "quests_before", 0) or 0),
+            int(_field(row, "quests_after", 0) or 0) - int(_field(row, "quests_before", 0) or 0),
         )
         creation_slots.extend([index] * delta)
 

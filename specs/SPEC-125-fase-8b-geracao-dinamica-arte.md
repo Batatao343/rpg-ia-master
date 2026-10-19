@@ -218,12 +218,14 @@ class ArtBrief(TypedDict):
     reference_asset_ids: list[str]
     profile_version: str
 
+
 def build_player_art_brief(character: Mapping[str, Any]) -> ArtBrief: ...
 def build_npc_art_brief(state: Mapping[str, Any], npc_id: str) -> ArtBrief: ...
 def build_epic_art_brief(state: Mapping[str, Any], event: Mapping[str, Any]) -> ArtBrief: ...
 def render_image_prompt(brief: ArtBrief) -> str: ...
-def resolve_art_triggers(previous: Mapping[str, Any], current: Mapping[str, Any],
-                         *, action_key: str) -> list[ArtGenerationRequest]: ...
+def resolve_art_triggers(
+    previous: Mapping[str, Any], current: Mapping[str, Any], *, action_key: str
+) -> list[ArtGenerationRequest]: ...
 ```
 
 O renderer usa seções fixas e nunca concatena entrada do jogador como comando de
@@ -242,6 +244,7 @@ class ImageGenerationInput:
     size: str
     reference_blobs: tuple[BlobRef, ...]
 
+
 @dataclass(frozen=True)
 class GeneratedImage:
     payload: bytes
@@ -249,6 +252,7 @@ class GeneratedImage:
     provider_request_id: str | None
     model: str
     usage: dict[str, Any]
+
 
 class ImageGenerator(Protocol):
     def generate(self, request: ImageGenerationInput) -> GeneratedImage: ...
@@ -314,7 +318,7 @@ Ledger por arco:
 ```python
 class ArcArtBudget(TypedDict):
     arc_instance_id: str
-    npc_generations_used: int       # 0..4
+    npc_generations_used: int  # 0..4
     epic_generation_used: bool
     last_npc_generation_turn: int | None
 ```
@@ -333,6 +337,7 @@ class CharacterCreateRequest(BaseModel):
     # campos existentes
     appearance: str = Field("", max_length=1000)
     visual_exclusions: str = Field("", max_length=500)
+
 
 class ArtBriefRequest(BaseModel):
     race: str

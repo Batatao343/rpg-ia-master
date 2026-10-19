@@ -2,6 +2,7 @@
 agents/librarian.py
 Utilitário de consistência. Verifica se entidades já existem antes de criar novas.
 """
+
 import difflib
 from typing import List, Optional
 
@@ -13,8 +14,13 @@ from observability.telemetry import log_event as _log_event
 
 
 class EntityMatch(BaseModel):
-    match_found: bool = Field(description="True se o pedido se refere a algo que já existe na lista.")
-    existing_id: str | None = Field(description="O ID exato da lista que corresponde ao pedido. Null se não houver match.")
+    match_found: bool = Field(
+        description="True se o pedido se refere a algo que já existe na lista."
+    )
+    existing_id: str | None = Field(
+        description="O ID exato da lista que corresponde ao pedido. Null se não houver match."
+    )
+
 
 def find_existing_entity(user_query: str, entity_type: str, existing_ids: list[str]) -> str | None:
     """
@@ -40,8 +46,11 @@ def find_existing_entity(user_query: str, entity_type: str, existing_ids: list[s
         e_tokens = {t for t in str(eid).split("_") if t and t not in _STOP}
         if (q_tokens & e_tokens) or query_slug in str(eid) or str(eid) in query_slug:
             candidates.append(eid)
-    candidates += [c for c in difflib.get_close_matches(query_slug, existing_ids, n=8, cutoff=0.7)
-                   if c not in candidates]
+    candidates += [
+        c
+        for c in difflib.get_close_matches(query_slug, existing_ids, n=8, cutoff=0.7)
+        if c not in candidates
+    ]
     if not candidates:
         _log_event("librarian", "no_candidate", level="debug")
         return None
@@ -53,7 +62,8 @@ def find_existing_entity(user_query: str, entity_type: str, existing_ids: list[s
 
     ids_str = ", ".join(candidates)
 
-    system_msg = SystemMessage(content=f"""
+    system_msg = SystemMessage(
+        content=f"""
     Você é um Bibliotecário de Banco de Dados de um RPG.
     Identifique se o pedido do usuário se refere a uma entidade que JÁ EXISTE no banco.
     
@@ -67,21 +77,25 @@ def find_existing_entity(user_query: str, entity_type: str, existing_ids: list[s
     3. Se houver ambiguidade ou certeza baixa, retorne match_found=False.
     4. Se for algo GENÉRICO (ex: "Um goblin") e houver vários, retorne False (crie um novo).
     5. Apenas nomes PRÓPRIOS ou itens ÚNICOS devem dar match.
-    """)
-    
+    """
+    )
+
     human_msg = HumanMessage(content=f"Query: {user_query}")
-    
+
     try:
         matcher = llm.with_structured_output(EntityMatch)
         result = matcher.invoke([system_msg, human_msg])
-        
-        if (not isinstance(result, BaseMessage) and result.match_found
-                and result.existing_id in existing_ids):
+
+        if (
+            not isinstance(result, BaseMessage)
+            and result.match_found
+            and result.existing_id in existing_ids
+        ):
             _log_event("librarian", "match_found", level="debug", existing_id=result.existing_id)
             return result.existing_id
-        
+
     except Exception as e:
         _log_event("librarian", "failed", level="warning", error=type(e).__name__)
-        
+
     _log_event("librarian", "no_match", level="debug")
     return None

@@ -8,22 +8,38 @@ Virtude vs dificuldade`, e integração de Ruptura.
 Este é o núcleo em produção desde o cutover conflito-13; o antigo pipeline
 d20+AC foi removido.
 """
+
 import random
 from typing import Dict, List, Optional
 
 # R4: Virtude adequada por tipo de arma/carta.
 VIRTUDE_POR_TIPO = {
-    "pesada": "forca", "arco": "agilidade", "adaga": "agilidade", "rapieira": "agilidade",
-    "magia": "mente", "arcana": "mente", "precisa": "mente",
-    "comando": "carisma", "fe": "carisma", "medo": "carisma", "presenca": "carisma",
-    "sangue": "corpo", "carne": "corpo", "transformacao": "corpo",
+    "pesada": "forca",
+    "arco": "agilidade",
+    "adaga": "agilidade",
+    "rapieira": "agilidade",
+    "magia": "mente",
+    "arcana": "mente",
+    "precisa": "mente",
+    "comando": "carisma",
+    "fe": "carisma",
+    "medo": "carisma",
+    "presenca": "carisma",
+    "sangue": "corpo",
+    "carne": "corpo",
+    "transformacao": "corpo",
 }
 
 # R7: dificuldades-base dos testes gerais.
 DIFICULDADES = {"facil": 9, "comum": 12, "dificil": 15, "extremo": 18, "quase_impossivel": 21}
 
-_LEGACY_VIRTUDE = {"forca": "str", "agilidade": "dex", "corpo": "con",
-                   "mente": "int", "carisma": "cha"}
+_LEGACY_VIRTUDE = {
+    "forca": "str",
+    "agilidade": "dex",
+    "corpo": "con",
+    "mente": "int",
+    "carisma": "cha",
+}
 
 
 def virtude_para_tipo(tipo: str) -> str:
@@ -41,6 +57,7 @@ def virtude_value(actor: dict, key: str) -> int:
         except (TypeError, ValueError):
             return 0
     from combat_mechanics import actor_mods
+
     return max(0, min(5, actor_mods(actor).get(_LEGACY_VIRTUDE.get(key, "str"), 0)))
 
 
@@ -53,6 +70,7 @@ def compute_esquiva(actor: dict, *, include_modifiers: bool = True) -> int:
     base = 10 + virtude_value(actor, "agilidade") - int(actor.get("esquiva_penalidade", 0) or 0)
     if include_modifiers:
         from combat_mechanics import combat_modifiers
+
         base += int(combat_modifiers(actor).get("ac", 0) or 0)
     return base
 
@@ -94,25 +112,28 @@ def _crit_from_kept(kept: list[int]) -> str | None:
 def _initiative_value(actor: dict) -> int:
     """Agilidade + `initiative` de condições/passivas (SPEC-232 R2)."""
     from combat_mechanics import combat_modifiers
+
     return virtude_value(actor, "agilidade") + int(
-        combat_modifiers(actor).get("initiative", 0) or 0)
+        combat_modifiers(actor).get("initiative", 0) or 0
+    )
 
 
 def _side_roll(participants: list[dict], rng) -> dict:
-    ag = max((_initiative_value(p) for p in participants
-              if p.get("conscious", True)), default=0)
+    ag = max((_initiative_value(p) for p in participants if p.get("conscious", True)), default=0)
     dados = [_d10(rng), _d10(rng)]
     return {"dice": dados, "agilidade": ag, "total": sum(dados) + ag}
 
 
 def _trace_initiative(order: list[str], rolls: dict) -> None:
     from services import mechanics_trace as mt
+
     dice = [d for side in order for d in ((rolls.get(side) or {}).get("dice") or [])]
     mt.record_step("initiative", dice=dice, result=order[0] if order else None)
 
 
-def roll_initiative_by_side(sides: dict[str, list[dict]], *,
-                            initiator: str | None = None, rng=None) -> dict:
+def roll_initiative_by_side(
+    sides: dict[str, list[dict]], *, initiator: str | None = None, rng=None
+) -> dict:
     """R2: se `initiator` iniciou claramente, age primeiro sem disputa; senão cada
     lado rola 2d10 + maior Agilidade consciente e o maior total age primeiro.
     Retorna {"order": [side...], "auto": bool, "rolls": {side: roll|None}}."""
@@ -132,16 +153,23 @@ def roll_initiative_by_side(sides: dict[str, list[dict]], *,
 # --------------------------------------------------------------------------
 # Ataque: 2d10 + Virtude vs Esquiva (R4/R5/R6/R8)
 # --------------------------------------------------------------------------
-def resolve_attack(attacker: dict, target: dict, *,
-                   virtude_key: str | None = None,
-                   virtude_value_override: int | None = None,
-                   advantage: int = 0, ruptura: bool = False,
-                   esquiva: int | None = None, rng=None) -> dict:
+def resolve_attack(
+    attacker: dict,
+    target: dict,
+    *,
+    virtude_key: str | None = None,
+    virtude_value_override: int | None = None,
+    advantage: int = 0,
+    ruptura: bool = False,
+    esquiva: int | None = None,
+    rng=None,
+) -> dict:
     """Resolve um ataque. Retorna a matemática COMPLETA (R9): dados rolados/mantidos,
     Virtude, total, Esquiva, resultado (erro/acerto/critico/supercritico) e o
     multiplicador do efeito PRINCIPAL. Ruptura concede Vantagem (R8)."""
     rng = rng or random
     from combat_mechanics import combat_modifiers
+
     if ruptura:
         advantage += 1
     if virtude_value_override is not None:
@@ -153,7 +181,7 @@ def resolve_attack(attacker: dict, target: dict, *,
     mods = combat_modifiers(attacker)
     modificador = int(mods.get("attack", 0) or 0)
     cond_adv = int(mods.get("advantage", 0) or 0)
-    advantage += (1 if cond_adv > 0 else -1 if cond_adv < 0 else 0)
+    advantage += 1 if cond_adv > 0 else -1 if cond_adv < 0 else 0
     esq = int(esquiva) if esquiva is not None else compute_esquiva(target)
 
     roll = roll_kept(advantage, rng)
@@ -169,26 +197,48 @@ def resolve_attack(attacker: dict, target: dict, *,
         resultado, mult = ("acerto" if acerto else "erro"), 1
 
     from services import mechanics_trace as mt
-    mt.record_step("attack", actor=attacker, target=target, dice=roll["rolled"], kept=kept,
-                   modifier=vval + modificador, dc_or_defense=esq, result=resultado, amount=total)
+
+    mt.record_step(
+        "attack",
+        actor=attacker,
+        target=target,
+        dice=roll["rolled"],
+        kept=kept,
+        modifier=vval + modificador,
+        dc_or_defense=esq,
+        result=resultado,
+        amount=total,
+    )
     return {
-        "dice_rolled": roll["rolled"], "dice_kept": kept, "virtude": vval,
-        "modificador": modificador, "total": total, "esquiva_alvo": esq, "resultado": resultado,
-        "acerto": acerto, "efeito_principal_multiplicador": mult,
-        "ruptura": bool(ruptura), "advantage": advantage,
+        "dice_rolled": roll["rolled"],
+        "dice_kept": kept,
+        "virtude": vval,
+        "modificador": modificador,
+        "total": total,
+        "esquiva_alvo": esq,
+        "resultado": resultado,
+        "acerto": acerto,
+        "efeito_principal_multiplicador": mult,
+        "ruptura": bool(ruptura),
+        "advantage": advantage,
     }
 
 
 # --------------------------------------------------------------------------
 # Testes gerais: Ímpeto + Presságio + Virtude vs dificuldade (R7/R8)
 # --------------------------------------------------------------------------
-def general_test(actor: dict, virtude_key: str, dificuldade, *,
-                 ruptura: bool = False, rng=None) -> dict:
+def general_test(
+    actor: dict, virtude_key: str, dificuldade, *, ruptura: bool = False, rng=None
+) -> dict:
     """Teste FORA de ataque. Ímpeto maior = consequência favorável; Presságio maior
     = desfavorável; empate = puro. Ruptura: 2 dados de Ímpeto, mantém o maior (R8).
     Ataques NÃO usam esta matriz."""
     rng = rng or random
-    dc = DIFICULDADES.get(dificuldade, dificuldade) if isinstance(dificuldade, str) else int(dificuldade)
+    dc = (
+        DIFICULDADES.get(dificuldade, dificuldade)
+        if isinstance(dificuldade, str)
+        else int(dificuldade)
+    )
     vval = virtude_value(actor, virtude_key)
     if ruptura:
         impetos = [_d10(rng), _d10(rng)]
@@ -205,10 +255,25 @@ def general_test(actor: dict, virtude_key: str, dificuldade, *,
     else:
         consequencia = "puro"
     from services import mechanics_trace as mt
-    mt.record_step("save", actor=actor, dice=impetos + [pressagio], kept=[impeto], modifier=vval,
-                   dc_or_defense=dc, result="sucesso" if total >= dc else "falha", amount=total)
+
+    mt.record_step(
+        "save",
+        actor=actor,
+        dice=impetos + [pressagio],
+        kept=[impeto],
+        modifier=vval,
+        dc_or_defense=dc,
+        result="sucesso" if total >= dc else "falha",
+        amount=total,
+    )
     return {
-        "impeto": impeto, "impetos_rolados": impetos, "pressagio": pressagio,
-        "virtude": vval, "total": total, "dificuldade": dc,
-        "sucesso": total >= dc, "consequencia": consequencia, "ruptura": bool(ruptura),
+        "impeto": impeto,
+        "impetos_rolados": impetos,
+        "pressagio": pressagio,
+        "virtude": vval,
+        "total": total,
+        "dificuldade": dc,
+        "sucesso": total >= dc,
+        "consequencia": consequencia,
+        "ruptura": bool(ruptura),
     }

@@ -23,6 +23,7 @@ def _bestiary_db() -> dict:
     criatura GERADA em jogo também entra no codex do jogador (lazy import p/
     não puxar o módulo de geração no import do serviço)."""
     from agents.bestiary import load_bestiary
+
     return load_bestiary() or {}
 
 
@@ -113,6 +114,7 @@ def bestiary_view(bk: dict, turn: int = 0) -> list[dict]:
     """Junta contadores + bestiário (curadoria ∪ overlay), revelando por grau.
     Fase 6.3: entrada ganha rótulo de raridade regional (pressão de caça)."""
     from services.ecology import regional_rarity_label
+
     db = _bestiary_db()
     out: list[dict] = []
     for creature_id, entry in (bk or {}).items():
@@ -153,11 +155,13 @@ def _locations_block(state: dict) -> list[dict]:
     out = []
     for loc_id in world.get("visited", []) or []:
         ent = gr.get_entity(loc_id)
-        out.append({
-            "id": loc_id,
-            "name": (ent or {}).get("name", loc_id),
-            "body": codex_body(loc_id),
-        })
+        out.append(
+            {
+                "id": loc_id,
+                "name": (ent or {}).get("name", loc_id),
+                "body": codex_body(loc_id),
+            }
+        )
     return out
 
 
@@ -172,13 +176,15 @@ def _factions_block(state: dict) -> list[dict]:
         if not rec.get("known"):
             continue
         knows_goal = bool(rec.get("knows_goal"))
-        out.append({
-            "id": fid,
-            "name": faction.get("name", ""),
-            "goal": faction.get("goal", "") if knows_goal else "",
-            "knows_goal": knows_goal,
-            "body": codex_body(fid),
-        })
+        out.append(
+            {
+                "id": fid,
+                "name": faction.get("name", ""),
+                "goal": faction.get("goal", "") if knows_goal else "",
+                "knows_goal": knows_goal,
+                "body": codex_body(fid),
+            }
+        )
     return out
 
 
@@ -186,6 +192,7 @@ def _characters_block(state: dict) -> list[dict]:
     out = []
     from services.entity_identity import resolve_npc_entity_id
     from services.npc_layers import trait_names
+
     for npc_name, npc in (state.get("npcs") or {}).items():
         if not isinstance(npc, dict):
             continue
@@ -193,30 +200,34 @@ def _characters_block(state: dict) -> list[dict]:
         if not npc.get("known_by_player", True):
             continue
         entity_id = resolve_npc_entity_id(npc, str(npc.get("name", npc_name)))
-        out.append({
-            # chaves `_` são internas: a projeção (SPEC-206) as usa e remove.
-            "_npc_key": npc_name,
-            "_entity_id": entity_id,
-            "name": npc.get("name", npc_name),
-            "role": npc.get("role", ""),
-            "location": npc.get("location", ""),
-            "knowledge_source": npc.get("knowledge_source", "met"),
-            "revealed_traits": trait_names(npc.get("revealed_traits") or []),
-            "body": codex_body(entity_id) if entity_id else "",
-        })
+        out.append(
+            {
+                # chaves `_` são internas: a projeção (SPEC-206) as usa e remove.
+                "_npc_key": npc_name,
+                "_entity_id": entity_id,
+                "name": npc.get("name", npc_name),
+                "role": npc.get("role", ""),
+                "location": npc.get("location", ""),
+                "knowledge_source": npc.get("knowledge_source", "met"),
+                "revealed_traits": trait_names(npc.get("revealed_traits") or []),
+                "body": codex_body(entity_id) if entity_id else "",
+            }
+        )
     return out
 
 
 def _secrets_block(state: dict) -> list[dict]:
-    facts = ((state.get("world_projection") or {}).get("revealed_facts") or {})
+    facts = (state.get("world_projection") or {}).get("revealed_facts") or {}
     out = []
     for event_id, fact in facts.items():
-        out.append({
-            "_event_id": event_id,
-            "entity_id": fact.get("entity_id", ""),
-            "fact": fact.get("fact", ""),
-            "turn": fact.get("revealed_at_turn", 0),
-        })
+        out.append(
+            {
+                "_event_id": event_id,
+                "entity_id": fact.get("entity_id", ""),
+                "fact": fact.get("fact", ""),
+                "turn": fact.get("revealed_at_turn", 0),
+            }
+        )
     out.sort(key=lambda f: f["turn"])
     return out
 
@@ -226,8 +237,10 @@ def _raw_codex(state: dict) -> dict[str, list[dict]]:
         "locations": _locations_block(state),
         "factions": _factions_block(state),
         "characters": _characters_block(state),
-        "creatures": bestiary_view(state.get("bestiary_knowledge") or {},
-                                   turn=int((state.get("world") or {}).get("turn_count", 0) or 0)),
+        "creatures": bestiary_view(
+            state.get("bestiary_knowledge") or {},
+            turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
+        ),
         "secrets": _secrets_block(state),
     }
 
@@ -239,4 +252,5 @@ def player_codex(state: dict) -> dict:
     entrada com `knowledge` (taxonomia) + `notes[]` e omite fail-closed entidade
     oculta não revelada. Adiciona `meta` (contagens já filtradas)."""
     from services.player_knowledge import project_player_knowledge
+
     return project_player_knowledge(state, _raw_codex(state))

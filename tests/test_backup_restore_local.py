@@ -12,8 +12,9 @@ def test_manifest_detecta_corrupcao_e_restore_exige_destino_vazio(tmp_path: Path
     (source / "objects").mkdir()
     (source / "objects" / "portrait.webp").write_bytes(b"image")
     backup = tmp_path / "backup"
-    copy_sources(backup, [(source / "database.dump", "database.dump"),
-                          (source / "objects", "objects")])
+    copy_sources(
+        backup, [(source / "database.dump", "database.dump"), (source / "objects", "objects")]
+    )
     write_manifest(backup)
     assert len(verify_manifest(backup)["files"]) == 2
 

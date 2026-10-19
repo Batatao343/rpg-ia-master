@@ -94,9 +94,9 @@ Princípios: "Mecânica é Python" (graus por contador, sem LLM) e "não-onisci�
 
 ```python
 class BestiaryKnowledge(TypedDict, total=False):
-    seen: int              # avistada/citada em alerta (rumor)
-    fought: int            # combates iniciados contra ela
-    defeated: int          # instâncias mortas pelo player
+    seen: int  # avistada/citada em alerta (rumor)
+    fought: int  # combates iniciados contra ela
+    defeated: int  # instâncias mortas pelo player
     first_seen_turn: int
     last_update_turn: int
 ```
@@ -157,7 +157,7 @@ Retorno dos nós: `{"bestiary_knowledge": novo_dict}` (dict parcial, convenção
 ```python
 @app.get("/game/codex")
 def get_player_codex(game_id: Optional[str] = None):
-    state = load_game_state(game_id)      # mesmo carregamento do /game/state
+    state = load_game_state(game_id)  # mesmo carregamento do /game/state
     return player_codex(state)
 ```
 

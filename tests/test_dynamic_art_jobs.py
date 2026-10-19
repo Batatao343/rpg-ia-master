@@ -13,16 +13,28 @@ def test_worker_fake_gera_duas_variantes_privadas_sem_provider_real(tmp_path):
     owner, game, asset = uuid4(), uuid4(), uuid4()
     generation = {
         "private_brief": {
-            "subject": "Iria", "canon": ["Valoria"], "player_description": "adulta",
-            "composition": ["natural spine"], "exclusions": ["no text"],
-            "reference_asset_ids": [], "profile_version": "v1", "size": "1024x1536",
+            "subject": "Iria",
+            "canon": ["Valoria"],
+            "player_description": "adulta",
+            "composition": ["natural spine"],
+            "exclusions": ["no text"],
+            "reference_asset_ids": [],
+            "profile_version": "v1",
+            "size": "1024x1536",
         },
-        "model": "gpt-image-2-2026-04-21", "subject_type": "player",
-        "subject_id": "player", "trigger_kind": "player_portrait",
+        "model": "gpt-image-2-2026-04-21",
+        "subject_type": "player",
+        "subject_id": "player",
+        "trigger_kind": "player_portrait",
     }
     result = generate_dynamic_art_job(
-        generator=generator, blob_store=FileBlobStore(tmp_path), generation=generation,
-        owner_id=owner, game_id=game, asset_id=asset, admission=lambda: generation,
+        generator=generator,
+        blob_store=FileBlobStore(tmp_path),
+        generation=generation,
+        owner_id=owner,
+        game_id=game,
+        asset_id=asset,
+        admission=lambda: generation,
     )
     assert generator.calls == 1 and result["status"] == "ready"
     assert len(result["variants"]) == 2
@@ -38,19 +50,37 @@ def test_usage_is_published_before_image_processing_can_fail(tmp_path, monkeypat
     monkeypatch.setattr(art_jobs, "process_image", fail_processing)
     generation = {
         "private_brief": {
-            "subject": "Iria", "canon": ["Valoria"], "player_description": "adulta",
-            "composition": ["natural spine"], "exclusions": ["no text"],
-            "reference_asset_ids": [], "profile_version": "v1", "size": "1024x1536",
+            "subject": "Iria",
+            "canon": ["Valoria"],
+            "player_description": "adulta",
+            "composition": ["natural spine"],
+            "exclusions": ["no text"],
+            "reference_asset_ids": [],
+            "profile_version": "v1",
+            "size": "1024x1536",
         },
-        "model": "gpt-image-2-2026-04-21", "subject_type": "player",
-        "subject_id": "player", "trigger_kind": "player_portrait",
+        "model": "gpt-image-2-2026-04-21",
+        "subject_type": "player",
+        "subject_id": "player",
+        "trigger_kind": "player_portrait",
     }
     with pytest.raises(RuntimeError, match="failed after provider"):
         generate_dynamic_art_job(
-            generator=FakeImageGenerator(), blob_store=FileBlobStore(tmp_path),
-            generation=generation, owner_id=uuid4(), game_id=uuid4(), asset_id=uuid4(), admission=lambda: generation,
+            generator=FakeImageGenerator(),
+            blob_store=FileBlobStore(tmp_path),
+            generation=generation,
+            owner_id=uuid4(),
+            game_id=uuid4(),
+            asset_id=uuid4(),
+            admission=lambda: generation,
             usage_sink=lambda model, usage: published.append((model, usage)),
         )
-    assert published == [("gpt-image-2-2026-04-21", {
-        "image_units": 1, "provider_cost_usd": "0",
-    })]
+    assert published == [
+        (
+            "gpt-image-2-2026-04-21",
+            {
+                "image_units": 1,
+                "provider_cost_usd": "0",
+            },
+        )
+    ]

@@ -12,6 +12,7 @@ Modelo (8 decisões de 2026-07-20):
 Fundação determinística (sem LLM). O flip do fluxo de morte em `agents/combat.py`
 (setar `death_pending`), o endpoint da API e a tela do frontend consomem isto.
 """
+
 from __future__ import annotations
 
 import copy
@@ -25,8 +26,9 @@ import persistence
 class NoRestorePoint(Exception):
     """Morte sem ponto de retorno válido (SPEC-228 R2/R3)."""
 
-CHECKPOINT_EVERY = 10   # D1: a cada N turnos
-SAFE_DANGER = 1         # zona segura = danger_level <= isto
+
+CHECKPOINT_EVERY = 10  # D1: a cada N turnos
+SAFE_DANGER = 1  # zona segura = danger_level <= isto
 
 
 def _turn(state: dict) -> int:
@@ -51,11 +53,12 @@ def should_checkpoint(state: dict, prev: dict | None = None) -> bool:
     """D1: grava a cada CHECKPOINT_EVERY turnos OU ao entrar em zona segura.
     Nunca grava com o jogo encerrado (memorial) ou morte pendente."""
     from services.actor_lifecycle import transition_readiness
+
     if not transition_readiness(state)["ready"]:
         return False
     t = _turn(state)
     if (state.get("continuity") or {}).get("checkpoint_deferred"):
-        return True   # SPEC-228 R5: checkpoint adiado é tentado de novo
+        return True  # SPEC-228 R5: checkpoint adiado é tentado de novo
     if t > 0 and t % CHECKPOINT_EVERY == 0:
         return True
     return entered_safe_zone(state, prev)
@@ -64,18 +67,19 @@ def should_checkpoint(state: dict, prev: dict | None = None) -> bool:
 def snapshot(state: dict) -> dict | None:
     """Cópia profunda do estado e da memória externa usada pelo harness."""
     from services.actor_lifecycle import transition_readiness
+
     if not transition_readiness(state)["ready"]:
         return None
     snap = copy.deepcopy(state)
     from services.continuity import mark_checkpoint
+
     snap["continuity"] = mark_checkpoint(
-        snap.get("continuity"), canonical_turn=_turn(snap),
+        snap.get("continuity"),
+        canonical_turn=_turn(snap),
     )
     game_id = snap.get("game_id")
     if game_id:
-        snap["_checkpoint_memory_snapshot"] = (
-            persistence.capture_session_memory(str(game_id))
-        )
+        snap["_checkpoint_memory_snapshot"] = persistence.capture_session_memory(str(game_id))
     return snap
 
 
@@ -90,8 +94,10 @@ def write_now(state: dict) -> bool:
     """Grava o checkpoint sem reavaliar a cadência (já decidida pelo chamador)."""
     marked = copy.deepcopy(state)
     from services.continuity import mark_checkpoint
+
     marked["continuity"] = mark_checkpoint(
-        marked.get("continuity"), canonical_turn=_turn(marked),
+        marked.get("continuity"),
+        canonical_turn=_turn(marked),
     )
     return persistence.save_checkpoint(marked)
 
@@ -99,6 +105,7 @@ def write_now(state: dict) -> bool:
 def _sanitize_legacy_combat_checkpoint(restored: dict) -> dict:
     """Fecha cena/transições efêmeras capturadas por versões antigas."""
     from services.actor_lifecycle import sanitize_interturn_state, transition_readiness
+
     readiness = transition_readiness(restored)
     if readiness["ready"]:
         return restored
@@ -106,18 +113,25 @@ def _sanitize_legacy_combat_checkpoint(restored: dict) -> dict:
     old = clean.get("combat") or {}
     if old.get("active"):
         clean["combat"] = {
-            "active": False, "round": int(old.get("round", 0) or 0),
-            "idle_turns": 0, "origin": old.get("origin", "unknown"), "scene": None,
+            "active": False,
+            "round": int(old.get("round", 0) or 0),
+            "idle_turns": 0,
+            "origin": old.get("origin", "unknown"),
+            "scene": None,
         }
         clean["enemies"] = []
         clean["combat_target"] = None
     return sanitize_interturn_state(clean)
 
 
-def resolve_death_choice(state: dict, choice: str, *,
-                         checkpoint: dict | None = None,
-                         initial_state: dict | None = None,
-                         strict: bool = True) -> dict:
+def resolve_death_choice(
+    state: dict,
+    choice: str,
+    *,
+    checkpoint: dict | None = None,
+    initial_state: dict | None = None,
+    strict: bool = True,
+) -> dict:
     """Resolve a tela de morte (D2). Não muta o estado de entrada.
 
     - `choice == "accept"` → memorial: seta `game_over` (fluxo atual preservado),
@@ -132,8 +146,7 @@ def resolve_death_choice(state: dict, choice: str, *,
         new["game_over"] = True
         events = list(new.get("event_log") or [])
         if not any(
-            isinstance(event, dict) and event.get("type") == "player_died"
-            for event in events
+            isinstance(event, dict) and event.get("type") == "player_died" for event in events
         ):
             turn = _turn(new)
             epoch = int((new.get("continuity") or {}).get("timeline_epoch", 0) or 0)
@@ -152,11 +165,15 @@ def resolve_death_choice(state: dict, choice: str, *,
             events.append(event)
             new["event_log"] = events
             from services.chronicle import append_entry, render_milestone
+
             milestone = render_milestone(event, new.get("world_projection") or {})
             if milestone:
                 new["chronicle"] = append_entry(
-                    new.get("chronicle") or [], text=milestone, turn=turn,
-                    kind="milestone", event_id=event_id,
+                    new.get("chronicle") or [],
+                    text=milestone,
+                    turn=turn,
+                    kind="milestone",
+                    event_id=event_id,
                 )
         return new
 
@@ -165,19 +182,16 @@ def resolve_death_choice(state: dict, choice: str, *,
         restored = copy.deepcopy(checkpoint)
         captured = restored.pop("_checkpoint_memory_snapshot", None)
         if state.get("game_id") and "_checkpoint_memory_snapshot" in checkpoint:
-            persistence.restore_captured_session_memory(
-                str(state["game_id"]), captured)
+            persistence.restore_captured_session_memory(str(state["game_id"]), captured)
     elif state.get("game_id"):
         restored = persistence.load_checkpoint(state["game_id"])
-        if restored is not None and os.getenv('RPG_RUNTIME_PROFILE', 'legacy') == 'legacy':
-            restored_external = persistence.restore_checkpoint_memory(
-                str(state["game_id"]))
+        if restored is not None and os.getenv("RPG_RUNTIME_PROFILE", "legacy") == "legacy":
+            restored_external = persistence.restore_checkpoint_memory(str(state["game_id"]))
             if not restored_external:
                 # Slot anterior à spec: não há como distinguir fatos pré/pós
                 # checkpoint. Falha fechado limpando o índice derivado; o ledger
                 # `memory_facts` restaurado ainda sustenta a continuidade global.
-                persistence.restore_captured_session_memory(
-                    str(state["game_id"]), None)
+                persistence.restore_captured_session_memory(str(state["game_id"]), None)
     if restored is None and initial_state is not None:  # D7: início da sessão
         restored = copy.deepcopy(initial_state)
     if restored is None:
@@ -188,13 +202,20 @@ def resolve_death_choice(state: dict, choice: str, *,
     restored["death_pending"] = False
     restored["game_over"] = False
     from services.continuity import after_restore
+
     restored["continuity"] = after_restore(state, restored)
     # SPEC-213 R4/R7b (revisão Astra): a versão canônica nunca volta no restore
     # (carrega a da linha do tempo viva) e a projeção da época antiga é cancelada.
     from services.projections import carry_over_restore
+
     carry_over_restore(state, restored)
     from observability.telemetry import log_event
-    log_event("persistence", "checkpoint_restored", level="info",
-              game_ref=persistence._game_ref(restored.get("game_id") or state.get("game_id")),
-              turn=int((restored.get("world") or {}).get("turn_count", 0) or 0))
+
+    log_event(
+        "persistence",
+        "checkpoint_restored",
+        level="info",
+        game_ref=persistence._game_ref(restored.get("game_id") or state.get("game_id")),
+        turn=int((restored.get("world") or {}).get("turn_count", 0) or 0),
+    )
     return restored

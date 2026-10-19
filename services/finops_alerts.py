@@ -9,6 +9,7 @@ Pricing safety: an UNKNOWN pricing (usage with no rate card) or a STALE rate car
 is a *blocking* alert. ``require_paid_effect`` refuses new paid effects while the
 relevant card is stale; cost is never assumed to be zero.
 """
+
 from __future__ import annotations
 
 import os
@@ -25,10 +26,21 @@ UNKNOWN_PRICING_VERSIONS = {"unknown-conservative-v1"}
 SUCCESS_OUTCOMES = {"success", "ok", "completed"}
 _ID_LIKE = re.compile(r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-|^[0-9a-fA-F]{24,}$|@")
 _SAFE = re.compile(r"^[A-Za-z0-9_.:/+-]{1,60}$")
-ALERT_KINDS = ("unknown_pricing", "stale_rate_card", "cost_spike", "expensive_fallback",
-               "wallet_mismatch", "webhook_backlog", "provider_failure", "margin_below_target",
-               "finops_unknown_purchase_pricing", "daily_spend_cap", "rate_card_expiring",
-               "wallet_uncertain_hold", "wallet_spend_anomaly")
+ALERT_KINDS = (
+    "unknown_pricing",
+    "stale_rate_card",
+    "cost_spike",
+    "expensive_fallback",
+    "wallet_mismatch",
+    "webhook_backlog",
+    "provider_failure",
+    "margin_below_target",
+    "finops_unknown_purchase_pricing",
+    "daily_spend_cap",
+    "rate_card_expiring",
+    "wallet_uncertain_hold",
+    "wallet_spend_anomaly",
+)
 # Installed provider rate cards that need an early renewal warning (fx has its own cadence).
 EXPIRING_CARD_NAMES = frozenset({"llm", "image", "speech", "rate_card"})
 
@@ -52,9 +64,13 @@ class Alert:
     blocking: bool = False
 
     def labels(self) -> dict[str, str]:
-        return {"kind": self.kind, "channel": safe_label(self.channel),
-                "sku_id": safe_label(self.sku_id), "provider": safe_label(self.provider),
-                "model": safe_label(self.model)}
+        return {
+            "kind": self.kind,
+            "channel": safe_label(self.channel),
+            "sku_id": safe_label(self.sku_id),
+            "provider": safe_label(self.provider),
+            "model": safe_label(self.model),
+        }
 
 
 @dataclass(frozen=True)
@@ -113,13 +129,19 @@ class Thresholds:
     def from_env(cls) -> Thresholds:
         e = os.getenv
         return cls(
-            float(e("RPG_FINOPS_SPIKE_FACTOR", "3")), float(e("RPG_FINOPS_SPIKE_MIN_USD", "1")),
+            float(e("RPG_FINOPS_SPIKE_FACTOR", "3")),
+            float(e("RPG_FINOPS_SPIKE_MIN_USD", "1")),
             float(e("RPG_FINOPS_FALLBACK_SHARE", "0.25")),
             float(e("RPG_FINOPS_FALLBACK_MIN_USD", "0.5")),
-            frozenset(p.strip() for p in e("RPG_FINOPS_PRIMARY_PROVIDERS", "deepseek,groq").split(",")
-                      if p.strip()),
-            float(e("RPG_FINOPS_FAILURE_RATIO", "0.3")), int(e("RPG_FINOPS_FAILURE_MIN", "20")),
-            float(e("RPG_FINOPS_BACKLOG_SECONDS", "3600")))
+            frozenset(
+                p.strip()
+                for p in e("RPG_FINOPS_PRIMARY_PROVIDERS", "deepseek,groq").split(",")
+                if p.strip()
+            ),
+            float(e("RPG_FINOPS_FAILURE_RATIO", "0.3")),
+            int(e("RPG_FINOPS_FAILURE_MIN", "20")),
+            float(e("RPG_FINOPS_BACKLOG_SECONDS", "3600")),
+        )
 
 
 @dataclass(frozen=True)
@@ -144,9 +166,17 @@ def unknown_pricing(groups: Iterable[UsageGroup]) -> list[Alert]:
     for g in spend_groups(groups):
         if g.pricing_version in UNKNOWN_PRICING_VERSIONS:
             seen[(g.provider, g.model)] = seen.get((g.provider, g.model), 0) + g.count
-    return [Alert("unknown_pricing", f"{n} usage event(s) without a rate card for {p}/{m}",
-                  provider=p, model=m, value=float(n), blocking=True)
-            for (p, m), n in sorted(seen.items())]
+    return [
+        Alert(
+            "unknown_pricing",
+            f"{n} usage event(s) without a rate card for {p}/{m}",
+            provider=p,
+            model=m,
+            value=float(n),
+            blocking=True,
+        )
+        for (p, m), n in sorted(seen.items())
+    ]
 
 
 def stale_rate_cards(items: Iterable[Freshness], now: datetime) -> list[Alert]:
@@ -154,15 +184,22 @@ def stale_rate_cards(items: Iterable[Freshness], now: datetime) -> list[Alert]:
     for f in items:
         age = now - f.observed_at
         if age < timedelta(0) or age > f.max_age:
-            out.append(Alert("stale_rate_card",
-                             f"{f.name} stale: age {age.total_seconds() / 86400:.1f}d "
-                             f"> {f.max_age.total_seconds() / 86400:.1f}d",
-                             provider=f.name, value=age.total_seconds() / 86400, blocking=True))
+            out.append(
+                Alert(
+                    "stale_rate_card",
+                    f"{f.name} stale: age {age.total_seconds() / 86400:.1f}d "
+                    f"> {f.max_age.total_seconds() / 86400:.1f}d",
+                    provider=f.name,
+                    value=age.total_seconds() / 86400,
+                    blocking=True,
+                )
+            )
     return out
 
 
-def expiring_rate_cards(items: Iterable[Freshness], now: datetime,
-                        warn: timedelta | None = None) -> list[Alert]:
+def expiring_rate_cards(
+    items: Iterable[Freshness], now: datetime, warn: timedelta | None = None
+) -> list[Alert]:
     """SPEC-236 R7: non-blocking warning from T-``RPG_RATE_CARD_WARN_DAYS`` (default 3 d) until
     the card expires; at expiry ``stale_rate_cards`` takes over as the blocking alert."""
     if warn is None:
@@ -176,10 +213,15 @@ def expiring_rate_cards(items: Iterable[Freshness], now: datetime,
             continue
         remaining = f.max_age - (now - f.observed_at)
         if timedelta(0) <= remaining <= warn and now >= f.observed_at:
-            out.append(Alert("rate_card_expiring",
-                             f"{f.name} rate card expires in {remaining.total_seconds() / 86400:.1f}d;"
-                             " renew it (docs/spec197/runbooks/budget.md)",
-                             provider=f.name, value=remaining.total_seconds() / 86400))
+            out.append(
+                Alert(
+                    "rate_card_expiring",
+                    f"{f.name} rate card expires in {remaining.total_seconds() / 86400:.1f}d;"
+                    " renew it (docs/spec197/runbooks/budget.md)",
+                    provider=f.name,
+                    value=remaining.total_seconds() / 86400,
+                )
+            )
     return out
 
 
@@ -187,14 +229,22 @@ def wallet_holds(uncertain: int, oldest_age_seconds: float, anomalies: int = 0) 
     """SPEC-236 R4/R10: funds retained for manual reconciliation, and capped over-ceiling costs."""
     out = []
     if uncertain > 0:
-        out.append(Alert("wallet_uncertain_hold",
-                         f"{uncertain} wallet reservation(s) held as uncertain; oldest "
-                         f"{oldest_age_seconds:.0f}s (scripts/admin_wallet_reconcile.py)",
-                         value=float(uncertain)))
+        out.append(
+            Alert(
+                "wallet_uncertain_hold",
+                f"{uncertain} wallet reservation(s) held as uncertain; oldest "
+                f"{oldest_age_seconds:.0f}s (scripts/admin_wallet_reconcile.py)",
+                value=float(uncertain),
+            )
+        )
     if anomalies > 0:
-        out.append(Alert("wallet_spend_anomaly",
-                         f"{anomalies} settlement(s) capped at the confirmed ceiling",
-                         value=float(anomalies)))
+        out.append(
+            Alert(
+                "wallet_spend_anomaly",
+                f"{anomalies} settlement(s) capped at the confirmed ceiling",
+                value=float(anomalies),
+            )
+        )
     return out
 
 
@@ -205,8 +255,9 @@ def _by_provider(groups: Iterable[UsageGroup]) -> dict[str, Decimal]:
     return totals
 
 
-def cost_spike(groups: Iterable[UsageGroup], baselines: Sequence[Mapping[str, Decimal]],
-               t: Thresholds) -> list[Alert]:
+def cost_spike(
+    groups: Iterable[UsageGroup], baselines: Sequence[Mapping[str, Decimal]], t: Thresholds
+) -> list[Alert]:
     current = _by_provider(groups)
     out = []
     for provider, usd in sorted(current.items()):
@@ -216,8 +267,14 @@ def cost_spike(groups: Iterable[UsageGroup], baselines: Sequence[Mapping[str, De
             continue
         # a provider with no history at all counts as a spike once above the floor
         if mean == 0 or usd > mean * Decimal(str(t.cost_spike_factor)):
-            out.append(Alert("cost_spike", f"{provider} cost ${usd} vs baseline ${mean:.4f}",
-                             provider=provider, value=float(usd)))
+            out.append(
+                Alert(
+                    "cost_spike",
+                    f"{provider} cost ${usd} vs baseline ${mean:.4f}",
+                    provider=provider,
+                    value=float(usd),
+                )
+            )
     return out
 
 
@@ -230,27 +287,48 @@ def expensive_fallback(groups: Iterable[UsageGroup], t: Thresholds) -> list[Aler
     by_model: dict[tuple, Decimal] = {}
     for g in llm:
         if g.provider not in t.primary_providers:
-            by_model[(g.provider, g.model)] = by_model.get((g.provider, g.model), Decimal("0")) + g.cost_usd
+            by_model[(g.provider, g.model)] = (
+                by_model.get((g.provider, g.model), Decimal("0")) + g.cost_usd
+            )
     for (provider, model), usd in sorted(by_model.items()):
         share = usd / total
         if share > Decimal(str(t.fallback_share)):
-            out.append(Alert("expensive_fallback",
-                             f"non-primary {provider}/{model} is {share:.0%} of LLM cost",
-                             provider=provider, model=model, value=float(share)))
+            out.append(
+                Alert(
+                    "expensive_fallback",
+                    f"non-primary {provider}/{model} is {share:.0%} of LLM cost",
+                    provider=provider,
+                    model=model,
+                    value=float(share),
+                )
+            )
     return out
 
 
 def wallet_mismatch(accounts: int, abs_milli: int) -> list[Alert]:
     if accounts <= 0 and abs_milli == 0:
         return []
-    return [Alert("wallet_mismatch", f"{accounts} wallet account(s) differ from ledger "
-                  f"(abs {abs_milli} milli)", value=float(max(accounts, 1)), blocking=False)]
+    return [
+        Alert(
+            "wallet_mismatch",
+            f"{accounts} wallet account(s) differ from ledger (abs {abs_milli} milli)",
+            value=float(max(accounts, 1)),
+            blocking=False,
+        )
+    ]
 
 
 def webhook_backlog(backlogs: Iterable[Backlog], t: Thresholds) -> list[Alert]:
-    return [Alert("webhook_backlog", f"{b.count} unprocessed {b.channel} event(s), oldest "
-                  f"{b.oldest_age_seconds:.0f}s", channel=b.channel, value=b.oldest_age_seconds)
-            for b in backlogs if b.count > 0 and b.oldest_age_seconds > t.backlog_age_seconds]
+    return [
+        Alert(
+            "webhook_backlog",
+            f"{b.count} unprocessed {b.channel} event(s), oldest {b.oldest_age_seconds:.0f}s",
+            channel=b.channel,
+            value=b.oldest_age_seconds,
+        )
+        for b in backlogs
+        if b.count > 0 and b.oldest_age_seconds > t.backlog_age_seconds
+    ]
 
 
 def provider_failures(groups: Iterable[UsageGroup], t: Thresholds) -> list[Alert]:
@@ -259,18 +337,25 @@ def provider_failures(groups: Iterable[UsageGroup], t: Thresholds) -> list[Alert
         pair = totals.setdefault(g.provider, [0, 0])
         pair[0] += g.count
         pair[1] += g.count if g.outcome not in SUCCESS_OUTCOMES else 0
-    return [Alert("provider_failure", f"{p}: {bad}/{n} attempts failed", provider=p,
-                  value=bad / n)
-            for p, (n, bad) in sorted(totals.items())
-            if n >= t.failure_min_attempts and bad / n >= t.failure_ratio]
+    return [
+        Alert("provider_failure", f"{p}: {bad}/{n} attempts failed", provider=p, value=bad / n)
+        for p, (n, bad) in sorted(totals.items())
+        if n >= t.failure_min_attempts and bad / n >= t.failure_ratio
+    ]
 
 
 def margin_below_target(skus: Iterable[SkuMargin], target: Decimal = TARGET_MARGIN) -> list[Alert]:
-    return [Alert("margin_below_target",
-                  f"{s.channel}/{s.sku_id}@{s.pricing_version}: margin {s.margin_pct} < {target}",
-                  channel=s.channel, sku_id=s.sku_id,
-                  value=float(s.margin_pct) if s.margin_pct is not None else 0.0)
-            for s in skus if s.meets_target is False]
+    return [
+        Alert(
+            "margin_below_target",
+            f"{s.channel}/{s.sku_id}@{s.pricing_version}: margin {s.margin_pct} < {target}",
+            channel=s.channel,
+            sku_id=s.sku_id,
+            value=float(s.margin_pct) if s.margin_pct is not None else 0.0,
+        )
+        for s in skus
+        if s.meets_target is False
+    ]
 
 
 def unknown_purchase_pricing(count: int, versions: Sequence[str]) -> list[Alert]:
@@ -279,24 +364,35 @@ def unknown_purchase_pricing(count: int, versions: Sequence[str]) -> list[Alert]
     if count <= 0:
         return []
     shown = ",".join(safe_label(v) for v in list(versions)[:3])
-    return [Alert("finops_unknown_purchase_pricing",
-                  f"{count} purchase(s) skipped from margin: unknown pricing version(s) {shown}",
-                  value=float(count), blocking=True)]
+    return [
+        Alert(
+            "finops_unknown_purchase_pricing",
+            f"{count} purchase(s) skipped from margin: unknown pricing version(s) {shown}",
+            value=float(count),
+            blocking=True,
+        )
+    ]
 
 
-def evaluate_alerts(inputs: AlertInputs, now: datetime,
-                    thresholds: Thresholds | None = None) -> list[Alert]:
+def evaluate_alerts(
+    inputs: AlertInputs, now: datetime, thresholds: Thresholds | None = None
+) -> list[Alert]:
     t = thresholds or Thresholds.from_env()
-    return [*unknown_pricing(inputs.usage_groups), *stale_rate_cards(inputs.freshness, now),
-            *expiring_rate_cards(inputs.freshness, now),
-            *wallet_holds(inputs.wallet_uncertain, inputs.wallet_uncertain_oldest_seconds,
-                          inputs.wallet_anomalies),
-            *cost_spike(inputs.usage_groups, inputs.baseline_cost_by_provider, t),
-            *expensive_fallback(inputs.usage_groups, t),
-            *wallet_mismatch(inputs.wallet_mismatch_accounts, inputs.wallet_mismatch_abs_milli),
-            *webhook_backlog(inputs.backlogs, t), *provider_failures(inputs.usage_groups, t),
-            *margin_below_target(inputs.skus),
-            *unknown_purchase_pricing(inputs.unpriced_purchases, inputs.unpriced_versions)]
+    return [
+        *unknown_pricing(inputs.usage_groups),
+        *stale_rate_cards(inputs.freshness, now),
+        *expiring_rate_cards(inputs.freshness, now),
+        *wallet_holds(
+            inputs.wallet_uncertain, inputs.wallet_uncertain_oldest_seconds, inputs.wallet_anomalies
+        ),
+        *cost_spike(inputs.usage_groups, inputs.baseline_cost_by_provider, t),
+        *expensive_fallback(inputs.usage_groups, t),
+        *wallet_mismatch(inputs.wallet_mismatch_accounts, inputs.wallet_mismatch_abs_milli),
+        *webhook_backlog(inputs.backlogs, t),
+        *provider_failures(inputs.usage_groups, t),
+        *margin_below_target(inputs.skus),
+        *unknown_purchase_pricing(inputs.unpriced_purchases, inputs.unpriced_versions),
+    ]
 
 
 # --- installed card freshness + paid-effect guard (R5) -----------------------------------
@@ -307,15 +403,21 @@ def installed_freshness() -> list[Freshness]:
     from services.speech_pricing import _CARD as speech_card
 
     def seen(card) -> datetime:
-        return datetime.fromisoformat(card["observed_at"]).replace(tzinfo=UTC) \
-            if "T" not in card["observed_at"] else datetime.fromisoformat(card["observed_at"])
+        return (
+            datetime.fromisoformat(card["observed_at"]).replace(tzinfo=UTC)
+            if "T" not in card["observed_at"]
+            else datetime.fromisoformat(card["observed_at"])
+        )
 
     from services.shard_pricing import rate_card_max_age
+
     llm_days = int(os.getenv("RPG_FINOPS_LLM_CARD_MAX_AGE_DAYS", "30"))
     window = rate_card_max_age()  # same window the pricing guards enforce (SPEC-236 R7)
-    return [Freshness("llm", INSTALLED_RATE_CARD_OBSERVED_AT, timedelta(days=llm_days)),
-            Freshness("image", seen(image_card), window),
-            Freshness("speech", seen(speech_card), window)]
+    return [
+        Freshness("llm", INSTALLED_RATE_CARD_OBSERVED_AT, timedelta(days=llm_days)),
+        Freshness("image", seen(image_card), window),
+        Freshness("speech", seen(speech_card), window),
+    ]
 
 
 def require_paid_effect(category: str, *, now: datetime | None = None) -> None:
@@ -328,10 +430,12 @@ def require_paid_effect(category: str, *, now: datetime | None = None) -> None:
         return
     name = {"image": "image", "stt": "speech", "llm": "llm"}[category]
     moment = (now or datetime.now(UTC)).astimezone(UTC)
-    stale = [a for a in stale_rate_cards(
-        [f for f in installed_freshness() if f.name == name], moment)]
+    stale = [
+        a for a in stale_rate_cards([f for f in installed_freshness() if f.name == name], moment)
+    ]
     if stale:
         from services.shard_pricing import PricingUnavailable
+
         raise PricingUnavailable(f"{name} rate card stale")
 
 
@@ -363,8 +467,11 @@ def publish_margin_metrics(skus: Iterable[SkuMargin], unit) -> None:
     for channel, sku_id in _published.get("margin", set()) - set(worst):
         metrics.clear_gauge("rpg_finops_margin_ratio", {"channel": channel, "sku_id": sku_id})
     _published["margin"] = set(worst)
-    for kind, value in (("turn", unit.cost_per_turn_usd), ("image", unit.cost_per_image_usd),
-                        ("voice_minute", unit.cost_per_voice_minute_usd)):
+    for kind, value in (
+        ("turn", unit.cost_per_turn_usd),
+        ("image", unit.cost_per_image_usd),
+        ("voice_minute", unit.cost_per_voice_minute_usd),
+    ):
         if value is not None:
             metrics.set_gauge("rpg_finops_unit_cost_usd", {"kind": kind}, float(value))
         else:
@@ -379,12 +486,16 @@ def publish_evaluation_age(now: float | None = None, *, evaluated: bool = False)
     evaluation. Called with ``evaluated=True`` at the end of a run (age 0) and on every /metrics
     scrape so a process that stopped receiving the cron shows growing age."""
     import time as _time
+
     moment = _time.time() if now is None else now
     if evaluated:
         _last_evaluation[:] = [moment]
     if _last_evaluation:
-        metrics.set_gauge("rpg_finops_evaluation_age_seconds", {"kind": "finops"},
-                          max(0.0, moment - _last_evaluation[0]))
+        metrics.set_gauge(
+            "rpg_finops_evaluation_age_seconds",
+            {"kind": "finops"},
+            max(0.0, moment - _last_evaluation[0]),
+        )
 
 
 def publish_switch_metrics(off_keys: Iterable[str]) -> None:
@@ -392,7 +503,13 @@ def publish_switch_metrics(off_keys: Iterable[str]) -> None:
     for key in off_keys:
         family = key.split(":", 1)[0]
         families[family] = families.get(family, 0) + 1
-    for family in ("image_generation", "stt_fallback_expensive", "model", "decision_backend",
-                   "new_purchases"):
-        metrics.set_gauge("rpg_finops_kill_switch_off", {"kind": family},
-                          float(families.get(family, 0)))
+    for family in (
+        "image_generation",
+        "stt_fallback_expensive",
+        "model",
+        "decision_backend",
+        "new_purchases",
+    ):
+        metrics.set_gauge(
+            "rpg_finops_kill_switch_off", {"kind": family}, float(families.get(family, 0))
+        )

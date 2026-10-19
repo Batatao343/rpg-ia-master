@@ -1,4 +1,5 @@
 """SPEC-219 R7: pre-validacao local + cache curto do SupabaseIdentityProvider (sem rede para lixo)."""
+
 from __future__ import annotations
 
 import base64
@@ -37,6 +38,7 @@ def provider(monkeypatch):
     def fake_post(url, **kwargs):
         calls["post"].append(url)
         return httpx.Response(200, json={})
+
     monkeypatch.setattr(httpx, "get", fake_get)
     monkeypatch.setattr(httpx, "post", fake_post)
     return SupabaseIdentityProvider(BASE + "/", "publishable"), calls, user
@@ -50,7 +52,7 @@ _REJECTED_TOKENS = [
     "a.b.c.d",
     "..",
     "x." + b64({"no": "exp"}) + ".s",
-    jwt(exp=time.time() - 3600),                    # expirado alem do skew
+    jwt(exp=time.time() - 3600),  # expirado alem do skew
     jwt(aud="anon"),
     jwt(aud=None),
     jwt(iss="https://evil.test/auth/v1"),
@@ -60,7 +62,9 @@ _REJECTED_TOKENS = [
 ]
 
 
-@pytest.mark.parametrize("token", _REJECTED_TOKENS, ids=[f"token{i}" for i in range(len(_REJECTED_TOKENS))])
+@pytest.mark.parametrize(
+    "token", _REJECTED_TOKENS, ids=[f"token{i}" for i in range(len(_REJECTED_TOKENS))]
+)
 def test_malformed_or_foreign_tokens_never_reach_the_network(provider, token):
     identity, calls, _user = provider
     for _ in range(50):
@@ -98,7 +102,9 @@ def test_cache_expires_and_can_be_disabled(provider, monkeypatch):
 
 def test_remote_rejection_is_not_cached(provider, monkeypatch):
     identity, calls, _user = provider
-    monkeypatch.setattr(httpx, "get", lambda url, **k: (calls["get"].append(url), httpx.Response(401))[1])
+    monkeypatch.setattr(
+        httpx, "get", lambda url, **k: (calls["get"].append(url), httpx.Response(401))[1]
+    )
     token = jwt()
     for _ in range(3):
         with pytest.raises(Unauthorized):
@@ -111,10 +117,21 @@ def test_logout_and_refresh_invalidate_the_cache(provider, monkeypatch):
     token = jwt()
     identity.verify(token)
     identity.logout(token)
-    identity.verify(token)                                 # voltou a consultar o GoTrue
+    identity.verify(token)  # voltou a consultar o GoTrue
     assert len(calls["get"]) == 2
-    monkeypatch.setattr(httpx, "post", lambda url, **k: httpx.Response(200, json={
-        "access_token": "x", "refresh_token": "y", "expires_in": 60, "user": {"id": str(user)}}))
+    monkeypatch.setattr(
+        httpx,
+        "post",
+        lambda url, **k: httpx.Response(
+            200,
+            json={
+                "access_token": "x",
+                "refresh_token": "y",
+                "expires_in": 60,
+                "user": {"id": str(user)},
+            },
+        ),
+    )
     identity.refresh("r")
     identity.verify(token)
     assert len(calls["get"]) == 3
@@ -136,7 +153,11 @@ def test_session_revocation_is_checked_in_db_even_on_cache_hit(monkeypatch):
     monkeypatch.delenv("RPG_VERIFY_CACHE_SECONDS", raising=False)
     user, session = uuid4(), uuid4()
     gets = []
-    monkeypatch.setattr(httpx, "get", lambda url, **k: (gets.append(url), httpx.Response(200, json={"id": str(user)}))[1])
+    monkeypatch.setattr(
+        httpx,
+        "get",
+        lambda url, **k: (gets.append(url), httpx.Response(200, json={"id": str(user)}))[1],
+    )
     state = {"active": True}
 
     class Row:
@@ -144,12 +165,19 @@ def test_session_revocation_is_checked_in_db_even_on_cache_hit(monkeypatch):
             return {"ok": state["active"]}
 
     class Db:
-        def __enter__(self): return self
-        def __exit__(self, *a): return False
-        def execute(self, *a): return Row()
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def execute(self, *a):
+            return Row()
 
     class Pool:
-        def connection(self): return Db()
+        def connection(self):
+            return Db()
+
     identity = SupabaseIdentityProvider(BASE, "k", pool=Pool())
     token = jwt(session_id=str(session))
     assert identity.verify(token).user_id == user
@@ -157,10 +185,11 @@ def test_session_revocation_is_checked_in_db_even_on_cache_hit(monkeypatch):
     state["active"] = False
     with pytest.raises(Unauthorized):
         identity.verify(token)
-    assert len(gets) == 1                                  # recusou sem nova chamada de rede
+    assert len(gets) == 1  # recusou sem nova chamada de rede
 
 
 # --- revisao Sol (SPEC-219) ------------------------------------------------------------------
+
 
 def test_deeply_nested_payload_is_unauthorized_not_500(provider):
     identity, calls, _user = provider
@@ -177,8 +206,8 @@ def test_cache_never_outlives_the_token_exp(provider, monkeypatch):
     token = jwt(exp=time.time() + 5)
     identity.verify(token)
     identity.verify(token)
-    assert len(calls["get"]) == 1                                      # dentro do exp: cache
+    assert len(calls["get"]) == 1  # dentro do exp: cache
     real = time.time
-    monkeypatch.setattr(time, "time", lambda: real() + 30)             # exp passou (dentro do skew)
+    monkeypatch.setattr(time, "time", lambda: real() + 30)  # exp passou (dentro do skew)
     identity.verify(token)
-    assert len(calls["get"]) == 2                                      # volta ao GoTrue, nao ao cache
+    assert len(calls["get"]) == 2  # volta ao GoTrue, nao ao cache

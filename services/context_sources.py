@@ -1,4 +1,5 @@
 """Concurrent, deterministic acquisition of independent context sources."""
+
 from __future__ import annotations
 
 import asyncio
@@ -45,8 +46,9 @@ class ContextSourceResult:
     latency_ms: int = 0
 
 
-def embed_context_query(text: str, *, game_id: str | None = None,
-                        npc_id: str | None = None) -> EmbeddedContextQuery:
+def embed_context_query(
+    text: str, *, game_id: str | None = None, npc_id: str | None = None
+) -> EmbeddedContextQuery:
     import rag
     from observability.telemetry import span
 
@@ -64,46 +66,58 @@ def embed_context_query(text: str, *, game_id: str | None = None,
     )
 
 
-def _default_readers(query: EmbeddedContextQuery, *, game_id: str | None,
-                     npc_id: str | None) -> dict[str, Callable[[], str]]:
+def _default_readers(
+    query: EmbeddedContextQuery, *, game_id: str | None, npc_id: str | None
+) -> dict[str, Callable[[], str]]:
     import rag
 
     vector = list(query.vector) if query.vector is not None else None
     # A compatible profile was selected but its one shared embedding failed:
     # fail this context acquisition closed. Falling back to each textual API
     # here would retry the same provider once per scope and multiply latency.
-    shared_embedding_failed = (
-        query.vector is None and query.embedding_provider is not None
-    )
+    shared_embedding_failed = query.vector is None and query.embedding_provider is not None
     readers: dict[str, Callable[[], str]] = {
         "lore": (
             (lambda: rag.query_global_by_vector(vector, "lore", "public"))
-            if vector is not None else
-            ((lambda: "") if shared_embedding_failed else
-             (lambda: rag.query_rag(query.text, index_name="lore", max_visibility="public")))
+            if vector is not None
+            else (
+                (lambda: "")
+                if shared_embedding_failed
+                else (lambda: rag.query_rag(query.text, index_name="lore", max_visibility="public"))
+            )
         ),
     }
     if game_id:
         readers["session"] = (
             (lambda: rag.query_session_by_vector(vector, game_id))
-            if vector is not None else
-            ((lambda: "") if shared_embedding_failed else
-             (lambda: rag.query_session_memory(query.text, game_id)))
+            if vector is not None
+            else (
+                (lambda: "")
+                if shared_embedding_failed
+                else (lambda: rag.query_session_memory(query.text, game_id))
+            )
         )
     if game_id and npc_id:
         readers["npc"] = (
             (lambda: rag.query_npc_by_vector(vector, game_id, npc_id))
-            if vector is not None else
-            ((lambda: "") if shared_embedding_failed else
-             (lambda: rag.query_npc_memory(game_id, npc_id, query.text)))
+            if vector is not None
+            else (
+                (lambda: "")
+                if shared_embedding_failed
+                else (lambda: rag.query_npc_memory(game_id, npc_id, query.text))
+            )
         )
     return readers
 
 
-def acquire_context_sources(query: EmbeddedContextQuery, *, game_id: str | None,
-                            npc_id: str | None, max_workers: int = 3,
-                            readers: dict[str, Callable[[], str]] | None = None,
-                            ) -> tuple[ContextSourceResult, ...]:
+def acquire_context_sources(
+    query: EmbeddedContextQuery,
+    *,
+    game_id: str | None,
+    npc_id: str | None,
+    max_workers: int = 3,
+    readers: dict[str, Callable[[], str]] | None = None,
+) -> tuple[ContextSourceResult, ...]:
     readers = dict(readers or _default_readers(query, game_id=game_id, npc_id=npc_id))
     order = [source for source in ("lore", "session", "npc") if source in readers]
 
@@ -111,24 +125,30 @@ def acquire_context_sources(query: EmbeddedContextQuery, *, game_id: str | None,
         started = time.perf_counter()
         try:
             from observability.telemetry import span
+
             with _limit("RPG_CONTEXT_GLOBAL_CONCURRENCY", 12):
                 with span(f"context.{source}"):
                     value = str(readers[source]() or "")
             return ContextSourceResult(
-                source=source, text=value, status="ok" if value else "empty",
+                source=source,
+                text=value,
+                status="ok" if value else "empty",
                 latency_ms=int((time.perf_counter() - started) * 1000),
             )
         except Exception as exc:
             return ContextSourceResult(
-                source=source, status="degraded", error_code=type(exc).__name__,
+                source=source,
+                status="degraded",
+                error_code=type(exc).__name__,
                 latency_ms=int((time.perf_counter() - started) * 1000),
             )
 
     if max_workers <= 1 or len(order) <= 1:
         return tuple(copy_context().run(run, source) for source in order)
     completed: dict[str, ContextSourceResult] = {}
-    with ThreadPoolExecutor(max_workers=min(max_workers, len(order)),
-                            thread_name_prefix="context-source") as executor:
+    with ThreadPoolExecutor(
+        max_workers=min(max_workers, len(order)), thread_name_prefix="context-source"
+    ) as executor:
         # One Context per task: a Context cannot be entered concurrently. Preserve
         # request identity/correlation without leaking a reader's assignments.
         futures = {executor.submit(copy_context().run, run, source): source for source in order}

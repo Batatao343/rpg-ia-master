@@ -16,12 +16,22 @@ from services.prose_guard import sanitize_meta_preamble
 
 
 def _summary():
-    return summary_service.build_summary([
-        {"name": "Herói", "dead": False, "conscious": True,
-         "ferimentos": {"leve": [], "grave": [], "critico": []}},
-        {"name": "Brutamontes", "dead": True, "conscious": False,
-         "ferimentos": {"leve": [], "grave": [], "critico": [{"regiao": "torso"}]}},
-    ])
+    return summary_service.build_summary(
+        [
+            {
+                "name": "Herói",
+                "dead": False,
+                "conscious": True,
+                "ferimentos": {"leve": [], "grave": [], "critico": []},
+            },
+            {
+                "name": "Brutamontes",
+                "dead": True,
+                "conscious": False,
+                "ferimentos": {"leve": [], "grave": [], "critico": [{"regiao": "torso"}]},
+            },
+        ]
+    )
 
 
 class _ArchivistLLM:
@@ -64,7 +74,8 @@ def test_archivist_persiste_summary_uma_vez_e_limpa(monkeypatch):
     saved = []
     monkeypatch.setattr(archivist, "get_llm", lambda **_kwargs: _ArchivistLLM())
     monkeypatch.setattr(
-        archivist, "add_memory_to_session",
+        archivist,
+        "add_memory_to_session",
         lambda game_id, facts: saved.append((game_id, list(facts))) or True,
     )
     state = {
@@ -82,8 +93,9 @@ def test_archivist_persiste_summary_uma_vez_e_limpa(monkeypatch):
     assert out["conflict_summary"] is None
     assert saved == [("game-summary", ["Brutamontes morreu no conflito."])]
     assert "Mortos: Brutamontes" in out["narrative_summary"]
-    assert any(entry["kind"] == "conflict"
-               for chapter in out["chronicle"] for entry in chapter["entries"])
+    assert any(
+        entry["kind"] == "conflict" for chapter in out["chronicle"] for entry in chapter["entries"]
+    )
     # O fato contraditório livre não foi promovido.
     assert all("fugiu vivo" not in fact for _game, facts in saved for fact in facts)
 
@@ -166,29 +178,31 @@ def test_grafo_real_consume_combate_loot_e_summary_no_mesmo_invoke(monkeypatch):
         "npcs": [],
     }
     current_location = state["world"]["current_location"]
-    state.update({
-        "messages": [HumanMessage(content="O combate terminou; vasculho os corpos.")],
-        "enemies": [dead_enemy],
-        "combat": {
-            "active": True,
-            "round": 1,
-            "idle_turns": 0,
-            "encounter_level": 2,
-            "scene": scene,
-        },
-        "campaign_plan": {
-            "location": current_location,
-            "beats": [{"description": "Cruze a ponte.", "status": "pending"}],
-            "climax": "Atravesse o rio.",
-            "current_step": 0,
-            "last_planned_turn": state["world"]["turn_count"],
-            "arc_title": "A Ponte Velha",
-        },
-        "needs_replan": False,
-        "archive_due": False,
-        "pending_world_events": [],
-        "consumed_conflict_ids": [],
-    })
+    state.update(
+        {
+            "messages": [HumanMessage(content="O combate terminou; vasculho os corpos.")],
+            "enemies": [dead_enemy],
+            "combat": {
+                "active": True,
+                "round": 1,
+                "idle_turns": 0,
+                "encounter_level": 2,
+                "scene": scene,
+            },
+            "campaign_plan": {
+                "location": current_location,
+                "beats": [{"description": "Cruze a ponte.", "status": "pending"}],
+                "climax": "Atravesse o rio.",
+                "current_step": 0,
+                "last_planned_turn": state["world"]["turn_count"],
+                "arc_title": "A Ponte Velha",
+            },
+            "needs_replan": False,
+            "archive_due": False,
+            "pending_world_events": [],
+            "consumed_conflict_ids": [],
+        }
+    )
 
     node_updates = []
     final = state
@@ -205,7 +219,11 @@ def test_grafo_real_consume_combate_loot_e_summary_no_mesmo_invoke(monkeypatch):
     assert node_names[:2] == ["action_guard", "turn_prepare"]
     assert set(node_names[2:4]) == {"campaign_manager", "dm_router"}
     assert node_names[4:] == [
-        "dispatch", "combat_agent", "loot_agent", "archivist", "turn_finalizer",
+        "dispatch",
+        "combat_agent",
+        "loot_agent",
+        "archivist",
+        "turn_finalizer",
     ]
     updates_by_name = {name: update for name, update in node_updates}
     combat_update = dict(updates_by_name["combat_agent"])
@@ -263,40 +281,51 @@ def test_archivist_nao_reconsome_conflict_id_ja_confirmado(monkeypatch):
             AssertionError("conflito consumido não deve chamar LLM")
         ),
     )
-    duplicate = archivist.archive_node({
-        **merged,
-        "conflict_summary": pending,
-        "archive_due": True,
-    })
+    duplicate = archivist.archive_node(
+        {
+            **merged,
+            "conflict_summary": pending,
+            "archive_due": True,
+        }
+    )
     merged_duplicate = {**merged, **duplicate}
     assert merged_duplicate["conflict_summary"] is None
     assert merged_duplicate["consumed_conflict_ids"] == ["conflict-idempotent"]
     assert len(saved) == 1
-    assert sum(
-        entry["kind"] == "conflict"
-        for chapter in merged_duplicate["chronicle"]
-        for entry in chapter["entries"]
-    ) == 1
+    assert (
+        sum(
+            entry["kind"] == "conflict"
+            for chapter in merged_duplicate["chronicle"]
+            for entry in chapter["entries"]
+        )
+        == 1
+    )
 
 
 def test_archivist_substitui_resumo_que_reverte_morte(monkeypatch):
     monkeypatch.setattr(
-        archivist, "get_llm", lambda **_kwargs: _ContradictoryArchivistLLM(),
+        archivist,
+        "get_llm",
+        lambda **_kwargs: _ContradictoryArchivistLLM(),
     )
     monkeypatch.setattr(
-        archivist, "add_memory_to_session", lambda _game_id, _facts: True,
+        archivist,
+        "add_memory_to_session",
+        lambda _game_id, _facts: True,
     )
-    out = archivist.archive_node({
-        "game_id": "game-contradiction",
-        "messages": [AIMessage(content="O Brutamontes caiu.")],
-        "world": {"turn_count": 7},
-        "narrative_summary": "Antes da luta.",
-        "archive_due": True,
-        "archivist_last_run": 0,
-        "chronicle": [],
-        "pending_world_events": [],
-        "conflict_summary": _summary(),
-    })
+    out = archivist.archive_node(
+        {
+            "game_id": "game-contradiction",
+            "messages": [AIMessage(content="O Brutamontes caiu.")],
+            "world": {"turn_count": 7},
+            "narrative_summary": "Antes da luta.",
+            "archive_due": True,
+            "archivist_last_run": 0,
+            "chronicle": [],
+            "pending_world_events": [],
+            "conflict_summary": _summary(),
+        }
+    )
     summary = out["narrative_summary"]
     assert "Mortos: Brutamontes" in summary
     assert "sobreviveu" not in summary.casefold()
@@ -337,11 +366,14 @@ def test_archivist_falha_rag_preserva_summary_e_retry_sem_cronica(monkeypatch):
     assert failed["archivist_last_run"] == 6
     assert [f["vector_status"] for f in failed["memory_facts"]] == ["pending"]
     assert len(failed["pending_memory_facts"]) == 1
-    assert sum(
-        entry["kind"] == "conflict"
-        for chapter in failed["chronicle"]
-        for entry in chapter["entries"]
-    ) == 1
+    assert (
+        sum(
+            entry["kind"] == "conflict"
+            for chapter in failed["chronicle"]
+            for entry in chapter["entries"]
+        )
+        == 1
+    )
 
     monkeypatch.setattr(
         archivist,
@@ -354,11 +386,14 @@ def test_archivist_falha_rag_preserva_summary_e_retry_sem_cronica(monkeypatch):
     assert retried["pending_memory_facts"] == []
     assert retried["rag_persistence_error"] is None
     assert {f["vector_status"] for f in retried["memory_facts"]} == {"written"}
-    assert sum(
-        entry["kind"] == "conflict"
-        for chapter in retried["chronicle"]
-        for entry in chapter["entries"]
-    ) == 1
+    assert (
+        sum(
+            entry["kind"] == "conflict"
+            for chapter in retried["chronicle"]
+            for entry in chapter["entries"]
+        )
+        == 1
+    )
 
 
 def test_archivist_canonical_only_bloqueia_so_fatos_e_limpa_apos_commit(
@@ -372,7 +407,9 @@ def test_archivist_canonical_only_bloqueia_so_fatos_e_limpa_apos_commit(
         return succeeds
 
     monkeypatch.setattr(
-        archivist, "get_llm", lambda **_kwargs: _PolicyArchivistLLM(),
+        archivist,
+        "get_llm",
+        lambda **_kwargs: _PolicyArchivistLLM(),
     )
     monkeypatch.setattr(archivist, "add_memory_to_session", persist)
     state = {
@@ -403,8 +440,10 @@ def test_archivist_canonical_only_bloqueia_so_fatos_e_limpa_apos_commit(
     assert retried["pending_memory_facts"] == []
     assert retried["rag_persistence_error"] is None
     assert not [
-        entry for chapter in retried.get("chronicle", [])
-        for entry in chapter["entries"] if entry["kind"] == "conflict"
+        entry
+        for chapter in retried.get("chronicle", [])
+        for entry in chapter["entries"]
+        if entry["kind"] == "conflict"
     ]
     assert attempts[0] == ["A praça recebeu um rumor validado."]
     assert attempts[1] == ["A praça recebeu um rumor validado."]
@@ -412,14 +451,14 @@ def test_archivist_canonical_only_bloqueia_so_fatos_e_limpa_apos_commit(
 
 def test_archivist_nao_confirma_retry_vazio_nem_apaga_erro_previo(monkeypatch):
     monkeypatch.setattr(
-        archivist, "get_llm", lambda **_kwargs: _PolicyArchivistLLM(),
+        archivist,
+        "get_llm",
+        lambda **_kwargs: _PolicyArchivistLLM(),
     )
     monkeypatch.setattr(
         archivist,
         "add_memory_to_session",
-        lambda *_args, **_kwargs: (_ for _ in ()).throw(
-            AssertionError("persist([]) não é commit")
-        ),
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("persist([]) não é commit")),
     )
     state = {
         "game_id": "game-empty-retry",
@@ -455,7 +494,9 @@ def test_archivist_retry_npc_falha_depois_confirma_e_limpa(monkeypatch):
 
     monkeypatch.setattr(archivist, "add_npc_memory", persist_npc)
     monkeypatch.setattr(
-        archivist, "get_llm", lambda **_kwargs: _PolicyArchivistLLM(),
+        archivist,
+        "get_llm",
+        lambda **_kwargs: _PolicyArchivistLLM(),
     )
     monkeypatch.setattr(
         archivist,
@@ -475,11 +516,13 @@ def test_archivist_retry_npc_falha_depois_confirma_e_limpa(monkeypatch):
         "pending_world_events": [],
         "memory_fact_policy": "canonical_only",
         "memory_canonical_facts": [],
-        "pending_npc_memory": [{
-            "operation": "add_npc_memory",
-            "npc_id": "npc_aldric",
-            "facts": ["Aldric ouviu o juramento do jogador."],
-        }],
+        "pending_npc_memory": [
+            {
+                "operation": "add_npc_memory",
+                "npc_id": "npc_aldric",
+                "facts": ["Aldric ouviu o juramento do jogador."],
+            }
+        ],
         "rag_persistence_error": "Falha ao persistir memória de npc_aldric.",
     }
 
@@ -488,11 +531,13 @@ def test_archivist_retry_npc_falha_depois_confirma_e_limpa(monkeypatch):
     assert failed["archive_due"] is True
     assert failed["rag_persistence_error"]
     assert failed["archivist_last_run"] == 9  # o resumo/turno NAO congelam
-    assert attempts == [(
-        "game-npc-retry",
-        "npc_aldric",
-        ["Aldric ouviu o juramento do jogador."],
-    )]
+    assert attempts == [
+        (
+            "game-npc-retry",
+            "npc_aldric",
+            ["Aldric ouviu o juramento do jogador."],
+        )
+    ]
 
     succeeds = True
     retried = archivist.archive_node({**state, **failed})
@@ -527,30 +572,34 @@ def test_archivist_retry_npc_remove_so_sucessos(monkeypatch):
 
     monkeypatch.setattr(archivist, "add_npc_memory", persist_npc)
     monkeypatch.setattr(
-        archivist, "get_llm", lambda **_kwargs: _PolicyArchivistLLM(),
+        archivist,
+        "get_llm",
+        lambda **_kwargs: _PolicyArchivistLLM(),
     )
-    out = archivist.archive_node({
-        "game_id": "game-npc-partial",
-        "messages": [],
-        "world": {"turn_count": 3},
-        "archive_due": True,
-        "archivist_last_run": 0,
-        "memory_fact_policy": "canonical_only",
-        "pending_world_events": [],
-        "pending_npc_memory": [
-            {
-                "operation": "add_npc_memory",
-                "npc_id": "npc_ok",
-                "facts": ["Fato já confirmado."],
-            },
-            {
-                "operation": "add_npc_memory",
-                "npc_id": "npc_falha",
-                "facts": ["Fato ainda pendente."],
-            },
-        ],
-        "rag_persistence_error": "falha anterior",
-    })
+    out = archivist.archive_node(
+        {
+            "game_id": "game-npc-partial",
+            "messages": [],
+            "world": {"turn_count": 3},
+            "archive_due": True,
+            "archivist_last_run": 0,
+            "memory_fact_policy": "canonical_only",
+            "pending_world_events": [],
+            "pending_npc_memory": [
+                {
+                    "operation": "add_npc_memory",
+                    "npc_id": "npc_ok",
+                    "facts": ["Fato já confirmado."],
+                },
+                {
+                    "operation": "add_npc_memory",
+                    "npc_id": "npc_falha",
+                    "facts": ["Fato ainda pendente."],
+                },
+            ],
+            "rag_persistence_error": "falha anterior",
+        }
+    )
 
     assert attempted_ids == ["npc_ok", "npc_falha"]
     assert [row["npc_id"] for row in out["pending_npc_memory"]] == [
@@ -590,8 +639,9 @@ def test_loot_usa_nivel_do_encontro_e_enriquece_summary(monkeypatch):
         return {"gold": 17, "item_id": None, "rarity": "common"}
 
     monkeypatch.setattr(loot.economy, "roll_loot", roll)
-    monkeypatch.setattr(loot, "get_location",
-                        lambda _loc: {"name": "Ponte", "region_id": "planicie"})
+    monkeypatch.setattr(
+        loot, "get_location", lambda _loc: {"name": "Ponte", "region_id": "planicie"}
+    )
     monkeypatch.setattr(loot, "_narrate", lambda *_args, **_kwargs: "Espólio recolhido.")
     state = {
         "player": {"gold": 2, "inventory": []},
@@ -618,19 +668,23 @@ def test_narrativa_contraditoria_cai_no_resumo_canonico():
 
 
 def test_preambulo_meta_e_removido():
-    assert sanitize_meta_preamble(
-        "Abaixo você encontra a narrativa: A chuva cai sobre a ponte."
-    ) == "A chuva cai sobre a ponte."
+    assert (
+        sanitize_meta_preamble("Abaixo você encontra a narrativa: A chuva cai sobre a ponte.")
+        == "A chuva cai sobre a ponte."
+    )
 
 
 def test_lore_global_e_memoria_de_sessao_ficam_em_blocos_separados(monkeypatch):
-    monkeypatch.setattr(context_builder, "query_rag",
-                        lambda *_args, **_kwargs: "LORE CANÔNICO")
-    monkeypatch.setattr(context_builder, "query_session_memory",
-                        lambda *_args, **_kwargs: "MEMÓRIA DA CAMPANHA")
+    monkeypatch.setattr(context_builder, "query_rag", lambda *_args, **_kwargs: "LORE CANÔNICO")
+    monkeypatch.setattr(
+        context_builder, "query_session_memory", lambda *_args, **_kwargs: "MEMÓRIA DA CAMPANHA"
+    )
     pack = context_builder.build_context_pack(
         {"world": {}, "narrative_summary": "Resumo recente.", "npcs": {}},
-        query="ponte", purpose="story", game_id="game-1", token_budget=900,
+        query="ponte",
+        purpose="story",
+        game_id="game-1",
+        token_budget=900,
     )
     assert "LORE CANÔNICO" in pack.lore_block
     assert "MEMÓRIA DA CAMPANHA" not in pack.lore_block
@@ -638,18 +692,22 @@ def test_lore_global_e_memoria_de_sessao_ficam_em_blocos_separados(monkeypatch):
 
 
 def test_evento_rejeitado_fica_observavel_sem_payload_livre():
-    out = process_pending_events({
-        "world": {"turn_count": 9},
-        "pending_world_events": [{
-            "type": "evento_inventado",
-            "target_id": "xanadu",
-            "payload": {"segredo": "não deve vazar"},
-        }],
-        "event_log": [],
-        "world_projection": {},
-        "chronicle": [],
-        "quests": [],
-    })
+    out = process_pending_events(
+        {
+            "world": {"turn_count": 9},
+            "pending_world_events": [
+                {
+                    "type": "evento_inventado",
+                    "target_id": "xanadu",
+                    "payload": {"segredo": "não deve vazar"},
+                }
+            ],
+            "event_log": [],
+            "world_projection": {},
+            "chronicle": [],
+            "quests": [],
+        }
+    )
     assert out["pending_world_events"] == []
     assert out["event_rejections"][0]["turn"] == 9
     assert out["event_rejections"][0]["type"] == "evento_inventado"
@@ -672,15 +730,20 @@ def test_world_pulse_persiste_so_consequencia_aplicada(monkeypatch):
     saved = []
     monkeypatch.setattr(world_simulator, "get_llm", lambda **_kwargs: _WorldLLM())
     monkeypatch.setattr(
-        world_simulator, "add_memory_to_session",
-        lambda game_id, facts: saved.extend(facts) or True)
+        world_simulator, "add_memory_to_session", lambda game_id, facts: saved.extend(facts) or True
+    )
     world_simulator.simulate_world(
         {"game_id": "g"},
         # SPEC-233 R2: shift positivo é ignorado em cidade/abrigo -> local de campo.
-        {"current_location_id": "brekmar",
-         "current_location": "Brekmar", "danger_level": 2,
-         "world_clock": {"day": 1, "period": 1}},
-        [], {}, periods=1,
+        {
+            "current_location_id": "brekmar",
+            "current_location": "Brekmar",
+            "danger_level": 2,
+            "world_clock": {"day": 1, "period": 1},
+        },
+        [],
+        {},
+        periods=1,
     )
     assert saved
     assert all("dragão secreto" not in fact.casefold() for fact in saved)
@@ -691,8 +754,8 @@ def test_evento_rejeitado_nao_vira_fato_do_archivist(monkeypatch):
     saved = []
     monkeypatch.setattr(archivist, "get_llm", lambda **_kwargs: _ArchivistLLM())
     monkeypatch.setattr(
-        archivist, "add_memory_to_session",
-        lambda _game_id, facts: saved.extend(facts) or True)
+        archivist, "add_memory_to_session", lambda _game_id, facts: saved.extend(facts) or True
+    )
     state = {
         "game_id": "game-rejected",
         "messages": [AIMessage(content="Xanadu agora pertence ao herói.")],
@@ -704,8 +767,9 @@ def test_evento_rejeitado_nao_vira_fato_do_archivist(monkeypatch):
         "event_log": [],
         "world_projection": {},
         "quests": [],
-        "pending_world_events": [{
-            "type": "evento_inventado", "target_id": "xanadu", "payload": {}}],
+        "pending_world_events": [
+            {"type": "evento_inventado", "target_id": "xanadu", "payload": {}}
+        ],
     }
     out = archivist.archive_node(state)
     assert saved == []
@@ -715,16 +779,19 @@ def test_evento_rejeitado_nao_vira_fato_do_archivist(monkeypatch):
 
 def test_viagem_impossivel_e_recusada_antes_da_llm(monkeypatch):
     monkeypatch.setattr(
-        storyteller, "get_llm",
-        lambda *_args, **_kwargs: (_ for _ in ()).throw(
-            AssertionError("LLM não deve ser chamada")))
-    out = storyteller.storyteller_node({
-        "messages": [HumanMessage(content="Viajo agora para Xanadu.")],
-        "world": {"current_location_id": "nova_arcadia"},
-        "player": {},
-        "factions": [],
-        "npcs": {},
-    })
+        storyteller,
+        "get_llm",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("LLM não deve ser chamada")),
+    )
+    out = storyteller.storyteller_node(
+        {
+            "messages": [HumanMessage(content="Viajo agora para Xanadu.")],
+            "world": {"current_location_id": "nova_arcadia"},
+            "player": {},
+            "factions": [],
+            "npcs": {},
+        }
+    )
     text = out["messages"][0].content
     assert "Não há rota direta" in text
     assert out["world"]["current_location_id"] == "nova_arcadia"
@@ -741,9 +808,7 @@ def test_pergunta_sobre_local_distante_nao_vira_intencao_de_viagem(monkeypatch):
         lambda *_args, **_kwargs: (_ for _ in ()).throw(ReachedLLM),
     )
     state = {
-        "messages": [
-            HumanMessage(content="O que você sabe sobre Skallgard e sua história?")
-        ],
+        "messages": [HumanMessage(content="O que você sabe sobre Skallgard e sua história?")],
         "world": {"current_location_id": "nova_arcadia"},
         "player": {},
         "factions": [],
@@ -759,40 +824,45 @@ def test_pergunta_sobre_local_distante_nao_vira_intencao_de_viagem(monkeypatch):
 
 def test_save_roundtrip_preserva_summary_pendente():
     pending = _summary()
-    raw = persistence._state_to_save_data({
-        "game_id": "g",
-        "player": {"vitalidade": 4, "max_vitalidade": 8},
-        "conflict_summary": pending,
-        "consumed_conflict_ids": ["conflict-old"],
-        "archive_due": True,
-        "memory_fact_policy": "canonical_only",
-        "memory_canonical_facts": ["Fato aguardando retry."],
-        "pending_npc_memory": [
-            {
-                "operation": "add_npc_memory",
-                "npc_id": "npc_aldric",
-                "facts": ["Aldric ouviu o juramento."],
-            },
-            {
-                "operation": "add_npc_memory",
-                "npc_id": "npc_aldric",
-                "facts": ["Aldric ouviu o juramento."],
-            },
-        ],
-        "rag_persistence_error": "embeddings_unavailable",
-        "event_rejections": [{"turn": 1, "type": "x", "reason": "inválido"}],
-        "messages": [],
-    }, "g")
+    raw = persistence._state_to_save_data(
+        {
+            "game_id": "g",
+            "player": {"vitalidade": 4, "max_vitalidade": 8},
+            "conflict_summary": pending,
+            "consumed_conflict_ids": ["conflict-old"],
+            "archive_due": True,
+            "memory_fact_policy": "canonical_only",
+            "memory_canonical_facts": ["Fato aguardando retry."],
+            "pending_npc_memory": [
+                {
+                    "operation": "add_npc_memory",
+                    "npc_id": "npc_aldric",
+                    "facts": ["Aldric ouviu o juramento."],
+                },
+                {
+                    "operation": "add_npc_memory",
+                    "npc_id": "npc_aldric",
+                    "facts": ["Aldric ouviu o juramento."],
+                },
+            ],
+            "rag_persistence_error": "embeddings_unavailable",
+            "event_rejections": [{"turn": 1, "type": "x", "reason": "inválido"}],
+            "messages": [],
+        },
+        "g",
+    )
     loaded = persistence._raw_to_state(raw)
     assert loaded["conflict_summary"] == pending
     assert loaded["consumed_conflict_ids"] == ["conflict-old"]
     assert loaded["archive_due"] is True
     assert loaded["memory_fact_policy"] == "canonical_only"
     assert loaded["memory_canonical_facts"] == ["Fato aguardando retry."]
-    assert loaded["pending_npc_memory"] == [{
-        "operation": "add_npc_memory",
-        "npc_id": "npc_aldric",
-        "facts": ["Aldric ouviu o juramento."],
-    }]
+    assert loaded["pending_npc_memory"] == [
+        {
+            "operation": "add_npc_memory",
+            "npc_id": "npc_aldric",
+            "facts": ["Aldric ouviu o juramento."],
+        }
+    ]
     assert loaded["rag_persistence_error"] == "embeddings_unavailable"
     assert loaded["event_rejections"] == raw["event_rejections"]

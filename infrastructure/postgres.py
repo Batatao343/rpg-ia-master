@@ -60,13 +60,24 @@ def _apply_request_role(connection: Connection, owner_id: UUID) -> None:
 
 
 class PostgresPool:
-    def __init__(self, dsn: str, *, min_size: int = 0, max_size: int = 4,
-                 timeout: float = 5.0, transaction_pooler: bool = False,
-                 connect_timeout: float = 5.0, request_rls: bool = False,
-                 admin_pool: PostgresPool | None = None):
+    def __init__(
+        self,
+        dsn: str,
+        *,
+        min_size: int = 0,
+        max_size: int = 4,
+        timeout: float = 5.0,
+        transaction_pooler: bool = False,
+        connect_timeout: float = 5.0,
+        request_rls: bool = False,
+        admin_pool: PostgresPool | None = None,
+    ):
         if ConnectionPool is None:
             raise RuntimeError("instale psycopg: uv sync")
-        kwargs: dict[str, Any] = {"row_factory": dict_row, "connect_timeout": max(1, int(round(connect_timeout)))}
+        kwargs: dict[str, Any] = {
+            "row_factory": dict_row,
+            "connect_timeout": max(1, int(round(connect_timeout))),
+        }
         if transaction_pooler:
             # Supavisor transaction mode cannot preserve prepared/session state.
             # Keep verify-full if already requested; never downgrade TLS.
@@ -99,14 +110,19 @@ class PostgresPool:
     @contextmanager
     def _checkout(self, *, request_scoped: bool, label: str = "request") -> Iterator[Connection]:
         from infrastructure import db_log
+
         started = time.perf_counter()
         with ExitStack() as stack:
             try:
                 connection = stack.enter_context(self._pool.connection())
             except Exception as exc:
                 # SPEC-254 R2: pool_timeout / connect_failed, sem host, DSN ou mensagem.
-                db_log.log_checkout_failure(exc, pool=label, waited_s=time.perf_counter() - started,
-                                            stats=self._pool_stats())
+                db_log.log_checkout_failure(
+                    exc,
+                    pool=label,
+                    waited_s=time.perf_counter() - started,
+                    stats=self._pool_stats(),
+                )
                 raise
             try:
                 if self._transaction_pooler:
@@ -122,7 +138,7 @@ class PostgresPool:
                         _apply_request_role(connection, principal.user_id)
                 yield connection
             except Exception as exc:
-                db_log.log_query_error(exc)       # SPEC-254 R3: statement/lock timeout
+                db_log.log_query_error(exc)  # SPEC-254 R3: statement/lock timeout
                 raise
 
     @contextmanager
@@ -183,8 +199,9 @@ class PostgresGameStore:
         return document, document_sha256(document), game_projection(document)
 
     @staticmethod
-    def _insert_events(connection: Connection, owner_id: UUID, game_id: UUID,
-                       document: dict[str, Any]) -> None:
+    def _insert_events(
+        connection: Connection, owner_id: UUID, game_id: UUID, document: dict[str, Any]
+    ) -> None:
         for raw in document.get("event_log", []) or []:
             if not isinstance(raw, dict) or not raw.get("event_id"):
                 continue
@@ -199,8 +216,14 @@ class PostgresGameStore:
                 returning event_sha256
                 """,
                 (
-                    game_id, owner_id, event["event_id"], event["turn"],
-                    event["event_type"], Jsonb(event["payload"]), event["source"], digest,
+                    game_id,
+                    owner_id,
+                    event["event_id"],
+                    event["turn"],
+                    event["event_type"],
+                    Jsonb(event["payload"]),
+                    event["source"],
+                    digest,
                 ),
             ).fetchone()
             if row is None:
@@ -226,11 +249,19 @@ class PostgresGameStore:
                     returning *
                     """,
                     (
-                        game_id, principal.user_id, int(document["schema_version"]),
-                        Jsonb(document), digest, projection["status"], projection["player_name"],
-                        projection["class_name"], projection["player_level"],
-                        projection["location_name"], projection["world_day"],
-                        projection["game_over"], projection["combat_simulation"],
+                        game_id,
+                        principal.user_id,
+                        int(document["schema_version"]),
+                        Jsonb(document),
+                        digest,
+                        projection["status"],
+                        projection["player_name"],
+                        projection["class_name"],
+                        projection["player_level"],
+                        projection["location_name"],
+                        projection["world_day"],
+                        projection["game_over"],
+                        projection["combat_simulation"],
                     ),
                 ).fetchone()
             except Exception as exc:
@@ -256,8 +287,9 @@ class PostgresGameStore:
             ).fetchall()
         return _stored_rows_tolerant(rows)
 
-    def save(self, principal: Principal, game_id: UUID, expected_version: int,
-             state: dict[str, Any]) -> StoredGame:
+    def save(
+        self, principal: Principal, game_id: UUID, expected_version: int, state: dict[str, Any]
+    ) -> StoredGame:
         document, digest, projection = self._prepare(state)
         if UUID(str(document["game_id"])) != game_id:
             raise Conflict("game_id do documento divergiu")
@@ -273,11 +305,19 @@ class PostgresGameStore:
                 returning *
                 """,
                 (
-                    int(document["schema_version"]), Jsonb(document), digest,
-                    projection["status"], projection["player_name"], projection["class_name"],
-                    projection["player_level"], projection["location_name"],
-                    projection["world_day"], projection["game_over"],
-                    projection["combat_simulation"], game_id, principal.user_id,
+                    int(document["schema_version"]),
+                    Jsonb(document),
+                    digest,
+                    projection["status"],
+                    projection["player_name"],
+                    projection["class_name"],
+                    projection["player_level"],
+                    projection["location_name"],
+                    projection["world_day"],
+                    projection["game_over"],
+                    projection["combat_simulation"],
+                    game_id,
+                    principal.user_id,
                     expected_version,
                 ),
             ).fetchone()
@@ -300,8 +340,14 @@ class PostgresGameStore:
             )
             return result.rowcount == 1
 
-    def save_checkpoint(self, principal: Principal, stored: StoredGame,
-                        state: dict[str, Any], *, memory_commit_version: int = 0) -> None:
+    def save_checkpoint(
+        self,
+        principal: Principal,
+        stored: StoredGame,
+        state: dict[str, Any],
+        *,
+        memory_commit_version: int = 0,
+    ) -> None:
         document = serialize_game_state(state)
         world = document.get("world") or {}
         continuity = document.get("continuity") or {}
@@ -327,10 +373,14 @@ class PostgresGameStore:
                   created_at=now()
                 """,
                 (
-                    stored.game_id, principal.user_id, stored.version,
+                    stored.game_id,
+                    principal.user_id,
+                    stored.version,
                     int(world.get("turn_count", 0) or 0),
-                    int(continuity.get("timeline_epoch", 0) or 0), memory_commit_version,
-                    Jsonb(document), document_sha256(document),
+                    int(continuity.get("timeline_epoch", 0) or 0),
+                    memory_commit_version,
+                    Jsonb(document),
+                    document_sha256(document),
                 ),
             )
 

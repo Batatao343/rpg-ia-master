@@ -1,4 +1,5 @@
 """SPEC-245: toda rejeição de auth deixa uma linha com motivo interno fechado, sem PII."""
+
 import base64
 import json
 import time
@@ -23,14 +24,18 @@ def _logs():
 
 def _lines(capsys, prefix="auth."):
     out = capsys.readouterr().out
-    assert EMAIL not in out and "sentinel.user" not in out        # R7: nenhum e-mail
-    return [json.loads(x) for x in out.splitlines()
-            if x.startswith("{") and json.loads(x).get("event", "").startswith(prefix)]
+    assert EMAIL not in out and "sentinel.user" not in out  # R7: nenhum e-mail
+    return [
+        json.loads(x)
+        for x in out.splitlines()
+        if x.startswith("{") and json.loads(x).get("event", "").startswith(prefix)
+    ]
 
 
 def _gotrue(status, error_code):
-    return lambda url, **_kw: httpx.Response(status, json={"code": status, "error_code": error_code,
-                                                           "msg": f"{EMAIL} private message"})
+    return lambda url, **_kw: httpx.Response(
+        status, json={"code": status, "error_code": error_code, "msg": f"{EMAIL} private message"}
+    )
 
 
 def test_login_400_logs_upstream_code_not_email(monkeypatch, capsys):
@@ -57,6 +62,7 @@ def test_unknown_gotrue_code_is_bucketed_as_other(monkeypatch, capsys):
 def test_timeout_returns_503_and_logs(monkeypatch, capsys, account_client):  # noqa: F811
     def boom(url, **_kw):
         raise httpx.ReadTimeout("slow " + EMAIL)
+
     monkeypatch.setattr(httpx, "post", boom)
     with pytest.raises(AuthUnavailable):
         SupabaseIdentityProvider("https://auth.test", "publishable").login(EMAIL, "password-123")
@@ -68,6 +74,7 @@ def test_timeout_returns_503_and_logs(monkeypatch, capsys, account_client):  # n
 
     def login(email, password):
         raise AuthUnavailable("auth_unavailable")
+
     monkeypatch.setattr(identity, "login", login)
     r = client.post("/auth/login", json={"email": EMAIL, "password": "password-123"})
     assert r.status_code == 503 and r.json()["detail"] == "auth_unavailable"
@@ -77,6 +84,7 @@ def test_timeout_returns_503_and_logs(monkeypatch, capsys, account_client):  # n
 def _jwt(exp, aud="authenticated", iss="https://auth.test/auth/v1"):
     def enc(obj):
         return base64.urlsafe_b64encode(json.dumps(obj).encode()).decode().rstrip("=")
+
     return f"{enc({'alg': 'ES256'})}.{enc({'exp': exp, 'aud': aud, 'iss': iss})}.sig"
 
 
@@ -98,6 +106,7 @@ def test_session_expired_reason(account_client, capsys, monkeypatch):  # noqa: F
 
     def verify(token):
         raise Unauthorized("sessão revogada")
+
     monkeypatch.setattr(identity, "verify", verify)
     client.cookies.set("rpg_access", "zzz")
     r = client.get("/game/saves", headers={"X-Request-ID": "sess-rej-0001"})
@@ -105,7 +114,9 @@ def test_session_expired_reason(account_client, capsys, monkeypatch):  # noqa: F
     lines = _lines(capsys, "auth.session_rejected")
     assert len(lines) == 1
     assert lines[0]["reason"] == "revoked" and lines[0]["route"] == "/game/saves"
-    assert lines[0]["request_id"] == "sess-rej-0001" and lines[0]["public_code"] == "session_invalid"
+    assert (
+        lines[0]["request_id"] == "sess-rej-0001" and lines[0]["public_code"] == "session_invalid"
+    )
 
 
 def test_missing_session_without_cookie_is_debug_only(account_client, capsys, monkeypatch):  # noqa: F811
@@ -113,6 +124,7 @@ def test_missing_session_without_cookie_is_debug_only(account_client, capsys, mo
 
     def verify(token):
         raise Unauthorized("sessão ausente")
+
     monkeypatch.setattr(identity, "verify", verify)
     client.cookies.clear()
     r = client.get("/game/saves")
@@ -128,7 +140,9 @@ def test_csrf_reason(account_client, capsys):  # noqa: F811
     assert r.status_code == 403
     (line,) = _lines(capsys, "auth.csrf_rejected")
     assert line["reason"] == "csrf_missing" and line["origin_host"] == "localhost:5173"
-    r = client.post("/game/equip", json={"game_id": "x"}, headers={"Origin": "https://evil.example"})
+    r = client.post(
+        "/game/equip", json={"game_id": "x"}, headers={"Origin": "https://evil.example"}
+    )
     assert r.status_code == 403
     (line,) = _lines(capsys, "auth.csrf_rejected")
     assert line["reason"] == "origin_denied" and line["origin_host"] == "other"
@@ -137,6 +151,7 @@ def test_csrf_reason(account_client, capsys):  # noqa: F811
 
 def test_turnstile_outage_reason_provider_unavailable(monkeypatch, capsys):
     from services import account_security
+
     monkeypatch.setenv("RPG_AUTH_CAPTCHA_MODE", "app")
     monkeypatch.setenv("RPG_AUTH_CAPTCHA_REQUIRED", "1")
     monkeypatch.setenv("RPG_TURNSTILE_SITE_KEY", "site")
@@ -144,6 +159,7 @@ def test_turnstile_outage_reason_provider_unavailable(monkeypatch, capsys):
 
     def down(url, **_kw):
         raise httpx.ConnectError("cloudflare down")
+
     monkeypatch.setattr(httpx, "post", down)
     with pytest.raises(Unauthorized) as exc:
         account_security.validate_captcha("tok", remote_ip="203.0.113.7", action="signup")
@@ -155,19 +171,30 @@ def test_turnstile_outage_reason_provider_unavailable(monkeypatch, capsys):
 
 def test_turnstile_error_codes_and_mismatch(monkeypatch, capsys):
     from services import account_security
+
     monkeypatch.setenv("RPG_AUTH_CAPTCHA_MODE", "app")
     monkeypatch.setenv("RPG_AUTH_CAPTCHA_REQUIRED", "1")
     monkeypatch.setenv("RPG_TURNSTILE_SITE_KEY", "site")
     monkeypatch.setenv("RPG_TURNSTILE_SECRET", "secret-value-123")
     monkeypatch.setenv("RPG_CORS_ORIGINS", "https://ok.example")
-    monkeypatch.setattr(httpx, "post", lambda url, **_kw: httpx.Response(
-        200, json={"success": False, "error-codes": ["timeout-or-duplicate", "Weird Value!"]}))
+    monkeypatch.setattr(
+        httpx,
+        "post",
+        lambda url, **_kw: httpx.Response(
+            200, json={"success": False, "error-codes": ["timeout-or-duplicate", "Weird Value!"]}
+        ),
+    )
     with pytest.raises(Unauthorized):
         account_security.validate_captcha("tok", remote_ip="1.1.1.1", action="signup")
     (line,) = _lines(capsys, "auth.captcha_rejected")
     assert line["reason"] == "turnstile_error:timeout-or-duplicate"
-    monkeypatch.setattr(httpx, "post", lambda url, **_kw: httpx.Response(
-        200, json={"success": True, "hostname": "evil.example", "action": "signup"}))
+    monkeypatch.setattr(
+        httpx,
+        "post",
+        lambda url, **_kw: httpx.Response(
+            200, json={"success": True, "hostname": "evil.example", "action": "signup"}
+        ),
+    )
     with pytest.raises(Unauthorized):
         account_security.validate_captcha("tok", remote_ip="1.1.1.1", action="signup")
     assert _lines(capsys, "auth.captcha_rejected")[0]["reason"] == "hostname_mismatch"
@@ -193,13 +220,14 @@ def test_lockout_logged_with_key_ref(capsys):
         assert exc.value.status_code == 429
         blocked += 1
     lines = _lines(capsys, "auth.rate_limited")
-    assert len(lines) == 1                       # amostrado: 1 linha por key_ref por minuto
+    assert len(lines) == 1  # amostrado: 1 linha por key_ref por minuto
     line = lines[0]
     key = _login_failure_key(EMAIL, "198.51.100.9")
     assert line["key_ref"] == pseudonym(key) and key.split(":")[-1] not in json.dumps(line)
     assert line["op"] == "login" and line["bucket"] == "email" and line["retry_after_s"] > 0
     assert "198.51.100.9" not in json.dumps(line)
     from observability.metrics import metrics
+
     assert metrics.snapshot()["rpg_auth_rejections_total{'reason': 'rate_limited'}"] >= blocked
 
 
@@ -209,6 +237,7 @@ def test_no_email_in_any_auth_log(monkeypatch, capsys, account_client):  # noqa:
     real = SupabaseIdentityProvider("https://auth.test", "publishable")
     with pytest.raises(Unauthorized):
         real.login(EMAIL, "password-123")
-    client.post("/auth/signup", json={"email": EMAIL, "password": "password-123",
-                                      "age_confirmed": True})
-    _lines(capsys, "")                            # a asserção de sentinela roda dentro de _lines
+    client.post(
+        "/auth/signup", json={"email": EMAIL, "password": "password-123", "age_confirmed": True}
+    )
+    _lines(capsys, "")  # a asserção de sentinela roda dentro de _lines

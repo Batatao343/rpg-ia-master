@@ -2,6 +2,7 @@
 Testes da Fase 0 — fundação de mundo (offline, sem API key).
 Mundo estruturado, relógio, viagem (fog of war), descanso, temas de classe.
 """
+
 from langchain_core.messages import HumanMessage, SystemMessage
 
 import gamedata
@@ -25,7 +26,9 @@ def test_get_location_and_connections():
 
 def test_start_location_for_region():
     assert gamedata.start_location_for_region("Skallgard")["id"] == "skallgard"
-    assert gamedata.start_location_for_region("Floresta dos Sussurros")["id"] == "floresta_sussurros"
+    assert (
+        gamedata.start_location_for_region("Floresta dos Sussurros")["id"] == "floresta_sussurros"
+    )
 
 
 # --------------------------------------------------------------------------
@@ -110,23 +113,41 @@ def _state_for_graph():
         "messages": [HumanMessage(content="vou para a Pradaria das Ruínas")],
         "next": "storyteller",
         "player": {
-            "name": "T", "class_name": "Guerreiro", "race": "Humano",
-            "hp": 30, "max_hp": 30, "mana": 5, "max_mana": 5,
-            "stamina": 10, "max_stamina": 10, "gold": 10, "level": 1, "xp": 0,
+            "name": "T",
+            "class_name": "Guerreiro",
+            "race": "Humano",
+            "hp": 30,
+            "max_hp": 30,
+            "mana": 5,
+            "max_mana": 5,
+            "stamina": 10,
+            "max_stamina": 10,
+            "gold": 10,
+            "level": 1,
+            "xp": 0,
             "alignment": "Neutro",
             "attributes": {"str": 12, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10},
-            "inventory": [], "known_abilities": [], "defense": 10,
-            "attack_bonus": 0, "active_conditions": [],
+            "inventory": [],
+            "known_abilities": [],
+            "defense": 10,
+            "attack_bonus": 0,
+            "active_conditions": [],
         },
         "world": wu.starting_world("Nova Arcádia", 1),
-        "campaign_plan": {}, "needs_replan": False,
-        "enemies": [], "party": [], "npcs": {}, "active_npc_name": None,
-        "combat_target": None, "loot_source": None,
+        "campaign_plan": {},
+        "needs_replan": False,
+        "enemies": [],
+        "party": [],
+        "npcs": {},
+        "active_npc_name": None,
+        "combat_target": None,
+        "loot_source": None,
     }
 
 
 def test_graph_travel_end_to_end():
     from main import app
+
     result = app.invoke(_state_for_graph())
     w = result["world"]
     assert w["current_location_id"] == "pradaria_ruinas"

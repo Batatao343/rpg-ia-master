@@ -5,6 +5,7 @@ Atualizado para suportar Memória Híbrida (Game ID e Resumo).
 Fase 10: game_id validado (UUID) na borda, CORS por env, rate limit mínimo,
 log JSON por turno.
 """
+
 import contextvars
 import hashlib
 import json
@@ -100,9 +101,9 @@ app = FastAPI(
 )
 
 
-
 def _current_request_id() -> str | None:
     from observability.telemetry import correlation
+
     return correlation().get("request_id")
 
 
@@ -113,14 +114,22 @@ def _error_code_of(detail: Any) -> str | None:
     """Codigo curto/fechado quando o detail JA e um codigo (nunca prosa)."""
     global _CODE_RE
     import re
+
     _CODE_RE = _CODE_RE or re.compile(r"^[a-z][a-z0-9_.]{1,63}$")
     return detail if isinstance(detail, str) and _CODE_RE.match(detail) else None
 
 
-def _error_response(status: int, detail: Any, *, code: str | None = None,
-                    headers: dict[str, str] | None = None, **extra: Any) -> JSONResponse:
+def _error_response(
+    status: int,
+    detail: Any,
+    *,
+    code: str | None = None,
+    headers: dict[str, str] | None = None,
+    **extra: Any,
+) -> JSONResponse:
     """SPEC-242 R1: envelope unico ``{detail, code, request_id}`` (+ extras aditivos)."""
     from services.error_codes import envelope
+
     rid = _current_request_id()
     body = envelope(status, detail, code=code, request_id=rid, **extra)
     hdrs = dict(headers or {})
@@ -133,21 +142,29 @@ def _error_response(status: int, detail: Any, *, code: str | None = None,
 async def _http_exception_handler(request: Request, exc: StarletteHTTPException):
     """SPEC-241 R3 + SPEC-242: corpo atual preservado + ``code`` + request_id (corpo e header)."""
     from services.error_codes import code_for
+
     code = code_for(exc.status_code, exc.detail, getattr(exc, "code", None))
     request.state.error_code = code
-    return _error_response(exc.status_code, exc.detail, code=code, headers=exc.headers,
-                           **getattr(exc, "extra", {}))
+    return _error_response(
+        exc.status_code, exc.detail, code=code, headers=exc.headers, **getattr(exc, "extra", {})
+    )
 
 
 @app.exception_handler(RequestValidationError)
 async def _validation_exception_handler(request: Request, exc: RequestValidationError):
     """SPEC-241 R3: 422 com o corpo padrao + request_id; o log leva so os ``loc`` (sem valores)."""
     from fastapi.encoders import jsonable_encoder
+
     request.state.error_code = "validation_failed"
     errors = exc.errors()
-    _log_event("http", "validation_failed", level="warning", method=request.method,
-               locs=[".".join(str(p) for p in e.get("loc", ())) for e in errors][:20],
-               error_count=len(errors))
+    _log_event(
+        "http",
+        "validation_failed",
+        level="warning",
+        method=request.method,
+        locs=[".".join(str(p) for p in e.get("loc", ())) for e in errors][:20],
+        error_count=len(errors),
+    )
     rid = _current_request_id()
     body: dict[str, Any] = {"detail": jsonable_encoder(errors), "code": "validation_failed"}
     if rid:
@@ -159,8 +176,11 @@ async def _validation_exception_handler(request: Request, exc: RequestValidation
 async def _incompatible_save_handler(_request, _exc):
     """SPEC-228 R9: save de schema mais novo é recusado, nunca regravado."""
     return _error_response(
-        409, "Este save foi criado por uma versão mais nova do jogo; "
-             "atualize o servidor antes de continuar.", code="save_schema_newer")
+        409,
+        "Este save foi criado por uma versão mais nova do jogo; "
+        "atualize o servidor antes de continuar.",
+        code="save_schema_newer",
+    )
 
 
 @app.exception_handler(_Unauthorized)
@@ -168,10 +188,16 @@ async def _unauthorized_handler(request, exc):
     """SPEC-220 R3: 401 com código fechado; a mensagem interna fica só no servidor
     (SPEC-245 R2: ...mas agora vai para o log, como motivo fechado)."""
     from observability.auth_log import reject, session_reason
+
     code = public_auth_code(exc)
     request.state.error_code = code
-    reject("session_rejected", session_reason(exc), route=request.url.path, public_code=code,
-           source="handler")
+    reject(
+        "session_rejected",
+        session_reason(exc),
+        route=request.url.path,
+        public_code=code,
+        source="handler",
+    )
     return _error_response(401, code)
 
 
@@ -186,12 +212,19 @@ def _log_csrf_rejection(request: Request, code: str) -> None:
     """SPEC-245 R3: motivo fechado; a origem só aparece se estiver na allowlist."""
     from observability.auth_log import origin_host, reject
     from services.auth_sessions import CSRF_COOKIE
+
     reason = code
     if code == "csrf_invalid" and (
-            not request.cookies.get(CSRF_COOKIE) or not request.headers.get("x-csrf-token")):
+        not request.cookies.get(CSRF_COOKIE) or not request.headers.get("x-csrf-token")
+    ):
         reason = "csrf_missing"
-    reject("csrf_rejected", reason, route=request.url.path, method=request.method,
-           origin_host=origin_host(request.headers.get("origin"), _CORS_ORIGINS))
+    reject(
+        "csrf_rejected",
+        reason,
+        route=request.url.path,
+        method=request.method,
+        origin_host=origin_host(request.headers.get("origin"), _CORS_ORIGINS),
+    )
 
 
 @app.exception_handler(CsrfError)
@@ -210,9 +243,9 @@ async def _session_secret_handler(_request, _exc):
 # Fase 10 (R5): CORS restrito por default; configurável via RPG_CORS_ORIGINS
 # (CSV no .env; "*" só se explicitamente configurado).
 _CORS_ORIGINS = [
-    o.strip() for o in os.getenv(
-        "RPG_CORS_ORIGINS", "http://localhost:8000,http://localhost:5173"
-    ).split(",") if o.strip()
+    o.strip()
+    for o in os.getenv("RPG_CORS_ORIGINS", "http://localhost:8000,http://localhost:5173").split(",")
+    if o.strip()
 ]
 
 app.add_middleware(
@@ -220,25 +253,39 @@ app.add_middleware(
     allow_origins=_CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
-    allow_headers=["content-type", "x-csrf-token", "x-request-id", "x-rpg-client", "x-operation-id", "idempotency-key",
-                   "x-rpg-build", "x-rpg-app-version"],
+    allow_headers=[
+        "content-type",
+        "x-csrf-token",
+        "x-request-id",
+        "x-rpg-client",
+        "x-operation-id",
+        "idempotency-key",
+        "x-rpg-build",
+        "x-rpg-app-version",
+    ],
 )
 
 
 from services.body_limit import BodyLimitMiddleware  # SPEC-221 R6
 
-app.add_middleware(BodyLimitMiddleware, default_limit=256 * 1024, per_path={
-    "/account/transcriptions": 8 * 1024 * 1024 + 64 * 1024,
-    # > MAX_WEBHOOK_BYTES: o handler (stream cru) responde o proprio 413 antes do corte do middleware.
-    "/payments/stripe/webhook": 256 * 1024 + 64 * 1024,
-    "/game/new": 64 * 1024,
-    "/game/prologue": 64 * 1024,
-    "/telemetry/client-error": 4 * 1024,   # SPEC-244 R3
-})
+app.add_middleware(
+    BodyLimitMiddleware,
+    default_limit=256 * 1024,
+    per_path={
+        "/account/transcriptions": 8 * 1024 * 1024 + 64 * 1024,
+        # > MAX_WEBHOOK_BYTES: o handler (stream cru) responde o proprio 413 antes do corte do middleware.
+        "/payments/stripe/webhook": 256 * 1024 + 64 * 1024,
+        "/game/new": 64 * 1024,
+        "/game/prologue": 64 * 1024,
+        "/telemetry/client-error": 4 * 1024,  # SPEC-244 R3
+    },
+)
 
 from services.cron_internal import router as _cron_router
 
-app.include_router(_cron_router, include_in_schema=False)  # SPEC-192: bearer-secret auth, no cookies/CSRF flow
+app.include_router(
+    _cron_router, include_in_schema=False
+)  # SPEC-192: bearer-secret auth, no cookies/CSRF flow
 
 
 def _database_profile() -> bool:
@@ -250,7 +297,7 @@ def _session_scoped_path(path: str, query) -> bool:
     SPEC-210 (revisão Sol): `/data/map?game_id=` é a view filtrada de UM save —
     sem a fronteira não haveria principal (404 sempre no perfil DB) nem no-store."""
     if path == _CLIENT_ERROR_PATH:
-        return False      # SPEC-244: erro na tela de login (sem sessao) tambem precisa chegar
+        return False  # SPEC-244: erro na tela de login (sem sessao) tambem precisa chegar
     if path.startswith(("/game", "/account", "/telemetry")):
         return True
     return path == "/data/map" and bool(query.get("game_id"))
@@ -259,8 +306,7 @@ def _session_scoped_path(path: str, query) -> bool:
 @app.middleware("http")
 async def _session_boundary(request: Request, call_next):
     """Auth/CSRF só nos perfis Postgres; legacy loopback permanece intacto."""
-    if not _database_profile() or not _session_scoped_path(
-            request.url.path, request.query_params):
+    if not _database_profile() or not _session_scoped_path(request.url.path, request.query_params):
         return await call_next(request)
     from infrastructure.contracts import Unauthorized
     from infrastructure.request_context import reset_current_principal, set_current_principal
@@ -268,7 +314,7 @@ async def _session_boundary(request: Request, call_next):
 
     # SPEC-220 R8: o ``try`` cobre só identidade + CSRF; ``call_next`` fica fora,
     # então um ValueError do handler volta a ser 500 genérico (nunca 401).
-    blocked = _authfail_blocked(request)       # SPEC-219 R6: sem chamar o verificador
+    blocked = _authfail_blocked(request)  # SPEC-219 R6: sem chamar o verificador
     if blocked is not None:
         return blocked
     try:
@@ -280,7 +326,8 @@ async def _session_boundary(request: Request, call_next):
                 cookie_token=request.cookies.get(CSRF_COOKIE),
                 header_token=request.headers.get("x-csrf-token"),
                 origin=request.headers.get("origin"),
-                allowed_origins=set(_CORS_ORIGINS), signer=signer,
+                allowed_origins=set(_CORS_ORIGINS),
+                signer=signer,
             )
     except CsrfError as exc:
         request.state.error_code = exc.code
@@ -288,48 +335,69 @@ async def _session_boundary(request: Request, call_next):
         return _error_response(403, exc.code)
     except AuthUnavailable:
         from observability.auth_log import reject
+
         request.state.error_code = "auth_unavailable"
-        reject("session_rejected", "upstream_unavailable", route=request.url.path,
-               public_code="auth_unavailable", source="boundary")
+        reject(
+            "session_rejected",
+            "upstream_unavailable",
+            route=request.url.path,
+            public_code="auth_unavailable",
+            source="boundary",
+        )
         return _error_response(503, "auth_unavailable", headers={"Retry-After": "5"})
     except Unauthorized as exc:
         # Sem cookie nao ha verificacao a amplificar: visitante deslogado (bootstrap da SPA) nao
         # consome o balde, so quem apresenta credencial invalida (SPEC-219 R6, revisao Sol).
         from observability.auth_log import reject, session_reason
+
         code = public_auth_code(exc)
         request.state.error_code = code
-        reject("session_rejected", session_reason(exc), level=(
-            "warning" if request.cookies.get("rpg_access") else "debug"),
-            route=request.url.path, public_code=code, source="boundary")
+        reject(
+            "session_rejected",
+            session_reason(exc),
+            level=("warning" if request.cookies.get("rpg_access") else "debug"),
+            route=request.url.path,
+            public_code=code,
+            source="boundary",
+        )
         throttled = _record_authfail(request) if request.cookies.get("rpg_access") else None
         if throttled is not None:
             return throttled
         return _error_response(401, code)
     except ValueError:  # segredo de sessão curto/ausente (CsrfSigner/proof)
         from observability.auth_log import reject
+
         request.state.error_code = "server_misconfigured"
-        reject("session_rejected", "server_misconfigured", route=request.url.path,
-               public_code="server_misconfigured", source="boundary", level="error")
+        reject(
+            "session_rejected",
+            "server_misconfigured",
+            route=request.url.path,
+            public_code="server_misconfigured",
+            source="boundary",
+            level="error",
+        )
         return _error_response(503, "server_misconfigured")
     token = set_current_principal(principal)
     try:
-        over = _owner_rate_limit(request, principal)   # SPEC-219 R2
+        over = _owner_rate_limit(request, principal)  # SPEC-219 R2
         if over is not None:
             return over
         from observability.telemetry import correlation_scope
+
         with correlation_scope(owner_id=principal.user_id) as _corr:
-            request.state.owner_ref = _corr.get("owner_ref")   # SPEC-241: access log
+            request.state.owner_ref = _corr.get("owner_ref")  # SPEC-241: access log
             return await call_next(request)
     finally:
         reset_current_principal(token)
 
 
-AUTHFAIL_LIMIT = (60, 900)                      # SPEC-219 R6: falhas de sessao por IP / 15 min
-_authfail_until: dict[str, float] = {}          # chave -> monotonic ate quando o IP segue bloqueado
+AUTHFAIL_LIMIT = (60, 900)  # SPEC-219 R6: falhas de sessao por IP / 15 min
+_authfail_until: dict[str, float] = {}  # chave -> monotonic ate quando o IP segue bloqueado
 
 
 def _authfail_key(request: Request) -> str:
     from observability.telemetry import pseudonym
+
     return f"authfail:{pseudonym(_client_ip(request))}"
 
 
@@ -348,10 +416,12 @@ def _record_authfail(request: Request) -> "JSONResponse | None":
     """Consome o balde de falhas (compartilhado entre instancias); estourou => 429."""
     from infrastructure.runtime import get_runtime
     from services import abuse_policy
+
     key = _authfail_key(request)
     try:
         decision = get_runtime().rate_limiter.consume(
-            key, limit=AUTHFAIL_LIMIT[0], window_seconds=AUTHFAIL_LIMIT[1])
+            key, limit=AUTHFAIL_LIMIT[0], window_seconds=AUTHFAIL_LIMIT[1]
+        )
     except Exception as exc:  # fail-open (SPEC-219), visivel (SPEC-246 R4)
         abuse_policy.limiter_unavailable("authfail", exc)
         return None
@@ -360,8 +430,13 @@ def _record_authfail(request: Request) -> "JSONResponse | None":
     if len(_authfail_until) > 2000:
         _authfail_until.clear()
     _authfail_until[key] = time.monotonic() + decision.retry_after_seconds
-    abuse_policy.record_block("session", "authfail", ip=_client_ip(request),
-                              retry_after=decision.retry_after_seconds, limit=AUTHFAIL_LIMIT[0])
+    abuse_policy.record_block(
+        "session",
+        "authfail",
+        ip=_client_ip(request),
+        retry_after=decision.retry_after_seconds,
+        limit=AUTHFAIL_LIMIT[0],
+    )
     return _blocked_response("rate_limited", "authfail", decision.retry_after_seconds)
 
 
@@ -376,6 +451,7 @@ def _boundary_principal(request: Request):
         if request.url.path != "/account/delete":
             raise
     from services.account_security import proof_owner
+
     receipt = request.cookies.get("rpg_deletion")
     if receipt:
         owner = proof_owner(receipt, "delete", max_age=604800)
@@ -385,11 +461,13 @@ def _boundary_principal(request: Request):
         # resume only an existing tombstone, never start a deletion.
         if not request.cookies.get(ACCESS_COOKIE):
             raise Unauthorized("account_delete_not_requested")
-        owner = proof_owner(request.cookies.get("rpg_recent"), "recent",
-                            request.cookies[ACCESS_COOKIE])
+        owner = proof_owner(
+            request.cookies.get("rpg_recent"), "recent", request.cookies[ACCESS_COOKIE]
+        )
     with admin_connection(get_runtime().game_store.pool) as db:  # SPEC-224: sem principal ainda
-        requested = db.execute("select 1 from app.account_deletions where owner_id=%s",
-                               (owner,)).fetchone()
+        requested = db.execute(
+            "select 1 from app.account_deletions where owner_id=%s", (owner,)
+        ).fetchone()
     if not requested:
         raise Unauthorized("account_delete_not_requested")
     return Principal(owner, "deletion-retry", str(owner))
@@ -413,14 +491,20 @@ _DOCS_PATHS = {"/docs", "/redoc", "/openapi.json", "/docs/oauth2-redirect"} if _
 
 _ACCESS_LOG_SKIP = frozenset({"/health", "/metrics"})
 # GET 2xx de polling/leitura: debug (anti-ruido); mutacoes e erros seguem em info/warning/error.
-_ACCESS_LOG_QUIET_GET = frozenset({
-    "/game/state", "/game/saves", "/game/map", "/game/codex", "/game/codex/dossiers", "/auth/config",
-})
+_ACCESS_LOG_QUIET_GET = frozenset(
+    {
+        "/game/state",
+        "/game/saves",
+        "/game/map",
+        "/game/codex",
+        "/game/codex/dossiers",
+        "/auth/config",
+    }
+)
 _API_PREFIXES = ("/game", "/account", "/auth", "/payments", "/internal", "/telemetry", "/data")
 
 
-def _access_log(request: Request, route: str, status: int, started: float,
-                request_id: str) -> None:
+def _access_log(request: Request, route: str, status: int, started: float, request_id: str) -> None:
     """SPEC-241 R1: uma linha ``http.request`` por requisicao de API. Nunca levanta."""
     try:
         path = request.url.path
@@ -440,16 +524,28 @@ def _access_log(request: Request, route: str, status: int, started: float,
             if status == 404 and not path.startswith(_API_PREFIXES):
                 level = "debug"
             elif status == 401 and not request.cookies.get("rpg_access"):
-                level = "debug"      # bootstrap da SPA sem cookie
-        elif request.method == "GET" and (path in _ACCESS_LOG_QUIET_GET or path.startswith("/data/")
-                                          or not path.startswith(_API_PREFIXES)):
+                level = "debug"  # bootstrap da SPA sem cookie
+        elif request.method == "GET" and (
+            path in _ACCESS_LOG_QUIET_GET
+            or path.startswith("/data/")
+            or not path.startswith(_API_PREFIXES)
+        ):
             # leitura de polling e navegacao da SPA ("/", rotas client-side): debug (revisao Sol)
             level = "debug"
         _log_event(
-            "http", "request", level=level, method=request.method, route=route, status=status,
-            duration_ms=int((time.perf_counter() - started) * 1000), request_id=request_id,
-            owner_ref=getattr(request.state, "owner_ref", None), client=client,
-            error_code=getattr(request.state, "error_code", None), **build_fields)
+            "http",
+            "request",
+            level=level,
+            method=request.method,
+            route=route,
+            status=status,
+            duration_ms=int((time.perf_counter() - started) * 1000),
+            request_id=request_id,
+            owner_ref=getattr(request.state, "owner_ref", None),
+            client=client,
+            error_code=getattr(request.state, "error_code", None),
+            **build_fields,
+        )
     except Exception:
         pass
 
@@ -474,7 +570,11 @@ def _client_build_fields(request: Request) -> dict[str, Any]:
         fields["client_build"] = build
         client_sha = build.split("+", 1)[0]
         server_sha = _server_git_sha()
-        if client_sha not in {"dev", "other"} and server_sha and not server_sha.startswith(client_sha):
+        if (
+            client_sha not in {"dev", "other"}
+            and server_sha
+            and not server_sha.startswith(client_sha)
+        ):
             fields["build_skew"] = True
     version = request.headers.get("x-rpg-app-version", "").strip()
     if version:
@@ -482,13 +582,23 @@ def _client_build_fields(request: Request) -> dict[str, Any]:
     return fields
 
 
-def _unhandled_response(request: Request, route: str, exc: Exception, request_id: str) -> JSONResponse:
+def _unhandled_response(
+    request: Request, route: str, exc: Exception, request_id: str
+) -> JSONResponse:
     """SPEC-241 R2: 500 com request_id; log com classe + frames, nunca a mensagem."""
     from observability.telemetry import safe_stack
+
     request.state.error_code = "internal_error"
-    _log_event("http", "unhandled_exception", level="error", route=route,
-               method=request.method, error_type=type(exc).__name__,
-               stack=safe_stack(exc), request_id=request_id)
+    _log_event(
+        "http",
+        "unhandled_exception",
+        level="error",
+        route=route,
+        method=request.method,
+        error_type=type(exc).__name__,
+        stack=safe_stack(exc),
+        request_id=request_id,
+    )
     return _error_response(500, "internal_error")
 
 
@@ -502,10 +612,17 @@ async def _correlation_boundary(request: Request, call_next):
     request_id = new_request_id(request.headers.get("x-request-id"))
     started = time.perf_counter()
     route = re.sub(
-        r"/[0-9a-fA-F]{8}-[0-9a-fA-F-]{27,36}(?=/|$)", "/{id}", request.url.path,
+        r"/[0-9a-fA-F]{8}-[0-9a-fA-F-]{27,36}(?=/|$)",
+        "/{id}",
+        request.url.path,
     )
-    with request_scope(request_id), span(
-        "http.request", route=route, method=request.method,
+    with (
+        request_scope(request_id),
+        span(
+            "http.request",
+            route=route,
+            method=request.method,
+        ),
     ):
         try:
             response = await call_next(request)
@@ -524,21 +641,26 @@ async def _correlation_boundary(request: Request, call_next):
             {"route": route, "status_class": f"{response.status_code // 100}xx"},
         )
         metrics.observe(
-            "rpg_http_duration_seconds", {"route": route},
+            "rpg_http_duration_seconds",
+            {"route": route},
             time.perf_counter() - started,
         )
         _access_log(request, route, response.status_code, started, request_id)
         response.headers["X-Request-ID"] = request_id
         response.headers.setdefault("X-Content-Type-Options", "nosniff")
         response.headers.setdefault("Referrer-Policy", "same-origin")
-        response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(self), geolocation=()")
+        response.headers.setdefault(
+            "Permissions-Policy", "camera=(), microphone=(self), geolocation=()"
+        )
         response.headers.setdefault("X-Frame-Options", "DENY")
         if request.url.path.startswith(("/game", "/account", "/auth")) or _session_scoped_path(
-                request.url.path, request.query_params):
+            request.url.path, request.query_params
+        ):
             response.headers.setdefault("Cache-Control", "no-store")  # SPEC-221 R4 / SPEC-210
         if os.getenv("RPG_COOKIE_SECURE", "0") == "1":
-            response.headers.setdefault("Strict-Transport-Security",
-                                        "max-age=63072000; includeSubDomains")
+            response.headers.setdefault(
+                "Strict-Transport-Security", "max-age=63072000; includeSubDomains"
+            )
         if request.url.path not in _DOCS_PATHS:  # swagger UI loads CDN scripts
             response.headers.setdefault("Content-Security-Policy", CONTENT_SECURITY_POLICY)
         return response
@@ -567,6 +689,7 @@ def auth_config(request: Request):
         try:
             from infrastructure.runtime import get_runtime
             from services.auth_sessions import ACCESS_COOKIE
+
             principal = get_runtime().identity_verifier.verify(
                 request.cookies.get(ACCESS_COOKIE),
             )
@@ -574,18 +697,23 @@ def auth_config(request: Request):
         except Exception:
             authenticated = False
     from services.account_security import captcha_config
+
     lifecycle = False
     if required:
         from infrastructure.runtime import get_runtime
         from infrastructure.supabase_identity import SupabaseIdentityProvider
+
         lifecycle = isinstance(get_runtime().identity_verifier, SupabaseIdentityProvider)
-    return {"required": required, "authenticated": authenticated,
-            "lifecycle_available": lifecycle,
-            "email_confirmation_required": _email_confirmation_required(),
-            "captcha": captcha_config(),
-            # SPEC-200 R10: so aparece quando LIGADO (default: ausente => cliente nao envia).
-            **({"client_latency_report": True} if _client_latency_enabled() else {}),
-            **({"user_id": str(principal.user_id)} if principal else {})}
+    return {
+        "required": required,
+        "authenticated": authenticated,
+        "lifecycle_available": lifecycle,
+        "email_confirmation_required": _email_confirmation_required(),
+        "captcha": captcha_config(),
+        # SPEC-200 R10: so aparece quando LIGADO (default: ausente => cliente nao envia).
+        **({"client_latency_report": True} if _client_latency_enabled() else {}),
+        **({"user_id": str(principal.user_id)} if principal else {}),
+    }
 
 
 def _android_refresh_max_age(request: Request | None) -> int | None:
@@ -603,8 +731,9 @@ def _android_refresh_max_age(request: Request | None) -> int | None:
     return min(max(value, 3600), 2592000)
 
 
-def _set_session_cookies(response: Response, tokens, *, clear_deletion: bool = True,
-                         request: Request | None = None) -> str:
+def _set_session_cookies(
+    response: Response, tokens, *, clear_deletion: bool = True, request: Request | None = None
+) -> str:
     from services.auth_sessions import (
         ACCESS_COOKIE,
         CSRF_COOKIE,
@@ -620,13 +749,18 @@ def _set_session_cookies(response: Response, tokens, *, clear_deletion: bool = T
     response.set_cookie(ACCESS_COOKIE, tokens.access_token, **cookie_settings(secure=secure))
     age = _android_refresh_max_age(request)
     response.set_cookie(
-        REFRESH_COOKIE, tokens.refresh_token,
+        REFRESH_COOKIE,
+        tokens.refresh_token,
         **cookie_settings(secure=secure, refresh=True),
         **({"max_age": age} if age else {}),
     )
     response.set_cookie(
-        CSRF_COOKIE, csrf, httponly=False, secure=secure,
-        samesite="strict", path="/",
+        CSRF_COOKIE,
+        csrf,
+        httponly=False,
+        secure=secure,
+        samesite="strict",
+        path="/",
         # SPEC-193: o CSRF acompanha a vida do refresh no cliente nativo (senao /auth/refresh no boot falha).
         **({"max_age": age} if age else {}),
     )
@@ -640,6 +774,7 @@ def auth_login(body: AuthRequest, request: Request, response: Response):
     from infrastructure.contracts import Unauthorized
     from infrastructure.runtime import get_runtime
     from services.account_security import auth_limit, auth_success, captcha_config
+
     runtime = get_runtime()
     provider = runtime.identity_verifier
     captcha_mode = captcha_config()["mode"]
@@ -680,12 +815,15 @@ def auth_signup(body: SignupRequest, request: Request, response: Response):
     from infrastructure.contracts import Unauthorized
     from infrastructure.runtime import get_runtime
     from services.account_security import GENERIC_MESSAGE
+
     _auth_abuse(request, action="signup", email=body.email, captcha_token=body.captcha_token)
     try:
         from services.account_security import captcha_config
+
         if captcha_config()["mode"] == "gotrue":
             tokens = get_runtime().identity_verifier.signup(
-                body.email, body.password, captcha_token=body.captcha_token)
+                body.email, body.password, captcha_token=body.captcha_token
+            )
         else:
             tokens = get_runtime().identity_verifier.signup(body.email, body.password)
         if tokens is None or _email_confirmation_required():
@@ -705,20 +843,37 @@ def auth_signup(body: SignupRequest, request: Request, response: Response):
 
 
 def _email_confirmation_required() -> bool:
-    return os.getenv("RPG_AUTH_EMAIL_CONFIRMATION_REQUIRED", "1" if os.getenv("RPG_RUNTIME_PROFILE", "").startswith("hosted") else "0") == "1"
+    return (
+        os.getenv(
+            "RPG_AUTH_EMAIL_CONFIRMATION_REQUIRED",
+            "1" if os.getenv("RPG_RUNTIME_PROFILE", "").startswith("hosted") else "0",
+        )
+        == "1"
+    )
 
 
 def _set_recent_cookie(response: Response, owner, access: str) -> None:
     from services.account_security import RECENT_COOKIE, proof
-    response.set_cookie(RECENT_COOKIE, proof(owner, "recent", access), max_age=300,
-                        httponly=True, secure=os.getenv("RPG_COOKIE_SECURE", "0") == "1", samesite="strict", path="/")
+
+    response.set_cookie(
+        RECENT_COOKIE,
+        proof(owner, "recent", access),
+        max_age=300,
+        httponly=True,
+        secure=os.getenv("RPG_COOKIE_SECURE", "0") == "1",
+        samesite="strict",
+        path="/",
+    )
 
 
 def _lifecycle_runtime():
     from infrastructure.runtime import get_runtime
     from infrastructure.supabase_identity import SupabaseIdentityProvider
+
     runtime = get_runtime()
-    if not _database_profile() or not isinstance(runtime.identity_verifier, SupabaseIdentityProvider):
+    if not _database_profile() or not isinstance(
+        runtime.identity_verifier, SupabaseIdentityProvider
+    ):
         raise HTTPException(404, "lifecycle_unavailable")
     return runtime
 
@@ -730,19 +885,24 @@ def _require_allowed_origin(request: Request) -> None:
         raise HTTPException(403, "origin_denied")
 
 
-def _auth_abuse(request: Request, *, action: str, email: str = "", captcha_token: str | None = None) -> None:
+def _auth_abuse(
+    request: Request, *, action: str, email: str = "", captcha_token: str | None = None
+) -> None:
     from infrastructure.contracts import Unauthorized
     from infrastructure.runtime import get_runtime
     from services.account_security import auth_limit, validate_captcha
+
     _require_allowed_origin(request)
     runtime = get_runtime()
     auth_limit(runtime, request, action=action, email=email)
     from services.account_security import captcha_config
+
     captcha_mode = captcha_config()["mode"]
     if captcha_mode not in {"app", "gotrue"}:
         raise HTTPException(503, "captcha_unavailable")
     if action in {"signup", "reset", "verify"} or (
-            captcha_mode == "gotrue" and action in {"login", "reauth"}):
+        captcha_mode == "gotrue" and action in {"login", "reauth"}
+    ):
         try:
             validate_captcha(captcha_token, remote_ip=_client_ip(request), action=action)
         except ValueError:
@@ -778,15 +938,18 @@ def auth_email_request(body: EmailRequest, request: Request):
     from observability.metrics import metrics
     from observability.telemetry import correlation, safe_json
     from services.account_security import GENERIC_MESSAGE
+
     runtime = _lifecycle_runtime()
     recovery = request.url.path == "/auth/reset/request"
     action = "reset" if recovery else "verify"
     _auth_abuse(request, action=action, email=body.email, captcha_token=body.captcha_token)
     try:
         from services.account_security import captcha_config
+
         if captcha_config()["mode"] == "gotrue":
-            runtime.identity_verifier.request_email(body.email, recovery=recovery,
-                                                    captcha_token=body.captcha_token)
+            runtime.identity_verifier.request_email(
+                body.email, recovery=recovery, captcha_token=body.captcha_token
+            )
         else:
             runtime.identity_verifier.request_email(body.email, recovery=recovery)
     except Unauthorized as exc:
@@ -794,24 +957,36 @@ def auth_email_request(body: EmailRequest, request: Request):
         raise HTTPException(403, public_auth_code(exc)) from None
     except (AuthEmailDeliveryError, httpx.HTTPError) as exc:
         status_class = exc.status_class if isinstance(exc, AuthEmailDeliveryError) else "network"
-        metrics.increment("rpg_auth_email_delivery_failures_total",
-                          {"action": action, "status_class": status_class})
-        logging.getLogger("rpg.account").warning(safe_json({
-            "event": "auth.email_delivery_failed", "flow": action,
-            "status_class": status_class, "request_id": correlation().get("request_id"),
-        }))
+        metrics.increment(
+            "rpg_auth_email_delivery_failures_total",
+            {"action": action, "status_class": status_class},
+        )
+        logging.getLogger("rpg.account").warning(
+            safe_json(
+                {
+                    "event": "auth.email_delivery_failed",
+                    "flow": action,
+                    "status_class": status_class,
+                    "request_id": correlation().get("request_id"),
+                }
+            )
+        )
     return {"message": GENERIC_MESSAGE}
 
 
 @app.post("/auth/verify")
 def auth_verify_email(body: VerifyEmailRequest, request: Request, response: Response):
     from infrastructure.contracts import Unauthorized
+
     runtime = _lifecycle_runtime()
     _auth_abuse(request, action="verify_link")
     try:
         tokens = runtime.identity_verifier.verify_email(body.token_hash)
         runtime.identity_verifier.verify(tokens.access_token)
-        return {"authenticated": True, "csrf_token": _set_session_cookies(response, tokens, request=request)}
+        return {
+            "authenticated": True,
+            "csrf_token": _set_session_cookies(response, tokens, request=request),
+        }
     except Unauthorized as exc:
         raise HTTPException(400, public_auth_code(exc)) from None
 
@@ -819,6 +994,7 @@ def auth_verify_email(body: VerifyEmailRequest, request: Request, response: Resp
 def _clear_auth_cookies(response: Response, *, keep_csrf: bool = False) -> None:
     from services.account_security import RECENT_COOKIE
     from services.auth_sessions import ACCESS_COOKIE, CSRF_COOKIE, REFRESH_COOKIE
+
     response.delete_cookie(ACCESS_COOKIE, path="/")
     response.delete_cookie(REFRESH_COOKIE, path="/auth/refresh")
     response.delete_cookie(RECENT_COOKIE, path="/")
@@ -829,6 +1005,7 @@ def _clear_auth_cookies(response: Response, *, keep_csrf: bool = False) -> None:
 @app.post("/auth/reset/confirm")
 def auth_reset_confirm(body: ResetPasswordRequest, request: Request, response: Response):
     from infrastructure.contracts import Unauthorized
+
     runtime = _lifecycle_runtime()
     _auth_abuse(request, action="reset_link")
     try:
@@ -848,15 +1025,18 @@ class ReauthRequest(BaseModel):
 def auth_reauthenticate(body: ReauthRequest, request: Request, response: Response):
     from infrastructure.contracts import Unauthorized
     from services.auth_sessions import ACCESS_COOKIE
+
     runtime = _lifecycle_runtime()
     _auth_abuse(request, action="reauth", captcha_token=body.captcha_token)
     try:
         _validate_auth_csrf(request)
         access = request.cookies.get(ACCESS_COOKIE)
         from services.account_security import captcha_config
+
         if captcha_config()["mode"] == "gotrue":
             owner = runtime.identity_verifier.reauthenticate(
-                access, body.password, captcha_token=body.captcha_token)
+                access, body.password, captcha_token=body.captcha_token
+            )
         else:
             owner = runtime.identity_verifier.reauthenticate(access, body.password)
         _set_recent_cookie(response, owner, access)
@@ -869,8 +1049,16 @@ def _require_recent(request: Request, owner) -> None:
     from infrastructure.contracts import Unauthorized
     from services.account_security import RECENT_COOKIE, proof_owner
     from services.auth_sessions import ACCESS_COOKIE
+
     try:
-        if proof_owner(request.cookies.get(RECENT_COOKIE), "recent", request.cookies.get(ACCESS_COOKIE) or "") != owner:
+        if (
+            proof_owner(
+                request.cookies.get(RECENT_COOKIE),
+                "recent",
+                request.cookies.get(ACCESS_COOKIE) or "",
+            )
+            != owner
+        ):
             raise Unauthorized("recent_session_required")
     except Unauthorized:
         raise HTTPException(403, "recent_session_required") from None
@@ -882,11 +1070,20 @@ def account_export(request: Request):
 
     from infrastructure.account_lifecycle import PostgresAccountLifecycle
     from infrastructure.request_context import current_principal
+
     runtime = _lifecycle_runtime()
     principal = current_principal()
     _require_recent(request, principal.user_id)
-    data = PostgresAccountLifecycle(runtime.game_store.pool, runtime.identity_verifier, runtime.blob_store).export(principal)
-    return JSONResponse(jsonable_encoder(data), headers={"Content-Disposition": 'attachment; filename="valoria-account.json"', "Cache-Control": "no-store"})
+    data = PostgresAccountLifecycle(
+        runtime.game_store.pool, runtime.identity_verifier, runtime.blob_store
+    ).export(principal)
+    return JSONResponse(
+        jsonable_encoder(data),
+        headers={
+            "Content-Disposition": 'attachment; filename="valoria-account.json"',
+            "Cache-Control": "no-store",
+        },
+    )
 
 
 @app.post("/game/{game_id}/audit-export")
@@ -902,6 +1099,7 @@ def game_audit_export(game_id: str, request: Request):
     from observability.telemetry import pseudonym
     from services.audit_export import bundle_zip
     from services.audit_redaction import AuditRedactionError
+
     principal = current_principal()
     _require_recent(request, principal.user_id)
     try:
@@ -910,16 +1108,27 @@ def game_audit_export(game_id: str, request: Request):
         raise HTTPException(404, "game_not_found") from None
     runtime = get_runtime()
     decision = runtime.rate_limiter.consume(
-        f"audit-export:{pseudonym(principal.user_id)}", limit=3, window_seconds=600)
+        f"audit-export:{pseudonym(principal.user_id)}", limit=3, window_seconds=600
+    )
     if not decision.allowed:
         from services.abuse_policy import record_block
-        record_block("audit_export", "owner", owner=principal.user_id,
-                     retry_after=decision.retry_after_seconds, limit=3)
-        raise HTTPException(429, "audit_export_rate_limit",
-                            headers={"Retry-After": str(decision.retry_after_seconds)})
+
+        record_block(
+            "audit_export",
+            "owner",
+            owner=principal.user_id,
+            retry_after=decision.retry_after_seconds,
+            limit=3,
+        )
+        raise HTTPException(
+            429,
+            "audit_export_rate_limit",
+            headers={"Retry-After": str(decision.retry_after_seconds)},
+        )
     try:
-        source = PostgresAuditSource(runtime.game_store.pool, runtime.game_store,
-                                     principal).load(game_uuid)
+        source = PostgresAuditSource(runtime.game_store.pool, runtime.game_store, principal).load(
+            game_uuid
+        )
     except AccountDeleted:
         raise HTTPException(401, "account_deleted") from None
     if source is None:
@@ -930,9 +1139,14 @@ def game_audit_export(game_id: str, request: Request):
     except AuditRedactionError:
         raise HTTPException(500, "audit_export_redaction_failed") from None
     filename = f"valoria-auditoria-{pseudonym(game_uuid)}.zip"
-    return Response(content=data, media_type="application/zip", headers={
-        "Content-Disposition": f'attachment; filename="{filename}"',
-        "Cache-Control": "no-store"})
+    return Response(
+        content=data,
+        media_type="application/zip",
+        headers={
+            "Content-Disposition": f'attachment; filename="{filename}"',
+            "Cache-Control": "no-store",
+        },
+    )
 
 
 class DeleteAccountRequest(BaseModel):
@@ -944,11 +1158,14 @@ def account_delete(body: DeleteAccountRequest, request: Request):
     from infrastructure.account_lifecycle import PostgresAccountLifecycle
     from infrastructure.request_context import current_principal
     from services.account_security import DELETE_COOKIE, proof
+
     runtime = _lifecycle_runtime()
     principal = current_principal()
     if principal.issuer != "deletion-retry":
         _require_recent(request, principal.user_id)
-    lifecycle = PostgresAccountLifecycle(runtime.game_store.pool, runtime.identity_verifier, runtime.blob_store)
+    lifecycle = PostgresAccountLifecycle(
+        runtime.game_store.pool, runtime.identity_verifier, runtime.blob_store
+    )
     if principal.issuer != "deletion-retry":
         lifecycle.begin(principal.user_id)
     try:
@@ -957,16 +1174,33 @@ def account_delete(body: DeleteAccountRequest, request: Request):
         import logging
 
         from observability.telemetry import correlation, pseudonym, safe_json
-        logging.getLogger("rpg.account").warning(safe_json({
-            "event": "account.delete.finish_failed", "owner_ref": pseudonym(principal.user_id),
-            "request_id": correlation().get("request_id"), "error_type": type(exc).__name__,
-        }))
+
+        logging.getLogger("rpg.account").warning(
+            safe_json(
+                {
+                    "event": "account.delete.finish_failed",
+                    "owner_ref": pseudonym(principal.user_id),
+                    "request_id": correlation().get("request_id"),
+                    "error_type": type(exc).__name__,
+                }
+            )
+        )
         status = "deleting"  # Durable denial remains; receipt enables a safe retry.
-    response = JSONResponse({"status": status}, status_code=200 if status == "deleted" else 202,
-                            headers={"Cache-Control": "no-store"})
+    response = JSONResponse(
+        {"status": status},
+        status_code=200 if status == "deleted" else 202,
+        headers={"Cache-Control": "no-store"},
+    )
     _clear_auth_cookies(response, keep_csrf=True)
-    response.set_cookie(DELETE_COOKIE, proof(principal.user_id, "delete"), max_age=604800,
-                        httponly=True, secure=os.getenv("RPG_COOKIE_SECURE", "0") == "1", samesite="strict", path="/account/delete")
+    response.set_cookie(
+        DELETE_COOKIE,
+        proof(principal.user_id, "delete"),
+        max_age=604800,
+        httponly=True,
+        secure=os.getenv("RPG_COOKIE_SECURE", "0") == "1",
+        samesite="strict",
+        path="/account/delete",
+    )
     return response
 
 
@@ -976,10 +1210,12 @@ def _validate_auth_csrf(request: Request) -> None:
         CsrfSigner,
         validate_mutation_request,
     )
+
     validate_mutation_request(
         cookie_token=request.cookies.get(CSRF_COOKIE),
         header_token=request.headers.get("x-csrf-token"),
-        origin=request.headers.get("origin"), allowed_origins=set(_CORS_ORIGINS),
+        origin=request.headers.get("origin"),
+        allowed_origins=set(_CORS_ORIGINS),
         signer=CsrfSigner(os.getenv("RPG_SESSION_SECRET", "")),
     )
 
@@ -1011,8 +1247,11 @@ def auth_logout(request: Request, response: Response):
     from services.auth_sessions import ACCESS_COOKIE, CSRF_COOKIE, REFRESH_COOKIE
 
     _validate_auth_csrf(request)  # CsrfError => 403 (handler), nunca 500
-    _revoke_session(get_runtime().identity_verifier, request.cookies.get(ACCESS_COOKIE),
-                    request.cookies.get(REFRESH_COOKIE))
+    _revoke_session(
+        get_runtime().identity_verifier,
+        request.cookies.get(ACCESS_COOKIE),
+        request.cookies.get(REFRESH_COOKIE),
+    )
     response.delete_cookie(ACCESS_COOKIE, path="/")
     response.delete_cookie(CSRF_COOKIE, path="/")
     response.delete_cookie(REFRESH_COOKIE, path="/auth/refresh")
@@ -1053,10 +1292,17 @@ def _revoke_session(identity, access: str | None, refresh: str | None) -> None:
     except Unauthorized:
         return  # refresh já rotacionado/revogado: nada a revogar
     except Exception as exc:  # upstream/DB fora do ar: cookies ainda são limpos
-        logging.getLogger("rpg.account").warning(safe_json({
-            "event": "auth.logout.revoke_failed", "stage": stage,
-            "error_type": type(exc).__name__, "request_id": correlation().get("request_id"),
-        }))
+        logging.getLogger("rpg.account").warning(
+            safe_json(
+                {
+                    "event": "auth.logout.revoke_failed",
+                    "stage": stage,
+                    "error_type": type(exc).__name__,
+                    "request_id": correlation().get("request_id"),
+                }
+            )
+        )
+
 
 # Fase 10 (R7) + SPEC-239: 1 linha JSON por turno; handler central em stdout.
 from observability.logging_setup import configure_logging
@@ -1073,11 +1319,14 @@ _turn_logger = logging.getLogger("rpg.turn")
 # síncrono roda numa thread com contexto próprio; zero vazamento entre turnos).
 # Dev-only: os campos vão no log `rpg.turn`, NUNCA no GameResponse.
 _llm_turn_events: contextvars.ContextVar = contextvars.ContextVar(
-    "rpg_llm_turn_events", default=None)
+    "rpg_llm_turn_events", default=None
+)
 _llm_attempt_events: contextvars.ContextVar = contextvars.ContextVar(
-    "rpg_llm_attempt_events", default=None)
+    "rpg_llm_attempt_events", default=None
+)
 _embedding_attempt_events: contextvars.ContextVar = contextvars.ContextVar(
-    "rpg_embedding_attempt_events", default=None)
+    "rpg_embedding_attempt_events", default=None
+)
 
 
 def _embedding_telemetry_hook(event: dict) -> None:
@@ -1094,11 +1343,16 @@ def _captured_usage(claim):
         operation_id=claim.operation_id,
         component=f"llm:{claim.lease_token}",
     )
-    events.extend(normalize_attempts(
-        _embedding_attempt_events.get() or [], operation_id=claim.operation_id,
-        component=f"embedding:{claim.lease_token}", category="embedding",
-    ))
+    events.extend(
+        normalize_attempts(
+            _embedding_attempt_events.get() or [],
+            operation_id=claim.operation_id,
+            component=f"embedding:{claim.lease_token}",
+            category="embedding",
+        )
+    )
     return events
+
 
 # Hardening 2026-08-11: mutações do mesmo save são serializadas no processo.
 # A Fase 10b substituirá isto por transação/lock distribuído no storage.
@@ -1121,19 +1375,28 @@ def _game_lock(game_id: str | None) -> threading.RLock:
         return _game_locks.setdefault(key, threading.RLock())
 
 
-def _telemetry_hook(provider: str, model: str, tier, latency_ms: int,
-                    fell_back: bool) -> None:
+def _telemetry_hook(provider: str, model: str, tier, latency_ms: int, fell_back: bool) -> None:
     from observability.telemetry import span
+
     with span(
-        "llm.invoke", provider=provider, tier=getattr(tier, "value", str(tier)),
-        latency_ms=latency_ms, fell_back=fell_back,
+        "llm.invoke",
+        provider=provider,
+        tier=getattr(tier, "value", str(tier)),
+        latency_ms=latency_ms,
+        fell_back=fell_back,
     ):
         pass
     acc = _llm_turn_events.get()
     if acc is not None:
-        acc.append({"provider": provider, "model": model,
-                    "tier": getattr(tier, "value", str(tier)),
-                    "latency_ms": int(latency_ms), "fell_back": bool(fell_back)})
+        acc.append(
+            {
+                "provider": provider,
+                "model": model,
+                "tier": getattr(tier, "value", str(tier)),
+                "latency_ms": int(latency_ms),
+                "fell_back": bool(fell_back),
+            }
+        )
 
 
 set_llm_telemetry_hook(_telemetry_hook)
@@ -1144,11 +1407,16 @@ def _safe_error_type(value: Any) -> str | None:
     if not value:
         return None
     text = str(value)
-    return text if len(text) <= 60 and text.replace("_", "").replace(".", "").replace(":", "").isalnum() else "other"
+    return (
+        text
+        if len(text) <= 60 and text.replace("_", "").replace(".", "").replace(":", "").isalnum()
+        else "other"
+    )
 
 
 def _attempt_telemetry_hook(event: LLMAttemptEvent) -> None:
     from observability.metrics import metrics
+
     tier = getattr(event.tier, "value", str(event.tier))
     metrics.increment(
         "rpg_llm_attempts_total",
@@ -1159,11 +1427,18 @@ def _attempt_telemetry_hook(event: LLMAttemptEvent) -> None:
         {"provider": event.provider, "tier": tier, "outcome": event.outcome},
         max(0, int(event.latency_ms)) / 1000,
     )
-    measured = normalize_attempts([{
-        "provider": event.provider, "model": event.model,
-        "outcome": event.outcome, "usage": event.usage,
-        "network_attempted": event.outcome not in {"build_error", "circuit_open"},
-    }], operation_id=uuid.UUID(int=0))
+    measured = normalize_attempts(
+        [
+            {
+                "provider": event.provider,
+                "model": event.model,
+                "outcome": event.outcome,
+                "usage": event.usage,
+                "network_attempted": event.outcome not in {"build_error", "circuit_open"},
+            }
+        ],
+        operation_id=uuid.UUID(int=0),
+    )
     for item in measured:
         metrics.increment(
             "rpg_llm_cost_usd_total",
@@ -1172,41 +1447,48 @@ def _attempt_telemetry_hook(event: LLMAttemptEvent) -> None:
         )
     try:
         from observability.latency import current_timeline
+
         _tl = current_timeline()
         if _tl is not None and event.outcome not in {"build_error", "circuit_open"}:
-            _tl.note_attempt(tier)   # SPEC-200 R17: chamadas por fase
+            _tl.note_attempt(tier)  # SPEC-200 R17: chamadas por fase
     except Exception:
         pass
     acc = _llm_attempt_events.get()
     if acc is not None:
         network_attempted = event.outcome not in {"build_error", "circuit_open"}
-        acc.append({
-            "provider": event.provider,
-            "model": event.model,
-            "tier": tier,
-            "attempt_index": int(event.attempt_index),
-            "latency_ms": int(event.latency_ms),
-            "fell_back": bool(event.fell_back),
-            "outcome": event.outcome,
-            "structured": bool(event.structured),
-            "network_attempted": network_attempted,
-            "usage": dict(event.usage) if event.usage else None,
-            "http_status": int(getattr(event, "http_status", 0) or 0),
-            "error_type": _safe_error_type(getattr(event, "error_type", None) or event.error),
-        })
+        acc.append(
+            {
+                "provider": event.provider,
+                "model": event.model,
+                "tier": tier,
+                "attempt_index": int(event.attempt_index),
+                "latency_ms": int(event.latency_ms),
+                "fell_back": bool(event.fell_back),
+                "outcome": event.outcome,
+                "structured": bool(event.structured),
+                "network_attempted": network_attempted,
+                "usage": dict(event.usage) if event.usage else None,
+                "http_status": int(getattr(event, "http_status", 0) or 0),
+                "error_type": _safe_error_type(getattr(event, "error_type", None) or event.error),
+            }
+        )
 
 
 set_llm_attempt_telemetry_hook(_attempt_telemetry_hook)
 
 
-def _llm_log_fields(events: list[dict] | None,
-                    attempts: list[dict] | None = None) -> dict[str, Any]:
+def _llm_log_fields(
+    events: list[dict] | None, attempts: list[dict] | None = None
+) -> dict[str, Any]:
     events = events or []
     attempts = attempts or []
     network_attempts = [
-        event for event in attempts
-        if event.get("network_attempted",
-                     event.get("outcome") not in {"build_error", "circuit_open"})]
+        event
+        for event in attempts
+        if event.get(
+            "network_attempted", event.get("outcome") not in {"build_error", "circuit_open"}
+        )
+    ]
     skipped = [event for event in attempts if event not in network_attempts]
     cost_events = _usage_attempts(events, attempts)
     normalized = normalize_attempts(cost_events, operation_id=uuid.UUID(int=0))
@@ -1214,36 +1496,35 @@ def _llm_log_fields(events: list[dict] | None,
         "llm_calls": len(events),
         "llm_requests": len(network_attempts) if attempts else len(events),
         "llm_attempts": len(attempts),
-        "llm_failures": sum(
-            1 for event in network_attempts if event.get("outcome") != "success"),
+        "llm_failures": sum(1 for event in network_attempts if event.get("outcome") != "success"),
         "llm_skipped": len(skipped),
-        "llm_attempt_outcomes": dict(Counter(
-            event.get("outcome") or "?" for event in attempts)),
+        "llm_attempt_outcomes": dict(Counter(event.get("outcome") or "?" for event in attempts)),
         "llm_providers": dict(Counter(e.get("provider") or "?" for e in events)),
         "fell_back": any(e.get("fell_back") for e in events),
         "cost_usd_est": round(float(operation_cost(normalized)), 9),
-        "cost_basis": "estimated" if any(not item.billing_exact for item in normalized
-                                         if item.counts_as_spend)
-                      else "normalized",
+        "cost_basis": "estimated"
+        if any(not item.billing_exact for item in normalized if item.counts_as_spend)
+        else "normalized",
         # SPEC-236 R2: provider failures without usage are counted apart, never as spend.
         "llm_failed_no_usage": sum(1 for item in normalized if not item.counts_as_spend),
         # SPEC-248 R4: classe de erro (top 5) e status HTTP por tentativa, sem texto de provider
-        "llm_errors": dict(Counter(
-            event.get("error_type") for event in attempts
-            if event.get("outcome") != "success" and event.get("error_type")).most_common(5)),
-        "llm_http_statuses": dict(Counter(
-            str(event.get("http_status")) for event in attempts if event.get("http_status"))),
+        "llm_errors": dict(
+            Counter(
+                event.get("error_type")
+                for event in attempts
+                if event.get("outcome") != "success" and event.get("error_type")
+            ).most_common(5)
+        ),
+        "llm_http_statuses": dict(
+            Counter(str(event.get("http_status")) for event in attempts if event.get("http_status"))
+        ),
     }
 
 
-def _usage_attempts(events: list[dict] | None,
-                    attempts: list[dict] | None) -> list[dict]:
+def _usage_attempts(events: list[dict] | None, attempts: list[dict] | None) -> list[dict]:
     if attempts:
         return list(attempts)
-    return [
-        {**event, "outcome": "success", "network_attempted": True}
-        for event in (events or [])
-    ]
+    return [{**event, "outcome": "success", "network_attempted": True} for event in (events or [])]
 
 
 def _resolve_save_file(game_id: str | None) -> str | None:
@@ -1264,13 +1545,18 @@ def _reject_memorial(state: dict) -> None:
     """Fase 4.6 (R7) + auditoria A2: save morto é MEMORIAL — nenhum endpoint
     de mutação (action/equip/levelup) toca nele."""
     if state.get("game_over"):
-        raise HTTPException(status_code=409,
-                            detail="Esta saga terminou. A crônica permanece como memorial — comece uma nova jornada.")
-    # SPEC-233 R9: laboratório encerrado não vira campanha (sem XP/RAG/viagem).
-    if (state.get("combat_simulation") or {}).get("enabled")             and not (state.get("combat") or {}).get("active"):
         raise HTTPException(
             status_code=409,
-            detail="simulation_finished: o laboratório de combate terminou — reinicie a simulação.")
+            detail="Esta saga terminou. A crônica permanece como memorial — comece uma nova jornada.",
+        )
+    # SPEC-233 R9: laboratório encerrado não vira campanha (sem XP/RAG/viagem).
+    if (state.get("combat_simulation") or {}).get("enabled") and not (
+        state.get("combat") or {}
+    ).get("active"):
+        raise HTTPException(
+            status_code=409,
+            detail="simulation_finished: o laboratório de combate terminou — reinicie a simulação.",
+        )
 
 
 def _reject_archived(state: dict) -> None:
@@ -1278,9 +1564,11 @@ def _reject_archived(state: dict) -> None:
     ÓRFÃO. Somente-leitura — nenhuma ação o toca (409, nunca 500)."""
     if state.get("archived"):
         raise api_error(
-            409, "game_archived",
+            409,
+            "game_archived",
             detail=state.get("archived_reason")
-            or "Personagem arquivado por migração de sistema — comece uma nova jornada.")
+            or "Personagem arquivado por migração de sistema — comece uma nova jornada.",
+        )
 
 
 # Fase 10 (R6): rate limit mínimo por IP (janela deslizante em memória).
@@ -1317,6 +1605,7 @@ async def _rate_limit_metrics(request: Request, call_next):
         hits.popleft()
     if len(hits) >= _METRICS_RATE_PER_MIN:
         from services.abuse_policy import record_block
+
         record_block("metrics", "ip", ip=ip, retry_after=60, limit=_METRICS_RATE_PER_MIN)
         return _error_response(429, "rate_limited", headers={"Retry-After": "60"})
     hits.append(now)
@@ -1325,14 +1614,19 @@ async def _rate_limit_metrics(request: Request, call_next):
 
 def _client_ip(request: Request) -> str:
     from services.abuse_policy import client_ip  # SPEC-219 R4
+
     return client_ip(request)
 
 
-def _blocked_response(detail: str, scope: str, retry_after: int, *, status: int = 429) -> JSONResponse:
+def _blocked_response(
+    detail: str, scope: str, retry_after: int, *, status: int = 429
+) -> JSONResponse:
     from services.abuse_policy import rate_limited_body
+
     body = rate_limited_body(detail, scope, retry_after)
-    return _error_response(status, body.pop("detail"),
-                           headers={"Retry-After": str(max(1, int(retry_after)))}, **body)
+    return _error_response(
+        status, body.pop("detail"), headers={"Retry-After": str(max(1, int(retry_after)))}, **body
+    )
 
 
 @app.middleware("http")
@@ -1342,6 +1636,7 @@ async def _rate_limit(request: Request, call_next):
     if _rate_limit_max() > 0 and request.url.path == "/metrics":
         return await _rate_limit_metrics(request, call_next)
     from services import abuse_policy
+
     cls = abuse_policy.classify(request.method, request.url.path)
     if cls is None:
         return await call_next(request)
@@ -1352,11 +1647,14 @@ async def _rate_limit(request: Request, call_next):
     if _database_profile():
         from infrastructure.runtime import get_runtime
         from observability.telemetry import pseudonym
+
         decision = get_runtime().rate_limiter.consume(
-            f"ip:{pseudonym(ip)}:{cls.name}", limit=ip_limit, window_seconds=cls.window_s)
+            f"ip:{pseudonym(ip)}:{cls.name}", limit=ip_limit, window_seconds=cls.window_s
+        )
         if not decision.allowed:
-            abuse_policy.record_block(cls.name, "ip", ip=ip, retry_after=decision.retry_after_seconds,
-                                      limit=ip_limit)
+            abuse_policy.record_block(
+                cls.name, "ip", ip=ip, retry_after=decision.retry_after_seconds, limit=ip_limit
+            )
             return _blocked_response("rate_limited", "ip", decision.retry_after_seconds)
         return await call_next(request)
     # legacy: janela deslizante em memoria (R11), mesma lista de classes.
@@ -1385,6 +1683,7 @@ app.middleware("http")(_correlation_boundary)
 def _owner_rate_limit(request: Request, principal) -> "JSONResponse | None":
     """SPEC-219 R2: limite por owner da classe (perfis DB). Falha do limitador NAO derruba a rota."""
     from services import abuse_policy
+
     cls = abuse_policy.classify(request.method, request.url.path)
     if cls is None or request.url.path in _TURN_BUDGET_PATHS:
         return None
@@ -1393,15 +1692,22 @@ def _owner_rate_limit(request: Request, principal) -> "JSONResponse | None":
         return None
     try:
         from infrastructure.runtime import get_runtime
+
         decision = get_runtime().rate_limiter.consume(
-            f"user:{principal.user_id}:{cls.name}", limit=owner_limit, window_seconds=cls.window_s)
+            f"user:{principal.user_id}:{cls.name}", limit=owner_limit, window_seconds=cls.window_s
+        )
     except Exception as exc:  # fail-open (SPEC-219), visivel (SPEC-246 R4)
         abuse_policy.limiter_unavailable("owner_minute", exc)
         return None
     if decision.allowed:
         return None
-    abuse_policy.record_block(cls.name, "owner", owner=principal.user_id,
-                              retry_after=decision.retry_after_seconds, limit=owner_limit)
+    abuse_policy.record_block(
+        cls.name,
+        "owner",
+        owner=principal.user_id,
+        retry_after=decision.retry_after_seconds,
+        limit=owner_limit,
+    )
     return _blocked_response("rate_limited", "owner", decision.retry_after_seconds)
 
 
@@ -1413,8 +1719,11 @@ class QuotaExceeded(HTTPException):
     """429/503 de abuso levantado dentro de um handler (corpo completo via exception_handler)."""
 
     def __init__(self, detail: str, scope: str, retry_after: int, status_code: int = 429) -> None:
-        super().__init__(status_code=status_code, detail=detail,
-                         headers={"Retry-After": str(max(1, int(retry_after)))})
+        super().__init__(
+            status_code=status_code,
+            detail=detail,
+            headers={"Retry-After": str(max(1, int(retry_after)))},
+        )
         self.scope = scope
         self.retry_after_seconds = int(retry_after)
 
@@ -1432,10 +1741,13 @@ def _enforce_owner_budget(cls_name: str, *, minute: bool = False, daily: bool = 
     from infrastructure.runtime import get_runtime
     from services import abuse_policy
     from services.daily_spend_cap import text_cap_exceeded
+
     principal = current_principal()
     runtime = get_runtime()
+
     def _reader():
         from infrastructure.finops_reader import PostgresFinopsReader
+
         return PostgresFinopsReader(runtime.game_store.pool)
 
     if text_cap_exceeded(_reader):
@@ -1447,10 +1759,18 @@ def _enforce_owner_budget(cls_name: str, *, minute: bool = False, daily: bool = 
         _ip, owner_limit = abuse_policy.limits_for(cls)
         if owner_limit > 0:
             decision = runtime.rate_limiter.consume(
-                f"user:{principal.user_id}:{cls.name}", limit=owner_limit, window_seconds=cls.window_s)
+                f"user:{principal.user_id}:{cls.name}",
+                limit=owner_limit,
+                window_seconds=cls.window_s,
+            )
             if not decision.allowed:
-                abuse_policy.record_block(cls.name, "owner", owner=principal.user_id,
-                                          retry_after=decision.retry_after_seconds, limit=owner_limit)
+                abuse_policy.record_block(
+                    cls.name,
+                    "owner",
+                    owner=principal.user_id,
+                    retry_after=decision.retry_after_seconds,
+                    limit=owner_limit,
+                )
                 raise QuotaExceeded("rate_limited", "owner", decision.retry_after_seconds)
     limit = abuse_policy.daily_quota_limit()
     quota = getattr(runtime, "daily_quota", None)
@@ -1458,12 +1778,19 @@ def _enforce_owner_budget(cls_name: str, *, minute: bool = False, daily: bool = 
         return
     try:
         verdict = quota.bump(principal.user_id, cls_name, limit)
-    except Exception as exc:  # contador indisponivel nao pode derrubar o jogo (o IP/owner/min seguem valendo)
+    except (
+        Exception
+    ) as exc:  # contador indisponivel nao pode derrubar o jogo (o IP/owner/min seguem valendo)
         abuse_policy.limiter_unavailable("daily_quota", exc)
         return
     if not verdict.allowed:
-        abuse_policy.record_block(cls_name, "daily", owner=principal.user_id,
-                                  retry_after=verdict.retry_after_seconds, limit=limit)
+        abuse_policy.record_block(
+            cls_name,
+            "daily",
+            owner=principal.user_id,
+            retry_after=verdict.retry_after_seconds,
+            limit=limit,
+        )
         raise QuotaExceeded("daily_quota_exceeded", "daily", verdict.retry_after_seconds)
 
 
@@ -1495,8 +1822,9 @@ class CreateCharacterRequest(BaseModel):
     @field_validator("race")
     @classmethod
     def _canonical_race(cls, value: str) -> str:
-        names = {str(row.get("name")) for row in
-                 (load_json_data("origins.json") or {}).get("races", [])}
+        names = {
+            str(row.get("name")) for row in (load_json_data("origins.json") or {}).get("races", [])
+        }
         if value not in names:
             raise ValueError("raça desconhecida")
         return value
@@ -1504,16 +1832,19 @@ class CreateCharacterRequest(BaseModel):
     @field_validator("region")
     @classmethod
     def _canonical_region(cls, value: str) -> str:
-        names = {str(row.get("name")) for row in
-                 (load_json_data("origins.json") or {}).get("regions", [])}
+        names = {
+            str(row.get("name"))
+            for row in (load_json_data("origins.json") or {}).get("regions", [])
+        }
         if value not in names:
             raise ValueError("região desconhecida")
         return value
 
+
 class ActionRequest(BaseModel):
     # Auditoria A7: ação vira prompt — sem teto, request gigante = custo/latência.
     input_text: str = Field(max_length=2000)
-    game_id: str | None = None # Opcional: permite especificar qual save carregar
+    game_id: str | None = None  # Opcional: permite especificar qual save carregar
     action_id: str | None = Field(default=None, max_length=36)
     # conflito-16: seleção tática canônica da UI; o motor revalida tudo.
     card_id: str | None = Field(default=None, max_length=128)
@@ -1590,21 +1921,27 @@ class CombatSimulatorRequest(BaseModel):
             raise ValueError("inimigo desconhecido")
         return value
 
+
 class EquipRequest(BaseModel):
     """Fase 4.3: equipa item do inventário (slot deduzido do tipo) ou desequipa slot."""
-    item_id: str | None = None   # equipar este item
+
+    item_id: str | None = None  # equipar este item
     unequip_slot: str | None = None  # OU esvaziar este slot
     game_id: str | None = None
     action_id: str | None = Field(default=None, max_length=36)
 
+
 class PrepareCardsRequest(BaseModel):
     """SPEC-209 R4: prepara/troca Cartas fora de combate (validação 100% Python)."""
+
     game_id: str | None = None
     prepared: list[str] = Field(default_factory=list, max_length=64)
     action_id: str | None = Field(default=None, max_length=36)
 
+
 class LevelUpRequest(BaseModel):
     """Conflito v2: consome escolha de Carta/evolução ou de Virtude."""
+
     choice_id: str
     card_id: str | None = None
     evolve_card_id: str | None = None
@@ -1666,10 +2003,11 @@ class VisualResponse(BaseModel):
     scene: SceneVisualResponse
     cue: VisualCueResponse | None = None
 
+
 class GameResponse(BaseModel):
     timeline_epoch: int = 0
     portrait_generation_id: str | None = None
-    game_id: str # <--- Novo: Frontend precisa saber o ID
+    game_id: str  # <--- Novo: Frontend precisa saber o ID
     message: str
     message_type: str
     # SPEC-202 R9: quem respondeu — {kind: narrator|npc|system, id, name, reason}.
@@ -1678,20 +2016,28 @@ class GameResponse(BaseModel):
     # Fase 4.3: estruturado — {id, name, qty, type, equipped, slot}
     inventory: list[dict[str, Any]]
     current_location: str
-    narrative_summary: str # <--- Novo: Frontend pode mostrar o resumo
+    narrative_summary: str  # <--- Novo: Frontend pode mostrar o resumo
     last_turn_log: list[dict[str, Any]]
-    simulated: bool = False # True quando rodando em modo simulado (sem API key)
-    world: dict[str, Any] = {} # location_id, day, period, visited (fog of war), danger
-    quest: dict[str, Any] = {} # objetivo atual, beats (status), clímax, progresso
-    combat: dict[str, Any] = {} # inimigos, condições, iniciativa, round, cooldowns
-    npcs: list[dict[str, Any]] = [] # NPCs conhecidos (nome, papel, local, relação, última lembrança)
+    simulated: bool = False  # True quando rodando em modo simulado (sem API key)
+    world: dict[str, Any] = {}  # location_id, day, period, visited (fog of war), danger
+    quest: dict[str, Any] = {}  # objetivo atual, beats (status), clímax, progresso
+    combat: dict[str, Any] = {}  # inimigos, condições, iniciativa, round, cooldowns
+    npcs: list[
+        dict[str, Any]
+    ] = []  # NPCs conhecidos (nome, papel, local, relação, última lembrança)
     art_offers: list[dict[str, str]] = []
     art_generations: list[dict[str, str]] = []
-    chronicle: list[dict[str, Any]] = [] # capítulos: {title, started_turn, location, entries[{text,turn,kind,event_id?}]}
-    factions: list[dict[str, Any]] = [] # fações vivas: objetivo, progresso, postura, reputação
-    party: list[dict[str, Any]] = [] # Fase 4.5: companheiros {name, hp, max_hp, active, archetype, status}
-    death_pending: bool = False # spec checkpoints-morte: queda letal — abre a tela de morte no cliente
-    game_over: bool = False     # memorial/bloqueio definitivo; Vitalidade 0 não basta
+    chronicle: list[
+        dict[str, Any]
+    ] = []  # capítulos: {title, started_turn, location, entries[{text,turn,kind,event_id?}]}
+    factions: list[dict[str, Any]] = []  # fações vivas: objetivo, progresso, postura, reputação
+    party: list[
+        dict[str, Any]
+    ] = []  # Fase 4.5: companheiros {name, hp, max_hp, active, archetype, status}
+    death_pending: bool = (
+        False  # spec checkpoints-morte: queda letal — abre a tela de morte no cliente
+    )
+    game_over: bool = False  # memorial/bloqueio definitivo; Vitalidade 0 não basta
     death: dict[str, Any] = {}  # conflito-16: Última Ação/Terminal/estabilização
     continuity: dict[str, Any] = {}
     combat_simulation: dict[str, Any] = {}
@@ -1701,31 +2047,46 @@ class GameResponse(BaseModel):
     projections: dict[str, Any] = {}
     visual: VisualResponse
 
+
 # --- HELPER: FORMATA RESPOSTA ---
 def _public_art_refs(state: dict) -> dict:
     """Public references from the owner-scoped save; private quotes never enter UI."""
     generations = []
     for row in state.get("art_generation_ledger") or []:
-        image_type = row.get("subject_type") or ("player" if row.get("trigger_kind") == "player_portrait" else None)
+        image_type = row.get("subject_type") or (
+            "player" if row.get("trigger_kind") == "player_portrait" else None
+        )
         if row.get("generation_id") and image_type in {"player", "npc", "scene"}:
-            generations.append({"generation_id": str(row["generation_id"]), "type": image_type,
-                                "subject_id": str(row.get("subject_id") or "player")})
-    return {"art_generations": generations,
-            "art_offers": [{"offer_id": row["offer_id"], "type": row["type"]}
-                           for row in state.get("art_offers") or []]}
+            generations.append(
+                {
+                    "generation_id": str(row["generation_id"]),
+                    "type": image_type,
+                    "subject_id": str(row.get("subject_id") or "player"),
+                }
+            )
+    return {
+        "art_generations": generations,
+        "art_offers": [
+            {"offer_id": row["offer_id"], "type": row["type"]}
+            for row in state.get("art_offers") or []
+        ],
+    }
 
 
 def _response_speaker(state: dict) -> dict[str, str]:
     from services.interlocutor import response_speaker
+
     return response_speaker(state)
 
 
 def format_response(state: dict, *, cue_action_key: str | None = None) -> GameResponse:
     # Pega a última mensagem
     from services.turn_outcome import player_facing_message
+
     last_content = player_facing_message(state)
 
     from services.presentation_history import message_kind
+
     msg_type = message_kind(state)
 
     player = state["player"]
@@ -1736,20 +2097,28 @@ def format_response(state: dict, *, cue_action_key: str | None = None) -> GameRe
         active = bool((state.get("combat") or {}).get("active"))
         simulation["finished"] = not active
         simulation["outcome"] = (
-            "defeat" if state.get("death_pending") else
-            "victory" if not active else None
+            "defeat" if state.get("death_pending") else "victory" if not active else None
         )
     from services.turn_outcome import public_outcome
-    turn_outcome = {} if simulation.get("enabled") else public_outcome(state.get("last_turn_outcome"))
+
+    turn_outcome = (
+        {} if simulation.get("enabled") else public_outcome(state.get("last_turn_outcome"))
+    )
     from services.projections import projection_status_view
+
     return GameResponse(
         projections=projection_status_view(state),
         turn_outcome=turn_outcome,
         combat_result={} if simulation.get("enabled") else _combat_result(state),
-        timeline_epoch=int((state.get('continuity') or {}).get('timeline_epoch', 0)),
-        portrait_generation_id=next((str(row['generation_id'])
-            for row in reversed(state.get('art_generation_ledger') or [])
-            if row.get('trigger_kind') == 'player_portrait' and row.get('generation_id')), None),
+        timeline_epoch=int((state.get("continuity") or {}).get("timeline_epoch", 0)),
+        portrait_generation_id=next(
+            (
+                str(row["generation_id"])
+                for row in reversed(state.get("art_generation_ledger") or [])
+                if row.get("trigger_kind") == "player_portrait" and row.get("generation_id")
+            ),
+            None,
+        ),
         game_id=state.get("game_id", "unknown"),
         message=last_content,
         message_type=msg_type,
@@ -1796,27 +2165,42 @@ def format_response(state: dict, *, cue_action_key: str | None = None) -> GameRe
         last_turn_log=_serialize_messages(state["messages"][-5:]),
         # Auditoria A4: espelha a decisão real do get_llm (qualquer provider conta)
         simulated=is_simulated(),
-        world=_world_block(state.get("world", {}) or {}, state.get("world_projection", {}) or {},
-                          state.get("event_log", []) or [], state.get("player", {}) or {}),
-        quest=_quest_block(state.get("campaign_plan") or {}, state.get("quests", []) or [],
-                           state.get("world") or {}),
+        world=_world_block(
+            state.get("world", {}) or {},
+            state.get("world_projection", {}) or {},
+            state.get("event_log", []) or [],
+            state.get("player", {}) or {},
+        ),
+        quest=_quest_block(
+            state.get("campaign_plan") or {},
+            state.get("quests", []) or [],
+            state.get("world") or {},
+        ),
         combat=_combat_block(state),
         npcs=_npcs_block(state.get("npcs", {}) or {}, state),
         **_public_art_refs(state),
         chronicle=_chronicle_block(state.get("chronicle", []) or []),
-        party=[{"name": c.get("name", "?"),
+        party=[
+            {
+                "name": c.get("name", "?"),
                 "vitalidade": int(c.get("vitalidade", 0) or 0),
                 "max_vitalidade": int(c.get("max_vitalidade", 1) or 1),
                 "hp": int(c.get("vitalidade", 0) or 0),
                 "max_hp": int(c.get("max_vitalidade", 1) or 1),
                 "active": bool(c.get("active")),
-                "archetype": c.get("archetype", ""), "status": c.get("status", "ativo")}
-               for c in (state.get("party") or []) if isinstance(c, dict)],
-        factions=_factions_block(state.get("factions", []) or [],
-                                 state.get("faction_intel", {}) or {},
-                                 (state.get("world", {}) or {}).get("turn_count", 0),
-                                 state.get("event_log", []) or [],
-                                 state.get("world_projection", {}) or {}),
+                "archetype": c.get("archetype", ""),
+                "status": c.get("status", "ativo"),
+            }
+            for c in (state.get("party") or [])
+            if isinstance(c, dict)
+        ],
+        factions=_factions_block(
+            state.get("factions", []) or [],
+            state.get("faction_intel", {}) or {},
+            (state.get("world", {}) or {}).get("turn_count", 0),
+            state.get("event_log", []) or [],
+            state.get("world_projection", {}) or {},
+        ),
         death_pending=bool(state.get("death_pending", False)),
         game_over=bool(state.get("game_over", False)),
         death=_death_block(state),
@@ -1830,6 +2214,7 @@ def _inventory_block(player: dict) -> list[dict[str, Any]]:
     """Fase 4.3: inventário estruturado com nome canônico (nunca title() sobre id)."""
     import inventory as inv_mod
     from gamedata import ARTIFACTS_DB
+
     eq = player.get("equipment") or {}
     equipped = {v: k for k, v in eq.items() if v}
     out = []
@@ -1837,14 +2222,17 @@ def _inventory_block(player: dict) -> list[dict[str, Any]]:
         if not isinstance(e, dict):  # tolerância a estado antigo em memória
             e = inv_mod.make_entry(str(e), 1)
         item = ARTIFACTS_DB.get(e.get("id", "")) or {}
-        out.append({
-            "id": e.get("id"), "name": inv_mod.item_display(e),
-            "qty": int(e.get("qty", 1)),
-            "type": item.get("type", "desconhecido"),
-            "equipped": e.get("id") in equipped,
-            "slot": equipped.get(e.get("id")) or inv_mod.slot_for(e.get("id", "")),
-            "unique": bool(item.get("unique")),  # Fase 6.2: ◆ um por mundo
-        })
+        out.append(
+            {
+                "id": e.get("id"),
+                "name": inv_mod.item_display(e),
+                "qty": int(e.get("qty", 1)),
+                "type": item.get("type", "desconhecido"),
+                "equipped": e.get("id") in equipped,
+                "slot": equipped.get(e.get("id")) or inv_mod.slot_for(e.get("id", "")),
+                "unique": bool(item.get("unique")),  # Fase 6.2: ◆ um por mundo
+            }
+        )
     return out
 
 
@@ -1852,6 +2240,7 @@ def _abyss_tier_view(player: dict) -> str:
     """spec refatoracao-sistema-classes (R11): patamar da Carga do Abismo p/ o HUD.
     Classe com `abyss.hidden` (Médico — Recidiva) NÃO expõe o valor: label enigmático."""
     import combat_mechanics as _cm
+
     cfg = _cm.entropy_config(player)
     if (cfg.get("abyss") or {}).get("hidden"):
         # SPEC-235 R8: sem Carga não há o que ocultar — chip some até acumular.
@@ -1861,36 +2250,49 @@ def _abyss_tier_view(player: dict) -> str:
 
 def _can_reorganize_view(state: dict) -> dict[str, Any]:
     from services import cards
+
     allowed, reason = cards.reorganize_status(state)
     return {"allowed": bool(allowed), "reason": reason}
 
 
 def _prepared_slots(player: dict) -> int:
     from services import cards
+
     return int(cards.prepare_slots_for_level(player.get("level", 1)))
 
 
 def _virtue_cards_view(player: dict) -> list[dict[str, Any]]:
     from services import cards
+
     out = []
     for row in player.get("virtue_cards") or []:
         cid = str(row.get("card_id") or "")
         card = cards.get_card(cid) or {}
-        out.append({"card_id": cid, "name": card.get("name", cid),
-                    "type": str(card.get("tipo", "")), "description": card.get("descricao", ""),
-                    "virtude": str(row.get("virtude") or ""),
-                    "mastery": int(row.get("mastery", 0) or 0),
-                    "effective_stage": int(row.get("effective_stage", 0) or 0)})
+        out.append(
+            {
+                "card_id": cid,
+                "name": card.get("name", cid),
+                "type": str(card.get("tipo", "")),
+                "description": card.get("descricao", ""),
+                "virtude": str(row.get("virtude") or ""),
+                "mastery": int(row.get("mastery", 0) or 0),
+                "effective_stage": int(row.get("effective_stage", 0) or 0),
+            }
+        )
     return out
 
 
 def _evolvable_card_ids(player: dict) -> list[str]:
     from services import cards
+
     if int(player.get("level", 1) or 1) < 4:
         return []
     done = player.get("evolved_cards") or {}
-    return [cid for cid in player.get("known_cards") or []
-            if (cards.get_card(cid) or {}).get("evolucao") and cid not in done]
+    return [
+        cid
+        for cid in player.get("known_cards") or []
+        if (cards.get_card(cid) or {}).get("evolucao") and cid not in done
+    ]
 
 
 def _scars_view(player: dict) -> list[dict[str, str]]:
@@ -1898,8 +2300,17 @@ def _scars_view(player: dict) -> list[dict[str, str]]:
     for scar in player.get("scars") or []:
         if not isinstance(scar, dict):
             continue
-        out.append({k: str(scar.get(k) or "") for k in (
-            "id", "origem", "consequencia_negativa", "habilidade_positiva_relacionada")})
+        out.append(
+            {
+                k: str(scar.get(k) or "")
+                for k in (
+                    "id",
+                    "origem",
+                    "consequencia_negativa",
+                    "habilidade_positiva_relacionada",
+                )
+            }
+        )
     return out
 
 
@@ -1911,6 +2322,7 @@ def _cards_block(player: dict, *, prepared_only: bool = False) -> list[dict[str,
     """
     import combat_mechanics as cm
     from services import cards
+
     prepared = set(player.get("prepared_cards") or [])
     evolved = player.get("evolved_cards") or {}
     entropy = int(player.get("entropy", 0) or 0)
@@ -1922,37 +2334,47 @@ def _cards_block(player: dict, *, prepared_only: bool = False) -> list[dict[str,
             continue
         frequency = str(card.get("frequencia", "livre"))
         counter = cards.FREQ_COUNTER.get(frequency)
-        usage = ((player.get("card_usage") or {}).get(cid) or {})
+        usage = (player.get("card_usage") or {}).get(cid) or {}
         spent = bool(counter and int(usage.get(counter, 0) or 0) >= 1)
         base_cost = int(card.get("custo_entropia", 0) or 0)
         cost = cm.dependencia_cost(player, base_cost)
         kind = str(card.get("tipo", ""))
         effect_kind = str((card.get("efeito") or {}).get("kind") or "")
         friendly = effect_kind in {
-            "cura", "estabilizar", "protecao", "reposicionar", "esconder",
-            "purga_condicao", "vantagem", "buff_defesa", "buff_acerto",
-            "buff_dano", "reduzir_carga_aliado",
+            "cura",
+            "estabilizar",
+            "protecao",
+            "reposicionar",
+            "esconder",
+            "purga_condicao",
+            "vantagem",
+            "buff_defesa",
+            "buff_acerto",
+            "buff_dano",
+            "reduzir_carga_aliado",
         }
-        ready = bool(
-            is_prepared and kind in ("ativa", "reacao") and not spent
-            and cost <= entropy
+        ready = bool(is_prepared and kind in ("ativa", "reacao") and not spent and cost <= entropy)
+        out.append(
+            {
+                "id": cid,
+                "name": card.get("name", cid),
+                "type": kind,
+                "description": card.get("descricao", ""),
+                "effect_kind": effect_kind,
+                "target_kind": "self" if friendly else "enemy",
+                "subclass": card.get("subclasse", ""),
+                "prepared": is_prepared,
+                "cost": cost,
+                "base_cost": base_cost,
+                "frequency": frequency,
+                "spent": spent,
+                "ready": ready,
+                "has_rupture": bool(card.get("ruptura")),
+                "rupture_ready": bool(ready and kind == "ativa" and card.get("ruptura")),
+                "trigger": card.get("gatilho", ""),
+                "evolved": evolved.get(cid),
+            }
         )
-        out.append({
-            "id": cid, "name": card.get("name", cid), "type": kind,
-            "description": card.get("descricao", ""),
-            "effect_kind": effect_kind,
-            "target_kind": "self" if friendly else "enemy",
-            "subclass": card.get("subclasse", ""), "prepared": is_prepared,
-            "cost": cost,
-            "base_cost": base_cost,
-            "frequency": frequency,
-            "spent": spent,
-            "ready": ready,
-            "has_rupture": bool(card.get("ruptura")),
-            "rupture_ready": bool(ready and kind == "ativa" and card.get("ruptura")),
-            "trigger": card.get("gatilho", ""),
-            "evolved": evolved.get(cid),
-        })
     return out
 
 
@@ -1964,6 +2386,7 @@ def _death_block(state: dict) -> dict[str, Any]:
     last_action_label = ""
     if isinstance(last_action, dict) and last_action.get("kind") == "card":
         from services import cards
+
         card = cards.get_card(str(last_action.get("card_id") or "")) or {}
         last_action_label = str(card.get("name") or last_action.get("card_id") or "")
     continuity = _continuity_block(state)
@@ -1979,18 +2402,14 @@ def _death_block(state: dict) -> dict[str, Any]:
         "pending": bool(state.get("death_pending")),
         "last_action": last_action,
         "last_action_label": last_action_label,
-        "entered_terminal": bool(
-            context.get("entered_terminal") or player.get("estado_terminal")
-        ),
+        "entered_terminal": bool(context.get("entered_terminal") or player.get("estado_terminal")),
         "stabilization": context.get("stabilization", ""),
         "stabilization_attempts": int(
-            context.get("stabilization_attempts",
-                        player.get("stabilization_attempts", 0)) or 0
+            context.get("stabilization_attempts", player.get("stabilization_attempts", 0)) or 0
         ),
         "killer": context.get("killer", ""),
         "will_restore_turn": checkpoint,
-        "will_lose_turns": (max(0, canonical - checkpoint)
-                            if checkpoint is not None else None),
+        "will_lose_turns": (max(0, canonical - checkpoint) if checkpoint is not None else None),
         "retained": ["histórico de mortes", "contagem de ações da sessão"],
         "reverted": ["mundo", "inventário", "posição e memória após o checkpoint"],
     }
@@ -1998,6 +2417,7 @@ def _death_block(state: dict) -> dict[str, Any]:
 
 def _continuity_block(state: dict) -> dict[str, Any]:
     from services.continuity import normalize
+
     canonical = int((state.get("world") or {}).get("turn_count", 0) or 0)
     meta = normalize(state.get("continuity"), canonical_turn=canonical)
     return {**meta, "canonical_turn": canonical}
@@ -2009,21 +2429,25 @@ def _levelup_block(player: dict) -> dict[str, Any]:
     if not pending:
         return {}
     from services import cards
+
     eligible = []
     for cid in progression.eligible_cards(player):
         card = cards.get_card(cid) or {}
-        eligible.append({
-            "id": cid, "name": card.get("name", cid),
-            "description": card.get("descricao", ""),
-            "subclass": card.get("subclasse", ""),
-            "tier": int(card.get("tier", 1) or 1),
-            "tier_label": gamedata.TIER_LABELS.get(int(card.get("tier", 1) or 1), ""),
-            "level_req": int(card.get("level_req", 1) or 1),
-            "apex": bool(card.get("apex")),
-            "cost": int(card.get("custo_entropia", 0) or 0),
-            "frequency": card.get("frequencia", "livre"),
-            "kind": card.get("tipo", "ativa"),
-        })
+        eligible.append(
+            {
+                "id": cid,
+                "name": card.get("name", cid),
+                "description": card.get("descricao", ""),
+                "subclass": card.get("subclasse", ""),
+                "tier": int(card.get("tier", 1) or 1),
+                "tier_label": gamedata.TIER_LABELS.get(int(card.get("tier", 1) or 1), ""),
+                "level_req": int(card.get("level_req", 1) or 1),
+                "apex": bool(card.get("apex")),
+                "cost": int(card.get("custo_entropia", 0) or 0),
+                "frequency": card.get("frequencia", "livre"),
+                "kind": card.get("tipo", "ativa"),
+            }
+        )
     evolvable = [
         {"id": cid, "name": (cards.get_card(cid) or {}).get("name", cid)}
         for cid in player.get("known_cards") or []
@@ -2037,11 +2461,15 @@ def _levelup_block(player: dict) -> dict[str, Any]:
         "evolvable": evolvable,
         "current_branch": progression.player_branch(player),
         "subclasses": progression.eligible_subclasses(player)
-        if any(row.get("kind") == "subclass" for row in pending) else [],
+        if any(row.get("kind") == "subclass" for row in pending)
+        else [],
         "virtue_cards": [
-            {"card_id": row.get("card_id"), "virtude": row.get("virtude"),
-             "mastery": int(row.get("mastery", 0) or 0),
-             "effective_stage": progression.effective_virtue_card_stage(row)}
+            {
+                "card_id": row.get("card_id"),
+                "virtude": row.get("virtude"),
+                "mastery": int(row.get("mastery", 0) or 0),
+                "effective_stage": progression.effective_virtue_card_stage(row),
+            }
             for row in player.get("virtue_cards") or []
         ],
         "unlocked_tier": gamedata.card_tier_for_level(int(player.get("level", 1) or 1)),
@@ -2055,22 +2483,32 @@ def _chronicle_block(chronicle: list) -> list[dict[str, Any]]:
     for cap in chronicle:
         if not isinstance(cap, dict):
             continue
-        entries = [e for e in (cap.get("entries") or [])
-                   if isinstance(e, dict) and str(e.get("text", "")).strip()]
-        out.append({
-            "chapter_id": cap.get("chapter_id", ""),
-            "title": cap.get("title", ""),
-            "started_turn": cap.get("started_turn", 0),
-            "location": cap.get("location", ""),
-            "entries": entries,
-            "digest": cap.get("digest"),
-            "entry_count": len(entries),
-        })
+        entries = [
+            e
+            for e in (cap.get("entries") or [])
+            if isinstance(e, dict) and str(e.get("text", "")).strip()
+        ]
+        out.append(
+            {
+                "chapter_id": cap.get("chapter_id", ""),
+                "title": cap.get("title", ""),
+                "started_turn": cap.get("started_turn", 0),
+                "location": cap.get("location", ""),
+                "entries": entries,
+                "digest": cap.get("digest"),
+                "entry_count": len(entries),
+            }
+        )
     return out
 
 
-def _factions_block(factions: list, intel: dict, turn: int = 0,
-                    event_log: list | None = None, projection: dict | None = None) -> list[dict[str, Any]]:
+def _factions_block(
+    factions: list,
+    intel: dict,
+    turn: int = 0,
+    event_log: list | None = None,
+    projection: dict | None = None,
+) -> list[dict[str, Any]]:
     """
     Fações para o HUD — não-onisciência: só as que o jogador CONHECE (intel.known).
     Objetivo só se aprendido; progresso é o SNAPSHOT que o jogador viu (nunca o ao vivo);
@@ -2093,20 +2531,22 @@ def _factions_block(factions: list, intel: dict, turn: int = 0,
         intel_turn = rec.get("intel_turn")
         stale = seen is not None and isinstance(intel_turn, int) and int(turn) > int(intel_turn)
         fid = f.get("id", "")
-        out.append({
-            "id": fid,
-            "name": f.get("name", ""),
-            "goal": f.get("goal", "") if knows_goal else "",
-            "knows_goal": knows_goal,
-            "region": f.get("region", ""),
-            "progress": int(seen) if seen is not None else None,
-            "intel_stale": bool(stale),
-            "disposition": f.get("disposition", "neutro"),
-            "reputation": int(f.get("reputation", 0)),
-            "completed": bool(f.get("completed", False)),
-            "history": sv.reputation_history(event_log or [], fid),
-            "stability_label": sv.stability_label(projection or {}, fid),
-        })
+        out.append(
+            {
+                "id": fid,
+                "name": f.get("name", ""),
+                "goal": f.get("goal", "") if knows_goal else "",
+                "knows_goal": knows_goal,
+                "region": f.get("region", ""),
+                "progress": int(seen) if seen is not None else None,
+                "intel_stale": bool(stale),
+                "disposition": f.get("disposition", "neutro"),
+                "reputation": int(f.get("reputation", 0)),
+                "completed": bool(f.get("completed", False)),
+                "history": sv.reputation_history(event_log or [], fid),
+                "stability_label": sv.stability_label(projection or {}, fid),
+            }
+        )
     return out
 
 
@@ -2115,32 +2555,43 @@ def _npcs_block(npcs: dict, state: dict | None = None) -> list[dict[str, Any]]:
     — hidden_traits NUNCA sai pela API (R9). SPEC-211: com `state`, NPC de entidade
     `hidden`/`secret` sem reveal aceito (regra fail-closed da SPEC-206) também some."""
     from services.npc_layers import visible_npc_view
+
     if state is not None:
         from services.entity_identity import resolve_npc_entity_id
         from services.player_knowledge import entity_is_player_visible
-        npcs = {key: npc for key, npc in (npcs or {}).items()
-                if not isinstance(npc, dict)
-                or entity_is_player_visible(resolve_npc_entity_id(npc, str(npc.get("name", key))), state)}
+
+        npcs = {
+            key: npc
+            for key, npc in (npcs or {}).items()
+            if not isinstance(npc, dict)
+            or entity_is_player_visible(
+                resolve_npc_entity_id(npc, str(npc.get("name", key))), state
+            )
+        }
     out = visible_npc_view(npcs)
     return out
 
 
 def _simulation_manifest(enemies: list, game_id: str, scene: dict) -> dict:
     from services import encounter_manifest as em
-    return em.build_manifest(enemies, source="simulation", origin="unknown",
-                             encounter_id=f"{game_id}:sim", scene=scene)
+
+    return em.build_manifest(
+        enemies, source="simulation", origin="unknown", encounter_id=f"{game_id}:sim", scene=scene
+    )
 
 
 def _combat_result(state: dict) -> dict[str, Any]:
     """SPEC-203 R7: desfecho do turno de término, derivado de estado persistido."""
     from services import encounter_manifest as em
     from services.turn_outcome import public_outcome
+
     return em.result_view(state.get("combat"), public_outcome(state.get("last_turn_outcome")))
 
 
 def _targeting_cards(state: dict, cards_view: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """SPEC-205 R7: `valid_targets`/`invalid_reason` por Carta, calculados em Python."""
     from services import combat_targeting as targeting
+
     for row in cards_view:
         row.update(targeting.card_targeting(state, str(row.get("id"))))
     return cards_view
@@ -2151,44 +2602,61 @@ def _combat_block(state: dict) -> dict[str, Any]:
     meta = state.get("combat") or {}
     enemies = state.get("enemies") or []
     player = state.get("player") or {}
-    alive = [e for e in enemies if not e.get("dead")
-             and e.get("status", "ativo") not in ("morto", "fugiu", "rendido")]
+    alive = [
+        e
+        for e in enemies
+        if not e.get("dead") and e.get("status", "ativo") not in ("morto", "fugiu", "rendido")
+    ]
 
     def _conds(entity):
-        return [{"name": c.get("name", ""), "dot": c.get("dot", 0), "duration": c.get("duration", 0)}
-                for c in (entity.get("active_conditions") or []) if isinstance(c, dict)]
+        return [
+            {"name": c.get("name", ""), "dot": c.get("dot", 0), "duration": c.get("duration", 0)}
+            for c in (entity.get("active_conditions") or [])
+            if isinstance(c, dict)
+        ]
 
     from services import bestiary_knowledge as knowledge
     from services import cards
     from services import combat_targeting as _targeting
+
     initiative = list(meta.get("initiative") or [])
     scene = meta.get("scene") or {}
     participant_names = {"player": player.get("name", "Protagonista")}
-    for entity in list(enemies) + list(state.get("party") or []) + list(meta.get("scene_allies") or []):
+    for entity in (
+        list(enemies) + list(state.get("party") or []) + list(meta.get("scene_allies") or [])
+    ):
         if isinstance(entity, dict):
             participant_names[str(entity.get("id") or entity.get("name"))] = entity.get("name", "?")
 
     scene_view = {"zones": [], "positions": []}
     scene_view["zones"] = [
-        {"id": z.get("id", ""), "name": z.get("name", ""),
-         "connections": list(z.get("connections") or [])}
-        for z in (scene.get("zones") or []) if isinstance(z, dict)
+        {
+            "id": z.get("id", ""),
+            "name": z.get("name", ""),
+            "connections": list(z.get("connections") or []),
+        }
+        for z in (scene.get("zones") or [])
+        if isinstance(z, dict)
     ]
     for participant_id, pos in (scene.get("positions") or {}).items():
         if not isinstance(pos, dict):
             continue
         posture = pos.get("postura") or {}
         engaged = [str(value) for value in (pos.get("engaged_with") or [])]
-        scene_view["positions"].append({
-            "participant_id": str(participant_id),
-            "participant_name": participant_names.get(str(participant_id), str(participant_id)),
-            "zone_id": pos.get("zone_id", ""),
-            "distance": pos.get("distance_state", "proximo"),
-            "posture": posture.get("state", "neutro") if isinstance(posture, dict) else str(posture),
-            "concealment": pos.get("ocultacao", "visivel"),
-            "engaged_with": engaged,
-            "engaged_names": [participant_names.get(value, value) for value in engaged],
-        })
+        scene_view["positions"].append(
+            {
+                "participant_id": str(participant_id),
+                "participant_name": participant_names.get(str(participant_id), str(participant_id)),
+                "zone_id": pos.get("zone_id", ""),
+                "distance": pos.get("distance_state", "proximo"),
+                "posture": posture.get("state", "neutro")
+                if isinstance(posture, dict)
+                else str(posture),
+                "concealment": pos.get("ocultacao", "visivel"),
+                "engaged_with": engaged,
+                "engaged_names": [participant_names.get(value, value) for value in engaged],
+            }
+        )
 
     enemy_views = []
     for enemy in alive:
@@ -2200,30 +2668,41 @@ def _combat_block(state: dict) -> dict[str, Any]:
                 revealed_cards.append({"id": str(card_id), "name": card.get("name", card_id)})
         vitality = int(public.get("vitalidade", enemy.get("vitalidade", 0)) or 0)
         max_vitality = int(public.get("max_vitalidade", enemy.get("max_vitalidade", 0)) or 0)
-        enemy_views.append({
-            "id": str(enemy.get("id") or enemy.get("name", "")),
-            "name": enemy.get("name", ""),
-            "vitalidade": vitality, "max_vitalidade": max_vitality,
-            "hp": vitality, "max_hp": max_vitality,
-            "esquiva": public.get("esquiva"), "protecao": public.get("protecao"),
-            "integridade_atual": public.get("integridade_atual"),
-            "integridade_max": public.get("integridade_max"),
-            "recursos_visiveis": public.get("recursos_visiveis") or {},
-            "conditions": _conds(enemy),
-            "revealed_cards": revealed_cards,
-            "revealed_resistances": list(enemy.get("revealed_resistances") or []),
-        })
+        enemy_views.append(
+            {
+                "id": str(enemy.get("id") or enemy.get("name", "")),
+                "name": enemy.get("name", ""),
+                "vitalidade": vitality,
+                "max_vitalidade": max_vitality,
+                "hp": vitality,
+                "max_hp": max_vitality,
+                "esquiva": public.get("esquiva"),
+                "protecao": public.get("protecao"),
+                "integridade_atual": public.get("integridade_atual"),
+                "integridade_max": public.get("integridade_max"),
+                "recursos_visiveis": public.get("recursos_visiveis") or {},
+                "conditions": _conds(enemy),
+                "revealed_cards": revealed_cards,
+                "revealed_resistances": list(enemy.get("revealed_resistances") or []),
+            }
+        )
 
     chase = meta.get("chase") or {}
-    chase_view = ({
-        "track": chase.get("trilha", "pressionado"),
-        "steps": ["pressionado", "afastado", "quase_livre", "escapou"],
-        "escaped": bool(chase.get("escapou")), "caught": bool(chase.get("alcancado")),
-        "pursuers": list(chase.get("perseguidores") or []),
-        "last_roll": dict(chase.get("_last") or {}),
-    } if chase else {})
+    chase_view = (
+        {
+            "track": chase.get("trilha", "pressionado"),
+            "steps": ["pressionado", "afastado", "quase_livre", "escapou"],
+            "escaped": bool(chase.get("escapou")),
+            "caught": bool(chase.get("alcancado")),
+            "pursuers": list(chase.get("perseguidores") or []),
+            "last_roll": dict(chase.get("_last") or {}),
+        }
+        if chase
+        else {}
+    )
     wounds = player.get("ferimentos") or {}
     from services import encounter_manifest as em
+
     manifest = meta.get("encounter") if em.is_valid_manifest(meta.get("encounter")) else None
     return {
         "active": bool(meta.get("active")) and bool(alive),
@@ -2234,9 +2713,14 @@ def _combat_block(state: dict) -> dict[str, Any]:
         "encounter_id": (manifest or {}).get("encounter_id") or meta.get("instance_id"),
         "encounter_view": em.public_view(manifest, meta.get("scene")) if manifest else {},
         # Compat temporária do HUD atual: iniciativa agora é POR LADO.
-        "order": [{"name": "Heróis" if side == "heroes" else "Inimigos",
-                   "side": "hero" if side == "heroes" else "enemy", "init": 0}
-                  for side in initiative],
+        "order": [
+            {
+                "name": "Heróis" if side == "heroes" else "Inimigos",
+                "side": "hero" if side == "heroes" else "enemy",
+                "init": 0,
+            }
+            for side in initiative
+        ],
         "initiative": initiative,
         "enemies": enemy_views,
         "cards": _targeting_cards(state, _cards_block(player, prepared_only=True)),
@@ -2268,6 +2752,7 @@ def _quest_block(plan: dict, quests: list, world: dict | None = None) -> dict[st
     step = plan.get("current_step", 0)
     climax = plan.get("climax", "")
     from services.objectives import public_objective
+
     public = public_objective(plan, quests, world or {})
     main = {
         "objective": public["objective"],
@@ -2284,18 +2769,26 @@ def _quest_block(plan: dict, quests: list, world: dict | None = None) -> dict[st
     }
     quests = [q for q in (quests or []) if isinstance(q, dict)]
     active = [q for q in quests if q.get("status") == "active"]
-    resolved = sorted((q for q in quests if q.get("status") != "active"),
-                      key=lambda q: q.get("resolved_turn", 0), reverse=True)[:5]
+    resolved = sorted(
+        (q for q in quests if q.get("status") != "active"),
+        key=lambda q: q.get("resolved_turn", 0),
+        reverse=True,
+    )[:5]
     return {"main": main, "side": active + resolved, "markers": quest_log.quest_markers(quests)}
 
 
-def _world_block(w: dict, projection: dict | None = None, event_log: list | None = None,
-                 player: dict | None = None) -> dict[str, Any]:
+def _world_block(
+    w: dict,
+    projection: dict | None = None,
+    event_log: list | None = None,
+    player: dict | None = None,
+) -> dict[str, Any]:
     clock = w.get("world_clock") or {}
     turn = w.get("turn_count", 0)
     # spec itens-vivos-e-luz (R7): estado de luz p/ o HUD (precisa do player p/
     # saber se ele carrega uma fonte de luz).
     from world_utils import light_level, weather_effects
+
     light = light_level(w, player or {})
     effective_weather = weather_effects(w)
     return {
@@ -2314,7 +2807,9 @@ def _world_block(w: dict, projection: dict | None = None, event_log: list | None
         "controlled": sv.visible_controllers(w, projection or {}),
         "danger_overrides": dict(w.get("danger_overrides") or {}),
         "map_overlays": {
-            "control_changes": sv.recent_control_changes(event_log or [], w.get("visited", []), turn),
+            "control_changes": sv.recent_control_changes(
+                event_log or [], w.get("visited", []), turn
+            ),
             "threats": sv.active_threats(w, turn),
             "looming_threat": w.get("looming_threat", ""),
         },
@@ -2331,9 +2826,12 @@ def _world_block(w: dict, projection: dict | None = None, event_log: list | None
 
 def _interiors_block(loc_id: str) -> dict[str, Any]:
     from services.map_view import interiors_block
+
     return interiors_block(loc_id)
 
+
 # --- ENDPOINTS ---
+
 
 @app.get("/health")
 def health_check():
@@ -2355,6 +2853,7 @@ _LATENCY_CLAMP_MAX = 600_000
 
 class ClientLatencyReport(BaseModel):
     """SPEC-200 R10: corpo FECHADO — sem game_id, sem texto livre."""
+
     model_config = ConfigDict(extra="forbid")
     action_id: uuid.UUID
     transport: Literal["stream", "post"]
@@ -2365,8 +2864,7 @@ class ClientLatencyReport(BaseModel):
     state_ms: int | None = None
     outcome: Literal["ok", "error", "aborted"] = "ok"
 
-    @field_validator("ack_ms", "first_phase_ms", "ttfmc_ms", "ttlt_ms", "state_ms",
-                     mode="before")
+    @field_validator("ack_ms", "first_phase_ms", "ttfmc_ms", "ttlt_ms", "state_ms", mode="before")
     @classmethod
     def _clamp(cls, value):
         if value is None:
@@ -2385,20 +2883,36 @@ def client_latency(report: ClientLatencyReport):
     try:
         from observability.metrics import metrics
         from observability.telemetry import pseudonym, safe_json
+
         route = "/game/action/stream" if report.transport == "stream" else "/game/action"
         if report.ttfmc_ms is not None:
-            metrics.observe("rpg_turn_first_content_seconds",
-                            {"route": route, "source": "client"}, report.ttfmc_ms / 1000)
+            metrics.observe(
+                "rpg_turn_first_content_seconds",
+                {"route": route, "source": "client"},
+                report.ttfmc_ms / 1000,
+            )
         if report.ttlt_ms is not None:
-            metrics.observe("rpg_turn_last_content_seconds",
-                            {"route": route, "source": "client"}, report.ttlt_ms / 1000)
-        _turn_logger.info(safe_json({
-            "event": "client_latency", "evt": "client_latency", "action_ref": pseudonym(report.action_id),
-            "transport": report.transport, "ack_ms": report.ack_ms,
-            "first_phase_ms": report.first_phase_ms, "ttfmc_ms": report.ttfmc_ms,
-            "ttlt_ms": report.ttlt_ms, "state_ms": report.state_ms,
-            "outcome": report.outcome,
-        }))
+            metrics.observe(
+                "rpg_turn_last_content_seconds",
+                {"route": route, "source": "client"},
+                report.ttlt_ms / 1000,
+            )
+        _turn_logger.info(
+            safe_json(
+                {
+                    "event": "client_latency",
+                    "evt": "client_latency",
+                    "action_ref": pseudonym(report.action_id),
+                    "transport": report.transport,
+                    "ack_ms": report.ack_ms,
+                    "first_phase_ms": report.first_phase_ms,
+                    "ttfmc_ms": report.ttfmc_ms,
+                    "ttlt_ms": report.ttlt_ms,
+                    "state_ms": report.state_ms,
+                    "outcome": report.outcome,
+                }
+            )
+        )
     except Exception:
         pass
     return Response(status_code=204)
@@ -2415,6 +2929,7 @@ _STACK_FRAME = r"^[A-Za-z0-9_./-]{1,120}:\d{1,7}(?::\d{1,7})?$"
 class ClientErrorReport(BaseModel):
     """SPEC-244 R2: corpo FECHADO. Nada de mensagem de erro, texto do jogador, URL com query ou e-mail:
     todo campo tem enum/regex estreito e campo extra e 422."""
+
     model_config = ConfigDict(extra="forbid")
     kind: Literal["render", "unhandled", "network", "sse", "native"]
     error_name: str = Field(pattern=r"^[A-Za-z_$][A-Za-z0-9_$.]{0,59}$")
@@ -2423,7 +2938,9 @@ class ClientErrorReport(BaseModel):
     request_id: str | None = Field(default=None, pattern=r"^[A-Za-z0-9._:-]{8,64}$")
     build: str | None = Field(default=None, pattern=r"^(?:[0-9a-f]{7}|dev)\+\d{12}$")
     client: Literal["web", "android"] = "web"
-    stack: list[Annotated[str, Field(pattern=_STACK_FRAME)]] = Field(default_factory=list, max_length=20)
+    stack: list[Annotated[str, Field(pattern=_STACK_FRAME)]] = Field(
+        default_factory=list, max_length=20
+    )
     ts: int | None = Field(default=None, ge=0, le=10**14)
 
     @field_validator("route")
@@ -2441,7 +2958,7 @@ _ID_SEGMENT = re.compile(r"[0-9a-fA-F-]{16,}|\d+")
 _CLIENT_ERROR_LOG_INTERVAL_S = 60.0
 _client_error_last: dict[tuple, float] = {}
 _CLIENT_ERROR_LOG_MAX_PER_MIN = 600
-_client_error_window: list[float] = [0.0, 0]   # [inicio da janela, linhas emitidas]
+_client_error_window: list[float] = [0.0, 0]  # [inicio da janela, linhas emitidas]
 
 
 @app.post(_CLIENT_ERROR_PATH, status_code=204, include_in_schema=False)
@@ -2457,15 +2974,22 @@ def client_error(report: ClientErrorReport, request: Request):
         raise HTTPException(status_code=403, detail="origin_denied")
     from observability.metrics import metrics
     from observability.telemetry import correlation, pseudonym
+
     metrics.increment("rpg_client_errors_total", {"kind": report.kind})
     beacon_id = correlation().get("request_id")
     fields = {k: v for k, v in report.model_dump().items() if v not in (None, [])}
-    if report.request_id:   # o id da requisicao que falhou vence (busca pelo codigo de suporte)
+    if report.request_id:  # o id da requisicao que falhou vence (busca pelo codigo de suporte)
         fields["beacon_request_id"] = beacon_id
     # Repeticao identica (mesmo IP+assinatura+request_id) sai 1x/min; teto GLOBAL de linhas/min contra
     # IPs distribuidos. O request_id entra na assinatura para nao esconder o codigo de suporte de outra falha.
-    signature = (pseudonym(_client_ip(request)), report.kind, report.code, report.error_name,
-                 report.route, report.request_id)
+    signature = (
+        pseudonym(_client_ip(request)),
+        report.kind,
+        report.code,
+        report.error_name,
+        report.route,
+        report.request_id,
+    )
     now = time.monotonic()
     last = _client_error_last.get(signature)
     if last is not None and now - last < _CLIENT_ERROR_LOG_INTERVAL_S:
@@ -2486,6 +3010,7 @@ def client_error(report: ClientErrorReport, request: Request):
 def _metrics_authorized(request: Request) -> bool:
     """SPEC-221 R1: Bearer RPG_METRICS_TOKEN (>=32 chars). Perfil DB sem token valido = fechado."""
     import hmac
+
     token = os.getenv("RPG_METRICS_TOKEN", "")
     if not token:
         return not _database_profile()  # legacy/local sem env: scrape local aberto
@@ -2528,8 +3053,10 @@ _metrics_sql_cache = _MetricsSqlCache()
 
 def _load_metrics_sql() -> None:
     from observability.metrics import metrics
+
     try:
         from infrastructure.runtime import get_runtime
+
         runtime = get_runtime()
         pool = getattr(runtime.job_queue, "pool", None)
         if pool is not None:
@@ -2561,21 +3088,32 @@ def _load_metrics_sql() -> None:
                 metrics.set_gauge("rpg_jobs", {"kind": kind, "status": status}, row["count"])
             for kind in kinds:
                 ages = [
-                    float(row["oldest"] or 0) for row in rows
+                    float(row["oldest"] or 0)
+                    for row in rows
                     if str(row["kind"]) == kind
                     and str(row["status"]) in {"queued", "retry", "running"}
                 ]
-                metrics.set_gauge("rpg_job_oldest_age_seconds", {"kind": kind},
-                                  max(ages, default=0.0))
+                metrics.set_gauge(
+                    "rpg_job_oldest_age_seconds", {"kind": kind}, max(ages, default=0.0)
+                )
             for row in operations:
-                metrics.set_gauge("rpg_operation_lease_age_seconds", {"kind": str(row["kind"])},
-                                  float(row["age"] or 0))
+                metrics.set_gauge(
+                    "rpg_operation_lease_age_seconds",
+                    {"kind": str(row["kind"])},
+                    float(row["age"] or 0),
+                )
             for row in embedding:
-                metrics.set_gauge("rpg_memory_embedding_backlog",
-                                  {"status": str(row["embedding_status"])}, row["count"])
+                metrics.set_gauge(
+                    "rpg_memory_embedding_backlog",
+                    {"status": str(row["embedding_status"])},
+                    row["count"],
+                )
             stats = getattr(getattr(pool, "_pool", None), "get_stats", lambda: {})()
-            for source, label in (("pool_available", "available"), ("pool_size", "size"),
-                                  ("requests_waiting", "waiting")):
+            for source, label in (
+                ("pool_available", "available"),
+                ("pool_size", "size"),
+                ("requests_waiting", "waiting"),
+            ):
                 metrics.set_gauge("rpg_db_pool", {"state": label}, stats.get(source, 0))
         metrics.set_gauge("rpg_metrics_db_error", {}, 0)
     except Exception:
@@ -2585,24 +3123,28 @@ def _load_metrics_sql() -> None:
 @app.get("/metrics", include_in_schema=False)
 def prometheus_metrics(request: Request):
     from observability.metrics import metrics
+
     if not _metrics_authorized(request):
         return Response(status_code=404)
     if _database_profile():
         _metrics_sql_cache.refresh(_load_metrics_sql)
     try:
         from pathlib import Path
-        manifests = list(Path(
-            os.getenv("RPG_BACKUP_ROOT", "readiness_artifacts")
-        ).glob("backup-*/manifest.json"))
+
+        manifests = list(
+            Path(os.getenv("RPG_BACKUP_ROOT", "readiness_artifacts")).glob("backup-*/manifest.json")
+        )
         if manifests:
             newest = max(item.stat().st_mtime for item in manifests)
             metrics.set_gauge(
-                "rpg_backup_age_seconds", {"component": "complete"},
+                "rpg_backup_age_seconds",
+                {"component": "complete"},
                 max(0.0, time.time() - newest),
             )
     except OSError:
         pass
     from services.finops_alerts import publish_evaluation_age  # SPEC-196: grows if cron stops
+
     publish_evaluation_age()
     return Response(
         metrics.render_prometheus(),
@@ -2620,18 +3162,20 @@ def combat_simulator_options() -> dict[str, Any]:
         category = str(raw.get("categoria") or "padrao").strip().lower()
         if category not in allowed:
             continue
-        enemies.append({
-            "id": str(enemy_id),
-            "name": str(raw.get("name") or enemy_id),
-            "category": category,
-            "regions": [str(region) for region in (raw.get("regions") or [])],
-        })
-    enemies.sort(key=lambda enemy: (
-        {"lacaio": 0, "padrao": 1, "elite": 2, "nomeado": 3, "chefe": 4}[
-            enemy["category"]
-        ],
-        enemy["name"].casefold(),
-    ))
+        enemies.append(
+            {
+                "id": str(enemy_id),
+                "name": str(raw.get("name") or enemy_id),
+                "category": category,
+                "regions": [str(region) for region in (raw.get("regions") or [])],
+            }
+        )
+    enemies.sort(
+        key=lambda enemy: (
+            {"lacaio": 0, "padrao": 1, "elite": 2, "nomeado": 3, "chefe": 4}[enemy["category"]],
+            enemy["name"].casefold(),
+        )
+    )
     return {
         "classes": list(gamedata.CLASSES),
         "levels": [1, 3, 5, 10],
@@ -2645,23 +3189,28 @@ def _build_combat_simulator_state(req: CombatSimulatorRequest) -> dict:
     from services import conflict_orchestrator as orchestrator
     from services import conflict_scene
 
-    player = create_player_character({
-        "name": "Combatente de Teste",
-        "class_name": req.class_name,
-        "race": "Humano",
-        "region": "Nova Arcádia",
-        "backstory": "Laboratório mecânico de combate.",
-        "level": req.level,
-    }, use_llm_flavor=False)
-    player.update({
-        "gold": 0,
-        "alignment": "Neutro",
-        "active_conditions": [],
-        "dead": False,
-        "estado_terminal": False,
-        "last_stand_pending": False,
-        "last_stand_resolved": False,
-    })
+    player = create_player_character(
+        {
+            "name": "Combatente de Teste",
+            "class_name": req.class_name,
+            "race": "Humano",
+            "region": "Nova Arcádia",
+            "backstory": "Laboratório mecânico de combate.",
+            "level": req.level,
+        },
+        use_llm_flavor=False,
+    )
+    player.update(
+        {
+            "gold": 0,
+            "alignment": "Neutro",
+            "active_conditions": [],
+            "dead": False,
+            "estado_terminal": False,
+            "last_stand_pending": False,
+            "last_stand_resolved": False,
+        }
+    )
     orchestrator.ensure_combat_sheet(player, is_player=True)
 
     template = gamedata.BESTIARY[req.enemy_id]
@@ -2672,30 +3221,39 @@ def _build_combat_simulator_state(req: CombatSimulatorRequest) -> dict:
         enemy["id"] = f"{req.enemy_id}__sim_{index}"
         if req.quantity > 1:
             enemy["name"] = f"{template.get('name', req.enemy_id)} {index}"
-        enemy.update({
-            "status": "ativo", "dead": False, "fled": False,
-            "surrendered": False, "conscious": True,
-            "active_conditions": [],
-            "ferimentos": {"leve": [], "grave": [], "critico": []},
-        })
+        enemy.update(
+            {
+                "status": "ativo",
+                "dead": False,
+                "fled": False,
+                "surrendered": False,
+                "conscious": True,
+                "active_conditions": [],
+                "ferimentos": {"leve": [], "grave": [], "critico": []},
+            }
+        )
         enemy["vitalidade"] = int(enemy.get("max_vitalidade") or enemy.get("vitalidade") or 1)
         enemies.append(orchestrator.ensure_combat_sheet(enemy))
 
-    scene = conflict_scene.new_scene([
-        {"id": "arena", "name": "Arena do Véu", "connections": []},
-    ])
+    scene = conflict_scene.new_scene(
+        [
+            {"id": "arena", "name": "Arena do Véu", "connections": []},
+        ]
+    )
     conflict_scene.place(scene, "player", zone_id="arena", distance_state="proximo")
     for enemy in enemies:
-        conflict_scene.place(
-            scene, enemy["id"], zone_id="arena", distance_state="proximo"
-        )
+        conflict_scene.place(scene, enemy["id"], zone_id="arena", distance_state="proximo")
     conflict_scene.freeze(scene)
 
     world = starting_world("Nova Arcádia", req.level)
     world["current_location"] = "Arena do Véu"
     category = str(template.get("categoria") or "padrao").lower()
     world["danger_level"] = {
-        "lacaio": 1, "padrao": 2, "elite": 4, "nomeado": 5, "chefe": 6,
+        "lacaio": 1,
+        "padrao": 2,
+        "elite": 4,
+        "nomeado": 5,
+        "chefe": 6,
     }.get(category, 2)
     game_id = str(uuid.uuid4())
     enemy_label = str(template.get("name") or req.enemy_id)
@@ -2715,10 +3273,14 @@ def _build_combat_simulator_state(req: CombatSimulatorRequest) -> dict:
         },
         "player": player,
         "world": world,
-        "messages": [AIMessage(content=(
-            f"⚔️ Laboratório iniciado: {req.class_name} nível {req.level} contra "
-            f"{req.quantity}× {enemy_label}. Escolha uma Carta ou manobra."
-        ))],
+        "messages": [
+            AIMessage(
+                content=(
+                    f"⚔️ Laboratório iniciado: {req.class_name} nível {req.level} contra "
+                    f"{req.quantity}× {enemy_label}. Escolha uma Carta ou manobra."
+                )
+            )
+        ],
         "party": [],
         "enemies": enemies,
         "factions": [],
@@ -2764,8 +3326,12 @@ def _build_combat_simulator_state(req: CombatSimulatorRequest) -> dict:
         "rejected_item_claims": [],
         "game_over": False,
         "death_pending": False,
-        "continuity": {"session_action_count": 0, "timeline_epoch": 0,
-                       "last_checkpoint_turn": 0, "death_history": []},
+        "continuity": {
+            "session_action_count": 0,
+            "timeline_epoch": 0,
+            "last_checkpoint_turn": 0,
+            "death_history": [],
+        },
     }
 
 
@@ -2785,9 +3351,13 @@ def new_combat_simulator(req: CombatSimulatorRequest):
         if claim is not None:
             from infrastructure.request_context import current_principal
             from infrastructure.runtime import get_runtime
+
             version, _receipt = get_runtime().turn_coordinator.commit_create(
-                current_principal(), claim, state,
-                receipt={"response": response.model_dump(mode="json")}, checkpoint=True,
+                current_principal(),
+                claim,
+                state,
+                receipt={"response": response.model_dump(mode="json")},
+                checkpoint=True,
             )
             state["_storage_version"] = version
         elif not save_game_state(state):
@@ -2796,8 +3366,10 @@ def new_combat_simulator(req: CombatSimulatorRequest):
     except Exception as exc:
         _fail_operation(claim, type(exc).__name__)
         raise HTTPException(
-            status_code=500, detail="Não foi possível criar o laboratório.",
+            status_code=500,
+            detail="Não foi possível criar o laboratório.",
         ) from exc
+
 
 @app.get("/data/options")
 def get_creation_options():
@@ -2811,6 +3383,7 @@ def get_creation_options():
         "visuals": creation_visuals(),
     }
 
+
 @app.get("/data/onboarding")
 def get_onboarding():
     """Spec onboarding-valoria (R4): lore curado do wizard de criação.
@@ -2819,9 +3392,9 @@ def get_onboarding():
     """
     data = load_json_data("onboarding.json")
     if not data:
-        raise HTTPException(status_code=404,
-                            detail="Conteúdo de onboarding indisponível.")
+        raise HTTPException(status_code=404, detail="Conteúdo de onboarding indisponível.")
     return data
+
 
 @app.get("/game/map")
 def get_game_map(game_id: str | None = None):
@@ -2831,6 +3404,7 @@ def get_game_map(game_id: str | None = None):
     com banco o carregamento já é escopado ao dono). Fail-closed: nenhum nome,
     perigo, lore ou arte de local não alcançado sai daqui."""
     from services.map_view import build_map_view
+
     state = _load_unlocked_or_locked(_resolve_save_file(game_id), game_id)
     if not state:
         raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
@@ -2850,16 +3424,15 @@ def get_world_map(game_id: str | None = None):
     """
     if game_id:
         from services.map_view import legacy_filtered_map
+
         state = _load_unlocked_or_locked(_resolve_save_file(game_id), game_id)
         if not state:
             raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
         return legacy_filtered_map(state)
     data = dict(load_json_data("world_map.json") or {})
-    data["locations"] = [
-        loc for loc in data.get("locations", [])
-        if loc.get("kind") != "interior"
-    ]
+    data["locations"] = [loc for loc in data.get("locations", []) if loc.get("kind") != "interior"]
     return data
+
 
 @app.get("/game/state")
 def get_current_state(game_id: str | None = None):
@@ -2880,6 +3453,7 @@ def get_current_state(game_id: str | None = None):
         raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
     return format_response(state)
 
+
 @app.get("/game/codex")
 def get_player_codex(game_id: str | None = None):
     """Codex do jogador (Fase 3.2) — locais/fações/personagens/criaturas/segredos
@@ -2891,6 +3465,7 @@ def get_player_codex(game_id: str | None = None):
         raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
     return player_codex(state)
 
+
 @app.get("/game/codex/dossiers")
 def get_codex_dossiers(response: Response, game_id: str | None = None):
     """SPEC-211 — dossiês vivos (NPC/local/facção/segredo/crônica + bestiário).
@@ -2898,69 +3473,86 @@ def get_codex_dossiers(response: Response, game_id: str | None = None):
     SPEC-206 (fail-closed). `GET /game/codex` segue inalterado."""
     from services.dossier_visibility import DossiersResponseModel
     from services.dossiers import build_dossiers
+
     file_to_load = _resolve_save_file(game_id)
     state = load_game_state(file_to_load)
     if not state:
         raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
     response.headers["Cache-Control"] = "private, no-store"
     # exclude_unset: chave acima do tier (R6) fica AUSENTE do JSON, nunca `null`.
-    return DossiersResponseModel.model_validate(build_dossiers(state)).model_dump(exclude_unset=True)
+    return DossiersResponseModel.model_validate(build_dossiers(state)).model_dump(
+        exclude_unset=True
+    )
 
-@app.get('/game/history')
+
+@app.get("/game/history")
 def game_history(game_id: str, cursor: str | None = None, limit: int = 50):
     state = load_game_state(_resolve_save_file(game_id))
     if not state:
-        raise HTTPException(404, 'Jogo não encontrado.')
+        raise HTTPException(404, "Jogo não encontrado.")
     from services.presentation_history import history_page
+
     try:
         page = history_page(state, cursor=cursor, limit=limit)
         # Enrichment must never mutate a presentation_history row held by the
         # loaded GameState, even transiently.
-        page['entries'] = [dict(entry) for entry in page['entries']]
+        page["entries"] = [dict(entry) for entry in page["entries"]]
     except (ValueError, TypeError) as exc:
-        raise HTTPException(409, 'history_cursor_stale') from exc
+        raise HTTPException(409, "history_cursor_stale") from exc
     # Financial data is an optional read projection. A failed query must never
     # hide the narrative or invent zero spend.
-    if _database_profile() and page['entries']:
+    if _database_profile() and page["entries"]:
         try:
             from infrastructure.account_read_model import PostgresAccountReader
             from infrastructure.request_context import current_principal
             from infrastructure.runtime import get_runtime
+
             reader = PostgresAccountReader(get_runtime().game_store.pool)
-            costs = reader.history_costs(current_principal(), uuid.UUID(game_id), page['entries'])
-            for entry in page['entries']:
-                if entry.get('role') == 'narrator':
-                    entry.update(costs.get(entry['id'],
-                                       {'cost_milli': None, 'technical_cost_usd': None,
-                                        'technical_cost_basis': None, 'technical_cost_exact': False}))
+            costs = reader.history_costs(current_principal(), uuid.UUID(game_id), page["entries"])
+            for entry in page["entries"]:
+                if entry.get("role") == "narrator":
+                    entry.update(
+                        costs.get(
+                            entry["id"],
+                            {
+                                "cost_milli": None,
+                                "technical_cost_usd": None,
+                                "technical_cost_basis": None,
+                                "technical_cost_exact": False,
+                            },
+                        )
+                    )
         except Exception:
-            for entry in page['entries']:
-                if entry.get('role') == 'narrator':
-                    entry['cost_milli'] = None
-                    entry['technical_cost_usd'] = None
-                    entry['technical_cost_basis'] = None
-                    entry['technical_cost_exact'] = False
+            for entry in page["entries"]:
+                if entry.get("role") == "narrator":
+                    entry["cost_milli"] = None
+                    entry["technical_cost_usd"] = None
+                    entry["technical_cost_basis"] = None
+                    entry["technical_cost_exact"] = False
     return page
 
 
 def _account_reader():
     if not _database_profile():
-        raise HTTPException(404, 'Conta indisponível neste perfil.')
+        raise HTTPException(404, "Conta indisponível neste perfil.")
     from infrastructure.account_read_model import PostgresAccountReader
     from infrastructure.runtime import get_runtime
+
     return PostgresAccountReader(get_runtime().game_store.pool)
 
 
-@app.get('/account/balance')
+@app.get("/account/balance")
 def account_balance():
     from infrastructure.request_context import current_principal
+
     return _account_reader().balance(current_principal())
 
 
 def _stripe_payments():
     if not _database_profile():
-        raise HTTPException(503, 'stripe_disabled')
+        raise HTTPException(503, "stripe_disabled")
     from services.stripe_checkout import StripeError, StripeSettings, StripeTestAdapter
+
     try:
         settings = StripeSettings.from_env()
     except StripeError:
@@ -2969,49 +3561,57 @@ def _stripe_payments():
         settings = StripeSettings.for_reconciliation()
     from infrastructure.runtime import get_runtime
     from infrastructure.stripe_payments import StripePayments
-    return StripePayments(get_runtime().game_store.pool, settings, StripeTestAdapter(settings.secret_key))
+
+    return StripePayments(
+        get_runtime().game_store.pool, settings, StripeTestAdapter(settings.secret_key)
+    )
 
 
 class CheckoutRequest(BaseModel):
-    model_config = {'extra': 'forbid'}
+    model_config = {"extra": "forbid"}
     sku_id: str = Field(min_length=1, max_length=120)
     request_id: uuid.UUID
 
 
-@app.get('/account/checkout/skus')
+@app.get("/account/checkout/skus")
 def checkout_skus(request: Request):
     _refuse_android_stripe(request)
     from services.stripe_checkout import StripeError
+
     try:
-        return JSONResponse(_stripe_payments().skus(), headers={'Cache-Control': 'no-store'})
+        return JSONResponse(_stripe_payments().skus(), headers={"Cache-Control": "no-store"})
     except StripeError:
-        raise HTTPException(503, 'stripe_catalog_unavailable') from None
+        raise HTTPException(503, "stripe_catalog_unavailable") from None
 
 
 def _refuse_android_stripe(request: Request) -> None:
     # SPEC-194 R8 policy (not a security boundary): the Android app never uses Stripe.
-    if request.headers.get('x-rpg-client', '').lower() == 'android':
-        raise HTTPException(403, 'stripe_unavailable_on_android')
+    if request.headers.get("x-rpg-client", "").lower() == "android":
+        raise HTTPException(403, "stripe_unavailable_on_android")
 
 
-@app.post('/account/checkout')
+@app.post("/account/checkout")
 def checkout_create(body: CheckoutRequest, request: Request):
     _refuse_android_stripe(request)
     from infrastructure.request_context import current_principal
     from services.kill_switches import SwitchOff
     from services.shard_pricing import PricingUnavailable
     from services.stripe_checkout import OpenOrdersLimit, StripeError
+
     try:
-        return JSONResponse(_stripe_payments().checkout(current_principal(), body.sku_id, body.request_id),
-                            headers={'Cache-Control': 'no-store'})
+        return JSONResponse(
+            _stripe_payments().checkout(current_principal(), body.sku_id, body.request_id),
+            headers={"Cache-Control": "no-store"},
+        )
     except OpenOrdersLimit:
-        raise QuotaExceeded('too_many_open_orders', 'owner', 60) from None
+        raise QuotaExceeded("too_many_open_orders", "owner", 60) from None
     except SwitchOff:
-        raise HTTPException(503, 'new_purchases_disabled') from None
+        raise HTTPException(503, "new_purchases_disabled") from None
     except (StripeError, PricingUnavailable) as exc:
         from infrastructure.payment_log import checkout_failed
+
         checkout_failed("create", exc)
-        raise HTTPException(503, 'stripe_checkout_unavailable') from None
+        raise HTTPException(503, "stripe_checkout_unavailable") from None
 
 
 _FAKE_GOOGLE = None
@@ -3019,113 +3619,139 @@ _FAKE_GOOGLE = None
 
 def _google_play():
     if not _database_profile():
-        raise HTTPException(503, 'google_play_disabled')
+        raise HTTPException(503, "google_play_disabled")
     from infrastructure.google_play_payments import GooglePlayPurchases, PostgresPurchaseStore
     from infrastructure.runtime import get_runtime
     from services.google_play import GooglePlayError, _account_key, shared_client
     from services.google_play_fake import FakeGooglePlayClient, fake_allowed, fake_requested
+
     global _FAKE_GOOGLE
     try:
         _account_key()  # fail closed without the HMAC key (account binding cannot be trusted)
         if fake_requested() and not fake_allowed():
-            raise GooglePlayError('google_play_unconfigured')  # fake flag on hosted/Vercel: refuse, never fall through
+            raise GooglePlayError(
+                "google_play_unconfigured"
+            )  # fake flag on hosted/Vercel: refuse, never fall through
         if fake_allowed():  # SPEC-194: local profile + explicit env only; never hosted
             _FAKE_GOOGLE = _FAKE_GOOGLE or FakeGooglePlayClient()
             client = _FAKE_GOOGLE
         else:
             client = shared_client()
     except GooglePlayError:
-        raise HTTPException(503, 'google_play_unconfigured') from None
+        raise HTTPException(503, "google_play_unconfigured") from None
     return GooglePlayPurchases(PostgresPurchaseStore(get_runtime().game_store.pool), client)
 
 
 class GooglePlayVerifyRequest(BaseModel):
-    model_config = {'extra': 'forbid'}
+    model_config = {"extra": "forbid"}
     product_id: str = Field(min_length=1, max_length=128)
     purchase_token: str = Field(min_length=16, max_length=2048)
     order_id: str | None = Field(default=None, max_length=128)
 
 
-@app.get('/account/purchases/google/profile')
+@app.get("/account/purchases/google/profile")
 def google_play_profile():
     """Value the app must pass to setObfuscatedAccountId before launching billing."""
     from infrastructure.request_context import current_principal
     from services.google_play import GooglePlayError, obfuscated_account_id
     from services.kill_switches import SwitchOff, require_purchases
+
     try:  # SPEC-196 F4: client must hide buy buttons BEFORE the user pays at Google
-        require_purchases('google_play')
+        require_purchases("google_play")
     except SwitchOff:
-        return JSONResponse({'purchases_disabled': True, 'reason': 'new_purchases_disabled'},
-                            headers={'Cache-Control': 'no-store'})
+        return JSONResponse(
+            {"purchases_disabled": True, "reason": "new_purchases_disabled"},
+            headers={"Cache-Control": "no-store"},
+        )
     try:
         account_id = obfuscated_account_id(current_principal().user_id)
     except GooglePlayError:
-        raise HTTPException(503, 'google_play_unconfigured') from None
-    return JSONResponse({'obfuscated_account_id': account_id, 'purchases_disabled': False},
-                        headers={'Cache-Control': 'no-store'})
+        raise HTTPException(503, "google_play_unconfigured") from None
+    return JSONResponse(
+        {"obfuscated_account_id": account_id, "purchases_disabled": False},
+        headers={"Cache-Control": "no-store"},
+    )
 
 
-@app.get('/account/purchases/google/products')
+@app.get("/account/purchases/google/products")
 def google_play_products():
     """Play product ids the app may query in the Store. No price: price comes from the Store only."""
     from infrastructure.google_play_payments import PostgresPurchaseStore
     from infrastructure.runtime import get_runtime
+
     if not _database_profile():
-        raise HTTPException(503, 'google_play_disabled')
+        raise HTTPException(503, "google_play_disabled")
     items = PostgresPurchaseStore(get_runtime().game_store.pool).list_products()
-    return JSONResponse({'items': items}, headers={'Cache-Control': 'no-store'})
+    return JSONResponse({"items": items}, headers={"Cache-Control": "no-store"})
 
 
-@app.post('/account/purchases/google/verify')
+@app.post("/account/purchases/google/verify")
 def google_play_verify(body: GooglePlayVerifyRequest):
     from infrastructure.request_context import current_principal
     from infrastructure.wallet import WalletConflict
     from services.google_play import GooglePlayError
-    unavailable = ('google_play_unavailable', 'google_play_unconfigured', 'new_purchases_disabled')
-    conflicts = ('google_play_token_conflict', 'google_play_purchase_cancelled', 'google_play_already_consumed',
-                 'google_play_test_purchase_rejected')
+
+    unavailable = ("google_play_unavailable", "google_play_unconfigured", "new_purchases_disabled")
+    conflicts = (
+        "google_play_token_conflict",
+        "google_play_purchase_cancelled",
+        "google_play_already_consumed",
+        "google_play_test_purchase_rejected",
+    )
     started = time.monotonic()
     try:
-        result = _google_play().verify(current_principal(), body.product_id, body.purchase_token, body.order_id)
+        result = _google_play().verify(
+            current_principal(), body.product_id, body.purchase_token, body.order_id
+        )
     except WalletConflict:
         from infrastructure.payment_log import google_verify
+
         google_verify("google_play_wallet_conflict", body, started, level="warning")
-        raise HTTPException(409, 'google_play_wallet_conflict') from None
+        raise HTTPException(409, "google_play_wallet_conflict") from None
     except GooglePlayError as exc:
         code = str(exc)
         from infrastructure.payment_log import google_verify
-        google_verify(code, body, started, upstream_status=getattr(exc, "upstream_status", 0),
-                      level="error" if code in unavailable else "warning")
+
+        google_verify(
+            code,
+            body,
+            started,
+            upstream_status=getattr(exc, "upstream_status", 0),
+            level="error" if code in unavailable else "warning",
+        )
         if code in unavailable:
             status = 503
         elif code in conflicts:
             status = 409
-        elif code == 'account_deleted':
+        elif code == "account_deleted":
             status = 403
         else:
             status = 422
         raise HTTPException(status, code) from None
     from infrastructure.payment_log import google_verify
+
     google_verify("pending" if result.get("status") == "pending" else "credited", body, started)
-    return JSONResponse(result, headers={'Cache-Control': 'no-store'})
+    return JSONResponse(result, headers={"Cache-Control": "no-store"})
 
 
-@app.get('/account/checkout/{order_id}')
+@app.get("/account/checkout/{order_id}")
 def checkout_status(order_id: uuid.UUID):
     from infrastructure.request_context import current_principal
     from services.stripe_checkout import StripeError
+
     try:
         result = _stripe_payments().order(current_principal(), str(order_id))
     except StripeError as exc:
         from infrastructure.payment_log import checkout_failed
+
         checkout_failed("order", exc)
-        raise HTTPException(503, 'stripe_checkout_unavailable') from None
+        raise HTTPException(503, "stripe_checkout_unavailable") from None
     if result is None:
-        raise HTTPException(404, 'payment_order_not_found')
-    return JSONResponse(result, headers={'Cache-Control': 'no-store'})
+        raise HTTPException(404, "payment_order_not_found")
+    return JSONResponse(result, headers={"Cache-Control": "no-store"})
 
 
-@app.post('/payments/stripe/webhook')
+@app.post("/payments/stripe/webhook")
 async def stripe_webhook(request: Request):
     """External provider route: raw signature replaces user cookie/CSRF auth."""
     import hashlib
@@ -3139,6 +3765,7 @@ async def stripe_webhook(request: Request):
         StripeSettings,
         verify_event,
     )
+
     started = time.monotonic()
     try:
         try:
@@ -3147,31 +3774,44 @@ async def stripe_webhook(request: Request):
             settings = StripeSettings.for_reconciliation()
     except StripeError:
         _wh("disabled", started)
-        raise HTTPException(503, 'stripe_disabled') from None
-    declared = request.headers.get('content-length')
+        raise HTTPException(503, "stripe_disabled") from None
+    declared = request.headers.get("content-length")
     if declared is not None and (not declared.isdecimal() or int(declared) > MAX_WEBHOOK_BYTES):
         _wh("too_large", started)
         from services.body_limit import log_body_too_large
-        log_body_too_large(request.url.path, MAX_WEBHOOK_BYTES,
-                           int(declared) if declared.isdecimal() else None, routes=app.routes)
-        raise HTTPException(413, 'stripe_body_limit')
+
+        log_body_too_large(
+            request.url.path,
+            MAX_WEBHOOK_BYTES,
+            int(declared) if declared.isdecimal() else None,
+            routes=app.routes,
+        )
+        raise HTTPException(413, "stripe_body_limit")
     payload = bytearray()
     event = None
     try:
-        async with __import__('asyncio').timeout(15):
+        async with __import__("asyncio").timeout(15):
             async for chunk in request.stream():
                 if len(payload) + len(chunk) > MAX_WEBHOOK_BYTES:
                     _wh("too_large", started)
                     from services.body_limit import log_body_too_large
+
                     log_body_too_large(request.url.path, MAX_WEBHOOK_BYTES, routes=app.routes)
-                    raise HTTPException(413, 'stripe_body_limit')
+                    raise HTTPException(413, "stripe_body_limit")
                 payload.extend(chunk)
         raw_body = bytes(payload)
-        event = verify_event(raw_body, request.headers.get('stripe-signature', ''), settings.webhook_secret)
-        result = await run_in_threadpool(_stripe_payments().accept_event, event,
-                                         body_sha256=hashlib.sha256(raw_body).hexdigest())
-        _wh("duplicate" if result.get("duplicate") else "applied", started, event=event,
-            apply_result=result.get("apply_result"))
+        event = verify_event(
+            raw_body, request.headers.get("stripe-signature", ""), settings.webhook_secret
+        )
+        result = await run_in_threadpool(
+            _stripe_payments().accept_event, event, body_sha256=hashlib.sha256(raw_body).hexdigest()
+        )
+        _wh(
+            "duplicate" if result.get("duplicate") else "applied",
+            started,
+            event=event,
+            apply_result=result.get("apply_result"),
+        )
         return result
     except StripeError as exc:
         code = str(exc.args[0] if exc.args else "")
@@ -3179,16 +3819,23 @@ async def stripe_webhook(request: Request):
             _wh("signature_invalid", started, error_code=code)
         elif code == "stripe_event_replay_conflict":
             _wh("replay_conflict", started, event=event)
-        else:      # evento autentico recusado pelas regras financeiras (ex.: sku_mismatch)
-            _wh("rejected", started, event=event, error_code=code,
-                apply_result="sku_mismatch" if code == "stripe_order_sku_authority_mismatch" else None)
-        raise HTTPException(400, 'stripe_event_invalid') from None
+        else:  # evento autentico recusado pelas regras financeiras (ex.: sku_mismatch)
+            _wh(
+                "rejected",
+                started,
+                event=event,
+                error_code=code,
+                apply_result="sku_mismatch"
+                if code == "stripe_order_sku_authority_mismatch"
+                else None,
+            )
+        raise HTTPException(400, "stripe_event_invalid") from None
     except TimeoutError:
         _wh("timeout", started)
-        raise HTTPException(408, 'stripe_body_timeout') from None
+        raise HTTPException(408, "stripe_body_timeout") from None
 
 
-@app.post('/account/transcriptions')
+@app.post("/account/transcriptions")
 async def account_transcription(request: Request):
     """Raw audio upload, separate from game actions. No multipart spool or recording store."""
     from infrastructure.contracts import Conflict
@@ -3202,128 +3849,172 @@ async def account_transcription(request: Request):
         canonical_mime,
         transcribe_audio,
     )
-    if not _database_profile() or os.getenv('RPG_SPEECH_ENABLED', '0') != '1':
-        raise HTTPException(503, 'speech_disabled')
+
+    if not _database_profile() or os.getenv("RPG_SPEECH_ENABLED", "0") != "1":
+        raise HTTPException(503, "speech_disabled")
     principal = current_principal()
     runtime = get_runtime()
     decision = runtime.rate_limiter.consume(
-        f'speech:{principal.user_id}', limit=5, window_seconds=60,
+        f"speech:{principal.user_id}",
+        limit=5,
+        window_seconds=60,
     )
     if not decision.allowed:
         from services.abuse_policy import record_block
-        record_block('stt', 'owner', owner=principal.user_id,
-                     retry_after=decision.retry_after_seconds, limit=5)
-        raise HTTPException(429, 'speech_rate_limit',
-                            headers={'Retry-After': str(decision.retry_after_seconds)})
+
+        record_block(
+            "stt",
+            "owner",
+            owner=principal.user_id,
+            retry_after=decision.retry_after_seconds,
+            limit=5,
+        )
+        raise HTTPException(
+            429, "speech_rate_limit", headers={"Retry-After": str(decision.retry_after_seconds)}
+        )
     try:
-        operation_id = uuid.UUID(request.headers.get('x-operation-id', ''))
-        mime = canonical_mime(request.headers.get('content-type', ''))
-        declared = request.headers.get('content-length')
-        if declared is not None and (not declared.isdecimal() or not 0 < int(declared) <= MAX_AUDIO_BYTES):
+        operation_id = uuid.UUID(request.headers.get("x-operation-id", ""))
+        mime = canonical_mime(request.headers.get("content-type", ""))
+        declared = request.headers.get("content-length")
+        if declared is not None and (
+            not declared.isdecimal() or not 0 < int(declared) <= MAX_AUDIO_BYTES
+        ):
             from services.body_limit import log_body_too_large
-            log_body_too_large(request.url.path, MAX_AUDIO_BYTES,
-                               int(declared) if declared.isdecimal() else None, routes=app.routes)
-            raise SpeechError('audio_bytes', 413)
+
+            log_body_too_large(
+                request.url.path,
+                MAX_AUDIO_BYTES,
+                int(declared) if declared.isdecimal() else None,
+                routes=app.routes,
+            )
+            raise SpeechError("audio_bytes", 413)
         payload = bytearray()
-        async with __import__('asyncio').timeout(15):
+        async with __import__("asyncio").timeout(15):
             async for chunk in request.stream():
                 if len(payload) + len(chunk) > MAX_AUDIO_BYTES:
                     from services.body_limit import log_body_too_large
+
                     log_body_too_large(request.url.path, MAX_AUDIO_BYTES, routes=app.routes)
-                    raise SpeechError('audio_bytes', 413)
+                    raise SpeechError("audio_bytes", 413)
                 payload.extend(chunk)
         from infrastructure.speech_finance import PostgresSpeechFinance
-        result = await transcribe_audio(bytes(payload), mime, operation_id,
-                                        PostgresSpeechFinance(runtime, principal))
-        return JSONResponse(result, headers={'Cache-Control': 'no-store'})
+
+        result = await transcribe_audio(
+            bytes(payload), mime, operation_id, PostgresSpeechFinance(runtime, principal)
+        )
+        return JSONResponse(result, headers={"Cache-Control": "no-store"})
     except SpeechError as exc:
         raise HTTPException(exc.status, exc.code) from None
     except InsufficientShards:
-        raise HTTPException(402, 'speech_insufficient_balance') from None
+        raise HTTPException(402, "speech_insufficient_balance") from None
     except (Conflict, WalletConflict):
         # Transcript is ephemeral. A consumed key never retranscribes its audio.
-        raise HTTPException(409, 'speech_operation_unavailable') from None
+        raise HTTPException(409, "speech_operation_unavailable") from None
     except PricingUnavailable:
-        raise HTTPException(503, 'speech_pricing_unavailable') from None
+        raise HTTPException(503, "speech_pricing_unavailable") from None
     except (ValueError, TimeoutError):
-        raise HTTPException(422, 'speech_request_invalid') from None
+        raise HTTPException(422, "speech_request_invalid") from None
     except Exception as exc:
         from observability.telemetry import log_event, safe_stack
-        log_event("stt", "internal_error", level="error", code="speech_internal_error",
-                  error_type=type(exc).__name__, stack=safe_stack(exc))
-        raise HTTPException(503, 'speech_internal_error') from None
+
+        log_event(
+            "stt",
+            "internal_error",
+            level="error",
+            code="speech_internal_error",
+            error_type=type(exc).__name__,
+            stack=safe_stack(exc),
+        )
+        raise HTTPException(503, "speech_internal_error") from None
 
 
-@app.get('/account/purchases')
+@app.get("/account/purchases")
 def account_purchases(cursor: str | None = None, limit: int = 20):
     from infrastructure.request_context import current_principal
+
     try:
         return _account_reader().purchases(current_principal(), cursor=cursor, limit=limit)
     except ValueError as exc:
         raise HTTPException(400, "invalid_request") from exc
 
 
-@app.get('/account/usage')
+@app.get("/account/usage")
 def account_usage(cursor: str | None = None, limit: int = 20):
     from infrastructure.request_context import current_principal
+
     try:
         return _account_reader().usage(current_principal(), cursor=cursor, limit=limit)
     except ValueError as exc:
         raise HTTPException(400, "invalid_request") from exc
 
 
-@app.get('/account/series')
-def account_series(period: str = '7d'):
+@app.get("/account/series")
+def account_series(period: str = "7d"):
     from infrastructure.request_context import current_principal
+
     try:
         return _account_reader().series(current_principal(), period)
     except ValueError as exc:
         raise HTTPException(400, "invalid_request") from exc
 
 
-@app.get('/game/{game_id}/operations/{operation_id}/cost')
+@app.get("/game/{game_id}/operations/{operation_id}/cost")
 def turn_cost(game_id: str, operation_id: str):
     state = load_game_state(_resolve_save_file(game_id))
     if not state:
-        raise HTTPException(404, 'Jogo não encontrado.')
+        raise HTTPException(404, "Jogo não encontrado.")
     if not _database_profile():
-        return {'history_id': None, 'cost_milli': None, 'technical_cost_usd': None,
-                'technical_cost_basis': None, 'technical_cost_exact': False}
+        return {
+            "history_id": None,
+            "cost_milli": None,
+            "technical_cost_usd": None,
+            "technical_cost_basis": None,
+            "technical_cost_exact": False,
+        }
     from infrastructure.request_context import current_principal
+
     try:
-        cost = _account_reader().operation_cost(current_principal(), uuid.UUID(game_id),
-                                                uuid.UUID(operation_id))
+        cost = _account_reader().operation_cost(
+            current_principal(), uuid.UUID(game_id), uuid.UUID(operation_id)
+        )
     except ValueError as exc:
-        raise HTTPException(400, 'ID inválido.') from exc
+        raise HTTPException(400, "ID inválido.") from exc
     if cost is None:
-        raise HTTPException(404, 'Turno não encontrado.')
+        raise HTTPException(404, "Turno não encontrado.")
     return cost
 
 
-@app.get('/game/{game_id}/operations/{operation_id}')
+@app.get("/game/{game_id}/operations/{operation_id}")
 def operation_status(game_id: str, operation_id: str):
     state = load_game_state(_resolve_save_file(game_id))  # ownership before lookup
     if not state:
-        raise HTTPException(404, 'Jogo não encontrado.')
+        raise HTTPException(404, "Jogo não encontrado.")
     try:
-        op, gid = uuid.UUID(operation_id), uuid.UUID(str(state['game_id']))
+        op, gid = uuid.UUID(operation_id), uuid.UUID(str(state["game_id"]))
     except ValueError as exc:
-        raise HTTPException(400, 'ID inválido.') from exc
+        raise HTTPException(400, "ID inválido.") from exc
     if not _database_profile():
-        return {'status': 'completed' if _action_already_processed(state, operation_id) else 'unknown',
-                'response': None, 'legacy': True}
+        return {
+            "status": "completed" if _action_already_processed(state, operation_id) else "unknown",
+            "response": None,
+            "legacy": True,
+        }
     from infrastructure.request_context import current_principal
     from infrastructure.runtime import get_runtime
+
     runtime = get_runtime()
     with runtime.resources[0].connection() as connection:
         row = connection.execute(
-            'select status,receipt,request_sha256 from app.operations where id=%s and game_id=%s and owner_id=%s',
+            "select status,receipt,request_sha256 from app.operations where id=%s and game_id=%s and owner_id=%s",
             (op, gid, current_principal().user_id),
         ).fetchone()
     if not row:
-        return {'status': 'unknown', 'response': None}
-    return {'status': row['status'], 'response': (row['receipt'] or {}).get('response'),
-            'request_hash': row['request_sha256']}
+        return {"status": "unknown", "response": None}
+    return {
+        "status": row["status"],
+        "response": (row["receipt"] or {}).get("response"),
+        "request_hash": row["request_sha256"],
+    }
 
 
 @app.post("/game/prologue")
@@ -3340,7 +4031,7 @@ def game_prologue(req: CreateCharacterRequest):
         "backstory": req.backstory or "",
         "level": req.level,
     }
-    _enforce_owner_budget("llm_aux")    # SPEC-219 R3 (minuto/owner ja aplicado na fronteira)
+    _enforce_owner_budget("llm_aux")  # SPEC-219 R3 (minuto/owner ja aplicado na fronteira)
     with _meter_auxiliary_operation("prologue"):
         scenario, mock = build_start_scenario(char_input)
     return {"scenario": scenario.model_dump(), "mock": mock}
@@ -3360,9 +4051,13 @@ def _meter_auxiliary_operation(kind: str, *, game_id: uuid.UUID | None = None):
         coordinator = get_runtime().turn_coordinator
         operation_id = uuid.uuid4()
         claim = coordinator.claim(
-            current_principal(), operation_id, game_id=game_id, kind=kind,
+            current_principal(),
+            operation_id,
+            game_id=game_id,
+            kind=kind,
             request_hash=hashlib.sha256(operation_id.bytes).hexdigest(),
-            base_version=None, exclusive=False,
+            base_version=None,
+            exclusive=False,
         )
     llm_token = _llm_turn_events.set([])
     attempt_token = _llm_attempt_events.set([])
@@ -3371,14 +4066,16 @@ def _meter_auxiliary_operation(kind: str, *, game_id: uuid.UUID | None = None):
         with embedding_usage_scope(_embedding_telemetry_hook):
             yield
         if claim is not None:
-            coordinator.complete(claim, committed_version=None,
-                                 receipt={"status": "completed"},
-                                 usage_events=_captured_usage(claim))
+            coordinator.complete(
+                claim,
+                committed_version=None,
+                receipt={"status": "completed"},
+                usage_events=_captured_usage(claim),
+            )
     except Exception as exc:
         if claim is not None:
             try:
-                coordinator.fail(claim, type(exc).__name__,
-                                 usage_events=_captured_usage(claim))
+                coordinator.fail(claim, type(exc).__name__, usage_events=_captured_usage(claim))
             except Exception as fail_exc:
                 _release_failed(claim, fail_exc, exc)
         raise
@@ -3391,20 +4088,31 @@ def _meter_auxiliary_operation(kind: str, *, game_id: uuid.UUID | None = None):
 @app.post("/game/art/brief")
 def preview_player_art_brief(req: ArtBriefRequest):
     from services.art_brief import build_player_art_brief, render_image_prompt
+
     brief = build_player_art_brief(req.model_dump())
-    return {"brief": brief, "rendered_prompt": render_image_prompt(brief),
-            "provider_called": False}
+    return {"brief": brief, "rendered_prompt": render_image_prompt(brief), "provider_called": False}
 
 
 def _enqueue_art_generation(state: dict, trigger, brief: dict) -> dict:
     """Automatic triggers publish offers; no reservation or job is created."""
     from dataclasses import asdict
-    offer_id = str(uuid.uuid5(uuid.NAMESPACE_URL,
-        f"art-offer:{state['game_id']}:{trigger.trigger_kind}:{trigger.trigger_instance_id}:{trigger.arc_instance_id}"))
+
+    offer_id = str(
+        uuid.uuid5(
+            uuid.NAMESPACE_URL,
+            f"art-offer:{state['game_id']}:{trigger.trigger_kind}:{trigger.trigger_instance_id}:{trigger.arc_instance_id}",
+        )
+    )
     offers = list(state.get("art_offers") or [])
     if not any(row.get("offer_id") == offer_id for row in offers):
-        offers.append({"offer_id": offer_id, "type": trigger.subject_type,
-                       "trigger": asdict(trigger), "brief": brief})
+        offers.append(
+            {
+                "offer_id": offer_id,
+                "type": trigger.subject_type,
+                "trigger": asdict(trigger),
+                "brief": brief,
+            }
+        )
     state["art_offers"] = offers[-32:]
     return {"status": "offered", "offer_id": offer_id, "placeholder": True}
 
@@ -3432,6 +4140,7 @@ def _guard_image_effect() -> None:
     from services.finops_alerts import require_paid_effect
     from services.kill_switches import IMAGE, SwitchOff, get_switches
     from services.shard_pricing import PricingUnavailable
+
     try:
         get_switches().require(IMAGE)
         require_paid_effect("image")
@@ -3445,7 +4154,12 @@ def _image_finance(*, guard: bool = True):
     from infrastructure.request_context import current_principal
     from infrastructure.runtime import get_runtime
     from services.image_quotes import ImageQuoteRepository
-    if not _database_profile() or os.getenv("RPG_DYNAMIC_ART_ENABLED", "0").lower() not in {"1", "true", "yes"}:
+
+    if not _database_profile() or os.getenv("RPG_DYNAMIC_ART_ENABLED", "0").lower() not in {
+        "1",
+        "true",
+        "yes",
+    }:
         raise HTTPException(503, "image_quotes_unavailable")
     if guard:
         _guard_image_effect()
@@ -3459,7 +4173,11 @@ def _validate_image_request(state: dict, reformulation: bool, image_type: str) -
     if state.get("death_pending"):
         raise HTTPException(409, "Resolva a queda antes de encomendar arte.")
     if image_type == "player":
-        rows = [row for row in state.get("art_generation_ledger", []) if row.get("trigger_kind") == "player_portrait"]
+        rows = [
+            row
+            for row in state.get("art_generation_ledger", [])
+            if row.get("trigger_kind") == "player_portrait"
+        ]
         if (reformulation and len(rows) != 1) or (not reformulation and rows):
             raise HTTPException(409, "Retrato ou reformulação indisponível.")
 
@@ -3471,6 +4189,7 @@ def create_image_quote(game_id: str, req: ArtQuoteRequest):
     from services.art_triggers import ArtGenerationRequest
     from services.image_quotes import public_quote
     from services.shard_pricing import PricingUnavailable
+
     runtime, principal, repository = _image_finance()
     state = load_game_state(_resolve_save_file(game_id))
     if not state:
@@ -3485,26 +4204,41 @@ def create_image_quote(game_id: str, req: ArtQuoteRequest):
                     """select 1 from app.art_generations g join app.wallet_reservations w
                     on w.reservation_id=g.wallet_reservation_id where g.game_id=%s and g.owner_id=%s
                     and g.subject_type='player' and w.status not in ('settled','released')""",
-                    (uuid.UUID(game_id), principal.user_id)).fetchone()
+                    (uuid.UUID(game_id), principal.user_id),
+                ).fetchone()
             if blocked:
                 raise HTTPException(409, "Confira a geração anterior antes de reformular.")
         request_key = str(uuid.uuid4())
-        trigger = ArtGenerationRequest("player_portrait", request_key, "player", "player", None, request_key)
+        trigger = ArtGenerationRequest(
+            "player_portrait", request_key, "player", "player", None, request_key
+        )
         brief = build_player_art_brief(state.get("player") or {}, reformulation=req.reformulation)
     else:
         if req.reformulation:
             raise HTTPException(422, "reformulation_only_player")
-        offer = next((row for row in state.get("art_offers", []) if row["offer_id"] == str(req.offer_id)
-                      and row["type"] == req.image_type), None)
+        offer = next(
+            (
+                row
+                for row in state.get("art_offers", [])
+                if row["offer_id"] == str(req.offer_id) and row["type"] == req.image_type
+            ),
+            None,
+        )
         if not offer:
             raise HTTPException(404, "Oferta não encontrada.")
         trigger = ArtGenerationRequest(**offer["trigger"])
         brief = offer["brief"]
     profile = load_json_data("dynamic_art_profiles.json") or {}
     try:
-        quote = repository.issue(principal, uuid.UUID(game_id), request=trigger, brief=brief,
-            model=str(profile.get("model")), profile_version=str(profile.get("profile_version")),
-            reformulation=req.reformulation)
+        quote = repository.issue(
+            principal,
+            uuid.UUID(game_id),
+            request=trigger,
+            brief=brief,
+            model=str(profile.get("model")),
+            profile_version=str(profile.get("profile_version")),
+            reformulation=req.reformulation,
+        )
     except PricingUnavailable:
         raise HTTPException(503, "image_pricing_unavailable") from None
     except Conflict:
@@ -3521,6 +4255,7 @@ def confirm_player_art(game_id: str, req: ArtConfirmRequest):
     from services.shard_pricing import PricingUnavailable
     from services.turn_effects import effect_scope
     from services.turn_execution import operation_scope
+
     # SPEC-196: replay of an existing generation must keep working with the switch off;
     # only a NEW confirm is refused (guard runs after the `prior` lookup below).
     runtime, principal, repository = _image_finance(guard=False)
@@ -3531,19 +4266,32 @@ def confirm_player_art(game_id: str, req: ArtConfirmRequest):
     try:
         quote = repository.get(principal, uuid.UUID(game_id), req.quote_id)
         with runtime.resources[0].connection() as connection:
-            prior = connection.execute("select generation_id,status from app.art_generations where image_quote_id=%s and owner_id=%s",
-                                       (req.quote_id, principal.user_id)).fetchone()
+            prior = connection.execute(
+                "select generation_id,status from app.art_generations where image_quote_id=%s and owner_id=%s",
+                (req.quote_id, principal.user_id),
+            ).fetchone()
         if prior:
-            return {"status": prior["status"], "generation_id": str(prior["generation_id"]),
-                    "type": quote["image_type"], "placeholder": prior["status"] != "ready",
-                    **_public_art_refs(state)}
+            return {
+                "status": prior["status"],
+                "generation_id": str(prior["generation_id"]),
+                "type": quote["image_type"],
+                "placeholder": prior["status"] != "ready",
+                **_public_art_refs(state),
+            }
         _guard_image_effect()
         _validate_image_request(state, quote["reformulation"], quote["image_type"])
-        claim, request_hash, receipt = _begin_state_mutation(state, action_id=req.action_id, kind="art",
-            payload={"game_id": game_id, **req.model_dump(mode="json", exclude={"action_id"})})
+        claim, request_hash, receipt = _begin_state_mutation(
+            state,
+            action_id=req.action_id,
+            kind="art",
+            payload={"game_id": game_id, **req.model_dump(mode="json", exclude={"action_id"})},
+        )
         if receipt is not None:
             return receipt
-        with operation_scope(runtime.turn_coordinator if claim else None, claim), effect_scope() as effects:
+        with (
+            operation_scope(runtime.turn_coordinator if claim else None, claim),
+            effect_scope() as effects,
+        ):
             trigger = ArtGenerationRequest(**quote["trigger"])
             reserved = reserve_request(state, trigger)
             if not reserved:
@@ -3551,13 +4299,35 @@ def confirm_player_art(game_id: str, req: ArtConfirmRequest):
             generation_id = str(uuid.uuid5(uuid.NAMESPACE_URL, f"image-quote:{req.quote_id}"))
             reserved["art_generation_ledger"][-1]["generation_id"] = generation_id
             reserved["art_generation_ledger"][-1]["image_quote_id"] = str(req.quote_id)
-            state.update({key: reserved[key] for key in ("art_arc_budgets", "art_generation_ledger")})
-            state["art_offers"] = [row for row in state.get("art_offers", []) if row.get("trigger") != quote["trigger"]]
-            effects.defer(lambda connection, epoch, version: repository.confirm(principal, uuid.UUID(game_id),
-                req.quote_id, connection=connection, epoch=epoch, version=version, queue=runtime.job_queue))
-            return _commit_state_mutation(state, {"status": "pending", "generation_id": generation_id,
-                "type": quote["image_type"], "placeholder": True, **_public_art_refs(state)},
-                                          claim=claim, request_hash=request_hash)
+            state.update(
+                {key: reserved[key] for key in ("art_arc_budgets", "art_generation_ledger")}
+            )
+            state["art_offers"] = [
+                row for row in state.get("art_offers", []) if row.get("trigger") != quote["trigger"]
+            ]
+            effects.defer(
+                lambda connection, epoch, version: repository.confirm(
+                    principal,
+                    uuid.UUID(game_id),
+                    req.quote_id,
+                    connection=connection,
+                    epoch=epoch,
+                    version=version,
+                    queue=runtime.job_queue,
+                )
+            )
+            return _commit_state_mutation(
+                state,
+                {
+                    "status": "pending",
+                    "generation_id": generation_id,
+                    "type": quote["image_type"],
+                    "placeholder": True,
+                    **_public_art_refs(state),
+                },
+                claim=claim,
+                request_hash=request_hash,
+            )
     except InsufficientShards:
         raise HTTPException(402, "image_insufficient_shards") from None
     except PricingUnavailable:
@@ -3598,40 +4368,56 @@ def dynamic_art_status(game_id: str, generation_id: str):
         assets = []
         if generation["status"] == "ready":
             for asset in repository.assets(principal, generation_uuid):
-                assets.append({
-                    "asset_id": str(asset["id"]),
-                    "variant": asset["variant"],
-                    "url": runtime.blob_store.signed_url(asset["object_key"], 300),
-                    "mime_type": asset["mime_type"],
-                    "bytes": int(asset["bytes"]),
-                    "width": int(asset["width"]),
-                    "height": int(asset["height"]),
-                    "sha256": asset["sha256"],
-                })
+                assets.append(
+                    {
+                        "asset_id": str(asset["id"]),
+                        "variant": asset["variant"],
+                        "url": runtime.blob_store.signed_url(asset["object_key"], 300),
+                        "mime_type": asset["mime_type"],
+                        "bytes": int(asset["bytes"]),
+                        "width": int(asset["width"]),
+                        "height": int(asset["height"]),
+                        "sha256": asset["sha256"],
+                    }
+                )
         public_error = None
         public_status = generation["status"]
         if generation.get("error_code") == "external_result_uncertain" or (
             public_status == "generating" and generation.get("worker_inactive")
         ):
             public_status = "reconcile_required"
-            public_error = "O resultado da geração precisa ser conferido; não haverá nova geração automática."
+            public_error = (
+                "O resultado da geração precisa ser conferido; não haverá nova geração automática."
+            )
         if str(generation["status"]).startswith("failed"):
-            public_error = public_error or "A arte não pôde ser gerada; o jogo continua com placeholder."
+            public_error = (
+                public_error or "A arte não pôde ser gerada; o jogo continua com placeholder."
+            )
         return {
             "generation_id": generation_id,
             "status": public_status,
             "placeholder": generation["status"] != "ready",
             "assets": assets,
             "financial_status": generation.get("financial_status"),
-            "credits_held": generation.get("financial_status") in {"reserved", "effect_started", "uncertain"},
+            "credits_held": generation.get("financial_status")
+            in {"reserved", "effect_started", "uncertain"},
             "error": public_error,
         }
-    row = next((item for item in state.get("art_generation_ledger") or []
-                if item.get("generation_id") == generation_id), None)
+    row = next(
+        (
+            item
+            for item in state.get("art_generation_ledger") or []
+            if item.get("generation_id") == generation_id
+        ),
+        None,
+    )
     if not row:
         raise HTTPException(status_code=404, detail="Geração não encontrada.")
-    return {"generation_id": generation_id, "status": row.get("status", "pending"),
-            "placeholder": row.get("status") != "ready"}
+    return {
+        "generation_id": generation_id,
+        "status": row.get("status", "pending"),
+        "placeholder": row.get("status") != "ready",
+    }
 
 
 @app.post("/game/{game_id}/art/{generation_id}/quality")
@@ -3648,15 +4434,20 @@ def dynamic_art_quality(game_id: str, generation_id: str, req: ArtQualityRequest
         profile = load_json_data("dynamic_art_profiles.json") or {}
         runtime = get_runtime()
         repository = DynamicArtRepository(
-            runtime.resources[0], model=str(profile.get("model")),
+            runtime.resources[0],
+            model=str(profile.get("model")),
             profile_version=str(profile.get("profile_version")),
         )
         try:
             repository.set_quality(
-                current_principal(), uuid.UUID(generation_id), approved=req.approved,
+                current_principal(),
+                uuid.UUID(generation_id),
+                approved=req.approved,
             )
         except (ValueError, Conflict) as exc:
-            raise HTTPException(status_code=409, detail="Arte não disponível para avaliação.") from exc
+            raise HTTPException(
+                status_code=409, detail="Arte não disponível para avaliação."
+            ) from exc
         return {"ok": True, "status": "ready" if req.approved else "rejected_quality"}
     ledger = list(state.get("art_generation_ledger") or [])
     row = next((item for item in ledger if item.get("generation_id") == generation_id), None)
@@ -3674,6 +4465,7 @@ def new_game(req: CreateCharacterRequest):
     from rag import embedding_usage_scope
     from services.turn_effects import effect_scope
     from services.turn_execution import operation_scope
+
     _bind_corr(None, getattr(req, "action_id", None))
     claim, request_hash, prior = _begin_create_operation(req)
     if prior is not None:
@@ -3682,14 +4474,21 @@ def new_game(req: CreateCharacterRequest):
     attempt_token = _llm_attempt_events.set([])
     embedding_token = _embedding_attempt_events.set([])
     try:
-        _enforce_owner_budget("llm_aux")   # SPEC-219 R3; falha aqui encerra o claim (retry com a mesma chave)
-        with operation_scope(get_runtime().turn_coordinator if claim else None, claim), effect_scope(), embedding_usage_scope(_embedding_telemetry_hook):
+        _enforce_owner_budget(
+            "llm_aux"
+        )  # SPEC-219 R3; falha aqui encerra o claim (retry com a mesma chave)
+        with (
+            operation_scope(get_runtime().turn_coordinator if claim else None, claim),
+            effect_scope(),
+            embedding_usage_scope(_embedding_telemetry_hook),
+        ):
             return _create_game(req, claim)
     except Exception as exc:
         if claim is not None:
             try:
                 get_runtime().turn_coordinator.fail(
-                    claim, type(exc).__name__, usage_events=_captured_usage(claim))
+                    claim, type(exc).__name__, usage_events=_captured_usage(claim)
+                )
             except Exception as fail_exc:
                 _release_failed(claim, fail_exc, exc)
         raise
@@ -3714,6 +4513,7 @@ def _create_game(req: CreateCharacterRequest, claim):
     }
     final_char = create_player_character(char_input)
     import gamedata
+
     gamedata.sync_vitality(final_char)
 
     # Gera ID único
@@ -3729,11 +4529,16 @@ def _create_game(req: CreateCharacterRequest, claim):
         "narrative_summary": f"A jornada de {req.name} começa em {final_char['region']}. {origin_fragment(req.backstory)}".rstrip(),  # SPEC-223 R5
         "archivist_last_run": 0,
         # Fase 3.1: capítulo 1 existe desde o turno 0 (determinístico, sem LLM)
-        "chronicle": [{"title": default_chapter_title(final_char["region"]),
-                       "started_turn": 0, "location": final_char["region"], "entries": []}],
+        "chronicle": [
+            {
+                "title": default_chapter_title(final_char["region"]),
+                "started_turn": 0,
+                "location": final_char["region"],
+                "entries": [],
+            }
+        ],
         "combat_target": None,
         "loot_source": None,
-
         # --- Dados do Player ---
         "player": {
             "name": final_char["name"],
@@ -3751,15 +4556,18 @@ def _create_game(req: CreateCharacterRequest, claim):
             "alignment": "Neutro",
             # spec conflito-01: 5 Virtudes + Vitalidade/Ferimentos (mana/stamina/attributes saíram)
             "virtudes": final_char["virtudes"],
-            "vitalidade": final_char.get("vitalidade", final_char.get("max_vitalidade", final_char["max_hp"])),
+            "vitalidade": final_char.get(
+                "vitalidade", final_char.get("max_vitalidade", final_char["max_hp"])
+            ),
             "max_vitalidade": final_char.get("max_vitalidade", final_char["max_hp"]),
             "vitalidade_max_penalty": final_char.get("vitalidade_max_penalty", 0),
             "ferimento_espacos": final_char.get("ferimento_espacos", {}),
             "ferimentos": final_char.get("ferimentos", {"leve": [], "grave": [], "critico": []}),
             "inventory": final_char["inventory"],
             # Fase 4.3: slots do creator (auto-equip) — sem isto o HUD nasce sem arma
-            "equipment": final_char.get("equipment",
-                                        {"weapon": None, "armor": None, "accessory": None}),
+            "equipment": final_char.get(
+                "equipment", {"weapon": None, "armor": None, "accessory": None}
+            ),
             "known_cards": final_char.get("known_cards", []),
             "prepared_cards": final_char.get("prepared_cards", []),
             "card_usage": final_char.get("card_usage", {}),
@@ -3767,9 +4575,11 @@ def _create_game(req: CreateCharacterRequest, claim):
             "evolved_cards": final_char.get("evolved_cards", {}),
             "pending_choices": final_char.get("pending_choices", []),
             # SPEC-227 R9: nível > 1 sobe pelo pipeline de XP — carrega o rastro.
-            **{k: final_char[k] for k in
-               ("subclass", "progression_events", "progression_grants")
-               if k in final_char},
+            **{
+                k: final_char[k]
+                for k in ("subclass", "progression_events", "progression_grants")
+                if k in final_char
+            },
             "defense": final_char["defense"],
             "attack_bonus": final_char.get("attack_bonus", 0),
             "active_conditions": [],
@@ -3783,7 +4593,9 @@ def _create_game(req: CreateCharacterRequest, claim):
         "world": starting_world(final_char["region"], req.level),
         "messages": [
             SystemMessage(content=f"A jornada de {req.name} começa em {final_char['region']}."),
-            HumanMessage(content=f"Descreva o cenário ao meu redor. Sou um {final_char['class_name']} de nível {req.level}.")
+            HumanMessage(
+                content=f"Descreva o cenário ao meu redor. Sou um {final_char['class_name']} de nível {req.level}."
+            ),
         ],
         "party": [],
         "enemies": [],
@@ -3794,8 +4606,12 @@ def _create_game(req: CreateCharacterRequest, claim):
         "archive_due": False,
         "game_over": False,
         "death_pending": False,
-        "continuity": {"session_action_count": 0, "timeline_epoch": 0,
-                       "last_checkpoint_turn": 0, "death_history": []},
+        "continuity": {
+            "session_action_count": 0,
+            "timeline_epoch": 0,
+            "last_checkpoint_turn": 0,
+            "death_history": [],
+        },
         "npcs": {},
         "campaign_plan": {},
         "needs_replan": False,
@@ -3808,8 +4624,7 @@ def _create_game(req: CreateCharacterRequest, claim):
         "art_arc_budgets": {},
         "art_generation_ledger": [],
     }
-    initial_state["player"] = progression.normalize_player_progression(
-        initial_state["player"])
+    initial_state["player"] = progression.normalize_player_progression(initial_state["player"])
 
     # spec inicio-personalizado (R5): cenário aprovado semeia plano pessoal,
     # capítulo 1, NPCs da história e a cena de abertura. Sem scenario, o
@@ -3831,22 +4646,29 @@ def _create_game(req: CreateCharacterRequest, claim):
         final_state = game_graph.invoke(initial_state)
         # A abertura posiciona a linha do tempo, mas não é ação do jogador.
         from services.continuity import mark_checkpoint
+
         final_state["continuity"] = mark_checkpoint(
             {**(final_state.get("continuity") or {}), "session_action_count": 0},
             canonical_turn=int((final_state.get("world") or {}).get("turn_count", 0) or 0),
         )
         visual_key = f"new:{new_game_id}"
-        final_state.update(resolve_turn_visual_state(initial_state, final_state,
-                                                     action_key=visual_key))
+        final_state.update(
+            resolve_turn_visual_state(initial_state, final_state, action_key=visual_key)
+        )
         response = format_response(final_state, cue_action_key=visual_key)
         from services.presentation_history import record_history
+
         record_history(final_state, response.message, include_input=False)
         if claim is not None:
             from infrastructure.request_context import current_principal
             from infrastructure.runtime import get_runtime
+
             version, _receipt = get_runtime().turn_coordinator.commit_create(
-                current_principal(), claim, final_state,
-                receipt={"response": response.model_dump(mode="json")}, checkpoint=True,
+                current_principal(),
+                claim,
+                final_state,
+                receipt={"response": response.model_dump(mode="json")},
+                checkpoint=True,
                 usage_events=_captured_usage(claim),
             )
             final_state["_storage_version"] = version
@@ -3855,8 +4677,10 @@ def _create_game(req: CreateCharacterRequest, claim):
                 raise RuntimeError("falha ao persistir jogo novo")
             # checkpoint INICIAL: a morte sempre possui um ponto de retorno.
             from persistence import save_checkpoint
+
             if not save_checkpoint(final_state):
                 import persistence as persistence_mod
+
                 persistence_mod.delete_save(new_game_id)
                 raise RuntimeError("falha ao persistir checkpoint inicial")
         return response
@@ -3864,6 +4688,7 @@ def _create_game(req: CreateCharacterRequest, claim):
         # Auditoria A6: detalhe interno só no log do servidor, nunca na resposta.
         _log_event("api", "new_game_failed", level="error", error=type(e).__name__)
         raise HTTPException(status_code=500, detail="Erro interno ao criar o jogo.")
+
 
 def _append_player_input(state: dict, input_text: str) -> None:
     """Anexa a ação do jogador ao histórico (mesma regra dos dois endpoints)."""
@@ -3882,8 +4707,11 @@ def _action_already_processed(state: dict, action_id: str | None) -> bool:
 def _mark_action_processed(state: dict, action_id: str | None) -> None:
     if not action_id:
         return
-    ledger = [str(value) for value in (state.get("processed_action_ids") or [])
-              if value and str(value) != action_id]
+    ledger = [
+        str(value)
+        for value in (state.get("processed_action_ids") or [])
+        if value and str(value) != action_id
+    ]
     ledger.append(action_id)
     state["processed_action_ids"] = ledger[-_ACTION_LEDGER_LIMIT:]
 
@@ -3898,12 +4726,14 @@ def _prepare_checkpoint(state: dict, previous: dict) -> bool:
     if (state.get("combat_simulation") or {}).get("enabled"):
         return False
     from services import checkpoints as _cp
+
     if not _cp.should_checkpoint(state, previous):
         return False
     if _database_profile():
         # Postgres grava turno+checkpoint na mesma tx; legacy só marca depois
         # que o arquivo existir (SPEC-228 R5).
         from services.continuity import mark_checkpoint
+
         state["continuity"] = mark_checkpoint(
             state.get("continuity"),
             canonical_turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
@@ -3919,7 +4749,8 @@ def _prepare_chronicle_derivatives(state: dict) -> None:
     from services.chronicle_compression import extractive_digest, should_compress
 
     chapters = ensure_chronicle_ids(
-        state.get("chronicle") or [], game_id=str(state.get("game_id", "legacy")),
+        state.get("chronicle") or [],
+        game_id=str(state.get("game_id", "legacy")),
     )
     for index, chapter in enumerate(chapters):
         if should_compress(chapter, closed=index < len(chapters) - 1):
@@ -3939,18 +4770,21 @@ def _schedule_chronicle_jobs(state: dict) -> None:
         runtime = get_runtime()
         if runtime.resources and isinstance(runtime.memory_store, PgVectorMemoryStore):
             ChronicleRepository(runtime.resources[0], runtime.memory_store).enqueue_due(
-                current_principal(), state,
+                current_principal(),
+                state,
             )
     except Exception as exc:
         logging.getLogger("rpg.chronicle").warning(
-            "falha ao agendar derivado da crônica: %s", type(exc).__name__,
+            "falha ao agendar derivado da crônica: %s",
+            type(exc).__name__,
         )
 
 
 def _operation_hash(req: ActionRequest) -> str:
     payload = req.model_dump(mode="json", exclude={"action_id"})
-    encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True,
-                         separators=(",", ":")).encode()
+    encoded = json.dumps(
+        payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode()
     return hashlib.sha256(encoded).hexdigest()
 
 
@@ -3958,8 +4792,15 @@ def _op_rejected(reason: str, kind: str, operation_id=None) -> None:
     """SPEC-247 R3: todo 409 de operacao deixa linha com motivo fechado (nunca o id cru)."""
     try:
         from observability.telemetry import log_event, pseudonym
-        log_event("operation", "rejected", level="warning", reason=reason, op_kind=kind,
-                  op_ref=pseudonym(operation_id) if operation_id else None)
+
+        log_event(
+            "operation",
+            "rejected",
+            level="warning",
+            reason=reason,
+            op_kind=kind,
+            op_ref=pseudonym(operation_id) if operation_id else None,
+        )
     except Exception:  # silent-ok: o log nunca derruba o turno
         pass
 
@@ -3968,17 +4809,27 @@ def _op_replayed(kind: str, operation_id=None) -> None:
     """SPEC-247 R3: resposta servida do recibo (idempotencia), sem reexecutar."""
     try:
         from observability.telemetry import log_event, pseudonym
-        log_event("operation", "replayed", op_kind=kind,
-                  op_ref=pseudonym(operation_id) if operation_id else None)
+
+        log_event(
+            "operation",
+            "replayed",
+            op_kind=kind,
+            op_ref=pseudonym(operation_id) if operation_id else None,
+        )
     except Exception:  # silent-ok: o log nunca derruba o turno
         pass
 
 
 def _validated_receipt(coordinator, principal, operation_id, *, game_id, kind, request_hash):
     from infrastructure.contracts import Conflict
+
     try:
         return coordinator.receipt(
-            principal, operation_id, game_id=game_id, kind=kind, request_hash=request_hash,
+            principal,
+            operation_id,
+            game_id=game_id,
+            kind=kind,
+            request_hash=request_hash,
         )
     except Conflict as exc:
         _op_rejected("request_mismatch", kind, operation_id)
@@ -3999,17 +4850,28 @@ def _begin_turn_operation(state: dict, req: ActionRequest):
     principal = current_principal()
     operation_id = uuid.UUID(req.action_id)
     request_hash = _operation_hash(req)
+
     def receipt_fn():
-        return _validated_receipt(runtime.turn_coordinator, principal, operation_id,
-            game_id=uuid.UUID(str(state["game_id"])), kind="turn", request_hash=request_hash)
+        return _validated_receipt(
+            runtime.turn_coordinator,
+            principal,
+            operation_id,
+            game_id=uuid.UUID(str(state["game_id"])),
+            kind="turn",
+            request_hash=request_hash,
+        )
+
     receipt = receipt_fn()
     if receipt and isinstance(receipt.get("response"), dict):
         _op_replayed("turn", operation_id)
         return None, request_hash, GameResponse.model_validate(receipt["response"])
     try:
         claim = runtime.turn_coordinator.claim(
-            principal, operation_id, game_id=uuid.UUID(str(state["game_id"])),
-            kind="turn", request_hash=request_hash,
+            principal,
+            operation_id,
+            game_id=uuid.UUID(str(state["game_id"])),
+            kind="turn",
+            request_hash=request_hash,
             base_version=int(state.get("_storage_version", 0) or 0),
         )
     except Conflict as exc:
@@ -4033,6 +4895,7 @@ def _failed_pending_operation(state: dict) -> str | None:
     rejeitado, então bloquear a morte criaria um deadlock."""
     from infrastructure.request_context import current_principal
     from infrastructure.runtime import get_runtime
+
     gid = uuid.UUID(str(state["game_id"]))
     with get_runtime().resources[0].connection() as connection:
         row = connection.execute(
@@ -4048,8 +4911,9 @@ def _failed_pending_operation(state: dict) -> str | None:
     return str(row["id"]) if row else None
 
 
-def _begin_state_mutation(state: dict, *, action_id: str | None, kind: str,
-                          payload: dict[str, Any]):
+def _begin_state_mutation(
+    state: dict, *, action_id: str | None, kind: str, payload: dict[str, Any]
+):
     if not _database_profile():
         return None, "", None
     if not action_id:
@@ -4062,14 +4926,23 @@ def _begin_state_mutation(state: dict, *, action_id: str | None, kind: str,
     from infrastructure.request_context import current_principal
     from infrastructure.runtime import get_runtime
 
-    encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True,
-                         separators=(",", ":"), default=str).encode()
+    encoded = json.dumps(
+        payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"), default=str
+    ).encode()
     request_hash = hashlib.sha256(encoded).hexdigest()
     runtime = get_runtime()
     principal = current_principal()
+
     def receipt_fn():
-        return _validated_receipt(runtime.turn_coordinator, principal, operation_id,
-            game_id=uuid.UUID(str(state["game_id"])), kind=kind, request_hash=request_hash)
+        return _validated_receipt(
+            runtime.turn_coordinator,
+            principal,
+            operation_id,
+            game_id=uuid.UUID(str(state["game_id"])),
+            kind=kind,
+            request_hash=request_hash,
+        )
+
     receipt = receipt_fn()
     if receipt and "response" in receipt:
         _op_replayed(kind, operation_id)
@@ -4078,15 +4951,25 @@ def _begin_state_mutation(state: dict, *, action_id: str | None, kind: str,
         pending_op = _failed_pending_operation(state)
         if pending_op:
             _op_rejected("pending_operation", kind, operation_id)
-            raise HTTPException(status_code=409, detail={
-                "code": "pending_operation", "operation_id": pending_op,
-                "message": ("Há uma ação que falhou e ainda não foi superada. Retome-a ou conclua "
-                            "uma nova ação antes desta alteração."),
-                "discardable": True})
+            raise HTTPException(
+                status_code=409,
+                detail={
+                    "code": "pending_operation",
+                    "operation_id": pending_op,
+                    "message": (
+                        "Há uma ação que falhou e ainda não foi superada. Retome-a ou conclua "
+                        "uma nova ação antes desta alteração."
+                    ),
+                    "discardable": True,
+                },
+            )
     try:
         claim = runtime.turn_coordinator.claim(
-            principal, operation_id, game_id=uuid.UUID(str(state["game_id"])),
-            kind=kind, request_hash=request_hash,
+            principal,
+            operation_id,
+            game_id=uuid.UUID(str(state["game_id"])),
+            kind=kind,
+            request_hash=request_hash,
             base_version=int(state.get("_storage_version", 0) or 0),
         )
     except Conflict as exc:
@@ -4113,22 +4996,39 @@ def _begin_create_operation(req: CreateCharacterRequest):
     from infrastructure.runtime import get_runtime
 
     payload = req.model_dump(mode="json", exclude={"action_id"})
-    request_hash = hashlib.sha256(json.dumps(
-        payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"),
-    ).encode()).hexdigest()
+    request_hash = hashlib.sha256(
+        json.dumps(
+            payload,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode()
+    ).hexdigest()
     runtime = get_runtime()
     principal = current_principal()
+
     def receipt_fn():
-        return _validated_receipt(runtime.turn_coordinator, principal, operation_id,
-            game_id=None, kind="new_game", request_hash=request_hash)
+        return _validated_receipt(
+            runtime.turn_coordinator,
+            principal,
+            operation_id,
+            game_id=None,
+            kind="new_game",
+            request_hash=request_hash,
+        )
+
     receipt = receipt_fn()
     if receipt and isinstance(receipt.get("response"), dict):
         _op_replayed("new_game", operation_id)
         return None, request_hash, GameResponse.model_validate(receipt["response"])
     try:
         claim = runtime.turn_coordinator.claim(
-            principal, operation_id, game_id=None, kind="new_game",
-            request_hash=request_hash, base_version=None,
+            principal,
+            operation_id,
+            game_id=None,
+            kind="new_game",
+            request_hash=request_hash,
+            base_version=None,
         )
     except Conflict as exc:
         receipt = receipt_fn()
@@ -4140,8 +5040,9 @@ def _begin_create_operation(req: CreateCharacterRequest):
     return claim, request_hash, None
 
 
-def _commit_state_mutation(state: dict, response: dict[str, Any], *, claim,
-                           request_hash: str) -> dict[str, Any]:
+def _commit_state_mutation(
+    state: dict, response: dict[str, Any], *, claim, request_hash: str
+) -> dict[str, Any]:
     if claim is None:
         _require_saved(state)
         return response
@@ -4150,9 +5051,15 @@ def _commit_state_mutation(state: dict, response: dict[str, Any], *, claim,
 
     try:
         version, receipt = get_runtime().turn_coordinator.commit_game(
-            current_principal(), claim, state, receipt={"response": response},
-            input_sha256=request_hash, latency_ms=0, llm_cost_usd=0.0,
-            checkpoint=False, record_turn=False,
+            current_principal(),
+            claim,
+            state,
+            receipt={"response": response},
+            input_sha256=request_hash,
+            latency_ms=0,
+            llm_cost_usd=0.0,
+            checkpoint=False,
+            record_turn=False,
         )
     except Exception as exc:
         try:
@@ -4168,10 +5075,15 @@ def _release_failed(claim, fail_exc: BaseException, cause: BaseException | None 
     """SPEC-250 R3: ``turn_coordinator.fail`` falhou => lease possivelmente nao liberado. Nunca levanta."""
     try:
         from observability.telemetry import log_event, pseudonym
-        log_event("operation", "release_failed", level="error",
-                  op_ref=pseudonym(getattr(claim, "operation_id", "")),
-                  error_type=type(fail_exc).__name__,
-                  cause_type=type(cause).__name__ if cause is not None else None)
+
+        log_event(
+            "operation",
+            "release_failed",
+            level="error",
+            op_ref=pseudonym(getattr(claim, "operation_id", "")),
+            error_type=type(fail_exc).__name__,
+            cause_type=type(cause).__name__ if cause is not None else None,
+        )
     except Exception:  # silent-ok: o log nunca mascara a falha original
         pass
 
@@ -4181,6 +5093,7 @@ def _fail_operation(claim, code: str) -> None:
         return
     try:
         from infrastructure.runtime import get_runtime
+
         get_runtime().turn_coordinator.fail(claim, code)
     except Exception as fail_exc:
         _release_failed(claim, fail_exc)
@@ -4199,6 +5112,7 @@ def _commit_turn(
     embedding_attempts: list[dict] | None = None,
 ) -> None:
     from services.presentation_history import record_history
+
     presentation_entry_id = record_history(state, response.message)
     if claim is None:
         if checkpoint:
@@ -4206,10 +5120,10 @@ def _commit_turn(
             # Falha vira adiamento (warning), nunca 500 com turno já salvo.
             from services import checkpoints as _cp
             from services.continuity import mark_checkpoint, normalize
+
             turn = int((state.get("world") or {}).get("turn_count", 0) or 0)
             if _cp.write_now(state):
-                state["continuity"] = mark_checkpoint(
-                    state.get("continuity"), canonical_turn=turn)
+                state["continuity"] = mark_checkpoint(state.get("continuity"), canonical_turn=turn)
             else:
                 meta = normalize(state.get("continuity"), canonical_turn=turn)
                 meta["checkpoint_deferred"] = True
@@ -4230,17 +5144,26 @@ def _commit_turn(
         operation_id=claim.operation_id,
         component=f"llm:{claim.lease_token}",
     )
-    usage_events = [*llm_usage_events, *normalize_attempts(
-        embedding_attempts or [], operation_id=claim.operation_id,
-        component=f"embedding:{claim.lease_token}", category="embedding",
-    )]
+    usage_events = [
+        *llm_usage_events,
+        *normalize_attempts(
+            embedding_attempts or [],
+            operation_id=claim.operation_id,
+            component=f"embedding:{claim.lease_token}",
+            category="embedding",
+        ),
+    ]
     from observability.metrics import metrics
+
     db_started = time.monotonic()
     from observability.telemetry import span
+
     try:
         with span("db.commit_turn", operation="commit_turn"):
             version, _receipt = commit(
-                current_principal(), claim, state,
+                current_principal(),
+                claim,
+                state,
                 receipt={"response": response.model_dump(mode="json")},
                 input_sha256=request_hash,
                 latency_ms=latency_ms,
@@ -4252,13 +5175,15 @@ def _commit_turn(
     except Exception:
         metrics.increment("rpg_turn_commits_total", {"outcome": "error"})
         metrics.observe(
-            "rpg_db_duration_seconds", {"operation": "commit_turn", "outcome": "error"},
+            "rpg_db_duration_seconds",
+            {"operation": "commit_turn", "outcome": "error"},
             time.monotonic() - db_started,
         )
         raise
     metrics.increment("rpg_turn_commits_total", {"outcome": "ok"})
     metrics.observe(
-        "rpg_db_duration_seconds", {"operation": "commit_turn", "outcome": "ok"},
+        "rpg_db_duration_seconds",
+        {"operation": "commit_turn", "outcome": "ok"},
         time.monotonic() - db_started,
     )
     state["_storage_version"] = version
@@ -4270,7 +5195,8 @@ def _apply_action_options(state: dict, req: ActionRequest) -> None:
     if not (state.get("combat") or {}).get("active"):
         return
     active_enemies = [
-        enemy for enemy in (state.get("enemies") or [])
+        enemy
+        for enemy in (state.get("enemies") or [])
         if not enemy.get("dead")
         and enemy.get("status", "ativo") not in ("morto", "fugiu", "rendido")
     ]
@@ -4278,25 +5204,36 @@ def _apply_action_options(state: dict, req: ActionRequest) -> None:
     if req.card_id and explicit_target:
         # SPEC-205 R10: Carta de suporte nunca mira um inimigo vindo da UI.
         from services import cards as _cards_svc
-        _effect = str(((_cards_svc.get_card(req.card_id) or {}).get("efeito") or {}).get("kind") or "")
+
+        _effect = str(
+            ((_cards_svc.get_card(req.card_id) or {}).get("efeito") or {}).get("kind") or ""
+        )
         from services.conflict_turn import _SUPPORT_EFFECTS as _SUPPORT
+
         if _effect in _SUPPORT and explicit_target in {str(e.get("id")) for e in active_enemies}:
             explicit_target = None
     # SPEC-205 R9: alvo explícito fora de `valid_targets` (estado velho) é
     # rejeitado na borda, sem tocar Entropia/frequência nem rodar turno.
     from services import combat_targeting as _targeting
+
     _bad = _targeting.check_declared_target(
-        state, card_id=req.card_id, action_kind=req.action_kind,
-        maneuver=req.maneuver, target_id=explicit_target)
-    if _bad:
-        raise HTTPException(409, detail={
-            "code": "invalid_target", "invalid_reason": _bad,
-            "message": "O alvo escolhido deixou de ser válido. Escolha de novo.",
-        })
-    state["player_reaction_card_id"] = req.reaction_card_id
-    target_id = explicit_target or (
-        str(active_enemies[0].get("id")) if active_enemies else None
+        state,
+        card_id=req.card_id,
+        action_kind=req.action_kind,
+        maneuver=req.maneuver,
+        target_id=explicit_target,
     )
+    if _bad:
+        raise HTTPException(
+            409,
+            detail={
+                "code": "invalid_target",
+                "invalid_reason": _bad,
+                "message": "O alvo escolhido deixou de ser válido. Escolha de novo.",
+            },
+        )
+    state["player_reaction_card_id"] = req.reaction_card_id
+    target_id = explicit_target or (str(active_enemies[0].get("id")) if active_enemies else None)
     action = None
     if req.card_id:
         card_target = explicit_target
@@ -4305,17 +5242,21 @@ def _apply_action_options(state: dict, req: ActionRequest) -> None:
             # próprio jogador — nunca herda o 1º inimigo (cura no inimigo).
             from agents.combat import _default_card_target
             from services import cards as cards_svc
+
             card_target = _default_card_target(
                 cards_svc.get_card(req.card_id) or {},
-                str(active_enemies[0].get("id")) if active_enemies else None)
+                str(active_enemies[0].get("id")) if active_enemies else None,
+            )
         action = {
-            "kind": "card", "card_id": req.card_id,
+            "kind": "card",
+            "card_id": req.card_id,
             "target_id": card_target,
             "params": {"ruptura": bool(req.ruptura)},
         }
     elif req.action_kind == "maneuver" and req.maneuver:
         action = {
-            "kind": "maneuver", "maneuver": req.maneuver,
+            "kind": "maneuver",
+            "maneuver": req.maneuver,
             "target_id": target_id,
         }
     elif req.action_kind in ("attack", "pass", "flee"):
@@ -4331,10 +5272,14 @@ def _apply_action_options(state: dict, req: ActionRequest) -> None:
         }
 
 
-def _latency_log_fields(timeline, llm_events: list[dict] | None,
-                        llm_attempts: list[dict] | None, *,
-                        action_id: str | None = None,
-                        input_text: str = "") -> dict[str, Any]:
+def _latency_log_fields(
+    timeline,
+    llm_events: list[dict] | None,
+    llm_attempts: list[dict] | None,
+    *,
+    action_id: str | None = None,
+    input_text: str = "",
+) -> dict[str, Any]:
     """SPEC-200 R5/R17: campos ADITIVOS da linha `rpg.turn`. Nunca levanta e
     nunca leva texto do jogador nem game_id cru (so contagens, ms e pseudonimos)."""
     if timeline is None:
@@ -4344,13 +5289,19 @@ def _latency_log_fields(timeline, llm_events: list[dict] | None,
 
         from observability.latency import input_size
         from observability.telemetry import pseudonym
+
         attempts = list(llm_attempts or [])
-        network = [a for a in attempts if a.get(
-            "network_attempted", a.get("outcome") not in {"build_error", "circuit_open"})]
+        network = [
+            a
+            for a in attempts
+            if a.get("network_attempted", a.get("outcome") not in {"build_error", "circuit_open"})
+        ]
         by_tier: dict[str, dict[str, Any]] = {}
         for item in network:
-            row = by_tier.setdefault(str(item.get("tier") or "?"), {
-                "attempts": 0, "failed": 0, "fallbacks": 0, "latency_ms": 0})
+            row = by_tier.setdefault(
+                str(item.get("tier") or "?"),
+                {"attempts": 0, "failed": 0, "fallbacks": 0, "latency_ms": 0},
+            )
             row["attempts"] += 1
             row["failed"] += 0 if item.get("outcome") == "success" else 1
             row["fallbacks"] += 1 if item.get("fell_back") else 0
@@ -4364,7 +5315,7 @@ def _latency_log_fields(timeline, llm_events: list[dict] | None,
         if not network:
             cost_usd, basis = "0", "none"
         elif not with_usage:
-            cost_usd, basis = None, "unavailable"   # nunca zero fabricado
+            cost_usd, basis = None, "unavailable"  # nunca zero fabricado
         else:
             cost_usd = str(sum((e.cost_usd for _, e in priced), Decimal("0")))
             basis = "usage" if len(with_usage) == len(network) else "partial"
@@ -4372,23 +5323,25 @@ def _latency_log_fields(timeline, llm_events: list[dict] | None,
         cached_total = sum(int(u.get("cached_tokens") or 0) for u in reported) if reported else None
         input_total = sum(int(u.get("input_tokens") or 0) for u in reported)
         ratio = round(cached_total / input_total, 4) if reported and input_total > 0 else None
-        timeline.extra.update({
-            "action_ref": pseudonym(action_id) if action_id else None,
-            "execution_mode": os.getenv("RPG_TURN_EXECUTION", "sequential").strip().lower(),
-            "attribution": "interval",
-            "llm_attempts": len(attempts),
-            "llm_fallbacks": sum(1 for a in network if a.get("fell_back")),
-            "llm_failed_attempts": sum(1 for a in network if a.get("outcome") != "success"),
-            "providers_used": sorted({str(a.get("provider") or "?") for a in network}),
-            "cost_usd": cost_usd,
-            "cost_usd_basis": basis,
-            "llm_by_tier": by_tier,
-            "cached_tokens": cached_total,
-            "cache_hit_ratio": ratio,
-            "input_chars": len(input_text or ""),
-            "input_size": input_size(len(input_text or "")),
-            "rag_cache": "not_instrumented",
-        })
+        timeline.extra.update(
+            {
+                "action_ref": pseudonym(action_id) if action_id else None,
+                "execution_mode": os.getenv("RPG_TURN_EXECUTION", "sequential").strip().lower(),
+                "attribution": "interval",
+                "llm_attempts": len(attempts),
+                "llm_fallbacks": sum(1 for a in network if a.get("fell_back")),
+                "llm_failed_attempts": sum(1 for a in network if a.get("outcome") != "success"),
+                "providers_used": sorted({str(a.get("provider") or "?") for a in network}),
+                "cost_usd": cost_usd,
+                "cost_usd_basis": basis,
+                "llm_by_tier": by_tier,
+                "cached_tokens": cached_total,
+                "cache_hit_ratio": ratio,
+                "input_chars": len(input_text or ""),
+                "input_size": input_size(len(input_text or "")),
+                "rag_cache": "not_instrumented",
+            }
+        )
         timeline.extra.setdefault("lock_wait_ms", 0)
         return timeline.fields()
     except Exception:
@@ -4399,86 +5352,148 @@ def _emit_turn_latency_metrics(timeline, route: str) -> None:
     """SPEC-200 R6: fases por turno (labels fechados). Falha nao quebra o turno."""
     try:
         from observability.metrics import metrics
+
         for phase_name, ms in timeline.phase_ms().items():
-            metrics.observe("rpg_turn_phase_seconds",
-                            {"route": route, "phase": phase_name}, ms / 1000)
+            metrics.observe(
+                "rpg_turn_phase_seconds", {"route": route, "phase": phase_name}, ms / 1000
+            )
     except Exception:
         pass
 
 
 def _turn_route(timeline) -> str:
-    return "/game/action/stream" if getattr(timeline, "transport", "") == "stream" else "/game/action"
+    return (
+        "/game/action/stream" if getattr(timeline, "transport", "") == "stream" else "/game/action"
+    )
 
 
-def _log_turn(state: dict, t0: float, eventos_antes: int, error: str | None,
-              llm_events: list[dict] | None = None, *,
-              rejections_antes: int = 0,
-              llm_attempts: list[dict] | None = None,
-              latency_fields: dict[str, Any] | None = None,
-              latency_ms: int | None = None,
-              fallbacks: list[str] | None = None) -> None:
+def _log_turn(
+    state: dict,
+    t0: float,
+    eventos_antes: int,
+    error: str | None,
+    llm_events: list[dict] | None = None,
+    *,
+    rejections_antes: int = 0,
+    llm_attempts: list[dict] | None = None,
+    latency_fields: dict[str, Any] | None = None,
+    latency_ms: int | None = None,
+    fallbacks: list[str] | None = None,
+) -> None:
     from observability.telemetry import correlation, pseudonym, safe_json
-    _turn_logger.info(safe_json({
-        "event": "turn", "evt": "turn",
-        "game_id_ref": pseudonym(state.get("game_id", "?")),
-        **correlation(),
-        "turn": (state.get("world") or {}).get("turn_count", 0),
-        "route": state.get("next", ""),
-        "latency_ms": (latency_ms if latency_ms is not None
-                       else int((time.monotonic() - t0) * 1000)),
-        "events_applied": (len(state.get("event_log", [])) - eventos_antes) if not error else 0,
-        "events_rejected": (
-            max(0, len(state.get("event_rejections", []) or []) - rejections_antes)
-            if not error else 0),
-        "error": error,
-        # SPEC-247 R1: fonte da decisao de rota + motivo de fallback (codigos fechados)
-        "route_source": state.get("route_source"),
-        "route_fallback_reason": state.get("route_fallback_reason"),
-        "fallbacks": dict(Counter(fallbacks or [])),      # SPEC-250 R5: node.reason -> contagem
-        "narrative_rejected": dict(getattr(fallbacks, "counters", None) or {}),  # SPEC-252 R2: kind -> contagem
-        **_llm_log_fields(llm_events, llm_attempts),
-        **(latency_fields or {}),
-    }))
+
+    _turn_logger.info(
+        safe_json(
+            {
+                "event": "turn",
+                "evt": "turn",
+                "game_id_ref": pseudonym(state.get("game_id", "?")),
+                **correlation(),
+                "turn": (state.get("world") or {}).get("turn_count", 0),
+                "route": state.get("next", ""),
+                "latency_ms": (
+                    latency_ms if latency_ms is not None else int((time.monotonic() - t0) * 1000)
+                ),
+                "events_applied": (len(state.get("event_log", [])) - eventos_antes)
+                if not error
+                else 0,
+                "events_rejected": (
+                    max(0, len(state.get("event_rejections", []) or []) - rejections_antes)
+                    if not error
+                    else 0
+                ),
+                "error": error,
+                # SPEC-247 R1: fonte da decisao de rota + motivo de fallback (codigos fechados)
+                "route_source": state.get("route_source"),
+                "route_fallback_reason": state.get("route_fallback_reason"),
+                "fallbacks": dict(Counter(fallbacks or [])),  # SPEC-250 R5: node.reason -> contagem
+                "narrative_rejected": dict(
+                    getattr(fallbacks, "counters", None) or {}
+                ),  # SPEC-252 R2: kind -> contagem
+                **_llm_log_fields(llm_events, llm_attempts),
+                **(latency_fields or {}),
+            }
+        )
+    )
 
 
-def _record_audit_trace(new_state: dict, previous_state: dict, *, action_id, timeline,
-                        llm_events, llm_attempts, input_text: str) -> None:
+def _record_audit_trace(
+    new_state: dict,
+    previous_state: dict,
+    *,
+    action_id,
+    timeline,
+    llm_events,
+    llm_attempts,
+    input_text: str,
+) -> None:
     """SPEC-207 R7: trilha de auditoria por turno, dentro do commit. Nunca derruba
     o turno (falha vira trilha ausente, marcada `unavailable` no export)."""
     try:
         from services.audit_trace import record_turn_trace
+
         # Popula os campos SPEC-200 da timeline (idempotente; recomputado no log).
-        _latency_log_fields(timeline, llm_events, llm_attempts,
-                            action_id=action_id, input_text=input_text)
-        record_turn_trace(new_state, previous_state=previous_state, action_id=action_id,
-                          timeline=timeline, llm_attempts=llm_attempts)
+        _latency_log_fields(
+            timeline, llm_events, llm_attempts, action_id=action_id, input_text=input_text
+        )
+        record_turn_trace(
+            new_state,
+            previous_state=previous_state,
+            action_id=action_id,
+            timeline=timeline,
+            llm_attempts=llm_attempts,
+        )
     except Exception as exc:
         _log_event("api", "audit_trace_not_written", level="warning", error=type(exc).__name__)
 
 
-def _run_turn(state: dict, input_text: str,
-              action_id: str | None = None, *, claim=None,
-              request_hash: str = "", progress=None,
-              timeline=None, out: dict | None = None,
-              pre_drain: bool = False) -> GameResponse:
+def _run_turn(
+    state: dict,
+    input_text: str,
+    action_id: str | None = None,
+    *,
+    claim=None,
+    request_hash: str = "",
+    progress=None,
+    timeline=None,
+    out: dict | None = None,
+    pre_drain: bool = False,
+) -> GameResponse:
     from rag import embedding_usage_scope
     from services.audit_trace import collecting as _audit_collecting
     from services.turn_effects import effect_scope
+
     with effect_scope(), embedding_usage_scope(_embedding_telemetry_hook), _audit_collecting():
-        return _run_turn_collected(state, input_text, action_id, claim=claim,
-                                   request_hash=request_hash, progress=progress,
-                                   timeline=timeline, out=out, pre_drain=pre_drain)
+        return _run_turn_collected(
+            state,
+            input_text,
+            action_id,
+            claim=claim,
+            request_hash=request_hash,
+            progress=progress,
+            timeline=timeline,
+            out=out,
+            pre_drain=pre_drain,
+        )
 
 
-def _run_turn_collected(state: dict, input_text: str,
-              action_id: str | None = None, *, claim=None,
-              request_hash: str = "", progress=None,
-              timeline=None, out: dict | None = None,
-              pre_drain: bool = False) -> GameResponse:
+def _run_turn_collected(
+    state: dict,
+    input_text: str,
+    action_id: str | None = None,
+    *,
+    claim=None,
+    request_hash: str = "",
+    progress=None,
+    timeline=None,
+    out: dict | None = None,
+    pre_drain: bool = False,
+) -> GameResponse:
     """Miolo do turno (spec streaming-turno-sse R2): grafo + save + log.
     Compartilhado pelo POST clássico e pelo stream — carga/validações ficam
     nos endpoints. Levanta HTTPException(500) genérica em falha (A6)."""
     from observability import latency as _lat
+
     if timeline is None:
         timeline = _lat.TurnTimeline(transport="post")
     t0 = time.monotonic()
@@ -4486,7 +5501,8 @@ def _run_turn_collected(state: dict, input_text: str,
     attempt_token = _llm_attempt_events.set([])
     embedding_token = _embedding_attempt_events.set([])
     from observability.telemetry import begin_fallbacks, end_fallbacks
-    fallback_token, fallbacks = begin_fallbacks()      # SPEC-250 R5
+
+    fallback_token, fallbacks = begin_fallbacks()  # SPEC-250 R5
     timeline_token = _lat.bind(timeline)
     if pre_drain:
         # SPEC-213 (perfil DB): projeção pendente drenada na cerca do turno, com o
@@ -4514,51 +5530,75 @@ def _run_turn_collected(state: dict, input_text: str,
     try:
         previous_state = deepcopy(state)
         from services.turn_execution import execute_graph
+
         new_state = execute_graph(
-            game_graph, state,
-            progress=_timeline_progress if hasattr(game_graph, "stream") else progress)
+            game_graph,
+            state,
+            progress=_timeline_progress if hasattr(game_graph, "stream") else progress,
+        )
         timeline.settle()
         with timeline.phase(_lat.TurnPhase.PERSISTENCE):
             visual_key = action_id or f"turn:{(new_state.get('world') or {}).get('turn_count', 0)}"
-            new_state.update(resolve_turn_visual_state(previous_state, new_state,
-                                                       action_key=visual_key))
+            new_state.update(
+                resolve_turn_visual_state(previous_state, new_state, action_key=visual_key)
+            )
             _enqueue_turn_art(previous_state, new_state, visual_key)
             _mark_action_processed(new_state, action_id)
             # SPEC-213 R4: versão canônica sobe 1 por turno commitado; derivados
             # adiados (modo A) ficam `pending` e são drenados pelo dono do lock.
             from services.projections import stamp_commit
+
             stamp_commit(new_state, action_id)
             checkpoint = _prepare_checkpoint(new_state, state)
             _prepare_chronicle_derivatives(new_state)
             response = format_response(new_state, cue_action_key=visual_key)
             llm_events = _llm_turn_events.get() or []
             llm_attempts = _llm_attempt_events.get() or []
-            _record_audit_trace(new_state, previous_state, action_id=action_id,
-                                timeline=timeline, llm_events=llm_events,
-                                llm_attempts=llm_attempts, input_text=input_text)
+            _record_audit_trace(
+                new_state,
+                previous_state,
+                action_id=action_id,
+                timeline=timeline,
+                llm_events=llm_events,
+                llm_attempts=llm_attempts,
+                input_text=input_text,
+            )
             _commit_turn(
-                new_state, response, claim=claim, request_hash=request_hash,
-                checkpoint=checkpoint, latency_ms=int((time.monotonic() - t0) * 1000),
-                llm_events=llm_events, llm_attempts=llm_attempts,
+                new_state,
+                response,
+                claim=claim,
+                request_hash=request_hash,
+                checkpoint=checkpoint,
+                latency_ms=int((time.monotonic() - t0) * 1000),
+                llm_events=llm_events,
+                llm_attempts=llm_attempts,
                 embedding_attempts=_embedding_attempt_events.get() or [],
             )
         timeline.finish()
         timeline.extra.setdefault("route_next", str(new_state.get("next", "") or ""))
         elapsed_ms = int((time.monotonic() - t0) * 1000)
-        timeline.submit_log(lambda: _log_turn(
-            new_state, t0, eventos_antes, None, llm_events,
-            rejections_antes=rejections_antes,
-            llm_attempts=llm_attempts, fallbacks=fallbacks,
-            latency_ms=elapsed_ms,
-            latency_fields=_latency_log_fields(
-                timeline, llm_events, llm_attempts,
-                action_id=action_id, input_text=input_text)))
+        timeline.submit_log(
+            lambda: _log_turn(
+                new_state,
+                t0,
+                eventos_antes,
+                None,
+                llm_events,
+                rejections_antes=rejections_antes,
+                llm_attempts=llm_attempts,
+                fallbacks=fallbacks,
+                latency_ms=elapsed_ms,
+                latency_fields=_latency_log_fields(
+                    timeline, llm_events, llm_attempts, action_id=action_id, input_text=input_text
+                ),
+            )
+        )
         from observability.metrics import metrics
+
         route_label = _turn_route(timeline)
         metrics.observe(
             "rpg_turn_duration_seconds",
-            {"route": route_label, "outcome": "ok",
-             "simulated": str(is_simulated()).lower()},
+            {"route": route_label, "outcome": "ok", "simulated": str(is_simulated()).lower()},
             time.monotonic() - t0,
         )
         _emit_turn_latency_metrics(timeline, route_label)
@@ -4567,38 +5607,58 @@ def _run_turn_collected(state: dict, input_text: str,
         return response
     except Exception as e:
         from observability.metrics import metrics
+
         metrics.observe(
             "rpg_turn_duration_seconds",
-            {"route": _turn_route(timeline), "outcome": "error",
-             "simulated": str(is_simulated()).lower()},
+            {
+                "route": _turn_route(timeline),
+                "outcome": "error",
+                "simulated": str(is_simulated()).lower(),
+            },
             time.monotonic() - t0,
         )
         timeline.finish()
         if claim is not None:
             try:
                 from infrastructure.runtime import get_runtime
+
                 failed_usage = normalize_attempts(
                     _usage_attempts(_llm_turn_events.get(), _llm_attempt_events.get()),
                     operation_id=claim.operation_id,
                     component=f"llm:{claim.lease_token}",
                 )
-                failed_usage.extend(normalize_attempts(
-                    _embedding_attempt_events.get() or [],
-                    operation_id=claim.operation_id,
-                    component=f"embedding:{claim.lease_token}", category="embedding",
-                ))
+                failed_usage.extend(
+                    normalize_attempts(
+                        _embedding_attempt_events.get() or [],
+                        operation_id=claim.operation_id,
+                        component=f"embedding:{claim.lease_token}",
+                        category="embedding",
+                    )
+                )
                 get_runtime().turn_coordinator.fail(
-                    claim, type(e).__name__, usage_events=failed_usage)
+                    claim, type(e).__name__, usage_events=failed_usage
+                )
             except Exception as fail_exc:
                 _release_failed(claim, fail_exc, e)
         _log_turn(
-            state, t0, eventos_antes, type(e).__name__, _llm_turn_events.get(),
-            rejections_antes=rejections_antes, fallbacks=fallbacks,
+            state,
+            t0,
+            eventos_antes,
+            type(e).__name__,
+            _llm_turn_events.get(),
+            rejections_antes=rejections_antes,
+            fallbacks=fallbacks,
             llm_attempts=_llm_attempt_events.get(),
             latency_fields=_latency_log_fields(
-                timeline, _llm_turn_events.get(), _llm_attempt_events.get(),
-                action_id=action_id, input_text=input_text))
+                timeline,
+                _llm_turn_events.get(),
+                _llm_attempt_events.get(),
+                action_id=action_id,
+                input_text=input_text,
+            ),
+        )
         from observability.telemetry import safe_stack
+
         _log_event("api", "turn_failed", level="error", error=type(e).__name__, stack=safe_stack(e))
         raise HTTPException(status_code=500, detail="Erro interno ao processar o turno.")
     finally:
@@ -4634,6 +5694,7 @@ def _pre_drain_in_turn(state: dict) -> dict:
     """Perfil DB: projeção pendente drenada DENTRO da cerca do turno (R10/R15),
     antes da ação do jogador entrar no histórico; memória vai no mesmo commit."""
     from services.projections import has_pending, run_pending
+
     if not has_pending(state):
         return state
     try:
@@ -4648,11 +5709,13 @@ def _await_projection_db(state: dict, game_id: str | None) -> dict:
     request/worker), espera até `RPG_PROJECTION_WAIT_SECONDS` e relê o jogo, em
     vez de repetir o LLM. Fila parada/sem dono → segue; o turno drena na cerca."""
     from services import projections
+
     plan = projections.normalize_plan(state.get("pending_derived"))
     if plan is None or plan["canonical_version"] is None or not plan["action_id"]:
         return state
     try:
         from infrastructure.runtime import get_runtime
+
         status = getattr(get_runtime().job_queue, "status", None)
         if not callable(status):
             return state
@@ -4677,6 +5740,7 @@ def _drain_projection_db(state: dict) -> None:
     """Perfil DB, pós-resposta: arrenda o PRÓPRIO job do outbox e o executa com
     o ciclo normal de lease/fence da fila (nunca thread nova; R9). Nunca levanta."""
     from services import projections
+
     payload = projections.job_payload(state)
     if payload is None:
         return
@@ -4684,25 +5748,32 @@ def _drain_projection_db(state: dict) -> None:
         from infrastructure.runtime import get_runtime
         from workers.job_worker import JobWorker
         from workers.projection_jobs import make_handler
+
         runtime = get_runtime()
         lease_key = getattr(runtime.job_queue, "lease_key", None)
         if not callable(lease_key) or not runtime.resources:
             return
-        job = lease_key("api-post-response", projections.JOB_KIND,
-                        projections.dedupe_key(payload["game_id"], payload["epoch"],
-                                               payload["action_id"]))
+        job = lease_key(
+            "api-post-response",
+            projections.JOB_KIND,
+            projections.dedupe_key(payload["game_id"], payload["epoch"], payload["action_id"]),
+        )
         if job is None:
             return
         handler = make_handler(runtime.resources[0], runtime.memory_store)
-        JobWorker(runtime.job_queue, {projections.JOB_KIND: handler},
-                  worker_id="api-post-response").run_leased(job)
+        JobWorker(
+            runtime.job_queue, {projections.JOB_KIND: handler}, worker_id="api-post-response"
+        ).run_leased(job)
     except Exception as exc:
-        _log_event("projection", "post_response_db_failed", level="warning", error=type(exc).__name__)
+        _log_event(
+            "projection", "post_response_db_failed", level="warning", error=type(exc).__name__
+        )
 
 
 def _drain_projection(state: dict, *, where: str) -> dict:
     """Executa a projeção pendente sob o lock do turno e persiste. Nunca levanta."""
     from services.projections import has_pending, run_pending
+
     if not has_pending(state):
         return state
     try:
@@ -4710,15 +5781,19 @@ def _drain_projection(state: dict, *, where: str) -> dict:
         _require_saved(drained, detail=f"projeção ({where})")
         return drained
     except Exception as exc:
-        _log_event("projection", "drain_failed", level="warning", where=where, error=type(exc).__name__)
+        _log_event(
+            "projection", "drain_failed", level="warning", where=where, error=type(exc).__name__
+        )
         return state
 
 
-def _execute_action(req: ActionRequest, *, progress=None, timeline=None,
-                    on_response=None) -> GameResponse:
+def _execute_action(
+    req: ActionRequest, *, progress=None, timeline=None, on_response=None
+) -> GameResponse:
     from infrastructure.runtime import get_runtime
     from observability import latency as _lat
     from services.turn_execution import operation_scope
+
     if timeline is None:
         timeline = _lat.TurnTimeline(transport="post")
     if not req.game_id and not _database_profile():
@@ -4741,15 +5816,16 @@ def _execute_action(req: ActionRequest, *, progress=None, timeline=None,
         if not state:
             raise HTTPException(status_code=404, detail="Jogo não encontrado.")
         if not _database_profile():
-            persistence_module.ensure_synthetic_checkpoint(state)   # SPEC-228 R4
+            persistence_module.ensure_synthetic_checkpoint(state)  # SPEC-228 R4
         operation_wait_started = _lat.now()
         if _database_profile():
             # SPEC-213 R10: projeção do turno anterior em execução → espera e relê.
             state = _await_projection_db(state, req.game_id)
         claim, request_hash, receipt = _begin_turn_operation(state, req)
         if _database_profile():
-            timeline.extra["lock_wait_ms"] += int(round(
-                (_lat.now() - operation_wait_started) * 1000))
+            timeline.extra["lock_wait_ms"] += int(
+                round((_lat.now() - operation_wait_started) * 1000)
+            )
         if receipt is not None:
             return receipt
         with operation_scope(get_runtime().turn_coordinator if claim else None, claim):
@@ -4763,6 +5839,7 @@ def _execute_action(req: ActionRequest, *, progress=None, timeline=None,
             _enforce_owner_budget("turn", minute=True)
             _apply_action_options(state, req)
             from services.projections import deferral_scope, projection_mode
+
             owner = _projection_owner()
             db = _database_profile()
             if owner and not db:
@@ -4770,14 +5847,21 @@ def _execute_action(req: ActionRequest, *, progress=None, timeline=None,
                 state = _drain_projection(state, where="pre_turn")
             holder: dict = {}
             with deferral_scope(owner and projection_mode() == "post_response"):
-                response = _run_turn(state, req.input_text, req.action_id, claim=claim,
-                                     request_hash=request_hash, progress=progress,
-                                     timeline=timeline, out=holder,
-                                     pre_drain=owner and db)
+                response = _run_turn(
+                    state,
+                    req.input_text,
+                    req.action_id,
+                    claim=claim,
+                    request_hash=request_hash,
+                    progress=progress,
+                    timeline=timeline,
+                    out=holder,
+                    pre_drain=owner and db,
+                )
         # Fora da cerca do turno (já commitado; o heartbeat do lease do turno não
         # pode falhar a request depois da entrega), mas ainda sob o lock legacy.
         if on_response is not None:
-            on_response(response)       # SSE: narração sai ANTES dos derivados
+            on_response(response)  # SSE: narração sai ANTES dos derivados
         if owner and holder.get("state") is not None:
             if db:
                 _drain_projection_db(holder["state"])
@@ -4790,10 +5874,10 @@ def _publish_timeline(timeline, outcome: str) -> None:
     """Entrega o registro final aos sinks (baseline). Nunca levanta."""
     try:
         from observability import latency as _lat
-        if outcome != "client_gone":     # o worker ainda pode estar rodando
+
+        if outcome != "client_gone":  # o worker ainda pode estar rodando
             timeline.finish()
-        _lat.publish({**timeline.fields(), "outcome": outcome,
-                      "total_ms": timeline.total_ms()})
+        _lat.publish({**timeline.fields(), "outcome": outcome, "total_ms": timeline.total_ms()})
     except Exception:
         pass
 
@@ -4802,6 +5886,7 @@ def _bind_corr(game_id=None, action_id=None) -> None:
     """SPEC-240 R2: game_ref/action_ref no contexto de log do handler (nunca o id cru)."""
     try:
         from observability.telemetry import bind_correlation
+
         bind_correlation(game_id=game_id, action_id=action_id)
     except Exception:
         pass
@@ -4810,6 +5895,7 @@ def _bind_corr(game_id=None, action_id=None) -> None:
 @app.post("/game/action", response_model=GameResponse)
 def game_action(req: ActionRequest):
     from observability import latency as _lat
+
     timeline = _lat.TurnTimeline(transport="post")
     outcome = "error"
     try:
@@ -4839,41 +5925,54 @@ def game_death(req: DeathChoiceRequest):
         if not state:
             raise HTTPException(status_code=404, detail="Jogo não encontrado.")
         claim, request_hash, receipt = _begin_state_mutation(
-            state, action_id=req.action_id, kind="death",
+            state,
+            action_id=req.action_id,
+            kind="death",
             payload=req.model_dump(mode="json", exclude={"action_id"}),
         )
         if receipt is not None:
             return GameResponse.model_validate(receipt)
         from infrastructure.runtime import get_runtime
         from services.turn_execution import operation_scope
+
         with operation_scope(get_runtime().turn_coordinator if claim else None, claim):
             _reject_archived(state)
             try:
                 _reject_archived(state)
                 if not state.get("death_pending"):
-                    raise HTTPException(status_code=409, detail="Nenhuma queda pendente para resolver.")
+                    raise HTTPException(
+                        status_code=409, detail="Nenhuma queda pendente para resolver."
+                    )
             except Exception as exc:
                 _fail_operation(claim, type(exc).__name__)
                 raise
             from services import checkpoints as _cp
+
             try:
                 new_state = _cp.resolve_death_choice(state, req.choice)
             except _cp.NoRestorePoint as exc:
                 _fail_operation(claim, "no_restore_point")
                 return _error_response(
-                    409, "Sem ponto de retorno válido; aceite o memorial ou inicie nova jornada.",
-                    code="no_restore_point", death_pending=True)
+                    409,
+                    "Sem ponto de retorno válido; aceite o memorial ou inicie nova jornada.",
+                    code="no_restore_point",
+                    death_pending=True,
+                )
             response = format_response(new_state)
             _commit_state_mutation(
-                new_state, response.model_dump(mode="json"), claim=claim,
+                new_state,
+                response.model_dump(mode="json"),
+                claim=claim,
                 request_hash=request_hash,
             )
             return response
 
+
 # --- STREAMING DO TURNO (spec streaming-turno-sse) ---------------------------
 
-_MEMORIAL_DETAIL = ("Esta saga terminou. A crônica permanece como memorial — "
-                    "comece uma nova jornada.")
+_MEMORIAL_DETAIL = (
+    "Esta saga terminou. A crônica permanece como memorial — comece uma nova jornada."
+)
 _SSE_PING_S = 10.0
 _NARRATIVE_CHUNK = 80
 
@@ -4885,16 +5984,24 @@ def _sse(event: str, data: dict) -> str:
 _STREAM_ROUTE = "/game/action/stream"
 
 
-def _stream_turn(req: ActionRequest, accepted_game_id: str, principal=None,
-                 timeline=None) -> Iterator[str]:
+def _stream_turn(
+    req: ActionRequest, accepted_game_id: str, principal=None, timeline=None
+) -> Iterator[str]:
     """Envolve o gerador SSE com as marcas de latencia (SPEC-200) e publica o
     registro final mesmo se o consumidor desconectar (GeneratorExit)."""
     from observability import latency as _lat
+
     if timeline is None:
         timeline = _lat.TurnTimeline(transport="stream")
-    outcome = {"value": "client_gone", "phase": "start", "gone": False, "worker": None,
-               "_lock": threading.Lock(), "_t0": time.monotonic()}
-    timeline.hold_log()     # SPEC-212 R13: `rpg.turn` sai apos ttfmc/ttlt
+    outcome = {
+        "value": "client_gone",
+        "phase": "start",
+        "gone": False,
+        "worker": None,
+        "_lock": threading.Lock(),
+        "_t0": time.monotonic(),
+    }
+    timeline.hold_log()  # SPEC-212 R13: `rpg.turn` sai apos ttfmc/ttlt
     _sse_log("started", transport="stream")
     try:
         yield from _stream_turn_events(req, accepted_game_id, principal, timeline, outcome)
@@ -4904,9 +6011,12 @@ def _stream_turn(req: ActionRequest, accepted_game_id: str, principal=None,
             gone = outcome["value"] == "client_gone"
             outcome["gone"] = gone
             worker_done = outcome["worker"]
-        if gone:     # SPEC-247 R2: o cliente caiu; o worker segue e conclui o turno
-            _sse_log("client_disconnected", phase=outcome["phase"],
-                     elapsed_ms=int((time.monotonic() - outcome["_t0"]) * 1000))
+        if gone:  # SPEC-247 R2: o cliente caiu; o worker segue e conclui o turno
+            _sse_log(
+                "client_disconnected",
+                phase=outcome["phase"],
+                elapsed_ms=int((time.monotonic() - outcome["_t0"]) * 1000),
+            )
             if worker_done is not None:
                 _sse_log("worker_finished_after_disconnect", outcome=worker_done)
         _log_turn_delivery(timeline, outcome["value"], outcome.get("error_type"))
@@ -4916,6 +6026,7 @@ def _stream_turn(req: ActionRequest, accepted_game_id: str, principal=None,
 def _sse_log(event: str, *, level: str = "info", **fields: Any) -> None:
     try:
         from observability.telemetry import log_event
+
         log_event("sse", event, level=level, **fields)
     except Exception:  # silent-ok: o log nunca derruba o turno
         pass
@@ -4934,24 +6045,31 @@ def _log_turn_delivery(timeline, outcome: str, error_type: str | None = None) ->
     ter logado `rpg.turn` (ttfmc/ttlt). Sem texto, sem game_id cru."""
     try:
         from observability.telemetry import safe_json
-        _turn_logger.info(safe_json({
-            "event": "turn_delivery", "evt": "turn_delivery",
-            "action_ref": timeline.extra.get("action_ref"),
-            "transport": timeline.transport,
-            "pseudo_streaming": True,
-            "ack_server_ms": timeline.mark_ms("accepted"),
-            "ttfmc_server_ms": timeline.mark_ms("ttfmc"),
-            "ttlt_server_ms": timeline.mark_ms("ttlt"),
-            "state_server_ms": timeline.mark_ms("state"),
-            "outcome": outcome,
-            **({"error_type": error_type} if outcome == "error" and error_type else {}),
-        }))
+
+        _turn_logger.info(
+            safe_json(
+                {
+                    "event": "turn_delivery",
+                    "evt": "turn_delivery",
+                    "action_ref": timeline.extra.get("action_ref"),
+                    "transport": timeline.transport,
+                    "pseudo_streaming": True,
+                    "ack_server_ms": timeline.mark_ms("accepted"),
+                    "ttfmc_server_ms": timeline.mark_ms("ttfmc"),
+                    "ttlt_server_ms": timeline.mark_ms("ttlt"),
+                    "state_server_ms": timeline.mark_ms("state"),
+                    "outcome": outcome,
+                    **({"error_type": error_type} if outcome == "error" and error_type else {}),
+                }
+            )
+        )
     except Exception:
         pass
 
 
-def _stream_turn_events(req: ActionRequest, accepted_game_id: str, principal,
-                        timeline, outcome: dict) -> Iterator[str]:
+def _stream_turn_events(
+    req: ActionRequest, accepted_game_id: str, principal, timeline, outcome: dict
+) -> Iterator[str]:
     """SSE cujo worker possui lock, execução e persistência do turno.
 
     Se o consumidor desconectar, a thread termina o save e o ``action_id`` torna
@@ -4959,18 +6077,23 @@ def _stream_turn_events(req: ActionRequest, accepted_game_id: str, principal,
     """
     stream_started = time.monotonic()
     from observability.metrics import metrics
+
     # DEPRECATED (SPEC-200 R7): mede so o enfileiramento de `accepted`; mantida
     # para nao abrir buraco em series. A medida honesta e `rpg_sse_ack_seconds`.
     metrics.observe(
-        "rpg_sse_first_event_seconds", {"route": _STREAM_ROUTE},
+        "rpg_sse_first_event_seconds",
+        {"route": _STREAM_ROUTE},
         time.monotonic() - stream_started,
     )
     outcome["phase"] = "accepted"
     yield _sse("accepted", {"game_id": accepted_game_id})
-    timeline.mark("accepted")      # retomada do gerador = proxy de flush
+    timeline.mark("accepted")  # retomada do gerador = proxy de flush
     try:
-        metrics.observe("rpg_sse_ack_seconds", {"route": _STREAM_ROUTE},
-                        (timeline.mark_ms("accepted") or 0) / 1000)
+        metrics.observe(
+            "rpg_sse_ack_seconds",
+            {"route": _STREAM_ROUTE},
+            (timeline.mark_ms("accepted") or 0) / 1000,
+        )
     except Exception:
         pass
     q: queue.Queue = queue.Queue()
@@ -4979,6 +6102,7 @@ def _stream_turn_events(req: ActionRequest, accepted_game_id: str, principal,
         result = "ok"
         try:
             from infrastructure.request_context import principal_scope
+
             context = principal_scope(principal) if principal is not None else nullcontext()
             with context:
                 delivered = {"done": False}
@@ -4988,33 +6112,52 @@ def _stream_turn_events(req: ActionRequest, accepted_game_id: str, principal,
                     q.put(("response", response))
 
                 response = _execute_action(
-                    req, progress=lambda chunk: q.put(("chunk", chunk)),
-                    timeline=timeline, on_response=_deliver)
+                    req,
+                    progress=lambda chunk: q.put(("chunk", chunk)),
+                    timeline=timeline,
+                    on_response=_deliver,
+                )
                 if not delivered["done"]:
                     q.put(("response", response))
         except HTTPException as exc:
             from services.error_codes import code_for
-            payload = {"detail": exc.detail, "code": exc.status_code,       # ``code`` numerico: compat do cliente
-                       "error_code": code_for(exc.status_code, exc.detail, getattr(exc, "code", None)),
-                       "request_id": _current_request_id()}
-            if isinstance(exc, QuotaExceeded):     # SPEC-219: cliente mostra "volta em HH:MM"
+
+            payload = {
+                "detail": exc.detail,
+                "code": exc.status_code,  # ``code`` numerico: compat do cliente
+                "error_code": code_for(exc.status_code, exc.detail, getattr(exc, "code", None)),
+                "request_id": _current_request_id(),
+            }
+            if isinstance(exc, QuotaExceeded):  # SPEC-219: cliente mostra "volta em HH:MM"
                 payload.update(scope=exc.scope, retry_after_seconds=exc.retry_after_seconds)
             result = "error"
             outcome["error_type"] = type(exc).__name__
-            _sse_log("error", level="warning", code=payload["error_code"], status=exc.status_code,
-                     error_type=type(exc).__name__)
+            _sse_log(
+                "error",
+                level="warning",
+                code=payload["error_code"],
+                status=exc.status_code,
+                error_type=type(exc).__name__,
+            )
             q.put(("http_error", payload))
         except Exception as exc:
             result = "error"
             outcome["error_type"] = type(exc).__name__
             from observability.telemetry import safe_stack
-            _sse_log("error", level="error", code="internal_turn_error",
-                     error_type=type(exc).__name__, stack=safe_stack(exc))
+
+            _sse_log(
+                "error",
+                level="error",
+                code="internal_turn_error",
+                error_type=type(exc).__name__,
+                stack=safe_stack(exc),
+            )
             q.put(("exc", exc))
         finally:
             _worker_done(outcome, result)
 
     from observability.telemetry import contextualize
+
     # SPEC-240 R3: a thread do SSE herda request_id/game_ref/action_ref da requisicao.
     threading.Thread(target=contextualize(_worker), daemon=True).start()
 
@@ -5038,16 +6181,21 @@ def _stream_turn_events(req: ActionRequest, accepted_game_id: str, principal,
             return
         if kind == "exc":
             outcome["value"] = "error"
-            yield _sse("error", {"detail": "Erro interno ao processar o turno.", "code": 500,
-                                 "error_code": "internal_turn_error",
-                                 "request_id": _current_request_id()})
+            yield _sse(
+                "error",
+                {
+                    "detail": "Erro interno ao processar o turno.",
+                    "code": 500,
+                    "error_code": "internal_turn_error",
+                    "request_id": _current_request_id(),
+                },
+            )
             return
         if kind == "chunk":
             mode, data = payload
             if mode == "updates":
                 for node, upd in (data or {}).items():
-                    if node not in {"action_guard", "turn_prepare", "dispatch",
-                                    "turn_finalizer"}:
+                    if node not in {"action_guard", "turn_prepare", "dispatch", "turn_finalizer"}:
                         outcome["phase"] = str(node)[:40]
                         yield _sse("phase", {"node": node, "status": "done"})
                     if node == "dm_router":
@@ -5059,9 +6207,9 @@ def _stream_turn_events(req: ActionRequest, accepted_game_id: str, principal,
             yield _sse("visual", resp.visual.model_dump(mode="json"))
             narrative = resp.message or ""
             for i in range(0, len(narrative), _NARRATIVE_CHUNK):
-                piece = narrative[i:i + _NARRATIVE_CHUNK]
+                piece = narrative[i : i + _NARRATIVE_CHUNK]
                 if piece.strip() and timeline.mark_ms("ttfmc") is None:
-                    timeline.mark("ttfmc")      # primeiro conteudo significativo (SPEC-200)
+                    timeline.mark("ttfmc")  # primeiro conteudo significativo (SPEC-200)
                     _observe_delivery("ttfmc", "rpg_turn_first_content_seconds")
                 yield _sse("narrative", {"chunk": piece, "done": False})
             timeline.mark("ttlt")
@@ -5079,7 +6227,8 @@ def game_action_stream(req: ActionRequest):
     reais do grafo. Guard-rails (rate limit via middleware, game_id, memorial,
     teto de input) valem aqui também (R3)."""
     from observability import latency as _lat
-    timeline = _lat.TurnTimeline(transport="stream")   # t0 = entrada do handler (ACK servidor)
+
+    timeline = _lat.TurnTimeline(transport="stream")  # t0 = entrada do handler (ACK servidor)
     file_to_load = _resolve_save_file(req.game_id)
     state = _load_unlocked_or_locked(file_to_load, req.game_id)
     if not state:
@@ -5090,18 +6239,25 @@ def game_action_stream(req: ActionRequest):
     principal = None
     if _database_profile():
         from infrastructure.request_context import current_principal
+
         principal = current_principal()
-    return StreamingResponse(_stream_turn(
-        req, str(state.get("game_id", "?")), principal, timeline,
-    ),
-                             media_type="text/event-stream",
-                             headers={"Cache-Control": "no-cache",
-                                      "X-Accel-Buffering": "no"})
+    return StreamingResponse(
+        _stream_turn(
+            req,
+            str(state.get("game_id", "?")),
+            principal,
+            timeline,
+        ),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
 
 @app.post("/game/equip")
 def game_equip(req: EquipRequest):
     """Fase 4.3: equipar/desequipar — validação 100% Python (inventory.equip)."""
     import inventory as inv_mod
+
     _bind_corr(req.game_id, req.action_id)
     lock = _game_lock(req.game_id) if not _database_profile() else nullcontext()
     with lock:
@@ -5110,13 +6266,16 @@ def game_equip(req: EquipRequest):
         if not state:
             raise HTTPException(status_code=404, detail="Jogo não encontrado.")
         claim, request_hash, receipt = _begin_state_mutation(
-            state, action_id=req.action_id, kind="equip",
+            state,
+            action_id=req.action_id,
+            kind="equip",
             payload=req.model_dump(mode="json", exclude={"action_id"}),
         )
         if receipt is not None:
             return receipt
         from infrastructure.runtime import get_runtime
         from services.turn_execution import operation_scope
+
         with operation_scope(get_runtime().turn_coordinator if claim else None, claim):
             _reject_archived(state)
             _reject_memorial(state)
@@ -5132,22 +6291,33 @@ def game_equip(req: EquipRequest):
                 raise HTTPException(status_code=400, detail="Informe item_id ou unequip_slot.")
             if err:
                 _fail_operation(claim, "invalid_equip")
-                raise api_error(400, "equip_rejected", detail=err)   # err = regra de dominio, nao excecao
+                raise api_error(
+                    400, "equip_rejected", detail=err
+                )  # err = regra de dominio, nao excecao
 
             state["player"] = player
             import combat_mechanics as cm_mod
+
             stats = cm_mod.compute_player_combat_stats(player)
-            response = {"ok": True, "equipment": player.get("equipment"),
-                        "inventory": _inventory_block(player),
-                        "derived": {"ac": stats["ac"], "attack": stats["attack"]}}
+            response = {
+                "ok": True,
+                "equipment": player.get("equipment"),
+                "inventory": _inventory_block(player),
+                "derived": {"ac": stats["ac"], "attack": stats["attack"]},
+            }
             return _commit_state_mutation(
-                state, response, claim=claim, request_hash=request_hash,
+                state,
+                response,
+                claim=claim,
+                request_hash=request_hash,
             )
+
 
 @app.post("/game/cards/prepare")
 def game_cards_prepare(req: PrepareCardsRequest):
     """SPEC-209 R4: Preparação fora de combate. A regra mora em services.cards."""
     from services import cards
+
     _bind_corr(req.game_id, req.action_id)
     lock = _game_lock(req.game_id) if not _database_profile() else nullcontext()
     with lock:
@@ -5156,13 +6326,16 @@ def game_cards_prepare(req: PrepareCardsRequest):
         if not state:
             raise HTTPException(status_code=404, detail="Jogo não encontrado.")
         claim, request_hash, receipt = _begin_state_mutation(
-            state, action_id=req.action_id, kind="equip",  # reaproveita o kind (CHECK do banco); hash do payload difere
+            state,
+            action_id=req.action_id,
+            kind="equip",  # reaproveita o kind (CHECK do banco); hash do payload difere
             payload=req.model_dump(mode="json", exclude={"action_id"}),
         )
         if receipt is not None:
             return receipt
         from infrastructure.runtime import get_runtime
         from services.turn_execution import operation_scope
+
         with operation_scope(get_runtime().turn_coordinator if claim else None, claim):
             _reject_archived(state)
             _reject_memorial(state)
@@ -5181,13 +6354,19 @@ def game_cards_prepare(req: PrepareCardsRequest):
                 raise api_error(status, "prepare_rejected", detail=reason or result["error"])
             state["player"] = probe["player"]
             player = state["player"]
-            response = {"ok": True,
-                        "prepared_cards": list(player.get("prepared_cards") or []),
-                        "cards": _cards_block(player),
-                        "prepared_slots": _prepared_slots(player)}
+            response = {
+                "ok": True,
+                "prepared_cards": list(player.get("prepared_cards") or []),
+                "cards": _cards_block(player),
+                "prepared_slots": _prepared_slots(player),
+            }
             return _commit_state_mutation(
-                state, response, claim=claim, request_hash=request_hash,
+                state,
+                response,
+                claim=claim,
+                request_hash=request_hash,
             )
+
 
 @app.post("/game/levelup")
 def game_levelup(req: LevelUpRequest):
@@ -5204,13 +6383,16 @@ def game_levelup(req: LevelUpRequest):
         if not state:
             raise HTTPException(status_code=404, detail="Jogo não encontrado.")
         claim, request_hash, receipt = _begin_state_mutation(
-            state, action_id=req.action_id, kind="levelup",
+            state,
+            action_id=req.action_id,
+            kind="levelup",
             payload=req.model_dump(mode="json", exclude={"action_id"}),
         )
         if receipt is not None:
             return receipt
         from infrastructure.runtime import get_runtime
         from services.turn_execution import operation_scope
+
         with operation_scope(get_runtime().turn_coordinator if claim else None, claim):
             _reject_archived(state)
             _reject_memorial(state)
@@ -5218,10 +6400,16 @@ def game_levelup(req: LevelUpRequest):
                 raise HTTPException(409, "Resolva a queda antes desta alteração.")
 
             player, err = progression.apply_choice(
-                state["player"], req.choice_id,
-                card_id=req.card_id, evolve_card_id=req.evolve_card_id,
-                caminho=req.caminho, virtude=req.virtude, attr=req.attr,
-                subclass_id=req.subclass_id, virtue_card_id=req.virtue_card_id)
+                state["player"],
+                req.choice_id,
+                card_id=req.card_id,
+                evolve_card_id=req.evolve_card_id,
+                caminho=req.caminho,
+                virtude=req.virtude,
+                attr=req.attr,
+                subclass_id=req.subclass_id,
+                virtue_card_id=req.virtue_card_id,
+            )
             if err:
                 _fail_operation(claim, "invalid_choice")
                 raise api_error(400, "levelup_rejected", detail=err)
@@ -5233,41 +6421,62 @@ def game_levelup(req: LevelUpRequest):
                     from uuid import uuid4
 
                     from services.chronicle import append_entry
+
                     subclass_id = str(progress_event.get("subclass_id", ""))
-                    option = next((row for row in progression.eligible_subclasses(player)
-                                   if row["id"] == subclass_id), {"name": subclass_id})
+                    option = next(
+                        (
+                            row
+                            for row in progression.eligible_subclasses(player)
+                            if row["id"] == subclass_id
+                        ),
+                        {"name": subclass_id},
+                    )
                     turn = int((state.get("world") or {}).get("turn_count", 0) or 0)
                     event_id = uuid4().hex
-                    state["event_log"] = list(state.get("event_log") or []) + [{
-                        "event_id": event_id, "turn": turn, "type": "subclass_chosen",
-                        "actor_id": "player", "target_id": subclass_id,
-                        "payload": {"subclass_id": subclass_id, "name": option["name"]},
-                        "source": "progression",
-                    }]
+                    state["event_log"] = list(state.get("event_log") or []) + [
+                        {
+                            "event_id": event_id,
+                            "turn": turn,
+                            "type": "subclass_chosen",
+                            "actor_id": "player",
+                            "target_id": subclass_id,
+                            "payload": {"subclass_id": subclass_id, "name": option["name"]},
+                            "source": "progression",
+                        }
+                    ]
                     state["chronicle"] = append_entry(
-                        state.get("chronicle") or [], text=f"A subclasse {option['name']} foi escolhida.",
-                        turn=turn, kind="milestone", event_id=event_id)
+                        state.get("chronicle") or [],
+                        text=f"A subclasse {option['name']} foi escolhida.",
+                        turn=turn,
+                        kind="milestone",
+                        event_id=event_id,
+                    )
             response = {
-            "ok": True,
-            "player_stats": {
-                "level": player.get("level", 1),
-                "xp": player.get("xp", 0),
-                "vitalidade": int(player.get("vitalidade", 0) or 0),
-                "max_vitalidade": int(player.get("max_vitalidade", 0) or 0),
-                "hp": int(player.get("vitalidade", 0) or 0),
-                "max_hp": int(player.get("max_vitalidade", 0) or 0),
-                "xp_next_level": progression.xp_to_next(int(player.get("level", 1) or 1)),
-                "virtudes": player.get("virtudes", {}),
-                "cards": _cards_block(player),
-                "pending_choices": player.get("pending_choices", []) or [],
-                "level_up": _levelup_block(player),
-            },
+                "ok": True,
+                "player_stats": {
+                    "level": player.get("level", 1),
+                    "xp": player.get("xp", 0),
+                    "vitalidade": int(player.get("vitalidade", 0) or 0),
+                    "max_vitalidade": int(player.get("max_vitalidade", 0) or 0),
+                    "hp": int(player.get("vitalidade", 0) or 0),
+                    "max_hp": int(player.get("max_vitalidade", 0) or 0),
+                    "xp_next_level": progression.xp_to_next(int(player.get("level", 1) or 1)),
+                    "virtudes": player.get("virtudes", {}),
+                    "cards": _cards_block(player),
+                    "pending_choices": player.get("pending_choices", []) or [],
+                    "level_up": _levelup_block(player),
+                },
             }
             return _commit_state_mutation(
-                state, response, claim=claim, request_hash=request_hash,
+                state,
+                response,
+                claim=claim,
+                request_hash=request_hash,
             )
 
+
 # --- SAVES E CRÔNICA (spec polish-sessao) ------------------------------------
+
 
 class SaveSummary(BaseModel):
     game_id: str
@@ -5285,6 +6494,7 @@ class SaveSummary(BaseModel):
 def get_saves():
     """R1: lista as campanhas salvas (mtime desc; corrompido é pulado)."""
     import persistence as persistence_mod
+
     return persistence_mod.list_saves()
 
 
@@ -5292,6 +6502,7 @@ def get_saves():
 def delete_save_endpoint(game_id: str, request: Request):
     """R2: exclui save + memória da sessão. Confirmação é da UI (uso local)."""
     import persistence as persistence_mod
+
     if _database_profile():
         from infrastructure.contracts import Conflict, NotFound
         from infrastructure.request_context import current_principal
@@ -5302,7 +6513,8 @@ def delete_save_endpoint(game_id: str, request: Request):
             operation_id = uuid.UUID(request.headers.get("idempotency-key", ""))
         except ValueError as exc:
             raise HTTPException(
-                status_code=400, detail="Idempotency-Key UUID é obrigatório.",
+                status_code=400,
+                detail="Idempotency-Key UUID é obrigatório.",
             ) from exc
         runtime = get_runtime()
         principal = current_principal()
@@ -5313,11 +6525,18 @@ def delete_save_endpoint(game_id: str, request: Request):
         digest = hashlib.sha256(f"delete:{game_uuid}".encode()).hexdigest()
         try:
             claim = runtime.turn_coordinator.claim(
-                principal, operation_id, game_id=None, kind="delete",
-                request_hash=digest, base_version=None,
+                principal,
+                operation_id,
+                game_id=None,
+                kind="delete",
+                request_hash=digest,
+                base_version=None,
             )
             return runtime.turn_coordinator.commit_delete(
-                principal, claim, game_uuid, receipt={"ok": True},
+                principal,
+                claim,
+                game_uuid,
+                receipt={"ok": True},
             )
         except Conflict as exc:
             prior = receipt_fn(principal, operation_id) if callable(receipt_fn) else None
@@ -5345,6 +6564,7 @@ def search_chronicle_endpoint(req: ChronicleSearchRequest):
     if not state:
         raise HTTPException(status_code=404, detail="Jogo não encontrado.")
     from services.chronicle_search import search_chronicle
+
     try:
         semantic = None
         if _database_profile():
@@ -5359,13 +6579,18 @@ def search_chronicle_endpoint(req: ChronicleSearchRequest):
                     "chronicle_search", game_id=uuid.UUID(str(state["game_id"]))
                 ):
                     semantic = ChronicleRepository(
-                        runtime.resources[0], runtime.memory_store,
+                        runtime.resources[0],
+                        runtime.memory_store,
                     ).semantic_candidates(
-                        current_principal(), uuid.UUID(str(state["game_id"])),
-                        req.query, top_k=req.top_k,
+                        current_principal(),
+                        uuid.UUID(str(state["game_id"])),
+                        req.query,
+                        top_k=req.top_k,
                     )
         return search_chronicle(
-            state.get("chronicle") or [], req.query, top_k=req.top_k,
+            state.get("chronicle") or [],
+            req.query,
+            top_k=req.top_k,
             semantic=semantic,
         )
     except ValueError as exc:
@@ -5376,21 +6601,26 @@ def search_chronicle_endpoint(req: ChronicleSearchRequest):
 def export_chronicle(game_id: str | None = None):
     """R5: crônica como .txt (download) com separadores por capítulo."""
     from fastapi.responses import PlainTextResponse
+
     file_to_load = _resolve_save_file(game_id)
     state = load_game_state(file_to_load)
     if not state:
         raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
 
     player = state.get("player") or {}
-    lines: list[str] = [f"CRÔNICA DE {player.get('name', 'HERÓI').upper()}",
-                        f"{player.get('class_name', '')} — {state.get('world', {}).get('current_location', '')}",
-                        ""]
+    lines: list[str] = [
+        f"CRÔNICA DE {player.get('name', 'HERÓI').upper()}",
+        f"{player.get('class_name', '')} — {state.get('world', {}).get('current_location', '')}",
+        "",
+    ]
     for cap in state.get("chronicle") or []:
         if not isinstance(cap, dict):
             continue
         lines.append("=" * 60)
-        lines.append(f"{cap.get('title', '')}  (turno {cap.get('started_turn', 0)}"
-                     f" — {cap.get('location', '')})")
+        lines.append(
+            f"{cap.get('title', '')}  (turno {cap.get('started_turn', 0)}"
+            f" — {cap.get('location', '')})"
+        )
         lines.append("=" * 60)
         for e in cap.get("entries") or []:
             if isinstance(e, dict) and str(e.get("text", "")).strip():
@@ -5398,9 +6628,11 @@ def export_chronicle(game_id: str | None = None):
                 lines.append(f"{marker} [t{e.get('turn', 0)}] {e['text']}")
         lines.append("")
     from services.body_limit import safe_attachment_filename
+
     ascii_name, quoted = safe_attachment_filename(str(player.get("name", "")))
-    disposition = (f'attachment; filename="cronica_{ascii_name}.txt"; '
-                   f"filename*=UTF-8''cronica_{quoted}.txt")
+    disposition = (
+        f"attachment; filename=\"cronica_{ascii_name}.txt\"; filename*=UTF-8''cronica_{quoted}.txt"
+    )
     return PlainTextResponse("\n".join(lines), headers={"Content-Disposition": disposition})
 
 

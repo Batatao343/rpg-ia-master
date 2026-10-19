@@ -147,6 +147,7 @@ class MarketQuote(TypedDict):
     buy_price: int
     sell_price: int
 
+
 class PublicMarketSnapshot(TypedDict):
     location_id: str
     merchant_id: str
@@ -154,6 +155,7 @@ class PublicMarketSnapshot(TypedDict):
     turn: int
     quotes: list[MarketQuote]
     known_recipes: list[str]
+
 
 def public_market_snapshot(state: Mapping[str, Any]) -> PublicMarketSnapshot | None:
     """View read-only do mercado atual; não inicializa/muta estoque no state."""
@@ -179,6 +181,7 @@ class ObservedQuote:
     day: int
     turn: int
 
+
 @dataclass
 class TradeGoal:
     phase: Literal["survey", "acquire", "travel", "liquidate", "reassess"]
@@ -186,6 +189,7 @@ class TradeGoal:
     source_location_id: str | None = None
     destination_location_id: str | None = None
     expected_margin: int | None = None
+
 
 class Comerciante(_Base):
     name = "comerciante"

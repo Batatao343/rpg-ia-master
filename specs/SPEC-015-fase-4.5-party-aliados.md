@@ -107,11 +107,14 @@ sistema de combate.
 
 ```python
 # combat_mechanics.py
-def resolve_ally_turn(ally: Dict, enemies: List[Dict], rnd: int) -> List[str]: ...
+def resolve_ally_turn(ally: Dict, enemies: List[Dict], rnd: int) -> List[str]:
+    ...
     # perfil 2.5b decide ação (choose_enemy_attack reusado com lado invertido);
     # muta ally/enemies; retorna logs
 
-def pick_target(enemy: Dict, targets: List[Dict], last_damage: Dict[str, int]) -> Dict: ...
+
+def pick_target(enemy: Dict, targets: List[Dict], last_damage: Dict[str, int]) -> Dict:
+    ...
     # R4 — determinístico por perfil; targets = [player] + aliados ativos
 ```
 

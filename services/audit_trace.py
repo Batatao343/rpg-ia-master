@@ -9,6 +9,7 @@ Zero LLM, zero rede. O coletor de `context_refs` é um ContextVar com lista
 mutável (mesmo padrão de `_llm_turn_events` em api.py): nós do grafo
 anexam e o finalizador lê.
 """
+
 from __future__ import annotations
 
 import contextvars
@@ -23,10 +24,21 @@ from services.memory_provenance import _CONFIDENCE_BY_PROVENANCE, accepted_secre
 DEFAULT_TRACE_LIMIT = 200
 
 # Fases da SPEC-200 (observability.latency.PHASES) — persistência não fechou ainda.
-_TIMING_KEYS = ("transport", "execution_mode", "ack_server_ms", "ttfmc_server_ms",
-                "ttlt_server_ms", "phase_ms", "lock_wait_ms", "llm_attempts",
-                "llm_fallbacks", "llm_failed_attempts", "providers_used",
-                "cost_basis", "input_size")
+_TIMING_KEYS = (
+    "transport",
+    "execution_mode",
+    "ack_server_ms",
+    "ttfmc_server_ms",
+    "ttlt_server_ms",
+    "phase_ms",
+    "lock_wait_ms",
+    "llm_attempts",
+    "llm_fallbacks",
+    "llm_failed_attempts",
+    "providers_used",
+    "cost_basis",
+    "input_size",
+)
 
 # Enum FECHADO de erros (README_SCHEMA.md). Nunca mensagem de exceção crua.
 ERROR_CODES = {
@@ -39,7 +51,8 @@ ERROR_CODES = {
 }
 
 _refs: contextvars.ContextVar[list[dict[str, Any]] | None] = contextvars.ContextVar(
-    "rpg_audit_context_refs", default=None)
+    "rpg_audit_context_refs", default=None
+)
 
 
 def trace_limit() -> int:
@@ -53,10 +66,13 @@ def trace_limit() -> int:
 def collecting() -> Iterator[list[dict[str, Any]]]:
     """Abre o coletor de refs do turno (api._run_turn_collected)."""
     from services import mechanics_trace
+
     bucket: list[dict[str, Any]] = []
     token = _refs.set(bucket)
     try:
-        with mechanics_trace.scope(recording=False):   # SPEC-251: so os passos do combat_node do turno
+        with mechanics_trace.scope(
+            recording=False
+        ):  # SPEC-251: so os passos do combat_node do turno
             yield bucket
     finally:
         _refs.reset(token)
@@ -70,7 +86,8 @@ def collected_refs() -> list[dict[str, Any]]:
 # Classificação de refs (taxonomia SPEC-206, sem texto)
 # --------------------------------------------------------------------------- #
 _MEMORY_LABEL = re.compile(
-    r"^\[(CONFIRMADO|RELATO|ESPECULATIVO|NÃO VERIFICADO|RESUMO NARRATIVO)\s*\|\s*([a-z_]+)")
+    r"^\[(CONFIRMADO|RELATO|ESPECULATIVO|NÃO VERIFICADO|RESUMO NARRATIVO)\s*\|\s*([a-z_]+)"
+)
 _KIND_BY_PROVENANCE = {
     "canonical_event": "fact",
     "player_observation": "perception",
@@ -83,9 +100,14 @@ _KIND_BY_PROVENANCE = {
 def classify_fact(*, section: str, source_id: str, visibility: str, text: str) -> dict[str, Any]:
     """Ref de contexto: só id/seção/visibilidade + selo SPEC-206 derivado do
     rótulo estrutural já presente no texto (nunca do LLM). Não guarda o texto."""
-    ref: dict[str, Any] = {"source_id": str(source_id or ""), "section": str(section or ""),
-                           "visibility": str(visibility or "public"),
-                           "knowledge_kind": None, "certainty": None, "source_kind": None}
+    ref: dict[str, Any] = {
+        "source_id": str(source_id or ""),
+        "section": str(section or ""),
+        "visibility": str(visibility or "public"),
+        "knowledge_kind": None,
+        "certainty": None,
+        "source_kind": None,
+    }
     if section == "session_memory":
         match = _MEMORY_LABEL.match(text or "")
         if match:
@@ -96,6 +118,7 @@ def classify_fact(*, section: str, source_id: str, visibility: str, text: str) -
                 kind = _KIND_BY_PROVENANCE[provenance]
                 if provenance == "npc_claim":
                     from services.player_knowledge import _is_rumor_text
+
                     if _is_rumor_text(text):
                         kind = "rumor"
                 certainty = _CONFIDENCE_BY_PROVENANCE[provenance]
@@ -105,8 +128,11 @@ def classify_fact(*, section: str, source_id: str, visibility: str, text: str) -
                     # rótulo diz que o ledger não confirmou: projetado como inferência
                     kind, provenance, certainty = "suspicion", "inference", "speculative"
                 ref.update(knowledge_kind=kind, certainty=certainty, source_kind=provenance)
-    elif section == "current_state" and ref["source_id"] and not ref["source_id"].startswith(
-            ("ctrl:", "summ:")):
+    elif (
+        section == "current_state"
+        and ref["source_id"]
+        and not ref["source_id"].startswith(("ctrl:", "summ:"))
+    ):
         ref.update(knowledge_kind="fact", certainty="confirmed", source_kind="canonical_event")
     return ref
 
@@ -143,8 +169,16 @@ def project_state(state: Mapping) -> dict[str, Any]:
     world = state.get("world") or {}
     combat = state.get("combat") or {}
     out: dict[str, Any] = {}
-    for key in ("vitalidade", "max_vitalidade", "entropy", "max_entropy", "abyss_charge",
-                "gold", "xp", "level"):
+    for key in (
+        "vitalidade",
+        "max_vitalidade",
+        "entropy",
+        "max_entropy",
+        "abyss_charge",
+        "gold",
+        "xp",
+        "level",
+    ):
         out[f"player.{key}"] = _scalar(player.get(key))
     inventory: dict[str, int] = {}
     for item in player.get("inventory") or []:
@@ -178,8 +212,10 @@ def project_state(state: Mapping) -> dict[str, Any]:
     npcs: dict[str, Any] = {}
     for name, npc in (state.get("npcs") or {}).items():
         if isinstance(npc, Mapping):
-            npcs[str(name)] = {"in_scene": bool(npc.get("in_scene")),
-                               "relationship": _scalar(npc.get("relationship"))}
+            npcs[str(name)] = {
+                "in_scene": bool(npc.get("in_scene")),
+                "relationship": _scalar(npc.get("relationship")),
+            }
     out["npcs"] = dict(sorted(npcs.items()))
     quests: dict[str, Any] = {}
     for quest in state.get("quests") or []:
@@ -210,13 +246,14 @@ def diff_projection(before: Mapping, after: Mapping) -> dict[str, dict[str, Any]
 def _grown(before: Any, after: Any) -> int:
     old = list(before or []) if isinstance(before, (list, tuple)) else []
     new = list(after or []) if isinstance(after, (list, tuple)) else []
-    if new[:len(old)] == old:
+    if new[: len(old)] == old:
         return max(0, len(new) - len(old))
     return len(new)
 
 
-def turn_errors(previous_state: Mapping, state: Mapping,
-                llm_attempts: Iterable[Mapping] = ()) -> list[dict[str, Any]]:
+def turn_errors(
+    previous_state: Mapping, state: Mapping, llm_attempts: Iterable[Mapping] = ()
+) -> list[dict[str, Any]]:
     errors: list[dict[str, Any]] = []
     attempts = [a for a in (llm_attempts or []) if isinstance(a, Mapping)]
     for index, attempt in enumerate(attempts):
@@ -224,21 +261,33 @@ def turn_errors(previous_state: Mapping, state: Mapping,
         if outcome == "success":
             continue
         tier = str(attempt.get("tier") or "")
-        later = [a for a in attempts[index + 1:] if str(a.get("tier") or "") == tier]
-        errors.append({
-            "code": ERROR_CODES.get(outcome, "llm_other_error"),
-            "node": None,
-            "tier": tier or None,
-            "recovered": any(a.get("outcome") == "success" for a in later),
-            "fallback": "provider_next" if later else "none",
-            "error_class": None,
-        })
-    for key, code, node in (("event_rejections", "event_rejected", "event_processor"),
-                            ("narrative_rejections", "narrative_rejected", "narrative_guard"),
-                            ("memory_rejections", "memory_rejected", "archivist")):
+        later = [a for a in attempts[index + 1 :] if str(a.get("tier") or "") == tier]
+        errors.append(
+            {
+                "code": ERROR_CODES.get(outcome, "llm_other_error"),
+                "node": None,
+                "tier": tier or None,
+                "recovered": any(a.get("outcome") == "success" for a in later),
+                "fallback": "provider_next" if later else "none",
+                "error_class": None,
+            }
+        )
+    for key, code, node in (
+        ("event_rejections", "event_rejected", "event_processor"),
+        ("narrative_rejections", "narrative_rejected", "narrative_guard"),
+        ("memory_rejections", "memory_rejected", "archivist"),
+    ):
         for _ in range(_grown((previous_state or {}).get(key), (state or {}).get(key))):
-            errors.append({"code": code, "node": node, "tier": None, "recovered": True,
-                           "fallback": "rejected", "error_class": None})
+            errors.append(
+                {
+                    "code": code,
+                    "node": node,
+                    "tier": None,
+                    "recovered": True,
+                    "fallback": "rejected",
+                    "error_class": None,
+                }
+            )
     return errors
 
 
@@ -251,7 +300,7 @@ def timing_snapshot(timeline: Any) -> dict[str, Any] | None:
     except Exception:  # silent-ok: trilha opcional; export marca `unavailable` (SPEC-207)
         return None
     phases = dict(fields.get("phase_ms") or {})
-    phases["persistence"] = None          # ainda aberta dentro do commit
+    phases["persistence"] = None  # ainda aberta dentro do commit
     snap = {
         "transport": fields.get("transport"),
         "execution_mode": fields.get("execution_mode"),
@@ -273,17 +322,23 @@ def timing_snapshot(timeline: Any) -> dict[str, Any] | None:
 def reveal_status(state: Mapping) -> dict[str, Any]:
     """Critério estrito (SPEC-206 R5) + sinal de divergência do corpus permissivo."""
     from services.secret_signatures import SECRET_SIGNATURES, revealed_corpus
+
     accepted = sorted(accepted_secret_ids(dict(state)))
     corpus = revealed_corpus(dict(state)).casefold()
-    by_corpus = {sid for sid, sigs in SECRET_SIGNATURES.items()
-                 if any(str(sig).casefold() in corpus for sig in sigs)}
-    strict = {sid for sid in SECRET_SIGNATURES if sid.casefold() in
-              {a.casefold() for a in accepted}}
+    by_corpus = {
+        sid
+        for sid, sigs in SECRET_SIGNATURES.items()
+        if any(str(sig).casefold() in corpus for sig in sigs)
+    }
+    strict = {
+        sid for sid in SECRET_SIGNATURES if sid.casefold() in {a.casefold() for a in accepted}
+    }
     return {"revealed_secret_ids": accepted, "reveal_criteria_diverge": by_corpus != strict}
 
 
 def _speaker(state: Mapping) -> str:
     from services.interlocutor import response_speaker
+
     try:
         speaker = response_speaker(state)
     except Exception:  # silent-ok: rotulo de auditoria; padrao seguro "narrator"
@@ -295,8 +350,15 @@ def _speaker(state: Mapping) -> str:
     return "narrator"
 
 
-_REF_GROUP_KEYS = ("section", "visibility", "purpose", "npc_id",
-                   "knowledge_kind", "certainty", "source_kind")
+_REF_GROUP_KEYS = (
+    "section",
+    "visibility",
+    "purpose",
+    "npc_id",
+    "knowledge_kind",
+    "certainty",
+    "source_kind",
+)
 
 
 def _dedupe_refs(refs: Iterable[Mapping]) -> list[dict[str, Any]]:
@@ -335,8 +397,10 @@ def iter_context_refs(trace_row: Mapping) -> Iterator[dict[str, Any]]:
 
 
 def _flat(groups: Any) -> list[tuple]:
-    return [(str(r["source_id"]),) + tuple(r.get(k) for k in _REF_GROUP_KEYS)
-            for r in iter_context_refs({"context_refs": groups})]
+    return [
+        (str(r["source_id"]),) + tuple(r.get(k) for k in _REF_GROUP_KEYS)
+        for r in iter_context_refs({"context_refs": groups})
+    ]
 
 
 def _group(flat: Iterable[tuple]) -> list[dict[str, Any]]:
@@ -387,7 +451,7 @@ def expand_trace(rows: Any) -> list[dict[str, Any]]:
             else:
                 flat.extend(_flat([ref]))
         row["context_refs"] = _group(flat)
-        if isinstance(row.get("timing"), dict):   # chaves nulas omitidas no ring
+        if isinstance(row.get("timing"), dict):  # chaves nulas omitidas no ring
             row["timing"] = {k: row["timing"].get(k) for k in _TIMING_KEYS}
         prev = row["context_refs"]
         out.append(row)
@@ -431,12 +495,18 @@ def encode_trace(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return out
 
 
-def record_turn_trace(state: dict, *, previous_state: Mapping | None = None,
-                      action_id: str | None = None, timeline: Any = None,
-                      llm_attempts: Iterable[Mapping] = (),
-                      context_refs: Iterable[Mapping] | None = None) -> dict[str, Any]:
+def record_turn_trace(
+    state: dict,
+    *,
+    previous_state: Mapping | None = None,
+    action_id: str | None = None,
+    timeline: Any = None,
+    llm_attempts: Iterable[Mapping] = (),
+    context_refs: Iterable[Mapping] | None = None,
+) -> dict[str, Any]:
     """Grava UMA linha por action_id (replay idempotente) no ring buffer."""
     from observability.telemetry import pseudonym
+
     world = state.get("world") or {}
     turn = int(world.get("turn_count", 0) or 0)
     epoch = int((state.get("continuity") or {}).get("timeline_epoch", 0) or 0)
@@ -450,25 +520,32 @@ def record_turn_trace(state: dict, *, previous_state: Mapping | None = None,
         "speaker": _speaker(state),
         "route": str(state.get("last_routed_intent") or state.get("next") or "") or None,
         "context_refs": _dedupe_refs(refs),
-        "delta": (diff_projection(project_state(previous_state), project_state(state))
-                  if previous_state is not None else None),
+        "delta": (
+            diff_projection(project_state(previous_state), project_state(state))
+            if previous_state is not None
+            else None
+        ),
         "errors": turn_errors(previous_state or {}, state, llm_attempts),
         "timing": timing,
         "timing_partial": timing is not None,
         **reveal_status(state),
     }
     from services import mechanics_trace
+
     mechanics = mechanics_trace.snapshot()
-    if mechanics:   # SPEC-251: aditivo, ausente em turno sem conflito
+    if mechanics:  # SPEC-251: aditivo, ausente em turno sem conflito
         entry["mechanics"] = mechanics
     trace = expand_trace(state.get("audit_trace") or [])
     if action_ref:
         trace = [row for row in trace if row.get("action_ref") != action_ref]
     else:
-        trace = [row for row in trace
-                 if row.get("action_ref") or (row.get("turn"), row.get("epoch")) != (turn, epoch)]
+        trace = [
+            row
+            for row in trace
+            if row.get("action_ref") or (row.get("turn"), row.get("epoch")) != (turn, epoch)
+        ]
     trace.append(entry)
-    state["audit_trace"] = encode_trace(trace[-trace_limit():])
+    state["audit_trace"] = encode_trace(trace[-trace_limit() :])
     return entry
 
 
@@ -476,4 +553,4 @@ def normalize_audit_trace(value: Any) -> list[dict[str, Any]]:
     """Load/save: lista de dicts, cortada no limite (idempotente)."""
     if not isinstance(value, list):
         return []
-    return encode_trace(expand_trace(value)[-trace_limit():])
+    return encode_trace(expand_trace(value)[-trace_limit() :])

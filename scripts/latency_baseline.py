@@ -12,6 +12,7 @@ deterministica (``playtest/latency_llm.py``) e um relogio virtual. Mede a
 ESTRUTURA do turno (decomposicao, ordem, contagens). Valores absolutos de p95 so
 sao interpretaveis no modo ``real`` (opt-in, com teto de requests/custo).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -39,19 +40,26 @@ RUNS_DIR = ROOT / "latency_runs"
 SCHEMA_VERSION = 1
 INDICATIVE_BELOW = 20
 METRICS = ("ack_server_ms", "ttfmc_server_ms", "ttlt_server_ms", "state_server_ms", "total_ms")
-METRIC_LABEL = {"ack_server_ms": "ack", "ttfmc_server_ms": "ttfmc", "ttlt_server_ms": "ttlt",
-                "state_server_ms": "state", "total_ms": "total"}
+METRIC_LABEL = {
+    "ack_server_ms": "ack",
+    "ttfmc_server_ms": "ttfmc",
+    "ttlt_server_ms": "ttlt",
+    "state_server_ms": "state",
+    "total_ms": "total",
+}
 REAL_ENV = "RPG_LATENCY_REAL_AUTHORIZED"
 REAL_COMMAND_HINT = (
     "RPG_LATENCY_REAL_AUTHORIZED=1 uv run python scripts/latency_baseline.py run --real "
-    "--journeys J1,J2,J3 --reps 5 --max-requests 40 --max-cost 0.20")
+    "--journeys J1,J2,J3 --reps 5 --max-requests 40 --max-cost 0.20"
+)
 
 
 # --------------------------------------------------------------------------- util
 def _git_sha() -> str:
     try:
-        out = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True,
-                             text=True, timeout=10)
+        out = subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True, timeout=10
+        )
         return out.stdout.strip() or "unknown"
     except Exception:
         return "unknown"
@@ -59,9 +67,10 @@ def _git_sha() -> str:
 
 def fingerprint(mode: str, profile: str, journeys: list[str]) -> dict[str, Any]:
     from scripts import latency_journeys as lj
+
     return {
         "git_sha": _git_sha(),
-        "mode": mode,                                   # offline-virtual|offline-scaled|real
+        "mode": mode,  # offline-virtual|offline-scaled|real
         "profile": profile,
         "execution_mode": os.getenv("RPG_TURN_EXECUTION", "sequential").strip().lower(),
         "python": ".".join(platform.python_version_tuple()[:2]),
@@ -73,8 +82,16 @@ def fingerprint(mode: str, profile: str, journeys: list[str]) -> dict[str, Any]:
 
 
 # Campos que tornam duas runs INCOMPARAVEIS (git_sha e informativo: e a variavel do A/B).
-_COMPARABLE_KEYS = ("mode", "profile", "execution_mode", "python", "pseudo_streaming",
-                    "journeys", "journeys_version", "schema_version")
+_COMPARABLE_KEYS = (
+    "mode",
+    "profile",
+    "execution_mode",
+    "python",
+    "pseudo_streaming",
+    "journeys",
+    "journeys_version",
+    "schema_version",
+)
 
 
 def fingerprint_mismatch(a: dict[str, Any], b: dict[str, Any]) -> list[str]:
@@ -83,8 +100,12 @@ def fingerprint_mismatch(a: dict[str, Any], b: dict[str, Any]) -> list[str]:
 
 def _stats(values: list[int]) -> dict[str, Any]:
     vals = [int(v) for v in values if v is not None]
-    return {"n": len(vals), "p50": percentile(vals, 50), "p95": percentile(vals, 95),
-            "max": max(vals, default=0)}
+    return {
+        "n": len(vals),
+        "p50": percentile(vals, 50),
+        "p95": percentile(vals, 95),
+        "max": max(vals, default=0),
+    }
 
 
 # ------------------------------------------------------------------- agregacao
@@ -102,11 +123,15 @@ def aggregate(records: list[dict[str, Any]], fp: dict[str, Any]) -> dict[str, An
         for size in ("short", "medium", "long"):
             sub = [r for r in rows if r.get("input_size") == size]
             if sub:
-                sizes[size] = {"n": len(sub), "ttfmc": _stats([r.get("ttfmc_server_ms") for r in sub]),
-                               "total": _stats([r.get("total_ms") for r in sub])}
+                sizes[size] = {
+                    "n": len(sub),
+                    "ttfmc": _stats([r.get("ttfmc_server_ms") for r in sub]),
+                    "total": _stats([r.get("total_ms") for r in sub]),
+                }
         out["by_input_size"] = sizes
         out["llm_attempts_mean"] = round(
-            sum(int(r.get("llm_attempts", 0) or 0) for r in rows) / max(1, len(rows)), 3)
+            sum(int(r.get("llm_attempts", 0) or 0) for r in rows) / max(1, len(rows)), 3
+        )
         out["llm_fallbacks_total"] = sum(int(r.get("llm_fallbacks", 0) or 0) for r in rows)
         out["routes"] = {}
         for r in rows:
@@ -115,14 +140,17 @@ def aggregate(records: list[dict[str, Any]], fp: dict[str, Any]) -> dict[str, An
         out["routes"] = dict(sorted(out["routes"].items()))
         return out
 
-    return {"fingerprint": fp,
-            "overall": block(records),
-            "journeys": {name: block(rows) for name, rows in sorted(by_journey.items())}}
+    return {
+        "fingerprint": fp,
+        "overall": block(records),
+        "journeys": {name: block(rows) for name, rows in sorted(by_journey.items())},
+    }
 
 
 def _dump(path: Path, data: Any) -> None:
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-                    encoding="utf-8")
+    path.write_text(
+        json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
 
 # ------------------------------------------------------------------- execucao
@@ -142,7 +170,10 @@ def _isolated_env(work: Path, *, offline: bool):
     os.environ["RPG_RATE_LIMIT"] = "0"
     os.environ["RPG_RUNTIME_CACHE_DIR"] = str(work / "runtime")
     persistence.SAVES_DIR, persistence.SESSION_MEMORY_DIR, rag.SAVES_DIR = (
-        str(saves), str(memory), str(memory))
+        str(saves),
+        str(memory),
+        str(memory),
+    )
     try:
         with pr._force_mock(active=offline), pr._offline_embeddings(active=offline):
             pr._clear_caches()
@@ -158,9 +189,11 @@ def _isolated_env(work: Path, *, offline: bool):
 
 def _read_stream(client, game_id: str, text: str, action_id: str) -> list[str]:
     events: list[str] = []
-    with client.stream("POST", "/game/action/stream",
-                       json={"input_text": text, "game_id": game_id,
-                             "action_id": action_id}) as response:
+    with client.stream(
+        "POST",
+        "/game/action/stream",
+        json={"input_text": text, "game_id": game_id, "action_id": action_id},
+    ) as response:
         if response.status_code != 200:
             raise RuntimeError(f"stream HTTP {response.status_code}")
         name = None
@@ -180,9 +213,20 @@ def _wait_record(sink: list[dict[str, Any]], count: int, timeout: float = 10.0) 
         raise RuntimeError("registro de latencia nao publicado a tempo")
 
 
-def execute(journeys, reps: int, seed: int, profile: str, mode: str, scale: float,
-            work: Path, *, real: bool = False, max_requests: int | None = None,
-            max_cost: float | None = None, progress=None) -> list[dict[str, Any]]:
+def execute(
+    journeys,
+    reps: int,
+    seed: int,
+    profile: str,
+    mode: str,
+    scale: float,
+    work: Path,
+    *,
+    real: bool = False,
+    max_requests: int | None = None,
+    max_cost: float | None = None,
+    progress=None,
+) -> list[dict[str, Any]]:
     """Roda as jornadas in-process (TestClient, SSE real) e devolve os registros."""
     import random
 
@@ -193,10 +237,14 @@ def execute(journeys, reps: int, seed: int, profile: str, mode: str, scale: floa
     records: list[dict[str, Any]] = []
     sink: list[dict[str, Any]] = []
     clock = lat.FakeClock() if (mode == "virtual" and not real) else None
-    ctx = None if real else LatencyContext(profile=profile, seed=seed, mode=mode,
-                                          scale=scale, clock=clock)
+    ctx = (
+        None
+        if real
+        else LatencyContext(profile=profile, seed=seed, mode=mode, scale=scale, clock=clock)
+    )
     with _isolated_env(work, offline=not real):
         import api
+
         if clock is not None:
             lat.set_clock(clock)
         if ctx is not None:
@@ -210,15 +258,23 @@ def execute(journeys, reps: int, seed: int, profile: str, mode: str, scale: floa
                         random.seed(f"{seed}|{journey.name}|{rep}")
                         if ctx is not None:
                             ctx.start_turn(journey.name, rep)
-                        created = client.post("/game/new", json={
-                            "name": "Latencia", "race": "Humano",
-                            "class_name": "Sangromante", "region": "Nova Arcádia",
-                            "level": 1, "backstory": ""})
+                        created = client.post(
+                            "/game/new",
+                            json={
+                                "name": "Latencia",
+                                "race": "Humano",
+                                "class_name": "Sangromante",
+                                "region": "Nova Arcádia",
+                                "level": 1,
+                                "backstory": "",
+                            },
+                        )
                         if created.status_code != 200:
                             raise RuntimeError(f"/game/new HTTP {created.status_code}")
                         game_id = created.json()["game_id"]
                         plan = [(t, False) for t in journey.warmup] + [
-                            (t, True) for t in journey.measured_turns()]
+                            (t, True) for t in journey.measured_turns()
+                        ]
                         for turn_index, (text, measured) in enumerate(plan):
                             if ctx is not None:
                                 ctx.start_turn(journey.name, rep * 1000 + turn_index)
@@ -231,21 +287,27 @@ def execute(journeys, reps: int, seed: int, profile: str, mode: str, scale: floa
                                 spent_cost += float(rec.get("cost_usd") or 0.0)
                             if not measured:
                                 continue
-                            rec.update({
-                                "journey": journey.name, "rep": rep, "seed": seed,
-                                "profile": "real" if real else profile,
-                                "mode": "real" if real else f"offline-{mode}",
-                                "turn_index": turn_index,
-                                "expected_route": journey.expected_route,
-                                "pseudo_streaming": lat.PSEUDO_STREAMING,
-                            })
+                            rec.update(
+                                {
+                                    "journey": journey.name,
+                                    "rep": rep,
+                                    "seed": seed,
+                                    "profile": "real" if real else profile,
+                                    "mode": "real" if real else f"offline-{mode}",
+                                    "turn_index": turn_index,
+                                    "expected_route": journey.expected_route,
+                                    "pseudo_streaming": lat.PSEUDO_STREAMING,
+                                }
+                            )
                             records.append(rec)
                             if real and (
-                                    (max_requests is not None and spent_requests >= max_requests)
-                                    or (max_cost is not None and spent_cost >= max_cost)):
+                                (max_requests is not None and spent_requests >= max_requests)
+                                or (max_cost is not None and spent_cost >= max_cost)
+                            ):
                                 raise SystemExit(
                                     f"teto atingido (requests={spent_requests}, "
-                                    f"custo={spent_cost:.4f}): run abortada")
+                                    f"custo={spent_cost:.4f}): run abortada"
+                                )
                     if progress:
                         progress(journey.name)
         finally:
@@ -262,21 +324,38 @@ def _row(label: str, st: dict[str, Any]) -> str:
 
 def render_report(summary: dict[str, Any]) -> str:
     fp = summary["fingerprint"]
-    lines = ["# Baseline de latencia percebida (SPEC-200)", "",
-             "## Fingerprint de ambiente", ""]
-    for key in ("git_sha", "mode", "profile", "execution_mode", "python",
-                "pseudo_streaming", "journeys_version"):
+    lines = ["# Baseline de latencia percebida (SPEC-200)", "", "## Fingerprint de ambiente", ""]
+    for key in (
+        "git_sha",
+        "mode",
+        "profile",
+        "execution_mode",
+        "python",
+        "pseudo_streaming",
+        "journeys_version",
+    ):
         lines.append(f"- `{key}`: `{fp.get(key)}`")
-    lines += ["", "> `pseudo_streaming=true`: o servidor fatia uma mensagem JA pronta; "
-              "**TTFT = TTFMC (pseudo_streaming)** — nao ha token real.", ""]
+    lines += [
+        "",
+        "> `pseudo_streaming=true`: o servidor fatia uma mensagem JA pronta; "
+        "**TTFT = TTFMC (pseudo_streaming)** — nao ha token real.",
+        "",
+    ]
     if fp.get("mode") != "real":
-        lines += ["> Modo offline mede a ESTRUTURA do turno (decomposicao, ordem, contagens) "
-                  "com latencia injetada; nao e latencia de rede. p95 absoluto so e "
-                  "interpretavel no modo `real`.", ""]
+        lines += [
+            "> Modo offline mede a ESTRUTURA do turno (decomposicao, ordem, contagens) "
+            "com latencia injetada; nao e latencia de rede. p95 absoluto so e "
+            "interpretavel no modo `real`.",
+            "",
+        ]
     for name, block in [("TODAS", summary["overall"])] + list(summary["journeys"].items()):
         tag = " (p95 indicativo: n < 20)" if block["indicative"] else ""
-        lines += [f"## {name} — n={block['n']}{tag}", "",
-                  "| metrica (ms) | n | p50 | p95 | max |", "|---|---|---|---|---|"]
+        lines += [
+            f"## {name} — n={block['n']}{tag}",
+            "",
+            "| metrica (ms) | n | p50 | p95 | max |",
+            "|---|---|---|---|---|",
+        ]
         for key in METRICS:
             label = METRIC_LABEL[key]
             lines.append(_row(label if label != "ttfmc" else "ttfmc (= TTFT)", block[label]))
@@ -287,29 +366,46 @@ def render_report(summary: dict[str, Any]) -> str:
         if block["by_input_size"]:
             lines += ["", "| entrada | n | ttfmc p50 | ttfmc p95 |", "|---|---|---|---|"]
             for size, sub in block["by_input_size"].items():
-                lines.append(f"| {size} | {sub['n']} | {sub['ttfmc']['p50']} | {sub['ttfmc']['p95']} |")
-        lines += ["", f"- tentativas LLM/turno (media): {block['llm_attempts_mean']} · "
-                      f"fallbacks: {block['llm_fallbacks_total']} · rotas: {block['routes']}", ""]
+                lines.append(
+                    f"| {size} | {sub['n']} | {sub['ttfmc']['p50']} | {sub['ttfmc']['p95']} |"
+                )
+        lines += [
+            "",
+            f"- tentativas LLM/turno (media): {block['llm_attempts_mean']} · "
+            f"fallbacks: {block['llm_fallbacks_total']} · rotas: {block['routes']}",
+            "",
+        ]
     return "\n".join(lines) + "\n"
 
 
 def compare_runs(a: dict[str, Any], b: dict[str, Any], *, allow_mismatch: bool) -> str:
     bad = fingerprint_mismatch(a["fingerprint"], b["fingerprint"])
     if bad and not allow_mismatch:
-        raise SystemExit("fingerprints incompativeis (" + ", ".join(bad) +
-                         "): recuso comparar; use --allow-env-mismatch para forcar")
+        raise SystemExit(
+            "fingerprints incompativeis ("
+            + ", ".join(bad)
+            + "): recuso comparar; use --allow-env-mismatch para forcar"
+        )
     lines = ["# Comparacao de baselines (SPEC-200)", ""]
     if bad:
-        lines += [f"> **RESSALVA:** fingerprints diferem em {', '.join(bad)} — "
-                  "comparacao nao e A/B limpa.", ""]
-    lines += [f"- A: `{a['fingerprint']['git_sha']}` · B: `{b['fingerprint']['git_sha']}`", "",
-              "| jornada | metrica | A p50 | B p50 | delta | A p95 | B p95 | delta |",
-              "|---|---|---|---|---|---|---|---|"]
+        lines += [
+            f"> **RESSALVA:** fingerprints diferem em {', '.join(bad)} — "
+            "comparacao nao e A/B limpa.",
+            "",
+        ]
+    lines += [
+        f"- A: `{a['fingerprint']['git_sha']}` · B: `{b['fingerprint']['git_sha']}`",
+        "",
+        "| jornada | metrica | A p50 | B p50 | delta | A p95 | B p95 | delta |",
+        "|---|---|---|---|---|---|---|---|",
+    ]
     for name in sorted(set(a["journeys"]) & set(b["journeys"])):
         for key in ("ttfmc", "ttlt", "total"):
             sa, sb = a["journeys"][name][key], b["journeys"][name][key]
-            lines.append(f"| {name} | {key} | {sa['p50']} | {sb['p50']} | {sb['p50'] - sa['p50']:+d} "
-                         f"| {sa['p95']} | {sb['p95']} | {sb['p95'] - sa['p95']:+d} |")
+            lines.append(
+                f"| {name} | {key} | {sa['p50']} | {sb['p50']} | {sb['p50'] - sa['p50']:+d} "
+                f"| {sa['p95']} | {sb['p95']} | {sb['p95'] - sa['p95']:+d} |"
+            )
     return "\n".join(lines) + "\n"
 
 
@@ -324,14 +420,18 @@ def _real_guard(args) -> None:
     if args.max_cost is None:
         problems.append("--max-cost e obrigatorio")
     if problems:
-        raise SystemExit("modo --real recusado: " + "; ".join(problems) +
-                         f"\ncomando previsto: {REAL_COMMAND_HINT}")
+        raise SystemExit(
+            "modo --real recusado: "
+            + "; ".join(problems)
+            + f"\ncomando previsto: {REAL_COMMAND_HINT}"
+        )
 
 
 def cmd_run(args) -> int:
     if args.real:
         _real_guard(args)
     from scripts import latency_journeys as lj
+
     journeys = lj.select(args.journeys)
     mode = "real" if args.real else args.mode
     run_id = args.run_id or time.strftime("%Y%m%d-%H%M%S") + f"-{uuid.uuid4().hex[:6]}"
@@ -340,9 +440,19 @@ def cmd_run(args) -> int:
     run_dir.mkdir(parents=True, exist_ok=True)
     work = Path(tempfile.mkdtemp(prefix="latency-work-"))
     try:
-        records = execute(journeys, args.reps, args.seed, args.profile, args.mode, args.scale,
-                          work, real=args.real, max_requests=args.max_requests,
-                          max_cost=args.max_cost, progress=lambda n: print(f"  {n} ok"))
+        records = execute(
+            journeys,
+            args.reps,
+            args.seed,
+            args.profile,
+            args.mode,
+            args.scale,
+            work,
+            real=args.real,
+            max_requests=args.max_requests,
+            max_cost=args.max_cost,
+            progress=lambda n: print(f"  {n} ok"),
+        )
     finally:
         shutil.rmtree(work, ignore_errors=True)
     fp_mode = "real" if args.real else f"offline-{mode}"
@@ -372,8 +482,13 @@ def cmd_report(args) -> int:
 
 
 def cmd_compare(args) -> int:
-    print(compare_runs(_load_summary(args.run_a, args.out_dir), _load_summary(args.run_b, args.out_dir),
-                       allow_mismatch=args.allow_env_mismatch))
+    print(
+        compare_runs(
+            _load_summary(args.run_a, args.out_dir),
+            _load_summary(args.run_b, args.out_dir),
+            allow_mismatch=args.allow_env_mismatch,
+        )
+    )
     return 0
 
 
@@ -382,14 +497,17 @@ def cmd_serve(args) -> int:
     import uvicorn
 
     from playtest.latency_llm import LatencyContext, install
+
     os.environ.setdefault("RPG_FORCE_MOCK", "1")
     os.environ.setdefault("RPG_RATE_LIMIT", "0")
     work = Path(tempfile.mkdtemp(prefix="latency-serve-"))
     import persistence
+
     persistence.SAVES_DIR = str(work / "saves")
     persistence.SESSION_MEMORY_DIR = str(work / "memory")
     os.makedirs(persistence.SAVES_DIR, exist_ok=True)
     import api
+
     install(LatencyContext(profile=args.profile, seed=args.seed, mode="scaled", scale=args.scale))
     uvicorn.run(api.app, host="127.0.0.1", port=args.port, log_level="warning")
     return 0
@@ -402,8 +520,11 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--journeys", default="all")
     run.add_argument("--reps", type=int, default=30)
     run.add_argument("--seed", type=int, default=200)
-    run.add_argument("--profile", default="typical",
-                     choices=["flat-fast", "typical", "slow-tail", "fallback-once"])
+    run.add_argument(
+        "--profile",
+        default="typical",
+        choices=["flat-fast", "typical", "slow-tail", "fallback-once"],
+    )
     run.add_argument("--mode", default="virtual", choices=["virtual", "scaled"])
     run.add_argument("--scale", type=float, default=0.01)
     run.add_argument("--run-id")

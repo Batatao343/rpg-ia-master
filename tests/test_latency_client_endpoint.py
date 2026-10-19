@@ -1,4 +1,5 @@
 """SPEC-200 Etapa 4 — beacon cliente->servidor (desligado por default, corpo fechado)."""
+
 from __future__ import annotations
 
 import json
@@ -18,9 +19,16 @@ PATH = "/telemetry/client-latency"
 
 
 def _body(**extra):
-    base = {"action_id": str(uuid4()), "transport": "stream", "ack_ms": 40,
-            "first_phase_ms": 900, "ttfmc_ms": 5000, "ttlt_ms": 5100, "state_ms": 5200,
-            "outcome": "ok"}
+    base = {
+        "action_id": str(uuid4()),
+        "transport": "stream",
+        "ack_ms": 40,
+        "first_phase_ms": 900,
+        "ttfmc_ms": 5000,
+        "ttlt_ms": 5100,
+        "state_ms": 5200,
+        "outcome": "ok",
+    }
     base.update(extra)
     return base
 
@@ -51,10 +59,13 @@ def test_accepts_valid_report_and_logs(enabled, caplog):
     response = enabled.post(PATH, json=body)
     assert response.status_code == 204 and response.content == b""
     assert metrics.snapshot()[key] == before + 1
-    lines = [json.loads(r.getMessage()) for r in caplog.records
-             if r.name == "rpg.turn" and "client_latency" in r.getMessage()]
+    lines = [
+        json.loads(r.getMessage())
+        for r in caplog.records
+        if r.name == "rpg.turn" and "client_latency" in r.getMessage()
+    ]
     assert lines and lines[-1]["evt"] == "client_latency"
-    assert body["action_id"] not in json.dumps(lines[-1])        # so pseudonimo
+    assert body["action_id"] not in json.dumps(lines[-1])  # so pseudonimo
 
 
 def test_rejects_extra_fields_and_text(enabled):
@@ -90,16 +101,20 @@ def test_requires_csrf_and_session(monkeypatch):
             raise Unauthorized("session absent")
         return principal
 
-    runtime = SimpleNamespace(identity_verifier=SimpleNamespace(verify=verify),
-                              rate_limiter=SimpleNamespace(
-                                  consume=lambda *a, **k: SimpleNamespace(
-                                      allowed=True, retry_after_seconds=1)))
+    runtime = SimpleNamespace(
+        identity_verifier=SimpleNamespace(verify=verify),
+        rate_limiter=SimpleNamespace(
+            consume=lambda *a, **k: SimpleNamespace(allowed=True, retry_after_seconds=1)
+        ),
+    )
     monkeypatch.setattr("infrastructure.runtime.get_runtime", lambda: runtime)
     client = TestClient(api.app)
     headers = {"origin": "http://localhost:5173", "x-csrf-token": csrf}
-    assert client.post(PATH, json=_body(), headers=headers).status_code == 401   # sem sessao
+    assert client.post(PATH, json=_body(), headers=headers).status_code == 401  # sem sessao
     client.cookies.set("rpg_access", "valid")
-    assert client.post(PATH, json=_body(), headers=headers).status_code == 403   # sem cookie CSRF (SPEC-220 R10)
+    assert (
+        client.post(PATH, json=_body(), headers=headers).status_code == 403
+    )  # sem cookie CSRF (SPEC-220 R10)
     client.cookies.set("rpg_csrf", csrf)
     assert client.post(PATH, json=_body(), headers=headers).status_code == 204
 

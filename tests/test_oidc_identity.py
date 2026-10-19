@@ -1,4 +1,5 @@
 """SPEC-220 R6: OIDC valida JWT localmente via JWKS (fail-closed)."""
+
 from __future__ import annotations
 
 import base64
@@ -34,10 +35,12 @@ def keys():
     rsa_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
     ec_key = ec.generate_private_key(ec.SECP256R1())
     rn, en = rsa_key.public_key().public_numbers(), ec_key.public_key().public_numbers()
-    jwks = {"keys": [
-        {"kty": "RSA", "kid": "r1", "alg": "RS256", "use": "sig", "n": _n(rn.n), "e": _n(rn.e)},
-        {"kty": "EC", "kid": "e1", "crv": "P-256", "x": _n(en.x, 32), "y": _n(en.y, 32)},
-    ]}
+    jwks = {
+        "keys": [
+            {"kty": "RSA", "kid": "r1", "alg": "RS256", "use": "sig", "n": _n(rn.n), "e": _n(rn.e)},
+            {"kty": "EC", "kid": "e1", "crv": "P-256", "x": _n(en.x, 32), "y": _n(en.y, 32)},
+        ]
+    }
     return rsa_key, ec_key, jwks
 
 
@@ -71,6 +74,7 @@ def provider(keys, monkeypatch):
         calls.append(url)
         assert url == JWKS
         return httpx.Response(200, json=keys[2])
+
     monkeypatch.setattr(httpx, "get", fake_get)
     p = OidcIdentityProvider("", ISS, jwks_url=JWKS, audience=AUD, timeout=3)
     p.calls = calls
@@ -85,11 +89,19 @@ def test_valid_rs256_and_es256_map_stable_principal(provider, keys):
     assert provider.calls == [JWKS]  # JWKS em cache
 
 
-@pytest.mark.parametrize("case", [
-    {"aud": "other-api"}, {"iss": None}, {"iss": "https://evil.example"},
-    {"email_verified": False}, {"exp": int(time.time()) - 3600}, {"nbf": int(time.time()) + 3600},
-    {"sub": None}, {"exp": None},
-])
+@pytest.mark.parametrize(
+    "case",
+    [
+        {"aud": "other-api"},
+        {"iss": None},
+        {"iss": "https://evil.example"},
+        {"email_verified": False},
+        {"exp": int(time.time()) - 3600},
+        {"nbf": int(time.time()) + 3600},
+        {"sub": None},
+        {"exp": None},
+    ],
+)
 def test_rejects_bad_claims(provider, keys, case):
     with pytest.raises(Unauthorized):
         provider.verify(_token(keys, **case))
@@ -119,6 +131,7 @@ def test_userinfo_only_complements_and_must_match_subject(keys, monkeypatch):
         if url == JWKS:
             return httpx.Response(200, json=keys[2])
         return httpx.Response(200, json={"sub": "someone-else"})
+
     monkeypatch.setattr(httpx, "get", fake_get)
     p = OidcIdentityProvider("https://identity.example/userinfo", ISS, jwks_url=JWKS, audience=AUD)
     with pytest.raises(Unauthorized):
@@ -142,8 +155,11 @@ def test_password_grant_stays_unavailable(provider):
 
 
 def test_runtime_config_requires_issuer_jwks_and_audience():
-    base = {"RPG_RUNTIME_PROFILE": "portable", "DATABASE_URL": "postgresql://localhost/postgres",
-            "RPG_OIDC_ISSUER": ISS}
+    base = {
+        "RPG_RUNTIME_PROFILE": "portable",
+        "DATABASE_URL": "postgresql://localhost/postgres",
+        "RPG_OIDC_ISSUER": ISS,
+    }
     for missing in ({}, {"RPG_OIDC_JWKS_URL": JWKS}, {"RPG_OIDC_AUDIENCE": AUD}):
         with pytest.raises(ValueError, match="RPG_OIDC_JWKS_URL"):
             RuntimeConfig.from_env({**base, **missing})

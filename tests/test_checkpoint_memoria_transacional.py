@@ -99,7 +99,8 @@ def test_falha_no_json_reverte_snapshot_de_memoria(tmp_path, monkeypatch):
 
     (session / "index.faiss").write_bytes(b"novo-incompleto")
     monkeypatch.setattr(
-        persistence, "_atomic_write_json",
+        persistence,
+        "_atomic_write_json",
         lambda *_a, **_k: (_ for _ in ()).throw(OSError("disco cheio")),
     )
     assert persistence.save_checkpoint(_state(gid, 20)) is False
@@ -111,6 +112,7 @@ def test_checkpoint_legado_sem_snapshot_limpa_indice_posterior(tmp_path, monkeyp
     gid = str(uuid.uuid4())
     assert persistence.save_checkpoint(_state(gid, 10))
     import shutil
+
     shutil.rmtree(saves / f"{gid}.checkpoint.memory")
     session = memory / gid
     session.mkdir(parents=True)

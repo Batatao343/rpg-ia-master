@@ -151,6 +151,7 @@ NIVEL_MAX = 20
 TIER_LEVELS = {1: 1, 2: 1, 3: 4, 4: 7, 5: 9, 6: 12, 7: 15, 8: 18, 9: 20}
 NIVEIS_MAESTRIA_VIRTUDE = (12, 16, 20)
 
+
 def card_tier_for_level(level: int) -> int: ...
 def prepared_slots_for_level(level: object) -> int: ...
 ```
@@ -167,11 +168,13 @@ class Carta(TypedDict, total=False):
     apex: bool
     # campos existentes permanecem
 
+
 class VirtueCardChoice(TypedDict):
     card_id: str
     virtude: str
     estagio: int
     mastery: int
+
 
 class SubclassChoice(TypedDict):
     id: str

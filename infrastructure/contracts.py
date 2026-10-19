@@ -44,23 +44,37 @@ class Forbidden(InfrastructureError):
 
 # SPEC-220 R3: única lista de códigos que uma resposta 401/403/503 de sessão
 # pode carregar. Mensagens internas (str(exc)) nunca saem na resposta.
-AUTH_ERROR_CODES = frozenset({
-    "session_missing", "session_invalid", "csrf_invalid", "origin_denied",
-    "captcha_required", "captcha_invalid", "recent_session_required",
-    "account_delete_not_requested", "credentials_invalid", "link_invalid_or_expired",
-    "signup_failed", "password_reset_failed", "account_deleted", "server_misconfigured",
-    # Auth debug 2026-10-18: GoTrue says "e-mail não confirmado" só após a senha conferir
-    # (sem enumeração); captcha recusado pelo GoTrue não é falha de credencial.
-    "email_not_confirmed",
-    "auth_unavailable",
-})
+AUTH_ERROR_CODES = frozenset(
+    {
+        "session_missing",
+        "session_invalid",
+        "csrf_invalid",
+        "origin_denied",
+        "captcha_required",
+        "captcha_invalid",
+        "recent_session_required",
+        "account_delete_not_requested",
+        "credentials_invalid",
+        "link_invalid_or_expired",
+        "signup_failed",
+        "password_reset_failed",
+        "account_deleted",
+        "server_misconfigured",
+        # Auth debug 2026-10-18: GoTrue says "e-mail não confirmado" só após a senha conferir
+        # (sem enumeração); captcha recusado pelo GoTrue não é falha de credencial.
+        "email_not_confirmed",
+        "auth_unavailable",
+    }
+)
 _AUTH_CODE_ALIASES = {
-    "sessão ausente": "session_missing", "token ausente": "session_missing",
+    "sessão ausente": "session_missing",
+    "token ausente": "session_missing",
     "principal ausente": "session_missing",
     "credenciais inválidas": "credentials_invalid",
     "não foi possível criar a conta": "signup_failed",
     "account_deleted_or_invalid_blob_owner": "account_deleted",
-    "Origin ausente": "origin_denied", "Origin não permitido": "origin_denied",
+    "Origin ausente": "origin_denied",
+    "Origin não permitido": "origin_denied",
     "CSRF inválido": "csrf_invalid",
 }
 
@@ -100,8 +114,6 @@ class JobDeferred(InfrastructureError):
         super().__init__(reason)
         self.reason = reason
         self.delay_seconds = delay_seconds
-
-
 
 
 @dataclass(frozen=True)
@@ -309,13 +321,12 @@ class TurnCoordinator(Protocol):
 
 class RateLimiter(Protocol):
     def consume(self, key: str, *, limit: int, window_seconds: int) -> RateLimitDecision: ...
+
     # SPEC-220: adapters também expõem ``peek`` (sem consumir) e ``reset(key)``.
 
 
 class IdentityVerifier(Protocol):
     def verify(self, credential: str | None) -> Principal: ...
-
-
 
 
 def validate_scope(
@@ -330,5 +341,3 @@ def validate_scope(
     )
     if not valid:
         raise ValueError("combinação inválida de scope/owner_id/game_id")
-
-

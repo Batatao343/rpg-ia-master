@@ -21,8 +21,9 @@ def test_nivel_encontro_nao_depende_do_nivel_da_party():
 
 def test_nivel_encontro_deriva_de_local_regiao_evento():
     baixo = ep.compute_encounter_level(location_danger=1, region_danger=1, event_type="comum")
-    alto = ep.compute_encounter_level(location_danger=4, region_danger=3, event_type="apex",
-                                      importance="climax", unique_threats=1)
+    alto = ep.compute_encounter_level(
+        location_danger=4, region_danger=3, event_type="apex", importance="climax", unique_threats=1
+    )
     assert alto > baixo
     assert ep.compute_encounter_level(location_danger=99) == ep.ENCOUNTER_LEVEL_MAX  # teto
 
@@ -36,7 +37,7 @@ def test_fraco_moderado_forte_devastador_mapeiam_valor_por_nivel():
     m = ep.potency_value("moderado", nivel)
     forte = ep.potency_value("forte", nivel)
     d = ep.potency_value("devastador", nivel)
-    assert f < m < forte < d                       # ordem das categorias
+    assert f < m < forte < d  # ordem das categorias
     # mesmo tier escala com o Nível do Encontro
     assert ep.potency_value("forte", 5) > ep.potency_value("forte", 1)
 
@@ -46,10 +47,22 @@ def test_fraco_moderado_forte_devastador_mapeiam_valor_por_nivel():
 # ==========================================================================
 def _valid_scene():
     return {
-        "objects": [{"id": "alavanca", "base_narrativa": "alavanca enferrujada citada na cena",
-                     "interactions": [{"label": "puxar", "effect": {"kind": "block_route", "params": {}}}]}],
-        "abyss_events": [{"id": "romper", "base_na_cena": "alavanca",
-                          "effect": {"kind": "reposition", "params": {}}}],
+        "objects": [
+            {
+                "id": "alavanca",
+                "base_narrativa": "alavanca enferrujada citada na cena",
+                "interactions": [
+                    {"label": "puxar", "effect": {"kind": "block_route", "params": {}}}
+                ],
+            }
+        ],
+        "abyss_events": [
+            {
+                "id": "romper",
+                "base_na_cena": "alavanca",
+                "effect": {"kind": "reposition", "params": {}},
+            }
+        ],
     }
 
 
@@ -83,8 +96,9 @@ def test_criatura_fora_da_regiao_sem_justificativa_rejeitada():
     creature = {"name": "Afogado", "regions": ["costa_naufraga"]}
     assert ep.validate_creature_selection(creature, "planicie_morta") is False
     # com justificativa de evento → aceita
-    assert ep.validate_creature_selection(creature, "planicie_morta",
-                                          event_justification=True) is True
+    assert (
+        ep.validate_creature_selection(creature, "planicie_morta", event_justification=True) is True
+    )
 
 
 # ==========================================================================
@@ -96,7 +110,7 @@ def test_todos_falham_usa_cena_simplificada_de_seguranca():
     scene = ep.prepare_encounter(ctx, FallbackLLM("sem chave"))
     assert scene["safe_fallback"] is True
     assert scene["enemies"] == [{"name": "Bandido"}]
-    assert ep.validate_preparation(scene)["ok"] is True     # a cena de segurança é sempre válida
+    assert ep.validate_preparation(scene)["ok"] is True  # a cena de segurança é sempre válida
 
 
 def test_cena_simplificada_e_deterministica():
@@ -110,9 +124,12 @@ def test_cena_simplificada_e_deterministica():
 # Etapa 6 — NPC nasce com ficha de combate completa (R10)
 # ==========================================================================
 def test_npc_gerado_tem_enemystats_completo_desde_criacao():
-    sheet = ep.build_npc_combat_sheet({"name": "Mercador Grum",
-                                       "virtudes": {"corpo": 2, "agilidade": 3,
-                                                    "forca": 1, "mente": 2, "carisma": 4}})
+    sheet = ep.build_npc_combat_sheet(
+        {
+            "name": "Mercador Grum",
+            "virtudes": {"corpo": 2, "agilidade": 3, "forca": 1, "mente": 2, "carisma": 4},
+        }
+    )
     assert sheet["virtudes"]["carisma"] == 4
     assert sheet["vitalidade"] == sheet["max_vitalidade"] > 0
     assert sheet["ferimento_espacos"]["critico"] >= 1

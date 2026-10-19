@@ -97,14 +97,14 @@ determinísticos** derivados do `event_log` (Python, zero LLM) + **prosa de mene
 class ChronicleEntry(TypedDict, total=False):
     text: str
     turn: int
-    kind: str        # "milestone" (determinístico, do event_log) | "prose" (menestrel LLM)
-    event_id: str    # só milestones — auditoria (aponta para GameEvent.event_id)
+    kind: str  # "milestone" (determinístico, do event_log) | "prose" (menestrel LLM)
+    event_id: str  # só milestones — auditoria (aponta para GameEvent.event_id)
 
 
 class ChronicleChapter(TypedDict, total=False):
     title: str
     started_turn: int
-    location: str            # current_location no momento da abertura
+    location: str  # current_location no momento da abertura
     entries: List[ChronicleEntry]
 ```
 
@@ -156,8 +156,13 @@ que retorna eventos de cascata). Após cada aplicação bem-sucedida:
 ```python
 milestone = render_milestone(event, projection)
 if milestone:
-    chronicle = append_entry(chronicle, text=milestone, turn=event.get("turn", 0),
-                             kind="milestone", event_id=event["event_id"])
+    chronicle = append_entry(
+        chronicle,
+        text=milestone,
+        turn=event.get("turn", 0),
+        kind="milestone",
+        event_id=event["event_id"],
+    )
 ```
 
 Eventos da cascata (`source="rule_engine"`) passam pelo mesmo caminho — "vácuo de poder"
@@ -170,8 +175,9 @@ No caminho estruturado (`isinstance(result, MemoryUpdate)`):
 
 ```python
 if entry:
-    updates["chronicle"] = append_entry(state.get("chronicle") or [],
-                                        text=entry, turn=turn, kind="prose")
+    updates["chronicle"] = append_entry(
+        state.get("chronicle") or [], text=entry, turn=turn, kind="prose"
+    )
 ```
 
 **Atenção à ordem de merge:** o archivist hoje faz `{**updates, **event_updates}` — se os
@@ -188,9 +194,11 @@ ou deixe vazio".
 `CampaignPlanModel` ganha:
 
 ```python
-arc_title: str = Field(description="Short evocative arc title (3-6 words, PT-BR). "
-                                   "KEEP the previous title if the story arc continues; "
-                                   "change it ONLY when a truly new arc begins.")
+arc_title: str = Field(
+    description="Short evocative arc title (3-6 words, PT-BR). "
+    "KEEP the previous title if the story arc continues; "
+    "change it ONLY when a truly new arc begins."
+)
 ```
 
 Prompt do planner recebe o `arc_title` atual (se existir) com a mesma instrução de
@@ -200,8 +208,12 @@ persistência. No `campaign_manager_node`, após `_build_plan`:
 new_title = (new_plan.get("arc_title") or "").strip()
 old_title = (state.get("campaign_plan") or {}).get("arc_title", "")
 if new_title and new_title != old_title:
-    updated_state["chronicle"] = open_chapter(state.get("chronicle") or [],
-        title=new_title, turn=world["turn_count"], location=world.get("current_location", ""))
+    updated_state["chronicle"] = open_chapter(
+        state.get("chronicle") or [],
+        title=new_title,
+        turn=world["turn_count"],
+        location=world.get("current_location", ""),
+    )
 ```
 
 Fallback do plan (exceção do LLM): `arc_title` = título atual (não abre capítulo) ou
@@ -215,8 +227,14 @@ Em `load_game_state`, no bloco de recuperação:
 ```python
 raw_chron = raw_data.get("chronicle", [])
 if raw_chron and isinstance(raw_chron[0], str):
-    raw_chron = [{"title": "Crônica da jornada", "started_turn": 0, "location": "",
-                  "entries": [{"text": t, "turn": 0, "kind": "prose"} for t in raw_chron]}]
+    raw_chron = [
+        {
+            "title": "Crônica da jornada",
+            "started_turn": 0,
+            "location": "",
+            "entries": [{"text": t, "turn": 0, "kind": "prose"} for t in raw_chron],
+        }
+    ]
 ```
 
 `save_game_state` não muda (capítulos são dicts JSON-serializáveis).

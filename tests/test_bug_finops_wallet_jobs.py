@@ -1,5 +1,6 @@
 """SPEC-236 offline repros: phantom cost of failed attempts, cross-day cap override,
 STT definitive rejection, rate-card window, benign post-commit heartbeat, fail-closed switches."""
+
 from __future__ import annotations
 
 import time
@@ -25,20 +26,38 @@ PRICING = {"v1": finops.PricingRef("v1", D("5"), {})}
 
 @pytest.fixture(autouse=True)
 def _env(monkeypatch):
-    for name in ("RPG_DAILY_SPEND_CAP_BRL", "RPG_KILL_SWITCHES_OFF", "RPG_KILL_SWITCH_FAIL_CLOSED",
-                 "RPG_RATE_CARD_MAX_AGE_DAYS", "RPG_RATE_CARD_WARN_DAYS",
-                 "RPG_KILL_SWITCH_CAP_FAIL_OPEN"):
+    for name in (
+        "RPG_DAILY_SPEND_CAP_BRL",
+        "RPG_KILL_SWITCHES_OFF",
+        "RPG_KILL_SWITCH_FAIL_CLOSED",
+        "RPG_RATE_CARD_MAX_AGE_DAYS",
+        "RPG_RATE_CARD_WARN_DAYS",
+        "RPG_KILL_SWITCH_CAP_FAIL_OPEN",
+    ):
         monkeypatch.delenv(name, raising=False)
 
 
 # --- R1 -------------------------------------------------------------------------------------
 def test_failed_attempt_costs_zero():
-    events = normalize_attempts([
-        {"provider": "deepseek", "model": "deepseek-v4-flash", "outcome": "invoke_error",
-         "network_attempted": True, "usage": None},
-        {"provider": "groq", "model": "openai/gpt-oss-120b", "outcome": "success",
-         "network_attempted": True, "usage": {"input_tokens": 1000, "output_tokens": 300}},
-    ], operation_id=OPERATION)
+    events = normalize_attempts(
+        [
+            {
+                "provider": "deepseek",
+                "model": "deepseek-v4-flash",
+                "outcome": "invoke_error",
+                "network_attempted": True,
+                "usage": None,
+            },
+            {
+                "provider": "groq",
+                "model": "openai/gpt-oss-120b",
+                "outcome": "success",
+                "network_attempted": True,
+                "usage": {"input_tokens": 1000, "output_tokens": 300},
+            },
+        ],
+        operation_id=OPERATION,
+    )
     failed, ok = events
     assert [e.cost_usd for e in events] == [D("0"), D("0.000330000")]
     assert failed.cost_basis == "failed_no_usage" and failed.billing_exact is False
@@ -52,9 +71,18 @@ def test_failed_attempt_costs_zero():
 @pytest.mark.parametrize("outcome", ["invalid_structured", "invalid_response", "success"])
 def test_answered_attempt_without_usage_stays_conservative(outcome):
     # The provider answered (and may have charged): never silently zero.
-    event = normalize_attempts([{"provider": "groq", "model": "openai/gpt-oss-20b",
-                                 "outcome": outcome, "network_attempted": True, "usage": None}],
-                               operation_id=OPERATION)[0]
+    event = normalize_attempts(
+        [
+            {
+                "provider": "groq",
+                "model": "openai/gpt-oss-20b",
+                "outcome": outcome,
+                "network_attempted": True,
+                "usage": None,
+            }
+        ],
+        operation_id=OPERATION,
+    )[0]
     assert event.cost_usd == D("1.000000000") and event.counts_as_spend is True
 
 
@@ -77,57 +105,118 @@ def test_stream_cut_after_first_chunk_is_conservative_spend(monkeypatch, mode):
     attempts = []
     monkeypatch.setattr(llm_setup, "_get_cached_client", lambda *_args: FakeClient())
     monkeypatch.setattr(llm_setup, "_ATTEMPT_TELEMETRY_HOOK", attempts.append)
-    stream = llm_setup.RoutedLLM(llm_setup.ModelTier.FAST, 0,
-                                 [("deepseek", "deepseek-v4-flash")]).stream("prompt")
+    stream = llm_setup.RoutedLLM(
+        llm_setup.ModelTier.FAST, 0, [("deepseek", "deepseek-v4-flash")]
+    ).stream("prompt")
     assert next(stream).content == "first"
     if mode == "consumer_closed":
         stream.close()
     else:
         list(stream)
     assert [a.outcome for a in attempts] == ["stream_interrupted"]
-    event = normalize_attempts([{"provider": a.provider, "model": a.model, "outcome": a.outcome,
-                                 "network_attempted": True, "usage": a.usage}
-                                for a in attempts], operation_id=OPERATION)[0]
+    event = normalize_attempts(
+        [
+            {
+                "provider": a.provider,
+                "model": a.model,
+                "outcome": a.outcome,
+                "network_attempted": True,
+                "usage": a.usage,
+            }
+            for a in attempts
+        ],
+        operation_id=OPERATION,
+    )[0]
     assert event.cost_basis != "failed_no_usage" and event.cost_usd > 0
     assert event.counts_as_spend is True and event.billing_exact is False
     assert exact_billable_cost([event]) is None
 
 
 def test_stream_failure_before_first_chunk_stays_failed_no_usage():
-    event = normalize_attempts([{"provider": "deepseek", "model": "deepseek-v4-flash",
-                                 "outcome": "stream_error", "network_attempted": True,
-                                 "usage": None}], operation_id=OPERATION)[0]
+    event = normalize_attempts(
+        [
+            {
+                "provider": "deepseek",
+                "model": "deepseek-v4-flash",
+                "outcome": "stream_error",
+                "network_attempted": True,
+                "usage": None,
+            }
+        ],
+        operation_id=OPERATION,
+    )[0]
     assert event.cost_basis == "failed_no_usage" and event.counts_as_spend is False
 
 
 def test_failed_attempt_with_usage_keeps_its_price():
-    event = normalize_attempts([{"provider": "groq", "model": "openai/gpt-oss-20b",
-                                 "outcome": "invoke_error", "network_attempted": True,
-                                 "usage": {"input_tokens": 1000, "output_tokens": 300}}],
-                               operation_id=OPERATION)[0]
+    event = normalize_attempts(
+        [
+            {
+                "provider": "groq",
+                "model": "openai/gpt-oss-20b",
+                "outcome": "invoke_error",
+                "network_attempted": True,
+                "usage": {"input_tokens": 1000, "output_tokens": 300},
+            }
+        ],
+        operation_id=OPERATION,
+    )[0]
     assert event.cost_basis == "token_priced" and event.cost_usd > 0 and event.counts_as_spend
 
 
 def test_turn_cost_log_excludes_failed_attempts():
     import api
-    fields = api._llm_log_fields([], [
-        {"provider": "deepseek", "model": "deepseek-v4-flash", "outcome": "invoke_error",
-         "network_attempted": True, "usage": None},
-        {"provider": "groq", "model": "openai/gpt-oss-120b", "outcome": "success",
-         "network_attempted": True, "usage": {"input_tokens": 1000, "output_tokens": 300}},
-    ])
+
+    fields = api._llm_log_fields(
+        [],
+        [
+            {
+                "provider": "deepseek",
+                "model": "deepseek-v4-flash",
+                "outcome": "invoke_error",
+                "network_attempted": True,
+                "usage": None,
+            },
+            {
+                "provider": "groq",
+                "model": "openai/gpt-oss-120b",
+                "outcome": "success",
+                "network_attempted": True,
+                "usage": {"input_tokens": 1000, "output_tokens": 300},
+            },
+        ],
+    )
     assert fields["cost_usd_est"] == pytest.approx(0.00033)
     assert fields["llm_failed_no_usage"] == 1 and fields["cost_basis"] == "normalized"
 
 
 # --- R2 -------------------------------------------------------------------------------------
 def _failures_and_cents() -> FakeFinopsReader:
-    failed = fa.UsageGroup("deepseek", "deepseek-v4-flash", "llm", "failed-no-usage-v1",
-                           "failed_no_usage", "invoke_error", 9, D("0"), False)
-    legacy = fa.UsageGroup("deepseek", "deepseek-v4-flash", "llm", "unknown-conservative-v1",
-                           "estimated", "invoke_error", 3, D("0"), False)  # backfilled rows
-    ok = fa.UsageGroup("groq", "openai/gpt-oss-20b", "llm", "v1", "token_priced", "success",
-                       1, D("0.01"))
+    failed = fa.UsageGroup(
+        "deepseek",
+        "deepseek-v4-flash",
+        "llm",
+        "failed-no-usage-v1",
+        "failed_no_usage",
+        "invoke_error",
+        9,
+        D("0"),
+        False,
+    )
+    legacy = fa.UsageGroup(
+        "deepseek",
+        "deepseek-v4-flash",
+        "llm",
+        "unknown-conservative-v1",
+        "estimated",
+        "invoke_error",
+        3,
+        D("0"),
+        False,
+    )  # backfilled rows
+    ok = fa.UsageGroup(
+        "groq", "openai/gpt-oss-20b", "llm", "v1", "token_priced", "success", 1, D("0.01")
+    )
     return FakeFinopsReader(pricing_refs=PRICING, groups=[failed, legacy, ok])
 
 
@@ -148,8 +237,9 @@ def test_failed_attempts_are_reported_apart_and_never_spike():
     assert out["provider_failures_no_usage_by_provider"] == "deepseek=12"
     assert out["report_version"] == "finops-spend-v2"
     # a first-ever spike from a provider with no history still needs REAL spend
-    groups = [fa.UsageGroup("deepseek", "m", "llm", "x", "failed_no_usage", "error", 50, D("0"),
-                            False)]
+    groups = [
+        fa.UsageGroup("deepseek", "m", "llm", "x", "failed_no_usage", "error", 50, D("0"), False)
+    ]
     assert fa.cost_spike(groups, [{}], fa.Thresholds()) == []
 
 
@@ -172,6 +262,7 @@ def test_manual_override_only_same_day(monkeypatch):
     monkeypatch.setenv("RPG_DAILY_SPEND_CAP_BRL", "1")
     now = datetime.now(UTC)
     from services.daily_spend_cap import day_start
+
     since = day_start(now)
     # yesterday's trip + this morning's re-enable must NOT disarm today's cap
     hours_today = (now - since).total_seconds() / 3600
@@ -192,13 +283,22 @@ def test_stt_rejection_is_exact_zero_and_timeout_stays_unknown():
         is_definitive_no_charge,
         speech_event,
     )
-    rejected = speech_event(OPERATION, 0, "groq", "whisper-large-v3-turbo", "rejected", {},
-                            definitive_no_charge=True)
+
+    rejected = speech_event(
+        OPERATION, 0, "groq", "whisper-large-v3-turbo", "rejected", {}, definitive_no_charge=True
+    )
     assert rejected.cost_usd == 0 and rejected.billing_exact is True
     assert rejected.cost_basis == "definitive_no_charge" and rejected.counts_as_spend is False
     assert rejected.pricing_version == SPEECH_PRICING_VERSION
-    assert [is_definitive_no_charge(s) for s in (400, 401, 429, 499, 500, 503, 200)] == \
-        [True, True, True, True, False, False, False]
+    assert [is_definitive_no_charge(s) for s in (400, 401, 429, 499, 500, 503, 200)] == [
+        True,
+        True,
+        True,
+        True,
+        False,
+        False,
+        False,
+    ]
     unknown = speech_event(OPERATION, 0, "groq", "whisper-large-v3-turbo", "unknown", {})
     assert unknown.billing_exact is False and unknown.cost_usd > 0
 
@@ -230,19 +330,38 @@ def test_stt_429_then_fallback_success_is_all_exact():
 
     class Provider:
         def __init__(self):
-            self.readings = [ProviderReading(429, None, {}),
-                             ProviderReading(200, "Ayla", {"input_tokens": 100, "audio_tokens": 100,
-                                                           "text_tokens": 0, "output_tokens": 20})]
+            self.readings = [
+                ProviderReading(429, None, {}),
+                ProviderReading(
+                    200,
+                    "Ayla",
+                    {
+                        "input_tokens": 100,
+                        "audio_tokens": 100,
+                        "text_tokens": 0,
+                        "output_tokens": 20,
+                    },
+                ),
+            ]
 
         async def transcribe(self, candidate, path):
             return self.readings.pop(0)
 
     finance = FakeFinance()
-    asyncio.run(transcribe_audio(output.getvalue(), "audio/wav", OPERATION, finance,
-                                 provider=Provider(),
-                                 candidates=[Candidate("groq", "whisper-large-v3-turbo"),
-                                             Candidate("openai", "gpt-4o-mini-transcribe")],
-                                 circuit=SpeechCircuit()))
+    asyncio.run(
+        transcribe_audio(
+            output.getvalue(),
+            "audio/wav",
+            OPERATION,
+            finance,
+            provider=Provider(),
+            candidates=[
+                Candidate("groq", "whisper-large-v3-turbo"),
+                Candidate("openai", "gpt-4o-mini-transcribe"),
+            ],
+            circuit=SpeechCircuit(),
+        )
+    )
     events = finance.events
     assert [e.cost_basis for e in events] == ["definitive_no_charge", "rate_card"]
     assert all(e.billing_exact for e in events)
@@ -254,6 +373,7 @@ def test_rate_card_window_configurable(monkeypatch):
     from services.image_pricing import require_image_prices
     from services.shard_pricing import PricingUnavailable
     from services.speech_pricing import require_speech_prices
+
     observed = datetime.fromisoformat(image_card["observed_at"])
     model = image_card["model"]
     require_image_prices(model, observed + timedelta(days=25))  # D-B default 30 d
@@ -347,6 +467,7 @@ def test_lost_lease_without_commit_still_raises():
 
 def test_watch_mark_committed_stops_renewal():
     from services.lease_heartbeat import keep_lease_alive
+
     calls = []
     with keep_lease_alive(lambda: calls.append(1), interval_seconds=0.01) as watch:
         watch.mark_committed()
@@ -387,4 +508,5 @@ def test_wallet_hold_alerts_are_raised():
 def test_stream_interrupted_keeps_its_audit_error_code():
     """Sol review: renaming the post-first-chunk outcome must not degrade the audit export."""
     from services.audit_trace import ERROR_CODES
+
     assert ERROR_CODES["stream_interrupted"] == "llm_stream_error"

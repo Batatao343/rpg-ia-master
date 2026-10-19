@@ -29,31 +29,72 @@ RATO = "enemy_rato_peste_anel_lama"
 
 def _base_state(messages=None):
     return {
-        "game_id": "pytest_fase32", "narrative_summary": "", "archivist_last_run": 0,
-        "messages": messages or [], "next": None,
+        "game_id": "pytest_fase32",
+        "narrative_summary": "",
+        "archivist_last_run": 0,
+        "messages": messages or [],
+        "next": None,
         "player": {
-            "name": "Tester", "class_name": "Guerreiro", "race": "Humano",
-            "hp": 30, "max_hp": 30, "mana": 10, "max_mana": 10,
-            "stamina": 10, "max_stamina": 10, "gold": 50, "level": 1, "xp": 0,
+            "name": "Tester",
+            "class_name": "Guerreiro",
+            "race": "Humano",
+            "hp": 30,
+            "max_hp": 30,
+            "mana": 10,
+            "max_mana": 10,
+            "stamina": 10,
+            "max_stamina": 10,
+            "gold": 50,
+            "level": 1,
+            "xp": 0,
             "attributes": {"str": 12, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10},
-            "inventory": [], "known_abilities": [], "defense": 10, "attack_bonus": 0,
-            "active_conditions": [], "ability_cooldowns": {},
+            "inventory": [],
+            "known_abilities": [],
+            "defense": 10,
+            "attack_bonus": 0,
+            "active_conditions": [],
+            "ability_cooldowns": {},
         },
-        "world": {"current_location": "Nova Arcádia", "current_location_id": "nova_arcadia",
-                   "time_of_day": "Dia", "turn_count": 0, "weather": "Neutro",
-                   "quest_plan": [], "danger_level": 1, "visited": []},
-        "campaign_plan": {}, "needs_replan": False, "enemies": [], "party": [],
-        "npcs": {}, "active_npc_name": None, "factions": [], "faction_intel": {},
-        "bestiary_knowledge": {}, "combat_target": None, "loot_source": None, "combat": {},
+        "world": {
+            "current_location": "Nova Arcádia",
+            "current_location_id": "nova_arcadia",
+            "time_of_day": "Dia",
+            "turn_count": 0,
+            "weather": "Neutro",
+            "quest_plan": [],
+            "danger_level": 1,
+            "visited": [],
+        },
+        "campaign_plan": {},
+        "needs_replan": False,
+        "enemies": [],
+        "party": [],
+        "npcs": {},
+        "active_npc_name": None,
+        "factions": [],
+        "faction_intel": {},
+        "bestiary_knowledge": {},
+        "combat_target": None,
+        "loot_source": None,
+        "combat": {},
     }
 
 
 def _combat_player():
-    return {"name": "Kael", "class_name": "Guerreiro", "hp": 30, "max_hp": 30,
-            "stamina": 12, "max_stamina": 12, "mana": 0,
-            "attributes": {"str": 16, "dex": 14, "con": 12},
-            "inventory": [], "attack_bonus": 0,
-            "active_conditions": [], "ability_cooldowns": {}}
+    return {
+        "name": "Kael",
+        "class_name": "Guerreiro",
+        "hp": 30,
+        "max_hp": 30,
+        "stamina": 12,
+        "max_stamina": 12,
+        "mana": 0,
+        "attributes": {"str": 16, "dex": 14, "con": 12},
+        "inventory": [],
+        "attack_bonus": 0,
+        "active_conditions": [],
+        "ability_cooldowns": {},
+    }
 
 
 @pytest.fixture(autouse=True)
@@ -68,6 +109,7 @@ def _fresh_caches():
 # ---------------------------------------------------------------------------
 # Etapa 1 — contadores + graus puros
 # ---------------------------------------------------------------------------
+
 
 def test_rato_existe_no_bestiario():
     assert RATO in gamedata.BESTIARY  # sanity: fixture real, não inventada
@@ -122,6 +164,7 @@ def test_funcoes_puras_nao_mutam_original():
 # Etapa 2 — revelação por grau (bestiary_view)
 # ---------------------------------------------------------------------------
 
+
 def test_view_grau1_sem_stats():
     bk = {RATO: {"seen": 1}}
     view = disc.bestiary_view(bk)
@@ -166,6 +209,7 @@ def test_grau_zero_nao_aparece():
 # Etapa 4 — codex_index / codex_body (services/codex_loader.py)
 # ---------------------------------------------------------------------------
 
+
 def test_codex_index_acha_id_conhecido():
     idx = cl.codex_index()
     assert "nova_arcadia" in idx
@@ -194,6 +238,7 @@ def test_codex_body_none_vazio():
 # Etapa 3 — hooks no combate + threat_alerts
 # ---------------------------------------------------------------------------
 
+
 def test_combate_registra_encounter(monkeypatch):
     import agents.combat as combat
 
@@ -205,10 +250,12 @@ def test_combate_registra_encounter(monkeypatch):
 
     monkeypatch.setattr(combat, "_spawn_v4_enemies", fake_spawn)
     random.seed(1)
-    state = _base_state(messages=[
-        HumanMessage(content="viajo para o beco"),
-        SystemMessage(content="COMBAT START. Ratos surgem!"),
-    ])
+    state = _base_state(
+        messages=[
+            HumanMessage(content="viajo para o beco"),
+            SystemMessage(content="COMBAT START. Ratos surgem!"),
+        ]
+    )
     state["player"] = _combat_player()
     state["enemies"] = []
     state["combat"] = {}
@@ -229,10 +276,16 @@ def test_morte_registra_defeated(monkeypatch):
         target["dead"] = True
         target["status"] = "morto"
         target["vitalidade"] = 0
-        return {"logs": ["Golpe fatal derruba o inimigo."],
-                "deaths": [target["id"]], "ended": True, "player_dead": False,
-                "scars_pending": [], "reason": "vitoria",
-                "recidiva_event": None, "initiative": ["heroes", "enemy"]}
+        return {
+            "logs": ["Golpe fatal derruba o inimigo."],
+            "deaths": [target["id"]],
+            "ended": True,
+            "player_dead": False,
+            "scars_pending": [],
+            "reason": "vitoria",
+            "recidiva_event": None,
+            "initiative": ["heroes", "enemy"],
+        }
 
     monkeypatch.setattr(combat.orch, "run_round", fake_round)
     random.seed(2)
@@ -281,6 +334,7 @@ def test_pick_encounter_enemy_by_faction_carrega_enemy_id():
 # Etapa 4 — codex agregado + endpoint
 # ---------------------------------------------------------------------------
 
+
 def test_codex_index_cacheia():
     idx1 = cl.codex_index()
     idx2 = cl.codex_index()
@@ -290,15 +344,28 @@ def test_codex_index_cacheia():
 def test_player_codex_deriva_fontes():
     state = _base_state()
     state["world"]["visited"] = ["nova_arcadia"]
-    state["factions"] = [{"id": "legiao_ferro", "name": "Legião de Ferro",
-                          "goal": "Unificar Valoria sob a lei", "defeated": False}]
+    state["factions"] = [
+        {
+            "id": "legiao_ferro",
+            "name": "Legião de Ferro",
+            "goal": "Unificar Valoria sob a lei",
+            "defeated": False,
+        }
+    ]
     state["faction_intel"] = {"legiao_ferro": {"known": True, "knows_goal": True}}
-    state["npcs"] = {"Lorde Protetor Valerius": {"name": "Lorde Protetor Valerius",
-                                                  "role": "governante", "location": "nova_arcadia"}}
+    state["npcs"] = {
+        "Lorde Protetor Valerius": {
+            "name": "Lorde Protetor Valerius",
+            "role": "governante",
+            "location": "nova_arcadia",
+        }
+    }
     state["bestiary_knowledge"] = {RATO: {"seen": 1, "fought": 1}}
-    state["world_projection"] = {"revealed_facts": {
-        "e1": {"entity_id": "npc_valerius", "fact": "É um lich", "revealed_at_turn": 4},
-    }}
+    state["world_projection"] = {
+        "revealed_facts": {
+            "e1": {"entity_id": "npc_valerius", "fact": "É um lich", "revealed_at_turn": 4},
+        }
+    }
 
     codex = disc.player_codex(state)
     assert {loc["id"] for loc in codex["locations"]} == {"nova_arcadia"}
@@ -310,13 +377,20 @@ def test_player_codex_deriva_fontes():
     assert {c["id"] for c in codex["creatures"]} == {RATO}
     assert codex["secrets"][0]["fact"] == "É um lich"
     from services.player_knowledge import assert_no_player_leak
+
     assert assert_no_player_leak(codex, state) == []  # SPEC-206 oráculo
 
 
 def test_faction_goal_nao_vaza_sem_knows_goal():
     state = _base_state()
-    state["factions"] = [{"id": "mao_sombria", "name": "Mão Sombria",
-                          "goal": "Segredo não revelado", "defeated": False}]
+    state["factions"] = [
+        {
+            "id": "mao_sombria",
+            "name": "Mão Sombria",
+            "goal": "Segredo não revelado",
+            "defeated": False,
+        }
+    ]
     state["faction_intel"] = {"mao_sombria": {"known": True, "knows_goal": False}}
     codex = disc.player_codex(state)
     assert codex["factions"][0]["goal"] == ""
@@ -325,8 +399,14 @@ def test_faction_goal_nao_vaza_sem_knows_goal():
 
 def test_faccao_desconhecida_fora_do_codex():
     state = _base_state()
-    state["factions"] = [{"id": "filhos_chama_azul", "name": "Filhos da Chama Azul",
-                          "goal": "...", "defeated": False}]
+    state["factions"] = [
+        {
+            "id": "filhos_chama_azul",
+            "name": "Filhos da Chama Azul",
+            "goal": "...",
+            "defeated": False,
+        }
+    ]
     state["faction_intel"] = {}  # jogador nunca ouviu falar
     codex = disc.player_codex(state)
     assert codex["factions"] == []
@@ -347,6 +427,7 @@ def test_endpoint_codex():
 
     import api
     import persistence
+
     game_id = str(uuid.uuid4())  # Fase 10: game_id da API precisa ser UUID
     save_path = os.path.join(persistence.SAVES_DIR, f"{game_id}.json")
     state = _base_state()
@@ -361,6 +442,7 @@ def test_endpoint_codex():
         body = resp.json()
         assert {loc["id"] for loc in body["locations"]} == {"nova_arcadia"}
         from services.player_knowledge import assert_no_player_leak
+
         assert assert_no_player_leak(body, state) == []  # SPEC-206 oráculo
         assert body["creatures"][0]["tier_name"] == "Estudada"
     finally:
@@ -374,6 +456,7 @@ def test_endpoint_codex_game_id_inexistente_404():
     from fastapi.testclient import TestClient
 
     import api
+
     client = TestClient(api.app)
     # UUID válido sem save no disco -> 404 (não-UUID vira 400 — Fase 10)
     resp = client.get("/game/codex", params={"game_id": str(uuid.uuid4())})

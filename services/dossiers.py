@@ -9,6 +9,7 @@ nem cartas/resistências acima do revelado.
 
 Vocabulário de conhecimento: `KnowledgeStamp` da SPEC-206, sem rótulos locais.
 """
+
 from __future__ import annotations
 
 import os
@@ -74,6 +75,7 @@ def _art(subject_type: str, subject_id: str | None) -> dict | None:
         return None
     try:
         from services.visual_catalog import visual_for
+
         asset = visual_for(subject_type, subject_id)
     except Exception:
         return None
@@ -119,6 +121,7 @@ def _claim(note: Mapping) -> dict:
 # NPC
 # ---------------------------------------------------------------------------
 
+
 def _npc_index(state: Mapping) -> dict[str, tuple]:
     """nome exibível -> (chave, npc) dos NPCs do runtime."""
     out: dict[str, tuple] = {}
@@ -131,15 +134,19 @@ def _npc_index(state: Mapping) -> dict[str, tuple]:
 def npc_dossier(entry: Mapping, state: Mapping, npc_index: Mapping) -> dict:
     """`entry` = entrada JÁ projetada (SPEC-206) do bloco `characters`."""
     from services.npc_layers import npc_alive
+
     name = str(entry.get("name", ""))
     key, npc = npc_index.get(name, (name, {}))
     entity_id = resolve_npc_entity_id(npc, name) if npc else None
     notes = list(entry.get("notes") or [])
     claims = [_claim(n) for n in notes]
     # R3: só observações do próprio jogador; nunca memória bruta/estado privado.
-    appears = [_claim(n) for n in notes
-               if n.get("source_kind") == "player_observation"
-               and n.get("knowledge_kind") in ("perception", "suspicion")]
+    appears = [
+        _claim(n)
+        for n in notes
+        if n.get("source_kind") == "player_observation"
+        and n.get("knowledge_kind") in ("perception", "suspicion")
+    ]
     encounters: list[dict] = []
     created = _turn(npc.get("created_turn"))
     if created is not None and (npc.get("knowledge_source", "met") or "met") == "met":
@@ -148,23 +155,30 @@ def npc_dossier(entry: Mapping, state: Mapping, npc_index: Mapping) -> dict:
     encounters.sort(key=lambda e: e["turn"])
     encounters = encounters[-MAX_ENCOUNTERS:]
     last_seen = _turn(npc.get("last_seen_turn"))
-    updated = _max_turn(last_seen, created, _notes_turn(notes),
-                        *[e["turn"] for e in encounters])
+    updated = _max_turn(last_seen, created, _notes_turn(notes), *[e["turn"] for e in encounters])
     relationship = npc.get("relationship", 5)
     status = "morto" if npc and not npc_alive(npc) else str(npc.get("status") or "")
     return {
-        "id": entity_id or str(key), "kind": "npc", "title": name,
-        "last_updated_turn": updated, "version": updated,
+        "id": entity_id or str(key),
+        "kind": "npc",
+        "title": name,
+        "last_updated_turn": updated,
+        "version": updated,
         "art": _art("npc", entity_id),
-        "knowledge": entry["knowledge"], "notes": notes,
-        "role": entry.get("role", ""), "location": entry.get("location", ""),
+        "knowledge": entry["knowledge"],
+        "notes": notes,
+        "role": entry.get("role", ""),
+        "location": entry.get("location", ""),
         "status": status,
         "relationship": int(relationship) if isinstance(relationship, (int, float)) else 5,
         "disposition_label": disposition_label(relationship),
         "knowledge_source": entry.get("knowledge_source", "met"),
         "revealed_traits": list(entry.get("revealed_traits") or []),
-        "claims": claims, "appears_to_know": appears, "encounters": encounters,
-        "last_seen_turn": last_seen, "body": entry.get("body", ""),
+        "claims": claims,
+        "appears_to_know": appears,
+        "encounters": encounters,
+        "last_seen_turn": last_seen,
+        "body": entry.get("body", ""),
     }
 
 
@@ -172,8 +186,10 @@ def npc_dossier(entry: Mapping, state: Mapping, npc_index: Mapping) -> dict:
 # Local / Facção / Segredo
 # ---------------------------------------------------------------------------
 
-def location_dossier(entry: Mapping, state: Mapping, npcs: list[dict],
-                     creatures: list[dict]) -> dict:
+
+def location_dossier(
+    entry: Mapping, state: Mapping, npcs: list[dict], creatures: list[dict]
+) -> dict:
     loc_id = str(entry["id"])
     name = str(entry.get("name", loc_id))
     ent = gr.get_entity(loc_id) or {}
@@ -184,19 +200,27 @@ def location_dossier(entry: Mapping, state: Mapping, npcs: list[dict],
     notes = list(entry.get("notes") or [])
     updated = _max_turn(_notes_turn(notes), *[e["turn"] for e in events])
     return {
-        "id": loc_id, "kind": "location", "title": name,
-        "last_updated_turn": updated, "version": updated,
+        "id": loc_id,
+        "kind": "location",
+        "title": name,
+        "last_updated_turn": updated,
+        "version": updated,
         "art": _art("location", loc_id),
-        "knowledge": entry["knowledge"], "notes": notes,
-        "body": entry.get("body", ""), "region": region or "",
-        "npcs": here, "creatures": seen, "events": events,
+        "knowledge": entry["knowledge"],
+        "notes": notes,
+        "body": entry.get("body", ""),
+        "region": region or "",
+        "npcs": here,
+        "creatures": seen,
+        "events": events,
     }
 
 
 def faction_dossier(entry: Mapping, state: Mapping) -> dict:
     fid = str(entry["id"])
-    faction = next((f for f in state.get("factions") or []
-                    if isinstance(f, dict) and f.get("id") == fid), {})
+    faction = next(
+        (f for f in state.get("factions") or [] if isinstance(f, dict) and f.get("id") == fid), {}
+    )
     intel = (state.get("faction_intel") or {}).get(fid) or {}
     knowledge = entry["knowledge"]
     seen = intel.get("progress_seen")
@@ -205,11 +229,17 @@ def faction_dossier(entry: Mapping, state: Mapping) -> dict:
     notes = list(entry.get("notes") or [])
     updated = _max_turn(intel.get("intel_turn"), _notes_turn(notes))
     return {
-        "id": fid, "kind": "faction", "title": str(entry.get("name", fid)),
-        "last_updated_turn": updated, "version": updated,
-        "art": None, "knowledge": knowledge, "notes": notes,
+        "id": fid,
+        "kind": "faction",
+        "title": str(entry.get("name", fid)),
+        "last_updated_turn": updated,
+        "version": updated,
+        "art": None,
+        "knowledge": knowledge,
+        "notes": notes,
         "body": entry.get("body", ""),
-        "goal": entry.get("goal", ""), "knows_goal": bool(entry.get("knows_goal")),
+        "goal": entry.get("goal", ""),
+        "knows_goal": bool(entry.get("knows_goal")),
         "region": str(faction.get("region", "")),
         "disposition": str(faction.get("disposition", "neutro")),
         "reputation": int(faction.get("reputation", 0) or 0),
@@ -225,17 +255,24 @@ def secret_dossier(entry: Mapping) -> dict:
     ent = gr.get_entity(entity_id) or {}
     turn = _turn(entry.get("turn")) or 0
     return {
-        "id": str(knowledge.get("source_ref") or entity_id), "kind": "secret",
+        "id": str(knowledge.get("source_ref") or entity_id),
+        "kind": "secret",
         "title": str(ent.get("name") or entity_id),
-        "last_updated_turn": turn, "version": turn,
-        "art": None, "knowledge": knowledge, "notes": list(entry.get("notes") or []),
-        "fact": entry.get("fact", ""), "entity_id": entity_id, "turn": turn,
+        "last_updated_turn": turn,
+        "version": turn,
+        "art": None,
+        "knowledge": knowledge,
+        "notes": list(entry.get("notes") or []),
+        "fact": entry.get("fact", ""),
+        "entity_id": entity_id,
+        "turn": turn,
     }
 
 
 # ---------------------------------------------------------------------------
 # Criatura (Bestiário)
 # ---------------------------------------------------------------------------
+
 
 def _revealed_for(base: Mapping, tier: int) -> tuple:
     """Cartas/resistências reveladas pelo bestiário (overlay) — só tier >= 2 e
@@ -250,6 +287,7 @@ def _revealed_for(base: Mapping, tier: int) -> tuple:
     try:
         from services import bestiary_knowledge as bk
         from services import cards
+
         data = bk._load_all().get(bk._archetype_id(base), {})
         exclusive = set(base.get("variant_exclusive_cards") or [])
         out_cards: list[dict[str, str]] = []
@@ -273,11 +311,16 @@ def creature_dossier(entry: Mapping, state: Mapping) -> dict:
     notes = list(entry.get("notes") or [])
     updated = _max_turn(rec.get("last_update_turn"), _notes_turn(notes))
     out: dict[str, Any] = {
-        "id": cid, "kind": "creature", "title": str(entry.get("name", "")),
-        "last_updated_turn": updated, "version": updated,
+        "id": cid,
+        "kind": "creature",
+        "title": str(entry.get("name", "")),
+        "last_updated_turn": updated,
+        "version": updated,
         "art": _art("creature", cid),
-        "knowledge": entry["knowledge"], "notes": notes,
-        "tier": tier, "tier_name": entry["tier_name"],
+        "knowledge": entry["knowledge"],
+        "notes": notes,
+        "tier": tier,
+        "tier_name": entry["tier_name"],
         "regions": list(entry.get("regions") or []),
         "first_seen_turn": _turn(rec.get("first_seen_turn")),
     }
@@ -299,28 +342,37 @@ def creature_dossier(entry: Mapping, state: Mapping) -> dict:
 # Crônica (índice por capítulo)
 # ---------------------------------------------------------------------------
 
+
 def chronicle_index(state: Mapping, known_ids: set) -> list[dict]:
-    targets = {e.get("event_id"): e.get("target_id")
-               for e in state.get("event_log") or [] if isinstance(e, Mapping)}
+    targets = {
+        e.get("event_id"): e.get("target_id")
+        for e in state.get("event_log") or []
+        if isinstance(e, Mapping)
+    }
     out: list[dict] = []
     for cap in state.get("chronicle") or []:
         if not isinstance(cap, Mapping):
             continue
-        entries = [e for e in cap.get("entries") or []
-                   if isinstance(e, Mapping) and str(e.get("text", "")).strip()]
+        entries = [
+            e
+            for e in cap.get("entries") or []
+            if isinstance(e, Mapping) and str(e.get("text", "")).strip()
+        ]
         ids: list[str] = []
         for e in entries:
             tid = targets.get(e.get("event_id"))
             if tid and tid in known_ids and tid not in ids:
                 ids.append(str(tid))
-        out.append({
-            "chapter_id": str(cap.get("chapter_id", "")),
-            "arc_title": str(cap.get("title", "")),
-            "started_turn": _turn(cap.get("started_turn")) or 0,
-            "location": str(cap.get("location", "")),
-            "entry_count": len(entries),
-            "entity_ids": ids,
-        })
+        out.append(
+            {
+                "chapter_id": str(cap.get("chapter_id", "")),
+                "arc_title": str(cap.get("title", "")),
+                "started_turn": _turn(cap.get("started_turn")) or 0,
+                "location": str(cap.get("location", "")),
+                "entry_count": len(entries),
+                "entity_ids": ids,
+            }
+        )
     return out
 
 
@@ -328,8 +380,10 @@ def chronicle_index(state: Mapping, known_ids: set) -> list[dict]:
 # Agregado
 # ---------------------------------------------------------------------------
 
+
 def build_dossiers(state: Mapping) -> dict:
     from services.player_knowledge import TAXONOMY_VERSION
+
     codex = discovery.player_codex(dict(state))  # já projetado + fail-closed
     npc_index = _npc_index(state)
     npcs: list[dict] = []
@@ -349,8 +403,11 @@ def build_dossiers(state: Mapping) -> dict:
         "version": _max_turn(*[d["version"] for d in every]),
         "generated_at_turn": turn,
         "sections": {
-            "npcs": npcs, "locations": locations, "factions": factions,
-            "secrets": secrets, "chronicle_index": chronicle_index(state, known_ids),
+            "npcs": npcs,
+            "locations": locations,
+            "factions": factions,
+            "secrets": secrets,
+            "chronicle_index": chronicle_index(state, known_ids),
         },
         "bestiary": creatures,
         "meta": {"taxonomy_version": TAXONOMY_VERSION},

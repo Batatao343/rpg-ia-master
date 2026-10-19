@@ -106,17 +106,21 @@ skallgard:
 ```python
 # scripts/migrate_lore_nova.py
 def load_overrides(path: str = os.path.join("data", "codex_overrides.yaml")) -> dict: ...
-def apply_overrides(entities: Dict[str, dict], overrides: dict,
-                    codex_dir: str = CODEX_DIR) -> List[str]:
+def apply_overrides(
+    entities: Dict[str, dict], overrides: dict, codex_dir: str = CODEX_DIR
+) -> List[str]:
     """Aplica patches nos .md gerados e no dict de entidades.
     Retorna ids não encontrados (o main imprime; lint 7.1 acusa como ERRO)."""
+
 
 def is_curated(path: str) -> bool:
     """True se o frontmatter tem curated: true (delete loop pula)."""
 
+
 # services/content_validator.py
-def validate_overrides(codex_dir: str = CODEX_DIR,
-                       overrides_path: str = "data/codex_overrides.yaml") -> list[Finding]: ...
+def validate_overrides(
+    codex_dir: str = CODEX_DIR, overrides_path: str = "data/codex_overrides.yaml"
+) -> list[Finding]: ...
 ```
 
 `apply_overrides` reusa `parse_codex_file` + `write_codex_file`: lê o gerado,

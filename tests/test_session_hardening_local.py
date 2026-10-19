@@ -1,4 +1,5 @@
 """SPEC-220 contra GoTrue + Postgres LOCAIS (Supabase CLI). Nunca staging/produção."""
+
 from __future__ import annotations
 
 from contextlib import contextmanager
@@ -18,8 +19,10 @@ ORIGIN = "http://localhost:5173"
 def local_stack():
     psycopg = pytest.importorskip("psycopg")
     from psycopg.rows import dict_row
+
     try:
         from scripts.start_local_api import _supabase_status
+
         status = _supabase_status()
     except Exception as exc:  # pragma: no cover - stack ausente
         pytest.skip(f"Supabase local indisponível: {type(exc).__name__}")
@@ -43,13 +46,23 @@ def local_stack():
 
     def user(password: str):
         email = f"spec220-{uuid4().hex}@example.test"
-        response = httpx.post(f"{url}/auth/v1/admin/users", headers=admin, timeout=10,
-                              json={"email": email, "password": password, "email_confirm": True})
+        response = httpx.post(
+            f"{url}/auth/v1/admin/users",
+            headers=admin,
+            timeout=10,
+            json={"email": email, "password": password, "email_confirm": True},
+        )
         response.raise_for_status()
         created.append(response.json()["id"])
         return email
-    yield SimpleNamespace(url=url, publishable=status.get("PUBLISHABLE_KEY") or status["ANON_KEY"],
-                          service=service, pool=Pool(), user=user)
+
+    yield SimpleNamespace(
+        url=url,
+        publishable=status.get("PUBLISHABLE_KEY") or status["ANON_KEY"],
+        service=service,
+        pool=Pool(),
+        user=user,
+    )
     for owner in created:
         httpx.delete(f"{url}/auth/v1/admin/users/{owner}", headers=admin, timeout=10)
 
@@ -59,6 +72,7 @@ def _client(monkeypatch, identity, pool):
 
     import api
     from infrastructure.postgres_turns import PostgresRateLimiter
+
     runtime = SimpleNamespace(identity_verifier=identity, rate_limiter=PostgresRateLimiter(pool))
     monkeypatch.setenv("RPG_SESSION_SECRET", "s" * 32)
     monkeypatch.setenv("RPG_AUTH_CAPTCHA_MODE", "app")
@@ -87,7 +101,7 @@ def test_logout_with_expired_access_revokes_refresh_on_local_gotrue(local_stack,
     out = client.post("/auth/refresh/logout", headers={"X-CSRF-Token": login.json()["csrf_token"]})
     assert out.status_code == 204, out.text
     with pytest.raises(Unauthorized):
-        identity.refresh(refresh_token)              # refresh antigo morto no servidor
+        identity.refresh(refresh_token)  # refresh antigo morto no servidor
     with pytest.raises(Unauthorized):
         identity.refresh(other_device.refresh_token)  # revogação global (D-A)
     with pytest.raises(Unauthorized):
@@ -116,17 +130,33 @@ def test_postgres_rate_limiter_peek_and_reset_and_login_lockout(local_stack, mon
     email = s.user("spec220-Lockout-Local-1")
     client = _client(monkeypatch, identity, s.pool)
     from services.account_security import auth_email_bucket_keys
+
     try:
         for _ in range(5):  # sucessos não consomem
-            assert client.post("/auth/login", json={"email": email,
-                                                    "password": "spec220-Lockout-Local-1"}).status_code == 200
+            assert (
+                client.post(
+                    "/auth/login", json={"email": email, "password": "spec220-Lockout-Local-1"}
+                ).status_code
+                == 200
+            )
         for _ in range(3):
-            assert client.post("/auth/login", json={"email": email, "password": "wrong-password"}).status_code == 401
-        assert client.post("/auth/login", json={"email": email,
-                                                "password": "spec220-Lockout-Local-1"}).status_code == 200
+            assert (
+                client.post(
+                    "/auth/login", json={"email": email, "password": "wrong-password"}
+                ).status_code
+                == 401
+            )
+        assert (
+            client.post(
+                "/auth/login", json={"email": email, "password": "spec220-Lockout-Local-1"}
+            ).status_code
+            == 200
+        )
         with s.pool.connection() as db:
-            assert not db.execute("select 1 from app.rate_limit_buckets where bucket_key=any(%s)",
-                                  (list(auth_email_bucket_keys(email)),)).fetchone()  # zerado
+            assert not db.execute(
+                "select 1 from app.rate_limit_buckets where bucket_key=any(%s)",
+                (list(auth_email_bucket_keys(email)),),
+            ).fetchone()  # zerado
     finally:
         with s.pool.connection() as db:
             db.execute("delete from app.rate_limit_buckets where bucket_key like 'auth:login:%'")

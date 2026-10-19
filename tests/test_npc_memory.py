@@ -3,6 +3,7 @@ Memória de NPC vetorizada (Fase 2): índice FAISS namespaceado por game_id+npc_
 Offline/determinístico via FakeEmbeddings (sem chave, sem rede). Cobre namespacing,
 degradação sem embeddings e derivação de id.
 """
+
 import hashlib
 import os
 
@@ -47,19 +48,25 @@ def _use_fake_embeddings(monkeypatch):
         monkeypatch.delenv(k, raising=False)
     rag._embeddings_cache.clear()
     rag._active_provider_name = None
-    monkeypatch.setattr(rag, "_EMBEDDING_BUILDERS",
-                        {p: (lambda p=p: FakeEmbeddings()) for p in rag.EMBEDDING_ROUTES})
+    monkeypatch.setattr(
+        rag,
+        "_EMBEDDING_BUILDERS",
+        {p: (lambda p=p: FakeEmbeddings()) for p in rag.EMBEDDING_ROUTES},
+    )
 
 
 def test_npc_memory_namespaced_per_npc(tmp_path, monkeypatch):
     monkeypatch.setattr(rag, "SAVES_DIR", str(tmp_path))
     _use_fake_embeddings(monkeypatch)
 
-    assert rag.add_npc_memory(
-        "g1",
-        "npc_aldric",
-        ["O jogador salvou a filha de Aldric em Nova Arcádia."],
-    ) is True
+    assert (
+        rag.add_npc_memory(
+            "g1",
+            "npc_aldric",
+            ["O jogador salvou a filha de Aldric em Nova Arcádia."],
+        )
+        is True
+    )
 
     got = rag.query_npc_memory("g1", "npc_aldric", "filha salva")
     assert "filha" in got, "o próprio NPC deve recuperar seu fato"
@@ -76,7 +83,9 @@ def test_npc_memory_degrades_without_embeddings(tmp_path, monkeypatch):
 
     assert rag.add_npc_memory("g3", "npc_x", ["fato qualquer"]) is False
     assert rag.query_npc_memory("g3", "npc_x", "fato") == ""
-    assert not os.path.exists(os.path.join(str(tmp_path), "g3")), "nada deve ser escrito sem embeddings"
+    assert not os.path.exists(os.path.join(str(tmp_path), "g3")), (
+        "nada deve ser escrito sem embeddings"
+    )
 
 
 def test_npc_memory_noop_on_missing_args(tmp_path, monkeypatch):
@@ -92,6 +101,7 @@ def test_npc_memory_noop_on_missing_args(tmp_path, monkeypatch):
 
 def test_npc_id_stable():
     from agents.npc import _npc_id
+
     assert _npc_id({}, "Guarda Bran") == "npc_guarda_bran"
     assert _npc_id({"id": "npc_custom"}, "Qualquer Nome") == "npc_custom"
     assert _npc_id({}, "") == "npc_desconhecido"
@@ -112,11 +122,10 @@ def test_session_memory_survives_npc_dir(tmp_path, monkeypatch):
     assert not rag._has_faiss_index(os.path.join(str(tmp_path), "g_sess"))
 
     # Antes do fix: entrava no ramo de load → FileIOReader → memória perdida.
-    assert rag.add_memory_to_session(
-        "g_sess", ["O portão de ferro range ao vento."]
-    ) is True
-    assert rag._has_faiss_index(os.path.join(str(tmp_path), "g_sess")), \
+    assert rag.add_memory_to_session("g_sess", ["O portão de ferro range ao vento."]) is True
+    assert rag._has_faiss_index(os.path.join(str(tmp_path), "g_sess")), (
         "índice de sessão deve ser gravado apesar do dir criado pela memória de NPC"
+    )
     # E a subpasta do NPC segue intacta e consultável.
     assert "Fato" in rag.query_npc_memory("g_sess", "npc_x", "fato do npc")
 
@@ -124,9 +133,7 @@ def test_session_memory_survives_npc_dir(tmp_path, monkeypatch):
 def test_ascii_seguro_preserva_paths_legados(tmp_path, monkeypatch):
     monkeypatch.setattr(rag, "SAVES_DIR", str(tmp_path))
 
-    assert rag._get_session_path("game_123-ABC") == os.path.join(
-        str(tmp_path), "game_123-ABC"
-    )
+    assert rag._get_session_path("game_123-ABC") == os.path.join(str(tmp_path), "game_123-ABC")
     assert rag._get_npc_path("game_123-ABC", "npc_guarda_bran") == os.path.join(
         str(tmp_path), "game_123-ABC", "npc_guarda_bran"
     )
@@ -145,16 +152,11 @@ def test_unicode_usa_path_ascii_estavel_e_faz_roundtrip(tmp_path, monkeypatch):
     assert physical_name.isascii()
     assert physical_name != npc_id
     assert "--" in physical_name
-    assert rag.add_npc_memory(
-        "g_unicode", npc_id, ["A Figura Pálida guardou o juramento."]
-    ) is True
-    assert "juramento" in rag.query_npc_memory(
-        "g_unicode", npc_id, "o que ela guardou?"
-    )
+    assert rag.add_npc_memory("g_unicode", npc_id, ["A Figura Pálida guardou o juramento."]) is True
+    assert "juramento" in rag.query_npc_memory("g_unicode", npc_id, "o que ela guardou?")
 
 
-def test_componentes_inseguros_nao_colidem_nem_escapam_da_raiz(
-        tmp_path, monkeypatch):
+def test_componentes_inseguros_nao_colidem_nem_escapam_da_raiz(tmp_path, monkeypatch):
     monkeypatch.setattr(rag, "SAVES_DIR", str(tmp_path))
 
     variants = ["CON", "..", ".", "npc/a", "npc\\a", "nome.", "nome ", "á", "ä"]
@@ -162,9 +164,7 @@ def test_componentes_inseguros_nao_colidem_nem_escapam_da_raiz(
 
     assert len(set(physical)) == len(physical)
     assert all(name.isascii() for name in physical)
-    assert rag._safe_storage_component("á", "npc") == rag._safe_storage_component(
-        "á", "npc"
-    )
+    assert rag._safe_storage_component("á", "npc") == rag._safe_storage_component("á", "npc")
     for value in variants:
         path = os.path.abspath(rag._get_npc_path(value, value))
         assert os.path.commonpath([os.path.abspath(str(tmp_path)), path]) == os.path.abspath(
@@ -214,8 +214,6 @@ def test_query_session_memory_nao_busca_lore_global(tmp_path, monkeypatch):
     monkeypatch.setattr(rag, "SAVES_DIR", str(tmp_path))
     _use_fake_embeddings(monkeypatch)
 
-    assert rag.add_memory_to_session(
-        "g_only", ["A ponte da sessão foi destruída."]
-    ) is True
+    assert rag.add_memory_to_session("g_only", ["A ponte da sessão foi destruída."]) is True
     assert "ponte" in rag.query_session_memory("ponte", "g_only")
     assert rag.query_session_memory("ponte", "outro_jogo") == ""

@@ -38,7 +38,9 @@ def test_save_e_load_compactam_resumo_legado(tmp_path, monkeypatch):
 def test_memoria_grande_e_particionada_e_nao_desaparece():
     memory = "\n".join(f"[FATO {i}] " + ("x" * 300) for i in range(30))
     pack = context_builder.assemble_pack(
-        [], context_builder.ContextBudget(max_tokens=1000), memory_text=memory,
+        [],
+        context_builder.ContextBudget(max_tokens=1000),
+        memory_text=memory,
     )
     assert pack.memory_block
     assert pack.total_tokens_est <= 1050
@@ -53,6 +55,9 @@ def test_resumo_compacto_cabe_no_pack_de_story():
         "npcs": {},
     }
     pack = context_builder.build_context_pack(
-        state, "cais", "story", token_budget=3500,
+        state,
+        "cais",
+        "story",
+        token_budget=3500,
     )
     assert "Valen chegou agora ao cais" in pack.memory_block

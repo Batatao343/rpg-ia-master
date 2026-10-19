@@ -8,6 +8,7 @@ router/storyteller só propõem referências one-shot (`combat_target_ref`,
 - Um participante só entra/sai da luta com `EncounterCompositionEvent`.
 - `combat.phase ∈ {entering, active, resolving, ended}` com transições explícitas.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -26,8 +27,9 @@ Role = Literal["hostile", "ally", "neutral", "hazard"]
 Presence = Literal["present", "arrived", "departed"]
 Status = Literal["ativo", "morto", "fugiu", "rendido", "capturado", "ausente"]
 EventKind = Literal["joined", "cut", "dead", "fled", "surrendered", "captured", "departed"]
-Source = Literal["systemic", "npc_in_scene", "threat", "scanner", "fallback",
-                 "legacy_migrated", "simulation"]
+Source = Literal[
+    "systemic", "npc_in_scene", "threat", "scanner", "fallback", "legacy_migrated", "simulation"
+]
 
 PHASES = ("entering", "active", "resolving", "ended")
 OUTCOMES = ("victory", "fled", "surrendered_enemy", "defeat", "death", "expired")
@@ -39,8 +41,13 @@ _ALLOWED = {
     "ended": set(),
 }
 _ENTERING_TO_ENDED_OUTCOMES = {"expired", "defeat"}
-_STATUS_EVENT = {"morto": "dead", "fugiu": "fled", "rendido": "surrendered",
-                 "capturado": "captured", "ausente": "departed"}
+_STATUS_EVENT = {
+    "morto": "dead",
+    "fugiu": "fled",
+    "rendido": "surrendered",
+    "capturado": "captured",
+    "ausente": "departed",
+}
 
 
 class EncounterParticipant(BaseModel):
@@ -83,15 +90,73 @@ class InvalidEncounterTransition(ValueError):
 # ---------------------------------------------------------------------------
 # Normalização de nomes (determinística, sem LLM)
 # ---------------------------------------------------------------------------
-_STOP = {"o", "a", "os", "as", "um", "uma", "uns", "umas", "de", "da", "do", "das",
-         "dos", "e", "com", "em", "no", "na", "nos", "nas", "the", "of", "enemy", "mon",
-         "inimigo", "inimigos", "grupo", "bando", "hostil", "hostis", "criatura",
-         "criaturas", "alguns", "algumas", "par", "dois", "duas", "tres", "quatro",
-         "horda", "matilha", "turba", "multidao", "ameaca", "inimiga", "inimigas",
-         "agressor", "agressores", "atacante", "atacantes", "vulto", "vultos",
-         "cinco", "seis"}
-_NUMBER_WORDS = {"um": 1, "uma": 1, "dois": 2, "duas": 2, "par": 2, "tres": 3,
-                 "quatro": 4, "cinco": 5, "seis": 6}
+_STOP = {
+    "o",
+    "a",
+    "os",
+    "as",
+    "um",
+    "uma",
+    "uns",
+    "umas",
+    "de",
+    "da",
+    "do",
+    "das",
+    "dos",
+    "e",
+    "com",
+    "em",
+    "no",
+    "na",
+    "nos",
+    "nas",
+    "the",
+    "of",
+    "enemy",
+    "mon",
+    "inimigo",
+    "inimigos",
+    "grupo",
+    "bando",
+    "hostil",
+    "hostis",
+    "criatura",
+    "criaturas",
+    "alguns",
+    "algumas",
+    "par",
+    "dois",
+    "duas",
+    "tres",
+    "quatro",
+    "horda",
+    "matilha",
+    "turba",
+    "multidao",
+    "ameaca",
+    "inimiga",
+    "inimigas",
+    "agressor",
+    "agressores",
+    "atacante",
+    "atacantes",
+    "vulto",
+    "vultos",
+    "cinco",
+    "seis",
+}
+_NUMBER_WORDS = {
+    "um": 1,
+    "uma": 1,
+    "dois": 2,
+    "duas": 2,
+    "par": 2,
+    "tres": 3,
+    "quatro": 4,
+    "cinco": 5,
+    "seis": 6,
+}
 
 
 def _fold(text: str) -> str:
@@ -102,8 +167,16 @@ def _fold(text: str) -> str:
 def _singular(token: str) -> str:
     if len(token) <= 3:
         return token
-    for plural, singular in (("oes", "ao"), ("aes", "ao"), ("ais", "al"), ("eis", "el"),
-                             ("ois", "ol"), ("ns", "m"), ("res", "r"), ("zes", "z")):
+    for plural, singular in (
+        ("oes", "ao"),
+        ("aes", "ao"),
+        ("ais", "al"),
+        ("eis", "el"),
+        ("ois", "ol"),
+        ("ns", "m"),
+        ("res", "r"),
+        ("zes", "z"),
+    ):
         if token.endswith(plural):
             return token[: -len(plural)] + singular
     if token.endswith("s"):
@@ -113,8 +186,11 @@ def _singular(token: str) -> str:
 
 def name_tokens(text: str) -> list[str]:
     """Tokens de conteúdo normalizados (sem acento/caixa, singularizados)."""
-    return [_singular(t) for t in re.split(r"[^a-z0-9]+", _fold(text))
-            if t and t not in _STOP and not t.isdigit()]
+    return [
+        _singular(t)
+        for t in re.split(r"[^a-z0-9]+", _fold(text))
+        if t and t not in _STOP and not t.isdigit()
+    ]
 
 
 def _is_plural(text: str) -> bool:
@@ -137,6 +213,7 @@ def hint_count(text: str, *, maximum: int = 12) -> int:
 
 def _bestiary() -> dict[str, dict]:
     import gamedata
+
     return dict(gamedata.BESTIARY or {})
 
 
@@ -167,8 +244,9 @@ def is_generic_hint(text: str) -> bool:
 # ---------------------------------------------------------------------------
 # Fonte canônica (R3)
 # ---------------------------------------------------------------------------
-def resolve_canonical_source(state: dict[str, Any], combat_target: str | None,
-                             encounter_hint: dict[str, Any] | None) -> dict[str, Any] | None:
+def resolve_canonical_source(
+    state: dict[str, Any], combat_target: str | None, encounter_hint: dict[str, Any] | None
+) -> dict[str, Any] | None:
     """Ordem: (a) `enemy_id` do encontro sistêmico; (b) NPC em cena casado com
     o alvo do router; (c) alvo/ameaça já resolvida (alert/facção ou nome exato do
     bestiário). None → o chamador cai no scanner (d)."""
@@ -178,30 +256,44 @@ def resolve_canonical_source(state: dict[str, Any], combat_target: str | None,
     if enemy_id and enemy_id in bestiary:
         reason = str(hint.get("reason") or "")
         source = "threat" if reason in {"reinforcements", "controlled"} else "systemic"
-        return {"source": source, "kind": "bestiary", "target_ref": enemy_id,
-                "groups": [(enemy_id, 1)]}
+        return {
+            "source": source,
+            "kind": "bestiary",
+            "target_ref": enemy_id,
+            "groups": [(enemy_id, 1)],
+        }
 
     target = str(combat_target or "").strip()
     ref = str(state.get("combat_target_ref") or "")
     if ref.startswith("npc:") or target:
         from services import npc_layers
+
         npcs = state.get("npcs") or {}
         in_scene = [name for name in npc_layers.npcs_in_scene(state) if name in npcs]
         wanted = ref[4:] if ref.startswith("npc:") else ""
         chosen = next((n for n in in_scene if wanted and n == wanted), None)
         if chosen is None and target:
             folded = _fold(target)
-            chosen = next((n for n in in_scene
-                           if _fold(n) in folded or (folded and folded in _fold(n))), None)
+            chosen = next(
+                (n for n in in_scene if _fold(n) in folded or (folded and folded in _fold(n))), None
+            )
         if chosen:
-            return {"source": "npc_in_scene", "kind": "npc", "target_ref": chosen,
-                    "npc_name": chosen}
+            return {
+                "source": "npc_in_scene",
+                "kind": "npc",
+                "target_ref": chosen,
+                "npc_name": chosen,
+            }
 
     if target and not is_generic_hint(target):
         bid = resolve_bestiary_name(target, bestiary)
         if bid:
-            return {"source": "threat", "kind": "bestiary", "target_ref": bid,
-                    "groups": [(bid, hint_count(target))]}
+            return {
+                "source": "threat",
+                "kind": "bestiary",
+                "target_ref": bid,
+                "groups": [(bid, hint_count(target))],
+            }
     return None
 
 
@@ -215,6 +307,7 @@ def _base_id(enemy_id: str) -> str:
 def species_label_for(enemy: dict[str, Any]) -> str:
     """Rótulo de espécie estável: nome do template (sem sufixo numérico)."""
     import gamedata
+
     base = _base_id(enemy.get("id", ""))
     entry = (gamedata.BESTIARY or {}).get(base) or {}
     if entry.get("name"):
@@ -222,9 +315,11 @@ def species_label_for(enemy: dict[str, Any]) -> str:
     return re.sub(r"\s+\d+$", "", str(enemy.get("name") or base or "Inimigo")).strip()
 
 
-def _participant(enemy: dict[str, Any], *, presence: str = "present",
-                 zone_id: str = "z0", role: str = "hostile") -> dict[str, Any]:
+def _participant(
+    enemy: dict[str, Any], *, presence: str = "present", zone_id: str = "z0", role: str = "hostile"
+) -> dict[str, Any]:
     import gamedata
+
     base = _base_id(enemy.get("id", ""))
     bestiary_id = base if base in (gamedata.BESTIARY or {}) else str(enemy.get("bestiary_id") or "")
     status = str(enemy.get("status") or "ativo")
@@ -239,7 +334,9 @@ def _participant(enemy: dict[str, Any], *, presence: str = "present",
         faction_id=str(enemy.get("faction_id") or enemy.get("faction") or ""),
         categoria=str(enemy.get("categoria") or "padrao"),
         role=role if role in ("hostile", "ally", "neutral", "hazard") else "hostile",
-        presence=presence, zone_id=str(zone_id or "z0"), status=status,
+        presence=presence,
+        zone_id=str(zone_id or "z0"),
+        status=status,
     ).model_dump()
 
 
@@ -248,10 +345,19 @@ def event_id_for(encounter_id: str, kind: str, participant_id: str, round_: int)
     return hashlib.sha256(raw.encode()).hexdigest()[:16]
 
 
-def build_manifest(enemies: Iterable[dict[str, Any]], *, source: str, origin: str,
-                   encounter_id: str, target_ref: str = "", scene: dict | None = None,
-                   joined_ids: Iterable[str] = (), cut_ids: Iterable[str] = (),
-                   cause_joined: str = "budget_fill", cause_cut: str = "budget_clamp") -> dict:
+def build_manifest(
+    enemies: Iterable[dict[str, Any]],
+    *,
+    source: str,
+    origin: str,
+    encounter_id: str,
+    target_ref: str = "",
+    scene: dict | None = None,
+    joined_ids: Iterable[str] = (),
+    cut_ids: Iterable[str] = (),
+    cause_joined: str = "budget_fill",
+    cause_cut: str = "budget_clamp",
+) -> dict:
     """Congela o elenco do spawn. `joined_ids` (reforço regional) entram como
     `arrived` + evento `joined`; `cut_ids` só geram evento `cut`."""
     positions = (scene or {}).get("positions") or {}
@@ -260,12 +366,16 @@ def build_manifest(enemies: Iterable[dict[str, Any]], *, source: str, origin: st
     for enemy in enemies:
         pid = str(enemy.get("id") or enemy.get("name") or "enemy")
         zone = (positions.get(pid) or {}).get("zone_id") or "z0"
-        participants.append(_participant(
-            enemy, presence="arrived" if pid in joined else "present", zone_id=zone))
+        participants.append(
+            _participant(enemy, presence="arrived" if pid in joined else "present", zone_id=zone)
+        )
     manifest = EncounterManifest(
-        encounter_id=str(encounter_id), origin=str(origin or "unknown"),
+        encounter_id=str(encounter_id),
+        origin=str(origin or "unknown"),
         source=source if source in Source.__args__ else "fallback",  # type: ignore[attr-defined]
-        target_ref=str(target_ref or ""), participants=participants, events=[],
+        target_ref=str(target_ref or ""),
+        participants=participants,
+        events=[],
         frozen=True,
     ).model_dump(by_alias=True)
     for pid in sorted(joined):
@@ -275,15 +385,21 @@ def build_manifest(enemies: Iterable[dict[str, Any]], *, source: str, origin: st
     return manifest
 
 
-def manifest_from_legacy(enemies: Iterable[dict[str, Any]], combat: dict[str, Any],
-                         *, game_id: str = "game") -> dict:
+def manifest_from_legacy(
+    enemies: Iterable[dict[str, Any]], combat: dict[str, Any], *, game_id: str = "game"
+) -> dict:
     """Save antigo/manifesto corrompido → manifesto `legacy_migrated` derivado de
     `enemies` (identidade = o que já estava persistido)."""
     encounter_id = str(combat.get("instance_id") or f"{game_id}:legacy")
     from services.combat_origin import normalize
-    return build_manifest(list(enemies or []), source="legacy_migrated",
-                          origin=normalize(combat.get("origin")),
-                          encounter_id=encounter_id, scene=combat.get("scene"))
+
+    return build_manifest(
+        list(enemies or []),
+        source="legacy_migrated",
+        origin=normalize(combat.get("origin")),
+        encounter_id=encounter_id,
+        scene=combat.get("scene"),
+    )
 
 
 def is_valid_manifest(manifest: Any) -> bool:
@@ -296,18 +412,30 @@ def is_valid_manifest(manifest: Any) -> bool:
     return True
 
 
-def apply_composition(manifest: dict, kind: str, participant_id: str, cause: str,
-                      round_: int) -> dict:
+def apply_composition(
+    manifest: dict, kind: str, participant_id: str, cause: str, round_: int
+) -> dict:
     """Registra um evento de composição (idempotente por `event_id`)."""
     out = deepcopy(manifest)
     eid = event_id_for(out.get("encounter_id", ""), kind, participant_id, round_)
     if any(ev.get("event_id") == eid for ev in out.get("events") or []):
         return out
-    out.setdefault("events", []).append(EncounterCompositionEvent(
-        kind=kind, participant_id=str(participant_id), cause=str(cause),
-        round=int(round_), event_id=eid).model_dump())
-    status = {"dead": "morto", "fled": "fugiu", "surrendered": "rendido",
-              "captured": "capturado", "departed": "ausente"}.get(kind)
+    out.setdefault("events", []).append(
+        EncounterCompositionEvent(
+            kind=kind,
+            participant_id=str(participant_id),
+            cause=str(cause),
+            round=int(round_),
+            event_id=eid,
+        ).model_dump()
+    )
+    status = {
+        "dead": "morto",
+        "fled": "fugiu",
+        "surrendered": "rendido",
+        "captured": "capturado",
+        "departed": "ausente",
+    }.get(kind)
     for p in out.get("participants") or []:
         if p.get("participant_id") == participant_id:
             if status:
@@ -357,8 +485,9 @@ def reconcile_roster(manifest: dict, enemies: list[dict[str, Any]], round_: int)
     present = {str(e.get("id") or e.get("name") or "") for e in kept}
     for p in manifest.get("participants") or []:
         if p.get("status") == "ativo" and p["participant_id"] not in present:
-            manifest = apply_composition(manifest, "departed", p["participant_id"],
-                                         "missing_from_roster", round_)
+            manifest = apply_composition(
+                manifest, "departed", p["participant_id"], "missing_from_roster", round_
+            )
     return manifest, kept, violations
 
 
@@ -378,8 +507,9 @@ def sync_statuses(manifest: dict, enemies: Iterable[dict[str, Any]], round_: int
         kind = _STATUS_EVENT.get(status)
         if not kind or kind == "departed":
             continue
-        current = next((p for p in manifest.get("participants") or []
-                        if p["participant_id"] == pid), None)
+        current = next(
+            (p for p in manifest.get("participants") or [] if p["participant_id"] == pid), None
+        )
         if current is None or current.get("status") != "ativo":
             continue
         manifest = apply_composition(manifest, kind, pid, "combat_round", round_)
@@ -408,8 +538,7 @@ def transition(combat: dict[str, Any], to_phase: str, outcome: str | None = None
     return out
 
 
-def safe_transition(combat: dict[str, Any], to_phase: str,
-                    outcome: str | None = None) -> dict:
+def safe_transition(combat: dict[str, Any], to_phase: str, outcome: str | None = None) -> dict:
     """Produção: transição inválida é registrada (log + `phase_violations`),
     nunca silenciosa e nunca derruba o turno."""
     try:
@@ -446,8 +575,9 @@ def next_step(combat: dict[str, Any]) -> str:
     return "explore"
 
 
-def normalize_combat(combat: Any, enemies: Iterable[dict[str, Any]] = (),
-                     *, game_id: str = "game") -> dict:
+def normalize_combat(
+    combat: Any, enemies: Iterable[dict[str, Any]] = (), *, game_id: str = "game"
+) -> dict:
     """Normalização ADITIVA e idempotente no load (sem bump de schema): combate
     ativo sem manifesto válido ganha manifesto `legacy_migrated` + fase `active`;
     sem combate ativo ganha `phase=ended`/`outcome` preservado (default None)."""
@@ -489,28 +619,36 @@ def public_view(manifest: dict | None, scene: dict | None = None) -> dict:
         "encounter_id": manifest.get("encounter_id", ""),
         "origin": manifest.get("origin", "unknown"),
         "participants": [
-            {"participant_id": p["participant_id"], "species_label": p["species_label"],
-             "categoria": p.get("categoria", "padrao"), "role": p.get("role", "hostile"),
-             "presence": p.get("presence", "present"), "status": p.get("status", "ativo")}
+            {
+                "participant_id": p["participant_id"],
+                "species_label": p["species_label"],
+                "categoria": p.get("categoria", "padrao"),
+                "role": p.get("role", "hostile"),
+                "presence": p.get("presence", "present"),
+                "status": p.get("status", "ativo"),
+            }
             for p in manifest.get("participants") or []
             if p["participant_id"] not in hidden
         ],
     }
 
 
-def build_result(manifest: dict, outcome: str, ended_round: int, *,
-                 loot: bool = False) -> dict:
+def build_result(manifest: dict, outcome: str, ended_round: int, *, loot: bool = False) -> dict:
     """Snapshot persistido do desfecho (R7). `xp_event_ref` é carimbado pelo
     turn_finalizer com o `receipt_id` do turno de término (SPEC-199)."""
     encounter_id = manifest.get("encounter_id", "")
     result_event_id = hashlib.sha256(
-        f"{encounter_id}|result|{outcome}|{int(ended_round)}".encode()).hexdigest()[:16]
+        f"{encounter_id}|result|{outcome}|{int(ended_round)}".encode()
+    ).hexdigest()[:16]
     return {
         "encounter_id": encounter_id,
         "outcome": outcome,
         "participants": [
-            {"participant_id": p["participant_id"], "species_label": p["species_label"],
-             "final_status": p.get("status", "ativo")}
+            {
+                "participant_id": p["participant_id"],
+                "species_label": p["species_label"],
+                "final_status": p.get("status", "ativo"),
+            }
             for p in manifest.get("participants") or []
         ],
         "xp_event_ref": None,

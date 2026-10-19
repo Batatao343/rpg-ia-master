@@ -16,6 +16,7 @@ from persistence import load_game_state, save_game_state
 # Etapa 1 — event_log / world_projection / pending_world_events no save
 # ---------------------------------------------------------------------------
 
+
 def _estado_minimo(game_id: str) -> dict:
     return {
         "game_id": game_id,
@@ -146,8 +147,13 @@ def test_locais_overlap_tem_entidade():
     Cobertura total de world_map.json fica para a 2.5b (mapa realinhado a Valoria).
     """
     entities = _load_json(GRAPH_DIR, "entities.json")
-    for loc_id in ("nova_arcadia", "deserto_zhur", "floresta_sussurros",
-                   "montanhas_afiadas", "skallgard"):
+    for loc_id in (
+        "nova_arcadia",
+        "deserto_zhur",
+        "floresta_sussurros",
+        "montanhas_afiadas",
+        "skallgard",
+    ):
         assert loc_id in entities, f"local '{loc_id}' sem entidade"
         assert entities[loc_id]["type"] == "location"
 
@@ -158,7 +164,8 @@ def test_migracao_idempotente(tmp_path, monkeypatch):
     import sys
 
     spec = importlib.util.spec_from_file_location(
-        "migrate_lore_nova", os.path.join("scripts", "migrate_lore_nova.py"))
+        "migrate_lore_nova", os.path.join("scripts", "migrate_lore_nova.py")
+    )
     mod = importlib.util.module_from_spec(spec)
     sys.modules["migrate_lore_nova"] = mod  # dataclasses resolve via sys.modules
     spec.loader.exec_module(mod)
@@ -252,8 +259,10 @@ def test_codex_frontmatter_valido():
         cid = frontmatter["id"]
         # story_/secret_/timeline_ são documentos de mundo, não entidades do grafo;
         # *_segredo (type npc_secret, Fase 7.3) também não registra entidade
-        if not cid.startswith(("story_", "secret_", "timeline_")) \
-                and frontmatter["type"] != "npc_secret":
+        if (
+            not cid.startswith(("story_", "secret_", "timeline_"))
+            and frontmatter["type"] != "npc_secret"
+        ):
             assert cid in entities, f"{path}: id '{cid}' não existe em entities.json"
 
 
@@ -281,7 +290,7 @@ def test_vis_rank_ordena():
     from rag import vis_rank
 
     assert vis_rank("public") < vis_rank("hidden") < vis_rank("secret")
-    assert vis_rank(None) == vis_rank("public")        # chunk antigo sem metadado
+    assert vis_rank(None) == vis_rank("public")  # chunk antigo sem metadado
     assert vis_rank("desconhecida") == vis_rank("secret")  # falha fechada
 
 
@@ -298,7 +307,8 @@ def _load_migrate_module():
     import sys
 
     spec = importlib.util.spec_from_file_location(
-        "migrate_lore_nova", os.path.join("scripts", "migrate_lore_nova.py"))
+        "migrate_lore_nova", os.path.join("scripts", "migrate_lore_nova.py")
+    )
     mod = importlib.util.module_from_spec(spec)
     sys.modules["migrate_lore_nova"] = mod
     spec.loader.exec_module(mod)
@@ -307,9 +317,9 @@ def _load_migrate_module():
 
 def _strip_lower(text: str) -> str:
     import unicodedata
+
     return "".join(
-        c for c in unicodedata.normalize("NFD", text)
-        if unicodedata.category(c) != "Mn"
+        c for c in unicodedata.normalize("NFD", text) if unicodedata.category(c) != "Mn"
     ).lower()
 
 
@@ -339,8 +349,9 @@ def test_timeline_reveals_sao_hidden():
     for start_ph, _end_ph in mod._TIMELINE_HIDDEN_CLUSTERS:
         achou = [vis for vis, body in docs.values() if start_ph in body]
         assert achou, f"cluster não encontrado na timeline: {start_ph!r}"
-        assert all(v == "hidden" for v in achou), \
+        assert all(v == "hidden" for v in achou), (
             f"reveal vazou como público: {start_ph!r} -> {achou}"
+        )
 
 
 def test_timeline_public_nao_vaza_reveal():

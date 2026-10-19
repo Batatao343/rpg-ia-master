@@ -32,25 +32,38 @@ def _fresh_graph_cache():
 # Etapa 1 — services/chronicle.py (puro)
 # ---------------------------------------------------------------------------
 
+
 def test_render_milestone_npc_killed():
-    ev = {"event_id": "e1", "turn": 5, "type": "npc_killed",
-          "actor_id": "player", "target_id": "npc_valerius"}
+    ev = {
+        "event_id": "e1",
+        "turn": 5,
+        "type": "npc_killed",
+        "actor_id": "player",
+        "target_id": "npc_valerius",
+    }
     txt = chron.render_milestone(ev, {})
     assert "Lorde Protetor Valerius" in txt
     assert "npc_valerius" not in txt
 
 
 def test_render_milestone_tipo_ignorado():
-    ev = {"event_id": "e2", "turn": 5, "type": "faction_relation_changed",
-          "target_id": "legiao_ferro", "payload": {"relation": "hostile_to"}}
+    ev = {
+        "event_id": "e2",
+        "turn": 5,
+        "type": "faction_relation_changed",
+        "target_id": "legiao_ferro",
+        "payload": {"relation": "hostile_to"},
+    }
     assert chron.render_milestone(ev, {}) == ""
 
 
 def test_render_milestone_secret():
-    proj = {"revealed_facts": {"e9": {"entity_id": "npc_velha_magda",
-                                      "fact": "Magda lidera a Mão Sombria"}}}
-    ev = {"event_id": "e9", "turn": 7, "type": "secret_revealed",
-          "target_id": "npc_velha_magda"}
+    proj = {
+        "revealed_facts": {
+            "e9": {"entity_id": "npc_velha_magda", "fact": "Magda lidera a Mão Sombria"}
+        }
+    }
+    ev = {"event_id": "e9", "turn": 7, "type": "secret_revealed", "target_id": "npc_velha_magda"}
     txt = chron.render_milestone(ev, proj)
     assert "Magda lidera a Mão Sombria" in txt
 
@@ -61,7 +74,10 @@ def test_append_cria_capitulo_default():
     assert out[0]["title"] == "Crônica da jornada"
     assert out[0]["started_turn"] == 0
     assert out[0]["entries"][0] | {"entry_id": ""} == {
-        "text": "algo aconteceu", "turn": 3, "kind": "prose", "entry_id": ""
+        "text": "algo aconteceu",
+        "turn": 3,
+        "kind": "prose",
+        "entry_id": "",
     }
     assert out[0]["entries"][0]["entry_id"]
 
@@ -77,13 +93,14 @@ def test_append_e_puro():
     original = [{"title": "T", "started_turn": 0, "location": "", "entries": []}]
     snapshot = copy.deepcopy(original)
     out = chron.append_entry(original, text="x", turn=1, kind="milestone", event_id="e1")
-    assert original == snapshot          # entrada não vazou para a lista original
+    assert original == snapshot  # entrada não vazou para a lista original
     assert out[0]["entries"][0]["event_id"] == "e1"
 
 
 # ---------------------------------------------------------------------------
 # Etapa 2 — schema + backfill de saves antigos
 # ---------------------------------------------------------------------------
+
 
 def test_save_antigo_chronicle_flat_fica_arquivado(tmp_path, monkeypatch):
     monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
@@ -109,11 +126,18 @@ def test_save_novo_roundtrip(tmp_path, monkeypatch):
     monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
     game_id = f"t31-{uuid.uuid4().hex[:8]}"
     capitulos = [
-        {"title": "O início da jornada — Nova Arcádia", "started_turn": 0,
-         "location": "nova_arcadia",
-         "entries": [{"text": "milestone!", "turn": 2, "kind": "milestone", "event_id": "e1"}]},
-        {"title": "A Sombra do Norte", "started_turn": 5, "location": "picos_gelados",
-         "entries": [{"text": "prosa do menestrel", "turn": 6, "kind": "prose"}]},
+        {
+            "title": "O início da jornada — Nova Arcádia",
+            "started_turn": 0,
+            "location": "nova_arcadia",
+            "entries": [{"text": "milestone!", "turn": 2, "kind": "milestone", "event_id": "e1"}],
+        },
+        {
+            "title": "A Sombra do Norte",
+            "started_turn": 5,
+            "location": "picos_gelados",
+            "entries": [{"text": "prosa do menestrel", "turn": 6, "kind": "prose"}],
+        },
     ]
     state = {
         "game_id": game_id,
@@ -151,10 +175,17 @@ def _state_events(**over) -> dict:
 
 
 def test_evento_aplicado_gera_milestone():
-    st = _state_events(pending_world_events=[
-        {"type": "npc_killed", "actor_id": "player", "target_id": "npc_grum",
-         "payload": {}, "source": "combat"},
-    ])
+    st = _state_events(
+        pending_world_events=[
+            {
+                "type": "npc_killed",
+                "actor_id": "player",
+                "target_id": "npc_grum",
+                "payload": {},
+                "source": "combat",
+            },
+        ]
+    )
     out = process_pending_events(st)
     assert "chronicle" in out
     entries = out["chronicle"][-1]["entries"]
@@ -166,19 +197,28 @@ def test_evento_aplicado_gera_milestone():
 
 
 def test_evento_rejeitado_sem_milestone():
-    st = _state_events(pending_world_events=[
-        {"type": "npc_killed", "target_id": "npc_fantasma", "payload": {}},
-    ])
+    st = _state_events(
+        pending_world_events=[
+            {"type": "npc_killed", "target_id": "npc_fantasma", "payload": {}},
+        ]
+    )
     out = process_pending_events(st)
     assert "chronicle" not in out  # nada aplicado → crônica intocada
 
 
 def test_cascata_gera_milestone():
     """Morte de líder (2.7): milestone da morte E do location_control_changed derivado."""
-    st = _state_events(pending_world_events=[
-        {"type": "npc_killed", "actor_id": "player", "target_id": "npc_valerius",
-         "payload": {}, "source": "combat"},
-    ])
+    st = _state_events(
+        pending_world_events=[
+            {
+                "type": "npc_killed",
+                "actor_id": "player",
+                "target_id": "npc_valerius",
+                "payload": {},
+                "source": "combat",
+            },
+        ]
+    )
     out = process_pending_events(st)
     entries = out["chronicle"][-1]["entries"]
     texts = [e["text"] for e in entries]
@@ -202,7 +242,7 @@ def _arch_state(**over) -> dict:
         "game_id": "t31",
         "narrative_summary": "",
         "archivist_last_run": 0,
-        "archive_due": True,          # força o LLM do arquivista a rodar
+        "archive_due": True,  # força o LLM do arquivista a rodar
         "world": {"turn_count": 4, "current_location": "nova_arcadia"},
         "messages": [],
         "chronicle": [],
@@ -227,10 +267,17 @@ def test_archivist_prose_no_capitulo(monkeypatch):
 def test_archivist_merge_prose_e_milestone(monkeypatch):
     """Turno com evento aplicado + prosa do menestrel → crônica final contém AMBOS."""
     monkeypatch.setattr("mock_llm.random.random", lambda: 0.0)
-    st = _arch_state(pending_world_events=[
-        {"type": "npc_killed", "actor_id": "player", "target_id": "npc_grum",
-         "payload": {}, "source": "combat"},
-    ])
+    st = _arch_state(
+        pending_world_events=[
+            {
+                "type": "npc_killed",
+                "actor_id": "player",
+                "target_id": "npc_grum",
+                "payload": {},
+                "source": "combat",
+            },
+        ]
+    )
     out = archive_node(st)
     kinds = [e["kind"] for e in out["chronicle"][-1]["entries"]]
     assert kinds == ["milestone", "prose"]  # evento consolidado primeiro, prosa por cima
@@ -241,11 +288,17 @@ def _camp_state(**over) -> dict:
         "world": {"turn_count": 3, "current_location": "nova_arcadia"},
         "messages": [],
         "needs_replan": True,
-        "campaign_plan": {"location": "nova_arcadia", "beats": [], "climax": "",
-                          "current_step": 0, "last_planned_turn": 0,
-                          "arc_title": "Arco Antigo"},
-        "chronicle": [{"title": "Arco Antigo", "started_turn": 0,
-                       "location": "nova_arcadia", "entries": []}],
+        "campaign_plan": {
+            "location": "nova_arcadia",
+            "beats": [],
+            "climax": "",
+            "current_step": 0,
+            "last_planned_turn": 0,
+            "arc_title": "Arco Antigo",
+        },
+        "chronicle": [
+            {"title": "Arco Antigo", "started_turn": 0, "location": "nova_arcadia", "entries": []}
+        ],
         "world_projection": {},
         "event_log": [],
         "pending_world_events": [],
@@ -279,21 +332,27 @@ def test_replan_mesmo_arco_nao_abre():
 # Etapa 5 — API (capítulo inicial + serialização)
 # ---------------------------------------------------------------------------
 
+
 def test_format_response_capitulos():
     from langchain_core.messages import AIMessage
 
     import api
+
     state = {
         "game_id": "t31-api",
         "messages": [AIMessage(content="O vento uiva.")],
         "player": {"name": "Testa", "inventory": []},
         "world": {"current_location": "Nova Arcádia", "turn_count": 2},
         "chronicle": [
-            {"title": "O início da jornada — Nova Arcádia", "started_turn": 0,
-             "location": "Nova Arcádia",
-             "entries": [{"text": "Grum tombou.", "turn": 2, "kind": "milestone",
-                          "event_id": "e1"},
-                         {"text": "   ", "turn": 2, "kind": "prose"}]},  # vazia → filtrada
+            {
+                "title": "O início da jornada — Nova Arcádia",
+                "started_turn": 0,
+                "location": "Nova Arcádia",
+                "entries": [
+                    {"text": "Grum tombou.", "turn": 2, "kind": "milestone", "event_id": "e1"},
+                    {"text": "   ", "turn": 2, "kind": "prose"},
+                ],
+            },  # vazia → filtrada
         ],
     }
     resp = api.format_response(state)
@@ -309,13 +368,21 @@ def test_game_new_capitulo_inicial(tmp_path, monkeypatch):
 
     import api
     import persistence
+
     monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
 
     client = TestClient(api.app)
-    resp = client.post("/game/new", json={
-        "name": "Testa", "class_name": "Sangromante", "race": "Humano",
-        "region": "Nova Arcádia", "backstory": "Um teste.", "level": 1,
-    })
+    resp = client.post(
+        "/game/new",
+        json={
+            "name": "Testa",
+            "class_name": "Sangromante",
+            "race": "Humano",
+            "region": "Nova Arcádia",
+            "backstory": "Um teste.",
+            "level": 1,
+        },
+    )
     assert resp.status_code == 200
     chron = resp.json()["chronicle"]
     assert len(chron) >= 1

@@ -117,9 +117,9 @@ Realidade do motor que esta spec explora (não reinventa):
 `PlayerStats` (TypedDict, `total=False`) ganha:
 
 ```python
-    entropy: int          # pool de curto prazo (substitui mana/stamina do jogador)
-    max_entropy: int
-    abyss_charge: int      # Carga do Abismo — longo prazo, não cai no descanso
+entropy: int  # pool de curto prazo (substitui mana/stamina do jogador)
+max_entropy: int
+abyss_charge: int  # Carga do Abismo — longo prazo, não cai no descanso
 ```
 
 `mana`/`max_mana`/`stamina`/`max_stamina` **permanecem no TypedDict** (save
@@ -226,10 +226,12 @@ def entropy_config(player: Dict, *, classes_db=None, abilities_db=None) -> Dict:
     """Merge da entropy_trigger/special_rule/abyss da classe com overrides do branch
     (player_branch). Fonte única de números — nunca hardcode em callsite."""
 
+
 def apply_entropy_trigger(player: Dict, event: Dict, logs: List[str]) -> None:
     """Aciona o gatilho da classe se `event` casa com o kind. Soma Entropia
     (clamp em max_entropy) e Carga (charge_per, respeitando per_turn_cap por turno).
     `event` = {"kind": ..., "amount"?: int, "decay_kind"?: str, ...}. Muta player."""
+
 
 def abyss_tier(player: Dict, *, classes_db=None) -> str:
     """'nenhum'|'leve'|'moderado'|'severo' a partir de abyss_charge + thresholds da classe."""

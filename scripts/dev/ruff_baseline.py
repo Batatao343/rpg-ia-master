@@ -62,7 +62,9 @@ def current_debt() -> dict[str, set[str]]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args(argv)
     expected = render(current_debt())
@@ -74,7 +76,9 @@ def main(argv: list[str] | None = None) -> int:
         print("ruff-baseline.toml is current")
         return 0
     BASELINE.write_bytes(expected.encode("utf-8"))
-    print(f"{sum(1 for line in expected.splitlines() if line.startswith(chr(34)))} files in baseline")
+    print(
+        f"{sum(1 for line in expected.splitlines() if line.startswith(chr(34)))} files in baseline"
+    )
     return 0
 
 

@@ -1,4 +1,5 @@
 """SPEC-186 finance orchestration; canonical writers remain coordinator/wallet."""
+
 from __future__ import annotations
 
 import os
@@ -29,8 +30,9 @@ class PostgresSpeechFinance:
         require_speech_prices(now)
         version_id = os.getenv("RPG_SPEECH_PRICING_VERSION", "")
         with admin_connection(self.pool) as connection:
-            record = connection.execute("select * from app.pricing_versions where version_id=%s",
-                                        (version_id,)).fetchone()
+            record = connection.execute(
+                "select * from app.pricing_versions where version_id=%s", (version_id,)
+            ).fetchone()
         if record is None:
             raise PricingUnavailable("speech pricing não configurado")
         version = version_from_record(record)
@@ -40,46 +42,76 @@ class PostgresSpeechFinance:
         ceiling = sum(quote_attempt_ceiling(v, version, at=now) for v in bounds)
         if ceiling > int(os.getenv("RPG_SPEECH_MAX_RESERVE_MILLI", "100")):
             raise SpeechError("speech_spend_ceiling", 402)
-        self.claim = self.coordinator.claim(self.principal, operation_id, game_id=None,
-                                            kind="speech_to_text", request_hash=request_hash,
-                                            base_version=None, exclusive=False)
+        self.claim = self.coordinator.claim(
+            self.principal,
+            operation_id,
+            game_id=None,
+            kind="speech_to_text",
+            request_hash=request_hash,
+            base_version=None,
+            exclusive=False,
+        )
         try:
             self.reservation = self.wallet.reserve(
-                self.principal, reference_type="speech_to_text", reference_id=str(operation_id),
-                pricing_version_id=version_id, ceiling_milli=ceiling,
-                fence_token=self.claim.lease_token, usage_operation_id=operation_id, at=now)
+                self.principal,
+                reference_type="speech_to_text",
+                reference_id=str(operation_id),
+                pricing_version_id=version_id,
+                ceiling_milli=ceiling,
+                fence_token=self.claim.lease_token,
+                usage_operation_id=operation_id,
+                at=now,
+            )
         except BaseException:
             self.coordinator.fail(self.claim, "speech_reserve_failed")
             raise
 
     def admit(self, ordinal: int, candidate: Candidate) -> None:
-        self.wallet.admit_attempt(self.principal, self.reservation.reservation_id,
-                                  fence_token=self.claim.lease_token,
-                                  attempt_key=f"speech:{ordinal}", provider=candidate.provider,
-                                  model=candidate.model, at=self.at)
+        self.wallet.admit_attempt(
+            self.principal,
+            self.reservation.reservation_id,
+            fence_token=self.claim.lease_token,
+            attempt_key=f"speech:{ordinal}",
+            provider=candidate.provider,
+            model=candidate.model,
+            at=self.at,
+        )
 
     def finish(self, events: list[UsageEvent], success: bool) -> str:
         # Metadata-only receipt: neither transcript nor original audio hash is returned/stored.
         if success:
-            self.coordinator.complete(self.claim, committed_version=None,
-                                      receipt={"kind": "speech_to_text", "result_retained": False},
-                                      usage_events=events)
+            self.coordinator.complete(
+                self.claim,
+                committed_version=None,
+                receipt={"kind": "speech_to_text", "result_retained": False},
+                usage_events=events,
+            )
         else:
             self.coordinator.fail(self.claim, "speech_failed", usage_events=events)
         if not events:
-            self.wallet.release_pre_effect(self.principal, self.reservation.reservation_id,
-                                           fence_token=self.claim.lease_token)
+            self.wallet.release_pre_effect(
+                self.principal, self.reservation.reservation_id, fence_token=self.claim.lease_token
+            )
             return "released"
         if all(e.billing_exact for e in events):
             try:
-                self.wallet.settle_usage(self.principal, self.reservation.reservation_id,
-                                         fence_token=self.claim.lease_token,
-                                         usage_event_ids=[e.event_id for e in events], at=self.at)
+                self.wallet.settle_usage(
+                    self.principal,
+                    self.reservation.reservation_id,
+                    fence_token=self.claim.lease_token,
+                    usage_event_ids=[e.event_id for e in events],
+                    at=self.at,
+                )
                 return "settled"
             except Exception as exc:
                 # Usage is already durable. Preserve funds/fence for reconciliation
                 # if settlement failed; never resend audio or silently refund.
                 from infrastructure.payment_log import wallet_event
-                wallet_event("settle_failed", self.reservation.reservation_id, exc, stage="speech_settle")
-        recovered = self.wallet.recover(self.principal, self.reservation.reservation_id, new_fence_token=uuid4())
-        return 'settled' if recovered.status == 'settled' else "pending_reconciliation"
+
+                wallet_event(
+                    "settle_failed", self.reservation.reservation_id, exc, stage="speech_settle"
+                )
+        recovered = self.wallet.recover(
+            self.principal, self.reservation.reservation_id, new_fence_token=uuid4()
+        )
+        return "settled" if recovered.status == "settled" else "pending_reconciliation"

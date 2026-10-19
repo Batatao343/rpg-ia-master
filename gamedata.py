@@ -3,6 +3,7 @@ gamedata.py
 Central de Dados Estáticos e Dinâmicos.
 Gerencia o carregamento de regras, itens, bestiário e a persistência de criações da IA.
 """
+
 import json
 import os
 
@@ -22,6 +23,7 @@ def runtime_cache_path(name: str) -> str:
     base = os.getenv("RPG_RUNTIME_CACHE_DIR") or os.path.join(DATA_DIR, "runtime")
     return os.path.join(base, name)
 
+
 def load_json_data(filename: str) -> dict:
     """Carrega um arquivo JSON da pasta data. Retorna dict vazio se falhar."""
     file_path = os.path.join(DATA_DIR, filename)
@@ -29,7 +31,8 @@ def load_json_data(filename: str) -> dict:
         with open(file_path, encoding="utf-8") as f:
             # Tenta carregar. Se o arquivo estiver vazio, json.load falha.
             content = f.read().strip()
-            if not content: return {}
+            if not content:
+                return {}
             return json.loads(content)
     except (FileNotFoundError, json.JSONDecodeError):
         # Se não existir ou estiver corrompido, retorna vazio para evitar crash
@@ -40,6 +43,7 @@ def load_json_data(filename: str) -> dict:
     except Exception as e:
         _log_event("gamedata", "read_failed", level="error", file=filename, error=type(e).__name__)
         return {}
+
 
 def _read_json_file(file_path: str) -> dict:
     if not os.path.exists(file_path):
@@ -63,8 +67,12 @@ def save_custom_artifact(item_id: str, item_data: dict):
         from infrastructure.runtime import get_runtime
 
         get_runtime().runtime_catalog.put(
-            "custom_artifact", item_id, item_data,
-            scope="global", owner_id=None, game_id=None,
+            "custom_artifact",
+            item_id,
+            item_data,
+            scope="global",
+            owner_id=None,
+            game_id=None,
         )
         _log_event("gamedata", "artifact_saved", level="info")
     except Exception as e:
@@ -72,9 +80,10 @@ def save_custom_artifact(item_id: str, item_data: dict):
 
     # 4. Atualiza a memória global (Hot Reload)
     ARTIFACTS_DB[item_id] = item_data
-    CUSTOM_ARTIFACTS[item_id] = item_data # <--- CORREÇÃO: Atualiza a lista de custom também
+    CUSTOM_ARTIFACTS[item_id] = item_data  # <--- CORREÇÃO: Atualiza a lista de custom também
     if item_id not in ALL_ARTIFACT_IDS:
         ALL_ARTIFACT_IDS.append(item_id)
+
 
 # --- CARREGAMENTO DE DADOS (Load on Startup) ---
 
@@ -89,7 +98,9 @@ try:
     from infrastructure.runtime import get_runtime
 
     _runtime_artifacts = get_runtime().runtime_catalog.list(
-        "custom_artifact", owner_id=None, game_id=None,
+        "custom_artifact",
+        owner_id=None,
+        game_id=None,
     )
 except Exception:
     _runtime_artifacts = _read_json_file(runtime_cache_path("custom_artifacts.json"))
@@ -112,15 +123,15 @@ FACTIONS = load_json_data("factions.json")
 def seed_factions() -> list:
     """Lista fresca de fações para uma nova partida (cópia profunda dos seeds)."""
     import copy
+
     return [copy.deepcopy(f) for f in FACTIONS.values()]
+
 
 _LOCATIONS_BY_ID = {loc["id"]: loc for loc in WORLD_MAP.get("locations", [])}
 START_LOCATION_ID = WORLD_MAP.get("start_location") or next(iter(_LOCATIONS_BY_ID), None)
 # Local inicial por nome de região (ex.: "Nova Arcádia" -> "nova_arcadia")
 REGION_START_ID = {
-    loc["region"]: loc["id"]
-    for loc in WORLD_MAP.get("locations", [])
-    if loc.get("start")
+    loc["region"]: loc["id"] for loc in WORLD_MAP.get("locations", []) if loc.get("start")
 }
 
 
@@ -138,7 +149,8 @@ def get_connections(loc_id: str) -> list:
 def interiors_of(loc_id: str) -> list:
     """Interiores (masmorras/prédios, kind='interior') filhos do local (spec mapa-sublocais)."""
     return [
-        loc for loc in _LOCATIONS_BY_ID.values()
+        loc
+        for loc in _LOCATIONS_BY_ID.values()
         if loc.get("kind") == "interior" and loc.get("parent_id") == loc_id
     ]
 
@@ -163,12 +175,29 @@ def start_location_for_region(region_name: str) -> dict:
         loc_id = direct.get("id") if direct else START_LOCATION_ID
     return _LOCATIONS_BY_ID.get(loc_id, {})
 
+
 # --- TABELA DE XP ---
 XP_TABLE = {
-    1: 0, 2: 300, 3: 900, 4: 2700, 5: 6500,
-    6: 14000, 7: 23000, 8: 34000, 9: 48000, 10: 64000,
-    11: 85000, 12: 100000, 13: 120000, 14: 140000, 15: 165000,
-    16: 195000, 17: 225000, 18: 265000, 19: 305000, 20: 355000
+    1: 0,
+    2: 300,
+    3: 900,
+    4: 2700,
+    5: 6500,
+    6: 14000,
+    7: 23000,
+    8: 34000,
+    9: 48000,
+    10: 64000,
+    11: 85000,
+    12: 100000,
+    13: 120000,
+    14: 140000,
+    15: 165000,
+    16: 195000,
+    17: 225000,
+    18: 265000,
+    19: 305000,
+    20: 355000,
 }
 
 # --- CONFLITO v2 (spec conflito-01): Virtudes / Vitalidade / Ferimentos ---
@@ -179,15 +208,22 @@ VIRTUDES = ("mente", "agilidade", "forca", "carisma", "corpo")
 # Distribuição fixa oferecida na criação (multiset livre entre as 5 Virtudes).
 DISTRIBUICAO_VIRTUDES_INICIAL = (4, 3, 2, 1, 1)
 
-VIRTUDE_MAX = 5          # teto por Virtude
+VIRTUDE_MAX = 5  # teto por Virtude
 NIVEL_MAX = 20
 # Níveis em que o jogador escolhe +1 numa Virtude (R3).
 NIVEIS_GANHO_VIRTUDE = (2, 4, 6, 8, 10)
 NIVEIS_MAESTRIA_VIRTUDE = (12, 16, 20)
 TIER_LEVELS = {1: 1, 2: 1, 3: 4, 4: 7, 5: 9, 6: 12, 7: 15, 8: 18, 9: 20}
 TIER_LABELS = {
-    1: "Inicial I", 2: "Inicial II", 3: "Avançado", 4: "Superior",
-    5: "Épico I", 6: "Épico II", 7: "Lendário", 8: "Mítico", 9: "Ápice",
+    1: "Inicial I",
+    2: "Inicial II",
+    3: "Avançado",
+    4: "Superior",
+    5: "Épico I",
+    6: "Épico II",
+    7: "Lendário",
+    8: "Mítico",
+    9: "Ápice",
 }
 
 
@@ -195,28 +231,31 @@ def card_tier_for_level(level: int) -> int:
     level = max(1, min(NIVEL_MAX, int(level)))
     return max(tier for tier, minimum in TIER_LEVELS.items() if minimum <= level)
 
+
 # --- CONFLITO v2 (spec conflito-05): armadura / escudo / dano-base ---
 # Dano-base por categoria de arma (R1).
 DANO_BASE_ARMA = {"leve": 3, "marcial": 4, "versatil": 6, "pesada": 8}
 
 # Armaduras (R5): protecao / integridade_max / penalidade_esquiva / reducoes_max_por_ataque.
 ARMADURAS = {
-    "leve":   {"protecao": 1, "integridade_max": 4, "penalidade_esquiva": 0, "reducoes_max": 1},
-    "media":  {"protecao": 2, "integridade_max": 6, "penalidade_esquiva": 1, "reducoes_max": 2},
+    "leve": {"protecao": 1, "integridade_max": 4, "penalidade_esquiva": 0, "reducoes_max": 1},
+    "media": {"protecao": 2, "integridade_max": 6, "penalidade_esquiva": 1, "reducoes_max": 2},
     "pesada": {"protecao": 3, "integridade_max": 8, "penalidade_esquiva": 2, "reducoes_max": 3},
 }
 
 # Escudos (R6): protecao / integridade_max / requisito_forca.
 ESCUDOS = {
     "broquel": {"protecao": 1, "integridade_max": 3, "requisito_forca": 0},
-    "comum":   {"protecao": 2, "integridade_max": 5, "requisito_forca": 2},
-    "pesado":  {"protecao": 3, "integridade_max": 7, "requisito_forca": 3},
+    "comum": {"protecao": 2, "integridade_max": 5, "requisito_forca": 2},
+    "pesado": {"protecao": 3, "integridade_max": 7, "requisito_forca": 3},
 }
 
 # Ajuste de dano por Resistência/Vulnerabilidade (R4).
 RESIST_MODIFIER = {
-    "resistencia": -2, "resistencia_maior": -4,
-    "vulnerabilidade": 2, "vulnerabilidade_maior": 4,
+    "resistencia": -2,
+    "resistencia_maior": -4,
+    "vulnerabilidade": 2,
+    "vulnerabilidade_maior": 4,
 }
 
 DANO_FISICO = ("cortante", "perfurante", "impactante")
@@ -286,17 +325,34 @@ LIMITES_GRAVIDADE_POR_CORPO = {
 # Aliases legados (chaves D&D / nomes longos / PT) -> chave curta de Virtude.
 # wis/int caem em "mente" (sem Virtude dedicada de percepção).
 _VIRTUDE_ALIASES = {
-    "str": "forca", "strength": "forca", "forca": "forca", "força": "forca",
-    "dex": "agilidade", "dexterity": "agilidade", "agilidade": "agilidade", "destreza": "agilidade",
-    "con": "corpo", "constitution": "corpo", "corpo": "corpo", "constituicao": "corpo",
-    "int": "mente", "intelligence": "mente", "mente": "mente", "inteligencia": "mente",
-    "wis": "mente", "wisdom": "mente", "sabedoria": "mente",
-    "cha": "carisma", "charisma": "carisma", "carisma": "carisma",
+    "str": "forca",
+    "strength": "forca",
+    "forca": "forca",
+    "força": "forca",
+    "dex": "agilidade",
+    "dexterity": "agilidade",
+    "agilidade": "agilidade",
+    "destreza": "agilidade",
+    "con": "corpo",
+    "constitution": "corpo",
+    "corpo": "corpo",
+    "constituicao": "corpo",
+    "int": "mente",
+    "intelligence": "mente",
+    "mente": "mente",
+    "inteligencia": "mente",
+    "wis": "mente",
+    "wisdom": "mente",
+    "sabedoria": "mente",
+    "cha": "carisma",
+    "charisma": "carisma",
+    "carisma": "carisma",
 }
 
 
 def _fold_key(key: str) -> str:
     import unicodedata
+
     nfkd = unicodedata.normalize("NFKD", str(key or "").strip().lower())
     return "".join(c for c in nfkd if not unicodedata.combining(c))
 
@@ -373,9 +429,8 @@ def sync_vitality(actor: dict, *, heal_to_full: bool = False) -> dict:
     # morte t15; +6 compra ~2 golpes comuns e mira t>=20 sem fortalecer inimigos.
     configured_bonus = actor.get("vitalidade_base_bonus")
     if configured_bonus is None and actor.get("class_name") in CLASSES:
-        configured_bonus = (
-            (CLASSES[actor["class_name"]].get("base_stats") or {})
-            .get("vitalidade_bonus", 0)
+        configured_bonus = (CLASSES[actor["class_name"]].get("base_stats") or {}).get(
+            "vitalidade_bonus", 0
         )
     vitality_bonus = max(0, int(configured_bonus or 0))
     if actor.get("class_name") in CLASSES:
@@ -385,6 +440,7 @@ def sync_vitality(actor: dict, *, heal_to_full: bool = False) -> dict:
     if actor.get("known_cards") or actor.get("virtue_cards"):
         try:
             from combat_mechanics import passive_modifiers
+
             card_bonus = max(0, int(passive_modifiers(actor).get("vitality", 0) or 0))
         except Exception:
             card_bonus = 0
@@ -394,8 +450,7 @@ def sync_vitality(actor: dict, *, heal_to_full: bool = False) -> dict:
     actor["vitalidade_max_penalty"] = penalty
     actor["max_vitalidade"] = novo_max
     actor["ferimento_espacos"] = espacos_ferimento_para_corpo(corpo)
-    ferimentos = actor.setdefault(
-        "ferimentos", {"leve": [], "grave": [], "critico": []})
+    ferimentos = actor.setdefault("ferimentos", {"leve": [], "grave": [], "critico": []})
     for categoria in ("leve", "grave", "critico"):
         ferimentos.setdefault(categoria, [])
     if heal_to_full or "vitalidade" not in actor:

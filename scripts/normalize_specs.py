@@ -40,7 +40,19 @@ SKIPPED_DIRECTORIES = {
     "saves_playtest",
     "playtest_runs",
 }
-TEXT_SUFFIXES = {".md", ".py", ".toml", ".yaml", ".yml", ".json", ".txt", ".html", ".ts", ".tsx", ".js"}
+TEXT_SUFFIXES = {
+    ".md",
+    ".py",
+    ".toml",
+    ".yaml",
+    ".yml",
+    ".json",
+    ".txt",
+    ".html",
+    ".ts",
+    ".tsx",
+    ".js",
+}
 # Observed historical Markdown-link alias.  This repairs only the link target;
 # it neither changes prose nor asserts an additional dependency.
 REFERENCE_ALIASES = {"npcs-3-camadas.md": "npcs-3-camadas-traits"}
@@ -178,7 +190,9 @@ def _history(repo: Path, current_path: str, revision: str = "HEAD") -> list[Hist
             elif status_code.startswith("C"):
                 ambiguous = "copy-lineage"
         if ambiguous:
-            reverse_records[-1] = dataclasses.replace(reverse_records[-1], ambiguous_reason=ambiguous)
+            reverse_records[-1] = dataclasses.replace(
+                reverse_records[-1], ambiguous_reason=ambiguous
+            )
 
     if not reverse_records:
         raise MigrationError(f"no Git history found for {current_path}")
@@ -204,7 +218,9 @@ def _spec_files(repo: Path, expected_count: int) -> list[tuple[Path, int | None,
             if 1 <= current_id <= expected_count:
                 # Renames remain unstaged during this migration.  Git evidence
                 # therefore stays anchored at the historical filename.
-                candidates.append((path, current_id, parsed.group(2), f"specs/{parsed.group(2)}.md"))
+                candidates.append(
+                    (path, current_id, parsed.group(2), f"specs/{parsed.group(2)}.md")
+                )
             continue
         candidates.append((path, None, path.stem, _as_posix(path.relative_to(repo))))
     if len(candidates) != expected_count:
@@ -214,7 +230,9 @@ def _spec_files(repo: Path, expected_count: int) -> list[tuple[Path, int | None,
         )
     existing_ids = [item[1] for item in candidates if item[1] is not None]
     if existing_ids and len(existing_ids) != len(candidates):
-        raise MigrationError("mixed numbered and legacy historical specs; refusing a partial migration")
+        raise MigrationError(
+            "mixed numbered and legacy historical specs; refusing a partial migration"
+        )
     if len(existing_ids) != len(set(existing_ids)):
         raise MigrationError("duplicate historical SPEC id")
     return candidates
@@ -300,8 +318,14 @@ def _records_from_existing_index(
         assert spec_id is not None
         index_entry = by_id.get(f"SPEC-{spec_id:03d}")
         expected_path = f"specs/SPEC-{spec_id:03d}-{slug}.md"
-        if not isinstance(index_entry, dict) or index_entry.get("slug") != slug or index_entry.get("path") != expected_path:
-            raise MigrationError(f"existing index does not match immutable identity {expected_path}")
+        if (
+            not isinstance(index_entry, dict)
+            or index_entry.get("slug") != slug
+            or index_entry.get("path") != expected_path
+        ):
+            raise MigrationError(
+                f"existing index does not match immutable identity {expected_path}"
+            )
         # Old filenames are mechanically derivable from the permanent slug.  Do
         # not retain literal legacy paths in index.yaml: the report is the sole
         # migration-evidence exception allowed to contain them.
@@ -338,7 +362,9 @@ def _records_from_existing_index(
             for record in group:
                 record.tie_breaker = "slug_lexical"
     completed = [record for record in records if record.completed_commit]
-    completed.sort(key=lambda record: (topo_order[record.completed_commit or ""], record.slug.casefold()))
+    completed.sort(
+        key=lambda record: (topo_order[record.completed_commit or ""], record.slug.casefold())
+    )
     for order, record in enumerate(completed, start=1):
         record.completed_order = order
     for record in records:
@@ -354,7 +380,9 @@ def _records_from_existing_index(
             "lineage_note": record.lineage_note,
         }
         if any(entry.get(key) != value for key, value in expected.items()):
-            raise MigrationError(f"existing index provenance was altered for SPEC-{record.spec_id:03d}")
+            raise MigrationError(
+                f"existing index provenance was altered for SPEC-{record.spec_id:03d}"
+            )
     active = _active_spec_163(repo)
     if active:
         records.append(active)
@@ -368,7 +396,9 @@ def build_plan(repo: Path, expected_count: int = 162) -> tuple[list[SpecRecord],
     source_sha = _run_git(repo, "rev-parse", "HEAD").strip()
     history_shallow = _is_shallow(repo)
     if history_shallow:
-        raise MigrationError("shallow Git history cannot prove stable creation order; fetch full history first")
+        raise MigrationError(
+            "shallow Git history cannot prove stable creation order; fetch full history first"
+        )
     candidates = _spec_files(repo, expected_count)
     existing = _existing_index(repo)
     if existing is not None and all(spec_id is not None for _, spec_id, _, _ in candidates):
@@ -459,7 +489,9 @@ def build_plan(repo: Path, expected_count: int = 162) -> tuple[list[SpecRecord],
     return records, source_sha, history_shallow
 
 
-def _index_payload(records: Iterable[SpecRecord], source_sha: str, history_shallow: bool) -> dict[str, object]:
+def _index_payload(
+    records: Iterable[SpecRecord], source_sha: str, history_shallow: bool
+) -> dict[str, object]:
     entries: list[dict[str, object]] = []
     for record in sorted(records, key=lambda value: value.spec_id):
         entries.append(
@@ -512,8 +544,14 @@ def render_report(records: Iterable[SpecRecord], source_sha: str, history_shallo
         "| --- | --- | --- | --- | --- | --- |",
     ]
     for record in sorted(records, key=lambda value: value.spec_id):
-        created = "—" if not record.created_commit else f"`{record.created_commit}` / {record.created_at}"
-        completed = "—" if not record.completed_commit else f"`{record.completed_commit}` / {record.completed_at}"
+        created = (
+            "—" if not record.created_commit else f"`{record.created_commit}` / {record.created_at}"
+        )
+        completed = (
+            "—"
+            if not record.completed_commit
+            else f"`{record.completed_commit}` / {record.completed_at}"
+        )
         lineage = record.lineage_note or "complete"
         rows.append(
             f"| SPEC-{record.spec_id:03d} | `{record.old_path}` | `{record.new_path}` | "
@@ -593,7 +631,10 @@ def _iter_text_files(repo: Path, excluded: set[Path]) -> Iterable[Path]:
         if not path.is_file() or path.resolve() in excluded:
             continue
         relative_parts = path.relative_to(repo).parts
-        if any(part in SKIPPED_DIRECTORIES or part in {".claude", ".agents", ".codex"} for part in relative_parts):
+        if any(
+            part in SKIPPED_DIRECTORIES or part in {".claude", ".agents", ".codex"}
+            for part in relative_parts
+        ):
             continue
         if path.suffix.casefold() not in TEXT_SUFFIXES:
             continue
@@ -611,7 +652,9 @@ def _update_depends_on(repo: Path, records: Iterable[SpecRecord]) -> None:
         content = _read_text(repo / record.new_path)
         match = DEPENDS_RE.search(content)
         raw = match.group(1).strip() if match else ""
-        record.depends_on_raw = [] if raw.casefold() in {"", "—", "nenhuma", "nada bloqueante"} else [raw]
+        record.depends_on_raw = (
+            [] if raw.casefold() in {"", "—", "nenhuma", "nada bloqueante"} else [raw]
+        )
         resolved = {f"SPEC-{value}" for value in SPEC_REFERENCE_RE.findall(raw)}
         unresolved = raw
         for filename, spec_id in by_filename.items():
@@ -621,17 +664,23 @@ def _update_depends_on(repo: Path, records: Iterable[SpecRecord]) -> None:
         for slug, spec_id in by_slug.items():
             if re.search(rf"(?<![A-Za-z0-9_-]){re.escape(slug)}(?![A-Za-z0-9_-])", unresolved):
                 resolved.add(spec_id)
-                unresolved = re.sub(rf"(?<![A-Za-z0-9_-]){re.escape(slug)}(?![A-Za-z0-9_-])", "", unresolved)
+                unresolved = re.sub(
+                    rf"(?<![A-Za-z0-9_-]){re.escape(slug)}(?![A-Za-z0-9_-])", "", unresolved
+                )
         resolved.discard(f"SPEC-{record.spec_id:03d}")
         record.depends_on = sorted(resolved)
         residue = re.sub(r"[\[\]`()·,;:.—–/]+", " ", unresolved).strip()
         record.depends_on_unresolved = [] if not residue else [raw]
 
 
-def _apply(repo: Path, records: list[SpecRecord], source_sha: str, history_shallow: bool, report_path: Path) -> None:
+def _apply(
+    repo: Path, records: list[SpecRecord], source_sha: str, history_shallow: bool, report_path: Path
+) -> None:
     index_path = repo / "specs" / "index.yaml"
     exclusions = {report_path.resolve(), index_path.resolve()}
-    exclusions.update(path.resolve() for path in (repo / "docs" / "evals-plan-v4").rglob("*") if path.is_file())
+    exclusions.update(
+        path.resolve() for path in (repo / "docs" / "evals-plan-v4").rglob("*") if path.is_file()
+    )
     expected_legacy_bytes: dict[Path, str] = {}
     for record in records:
         old = repo / record.old_path
@@ -662,7 +711,9 @@ def _apply(repo: Path, records: list[SpecRecord], source_sha: str, history_shall
 
     for path, expected in expected_legacy_bytes.items():
         if _read_text(path) != expected:
-            raise MigrationError(f"historical spec changed beyond mapped references: {path.relative_to(repo)}")
+            raise MigrationError(
+                f"historical spec changed beyond mapped references: {path.relative_to(repo)}"
+            )
 
     _update_depends_on(repo, records)
     _write_text(index_path, render_index(records, source_sha, history_shallow))
@@ -670,7 +721,9 @@ def _apply(repo: Path, records: list[SpecRecord], source_sha: str, history_shall
     _write_text(report_path, render_report(records, source_sha, history_shallow))
 
 
-def _check(repo: Path, records: list[SpecRecord], source_sha: str, history_shallow: bool, report_path: Path) -> list[str]:
+def _check(
+    repo: Path, records: list[SpecRecord], source_sha: str, history_shallow: bool, report_path: Path
+) -> list[str]:
     errors: list[str] = []
     for record in records:
         if not (repo / record.new_path).is_file():
@@ -684,10 +737,14 @@ def _check(repo: Path, records: list[SpecRecord], source_sha: str, history_shall
         errors.append("specs/index.yaml is absent or not reproducible at this SHA")
     expected_report = render_report(records, source_sha, history_shallow)
     if not report_path.is_file() or _read_text(report_path) != expected_report:
-        errors.append(f"migration report is absent or not reproducible: {report_path.relative_to(repo)}")
+        errors.append(
+            f"migration report is absent or not reproducible: {report_path.relative_to(repo)}"
+        )
 
     exclusions = {report_path.resolve(), index_path.resolve()}
-    exclusions.update(path.resolve() for path in (repo / "docs" / "evals-plan-v4").rglob("*") if path.is_file())
+    exclusions.update(
+        path.resolve() for path in (repo / "docs" / "evals-plan-v4").rglob("*") if path.is_file()
+    )
     scanned_paths = list(_iter_text_files(repo, exclusions))
     for path in scanned_paths:
         content = _read_text(path)
@@ -701,19 +758,29 @@ def _check(repo: Path, records: list[SpecRecord], source_sha: str, history_shall
 def _arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     action = parser.add_mutually_exclusive_group(required=True)
-    action.add_argument("--dry-run", action="store_true", help="print the deterministic migration plan")
-    action.add_argument("--apply", action="store_true", help="rename specs and write references/index/report")
-    action.add_argument("--check", action="store_true", help="fail unless the migration is idempotently canonical")
+    action.add_argument(
+        "--dry-run", action="store_true", help="print the deterministic migration plan"
+    )
+    action.add_argument(
+        "--apply", action="store_true", help="rename specs and write references/index/report"
+    )
+    action.add_argument(
+        "--check", action="store_true", help="fail unless the migration is idempotently canonical"
+    )
     parser.add_argument("--repo", type=Path, default=Path.cwd())
     parser.add_argument("--expected-count", type=int, default=162)
-    parser.add_argument("--report", type=Path, default=Path("docs/auditorias/specs-migration-report.md"))
+    parser.add_argument(
+        "--report", type=Path, default=Path("docs/auditorias/specs-migration-report.md")
+    )
     return parser.parse_args()
 
 
 def main() -> int:
     args = _arguments()
     repo = args.repo.resolve()
-    report_path = (repo / args.report).resolve() if not args.report.is_absolute() else args.report.resolve()
+    report_path = (
+        (repo / args.report).resolve() if not args.report.is_absolute() else args.report.resolve()
+    )
     try:
         records, source_sha, history_shallow = build_plan(repo, args.expected_count)
         if args.dry_run:
@@ -728,7 +795,12 @@ def main() -> int:
             return 0
         errors = _check(repo, records, source_sha, history_shallow, report_path)
         if errors:
-            print("SPEC migration check failed:", *[f"- {error}" for error in errors], sep="\n", file=sys.stderr)
+            print(
+                "SPEC migration check failed:",
+                *[f"- {error}" for error in errors],
+                sep="\n",
+                file=sys.stderr,
+            )
             return 1
         print(
             f"SPEC migration check passed for {args.expected_count} historical specs"

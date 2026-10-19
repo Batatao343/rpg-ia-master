@@ -4,6 +4,7 @@ Funções PURAS (sem LLM) para o narrador: extrair a "abertura" de uma narraçã
 pegar as últimas aberturas do histórico (injetadas no prompt, R1), detectar
 repetição (telemetria R4) e alimentar a invariante R5. Zero mecânica de jogo.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -55,7 +56,8 @@ def opening(text: str, words: int = 6) -> str:
 
 
 _NPC_SCAFFOLD = re.compile(
-    r"^\s*(?:🗣️?\s*)?[^:\n]{1,80}:\s*", flags=re.IGNORECASE,
+    r"^\s*(?:🗣️?\s*)?[^:\n]{1,80}:\s*",
+    flags=re.IGNORECASE,
 )
 
 
@@ -66,16 +68,20 @@ def semantic_opening(text: str, words: int = 6) -> str:
         prefix = next((p for p in _NEUTRAL_TRANSITIONS if value.startswith(p)), None)
         if prefix is None:
             break
-        value = value[len(prefix):].lstrip('* "“')
+        value = value[len(prefix) :].lstrip('* "“')
     return opening(value, words)
 
 
 def is_deterministic_interaction_message(text: str) -> bool:
     value = str(text or "")
-    return bool(_NPC_SCAFFOLD.match(value) and re.search(
-        r"\b(?:recusa|não está aqui|já está no grupo|grupo já está cheio)\b",
-        value, re.IGNORECASE,
-    ))
+    return bool(
+        _NPC_SCAFFOLD.match(value)
+        and re.search(
+            r"\b(?:recusa|não está aqui|já está no grupo|grupo já está cheio)\b",
+            value,
+            re.IGNORECASE,
+        )
+    )
 
 
 def sanitize_meta_preamble(text: str) -> str:
@@ -103,7 +109,7 @@ def sanitize_player_facing(text: str) -> str:
     return cleaned.strip()
 
 
-_OUTER_QUOTES = (("\"", "\""), ("“", "”"), ("‘", "’"))
+_OUTER_QUOTES = (('"', '"'), ("“", "”"), ("‘", "’"))
 
 
 def strip_outer_quotes(text: str) -> str:
@@ -123,7 +129,7 @@ def strip_outer_quotes(text: str) -> str:
                 and value.startswith(opening_quote)
                 and value.endswith(closing_quote)
             ):
-                value = value[len(opening_quote):-len(closing_quote)].strip()
+                value = value[len(opening_quote) : -len(closing_quote)].strip()
                 break
     return value
 
@@ -160,9 +166,7 @@ def reconcile_player_gold_claims(text: str, gold: int) -> str:
     value = _PLAYER_GOLD_PATTERNS[0].sub(
         lambda match: f"{match.group(1)}{canonical}{match.group(2)}", value
     )
-    value = _PLAYER_GOLD_PATTERNS[1].sub(
-        lambda match: f"{match.group(1)}{canonical}", value
-    )
+    value = _PLAYER_GOLD_PATTERNS[1].sub(lambda match: f"{match.group(1)}{canonical}", value)
     return _PLAYER_GOLD_PATTERNS[2].sub(canonical, value)
 
 
@@ -171,8 +175,7 @@ def contains_engine_marker(text: str) -> bool:
     return bool(_ENGINE_MARKERS.search(str(text or "")))
 
 
-def vary_repeated_opening(text: str, recent_openings: list[str], *,
-                          salt: str = "") -> str:
+def vary_repeated_opening(text: str, recent_openings: list[str], *, salt: str = "") -> str:
     """Quebra abertura literalmente repetida com transição neutra e estável.
 
     A transformação é conservadora: só atua quando seis palavras iniciais são
@@ -197,8 +200,7 @@ def remove_rejected_claims(text: str, rejected_terms: list[str]) -> str:
 
     A comparação é literal e case-insensitive; não tenta inferir semântica.
     """
-    terms = [str(term).strip().casefold() for term in rejected_terms
-             if str(term).strip()]
+    terms = [str(term).strip().casefold() for term in rejected_terms if str(term).strip()]
     if not terms:
         return str(text or "")
     value = str(text or "")
@@ -209,7 +211,8 @@ def remove_rejected_claims(text: str, rejected_terms: list[str]) -> str:
     if any("ouro" in term or "moeda" in term for term in terms):
         paragraphs = re.split(r"\n\s*\n", value)
         value = "\n\n".join(
-            paragraph for paragraph in paragraphs
+            paragraph
+            for paragraph in paragraphs
             if not re.search(r"\b(?:ouro|moedas?)\b", paragraph, re.IGNORECASE)
         )
     chunks = re.split(r"(?<=[.!?])(\s+)", value)
@@ -250,8 +253,10 @@ def openings_clause(aberturas: list[str]) -> str:
     if not aberturas:
         return ""
     listadas = " | ".join(f'"{a}…"' for a in aberturas)
-    return ("\n    - VARIE A ABERTURA: as últimas narrações começaram assim: "
-            f"{listadas}. NÃO comece com estrutura ou imagem parecida; abra diferente.")
+    return (
+        "\n    - VARIE A ABERTURA: as últimas narrações começaram assim: "
+        f"{listadas}. NÃO comece com estrutura ou imagem parecida; abra diferente."
+    )
 
 
 def log_if_repeats(new_text: str, prev_text: str, *, where: str = "prose") -> bool:
@@ -268,24 +273,70 @@ def log_if_repeats(new_text: str, prev_text: str, *, where: str = "prose") -> bo
 # SPEC-203 R9 — prosa ancorada no manifesto do encontro
 # ---------------------------------------------------------------------------
 # Cabeças de nome de bestiário que são títulos/ofícios comuns (não espécie).
-_NON_SPECIES_HEADS = {"capitao", "guarda", "senhor", "senhora", "mestre", "rei", "rainha",
-                      "soldado", "lider", "chefe", "sacerdote", "cavaleiro", "guardiao",
-                      "filho", "filha", "mae", "pai", "irma", "irmao", "velho", "velha",
-                      "sombra", "voz", "eco", "coisa", "algo",
-                      # Revisão Astra: palavras comuns de prosa de combate (substantivo
-                      # não-criatura, verbo flexionado ou ofício genérico) que
-                      # derrubavam narração legítima ("uma faísca salta", "vinha").
-                      "fumaca", "faisca", "vinha", "horror", "eclipse", "vigia",
-                      "sentinela", "general", "lorde", "guerreiro", "cacador",
-                      "predador", "observador", "devorador", "iniciado", "nomade",
-                      "filhote", "larva", "elemental", "colosso", "renegado",
-                      "saqueador", "capanga", "assassino", "cobrador", "capturador"}
+_NON_SPECIES_HEADS = {
+    "capitao",
+    "guarda",
+    "senhor",
+    "senhora",
+    "mestre",
+    "rei",
+    "rainha",
+    "soldado",
+    "lider",
+    "chefe",
+    "sacerdote",
+    "cavaleiro",
+    "guardiao",
+    "filho",
+    "filha",
+    "mae",
+    "pai",
+    "irma",
+    "irmao",
+    "velho",
+    "velha",
+    "sombra",
+    "voz",
+    "eco",
+    "coisa",
+    "algo",
+    # Revisão Astra: palavras comuns de prosa de combate (substantivo
+    # não-criatura, verbo flexionado ou ofício genérico) que
+    # derrubavam narração legítima ("uma faísca salta", "vinha").
+    "fumaca",
+    "faisca",
+    "vinha",
+    "horror",
+    "eclipse",
+    "vigia",
+    "sentinela",
+    "general",
+    "lorde",
+    "guerreiro",
+    "cacador",
+    "predador",
+    "observador",
+    "devorador",
+    "iniciado",
+    "nomade",
+    "filhote",
+    "larva",
+    "elemental",
+    "colosso",
+    "renegado",
+    "saqueador",
+    "capanga",
+    "assassino",
+    "cobrador",
+    "capturador",
+}
 
 
 def _species_heads() -> dict:
     """{token-cabeça normalizado: nome} de cada espécie do bestiário curado."""
     import gamedata
     from services.encounter_manifest import name_tokens
+
     heads: dict = {}
     for entry in (gamedata.BESTIARY or {}).values():
         tokens = name_tokens(entry.get("name", ""))
@@ -299,6 +350,7 @@ def species_drift(text: str, manifest: dict | None) -> list:
     espécie do bestiário ausente do elenco E não menciona nenhuma espécie canônica.
     Não reescreve estado; o chamador decide neutralizar (texto determinístico)."""
     from services.encounter_manifest import name_tokens
+
     participants = (manifest or {}).get("participants") or []
     if not text or not participants:
         return []
@@ -313,12 +365,16 @@ def species_drift(text: str, manifest: dict | None) -> list:
     for tok in prose_tokens:
         if tok in heads and tok not in canonical and tok not in seen:
             seen.add(tok)
-            flags.append({"species": tok, "bestiary_name": heads[tok],
-                          "canonical": sorted({p.get("species_label", "") for p in participants})})
+            flags.append(
+                {
+                    "species": tok,
+                    "bestiary_name": heads[tok],
+                    "canonical": sorted({p.get("species_label", "") for p in participants}),
+                }
+            )
     return flags
 
 
 def log_species_drift(flags: list, *, where: str = "combate") -> None:
     if flags:
-        _LOG.warning("species_drift where=%s species=%s", where,
-                     [f.get("species") for f in flags])
+        _LOG.warning("species_drift where=%s species=%s", where, [f.get("species") for f in flags])

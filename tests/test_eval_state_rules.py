@@ -100,7 +100,5 @@ def test_known_bad_candidate_projection_fails_without_oracle_access() -> None:
 
     assert result.passed is False
     assert result.metric_values == {"state_transition_pass_rate": 0.0}
-    assert result.results[0].diagnostics == [
-        "actual projection != fixture-authored expected"
-    ]
+    assert result.results[0].diagnostics == ["actual projection != fixture-authored expected"]
     assert result.hard_failures == ["case failed: state.event.npc-killed"]

@@ -22,4 +22,6 @@ def test_collector_dedupe_idempotente_e_conflito():
     assert len(collector.drain()) == 1
     collector.add(one)
     with pytest.raises(Exception):
-        collector.add(MemoryWriteIntent(MemoryDocument("m1", "outro", "session"), principal, game_id))
+        collector.add(
+            MemoryWriteIntent(MemoryDocument("m1", "outro", "session"), principal, game_id)
+        )

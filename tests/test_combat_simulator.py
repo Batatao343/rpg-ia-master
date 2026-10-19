@@ -2,6 +2,7 @@
 
 Spec: specs/SPEC-090-modo-simulacao-combate.md.
 """
+
 from __future__ import annotations
 
 from copy import deepcopy
@@ -45,18 +46,42 @@ def test_opcoes_do_simulador_so_expoem_dados_canonicos():
 def test_request_rejeita_nivel_quantidade_e_inimigo_invalidos():
     client = TestClient(api.app)
 
-    assert client.post("/game/combat-simulator", json={
-        "class_name": "Sangromante", "level": 2,
-        "enemy_id": "mon_cao_rebite", "quantity": 1,
-    }).status_code == 422
-    assert client.post("/game/combat-simulator", json={
-        "class_name": "Sangromante", "level": 3,
-        "enemy_id": "nao_existe", "quantity": 1,
-    }).status_code == 422
-    assert client.post("/game/combat-simulator", json={
-        "class_name": "Sangromante", "level": 3,
-        "enemy_id": "mon_cao_rebite", "quantity": 4,
-    }).status_code == 422
+    assert (
+        client.post(
+            "/game/combat-simulator",
+            json={
+                "class_name": "Sangromante",
+                "level": 2,
+                "enemy_id": "mon_cao_rebite",
+                "quantity": 1,
+            },
+        ).status_code
+        == 422
+    )
+    assert (
+        client.post(
+            "/game/combat-simulator",
+            json={
+                "class_name": "Sangromante",
+                "level": 3,
+                "enemy_id": "nao_existe",
+                "quantity": 1,
+            },
+        ).status_code
+        == 422
+    )
+    assert (
+        client.post(
+            "/game/combat-simulator",
+            json={
+                "class_name": "Sangromante",
+                "level": 3,
+                "enemy_id": "mon_cao_rebite",
+                "quantity": 4,
+            },
+        ).status_code
+        == 422
+    )
 
 
 def test_builder_cria_ficha_inimigos_unicos_e_cena_congelada_sem_llm(monkeypatch):
@@ -79,16 +104,17 @@ def test_builder_cria_ficha_inimigos_unicos_e_cena_congelada_sem_llm(monkeypatch
     assert state["player"]["level"] == 3
     assert len(state["player"]["prepared_cards"]) >= 4
     assert [enemy["id"] for enemy in state["enemies"]] == [
-        "mon_cao_rebite__sim_1", "mon_cao_rebite__sim_2",
+        "mon_cao_rebite__sim_1",
+        "mon_cao_rebite__sim_2",
     ]
     scene = state["combat"]["scene"]
     assert scene["frozen"] is True
     assert set(scene["positions"]) == {
-        "player", "mon_cao_rebite__sim_1", "mon_cao_rebite__sim_2",
+        "player",
+        "mon_cao_rebite__sim_1",
+        "mon_cao_rebite__sim_2",
     }
-    assert scene["zones"] == [
-        {"id": "arena", "name": "Arena do Véu", "connections": []}
-    ]
+    assert scene["zones"] == [{"id": "arena", "name": "Arena do Véu", "connections": []}]
 
 
 def test_endpoint_cria_e_turno_livre_usa_ataque_basico_sem_llm_ou_rag(monkeypatch):
@@ -124,10 +150,13 @@ def test_endpoint_cria_e_turno_livre_usa_ataque_basico_sem_llm_ou_rag(monkeypatc
     assert first["combat"]["active"] is True
     assert first["combat"]["round"] == 0
 
-    acted = client.post("/game/action", json={
-        "game_id": first["game_id"],
-        "input_text": "qualquer texto livre vira ataque básico no laboratório",
-    })
+    acted = client.post(
+        "/game/action",
+        json={
+            "game_id": first["game_id"],
+            "input_text": "qualquer texto livre vira ataque básico no laboratório",
+        },
+    )
     assert acted.status_code == 200, acted.text
     body = acted.json()
     assert body["combat_simulation"]["enabled"] is True
@@ -140,9 +169,11 @@ def test_endpoint_cria_e_turno_livre_usa_ataque_basico_sem_llm_ou_rag(monkeypatc
 
 def test_simulacao_persiste_marcador_e_arena_sem_checkpoint(tmp_path, monkeypatch):
     monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
-    monkeypatch.setattr(character_creator, "get_llm", lambda *_a, **_k: (_ for _ in ()).throw(
-        AssertionError("LLM proibida")
-    ))
+    monkeypatch.setattr(
+        character_creator,
+        "get_llm",
+        lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("LLM proibida")),
+    )
     state = api._build_combat_simulator_state(_request(quantity=1))
 
     assert persistence.save_game_state(state) is True

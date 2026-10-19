@@ -98,6 +98,7 @@ class Principal:
     subject: str
     local: bool = False
 
+
 @dataclass(frozen=True)
 class StoredGame:
     game_id: UUID
@@ -107,29 +108,43 @@ class StoredGame:
     state: dict[str, Any]
     updated_at: datetime
 
+
 class GameStore(Protocol):
     def create(self, principal: Principal, state: dict[str, Any]) -> StoredGame: ...
     def get(self, principal: Principal, game_id: UUID) -> StoredGame | None: ...
     def list(self, principal: Principal) -> list[StoredGame]: ...
-    def save(self, principal: Principal, game_id: UUID, expected_version: int,
-             state: dict[str, Any]) -> StoredGame: ...
+    def save(
+        self, principal: Principal, game_id: UUID, expected_version: int, state: dict[str, Any]
+    ) -> StoredGame: ...
     def delete(self, principal: Principal, game_id: UUID) -> bool: ...
 
+
 class RuntimeCatalogStore(Protocol):
-    def get(self, namespace: str, key: str, *, owner_id: UUID | None,
-            game_id: UUID | None) -> dict[str, Any] | None: ...
-    def put(self, namespace: str, key: str, value: dict[str, Any], *,
-            scope: Literal["global", "user", "game"],
-            owner_id: UUID | None, game_id: UUID | None) -> None: ...
+    def get(
+        self, namespace: str, key: str, *, owner_id: UUID | None, game_id: UUID | None
+    ) -> dict[str, Any] | None: ...
+    def put(
+        self,
+        namespace: str,
+        key: str,
+        value: dict[str, Any],
+        *,
+        scope: Literal["global", "user", "game"],
+        owner_id: UUID | None,
+        game_id: UUID | None,
+    ) -> None: ...
+
 
 class MemoryStore(Protocol):
     def query(self, request: MemoryQuery) -> list[MemoryDocument]: ...
     def stage(self, intent: MemoryWriteIntent) -> None: ...
 
+
 class BlobStore(Protocol):
     def put(self, key: str, payload: BinaryIO, metadata: BlobMetadata) -> BlobRef: ...
     def signed_url(self, key: str, expires_seconds: int) -> str: ...
     def delete(self, key: str) -> bool: ...
+
 
 class JobQueue(Protocol):
     def enqueue(self, job: JobRequest) -> UUID: ...

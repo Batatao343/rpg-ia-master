@@ -29,9 +29,14 @@ def _fresh_graph_cache():
 # Etapa 1 — services/state_views.py (puro)
 # ---------------------------------------------------------------------------
 
+
 def _rep_event(turn, delta, value, fid=LEGIAO):
-    return {"type": "reputation_changed", "target_id": fid, "turn": turn,
-            "payload": {"delta": delta, "new_value": value, "reason": "ajudou"}}
+    return {
+        "type": "reputation_changed",
+        "target_id": fid,
+        "turn": turn,
+        "payload": {"delta": delta, "new_value": value, "reason": "ajudou"},
+    }
 
 
 def test_history_ordena_e_limita():
@@ -63,8 +68,12 @@ def test_stability_label_ausente():
 
 
 def _ctrl_event(loc_id, new_controller, turn):
-    return {"type": "location_control_changed", "target_id": loc_id, "turn": turn,
-            "payload": {"new_controller_id": new_controller}}
+    return {
+        "type": "location_control_changed",
+        "target_id": loc_id,
+        "turn": turn,
+        "payload": {"new_controller_id": new_controller},
+    }
 
 
 def test_control_changes_respeita_fog():
@@ -86,11 +95,15 @@ def test_control_changes_janela():
 
 
 def test_active_threats_ttl():
-    world = {"threat_alerts": [
-        {"region_id": "nova_arcadia", "hint": "Rato da Peste", "turn": 5},
-        {"region_id": "skallgard", "hint": "Bandido", "turn": 0},
-    ]}
-    out = sv.active_threats(world, current_turn=7)  # TTL=6: turn=5 (diff 2) vale, turn=0 (diff 7) expirou
+    world = {
+        "threat_alerts": [
+            {"region_id": "nova_arcadia", "hint": "Rato da Peste", "turn": 5},
+            {"region_id": "skallgard", "hint": "Bandido", "turn": 0},
+        ]
+    }
+    out = sv.active_threats(
+        world, current_turn=7
+    )  # TTL=6: turn=5 (diff 2) vale, turn=0 (diff 7) expirou
     assert len(out) == 1
     assert out[0]["region_id"] == "nova_arcadia"
 
@@ -103,8 +116,17 @@ def test_active_threats_nao_consome():
 
 def test_visible_controllers_projection_vence_legado():
     world = {"visited": [NOVA_ARCADIA], "controlled": {NOVA_ARCADIA: MAO_SOMBRIA}}
-    proj = {"dynamic_edges": [{"id": "dyn1", "source": LEGIAO, "type": "controls",
-                               "target": NOVA_ARCADIA, "visibility": "public"}]}
+    proj = {
+        "dynamic_edges": [
+            {
+                "id": "dyn1",
+                "source": LEGIAO,
+                "type": "controls",
+                "target": NOVA_ARCADIA,
+                "visibility": "public",
+            }
+        ]
+    }
     out = sv.visible_controllers(world, proj)
     # dynamic (LEGIAO, pública) vence tanto o base do grafo (Valerius) quanto o legado (Mão Sombria)
     assert out[NOVA_ARCADIA] == gr.get_entity(LEGIAO)["name"]
@@ -114,8 +136,17 @@ def test_visible_controllers_edge_hidden_nao_aparece():
     # nova_arcadia já tem controlador PÚBLICO no grafo base (npc_valerius) — a edge
     # dynamic hidden (Legião) deve ser ignorada e o público deve prevalecer, não vazar.
     world = {"visited": [NOVA_ARCADIA], "controlled": {}}
-    proj = {"dynamic_edges": [{"id": "dyn1", "source": LEGIAO, "type": "controls",
-                               "target": NOVA_ARCADIA, "visibility": "hidden"}]}
+    proj = {
+        "dynamic_edges": [
+            {
+                "id": "dyn1",
+                "source": LEGIAO,
+                "type": "controls",
+                "target": NOVA_ARCADIA,
+                "visibility": "hidden",
+            }
+        ]
+    }
     out = sv.visible_controllers(world, proj)
     assert out[NOVA_ARCADIA] != gr.get_entity(LEGIAO)["name"]  # a edge hidden não vazou
 
@@ -136,10 +167,15 @@ def test_visible_controllers_so_visitados():
 # Etapa 2 — evento reputation_changed no pipeline (2.6)
 # ---------------------------------------------------------------------------
 
+
 def test_validador_reputation_valida():
     from services.world_validators import validate_proposal
-    prop = {"type": "reputation_changed", "target_id": LEGIAO,
-            "payload": {"delta": 10, "new_value": 10, "reason": "ajudou"}}
+
+    prop = {
+        "type": "reputation_changed",
+        "target_id": LEGIAO,
+        "payload": {"delta": 10, "new_value": 10, "reason": "ajudou"},
+    }
     state = {"world": {"turn_count": 5}, "world_projection": {}, "event_log": []}
     res = validate_proposal(prop, state)
     assert res.ok, res.reason
@@ -147,8 +183,12 @@ def test_validador_reputation_valida():
 
 def test_validador_reputation_rejeita_id_inexistente():
     from services.world_validators import validate_proposal
-    prop = {"type": "reputation_changed", "target_id": "faccao_fantasma",
-            "payload": {"delta": 10, "new_value": 10, "reason": "ajudou"}}
+
+    prop = {
+        "type": "reputation_changed",
+        "target_id": "faccao_fantasma",
+        "payload": {"delta": 10, "new_value": 10, "reason": "ajudou"},
+    }
     state = {"world": {"turn_count": 5}, "world_projection": {}, "event_log": []}
     res = validate_proposal(prop, state)
     assert not res.ok
@@ -156,8 +196,12 @@ def test_validador_reputation_rejeita_id_inexistente():
 
 def test_validador_reputation_rejeita_derrotada():
     from services.world_validators import validate_proposal
-    prop = {"type": "reputation_changed", "target_id": LEGIAO,
-            "payload": {"delta": 10, "new_value": 10, "reason": "ajudou"}}
+
+    prop = {
+        "type": "reputation_changed",
+        "target_id": LEGIAO,
+        "payload": {"delta": 10, "new_value": 10, "reason": "ajudou"},
+    }
     proj = {"entities": {LEGIAO: {"alive": False}}}
     state = {"world": {"turn_count": 5}, "world_projection": proj, "event_log": []}
     res = validate_proposal(prop, state)
@@ -166,8 +210,14 @@ def test_validador_reputation_rejeita_derrotada():
 
 def test_apply_reputation_changed_noop_na_projection():
     from services.event_processor import apply_event
-    event = {"event_id": "e1", "turn": 5, "type": "reputation_changed",
-             "target_id": LEGIAO, "payload": {"delta": 10, "new_value": 10}}
+
+    event = {
+        "event_id": "e1",
+        "turn": 5,
+        "type": "reputation_changed",
+        "target_id": LEGIAO,
+        "payload": {"delta": 10, "new_value": 10},
+    }
     before = {"entities": {}, "dynamic_edges": []}
     after = apply_event(event, before)
     assert after == before  # fallthrough — nada muda na projection
@@ -175,20 +225,35 @@ def test_apply_reputation_changed_noop_na_projection():
 
 def test_reputation_changed_nao_vira_milestone():
     from services.chronicle import render_milestone
-    event = {"event_id": "e1", "turn": 5, "type": "reputation_changed",
-             "target_id": LEGIAO, "payload": {"delta": 10, "new_value": 10}}
+
+    event = {
+        "event_id": "e1",
+        "turn": 5,
+        "type": "reputation_changed",
+        "target_id": LEGIAO,
+        "payload": {"delta": 10, "new_value": 10},
+    }
     assert render_milestone(event, {}) == ""
 
 
 def test_pipeline_reputation_changed_completo():
     from services.event_processor import process_pending_events
+
     state = {
-        "world": {"turn_count": 8}, "world_projection": {}, "event_log": [],
-        "chronicle": [], "quests": [],
-        "pending_world_events": [{"type": "reputation_changed", "target_id": LEGIAO,
-                                  "actor_id": "player",
-                                  "payload": {"delta": 10, "new_value": 10, "reason": "ajudou"},
-                                  "source": "storyteller"}],
+        "world": {"turn_count": 8},
+        "world_projection": {},
+        "event_log": [],
+        "chronicle": [],
+        "quests": [],
+        "pending_world_events": [
+            {
+                "type": "reputation_changed",
+                "target_id": LEGIAO,
+                "actor_id": "player",
+                "payload": {"delta": 10, "new_value": 10, "reason": "ajudou"},
+                "source": "storyteller",
+            }
+        ],
     }
     out = process_pending_events(state)
     assert len(out["event_log"]) == 1
@@ -208,26 +273,45 @@ class _FakeStoryLLM34:
         return self
 
     def invoke(self, _msgs):
-        return self._model(narrative="A Legião nota sua ajuda.", introduced_npcs=[],
-                           faction_impacts=self._impacts)
+        return self._model(
+            narrative="A Legião nota sua ajuda.", introduced_npcs=[], faction_impacts=self._impacts
+        )
 
 
 def test_storyteller_enfileira_reputation_changed(monkeypatch):
     from langchain_core.messages import HumanMessage
 
     import agents.storyteller as stt
+
     fake = _FakeStoryLLM34(impacts=[{"faction_id": LEGIAO, "direction": "ajudou"}])
     monkeypatch.setattr(stt, "get_llm", lambda *a, **k: fake)
     state = {
-        "game_id": "pytest34", "narrative_summary": "", "archivist_last_run": 0,
+        "game_id": "pytest34",
+        "narrative_summary": "",
+        "archivist_last_run": 0,
         "messages": [HumanMessage(content="ajudo os soldados da legião")],
-        "npcs": {}, "quests": [],
-        "factions": [{"id": LEGIAO, "name": "Legião de Ferro", "reputation": 0,
-                      "disposition": "neutro", "defeated": False}],
-        "faction_intel": {}, "player": {"name": "T", "class_name": "Guerreiro"},
+        "npcs": {},
+        "quests": [],
+        "factions": [
+            {
+                "id": LEGIAO,
+                "name": "Legião de Ferro",
+                "reputation": 0,
+                "disposition": "neutro",
+                "defeated": False,
+            }
+        ],
+        "faction_intel": {},
+        "player": {"name": "T", "class_name": "Guerreiro"},
         "campaign_plan": {},
-        "world": {"current_location": "nova_arcadia", "turn_count": 8,
-                  "time_of_day": "Dia", "weather": "Neutro", "danger_level": 1, "quest_plan": []},
+        "world": {
+            "current_location": "nova_arcadia",
+            "turn_count": 8,
+            "time_of_day": "Dia",
+            "weather": "Neutro",
+            "danger_level": 1,
+            "quest_plan": [],
+        },
     }
     out = stt.storyteller_node(state)
     assert "pending_world_events" in out
@@ -242,8 +326,10 @@ def test_storyteller_enfileira_reputation_changed(monkeypatch):
 # Etapa 3 — API (_world_block / _factions_block)
 # ---------------------------------------------------------------------------
 
+
 def test_factions_block_history_so_known():
     import api
+
     event_log = [_rep_event(1, 10, 10, fid=LEGIAO), _rep_event(2, 10, 10, fid=MAO_SOMBRIA)]
     factions = [
         {"id": LEGIAO, "name": "Legião de Ferro", "reputation": 10, "disposition": "neutro"},
@@ -259,9 +345,13 @@ def test_factions_block_history_so_known():
 
 def test_world_block_overlays_shape():
     import api
+
     world = {
-        "current_location": "Nova Arcádia", "current_location_id": NOVA_ARCADIA,
-        "visited": [NOVA_ARCADIA], "turn_count": 10, "danger_level": 1,
+        "current_location": "Nova Arcádia",
+        "current_location_id": NOVA_ARCADIA,
+        "visited": [NOVA_ARCADIA],
+        "turn_count": 10,
+        "danger_level": 1,
         "looming_threat": "algo se aproxima",
         "threat_alerts": [{"region_id": "nova_arcadia", "hint": "Rato da Peste", "turn": 8}],
     }
@@ -276,6 +366,7 @@ def test_world_block_overlays_shape():
 
 def test_save_antigo_overlays_vazios():
     import api
+
     world = {"current_location": "X", "visited": []}  # sem threat_alerts/looming_threat
     block = api._world_block(world, projection=None, event_log=None)
     assert block["map_overlays"] == {"control_changes": [], "threats": [], "looming_threat": ""}
@@ -284,9 +375,13 @@ def test_save_antigo_overlays_vazios():
 
 def test_save_antigo_faction_sem_history():
     import api
+
     out = api._factions_block(
         [{"id": LEGIAO, "name": "Legião de Ferro", "reputation": 0, "disposition": "neutro"}],
-        {LEGIAO: {"known": True}}, turn=1, event_log=None, projection=None,
+        {LEGIAO: {"known": True}},
+        turn=1,
+        event_log=None,
+        projection=None,
     )
     assert out[0]["history"] == []
     assert out[0]["stability_label"] == "estável"

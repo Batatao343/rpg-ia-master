@@ -22,6 +22,7 @@ def _reset_client(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(jev_rollout, "_client", None)
     _SlowClient.built = 0
     import httpx
+
     monkeypatch.setattr(httpx, "Client", _SlowClient)
     yield
 
@@ -79,6 +80,7 @@ def test_build_failure_does_not_break_turn(monkeypatch: pytest.MonkeyPatch) -> N
             raise OSError("ssl store unavailable")
 
     import httpx
+
     monkeypatch.setattr(httpx, "Client", _Broken)
     pending = jev_rollout.begin({}, "ando")
     assert pending is not None
@@ -90,11 +92,14 @@ def test_build_failure_does_not_break_turn(monkeypatch: pytest.MonkeyPatch) -> N
 def test_frozen_import_failure_does_not_break_turn(monkeypatch):
     """A broken/missing frozen policy falls back (begin -> None) instead of raising."""
     from services import jev_rollout
+
     events = []
     monkeypatch.setenv("RPG_JEV_ROUTER_MODE", "shadow")
     monkeypatch.setattr(jev_rollout, "_emit", events.append)
+
     def boom():
         raise ImportError("frozen policy not packaged")
+
     monkeypatch.setattr(jev_rollout, "_frozen", boom)
     assert jev_rollout.begin({"player": {}}, "olho em volta") is None
     assert [e.outcome for e in events][-1:] == ["error"]

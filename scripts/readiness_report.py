@@ -29,27 +29,39 @@ GATES = {
 
 def _git(*args: str) -> str:
     result = subprocess.run(
-        ["git", *args], text=True, capture_output=True, check=False,
+        ["git", *args],
+        text=True,
+        capture_output=True,
+        check=False,
     )
     return result.stdout.strip()[:200]
 
 
-def record_gate(root: Path, gate: str, *, status: str, command: str,
-                evidence: str, metrics: dict[str, Any] | None = None) -> Path:
+def record_gate(
+    root: Path,
+    gate: str,
+    *,
+    status: str,
+    command: str,
+    evidence: str,
+    metrics: dict[str, Any] | None = None,
+) -> Path:
     gate = gate.upper()
     if gate not in GATES:
         raise ValueError(f"gate inválido: {gate}")
     if status not in {"passed", "failed", "skipped"}:
         raise ValueError("status deve ser passed, failed ou skipped")
-    payload = redact({
-        "gate": gate,
-        "name": GATES[gate],
-        "status": status,
-        "command": command,
-        "evidence": evidence,
-        "metrics": metrics or {},
-        "recorded_at": datetime.now(UTC).isoformat(),
-    })
+    payload = redact(
+        {
+            "gate": gate,
+            "name": GATES[gate],
+            "status": status,
+            "command": command,
+            "evidence": evidence,
+            "metrics": metrics or {},
+            "recorded_at": datetime.now(UTC).isoformat(),
+        }
+    )
     root.mkdir(parents=True, exist_ok=True)
     target = root / f"{gate.lower()}.json"
     target.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -87,11 +99,14 @@ def build_report(root: Path, output_dir: Path) -> dict[str, Any]:
     md_path = output_dir / "readiness-local.md"
     json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     lines = [
-        "# Valoria — prontidão local", "",
+        "# Valoria — prontidão local",
+        "",
         f"- Resultado: **{'READY' if ready else 'NOT READY'}**",
         f"- Commit: `{payload['git']['commit']}`",
-        f"- Gerado: {payload['generated_at']}", "",
-        "| Gate | Escopo | Estado | Evidência |", "|---|---|---|---|",
+        f"- Gerado: {payload['generated_at']}",
+        "",
+        "| Gate | Escopo | Estado | Evidência |",
+        "|---|---|---|---|",
     ]
     for gate, row in gates.items():
         evidence = str(row.get("evidence") or "—").replace("|", "\\|").replace("\n", " ")
@@ -115,10 +130,15 @@ def main() -> int:
     build.add_argument("--output-dir", type=Path, default=Path("docs/operacao/readiness"))
     args = parser.parse_args()
     if args.action == "record":
-        print(record_gate(
-            args.root, args.gate, status=args.status,
-            command=args.command, evidence=args.evidence,
-        ))
+        print(
+            record_gate(
+                args.root,
+                args.gate,
+                status=args.status,
+                command=args.command,
+                evidence=args.evidence,
+            )
+        )
         return 0
     report = build_report(args.root, args.output_dir)
     print(json.dumps({"ready_local": report["ready_local"], "pending": report["pending"]}))

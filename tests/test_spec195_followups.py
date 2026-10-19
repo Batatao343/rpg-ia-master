@@ -1,4 +1,5 @@
 """SPEC-195 re-review follow-ups: orphan recovery, void watermark, CLI reference, 2-thread safety."""
+
 from __future__ import annotations
 
 import threading
@@ -31,10 +32,14 @@ def _exhaust(rec, clock, provider_ref_count=1):
 
 # ------------------------------------------------------------------ F1 orphan recovery (memory)
 
-@pytest.mark.parametrize("provider,ref,event", [
-    (GOOGLE, "GPA.9", Event(GOOGLE, "void:GPA.9:5", "voided", "GPA.9", None, None, 5)),
-    (STRIPE, "pi_9", Event(STRIPE, "evt_9", "refund", "pi_9", G, "ch_9", 5)),
-])
+
+@pytest.mark.parametrize(
+    "provider,ref,event",
+    [
+        (GOOGLE, "GPA.9", Event(GOOGLE, "void:GPA.9:5", "voided", "GPA.9", None, None, 5)),
+        (STRIPE, "pi_9", Event(STRIPE, "evt_9", "refund", "pi_9", G, "ch_9", 5)),
+    ],
+)
 def test_orphaned_event_applies_once_the_purchase_is_credited(provider, ref, event):
     clock, owner = [1000.0], uuid4()
     store = MemoryStore(clock=lambda: clock[0])
@@ -52,6 +57,7 @@ def test_orphaned_event_applies_once_the_purchase_is_credited(provider, ref, eve
 
 # ------------------------------------------------------------------ F2 watermark
 
+
 def test_poll_persists_watermark_and_keeps_it_when_truncated():
     calls = []
 
@@ -61,6 +67,7 @@ def test_poll_persists_watermark_and_keeps_it_when_truncated():
         def list_voided_events(self, start_ms=None, end_ms=None, **k):
             calls.append(start_ms)
             return []
+
     store, google = MemoryStore(), Google()
     rec = Reconciler(store, google)
     rec.poll_google_voided()
@@ -79,27 +86,51 @@ def test_google_client_pages_1000_and_reports_truncation():
         if request.url.host == "oauth2.googleapis.com":
             return httpx.Response(200, json={"access_token": "t", "expires_in": 3000})
         n = int(request.url.params.get("token", "0"))
-        return httpx.Response(200, json={
-            "voidedPurchases": [{"orderId": f"GPA.{n}", "voidedTimeMillis": str(n + 1)}],
-            "tokenPagination": {"nextPageToken": str(n + 1)}})
-    client = GooglePlayClient(GooglePlaySettings("com.x.y", {"private_key": "k", "client_email": "e"}),
-                              transport=httpx.MockTransport(handler), clock=lambda: 2_000_000_000)
+        return httpx.Response(
+            200,
+            json={
+                "voidedPurchases": [{"orderId": f"GPA.{n}", "voidedTimeMillis": str(n + 1)}],
+                "tokenPagination": {"nextPageToken": str(n + 1)},
+            },
+        )
+
+    client = GooglePlayClient(
+        GooglePlaySettings("com.x.y", {"private_key": "k", "client_email": "e"}),
+        transport=httpx.MockTransport(handler),
+        clock=lambda: 2_000_000_000,
+    )
     client._assertion = lambda: "jwt"
     assert len(client.list_voided_events(max_pages=3)) == 3 and client.last_poll_complete is False
 
 
 # ------------------------------------------------------------------ F3 CLI
 
+
 def test_cli_rejects_colon_in_reference():
     from scripts import admin_wallet_adjust as cli
+
     parser = cli.build_parser()
-    args = parser.parse_args(["credit", "--owner", str(uuid4()), "--amount-milli", "1", "--actor",
-                              str(uuid4()), "--reason", "r", "--reference", "INC:1"])
+    args = parser.parse_args(
+        [
+            "credit",
+            "--owner",
+            str(uuid4()),
+            "--amount-milli",
+            "1",
+            "--actor",
+            str(uuid4()),
+            "--reason",
+            "r",
+            "--reference",
+            "INC:1",
+        ]
+    )
     with pytest.raises(SystemExit):
         cli.validate(args, parser)
 
 
 # ------------------------------------------------------------------ policy vector V15
+
 
 def test_v15_partial_reversal_returns_paid_money_before_closing_forgiven_debt():
     store, owner = MemoryStore(), uuid4()
@@ -135,7 +166,8 @@ def _gp_verify(lab, owner, order):
     google = FakeGoogle(lab.product, order)
     google.base["account_id"] = obfuscated_account_id(owner.user_id)
     return GooglePlayPurchases(PostgresPurchaseStore(lab.pool), google).verify(
-        owner, lab.product, "tok_" + uuid4().hex)
+        owner, lab.product, "tok_" + uuid4().hex
+    )
 
 
 def _orphan_void(lab, order):
@@ -143,8 +175,11 @@ def _orphan_void(lab, order):
     rec.ingest(Event(GOOGLE, "void:" + order, "voided", order, None, None, 0))
     for _ in range(PARK_MAX_ATTEMPTS):
         with lab.pool.connection() as db:
-            db.execute("update app.purchase_reconciliation_events set next_attempt_at=now() "
-                       "where purchase_ref=%s", (order,))
+            db.execute(
+                "update app.purchase_reconciliation_events set next_attempt_at=now() "
+                "where purchase_ref=%s",
+                (order,),
+            )
         outcome = lab.store.reconcile(GOOGLE, order)
     assert outcome == "orphaned"
     return rec
@@ -176,13 +211,16 @@ def test_pg_google_fulfill_triggers_immediate_reconcile_for_orphaned_void(lab_rb
 @pytest.mark.infra_local
 def test_pg_stripe_orphan_with_credited_purchase_applies_in_later_batch(lab_rb):
     from tests.test_spec194_196_postgres_local import GROSS_CENTS, web_purchase
+
     lab, owner = lab_rb, Principal(uuid4(), "test", "o3")
     ref = web_purchase(lab, owner)
     rec = Reconciler(lab.store)
     rec.ingest(Event(STRIPE, ref + "-1", "refund", ref, GROSS_CENTS, "ch_1", 0))
     with lab.pool.connection() as db:  # the paid-webhook pass failed; attempts ran out earlier
-        db.execute("update app.purchase_reconciliation_events set status='orphaned' where purchase_ref=%s",
-                   (ref,))
+        db.execute(
+            "update app.purchase_reconciliation_events set status='orphaned' where purchase_ref=%s",
+            (ref,),
+        )
     assert (STRIPE, ref) in lab.store.open_refs(1000)
     assert rec.reconcile_batch(1000)["applied"] >= 1
     assert (balance(lab, owner), debt(lab, owner)) == (0, 0)
@@ -203,8 +241,9 @@ def test_pg_concurrent_reconcilers_same_owner_different_refs(lab):
     for o in orders:
         _gp_verify(lab, owner, o)
     spent = SHARD  # one purchase worth spent: clawed + debt must sum to both purchases
-    lab.wallet.adjust_admin(owner, adjustment_id=str(uuid4()), signed_milli=-spent, actor_id=uuid4(),
-                            reason="spent")
+    lab.wallet.adjust_admin(
+        owner, adjustment_id=str(uuid4()), signed_milli=-spent, actor_id=uuid4(), reason="spent"
+    )
     rec = Reconciler(lab.store)
     for o in orders:
         rec.ingest(Event(GOOGLE, "void:" + o, "voided", o, None, None, 0))
@@ -216,6 +255,7 @@ def test_pg_concurrent_reconcilers_same_owner_different_refs(lab):
             assert lab.store.reconcile(GOOGLE, o) == "applied"
         except Exception as exc:  # noqa: BLE001
             errors.append(exc)
+
     threads = [threading.Thread(target=work, args=(o,)) for o in orders]
     [t.start() for t in threads]
     [t.join(timeout=30) for t in threads]
@@ -230,9 +270,15 @@ def test_pg_reservation_release_while_reconcile_in_flight(lab):
     order = "GPA." + uuid4().hex[:12]
     _gp_verify(lab, owner, order)
     fence = uuid4()
-    reservation = lab.wallet.reserve(owner, reference_type="other", reference_id=str(uuid4()),
-                                     pricing_version_id=lab.version, ceiling_milli=100,
-                                     fence_token=fence, at=lab.at)
+    reservation = lab.wallet.reserve(
+        owner,
+        reference_type="other",
+        reference_id=str(uuid4()),
+        pricing_version_id=lab.version,
+        ceiling_milli=100,
+        fence_token=fence,
+        at=lab.at,
+    )
     Reconciler(lab.store).ingest(Event(GOOGLE, "void:" + order, "voided", order, None, None, 0))
     barrier, errors = threading.Barrier(2), []
 
@@ -249,6 +295,7 @@ def test_pg_reservation_release_while_reconcile_in_flight(lab):
             lab.wallet.release_pre_effect(owner, reservation.reservation_id, fence_token=fence)
         except Exception as exc:  # noqa: BLE001
             errors.append(exc)
+
     threads = [threading.Thread(target=reconcile), threading.Thread(target=release)]
     [t.start() for t in threads]
     [t.join(timeout=30) for t in threads]
@@ -262,9 +309,14 @@ def test_orphaned_alert_rule_and_fixture_are_consistent():
     from pathlib import Path
 
     import yaml
-    rules = yaml.safe_load(Path("observability/alerts/reconciliation.yml").read_text(encoding="utf-8"))
+
+    rules = yaml.safe_load(
+        Path("observability/alerts/reconciliation.yml").read_text(encoding="utf-8")
+    )
     rule = rules["groups"][0]["rules"][0]
     assert rule["alert"] == "ReconciliationOrphaned" and rule["for"] == "1h"
     assert 'status="orphaned"' in rule["expr"]
-    fixture = yaml.safe_load(Path("observability/alerts/reconciliation.test.yml").read_text(encoding="utf-8"))
+    fixture = yaml.safe_load(
+        Path("observability/alerts/reconciliation.test.yml").read_text(encoding="utf-8")
+    )
     assert fixture["rule_files"] == ["reconciliation.yml"]

@@ -11,6 +11,7 @@ Equipamento: player["equipment"] = {"weapon": id|None, "armor": id|None,
 
 Convenção: funções retornam cópias (inventário novo), nunca mutam o recebido.
 """
+
 import re
 import unicodedata
 from typing import Dict, List, Optional, Tuple
@@ -73,8 +74,7 @@ def make_entry(id_or_name: str, qty: int = 1) -> dict:
     iid = resolve_item_name(id_or_name)
     if iid:
         return {"id": iid, "qty": max(1, int(qty))}
-    return {"id": UNKNOWN_ID, "qty": max(1, int(qty)),
-            "display_name": str(id_or_name)}
+    return {"id": UNKNOWN_ID, "qty": max(1, int(qty)), "display_name": str(id_or_name)}
 
 
 def add_item(inv: list[dict], id_or_name: str, qty: int = 1) -> list[dict]:
@@ -82,8 +82,7 @@ def add_item(inv: list[dict], id_or_name: str, qty: int = 1) -> list[dict]:
     out = [dict(e) for e in inv or []]
     entry = make_entry(id_or_name, qty)
     for e in out:
-        same = (e.get("id") == entry["id"]
-                and e.get("display_name") == entry.get("display_name"))
+        same = e.get("id") == entry["id"] and e.get("display_name") == entry.get("display_name")
         if same and (is_stackable(entry["id"]) or entry["id"] == UNKNOWN_ID):
             e["qty"] = int(e.get("qty", 1)) + entry["qty"]
             return out
@@ -91,14 +90,16 @@ def add_item(inv: list[dict], id_or_name: str, qty: int = 1) -> list[dict]:
     return out
 
 
-def remove_item(inv: list[dict], item_id: str, qty: int = 1, *,
-                display_name: str | None = None) -> tuple[list[dict], bool]:
+def remove_item(
+    inv: list[dict], item_id: str, qty: int = 1, *, display_name: str | None = None
+) -> tuple[list[dict], bool]:
     """Consome `qty` ATRAVÉS de todas as entradas do mesmo item (não-empilháveis
     vivem em entradas separadas). Soma insuficiente -> (inv original, False), sem
     mutar nada. `display_name` desambigua itens livres (`item_desconhecido`)."""
     qty = max(1, int(qty or 1))
     matches = [
-        i for i, e in enumerate(inv or [])
+        i
+        for i, e in enumerate(inv or [])
         if (e.get("id") == item_id or item_display(e) == item_id)
         and (display_name is None or e.get("display_name") == display_name)
     ]
@@ -223,16 +224,14 @@ def unequip(player: dict, slot: str) -> tuple[dict, str | None]:
 def equipped_items(player: dict) -> list[str]:
     """Ids dos slots preenchidos COM posse no inventário (slot órfão não conta)."""
     inv_ = player.get("inventory") or []
-    return [v for v in (player.get("equipment") or {}).values()
-            if v and has_item(inv_, v)]
+    return [v for v in (player.get("equipment") or {}).values() if v and has_item(inv_, v)]
 
 
 def reconcile_equipment(player: dict) -> tuple[dict, list[str]]:
     """Esvazia slots cujo item não está mais no inventário. Pura (cópia)."""
     p = dict(player)
     eq = dict(p.get("equipment") or {})
-    removed = [slot for slot, v in eq.items()
-               if v and not has_item(p.get("inventory") or [], v)]
+    removed = [slot for slot, v in eq.items() if v and not has_item(p.get("inventory") or [], v)]
     for slot in removed:
         eq[slot] = None
     if "equipment" in p or removed:
@@ -243,8 +242,9 @@ def reconcile_equipment(player: dict) -> tuple[dict, list[str]]:
 # ---------------------------------------------------------------------------
 # Uso em combate (Fase 4.3 R4) — resolução 100% Python
 # ---------------------------------------------------------------------------
-def use_item_in_combat(player: dict, item_ref: str,
-                       target: dict | None = None) -> tuple[dict, list[str]]:
+def use_item_in_combat(
+    player: dict, item_ref: str, target: dict | None = None
+) -> tuple[dict, list[str]]:
     """Wrapper de compatibilidade de `try_use_item` -> (player, logs)."""
     res = try_use_item(player, item_ref, target)
     return res["player"], res["logs"]
@@ -253,14 +253,14 @@ def use_item_in_combat(player: dict, item_ref: str,
 def _vitality_full(p: dict) -> bool:
     if p.get("vitalidade") is not None or isinstance(p.get("virtudes"), dict):
         import gamedata
+
         q = dict(p)
         gamedata.sync_vitality(q)
         return int(q.get("vitalidade", 0) or 0) >= int(q.get("max_vitalidade", 0) or 0)
     return int(p.get("hp", 0) or 0) >= int(p.get("max_hp", p.get("hp", 0)) or 0)
 
 
-def try_use_item(player: dict, item_ref: str, target: dict | None = None,
-                 rng=None) -> dict:
+def try_use_item(player: dict, item_ref: str, target: dict | None = None, rng=None) -> dict:
     """SPEC-227 R8: valida ANTES de consumir. Retorna
     {ok, reason, consumed_turn, logs, player}; recusa deixa player/inventário
     intactos e `consumed_turn=False`. Consome 1 unidade e aplica o efeito mecânico.
@@ -273,8 +273,7 @@ def try_use_item(player: dict, item_ref: str, target: dict | None = None,
     import combat_mechanics as cm
 
     def _refuse(msg: str) -> dict:
-        return {"ok": False, "reason": msg, "consumed_turn": False,
-                "logs": [msg], "player": player}
+        return {"ok": False, "reason": msg, "consumed_turn": False, "logs": [msg], "player": player}
 
     inv = player.get("inventory") or []
     iid = find_in_inventory(inv, item_ref)
@@ -314,20 +313,25 @@ def try_use_item(player: dict, item_ref: str, target: dict | None = None,
         amount, detail = cm.roll_dice_numeric(str(heal_formula))
         if p.get("vitalidade") is not None or isinstance(p.get("virtudes"), dict):
             import gamedata
+
             gamedata.sync_vitality(p)
             cur = int(p.get("vitalidade", 0) or 0)
             ceiling = int(p.get("max_vitalidade", cur + amount) or cur + amount)
             p["vitalidade"] = min(ceiling, cur + amount)
             gamedata.sync_legacy_hp_aliases(p)
-            logs.append(f"{p.get('name','Herói')} usa {item.get('name', iid)}: "
-                        f"recupera {p['vitalidade'] - cur} de Vitalidade "
-                        f"(Vitalidade {p['vitalidade']}) [{detail}]")
+            logs.append(
+                f"{p.get('name', 'Herói')} usa {item.get('name', iid)}: "
+                f"recupera {p['vitalidade'] - cur} de Vitalidade "
+                f"(Vitalidade {p['vitalidade']}) [{detail}]"
+            )
         else:
             cur = int(p.get("hp", 0))
             ceiling = int(p.get("max_hp", cur + amount))
             p["hp"] = min(ceiling, cur + amount)
-            logs.append(f"{p.get('name','Herói')} usa {item.get('name', iid)}: "
-                        f"recupera {p['hp'] - cur} de HP (HP {p['hp']}) [{detail}]")
+            logs.append(
+                f"{p.get('name', 'Herói')} usa {item.get('name', iid)}: "
+                f"recupera {p['hp'] - cur} de HP (HP {p['hp']}) [{detail}]"
+            )
     name = item.get("name", iid)
     for eff in effects:
         kind = eff.get("kind")
@@ -352,8 +356,9 @@ def try_use_item(player: dict, item_ref: str, target: dict | None = None,
                 save_mod += cm.condition_modifiers(target)["save"]
                 roll = cm.random.randint(1, 20) + save_mod
                 if roll >= dc:
-                    logs.append(f"{target.get('name','Alvo')} resiste a {name} "
-                                f"(save {roll} vs CD {dc}).")
+                    logs.append(
+                        f"{target.get('name', 'Alvo')} resiste a {name} (save {roll} vs CD {dc})."
+                    )
                     continue
             logs.append(cm.apply_condition(target, cond))
     return {"ok": True, "reason": "", "consumed_turn": True, "logs": logs, "player": p}

@@ -126,10 +126,18 @@ def visible_controllers(world: dict, projection: dict) -> Dict[str, str]
 
 ```python
 # proposta enfileirada pelo storyteller (Python, não LLM):
-{"type": "reputation_changed", "actor_id": "player", "target_id": fid,
- "payload": {"delta": ev["delta"], "new_value": ev["reputation"],
-             "reason": direction},   # "ajudou" | "prejudicou"
- "source": "storyteller"}
+{
+    "type": "reputation_changed",
+    "actor_id": "player",
+    "target_id": fid,
+    "payload": {
+        "delta": ev["delta"],
+        "new_value": ev["reputation"],
+        "reason": direction,
+    },  # "ajudou" | "prejudicou"
+    "source": "storyteller",
+}
+
 
 def _v_reputation_changed(ev, state, proj):
     f = gr.get_entity(ev.target_id)

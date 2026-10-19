@@ -1,5 +1,6 @@
 """Suíte da spec streaming-turno-sse — fases do grafo via SSE + telemetria de
 LLM em produção. Offline/MockLLM (conftest força RPG_FORCE_MOCK=1)."""
+
 from __future__ import annotations
 
 import copy
@@ -15,8 +16,10 @@ import persistence
 # Etapa 1 — caracterização do LangGraph (app.stream)
 # ---------------------------------------------------------------------------
 
+
 def _initial_state(seed: int) -> dict:
     from playtest.runner import _build_initial_state
+
     random.seed(seed)
     return _build_initial_state("explorador", seed)
 
@@ -24,6 +27,7 @@ def _initial_state(seed: int) -> dict:
 def test_graph_stream_emite_updates_por_no(tmp_path, monkeypatch):
     monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
     from main import app as game_graph
+
     state = _initial_state(1)
     nodes, final = [], None
     for mode, data in game_graph.stream(state, stream_mode=["updates", "values"]):
@@ -42,6 +46,7 @@ def test_graph_stream_emite_updates_por_no(tmp_path, monkeypatch):
 def test_estado_final_do_stream_igual_ao_invoke(tmp_path, monkeypatch):
     monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
     from main import app as game_graph
+
     base = _initial_state(7)
     s_invoke, s_stream = copy.deepcopy(base), copy.deepcopy(base)
 
@@ -63,20 +68,30 @@ def test_estado_final_do_stream_igual_ao_invoke(tmp_path, monkeypatch):
 # Etapas 2/3 — endpoint SSE (TestClient sobre MockLLM)
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture()
 def client(monkeypatch):
     import api
+
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
     api._rate_hits.clear()
     from fastapi.testclient import TestClient
+
     return TestClient(api.app)
 
 
 def _new_game(client) -> str:
-    r = client.post("/game/new", json={
-        "name": "Streamer", "race": "Humano",
-        "class_name": "Sangromante", "region": "Nova Arcádia",
-        "level": 1, "backstory": ""})
+    r = client.post(
+        "/game/new",
+        json={
+            "name": "Streamer",
+            "race": "Humano",
+            "class_name": "Sangromante",
+            "region": "Nova Arcádia",
+            "level": 1,
+            "backstory": "",
+        },
+    )
     assert r.status_code == 200, r.text
     return r.json()["game_id"]
 
@@ -88,17 +103,18 @@ def _read_sse(resp) -> list:
     for line in resp.iter_lines():
         line = line.decode() if isinstance(line, bytes) else line
         if line.startswith("event: "):
-            event_name = line[len("event: "):].strip()
+            event_name = line[len("event: ") :].strip()
         elif line.startswith("data: ") and event_name:
-            events.append((event_name, json.loads(line[len("data: "):])))
+            events.append((event_name, json.loads(line[len("data: ") :])))
             event_name = None
     return events
 
 
 def test_stream_ordem_de_eventos(client):
     gid = _new_game(client)
-    with client.stream("POST", "/game/action/stream",
-                       json={"input_text": "olho ao redor", "game_id": gid}) as r:
+    with client.stream(
+        "POST", "/game/action/stream", json={"input_text": "olho ao redor", "game_id": gid}
+    ) as r:
         assert r.status_code == 200
         assert r.headers["content-type"].startswith("text/event-stream")
         events = _read_sse(r)
@@ -122,8 +138,9 @@ def test_stream_ordem_de_eventos(client):
 
 def test_stream_state_igual_ao_post(client):
     gid = _new_game(client)
-    with client.stream("POST", "/game/action/stream",
-                       json={"input_text": "sigo em frente", "game_id": gid}) as r:
+    with client.stream(
+        "POST", "/game/action/stream", json={"input_text": "sigo em frente", "game_id": gid}
+    ) as r:
         events = _read_sse(r)
     state_evt = next(d for e, d in events if e == "state")
     visual_evt = next(d for e, d in events if e == "visual")
@@ -145,8 +162,9 @@ def test_stream_memorial_devolve_error(client, tmp_path, monkeypatch):
     state = persistence.load_game_state(persistence.save_path(gid))
     state["game_over"] = True
     persistence.save_game_state(state)
-    with client.stream("POST", "/game/action/stream",
-                       json={"input_text": "ataco", "game_id": gid}) as r:
+    with client.stream(
+        "POST", "/game/action/stream", json={"input_text": "ataco", "game_id": gid}
+    ) as r:
         events = _read_sse(r)
     assert events[0][0] == "accepted"
     assert events[-1][0] == "error"
@@ -157,14 +175,14 @@ def test_stream_respeita_rate_limit(monkeypatch):
     from fastapi.testclient import TestClient
 
     import api
+
     monkeypatch.setenv("RPG_RATE_LIMIT", "2")
     api._rate_hits.clear()
     client = TestClient(api.app)
     gid = str(uuid.uuid4())  # save não existe: 404, mas conta na janela
     codes = []
     for _ in range(3):
-        r = client.post("/game/action/stream",
-                        json={"input_text": "x", "game_id": gid})
+        r = client.post("/game/action/stream", json={"input_text": "x", "game_id": gid})
         codes.append(r.status_code)
     api._rate_hits.clear()
     assert codes[-1] == 429
@@ -172,6 +190,7 @@ def test_stream_respeita_rate_limit(monkeypatch):
 
 def test_stream_erro_no_meio_emite_error_sanitizado(client, monkeypatch):
     import api
+
     gid = _new_game(client)
 
     class _Boom:
@@ -182,8 +201,9 @@ def test_stream_erro_no_meio_emite_error_sanitizado(client, monkeypatch):
             raise RuntimeError("nunca chega aqui")
 
     monkeypatch.setattr(api, "game_graph", _Boom())
-    with client.stream("POST", "/game/action/stream",
-                       json={"input_text": "x", "game_id": gid}) as r:
+    with client.stream(
+        "POST", "/game/action/stream", json={"input_text": "x", "game_id": gid}
+    ) as r:
         events = _read_sse(r)
     assert events[-1][0] == "error"
     detail = events[-1][1]["detail"]
@@ -194,8 +214,10 @@ def test_stream_erro_no_meio_emite_error_sanitizado(client, monkeypatch):
 # Etapa 4 — telemetria de LLM em produção (R5)
 # ---------------------------------------------------------------------------
 
+
 def test_log_de_turno_tem_custo_e_providers(client, monkeypatch):
     import api
+
     logs = []
     monkeypatch.setattr(api._turn_logger, "info", lambda msg: logs.append(msg))
     gid = _new_game(client)
@@ -213,6 +235,7 @@ def test_log_de_turno_tem_custo_e_providers(client, monkeypatch):
 
 def test_hook_nao_vaza_entre_turnos():
     import api
+
     token = api._llm_turn_events.set([])
     api._telemetry_hook("groq", "llama-3.3-70b-versatile", "fast", 12, False)
     assert len(api._llm_turn_events.get()) == 1

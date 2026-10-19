@@ -100,28 +100,40 @@ XP_BY_TIER = {"minion": 50, "elite": 200, "boss": 1000}
 XP_PER_BEAT = 150
 XP_PER_QUEST = 200
 
-def xp_for_kills(dead_enemies: list[dict]) -> int: ...
+
+def xp_for_kills(dead_enemies: list[dict]) -> int:
+    ...
     # soma XP_BY_TIER[e.get("type","minion").lower()], desconhecido -> minion
 
-def xp_to_next(level: int) -> int | None: ...
+
+def xp_to_next(level: int) -> int | None:
+    ...
     # limiar do próximo nível na XP_TABLE; None se level >= 20
 
-def grant_xp(player: dict, amount: int) -> tuple[dict, list[dict]]: ...
+
+def grant_xp(player: dict, amount: int) -> tuple[dict, list[dict]]:
+    ...
     # devolve (player_atualizado, level_up_events)
     # processa multi-level; por nível: aplica level_gains da classe,
     # cura o delta de max_hp/max_mana/max_stamina, appenda pending_choices
 
-def player_branch(player: dict) -> str | None: ...
+
+def player_branch(player: dict) -> str | None:
+    ...
     # subclasse derivada: branch da primeira habilidade conhecida com branch
     # (None = ainda no tronco). Sem campo novo de estado.
 
-def eligible_abilities(player: dict) -> list[str]: ...
+
+def eligible_abilities(player: dict) -> list[str]:
+    ...
     # ids elegíveis na árvore (R5 + R5b lock de ramo);
     # usa ABILITIES + class_name/level/known + player_branch
 
-def apply_choice(player: dict, choice_id: str, *,
-                 ability_id: str | None = None, attr: str | None = None
-                 ) -> tuple[dict, str | None]: ...
+
+def apply_choice(
+    player: dict, choice_id: str, *, ability_id: str | None = None, attr: str | None = None
+) -> tuple[dict, str | None]:
+    ...
     # valida e consome UMA pending_choice; devolve (player, erro|None)
     # attr usa chaves curtas (str/dex/...) via combat_mechanics.normalize_attr
 ```

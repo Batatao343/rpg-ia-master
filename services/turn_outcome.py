@@ -1,4 +1,5 @@
 """Canonical end-of-turn outcome and shared player-facing presentation."""
+
 from __future__ import annotations
 
 import hashlib
@@ -16,8 +17,9 @@ _NEGATIVE_ITEM = re.compile(
 )
 
 
-def record_gain(baseline: dict | None, kind: str, amount: int,
-                origin: str | None = None) -> dict | None:
+def record_gain(
+    baseline: dict | None, kind: str, amount: int, origin: str | None = None
+) -> dict | None:
     """SPEC-226 R10: registra um ganho (amount > 0) ou gasto (amount < 0) individual
     de `kind` ('gold'|'xp') no `turn_baseline` do turno, para o guard narrativo
     aceitar o GANHO BRUTO por fonte. PURO: devolve cópia; sem baseline (nó chamado
@@ -51,12 +53,20 @@ def capture_baseline(state: dict) -> dict:
     player = state.get("player") or {}
     return {
         "turn": int((state.get("world") or {}).get("turn_count", 0) or 0),
-        "gold": int(player.get("gold", 0) or 0), "xp": int(player.get("xp", 0) or 0),
-        "level": int(player.get("level", 1) or 1), "inventory": dict(_inventory(player)),
-        "completed_quests": sorted(str(q.get("id") or "") for q in (state.get("quests") or [])
-                                   if isinstance(q, dict) and q.get("status") == "completed"),
-        "event_ids": sorted(str(e.get("event_id") or "") for e in (state.get("event_log") or [])
-                            if isinstance(e, dict) and e.get("event_id")),
+        "gold": int(player.get("gold", 0) or 0),
+        "xp": int(player.get("xp", 0) or 0),
+        "level": int(player.get("level", 1) or 1),
+        "inventory": dict(_inventory(player)),
+        "completed_quests": sorted(
+            str(q.get("id") or "")
+            for q in (state.get("quests") or [])
+            if isinstance(q, dict) and q.get("status") == "completed"
+        ),
+        "event_ids": sorted(
+            str(e.get("event_id") or "")
+            for e in (state.get("event_log") or [])
+            if isinstance(e, dict) and e.get("event_id")
+        ),
     }
 
 
@@ -76,9 +86,12 @@ def strip_receipt(text: str) -> str:
 
 
 def render_player_message(narrative: str, outcome: dict) -> str:
-    gains = (int(outcome.get("gold_delta", 0) or 0) > 0
-             or int(outcome.get("xp_delta", 0) or 0) > 0
-             or bool(outcome.get("items_gained")) or bool(outcome.get("quests_completed")))
+    gains = (
+        int(outcome.get("gold_delta", 0) or 0) > 0
+        or int(outcome.get("xp_delta", 0) or 0) > 0
+        or bool(outcome.get("items_gained"))
+        or bool(outcome.get("quests_completed"))
+    )
     text = str(narrative or "").strip()
     # Reserved receipt blocks are untrusted input, even when emitted by a model.
     # Replace each marker's line; retain unrelated prose on following lines.
@@ -90,8 +103,13 @@ def render_player_message(narrative: str, outcome: dict) -> str:
     return text
 
 
-_ORIGIN_SOURCE = {"combat": "combat", "beat": "story", "quest": "quest",
-                  "loot": "loot", "exploration": "exploration"}
+_ORIGIN_SOURCE = {
+    "combat": "combat",
+    "beat": "story",
+    "quest": "quest",
+    "loot": "loot",
+    "exploration": "exploration",
+}
 
 
 def _source(outcome: dict, origins: list | None = None) -> str:
@@ -117,6 +135,7 @@ def public_outcome(outcome: dict | None) -> dict:
     if not outcome or not outcome.get("receipt_id"):
         return {}
     import inventory as inv
+
     items = outcome.get("items_gained") or {}
     if isinstance(items, dict):
         items = [{"id": k, "qty": v} for k, v in sorted(items.items())]
@@ -124,21 +143,30 @@ def public_outcome(outcome: dict | None) -> dict:
     for it in items:
         if not isinstance(it, dict) or not it.get("id"):
             continue
-        named.append({"id": str(it["id"]), "qty": int(it.get("qty", 1) or 1),
-                      "name": str(it.get("name") or inv.item_display({"id": it["id"]}))})
+        named.append(
+            {
+                "id": str(it["id"]),
+                "qty": int(it.get("qty", 1) or 1),
+                "name": str(it.get("name") or inv.item_display({"id": it["id"]})),
+            }
+        )
     quests = []
     for q in outcome.get("quests_completed") or []:
         if isinstance(q, dict):
-            quests.append({"id": str(q.get("id") or ""), "title": str(q.get("title") or q.get("id") or "")})
+            quests.append(
+                {"id": str(q.get("id") or ""), "title": str(q.get("title") or q.get("id") or "")}
+            )
         else:
             quests.append({"id": str(q), "title": str(q)})
     return {
-        "receipt_id": str(outcome["receipt_id"]), "turn": int(outcome.get("turn", 0) or 0),
+        "receipt_id": str(outcome["receipt_id"]),
+        "turn": int(outcome.get("turn", 0) or 0),
         "xp_delta": int(outcome.get("xp_delta", 0) or 0),
         "level_delta": int(outcome.get("level_delta", 0) or 0),
         "level_after": int(outcome.get("level_after", 0) or 0),
         "gold_delta": int(outcome.get("gold_delta", 0) or 0),
-        "items_gained": named, "quests_completed": quests,
+        "items_gained": named,
+        "quests_completed": quests,
         "source": str(outcome.get("source") or _source(outcome)),
     }
 
@@ -148,15 +176,18 @@ def finalize_outcome(state: dict) -> dict:
     now = capture_baseline(state)
     items = dict(_inventory(state.get("player") or {}) - Counter(baseline.get("inventory") or {}))
     outcome = {
-        "turn": now["turn"], "gold_delta": now["gold"] - int(baseline.get("gold", now["gold"])),
+        "turn": now["turn"],
+        "gold_delta": now["gold"] - int(baseline.get("gold", now["gold"])),
         "xp_delta": now["xp"] - int(baseline.get("xp", now["xp"])),
         "level_delta": now["level"] - int(baseline.get("level", now["level"])),
         "items_gained": {k: v for k, v in items.items() if k and v > 0},
-        "quests_completed": sorted(set(now["completed_quests"]) - set(baseline.get("completed_quests") or [])),
+        "quests_completed": sorted(
+            set(now["completed_quests"]) - set(baseline.get("completed_quests") or [])
+        ),
         "event_ids": sorted(set(now["event_ids"]) - set(baseline.get("event_ids") or [])),
     }
     outcome["receipt_id"] = hashlib.sha256(
-        f"{state.get('game_id','')}|{repr(sorted(outcome.items()))}".encode()
+        f"{state.get('game_id', '')}|{repr(sorted(outcome.items()))}".encode()
     ).hexdigest()[:20]
     outcome["level_after"] = now["level"]
     outcome["source"] = _source(outcome, baseline.get("gain_origins"))
@@ -164,6 +195,7 @@ def finalize_outcome(state: dict) -> dict:
     # SPEC-202 R9: quem respondeu (público). Fora do receipt_id, que permanece
     # derivado só das mudanças mecânicas.
     from services.interlocutor import public_speaker, speaker_for_turn
+
     outcome["speaker"] = public_speaker(speaker_for_turn(state))
     return outcome
 

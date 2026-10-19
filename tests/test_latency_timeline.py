@@ -1,4 +1,5 @@
 """SPEC-200 Etapa 1 — nucleo de timeline e fases exclusivas (puro, sem rede)."""
+
 from __future__ import annotations
 
 import threading
@@ -10,23 +11,28 @@ from observability.latency import FakeClock, TurnPhase, TurnTimeline
 def test_phases_exclusive_no_double_count():
     clock = FakeClock()
     tl = TurnTimeline(clock)
-    clock.advance(1.0)                       # carga do save etc. (sem no ainda)
-    with tl.phase(TurnPhase.CONTEXT):        # contexto aninhado no narrador
+    clock.advance(1.0)  # carga do save etc. (sem no ainda)
+    with tl.phase(TurnPhase.CONTEXT):  # contexto aninhado no narrador
         clock.advance(2.0)
-    clock.advance(3.0)                       # resto do narrador
+    clock.advance(3.0)  # resto do narrador
     tl.node_done("storyteller")
     tl.finish()
     ms = tl.phase_ms()
     assert ms["context"] == 2000
-    assert ms["narrator"] == 4000            # 1.0 + 3.0; contexto NAO conta em dobro
+    assert ms["narrator"] == 4000  # 1.0 + 3.0; contexto NAO conta em dobro
     assert sum(ms.values()) == tl.total_ms() == 6000
 
 
 def test_sum_phases_equals_total():
     clock = FakeClock()
     tl = TurnTimeline(clock)
-    for node, spent in (("turn_prepare", 0.0004), ("dm_router", 0.4113),
-                        ("storyteller", 2.5017), ("archivist", 1.9), ("turn_finalizer", 0.0006)):
+    for node, spent in (
+        ("turn_prepare", 0.0004),
+        ("dm_router", 0.4113),
+        ("storyteller", 2.5017),
+        ("archivist", 1.9),
+        ("turn_finalizer", 0.0006),
+    ):
         clock.advance(spent)
         tl.node_done(node)
     tl.settle()
@@ -41,7 +47,7 @@ def test_sum_phases_equals_total():
 
 def test_noop_when_no_timeline():
     assert lat.current_timeline() is None
-    with lat.phase(TurnPhase.CONTEXT):       # nao levanta
+    with lat.phase(TurnPhase.CONTEXT):  # nao levanta
         pass
     with lat.accumulate("archivist_validate_ms"):
         pass
@@ -104,7 +110,7 @@ def test_client_gone_leaves_nulls():
     clock = FakeClock()
     tl = TurnTimeline(clock, transport="stream")
     clock.advance(0.01)
-    tl.mark("accepted")                      # desconectou antes de qualquer conteudo
+    tl.mark("accepted")  # desconectou antes de qualquer conteudo
     fields = tl.fields()
     assert fields["ack_server_ms"] == 10
     assert fields["ttfmc_server_ms"] is None and fields["ttlt_server_ms"] is None
@@ -115,8 +121,8 @@ def test_attempts_attributed_to_current_phase():
     clock = FakeClock()
     tl = TurnTimeline(clock)
     with tl.phase(TurnPhase.CONTEXT):
-        tl.note_attempt("classify")          # dentro do contexto
-    tl.note_attempt("fast")                  # pendente ate o no terminar
+        tl.note_attempt("classify")  # dentro do contexto
+    tl.note_attempt("fast")  # pendente ate o no terminar
     tl.note_attempt("fast")
     tl.node_done("storyteller")
     assert tl.llm_by_phase() == {"context": 1, "narrator": 2}
@@ -130,6 +136,7 @@ def test_input_size_thresholds():
 
 def test_percentile_nearest_rank_matches_playtest():
     from playtest.telemetry import _percentile
+
     values = [5, 1, 9, 3, 7, 2, 8]
     for pct in (50, 95):
         assert lat.percentile(values, pct) == _percentile(values, pct)

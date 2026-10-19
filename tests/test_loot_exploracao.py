@@ -3,20 +3,24 @@
 Offline/determinístico. Reusa a engine de loot da Fase 6. Ver
 specs/SPEC-057-loot-exploracao.md.
 """
+
 import random
 
 from services import exploration as ex
 
 
 def _world(visited=None, looted=None, danger=3):
-    return {"current_location_id": "pm_profundezas", "danger_level": danger,
-            "visited": visited or [], "looted_locations": looted or [],
-            "turn_count": 5}
+    return {
+        "current_location_id": "pm_profundezas",
+        "danger_level": danger,
+        "visited": visited or [],
+        "looted_locations": looted or [],
+        "turn_count": 5,
+    }
 
 
 def _loc(danger=3, region="pantano_melancolia", treasure=None):
-    d = {"id": "pm_profundezas", "name": "Profundezas", "danger": danger,
-         "region_id": region}
+    d = {"id": "pm_profundezas", "name": "Profundezas", "danger": danger, "region_id": region}
     if treasure is not None:
         d["treasure"] = treasure
     return d
@@ -24,9 +28,10 @@ def _loc(danger=3, region="pantano_melancolia", treasure=None):
 
 # --- R1/R2: achado ambiental na 1ª visita -----------------------------------
 
+
 def test_chance_escala_com_perigo():
     assert ex.discovery_chance(1) < ex.discovery_chance(4)
-    assert ex.discovery_chance(4) <= 0.5   # teto
+    assert ex.discovery_chance(4) <= 0.5  # teto
 
 
 def test_roll_discovery_pode_dar_loot():
@@ -44,6 +49,7 @@ def test_roll_discovery_pode_dar_loot():
 
 def test_roll_discovery_passivo_nunca_unico():
     from inventory import is_unique
+
     for s in range(60):
         d = ex.roll_discovery(_world(), _loc(danger=4), 3, random.Random(s))
         if d and d.get("item_id"):
@@ -58,6 +64,7 @@ def test_rng_de_chegada_e_estavel():
 
 # --- R3/R4: baú curado one-shot ---------------------------------------------
 
+
 def test_bau_curado_concede_uma_vez():
     player = {"inventory": [], "gold": 0, "level": 2}
     world = _world()
@@ -65,8 +72,10 @@ def test_bau_curado_concede_uma_vez():
     note, _ = ex.discover_on_arrival(player, world, loc, 2, random.Random(0))
     assert note and "baú" in note.lower() or "esconderijo" in note.lower()
     assert player["gold"] == 40
-    assert any((i.get("id") if isinstance(i, dict) else i) == "pocao_cura_maior"
-               for i in player["inventory"])
+    assert any(
+        (i.get("id") if isinstance(i, dict) else i) == "pocao_cura_maior"
+        for i in player["inventory"]
+    )
     assert "pm_profundezas" in world["looted_locations"]
     # 2ª chegada → nada (já saqueado)
     p2 = {"inventory": [], "gold": 0, "level": 2}
@@ -88,7 +97,8 @@ def test_unico_escondido_respeita_claim():
     world = _world()
     loc = _loc(treasure={"gold": 0, "items": [unique]})
     _, events = ex.discover_on_arrival(
-        player, world, loc, 2, random.Random(0), projection=projection)
+        player, world, loc, 2, random.Random(0), projection=projection
+    )
     assert player["inventory"] == []
     assert events == []
     assert "pm_profundezas" in world["looted_locations"]
@@ -109,6 +119,7 @@ def test_sem_treasure_none():
 
 
 # --- R5: item entra pelo caminho canônico (sem item fantasma) ----------------
+
 
 def test_item_entra_no_inventario_do_estado():
     player = {"inventory": [], "gold": 0}

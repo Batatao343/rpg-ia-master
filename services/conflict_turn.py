@@ -9,6 +9,7 @@ motores puros (`conflict_scene`, `conflict_resolution`, `conflict_damage`, `card
 uma manobra, um ataque/Carta, uso de objeto ou movimento. O jogador e a IA
 (perfil tático, conflito-08) emitem essa estrutura — não texto livre.
 """
+
 import logging
 import random
 from typing import Dict, List, Optional
@@ -30,14 +31,14 @@ logger = logging.getLogger("rpg.conflict")
 # Declaração estruturada de turno (R4)
 # ==========================================================================
 class TurnStep(BaseModel):
-    kind: str = "pass"                 # attack | card | item | maneuver | object | move | pass
+    kind: str = "pass"  # attack | card | item | maneuver | object | move | pass
     card_id: str | None = None
     item_id: str | None = None
     target_id: str | None = None
-    maneuver: str | None = None     # engajar|desengajar|guardar|esconder|procurar|mover
-    direction: str | None = None    # p/ mover: aproximar|afastar
+    maneuver: str | None = None  # engajar|desengajar|guardar|esconder|procurar|mover
+    direction: str | None = None  # p/ mover: aproximar|afastar
     virtude: str | None = None
-    source: str | None = None       # p/ esconder: fonte plausível
+    source: str | None = None  # p/ esconder: fonte plausível
     object_id: str | None = None
     interaction: str | None = None
     params: dict = Field(default_factory=dict)
@@ -56,33 +57,45 @@ class TurnDeclaration(BaseModel):
 # ==========================================================================
 # Resolução de um turno
 # ==========================================================================
-def resolve_turn(scene: dict, actors_by_id: dict[str, dict], declaration, *,
-                 state: dict | None = None, rng=None,
-                 sides: dict[str, list[str]] | None = None) -> dict:
+def resolve_turn(
+    scene: dict,
+    actors_by_id: dict[str, dict],
+    declaration,
+    *,
+    state: dict | None = None,
+    rng=None,
+    sides: dict[str, list[str]] | None = None,
+) -> dict:
     """Resolve um turno inteiro. `actors_by_id` mapeia participant_id → ficha
     (player/inimigo/aliado). `state` (opcional) leva o jogador p/ a economia de
     Cartas. `sides` (opcional) define hostilidade para validar alvo (SPEC-232
     R5); sem ele, o lado é inferido da ficha. Retorna {logs, attacks, deaths, terminal}."""
     rng = rng or random.Random()
-    decl = declaration if isinstance(declaration, TurnDeclaration) else TurnDeclaration(**declaration)
+    decl = (
+        declaration if isinstance(declaration, TurnDeclaration) else TurnDeclaration(**declaration)
+    )
     actor = actors_by_id.get(decl.actor_id)
     if not actor:
-        return {"ok": False, "logs": [f"Ator '{decl.actor_id}' fora da cena."],
-                "attacks": [], "deaths": [], "terminal": []}
+        return {
+            "ok": False,
+            "logs": [f"Ator '{decl.actor_id}' fora da cena."],
+            "attacks": [],
+            "deaths": [],
+            "terminal": [],
+        }
 
     cs.reset_turn_budget(scene, decl.actor_id)
-    out = {"ok": True, "logs": [], "attacks": [], "deaths": [], "terminal": [],
-           "cards_used": []}
+    out = {"ok": True, "logs": [], "attacks": [], "deaths": [], "terminal": [], "cards_used": []}
     for slot in (decl.pre_acao, decl.acao, decl.pos_acao):
         if slot is None:
             continue
-        _resolve_step(scene, actor, decl.actor_id, actors_by_id, slot, out,
-                      state=state, rng=rng, sides=sides)
+        _resolve_step(
+            scene, actor, decl.actor_id, actors_by_id, slot, out, state=state, rng=rng, sides=sides
+        )
     return out
 
 
-def _resolve_step(scene, actor, actor_id, actors_by_id, step, out, *, state, rng,
-                  sides=None):
+def _resolve_step(scene, actor, actor_id, actors_by_id, step, out, *, state, rng, sides=None):
     kind = str(step.kind or "pass").lower()
     if kind == "pass":
         return
@@ -101,15 +114,16 @@ def _resolve_step(scene, actor, actor_id, actors_by_id, step, out, *, state, rng
             # importa este resolvedor. A função chamada materializa novamente o
             # EffectSpec e valida catálogo/potência/alvo antes de tocar a ficha.
             from services import conflict_orchestrator as orchestrator
-            orchestrator.apply_effect_spec(
-                scene, actors_by_id, r["effect"], out, rng=rng)
+
+            orchestrator.apply_effect_spec(scene, actors_by_id, r["effect"], out, rng=rng)
         return
     if kind == "item":
         _resolve_inventory_item(actor, actors_by_id, step, out)
         return
     if kind in ("attack", "card"):
-        _resolve_attack_step(scene, actor, actor_id, actors_by_id, step, out,
-                             state=state, rng=rng, sides=sides)
+        _resolve_attack_step(
+            scene, actor, actor_id, actors_by_id, step, out, state=state, rng=rng, sides=sides
+        )
 
 
 def _resolve_inventory_item(actor, actors_by_id, step, out):
@@ -117,9 +131,11 @@ def _resolve_inventory_item(actor, actors_by_id, step, out):
     sistema reaproveitado no conflito v2; cura passa a operar sobre Vitalidade
     quando a ficha já está no schema v4."""
     import inventory
+
     target = actors_by_id.get(step.target_id) if step.target_id else None
     updated, logs = inventory.use_item_in_combat(
-        actor, step.item_id or step.object_id or "", target=target)
+        actor, step.item_id or step.object_id or "", target=target
+    )
     actor.clear()
     actor.update(updated)
     out["logs"] += logs
@@ -157,11 +173,23 @@ _DANO_BASE_ARMA = {"leve": 3, "marcial": 4, "versatil": 6, "pesada": 8}
 _DANO_BASICO_DEFAULT = 3
 _DIRECT_DAMAGE_EFFECTS = {"dano", "contra_ataque"}
 _ATTACK_EFFECTS = _DIRECT_DAMAGE_EFFECTS | {
-    "dot", "aplicar_condicao", "empurrao", "taunt", "marca",
+    "dot",
+    "aplicar_condicao",
+    "empurrao",
+    "taunt",
+    "marca",
 }
 _SUPPORT_EFFECTS = {
-    "cura", "estabilizar", "protecao", "reposicionar", "esconder",
-    "purga_condicao", "vantagem", "buff_defesa", "buff_acerto", "buff_dano",
+    "cura",
+    "estabilizar",
+    "protecao",
+    "reposicionar",
+    "esconder",
+    "purga_condicao",
+    "vantagem",
+    "buff_defesa",
+    "buff_acerto",
+    "buff_dano",
     "reduzir_carga_aliado",
 }
 
@@ -223,8 +251,9 @@ def _targetable(target: dict | None) -> bool:
     return str(target.get("status", "ativo")) not in ("morto", "fugiu", "rendido")
 
 
-def _invalid_target_reason(scene, actor, actor_id, actors_by_id, step, *, support,
-                           sides) -> str | None:
+def _invalid_target_reason(
+    scene, actor, actor_id, actors_by_id, step, *, support, sides
+) -> str | None:
     """SPEC-232 R5: valida o alvo ANTES de qualquer custo. Ofensiva: vivo,
     hostil, não o próprio ator, mirável. Suporte: vivo e do mesmo lado (ou o
     próprio ator quando sem alvo)."""
@@ -268,6 +297,7 @@ def _fire_triggered_passive(actor, trigger: str, out) -> list[dict]:
     if not actor.get("is_player"):
         return []
     from services import cards
+
     fired = []
     for pe in cm.triggered_passives(actor, trigger):
         res = cards.use_passive(actor, pe["source_card"])
@@ -278,28 +308,29 @@ def _fire_triggered_passive(actor, trigger: str, out) -> list[dict]:
     return fired
 
 
-def _resolve_attack_step(scene, actor, actor_id, actors_by_id, step, out, *, state, rng,
-                         sides=None):
+def _resolve_attack_step(
+    scene, actor, actor_id, actors_by_id, step, out, *, state, rng, sides=None
+):
     card = None
     effect_kind = "dano"
     ruptura = bool(step.params.get("ruptura"))
     if step.card_id:
         from services import cards
+
         card = cards.effective_card(actor, step.card_id, ruptura=ruptura)
         if not card:
             out["logs"].append(f"Carta '{step.card_id}' desconhecida.")
             return
         if card.get("tipo") != "ativa":
-            out["logs"].append(
-                f"{card.get('name', step.card_id)} não é uma Carta ativa.")
+            out["logs"].append(f"{card.get('name', step.card_id)} não é uma Carta ativa.")
             return
         effect_kind = str((card.get("efeito") or {}).get("kind") or "")
         if effect_kind not in _ATTACK_EFFECTS | _SUPPORT_EFFECTS:
-            out["logs"].append(
-                f"Efeito de Carta sem resolução de Ação: {effect_kind!r}.")
+            out["logs"].append(f"Efeito de Carta sem resolução de Ação: {effect_kind!r}.")
             return
         is_player_actor = bool(
-            actor.get("is_player") or actor.get("player")
+            actor.get("is_player")
+            or actor.get("player")
             or (state is not None and actor is state.get("player"))
         )
         if cm.has_control(actor, "silence"):
@@ -309,17 +340,22 @@ def _resolve_attack_step(scene, actor, actor_id, actors_by_id, step, out, *, sta
             card, step.card_id, effect_kind = None, None, "dano"
     if card is not None:
         support = effect_kind in _SUPPORT_EFFECTS
-        reason = _invalid_target_reason(scene, actor, actor_id, actors_by_id, step,
-                                        support=support, sides=sides)
+        reason = _invalid_target_reason(
+            scene, actor, actor_id, actors_by_id, step, support=support, sides=sides
+        )
         if reason and not is_player_actor:
             # SPEC-275 R3: declaração recusada de INIMIGO não é no-op — cai UMA
             # vez em ataque básico no mesmo alvo (nada cobrado); se também for
             # recusado, o bloco abaixo registra a recusa e o turno passa.
             # Telemetria estruturada; a prosa não recebe o motivo técnico.
-            out.setdefault("enemy_fallbacks", []).append({
-                "event": "enemy_declaration_fallback", "actor_id": actor_id,
-                "card_id": step.card_id, "reason": reason,
-            })
+            out.setdefault("enemy_fallbacks", []).append(
+                {
+                    "event": "enemy_declaration_fallback",
+                    "actor_id": actor_id,
+                    "card_id": step.card_id,
+                    "reason": reason,
+                }
+            )
             logger.info("enemy_declaration_fallback actor=%s", actor_id)
             card, step.card_id, effect_kind = None, None, "dano"
         elif reason:
@@ -327,11 +363,16 @@ def _resolve_attack_step(scene, actor, actor_id, actors_by_id, step, out, *, sta
             out["logs"].append(reason)
             return
         if card is None:
-            res = None          # SPEC-275 R3: caiu em ataque básico
+            res = None  # SPEC-275 R3: caiu em ataque básico
         elif is_player_actor:
-            res = None if state is None else (
-                cards.use_ruptura(state, step.card_id) if ruptura
-                else cards.use_card(state, step.card_id)
+            res = (
+                None
+                if state is None
+                else (
+                    cards.use_ruptura(state, step.card_id)
+                    if ruptura
+                    else cards.use_card(state, step.card_id)
+                )
             )
         else:
             res = cards.use_enemy_card(actor, step.card_id)
@@ -345,23 +386,25 @@ def _resolve_attack_step(scene, actor, actor_id, actors_by_id, step, out, *, sta
                 effect_kind = "dano"
             else:
                 out["logs"].append(res["log"])
-                out["cards_used"].append({
-                    "actor_id": actor_id,
-                    "card_id": step.card_id,
-                    "card": card,
-                    "economy": {
-                        "cost": int(res.get("cost", 0) or 0),
-                        "base_cost": int(res.get("base_cost", res.get("cost", 0)) or 0),
-                        "dependencia_applied": bool(res.get("dependencia_applied")),
-                    },
-                })
+                out["cards_used"].append(
+                    {
+                        "actor_id": actor_id,
+                        "card_id": step.card_id,
+                        "card": card,
+                        "economy": {
+                            "cost": int(res.get("cost", 0) or 0),
+                            "base_cost": int(res.get("base_cost", res.get("cost", 0)) or 0),
+                            "dependencia_applied": bool(res.get("dependencia_applied")),
+                        },
+                    }
+                )
         if card is not None and effect_kind in _SUPPORT_EFFECTS:
-            _resolve_support_card(scene, actor, actor_id, actors_by_id, step,
-                                  card, out)
+            _resolve_support_card(scene, actor, actor_id, actors_by_id, step, card, out)
             return
 
-    reason = _invalid_target_reason(scene, actor, actor_id, actors_by_id, step,
-                                    support=False, sides=sides)
+    reason = _invalid_target_reason(
+        scene, actor, actor_id, actors_by_id, step, support=False, sides=sides
+    )
     if reason:
         out["logs"].append(reason)
         return
@@ -375,31 +418,34 @@ def _resolve_attack_step(scene, actor, actor_id, actors_by_id, step, out, *, sta
     advantage = occ["advantage"]
     advantage += cs.guard_offense_modifier(scene, actor_id)
     advantage += cs.guard_defense_modifier(scene, step.target_id)
-    advantage += cs.consume_tactical_attack_modifier(
-        scene, actor_id, step.target_id)
+    advantage += cs.consume_tactical_attack_modifier(scene, actor_id, step.target_id)
     if cm.has_control(target, "marca"):
-        advantage += 1        # SPEC-232: alvo Marcado é atacado com Vantagem
+        advantage += 1  # SPEC-232: alvo Marcado é atacado com Vantagem
     if _fire_triggered_passive(actor, "on_attack", out):
-        advantage += 1        # passiva `vantagem` (1×frequência, custo próprio)
+        advantage += 1  # passiva `vantagem` (1×frequência, custo próprio)
     directed_region = step.params.get("regiao")
     if directed_region is not None and cd.is_valid_hit_region(target, directed_region):
         # Mirar uma parte específica troca precisão por controle da consequência.
         advantage -= 1
 
     virtue_key = _virtude_key(card, step, actor)
-    effective_virtue = (
-        virtude_value(actor, virtue_key)
-        + int(actor.get("_env_attack_mod", 0) or 0)
+    effective_virtue = virtude_value(actor, virtue_key) + int(actor.get("_env_attack_mod", 0) or 0)
+    atk = resolve_attack(
+        actor,
+        target,
+        virtude_key=virtue_key,
+        virtude_value_override=effective_virtue,
+        advantage=advantage,
+        ruptura=ruptura,
+        rng=rng,
     )
-    atk = resolve_attack(actor, target, virtude_key=virtue_key,
-                         virtude_value_override=effective_virtue,
-                         advantage=advantage, ruptura=ruptura, rng=rng)
     atk["actor_id"] = actor_id
     atk["target_id"] = step.target_id
     out["attacks"].append(atk)
     out["logs"].append(
         f"{actor.get('name', actor_id)} → {target.get('name', step.target_id)}: "
-        f"{atk['resultado']} (total {atk['total']} vs Esquiva {atk['esquiva_alvo']}).")
+        f"{atk['resultado']} (total {atk['total']} vs Esquiva {atk['esquiva_alvo']})."
+    )
 
     if atk["acerto"]:
         positions = scene.get("positions", {})
@@ -412,28 +458,36 @@ def _resolve_attack_step(scene, actor, actor_id, actors_by_id, step, out, *, sta
         if card is None or effect_kind in _DIRECT_DAMAGE_EFFECTS:
             dmg_base, dtype = _damage_from(card, actor, step)
             if actor_id == "player" or actor.get("is_player"):
-                dmg_base += cm.early_game_damage_bonus(
-                    int(actor.get("level", 1) or 1))
+                dmg_base += cm.early_game_damage_bonus(int(actor.get("level", 1) or 1))
             # SPEC-232 R1/R2: `damage` de condições e passivas estáticas.
-            dmg_base = max(0, dmg_base + int(cm.combat_modifiers(actor).get("damage", 0))
-                           + cm.damage_type_bonus(actor, dtype))
-            dmg_base += sum(int(pe.get("value", 0) or 0) for pe in on_hit
-                            if pe.get("kind") == "dano")
+            dmg_base = max(
+                0,
+                dmg_base
+                + int(cm.combat_modifiers(actor).get("damage", 0))
+                + cm.damage_type_bonus(actor, dtype),
+            )
+            dmg_base += sum(
+                int(pe.get("value", 0) or 0) for pe in on_hit if pe.get("kind") == "dano"
+            )
             dres = cd.resolve_damage_and_wounds(
-                target, damage_base=dmg_base, damage_type=dtype,
+                target,
+                damage_base=dmg_base,
+                damage_type=dtype,
                 crit_mult=atk["efeito_principal_multiplicador"],
-                directed_region=directed_region, rng=rng)
+                directed_region=directed_region,
+                rng=rng,
+            )
             atk["regiao"] = dres["regiao"]
             atk["dano_final"] = int(dres.get("dano_final", 0) or 0)
             out["logs"].append("; ".join(dres["log"]))
             _check_death(target, step.target_id, out)
         else:
-            _apply_attack_card_effect(scene, actor, actor_id, target,
-                                      step.target_id, card, out)
+            _apply_attack_card_effect(scene, actor, actor_id, target, step.target_id, card, out)
         for pe in on_hit:
             if pe.get("kind") == "aplicar_condicao":
-                cond = cm.parse_condition(str(pe.get("condicao") or "exposto"),
-                                          source=pe.get("source_card", ""))
+                cond = cm.parse_condition(
+                    str(pe.get("condicao") or "exposto"), source=pe.get("source_card", "")
+                )
                 cond["duration"] = max(1, int(pe.get("duration", 1) or 1))
                 out["logs"].append(cm.apply_condition(target, cond))
 
@@ -459,10 +513,12 @@ def _resolve_support_card(scene, actor, actor_id, actors_by_id, step, card, out)
         max_v = int(target.get("max_vitalidade", before) or before)
         target["vitalidade"] = min(max_v, before + amount)
         import gamedata
+
         gamedata.sync_legacy_hp_aliases(target)
         out["logs"].append(
             f"{target.get('name', step.target_id or actor_id)} recupera "
-            f"{target['vitalidade'] - before} Vitalidade com {name}.")
+            f"{target['vitalidade'] - before} Vitalidade com {name}."
+        )
     elif kind == "estabilizar":
         if target.get("estado_terminal"):
             target["estado_terminal"] = False
@@ -482,15 +538,19 @@ def _resolve_support_card(scene, actor, actor_id, actors_by_id, step, card, out)
         conditions = target.setdefault("active_conditions", [])
         # SPEC-232: purga remove a primeira condição NOCIVA (DoT, controle ou
         # delta negativo) — antes tirava a primeira da lista, inclusive um buff.
-        harmful = [c for c in conditions
-                   if int(c.get("dot", 0) or 0) > 0 or c.get("control")
-                   or int(c.get("delta", 0) or 0) < 0]
+        harmful = [
+            c
+            for c in conditions
+            if int(c.get("dot", 0) or 0) > 0 or c.get("control") or int(c.get("delta", 0) or 0) < 0
+        ]
         removed = harmful[0] if harmful else None
         if removed is not None:
             conditions.remove(removed)
         out["logs"].append(
             f"{name} remove {removed.get('name', 'uma condição')}."
-            if removed else f"{name}: nenhuma condição para remover.")
+            if removed
+            else f"{name}: nenhuma condição para remover."
+        )
     elif kind == "reduzir_carga_aliado":
         _ok, log = cm.reduce_ally_abyss(actor, target, amount)
         out["logs"].append(log)
@@ -503,12 +563,19 @@ def _resolve_support_card(scene, actor, actor_id, actors_by_id, step, card, out)
         out["logs"].append(result.get("log") or result.get("error", ""))
     else:
         stat = {
-            "protecao": "protection", "vantagem": "advantage",
-            "buff_defesa": "ac", "buff_acerto": "attack", "buff_dano": "damage",
+            "protecao": "protection",
+            "vantagem": "advantage",
+            "buff_defesa": "ac",
+            "buff_acerto": "attack",
+            "buff_dano": "damage",
         }.get(kind, kind)
         condition = {
-            "name": name, "dot": 0, "duration": duration,
-            "source": step.card_id, "stat": stat, "delta": amount,
+            "name": name,
+            "dot": 0,
+            "duration": duration,
+            "source": step.card_id,
+            "stat": stat,
+            "delta": amount,
         }
         out["logs"].append(cm.apply_condition(target, condition))
 
@@ -533,10 +600,17 @@ def _apply_attack_card_effect(scene, actor, actor_id, target, target_id, card, o
     if kind == "dot":
         # SPEC-232 R2: `dot` (buff_dot) do aplicador soma à potência do DoT.
         dot = max(0, amount + int(cm.combat_modifiers(actor).get("dot", 0) or 0))
-        out["logs"].append(cm.apply_condition(target, {
-            "name": name, "dot": dot, "duration": duration,
-            "source": card.get("id", name),
-        }))
+        out["logs"].append(
+            cm.apply_condition(
+                target,
+                {
+                    "name": name,
+                    "dot": dot,
+                    "duration": duration,
+                    "source": card.get("id", name),
+                },
+            )
+        )
     elif kind == "aplicar_condicao":
         raw = str(effect.get("condicao") or name)
         cond = cm.parse_condition(raw, source=card.get("id", name))
@@ -546,11 +620,20 @@ def _apply_attack_card_effect(scene, actor, actor_id, target, target_id, card, o
         result = cs.move_distance(scene, target_id, "afastar")
         out["logs"].append(result.get("log") or result.get("error", ""))
     elif kind in ("taunt", "marca"):
-        out["logs"].append(cm.apply_condition(target, {
-            "name": name, "dot": 0, "duration": duration,
-            "source": card.get("id", name), "control": kind,
-            "source_actor_id": actor_id, "delta": amount,
-        }))
+        out["logs"].append(
+            cm.apply_condition(
+                target,
+                {
+                    "name": name,
+                    "dot": 0,
+                    "duration": duration,
+                    "source": card.get("id", name),
+                    "control": kind,
+                    "source_actor_id": actor_id,
+                    "delta": amount,
+                },
+            )
+        )
 
 
 def _check_death(target, target_id, out):
@@ -561,5 +644,4 @@ def _check_death(target, target_id, out):
         death_flow.trigger_last_stand(target)
         if target_id not in out["terminal"]:
             out["terminal"].append(target_id)
-        out["logs"].append(
-            f"{target.get('name', target_id)} prepara sua Última Ação.")
+        out["logs"].append(f"{target.get('name', target_id)} prepara sua Última Ação.")

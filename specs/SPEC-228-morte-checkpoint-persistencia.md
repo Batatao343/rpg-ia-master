@@ -116,8 +116,8 @@ ao reload; perfil legacy serializa por jogo real.
 class Continuity(TypedDict, total=False):
     last_checkpoint_turn: int | None
     checkpoint_deferred: bool
-    initial_snapshot_ref: str            # path/ident do checkpoint inicial
-    synthetic_from_turn: int | None      # R4: checkpoint inicial sintético
+    initial_snapshot_ref: str  # path/ident do checkpoint inicial
+    synthetic_from_turn: int | None  # R4: checkpoint inicial sintético
     timeline_epoch: int
 ```
 

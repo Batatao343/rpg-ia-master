@@ -9,6 +9,7 @@ NUNCA de argumento de linha de comando (apareceria no historico do shell e na li
 Recusa rodar sem o segredo: o fallback publico de ``pseudonym()`` geraria referencias que nao
 batem com as de producao.
 """
+
 from __future__ import annotations
 
 import os
@@ -38,8 +39,10 @@ def load_secret(argv: list[str], env: dict[str, str]) -> str | None:
 def main(argv: list[str], env: dict[str, str] | None = None) -> int:
     env = dict(os.environ if env is None else env)
     if any(arg.startswith("--secret") for arg in argv):
-        print("recusado: o segredo nao pode ir por argumento; use RPG_TELEMETRY_SECRET, .env ou --stdin.",
-              file=sys.stderr)
+        print(
+            "recusado: o segredo nao pode ir por argumento; use RPG_TELEMETRY_SECRET, .env ou --stdin.",
+            file=sys.stderr,
+        )
         return 2
     args = [a for a in argv if not a.startswith("--")]
     if len(args) != 2 or args[0] not in FIELDS:
@@ -47,13 +50,17 @@ def main(argv: list[str], env: dict[str, str] | None = None) -> int:
         return 2
     secret = load_secret(argv, env)
     if not secret or len(secret) < 16:
-        print("recusado: RPG_TELEMETRY_SECRET ausente ou curto (use o segredo do ambiente alvo).", file=sys.stderr)
+        print(
+            "recusado: RPG_TELEMETRY_SECRET ausente ou curto (use o segredo do ambiente alvo).",
+            file=sys.stderr,
+        )
         return 3
     sys.path.insert(0, str(ROOT))
     from observability.telemetry import pseudonym
+
     raw = args[1].strip()
     try:
-        raw = str(uuid.UUID(raw))       # mesma forma canonica usada pelo servidor
+        raw = str(uuid.UUID(raw))  # mesma forma canonica usada pelo servidor
     except ValueError:
         pass
     print(f"{FIELDS[args[0]]}={pseudonym(raw, secret=secret)}")

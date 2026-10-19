@@ -1,4 +1,5 @@
 """SPEC-225 R7: scripts de ops recebem DSN por variável de ambiente, não por argv."""
+
 from pathlib import Path
 
 import pytest
@@ -7,13 +8,19 @@ from services.dsn_cli import add_dsn_arguments, resolve_dsn
 
 ROOT = Path(__file__).resolve().parents[1]
 OPS_SCRIPTS = [
-    "scripts/export_game_data.py", "scripts/migrate_file_saves.py", "scripts/recover_operations.py",
-    "scripts/chaos_test.py", "scripts/load_test.py", "scripts/verify_restore.py", "scripts/export_game_audit.py",
+    "scripts/export_game_data.py",
+    "scripts/migrate_file_saves.py",
+    "scripts/recover_operations.py",
+    "scripts/chaos_test.py",
+    "scripts/load_test.py",
+    "scripts/verify_restore.py",
+    "scripts/export_game_audit.py",
 ]
 
 
 def _parser():
     import argparse
+
     parser = argparse.ArgumentParser()
     add_dsn_arguments(parser)
     return parser
@@ -45,7 +52,9 @@ def test_missing_env_uses_local_default_when_given(monkeypatch):
     monkeypatch.delenv("DATABASE_URL", raising=False)
     parser = _parser()
     args = parser.parse_args([])
-    assert resolve_dsn(parser, args, default_dsn="postgresql://postgres:postgres@127.0.0.1:55322/postgres").endswith("55322/postgres")
+    assert resolve_dsn(
+        parser, args, default_dsn="postgresql://postgres:postgres@127.0.0.1:55322/postgres"
+    ).endswith("55322/postgres")
 
 
 def test_literal_dsn_in_argv_is_refused_by_default(monkeypatch):

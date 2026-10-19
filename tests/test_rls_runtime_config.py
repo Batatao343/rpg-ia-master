@@ -1,4 +1,5 @@
 """SPEC-224 (offline): credenciais separadas, pool de request x sistema e inventario de uso do pool."""
+
 from __future__ import annotations
 
 import ast
@@ -14,10 +15,14 @@ from tests.test_hosted_supabase_contract import hosted_env
 
 ROOT = Path(__file__).resolve().parents[1]
 
-REQUEST = ("postgresql://rpg_runtime.projectref:RT_SENTINEL@aws-0-us-east-1.pooler.supabase.com:6543/"
-           "postgres?sslmode=require")
-ADMIN = ("postgresql://rpg_admin.projectref:AD_SENTINEL@aws-0-us-east-1.pooler.supabase.com:6543/"
-         "postgres?sslmode=require")
+REQUEST = (
+    "postgresql://rpg_runtime.projectref:RT_SENTINEL@aws-0-us-east-1.pooler.supabase.com:6543/"
+    "postgres?sslmode=require"
+)
+ADMIN = (
+    "postgresql://rpg_admin.projectref:AD_SENTINEL@aws-0-us-east-1.pooler.supabase.com:6543/"
+    "postgres?sslmode=require"
+)
 
 
 def _env(**over):
@@ -32,24 +37,43 @@ def test_hosted_accepts_distinct_runtime_and_admin_credentials():
     assert "SENTINEL" not in repr(config)
 
 
-@pytest.mark.parametrize("over, fragment", [
-    ({"RPG_ADMIN_DATABASE_URL": None}, "RPG_ADMIN_DATABASE_URL"),
-    ({"RPG_ADMIN_DATABASE_URL": REQUEST}, "diferente"),
-    ({"DATABASE_URL": REQUEST.replace("rpg_runtime", "postgres")}, "postgres"),
-    ({"RPG_ADMIN_DATABASE_URL": ADMIN.replace("projectref", "otherref")}, "projetos diferentes"),
-    # Astra: credenciais trocadas / roles de plataforma tambem falham no boot
-    ({"DATABASE_URL": ADMIN, "RPG_ADMIN_DATABASE_URL": REQUEST}, "role de sistema"),
-    ({"DATABASE_URL": REQUEST.replace("rpg_runtime", "supabase_storage_admin")}, "role de sistema"),
-    ({"DATABASE_URL": REQUEST.replace("rpg_runtime", "authenticator")}, "role de sistema"),
-    ({"RPG_ADMIN_DATABASE_URL": ADMIN.replace("rpg_admin", "rpg_runtime").replace("AD_", "X_")}, "diferente"),
-])
+@pytest.mark.parametrize(
+    "over, fragment",
+    [
+        ({"RPG_ADMIN_DATABASE_URL": None}, "RPG_ADMIN_DATABASE_URL"),
+        ({"RPG_ADMIN_DATABASE_URL": REQUEST}, "diferente"),
+        ({"DATABASE_URL": REQUEST.replace("rpg_runtime", "postgres")}, "postgres"),
+        (
+            {"RPG_ADMIN_DATABASE_URL": ADMIN.replace("projectref", "otherref")},
+            "projetos diferentes",
+        ),
+        # Astra: credenciais trocadas / roles de plataforma tambem falham no boot
+        ({"DATABASE_URL": ADMIN, "RPG_ADMIN_DATABASE_URL": REQUEST}, "role de sistema"),
+        (
+            {"DATABASE_URL": REQUEST.replace("rpg_runtime", "supabase_storage_admin")},
+            "role de sistema",
+        ),
+        ({"DATABASE_URL": REQUEST.replace("rpg_runtime", "authenticator")}, "role de sistema"),
+        (
+            {
+                "RPG_ADMIN_DATABASE_URL": ADMIN.replace("rpg_admin", "rpg_runtime").replace(
+                    "AD_", "X_"
+                )
+            },
+            "diferente",
+        ),
+    ],
+)
 def test_runtime_requires_distinct_dsns_in_hosted(over, fragment):
     with pytest.raises(ValueError, match=fragment):
         RuntimeConfig.from_env(_env(**over))
 
 
 def test_request_rls_off_is_the_documented_rollback_to_the_single_dsn():
-    legacy_style = {**hosted_env(), "RPG_REQUEST_RLS": "off"}  # DATABASE_URL = postgres.<ref>, sem admin
+    legacy_style = {
+        **hosted_env(),
+        "RPG_REQUEST_RLS": "off",
+    }  # DATABASE_URL = postgres.<ref>, sem admin
     legacy_style.pop("RPG_ADMIN_DATABASE_URL")
     legacy_style["DATABASE_URL"] = REQUEST.replace("rpg_runtime", "postgres")
     config = RuntimeConfig.from_env(legacy_style)
@@ -57,7 +81,9 @@ def test_request_rls_off_is_the_documented_rollback_to_the_single_dsn():
 
 
 def test_local_keeps_a_single_dsn_by_default_with_role_switch_on():
-    local = RuntimeConfig.from_env({"RPG_RUNTIME_PROFILE": "local", "DATABASE_URL": "postgresql://localhost/postgres"})
+    local = RuntimeConfig.from_env(
+        {"RPG_RUNTIME_PROFILE": "local", "DATABASE_URL": "postgresql://localhost/postgres"}
+    )
     assert local.request_rls is True and local.admin_database_url == ""
 
 
@@ -148,21 +174,37 @@ def test_admin_connection_without_admin_pool_uses_same_pool():
 # --- inventario de uso do pool (R5): quem e request e quem e sistema -------------------------
 # Modulos cujo acesso e SEMPRE de sistema: nenhuma chamada `.connection()` direta e permitida.
 SYSTEM_MODULES = [
-    "infrastructure/account_lifecycle.py", "infrastructure/account_read_model.py",
-    "infrastructure/audit_source.py", "infrastructure/finops_reader.py",
-    "infrastructure/google_play_payments.py", "infrastructure/kill_switch_store.py",
-    "infrastructure/reconciliation.py", "infrastructure/speech_finance.py",
-    "infrastructure/stripe_payments.py", "infrastructure/supabase_blob.py",
-    "infrastructure/supabase_identity.py", "infrastructure/usage_events.py",
-    "infrastructure/wallet.py", "services/dynamic_art.py", "services/image_quotes.py",
-    "services/operation_recovery.py", "services/retention.py", "services/wallet_recovery.py",
-    "workers/blob_purge_jobs.py", "workers/embedding_jobs.py", "workers/projection_jobs.py",
+    "infrastructure/account_lifecycle.py",
+    "infrastructure/account_read_model.py",
+    "infrastructure/audit_source.py",
+    "infrastructure/finops_reader.py",
+    "infrastructure/google_play_payments.py",
+    "infrastructure/kill_switch_store.py",
+    "infrastructure/reconciliation.py",
+    "infrastructure/speech_finance.py",
+    "infrastructure/stripe_payments.py",
+    "infrastructure/supabase_blob.py",
+    "infrastructure/supabase_identity.py",
+    "infrastructure/usage_events.py",
+    "infrastructure/wallet.py",
+    "services/dynamic_art.py",
+    "services/image_quotes.py",
+    "services/operation_recovery.py",
+    "services/retention.py",
+    "services/wallet_recovery.py",
+    "workers/blob_purge_jobs.py",
+    "workers/embedding_jobs.py",
+    "workers/projection_jobs.py",
 ]
 # Modulos de request: usam `.connection()` (escopado ao owner); deve ser deliberado.
 REQUEST_MODULES = [
-    "infrastructure/postgres.py", "infrastructure/postgres_turns.py", "infrastructure/postgres_catalog.py",
-    "infrastructure/pgvector_memory.py", "infrastructure/postgres_jobs.py",
-    "services/chronicle_repository.py", "services/game_transfer.py",
+    "infrastructure/postgres.py",
+    "infrastructure/postgres_turns.py",
+    "infrastructure/postgres_catalog.py",
+    "infrastructure/pgvector_memory.py",
+    "infrastructure/postgres_jobs.py",
+    "services/chronicle_repository.py",
+    "services/game_transfer.py",
 ]
 
 
@@ -170,8 +212,12 @@ def _direct_connection_calls(path: Path) -> list[tuple[int, str]]:
     tree = ast.parse(path.read_text(encoding="utf-8"))
     out = []
     for node in ast.walk(tree):
-        if (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
-                and node.func.attr == "connection" and not node.args):
+        if (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and node.func.attr == "connection"
+            and not node.args
+        ):
             out.append((node.lineno, ast.unparse(node.func)))
     return out
 

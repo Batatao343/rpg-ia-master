@@ -1,4 +1,5 @@
 """SPEC-227 — integridade de economia/inventário (venda, craft, equipamento, únicos)."""
+
 import copy
 import random
 
@@ -8,18 +9,31 @@ import combat_mechanics as cm
 import inventory as inv
 from services import economy as eco
 
-LOC = "na_anel_dourado"          # mercado_anel_dourado
+LOC = "na_anel_dourado"  # mercado_anel_dourado
 UNIQ = "art_adaga_vidro_dragao"
 
 
 def _state(gold=100, inventory=None, equipment=None, loc=LOC, **p):
-    player = {"name": "T", "gold": gold, "inventory": inventory or [],
-              "equipment": equipment or {"weapon": None, "armor": None, "accessory": None},
-              "hp": 30, "max_hp": 30, **p}
-    return {"world": {"turn_count": 1, "current_location_id": loc,
-                      "world_clock": {"day": 1, "period": "Manhã"}},
-            "world_projection": {}, "event_log": [], "pending_world_events": [],
-            "player": player}
+    player = {
+        "name": "T",
+        "gold": gold,
+        "inventory": inventory or [],
+        "equipment": equipment or {"weapon": None, "armor": None, "accessory": None},
+        "hp": 30,
+        "max_hp": 30,
+        **p,
+    }
+    return {
+        "world": {
+            "turn_count": 1,
+            "current_location_id": loc,
+            "world_clock": {"day": 1, "period": "Manhã"},
+        },
+        "world_projection": {},
+        "event_log": [],
+        "pending_world_events": [],
+        "player": player,
+    }
 
 
 def test_remove_item_consumes_across_entries():
@@ -55,8 +69,10 @@ def test_sell_without_merchant_refused():
 
 
 def test_sold_item_is_unequipped():
-    st = _state(inventory=[{"id": "adaga_ferro", "qty": 1}],
-                equipment={"weapon": "adaga_ferro", "armor": None, "accessory": None})
+    st = _state(
+        inventory=[{"id": "adaga_ferro", "qty": 1}],
+        equipment={"weapon": "adaga_ferro", "armor": None, "accessory": None},
+    )
     out = eco.execute_trade(st, "sell", "adaga_ferro", 1)
     assert out["ok"]
     assert out["player"]["equipment"]["weapon"] is None
@@ -64,8 +80,14 @@ def test_sold_item_is_unequipped():
 
 
 def test_combat_ignores_slot_without_possession():
-    p = {"name": "T", "class_name": "Sangromante", "level": 1, "inventory": [],
-         "virtudes": {}, "equipment": {"weapon": UNIQ, "armor": None, "accessory": None}}
+    p = {
+        "name": "T",
+        "class_name": "Sangromante",
+        "level": 1,
+        "inventory": [],
+        "virtudes": {},
+        "equipment": {"weapon": UNIQ, "armor": None, "accessory": None},
+    }
     assert cm.equipped_ids(p) == []
     p["inventory"] = [{"id": UNIQ, "qty": 1}]
     assert cm.equipped_ids(p) == [UNIQ]
@@ -84,8 +106,10 @@ def test_restock_keeps_unique_held_by_merchant():
 
 
 def test_sell_free_item_removes_correct_entry():
-    items = [{"id": inv.UNKNOWN_ID, "qty": 1, "display_name": "Amuleto da Avó"},
-             {"id": inv.UNKNOWN_ID, "qty": 1, "display_name": "Pedra Lisa"}]
+    items = [
+        {"id": inv.UNKNOWN_ID, "qty": 1, "display_name": "Amuleto da Avó"},
+        {"id": inv.UNKNOWN_ID, "qty": 1, "display_name": "Pedra Lisa"},
+    ]
     ent = inv.find_entry_in_inventory(items, "Pedra Lisa")
     assert ent["display_name"] == "Pedra Lisa"
     out, ok = inv.remove_item(items, ent["id"], 1, display_name=ent["display_name"])
@@ -96,8 +120,14 @@ def test_sell_free_item_removes_correct_entry():
 
 
 def test_potion_full_hp_not_consumed():
-    p = {"name": "T", "hp": 30, "max_hp": 30, "inventory": inv.add_item([], "pocao_cura", 1),
-         "equipment": {}, "active_conditions": []}
+    p = {
+        "name": "T",
+        "hp": 30,
+        "max_hp": 30,
+        "inventory": inv.add_item([], "pocao_cura", 1),
+        "equipment": {},
+        "active_conditions": [],
+    }
     out, logs = inv.use_item_in_combat(p, "pocao_cura")
     assert inv.get_qty(out["inventory"], "pocao_cura") == 1
     res = inv.try_use_item(p, "pocao_cura")
@@ -106,8 +136,13 @@ def test_potion_full_hp_not_consumed():
 
 
 def test_hostile_consumable_without_target_not_consumed():
-    p = {"name": "T", "hp": 10, "max_hp": 30,
-         "inventory": inv.add_item([], "bomba_de_trovao", 1), "active_conditions": []}
+    p = {
+        "name": "T",
+        "hp": 10,
+        "max_hp": 30,
+        "inventory": inv.add_item([], "bomba_de_trovao", 1),
+        "active_conditions": [],
+    }
     res = inv.try_use_item(p, "bomba_de_trovao", None)
     assert not res["ok"]
     assert inv.get_qty(res["player"]["inventory"], "bomba_de_trovao") == 1
@@ -117,9 +152,17 @@ def test_create_level_20_respects_entropy_cap():
     import progression
     from character_creator import create_player_character
     from gamedata import CLASSES
+
     sheet = create_player_character(
-        {"name": "A", "class_name": "Devoto do Abismo", "race": "Humano",
-         "region": "Nova Arcádia", "level": 20}, use_llm_flavor=False)
+        {
+            "name": "A",
+            "class_name": "Devoto do Abismo",
+            "race": "Humano",
+            "region": "Nova Arcádia",
+            "level": 20,
+        },
+        use_llm_flavor=False,
+    )
     cap = CLASSES["Devoto do Abismo"]["late_entropy_curve"]["cap"]
     assert sheet["level"] == 20
     assert sheet["max_entropy"] == cap
@@ -158,9 +201,16 @@ def test_gold_never_negative_property():
 
 def test_load_reconciles_orphan_equipment(tmp_path):
     import persistence
-    raw = {"game_id": "g", "player": {
-        "name": "T", "gold": 7, "inventory": [],
-        "equipment": {"weapon": "adaga_ferro", "armor": None, "accessory": None}}}
+
+    raw = {
+        "game_id": "g",
+        "player": {
+            "name": "T",
+            "gold": 7,
+            "inventory": [],
+            "equipment": {"weapon": "adaga_ferro", "armor": None, "accessory": None},
+        },
+    }
     state = persistence._raw_to_state(raw)
     assert state["player"]["equipment"]["weapon"] is None
     assert state["player"]["gold"] == 7
@@ -174,24 +224,48 @@ def test_refused_item_does_not_spend_round():
     from services import conflict_orchestrator as orch
     from services import conflict_scene as cs
     from services import conflict_turn as ct
+
     player = orch.ensure_combat_sheet(
-        {"id": "player", "name": "H", "is_player": True, "class_name": "Sangromante",
-         "virtudes": {"forca": 4, "agilidade": 3, "corpo": 3, "mente": 1, "carisma": 1},
-         "attack_formula": "2d6", "entropy": 10, "max_entropy": 10, "abyss_charge": 0,
-         "inventory": inv.add_item([], "pocao_cura", 1)}, is_player=True)
-    gob = orch.ensure_combat_sheet({"id": "gob_1", "name": "Goblin", "type": "Minion",
-                                    "hp": 12, "max_hp": 12, "ac": 11,
-                                    "attributes": {"str": 10, "dex": 12, "con": 10,
-                                                   "int": 8, "wis": 8, "cha": 6}})
+        {
+            "id": "player",
+            "name": "H",
+            "is_player": True,
+            "class_name": "Sangromante",
+            "virtudes": {"forca": 4, "agilidade": 3, "corpo": 3, "mente": 1, "carisma": 1},
+            "attack_formula": "2d6",
+            "entropy": 10,
+            "max_entropy": 10,
+            "abyss_charge": 0,
+            "inventory": inv.add_item([], "pocao_cura", 1),
+        },
+        is_player=True,
+    )
+    gob = orch.ensure_combat_sheet(
+        {
+            "id": "gob_1",
+            "name": "Goblin",
+            "type": "Minion",
+            "hp": 12,
+            "max_hp": 12,
+            "ac": 11,
+            "attributes": {"str": 10, "dex": 12, "con": 10, "int": 8, "wis": 8, "cha": 6},
+        }
+    )
     scene = cs.new_scene()
     for i in ("player", "gob_1"):
         cs.place(scene, i)
     cs.freeze(scene)
-    decl = ct.TurnDeclaration(actor_id="player",
-                              acao=ct.TurnStep(kind="item", item_id="pocao_cura"))
-    out = orch.run_round(scene, {"player": player, "gob_1": gob},
-                         {"hero": ["player"], "enemy": ["gob_1"]}, {"player": player},
-                         declarations={"player": decl}, rng=random.Random(1))
+    decl = ct.TurnDeclaration(
+        actor_id="player", acao=ct.TurnStep(kind="item", item_id="pocao_cura")
+    )
+    out = orch.run_round(
+        scene,
+        {"player": player, "gob_1": gob},
+        {"hero": ["player"], "enemy": ["gob_1"]},
+        {"player": player},
+        declarations={"player": decl},
+        rng=random.Random(1),
+    )
     assert out["resolved_turns"] == [] and out.get("action_refused") is True
     assert inv.get_qty(player["inventory"], "pocao_cura") == 1
     assert not out["attacks"]
@@ -200,6 +274,7 @@ def test_refused_item_does_not_spend_round():
 
 def test_negative_gold_clamp_logs(caplog):
     import logging
+
     st = _state(gold=0, inventory=[])
     with caplog.at_level(logging.WARNING):
         assert eco.clamp_gold(st["player"], -5) == 0
@@ -213,8 +288,12 @@ def test_restock_preserved_unique_can_be_rebought():
     world = sold["world"]
     world["world_clock"] = {"day": 4, "period": "Manhã"}
     eco.restock(world, projection=proj)
-    rebuy = {**st, "world": world, "world_projection": proj,
-             "player": {**sold["player"], "gold": 99999}}
+    rebuy = {
+        **st,
+        "world": world,
+        "world_projection": proj,
+        "player": {**sold["player"], "gold": 99999},
+    }
     out = eco.execute_trade(rebuy, "buy", UNIQ, 1)
     assert out["ok"], out
     assert inv.get_qty(out["player"]["inventory"], UNIQ) == 1

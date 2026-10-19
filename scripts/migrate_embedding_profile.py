@@ -1,4 +1,5 @@
 """SPEC-234 R9: migra memory_documents de `local-1024` para o perfil do provider atual."""
+
 from __future__ import annotations
 
 import rag

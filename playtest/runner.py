@@ -14,6 +14,7 @@ Princípios (spec fase-5.1):
   - Telemetria: registra provider/modelo/tier/fell_back por turno via o hook
     `set_llm_telemetry_hook` do roteamento (None no MockLLM).
 """
+
 from __future__ import annotations
 
 import contextlib
@@ -48,13 +49,11 @@ def _require_persisted(save_fn, state: dict, *, phase: str) -> None:
 class PlaytestTimeoutError(TimeoutError):
     """Watchdog do harness; a operação vencida permanece apenas em thread daemon."""
 
-    def __init__(self, phase: str, timeout_seconds: float, *,
-                 elapsed_seconds: float | None = None):
+    def __init__(self, phase: str, timeout_seconds: float, *, elapsed_seconds: float | None = None):
         self.phase = str(phase)
         self.timeout_seconds = float(timeout_seconds)
         self.elapsed_seconds = float(
-            elapsed_seconds
-            if elapsed_seconds is not None else timeout_seconds
+            elapsed_seconds if elapsed_seconds is not None else timeout_seconds
         )
         super().__init__(
             f"{self.phase} excedeu {self.timeout_seconds:g}s de wall-clock "
@@ -62,8 +61,7 @@ class PlaytestTimeoutError(TimeoutError):
         )
 
 
-def _run_with_watchdog(call: Callable[[], Any], *, timeout_seconds: float,
-                       phase: str) -> Any:
+def _run_with_watchdog(call: Callable[[], Any], *, timeout_seconds: float, phase: str) -> Any:
     """Executa ``call`` com teto de parede sem prender a saída do processo.
 
     Python não consegue matar uma thread com segurança. Por isso o worker é
@@ -97,7 +95,9 @@ def _run_with_watchdog(call: Callable[[], Any], *, timeout_seconds: float,
             time.time() - started_wall,
         )
         raise PlaytestTimeoutError(
-            phase, timeout, elapsed_seconds=elapsed,
+            phase,
+            timeout,
+            elapsed_seconds=elapsed,
         ) from exc
     elapsed = max(
         time.monotonic() - started_monotonic,
@@ -108,7 +108,9 @@ def _run_with_watchdog(call: Callable[[], Any], *, timeout_seconds: float,
     # timeout da Queue seja processado. O deadline absoluto continua soberano.
     if elapsed > timeout:
         raise PlaytestTimeoutError(
-            phase, timeout, elapsed_seconds=elapsed,
+            phase,
+            timeout,
+            elapsed_seconds=elapsed,
         )
     if ok:
         return payload
@@ -120,6 +122,7 @@ class TurnRecord:
     """Um turno da campanha. `route` é a rota do GRAFO (storyteller/combat/...),
     NÃO o tier de LLM — não confundir. provider/model/tier vêm do hook de
     telemetria do roteamento (None sob MockLLM)."""
+
     turn: int
     action: str
     route: str
@@ -237,7 +240,10 @@ class CampaignResult:
 
 
 def _resolve_profile_progression(
-    state: dict, profile: object, *, force: bool = False,
+    state: dict,
+    profile: object,
+    *,
+    force: bool = False,
 ) -> list[dict]:
     """Simula o modal de level-up apenas para perfis que optam por isso."""
     if not force and not getattr(profile, "resolve_progression", False):
@@ -256,8 +262,11 @@ def _resolve_profile_progression(
         selected = ""
         if kind == "virtude":
             virtues = player.get("virtudes") or {}
-            eligible = [key for key in gamedata.VIRTUDES
-                        if int(virtues.get(key, 0) or 0) < gamedata.VIRTUDE_MAX]
+            eligible = [
+                key
+                for key in gamedata.VIRTUDES
+                if int(virtues.get(key, 0) or 0) < gamedata.VIRTUDE_MAX
+            ]
             if eligible:
                 selected = min(eligible, key=lambda key: (int(virtues.get(key, 0) or 0), key))
                 kwargs["virtude"] = selected
@@ -267,11 +276,16 @@ def _resolve_profile_progression(
                 selected = str(subclasses[0]["id"])
                 kwargs["subclass_id"] = selected
         elif kind == "virtue_mastery":
-            virtue_cards = [row for row in player.get("virtue_cards") or []
-                             if int(row.get("mastery", 0) or 0) < 2]
+            virtue_cards = [
+                row
+                for row in player.get("virtue_cards") or []
+                if int(row.get("mastery", 0) or 0) < 2
+            ]
             if virtue_cards:
-                chosen = min(virtue_cards, key=lambda row: (
-                    int(row.get("mastery", 0) or 0), str(row.get("card_id", ""))))
+                chosen = min(
+                    virtue_cards,
+                    key=lambda row: (int(row.get("mastery", 0) or 0), str(row.get("card_id", ""))),
+                )
                 selected = str(chosen.get("card_id", ""))
                 kwargs["virtue_card_id"] = selected
         elif kind == "carta":
@@ -282,7 +296,8 @@ def _resolve_profile_progression(
             else:
                 evolved = player.get("evolved_cards") or {}
                 evolvable = [
-                    cid for cid in (player.get("known_cards") or [])
+                    cid
+                    for cid in (player.get("known_cards") or [])
                     if cid not in evolved and (cards.get_card(cid) or {}).get("evolucao")
                 ]
                 if evolvable:
@@ -294,10 +309,14 @@ def _resolve_profile_progression(
         if error:
             continue
         player = updated
-        applied.append({
-            "choice_id": choice_id, "kind": kind, "selection": selected,
-            **({"path": "A"} if kwargs.get("caminho") else {}),
-        })
+        applied.append(
+            {
+                "choice_id": choice_id,
+                "kind": kind,
+                "selection": selected,
+                **({"path": "A"} if kwargs.get("caminho") else {}),
+            }
+        )
     if applied:
         state["player"] = player
     return applied
@@ -346,10 +365,13 @@ def campaign_game_id(profile: str, seed: int | None, discriminator: object = 0) 
     return str(uuid.uuid5(_PLAYTEST_NS, f"{profile}:{seed}:{discriminator}"))
 
 
-def _build_initial_state(profile: str, seed: int,
-                         class_name: str | None = None,
-                         start_level: int = 1,
-                         random_game_id: bool = False) -> dict:
+def _build_initial_state(
+    profile: str,
+    seed: int,
+    class_name: str | None = None,
+    start_level: int = 1,
+    random_game_id: bool = False,
+) -> dict:
     """Monta o estado inicial da campanha — MESMO shape de api.new_game."""
     from langchain_core.messages import HumanMessage, SystemMessage
 
@@ -373,14 +395,21 @@ def _build_initial_state(profile: str, seed: int,
     # {game_id}) e o LLM não é reproduzível: um id repetido herdaria fatos de
     # outra campanha (ex.: matriz A × B com os mesmos seeds).
     game_id = campaign_game_id(
-        profile, None if random_game_id else seed, f"{class_name}:{start_level}")
+        profile, None if random_game_id else seed, f"{class_name}:{start_level}"
+    )
     region = final_char["region"]
     initial = {
         "game_id": game_id,
         "narrative_summary": f"A jornada de {final_char['name']} começa em {region}.",
         "archivist_last_run": 0,
-        "chronicle": [{"title": default_chapter_title(region),
-                       "started_turn": 0, "location": region, "entries": []}],
+        "chronicle": [
+            {
+                "title": default_chapter_title(region),
+                "started_turn": 0,
+                "location": region,
+                "entries": [],
+            }
+        ],
         "combat_target": None,
         "loot_source": None,
         "player": {
@@ -399,13 +428,16 @@ def _build_initial_state(profile: str, seed: int,
             "alignment": "Neutro",
             # spec conflito-01: Virtudes + Vitalidade/Ferimentos (mana/stamina/attributes saíram)
             "virtudes": final_char["virtudes"],
-            "vitalidade": final_char.get("vitalidade", final_char.get("max_vitalidade", final_char["max_hp"])),
+            "vitalidade": final_char.get(
+                "vitalidade", final_char.get("max_vitalidade", final_char["max_hp"])
+            ),
             "max_vitalidade": final_char.get("max_vitalidade", final_char["max_hp"]),
             "ferimento_espacos": final_char.get("ferimento_espacos", {}),
             "ferimentos": final_char.get("ferimentos", {"leve": [], "grave": [], "critico": []}),
             "inventory": final_char["inventory"],
-            "equipment": final_char.get("equipment",
-                                        {"weapon": None, "armor": None, "accessory": None}),
+            "equipment": final_char.get(
+                "equipment", {"weapon": None, "armor": None, "accessory": None}
+            ),
             "known_cards": final_char.get("known_cards", []),
             "prepared_cards": final_char.get("prepared_cards", []),
             "card_usage": final_char.get("card_usage", {}),
@@ -422,7 +454,9 @@ def _build_initial_state(profile: str, seed: int,
         "world": starting_world(region, level),
         "messages": [
             SystemMessage(content=f"A jornada de {final_char['name']} começa em {region}."),
-            HumanMessage(content=f"Descreva o cenário ao meu redor. Sou um {final_char['class_name']} de nível {level}."),
+            HumanMessage(
+                content=f"Descreva o cenário ao meu redor. Sou um {final_char['class_name']} de nível {level}."
+            ),
         ],
         "party": [],
         "enemies": [],
@@ -438,16 +472,18 @@ def _build_initial_state(profile: str, seed: int,
         "event_log": [],
         "world_projection": {},
         "pending_world_events": [],
-        "continuity": {"session_action_count": 0, "timeline_epoch": 0,
-                       "last_checkpoint_turn": 0, "death_history": []},
+        "continuity": {
+            "session_action_count": 0,
+            "timeline_epoch": 0,
+            "last_checkpoint_turn": 0,
+            "death_history": [],
+        },
     }
     if start_level > 1:
         import progression
         from services import cards
 
-        player, _events = progression.grant_xp(
-            initial["player"], int(XP_TABLE[int(start_level)])
-        )
+        player, _events = progression.grant_xp(initial["player"], int(XP_TABLE[int(start_level)]))
         initial["player"] = player
         # A subclasse é obrigatória antes das demais escolhas. Uma primeira
         # passada pode consumi-la e deixar escolhas anteriores; repita até fixar.
@@ -464,21 +500,24 @@ def _build_initial_state(profile: str, seed: int,
             ),
             reverse=True,
         )
-        player["prepared_cards"] = ranked[:prepared_slots_for_level(start_level)]
+        player["prepared_cards"] = ranked[: prepared_slots_for_level(start_level)]
         initial["player"] = player
         initial["world"] = starting_world(region, start_level)
         initial["messages"] = [
             SystemMessage(content=f"A jornada de {final_char['name']} começa em {region}."),
-            HumanMessage(content=(
-                f"Descreva o cenário ao meu redor. Sou um "
-                f"{final_char['class_name']} de nível {start_level}."
-            )),
+            HumanMessage(
+                content=(
+                    f"Descreva o cenário ao meu redor. Sou um "
+                    f"{final_char['class_name']} de nível {start_level}."
+                )
+            ),
         ]
     initial["player"]["gold"] = 50 * int(start_level)
     return initial
 
 
 # --- helpers de ambiente ----------------------------------------------------
+
 
 @contextlib.contextmanager
 def _seeded_random_factory():
@@ -503,6 +542,7 @@ def _seeded_random_factory():
 def _isolated_saves():
     """Aponta persistence.SAVES_DIR p/ o diretório de playtest e restaura ao fim."""
     import persistence
+
     original = persistence.SAVES_DIR
     persistence.SAVES_DIR = PLAYTEST_SAVES_DIR
     os.makedirs(PLAYTEST_SAVES_DIR, exist_ok=True)
@@ -582,11 +622,13 @@ def _offline_embeddings(active: bool):
         }
         if not payload["session"] and not payload["npcs"]:
             return None
-        return {"__offline_store__.json": json.dumps(
-            payload, ensure_ascii=False, sort_keys=True).encode("utf-8")}
+        return {
+            "__offline_store__.json": json.dumps(
+                payload, ensure_ascii=False, sort_keys=True
+            ).encode("utf-8")
+        }
 
-    def _restore_offline_memory(game_id: str,
-                                captured: dict[str, bytes] | None) -> None:
+    def _restore_offline_memory(game_id: str, captured: dict[str, bytes] | None) -> None:
         gid = str(game_id)
         session_store.pop(gid, None)
         for key in [key for key in npc_store if key[0] == gid]:
@@ -608,14 +650,15 @@ def _offline_embeddings(active: bool):
         return f"memory://playtest/{session}/{npc}"
 
     def _write_session(
-        game_id: str, texts: list[str], *, metadatas: list[dict] | None = None,
+        game_id: str,
+        texts: list[str],
+        *,
+        metadatas: list[dict] | None = None,
     ) -> bool:
         valid = bool(game_id and isinstance(texts, list) and texts)
         path = _offline_path(str(game_id)) if game_id else ""
         if valid:
-            session_store.setdefault(str(game_id), []).extend(
-                str(text) for text in texts
-            )
+            session_store.setdefault(str(game_id), []).extend(str(text) for text in texts)
         return rag._rag_operation_result(
             "add_session_memory",
             valid,
@@ -636,10 +679,7 @@ def _offline_embeddings(active: bool):
         metadatas: list[dict] | None = None,
     ) -> bool:
         valid = bool(game_id and npc_id and isinstance(texts, list) and texts)
-        path = (
-            _offline_path(str(game_id), str(npc_id))
-            if game_id and npc_id else ""
-        )
+        path = _offline_path(str(game_id), str(npc_id)) if game_id and npc_id else ""
         if valid:
             npc_store.setdefault((str(game_id), str(npc_id)), []).extend(
                 str(text) for text in texts
@@ -686,15 +726,18 @@ def _clear_caches() -> None:
     é cache legítimo de dedupe global — não é limpo aqui."""
     with contextlib.suppress(Exception):
         from services.graph_resolver import clear_cache
+
         clear_cache()
     with contextlib.suppress(Exception):
         from services.codex_loader import clear_codex_index_cache
+
         clear_codex_index_cache()
 
 
 def _last_ai_text(state: dict) -> str:
     """Última mensagem de narração visível (o que um jogador leria na tela)."""
     from services.turn_outcome import player_facing_message
+
     return player_facing_message(state)
 
 
@@ -740,9 +783,7 @@ def _normalize_llm_event(*args, **kwargs) -> dict:
         "latency_ms": max(0, int(data.get("latency_ms", 0) or 0)),
         "fell_back": bool(data.get("fell_back")),
         "status": outcome,
-        "network_attempted": (
-            False if no_network else bool(data.get("network_attempted", True))
-        ),
+        "network_attempted": (False if no_network else bool(data.get("network_attempted", True))),
         "attempt_index": data.get("attempt_index"),
         "structured": bool(data.get("structured", False)),
         "error": error[:240] or None,
@@ -772,10 +813,12 @@ def _rag_memory_counts(events: list[dict]) -> dict[str, int]:
     for event in events:
         if not event.get("success"):
             continue
-        counts.update({
-            str(key): int(value or 0)
-            for key, value in dict(event.get("provenance_counts") or {}).items()
-        })
+        counts.update(
+            {
+                str(key): int(value or 0)
+                for key, value in dict(event.get("provenance_counts") or {}).items()
+            }
+        )
     return dict(counts)
 
 
@@ -806,13 +849,15 @@ def terminal_llm_invocation_count(events: list[dict]) -> int:
     if current:
         groups.append(current)
     return sum(
-        1 for group in groups
+        1
+        for group in groups
         if not any(event.get("status", "success") == "success" for event in group)
     )
 
 
 def _count_new_rejections(before: list[dict], after: list[dict]) -> int:
     """Conta conteúdo novo mesmo quando o buffer circular continua em 100 itens."""
+
     def identity(item: object) -> str:
         try:
             return json.dumps(item, ensure_ascii=False, sort_keys=True, default=str)
@@ -824,10 +869,14 @@ def _count_new_rejections(before: list[dict], after: list[dict]) -> int:
     return sum(max(0, count - old.get(key, 0)) for key, count in new.items())
 
 
-def _run_turn(game_graph, state: dict, *,
-              nodes_executed: list[str] | None = None,
-              node_observations: dict | None = None,
-              node_latency_ms: dict | None = None) -> tuple[dict, str]:
+def _run_turn(
+    game_graph,
+    state: dict,
+    *,
+    nodes_executed: list[str] | None = None,
+    node_observations: dict | None = None,
+    node_latency_ms: dict | None = None,
+) -> tuple[dict, str]:
     """Invoca o grafo capturando a DECISÃO do `dm_router` (spec R3): a rota fiel
     é o `next` que o router escolheu, não o `next` do estado final (combate/loot
     sobrescrevem). Se o combate está ATIVO na entrada do turno, a rota é
@@ -867,21 +916,23 @@ def _run_turn(game_graph, state: dict, *,
             if isinstance(upd, dict) and not router_next:
                 router_next = upd.get("next") or ""
             combat_update = chunk.get("combat_agent")
-            if (
-                node_observations is not None
-                and isinstance(combat_update, dict)
-            ):
+            if node_observations is not None and isinstance(combat_update, dict):
                 # O archivist pode consumir o ConflictSummary no mesmo invoke.
                 # Preserva somente a janela mecânica intermediária necessária
                 # à auditoria, sem duplicar mensagens/prompts no JSONL.
-                node_observations["combat_agent"] = copy.deepcopy({
-                    key: combat_update.get(key)
-                    for key in (
-                        "combat", "player", "enemies", "conflict_summary",
-                        "tactics",
-                    )
-                    if key in combat_update
-                })
+                node_observations["combat_agent"] = copy.deepcopy(
+                    {
+                        key: combat_update.get(key)
+                        for key in (
+                            "combat",
+                            "player",
+                            "enemies",
+                            "conflict_summary",
+                            "tactics",
+                        )
+                        if key in combat_update
+                    }
+                )
         elif mode == "values":
             final = chunk
     route = "combat_agent" if combat_on_entry else router_next
@@ -892,6 +943,7 @@ def _run_turn_projected(game_graph, state: dict, **kwargs) -> tuple[dict, str]:
     """SPEC-213: turno + drenagem determinística da projeção adiada (paridade com
     `inline`). Sem `RPG_PROJECTION_MODE=post_response` é idêntico a `_run_turn`."""
     from services.projections import deferral_scope, has_pending, run_pending, stamp_commit
+
     with deferral_scope():
         new_state, route = _run_turn(game_graph, state, **kwargs)
     new_state = stamp_commit(dict(new_state), None)
@@ -915,11 +967,14 @@ def _observed_resolved_action(node_observations: dict | None) -> dict:
 def _is_explicit_quest_request(action: str) -> bool:
     """Pedido diegético de tarefa; usado somente como métrica do harness."""
     import re
-    return bool(re.search(
-        r"\b(?:tarefa|miss[aã]o|trabalho|favor)\s+concret[oa]\b",
-        str(action or ""),
-        flags=re.IGNORECASE,
-    ))
+
+    return bool(
+        re.search(
+            r"\b(?:tarefa|miss[aã]o|trabalho|favor)\s+concret[oa]\b",
+            str(action or ""),
+            flags=re.IGNORECASE,
+        )
+    )
 
 
 def _campaign_experience_violations(
@@ -932,57 +987,66 @@ def _campaign_experience_violations(
         return []
     out: list[dict] = []
     total = len(history)
-    combat_turns = len([
-        record for record in history
-        if record.combat_executed or record.route == "combat_agent"
-    ])
+    combat_turns = len(
+        [record for record in history if record.combat_executed or record.route == "combat_agent"]
+    )
     combat_pct = round(100.0 * combat_turns / total, 1)
     if total >= 50 and combat_pct > 35.0:
-        out.append({
-            "check_id": "profile.combat_share",
-            "severity": "warning",
-            "turn": history[-1].turn,
-            "message": f"perfil normal passou {combat_pct:.1f}% dos turnos em combate",
-            "details": {
-                "combat_turns": combat_turns,
-                "turns": total,
-                "combat_turn_pct": combat_pct,
-                "warning_pct": 35.0,
-            },
-        })
+        out.append(
+            {
+                "check_id": "profile.combat_share",
+                "severity": "warning",
+                "turn": history[-1].turn,
+                "message": f"perfil normal passou {combat_pct:.1f}% dos turnos em combate",
+                "details": {
+                    "combat_turns": combat_turns,
+                    "turns": total,
+                    "combat_turn_pct": combat_pct,
+                    "warning_pct": 35.0,
+                },
+            }
+        )
     from playtest.metrics import quest_request_conversion_count
+
     requests = len([record for record in history if record.quest_requested])
     conversions = quest_request_conversion_count(history, window=3)
     if total >= 50 and requests >= 2 and conversions == 0:
-        out.append({
-            "check_id": "profile.quest_conversion_empty",
-            "severity": "warning",
-            "turn": history[-1].turn,
-            "message": f"{requests} pedidos concretos não criaram nenhuma quest",
-            "details": {
-                "quest_requests": requests,
-                "quest_request_conversions": conversions,
-                "final_quests": len(final_state.get("quests", []) or []),
-            },
-        })
+        out.append(
+            {
+                "check_id": "profile.quest_conversion_empty",
+                "severity": "warning",
+                "turn": history[-1].turn,
+                "message": f"{requests} pedidos concretos não criaram nenhuma quest",
+                "details": {
+                    "quest_requests": requests,
+                    "quest_request_conversions": conversions,
+                    "final_quests": len(final_state.get("quests", []) or []),
+                },
+            }
+        )
     return out
 
 
 # --- runner -----------------------------------------------------------------
 
-def run_campaign(profile: str, turns: int = 50, seed: int = 0,
-                 use_real_llm: bool = False,
-                 on_turn_end: Callable[[dict, int], None] | None = None,
-                 invariants: bool = True,
-                 max_requests: int = 0,
-                 max_cost: float = 0.0,
-                 class_name: str | None = None,
-                 turn_timeout_seconds: float | None = None,
-                 scenario: str | None = None,
-                 start_level: int = 1,
-                 provider_min_interval_seconds: float = 0.0,
-                 require_all_llm_invocations_successful: bool = False,
-                 stop_on_error: bool = False) -> CampaignResult:
+
+def run_campaign(
+    profile: str,
+    turns: int = 50,
+    seed: int = 0,
+    use_real_llm: bool = False,
+    on_turn_end: Callable[[dict, int], None] | None = None,
+    invariants: bool = True,
+    max_requests: int = 0,
+    max_cost: float = 0.0,
+    class_name: str | None = None,
+    turn_timeout_seconds: float | None = None,
+    scenario: str | None = None,
+    start_level: int = 1,
+    provider_min_interval_seconds: float = 0.0,
+    require_all_llm_invocations_successful: bool = False,
+    stop_on_error: bool = False,
+) -> CampaignResult:
     """Joga `turns` turnos com o perfil `profile` e devolve o CampaignResult.
 
     - `on_turn_end(state, turn)` roda após cada turno; exceção conta como erro.
@@ -995,14 +1059,15 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
       run real e desliga no mock; valor explícito também serve em testes offline.
     """
     from playtest.profiles import PROFILES
+
     scenario_module = None
     if scenario:
         from playtest import scenarios as scenario_module
+
         expected_profile = scenario_module.profile_for(scenario)
         if profile != expected_profile:
             raise ValueError(
-                f"cenário {scenario!r} exige perfil {expected_profile!r}, "
-                f"recebeu {profile!r}"
+                f"cenário {scenario!r} exige perfil {expected_profile!r}, recebeu {profile!r}"
             )
     if profile not in PROFILES:
         raise KeyError(f"perfil desconhecido: {profile!r} (conhecidos: {sorted(PROFILES)})")
@@ -1028,16 +1093,14 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
 
     if turn_timeout_seconds is None:
         turn_timeout_seconds = (
-            float(os.getenv("RPG_PLAYTEST_TURN_TIMEOUT_SECONDS", "120"))
-            if use_real_llm else 0.0
+            float(os.getenv("RPG_PLAYTEST_TURN_TIMEOUT_SECONDS", "120")) if use_real_llm else 0.0
         )
     turn_timeout_seconds = max(0.0, float(turn_timeout_seconds or 0.0))
 
     import llm_setup
     from playtest.provider_profiles import ProviderPacer
-    provider_pacer = ProviderPacer(
-        provider_min_interval_seconds if use_real_llm else 0.0
-    )
+
+    provider_pacer = ProviderPacer(provider_min_interval_seconds if use_real_llm else 0.0)
     reset_circuits = getattr(llm_setup, "reset_llm_circuit_breakers", None)
     if reset_circuits is not None:
         reset_circuits()
@@ -1060,6 +1123,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
     rag_setter = None
     try:
         import rag as _rag
+
         rag_setter = getattr(_rag, "set_rag_operation_hook", None)
     except Exception:
         pass
@@ -1067,9 +1131,13 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
     def _rag_hook(event):
         rag_sink.append(_normalize_rag_event(event))
 
-    with _force_mock(active=not use_real_llm), \
-            _offline_embeddings(active=not use_real_llm), _isolated_saves(), \
-            _isolated_runtime_cache(), _seeded_random_factory():
+    with (
+        _force_mock(active=not use_real_llm),
+        _offline_embeddings(active=not use_real_llm),
+        _isolated_saves(),
+        _isolated_runtime_cache(),
+        _seeded_random_factory(),
+    ):
         _clear_caches()
         random.seed(seed)  # reproduz MockLLM + combate da campanha inteira
         from langchain_core.messages import HumanMessage
@@ -1082,7 +1150,10 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
             rag_setter(_rag_hook)
         try:
             state = _build_initial_state(
-                profile, seed, class_name=class_name, start_level=start_level,
+                profile,
+                seed,
+                class_name=class_name,
+                start_level=start_level,
                 random_game_id=use_real_llm,
             )
             if scenario_module is not None:
@@ -1098,6 +1169,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
             )
             # Startup é prólogo, não decisão do perfil.
             from services.continuity import mark_checkpoint
+
             state["continuity"] = mark_checkpoint(
                 {**(state.get("continuity") or {}), "session_action_count": 0},
                 canonical_turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
@@ -1120,8 +1192,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
             startup_terminal = terminal_llm_invocation_count(startup_llm_events)
             if require_all_llm_invocations_successful and startup_terminal:
                 startup_abort = (
-                    "llm_terminal_failure "
-                    f"({startup_terminal} invocação sem sucesso, startup)"
+                    f"llm_terminal_failure ({startup_terminal} invocação sem sucesso, startup)"
                 )
             if startup_abort:
                 aborted_reason = startup_abort
@@ -1130,7 +1201,8 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                 progression_choices = _resolve_profile_progression(state, prof)
                 directed = (
                     scenario_module.decision_for(str(scenario), turn, state)
-                    if scenario_module is not None else None
+                    if scenario_module is not None
+                    else None
                 )
                 decision = directed or prof.decide(state, prof_rng)
                 action = decision.text
@@ -1159,6 +1231,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                 combat_round_before = int(combat_before.get("round", 0) or 0)
                 try:
                     from playtest import invariants as _inv
+
                     progress_before = _inv.combat_progress_fingerprint(state)
                 except Exception:
                     _inv = None
@@ -1211,10 +1284,12 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                     rec.resolved_action = _observed_resolved_action(
                         node_observations,
                     )
-                    rec.replanned = ((new_state.get("campaign_plan") or {})
-                                     .get("last_planned_turn") != plan_before)
+                    rec.replanned = (new_state.get("campaign_plan") or {}).get(
+                        "last_planned_turn"
+                    ) != plan_before
                     rec.events_applied = max(
-                        0, len(new_state.get("event_log", []) or []) - events_before,
+                        0,
+                        len(new_state.get("event_log", []) or []) - events_before,
                     )
                     rec.events_rejected = _count_new_rejections(
                         rejected_before,
@@ -1230,41 +1305,41 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                     _fill_economy_metrics(rec, turn_input_state, new_state)
                     _attach_telemetry(rec, list(turn_events))
                     rec.rag_events = list(turn_rag_events)
-                    rec.memory_writes_by_provenance = _rag_memory_counts(
-                        rec.rag_events
-                    )
+                    rec.memory_writes_by_provenance = _rag_memory_counts(rec.rag_events)
                     _bump_llm_events_budget(llm_calls, rec.llm_events)
-                    terminal_invocations = terminal_llm_invocation_count(
-                        rec.llm_events
-                    )
-                    if (
-                        require_all_llm_invocations_successful
-                        and terminal_invocations
-                    ):
+                    terminal_invocations = terminal_llm_invocation_count(rec.llm_events)
+                    if require_all_llm_invocations_successful and terminal_invocations:
                         message = (
                             "llm_terminal_failure "
                             f"({terminal_invocations} invocação sem sucesso, "
                             f"turno {turn})"
                         )
                         rec.error = message
-                        errors.append({
-                            "turn": turn,
-                            "action": action,
-                            "exc": message,
-                            "phase": "llm_only",
-                        })
+                        errors.append(
+                            {
+                                "turn": turn,
+                                "action": action,
+                                "exc": message,
+                                "phase": "llm_only",
+                            }
+                        )
                         aborted_reason = message
 
                     try:
                         progress_after = (
                             _inv.combat_progress_fingerprint(new_state)
-                            if _inv is not None else None
+                            if _inv is not None
+                            else None
                         )
                     except Exception:
                         progress_after = None
-                    if rec.combat_executed and combat_on_entry and active_after \
-                            and progress_before is not None \
-                            and progress_before == progress_after:
+                    if (
+                        rec.combat_executed
+                        and combat_on_entry
+                        and active_after
+                        and progress_before is not None
+                        and progress_before == progress_after
+                    ):
                         no_progress_streak += 1
                     else:
                         no_progress_streak = 0
@@ -1287,16 +1362,22 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                     }
                     turn_viol = (
                         _run_invariants(
-                            new_state, turn_input_state, turn,
+                            new_state,
+                            turn_input_state,
+                            turn,
                             context=audit_context,
                         )
-                        if invariants else []
+                        if invariants
+                        else []
                     )
                     # spec polish-prosa (§7): MockLLM tem narração FIXA → o check de
                     # abertura repetida dispararia sempre; irrelevante em mock.
                     if not use_real_llm:
-                        turn_viol = [v for v in turn_viol
-                                     if v.get("check_id") != "narrative.repeated_opening"]
+                        turn_viol = [
+                            v
+                            for v in turn_viol
+                            if v.get("check_id") != "narrative.repeated_opening"
+                        ]
                     rec.violations = [v["check_id"] for v in turn_viol]
                     rec.violation_details = turn_viol
                     violations.extend(turn_viol)
@@ -1308,8 +1389,14 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                         try:
                             on_turn_end(state, turn)
                         except Exception as e:  # violação de invariante externa = erro
-                            errors.append({"turn": turn, "action": action, "exc": repr(e),
-                                           "traceback": format_traceback(e)})
+                            errors.append(
+                                {
+                                    "turn": turn,
+                                    "action": action,
+                                    "exc": repr(e),
+                                    "traceback": format_traceback(e),
+                                }
+                            )
                             rec.error = repr(e)
                             rec.traceback = format_traceback(e)
                 except Exception as e:
@@ -1319,9 +1406,9 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                     # Timeout é uma saída própria; os nós já observados continuam
                     # auditáveis sem atribuir o custo a uma rota inconclusa.
                     rec.route = (
-                        "timeout" if isinstance(e, PlaytestTimeoutError)
-                        else ("combat_agent" if combat_on_entry
-                              else (state.get("next", "") or ""))
+                        "timeout"
+                        if isinstance(e, PlaytestTimeoutError)
+                        else ("combat_agent" if combat_on_entry else (state.get("next", "") or ""))
                     )
                     rec.nodes_executed = list(nodes)
                     rec.node_latency_ms = dict(node_timings)
@@ -1330,24 +1417,26 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                     _fill_economy_metrics(rec, turn_input_state, state)
                     _attach_telemetry(rec, list(turn_events))
                     rec.rag_events = list(turn_rag_events)
-                    rec.memory_writes_by_provenance = _rag_memory_counts(
-                        rec.rag_events
-                    )
+                    rec.memory_writes_by_provenance = _rag_memory_counts(rec.rag_events)
                     _bump_llm_events_budget(llm_calls, rec.llm_events)
-                    errors.append({"turn": turn, "action": action, "exc": repr(e),
-                                   "traceback": format_traceback(e)})
+                    errors.append(
+                        {
+                            "turn": turn,
+                            "action": action,
+                            "exc": repr(e),
+                            "traceback": format_traceback(e),
+                        }
+                    )
                     if isinstance(e, PlaytestTimeoutError):
-                        aborted_reason = (
-                            f"timeout: {e.phase} excedeu "
-                            f"{e.timeout_seconds:g}s"
-                        )
+                        aborted_reason = f"timeout: {e.phase} excedeu {e.timeout_seconds:g}s"
                     # mantém o estado anterior; próximo turno continua
 
                 history.append(rec)
 
-                if stop_on_error and (rec.error or any(
-                    row.get("severity") == "error" for row in rec.violation_details
-                )):
+                if stop_on_error and (
+                    rec.error
+                    or any(row.get("severity") == "error" for row in rec.violation_details)
+                ):
                     aborted_reason = aborted_reason or f"contract_failure (turno {turn})"
                     break
 
@@ -1355,9 +1444,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                 # Não inicia outro turno nem toca checkpoints com estado parcial.
                 if aborted_reason and aborted_reason.startswith("timeout:"):
                     break
-                if aborted_reason and aborted_reason.startswith(
-                    "llm_terminal_failure"
-                ):
+                if aborted_reason and aborted_reason.startswith("llm_terminal_failure"):
                     break
 
                 # spec checkpoints-morte (D1/D6): grava snapshot na cadência; a
@@ -1368,8 +1455,14 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                 if _cp.should_checkpoint(state, prev_state):
                     checkpoint_snap = _cp.snapshot(state)
                 if state.get("death_pending"):
-                    _dev = next((e for e in reversed(state.get("event_log") or [])
-                                 if isinstance(e, dict) and e.get("type") == "player_downed"), {})
+                    _dev = next(
+                        (
+                            e
+                            for e in reversed(state.get("event_log") or [])
+                            if isinstance(e, dict) and e.get("type") == "player_downed"
+                        ),
+                        {},
+                    )
                     _pay = (_dev or {}).get("payload", {}) or {}
                     _continuity = state.get("continuity") or {}
                     death = {
@@ -1377,12 +1470,8 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                         "session_action": int(
                             _continuity.get("session_action_count", turn) or turn
                         ),
-                        "canonical_turn": int(
-                            (state.get("world") or {}).get("turn_count", 0) or 0
-                        ),
-                        "timeline_epoch": int(
-                            _continuity.get("timeline_epoch", 0) or 0
-                        ),
+                        "canonical_turn": int((state.get("world") or {}).get("turn_count", 0) or 0),
+                        "timeline_epoch": int(_continuity.get("timeline_epoch", 0) or 0),
                         "location": _pay.get("location"),
                         "location_id": str(
                             (state.get("world") or {}).get("current_location_id", "") or ""
@@ -1392,7 +1481,8 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                     deaths_log.append(death)
                     rec.death = death
                     state = _cp.resolve_death_choice(
-                        state, "continue", checkpoint=checkpoint_snap, initial_state=initial_snap)
+                        state, "continue", checkpoint=checkpoint_snap, initial_state=initial_snap
+                    )
                     _require_persisted(save_game_state, state, phase=f"restore {turn}")
                     prev_state = state
 
@@ -1417,13 +1507,15 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
             # não se perde request/custo só porque a abertura falhou.
             if llm_calls["count"] == 0 and startup_llm_events:
                 _bump_llm_events_budget(llm_calls, startup_llm_events)
-            errors.append({
-                "turn": 0,
-                "action": "<startup>",
-                "exc": repr(exc),
-                "traceback": format_traceback(exc),
-                "phase": "startup",
-            })
+            errors.append(
+                {
+                    "turn": 0,
+                    "action": "<startup>",
+                    "exc": repr(exc),
+                    "traceback": format_traceback(exc),
+                    "phase": "startup",
+                }
+            )
             aborted_reason = (
                 f"timeout: {exc.phase} excedeu {exc.timeout_seconds:g}s"
                 if isinstance(exc, PlaytestTimeoutError)
@@ -1438,10 +1530,18 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
             final_path = os.path.abspath(save_path(game_id))
 
     result = CampaignResult(
-        profile=profile, seed=seed, turns_completed=len(history),
-        errors=errors, history=history, final_state=state, save_path=final_path,
-        violations=violations, mock=not use_real_llm, aborted_reason=aborted_reason,
-        deaths_log=deaths_log, turns_requested=turns,
+        profile=profile,
+        seed=seed,
+        turns_completed=len(history),
+        errors=errors,
+        history=history,
+        final_state=state,
+        save_path=final_path,
+        violations=violations,
+        mock=not use_real_llm,
+        aborted_reason=aborted_reason,
+        deaths_log=deaths_log,
+        turns_requested=turns,
         startup_llm_events=startup_llm_events,
         startup_rag_events=startup_rag_events,
         invariants_enabled=invariants,
@@ -1449,27 +1549,26 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
         start_level=int(start_level),
     )
     campaign_violations = _campaign_experience_violations(
-        profile, history, state,
+        profile,
+        history,
+        state,
     )
     if campaign_violations:
         violations.extend(campaign_violations)
         if history:
-            history[-1].violations.extend(
-                item["check_id"] for item in campaign_violations
-            )
+            history[-1].violations.extend(item["check_id"] for item in campaign_violations)
             history[-1].violation_details.extend(campaign_violations)
     if scenario_module is not None and not (
         aborted_reason and aborted_reason.startswith("timeout:")
     ):
         scenario_violations = scenario_module.oracle_violations(
-            str(scenario), result,
+            str(scenario),
+            result,
         )
         if scenario_violations:
             violations.extend(scenario_violations)
             if history:
-                history[-1].violations.extend(
-                    item["check_id"] for item in scenario_violations
-                )
+                history[-1].violations.extend(item["check_id"] for item in scenario_violations)
                 history[-1].violation_details.extend(scenario_violations)
     return result
 
@@ -1486,12 +1585,8 @@ def _fill_state_metrics(
     rec.location_id = world.get("current_location_id", "") or ""
     rec.player_hp = int(player.get("hp", 0) or 0)
     rec.player_max_hp = int(player.get("max_hp", 0) or 0)
-    rec.player_vitality = int(
-        player.get("vitalidade", player.get("hp", 0)) or 0
-    )
-    rec.player_max_vitality = int(
-        player.get("max_vitalidade", player.get("max_hp", 0)) or 0
-    )
+    rec.player_vitality = int(player.get("vitalidade", player.get("hp", 0)) or 0)
+    rec.player_max_vitality = int(player.get("max_vitalidade", player.get("max_hp", 0)) or 0)
     rec.player_level = int(player.get("level", 1) or 1)
     rec.gold = int(player.get("gold", 0) or 0)
     rec.combat_active = bool((state.get("combat") or {}).get("active"))
@@ -1503,6 +1598,7 @@ def _fill_state_metrics(
     rec.abyss_charge = int(player.get("abyss_charge", 0) or 0)
     try:
         from combat_mechanics import abyss_tier
+
         rec.abyss_tier = abyss_tier(player)
     except Exception:
         rec.abyss_tier = ""
@@ -1513,14 +1609,12 @@ def _fill_state_metrics(
         rec.entropy_spent = int(player.get("_last_entropy_spent", 0) or 0)
         rec.used_active_ability = bool(player.get("_last_used_active"))
         rec.ability_id = player.get("_last_ability_id")
-        rec.class_mechanics = copy.deepcopy(list(
-            player.get("_last_class_mechanics") or []
-        ))
+        rec.class_mechanics = copy.deepcopy(list(player.get("_last_class_mechanics") or []))
         combat = observed.get("combat") or state.get("combat") or {}
         rec.reactions = copy.deepcopy(list(combat.get("last_reactions") or []))
-        rec.last_tactics = copy.deepcopy(list(
-            observed.get("tactics") or combat.get("last_tactics") or []
-        ))
+        rec.last_tactics = copy.deepcopy(
+            list(observed.get("tactics") or combat.get("last_tactics") or [])
+        )
     else:
         rec.entropy_spent = 0
         rec.used_active_ability = False
@@ -1535,50 +1629,45 @@ def _fill_state_metrics(
         else state.get("enemies")
     ) or []
     rec.enemy_wounds = {
-        str(enemy.get("id") or enemy.get("name") or f"enemy-{index}"):
-            copy.deepcopy(dict(enemy.get("ferimentos") or {}))
+        str(enemy.get("id") or enemy.get("name") or f"enemy-{index}"): copy.deepcopy(
+            dict(enemy.get("ferimentos") or {})
+        )
         for index, enemy in enumerate(observed_enemies)
         if isinstance(enemy, dict)
     }
-    conflict_summary = (
-        observed.get("conflict_summary")
-        or state.get("conflict_summary")
-        or {}
-    )
-    rec.conflict_wounds = copy.deepcopy(
-        dict(conflict_summary.get("ferimentos") or {})
-    )
+    conflict_summary = observed.get("conflict_summary") or state.get("conflict_summary") or {}
+    rec.conflict_wounds = copy.deepcopy(dict(conflict_summary.get("ferimentos") or {}))
     try:
         from services.memory_provenance import normalize_memory_facts
+
         memory_records = normalize_memory_facts(state.get("memory_facts"))
     except Exception:
         memory_records = []
-    rec.memory_by_provenance = dict(Counter(
-        str(record.get("provenance") or "legacy_unverified")
-        for record in memory_records
-    ))
-    rec.memory_by_confidence = dict(Counter(
-        str(record.get("confidence") or "speculative") for record in memory_records
-    ))
-    canonical_turn = int((state.get("world") or {}).get("turn_count", 0) or 0)
-    rec.stale_speculative_memories = len([
-        record for record in memory_records
-        if record.get("confidence") == "speculative"
-        and record.get("source_turn") is not None
-        and canonical_turn - int(record.get("source_turn") or 0) >= 20
-    ])
-    rec.combat_origin = str((state.get("combat") or {}).get("origin") or "unknown")
-    rec.conflict_instance_id = str(
-        (state.get("combat") or {}).get("instance_id") or ""
+    rec.memory_by_provenance = dict(
+        Counter(str(record.get("provenance") or "legacy_unverified") for record in memory_records)
     )
+    rec.memory_by_confidence = dict(
+        Counter(str(record.get("confidence") or "speculative") for record in memory_records)
+    )
+    canonical_turn = int((state.get("world") or {}).get("turn_count", 0) or 0)
+    rec.stale_speculative_memories = len(
+        [
+            record
+            for record in memory_records
+            if record.get("confidence") == "speculative"
+            and record.get("source_turn") is not None
+            and canonical_turn - int(record.get("source_turn") or 0) >= 20
+        ]
+    )
+    rec.combat_origin = str((state.get("combat") or {}).get("origin") or "unknown")
+    rec.conflict_instance_id = str((state.get("combat") or {}).get("instance_id") or "")
     continuity = state.get("continuity") or {}
     rec.session_action_count = int(continuity.get("session_action_count", canonical_turn) or 0)
     rec.canonical_turn = canonical_turn
     rec.timeline_epoch = int(continuity.get("timeline_epoch", 0) or 0)
-    rec.memory_rejections = len([
-        row for row in (state.get("memory_rejections") or [])
-        if isinstance(row, dict)
-    ])
+    rec.memory_rejections = len(
+        [row for row in (state.get("memory_rejections") or []) if isinstance(row, dict)]
+    )
     rec.memory_promotions = sum(
         max(1, int(row.get("count", 1) or 1))
         for row in (state.get("memory_promotions") or [])
@@ -1646,7 +1735,9 @@ def _merchant_action_family(rec: TurnRecord) -> str:
 
 
 def _fill_economy_metrics(
-    rec: TurnRecord, before: dict, after: dict | None,
+    rec: TurnRecord,
+    before: dict,
+    after: dict | None,
 ) -> None:
     from services.economy import public_market_snapshot
 
@@ -1656,6 +1747,7 @@ def _fill_economy_metrics(
     rec.market_observed = snapshot is not None
     if snapshot is not None:
         from gamedata import get_location
+
         location = get_location(str(snapshot["location_id"])) or {}
         rec.market_snapshot = {
             "merchant_id": str(snapshot["merchant_id"]),
@@ -1671,8 +1763,7 @@ def _fill_economy_metrics(
         return
     rec.inventory_value_after = _inventory_liquidation_value(after)
     rec.net_worth_after = (
-        int((after.get("player") or {}).get("gold", 0) or 0)
-        + rec.inventory_value_after
+        int((after.get("player") or {}).get("gold", 0) or 0) + rec.inventory_value_after
     )
     previous_id = str((before.get("last_economy_action") or {}).get("action_id") or "")
     outcome = after.get("last_economy_action") or {}
@@ -1688,7 +1779,9 @@ def _attach_telemetry(rec: TurnRecord, events: list[dict]) -> None:
     if not events:
         return
     tier_of_route = {
-        "combat_agent": "fast", "storyteller": "fast", "npc_actor": "fast",
+        "combat_agent": "fast",
+        "storyteller": "fast",
+        "npc_actor": "fast",
         "loot": "fast",
     }.get(rec.route)
     successes = [e for e in events if e.get("status", "success") == "success"]
@@ -1706,6 +1799,7 @@ def _attach_telemetry(rec: TurnRecord, events: list[dict]) -> None:
 def _bump_llm_events_budget(budget: dict, events: list[dict]) -> None:
     """Conta tentativas de rede, inclusive falhas; build_error não é request."""
     from playtest import pricing
+
     network = _network_events(events)
     budget["count"] += len(network)
     # Lower bound conservador: uma tentativa que chegou ao provider pode ter
@@ -1714,12 +1808,14 @@ def _bump_llm_events_budget(budget: dict, events: list[dict]) -> None:
 
 
 def _budget_abort_reason(
-    budget: dict, *, max_requests: int, max_cost: float, phase: str,
+    budget: dict,
+    *,
+    max_requests: int,
+    max_cost: float,
+    phase: str,
 ) -> str | None:
     if max_requests and budget["count"] >= max_requests:
-        return (
-            f"max_requests atingido ({budget['count']}/{max_requests}, {phase})"
-        )
+        return f"max_requests atingido ({budget['count']}/{max_requests}, {phase})"
     if max_cost and budget["cost"] >= max_cost:
         return f"max_cost atingido ({budget['cost']:.4f}/{max_cost}, {phase})"
     return None
@@ -1727,9 +1823,7 @@ def _budget_abort_reason(
 
 def format_traceback(exc: BaseException, max_lines: int = 40) -> str:
     """Traceback truncado (cauda) via format_exception; sem locals (SPEC-260 R1)."""
-    lines = "".join(
-        traceback.format_exception(type(exc), exc, exc.__traceback__)
-    ).splitlines()
+    lines = "".join(traceback.format_exception(type(exc), exc, exc.__traceback__)).splitlines()
     return "\n".join(lines[-max_lines:])
 
 
@@ -1744,33 +1838,42 @@ def _run_invariants(
     try:
         from playtest import invariants as inv
     except Exception as exc:
-        return [{
-            "check_id": "invariant.runner_crash",
-            "severity": "error",
-            "turn": turn,
-            "message": f"falha ao importar invariantes: {type(exc).__name__}",
-            "details": {
-                "phase": "import",
-                "exception_type": type(exc).__name__,
-                "error": str(exc),
-                "traceback": format_traceback(exc),
-            },
-        }]
+        return [
+            {
+                "check_id": "invariant.runner_crash",
+                "severity": "error",
+                "turn": turn,
+                "message": f"falha ao importar invariantes: {type(exc).__name__}",
+                "details": {
+                    "phase": "import",
+                    "exception_type": type(exc).__name__,
+                    "error": str(exc),
+                    "traceback": format_traceback(exc),
+                },
+            }
+        ]
     try:
-        return [v.__dict__ if hasattr(v, "__dict__") else dict(v)
-                for v in inv.check_all(
-                    state, prev_state, turn, context=context,
-                )]
+        return [
+            v.__dict__ if hasattr(v, "__dict__") else dict(v)
+            for v in inv.check_all(
+                state,
+                prev_state,
+                turn,
+                context=context,
+            )
+        ]
     except Exception as exc:
-        return [{
-            "check_id": "invariant.runner_crash",
-            "severity": "error",
-            "turn": turn,
-            "message": f"runner de invariantes falhou: {type(exc).__name__}",
-            "details": {
-                "phase": "check_all",
-                "exception_type": type(exc).__name__,
-                "error": str(exc),
-                "traceback": format_traceback(exc),
-            },
-        }]
+        return [
+            {
+                "check_id": "invariant.runner_crash",
+                "severity": "error",
+                "turn": turn,
+                "message": f"runner de invariantes falhou: {type(exc).__name__}",
+                "details": {
+                    "phase": "check_all",
+                    "exception_type": type(exc).__name__,
+                    "error": str(exc),
+                    "traceback": format_traceback(exc),
+                },
+            }
+        ]

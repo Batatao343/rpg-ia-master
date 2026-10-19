@@ -44,7 +44,9 @@ def _v_secret_revealed(ev: ProposedWorldEvent, state: dict, proj: dict) -> Valid
     # existe edge hidden/secret ligada ao alvo? (o segredo tem de EXISTIR no grafo)
     edges = gr.resolve_edges(proj, entity_id=ev.target_id, include_hidden=True)
     if not any(e.get("visibility") in ("hidden", "secret") for e in edges):
-        return ValidationResult(False, f"nenhum segredo (edge hidden/secret) ligado a {ev.target_id}")
+        return ValidationResult(
+            False, f"nenhum segredo (edge hidden/secret) ligado a {ev.target_id}"
+        )
     # fato ainda não revelado?
     revealed = proj.get("revealed_facts", {}) or {}
     if any(rf.get("entity_id") == ev.target_id for rf in revealed.values()):
@@ -52,7 +54,9 @@ def _v_secret_revealed(ev: ProposedWorldEvent, state: dict, proj: dict) -> Valid
     return ValidationResult(True)
 
 
-def _v_location_control_changed(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+def _v_location_control_changed(
+    ev: ProposedWorldEvent, state: dict, proj: dict
+) -> ValidationResult:
     ent = gr.get_entity(ev.target_id)
     if not ent:
         return ValidationResult(False, f"id desconhecido em entities.json: {ev.target_id}")
@@ -84,11 +88,13 @@ def _v_quest_completed(ev: ProposedWorldEvent, state: dict, proj: dict) -> Valid
         return ValidationResult(False, "sem campaign_plan/beats para concluir")
     idx = ev.payload.get("beat_index")
     if idx is not None and not (0 <= int(idx) < len(beats)):
-        return ValidationResult(False, f"beat_index {idx} fora do plano (0..{len(beats)-1})")
+        return ValidationResult(False, f"beat_index {idx} fora do plano (0..{len(beats) - 1})")
     return ValidationResult(True)
 
 
-def _v_faction_relation_changed(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+def _v_faction_relation_changed(
+    ev: ProposedWorldEvent, state: dict, proj: dict
+) -> ValidationResult:
     other = ev.payload.get("other_faction_id") or ev.actor_id
     a, b = gr.get_entity(ev.target_id), gr.get_entity(other)
     if not a or a.get("type") != "faction":
@@ -131,13 +137,16 @@ def _v_progression_choice(ev: ProposedWorldEvent, state: dict, proj: dict) -> Va
 
 def _route_pair_blocked(proj: dict, a: str, b: str) -> bool:
     pair = frozenset((a, b))
-    return any(frozenset((r.get("a"), r.get("b"))) == pair
-               for r in (proj or {}).get("blocked_routes", []) or [])
+    return any(
+        frozenset((r.get("a"), r.get("b"))) == pair
+        for r in (proj or {}).get("blocked_routes", []) or []
+    )
 
 
 def _v_route_blocked(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
     """Fase 6.1: rota só existe entre locais DIRETAMENTE conectados no mapa."""
     from gamedata import get_location
+
     a = ev.target_id
     b = str(ev.payload.get("other_location_id") or "")
     if not get_location(a):
@@ -162,6 +171,7 @@ def _v_route_cleared(ev: ProposedWorldEvent, state: dict, proj: dict) -> Validat
 def _v_unique_item(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
     """Fase 6.2: gate de source fica em validate_proposal; aqui sanidade do item."""
     from gamedata import ARTIFACTS_DB
+
     item = ARTIFACTS_DB.get(ev.target_id)
     if not item:
         return ValidationResult(False, f"{ev.target_id} não existe no ARTIFACTS_DB")
@@ -190,9 +200,16 @@ def _v_player_downed(ev: ProposedWorldEvent, state: dict, proj: dict) -> Validat
 # --- SPEC-223: prova determinística p/ eventos propostos pelo LLM ---------------
 # Fontes do MOTOR (Python) — tudo o mais (sem `source`, ou "storyteller") é
 # proposta do LLM e precisa de prova no estado antes de virar fato.
-ENGINE_SOURCES = frozenset({
-    "system", "combat", "rule_engine", "engine", "progression", "trap",
-})
+ENGINE_SOURCES = frozenset(
+    {
+        "system",
+        "combat",
+        "rule_engine",
+        "engine",
+        "progression",
+        "trap",
+    }
+)
 PROOF_REQUIRED_TYPES = frozenset({"quest_completed", "secret_revealed", "npc_killed"})
 UNPROVEN_PREFIX = "sem prova determinística"
 LIMIT_PREFIX = "limite de conclusões"
@@ -212,6 +229,7 @@ def _turn_of(state: dict) -> int:
 
 def _fold(value: object) -> str:
     import unicodedata
+
     folded = unicodedata.normalize("NFKD", str(value or ""))
     return " ".join("".join(c for c in folded if not unicodedata.combining(c)).casefold().split())
 
@@ -219,6 +237,7 @@ def _fold(value: object) -> str:
 def scene_anchor_ids(state: dict) -> set:
     """Ids canônicos ANCORADOS na cena atual: local atual + NPCs `in_scene`."""
     from services.entity_identity import resolve_npc_entity_id
+
     world = state.get("world") or {}
     ids = {str(world.get("current_location_id") or "")}
     for key, npc in (state.get("npcs") or {}).items():
@@ -232,50 +251,59 @@ def scene_anchor_ids(state: dict) -> set:
 
 
 def _hidden_edges(target_id: str, proj: dict) -> list:
-    return [e for e in gr.resolve_edges(proj, entity_id=target_id, include_hidden=True)
-            if e.get("visibility") in ("hidden", "secret")]
+    return [
+        e
+        for e in gr.resolve_edges(proj, entity_id=target_id, include_hidden=True)
+        if e.get("visibility") in ("hidden", "secret")
+    ]
 
 
-def canonical_secret_detail(target_id: str, proj: dict,
-                            anchors: set | None = None) -> str:
+def canonical_secret_detail(target_id: str, proj: dict, anchors: set | None = None) -> str:
     """Texto do segredo vem do GRAFO (edges hidden/secret), nunca do LLM.
 
     Com ``anchors`` e alvo FORA da cena, só entram as edges ancoradas na cena
     (a revelação que a prova autorizou) — nunca os demais segredos do alvo."""
+
     def name(eid: str) -> str:
         return str((gr.get_entity(eid) or {}).get("name") or eid)
+
     edges = _hidden_edges(target_id, proj)
     if anchors is not None and target_id not in anchors:
-        edges = [e for e in edges
-                 if e.get("source") in anchors or e.get("target") in anchors]
-    parts = [f"{name(e.get('source'))} —{e.get('type')}→ {name(e.get('target'))}"
-             for e in edges]
+        edges = [e for e in edges if e.get("source") in anchors or e.get("target") in anchors]
+    parts = [f"{name(e.get('source'))} —{e.get('type')}→ {name(e.get('target'))}" for e in edges]
     return "; ".join(parts)
 
 
 def _quest_proof(ev: ProposedWorldEvent, state: dict) -> ValidationResult:
     from services.quest_log import has_completion_proof
+
     qid = ev.payload.get("quest_id")
     if not qid:
         # Modo beat: conclusão de beat é decidida por beat_completed (SPEC-142),
         # não por evento proposto — o LLM não fecha beat por quest_completed.
         return ValidationResult(False, f"{UNPROVEN_PREFIX}: quest_completed sem quest_id")
-    quest = next((q for q in state.get("quests", []) or []
-                  if isinstance(q, dict) and q.get("id") == qid), None)
+    quest = next(
+        (q for q in state.get("quests", []) or [] if isinstance(q, dict) and q.get("id") == qid),
+        None,
+    )
     if quest is None:
         return ValidationResult(False, f"quest_id {qid} não é uma quest ativa")
     ok, why = has_completion_proof(quest, state)
     if not ok:
         return ValidationResult(False, f"{UNPROVEN_PREFIX}: quest_completed ({why})")
     turn = _turn_of(state)
-    done_turns = [int(e.get("turn", 0) or 0) for e in state.get("event_log") or []
-                  if isinstance(e, dict) and e.get("type") == "quest_completed"]
+    done_turns = [
+        int(e.get("turn", 0) or 0)
+        for e in state.get("event_log") or []
+        if isinstance(e, dict) and e.get("type") == "quest_completed"
+    ]
     if any(t == turn for t in done_turns):
         return ValidationResult(False, f"{LIMIT_PREFIX}: 1 quest_completed por turno")
     past = [t for t in done_turns if t < turn]
     if past and turn - max(past) < QUEST_COMPLETION_COOLDOWN:
         return ValidationResult(
-            False, f"{LIMIT_PREFIX}: cooldown de {QUEST_COMPLETION_COOLDOWN} turnos")
+            False, f"{LIMIT_PREFIX}: cooldown de {QUEST_COMPLETION_COOLDOWN} turnos"
+        )
     return ValidationResult(True)
 
 
@@ -287,7 +315,8 @@ def _secret_proof(ev: ProposedWorldEvent, state: dict, proj: dict) -> Validation
         if edge.get("source") in anchors or edge.get("target") in anchors:
             return ValidationResult(True)
     return ValidationResult(
-        False, f"{UNPROVEN_PREFIX}: secret_revealed sem âncora na cena ({ev.target_id})")
+        False, f"{UNPROVEN_PREFIX}: secret_revealed sem âncora na cena ({ev.target_id})"
+    )
 
 
 def _killed_proof(ev: ProposedWorldEvent, state: dict) -> ValidationResult:
@@ -304,7 +333,8 @@ def _killed_proof(ev: ProposedWorldEvent, state: dict) -> ValidationResult:
                 if _fold(dead) in wanted:
                     return ValidationResult(True)
     return ValidationResult(
-        False, f"{UNPROVEN_PREFIX}: npc_killed sem combate encerrado neste turno")
+        False, f"{UNPROVEN_PREFIX}: npc_killed sem combate encerrado neste turno"
+    )
 
 
 def _proof_gate(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
@@ -333,11 +363,25 @@ def reason_class(reason: str) -> str:
     return "invalid"
 
 
-REASON_CODES = frozenset({
-    "unproven", "cooldown", "rate_limited", "engine_only", "duplicate", "malformed",
-    "unknown_target", "wrong_type", "not_active", "already_done", "no_secret",
-    "invalid_payload", "no_connection", "unique_claimed", "other",
-})
+REASON_CODES = frozenset(
+    {
+        "unproven",
+        "cooldown",
+        "rate_limited",
+        "engine_only",
+        "duplicate",
+        "malformed",
+        "unknown_target",
+        "wrong_type",
+        "not_active",
+        "already_done",
+        "no_secret",
+        "invalid_payload",
+        "no_connection",
+        "unique_claimed",
+        "other",
+    }
+)
 
 
 def reason_code(reason: str) -> str:
@@ -354,24 +398,42 @@ def reason_code(reason: str) -> str:
         return "duplicate"
     if text.startswith("proposta malformada"):
         return "malformed"
-    if ("id desconhecido" in text or "não existe no ARTIFACTS_DB" in text
-            or "não é local do mapa" in text or "relação desconhecida" in text):
+    if (
+        "id desconhecido" in text
+        or "não existe no ARTIFACTS_DB" in text
+        or "não é local do mapa" in text
+        or "relação desconhecida" in text
+    ):
         return "unknown_target"
-    if ("não é do type" in text or "não é facção" in text or "não é item único" in text
-            or "não é uma facção conhecida" in text or "sempre do player" in text
-            or "exige actor player" in text):
+    if (
+        "não é do type" in text
+        or "não é facção" in text
+        or "não é item único" in text
+        or "não é uma facção conhecida" in text
+        or "sempre do player" in text
+        or "exige actor player" in text
+    ):
         return "wrong_type"
     if "não é uma quest ativa" in text:
         return "not_active"
     if "nenhum segredo" in text:
         return "no_secret"
-    if ("já está morto" in text or "já revelado" in text or "já ocorreu" in text
-            or "derrotada" in text or "bloqueada" in text):
+    if (
+        "já está morto" in text
+        or "já revelado" in text
+        or "já ocorreu" in text
+        or "derrotada" in text
+        or "bloqueada" in text
+    ):
         return "already_done"
     if "sem conexão" in text or "não têm conexão" in text:
         return "no_connection"
-    if ("ausente" in text or "inválido" in text or "fora do plano" in text
-            or "sem campaign_plan" in text):
+    if (
+        "ausente" in text
+        or "inválido" in text
+        or "fora do plano" in text
+        or "sem campaign_plan" in text
+    ):
         return "invalid_payload"
     return "other"
 
@@ -394,6 +456,7 @@ def catalog_ref(target_id: object) -> str | None:
         return None
     try:
         from gamedata import ARTIFACTS_DB, get_location
+
         if gr.get_entity(tid) or get_location(tid) or tid in ARTIFACTS_DB:
             return tid
     except Exception:  # silent-ok: ref de catalogo e best-effort; sem ela o log omite o campo
@@ -430,8 +493,10 @@ def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
 
     # Fase 4.1: level_up só nasce no motor (grant_xp) — proposta do LLM chega sem
     # `source` (o schema ProposedWorldEvent não tem o campo) e é rejeitada aqui.
-    if ev.type in ("level_up", "subclass_chosen", "class_apex_unlocked") \
-            and proposal.get("source") != "progression":
+    if (
+        ev.type in ("level_up", "subclass_chosen", "class_apex_unlocked")
+        and proposal.get("source") != "progression"
+    ):
         return ValidationResult(False, "level_up é gerado pelo motor, não proposto")
     # Fase 4.6: player_died idem — só o combate emite.
     if ev.type == "player_died" and proposal.get("source") != "combat":
@@ -440,8 +505,10 @@ def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
     if ev.type == "player_downed" and proposal.get("source") != "combat":
         return ValidationResult(False, "player_downed é gerado pelo motor, não proposto")
     # Fase 6.2: posse de item único é observada pelo motor, nunca proposta.
-    if ev.type in ("unique_item_claimed", "unique_item_lost") and \
-            proposal.get("source") != "engine":
+    if (
+        ev.type in ("unique_item_claimed", "unique_item_lost")
+        and proposal.get("source") != "engine"
+    ):
         return ValidationResult(False, "posse de item único é registrada pelo motor, não proposta")
 
     projection = state.get("world_projection") or {}
@@ -450,14 +517,23 @@ def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
     # 2. Sem duplicata (mesmo type+target já no event_log DESTE turno).
     #    Exceção: multi-level no mesmo turno (boss XP) — level_up distingue por new_level.
     for e in state.get("event_log") or []:
-        if e.get("type") == ev.type and e.get("target_id") == ev.target_id and e.get("turn") == turn:
-            if ev.type == "level_up" and (e.get("payload") or {}).get("new_level") != ev.payload.get("new_level"):
+        if (
+            e.get("type") == ev.type
+            and e.get("target_id") == ev.target_id
+            and e.get("turn") == turn
+        ):
+            if ev.type == "level_up" and (e.get("payload") or {}).get(
+                "new_level"
+            ) != ev.payload.get("new_level"):
                 continue
             # Fase 6.1: mesmo local pode bloquear/limpar rotas para PARES diferentes
-            if ev.type in ("route_blocked", "route_cleared") and \
-                    (e.get("payload") or {}).get("other_location_id") != ev.payload.get("other_location_id"):
+            if ev.type in ("route_blocked", "route_cleared") and (e.get("payload") or {}).get(
+                "other_location_id"
+            ) != ev.payload.get("other_location_id"):
                 continue
-            return ValidationResult(False, f"duplicata: {ev.type}/{ev.target_id} já no turno {turn}")
+            return ValidationResult(
+                False, f"duplicata: {ev.type}/{ev.target_id} já no turno {turn}"
+            )
 
     # 3. Regra específica do tipo.
     result = _VALIDATORS[ev.type](ev, state, projection)

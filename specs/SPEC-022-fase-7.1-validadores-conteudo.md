@@ -93,17 +93,28 @@ from typing import Literal
 
 Severity = Literal["error", "warning"]
 
+
 @dataclass
 class Finding:
-    validator: str    # "frontmatter" | "ids" | "references" | "aliases" | "visibility" | "encoding"
+    validator: str  # "frontmatter" | "ids" | "references" | "aliases" | "visibility" | "encoding"
     severity: Severity
-    path: str         # arquivo onde foi achado (md/json)
-    entity_id: str    # id envolvido ("" se não aplicável)
-    message: str      # humano, em PT-BR
+    path: str  # arquivo onde foi achado (md/json)
+    entity_id: str  # id envolvido ("" se não aplicável)
+    message: str  # humano, em PT-BR
+
 
 CODEX_TYPES = {
-    "location", "faction", "npc", "race", "monster", "artifact",
-    "items", "secret", "perspective", "world_story", "timeline",
+    "location",
+    "faction",
+    "npc",
+    "race",
+    "monster",
+    "artifact",
+    "items",
+    "secret",
+    "perspective",
+    "world_story",
+    "timeline",
 }
 VISIBILITIES = {"public", "hidden", "secret"}
 ```
@@ -113,10 +124,15 @@ VISIBILITIES = {"public", "hidden", "secret"}
 ```python
 def validate_frontmatter(codex_dir: str = CODEX_DIR) -> list[Finding]: ...
 def validate_ids(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) -> list[Finding]: ...
-def validate_references(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) -> list[Finding]: ...
+def validate_references(
+    codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR
+) -> list[Finding]: ...
 def validate_aliases(graph_dir: str = GRAPH_DIR) -> list[Finding]: ...
-def validate_visibility(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) -> list[Finding]: ...
+def validate_visibility(
+    codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR
+) -> list[Finding]: ...
 def validate_encoding(paths: list[str] | None = None) -> list[Finding]: ...
+
 
 def validate_all(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) -> list[Finding]:
     """Roda todos os validadores; ordena por (severity, validator, path)."""

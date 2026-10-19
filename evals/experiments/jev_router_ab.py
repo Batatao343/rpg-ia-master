@@ -77,10 +77,14 @@ class Budget:
     exhausted: bool = False
 
     def consume(self) -> None:
-        if (self.calls >= self.max_calls or
-                (self.reported_cost_usd is not None and
-                 self.reported_cost_usd + self.reserved_per_call_usd > self.max_cost_usd) or
-                (self.calls + 1) * self.reserved_per_call_usd > self.max_cost_usd):
+        if (
+            self.calls >= self.max_calls
+            or (
+                self.reported_cost_usd is not None
+                and self.reported_cost_usd + self.reserved_per_call_usd > self.max_cost_usd
+            )
+            or (self.calls + 1) * self.reserved_per_call_usd > self.max_cost_usd
+        ):
             self.exhausted = True
             raise ExperimentBlocked("external call or reserved spending cap reached")
         self.calls += 1
@@ -100,8 +104,13 @@ def _candidate(case: Any) -> AdapterCase:
     """Only input and opaque case id enter a product candidate; no labels or hints."""
     return AdapterCase(
         id=hashlib.sha256(case.id.encode("utf-8")).hexdigest()[:16],
-        suite="routing", description="", fixture=None,
-        input=copy.deepcopy(case.input), tags=(), source="", created_from=None,
+        suite="routing",
+        description="",
+        fixture=None,
+        input=copy.deepcopy(case.input),
+        tags=(),
+        source="",
+        created_from=None,
     )
 
 
@@ -111,7 +120,8 @@ def _cases() -> tuple[list[Any], str]:
     if manifest["datasets"]["datasets/regression/routing_actions.jsonl"] != digest:
         raise ExperimentBlocked("locked routing dataset hash mismatch")
     cases = [
-        case for case in load_cases(DATASET)
+        case
+        for case in load_cases(DATASET)
         if case.oracle == "classification" and case.input.get("operation") == "route"
     ]
     if len(cases) != 21:
@@ -162,7 +172,10 @@ def _capture_classify(budget: Budget) -> Iterator[dict[str, Any]]:
     original_slot = llm_setup._provider_slot
     original_hook = llm_setup._ATTEMPT_TELEMETRY_HOOK
     capture: dict[str, Any] = {
-        "attempts": [], "confidence": None, "fatal_sanity_error": False, "usage_rows": [],
+        "attempts": [],
+        "confidence": None,
+        "fatal_sanity_error": False,
+        "usage_rows": [],
     }
 
     def real_only(*args: Any, **kwargs: Any) -> Any:
@@ -186,9 +199,12 @@ def _capture_classify(budget: Budget) -> Iterator[dict[str, Any]]:
             input_tokens = usage.get("input_tokens", usage.get("prompt_tokens"))
             output_tokens = usage.get("output_tokens", usage.get("completion_tokens"))
             if isinstance(input_tokens, int) and isinstance(output_tokens, int):
-                capture["usage_rows"].append({
-                    "input_tokens": input_tokens, "output_tokens": output_tokens,
-                })
+                capture["usage_rows"].append(
+                    {
+                        "input_tokens": input_tokens,
+                        "output_tokens": output_tokens,
+                    }
+                )
         return original_normalize(self, result)
 
     @contextmanager
@@ -200,19 +216,35 @@ def _capture_classify(budget: Budget) -> Iterator[dict[str, Any]]:
     def attempt(event: Any) -> None:
         error_text = str(event.error or "").lower()
         if event.outcome == "build_error" or (
-            event.outcome != "success" and any(
-                marker in error_text for marker in
-                ("401", "402", "429", "api key", "api_key", "authentication",
-                 "unauthorized", "quota", "insufficient credit", "configuration")
+            event.outcome != "success"
+            and any(
+                marker in error_text
+                for marker in (
+                    "401",
+                    "402",
+                    "429",
+                    "api key",
+                    "api_key",
+                    "authentication",
+                    "unauthorized",
+                    "quota",
+                    "insufficient credit",
+                    "configuration",
+                )
             )
         ):
             capture["fatal_sanity_error"] = True
-        capture["attempts"].append({
-            "provider": event.provider, "model": event.model,
-            "attempt_index": event.attempt_index, "latency_ms": event.latency_ms,
-            "fell_back": event.fell_back, "outcome": event.outcome,
-            "failure_code": event.structured_failure_code,
-        })
+        capture["attempts"].append(
+            {
+                "provider": event.provider,
+                "model": event.model,
+                "attempt_index": event.attempt_index,
+                "latency_ms": event.latency_ms,
+                "fell_back": event.fell_back,
+                "outcome": event.outcome,
+                "failure_code": event.structured_failure_code,
+            }
+        )
 
     try:
         router.get_llm = real_only
@@ -237,27 +269,36 @@ def _arm_a(case: Any, budget: Budget) -> dict[str, Any]:
         except Exception as exc:
             raise ExperimentBlocked(
                 f"CLASSIFY failed for {case.id}: {type(exc).__name__}",
-                _error_result(str(exc), round((time.perf_counter() - start) * 1000), capture["attempts"]),
+                _error_result(
+                    str(exc), round((time.perf_counter() - start) * 1000), capture["attempts"]
+                ),
             ) from exc
     if budget.exhausted:
         message = "CLASSIFY exhausted external call cap"
         raise ExperimentBlocked(
             message,
-            _error_result(message, round((time.perf_counter() - start) * 1000), capture["attempts"]),
+            _error_result(
+                message, round((time.perf_counter() - start) * 1000), capture["attempts"]
+            ),
         )
     attempts = capture["attempts"]
     if not any(row["outcome"] == "success" for row in attempts):
         message = f"CLASSIFY did not return a real structured decision: {case.id}"
         raise ExperimentBlocked(
-            message, _error_result(message, round((time.perf_counter() - start) * 1000), attempts),
+            message,
+            _error_result(message, round((time.perf_counter() - start) * 1000), attempts),
         )
     return {
-        "route": actual["route"], "confidence": capture["confidence"],
-        "probabilities": "unavailable", "latency_ms": round((time.perf_counter() - start) * 1000),
-        "attempts": attempts, "provider": next(row["provider"] for row in attempts if row["outcome"] == "success"),
+        "route": actual["route"],
+        "confidence": capture["confidence"],
+        "probabilities": "unavailable",
+        "latency_ms": round((time.perf_counter() - start) * 1000),
+        "attempts": attempts,
+        "provider": next(row["provider"] for row in attempts if row["outcome"] == "success"),
         "model": next(row["model"] for row in attempts if row["outcome"] == "success"),
         "usage": capture["usage_rows"] or "unavailable",
-        "cost_usd": "unavailable", "error": None,
+        "cost_usd": "unavailable",
+        "error": None,
         "fatal_sanity_error": capture["fatal_sanity_error"],
     }
 
@@ -283,20 +324,25 @@ def _arm_b(case: Any, backend: JevDecisionBackend, budget: Budget, run_id: str) 
         message = f"Jev {exc.code} for {case.id}"
         raise ExperimentBlocked(
             message,
-            _error_result(message, round((time.perf_counter() - start) * 1000),
-                          [{"provider": "jev", "model": request.model, "outcome": exc.code}]),
+            _error_result(
+                message,
+                round((time.perf_counter() - start) * 1000),
+                [{"provider": "jev", "model": request.model, "outcome": exc.code}],
+            ),
         ) from exc
     answer = result.answers["route"]
     if not isinstance(answer, ChoiceAnswer):
         raise ExperimentBlocked(f"Jev returned non-choice answer for {case.id}")
     record = {
         "route": "storyteller" if answer.choice == "none" else answer.choice,
-        "raw_choice": answer.choice, "confidence": answer.confidence,
+        "raw_choice": answer.choice,
+        "confidence": answer.confidence,
         "probabilities": answer.probabilities,
         "latency_ms": round((time.perf_counter() - start) * 1000),
         "provider_latency_ms": result.latency_ms,
         "attempts": [{"provider": "jev", "model": result.model, "outcome": "success"}],
-        "provider": "jev", "model": result.model,
+        "provider": "jev",
+        "model": result.model,
         "usage": result.usage.model_dump() if result.usage else "unavailable",
         "cost_usd": result.cost_usd if result.cost_usd is not None else "unavailable",
         "error": None,
@@ -311,10 +357,16 @@ def _arm_b(case: Any, backend: JevDecisionBackend, budget: Budget, run_id: str) 
 
 def _error_result(message: str, latency_ms: int, attempts: list[dict[str, Any]]) -> dict[str, Any]:
     return {
-        "route": None, "confidence": "unavailable", "probabilities": "unavailable",
-        "latency_ms": latency_ms, "attempts": attempts,
-        "provider": "unavailable", "model": "unavailable",
-        "usage": "unavailable", "cost_usd": "unavailable", "error": message,
+        "route": None,
+        "confidence": "unavailable",
+        "probabilities": "unavailable",
+        "latency_ms": latency_ms,
+        "attempts": attempts,
+        "provider": "unavailable",
+        "model": "unavailable",
+        "usage": "unavailable",
+        "cost_usd": "unavailable",
+        "error": message,
     }
 
 
@@ -340,7 +392,11 @@ def _percentile(values: list[int], fraction: float) -> float | str:
     ordered = sorted(values)
     rank = (len(ordered) - 1) * fraction
     lower = int(rank)
-    return round(ordered[lower] + (ordered[min(lower + 1, len(ordered) - 1)] - ordered[lower]) * (rank - lower), 2)
+    return round(
+        ordered[lower]
+        + (ordered[min(lower + 1, len(ordered) - 1)] - ordered[lower]) * (rank - lower),
+        2,
+    )
 
 
 def score(raw: dict[str, Any], cases: list[Any]) -> dict[str, Any]:
@@ -349,7 +405,9 @@ def score(raw: dict[str, Any], cases: list[Any]) -> dict[str, Any]:
     summary: dict[str, Any] = {"evidence_type": "development/regression", "promotion": False}
     for cohort in ("pipeline_full", "classifier_eligible"):
         rows = [
-            row for replica in raw["replicas"] for row in replica["rows"]
+            row
+            for replica in raw["replicas"]
+            for row in replica["rows"]
             if (cohort == "pipeline_full" and row["replica"] == 1)
             or (cohort == "classifier_eligible" and row["eligible"])
         ]
@@ -361,19 +419,33 @@ def score(raw: dict[str, Any], cases: list[Any]) -> dict[str, Any]:
             for row in valid:
                 truth = expected[row["case_id"]]
                 route = row[arm]["route"]
-                confusion.setdefault(truth, {})[route] = confusion.setdefault(truth, {}).get(route, 0) + 1
+                confusion.setdefault(truth, {})[route] = (
+                    confusion.setdefault(truth, {}).get(route, 0) + 1
+                )
             latencies = [row[arm]["latency_ms"] for row in valid if row["eligible"]]
             cohort_summary[arm] = {
-                "route_accuracy": (sum(row[arm]["route"] == expected[row["case_id"]] for row in valid) / len(valid)) if valid else "unavailable",
+                "route_accuracy": (
+                    sum(row[arm]["route"] == expected[row["case_id"]] for row in valid) / len(valid)
+                )
+                if valid
+                else "unavailable",
                 "confusion_matrix": confusion,
                 "backend_latency_ms_p50": _percentile(latencies, 0.5),
                 "backend_latency_ms_p95": _percentile(latencies, 0.95),
-                "failure_unavailable_rate": (len(paired) - len(valid)) / len(paired) if paired else "unavailable",
+                "failure_unavailable_rate": (len(paired) - len(valid)) / len(paired)
+                if paired
+                else "unavailable",
             }
         cohort_summary["divergences"] = [
-            {"replica": row["replica"], "case_id": row["case_id"],
-             "expected": expected[row["case_id"]], "a": row["a"]["route"], "b": row["b"]["route"]}
-            for row in paired if row["a"]["route"] != row["b"]["route"]
+            {
+                "replica": row["replica"],
+                "case_id": row["case_id"],
+                "expected": expected[row["case_id"]],
+                "a": row["a"]["route"],
+                "b": row["b"]["route"],
+            }
+            for row in paired
+            if row["a"]["route"] != row["b"]["route"]
         ]
         summary[cohort] = cohort_summary
     return summary
@@ -385,7 +457,9 @@ def run(output_dir: Path, budget: Budget | None = None) -> dict[str, Any]:
     checkout_env = ROOT.parent.parent / ".env" if ROOT.parent.name == ".tmp" else local_env
     load_dotenv(local_env if local_env.exists() else checkout_env, override=False)
     if os.getenv("RPG_FORCE_MOCK") or os.getenv("RPG_NO_MOCK") or os.getenv("LLM_PROVIDER"):
-        raise ExperimentBlocked("mock/no-mock/provider override invalidates current CLASSIFY cascade")
+        raise ExperimentBlocked(
+            "mock/no-mock/provider override invalidates current CLASSIFY cascade"
+        )
     budget = budget or Budget()
     cases, dataset_hash = _cases()
     pre = preflight()
@@ -398,13 +472,19 @@ def run(output_dir: Path, budget: Budget | None = None) -> dict[str, Any]:
     run_id = datetime.now(UTC).strftime("SPEC-178-%Y%m%dT%H%M%SZ") + "-" + uuid4().hex[:8]
     product_sha, product_tree_hash, product_dirty = repository_identity(ROOT)
     raw: dict[str, Any] = {
-        "run_id": run_id, "product_sha": product_sha,
-        "product_tree_hash": product_tree_hash, "product_dirty": product_dirty,
+        "run_id": run_id,
+        "product_sha": product_sha,
+        "product_tree_hash": product_tree_hash,
+        "product_dirty": product_dirty,
         "dataset_hash": dataset_hash,
         "started_at": datetime.now(UTC).isoformat(),
-        "case_order": pre["case_ids"], "eligible_ids": pre["eligible_ids"],
-        "gated_routes": pre["gated_routes"], "budget": asdict(budget),
-        "sanity": {}, "replicas": [], "status": "in_progress",
+        "case_order": pre["case_ids"],
+        "eligible_ids": pre["eligible_ids"],
+        "gated_routes": pre["gated_routes"],
+        "budget": asdict(budget),
+        "sanity": {},
+        "replicas": [],
+        "status": "in_progress",
     }
     raw_path = output_dir / "raw.json"
     _write_json(raw_path, raw)
@@ -414,7 +494,10 @@ def run(output_dir: Path, budget: Budget | None = None) -> dict[str, Any]:
             try:
                 raw["sanity"]["a"] = _arm_a(first, budget)
             except ExperimentBlocked as exc:
-                raw["sanity"]["a"] = {"case_id": first.id, **(exc.record or _error_result(str(exc), 0, []))}
+                raw["sanity"]["a"] = {
+                    "case_id": first.id,
+                    **(exc.record or _error_result(str(exc), 0, [])),
+                }
                 raise
             _write_json(raw_path, raw)
             if raw["sanity"]["a"]["fatal_sanity_error"]:
@@ -422,7 +505,10 @@ def run(output_dir: Path, budget: Budget | None = None) -> dict[str, Any]:
             try:
                 raw["sanity"]["b"] = _arm_b(first, backend, budget, run_id + "-sanity")
             except ExperimentBlocked as exc:
-                raw["sanity"]["b"] = {"case_id": first.id, **(exc.record or _error_result(str(exc), 0, []))}
+                raw["sanity"]["b"] = {
+                    "case_id": first.id,
+                    **(exc.record or _error_result(str(exc), 0, [])),
+                }
                 raise
             _write_json(raw_path, raw)
             for number in range(1, 4):
@@ -437,9 +523,16 @@ def run(output_dir: Path, budget: Budget | None = None) -> dict[str, Any]:
                     if gate:
                         route = pre["gated_routes"][case.id]
                         row["a"] = row["b"] = {
-                            "route": route, "confidence": "unavailable", "probabilities": "unavailable",
-                            "latency_ms": 0, "attempts": [], "provider": "python_gate", "model": "unavailable",
-                            "usage": "unavailable", "cost_usd": "unavailable", "error": None,
+                            "route": route,
+                            "confidence": "unavailable",
+                            "probabilities": "unavailable",
+                            "latency_ms": 0,
+                            "attempts": [],
+                            "provider": "python_gate",
+                            "model": "unavailable",
+                            "usage": "unavailable",
+                            "cost_usd": "unavailable",
+                            "error": None,
                         }
                     else:
                         try:
@@ -482,7 +575,15 @@ def main() -> None:
     if args.max_calls <= 0 or args.max_cost_usd <= 0:
         parser.error("call and spending caps must be positive")
     result = run(args.output_dir, Budget(max_calls=args.max_calls, max_cost_usd=args.max_cost_usd))
-    print(json.dumps({"run_id": result["run_id"], "status": result["status"], "calls": result["budget"]["calls"]}))
+    print(
+        json.dumps(
+            {
+                "run_id": result["run_id"],
+                "status": result["status"],
+                "calls": result["budget"]["calls"],
+            }
+        )
+    )
 
 
 if __name__ == "__main__":

@@ -12,6 +12,7 @@ from services import tactical_profile as tp
 
 class _CountingLLM:
     """LLM que devolve um TacticalProfileModel válido e conta invocações."""
+
     def __init__(self):
         self.calls = 0
 
@@ -21,20 +22,25 @@ class _CountingLLM:
 
     def invoke(self, _prompt):
         self.calls += 1
-        return tp.TacticalProfileModel(priorities=[
-            tp.PriorityModel(trigger="sempre", tipo="obrigatorio",
-                             action_hint="ataca", resistance="flexivel"),
-        ])
+        return tp.TacticalProfileModel(
+            priorities=[
+                tp.PriorityModel(
+                    trigger="sempre", tipo="obrigatorio", action_hint="ataca", resistance="flexivel"
+                ),
+            ]
+        )
 
 
 # ==========================================================================
 # Etapa 1 — pick_action (R1/R2/R3)
 # ==========================================================================
 def test_primeira_prioridade_valida_prevalece():
-    profile = {"priorities": [
-        {"trigger": "lider_caido", "tipo": "obrigatorio", "action_hint": "vinga o líder"},
-        {"trigger": "sempre", "tipo": "obrigatorio", "action_hint": "ataca o mais próximo"},
-    ]}
+    profile = {
+        "priorities": [
+            {"trigger": "lider_caido", "tipo": "obrigatorio", "action_hint": "vinga o líder"},
+            {"trigger": "sempre", "tipo": "obrigatorio", "action_hint": "ataca o mais próximo"},
+        ]
+    }
     # líder não caiu → 1ª pula, 2ª (sempre) prevalece
     d0 = tp.pick_action(profile, {})
     assert d0["action_hint"] == "ataca o mais próximo"
@@ -44,15 +50,23 @@ def test_primeira_prioridade_valida_prevalece():
 
 
 def test_prioridade_obrigatoria_executa_sem_escolha():
-    profile = {"priorities": [{"trigger": "sempre", "tipo": "obrigatorio",
-                               "action_hint": "carrega"}]}
+    profile = {
+        "priorities": [{"trigger": "sempre", "tipo": "obrigatorio", "action_hint": "carrega"}]
+    }
     d = tp.pick_action(profile, {})
     assert d["requires_player_choice"] is False and d["matched"] is True
 
 
 def test_prioridade_oferta_pergunta_ao_jogador():
-    profile = {"priorities": [{"trigger": "aliado_em_perigo", "tipo": "oferta",
-                               "action_hint": "sacrificar-se pelo aliado?"}]}
+    profile = {
+        "priorities": [
+            {
+                "trigger": "aliado_em_perigo",
+                "tipo": "oferta",
+                "action_hint": "sacrificar-se pelo aliado?",
+            }
+        ]
+    }
     d = tp.pick_action(profile, {"aliado_em_perigo": True})
     assert d["requires_player_choice"] is True and d["tipo"] == "oferta"
 
@@ -61,11 +75,19 @@ def test_prioridade_oferta_pergunta_ao_jogador():
 # Etapa 2 — validação de ordem de companheiro (R3/R4/R6)
 # ==========================================================================
 def _paladino(resistance="absoluta"):
-    return {"tactical_profile": {"priorities": [
-        {"trigger": "ordem_incompativel", "tipo": "restricao",
-         "action_hint": "O paladino se recusa a assassinar um inocente.",
-         "resistance": resistance, "blocks": ["matar_inocente"]},
-    ]}}
+    return {
+        "tactical_profile": {
+            "priorities": [
+                {
+                    "trigger": "ordem_incompativel",
+                    "tipo": "restricao",
+                    "action_hint": "O paladino se recusa a assassinar um inocente.",
+                    "resistance": resistance,
+                    "blocks": ["matar_inocente"],
+                },
+            ]
+        }
+    }
 
 
 def test_ordem_flexivel_aceita():
@@ -76,9 +98,10 @@ def test_ordem_flexivel_aceita():
 
 def test_ordem_absoluta_recusa_sempre():
     comp = _paladino(resistance="absoluta")
-    res = tp.validate_companion_order(comp, {"action": "atacar", "tags": ["matar_inocente"],
-                                             "leverage": True})
-    assert res["accepted"] is False               # nem leverage vence Absoluta
+    res = tp.validate_companion_order(
+        comp, {"action": "atacar", "tags": ["matar_inocente"], "leverage": True}
+    )
+    assert res["accepted"] is False  # nem leverage vence Absoluta
 
 
 def test_ordem_resistente_cede_com_leverage():
@@ -98,8 +121,10 @@ def test_ordem_recusada_devolve_escolha_ao_jogador():
 # Etapa 3 — controle de party / perda de controle (R6)
 # ==========================================================================
 def test_jogador_controla_party_com_protagonista_fora():
-    party = [{"name": "herói", "conscious": False},           # protagonista fora
-             {"name": "aliado", "conscious": True, "active_conditions": []}]
+    party = [
+        {"name": "herói", "conscious": False},  # protagonista fora
+        {"name": "aliado", "conscious": True, "active_conditions": []},
+    ]
     assert tp.player_retains_party_control(party) is True
     assert tp.player_controls_member(party[1]) is True
 
@@ -125,7 +150,7 @@ def test_perfil_gerado_uma_vez_e_reusado_sem_nova_chamada():
     entry = {"archetype_id": "verme_do_po"}
     p1 = tp.get_or_generate_profile(entry, "Verme do Pó", llm)
     p2 = tp.get_or_generate_profile(entry, "Verme do Pó", llm)
-    assert llm.calls == 1                          # 2ª vez reusa a ficha
+    assert llm.calls == 1  # 2ª vez reusa a ficha
     assert p1 == p2 and entry["tactical_profile"]["priorities"]
 
 
@@ -139,9 +164,16 @@ def test_geracao_com_fallbackllm_cai_no_default_sem_estourar():
 # Etapa 5 — informação revelada progressiva (R7/R8/R9)
 # ==========================================================================
 def test_painel_inicial_mostra_so_campos_publicos():
-    enemy = {"vitalidade": 12, "max_vitalidade": 20, "esquiva": 11, "protecao": 2,
-             "virtudes": {"corpo": 3}, "ferimento_espacos": {"critico": 1},
-             "tactical_profile": {"priorities": []}, "known_cards": ["segredo"]}
+    enemy = {
+        "vitalidade": 12,
+        "max_vitalidade": 20,
+        "esquiva": 11,
+        "protecao": 2,
+        "virtudes": {"corpo": 3},
+        "ferimento_espacos": {"critico": 1},
+        "tactical_profile": {"priorities": []},
+        "known_cards": ["segredo"],
+    }
     panel = bk.public_panel(enemy)
     assert panel["vitalidade"] == 12 and panel["esquiva"] == 11
     assert "virtudes" not in panel and "tactical_profile" not in panel
@@ -171,8 +203,8 @@ def test_variante_pode_ter_carta_exclusiva_ainda_oculta():
     bk.reveal_card(e1, "maremoto")
     # variante do mesmo arquétipo com carta exclusiva marcada
     variante = {"archetype_id": "afogado", "variant_exclusive_cards": ["chamado_abissal"]}
-    bk.reveal_card(variante, "chamado_abissal")     # não propaga pro arquétipo
+    bk.reveal_card(variante, "chamado_abissal")  # não propaga pro arquétipo
     e3 = {"archetype_id": "afogado"}
     bk.apply_persisted_knowledge(e3)
-    assert bk.is_card_revealed(e3, "maremoto")       # comum propaga
+    assert bk.is_card_revealed(e3, "maremoto")  # comum propaga
     assert not bk.is_card_revealed(e3, "chamado_abissal")  # exclusiva de variante não

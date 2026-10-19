@@ -1,4 +1,5 @@
 """Regressões das decisões atômicas do harness de playtest."""
+
 from __future__ import annotations
 
 import random
@@ -61,12 +62,11 @@ def test_profile_decision_rejeita_combinacoes_ambiguas():
 
 def test_carta_texto_e_declaracao_nascem_do_mesmo_id():
     state = _combat_state()
-    decisions = [PROFILES["agressivo"].decide(state, random.Random(seed))
-                 for seed in range(30)]
+    decisions = [PROFILES["agressivo"].decide(state, random.Random(seed)) for seed in range(30)]
     chosen = next(
-        d for d in decisions
-        if d.mode == "declaration"
-        and (d.declaration or {}).get("acao", {}).get("kind") == "card"
+        d
+        for d in decisions
+        if d.mode == "declaration" and (d.declaration or {}).get("acao", {}).get("kind") == "card"
     )
     step = chosen.declaration["acao"]
     assert step["card_id"] == "dev_golpe_convite"
@@ -98,11 +98,8 @@ def test_fujao_e_explorador_em_combate_emitem_fuga_sem_declaracao():
         assert decision.declaration is None
         assert decision.mechanical_kind == "flee"
 
-    assert PROFILES["explorador"].decide(
-        state, random.Random(7)
-    ).flee_destination_id in {
-        conn["id"]
-        for conn in __import__("gamedata").get_connections("nova_arcadia")
+    assert PROFILES["explorador"].decide(state, random.Random(7)).flee_destination_id in {
+        conn["id"] for conn in __import__("gamedata").get_connections("nova_arcadia")
     }
 
 
@@ -114,7 +111,13 @@ def test_decisao_atomica_e_deterministica_para_todos_os_perfis():
         assert a.to_record() == b.to_record(), profile.name
         assert a.text
         assert a.mechanical_kind in {
-            "attack", "card", "item", "maneuver", "move", "pass", "flee",
+            "attack",
+            "card",
+            "item",
+            "maneuver",
+            "move",
+            "pass",
+            "flee",
         }
 
 
@@ -169,7 +172,8 @@ def test_invariante_action_declaration_matches_falha_sem_resultado_canonico():
         "action.declaration_matches",
     ]
     assert violations[0].details["mismatches"]["resolved_action"] == [
-        "present", "missing",
+        "present",
+        "missing",
     ]
 
 
@@ -179,18 +183,26 @@ def test_declaracao_interrompida_por_queda_antes_da_iniciativa_nao_e_mismatch():
         mode="declaration",
         declaration={
             "actor_id": "player",
-            "acao": {"kind": "item", "item_id": "pocao_cura_maior",
-                     "target_id": "player"},
+            "acao": {"kind": "item", "item_id": "pocao_cura_maior", "target_id": "player"},
         },
     ).to_record()
     resolved = {
-        "kind": "item", "item_id": "pocao_cura_maior",
-        "target_id": "player", "result": "interrupted", "attempted": False,
+        "kind": "item",
+        "item_id": "pocao_cura_maior",
+        "target_id": "player",
+        "result": "interrupted",
+        "attempted": False,
     }
 
-    assert invariants.check_action_declaration(
-        decision, resolved, turn=3, combat_executed=True,
-    ) == []
+    assert (
+        invariants.check_action_declaration(
+            decision,
+            resolved,
+            turn=3,
+            combat_executed=True,
+        )
+        == []
+    )
 
 
 def test_perfil_descansa_antes_de_abrir_novo_combate_se_inconsciente():
@@ -210,18 +222,30 @@ def test_resolved_action_so_existe_quando_observada_no_turno_atual():
     previous_state = {
         "combat": {
             "last_player_action": {
-                "kind": "flee", "result": "fled", "attempted": True,
+                "kind": "flee",
+                "result": "fled",
+                "attempted": True,
             },
         },
     }
 
     assert runner._observed_resolved_action({}) == {}
-    assert runner._observed_resolved_action({
-        "storyteller": previous_state,
-    }) == {}
-    assert runner._observed_resolved_action({
-        "combat_agent": previous_state,
-    }) == previous_state["combat"]["last_player_action"]
+    assert (
+        runner._observed_resolved_action(
+            {
+                "storyteller": previous_state,
+            }
+        )
+        == {}
+    )
+    assert (
+        runner._observed_resolved_action(
+            {
+                "combat_agent": previous_state,
+            }
+        )
+        == previous_state["combat"]["last_player_action"]
+    )
 
 
 def test_runner_chama_decide_uma_vez_e_injeta_o_mesmo_payload(monkeypatch):
@@ -258,8 +282,14 @@ def test_runner_chama_decide_uma_vez_e_injeta_o_mesmo_payload(monkeypatch):
     atomic = AtomicProfile()
     monkeypatch.setitem(profiles.PROFILES, "explorador", atomic)
     state = _combat_state()
-    state.update({"game_id": "00000000-0000-0000-0000-000000000111",
-                  "messages": [], "event_log": [], "campaign_plan": {}})
+    state.update(
+        {
+            "game_id": "00000000-0000-0000-0000-000000000111",
+            "messages": [],
+            "event_log": [],
+            "campaign_plan": {},
+        }
+    )
     monkeypatch.setattr(runner, "_build_initial_state", lambda *a, **k: state)
     monkeypatch.setattr(persistence, "save_game_state", lambda _state: True)
     monkeypatch.setattr(persistence, "save_path", lambda _gid: "fake-save.json")
@@ -276,7 +306,9 @@ def test_runner_chama_decide_uma_vez_e_injeta_o_mesmo_payload(monkeypatch):
             out["combat"] = {
                 **current["combat"],
                 "last_player_action": {
-                    "kind": "attack", "target_id": "lobo_1", "result": "hit",
+                    "kind": "attack",
+                    "target_id": "lobo_1",
+                    "result": "hit",
                 },
             }
             yield "updates", {"dm_router": {"next": "combat_agent"}}
@@ -285,17 +317,20 @@ def test_runner_chama_decide_uma_vez_e_injeta_o_mesmo_payload(monkeypatch):
 
     graph = Graph()
     monkeypatch.setattr(main, "app", graph)
-    monkeypatch.setattr(llm_setup, "set_llm_attempt_telemetry_hook",
-                        lambda _fn: None, raising=False)
+    monkeypatch.setattr(
+        llm_setup, "set_llm_attempt_telemetry_hook", lambda _fn: None, raising=False
+    )
 
     result = runner.run_campaign(
-        "explorador", turns=1, seed=3, invariants=True,
+        "explorador",
+        turns=1,
+        seed=3,
+        invariants=True,
     )
 
     assert atomic.calls == 1
     assert graph.captured["combat_declaration"]["acao"]["target_id"] == "lobo_1"
-    human = next(m for m in reversed(graph.captured["messages"])
-                 if isinstance(m, HumanMessage))
+    human = next(m for m in reversed(graph.captured["messages"]) if isinstance(m, HumanMessage))
     assert human.content == "Ataco Lobo Cinzento."
     assert result.history[0].decision["kind"] == "attack"
     assert result.history[0].resolved_action["kind"] == "attack"

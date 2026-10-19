@@ -4,6 +4,7 @@ Tudo aqui e determinístico e sem LLM. ``classify`` mapeia (metodo, path) para U
 middleware aplica o limite por IP, a fronteira de sessao aplica o limite por owner e os
 handlers que gastam LLM chamam ``enforce_daily_quota`` ANTES de invocar o grafo.
 """
+
 from __future__ import annotations
 
 import os
@@ -20,32 +21,58 @@ class RouteClass(NamedTuple):
     pattern: re.Pattern[str]
     methods: frozenset[str]
     ip_limit: int
-    owner_limit: int          # 0 = sem limite por owner nesta camada
+    owner_limit: int  # 0 = sem limite por owner nesta camada
     window_s: int
     daily_quota: bool
 
 
-def _rc(name: str, pattern: str, methods: tuple[str, ...], ip: int, owner: int,
-        *, window: int = 60, daily: bool = False) -> RouteClass:
+def _rc(
+    name: str,
+    pattern: str,
+    methods: tuple[str, ...],
+    ip: int,
+    owner: int,
+    *,
+    window: int = 60,
+    daily: bool = False,
+) -> RouteClass:
     return RouteClass(name, re.compile(pattern), frozenset(methods), ip, owner, window, daily)
 
 
 # Ordem importa: a primeira classe que casa vence (``read_auth`` e a rede de seguranca final).
-ROUTE_CLASSES: dict[str, RouteClass] = {c.name: c for c in (
-    _rc("turn", r"^/game/(action|action/stream|death)$", ("POST",), 60, 20, daily=True),
-    _rc("llm_aux", r"^/game/(new|prologue|art/brief|combat-simulator)$", ("POST",), 30, 6, daily=True),
-    _rc("embedding", r"^/game/chronicle/search$", ("POST",), 30, 10),
-    _rc("quote", rf"^/game/{_ID}/art/(quote|confirm|player/confirm)$", ("POST",), 30, 10),
-    _rc("mutation",
-        rf"^/game/(equip|levelup|cards/prepare)$|^/game/save/{_ID}$|^/game/{_ID}/art/{_ID}/quality$",
-        ("POST", "DELETE"), 60, 30),
-    _rc("payments", r"^/account/(checkout|purchases/google/verify)$", ("POST",), 15, 5),
-    _rc("export", rf"^/account/export$|^/game/{_ID}/audit-export$", ("GET", "POST"), 30, 6),
-    _rc("stt", r"^/account/transcriptions$", ("POST",), 30, 0),   # owner: 5/min no proprio handler
-    _rc("latency", r"^/telemetry/client-latency$", ("POST",), 30, 0),
-    _rc("telemetry", r"^/telemetry/client-error$", ("POST",), 30, 0),   # SPEC-244 (publico, so IP)
-    _rc("read_auth", r"^/(game|account)(/|$)", ("GET", "HEAD"), 300, 120),
-)}
+ROUTE_CLASSES: dict[str, RouteClass] = {
+    c.name: c
+    for c in (
+        _rc("turn", r"^/game/(action|action/stream|death)$", ("POST",), 60, 20, daily=True),
+        _rc(
+            "llm_aux",
+            r"^/game/(new|prologue|art/brief|combat-simulator)$",
+            ("POST",),
+            30,
+            6,
+            daily=True,
+        ),
+        _rc("embedding", r"^/game/chronicle/search$", ("POST",), 30, 10),
+        _rc("quote", rf"^/game/{_ID}/art/(quote|confirm|player/confirm)$", ("POST",), 30, 10),
+        _rc(
+            "mutation",
+            rf"^/game/(equip|levelup|cards/prepare)$|^/game/save/{_ID}$|^/game/{_ID}/art/{_ID}/quality$",
+            ("POST", "DELETE"),
+            60,
+            30,
+        ),
+        _rc("payments", r"^/account/(checkout|purchases/google/verify)$", ("POST",), 15, 5),
+        _rc("export", rf"^/account/export$|^/game/{_ID}/audit-export$", ("GET", "POST"), 30, 6),
+        _rc(
+            "stt", r"^/account/transcriptions$", ("POST",), 30, 0
+        ),  # owner: 5/min no proprio handler
+        _rc("latency", r"^/telemetry/client-latency$", ("POST",), 30, 0),
+        _rc(
+            "telemetry", r"^/telemetry/client-error$", ("POST",), 30, 0
+        ),  # SPEC-244 (publico, so IP)
+        _rc("read_auth", r"^/(game|account)(/|$)", ("GET", "HEAD"), 300, 120),
+    )
+}
 
 LEGACY_DEFAULT_ENV = "RPG_RATE_LIMIT"
 
@@ -96,6 +123,7 @@ def daily_quota_limit(env: Mapping[str, str] | None = None) -> int:
 
 # --- IP real -----------------------------------------------------------------
 
+
 def _first_valid(value: str | None) -> str | None:
     if not value:
         return None
@@ -118,12 +146,15 @@ def client_ip(request: Any, env: Mapping[str, str] | None = None) -> str:
     try:
         if str(env.get("VERCEL", "")).strip():
             found = _first_valid(headers.get("x-vercel-forwarded-for")) or _first_valid(
-                headers.get("x-real-ip"))
+                headers.get("x-real-ip")
+            )
             if found:
                 return found
         hops = _env_int(env, "RPG_TRUSTED_PROXY_HOPS") or 0
         if hops > 0:
-            parts = [p.strip() for p in str(headers.get("x-forwarded-for", "")).split(",") if p.strip()]
+            parts = [
+                p.strip() for p in str(headers.get("x-forwarded-for", "")).split(",") if p.strip()
+            ]
             if len(parts) >= hops:
                 candidate = _first_valid(parts[-hops])
                 if candidate:
@@ -134,6 +165,7 @@ def client_ip(request: Any, env: Mapping[str, str] | None = None) -> str:
 
 
 # --- cota diaria ---------------------------------------------------------------
+
 
 class QuotaDecision(NamedTuple):
     allowed: bool
@@ -154,7 +186,9 @@ class MemoryDailyQuota:
     def __init__(self) -> None:
         self._counts: dict[tuple[str, str, str], int] = {}
 
-    def bump(self, owner_id: Any, cls: str, limit: int, *, now: datetime | None = None) -> QuotaDecision:
+    def bump(
+        self, owner_id: Any, cls: str, limit: int, *, now: datetime | None = None
+    ) -> QuotaDecision:
         now = now or datetime.now(UTC)
         key = (str(owner_id), now.date().isoformat(), cls)
         count = self._counts.get(key, 0)
@@ -173,14 +207,22 @@ _BLOCK_LOG_INTERVAL_S = 60.0
 _block_log_last: dict[tuple[str, str, str], float] = {}
 
 
-def record_block(cls: str, scope: str, *, owner: Any = None, ip: str | None = None,
-                 retry_after: int | None = None, limit: int | None = None) -> None:
+def record_block(
+    cls: str,
+    scope: str,
+    *,
+    owner: Any = None,
+    ip: str | None = None,
+    retry_after: int | None = None,
+    limit: int | None = None,
+) -> None:
     """Metrica (labels fechados, sem ids) + log JSON pseudonimizado e amostrado. Nunca levanta."""
     try:
         import time
 
         from observability.metrics import metrics
         from observability.telemetry import log_event, pseudonym
+
         metrics.increment("rpg_rate_limited_total", {"class": cls, "scope": scope})
         owner_ref = pseudonym(owner) if owner else None
         ip_ref = pseudonym(ip) if ip else None
@@ -192,10 +234,17 @@ def record_block(cls: str, scope: str, *, owner: Any = None, ip: str | None = No
         if len(_block_log_last) > 5000:
             _block_log_last.clear()
         _block_log_last[key] = now
-        log_event("abuse", "blocked", level="warning", cls=cls, scope=scope,
-                  owner_ref=owner_ref, ip_ref=ip_ref,
-                  retry_after_s=int(retry_after) if retry_after is not None else None,
-                  limit=int(limit) if limit is not None else None)
+        log_event(
+            "abuse",
+            "blocked",
+            level="warning",
+            cls=cls,
+            scope=scope,
+            owner_ref=owner_ref,
+            ip_ref=ip_ref,
+            retry_after_s=int(retry_after) if retry_after is not None else None,
+            limit=int(limit) if limit is not None else None,
+        )
     except Exception:  # silent-ok: contabilidade de bloqueio nunca derruba a resposta 429
         pass
 
@@ -207,8 +256,10 @@ def limiter_unavailable(site: str, exc: BaseException) -> None:
     try:
         from observability.metrics import metrics
         from observability.telemetry import log_event
+
         metrics.increment("rpg_rate_limiter_errors_total", {"site": site})
-        log_event("abuse", "limiter_unavailable", level="error", site=site,
-                  error_type=type(exc).__name__)
+        log_event(
+            "abuse", "limiter_unavailable", level="error", site=site, error_type=type(exc).__name__
+        )
     except Exception:  # silent-ok: o log do fail-open nunca derruba a rota
         pass

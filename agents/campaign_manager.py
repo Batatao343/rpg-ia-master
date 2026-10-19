@@ -1,4 +1,5 @@
 """Campaign planning node used to keep multi-step story arcs coherent."""
+
 from typing import List, Optional
 
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -23,7 +24,9 @@ class CampaignPlanModel(BaseModel):
         min_length=3,
         description="Ordered story beats leading to the climax — SEMPRE em português do Brasil (pt-BR), NUNCA em inglês",
     )
-    climax: str = Field(description="The intended climactic moment — SEMPRE em português do Brasil (pt-BR)")
+    climax: str = Field(
+        description="The intended climactic moment — SEMPRE em português do Brasil (pt-BR)"
+    )
     arc_title: str = Field(
         default="",
         description=(
@@ -57,6 +60,7 @@ def _region_of(loc_ref: str):
     """Região de um local por id OU nome exibível; None se não está no mapa
     (ex.: local inventado pelo LLM)."""
     from gamedata import find_location_by_name, get_location
+
     loc = get_location(loc_ref) or find_location_by_name(loc_ref)
     return (loc or {}).get("region")
 
@@ -111,8 +115,11 @@ def _replan_reason(state: GameState) -> str:
     if not plan:
         return "first_plan"
     world = state.get("world", {})
-    if (plan.get("location") and plan["location"] != world.get("current_location")
-            and not _same_region(plan["location"], world.get("current_location", ""))):
+    if (
+        plan.get("location")
+        and plan["location"] != world.get("current_location")
+        and not _same_region(plan["location"], world.get("current_location", ""))
+    ):
         return "region_change"
     last_turn = plan.get("last_planned_turn", -REPLAN_INTERVAL)
     if world.get("turn_count", 0) - last_turn >= REPLAN_INTERVAL:
@@ -139,24 +146,22 @@ def _build_plan(state: GameState, _info: dict | None = None) -> CampaignPlan:
     world_state_context = pack.world_state_block
 
     # --- 2. CONFIGURAÇÃO DO LLM ---
-    planner_llm = get_llm(temperature=0.4, tier=ModelTier.SMART) # Aumentei levemente a temp para criatividade
-    
+    planner_llm = get_llm(
+        temperature=0.4, tier=ModelTier.SMART
+    )  # Aumentei levemente a temp para criatividade
+
     system_msg = SystemMessage(
         content=(
             "<PERSONA>\n"
             "You are the Campaign Architect for a rich, immersive tabletop RPG.\n"
-            
             "<CONTEXT>\n"
             f"Location: {current_loc}\n"
             f"Weather/Time: {world.get('weather', 'unknown')} / {world.get('time_of_day', 'unknown')}\n"
-            
             f"{world_state_context}\n"
             "(Se o estado atual do mundo contradisser o lore, o estado atual VENCE.)\n"
-
             "<LORE_CONTEXT>\n"
             f"{lore_context}\n"
             "</LORE_CONTEXT>\n"
-
             "<INSTRUCTIONS>\n"
             "Design a concise plot roadmap (3-5 beats) for the current scene.\n"
             "0. IDIOMA (OBRIGATÓRIO): escreva os beats, o climax e o arc_title SEMPRE "
@@ -171,7 +176,6 @@ def _build_plan(state: GameState, _info: dict | None = None) -> CampaignPlan:
             "4. ARC TITLE: current arc title is "
             f"'{current_arc or '(none yet)'}'. KEEP it if the story arc continues; "
             "change it ONLY when a truly new arc begins (3-6 words, pt-BR).\n"
-
             "<EXEMPLO>\n"
             "Lore: 'As Cavernas Sussurrantes são assombradas por ecos do passado.'\n"
             "Beats: ['Descreva os ecos perturbadores imitando o grupo', 'O jogador acha um esqueleto com um bilhete de aviso', 'Os ecos se fundem num guardião espectral']\n"
@@ -183,8 +187,8 @@ def _build_plan(state: GameState, _info: dict | None = None) -> CampaignPlan:
     prefix = "Recent player intent: " if last_human else "Initial setup: "
     # SPEC-223 R5: a intenção do jogador entra delimitada como dado.
     human_msg = HumanMessage(
-        content=prefix + (wrap_player_input(last_intent) if last_intent
-                          else "Start the scene with strong hooks.")
+        content=prefix
+        + (wrap_player_input(last_intent) if last_intent else "Start the scene with strong hooks.")
     )
 
     # spec beats-visibilidade-ptbr (R2/R4): sanitização de segredo + idioma.
@@ -205,10 +209,11 @@ def _build_plan(state: GameState, _info: dict | None = None) -> CampaignPlan:
         # R4: idioma — beat em inglês re-tenta 1x reforçando pt-BR; 2ª falha
         # mantém o plano anterior (retorna None → needs_replan fica).
         if any(looks_english(b) for b in plan.beats) or looks_english(plan.climax):
-            plan = _invoke("ATENÇÃO: os beats, o climax e o arc_title DEVEM estar 100% "
-                           "em PORTUGUÊS DO BRASIL (pt-BR). Reescreva TUDO em pt-BR agora.")
-            if (not isinstance(plan, CampaignPlanModel)
-                    or any(looks_english(b) for b in plan.beats)):
+            plan = _invoke(
+                "ATENÇÃO: os beats, o climax e o arc_title DEVEM estar 100% "
+                "em PORTUGUÊS DO BRASIL (pt-BR). Reescreva TUDO em pt-BR agora."
+            )
+            if not isinstance(plan, CampaignPlanModel) or any(looks_english(b) for b in plan.beats):
                 _log_event("campaign", "beats_english_after_retry", level="warning")
                 if _info is not None:
                     _info["outcome"] = "previous_kept"
@@ -218,8 +223,7 @@ def _build_plan(state: GameState, _info: dict | None = None) -> CampaignPlan:
         if _info is not None:
             _info["outcome"] = "llm"
         beats: list[CampaignBeat] = [
-            {"description": sanitize_beat(beat, state), "status": "pending"}
-            for beat in plan.beats
+            {"description": sanitize_beat(beat, state), "status": "pending"} for beat in plan.beats
         ]
         return {
             # Grounding é mecânico: o modelo propõe conteúdo, não geografia ativa.
@@ -240,8 +244,10 @@ def _build_plan(state: GameState, _info: dict | None = None) -> CampaignPlan:
         # template ancorado no local atual é o mal menor (1× por troca de região).
         _old = state.get("campaign_plan") or {}
         from observability.telemetry import log_fallback
-        if _old.get("beats") and _same_region(str(_old.get("location") or ""),
-                                              str(current_loc or "")):
+
+        if _old.get("beats") and _same_region(
+            str(_old.get("location") or ""), str(current_loc or "")
+        ):
             log_fallback("campaign", "previous_plan_kept", exc)
             if _info is not None:
                 _info["outcome"] = "previous_kept"
@@ -254,7 +260,10 @@ def _build_plan(state: GameState, _info: dict | None = None) -> CampaignPlan:
         fallback_beats: list[CampaignBeat] = [
             {"description": f"Explore os mistérios de {current_loc}.", "status": "pending"},
             {"description": "Enfrente um desafio ligado ao ambiente local.", "status": "pending"},
-            {"description": "Faça uma descoberta importante ou encare uma ameaça.", "status": "pending"},
+            {
+                "description": "Faça uma descoberta importante ou encare uma ameaça.",
+                "status": "pending",
+            },
         ]
         return {
             "location": current_loc,
@@ -289,8 +298,10 @@ def _campaign_manager_node(state: GameState):
     else:
         world["turn_count"] = world.get("turn_count", 0) + 1
         from services.continuity import advance_action
+
         continuity = advance_action(
-            state.get("continuity"), canonical_turn=int(world["turn_count"]),
+            state.get("continuity"),
+            canonical_turn=int(world["turn_count"]),
         )
     effective_state = {**state, "world": world, "continuity": continuity}
 
@@ -325,10 +336,15 @@ def _campaign_manager_node(state: GameState):
 
     _log_event("campaign", "generating_plot", level="info")
     _plan_info: dict = {}
-    _reason = _replan_reason(effective_state)   # antes do build (que pode mexer no estado)
+    _reason = _replan_reason(effective_state)  # antes do build (que pode mexer no estado)
     new_plan = _build_plan(effective_state, _plan_info)
-    _log_event("campaign", "replan", level="info", reason=_reason,
-               outcome=_plan_info.get("outcome", "llm" if new_plan else "previous_kept"))
+    _log_event(
+        "campaign",
+        "replan",
+        level="info",
+        reason=_reason,
+        outcome=_plan_info.get("outcome", "llm" if new_plan else "previous_kept"),
+    )
     # spec beats-visibilidade-ptbr (R4): não conseguiu um plano em pt-BR → mantém
     # o anterior e deixa needs_replan ligado para tentar de novo no próximo turno.
     if new_plan is None:

@@ -24,7 +24,9 @@ def main() -> int:
     pool = PostgresPool(resolve_dsn(parser, args))
     try:
         bundle = export_game(
-            pool, Principal(args.owner, "export", str(args.owner), local=True), args.game_id,
+            pool,
+            Principal(args.owner, "export", str(args.owner), local=True),
+            args.game_id,
         )
     finally:
         pool.close()
@@ -32,7 +34,9 @@ def main() -> int:
     if errors:
         raise RuntimeError(f"export inválido: {errors}")
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(bundle, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+    args.output.write_text(
+        json.dumps(bundle, ensure_ascii=False, indent=2, default=str), encoding="utf-8"
+    )
     print(json.dumps({"output": str(args.output), "state_sha256": bundle["state_sha256"]}))
     return 0
 

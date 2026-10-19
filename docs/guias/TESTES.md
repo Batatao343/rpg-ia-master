@@ -33,12 +33,14 @@ Regras: executor **não** roda a camada 2; comando > 2 min vai para background c
 
 ## Ruff (incremental)
 
-- Regras: `F`, `B`, `E4/E7/E9` (`pyproject.toml`). `E501` fora; `B905` depois.
+- Regras: `F`, `B`, `E4/E7/E9`, `I` (isort) e `UP` (py313) em `pyproject.toml`.
+  `E501` fora; `B905` depois. `ruff format` é obrigatório (`ruff format --check .` no CI e
+  no pre-commit); `evals/core`, `evals/evaluators`, `evals/__main__.py`, `evals/datasets` e
+  `web/e2e/contracts` ficam fora do format e de `I`/`UP` (hashes travados da régua).
 - Dívida antiga congelada em `ruff-baseline.toml` (gerado; só encolhe):
   conserte um arquivo e rode `bash scripts/dev/py.sh scripts/dev/ruff_baseline.py`.
   Arquivo novo recebe todas as regras.
-- Próximos degraus (commits mecânicos, **sem worktrees vivos**): `I` + `UP` com
-  `ruff check --fix`, depois `ruff format` one-shot.
+- Degraus 1–3 concluídos (I, UP, format). Antes de commitar: `ruff check --fix` + `ruff format`.
 
 ## Frontend
 

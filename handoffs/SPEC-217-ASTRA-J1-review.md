@@ -13,7 +13,9 @@ Estrutura final congelada para a J2:
 ```python
 FROZEN_J1_POLICY = Policy(label_set="plain", with_target=True, combat_guard=True, tau=0.50)
 # variant_id = "plain+target+guard@0.50"
-FROZEN_J1_STRUCTURE_DIGEST = "sha256:80225d161ff31f226919c67b34195bdd864d5aece3c5dfc95f411093f3dd10f5"
+FROZEN_J1_STRUCTURE_DIGEST = (
+    "sha256:80225d161ff31f226919c67b34195bdd864d5aece3c5dfc95f411093f3dd10f5"
+)
 ```
 
 O hash anterior (`950917…4b81`, guarda desligada) fica **superado**. A requisição

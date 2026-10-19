@@ -11,6 +11,7 @@ existe, nunca cria do nada, e respeita proibições rígidas (R4/R6).
 ADITIVO: módulo novo + testes. O consumidor de `abyss_charge` e a fiação no loop
 de combate entram no cutover (conflito-13).
 """
+
 import random
 from typing import List, Optional, Tuple
 
@@ -27,9 +28,15 @@ ABYSS_SIGNATURE = (
 
 # R4: condições que o Abismo NÃO pode impor (controle mental / obrigar contra a
 # personalidade — o Abismo é impessoal, sem plano sobre a mente alheia).
-_FORBIDDEN_CONDITIONS = frozenset({
-    "controle_mental", "controle mental", "dominado", "enfeiticado", "possuido",
-})
+_FORBIDDEN_CONDITIONS = frozenset(
+    {
+        "controle_mental",
+        "controle mental",
+        "dominado",
+        "enfeiticado",
+        "possuido",
+    }
+)
 
 
 # ==========================================================================
@@ -40,9 +47,9 @@ class PreparedAbyssEvent(BaseModel):
     gatilho: str = "sempre"
     prioridade: int = 0
     cargas_necessarias: int = 1
-    effect: dict = Field(default_factory=dict)     # EffectSpec (conflito-03)
+    effect: dict = Field(default_factory=dict)  # EffectSpec (conflito-03)
     usos_permitidos: int = 1
-    base_na_cena: str = ""                          # elemento existente que justifica o evento
+    base_na_cena: str = ""  # elemento existente que justifica o evento
 
 
 # ==========================================================================
@@ -56,7 +63,7 @@ def _scene_tokens(scene_objects) -> set:
                 v = str(o.get(k, "") or "").strip().lower()
                 if v:
                     tokens.add(v)
-            for tag in (o.get("tags") or []):
+            for tag in o.get("tags") or []:
                 tokens.add(str(tag).strip().lower())
         else:
             tokens.add(str(o).strip().lower())
@@ -93,8 +100,9 @@ def _usos_restantes(event: dict) -> int:
     return int(event.get("usos_restantes", event.get("usos_permitidos", 1)) or 0)
 
 
-def can_trigger(event: dict, scene_state: dict | None, charges_available: int, *,
-                scene_objects=None) -> bool:
+def can_trigger(
+    event: dict, scene_state: dict | None, charges_available: int, *, scene_objects=None
+) -> bool:
     """R2: pode carregar SE Cargas suficientes + usos restantes + gatilho válido no
     estado da cena (+ base na cena, quando os objetos forem passados). 100%
     determinístico, sem LLM."""
@@ -109,12 +117,21 @@ def can_trigger(event: dict, scene_state: dict | None, charges_available: int, *
     return True
 
 
-def select_event(events: list[dict], scene_state: dict | None, charges_available: int, *,
-                 seed=None, scene_objects=None) -> dict | None:
+def select_event(
+    events: list[dict],
+    scene_state: dict | None,
+    charges_available: int,
+    *,
+    seed=None,
+    scene_objects=None,
+) -> dict | None:
     """R2: entre os eventos que podem carregar, a maior PRIORIDADE vence; empate é
     resolvido deterministicamente por seed (ou por id, estável). Sem candidato → None."""
-    candidatos = [e for e in (events or [])
-                  if can_trigger(e, scene_state, charges_available, scene_objects=scene_objects)]
+    candidatos = [
+        e
+        for e in (events or [])
+        if can_trigger(e, scene_state, charges_available, scene_objects=scene_objects)
+    ]
     if not candidatos:
         return None
     top = max(int(e.get("prioridade", 0) or 0) for e in candidatos)
@@ -145,8 +162,11 @@ def validate_abyss_effect(effect: dict, *, context: dict | None = None) -> tuple
         return False, "não desfaz sucesso já resolvido (R6)"
     if kind == "apply_condition":
         cond = str(params.get("condition", "")).lower()
-        if (cond in _FORBIDDEN_CONDITIONS or params.get("mind_control")
-                or params.get("force_against_personality")):
+        if (
+            cond in _FORBIDDEN_CONDITIONS
+            or params.get("mind_control")
+            or params.get("force_against_personality")
+        ):
             return False, "não controla mentalmente nem obriga contra a personalidade"
     if params.get("direct_wound") or params.get("aggravate_wound_out_of_combat"):
         return False, "não cria nem agrava Ferimento diretamente"
@@ -156,8 +176,9 @@ def validate_abyss_effect(effect: dict, *, context: dict | None = None) -> tuple
 # ==========================================================================
 # Etapa 4 — disparo + assinatura + exposição de gasto (R3)
 # ==========================================================================
-def trigger_event(event: dict, scene_state: dict | None = None, *,
-                  context: dict | None = None) -> dict:
+def trigger_event(
+    event: dict, scene_state: dict | None = None, *, context: dict | None = None
+) -> dict:
     """Dispara um evento preparado: valida as proibições (R4/R6), decrementa os usos
     e devolve o EffectSpec (aplicado pelo mesmo aplicador da conflito-03) + o log com
     a assinatura fixa e o gasto de Carga reportado IMEDIATAMENTE (R3). NÃO chama LLM."""
@@ -167,7 +188,10 @@ def trigger_event(event: dict, scene_state: dict | None = None, *,
     cargas = int(event.get("cargas_necessarias", 1) or 0)
     event["usos_restantes"] = max(0, _usos_restantes(event) - 1)
     return {
-        "ok": True, "error": None, "effect": event.get("effect"),
-        "cargas_gastas": cargas, "signature": ABYSS_SIGNATURE,
+        "ok": True,
+        "error": None,
+        "effect": event.get("effect"),
+        "cargas_gastas": cargas,
+        "signature": ABYSS_SIGNATURE,
         "log": f"[ABISMO] {cargas} Carga(s) gasta(s). {ABYSS_SIGNATURE}",
     }

@@ -51,7 +51,9 @@ def _fixture_repo(tmp_path: Path) -> Path:
     (repo / "data/codex/should_not_index.py").write_text("SECRET = True\n", encoding="utf-8")
     (repo / "assets/should_not_index.py").write_text("ASSET = True\n", encoding="utf-8")
     (repo / "pkg/__init__.py").write_text("", encoding="utf-8")
-    (repo / "pkg/a.py").write_text("from .b import f\n\ndef call():\n    return f()\n", encoding="utf-8")
+    (repo / "pkg/a.py").write_text(
+        "from .b import f\n\ndef call():\n    return f()\n", encoding="utf-8"
+    )
     (repo / "pkg/b.py").write_text("def f():\n    return 'package'\n", encoding="utf-8")
     (repo / "pkg/c.py").write_text(
         "from . import b\n\ndef call():\n    return b.f()\n", encoding="utf-8"
@@ -180,9 +182,13 @@ def test_graph_has_provenance_confidence_and_static_relationships(tmp_path: Path
         and node["qualified_name"] in {"GET /not-http", "GET /match-fake"}
         for node in graph["nodes"]
     )
-    assert any(node["id"] == "file:frontend.ts" and node["kind"] == "file" for node in graph["nodes"])
+    assert any(
+        node["id"] == "file:frontend.ts" and node["kind"] == "file" for node in graph["nodes"]
+    )
     assert all(edge["provenance"]["file"] for edge in graph["edges"])
-    assert all(edge["confidence"] in {"static_exact", "static_best_effort"} for edge in graph["edges"])
+    assert all(
+        edge["confidence"] in {"static_exact", "static_best_effort"} for edge in graph["edges"]
+    )
 
 
 def test_graph_validation_rejects_schema_drift(tmp_path: Path) -> None:
@@ -252,7 +258,9 @@ def test_real_index_excludes_content_and_queries_are_bounded() -> None:
     _, manifest = check_index(ROOT)
     included = manifest["included_files"]
 
-    assert not any(path.startswith(("data/", "assets/", "lore_nova/", "saves/")) for path in included)
+    assert not any(
+        path.startswith(("data/", "assets/", "lore_nova/", "saves/")) for path in included
+    )
     assert not any(path.startswith((".claude/", ".agents/")) for path in included)
     result = query(ROOT, "memory context", limit=999)
     assert result["count"] <= MAX_RESULTS

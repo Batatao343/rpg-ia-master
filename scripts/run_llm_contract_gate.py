@@ -41,8 +41,7 @@ class ContractBudget:
         next_cost = self.conservative_cost_reserved_usd + self.worst_case_request_cost
         if next_requests > self.max_requests:
             raise ContractBudgetExceeded(
-                f"request cap exceeded before {provider} call "
-                f"({next_requests}/{self.max_requests})"
+                f"request cap exceeded before {provider} call ({next_requests}/{self.max_requests})"
             )
         if next_cost > self.max_cost_usd:
             raise ContractBudgetExceeded(
@@ -100,9 +99,9 @@ def run_gate(
     llm_setup.set_llm_attempt_telemetry_hook(capture)
     started_at = datetime.now(UTC)
     try:
-        pytest_code = int(pytest_runner([
-            "-m", "llm_contract", "-v", "-s", f"--junitxml={junit_xml}"
-        ]))
+        pytest_code = int(
+            pytest_runner(["-m", "llm_contract", "-v", "-s", f"--junitxml={junit_xml}"])
+        )
     finally:
         llm_setup.set_llm_attempt_telemetry_hook(None)
         llm_setup._provider_slot = original_slot
@@ -126,9 +125,7 @@ def run_gate(
             "requests_started": budget.requests_started,
             "successful_attempts": successful,
             "estimated_cost_usd": round(estimated_cost, 8),
-            "conservative_cost_reserved_usd": round(
-                budget.conservative_cost_reserved_usd, 8
-            ),
+            "conservative_cost_reserved_usd": round(budget.conservative_cost_reserved_usd, 8),
         },
         "attempts": attempts,
         "pytest_exit_code": pytest_code,

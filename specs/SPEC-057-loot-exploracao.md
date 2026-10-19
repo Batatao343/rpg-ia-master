@@ -124,8 +124,9 @@ do sinal do ouro em `loot.py`).
 
 **Assinaturas:**
 ```python
-def roll_discovery(world: dict, loc: dict, player_level: int,
-                   rng: random.Random) -> Optional[dict]: ...
+def roll_discovery(
+    world: dict, loc: dict, player_level: int, rng: random.Random
+) -> Optional[dict]: ...
 def resolve_treasure(world: dict, loc: dict) -> Optional[dict]: ...  # baú curado, R3
 ```
 

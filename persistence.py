@@ -7,6 +7,7 @@ Fase 10: `save_path()` é o ÚNICO lugar que monta caminho de save a partir de
 game_id vindo do cliente (valida UUID — anti path-traversal); saves carregam
 `schema_version` e passam pelo hard cut de compatibilidade no load.
 """
+
 import glob
 import json
 import os
@@ -52,13 +53,25 @@ def _replace_with_retry(source: str, destination: str, *, attempts: int = 6) -> 
         except PermissionError as exc:
             last_error = exc
             if attempt + 1 < attempts:
-                _log_event("persistence", "atomic_retry", level="debug",
-                           attempt=attempt + 1, attempts=attempts, error_type=type(exc).__name__)
-                time.sleep(0.01 * (2 ** attempt))
+                _log_event(
+                    "persistence",
+                    "atomic_retry",
+                    level="debug",
+                    attempt=attempt + 1,
+                    attempts=attempts,
+                    error_type=type(exc).__name__,
+                )
+                time.sleep(0.01 * (2**attempt))
     assert last_error is not None
-    _log_event("persistence", "atomic_failed", level="error",
-               attempts=attempts, error_type=type(last_error).__name__)
+    _log_event(
+        "persistence",
+        "atomic_failed",
+        level="error",
+        attempts=attempts,
+        error_type=type(last_error).__name__,
+    )
     raise last_error
+
 
 # Versão atual do schema de save (Fase 10). Save sem o campo = versão 0.
 # v2 = campos de camada dos NPCs (spec npcs-3-camadas-traits).
@@ -76,11 +89,14 @@ def normalize_rejected_item_claims(value) -> list[str]:
     """Ledger compacto de itens que a prosa tentou conceder sem autoridade."""
     if not isinstance(value, (list, tuple)):
         return []
-    return list(dict.fromkeys(
-        cleaned
-        for item in value
-        if (cleaned := " ".join(str(item or "").split())[:160].strip())
-    ))[-MAX_REJECTED_ITEM_CLAIMS:]
+    return list(
+        dict.fromkeys(
+            cleaned
+            for item in value
+            if (cleaned := " ".join(str(item or "").split())[:160].strip())
+        )
+    )[-MAX_REJECTED_ITEM_CLAIMS:]
+
 
 def save_path(game_id: str) -> str:
     """Caminho canônico do save de `game_id`.
@@ -132,8 +148,7 @@ def _normalize_vitality_actor(actor: Any) -> Any:
     has_max_vitality = normalized.get("max_vitalidade") is not None
     if has_vitality or has_max_vitality:
         if not has_max_vitality:
-            normalized["max_vitalidade"] = max(
-                1, int(normalized.get("vitalidade", 0) or 0))
+            normalized["max_vitalidade"] = max(1, int(normalized.get("vitalidade", 0) or 0))
         if not has_vitality:
             normalized["vitalidade"] = int(normalized["max_vitalidade"])
         normalized["vitalidade"] = max(
@@ -148,9 +163,11 @@ def _normalize_vitality_actor(actor: Any) -> Any:
         # Só recalcula a escala anatômica quando o save realmente possui Corpo.
         # Fichas legadas/checkpoints sintéticos com apenas HP não podem inferir
         # Corpo=0: isso reduziria silenciosamente, por exemplo, 30 HP para 12.
-        if (normalized.get("class_name") in gamedata.CLASSES
-                and isinstance(normalized.get("virtudes"), dict)
-                and normalized["virtudes"].get("corpo") is not None):
+        if (
+            normalized.get("class_name") in gamedata.CLASSES
+            and isinstance(normalized.get("virtudes"), dict)
+            and normalized["virtudes"].get("corpo") is not None
+        ):
             gamedata.sync_vitality(normalized)
         else:
             gamedata.sync_legacy_hp_aliases(normalized)
@@ -172,13 +189,11 @@ def _migrate_v4_to_v5(raw: dict[str, Any]) -> dict[str, Any]:
         migrated["player"] = _normalize_vitality_actor(migrated.get("player"))
     if "party" in migrated:
         migrated["party"] = [
-            _normalize_vitality_actor(actor)
-            for actor in (migrated.get("party") or [])
+            _normalize_vitality_actor(actor) for actor in (migrated.get("party") or [])
         ]
     if "enemies" in migrated:
         migrated["enemies"] = [
-            _normalize_vitality_actor(actor)
-            for actor in (migrated.get("enemies") or [])
+            _normalize_vitality_actor(actor) for actor in (migrated.get("enemies") or [])
         ]
     if "consumed_conflict_ids" in migrated:
         migrated["consumed_conflict_ids"] = normalize_consumed_conflict_ids(
@@ -195,7 +210,8 @@ def _migrate_v4_to_v5(raw: dict[str, Any]) -> dict[str, Any]:
         ):
             pending["conflict_turn"] = int(world_turn)
         pending["conflict_id"] = ensure_conflict_id(
-            pending, turn=pending.get("conflict_turn"),
+            pending,
+            turn=pending.get("conflict_turn"),
         )
         migrated["conflict_summary"] = pending
     migrated["schema_version"] = 5
@@ -204,11 +220,14 @@ def _migrate_v4_to_v5(raw: dict[str, Any]) -> dict[str, Any]:
 
 def _migrate_v5_to_v6(raw: dict[str, Any]) -> dict[str, Any]:
     migrated = deepcopy(raw)
-    migrated["visual_seen_entity_ids"] = list(dict.fromkeys(
-        str(value) for value in (migrated.get("visual_seen_entity_ids") or []) if value
-    ))[-64:]
+    migrated["visual_seen_entity_ids"] = list(
+        dict.fromkeys(
+            str(value) for value in (migrated.get("visual_seen_entity_ids") or []) if value
+        )
+    )[-64:]
     migrated["visual_cue_ledger"] = [
-        row for row in (migrated.get("visual_cue_ledger") or [])
+        row
+        for row in (migrated.get("visual_cue_ledger") or [])
         if isinstance(row, dict) and row.get("action_key")
     ][-64:]
     migrated["schema_version"] = 6
@@ -218,9 +237,11 @@ def _migrate_v5_to_v6(raw: dict[str, Any]) -> dict[str, Any]:
 def _migrate_v6_to_v7(raw: dict[str, Any]) -> dict[str, Any]:
     migrated = deepcopy(raw)
     from services.continuity import normalize
+
     canonical_turn = int((migrated.get("world") or {}).get("turn_count", 0) or 0)
     migrated["continuity"] = normalize(
-        migrated.get("continuity"), canonical_turn=canonical_turn,
+        migrated.get("continuity"),
+        canonical_turn=canonical_turn,
     )
     migrated["schema_version"] = 7
     return migrated
@@ -230,6 +251,7 @@ def _migrate_v7_to_v8(raw: dict[str, Any]) -> dict[str, Any]:
     migrated = deepcopy(raw)
     from progression import normalize_player_progression
     from services.chronicle import ensure_chronicle_ids
+
     if isinstance(migrated.get("player"), dict):
         migrated["player"] = normalize_player_progression(migrated["player"])
     # Saves anteriores ao hard cut v4 permanecem como memoriais somente-leitura.
@@ -238,7 +260,8 @@ def _migrate_v7_to_v8(raw: dict[str, Any]) -> dict[str, Any]:
     chronicle = migrated.get("chronicle") or []
     if not migrated.get("archived") or all(isinstance(row, dict) for row in chronicle):
         migrated["chronicle"] = ensure_chronicle_ids(
-            chronicle, game_id=str(migrated.get("game_id", "legacy")))
+            chronicle, game_id=str(migrated.get("game_id", "legacy"))
+        )
     migrated["schema_version"] = SCHEMA_VERSION
     return migrated
 
@@ -260,19 +283,29 @@ def migrate_state(raw: dict[str, Any]) -> dict[str, Any]:
     version = int(raw.get("schema_version", 0) or 0)
     result = _migrate_state(raw, version)
     if version < SCHEMA_VERSION:
-        _log_event("persistence", "migrated", level="info",
-                   from_version=version, to_version=SCHEMA_VERSION,
-                   steps=SCHEMA_VERSION - version, game_ref=_game_ref(raw.get("game_id")))
+        _log_event(
+            "persistence",
+            "migrated",
+            level="info",
+            from_version=version,
+            to_version=SCHEMA_VERSION,
+            steps=SCHEMA_VERSION - version,
+            game_ref=_game_ref(raw.get("game_id")),
+        )
     return result
 
 
 def _migrate_state(raw: dict[str, Any], version: int) -> dict[str, Any]:
     if version > SCHEMA_VERSION:
-        _log_event("persistence", "save_schema_newer", level="warning",
-                   found_version=version, supported_version=SCHEMA_VERSION,
-                   game_ref=_game_ref(raw.get("game_id")))
-        raise IncompatibleSaveError(
-            f"save de versão mais nova (v{version} > v{SCHEMA_VERSION})")
+        _log_event(
+            "persistence",
+            "save_schema_newer",
+            level="warning",
+            found_version=version,
+            supported_version=SCHEMA_VERSION,
+            game_ref=_game_ref(raw.get("game_id")),
+        )
+        raise IncompatibleSaveError(f"save de versão mais nova (v{version} > v{SCHEMA_VERSION})")
     if version < 4:
         archived = _migrate_v3_to_v4(deepcopy(raw))
         archived["schema_version"] = 5
@@ -286,16 +319,19 @@ def _migrate_state(raw: dict[str, Any], version: int) -> dict[str, Any]:
         migrated = _migrate_v6_to_v7(migrated)
     return _migrate_v7_to_v8(migrated)
 
+
 def _serialize_messages(messages: list[BaseMessage]) -> list[dict[str, Any]]:
     """Converte mensagens LangChain para dicts JSON (SPEC-228 R11: preserva
     ToolMessage, additional_kwargs, name, id e tool_calls)."""
     from langchain_core.messages import messages_to_dict
+
     return messages_to_dict(list(messages))
 
 
 def _deserialize_messages(data: list[dict[str, Any]]) -> list[BaseMessage]:
     """Lê o formato novo (messages_to_dict) e o legado {type, content}."""
     from langchain_core.messages import messages_from_dict
+
     out: list[BaseMessage] = []
     for item in data or []:
         if not isinstance(item, dict):
@@ -315,17 +351,19 @@ def _deserialize_messages(data: list[dict[str, Any]]) -> list[BaseMessage]:
             out.append(SystemMessage(content=content))
     return out
 
+
 def get_latest_save_file() -> str | None:
     """Retorna o caminho do arquivo de save mais recente na pasta saves/."""
     if not os.path.exists(SAVES_DIR):
         return None
-    
+
     list_of_files = _iter_live_save_files()
     if not list_of_files:
         return None
-        
+
     # Retorna o mais recente
     return max(list_of_files, key=os.path.getctime)
+
 
 # --- spec polish-sessao (R1/R2): listar e excluir saves ----------------------
 
@@ -335,7 +373,8 @@ SESSION_MEMORY_DIR = os.path.join("data", "saves_memory")
 def _iter_live_save_files() -> list[str]:
     """Arquivos de campanha, nunca slots internos de checkpoint."""
     return [
-        path for path in glob.glob(os.path.join(SAVES_DIR, "*.json"))
+        path
+        for path in glob.glob(os.path.join(SAVES_DIR, "*.json"))
         if not path.casefold().endswith(".checkpoint.json")
     ]
 
@@ -355,17 +394,19 @@ def list_saves() -> list[dict[str, Any]]:
             player = raw.get("player") or {}
             world = raw.get("world") or {}
             clock = world.get("world_clock") or {}
-            out.append({
-                "game_id": str(stored.game_id),
-                "name": str(player.get("name", "?")),
-                "class_name": str(player.get("class_name", "")),
-                "level": int(player.get("level", 1) or 1),
-                "location": str(world.get("current_location", "")),
-                "day": int(clock.get("day", 1) or 1),
-                "game_over": bool(raw.get("game_over", False)),
-                "combat_simulation": bool((raw.get("combat_simulation") or {}).get("enabled")),
-                "updated_at": stored.updated_at.timestamp(),
-            })
+            out.append(
+                {
+                    "game_id": str(stored.game_id),
+                    "name": str(player.get("name", "?")),
+                    "class_name": str(player.get("class_name", "")),
+                    "level": int(player.get("level", 1) or 1),
+                    "location": str(world.get("current_location", "")),
+                    "day": int(clock.get("day", 1) or 1),
+                    "game_over": bool(raw.get("game_over", False)),
+                    "combat_simulation": bool((raw.get("combat_simulation") or {}).get("enabled")),
+                    "updated_at": stored.updated_at.timestamp(),
+                }
+            )
         return out
     if not os.path.isdir(SAVES_DIR):
         return []
@@ -377,19 +418,19 @@ def list_saves() -> list[dict[str, Any]]:
             player = raw.get("player") or {}
             world = raw.get("world") or {}
             clock = world.get("world_clock") or {}
-            out.append({
-                "game_id": str(raw.get("game_id", "")),
-                "name": str(player.get("name", "?")),
-                "class_name": str(player.get("class_name", "")),
-                "level": int(player.get("level", 1) or 1),
-                "location": str(world.get("current_location", "")),
-                "day": int(clock.get("day", 1) or 1),
-                "game_over": bool(raw.get("game_over", False)),
-                "combat_simulation": bool(
-                    (raw.get("combat_simulation") or {}).get("enabled")
-                ),
-                "updated_at": os.path.getmtime(path),
-            })
+            out.append(
+                {
+                    "game_id": str(raw.get("game_id", "")),
+                    "name": str(player.get("name", "?")),
+                    "class_name": str(player.get("class_name", "")),
+                    "level": int(player.get("level", 1) or 1),
+                    "location": str(world.get("current_location", "")),
+                    "day": int(clock.get("day", 1) or 1),
+                    "game_over": bool(raw.get("game_over", False)),
+                    "combat_simulation": bool((raw.get("combat_simulation") or {}).get("enabled")),
+                    "updated_at": os.path.getmtime(path),
+                }
+            )
         except Exception:
             continue
     out.sort(key=lambda s: s["updated_at"], reverse=True)
@@ -416,8 +457,7 @@ def delete_save(game_id: str) -> bool:
             removed = True
     if os.path.isdir(checkpoint_memory):
         removed = True
-    shutil.rmtree(os.path.join(SESSION_MEMORY_DIR, str(game_id)),
-                  ignore_errors=True)
+    shutil.rmtree(os.path.join(SESSION_MEMORY_DIR, str(game_id)), ignore_errors=True)
     shutil.rmtree(checkpoint_memory, ignore_errors=True)
     return removed
 
@@ -463,8 +503,9 @@ def save_checkpoint_memory(game_id: str) -> bool:
     source = _safe_session_memory_path(game_id)
     destination = checkpoint_memory_path(game_id)
     os.makedirs(os.path.dirname(os.path.abspath(destination)), exist_ok=True)
-    staged = tempfile.mkdtemp(prefix=f".{game_id}.checkpoint-memory.",
-                              dir=os.path.dirname(os.path.abspath(destination)))
+    staged = tempfile.mkdtemp(
+        prefix=f".{game_id}.checkpoint-memory.", dir=os.path.dirname(os.path.abspath(destination))
+    )
     try:
         if os.path.isdir(source):
             shutil.copytree(source, staged, dirs_exist_ok=True)
@@ -486,12 +527,17 @@ def restore_checkpoint_memory(game_id: str) -> bool:
     destination = _safe_session_memory_path(game_id)
     os.makedirs(os.path.dirname(destination), exist_ok=True)
     empty = os.path.exists(os.path.join(snapshot_dir, _EMPTY_MEMORY_MARKER))
-    staged = tempfile.mkdtemp(prefix=f".{game_id}.restore-memory.",
-                              dir=os.path.dirname(destination))
+    staged = tempfile.mkdtemp(
+        prefix=f".{game_id}.restore-memory.", dir=os.path.dirname(destination)
+    )
     try:
         if not empty:
-            shutil.copytree(snapshot_dir, staged, dirs_exist_ok=True,
-                            ignore=shutil.ignore_patterns(_EMPTY_MEMORY_MARKER))
+            shutil.copytree(
+                snapshot_dir,
+                staged,
+                dirs_exist_ok=True,
+                ignore=shutil.ignore_patterns(_EMPTY_MEMORY_MARKER),
+            )
         if empty:
             shutil.rmtree(staged)
             backup = destination + ".previous"
@@ -522,8 +568,7 @@ def capture_session_memory(game_id: str) -> dict[str, bytes] | None:
     return captured
 
 
-def restore_captured_session_memory(game_id: str,
-                                    captured: dict[str, bytes] | None) -> None:
+def restore_captured_session_memory(game_id: str, captured: dict[str, bytes] | None) -> None:
     destination = _safe_session_memory_path(game_id)
     shutil.rmtree(destination, ignore_errors=True)
     if captured is None:
@@ -547,8 +592,7 @@ def _safe_save_path(game_id: str, suffix: str = "") -> str:
             base = base[:-5] + f"{suffix}.json"  # troca '.json' final
         return base
     except ValueError:
-        safe = "".join(c for c in str(game_id)
-                       if c.isalnum() or c in "-_") or DEFAULT_SAVE_NAME
+        safe = "".join(c for c in str(game_id) if c.isalnum() or c in "-_") or DEFAULT_SAVE_NAME
         return os.path.join(SAVES_DIR, f"{safe}{suffix}.json")
 
 
@@ -575,16 +619,19 @@ def _atomic_write_json(file_path: str, data: dict[str, Any]) -> None:
 
 def _projection_state(raw, state):
     from services.projections import normalize_projection_state
+
     return normalize_projection_state(raw, state)
 
 
 def _knowledge(raw, *, legacy_default):
     from services.npc_knowledge import normalize_knowledge
+
     return normalize_knowledge(raw, legacy_default=legacy_default)
 
 
 def _projection_plan(raw):
     from services.projections import normalize_plan
+
     return normalize_plan(raw)
 
 
@@ -604,7 +651,8 @@ def _state_to_save_data(state: dict[str, Any], game_id: str) -> dict[str, Any]:
         ):
             pending_conflict["conflict_turn"] = int(world_turn)
         pending_conflict["conflict_id"] = ensure_conflict_id(
-            pending_conflict, turn=pending_conflict.get("conflict_turn"),
+            pending_conflict,
+            turn=pending_conflict.get("conflict_turn"),
         )
     return {
         # --- Fase 10: versão do schema (migrations no load) ---
@@ -625,7 +673,8 @@ def _state_to_save_data(state: dict[str, Any], game_id: str) -> dict[str, Any]:
         "memory_canonical_facts": state.get("memory_canonical_facts", []),
         "memory_facts": normalize_memory_facts(state.get("memory_facts")),
         "pending_memory_facts": normalize_memory_facts(
-            state.get("pending_memory_facts"), pending=True,
+            state.get("pending_memory_facts"),
+            pending=True,
         ),
         "presentation_history": list(state.get("presentation_history") or []),
         # SPEC-207 (aditivo, sem bump): ring buffer de refs por turno p/ auditoria.
@@ -640,32 +689,26 @@ def _state_to_save_data(state: dict[str, Any], game_id: str) -> dict[str, Any]:
         "art_offers": deepcopy(state.get("art_offers") or []),
         "evidence_rejections": list(state.get("evidence_rejections") or [])[-64:],
         "memory_rejections": bounded_audit_rows(
-            state.get("memory_rejections"), limit=MAX_MEMORY_REJECTIONS,
+            state.get("memory_rejections"),
+            limit=MAX_MEMORY_REJECTIONS,
         ),
         "memory_promotions": bounded_audit_rows(
-            state.get("memory_promotions"), limit=MAX_MEMORY_PROMOTIONS,
+            state.get("memory_promotions"),
+            limit=MAX_MEMORY_PROMOTIONS,
         ),
-        "rejected_item_claims": normalize_rejected_item_claims(
-            state.get("rejected_item_claims")
-        ),
-        "pending_npc_memory": normalize_pending_npc_memory(
-            state.get("pending_npc_memory")
-        ),
+        "rejected_item_claims": normalize_rejected_item_claims(state.get("rejected_item_claims")),
+        "pending_npc_memory": normalize_pending_npc_memory(state.get("pending_npc_memory")),
         "rag_persistence_error": state.get("rag_persistence_error"),
         "continuity": deepcopy(state.get("continuity") or {}),
         # Canonical presentation receipts survive reload/idempotent retries.
         "last_turn_outcome": deepcopy(state.get("last_turn_outcome") or {}),
         "last_speaker": deepcopy(state.get("last_speaker") or {}),
-        "last_interaction_outcome": deepcopy(
-            state.get("last_interaction_outcome") or {}
-        ),
-
+        "last_interaction_outcome": deepcopy(state.get("last_interaction_outcome") or {}),
         # --- Dados Transicionais ---
         "combat_target": state.get("combat_target"),
         "loot_source": state.get("loot_source"),
         "combat": state.get("combat", {}),
         "conflict_summary": pending_conflict,
-
         # --- Dados Core ---
         "player": player,
         "world": state.get("world", {}),
@@ -678,13 +721,11 @@ def _state_to_save_data(state: dict[str, Any], game_id: str) -> dict[str, Any]:
         "inventory": state.get("inventory", []),
         "quests": state.get("quests", []),
         "campaign_plan": state.get("campaign_plan", {}),
-
         # --- Fase 2.5: eventos estruturados + projeção do mundo ---
         "event_log": state.get("event_log", []),
         "world_projection": state.get("world_projection", {}),
         "pending_world_events": state.get("pending_world_events", []),
         "event_rejections": state.get("event_rejections", []),
-
         # --- Fase 4.6: save morto vira memorial (não aceita ações) ---
         "game_over": bool(state.get("game_over", False)),
         # --- spec checkpoints-morte: tela de morte pendente (persiste entre requests) ---
@@ -693,7 +734,6 @@ def _state_to_save_data(state: dict[str, Any], game_id: str) -> dict[str, Any]:
         "archived": bool(state.get("archived", False)),
         "archived_reason": str(state.get("archived_reason") or ""),
         "combat_simulation": deepcopy(state.get("combat_simulation")),
-
         # --- Histórico ---
         "message_history": _serialize_messages(state.get("messages", [])),
     }
@@ -705,7 +745,8 @@ def save_game_state(state: dict[str, Any]) -> bool:
     Usa o 'game_id' como nome do arquivo.
     """
     _t0 = time.monotonic()
-    if not state: return False
+    if not state:
+        return False
 
     if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
         try:
@@ -723,8 +764,14 @@ def save_game_state(state: dict[str, Any]) -> bool:
             state["_storage_version"] = stored.version
             return True
         except Exception as e:
-            _log_event("persistence", "store_save_failed", level="error", error_type=type(e).__name__,
-                   game_ref=_game_ref(state.get("game_id")), duration_ms=_ms(_t0))
+            _log_event(
+                "persistence",
+                "store_save_failed",
+                level="error",
+                error_type=type(e).__name__,
+                game_ref=_game_ref(state.get("game_id")),
+                duration_ms=_ms(_t0),
+            )
             return False
 
     try:
@@ -745,9 +792,16 @@ def save_game_state(state: dict[str, Any]) -> bool:
         return True
 
     except Exception as e:
-        _log_event("persistence", "save_failed", level="error", error_type=type(e).__name__,
-                   game_ref=_game_ref(state.get("game_id")), duration_ms=_ms(_t0))
+        _log_event(
+            "persistence",
+            "save_failed",
+            level="error",
+            error_type=type(e).__name__,
+            game_ref=_game_ref(state.get("game_id")),
+            duration_ms=_ms(_t0),
+        )
         return False
+
 
 def load_game_state(specific_file: str = None) -> dict[str, Any]:
     """
@@ -775,38 +829,56 @@ def load_game_state(specific_file: str = None) -> dict[str, Any]:
             if get_runtime().resources:
                 from infrastructure.pgvector_memory import PgVectorMemoryStore
                 from services.chronicle_repository import ChronicleRepository
+
                 memory = get_runtime().memory_store
                 if isinstance(memory, PgVectorMemoryStore):
                     state = ChronicleRepository(
-                        get_runtime().resources[0], memory,
+                        get_runtime().resources[0],
+                        memory,
                     ).overlay(principal, state)
                     state["_storage_version"] = stored.version
             return state
         except IncompatibleSaveError:
             raise
         except Exception as e:
-            _log_event("persistence", "store_load_failed", level="warning", error_type=type(e).__name__,
-                   game_ref=_game_ref(specific_file and os.path.basename(str(specific_file)).removesuffix(".json")), duration_ms=_ms(_t0))
+            _log_event(
+                "persistence",
+                "store_load_failed",
+                level="warning",
+                error_type=type(e).__name__,
+                game_ref=_game_ref(
+                    specific_file and os.path.basename(str(specific_file)).removesuffix(".json")
+                ),
+                duration_ms=_ms(_t0),
+            )
             return None
 
     target_file = specific_file
-    
+
     if not target_file:
         target_file = get_latest_save_file()
-    
+
     if not target_file or not os.path.exists(target_file):
         return None
 
     try:
-        with open(target_file, encoding='utf-8') as f:
+        with open(target_file, encoding="utf-8") as f:
             raw_data = json.load(f)
         return _raw_to_state(raw_data)
 
     except IncompatibleSaveError:
         raise
     except Exception as e:
-        _log_event("persistence", "load_failed", level="warning", error_type=type(e).__name__,
-                   game_ref=_game_ref(target_file and os.path.basename(str(target_file)).removesuffix(".json")), duration_ms=_ms(_t0))
+        _log_event(
+            "persistence",
+            "load_failed",
+            level="warning",
+            error_type=type(e).__name__,
+            game_ref=_game_ref(
+                target_file and os.path.basename(str(target_file)).removesuffix(".json")
+            ),
+            duration_ms=_ms(_t0),
+        )
         return None
 
 
@@ -816,10 +888,14 @@ def _normalize_combat_on_load(raw_data: dict[str, Any]) -> dict[str, Any]:
         return {}
     try:
         from services.encounter_manifest import normalize_combat
-        return normalize_combat(combat, raw_data.get("enemies") or [],
-                                game_id=str(raw_data.get("game_id") or "game"))
+
+        return normalize_combat(
+            combat, raw_data.get("enemies") or [], game_id=str(raw_data.get("game_id") or "game")
+        )
     except Exception as exc:  # nunca derruba o load
-        _log_event("persistence", "combat_normalize_failed", level="warning", error=type(exc).__name__)
+        _log_event(
+            "persistence", "combat_normalize_failed", level="warning", error=type(exc).__name__
+        )
         return combat
 
 
@@ -845,7 +921,8 @@ def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
         "memory_canonical_facts": raw_data.get("memory_canonical_facts", []),
         "memory_facts": normalize_memory_facts(raw_data.get("memory_facts")),
         "pending_memory_facts": normalize_memory_facts(
-            raw_data.get("pending_memory_facts"), pending=True,
+            raw_data.get("pending_memory_facts"),
+            pending=True,
         ),
         "presentation_history": list(raw_data.get("presentation_history") or []),
         # SPEC-207 (aditivo, sem bump): save antigo sem a chave → [].
@@ -855,29 +932,29 @@ def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
         "art_offers": deepcopy(raw_data.get("art_offers") or []),
         "evidence_rejections": list(raw_data.get("evidence_rejections") or [])[-64:],
         "memory_rejections": bounded_audit_rows(
-            raw_data.get("memory_rejections"), limit=MAX_MEMORY_REJECTIONS,
+            raw_data.get("memory_rejections"),
+            limit=MAX_MEMORY_REJECTIONS,
         ),
         "memory_promotions": bounded_audit_rows(
-            raw_data.get("memory_promotions"), limit=MAX_MEMORY_PROMOTIONS,
+            raw_data.get("memory_promotions"),
+            limit=MAX_MEMORY_PROMOTIONS,
         ),
         "rejected_item_claims": normalize_rejected_item_claims(
             raw_data.get("rejected_item_claims")
         ),
-        "pending_npc_memory": normalize_pending_npc_memory(
-            raw_data.get("pending_npc_memory")
-        ),
+        "pending_npc_memory": normalize_pending_npc_memory(raw_data.get("pending_npc_memory")),
         "rag_persistence_error": raw_data.get("rag_persistence_error"),
         "continuity": deepcopy(raw_data.get("continuity") or {}),
         "last_turn_outcome": deepcopy(raw_data.get("last_turn_outcome") or {}),
         # SPEC-215 (aditivo, sem bump): save sem ledger → vazio + legacy_knowledge.
         **_knowledge(raw_data, legacy_default=True),
         # SPEC-202 (aditivo, sem bump): save antigo/sem dict → {} (= narrador).
-        "last_speaker": (deepcopy(raw_data["last_speaker"])
-                         if isinstance(raw_data.get("last_speaker"), dict) else {}),
-        "last_interaction_outcome": deepcopy(
-            raw_data.get("last_interaction_outcome") or {}
+        "last_speaker": (
+            deepcopy(raw_data["last_speaker"])
+            if isinstance(raw_data.get("last_speaker"), dict)
+            else {}
         ),
-
+        "last_interaction_outcome": deepcopy(raw_data.get("last_interaction_outcome") or {}),
         # --- Recupera Core ---
         "player": raw_data.get("player", {}),
         "world": raw_data.get("world", {}),
@@ -890,13 +967,11 @@ def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
         "inventory": raw_data.get("inventory", []),
         "quests": raw_data.get("quests", []),
         "campaign_plan": raw_data.get("campaign_plan", {}),
-
         # --- Fase 2.5: eventos estruturados + projeção do mundo ---
         "event_log": raw_data.get("event_log", []),
         "world_projection": raw_data.get("world_projection", {}),
         "pending_world_events": raw_data.get("pending_world_events", []),
         "event_rejections": raw_data.get("event_rejections", []),
-
         # --- Recupera Transicionais ---
         "combat_target": raw_data.get("combat_target"),
         "loot_source": raw_data.get("loot_source"),
@@ -905,10 +980,8 @@ def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
         # ativo ganha phase=ended/outcome preservado.
         "combat": _normalize_combat_on_load(raw_data),
         "conflict_summary": raw_data.get("conflict_summary"),
-
         # --- Recupera Mensagens ---
         "messages": _deserialize_messages(raw_data.get("message_history", [])),
-
         # Fase 4.6: memorial
         "game_over": bool(raw_data.get("game_over", False)),
         # spec checkpoints-morte: tela de morte pendente
@@ -917,7 +990,6 @@ def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
         # spec conflito-01 R10: save pré-Virtudes marcado pela migração v3→v4
         "archived": bool(raw_data.get("archived", False)),
         "archived_reason": raw_data.get("archived_reason", ""),
-
         # Garante campos técnicos de fluxo
         "next": "storyteller",
         "needs_replan": bool(raw_data.get("needs_replan", False)),
@@ -927,11 +999,14 @@ def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
     # resolvê-los. Repara somente essa combinação órfã; combate e death_pending
     # vivos mantêm seu dono normal.
     player = state.get("player") or {}
-    if (not (state.get("combat") or {}).get("active")
-            and not state.get("death_pending")
-            and not state.get("game_over")
-            and (player.get("last_stand_pending") or player.get("estado_terminal"))):
+    if (
+        not (state.get("combat") or {}).get("active")
+        and not state.get("death_pending")
+        and not state.get("game_over")
+        and (player.get("last_stand_pending") or player.get("estado_terminal"))
+    ):
         from services.actor_lifecycle import sanitize_interturn_state
+
         state = sanitize_interturn_state(state)
         state["needs_replan"] = True
     # SPEC-213 (aditivo, sem bump): save v8 sem a chave nasce `completed` em
@@ -942,6 +1017,7 @@ def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
     # idempotente e sem tocar no ouro. Sem bump de schema (D-C default).
     try:
         from inventory import reconcile_equipment
+
         player = state.get("player")
         inventory_ok = all(isinstance(e, dict) for e in (player or {}).get("inventory") or [])
         if isinstance(player, dict) and isinstance(player.get("equipment"), dict) and inventory_ok:
@@ -953,11 +1029,16 @@ def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
 
 # --- spec checkpoints-morte: slot de checkpoint (1 por save, sobrescreve) -----
 
+
 def _log_checkpoint_written(state: dict[str, Any], t0: float) -> None:
-    _log_event("persistence", "checkpoint_written", level="info",
-               game_ref=_game_ref(state.get("game_id")),
-               turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
-               duration_ms=_ms(t0))
+    _log_event(
+        "persistence",
+        "checkpoint_written",
+        level="info",
+        game_ref=_game_ref(state.get("game_id")),
+        turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
+        duration_ms=_ms(t0),
+    )
 
 
 def save_checkpoint(state: dict[str, Any]) -> bool:
@@ -967,10 +1048,12 @@ def save_checkpoint(state: dict[str, Any]) -> bool:
     if not state:
         return False
     from services.actor_lifecycle import transition_readiness
+
     if not transition_readiness(state)["ready"]:
         return False
     state = deepcopy(state)
     from services.continuity import mark_checkpoint
+
     state["continuity"] = mark_checkpoint(
         state.get("continuity"),
         canonical_turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
@@ -989,8 +1072,14 @@ def save_checkpoint(state: dict[str, Any]) -> bool:
             _log_checkpoint_written(state, _t0)
             return True
         except Exception as e:
-            _log_event("persistence", "store_checkpoint_failed", level="error", error_type=type(e).__name__,
-                   game_ref=_game_ref(state.get("game_id")), duration_ms=_ms(_t0))
+            _log_event(
+                "persistence",
+                "store_checkpoint_failed",
+                level="error",
+                error_type=type(e).__name__,
+                game_ref=_game_ref(state.get("game_id")),
+                duration_ms=_ms(_t0),
+            )
             return False
     memory_backup: str | None = None
     memory_destination: str | None = None
@@ -1021,8 +1110,14 @@ def save_checkpoint(state: dict[str, Any]) -> bool:
                 _replace_with_retry(memory_backup, memory_destination)
         if memory_backup:
             shutil.rmtree(memory_backup, ignore_errors=True)
-        _log_event("persistence", "checkpoint_write_failed", level="error", error_type=type(e).__name__,
-                   game_ref=_game_ref(state.get("game_id")), duration_ms=_ms(_t0))
+        _log_event(
+            "persistence",
+            "checkpoint_write_failed",
+            level="error",
+            error_type=type(e).__name__,
+            game_ref=_game_ref(state.get("game_id")),
+            duration_ms=_ms(_t0),
+        )
         return False
 
 
@@ -1052,8 +1147,13 @@ def checkpoint_turn(game_id: str) -> int | None:
 def ensure_synthetic_checkpoint(state: dict[str, Any]) -> bool:
     """SPEC-228 R4: save sem checkpoint válido ganha um checkpoint sintético do
     estado atual, marcado `synthetic_from_turn`. Retorna se gravou."""
-    if (not state or not state.get("game_id") or state.get("archived")
-            or state.get("game_over") or state.get("death_pending")):
+    if (
+        not state
+        or not state.get("game_id")
+        or state.get("archived")
+        or state.get("game_over")
+        or state.get("death_pending")
+    ):
         return False
     if (state.get("combat_simulation") or {}).get("enabled"):
         return False
@@ -1069,7 +1169,13 @@ def ensure_synthetic_checkpoint(state: dict[str, Any]) -> bool:
         cp_turn = checkpoint_turn(gid)
         if cp_turn is None or cp_turn <= turn:
             return False
-        _log_event("persistence", "checkpoint_ahead_discarded", level="warning", checkpoint_turn=cp_turn, turn=turn)
+        _log_event(
+            "persistence",
+            "checkpoint_ahead_discarded",
+            level="warning",
+            checkpoint_turn=cp_turn,
+            turn=turn,
+        )
     snap = deepcopy(state)
     cont = dict(snap.get("continuity") or {})
     cont["synthetic_from_turn"] = turn
@@ -1092,8 +1198,14 @@ def load_checkpoint(game_id: str) -> dict[str, Any] | None:
                 return None
             return store.get_checkpoint(principal, uuid.UUID(str(game_id)))
         except Exception as e:
-            _log_event("persistence", "store_checkpoint_load_failed", level="warning", error_type=type(e).__name__,
-                   game_ref=_game_ref(game_id), duration_ms=_ms(_t0))
+            _log_event(
+                "persistence",
+                "store_checkpoint_load_failed",
+                level="warning",
+                error_type=type(e).__name__,
+                game_ref=_game_ref(game_id),
+                duration_ms=_ms(_t0),
+            )
             return None
     path = _safe_save_path(game_id, suffix=".checkpoint")
     if not os.path.exists(path):
@@ -1102,6 +1214,12 @@ def load_checkpoint(game_id: str) -> dict[str, Any] | None:
         with open(path, encoding="utf-8") as f:
             return _raw_to_state(json.load(f))
     except Exception as e:
-        _log_event("persistence", "checkpoint_load_failed", level="warning", error_type=type(e).__name__,
-                   game_ref=_game_ref(game_id), duration_ms=_ms(_t0))
+        _log_event(
+            "persistence",
+            "checkpoint_load_failed",
+            level="warning",
+            error_type=type(e).__name__,
+            game_ref=_game_ref(game_id),
+            duration_ms=_ms(_t0),
+        )
         return None

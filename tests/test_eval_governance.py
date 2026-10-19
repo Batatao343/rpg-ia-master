@@ -92,7 +92,9 @@ def test_evaluator_source_change_fails_closed(tmp_path: Path) -> None:
 def test_core_ruler_change_fails_closed(tmp_path: Path) -> None:
     eval_root = _copy_evals(tmp_path)
     schemas = eval_root / "core/schemas.py"
-    schemas.write_text(schemas.read_text(encoding="utf-8") + "\n# semantic drift\n", encoding="utf-8")
+    schemas.write_text(
+        schemas.read_text(encoding="utf-8") + "\n# semantic drift\n", encoding="utf-8"
+    )
 
     with pytest.raises(GovernanceError, match="ruler source hash mismatch"):
         validate_repository(eval_root)
@@ -140,7 +142,9 @@ def test_protection_list_cannot_remove_its_own_controls(tmp_path: Path) -> None:
 
 
 def test_exact_evaluator_has_known_good_and_known_bad() -> None:
-    cases = {case.id: case for case in load_cases(EVAL_ROOT / "datasets/regression/governance.jsonl")}
+    cases = {
+        case.id: case for case in load_cases(EVAL_ROOT / "datasets/regression/governance.jsonl")
+    }
     evaluator = ExactEvaluator()
     dataset_hash = f"sha256:{'b' * 64}"
 
@@ -194,17 +198,13 @@ def test_baseline_comparison_rejects_changed_measurement_identity() -> None:
             _metadata(dataset_hashes={"routing": f"sha256:{'c' * 64}"}), baseline
         )
     with pytest.raises(GovernanceError, match="metrics_registry_hash"):
-        assert_baseline_compatible(
-            _metadata(metrics_registry_hash=f"sha256:{'1' * 64}"), baseline
-        )
+        assert_baseline_compatible(_metadata(metrics_registry_hash=f"sha256:{'1' * 64}"), baseline)
     with pytest.raises(GovernanceError, match="ruler_hashes"):
         assert_baseline_compatible(
             _metadata(ruler_hashes={"evaluators/exact.py": f"sha256:{'2' * 64}"}), baseline
         )
     with pytest.raises(GovernanceError, match="case_selection_hash"):
-        assert_baseline_compatible(
-            _metadata(case_selection_hash=f"sha256:{'3' * 64}"), baseline
-        )
+        assert_baseline_compatible(_metadata(case_selection_hash=f"sha256:{'3' * 64}"), baseline)
     with pytest.raises(GovernanceError, match="seed"):
         assert_baseline_compatible(_metadata(seed=8), baseline)
 

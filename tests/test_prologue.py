@@ -44,8 +44,7 @@ def test_build_scenario_mock():
 def test_fallback_scenario_deterministic(monkeypatch):
     import services.prologue as prologue
 
-    monkeypatch.setattr(prologue, "get_llm",
-                        lambda *a, **k: FallbackLLM("sem provider"))
+    monkeypatch.setattr(prologue, "get_llm", lambda *a, **k: FallbackLLM("sem provider"))
     scenario, mock = prologue.build_start_scenario(CHAR_INPUT)
     assert isinstance(scenario, StartScenario)
     assert "Kaelen" in scenario.prologue
@@ -104,10 +103,16 @@ def test_normalize_truncates_llm_overflow():
     attitude livre) — `_normalize` trunca para o cenário passar na borda
     estrita do /game/new (StartScenarioIn)."""
     bruto = StartScenario(
-        prologue="p" * 2500, opening_scene_brief="b" * 1500,
-        arc_title="a" * 120, beats=["x" * 400] * 6, climax="c" * 700,
-        seed_npcs=[SeedNPC(name="N" * 80, role="r" * 100,
-                           attitude="cauteloso e ambicioso", persona="q" * 500)],
+        prologue="p" * 2500,
+        opening_scene_brief="b" * 1500,
+        arc_title="a" * 120,
+        beats=["x" * 400] * 6,
+        climax="c" * 700,
+        seed_npcs=[
+            SeedNPC(
+                name="N" * 80, role="r" * 100, attitude="cauteloso e ambicioso", persona="q" * 500
+            )
+        ],
     )
     out = _normalize(bruto, CHAR_INPUT)
     StartScenarioIn(**out.model_dump())  # não levanta: dentro dos tetos
@@ -121,8 +126,12 @@ def test_normalize_truncates_llm_overflow():
 # ---------------------------------------------------------------------------
 
 _NEW_PAYLOAD = {
-    "name": "Kaelen", "class_name": "Sangromante", "race": "Humano",
-    "region": "Nova Arcádia", "backstory": "renegado de família nobre", "level": 1,
+    "name": "Kaelen",
+    "class_name": "Sangromante",
+    "race": "Humano",
+    "region": "Nova Arcádia",
+    "backstory": "renegado de família nobre",
+    "level": 1,
 }
 
 
@@ -130,6 +139,7 @@ def _client():
     from fastapi.testclient import TestClient
 
     import api
+
     return TestClient(api.app), api
 
 
@@ -140,8 +150,14 @@ def test_api_prologue_returns_scenario():
     body = resp.json()
     assert body["mock"] is True
     sc = body["scenario"]
-    assert set(sc.keys()) >= {"prologue", "opening_scene_brief", "arc_title",
-                              "beats", "climax", "seed_npcs"}
+    assert set(sc.keys()) >= {
+        "prologue",
+        "opening_scene_brief",
+        "arc_title",
+        "beats",
+        "climax",
+        "seed_npcs",
+    }
     assert 3 <= len(sc["beats"]) <= 5
 
 
@@ -149,8 +165,7 @@ def test_api_prologue_rate_limited(monkeypatch):
     client, api = _client()
     monkeypatch.setenv("RPG_RATE_LIMIT", "2")
     api._rate_hits.clear()
-    codes = [client.post("/game/prologue", json=_NEW_PAYLOAD).status_code
-             for _ in range(4)]
+    codes = [client.post("/game/prologue", json=_NEW_PAYLOAD).status_code for _ in range(4)]
     assert 429 in codes
     api._rate_hits.clear()
 
@@ -159,6 +174,7 @@ def test_api_prologue_rate_limited(monkeypatch):
 # Etapa 3 — seed no /game/new
 # ---------------------------------------------------------------------------
 
+
 def _scenario_dict() -> dict:
     scenario, _ = build_start_scenario(CHAR_INPUT)
     return scenario.model_dump()
@@ -166,6 +182,7 @@ def _scenario_dict() -> dict:
 
 def _new_with_scenario(tmp_path, monkeypatch, scenario: dict | None):
     import persistence
+
     monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
     client, _ = _client()
     payload = dict(_NEW_PAYLOAD)
@@ -193,8 +210,7 @@ def test_seeded_plan_survives_first_invoke(tmp_path, monkeypatch):
     sc = _scenario_dict()
     resp = _new_with_scenario(tmp_path, monkeypatch, sc)
     assert resp.status_code == 200
-    state = persistence.load_game_state(
-        persistence.save_path(resp.json()["game_id"]))
+    state = persistence.load_game_state(persistence.save_path(resp.json()["game_id"]))
     plan = state["campaign_plan"]
     assert plan["arc_title"] == sc["arc_title"]
     assert plan["last_planned_turn"] == 0  # não foi refeito pelo manager
@@ -211,8 +227,7 @@ def test_new_game_with_scenario_seeds_npcs(tmp_path, monkeypatch):
     npc_name = sc["seed_npcs"][0]["name"]
     resp = _new_with_scenario(tmp_path, monkeypatch, sc)
     assert resp.status_code == 200
-    state = persistence.load_game_state(
-        persistence.save_path(resp.json()["game_id"]))
+    state = persistence.load_game_state(persistence.save_path(resp.json()["game_id"]))
 
     npc = state["npcs"][npc_name]
     assert npc["in_scene"] is True
@@ -220,6 +235,7 @@ def test_new_game_with_scenario_seeds_npcs(tmp_path, monkeypatch):
 
     state["active_npc_name"] = npc_name
     from langchain_core.messages import HumanMessage
+
     state["messages"].append(HumanMessage(content=f"Falo com {npc_name}."))
     out = npc_actor_node(state)
     msg = out["messages"][-1].content
@@ -235,8 +251,7 @@ def test_new_game_without_scenario_unchanged(tmp_path, monkeypatch):
     assert resp.status_code == 200
     body = resp.json()
     assert body["chronicle"][0]["title"].startswith("O início da jornada")
-    state = persistence.load_game_state(
-        persistence.save_path(body["game_id"]))
+    state = persistence.load_game_state(persistence.save_path(body["game_id"]))
     # mensagem inicial clássica (não o brief de cena do prólogo)
     texts = [m.get("content", "") for m in _raw_messages(state)]
     assert any("Descreva o cenário ao meu redor" in t for t in texts)

@@ -24,7 +24,11 @@ def test_with_new_npc_preserves_complete_v4_sheet_and_tactical_profile(monkeypat
         "attributes": {"dex": 14},
         "combat_stats": {"hp": 8, "ac": 13, "attacks": []},
         "virtudes": {
-            "forca": 1, "agilidade": 3, "corpo": 2, "mente": 2, "carisma": 1,
+            "forca": 1,
+            "agilidade": 3,
+            "corpo": 2,
+            "mente": 2,
+            "carisma": 1,
         },
         "vitalidade": 8,
         "max_vitalidade": 8,
@@ -44,14 +48,28 @@ def test_with_new_npc_preserves_complete_v4_sheet_and_tactical_profile(monkeypat
     monkeypatch.setattr(storyteller, "generate_new_npc", lambda *_args, **_kwargs: generated)
 
     result = storyteller._with_new_npc(
-        {}, "Iria", "Ponte Velha", "Iria surge entre as ruínas.",
-        game_id="game-1", home_id="ponte_velha", turn=4,
+        {},
+        "Iria",
+        "Ponte Velha",
+        "Iria surge entre as ruínas.",
+        game_id="game-1",
+        home_id="ponte_velha",
+        turn=4,
     )["Iria"]
 
     for field in (
-        "id", "virtudes", "vitalidade", "max_vitalidade", "ferimento_espacos",
-        "ferimentos", "esquiva", "categoria", "active_conditions", "status",
-        "tactical_profile", "known_cards",
+        "id",
+        "virtudes",
+        "vitalidade",
+        "max_vitalidade",
+        "ferimento_espacos",
+        "ferimentos",
+        "esquiva",
+        "categoria",
+        "active_conditions",
+        "status",
+        "tactical_profile",
+        "known_cards",
     ):
         assert result[field] == generated[field]
     assert result["location"] == "Ponte Velha"
@@ -61,15 +79,19 @@ def test_with_new_npc_preserves_complete_v4_sheet_and_tactical_profile(monkeypat
 
 def test_normalize_prepared_object_without_uses_gets_one_finite_use():
     source = {
-        "objects": [{
-            "id": "alavanca",
-            "name": "Alavanca",
-            "base_narrativa": "Uma alavanca enferrujada está na parede.",
-            "interactions": [{
-                "label": "puxar",
-                "effect": {"kind": "block_route", "params": {}},
-            }],
-        }],
+        "objects": [
+            {
+                "id": "alavanca",
+                "name": "Alavanca",
+                "base_narrativa": "Uma alavanca enferrujada está na parede.",
+                "interactions": [
+                    {
+                        "label": "puxar",
+                        "effect": {"kind": "block_route", "params": {}},
+                    }
+                ],
+            }
+        ],
     }
 
     scene = prep.normalize_prepared_scene(source, encounter_level=2)
@@ -91,18 +113,22 @@ def test_position_id_is_not_a_canonical_effect_target():
         },
         "enemies": [{"id": "enemy_1", "name": "Salteador"}],
         "npcs": [],
-        "objects": [{
-            "id": "braseiro",
-            "base_narrativa": "Um braseiro arde junto à passagem.",
-            "interactions": [{
-                "label": "derrubar",
-                "effect": {
-                    "kind": "damage",
-                    "potency": "moderado",
-                    "params": {"target": "npc_inventado"},
-                },
-            }],
-        }],
+        "objects": [
+            {
+                "id": "braseiro",
+                "base_narrativa": "Um braseiro arde junto à passagem.",
+                "interactions": [
+                    {
+                        "label": "derrubar",
+                        "effect": {
+                            "kind": "damage",
+                            "potency": "moderado",
+                            "params": {"target": "npc_inventado"},
+                        },
+                    }
+                ],
+            }
+        ],
     }
 
     rejected = prep.normalize_prepared_scene(scene, encounter_level=2)
@@ -121,7 +147,11 @@ def test_prepared_object_damage_is_applied_to_target_vitality():
         "name": "Salteador",
         "categoria": "padrao",
         "virtudes": {
-            "forca": 2, "agilidade": 2, "corpo": 3, "mente": 1, "carisma": 1,
+            "forca": 2,
+            "agilidade": 2,
+            "corpo": 3,
+            "mente": 1,
+            "carisma": 1,
         },
         "vitalidade": gamedata.vitalidade_para_corpo(3),
         "max_vitalidade": gamedata.vitalidade_para_corpo(3),
@@ -133,7 +163,11 @@ def test_prepared_object_damage_is_applied_to_target_vitality():
         "id": "player",
         "name": "Heroína",
         "virtudes": {
-            "forca": 2, "agilidade": 2, "corpo": 2, "mente": 2, "carisma": 2,
+            "forca": 2,
+            "agilidade": 2,
+            "corpo": 2,
+            "mente": 2,
+            "carisma": 2,
         },
     }
     raw_scene = {
@@ -142,19 +176,23 @@ def test_prepared_object_damage_is_applied_to_target_vitality():
             "enemy_1": {"zone_id": "z0"},
         },
         "enemies": [target],
-        "objects": [{
-            "id": "braseiro",
-            "name": "Braseiro",
-            "base_narrativa": "Um braseiro pesado domina a passagem.",
-            "interactions": [{
-                "label": "derrubar",
-                "effect": {
-                    "kind": "damage",
-                    "potency": "moderado",
-                    "params": {"target": "enemy_1"},
-                },
-            }],
-        }],
+        "objects": [
+            {
+                "id": "braseiro",
+                "name": "Braseiro",
+                "base_narrativa": "Um braseiro pesado domina a passagem.",
+                "interactions": [
+                    {
+                        "label": "derrubar",
+                        "effect": {
+                            "kind": "damage",
+                            "potency": "moderado",
+                            "params": {"target": "enemy_1"},
+                        },
+                    }
+                ],
+            }
+        ],
     }
     scene = prep.normalize_prepared_scene(raw_scene, encounter_level=2)
     # Mesmo uma adulteração posterior não atravessa como número livre: o
@@ -183,12 +221,14 @@ def test_prepared_object_damage_is_applied_to_target_vitality():
 
 
 def test_npc_tactical_archetype_explicit_wins_and_materializes_specific_profile():
-    sheet = prep.build_npc_combat_sheet({
-        "name": "Serena",
-        "role": "Oráculo",
-        "persona": "Decifra presságios.",
-        "tactical_archetype": "guardiao",
-    })
+    sheet = prep.build_npc_combat_sheet(
+        {
+            "name": "Serena",
+            "role": "Oráculo",
+            "persona": "Decifra presságios.",
+            "tactical_archetype": "guardiao",
+        }
+    )
 
     assert sheet["tactical_archetype"] == "guardiao"
     assert "protege" in sheet["tactical_profile"]["priorities"][0]["action_hint"].lower()
@@ -196,23 +236,28 @@ def test_npc_tactical_archetype_explicit_wins_and_materializes_specific_profile(
 
 
 def test_npc_tactical_archetype_derives_from_role_and_has_closed_fallback():
-    support = prep.build_npc_combat_sheet({
-        "name": "Mara",
-        "role": "Curandeira de campanha",
-        "persona": "Cuida primeiro dos feridos.",
-    })
-    fallback = prep.build_npc_combat_sheet({
-        "name": "Nulo",
-        "role": "Guardião",
-        "persona": "Sem descrição.",
-        "tactical_archetype": "deus_onisciente",
-    })
+    support = prep.build_npc_combat_sheet(
+        {
+            "name": "Mara",
+            "role": "Curandeira de campanha",
+            "persona": "Cuida primeiro dos feridos.",
+        }
+    )
+    fallback = prep.build_npc_combat_sheet(
+        {
+            "name": "Nulo",
+            "role": "Guardião",
+            "persona": "Sem descrição.",
+            "tactical_archetype": "deus_onisciente",
+        }
+    )
 
     assert support["tactical_archetype"] == "suporte"
     assert support["tactical_profile"] == tactical.npc_profile_for_archetype("suporte")
     assert fallback["tactical_archetype"] == tactical.NPC_TACTICAL_FALLBACK
     assert fallback["tactical_profile"] == tactical.npc_profile_for_archetype(
-        tactical.NPC_TACTICAL_FALLBACK)
+        tactical.NPC_TACTICAL_FALLBACK
+    )
 
 
 class _DialogueLLM:
@@ -271,7 +316,8 @@ def test_npc_dialogue_marks_memory_as_canonical_only(monkeypatch):
         npc_mod,
         "build_context_pack",
         lambda *_args, **_kwargs: SimpleNamespace(
-            memory_block="", lore_block="", world_state_block=""),
+            memory_block="", lore_block="", world_state_block=""
+        ),
     )
     monkeypatch.setattr(npc_mod, "add_npc_memory", lambda *_args, **_kwargs: True)
     state = _dialogue_state()
@@ -302,18 +348,15 @@ def test_npc_dialogue_varia_abertura_sem_ocultar_repeticao(monkeypatch):
         npc_mod,
         "build_context_pack",
         lambda *_args, **_kwargs: SimpleNamespace(
-            memory_block="", lore_block="", world_state_block=""),
+            memory_block="", lore_block="", world_state_block=""
+        ),
     )
     monkeypatch.setattr(npc_mod, "add_npc_memory", lambda *_args, **_kwargs: True)
     state = _dialogue_state()
     state["messages"] = [
-        AIMessage(content=(
-            '**Grum:** "Ela te encara por um longo momento e aponta a saída."'
-        )),
+        AIMessage(content=('**Grum:** "Ela te encara por um longo momento e aponta a saída."')),
         HumanMessage(content="E agora?"),
-        AIMessage(content=(
-            '**Grum:** "Ela te encara por um longo momento sem dizer nada."'
-        )),
+        AIMessage(content=('**Grum:** "Ela te encara por um longo momento sem dizer nada."')),
         HumanMessage(content="Responda."),
     ]
 
@@ -331,9 +374,11 @@ def test_npc_dialogue_varia_abertura_sem_ocultar_repeticao(monkeypatch):
     )
 
     from playtest.invariants import check_repeated_opening
+
     combined = {"messages": [*state["messages"], *result["messages"]]}
     assert [v.check_id for v in check_repeated_opening(combined, None, 3)] == [
-        "narrative.repeated_opening"]
+        "narrative.repeated_opening"
+    ]
 
 
 def test_npc_dialogue_success_is_idempotent_in_global_ledger(monkeypatch):
@@ -342,7 +387,8 @@ def test_npc_dialogue_success_is_idempotent_in_global_ledger(monkeypatch):
         npc_mod,
         "build_context_pack",
         lambda *_args, **_kwargs: SimpleNamespace(
-            memory_block="", lore_block="", world_state_block=""),
+            memory_block="", lore_block="", world_state_block=""
+        ),
     )
     writes = []
     monkeypatch.setattr(
@@ -371,23 +417,28 @@ def test_npc_dialogue_promotes_same_text_from_inference_to_reported(monkeypatch)
         npc_mod,
         "build_context_pack",
         lambda *_args, **_kwargs: SimpleNamespace(
-            memory_block="", lore_block="", world_state_block=""),
+            memory_block="", lore_block="", world_state_block=""
+        ),
     )
     monkeypatch.setattr(npc_mod, "add_npc_memory", lambda *_args, **_kwargs: True)
     baseline = npc_mod.npc_actor_node(_dialogue_state())
     state = _dialogue_state()
-    state["memory_facts"] = [make_memory_fact(
-        baseline["memory_facts"][0]["text"],
-        provenance="inference",
-        source_id="archivist:summary",
-        source_turn=3,
-    )]
+    state["memory_facts"] = [
+        make_memory_fact(
+            baseline["memory_facts"][0]["text"],
+            provenance="inference",
+            source_id="archivist:summary",
+            source_turn=3,
+        )
+    ]
 
     result = npc_mod.npc_actor_node(state)
 
     assert result["memory_facts"][0]["confidence"] == "reported"
     assert result["memory_promotions"][-1] == {
-        "turn": 3, "count": 1, "reason": "npc_claim_direct_write",
+        "turn": 3,
+        "count": 1,
+        "reason": "npc_claim_direct_write",
     }
 
 
@@ -397,7 +448,8 @@ def test_npc_dialogue_failure_enqueues_operation_scoped_retry(monkeypatch):
         npc_mod,
         "build_context_pack",
         lambda *_args, **_kwargs: SimpleNamespace(
-            memory_block="", lore_block="", world_state_block=""),
+            memory_block="", lore_block="", world_state_block=""
+        ),
     )
     monkeypatch.setattr(npc_mod, "add_npc_memory", lambda *_args, **_kwargs: False)
 
@@ -420,15 +472,18 @@ def test_npc_dialogue_success_does_not_erase_old_retry(monkeypatch):
         npc_mod,
         "build_context_pack",
         lambda *_args, **_kwargs: SimpleNamespace(
-            memory_block="", lore_block="", world_state_block=""),
+            memory_block="", lore_block="", world_state_block=""
+        ),
     )
     monkeypatch.setattr(npc_mod, "add_npc_memory", lambda *_args, **_kwargs: True)
     state = _dialogue_state()
-    state["pending_npc_memory"] = [{
-        "operation": "add_npc_memory",
-        "npc_id": "npc_antigo",
-        "facts": ["Uma memória antiga ainda aguarda retry."],
-    }]
+    state["pending_npc_memory"] = [
+        {
+            "operation": "add_npc_memory",
+            "npc_id": "npc_antigo",
+            "facts": ["Uma memória antiga ainda aguarda retry."],
+        }
+    ]
     state["rag_persistence_error"] = "falha antiga"
 
     result = npc_mod.npc_actor_node(state)

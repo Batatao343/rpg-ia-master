@@ -1,4 +1,5 @@
 """SPEC-211 — endpoint GET /game/codex/dossiers."""
+
 from __future__ import annotations
 
 import json
@@ -20,14 +21,31 @@ RATO = "enemy_rato_peste_anel_lama"
 def _save(**extra):
     game_id = str(uuid.uuid4())
     state = {
-        "game_id": game_id, "narrative_summary": "", "messages": [],
+        "game_id": game_id,
+        "narrative_summary": "",
+        "messages": [],
         "player": {"name": "T", "class_name": "Devoto do Abismo", "race": "Humano"},
-        "world": {"current_location": "Nova Arcádia", "current_location_id": "nova_arcadia",
-                  "turn_count": 8, "visited": ["nova_arcadia", HIDDEN_LOC]},
-        "npcs": {"Grum": {"name": "Grum", "role": "Ferreiro", "knowledge_source": "met",
-                          "created_turn": 1, "last_seen_turn": 5, "hidden_traits": ["x_oculto"],
-                          "memory": ["PRIVADO"]}},
-        "factions": [], "faction_intel": {}, "event_log": [], "world_projection": {},
+        "world": {
+            "current_location": "Nova Arcádia",
+            "current_location_id": "nova_arcadia",
+            "turn_count": 8,
+            "visited": ["nova_arcadia", HIDDEN_LOC],
+        },
+        "npcs": {
+            "Grum": {
+                "name": "Grum",
+                "role": "Ferreiro",
+                "knowledge_source": "met",
+                "created_turn": 1,
+                "last_seen_turn": 5,
+                "hidden_traits": ["x_oculto"],
+                "memory": ["PRIVADO"],
+            }
+        },
+        "factions": [],
+        "faction_intel": {},
+        "event_log": [],
+        "world_projection": {},
         "bestiary_knowledge": {RATO: {"seen": 1, "fought": 1, "last_update_turn": 6}},
     }
     state.update(extra)
@@ -45,7 +63,9 @@ def _path(gid):
 
 
 def test_get_dossiers_404_sem_save(client):
-    assert client.get("/game/codex/dossiers", params={"game_id": str(uuid.uuid4())}).status_code == 404
+    assert (
+        client.get("/game/codex/dossiers", params={"game_id": str(uuid.uuid4())}).status_code == 404
+    )
 
 
 def test_get_dossiers_ok_e_oraculos(client):
@@ -73,6 +93,7 @@ def test_arte_so_se_publica(client, monkeypatch):
     body = client.get("/game/codex/dossiers", params={"game_id": gid}).json()
     assert body["sections"]["npcs"][0]["art"]["asset_id"]
     from services import visual_catalog as vc
+
     monkeypatch.setattr(vc, "visual_for", lambda *a, **k: None)
     body = client.get("/game/codex/dossiers", params={"game_id": gid}).json()
     assert body["sections"]["npcs"][0]["art"] is None
@@ -81,8 +102,14 @@ def test_arte_so_se_publica(client, monkeypatch):
 
 def test_oculto_e_inexistente_indistinguiveis(client):
     com = _save()
-    sem = _save(world={"current_location": "Nova Arcádia", "current_location_id": "nova_arcadia",
-                       "turn_count": 8, "visited": ["nova_arcadia"]})
+    sem = _save(
+        world={
+            "current_location": "Nova Arcádia",
+            "current_location_id": "nova_arcadia",
+            "turn_count": 8,
+            "visited": ["nova_arcadia"],
+        }
+    )
     a = client.get("/game/codex/dossiers", params={"game_id": com}).json()
     b = client.get("/game/codex/dossiers", params={"game_id": sem}).json()
     assert json.dumps(a, sort_keys=True) == json.dumps(b, sort_keys=True)
@@ -90,7 +117,9 @@ def test_oculto_e_inexistente_indistinguiveis(client):
 
 def test_sem_cache_publico(client):
     gid = _save()
-    cc = client.get("/game/codex/dossiers", params={"game_id": gid}).headers.get("cache-control", "")
+    cc = client.get("/game/codex/dossiers", params={"game_id": gid}).headers.get(
+        "cache-control", ""
+    )
     assert "no-store" in cc and "public" not in cc
 
 
@@ -115,16 +144,23 @@ def test_save_legado_sem_campos_novos_carrega(client):
 def test_npcs_block_do_hud_omite_npc_oculto(monkeypatch):
     """SPEC-211: o fallback legado (HUD) não reabre NPC oculto que o dossiê esconde."""
     real = pk._entity_visibility
-    monkeypatch.setattr(pk, "_entity_visibility",
-                        lambda eid: "hidden" if eid == "npc_grum" else real(eid))
+    monkeypatch.setattr(
+        pk, "_entity_visibility", lambda eid: "hidden" if eid == "npc_grum" else real(eid)
+    )
     state = {"world": {"turn_count": 1}, "event_log": []}
-    npcs = {"Grum": {"name": "Grum", "knowledge_source": "met"},
-            "Zé": {"name": "Zé", "knowledge_source": "met"}}
+    npcs = {
+        "Grum": {"name": "Grum", "knowledge_source": "met"},
+        "Zé": {"name": "Zé", "knowledge_source": "met"},
+    }
     assert [n["name"] for n in api._npcs_block(npcs, state)] == ["Zé"]
-    assert [n["name"] for n in api._npcs_block(npcs)] == ["Grum", "Zé"]  # sem state: comportamento antigo
+    assert [n["name"] for n in api._npcs_block(npcs)] == [
+        "Grum",
+        "Zé",
+    ]  # sem state: comportamento antigo
 
 
 # --- Revisão Sol independente (SPEC-211) -----------------------------------
+
 
 def test_api_json_criatura_tier1_sem_chaves_acima_do_tier(client):
     """R6: chave acima do tier AUSENTE do JSON da API (não `null`)."""
@@ -132,8 +168,17 @@ def test_api_json_criatura_tier1_sem_chaves_acima_do_tier(client):
     body = client.get("/game/codex/dossiers", params={"game_id": gid}).json()
     creature = body["bestiary"][0]
     assert creature["tier"] == 1
-    for key in ("description", "type", "max_hp", "defense", "attacks",
-                "behavior", "loot", "revealed_cards", "revealed_resistances"):
+    for key in (
+        "description",
+        "type",
+        "max_hp",
+        "defense",
+        "attacks",
+        "behavior",
+        "loot",
+        "revealed_cards",
+        "revealed_resistances",
+    ):
         assert key not in creature, key
 
 

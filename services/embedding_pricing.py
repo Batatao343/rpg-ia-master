@@ -4,6 +4,7 @@ Embedding calls only report input tokens, so they cannot use the text card's
 input+output pricing. A new card is a new file/version; the pinned
 ``rate_card_2026-10-08.json`` is never mutated.
 """
+
 from __future__ import annotations
 
 import json
@@ -12,8 +13,9 @@ from hashlib import sha256
 from pathlib import Path
 from typing import Any
 
-_BYTES = (Path(__file__).resolve().parents[1] /
-          "data/pricing/embedding_rate_card_2026-10-17.json").read_bytes()
+_BYTES = (
+    Path(__file__).resolve().parents[1] / "data/pricing/embedding_rate_card_2026-10-17.json"
+).read_bytes()
 _CARD = json.loads(_BYTES)
 EMBEDDING_PRICING_VERSION: str = _CARD["version"] + "-" + sha256(_BYTES).hexdigest()[:16]
 _MODELS: dict[str, dict[str, Any]] = _CARD["models"]

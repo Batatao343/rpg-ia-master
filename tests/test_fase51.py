@@ -1,4 +1,5 @@
 """Suíte da Fase 5.1 — harness de playtest + 10 perfis (offline, MockLLM)."""
+
 import os
 
 import pytest
@@ -7,6 +8,7 @@ from playtest.profiles import PROFILES
 from playtest.runner import PLAYTEST_SAVES_DIR, run_campaign
 
 # --- Etapa 1 — runner + explorador -----------------------------------------
+
 
 def test_campanha_10_turnos_sem_erros():
     """R6 — smoke automatizado permanente: 10 turnos sem exceção não-capturada."""
@@ -46,6 +48,7 @@ def test_erro_de_turno_nao_derruba_campanha(monkeypatch):
 def test_saves_em_diretorio_isolado():
     """R7 — save da campanha vai p/ saves_playtest/, não polui saves/."""
     import persistence
+
     antes = persistence.SAVES_DIR
     res = run_campaign("explorador", turns=3, seed=3)
     assert PLAYTEST_SAVES_DIR in res.save_path
@@ -55,6 +58,7 @@ def test_saves_em_diretorio_isolado():
 
 
 # --- Etapa 2 — os outros 9 perfis ------------------------------------------
+
 
 @pytest.mark.parametrize("profile", sorted(PROFILES))
 def test_todos_perfis_rodam_5_turnos(profile):
@@ -73,6 +77,7 @@ def test_troll_nao_quebra_router():
 def test_mapa_breaker_nao_teleporta():
     """Local final sempre existe no grafo (nunca teleporta p/ fora do mapa)."""
     from gamedata import get_location
+
     res = run_campaign("mapa_breaker", turns=8, seed=5)
     loc_id = res.final_state.get("world", {}).get("current_location_id", "")
     assert get_location(loc_id), f"local final {loc_id!r} não existe no grafo"
@@ -85,19 +90,23 @@ def test_quester_fecha_quest_no_harness():
     (nenhuma quest criada nesse caminho) — seed 3 exercita o fluxo criar→fechar."""
     res = run_campaign("quester", turns=25, seed=3)
     assert res.errors == [], res.errors
-    completadas = [q for q in res.final_state.get("quests", [])
-                   if isinstance(q, dict) and q.get("status") == "completed"]
+    completadas = [
+        q
+        for q in res.final_state.get("quests", [])
+        if isinstance(q, dict) and q.get("status") == "completed"
+    ]
     assert completadas, "nenhuma quest foi concluída na campanha do quester"
-    assert any(e.get("type") == "quest_completed"
-               for e in res.final_state.get("event_log", []))
+    assert any(e.get("type") == "quest_completed" for e in res.final_state.get("event_log", []))
 
 
 # --- Etapa 3 — CLI ----------------------------------------------------------
+
 
 def test_cli_run_devolve_exit_0(monkeypatch, tmp_path):
     """CLI `run` roda uma campanha curta, grava telemetria e sai 0."""
     from playtest import telemetry
     from playtest.__main__ import main
+
     monkeypatch.setattr(telemetry, "PLAYTEST_RUNS_DIR", str(tmp_path / "runs"))
     rc = main(["run", "--profile", "explorador", "--turns", "3", "--seed", "0"])
     assert rc == 0

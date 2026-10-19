@@ -32,7 +32,20 @@ def main() -> int:
         elif args.command == "check":
             graph, manifest = check_index(root)
             status = freshness_status(root, manifest)
-            print(dumps({"status": status, "nodes": len(graph["nodes"]), "edges": len(graph["edges"]), "commit_sha": manifest["commit_sha"], "source_tree_hash": manifest["source_tree_hash"], "warning": "commit SHA drift; source tree is byte-identical" if status != "fresh" else None}))
+            print(
+                dumps(
+                    {
+                        "status": status,
+                        "nodes": len(graph["nodes"]),
+                        "edges": len(graph["edges"]),
+                        "commit_sha": manifest["commit_sha"],
+                        "source_tree_hash": manifest["source_tree_hash"],
+                        "warning": "commit SHA drift; source tree is byte-identical"
+                        if status != "fresh"
+                        else None,
+                    }
+                )
+            )
         elif args.command == "query":
             print(dumps(query(root, args.value, args.limit)))
         elif args.command == "symbol":

@@ -24,8 +24,14 @@ from services.npc_layers import (
 
 
 def _npc(name: str = "Grum", **extra) -> dict:
-    base = {"name": name, "role": "Taverneiro", "persona": "Rabugento",
-            "location": "Anel de Lama", "relationship": 5, "memory": []}
+    base = {
+        "name": name,
+        "role": "Taverneiro",
+        "persona": "Rabugento",
+        "location": "Anel de Lama",
+        "relationship": 5,
+        "memory": [],
+    }
     base.update(extra)
     return base
 
@@ -33,6 +39,7 @@ def _npc(name: str = "Grum", **extra) -> dict:
 # ---------------------------------------------------------------------------
 # Etapa 1 — catálogo + sorteio + revelação (puro)
 # ---------------------------------------------------------------------------
+
 
 def test_traits_json_valido():
     with open(os.path.join("data", "traits.json"), encoding="utf-8") as f:
@@ -52,9 +59,9 @@ def test_sorteio_deterministico_por_save():
     a = roll_hidden_traits("npc_grum", "game-1")
     b = roll_hidden_traits("npc_grum", "game-1")
     outro_save = roll_hidden_traits("npc_grum", "game-2")
-    assert a == b                      # replay estável
+    assert a == b  # replay estável
     assert 1 <= len(a) <= 3
-    assert len(set(a)) == len(a)       # sem repetição
+    assert len(set(a)) == len(a)  # sem repetição
     # saves diferentes tendem a divergir (não asserta desigualdade estrita —
     # colisão é possível; asserta que a função USA o game_id via seed distinta)
     c = roll_hidden_traits("npc_outro", "game-1")
@@ -88,6 +95,7 @@ def test_trait_dc_modifier_soma():
 # Etapa 2 — schema + backfill + gate in_scene
 # ---------------------------------------------------------------------------
 
+
 def test_ensure_npc_fields_backfill():
     npc = ensure_npc_fields(_npc(), "game-1", home_location_id="na_anel_lama")
     assert npc["home_location_id"] == "na_anel_lama"
@@ -100,16 +108,21 @@ def test_ensure_npc_fields_backfill():
 
 def test_save_antigo_npc_fica_arquivado_sem_conversao():
     from persistence import migrate_state
-    raw = {"game_id": str(uuid.uuid4()), "schema_version": 1,
-           "world": {"current_location_id": "brekmar"},
-           "npcs": {"Grum": _npc()}, "party": []}
+
+    raw = {
+        "game_id": str(uuid.uuid4()),
+        "schema_version": 1,
+        "world": {"current_location_id": "brekmar"},
+        "npcs": {"Grum": _npc()},
+        "party": [],
+    }
     out = migrate_state(raw)
     assert out["archived"] is True
     assert out["npcs"]["Grum"] == raw["npcs"]["Grum"]
 
 
 def test_gate_ausente_e_presente():
-    assert is_in_scene(_npc()) is True                 # legado: sem campo = presente
+    assert is_in_scene(_npc()) is True  # legado: sem campo = presente
     assert is_in_scene(_npc(in_scene=False)) is False
     assert is_in_scene(_npc(in_scene=True)) is True
 
@@ -129,9 +142,9 @@ def test_npc_fora_de_cena_nao_chama_llm(monkeypatch):
 
     monkeypatch.setattr(npc_mod, "get_llm", _explode)
     state = {
-        "game_id": "g1", "active_npc_name": "Volkar",
-        "npcs": {"Volkar": _npc("Volkar", in_scene=False,
-                                home_location_id="sk_farol_chama_negra")},
+        "game_id": "g1",
+        "active_npc_name": "Volkar",
+        "npcs": {"Volkar": _npc("Volkar", in_scene=False, home_location_id="sk_farol_chama_negra")},
         "world": {"current_location": "Nova Arcádia", "turn_count": 3},
         "messages": [HumanMessage(content="Volkar, me conte do farol")],
         "party": [],
@@ -147,7 +160,8 @@ def test_membro_de_party_ignora_gate(monkeypatch):
     import agents.npc as npc_mod
 
     state = {
-        "game_id": "g1", "active_npc_name": "Aria",
+        "game_id": "g1",
+        "active_npc_name": "Aria",
         "npcs": {"Aria": _npc("Aria", in_scene=False)},
         "world": {"current_location": "Brekmar", "turn_count": 3},
         "messages": [HumanMessage(content="Aria, espere aqui")],
@@ -162,19 +176,34 @@ def test_membro_de_party_ignora_gate(monkeypatch):
 # Etapa 3 — canal de cena no storyteller
 # ---------------------------------------------------------------------------
 
+
 def test_viagem_zera_in_scene():
     from agents.storyteller import storyteller_node
 
     state = {
         "game_id": "g1",
-        "player": {"name": "H", "class_name": "Guerreiro", "hp": 10, "max_hp": 10,
-                   "inventory": [], "known_abilities": ["ataque_basico"]},
-        "world": {"current_location": "Nova Arcádia", "current_location_id": "nova_arcadia",
-                  "visited": ["nova_arcadia"], "world_clock": {"day": 1, "period": "Manhã"},
-                  "danger_level": 1, "turn_count": 2},
+        "player": {
+            "name": "H",
+            "class_name": "Guerreiro",
+            "hp": 10,
+            "max_hp": 10,
+            "inventory": [],
+            "known_abilities": ["ataque_basico"],
+        },
+        "world": {
+            "current_location": "Nova Arcádia",
+            "current_location_id": "nova_arcadia",
+            "visited": ["nova_arcadia"],
+            "world_clock": {"day": 1, "period": "Manhã"},
+            "danger_level": 1,
+            "turn_count": 2,
+        },
         "npcs": {"Grum": _npc(in_scene=True)},
-        "factions": [], "faction_intel": {}, "quests": [],
-        "campaign_plan": {}, "messages": [HumanMessage(content="Viajo para Brekmar")],
+        "factions": [],
+        "faction_intel": {},
+        "quests": [],
+        "campaign_plan": {},
+        "messages": [HumanMessage(content="Viajo para Brekmar")],
     }
     out = storyteller_node(state)
     novos = out.get("npcs") or {}
@@ -188,14 +217,28 @@ def test_entrar_em_interior_nao_zera_cena_do_relogio():
 
     state = {
         "game_id": "g1",
-        "player": {"name": "H", "class_name": "Guerreiro", "hp": 10, "max_hp": 10,
-                   "inventory": [], "known_abilities": ["ataque_basico"]},
-        "world": {"current_location": "Anel de Lama", "current_location_id": "na_anel_lama",
-                  "visited": ["na_anel_lama"], "world_clock": {"day": 1, "period": "Manhã"},
-                  "danger_level": 1, "turn_count": 2},
+        "player": {
+            "name": "H",
+            "class_name": "Guerreiro",
+            "hp": 10,
+            "max_hp": 10,
+            "inventory": [],
+            "known_abilities": ["ataque_basico"],
+        },
+        "world": {
+            "current_location": "Anel de Lama",
+            "current_location_id": "na_anel_lama",
+            "visited": ["na_anel_lama"],
+            "world_clock": {"day": 1, "period": "Manhã"},
+            "danger_level": 1,
+            "turn_count": 2,
+        },
         "npcs": {"Grum": _npc(in_scene=True)},
-        "factions": [], "faction_intel": {}, "quests": [],
-        "campaign_plan": {}, "messages": [HumanMessage(content="Entro na Taverna do Javali Dourado")],
+        "factions": [],
+        "faction_intel": {},
+        "quests": [],
+        "campaign_plan": {},
+        "messages": [HumanMessage(content="Entro na Taverna do Javali Dourado")],
     }
     out = storyteller_node(state)
     assert out["world"]["world_clock"] == {"day": 1, "period": "Manhã"}
@@ -206,20 +249,35 @@ def test_entrar_em_interior_nao_zera_cena_do_relogio():
 # Etapa 4 — DC modifiers no consumidor (recrutamento 4.5)
 # ---------------------------------------------------------------------------
 
+
 def test_recrutamento_usa_trait_persuasao():
     import party
 
     # desconfiado (+3): rel 7 não basta mais (limiar vira 10)
-    state = {"npcs": {"Kess": _npc("Kess", relationship=7,
-                                   hidden_traits=["desconfiado"], revealed_traits=[])},
-             "party": [], "factions": []}
+    state = {
+        "npcs": {
+            "Kess": _npc("Kess", relationship=7, hidden_traits=["desconfiado"], revealed_traits=[])
+        },
+        "party": [],
+        "factions": [],
+    }
     ok, _reason = party.can_recruit(state, "Kess")
     assert ok is False
 
     # sentimental (-2): rel 5 passa (limiar vira 5)
-    state2 = {"npcs": {"Nilo": _npc("Nilo", relationship=5, interaction_count=2,  # SPEC-223 R4
-                                    hidden_traits=["sentimental"], revealed_traits=[])},
-              "party": [], "factions": []}
+    state2 = {
+        "npcs": {
+            "Nilo": _npc(
+                "Nilo",
+                relationship=5,
+                interaction_count=2,  # SPEC-223 R4
+                hidden_traits=["sentimental"],
+                revealed_traits=[],
+            )
+        },
+        "party": [],
+        "factions": [],
+    }
     ok2, _ = party.can_recruit(state2, "Nilo")
     assert ok2 is True
 
@@ -228,14 +286,19 @@ def test_recrutamento_usa_trait_persuasao():
 # Etapa 5 — API não vaza hidden_traits
 # ---------------------------------------------------------------------------
 
+
 def test_visible_npc_view_filtra_e_nao_vaza():
     npcs = {
-        "Grum": _npc(hidden_traits=["ganancioso"], revealed_traits=["tagarela"],
-                     known_by_player=True, knowledge_source="met"),
+        "Grum": _npc(
+            hidden_traits=["ganancioso"],
+            revealed_traits=["tagarela"],
+            known_by_player=True,
+            knowledge_source="met",
+        ),
         "Sombra": _npc("Sombra", known_by_player=False),
     }
     view = visible_npc_view(npcs)
-    assert len(view) == 1                       # só conhecidos
+    assert len(view) == 1  # só conhecidos
     entrada = view[0]
     assert "hidden_traits" not in json.dumps(entrada)
     assert [t["id"] for t in entrada["revealed_traits"]] == ["tagarela"]
@@ -249,11 +312,21 @@ def test_api_nao_vaza_hidden_traits(tmp_path, monkeypatch):
     gid = str(uuid.uuid4())
     state = {
         "game_id": gid,
-        "player": {"name": "H", "class_name": "Guerreiro", "hp": 10, "max_hp": 10,
-                   "inventory": [], "known_abilities": ["ataque_basico"]},
-        "world": {"current_location": "Brekmar", "current_location_id": "brekmar",
-                  "visited": ["brekmar"], "turn_count": 1,
-                  "world_clock": {"day": 1, "period": "Manhã"}},
+        "player": {
+            "name": "H",
+            "class_name": "Guerreiro",
+            "hp": 10,
+            "max_hp": 10,
+            "inventory": [],
+            "known_abilities": ["ataque_basico"],
+        },
+        "world": {
+            "current_location": "Brekmar",
+            "current_location_id": "brekmar",
+            "visited": ["brekmar"],
+            "turn_count": 1,
+            "world_clock": {"day": 1, "period": "Manhã"},
+        },
         "npcs": {"Grum": _npc(hidden_traits=["ganancioso"], revealed_traits=[])},
         "messages": [HumanMessage(content="olá")],
     }

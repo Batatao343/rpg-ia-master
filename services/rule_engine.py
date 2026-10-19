@@ -48,6 +48,7 @@ class RuleActionError(Exception):
 
 # --- resolvedor seguro de paths --------------------------------------------
 
+
 def _walk(root: Any, dotted: str) -> Any:
     """Desce por chaves de dict separadas por ponto, com sufixo opcional [N].
 
@@ -85,19 +86,19 @@ def resolve_path(expr: Any, ctx: dict) -> Any:
         raise RuleActionError(f"expressão proibida (dunder): {expr!r}")
 
     if expr.startswith("event."):
-        return _walk(ctx.get("event") or {}, expr[len("event."):])
+        return _walk(ctx.get("event") or {}, expr[len("event.") :])
     if expr.startswith("target."):
-        return _walk(ctx.get("target") or {}, expr[len("target."):])
+        return _walk(ctx.get("target") or {}, expr[len("target.") :])
     if expr.startswith("component:"):
-        return _walk(ctx.get("component") or {}, expr[len("component:"):])
+        return _walk(ctx.get("component") or {}, expr[len("component:") :])
 
     raise RuleActionError(f"expressão não permitida: {expr!r}")
 
 
 # --- conditions -------------------------------------------------------------
 
-def check_conditions(rule: dict, event: dict, projection: dict,
-                     state: dict | None = None) -> bool:
+
+def check_conditions(rule: dict, event: dict, projection: dict, state: dict | None = None) -> bool:
     """True se TODAS as conditions da regra passarem (AND). Regra sem conditions → True.
 
     Suporta: target_has_component | target_missing_component | target_has_tag |
@@ -114,6 +115,7 @@ def check_conditions(rule: dict, event: dict, projection: dict,
     for cond in rule.get("conditions", []) or []:
         if "target_map_tag" in cond:
             from gamedata import get_location
+
             loc = get_location(event.get("target_id", "")) or {}
             loc_tags = set(loc.get("tags") or []) | set(loc.get("economy_tags") or [])
             if cond["target_map_tag"] not in loc_tags:
@@ -121,8 +123,14 @@ def check_conditions(rule: dict, event: dict, projection: dict,
             continue
         if "new_controller_hostile" in cond:
             fid = payload.get("new_controller_id")
-            disp = next((f.get("disposition") for f in (state or {}).get("factions", []) or []
-                         if f.get("id") == fid), None)
+            disp = next(
+                (
+                    f.get("disposition")
+                    for f in (state or {}).get("factions", []) or []
+                    if f.get("id") == fid
+                ),
+                None,
+            )
             if (disp == "hostil") != bool(cond["new_controller_hostile"]):
                 return False
             continue
@@ -145,6 +153,7 @@ def check_conditions(rule: dict, event: dict, projection: dict,
 
 
 # --- carga de regras --------------------------------------------------------
+
 
 def load_rules() -> list[dict]:
     """Lê world_rules.json (cache em módulo). Ausente/ilegível → []."""
@@ -195,27 +204,33 @@ def _controlled_locations(npc_id: str, proj: dict) -> list[str]:
     return locs
 
 
-def _rival_faction(location: str, dead_faction: str | None, component: dict,
-                   proj: dict) -> str | None:
+def _rival_faction(
+    location: str, dead_faction: str | None, component: dict, proj: dict
+) -> str | None:
     """Quem ocupa o vácuo: override do componente → 1º enemy_of da fação → 1ª outra
     fação com operates_in no local. None se nada aplicável."""
     override = (component.get("power_vacuum_trigger") or {}).get("rival_faction_override")
     if override:
         return override
     if dead_faction:
-        for e in gr.resolve_edges(proj, entity_id=dead_faction, edge_type="enemy_of",
-                                  include_hidden=True):
+        for e in gr.resolve_edges(
+            proj, entity_id=dead_faction, edge_type="enemy_of", include_hidden=True
+        ):
             other = e.get("target") if e.get("source") == dead_faction else e.get("source")
             if other and gr.is_alive(other, proj):
                 return other
     for e in gr.resolve_edges(proj, edge_type="operates_in", include_hidden=True):
-        if e.get("target") == location and e.get("source") != dead_faction \
-                and gr.is_alive(e.get("source"), proj):
+        if (
+            e.get("target") == location
+            and e.get("source") != dead_faction
+            and gr.is_alive(e.get("source"), proj)
+        ):
             return e.get("source")
     return None
 
 
 # --- execução de ações ------------------------------------------------------
+
 
 def _clamp(v: int, lo: int = -100, hi: int = 100) -> int:
     return max(lo, min(hi, v))
@@ -226,8 +241,14 @@ def _adjust_stability(proj: dict, state: dict, faction: str, delta: int) -> None
     if "stability" in entities.get(faction, {}):
         cur = int(entities[faction]["stability"])
     else:  # semeia da Fase 2 (state.factions) se a projection ainda não tem
-        cur = next((int(f.get("stability", 0)) for f in state.get("factions") or []
-                    if f.get("id") == faction), 0)
+        cur = next(
+            (
+                int(f.get("stability", 0))
+                for f in state.get("factions") or []
+                if f.get("id") == faction
+            ),
+            0,
+        )
     new = _clamp(cur + int(delta))
     entities[faction] = {**entities.get(faction, {}), "stability": new}
     # Espelha em state.factions se a fação existir lá (compat Fase 2).
@@ -289,17 +310,20 @@ def execute_action(action: dict, event: dict, state: dict) -> list[dict]:
         for e in gr.resolve_edges(proj, edge_type="controls", include_hidden=True):
             if e.get("source") in sources and e.get("id"):
                 proj.setdefault("disabled_edges", []).append(
-                    {"edge_id": e["id"], "disabled_by_event": event.get("event_id", "")})
+                    {"edge_id": e["id"], "disabled_by_event": event.get("event_id", "")}
+                )
         return []
 
     if op == "create_dynamic_edge":
-        proj.setdefault("dynamic_edges", []).append({
-            "id": f"dyn_rule_{uuid.uuid4().hex[:8]}",
-            "source": _arg(action.get("source"), ctx),
-            "type": _arg(action.get("type"), ctx),
-            "target": _arg(action.get("target"), ctx),
-            "created_by_event": event.get("event_id", ""),
-        })
+        proj.setdefault("dynamic_edges", []).append(
+            {
+                "id": f"dyn_rule_{uuid.uuid4().hex[:8]}",
+                "source": _arg(action.get("source"), ctx),
+                "type": _arg(action.get("type"), ctx),
+                "target": _arg(action.get("target"), ctx),
+                "created_by_event": event.get("event_id", ""),
+            }
+        )
         return []
 
     if op == "emit_event":
@@ -309,15 +333,22 @@ def execute_action(action: dict, event: dict, state: dict) -> list[dict]:
             # Fase 6.1: um evento por CONEXÃO do local-alvo (ex.: porto tomado
             # bloqueia todas as rotas dele). Par já bloqueado é pulado.
             from gamedata import get_location
-            blocked = {frozenset((r.get("a"), r.get("b")))
-                       for r in proj.get("blocked_routes", []) or []}
+
+            blocked = {
+                frozenset((r.get("a"), r.get("b"))) for r in proj.get("blocked_routes", []) or []
+            }
             derived = []
             for conn in (get_location(target_id) or {}).get("connections", []) or []:
                 if frozenset((target_id, conn)) in blocked:
                     continue
-                derived.append(_new_event(
-                    etype, target_id, {"other_location_id": conn},
-                    actor_id=event.get("actor_id", "player")))
+                derived.append(
+                    _new_event(
+                        etype,
+                        target_id,
+                        {"other_location_id": conn},
+                        actor_id=event.get("actor_id", "player"),
+                    )
+                )
             return derived
         if targets_spec == "controlled_locations":
             dead_faction = _led_faction(target_id, proj)
@@ -326,21 +357,25 @@ def execute_action(action: dict, event: dict, state: dict) -> list[dict]:
                 rival = _rival_faction(loc, dead_faction, component, proj)
                 if not rival:
                     continue
-                derived.append(_new_event(
-                    etype, loc, {"new_controller_id": rival}, actor_id=target_id))
+                derived.append(
+                    _new_event(etype, loc, {"new_controller_id": rival}, actor_id=target_id)
+                )
             return derived
         # targets explícito (lista ou path) — payload comum
         targets = _arg(targets_spec, ctx)
         if isinstance(targets, str):
             targets = [targets]
         payload = {k: _arg(v, ctx) for k, v in (action.get("payload") or {}).items()}
-        return [_new_event(etype, t, dict(payload), actor_id=event.get("actor_id", "player"))
-                for t in (targets or [])]
+        return [
+            _new_event(etype, t, dict(payload), actor_id=event.get("actor_id", "player"))
+            for t in (targets or [])
+        ]
 
     raise RuleActionError(f"op desconhecida: {op!r}")
 
 
 # --- orquestração da cascata ------------------------------------------------
+
 
 def run_rules(event: dict, state: dict, depth: int = 0) -> list[dict]:
     """Dispara as regras casadas por `event`, aplica os derivados na projection e recursa
@@ -365,7 +400,13 @@ def run_rules(event: dict, state: dict, depth: int = 0) -> list[dict]:
             for action in rule.get("actions", []) or []:
                 emitted += execute_action(action, event, state)
         except RuleActionError as exc:
-            _log_event("rule", "rule_ignored", level="warning", rule_id=rule.get('id'), error=type(exc).__name__)
+            _log_event(
+                "rule",
+                "rule_ignored",
+                level="warning",
+                rule_id=rule.get("id"),
+                error=type(exc).__name__,
+            )
             continue
         for d in emitted:
             d["turn"] = event.get("turn", 0)  # SPEC-226 R9: derivado herda o turno

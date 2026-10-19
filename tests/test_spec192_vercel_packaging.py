@@ -1,4 +1,5 @@
 """SPEC-192 — empacotamento Vercel (offline)."""
+
 import json
 import re
 import subprocess

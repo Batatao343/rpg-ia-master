@@ -34,16 +34,25 @@ Severity = Literal["error", "warning"]
 
 @dataclass
 class Finding:
-    validator: str    # "frontmatter" | "ids" | "references" | "aliases" | "visibility" | "encoding"
+    validator: str  # "frontmatter" | "ids" | "references" | "aliases" | "visibility" | "encoding"
     severity: Severity
-    path: str         # arquivo onde foi achado (md/json)
-    entity_id: str    # id envolvido ("" se não aplicável)
-    message: str      # humano, em PT-BR
+    path: str  # arquivo onde foi achado (md/json)
+    entity_id: str  # id envolvido ("" se não aplicável)
+    message: str  # humano, em PT-BR
 
 
 CODEX_TYPES = {
-    "location", "faction", "npc", "race", "monster", "artifact",
-    "items", "secret", "perspective", "world_story", "timeline",
+    "location",
+    "faction",
+    "npc",
+    "race",
+    "monster",
+    "artifact",
+    "items",
+    "secret",
+    "perspective",
+    "world_story",
+    "timeline",
     "npc_secret",  # Fase 7.3 — doc paralelo com a verdade oculta de um NPC
 }
 VISIBILITIES = {"public", "hidden", "secret"}
@@ -54,25 +63,27 @@ VISIBILITIES = {"public", "hidden", "secret"}
 # o lint acusa ERRO se algum voltar a doc público de NPC (anti-regressão).
 # "rumor verdadeiro": o rumor em si circula publicamente (rumors.txt); o que o
 # doc de NPC marca é a CONFIRMAÇÃO de que é verdade — isso é spoiler, vai pro hidden.
-NPC_SECRET_LABELS = frozenset({
-    "historia real",
-    "motivacao real",
-    "o que ele esconde",
-    "o que ela esconde",
-    "segredo",
-    "o pacto e seus efeitos",
-    "rumor verdadeiro",
-    "verdade",
-    # Achados na auditoria da Etapa 4 (rótulos reais de lore_nova/npcs.txt que
-    # carregam twist/verdade oculta — revisão manual de 2026-07-05):
-    "a verdade",                        # Velha Magda: passado de sacerdotisa/Mão Sombria
-    "identidade real",                  # Arauto da Névoa: é o aprendiz de Aethelgard
-    "papel real",                       # Lady Aerwen: governa no lugar do marido perdido
-    "o que nao diz",                    # Doutor Silas Vane: experimentos com a Praga
-    "o segredo do barril",              # Grum: documento escondido na taverna
-    "relacao com a guilda dos corvos",  # Silas Vane: acordo de corpos marcados
-    "o que fazem com as memorias",      # Mercadores de Curiosidades: memórias consumidas
-})
+NPC_SECRET_LABELS = frozenset(
+    {
+        "historia real",
+        "motivacao real",
+        "o que ele esconde",
+        "o que ela esconde",
+        "segredo",
+        "o pacto e seus efeitos",
+        "rumor verdadeiro",
+        "verdade",
+        # Achados na auditoria da Etapa 4 (rótulos reais de lore_nova/npcs.txt que
+        # carregam twist/verdade oculta — revisão manual de 2026-07-05):
+        "a verdade",  # Velha Magda: passado de sacerdotisa/Mão Sombria
+        "identidade real",  # Arauto da Névoa: é o aprendiz de Aethelgard
+        "papel real",  # Lady Aerwen: governa no lugar do marido perdido
+        "o que nao diz",  # Doutor Silas Vane: experimentos com a Praga
+        "o segredo do barril",  # Grum: documento escondido na taverna
+        "relacao com a guilda dos corvos",  # Silas Vane: acordo de corpos marcados
+        "o que fazem com as memorias",  # Mercadores de Curiosidades: memórias consumidas
+    }
+)
 
 # Campos de frontmatter que, quando presentes, precisam ser lista de strings.
 _LIST_FIELDS = ("tags", "aliases", "related_entities")
@@ -83,8 +94,7 @@ _LINT_WHITELIST: set[tuple[str, str]] = set()
 
 def _strip_accents(text: str) -> str:
     return "".join(
-        ch for ch in unicodedata.normalize("NFD", text)
-        if unicodedata.category(ch) != "Mn"
+        ch for ch in unicodedata.normalize("NFD", text) if unicodedata.category(ch) != "Mn"
     )
 
 
@@ -138,6 +148,7 @@ def _merged_entities(graph_dir: str) -> dict[str, dict]:
 # Validadores
 # ---------------------------------------------------------------------------
 
+
 def validate_frontmatter(codex_dir: str = CODEX_DIR) -> list[Finding]:
     """R1 — frontmatter completo, id == nome do arquivo, type/visibility canônicos."""
     findings: list[Finding] = []
@@ -151,25 +162,49 @@ def validate_frontmatter(codex_dir: str = CODEX_DIR) -> list[Finding]:
         entity_id = str(frontmatter.get("id", ""))
         stem = os.path.splitext(os.path.basename(path))[0]
         if entity_id != stem:
-            findings.append(Finding(
-                "frontmatter", "error", path, entity_id,
-                f"id '{entity_id}' diverge do nome do arquivo '{stem}'"))
+            findings.append(
+                Finding(
+                    "frontmatter",
+                    "error",
+                    path,
+                    entity_id,
+                    f"id '{entity_id}' diverge do nome do arquivo '{stem}'",
+                )
+            )
         if frontmatter.get("type") not in CODEX_TYPES:
-            findings.append(Finding(
-                "frontmatter", "error", path, entity_id,
-                f"type '{frontmatter.get('type')}' fora do conjunto canônico"))
+            findings.append(
+                Finding(
+                    "frontmatter",
+                    "error",
+                    path,
+                    entity_id,
+                    f"type '{frontmatter.get('type')}' fora do conjunto canônico",
+                )
+            )
         if frontmatter.get("visibility") not in VISIBILITIES:
-            findings.append(Finding(
-                "frontmatter", "error", path, entity_id,
-                f"visibility '{frontmatter.get('visibility')}' inválida "
-                f"(esperado public|hidden|secret)"))
+            findings.append(
+                Finding(
+                    "frontmatter",
+                    "error",
+                    path,
+                    entity_id,
+                    f"visibility '{frontmatter.get('visibility')}' inválida "
+                    f"(esperado public|hidden|secret)",
+                )
+            )
         for campo in _LIST_FIELDS:
             if campo in frontmatter:
                 valor = frontmatter[campo]
                 if not isinstance(valor, list) or any(not isinstance(v, str) for v in valor):
-                    findings.append(Finding(
-                        "frontmatter", "error", path, entity_id,
-                        f"campo '{campo}' precisa ser lista de strings"))
+                    findings.append(
+                        Finding(
+                            "frontmatter",
+                            "error",
+                            path,
+                            entity_id,
+                            f"campo '{campo}' precisa ser lista de strings",
+                        )
+                    )
     return findings
 
 
@@ -182,9 +217,15 @@ def validate_ids(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) -> list
     for path, frontmatter, _body in _parse_codex(codex_dir):
         entity_id = str(frontmatter.get("id", ""))
         if entity_id in seen:
-            findings.append(Finding(
-                "ids", "error", path, entity_id,
-                f"id duplicado no Codex (também em {seen[entity_id]})"))
+            findings.append(
+                Finding(
+                    "ids",
+                    "error",
+                    path,
+                    entity_id,
+                    f"id duplicado no Codex (também em {seen[entity_id]})",
+                )
+            )
         else:
             seen[entity_id] = path
 
@@ -193,9 +234,15 @@ def validate_ids(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) -> list
     extra_path = os.path.join(graph_dir, "entities_extra.json")
     for eid in extra:
         if eid in base:
-            findings.append(Finding(
-                "ids", "error", extra_path, eid,
-                "id de entities_extra.json conflita com entities.json (canônico vence)"))
+            findings.append(
+                Finding(
+                    "ids",
+                    "error",
+                    extra_path,
+                    eid,
+                    "id de entities_extra.json conflita com entities.json (canônico vence)",
+                )
+            )
 
     merged = _merged_entities(graph_dir)
     components = _read_graph_json(graph_dir, "components.json", {})
@@ -204,9 +251,15 @@ def validate_ids(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) -> list
         if eid.startswith("_"):
             continue
         if eid not in merged:
-            findings.append(Finding(
-                "ids", "error", comp_path, eid,
-                "components.json referencia id que não existe nas entidades"))
+            findings.append(
+                Finding(
+                    "ids",
+                    "error",
+                    comp_path,
+                    eid,
+                    "components.json referencia id que não existe nas entidades",
+                )
+            )
     return findings
 
 
@@ -223,9 +276,15 @@ def validate_references(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) 
             continue  # frontmatter validator já acusa
         for ref in related:
             if ref not in entities:
-                findings.append(Finding(
-                    "references", "error", path, entity_id,
-                    f"related_entities aponta para '{ref}', que não existe"))
+                findings.append(
+                    Finding(
+                        "references",
+                        "error",
+                        path,
+                        entity_id,
+                        f"related_entities aponta para '{ref}', que não existe",
+                    )
+                )
 
     edges = _read_graph_json(graph_dir, "edges.json", [])
     relation_types = _read_graph_json(graph_dir, "relation_types.json", {})
@@ -234,37 +293,55 @@ def validate_references(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) 
     for edge in edges:
         edge_id = edge.get("id", "")
         if not edge_id:
-            findings.append(Finding(
-                "references", "error", edges_path, "",
-                f"edge sem 'id': {edge}"))
+            findings.append(
+                Finding("references", "error", edges_path, "", f"edge sem 'id': {edge}")
+            )
         elif edge_id in seen_edge_ids:
-            findings.append(Finding(
-                "references", "error", edges_path, edge_id,
-                "id de edge duplicado"))
+            findings.append(
+                Finding("references", "error", edges_path, edge_id, "id de edge duplicado")
+            )
         else:
             seen_edge_ids.add(edge_id)
 
         edge_type = edge.get("type")
         rel = relation_types.get(edge_type)
         if rel is None:
-            findings.append(Finding(
-                "references", "error", edges_path, edge_id,
-                f"type '{edge_type}' não existe em relation_types.json"))
+            findings.append(
+                Finding(
+                    "references",
+                    "error",
+                    edges_path,
+                    edge_id,
+                    f"type '{edge_type}' não existe em relation_types.json",
+                )
+            )
 
         for ponta in ("source", "target"):
             eid = edge.get(ponta)
             if eid not in entities:
-                findings.append(Finding(
-                    "references", "error", edges_path, edge_id,
-                    f"{ponta} '{eid}' não existe nas entidades"))
+                findings.append(
+                    Finding(
+                        "references",
+                        "error",
+                        edges_path,
+                        edge_id,
+                        f"{ponta} '{eid}' não existe nas entidades",
+                    )
+                )
             elif rel and ponta in rel:
                 exigido = rel[ponta]
                 real = entities[eid].get("type")
                 if real != exigido:
-                    findings.append(Finding(
-                        "references", "error", edges_path, edge_id,
-                        f"constraint de '{edge_type}': {ponta} '{eid}' precisa ser "
-                        f"type '{exigido}', é '{real}'"))
+                    findings.append(
+                        Finding(
+                            "references",
+                            "error",
+                            edges_path,
+                            edge_id,
+                            f"constraint de '{edge_type}': {ponta} '{eid}' precisa ser "
+                            f"type '{exigido}', é '{real}'",
+                        )
+                    )
     return findings
 
 
@@ -289,16 +366,28 @@ def validate_aliases(graph_dir: str = GRAPH_DIR) -> list[Finding]:
                 continue
             dono = alias_owner.get(key)
             if dono and dono != eid:
-                findings.append(Finding(
-                    "aliases", "error", entities_path, eid,
-                    f"alias '{alias}' duplicado com a entidade '{dono}'"))
+                findings.append(
+                    Finding(
+                        "aliases",
+                        "error",
+                        entities_path,
+                        eid,
+                        f"alias '{alias}' duplicado com a entidade '{dono}'",
+                    )
+                )
                 continue
             alias_owner[key] = eid
             outro = claimed.get(key)
             if outro and outro != eid:
-                findings.append(Finding(
-                    "aliases", "error", entities_path, eid,
-                    f"alias '{alias}' colide com name/id da entidade '{outro}'"))
+                findings.append(
+                    Finding(
+                        "aliases",
+                        "error",
+                        entities_path,
+                        eid,
+                        f"alias '{alias}' colide com name/id da entidade '{outro}'",
+                    )
+                )
     return findings
 
 
@@ -332,46 +421,74 @@ def validate_visibility(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) 
     }
     parsed = _parse_codex(codex_dir)
     for _path, frontmatter, _body in parsed:
-        vis_map.setdefault(
-            str(frontmatter.get("id", "")),
-            frontmatter.get("visibility", "public"))
+        vis_map.setdefault(str(frontmatter.get("id", "")), frontmatter.get("visibility", "public"))
 
     for path, frontmatter, body in parsed:
         entity_id = str(frontmatter.get("id", ""))
         visibility = frontmatter.get("visibility", "public")
         if frontmatter.get("type") == "secret" and visibility != "secret":
-            findings.append(Finding(
-                "visibility", "error", path, entity_id,
-                f"doc type 'secret' precisa de visibility 'secret', tem '{visibility}'"))
+            findings.append(
+                Finding(
+                    "visibility",
+                    "error",
+                    path,
+                    entity_id,
+                    f"doc type 'secret' precisa de visibility 'secret', tem '{visibility}'",
+                )
+            )
         # Fase 7.3 — segredo de NPC nunca é public; doc público de NPC não
         # pode conter parágrafo de rótulo secreto (vazaria ao narrador).
         if frontmatter.get("type") == "npc_secret" and visibility not in ("hidden", "secret"):
-            findings.append(Finding(
-                "visibility", "error", path, entity_id,
-                f"doc 'npc_secret' precisa de visibility hidden/secret, tem '{visibility}'"))
+            findings.append(
+                Finding(
+                    "visibility",
+                    "error",
+                    path,
+                    entity_id,
+                    f"doc 'npc_secret' precisa de visibility hidden/secret, tem '{visibility}'",
+                )
+            )
         if frontmatter.get("type") == "npc" and visibility == "public":
             for rotulo in _secret_labels_in(body):
-                findings.append(Finding(
-                    "visibility", "error", path, entity_id,
-                    f"doc público de NPC contém rótulo secreto '{rotulo}' — "
-                    f"mover para o doc npc_secret (Fase 7.3)"))
+                findings.append(
+                    Finding(
+                        "visibility",
+                        "error",
+                        path,
+                        entity_id,
+                        f"doc público de NPC contém rótulo secreto '{rotulo}' — "
+                        f"mover para o doc npc_secret (Fase 7.3)",
+                    )
+                )
         if visibility == "public":
             related = frontmatter.get("related_entities") or []
             if isinstance(related, list):
                 for ref in related:
                     if vis_map.get(ref) == "secret":
-                        findings.append(Finding(
-                            "visibility", "error", path, entity_id,
-                            f"doc public referencia '{ref}' (secret) — vaza a "
-                            f"existência do segredo"))
+                        findings.append(
+                            Finding(
+                                "visibility",
+                                "error",
+                                path,
+                                entity_id,
+                                f"doc public referencia '{ref}' (secret) — vaza a "
+                                f"existência do segredo",
+                            )
+                        )
 
     entities_path = os.path.join(graph_dir, "entities.json")
     for eid, ent in entities.items():
         vis = ent.get("visibility", "public")
         if vis not in VISIBILITIES:
-            findings.append(Finding(
-                "visibility", "error", entities_path, eid,
-                f"visibility '{vis}' inválida no grafo (esperado public|hidden|secret)"))
+            findings.append(
+                Finding(
+                    "visibility",
+                    "error",
+                    entities_path,
+                    eid,
+                    f"visibility '{vis}' inválida no grafo (esperado public|hidden|secret)",
+                )
+            )
     return findings
 
 
@@ -381,9 +498,9 @@ def validate_visibility(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) 
 _MOJIBAKE_RE = re.compile("[ÃÂ][-¿]|â€")
 
 
-def _default_encoding_paths(codex_dir: str = CODEX_DIR,
-                            graph_dir: str = GRAPH_DIR,
-                            lore_dir: str = LORE_DIR) -> list[str]:
+def _default_encoding_paths(
+    codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR, lore_dir: str = LORE_DIR
+) -> list[str]:
     paths = _codex_md_paths(codex_dir)
     for base, ext in ((lore_dir, ".txt"), (graph_dir, ".json")):
         if os.path.isdir(base):
@@ -396,21 +513,21 @@ def _default_encoding_paths(codex_dir: str = CODEX_DIR,
 def validate_encoding(paths: list[str] | None = None) -> list[Finding]:
     """R6 — UTF-8 estrito (ERRO); heurística de mojibake (AVISO)."""
     findings: list[Finding] = []
-    for path in (paths if paths is not None else _default_encoding_paths()):
+    for path in paths if paths is not None else _default_encoding_paths():
         with open(path, "rb") as f:
             raw = f.read()
         try:
             text = raw.decode("utf-8")
         except UnicodeDecodeError as exc:
-            findings.append(Finding(
-                "encoding", "error", path, "",
-                f"não decodifica como UTF-8: {exc}"))
+            findings.append(
+                Finding("encoding", "error", path, "", f"não decodifica como UTF-8: {exc}")
+            )
             continue
         m = _MOJIBAKE_RE.search(text)
         if m:
-            findings.append(Finding(
-                "encoding", "warning", path, "",
-                f"possível mojibake ('{m.group(0)}')"))
+            findings.append(
+                Finding("encoding", "warning", path, "", f"possível mojibake ('{m.group(0)}')")
+            )
     return findings
 
 
@@ -419,9 +536,9 @@ def validate_encoding(paths: list[str] | None = None) -> list[Finding]:
 _REGISTRABLE_TYPES = {"location", "faction", "npc", "race", "monster", "artifact"}
 
 
-def validate_overrides(codex_dir: str = CODEX_DIR,
-                       overrides_path: str = OVERRIDES_PATH,
-                       graph_dir: str = GRAPH_DIR) -> list[Finding]:
+def validate_overrides(
+    codex_dir: str = CODEX_DIR, overrides_path: str = OVERRIDES_PATH, graph_dir: str = GRAPH_DIR
+) -> list[Finding]:
     """Fase 7.2 — override órfão é ERRO; override em arquivo curated e doc
     curated registrável sem entidade são AVISO."""
     findings: list[Finding] = []
@@ -437,13 +554,25 @@ def validate_overrides(codex_dir: str = CODEX_DIR,
 
     for override_id in overrides:
         if override_id not in por_id:
-            findings.append(Finding(
-                "overrides", "error", overrides_path, override_id,
-                "override órfão: id não existe no Codex"))
+            findings.append(
+                Finding(
+                    "overrides",
+                    "error",
+                    overrides_path,
+                    override_id,
+                    "override órfão: id não existe no Codex",
+                )
+            )
         elif por_id[override_id][1].get("curated"):
-            findings.append(Finding(
-                "overrides", "warning", overrides_path, override_id,
-                "override ignorado: arquivo é curated (100% manual)"))
+            findings.append(
+                Finding(
+                    "overrides",
+                    "warning",
+                    overrides_path,
+                    override_id,
+                    "override ignorado: arquivo é curated (100% manual)",
+                )
+            )
 
     entities = _merged_entities(graph_dir)
     for path, frontmatter, _body in parsed:
@@ -453,9 +582,15 @@ def validate_overrides(codex_dir: str = CODEX_DIR,
             continue
         entity_id = str(frontmatter.get("id", ""))
         if entity_id not in entities:
-            findings.append(Finding(
-                "overrides", "warning", path, entity_id,
-                "arquivo curated sem entidade em entities_extra.json/entities.json"))
+            findings.append(
+                Finding(
+                    "overrides",
+                    "warning",
+                    path,
+                    entity_id,
+                    "arquivo curated sem entidade em entities_extra.json/entities.json",
+                )
+            )
     return findings
 
 
@@ -488,10 +623,12 @@ def effect_signature(card: dict) -> tuple:
 def creature_signature(creature: dict) -> tuple:
     """Assinatura tática de criatura usada pela guarda anti-clone da spec 17."""
     resistances = creature.get("resistances") or {}
-    resist = tuple(sorted(
-        (str(kind), tuple(value) if isinstance(value, list) else str(value))
-        for kind, value in resistances.items()
-    ))
+    resist = tuple(
+        sorted(
+            (str(kind), tuple(value) if isinstance(value, list) else str(value))
+            for kind, value in resistances.items()
+        )
+    )
     virtues = tuple(sorted((creature.get("virtudes") or {}).items()))
     return (
         str(creature.get("arquetipo", "")),
@@ -509,29 +646,55 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Findi
     Cartas centrais. Só valida as autorais — os exemplos do motor (conflito-02)
     usam schema opaco de propósito."""
     from services.cards import CARD_EFFECT_KINDS, DANO_BASE_ARMA, valid_class_mechanics
+
     findings: list[Finding] = []
     if not os.path.isdir(cards_dir):
         return findings
-    PATAMAR = {"inicial", "avancado", "superior", "epico_i", "epico_ii",
-               "lendario", "mitico", "apice"}
+    PATAMAR = {
+        "inicial",
+        "avancado",
+        "superior",
+        "epico_i",
+        "epico_ii",
+        "lendario",
+        "mitico",
+        "apice",
+    }
     FREQ = {"livre", "turno", "cena", "descanso_curto", "descanso_longo"}
     TIPO = {"ativa", "passiva", "utilitaria", "reacao"}
 
     def _kind_ok(eff, path, cid, where):
         if not (isinstance(eff, dict) and str(eff.get("kind")) in CARD_EFFECT_KINDS):
-            findings.append(Finding("cards", "error", path, cid,
-                f"{where}: efeito.kind {eff.get('kind') if isinstance(eff, dict) else eff!r} "
-                "fora do catálogo fechado"))
+            findings.append(
+                Finding(
+                    "cards",
+                    "error",
+                    path,
+                    cid,
+                    f"{where}: efeito.kind {eff.get('kind') if isinstance(eff, dict) else eff!r} "
+                    "fora do catálogo fechado",
+                )
+            )
             return
         if eff.get("kind") == "dano":
             cat = eff.get("categoria_arma")
             if cat not in DANO_BASE_ARMA:
-                findings.append(Finding("cards", "error", path, cid,
-                    f"{where}: categoria_arma {cat!r} inválida"))
+                findings.append(
+                    Finding(
+                        "cards", "error", path, cid, f"{where}: categoria_arma {cat!r} inválida"
+                    )
+                )
             elif int(eff.get("dano_base", 0) or 0) < DANO_BASE_ARMA[cat]:
-                findings.append(Finding("cards", "error", path, cid,
-                    f"{where}: dano_base {eff.get('dano_base')} < base da arma "
-                    f"{DANO_BASE_ARMA[cat]}"))
+                findings.append(
+                    Finding(
+                        "cards",
+                        "error",
+                        path,
+                        cid,
+                        f"{where}: dano_base {eff.get('dano_base')} < base da arma "
+                        f"{DANO_BASE_ARMA[cat]}",
+                    )
+                )
 
     active_signatures: dict[tuple, tuple[str, str]] = {}
     seen_ids: dict[str, str] = {}
@@ -546,83 +709,117 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Findi
         except Exception as exc:
             findings.append(Finding("cards", "error", path, "", str(exc)))
             continue
-        for c in (data.get("cards") or []):
+        for c in data.get("cards") or []:
             if c.get("origem") not in ("conflito-14", "conflito-15", "tiers-5-plus"):
                 continue
             cid = c.get("id", "")
             if cid in seen_ids:
-                findings.append(Finding("cards", "error", path, cid,
-                    f"id duplicado (também em {seen_ids[cid]})"))
+                findings.append(
+                    Finding(
+                        "cards", "error", path, cid, f"id duplicado (também em {seen_ids[cid]})"
+                    )
+                )
             seen_ids[cid] = path
             if c.get("patamar") not in PATAMAR:
-                findings.append(Finding("cards", "error", path, cid,
-                    f"patamar inválido: {c.get('patamar')!r}"))
+                findings.append(
+                    Finding("cards", "error", path, cid, f"patamar inválido: {c.get('patamar')!r}")
+                )
             if c.get("frequencia") not in FREQ:
-                findings.append(Finding("cards", "error", path, cid,
-                    f"frequência inválida: {c.get('frequencia')!r}"))
+                findings.append(
+                    Finding(
+                        "cards", "error", path, cid, f"frequência inválida: {c.get('frequencia')!r}"
+                    )
+                )
             if c.get("tipo") not in TIPO:
-                findings.append(Finding("cards", "error", path, cid,
-                    f"tipo inválido: {c.get('tipo')!r}"))
+                findings.append(
+                    Finding("cards", "error", path, cid, f"tipo inválido: {c.get('tipo')!r}")
+                )
             _kind_ok(c.get("efeito") or {}, path, cid, "efeito")
             if not valid_class_mechanics(c.get("mecanica_classe")):
-                findings.append(Finding(
-                    "cards", "error", path, cid,
-                    "mecanica_classe fora do vocabulário fechado",
-                ))
+                findings.append(
+                    Finding(
+                        "cards",
+                        "error",
+                        path,
+                        cid,
+                        "mecanica_classe fora do vocabulário fechado",
+                    )
+                )
             if c.get("central"):
                 rup = c.get("ruptura") or {}
                 evo = c.get("evolucao") or {}
                 if not (rup.get("caminho_a") and rup.get("caminho_b")):
-                    findings.append(Finding("cards", "error", path, cid,
-                        "central sem Ruptura A/B"))
+                    findings.append(Finding("cards", "error", path, cid, "central sem Ruptura A/B"))
                 if not (evo.get("caminho_a") and evo.get("caminho_b")):
-                    findings.append(Finding("cards", "error", path, cid,
-                        "central sem Evolução A/B"))
+                    findings.append(
+                        Finding("cards", "error", path, cid, "central sem Evolução A/B")
+                    )
             if c.get("tipo") == "ativa":
                 signature = (str(c.get("classe", "")), effect_signature(c))
                 previous = active_signatures.get(signature)
                 if previous and c.get("origem") == "conflito-17":
-                    findings.append(Finding(
-                        "cards", "error", path, cid,
-                        f"duplicata pura da Carta '{previous[1]}'",
-                    ))
+                    findings.append(
+                        Finding(
+                            "cards",
+                            "error",
+                            path,
+                            cid,
+                            f"duplicata pura da Carta '{previous[1]}'",
+                        )
+                    )
                 else:
                     active_signatures[signature] = (path, cid)
             tier = c.get("tier")
             level_req = c.get("level_req")
             if c.get("classe") != "Inimigo":
                 if not isinstance(tier, int) or not 1 <= tier <= 9:
-                    findings.append(Finding("cards", "error", path, cid,
-                        f"tier inválido: {tier!r}"))
+                    findings.append(
+                        Finding("cards", "error", path, cid, f"tier inválido: {tier!r}")
+                    )
                 if not isinstance(level_req, int) or not 1 <= level_req <= 20:
-                    findings.append(Finding("cards", "error", path, cid,
-                        f"level_req inválido: {level_req!r}"))
+                    findings.append(
+                        Finding("cards", "error", path, cid, f"level_req inválido: {level_req!r}")
+                    )
             if c.get("origem") == "tiers-5-plus":
                 late_cards.append(c)
                 expected = {5: 9, 6: 12, 7: 15, 8: 18, 9: 20}.get(tier)
                 if level_req != expected:
-                    findings.append(Finding("cards", "error", path, cid,
-                        f"tier {tier} exige level_req={expected}, recebeu {level_req}"))
+                    findings.append(
+                        Finding(
+                            "cards",
+                            "error",
+                            path,
+                            cid,
+                            f"tier {tier} exige level_req={expected}, recebeu {level_req}",
+                        )
+                    )
                 if bool(c.get("apex")) != (tier == 9):
-                    findings.append(Finding("cards", "error", path, cid,
-                        "apex deve existir somente no tier 9"))
+                    findings.append(
+                        Finding("cards", "error", path, cid, "apex deve existir somente no tier 9")
+                    )
                 if c.get("apex") and (
                     c.get("frequencia") not in {"cena", "descanso_curto", "descanso_longo"}
                     or int(c.get("custo_entropia", 0) or 0) < 4
                     or not c.get("contrapartida")
                 ):
-                    findings.append(Finding("cards", "error", path, cid,
-                        "Ápice sem freio mecânico explícito"))
+                    findings.append(
+                        Finding("cards", "error", path, cid, "Ápice sem freio mecânico explícito")
+                    )
     if late_cards:
         trunks = [card for card in late_cards if not card.get("subclasse")]
         branch = [card for card in late_cards if card.get("subclasse") and not card.get("apex")]
         apex = [card for card in late_cards if card.get("apex")]
         if (len(late_cards), len(trunks), len(branch), len(apex)) != (80, 20, 45, 15):
-            findings.append(Finding(
-                "cards", "error", cards_dir, "tiers-5-plus",
-                f"distribuição tardia inválida: total/tronco/ramo/ápice="
-                f"{len(late_cards)}/{len(trunks)}/{len(branch)}/{len(apex)}",
-            ))
+            findings.append(
+                Finding(
+                    "cards",
+                    "error",
+                    cards_dir,
+                    "tiers-5-plus",
+                    f"distribuição tardia inválida: total/tronco/ramo/ápice="
+                    f"{len(late_cards)}/{len(trunks)}/{len(branch)}/{len(apex)}",
+                )
+            )
         by_branch: dict[tuple[str, str], list[dict]] = {}
         for card in late_cards:
             if card.get("subclasse"):
@@ -631,16 +828,32 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Findi
             non_apex = [card for card in cards if not card.get("apex")]
             kinds = {card.get("tipo") for card in non_apex}
             if len(cards) != 4 or len([card for card in cards if card.get("apex")]) != 1:
-                findings.append(Finding("cards", "error", cards_dir, "/".join(key),
-                    "subclasse precisa de 3 Cartas tardias + 1 Ápice"))
+                findings.append(
+                    Finding(
+                        "cards",
+                        "error",
+                        cards_dir,
+                        "/".join(key),
+                        "subclasse precisa de 3 Cartas tardias + 1 Ápice",
+                    )
+                )
             if "ativa" not in kinds or not (kinds - {"ativa"}):
-                findings.append(Finding("cards", "error", cards_dir, "/".join(key),
-                    "subclasse precisa de Carta ativa e não-ativa"))
+                findings.append(
+                    Finding(
+                        "cards",
+                        "error",
+                        cards_dir,
+                        "/".join(key),
+                        "subclasse precisa de Carta ativa e não-ativa",
+                    )
+                )
     return findings
 
 
-def validate_bestiary(bestiary_path: str = os.path.join("data", "bestiary.json"),
-                      cards_dir: str = os.path.join("data", "cards")) -> list[Finding]:
+def validate_bestiary(
+    bestiary_path: str = os.path.join("data", "bestiary.json"),
+    cards_dir: str = os.path.join("data", "cards"),
+) -> list[Finding]:
     """conflito-15 Etapa 5: lint do bestiário migrado (schema v4).
 
     categoria válida, Virtudes 0-5, Vitalidade coerente com Corpo, resistências
@@ -648,6 +861,7 @@ def validate_bestiary(bestiary_path: str = os.path.join("data", "bestiary.json")
     rendição (ou não-fuga INTENCIONAL via resistência 'absoluta'), e ≥1 Carta
     assinatura OCULTA existente por criatura."""
     import gamedata
+
     findings: list[Finding] = []
     if not os.path.isfile(bestiary_path):
         return findings
@@ -670,7 +884,7 @@ def validate_bestiary(bestiary_path: str = os.path.join("data", "bestiary.json")
                 continue
             try:
                 with open(os.path.join(cards_dir, fn), encoding="utf-8") as f:
-                    for c in (json.load(f).get("cards") or []):
+                    for c in json.load(f).get("cards") or []:
                         all_card_ids.add(c.get("id"))
                         if c.get("oculta"):
                             hidden_cards.add(c.get("id"))
@@ -682,61 +896,93 @@ def validate_bestiary(bestiary_path: str = os.path.join("data", "bestiary.json")
         p = bestiary_path
         cat = cre.get("categoria")
         if cat not in CATS:
-            findings.append(Finding("bestiary", "error", p, cid,
-                f"categoria inválida: {cat!r}"))
+            findings.append(Finding("bestiary", "error", p, cid, f"categoria inválida: {cat!r}"))
         virt = cre.get("virtudes") or {}
         for vk in ("mente", "agilidade", "forca", "carisma", "corpo"):
             v = virt.get(vk)
             if not isinstance(v, int) or not (0 <= v <= 5):
-                findings.append(Finding("bestiary", "error", p, cid,
-                    f"Virtude {vk} inválida: {v!r} (esperado 0-5)"))
+                findings.append(
+                    Finding(
+                        "bestiary", "error", p, cid, f"Virtude {vk} inválida: {v!r} (esperado 0-5)"
+                    )
+                )
         corpo = int(virt.get("corpo", 0) or 0)
         esperado = gamedata.vitalidade_para_corpo(corpo)
         if int(cre.get("max_vitalidade", 0) or 0) != esperado:
-            findings.append(Finding("bestiary", "error", p, cid,
-                f"max_vitalidade {cre.get('max_vitalidade')} != tabela de Corpo {esperado}"))
+            findings.append(
+                Finding(
+                    "bestiary",
+                    "error",
+                    p,
+                    cid,
+                    f"max_vitalidade {cre.get('max_vitalidade')} != tabela de Corpo {esperado}",
+                )
+            )
         for t, src in (cre.get("resistances") or {}).items():
             if t not in DANO_VALIDO:
-                findings.append(Finding("bestiary", "error", p, cid,
-                    f"resistência com tipo inválido: {t!r}"))
+                findings.append(
+                    Finding("bestiary", "error", p, cid, f"resistência com tipo inválido: {t!r}")
+                )
             srcs = src if isinstance(src, list) else [src]
             for s in srcs:
                 if s not in RESIST_SRC:
-                    findings.append(Finding("bestiary", "error", p, cid,
-                        f"resistência com fonte inválida: {s!r}"))
-        for t in (cre.get("immunities") or []):
+                    findings.append(
+                        Finding(
+                            "bestiary", "error", p, cid, f"resistência com fonte inválida: {s!r}"
+                        )
+                    )
+        for t in cre.get("immunities") or []:
             if t not in DANO_VALIDO:
-                findings.append(Finding("bestiary", "error", p, cid,
-                    f"imunidade com tipo inválido: {t!r}"))
+                findings.append(
+                    Finding("bestiary", "error", p, cid, f"imunidade com tipo inválido: {t!r}")
+                )
         prof = (cre.get("tactical_profile") or {}).get("priorities") or []
         if not prof:
-            findings.append(Finding("bestiary", "error", p, cid,
-                "tactical_profile sem prioridades"))
+            findings.append(
+                Finding("bestiary", "error", p, cid, "tactical_profile sem prioridades")
+            )
         else:
-            tem_fuga = any(any(k in str(pr.get("action_hint", "")).lower() for k in FLEE)
-                           for pr in prof)
+            tem_fuga = any(
+                any(k in str(pr.get("action_hint", "")).lower() for k in FLEE) for pr in prof
+            )
             intencional = any(str(pr.get("resistance")) == "absoluta" for pr in prof)
             if not (tem_fuga or intencional):
-                findings.append(Finding("bestiary", "error", p, cid,
-                    "perfil sem regra de fuga/rendição (nem não-fuga intencional)"))
+                findings.append(
+                    Finding(
+                        "bestiary",
+                        "error",
+                        p,
+                        cid,
+                        "perfil sem regra de fuga/rendição (nem não-fuga intencional)",
+                    )
+                )
         cartas = cre.get("cartas") or []
         if not cartas:
             findings.append(Finding("bestiary", "error", p, cid, "sem Cartas"))
         for card_id in cartas:
             if all_card_ids and card_id not in all_card_ids:
-                findings.append(Finding("bestiary", "error", p, cid,
-                    f"Carta '{card_id}' inexistente"))
+                findings.append(
+                    Finding("bestiary", "error", p, cid, f"Carta '{card_id}' inexistente")
+                )
         if hidden_cards and not (set(cartas) & hidden_cards):
-            findings.append(Finding("bestiary", "error", p, cid,
-                "sem Carta assinatura OCULTA (conflito-08 R7-R9)"))
+            findings.append(
+                Finding(
+                    "bestiary", "error", p, cid, "sem Carta assinatura OCULTA (conflito-08 R7-R9)"
+                )
+            )
         if cre.get("origem") == "conflito-17":
             signature = creature_signature(cre)
             previous = volume_signatures.get(signature)
             if previous:
-                findings.append(Finding(
-                    "bestiary", "error", p, cid,
-                    f"clone tático da criatura '{previous}'",
-                ))
+                findings.append(
+                    Finding(
+                        "bestiary",
+                        "error",
+                        p,
+                        cid,
+                        f"clone tático da criatura '{previous}'",
+                    )
+                )
             else:
                 volume_signatures[signature] = cid
 
@@ -744,9 +990,10 @@ def validate_bestiary(bestiary_path: str = os.path.join("data", "bestiary.json")
     if volume_signatures and os.path.normcase(os.path.normpath(bestiary_path)) == default_best:
         world_path = os.path.join("data", "world_map.json")
         with open(world_path, encoding="utf-8") as f:
-            locations = (json.load(f).get("locations") or [])
+            locations = json.load(f).get("locations") or []
         encounter_regions = {
-            str(loc.get("region_id")) for loc in locations
+            str(loc.get("region_id"))
+            for loc in locations
             if loc.get("start") and loc.get("region_id")
         }
         by_region: dict[str, list] = {region: [] for region in encounter_regions}
@@ -757,20 +1004,31 @@ def validate_bestiary(bestiary_path: str = os.path.join("data", "bestiary.json")
         for region, creatures in sorted(by_region.items()):
             categories = {creature.get("categoria") for creature in creatures}
             if len(creatures) < 6:
-                findings.append(Finding(
-                    "bestiary", "error", bestiary_path, region,
-                    f"cobertura insuficiente: {len(creatures)} criaturas (mínimo 6)",
-                ))
+                findings.append(
+                    Finding(
+                        "bestiary",
+                        "error",
+                        bestiary_path,
+                        region,
+                        f"cobertura insuficiente: {len(creatures)} criaturas (mínimo 6)",
+                    )
+                )
             if "lacaio" not in categories or not (categories & {"elite", "chefe"}):
-                findings.append(Finding(
-                    "bestiary", "error", bestiary_path, region,
-                    "tabela precisa de ao menos 1 lacaio e 1 elite/chefe",
-                ))
+                findings.append(
+                    Finding(
+                        "bestiary",
+                        "error",
+                        bestiary_path,
+                        region,
+                        "tabela precisa de ao menos 1 lacaio e 1 elite/chefe",
+                    )
+                )
     return findings
 
 
-def validate_visual_assets(catalog_path: str = VISUAL_CATALOG_PATH,
-                           public_root: str = os.path.join("web", "public")) -> list[Finding]:
+def validate_visual_assets(
+    catalog_path: str = VISUAL_CATALOG_PATH, public_root: str = os.path.join("web", "public")
+) -> list[Finding]:
     """Fase 8A: identidade, cobertura, segurança e integridade dos WebP públicos."""
     findings: list[Finding] = []
     if not os.path.isfile(catalog_path):
@@ -791,8 +1049,7 @@ def validate_visual_assets(catalog_path: str = VISUAL_CATALOG_PATH,
     npc_ids = {eid for eid, row in entities.items() if row.get("type") == "npc"}
     race_ids = {row["id"] for row in origins.get("races", [])}
     class_ids = set(classes)
-    canonical = {"race": race_ids, "class": class_ids, "location": locations,
-                 "npc": npc_ids}
+    canonical = {"race": race_ids, "class": class_ids, "location": locations, "npc": npc_ids}
 
     asset_ids: set[str] = set()
     subjects: set[tuple[str, str]] = set()
@@ -802,25 +1059,51 @@ def validate_visual_assets(catalog_path: str = VISUAL_CATALOG_PATH,
         kind = str(asset.get("subject_type") or "")
         sid = str(asset.get("subject_id") or "")
         if not aid or aid in asset_ids:
-            findings.append(Finding("visual_assets", "error", catalog_path, aid,
-                                    "asset_id vazio ou duplicado"))
+            findings.append(
+                Finding("visual_assets", "error", catalog_path, aid, "asset_id vazio ou duplicado")
+            )
         asset_ids.add(aid)
         if kind not in canonical or sid not in canonical.get(kind, set()):
-            findings.append(Finding("visual_assets", "error", catalog_path, aid,
-                                    f"subject canônico inexistente: {kind}:{sid}"))
+            findings.append(
+                Finding(
+                    "visual_assets",
+                    "error",
+                    catalog_path,
+                    aid,
+                    f"subject canônico inexistente: {kind}:{sid}",
+                )
+            )
         if (kind, sid) in subjects:
-            findings.append(Finding("visual_assets", "error", catalog_path, aid,
-                                    f"subject duplicado: {kind}:{sid}"))
+            findings.append(
+                Finding(
+                    "visual_assets", "error", catalog_path, aid, f"subject duplicado: {kind}:{sid}"
+                )
+            )
         subjects.add((kind, sid))
         if asset.get("visibility") != "public":
-            findings.append(Finding("visual_assets", "error", catalog_path, aid,
-                                    "catálogo público contém asset não-público"))
+            findings.append(
+                Finding(
+                    "visual_assets",
+                    "error",
+                    catalog_path,
+                    aid,
+                    "catálogo público contém asset não-público",
+                )
+            )
         for role, variant in (asset.get("variants") or {}).items():
             url = str(variant.get("url") or "")
-            path = os.path.abspath(os.path.join(public_root, url.removeprefix("/").replace("/", os.sep)))
-            if not url.startswith("/art/v1/") or os.path.commonpath((public_abs, path)) != public_abs:
-                findings.append(Finding("visual_assets", "error", catalog_path, aid,
-                                        f"URL fora de /art/v1/: {url}"))
+            path = os.path.abspath(
+                os.path.join(public_root, url.removeprefix("/").replace("/", os.sep))
+            )
+            if (
+                not url.startswith("/art/v1/")
+                or os.path.commonpath((public_abs, path)) != public_abs
+            ):
+                findings.append(
+                    Finding(
+                        "visual_assets", "error", catalog_path, aid, f"URL fora de /art/v1/: {url}"
+                    )
+                )
                 continue
             if not os.path.isfile(path):
                 findings.append(Finding("visual_assets", "error", path, aid, "derivado ausente"))
@@ -828,27 +1111,58 @@ def validate_visual_assets(catalog_path: str = VISUAL_CATALOG_PATH,
             with open(path, "rb") as handle:
                 digest = hashlib.sha256(handle.read()).hexdigest()
             actual_bytes = os.path.getsize(path)
-            ceiling = 120_000 if role == "thumbnail" else (400_000 if kind == "location" else 300_000)
+            ceiling = (
+                120_000 if role == "thumbnail" else (400_000 if kind == "location" else 300_000)
+            )
             if digest != variant.get("sha256") or actual_bytes != variant.get("bytes"):
-                findings.append(Finding("visual_assets", "error", path, aid,
-                                        "hash/bytes divergem do catálogo"))
+                findings.append(
+                    Finding("visual_assets", "error", path, aid, "hash/bytes divergem do catálogo")
+                )
             if actual_bytes > ceiling:
-                findings.append(Finding("visual_assets", "error", path, aid,
-                                        f"{role} excede teto de {ceiling} bytes"))
+                findings.append(
+                    Finding(
+                        "visual_assets",
+                        "error",
+                        path,
+                        aid,
+                        f"{role} excede teto de {ceiling} bytes",
+                    )
+                )
 
     creation = catalog.get("creation") or {}
     if set((creation.get("races") or {}).keys()) != race_ids:
-        findings.append(Finding("visual_assets", "error", catalog_path, "races",
-                                "cobertura de raças do onboarding está incompleta"))
+        findings.append(
+            Finding(
+                "visual_assets",
+                "error",
+                catalog_path,
+                "races",
+                "cobertura de raças do onboarding está incompleta",
+            )
+        )
     if set((creation.get("classes") or {}).keys()) != class_ids:
-        findings.append(Finding("visual_assets", "error", catalog_path, "classes",
-                                "cobertura de classes do onboarding está incompleta"))
+        findings.append(
+            Finding(
+                "visual_assets",
+                "error",
+                catalog_path,
+                "classes",
+                "cobertura de classes do onboarding está incompleta",
+            )
+        )
     mapped_locations = {sid for kind, sid in subjects if kind == "location"}
     fallbacks = catalog.get("location_fallbacks") or {}
     for location_id in locations - mapped_locations:
         if fallbacks.get(location_id) not in mapped_locations:
-            findings.append(Finding("visual_assets", "error", catalog_path, location_id,
-                                    "local sem arte exata ou fallback regional válido"))
+            findings.append(
+                Finding(
+                    "visual_assets",
+                    "error",
+                    catalog_path,
+                    location_id,
+                    "local sem arte exata ou fallback regional válido",
+                )
+            )
     return findings
 
 
@@ -861,20 +1175,33 @@ def validate_secret_entity_ids(graph_dir: str = GRAPH_DIR) -> list[Finding]:
     findings: list[Finding] = []
     for secret_id in SECRET_SIGNATURES:
         if not SECRET_ENTITY_IDS.get(secret_id):
-            findings.append(Finding(
-                "secret_entity_ids", "error", path, secret_id,
-                "segredo sem entidade-alvo em SECRET_ENTITY_IDS"))
+            findings.append(
+                Finding(
+                    "secret_entity_ids",
+                    "error",
+                    path,
+                    secret_id,
+                    "segredo sem entidade-alvo em SECRET_ENTITY_IDS",
+                )
+            )
     for secret_id, entity_ids in SECRET_ENTITY_IDS.items():
         for entity_id in sorted(entity_ids):
             if entity_id not in merged:
-                findings.append(Finding(
-                    "secret_entity_ids", "error", path, entity_id,
-                    f"SECRET_ENTITY_IDS['{secret_id}'] referencia id que não existe no grafo"))
+                findings.append(
+                    Finding(
+                        "secret_entity_ids",
+                        "error",
+                        path,
+                        entity_id,
+                        f"SECRET_ENTITY_IDS['{secret_id}'] referencia id que não existe no grafo",
+                    )
+                )
     return findings
 
 
-def validate_all(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR,
-                 overrides_path: str = OVERRIDES_PATH) -> list[Finding]:
+def validate_all(
+    codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR, overrides_path: str = OVERRIDES_PATH
+) -> list[Finding]:
     """Roda todos os validadores; aplica whitelist; ordena por
     (severity, validator, path, entity_id) — erros primeiro."""
     findings: list[Finding] = []
@@ -894,11 +1221,12 @@ def validate_all(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR,
     else:
         paths = _codex_md_paths(codex_dir)
         if os.path.isdir(graph_dir):
-            paths += [os.path.join(graph_dir, f) for f in sorted(os.listdir(graph_dir))
-                      if f.endswith(".json")]
+            paths += [
+                os.path.join(graph_dir, f)
+                for f in sorted(os.listdir(graph_dir))
+                if f.endswith(".json")
+            ]
         findings.extend(validate_encoding(paths))
-    findings = [
-        f for f in findings if (f.validator, f.entity_id) not in _LINT_WHITELIST
-    ]
+    findings = [f for f in findings if (f.validator, f.entity_id) not in _LINT_WHITELIST]
     findings.sort(key=lambda f: (f.severity, f.validator, f.path, f.entity_id))
     return findings

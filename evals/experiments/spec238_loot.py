@@ -50,7 +50,7 @@ ORACLE_SHA256 = "sha256:129ac6fb9ff0c298c9b594d8db3afd756358063d4b7c5cbafe30d359
 RUNS = ROOT / "evals/runs/jev-router-ab/spec238-j1b"
 J1B_CALL_CAP = 30
 TOTAL_CALL_CAP = 190  # SPEC-217 total raised 160 -> 190 by the owner (2026-10-18)
-NON_LOOT_SAMPLE = 9   # + 8 DEV critical + 13 DEV loot = 30 calls
+NON_LOOT_SAMPLE = 9  # + 8 DEV critical + 13 DEV loot = 30 calls
 SAMPLE_SEED = "SPEC-238-J1b"
 LOOT_SOURCES = ("TREASURE", "SHOP", "CRAFT")
 
@@ -59,6 +59,7 @@ LOOT_SOURCES = ("TREASURE", "SHOP", "CRAFT")
 # Deterministic public features
 # ---------------------------------------------------------------------------
 
+
 def loot_features(state: Mapping[str, Any]) -> dict[str, bool | None]:
     """Location facts from public catalogs only; ``None`` when the location is unknown."""
     world = (state or {}).get("world") or {}
@@ -66,8 +67,10 @@ def loot_features(state: Mapping[str, Any]) -> dict[str, bool | None]:
     node = get_location(location_id) if location_id else {}
     if not node:
         return {"merchant_here": None, "craft_station": None}
-    return {"merchant_here": bool(merchants_at(location_id)),
-            "craft_station": bool(node.get("craft_tags"))}
+    return {
+        "merchant_here": bool(merchants_at(location_id)),
+        "craft_station": bool(node.get("craft_tags")),
+    }
 
 
 LOOT_SOURCE_INSTRUCTIONS = (
@@ -91,13 +94,15 @@ def j1b_request(case_input: Mapping[str, Any], base: Policy = FROZEN_J1_POLICY) 
     request = frozen_request(case_input, base)
     features = loot_features(case_input.get("state") or {})
     state = request.state.model_copy(update=features)
-    return DecisionRequest(state=state, questions={**request.questions,
-                                                   "loot_source": LOOT_SOURCE_QUESTION})
+    return DecisionRequest(
+        state=state, questions={**request.questions, "loot_source": LOOT_SOURCE_QUESTION}
+    )
 
 
 # ---------------------------------------------------------------------------
 # Policy (pure)
 # ---------------------------------------------------------------------------
+
 
 @dataclass(frozen=True)
 class LootPolicy:
@@ -110,12 +115,15 @@ class LootPolicy:
     def variant_id(self) -> str:
         if not self.loot_stage:
             return self.base.variant_id
-        return (f"{self.base.variant_id}+lootsrc{'+lguard' if self.loot_guard else ''}"
-                f"@{self.loot_tau:.2f}")
+        return (
+            f"{self.base.variant_id}+lootsrc{'+lguard' if self.loot_guard else ''}"
+            f"@{self.loot_tau:.2f}"
+        )
 
 
-def loot_guard_ok(source: str, verbs: tuple[str, ...], merchant_here: bool | None,
-                  craft_station: bool | None) -> bool:
+def loot_guard_ok(
+    source: str, verbs: tuple[str, ...], merchant_here: bool | None, craft_station: bool | None
+) -> bool:
     """Python consistency check between the Jev source and public signals."""
     if not {"take", "trade", "craft"} & set(verbs):
         return False  # no item verb at all: a loot route is not trusted
@@ -127,21 +135,38 @@ def loot_guard_ok(source: str, verbs: tuple[str, ...], merchant_here: bool | Non
 
 
 def loot_hybrid_decision(
-    *, route: Mapping[str, Any] | None, target: Mapping[str, Any] | None,
-    loot_source: Mapping[str, Any] | None, verbs: tuple[str, ...], in_combat: bool,
-    target_status: str, merchant_here: bool | None, craft_station: bool | None,
+    *,
+    route: Mapping[str, Any] | None,
+    target: Mapping[str, Any] | None,
+    loot_source: Mapping[str, Any] | None,
+    verbs: tuple[str, ...],
+    in_combat: bool,
+    target_status: str,
+    merchant_here: bool | None,
+    craft_station: bool | None,
     policy: LootPolicy,
 ) -> dict[str, Any]:
     """J1 frozen decision; when it defers loot by scope, try the loot-source stage."""
-    decision = hybrid_decision(route=route, target=target, verbs=verbs, in_combat=in_combat,
-                               target_status=target_status, policy=policy.base)
+    decision = hybrid_decision(
+        route=route,
+        target=target,
+        verbs=verbs,
+        in_combat=in_combat,
+        target_status=target_status,
+        policy=policy.base,
+    )
     decision = {**decision, "loot_source": None}
     if decision["reason"] != "loot_context_out_of_scope" or not policy.loot_stage:
         return decision
 
     def fallback(reason: str) -> dict[str, Any]:
-        return {"source": "fallback", "reason": reason, "route": None, "target": None,
-                "loot_source": None}
+        return {
+            "source": "fallback",
+            "reason": reason,
+            "route": None,
+            "target": None,
+            "loot_source": None,
+        }
 
     if loot_source is None:
         return fallback("loot_source_missing")
@@ -154,13 +179,13 @@ def loot_hybrid_decision(
         return fallback("loot_source_invalid")
     if policy.loot_guard and not loot_guard_ok(source, verbs, merchant_here, craft_station):
         return fallback("loot_guard")
-    return {"source": "jev", "reason": None, "route": "loot", "target": None,
-            "loot_source": source}
+    return {"source": "jev", "reason": None, "route": "loot", "target": None, "loot_source": source}
 
 
 # ---------------------------------------------------------------------------
 # Sample, oracle, scoring (offline, from raw only)
 # ---------------------------------------------------------------------------
+
 
 def load_oracle(path: Path = ORACLE) -> dict[str, str]:
     if sha256_file(path) != ORACLE_SHA256:
@@ -177,17 +202,25 @@ def j1b_sample(eligible: list[Case]) -> list[Case]:
     """All DEV loot + all DEV critical + 9 other non-loot by seeded hash order."""
     loot = [case for case in eligible if case.expected["route"] == "loot"]
     critical = [case for case in eligible if case.critical and case not in loot]
-    rest = sorted((case for case in eligible if case not in loot and case not in critical),
-                  key=lambda case: _rank(case.id))
+    rest = sorted(
+        (case for case in eligible if case not in loot and case not in critical),
+        key=lambda case: _rank(case.id),
+    )
     return loot + critical + rest[:NON_LOOT_SAMPLE]
 
 
 def candidate_policies() -> list[LootPolicy]:
-    return [LootPolicy(loot_guard=guard, loot_tau=tau) for guard in (True, False) for tau in TAU_GRID]
+    return [
+        LootPolicy(loot_guard=guard, loot_tau=tau) for guard in (True, False) for tau in TAU_GRID
+    ]
 
 
-def score(rows: list[Mapping[str, Any]], cases: Mapping[str, Case], oracle: Mapping[str, str],
-          policy: LootPolicy) -> dict[str, Any]:
+def score(
+    rows: list[Mapping[str, Any]],
+    cases: Mapping[str, Case],
+    oracle: Mapping[str, str],
+    policy: LootPolicy,
+) -> dict[str, Any]:
     covered = route_errors = target_errors = source_errors = unsafe = 0
     loot_cases = loot_covered = 0
     reasons: dict[str, int] = {}
@@ -198,10 +231,14 @@ def score(rows: list[Mapping[str, Any]], cases: Mapping[str, Case], oracle: Mapp
         answers = row["answers"]
         features = loot_features(case.input.get("state") or {})
         decision = loot_hybrid_decision(
-            route=answers.get("route"), target=answers.get("target"),
-            loot_source=answers.get("loot_source"), verbs=tuple(row["verbs"]),
-            in_combat=bool(row["in_combat"]), target_status=row["target_status"],
-            policy=policy, **features,
+            route=answers.get("route"),
+            target=answers.get("target"),
+            loot_source=answers.get("loot_source"),
+            verbs=tuple(row["verbs"]),
+            in_combat=bool(row["in_combat"]),
+            target_status=row["target_status"],
+            policy=policy,
+            **features,
         )
         is_loot = truth["route"] == "loot"
         loot_cases += is_loot
@@ -210,45 +247,74 @@ def score(rows: list[Mapping[str, Any]], cases: Mapping[str, Case], oracle: Mapp
             continue
         covered += 1
         route_ok = decision["route"] == truth["route"]
-        target_ok = case.kind != "target" or (route_ok and decision["target"] == truth.get("target"))
-        source_ok = decision["route"] != "loot" or (is_loot and decision["loot_source"] == oracle.get(case.id))
+        target_ok = case.kind != "target" or (
+            route_ok and decision["target"] == truth.get("target")
+        )
+        source_ok = decision["route"] != "loot" or (
+            is_loot and decision["loot_source"] == oracle.get(case.id)
+        )
         route_errors += not route_ok
         target_errors += not target_ok
         source_errors += decision["route"] == "loot" and not source_ok
         unsafe += decision["route"] == "combat_agent" and truth["route"] != "combat_agent"
         loot_covered += is_loot and route_ok
         if not (route_ok and target_ok and source_ok):
-            misses.append({"case_id": case.id, "expected": {**truth, "loot_source": oracle.get(case.id)},
-                           "jev": {k: decision[k] for k in ("route", "target", "loot_source")}})
+            misses.append(
+                {
+                    "case_id": case.id,
+                    "expected": {**truth, "loot_source": oracle.get(case.id)},
+                    "jev": {k: decision[k] for k in ("route", "target", "loot_source")},
+                }
+            )
     total = len(rows)
     return {
-        "variant_id": policy.variant_id, "policy": {**asdict(policy), "base": asdict(policy.base)},
-        "rows": total, "covered": covered, "coverage": covered / total if total else "unavailable",
-        "loot_cases": loot_cases, "loot_covered": loot_covered,
-        "covered_route_errors": route_errors, "covered_target_errors": target_errors,
-        "covered_loot_source_errors": source_errors, "unsafe_combat_escalations": unsafe,
-        "fallback_reasons": dict(sorted(reasons.items())), "misses": misses,
+        "variant_id": policy.variant_id,
+        "policy": {**asdict(policy), "base": asdict(policy.base)},
+        "rows": total,
+        "covered": covered,
+        "coverage": covered / total if total else "unavailable",
+        "loot_cases": loot_cases,
+        "loot_covered": loot_covered,
+        "covered_route_errors": route_errors,
+        "covered_target_errors": target_errors,
+        "covered_loot_source_errors": source_errors,
+        "unsafe_combat_escalations": unsafe,
+        "fallback_reasons": dict(sorted(reasons.items())),
+        "misses": misses,
     }
 
 
 def adoptable(candidate: Mapping[str, Any], baseline: Mapping[str, Any]) -> bool:
     """Pre-registered (docs/spec217/j1b-loot.md, committed before any live call)."""
-    return (candidate["covered_loot_source_errors"] == 0 and candidate["covered_route_errors"] == 0
-            and candidate["covered_target_errors"] == 0
-            and candidate["unsafe_combat_escalations"] == 0
-            and candidate["covered"] > baseline["covered"])
+    return (
+        candidate["covered_loot_source_errors"] == 0
+        and candidate["covered_route_errors"] == 0
+        and candidate["covered_target_errors"] == 0
+        and candidate["unsafe_combat_escalations"] == 0
+        and candidate["covered"] > baseline["covered"]
+    )
 
 
-def select(scores: list[Mapping[str, Any]], baseline: Mapping[str, Any]) -> Mapping[str, Any] | None:
+def select(
+    scores: list[Mapping[str, Any]], baseline: Mapping[str, Any]
+) -> Mapping[str, Any] | None:
     """Max coverage among adoptable; ties → guard on → loot τ nearest 0.50."""
     pool = [s for s in scores if adoptable(s, baseline)]
     if not pool:
         return None
-    return sorted(pool, key=lambda s: (-s["covered"], not s["policy"]["loot_guard"],
-                                       abs(s["policy"]["loot_tau"] - DEFAULT_TAU)))[0]
+    return sorted(
+        pool,
+        key=lambda s: (
+            -s["covered"],
+            not s["policy"]["loot_guard"],
+            abs(s["policy"]["loot_tau"] - DEFAULT_TAU),
+        ),
+    )[0]
 
 
-def summarize(raw: Mapping[str, Any], cases: list[Case], oracle: Mapping[str, str]) -> dict[str, Any]:
+def summarize(
+    raw: Mapping[str, Any], cases: list[Case], oracle: Mapping[str, str]
+) -> dict[str, Any]:
     by_id = {case.id: case for case in cases}
     rows = [row for row in raw["j1b"]["rows"] if row.get("answers")]
     baseline = score(rows, by_id, oracle, LootPolicy(loot_stage=False))
@@ -257,15 +323,21 @@ def summarize(raw: Mapping[str, Any], cases: list[Case], oracle: Mapping[str, st
     non_loot = [row for row in rows if by_id[row["case_id"]].expected["route"] != "loot"]
     latency = [float(row["latency_ms"]) for row in rows]
     return {
-        "evidence_type": "development (DEV corpus, SPEC-238 J1b)", "promotion": False,
-        "dev_hash": raw["dev_hash"], "oracle_hash": raw["oracle_hash"], "rows": len(rows),
+        "evidence_type": "development (DEV corpus, SPEC-238 J1b)",
+        "promotion": False,
+        "dev_hash": raw["dev_hash"],
+        "oracle_hash": raw["oracle_hash"],
+        "rows": len(rows),
         "selection_rule": "adopt iff 0 covered loot-source errors, 0 covered route/target "
-                          "errors, 0 unsafe, coverage > baseline; max coverage; ties guard "
-                          "on, loot τ nearest 0.50",
+        "errors, 0 unsafe, coverage > baseline; max coverage; ties guard "
+        "on, loot τ nearest 0.50",
         "baseline": {k: v for k, v in baseline.items() if k != "misses"},
         "baseline_misses": baseline["misses"],
-        "chosen": chosen, "adopted": chosen is not None,
-        "non_loot_route_answers": {row["case_id"]: row["answers"]["route"]["choice"] for row in non_loot},
+        "chosen": chosen,
+        "adopted": chosen is not None,
+        "non_loot_route_answers": {
+            row["case_id"]: row["answers"]["route"]["choice"] for row in non_loot
+        },
         "jev_latency_ms_p50": percentile(latency, 0.5),
         "jev_latency_ms_p95": percentile(latency, 0.95),
         "variants": [{k: v for k, v in s.items() if k != "misses"} for s in scores],
@@ -303,18 +375,31 @@ def frozen_j1b_request(case_input: Mapping[str, Any]) -> DecisionRequest:
     return DecisionRequest(state=state, questions=request.questions)
 
 
-def frozen_loot_decision(*, route: Mapping[str, Any] | None, target: Mapping[str, Any] | None,
-                         loot_source: Mapping[str, Any] | None, verbs: tuple[str, ...],
-                         in_combat: bool, target_status: str,
-                         merchant_here: bool | None = None,
-                         craft_station: bool | None = None) -> dict[str, Any]:
+def frozen_loot_decision(
+    *,
+    route: Mapping[str, Any] | None,
+    target: Mapping[str, Any] | None,
+    loot_source: Mapping[str, Any] | None,
+    verbs: tuple[str, ...],
+    in_combat: bool,
+    target_status: str,
+    merchant_here: bool | None = None,
+    craft_station: bool | None = None,
+) -> dict[str, Any]:
     """J2 arm-B decision under the frozen J1b policy (location never relaxes the guard)."""
     if not FROZEN_J1B_LOCATION_FEATURES:
         merchant_here = craft_station = None
-    return loot_hybrid_decision(route=route, target=target, loot_source=loot_source, verbs=verbs,
-                                in_combat=in_combat, target_status=target_status,
-                                merchant_here=merchant_here, craft_station=craft_station,
-                                policy=FROZEN_J1B_POLICY)
+    return loot_hybrid_decision(
+        route=route,
+        target=target,
+        loot_source=loot_source,
+        verbs=verbs,
+        in_combat=in_combat,
+        target_status=target_status,
+        merchant_here=merchant_here,
+        craft_station=craft_station,
+        policy=FROZEN_J1B_POLICY,
+    )
 
 
 def r9_7_loot_source(observations: list[Mapping[str, Any]]) -> dict[str, Any]:
@@ -345,26 +430,52 @@ def r9_7_loot_source(observations: list[Mapping[str, Any]]) -> dict[str, Any]:
             unverifiable += 1
         if not ok:
             errors += 1
-            failures.append({k: obs.get(k) for k in ("case_id", "replicate", "b_loot_source",
-                                                      "a_route", "a_loot_source",
-                                                      "oracle_loot_source")})
-    return {"rule": "R9.7", "checked": checked, "errors": errors,
-            "unverifiable": unverifiable, "failures": failures, "pass": errors == 0}
+            failures.append(
+                {
+                    k: obs.get(k)
+                    for k in (
+                        "case_id",
+                        "replicate",
+                        "b_loot_source",
+                        "a_route",
+                        "a_loot_source",
+                        "oracle_loot_source",
+                    )
+                }
+            )
+    return {
+        "rule": "R9.7",
+        "checked": checked,
+        "errors": errors,
+        "unverifiable": unverifiable,
+        "failures": failures,
+        "pass": errors == 0,
+    }
 
 
 def structure_digest(policy: LootPolicy) -> str:
     """J1 frozen digest + everything the loot stage sends or decides with."""
-    return digest_of({
-        "j1_structure_digest": hybrid.structure_digest(policy.base),
-        "policy": {**asdict(policy), "base": asdict(policy.base)},
-        "loot_source_question": LOOT_SOURCE_QUESTION.model_dump(),
-        "location_features": FROZEN_J1B_LOCATION_FEATURES,
-        "decision_code": {fn.__name__: inspect.getsource(fn).replace("\r\n", "\n")
-                          for fn in (loot_features, j1b_request, loot_guard_ok,
-                                     loot_hybrid_decision, merchants_at,
-                                     frozen_j1b_request, frozen_loot_decision,
-                                     r9_7_loot_source)},
-    })
+    return digest_of(
+        {
+            "j1_structure_digest": hybrid.structure_digest(policy.base),
+            "policy": {**asdict(policy), "base": asdict(policy.base)},
+            "loot_source_question": LOOT_SOURCE_QUESTION.model_dump(),
+            "location_features": FROZEN_J1B_LOCATION_FEATURES,
+            "decision_code": {
+                fn.__name__: inspect.getsource(fn).replace("\r\n", "\n")
+                for fn in (
+                    loot_features,
+                    j1b_request,
+                    loot_guard_ok,
+                    loot_hybrid_decision,
+                    merchants_at,
+                    frozen_j1b_request,
+                    frozen_loot_decision,
+                    r9_7_loot_source,
+                )
+            },
+        }
+    )
 
 
 # Superseded by the Astra emenda: sha256:1f6a5982…70f0 (location features on).
@@ -377,12 +488,15 @@ FROZEN_J1B_STRUCTURE_DIGEST = (
 # Ledger + live runner (DEV only)
 # ---------------------------------------------------------------------------
 
+
 class J1bLedger:
     """Shared SPEC-217 ledger; J1b counter capped at 30, spec total at 190."""
 
-    def __init__(self, path: Path | None = None, j1b_cap: int = J1B_CALL_CAP,
-                 total_cap: int = TOTAL_CALL_CAP) -> None:
+    def __init__(
+        self, path: Path | None = None, j1b_cap: int = J1B_CALL_CAP, total_cap: int = TOTAL_CALL_CAP
+    ) -> None:
         from evals.experiments.spec217_j1 import LEDGER
+
         self.path, self.j1b_cap, self.total_cap = path or LEDGER, j1b_cap, total_cap
 
     def read(self) -> dict[str, Any]:
@@ -392,19 +506,28 @@ class J1bLedger:
 
     def remaining(self) -> int:
         data = self.read()
-        return max(0, min(self.j1b_cap - data.get("j1b_calls", 0),
-                          self.total_cap - data["total_calls"]))
+        return max(
+            0, min(self.j1b_cap - data.get("j1b_calls", 0), self.total_cap - data["total_calls"])
+        )
 
     def consume(self, phase: str, case_id: str, provider: str = "jev") -> int:
         from evals.experiments.spec217_j1 import BudgetExhausted
+
         data = self.read()
         if data.get("j1b_calls", 0) >= self.j1b_cap or data["total_calls"] >= self.total_cap:
             raise BudgetExhausted("SPEC-238 J1b external call cap reached")
         data["j1b_calls"] = data.get("j1b_calls", 0) + 1
         data["total_calls"] += 1
         data["total_cap"] = self.total_cap
-        data["entries"].append({"n": data["total_calls"], "phase": phase, "case_id": case_id,
-                                "provider": provider, "at": datetime.now(UTC).isoformat()})
+        data["entries"].append(
+            {
+                "n": data["total_calls"],
+                "phase": phase,
+                "case_id": case_id,
+                "provider": provider,
+                "at": datetime.now(UTC).isoformat(),
+            }
+        )
         data["reserved_usd"] = round(data["total_calls"] * hybrid.RESERVED_USD_PER_CALL, 2)
         _write_json(self.path, data)
         return data["total_calls"]
@@ -428,8 +551,14 @@ def main() -> None:
         if raw["status"] != "complete":
             raise SystemExit("J1b raw is not complete; no score")
         _write_json(args.run_dir / "summary.json", summarize(raw, cases, oracle))
-        print(json.dumps({"raw_sha256": sha256_file(args.run_dir / "raw.json"),
-                          "summary_sha256": sha256_file(args.run_dir / "summary.json")}))
+        print(
+            json.dumps(
+                {
+                    "raw_sha256": sha256_file(args.run_dir / "raw.json"),
+                    "summary_sha256": sha256_file(args.run_dir / "summary.json"),
+                }
+            )
+        )
         return
     if args.env_file:
         load_dotenv(args.env_file, override=False)
@@ -441,15 +570,31 @@ def main() -> None:
         raise SystemExit(f"{len(sample)} calls needed, {ledger.remaining()} remain in the J1b cap")
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     run_id = f"SPEC-238-J1b-{stamp}"
-    meta = {**_meta(digest, run_id), "stage": "J1b", "spec_j1b": "SPEC-238",
-            "oracle_hash": ORACLE_SHA256, "base_variant": FROZEN_J1_POLICY.variant_id,
-            "j1_structure_digest": hybrid.FROZEN_J1_STRUCTURE_DIGEST,
-            "sample": [case.id for case in sample]}
-    with JevDecisionBackend(max_retries=0, timeout_seconds=8.0, total_timeout_seconds=10.0) as backend:
-        raw = run_phase("j1b", sample, lambda case: j1b_request(case.input), backend, ledger,
-                        RUNS / stamp, meta)
-    print(json.dumps({"run_id": run_id, "status": raw["status"], "dir": str(RUNS / stamp),
-                      "ledger": raw["ledger_after"]}))
+    meta = {
+        **_meta(digest, run_id),
+        "stage": "J1b",
+        "spec_j1b": "SPEC-238",
+        "oracle_hash": ORACLE_SHA256,
+        "base_variant": FROZEN_J1_POLICY.variant_id,
+        "j1_structure_digest": hybrid.FROZEN_J1_STRUCTURE_DIGEST,
+        "sample": [case.id for case in sample],
+    }
+    with JevDecisionBackend(
+        max_retries=0, timeout_seconds=8.0, total_timeout_seconds=10.0
+    ) as backend:
+        raw = run_phase(
+            "j1b", sample, lambda case: j1b_request(case.input), backend, ledger, RUNS / stamp, meta
+        )
+    print(
+        json.dumps(
+            {
+                "run_id": run_id,
+                "status": raw["status"],
+                "dir": str(RUNS / stamp),
+                "ledger": raw["ledger_after"],
+            }
+        )
+    )
 
 
 if __name__ == "__main__":

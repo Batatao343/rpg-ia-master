@@ -101,7 +101,10 @@ def _git_visible_files(root: Path) -> list[str]:
 
 def _excluded(relative: str) -> bool:
     folded = relative.casefold()
-    return any(folded == prefix.casefold() or folded.startswith(f"{prefix.casefold()}/") for prefix in EXCLUDED_PREFIXES)
+    return any(
+        folded == prefix.casefold() or folded.startswith(f"{prefix.casefold()}/")
+        for prefix in EXCLUDED_PREFIXES
+    )
 
 
 def discover_files(root: Path) -> list[Path]:
@@ -114,7 +117,10 @@ def discover_files(root: Path) -> list[Path]:
             continue
         if path.suffix.casefold() in SOURCE_SUFFIXES or path.name in ARTIFACT_NAMES:
             files.append(path)
-        elif relative.startswith(".github/workflows/") and path.suffix.casefold() in {".yml", ".yaml"}:
+        elif relative.startswith(".github/workflows/") and path.suffix.casefold() in {
+            ".yml",
+            ".yaml",
+        }:
             files.append(path)
     return sorted(files, key=lambda item: item.relative_to(root).as_posix().casefold())
 
@@ -139,9 +145,7 @@ def _module_name(relative: str) -> str:
     return ".".join(parts)
 
 
-def _absolute_import_from(
-    module: str, relative: str, *, is_package: bool, level: int
-) -> str:
+def _absolute_import_from(module: str, relative: str, *, is_package: bool, level: int) -> str:
     if level <= 0:
         return relative
     package = module.split(".") if is_package else module.split(".")[:-1]
@@ -237,9 +241,7 @@ class _WriteCollector(ast.NodeVisitor):
             self.mutated_roots.add(node.args[0].id)
         self.generic_visit(node)
 
-    def _visit_function_header(
-        self, node: ast.FunctionDef | ast.AsyncFunctionDef
-    ) -> None:
+    def _visit_function_header(self, node: ast.FunctionDef | ast.AsyncFunctionDef) -> None:
         for decorator in node.decorator_list:
             self.visit(decorator)
         for default in [*node.args.defaults, *node.args.kw_defaults]:
@@ -345,14 +347,10 @@ def _fastapi_bindings(tree: ast.Module) -> dict[int, set[str]]:
                 )
             continue
         if isinstance(statement, ast.Import):
-            imported_names = {
-                alias.asname or alias.name.split(".")[0] for alias in statement.names
-            }
+            imported_names = {alias.asname or alias.name.split(".")[0] for alias in statement.names}
             shadow(imported_names)
             namespaces.update(
-                alias.asname or alias.name
-                for alias in statement.names
-                if alias.name == "fastapi"
+                alias.asname or alias.name for alias in statement.names if alias.name == "fastapi"
             )
             continue
         targets: list[ast.expr] = []
@@ -392,7 +390,10 @@ def _endpoint_decorators(
     for decorator in node.decorator_list:
         if not isinstance(decorator, ast.Call) or not isinstance(decorator.func, ast.Attribute):
             continue
-        if not isinstance(decorator.func.value, ast.Name) or decorator.func.value.id not in http_bindings:
+        if (
+            not isinstance(decorator.func.value, ast.Name)
+            or decorator.func.value.id not in http_bindings
+        ):
             continue
         method = decorator.func.attr.upper()
         if method not in {"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"}:
@@ -458,7 +459,9 @@ def _parse_python(root: Path, path: Path) -> PythonUnit:
                 node, http_bindings.get(id(node), set())
             ):
                 endpoint_id = f"endpoint:{method}:{route}:{relative}:{node.lineno}"
-                endpoints.append(_node(endpoint_id, "endpoint", relative, line, f"{method} {route}"))
+                endpoints.append(
+                    _node(endpoint_id, "endpoint", relative, line, f"{method} {route}")
+                )
                 edges.append(
                     _edge(
                         endpoint_id,
@@ -502,9 +505,7 @@ class _CallCollector(ast.NodeVisitor):
 
 def _function_nodes(tree: ast.AST) -> list[ast.FunctionDef | ast.AsyncFunctionDef]:
     return [
-        node
-        for node in ast.walk(tree)
-        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+        node for node in ast.walk(tree) if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
     ]
 
 
@@ -519,7 +520,9 @@ def _graph_schema_hash(root: Path) -> str:
     return _sha256(_canonical_json(schema))
 
 
-def generate(root: Path, *, indexed_commit: str | None = None) -> tuple[dict[str, Any], dict[str, Any]]:
+def generate(
+    root: Path, *, indexed_commit: str | None = None
+) -> tuple[dict[str, Any], dict[str, Any]]:
     root = root.resolve()
     files = discover_files(root)
     commit_sha = indexed_commit or _git_head(root)
@@ -537,7 +540,9 @@ def generate(root: Path, *, indexed_commit: str | None = None) -> tuple[dict[str
             nodes.append(_node(unit.module_id, "module", relative, 1, unit.module))
             nodes.extend(unit.symbol_nodes)
             nodes.extend(unit.endpoint_nodes)
-            edges.append(_edge(unit.file_id, unit.module_id, "contains", relative, 1, "static_exact"))
+            edges.append(
+                _edge(unit.file_id, unit.module_id, "contains", relative, 1, "static_exact")
+            )
             edges.extend(unit.structural_edges)
         elif path.suffix.casefold() in SOURCE_SUFFIXES:
             nodes.append(_node(f"file:{relative}", "file", relative, 1, None))
@@ -578,7 +583,9 @@ def generate(root: Path, *, indexed_commit: str | None = None) -> tuple[dict[str
                     continue
                 target = modules[candidate]
                 edges.append(
-                    _edge(unit.module_id, target.module_id, "imports", unit.path, line, "static_exact")
+                    _edge(
+                        unit.module_id, target.module_id, "imports", unit.path, line, "static_exact"
+                    )
                 )
                 if unit.path.startswith("tests/"):
                     edges.append(
@@ -596,7 +603,8 @@ def generate(root: Path, *, indexed_commit: str | None = None) -> tuple[dict[str
             candidates = [
                 node
                 for node in unit.symbol_nodes
-                if node["line"] == function.lineno and str(node["qualified_name"]).endswith(f".{function.name}")
+                if node["line"] == function.lineno
+                and str(node["qualified_name"]).endswith(f".{function.name}")
             ]
             if not candidates:
                 continue
@@ -617,7 +625,14 @@ def generate(root: Path, *, indexed_commit: str | None = None) -> tuple[dict[str
                         target_id = symbol_by_qualified.get(f"{prefix}.{call.func.attr}")
                 if target_id:
                     edges.append(
-                        _edge(source_id, target_id, "calls", unit.path, call.lineno, "static_best_effort")
+                        _edge(
+                            source_id,
+                            target_id,
+                            "calls",
+                            unit.path,
+                            call.lineno,
+                            "static_best_effort",
+                        )
                     )
 
     unique_nodes = {str(node["id"]): node for node in nodes}
@@ -700,10 +715,7 @@ def validate_graph(graph: dict[str, Any]) -> None:
             or not isinstance(node["kind"], str)
             or node["kind"] not in allowed_node_kinds
             or not (node["line"] is None or type(node["line"]) is int)
-            or not (
-                node["qualified_name"] is None
-                or isinstance(node["qualified_name"], str)
-            )
+            or not (node["qualified_name"] is None or isinstance(node["qualified_name"], str))
         ):
             raise ProjectIndexError("repo graph node has invalid field values")
     ids = [node.get("id") for node in nodes if isinstance(node, dict)]
@@ -732,13 +744,9 @@ def validate_graph(graph: dict[str, Any]) -> None:
             or set(provenance) != provenance_fields
             or not isinstance(provenance.get("file"), str)
             or not provenance.get("file")
+            or not (provenance.get("line") is None or type(provenance.get("line")) is int)
             or not (
-                provenance.get("line") is None
-                or type(provenance.get("line")) is int
-            )
-            or not (
-                provenance.get("extractor") is None
-                or isinstance(provenance.get("extractor"), str)
+                provenance.get("extractor") is None or isinstance(provenance.get("extractor"), str)
             )
         ):
             raise ProjectIndexError("repo graph edge lacks provenance")
@@ -751,7 +759,11 @@ def _load_curated(path: Path, top_key: str) -> dict[str, Any]:
         data = yaml.safe_load(path.read_text(encoding="utf-8"))
     except (OSError, yaml.YAMLError) as error:
         raise ProjectIndexError(f"invalid curated index file {path}: {error}") from error
-    if not isinstance(data, dict) or data.get("schema_version") != 1 or not isinstance(data.get(top_key), dict):
+    if (
+        not isinstance(data, dict)
+        or data.get("schema_version") != 1
+        or not isinstance(data.get(top_key), dict)
+    ):
         raise ProjectIndexError(f"invalid curated index schema in {path}")
     return data
 
@@ -812,11 +824,15 @@ def check_index(root: Path) -> tuple[dict[str, Any], dict[str, Any]]:
         raise ProjectIndexError("project index has invalid commit SHA")
     expected_graph, expected_manifest = generate(root, indexed_commit=indexed_commit)
     if actual_graph != expected_graph or actual_manifest != expected_manifest:
-        raise ProjectIndexError("project index is stale: source tree or generated artifacts changed")
+        raise ProjectIndexError(
+            "project index is stale: source tree or generated artifacts changed"
+        )
     return actual_graph, actual_manifest
 
 
 def freshness_status(root: Path, manifest: dict[str, Any]) -> str:
     """Commit drift warns; byte-identical indexed source remains usable."""
 
-    return "fresh" if manifest.get("commit_sha") == _git_head(root.resolve()) else "fresh_commit_drift"
+    return (
+        "fresh" if manifest.get("commit_sha") == _git_head(root.resolve()) else "fresh_commit_drift"
+    )

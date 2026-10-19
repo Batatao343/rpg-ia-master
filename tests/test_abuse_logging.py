@@ -1,4 +1,5 @@
 """SPEC-246: 429/413/503-de-limite com linha JSON (retry_after_s, request_id) e limiter fail-open visivel."""
+
 import ast
 import asyncio
 import json
@@ -48,16 +49,19 @@ def test_record_block_json_with_retry_after(capsys):
 
 def test_record_block_sampled_per_key(capsys):
     from observability.metrics import metrics
-    before = metrics._values.get(("rpg_rate_limited_total", (("class", "turn"), ("scope", "ip"))), 0)
+
+    before = metrics._values.get(
+        ("rpg_rate_limited_total", (("class", "turn"), ("scope", "ip"))), 0
+    )
     for _ in range(5):
         abuse_policy.record_block("turn", "ip", ip=IP, retry_after=3)
     rows = _lines(capsys, "abuse.blocked")
-    assert len(rows) == 1                     # 1x/min por (classe, escopo, chave)
+    assert len(rows) == 1  # 1x/min por (classe, escopo, chave)
     after = metrics._values.get(("rpg_rate_limited_total", (("class", "turn"), ("scope", "ip"))), 0)
-    assert after - before == 5                # a metrica conta todos
+    assert after - before == 5  # a metrica conta todos
     assert IP not in json.dumps(rows)
     abuse_policy.record_block("turn", "ip", ip="198.51.100.9", retry_after=3)
-    assert len(_lines(capsys, "abuse.blocked")) == 1        # outra chave: loga
+    assert len(_lines(capsys, "abuse.blocked")) == 1  # outra chave: loga
 
 
 def test_body_limit_logs_and_counts(capsys):
@@ -80,8 +84,18 @@ def test_body_limit_logs_and_counts(capsys):
     key = ("rpg_http_body_too_large_total", (("route", "/game/new"),))
     before = metrics._values.get(key, 0)
     with request_scope("body-req-00001"):
-        asyncio.run(app({"type": "http", "method": "POST", "path": "/game/new",
-                         "headers": [(b"content-length", b"999")]}, receive, send))
+        asyncio.run(
+            app(
+                {
+                    "type": "http",
+                    "method": "POST",
+                    "path": "/game/new",
+                    "headers": [(b"content-length", b"999")],
+                },
+                receive,
+                send,
+            )
+        )
     assert sent[0]["status"] == 413
     row = _lines(capsys, "http.body_too_large")[0]
     assert row["route"] == "/game/new" and row["limit_bytes"] == 10 and row["declared_bytes"] == 999
@@ -92,8 +106,11 @@ def test_body_limit_logs_and_counts(capsys):
 def test_body_limit_route_label_is_templated():
     from api import app
     from services.body_limit import route_label
-    assert route_label("/game/8a6e0804-2bd0-4672-b79d-d97358571b25/audit-export",
-                       routes=app.routes) == "/game/{id}/audit-export"
+
+    assert (
+        route_label("/game/8a6e0804-2bd0-4672-b79d-d97358571b25/audit-export", routes=app.routes)
+        == "/game/{id}/audit-export"
+    )
 
 
 def test_body_limit_route_label_closed_for_unknown_paths(capsys):
@@ -103,6 +120,7 @@ def test_body_limit_route_label_closed_for_unknown_paths(capsys):
     from api import app
     from observability.metrics import metrics
     from services.body_limit import route_label
+
     assert route_label("/nao/existe/abc123") == "other"
     assert route_label("/nao/existe/abc123", routes=app.routes) == "other"
     before = {k for k in metrics._values if k[0] == "rpg_http_body_too_large_total"}
@@ -117,6 +135,7 @@ def test_body_limit_route_label_closed_for_unknown_paths(capsys):
 
 def test_limiter_exception_logged_failopen(capsys):
     from observability.metrics import metrics
+
     key = ("rpg_rate_limiter_errors_total", (("site", "daily_quota"),))
     before = metrics._values.get(key, 0)
 
@@ -140,11 +159,14 @@ def test_owner_rate_limit_failopen_is_logged(monkeypatch, capsys):
         def consume(self, *a, **k):
             raise ConnectionError("down")
 
-    monkeypatch.setattr("infrastructure.runtime.get_runtime",
-                        lambda: SimpleNamespace(rate_limiter=Broken()))
+    monkeypatch.setattr(
+        "infrastructure.runtime.get_runtime", lambda: SimpleNamespace(rate_limiter=Broken())
+    )
     monkeypatch.delenv("RPG_RATE_LIMIT", raising=False)
     request = SimpleNamespace(method="POST", url=SimpleNamespace(path="/game/chronicle/search"))
-    assert api._owner_rate_limit(request, SimpleNamespace(user_id=OWNER)) is None   # continua fail-open
+    assert (
+        api._owner_rate_limit(request, SimpleNamespace(user_id=OWNER)) is None
+    )  # continua fail-open
     rows = _lines(capsys, "abuse.limiter_unavailable")
     assert rows and rows[0]["site"] == "owner_minute" and rows[0]["error_type"] == "ConnectionError"
 
@@ -172,7 +194,11 @@ def test_every_429_records_block():
             code = first.value if isinstance(first, ast.Constant) else None
             if code not in (429, 413):
                 continue
-            name = sub.func.attr if isinstance(sub.func, ast.Attribute) else getattr(sub.func, "id", "")
+            name = (
+                sub.func.attr
+                if isinstance(sub.func, ast.Attribute)
+                else getattr(sub.func, "id", "")
+            )
             if name not in {"HTTPException", "_error_response", "SpeechError"}:
                 continue
             needed = {"record_block"} if code == 429 else {"log_body_too_large"}

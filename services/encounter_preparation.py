@@ -14,6 +14,7 @@ ADITIVO: a mudança de GRAFO (mover `_spawn_enemies_integrated` pra fora do
 `combat_node`, NPC nascer com ficha completa em `agents/npc.py`) é o cutover
 (conflito-13). Aqui: motor puro + o builder de ficha de combate + testes.
 """
+
 import json
 import os
 from copy import deepcopy
@@ -28,8 +29,15 @@ from services import conflict_scene as cs
 
 # R6: teto do Nível do Encontro (perigo ABSOLUTO — nunca depende da party).
 ENCOUNTER_LEVEL_MAX = 10
-_EVENT_TYPE_BONUS = {"comum": 0, "emboscada": 1, "cacada": 1, "ritual": 2,
-                     "invasao": 2, "apex": 3, "chefe": 3}
+_EVENT_TYPE_BONUS = {
+    "comum": 0,
+    "emboscada": 1,
+    "cacada": 1,
+    "ritual": 2,
+    "invasao": 2,
+    "apex": 3,
+    "chefe": 3,
+}
 _IMPORTANCE_BONUS = {"trivial": -1, "comum": 0, "importante": 1, "climax": 2}
 
 _POTENCY: dict | None = None
@@ -38,17 +46,24 @@ _POTENCY: dict | None = None
 # ==========================================================================
 # Etapa 1 — Nível do Encontro (Python puro, R6)
 # ==========================================================================
-def compute_encounter_level(*, location_danger: int = 1, region_danger: int = 1,
-                            event_type: str = "comum", importance: str = "comum",
-                            unique_threats: int = 0) -> int:
+def compute_encounter_level(
+    *,
+    location_danger: int = 1,
+    region_danger: int = 1,
+    event_type: str = "comum",
+    importance: str = "comum",
+    unique_threats: int = 0,
+) -> int:
     """R6: Nível do Encontro = perigo ABSOLUTO do local/região/evento/importância/
     ameaças únicas. NÃO recebe nem considera o nível/força da party (decisão fechada
     do épico). O jogador nunca vê este número."""
     base = max(int(location_danger or 1), int(region_danger or 1))
-    level = (base
-             + _EVENT_TYPE_BONUS.get(str(event_type).lower(), 0)
-             + _IMPORTANCE_BONUS.get(str(importance).lower(), 0)
-             + int(unique_threats or 0))
+    level = (
+        base
+        + _EVENT_TYPE_BONUS.get(str(event_type).lower(), 0)
+        + _IMPORTANCE_BONUS.get(str(importance).lower(), 0)
+        + int(unique_threats or 0)
+    )
     return max(1, min(ENCOUNTER_LEVEL_MAX, level))
 
 
@@ -75,10 +90,20 @@ def potency_value(categoria: str, encounter_level: int, dimension: str = "dano")
     return base + slope * max(0, int(encounter_level) - 1)
 
 
-_NUMERIC_EFFECT_PARAMS = frozenset({
-    "amount", "damage", "duration", "duracao", "dc", "difficulty",
-    "count", "quantity", "cost", "custo",
-})
+_NUMERIC_EFFECT_PARAMS = frozenset(
+    {
+        "amount",
+        "damage",
+        "duration",
+        "duracao",
+        "dc",
+        "difficulty",
+        "count",
+        "quantity",
+        "cost",
+        "custo",
+    }
+)
 _TARGETED_EFFECTS = frozenset({"damage", "apply_condition", "reposition"})
 _POTENCY_DIMENSION = {
     "damage": ("amount", "dano"),
@@ -87,8 +112,9 @@ _POTENCY_DIMENSION = {
 }
 
 
-def materialize_effect(effect: dict, encounter_level: int, *,
-                       valid_targets: set[str] | None = None) -> dict | None:
+def materialize_effect(
+    effect: dict, encounter_level: int, *, valid_targets: set[str] | None = None
+) -> dict | None:
     """Materializa um EffectSpec categórico. Números recebidos são sempre
     descartados e recalculados; assim nem um dict aberto vindo de provider
     consegue dirigir a mecânica."""
@@ -96,20 +122,24 @@ def materialize_effect(effect: dict, encounter_level: int, *,
         return None
     kind = str(effect.get("kind"))
     raw_params = effect.get("params") if isinstance(effect.get("params"), dict) else {}
-    category = str(
-        effect.get("potency")
-        or raw_params.get("potency")
-        or raw_params.get("potencia")
-        or "moderado"
-    ).strip().lower()
+    category = (
+        str(
+            effect.get("potency")
+            or raw_params.get("potency")
+            or raw_params.get("potencia")
+            or "moderado"
+        )
+        .strip()
+        .lower()
+    )
     categories = set(_load_potency().get("categorias") or [])
     if category not in categories:
         return None
 
     params = {
-        str(key): value for key, value in raw_params.items()
-        if str(key) not in _NUMERIC_EFFECT_PARAMS
-        and str(key) not in {"potency", "potencia"}
+        str(key): value
+        for key, value in raw_params.items()
+        if str(key) not in _NUMERIC_EFFECT_PARAMS and str(key) not in {"potency", "potencia"}
     }
     target = params.get("target")
     if kind in _TARGETED_EFFECTS:
@@ -207,10 +237,14 @@ def normalize_prepared_scene(scene: dict, encounter_level: int) -> dict:
 # ==========================================================================
 # Etapa 3 — seleção de criatura por região (R7)
 # ==========================================================================
-def validate_creature_selection(creature: dict, region: str, *,
-                                event_justification: bool = False,
-                                authorized_variant: bool = False,
-                                canonical_introduction: bool = False) -> bool:
+def validate_creature_selection(
+    creature: dict,
+    region: str,
+    *,
+    event_justification: bool = False,
+    authorized_variant: bool = False,
+    canonical_introduction: bool = False,
+) -> bool:
     """R7: criatura respeita a região — associada à região, justificada pelo evento,
     variante autorizada, ou introduzida por acontecimento canônico. Fora de região
     sem razão de mundo = rejeitada (nunca por conveniência de balanceamento)."""
@@ -233,12 +267,14 @@ def validate_preparation(scene: dict) -> dict:
     for o in objetos:
         if not str(o.get("base_narrativa") or "").strip():
             errors.append(f"Objeto '{o.get('id', o.get('name'))}' sem base narrativa (R8).")
-        for it in (o.get("interactions") or []):
+        for it in o.get("interactions") or []:
             effect = it.get("effect") or {}
             if not cs.validate_effect_kind(effect):
                 errors.append(f"Efeito fora do catálogo em '{o.get('id')}' (R4).")
-            elif (str(effect.get("kind")) in _POTENCY_DIMENSION
-                  and effect.get("_mechanical_origin") != "potency_by_level"):
+            elif (
+                str(effect.get("kind")) in _POTENCY_DIMENSION
+                and effect.get("_mechanical_origin") != "potency_by_level"
+            ):
                 errors.append(f"Efeito numérico não materializado em '{o.get('id')}'.")
             elif effect.get("_mechanical_origin") == "potency_by_level":
                 expected = materialize_effect(
@@ -249,14 +285,16 @@ def validate_preparation(scene: dict) -> dict:
                 if expected != effect:
                     errors.append(f"Efeito mecânico inconsistente em '{o.get('id')}'.")
 
-    for ev in (scene.get("abyss_events") or []):
+    for ev in scene.get("abyss_events") or []:
         if not abyss_events.validate_event_has_scene_basis(ev, obj_tokens):
             errors.append(f"Evento do Abismo '{ev.get('id')}' sem base na cena (R5).")
         effect = ev.get("effect") or {}
         if effect and not cs.validate_effect_kind(effect):
             errors.append(f"Evento do Abismo '{ev.get('id')}' tem efeito fora do catálogo.")
-        elif (str(effect.get("kind")) in _POTENCY_DIMENSION
-              and effect.get("_mechanical_origin") != "potency_by_level"):
+        elif (
+            str(effect.get("kind")) in _POTENCY_DIMENSION
+            and effect.get("_mechanical_origin") != "potency_by_level"
+        ):
             errors.append(f"Evento do Abismo '{ev.get('id')}' não foi materializado.")
 
     return {"ok": not errors, "errors": errors}
@@ -275,7 +313,9 @@ def validate_preparation(scene: dict) -> dict:
 # reforços/condições de fim não têm consumidor no loop e saíram do pedido.
 class PreparedEffectParams(BaseModel):
     model_config = ConfigDict(extra="ignore")
-    target: str | None = Field(None, description="id de um participante listado (só p/ damage/apply_condition/reposition)")
+    target: str | None = Field(
+        None, description="id de um participante listado (só p/ damage/apply_condition/reposition)"
+    )
     condition: str | None = Field(None, description="nome da condição (apply_condition)")
 
 
@@ -319,7 +359,9 @@ class PreparedScene(BaseModel):
 
     zones: list[PreparedZone] = Field(default_factory=list, description="1 a 3 zonas")
     objects: list[PreparedObject] = Field(default_factory=list, description="0 a 2 objetos")
-    abyss_events: list[PreparedAbyssEvent] = Field(default_factory=list, description="0 ou 1 evento")
+    abyss_events: list[PreparedAbyssEvent] = Field(
+        default_factory=list, description="0 ou 1 evento"
+    )
     objectives: list[str] = Field(default_factory=list, description="até 2, curtos")
 
 
@@ -329,17 +371,29 @@ _MAX_ZONES, _MAX_OBJECTS, _MAX_EVENTS, _MAX_TEXT = 3, 2, 1, 120
 
 def _trim_prepared(scene: dict) -> dict:
     """Truncagem determinística (padrão do repo: limite em Python, não no schema)."""
+
     def cut(text) -> str:
         return str(text or "").strip()[:_MAX_TEXT]
+
     scene["zones"] = [
-        {**z, "id": cut(z.get("id")), "name": cut(z.get("name")),
-         "connections": [cut(c) for c in (z.get("connections") or [])][:_MAX_ZONES]}
-        for z in (scene.get("zones") or [])[:_MAX_ZONES] if str(z.get("id") or "").strip()]
+        {
+            **z,
+            "id": cut(z.get("id")),
+            "name": cut(z.get("name")),
+            "connections": [cut(c) for c in (z.get("connections") or [])][:_MAX_ZONES],
+        }
+        for z in (scene.get("zones") or [])[:_MAX_ZONES]
+        if str(z.get("id") or "").strip()
+    ]
     scene["objects"] = [
-        {**o, "name": cut(o.get("name")) or cut(o.get("id")),
-         "base_narrativa": cut(o.get("base_narrativa")),
-         "interactions": list(o.get("interactions") or [])[:2]}
-        for o in (scene.get("objects") or [])[:_MAX_OBJECTS]]
+        {
+            **o,
+            "name": cut(o.get("name")) or cut(o.get("id")),
+            "base_narrativa": cut(o.get("base_narrativa")),
+            "interactions": list(o.get("interactions") or [])[:2],
+        }
+        for o in (scene.get("objects") or [])[:_MAX_OBJECTS]
+    ]
     events = []
     for ev in (scene.get("abyss_events") or [])[:_MAX_EVENTS]:
         # gatilho é Python: só "sempre" (flags livres de cena não existem aqui).
@@ -377,14 +431,17 @@ def prepare_encounter(narrative_context: dict, llm) -> dict:
     try:
         result = _invoke_with_deadline(
             lambda: llm.with_structured_output(PreparedScene).invoke(
-                _prep_prompt(narrative_context)))
+                _prep_prompt(narrative_context)
+            )
+        )
         if isinstance(result, PreparedScene):
             scene = _trim_prepared(_drop_none_params(result.model_dump()))
             # IDs mecânicos já conhecidos entram no conjunto de alvos válidos.
             scene["enemies"] = list(narrative_context.get("enemies") or scene.get("enemies") or [])
             scene["npcs"] = list(narrative_context.get("npcs") or scene.get("npcs") or [])
             scene = normalize_prepared_scene(
-                scene, int(narrative_context.get("encounter_level", 1) or 1))
+                scene, int(narrative_context.get("encounter_level", 1) or 1)
+            )
             if validate_preparation(scene)["ok"]:
                 scene.pop("_normalization_errors", None)
                 return scene
@@ -398,6 +455,7 @@ def _drop_none_params(scene: dict) -> dict:
         effect = holder.get("effect")
         if isinstance(effect, dict) and isinstance(effect.get("params"), dict):
             effect["params"] = {k: v for k, v in effect["params"].items() if v is not None}
+
     for obj in scene.get("objects") or []:
         for it in obj.get("interactions") or []:
             clean(it)
@@ -412,6 +470,7 @@ def _invoke_with_deadline(call):
     de segurança); a thread órfã termina sozinha e o resultado é descartado."""
     import concurrent.futures
     import contextvars
+
     try:
         timeout = float(os.getenv("RPG_PREP_TIMEOUT_SECONDS", _PREP_TIMEOUT_DEFAULT))
     except ValueError:
@@ -432,8 +491,9 @@ def _prep_prompt(ctx: dict) -> str:
     """Prompt COMPACTO (SPEC-232 R10): só nomes/ids — nunca o dict cru do contexto
     (fichas inteiras de inimigo estouravam tokens e latência)."""
     enemies = [e for e in (ctx.get("enemies") or []) if isinstance(e, dict)]
-    ids = ["player"] + [str(e.get("id") or e.get("name")) for e in enemies
-                        if e.get("id") or e.get("name")]
+    ids = ["player"] + [
+        str(e.get("id") or e.get("name")) for e in enemies if e.get("id") or e.get("name")
+    ]
     foes = ", ".join(f"{e.get('name', e.get('id'))} ({e.get('id', '?')})" for e in enemies[:6])
     narrative = " ".join(str(ctx.get("narrative") or "").split())[:400]
     return (
@@ -463,8 +523,9 @@ def build_npc_combat_sheet(npc: dict) -> dict:
         npc_profile_for_archetype,
     )
 
-    virtudes = dict(npc.get("virtudes") or {"forca": 1, "agilidade": 1, "corpo": 1,
-                                            "mente": 1, "carisma": 1})
+    virtudes = dict(
+        npc.get("virtudes") or {"forca": 1, "agilidade": 1, "corpo": 1, "mente": 1, "carisma": 1}
+    )
     corpo = int(virtudes.get("corpo", 1) or 1)
     tactical_archetype = infer_npc_tactical_archetype(npc)
     sheet = {

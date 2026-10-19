@@ -13,7 +13,9 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_docs_only_classification_is_conservative():
-    assert ci_docs_only.docs_only(["docs/a.md", "handoffs/SPEC-001-sol-review.md", "ESTADO_ATUAL.md"])
+    assert ci_docs_only.docs_only(
+        ["docs/a.md", "handoffs/SPEC-001-sol-review.md", "ESTADO_ATUAL.md"]
+    )
     assert ci_docs_only.docs_only(["docs/historico/proximas-specs/x/y.md", "docs/img.png"])
     # lore/specs/código nunca contam como docs-only
     assert not ci_docs_only.docs_only(["docs/a.md", "data/codex/x.md"])
@@ -27,13 +29,18 @@ def test_unknown_base_runs_full_suite(tmp_path):
     assert ci_docs_only.changed_paths(ROOT, "0" * 40, "HEAD") is None
     assert ci_docs_only.changed_paths(ROOT, "deadbeef" * 5, "HEAD") is None
     out = tmp_path / "out"
-    ci_docs_only.main(["--root", str(ROOT), "--base", "", "--head", "HEAD", "--github-output", str(out)])
+    ci_docs_only.main(
+        ["--root", str(ROOT), "--base", "", "--head", "HEAD", "--github-output", str(out)]
+    )
     assert out.read_text(encoding="utf-8") == "docs_only=false\n"
 
 
 def test_docs_only_from_real_git_range(tmp_path):
     def git(*args):
-        return subprocess.run(["git", *args], cwd=tmp_path, check=True, capture_output=True, text=True).stdout.strip()
+        return subprocess.run(
+            ["git", *args], cwd=tmp_path, check=True, capture_output=True, text=True
+        ).stdout.strip()
+
     git("init", "-q")
     git("config", "user.email", "t@t")
     git("config", "user.name", "t")
@@ -59,7 +66,9 @@ def test_doc_tests_selection_includes_doc_readers():
 
 
 def test_link_checker_finds_only_unlisted_breaks(tmp_path, monkeypatch):
-    (tmp_path / "a.md").write_text("[ok](b.md) [web](https://x) [anc](#t) [bad](missing.md) ![img](nope.png)\n")
+    (tmp_path / "a.md").write_text(
+        "[ok](b.md) [web](https://x) [anc](#t) [bad](missing.md) ![img](nope.png)\n"
+    )
     (tmp_path / "b.md").write_text("[up](a.md#x) [sp](dir%20x/c.md)\n")
     (tmp_path / "dir x").mkdir()
     (tmp_path / "dir x" / "c.md").write_text("ok\n")
@@ -81,7 +90,9 @@ def test_workflows_wire_docs_only_without_touching_eval_gates():
     audit = yaml.safe_load((ROOT / ".github/workflows/audit-local.yml").read_text(encoding="utf-8"))
     assert "docs_only != 'true'" in audit["jobs"]["infra-browser"]["if"]
     gates = (ROOT / ".github/workflows/eval-gates.yml").read_text(encoding="utf-8")
-    assert "ci_docs_only" not in gates, "deterministic-evals / project index check keep running always"
+    assert "ci_docs_only" not in gates, (
+        "deterministic-evals / project index check keep running always"
+    )
 
 
 def test_dependabot_groups_minor_patch_and_leaves_majors_alone():

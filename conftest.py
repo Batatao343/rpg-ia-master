@@ -1,4 +1,5 @@
 """Garante que a raiz do projeto esteja no sys.path para os testes (import de agents/, etc.)."""
+
 import os
 import sys
 

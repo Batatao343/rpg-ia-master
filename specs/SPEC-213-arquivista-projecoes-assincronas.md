@@ -222,11 +222,12 @@ class ProjectionEntry(TypedDict):
     projected_version: int
     action_id: str | None
     attempts: int
-    last_error_code: str | None   # código fechado, nunca texto do provider
+    last_error_code: str | None  # código fechado, nunca texto do provider
+
 
 class ProjectionState(TypedDict):
-    canonical_version: int        # monotônico; nunca volta em rollback
-    timeline_epoch: int           # = continuity.timeline_epoch no último commit
+    canonical_version: int  # monotônico; nunca volta em rollback
+    timeline_epoch: int  # = continuity.timeline_epoch no último commit
     summary: ProjectionEntry
     memory: ProjectionEntry
     chronicle: ProjectionEntry

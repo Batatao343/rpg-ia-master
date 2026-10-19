@@ -20,8 +20,14 @@ from services import conflict_scene as cs
 from services import conflict_turn as ct
 
 
-def _actor(actor_id: str, *, corpo: int = 3, vitalidade: int | None = None,
-           is_player: bool = False, categoria: str = "chefe") -> dict:
+def _actor(
+    actor_id: str,
+    *,
+    corpo: int = 3,
+    vitalidade: int | None = None,
+    is_player: bool = False,
+    categoria: str = "chefe",
+) -> dict:
     max_vitalidade = gamedata.vitalidade_para_corpo(corpo)
     return {
         "id": actor_id,
@@ -83,15 +89,17 @@ def test_sync_vitality_aplica_penalidade_permanente_e_aliases() -> None:
 
 def test_cicatriz_sobrevive_recalculo_por_corpo_e_level_up() -> None:
     actor = _actor("heroi", corpo=3, is_player=True)
-    actor.update({
-        "class_name": "Sangromante",
-        "level": 1,
-        "xp": 0,
-        "entropy": 5,
-        "max_entropy": 5,
-        "abyss_charge": 0,
-        "pending_choices": [],
-    })
+    actor.update(
+        {
+            "class_name": "Sangromante",
+            "level": 1,
+            "xp": 0,
+            "entropy": 5,
+            "max_entropy": 5,
+            "abyss_charge": 0,
+            "pending_choices": [],
+        }
+    )
     classes = {
         "Sangromante": {
             "abyss": {
@@ -103,8 +111,7 @@ def test_cicatriz_sobrevive_recalculo_por_corpo_e_level_up() -> None:
     }
 
     cm.apply_scar(actor, {"peak": True}, classes_db=classes)
-    actor, _events = progression.grant_xp(
-        actor, progression.XP_TABLE[2], classes_db=classes)
+    actor, _events = progression.grant_xp(actor, progression.XP_TABLE[2], classes_db=classes)
     gamedata.sync_vitality(actor)
 
     assert actor["vitalidade_max_penalty"] == 2
@@ -122,14 +129,16 @@ def test_migracao_v4_para_v5_escolhe_vitalidade_e_normaliza_party() -> None:
             "hp": 30,
             "max_hp": 40,
         },
-        "party": [{
-            "name": "Iria",
-            "virtudes": {"corpo": 1},
-            "vitalidade": 3,
-            "max_vitalidade": 8,
-            "hp": 0,
-            "max_hp": 20,
-        }],
+        "party": [
+            {
+                "name": "Iria",
+                "virtudes": {"corpo": 1},
+                "vitalidade": 3,
+                "max_vitalidade": 8,
+                "hp": 0,
+                "max_hp": 20,
+            }
+        ],
     }
 
     migrated = persistence.migrate_state(raw)
@@ -142,10 +151,12 @@ def test_migracao_v4_para_v5_escolhe_vitalidade_e_normaliza_party() -> None:
 
 
 def test_save_pre_v4_permanece_arquivado_no_schema_atual() -> None:
-    migrated = persistence.migrate_state({
-        "schema_version": 3,
-        "player": {"hp": 20, "max_hp": 20},
-    })
+    migrated = persistence.migrate_state(
+        {
+            "schema_version": 3,
+            "player": {"hp": 20, "max_hp": 20},
+        }
+    )
 
     assert migrated["schema_version"] == persistence.SCHEMA_VERSION
     assert migrated["archived"] is True
@@ -171,9 +182,11 @@ def test_regiao_nao_direcionada_e_reprodutivel_por_rng() -> None:
     b = _actor("b", corpo=0, vitalidade=1)
 
     ra = cd.resolve_damage_and_wounds(
-        a, damage_base=4, directed_region=None, rng=random.Random(123))
+        a, damage_base=4, directed_region=None, rng=random.Random(123)
+    )
     rb = cd.resolve_damage_and_wounds(
-        b, damage_base=4, directed_region=None, rng=random.Random(123))
+        b, damage_base=4, directed_region=None, rng=random.Random(123)
+    )
 
     assert ra["regiao"] == rb["regiao"]
     assert cd.is_valid_hit_region(a, ra["regiao"])

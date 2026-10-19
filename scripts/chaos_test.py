@@ -28,17 +28,26 @@ def run(dsn: str = DEFAULT_DSN, *, output: Path | None = None) -> dict:
     scenarios: dict[str, bool] = {}
     try:
         initial = _state(game_id, "Caos")
-        initial["event_log"] = [{
-            "event_id": "chaos-event", "type": "quest_completed", "turn": 0,
-            "payload": {"value": "original"}, "source": "chaos",
-        }]
+        initial["event_log"] = [
+            {
+                "event_id": "chaos-event",
+                "type": "quest_completed",
+                "turn": 0,
+                "payload": {"value": "original"},
+                "source": "chaos",
+            }
+        ]
         created = store.create(principal, initial)
 
         coordinator = PostgresTurnCoordinator(pool, lease_seconds=1)
         operation = uuid4()
         old = coordinator.claim(
-            principal, operation, game_id=game_id, kind="turn",
-            request_hash="a" * 64, base_version=created.version,
+            principal,
+            operation,
+            game_id=game_id,
+            kind="turn",
+            request_hash="a" * 64,
+            base_version=created.version,
         )
         with pool.connection() as connection, connection.transaction():
             connection.execute(
@@ -50,8 +59,12 @@ def run(dsn: str = DEFAULT_DSN, *, output: Path | None = None) -> dict:
                 (game_id,),
             )
         fresh = coordinator.claim(
-            principal, operation, game_id=game_id, kind="turn",
-            request_hash="a" * 64, base_version=created.version,
+            principal,
+            operation,
+            game_id=game_id,
+            kind="turn",
+            request_hash="a" * 64,
+            base_version=created.version,
         )
         try:
             coordinator.complete(old, committed_version=created.version, receipt={"old": True})
@@ -64,9 +77,15 @@ def run(dsn: str = DEFAULT_DSN, *, output: Path | None = None) -> dict:
         }
 
         queue = PostgresJobQueue(pool, lease_seconds=1)
-        job_id = queue.enqueue(JobRequest(
-            "chaos_job", f"chaos-{uuid4()}", {}, owner_id=owner, game_id=game_id,
-        ))
+        job_id = queue.enqueue(
+            JobRequest(
+                "chaos_job",
+                f"chaos-{uuid4()}",
+                {},
+                owner_id=owner,
+                game_id=game_id,
+            )
+        )
         old_job = queue.lease("old-worker", {"chaos_job"}, 1)[0]
         with pool.connection() as connection, connection.transaction():
             connection.execute(
@@ -90,16 +109,24 @@ def run(dsn: str = DEFAULT_DSN, *, output: Path | None = None) -> dict:
         assert stored is not None
         atomic_operation = uuid4()
         claim = coordinator.claim(
-            principal, atomic_operation, game_id=game_id, kind="turn",
-            request_hash="b" * 64, base_version=stored.version,
+            principal,
+            atomic_operation,
+            game_id=game_id,
+            kind="turn",
+            request_hash="b" * 64,
+            base_version=stored.version,
         )
         corrupted = copy.deepcopy(stored.state)
         corrupted["event_log"][0]["payload"] = {"value": "divergent"}
         try:
             coordinator.commit_game(
-                principal, claim, corrupted, receipt={"bad": True},
+                principal,
+                claim,
+                corrupted,
+                receipt={"bad": True},
                 input_sha256=hashlib.sha256(b"chaos").hexdigest(),
-                latency_ms=1, llm_cost_usd=0,
+                latency_ms=1,
+                llm_cost_usd=0,
             )
             scenarios["atomic_rollback"] = False
         except Conflict:
@@ -138,7 +165,9 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     add_dsn_arguments(parser)
     parser.add_argument(
-        "--output", type=Path, default=Path("readiness_artifacts/chaos_test.json"),
+        "--output",
+        type=Path,
+        default=Path("readiness_artifacts/chaos_test.json"),
     )
     args = parser.parse_args()
     dsn = resolve_dsn(parser, args, default_dsn=DEFAULT_DSN)

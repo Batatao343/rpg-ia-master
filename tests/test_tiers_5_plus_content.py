@@ -6,11 +6,12 @@ from services.content_validator import validate_cards
 
 def test_lote_tem_distribuicao_e_cobertura_exatas():
     cards.reload_cards()
-    late = [card for card in cards.all_cards().values()
-            if card.get("origem") == "tiers-5-plus"]
+    late = [card for card in cards.all_cards().values() if card.get("origem") == "tiers-5-plus"]
     assert len(late) == 80
     assert Counter((bool(card.get("subclasse")), bool(card.get("apex"))) for card in late) == {
-        (False, False): 20, (True, False): 45, (True, True): 15,
+        (False, False): 20,
+        (True, False): 45,
+        (True, True): 15,
     }
     by_branch = defaultdict(list)
     for card in late:

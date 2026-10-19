@@ -88,7 +88,9 @@ def scan(root: Path) -> dict[str, Spec]:
         number = int(match.group(1))
         spec_id = f"SPEC-{number:03d}"
         if spec_id in specs:
-            raise SpecIndexError(f"duplicate {spec_id}: {specs[spec_id].path} and specs/{path.name}")
+            raise SpecIndexError(
+                f"duplicate {spec_id}: {specs[spec_id].path} and specs/{path.name}"
+            )
         specs[spec_id] = Spec(
             id=spec_id,
             number=number,
@@ -119,7 +121,9 @@ def problems(root: Path) -> list[str]:
         if entry.get("path") != spec.path or entry.get("slug") != spec.slug:
             found.append(f"{spec_id}: identity drift ({entry.get('path')} != {spec.path})")
         if entry.get("status") != spec.status:
-            found.append(f"{spec_id}: index says {entry.get('status')!r}, header says {spec.status!r}")
+            found.append(
+                f"{spec_id}: index says {entry.get('status')!r}, header says {spec.status!r}"
+            )
     for spec_id in sorted(set(entries) - set(specs)):
         found.append(f"{spec_id}: in {INDEX.as_posix()} but no spec file")
     return found
@@ -143,7 +147,9 @@ def build(root: Path) -> list[str]:
     changes: list[str] = []
     orphans = sorted(set(entries) - set(specs))
     if orphans:
-        raise SpecIndexError(f"{orphans[0]} is indexed but has no spec file; refusing to drop provenance")
+        raise SpecIndexError(
+            f"{orphans[0]} is indexed but has no spec file; refusing to drop provenance"
+        )
     starts = [(m.group(1), m.start()) for m in ENTRY_RE.finditer(text)]
     bounds = {
         spec_id: (start, starts[i + 1][1] if i + 1 < len(starts) else len(text))
@@ -212,7 +218,15 @@ def recent(root: Path, days: int, today: dt.date | None = None) -> list[str]:
     specs = scan(root)
     by_path = {spec.path: spec for spec in specs.values()}
     since = (today or dt.date.today()) - dt.timedelta(days=days)
-    log = _git(root, "log", f"--since={since.isoformat()}", "--name-only", "--format=\x1e%cs", "--", "specs/")
+    log = _git(
+        root,
+        "log",
+        f"--since={since.isoformat()}",
+        "--name-only",
+        "--format=\x1e%cs",
+        "--",
+        "specs/",
+    )
     touched: dict[str, str] = {}
     for record in log.split("\x1e"):
         lines = [line.strip() for line in record.strip().splitlines() if line.strip()]
@@ -226,7 +240,9 @@ def recent(root: Path, days: int, today: dt.date | None = None) -> list[str]:
         path = name[3:].strip().strip('"')
         if path in by_path:
             touched[path] = (today or dt.date.today()).isoformat()
-    rows = sorted(touched.items(), key=lambda item: (item[1], by_path[item[0]].number), reverse=True)
+    rows = sorted(
+        touched.items(), key=lambda item: (item[1], by_path[item[0]].number), reverse=True
+    )
     return [
         f"- {date} · {by_path[path].id} `{by_path[path].status}` — {by_path[path].title}"
         for path, date in rows
@@ -253,8 +269,13 @@ def next_id(root: Path) -> int:
         numbers |= {int(key.split("-")[1]) for key in entries}
     except (OSError, yaml.YAMLError):
         pass
-    refs = _git(root, "branch", "--all", "--format=%(refname:short)") + _git(root, "worktree", "list", "--porcelain")
-    numbers |= {int(m) for m in re.findall(r"(?:^|[/\s-])spec-(\d{3,})\b", refs, re.IGNORECASE | re.MULTILINE)}
+    refs = _git(root, "branch", "--all", "--format=%(refname:short)") + _git(
+        root, "worktree", "list", "--porcelain"
+    )
+    numbers |= {
+        int(m)
+        for m in re.findall(r"(?:^|[/\s-])spec-(\d{3,})\b", refs, re.IGNORECASE | re.MULTILINE)
+    }
     return max(numbers, default=0) + 1
 
 
@@ -266,15 +287,23 @@ def create_spec(root: Path, number: int, slug: str, today: dt.date | None = None
         raise SpecIndexError(f"{path} already exists")
     stamp = (today or dt.date.today()).isoformat()
     template = (root / "specs" / "TEMPLATE.md").read_text(encoding="utf-8")
-    template = re.sub(r"^# SPEC — .*$", f"# SPEC-{number:03d} — {slug}", template, count=1, flags=re.MULTILINE)
-    template = re.sub(r"^> \*\*Status:\*\*.*$", "> **Status:** `draft`", template, count=1, flags=re.MULTILINE)
-    template = template.replace("YYYY-MM-DD · **Atualizada:** YYYY-MM-DD", f"{stamp} · **Atualizada:** {stamp}")
+    template = re.sub(
+        r"^# SPEC — .*$", f"# SPEC-{number:03d} — {slug}", template, count=1, flags=re.MULTILINE
+    )
+    template = re.sub(
+        r"^> \*\*Status:\*\*.*$", "> **Status:** `draft`", template, count=1, flags=re.MULTILINE
+    )
+    template = template.replace(
+        "YYYY-MM-DD · **Atualizada:** YYYY-MM-DD", f"{stamp} · **Atualizada:** {stamp}"
+    )
     path.write_bytes(template.replace("\r\n", "\n").encode("utf-8"))
     return path
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--root", type=Path, default=Path.cwd())
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("build")

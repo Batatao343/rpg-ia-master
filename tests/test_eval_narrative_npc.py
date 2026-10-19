@@ -59,8 +59,9 @@ def test_narrative_dataset_uses_canonical_contracts_without_judge() -> None:
     assert result.metadata.model is None
     matrix = result.aggregates["narrative_reason_matrix"]
     assert all(set(row) == {expected} for expected, row in matrix.items())
-    assert all("input" not in case.actual and "story_text" not in case.actual
-               for case in result.results)
+    assert all(
+        "input" not in case.actual and "story_text" not in case.actual for case in result.results
+    )
 
 
 def test_subjective_judge_remains_explicitly_non_blocking_and_uncalibrated() -> None:
@@ -127,12 +128,14 @@ def test_wrong_rejection_reason_fails_without_counting_an_accepted_contradiction
         adapter_id = "wrong_reason"
 
         def execute(self, _case: AdapterCase) -> AdapterOutput:
-            return AdapterOutput(actual={
-                "accepted": False,
-                "rejection_reasons": ["wrong_reason"],
-                "sanitized_text": "",
-                "trace": {},
-            })
+            return AdapterOutput(
+                actual={
+                    "accepted": False,
+                    "rejection_reasons": ["wrong_reason"],
+                    "sanitized_text": "",
+                    "trace": {},
+                }
+            )
 
     result = run_eval(
         ROOT,
@@ -231,12 +234,14 @@ def test_adapter_error_remains_in_narrative_accuracy_denominator() -> None:
         def execute(self, case: AdapterCase) -> AdapterOutput:
             if case.id == "narrative.death.false":
                 raise RuntimeError("synthetic adapter error")
-            return AdapterOutput(actual={
-                "accepted": True,
-                "rejection_reasons": [],
-                "sanitized_text": "Ari morreu.",
-                "trace": {},
-            })
+            return AdapterOutput(
+                actual={
+                    "accepted": True,
+                    "rejection_reasons": [],
+                    "sanitized_text": "Ari morreu.",
+                    "trace": {},
+                }
+            )
 
     result = run_eval(
         ROOT,

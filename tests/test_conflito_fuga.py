@@ -17,16 +17,32 @@ class _Rng:
 
 
 def _predador():
-    return {"id": "predador", "pursuit_policy": "persegue", "tactical_profile": {"priorities": [
-        {"trigger": "alvo_fugindo", "tipo": "obrigatorio", "action_hint": "persegue a presa"},
-        {"trigger": "sempre", "tipo": "obrigatorio", "action_hint": "ataca"},
-    ]}}
+    return {
+        "id": "predador",
+        "pursuit_policy": "persegue",
+        "tactical_profile": {
+            "priorities": [
+                {
+                    "trigger": "alvo_fugindo",
+                    "tipo": "obrigatorio",
+                    "action_hint": "persegue a presa",
+                },
+                {"trigger": "sempre", "tipo": "obrigatorio", "action_hint": "ataca"},
+            ]
+        },
+    }
 
 
 def _guardiao():
-    return {"id": "guardiao", "pursuit_policy": "nao_persegue", "tactical_profile": {"priorities": [
-        {"trigger": "sempre", "tipo": "obrigatorio", "action_hint": "não abandona o posto"},
-    ]}}
+    return {
+        "id": "guardiao",
+        "pursuit_policy": "nao_persegue",
+        "tactical_profile": {
+            "priorities": [
+                {"trigger": "sempre", "tipo": "obrigatorio", "action_hint": "não abandona o posto"},
+            ]
+        },
+    }
 
 
 # ==========================================================================
@@ -48,7 +64,7 @@ def test_perseguidor_so_persegue_se_perfil_permitir():
     s = cs.new_scene()
     cs.place(s, "player", distance_state="proximo")
     ch = chase.start_chase(s, "player", [_predador(), _guardiao()])
-    assert ch["perseguidores"] == ["predador"]      # guardião não persegue
+    assert ch["perseguidores"] == ["predador"]  # guardião não persegue
     assert ch["trilha"] == "pressionado"
 
 
@@ -60,9 +76,14 @@ def test_sem_perseguidor_disposto_escapa():
 
 
 def test_prosa_nao_autoriza_perseguicao_sem_politica_fechada():
-    fake = {"id": "fake", "tactical_profile": {"priorities": [
-        {"trigger": "alvo_fugindo", "action_hint": "persegue para sempre"},
-    ]}}
+    fake = {
+        "id": "fake",
+        "tactical_profile": {
+            "priorities": [
+                {"trigger": "alvo_fugindo", "action_hint": "persegue para sempre"},
+            ]
+        },
+    }
     assert chase.will_pursue(fake) is False
 
 
@@ -85,8 +106,8 @@ def test_abordagem_mapeia_virtude():
 # Etapa 3 — Teste de Sorte dos companheiros (R5)
 # ==========================================================================
 def test_1d10_faixas_complicacao_neutro_ajuda():
-    assert chase.luck_roll(_Rng(high=False)) == -1     # rola 1 → Complicação
-    assert chase.luck_roll(_Rng(high=True)) == 1        # rola 10 → Ajuda
+    assert chase.luck_roll(_Rng(high=False)) == -1  # rola 1 → Complicação
+    assert chase.luck_roll(_Rng(high=True)) == 1  # rola 10 → Ajuda
 
 
 def test_ajuda_e_complicacao_se_anulam():
@@ -105,15 +126,14 @@ def test_abandonar_remove_complicacao_separa_npc():
     party = [{"id": "hero", "is_player": True}, {"id": "peso_morto"}]
     removido = chase.abandon_companion(party, "peso_morto")
     assert removido["separated"] is True
-    assert all((m.get("id") != "peso_morto") for m in party)   # saiu da party
+    assert all((m.get("id") != "peso_morto") for m in party)  # saiu da party
 
 
 def test_simulacao_e_deterministica_por_seed():
-    comp = {"name": "Bran", "vitalidade": 5, "max_vitalidade": 20,
-            "virtudes": {"agilidade": 2}}
+    comp = {"name": "Bran", "vitalidade": 5, "max_vitalidade": 20, "virtudes": {"agilidade": 2}}
     a = chase.simulate_abandoned_companion(comp, {"pursuers": 2}, seed=1234)
     b = chase.simulate_abandoned_companion(comp, {"pursuers": 2}, seed=1234)
-    assert a["resultado"] == b["resultado"]                     # mesma seed → mesmo destino
+    assert a["resultado"] == b["resultado"]  # mesma seed → mesmo destino
     assert a["resultado"] in chase.ABANDON_OUTCOMES
 
 
@@ -128,8 +148,9 @@ def test_resultado_gera_fatos_relacionais():
 # ==========================================================================
 def test_sacrificio_so_com_traco_e_prioridade_valida():
     com_traco = {"se_sacrifica_pelo_grupo": True}
-    sem_traco = {"tactical_profile": {"priorities": [
-        {"trigger": "sempre", "action_hint": "foge sozinho"}]}}
+    sem_traco = {
+        "tactical_profile": {"priorities": [{"trigger": "sempre", "action_hint": "foge sozinho"}]}
+    }
     assert chase.can_volunteer_sacrifice(com_traco) is True
     assert chase.can_volunteer_sacrifice(sem_traco) is False
 

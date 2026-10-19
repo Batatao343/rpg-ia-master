@@ -5,6 +5,7 @@ enfileira ``purge_blobs`` na mesma transação. O worker/cron ``/internal/cron/j
 apaga os objetos; é idempotente (apagar objeto ausente é sucesso) e varre também o
 prefixo da campanha para pegar uploads não registrados.
 """
+
 from __future__ import annotations
 
 from uuid import UUID, uuid4
@@ -24,8 +25,12 @@ def game_prefix(owner_id: UUID, game_id: UUID) -> str:
 def _in_prefix(key: object, prefix: str) -> bool:
     # Keys are opaque for S3/Supabase, but a file store resolves ``..``; never let a
     # key that starts with the campaign prefix climb out of it.
-    return (isinstance(key, str) and key.startswith(prefix)
-            and ".." not in key.split("/") and "\\" not in key)
+    return (
+        isinstance(key, str)
+        and key.startswith(prefix)
+        and ".." not in key.split("/")
+        and "\\" not in key
+    )
 
 
 def _deleted_or_absent(blob_store, key: str) -> bool:
@@ -40,13 +45,15 @@ def _deleted_or_absent(blob_store, key: str) -> bool:
         return True
     except Exception as exc:
         from observability.telemetry import log_fallback
+
         log_fallback("blob_purge", "open_check_failed", exc)
         return False
     return False
 
 
-def enqueue_game_blob_purge(connection, owner_id: UUID, game_id: UUID,
-                            object_keys: list[str]) -> None:
+def enqueue_game_blob_purge(
+    connection, owner_id: UUID, game_id: UUID, object_keys: list[str]
+) -> None:
     prefix = game_prefix(owner_id, game_id)
     keys = sorted({key for key in object_keys if _in_prefix(key, prefix)})
     # game_id stays NULL: jobs.game_id cascades with the game being deleted.
@@ -54,9 +61,14 @@ def enqueue_game_blob_purge(connection, owner_id: UUID, game_id: UUID,
         """insert into app.jobs (id,owner_id,game_id,kind,dedupe_key,status,payload,max_attempts)
            values (%s,%s,null,%s,%s,'queued',%s,%s)
            on conflict (kind,dedupe_key) do nothing""",
-        (uuid4(), owner_id, KIND, f"game:{game_id}",
-         Jsonb({"owner_id": str(owner_id), "game_id": str(game_id), "object_keys": keys}),
-         MAX_ATTEMPTS),
+        (
+            uuid4(),
+            owner_id,
+            KIND,
+            f"game:{game_id}",
+            Jsonb({"owner_id": str(owner_id), "game_id": str(game_id), "object_keys": keys}),
+            MAX_ATTEMPTS,
+        ),
     )
 
 
@@ -68,9 +80,14 @@ def purge_game_blobs_job(pool, blob_store, payload: dict) -> dict:
     if bucket:
         with admin_connection(pool) as connection:
             if connection.execute("select to_regclass('storage.objects') as r").fetchone()["r"]:
-                keys.update(row["name"] for row in connection.execute(
-                    "select name from storage.objects where bucket_id=%s and starts_with(name,%s)",
-                    (bucket, prefix)).fetchall() if _in_prefix(row["name"], prefix))
+                keys.update(
+                    row["name"]
+                    for row in connection.execute(
+                        "select name from storage.objects where bucket_id=%s and starts_with(name,%s)",
+                        (bucket, prefix),
+                    ).fetchall()
+                    if _in_prefix(row["name"], prefix)
+                )
     failed = [key for key in sorted(keys) if not _deleted_or_absent(blob_store, key)]
     if failed:
         raise RuntimeError("blob_purge_incomplete")  # retried by the queue

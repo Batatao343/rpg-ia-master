@@ -39,7 +39,10 @@ def changed_paths(root: Path, base: str, head: str) -> list[str] | None:
         return None
     result = subprocess.run(
         ["git", "diff", "--name-only", f"{base}...{head}"],
-        cwd=root, text=True, capture_output=True, check=False,
+        cwd=root,
+        text=True,
+        capture_output=True,
+        check=False,
     )
     if result.returncode:
         return None
@@ -67,7 +70,9 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     paths = changed_paths(args.root, args.base, args.head)
     verdict = paths is not None and docs_only(paths)
-    print(f"docs_only={'true' if verdict else 'false'} ({'unknown' if paths is None else len(paths)} files)")
+    print(
+        f"docs_only={'true' if verdict else 'false'} ({'unknown' if paths is None else len(paths)} files)"
+    )
     if args.github_output:
         with args.github_output.open("a", encoding="utf-8") as handle:
             handle.write(f"docs_only={'true' if verdict else 'false'}\n")

@@ -1,4 +1,5 @@
 """Metatempo da sessão que não retrocede quando um checkpoint é restaurado."""
+
 from __future__ import annotations
 
 from copy import deepcopy
@@ -20,15 +21,18 @@ def normalize(value: dict[str, Any] | None, *, canonical_turn: int = 0) -> dict[
         # SPEC-228 R10: ausente = desconhecido (None), nunca "o turno atual".
         "last_checkpoint_turn": (
             max(0, int(value["last_checkpoint_turn"]))
-            if value.get("last_checkpoint_turn") is not None else None
+            if value.get("last_checkpoint_turn") is not None
+            else None
         ),
         "checkpoint_deferred": bool(value.get("checkpoint_deferred", False)),
         "synthetic_from_turn": (
             int(value["synthetic_from_turn"])
-            if value.get("synthetic_from_turn") is not None else None
+            if value.get("synthetic_from_turn") is not None
+            else None
         ),
-        "death_history": [dict(row) for row in value.get("death_history", [])
-                          if isinstance(row, dict)][-MAX_DEATH_HISTORY:],
+        "death_history": [
+            dict(row) for row in value.get("death_history", []) if isinstance(row, dict)
+        ][-MAX_DEATH_HISTORY:],
     }
 
 
@@ -70,8 +74,8 @@ def after_restore(dead_state: dict, restored_state: dict) -> dict[str, Any]:
     meta["timeline_epoch"] += 1
     meta["last_checkpoint_turn"] = restored_turn
     meta["checkpoint_deferred"] = False
-    meta["synthetic_from_turn"] = (
-        normalize(restored_state.get("continuity"), canonical_turn=restored_turn)
-        .get("synthetic_from_turn"))
+    meta["synthetic_from_turn"] = normalize(
+        restored_state.get("continuity"), canonical_turn=restored_turn
+    ).get("synthetic_from_turn")
     meta["death_history"] = [*meta["death_history"], record][-MAX_DEATH_HISTORY:]
     return meta

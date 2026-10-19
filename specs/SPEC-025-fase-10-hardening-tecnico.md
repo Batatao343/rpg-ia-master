@@ -81,13 +81,16 @@ chega cru ao filesystem.
 # persistence.py
 SCHEMA_VERSION = 1
 
+
 def save_path(game_id: str) -> str:
     """Caminho canônico do save. Levanta ValueError se game_id não for UUID
     ou o caminho resolvido escapar de saves/."""
 
+
 def migrate_state(state: dict) -> dict:
     """Aplica _MIGRATIONS de state['schema_version'] (default 0) até
     SCHEMA_VERSION. Puro e idempotente."""
+
 
 # api.py
 def validated_game_id(game_id: Optional[str] = None) -> Optional[str]:

@@ -14,8 +14,15 @@ from infrastructure.db_roles import admin_connection
 
 
 class SupabaseBlobStore:
-    def __init__(self, base_url: str, service_key: str, *, bucket: str = "rpg-dynamic",
-                 timeout: float = 15.0, pool=None) -> None:
+    def __init__(
+        self,
+        base_url: str,
+        service_key: str,
+        *,
+        bucket: str = "rpg-dynamic",
+        timeout: float = 15.0,
+        pool=None,
+    ) -> None:
         self.base_url = base_url.rstrip("/")
         self._key = service_key
         self.bucket = bucket
@@ -26,7 +33,9 @@ class SupabaseBlobStore:
         if self.pool is None:
             return True
         with admin_connection(self.pool) as db:
-            return not db.execute("select 1 from app.account_deletions where owner_id=%s", (owner,)).fetchone()
+            return not db.execute(
+                "select 1 from app.account_deletions where owner_id=%s", (owner,)
+            ).fetchone()
 
     def _headers(self, content_type: str | None = None) -> dict[str, str]:
         headers = {"apikey": self._key}
@@ -42,6 +51,7 @@ class SupabaseBlobStore:
     def _metric(operation: str, success: bool) -> None:
         from observability.metrics import metrics
         from observability.telemetry import span
+
         outcome = "ok" if success else "error"
         metrics.increment(
             "rpg_blob_operations_total",
@@ -51,7 +61,9 @@ class SupabaseBlobStore:
             pass
 
     def put(self, key, payload, metadata: BlobMetadata) -> BlobRef:
-        if not key.startswith(f"users/{metadata.owner_id}/") or not self._account_active(metadata.owner_id):
+        if not key.startswith(f"users/{metadata.owner_id}/") or not self._account_active(
+            metadata.owner_id
+        ):
             raise Unauthorized("account_deleted_or_invalid_blob_owner")
         # The migration also fences storage.objects publication including service_role.
         # A caller-side HTTP lock cannot fence a remote commit after timeout/crash.
@@ -67,7 +79,8 @@ class SupabaseBlobStore:
         response = httpx.post(
             f"{self.base_url}/storage/v1/object/{self.bucket}/{path}",
             headers={**self._headers(metadata.content_type), "x-upsert": "false"},
-            content=data, timeout=self.timeout,
+            content=data,
+            timeout=self.timeout,
         )
         success = response.status_code in (200, 201)
         self._metric("put", success)
@@ -79,7 +92,8 @@ class SupabaseBlobStore:
         path = quote(key.strip("/"), safe="/")
         response = httpx.get(
             f"{self.base_url}/storage/v1/object/authenticated/{self.bucket}/{path}",
-            headers=self._headers(), timeout=self.timeout,
+            headers=self._headers(),
+            timeout=self.timeout,
         )
         success = response.status_code == 200
         self._metric("open", success)
@@ -94,7 +108,8 @@ class SupabaseBlobStore:
         response = httpx.post(
             f"{self.base_url}/storage/v1/object/sign/{self.bucket}/{path}",
             headers={**self._headers(), "Content-Type": "application/json"},
-            json={"expiresIn": expires_seconds}, timeout=self.timeout,
+            json={"expiresIn": expires_seconds},
+            timeout=self.timeout,
         )
         success = response.status_code == 200
         self._metric("sign", success)
@@ -105,9 +120,11 @@ class SupabaseBlobStore:
 
     def delete(self, key: str) -> bool:
         response = httpx.request(
-            "DELETE", f"{self.base_url}/storage/v1/object/{self.bucket}",
+            "DELETE",
+            f"{self.base_url}/storage/v1/object/{self.bucket}",
             headers={**self._headers(), "Content-Type": "application/json"},
-            json={"prefixes": [key.strip("/")]}, timeout=self.timeout,
+            json={"prefixes": [key.strip("/")]},
+            timeout=self.timeout,
         )
         success = response.status_code in (200, 204)
         self._metric("delete", success)

@@ -14,6 +14,7 @@ estado, QUEM responde ao turno — o narrador ou um NPC presente — e publica u
 
 O alvo cru do CLASSIFY NUNCA vira identidade nova (R5).
 """
+
 from __future__ import annotations
 
 import re
@@ -32,10 +33,19 @@ from services.input_normalization import optional_entity_ref
 
 SpeakerKind = Literal["narrator", "npc", "system"]
 ReasonCode = Literal[
-    "meta_to_narrator", "scene_description", "direct_address", "quoted_vocative",
-    "single_in_scene", "continuity_last_speaker", "ambiguous_multi_mediated",
-    "npc_absent_known", "npc_unknown_absent", "generic_role_spawn",
-    "classify_story", "classify_fallback", "action_refused",
+    "meta_to_narrator",
+    "scene_description",
+    "direct_address",
+    "quoted_vocative",
+    "single_in_scene",
+    "continuity_last_speaker",
+    "ambiguous_multi_mediated",
+    "npc_absent_known",
+    "npc_unknown_absent",
+    "generic_role_spawn",
+    "classify_story",
+    "classify_fallback",
+    "action_refused",
 ]
 
 REASON_CODES: frozenset[str] = frozenset(ReasonCode.__args__)  # type: ignore[attr-defined]
@@ -55,28 +65,104 @@ CONTINUITY_WINDOW = 2
 MIN_ALIAS_LEN = 3
 
 # R6/P2: lista FECHADA de papéis genéricos (forma normalizada, sem acento).
-GENERIC_ROLES: frozenset[str] = frozenset({
-    "taverneiro", "taverneira", "estalajadeiro", "estalajadeira", "guarda",
-    "guardas", "mercador", "mercadora", "comerciante", "vendedor", "vendedora",
-    "ferreiro", "ferreira", "sacerdote", "sacerdotisa", "barqueiro", "barqueira",
-    "pescador", "pescadora", "marinheiro", "marinheira", "curandeiro",
-    "curandeira", "boticario", "boticaria", "mendigo", "mendiga", "soldado",
-    "bardo", "barda", "cocheiro", "estivador", "atendente", "carcereiro",
-})
+GENERIC_ROLES: frozenset[str] = frozenset(
+    {
+        "taverneiro",
+        "taverneira",
+        "estalajadeiro",
+        "estalajadeira",
+        "guarda",
+        "guardas",
+        "mercador",
+        "mercadora",
+        "comerciante",
+        "vendedor",
+        "vendedora",
+        "ferreiro",
+        "ferreira",
+        "sacerdote",
+        "sacerdotisa",
+        "barqueiro",
+        "barqueira",
+        "pescador",
+        "pescadora",
+        "marinheiro",
+        "marinheira",
+        "curandeiro",
+        "curandeira",
+        "boticario",
+        "boticaria",
+        "mendigo",
+        "mendiga",
+        "soldado",
+        "bardo",
+        "barda",
+        "cocheiro",
+        "estivador",
+        "atendente",
+        "carcereiro",
+    }
+)
 # Tags de local que caracterizam assentamento (não-ermo).
-_SETTLEMENT_TAGS = frozenset({
-    "cidade", "favela", "porto", "docas", "taverna", "salao", "urbano", "comercio",
-})
+_SETTLEMENT_TAGS = frozenset(
+    {
+        "cidade",
+        "favela",
+        "porto",
+        "docas",
+        "taverna",
+        "salao",
+        "urbano",
+        "comercio",
+    }
+)
 _SETTLEMENT_ECONOMY = frozenset({"comercio", "porto"})
 
 # Tokens que não servem de apelido curto (adjetivos/títulos/artigos/papéis).
-_STOP_TOKENS = frozenset({
-    "o", "a", "os", "as", "de", "da", "do", "das", "dos", "e", "um", "uma",
-    "velha", "velho", "jovem", "senhor", "senhora", "dona", "dom", "mestre",
-    "mestra", "irmao", "irma", "padre", "madre", "capitao", "capita", "lorde",
-    "lady", "sir", "rei", "rainha", "principe", "princesa", "anciao", "anciã",
-    "narrador",
-}) | GENERIC_ROLES
+_STOP_TOKENS = (
+    frozenset(
+        {
+            "o",
+            "a",
+            "os",
+            "as",
+            "de",
+            "da",
+            "do",
+            "das",
+            "dos",
+            "e",
+            "um",
+            "uma",
+            "velha",
+            "velho",
+            "jovem",
+            "senhor",
+            "senhora",
+            "dona",
+            "dom",
+            "mestre",
+            "mestra",
+            "irmao",
+            "irma",
+            "padre",
+            "madre",
+            "capitao",
+            "capita",
+            "lorde",
+            "lady",
+            "sir",
+            "rei",
+            "rainha",
+            "principe",
+            "princesa",
+            "anciao",
+            "anciã",
+            "narrador",
+        }
+    )
+    | GENERIC_ROLES
+)
 
 _TALK_VERBS = (
     r"(?:pergunto|perguntamos|pergunta|digo|dizemos|falo|falamos|respondo|peco|"
@@ -90,20 +176,24 @@ _PREP = r"(?:a|ao|aos|as|para|pra|pro|com)"
 _OOC_RE = re.compile(r"\(\(|\)\)")
 _OOC_NORM_RE = re.compile(r"\b(?:fora do jogo|ooc|off game|offgame)\b")
 _META_VOCATIVE_RE = re.compile(
-    r"^\s*(?:(?:ei|oi|ola|olá|ó|o)\s+)?(?:narrador|mestre)\s*[,:!?]", re.IGNORECASE)
+    r"^\s*(?:(?:ei|oi|ola|olá|ó|o)\s+)?(?:narrador|mestre)\s*[,:!?]", re.IGNORECASE
+)
 # Astra: "mestre" seguido de nome/papel ("mestre Orlan", "mestre ferreiro",
 # "mestre da guilda") é PERSONAGEM, não o mestre do jogo — só é meta no fim da
 # frase ou antes de palavra funcional (o que / se / sobre / quem / ela ...).
-_MESTRE_META = (r"mestre(?=\s*$|\s+(?:o|a|os|as|se|sobre|quem|como|por|porque|"
-                r"qual|quais|onde|quando|que|e|ela|ele|eles|elas)\b)")
-_META_VERB_RE = re.compile(
-    rf"\b{_TALK_VERBS}\s+{_PREP}\s+{_ARTICLES}(?:narrador\b|{_MESTRE_META})")
+_MESTRE_META = (
+    r"mestre(?=\s*$|\s+(?:o|a|os|as|se|sobre|quem|como|por|porque|"
+    r"qual|quais|onde|quando|que|e|ela|ele|eles|elas)\b)"
+)
+_META_VERB_RE = re.compile(rf"\b{_TALK_VERBS}\s+{_PREP}\s+{_ARTICLES}(?:narrador\b|{_MESTRE_META})")
 
 _DESCRIPTION_RES = (
     re.compile(r"\bdescrev\w*\b"),
     re.compile(r"\bo que (?:eu )?(?:vejo|ouco|escuto|sinto|percebo|noto|enxergo)\b"),
-    re.compile(r"\bquem (?:mais )?(?:esta|estao|ha|tem) (?:aqui|por perto|ao redor|"
-               r"na sala|no local|na taverna|no salao)\b"),
+    re.compile(
+        r"\bquem (?:mais )?(?:esta|estao|ha|tem) (?:aqui|por perto|ao redor|"
+        r"na sala|no local|na taverna|no salao)\b"
+    ),
     re.compile(r"\b(?:olho|observo) (?:ao|em) (?:redor|volta)\b"),
 )
 
@@ -114,27 +204,42 @@ _FILLERS_RE = re.compile(
 _HEAD_RE = re.compile(r"^\s*(.+?)\s*(?:\.\.\.|…|,|:|!|\?|—|–|\s-\s)")
 _VOCATIVE_PREFIX = re.compile(r"^(?:ei|oi|ola|o|e ai|bom dia|boa tarde|boa noite)\s+")
 _PRONOUN_ADDRESS_RE = re.compile(
-    rf"(?:\b{_TALK_VERBS}\s+{_PREP}\s+(?:ela|ele)\b|^e (?:voce|tu|ela|ele)\b)")
-_PRONOUN_TARGETS = frozenset({
-    "ela", "ele", "voce", "tu", "eles", "elas", "alguem", "pessoa", "npc",
-    "narrador", "mestre", "o narrador", "o mestre",
-})
+    rf"(?:\b{_TALK_VERBS}\s+{_PREP}\s+(?:ela|ele)\b|^e (?:voce|tu|ela|ele)\b)"
+)
+_PRONOUN_TARGETS = frozenset(
+    {
+        "ela",
+        "ele",
+        "voce",
+        "tu",
+        "eles",
+        "elas",
+        "alguem",
+        "pessoa",
+        "npc",
+        "narrador",
+        "mestre",
+        "o narrador",
+        "o mestre",
+    }
+)
 _QUOTE_RE = re.compile(r"[\"“”«»]")
 
 
 @dataclass(frozen=True)
 class InterlocutorResolution:
-    route: str                       # RouteType.value
+    route: str  # RouteType.value
     speaker_kind: SpeakerKind
-    npc_state_key: str | None     # chave em state["npcs"]/party; só se npc ou absent_known
+    npc_state_key: str | None  # chave em state["npcs"]/party; só se npc ou absent_known
     mediated_subject_id: str | None  # NPC de quem o narrador fala (R2/R7/R8)
     reason: ReasonCode
-    fallback_hint: str | None     # vira npc_fallback_hint quando npc_unknown_absent
+    fallback_hint: str | None  # vira npc_fallback_hint quando npc_unknown_absent
 
 
 # ---------------------------------------------------------------------------
 # Helpers de identidade
 # ---------------------------------------------------------------------------
+
 
 def _norm(text: object) -> str:
     return normalize_entity_label(str(text or ""))
@@ -152,7 +257,8 @@ def _row_for(state: Mapping[str, Any], key: str) -> dict | None:
     wanted = runtime_npc_aliases(key)
     for member in state.get("party") or []:
         if isinstance(member, dict) and wanted & runtime_npc_aliases(
-                str(member.get("name") or ""), member):
+            str(member.get("name") or ""), member
+        ):
             return member
     return None
 
@@ -190,6 +296,7 @@ def _alias_map(state: Mapping[str, Any], keys: list[str]) -> dict[str, str | Non
 
 def scene_keys(state: Mapping[str, Any]) -> list[str]:
     from services import npc_layers
+
     return [
         normalized
         for name in npc_layers.npcs_in_scene(dict(state))
@@ -198,8 +305,11 @@ def scene_keys(state: Mapping[str, Any]) -> list[str]:
 
 
 def _known_keys(state: Mapping[str, Any]) -> list[str]:
-    keys = [str(k) for k, v in (state.get("npcs") or {}).items()
-            if isinstance(v, dict) and optional_entity_ref(k) is not None]
+    keys = [
+        str(k)
+        for k, v in (state.get("npcs") or {}).items()
+        if isinstance(v, dict) and optional_entity_ref(k) is not None
+    ]
     for member in state.get("party") or []:
         if isinstance(member, dict) and optional_entity_ref(member.get("name")):
             keys.append(str(member["name"]))
@@ -271,6 +381,7 @@ def is_settlement(state: Mapping[str, Any]) -> bool:
     if not loc_id:
         return False
     import gamedata
+
     loc = gamedata.get_location(loc_id) or {}
     tags = {_norm(t) for t in loc.get("tags") or []}
     eco = {_norm(t) for t in loc.get("economy_tags") or []}
@@ -281,10 +392,13 @@ def is_settlement(state: Mapping[str, Any]) -> bool:
 # Detecção léxica
 # ---------------------------------------------------------------------------
 
+
 def _is_meta_marker(text: str, norm: str) -> bool:
     return bool(
-        _OOC_RE.search(text) or _OOC_NORM_RE.search(norm)
-        or _META_VOCATIVE_RE.search(text) or _META_VERB_RE.search(norm)
+        _OOC_RE.search(text)
+        or _OOC_NORM_RE.search(norm)
+        or _META_VOCATIVE_RE.search(text)
+        or _META_VERB_RE.search(norm)
     )
 
 
@@ -346,12 +460,23 @@ def _first_known_subject(state: Mapping[str, Any], norm: str) -> str | None:
     return canonical_npc_id(state, found[0]) if found else None
 
 
-def _resolution(route: str, kind: SpeakerKind, reason: str, *, key: str | None = None,
-                subject: str | None = None, hint: str | None = None
-                ) -> InterlocutorResolution:
-    return InterlocutorResolution(route=route, speaker_kind=kind, npc_state_key=key,
-                                  mediated_subject_id=subject, reason=reason,  # type: ignore[arg-type]
-                                  fallback_hint=hint)
+def _resolution(
+    route: str,
+    kind: SpeakerKind,
+    reason: str,
+    *,
+    key: str | None = None,
+    subject: str | None = None,
+    hint: str | None = None,
+) -> InterlocutorResolution:
+    return InterlocutorResolution(
+        route=route,
+        speaker_kind=kind,
+        npc_state_key=key,
+        mediated_subject_id=subject,
+        reason=reason,  # type: ignore[arg-type]
+        fallback_hint=hint,
+    )
 
 
 STORY = "storyteller"
@@ -365,16 +490,18 @@ def pre_classify(state: Mapping[str, Any], text: str) -> InterlocutorResolution 
         return None
     norm = _norm(text)
     if _is_meta_marker(text, norm):
-        return _resolution(STORY, "narrator", "meta_to_narrator",
-                           subject=_first_known_subject(state, norm))
+        return _resolution(
+            STORY, "narrator", "meta_to_narrator", subject=_first_known_subject(state, norm)
+        )
     addressed = addressed_in_scene(state, text)
     if addressed is None and not _TALK_RE.search(norm):
         known = _alias_map(state, _known_keys(state))
         for alias in sorted(known, key=len, reverse=True):
             key = known[alias]
             if key and re.search(rf"\bsobre\s+{_ARTICLES}{re.escape(alias)}\b", norm):
-                return _resolution(STORY, "narrator", "meta_to_narrator",
-                                   subject=canonical_npc_id(state, key))
+                return _resolution(
+                    STORY, "narrator", "meta_to_narrator", subject=canonical_npc_id(state, key)
+                )
     if addressed is None and _is_description(norm):
         return _resolution(STORY, "narrator", "scene_description")
     return None
@@ -387,8 +514,9 @@ def _text_role_target(norm: str) -> str | None:
     return None
 
 
-def post_classify(state: Mapping[str, Any], text: str, route: str,
-                  target: str | None) -> InterlocutorResolution:
+def post_classify(
+    state: Mapping[str, Any], text: str, route: str, target: str | None
+) -> InterlocutorResolution:
     """R3–R8 sobre a decisão do CLASSIFY (nenhuma chamada LLM)."""
     text = str(text or "")
     norm = _norm(text)
@@ -470,13 +598,17 @@ def _target_in_text(tnorm: str, norm: str) -> bool:
         return False
     if _has_alias(norm, tnorm):
         return True
-    return any(_has_alias(norm, tok) for tok in tnorm.split()
-               if tok not in _STOP_TOKENS or tok in GENERIC_ROLES)
+    return any(
+        _has_alias(norm, tok)
+        for tok in tnorm.split()
+        if tok not in _STOP_TOKENS or tok in GENERIC_ROLES
+    )
 
 
 # ---------------------------------------------------------------------------
 # Speaker canônico (R9)
 # ---------------------------------------------------------------------------
+
 
 def narrator_speaker(reason: str | None = None) -> dict:
     code = reason if reason in REASON_CODES else "classify_story"
@@ -522,12 +654,14 @@ def speaker_for_turn(state: Mapping[str, Any]) -> dict:
         reason = state.get("interlocutor_reason")
         key = optional_entity_ref(state.get("active_npc_name"))
         speaker = None
-        if (state.get("next") == NPC and key and reason not in ABSENT_REASONS):
+        if state.get("next") == NPC and key and reason not in ABSENT_REASONS:
             from services import npc_layers
+
             row = _row_for(state, key)
             if row is not None and npc_layers.npc_alive(row):
                 speaker = {
-                    "kind": "npc", "id": canonical_npc_id(state, key),
+                    "kind": "npc",
+                    "id": canonical_npc_id(state, key),
                     "name": canonical_npc_name(state, key),
                     "reason": reason if reason in REASON_CODES else "direct_address",
                     "state_key": find_runtime_npc_key(state.get("npcs") or {}, key) or key,
@@ -553,5 +687,4 @@ def legacy_row_speaker(row: Mapping[str, Any]) -> dict:
     """Linha de histórico anterior à SPEC-202: rótulo derivado do `type`."""
     if str(row.get("type") or "") == "NPC":
         return {"speaker_kind": "npc", "speaker_id": "", "speaker_name": ""}
-    return {"speaker_kind": "narrator", "speaker_id": NARRATOR_ID,
-            "speaker_name": NARRATOR_NAME}
+    return {"speaker_kind": "narrator", "speaker_id": NARRATOR_ID, "speaker_name": NARRATOR_NAME}

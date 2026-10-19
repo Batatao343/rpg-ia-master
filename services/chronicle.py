@@ -24,9 +24,17 @@ from services.context_builder import _name
 # Tipos que merecem crônica (alto impacto). faction_relation_changed fica FORA
 # (ruído — mudanças de relação são frequentes e já aparecem via reputação/2.7).
 CHRONICLE_EVENT_TYPES = {
-    "npc_killed", "location_control_changed", "quest_completed", "quest_failed",
-    "secret_revealed", "level_up", "player_died", "player_downed",
-    "unique_item_claimed", "subclass_chosen", "class_apex_unlocked",
+    "npc_killed",
+    "location_control_changed",
+    "quest_completed",
+    "quest_failed",
+    "secret_revealed",
+    "level_up",
+    "player_died",
+    "player_downed",
+    "unique_item_claimed",
+    "subclass_chosen",
+    "class_apex_unlocked",
 }
 
 # Templates voltados ao JOGADOR (prosa curta), diferentes dos EVENT_TEMPLATES
@@ -34,8 +42,8 @@ CHRONICLE_EVENT_TYPES = {
 CHRONICLE_TEMPLATES: dict[str, str] = {
     "npc_killed": "{target} tombou{by_player}.",
     "location_control_changed": "{controller} tomou o controle de {target}.",
-    "quest_completed": "A missão \"{target}\" foi concluída.",
-    "quest_failed": "A missão \"{target}\" fracassou.",
+    "quest_completed": 'A missão "{target}" foi concluída.',
+    "quest_failed": 'A missão "{target}" fracassou.',
     "secret_revealed": "Um segredo veio à luz: {fact}",
     "level_up": "O herói alcançou o nível {new_level}.",
     "player_died": "Aqui termina a saga: {detail}.",
@@ -75,8 +83,10 @@ def render_milestone(event: dict, projection: dict) -> str:
         if payload.get("holder", "player") != "player":
             return ""
         from gamedata import ARTIFACTS_DB
+
         item = (ARTIFACTS_DB.get(event.get("target_id", "")) or {}).get(
-            "name", event.get("target_id", ""))
+            "name", event.get("target_id", "")
+        )
         return tmpl.format(item=item)
 
     if etype in ("subclass_chosen", "class_apex_unlocked"):
@@ -103,8 +113,13 @@ def render_milestone(event: dict, projection: dict) -> str:
 
 def _new_chapter(title: str, turn: int, location: str) -> dict:
     seed = f"valoria:chronicle:{title}:{turn}:{location}"
-    return {"chapter_id": uuid5(NAMESPACE_URL, seed).hex, "title": title,
-            "started_turn": turn, "location": location, "entries": []}
+    return {
+        "chapter_id": uuid5(NAMESPACE_URL, seed).hex,
+        "title": title,
+        "started_turn": turn,
+        "location": location,
+        "entries": [],
+    }
 
 
 def ensure_chronicle_ids(chronicle: list[dict], *, game_id: str = "legacy") -> list[dict]:
@@ -129,8 +144,9 @@ def ensure_chronicle_ids(chronicle: list[dict], *, game_id: str = "legacy") -> l
     return chapters
 
 
-def append_entry(chronicle: list[dict], *, text: str, turn: int,
-                 kind: str, event_id: str = "") -> list[dict]:
+def append_entry(
+    chronicle: list[dict], *, text: str, turn: int, kind: str, event_id: str = ""
+) -> list[dict]:
     """PURO: retorna cópia com a entrada no capítulo atual (cria capítulo se vazio)."""
     chapters = list(chronicle or [])
     if not chapters:
@@ -148,8 +164,7 @@ def append_entry(chronicle: list[dict], *, text: str, turn: int,
     return chapters
 
 
-def open_chapter(chronicle: list[dict], *, title: str, turn: int,
-                 location: str) -> list[dict]:
+def open_chapter(chronicle: list[dict], *, title: str, turn: int, location: str) -> list[dict]:
     """Abre capítulo novo. Mesmo título do capítulo atual → no-op (lista original)."""
     if chronicle and (chronicle[-1].get("title") or "") == title:
         return chronicle

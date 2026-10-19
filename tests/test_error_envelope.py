@@ -1,4 +1,5 @@
 """SPEC-242: toda resposta de erro traz {detail, code, request_id}; catálogo fechado."""
+
 import ast
 import json
 import uuid
@@ -12,7 +13,12 @@ ROOT = Path(__file__).resolve().parents[1]
 FILES = ["api.py", "services/cron_internal.py", "services/account_security.py"]
 # Expressões dinâmicas aceitas como ``detail`` (já são códigos fechados por construção).
 DYNAMIC_OK = {
-    "code", "public_auth_code(exc)", "exc.code", "exc.status", "status", "detail",
+    "code",
+    "public_auth_code(exc)",
+    "exc.code",
+    "exc.status",
+    "status",
+    "detail",
 }
 
 
@@ -69,22 +75,28 @@ def test_envelope_helpers():
 
 def test_docs_are_fresh():
     doc = (ROOT / "docs/operacao/CODIGOS_DE_ERRO.md").read_text(encoding="utf-8")
-    assert doc.replace("\r\n", "\n") == ec.render_markdown().replace("\r\n", "\n"), \
+    assert doc.replace("\r\n", "\n") == ec.render_markdown().replace("\r\n", "\n"), (
         "rode: uv run python scripts/gen_error_codes_doc.py"
+    )
 
 
 @pytest.fixture()
 def client(monkeypatch):
     import api
+
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
     api._rate_hits.clear()
     from fastapi.testclient import TestClient
+
     return TestClient(api.app)
 
 
 def test_404_game_has_code_and_request_id(client):
-    r = client.get("/game/state", params={"game_id": str(uuid.uuid4())},
-                   headers={"X-Request-ID": "envelope-req-0001"})
+    r = client.get(
+        "/game/state",
+        params={"game_id": str(uuid.uuid4())},
+        headers={"X-Request-ID": "envelope-req-0001"},
+    )
     assert r.status_code == 404
     body = r.json()
     assert body["code"] == "no_saved_game" or body["code"] == "game_not_found"
@@ -105,6 +117,7 @@ def test_unknown_route_and_validation_have_code(client):
 def test_blocked_response_has_code_and_request_id():
     import api
     from observability.telemetry import request_scope
+
     with request_scope("blocked-req-0001"):
         resp = api._blocked_response("rate_limited", "authfail", 7)
     body = json.loads(resp.body)
@@ -116,29 +129,48 @@ def test_sse_error_event_envelope(client, monkeypatch):
     from fastapi import HTTPException
 
     import api
-    gid = client.post("/game/new", json={
-        "name": "Envelope", "race": "Humano", "class_name": "Sangromante",
-        "region": "Nova Arcádia", "level": 1}).json()["game_id"]
+
+    gid = client.post(
+        "/game/new",
+        json={
+            "name": "Envelope",
+            "race": "Humano",
+            "class_name": "Sangromante",
+            "region": "Nova Arcádia",
+            "level": 1,
+        },
+    ).json()["game_id"]
 
     def boom(*a, **k):
         raise HTTPException(409, "operation_in_progress")
 
     monkeypatch.setattr(api, "_execute_action", boom)
-    with client.stream("POST", "/game/action/stream", json={
-            "input_text": "olho", "game_id": gid,
-            "action_id": str(uuid.uuid4())}, headers={"X-Request-ID": "sse-req-000001"}) as r:
+    with client.stream(
+        "POST",
+        "/game/action/stream",
+        json={"input_text": "olho", "game_id": gid, "action_id": str(uuid.uuid4())},
+        headers={"X-Request-ID": "sse-req-000001"},
+    ) as r:
         text = "".join(r.iter_text())
     blocks = [b for b in text.split("\n\n") if b.startswith("event: error")]
     assert blocks, text
     payload = json.loads(blocks[0].split("data: ", 1)[1])
-    assert payload["error_code"] == "operation_in_progress" and payload["code"] == 409 and payload["request_id"] == "sse-req-000001"
-    assert True    # ``code`` numerico = compat do cliente
+    assert (
+        payload["error_code"] == "operation_in_progress"
+        and payload["code"] == 409
+        and payload["request_id"] == "sse-req-000001"
+    )
+    assert True  # ``code`` numerico = compat do cliente
 
 
 def test_error_responses_never_echo_exception_text(client, monkeypatch):
     import api
-    monkeypatch.setattr(api, "load_game_state", lambda *a, **k: (_ for _ in ()).throw(
-        RuntimeError("SEGREDO-NA-EXCECAO")))
+
+    monkeypatch.setattr(
+        api,
+        "load_game_state",
+        lambda *a, **k: (_ for _ in ()).throw(RuntimeError("SEGREDO-NA-EXCECAO")),
+    )
     r = client.get("/game/state", params={"game_id": str(uuid.uuid4())})
     assert "SEGREDO-NA-EXCECAO" not in r.text
 

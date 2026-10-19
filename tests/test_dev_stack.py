@@ -48,7 +48,9 @@ def test_branch_local_da_cli_nao_e_confundida_com_link_remoto(monkeypatch, tmp_p
 
 def test_cli_pinada_quando_so_npx_existe(monkeypatch):
     monkeypatch.delenv("SUPABASE_CLI_COMMAND", raising=False)
-    monkeypatch.setattr(dev_stack.shutil, "which", lambda name: "npx.cmd" if name == "npx.cmd" else None)
+    monkeypatch.setattr(
+        dev_stack.shutil, "which", lambda name: "npx.cmd" if name == "npx.cmd" else None
+    )
     assert dev_stack.cli_command()[-1] == f"supabase@{dev_stack.SUPABASE_CLI_VERSION}"
 
 

@@ -106,17 +106,19 @@ stateless por save).
 ```python
 ATTITUDES = ("hostil", "neutro", "aliado")
 
+
 class SeedNPC(BaseModel):
     name: str = Field(max_length=60)
-    role: str = Field(max_length=80)          # "credor", "irmã exilada"...
-    attitude: str = Field(max_length=20)      # normalizado p/ ATTITUDES; fora disso → "neutro"
-    persona: str = Field(max_length=400)      # 1-2 frases de personalidade
+    role: str = Field(max_length=80)  # "credor", "irmã exilada"...
+    attitude: str = Field(max_length=20)  # normalizado p/ ATTITUDES; fora disso → "neutro"
+    persona: str = Field(max_length=400)  # 1-2 frases de personalidade
+
 
 class StartScenario(BaseModel):
-    prologue: str = Field(max_length=2000)            # p/ o JOGADOR, 2ª pessoa, 100-180 palavras
+    prologue: str = Field(max_length=2000)  # p/ o JOGADOR, 2ª pessoa, 100-180 palavras
     opening_scene_brief: str = Field(max_length=1200)  # p/ o STORYTELLER: local, situação, tensão
-    arc_title: str = Field(max_length=80)              # 3-6 palavras, pt-BR
-    beats: List[str] = Field(max_length=5)             # 3-5 beats pessoais (cada ≤ 300 chars)
+    arc_title: str = Field(max_length=80)  # 3-6 palavras, pt-BR
+    beats: List[str] = Field(max_length=5)  # 3-5 beats pessoais (cada ≤ 300 chars)
     climax: str = Field(max_length=300)
     seed_npcs: List[SeedNPC] = Field(default_factory=list, max_length=2)
 ```
@@ -133,13 +135,14 @@ seed (não rejeitado — o client recebeu do próprio server).
 
 ```python
 npc = {
-    "name": s.name, "role": s.role, "persona": s.persona,
+    "name": s.name,
+    "role": s.role,
+    "persona": s.persona,
     "initial_relationship": REL_MAP[attitude],
-    "attributes": {k: 10 for k in ("str","dex","con","int","wis","cha")},
+    "attributes": {k: 10 for k in ("str", "dex", "con", "int", "wis", "cha")},
     "combat_stats": {"hp": 10, "ac": 10, "attacks": []},
 }
-npc = npc_layers.ensure_npc_fields(npc, game_id,
-                                   home_location_id=start_loc_id, in_scene=True)
+npc = npc_layers.ensure_npc_fields(npc, game_id, home_location_id=start_loc_id, in_scene=True)
 npc["known_by_player"] = True
 ```
 

@@ -303,7 +303,9 @@ def _validate_answer(request: DecisionRequest, raw: _WireResponse) -> None:
             if answer.probabilities[answer.choice] < max(answer.probabilities.values()):
                 raise JevResponseError("Jev choice differs from highest probability")
         if isinstance(question, ScoreQuestion) and isinstance(answer, ScoreAnswer):
-            levels = {str(index): description for index, description in enumerate(question.criteria)}
+            levels = {
+                str(index): description for index, description in enumerate(question.criteria)
+            }
             if answer.score > len(question.criteria) - 1:
                 raise JevResponseError("Jev score outside requested rubric")
             if answer.legend != levels or set(answer.probabilities) != set(levels):

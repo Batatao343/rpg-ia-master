@@ -35,35 +35,57 @@ from services.jev_decision import (
 from services.jev_rollout import frozen_request as rollout_request
 
 NPCS = {
-    "Corvo": {"id": "npc_corvo_rapido", "name": "Corvo", "in_scene": True,
-              "known_by_player": True, "aliases": ["Corvo Cinzento"]},
+    "Corvo": {
+        "id": "npc_corvo_rapido",
+        "name": "Corvo",
+        "in_scene": True,
+        "known_by_player": True,
+        "aliases": ["Corvo Cinzento"],
+    },
     "Magda": {"id": "npc_velha_magda", "name": "Magda", "in_scene": False, "known_by_player": True},
-    "Sombra": {"id": "npc_sombra", "name": "Sombra", "in_scene": True,
-               "known_by_player": False, "visibility": "secret"},
+    "Sombra": {
+        "id": "npc_sombra",
+        "name": "Sombra",
+        "in_scene": True,
+        "known_by_player": False,
+        "visibility": "secret",
+    },
 }
 
 
 def test_features_are_deterministic_and_public_only() -> None:
-    state = decision_state({"action": "  FALO COM CORVO  ", "state": {"npcs": NPCS,
-                                                                    "active_npc_name": "Corvo"}})
-    assert state == decision_state({"action": "  FALO COM CORVO  ",
-                                    "state": {"npcs": NPCS, "active_npc_name": "Corvo"}})
+    state = decision_state(
+        {"action": "  FALO COM CORVO  ", "state": {"npcs": NPCS, "active_npc_name": "Corvo"}}
+    )
+    assert state == decision_state(
+        {"action": "  FALO COM CORVO  ", "state": {"npcs": NPCS, "active_npc_name": "Corvo"}}
+    )
     assert state.action == "falo com corvo"
     assert [actor.id for actor in state.scene] == ["npc_corvo_rapido"]  # secret/off-scene dropped
     assert state.scene[0].aliases == ("Corvo Cinzento",)
     assert state.last_speaker == "npc_corvo_rapido"
     assert state.verbs == ("talk",)
-    wire = json.dumps(DecisionRequest(state=state, questions={
-        "route": hybrid.PLAIN_ROUTE_QUESTION}).wire_body(), ensure_ascii=False)
+    wire = json.dumps(
+        DecisionRequest(state=state, questions={"route": hybrid.PLAIN_ROUTE_QUESTION}).wire_body(),
+        ensure_ascii=False,
+    )
     assert "Sombra" not in wire and "npc_sombra" not in wire and "Magda" not in wire
 
 
-@pytest.mark.parametrize(("action", "verbs"), [
-    ("Ataco o guarda", ("attack",)), ("Golpeio o degolador", ("attack",)),
-    ("Limpo minha espada enquanto espero", ("rest",)), ("Guardo o arco na mochila", ()),
-    ("ei, Grum!", ("talk",)), ("Compro uma poção", ("trade",)), ("Forjo um elmo", ("craft",)),
-    ("Observo o lobo de longe", ("observe",)), ("Digo a Silas que nao quero briga", ("talk",)),
-])
+@pytest.mark.parametrize(
+    ("action", "verbs"),
+    [
+        ("Ataco o guarda", ("attack",)),
+        ("Golpeio o degolador", ("attack",)),
+        ("Limpo minha espada enquanto espero", ("rest",)),
+        ("Guardo o arco na mochila", ()),
+        ("ei, Grum!", ("talk",)),
+        ("Compro uma poção", ("trade",)),
+        ("Forjo um elmo", ("craft",)),
+        ("Observo o lobo de longe", ("observe",)),
+        ("Digo a Silas que nao quero briga", ("talk",)),
+    ],
+)
 def test_verb_flags_are_a_closed_lexicon(action: str, verbs: tuple[str, ...]) -> None:
     assert extract_verbs(action) == verbs
 
@@ -71,6 +93,7 @@ def test_verb_flags_are_a_closed_lexicon(action: str, verbs: tuple[str, ...]) ->
 def test_production_rollout_payload_is_the_frozen_request() -> None:
     # SPEC-217 R14: production now sends the frozen J2 request (was the SPEC-180 one).
     from evals.experiments.spec238_loot import frozen_j1b_request
+
     state = {"world": {"current_location": "X"}}
     body = rollout_request(state, "olho").wire_body()
     assert body == frozen_j1b_request({"action": "olho", "state": state}).wire_body()
@@ -83,7 +106,9 @@ def test_two_stage_target_restricted_to_scene_candidates() -> None:
     assert set(question.criteria) == {"npc_corvo_rapido", "none"}
     assert "Corvo Cinzento" in question.criteria["npc_corvo_rapido"]
     assert target_question(()) is None
-    many = {"enemies": [{"id": f"enemy_{i:02d}", "name": f"G{i}", "status": "ativo"} for i in range(21)]}
+    many = {
+        "enemies": [{"id": f"enemy_{i:02d}", "name": f"G{i}", "status": "ativo"} for i in range(21)]
+    }
     over = scene_view(many)
     assert over.target_status == "unrepresentable" and over.actors == ()
     assert decision_state({"action": "ataco", "state": many}).scene is None  # never truncated
@@ -92,7 +117,11 @@ def test_two_stage_target_restricted_to_scene_candidates() -> None:
 def test_screening_and_frozen_requests_have_expected_questions() -> None:
     case_input = {"action": "Falo com Corvo", "state": {"npcs": NPCS}}
     assert set(screening_request(case_input).questions) == {
-        "route_legacy", "route_plain", "route_rich", "target"}
+        "route_legacy",
+        "route_plain",
+        "route_rich",
+        "target",
+    }
     frozen = frozen_request(case_input, Policy("plain", True, True))
     assert set(frozen.questions) == {"route", "target"}
     assert set(frozen_request(case_input, Policy("rich", False, True)).questions) == {"route"}
@@ -102,52 +131,100 @@ def _route(choice: str, confidence: float = 0.9) -> dict:
     return {"choice": choice, "confidence": confidence}
 
 
-@pytest.mark.parametrize(("route", "verbs", "status", "target", "reason"), [
-    (_route("none"), (), "no_candidates", None, "abstain"),
-    (_route("storyteller", 0.4), (), "no_candidates", None, "low_confidence"),
-    (_route("loot"), ("trade",), "no_candidates", None, "loot_context_out_of_scope"),
-    (_route("combat_agent"), ("talk",), "ok", _route("npc_x"), "combat_guard"),
-    (_route("npc_actor"), ("talk",), "unrepresentable", None, "target_unrepresentable"),
-    (_route("npc_actor"), ("talk",), "ok", _route("npc_x", 0.3), "target_low_confidence"),
-])
+@pytest.mark.parametrize(
+    ("route", "verbs", "status", "target", "reason"),
+    [
+        (_route("none"), (), "no_candidates", None, "abstain"),
+        (_route("storyteller", 0.4), (), "no_candidates", None, "low_confidence"),
+        (_route("loot"), ("trade",), "no_candidates", None, "loot_context_out_of_scope"),
+        (_route("combat_agent"), ("talk",), "ok", _route("npc_x"), "combat_guard"),
+        (_route("npc_actor"), ("talk",), "unrepresentable", None, "target_unrepresentable"),
+        (_route("npc_actor"), ("talk",), "ok", _route("npc_x", 0.3), "target_low_confidence"),
+    ],
+)
 def test_hybrid_policy_falls_back_when_not_confident_or_representable(
-    route, verbs, status, target, reason,
+    route,
+    verbs,
+    status,
+    target,
+    reason,
 ) -> None:
-    decision = hybrid_decision(route=route, target=target, verbs=verbs, in_combat=False,
-                               target_status=status, policy=Policy("plain", True, True))
+    decision = hybrid_decision(
+        route=route,
+        target=target,
+        verbs=verbs,
+        in_combat=False,
+        target_status=status,
+        policy=Policy("plain", True, True),
+    )
     assert decision == {"source": "fallback", "reason": reason, "route": None, "target": None}
 
 
 def test_hybrid_policy_uses_jev_only_when_confident_and_representable() -> None:
     policy = Policy("plain", True, True)
-    talk = hybrid_decision(route=_route("npc_actor"), target=_route("npc_x"), verbs=("talk",),
-                           in_combat=False, target_status="ok", policy=policy)
+    talk = hybrid_decision(
+        route=_route("npc_actor"),
+        target=_route("npc_x"),
+        verbs=("talk",),
+        in_combat=False,
+        target_status="ok",
+        policy=policy,
+    )
     assert talk == {"source": "jev", "reason": None, "route": "npc_actor", "target": "npc_x"}
-    story = hybrid_decision(route=_route("storyteller"), target=None, verbs=(),
-                            in_combat=False, target_status="no_candidates", policy=policy)
+    story = hybrid_decision(
+        route=_route("storyteller"),
+        target=None,
+        verbs=(),
+        in_combat=False,
+        target_status="no_candidates",
+        policy=policy,
+    )
     assert story["source"] == "jev" and story["target"] is None
-    route_only = hybrid_decision(route=_route("npc_actor"), target=None, verbs=("talk",),
-                                 in_combat=False, target_status="ok",
-                                 policy=Policy("plain", False, True))
+    route_only = hybrid_decision(
+        route=_route("npc_actor"),
+        target=None,
+        verbs=("talk",),
+        in_combat=False,
+        target_status="ok",
+        policy=Policy("plain", False, True),
+    )
     assert route_only["reason"] == "target_not_in_structure"
 
 
-def _p1_row(case_id: str, choice: str, confidence: float = 0.9, latency: int = 300,
-            kind: str = "route", target: dict | None = None, verbs=("observe",)) -> dict:
+def _p1_row(
+    case_id: str,
+    choice: str,
+    confidence: float = 0.9,
+    latency: int = 300,
+    kind: str = "route",
+    target: dict | None = None,
+    verbs=("observe",),
+) -> dict:
     answers = {f"route_{label}": _route(choice, confidence) for label in hybrid.LABEL_SETS}
     if target:
         answers["target"] = target
-    return {"case_id": case_id, "kind": kind, "verbs": list(verbs), "in_combat": False,
-            "target_status": "ok" if target else "no_candidates", "answers": answers,
-            "latency_ms": latency}
+    return {
+        "case_id": case_id,
+        "kind": kind,
+        "verbs": list(verbs),
+        "in_combat": False,
+        "target_status": "ok" if target else "no_candidates",
+        "answers": answers,
+        "latency_ms": latency,
+    }
 
 
 def test_fallback_latency_is_sum_and_unsafe_escalation_is_counted() -> None:
-    rows = [_p1_row("a", "storyteller"), _p1_row("b", "none"),
-            _p1_row("c", "combat_agent", verbs=("attack",))]
-    expected = {"a": {"route": "storyteller", "target": None},
-                "b": {"route": "storyteller", "target": None},
-                "c": {"route": "storyteller", "target": None}}
+    rows = [
+        _p1_row("a", "storyteller"),
+        _p1_row("b", "none"),
+        _p1_row("c", "combat_agent", verbs=("attack",)),
+    ]
+    expected = {
+        "a": {"route": "storyteller", "target": None},
+        "b": {"route": "storyteller", "target": None},
+        "c": {"route": "storyteller", "target": None},
+    }
     score = score_policy(rows, expected, {}, Policy("plain", True, False))
     assert score["covered"] == 2 and score["unsafe_combat_escalations"] == 1
     only_fallback = score_policy(rows[1:2], expected, {}, Policy("plain", True, False))
@@ -159,14 +236,28 @@ def test_fallback_latency_is_sum_and_unsafe_escalation_is_counted() -> None:
 
 def test_selection_prefers_feasible_coverage_then_tau_near_default() -> None:
     def fake(label, tau, covered, errors=0, unsafe=0):
-        return {"policy": {"label_set": label, "tau": tau, "with_target": True,
-                           "combat_guard": True}, "covered": covered,
-                "covered_route_errors": errors, "covered_target_errors": 0,
-                "unsafe_combat_escalations": unsafe}
-    chosen = select([fake("rich", 0.5, 40, unsafe=1), fake("plain", 0.6, 30),
-                     fake("legacy", 0.5, 30), fake("plain", 0.5, 30)])
-    assert chosen["policy"] == {"label_set": "plain", "tau": 0.5, "with_target": True,
-                                "combat_guard": True}
+        return {
+            "policy": {"label_set": label, "tau": tau, "with_target": True, "combat_guard": True},
+            "covered": covered,
+            "covered_route_errors": errors,
+            "covered_target_errors": 0,
+            "unsafe_combat_escalations": unsafe,
+        }
+
+    chosen = select(
+        [
+            fake("rich", 0.5, 40, unsafe=1),
+            fake("plain", 0.6, 30),
+            fake("legacy", 0.5, 30),
+            fake("plain", 0.5, 30),
+        ]
+    )
+    assert chosen["policy"] == {
+        "label_set": "plain",
+        "tau": 0.5,
+        "with_target": True,
+        "combat_guard": True,
+    }
 
 
 def test_dev_hash_mismatch_aborts(tmp_path: Path) -> None:
@@ -212,25 +303,44 @@ class _Backend:
         answers = {}
         for name, question in request.questions.items():
             keys = list(question.criteria)
-            probabilities = {key: (0.9 if index == 0 else 0.1 / (len(keys) - 1))
-                             for index, key in enumerate(keys)}
-            answers[name] = ChoiceAnswer(type="choice", choice=keys[0],
-                                         probabilities=probabilities, confidence=0.9)
-        return DecisionResult(model="jev-test", answers=answers, usage=None,
-                              correlation_id="c", latency_ms=5)
+            probabilities = {
+                key: (0.9 if index == 0 else 0.1 / (len(keys) - 1))
+                for index, key in enumerate(keys)
+            }
+            answers[name] = ChoiceAnswer(
+                type="choice", choice=keys[0], probabilities=probabilities, confidence=0.9
+            )
+        return DecisionResult(
+            model="jev-test", answers=answers, usage=None, correlation_id="c", latency_ms=5
+        )
 
 
 def _cases() -> list[Case]:
-    return [Case(id=f"c{i}", kind="route", input={"action": "Observo a praça", "state": {}},
-                 expected={"route": "storyteller", "target": None}, python_gate=False,
-                 critical=None) for i in range(3)]
+    return [
+        Case(
+            id=f"c{i}",
+            kind="route",
+            input={"action": "Observo a praça", "state": {}},
+            expected={"route": "storyteller", "target": None},
+            python_gate=False,
+            critical=None,
+        )
+        for i in range(3)
+    ]
 
 
 def test_run_stops_on_provider_error(tmp_path: Path) -> None:
     backend = _Backend(fail_at=2)
     ledger = CallLedger(tmp_path / "ledger.json")
-    raw = run_phase("p1", _cases(), lambda case: screening_request(case.input), backend,
-                    ledger, tmp_path / "run", {"run_id": "t"})
+    raw = run_phase(
+        "p1",
+        _cases(),
+        lambda case: screening_request(case.input),
+        backend,
+        ledger,
+        tmp_path / "run",
+        {"run_id": "t"},
+    )
     assert raw["status"] == "blocked-by-provider" and backend.calls == 2
     assert ledger.read()["total_calls"] == 2
     assert raw["p1"]["rows"][1]["error"] == "rate_limit"
@@ -239,12 +349,20 @@ def test_run_stops_on_provider_error(tmp_path: Path) -> None:
 
 
 def test_summary_reproducible_from_raw(tmp_path: Path) -> None:
-    raw = run_phase("p1", _cases(), lambda case: screening_request(case.input), _Backend(),
-                    CallLedger(tmp_path / "ledger.json"), tmp_path / "run",
-                    {"run_id": "t", "dev_hash": "sha256:x"})
+    raw = run_phase(
+        "p1",
+        _cases(),
+        lambda case: screening_request(case.input),
+        _Backend(),
+        CallLedger(tmp_path / "ledger.json"),
+        tmp_path / "run",
+        {"run_id": "t", "dev_hash": "sha256:x"},
+    )
     assert raw["status"] == "complete"
     reloaded = json.loads((tmp_path / "run" / "raw.json").read_text(encoding="utf-8"))
-    assert hybrid.digest_of(summarize(reloaded, _cases())) == hybrid.digest_of(summarize(raw, _cases()))
+    assert hybrid.digest_of(summarize(reloaded, _cases())) == hybrid.digest_of(
+        summarize(raw, _cases())
+    )
     assert "expected" not in json.dumps(reloaded)  # raw holds no oracle labels
 
 
@@ -261,7 +379,9 @@ def test_frozen_structure_digest_matches_code() -> None:
     assert hybrid.FROZEN_J1_POLICY.variant_id == "plain+target+guard@0.50"
     assert hybrid.structure_digest(hybrid.FROZEN_J1_POLICY) == hybrid.FROZEN_J1_STRUCTURE_DIGEST
     assert hybrid.structure_digest(Policy("rich", True, False)) != hybrid.FROZEN_J1_STRUCTURE_DIGEST
-    assert hybrid.structure_digest(Policy("plain", True, False)) != hybrid.FROZEN_J1_STRUCTURE_DIGEST
+    assert (
+        hybrid.structure_digest(Policy("plain", True, False)) != hybrid.FROZEN_J1_STRUCTURE_DIGEST
+    )
 
 
 def test_frozen_digest_pins_decision_code(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -273,27 +393,47 @@ def test_frozen_digest_pins_decision_code(monkeypatch: pytest.MonkeyPatch) -> No
 @pytest.mark.parametrize("verbs", [(), ("talk",), ("observe",), ("move", "talk")])
 def test_frozen_policy_never_accepts_combat_without_attack_verb(verbs) -> None:
     """R9.3 guard: an unprovoked Jev combat_agent always goes to arm A's CLASSIFY."""
-    decision = hybrid_decision(route=_route("combat_agent", 0.99), target=_route("npc_x", 0.99),
-                               verbs=verbs, in_combat=False, target_status="ok",
-                               policy=hybrid.FROZEN_J1_POLICY)
+    decision = hybrid_decision(
+        route=_route("combat_agent", 0.99),
+        target=_route("npc_x", 0.99),
+        verbs=verbs,
+        in_combat=False,
+        target_status="ok",
+        policy=hybrid.FROZEN_J1_POLICY,
+    )
     assert decision["source"] == "fallback" and decision["reason"] == "combat_guard"
-    attack = hybrid_decision(route=_route("combat_agent", 0.99), target=_route("npc_x", 0.99),
-                             verbs=("attack",), in_combat=False, target_status="ok",
-                             policy=hybrid.FROZEN_J1_POLICY)
+    attack = hybrid_decision(
+        route=_route("combat_agent", 0.99),
+        target=_route("npc_x", 0.99),
+        verbs=("attack",),
+        in_combat=False,
+        target_status="ok",
+        policy=hybrid.FROZEN_J1_POLICY,
+    )
     assert attack["source"] == "jev" and attack["route"] == "combat_agent"
 
 
 def test_frozen_policy_sends_loot_to_classify() -> None:
-    decision = hybrid_decision(route=_route("loot", 0.99), target=None, verbs=("trade",),
-                               in_combat=False, target_status="no_candidates",
-                               policy=hybrid.FROZEN_J1_POLICY)
+    decision = hybrid_decision(
+        route=_route("loot", 0.99),
+        target=None,
+        verbs=("trade",),
+        in_combat=False,
+        target_status="no_candidates",
+        policy=hybrid.FROZEN_J1_POLICY,
+    )
     assert decision["reason"] == "loot_context_out_of_scope"
 
 
 def test_production_rollout_payload_is_frozen_with_active_npc() -> None:
     from evals.experiments.spec238_loot import frozen_j1b_request
-    state = {"world": {"current_location": "X"}, "active_npc_name": "Corvo",
-             "npcs": NPCS, "combat": {"active": False}}
+
+    state = {
+        "world": {"current_location": "X"},
+        "active_npc_name": "Corvo",
+        "npcs": NPCS,
+        "combat": {"active": False},
+    }
     body = rollout_request(state, "FALO COM CORVO").wire_body()
     assert body == frozen_j1b_request({"action": "FALO COM CORVO", "state": state}).wire_body()
     assert body["state"]["last_speaker"] == "npc_corvo_rapido"

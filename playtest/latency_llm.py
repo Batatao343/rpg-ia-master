@@ -10,6 +10,7 @@ Nunca importado pelo runtime de producao. Envolve o ``get_llm`` (que sob
 
 Perfis versionados: ``flat-fast``, ``typical``, ``slow-tail``, ``fallback-once``.
 """
+
 from __future__ import annotations
 
 import random
@@ -27,15 +28,17 @@ PROFILE_VERSION = 1
 _TYPICAL = {"classify": (300, 0.20), "fast": (2500, 0.20), "smart": (4000, 0.20)}
 
 PROFILES: dict[str, dict[str, Any]] = {
-    "flat-fast": {"tiers": {"classify": (50, 0.0), "fast": (100, 0.0), "smart": (150, 0.0)},
-                  "tail_prob": 0.0, "tail_mult": 1.0, "fallback_once": False},
+    "flat-fast": {
+        "tiers": {"classify": (50, 0.0), "fast": (100, 0.0), "smart": (150, 0.0)},
+        "tail_prob": 0.0,
+        "tail_mult": 1.0,
+        "fallback_once": False,
+    },
     "typical": {"tiers": _TYPICAL, "tail_prob": 0.0, "tail_mult": 1.0, "fallback_once": False},
     # cauda longa: 10% das chamadas custam 4x (exercita o p95)
-    "slow-tail": {"tiers": _TYPICAL, "tail_prob": 0.10, "tail_mult": 4.0,
-                  "fallback_once": False},
+    "slow-tail": {"tiers": _TYPICAL, "tail_prob": 0.10, "tail_mult": 4.0, "fallback_once": False},
     # 1a tentativa de cada tier, em cada turno, falha e cai para o proximo candidato
-    "fallback-once": {"tiers": _TYPICAL, "tail_prob": 0.0, "tail_mult": 1.0,
-                      "fallback_once": True},
+    "fallback-once": {"tiers": _TYPICAL, "tail_prob": 0.0, "tail_mult": 1.0, "fallback_once": True},
 }
 
 PRIMARY = ("deepseek", "mock-latency-primary")
@@ -52,9 +55,9 @@ class LatencyContext:
 
     profile: str = "typical"
     seed: int = 0
-    mode: str = "virtual"            # virtual | scaled
+    mode: str = "virtual"  # virtual | scaled
     scale: float = 1.0
-    clock: Callable[[], float] | None = None   # FakeClock (tem .advance) no modo virtual
+    clock: Callable[[], float] | None = None  # FakeClock (tem .advance) no modo virtual
     journey: str = ""
     rep: int = 0
     call_index: int = 0
@@ -105,18 +108,36 @@ class LatencyContext:
             self.failed_tiers.add(key)
             failed_ms = self.sample_ms(key, fraction=0.5)
             self.spend(failed_ms)
-            _emit_attempt_telemetry(LLMAttemptEvent(
-                provider=PRIMARY[0], model=PRIMARY[1], tier=model_tier, attempt_index=0,
-                latency_ms=failed_ms, fell_back=False, outcome="invoke_error",
-                error="InjectedFailure", structured=structured))
+            _emit_attempt_telemetry(
+                LLMAttemptEvent(
+                    provider=PRIMARY[0],
+                    model=PRIMARY[1],
+                    tier=model_tier,
+                    attempt_index=0,
+                    latency_ms=failed_ms,
+                    fell_back=False,
+                    outcome="invoke_error",
+                    error="InjectedFailure",
+                    structured=structured,
+                )
+            )
             index, fell_back = 1, True
         provider, model = SECONDARY if fell_back else PRIMARY
         ms = self.sample_ms(key)
         self.spend(ms)
-        _emit_attempt_telemetry(LLMAttemptEvent(
-            provider=provider, model=model, tier=model_tier, attempt_index=index,
-            latency_ms=ms, fell_back=fell_back, outcome="success", error=None,
-            structured=structured))
+        _emit_attempt_telemetry(
+            LLMAttemptEvent(
+                provider=provider,
+                model=model,
+                tier=model_tier,
+                attempt_index=index,
+                latency_ms=ms,
+                fell_back=fell_back,
+                outcome="success",
+                error=None,
+                structured=structured,
+            )
+        )
         _emit_telemetry(provider, model, model_tier, ms, fell_back)
 
 
@@ -141,7 +162,8 @@ class LatencyInjectingLLM:
 
     def with_structured_output(self, *args, **kwargs):
         return _StructuredLatency(
-            self._inner.with_structured_output(*args, **kwargs), self._tier, self._ctx)
+            self._inner.with_structured_output(*args, **kwargs), self._tier, self._ctx
+        )
 
     def with_retry(self, *_a, **_k):
         return self
@@ -178,6 +200,7 @@ def install(ctx: LatencyContext) -> None:
     """Troca ``get_llm`` em todo modulo que o importou. Reversivel via ``uninstall``."""
     global _ORIGINAL, _CURRENT
     import llm_setup
+
     if _ORIGINAL is None:
         _ORIGINAL = llm_setup.get_llm
     _CURRENT = ctx

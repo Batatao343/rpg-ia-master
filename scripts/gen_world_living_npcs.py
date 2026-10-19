@@ -23,78 +23,260 @@ GRAPH_DIR = ROOT / "data" / "graph"
 # região: (nome, papel, facção declarada, gancho público)
 NPCS = {
     "nova_arcadia": [
-        ("Irena Prego-Frio", "fiscal de rebites do Anel de Ferro", "legiao_ferro", "Encontrar a remessa de rebites ocos que faz caldeiras explodirem."),
-        ("Téo Chaminé", "mensageiro pelos telhados fabris", "resistencia_operaria_martelos_partidos", "Levar uma lista de operários presos sem cruzar uma patrulha da Legião."),
-        ("Mara do Sétimo Sino", "relojoeira e informante de turnos", "guilda_corvos", "Descobrir por que um sino toca sozinho antes de cada desaparecimento."),
+        (
+            "Irena Prego-Frio",
+            "fiscal de rebites do Anel de Ferro",
+            "legiao_ferro",
+            "Encontrar a remessa de rebites ocos que faz caldeiras explodirem.",
+        ),
+        (
+            "Téo Chaminé",
+            "mensageiro pelos telhados fabris",
+            "resistencia_operaria_martelos_partidos",
+            "Levar uma lista de operários presos sem cruzar uma patrulha da Legião.",
+        ),
+        (
+            "Mara do Sétimo Sino",
+            "relojoeira e informante de turnos",
+            "guilda_corvos",
+            "Descobrir por que um sino toca sozinho antes de cada desaparecimento.",
+        ),
     ],
     "pantano_melancolia": [
-        ("Ume Lodo-Claro", "barqueira dos canais rasos", "druidas_ciclo_cinzento", "Guiar uma coleta de água que ainda não aprendeu a lembrar dos mortos."),
-        ("Padre Junco", "guardião de túmulos flutuantes", "druidas_ciclo_cinzento", "Reatar três âncoras funerárias antes da próxima cheia de Éter."),
-        ("Sira Candeia", "caçadora de luzes-fátuas", "independente", "Capturar uma chama que repete a voz de uma criança desaparecida."),
+        (
+            "Ume Lodo-Claro",
+            "barqueira dos canais rasos",
+            "druidas_ciclo_cinzento",
+            "Guiar uma coleta de água que ainda não aprendeu a lembrar dos mortos.",
+        ),
+        (
+            "Padre Junco",
+            "guardião de túmulos flutuantes",
+            "druidas_ciclo_cinzento",
+            "Reatar três âncoras funerárias antes da próxima cheia de Éter.",
+        ),
+        (
+            "Sira Candeia",
+            "caçadora de luzes-fátuas",
+            "independente",
+            "Capturar uma chama que repete a voz de uma criança desaparecida.",
+        ),
     ],
     "deserto_zhur": [
-        ("Nahir Vidro-Manso", "lapidador de vidro solar", "tribos_devoradores_sol", "Recuperar uma lente roubada capaz de revelar água sob as dunas."),
-        ("Kessa Três-Sombras", "batedora de caravanas", "tribos_devoradores_sol", "Mapear a sombra extra que acompanha uma caravana sem possuir dono."),
-        ("Orun Sal-Negro", "negociador de poços", "independente", "Impedir que dois clãs sangrem pelo mesmo poço envenenado."),
+        (
+            "Nahir Vidro-Manso",
+            "lapidador de vidro solar",
+            "tribos_devoradores_sol",
+            "Recuperar uma lente roubada capaz de revelar água sob as dunas.",
+        ),
+        (
+            "Kessa Três-Sombras",
+            "batedora de caravanas",
+            "tribos_devoradores_sol",
+            "Mapear a sombra extra que acompanha uma caravana sem possuir dono.",
+        ),
+        (
+            "Orun Sal-Negro",
+            "negociador de poços",
+            "independente",
+            "Impedir que dois clãs sangrem pelo mesmo poço envenenado.",
+        ),
     ],
     "floresta_sussurros": [
-        ("Eilin Folha-Oca", "intérprete dos sussurros de trilha", "independente", "Traduzir o aviso que árvores diferentes repetem com a mesma voz."),
-        ("Tomir Musgo", "curador de cascas feridas", "guardiões_de_thessavar", "Descobrir quem grava símbolos de Nova Arcádia em árvores antigas."),
-        ("Vaela do Ninho", "guia de copas baixas", "independente", "Resgatar ovos de mariposa antes que o sussurro dentro deles desperte."),
+        (
+            "Eilin Folha-Oca",
+            "intérprete dos sussurros de trilha",
+            "independente",
+            "Traduzir o aviso que árvores diferentes repetem com a mesma voz.",
+        ),
+        (
+            "Tomir Musgo",
+            "curador de cascas feridas",
+            "guardiões_de_thessavar",
+            "Descobrir quem grava símbolos de Nova Arcádia em árvores antigas.",
+        ),
+        (
+            "Vaela do Ninho",
+            "guia de copas baixas",
+            "independente",
+            "Resgatar ovos de mariposa antes que o sussurro dentro deles desperte.",
+        ),
     ],
     "selva_xylos": [
-        ("Jori Sete-Esporos", "mediador entre hospedeiros", "colmeia_hospedeiros", "Separar uma memória coletiva que começou a acusar o corpo errado."),
-        ("Mãe Aru", "parteira das cidades de copa", "colmeia_hospedeiros", "Buscar uma planta que permita a um recém-hospedado conservar o próprio nome."),
-        ("Pel Sem-Rosto", "cartógrafo de trilhas migratórias", "independente", "Marcar uma rota que muda quando ninguém está olhando para ela."),
+        (
+            "Jori Sete-Esporos",
+            "mediador entre hospedeiros",
+            "colmeia_hospedeiros",
+            "Separar uma memória coletiva que começou a acusar o corpo errado.",
+        ),
+        (
+            "Mãe Aru",
+            "parteira das cidades de copa",
+            "colmeia_hospedeiros",
+            "Buscar uma planta que permita a um recém-hospedado conservar o próprio nome.",
+        ),
+        (
+            "Pel Sem-Rosto",
+            "cartógrafo de trilhas migratórias",
+            "independente",
+            "Marcar uma rota que muda quando ninguém está olhando para ela.",
+        ),
     ],
     "skallgard": [
-        ("Runa Brasa-Branca", "mecânica de aquecedores de clã", "clas_tecnologicos", "Reativar um forno soterrado antes que a noite congele o abrigo."),
-        ("Eirik Sem-Pegadas", "caçador da borda noturna", "clas_combate", "Seguir um lobo que deixa pegadas apontando na direção contrária."),
-        ("Solvi Cabo-Cobre", "operadora de rádio antigo", "independente", "Localizar a estação que responde com notícias de amanhã."),
+        (
+            "Runa Brasa-Branca",
+            "mecânica de aquecedores de clã",
+            "clas_tecnologicos",
+            "Reativar um forno soterrado antes que a noite congele o abrigo.",
+        ),
+        (
+            "Eirik Sem-Pegadas",
+            "caçador da borda noturna",
+            "clas_combate",
+            "Seguir um lobo que deixa pegadas apontando na direção contrária.",
+        ),
+        (
+            "Solvi Cabo-Cobre",
+            "operadora de rádio antigo",
+            "independente",
+            "Localizar a estação que responde com notícias de amanhã.",
+        ),
     ],
     "aethelgard": [
-        ("Maeril Caco-Azul", "zelador de cristal de contenção", "independente", "Substituir um cristal rachado sem repetir a falha da Destilação."),
-        ("Oren Último-Mapa", "copista das galerias élficas", "independente", "Conferir uma sala que apareceu apenas na cópia mais recente do mapa."),
-        ("Tessa Ampola", "alquimista arrependida", "cultistas_destilacao", "Interceptar reagentes antes que cheguem a um novo laboratório clandestino."),
+        (
+            "Maeril Caco-Azul",
+            "zelador de cristal de contenção",
+            "independente",
+            "Substituir um cristal rachado sem repetir a falha da Destilação.",
+        ),
+        (
+            "Oren Último-Mapa",
+            "copista das galerias élficas",
+            "independente",
+            "Conferir uma sala que apareceu apenas na cópia mais recente do mapa.",
+        ),
+        (
+            "Tessa Ampola",
+            "alquimista arrependida",
+            "cultistas_destilacao",
+            "Interceptar reagentes antes que cheguem a um novo laboratório clandestino.",
+        ),
     ],
     "ophidia": [
-        ("Nami Cinza-Sal", "pilota de canais vulcânicos", "navegadores_ophidia", "Atravessar uma caldeira marítima durante a breve maré de cinzas."),
-        ("Koro Remo-Curto", "pescador de tubos de lava", "independente", "Retirar uma rede presa a algo grande demais para ser peixe."),
-        ("Iria Coral-Cego", "oraculista de recife", "guardiões_do_recife", "Interpretar uma resposta de coral que cita alguém ainda não nascido."),
+        (
+            "Nami Cinza-Sal",
+            "pilota de canais vulcânicos",
+            "navegadores_ophidia",
+            "Atravessar uma caldeira marítima durante a breve maré de cinzas.",
+        ),
+        (
+            "Koro Remo-Curto",
+            "pescador de tubos de lava",
+            "independente",
+            "Retirar uma rede presa a algo grande demais para ser peixe.",
+        ),
+        (
+            "Iria Coral-Cego",
+            "oraculista de recife",
+            "guardiões_do_recife",
+            "Interpretar uma resposta de coral que cita alguém ainda não nascido.",
+        ),
     ],
     "costa_negra": [
-        ("Daro Osso-Cantante", "afinador de ossadas titânicas", "mercadores_curiosidades", "Silenciar uma costela gigante que chama predadores a cada vento."),
-        ("Mãe Neris", "capitã de coleta de marfim", "osshari", "Encontrar três coletores antes que a maré exponha o caminho até eles."),
-        ("Ulk Marfim", "avaliador de relíquias costeiras", "independente", "Provar que um dente vendido em Brekmar pertence a uma criatura viva."),
+        (
+            "Daro Osso-Cantante",
+            "afinador de ossadas titânicas",
+            "mercadores_curiosidades",
+            "Silenciar uma costela gigante que chama predadores a cada vento.",
+        ),
+        (
+            "Mãe Neris",
+            "capitã de coleta de marfim",
+            "osshari",
+            "Encontrar três coletores antes que a maré exponha o caminho até eles.",
+        ),
+        (
+            "Ulk Marfim",
+            "avaliador de relíquias costeiras",
+            "independente",
+            "Provar que um dente vendido em Brekmar pertence a uma criatura viva.",
+        ),
     ],
     "montanhas_afiadas": [
-        ("Brunna Ponte-Alta", "engenheira das passagens anãs", "ultimos_anoes_reino", "Firmar uma ponte que o eco insiste em desmontar durante a noite."),
-        ("Skek Eco-Curto", "prospector goblin", "goblins_mineiros", "Seguir um veio que responde às picaretas com batidas codificadas."),
-        ("Odrin Calcário", "mediador das saídas baixas", "bandos_orc_saidas_baixas", "Negociar passagem antes que dois túneis rivais se encontrem à força."),
+        (
+            "Brunna Ponte-Alta",
+            "engenheira das passagens anãs",
+            "ultimos_anoes_reino",
+            "Firmar uma ponte que o eco insiste em desmontar durante a noite.",
+        ),
+        (
+            "Skek Eco-Curto",
+            "prospector goblin",
+            "goblins_mineiros",
+            "Seguir um veio que responde às picaretas com batidas codificadas.",
+        ),
+        (
+            "Odrin Calcário",
+            "mediador das saídas baixas",
+            "bandos_orc_saidas_baixas",
+            "Negociar passagem antes que dois túneis rivais se encontrem à força.",
+        ),
     ],
     "pradaria_ruinas": [
-        ("Lio Bandeira-Vazia", "arqueólogo de brasões apagados", "cidades_estado_sobreviventes_vaelorn_solvhen", "Identificar a cidade de uma bandeira que ninguém consegue recordar."),
-        ("Hana Estribo", "correio dos bandos nômades", "bandos_nomades", "Entregar um tratado entre acampamentos que mudam de lugar a cada aurora."),
-        ("Korso Pedra-Móvel", "pastor de auroques", "independente", "Desviar um rebanho antes que derrube a última torre de uma ruína habitada."),
+        (
+            "Lio Bandeira-Vazia",
+            "arqueólogo de brasões apagados",
+            "cidades_estado_sobreviventes_vaelorn_solvhen",
+            "Identificar a cidade de uma bandeira que ninguém consegue recordar.",
+        ),
+        (
+            "Hana Estribo",
+            "correio dos bandos nômades",
+            "bandos_nomades",
+            "Entregar um tratado entre acampamentos que mudam de lugar a cada aurora.",
+        ),
+        (
+            "Korso Pedra-Móvel",
+            "pastor de auroques",
+            "independente",
+            "Desviar um rebanho antes que derrube a última torre de uma ruína habitada.",
+        ),
     ],
     "brekmar": [
-        ("Mina Sete-Taxas", "escrivã dos sindicatos", "tres_sindicatos_comercio", "Encontrar o livro-caixa que cobra a mesma dívida de sete pessoas."),
-        ("Jax Corda-Seca", "salvador de tripulações", "grupos_piratas_rivais", "Resgatar marinheiros presos num navio que continua afundando fora d'água."),
-        ("Varo Dois-Portos", "corretor de rotas clandestinas", "poder_kahen", "Descobrir qual dos dois portos desenhados em seu mapa passou a existir."),
+        (
+            "Mina Sete-Taxas",
+            "escrivã dos sindicatos",
+            "tres_sindicatos_comercio",
+            "Encontrar o livro-caixa que cobra a mesma dívida de sete pessoas.",
+        ),
+        (
+            "Jax Corda-Seca",
+            "salvador de tripulações",
+            "grupos_piratas_rivais",
+            "Resgatar marinheiros presos num navio que continua afundando fora d'água.",
+        ),
+        (
+            "Varo Dois-Portos",
+            "corretor de rotas clandestinas",
+            "poder_kahen",
+            "Descobrir qual dos dois portos desenhados em seu mapa passou a existir.",
+        ),
     ],
 }
 
 
 def _slug(text: str) -> str:
     ascii_text = "".join(
-        char for char in unicodedata.normalize("NFD", text)
-        if unicodedata.category(char) != "Mn"
+        char for char in unicodedata.normalize("NFD", text) if unicodedata.category(char) != "Mn"
     )
-    return "".join(char if char.isalnum() else "_" for char in ascii_text.lower()).strip("_").replace("__", "_")
+    return (
+        "".join(char if char.isalnum() else "_" for char in ascii_text.lower())
+        .strip("_")
+        .replace("__", "_")
+    )
 
 
-def _write_codex(npc_id: str, name: str, region: str, role: str,
-                 faction: str, hook: str) -> None:
+def _write_codex(npc_id: str, name: str, region: str, role: str, faction: str, hook: str) -> None:
     frontmatter = {
         "id": npc_id,
         "type": "npc",
@@ -118,9 +300,12 @@ def _write_codex(npc_id: str, name: str, region: str, role: str,
         "reage às mudanças persistentes da região. Seus traços de personalidade "
         "são derivados deterministicamente por `npc_layers` a partir do ID.\n"
     )
-    text = "---\n" + yaml.safe_dump(
-        frontmatter, allow_unicode=True, sort_keys=False
-    ).strip() + "\n---\n\n" + body
+    text = (
+        "---\n"
+        + yaml.safe_dump(frontmatter, allow_unicode=True, sort_keys=False).strip()
+        + "\n---\n\n"
+        + body
+    )
     (NPC_DIR / f"{npc_id}.md").write_text(text, encoding="utf-8")
 
 
@@ -169,9 +354,7 @@ def main() -> int:
     entities_path.write_text(
         json.dumps(entities, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
-    extra_path.write_text(
-        json.dumps(extra, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
+    extra_path.write_text(json.dumps(extra, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     edges_path.write_text(
         json.dumps(list(edge_by_id.values()), ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",

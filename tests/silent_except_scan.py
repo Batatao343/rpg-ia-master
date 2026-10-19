@@ -5,6 +5,7 @@ Um handler ``except Exception|BaseException|<bare>`` e SILENCIOSO quando seu cor
 (``raise``) e nao contem chamada de log/metrica, e a linha do ``except`` (ou a anterior) nao traz
 ``# silent-ok: <motivo>``.
 """
+
 from __future__ import annotations
 
 import ast
@@ -16,8 +17,17 @@ SCAN_FILES = ("api.py", "llm_setup.py", "rag.py", "persistence.py")
 
 
 # chamadas que contam como "deixa rastro" (log, metrica, telemetria de tentativa, liberacao de lease)
-_ACCEPTED_CALLS = ("log", "metrics.increment", "fallback", "telemetry", "release_failed", "wallet_event", "_db_conflict",
-                   "limiter_unavailable", "record_block")
+_ACCEPTED_CALLS = (
+    "log",
+    "metrics.increment",
+    "fallback",
+    "telemetry",
+    "release_failed",
+    "wallet_event",
+    "_db_conflict",
+    "limiter_unavailable",
+    "record_block",
+)
 
 
 def _is_broad(handler: ast.ExceptHandler) -> bool:
@@ -25,7 +35,7 @@ def _is_broad(handler: ast.ExceptHandler) -> bool:
     if t is None:
         return True
     names = []
-    for node in (t.elts if isinstance(t, ast.Tuple) else [t]):
+    for node in t.elts if isinstance(t, ast.Tuple) else [t]:
         names.append(node.id if isinstance(node, ast.Name) else getattr(node, "attr", ""))
     return any(n in {"Exception", "BaseException"} for n in names)
 
@@ -72,8 +82,12 @@ def scan() -> list[str]:
                 if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
                     visit(child, f"{scope}.{child.name}" if scope else child.name, counters)
                     continue
-                if isinstance(child, ast.ExceptHandler) and _is_broad(child) and not _logs_or_raises(child):
-                    around = " ".join(lines[max(0, child.lineno - 2):child.lineno])
+                if (
+                    isinstance(child, ast.ExceptHandler)
+                    and _is_broad(child)
+                    and not _logs_or_raises(child)
+                ):
+                    around = " ".join(lines[max(0, child.lineno - 2) : child.lineno])
                     if "silent-ok" not in around:
                         counters[scope] = counters.get(scope, 0) + 1
                         keys.append(f"{rel}::{scope or '<module>'}::{counters[scope]}")

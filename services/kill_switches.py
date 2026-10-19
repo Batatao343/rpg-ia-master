@@ -11,6 +11,7 @@ Keys: ``image_generation``, ``stt_fallback_expensive``, ``model:<provider>/<mode
 ``decision_backend:jev``, ``new_purchases`` and ``new_purchases:<channel>``
 (``stripe`` / ``google_play``).
 """
+
 from __future__ import annotations
 
 import logging
@@ -25,7 +26,8 @@ from observability.metrics import metrics
 
 KEY_RE = re.compile(
     r"^(image_generation|stt_fallback_expensive|model:[A-Za-z0-9._/-]{1,200}"
-    r"|decision_backend:[a-z0-9_]{1,40}|new_purchases(:[a-z_]{1,40})?)$")
+    r"|decision_backend:[a-z0-9_]{1,40}|new_purchases(:[a-z_]{1,40})?)$"
+)
 log = logging.getLogger("rpg.kill_switches")
 IMAGE = "image_generation"
 STT_FALLBACK = "stt_fallback_expensive"
@@ -77,10 +79,16 @@ class MemorySwitchStore:
 
     def set(self, key: str, enabled: bool, *, actor_id: str, reason: str) -> None:
         validate_change(key, actor_id, reason)
-        self.audit_rows.append({
-            "key": key, "previous_enabled": self.state.get(key, True),
-            "enabled": bool(enabled), "actor_id": actor_id, "reason": reason,
-            "at": time.time()})
+        self.audit_rows.append(
+            {
+                "key": key,
+                "previous_enabled": self.state.get(key, True),
+                "enabled": bool(enabled),
+                "actor_id": actor_id,
+                "reason": reason,
+                "at": time.time(),
+            }
+        )
         self.state[key] = bool(enabled)
 
     def audit(self, limit: int = 50) -> list[dict]:
@@ -90,6 +98,7 @@ class MemorySwitchStore:
 def _daily_cap_configured() -> bool:
     """Same rule as ``daily_spend_cap.cap_from_env`` (kept local: that module imports this one)."""
     from decimal import Decimal, InvalidOperation
+
     raw = os.getenv("RPG_DAILY_SPEND_CAP_BRL", "").strip()
     try:
         return bool(raw) and Decimal(raw) > 0
@@ -103,6 +112,7 @@ def _fail_closed_keys() -> set[str]:
     raw = os.getenv("RPG_KILL_SWITCH_FAIL_CLOSED")
     if raw is None:  # SPEC-218 R5: ausente => default por perfil; env explícita (até "") vence
         from infrastructure.runtime import kill_switch_fail_closed_default
+
         profile = os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower()
         raw = ",".join(kill_switch_fail_closed_default(profile))
     keys = {k.strip() for k in raw.split(",") if KEY_RE.fullmatch(k.strip())}
@@ -121,8 +131,13 @@ def _env_off() -> set[str]:
 
 
 class KillSwitches:
-    def __init__(self, store: SwitchStore | None = None, *, ttl: float | None = None,
-                 clock: Callable[[], float] = time.monotonic) -> None:
+    def __init__(
+        self,
+        store: SwitchStore | None = None,
+        *,
+        ttl: float | None = None,
+        clock: Callable[[], float] = time.monotonic,
+    ) -> None:
         self._store = store
         self._ttl = ttl if ttl is not None else float(os.getenv("RPG_KILL_SWITCH_TTL_SECONDS", "5"))
         self._clock = clock
@@ -139,6 +154,7 @@ class KillSwitches:
             return None
         from infrastructure.kill_switch_store import PostgresSwitchStore
         from infrastructure.runtime import get_runtime
+
         pool = getattr(get_runtime().game_store, "pool", None)
         return PostgresSwitchStore(pool) if pool is not None else None
 
@@ -155,8 +171,9 @@ class KillSwitches:
                 except Exception as exc:  # fail-safe: keep last good snapshot, never disable
                     self._load_failed = True
                     log.warning("kill_switch_load_failed error=%s", type(exc).__name__)
-                    metrics.increment("rpg_kill_switch_load_errors_total",
-                                      {"error": type(exc).__name__})
+                    metrics.increment(
+                        "rpg_kill_switch_load_errors_total", {"error": type(exc).__name__}
+                    )
                 self._loaded_at = now  # back off on failure too
             state = dict(self._cache)
             unreadable = self._load_failed and not self._ever_loaded

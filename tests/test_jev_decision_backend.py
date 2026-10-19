@@ -58,7 +58,9 @@ def _request() -> DecisionRequest:
                 criteria={"story": "Cena", "npc": "Conversa"},
             ),
             "urgent": NoulQuestion(instructions="Precisa de atenção imediata?"),
-            "danger": ScoreQuestion(instructions="Qual o perigo?", criteria=["baixo", "médio", "alto"]),
+            "danger": ScoreQuestion(
+                instructions="Qual o perigo?", criteria=["baixo", "médio", "alto"]
+            ),
         },
     )
 
@@ -72,7 +74,9 @@ def test_success_is_typed_and_sends_only_minimal_state() -> None:
         return httpx.Response(200, json=FIXTURE)
 
     with httpx.Client(transport=httpx.MockTransport(handler)) as client:
-        backend = JevDecisionBackend(api_key="test-secret", client=client, telemetry_hook=events.append)
+        backend = JevDecisionBackend(
+            api_key="test-secret", client=client, telemetry_hook=events.append
+        )
         result = backend.decide(_request(), idempotency_key="turn-17", correlation_id="trace-17")
 
     assert isinstance(result.answers["route"], ChoiceAnswer)
@@ -154,7 +158,9 @@ def test_total_deadline_rejects_slow_success() -> None:
         start = time.monotonic()
         with pytest.raises(JevTimeoutError):
             backend.decide(_request())
-        assert time.monotonic() - start < 0.5  # did not wait for the slow side (margin for loaded CI)
+        assert (
+            time.monotonic() - start < 0.5
+        )  # did not wait for the slow side (margin for loaded CI)
 
 
 def test_total_deadline_covers_response_parsing() -> None:
@@ -170,7 +176,9 @@ def test_total_deadline_covers_response_parsing() -> None:
         start = time.monotonic()
         with pytest.raises(JevTimeoutError):
             backend.decide(_request())
-        assert time.monotonic() - start < 0.5  # did not wait for the slow side (margin for loaded CI)
+        assert (
+            time.monotonic() - start < 0.5
+        )  # did not wait for the slow side (margin for loaded CI)
 
 
 def test_timed_out_worker_is_quarantined_and_close_blocks_new_calls() -> None:
@@ -233,7 +241,9 @@ def test_timed_out_worker_is_quarantined_and_close_blocks_new_calls() -> None:
 def test_incompatible_200_never_becomes_a_decision(mutate) -> None:
     body = json.loads(json.dumps(FIXTURE))
     mutate(body)
-    with httpx.Client(transport=httpx.MockTransport(lambda _: httpx.Response(200, json=body))) as client:
+    with httpx.Client(
+        transport=httpx.MockTransport(lambda _: httpx.Response(200, json=body))
+    ) as client:
         backend = JevDecisionBackend(api_key="test-secret", client=client)
         with pytest.raises(JevResponseError):
             backend.decide(_request())
@@ -255,10 +265,10 @@ def test_request_budget_and_closed_state_are_enforced_before_transport() -> None
 
 def test_mutated_request_is_revalidated_and_retry_body_is_stable() -> None:
     request = _request()
-    request.questions.update(
-        {f"extra_{i}": NoulQuestion(instructions="Sim?") for i in range(8)}
-    )
-    with httpx.Client(transport=httpx.MockTransport(lambda _: pytest.fail("network called"))) as client:
+    request.questions.update({f"extra_{i}": NoulQuestion(instructions="Sim?") for i in range(8)})
+    with httpx.Client(
+        transport=httpx.MockTransport(lambda _: pytest.fail("network called"))
+    ) as client:
         backend = JevDecisionBackend(api_key="test-secret", client=client)
         with pytest.raises(ValidationError):
             backend.decide(request)
@@ -281,7 +291,9 @@ def test_mutated_request_is_revalidated_and_retry_body_is_stable() -> None:
     assert "injected" not in sent_bodies[1]["questions"]["route"]["criteria"]
 
 
-def test_key_migration_and_conflicting_variables_fail_closed(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_key_migration_and_conflicting_variables_fail_closed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     with pytest.raises(JevConfigurationError, match="TYPESAFE_API_KEY"):
         JevDecisionBackend()
     monkeypatch.setenv("JEV_API_KEY", "legacy-secret")

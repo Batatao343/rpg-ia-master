@@ -26,8 +26,13 @@ ROOT = Path(__file__).resolve().parents[2]
 
 # (nome, origem) — origem "file" lê de .env.staging/.env; senão literal.
 SECRET_FROM_FILE = (
-    "DATABASE_URL", "SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY", "SUPABASE_SERVICE_ROLE_KEY",
-    "RPG_SESSION_SECRET", "RPG_CRON_SECRET", "JINA_API_KEY",
+    "DATABASE_URL",
+    "SUPABASE_URL",
+    "SUPABASE_PUBLISHABLE_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "RPG_SESSION_SECRET",
+    "RPG_CRON_SECRET",
+    "JINA_API_KEY",
     "RPG_TELEMETRY_SECRET",  # SPEC-218/222: requisito hosted (pseudonimizacao de telemetria)
     "GROQ_API_KEY",  # 2026-10-17: staging joga com LLM real (Groq); sem MockLLM em hosted (SPEC-218)
 )
@@ -59,14 +64,21 @@ REMOVED_NAMES = ("RPG_FORCE_MOCK", "LLM_PROVIDER")
 # outro modo para tras (ex.: RPG_REQUEST_RLS=off sobrevivendo a volta ao RLS efetivo).
 MODE_EXCLUSIVE = ("RPG_REQUEST_RLS", "RPG_ADMIN_DATABASE_URL")
 # Flags opcionais: saem do projeto quando nao estao em ``production`` (ex.: --no-text-cap).
-OPTIONAL_FLAGS = ("RPG_DAILY_SPEND_CAP_TEXT", "RPG_PROJECTION_MODE", "RPG_JEV_ROUTER_MODE", "TYPESAFE_API_KEY",
-                  "RPG_JEV_ROUTER_PRIMARY_APPROVED")
+OPTIONAL_FLAGS = (
+    "RPG_DAILY_SPEND_CAP_TEXT",
+    "RPG_PROJECTION_MODE",
+    "RPG_JEV_ROUTER_MODE",
+    "TYPESAFE_API_KEY",
+    "RPG_JEV_ROUTER_PRIMARY_APPROVED",
+)
 # SPEC-217 R15: Jev no router. ``off`` (default) = variaveis ausentes; ``shadow`` observa sem mudar a rota e
 # envia a chave TypeSafe (secreta). ``primary`` exige ``owner_approved_primary`` (flag explicita
 # ``--owner-approved-primary``) e so vale para ESTE projeto de staging. Aprovacao do dono, 2026-10-18 (literal):
 # "já coloquei credito na OpenAi e pode ligar o primary no staging". Rollback: ``--jev-router-mode off`` + deploy.
 JEV_ROUTER_MODES = ("off", "shadow", "primary")
-OWNER_PRIMARY_APPROVAL = "2026-10-18: \"já coloquei credito na OpenAi e pode ligar o primary no staging\""
+OWNER_PRIMARY_APPROVAL = (
+    '2026-10-18: "já coloquei credito na OpenAi e pode ligar o primary no staging"'
+)
 JEV_KEY_FROM_FILE = ("TYPESAFE_API_KEY", "JEVMODEL_API_KEY")
 # SPEC-213: modo do arquivista. ``inline`` (default do produto) = variavel ausente; ``post_response`` tira os
 # derivados (resumo/memoria/cronica) do caminho do jogador. Rollback: --projection-mode inline.
@@ -78,6 +90,7 @@ DEFAULT_DAILY_CAP_BRL = NON_SECRET_LITERALS["RPG_DAILY_SPEND_CAP_BRL"]
 
 def _valid_cap(raw: str) -> str:
     from decimal import Decimal, InvalidOperation
+
     try:
         value = Decimal(str(raw))
     except InvalidOperation:
@@ -90,6 +103,8 @@ def _valid_cap(raw: str) -> str:
 def stale_names(production: Mapping[str, str]) -> tuple[str, ...]:
     """Variaveis a apagar: as removidas + as do outro modo RLS/flags opcionais ausentes de ``production``."""
     return REMOVED_NAMES + tuple(n for n in MODE_EXCLUSIVE + OPTIONAL_FLAGS if n not in production)
+
+
 # SPEC-194: HMAC key for Play obfuscated account ids (>=32 chars). Pushed only when present in the env files.
 # SPEC-197 R6 voice: Groq primary. 2026-10-18 (dono): OPENAI_API_KEY opcional entra no staging (fallback pago de
 # STT/imagem, SPEC-236 §6.3); sem a chave nao ha candidato pago.
@@ -103,8 +118,12 @@ SITE_KEY_FROM_FILE = ("RPG_TURNSTILE_SITE_KEY", "TURNSTILE_SITE_KEY")
 INVALID_DEEPSEEK_KEY = "sk-spec236-smoke-invalid-key"
 RLS_SECRETS = ("RPG_ADMIN_DATABASE_URL",)  # SPEC-224: so no modo RLS efetivo
 JEV_SECRETS = ("TYPESAFE_API_KEY",)  # SPEC-217 R15: so com --jev-router-mode shadow
-FORBIDDEN_IN_PREVIEW = (frozenset(SECRET_FROM_FILE) | frozenset(OPTIONAL_SECRET_FROM_FILE)
-                        | frozenset(RLS_SECRETS) | frozenset(JEV_SECRETS))
+FORBIDDEN_IN_PREVIEW = (
+    frozenset(SECRET_FROM_FILE)
+    | frozenset(OPTIONAL_SECRET_FROM_FILE)
+    | frozenset(RLS_SECRETS)
+    | frozenset(JEV_SECRETS)
+)
 
 
 def _load_files() -> dict[str, str]:
@@ -114,13 +133,17 @@ def _load_files() -> dict[str, str]:
     return merged
 
 
-def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST, use_admin_dsn: bool = False,
-              invalid_deepseek_key: bool = False,
-              text_cap: bool = True,
-              projection_mode: str = "inline",
-              jev_router_mode: str = "off",
-              owner_approved_primary: bool = False,
-              daily_cap_brl: str = DEFAULT_DAILY_CAP_BRL) -> tuple[dict[str, str], dict[str, str]]:
+def build_env(
+    files: Mapping[str, str],
+    public_host: str = PUBLIC_HOST,
+    use_admin_dsn: bool = False,
+    invalid_deepseek_key: bool = False,
+    text_cap: bool = True,
+    projection_mode: str = "inline",
+    jev_router_mode: str = "off",
+    owner_approved_primary: bool = False,
+    daily_cap_brl: str = DEFAULT_DAILY_CAP_BRL,
+) -> tuple[dict[str, str], dict[str, str]]:
     """Retorna (production, preview). Levanta KeyError com NOME do segredo ausente."""
     if projection_mode not in PROJECTION_MODES:
         raise ValueError(f"projection_mode invalido: {projection_mode}")
@@ -161,8 +184,10 @@ def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST, use_admi
     # `postgres` e RPG_REQUEST_RLS=off (comportamento anterior). Sem papeis provisionados, idem.
     if files.get("RPG_RUNTIME_DATABASE_URL") and not use_admin_dsn:
         if not files.get("RPG_ADMIN_DATABASE_URL"):
-            raise KeyError("ausentes em .env.staging/.env: RPG_ADMIN_DATABASE_URL "
-                           "(rode scripts/staging/runtime_role.py --role rpg_admin --apply)")
+            raise KeyError(
+                "ausentes em .env.staging/.env: RPG_ADMIN_DATABASE_URL "
+                "(rode scripts/staging/runtime_role.py --role rpg_admin --apply)"
+            )
         production["DATABASE_URL"] = files["RPG_RUNTIME_DATABASE_URL"]
         production["RPG_ADMIN_DATABASE_URL"] = files["RPG_ADMIN_DATABASE_URL"]
     else:
@@ -173,25 +198,42 @@ def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST, use_admi
     return production, preview
 
 
-def push(token: str, project_id: str, team_id: str, target: str, values: Mapping[str, str],
-         secret_names: frozenset[str]) -> list[str]:
+def push(
+    token: str,
+    project_id: str,
+    team_id: str,
+    target: str,
+    values: Mapping[str, str],
+    secret_names: frozenset[str],
+) -> list[str]:
     pushed = []
     headers = {"Authorization": f"Bearer {token}"}
     url = f"https://api.vercel.com/v10/projects/{project_id}/env"
     for key, value in values.items():
-        body = {"key": key, "value": value, "target": [target],
-                "type": "encrypted" if key in secret_names else "plain"}
+        body = {
+            "key": key,
+            "value": value,
+            "target": [target],
+            "type": "encrypted" if key in secret_names else "plain",
+        }
         for attempt in range(3):
             try:
-                r = httpx.post(url, params={"upsert": "true", "teamId": team_id},
-                               headers=headers, json=body, timeout=60)
+                r = httpx.post(
+                    url,
+                    params={"upsert": "true", "teamId": team_id},
+                    headers=headers,
+                    json=body,
+                    timeout=60,
+                )
                 break
             except httpx.HTTPError:
                 if attempt == 2:
                     raise
         if r.status_code >= 300:
-            raise RuntimeError(f"vercel env {key}@{target}: HTTP {r.status_code} "
-                               f"{r.json().get('error', {}).get('code', '?')}")
+            raise RuntimeError(
+                f"vercel env {key}@{target}: HTTP {r.status_code} "
+                f"{r.json().get('error', {}).get('code', '?')}"
+            )
         pushed.append(key)
     return pushed
 
@@ -200,12 +242,20 @@ def remove(token: str, project_id: str, team_id: str, names: tuple[str, ...]) ->
     """Apaga (todos os targets) as variaveis em ``names``; devolve 'NOME@target' apagados."""
     headers = {"Authorization": f"Bearer {token}"}
     base = f"https://api.vercel.com/v10/projects/{project_id}/env"
-    envs = httpx.get(base, params={"teamId": team_id}, headers=headers, timeout=60).json().get("envs", [])
+    envs = (
+        httpx.get(base, params={"teamId": team_id}, headers=headers, timeout=60)
+        .json()
+        .get("envs", [])
+    )
     removed = []
     for env in envs:
         if env.get("key") in names:
-            r = httpx.delete(f"https://api.vercel.com/v9/projects/{project_id}/env/{env['id']}",
-                             params={"teamId": team_id}, headers=headers, timeout=60)
+            r = httpx.delete(
+                f"https://api.vercel.com/v9/projects/{project_id}/env/{env['id']}",
+                params={"teamId": team_id},
+                headers=headers,
+                timeout=60,
+            )
             if r.status_code >= 300:
                 raise RuntimeError(f"vercel env delete {env['key']}: HTTP {r.status_code}")
             removed += [f"{env['key']}@{t}" for t in env.get("target") or []]
@@ -217,19 +267,42 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--project-name", default=PROJECT_NAME)
     ap.add_argument("--public-host", default=PUBLIC_HOST)
     ap.add_argument("--dry-run", action="store_true")
-    ap.add_argument("--use-admin-dsn", action="store_true", help="rollback: DATABASE_URL = postgres")
-    ap.add_argument("--invalid-deepseek-key", action="store_true",
-                    help="SPEC-236 §6.1: envia uma chave DeepSeek invalida (forca fallback Groq); reverter sem a flag")
-    ap.add_argument("--no-text-cap", action="store_true",
-                    help="rollback SPEC-237: desliga o cap diario de TEXTO (apaga RPG_DAILY_SPEND_CAP_TEXT)")
-    ap.add_argument("--projection-mode", choices=PROJECTION_MODES, default="inline",
-                    help="SPEC-213: post_response tira os derivados do arquivista do hot path; inline apaga a variavel")
-    ap.add_argument("--jev-router-mode", "--jev-router", choices=JEV_ROUTER_MODES, default="off",
-                    help="SPEC-217: shadow observa; primary decide (exige --owner-approved-primary); off apaga tudo")
-    ap.add_argument("--owner-approved-primary", action="store_true",
-                    help=f"SPEC-217: aprovacao do dono para primary no staging ({OWNER_PRIMARY_APPROVAL})")
-    ap.add_argument("--daily-cap-brl", default=DEFAULT_DAILY_CAP_BRL,
-                    help="SPEC-236 §6.2: teto diario em BRL (default 5); valor baixo provoca trip real; reverter sem a flag")
+    ap.add_argument(
+        "--use-admin-dsn", action="store_true", help="rollback: DATABASE_URL = postgres"
+    )
+    ap.add_argument(
+        "--invalid-deepseek-key",
+        action="store_true",
+        help="SPEC-236 §6.1: envia uma chave DeepSeek invalida (forca fallback Groq); reverter sem a flag",
+    )
+    ap.add_argument(
+        "--no-text-cap",
+        action="store_true",
+        help="rollback SPEC-237: desliga o cap diario de TEXTO (apaga RPG_DAILY_SPEND_CAP_TEXT)",
+    )
+    ap.add_argument(
+        "--projection-mode",
+        choices=PROJECTION_MODES,
+        default="inline",
+        help="SPEC-213: post_response tira os derivados do arquivista do hot path; inline apaga a variavel",
+    )
+    ap.add_argument(
+        "--jev-router-mode",
+        "--jev-router",
+        choices=JEV_ROUTER_MODES,
+        default="off",
+        help="SPEC-217: shadow observa; primary decide (exige --owner-approved-primary); off apaga tudo",
+    )
+    ap.add_argument(
+        "--owner-approved-primary",
+        action="store_true",
+        help=f"SPEC-217: aprovacao do dono para primary no staging ({OWNER_PRIMARY_APPROVAL})",
+    )
+    ap.add_argument(
+        "--daily-cap-brl",
+        default=DEFAULT_DAILY_CAP_BRL,
+        help="SPEC-236 §6.2: teto diario em BRL (default 5); valor baixo provoca trip real; reverter sem a flag",
+    )
     args = ap.parse_args(argv)
     if args.project_name != PROJECT_NAME:
         print(f"recusado: projeto deve ser {PROJECT_NAME}", file=sys.stderr)
@@ -240,12 +313,17 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     files = _load_files()
     try:
-        production, preview = build_env(files, args.public_host, args.use_admin_dsn,
-                                        args.invalid_deepseek_key, text_cap=not args.no_text_cap,
-                                        projection_mode=args.projection_mode,
-                                        jev_router_mode=args.jev_router_mode,
-                                        owner_approved_primary=args.owner_approved_primary,
-                                        daily_cap_brl=args.daily_cap_brl)
+        production, preview = build_env(
+            files,
+            args.public_host,
+            args.use_admin_dsn,
+            args.invalid_deepseek_key,
+            text_cap=not args.no_text_cap,
+            projection_mode=args.projection_mode,
+            jev_router_mode=args.jev_router_mode,
+            owner_approved_primary=args.owner_approved_primary,
+            daily_cap_brl=args.daily_cap_brl,
+        )
     except (KeyError, ValueError) as exc:
         print(exc.args[0], file=sys.stderr)
         return 1

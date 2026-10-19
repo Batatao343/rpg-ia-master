@@ -2,12 +2,14 @@
 
 Offline/determinístico. Ver specs/SPEC-043-polish-prosa.md.
 """
+
 from langchain_core.messages import AIMessage, HumanMessage
 
 from playtest import invariants as inv
 from services import prose_guard as pg
 
 # --- Etapa 1: prose_guard ---------------------------------------------------
+
 
 def test_opening_normaliza():
     assert pg.opening("O AR fétido, do pântano! queima...", 3) == "o ar fétido"
@@ -23,9 +25,11 @@ def test_repeats():
 
 
 def test_ultimas_aberturas_ignora_humano():
-    msgs = [AIMessage(content="Primeira narração longa aqui do mestre do jogo agora"),
-            HumanMessage(content="ataco o goblin"),
-            AIMessage(content="Segunda narração diferente do mestre continua a cena viva")]
+    msgs = [
+        AIMessage(content="Primeira narração longa aqui do mestre do jogo agora"),
+        HumanMessage(content="ataco o goblin"),
+        AIMessage(content="Segunda narração diferente do mestre continua a cena viva"),
+    ]
     ab = pg.ultimas_aberturas(msgs, n=2, words=4)
     assert ab[0] == "segunda narração diferente do"
     assert ab[1] == "primeira narração longa aqui"
@@ -37,20 +41,24 @@ def test_openings_clause_vazio_sem_historico():
 
 
 def test_strip_outer_quotes_remove_so_wrapper_do_provider():
-    assert pg.strip_outer_quotes('"Ela diz: \'fique\'."') == "Ela diz: 'fique'."
-    assert pg.strip_outer_quotes('“\"Resposta\"”') == "Resposta"
+    assert pg.strip_outer_quotes("\"Ela diz: 'fique'.\"") == "Ela diz: 'fique'."
+    assert pg.strip_outer_quotes('“"Resposta"”') == "Resposta"
     assert pg.strip_outer_quotes("Sem wrapper") == "Sem wrapper"
 
 
 def test_log_if_repeats(caplog):
     with caplog.at_level("WARNING", logger="rpg.prose"):
-        r = pg.log_if_repeats("O ar fétido do pântano queima aqui.",
-                              "O ar fétido do pântano queima tudo.", where="combate")
+        r = pg.log_if_repeats(
+            "O ar fétido do pântano queima aqui.",
+            "O ar fétido do pântano queima tudo.",
+            where="combate",
+        )
     assert r is True
     assert any("repetida" in rec.message.lower() for rec in caplog.records)
 
 
 # --- Etapa 2: voz + menu (cláusulas no prompt do storyteller) ---------------
+
 
 def test_storyteller_injeta_clausulas(monkeypatch):
     # captura o system prompt do storyteller para conferir R1/R3.
@@ -63,49 +71,63 @@ def test_storyteller_injeta_clausulas(monkeypatch):
     class _Rec:
         def with_structured_output(self, _m):
             return self
+
         def invoke(self, msgs):
             captured["sys"] = str(msgs[0].content)
             raise RuntimeError("parar após capturar prompt")
 
     monkeypatch.setattr(st, "get_llm", lambda *a, **k: _Rec())
     state = {
-        "game_id": "g", "world": starting_world("Nova Arcádia", 1),
-        "player": {"name": "Kael", "class_name": "Batedor", "level": 1,
-                   "active_conditions": []},
-        "factions": seed_factions(), "faction_intel": {}, "npcs": {}, "party": [],
-        "messages": [AIMessage(content="O ar fétido do pântano queima em suas narinas outra vez"),
-                     HumanMessage(content="Olho ao redor")],
-        "campaign_plan": {"beats": [{"description": "Explore", "status": "pending"}],
-                          "current_step": 0},
+        "game_id": "g",
+        "world": starting_world("Nova Arcádia", 1),
+        "player": {"name": "Kael", "class_name": "Batedor", "level": 1, "active_conditions": []},
+        "factions": seed_factions(),
+        "faction_intel": {},
+        "npcs": {},
+        "party": [],
+        "messages": [
+            AIMessage(content="O ar fétido do pântano queima em suas narinas outra vez"),
+            HumanMessage(content="Olho ao redor"),
+        ],
+        "campaign_plan": {
+            "beats": [{"description": "Explore", "status": "pending"}],
+            "current_step": 0,
+        },
     }
     try:
         st.storyteller_node(state)
     except Exception:
         pass
     sys = captured.get("sys", "")
-    assert "VARIE A ABERTURA" in sys           # R1
-    assert "OPÇÕES concretas" in sys           # R3
+    assert "VARIE A ABERTURA" in sys  # R1
+    assert "OPÇÕES concretas" in sys  # R3
 
 
 # --- Etapa 3: invariante R5 -------------------------------------------------
 
+
 def test_invariante_repeated_opening_dispara():
-    msgs = [AIMessage(content="O ar fétido do pântano queima em suas narinas."),
-            AIMessage(content="O ar fétido do pântano queima os pulmões."),
-            AIMessage(content="O ar fétido do pântano queima tudo de podre.")]
+    msgs = [
+        AIMessage(content="O ar fétido do pântano queima em suas narinas."),
+        AIMessage(content="O ar fétido do pântano queima os pulmões."),
+        AIMessage(content="O ar fétido do pântano queima tudo de podre."),
+    ]
     viol = inv.check_repeated_opening({"messages": msgs}, None, 11)
     assert viol and viol[0].check_id == "narrative.repeated_opening"
     assert viol[0].severity == "warning"
 
 
 def test_invariante_repeated_opening_nao_dispara_variado():
-    msgs = [AIMessage(content="O ar fétido do pântano queima."),
-            AIMessage(content="A luz do amanhecer corta o céu."),
-            AIMessage(content="Um grito ecoa entre as árvores.")]
+    msgs = [
+        AIMessage(content="O ar fétido do pântano queima."),
+        AIMessage(content="A luz do amanhecer corta o céu."),
+        AIMessage(content="Um grito ecoa entre as árvores."),
+    ]
     assert inv.check_repeated_opening({"messages": msgs}, None, 11) == []
 
 
 # --- v2: fronteira diegética + correção determinística ---------------------
+
 
 def test_sanitize_player_facing_remove_marcadores_e_preserva_conteudo():
     raw = (
@@ -139,8 +161,10 @@ def test_vary_repeated_opening_so_muda_repeticao_e_e_deterministico():
     assert first == second
     assert first.endswith(text)
     assert pg.opening(first) != pg.opening(text)
-    assert pg.vary_repeated_opening("Uma porta se abre ao norte.", recent,
-                                   salt="game:8") == "Uma porta se abre ao norte."
+    assert (
+        pg.vary_repeated_opening("Uma porta se abre ao norte.", recent, salt="game:8")
+        == "Uma porta se abre ao norte."
+    )
 
 
 def test_player_facing_note_do_storyteller_nao_vaza_motor():
@@ -160,9 +184,11 @@ def test_player_facing_note_do_storyteller_nao_vaza_motor():
 
 
 def test_invariante_meta_leak_dispara_para_marcador_interno():
-    state = {"messages": [AIMessage(content=(
-        "Você chega ao vale. [ECOS DO MUNDO] Há luzes nas colinas."
-    ))]}
+    state = {
+        "messages": [
+            AIMessage(content=("Você chega ao vale. [ECOS DO MUNDO] Há luzes nas colinas."))
+        ]
+    }
 
     violations = inv.check_meta_leak(state, None, 4)
 

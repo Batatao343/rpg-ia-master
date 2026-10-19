@@ -14,6 +14,7 @@ objeto `knowledge` inteiro): `knowledge_kind` ∈ KnowledgeKind, `certainty` =
 
 Zero LLM, zero RAG, zero rede. Não escreve no estado e não muda o save.
 """
+
 from __future__ import annotations
 
 import functools
@@ -103,9 +104,16 @@ def _is_rumor_text(text: str) -> bool:
     return bool(QUALIFIED_MARKER.search(_fold(text)))
 
 
-def _stamp(kind: str, source_kind: str, ref: str, first: int | None,
-           last: int | None, *, stale: bool = False,
-           label: str | None = None) -> KnowledgeStamp:
+def _stamp(
+    kind: str,
+    source_kind: str,
+    ref: str,
+    first: int | None,
+    last: int | None,
+    *,
+    stale: bool = False,
+    label: str | None = None,
+) -> KnowledgeStamp:
     if kind not in KNOWLEDGE_KINDS:
         raise ValueError(f"knowledge_kind fora da taxonomia: {kind!r}")
     return KnowledgeStamp(
@@ -164,8 +172,11 @@ def derive_stamp(origin: str, record: Mapping, state: Mapping) -> KnowledgeStamp
     if origin == "faction":
         ref = f"{prefix}:{record['id']}"
         intel_turn = _turn(record.get("intel_turn"))
-        stale = bool(record.get("knows_goal")) and intel_turn is not None \
+        stale = (
+            bool(record.get("knows_goal"))
+            and intel_turn is not None
             and intel_turn < _current_turn(state)
+        )
         return _stamp("report", "npc_claim", ref, None, intel_turn, stale=stale)
 
     # memory — MemoryFact do ledger
@@ -233,6 +244,7 @@ def _codex_meta(codex_dir: str) -> dict[str, dict[str, str]]:
 
 def _codex_dir() -> str:
     from services.codex_loader import CODEX_DIR
+
     return CODEX_DIR
 
 
@@ -241,6 +253,7 @@ def _entity_visibility(entity_id: str) -> str | None:
     Indisponibilidade de qualquer fonte => 'secret' (fail-closed, §3.6)."""
     try:
         from services import graph_resolver as gr
+
         entity = gr.get_entity(entity_id)
         graph_vis = entity.get("visibility") if isinstance(entity, dict) else None
         codex_vis = (_codex_meta(_codex_dir()).get(entity_id) or {}).get("visibility")
@@ -270,6 +283,7 @@ def entity_is_player_visible(entity_id: str | None, state: Mapping) -> bool:
 def _hidden_catalog(state: Mapping) -> dict[str, str]:
     """id -> nome das entidades não-public ainda não reveladas (grafo + Codex)."""
     from services import graph_resolver as gr
+
     accepted = _accepted_folded(state)
     out: dict[str, str] = {}
     sources: list[tuple] = []
@@ -347,6 +361,7 @@ def _mentions_hidden(text: str, hidden: Mapping[str, str]) -> str | None:
 # Projeção
 # ---------------------------------------------------------------------------
 
+
 def _anchor_and_origin(category: str, entry: Mapping, state: Mapping) -> tuple:
     """(entity_id p/ visibilidade, ids de âncora de nota, origin, record)."""
     if category == "locations":
@@ -364,8 +379,12 @@ def _anchor_and_origin(category: str, entry: Mapping, state: Mapping) -> tuple:
         key = entry.get("_npc_key") or entry.get("name", "")
         npc = dict(((state.get("npcs") or {}).get(key)) or {})
         eid = entry.get("_entity_id") or None
-        record = {**npc, "name": entry.get("name") or key, "entity_id": eid,
-                  "knowledge_source": entry.get("knowledge_source") or npc.get("knowledge_source", "met")}
+        record = {
+            **npc,
+            "name": entry.get("name") or key,
+            "entity_id": eid,
+            "knowledge_source": entry.get("knowledge_source") or npc.get("knowledge_source", "met"),
+        }
         anchors = {a for a in (eid, key, entry.get("name")) if a}
         return eid, anchors, "npc", record
     if category == "secrets":
@@ -381,14 +400,20 @@ def _anchor_and_origin(category: str, entry: Mapping, state: Mapping) -> tuple:
 
 def _memory_rows(state: Mapping) -> list[dict]:
     from services.memory_provenance import normalize_memory_facts
+
     try:
         return normalize_memory_facts(state.get("memory_facts") or [])
     except Exception:
         return []
 
 
-def _notes_for(anchors: Iterable[str], memory: list[dict], state: Mapping,
-               hidden: Mapping[str, str], counter: dict[str, int]) -> list[KnowledgeNote]:
+def _notes_for(
+    anchors: Iterable[str],
+    memory: list[dict],
+    state: Mapping,
+    hidden: Mapping[str, str],
+    counter: dict[str, int],
+) -> list[KnowledgeNote]:
     folded = {a.casefold() for a in anchors if a}
     if not folded:
         return []
@@ -442,8 +467,9 @@ def project_player_knowledge(state: Mapping, raw: Mapping[str, list]) -> dict:
                 public["notes"] = _notes_for(anchors, memory, state, hidden, counter)
                 projected.append(public)
             except Exception as exc:  # §3.6: dado malformado -> omite, nunca 500
-                _LOG.warning("entrada omitida", extra={
-                    "category": category, "reason": type(exc).__name__})
+                _LOG.warning(
+                    "entrada omitida", extra={"category": category, "reason": type(exc).__name__}
+                )
         out[category] = projected
     out["meta"] = {
         "taxonomy_version": TAXONOMY_VERSION,
@@ -456,6 +482,7 @@ def project_player_knowledge(state: Mapping, raw: Mapping[str, list]) -> dict:
 # ---------------------------------------------------------------------------
 # Oráculo determinístico (R12)
 # ---------------------------------------------------------------------------
+
 
 def _iter_stamped(codex: Mapping):
     for category in CATEGORIES:
@@ -477,13 +504,14 @@ def _fact_has_source(stamp: Mapping, state: Mapping) -> bool:
     if prefix == "visited":
         return ref in ((state.get("world") or {}).get("visited") or [])
     if prefix == "event":
-        facts = ((state.get("world_projection") or {}).get("revealed_facts") or {})
+        facts = (state.get("world_projection") or {}).get("revealed_facts") or {}
         return ref in facts
     if prefix == "bestiary":
         rec = (state.get("bestiary_knowledge") or {}).get(ref) or {}
         return int(rec.get("fought", 0) or 0) >= 1
     if prefix == "npc":
         from services.entity_identity import resolve_npc_entity_id
+
         for key, npc in (state.get("npcs") or {}).items():
             if not isinstance(npc, dict):
                 continue
@@ -494,8 +522,9 @@ def _fact_has_source(stamp: Mapping, state: Mapping) -> bool:
     if prefix == "memory":
         for row in _memory_rows(state):
             if row.get("memory_id") == ref:
-                return row.get("provenance") == "canonical_event" and \
-                    source_is_applicable(row.get("source_id"), dict(state))
+                return row.get("provenance") == "canonical_event" and source_is_applicable(
+                    row.get("source_id"), dict(state)
+                )
         return False
     return False
 
@@ -520,7 +549,11 @@ def assert_no_player_leak(codex: Mapping, state: Mapping) -> list[str]:
         problems.append(f"b:secret_signature:{secret}")
 
     # (c) contagem de categoria x lista filtrada
-    counts = ((codex.get("meta") or {}).get("counts")) if isinstance(codex.get("meta"), Mapping) else None
+    counts = (
+        ((codex.get("meta") or {}).get("counts"))
+        if isinstance(codex.get("meta"), Mapping)
+        else None
+    )
     if not isinstance(counts, Mapping):
         problems.append("c:meta_counts_missing")
     else:

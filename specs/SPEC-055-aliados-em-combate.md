@@ -123,7 +123,9 @@ determinístico (in_scene + amizade + fação), não julgamento do LLM.
 
 **Assinaturas:**
 ```python
-def scene_allies(state: Dict) -> List[Dict]: ...        # NPCs amigos in_scene → transitórios
+def scene_allies(state: Dict) -> List[Dict]: ...  # NPCs amigos in_scene → transitórios
+
+
 SCENE_ALLY_MIN_REL = 5
 MAX_SCENE_ALLIES = 2
 ```

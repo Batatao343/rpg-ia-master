@@ -45,7 +45,11 @@ ROUTES = ("storyteller", "combat_agent", "npc_actor", "loot", "none")
 LABEL_SETS = ("legacy", "plain", "rich")
 # Historical CLASSIFY router latency used only to *estimate* hybrid latency in J1
 # (no CLASSIFY call is spent in J1): SPEC-214 real gate, router phase, staging.
-CLASSIFY_REFERENCE_MS = {"p50": 1473.0, "p95": 2023.0, "source": "docs/spec214/gate-real-2026-10-17.md"}
+CLASSIFY_REFERENCE_MS = {
+    "p50": 1473.0,
+    "p95": 2023.0,
+    "source": "docs/spec214/gate-real-2026-10-17.md",
+}
 
 LabelSet = Literal["legacy", "plain", "rich"]
 
@@ -57,6 +61,7 @@ class CorpusError(RuntimeError):
 # ---------------------------------------------------------------------------
 # Corpus
 # ---------------------------------------------------------------------------
+
 
 @dataclass(frozen=True)
 class Case:
@@ -80,10 +85,16 @@ def load_dev_cases(path: Path = DEV_CORPUS, lock: Path = DEV_LOCK) -> tuple[list
         row = json.loads(line)
         if row.get("split") != "dev":
             raise CorpusError("non-DEV row in DEV corpus")
-        cases.append(Case(
-            id=row["id"], kind=row["kind"], input=row["input"], expected=row["expected"],
-            python_gate=bool(row["python_gate"]), critical=row.get("critical"),
-        ))
+        cases.append(
+            Case(
+                id=row["id"],
+                kind=row["kind"],
+                input=row["input"],
+                expected=row["expected"],
+                python_gate=bool(row["python_gate"]),
+                critical=row.get("critical"),
+            )
+        )
     return cases, digest
 
 
@@ -96,6 +107,7 @@ def frozen_lock_digest() -> str:
 # Deterministic, public-only features (R3b)
 # ---------------------------------------------------------------------------
 
+
 def normalize_action(text: str) -> str:
     """Case/whitespace normalization; keeps accents and punctuation."""
     return " ".join(str(text or "").split()).casefold()
@@ -107,19 +119,31 @@ def _fold(text: str) -> str:
 
 
 _VERB_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
-    ("talk", re.compile(
-        r"(?:^|[\s,.!?])(?:falo|falar|converso|conversar|pergunto|perguntar|digo|dizer|"
-        r"respondo|cumprimento|saudo|chamo|peco|conto|explico|sussurro|grito\s+para)\b"
-        r"|^\s*(?:ei|oi|ola|hey|psiu)\b|\b(?:voce|vc|senhor|senhora)\b")),
-    ("attack", re.compile(
-        r"\b(?:atac\w*|golpe\w*|apunhal\w*|dispar\w*|enfrent\w*|esfaqueio|mato|"
-        r"saco\s+(?:a|minha|o|meu)?\s*(?:arma|espada|arco)|inicio\s+(?:um\s+)?combate)\b")),
+    (
+        "talk",
+        re.compile(
+            r"(?:^|[\s,.!?])(?:falo|falar|converso|conversar|pergunto|perguntar|digo|dizer|"
+            r"respondo|cumprimento|saudo|chamo|peco|conto|explico|sussurro|grito\s+para)\b"
+            r"|^\s*(?:ei|oi|ola|hey|psiu)\b|\b(?:voce|vc|senhor|senhora)\b"
+        ),
+    ),
+    (
+        "attack",
+        re.compile(
+            r"\b(?:atac\w*|golpe\w*|apunhal\w*|dispar\w*|enfrent\w*|esfaqueio|mato|"
+            r"saco\s+(?:a|minha|o|meu)?\s*(?:arma|espada|arco)|inicio\s+(?:um\s+)?combate)\b"
+        ),
+    ),
     ("trade", re.compile(r"\b(?:compro|comprar|vendo|vender|troco|trocar|pago|barganho)\b")),
     ("craft", re.compile(r"\b(?:forjo|forjar|fabrico|fabricar|construo|craft\w*)\b")),
     ("take", re.compile(r"\b(?:pego|pegar|apanho|recolho|vasculho|vasculhar|saqueio|abro)\b")),
     ("move", re.compile(r"\b(?:viajo|vou|sigo|caminho|entro|saio|corro|subo|atravesso|fujo)\b")),
-    ("observe", re.compile(
-        r"\b(?:observo|olho|examino|investigo|procuro|escuto|vejo|analiso|inspeciono)\b")),
+    (
+        "observe",
+        re.compile(
+            r"\b(?:observo|olho|examino|investigo|procuro|escuto|vejo|analiso|inspeciono)\b"
+        ),
+    ),
     ("rest", re.compile(r"\b(?:descanso|durmo|acampo|espero)\b")),
 )
 
@@ -160,7 +184,9 @@ def scene_view(state: Mapping[str, Any]) -> SceneView:
             rows.setdefault(canonical, ("npc", member, str(member["name"])))
     for enemy in state.get("enemies") or []:
         if isinstance(enemy, dict) and enemy.get("id"):
-            rows.setdefault(str(enemy["id"]), ("enemy", enemy, str(enemy.get("name") or enemy["id"])))
+            rows.setdefault(
+                str(enemy["id"]), ("enemy", enemy, str(enemy.get("name") or enemy["id"]))
+            )
     actors = []
     for canonical in options.candidate_ids:
         kind, row, key = rows[canonical]
@@ -168,15 +194,26 @@ def scene_view(state: Mapping[str, Any]) -> SceneView:
             alias for alias in (_short(value) for value in (row.get("aliases") or [])[:4]) if alias
         )
         attitude = str(row.get("attitude") or "").casefold()
-        actors.append(SceneActor(
-            id=canonical, name=_short(row.get("name") or key) or canonical, kind=kind,
-            aliases=aliases, hostile=kind == "enemy" or attitude in {"hostil", "hostile"},
-        ))
+        actors.append(
+            SceneActor(
+                id=canonical,
+                name=_short(row.get("name") or key) or canonical,
+                kind=kind,
+                aliases=aliases,
+                hostile=kind == "enemy" or attitude in {"hostil", "hostile"},
+            )
+        )
     active = normalize_action(str(state.get("active_npc_name") or ""))
-    speaker = next((
-        actor.id for actor in actors
-        if active and active in {normalize_action(actor.name), *(normalize_action(a) for a in actor.aliases)}
-    ), None)
+    speaker = next(
+        (
+            actor.id
+            for actor in actors
+            if active
+            and active
+            in {normalize_action(actor.name), *(normalize_action(a) for a in actor.aliases)}
+        ),
+        None,
+    )
     return SceneView(tuple(actors), "ok" if actors else "no_candidates", None, speaker)
 
 
@@ -185,16 +222,20 @@ def decision_state(case_input: Mapping[str, Any], features: bool = True) -> Deci
     world = state.get("world") or {}
     action = str(case_input.get("action") or "")
     base = {
-        "location_id": str(world.get("current_location_id") or world.get("current_location") or "Aethelgard"),
+        "location_id": str(
+            world.get("current_location_id") or world.get("current_location") or "Aethelgard"
+        ),
         "in_combat": bool((state.get("combat") or {}).get("active")),
     }
     if not features:
         return DecisionState(action=action, active_npc=state.get("active_npc_name"), **base)
     view = scene_view(state)
     return DecisionState(
-        action=normalize_action(action) or action, **base,
+        action=normalize_action(action) or action,
+        **base,
         scene=view.actors if view.target_status == "ok" else None,
-        last_speaker=view.last_speaker, verbs=extract_verbs(action),
+        last_speaker=view.last_speaker,
+        verbs=extract_verbs(action),
     )
 
 
@@ -212,36 +253,39 @@ PLAIN_ROUTE_QUESTION = ChoiceQuestion(
     instructions=_PLAIN_INSTRUCTIONS,
     criteria={
         "storyteller": "Narrador: mover-se, viajar, explorar, observar, examinar, esperar ou "
-                       "mexer no próprio equipamento sem atacar ninguém",
+        "mexer no próprio equipamento sem atacar ninguém",
         "combat_agent": "Combate: atacar ou ferir um ator, disparar contra ele ou iniciar luta",
         "npc_actor": "Conversa: falar, perguntar, chamar, saudar ou responder a um NPC, "
-                     "mesmo hostil ou em caixa alta",
+        "mesmo hostil ou em caixa alta",
         "loot": "Itens: pegar, vasculhar, abrir baú, comprar, vender, trocar ou fabricar",
         "none": "Sem ação de jogo: código, comando ao sistema ou intenção indecifrável",
     },
 )
 RICH_ROUTE_QUESTION = ChoiceQuestion(
-    instructions=_PLAIN_INSTRUCTIONS + (
+    instructions=_PLAIN_INSTRUCTIONS
+    + (
         " Gritar ou falar alto com alguém é conversa, não combate. Citar uma arma sem usá-la "
         "contra alguém não é combate. Comprar ou vender de um NPC é itens, não conversa."
     ),
     criteria={
         "storyteller": "Narrador. Ex.: 'ando até o porto', 'estudo o mapa', 'afio minha adaga', "
-                       "'espio os bandidos de trás da pedra'. Não: falar com alguém, atacar, "
-                       "pegar ou negociar itens",
+        "'espio os bandidos de trás da pedra'. Não: falar com alguém, atacar, "
+        "pegar ou negociar itens",
         "combat_agent": "Combate. Ex.: 'acerto o bandido com o machado', 'atiro no corvo', "
-                        "'parto para cima do mercenário'. Não: ameaçar com palavras, gritar, "
-                        "perguntar a NPC hostil, citar arma sem usá-la",
+        "'parto para cima do mercenário'. Não: ameaçar com palavras, gritar, "
+        "perguntar a NPC hostil, citar arma sem usá-la",
         "npc_actor": "Conversa. Ex.: 'converso com a guarda', 'olá, ferreiro!', 'pergunto ao "
-                     "velho sobre a estrada', 'e você, concorda?'. Vale para NPC hostil e "
-                     "CAIXA ALTA",
+        "velho sobre a estrada', 'e você, concorda?'. Vale para NPC hostil e "
+        "CAIXA ALTA",
         "loot": "Itens. Ex.: 'recolho as moedas', 'compro uma corda', 'vendo o escudo', "
-                "'fabrico flechas'. Não: só perguntar o que o mercador tem",
+        "'fabrico flechas'. Não: só perguntar o que o mercador tem",
         "none": "Sem ação de jogo. Ex.: código, comandos ao sistema, texto sem sentido",
     },
 )
 ROUTE_QUESTIONS: dict[str, ChoiceQuestion] = {
-    "legacy": LEGACY_ROUTE_QUESTION, "plain": PLAIN_ROUTE_QUESTION, "rich": RICH_ROUTE_QUESTION,
+    "legacy": LEGACY_ROUTE_QUESTION,
+    "plain": PLAIN_ROUTE_QUESTION,
+    "rich": RICH_ROUTE_QUESTION,
 }
 _TARGET_INSTRUCTIONS = (
     "A quem a ação do jogador (state.action) se dirige? Escolha o id de um ator de "
@@ -269,7 +313,9 @@ def target_question(actors: tuple[SceneActor, ...]) -> ChoiceQuestion | None:
 def screening_request(case_input: Mapping[str, Any]) -> DecisionRequest:
     """J1 P1: every route label set plus the target stage, one shared enriched state."""
     state = decision_state(case_input, features=True)
-    questions: dict[str, ChoiceQuestion] = {f"route_{name}": q for name, q in ROUTE_QUESTIONS.items()}
+    questions: dict[str, ChoiceQuestion] = {
+        f"route_{name}": q for name, q in ROUTE_QUESTIONS.items()
+    }
     target = target_question(state.scene or ())
     if target is not None:
         questions["target"] = target
@@ -279,6 +325,7 @@ def screening_request(case_input: Mapping[str, Any]) -> DecisionRequest:
 # ---------------------------------------------------------------------------
 # Hybrid policy (R3d/R3e, R7) — pure
 # ---------------------------------------------------------------------------
+
 
 @dataclass(frozen=True)
 class Policy:
@@ -290,9 +337,11 @@ class Policy:
 
     @property
     def variant_id(self) -> str:
-        return (f"{self.label_set}{'+target' if self.with_target else ''}"
-                f"{'+guard' if self.combat_guard else ''}"
-                f"{'+loot' if self.accept_loot else ''}@{self.tau:.2f}")
+        return (
+            f"{self.label_set}{'+target' if self.with_target else ''}"
+            f"{'+guard' if self.combat_guard else ''}"
+            f"{'+loot' if self.accept_loot else ''}@{self.tau:.2f}"
+        )
 
 
 def frozen_request(case_input: Mapping[str, Any], policy: Policy) -> DecisionRequest:
@@ -306,14 +355,20 @@ def frozen_request(case_input: Mapping[str, Any], policy: Policy) -> DecisionReq
 
 
 def hybrid_decision(
-    *, route: Mapping[str, Any] | None, target: Mapping[str, Any] | None,
-    verbs: tuple[str, ...], in_combat: bool, target_status: str, policy: Policy,
+    *,
+    route: Mapping[str, Any] | None,
+    target: Mapping[str, Any] | None,
+    verbs: tuple[str, ...],
+    in_combat: bool,
+    target_status: str,
+    policy: Policy,
 ) -> dict[str, Any]:
     """Return the Jev decision when confident and representable, else a fallback.
 
     ``route``/``target`` are ``{"choice", "confidence"}``; target ``choice`` is an
     actor ID or ``none``. A fallback means "use CLASSIFY" (Python gates already ran).
     """
+
     def fallback(reason: str) -> dict[str, Any]:
         return {"source": "fallback", "reason": reason, "route": None, "target": None}
 
@@ -345,6 +400,7 @@ def hybrid_decision(
 # Scoring and selection (offline, from raw only)
 # ---------------------------------------------------------------------------
 
+
 def percentile(values: list[float], fraction: float) -> float | str:
     if not values:
         return "unavailable"
@@ -359,9 +415,13 @@ def _answer(row: Mapping[str, Any], name: str) -> Mapping[str, Any] | None:
     return (row.get("answers") or {}).get(name)
 
 
-def score_policy(rows: list[Mapping[str, Any]], expected: Mapping[str, Mapping[str, Any]],
-                 critical: Mapping[str, str | None], policy: Policy,
-                 latency_key: str = "latency_ms") -> dict[str, Any]:
+def score_policy(
+    rows: list[Mapping[str, Any]],
+    expected: Mapping[str, Mapping[str, Any]],
+    critical: Mapping[str, str | None],
+    policy: Policy,
+    latency_key: str = "latency_ms",
+) -> dict[str, Any]:
     """Score one policy over P1 raw rows (all eligible DEV cases)."""
     covered = errors = target_errors = unsafe = target_cases = 0
     standalone_correct = standalone_combat_fp = 0
@@ -378,8 +438,12 @@ def score_policy(rows: list[Mapping[str, Any]], expected: Mapping[str, Mapping[s
         standalone_correct += standalone == truth["route"]
         standalone_combat_fp += standalone == "combat_agent" and truth["route"] != "combat_agent"
         decision = hybrid_decision(
-            route=route, target=_answer(row, "target"), verbs=tuple(row["verbs"]),
-            in_combat=bool(row["in_combat"]), target_status=row["target_status"], policy=policy,
+            route=route,
+            target=_answer(row, "target"),
+            verbs=tuple(row["verbs"]),
+            in_combat=bool(row["in_combat"]),
+            target_status=row["target_status"],
+            policy=policy,
         )
         latency = float(row[latency_key])
         jev_latency.append(latency)
@@ -396,23 +460,32 @@ def score_policy(rows: list[Mapping[str, Any]], expected: Mapping[str, Mapping[s
             else:
                 target_ok = True
             if not (route_ok and target_ok):
-                misses.append({"case_id": case_id, "expected": dict(truth),
-                               "jev": {"route": decision["route"], "target": decision["target"]},
-                               "critical": critical.get(case_id)})
+                misses.append(
+                    {
+                        "case_id": case_id,
+                        "expected": dict(truth),
+                        "jev": {"route": decision["route"], "target": decision["target"]},
+                        "critical": critical.get(case_id),
+                    }
+                )
         else:
             reasons[decision["reason"]] = reasons.get(decision["reason"], 0) + 1
             hybrid_latency.append(latency + CLASSIFY_REFERENCE_MS["p50"])
     total = len(rows)
     return {
-        "variant_id": policy.variant_id, "policy": asdict(policy), "eligible": total,
+        "variant_id": policy.variant_id,
+        "policy": asdict(policy),
+        "eligible": total,
         "standalone_route_accuracy": standalone_correct / total if total else "unavailable",
         "standalone_combat_false_positives": standalone_combat_fp,
-        "covered": covered, "coverage": covered / total if total else "unavailable",
+        "covered": covered,
+        "coverage": covered / total if total else "unavailable",
         "abstain_or_fallback_rate": (total - covered) / total if total else "unavailable",
         "fallback_reasons": dict(sorted(reasons.items())),
         "covered_route_errors": errors,
         "covered_route_accuracy": (covered - errors) / covered if covered else "unavailable",
-        "covered_target_cases": target_cases, "covered_target_errors": target_errors,
+        "covered_target_cases": target_cases,
+        "covered_target_errors": target_errors,
         "unsafe_combat_escalations": unsafe,
         "jev_latency_ms_p50": percentile(jev_latency, 0.5),
         "jev_latency_ms_p95": percentile(jev_latency, 0.95),
@@ -425,15 +498,20 @@ def score_policy(rows: list[Mapping[str, Any]], expected: Mapping[str, Mapping[s
 def candidate_policies() -> list[Policy]:
     return [
         Policy(label_set=label, with_target=with_target, combat_guard=guard, tau=tau)
-        for label in LABEL_SETS for with_target in (False, True)
-        for guard in (False, True) for tau in TAU_GRID
+        for label in LABEL_SETS
+        for with_target in (False, True)
+        for guard in (False, True)
+        for tau in TAU_GRID
     ]
 
 
 def feasible(score: Mapping[str, Any]) -> bool:
     """Pre-declared J1 gate (docs/spec217/j1-variantes.md, before any live call)."""
-    return (score["unsafe_combat_escalations"] == 0 and score["covered_route_errors"] <= 1
-            and score["covered_target_errors"] == 0)
+    return (
+        score["unsafe_combat_escalations"] == 0
+        and score["covered_route_errors"] <= 1
+        and score["covered_target_errors"] == 0
+    )
 
 
 def select(scores: list[Mapping[str, Any]]) -> Mapping[str, Any]:
@@ -442,9 +520,14 @@ def select(scores: list[Mapping[str, Any]]) -> Mapping[str, Any]:
 
     def key(score: Mapping[str, Any]) -> tuple[Any, ...]:
         policy = score["policy"]
-        return (-score["covered"], score["covered_route_errors"],
-                abs(policy["tau"] - DEFAULT_TAU), simplicity[policy["label_set"]],
-                policy["with_target"], policy["combat_guard"])
+        return (
+            -score["covered"],
+            score["covered_route_errors"],
+            abs(policy["tau"] - DEFAULT_TAU),
+            simplicity[policy["label_set"]],
+            policy["with_target"],
+            policy["combat_guard"],
+        )
 
     pool = [score for score in scores if feasible(score)] or list(scores)
     return sorted(pool, key=key)[0]
@@ -462,26 +545,33 @@ def summarize(raw: Mapping[str, Any], cases: list[Case]) -> dict[str, Any]:
         for label in LABEL_SETS
     }
     return {
-        "evidence_type": "development (DEV corpus, J1)", "promotion": False,
-        "dev_hash": raw["dev_hash"], "rows": len(rows),
+        "evidence_type": "development (DEV corpus, J1)",
+        "promotion": False,
+        "dev_hash": raw["dev_hash"],
+        "rows": len(rows),
         "selection_rule": "feasible = 0 unsafe, ≤1 covered route error, 0 covered target "
-                          "errors; max coverage; ties fewer errors, τ near 0.50, simpler",
+        "errors; max coverage; ties fewer errors, τ near 0.50, simpler",
         "chosen": chosen,
-        "label_set_reference_tau_0_50": {label: {k: v for k, v in s.items() if k != "misses"}
-                                         for label, s in by_label.items()},
+        "label_set_reference_tau_0_50": {
+            label: {k: v for k, v in s.items() if k != "misses"} for label, s in by_label.items()
+        },
         "variants": [{k: v for k, v in s.items() if k != "misses"} for s in scores],
     }
 
 
 def canonical_json(value: Any) -> bytes:
-    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode(
+        "utf-8"
+    )
 
 
 def digest_of(value: Any) -> str:
     return "sha256:" + hashlib.sha256(canonical_json(value)).hexdigest()
 
 
-def summarize_p2(raw: Mapping[str, Any], p1_raw: Mapping[str, Any], cases: list[Case]) -> dict[str, Any]:
+def summarize_p2(
+    raw: Mapping[str, Any], p1_raw: Mapping[str, Any], cases: list[Case]
+) -> dict[str, Any]:
     """P2 = exact frozen-candidate request on DEV critical cases; agreement vs P1."""
     policy = Policy(**raw["policy"])
     expected = {case.id: case.expected for case in cases}
@@ -491,16 +581,20 @@ def summarize_p2(raw: Mapping[str, Any], p1_raw: Mapping[str, Any], cases: list[
     agreement = []
     for row in rows:
         before = p1[row["case_id"]]["answers"]
-        agreement.append({
-            "case_id": row["case_id"],
-            "route_p1": before[f"route_{policy.label_set}"]["choice"],
-            "route_p2": row["answers"]["route"]["choice"],
-            "target_p1": (before.get("target") or {}).get("choice"),
-            "target_p2": (row["answers"].get("target") or {}).get("choice"),
-        })
+        agreement.append(
+            {
+                "case_id": row["case_id"],
+                "route_p1": before[f"route_{policy.label_set}"]["choice"],
+                "route_p2": row["answers"]["route"]["choice"],
+                "target_p1": (before.get("target") or {}).get("choice"),
+                "target_p2": (row["answers"].get("target") or {}).get("choice"),
+            }
+        )
     return {
-        "evidence_type": "development (DEV critical cases, J1 P2)", "promotion": False,
-        "variant_id": policy.variant_id, "structure_digest": structure_digest(policy),
+        "evidence_type": "development (DEV critical cases, J1 P2)",
+        "promotion": False,
+        "variant_id": policy.variant_id,
+        "structure_digest": structure_digest(policy),
         "score": score_policy(rows, expected, critical, policy),
         "agreement_with_p1": agreement,
         "route_agreement": sum(a["route_p1"] == a["route_p2"] for a in agreement),
@@ -510,18 +604,20 @@ def summarize_p2(raw: Mapping[str, Any], p1_raw: Mapping[str, Any], cases: list[
 
 def structure_digest(policy: Policy) -> str:
     """Hash of everything the frozen structure sends or decides with."""
-    return digest_of({
-        "policy": asdict(policy),
-        "route_question": ROUTE_QUESTIONS[policy.label_set].model_dump(),
-        "target_instructions": _TARGET_INSTRUCTIONS,
-        "target_none": "Nenhum ator de state.scene é o alvo da ação",
-        "verb_patterns": [[name, pattern.pattern] for name, pattern in _VERB_PATTERNS],
-        "features": "decision_state(features=True): casefold action, scene_view (SPEC-179 "
-                    "_target_options filter, ≤20, aliases ≤4), last_speaker id, verbs",
-        # Astra J1 review: also pin the code that builds the wire state and
-        # decides, so a silent edit to the filter/policy logic breaks the freeze.
-        "decision_code": {fn.__name__: _source(fn) for fn in _frozen_code()},
-    })
+    return digest_of(
+        {
+            "policy": asdict(policy),
+            "route_question": ROUTE_QUESTIONS[policy.label_set].model_dump(),
+            "target_instructions": _TARGET_INSTRUCTIONS,
+            "target_none": "Nenhum ator de state.scene é o alvo da ação",
+            "verb_patterns": [[name, pattern.pattern] for name, pattern in _VERB_PATTERNS],
+            "features": "decision_state(features=True): casefold action, scene_view (SPEC-179 "
+            "_target_options filter, ≤20, aliases ≤4), last_speaker id, verbs",
+            # Astra J1 review: also pin the code that builds the wire state and
+            # decides, so a silent edit to the filter/policy logic breaks the freeze.
+            "decision_code": {fn.__name__: _source(fn) for fn in _frozen_code()},
+        }
+    )
 
 
 def _source(fn: Any) -> str:
@@ -530,8 +626,17 @@ def _source(fn: Any) -> str:
 
 
 def _frozen_code() -> tuple[Any, ...]:
-    return (normalize_action, _fold, extract_verbs, scene_view, decision_state,
-            target_question, frozen_request, hybrid_decision, _target_options)
+    return (
+        normalize_action,
+        _fold,
+        extract_verbs,
+        scene_view,
+        decision_state,
+        target_question,
+        frozen_request,
+        hybrid_decision,
+        _target_options,
+    )
 
 
 # ---------------------------------------------------------------------------

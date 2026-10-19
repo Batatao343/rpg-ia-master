@@ -1,4 +1,5 @@
 """SPEC-197 release checklist: offline, all side effects faked."""
+
 from __future__ import annotations
 
 import json
@@ -18,6 +19,7 @@ def fake_run(dirty: bool = False, gh: str | None = None, gov_rc: int = 0):
         if args[0] == "gh":
             return (0, gh) if gh is not None else (1, "")
         return gov_rc, "ok"
+
     return run
 
 
@@ -27,6 +29,7 @@ def http(table):
         if isinstance(v, Exception):
             raise v
         return v
+
     return get
 
 
@@ -61,16 +64,23 @@ def test_ci_states():
 def test_migrations_drift(tmp_path: Path):
     (tmp_path / "20260101000000_a.sql").write_text("select 1")
     (tmp_path / "20260102000000_b.sql").write_text("select 1")
-    synced = [{"version": "20260101000000", "name": "a"}, {"version": "20260102000000", "name": "b"}]
+    synced = [
+        {"version": "20260101000000", "name": "a"},
+        {"version": "20260102000000", "name": "b"},
+    ]
     d = c.Deps(remote_migrations=lambda e: synced)
     assert c.check_migrations("staging", d, tmp_path).status == "pass"
     d = c.Deps(remote_migrations=lambda e: synced[:1])
     r = c.check_migrations("staging", d, tmp_path)
     assert r.status == "fail" and r.detail["pending"] == ["20260102000000"]
-    assert c.check_migrations("production", c.Deps(remote_migrations=lambda e: None), tmp_path).status == "not_provisioned"
+    assert (
+        c.check_migrations("production", c.Deps(remote_migrations=lambda e: None), tmp_path).status
+        == "not_provisioned"
+    )
 
     def boom(e):
         raise RuntimeError("x")
+
     assert c.check_migrations("staging", c.Deps(remote_migrations=boom), tmp_path).status == "fail"
 
 
@@ -93,14 +103,19 @@ def test_env_names_prod_requires_stripe_and_forbids_mock():
     assert r.status == "fail" and r.detail["forbidden_present"] == ["RPG_FORCE_MOCK"]
     full.discard("RPG_FORCE_MOCK")
     assert c.check_env_names("production", c.Deps(vercel_env_names=lambda e: full)).status == "pass"
-    assert c.check_env_names("production", c.Deps(vercel_env_names=lambda e: None)).status == "not_provisioned"
+    assert (
+        c.check_env_names("production", c.Deps(vercel_env_names=lambda e: None)).status
+        == "not_provisioned"
+    )
 
 
 def test_legal_pages():
     urls = {n: f"https://x/{n}" for n in ("privacy", "terms", "support", "refund")}
     ok = c.Deps(http_get=http({u: (200, None) for u in urls.values()}))
     assert c.check_legal(urls, ok).status == "pass"
-    broken = c.Deps(http_get=http({**{u: (200, None) for u in urls.values()}, urls["terms"]: (404, None)}))
+    broken = c.Deps(
+        http_get=http({**{u: (200, None) for u in urls.values()}, urls["terms"]: (404, None)})
+    )
     assert c.check_legal(urls, broken).detail["problems"] == {"terms": "http 404"}
     assert c.check_legal({}, ok).status == "fail"
     partial = {"privacy": urls["privacy"]}
@@ -111,19 +126,30 @@ def test_kill_switch_store():
     d = c.Deps(kill_switch_load=lambda e: {"image_generation": False, "new_purchases": True})
     r = c.check_kill_switch("staging", d)
     assert r.status == "pass" and r.detail["switched_off"] == ["image_generation"]
-    assert c.check_kill_switch("production", c.Deps(kill_switch_load=lambda e: None)).status == "not_provisioned"
+    assert (
+        c.check_kill_switch("production", c.Deps(kill_switch_load=lambda e: None)).status
+        == "not_provisioned"
+    )
 
     def boom(e):
         raise RuntimeError
+
     assert c.check_kill_switch("staging", c.Deps(kill_switch_load=boom)).status == "fail"
 
 
 def test_risks_gate(tmp_path: Path):
     p = tmp_path / "r.md"
-    p.write_text("| R-01 | P1 | titulo | dono | aberto | m |\n| R-02 | P2 | t | d | aberto | m |\n"
-                 "| R-03 | P1 | t | d | fechado | m |\n", encoding="utf-8")
+    p.write_text(
+        "| R-01 | P1 | titulo | dono | aberto | m |\n| R-02 | P2 | t | d | aberto | m |\n"
+        "| R-03 | P1 | t | d | fechado | m |\n",
+        encoding="utf-8",
+    )
     r = c.check_risks(p)
-    assert r.status == "fail" and r.detail["open_p0_p1"] == ["R-01"] and r.detail["p2_awaiting_acceptance"] == ["R-02"]
+    assert (
+        r.status == "fail"
+        and r.detail["open_p0_p1"] == ["R-01"]
+        and r.detail["p2_awaiting_acceptance"] == ["R-02"]
+    )
     p.write_text("| R-01 | P1 | titulo | dono | fechado | m |\n", encoding="utf-8")
     assert c.check_risks(p).status == "pass"
     assert c.check_risks(tmp_path / "none.md").status == "fail"
@@ -139,18 +165,27 @@ def test_run_and_report(tmp_path: Path):
     rep = c.run_checklist("production", None, {}, deps)
     assert not rep["ok"] and "git_clean_tree" in rep["failing"]
     by = {r["name"]: r for r in rep["results"]}
-    assert by["health_sha"]["status"] == "not_provisioned" and by["migrations_drift"]["status"] == "skip"
+    assert (
+        by["health_sha"]["status"] == "not_provisioned"
+        and by["migrations_drift"]["status"] == "skip"
+    )
     strict = c.run_checklist("production", None, {}, deps, strict=True)
     assert "health_sha" in strict["failing"]
     j, m = c.write_report(rep, tmp_path)
-    assert j.name == f"checklist-{SHA[:12]}-production.json" and json.loads(j.read_text())["sha"] == SHA
+    assert (
+        j.name == f"checklist-{SHA[:12]}-production.json"
+        and json.loads(j.read_text())["sha"] == SHA
+    )
     assert "BLOQUEADO" in m.read_text(encoding="utf-8")
     assert "dirty" in json.dumps(rep) or True
 
 
 def test_closed_status_is_exact_token(tmp_path: Path):
     p = tmp_path / "r.md"
-    p.write_text("| R-01 | P1 | t | d | fechado (staging) | m |\n| R-02 | P1 | t | d | mitigado | m |\n", encoding="utf-8")
+    p.write_text(
+        "| R-01 | P1 | t | d | fechado (staging) | m |\n| R-02 | P1 | t | d | mitigado | m |\n",
+        encoding="utf-8",
+    )
     assert c.check_risks(p).detail["open_p0_p1"] == ["R-01", "R-02"]
     p.write_text("| R-01 | P1 | t | d | Fechado | m |\n", encoding="utf-8")
     assert c.check_risks(p).status == "pass"
@@ -194,16 +229,20 @@ def test_legal_rejects_draft_and_placeholders():
 
 # SPEC-225 R8/R9 -------------------------------------------------------------------------
 
+
 def test_prod_forbids_play_test_purchase_env():
     full = set(c.REQUIRED_ENV["production"]) | {"RPG_PLAY_ACCEPT_TEST_PURCHASES"}
     r = c.check_env_names("production", c.Deps(vercel_env_names=lambda e: full))
-    assert r.status == "fail" and r.detail["forbidden_present"] == ["RPG_PLAY_ACCEPT_TEST_PURCHASES"]
+    assert r.status == "fail" and r.detail["forbidden_present"] == [
+        "RPG_PLAY_ACCEPT_TEST_PURCHASES"
+    ]
 
 
 def test_workflow_hygiene_passes_on_repo_and_flags_unpinned(tmp_path: Path):
     assert c.check_workflow_hygiene().status == "pass"
     (tmp_path / "bad.yml").write_text(
-        "on: push\njobs:\n  a:\n    steps:\n      - uses: actions/checkout@v4\n", encoding="utf-8")
+        "on: push\njobs:\n  a:\n    steps:\n      - uses: actions/checkout@v4\n", encoding="utf-8"
+    )
     r = c.check_workflow_hygiene(tmp_path)
     assert r.status == "fail" and "bad.yml" in r.detail["problems"]
     assert any("sem permissions" in p for p in r.detail["problems"]["bad.yml"])

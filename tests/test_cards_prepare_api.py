@@ -1,4 +1,5 @@
 """SPEC-209 R4/R5/R9: preparar Cartas fora de combate, can_reorganize e cicatrizes."""
+
 import copy
 import uuid
 
@@ -11,6 +12,7 @@ import persistence
 @pytest.fixture()
 def client(tmp_path, monkeypatch):
     import api
+
     monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
     api._rate_hits.clear()
@@ -18,9 +20,17 @@ def client(tmp_path, monkeypatch):
 
 
 def _new(client, level=3) -> str:
-    r = client.post("/game/new", json={
-        "name": "Deck", "race": "Humano", "class_name": "Sangromante",
-        "region": "Nova Arcádia", "level": level, "backstory": ""})
+    r = client.post(
+        "/game/new",
+        json={
+            "name": "Deck",
+            "race": "Humano",
+            "class_name": "Sangromante",
+            "region": "Nova Arcádia",
+            "level": level,
+            "backstory": "",
+        },
+    )
     assert r.status_code == 200, r.text
     return r.json()["game_id"]
 
@@ -40,8 +50,10 @@ def _state_resp(client, gid):
 
 
 def _prep(client, gid, ids):
-    return client.post("/game/cards/prepare", json={
-        "game_id": gid, "prepared": ids, "action_id": str(uuid.uuid4())})
+    return client.post(
+        "/game/cards/prepare",
+        json={"game_id": gid, "prepared": ids, "action_id": str(uuid.uuid4())},
+    )
 
 
 def test_prepare_ok_persiste_e_reload(client):
@@ -72,6 +84,7 @@ def test_excede_limite_400_save_intocado(client):
     gid = _new(client)
     st = _load(gid)
     from services import cards
+
     limit = cards.prepare_slots_for_level(st["player"]["level"])
     extras = [f"x{i}" for i in range(limit + 1)]
     st["player"]["known_cards"] = list(st["player"]["known_cards"]) + extras
@@ -169,13 +182,24 @@ def test_can_reorganize_em_combate_tem_razao(client):
 def test_scars_projetadas(client):
     gid = _new(client)
     st = _load(gid)
-    st["player"]["scars"] = [{"id": "scar_x_0", "consequencia_negativa": "Tremor na mão",
-                              "habilidade_positiva_relacionada": "Olhar frio", "origem": "Queda em Vorr"}]
+    st["player"]["scars"] = [
+        {
+            "id": "scar_x_0",
+            "consequencia_negativa": "Tremor na mão",
+            "habilidade_positiva_relacionada": "Olhar frio",
+            "origem": "Queda em Vorr",
+        }
+    ]
     _save(st)
     scars = _state_resp(client, gid)["player_stats"]["scars"]
-    assert scars == [{"id": "scar_x_0", "origem": "Queda em Vorr",
-                      "consequencia_negativa": "Tremor na mão",
-                      "habilidade_positiva_relacionada": "Olhar frio"}]
+    assert scars == [
+        {
+            "id": "scar_x_0",
+            "origem": "Queda em Vorr",
+            "consequencia_negativa": "Tremor na mão",
+            "habilidade_positiva_relacionada": "Olhar frio",
+        }
+    ]
 
 
 def test_save_sem_scars_carrega_sem_secao(client):
@@ -198,12 +222,17 @@ def test_deck_campos_aditivos(client):
 def test_prepare_entra_no_rate_limit(tmp_path, monkeypatch):
     """Revisão Sol: a rota muta o save — mesma janela de rate limit de equip/levelup."""
     import api
+
     monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
     monkeypatch.setenv("RPG_RATE_LIMIT", "2")
     api._rate_hits.clear()
     c = TestClient(api.app)
-    codes = [c.post("/game/cards/prepare", json={
-        "game_id": "../x", "prepared": [], "action_id": str(uuid.uuid4())}).status_code
-        for _ in range(3)]
+    codes = [
+        c.post(
+            "/game/cards/prepare",
+            json={"game_id": "../x", "prepared": [], "action_id": str(uuid.uuid4())},
+        ).status_code
+        for _ in range(3)
+    ]
     api._rate_hits.clear()
     assert codes[-1] == 429, codes

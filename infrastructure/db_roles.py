@@ -33,7 +33,9 @@ def system_scope(connection: Any) -> Iterator[Any]:
     (mesmo nivel de confianca do pool admin)."""
     elevated = False
     if type(connection).__module__.startswith("psycopg"):
-        row = connection.execute("select current_user = %s as scoped", (REQUEST_DB_ROLE,)).fetchone()
+        row = connection.execute(
+            "select current_user = %s as scoped", (REQUEST_DB_ROLE,)
+        ).fetchone()
         scoped = row["scoped"] if isinstance(row, dict) else row[0]
         if scoped:
             connection.execute("SET LOCAL ROLE NONE")

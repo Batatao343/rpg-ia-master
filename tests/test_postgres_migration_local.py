@@ -29,11 +29,16 @@ def _state(game_id):
     return {
         "game_id": str(game_id),
         "player": {
-            "name": "Teste", "class_name": "Devoto", "level": 1,
-            "virtudes": {"corpo": 2}, "vitalidade": 20, "max_vitalidade": 20,
+            "name": "Teste",
+            "class_name": "Devoto",
+            "level": 1,
+            "virtudes": {"corpo": 2},
+            "vitalidade": 20,
+            "max_vitalidade": 20,
         },
         "world": {
-            "current_location": "Nova Arcádia", "turn_count": 0,
+            "current_location": "Nova Arcádia",
+            "turn_count": 0,
             "world_clock": {"day": 1, "period": "Manhã"},
         },
         "messages": [],
@@ -51,10 +56,15 @@ def test_postgres_store_owner_version_checkpoint_e_evento(postgres_store):
     assert postgres_store.get(other, game_id) is None
     state = deepcopy(state)
     state["player"]["gold"] = 7
-    state["event_log"] = [{
-        "event_id": "evt-1", "turn": 1, "type": "reputation_changed",
-        "payload": {"delta": 1}, "source": "test",
-    }]
+    state["event_log"] = [
+        {
+            "event_id": "evt-1",
+            "turn": 1,
+            "type": "reputation_changed",
+            "payload": {"delta": 1},
+            "source": "test",
+        }
+    ]
     saved = postgres_store.save(principal, game_id, created.version, state)
     assert saved.version == 2
     with pytest.raises(StaleVersion):

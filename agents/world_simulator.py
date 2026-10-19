@@ -8,6 +8,7 @@ Arquitetura: a IA NARRA/identifica (WorldPulse); Python resolve (clampa o perigo
 Não-onisciência: o prompt só lista fações que o jogador conhece (intel.known); forças desconhecidas
 aparecem como sinais sem nome. Guard de FallbackLLM (isinstance). Inerte sem chave.
 """
+
 from dataclasses import dataclass
 from typing import Tuple
 
@@ -20,22 +21,31 @@ from world_utils import clock_label, ensure_faction_intel, ensure_factions
 
 try:
     from rag import add_memory_to_session
+
     RAG_AVAILABLE = True
 except ImportError:  # pragma: no cover
     RAG_AVAILABLE = False
-    def add_memory_to_session(*args, **kwargs): return None
+
+    def add_memory_to_session(*args, **kwargs):
+        return None
+
 
 import gamedata
 
 
 class WorldPulse(BaseModel):
-    rumor: str = Field(description="1-2 frases que o JOGADOR percebe (rumor de taverna, sinal na estrada, "
-                                   "eco distante). NÃO nomeie fações/poderes que ele não conhece.")
+    rumor: str = Field(
+        description="1-2 frases que o JOGADOR percebe (rumor de taverna, sinal na estrada, "
+        "eco distante). NÃO nomeie fações/poderes que ele não conhece."
+    )
     fact: str = Field(
         default="",
         description="Justificativa narrativa opcional. Não vira memória por si só; "
-                    "somente a consequência aplicada pelo motor é persistida.")
-    danger_shift: int = Field(default=0, description="-1, 0 ou +1: o mundo ficou mais ou menos perigoso aqui?")
+        "somente a consequência aplicada pelo motor é persistida.",
+    )
+    danger_shift: int = Field(
+        default=0, description="-1, 0 ou +1: o mundo ficou mais ou menos perigoso aqui?"
+    )
 
 
 @dataclass(frozen=True)
@@ -49,13 +59,14 @@ class WorldPulseProposal:
 def _effective_danger(world: dict, loc_id: str) -> int:
     # SPEC-233 R1: fonte única (aceita override int legado ou dict {value}).
     from world_utils import _effective_danger as _wu_effective
+
     return _wu_effective(world, loc_id)
 
 
 def _known_factions_ctx(factions, intel) -> str:
     intel = ensure_faction_intel(intel)
     linhas = [
-        f"- {f.get('name')} ({f.get('region','')}) · disposição={f.get('disposition','neutro')}"
+        f"- {f.get('name')} ({f.get('region', '')}) · disposição={f.get('disposition', 'neutro')}"
         for f in ensure_factions(factions)
         if intel.get(f.get("id"), {}).get("known") and not f.get("defeated")
     ]
@@ -77,7 +88,9 @@ def _apply_danger_shift(world: dict, loc_id: str, shift: int) -> dict:
         return world
     # Override sem carimbo de drift = ascensão de facção (mudança estrutural): o pulso
     # do mundo não o corrói, senão o decaimento devolveria o local ao base do mapa.
-    if loc_id in (world.get("danger_overrides") or {})             and loc_id not in (world.get("danger_shift_turns") or {}):
+    if loc_id in (world.get("danger_overrides") or {}) and loc_id not in (
+        world.get("danger_shift_turns") or {}
+    ):
         return world
     new = cur + shift
     new = max(min(new, max(hi, cur)), min(lo, cur))
@@ -94,8 +107,9 @@ def _apply_danger_shift(world: dict, loc_id: str, shift: int) -> dict:
     return world
 
 
-def propose_world_pulse(state: dict, world: dict, factions, intel,
-                        periods: int = 1) -> WorldPulseProposal:
+def propose_world_pulse(
+    state: dict, world: dict, factions, intel, periods: int = 1
+) -> WorldPulseProposal:
     """Generate a pure proposal: no world mutation and no RAG write."""
     world = dict(world or {})
     loc_id = world.get("current_location_id", "")
@@ -103,7 +117,8 @@ def propose_world_pulse(state: dict, world: dict, factions, intel,
     threat = world.get("looming_threat") or "—"
     danger = _effective_danger(world, loc_id)
 
-    sys = SystemMessage(content=f"""
+    sys = SystemMessage(
+        content=f"""
     Você é o SIMULADOR DO MUNDO de um RPG dark fantasy. O tempo passou ({periods} período(s))
     enquanto o jogador descansava/viajava. Gere UM evento off-screen plausível.
 
@@ -117,18 +132,21 @@ def propose_world_pulse(state: dict, world: dict, factions, intel,
       que ele não conhece; forças desconhecidas são "sinais sem nome".
     - 'fact': registro interno objetivo (pode nomear), curto.
     - 'danger_shift': -1, 0 ou +1 conforme o mundo ficou mais/menos perigoso AQUI.
-    """)
+    """
+    )
 
     llm = get_llm(temperature=0.8, tier=ModelTier.FAST)
     try:
         pulse = llm.with_structured_output(WorldPulse).invoke([sys])
     except Exception as exc:
         from observability.telemetry import log_fallback
+
         log_fallback("world_simulator", "invoke_error", exc)
         return WorldPulseProposal(status="degraded", error_code="invoke_error")
 
     if not isinstance(pulse, WorldPulse):  # FallbackLLM devolve AIMessage
         from observability.telemetry import log_fallback
+
         log_fallback("world_simulator", "structured_invalid")
         return WorldPulseProposal(status="degraded", error_code="invalid_structured")
     return WorldPulseProposal(
@@ -144,6 +162,7 @@ def apply_world_pulse(world: dict, proposal: WorldPulseProposal) -> tuple[dict, 
     loc_name = world.get("current_location", "a região")
 
     from world_utils import decay_danger_overrides
+
     world = decay_danger_overrides(world)
     before_danger = _effective_danger(world, loc_id)
     world = _apply_danger_shift(world, loc_id, proposal.danger_shift)
@@ -153,10 +172,14 @@ def apply_world_pulse(world: dict, proposal: WorldPulseProposal) -> tuple[dict, 
     # é prosa não verificada e não pode promover cânone novo.
     applied_fact = (
         f"[mundo] O perigo de {loc_name} mudou de {before_danger} para {after_danger}."
-        if after_danger != before_danger else "")
+        if after_danger != before_danger
+        else ""
+    )
     rumor = proposal.rumor
-    return world, (f"[ECOS DO MUNDO] {rumor}" if rumor else ""), (
-        [applied_fact] if applied_fact else []
+    return (
+        world,
+        (f"[ECOS DO MUNDO] {rumor}" if rumor else ""),
+        ([applied_fact] if applied_fact else []),
     )
 
 
@@ -169,5 +192,6 @@ def simulate_world(state: dict, world: dict, factions, intel, periods: int = 1) 
             add_memory_to_session(state["game_id"], intents)
         except Exception as exc:
             from observability.telemetry import log_fallback
+
             log_fallback("world_simulator", "rag_unavailable", exc)
     return world, note

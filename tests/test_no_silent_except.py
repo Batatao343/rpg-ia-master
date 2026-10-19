@@ -4,6 +4,7 @@ Todo handler amplo que nao relanca precisa logar (log_event/log_fallback/logger/
 ``# silent-ok: <motivo>``. A allowlist (tests/data/silent_except_allowlist.txt) congela os casos
 ANTIGOS e so pode diminuir: ao corrigir um, remova a linha dele.
 """
+
 import sys
 from pathlib import Path
 
@@ -21,8 +22,10 @@ def _allowed() -> set[str]:
 def test_no_new_silent_except():
     found = set(silent_except_scan.scan())
     new = sorted(found - _allowed())
-    assert not new, ("except silencioso novo (logue com log_fallback/log_event ou anote "
-                     "'# silent-ok: <motivo>'):\n" + "\n".join(new))
+    assert not new, (
+        "except silencioso novo (logue com log_fallback/log_event ou anote "
+        "'# silent-ok: <motivo>'):\n" + "\n".join(new)
+    )
 
 
 def test_allowlist_only_shrinks():

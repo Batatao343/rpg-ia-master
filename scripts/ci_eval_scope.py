@@ -30,19 +30,21 @@ FRONTEND_FILES = {"api.py", "services/presentation_history.py", "services/auth_s
 
 
 def _normalized(paths: list[str]) -> list[str]:
-    return sorted({PurePosixPath(path.replace("\\", "/")).as_posix().lstrip("./") for path in paths})
+    return sorted(
+        {PurePosixPath(path.replace("\\", "/")).as_posix().lstrip("./") for path in paths}
+    )
 
 
 def classify(paths: list[str], protected_file: Path) -> dict[str, object]:
     changed = _normalized(paths)
     protected = protected_changes(changed, load_protected_paths(protected_file))
     backend = [
-        path for path in changed
+        path
+        for path in changed
         if path in AI_FILES or path.startswith(AI_PREFIXES) or path.startswith(AI_SERVICE_PREFIXES)
     ]
     frontend = [
-        path for path in changed
-        if path in FRONTEND_FILES or path.startswith(FRONTEND_PREFIXES)
+        path for path in changed if path in FRONTEND_FILES or path.startswith(FRONTEND_PREFIXES)
     ]
     return {
         "changed_files": changed,

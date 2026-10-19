@@ -18,7 +18,11 @@ def _origin(base_url: str) -> str:
     try:
         parsed = urlparse(base_url or "")
         port = f":{parsed.port}" if parsed.port else ""
-        return f"{parsed.scheme}://{parsed.hostname}{port}" if parsed.scheme and parsed.hostname else ""
+        return (
+            f"{parsed.scheme}://{parsed.hostname}{port}"
+            if parsed.scheme and parsed.hostname
+            else ""
+        )
     except ValueError:
         return ""
 
@@ -114,7 +118,9 @@ def main() -> int:
             "generated_at": datetime.now(UTC).isoformat(),
         }
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    args.output.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
     print(args.output)
     return 0 if payload["status"] == "passed" else 1
 

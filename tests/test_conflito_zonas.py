@@ -6,10 +6,12 @@ from services import conflict_scene as cs
 
 
 def _scene():
-    s = cs.new_scene([
-        {"id": "z0", "name": "Salão", "connections": ["z1"]},
-        {"id": "z1", "name": "Corredor", "connections": ["z0"]},
-    ])
+    s = cs.new_scene(
+        [
+            {"id": "z0", "name": "Salão", "connections": ["z1"]},
+            {"id": "z1", "name": "Corredor", "connections": ["z0"]},
+        ]
+    )
     cs.place(s, "player", zone_id="z0", distance_state="separado")
     cs.place(s, "verme", zone_id="z0", distance_state="separado")
     return s
@@ -26,8 +28,8 @@ def test_move_distance_um_estagio():
 
 def test_move_distance_dois_estagios_pre_e_pos():
     s = _scene()
-    cs.move_distance(s, "player", "aproximar", via="pre")   # separado -> distante
-    cs.move_distance(s, "player", "aproximar", via="pos")   # distante -> proximo
+    cs.move_distance(s, "player", "aproximar", via="pre")  # separado -> distante
+    cs.move_distance(s, "player", "aproximar", via="pos")  # distante -> proximo
     assert s["positions"]["player"]["distance_state"] == "proximo"
 
 
@@ -69,7 +71,7 @@ def test_protegido_momentaneo_expira_apos_um_ataque():
 def test_protegido_sustentado_persiste_enquanto_causa_existir():
     s = _scene()
     cs.set_postura(s, "player", "protegido", mode="sustentado", cause="pilastra")
-    cs.consume_postura_on_attack(s, "player")   # sustentada NÃO expira num ataque
+    cs.consume_postura_on_attack(s, "player")  # sustentada NÃO expira num ataque
     assert s["positions"]["player"]["postura"]["state"] == "protegido"
     cs.clear_sustained_postura(s, "player", "pilastra")  # causa some -> some
     assert s["positions"]["player"]["postura"]["state"] == "neutro"
@@ -80,10 +82,18 @@ def test_protegido_sustentado_persiste_enquanto_causa_existir():
 # --------------------------------------------------------------------------
 def _lustre():
     return {
-        "id": "lustre", "name": "Lustre de Ferro", "distance_state": "distante",
-        "zone_id": "z0", "uses_remaining": 1,
-        "interactions": [{"label": "Derrubar", "cost": "acao",
-                          "effect": {"kind": "damage", "params": {"formula": "2d8"}}}],
+        "id": "lustre",
+        "name": "Lustre de Ferro",
+        "distance_state": "distante",
+        "zone_id": "z0",
+        "uses_remaining": 1,
+        "interactions": [
+            {
+                "label": "Derrubar",
+                "cost": "acao",
+                "effect": {"kind": "damage", "params": {"formula": "2d8"}},
+            }
+        ],
     }
 
 
@@ -128,7 +138,7 @@ def test_objeto_visivel_esconde_o_effect():
     cs.add_object(s, _lustre())
     vis = cs.visible_objects(s)[0]
     it = vis["interactions"][0]
-    assert set(it.keys()) == {"label", "cost"}   # nunca expõe 'effect'
+    assert set(it.keys()) == {"label", "cost"}  # nunca expõe 'effect'
 
 
 # --------------------------------------------------------------------------
@@ -146,10 +156,21 @@ def test_freeze_bloqueia_novo_objeto_apos_inicio():
 
 def test_reforco_so_entra_via_gatilho_preparado():
     s = _scene()
-    cs.add_reinforcement_trigger(s, {"id": "onda2", "participants": {
-        "verme2": {"zone_id": "z1", "distance_state": "separado",
-                   "postura": {"state": "neutro", "mode": "sustentado", "cause": None},
-                   "ocultacao": "visivel", "engaged_with": []}}})
+    cs.add_reinforcement_trigger(
+        s,
+        {
+            "id": "onda2",
+            "participants": {
+                "verme2": {
+                    "zone_id": "z1",
+                    "distance_state": "separado",
+                    "postura": {"state": "neutro", "mode": "sustentado", "cause": None},
+                    "ocultacao": "visivel",
+                    "engaged_with": [],
+                }
+            },
+        },
+    )
     cs.freeze(s)
     # gatilho não-preparado falha
     assert not cs.fire_reinforcement(s, "inexistente")["ok"]

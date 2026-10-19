@@ -18,9 +18,16 @@ def test_segunda_matriz_e_bloqueada_enquanto_dona_esta_viva(tmp_path):
 
 def test_lock_de_pid_morto_e_recuperado(tmp_path, monkeypatch):
     lock_path = tmp_path / ".matrix-suite.lock"
-    lock_path.write_text(json.dumps({
-        "pid": 999_999_999, "host": "local", "token": "antigo",
-    }), encoding="utf-8")
+    lock_path.write_text(
+        json.dumps(
+            {
+                "pid": 999_999_999,
+                "host": "local",
+                "token": "antigo",
+            }
+        ),
+        encoding="utf-8",
+    )
     monkeypatch.setattr("playtest.matrix_lock.socket.gethostname", lambda: "local")
     monkeypatch.setattr("playtest.matrix_lock._pid_is_alive", lambda _pid: False)
 

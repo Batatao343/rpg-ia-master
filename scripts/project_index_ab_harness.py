@@ -26,17 +26,37 @@ MAX_CALLS_PER_TASK = 12
 MAX_SOURCE_BYTES_PER_TASK = 50_000
 MAX_WALL_SECONDS_PER_TASK = 300.0
 ALLOWED_DIRS = (
-    "agents/", "services/", "tests/", "web/src/", "web/e2e/",
-    "infrastructure/", "playtest/", "evals/",
+    "agents/",
+    "services/",
+    "tests/",
+    "web/src/",
+    "web/e2e/",
+    "infrastructure/",
+    "playtest/",
+    "evals/",
 )
 ALLOWED_DIR_ROOTS = frozenset(path.rstrip("/") for path in ALLOWED_DIRS)
 ALLOWED_ROOT_FILES = {
-    "api.py", "main.py", "state.py", "persistence.py", "llm_setup.py",
-    "rag.py", "world_utils.py", "combat_mechanics.py", "inventory.py",
+    "api.py",
+    "main.py",
+    "state.py",
+    "persistence.py",
+    "llm_setup.py",
+    "rag.py",
+    "world_utils.py",
+    "combat_mechanics.py",
+    "inventory.py",
 }
 FORBIDDEN_PARTS = {
-    ".git", "docs", "specs", "project_index", ".agents", ".claude",
-    "ESTADO_ATUAL.md", "ROADMAP.md", "AGENTS.md",
+    ".git",
+    "docs",
+    "specs",
+    "project_index",
+    ".agents",
+    ".claude",
+    "ESTADO_ATUAL.md",
+    "ROADMAP.md",
+    "AGENTS.md",
 }
 
 
@@ -109,7 +129,11 @@ def _relative(value: str) -> str:
 
 
 def _record(
-    payload: dict[str, Any], *, task: str, op: str, detail: dict[str, Any],
+    payload: dict[str, Any],
+    *,
+    task: str,
+    op: str,
+    detail: dict[str, Any],
     source_bytes: int,
 ) -> None:
     task_rows = payload.setdefault("task_usage", {}).setdefault(
@@ -123,13 +147,15 @@ def _record(
         raise HarnessError("task source-byte budget exceeded")
     task_rows["discovery_calls"] = next_calls
     task_rows["source_bytes_read"] = next_bytes
-    task_rows["trace"].append({
-        "sequence": next_calls,
-        "at": _now(),
-        "op": op,
-        "source_bytes": source_bytes,
-        **detail,
-    })
+    task_rows["trace"].append(
+        {
+            "sequence": next_calls,
+            "at": _now(),
+            "op": op,
+            "source_bytes": source_bytes,
+            **detail,
+        }
+    )
     _save_session(payload)
 
 
@@ -186,7 +212,9 @@ def begin_task(args: argparse.Namespace) -> int:
     payload["task_started_at"] = _now()
     payload["status"] = "running"
     payload.setdefault("task_usage", {})[args.task] = {
-        "discovery_calls": 0, "source_bytes_read": 0, "trace": []
+        "discovery_calls": 0,
+        "source_bytes_read": 0,
+        "trace": [],
     }
     _save_session(payload)
     print(args.task)
@@ -205,7 +233,9 @@ def search_source(args: argparse.Namespace) -> int:
     output = result.stdout
     size = len(output.encode("utf-8"))
     _record(
-        payload, task=args.task, op="search",
+        payload,
+        task=args.task,
+        op="search",
         detail={"pattern": args.pattern, "paths": paths, "context": args.context},
         source_bytes=size,
     )
@@ -220,13 +250,15 @@ def read_source(args: argparse.Namespace) -> int:
         raise HarnessError("condition B must query the index before source discovery")
     lines = (ROOT / relative).read_text(encoding="utf-8").splitlines()
     start = max(1, args.start)
-    selected = lines[start - 1:start - 1 + args.lines]
+    selected = lines[start - 1 : start - 1 + args.lines]
     output = "\n".join(f"{index}: {line}" for index, line in enumerate(selected, start=start))
     if output:
         output += "\n"
     size = len(output.encode("utf-8"))
     _record(
-        payload, task=args.task, op="read",
+        payload,
+        task=args.task,
+        op="read",
         detail={"path": relative, "start": start, "lines": args.lines},
         source_bytes=size,
     )
@@ -249,8 +281,14 @@ def index_query(args: argparse.Namespace) -> int:
     output = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
     payload["task_usage"][args.task]["index_queried"] = True
     _record(
-        payload, task=args.task, op=f"index:{args.mode}",
-        detail={"value": args.value, "limit": args.limit, "output_bytes": len(output.encode("utf-8"))},
+        payload,
+        task=args.task,
+        op=f"index:{args.mode}",
+        detail={
+            "value": args.value,
+            "limit": args.limit,
+            "output_bytes": len(output.encode("utf-8")),
+        },
         source_bytes=0,
     )
     print(output, end="")
@@ -279,11 +317,13 @@ def finish_task(args: argparse.Namespace) -> int:
         raise HarnessError("condition B task has no index query")
     started = datetime.fromisoformat(payload["task_started_at"])
     elapsed = round((datetime.now(UTC) - started).total_seconds(), 3)
-    result.update({
-        "discovery_calls": usage["discovery_calls"],
-        "source_bytes_read": usage["source_bytes_read"],
-        "wall_seconds": elapsed,
-    })
+    result.update(
+        {
+            "discovery_calls": usage["discovery_calls"],
+            "source_bytes_read": usage["source_bytes_read"],
+            "wall_seconds": elapsed,
+        }
+    )
     payload["results"].append(result)
     payload["next_task_index"] = int(payload["next_task_index"]) + 1
     payload["active_task"] = None

@@ -4,6 +4,7 @@ Uso:
   uv run python scripts/import_visual_assets.py --source-root <VALORIA_GAME_ART_HANDOFF>
   uv run python scripts/import_visual_assets.py --source-root <...> --check
 """
+
 from __future__ import annotations
 
 import argparse
@@ -114,6 +115,7 @@ def verify_source_entry(path: Path, expected_sha256: str) -> None:
 
 def _slug(value: str) -> str:
     import unicodedata
+
     text = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode()
     return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
 
@@ -153,8 +155,9 @@ def _save_webp(image: Image.Image, path: Path, max_width: int, ceiling: int) -> 
     }
 
 
-def _build_asset(row: dict[str, Any], subject_type: str, subject_id: str,
-                 source_root: Path, output_root: Path) -> dict[str, Any]:
+def _build_asset(
+    row: dict[str, Any], subject_type: str, subject_id: str, source_root: Path, output_root: Path
+) -> dict[str, Any]:
     source = (source_root / row["handoff_relative_path"]).resolve()
     if source_root.resolve() not in source.parents:
         raise ValueError(f"fonte fora da raiz: {source}")
@@ -190,12 +193,18 @@ def _build_asset(row: dict[str, Any], subject_type: str, subject_id: str,
     }
 
 
-def import_assets(source_root: Path, catalog_path: Path = CATALOG_PATH,
-                  output_root: Path = OUTPUT_ROOT, *, check: bool = False,
-                  prune: bool = False) -> dict[str, Any]:
+def import_assets(
+    source_root: Path,
+    catalog_path: Path = CATALOG_PATH,
+    output_root: Path = OUTPUT_ROOT,
+    *,
+    check: bool = False,
+    prune: bool = False,
+) -> dict[str, Any]:
     source_root = source_root.resolve()
-    rows = json.loads((source_root / "manifests" / "game_art_manifest.json").read_text(
-        encoding="utf-8"))
+    rows = json.loads(
+        (source_root / "manifests" / "game_art_manifest.json").read_text(encoding="utf-8")
+    )
     if not isinstance(rows, list):
         raise ValueError("manifesto deve ser uma lista")
     selections: list[tuple[str, str, str]] = []

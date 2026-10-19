@@ -4,6 +4,7 @@ O cliente so recebe o que o jogador descobriu: locais visitados (completos) e
 adjacentes ao local atual (id/coords/nome - a "placa da estrada"). Nada de
 nome/perigo/lore/arte de local nao alcancado. Estado derivado do servidor.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -23,8 +24,7 @@ def interiors_block(loc_id: str) -> dict[str, Any]:
     """Interiores do local atual ("Locais daqui") + caminho de volta ao pai."""
     loc = gamedata.get_location(loc_id) or {}
     here = [
-        {"id": i["id"], "name": i["name"], "danger": i.get("danger", 0),
-         "tags": i.get("tags", [])}
+        {"id": i["id"], "name": i["name"], "danger": i.get("danger", 0), "tags": i.get("tags", [])}
         for i in gamedata.interiors_of(loc_id)
     ]
     exit_to = None
@@ -36,8 +36,10 @@ def interiors_block(loc_id: str) -> dict[str, Any]:
 
 
 def _blocked_pairs(projection: dict | None) -> set:
-    return {frozenset((r.get("a", ""), r.get("b", "")))
-            for r in (projection or {}).get("blocked_routes", []) or []}
+    return {
+        frozenset((r.get("a", ""), r.get("b", "")))
+        for r in (projection or {}).get("blocked_routes", []) or []
+    }
 
 
 def travel_gate(state: dict) -> dict[str, Any]:
@@ -49,7 +51,9 @@ def travel_gate(state: dict) -> dict[str, Any]:
         return {"blocked": True, "reason": "A saga terminou."}
     if state.get("death_pending"):
         return {"blocked": True, "reason": "Queda pendente: resolva a morte antes de viajar."}
-    if (state.get("combat") or {}).get("active") or (state.get("combat_simulation") or {}).get("enabled"):
+    if (state.get("combat") or {}).get("active") or (state.get("combat_simulation") or {}).get(
+        "enabled"
+    ):
         return {"blocked": True, "reason": "Em combate: fuga é uma ação do encontro."}
     return {"blocked": False, "reason": ""}
 
@@ -66,16 +70,24 @@ def _travel_options(world: dict, blocked: set) -> list[dict[str, Any]]:
     cur = world.get("current_location_id", "") or ""
     dests = list(gamedata.get_connections(cur))
     loc = gamedata.get_location(cur) or {}
-    parent = gamedata.get_location(loc.get("parent_id", "")) if loc.get("kind") == "interior" else None
+    parent = (
+        gamedata.get_location(loc.get("parent_id", "")) if loc.get("kind") == "interior" else None
+    )
     if parent and all(d["id"] != parent["id"] for d in dests):
         dests.append(parent)
     out = []
     for d in dests:
         is_blocked = frozenset((cur, d["id"])) in blocked
-        out.append({"location_id": d["id"], "name": d["name"],
-                    "periods": world_utils.travel_cost(world, d),
-                    "reachable": not is_blocked, "blocked": is_blocked,
-                    "reason": BLOCKED_REASON if is_blocked else ""})
+        out.append(
+            {
+                "location_id": d["id"],
+                "name": d["name"],
+                "periods": world_utils.travel_cost(world, d),
+                "reachable": not is_blocked,
+                "blocked": is_blocked,
+                "reason": BLOCKED_REASON if is_blocked else "",
+            }
+        )
     return out
 
 
@@ -93,10 +105,15 @@ def build_map_view(state: dict) -> dict[str, Any]:
 
     controllers = sv.visible_controllers(world, projection)
     threats = {t["region_id"]: t["hint"] for t in sv.active_threats(world, turn)}
-    contested = {c["location_id"] for c in sv.recent_control_changes(
-        state.get("event_log") or [], visited, turn)}
-    quest_targets = {q.get("location_id") for q in (state.get("quests") or [])
-                     if isinstance(q, dict) and q.get("status") == "active" and q.get("location_id")}
+    contested = {
+        c["location_id"]
+        for c in sv.recent_control_changes(state.get("event_log") or [], visited, turn)
+    }
+    quest_targets = {
+        q.get("location_id")
+        for q in (state.get("quests") or [])
+        if isinstance(q, dict) and q.get("status") == "active" and q.get("location_id")
+    }
 
     # Conjunto enviado: visitados (nao-interior) + adjacentes (connections da ancora).
     sent: dict[str, str] = {}
@@ -125,8 +142,12 @@ def build_map_view(state: dict) -> dict[str, Any]:
             st = "visitado"
         else:
             st = "adjacente"
-        node: dict[str, Any] = {"id": lid, "state": st, "name": loc.get("name", lid),
-                                "coords": dict(loc.get("coords") or {"x": 50, "y": 50})}
+        node: dict[str, Any] = {
+            "id": lid,
+            "state": st,
+            "name": loc.get("name", lid),
+            "coords": dict(loc.get("coords") or {"x": 50, "y": 50}),
+        }
         if not is_cur:
             opt = opt_by_id.get(lid)
             node["reachable"] = bool(opt and opt["reachable"])
@@ -172,8 +193,9 @@ def build_map_view(state: dict) -> dict[str, Any]:
     }
     # map_version: hash estavel do conteudo visivel (sem o turno, que muda sozinho).
     stable = {k: v for k, v in view.items() if k != "turn_count"}
-    view["map_version"] = hashlib.sha256(json.dumps(
-        stable, sort_keys=True, ensure_ascii=False, default=str).encode("utf-8")).hexdigest()[:16]
+    view["map_version"] = hashlib.sha256(
+        json.dumps(stable, sort_keys=True, ensure_ascii=False, default=str).encode("utf-8")
+    ).hexdigest()[:16]
     return view
 
 
@@ -186,18 +208,34 @@ def legacy_filtered_map(state: dict) -> dict[str, Any]:
     locations = []
     for lid, n in sent.items():
         if "lore_seed" not in n:
-            locations.append({"id": lid, "name": n["name"], "region": "", "region_id": "",
-                              "coords": n["coords"], "danger": 0, "tags": [],
-                              "connections": [], "lore_seed": ""})
+            locations.append(
+                {
+                    "id": lid,
+                    "name": n["name"],
+                    "region": "",
+                    "region_id": "",
+                    "coords": n["coords"],
+                    "danger": 0,
+                    "tags": [],
+                    "connections": [],
+                    "lore_seed": "",
+                }
+            )
         else:
             # Whitelist (revisao Sol): o JSON cru tem `treasure` (bau curado) e
             # `travel_times` citando IDs de locais nao alcancados - nunca saem.
             raw = gamedata.get_location(lid) or {}
-            locations.append({
-                "id": lid, "name": n["name"], "region": raw.get("region", ""),
-                "region_id": n.get("region_id", ""), "coords": n["coords"],
-                "danger": n.get("danger", 0), "tags": list(raw.get("tags") or []),
-                "connections": [c for c in raw.get("connections", []) if c in sent],
-                "lore_seed": n.get("lore_seed", ""),
-            })
+            locations.append(
+                {
+                    "id": lid,
+                    "name": n["name"],
+                    "region": raw.get("region", ""),
+                    "region_id": n.get("region_id", ""),
+                    "coords": n["coords"],
+                    "danger": n.get("danger", 0),
+                    "tags": list(raw.get("tags") or []),
+                    "connections": [c for c in raw.get("connections", []) if c in sent],
+                    "lore_seed": n.get("lore_seed", ""),
+                }
+            )
     return {"start_location": view["anchor_id"], "locations": locations}

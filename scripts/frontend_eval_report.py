@@ -53,7 +53,9 @@ def summarize(report: dict[str, Any]) -> dict[str, Any]:
             continue
         tests = spec.get("tests", [])
         results = [test.get("results", [])[-1] for test in tests if test.get("results")]
-        journeys[match.group(1)] = bool(results) and all(result.get("status") == "passed" for result in results)
+        journeys[match.group(1)] = bool(results) and all(
+            result.get("status") == "passed" for result in results
+        )
 
     messages = _messages(report)
     joined = "\n".join(messages)
@@ -69,13 +71,24 @@ def summarize(report: dict[str, Any]) -> dict[str, Any]:
         "frontend_a11y_serious_critical": joined.count("A11Y serious/critical:"),
     }
     complete = set(journeys) == set(JOURNEY_IDS)
-    hard_pass = complete and metrics["frontend_critical_journey_pass_rate"] == 1.0 and all(
-        value == 0 for key, value in metrics.items() if key != "frontend_critical_journey_pass_rate"
+    hard_pass = (
+        complete
+        and metrics["frontend_critical_journey_pass_rate"] == 1.0
+        and all(
+            value == 0
+            for key, value in metrics.items()
+            if key != "frontend_critical_journey_pass_rate"
+        )
     )
     return {
         "schema_version": 1,
         "source": "playwright-json",
-        "journeys": {"registered": JOURNEY_COUNT, "executed": total, "passed": passed, "results": journeys},
+        "journeys": {
+            "registered": JOURNEY_COUNT,
+            "executed": total,
+            "passed": passed,
+            "results": journeys,
+        },
         "metrics": metrics,
         "hard_gates_passed": hard_pass,
     }
@@ -107,14 +120,21 @@ def summarize_vertical(report: dict[str, Any]) -> dict[str, Any]:
         "frontend_unexpected_failed_requests": messages.count("requestfailed:"),
         "frontend_unexpected_5xx_responses": len(re.findall(r"HTTP 5\d\d:", messages)),
     }
-    hard_pass = complete and rate == 1.0 and all(
-        value == 0 for key, value in metrics.items() if key != "vertical_journey_pass_rate")
+    hard_pass = (
+        complete
+        and rate == 1.0
+        and all(value == 0 for key, value in metrics.items() if key != "vertical_journey_pass_rate")
+    )
     return {
         "schema_version": 1,
         "source": "playwright-json",
         "suite": "vertical",
-        "journeys": {"registered": len(expected), "executed": len(seen & expected), "passed": passed_n,
-                     "results": {p: by_project.get(p, {}) for p in VERTICAL_VIEWPORTS}},
+        "journeys": {
+            "registered": len(expected),
+            "executed": len(seen & expected),
+            "passed": passed_n,
+            "results": {p: by_project.get(p, {}) for p in VERTICAL_VIEWPORTS},
+        },
         "metrics": metrics,
         "hard_gates_passed": hard_pass,
     }
@@ -146,14 +166,21 @@ def summarize_mobile(report: dict[str, Any]) -> dict[str, Any]:
         "frontend_unexpected_5xx_responses": len(re.findall(r"HTTP 5\d\d:", messages)),
         "frontend_a11y_serious_critical": messages.count("A11Y serious/critical:"),
     }
-    hard_pass = expected <= seen and rate == 1.0 and all(
-        value == 0 for key, value in metrics.items() if key != "mobile_journey_pass_rate")
+    hard_pass = (
+        expected <= seen
+        and rate == 1.0
+        and all(value == 0 for key, value in metrics.items() if key != "mobile_journey_pass_rate")
+    )
     return {
         "schema_version": 1,
         "source": "playwright-json",
         "suite": "mobile",
-        "journeys": {"registered": len(expected), "executed": len(seen & expected), "passed": passed_n,
-                     "results": {p: by_project.get(p, {}) for p in MOBILE_VIEWPORTS}},
+        "journeys": {
+            "registered": len(expected),
+            "executed": len(seen & expected),
+            "passed": passed_n,
+            "results": {p: by_project.get(p, {}) for p in MOBILE_VIEWPORTS},
+        },
         "metrics": metrics,
         "hard_gates_passed": hard_pass,
     }
@@ -187,7 +214,9 @@ def main() -> int:
     parser.add_argument("--root", type=Path, default=Path.cwd())
     args = parser.parse_args()
     report = json.loads(args.report.read_text(encoding="utf-8"))
-    summary = {"vertical": summarize_vertical, "mobile": summarize_mobile}.get(args.suite, summarize)(report)
+    summary = {"vertical": summarize_vertical, "mobile": summarize_mobile}.get(
+        args.suite, summarize
+    )(report)
     summary["measurement_identity"] = measurement_identity(args.root.resolve())
     encoded = json.dumps(summary, ensure_ascii=False, indent=2) + "\n"
     if args.output:

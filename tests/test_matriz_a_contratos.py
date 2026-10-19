@@ -28,11 +28,19 @@ def test_vitalidade_zero_consciente_e_ativo_mas_inconsciente_bloqueia_viagem():
 
 def test_guard_bloqueia_sem_consumir_turno_e_sem_chamar_llm():
     state = {
-        "player": {"vitalidade": 0, "conscious": False, "gold": 2, "xp": 0,
-                   "level": 1, "inventory": []},
+        "player": {
+            "vitalidade": 0,
+            "conscious": False,
+            "gold": 2,
+            "xp": 0,
+            "level": 1,
+            "inventory": [],
+        },
         "world": {"turn_count": 71, "current_location_id": "vorr"},
         "messages": [HumanMessage(content="Viajo para outra região")],
-        "combat": {"active": False}, "quests": [], "event_log": [],
+        "combat": {"active": False},
+        "quests": [],
+        "event_log": [],
     }
     update = action_guard_node(state)
     assert update["action_guard_blocked"] is True
@@ -69,20 +77,28 @@ def test_grafo_universal_encerra_viagem_inconsciente_antes_do_router():
 @pytest.mark.parametrize("turn", [39, 42, 80, 94])
 def test_recompensa_tardia_de_quest_reconcilia_a_mesma_resposta(turn):
     before = {
-        "game_id": "quester", "world": {"turn_count": turn - 1},
+        "game_id": "quester",
+        "world": {"turn_count": turn - 1},
         "player": {"gold": 602, "xp": 400, "level": 11, "inventory": []},
-        "quests": [{"id": "q1", "status": "active"}], "event_log": [],
+        "quests": [{"id": "q1", "status": "active"}],
+        "event_log": [],
         "messages": [],
     }
     baseline = capture_baseline(before)
     after = {
-        **before, "turn_baseline": baseline, "world": {"turn_count": turn},
+        **before,
+        "turn_baseline": baseline,
+        "world": {"turn_count": turn},
         "player": {"gold": 622, "xp": 500, "level": 11, "inventory": []},
         "quests": [{"id": "q1", "status": "completed"}],
         "event_log": [{"event_id": "ev-q1", "type": "quest_completed"}],
-        "messages": [AIMessage(content=(
-            "A missão chega ao fim. Ao conferir seus pertences, você percebe que nada novo foi obtido."
-        ))],
+        "messages": [
+            AIMessage(
+                content=(
+                    "A missão chega ao fim. Ao conferir seus pertences, você percebe que nada novo foi obtido."
+                )
+            )
+        ],
     }
     outcome = finalize_outcome(after)
     message = outcome["player_message"]
@@ -91,15 +107,26 @@ def test_recompensa_tardia_de_quest_reconcilia_a_mesma_resposta(turn):
     assert outcome["gold_delta"] == 20 and outcome["xp_delta"] == 100
     assert outcome["quests_completed"] == ["q1"]
     assert player_facing_message({**after, "last_turn_outcome": outcome}) == message
-    assert finalize_outcome({**after, "last_turn_outcome": outcome})["receipt_id"] == outcome["receipt_id"]
+    assert (
+        finalize_outcome({**after, "last_turn_outcome": outcome})["receipt_id"]
+        == outcome["receipt_id"]
+    )
 
 
 def test_decisao_recrutamento_trait_aware_e_hint_nao_vaza_trait():
     state = {
-        "npcs": {"Kess": {"name": "Kess", "relationship": 7,
-                            "hidden_traits": ["desconfiado"], "revealed_traits": [],
-                            "in_scene": True}},
-        "party": [], "factions": [], "world": {"current_location_id": "brekmar"},
+        "npcs": {
+            "Kess": {
+                "name": "Kess",
+                "relationship": 7,
+                "hidden_traits": ["desconfiado"],
+                "revealed_traits": [],
+                "in_scene": True,
+            }
+        },
+        "party": [],
+        "factions": [],
+        "world": {"current_location_id": "brekmar"},
     }
     decision = party.recruitment_decision(state, "Kess")
     assert decision["ok"] is False
@@ -116,10 +143,14 @@ def test_decisao_recrutamento_trait_aware_e_hint_nao_vaza_trait():
 
 def test_repeticao_de_interacao_vira_um_episodio_curto():
     assert semantic_opening("🗣️ Kess: Ainda não confio em você.") == "ainda não confio em você"
-    state = {"last_interaction_outcome": {
-        "code": "relationship_too_low", "subject_id": "kess",
-        "progressed": False, "repeat_count": 3,
-    }}
+    state = {
+        "last_interaction_outcome": {
+            "code": "relationship_too_low",
+            "subject_id": "kess",
+            "progressed": False,
+            "repeat_count": 3,
+        }
+    }
     got = invariants.check_interaction_no_progress(state, None, 3)
     assert len(got) == 1 and got[0].check_id == "interaction.no_progress"
     state["last_interaction_outcome"]["repeat_count"] = 5
@@ -131,7 +162,8 @@ def test_diplomatico_esgota_perguntas_e_procura_outro_local():
     profile.reset()
     state = {
         "npcs": {"Magda": {"name": "Magda", "in_scene": True, "relationship": 1}},
-        "party": [], "world": {"current_location_id": "nova_arcadia"},
+        "party": [],
+        "world": {"current_location_id": "nova_arcadia"},
     }
     actions = [profile._next_action(state, random.Random(7)) for _ in range(5)]
     assert len(set(actions[:4])) == 4
@@ -152,15 +184,23 @@ def test_resultado_e_progresso_de_interacao_sobrevivem_save_load():
     from persistence import _raw_to_state, _state_to_save_data
 
     state = {
-        "game_id": "persist-contract", "player": {}, "party": [], "enemies": [],
-        "world": {}, "messages": [], "continuity": {},
+        "game_id": "persist-contract",
+        "player": {},
+        "party": [],
+        "enemies": [],
+        "world": {},
+        "messages": [],
+        "continuity": {},
         "last_turn_outcome": {
-            "turn": 39, "receipt_id": "receipt-q1",
+            "turn": 39,
+            "receipt_id": "receipt-q1",
             "player_message": "Missão concluída.\n\n[RESULTADO] +20 ouro",
         },
         "last_interaction_outcome": {
-            "kind": "recruit", "subject_id": "kess",
-            "code": "relationship_too_low", "repeat_count": 3,
+            "kind": "recruit",
+            "subject_id": "kess",
+            "code": "relationship_too_low",
+            "repeat_count": 3,
             "progressed": False,
         },
     }
@@ -170,7 +210,6 @@ def test_resultado_e_progresso_de_interacao_sobrevivem_save_load():
     assert loaded["last_turn_outcome"] == state["last_turn_outcome"]
     assert loaded["last_interaction_outcome"] == state["last_interaction_outcome"]
     assert player_facing_message(loaded) == "Missão concluída."  # SPEC-199 R7: strip legado
-    legacy = _raw_to_state({**raw, "last_turn_outcome": None,
-                            "last_interaction_outcome": None})
+    legacy = _raw_to_state({**raw, "last_turn_outcome": None, "last_interaction_outcome": None})
     assert legacy["last_turn_outcome"] == {}
     assert legacy["last_interaction_outcome"] == {}

@@ -29,12 +29,16 @@ def main() -> int:
         pool = PostgresPool(resolve_dsn(parser, args))
         try:
             rows = import_saves(
-                pool, Principal(args.owner, "migration", str(args.owner), local=True),
-                args.source, dry_run=args.command == "dry-run",
+                pool,
+                Principal(args.owner, "migration", str(args.owner), local=True),
+                args.source,
+                dry_run=args.command == "dry-run",
                 journal_path=args.journal,
             )
             if args.command == "verify":
-                bad = [row for row in rows if row["status"] not in {"already_present", "journal_skip"}]
+                bad = [
+                    row for row in rows if row["status"] not in {"already_present", "journal_skip"}
+                ]
                 if bad:
                     print(json.dumps(rows, ensure_ascii=False, indent=2))
                     return 1

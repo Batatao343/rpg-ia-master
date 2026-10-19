@@ -59,6 +59,7 @@ jobs:
       - name: pip-audit (requirements.txt exportado do lock)
         run: uvx --from pip-audit==2.10.1 pip-audit -r requirements.txt --progress-spinner off
       - run: uv run ruff check .
+      - run: uv run ruff format --check .
       - run: uv run python scripts/validate_content.py
       - run: uv run pytest -q -n auto --tb=short --junitxml=pytest-junit.xml 2>&1 | tee pytest-tb.log; exit "${PIPESTATUS[0]}"
         shell: bash

@@ -8,6 +8,7 @@ Cobre os pontos que não dependem de chamada real ao LLM:
 - Compilação do grafo
 - Criação de personagem em modo fallback (sem chave de API)
 """
+
 import os
 import random
 
@@ -34,22 +35,40 @@ def _base_state(messages=None):
             "name": "Tester",
             "class_name": "Guerreiro",
             "race": "Humano",
-            "hp": 30, "max_hp": 30,
-            "mana": 10, "max_mana": 10,
-            "stamina": 10, "max_stamina": 10,
-            "gold": 50, "level": 1, "xp": 0, "alignment": "Neutro",
+            "hp": 30,
+            "max_hp": 30,
+            "mana": 10,
+            "max_mana": 10,
+            "stamina": 10,
+            "max_stamina": 10,
+            "gold": 50,
+            "level": 1,
+            "xp": 0,
+            "alignment": "Neutro",
             "attributes": {"str": 12, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10},
-            "inventory": [], "known_abilities": [],
-            "defense": 10, "attack_bonus": 0, "active_conditions": [],
+            "inventory": [],
+            "known_abilities": [],
+            "defense": 10,
+            "attack_bonus": 0,
+            "active_conditions": [],
         },
         "world": {
-            "current_location": "Lab", "time_of_day": "Dia", "turn_count": 0,
-            "weather": "Neutro", "quest_plan": [], "quest_plan_origin": None,
+            "current_location": "Lab",
+            "time_of_day": "Dia",
+            "turn_count": 0,
+            "weather": "Neutro",
+            "quest_plan": [],
+            "quest_plan_origin": None,
             "danger_level": 1,
         },
-        "campaign_plan": {}, "needs_replan": False,
-        "enemies": [], "party": [], "npcs": {}, "active_npc_name": None,
-        "combat_target": None, "loot_source": None,
+        "campaign_plan": {},
+        "needs_replan": False,
+        "enemies": [],
+        "party": [],
+        "npcs": {},
+        "active_npc_name": None,
+        "combat_target": None,
+        "loot_source": None,
     }
 
 
@@ -69,13 +88,16 @@ def test_artifacts_db_is_dict():
 # Persistência
 # --------------------------------------------------------------------------
 def test_persistence_roundtrip():
-    state = _base_state(messages=[
-        SystemMessage(content="boot"),
-        HumanMessage(content="olá mundo"),
-        AIMessage(content="resposta"),
-    ])
+    state = _base_state(
+        messages=[
+            SystemMessage(content="boot"),
+            HumanMessage(content="olá mundo"),
+            AIMessage(content="resposta"),
+        ]
+    )
     state["game_id"] = "pytest_roundtrip"
     import persistence
+
     save_path = os.path.join(persistence.SAVES_DIR, "pytest_roundtrip.json")
     try:
         assert save_game_state(state) is True
@@ -119,8 +141,13 @@ def test_router_none_normaliza_para_storyteller(monkeypatch):
             return self
 
         def invoke(self, _msgs):
-            return RouterDecision(route=RouteType.NONE, loot_context=None,
-                                  target=None, reasoning="sem intenção", confidence=0.1)
+            return RouterDecision(
+                route=RouteType.NONE,
+                loot_context=None,
+                target=None,
+                reasoning="sem intenção",
+                confidence=0.1,
+            )
 
     monkeypatch.setattr(router_mod, "get_llm", lambda *a, **k: _FakeRouterLLM())
     res = dm_router_node(_base_state([HumanMessage(content="'; DROP TABLE players; --")]))
@@ -144,6 +171,7 @@ def test_get_llm_without_key_returns_fallback(monkeypatch):
 # --------------------------------------------------------------------------
 def test_graph_compiles():
     from main import app
+
     assert app is not None
 
 
@@ -152,13 +180,29 @@ def test_graph_compiles():
 # --------------------------------------------------------------------------
 def test_character_creation_fallback(monkeypatch):
     monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
-    char = create_player_character({
-        "name": "Aria", "class_name": "Mago", "race": "Elfo",
-        "region": "Nova Arcádia", "backstory": "curiosa", "level": 3,
-    })
+    char = create_player_character(
+        {
+            "name": "Aria",
+            "class_name": "Mago",
+            "race": "Elfo",
+            "region": "Nova Arcádia",
+            "backstory": "curiosa",
+            "level": 3,
+        }
+    )
     # spec conflito-01: mana/stamina/attributes saíram; entram Virtudes + Vitalidade
-    for key in ("name", "class_name", "hp", "max_hp", "virtudes", "max_vitalidade",
-                "inventory", "known_cards", "prepared_cards", "defense"):
+    for key in (
+        "name",
+        "class_name",
+        "hp",
+        "max_hp",
+        "virtudes",
+        "max_vitalidade",
+        "inventory",
+        "known_cards",
+        "prepared_cards",
+        "defense",
+    ):
         assert key in char, f"campo ausente: {key}"
     assert char["level"] == 3
     assert isinstance(char["virtudes"], dict)
@@ -202,6 +246,7 @@ def _plan(step=0, beats=2):
 
 def test_storyteller_advances_beat_when_completed(monkeypatch):
     import agents.storyteller as st
+
     monkeypatch.setattr(st, "get_llm", lambda *a, **k: _FakeStoryLLM(True))
 
     state = _base_state(messages=[HumanMessage(content="executo o objetivo")])
@@ -217,6 +262,7 @@ def test_storyteller_advances_beat_when_completed(monkeypatch):
 
 def test_storyteller_keeps_beat_when_not_completed(monkeypatch):
     import agents.storyteller as st
+
     monkeypatch.setattr(st, "get_llm", lambda *a, **k: _FakeStoryLLM(False))
 
     state = _base_state(messages=[HumanMessage(content="olho ao redor")])
@@ -230,6 +276,7 @@ def test_storyteller_keeps_beat_when_not_completed(monkeypatch):
 
 def test_storyteller_flags_replan_on_last_beat(monkeypatch):
     import agents.storyteller as st
+
     monkeypatch.setattr(st, "get_llm", lambda *a, **k: _FakeStoryLLM(True))
 
     state = _base_state(messages=[HumanMessage(content="executo o objetivo final")])
@@ -249,18 +296,34 @@ import combat_mechanics as cm
 
 
 def _enemy(hp=12, name="Goblin 1", eid="goblin_1"):
-    return {"id": eid, "name": name, "hp": hp, "max_hp": hp, "defense": 11,
-            "status": "ativo", "attributes": {"dex": 12, "con": 10},
-            "attacks": [{"name": "Adaga", "bonus": 3, "damage": "1d4+1"}],
-            "active_conditions": []}
+    return {
+        "id": eid,
+        "name": name,
+        "hp": hp,
+        "max_hp": hp,
+        "defense": 11,
+        "status": "ativo",
+        "attributes": {"dex": 12, "con": 10},
+        "attacks": [{"name": "Adaga", "bonus": 3, "damage": "1d4+1"}],
+        "active_conditions": [],
+    }
 
 
 def _combat_player():
-    return {"name": "Kael", "class_name": "Guerreiro", "hp": 30, "max_hp": 30,
-            "stamina": 12, "max_stamina": 12, "mana": 0,
-            "attributes": {"str": 16, "dex": 14, "con": 12},
-            "inventory": [], "attack_bonus": 0,
-            "active_conditions": [], "ability_cooldowns": {}}
+    return {
+        "name": "Kael",
+        "class_name": "Guerreiro",
+        "hp": 30,
+        "max_hp": 30,
+        "stamina": 12,
+        "max_stamina": 12,
+        "mana": 0,
+        "attributes": {"str": 16, "dex": 14, "con": 12},
+        "inventory": [],
+        "attack_bonus": 0,
+        "active_conditions": [],
+        "ability_cooldowns": {},
+    }
 
 
 def test_parse_condition_dot_and_duration():
@@ -281,6 +344,7 @@ def test_condition_tick_applies_dot_and_expires():
 
 def test_combat_node_round_runs_and_returns_state():
     import agents.combat as combat
+
     random.seed(9)
     state = _base_state(messages=[HumanMessage(content="ataco o goblin")])
     state["player"] = _combat_player()

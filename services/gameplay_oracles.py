@@ -5,6 +5,7 @@ Este modulo e so o mapa nome-da-spec -> oraculo, para o orquestrador e para quem
 precisar chamar um oraculo isolado sem copiar logica. Cada funcao devolve a lista de
 classes de problema (vazia = ok). Nao reimplementar: a paridade e testada.
 """
+
 from __future__ import annotations
 
 from collections.abc import Mapping
@@ -13,6 +14,7 @@ from typing import Any
 
 def _gate():
     from evals.evaluators import gameplay_gate
+
     return gameplay_gate
 
 

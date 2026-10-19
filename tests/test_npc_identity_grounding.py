@@ -1,4 +1,5 @@
 """Regressões da matriz B para identidade canônica de NPC."""
+
 from __future__ import annotations
 
 from types import SimpleNamespace
@@ -51,7 +52,9 @@ def _state() -> dict:
 
 def test_reintroducao_por_id_reusa_chave_e_ficha_canonica(monkeypatch) -> None:
     monkeypatch.setattr(
-        storyteller, "generate_new_npc", lambda *_a, **_k: _skriit(in_scene=False),
+        storyteller,
+        "generate_new_npc",
+        lambda *_a, **_k: _skriit(in_scene=False),
     )
     original = {"Skriit Mil-olhos": _skriit(in_scene=False)}
     out = storyteller._with_new_npc(
@@ -87,7 +90,8 @@ def test_npc_actor_resolve_id_sem_criar_segunda_chave(monkeypatch) -> None:
         npc,
         "build_context_pack",
         lambda *_args, **_kwargs: SimpleNamespace(
-            memory_block="", lore_block="", world_state_block=""),
+            memory_block="", lore_block="", world_state_block=""
+        ),
     )
     monkeypatch.setattr(npc, "add_npc_memory", lambda *_args, **_kwargs: True)
     state = {
@@ -125,7 +129,8 @@ def test_coalescencia_legada_por_id_preserva_identidade_e_estado_recente() -> No
     assert merged["Skriit Mil-olhos"]["last_seen_turn"] == 51
 
     raw = persistence._state_to_save_data(
-        {"game_id": "npc-identity", "player": {}, "npcs": npcs}, "npc-identity",
+        {"game_id": "npc-identity", "player": {}, "npcs": npcs},
+        "npc-identity",
     )
     assert list(raw["npcs"]) == ["Skriit Mil-olhos"]
     assert list(persistence._raw_to_state(raw)["npcs"]) == ["Skriit Mil-olhos"]
@@ -147,26 +152,38 @@ def test_memoria_recusa_especie_e_porte_contraditorios_da_matriz_b() -> None:
     }
     accepted, reason = validate_memory_fact(
         make_memory_fact(
-            bad, provenance="inference", source_id="archivist:32", source_turn=32,
+            bad,
+            provenance="inference",
+            source_id="archivist:32",
+            source_turn=32,
         ),
         state,
     )
     assert accepted is None
     assert reason == "npc_identity_contradiction:Skriit Mil-olhos:species"
-    assert npc_identity_contradiction(
-        "Skriit Mil-olhos, goblin pequeno e ferido, aguarda no salão.", state,
-    ) is None
+    assert (
+        npc_identity_contradiction(
+            "Skriit Mil-olhos, goblin pequeno e ferido, aguarda no salão.",
+            state,
+        )
+        is None
+    )
 
 
 def test_coalescencia_prefere_identidade_original_mesmo_em_ordem_inversa() -> None:
     original = {**_skriit(last_seen=27), "created_turn": 2}
     duplicate = {
-        **_skriit(in_scene=True, last_seen=51), "created_turn": 50,
-        "appearance": "Homem alto.", "relationship": 2,
+        **_skriit(in_scene=True, last_seen=51),
+        "created_turn": 50,
+        "appearance": "Homem alto.",
+        "relationship": 2,
     }
-    merged = coalesce_runtime_npcs({
-        "npc_skriit_mil_olhos": duplicate, "Skriit Mil-olhos": original,
-    })
+    merged = coalesce_runtime_npcs(
+        {
+            "npc_skriit_mil_olhos": duplicate,
+            "Skriit Mil-olhos": original,
+        }
+    )
     assert len(merged) == 1
     row = next(iter(merged.values()))
     assert row["appearance"].startswith("Goblin pequeno")
@@ -180,22 +197,27 @@ def test_contexto_e_invariantes_quarentenam_identidade_antiga(monkeypatch) -> No
 
     bad_text = "Skriit Mil-olhos é um homem alto de cabelo grisalho."
     bad = make_memory_fact(
-        bad_text, provenance="inference", source_id="archivist:32", source_turn=32,
+        bad_text,
+        provenance="inference",
+        source_id="archivist:32",
+        source_turn=32,
     )
     state = {**_state(), "memory_facts": [bad], "narrative_summary": bad_text}
     monkeypatch.setattr(context_builder, "query_rag", lambda *_a, **_k: "")
     monkeypatch.setattr(
-        context_builder, "query_session_memory", lambda *_a, **_k: bad_text,
+        context_builder,
+        "query_session_memory",
+        lambda *_a, **_k: bad_text,
     )
     pack = build_context_pack(state, "Skriit", "story", game_id="g")
     assert "homem alto" not in pack.memory_block
 
     memory_violations = check_memory_provenance(
-        state, {"memory_facts": []}, 32,
+        state,
+        {"memory_facts": []},
+        32,
     )
-    assert [row.check_id for row in memory_violations] == [
-        "memory.npc_identity_grounding"
-    ]
+    assert [row.check_id for row in memory_violations] == ["memory.npc_identity_grounding"]
 
     duplicate_state = {
         **state,
@@ -220,9 +242,9 @@ def test_contexto_e_invariantes_quarentenam_identidade_antiga(monkeypatch) -> No
         },
         "event_log": [],
     }
-    assert [
-        row.check_id for row in check_entities(same_name_distinct_ids, None, 51)
-    ] == ["entity.npc_duplicate_identity"]
+    assert [row.check_id for row in check_entities(same_name_distinct_ids, None, 51)] == [
+        "entity.npc_duplicate_identity"
+    ]
 
 
 def test_archivist_recusa_fato_e_resumo_com_identidade_trocada(monkeypatch) -> None:
@@ -231,7 +253,9 @@ def test_archivist_recusa_fato_e_resumo_com_identidade_trocada(monkeypatch) -> N
     class _Structured:
         def invoke(self, _messages):
             return MemoryUpdate(
-                new_summary=bad, important_facts=[bad], chronicle_entry="",
+                new_summary=bad,
+                important_facts=[bad],
+                chronicle_entry="",
             )
 
     class _LLM:

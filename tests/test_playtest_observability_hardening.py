@@ -1,4 +1,5 @@
 """Regressões do hardening de observabilidade do playtest."""
+
 from __future__ import annotations
 
 import json
@@ -77,26 +78,35 @@ def test_run_turn_registra_todos_os_nos_inclusive_combate_aninhado():
             yield "updates", {"campaign_manager": {}}
             yield "updates", {"dm_router": {"next": "storyteller"}}
             yield "updates", {"storyteller": {"next": "combat_agent"}}
-            yield "updates", {"combat_agent": {
-                "combat": {
-                    "active": True,
-                    "last_reactions": [{"actor_id": "e1", "card_id": "aparar"}],
+            yield (
+                "updates",
+                {
+                    "combat_agent": {
+                        "combat": {
+                            "active": True,
+                            "last_reactions": [{"actor_id": "e1", "card_id": "aparar"}],
+                        },
+                        "tactics": [
+                            {
+                                "actor_id": "e1",
+                                "action": "attack",
+                                "target_id": "player",
+                            }
+                        ],
+                        "enemies": [],
+                        "conflict_summary": {
+                            "ferimentos": {
+                                "Inimigo": [
+                                    {
+                                        "categoria": "critico",
+                                        "regiao": "torso",
+                                    }
+                                ],
+                            },
+                        },
+                    }
                 },
-                "tactics": [{
-                    "actor_id": "e1",
-                    "action": "attack",
-                    "target_id": "player",
-                }],
-                "enemies": [],
-                "conflict_summary": {
-                    "ferimentos": {
-                        "Inimigo": [{
-                            "categoria": "critico",
-                            "regiao": "torso",
-                        }],
-                    },
-                },
-            }}
+            )
             yield "updates", {"archivist": {}}
             yield "values", {**state, "combat": {"active": True, "round": 1}}
 
@@ -110,11 +120,16 @@ def test_run_turn_registra_todos_os_nos_inclusive_combate_aninhado():
     )
     assert route == "storyteller"
     assert nodes == [
-        "campaign_manager", "dm_router", "storyteller", "combat_agent", "archivist",
+        "campaign_manager",
+        "dm_router",
+        "storyteller",
+        "combat_agent",
+        "archivist",
     ]
-    assert observations["combat_agent"]["conflict_summary"]["ferimentos"][
-        "Inimigo"
-    ][0]["regiao"] == "torso"
+    assert (
+        observations["combat_agent"]["conflict_summary"]["ferimentos"]["Inimigo"][0]["regiao"]
+        == "torso"
+    )
     assert observations["combat_agent"]["tactics"][0]["actor_id"] == "e1"
 
 
@@ -150,10 +165,13 @@ def test_runner_conta_rejeicao_nova_com_buffer_100_para_100(
             yield "updates", {"dm_router": {"next": "storyteller"}}
             yield "updates", {"storyteller": {}}
             yield "updates", {"archivist": {}}
-            yield "values", {
-                **state,
-                "event_rejections": [*previous[1:], appended],
-            }
+            yield (
+                "values",
+                {
+                    **state,
+                    "event_rejections": [*previous[1:], appended],
+                },
+            )
 
     monkeypatch.setattr(main, "app", CappedRejectionGraph())
     monkeypatch.setattr(
@@ -187,10 +205,13 @@ def test_excecao_de_check_vira_invariant_crash(monkeypatch):
 
 
 def test_no_progress_so_falha_no_limiar_e_reseta_com_progresso():
-    assert invariants.check_combat_no_progress(
-        {"combat_no_progress_streak": invariants.COMBAT_NO_PROGRESS_LIMIT - 1},
-        turn=7,
-    ) == []
+    assert (
+        invariants.check_combat_no_progress(
+            {"combat_no_progress_streak": invariants.COMBAT_NO_PROGRESS_LIMIT - 1},
+            turn=7,
+        )
+        == []
+    )
     violation = invariants.check_combat_no_progress(
         {"combat_no_progress_streak": invariants.COMBAT_NO_PROGRESS_LIMIT},
         turn=8,
@@ -206,8 +227,9 @@ def test_no_progress_so_falha_no_limiar_e_reseta_com_progresso():
         **base,
         "enemies": [{"id": "e1", "status": "ativo", "vitalidade": 3, "ferimentos": {}}],
     }
-    assert invariants.combat_progress_fingerprint(base) != \
-        invariants.combat_progress_fingerprint(changed)
+    assert invariants.combat_progress_fingerprint(base) != invariants.combat_progress_fingerprint(
+        changed
+    )
 
 
 def test_invariante_detecta_summary_com_conflict_id_ja_consumido():
@@ -217,7 +239,8 @@ def test_invariante_detecta_summary_com_conflict_id_ja_consumido():
     }
     violations = invariants.check_all(state, turn=12)
     duplicate = [
-        violation for violation in violations
+        violation
+        for violation in violations
         if violation.check_id == "summary.duplicate_consumption"
     ]
     assert len(duplicate) == 1
@@ -240,10 +263,7 @@ def test_combate_encerrado_nao_pode_deixar_summary_pendente_no_mesmo_invoke():
         context={"combat_ended": True},
     )
 
-    lifecycle = [
-        violation for violation in violations
-        if violation.check_id == "summary.lifecycle"
-    ]
+    lifecycle = [violation for violation in violations if violation.check_id == "summary.lifecycle"]
     assert len(lifecycle) == 1
     assert lifecycle[0].details["conflict_id"] == "conflict-pendente"
 
@@ -254,7 +274,9 @@ def test_invariante_detecta_ultimo_critico_sem_fluxo_terminal():
             "is_player": True,
             "ferimento_espacos": {"leve": 1, "grave": 1, "critico": 1},
             "ferimentos": {
-                "leve": [], "grave": [], "critico": [{"regiao": "torso"}],
+                "leve": [],
+                "grave": [],
+                "critico": [{"regiao": "torso"}],
             },
         },
         "world": {"turn_count": 2},
@@ -278,10 +300,7 @@ def test_summary_pendente_apos_combate_aceita_erro_rag_explicito():
         context={"combat_ended": True},
     )
 
-    assert not any(
-        violation.check_id == "summary.lifecycle"
-        for violation in violations
-    )
+    assert not any(violation.check_id == "summary.lifecycle" for violation in violations)
 
 
 def test_hp_zero_vivo_nao_cria_primeira_morte():
@@ -344,8 +363,9 @@ def test_violation_details_sobrevivem_jsonl_summary_e_report(tmp_path, monkeypat
     with open(tmp_path / "run-detail" / "explorador_1.jsonl", encoding="utf-8") as fp:
         row = json.loads(fp.readline())
     assert row["violation_details"] == [detail]
-    assert summary["violation_samples"]["invariant.crash"]["message"] == \
-        "broken levantou RuntimeError"
+    assert (
+        summary["violation_samples"]["invariant.crash"]["message"] == "broken levantou RuntimeError"
+    )
 
     markdown = report.render_markdown(report.aggregate(str(tmp_path / "run-detail")))
     assert "invariant.crash" in markdown
@@ -386,26 +406,30 @@ def test_evento_de_tentativa_e_normalizado_sem_vazar_payload():
     )
     assert build["network_attempted"] is False
 
-    circuit = _normalize_llm_event({
-        "provider": "deepseek",
-        "model": "deepseek-v4-flash",
-        "tier": "fast",
-        "outcome": "circuit_open",
-        "error": "402 Payment Required",
-    })
+    circuit = _normalize_llm_event(
+        {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "tier": "fast",
+            "outcome": "circuit_open",
+            "error": "402 Payment Required",
+        }
+    )
     assert circuit["network_attempted"] is False
 
 
 def test_circuit_open_e_skip_auditavel_sem_request_custo_ou_falha():
     from playtest.runner import _normalize_llm_event
 
-    circuit = _normalize_llm_event({
-        "provider": "deepseek",
-        "model": "deepseek-v4-flash",
-        "tier": "fast",
-        "outcome": "circuit_open",
-        "error": "402 Payment Required",
-    })
+    circuit = _normalize_llm_event(
+        {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "tier": "fast",
+            "outcome": "circuit_open",
+            "error": "402 Payment Required",
+        }
+    )
     rec = TurnRecord(
         turn=1,
         action="Observo.",
@@ -416,7 +440,8 @@ def test_circuit_open_e_skip_auditavel_sem_request_custo_ou_falha():
     result = _result(history=[rec], startup_llm_events=[dict(circuit)])
 
     summary = telemetry.build_summary(
-        result, [telemetry.turn_to_record(rec)],
+        result,
+        [telemetry.turn_to_record(rec)],
     )
 
     assert summary["llm_attempts"] == 2
@@ -429,15 +454,17 @@ def test_circuit_open_e_skip_auditavel_sem_request_custo_ou_falha():
 
 
 def test_startup_entra_no_total_de_tentativas_e_custo():
-    startup = [{
-        "provider": "deepseek",
-        "model": "deepseek-v4-flash",
-        "tier": "smart",
-        "status": "success",
-        "network_attempted": True,
-        "latency_ms": 10,
-        "fell_back": False,
-    }]
+    startup = [
+        {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "tier": "smart",
+            "status": "success",
+            "network_attempted": True,
+            "latency_ms": 10,
+            "fell_back": False,
+        }
+    ]
     turn_event = {
         **startup[0],
         "tier": "fast",
@@ -509,7 +536,10 @@ def test_manifest_accepts_declared_seed_matrix_per_profile(tmp_path, monkeypatch
             seed=9501,
             history=[record],
             final_state={
-                "game_id": "merchant-game", "player": {}, "world": {}, "event_log": [],
+                "game_id": "merchant-game",
+                "player": {},
+                "world": {},
+                "event_log": [],
             },
             save_path=str(save),
         ),
@@ -586,10 +616,7 @@ def test_run_real_exige_sucesso_de_rede_e_nao_apenas_intencao(
     inspected = telemetry.finish_run("run-formal", status="complete")
 
     assert inspected["complete"] is False
-    assert any(
-        "sucesso de rede" in error
-        for error in inspected["configuration_errors"]
-    )
+    assert any("sucesso de rede" in error for error in inspected["configuration_errors"])
 
 
 def test_run_real_com_sucesso_de_rede_pode_fechar_verde(
@@ -632,8 +659,7 @@ def test_manifest_rejeita_summary_parseavel_com_campos_incoerentes(
 
     assert inspected["complete"] is False
     assert any(
-        item["field"] == "summary.turns_completed"
-        for item in inspected["artifact_mismatches"]
+        item["field"] == "summary.turns_completed" for item in inspected["artifact_mismatches"]
     )
 
 
@@ -647,24 +673,17 @@ def test_no_invariants_nunca_fecha_run_formal_verde(tmp_path, monkeypatch):
     inspected = telemetry.finish_run("run-formal", status="complete")
 
     assert inspected["complete"] is False
-    assert any(
-        "invariantes" in error.casefold()
-        for error in inspected["configuration_errors"]
-    )
+    assert any("invariantes" in error.casefold() for error in inspected["configuration_errors"])
 
 
 def test_manifest_e_summary_vinculam_save_e_game_id(tmp_path, monkeypatch):
     run_dir, save = _persist_formal_campaign(tmp_path, monkeypatch)
 
     inspected = telemetry.finish_run("run-formal", status="complete")
-    summary = json.loads(
-        (run_dir / "explorador_1.summary.json").read_text(encoding="utf-8")
-    )
+    summary = json.loads((run_dir / "explorador_1.summary.json").read_text(encoding="utf-8"))
     meta = json.loads((run_dir / "run.meta.json").read_text(encoding="utf-8"))
     campaign = meta["campaigns"]["explorador_1"]
-    row = json.loads(
-        (run_dir / "explorador_1.jsonl").read_text(encoding="utf-8")
-    )
+    row = json.loads((run_dir / "explorador_1.jsonl").read_text(encoding="utf-8"))
 
     assert inspected["complete"] is True
     assert summary["game_id"] == "game-formal"
@@ -701,20 +720,24 @@ def test_jsonl_expoe_reacoes_e_ferimentos_mecanicos():
         "enemies": [],
         "conflict_summary": {
             "ferimentos": {
-                "Lobo": [{
-                    "categoria": "critico",
-                    "regiao": "torso",
-                }],
+                "Lobo": [
+                    {
+                        "categoria": "critico",
+                        "regiao": "torso",
+                    }
+                ],
             },
         },
         "combat": {
             "active": True,
             "last_reactions": [{"actor_id": "lobo", "card_id": "aparar"}],
-            "last_tactics": [{
-                "actor_id": "lobo",
-                "action": "attack",
-                "target_id": "player",
-            }],
+            "last_tactics": [
+                {
+                    "actor_id": "lobo",
+                    "action": "attack",
+                    "target_id": "player",
+                }
+            ],
         },
         "world": {},
     }
@@ -723,11 +746,13 @@ def test_jsonl_expoe_reacoes_e_ferimentos_mecanicos():
     row = telemetry.turn_to_record(rec)
 
     assert row["reactions"] == [{"actor_id": "lobo", "card_id": "aparar"}]
-    assert row["last_tactics"] == [{
-        "actor_id": "lobo",
-        "action": "attack",
-        "target_id": "player",
-    }]
+    assert row["last_tactics"] == [
+        {
+            "actor_id": "lobo",
+            "action": "attack",
+            "target_id": "player",
+        }
+    ]
     assert row["player_wounds"]["grave"][0]["regiao"] == "braco"
     assert row["enemy_wounds"]["Lobo"]["critico"][0]["regiao"] == "torso"
     assert row["conflict_wounds"]["Lobo"][0]["regiao"] == "torso"
@@ -737,15 +762,19 @@ def test_jsonl_expoe_reacoes_e_ferimentos_mecanicos():
         [row],
     )
     assert summary["combat_coverage"]["tactics"] == 1
-    markdown = report.render_markdown(report.RunReport(
-        run_id="tactics",
-        campaigns=[summary],
-        top_violations=[],
-        top_errors=[],
-        deltas=None,
-    ))
-    assert "| perfil | turnos combat | conflitos iniciados | encerrados | reações | táticas |" \
+    markdown = report.render_markdown(
+        report.RunReport(
+            run_id="tactics",
+            campaigns=[summary],
+            top_violations=[],
+            top_errors=[],
+            deltas=None,
+        )
+    )
+    assert (
+        "| perfil | turnos combat | conflitos iniciados | encerrados | reações | táticas |"
         in markdown
+    )
 
 
 def test_backend_rag_offline_simula_writes_com_eventos_sem_faiss(monkeypatch):
@@ -770,24 +799,43 @@ def test_backend_rag_offline_simula_writes_com_eventos_sem_faiss(monkeypatch):
             assert rag.add_npc_memory("game-1", "Ária", ["lembrança"]) is True
             # Aliases importados antes do context manager também precisam apontar
             # para o backend efêmero.
-            assert archivist_module.add_memory_to_session(
-                "game-1", ["arquivo"],
-            ) is True
-            assert archivist_module.add_npc_memory(
-                "game-1", "Ária", ["arquivo NPC"],
-            ) is True
-            assert npc_module.add_npc_memory(
-                "game-1", "Ária", ["ator NPC"],
-            ) is True
-            assert world_module.add_memory_to_session(
-                "game-1", ["pulso do mundo"],
-            ) is True
+            assert (
+                archivist_module.add_memory_to_session(
+                    "game-1",
+                    ["arquivo"],
+                )
+                is True
+            )
+            assert (
+                archivist_module.add_npc_memory(
+                    "game-1",
+                    "Ária",
+                    ["arquivo NPC"],
+                )
+                is True
+            )
+            assert (
+                npc_module.add_npc_memory(
+                    "game-1",
+                    "Ária",
+                    ["ator NPC"],
+                )
+                is True
+            )
+            assert (
+                world_module.add_memory_to_session(
+                    "game-1",
+                    ["pulso do mundo"],
+                )
+                is True
+            )
     finally:
         rag.set_rag_operation_hook(None)
 
     assert len(events) == 6
     assert {event.operation for event in events} == {
-        "add_session_memory", "add_npc_memory",
+        "add_session_memory",
+        "add_npc_memory",
     }
     assert all(event.success for event in events)
     assert all(event.provider == "offline-simulated" for event in events)
@@ -813,14 +861,12 @@ def test_backend_rag_offline_restaura_aliases_entre_multiplas_campanhas():
         with _offline_embeddings(True):
             stubs.append(rag.add_memory_to_session)
             assert rag.add_memory_to_session(campaign, ["fato"]) is True
-            assert archivist_module.add_memory_to_session is \
-                rag.add_memory_to_session
+            assert archivist_module.add_memory_to_session is rag.add_memory_to_session
             assert archivist_module.add_npc_memory is rag.add_npc_memory
             assert npc_module.add_npc_memory is rag.add_npc_memory
         assert rag.add_memory_to_session is originals["rag_session"]
         assert rag.add_npc_memory is originals["rag_npc"]
-        assert archivist_module.add_memory_to_session is \
-            originals["archivist_session"]
+        assert archivist_module.add_memory_to_session is originals["archivist_session"]
         assert archivist_module.add_npc_memory is originals["archivist_npc"]
         assert npc_module.add_npc_memory is originals["npc_npc"]
 
@@ -874,21 +920,11 @@ def test_campanhas_offline_confirmam_rag_e_consumo_do_resumo(
     npc_result = runner.run_campaign("npc_only", turns=8, seed=0)
     fugitive_result = runner.run_campaign("fujao", turns=12, seed=0)
 
-    npc_rag_events = [
-        event
-        for record in npc_result.history
-        for event in record.rag_events
-    ]
+    npc_rag_events = [event for record in npc_result.history for event in record.rag_events]
     assert npc_rag_events
     assert all(event["success"] for event in npc_rag_events)
-    assert all(
-        event["provider"] == "offline-simulated"
-        for event in npc_rag_events
-    )
-    assert all(
-        event["path"].startswith("memory://playtest/")
-        for event in npc_rag_events
-    )
+    assert all(event["provider"] == "offline-simulated" for event in npc_rag_events)
+    assert all(event["path"].startswith("memory://playtest/") for event in npc_rag_events)
 
     target_checks = {"rag.persistence_error", "summary.lifecycle"}
     for result in (npc_result, fugitive_result):
@@ -903,7 +939,9 @@ def test_cli_retorna_um_para_error_ou_aborto(monkeypatch, tmp_path):
     from playtest import telemetry as telemetry_module
 
     monkeypatch.setattr(
-        telemetry_module, "PLAYTEST_RUNS_DIR", str(tmp_path / "runs"),
+        telemetry_module,
+        "PLAYTEST_RUNS_DIR",
+        str(tmp_path / "runs"),
     )
 
     monkeypatch.setattr(
@@ -916,9 +954,20 @@ def test_cli_retorna_um_para_error_ou_aborto(monkeypatch, tmp_path):
             turns_requested=1,
         ),
     )
-    assert cli.main([
-        "run", "--profile", "explorador", "--turns", "1", "--seed", "1",
-    ]) == 1
+    assert (
+        cli.main(
+            [
+                "run",
+                "--profile",
+                "explorador",
+                "--turns",
+                "1",
+                "--seed",
+                "1",
+            ]
+        )
+        == 1
+    )
 
     monkeypatch.setattr(
         cli,
@@ -930,6 +979,17 @@ def test_cli_retorna_um_para_error_ou_aborto(monkeypatch, tmp_path):
             turns_requested=1,
         ),
     )
-    assert cli.main([
-        "run", "--profile", "explorador", "--turns", "1", "--seed", "1",
-    ]) == 1
+    assert (
+        cli.main(
+            [
+                "run",
+                "--profile",
+                "explorador",
+                "--turns",
+                "1",
+                "--seed",
+                "1",
+            ]
+        )
+        == 1
+    )

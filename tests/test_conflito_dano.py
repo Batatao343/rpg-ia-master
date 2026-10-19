@@ -7,18 +7,27 @@ from services import conflict_damage as cd
 
 
 def _target(vit=10, corpo=2, **over):
-    t = {"virtudes": {"corpo": corpo, "agilidade": 1, "forca": 1, "mente": 1, "carisma": 1},
-         "vitalidade": vit, "max_vitalidade": vit,
-         "ferimentos": {"leve": [], "grave": [], "critico": []},
-         "ferimento_espacos": gamedata.espacos_ferimento_para_corpo(corpo),
-         "active_conditions": []}
+    t = {
+        "virtudes": {"corpo": corpo, "agilidade": 1, "forca": 1, "mente": 1, "carisma": 1},
+        "vitalidade": vit,
+        "max_vitalidade": vit,
+        "ferimentos": {"leve": [], "grave": [], "critico": []},
+        "ferimento_espacos": gamedata.espacos_ferimento_para_corpo(corpo),
+        "active_conditions": [],
+    }
     t.update(over)
     return t
 
 
 def _armor(protecao=2, reducoes_max=0, integ=6):
-    return {"categoria": "media", "protecao": protecao, "integridade_max": integ,
-            "integridade_atual": integ, "reducoes_max": reducoes_max, "comprometida": False}
+    return {
+        "categoria": "media",
+        "protecao": protecao,
+        "integridade_max": integ,
+        "integridade_atual": integ,
+        "reducoes_max": reducoes_max,
+        "comprometida": False,
+    }
 
 
 # --------------------------------------------------------------------------
@@ -43,14 +52,14 @@ def test_perfurante_reduz_protecao_um():
     perf = _target(vit=20, armor=_armor(protecao=2))
     rc = cd.resolve_damage_and_wounds(base, damage_base=5, damage_type="cortante")
     rp = cd.resolve_damage_and_wounds(perf, damage_base=5, damage_type="perfurante")
-    assert rc["dano_final"] == 3   # proteção 2
-    assert rp["dano_final"] == 4   # proteção 2-1=1
+    assert rc["dano_final"] == 3  # proteção 2
+    assert rp["dano_final"] == 4  # proteção 2-1=1
 
 
 def test_impactante_reduz_integridade_extra():
     t = _target(vit=20, armor=_armor(protecao=2, integ=6))
     cd.resolve_damage_and_wounds(t, damage_base=5, damage_type="impactante")
-    assert t["armor"]["integridade_atual"] == 5   # -1 extra ao proteger
+    assert t["armor"]["integridade_atual"] == 5  # -1 extra ao proteger
 
 
 # --------------------------------------------------------------------------
@@ -59,7 +68,7 @@ def test_impactante_reduz_integridade_extra():
 def test_igneo_mais_2_se_atravessa():
     t = _target(vit=20)
     r = cd.resolve_damage_and_wounds(t, damage_base=3, damage_type="igneo")
-    assert r["dano_final"] == 5   # 3 +2
+    assert r["dano_final"] == 5  # 3 +2
 
 
 def test_gelido_da_vantagem_ao_proximo():
@@ -133,8 +142,8 @@ def test_protecao_reduz_dano_automatico():
 def test_gastar_integridade_reduz_dano_extra():
     t = _target(vit=20, armor=_armor(protecao=1, reducoes_max=2, integ=6))
     r = cd.resolve_damage_and_wounds(t, damage_base=5, damage_type="cortante")
-    assert r["dano_final"] == 2                    # 5 -1 proteção -2 integridade
-    assert t["armor"]["integridade_atual"] == 4    # 2 pontos gastos
+    assert r["dano_final"] == 2  # 5 -1 proteção -2 integridade
+    assert t["armor"]["integridade_atual"] == 4  # 2 pontos gastos
 
 
 def test_integridade_zero_fica_comprometida():
@@ -144,22 +153,33 @@ def test_integridade_zero_fica_comprometida():
 
 
 def test_armadura_e_escudo_nao_somam():
-    t = _target(vit=20, armor=_armor(protecao=2, reducoes_max=0),
-                shield={"categoria": "pesado", "protecao": 3, "integridade_max": 7,
-                        "integridade_atual": 7, "reducoes_max": 0, "comprometida": False})
-    com_armadura = cd.resolve_damage_and_wounds(dict(t, vitalidade=20), damage_base=8,
-                                                damage_type="cortante", use_shield=False)
-    com_escudo = cd.resolve_damage_and_wounds(dict(t, vitalidade=20), damage_base=8,
-                                              damage_type="cortante", use_shield=True)
-    assert com_armadura["dano_final"] == 6   # proteção 2
-    assert com_escudo["dano_final"] == 5     # proteção 3 (não 2+3=5 de soma)
+    t = _target(
+        vit=20,
+        armor=_armor(protecao=2, reducoes_max=0),
+        shield={
+            "categoria": "pesado",
+            "protecao": 3,
+            "integridade_max": 7,
+            "integridade_atual": 7,
+            "reducoes_max": 0,
+            "comprometida": False,
+        },
+    )
+    com_armadura = cd.resolve_damage_and_wounds(
+        dict(t, vitalidade=20), damage_base=8, damage_type="cortante", use_shield=False
+    )
+    com_escudo = cd.resolve_damage_and_wounds(
+        dict(t, vitalidade=20), damage_base=8, damage_type="cortante", use_shield=True
+    )
+    assert com_armadura["dano_final"] == 6  # proteção 2
+    assert com_escudo["dano_final"] == 5  # proteção 3 (não 2+3=5 de soma)
 
 
 # --------------------------------------------------------------------------
 # Etapa 5 — Ferimentos localizados + agravamento
 # --------------------------------------------------------------------------
 def test_excedente_cria_ferimento_pelos_limites_de_gravidade():
-    t = _target(vit=10, corpo=2)   # excedente 6 -> Grave (6-10)
+    t = _target(vit=10, corpo=2)  # excedente 6 -> Grave (6-10)
     r = cd.resolve_damage_and_wounds(t, damage_base=16, damage_type="perfurante")
     assert r["wound"]["categoria"] == "grave"
     assert len(t["ferimentos"]["grave"]) == 1
@@ -176,7 +196,7 @@ def test_mesma_regiao_agrava_leve_mais_leve_vira_grave():
 def test_categoria_cheia_escala_para_seguinte():
     t = _target(corpo=2)
     t["ferimento_espacos"] = {"leve": 1, "grave": 2, "critico": 1}
-    cd.apply_wound(t, "leve", "perna")      # ocupa o único slot Leve
+    cd.apply_wound(t, "leve", "perna")  # ocupa o único slot Leve
     w = cd.apply_wound(t, "leve", "cabeca")  # Leve cheio -> escala p/ Grave
     assert w["categoria"] == "grave"
 
@@ -188,7 +208,7 @@ def test_sangromante_paga_com_vitalidade_ate_zero_depois_vira_ferimento():
     t = _target(vit=3, corpo=2)
     r = cd.sacrifice_vitality(t, 5)
     assert t["vitalidade"] == 0 and r["deficit"] == 2
-    assert r["wound"]["categoria"] == "leve"   # déficit 2 (1-5)
+    assert r["wound"]["categoria"] == "leve"  # déficit 2 (1-5)
 
 
 def test_armadura_nao_protege_sacrificio_voluntario():
@@ -216,6 +236,6 @@ def test_recupera_integridade_curto_metade_longo_tudo():
     arm = _armor(protecao=2, integ=8)
     arm["integridade_atual"] = 2
     cd.recover_integrity(arm, "curto")
-    assert arm["integridade_atual"] == 6   # 2 + ceil(8/2)=4
+    assert arm["integridade_atual"] == 6  # 2 + ceil(8/2)=4
     cd.recover_integrity(arm, "longo")
     assert arm["integridade_atual"] == 8

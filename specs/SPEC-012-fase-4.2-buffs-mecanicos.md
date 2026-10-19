@@ -83,6 +83,7 @@ def condition_modifiers(entity: Dict) -> Dict[str, int]:
     """Soma delta das active_conditions por stat. Ex.: {"damage": 5, "ac": 0,
     "attack": -2, "save": 0}. fear embute -2 em attack."""
 
+
 def has_control(entity: Dict, kind: str) -> bool:
     """True se condição ativa com control == kind ("stun"/"root"/"fear")."""
 ```

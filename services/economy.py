@@ -9,6 +9,7 @@ Preço = base(raridade|value_gold) × mod_regional(economy_tags) × mult_mercado
         × mod_reputação(fação controladora do local — projection 2.5+) [× 0.5 venda]
 LLM NUNCA decide preço; `gold_value` proposto pela IA para item novo é ignorado.
 """
+
 from __future__ import annotations
 
 import copy
@@ -54,19 +55,38 @@ class PublicMarketSnapshot(TypedDict):
     quotes: list[MarketQuote]
     known_recipes: list[str]
 
+
 RARITY_BASE = {
-    "common": 25, "comum": 25,
-    "uncommon": 100, "incomum": 100,
-    "rare": 400, "raro": 400,
-    "epic": 1500, "epico": 1500, "épico": 1500,
-    "legendary": 6000, "lendario": 6000, "lendário": 6000,
+    "common": 25,
+    "comum": 25,
+    "uncommon": 100,
+    "incomum": 100,
+    "rare": 400,
+    "raro": 400,
+    "epic": 1500,
+    "epico": 1500,
+    "épico": 1500,
+    "legendary": 6000,
+    "lendario": 6000,
+    "lendário": 6000,
 }
 SELL_FACTOR = 0.5
 HOSTILE_BUY_MULT = 1.5
 ABUNDANT_MULT = 0.6
-_RARITY_RANK = {"comum": 0, "common": 0, "incomum": 1, "uncommon": 1,
-                "raro": 2, "rare": 2, "epico": 3, "epic": 3, "épico": 3,
-                "lendario": 4, "lendário": 4, "legendary": 4}
+_RARITY_RANK = {
+    "comum": 0,
+    "common": 0,
+    "incomum": 1,
+    "uncommon": 1,
+    "raro": 2,
+    "rare": 2,
+    "epico": 3,
+    "epic": 3,
+    "épico": 3,
+    "lendario": 4,
+    "lendário": 4,
+    "legendary": 4,
+}
 
 
 def _round5(v: float) -> int:
@@ -99,8 +119,10 @@ SCARCE_MULT = 1.8
 
 
 def _blocked_pairs(projection: dict | None) -> set:
-    return {frozenset((r.get("a"), r.get("b")))
-            for r in (projection or {}).get("blocked_routes", []) or []}
+    return {
+        frozenset((r.get("a"), r.get("b")))
+        for r in (projection or {}).get("blocked_routes", []) or []
+    }
 
 
 def is_reachable(loc_a: str, loc_b: str, projection: dict | None) -> bool:
@@ -125,15 +147,18 @@ def is_reachable(loc_a: str, loc_b: str, projection: dict | None) -> bool:
 def producing_locations(item_id: str) -> list[str]:
     """Locais cujo economy_tags intersecta o do item (regiões produtoras)."""
     from gamedata import WORLD_MAP
+
     item_tags = set((ARTIFACTS_DB.get(item_id) or {}).get("economy_tags") or [])
     if not item_tags:
         return []
-    return [l["id"] for l in WORLD_MAP.get("locations", [])
-            if item_tags & set(l.get("economy_tags") or [])]
+    return [
+        l["id"]
+        for l in WORLD_MAP.get("locations", [])
+        if item_tags & set(l.get("economy_tags") or [])
+    ]
 
 
-def supply_factor(item_id: str, location_id: str,
-                  projection: dict | None = None) -> float:
+def supply_factor(item_id: str, location_id: str, projection: dict | None = None) -> float:
     """Fase 6.1: 0.6 produzido AQUI · 1.0 produtor alcançável · 1.8 escasso
     (todas as rotas até produtores bloqueadas). Item sem tags → 1.0 sempre."""
     producers = producing_locations(item_id)
@@ -148,8 +173,7 @@ def supply_factor(item_id: str, location_id: str,
     return SCARCE_MULT
 
 
-def price(item_id: str, *, mode: str, state: dict,
-          merchant: dict | None = None) -> int:
+def price(item_id: str, *, mode: str, state: dict, merchant: dict | None = None) -> int:
     """Preço final determinístico. mode: 'buy' (jogador compra) | 'sell' (vende)."""
     location_id = (state.get("world") or {}).get("current_location_id", "")
     p = float(base_price(item_id))
@@ -173,6 +197,7 @@ def is_unique_available(item_id: str, projection: dict | None) -> bool:
     holder="world" = voltou ao pool (saqueado no downed — spec balanceamento R3):
     pode reaparecer em loot/loja/inimigo como se nunca tivesse sido reclamado."""
     from inventory import is_unique
+
     if not is_unique(item_id):
         return True
     entry = ((projection or {}).get("unique_items") or {}).get(item_id)
@@ -187,17 +212,21 @@ def unique_holder(item_id: str, projection: dict | None) -> str | None:
 def claim_event(item_id: str, holder: str = "player") -> dict:
     """Evento de posse (source=engine — o LLM nunca propõe isto)."""
     etype = "unique_item_claimed" if holder == "player" else "unique_item_lost"
-    return {"type": etype, "actor_id": "player", "target_id": item_id,
-            "detail": f"posse de {item_id} -> {holder}",
-            "payload": {"holder": holder}, "source": "engine"}
+    return {
+        "type": etype,
+        "actor_id": "player",
+        "target_id": item_id,
+        "detail": f"posse de {item_id} -> {holder}",
+        "payload": {"holder": holder},
+        "source": "engine",
+    }
 
 
 # ---------------------------------------------------------------------------
 # Mercadores — estoque persistente no world state, restock por relógio
 # ---------------------------------------------------------------------------
 def merchants_at(location_id: str) -> list[tuple[str, dict]]:
-    return [(mid, m) for mid, m in MERCHANTS.items()
-            if m.get("location_id") == location_id]
+    return [(mid, m) for mid, m in MERCHANTS.items() if m.get("location_id") == location_id]
 
 
 def _ensure_stock(world: dict, mid: str, merchant: dict) -> dict[str, int]:
@@ -205,7 +234,8 @@ def _ensure_stock(world: dict, mid: str, merchant: dict) -> dict[str, int]:
     if mid not in stocks:
         stocks[mid] = dict(merchant.get("base_stock") or {})
         world.setdefault("merchant_restock_day", {})[mid] = int(
-            (world.get("world_clock") or {}).get("day", 1) or 1)
+            (world.get("world_clock") or {}).get("day", 1) or 1
+        )
     return stocks[mid]
 
 
@@ -216,8 +246,12 @@ def clamp_gold(player: dict, value: int) -> int:
     if value < 0:
         logging.getLogger("rpg.economy").warning(
             "economy.negative_gold_prevented",
-            extra={"event": "economy.negative_gold_prevented", "attempted_gold": value,
-                   "player": str((player or {}).get("name", ""))})
+            extra={
+                "event": "economy.negative_gold_prevented",
+                "attempted_gold": value,
+                "player": str((player or {}).get("name", "")),
+            },
+        )
         return 0
     return value
 
@@ -230,12 +264,19 @@ def restock(world: dict, *, projection: dict | None = None) -> dict:
     stocks = world.get("merchant_stocks") or {}
     last = world.setdefault("merchant_restock_day", {})
     from inventory import is_unique
+
     for mid, m in MERCHANTS.items():
         if mid in stocks and day - int(last.get(mid, day)) >= int(m.get("restock_days", 3)):
-            held = {iid: q for iid, q in (stocks[mid] or {}).items()
-                    if q and is_unique(iid) and (
-                        unique_holder(iid, projection) == mid
-                        or (projection is None and iid not in (m.get("base_stock") or {})))}
+            held = {
+                iid: q
+                for iid, q in (stocks[mid] or {}).items()
+                if q
+                and is_unique(iid)
+                and (
+                    unique_holder(iid, projection) == mid
+                    or (projection is None and iid not in (m.get("base_stock") or {}))
+                )
+            }
             stocks[mid] = {**(m.get("base_stock") or {}), **held}
             last[mid] = day
     return world
@@ -250,18 +291,28 @@ def merchant_stock(state: dict, location_id: str) -> tuple[str | None, dict[str,
     world = state.get("world") or {}
     stock = dict(_ensure_stock(world, mid, merchant))
     if _controller_disposition(state, location_id) == "hostil":
-        stock = {iid: q for iid, q in stock.items()
-                 if _RARITY_RANK.get(str((ARTIFACTS_DB.get(iid) or {}).get("rarity", "comum")).lower(), 0) < 2}
+        stock = {
+            iid: q
+            for iid, q in stock.items()
+            if _RARITY_RANK.get(
+                str((ARTIFACTS_DB.get(iid) or {}).get("rarity", "comum")).lower(), 0
+            )
+            < 2
+        }
     # Fase 6.1: item escasso (produtores inalcançáveis) SOME da prateleira —
     # o mercador não vende o que não chega. Restock não repõe enquanto bloqueado
     # (o estoque base segue lá; a view esconde até route_cleared).
     proj = state.get("world_projection")
-    stock = {iid: q for iid, q in stock.items()
-             if supply_factor(iid, location_id, proj) < SCARCE_MULT}
+    stock = {
+        iid: q for iid, q in stock.items() if supply_factor(iid, location_id, proj) < SCARCE_MULT
+    }
     # Fase 6.2: único já reclamado some — EXCETO se o dono atual é ESTE mercador
     # (jogador vendeu pra ele; segue recomprável, rastreado no event_log).
-    stock = {iid: q for iid, q in stock.items()
-             if is_unique_available(iid, proj) or unique_holder(iid, proj) == mid}
+    stock = {
+        iid: q
+        for iid, q in stock.items()
+        if is_unique_available(iid, proj) or unique_holder(iid, proj) == mid
+    }
     return mid, {iid: q for iid, q in stock.items() if q > 0}
 
 
@@ -283,34 +334,43 @@ def public_market_snapshot(
     merchant = MERCHANTS.get(mid) or {}
     quotes: list[MarketQuote] = []
     for item_id, qty in sorted(stock.items()):
-        quotes.append({
-            "item_id": item_id,
-            "item_name": item_display(make_entry(item_id)),
-            "stock": int(qty or 0),
-            "buy_price": price(item_id, mode="buy", state=work, merchant=merchant),
-            "sell_price": price(item_id, mode="sell", state=work, merchant=merchant),
-        })
+        quotes.append(
+            {
+                "item_id": item_id,
+                "item_name": item_display(make_entry(item_id)),
+                "stock": int(qty or 0),
+                "buy_price": price(item_id, mode="buy", state=work, merchant=merchant),
+                "sell_price": price(item_id, mode="sell", state=work, merchant=merchant),
+            }
+        )
     quoted_ids = {quote["item_id"] for quote in quotes}
     # Um mercador visível também pode cotar publicamente os itens que o jogador
     # carrega, ainda que não os tenha em estoque. ``stock=0`` impede compra, mas
     # permite decidir a venda sem ler tabelas privadas.
-    inventory_ids = sorted({
-        str(entry.get("id") or "")
-        for entry in (work.get("player") or {}).get("inventory") or []
-        if isinstance(entry, dict) and int(entry.get("qty", 1) or 0) > 0
-    } - quoted_ids - {""})
+    inventory_ids = sorted(
+        {
+            str(entry.get("id") or "")
+            for entry in (work.get("player") or {}).get("inventory") or []
+            if isinstance(entry, dict) and int(entry.get("qty", 1) or 0) > 0
+        }
+        - quoted_ids
+        - {""}
+    )
     for item_id in inventory_ids:
-        quotes.append({
-            "item_id": item_id,
-            "item_name": item_display(make_entry(item_id)),
-            "stock": 0,
-            "buy_price": price(item_id, mode="buy", state=work, merchant=merchant),
-            "sell_price": price(item_id, mode="sell", state=work, merchant=merchant),
-        })
+        quotes.append(
+            {
+                "item_id": item_id,
+                "item_name": item_display(make_entry(item_id)),
+                "stock": 0,
+                "buy_price": price(item_id, mode="buy", state=work, merchant=merchant),
+                "sell_price": price(item_id, mode="sell", state=work, merchant=merchant),
+            }
+        )
     location = get_location(location_id) or {}
     craft_tags = set(location.get("craft_tags") or [])
     known_recipes = sorted(
-        rid for rid, recipe in RECIPES.items()
+        rid
+        for rid, recipe in RECIPES.items()
         if not recipe.get("craft_tag") or recipe.get("craft_tag") in craft_tags
     )
     clock = world.get("world_clock") or {}
@@ -370,11 +430,13 @@ def log_trade(mode: str, outcome: dict) -> None:
     catalogo) + `economy.unique_claim_conflict` (warning) quando um unico ja existe no mundo."""
     try:
         from observability.telemetry import log_event
+
         ok = bool(outcome.get("ok"))
         code = "ok" if ok else trade_reason_code(outcome.get("reason"))
         fields: dict[str, Any] = {
             "mode": mode if mode in ("buy", "sell", "craft") else "other",
-            "outcome": "ok" if ok else "refused", "reason_code": code,
+            "outcome": "ok" if ok else "refused",
+            "reason_code": code,
             "gold_delta": int(outcome.get("gold_delta", 0) or 0),
         }
         iid = str(outcome.get("item_id") or "")
@@ -382,8 +444,13 @@ def log_trade(mode: str, outcome: dict) -> None:
             fields["item_id"] = iid
         log_event("economy", "trade", level="info", **fields)
         if code == "unique_conflict":
-            log_event("economy", "unique_claim_conflict", level="warning", source="craft",
-                      **({"item_id": iid} if "item_id" in fields else {}))
+            log_event(
+                "economy",
+                "unique_claim_conflict",
+                level="warning",
+                source="craft",
+                **({"item_id": iid} if "item_id" in fields else {}),
+            )
     except Exception:  # silent-ok: log best-effort; nunca altera a transacao
         pass
 
@@ -406,7 +473,10 @@ def execute_trade(state: dict, mode: str, item_ref: str, qty: int = 1) -> dict:
         if not iid:
             return {"ok": False, "reason": f"O mercador não tem '{item_ref}' à venda."}
         if stock.get(iid, 0) < qty:
-            return {"ok": False, "reason": f"Estoque insuficiente de {item_display(make_entry(iid))}."}
+            return {
+                "ok": False,
+                "reason": f"Estoque insuficiente de {item_display(make_entry(iid))}.",
+            }
         unit = price(iid, mode="buy", state=state, merchant=merchant)
         total = unit * qty
         if int(player.get("gold", 0)) < total:
@@ -414,11 +484,19 @@ def execute_trade(state: dict, mode: str, item_ref: str, qty: int = 1) -> dict:
         player["gold"] = clamp_gold(player, int(player.get("gold", 0)) - total)
         player["inventory"] = add_item(player["inventory"], iid, qty)
         world["merchant_stocks"][mid][iid] = world["merchant_stocks"][mid].get(iid, 0) - qty
-        out = {"ok": True, "mode": "buy", "item_id": iid,
-               "item_name": item_display(make_entry(iid)), "qty": qty,
-               "gold_delta": -total, "player": player, "world": world}
+        out = {
+            "ok": True,
+            "mode": "buy",
+            "item_id": iid,
+            "item_name": item_display(make_entry(iid)),
+            "qty": qty,
+            "gold_delta": -total,
+            "player": player,
+            "world": world,
+        }
         # Fase 6.2: comprar um único registra a posse (inclusive recompra do mercador)
         from inventory import is_unique
+
         if is_unique(iid):
             out["pending_events"] = [claim_event(iid, "player")]
         return out
@@ -444,13 +522,21 @@ def execute_trade(state: dict, mode: str, item_ref: str, qty: int = 1) -> dict:
         player["inventory"] = new_inv
         player, unequipped = reconcile_equipment(player)
         player["gold"] = int(player.get("gold", 0)) + total  # sinal em PYTHON, sempre
-        out = {"ok": True, "mode": "sell", "item_id": iid,
-               "item_name": item_display(make_entry(iid)), "qty": qty,
-               "gold_delta": total, "player": player, "world": world,
-               "unequipped": unequipped}
+        out = {
+            "ok": True,
+            "mode": "sell",
+            "item_id": iid,
+            "item_name": item_display(make_entry(iid)),
+            "qty": qty,
+            "gold_delta": total,
+            "player": player,
+            "world": world,
+            "unequipped": unequipped,
+        }
         # Fase 6.2: vender um único → mercador SEGURA o item (recomprável,
         # nunca volta ao pool de drop) e a perda entra no event_log.
         from inventory import is_unique
+
         if is_unique(iid) and mid:
             stocks = world.setdefault("merchant_stocks", {}).setdefault(mid, {})
             stocks[iid] = stocks.get(iid, 0) + qty
@@ -469,8 +555,11 @@ def find_recipe(ref: str) -> tuple[str, dict] | None:
     folded = _fold_key(ref)
     for rid, r in RECIPES.items():
         result = r.get("result_id", "")
-        names = {_fold_key(rid), _fold_key(result),
-                 _fold_key((ARTIFACTS_DB.get(result) or {}).get("name", ""))}
+        names = {
+            _fold_key(rid),
+            _fold_key(result),
+            _fold_key((ARTIFACTS_DB.get(result) or {}).get("name", "")),
+        }
         if folded in names or any(folded and folded in n for n in names if n):
             return rid, r
     return None
@@ -507,33 +596,52 @@ def execute_craft(state: dict, item_ref: str) -> dict:
 
     # Fase 6.2: receita de item ÚNICO já existente no mundo falha — não há segundo.
     if not is_unique_available(recipe.get("result_id", ""), state.get("world_projection")):
-        return {"ok": False, "reason": "Esse artefato já existe no mundo — não há como forjar outro."}
+        return {
+            "ok": False,
+            "reason": "Esse artefato já existe no mundo — não há como forjar outro.",
+        }
 
     work_inv = player["inventory"]
     for iid, need in (recipe.get("ingredients") or {}).items():
         work_inv, removed = remove_item(work_inv, iid, int(need))
         if not removed:
-            return {"ok": False, "reason": f"Não foi possível separar o ingrediente: {item_display(make_entry(iid))}."}
+            return {
+                "ok": False,
+                "reason": f"Não foi possível separar o ingrediente: {item_display(make_entry(iid))}.",
+            }
     player["inventory"] = work_inv
     player, unequipped = reconcile_equipment(player)
     player["gold"] = clamp_gold(player, int(player.get("gold", 0)) - cost)
     result_id = recipe.get("result_id")
-    player["inventory"] = add_item(player["inventory"], result_id,
-                                   int(recipe.get("result_qty", 1) or 1))
-    return {"ok": True, "mode": "craft", "recipe_id": rid, "item_id": result_id,
-            "item_name": item_display(make_entry(result_id)),
-            "qty": int(recipe.get("result_qty", 1) or 1),
-            "gold_delta": -cost, "player": player, "world": dict(world),
-            "unequipped": unequipped}
+    player["inventory"] = add_item(
+        player["inventory"], result_id, int(recipe.get("result_qty", 1) or 1)
+    )
+    return {
+        "ok": True,
+        "mode": "craft",
+        "recipe_id": rid,
+        "item_id": result_id,
+        "item_name": item_display(make_entry(result_id)),
+        "qty": int(recipe.get("result_qty", 1) or 1),
+        "gold_delta": -cost,
+        "player": player,
+        "world": dict(world),
+        "unequipped": unequipped,
+    }
 
 
 # ---------------------------------------------------------------------------
 # Drop tables — raridade rolada em Python (LLM só descreve)
 # ---------------------------------------------------------------------------
-def roll_loot(region_id: str, danger: int, rng: random.Random | None = None,
-              projection: dict | None = None,
-              bestiary_knowledge: dict | None = None, turn: int = 0,
-              boost: bool = False) -> dict:
+def roll_loot(
+    region_id: str,
+    danger: int,
+    rng: random.Random | None = None,
+    projection: dict | None = None,
+    bestiary_knowledge: dict | None = None,
+    turn: int = 0,
+    boost: bool = False,
+) -> dict:
     """Sorteia raridade (pesos por banda de perigo) e item do pool da região.
     Retorna {"item_id", "rarity", "gold"} — item_id None se pool vazio (só ouro).
     Fase 6.2: único já reclamado sai do pool ANTES do sorteio (nunca re-dropa).
@@ -550,10 +658,13 @@ def roll_loot(region_id: str, danger: int, rng: random.Random | None = None,
     if bestiary_knowledge is not None:
         from gamedata import BESTIARY
         from services.ecology import suppressed_loot
+
         suppressed = suppressed_loot(region_id, BESTIARY or {}, bestiary_knowledge, turn)
-    pool = [i for i in (pools.get(pick) or [])
-            if i in ARTIFACTS_DB and is_unique_available(i, projection)
-            and i not in suppressed]
+    pool = [
+        i
+        for i in (pools.get(pick) or [])
+        if i in ARTIFACTS_DB and is_unique_available(i, projection) and i not in suppressed
+    ]
     item_id = rng.choice(pool) if pool else None
     gold = rng.randint(3, 12) * max(1, int(danger or 1))
     return {"item_id": item_id, "rarity": pick, "gold": gold}

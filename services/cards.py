@@ -6,6 +6,7 @@ vive em conflito-04/`conflict_turn`; o catálogo d20 antigo foi removido no cuto
 Convenções: funções que consomem recurso MUTAM `state`/`player` e retornam um
 Result dict {"ok": bool, "error": Optional[str], "log": str}.
 """
+
 import copy
 import glob
 import json
@@ -23,25 +24,47 @@ import gamedata
 # `efeito.kind` sem correspondência mecânica (mesmo princípio do catálogo de
 # cena). Este é o catálogo canônico consumido pela autoria (conflito-14) e pelo
 # lint de conteúdo (`scripts/validate_content.py`).
-CARD_EFFECT_KINDS = frozenset({
-    # ataque / dano ao longo do tempo / cura
-    "dano", "dot", "cura", "estabilizar",
-    # defesa / posição / controle
-    "protecao", "taunt", "empurrao", "reposicionar", "esconder", "marca",
-    "aplicar_condicao", "purga_condicao", "contra_ataque", "vantagem",
-    # buffs (passivas e ativas de suporte)
-    "buff_defesa", "buff_acerto", "buff_dano", "buff_cura", "buff_dot",
-    "buff_iniciativa", "buff_esquiva", "perception",
-    # utilitária fora de combate
-    "utilitaria",
-    # exclusivo do Médico (purga a Carga do Abismo de aliado)
-    "reduzir_carga_aliado",
-    # Cartas de Virtude: bônus que escala com o Estágio da Virtude
-    "bonus_dano_por_estagio", "bonus_percepcao_por_estagio",
-    "bonus_vitalidade_por_estagio", "bonus_iniciativa_por_estagio",
-    "bonus_social_por_estagio", "bonus_esquiva_por_estagio",
-    "bonus_cura_por_estagio",
-})
+CARD_EFFECT_KINDS = frozenset(
+    {
+        # ataque / dano ao longo do tempo / cura
+        "dano",
+        "dot",
+        "cura",
+        "estabilizar",
+        # defesa / posição / controle
+        "protecao",
+        "taunt",
+        "empurrao",
+        "reposicionar",
+        "esconder",
+        "marca",
+        "aplicar_condicao",
+        "purga_condicao",
+        "contra_ataque",
+        "vantagem",
+        # buffs (passivas e ativas de suporte)
+        "buff_defesa",
+        "buff_acerto",
+        "buff_dano",
+        "buff_cura",
+        "buff_dot",
+        "buff_iniciativa",
+        "buff_esquiva",
+        "perception",
+        # utilitária fora de combate
+        "utilitaria",
+        # exclusivo do Médico (purga a Carga do Abismo de aliado)
+        "reduzir_carga_aliado",
+        # Cartas de Virtude: bônus que escala com o Estágio da Virtude
+        "bonus_dano_por_estagio",
+        "bonus_percepcao_por_estagio",
+        "bonus_vitalidade_por_estagio",
+        "bonus_iniciativa_por_estagio",
+        "bonus_social_por_estagio",
+        "bonus_esquiva_por_estagio",
+        "bonus_cura_por_estagio",
+    }
+)
 
 # Dano-base por categoria de arma (doc 01 §19; conflito-05 R1). Escala NOVA —
 # valores FLAT, não dados. A autoria (conflito-14 R2) ancora todo `dano` aqui.
@@ -49,9 +72,14 @@ DANO_BASE_ARMA = {"leve": 3, "marcial": 4, "versatil": 6, "pesada": 8}
 
 # Marcadores determinísticos que conectam uma Carta ao motor das 5 Posturas.
 # O campo é autoral (nunca vem do LLM) e fechado para evitar regra livre em JSON.
-CLASS_MECHANIC_FIELDS = frozenset({
-    "auto_dano", "pico", "decadencia", "resfria_caldeira",
-})
+CLASS_MECHANIC_FIELDS = frozenset(
+    {
+        "auto_dano",
+        "pico",
+        "decadencia",
+        "resfria_caldeira",
+    }
+)
 _DECAY_KINDS = frozenset({"any", "flesh", "morale", "gear"})
 
 
@@ -67,9 +95,9 @@ def valid_class_mechanics(mechanics) -> bool:
     if not isinstance(mechanics, dict) or set(mechanics) - CLASS_MECHANIC_FIELDS:
         return False
     auto_dano = mechanics.get("auto_dano")
-    if auto_dano is not None and (isinstance(auto_dano, bool)
-                                  or not isinstance(auto_dano, int)
-                                  or auto_dano <= 0):
+    if auto_dano is not None and (
+        isinstance(auto_dano, bool) or not isinstance(auto_dano, int) or auto_dano <= 0
+    ):
         return False
     for field in ("pico", "resfria_caldeira"):
         if field in mechanics and not isinstance(mechanics[field], bool):
@@ -82,6 +110,7 @@ def valid_class_mechanics(mechanics) -> bool:
 def _entropy_cost(player: dict, card: dict) -> int:
     """Custo efetivo, incluindo a consequência determinística Dependência."""
     import combat_mechanics as cm
+
     base = int(card.get("custo_entropia", 0) or 0)
     return cm.dependencia_cost(player, base)
 
@@ -98,11 +127,19 @@ _RESET_CASCADE = {
     "turno": ("used_this_turn",),
     "cena": ("used_this_turn", "used_this_scene"),
     "descanso_curto": ("used_this_turn", "used_this_scene", "used_since_short_rest"),
-    "descanso_longo": ("used_this_turn", "used_this_scene",
-                       "used_since_short_rest", "used_since_long_rest"),
+    "descanso_longo": (
+        "used_this_turn",
+        "used_this_scene",
+        "used_since_short_rest",
+        "used_since_long_rest",
+    ),
 }
-_ALL_COUNTERS = ("used_this_turn", "used_this_scene",
-                 "used_since_short_rest", "used_since_long_rest")
+_ALL_COUNTERS = (
+    "used_this_turn",
+    "used_this_scene",
+    "used_since_short_rest",
+    "used_since_long_rest",
+)
 
 _CARDS: dict[str, dict] | None = None
 
@@ -118,7 +155,7 @@ def _load_cards() -> dict[str, dict]:
                 data = json.load(f)
         except Exception:
             continue
-        for c in (data.get("cards") or []):
+        for c in data.get("cards") or []:
             if isinstance(c, dict) and c.get("id"):
                 out[c["id"]] = c
     _CARDS = out
@@ -239,6 +276,7 @@ def with_location(state: dict) -> dict:
 
     Só para validar `can_reorganize` (tag `apex`); NUNCA devolver/persistir esta cópia."""
     import gamedata
+
     world = state.get("world") or {}
     loc_id = world.get("current_location_id")
     clone = dict(state)
@@ -306,13 +344,20 @@ def use_card(state: dict, card_id: str) -> dict:
     entry = _usage_entry(player, card_id)
     counter = FREQ_COUNTER.get(freq)
     if counter and int(entry.get(counter, 0)) >= 1:
-        return {"ok": False, "error": f"'{card.get('name', card_id)}' já foi usada (1×{freq}).", "log": ""}
+        return {
+            "ok": False,
+            "error": f"'{card.get('name', card_id)}' já foi usada (1×{freq}).",
+            "log": "",
+        }
 
     custo_base = int(card.get("custo_entropia", 0) or 0)
     custo = _entropy_cost(player, card)
     if custo > int(player.get("entropy", 0) or 0):
-        return {"ok": False,
-                "error": f"Entropia insuficiente ({player.get('entropy', 0)}/{custo}).", "log": ""}
+        return {
+            "ok": False,
+            "error": f"Entropia insuficiente ({player.get('entropy', 0)}/{custo}).",
+            "log": "",
+        }
 
     if custo:
         player["entropy"] = int(player.get("entropy", 0)) - custo
@@ -350,9 +395,13 @@ def use_passive(player: dict, card_id: str) -> dict:
     entry = _usage_entry(player, card_id)
     for k in _ALL_COUNTERS:
         entry[k] = int(entry.get(k, 0)) + 1
-    return {"ok": True, "error": None, "cost": custo,
-            "log": f"Passiva {card.get('name', card_id)} desperta"
-                   + (f" (-{custo} Entropia)" if custo else "")}
+    return {
+        "ok": True,
+        "error": None,
+        "cost": custo,
+        "log": f"Passiva {card.get('name', card_id)} desperta"
+        + (f" (-{custo} Entropia)" if custo else ""),
+    }
 
 
 def can_use_card(player: dict, card_id: str) -> bool:
@@ -375,7 +424,7 @@ def can_use_card(player: dict, card_id: str) -> bool:
 def enemy_card_ids(actor: dict) -> list[str]:
     """IDs autorais fechados da ficha inimiga; payload inline nunca vira regra."""
     out: list[str] = []
-    for entry in (actor.get("cartas") or actor.get("enemy_cards") or []):
+    for entry in actor.get("cartas") or actor.get("enemy_cards") or []:
         card_id = entry.get("id") if isinstance(entry, dict) else entry
         card_id = str(card_id or "").strip()
         if card_id and card_id not in out and get_card(card_id):
@@ -383,8 +432,7 @@ def enemy_card_ids(actor: dict) -> list[str]:
     return out
 
 
-def can_use_enemy_card(actor: dict, card_id: str, *,
-                       expected_type: str | None = None) -> bool:
+def can_use_enemy_card(actor: dict, card_id: str, *, expected_type: str | None = None) -> bool:
     """Economia própria do inimigo, independente do deck preparado do player."""
     if card_id not in set(enemy_card_ids(actor)):
         return False
@@ -395,9 +443,7 @@ def can_use_enemy_card(actor: dict, card_id: str, *,
     usage = (actor.get("enemy_card_usage") or {}).get(card_id) or {}
     if counter and int(usage.get(counter, 0) or 0) >= 1:
         return False
-    return int(card.get("custo_entropia", 0) or 0) <= int(
-        actor.get("entropy", 0) or 0
-    )
+    return int(card.get("custo_entropia", 0) or 0) <= int(actor.get("entropy", 0) or 0)
 
 
 def use_enemy_card(actor: dict, card_id: str) -> dict:
@@ -406,7 +452,11 @@ def use_enemy_card(actor: dict, card_id: str) -> dict:
     if not card or card_id not in set(enemy_card_ids(actor)):
         return {"ok": False, "error": f"Carta inimiga '{card_id}' indisponível.", "log": ""}
     if not can_use_enemy_card(actor, card_id):
-        return {"ok": False, "error": f"'{card.get('name', card_id)}' já usada ou sem Entropia.", "log": ""}
+        return {
+            "ok": False,
+            "error": f"'{card.get('name', card_id)}' já usada ou sem Entropia.",
+            "log": "",
+        }
     cost = int(card.get("custo_entropia", 0) or 0)
     actor["entropy"] = max(0, int(actor.get("entropy", 0) or 0) - cost)
     usage = actor.setdefault("enemy_card_usage", {})
@@ -416,9 +466,7 @@ def use_enemy_card(actor: dict, card_id: str) -> dict:
     return {
         "ok": True,
         "error": None,
-        "log": f"Usa {card.get('name', card_id)}" + (
-            f" (-{cost} Entropia)" if cost else ""
-        ),
+        "log": f"Usa {card.get('name', card_id)}" + (f" (-{cost} Entropia)" if cost else ""),
     }
 
 
@@ -428,30 +476,39 @@ def reset_enemy_card_usage(actor: dict, scope: str) -> None:
             entry[key] = 0
 
 
-def combat_card_suggestions(player: dict, enemies: list[dict],
-                            combat: dict | None) -> list[str]:
+def combat_card_suggestions(player: dict, enemies: list[dict], combat: dict | None) -> list[str]:
     """Chips transitórios até a UI de Cartas (conflito-16): Cartas preparadas
     utilizáveis + poção + fuga. Zero dependência do catálogo d20 antigo."""
-    active = [e for e in (enemies or []) if isinstance(e, dict)
-              and e.get("status") == "ativo" and not e.get("dead")]
+    active = [
+        e
+        for e in (enemies or [])
+        if isinstance(e, dict) and e.get("status") == "ativo" and not e.get("dead")
+    ]
     if not (combat or {}).get("active") or not active:
         return []
-    ready = [get_card(cid) for cid in (player.get("prepared_cards") or [])
-             if can_use_card(player, cid)]
+    ready = [
+        get_card(cid) for cid in (player.get("prepared_cards") or []) if can_use_card(player, cid)
+    ]
     ready = [c for c in ready if c]
     ready.sort(key=lambda c: (str(c.get("patamar", "")), str(c.get("name", ""))))
     chips = [str(c.get("name", c.get("id"))) for c in ready[:3]]
     from gamedata import ARTIFACTS_DB
     from inventory import item_display
-    potion = next((
-        item_display(e) for e in (player.get("inventory") or [])
-        if isinstance(e, dict)
-        and str((ARTIFACTS_DB.get(e.get("id", "")) or {}).get("type", "")).lower()
-        in ("consumable", "potion")
-    ), None)
+
+    potion = next(
+        (
+            item_display(e)
+            for e in (player.get("inventory") or [])
+            if isinstance(e, dict)
+            and str((ARTIFACTS_DB.get(e.get("id", "")) or {}).get("type", "")).lower()
+            in ("consumable", "potion")
+        ),
+        None,
+    )
     if potion and len(chips) < 4:
         chips.append(f"Beber {potion}")
     import combat_mechanics as cm
+
     if not cm.has_control(player, "root") and len(chips) < 5:
         chips.append("Fugir")
     return chips
@@ -483,8 +540,11 @@ def evolve_card(state: dict, card_id: str, caminho: str) -> dict:
         return {"ok": False, "error": "Caminho de evolução inválido (use A ou B).", "log": ""}
     evolved = player.setdefault("evolved_cards", {})
     if card_id in evolved:
-        return {"ok": False,
-                "error": f"'{card_id}' já evoluiu pelo Caminho {evolved[card_id]} (único).", "log": ""}
+        return {
+            "ok": False,
+            "error": f"'{card_id}' já evoluiu pelo Caminho {evolved[card_id]} (único).",
+            "log": "",
+        }
     evolved[card_id] = caminho
     return {"ok": True, "error": None, "log": f"'{card_id}' evoluiu pelo Caminho {caminho}."}
 

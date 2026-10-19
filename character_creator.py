@@ -5,6 +5,7 @@ Versão V7.0 (spec conflito-01): 5 Virtudes (0-5) substituem os 6 atributos D&D;
 Vitalidade/Ferimentos derivam de Corpo. A distribuição das Virtudes vem do JOGADOR
 (wizard) — a classe apenas RECOMENDA. O LLM só sugere inventário/flavor textual.
 """
+
 from typing import Any, Dict, List
 
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -17,17 +18,24 @@ from observability.telemetry import log_event as _log_event
 # --- IMPORTAÇÕES ESSENCIAIS ---
 try:
     from rag import query_rag
+
     RAG_AVAILABLE = True
 except ImportError:
     RAG_AVAILABLE = False
-    def query_rag(*args, **kwargs): return ""
+
+    def query_rag(*args, **kwargs):
+        return ""
+
 
 # Importa os dados oficiais para garantir consistência
 try:
     from gamedata import CLASSES, load_json_data
 except ImportError:
     CLASSES = {}
-    def load_json_data(_): return {}
+
+    def load_json_data(_):
+        return {}
+
 
 # --- VIRTUDE PRIMÁRIA POR CLASSE (recomendação de distribuição / attack_bonus) ---
 # spec conflito-01: 5 Posturas diante do Abismo mapeadas às 5 Virtudes.
@@ -42,14 +50,25 @@ CLASS_PRIMARY_VIRTUE = {
 # Bridge dos dados LEGADO (traits raciais em origins.json ainda usam chaves D&D):
 # mapeia atributo curto -> Virtude. wis/int caem em "mente" (não há Virtude dedicada).
 _ATTR_TO_VIRTUDE = {
-    "str": "forca", "dex": "agilidade", "con": "corpo",
-    "int": "mente", "wis": "mente", "cha": "carisma",
+    "str": "forca",
+    "dex": "agilidade",
+    "con": "corpo",
+    "int": "mente",
+    "wis": "mente",
+    "cha": "carisma",
     # tolera nomes longos/PT eventuais
-    "strength": "forca", "forca": "forca", "força": "forca",
-    "dexterity": "agilidade", "agilidade": "agilidade",
-    "constitution": "corpo", "corpo": "corpo",
-    "intelligence": "mente", "mente": "mente",
-    "wisdom": "mente", "charisma": "carisma", "carisma": "carisma",
+    "strength": "forca",
+    "forca": "forca",
+    "força": "forca",
+    "dexterity": "agilidade",
+    "agilidade": "agilidade",
+    "constitution": "corpo",
+    "corpo": "corpo",
+    "intelligence": "mente",
+    "mente": "mente",
+    "wisdom": "mente",
+    "charisma": "carisma",
+    "carisma": "carisma",
 }
 
 # Distribuição default quando a classe não recomenda nada (permutação de 4/3/2/1/1).
@@ -113,12 +132,18 @@ def _resolve_virtudes(user_input: dict[str, Any], class_name: str) -> dict[str, 
 
 # --- SCHEMAS DA IA ---
 
+
 class PlayerFlavorSchema(BaseModel):
     """A IA só sugere sabor textual — Virtudes vêm do jogador, não do LLM."""
+
     inventory: list[str] = Field(description="Itens baseados na Região e Lore.")
-    flavor_abilities: list[str] = Field(description="2 ou 3 magias/truques extras (Flavor) além da passiva.")
+    flavor_abilities: list[str] = Field(
+        description="2 ou 3 magias/truques extras (Flavor) além da passiva."
+    )
+
 
 # --- LÓGICA AUXILIAR ---
+
 
 def _prof_bonus(level: int) -> int:
     return 2 + ((int(level) - 1) // 4)
@@ -175,9 +200,11 @@ def apply_racial_traits(sheet: dict[str, Any], race: str) -> dict[str, Any]:
             sheet["gold"] = int(sheet.get("gold", 0)) + int(fx["gold_bonus"])
         for item in fx.get("start_items") or []:
             from inventory import add_item, item_display
+
             inv = sheet.setdefault("inventory", [])
-            if not any(item_display(e) == item or e.get("id") == item
-                       for e in inv if isinstance(e, dict)):
+            if not any(
+                item_display(e) == item or e.get("id") == item for e in inv if isinstance(e, dict)
+            ):
                 sheet["inventory"] = add_item(inv, item, 1)
         resists.extend(str(c).lower() for c in fx.get("condition_resist") or [])
         for attr, inc in (fx.get("save_bonus") or {}).items():
@@ -190,8 +217,9 @@ def apply_racial_traits(sheet: dict[str, Any], race: str) -> dict[str, Any]:
     return sheet
 
 
-def _resolve_starting_cards(user_input: dict[str, Any], class_name: str,
-                            virtudes: dict[str, int]) -> dict[str, Any]:
+def _resolve_starting_cards(
+    user_input: dict[str, Any], class_name: str, virtudes: dict[str, int]
+) -> dict[str, Any]:
     """spec conflito-02: monta Acervo (6) + Preparadas (4) + 2 Cartas de Virtude.
 
     Vem do JOGADOR (wizard) quando fornecido; senão auto-seleciona do pool da
@@ -202,16 +230,17 @@ def _resolve_starting_cards(user_input: dict[str, Any], class_name: str,
     # A criação nunca usa uma Carta para inferir ramo: até a escolha explícita
     # de subclasse, o Acervo nasce somente do tronco e respeita o gate numérico.
     available = [
-        card for card in cards_svc.cards_for_class(class_name)
-        if not card.get("subclasse") and int(card.get("level_req", 1) or 1) <= level
+        card
+        for card in cards_svc.cards_for_class(class_name)
+        if not card.get("subclasse")
+        and int(card.get("level_req", 1) or 1) <= level
         and not card.get("apex")
     ]
     # conflito-13/14: `data/cards/exemplos.json` permanece como fixture e contém
     # IDs legados da mesma classe. A ordem alfabética dos arquivos fazia algumas
     # classes começarem com esses exemplos em vez do acervo autoral v4.
     canonical = [
-        c for c in available
-        if c.get("classe") == class_name and c.get("origem") == "conflito-14"
+        c for c in available if c.get("classe") == class_name and c.get("origem") == "conflito-14"
     ]
     remaining = [c for c in available if c not in canonical]
     pool = [c["id"] for c in canonical + remaining]
@@ -245,9 +274,14 @@ def _resolve_starting_cards(user_input: dict[str, Any], class_name: str,
         card = cards_svc.get_card(cid) or {}
         vkey = gamedata.normalize_virtude(card.get("virtude_relacionada", ""))
         estagio = gamedata.virtue_card_stage(virtudes.get(vkey, 0))
-        virtue_cards.append({
-            "card_id": cid, "virtude": vkey, "estagio": estagio, "mastery": 0,
-        })
+        virtue_cards.append(
+            {
+                "card_id": cid,
+                "virtude": vkey,
+                "estagio": estagio,
+                "mastery": 0,
+            }
+        )
 
     return {
         "known_cards": known,
@@ -267,10 +301,13 @@ def _get_class_data(class_name: str) -> dict:
         "base_stats": {"hp": 10, "virtudes": dict(_DEFAULT_VIRTUDES)},
     }
 
+
 # --- FUNÇÃO PRINCIPAL ---
 
-def create_player_character(user_input: dict[str, Any], *,
-                            use_llm_flavor: bool = True) -> dict[str, Any]:
+
+def create_player_character(
+    user_input: dict[str, Any], *, use_llm_flavor: bool = True
+) -> dict[str, Any]:
     name = user_input.get("name", "Herói")
     p_class = user_input.get("class_name", "Aventureiro")
     race = user_input.get("race", "Humano")
@@ -306,7 +343,8 @@ def create_player_character(user_input: dict[str, Any], *,
     if use_llm_flavor:
         region_lore = _get_region_lore(region)
         llm = get_llm(temperature=0.6, tier=ModelTier.SMART)
-        system_msg = SystemMessage(content=f"""
+        system_msg = SystemMessage(
+            content=f"""
         Você é um Motor de Regras para RPG do mundo de Valoria.
 
         CONTEXTO DO MUNDO: {region_lore}
@@ -315,8 +353,11 @@ def create_player_character(user_input: dict[str, Any], *,
         TAREFA:
         1. Gere um inventário temático da região {region}.
         2. Sugira 2 habilidades extras (flavor) que combinem com a classe.
-        """)
-        human_msg = HumanMessage(content=f"Personagem: {name}, {race} {p_class}. Conceito: {backstory}")
+        """
+        )
+        human_msg = HumanMessage(
+            content=f"Personagem: {name}, {race} {p_class}. Conceito: {backstory}"
+        )
 
         try:
             stats = llm.with_structured_output(PlayerFlavorSchema).invoke([system_msg, human_msg])
@@ -361,10 +402,12 @@ def create_player_character(user_input: dict[str, Any], *,
 
     # 6. Inventário estruturado — starting_equipment canônico + flavor do LLM
     from inventory import add_item, backfill_inventory
+
     inv: list[dict] = []
     for iid in class_data.get("starting_equipment", []) or []:
         inv = add_item(inv, iid, 1)
     from inventory import resolve_flavor_item
+
     for free_name in flavor_data.get("inventory", []) or []:
         flavor = resolve_flavor_item(str(free_name))
         if flavor["id"] == "item_desconhecido":
@@ -383,7 +426,9 @@ def create_player_character(user_input: dict[str, Any], *,
     # 9. Defesa/Ataque derivados de Virtude (ponte transicional até a conflito-04/05)
     base_def = base_stats.get("defense", 10)
     racial_def_bonus = int(sheet.get("defense", 0) or 0) - 10 if "defense" in sheet else 0
-    sheet["defense"] = max(base_def, 10 + int(virtudes.get("agilidade", 0))) + max(0, racial_def_bonus)
+    sheet["defense"] = max(base_def, 10 + int(virtudes.get("agilidade", 0))) + max(
+        0, racial_def_bonus
+    )
     sheet["attack_bonus"] = _calculate_attack_bonus(p_class, sheet["virtudes"], level)
     if target_level > 1:
         sheet = _level_up_deterministic(sheet, target_level)
@@ -394,6 +439,7 @@ def create_player_character(user_input: dict[str, Any], *,
 def _append_free(inv: list[dict], name: str) -> list[dict]:
     """Nome livre que colide com raro/único: entra como `item_desconhecido`."""
     from inventory import UNKNOWN_ID
+
     out = [dict(e) for e in inv]
     for e in out:
         if e.get("id") == UNKNOWN_ID and e.get("display_name") == name:
@@ -407,13 +453,18 @@ def _level_up_deterministic(sheet: dict[str, Any], target_level: int) -> dict[st
     """Sobe o nível 1 -> target_level por XP e resolve as escolhas de forma
     determinística (progression.auto_resolve_choices). Vitalidade/Entropia cheias."""
     import progression
+
     player, _events = progression.grant_xp(sheet, int(gamedata.XP_TABLE[int(target_level)]))
     player = progression.auto_resolve_choices(player)
     gamedata.sync_player_vitals(player, heal_to_full=True)
     player["entropy"] = int(player.get("max_entropy", player.get("entropy", 0)) or 0)
     return player
 
+
 def _get_region_lore(region_name: str) -> str:
-    if not RAG_AVAILABLE: return ""
-    try: return query_rag(f"Describe {region_name}", index_name="lore")
-    except: return ""
+    if not RAG_AVAILABLE:
+        return ""
+    try:
+        return query_rag(f"Describe {region_name}", index_name="lore")
+    except:
+        return ""

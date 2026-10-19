@@ -12,8 +12,11 @@ from services import jev_rollout
 
 
 def state():
-    return {"game_id": "game-1", "world": {"turn_count": 3, "current_location": "Vila"},
-            "combat": {"active": False}}
+    return {
+        "game_id": "game-1",
+        "world": {"turn_count": 3, "current_location": "Vila"},
+        "combat": {"active": False},
+    }
 
 
 def test_off_and_invalid_config_never_start(monkeypatch: pytest.MonkeyPatch) -> None:

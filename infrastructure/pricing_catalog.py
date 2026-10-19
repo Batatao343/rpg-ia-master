@@ -22,7 +22,8 @@ def quote_published_sku(connection, sku_id: str, *, at: datetime) -> PurchaseQuo
     """Only the SKU identifier is supplied by a caller; price comes from SQL."""
     row = connection.execute(
         """select sku_id,channel,gross_brl,shard_milli,pricing_version_id
-        from app.purchase_skus where sku_id=%s""", (sku_id,),
+        from app.purchase_skus where sku_id=%s""",
+        (sku_id,),
     ).fetchone()
     if row is None:
         raise PricingUnavailable("SKU não publicado")
@@ -33,7 +34,10 @@ def quote_published_sku(connection, sku_id: str, *, at: datetime) -> PurchaseQuo
     if version is None:
         raise PricingUnavailable("versão de pricing ausente")
     sku = PurchaseSku(
-        row["sku_id"], row["channel"], Decimal(row["gross_brl"]),
-        row["shard_milli"], row["pricing_version_id"],
+        row["sku_id"],
+        row["channel"],
+        Decimal(row["gross_brl"]),
+        row["shard_milli"],
+        row["pricing_version_id"],
     )
     return quote_purchase(sku, version_from_record(version), at=at)

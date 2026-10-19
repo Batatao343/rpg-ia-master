@@ -98,12 +98,13 @@ class TurnDeclaration(TypedDict):
     acao: ActionDeclaration
     pos_acao: Optional[ActionDeclaration]
 
+
 class AttackResolution(TypedDict):
     dice_rolled: List[int]
     dice_kept: List[int]
     total: int
     esquiva_alvo: int
-    resultado: Literal["erro","acerto","critico","supercritico"]
+    resultado: Literal["erro", "acerto", "critico", "supercritico"]
     efeito_principal_multiplicador: int
 ```
 

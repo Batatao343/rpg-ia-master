@@ -1,12 +1,17 @@
 """SPEC-279 (offline): usage facts survive a campaign delete; readers keep counting them."""
+
 from __future__ import annotations
 
 import inspect
 import re
 from pathlib import Path
 
-MIGRATION = Path(__file__).resolve().parents[1] / "supabase" / "migrations" / \
-    "20261019150000_usage_events_survive_game_delete.sql"
+MIGRATION = (
+    Path(__file__).resolve().parents[1]
+    / "supabase"
+    / "migrations"
+    / "20261019150000_usage_events_survive_game_delete.sql"
+)
 
 
 def _sql() -> str:
@@ -17,7 +22,7 @@ def test_game_link_is_set_null_and_operation_link_no_longer_cascades():
     sql = _sql()
     assert "references app.games(id) on delete set null" in sql
     assert "drop constraint if exists usage_events_operation_id_fkey" in sql
-    assert "references app.operations" not in sql      # opaque id, like wallet_settled_usage
+    assert "references app.operations" not in sql  # opaque id, like wallet_settled_usage
     assert "drop not null" not in sql
     assert "on delete cascade" not in sql
 
@@ -42,6 +47,7 @@ def test_attribution_trigger_snapshots_kind_from_operations_and_still_fails_clos
 def test_readers_keep_events_whose_operation_was_deleted():
     from infrastructure.account_read_model import PostgresAccountReader
     from infrastructure.finops_reader import PostgresFinopsReader
+
     for fn in (PostgresFinopsReader.ops_counts, PostgresAccountReader.usage):
         src = re.sub(r"\s+", " ", inspect.getsource(fn))
         assert "left join app.operations o" in src

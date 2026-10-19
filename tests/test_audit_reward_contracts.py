@@ -1,4 +1,5 @@
 """Independent regressions from the September audit; no provider or disk writes."""
+
 from __future__ import annotations
 
 from copy import deepcopy
@@ -14,40 +15,68 @@ from services.turn_outcome import capture_baseline, finalize_outcome
 
 def _state() -> dict:
     return {
-        "game_id": "audit-rewards", "messages": [HumanMessage(content="Observo a rua.")],
-        "player": {"name": "Ari", "class_name": "Devoto do Abismo", "level": 1,
-                   "xp": 0, "inventory": [], "vitalidade": 8, "max_vitalidade": 8},
-        "world": {"current_location_id": "nova_arcadia", "current_location": "Nova Arcádia",
-                  "turn_count": 4, "danger_level": 1,
-                  "world_clock": {"day": 1, "period": "Manhã"}, "visited": ["nova_arcadia"]},
-        "npcs": {}, "factions": [], "faction_intel": {}, "quests": [],
-        "campaign_plan": {}, "event_log": [], "world_projection": {},
+        "game_id": "audit-rewards",
+        "messages": [HumanMessage(content="Observo a rua.")],
+        "player": {
+            "name": "Ari",
+            "class_name": "Devoto do Abismo",
+            "level": 1,
+            "xp": 0,
+            "inventory": [],
+            "vitalidade": 8,
+            "max_vitalidade": 8,
+        },
+        "world": {
+            "current_location_id": "nova_arcadia",
+            "current_location": "Nova Arcádia",
+            "turn_count": 4,
+            "danger_level": 1,
+            "world_clock": {"day": 1, "period": "Manhã"},
+            "visited": ["nova_arcadia"],
+        },
+        "npcs": {},
+        "factions": [],
+        "faction_intel": {},
+        "quests": [],
+        "campaign_plan": {},
+        "event_log": [],
+        "world_projection": {},
     }
 
 
 @pytest.fixture
 def story(monkeypatch):
-    monkeypatch.setattr(storyteller, "build_context_pack", lambda *a, **k: SimpleNamespace(
-        lore_block="", memory_block="", world_state_block=""))
+    monkeypatch.setattr(
+        storyteller,
+        "build_context_pack",
+        lambda *a, **k: SimpleNamespace(lore_block="", memory_block="", world_state_block=""),
+    )
     monkeypatch.setattr(storyteller, "simulate_world", lambda s, w, *a: (w, ""))
     monkeypatch.setattr(storyteller, "check_encounter", lambda *a, **k: None)
 
     def run(state: dict, **fields) -> dict:
         update = storyteller.StoryUpdate(narrative="A cena permanece tranquila.", **fields)
-        llm = SimpleNamespace(with_structured_output=lambda _: SimpleNamespace(invoke=lambda _: update))
+        llm = SimpleNamespace(
+            with_structured_output=lambda _: SimpleNamespace(invoke=lambda _: update)
+        )
         monkeypatch.setattr(storyteller, "get_llm", lambda **k: llm)
         return storyteller.storyteller_node(state)
+
     return run
 
 
-@pytest.mark.parametrize("plan", [
-    {}, {"beats": [], "current_step": 0},
-    {"beats": [{"description": "Investigar", "status": "pending"}], "current_step": 1},
-    {"beats": [{"description": "Investigar", "status": "done"}], "current_step": 0},
-    {"beats": [{"description": "Investigar", "status": "pending"}], "current_step": -1},
-    {"beats": [{"description": "Investigar", "status": "pending"}], "current_step": None},
-    {"beats": [{"description": "Investigar", "status": "pending"}], "current_step": "0"},
-])
+@pytest.mark.parametrize(
+    "plan",
+    [
+        {},
+        {"beats": [], "current_step": 0},
+        {"beats": [{"description": "Investigar", "status": "pending"}], "current_step": 1},
+        {"beats": [{"description": "Investigar", "status": "done"}], "current_step": 0},
+        {"beats": [{"description": "Investigar", "status": "pending"}], "current_step": -1},
+        {"beats": [{"description": "Investigar", "status": "pending"}], "current_step": None},
+        {"beats": [{"description": "Investigar", "status": "pending"}], "current_step": "0"},
+    ],
+)
 def test_invalid_or_completed_beat_cannot_grant_xp(story, plan: dict) -> None:
     state = _state()
     state["campaign_plan"] = deepcopy(plan)
@@ -59,8 +88,10 @@ def test_invalid_or_completed_beat_cannot_grant_xp(story, plan: dict) -> None:
 
 def test_valid_beat_rewards_once_and_does_not_mutate_input(story) -> None:
     state = _state()
-    state["campaign_plan"] = {"beats": [{"description": "Investigar", "status": "pending"}],
-                              "current_step": 0}
+    state["campaign_plan"] = {
+        "beats": [{"description": "Investigar", "status": "pending"}],
+        "current_step": 0,
+    }
     before = deepcopy(state)
     out = story(state, beat_completed=True)
     assert out["player"]["xp"] == 150
@@ -74,15 +105,20 @@ def test_valid_beat_rewards_once_and_does_not_mutate_input(story) -> None:
 def test_prologue_beat_never_grants_xp(story) -> None:
     state = _state()
     state["world"]["turn_count"] = 1
-    state["campaign_plan"] = {"beats": [{"description": "Chegar", "status": "pending"}],
-                              "current_step": 0}
+    state["campaign_plan"] = {
+        "beats": [{"description": "Chegar", "status": "pending"}],
+        "current_step": 0,
+    }
     out = story(state, beat_completed=True)
     assert out.get("player", state["player"])["xp"] == 0
 
 
 @pytest.mark.parametrize("already_owned", [False, True])
-def test_unique_aliases_granted_once_even_before_projection_updates(story, already_owned: bool) -> None:
+def test_unique_aliases_granted_once_even_before_projection_updates(
+    story, already_owned: bool
+) -> None:
     from gamedata import ARTIFACTS_DB
+
     item_id = "art_adaga_vidro_dragao"
     state = _state()
     if already_owned:
@@ -100,7 +136,9 @@ def test_unique_aliases_granted_once_even_before_projection_updates(story, alrea
 
 
 @pytest.mark.parametrize("quantities,expected", [([1, 1], 2), ([2, 3], 5), ([1, 0, -2], 1)])
-def test_receipt_sums_repeated_rows_and_ignores_nonpositive_quantities(quantities, expected) -> None:
+def test_receipt_sums_repeated_rows_and_ignores_nonpositive_quantities(
+    quantities, expected
+) -> None:
     state = _state()
     state["player"]["inventory"] = [{"id": "art_adaga_vidro_dragao", "qty": q} for q in quantities]
     assert capture_baseline(state)["inventory"] == {"art_adaga_vidro_dragao": expected}
@@ -110,6 +148,7 @@ def test_second_nonstackable_item_appears_in_receipt_and_survives_serialization(
     import uuid
 
     import persistence
+
     state = _state()
     state["game_id"] = str(uuid.uuid4())
     state["player"]["inventory"] = add_item([], "Espada Gasta")
@@ -130,20 +169,28 @@ def test_story_reward_through_graph_finalizer_and_save_load(story, monkeypatch):
     import main
     import persistence
     from gamedata import ARTIFACTS_DB
-    item = 'art_adaga_vidro_dragao'
+
+    item = "art_adaga_vidro_dragao"
     state = _state()
-    state['game_id'] = str(uuid4())
-    state['campaign_plan'] = {'beats': [{'description': 'Investigar', 'status': 'pending'}],
-                              'current_step': 0}
+    state["game_id"] = str(uuid4())
+    state["campaign_plan"] = {
+        "beats": [{"description": "Investigar", "status": "pending"}],
+        "current_step": 0,
+    }
     # Fix planning/routing only: storyteller, archive and finalizer are real nodes.
-    monkeypatch.setattr(main, 'campaign_manager_node', lambda state: {})
-    monkeypatch.setattr(main, 'route_intent_node', lambda state: {'next': 'storyteller'})
-    monkeypatch.setattr(main, 'storyteller_node', lambda state: story(state,
-        beat_completed=True, items_gained=[item, ARTIFACTS_DB[item]['name']]))
+    monkeypatch.setattr(main, "campaign_manager_node", lambda state: {})
+    monkeypatch.setattr(main, "route_intent_node", lambda state: {"next": "storyteller"})
+    monkeypatch.setattr(
+        main,
+        "storyteller_node",
+        lambda state: story(
+            state, beat_completed=True, items_gained=[item, ARTIFACTS_DB[item]["name"]]
+        ),
+    )
     result = main.build_game_graph().invoke(state)
-    assert result['player']['xp'] == 150
-    assert get_qty(result['player']['inventory'], item) == 1
-    assert result['last_turn_outcome']['items_gained'] == {item: 1}
-    loaded = persistence._raw_to_state(persistence._state_to_save_data(result, state['game_id']))
-    assert loaded['last_turn_outcome'] == result['last_turn_outcome']
-    assert loaded['player']['xp'] == 150
+    assert result["player"]["xp"] == 150
+    assert get_qty(result["player"]["inventory"], item) == 1
+    assert result["last_turn_outcome"]["items_gained"] == {item: 1}
+    loaded = persistence._raw_to_state(persistence._state_to_save_data(result, state["game_id"]))
+    assert loaded["last_turn_outcome"] == result["last_turn_outcome"]
+    assert loaded["player"]["xp"] == 150

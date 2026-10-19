@@ -1,4 +1,5 @@
 """Direção social canônica quando não existe interlocutor em cena."""
+
 from __future__ import annotations
 
 from typing import Any, Dict
@@ -13,12 +14,16 @@ def build_social_direction(state: dict[str, Any]) -> str:
     connections = list(gamedata.get_connections(current_id)) if current_id else []
     destination = min(
         (loc for loc in connections if isinstance(loc, dict) and loc.get("name")),
-        key=lambda loc: (int(loc.get("danger", loc.get("danger_level", 9)) or 9),
-                         str(loc.get("name"))),
+        key=lambda loc: (
+            int(loc.get("danger", loc.get("danger_level", 9)) or 9),
+            str(loc.get("name")),
+        ),
         default=None,
     )
     objective = public_objective(
-        state.get("campaign_plan"), state.get("quests"), world,
+        state.get("campaign_plan"),
+        state.get("quests"),
+        world,
     )["objective"]
     if destination:
         return (

@@ -36,14 +36,26 @@ def configured_profile_id() -> str:
         return rag.embedding_profile_id()
     except Exception as exc:  # pragma: no cover - rag indisponível: perfil legado
         from observability.telemetry import log_event
-        log_event("vector", "profile_fallback", level="warning",
-                  error_type=type(exc).__name__, profile="local-1024")
+
+        log_event(
+            "vector",
+            "profile_fallback",
+            level="warning",
+            error_type=type(exc).__name__,
+            profile="local-1024",
+        )
         return "local-1024"
 
 
 class PgVectorMemoryStore:
-    def __init__(self, pool: PostgresPool, *, profile_id: str = "local-1024",
-                 embedder: Embedder | None = None, dimensions: int = 1024) -> None:
+    def __init__(
+        self,
+        pool: PostgresPool,
+        *,
+        profile_id: str = "local-1024",
+        embedder: Embedder | None = None,
+        dimensions: int = 1024,
+    ) -> None:
         if dimensions != 1024:  # SPEC-234 R9: coluna vector(1024)
             raise ValueError(f"pgvector exige 1024 dimensões, recebido {dimensions}")
         self.pool = pool
@@ -67,8 +79,9 @@ class PgVectorMemoryStore:
         # SPEC-224: a role de request (`rpg_api`) so le `embedding_profiles`. Normalmente a linha ja
         # existe (boot: `ensure_profile()` com credencial de sistema); se faltar, o insert e feito
         # numa conexao de sistema propria (autonoma), nunca na conexao escopada ao owner.
-        if connection.execute("select 1 from app.embedding_profiles where id=%s",
-                              (self.profile_id,)).fetchone():
+        if connection.execute(
+            "select 1 from app.embedding_profiles where id=%s", (self.profile_id,)
+        ).fetchone():
             self._profile_ready = True
             return
         if getattr(self.pool, "_request_rls", False):
@@ -120,6 +133,7 @@ class PgVectorMemoryStore:
 
     def stage(self, intent: MemoryWriteIntent) -> None:
         from services.turn_effects import current_effects
+
         effects = current_effects()
         if effects is not None:
             effects.memory.add(intent)
@@ -144,13 +158,23 @@ class PgVectorMemoryStore:
             on conflict (id) do nothing returning id
             """,
             (
-                intent.document.document_id, owner_id, game_id, npc_id,
-                intent.document.scope, intent.document.text, digest, Jsonb(metadata),
-                metadata.get("provenance"), metadata.get("confidence"),
-                metadata.get("source_id"), metadata.get("source_turn"),
+                intent.document.document_id,
+                owner_id,
+                game_id,
+                npc_id,
+                intent.document.scope,
+                intent.document.text,
+                digest,
+                Jsonb(metadata),
+                metadata.get("provenance"),
+                metadata.get("confidence"),
+                metadata.get("source_id"),
+                metadata.get("source_turn"),
                 list(metadata.get("canonical_entity_ids", [])),
-                metadata.get("visibility", "public"), intent.timeline_epoch,
-                metadata.get("commit_version"), self.profile_id,
+                metadata.get("visibility", "public"),
+                intent.timeline_epoch,
+                metadata.get("commit_version"),
+                self.profile_id,
             ),
         ).fetchone()
         if row is None:
@@ -159,24 +183,34 @@ class PgVectorMemoryStore:
                 (intent.document.document_id,),
             ).fetchone()
             comparable = MemoryWriteIntent(
-                MemoryDocument(intent.document.document_id, existing["content"], existing["scope"], dict(existing["metadata"])),
+                MemoryDocument(
+                    intent.document.document_id,
+                    existing["content"],
+                    existing["scope"],
+                    dict(existing["metadata"]),
+                ),
                 intent.principal if existing["owner_id"] else None,
-                existing["game_id"], existing["npc_id"], existing["timeline_epoch"],
+                existing["game_id"],
+                existing["npc_id"],
+                existing["timeline_epoch"],
             )
             # Repeating an identical fact on a later commit keeps the original
             # visibility boundary, not a new version that changes its identity.
             from dataclasses import replace
+
             comparison_metadata = dict(intent.document.metadata)
-            comparison_metadata['commit_version'] = existing['metadata'].get('commit_version')
-            if 'commit_version' not in existing['metadata']:
-                comparison_metadata.pop('commit_version', None)
-            identity_digest = intent_sha256(replace(intent,
-                document=replace(intent.document, metadata=comparison_metadata)))
+            comparison_metadata["commit_version"] = existing["metadata"].get("commit_version")
+            if "commit_version" not in existing["metadata"]:
+                comparison_metadata.pop("commit_version", None)
+            identity_digest = intent_sha256(
+                replace(intent, document=replace(intent.document, metadata=comparison_metadata))
+            )
             if intent_sha256(comparable) != identity_digest:
                 raise Conflict("memory_id reutilizado com conteúdo divergente")
             if existing["embedding_status"] == "pending":
                 # SPEC-236 R9: a dead embedding job would leave the fact lexical-only forever.
                 from infrastructure.postgres_jobs import revive_dead_job
+
                 revive_dead_job(connection, "embed_memory", intent.document.document_id)
             return
         connection.execute(
@@ -185,13 +219,25 @@ class PgVectorMemoryStore:
             values (gen_random_uuid(),%s,%s,'embed_memory',%s,'queued',%s,5)
             on conflict (kind,dedupe_key) do nothing
             """,
-            (owner_id, game_id, intent.document.document_id,
-             Jsonb({"memory_id": intent.document.document_id, "content_sha256": digest,
-                    "profile_id": self.profile_id, "timeline_epoch": intent.timeline_epoch,
-                    "commit_version": metadata.get('commit_version')})),
+            (
+                owner_id,
+                game_id,
+                intent.document.document_id,
+                Jsonb(
+                    {
+                        "memory_id": intent.document.document_id,
+                        "content_sha256": digest,
+                        "profile_id": self.profile_id,
+                        "timeline_epoch": intent.timeline_epoch,
+                        "commit_version": metadata.get("commit_version"),
+                    }
+                ),
+            ),
         )
 
-    def set_embedding(self, document_id: str, values: Sequence[float], *, content_sha256: str) -> None:
+    def set_embedding(
+        self, document_id: str, values: Sequence[float], *, content_sha256: str
+    ) -> None:
         vector = vector_literal(values)
         with admin_connection(self.pool) as connection, connection.transaction():
             result = connection.execute(
@@ -235,7 +281,10 @@ class PgVectorMemoryStore:
         where, params = self._filters(request)
         by_id: dict[str, MemoryDocument] = {}
         with self.pool.connection() as connection:
-            if request.vector is not None and request.embedding_profile_id not in {None, self.profile_id}:
+            if request.vector is not None and request.embedding_profile_id not in {
+                None,
+                self.profile_id,
+            }:
                 raise ValueError("embedding_profile_id incompatível com o adapter")
             if request.vector is not None:
                 vector = vector_literal(request.vector)
@@ -244,8 +293,13 @@ class PgVectorMemoryStore:
                     vector = vector_literal(self.embedder(request.text))
                 except Exception as exc:
                     from observability.telemetry import log_event
-                    log_event("vector", "semantic_degraded", level="warning",
-                              error_type=type(exc).__name__)
+
+                    log_event(
+                        "vector",
+                        "semantic_degraded",
+                        level="warning",
+                        error_type=type(exc).__name__,
+                    )
                     vector = None
             else:
                 vector = None
@@ -273,7 +327,7 @@ class PgVectorMemoryStore:
                     document = self._document(row, float(row["score"]))
                     document.metadata["retrieval"] = "lexical"
                     by_id.setdefault(row["id"], document)
-        return sorted(by_id.values(), key=lambda item: item.score or 0, reverse=True)[:request.k]
+        return sorted(by_id.values(), key=lambda item: item.score or 0, reverse=True)[: request.k]
 
     def discard_after(self, *, game_id, timeline_epoch: int, commit_version: int) -> int:
         with self.pool.connection() as connection, connection.transaction():

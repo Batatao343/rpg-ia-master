@@ -1,4 +1,5 @@
 """SPEC-258: provider.attempt para STT, imagem e embeddings (offline, sem conteudo em log)."""
+
 import asyncio
 import io
 import json
@@ -47,9 +48,14 @@ def _wav():
 
 
 class _Finance:
-    def begin(self, *a): pass
-    def admit(self, *a): pass
-    def finish(self, events, ok): return "settled"
+    def begin(self, *a):
+        pass
+
+    def admit(self, *a):
+        pass
+
+    def finish(self, events, ok):
+        return "settled"
 
 
 class _Provider:
@@ -64,8 +70,17 @@ class _Provider:
 
 
 def _run(provider, circuit=None):
-    return asyncio.run(transcribe_audio(_wav(), "audio/wav", uuid4(), _Finance(), provider=provider,
-                                        candidates=[GROQ, OPENAI], circuit=circuit or SpeechCircuit()))
+    return asyncio.run(
+        transcribe_audio(
+            _wav(),
+            "audio/wav",
+            uuid4(),
+            _Finance(),
+            provider=provider,
+            candidates=[GROQ, OPENAI],
+            circuit=circuit or SpeechCircuit(),
+        )
+    )
 
 
 def test_stt_fallback_logged(capsys):
@@ -73,7 +88,9 @@ def test_stt_fallback_logged(capsys):
     _run(_Provider(ProviderReading(429, None, {}), ProviderReading(200, f"{SENTINEL} fala", {})))
     attempts = _events(capsys, "provider.attempt")
     assert [(a["provider"], a["outcome"], a["fell_back"], a["attempt"]) for a in attempts] == [
-        ("groq", "http_error", False, 1), ("openai", "success", True, 2)]
+        ("groq", "http_error", False, 1),
+        ("openai", "success", True, 2),
+    ]
     assert attempts[0]["http_status"] == 429 and attempts[0]["capability"] == "stt"
     assert SENTINEL not in json.dumps(attempts)
 
@@ -98,6 +115,7 @@ def test_stt_circuit_opened_logged(capsys):
 def test_stt_switch_check_failed_logged(capsys, monkeypatch):
     import services.kill_switches as ks
     from services.speech_to_text import _allowed_by_switches
+
     monkeypatch.setattr(ks, "get_switches", lambda: (_ for _ in ()).throw(RuntimeError(SENTINEL)))
     capsys.readouterr()
     assert _allowed_by_switches(GROQ, primary=GROQ) is True
@@ -108,12 +126,20 @@ def test_stt_switch_check_failed_logged(capsys, monkeypatch):
 def test_image_http_status_logged(capsys, monkeypatch):
     from infrastructure.openai_images import ImageProviderError, OpenAIImageGenerator
     from infrastructure.ports import ImageGenerationInput
+
     transport = httpx.MockTransport(lambda r: httpx.Response(503, text=SENTINEL))
-    monkeypatch.setattr(httpx, "post", lambda url, **kw: httpx.Client(transport=transport).post(
-        url, json=kw.get("json"), headers=kw.get("headers")))
+    monkeypatch.setattr(
+        httpx,
+        "post",
+        lambda url, **kw: httpx.Client(transport=transport).post(
+            url, json=kw.get("json"), headers=kw.get("headers")
+        ),
+    )
     capsys.readouterr()
     with pytest.raises(ImageProviderError) as info:
-        OpenAIImageGenerator("k").generate(ImageGenerationInput(f"prompt {SENTINEL}", "gpt-image-2", "1024x1024", ()))
+        OpenAIImageGenerator("k").generate(
+            ImageGenerationInput(f"prompt {SENTINEL}", "gpt-image-2", "1024x1024", ())
+        )
     assert info.value.http_status == 503
     attempts = _events(capsys, "provider.attempt")
     assert attempts[0]["capability"] == "image" and attempts[0]["http_status"] == 503
@@ -123,32 +149,45 @@ def test_image_http_status_logged(capsys, monkeypatch):
 def test_image_refusal_outcome(capsys, monkeypatch):
     from infrastructure.openai_images import ImageGenerationRefused, OpenAIImageGenerator
     from infrastructure.ports import ImageGenerationInput
+
     transport = httpx.MockTransport(lambda r: httpx.Response(400, text="safety violation"))
-    monkeypatch.setattr(httpx, "post", lambda url, **kw: httpx.Client(transport=transport).post(
-        url, json=kw.get("json"), headers=kw.get("headers")))
+    monkeypatch.setattr(
+        httpx,
+        "post",
+        lambda url, **kw: httpx.Client(transport=transport).post(
+            url, json=kw.get("json"), headers=kw.get("headers")
+        ),
+    )
     capsys.readouterr()
     with pytest.raises(ImageGenerationRefused):
-        OpenAIImageGenerator("k").generate(ImageGenerationInput("p", "gpt-image-2", "1024x1024", ()))
+        OpenAIImageGenerator("k").generate(
+            ImageGenerationInput("p", "gpt-image-2", "1024x1024", ())
+        )
     assert _events(capsys, "provider.attempt")[0]["outcome"] == "refused"
 
 
 def test_jina_retry_logged(capsys):
     from rag import _JinaEmbeddingsHTTPX
+
     calls = []
 
     def handler(request):
         calls.append(1)
         if len(calls) == 1:
             return httpx.Response(503, text=SENTINEL)
-        return httpx.Response(200, json={"data": [{"index": 0, "embedding": [0.1]}],
-                                          "usage": {"total_tokens": 3}})
+        return httpx.Response(
+            200, json={"data": [{"index": 0, "embedding": [0.1]}], "usage": {"total_tokens": 3}}
+        )
+
     client = httpx.Client(transport=httpx.MockTransport(handler))
     emb = _JinaEmbeddingsHTTPX(api_key="k", model_name="jina-embeddings-v3", client=client)
     capsys.readouterr()
     assert emb.embed_query(f"texto {SENTINEL}") == [0.1]
     attempts = _events(capsys, "provider.attempt")
     assert [(a["outcome"], a["http_status"], a["attempt"]) for a in attempts] == [
-        ("http_error", 503, 1), ("success", 200, 2)]
+        ("http_error", 503, 1),
+        ("success", 200, 2),
+    ]
     assert all(a["capability"] == "embedding" for a in attempts)
     assert SENTINEL not in json.dumps(attempts)
     assert any("rpg_provider_attempts_total" in k for k in metrics.snapshot())

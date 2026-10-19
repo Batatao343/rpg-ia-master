@@ -157,12 +157,14 @@ auditor, com redaction de PII obrigatória e sem custo de provider.
 **Schemas (TypedDict em `state.py`)**
 ```python
 class AuditTurnTrace(TypedDict):
-    turn: int; epoch: int; action_ref: str      # pseudônimo do action_id
-    speaker: str                                 # narrator | npc:<id> | system
-    context_refs: list[dict]                     # {source_id, section, visibility}
-    delta: dict                                  # diff estrutural mínimo, ver abaixo
-    errors: list[dict]                           # {code, node, recovered: bool}
-    timing: dict | None                          # subconjunto SPEC-200, ver abaixo
+    turn: int
+    epoch: int
+    action_ref: str  # pseudônimo do action_id
+    speaker: str  # narrator | npc:<id> | system
+    context_refs: list[dict]  # {source_id, section, visibility}
+    delta: dict  # diff estrutural mínimo, ver abaixo
+    errors: list[dict]  # {code, node, recovered: bool}
+    timing: dict | None  # subconjunto SPEC-200, ver abaixo
 ```
 
 **Fonte dos timings (correção de revisão).** [F] A SPEC-200 grava TTFMC/TTLT/fases **só** na

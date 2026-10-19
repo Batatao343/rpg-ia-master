@@ -16,8 +16,11 @@ def _local_admin() -> tuple[str, str]:
     status = _supabase_status()
     base = status["API_URL"].rstrip("/")
     parsed = urlsplit(base)
-    if (parsed.scheme != "http" or parsed.hostname not in {"127.0.0.1", "localhost"}
-            or parsed.port != 55321):
+    if (
+        parsed.scheme != "http"
+        or parsed.hostname not in {"127.0.0.1", "localhost"}
+        or parsed.port != 55321
+    ):
         raise RuntimeError("audit Auth admin requires local GoTrue on port 55321")
     return base, status["SERVICE_ROLE_KEY"]
 

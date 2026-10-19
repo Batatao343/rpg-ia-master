@@ -1,4 +1,5 @@
 """SPEC-222 R8/R10: terceiros declarados e retenção derivada do código."""
+
 from __future__ import annotations
 
 import re
@@ -38,5 +39,6 @@ def test_fonts_are_self_hosted_and_referenced():
 
 def test_csp_no_longer_allows_google_fonts():
     import api
+
     assert not any(host in api.CONTENT_SECURITY_POLICY for host in FONT_HOSTS)
     assert "font-src 'self' data:" in api.CONTENT_SECURITY_POLICY

@@ -1,4 +1,5 @@
 """SPEC-192 R4/R5/R9: cron endpoints, drain budget, recovery dedup (offline)."""
+
 from __future__ import annotations
 
 import threading
@@ -84,8 +85,10 @@ def test_drain_budget_with_fake_clock():
 
 
 def test_jobs_endpoint_response_shape(monkeypatch):
-    monkeypatch.setattr("workers.drain.drain_jobs",
-                        lambda *a, **k: {"processed": 2, "stopped_reason": "empty", "elapsed_s": 0.1})
+    monkeypatch.setattr(
+        "workers.drain.drain_jobs",
+        lambda *a, **k: {"processed": 2, "stopped_reason": "empty", "elapsed_s": 0.1},
+    )
     r = client.post("/internal/cron/jobs", headers=H)
     assert r.status_code == 200 and r.json()["processed"] == 2 and r.json()["ok"] is True
 
@@ -93,13 +96,17 @@ def test_jobs_endpoint_response_shape(monkeypatch):
 def test_task_failure_is_500_and_escalates_to_error_log(monkeypatch, caplog):
     def boom(*a, **k):
         raise RuntimeError("secret@example.com")
+
     monkeypatch.setattr("workers.drain.drain_jobs", boom)
     with caplog.at_level("INFO", logger="rpg.cron"):
         for _ in range(3):
             r = client.post("/internal/cron/jobs", headers=H)
             assert r.status_code == 500 and "example.com" not in r.text
-    levels = [rec.levelname for rec in caplog.records
-              if rec.name == "rpg.cron" and '"event": "rpg.cron"' in rec.getMessage()]
+    levels = [
+        rec.levelname
+        for rec in caplog.records
+        if rec.name == "rpg.cron" and '"event": "rpg.cron"' in rec.getMessage()
+    ]
     assert levels == ["WARNING", "WARNING", "ERROR"]
     assert "example.com" not in caplog.text and '"consecutive_failures": 3' in caplog.text
 
@@ -135,8 +142,9 @@ class _Store:
 
 
 def _runtime(store):
-    return SimpleNamespace(game_store=SimpleNamespace(pool=store),
-                           identity_verifier=object(), blob_store=object())
+    return SimpleNamespace(
+        game_store=SimpleNamespace(pool=store), identity_verifier=object(), blob_store=object()
+    )
 
 
 def test_account_deletion_endpoint_dedups_and_hides_ids(monkeypatch):
@@ -144,17 +152,25 @@ def test_account_deletion_endpoint_dedups_and_hides_ids(monkeypatch):
     store, finished = _Store([owner]), []
 
     class Lifecycle:
-        def __init__(self, *_a): pass
+        def __init__(self, *_a):
+            pass
 
         def finish(self, o):
             finished.append(o)
             return "deleted"
+
     monkeypatch.setattr(cli, "PostgresAccountLifecycle", Lifecycle)
     monkeypatch.setattr(cron_internal, "_runtime", lambda: _runtime(store))
     monkeypatch.setenv("RPG_RUNTIME_PROFILE", "hosted-supabase")
     responses = []
-    threads = [threading.Thread(target=lambda: responses.append(
-        client.post("/internal/cron/account-deletions", headers=H))) for _ in range(2)]
+    threads = [
+        threading.Thread(
+            target=lambda: responses.append(
+                client.post("/internal/cron/account-deletions", headers=H)
+            )
+        )
+        for _ in range(2)
+    ]
     [t.start() for t in threads]
     [t.join() for t in threads]
     assert finished == [owner]  # processed exactly once
@@ -166,10 +182,12 @@ def test_account_deletion_failure_counts(monkeypatch):
     store = _Store([uuid4()])
 
     class Lifecycle:
-        def __init__(self, *_a): pass
+        def __init__(self, *_a):
+            pass
 
         def finish(self, o):
             raise ValueError("x")
+
     monkeypatch.setattr(cli, "PostgresAccountLifecycle", Lifecycle)
     monkeypatch.setattr(cron_internal, "_runtime", lambda: _runtime(store))
     monkeypatch.setenv("RPG_RUNTIME_PROFILE", "hosted-supabase")
@@ -186,13 +204,19 @@ def test_account_deletions_wrong_profile_fails(monkeypatch):
 
 def test_operations_endpoint(monkeypatch):
     monkeypatch.setattr(cron_internal, "_runtime", lambda: _runtime(object()))
-    monkeypatch.setattr("services.operation_recovery.recover_expired",
-                        lambda pool, n: {"orphans_seen": 2, "released": 2})
-    monkeypatch.setattr("services.retention.purge_expired",  # SPEC-222 R7
-                        lambda pool: {"purged_jobs": 3})
+    monkeypatch.setattr(
+        "services.operation_recovery.recover_expired",
+        lambda pool, n: {"orphans_seen": 2, "released": 2},
+    )
+    monkeypatch.setattr(
+        "services.retention.purge_expired",  # SPEC-222 R7
+        lambda pool: {"purged_jobs": 3},
+    )
     # SPEC-236 R4: the same cron also sweeps orphan wallet reservations.
-    monkeypatch.setattr("services.wallet_recovery.recover_wallet_reservations",
-                        lambda pool, n: {"wallet_seen": 1, "wallet_released": 1, "wallet_errors": 0})
+    monkeypatch.setattr(
+        "services.wallet_recovery.recover_wallet_reservations",
+        lambda pool, n: {"wallet_seen": 1, "wallet_released": 1, "wallet_errors": 0},
+    )
     body = client.post("/internal/cron/operations", headers=H).json()
     assert body["released"] == 2 and body["ok"] is True and body["wallet_released"] == 1
     assert body["purged_jobs"] == 3
@@ -200,8 +224,10 @@ def test_operations_endpoint(monkeypatch):
 
 def test_operations_endpoint_reports_wallet_sweep_failure(monkeypatch):
     monkeypatch.setattr(cron_internal, "_runtime", lambda: _runtime(object()))
-    monkeypatch.setattr("services.operation_recovery.recover_expired",
-                        lambda pool, n: {"orphans_seen": 0, "released": 0})
+    monkeypatch.setattr(
+        "services.operation_recovery.recover_expired",
+        lambda pool, n: {"orphans_seen": 0, "released": 0},
+    )
     monkeypatch.setattr("services.retention.purge_expired", lambda pool: {"purged_jobs": 0})
     response = client.post("/internal/cron/operations", headers=H)
     body = response.json()  # object() pool: the sweep fails, operations result is still reported
@@ -213,16 +239,24 @@ def test_security_headers_csp():
     r = client.get("/health")
     csp = r.headers["content-security-policy"]
     assert r.headers["x-frame-options"] == "DENY"
-    for part in ("default-src 'self'", "frame-ancestors 'none'", "object-src 'none'",
-                 "script-src 'self' https://challenges.cloudflare.com", "base-uri 'self'"):
+    for part in (
+        "default-src 'self'",
+        "frame-ancestors 'none'",
+        "object-src 'none'",
+        "script-src 'self' https://challenges.cloudflare.com",
+        "base-uri 'self'",
+    ):
         assert part in csp
     assert "unsafe-eval" not in csp and "script-src 'self' 'unsafe-inline'" not in csp
     # Vite output must keep scripts external (no inline <script>) for this CSP to hold
     import re
     from pathlib import Path
+
     index = Path("web/dist/index.html")
     if index.exists():
-        assert not re.search(r"<script(?![^>]*\bsrc=)[^>]*>\s*\S", index.read_text(encoding="utf-8"))
+        assert not re.search(
+            r"<script(?![^>]*\bsrc=)[^>]*>\s*\S", index.read_text(encoding="utf-8")
+        )
 
 
 def test_claim_pending_has_reclaim_cooldown():
@@ -242,6 +276,7 @@ def test_claim_pending_has_reclaim_cooldown():
     class Pool:
         def connection(self):
             return nullcontext(DB())
+
     cli.claim_pending(Pool(), 5)
     assert "recovery_attempted_at is null" in seen["sql"]
     assert "recovery_attempted_at < now() - interval '2 minutes'" in seen["sql"]

@@ -59,7 +59,9 @@ def _valid_entity_ids() -> set:
         return set()
 
 
-def register_proposed_quests(quests: list[dict], proposals: list, *, turn: int = 0) -> tuple[list[dict], list[dict]]:
+def register_proposed_quests(
+    quests: list[dict], proposals: list, *, turn: int = 0
+) -> tuple[list[dict], list[dict]]:
     """PURO. Valida/cria side quests a partir de propostas do LLM.
 
     Retorna (lista_nova, criadas). Regras (nunca levanta, só ignora ou zera campo):
@@ -84,8 +86,11 @@ def register_proposed_quests(quests: list[dict], proposals: list, *, turn: int =
             continue
 
         active_titles = [q for q in quests if q.get("status") == "active"]
-        if any(difflib.SequenceMatcher(None, title.lower(), q.get("title", "").lower()).ratio()
-               >= TITLE_SIMILARITY for q in active_titles):
+        if any(
+            difflib.SequenceMatcher(None, title.lower(), q.get("title", "").lower()).ratio()
+            >= TITLE_SIMILARITY
+            for q in active_titles
+        ):
             _log_event("quest", "proposal_duplicate_ignored", level="info")
             continue
 
@@ -137,11 +142,15 @@ def sync_location_progress(quests: list[dict], location_id: str, *, turn: int = 
     for original in quests or []:
         q = dict(original)
         progress = list(q.get("progress_log") or [])
-        if (q.get("status") == "active" and location_id
-                and q.get("location_id") == location_id
-                and not any(row.get("kind") == "location_reached" for row in progress)):
-            progress.append({"kind": "location_reached", "turn": int(turn),
-                             "detail": str(location_id)})
+        if (
+            q.get("status") == "active"
+            and location_id
+            and q.get("location_id") == location_id
+            and not any(row.get("kind") == "location_reached" for row in progress)
+        ):
+            progress.append(
+                {"kind": "location_reached", "turn": int(turn), "detail": str(location_id)}
+            )
             q["progress_log"] = progress
         out.append(q)
     return out
@@ -150,10 +159,7 @@ def sync_location_progress(quests: list[dict], location_id: str, *, turn: int = 
 def _normalized_words(value: str) -> set[str]:
     folded = unicodedata.normalize("NFKD", str(value or ""))
     plain = "".join(char for char in folded if not unicodedata.combining(char))
-    return {
-        word for word in re.findall(r"[a-z0-9]+", plain.casefold())
-        if len(word) >= 4
-    }
+    return {word for word in re.findall(r"[a-z0-9]+", plain.casefold()) if len(word) >= 4}
 
 
 FINGERPRINT_JACCARD = 0.6  # SPEC-226 R6 (D-B): similaridade máxima p/ "ação distinta"
@@ -208,9 +214,7 @@ def sync_action_progress(
     for original in quests or []:
         q = dict(original)
         progress = [dict(row) for row in (q.get("progress_log") or [])]
-        quest_words = _normalized_words(
-            f"{q.get('title', '')} {q.get('description', '')}"
-        )
+        quest_words = _normalized_words(f"{q.get('title', '')} {q.get('description', '')}")
         relevant = generic_reference or bool(action_words & quest_words)
         reached = any(row.get("kind") == "location_reached" for row in progress)
         already_ready = bool(q.get("completion_ready"))
@@ -223,16 +227,18 @@ def sync_action_progress(
             and fresh
             and not already_ready
         ):
-            if _is_distinct(fp_tokens, [
-                row.get("fingerprint") for row in progress
-                if row.get("kind") == "investigation"
-            ]):
-                progress.append({
-                    "kind": "investigation",
-                    "turn": int(turn),
-                    "detail": action,
-                    "fingerprint": fingerprint,
-                })
+            if _is_distinct(
+                fp_tokens,
+                [row.get("fingerprint") for row in progress if row.get("kind") == "investigation"],
+            ):
+                progress.append(
+                    {
+                        "kind": "investigation",
+                        "turn": int(turn),
+                        "detail": action,
+                        "fingerprint": fingerprint,
+                    }
+                )
             distinct: list[frozenset] = []
             for row in progress:
                 if row.get("kind") != "investigation":
@@ -243,11 +249,13 @@ def sync_action_progress(
             investigations = distinct
             if len(investigations) >= 2:
                 q["completion_ready"] = True
-                progress.append({
-                    "kind": "completion_ready",
-                    "turn": int(turn),
-                    "detail": "objetivo verificado por ações distintas",
-                })
+                progress.append(
+                    {
+                        "kind": "completion_ready",
+                        "turn": int(turn),
+                        "detail": "objetivo verificado por ações distintas",
+                    }
+                )
                 ready_ids.append(str(q.get("id") or ""))
             q["progress_log"] = progress
         out.append(q)
@@ -272,14 +280,20 @@ def sync_npc_interaction(quests: list[dict], npc_name: str, *, turn: int = 0) ->
     for original in quests or []:
         q = dict(original)
         progress = list(q.get("progress_log") or [])
-        if (who and q.get("status") == "active"
-                and _fold_name(q.get("origin_name")) == who
-                and _safe_turn(q.get("created_turn")) < int(turn)
-                and not any(row.get("kind") == "npc_interaction"
-                            and _safe_turn(row.get("turn")) == int(turn)
-                            for row in progress if isinstance(row, dict))):
-            progress.append({"kind": "npc_interaction", "turn": int(turn),
-                             "detail": str(npc_name)[:60]})
+        if (
+            who
+            and q.get("status") == "active"
+            and _fold_name(q.get("origin_name")) == who
+            and _safe_turn(q.get("created_turn")) < int(turn)
+            and not any(
+                row.get("kind") == "npc_interaction" and _safe_turn(row.get("turn")) == int(turn)
+                for row in progress
+                if isinstance(row, dict)
+            )
+        ):
+            progress.append(
+                {"kind": "npc_interaction", "turn": int(turn), "detail": str(npc_name)[:60]}
+            )
             q["progress_log"] = progress
         out.append(q)
     return out
@@ -308,9 +322,11 @@ def has_completion_proof(quest: dict, state: dict) -> tuple[bool, str]:
     if created >= turn:
         return False, "quest criada neste turno"
     rows = [row for row in (quest.get("progress_log") or []) if isinstance(row, dict)]
-    evidence = [row for row in rows
-                if row.get("kind") in PROOF_EVIDENCE_KINDS
-                and created < _safe_turn(row.get("turn")) <= turn]
+    evidence = [
+        row
+        for row in rows
+        if row.get("kind") in PROOF_EVIDENCE_KINDS and created < _safe_turn(row.get("turn")) <= turn
+    ]
     if quest.get("location_id"):
         if not any(row.get("kind") == "location_reached" for row in rows):
             return False, "sem chegada ao local da missão"
@@ -322,8 +338,9 @@ def has_completion_proof(quest: dict, state: dict) -> tuple[bool, str]:
     return True, ""
 
 
-def complete_quest_with_reward(quests: list[dict], quest_id: str,
-                               turn: int = 0) -> tuple[list[dict], int]:
+def complete_quest_with_reward(
+    quests: list[dict], quest_id: str, turn: int = 0
+) -> tuple[list[dict], int]:
     """Conclui e materializa a recompensa fixa uma vez. Retorna ouro concedido."""
     out: list[dict] = []
     reward = 0
@@ -332,17 +349,23 @@ def complete_quest_with_reward(quests: list[dict], quest_id: str,
         if q.get("id") == quest_id and q.get("status") == "active":
             progress = list(q.get("progress_log") or [])
             progress.append({"kind": "completed", "turn": int(turn), "detail": ""})
-            q.update({
-                "status": "completed", "resolved_turn": int(turn),
-                "progress_log": progress, "reward_gold": QUEST_REWARD_GOLD,
-                "reward_delivered": True,
-            })
+            q.update(
+                {
+                    "status": "completed",
+                    "resolved_turn": int(turn),
+                    "progress_log": progress,
+                    "reward_gold": QUEST_REWARD_GOLD,
+                    "reward_delivered": True,
+                }
+            )
             reward = QUEST_REWARD_GOLD
         out.append(q)
     return out, reward
 
 
-def fail_orphan_quests(quests: list[dict], dead_entity_id: str, turn: int = 0) -> tuple[list[dict], list[dict]]:
+def fail_orphan_quests(
+    quests: list[dict], dead_entity_id: str, turn: int = 0
+) -> tuple[list[dict], list[dict]]:
     """PURO. Quests ATIVAS com origin_entity_id == dead_entity_id -> failed.
 
     Retorna (lista_nova, eventos `quest_failed` — 1 por quest, source="system").
@@ -355,22 +378,29 @@ def fail_orphan_quests(quests: list[dict], dead_entity_id: str, turn: int = 0) -
     for q in quests or []:
         if q.get("status") == "active" and q.get("origin_entity_id") == dead_entity_id:
             q = {**q, "status": "failed", "resolved_turn": int(turn)}
-            events.append({
-                "event_id": uuid.uuid4().hex,
-                "turn": int(turn),
-                "type": "quest_failed",
-                "actor_id": "system",
-                "target_id": dead_entity_id,
-                "payload": {"quest_id": q["id"], "quest_title": q.get("title", ""),
-                           "reason": "origin_killed"},
-                "source": "system",
-            })
+            events.append(
+                {
+                    "event_id": uuid.uuid4().hex,
+                    "turn": int(turn),
+                    "type": "quest_failed",
+                    "actor_id": "system",
+                    "target_id": dead_entity_id,
+                    "payload": {
+                        "quest_id": q["id"],
+                        "quest_title": q.get("title", ""),
+                        "reason": "origin_killed",
+                    },
+                    "source": "system",
+                }
+            )
         out.append(q)
     return out, events
 
 
 def quest_markers(quests: list[dict]) -> list[dict]:
     """Quests ativas com local válido -> [{"quest_id", "location_id"}] pro mapa."""
-    return [{"quest_id": q["id"], "location_id": q["location_id"]}
-            for q in (quests or [])
-            if q.get("status") == "active" and q.get("location_id")]
+    return [
+        {"quest_id": q["id"], "location_id": q["location_id"]}
+        for q in (quests or [])
+        if q.get("status") == "active" and q.get("location_id")
+    ]

@@ -70,7 +70,9 @@ def repo(tmp_path: Path) -> Path:
 
 def test_build_edits_only_status_line_and_appends_new_specs(repo: Path) -> None:
     (repo / "specs/SPEC-001-alpha.md").write_text(_spec("done", "Alpha"), encoding="utf-8")
-    (repo / "specs/SPEC-002-beta.md").write_text(_spec("draft", "SPEC-002 — Beta"), encoding="utf-8")
+    (repo / "specs/SPEC-002-beta.md").write_text(
+        _spec("draft", "SPEC-002 — Beta"), encoding="utf-8"
+    )
     assert spec_index.problems(repo)
 
     changes = spec_index.build(repo)
@@ -94,7 +96,9 @@ def test_build_refuses_to_drop_indexed_spec(repo: Path) -> None:
 
 def test_recent_writes_between_markers(repo: Path) -> None:
     estado = repo / "ESTADO_ATUAL.md"
-    estado.write_text("top\n<!-- recent:start -->\nold\n<!-- recent:end -->\nbottom\n", encoding="utf-8")
+    estado.write_text(
+        "top\n<!-- recent:start -->\nold\n<!-- recent:end -->\nbottom\n", encoding="utf-8"
+    )
     lines = spec_index.recent(repo, 7)
     assert lines and "SPEC-001 `draft` — Alpha" in lines[0]
 
@@ -102,7 +106,9 @@ def test_recent_writes_between_markers(repo: Path) -> None:
 
     text = estado.read_text(encoding="utf-8")
     assert "old" not in text
-    assert text.startswith("top\n<!-- recent:start -->\n- ") and text.endswith("<!-- recent:end -->\nbottom\n")
+    assert text.startswith("top\n<!-- recent:start -->\n- ") and text.endswith(
+        "<!-- recent:end -->\nbottom\n"
+    )
 
 
 def test_next_id_sees_reserved_branches_and_creates_from_template(repo: Path) -> None:

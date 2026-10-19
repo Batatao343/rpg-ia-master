@@ -1,4 +1,5 @@
 """SPEC-218: fail-closed de perfil e configuração de segurança em deploy exposto."""
+
 from __future__ import annotations
 
 import importlib
@@ -57,7 +58,10 @@ def without(name: str) -> dict[str, str]:
 
 
 # --- R1/R2: exposição e boot ------------------------------------------------
-@pytest.mark.parametrize("marker", ["VERCEL", "RAILWAY_ENVIRONMENT", "RENDER", "K_SERVICE", "FLY_APP_NAME", "DYNO", "PORT"])
+@pytest.mark.parametrize(
+    "marker",
+    ["VERCEL", "RAILWAY_ENVIRONMENT", "RENDER", "K_SERVICE", "FLY_APP_NAME", "DYNO", "PORT"],
+)
 def test_legacy_exposed_boot_fails(marker: str) -> None:
     with pytest.raises(RuntimeError, match="legacy_profile_exposed") as exc:
         assert_boot_policy({marker: "x"})
@@ -80,7 +84,9 @@ def test_explicit_empty_or_unknown_profile_is_not_a_bypass() -> None:
 
 def test_legacy_loopback_without_markers_ok() -> None:
     assert_boot_policy({})
-    assert_boot_policy({"RPG_BIND_HOST": "127.0.0.1", "PORT": "8000"})  # loopback explícito remove PORT
+    assert_boot_policy(
+        {"RPG_BIND_HOST": "127.0.0.1", "PORT": "8000"}
+    )  # loopback explícito remove PORT
     assert exposure_markers({"RPG_BIND_HOST": "127.0.0.1", "PORT": "8000"}) == set()
 
 
@@ -99,7 +105,11 @@ def test_allow_legacy_exposed_override() -> None:
 
 
 def test_boot_error_has_no_env_values() -> None:
-    env = {"PORT": "8000", "DATABASE_URL": "postgres://u:SEGREDO@h/db", "RPG_SESSION_SECRET": "SEGREDO"}
+    env = {
+        "PORT": "8000",
+        "DATABASE_URL": "postgres://u:SEGREDO@h/db",
+        "RPG_SESSION_SECRET": "SEGREDO",
+    }
     with pytest.raises(RuntimeError) as exc:
         assert_boot_policy(env)
     assert "SEGREDO" not in str(exc.value) and "8000" not in str(exc.value)
@@ -134,39 +144,50 @@ def test_secure_env_is_valid_and_hardened() -> None:
     assert not is_hardened({})  # legacy nunca "hardened"
 
 
-@pytest.mark.parametrize("name", [
-    "RPG_COOKIE_SECURE", "RPG_SESSION_SECRET", "RPG_TELEMETRY_SECRET", "RPG_CORS_ORIGINS",
-    "RPG_AUTH_CAPTCHA_REQUIRED", "RPG_AUTH_EMAIL_CONFIRMATION_REQUIRED", "RPG_NO_MOCK",
-])
+@pytest.mark.parametrize(
+    "name",
+    [
+        "RPG_COOKIE_SECURE",
+        "RPG_SESSION_SECRET",
+        "RPG_TELEMETRY_SECRET",
+        "RPG_CORS_ORIGINS",
+        "RPG_AUTH_CAPTCHA_REQUIRED",
+        "RPG_AUTH_EMAIL_CONFIRMATION_REQUIRED",
+        "RPG_NO_MOCK",
+    ],
+)
 def test_hosted_missing_requirement_fails(name: str) -> None:
     with pytest.raises(ValueError, match="hosted_config_insecure") as exc:
         RuntimeConfig.from_env(without(name))
     assert name in str(exc.value)
 
 
-@pytest.mark.parametrize("override,needle", [
-    ({"RPG_COOKIE_SECURE": "0"}, "RPG_COOKIE_SECURE"),
-    ({"RPG_SESSION_SECRET": "curto"}, "RPG_SESSION_SECRET"),
-    ({"RPG_TELEMETRY_SECRET": "x" * 31}, "RPG_TELEMETRY_SECRET"),
-    ({"RPG_CORS_ORIGINS": "*"}, "RPG_CORS_ORIGINS"),
-    ({"RPG_CORS_ORIGINS": "https://a.example.com,http://b.example.com"}, "RPG_CORS_ORIGINS"),
-    ({"RPG_CORS_ORIGINS": "https://localhost"}, "RPG_CORS_ORIGINS"),
-    ({"RPG_CORS_ORIGINS": "https://127.0.0.1:8000"}, "RPG_CORS_ORIGINS"),
-    ({"RPG_CORS_ORIGINS": "https://a.example.com/path"}, "RPG_CORS_ORIGINS"),
-    ({"RPG_AUTH_CAPTCHA_REQUIRED": "0"}, "RPG_AUTH_CAPTCHA_REQUIRED"),
-    ({"RPG_TURNSTILE_SITE_KEY": ""}, "RPG_AUTH_CAPTCHA_REQUIRED"),
-    ({"RPG_AUTH_CAPTCHA_MODE": "app"}, "RPG_AUTH_CAPTCHA_REQUIRED"),  # sem RPG_TURNSTILE_SECRET
-    ({"RPG_RATE_LIMIT": "0"}, "RPG_RATE_LIMIT"),
-    ({"RPG_RATE_LIMIT": "-5"}, "RPG_RATE_LIMIT"),
-    ({"RPG_RATE_LIMIT": "abc"}, "RPG_RATE_LIMIT"),
-    ({"LLM_PROVIDER": "ollama"}, "LLM_PROVIDER"),
-    ({"RPG_FORCE_MOCK": "1"}, "RPG_FORCE_MOCK"),
-    ({"RPG_GOOGLE_PLAY_FAKE": "1"}, "RPG_GOOGLE_PLAY_FAKE"),
-    ({"RPG_ADMIN_ALLOW_PROFILE": "1"}, "RPG_ADMIN_ALLOW_PROFILE"),
-    ({"RPG_KILL_SWITCHES_OFF": "image_generation"}, "RPG_KILL_SWITCHES_OFF"),
-    ({"RPG_EXPOSE_OPENAPI": "1"}, "RPG_EXPOSE_OPENAPI"),
-    ({"RPG_ALLOW_LEGACY_EXPOSED": "1"}, "RPG_ALLOW_LEGACY_EXPOSED"),
-])
+@pytest.mark.parametrize(
+    "override,needle",
+    [
+        ({"RPG_COOKIE_SECURE": "0"}, "RPG_COOKIE_SECURE"),
+        ({"RPG_SESSION_SECRET": "curto"}, "RPG_SESSION_SECRET"),
+        ({"RPG_TELEMETRY_SECRET": "x" * 31}, "RPG_TELEMETRY_SECRET"),
+        ({"RPG_CORS_ORIGINS": "*"}, "RPG_CORS_ORIGINS"),
+        ({"RPG_CORS_ORIGINS": "https://a.example.com,http://b.example.com"}, "RPG_CORS_ORIGINS"),
+        ({"RPG_CORS_ORIGINS": "https://localhost"}, "RPG_CORS_ORIGINS"),
+        ({"RPG_CORS_ORIGINS": "https://127.0.0.1:8000"}, "RPG_CORS_ORIGINS"),
+        ({"RPG_CORS_ORIGINS": "https://a.example.com/path"}, "RPG_CORS_ORIGINS"),
+        ({"RPG_AUTH_CAPTCHA_REQUIRED": "0"}, "RPG_AUTH_CAPTCHA_REQUIRED"),
+        ({"RPG_TURNSTILE_SITE_KEY": ""}, "RPG_AUTH_CAPTCHA_REQUIRED"),
+        ({"RPG_AUTH_CAPTCHA_MODE": "app"}, "RPG_AUTH_CAPTCHA_REQUIRED"),  # sem RPG_TURNSTILE_SECRET
+        ({"RPG_RATE_LIMIT": "0"}, "RPG_RATE_LIMIT"),
+        ({"RPG_RATE_LIMIT": "-5"}, "RPG_RATE_LIMIT"),
+        ({"RPG_RATE_LIMIT": "abc"}, "RPG_RATE_LIMIT"),
+        ({"LLM_PROVIDER": "ollama"}, "LLM_PROVIDER"),
+        ({"RPG_FORCE_MOCK": "1"}, "RPG_FORCE_MOCK"),
+        ({"RPG_GOOGLE_PLAY_FAKE": "1"}, "RPG_GOOGLE_PLAY_FAKE"),
+        ({"RPG_ADMIN_ALLOW_PROFILE": "1"}, "RPG_ADMIN_ALLOW_PROFILE"),
+        ({"RPG_KILL_SWITCHES_OFF": "image_generation"}, "RPG_KILL_SWITCHES_OFF"),
+        ({"RPG_EXPOSE_OPENAPI": "1"}, "RPG_EXPOSE_OPENAPI"),
+        ({"RPG_ALLOW_LEGACY_EXPOSED": "1"}, "RPG_ALLOW_LEGACY_EXPOSED"),
+    ],
+)
 def test_hosted_bad_value_fails(override: dict[str, str], needle: str) -> None:
     with pytest.raises(ValueError, match="hosted_config_insecure") as exc:
         RuntimeConfig.from_env(secure_env(**override))
@@ -193,7 +214,9 @@ def test_validate_error_lists_all_missing_at_once() -> None:
     with pytest.raises(ValueError) as exc:
         RuntimeConfig.from_env(env)
     msg = str(exc.value)
-    assert all(n in msg for n in ("RPG_COOKIE_SECURE", "RPG_SESSION_SECRET", "RPG_AUTH_CAPTCHA_REQUIRED"))
+    assert all(
+        n in msg for n in ("RPG_COOKIE_SECURE", "RPG_SESSION_SECRET", "RPG_AUTH_CAPTCHA_REQUIRED")
+    )
 
 
 def test_allow_insecure_hosted_override_only_for_lab() -> None:
@@ -225,8 +248,14 @@ def test_requirements_parity_with_release_checklist() -> None:
     # Produção proíbe tudo o que o boot hospedado proíbe; compras de teste do Play (SPEC-225 R8)
     # ficam só na lista de produção porque o QA de staging (perfil hospedado) as liga.
     assert set(rt.FORBIDDEN_IN_HOSTED) <= set(checklist.FORBIDDEN_IN_PROD)
-    assert set(checklist.FORBIDDEN_IN_PROD) - set(rt.FORBIDDEN_IN_HOSTED) <= {"RPG_PLAY_ACCEPT_TEST_PURCHASES"}
-    for forbidden in ("RPG_ALLOW_INSECURE_HOSTED", "RPG_ALLOW_LEGACY_EXPOSED", "RPG_EXPOSE_OPENAPI"):
+    assert set(checklist.FORBIDDEN_IN_PROD) - set(rt.FORBIDDEN_IN_HOSTED) <= {
+        "RPG_PLAY_ACCEPT_TEST_PURCHASES"
+    }
+    for forbidden in (
+        "RPG_ALLOW_INSECURE_HOSTED",
+        "RPG_ALLOW_LEGACY_EXPOSED",
+        "RPG_EXPOSE_OPENAPI",
+    ):
         assert forbidden in checklist.FORBIDDEN_IN_PROD
 
 
@@ -351,18 +380,26 @@ def test_serverless_defaults_force_no_mock_in_hosted() -> None:
 
 # --- Revisao Astra: perfis nao-hosted expostos -------------------------------
 def test_local_profile_exposed_fails() -> None:
-    env = {"RPG_RUNTIME_PROFILE": "local", "VERCEL": "1",
-           "DATABASE_URL": "postgresql://u:p@db.example.com:5432/postgres",
-           "SUPABASE_URL": "https://projectref.supabase.co"}
+    env = {
+        "RPG_RUNTIME_PROFILE": "local",
+        "VERCEL": "1",
+        "DATABASE_URL": "postgresql://u:p@db.example.com:5432/postgres",
+        "SUPABASE_URL": "https://projectref.supabase.co",
+    }
     with pytest.raises(RuntimeError, match="local_profile_exposed"):
         assert_boot_policy(env)
 
 
 def test_portable_profile_exposed_requires_hardening() -> None:
-    base = {"RPG_RUNTIME_PROFILE": "portable", "PORT": "8000",
-            "DATABASE_URL": "postgresql://u:p@db.example.com:5432/postgres",
-            "RPG_OIDC_USERINFO_URL": "https://id.example/userinfo", "RPG_OIDC_ISSUER": "https://id.example",
-            "RPG_OIDC_JWKS_URL": "https://id.example/jwks", "RPG_OIDC_AUDIENCE": "rpg"}
+    base = {
+        "RPG_RUNTIME_PROFILE": "portable",
+        "PORT": "8000",
+        "DATABASE_URL": "postgresql://u:p@db.example.com:5432/postgres",
+        "RPG_OIDC_USERINFO_URL": "https://id.example/userinfo",
+        "RPG_OIDC_ISSUER": "https://id.example",
+        "RPG_OIDC_JWKS_URL": "https://id.example/jwks",
+        "RPG_OIDC_AUDIENCE": "rpg",
+    }
     with pytest.raises(ValueError, match="hosted_config_insecure"):
         assert_boot_policy(base)
     hardened = {**secure_env(), **base}
@@ -385,9 +422,21 @@ def test_suite_collection_survives_exposure_markers_in_parent_env() -> None:
     env = {**os.environ, "PORT": "8000", "DYNO": "web.1", "RAILWAY_ENVIRONMENT": "production"}
     env.pop("RPG_RUNTIME_PROFILE", None)
     proc = subprocess.run(
-        [sys.executable, "-m", "pytest", "--collect-only", "-q", "-p", "no:cacheprovider",
-         "tests/test_account_api.py"],
-        cwd=root, env=env, capture_output=True, text=True, timeout=180,
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "--collect-only",
+            "-q",
+            "-p",
+            "no:cacheprovider",
+            "tests/test_account_api.py",
+        ],
+        cwd=root,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=180,
     )
     assert proc.returncode == 0, proc.stdout[-2000:] + proc.stderr[-2000:]
     assert "legacy_profile_exposed" not in proc.stdout + proc.stderr

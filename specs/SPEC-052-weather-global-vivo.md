@@ -54,8 +54,8 @@ eventos raros que varrem Valoria por alguns períodos, sobrepondo o clima local.
 **Arquivo alterado:** `world_utils.py`
 - Constantes:
   ```python
-  GLOBAL_WEATHER_BASE_CHANCE = 0.06   # [BALANCEAR] por período sem evento ativo
-  GLOBAL_WEATHER_DANGER_STEP = 0.03   # [BALANCEAR] +chance por nível de perigo >1
+  GLOBAL_WEATHER_BASE_CHANCE = 0.06  # [BALANCEAR] por período sem evento ativo
+  GLOBAL_WEATHER_DANGER_STEP = 0.03  # [BALANCEAR] +chance por nível de perigo >1
   ```
 - Nova função:
   ```python

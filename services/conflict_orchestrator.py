@@ -18,6 +18,7 @@ determinístico e ZERO LLM em resolução:
 (`enemy_declaration`) decide a `TurnDeclaration` por perfil tático (08), sem LLM.
 O jogador chega com a `TurnDeclaration` já montada (parse CLASSIFY no nó).
 """
+
 import copy
 import json
 import logging
@@ -43,16 +44,29 @@ _VIRTUDES = ("forca", "agilidade", "corpo", "mente", "carisma")
 
 # Mapa de `type`/`categoria` legado → categoria canônica do fluxo de morte (07/15).
 _CATEGORIA_ALIAS = {
-    "minion": "lacaio", "lacaio": "lacaio", "trivial": "lacaio",
-    "padrao": "padrao", "standard": "padrao", "normal": "padrao", "grunt": "padrao",
-    "elite": "elite", "veterano": "elite",
-    "boss": "chefe", "chefe": "chefe", "chefao": "chefe",
-    "nomeado": "nomeado", "named": "nomeado", "unico": "nomeado",
-    "companheiro": "companheiro", "aliado": "companheiro",
+    "minion": "lacaio",
+    "lacaio": "lacaio",
+    "trivial": "lacaio",
+    "padrao": "padrao",
+    "standard": "padrao",
+    "normal": "padrao",
+    "grunt": "padrao",
+    "elite": "elite",
+    "veterano": "elite",
+    "boss": "chefe",
+    "chefe": "chefe",
+    "chefao": "chefe",
+    "nomeado": "nomeado",
+    "named": "nomeado",
+    "unico": "nomeado",
+    "companheiro": "companheiro",
+    "aliado": "companheiro",
 }
-_KNOWN_CATEGORIAS = (death_flow.FULL_FLOW_CATEGORIES
-                     | death_flow.NO_TERMINAL_CATEGORIES
-                     | death_flow.MINION_CATEGORIES)
+_KNOWN_CATEGORIAS = (
+    death_flow.FULL_FLOW_CATEGORIES
+    | death_flow.NO_TERMINAL_CATEGORIES
+    | death_flow.MINION_CATEGORIES
+)
 
 
 # ==========================================================================
@@ -62,8 +76,7 @@ def _derive_virtudes(actor: dict) -> dict[str, int]:
     return {k: virtude_value(actor, k) for k in _VIRTUDES}
 
 
-def ensure_combat_sheet(actor: dict, *, is_player: bool = False,
-                        is_ally: bool = False) -> dict:
+def ensure_combat_sheet(actor: dict, *, is_player: bool = False, is_ally: bool = False) -> dict:
     """Normaliza `actor` (mutando) para a ficha de combate v4 que o motor novo
     consome: Virtudes 0-5, Vitalidade/espaços de Ferimento por Corpo, Esquiva,
     categoria canônica (07) e um perfil tático default para inimigo. Idempotente —
@@ -98,19 +111,23 @@ def ensure_combat_sheet(actor: dict, *, is_player: bool = False,
         actor["is_player"] = True
         if actor.get("cartas"):
             actor["cartas"] = [
-                entry for entry in actor["cartas"]
+                entry
+                for entry in actor["cartas"]
                 if str(entry.get("id") if isinstance(entry, dict) else entry)
                 != "bst_defesa_instintiva"
             ]
     else:
         cat = _CATEGORIA_ALIAS.get(str(actor.get("categoria") or "").strip().lower())
         if is_ally or actor.get("transient") or actor.get("origin_npc") is not None:
-            cat = "companheiro"   # SPEC-231 R3: aliado nunca é "padrao" nem tem política de bestiário
+            cat = (
+                "companheiro"  # SPEC-231 R3: aliado nunca é "padrao" nem tem política de bestiário
+            )
         if not cat:
             cat = _CATEGORIA_ALIAS.get(str(actor.get("type") or "").strip().lower(), "padrao")
         actor["categoria"] = cat if cat in _KNOWN_CATEGORIAS else "padrao"
         actor["tactical_profile"] = tp.normalize_runtime_profile(
-            actor, actor.get("tactical_profile") or tp._default_profile())
+            actor, actor.get("tactical_profile") or tp._default_profile()
+        )
         if actor["categoria"] != "companheiro":
             actor["pursuit_policy"] = actor["tactical_profile"].get(
                 "pursuit_policy", "nao_persegue"
@@ -121,8 +138,7 @@ def ensure_combat_sheet(actor: dict, *, is_player: bool = False,
             actor.setdefault("enemy_card_usage", {})
             enemy_cards = list(actor.get("cartas") or actor.get("enemy_cards") or [])
             known_ids = {
-                str(entry.get("id") if isinstance(entry, dict) else entry)
-                for entry in enemy_cards
+                str(entry.get("id") if isinstance(entry, dict) else entry) for entry in enemy_cards
             }
             if "bst_defesa_instintiva" not in known_ids:
                 enemy_cards.append("bst_defesa_instintiva")
@@ -153,8 +169,9 @@ def _alive(actor: dict | None) -> bool:
 
 def _can_act(actor: dict) -> bool:
     """Pode declarar turno: vivo e NÃO em Estado Terminal (terminal só reage/estabiliza)."""
-    return (_alive(actor) and not actor.get("estado_terminal")
-            and not actor.get("last_stand_pending"))
+    return (
+        _alive(actor) and not actor.get("estado_terminal") and not actor.get("last_stand_pending")
+    )
 
 
 def _agility(actor: dict) -> int:
@@ -165,7 +182,12 @@ def _apply_dot_v4(target: dict, dot: int, dtype: str, out: dict, rng=None) -> No
     """DoT do motor NOVO: reduz Vitalidade; excedente vira Ferimento localizado (05).
     Sangramento/veneno ignoram armadura (dano contínuo interno)."""
     known_types = set(gamedata.DANO_FISICO) | {
-        "igneo", "gelido", "eletrico", "arcano", "corrosivo", "abissal",
+        "igneo",
+        "gelido",
+        "eletrico",
+        "arcano",
+        "corrosivo",
+        "abissal",
     }
     result = resolve_damage_and_wounds(
         target,
@@ -182,8 +204,11 @@ def _apply_dot_v4(target: dict, dot: int, dtype: str, out: dict, rng=None) -> No
 
 def _is_stat_only(condition: dict) -> bool:
     """Buff/debuff puro ({stat, delta} sem DoT nem controle)."""
-    return (bool(condition.get("stat")) and not int(condition.get("dot", 0) or 0)
-            and not condition.get("control"))
+    return (
+        bool(condition.get("stat"))
+        and not int(condition.get("dot", 0) or 0)
+        and not condition.get("control")
+    )
 
 
 def _expire_stat_conditions(actor: dict, present_at_start: list, out: dict) -> None:
@@ -217,11 +242,12 @@ def _tick_conditions_v4(actor: dict, out: dict, rng=None) -> bool:
         if dot > 0:
             damage_applied = True
             _apply_dot_v4(
-                actor, dot, str(c.get("damage_type") or c.get("source") or "cortante"),
-                out, rng=rng)
+                actor, dot, str(c.get("damage_type") or c.get("source") or "cortante"), out, rng=rng
+            )
             out["logs"].append(
                 f"{_name(actor)} sofre {dot} de {c.get('name', 'condição')} "
-                f"(Vit {actor.get('vitalidade', 0)}).")
+                f"(Vit {actor.get('vitalidade', 0)})."
+            )
         c["duration"] = int(c.get("duration", 0)) - 1
         if c["duration"] > 0:
             survivors.append(c)
@@ -240,7 +266,9 @@ def _opposing_ids(actor_id: str, sides: dict[str, list[str]]) -> list[str]:
     return list(enemy) if actor_id in hero else list(hero)
 
 
-def _nearest_target(actor_id: str, candidates: list[str], actors_by_id: dict[str, dict]) -> str | None:
+def _nearest_target(
+    actor_id: str, candidates: list[str], actors_by_id: dict[str, dict]
+) -> str | None:
     alive = [c for c in candidates if _alive(actors_by_id.get(c))]
     if not alive:
         return None
@@ -249,7 +277,9 @@ def _nearest_target(actor_id: str, candidates: list[str], actors_by_id: dict[str
     return alive[0]
 
 
-def _taunt_target(actor: dict, candidates: list[str], actors_by_id: dict[str, dict], rng) -> str | None:
+def _taunt_target(
+    actor: dict, candidates: list[str], actors_by_id: dict[str, dict], rng
+) -> str | None:
     """Resolve Provocação fechada: a condição vive no provocado e aponta a fonte.
 
     A chance-base de 50% escala pela Entropia do Devoto e respeita teto de 90%.
@@ -265,10 +295,13 @@ def _taunt_target(actor: dict, candidates: list[str], actors_by_id: dict[str, di
             continue
         chance = min(0.9, 0.5 * cm.taunt_aggro_multiplier(source))
         if rng.random() < chance:
-            source.setdefault("_last_class_mechanics", []).append({
-                "kind": "special:taunt", "chance": round(chance, 4),
-                "target_id": source_id,
-            })
+            source.setdefault("_last_class_mechanics", []).append(
+                {
+                    "kind": "special:taunt",
+                    "chance": round(chance, 4),
+                    "target_id": source_id,
+                }
+            )
             return source_id
     return None
 
@@ -315,8 +348,9 @@ def _aid_rank(actor_id: str, actors_by_id: dict[str, dict]) -> tuple:
     )
 
 
-def _aid_target(actor_id: str, sides: dict[str, list[str]],
-                actors_by_id: dict[str, dict], predicate) -> str | None:
+def _aid_target(
+    actor_id: str, sides: dict[str, list[str]], actors_by_id: dict[str, dict], predicate
+) -> str | None:
     candidates = [
         ally_id
         for ally_id in _same_side_ids(actor_id, sides)
@@ -328,9 +362,9 @@ def _aid_target(actor_id: str, sides: dict[str, list[str]],
     return candidates[0] if candidates else None
 
 
-def derive_tactical_scene_state(scene: dict, actor_id: str,
-                                actors_by_id: dict[str, dict],
-                                sides: dict[str, list[str]]) -> dict:
+def derive_tactical_scene_state(
+    scene: dict, actor_id: str, actors_by_id: dict[str, dict], sides: dict[str, list[str]]
+) -> dict:
     """Deriva os únicos gatilhos mecânicos aceitos pelos perfis fechados.
 
     IDs de alvo vêm de ``sides``/``actors_by_id``; flags livres de ``scene_state``
@@ -347,10 +381,10 @@ def derive_tactical_scene_state(scene: dict, actor_id: str,
             _vitality_ratio(actors_by_id[target]) <= 0.5
             or _has_wounds(actors_by_id[target])
             or (
-                (
-                    ((scene.get("positions") or {}).get(target) or {})
-                    .get("postura") or {}
-                ).get("state") == "exposto"
+                (((scene.get("positions") or {}).get(target) or {}).get("postura") or {}).get(
+                    "state"
+                )
+                == "exposto"
             )
         )
     ]
@@ -358,20 +392,25 @@ def derive_tactical_scene_state(scene: dict, actor_id: str,
         key=lambda target: (
             _vitality_ratio(actors_by_id[target]),
             str(target),
-        ))
+        )
+    )
     vulnerable_id = vulnerable_ids[0] if vulnerable_ids else None
     terminal_id = _aid_target(
-        actor_id, sides, actors_by_id,
+        actor_id,
+        sides,
+        actors_by_id,
         lambda _ally_id, ally: bool(ally.get("estado_terminal")),
     )
     wounded_id = _aid_target(
-        actor_id, sides, actors_by_id,
-        lambda _ally_id, ally: (
-            _vitality_ratio(ally) < 1.0 or _has_wounds(ally)
-        ),
+        actor_id,
+        sides,
+        actors_by_id,
+        lambda _ally_id, ally: _vitality_ratio(ally) < 1.0 or _has_wounds(ally),
     )
     danger_id = _aid_target(
-        actor_id, sides, actors_by_id,
+        actor_id,
+        sides,
+        actors_by_id,
         lambda _ally_id, ally: (
             bool(ally.get("estado_terminal") or ally.get("last_stand_pending"))
             or _vitality_ratio(ally) <= 0.5
@@ -379,30 +418,22 @@ def derive_tactical_scene_state(scene: dict, actor_id: str,
         ),
     )
     available_id = _aid_target(
-        actor_id, sides, actors_by_id,
+        actor_id,
+        sides,
+        actors_by_id,
         lambda ally_id, ally: (
-            _can_act(ally)
-            and not cs.has_tactical_modifier(
-                scene, "attack_advantage", ally_id)
+            _can_act(ally) and not cs.has_tactical_modifier(scene, "attack_advantage", ally_id)
         ),
     )
-    has_flank = bool(
-        target_id and cs.is_hidden_from(scene, actor_id, target_id))
+    has_flank = bool(target_id and cs.is_hidden_from(scene, actor_id, target_id))
     same_side = _same_side_ids(actor_id, sides)
     peers = [ally_id for ally_id in same_side if ally_id != actor_id]
-    alive_peers = [
-        ally_id for ally_id in peers if _alive(actors_by_id.get(ally_id))
-    ]
-    engaged = set(
-        ((scene.get("positions") or {}).get(actor_id) or {}).get(
-            "engaged_with", []))
+    alive_peers = [ally_id for ally_id in peers if _alive(actors_by_id.get(ally_id))]
+    engaged = set(((scene.get("positions") or {}).get(actor_id) or {}).get("engaged_with", []))
     surrounded = len(engaged & set(opposing_ids)) >= 2
     alone = not alive_peers
     pack_broken = bool(peers) and len(alive_peers) * 2 <= len(peers)
-    badly_wounded = (
-        _vitality_ratio(actor) <= 0.35
-        or _has_wounds(actor, "grave", "critico")
-    )
+    badly_wounded = _vitality_ratio(actor) <= 0.35 or _has_wounds(actor, "grave", "critico")
     return {
         "aliado_terminal": terminal_id is not None,
         "aliado_ferido": wounded_id is not None,
@@ -411,8 +442,7 @@ def derive_tactical_scene_state(scene: dict, actor_id: str,
         "vitalidade_baixa": badly_wounded,
         "sem_flanco": target_id is not None and not has_flank,
         "controle_disponivel": (
-            target_id is not None
-            and cs.tactical_cooldown(scene, actor_id, "control") == 0
+            target_id is not None and cs.tactical_cooldown(scene, actor_id, "control") == 0
         ),
         # Vocabulário canônico dos 84 perfis curados do bestiário.
         "sozinho": alone,
@@ -431,15 +461,20 @@ def derive_tactical_scene_state(scene: dict, actor_id: str,
     }
 
 
-def enemy_declaration(scene: dict, actor_id: str, actors_by_id: dict[str, dict],
-                      sides: dict[str, list[str]], *,
-                      scene_state: dict | None = None, rng=None) -> "ct.TurnDeclaration":
+def enemy_declaration(
+    scene: dict,
+    actor_id: str,
+    actors_by_id: dict[str, dict],
+    sides: dict[str, list[str]],
+    *,
+    scene_state: dict | None = None,
+    rng=None,
+) -> "ct.TurnDeclaration":
     """R1/R2 (08): decide o turno de um inimigo pela PRECEDÊNCIA do perfil tático,
     sem LLM. A mecânica usa ``action_key`` fechado; ``action_hint`` é somente
     apresentação. Default determinístico: ataque no alvo mais ameaçador."""
     actor = actors_by_id[actor_id]
-    canonical = derive_tactical_scene_state(
-        scene, actor_id, actors_by_id, sides)
+    canonical = derive_tactical_scene_state(scene, actor_id, actors_by_id, sides)
     decision_state = dict(scene_state or {})
     decision_state.update(canonical)
     decision = tp.pick_action(
@@ -447,8 +482,7 @@ def enemy_declaration(scene: dict, actor_id: str, actors_by_id: dict[str, dict],
         decision_state,
     )
     explicit_action = decision.get("action_key")
-    action_key = explicit_action or tp.legacy_action_key(
-        decision.get("action_hint"))
+    action_key = explicit_action or tp.legacy_action_key(decision.get("action_hint"))
     target = (
         canonical["_vulnerable_enemy_target"]
         if decision.get("trigger") == "alvo_vulneravel"
@@ -456,13 +490,14 @@ def enemy_declaration(scene: dict, actor_id: str, actors_by_id: dict[str, dict],
         else canonical["_enemy_target"]
     )
     taunted_target = _taunt_target(
-        actor, _opposing_ids(actor_id, sides), actors_by_id, rng or random.Random())
+        actor, _opposing_ids(actor_id, sides), actors_by_id, rng or random.Random()
+    )
     if taunted_target is not None:
         target = taunted_target
 
     forced_attack = bool(actor.pop("_forced_attack", None))
     if forced_attack and action_key not in {"flee", "surrender"}:
-        action_key = "attack"      # SPEC-275 R5: quebra de impasse — ataca.
+        action_key = "attack"  # SPEC-275 R5: quebra de impasse — ataca.
     if action_key == "control" and not canonical["controle_disponivel"]:
         action_key = "attack"
     if action_key == "flank" and not canonical["sem_flanco"]:
@@ -479,8 +514,8 @@ def enemy_declaration(scene: dict, actor_id: str, actors_by_id: dict[str, dict],
             )
         # Compatibilidade com perfil persistido pré-action_key.
         return ct.TurnDeclaration(
-            actor_id=actor_id,
-            acao=ct.TurnStep(kind="move", direction="afastar"))
+            actor_id=actor_id, acao=ct.TurnStep(kind="move", direction="afastar")
+        )
 
     if target is None:
         return ct.TurnDeclaration(actor_id=actor_id, acao=ct.TurnStep(kind="pass"))
@@ -509,30 +544,35 @@ def enemy_declaration(scene: dict, actor_id: str, actors_by_id: dict[str, dict],
         action_key = "attack"
 
     # Carta de inimigo (conflito-15: `cartas`) quando houver Entropia; senão ataque básico.
-    card_id = _enemy_offensive_card(actor, scene=scene, actor_id=actor_id,
-                                    allow_hide=not forced_attack)
+    card_id = _enemy_offensive_card(
+        actor, scene=scene, actor_id=actor_id, allow_hide=not forced_attack
+    )
     if card_id:
         # SPEC-275 R2: Carta de suporte mira o próprio lado, nunca o jogador.
         kind = str(((_get_card(card_id) or {}).get("efeito") or {}).get("kind") or "")
         if kind in ct._SUPPORT_EFFECTS:
             target = actor_id
-    step = ct.TurnStep(kind="card" if card_id else "attack",
-                       card_id=card_id, target_id=target)
+    step = ct.TurnStep(kind="card" if card_id else "attack", card_id=card_id, target_id=target)
     return ct.TurnDeclaration(actor_id=actor_id, acao=step)
 
 
 def _get_card(card_id: str) -> dict | None:
     from services import cards
+
     return cards.get_card(card_id)
 
 
 def _enemy_offensive_card(
-    actor: dict, *, scene: dict | None = None, actor_id: str = "",
+    actor: dict,
+    *,
+    scene: dict | None = None,
+    actor_id: str = "",
     allow_hide: bool = True,
 ) -> str | None:
     """Primeira Carta de inimigo ofensiva utilizável (assinatura oculta da 15) —
     só id embutido na ficha; inimigo NÃO usa o Acervo do jogador."""
     from services import cards
+
     for card_id in cards.enemy_card_ids(actor):
         card = cards.get_card(card_id) or {}
         effect_kind = str((card.get("efeito") or {}).get("kind") or "")
@@ -570,33 +610,53 @@ def _declaration_leaves_engagement(decl: "ct.TurnDeclaration") -> bool:
             return True
         if slot.kind == "tactic" and str(slot.maneuver or "").lower() == "flee":
             return True
-        if slot.kind == "maneuver" and str(slot.maneuver or "").lower() == "mover" \
-                and str(slot.direction or "").lower() in ("afastar", "away"):
+        if (
+            slot.kind == "maneuver"
+            and str(slot.maneuver or "").lower() == "mover"
+            and str(slot.direction or "").lower() in ("afastar", "away")
+        ):
             return True
     return False
 
 
-def _resolve_opportunity_attacks(scene: dict, leaving_id: str, actors_by_id: dict[str, dict],
-                                 sides: dict[str, list[str]], out: dict, rng) -> None:
+def _resolve_opportunity_attacks(
+    scene: dict,
+    leaving_id: str,
+    actors_by_id: dict[str, dict],
+    sides: dict[str, list[str]],
+    out: dict,
+    rng,
+) -> None:
     """R5 (06): abandonar Engajamento SEM Desengajar provoca AoO de cada inimigo
     Engajado, consciente e capaz — fora do limite de reação comum."""
-    allies = [a for a in sides.get("hero", []) + sides.get("ally", [])] \
-        if leaving_id in set(sides.get("hero", []) + sides.get("ally", [])) \
+    allies = (
+        [a for a in sides.get("hero", []) + sides.get("ally", [])]
+        if leaving_id in set(sides.get("hero", []) + sides.get("ally", []))
         else list(sides.get("enemy", []))
+    )
     aoos = rx.trigger_opportunity_attack(scene, leaving_id, allies=allies, stats_by_id=actors_by_id)
     for aoo in aoos:
         atk_id, tgt_id = aoo["attacker"], aoo["target"]
         attacker, target = actors_by_id.get(atk_id), actors_by_id.get(tgt_id)
         if not _alive(attacker) or not target:
             continue
-        _basic_attack(scene, attacker, atk_id, target, tgt_id, out, rng,
-                      label="Ataque de Oportunidade")
+        _basic_attack(
+            scene, attacker, atk_id, target, tgt_id, out, rng, label="Ataque de Oportunidade"
+        )
 
 
-def _open_reaction_window(scene: dict, attacker_id: str, target_id: str,
-                          actors_by_id: dict[str, dict], sides: dict[str, list[str]],
-                          out: dict, state: dict | None = None, *,
-                          rng=None, step=None) -> None:
+def _open_reaction_window(
+    scene: dict,
+    attacker_id: str,
+    target_id: str,
+    actors_by_id: dict[str, dict],
+    sides: dict[str, list[str]],
+    out: dict,
+    state: dict | None = None,
+    *,
+    rng=None,
+    step=None,
+) -> None:
     """R1/R3 (06): abre a janela sobre o ataque declarado e deixa reatores do lado
     oposto oferecerem UMA reação COMUM (Carta de reação) — reação defensiva de
     Guarda entra na cena antes de o ataque resolver. Player só reage pela UI
@@ -604,22 +664,24 @@ def _open_reaction_window(scene: dict, attacker_id: str, target_id: str,
     declared = _declared_attack(scene, attacker_id, target_id, actors_by_id, sides, step)
     chain = rx.open_reaction_window(declared)
     reactors = _opposing_ids(attacker_id, sides)
-    ordered = rx.reaction_order(reactors, declared, stats_by_id=actors_by_id,
-                               target_allies=reactors)
+    ordered = rx.reaction_order(
+        reactors, declared, stats_by_id=actors_by_id, target_allies=reactors
+    )
     for rid in ordered:
         reactor = actors_by_id.get(rid)
         if not _alive(reactor):
             continue
         player_id = _player_id(sides)
-        selected_player_card = (
-            state.get("_player_reaction_card_id") if state is not None else None
-        )
+        selected_player_card = state.get("_player_reaction_card_id") if state is not None else None
         from services import cards
+
         if rid == player_id and selected_player_card:
             card = cards.get_card(str(selected_player_card))
-            if (not card or card.get("tipo") != "reacao"
-                    or str(selected_player_card) not in set(
-                        reactor.get("prepared_cards") or [])):
+            if (
+                not card
+                or card.get("tipo") != "reacao"
+                or str(selected_player_card) not in set(reactor.get("prepared_cards") or [])
+            ):
                 continue
         else:
             card = _enemy_reaction_card(reactor)
@@ -627,14 +689,18 @@ def _open_reaction_window(scene: dict, attacker_id: str, target_id: str,
             continue
         if not rx.gatilho_matches(card, declared, rid):
             continue
-        if (str((card.get("efeito") or {}).get("kind") or "") in ("contra_ataque", "dano")
-                and not _alive(actors_by_id.get(attacker_id))):
+        if str((card.get("efeito") or {}).get("kind") or "") in (
+            "contra_ataque",
+            "dano",
+        ) and not _alive(actors_by_id.get(attacker_id)):
             # Revisão Sol (SPEC-232 R3): revide sem atacante vivo na cena não
             # cobra Entropia nem uso — não há o que resolver.
             continue
-        snapshot = (reactor.get("entropy"),
-                    copy.deepcopy(reactor.get("card_usage")),
-                    copy.deepcopy(reactor.get("enemy_card_usage")))
+        snapshot = (
+            reactor.get("entropy"),
+            copy.deepcopy(reactor.get("card_usage")),
+            copy.deepcopy(reactor.get("enemy_card_usage")),
+        )
         if rid == player_id:
             spent = cards.use_card(state or {"player": reactor}, card["id"])
         else:
@@ -652,14 +718,21 @@ def _open_reaction_window(scene: dict, attacker_id: str, target_id: str,
             continue
         # Proteção limitada ao próximo ataque; não deixa Guarda persistente.
         cs.grant_tactical_modifier(scene, "protected", rid, rid)
-        _resolve_reaction_effect(scene, reactor, rid, card, attacker_id,
-                                 actors_by_id, out, rng=rng)
+        _resolve_reaction_effect(scene, reactor, rid, card, attacker_id, actors_by_id, out, rng=rng)
     out.setdefault("reactions", []).extend(rx.resolve_chain(chain))
 
 
-def _resolve_reaction_effect(scene: dict, reactor: dict, reactor_id: str, card: dict,
-                             attacker_id: str, actors_by_id: dict[str, dict], out: dict,
-                             *, rng=None) -> None:
+def _resolve_reaction_effect(
+    scene: dict,
+    reactor: dict,
+    reactor_id: str,
+    card: dict,
+    attacker_id: str,
+    actors_by_id: dict[str, dict],
+    out: dict,
+    *,
+    rng=None,
+) -> None:
     """SPEC-232 R3: o `efeito` da Carta de Reação roda pelo mesmo pipeline das
     ações — contra-ataque/dano rolam ataque do reagente contra o atacante; cura,
     buff e Proteção valem para o reagente; condição/empurrão miram o atacante."""
@@ -671,21 +744,33 @@ def _resolve_reaction_effect(scene: dict, reactor: dict, reactor_id: str, card: 
     duration = max(1, int(effect.get("duracao", effect.get("duration", 1)) or 1))
     if kind in ("contra_ataque", "dano"):
         if _alive(attacker):
-            _basic_attack(scene, reactor, reactor_id, attacker, attacker_id, out, rng,
-                          label=name, damage_override=amount,
-                          damage_type=str(effect.get("dano_tipo") or "cortante"))
+            _basic_attack(
+                scene,
+                reactor,
+                reactor_id,
+                attacker,
+                attacker_id,
+                out,
+                rng,
+                label=name,
+                damage_override=amount,
+                damage_type=str(effect.get("dano_tipo") or "cortante"),
+            )
     elif kind == "cura":
         before = int(reactor.get("vitalidade", 0) or 0)
         heal = max(0, amount + int(cm.combat_modifiers(reactor).get("heal", 0) or 0))
-        reactor["vitalidade"] = min(int(reactor.get("max_vitalidade", before) or before),
-                                    before + heal)
+        reactor["vitalidade"] = min(
+            int(reactor.get("max_vitalidade", before) or before), before + heal
+        )
         gamedata.sync_legacy_hp_aliases(reactor)
-        out["logs"].append(f"{name}: {_name(reactor)} recupera "
-                           f"{reactor['vitalidade'] - before} Vitalidade.")
+        out["logs"].append(
+            f"{name}: {_name(reactor)} recupera {reactor['vitalidade'] - before} Vitalidade."
+        )
     elif kind == "aplicar_condicao":
         if attacker is not None:
-            cond = cm.parse_condition(str(effect.get("condicao") or name),
-                                      source=card.get("id", name))
+            cond = cm.parse_condition(
+                str(effect.get("condicao") or name), source=card.get("id", name)
+            )
             cond["duration"] = duration
             out["logs"].append(cm.apply_condition(attacker, cond))
     elif kind == "empurrao":
@@ -693,81 +778,125 @@ def _resolve_reaction_effect(scene: dict, reactor: dict, reactor_id: str, card: 
         cs.disengage(scene, reactor_id, attacker_id, spend=False)
         out["logs"].append(result.get("log") or result.get("error", ""))
     elif kind in ("buff_defesa", "buff_esquiva", "protecao", "buff_iniciativa"):
-        stat = {"buff_defesa": "ac", "buff_esquiva": "ac", "protecao": "protection",
-                "buff_iniciativa": "initiative"}[kind]
-        out["logs"].append(cm.apply_condition(reactor, {
-            "name": name, "dot": 0, "duration": duration,
-            "source": card.get("id", name), "stat": stat, "delta": amount}))
+        stat = {
+            "buff_defesa": "ac",
+            "buff_esquiva": "ac",
+            "protecao": "protection",
+            "buff_iniciativa": "initiative",
+        }[kind]
+        out["logs"].append(
+            cm.apply_condition(
+                reactor,
+                {
+                    "name": name,
+                    "dot": 0,
+                    "duration": duration,
+                    "source": card.get("id", name),
+                    "stat": stat,
+                    "delta": amount,
+                },
+            )
+        )
     else:
         out["logs"].append(f"{name}: reação sem efeito resolvível ({kind!r}).")
 
 
-def _declared_attack(scene: dict, attacker_id: str, target_id: str,
-                     actors_by_id: dict[str, dict], sides: dict[str, list[str]],
-                     step=None) -> dict:
+def _declared_attack(
+    scene: dict,
+    attacker_id: str,
+    target_id: str,
+    actors_by_id: dict[str, dict],
+    sides: dict[str, list[str]],
+    step=None,
+) -> dict:
     """Ação declarada para a janela de Reação, com os campos determinísticos que
     os gatilhos lêem (SPEC-232 R4): lados, corpo a corpo/distância, tipo de
     dano, flanqueio, aliados caídos/controlados e auto-dano recente."""
     card = None
     if step is not None and getattr(step, "card_id", None):
         from services import cards
+
         card = cards.get_card(step.card_id)
     effect = (card or {}).get("efeito") or {}
     melee = ct._is_melee(card, step) if step is not None else True
-    dtype = str(effect.get("damage_type") or effect.get("tipo_dano")
-                or effect.get("dano_tipo") or "cortante").lower()
+    dtype = str(
+        effect.get("damage_type")
+        or effect.get("tipo_dano")
+        or effect.get("dano_tipo")
+        or "cortante"
+    ).lower()
     hero = set(sides.get("hero", [])) | set(sides.get("ally", []))
     enemy = set(sides.get("enemy", []))
-    allies_of = {aid: sorted((hero if aid in hero else enemy) - {aid})
-                 for aid in hero | enemy}
+    allies_of = {aid: sorted((hero if aid in hero else enemy) - {aid}) for aid in hero | enemy}
     positions = scene.get("positions") or {}
-    flanked = [aid for aid, pos in positions.items()
-               if len([o for o in pos.get("engaged_with", [])
-                       if (o in hero) != (aid in hero)]) >= 2]
+    flanked = [
+        aid
+        for aid, pos in positions.items()
+        if len([o for o in pos.get("engaged_with", []) if (o in hero) != (aid in hero)]) >= 2
+    ]
     return {
-        "kind": "attack", "actor": attacker_id, "targets": [target_id],
-        "allies_of": allies_of, "melee": bool(melee),
+        "kind": "attack",
+        "actor": attacker_id,
+        "targets": [target_id],
+        "allies_of": allies_of,
+        "melee": bool(melee),
         "already_engaged": cs.is_engaged(scene, attacker_id, target_id),
         "damage_type": dtype,
         "supernatural": dtype not in set(gamedata.DANO_FISICO),
         "flanked": flanked,
-        "downed": [aid for aid, a in actors_by_id.items()
-                   if a.get("estado_terminal") or int(a.get("vitalidade", 1) or 0) <= 0],
-        "controlled": [aid for aid, a in actors_by_id.items()
-                       if cm.has_control(a, "stun")],
-        "self_harmed": [aid for aid, a in actors_by_id.items()
-                        if a.get("_self_harmed_round")],
+        "downed": [
+            aid
+            for aid, a in actors_by_id.items()
+            if a.get("estado_terminal") or int(a.get("vitalidade", 1) or 0) <= 0
+        ],
+        "controlled": [aid for aid, a in actors_by_id.items() if cm.has_control(a, "stun")],
+        "self_harmed": [aid for aid, a in actors_by_id.items() if a.get("_self_harmed_round")],
     }
 
 
 def _enemy_reaction_card(actor: dict) -> dict | None:
     from services import cards
+
     for card_id in cards.enemy_card_ids(actor):
         if cards.can_use_enemy_card(actor, card_id, expected_type="reacao"):
             return cards.get_card(card_id)
     return None
 
 
-def _basic_attack(scene: dict, attacker: dict, attacker_id: str, target: dict, target_id: str,
-                  out: dict, rng, *, label: str = "Ataque",
-                  advantage: int = 0, damage_override: int | None = None,
-                  damage_type: str = "cortante") -> None:
+def _basic_attack(
+    scene: dict,
+    attacker: dict,
+    attacker_id: str,
+    target: dict,
+    target_id: str,
+    out: dict,
+    rng,
+    *,
+    label: str = "Ataque",
+    advantage: int = 0,
+    damage_override: int | None = None,
+    damage_type: str = "cortante",
+) -> None:
     """Ataque básico determinístico (2d10+Virtude vs Esquiva → dano→Ferimento).
     Usado por AoO/reações que não passam pela declaração de turno."""
-    advantage += cs.consume_tactical_attack_modifier(
-        scene, attacker_id, target_id)
+    advantage += cs.consume_tactical_attack_modifier(scene, attacker_id, target_id)
     atk = resolve_attack(
-        attacker, target, virtude_key="forca",
+        attacker,
+        target,
+        virtude_key="forca",
         virtude_value_override=(
-            virtude_value(attacker, "forca")
-            + int(attacker.get("_env_attack_mod", 0) or 0)
+            virtude_value(attacker, "forca") + int(attacker.get("_env_attack_mod", 0) or 0)
         ),
-        advantage=advantage, rng=rng)
+        advantage=advantage,
+        rng=rng,
+    )
     atk["actor_id"] = attacker_id
     atk["target_id"] = target_id
     out.setdefault("attacks", []).append(atk)
-    out["logs"].append(f"{label}: {_name(attacker)} → {_name(target)}: "
-                       f"{atk['resultado']} ({atk['total']} vs {atk['esquiva_alvo']}).")
+    out["logs"].append(
+        f"{label}: {_name(attacker)} → {_name(target)}: "
+        f"{atk['resultado']} ({atk['total']} vs {atk['esquiva_alvo']})."
+    )
     if atk["acerto"]:
         if damage_override is not None:
             dmg = max(0, int(damage_override))
@@ -777,8 +906,7 @@ def _basic_attack(scene: dict, attacker: dict, attacker_id: str, target: dict, t
             formula = str(attacker.get("attack_formula") or "1d6")
             dmg, _ = cm.roll_dice_numeric(formula)
         if attacker_id == "player" or attacker.get("is_player"):
-            dmg += cm.early_game_damage_bonus(
-                int(attacker.get("level", 1) or 1))
+            dmg += cm.early_game_damage_bonus(int(attacker.get("level", 1) or 1))
         # SPEC-232 R1/R2: `damage` de condições/passivas estáticas do atacante.
         dmg += int(cm.combat_modifiers(attacker).get("damage", 0) or 0)
         dres = resolve_damage_and_wounds(
@@ -803,15 +931,15 @@ def _record_class_event(out: dict, kind: str, **details) -> None:
 
 
 def _entropy_event(player: dict, event: dict, out: dict) -> None:
-    before = (int(player.get("entropy", 0) or 0),
-              int(player.get("abyss_charge", 0) or 0))
+    before = (int(player.get("entropy", 0) or 0), int(player.get("abyss_charge", 0) or 0))
     cm.apply_entropy_trigger(player, event, out["logs"])
-    after = (int(player.get("entropy", 0) or 0),
-             int(player.get("abyss_charge", 0) or 0))
+    after = (int(player.get("entropy", 0) or 0), int(player.get("abyss_charge", 0) or 0))
     if after != before:
         _record_class_event(
-            out, f"entropy:{event['kind']}",
-            entropy_delta=after[0] - before[0], charge_delta=after[1] - before[1],
+            out,
+            f"entropy:{event['kind']}",
+            entropy_delta=after[0] - before[0],
+            charge_delta=after[1] - before[1],
         )
 
 
@@ -819,39 +947,41 @@ def _post_hit(target: dict, target_id: str, out: dict, *, amount: int = 0) -> No
     """Gatilho de Entropia da classe do alvo (on_damage_taken) + checagem de Terminal."""
     if target.get("is_player"):
         _entropy_event(target, {"kind": "on_damage_taken", "amount": amount}, out)
-        before = (int(target.get("entropy", 0) or 0),
-                  int(target.get("_blood_entropy", 0) or 0))
+        before = (int(target.get("entropy", 0) or 0), int(target.get("_blood_entropy", 0) or 0))
         cm.apply_blood_leak(target, out["logs"])
-        after = (int(target.get("entropy", 0) or 0),
-                 int(target.get("_blood_entropy", 0) or 0))
+        after = (int(target.get("entropy", 0) or 0), int(target.get("_blood_entropy", 0) or 0))
         if after != before:
             _record_class_event(out, "special:blood_leak", entropy_delta=after[0] - before[0])
     _check_terminal(target, target_id, out, damage_applied=True)
 
 
-def _apply_player_card_mechanics(player: dict, used: dict, player_id: str,
-                                 out: dict, rng) -> None:
+def _apply_player_card_mechanics(player: dict, used: dict, player_id: str, out: dict, rng) -> None:
     """Liga marcadores autorais fechados da Carta aos helpers sobreviventes."""
     card = used.get("card") or {}
     mechanics = card.get("mecanica_classe") or {}
     self_harm = int(mechanics.get("auto_dano", 0) or 0)
     if self_harm:
         from services.conflict_damage import sacrifice_vitality
+
         before = int(player.get("vitalidade", 0) or 0)
         sacrifice_vitality(player, self_harm)
-        player["_self_harmed_round"] = True   # gatilho `apos_auto_dano` (SPEC-232)
+        player["_self_harmed_round"] = True  # gatilho `apos_auto_dano` (SPEC-232)
         out["logs"].append(
             f"{_name(player)} sacrifica {self_harm} Vitalidade pela Carta "
-            f"(Vit {player.get('vitalidade', 0)}).")
-        _record_class_event(out, "self_harm", amount=self_harm,
-                            vitality_delta=int(player.get("vitalidade", 0) or 0) - before)
+            f"(Vit {player.get('vitalidade', 0)})."
+        )
+        _record_class_event(
+            out,
+            "self_harm",
+            amount=self_harm,
+            vitality_delta=int(player.get("vitalidade", 0) or 0) - before,
+        )
         _entropy_event(player, {"kind": "on_self_harm", "amount": self_harm}, out)
         _check_terminal(player, player_id, out, damage_applied=True)
 
     decay_kind = mechanics.get("decadencia")
     if decay_kind:
-        _entropy_event(
-            player, {"kind": "on_decay_nearby", "decay_kind": decay_kind}, out)
+        _entropy_event(player, {"kind": "on_decay_nearby", "decay_kind": decay_kind}, out)
 
     if player.get("class_name") == "Arcanista Cinzento":
         _entropy_event(player, {"kind": "on_channel"}, out)
@@ -865,22 +995,30 @@ def _apply_player_card_mechanics(player: dict, used: dict, player_id: str,
     economy = used.get("economy") or {}
     if economy.get("dependencia_applied"):
         _record_class_event(
-            out, "consequence:dependencia",
+            out,
+            "consequence:dependencia",
             cost=int(economy.get("cost", 0) or 0),
             base_cost=int(economy.get("base_cost", 0) or 0),
         )
     if str((card.get("efeito") or {}).get("kind")) == "reduzir_carga_aliado":
         _record_class_event(out, "special:purga")
 
-    before_scar = (int(player.get("vitalidade_max_penalty", 0) or 0),
-                   int(player.get("abyss_charge", 0) or 0))
+    before_scar = (
+        int(player.get("vitalidade_max_penalty", 0) or 0),
+        int(player.get("abyss_charge", 0) or 0),
+    )
     cm.apply_scar(player, {"peak": bool(mechanics.get("pico"))}, out["logs"])
-    after_scar = (int(player.get("vitalidade_max_penalty", 0) or 0),
-                  int(player.get("abyss_charge", 0) or 0))
+    after_scar = (
+        int(player.get("vitalidade_max_penalty", 0) or 0),
+        int(player.get("abyss_charge", 0) or 0),
+    )
     if after_scar != before_scar:
-        _record_class_event(out, "consequence:cicatriz",
-                            max_vitality_penalty_delta=after_scar[0] - before_scar[0],
-                            charge_delta=after_scar[1] - before_scar[1])
+        _record_class_event(
+            out,
+            "consequence:cicatriz",
+            max_vitality_penalty_delta=after_scar[0] - before_scar[0],
+            charge_delta=after_scar[1] - before_scar[1],
+        )
 
 
 def _has_any_wound(target: dict) -> bool:
@@ -896,16 +1034,20 @@ def _mark_dead(target: dict, target_id: str, out: dict) -> None:
     out["logs"].append(f"{_name(target)} é derrotado.")
 
 
-def _check_terminal(target: dict, target_id: str, out: dict, *,
-                    damage_applied: bool = False) -> None:
+def _check_terminal(
+    target: dict, target_id: str, out: dict, *, damage_applied: bool = False
+) -> None:
     """Traduz o estado de Ferimentos do alvo no desfecho da categoria (07 R7):
     Lacaio cai com qualquer Ferimento; Padrão ao encher o último Crítico; full-flow
     (jogador/Elite/Chefe/Nomeado/companheiro) dispara Última Ação → Estado Terminal."""
     if target.get("dead") or target.get("estado_terminal"):
         return
-    if (damage_applied and death_flow.uses_full_death_flow(target)
-            and death_flow.critical_spaces_full(target)
-            and target.get("last_stand_resolved")):
+    if (
+        damage_applied
+        and death_flow.uses_full_death_flow(target)
+        and death_flow.critical_spaces_full(target)
+        and target.get("last_stand_resolved")
+    ):
         # Sobreviver ao fluxo terminal não concede imortalidade. O próximo dano
         # real com todos os espaços críticos ocupados encerra a vida; mera
         # passagem de rodada, sem dano, nunca dispara esta cláusula.
@@ -923,22 +1065,36 @@ def _check_terminal(target: dict, target_id: str, out: dict, *,
         _mark_dead(target, target_id, out)
 
 
-def _record_tactic(out: dict, actor_id: str, action_key: str, *,
-                   target_id: str | None = None, ok: bool,
-                   detail: str = "") -> None:
-    out.setdefault("tactics", []).append({
-        "actor_id": actor_id,
-        "action_key": action_key,
-        "target_id": target_id,
-        "ok": bool(ok),
-        "detail": str(detail or "")[:160],
-    })
+def _record_tactic(
+    out: dict,
+    actor_id: str,
+    action_key: str,
+    *,
+    target_id: str | None = None,
+    ok: bool,
+    detail: str = "",
+) -> None:
+    out.setdefault("tactics", []).append(
+        {
+            "actor_id": actor_id,
+            "action_key": action_key,
+            "target_id": target_id,
+            "ok": bool(ok),
+            "detail": str(detail or "")[:160],
+        }
+    )
 
 
-def _resolve_tactical_action(scene: dict, actor: dict, actor_id: str,
-                             actors_by_id: dict[str, dict],
-                             sides: dict[str, list[str]], step,
-                             out: dict, rng) -> None:
+def _resolve_tactical_action(
+    scene: dict,
+    actor: dict,
+    actor_id: str,
+    actors_by_id: dict[str, dict],
+    sides: dict[str, list[str]],
+    step,
+    out: dict,
+    rng,
+) -> None:
     """Executa somente o catálogo mecânico fechado dos perfis determinísticos."""
     action_key = str(step.maneuver or "")
     target_id = step.target_id
@@ -950,12 +1106,15 @@ def _resolve_tactical_action(scene: dict, actor: dict, actor_id: str,
 
     if action_key == "protect":
         if target_id in same_side and target_id != actor_id and _available_for_aid(target):
-            ok = cs.grant_tactical_modifier(
-                scene, "protected", target_id, actor_id)
+            ok = cs.grant_tactical_modifier(scene, "protected", target_id, actor_id)
             detail = f"{_name(actor)} protege {_name(target)} no próximo ataque."
     elif action_key == "stabilize":
-        if (target_id in same_side and target_id != actor_id and target
-                and target.get("estado_terminal")):
+        if (
+            target_id in same_side
+            and target_id != actor_id
+            and target
+            and target.get("estado_terminal")
+        ):
             target["_tactical_stabilization_round"] = cs.tactical_round(scene)
             has_kit = bool(actor.get("has_kit") or actor.get("_has_kit"))
             is_medic = (
@@ -993,19 +1152,25 @@ def _resolve_tactical_action(scene: dict, actor: dict, actor_id: str,
             ok = bool(result.get("ok"))
             detail = result.get("log") or result.get("error", "")
     elif action_key == "control":
-        if (target_id in opposing and _alive(target)
-                and cs.tactical_cooldown(scene, actor_id, "control") == 0):
-            detail = cm.apply_condition(target, {
-                "name": "Controle tático",
-                "dot": 0,
-                # O controle nasce durante a rodada do Místico. Mantemos um
-                # tick residual para que a condição continue observável até o
-                # começo do próximo turno do alvo; consumíveis aplicados antes
-                # da rodada continuam usando duration=1.
-                "duration": 2,
-                "source": actor_id,
-                "control": "stun",
-            })
+        if (
+            target_id in opposing
+            and _alive(target)
+            and cs.tactical_cooldown(scene, actor_id, "control") == 0
+        ):
+            detail = cm.apply_condition(
+                target,
+                {
+                    "name": "Controle tático",
+                    "dot": 0,
+                    # O controle nasce durante a rodada do Místico. Mantemos um
+                    # tick residual para que a condição continue observável até o
+                    # começo do próximo turno do alvo; consumíveis aplicados antes
+                    # da rodada continuam usando duration=1.
+                    "duration": 2,
+                    "source": actor_id,
+                    "control": "stun",
+                },
+            )
             ok = "resiste" not in str(detail).lower()
             cs.set_tactical_cooldown(scene, actor_id, "control", 2)
     elif action_key == "support":
@@ -1019,8 +1184,7 @@ def _resolve_tactical_action(scene: dict, actor: dict, actor_id: str,
                 ok = restored > 0
                 detail = f"{_name(actor)} recupera {restored} Vitalidade de {_name(target)}."
             else:
-                ok = cs.grant_tactical_modifier(
-                    scene, "attack_advantage", target_id, actor_id)
+                ok = cs.grant_tactical_modifier(scene, "attack_advantage", target_id, actor_id)
                 detail = f"{_name(actor)} coordena o próximo ataque de {_name(target)}."
     elif action_key == "flee":
         result = cs.move_distance(scene, actor_id, "afastar")
@@ -1034,15 +1198,23 @@ def _resolve_tactical_action(scene: dict, actor: dict, actor_id: str,
         detail = f"Ação tática fora do catálogo: {action_key!r}."
 
     out["logs"].append(detail or f"{_name(actor)} não consegue executar {action_key}.")
-    _record_tactic(
-        out, actor_id, action_key, target_id=target_id, ok=ok, detail=detail)
+    _record_tactic(out, actor_id, action_key, target_id=target_id, ok=ok, detail=detail)
 
 
 # ==========================================================================
 # Resolução do turno de um ator (compõe conflict_turn + reações + AoO)
 # ==========================================================================
-def _resolve_actor_turn(scene: dict, actor: dict, actor_id: str, actors_by_id: dict[str, dict],
-                        sides: dict[str, list[str]], decl, state, out: dict, rng) -> None:
+def _resolve_actor_turn(
+    scene: dict,
+    actor: dict,
+    actor_id: str,
+    actors_by_id: dict[str, dict],
+    sides: dict[str, list[str]],
+    decl,
+    state,
+    out: dict,
+    rng,
+) -> None:
     decl = decl if isinstance(decl, ct.TurnDeclaration) else ct.TurnDeclaration(**decl)
     out.setdefault("resolved_turns", []).append(actor_id)
 
@@ -1056,13 +1228,12 @@ def _resolve_actor_turn(scene: dict, actor: dict, actor_id: str, actors_by_id: d
     acao = decl.acao
     if acao is not None and acao.kind in ("attack", "card") and acao.target_id:
         _open_reaction_window(
-            scene, actor_id, acao.target_id, actors_by_id, sides, out, state,
-            rng=rng, step=acao)
+            scene, actor_id, acao.target_id, actors_by_id, sides, out, state, rng=rng, step=acao
+        )
 
     if acao is not None and acao.kind == "tactic":
         cs.reset_turn_budget(scene, actor_id)
-        _resolve_tactical_action(
-            scene, actor, actor_id, actors_by_id, sides, acao, out, rng)
+        _resolve_tactical_action(scene, actor, actor_id, actors_by_id, sides, acao, out, rng)
         return
 
     sub = ct.resolve_turn(scene, actors_by_id, decl, state=state, rng=rng, sides=sides)
@@ -1077,7 +1248,7 @@ def _resolve_actor_turn(scene: dict, actor: dict, actor_id: str, actors_by_id: d
     for did in sub.get("deaths", []):
         if did not in out["deaths"]:
             out["deaths"].append(did)
-    for sid in sub.get("scars_pending", []):   # SPEC-231 R8: carta estabilizar
+    for sid in sub.get("scars_pending", []):  # SPEC-231 R8: carta estabilizar
         scars = out.setdefault("scars_pending", [])
         if sid not in scars:
             scars.append(sid)
@@ -1088,8 +1259,11 @@ def _resolve_actor_turn(scene: dict, actor: dict, actor_id: str, actors_by_id: d
         for used in sub.get("cards_used", []):
             if used.get("actor_id") == _player_id(sides):
                 _apply_player_card_mechanics(
-                    player, used, _player_id(sides) or actor_id,
-                    out, rng,
+                    player,
+                    used,
+                    _player_id(sides) or actor_id,
+                    out,
+                    rng,
                 )
 
     # on_damage_taken: quem levou dano neste turno (alvos dos ataques que acertaram).
@@ -1099,14 +1273,11 @@ def _resolve_actor_turn(scene: dict, actor: dict, actor_id: str, actors_by_id: d
             continue
         if tgt.get("is_player"):
             _entropy_event(tgt, {"kind": "on_damage_taken", "amount": amount}, out)
-            before = (int(tgt.get("entropy", 0) or 0),
-                      int(tgt.get("_blood_entropy", 0) or 0))
+            before = (int(tgt.get("entropy", 0) or 0), int(tgt.get("_blood_entropy", 0) or 0))
             cm.apply_blood_leak(tgt, out["logs"])
-            after = (int(tgt.get("entropy", 0) or 0),
-                     int(tgt.get("_blood_entropy", 0) or 0))
+            after = (int(tgt.get("entropy", 0) or 0), int(tgt.get("_blood_entropy", 0) or 0))
             if after != before:
-                _record_class_event(
-                    out, "special:blood_leak", entropy_delta=after[0] - before[0])
+                _record_class_event(out, "special:blood_leak", entropy_delta=after[0] - before[0])
         elif player is not None and tid in set(sides.get("hero", []) + sides.get("ally", [])):
             _entropy_event(player, {"kind": "on_ally_suffer"}, out)
         _check_terminal(tgt, tid, out, damage_applied=True)
@@ -1114,11 +1285,21 @@ def _resolve_actor_turn(scene: dict, actor: dict, actor_id: str, actors_by_id: d
             # SPEC-232 R2: passiva `contra_ataque` (tier 8) — revida 1×frequência.
             for pe in cm.triggered_passives(tgt, "on_hit_taken"):
                 from services import cards
+
                 paid = cards.use_passive(tgt, pe["source_card"])
                 if paid.get("ok"):
                     out["logs"].append(paid["log"])
-                    _basic_attack(scene, tgt, tid, actor, actor_id, out, rng,
-                                  label="Contra-ataque", damage_override=pe.get("value"))
+                    _basic_attack(
+                        scene,
+                        tgt,
+                        tid,
+                        actor,
+                        actor_id,
+                        out,
+                        rng,
+                        label="Contra-ataque",
+                        damage_override=pe.get("value"),
+                    )
 
 
 def _hit_events(sub: dict, decl: "ct.TurnDeclaration") -> list[tuple[str, int]]:
@@ -1152,15 +1333,22 @@ def _find_player(actors_by_id: dict[str, dict], sides: dict[str, list[str]]) -> 
 # ==========================================================================
 # Estabilização do Estado Terminal (07, decisão R6=A)
 # ==========================================================================
-def resolve_terminals(actors_by_id: dict[str, dict], sides: dict[str, list[str]],
-                      out: dict, *, scene: dict | None = None, rng=None) -> None:
+def resolve_terminals(
+    actors_by_id: dict[str, dict],
+    sides: dict[str, list[str]],
+    out: dict,
+    *,
+    scene: dict | None = None,
+    rng=None,
+) -> None:
     """Cada ator em Estado Terminal resolve DENTRO do combate (R6=A): auto-reanima
     com Médico+kit/poção; senão um aliado consciente tenta estabilizar; sem aliado
     capaz ou 2 falhas = morte. Sobreviver marca Cicatriz (`scar_pending`). Só a morte
     REAL do jogador vira `player_dead` (o nó de combate abre a tela de morte)."""
     pending_ids = list(out.get("terminal", []))
     pending_ids.extend(
-        actor_id for actor_id, actor in actors_by_id.items()
+        actor_id
+        for actor_id, actor in actors_by_id.items()
         if actor.get("estado_terminal") and actor_id not in pending_ids
     )
     for actor_id in pending_ids:
@@ -1168,22 +1356,23 @@ def resolve_terminals(actors_by_id: dict[str, dict], sides: dict[str, list[str]]
         if not target or not target.get("estado_terminal"):
             continue
         try:
-            tactical_stabilization_round = int(
-                target.get("_tactical_stabilization_round", -1))
+            tactical_stabilization_round = int(target.get("_tactical_stabilization_round", -1))
         except (TypeError, ValueError):
             tactical_stabilization_round = -1
-        if (scene is not None
-                and tactical_stabilization_round == cs.tactical_round(scene)):
+        if scene is not None and tactical_stabilization_round == cs.tactical_round(scene):
             # A ação tática já consumiu a tentativa desta rodada. Não rola uma
             # segunda estabilização automática sobre a mesma queda.
             continue
         helper = _stabilizer_for(actor_id, actors_by_id, sides)
         res = death_flow.attempt_stabilization(
-            target, helper,
+            target,
+            helper,
             has_kit=bool(target.get("_has_kit") or (helper or {}).get("has_kit")),
             is_medico="médico" in str((helper or {}).get("class_name", "")).lower()
-                      or "medico" in str((helper or {}).get("class_name", "")).lower(),
-            has_potion=bool(target.get("_has_stabilize_potion")), rng=rng)
+            or "medico" in str((helper or {}).get("class_name", "")).lower(),
+            has_potion=bool(target.get("_has_stabilize_potion")),
+            rng=rng,
+        )
         out.setdefault("stabilizations", []).append({"actor_id": actor_id, **res})
         if res.get("log"):
             out["logs"].append(res["log"])
@@ -1197,8 +1386,9 @@ def resolve_terminals(actors_by_id: dict[str, dict], sides: dict[str, list[str]]
             out.setdefault("scars_pending", []).append(actor_id)
 
 
-def _resolve_last_stands(scene: dict, actors_by_id: dict[str, dict],
-                         sides: dict[str, list[str]], out: dict, rng) -> None:
+def _resolve_last_stands(
+    scene: dict, actors_by_id: dict[str, dict], sides: dict[str, list[str]], out: dict, rng
+) -> None:
     """Executa cada Última Ação pendente uma única vez, antes do terminal.
 
     A semântica mínima determinística usa um ataque básico com vantagem extrema
@@ -1211,8 +1401,7 @@ def _resolve_last_stands(scene: dict, actors_by_id: dict[str, dict],
         actor_id = out["terminal"][cursor]
         cursor += 1
         actor = actors_by_id.get(actor_id)
-        if (actor is None or actor.get("last_stand_resolved")
-                or not actor.get("last_stand_pending")):
+        if actor is None or actor.get("last_stand_resolved") or not actor.get("last_stand_pending"):
             continue
         target_id = _nearest_target(
             actor_id,
@@ -1245,9 +1434,13 @@ def _resolve_last_stands(scene: dict, actors_by_id: dict[str, dict],
                     out["terminal"].append(target)
 
 
-def _stabilizer_for(down_id: str, actors_by_id: dict[str, dict],
-                    sides: dict[str, list[str]], *,
-                    scene: dict | None = None) -> dict | None:
+def _stabilizer_for(
+    down_id: str,
+    actors_by_id: dict[str, dict],
+    sides: dict[str, list[str]],
+    *,
+    scene: dict | None = None,
+) -> dict | None:
     """SPEC-231 R1/R2: hero+ally são UM lado. Ordem: party ativa, aliado
     transitório, depois maior Agilidade (D-B: sem exigir adjacência)."""
     candidates = []
@@ -1271,23 +1464,40 @@ def _stabilizer_for(down_id: str, actors_by_id: dict[str, dict],
 # ==========================================================================
 # Evento do Abismo carregado por Cargas (10)
 # ==========================================================================
-def _maybe_abyss(scene: dict, player: dict, actors_by_id: dict[str, dict],
-                 prepared_abyss: list[dict] | None, out: dict, *,
-                 scene_state: dict | None = None, rng=None) -> None:
+def _maybe_abyss(
+    scene: dict,
+    player: dict,
+    actors_by_id: dict[str, dict],
+    prepared_abyss: list[dict] | None,
+    out: dict,
+    *,
+    scene_state: dict | None = None,
+    rng=None,
+) -> None:
     if not prepared_abyss or player is None:
         return
     charges = int(player.get("abyss_charge", 0) or 0)
-    event = abyss_events.select_event(prepared_abyss, scene_state or {}, charges,
-                                      scene_objects=scene.get("objects"),
-                                      seed=rng.random() if rng else None)
+    event = abyss_events.select_event(
+        prepared_abyss,
+        scene_state or {},
+        charges,
+        scene_objects=scene.get("objects"),
+        seed=rng.random() if rng else None,
+    )
     if not event:
         return
     from services import encounter_preparation as prep
+
     # SPEC-232 R9: só gasta Cargas/usos se o EffectSpec materializa (alvo e
     # potência válidos); rejeitado = nada debitado.
-    if prep.materialize_effect(event.get("effect") or {},
-                               int(scene.get("encounter_level", 1) or 1),
-                               valid_targets=set(actors_by_id)) is None:
+    if (
+        prep.materialize_effect(
+            event.get("effect") or {},
+            int(scene.get("encounter_level", 1) or 1),
+            valid_targets=set(actors_by_id),
+        )
+        is None
+    ):
         out["logs"].append("Evento do Abismo sem alvo válido — nenhuma Carga gasta.")
         return
     fired = abyss_events.trigger_event(event, scene_state or {})
@@ -1296,23 +1506,23 @@ def _maybe_abyss(scene: dict, player: dict, actors_by_id: dict[str, dict],
     player["abyss_charge"] = max(0, charges - int(fired.get("cargas_gastas", 0) or 0))
     out["logs"].append(fired["log"])
     out.setdefault("abyss", []).append(fired.get("effect"))
-    apply_effect_spec(
-        scene, actors_by_id, fired.get("effect") or {}, out, rng=rng)
+    apply_effect_spec(scene, actors_by_id, fired.get("effect") or {}, out, rng=rng)
 
 
-def apply_effect_spec(scene: dict, actors_by_id: dict[str, dict], effect: dict,
-                      out: dict, *, rng=None) -> None:
+def apply_effect_spec(
+    scene: dict, actors_by_id: dict[str, dict], effect: dict, out: dict, *, rng=None
+) -> None:
     """Aplica um EffectSpec do catálogo fechado (03/10). Cobre os kinds resolvíveis
     em combate; os puramente de cena (block_route/alter_terrain…) só se registram."""
     from services import encounter_preparation as prep
+
     materialized = prep.materialize_effect(
         effect,
         int(scene.get("encounter_level", 1) or 1),
         valid_targets=set(actors_by_id),
     )
     if materialized is None:
-        out.setdefault("logs", []).append(
-            "Efeito mecânico rejeitado: potência ou alvo inválido.")
+        out.setdefault("logs", []).append("Efeito mecânico rejeitado: potência ou alvo inválido.")
         return
     kind = str(materialized.get("kind"))
     params = materialized.get("params") or {}
@@ -1320,9 +1530,13 @@ def apply_effect_spec(scene: dict, actors_by_id: dict[str, dict], effect: dict,
         tid = params.get("target")
         tgt = actors_by_id.get(tid)
         if tgt is not None:
-            dres = resolve_damage_and_wounds(tgt, damage_base=int(params.get("amount", 1) or 1),
-                                             damage_type=str(params.get("tipo", "abissal")),
-                                             directed_region=None, rng=rng)
+            dres = resolve_damage_and_wounds(
+                tgt,
+                damage_base=int(params.get("amount", 1) or 1),
+                damage_type=str(params.get("tipo", "abissal")),
+                directed_region=None,
+                rng=rng,
+            )
             out["logs"] += dres["log"]
             _check_terminal(tgt, tid, out, damage_applied=True)
     elif kind == "apply_condition":
@@ -1330,8 +1544,7 @@ def apply_effect_spec(scene: dict, actors_by_id: dict[str, dict], effect: dict,
         tgt = actors_by_id.get(tid)
         if tgt is not None:
             # SPEC-232: condição nomeada passa pelo catálogo fechado (efeito real).
-            cond = cm.parse_condition(str(params.get("condition", "abissal")),
-                                      source="abismo")
+            cond = cm.parse_condition(str(params.get("condition", "abissal")), source="abismo")
             cond["duration"] = int(params.get("duration", 1) or 1)
             out.setdefault("logs", []).append(cm.apply_condition(tgt, cond))
 
@@ -1343,6 +1556,7 @@ def _refused_player_item(actors_by_id, sides, declarations) -> str:
     """Motivo da recusa se o protagonista declarou um item que `try_use_item`
     recusaria (sem mutar nada); '' caso contrário."""
     import inventory
+
     pid = _player_id(sides)
     decl = (declarations or {}).get(pid) if pid else None
     player = actors_by_id.get(pid) if pid else None
@@ -1354,8 +1568,7 @@ def _refused_player_item(actors_by_id, sides, declarations) -> str:
         if step is None or str(step.kind or "").lower() != "item":
             continue
         target = actors_by_id.get(step.target_id) if step.target_id else None
-        res = inventory.try_use_item(
-            player, step.item_id or step.object_id or "", target=target)
+        res = inventory.try_use_item(player, step.item_id or step.object_id or "", target=target)
         if not res["ok"]:
             return res["reason"]
     return ""
@@ -1371,23 +1584,34 @@ def _damage_fingerprint(actors_by_id: dict[str, dict]) -> str:
     bits = []
     for aid in sorted(actors_by_id):
         a = actors_by_id[aid]
-        bits.append((aid, int(a.get("vitalidade", a.get("hp", 0)) or 0),
-                     str(a.get("status") or ""), bool(a.get("dead")),
-                     bool(a.get("fled")), bool(a.get("surrendered")),
-                     json.dumps(a.get("ferimentos") or {}, sort_keys=True,
-                                default=str)))
+        bits.append(
+            (
+                aid,
+                int(a.get("vitalidade", a.get("hp", 0)) or 0),
+                str(a.get("status") or ""),
+                bool(a.get("dead")),
+                bool(a.get("fled")),
+                bool(a.get("surrendered")),
+                json.dumps(a.get("ferimentos") or {}, sort_keys=True, default=str),
+            )
+        )
     return json.dumps(bits, default=str)
 
 
 def _is_cowardly(actor: dict) -> bool:
     profile = actor.get("tactical_profile") or {}
-    names = (actor.get("tactical_archetype"), actor.get("arquetipo"),
-             actor.get("profile"), profile.get("archetype") if isinstance(profile, dict) else None)
+    names = (
+        actor.get("tactical_archetype"),
+        actor.get("arquetipo"),
+        actor.get("profile"),
+        profile.get("archetype") if isinstance(profile, dict) else None,
+    )
     return any(str(n or "").startswith("covarde") for n in names)
 
 
-def _stalemate_guard(scene: dict, actors_by_id: dict[str, dict],
-                     sides: dict[str, list[str]]) -> list[dict]:
+def _stalemate_guard(
+    scene: dict, actors_by_id: dict[str, dict], sides: dict[str, list[str]]
+) -> list[dict]:
     """SPEC-275 R5 (decisão do dono 2026-10-18): após ``STALEMATE_ROUNDS``
     rodadas seguidas SEM dano, o motor quebra o impasse, 100% determinístico:
     inimigos ``covarde*`` fogem (``fled``); os demais perdem a ocultação e
@@ -1411,45 +1635,73 @@ def _stalemate_guard(scene: dict, actors_by_id: dict[str, dict],
         if _is_cowardly(enemy):
             enemy["fled"] = True
             enemy["status"] = "fugiu"
-            events.append({"event": "conflict_stalemate_broken", "actor_id": eid,
-                           "outcome": "fled",
-                           "log": f"{_name(enemy)} desiste do impasse e foge do conflito."})
+            events.append(
+                {
+                    "event": "conflict_stalemate_broken",
+                    "actor_id": eid,
+                    "outcome": "fled",
+                    "log": f"{_name(enemy)} desiste do impasse e foge do conflito.",
+                }
+            )
         else:
             pos = (scene.get("positions") or {}).get(eid)
             if pos is not None:
                 cs._reveal(pos)
             enemy["_forced_attack"] = True
-            events.append({"event": "conflict_stalemate_broken", "actor_id": eid,
-                           "outcome": "reveal_attack",
-                           "log": f"{_name(enemy)} perde a paciência e sai da ocultação para atacar."})
+            events.append(
+                {
+                    "event": "conflict_stalemate_broken",
+                    "actor_id": eid,
+                    "outcome": "reveal_attack",
+                    "log": f"{_name(enemy)} perde a paciência e sai da ocultação para atacar.",
+                }
+            )
     if events:
         logger.info("conflict_stalemate_broken events=%s", len(events))
     return events
 
 
-def run_round(scene: dict, actors_by_id: dict[str, dict], sides: dict[str, list[str]],
-              state: dict | None = None, *, declarations: dict | None = None,
-              prepared_abyss: list[dict] | None = None, scene_state: dict | None = None,
-              initiator: str | None = None, rng=None) -> dict:
+def run_round(
+    scene: dict,
+    actors_by_id: dict[str, dict],
+    sides: dict[str, list[str]],
+    state: dict | None = None,
+    *,
+    declarations: dict | None = None,
+    prepared_abyss: list[dict] | None = None,
+    scene_state: dict | None = None,
+    initiator: str | None = None,
+    rng=None,
+) -> dict:
     """Resolve uma RODADA inteira. `sides` = {"hero":[ids], "ally":[ids], "enemy":[ids]}.
     `declarations[actor_id]` = TurnDeclaration do jogador/aliado controlado; inimigos
     sem declaração recebem uma via `enemy_declaration`. Retorna
     {logs, deaths, terminal, scars_pending, player_dead, ended, reason, initiative}."""
     rng = rng or random.Random()
     declarations = dict(declarations or {})
-    out = {"logs": [], "deaths": [], "terminal": [], "abyss": [],
-           "attacks": [], "reactions": [], "last_stands": [],
-           "stabilizations": [],
-           "resolved_turns": [], "tactics": [], "cards_used": [],
-           "class_mechanics": [],
-           "ended": False, "reason": "", "player_dead": False}
+    out = {
+        "logs": [],
+        "deaths": [],
+        "terminal": [],
+        "abyss": [],
+        "attacks": [],
+        "reactions": [],
+        "last_stands": [],
+        "stabilizations": [],
+        "resolved_turns": [],
+        "tactics": [],
+        "cards_used": [],
+        "class_mechanics": [],
+        "ended": False,
+        "reason": "",
+        "player_dead": False,
+    }
     # Dano externo resolvido imediatamente antes da rodada (por exemplo, clima
     # durante uma tentativa de fuga) pode já ter armado a Última Ação.
     # O orquestrador precisa adotar esse estado em vez de depender apenas de
     # eventos de dano produzidos dentro de ``run_round``.
     out["terminal"].extend(
-        actor_id for actor_id, actor in actors_by_id.items()
-        if actor.get("last_stand_pending")
+        actor_id for actor_id, actor in actors_by_id.items() if actor.get("last_stand_pending")
     )
     refusal = _refused_player_item(actors_by_id, sides, declarations)
     if refusal:
@@ -1468,13 +1720,12 @@ def run_round(scene: dict, actors_by_id: dict[str, dict], sides: dict[str, list[
     player_decl = declarations.get(player_id) if player_id else None
     if player_decl is not None and not isinstance(player_decl, ct.TurnDeclaration):
         player_decl = ct.TurnDeclaration(**player_decl)
-    selected_reaction = (
-        player_decl.reaction_card_id if player_decl is not None else None
-    )
+    selected_reaction = player_decl.reaction_card_id if player_decl is not None else None
     if state is not None:
         selected_reaction = selected_reaction or state.get("_player_reaction_card_id")
         state["_player_reaction_card_id"] = selected_reaction
     from services import cards
+
     for enemy_id in sides.get("enemy", []):
         enemy = actors_by_id.get(enemy_id)
         if enemy is not None:
@@ -1489,11 +1740,15 @@ def run_round(scene: dict, actors_by_id: dict[str, dict], sides: dict[str, list[
             cards.reset_card_usage(state, "turno")
         cm.reset_entropy_turn(player)
         player.pop("_self_harmed_round", None)
-        before_boiler = (player.get("_cool_deadline"),
-                         int(player.get("vitalidade", player.get("hp", 0)) or 0))
+        before_boiler = (
+            player.get("_cool_deadline"),
+            int(player.get("vitalidade", player.get("hp", 0)) or 0),
+        )
         out["logs"] += cm.tick_boiler(player, rng=rng)
-        after_boiler = (player.get("_cool_deadline"),
-                        int(player.get("vitalidade", player.get("hp", 0)) or 0))
+        after_boiler = (
+            player.get("_cool_deadline"),
+            int(player.get("vitalidade", player.get("hp", 0)) or 0),
+        )
         if after_boiler != before_boiler:
             _record_class_event(
                 out,
@@ -1508,16 +1763,23 @@ def run_round(scene: dict, actors_by_id: dict[str, dict], sides: dict[str, list[
         if len(player.get("active_conditions") or []) > conditions_before:
             _record_class_event(out, "consequence:transformacao")
 
-    side_actors = {s: [actors_by_id[a] for a in ids if a in actors_by_id]
-                   for s, ids in sides.items() if s in ("hero", "ally", "enemy")}
+    side_actors = {
+        s: [actors_by_id[a] for a in ids if a in actors_by_id]
+        for s, ids in sides.items()
+        if s in ("hero", "ally", "enemy")
+    }
     # hero+ally agem como um lado só na iniciativa por lado (04).
-    init_sides = {"heroes": [a for s in ("hero", "ally") for a in side_actors.get(s, [])],
-                  "enemy": side_actors.get("enemy", [])}
+    init_sides = {
+        "heroes": [a for s in ("hero", "ally") for a in side_actors.get(s, [])],
+        "enemy": side_actors.get("enemy", []),
+    }
     init = roll_initiative_by_side(init_sides, initiator=initiator, rng=rng)
     out["initiative"] = init["order"]
     seq: list[str] = []
-    side_ids = {"heroes": sides.get("hero", []) + sides.get("ally", []),
-                "enemy": sides.get("enemy", [])}
+    side_ids = {
+        "heroes": sides.get("hero", []) + sides.get("ally", []),
+        "enemy": sides.get("enemy", []),
+    }
     for side in init["order"]:
         members = [aid for aid in side_ids.get(side, []) if _can_act(actors_by_id.get(aid, {}))]
         members.sort(key=lambda aid: (-_agility(actors_by_id[aid]), str(aid)))
@@ -1544,8 +1806,9 @@ def run_round(scene: dict, actors_by_id: dict[str, dict], sides: dict[str, list[
             continue
         decl = declarations.get(actor_id)
         if decl is None:
-            decl = enemy_declaration(scene, actor_id, actors_by_id, sides,
-                                     scene_state=scene_state, rng=rng)
+            decl = enemy_declaration(
+                scene, actor_id, actors_by_id, sides, scene_state=scene_state, rng=rng
+            )
         _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
         _expire_stat_conditions(actor, present_at_start, out)
 
@@ -1563,8 +1826,9 @@ def run_round(scene: dict, actors_by_id: dict[str, dict], sides: dict[str, list[
         if rec_ev:
             out["recidiva_event"] = rec_ev
             _record_class_event(out, "consequence:recidiva")
-        _maybe_abyss(scene, player, actors_by_id, prepared_abyss, out,
-                     scene_state=scene_state, rng=rng)
+        _maybe_abyss(
+            scene, player, actors_by_id, prepared_abyss, out, scene_state=scene_state, rng=rng
+        )
 
     end = death_flow.combat_should_end({"hostiles": side_actors.get("enemy", [])})
     out["ended"] = end["ended"]

@@ -4,6 +4,7 @@ A LLM só fornece texto. Confiança e autoridade são derivadas aqui a partir da
 origem que o motor conhece; portanto um payload livre nunca consegue se declarar
 canônico. O ledger vive no save e os mesmos metadados acompanham os vetores FAISS.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -81,11 +82,9 @@ class MemoryFactRecord(BaseModel):
             value = [value]
         if not isinstance(value, (list, tuple)):
             return []
-        return list(dict.fromkeys(
-            cleaned
-            for item in value
-            if (cleaned := _clean_text(item, 120))
-        ))[:20]
+        return list(
+            dict.fromkeys(cleaned for item in value if (cleaned := _clean_text(item, 120)))
+        )[:20]
 
     @model_validator(mode="after")
     def _derive_authority(self):
@@ -219,7 +218,8 @@ def false_player_death_claim(text: str, state: dict) -> bool:
     player_name = str((state.get("player") or {}).get("name") or "").strip()
     epoch = (state.get("continuity") or {}).get("timeline_epoch", 0)
     terminal = any(
-        isinstance(event, dict) and event.get("type") == "player_died"
+        isinstance(event, dict)
+        and event.get("type") == "player_died"
         and event.get("target_id", "player") == "player"
         and event.get("timeline_epoch", epoch) == epoch
         for event in (state.get("event_log") or [])
@@ -229,18 +229,18 @@ def false_player_death_claim(text: str, state: dict) -> bool:
     names = [re.escape(_fold(player_name))] if player_name else []
     names.extend([r"o heroi", r"a heroina", r"o jogador", r"o protagonista", r"voce"])
     subject = "(?:" + "|".join(names) + ")"
-    return bool(re.search(
-        rf"(?:\b{subject}\b\s+(?:morreu|esta\s+mort[oa])\b|"
-        rf"\bmorte\s+(?:definitiva\s+)?de\s+{subject}\b)",
-        _fold(text),
-    ))
+    return bool(
+        re.search(
+            rf"(?:\b{subject}\b\s+(?:morreu|esta\s+mort[oa])\b|"
+            rf"\bmorte\s+(?:definitiva\s+)?de\s+{subject}\b)",
+            _fold(text),
+        )
+    )
 
 
 def _fold(value: str) -> str:
     normalized = unicodedata.normalize("NFKD", str(value or ""))
-    return "".join(
-        char for char in normalized if not unicodedata.combining(char)
-    ).casefold()
+    return "".join(char for char in normalized if not unicodedata.combining(char)).casefold()
 
 
 def canonical_location_contradiction(text: str) -> dict | None:
@@ -255,15 +255,18 @@ def canonical_location_contradiction(text: str) -> dict | None:
     import gamedata
 
     locations = [
-        row for row in (gamedata.WORLD_MAP.get("locations") or [])
+        row
+        for row in (gamedata.WORLD_MAP.get("locations") or [])
         if row.get("name") and row.get("region")
     ]
-    regions = sorted({
-        str(row["region"]) for row in locations if row.get("region")
-    }, key=len, reverse=True)
+    regions = sorted(
+        {str(row["region"]) for row in locations if row.get("region")}, key=len, reverse=True
+    )
     roles = r"(?:bairro|distrito|cidade|porto|assentamento|regiao|aldeia|vila)"
     for location in sorted(
-        locations, key=lambda row: len(str(row["name"])), reverse=True,
+        locations,
+        key=lambda row: len(str(row["name"])),
+        reverse=True,
     ):
         location_name = str(location["name"])
         location_folded = _fold(location_name)
@@ -357,10 +360,12 @@ def npc_identity_contradiction(text: str, state: dict) -> dict | None:
         descriptor = _npc_descriptor(text, name)
         if not descriptor:
             continue
-        anchor = " ".join((
-            str(npc.get("appearance") or ""),
-            str(npc.get("role") or ""),
-        ))
+        anchor = " ".join(
+            (
+                str(npc.get("appearance") or ""),
+                str(npc.get("role") or ""),
+            )
+        )
         for field, catalog in (("species", _NPC_SPECIES), ("size", _NPC_SIZES)):
             expected = _first_identity_label(anchor, catalog)
             claimed = _first_identity_label(descriptor, catalog)
@@ -406,15 +411,13 @@ def inventory_possession_contradiction(text: str, state: dict) -> dict | None:
         subjects.append(re.escape(player_name))
     # Direct subject + affirmative verb only. An intervening reporting verb or
     # negation is not evidence of possession by this subject.
-    subject_pattern = re.compile(
-        rf"\b(?:{'|'.join(subjects)})\s+{_POSSESSION_VERB}\b"
-    )
+    subject_pattern = re.compile(rf"\b(?:{'|'.join(subjects)})\s+{_POSSESSION_VERB}\b")
     clauses = []
     for match in subject_pattern.finditer(folded):
         # Do not attribute a later coordinated subject's possessions to player.
         clause = re.split(
             rf"\s+(?:e|mas|enquanto)\s+(?=[^,;:]{{1,80}}?\s+{_POSSESSION_VERB}\b)|[;:]",
-            re.split(r"[.!?]", folded[match.end():match.end() + 360], maxsplit=1)[0].lstrip(" :"),
+            re.split(r"[.!?]", folded[match.end() : match.end() + 360], maxsplit=1)[0].lstrip(" :"),
             maxsplit=1,
         )[0]
         clauses.append(clause)
@@ -426,23 +429,31 @@ def inventory_possession_contradiction(text: str, state: dict) -> dict | None:
 
     inventory = [row for row in (player.get("inventory") or []) if isinstance(row, dict)]
     present_ids = {str(row.get("id") or "") for row in inventory}
-    present_names = {
-        name
-        for row in inventory
-        if (name := _fold(item_display(row)))
-    }
+    present_names = {name for row in inventory if (name := _fold(item_display(row)))}
     clause = " . ".join(clauses)
 
     for rejected in state.get("rejected_item_claims") or []:
         label = _fold(rejected)
-        if label and re.search(rf"(?<!\w){re.escape(label)}(?!\w)", clause) and label not in present_names:
+        if (
+            label
+            and re.search(rf"(?<!\w){re.escape(label)}(?!\w)", clause)
+            and label not in present_names
+        ):
             return {"item_name": str(rejected), "claim_kind": "rejected_item"}
 
     for item_id, item in ARTIFACTS_DB.items():
         name = str((item or {}).get("name") or "")
         label = _fold(name)
-        if label and re.search(rf"(?<!\w){re.escape(label)}(?!\w)", clause) and str(item_id) not in present_ids:
-            return {"item_name": name, "item_id": str(item_id), "claim_kind": "absent_canonical_item"}
+        if (
+            label
+            and re.search(rf"(?<!\w){re.escape(label)}(?!\w)", clause)
+            and str(item_id) not in present_ids
+        ):
+            return {
+                "item_name": name,
+                "item_id": str(item_id),
+                "claim_kind": "absent_canonical_item",
+            }
     return None
 
 
@@ -467,37 +478,33 @@ def validate_memory_fact(record: dict, state: dict) -> tuple[dict | None, str | 
         return None, "invalid_memory_fact"
     item = normalized[0]
     from services.narrative_evidence import build_evidence, validate_narrative
-    check = validate_narrative(item['text'], build_evidence(state), channel='memory')
-    reasons = {row['reason'] for row in check.rejections}
+
+    check = validate_narrative(item["text"], build_evidence(state), channel="memory")
+    reasons = {row["reason"] for row in check.rejections}
     # Existing reason codes remain stable for the older guards below.
-    if any(row['reason'] in {'current_location', 'reward_delta'} for row in check.rejections):
-        return None, 'narrative_evidence_contradiction'
+    if any(row["reason"] in {"current_location", "reward_delta"} for row in check.rejections):
+        return None, "narrative_evidence_contradiction"
     secret_id = find_strict_unrevealed(item["text"], state)
     if secret_id:
         return None, f"unrevealed_secret:{secret_id}"
-    if 'player_death' in reasons:
+    if "player_death" in reasons:
         return None, "player_downed_not_dead"
     contradiction = canonical_location_contradiction(item["text"])
-    if contradiction and 'location_region' in reasons:
+    if contradiction and "location_region" in reasons:
         return None, (
             "location_region_contradiction:"
             f"{contradiction['location_id']}:{contradiction['claimed_region']}"
         )
     inventory_contradiction = inventory_possession_contradiction(item["text"], state)
-    if inventory_contradiction and 'inventory_possession' in reasons:
-        return None, (
-            "inventory_possession_contradiction:"
-            f"{inventory_contradiction['item_name']}"
-        )
+    if inventory_contradiction and "inventory_possession" in reasons:
+        return None, (f"inventory_possession_contradiction:{inventory_contradiction['item_name']}")
     npc_contradiction = npc_identity_contradiction(item["text"], state)
-    if npc_contradiction and 'npc_identity' in reasons:
+    if npc_contradiction and "npc_identity" in reasons:
         return None, (
             "npc_identity_contradiction:"
             f"{npc_contradiction['npc_name']}:{npc_contradiction['field']}"
         )
-    if item["confidence"] == "confirmed" and not source_is_applicable(
-        item.get("source_id"), state
-    ):
+    if item["confidence"] == "confirmed" and not source_is_applicable(item.get("source_id"), state):
         return None, "confirmed_without_applicable_source"
     return item, None
 
@@ -524,7 +531,9 @@ def commit_memory_facts(existing: Iterable | None, new: Iterable | None) -> tupl
     return [by_text[key] for key in order][-MAX_MEMORY_FACTS:], promotions
 
 
-def set_vector_status(ledger: Iterable | None, memory_ids: Iterable[str], status: str) -> list[dict]:
+def set_vector_status(
+    ledger: Iterable | None, memory_ids: Iterable[str], status: str
+) -> list[dict]:
     """Marca o estado da copia vetorial de registros do ledger (SPEC-234 R1)."""
     ids = set(memory_ids)
     out: list[dict] = []
@@ -543,9 +552,7 @@ def memory_metadata(record: dict) -> dict:
         "memory_provenance": item["provenance"],
         "memory_confidence": item["confidence"],
         "memory_source_id": item.get("source_id") or "",
-        "memory_source_turn": (
-            item["source_turn"] if item.get("source_turn") is not None else -1
-        ),
+        "memory_source_turn": (item["source_turn"] if item.get("source_turn") is not None else -1),
         "memory_entity_ids": ",".join(item.get("canonical_entity_ids") or []),
     }
 

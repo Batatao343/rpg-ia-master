@@ -23,16 +23,24 @@ def test_catalog_has_all_creation_art_and_only_canonical_public_assets():
 
     catalog = load_visual_catalog()
     assert set(catalog["creation"]["races"]) == {
-        "race_humanos", "race_elfos", "race_anoes_fuligem",
-        "race_vrel", "race_cinzeus", "race_osshari",
+        "race_humanos",
+        "race_elfos",
+        "race_anoes_fuligem",
+        "race_vrel",
+        "race_cinzeus",
+        "race_osshari",
     }
     assert set(catalog["creation"]["classes"]) == {
-        "Devoto do Abismo", "Sangromante", "Corruptor",
-        "Arcanista Cinzento", "Médico de Campo",
+        "Devoto do Abismo",
+        "Sangromante",
+        "Corruptor",
+        "Arcanista Cinzento",
+        "Médico de Campo",
     }
     assert all(a["visibility"] == "public" for a in catalog["assets"])
-    assert all(str(a["variants"]["display"]["url"]).startswith("/art/v1/")
-               for a in catalog["assets"])
+    assert all(
+        str(a["variants"]["display"]["url"]).startswith("/art/v1/") for a in catalog["assets"]
+    )
 
 
 def test_catalog_files_exist_match_hash_and_respect_budget():
@@ -45,8 +53,10 @@ def test_catalog_files_exist_match_hash_and_respect_budget():
             assert path.is_file(), (asset["asset_id"], role)
             assert sha256_file(path) == variant["sha256"]
             assert path.stat().st_size == variant["bytes"]
-            ceiling = 120_000 if role == "thumbnail" else (
-                400_000 if asset["subject_type"] == "location" else 300_000
+            ceiling = (
+                120_000
+                if role == "thumbnail"
+                else (400_000 if asset["subject_type"] == "location" else 300_000)
             )
             assert variant["bytes"] <= ceiling, (asset["asset_id"], role)
 
@@ -74,10 +84,17 @@ def test_npc_cue_uses_structured_state_not_narrative_text():
     from services.visual_catalog import resolve_turn_visual_state, visual_response
 
     previous = _state()
-    current = _state(npcs={
-        "Grum": {"id": "npc_grum", "name": "Grum", "known_by_player": True,
-                  "in_scene": True, "role": "Taverneiro"},
-    })
+    current = _state(
+        npcs={
+            "Grum": {
+                "id": "npc_grum",
+                "name": "Grum",
+                "known_by_player": True,
+                "in_scene": True,
+                "role": "Taverneiro",
+            },
+        }
+    )
     update = resolve_turn_visual_state(previous, current, action_key="turn:1")
     current.update(update)
     response = visual_response(current, cue_action_key="turn:1")
@@ -94,10 +111,11 @@ def test_npc_cue_is_once_and_retry_safe():
     from services.visual_catalog import resolve_turn_visual_state, visual_response
 
     previous = _state()
-    current = _state(npcs={
-        "Grum": {"id": "npc_grum", "name": "Grum", "known_by_player": True,
-                  "in_scene": True},
-    })
+    current = _state(
+        npcs={
+            "Grum": {"id": "npc_grum", "name": "Grum", "known_by_player": True, "in_scene": True},
+        }
+    )
     current.update(resolve_turn_visual_state(previous, current, action_key="same"))
     first = visual_response(current, cue_action_key="same")
     retry = visual_response(current, cue_action_key="same")
@@ -113,12 +131,17 @@ def test_active_npc_has_priority_and_runtime_npc_gets_honest_fallback():
     from services.visual_catalog import resolve_turn_visual_state
 
     previous = _state()
-    current = _state(npcs={
-        "Pessoa Nova": {"name": "Pessoa Nova", "known_by_player": True,
-                        "in_scene": True, "role": "Viajante"},
-        "Grum": {"id": "npc_grum", "name": "Grum", "known_by_player": True,
-                  "in_scene": True},
-    })
+    current = _state(
+        npcs={
+            "Pessoa Nova": {
+                "name": "Pessoa Nova",
+                "known_by_player": True,
+                "in_scene": True,
+                "role": "Viajante",
+            },
+            "Grum": {"id": "npc_grum", "name": "Grum", "known_by_player": True, "in_scene": True},
+        }
+    )
     current["active_npc_name"] = "Pessoa Nova"
     update = resolve_turn_visual_state(previous, current, action_key="a")
     cue = update["visual_cue_ledger"][-1]["cue"]
@@ -143,17 +166,28 @@ def test_entity_identity_handles_accents_punctuation_and_explicit_id():
 def test_save_v5_migrates_visual_fields_and_roundtrips(tmp_path, monkeypatch):
     import persistence
 
-    raw = {"schema_version": 5, "game_id": "00000000-0000-0000-0000-000000000001",
-           "player": {}, "party": [], "enemies": []}
+    raw = {
+        "schema_version": 5,
+        "game_id": "00000000-0000-0000-0000-000000000001",
+        "player": {},
+        "party": [],
+        "enemies": [],
+    }
     migrated = persistence.migrate_state(raw)
     assert migrated["schema_version"] == persistence.SCHEMA_VERSION
     assert migrated["visual_seen_entity_ids"] == []
     assert migrated["visual_cue_ledger"] == []
 
     state = _state()
-    state.update({"player": {}, "party": [], "enemies": [],
-                  "visual_seen_entity_ids": ["npc:npc_grum"],
-                  "visual_cue_ledger": [{"action_key": "a", "cue": None}]})
+    state.update(
+        {
+            "player": {},
+            "party": [],
+            "enemies": [],
+            "visual_seen_entity_ids": ["npc:npc_grum"],
+            "visual_cue_ledger": [{"action_key": "a", "cue": None}],
+        }
+    )
     monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
     assert persistence.save_game_state(state)
     loaded = persistence.load_game_state(str(tmp_path / f"{state['game_id']}.json"))

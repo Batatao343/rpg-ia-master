@@ -1,4 +1,5 @@
 """SPEC-228 — morte sem checkpoint, ordem save/checkpoint, flags e schema."""
+
 import json
 import os
 import uuid
@@ -73,8 +74,7 @@ def test_resolve_death_choice_strict_raises():
     st = _state(str(uuid.uuid4()), hp=0, gold=0, death_pending=True)
     with pytest.raises(cp.NoRestorePoint):
         cp.resolve_death_choice(st, "continue")
-    ok = cp.resolve_death_choice(st, "continue",
-                                 initial_state=_idle(_state("x", hp=30, gold=9)))
+    ok = cp.resolve_death_choice(st, "continue", initial_state=_idle(_state("x", hp=30, gold=9)))
     assert ok["player"]["hp"] == 30
     assert cp.resolve_death_choice(st, "continue", strict=False)["death_pending"] is False
 
@@ -83,8 +83,7 @@ def test_synthetic_checkpoint_for_legacy_save():
     gid = str(uuid.uuid4())
     persistence.save_game_state(_idle(_state(gid, hp=20, gold=5, turn=12)))
     assert not persistence.has_checkpoint(gid)
-    persistence.ensure_synthetic_checkpoint(
-        persistence.load_game_state(persistence.save_path(gid)))
+    persistence.ensure_synthetic_checkpoint(persistence.load_game_state(persistence.save_path(gid)))
     assert persistence.has_checkpoint(gid)
     assert persistence.load_checkpoint(gid)["continuity"]["synthetic_from_turn"] == 12
 
@@ -143,9 +142,17 @@ def test_commit_turn_defers_on_checkpoint_failure(monkeypatch):
     st["continuity"] = {"last_checkpoint_turn": 0}
     monkeypatch.setattr(persistence, "save_checkpoint", lambda s: False)
     assert api._prepare_checkpoint(st, deepcopy(st)) is True
-    assert st["continuity"]["last_checkpoint_turn"] == 0   # nao marcado antes de gravar
-    api._commit_turn(st, api.format_response(st), claim=None, request_hash="",
-                     checkpoint=True, latency_ms=1, llm_events=[], llm_attempts=[])
+    assert st["continuity"]["last_checkpoint_turn"] == 0  # nao marcado antes de gravar
+    api._commit_turn(
+        st,
+        api.format_response(st),
+        claim=None,
+        request_hash="",
+        checkpoint=True,
+        latency_ms=1,
+        llm_events=[],
+        llm_attempts=[],
+    )
     saved = persistence.load_game_state(persistence.save_path(gid))
     assert saved["continuity"]["checkpoint_deferred"] is True
     assert saved["continuity"]["last_checkpoint_turn"] == 0
@@ -159,8 +166,16 @@ def test_commit_turn_marks_after_checkpoint_success():
     st = _idle(_state(gid, hp=20, gold=1, turn=10))
     st["continuity"] = {"last_checkpoint_turn": 0, "checkpoint_deferred": True}
     assert api._prepare_checkpoint(st, deepcopy(st)) is True
-    api._commit_turn(st, api.format_response(st), claim=None, request_hash="",
-                     checkpoint=True, latency_ms=1, llm_events=[], llm_attempts=[])
+    api._commit_turn(
+        st,
+        api.format_response(st),
+        claim=None,
+        request_hash="",
+        checkpoint=True,
+        latency_ms=1,
+        llm_events=[],
+        llm_attempts=[],
+    )
     saved = persistence.load_game_state(persistence.save_path(gid))
     assert saved["continuity"]["last_checkpoint_turn"] == 10
     assert not saved["continuity"].get("checkpoint_deferred")
@@ -184,8 +199,12 @@ def test_stream_resolves_latest_once(client):
 def test_messages_roundtrip_all_types():
     msgs = [
         HumanMessage(content="oi", id="h1"),
-        AIMessage(content="", tool_calls=[{"name": "f", "args": {"a": 1}, "id": "t1"}],
-                  additional_kwargs={"k": "v"}, name="narrador"),
+        AIMessage(
+            content="",
+            tool_calls=[{"name": "f", "args": {"a": 1}, "id": "t1"}],
+            additional_kwargs={"k": "v"},
+            name="narrador",
+        ),
         SystemMessage(content="sys"),
         ToolMessage(content="res", tool_call_id="t1"),
     ]
@@ -194,8 +213,11 @@ def test_messages_roundtrip_all_types():
     assert back[1].tool_calls[0]["name"] == "f"
     assert back[1].additional_kwargs == {"k": "v"} and back[1].name == "narrador"
     assert isinstance(back[3], ToolMessage) and back[3].tool_call_id == "t1"
-    legacy = [{"type": "human", "content": "a"}, {"type": "ai", "content": "b"},
-              {"type": "system", "content": "c"}]
+    legacy = [
+        {"type": "human", "content": "a"},
+        {"type": "ai", "content": "b"},
+        {"type": "system", "content": "c"},
+    ]
     assert [m.content for m in persistence._deserialize_messages(legacy)] == ["a", "b", "c"]
 
 
@@ -207,19 +229,27 @@ def test_crash_between_checkpoint_and_save_discards_ahead_checkpoint(client, mon
     persistence.save_game_state(base)
     ahead = deepcopy(base)
     ahead["world"]["turn_count"] = 11
-    ahead["player"]["gold"] = 999          # linha do tempo abortada
+    ahead["player"]["gold"] = 999  # linha do tempo abortada
     ahead["continuity"] = {"last_checkpoint_turn": 0, "checkpoint_deferred": True}
 
     def _crash(_state, **_kw):
         raise RuntimeError("crash simulado após o checkpoint")
+
     with monkeypatch.context() as m:
         m.setattr(api, "_require_saved", _crash)
         m.setattr(api, "_schedule_chronicle_jobs", lambda *_a, **_k: None)
         with pytest.raises(RuntimeError):
-            api._commit_turn(ahead, api.format_response(ahead), claim=None,
-                             request_hash="", checkpoint=True, latency_ms=1,
-                             llm_events=[], llm_attempts=[])
-    assert persistence.checkpoint_turn(gid) == 11            # slot à frente
+            api._commit_turn(
+                ahead,
+                api.format_response(ahead),
+                claim=None,
+                request_hash="",
+                checkpoint=True,
+                latency_ms=1,
+                llm_events=[],
+                llm_attempts=[],
+            )
+    assert persistence.checkpoint_turn(gid) == 11  # slot à frente
     saved = persistence.load_game_state(persistence.save_path(gid))
     assert saved["world"]["turn_count"] == 10
 
@@ -251,19 +281,32 @@ def test_postgres_list_skips_newer_schema_rows(monkeypatch):
         if row["schema_version"] > persistence.SCHEMA_VERSION:
             raise persistence.IncompatibleSaveError("v99")
         return row["id"]
+
     monkeypatch.setattr(pg, "_stored", _fake_stored)
-    rows = [{"id": "nova", "schema_version": 99}, {"id": "a", "schema_version": 8},
-            {"id": "b", "schema_version": 8}]
+    rows = [
+        {"id": "nova", "schema_version": 99},
+        {"id": "a", "schema_version": 8},
+        {"id": "b", "schema_version": 8},
+    ]
     assert pg._stored_rows_tolerant(rows) == ["a", "b"]
 
     class _Conn:
-        def __enter__(self): return self
-        def __exit__(self, *a): return False
-        def execute(self, *_a, **_k): return self
-        def fetchall(self): return rows
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def execute(self, *_a, **_k):
+            return self
+
+        def fetchall(self):
+            return rows
 
     class _Pool:
-        def connection(self): return _Conn()
+        def connection(self):
+            return _Conn()
+
     store = pg.PostgresGameStore(_Pool())
     principal = type("P", (), {"user_id": "u"})()
     assert store.list(principal) == ["a", "b"]
@@ -279,6 +322,7 @@ def test_action_without_game_id_resolves_latest_once(client, monkeypatch):
     def _counting():
         calls.append(1)
         return real()
+
     monkeypatch.setattr(persistence, "get_latest_save_file", _counting)
     seen = []
     orig_lock = api._game_lock
@@ -293,15 +337,18 @@ def test_action_without_game_id_resolves_latest_once(client, monkeypatch):
 def test_cli_persist_turn_checkpoint_before_save(monkeypatch):
     """R5 (CLI): checkpoint antes do save; falha adia sem marcar."""
     import game_engine
+
     order = []
     gid = str(uuid.uuid4())
     st = _idle(_state(gid, hp=20, gold=1, turn=10))
     st["continuity"] = {"last_checkpoint_turn": 0}
     real_cp, real_save = persistence.save_checkpoint, game_engine.save_game_state
-    monkeypatch.setattr(persistence, "save_checkpoint",
-                        lambda s: order.append("checkpoint") or real_cp(s))
-    monkeypatch.setattr(game_engine, "save_game_state",
-                        lambda s: order.append("save") or real_save(s))
+    monkeypatch.setattr(
+        persistence, "save_checkpoint", lambda s: order.append("checkpoint") or real_cp(s)
+    )
+    monkeypatch.setattr(
+        game_engine, "save_game_state", lambda s: order.append("save") or real_save(s)
+    )
     st = game_engine._persist_turn_cli(st)
     assert order == ["checkpoint", "save"]
     assert st["continuity"]["last_checkpoint_turn"] == 10
@@ -319,19 +366,23 @@ def test_cli_persist_turn_checkpoint_before_save(monkeypatch):
 def test_cli_resumed_death_pending_opens_death_flow(monkeypatch):
     """CLI: save retomado já caído abre a tela de morte antes de jogar."""
     import game_engine
+
     gid = str(uuid.uuid4())
     persistence.save_game_state(_state(gid, hp=0, gold=0, death_pending=True, turn=7))
-    answers = iter(["1", "n"])          # Continuar → sem retorno → não aceita
+    answers = iter(["1", "n"])  # Continuar → sem retorno → não aceita
     monkeypatch.setattr("builtins.input", lambda *_a: next(answers))
     monkeypatch.setattr(game_engine, "clear_screen", lambda: None)
-    monkeypatch.setattr(game_engine, "load_game_state",
-                        lambda *_a: persistence.load_game_state(persistence.save_path(gid)))
-    monkeypatch.setattr(game_engine, "app", None)   # nunca chega ao grafo
+    monkeypatch.setattr(
+        game_engine,
+        "load_game_state",
+        lambda *_a: persistence.load_game_state(persistence.save_path(gid)),
+    )
+    monkeypatch.setattr(game_engine, "app", None)  # nunca chega ao grafo
     game_engine.run_game_loop()
     saved = persistence.load_game_state(persistence.save_path(gid))
     assert saved["death_pending"] is True and not saved.get("game_over")
 
-    answers2 = iter(["2"])              # Aceitar o fim → memorial
+    answers2 = iter(["2"])  # Aceitar o fim → memorial
     monkeypatch.setattr("builtins.input", lambda *_a: next(answers2))
     game_engine.run_game_loop()
     assert persistence.load_game_state(persistence.save_path(gid))["game_over"] is True

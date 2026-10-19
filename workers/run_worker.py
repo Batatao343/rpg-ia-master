@@ -25,6 +25,7 @@ from workers.job_worker import JobWorker
 def image_defer_max_age():
     """SPEC-236 R10: how long a kill-switch-paused image job may keep its reservation."""
     from datetime import timedelta
+
     try:
         hours = float(os.getenv("RPG_IMAGE_DEFER_MAX_HOURS", "6"))
     except ValueError:
@@ -43,9 +44,11 @@ def build_handlers():
     def generate(payload: dict) -> dict:
         from infrastructure.contracts import Conflict, Principal
         from services.image_quotes import ImageQuoteRepository
+
         generation_id = UUID(str(payload["generation"]["generation_id"]))
         from infrastructure.contracts import JobDeferred
         from services.kill_switches import IMAGE, get_switches
+
         finance = ImageQuoteRepository(pool)
         if not get_switches().is_enabled(IMAGE):
             # SPEC-196 F5: paused, not failed. Reservation stays held; the job resumes when the
@@ -53,9 +56,12 @@ def build_handlers():
             # SPEC-236 R10: ...but only for RPG_IMAGE_DEFER_MAX_HOURS (default 6 h); then the
             # pre-dispatch reservation is released and the generation fails (deferred_timeout).
             try:
-                released = finance.release_if_deferred_too_long(generation_id, image_defer_max_age())
+                released = finance.release_if_deferred_too_long(
+                    generation_id, image_defer_max_age()
+                )
             except Exception as exc:
                 from observability.telemetry import log_fallback
+
                 log_fallback("image_job", "defer_ttl_check_failed", exc)
                 released = False  # never let the TTL check break the pause; retry next defer
             if released:
@@ -63,11 +69,17 @@ def build_handlers():
             raise JobDeferred("image_generation_disabled", 60.0)
         owner_id, game_id = UUID(str(payload["owner_id"])), UUID(str(payload["game_id"]))
         repository = DynamicArtRepository(
-            pool, model="", profile_version="",
+            pool,
+            model="",
+            profile_version="",
         )
         try:
             generation = repository.get(Principal(owner_id, "worker", str(owner_id)), generation_id)
-            if not generation or generation["game_id"] != game_id or not generation.get("image_quote_id"):
+            if (
+                not generation
+                or generation["game_id"] != game_id
+                or not generation.get("image_quote_id")
+            ):
                 raise Conflict("image_quote confirmation required")
             if generation["status"] == "ready":
                 return {"status": "already_ready", "generation_id": str(generation_id)}
@@ -75,27 +87,37 @@ def build_handlers():
             generator = OpenAIImageGenerator(os.environ["OPENAI_API_KEY"])
             result = generate_dynamic_art_job(
                 generator=generator,
-                blob_store=runtime.blob_store, generation=generation,
-                owner_id=owner_id, game_id=game_id,
+                blob_store=runtime.blob_store,
+                generation=generation,
+                owner_id=owner_id,
+                game_id=game_id,
                 asset_id=UUID(str(payload["asset_id"])),
                 admission=lambda: finance.dispatch(generation_id, owner_id, game_id),
                 usage_sink=lambda model, usage: repository.record_usage(
-                    generation_id, model=model, usage=usage),
+                    generation_id, model=model, usage=usage
+                ),
             )
             repository.complete(
-                generation_id, asset_id=UUID(str(payload["asset_id"])), result=result,
+                generation_id,
+                asset_id=UUID(str(payload["asset_id"])),
+                result=result,
             )
             return result
         except Exception as exc:
             from observability.telemetry import log_event
             from services.job_fence import current_job
+
             job = current_job()
             status = getattr(exc, "http_status", None)
-            log_event("image", "generation_failed", level="warning",
-                      job_id=str(job.job_id) if job is not None else None,
-                      error_type=type(exc).__name__,
-                      http_status=status if isinstance(status, int) else None,
-                      outcome=getattr(exc, "outcome", "unknown"))
+            log_event(
+                "image",
+                "generation_failed",
+                level="warning",
+                job_id=str(job.job_id) if job is not None else None,
+                error_type=type(exc).__name__,
+                http_status=status if isinstance(status, int) else None,
+                outcome=getattr(exc, "outcome", "unknown"),
+            )
             finance.hold_or_release(generation_id)
             raise
 
@@ -135,12 +157,15 @@ def build_handlers():
         capture_errors: list[Exception] = []
 
         def capture(event) -> None:
-            attempts.append({
-                "provider": event.provider, "model": event.model,
-                "outcome": event.outcome,
-                "network_attempted": event.outcome not in {"build_error", "circuit_open"},
-                "usage": dict(event.usage) if event.usage else None,
-            })
+            attempts.append(
+                {
+                    "provider": event.provider,
+                    "model": event.model,
+                    "outcome": event.outcome,
+                    "network_attempted": event.outcome not in {"build_error", "circuit_open"},
+                    "usage": dict(event.usage) if event.usage else None,
+                }
+            )
             if job is not None:
                 try:
                     append_chronicle_job_attempt(pool, job, attempts)
@@ -155,10 +180,12 @@ def build_handlers():
         return {"status": digest["status"], "source_hash": digest["source_hash"]}
 
     from workers.projection_jobs import make_handler as make_projection_handler
+
     project = make_projection_handler(pool, runtime.memory_store)
 
     def purge_blobs(payload: dict) -> dict:
         from workers.blob_purge_jobs import purge_game_blobs_job
+
         return purge_game_blobs_job(pool, runtime.blob_store, payload)
 
     return {
@@ -172,6 +199,7 @@ def build_handlers():
 
 def main() -> int:
     from observability.logging_setup import configure_logging
+
     configure_logging()
     parser = argparse.ArgumentParser()
     parser.add_argument("--worker-id", default="local-worker-1")

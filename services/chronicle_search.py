@@ -39,19 +39,31 @@ def lexical_candidates(chronicle: list[dict[str, Any]], query: str) -> list[Chro
         for entry in chapter.get("entries") or []:
             overlap = wanted & _terms(str(entry.get("text", "")))
             if overlap:
-                candidates.append(ChronicleCandidate(
-                    entry["entry_id"], chapter_id, "entry", len(overlap) / max(1, len(wanted)),
-                ))
+                candidates.append(
+                    ChronicleCandidate(
+                        entry["entry_id"],
+                        chapter_id,
+                        "entry",
+                        len(overlap) / max(1, len(wanted)),
+                    )
+                )
         digest = chapter.get("digest") or {}
         overlap = wanted & _terms(str(digest.get("summary", "")))
         if overlap:
-            candidates.append(ChronicleCandidate(
-                f"{chapter_id}:digest", chapter_id, "digest", len(overlap) / max(1, len(wanted)),
-            ))
+            candidates.append(
+                ChronicleCandidate(
+                    f"{chapter_id}:digest",
+                    chapter_id,
+                    "digest",
+                    len(overlap) / max(1, len(wanted)),
+                )
+            )
     return sorted(candidates, key=lambda item: (-item.score, item.document_id))
 
 
-def reciprocal_rank_fusion(rankings: Iterable[list[ChronicleCandidate]], *, k: int = 60) -> list[tuple[str, float, set[str]]]:
+def reciprocal_rank_fusion(
+    rankings: Iterable[list[ChronicleCandidate]], *, k: int = 60
+) -> list[tuple[str, float, set[str]]]:
     scores: dict[str, float] = {}
     sources: dict[str, set[str]] = {}
     labels = ("lexical", "semantic")
@@ -60,12 +72,19 @@ def reciprocal_rank_fusion(rankings: Iterable[list[ChronicleCandidate]], *, k: i
         for rank, item in enumerate(ranking, 1):
             scores[item.document_id] = scores.get(item.document_id, 0.0) + 1 / (k + rank)
             sources.setdefault(item.document_id, set()).add(label)
-    return sorted(((key, score, sources[key]) for key, score in scores.items()),
-                  key=lambda item: (-item[1], item[0]))
+    return sorted(
+        ((key, score, sources[key]) for key, score in scores.items()),
+        key=lambda item: (-item[1], item[0]),
+    )
 
 
-def search_chronicle(chronicle: list[dict[str, Any]], query: str, *, top_k: int = 5,
-                     semantic: list[ChronicleCandidate] | None = None) -> dict[str, Any]:
+def search_chronicle(
+    chronicle: list[dict[str, Any]],
+    query: str,
+    *,
+    top_k: int = 5,
+    semantic: list[ChronicleCandidate] | None = None,
+) -> dict[str, Any]:
     if not 1 <= top_k <= 10:
         raise ValueError("top_k deve estar entre 1 e 10")
     chapters = ensure_chronicle_ids(chronicle)
@@ -85,14 +104,23 @@ def search_chronicle(chronicle: list[dict[str, Any]], query: str, *, top_k: int 
         digest = chapter.get("digest") or {}
         text = entry.get("text", "") if entry else digest.get("summary", "")
         turns = [int(row.get("turn", 0) or 0) for row in chapter.get("entries") or []]
-        hits.append({
-            "chapter_id": chapter["chapter_id"], "chapter_title": chapter.get("title", ""),
-            "snippet": str(text)[:500], "source_kind": source_kind,
-            "from_turn": min(turns, default=int(chapter.get("started_turn", 0) or 0)),
-            "to_turn": max(turns, default=int(chapter.get("started_turn", 0) or 0)),
-            "entry_ids": [entry["entry_id"]] if entry else digest.get("milestone_entry_ids", []),
-            "event_ids": [entry["event_id"]] if entry and entry.get("event_id") else [],
-            "match_kind": "hybrid" if len(sources) > 1 else next(iter(sources)),
-        })
-    return {"mode": "hybrid" if semantic else "lexical_fallback",
-            "index_current": bool(semantic), "hits": hits}
+        hits.append(
+            {
+                "chapter_id": chapter["chapter_id"],
+                "chapter_title": chapter.get("title", ""),
+                "snippet": str(text)[:500],
+                "source_kind": source_kind,
+                "from_turn": min(turns, default=int(chapter.get("started_turn", 0) or 0)),
+                "to_turn": max(turns, default=int(chapter.get("started_turn", 0) or 0)),
+                "entry_ids": [entry["entry_id"]]
+                if entry
+                else digest.get("milestone_entry_ids", []),
+                "event_ids": [entry["event_id"]] if entry and entry.get("event_id") else [],
+                "match_kind": "hybrid" if len(sources) > 1 else next(iter(sources)),
+            }
+        )
+    return {
+        "mode": "hybrid" if semantic else "lexical_fallback",
+        "index_current": bool(semantic),
+        "hits": hits,
+    }

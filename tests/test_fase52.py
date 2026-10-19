@@ -1,4 +1,5 @@
 """Suíte da Fase 5.2 — invariantes de estado (offline, MockLLM)."""
+
 import copy
 import uuid
 
@@ -18,6 +19,7 @@ def _ids(violations):
 
 
 # --- Etapa 1 — vitals + economia -------------------------------------------
+
 
 def test_estado_saudavel_zero_violacoes():
     assert inv.check_all(_base()) == []
@@ -79,6 +81,7 @@ def test_ouro_negativo_acusa():
 
 def test_unique_duplicado_acusa():
     from gamedata import ARTIFACTS_DB
+
     uid = next(iid for iid, a in ARTIFACTS_DB.items() if isinstance(a, dict) and a.get("unique"))
     st = _base()
     st["player"]["inventory"] = [{"id": uid, "qty": 2}]  # unique não empilha
@@ -86,6 +89,7 @@ def test_unique_duplicado_acusa():
 
 
 # --- Etapa 2 — entidades + mundo -------------------------------------------
+
 
 def test_npc_morto_em_cena_acusa():
     st = _base()
@@ -98,9 +102,17 @@ def test_faccao_derrotada_no_controle_acusa():
     st = _base()
     loc = st["world"]["current_location_id"]
     st["factions"] = [{"id": "fac_x", "defeated": True}]
-    st["world_projection"] = {"dynamic_edges": [
-        {"id": "dyn_t", "type": "controls", "source": "fac_x", "target": loc,
-         "visibility": "public"}]}
+    st["world_projection"] = {
+        "dynamic_edges": [
+            {
+                "id": "dyn_t",
+                "type": "controls",
+                "source": "fac_x",
+                "target": loc,
+                "visibility": "public",
+            }
+        ]
+    }
     assert "world.defeated_controls" in _ids(inv.check_all(st))
 
 
@@ -120,30 +132,47 @@ def test_relogio_regressivo_acusa():
 
 # --- Etapa 3 — conhecimento + roundtrip ------------------------------------
 
+
 def test_assinatura_de_segredo_em_mensagem_acusa():
     from langchain_core.messages import AIMessage
+
     st = _base()
-    st["messages"].append(AIMessage(content=
-        "O velho sussurra: Valerius fez o pacto com Daruun que consumiu a família dele."))
+    st["messages"].append(
+        AIMessage(
+            content="O velho sussurra: Valerius fez o pacto com Daruun que consumiu a família dele."
+        )
+    )
     ids = _ids(inv.check_all(st))
     assert "knowledge.secret_leak" in ids
 
 
 def test_segredo_revelado_nao_acusa():
     from langchain_core.messages import AIMessage
+
     st = _base()
     frase = "consumiu a família"
-    st["event_log"] = [{"type": "secret_revealed", "target_id": "pacto",
-                        "payload": {"detail": frase}, "event_id": "e1", "turn": 1}]
+    st["event_log"] = [
+        {
+            "type": "secret_revealed",
+            "target_id": "pacto",
+            "payload": {"detail": frase},
+            "event_id": "e1",
+            "turn": 1,
+        }
+    ]
     st["messages"].append(AIMessage(content=f"Enfim a verdade: {frase} em troca de poder."))
     # 'consumiu a família' está no corpus revelado → desarmado
-    leaks = [v for v in inv.check_all(st) if v.check_id == "knowledge.secret_leak"
-             and v.details.get("phrase") == frase]
+    leaks = [
+        v
+        for v in inv.check_all(st)
+        if v.check_id == "knowledge.secret_leak" and v.details.get("phrase") == frase
+    ]
     assert leaks == []
 
 
 def test_roundtrip_save_load_equivalente(monkeypatch, tmp_path):
     import persistence
+
     monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
     st = _base()
     st["game_id"] = str(uuid.uuid4())
@@ -155,6 +184,7 @@ def test_roundtrip_save_load_equivalente(monkeypatch, tmp_path):
 
 
 # --- Etapa 4 — integração no runner ----------------------------------------
+
 
 def test_campanha_com_invariantes_zero_errors():
     for profile in ("explorador", "comerciante"):

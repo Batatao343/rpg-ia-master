@@ -3,6 +3,7 @@
 Offline. Cobre: ação barrada com queda pendente (409), Continuar (restaura do
 checkpoint), Aceitar (memorial), e sem-pendência (409).
 """
+
 import uuid
 
 import pytest
@@ -28,15 +29,30 @@ def saves_dir(tmp_path, monkeypatch):
 def _state(gid, *, hp, gold, death_pending=False, game_over=False, turn=8):
     return {
         "game_id": gid,
-        "player": {"name": "Kael", "class_name": "Sangromante", "race": "Humano",
-                   "level": 2, "hp": hp, "max_hp": 30, "gold": gold, "defense": 12,
-                   "inventory": [], "known_abilities": ["ataque_basico"],
-                   "equipment": {"weapon": None, "armor": None, "accessory": None}},
-        "world": {"current_location": "Cripta", "current_location_id": "pm_cripta_afogada",
-                  "turn_count": turn, "danger_level": 4, "world_clock": {"day": 3}},
+        "player": {
+            "name": "Kael",
+            "class_name": "Sangromante",
+            "race": "Humano",
+            "level": 2,
+            "hp": hp,
+            "max_hp": 30,
+            "gold": gold,
+            "defense": 12,
+            "inventory": [],
+            "known_abilities": ["ataque_basico"],
+            "equipment": {"weapon": None, "armor": None, "accessory": None},
+        },
+        "world": {
+            "current_location": "Cripta",
+            "current_location_id": "pm_cripta_afogada",
+            "turn_count": turn,
+            "danger_level": 4,
+            "world_clock": {"day": 3},
+        },
         "messages": [HumanMessage(content="luto"), AIMessage(content="☠️ Você tomba.")],
         "campaign_plan": {"beats": []},
-        "death_pending": death_pending, "game_over": game_over,
+        "death_pending": death_pending,
+        "game_over": game_over,
     }
 
 
@@ -55,7 +71,7 @@ def test_death_continue_restaura_do_checkpoint(client, saves_dir):
     r = client.post("/game/death", json={"game_id": gid, "choice": "continue"})
     assert r.status_code == 200
     body = r.json()
-    assert body["player_stats"]["hp"] == 30       # restaurou o checkpoint
+    assert body["player_stats"]["hp"] == 30  # restaurou o checkpoint
     assert body["player_stats"]["gold"] == 200
     assert body["death_pending"] is False
     # save vivo agora reflete o restaurado, sem game_over
@@ -71,9 +87,7 @@ def test_death_accept_vira_memorial(client, saves_dir):
     assert r.status_code == 200
     reloaded = persistence.load_game_state(persistence.save_path(gid))
     assert reloaded.get("game_over") is True and not reloaded.get("death_pending")
-    assert [event["type"] for event in reloaded.get("event_log", [])].count(
-        "player_died"
-    ) == 1
+    assert [event["type"] for event in reloaded.get("event_log", [])].count("player_died") == 1
     # memorial: ação seguinte é barrada (409)
     assert client.post("/game/action", json={"input_text": "x", "game_id": gid}).status_code == 409
 

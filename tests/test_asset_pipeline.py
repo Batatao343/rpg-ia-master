@@ -33,6 +33,13 @@ def test_pipeline_rejeita_bytes_falsos_e_gates_segredo():
 
 def test_object_key_e_server_side_e_sanitizada():
     owner, game, asset = uuid4(), uuid4(), uuid4()
-    key = object_key(owner_id=owner, game_id=game, asset_kind="npc",
-                     entity_id="Lady Áurea", asset_id=asset, variant="thumb", sha256="a" * 64)
+    key = object_key(
+        owner_id=owner,
+        game_id=game,
+        asset_kind="npc",
+        entity_id="Lady Áurea",
+        asset_id=asset,
+        variant="thumb",
+        sha256="a" * 64,
+    )
     assert ".." not in key and key.startswith(f"users/{owner}/games/{game}/npc/")

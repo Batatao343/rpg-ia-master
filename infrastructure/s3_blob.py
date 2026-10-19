@@ -17,6 +17,7 @@ class S3BlobStore:
     def _metric(operation: str, success: bool = True) -> None:
         from observability.metrics import metrics
         from observability.telemetry import span
+
         outcome = "ok" if success else "error"
         metrics.increment(
             "rpg_blob_operations_total",
@@ -32,7 +33,9 @@ class S3BlobStore:
             self._metric("put", False)
             raise Conflict("hash do blob divergiu")
         self.client.put_object(
-            Bucket=self.bucket, Key=key, Body=data,
+            Bucket=self.bucket,
+            Key=key,
+            Body=data,
             ContentType=metadata.content_type,
             Metadata={
                 "owner-id": str(metadata.owner_id),
@@ -53,7 +56,8 @@ class S3BlobStore:
         if not 1 <= expires_seconds <= 3600:
             raise ValueError("expiração deve estar entre 1 e 3600 segundos")
         signed = self.client.generate_presigned_url(
-            "get_object", Params={"Bucket": self.bucket, "Key": key},
+            "get_object",
+            Params={"Bucket": self.bucket, "Key": key},
             ExpiresIn=expires_seconds,
         )
         self._metric("sign")

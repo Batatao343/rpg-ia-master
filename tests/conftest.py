@@ -1,6 +1,7 @@
 """Config de testes: força o modo simulado (MockLLM) para a suíte ser
 determinística e offline — independente de haver GOOGLE_API_KEY no ambiente
 (evita falhas por quota/rede). O comportamento de jogo real não muda."""
+
 import os
 
 import pytest
@@ -16,8 +17,18 @@ os.environ.setdefault("RPG_PLAY_ACCOUNT_KEY", "test-play-account-key-0123456789a
 
 
 # SPEC-218 R10: marcadores de plataforma/bind do ambiente do dev/CI nunca vazam para a suíte.
-_EXPOSURE_ENV = ("VERCEL", "PORT", "RAILWAY_ENVIRONMENT", "RENDER", "K_SERVICE", "FLY_APP_NAME",
-                 "DYNO", "RPG_BIND_HOST", "RPG_HOST", "RPG_ALLOW_LEGACY_EXPOSED")
+_EXPOSURE_ENV = (
+    "VERCEL",
+    "PORT",
+    "RAILWAY_ENVIRONMENT",
+    "RENDER",
+    "K_SERVICE",
+    "FLY_APP_NAME",
+    "DYNO",
+    "RPG_BIND_HOST",
+    "RPG_HOST",
+    "RPG_ALLOW_LEGACY_EXPOSED",
+)
 # Revisao Astra: limpar TAMBEM no import do conftest — `import api` acontece na coleta
 # (antes de qualquer fixture), e o boot policy roda no import do api.
 for _name in _EXPOSURE_ENV:
@@ -98,6 +109,7 @@ def _no_real_embeddings(monkeypatch, request):
     if any(m in request.node.nodeid for m in ("test_embeddings_provider", "test_npc_memory")):
         return
     import rag
+
     monkeypatch.setattr(rag, "get_embeddings", lambda: None, raising=False)
     monkeypatch.setattr(rag, "_embeddings_for_index", lambda _p: None, raising=False)
 
@@ -142,6 +154,7 @@ def _force_request_rls(monkeypatch):
                 return fn(self, *args, **kwargs)
             with principal_scope(principal):
                 return fn(self, *args, **kwargs)
+
         return wrapper
 
     from infrastructure.pgvector_memory import PgVectorMemoryStore
@@ -169,13 +182,19 @@ def _force_request_rls(monkeypatch):
                 return fn(self, claim, *args, **kwargs)
             with principal_scope(principal):
                 return fn(self, claim, *args, **kwargs)
+
         return wrapper
 
     for name in ("complete", "fail", "heartbeat", "is_completed"):
-        monkeypatch.setattr(PostgresTurnCoordinator, name, claim_scoped(getattr(PostgresTurnCoordinator, name)))
+        monkeypatch.setattr(
+            PostgresTurnCoordinator, name, claim_scoped(getattr(PostgresTurnCoordinator, name))
+        )
 
     for cls, names in (
-        (PostgresGameStore, ("create", "get", "list", "save", "delete", "save_checkpoint", "get_checkpoint")),
+        (
+            PostgresGameStore,
+            ("create", "get", "list", "save", "delete", "save_checkpoint", "get_checkpoint"),
+        ),
         (PostgresTurnCoordinator, ("commit_game", "commit_create", "commit_delete", "receipt")),
         (PgVectorMemoryStore, ("stage", "query")),
         (ChronicleRepository, ("append", "compress", "search")),

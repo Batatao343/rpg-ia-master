@@ -1,4 +1,5 @@
 """Bind derived writes to the worker's current database fencing token."""
+
 from __future__ import annotations
 
 from collections.abc import Iterator

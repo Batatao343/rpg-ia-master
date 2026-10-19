@@ -5,6 +5,7 @@
 estático legível no GitHub/editor. Comparação opcional com um run baseline
 produz deltas de erros/violações/latência/custo. 100% offline; zero dep nova.
 """
+
 from __future__ import annotations
 
 import glob
@@ -18,10 +19,10 @@ from typing import Dict, List, Optional, Tuple
 @dataclass
 class RunReport:
     run_id: str
-    campaigns: list[dict]                 # summaries
+    campaigns: list[dict]  # summaries
     top_violations: list[tuple[str, int]]
-    top_errors: list[tuple[str, int]]     # por rota do grafo
-    deltas: dict | None                # vs baseline (None sem baseline)
+    top_errors: list[tuple[str, int]]  # por rota do grafo
+    deltas: dict | None  # vs baseline (None sem baseline)
     mock_any: bool = False
     status: str = "legacy"
     complete: bool = True
@@ -65,7 +66,9 @@ def _totais(summaries: list[dict]) -> dict:
         "violations": sum(sum(s.get("violations", {}).values()) for s in summaries),
         "cost_usd": round(sum(float(s.get("cost_usd_total", 0.0)) for s in summaries), 6),
         "deaths": sum(int(s.get("deaths", 0)) for s in summaries),
-        "latency_p95_max": max((int(s.get("latency_ms", {}).get("p95", 0)) for s in summaries), default=0),
+        "latency_p95_max": max(
+            (int(s.get("latency_ms", {}).get("p95", 0)) for s in summaries), default=0
+        ),
         # spec balanceamento-early-game (R5)
         "replans": sum(int(s.get("replan_count", 0) or 0) for s in summaries),
         "downed": sum(int(s.get("downed_count", 0) or 0) for s in summaries),
@@ -91,15 +94,26 @@ def aggregate(run_dir: str, baseline_dir: str | None = None) -> RunReport:
     if baseline_dir:
         base = _load_summaries(baseline_dir)
         cur_t, base_t = _totais(summaries), _totais(base)
-        deltas = {k: cur_t.get(k, 0) - base_t.get(k, 0)
-                  for k in ("errors", "violations", "cost_usd", "deaths",
-                            "latency_p95_max", "replans", "downed")}
+        deltas = {
+            k: cur_t.get(k, 0) - base_t.get(k, 0)
+            for k in (
+                "errors",
+                "violations",
+                "cost_usd",
+                "deaths",
+                "latency_p95_max",
+                "replans",
+                "downed",
+            )
+        }
         deltas["baseline_id"] = os.path.basename(os.path.normpath(baseline_dir))
 
     from playtest import telemetry
+
     completeness = telemetry.inspect_run(run_dir)
     return RunReport(
-        run_id=run_id, campaigns=summaries,
+        run_id=run_id,
+        campaigns=summaries,
         top_violations=viol.most_common(10),
         top_errors=errs.most_common(10),
         deltas=deltas,
@@ -115,7 +129,10 @@ def render_transcript(run_dir: str) -> str:
     """Transcrito QUALITATIVO por turno (ação do jogador → rota → narração do
     LLM) de todas as campanhas do run. Serve p/ julgar o PROMPT: coerência,
     repetição, se o narrador ignora estado, se falta algo. Legível no editor."""
-    L: list[str] = [f"# Transcrito de playtest — `{os.path.basename(os.path.normpath(run_dir))}`", ""]
+    L: list[str] = [
+        f"# Transcrito de playtest — `{os.path.basename(os.path.normpath(run_dir))}`",
+        "",
+    ]
     for path in sorted(glob.glob(os.path.join(run_dir, "*.jsonl"))):
         stem = os.path.basename(path)[:-6]  # tira .jsonl
         L.append(f"## Campanha `{stem}`")
@@ -128,9 +145,9 @@ def render_transcript(run_dir: str) -> str:
             continue
         for r in rows:
             prov = r.get("provider")
-            tag = f" · {prov}/{r.get('model','')}" if prov else " · mock"
-            L.append(f"### Turno {r.get('turn')} — rota `{r.get('route','')}`{tag}")
-            L.append(f"**Ação:** {r.get('action','')}")
+            tag = f" · {prov}/{r.get('model', '')}" if prov else " · mock"
+            L.append(f"### Turno {r.get('turn')} — rota `{r.get('route', '')}`{tag}")
+            L.append(f"**Ação:** {r.get('action', '')}")
             err = r.get("error")
             if err:
                 L.append(f"**ERRO:** `{err}`")
@@ -173,11 +190,7 @@ def render_markdown(report: RunReport) -> str:
             L.append(f"> Campanhas incompletas: {rendered}.")
         missing_summaries = details.get("missing_summaries") or []
         if missing_summaries:
-            L.append(
-                "> Summaries ausentes: "
-                + ", ".join(map(str, missing_summaries))
-                + "."
-            )
+            L.append("> Summaries ausentes: " + ", ".join(map(str, missing_summaries)) + ".")
         for label, key in (
             ("Summaries inválidos", "invalid_summaries"),
             ("JSONLs ausentes", "missing_jsonls"),
@@ -191,18 +204,20 @@ def render_markdown(report: RunReport) -> str:
             if values:
                 rendered_values = ", ".join(
                     str(value.get("file") or value.get("field") or value)
-                    if isinstance(value, dict) else str(value)
+                    if isinstance(value, dict)
+                    else str(value)
                     for value in values[:10]
                 )
                 L.append(f"> {label}: {rendered_values}.")
         L.append("")
     if report.mock_any:
-        L.append("> ⚠️ **Contém campanhas em MockLLM** (`mock: true`) — latência/rotas/custo "
-                 "NÃO representam produção. Não compare mock × real.")
+        L.append(
+            "> ⚠️ **Contém campanhas em MockLLM** (`mock: true`) — latência/rotas/custo "
+            "NÃO representam produção. Não compare mock × real."
+        )
         L.append("")
     warning_total = sum(
-        int(summary.get("warning_violations", 0) or 0)
-        for summary in report.campaigns
+        int(summary.get("warning_violations", 0) or 0) for summary in report.campaigns
     )
     if warning_total:
         L.append(
@@ -213,34 +228,40 @@ def render_markdown(report: RunReport) -> str:
 
     L.append("## Por perfil")
     L.append("")
-    L.append("| perfil | seed | turnos | erros | mortes | 1ª morte | downed | "
-             "hp% pós-comb | replans | nível | ouro | locais | "
-             "p50 | p95 | custo USD | fallback | mock |")
+    L.append(
+        "| perfil | seed | turnos | erros | mortes | 1ª morte | downed | "
+        "hp% pós-comb | replans | nível | ouro | locais | "
+        "p50 | p95 | custo USD | fallback | mock |"
+    )
     L.append("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|")
     for s in report.campaigns:
         lat = s.get("latency_ms", {})
         hp_pct = s.get("avg_hp_pct_after_combat")
         L.append(
-            f"| {s.get('profile','?')} | {s.get('seed',0)} | {s.get('turns_completed',0)} "
-            f"| {s.get('errors',0)} | {s.get('deaths',0)} "
+            f"| {s.get('profile', '?')} | {s.get('seed', 0)} | {s.get('turns_completed', 0)} "
+            f"| {s.get('errors', 0)} | {s.get('deaths', 0)} "
             f"| {s.get('first_death_turn') if s.get('first_death_turn') is not None else '—'} "
-            f"| {s.get('downed_count',0)} "
+            f"| {s.get('downed_count', 0)} "
             f"| {f'{hp_pct:.0f}%' if hp_pct is not None else '—'} "
-            f"| {s.get('replan_count',0)} | {s.get('final_level',1)} "
-            f"| {s.get('final_gold',0)} | {s.get('locations_visited',0)} "
-            f"| {lat.get('p50',0)} | {lat.get('p95',0)} | {s.get('cost_usd_total',0.0):.4f} "
-            f"| {s.get('fell_back_turns',0)} | {'sim' if s.get('mock') else 'não'} |")
+            f"| {s.get('replan_count', 0)} | {s.get('final_level', 1)} "
+            f"| {s.get('final_gold', 0)} | {s.get('locations_visited', 0)} "
+            f"| {lat.get('p50', 0)} | {lat.get('p95', 0)} | {s.get('cost_usd_total', 0.0):.4f} "
+            f"| {s.get('fell_back_turns', 0)} | {'sim' if s.get('mock') else 'não'} |"
+        )
     L.append("")
 
     merchant_campaigns = [
-        summary for summary in report.campaigns
+        summary
+        for summary in report.campaigns
         if (summary.get("economy") or {}).get("successful_transactions")
         or str(summary.get("profile") or "").startswith("comerciante")
     ]
     if merchant_campaigns:
         L.append("## Economia — perfil comerciante")
         L.append("")
-        L.append("| seed | compras | vendas | crafts | recusas | mercados | regiões | margem | giro | patrimônio | restocks |")
+        L.append(
+            "| seed | compras | vendas | crafts | recusas | mercados | regiões | margem | giro | patrimônio | restocks |"
+        )
         L.append("|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
         for summary in merchant_campaigns:
             economy = summary.get("economy") or {}
@@ -261,7 +282,7 @@ def render_markdown(report: RunReport) -> str:
     for summary in report.campaigns:
         coverage = summary.get("combat_coverage") or {}
         L.append(
-            f"| {summary.get('profile','?')} "
+            f"| {summary.get('profile', '?')} "
             f"| {coverage.get('executed_turns', 0)} "
             f"| {coverage.get('started', 0)} "
             f"| {coverage.get('ended', 0)} "
@@ -277,8 +298,10 @@ def render_markdown(report: RunReport) -> str:
         L.append("")
         # spec playtest-agente-curioso-entropia (R5): colunas de GASTO real
         # (%ativa, gasto/turno) no lugar do snapshot degenerado.
-        L.append("| perfil | classe | início | turnos | mortes | nível final | %ativa | "
-                 "gasto/turno | starvation | flooding | Carga pico | Carga final | patamar |")
+        L.append(
+            "| perfil | classe | início | turnos | mortes | nível final | %ativa | "
+            "gasto/turno | starvation | flooding | Carga pico | Carga final | patamar |"
+        )
         L.append("|---|---|---|---|---|---|---|---|---|---|---|---|---|")
         for s in with_class:
             ent = s.get("entropy") or {}
@@ -288,16 +311,18 @@ def render_markdown(report: RunReport) -> str:
 
             def _n(v):
                 return f"{v:.2f}" if isinstance(v, (int, float)) else "—"
+
             L.append(
-                f"| {s.get('profile','?')} | {s.get('class_name','?')} "
-                f"| {s.get('start_level',1)} | {s.get('turns_completed',0)} | {s.get('deaths',0)} "
-                f"| {s.get('final_level',1)} "
+                f"| {s.get('profile', '?')} | {s.get('class_name', '?')} "
+                f"| {s.get('start_level', 1)} | {s.get('turns_completed', 0)} | {s.get('deaths', 0)} "
+                f"| {s.get('final_level', 1)} "
                 f"| {_p(ent.get('pct_combat_turns_ability_used'))} "
                 f"| {_n(ent.get('spent_per_combat_turn'))} "
                 f"| {_p(ent.get('starvation_pct_combat'))} "
                 f"| {_p(ent.get('flooding_pct_combat'))} "
-                f"| {ent.get('peak_abyss_charge',0)} | {ent.get('final_abyss_charge',0)} "
-                f"| {ent.get('final_abyss_tier') or '—'} |")
+                f"| {ent.get('peak_abyss_charge', 0)} | {ent.get('final_abyss_charge', 0)} "
+                f"| {ent.get('final_abyss_tier') or '—'} |"
+            )
         L.append("")
 
     # spec playtest-stop-gameover (R4): morte como linha própria (turno/local/causa).
@@ -310,16 +335,19 @@ def render_markdown(report: RunReport) -> str:
         for s in deaths:
             history = list(s.get("deaths_log") or [])
             if not history:
-                history = [{
-                    "turn": s.get("first_death_turn"),
-                    "location": s.get("death_location"),
-                    "cause": s.get("death_cause"),
-                }]
+                history = [
+                    {
+                        "turn": s.get("first_death_turn"),
+                        "location": s.get("death_location"),
+                        "cause": s.get("death_cause"),
+                    }
+                ]
             for death in history:
                 L.append(
-                    f"| {s.get('profile','?')} | {s.get('seed',0)} "
+                    f"| {s.get('profile', '?')} | {s.get('seed', 0)} "
                     f"| {death.get('turn') if death.get('turn') is not None else '—'} "
-                    f"| {death.get('location') or '—'} | {death.get('cause') or '—'} |")
+                    f"| {death.get('location') or '—'} | {death.get('cause') or '—'} |"
+                )
         L.append("")
 
     L.append("## Violações")
@@ -385,12 +413,19 @@ def render_markdown(report: RunReport) -> str:
     L.append("")
 
     if report.deltas:
-        L.append(f"## Deltas vs baseline `{report.deltas.get('baseline_id','?')}`")
+        L.append(f"## Deltas vs baseline `{report.deltas.get('baseline_id', '?')}`")
         L.append("")
         L.append("| métrica | delta |")
         L.append("|---|---|")
-        for k in ("errors", "violations", "deaths", "downed", "replans",
-                  "latency_p95_max", "cost_usd"):
+        for k in (
+            "errors",
+            "violations",
+            "deaths",
+            "downed",
+            "replans",
+            "latency_p95_max",
+            "cost_usd",
+        ):
             if k in report.deltas:
                 L.append(f"| {k} | {_fmt(report.deltas[k])} |")
         L.append("")

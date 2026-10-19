@@ -1,4 +1,5 @@
 """SPEC-250: fallbacks de nos do grafo deixam rastro (`<no>.fallback`) sem mudar o comportamento."""
+
 import json
 import uuid
 
@@ -43,7 +44,7 @@ def test_dedupe_per_turn_but_counted_per_turn(capsys):
         end_fallbacks(token)
     assert len([x for x in _lines(capsys) if x["event"] == "npc.fallback"]) == 1
     assert bucket == ["npc.rag_unavailable"] * 3
-    log_fallback("npc", "rag_unavailable")           # fora de um turno: sem dedupe
+    log_fallback("npc", "rag_unavailable")  # fora de um turno: sem dedupe
     log_fallback("npc", "rag_unavailable")
     assert len([x for x in _lines(capsys) if x["event"] == "npc.fallback"]) == 2
 
@@ -54,15 +55,30 @@ def test_storyteller_with_fallback_llm_logs_structured_invalid(capsys, monkeypat
     import agents.storyteller as st
     import api
     from llm_setup import FallbackLLM
+
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
     api._rate_hits.clear()
     client = TestClient(api.app)
-    gid = client.post("/game/new", json={"name": "Fb", "race": "Humano", "class_name": "Sangromante",
-                                        "region": "Nova Arcádia", "level": 1}).json()["game_id"]
+    gid = client.post(
+        "/game/new",
+        json={
+            "name": "Fb",
+            "race": "Humano",
+            "class_name": "Sangromante",
+            "region": "Nova Arcádia",
+            "level": 1,
+        },
+    ).json()["game_id"]
     monkeypatch.setattr(st, "get_llm", lambda **k: FallbackLLM("sem chave"))
     capsys.readouterr()
-    r = client.post("/game/action", json={"input_text": f"ando pela estrada {SENT}", "game_id": gid,
-                                         "action_id": str(uuid.uuid4())})
+    r = client.post(
+        "/game/action",
+        json={
+            "input_text": f"ando pela estrada {SENT}",
+            "game_id": gid,
+            "action_id": str(uuid.uuid4()),
+        },
+    )
     assert r.status_code == 200, r.text
     lines = _lines(capsys)
     fb = [x for x in lines if x["event"] == "storyteller.fallback"]
@@ -89,13 +105,25 @@ def test_campaign_planner_error_logs_template_used(capsys, monkeypatch):
 
     import agents.campaign_manager as cm
     import api
+
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
     api._rate_hits.clear()
-    gid = TestClient(api.app).post("/game/new", json={
-        "name": "Fb", "race": "Humano", "class_name": "Sangromante",
-        "region": "Nova Arcádia", "level": 1}).json()["game_id"]
+    gid = (
+        TestClient(api.app)
+        .post(
+            "/game/new",
+            json={
+                "name": "Fb",
+                "race": "Humano",
+                "class_name": "Sangromante",
+                "region": "Nova Arcádia",
+                "level": 1,
+            },
+        )
+        .json()["game_id"]
+    )
     state = api.load_game_state(api._resolve_save_file(gid))
-    state["campaign_plan"] = {}                       # sem plano anterior => template
+    state["campaign_plan"] = {}  # sem plano anterior => template
 
     class _Boom:
         def with_structured_output(self, *_a, **_k):
@@ -106,6 +134,8 @@ def test_campaign_planner_error_logs_template_used(capsys, monkeypatch):
     plan = cm._build_plan(state)
     assert plan["beats"]
     # So a linha desta chamada direta (sem request): threads de turno de outros testes carregam request_id.
-    (line,) = [x for x in _lines(capsys) if x["event"] == "campaign.fallback" and not x.get("request_id")]
+    (line,) = [
+        x for x in _lines(capsys) if x["event"] == "campaign.fallback" and not x.get("request_id")
+    ]
     assert line["reason"] == "template_used" and line["error_type"] == "RuntimeError"
     assert SENT not in json.dumps(line)

@@ -67,9 +67,11 @@ Objetivo: **um processo que escuta fora de loopback ou roda em plataforma de hos
 - **Assinaturas**
   ```python
   def exposure_markers(env: Mapping[str, str]) -> set[str]: ...
-  def assert_boot_policy(env: Mapping[str, str]) -> None: ...   # levanta RuntimeError
+  def assert_boot_policy(env: Mapping[str, str]) -> None: ...  # levanta RuntimeError
   def docs_enabled(env: Mapping[str, str] | None = None) -> bool: ...
   def kill_switch_fail_closed_default(profile: str) -> tuple[str, ...]: ...
+
+
   HOSTED_SECURITY_REQUIREMENTS: tuple[Requirement, ...]
   ```
 - **Formato de erro de boot** (stderr, sem valores):

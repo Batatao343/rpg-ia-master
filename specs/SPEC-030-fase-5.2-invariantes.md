@@ -82,14 +82,15 @@ Cada invariante = 1 função, 1 id estável, severidade `error|warning`:
 ```python
 @dataclass
 class Violation:
-    check_id: str          # "vitals.hp_bounds", "economy.unique_dupe", ...
+    check_id: str  # "vitals.hp_bounds", "economy.unique_dupe", ...
     severity: Literal["error", "warning"]
     turn: int
-    message: str           # PT-BR, humano
-    details: dict          # valores brutos p/ debug
+    message: str  # PT-BR, humano
+    details: dict  # valores brutos p/ debug
 
-def check_all(state: dict, prev_state: Optional[dict] = None,
-              turn: int = 0) -> List[Violation]: ...
+
+def check_all(state: dict, prev_state: Optional[dict] = None, turn: int = 0) -> List[Violation]: ...
+
 
 def assert_invariants(state: dict) -> None:
     """Uso em testes: levanta AssertionError com TODAS as violações."""

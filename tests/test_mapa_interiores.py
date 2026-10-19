@@ -16,21 +16,52 @@ from world_utils import apply_travel, find_travel_destination, travel_cost
 # Helpers — mapa fixture injetado em gamedata._LOCATIONS_BY_ID
 # ---------------------------------------------------------------------------
 
+
 def _fixture_map(monkeypatch):
     locs = {
-        "cidade": {"id": "cidade", "name": "Cidade", "region_id": "r1", "danger": 1,
-                   "connections": ["bairro", "ermo", "longe", "taverna"],
-                   "travel_times": {"bairro": 0, "longe": 3},
-                   "tags": ["cidade"]},
-        "bairro": {"id": "bairro", "name": "Bairro", "region_id": "r1", "danger": 1,
-                   "connections": ["cidade"], "tags": []},
-        "ermo": {"id": "ermo", "name": "Ermo", "region_id": "r2", "danger": 3,
-                 "connections": ["cidade"], "tags": []},
-        "longe": {"id": "longe", "name": "Longe", "region_id": "r3", "danger": 2,
-                  "connections": ["cidade"], "tags": []},
-        "taverna": {"id": "taverna", "name": "Taverna do Teste", "kind": "interior",
-                    "parent_id": "cidade", "region_id": "r1", "danger": 0,
-                    "connections": ["cidade"], "tags": ["taverna", "abrigo"]},
+        "cidade": {
+            "id": "cidade",
+            "name": "Cidade",
+            "region_id": "r1",
+            "danger": 1,
+            "connections": ["bairro", "ermo", "longe", "taverna"],
+            "travel_times": {"bairro": 0, "longe": 3},
+            "tags": ["cidade"],
+        },
+        "bairro": {
+            "id": "bairro",
+            "name": "Bairro",
+            "region_id": "r1",
+            "danger": 1,
+            "connections": ["cidade"],
+            "tags": [],
+        },
+        "ermo": {
+            "id": "ermo",
+            "name": "Ermo",
+            "region_id": "r2",
+            "danger": 3,
+            "connections": ["cidade"],
+            "tags": [],
+        },
+        "longe": {
+            "id": "longe",
+            "name": "Longe",
+            "region_id": "r3",
+            "danger": 2,
+            "connections": ["cidade"],
+            "tags": [],
+        },
+        "taverna": {
+            "id": "taverna",
+            "name": "Taverna do Teste",
+            "kind": "interior",
+            "parent_id": "cidade",
+            "region_id": "r1",
+            "danger": 0,
+            "connections": ["cidade"],
+            "tags": ["taverna", "abrigo"],
+        },
     }
     monkeypatch.setattr(gamedata, "_LOCATIONS_BY_ID", locs)
     return locs
@@ -38,15 +69,19 @@ def _fixture_map(monkeypatch):
 
 def _world(loc_id: str = "cidade") -> dict:
     return {
-        "current_location_id": loc_id, "current_location": loc_id.title(),
-        "visited": [loc_id], "world_clock": {"day": 1, "period": "Manhã"},
-        "danger_level": 1, "turn_count": 1,
+        "current_location_id": loc_id,
+        "current_location": loc_id.title(),
+        "visited": [loc_id],
+        "world_clock": {"day": 1, "period": "Manhã"},
+        "danger_level": 1,
+        "turn_count": 1,
     }
 
 
 # ---------------------------------------------------------------------------
 # Etapa 1 — travel_cost + apply_travel
 # ---------------------------------------------------------------------------
+
 
 def test_custo_default_1(monkeypatch):
     locs = _fixture_map(monkeypatch)
@@ -80,7 +115,7 @@ def test_custo_zero_nao_vira_relogio(monkeypatch):
     novo = apply_travel(world, locs["bairro"])
     assert novo["world_clock"] == clock_antes
     assert novo.get("weather_state") == weather_antes
-    assert "bairro" in novo["visited"]          # fog of war revela mesmo assim
+    assert "bairro" in novo["visited"]  # fog of war revela mesmo assim
     assert novo["current_location_id"] == "bairro"
 
 
@@ -101,6 +136,7 @@ def test_sair_do_interior_para_o_pai_custa_zero(monkeypatch):
 # ---------------------------------------------------------------------------
 # Etapa 2 — camada interior
 # ---------------------------------------------------------------------------
+
 
 def test_interior_so_alcancavel_do_pai(monkeypatch):
     _fixture_map(monkeypatch)
@@ -132,6 +168,7 @@ def test_interiors_of(monkeypatch):
 # Etapa 3 — dados reais do repo (R8)
 # ---------------------------------------------------------------------------
 
+
 def _mapa_real() -> list:
     with open(os.path.join("data", "world_map.json"), encoding="utf-8") as f:
         return json.load(f)["locations"]
@@ -147,23 +184,25 @@ def test_mapa_real_valido():
             assert c in by_id, f"{loc['id']}: conexão órfã '{c}'"
         # travel_times só referencia conexões existentes
         for dest, cost in (loc.get("travel_times") or {}).items():
-            assert dest in loc.get("connections", []), \
+            assert dest in loc.get("connections", []), (
                 f"{loc['id']}: travel_time para '{dest}' que não é conexão"
+            )
             assert isinstance(cost, int) and cost >= 0
             # custo 0 fora de interior só entre nós da mesma região
             if cost == 0 and by_id[dest].get("kind") != "interior":
-                assert loc.get("region_id") == by_id[dest].get("region_id"), \
+                assert loc.get("region_id") == by_id[dest].get("region_id"), (
                     f"{loc['id']}->{dest}: custo 0 entre regiões diferentes"
+                )
         # interior bem formado
         if loc.get("kind") == "interior":
             parent = by_id.get(loc.get("parent_id", ""))
-            assert parent and parent.get("kind") != "interior", \
-                f"{loc['id']}: parent_id inválido"
+            assert parent and parent.get("kind") != "interior", f"{loc['id']}: parent_id inválido"
             assert "abrigo" in (loc.get("tags") or []), f"{loc['id']}: interior sem tag abrigo"
             for c in loc.get("connections", []):
-                ok = c == loc.get("parent_id") or \
-                    (by_id[c].get("kind") == "interior" and
-                     by_id[c].get("parent_id") == loc.get("parent_id"))
+                ok = c == loc.get("parent_id") or (
+                    by_id[c].get("kind") == "interior"
+                    and by_id[c].get("parent_id") == loc.get("parent_id")
+                )
                 assert ok, f"{loc['id']}: interior conecta fora do pai ({c})"
 
     # grafo não-interior é conexo
@@ -193,6 +232,7 @@ def test_mapa_real_custos_curados():
 # Etapa 4 — API
 # ---------------------------------------------------------------------------
 
+
 def test_data_map_sem_interiores():
     from fastapi.testclient import TestClient
 
@@ -210,11 +250,16 @@ def test_data_map_sem_interiores():
 def test_world_block_lista_interiores():
     import api
 
-    bloco = api._world_block({"current_location_id": "na_anel_lama",
-                              "current_location": "Anel de Lama"})
+    bloco = api._world_block(
+        {"current_location_id": "na_anel_lama", "current_location": "Anel de Lama"}
+    )
     assert any(i["id"] == "na_taverna_javali" for i in bloco["interiors"]["here"])
     assert bloco["interiors"]["exit_to"] is None
 
-    dentro = api._world_block({"current_location_id": "na_taverna_javali",
-                               "current_location": "Taverna do Javali Dourado"})
+    dentro = api._world_block(
+        {
+            "current_location_id": "na_taverna_javali",
+            "current_location": "Taverna do Javali Dourado",
+        }
+    )
     assert dentro["interiors"]["exit_to"]["id"] == "na_anel_lama"

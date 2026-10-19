@@ -34,7 +34,8 @@ def test_recovery_lists_and_abandons_only_expired_running_operation():
     assert abandon_expired(pool, expired) is False
     with pool.connection() as connection, connection.transaction():
         status = connection.execute(
-            "select status from app.operations where id=%s", (completed,),
+            "select status from app.operations where id=%s",
+            (completed,),
         ).fetchone()["status"]
         assert status == "completed"
         connection.execute("delete from app.operations where id in (%s,%s)", (expired, completed))

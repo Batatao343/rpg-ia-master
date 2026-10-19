@@ -7,6 +7,7 @@ clampa o que entra de fato na mecânica: orçamento em PONTOS por tier
 Também há PISO: encontro fraco em local perigoso é reforçado com criatura
 regional (pick_encounter_enemy, 2.5b). LLM nunca decide a quantidade final.
 """
+
 from typing import Dict, List, Optional, Tuple
 
 TIER_COST = {"minion": 2, "elite": 5, "boss": 12}
@@ -17,6 +18,7 @@ BASE_BY_DANGER = {1: 2, 2: 4, 3: 7, 4: 10}
 
 def tier_cost(enemy: dict) -> int:
     from combat_mechanics import normalize_categoria
+
     return CATEGORIA_COST[normalize_categoria(enemy)]
 
 
@@ -37,9 +39,9 @@ def encounter_budget(player_level: int, danger: int, allies_count: int = 0) -> i
     return min(raw, cap)
 
 
-def clamp_encounter(enemies: list[dict], budget: int,
-                    player_level: int = 0, *,
-                    protected: set | None = None) -> tuple[list[dict], list[str]]:
+def clamp_encounter(
+    enemies: list[dict], budget: int, player_level: int = 0, *, protected: set | None = None
+) -> tuple[list[dict], list[str]]:
     """Corta o excedente do orçamento. Regras: boss NUNCA é cortado; prioriza
     VARIEDADE (1 de cada template antes de repetições); mantém >= 1 inimigo.
     Nível 1 (spec balanceamento-early-game R2.1): no máximo 1 elite — burst de
@@ -58,6 +60,7 @@ def clamp_encounter(enemies: list[dict], budget: int,
 
     def _template(e: dict) -> str:
         import re
+
         return re.sub(r"_\d+$", "", str(e.get("id", e.get("name", "?"))))
 
     # variedade primeiro: 1ª instância de cada template, depois repetições
@@ -80,13 +83,17 @@ def clamp_encounter(enemies: list[dict], budget: int,
             kept.append(e)
             spent += c
     cut = [e for e in enemies if e not in kept]
-    logs = ([f"Apenas {len(kept)} inimigo(s) alcançam você — o resto se perde na confusão."]
-            if cut else [])
+    logs = (
+        [f"Apenas {len(kept)} inimigo(s) alcançam você — o resto se perde na confusão."]
+        if cut
+        else []
+    )
     return kept, logs
 
 
-def fill_encounter(enemies: list[dict], budget: int, loc: dict, danger: int,
-                   turn: int = 0, make_instance=None) -> tuple[list[dict], list[str]]:
+def fill_encounter(
+    enemies: list[dict], budget: int, loc: dict, danger: int, turn: int = 0, make_instance=None
+) -> tuple[list[dict], list[str]]:
     """PISO (budget/2): local perigoso reforça encontro fraco com criatura regional.
     `make_instance(entry, i)` transforma a entrada do bestiário em instância de
     combate (injetado pelo chamador para reusar o pipeline do spawn)."""

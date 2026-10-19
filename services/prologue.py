@@ -41,12 +41,15 @@ class SeedNPC(BaseModel):
 
 class StartScenario(BaseModel):
     prologue: str = Field(description="Prólogo para o JOGADOR, 2ª pessoa, 100-180 palavras, pt-BR")
-    opening_scene_brief: str = Field(description="Brief para o narrador: local, situação e tensão da 1ª cena (2-4 frases)")
+    opening_scene_brief: str = Field(
+        description="Brief para o narrador: local, situação e tensão da 1ª cena (2-4 frases)"
+    )
     arc_title: str = Field(description="Título do arco, 3-6 palavras, pt-BR")
     beats: list[str] = Field(description="3 a 5 beats pessoais, 1-2 frases cada")
     climax: str = Field(description="Clímax do arco em 1-2 frases")
-    seed_npcs: list[SeedNPC] = Field(default_factory=list,
-                                     description="0 a 2 NPCs novos da história pessoal")
+    seed_npcs: list[SeedNPC] = Field(
+        default_factory=list, description="0 a 2 NPCs novos da história pessoal"
+    )
 
 
 # --- Borda da API (R4): limites ESTRITOS — excedente do client vira 422.
@@ -73,9 +76,11 @@ def _region_context(region_name: str) -> str:
     onboarding = load_json_data("onboarding.json") or {}
     for card in (onboarding.get("regions") or {}).values():
         if card.get("name") == region_name:
-            return (f"Região: {region_name}. {card.get('tagline', '')} "
-                    f"{card.get('description', '')} Gancho típico: {card.get('hook', '')} "
-                    f"Bônus inicial: {card.get('bonus', '')}")
+            return (
+                f"Região: {region_name}. {card.get('tagline', '')} "
+                f"{card.get('description', '')} Gancho típico: {card.get('hook', '')} "
+                f"Bônus inicial: {card.get('bonus', '')}"
+            )
     origins = load_json_data("origins.json") or {}
     for r in origins.get("regions") or []:
         if r.get("name") == region_name:
@@ -137,8 +142,9 @@ def _normalize(scenario: StartScenario, char_input: dict) -> StartScenario:
     data["prologue"] = (data.get("prologue") or "").strip()[:2000]
     data["opening_scene_brief"] = (data.get("opening_scene_brief") or "").strip()[:1200]
     data["climax"] = (data.get("climax") or "").strip()[:300]
-    data["arc_title"] = ((data.get("arc_title") or "").strip() or
-                         default_chapter_title(char_input.get("region", "")))[:80]
+    data["arc_title"] = (
+        (data.get("arc_title") or "").strip() or default_chapter_title(char_input.get("region", ""))
+    )[:80]
     beats = [b.strip()[:MAX_BEAT_CHARS] for b in (data.get("beats") or []) if b and b.strip()]
     if not beats:
         beats = [b[:MAX_BEAT_CHARS] for b in fallback_scenario(char_input).beats]
@@ -163,41 +169,46 @@ def build_start_scenario(char_input: dict) -> tuple[StartScenario, bool]:
 
     region_ctx = _region_context(char_input.get("region", ""))
     class_ctx = _class_context(char_input.get("class_name", ""))
-    system_msg = SystemMessage(content=(
-        "<PERSONA>\n"
-        "Você é o motor de cenários de abertura de um RPG dark fantasy no mundo "
-        "de Valoria. Você transforma a ficha e a descrição livre do jogador num "
-        "início de campanha pessoal e concreto.\n"
-        "<CONTEXTO>\n"
-        f"{region_ctx}\n"
-        f"{class_ctx}\n"
-        f"Raça: {char_input.get('race', '')}.\n"
-        "<REGRAS>\n"
-        "1. IDIOMA (OBRIGATÓRIO): TUDO em português do Brasil (pt-BR) — prólogo, "
-        "beats, arc_title, clímax, NPCs. NUNCA em inglês.\n"
-        "2. A cena de abertura é CONCRETA e acontece NA região escolhida.\n"
-        "3. Os beats são PESSOAIS: ligados à descrição do jogador, não à trama "
-        "global do mundo.\n"
-        "4. NPCs (0 a 2) são NOVOS, inventados para a história pessoal do "
-        "personagem — não cite personagens nomeados do lore além da própria região.\n"
-        "5. O prólogo fala com o JOGADOR em 2ª pessoa, 100-180 palavras.\n"
-        "6. `opening_scene_brief` é instrução para o narrador: local, situação e "
-        "tensão imediata da primeira cena.\n"
-        "7. `arc_title`: 3-6 palavras, evocativo.\n"
-        "8. `attitude` de cada NPC: EXATAMENTE uma palavra — hostil, neutro ou "
-        "aliado.\n"
-        "9. Seja conciso: clímax em 1-2 frases; cada beat em 1-2 frases."
-    ))
-    backstory = (char_input.get("backstory") or "").strip() or \
-        "(nenhuma — crie um início coerente e genérico da região para esta classe)"
-    human_msg = HumanMessage(content=(
-        f"Nome: {char_input.get('name', 'Herói')}\n"
-        f"Raça: {char_input.get('race', '')}\n"
-        f"Classe: {char_input.get('class_name', '')}\n"
-        f"Nível: {char_input.get('level', 1)}\n"
-        f"Região inicial: {char_input.get('region', '')}\n"
-        f"Descrição livre do jogador: {backstory}"
-    ))
+    system_msg = SystemMessage(
+        content=(
+            "<PERSONA>\n"
+            "Você é o motor de cenários de abertura de um RPG dark fantasy no mundo "
+            "de Valoria. Você transforma a ficha e a descrição livre do jogador num "
+            "início de campanha pessoal e concreto.\n"
+            "<CONTEXTO>\n"
+            f"{region_ctx}\n"
+            f"{class_ctx}\n"
+            f"Raça: {char_input.get('race', '')}.\n"
+            "<REGRAS>\n"
+            "1. IDIOMA (OBRIGATÓRIO): TUDO em português do Brasil (pt-BR) — prólogo, "
+            "beats, arc_title, clímax, NPCs. NUNCA em inglês.\n"
+            "2. A cena de abertura é CONCRETA e acontece NA região escolhida.\n"
+            "3. Os beats são PESSOAIS: ligados à descrição do jogador, não à trama "
+            "global do mundo.\n"
+            "4. NPCs (0 a 2) são NOVOS, inventados para a história pessoal do "
+            "personagem — não cite personagens nomeados do lore além da própria região.\n"
+            "5. O prólogo fala com o JOGADOR em 2ª pessoa, 100-180 palavras.\n"
+            "6. `opening_scene_brief` é instrução para o narrador: local, situação e "
+            "tensão imediata da primeira cena.\n"
+            "7. `arc_title`: 3-6 palavras, evocativo.\n"
+            "8. `attitude` de cada NPC: EXATAMENTE uma palavra — hostil, neutro ou "
+            "aliado.\n"
+            "9. Seja conciso: clímax em 1-2 frases; cada beat em 1-2 frases."
+        )
+    )
+    backstory = (
+        char_input.get("backstory") or ""
+    ).strip() or "(nenhuma — crie um início coerente e genérico da região para esta classe)"
+    human_msg = HumanMessage(
+        content=(
+            f"Nome: {char_input.get('name', 'Herói')}\n"
+            f"Raça: {char_input.get('race', '')}\n"
+            f"Classe: {char_input.get('class_name', '')}\n"
+            f"Nível: {char_input.get('level', 1)}\n"
+            f"Região inicial: {char_input.get('region', '')}\n"
+            f"Descrição livre do jogador: {backstory}"
+        )
+    )
 
     # Guard de resiliência (convenção CRÍTICA): FallbackLLM devolve AIMessage,
     # não StartScenario — isinstance + try/except, nunca 500.
@@ -211,8 +222,7 @@ def build_start_scenario(char_input: dict) -> tuple[StartScenario, bool]:
         return fallback_scenario(char_input), mock
 
 
-def scenario_to_state_seed(scenario: StartScenario, char_input: dict,
-                           start_loc_id: str) -> dict:
+def scenario_to_state_seed(scenario: StartScenario, char_input: dict, start_loc_id: str) -> dict:
     """Traduz cenário aprovado em seed de estado (função pura — R5).
 
     O `/game/new` só aplica: campaign_plan, npcs, mensagem de abertura,
@@ -221,8 +231,11 @@ def scenario_to_state_seed(scenario: StartScenario, char_input: dict,
     from services import npc_layers
 
     region = char_input.get("region", "")
-    beats = [{"description": b.strip()[:MAX_BEAT_CHARS], "status": "pending"}
-             for b in scenario.beats if b and b.strip()]
+    beats = [
+        {"description": b.strip()[:MAX_BEAT_CHARS], "status": "pending"}
+        for b in scenario.beats
+        if b and b.strip()
+    ]
     arc_title = (scenario.arc_title or "").strip() or default_chapter_title(region)
 
     npcs: dict = {}
@@ -230,7 +243,9 @@ def scenario_to_state_seed(scenario: StartScenario, char_input: dict,
     for s in scenario.seed_npcs[:2]:
         att = s.attitude if s.attitude in ATTITUDES else "neutro"
         npc = {
-            "name": s.name, "role": s.role, "persona": s.persona,
+            "name": s.name,
+            "role": s.role,
+            "persona": s.persona,
             "initial_relationship": REL_MAP[att],
             "relationship": REL_MAP[att],
             "location": region,
@@ -238,9 +253,9 @@ def scenario_to_state_seed(scenario: StartScenario, char_input: dict,
             "attributes": {k: 10 for k in ("str", "dex", "con", "int", "wis", "cha")},
             "combat_stats": {"hp": 10, "ac": 10, "attacks": []},
         }
-        npc = npc_layers.ensure_npc_fields(npc, game_id,
-                                           home_location_id=start_loc_id,
-                                           in_scene=True)
+        npc = npc_layers.ensure_npc_fields(
+            npc, game_id, home_location_id=start_loc_id, in_scene=True
+        )
         npc["known_by_player"] = True
         npcs[s.name] = npc
 

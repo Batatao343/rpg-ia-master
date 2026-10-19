@@ -87,10 +87,20 @@ class SceneObject(TypedDict):
     uses_remaining: Optional[int]
     destroyed: bool
 
+
 class EffectSpec(TypedDict):
-    kind: Literal["alter_terrain","block_route","unblock_route","damage",
-                  "request_reaction","apply_condition","reposition",
-                  "spawn_reinforcement","destroy_object","change_environment_condition"]
+    kind: Literal[
+        "alter_terrain",
+        "block_route",
+        "unblock_route",
+        "damage",
+        "request_reaction",
+        "apply_condition",
+        "reposition",
+        "spawn_reinforcement",
+        "destroy_object",
+        "change_environment_condition",
+    ]
     params: Dict
 ```
 

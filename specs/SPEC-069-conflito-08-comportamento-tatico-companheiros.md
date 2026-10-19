@@ -101,9 +101,10 @@ inimigo (`conflito-16`).
 ```python
 class Priority(TypedDict):
     trigger: str
-    tipo: Literal["obrigatorio","oferta","restricao","autonomo"]
+    tipo: Literal["obrigatorio", "oferta", "restricao", "autonomo"]
     action_hint: str
-    resistance: Literal["flexivel","resistente","absoluta","autonoma"]
+    resistance: Literal["flexivel", "resistente", "absoluta", "autonoma"]
+
 
 class TacticalProfile(TypedDict):
     priorities: List[Priority]  # ordem = precedência

@@ -26,7 +26,9 @@ import httpx
 from scripts.staging import common
 
 API = "https://api.supabase.com/v1"
-TURNSTILE_TEST_SECRET = "1x0000000000000000000000000000000AA"  # Cloudflare documented always-pass TEST secret
+TURNSTILE_TEST_SECRET = (
+    "1x0000000000000000000000000000000AA"  # Cloudflare documented always-pass TEST secret
+)
 # Conservative staging defaults. The backend shares one egress IP, so per-IP limits
 # (verify/token_refresh/otp) leave headroom for the A/B smoke; email_sent protects SMTP quota.
 RATE_LIMITS = {
@@ -64,7 +66,9 @@ def validate_redirects(redirects: list[str]) -> None:
     for url in redirects:
         if "*" in url:
             raise common.GuardError(f"uri_allow_list com curinga recusado: {url}")
-        if url.startswith("http://") and not url.startswith(("http://localhost", "http://127.0.0.1")):
+        if url.startswith("http://") and not url.startswith(
+            ("http://localhost", "http://127.0.0.1")
+        ):
             raise common.GuardError(f"uri_allow_list http:// fora de localhost recusado: {url}")
 
 
@@ -89,19 +93,26 @@ def template_config(root=common.ROOT) -> dict[str, str]:
     for name, api_name in TEMPLATES.items():
         tpl = cfg["auth"]["email"]["template"][name]
         out[f"mailer_subjects_{api_name}"] = tpl["subject"]
-        out[f"mailer_templates_{api_name}_content"] = (root / tpl["content_path"]).read_text(encoding="utf-8")
+        out[f"mailer_templates_{api_name}_content"] = (root / tpl["content_path"]).read_text(
+            encoding="utf-8"
+        )
     return out
 
 
 def desired_config(env: Mapping[str, str], turnstile_test_keys: bool = False) -> dict[str, Any]:
     secret = next((env[k] for k in TURNSTILE_SECRET_ENV if env.get(k)), "") or (
-        TURNSTILE_TEST_SECRET if turnstile_test_keys else "")
+        TURNSTILE_TEST_SECRET if turnstile_test_keys else ""
+    )
     if not secret:
-        raise common.GuardError("RPG_STAGING_TURNSTILE_SECRET ausente (ou use --turnstile-test-keys)")
+        raise common.GuardError(
+            "RPG_STAGING_TURNSTILE_SECRET ausente (ou use --turnstile-test-keys)"
+        )
     site = env.get("RPG_STAGING_SITE_URL")
     if not site:
         raise common.GuardError("RPG_STAGING_SITE_URL ausente")
-    redirects = [u.strip() for u in env.get("RPG_STAGING_REDIRECT_URLS", site).split(",") if u.strip()]
+    redirects = [
+        u.strip() for u in env.get("RPG_STAGING_REDIRECT_URLS", site).split(",") if u.strip()
+    ]
     validate_redirects(redirects)
     cfg: dict[str, Any] = {
         "mailer_autoconfirm": False,
@@ -130,8 +141,10 @@ def diff_config(current: Mapping[str, Any], desired: Mapping[str, Any]) -> dict[
 
 
 def redacted_diff(diff: Mapping[str, dict]) -> dict:
-    return {k: {"from": v["from"], "to": common.REDACTED if k in SECRET_FIELDS else v["to"]}
-            for k, v in diff.items()}
+    return {
+        k: {"from": v["from"], "to": common.REDACTED if k in SECRET_FIELDS else v["to"]}
+        for k, v in diff.items()
+    }
 
 
 class AuthConfigClient:
@@ -156,13 +169,23 @@ class AuthConfigClient:
         return r.status_code, "" if r.is_success else common.redact(r.text[:300])
 
 
-def run(mode: str, ref: str, env: Mapping[str, str], client: httpx.Client | None = None,
-        turnstile_test_keys: bool = False) -> dict:
+def run(
+    mode: str,
+    ref: str,
+    env: Mapping[str, str],
+    client: httpx.Client | None = None,
+    turnstile_test_keys: bool = False,
+) -> dict:
     api = AuthConfigClient(ref, common.env_required("SUPABASE_ACCESS_TOKEN", env), client)
     want = desired_config(env, turnstile_test_keys)
     diff = diff_config(api.get(), want)
-    result: dict[str, Any] = {"project_ref": ref, "mode": mode, "diff": redacted_diff(diff),
-                              "turnstile_test_keys": bool(turnstile_test_keys), "applied": False}
+    result: dict[str, Any] = {
+        "project_ref": ref,
+        "mode": mode,
+        "diff": redacted_diff(diff),
+        "turnstile_test_keys": bool(turnstile_test_keys),
+        "applied": False,
+    }
     if mode == "apply" and diff:
         # Field groups are applied separately so one plan-gated field (e.g. an
         # email rate limit that requires custom SMTP) cannot block the rest.

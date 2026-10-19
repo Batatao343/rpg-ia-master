@@ -1,4 +1,5 @@
 """Request-scoped outbox: no SQL effects escape the canonical commit."""
+
 from __future__ import annotations
 
 from collections.abc import Callable, Iterator
@@ -23,28 +24,53 @@ class TurnEffects:
         with self._lock:
             self._writes.append(write)
 
-    def flush(self, connection: Any, *, memory_store: Any, principal: Principal,
-              game_id: UUID, epoch: int, version: int) -> None:
+    def flush(
+        self,
+        connection: Any,
+        *,
+        memory_store: Any,
+        principal: Principal,
+        game_id: UUID,
+        epoch: int,
+        version: int,
+    ) -> None:
         for intent in self.memory.drain():
             if intent.game_id != game_id or intent.principal != principal:
-                raise Conflict('effect_scope_mismatch')
+                raise Conflict("effect_scope_mismatch")
             metadata = dict(intent.document.metadata)
-            for name in ('provenance', 'confidence', 'source_id', 'source_turn', 'canonical_entity_ids'):
-                if f'memory_{name}' in metadata:
-                    metadata[name] = metadata[f'memory_{name}']
-            if 'memory_entity_ids' in metadata:
-                metadata['canonical_entity_ids'] = [
-                    value.strip() for value in str(metadata['memory_entity_ids']).split(',') if value.strip()
+            for name in (
+                "provenance",
+                "confidence",
+                "source_id",
+                "source_turn",
+                "canonical_entity_ids",
+            ):
+                if f"memory_{name}" in metadata:
+                    metadata[name] = metadata[f"memory_{name}"]
+            if "memory_entity_ids" in metadata:
+                metadata["canonical_entity_ids"] = [
+                    value.strip()
+                    for value in str(metadata["memory_entity_ids"]).split(",")
+                    if value.strip()
                 ]
             metadata.update(commit_version=version, timeline_epoch=epoch)
-            memory_store.stage_on(connection, replace(intent, timeline_epoch=epoch,
-                document=replace(intent.document, metadata=metadata,
-                    document_id=f'{intent.document.document_id}:epoch:{epoch}')))
+            memory_store.stage_on(
+                connection,
+                replace(
+                    intent,
+                    timeline_epoch=epoch,
+                    document=replace(
+                        intent.document,
+                        metadata=metadata,
+                        document_id=f"{intent.document.document_id}:epoch:{epoch}",
+                    ),
+                ),
+            )
         for write in self._writes:
             write(connection, epoch, version)
 
 
-_effects: ContextVar[TurnEffects | None] = ContextVar('turn_effects', default=None)
+_effects: ContextVar[TurnEffects | None] = ContextVar("turn_effects", default=None)
 
 
 def current_effects() -> TurnEffects | None:

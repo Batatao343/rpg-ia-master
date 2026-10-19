@@ -101,7 +101,7 @@ Estado do mundo entra no comércio: local controlado por fação hostil ao jogad
 ```python
 class TradeIntent(BaseModel):
     mode: Literal["buy", "sell", "craft"]
-    item_ref: str          # nome livre dito pelo jogador; Python resolve -> id
+    item_ref: str  # nome livre dito pelo jogador; Python resolve -> id
     qty: int = 1
 ```
 

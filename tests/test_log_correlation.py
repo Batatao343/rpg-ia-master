@@ -1,4 +1,5 @@
 """SPEC-240: correlação automática (request_id / action_ref / game_ref) em toda linha."""
+
 import json
 import threading
 import uuid
@@ -18,17 +19,27 @@ from observability.telemetry import (
 @pytest.fixture()
 def client(monkeypatch):
     import api
+
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
     api._rate_hits.clear()
     logging_setup.configure_logging({"RPG_LOG_LEVEL": "debug", "RPG_LOG_PROPAGATE": "1"})
     from fastapi.testclient import TestClient
+
     return TestClient(api.app)
 
 
 def _new_game(client) -> str:
-    r = client.post("/game/new", json={
-        "name": "Streamer", "race": "Humano", "class_name": "Sangromante",
-        "region": "Nova Arcádia", "level": 1, "backstory": ""})
+    r = client.post(
+        "/game/new",
+        json={
+            "name": "Streamer",
+            "race": "Humano",
+            "class_name": "Sangromante",
+            "region": "Nova Arcádia",
+            "level": 1,
+            "backstory": "",
+        },
+    )
     assert r.status_code == 200, r.text
     return r.json()["game_id"]
 
@@ -83,17 +94,20 @@ def test_bind_correlation_sets_game_and_action():
     with correlation_scope(request_id="req-bind-001"):
         bind_correlation(game_id="g1", action_id="a1")
         from observability.telemetry import correlation
+
         c = correlation()
     assert c["game_ref"] == pseudonym("g1") and c["action_ref"] == pseudonym("a1")
 
 
 def test_jev_shadow_line_has_action_ref(monkeypatch, capsys):
     from services import jev_rollout
+
     logging_setup.configure_logging({})
     seen = {}
 
     def fake_eval(*_a):
         from observability.telemetry import correlation
+
         seen.update(correlation())
         raise RuntimeError("stop")
 
@@ -108,15 +122,22 @@ def test_jev_shadow_line_has_action_ref(monkeypatch, capsys):
 
 
 def _turn_lines(lines, rid):
-    return [l for l in lines if l.get("request_id") == rid and str(l.get("logger", "")).startswith("rpg.")]
+    return [
+        l
+        for l in lines
+        if l.get("request_id") == rid and str(l.get("logger", "")).startswith("rpg.")
+    ]
 
 
 def test_turn_lines_share_action_ref(client, capsys):
     gid = _new_game(client)
     capsys.readouterr()
     action = str(uuid.uuid4())
-    r = client.post("/game/action", headers={"X-Request-ID": "test-req-0001"},
-                    json={"input_text": "olho ao redor", "game_id": gid, "action_id": action})
+    r = client.post(
+        "/game/action",
+        headers={"X-Request-ID": "test-req-0001"},
+        json={"input_text": "olho ao redor", "game_id": gid, "action_id": action},
+    )
     assert r.status_code == 200 and r.headers["X-Request-ID"] == "test-req-0001"
     lines = _turn_lines(_stdout_lines(capsys), "test-req-0001")
     assert len({l["event"] for l in lines}) >= 2, [l["event"] for l in lines]
@@ -131,8 +152,12 @@ def test_sse_worker_lines_have_request_id(client, capsys):
     gid = _new_game(client)
     capsys.readouterr()
     action = str(uuid.uuid4())
-    with client.stream("POST", "/game/action/stream", headers={"X-Request-ID": "test-req-0002"},
-                       json={"input_text": "olho ao redor", "game_id": gid, "action_id": action}) as r:
+    with client.stream(
+        "POST",
+        "/game/action/stream",
+        headers={"X-Request-ID": "test-req-0002"},
+        json={"input_text": "olho ao redor", "game_id": gid, "action_id": action},
+    ) as r:
         for _ in r.iter_lines():
             pass
     out = capsys.readouterr().out

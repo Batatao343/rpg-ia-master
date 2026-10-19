@@ -26,24 +26,37 @@ def route_label(path: str, *, routes: Iterable = (), known: Iterable[str] = ()) 
     return "other"
 
 
-def log_body_too_large(path: str, limit: int, declared: int | None = None, *,
-                       routes: Iterable = (), known: Iterable[str] = ()) -> None:
+def log_body_too_large(
+    path: str,
+    limit: int,
+    declared: int | None = None,
+    *,
+    routes: Iterable = (),
+    known: Iterable[str] = (),
+) -> None:
     """SPEC-246 R3: ``http.body_too_large`` + ``rpg_http_body_too_large_total{route}``. Nunca levanta."""
     try:
         from observability.metrics import metrics
         from observability.telemetry import log_event
+
         route = route_label(path, routes=routes, known=known)
         metrics.increment("rpg_http_body_too_large_total", {"route": route})
-        log_event("http", "body_too_large", level="warning", route=route, limit_bytes=int(limit),
-                  declared_bytes=declared)
+        log_event(
+            "http",
+            "body_too_large",
+            level="warning",
+            route=route,
+            limit_bytes=int(limit),
+            declared_bytes=declared,
+        )
     except Exception:  # silent-ok: o log do 413 nunca derruba a resposta
         pass
 
 
-
 class BodyLimitMiddleware:
-    def __init__(self, app, default_limit: int = 256 * 1024,
-                 per_path: Mapping[str, int] | None = None) -> None:
+    def __init__(
+        self, app, default_limit: int = 256 * 1024, per_path: Mapping[str, int] | None = None
+    ) -> None:
         self.app = app
         self.default_limit = int(default_limit)
         self.per_path = dict(per_path or {})
@@ -67,20 +80,31 @@ class BodyLimitMiddleware:
             if started:
                 return
             started = True
-            log_body_too_large(scope.get("path", ""), limit, declared,
-                               routes=getattr(scope.get("app"), "routes", None) or (),
-                               known=self.per_path)
+            log_body_too_large(
+                scope.get("path", ""),
+                limit,
+                declared,
+                routes=getattr(scope.get("app"), "routes", None) or (),
+                known=self.per_path,
+            )
             from observability.telemetry import correlation
-            rid = correlation().get("request_id")   # SPEC-242: envelope unico
+
+            rid = correlation().get("request_id")  # SPEC-242: envelope unico
             payload = {"detail": "payload_too_large", "code": "payload_too_large"}
             if rid:
                 payload["request_id"] = rid
             body = json.dumps(payload).encode()
-            await send({"type": "http.response.start", "status": 413, "headers": [
-                (b"content-type", b"application/json"),
-                (b"content-length", str(len(body)).encode()),
-                (b"connection", b"close"),
-            ]})
+            await send(
+                {
+                    "type": "http.response.start",
+                    "status": 413,
+                    "headers": [
+                        (b"content-type", b"application/json"),
+                        (b"content-length", str(len(body)).encode()),
+                        (b"connection", b"close"),
+                    ],
+                }
+            )
             await send({"type": "http.response.body", "body": body})
 
         if declared is not None and declared > limit:

@@ -70,25 +70,44 @@ Rótulos: **[F]** fato observado no HEAD `6b94f66` · **[D]** decisão de produt
 ```python
 SpeakerKind = Literal["narrator", "npc", "system"]
 ReasonCode = Literal[
-    "meta_to_narrator", "scene_description", "direct_address", "quoted_vocative",
-    "single_in_scene", "continuity_last_speaker", "ambiguous_multi_mediated",
-    "npc_absent_known", "npc_unknown_absent", "generic_role_spawn",
-    "classify_story", "classify_fallback", "action_refused",
+    "meta_to_narrator",
+    "scene_description",
+    "direct_address",
+    "quoted_vocative",
+    "single_in_scene",
+    "continuity_last_speaker",
+    "ambiguous_multi_mediated",
+    "npc_absent_known",
+    "npc_unknown_absent",
+    "generic_role_spawn",
+    "classify_story",
+    "classify_fallback",
+    "action_refused",
 ]
+
 
 @dataclass(frozen=True)
 class InterlocutorResolution:
-    route: str                       # RouteType.value
+    route: str  # RouteType.value
     speaker_kind: SpeakerKind
-    npc_state_key: str | None        # chave em state["npcs"]/party; só se speaker_kind=="npc" ou absent_known
+    npc_state_key: (
+        str | None
+    )  # chave em state["npcs"]/party; só se speaker_kind=="npc" ou absent_known
     mediated_subject_id: str | None  # NPC de quem o narrador fala (R2/R7/R8)
     reason: ReasonCode
-    fallback_hint: str | None        # vira npc_fallback_hint quando npc_unknown_absent
+    fallback_hint: str | None  # vira npc_fallback_hint quando npc_unknown_absent
 
-def pre_classify(state: dict, text: str) -> InterlocutorResolution | None: ...
+
+def pre_classify(state: dict, text: str) -> InterlocutorResolution | None:
+    ...
     # R2/R3 deterministas; None = seguir para CLASSIFY
-def post_classify(state: dict, text: str, route: str, target: str | None) -> InterlocutorResolution: ...
+
+
+def post_classify(state: dict, text: str, route: str, target: str | None) -> InterlocutorResolution:
+    ...
     # R3–R8 sobre a decisão do CLASSIFY
+
+
 def speaker_for_turn(state: dict) -> dict: ...  # R9: {kind,id,name,reason}
 ```
 

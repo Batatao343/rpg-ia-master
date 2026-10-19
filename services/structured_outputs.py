@@ -48,7 +48,9 @@ class ProposedWorldEvent(BaseModel):
     actor_id: str = Field(default="player", description="Quem causou. 'player' ou id canônico.")
     target_id: str = Field(description="Entidade afetada — id EXATO de entities.json.")
     detail: str = Field(default="", description="1 frase objetiva do que aconteceu.")
-    payload: dict = Field(default_factory=dict, description="Dados extras por tipo (ex.: new_controller_id).")
+    payload: dict = Field(
+        default_factory=dict, description="Dados extras por tipo (ex.: new_controller_id)."
+    )
 
 
 class ProposedQuest(BaseModel):
@@ -57,9 +59,16 @@ class ProposedQuest(BaseModel):
     Conclusão de quest reusa `ProposedWorldEvent(type="quest_completed",
     target_id=<quest_id>, payload={"quest_id": ...})`, não este schema.
     """
+
     title: str
     description: str = ""
-    origin_name: str = Field(default="", description="Quem/o que originou a missão (nome exibível).")
-    origin_entity_id: str = Field(default="", description="Id canônico EXATO de entities.json, ou vazio.")
-    location_id: str = Field(default="", description="Id de local EXATO de world_map.json, ou vazio.")
+    origin_name: str = Field(
+        default="", description="Quem/o que originou a missão (nome exibível)."
+    )
+    origin_entity_id: str = Field(
+        default="", description="Id canônico EXATO de entities.json, ou vazio."
+    )
+    location_id: str = Field(
+        default="", description="Id de local EXATO de world_map.json, ou vazio."
+    )
     reward_hint: str = ""

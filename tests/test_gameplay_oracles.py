@@ -1,4 +1,5 @@
 """SPEC-212 Etapa 1: o mapa de nomes da spec reproduz o veredito da regua (paridade)."""
+
 from __future__ import annotations
 
 import json
@@ -10,9 +11,12 @@ from services import gameplay_oracles as oracles
 
 DATASET = Path(__file__).resolve().parents[1] / "evals/datasets/regression/gameplay_gate.jsonl"
 BY_OPERATION = {
-    "turns": oracles.no_duplicate_turns, "secrets": oracles.no_unrevealed_secret,
-    "xp": oracles.xp_not_in_prose, "latency": oracles.latency_present,
-    "speaker": oracles.speaker_matches, "roster": oracles.roster_stable,
+    "turns": oracles.no_duplicate_turns,
+    "secrets": oracles.no_unrevealed_secret,
+    "xp": oracles.xp_not_in_prose,
+    "latency": oracles.latency_present,
+    "speaker": oracles.speaker_matches,
+    "roster": oracles.roster_stable,
 }
 
 
@@ -32,18 +36,36 @@ def test_oracle_parity_with_ruler_dataset(case):
 
 
 def test_post_transport_null_server_ttfmc_ok():
-    turn = {"transport": "post",
-            "client": {"ack_ms": 1, "first_phase_ms": None, "ttfmc_ms": 5, "ttlt_ms": 6, "state_ms": 7},
-            "server": {"transport": "post", "pseudo_streaming": True, "ack_server_ms": 1,
-                       "ttfmc_server_ms": None, "ttlt_server_ms": None,
-                       "phase_ms": {p: 1 for p in ("router", "context", "narrator", "archivist", "persistence")}}}
+    turn = {
+        "transport": "post",
+        "client": {"ack_ms": 1, "first_phase_ms": None, "ttfmc_ms": 5, "ttlt_ms": 6, "state_ms": 7},
+        "server": {
+            "transport": "post",
+            "pseudo_streaming": True,
+            "ack_server_ms": 1,
+            "ttfmc_server_ms": None,
+            "ttlt_server_ms": None,
+            "phase_ms": {
+                p: 1 for p in ("router", "context", "narrator", "archivist", "persistence")
+            },
+        },
+    }
     assert oracles.latency_present({"turns": [turn]}) == []
 
 
 def test_stream_null_server_marks_fail():
-    turn = {"transport": "stream",
-            "client": {"ack_ms": 1, "first_phase_ms": 2, "ttfmc_ms": 5, "ttlt_ms": 6, "state_ms": 7},
-            "server": {"transport": "stream", "pseudo_streaming": True, "ack_server_ms": 1,
-                       "ttfmc_server_ms": None, "ttlt_server_ms": None,
-                       "phase_ms": {p: 1 for p in ("router", "context", "narrator", "archivist", "persistence")}}}
+    turn = {
+        "transport": "stream",
+        "client": {"ack_ms": 1, "first_phase_ms": 2, "ttfmc_ms": 5, "ttlt_ms": 6, "state_ms": 7},
+        "server": {
+            "transport": "stream",
+            "pseudo_streaming": True,
+            "ack_server_ms": 1,
+            "ttfmc_server_ms": None,
+            "ttlt_server_ms": None,
+            "phase_ms": {
+                p: 1 for p in ("router", "context", "narrator", "archivist", "persistence")
+            },
+        },
+    }
     assert oracles.latency_present({"turns": [turn]}) == ["latency:null_server_stream"]

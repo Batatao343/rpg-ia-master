@@ -1,4 +1,5 @@
 """SPEC-210 - view de mapa com fog server-side (offline)."""
+
 from __future__ import annotations
 
 import json
@@ -19,8 +20,14 @@ def _state(visited=None, current="nova_arcadia", **world_extra) -> dict:
     world["current_location"] = gamedata.get_location(current)["name"]
     world["visited"] = list(visited or [current])
     world.update(world_extra)
-    return {"game_id": "g", "world": world, "world_projection": {}, "event_log": [],
-            "quests": [], "combat": None}
+    return {
+        "game_id": "g",
+        "world": world,
+        "world_projection": {},
+        "event_log": [],
+        "quests": [],
+        "combat": None,
+    }
 
 
 def _by_id(view):
@@ -75,7 +82,9 @@ def test_assimetria_e_fallback_simetrico():
     state = _state(current="brekmar", visited=["nova_arcadia", "brekmar"])
     view = map_view.build_map_view(state)
     opt = {o["location_id"]: o for o in view["travel_options"]}["nova_arcadia"]
-    assert opt["periods"] == world_utils.travel_cost(state["world"], gamedata.get_location("nova_arcadia"))
+    assert opt["periods"] == world_utils.travel_cost(
+        state["world"], gamedata.get_location("nova_arcadia")
+    )
 
 
 def test_botao_texto_reconhecido_por_find_travel_destination():
@@ -142,7 +151,11 @@ def test_interior_ancora_no_pai_e_nunca_vira_no():
 def test_arte_exata_ou_regional_ou_placeholder():
     view = map_view.build_map_view(_state(visited=["nova_arcadia", "pantano_melancolia"]))
     assert _by_id(view)["nova_arcadia"]["art"]["scope"] == "exact"
-    assert _by_id(view)["pantano_melancolia"]["art"]["scope"] in {"exact", "regional", "placeholder"}
+    assert _by_id(view)["pantano_melancolia"]["art"]["scope"] in {
+        "exact",
+        "regional",
+        "placeholder",
+    }
 
 
 def test_map_version_estavel_e_muda():
@@ -185,11 +198,21 @@ def test_api_endpoint_fog_e_404(monkeypatch):
     from fastapi.testclient import TestClient
 
     import api
+
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
     api._rate_hits.clear()
     client = TestClient(api.app)
-    r = client.post("/game/new", json={"name": "Mapa", "race": "Humano", "class_name": "Sangromante",
-                                       "region": "Nova Arcádia", "level": 1, "backstory": ""})
+    r = client.post(
+        "/game/new",
+        json={
+            "name": "Mapa",
+            "race": "Humano",
+            "class_name": "Sangromante",
+            "region": "Nova Arcádia",
+            "level": 1,
+            "backstory": "",
+        },
+    )
     assert r.status_code == 200, r.text
     gid = r.json()["game_id"]
     m = client.get("/game/map", params={"game_id": gid})
@@ -204,18 +227,26 @@ def test_api_endpoint_fog_e_404(monkeypatch):
             assert loc["name"] not in text
     legacy = client.get("/data/map", params={"game_id": gid}).json()
     assert {loc["id"] for loc in legacy["locations"]} == sent
-    assert client.get("/game/map", params={"game_id": "00000000-0000-4000-8000-000000000000"}).status_code == 404
+    assert (
+        client.get(
+            "/game/map", params={"game_id": "00000000-0000-4000-8000-000000000000"}
+        ).status_code
+        == 404
+    )
     assert client.get("/game/map", params={"game_id": "x"}).status_code == 400
     assert len(client.get("/data/map").json()["locations"]) == len(full)  # global intacto
 
 
 # --- Revisao independente (Sol) ---
 
+
 def test_legado_filtrado_nao_vaza_tesouro_nem_ids_por_travel_times():
     """Visitado nao-ancora: `travel_times`/`treasure` do JSON cru nao podem sair
     (travel_times de brekmar cita costa_negra/ophidia, nao alcancados daqui)."""
-    for visited, current in ((["nova_arcadia", "brekmar"], "nova_arcadia"),
-                             (["pantano_melancolia", "pm_profundezas"], "pantano_melancolia")):
+    for visited, current in (
+        (["nova_arcadia", "brekmar"], "nova_arcadia"),
+        (["pantano_melancolia", "pm_profundezas"], "pantano_melancolia"),
+    ):
         legacy = map_view.legacy_filtered_map(_state(current=current, visited=visited))
         sent = {loc["id"] for loc in legacy["locations"]}
         text = json.dumps(legacy, ensure_ascii=False)
@@ -227,8 +258,10 @@ def test_legado_filtrado_nao_vaza_tesouro_nem_ids_por_travel_times():
 
 
 def test_view_nao_cita_ids_de_locais_nao_alcancados():
-    for visited, current in ((["nova_arcadia", "brekmar"], "nova_arcadia"),
-                             (["pantano_melancolia", "pm_profundezas"], "pantano_melancolia")):
+    for visited, current in (
+        (["nova_arcadia", "brekmar"], "nova_arcadia"),
+        (["pantano_melancolia", "pm_profundezas"], "pantano_melancolia"),
+    ):
         view = map_view.build_map_view(_state(current=current, visited=visited))
         sent = set(_by_id(view)) | {o["location_id"] for o in view["travel_options"]}
         sent |= {i["id"] for i in view["interiors"]["here"]}
@@ -252,13 +285,27 @@ def test_data_map_por_jogo_entra_na_fronteira_de_sessao_e_no_store(monkeypatch):
     from fastapi.testclient import TestClient
 
     import api
+
     assert api._session_scoped_path("/data/map", {"game_id": "x"}) is True
     assert api._session_scoped_path("/data/map", {}) is False
     assert api._session_scoped_path("/game/map", {}) is True
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
     client = TestClient(api.app)
-    r = client.post("/game/new", json={"name": "Mapa", "race": "Humano", "class_name": "Sangromante",
-                                       "region": "Nova Arcádia", "level": 1, "backstory": ""})
+    r = client.post(
+        "/game/new",
+        json={
+            "name": "Mapa",
+            "race": "Humano",
+            "class_name": "Sangromante",
+            "region": "Nova Arcádia",
+            "level": 1,
+            "backstory": "",
+        },
+    )
     gid = r.json()["game_id"]
-    assert client.get("/data/map", params={"game_id": gid}).headers.get("cache-control") == "no-store"
-    assert client.get("/game/map", params={"game_id": gid}).headers.get("cache-control") == "no-store"
+    assert (
+        client.get("/data/map", params={"game_id": gid}).headers.get("cache-control") == "no-store"
+    )
+    assert (
+        client.get("/game/map", params={"game_id": gid}).headers.get("cache-control") == "no-store"
+    )

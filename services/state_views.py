@@ -24,14 +24,21 @@ STABILITY_LABELS = ((-100, "em colapso"), (-30, "instável"), (30, "estável"))
 
 def reputation_history(event_log: list[dict], faction_id: str, limit: int = 20) -> list[dict]:
     """Últimos `limit` eventos `reputation_changed` da fação, em ordem cronológica."""
-    events = [e for e in (event_log or [])
-              if e.get("type") == "reputation_changed" and e.get("target_id") == faction_id]
+    events = [
+        e
+        for e in (event_log or [])
+        if e.get("type") == "reputation_changed" and e.get("target_id") == faction_id
+    ]
     events.sort(key=lambda e: e.get("turn", 0))
     events = events[-limit:]
-    return [{"turn": e.get("turn", 0),
-             "delta": (e.get("payload") or {}).get("delta", 0),
-             "value": (e.get("payload") or {}).get("new_value", 0)}
-            for e in events]
+    return [
+        {
+            "turn": e.get("turn", 0),
+            "delta": (e.get("payload") or {}).get("delta", 0),
+            "value": (e.get("payload") or {}).get("new_value", 0),
+        }
+        for e in events
+    ]
 
 
 def stability_label(projection: dict | None, faction_id: str) -> str:
@@ -47,8 +54,9 @@ def stability_label(projection: dict | None, faction_id: str) -> str:
     return "estável"
 
 
-def recent_control_changes(event_log: list[dict], visited: list[str], current_turn: int,
-                           window: int = RECENT_TURNS) -> list[dict]:
+def recent_control_changes(
+    event_log: list[dict], visited: list[str], current_turn: int, window: int = RECENT_TURNS
+) -> list[dict]:
     """`location_control_changed` recentes em locais visitados (fog of war vale aqui também)."""
     visited_set = set(visited or [])
     out = []
@@ -63,9 +71,13 @@ def recent_control_changes(event_log: list[dict], visited: list[str], current_tu
             continue
         controller_id = (ev.get("payload") or {}).get("new_controller_id", "")
         ent = gr.get_entity(controller_id)
-        out.append({"location_id": loc_id,
-                    "controller_name": (ent or {}).get("name", controller_id),
-                    "turn": turn})
+        out.append(
+            {
+                "location_id": loc_id,
+                "controller_name": (ent or {}).get("name", controller_id),
+                "turn": turn,
+            }
+        )
     return out
 
 
@@ -75,8 +87,13 @@ def active_threats(world: dict | None, current_turn: int) -> list[dict]:
     for a in (world or {}).get("threat_alerts") or []:
         if int(current_turn) - int(a.get("turn", -99)) > _ALERT_TTL:
             continue
-        out.append({"region_id": a.get("region_id", ""), "hint": a.get("hint", ""),
-                    "turn": int(a.get("turn", 0))})
+        out.append(
+            {
+                "region_id": a.get("region_id", ""),
+                "hint": a.get("hint", ""),
+                "turn": int(a.get("turn", 0)),
+            }
+        )
     return out
 
 

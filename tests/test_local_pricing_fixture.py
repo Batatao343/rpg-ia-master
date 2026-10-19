@@ -6,6 +6,7 @@ fixed 10-day window therefore expired on 2026-10-18 00:00 UTC, ten days after
 the card was observed, and every local paid-effect test started returning
 ``image_pricing_unavailable``. Production fail-closed behaviour is unchanged.
 """
+
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone, UTC
@@ -26,10 +27,16 @@ from tests.fakes.local_pricing import installed_card_max_age_seconds
 
 def _version(max_age_seconds: int, now: datetime) -> PricingVersion:
     return PricingVersion(
-        version_id="fixture", shard_budget_unit_brl=Decimal("0.03"), fx_usd_brl=Decimal("5"),
-        fx_source="test", fx_observed_at=now, fx_max_age=timedelta(seconds=864000),
-        fx_buffer_rate=Decimal("0.1"), rate_card_version=RATE_CARD_VERSION,
-        rate_card_sha256=INSTALLED_RATE_CARD_SHA256, rate_card_source="test",
+        version_id="fixture",
+        shard_budget_unit_brl=Decimal("0.03"),
+        fx_usd_brl=Decimal("5"),
+        fx_source="test",
+        fx_observed_at=now,
+        fx_max_age=timedelta(seconds=864000),
+        fx_buffer_rate=Decimal("0.1"),
+        rate_card_version=RATE_CARD_VERSION,
+        rate_card_sha256=INSTALLED_RATE_CARD_SHA256,
+        rate_card_source="test",
         rate_card_observed_at=INSTALLED_RATE_CARD_OBSERVED_AT,
         rate_card_max_age=timedelta(seconds=max_age_seconds),
         channel_fees=(ChannelFee("web", Decimal("0.04"), Decimal("0.20")),),

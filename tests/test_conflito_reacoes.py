@@ -19,14 +19,24 @@ def _scene(*participants):
 
 
 def _reacao(card_id="reflexo", gatilho="ao_ser_atacado", custo=0, repetivel=False):
-    return {"id": card_id, "name": card_id, "tipo": "reacao", "gatilho": gatilho,
-            "custo_entropia": custo, "repetivel": repetivel,
-            "efeito": {"kind": "contra_ataque", "formula": "1d8"}}
+    return {
+        "id": card_id,
+        "name": card_id,
+        "tipo": "reacao",
+        "gatilho": gatilho,
+        "custo_entropia": custo,
+        "repetivel": repetivel,
+        "efeito": {"kind": "contra_ataque", "formula": "1d8"},
+    }
 
 
 def _stats(agilidade=1, entropy=10, conscious=True, incapacitated=False):
-    return {"virtudes": {"agilidade": agilidade}, "entropy": entropy,
-            "conscious": conscious, "incapacitated": incapacitated}
+    return {
+        "virtudes": {"agilidade": agilidade},
+        "entropy": entropy,
+        "conscious": conscious,
+        "incapacitated": incapacitated,
+    }
 
 
 # ==========================================================================
@@ -39,7 +49,7 @@ def test_reacao_valida_antes_da_rolagem():
     chain = rx.open_reaction_window(action)
     ok = rx.offer_reaction(chain, "player", "reflexo", card=_reacao())
     assert ok is True
-    assert chain["triggering_action"] == action           # declaração congelada (R1)
+    assert chain["triggering_action"] == action  # declaração congelada (R1)
     assert len(chain["links"]) == 1
 
 
@@ -58,8 +68,10 @@ def test_cadeia_termina_quando_ninguem_tem_reacao_valida():
     chain = rx.open_reaction_window(action)
     rx.offer_reaction(chain, "player", "reflexo", card=_reacao())
     # aliado tenta reagir com carta cujo gatilho NÃO casa → sem link novo
-    assert rx.offer_reaction(chain, "aliado", "grito",
-                             card=_reacao("grito", gatilho="ao_ser_atacado")) is False
+    assert (
+        rx.offer_reaction(chain, "aliado", "grito", card=_reacao("grito", gatilho="ao_ser_atacado"))
+        is False
+    )
     resolved = rx.resolve_chain(chain)
     assert chain["closed"] is True
     assert len(resolved) == 1
@@ -71,14 +83,18 @@ def test_reacao_debita_entropia_do_reagente():
     action = {"kind": "attack", "actor": "inimigo", "targets": ["player"]}
     chain = rx.open_reaction_window(action)
     reactor = _stats(entropy=2)
-    assert rx.offer_reaction(chain, "player", "reflexo",
-                             card=_reacao(custo=2), reactor=reactor) is True
+    assert (
+        rx.offer_reaction(chain, "player", "reflexo", card=_reacao(custo=2), reactor=reactor)
+        is True
+    )
     assert reactor["entropy"] == 0
     # sem Entropia suficiente → recusa sem efeito colateral
     reactor2 = _stats(entropy=1)
     chain2 = rx.open_reaction_window(action)
-    assert rx.offer_reaction(chain2, "player", "reflexo",
-                             card=_reacao(custo=2), reactor=reactor2) is False
+    assert (
+        rx.offer_reaction(chain2, "player", "reflexo", card=_reacao(custo=2), reactor=reactor2)
+        is False
+    )
     assert reactor2["entropy"] == 1
 
 
@@ -98,8 +114,9 @@ def test_reacao_pode_responder_reacao_com_gatilho_valido():
     rx.offer_reaction(chain, "player", "reflexo", card=_reacao())
     # a reação do player vira uma "ação" kind=reaction; carta com gatilho "sempre"
     # (ou que casa reaction) pode responder a ela (R2)
-    ok = rx.offer_reaction(chain, "aliado", "eco",
-                           card=_reacao("eco", gatilho="sempre"), respond_to_link=0)
+    ok = rx.offer_reaction(
+        chain, "aliado", "eco", card=_reacao("eco", gatilho="sempre"), respond_to_link=0
+    )
     assert ok is True
     assert len(chain["links"]) == 2
 
@@ -114,7 +131,8 @@ def test_ordem_alvo_direto_depois_aliados_depois_agilidade():
     }
     ordem = rx.reaction_order(
         ["colega_inimigo", "aliado_lento", "aliado_rapido", "player"],
-        action, stats_by_id=stats,
+        action,
+        stats_by_id=stats,
         target_allies=["aliado_lento", "aliado_rapido"],
         actor_allies=["colega_inimigo"],
     )
@@ -139,10 +157,9 @@ def test_aoo_pula_aliados_e_inconscientes():
     s = _scene("player", "orc1", "aliado", "orc_caido")
     for other in ("orc1", "aliado", "orc_caido"):
         cs.engage(s, "player", other, spend=False)
-    stats = {"orc1": _stats(), "aliado": _stats(),
-             "orc_caido": _stats(conscious=False)}
+    stats = {"orc1": _stats(), "aliado": _stats(), "orc_caido": _stats(conscious=False)}
     aoos = rx.trigger_opportunity_attack(s, "player", allies=["aliado"], stats_by_id=stats)
-    assert {a["attacker"] for a in aoos} == {"orc1"}   # aliado excluído, inconsciente pulado
+    assert {a["attacker"] for a in aoos} == {"orc1"}  # aliado excluído, inconsciente pulado
 
 
 def test_aoo_nao_conta_pro_limite_de_reacao_comum():
@@ -154,9 +171,8 @@ def test_aoo_nao_conta_pro_limite_de_reacao_comum():
 
     s = _scene("player", "orc1")
     cs.engage(s, "player", "orc1", spend=False)
-    aoos = rx.trigger_opportunity_attack(s, "player", allies=[],
-                                         stats_by_id={"orc1": _stats()})
-    assert [a["attacker"] for a in aoos] == ["orc1"]   # AoO independe da cadeia
+    aoos = rx.trigger_opportunity_attack(s, "player", allies=[], stats_by_id={"orc1": _stats()})
+    assert [a["attacker"] for a in aoos] == ["orc1"]  # AoO independe da cadeia
 
 
 # ==========================================================================
@@ -167,10 +183,10 @@ def test_engajar_custa_pre_ou_pos_acao():
     r1 = cs.engage(s, "player", "orc")
     assert r1["ok"] and r1["via"] in ("pre_acao", "pos_acao")
     b = s["positions"]["player"]["budget"]
-    assert b["pre_acao"] + b["pos_acao"] == 1          # gastou 1 dos 2
+    assert b["pre_acao"] + b["pos_acao"] == 1  # gastou 1 dos 2
     # gastar a Ação também não impede: mas exaurir pre+pos bloqueia novo Engajar
     cs.place(s, "orc2")
-    cs.engage(s, "player", "orc2")                     # gasta o outro pre/pos
+    cs.engage(s, "player", "orc2")  # gasta o outro pre/pos
     cs.place(s, "orc3")
     r3 = cs.engage(s, "player", "orc3")
     assert r3["ok"] is False and "Pré/Pós" in r3["error"]
@@ -219,8 +235,8 @@ def test_esconder_exige_fonte_plausivel():
 def test_ocultacao_relativa_por_observador():
     s = _scene("player", "orc_a", "orc_b")
     cs.hide(s, "player", source="pilar", observers=["orc_a"])
-    assert cs.is_hidden_from(s, "player", "orc_a")       # escondido de A
-    assert not cs.is_hidden_from(s, "player", "orc_b")   # visível para B
+    assert cs.is_hidden_from(s, "player", "orc_a")  # escondido de A
+    assert not cs.is_hidden_from(s, "player", "orc_b")  # visível para B
 
 
 def test_atacar_com_posicao_aproximada_tem_desvantagem():
@@ -249,8 +265,8 @@ def test_alertar_party_propaga_posicao_aproximada():
 def test_atacar_oculto_da_vantagem_e_move_encerra_escondido():
     s = _scene("player", "orc")
     cs.hide(s, "player", source="sombra", observers=["orc"])
-    v = cs.occlusion_attack_modifier(s, "player", "orc")   # player ataca oculto
-    assert v["advantage"] == 1                              # Vantagem (R11)
+    v = cs.occlusion_attack_modifier(s, "player", "orc")  # player ataca oculto
+    assert v["advantage"] == 1  # Vantagem (R11)
     cs.reveal_after_attack(s, "player")
     assert not cs.is_hidden_from(s, "player", "orc")
     # e mudar de distância também encerra o Escondido (R11)

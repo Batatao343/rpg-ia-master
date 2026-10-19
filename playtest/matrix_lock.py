@@ -1,4 +1,5 @@
 """Lock local atômico para impedir duas matrizes de longrun simultâneas."""
+
 from __future__ import annotations
 
 import json
@@ -32,7 +33,9 @@ def _pid_is_alive(pid: int) -> bool:
         still_active = 259
         kernel32 = ctypes.windll.kernel32
         handle = kernel32.OpenProcess(
-            process_query_limited_information, False, pid,
+            process_query_limited_information,
+            False,
+            pid,
         )
         if not handle:
             # Acesso negado prova que o PID existe, ainda que não seja consultável.

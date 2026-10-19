@@ -111,6 +111,7 @@ class LastStandResult(TypedDict):
     ruptura_declarada: bool
     entra_em_estado_terminal: bool
 
+
 class Scar(TypedDict):
     id: str
     consequencia_negativa: str

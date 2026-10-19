@@ -10,6 +10,7 @@ ADITIVO (como 03-08): módulo novo + testes. Substituir o fluxo simplificado atu
 (`combat_flee_attempt`/`combat_flee_destination`) e ajustar os perfis `fujao`/
 `quester` do playtest é cutover (conflito-13).
 """
+
 import random
 import re
 from typing import Dict, List, Optional
@@ -26,22 +27,33 @@ FLEE_RE = re.compile(
 
 # Trilha de perseguição (R2). Abaixo de "pressionado" = alcançado (combate volta).
 TRACK = ("pressionado", "afastado", "quase_livre", "escapou")
-_DISTANCE_TO_TRACK = {"proximo": "pressionado", "distante": "afastado",
-                      "separado": "quase_livre"}
+_DISTANCE_TO_TRACK = {"proximo": "pressionado", "distante": "afastado", "separado": "quase_livre"}
 _PURSUE_TRIGGERS = frozenset({"alvo_fugindo", "fugitivo_foge", "cacar", "persegue"})
 
 # Abordagem → Virtude do condutor (R4).
 APPROACH_VIRTUDE = {
-    "correr": "agilidade", "desviar": "agilidade",
-    "rotas": "mente", "atalhos": "mente",
-    "romper": "forca", "obstaculos": "forca",
-    "resistencia": "corpo", "prolongada": "corpo",
-    "coordenar": "carisma", "mobilizar": "carisma",
+    "correr": "agilidade",
+    "desviar": "agilidade",
+    "rotas": "mente",
+    "atalhos": "mente",
+    "romper": "forca",
+    "obstaculos": "forca",
+    "resistencia": "corpo",
+    "prolongada": "corpo",
+    "coordenar": "carisma",
+    "mobilizar": "carisma",
 }
 
 # Desfechos possíveis do companheiro abandonado (R6).
-ABANDON_OUTCOMES = ("fuga", "captura", "rendicao", "esconderijo",
-                    "combate", "morte", "reencontro_futuro")
+ABANDON_OUTCOMES = (
+    "fuga",
+    "captura",
+    "rendicao",
+    "esconderijo",
+    "combate",
+    "morte",
+    "reencontro_futuro",
+)
 
 
 # ==========================================================================
@@ -55,14 +67,15 @@ def initial_track(distance_state: str) -> str:
 def will_pursue(pursuer: dict, scene_state: dict | None = None) -> bool:
     """R3: política fechada; prosa livre nunca autoriza perseguição."""
     profile = pursuer.get("tactical_profile") or {}
-    policy = str(
-        pursuer.get("pursuit_policy") or profile.get("pursuit_policy") or ""
-    ).strip().lower()
+    policy = (
+        str(pursuer.get("pursuit_policy") or profile.get("pursuit_policy") or "").strip().lower()
+    )
     return policy == "persegue"
 
 
-def start_chase(scene: dict, fugitive_id: str, pursuers: list[dict], *,
-                scene_state: dict | None = None) -> dict:
+def start_chase(
+    scene: dict, fugitive_id: str, pursuers: list[dict], *, scene_state: dict | None = None
+) -> dict:
     """R2/R3: inicia a perseguição. Posição inicial pela distância do fugitivo;
     perseguidores filtrados pelo perfil (só os que decidem seguir). Sem perseguidor
     disposto → escapou."""
@@ -71,12 +84,16 @@ def start_chase(scene: dict, fugitive_id: str, pursuers: list[dict], *,
     seguidores = [p for p in pursuers if will_pursue(p, scene_state)]
     if not seguidores:
         trilha = "escapou"
-    return {"trilha": trilha, "perseguidores": [p.get("id") or p.get("name") for p in seguidores],
-            "fugitive_id": fugitive_id, "alcancado": False, "escapou": trilha == "escapou"}
+    return {
+        "trilha": trilha,
+        "perseguidores": [p.get("id") or p.get("name") for p in seguidores],
+        "fugitive_id": fugitive_id,
+        "alcancado": False,
+        "escapou": trilha == "escapou",
+    }
 
 
-def can_resume(chase: dict | None, fugitive_id: str,
-               pursuers: list[dict]) -> bool:
+def can_resume(chase: dict | None, fugitive_id: str, pursuers: list[dict]) -> bool:
     """Confirma que um snapshot pertence à perseguição ativa atual.
 
     Estados terminais nunca são retomados. A comparação fechada dos IDs evita
@@ -90,10 +107,7 @@ def can_resume(chase: dict | None, fugitive_id: str,
         return False
     if chase.get("fugitive_id") != fugitive_id:
         return False
-    current = {
-        str(p.get("id") or p.get("name"))
-        for p in pursuers or [] if will_pursue(p)
-    }
+    current = {str(p.get("id") or p.get("name")) for p in pursuers or [] if will_pursue(p)}
     stored = {str(pid) for pid in (chase.get("perseguidores") or [])}
     return bool(current) and current == stored
 
@@ -132,8 +146,14 @@ def luck_to_advantage(rolls: list[int]) -> int:
     return 1 if net > 0 else (-1 if net < 0 else 0)
 
 
-def resolve_chase_round(chase: dict, *, condutor_virtude: int = 0, difficulty: int = 12,
-                        companion_luck: list[int] | None = None, rng=None) -> dict:
+def resolve_chase_round(
+    chase: dict,
+    *,
+    condutor_virtude: int = 0,
+    difficulty: int = 12,
+    companion_luck: list[int] | None = None,
+    rng=None,
+) -> dict:
     """R2/R4/R5: um round de perseguição. Sucesso avança 1 na trilha; falha recua 1
     (abaixo de Pressionado = alcançado, combate normal retorna)."""
     if chase.get("trilha") == "escapou":
@@ -151,12 +171,25 @@ def resolve_chase_round(chase: dict, *, condutor_virtude: int = 0, difficulty: i
     chase["trilha"] = new
     chase["alcancado"] = new == "alcancado"
     chase["escapou"] = new == "escapou"
-    chase["_last"] = {"total": total, "difficulty": int(difficulty),
-                      "sucesso": sucesso, "advantage": adv}
+    chase["_last"] = {
+        "total": total,
+        "difficulty": int(difficulty),
+        "sucesso": sucesso,
+        "advantage": adv,
+    }
     from services import mechanics_trace as mt
-    mt.record_step("flee", actor="player", dice=roll["rolled"], kept=roll["kept"],
-                   modifier=condutor_virtude, dc_or_defense=difficulty, amount=total,
-                   result="sucesso" if sucesso else "falha", reason=new)
+
+    mt.record_step(
+        "flee",
+        actor="player",
+        dice=roll["rolled"],
+        kept=roll["kept"],
+        modifier=condutor_virtude,
+        dc_or_defense=difficulty,
+        amount=total,
+        result="sucesso" if sucesso else "falha",
+        reason=new,
+    )
     return chase
 
 
@@ -185,8 +218,7 @@ def _weighted_choice(rng: random.Random, weights: dict[str, float]) -> str:
     return next(iter(weights))
 
 
-def simulate_abandoned_companion(companion: dict, scene_state: dict | None,
-                                 seed) -> dict:
+def simulate_abandoned_companion(companion: dict, scene_state: dict | None, seed) -> dict:
     """R6: destino do companheiro abandonado por SIMULAÇÃO automática completa —
     estado, perfil, terreno, perseguidores — DETERMINÍSTICA por seed (nunca
     `random.random()` sem seed). Retorna {resultado, fatos_relacionais}."""
@@ -214,22 +246,25 @@ def simulate_abandoned_companion(companion: dict, scene_state: dict | None,
     weights["captura"] += 0.6 * perseguidores
     weights["combate"] += 0.4 * perseguidores
     if companion.get("tactical_profile") and any(
-            p.get("action_hint", "").find("rende") >= 0
-            for p in companion["tactical_profile"].get("priorities", [])):
+        p.get("action_hint", "").find("rende") >= 0
+        for p in companion["tactical_profile"].get("priorities", [])
+    ):
         weights["rendicao"] += 1.5
     weights["reencontro_futuro"] += 0.5
 
     resultado = _weighted_choice(rng, weights)
     fatos = [f"{name} foi deixado para trás durante a fuga."]
-    fatos.append({
-        "fuga": f"{name} conseguiu escapar por conta própria.",
-        "captura": f"{name} foi capturado pelos perseguidores.",
-        "rendicao": f"{name} se rendeu para sobreviver.",
-        "esconderijo": f"{name} se escondeu e sumiu do radar.",
-        "combate": f"{name} ficou preso em combate ao ser abandonado.",
-        "morte": f"{name} não sobreviveu à separação.",
-        "reencontro_futuro": f"{name} escapou e pode reaparecer mais tarde.",
-    }[resultado])
+    fatos.append(
+        {
+            "fuga": f"{name} conseguiu escapar por conta própria.",
+            "captura": f"{name} foi capturado pelos perseguidores.",
+            "rendicao": f"{name} se rendeu para sobreviver.",
+            "esconderijo": f"{name} se escondeu e sumiu do radar.",
+            "combate": f"{name} ficou preso em combate ao ser abandonado.",
+            "morte": f"{name} não sobreviveu à separação.",
+            "reencontro_futuro": f"{name} escapou e pode reaparecer mais tarde.",
+        }[resultado]
+    )
     return {"resultado": resultado, "fatos_relacionais": fatos}
 
 

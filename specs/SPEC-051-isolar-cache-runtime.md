@@ -96,7 +96,7 @@ do repo.
 **Assinaturas**
 ```python
 def _runtime_cache_path(name: str) -> str: ...
-def load_bestiary() -> Dict: ...      # curado ∪ overlay (curado vence)
+def load_bestiary() -> Dict: ...  # curado ∪ overlay (curado vence)
 def save_enemy(data: Dict) -> None: ...  # overlay only
 ```
 

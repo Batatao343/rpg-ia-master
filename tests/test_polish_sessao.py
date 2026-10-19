@@ -1,5 +1,6 @@
 """Suíte da spec polish-sessao — saves na API (R1/R2), chips de combate
 mecânicos (R4) e export da crônica (R5). Offline/MockLLM."""
+
 from __future__ import annotations
 
 import json
@@ -15,15 +16,21 @@ import persistence
 # Etapa 1 — saves na API (R1/R2)
 # ---------------------------------------------------------------------------
 
+
 def _write_save(dirpath, gid, name="Herói", level=2, game_over=False, mtime=None):
     os.makedirs(dirpath, exist_ok=True)
     data = {
         "schema_version": persistence.SCHEMA_VERSION,
-        "game_id": gid, "game_over": game_over,
-        "player": {"name": name, "class_name": "Batedor das Fronteiras",
-                   "level": level, "inventory": [], "known_abilities": []},
-        "world": {"current_location": "Nova Arcádia",
-                  "world_clock": {"day": 3, "period": "Tarde"}},
+        "game_id": gid,
+        "game_over": game_over,
+        "player": {
+            "name": name,
+            "class_name": "Batedor das Fronteiras",
+            "level": level,
+            "inventory": [],
+            "known_abilities": [],
+        },
+        "world": {"current_location": "Nova Arcádia", "world_clock": {"day": 3, "period": "Tarde"}},
         "message_history": [],
     }
     path = os.path.join(dirpath, f"{gid}.json")
@@ -43,8 +50,16 @@ def test_list_saves_ordena_por_mtime(tmp_path, monkeypatch):
     saves = persistence.list_saves()
     assert [s["name"] for s in saves] == ["Recente", "Antigo"]
     s = saves[0]
-    for campo in ("game_id", "name", "class_name", "level", "location", "day",
-                  "game_over", "updated_at"):
+    for campo in (
+        "game_id",
+        "name",
+        "class_name",
+        "level",
+        "location",
+        "day",
+        "game_over",
+        "updated_at",
+    ):
         assert campo in s, campo
     assert s["day"] == 3 and s["location"] == "Nova Arcádia"
 
@@ -84,9 +99,11 @@ def test_delete_save_uuid_invalido_e_inexistente(tmp_path, monkeypatch):
 @pytest.fixture()
 def client(monkeypatch):
     import api
+
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
     api._rate_hits.clear()
     from fastapi.testclient import TestClient
+
     return TestClient(api.app)
 
 
@@ -108,15 +125,26 @@ def test_endpoints_saves_delete(client, tmp_path, monkeypatch):
 # Etapa 2 — chips de combate (R4)
 # ---------------------------------------------------------------------------
 
+
 def _fighter(**over):
     p = {
-        "name": "Chip", "class_name": "Sangromante", "level": 2,
-        "hp": 20, "max_hp": 27, "mana": 0, "max_mana": 0,
-        "stamina": 0, "max_stamina": 0,
-        "entropy": 16, "max_entropy": 16, "abyss_charge": 0,
+        "name": "Chip",
+        "class_name": "Sangromante",
+        "level": 2,
+        "hp": 20,
+        "max_hp": 27,
+        "mana": 0,
+        "max_mana": 0,
+        "stamina": 0,
+        "max_stamina": 0,
+        "entropy": 16,
+        "max_entropy": 16,
+        "abyss_charge": 0,
         "known_cards": ["san_corte_troca", "san_finta"],
         "prepared_cards": ["san_corte_troca", "san_finta"],
-        "card_usage": {}, "virtue_cards": [], "evolved_cards": {},
+        "card_usage": {},
+        "virtue_cards": [],
+        "evolved_cards": {},
         "active_conditions": [],
         "inventory": [{"id": "pocao_cura", "qty": 2}],
         "equipment": {"weapon": "adaga_ferro", "armor": None, "accessory": None},
@@ -131,9 +159,9 @@ _COMBAT = {"active": True, "round": 1, "order": []}
 
 def test_combat_suggestions_carta_pronta_vira_chip():
     from services import cards
+
     chips = cards.combat_card_suggestions(_fighter(), _ENEMY, _COMBAT)
-    nomes = {cards.get_card("san_corte_troca")["name"],
-             cards.get_card("san_finta")["name"]}
+    nomes = {cards.get_card("san_corte_troca")["name"], cards.get_card("san_finta")["name"]}
     assert nomes & set(chips)
     assert "Fugir" in chips
     assert any(c.startswith("Beber ") for c in chips)
@@ -142,10 +170,11 @@ def test_combat_suggestions_carta_pronta_vira_chip():
 
 def test_carta_usada_no_turno_ou_sem_recurso_nao_vira_chip():
     from services import cards
+
     nome_finta = cards.get_card("san_finta")["name"]
     chips = cards.combat_card_suggestions(
-        _fighter(card_usage={"san_finta": {"used_this_turn": 1}}),
-        _ENEMY, _COMBAT)
+        _fighter(card_usage={"san_finta": {"used_this_turn": 1}}), _ENEMY, _COMBAT
+    )
     assert nome_finta not in chips
     chips2 = cards.combat_card_suggestions(_fighter(entropy=0), _ENEMY, _COMBAT)
     assert nome_finta not in chips2
@@ -153,6 +182,7 @@ def test_carta_usada_no_turno_ou_sem_recurso_nao_vira_chip():
 
 def test_pocao_no_inventario_vira_chip():
     from services import cards
+
     chips = cards.combat_card_suggestions(_fighter(inventory=[]), _ENEMY, _COMBAT)
     assert not any(c.startswith("Beber ") for c in chips)
     chips2 = cards.combat_card_suggestions(_fighter(), _ENEMY, _COMBAT)
@@ -161,15 +191,19 @@ def test_pocao_no_inventario_vira_chip():
 
 def test_fugir_some_quando_enredado():
     from services import cards
-    enredado = _fighter(active_conditions=[
-        {"name": "Enredado", "dot": 0, "duration": 2, "source": "teia",
-         "control": "root"}])
+
+    enredado = _fighter(
+        active_conditions=[
+            {"name": "Enredado", "dot": 0, "duration": 2, "source": "teia", "control": "root"}
+        ]
+    )
     chips = cards.combat_card_suggestions(enredado, _ENEMY, _COMBAT)
     assert "Fugir" not in chips
 
 
 def test_fora_de_combate_lista_vazia():
     from services import cards
+
     assert cards.combat_card_suggestions(_fighter(), [], _COMBAT) == []
     assert cards.combat_card_suggestions(_fighter(), _ENEMY, {"active": False}) == []
     assert cards.combat_card_suggestions(_fighter(), _ENEMY, None) == []
@@ -177,12 +211,11 @@ def test_fora_de_combate_lista_vazia():
 
 def test_sugestoes_no_combat_block_da_api():
     import api
-    state = {"combat": dict(_COMBAT), "enemies": list(_ENEMY),
-             "player": _fighter()}
+
+    state = {"combat": dict(_COMBAT), "enemies": list(_ENEMY), "player": _fighter()}
     block = api._combat_block(state)
     assert "suggestions" in block and block["suggestions"]
-    vazio = api._combat_block({"combat": {"active": False}, "enemies": [],
-                               "player": _fighter()})
+    vazio = api._combat_block({"combat": {"active": False}, "enemies": [], "player": _fighter()})
     assert vazio["suggestions"] == []
 
 
@@ -190,6 +223,7 @@ def test_chip_clicado_resolve_no_parser():
     """Texto do chip (nome exibível) → TurnDeclaration mapeia pro card_id certo."""
     from agents.combat import _parse_turn_declaration
     from services import cards
+
     player = _fighter()
     nome = cards.get_card("san_corte_troca")["name"]
     action = _parse_turn_declaration(player, list(_ENEMY), f"uso {nome}", {})
@@ -200,22 +234,37 @@ def test_chip_clicado_resolve_no_parser():
 # Etapa 3 — crônica: export (R5)
 # ---------------------------------------------------------------------------
 
+
 def _save_com_cronica(dirpath, gid):
     os.makedirs(dirpath, exist_ok=True)
     data = {
         "schema_version": persistence.SCHEMA_VERSION,
-        "game_id": gid, "game_over": False,
-        "player": {"name": "Cronista", "class_name": "Batedor das Fronteiras",
-                   "level": 1, "inventory": [], "known_abilities": []},
-        "world": {"current_location": "Nova Arcádia",
-                  "world_clock": {"day": 1, "period": "Manhã"}},
+        "game_id": gid,
+        "game_over": False,
+        "player": {
+            "name": "Cronista",
+            "class_name": "Batedor das Fronteiras",
+            "level": 1,
+            "inventory": [],
+            "known_abilities": [],
+        },
+        "world": {"current_location": "Nova Arcádia", "world_clock": {"day": 1, "period": "Manhã"}},
         "chronicle": [
-            {"title": "O início", "started_turn": 0, "location": "Nova Arcádia",
-             "entries": [{"text": "A jornada começou.", "turn": 1, "kind": "prose"},
-                          {"text": "O herói alcançou o nível 2.", "turn": 4,
-                           "kind": "milestone"}]},
-            {"title": "Sombras no pântano", "started_turn": 6,
-             "location": "Pântano", "entries": []},
+            {
+                "title": "O início",
+                "started_turn": 0,
+                "location": "Nova Arcádia",
+                "entries": [
+                    {"text": "A jornada começou.", "turn": 1, "kind": "prose"},
+                    {"text": "O herói alcançou o nível 2.", "turn": 4, "kind": "milestone"},
+                ],
+            },
+            {
+                "title": "Sombras no pântano",
+                "started_turn": 6,
+                "location": "Pântano",
+                "entries": [],
+            },
         ],
         "message_history": [],
     }

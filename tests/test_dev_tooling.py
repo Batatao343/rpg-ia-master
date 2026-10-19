@@ -11,9 +11,25 @@ import pytest
 from scripts.dev import eval_publish
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILLS = ("qa", "wrap-up", "spec-new", "spec-land", "estado", "reindex", "eval-publish",
-          "staging-deploy", "status-dono")
-AGENTS = ("spec-executor", "spec-reviewer", "spec-author", "code-locator", "audit-reader", "ci-watcher")
+SKILLS = (
+    "qa",
+    "wrap-up",
+    "spec-new",
+    "spec-land",
+    "estado",
+    "reindex",
+    "eval-publish",
+    "staging-deploy",
+    "status-dono",
+)
+AGENTS = (
+    "spec-executor",
+    "spec-reviewer",
+    "spec-author",
+    "code-locator",
+    "audit-reader",
+    "ci-watcher",
+)
 
 
 def _frontmatter(path: Path) -> dict[str, str]:

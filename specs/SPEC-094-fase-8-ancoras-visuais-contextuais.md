@@ -270,6 +270,7 @@ eliminando o match duplicado por nome sem mudar regras de quest/Codex.
 ```python
 SubjectType = Literal["race", "class", "location", "npc"]
 
+
 def load_visual_catalog(path: Path | None = None) -> VisualCatalog: ...
 def visual_for(subject_type: SubjectType, subject_id: str) -> dict | None: ...
 def creation_visuals() -> dict[str, dict[str, dict]]: ...
@@ -300,9 +301,11 @@ class VisualCue(TypedDict, total=False):
     asset_id: str | None
     fallback: bool
 
+
 class VisualCueRecord(TypedDict):
     action_key: str
     cue: Optional[VisualCue]
+
 
 visual_seen_entity_ids: List[str]
 visual_cue_ledger: List[VisualCueRecord]
@@ -344,6 +347,7 @@ class VisualVariantResponse(BaseModel):
     bytes: int
     sha256: str
 
+
 class VisualAssetResponse(BaseModel):
     asset_id: str
     subject_type: Literal["race", "class", "location", "npc"]
@@ -354,11 +358,13 @@ class VisualAssetResponse(BaseModel):
     thumbnail: VisualVariantResponse
     display: VisualVariantResponse
 
+
 class SceneVisualResponse(BaseModel):
     location_id: str
     location_name: str
     scope: Literal["exact", "regional", "placeholder"]
     asset: VisualAssetResponse | None
+
 
 class VisualCueResponse(BaseModel):
     kind: Literal["npc_first_appearance"]
@@ -367,6 +373,7 @@ class VisualCueResponse(BaseModel):
     caption: str
     asset: VisualAssetResponse | None
     fallback: bool
+
 
 class VisualResponse(BaseModel):
     scene: SceneVisualResponse

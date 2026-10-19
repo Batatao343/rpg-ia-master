@@ -3,6 +3,7 @@
 As chaves legadas podem existir em saves v3 (arquivados) e v4+; o motor as ignora,
 a view da API não as expõe e o descanso não as recompõe nem quebra.
 """
+
 from __future__ import annotations
 
 from langchain_core.messages import AIMessage
@@ -35,8 +36,16 @@ def test_save_v4_com_mana_stamina_round_trip_e_descanso() -> None:
     raw = {
         "schema_version": 4,
         "game_id": "g",
-        "player": {"virtudes": {"corpo": 2}, "vitalidade": 4, "max_vitalidade": 10,
-                   "hp": 4, "max_hp": 10, "entropy": 1, "max_entropy": 6, **_LEGACY},
+        "player": {
+            "virtudes": {"corpo": 2},
+            "vitalidade": 4,
+            "max_vitalidade": 10,
+            "hp": 4,
+            "max_hp": 10,
+            "entropy": 1,
+            "max_entropy": 6,
+            **_LEGACY,
+        },
         "party": [],
         "messages": [],
         "world": {"current_location": "Arena"},
@@ -46,7 +55,8 @@ def test_save_v4_com_mana_stamina_round_trip_e_descanso() -> None:
     assert not _KEYS & _response_keys(state)
 
     player, _world = world_utils.apply_rest(
-        dict(state["player"]), world_utils.ensure_world({"current_location_id": "nova_arcadia"}))
+        dict(state["player"]), world_utils.ensure_world({"current_location_id": "nova_arcadia"})
+    )
     assert player["entropy"] == 6
     # chaves legadas ficam inertes: nem recompostas nem removidas pelo descanso
     assert {k: player[k] for k in _KEYS} == _LEGACY

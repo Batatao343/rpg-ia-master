@@ -55,18 +55,32 @@ def test_runtime_catalog_valida_e_isola_escopos(tmp_path):
 def test_legacy_catalog_preserva_arquivos_globais_e_isola_conhecimento(tmp_path):
     store = LegacyRuntimeCatalogStore(lambda: tmp_path)
     store.put(
-        "npc_template", "n1", {"name": "A"},
-        scope="global", owner_id=None, game_id=None,
+        "npc_template",
+        "n1",
+        {"name": "A"},
+        scope="global",
+        owner_id=None,
+        game_id=None,
     )
     assert (tmp_path / "npc_database.json").exists()
     owner_a, owner_b, game = uuid4(), uuid4(), uuid4()
     store.put(
-        "bestiary_knowledge", "wolf", {"seen": True},
-        scope="game", owner_id=owner_a, game_id=game,
+        "bestiary_knowledge",
+        "wolf",
+        {"seen": True},
+        scope="game",
+        owner_id=owner_a,
+        game_id=game,
     )
-    assert store.get(
-        "bestiary_knowledge", "wolf", owner_id=owner_b, game_id=game,
-    ) is None
+    assert (
+        store.get(
+            "bestiary_knowledge",
+            "wolf",
+            owner_id=owner_b,
+            game_id=game,
+        )
+        is None
+    )
 
 
 def test_blob_store_rejeita_traversal_hash_divergente_e_isola_raiz(tmp_path):

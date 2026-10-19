@@ -29,17 +29,24 @@ def _probe_viewport(browser: Any, base_url: str, width: int, height: int) -> dic
     failed_responses: list[dict[str, object]] = []
     page.on(
         "console",
-        lambda message: console_errors.append(message.text[:300])
-        if message.type == "error" else None,
+        lambda message: (
+            console_errors.append(message.text[:300]) if message.type == "error" else None
+        ),
     )
     page.on("pageerror", lambda error: page_errors.append(type(error).__name__))
     page.on(
         "response",
-        lambda item: failed_responses.append({
-            "status": item.status,
-            "origin": urlsplit(item.url).netloc,
-            "path": urlsplit(item.url).path[:160],
-        }) if item.status >= 400 else None,
+        lambda item: (
+            failed_responses.append(
+                {
+                    "status": item.status,
+                    "origin": urlsplit(item.url).netloc,
+                    "path": urlsplit(item.url).path[:160],
+                }
+            )
+            if item.status >= 400
+            else None
+        ),
     )
     try:
         response = page.goto(base_url, wait_until="networkidle", timeout=30_000)
@@ -68,20 +75,32 @@ def _probe_viewport(browser: Any, base_url: str, width: int, height: int) -> dic
               className: String(element.className || '').slice(0, 80)
             }))
         """)
-        overlay = bool(page.locator(
-            ".vite-error-overlay,#webpack-dev-server-client-overlay,[data-nextjs-dialog]"
-        ).count())
+        overlay = bool(
+            page.locator(
+                ".vite-error-overlay,#webpack-dev-server-client-overlay,[data-nextjs-dialog]"
+            ).count()
+        )
         invalid_scene_aria = bool(page.locator(".scene-art[aria-label]").count())
         passed = bool(
-            response and response.ok and content and not overflow and not overlay
-            and not console_errors and not page_errors and not invalid_scene_aria
+            response
+            and response.ok
+            and content
+            and not overflow
+            and not overlay
+            and not console_errors
+            and not page_errors
+            and not invalid_scene_aria
         )
         return {
-            "width": width, "height": height,
+            "width": width,
+            "height": height,
             "http_status": response.status if response else None,
-            "content": content, "overflow": overflow,
-            "dimensions": dimensions, "overflow_elements": overflow_elements,
-            "error_overlay": overlay, "console_errors": console_errors,
+            "content": content,
+            "overflow": overflow,
+            "dimensions": dimensions,
+            "overflow_elements": overflow_elements,
+            "error_overlay": overlay,
+            "console_errors": console_errors,
             "page_errors": len(page_errors),
             "failed_responses": failed_responses,
             "invalid_scene_aria": invalid_scene_aria,
@@ -133,7 +152,9 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--base-url", default="http://127.0.0.1:8000")
     parser.add_argument(
-        "--output", type=Path, default=Path("readiness_artifacts/browser.json"),
+        "--output",
+        type=Path,
+        default=Path("readiness_artifacts/browser.json"),
     )
     args = parser.parse_args()
     print(json.dumps(run(args.base_url, output=args.output), ensure_ascii=False))

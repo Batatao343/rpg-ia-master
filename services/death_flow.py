@@ -11,6 +11,7 @@ ADITIVO (como 04/05/06): entrega o motor puro + testes. A reconciliação final 
 `services/checkpoints.py` (death_pending/save-restore/UI) e o hook no pipeline de
 dano ao vivo acontecem no cutover (conflito-13) — os pontos estão marcados.
 """
+
 from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field
@@ -56,6 +57,7 @@ def _wound_spaces(actor: dict) -> dict[str, int]:
     if actor.get("ferimento_espacos"):
         return actor["ferimento_espacos"]
     import gamedata
+
     return gamedata.espacos_ferimento_para_corpo((actor.get("virtudes") or {}).get("corpo", 0))
 
 
@@ -69,9 +71,12 @@ def critical_spaces_full(actor: dict) -> bool:
 def should_trigger_last_stand(actor: dict) -> bool:
     """Gate do fluxo completo: último Crítico cheio E o ator usa Última Ação (R1/R7).
     Um ator que já morreu/estabilizou não redispara."""
-    if (actor.get("dead") or actor.get("estado_terminal")
-            or actor.get("last_stand_pending")
-            or actor.get("last_stand_resolved")):
+    if (
+        actor.get("dead")
+        or actor.get("estado_terminal")
+        or actor.get("last_stand_pending")
+        or actor.get("last_stand_resolved")
+    ):
         return False
     return uses_full_death_flow(actor) and critical_spaces_full(actor)
 
@@ -87,8 +92,9 @@ class LastStandResult(BaseModel):
     ignora_recursos: bool = True
 
 
-def trigger_last_stand(participant: dict, *, acao: dict | None = None,
-                       ruptura: bool = False) -> dict:
+def trigger_last_stand(
+    participant: dict, *, acao: dict | None = None, ruptura: bool = False
+) -> dict:
     """R1: dispara a Última Ação imediatamente (mesmo fora da ordem). Vantagem
     extrema, ignora limitações dos Ferimentos e recursos ausentes; pode declarar
     Ruptura (gera Carga normalmente). Marca o Estado Terminal a seguir (R2)."""
@@ -100,12 +106,13 @@ def trigger_last_stand(participant: dict, *, acao: dict | None = None,
     if ruptura and not participant.get("last_stand_pending"):
         participant["abyss_charge"] = int(participant.get("abyss_charge", 0) or 0) + 1
     if not participant.get("last_stand_pending"):
-        participant["_last_stand_count"] = int(
-            participant.get("_last_stand_count", 0) or 0) + 1
+        participant["_last_stand_count"] = int(participant.get("_last_stand_count", 0) or 0) + 1
     participant["last_stand_pending"] = True
     from services import mechanics_trace as mt
-    mt.record_step("death_stage", actor=participant, result="last_stand",
-                   reason="ruptura" if ruptura else None)
+
+    mt.record_step(
+        "death_stage", actor=participant, result="last_stand", reason="ruptura" if ruptura else None
+    )
     return LastStandResult(
         acao_declarada=dict(acao or {}),
         ruptura_declarada=bool(ruptura),
@@ -123,6 +130,7 @@ def enter_terminal_state(participant: dict) -> dict:
     participant["last_stand_resolved"] = True
     participant.setdefault("stabilization_attempts", 0)
     from services import mechanics_trace as mt
+
     mt.record_step("death_stage", actor=participant, result="terminal")
     return {"estado_terminal": True}
 
@@ -136,8 +144,15 @@ def reset_terminal_episode(participant: dict) -> None:
     participant["stabilization_attempts"] = 0
 
 
-def _revive(target: dict, *, fraction: float | None = None, minimum_one: bool = False,
-            auto: bool = False, kit_cargas: int = 0, log: str = "") -> dict:
+def _revive(
+    target: dict,
+    *,
+    fraction: float | None = None,
+    minimum_one: bool = False,
+    auto: bool = False,
+    kit_cargas: int = 0,
+    log: str = "",
+) -> dict:
     maxv = int(target.get("max_vitalidade", 0) or 0)
     if fraction is not None:
         target["vitalidade"] = max(1, int(maxv * fraction))
@@ -145,17 +160,30 @@ def _revive(target: dict, *, fraction: float | None = None, minimum_one: bool = 
         target["vitalidade"] = 1
     target["estado_terminal"] = False
     target["dead"] = False
-    target["scar_pending"] = True   # sobreviveu ao fluxo completo → Cicatriz (R6)
+    target["scar_pending"] = True  # sobreviveu ao fluxo completo → Cicatriz (R6)
     import gamedata
+
     gamedata.sync_legacy_hp_aliases(target)
     attempts = int(target.get("stabilization_attempts", 0))
-    target["stabilization_attempts"] = 0   # R7: contador por episódio terminal
+    target["stabilization_attempts"] = 0  # R7: contador por episódio terminal
     from services import mechanics_trace as mt
-    mt.record_step("death_stage", actor=target, result="revived", amount=target.get("vitalidade"),
-                   reason="auto" if auto else "roll")
-    return {"revived": True, "dead": False, "auto": auto, "kit_cargas": kit_cargas,
-            "vitalidade": target["vitalidade"],
-            "attempts": attempts, "log": log}
+
+    mt.record_step(
+        "death_stage",
+        actor=target,
+        result="revived",
+        amount=target.get("vitalidade"),
+        reason="auto" if auto else "roll",
+    )
+    return {
+        "revived": True,
+        "dead": False,
+        "auto": auto,
+        "kit_cargas": kit_cargas,
+        "vitalidade": target["vitalidade"],
+        "attempts": attempts,
+        "log": log,
+    }
 
 
 def _die(target: dict, cause: str) -> dict:
@@ -163,18 +191,35 @@ def _die(target: dict, cause: str) -> dict:
     target["dead"] = True
     target["vitalidade"] = 0
     import gamedata
+
     gamedata.sync_legacy_hp_aliases(target)
     from services import mechanics_trace as mt
-    mt.record_step("death_stage", actor=target, result="dead",
-                   amount=target.get("stabilization_attempts"),
-                   reason="no_helper" if cause.startswith("sem aliado") else "stabilization_exhausted")
-    return {"revived": False, "dead": True, "cause": cause, "vitalidade": 0,
-            "attempts": int(target.get("stabilization_attempts", 0))}
+
+    mt.record_step(
+        "death_stage",
+        actor=target,
+        result="dead",
+        amount=target.get("stabilization_attempts"),
+        reason="no_helper" if cause.startswith("sem aliado") else "stabilization_exhausted",
+    )
+    return {
+        "revived": False,
+        "dead": True,
+        "cause": cause,
+        "vitalidade": 0,
+        "attempts": int(target.get("stabilization_attempts", 0)),
+    }
 
 
-def attempt_stabilization(target: dict, helper: dict | None = None, *,
-                          has_kit: bool = False, is_medico: bool = False,
-                          has_potion: bool = False, rng=None) -> dict:
+def attempt_stabilization(
+    target: dict,
+    helper: dict | None = None,
+    *,
+    has_kit: bool = False,
+    is_medico: bool = False,
+    has_potion: bool = False,
+    rng=None,
+) -> dict:
     """R3/R4: resolve uma tentativa de tirar o alvo do Estado Terminal.
 
     Caminhos AUTOMÁTICOS (sem rolagem, sem gastar tentativa): Médico com kit
@@ -183,11 +228,17 @@ def attempt_stabilization(target: dict, helper: dict | None = None, *,
     Vantagem; senão teste normal. Sucesso improvisado volta com 1 Vitalidade,
     adequado (kit) com metade da máx. 2ª tentativa é mais difícil; 2 falhas = morte."""
     if is_medico and has_kit:
-        return _revive(target, fraction=0.5, auto=True, kit_cargas=1,
-                       log="Médico de Campo com kit: reanimação automática.")
+        return _revive(
+            target,
+            fraction=0.5,
+            auto=True,
+            kit_cargas=1,
+            log="Médico de Campo com kit: reanimação automática.",
+        )
     if has_potion:
-        return _revive(target, fraction=0.5, auto=True,
-                       log="Poção adequada: reanimação automática.")
+        return _revive(
+            target, fraction=0.5, auto=True, log="Poção adequada: reanimação automática."
+        )
     if helper is None:
         return _die(target, "sem aliado próximo e capaz")
 
@@ -200,17 +251,36 @@ def attempt_stabilization(target: dict, helper: dict | None = None, *,
 
     if total >= dc:
         if has_kit:
-            return _revive(target, fraction=0.5, kit_cargas=1,
-                           log=f"Estabilizado (tratamento adequado, {total}≥{dc}).")
-        return _revive(target, minimum_one=True,
-                       log=f"Estabilizado (tratamento improvisado, {total}≥{dc}).")
+            return _revive(
+                target,
+                fraction=0.5,
+                kit_cargas=1,
+                log=f"Estabilizado (tratamento adequado, {total}≥{dc}).",
+            )
+        return _revive(
+            target, minimum_one=True, log=f"Estabilizado (tratamento improvisado, {total}≥{dc})."
+        )
     if attempt >= MAX_STABILIZE_ATTEMPTS:
         return _die(target, "duas falhas de estabilização")
     from services import mechanics_trace as mt
-    mt.record_step("death_stage", actor=target, result="stabilization_failed", amount=total,
-                   dc_or_defense=dc, kept=roll["kept"], dice=roll["rolled"])
-    return {"revived": False, "dead": False, "attempts": attempt,
-            "dc": dc, "total": total, "log": f"Falha na estabilização ({total}<{dc})."}
+
+    mt.record_step(
+        "death_stage",
+        actor=target,
+        result="stabilization_failed",
+        amount=total,
+        dc_or_defense=dc,
+        kept=roll["kept"],
+        dice=roll["rolled"],
+    )
+    return {
+        "revived": False,
+        "dead": False,
+        "attempts": attempt,
+        "dc": dc,
+        "total": total,
+        "log": f"Falha na estabilização ({total}<{dc}).",
+    }
 
 
 # ==========================================================================
@@ -233,7 +303,9 @@ def post_combat_consciousness(participant: dict) -> str:
 # ==========================================================================
 class ScarModel(BaseModel):
     consequencia_negativa: str = Field(description="1 consequência negativa real do trauma")
-    habilidade_positiva_relacionada: str = Field(description="1 habilidade positiva ligada ao trauma")
+    habilidade_positiva_relacionada: str = Field(
+        description="1 habilidade positiva ligada ao trauma"
+    )
     origem: str = Field(description="local do Ferimento / causa (arma, criatura, contexto)")
 
 
@@ -261,8 +333,7 @@ def _scar_prompt(participant: dict, context: dict | None) -> str:
 
 def _fallback_scar(participant: dict) -> dict:
     fer = participant.get("ferimentos") or {}
-    regiao = next((w.get("regiao") for c in ("critico", "grave")
-                   for w in fer.get(c, [])), "torso")
+    regiao = next((w.get("regiao") for c in ("critico", "grave") for w in fer.get(c, [])), "torso")
     return {
         "id": f"scar_{regiao}_{len(participant.get('scars', []))}",
         "consequencia_negativa": f"Dor crônica no {regiao} em esforço extremo.",
@@ -280,8 +351,10 @@ def generate_scar(participant: dict, llm, *, context: dict | None = None) -> dic
         result = llm.with_structured_output(ScarModel).invoke(_scar_prompt(participant, context))
         if isinstance(result, ScarModel):
             fer = participant.get("ferimentos") or {}
-            regiao = next((w.get("regiao") for c in ("critico", "grave")
-                           for w in fer.get(c, [])), result.origem or "torso")
+            regiao = next(
+                (w.get("regiao") for c in ("critico", "grave") for w in fer.get(c, [])),
+                result.origem or "torso",
+            )
             scar = {
                 "id": f"scar_{regiao}_{len(participant.get('scars', []))}",
                 "consequencia_negativa": result.consequencia_negativa,
@@ -290,6 +363,7 @@ def generate_scar(participant: dict, llm, *, context: dict | None = None) -> dic
             }
     except Exception as exc:
         from observability.telemetry import log_fallback
+
         log_fallback("death_flow", "scar_generation_failed", exc)
         scar = None
     if scar is None:
@@ -336,8 +410,13 @@ def combat_should_end(sides_state: dict) -> dict:
     hostiles = sides_state.get("hostiles") or []
 
     def _inactive(h: dict) -> bool:
-        return bool(h.get("dead") or h.get("fled") or h.get("surrendered")
-                    or not h.get("conscious", True) or h.get("incapacitated"))
+        return bool(
+            h.get("dead")
+            or h.get("fled")
+            or h.get("surrendered")
+            or not h.get("conscious", True)
+            or h.get("incapacitated")
+        )
 
     if hostiles and all(_inactive(h) for h in hostiles):
         if all(h.get("fled") for h in hostiles):

@@ -109,8 +109,14 @@ de bug em definitivo.
 
 **Assinaturas**
 ```python
-def pick_target(enemy: Dict, targets: List[Dict], player: Optional[Dict] = None) -> Optional[Dict]: ...
-def reduce_ally_abyss(medic: Dict, ally: Dict, amount: int, *, cost: int = 0) -> Tuple[bool, str]: ...
+def pick_target(
+    enemy: Dict, targets: List[Dict], player: Optional[Dict] = None
+) -> Optional[Dict]: ...
+def reduce_ally_abyss(
+    medic: Dict, ally: Dict, amount: int, *, cost: int = 0
+) -> Tuple[bool, str]: ...
+
+
 HANDLED_KINDS: Dict[str, set]  # categoria -> kinds com handler no motor
 ```
 

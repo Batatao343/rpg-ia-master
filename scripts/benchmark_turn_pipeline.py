@@ -1,4 +1,5 @@
 """Deterministic, provider-free benchmark for the turn fan-out contract."""
+
 from __future__ import annotations
 
 import argparse
@@ -28,12 +29,13 @@ def sample(*, concurrent: bool, plan_ms: int, route_ms: int) -> float:
     return (time.perf_counter() - started) * 1000
 
 
-def benchmark(*, repetitions: int = 5, plan_ms: int = 80,
-              route_ms: int = 60) -> dict:
-    serial = [sample(concurrent=False, plan_ms=plan_ms, route_ms=route_ms)
-              for _ in range(repetitions)]
-    parallel = [sample(concurrent=True, plan_ms=plan_ms, route_ms=route_ms)
-                for _ in range(repetitions)]
+def benchmark(*, repetitions: int = 5, plan_ms: int = 80, route_ms: int = 60) -> dict:
+    serial = [
+        sample(concurrent=False, plan_ms=plan_ms, route_ms=route_ms) for _ in range(repetitions)
+    ]
+    parallel = [
+        sample(concurrent=True, plan_ms=plan_ms, route_ms=route_ms) for _ in range(repetitions)
+    ]
     serial_median = statistics.median(serial)
     parallel_median = statistics.median(parallel)
     reduction = 1 - (parallel_median / serial_median)

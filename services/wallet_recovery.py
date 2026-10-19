@@ -14,6 +14,7 @@ Image reservations belong to their ``generate_dynamic_art`` job: only a dead/can
 (e.g. lease expired at max attempts) hands its reservation to this sweep.
 A grace period keeps the sweep away from requests that are still finishing normally.
 """
+
 from __future__ import annotations
 
 import os
@@ -70,12 +71,20 @@ def _resolve_image(pool, wallet, principal: Principal, row: dict) -> str:
             return "skipped"  # a live job (queued/retry/running) owns this reservation
         current = wallet._locked_reservation(connection, principal, row["reservation_id"])
         if current["status"] == "reserved":
-            wallet.release_pre_effect(principal, row["reservation_id"],
-                                      fence_token=current["fence_token"], connection=connection)
+            wallet.release_pre_effect(
+                principal,
+                row["reservation_id"],
+                fence_token=current["fence_token"],
+                connection=connection,
+            )
             outcome, code = "released", "job_dead_pre_dispatch"
         elif current["status"] == "effect_started":
-            wallet.mark_uncertain(principal, row["reservation_id"],
-                                  reason="image_job_dead_after_dispatch", connection=connection)
+            wallet.mark_uncertain(
+                principal,
+                row["reservation_id"],
+                reason="image_job_dead_after_dispatch",
+                connection=connection,
+            )
             outcome, code = "uncertain", "external_result_uncertain"
         else:
             return "skipped"
@@ -89,6 +98,7 @@ def _resolve_image(pool, wallet, principal: Principal, row: dict) -> str:
 
 def _resolve_operation(pool, wallet, principal: Principal, row: dict) -> str:
     from infrastructure.wallet import UncertainEffect
+
     if row["status"] == "reserved":
         try:
             done = wallet.recover(principal, row["reservation_id"], new_fence_token=uuid4())
@@ -98,24 +108,34 @@ def _resolve_operation(pool, wallet, principal: Principal, row: dict) -> str:
     # effect_started: never touch a reservation whose operation still holds a live lease (the
     # worker owns it and may still issue a ticket); settle only when every ticket has exact usage.
     lease_until = row.get("lease_until")
-    if (row.get("op_status") == "running" and lease_until is not None
-            and lease_until > datetime.now(UTC)):
+    if (
+        row.get("op_status") == "running"
+        and lease_until is not None
+        and lease_until > datetime.now(UTC)
+    ):
         return "skipped"
     with admin_connection(pool) as connection:
         tickets = connection.execute(
             "select count(*) as n from app.wallet_attempt_tickets where reservation_id=%s",
-            (row["reservation_id"],)).fetchone()["n"]
+            (row["reservation_id"],),
+        ).fetchone()["n"]
         events = connection.execute(
             "select event_id,billing_exact from app.usage_events where operation_id=%s "
             "and owner_id=%s order by event_id",
-            (row["usage_operation_id"], row["owner_id"])).fetchall()
+            (row["usage_operation_id"], row["owner_id"]),
+        ).fetchall()
     if events and len(events) == int(tickets) and all(e["billing_exact"] for e in events):
         try:
-            wallet.settle_usage(principal, row["reservation_id"], fence_token=row["fence_token"],
-                                usage_event_ids=[e["event_id"] for e in events])
+            wallet.settle_usage(
+                principal,
+                row["reservation_id"],
+                fence_token=row["fence_token"],
+                usage_event_ids=[e["event_id"] for e in events],
+            )
             return "settled"
         except Exception as exc:
             from infrastructure.payment_log import wallet_event
+
             wallet_event("settle_failed", row["reservation_id"], exc, stage="settle_usage")
             # fall through: keep the funds held for reconciliation
     try:
@@ -125,14 +145,24 @@ def _resolve_operation(pool, wallet, principal: Principal, row: dict) -> str:
     return done.status
 
 
-def recover_wallet_reservations(pool, max_items: int = 50, *, owner_id: UUID | None = None,
-                                grace: int | None = None) -> dict[str, int]:
+def recover_wallet_reservations(
+    pool, max_items: int = 50, *, owner_id: UUID | None = None, grace: int | None = None
+) -> dict[str, int]:
     """Idempotent, owner-free counts (safe for the cron response and logs)."""
     from infrastructure.wallet import PostgresWallet
+
     wallet = PostgresWallet(pool)
-    counts = {"wallet_seen": 0, "wallet_released": 0, "wallet_settled": 0,
-              "wallet_uncertain": 0, "wallet_skipped": 0, "wallet_errors": 0}
-    for row in _candidates(pool, max_items, owner_id, grace if grace is not None else grace_seconds()):
+    counts = {
+        "wallet_seen": 0,
+        "wallet_released": 0,
+        "wallet_settled": 0,
+        "wallet_uncertain": 0,
+        "wallet_skipped": 0,
+        "wallet_errors": 0,
+    }
+    for row in _candidates(
+        pool, max_items, owner_id, grace if grace is not None else grace_seconds()
+    ):
         counts["wallet_seen"] += 1
         principal = Principal(row["owner_id"], "recovery", str(row["owner_id"]))
         try:
@@ -144,11 +174,19 @@ def recover_wallet_reservations(pool, max_items: int = 50, *, owner_id: UUID | N
                 outcome = _resolve_operation(pool, wallet, principal, row)
         except Exception as exc:
             from infrastructure.payment_log import wallet_event
+
             wallet_event("recovery_item_failed", row["reservation_id"], exc, stage="resolve")
             from observability.telemetry import log_event, pseudonym
-            log_event("cron", "item_failed", level="warning", task="operations",
-                      item_kind="wallet_reservation", item_ref=pseudonym(row["reservation_id"]),
-                      error_type=type(exc).__name__)
+
+            log_event(
+                "cron",
+                "item_failed",
+                level="warning",
+                task="operations",
+                item_kind="wallet_reservation",
+                item_ref=pseudonym(row["reservation_id"]),
+                error_type=type(exc).__name__,
+            )
             counts["wallet_errors"] += 1
             continue
         key = f"wallet_{outcome}"

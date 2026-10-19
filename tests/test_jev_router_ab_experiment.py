@@ -11,7 +11,9 @@ from evals.experiments import jev_router_ab as experiment
 from services.jev_decision import ChoiceAnswer, DecisionResult, Usage
 
 
-def test_preflight_proves_classifier_eligibility_without_calling_provider(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_preflight_proves_classifier_eligibility_without_calling_provider(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     import agents.router as router
 
     def forbidden(*_args: object, **_kwargs: object) -> object:
@@ -47,7 +49,8 @@ def test_budget_stops_before_next_external_call() -> None:
 
 
 def test_raw_write_retries_transient_windows_replace_lock(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     path = tmp_path / "raw.json"
     experiment._write_json(path, {"status": "in_progress"})
@@ -65,7 +68,8 @@ def test_raw_write_retries_transient_windows_replace_lock(
     experiment._write_json(path, {"status": "blocked-by-provider", "calls": 2})
     assert attempts == 2
     assert json.loads(path.read_text(encoding="utf-8")) == {
-        "status": "blocked-by-provider", "calls": 2,
+        "status": "blocked-by-provider",
+        "calls": 2,
     }
     assert not path.with_suffix(".json.tmp").exists()
 
@@ -87,38 +91,67 @@ def test_capture_marks_build_failure_fatal_and_keeps_raw_usage() -> None:
 
     budget = experiment.Budget()
     with experiment._capture_classify(budget) as capture:
-        llm_setup._emit_attempt_telemetry(llm_setup.LLMAttemptEvent(
-            provider="missing", model="missing", tier=llm_setup.ModelTier.CLASSIFY,
-            attempt_index=0, latency_ms=0, fell_back=False,
-            outcome="build_error", error="No module named provider", structured=True,
-        ))
+        llm_setup._emit_attempt_telemetry(
+            llm_setup.LLMAttemptEvent(
+                provider="missing",
+                model="missing",
+                tier=llm_setup.ModelTier.CLASSIFY,
+                attempt_index=0,
+                latency_ms=0,
+                fell_back=False,
+                outcome="build_error",
+                error="No module named provider",
+                structured=True,
+            )
+        )
         routed = llm_setup.RoutedLLM(llm_setup.ModelTier.CLASSIFY, 0.0, [])
         routed = routed.with_structured_output(RouterDecision)
-        routed._normalize_internal_structured_result({
-            "raw": AIMessage(content="", usage_metadata={"input_tokens": 12, "output_tokens": 3, "total_tokens": 15}),
-            "parsed": RouterDecision(route="storyteller", loot_context=None, target=None,
-                                     reasoning="test", confidence=0.9),
-            "parsing_error": None,
-        })
+        routed._normalize_internal_structured_result(
+            {
+                "raw": AIMessage(
+                    content="",
+                    usage_metadata={"input_tokens": 12, "output_tokens": 3, "total_tokens": 15},
+                ),
+                "parsed": RouterDecision(
+                    route="storyteller",
+                    loot_context=None,
+                    target=None,
+                    reasoning="test",
+                    confidence=0.9,
+                ),
+                "parsing_error": None,
+            }
+        )
     assert capture["fatal_sanity_error"]
     assert capture["usage_rows"] == [{"input_tokens": 12, "output_tokens": 3}]
 
 
 def test_jev_over_budget_keeps_observed_response() -> None:
-    case = next(case for case in experiment._cases()[0] if case.id == experiment.preflight()["eligible_ids"][0])
+    case = next(
+        case
+        for case in experiment._cases()[0]
+        if case.id == experiment.preflight()["eligible_ids"][0]
+    )
 
     class Backend:
         def decide(self, *_args: object, **_kwargs: object) -> DecisionResult:
             return DecisionResult(
                 model="fixture-model",
-                answers={"route": ChoiceAnswer(
-                    type="choice", choice="storyteller",
-                    probabilities={route: (1.0 if route == "storyteller" else 0.0)
-                                   for route in experiment.ROUTES},
-                    confidence=1.0,
-                )},
+                answers={
+                    "route": ChoiceAnswer(
+                        type="choice",
+                        choice="storyteller",
+                        probabilities={
+                            route: (1.0 if route == "storyteller" else 0.0)
+                            for route in experiment.ROUTES
+                        },
+                        confidence=1.0,
+                    )
+                },
                 usage=Usage(input_tokens=12, output_tokens=3),
-                correlation_id="fixture", latency_ms=5, cost_usd=2.0,
+                correlation_id="fixture",
+                latency_ms=5,
+                cost_usd=2.0,
             )
 
     budget = experiment.Budget(max_cost_usd=1.0)
@@ -132,7 +165,8 @@ def test_jev_over_budget_keeps_observed_response() -> None:
 
 
 def test_raw_is_durable_before_scoring_and_all_pairs_keep_order(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.delenv("RPG_FORCE_MOCK", raising=False)
     monkeypatch.delenv("RPG_NO_MOCK", raising=False)
@@ -153,10 +187,17 @@ def test_raw_is_durable_before_scoring_and_all_pairs_keep_order(
     def actual(case: object, _budget: object, *_args: object) -> dict[str, object]:
         assert getattr(case, "id") in expected_order
         return {
-            "route": "storyteller", "confidence": 0.5, "probabilities": "unavailable",
-            "latency_ms": 10, "attempts": [{"provider": "offline", "outcome": "success"}],
-            "provider": "offline", "model": "fake", "usage": "unavailable",
-            "cost_usd": "unavailable", "error": None, "fatal_sanity_error": False,
+            "route": "storyteller",
+            "confidence": 0.5,
+            "probabilities": "unavailable",
+            "latency_ms": 10,
+            "attempts": [{"provider": "offline", "outcome": "success"}],
+            "provider": "offline",
+            "model": "fake",
+            "usage": "unavailable",
+            "cost_usd": "unavailable",
+            "error": None,
+            "fatal_sanity_error": False,
         }
 
     monkeypatch.setattr(experiment, "JevDecisionBackend", OfflineBackend)
@@ -207,5 +248,8 @@ def test_incomplete_run_has_no_score(tmp_path: Path, monkeypatch: pytest.MonkeyP
     output_dir = tmp_path / "experiment"
     raw = experiment.run(output_dir)
     assert raw["status"] == "blocked-by-provider"
-    assert json.loads((output_dir / "raw.json").read_text(encoding="utf-8"))["status"] == "blocked-by-provider"
+    assert (
+        json.loads((output_dir / "raw.json").read_text(encoding="utf-8"))["status"]
+        == "blocked-by-provider"
+    )
     assert not (output_dir / "summary.json").exists()
