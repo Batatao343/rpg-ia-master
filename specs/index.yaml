@@ -4049,7 +4049,7 @@ specs:
   lineage_note: Authored from security audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
 - id: SPEC-225
   slug: supply-chain-ci-release-hygiene
-  status: in-progress
+  status: done
   path: specs/SPEC-225-supply-chain-ci-release-hygiene.md
   created_commit: null
   created_at: '2026-10-15'
@@ -4619,7 +4619,7 @@ specs:
   lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P2
 - id: SPEC-259
   slug: android-shell-logs-billing
-  status: done
+  status: in-progress
   path: specs/SPEC-259-android-shell-logs-billing.md
   created_commit: null
   created_at: '2026-10-18'
