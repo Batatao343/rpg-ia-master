@@ -315,8 +315,11 @@ def _resolve_attack_step(scene, actor, actor_id, actors_by_id, step, out, *, sta
             # SPEC-275 R3: declaração recusada de INIMIGO não é no-op — cai UMA
             # vez em ataque básico no mesmo alvo (nada cobrado); se também for
             # recusado, o bloco abaixo registra a recusa e o turno passa.
-            out["logs"].append(reason)
-            out["logs"].append("enemy_declaration_fallback: ataque básico.")
+            # Telemetria estruturada; a prosa não recebe o motivo técnico.
+            out.setdefault("enemy_fallbacks", []).append({
+                "event": "enemy_declaration_fallback", "actor_id": actor_id,
+                "card_id": step.card_id, "reason": reason,
+            })
             logger.info("enemy_declaration_fallback actor=%s", actor_id)
             card, step.card_id, effect_kind = None, None, "dano"
         elif reason:

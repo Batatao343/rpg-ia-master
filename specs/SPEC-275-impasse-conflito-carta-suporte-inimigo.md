@@ -1,6 +1,6 @@
 # SPEC-275 — Impasse eterno no conflito: inimigo oculto "ataca" com Carta de suporte recusada
 
-> **Status:** `in-progress` (implementada; aguarda revisão independente Astra)
+> **Status:** `done` (revisão Astra APPROVED 2026-10-19 com 4 correções — [handoff](../handoffs/SPEC-275-ASTRA-review.md))
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Origem:** revisão SPEC-272 2026-10-18 (achado: `combat.no_progress` em `playtest run --profile combate --turns 200`, offline)
 > **Depende de:** —

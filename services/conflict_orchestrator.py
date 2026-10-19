@@ -457,7 +457,8 @@ def enemy_declaration(scene: dict, actor_id: str, actors_by_id: Dict[str, dict],
     if taunted_target is not None:
         target = taunted_target
 
-    if actor.pop("_forced_attack", None) and action_key not in {"flee", "surrender"}:
+    forced_attack = bool(actor.pop("_forced_attack", None))
+    if forced_attack and action_key not in {"flee", "surrender"}:
         action_key = "attack"      # SPEC-275 R5: quebra de impasse — ataca.
     if action_key == "control" and not canonical["controle_disponivel"]:
         action_key = "attack"
@@ -505,7 +506,8 @@ def enemy_declaration(scene: dict, actor_id: str, actors_by_id: Dict[str, dict],
         action_key = "attack"
 
     # Carta de inimigo (conflito-15: `cartas`) quando houver Entropia; senão ataque básico.
-    card_id = _enemy_offensive_card(actor, scene=scene, actor_id=actor_id)
+    card_id = _enemy_offensive_card(actor, scene=scene, actor_id=actor_id,
+                                    allow_hide=not forced_attack)
     if card_id:
         # SPEC-275 R2: Carta de suporte mira o próprio lado, nunca o jogador.
         kind = str(((_get_card(card_id) or {}).get("efeito") or {}).get("kind") or "")
@@ -523,6 +525,7 @@ def _get_card(card_id: str) -> Optional[dict]:
 
 def _enemy_offensive_card(
     actor: dict, *, scene: Optional[dict] = None, actor_id: str = "",
+    allow_hide: bool = True,
 ) -> Optional[str]:
     """Primeira Carta de inimigo ofensiva utilizável (assinatura oculta da 15) —
     só id embutido na ficha; inimigo NÃO usa o Acervo do jogador."""
@@ -533,7 +536,11 @@ def _enemy_offensive_card(
         position = ((scene or {}).get("positions") or {}).get(actor_id) or {}
         # Esconder-se de novo enquanto já oculto não cria mudança mecânica e
         # pode bloquear o conflito para sempre (Mimetismo Morto da matriz A).
-        if effect_kind == "esconder" and position.get("ocultacao") == "escondido":
+        if effect_kind == "esconder" and (
+            not allow_hide or position.get("ocultacao") == "escondido"
+        ):
+            # SPEC-275 R5 (revisão Astra): na quebra de impasse o inimigo ATACA —
+            # esconder-se de novo anularia a quebra.
             continue
         # SPEC-275 R1: "ofensiva" de verdade — Carta de suporte recusada contra
         # o jogador deixava o inimigo inerte para sempre.
@@ -1059,6 +1066,8 @@ def _resolve_actor_turn(scene: dict, actor: dict, actor_id: str, actors_by_id: D
     out["logs"] += [l for l in sub.get("logs", []) if l]
     out.setdefault("attacks", []).extend(sub.get("attacks", []))
     out.setdefault("cards_used", []).extend(sub.get("cards_used", []))
+    if sub.get("enemy_fallbacks"):
+        out.setdefault("enemy_fallbacks", []).extend(sub["enemy_fallbacks"])
     for tid in sub.get("terminal", []):
         if tid not in out["terminal"]:
             out["terminal"].append(tid)
@@ -1375,12 +1384,13 @@ def _is_cowardly(actor: dict) -> bool:
 
 
 def _stalemate_guard(scene: dict, actors_by_id: Dict[str, dict],
-                     sides: Dict[str, List[str]]) -> List[str]:
+                     sides: Dict[str, List[str]]) -> List[dict]:
     """SPEC-275 R5 (decisão do dono 2026-10-18): após ``STALEMATE_ROUNDS``
     rodadas seguidas SEM dano, o motor quebra o impasse, 100% determinístico:
     inimigos ``covarde*`` fogem (``fled``); os demais perdem a ocultação e
     atacam na rodada seguinte. Contador em ``scene["stalemate"]`` (persistido
-    junto da cena; ausente em saves antigos = 0). Devolve eventos."""
+    junto da cena; ausente em saves antigos = 0). Devolve eventos estruturados
+    ``{event, actor_id, outcome, log}`` — só ``log`` (pt-BR) vai à narração."""
     fp = _damage_fingerprint(actors_by_id)
     st = scene.setdefault("stalemate", {"rounds": 0, "fp": fp})
     if st.get("fp") != fp:
@@ -1398,13 +1408,17 @@ def _stalemate_guard(scene: dict, actors_by_id: Dict[str, dict],
         if _is_cowardly(enemy):
             enemy["fled"] = True
             enemy["status"] = "fugiu"
-            events.append(f"conflict_stalemate_broken: {_name(enemy)} foge do impasse.")
+            events.append({"event": "conflict_stalemate_broken", "actor_id": eid,
+                           "outcome": "fled",
+                           "log": f"{_name(enemy)} desiste do impasse e foge do conflito."})
         else:
             pos = (scene.get("positions") or {}).get(eid)
             if pos is not None:
                 cs._reveal(pos)
             enemy["_forced_attack"] = True
-            events.append(f"conflict_stalemate_broken: {_name(enemy)} sai da ocultação e ataca.")
+            events.append({"event": "conflict_stalemate_broken", "actor_id": eid,
+                           "outcome": "reveal_attack",
+                           "log": f"{_name(enemy)} perde a paciência e sai da ocultação para atacar."})
     if events:
         logger.info("conflict_stalemate_broken events=%s", len(events))
     return events
@@ -1442,7 +1456,10 @@ def run_round(scene: dict, actors_by_id: Dict[str, dict], sides: Dict[str, List[
         out["action_refused"] = True
         return out
     cs.advance_tactical_state(scene)
-    out["logs"].extend(_stalemate_guard(scene, actors_by_id, sides))
+    stalemate_events = _stalemate_guard(scene, actors_by_id, sides)
+    if stalemate_events:
+        out["stalemate_events"] = stalemate_events
+        out["logs"].extend(ev["log"] for ev in stalemate_events)
     player = _find_player(actors_by_id, sides)
     player_id = _player_id(sides)
     player_decl = declarations.get(player_id) if player_id else None

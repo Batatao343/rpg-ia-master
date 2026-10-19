@@ -70,8 +70,9 @@ def test_enemy_refused_declaration_falls_back_once():
                          declarations={"player": _pass_decl()["player"], "viuva": decl},
                          rng=random.Random(3))
     assert any(a["actor_id"] == "viuva" for a in out["attacks"])
-    assert any("enemy_declaration_fallback" in line or "fallback" in line.lower()
-               for line in out["logs"])
+    assert [f["event"] for f in out["enemy_fallbacks"]] == ["enemy_declaration_fallback"]
+    # o motivo técnico fica na telemetria, não na prosa enviada ao narrador
+    assert not any("fallback" in line.lower() or "recusada" in line for line in out["logs"])
     # Entropia/frequência da Carta recusada não foram cobradas
     assert actors["viuva"]["entropy"] == 10
 
@@ -94,7 +95,8 @@ def test_stalemate_guard_breaks_after_k_rounds():
     for _ in range(orch.STALEMATE_ROUNDS):
         assert orch._stalemate_guard(scene, actors, sides) == []
     events = orch._stalemate_guard(scene, actors, sides)
-    assert events and "conflict_stalemate_broken" in events[0]
+    assert events and events[0]["event"] == "conflict_stalemate_broken"
+    assert events[0]["outcome"] == "fled"
     assert actors["viuva"].get("fled") is True
 
 
@@ -142,3 +144,61 @@ def test_enemy_support_card_targets_own_side():
     decl = orch.enemy_declaration(scene, "viuva", actors, sides, rng=random.Random(1))
     if decl.acao.kind == "card":
         assert decl.acao.target_id == "viuva"
+
+
+# --- revisão Astra (2026-10-19) ---------------------------------------------
+
+def test_forced_attack_is_not_cancelled_by_hide_card():
+    """R5: o inimigo forçado a atacar não pode gastar a ação se escondendo de novo
+    (Mimetismo Morto custa 0 e tem frequência por turno)."""
+    scene, actors, sides = _world(("brute",), hidden=False, cards=("bst_mimetismo_morto",))
+    free = orch.enemy_declaration(scene, "brute", actors, sides, rng=random.Random(1))
+    assert free.acao.card_id == "bst_mimetismo_morto"
+    actors["brute"]["_forced_attack"] = True
+    forced = orch.enemy_declaration(scene, "brute", actors, sides, rng=random.Random(1))
+    assert forced.acao.kind == "attack" and forced.acao.card_id is None
+    assert forced.acao.target_id == "player"
+    assert "_forced_attack" not in actors["brute"]
+
+
+def test_run_round_stalemate_break_is_structured_and_narratable():
+    scene, actors, sides = _world(("viuva",))
+    actors["viuva"]["arquetipo"] = "covarde_oportunista"
+    actors["viuva"]["cartas"] = []
+    out = None
+    for _ in range(orch.STALEMATE_ROUNDS + 1):
+        # o jogador apenas espera; o inimigo oculto também não fere (cego p/ player)
+        scene["positions"]["player"]["hidden_from"] = ["viuva"]
+        scene["positions"]["player"]["ocultacao"] = "escondido"
+        out = orch.run_round(scene, actors, sides, {"player": actors["player"]},
+                             declarations=_pass_decl(), rng=random.Random(7))
+        if out.get("stalemate_events"):
+            break
+    assert out["stalemate_events"][0]["outcome"] == "fled"
+    assert out["ended"] is True and out["reason"] == "todos os hostis fugiram"
+    assert all("conflict_stalemate_broken" not in line for line in out["logs"])
+    assert any("foge do conflito" in line for line in out["logs"])
+
+
+def test_stalemate_counter_survives_save_load_roundtrip():
+    import json
+    scene, actors, sides = _world(("brute",))
+    for _ in range(orch.STALEMATE_ROUNDS - 1):
+        orch._stalemate_guard(scene, actors, sides)
+    scene = json.loads(json.dumps(scene))           # save/load é JSON
+    actors = json.loads(json.dumps(actors))
+    assert orch._stalemate_guard(scene, actors, sides) == []
+    assert scene["stalemate"]["rounds"] == orch.STALEMATE_ROUNDS
+    assert orch._stalemate_guard(scene, actors, sides)   # K+1 quebra
+
+
+def test_real_llm_campaign_keeps_random_game_id():
+    """R6: id derivado do seed só no mock — em --real a memória vetorial da sessão
+    (fora de saves_playtest) seria herdada por outra campanha com o mesmo seed."""
+    from playtest.runner import _build_initial_state
+    a = _build_initial_state("combate", 3)["game_id"]
+    b = _build_initial_state("combate", 3)["game_id"]
+    assert a == b
+    c = _build_initial_state("combate", 3, random_game_id=True)["game_id"]
+    d = _build_initial_state("combate", 3, random_game_id=True)["game_id"]
+    assert len({a, c, d}) == 3

@@ -19,4 +19,7 @@ atacam na rodada seguinte (determinístico, evento `conflict_stalemate_broken`).
 - `--all --turns 3`: 14 perfis, 0 erros/violações. Suíte completa exit 0; ruff verde; `evals.core.governance check` ok; eval `encounter_manifest`/`state_rules` passed.
 
 ## Limites
-Letalidade efetiva sobe (inimigos antes inertes agora atacam) — medir via SPEC-049. Smoke LLM real (§6) não executado. Revisão independente (REVIEW_REQUIRED) pendente.
+Letalidade efetiva sobe (inimigos antes inertes agora atacam) — medir via SPEC-049.
+
+## Revisão Astra (2026-10-19) — APPROVED
+Corrigidos: quebra R5 anulada por `esconder`; tokens técnicos (`conflict_stalemate_broken`/`enemy_declaration_fallback`/motivo de recusa) fora da prosa — agora `out["stalemate_events"]`/`out["enemy_fallbacks"]` estruturados; `game_id` por seed só no mock (em `--real` a memória vetorial ficaria compartilhada entre campanhas de mesmo seed). Smoke real §6 (DeepSeek, 32 chamadas) verde. Detalhes: [handoff](../../handoffs/SPEC-275-ASTRA-review.md).

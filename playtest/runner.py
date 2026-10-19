@@ -344,7 +344,8 @@ def campaign_game_id(profile: str, seed: Optional[int], discriminator: object = 
 
 def _build_initial_state(profile: str, seed: int,
                          class_name: Optional[str] = None,
-                         start_level: int = 1) -> dict:
+                         start_level: int = 1,
+                         random_game_id: bool = False) -> dict:
     """Monta o estado inicial da campanha — MESMO shape de api.new_game."""
     from langchain_core.messages import HumanMessage, SystemMessage
     from character_creator import create_player_character
@@ -362,7 +363,12 @@ def _build_initial_state(profile: str, seed: int,
     final_char = create_player_character(char_input)
     level = int(char_input["level"])
 
-    game_id = campaign_game_id(profile, seed, f"{class_name}:{start_level}")
+    # SPEC-275 R6 (revisão Astra): id derivado do seed só no MOCK. Em --real a
+    # memória vetorial da sessão vive fora de saves_playtest (data/saves_memory/
+    # {game_id}) e o LLM não é reproduzível: um id repetido herdaria fatos de
+    # outra campanha (ex.: matriz A × B com os mesmos seeds).
+    game_id = campaign_game_id(
+        profile, None if random_game_id else seed, f"{class_name}:{start_level}")
     region = final_char["region"]
     initial = {
         "game_id": game_id,
@@ -1071,6 +1077,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
         try:
             state = _build_initial_state(
                 profile, seed, class_name=class_name, start_level=start_level,
+                random_game_id=use_real_llm,
             )
             if scenario_module is not None:
                 # O startup (campaign_manager/storyteller) já deve enxergar a
