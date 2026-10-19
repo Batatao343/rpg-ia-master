@@ -618,16 +618,21 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
     from infrastructure.supabase_blob import SupabaseBlobStore
     from infrastructure.supabase_identity import SupabaseIdentityProvider
 
+    from observability.boot import log_build_failed
     admin_pool = None
     if config.admin_database_url and config.admin_database_url != config.database_url:
-        admin_pool = PostgresPool(
-            config.admin_database_url,
-            min_size=config.db_pool_min_size,
-            max_size=config.db_pool_max_size,
-            timeout=config.db_pool_timeout,
-            transaction_pooler=config.profile == "hosted-supabase",
-            connect_timeout=config.db_connect_timeout,
-        )
+        try:
+            admin_pool = PostgresPool(
+                config.admin_database_url,
+                min_size=config.db_pool_min_size,
+                max_size=config.db_pool_max_size,
+                timeout=config.db_pool_timeout,
+                transaction_pooler=config.profile == "hosted-supabase",
+                connect_timeout=config.db_connect_timeout,
+            )
+        except Exception as exc:
+            log_build_failed("admin_pool", exc)   # SPEC-249 R3
+            raise
     if not config.request_rls:
         _log_event("runtime", "request_rls_disabled", level="warning", profile=config.profile)
     try:
@@ -641,10 +646,12 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
             request_rls=config.request_rls,
             admin_pool=admin_pool,
         )
-    except Exception:
+    except Exception as exc:
+        log_build_failed("db_pool", exc)
         if admin_pool is not None:
             admin_pool.close()
         raise
+    stage = "blob"
     try:
         if config.blob_store == "supabase":
             if not config.supabase_url or not config.supabase_service_role_key:
@@ -670,6 +677,7 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
             )
         else:
             raise ValueError(f"BlobStore não suportado: {config.blob_store}")
+        stage = "identity"
         if config.auth_mode == "supabase":
             if not config.supabase_url or not config.supabase_publishable_key:
                 raise ValueError("auth Supabase exige SUPABASE_URL e SUPABASE_PUBLISHABLE_KEY")
@@ -695,6 +703,7 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
                 raise ValueError(f"embedding incompatível: {len(values)} dimensões")
             return values
 
+        stage = "vector"
         import rag as _rag
         _rag.validate_pgvector_provider()  # SPEC-234 R9: recusa dimensao != 1024
         memory_store = PgVectorMemoryStore(
@@ -717,7 +726,8 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
             identity_verifier=identity,
             resources=(pool,),
         )
-    except Exception:
+    except Exception as exc:
+        log_build_failed(stage, exc)
         pool.close()
         raise
 

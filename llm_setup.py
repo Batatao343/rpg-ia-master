@@ -1116,3 +1116,24 @@ def is_simulated() -> bool:
     if provider:
         return provider == "gemini" and not os.getenv("GOOGLE_API_KEY")
     return not _any_key_available()
+
+
+def llm_mode() -> str:
+    """SPEC-249/248: modo efetivo do LLM — ``routes|legacy:<provider>|mock|fallback``.
+
+    Espelha a ordem de resolução de ``get_llm`` (sem instanciar nada)."""
+    if os.getenv("RPG_FORCE_MOCK"):
+        return "mock"
+    provider = os.getenv("LLM_PROVIDER", "").strip().lower()
+    if provider:
+        if provider == "gemini" and not os.getenv("GOOGLE_API_KEY"):
+            return "fallback" if os.getenv("RPG_NO_MOCK") else "mock"
+        return f"legacy:{provider[:24]}"
+    if not _any_key_available():
+        return "fallback" if os.getenv("RPG_NO_MOCK") else "mock"
+    return "routes"
+
+
+def providers_with_key() -> list[str]:
+    """Nomes (nunca valores) dos providers com chave configurada."""
+    return sorted(p for p, env in PROVIDER_KEY_ENV.items() if os.getenv(env))

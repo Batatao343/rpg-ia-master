@@ -1,6 +1,6 @@
 # SPEC-249 — Linha de boot: perfil, build, adapters, modo LLM, embeddings e segredos ausentes
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P1**.
+> **Status:** `in-progress` — implementada em `logs-p1` (REVIEW_REQUIRED; smoke staging pendente)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-239
 > **Desbloqueia:** SPEC-261, SPEC-262
@@ -55,12 +55,12 @@ R1–R5.
 
 ## 5. Critérios de aceite
 
-- [ ] Cada instância tem 1 `runtime.boot`; toda linha tem `instance_ref`.
-- [ ] Zero segredos (teste).
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Cada instância tem 1 `runtime.boot`; toda linha tem `instance_ref`.
+- [x] Zero segredos (teste).
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] `uv run pytest` verde (suíte completa offline).
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -71,3 +71,7 @@ R1–R5.
 - Nenhum.
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## Execução (logs-p1, 2026-10-18)
+
+Implementado: `observability/boot.py` (`runtime.boot`, `runtime.config_warning`, `runtime.build_failed`), `instance_ref` em toda linha via `JsonLineFormatter`, `llm_setup.llm_mode()/providers_with_key()`. Testes: `tests/test_boot_log.py`. Falta o smoke de staging (§6) e a revisão Sol.

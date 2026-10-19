@@ -995,6 +995,9 @@ def _revoke_session(identity, access: str | None, refresh: str | None) -> None:
 from observability.logging_setup import configure_logging
 
 configure_logging()
+from observability.boot import log_boot_once   # SPEC-249
+
+log_boot_once()
 _turn_logger = logging.getLogger("rpg.turn")
 
 
