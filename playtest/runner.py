@@ -133,6 +133,7 @@ class TurnRecord:
     model: str | None = None
     tier: str | None = None
     fell_back: bool = False
+    guard_code: str | None = None
     # Fase 5.3: todos os invokes de LLM do turno (p/ custo agregado) e métricas
     # de estado capturadas pós-turno (alimentam a telemetria JSONL).
     llm_events: list[dict] = field(default_factory=list)
@@ -936,6 +937,10 @@ def _run_turn(
         elif mode == "values":
             final = chunk
     route = "combat_agent" if combat_on_entry else router_next
+    if not route and "action_guard" in nodes and "dm_router" not in nodes:
+        # SPEC-286: recusa determinística do action_guard encerra o grafo antes
+        # do router; a rota é o próprio guard, nunca vazia.
+        route = "action_guard"
     return final, route
 
 
@@ -1297,6 +1302,10 @@ def run_campaign(
                     )
                     rec.quests_after = len(new_state.get("quests", []) or [])
                     rec.narrative = _last_ai_text(new_state)
+                    if new_state.get("action_guard_blocked"):
+                        rec.guard_code = str(
+                            (new_state.get("last_action_outcome") or {}).get("code") or "blocked"
+                        )
                     _fill_state_metrics(
                         rec,
                         new_state,

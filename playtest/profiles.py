@@ -188,14 +188,22 @@ def _dangerous_here(state: dict) -> bool:
 
 def _needs_recovery(state: dict) -> bool:
     player = state.get("player") or {}
-    return not player.get("conscious", True) or player.get("post_combat_state") == "inconsciente"
+    return (
+        not player.get("conscious", True)
+        or bool(player.get("incapacitated"))
+        or player.get("post_combat_state") == "inconsciente"
+    )
 
 
 def _recovery_decision(state: dict) -> ProfileDecision:
-    """Jogo razoável: sai de perigo alto antes de montar acampamento."""
+    """Jogo razoável: sai de perigo alto antes de montar acampamento.
+
+    SPEC-286: inconsciente/incapacitado NÃO viaja (o action_guard recusa tudo
+    menos recuperação, que precisa casar a frase inteira) — só declara descanso.
+    """
     world = state.get("world") or {}
     current_danger = int(world.get("danger_level", 1) or 1)
-    if current_danger > 3:
+    if current_danger > 3 and not _needs_recovery(state):
         connections = sorted(
             _connections(_current_id(state)),
             key=lambda loc: (int(loc.get("danger", 9) or 9), loc.get("id", "")),
@@ -215,7 +223,7 @@ def _recovery_decision(state: dict) -> ProfileDecision:
                 mode="free_text",
             )
     return ProfileDecision(
-        text="Descanso: monto acampamento para recuperar as forças.",
+        text="Descanso para me recuperar.",
         mode="free_text",
     )
 

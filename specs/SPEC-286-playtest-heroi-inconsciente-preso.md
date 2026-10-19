@@ -1,68 +1,29 @@
-# SPEC-286 — playtest-heroi-inconsciente-preso
+# SPEC-286 — Playtest preso com herói inconsciente (perfil, rota do guard, contrato JSONL)
 
-> **Status:** `draft`
-> **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
-> **Depende de:** <specs anteriores que precisam estar `done`>
-> **Desbloqueia:** <specs/features que dependem desta>
+> **Status:** `done` (aprovada sob a autorização do dono de 19/10 para tudo que não exige ação externa dele)
+> **Criada:** 2026-10-19 · **Origem:** achado da SPEC-283 (reproduzível na main)
+> **EXECUTOR_MODEL:** `Sonnet` · **REVIEW_REQUIRED:** `false` (só harness de playtest; produto intacto)
 
----
+## 1. Contexto
+`playtest run --profile combate --turns 200` com seeds 23/24 saía exit 1 sem erro/violação: após vencer
+um combate o herói ficava inconsciente e o perfil continuava propondo "Viajo para X em busca de abrigo
+antes de descansar" (turnos 142–200 repetidos). O `action_guard` recusa tudo que não seja recuperação;
+o turno nem chegava ao router, então `route` ficava `''` e o manifesto marcava "contrato JSONL inválido".
 
-## 1. Contexto & Objetivo
+## 2. Diagnóstico
+- (a) O JOGO tem saída válida: o guard avisa "Declare descanso, tratamento ou aguarde socorro" e
+  `evaluate_action` aceita recuperação (`_RECOVERY`, `fullmatch`) em UNCONSCIOUS/INCAPACITATED. Não é bug de produto.
+- (b) Bug do perfil: `_recovery_decision` viajava quando `danger_level > 3`, mesmo inconsciente; e o texto
+  de descanso ("Descanso: monto acampamento para recuperar as forças.") não casa o `fullmatch` estrito.
+- (c) Bug do harness: recusa do guard encerra o grafo antes do `dm_router`, rota `''`.
 
-Por que esta spec existe. Qual problema resolve. 2-4 parágrafos no máximo.
-Referência ao princípio de arquitetura relevante (ver `ROADMAP.md` § Princípios).
+## 3. Requisitos
+- R1: inconsciente/incapacitado nunca viaja; o texto de recuperação é aceito pelo guard (`Descanso para me recuperar.`).
+- R2: turno recusado pelo guard grava `route="action_guard"` e `guard_code` (ex. `blocked_unconscious`) no JSONL.
+- R3: o contrato JSONL aceita `action_guard` (sem exigir `archivist` em `nodes_executed`).
+- R4: regressão offline + prova com seeds 21/23/24.
 
-## 2. Requisitos
-
-Numerados, testáveis. Cada requisito deve poder virar assert.
-
-- **R1** — ...
-- **R2** — ...
-
-### Fora de escopo
-
-Lista explícita do que esta spec NÃO cobre (anti-scope-creep).
-
-## 3. Design técnico
-
-Detalhe suficiente para uma sessão futura de IA implementar **sem reler o roadmap**:
-
-- **Arquivos novos** — caminho + responsabilidade
-- **Arquivos alterados** — o que muda em cada um
-- **Schemas** — Pydantic/TypedDict completos (campos, tipos, defaults)
-- **Assinaturas** — funções públicas com tipos
-- **Formatos de dados** — JSON/frontmatter com exemplo real (usar IDs canônicos do projeto, não inventados)
-
-## 4. Plano passo a passo
-
-Etapas ordenadas e testáveis. **Testes primeiro** (TDD): cada etapa nomeia os
-testes a escrever ANTES do código e o que cada um asserta.
-
-### Etapa N — <nome>
-
-1. **Testes** (`tests/test_<...>.py`): `test_x` asserta ...; `test_y` asserta ...
-2. **Implementação:** ...
-3. **Verificação:** `uv run pytest` verde.
-
-## 5. Critérios de aceite
-
-Checklist objetivo. A spec só vira `done` com todos marcados.
-
-- [ ] ...
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo (try/except ou isinstance)
-- [ ] Saves antigos continuam carregando
-
-## 6. Smoke test com LLM real
-
-Checklist manual curto (3-5 requests, dentro da quota Gemini de 20/dia/modelo).
-MockLLM esconde bugs de mapeamento de campo — este passo é obrigatório antes de `done`.
-
-1. ...
-2. ...
-
-## 7. Riscos & compatibilidade
-
-- Compatibilidade com saves antigos: ...
-- Comportamento no MockLLM / FallbackLLM: ...
-- Impacto em quota/latência: ...
+## 4. Critérios de aceite
+- [x] `tests/test_spec286_heroi_inconsciente.py` (3 testes): todos os perfis recuperam inconscientes; incapacitado idem; rota do guard não vazia.
+- [x] `playtest run --profile combate --turns 200 --seed N` para N=21, 23, 24: exit 0, 200 turnos, 0 erro/violação, 0 `route ''`, 0 recusas do guard (antes: exit 1, 59+ turnos perdidos).
+- [x] Suíte completa registrada no hand-back.

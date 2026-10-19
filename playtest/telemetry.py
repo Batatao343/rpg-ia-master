@@ -451,14 +451,17 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
                             "npc_actor",
                             "loot",
                             "timeout",
+                            "action_guard",
                         }:
                             row_contract_errors.append(f"route inválida {row.get('route')!r}")
                         nodes = row.get("nodes_executed")
                         if not isinstance(nodes, list):
                             row_contract_errors.append("nodes_executed inválido")
-                        elif row.get("route") != "timeout" and not nodes:
+                        elif row.get("route") not in {"timeout", "action_guard"} and not nodes:
                             row_contract_errors.append("nodes_executed vazio")
-                        elif row.get("route") != "timeout" and "archivist" not in nodes:
+                        elif row.get("route") not in {"timeout", "action_guard"} and (
+                            "archivist" not in nodes
+                        ):
                             row_contract_errors.append("archivist ausente de nodes_executed")
                         decision = row.get("decision")
                         if not isinstance(decision, dict):
@@ -747,6 +750,7 @@ def turn_to_record(rec: TurnRecord) -> dict:
         "canonical_turn": rec.canonical_turn,
         "timeline_epoch": rec.timeline_epoch,
         "route": rec.route,
+        "guard_code": rec.guard_code,
         "nodes_executed": list(rec.nodes_executed),
         "node_latency_ms": dict(rec.node_latency_ms),
         "combat_executed": rec.combat_executed,
