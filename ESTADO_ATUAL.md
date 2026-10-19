@@ -61,6 +61,8 @@ devolvem o parágrafo no hand-back. Ao abrir a próxima onda, mova estas notas p
 
 <!-- onda:inserir-aqui -->
 
+- **19/10 — SPEC-282 `done`:** o "timeout do axe" no M07 mobile não era a11y nem app: cada jornada leva 4–12 s sozinha e estourava o teto default de 30 s com a CPU disputada. Teto de 90 s no arquivo `mobile-single-pane` (asserções serious/critical intactas); 14/14 em 3 repetições. Achado: nesta máquina o Playwright completo leva ~8 min e timeouts de 30 s aparecem em outras specs sob carga; no CI passa.
+
 - **19/10 — SPEC-225 `done`:** CI verde com secret-scan/pip-audit/npm audit, Dependabot ativo, 4 environments só `main` + reviewer (`post-deploy-smoke` ganhou reviewer); 1º scan semanal do gitleaks tinha 3 falsos positivos (caminhos renomeados) → `.gitleaksignore`, 568 commits limpos. Critério da compra de license tester movido para a SPEC-198. **SPEC-259 reaberta:** no AVD `rpg34` R1–R3 ok, mas o app nunca envia `X-RPG-App-Version` (plugin do Capacitor registra ~200 ms depois da leitura).
 
 - **19/10 — SPEC-281 `done`:** o client HTTP do Jev é construído antes do prazo de 1 s (1º turno de instância fria não dá mais timeout falso); falha ao construir o client ou ao importar a política congelada cai no CLASSIFY em vez de derrubar o turno; `off` intacto. Revisão Opus APPROVED com 1 P1 corrigido ([parecer](handoffs/SPEC-281-review.md)). Vale no staging no próximo deploy.
