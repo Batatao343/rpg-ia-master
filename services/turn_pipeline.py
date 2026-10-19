@@ -66,13 +66,15 @@ def turn_prepare_node(state: dict) -> dict:
 
 def route_intent_node(state: dict) -> dict:
     """Router branch adapter: it never owns the canonical world channel."""
-    from agents.router import dm_router_node
+    from agents.router import dm_router_node, last_decision, reset_last_decision
 
     from observability.telemetry import span
 
+    reset_last_decision()
     with span("turn.route"):
         update = dict(dm_router_node(state) or {})
     update.pop("world", None)
+    update.update({"route_source": None, "route_fallback_reason": None, **last_decision()})   # SPEC-247: route_source / route_fallback_reason -> rpg.turn
     return update
 
 

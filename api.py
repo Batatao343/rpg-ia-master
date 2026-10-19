@@ -3732,6 +3732,26 @@ def _operation_hash(req: ActionRequest) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
+def _op_rejected(reason: str, kind: str, operation_id=None) -> None:
+    """SPEC-247 R3: todo 409 de operacao deixa linha com motivo fechado (nunca o id cru)."""
+    try:
+        from observability.telemetry import log_event, pseudonym
+        log_event("operation", "rejected", level="warning", reason=reason, op_kind=kind,
+                  op_ref=pseudonym(operation_id) if operation_id else None)
+    except Exception:
+        pass
+
+
+def _op_replayed(kind: str, operation_id=None) -> None:
+    """SPEC-247 R3: resposta servida do recibo (idempotencia), sem reexecutar."""
+    try:
+        from observability.telemetry import log_event, pseudonym
+        log_event("operation", "replayed", op_kind=kind,
+                  op_ref=pseudonym(operation_id) if operation_id else None)
+    except Exception:
+        pass
+
+
 def _validated_receipt(coordinator, principal, operation_id, *, game_id, kind, request_hash):
     from infrastructure.contracts import Conflict
     try:
@@ -3739,6 +3759,7 @@ def _validated_receipt(coordinator, principal, operation_id, *, game_id, kind, r
             principal, operation_id, game_id=game_id, kind=kind, request_hash=request_hash,
         )
     except Conflict as exc:
+        _op_rejected("request_mismatch", kind, operation_id)
         raise HTTPException(status_code=409, detail="operation_request_mismatch") from exc
 
 
@@ -3761,6 +3782,7 @@ def _begin_turn_operation(state: dict, req: ActionRequest):
             game_id=uuid.UUID(str(state["game_id"])), kind="turn", request_hash=request_hash)
     receipt = receipt_fn()
     if receipt and isinstance(receipt.get("response"), dict):
+        _op_replayed("turn", operation_id)
         return None, request_hash, GameResponse.model_validate(receipt["response"])
     try:
         claim = runtime.turn_coordinator.claim(
@@ -3771,10 +3793,12 @@ def _begin_turn_operation(state: dict, req: ActionRequest):
     except Conflict as exc:
         receipt = receipt_fn()
         if receipt and isinstance(receipt.get("response"), dict):
+            _op_replayed("turn", operation_id)
             return None, request_hash, GameResponse.model_validate(receipt["response"])
         code = "operation_in_progress" if isinstance(exc, LeaseHeld) else "operation_conflict"
         if isinstance(exc, StaleVersion):
             code = "stale_version"
+        _op_rejected(code, "turn", operation_id)
         raise HTTPException(status_code=409, detail=code) from exc
     return claim, request_hash, None
 
@@ -3826,10 +3850,12 @@ def _begin_state_mutation(state: dict, *, action_id: Optional[str], kind: str,
             game_id=uuid.UUID(str(state["game_id"])), kind=kind, request_hash=request_hash)
     receipt = receipt_fn()
     if receipt and "response" in receipt:
+        _op_replayed(kind, operation_id)
         return None, request_hash, receipt["response"]
     if kind in ("equip", "levelup"):
         pending_op = _failed_pending_operation(state)
         if pending_op:
+            _op_rejected("pending_operation", kind, operation_id)
             raise HTTPException(status_code=409, detail={
                 "code": "pending_operation", "operation_id": pending_op,
                 "message": ("Há uma ação que falhou e ainda não foi superada. Retome-a ou conclua "
@@ -3844,7 +3870,9 @@ def _begin_state_mutation(state: dict, *, action_id: Optional[str], kind: str,
     except Conflict as exc:
         receipt = receipt_fn()
         if receipt and "response" in receipt:
+            _op_replayed(kind, operation_id)
             return None, request_hash, receipt["response"]
+        _op_rejected("operation_in_progress", kind, operation_id)
         raise HTTPException(status_code=409, detail="operation_in_progress") from exc
     return claim, request_hash, None
 
@@ -3873,6 +3901,7 @@ def _begin_create_operation(req: CreateCharacterRequest):
             game_id=None, kind="new_game", request_hash=request_hash)
     receipt = receipt_fn()
     if receipt and isinstance(receipt.get("response"), dict):
+        _op_replayed("new_game", operation_id)
         return None, request_hash, GameResponse.model_validate(receipt["response"])
     try:
         claim = runtime.turn_coordinator.claim(
@@ -3882,7 +3911,9 @@ def _begin_create_operation(req: CreateCharacterRequest):
     except Conflict as exc:
         receipt = receipt_fn()
         if receipt and isinstance(receipt.get("response"), dict):
+            _op_replayed("new_game", operation_id)
             return None, request_hash, GameResponse.model_validate(receipt["response"])
+        _op_rejected("operation_in_progress", "new_game", operation_id)
         raise HTTPException(status_code=409, detail="operation_in_progress") from exc
     return claim, request_hash, None
 
@@ -4164,6 +4195,9 @@ def _log_turn(state: dict, t0: float, eventos_antes: int, error: Optional[str],
             max(0, len(state.get("event_rejections", []) or []) - rejections_antes)
             if not error else 0),
         "error": error,
+        # SPEC-247 R1: fonte da decisao de rota + motivo de fallback (codigos fechados)
+        "route_source": state.get("route_source"),
+        "route_fallback_reason": state.get("route_fallback_reason"),
         **_llm_log_fields(llm_events, llm_attempts),
         **(latency_fields or {}),
     }))
@@ -4616,17 +4650,44 @@ def _stream_turn(req: ActionRequest, accepted_game_id: str, principal=None,
     from observability import latency as _lat
     if timeline is None:
         timeline = _lat.TurnTimeline(transport="stream")
-    outcome = {"value": "client_gone"}
+    outcome = {"value": "client_gone", "phase": "start", "gone": False, "worker": None,
+               "_lock": threading.Lock(), "_t0": time.monotonic()}
     timeline.hold_log()     # SPEC-212 R13: `rpg.turn` sai apos ttfmc/ttlt
+    _sse_log("started", transport="stream")
     try:
         yield from _stream_turn_events(req, accepted_game_id, principal, timeline, outcome)
     finally:
         timeline.release_log()
-        _log_turn_delivery(timeline, outcome["value"])
+        with outcome["_lock"]:
+            gone = outcome["value"] == "client_gone"
+            outcome["gone"] = gone
+            worker_done = outcome["worker"]
+        if gone:     # SPEC-247 R2: o cliente caiu; o worker segue e conclui o turno
+            _sse_log("client_disconnected", phase=outcome["phase"],
+                     elapsed_ms=int((time.monotonic() - outcome["_t0"]) * 1000))
+            if worker_done is not None:
+                _sse_log("worker_finished_after_disconnect", outcome=worker_done)
+        _log_turn_delivery(timeline, outcome["value"], outcome.get("error_type"))
         _publish_timeline(timeline, outcome["value"])
 
 
-def _log_turn_delivery(timeline, outcome: str) -> None:
+def _sse_log(event: str, *, level: str = "info", **fields: Any) -> None:
+    try:
+        from observability.telemetry import log_event
+        log_event("sse", event, level=level, **fields)
+    except Exception:
+        pass
+
+
+def _worker_done(outcome: dict, result: str) -> None:
+    with outcome["_lock"]:
+        outcome["worker"] = result
+        gone = outcome["gone"]
+    if gone:
+        _sse_log("worker_finished_after_disconnect", outcome=result)
+
+
+def _log_turn_delivery(timeline, outcome: str, error_type: Optional[str] = None) -> None:
     """Linha `evt:"turn_delivery"`: marcas de entrega que so existem apos o worker
     ter logado `rpg.turn` (ttfmc/ttlt). Sem texto, sem game_id cru."""
     try:
@@ -4641,6 +4702,7 @@ def _log_turn_delivery(timeline, outcome: str) -> None:
             "ttlt_server_ms": timeline.mark_ms("ttlt"),
             "state_server_ms": timeline.mark_ms("state"),
             "outcome": outcome,
+            **({"error_type": error_type} if outcome == "error" and error_type else {}),
         }))
     except Exception:
         pass
@@ -4661,6 +4723,7 @@ def _stream_turn_events(req: ActionRequest, accepted_game_id: str, principal,
         "rpg_sse_first_event_seconds", {"route": _STREAM_ROUTE},
         time.monotonic() - stream_started,
     )
+    outcome["phase"] = "accepted"
     yield _sse("accepted", {"game_id": accepted_game_id})
     timeline.mark("accepted")      # retomada do gerador = proxy de flush
     try:
@@ -4671,6 +4734,7 @@ def _stream_turn_events(req: ActionRequest, accepted_game_id: str, principal,
     q: "queue.Queue" = queue.Queue()
 
     def _worker():
+        result = "ok"
         try:
             from infrastructure.request_context import principal_scope
             context = principal_scope(principal) if principal is not None else nullcontext()
@@ -4693,9 +4757,20 @@ def _stream_turn_events(req: ActionRequest, accepted_game_id: str, principal,
                        "request_id": _current_request_id()}
             if isinstance(exc, QuotaExceeded):     # SPEC-219: cliente mostra "volta em HH:MM"
                 payload.update(scope=exc.scope, retry_after_seconds=exc.retry_after_seconds)
+            result = "error"
+            outcome["error_type"] = type(exc).__name__
+            _sse_log("error", level="warning", code=payload["error_code"], status=exc.status_code,
+                     error_type=type(exc).__name__)
             q.put(("http_error", payload))
         except Exception as exc:
+            result = "error"
+            outcome["error_type"] = type(exc).__name__
+            from observability.telemetry import safe_stack
+            _sse_log("error", level="error", code="internal_turn_error",
+                     error_type=type(exc).__name__, stack=safe_stack(exc))
             q.put(("exc", exc))
+        finally:
+            _worker_done(outcome, result)
 
     from observability.telemetry import contextualize
     # SPEC-240 R3: a thread do SSE herda request_id/game_ref/action_ref da requisicao.
@@ -4731,12 +4806,14 @@ def _stream_turn_events(req: ActionRequest, accepted_game_id: str, principal,
                 for node, upd in (data or {}).items():
                     if node not in {"action_guard", "turn_prepare", "dispatch",
                                     "turn_finalizer"}:
+                        outcome["phase"] = str(node)[:40]
                         yield _sse("phase", {"node": node, "status": "done"})
                     if node == "dm_router":
                         yield _sse("route", {"route": (upd or {}).get("next", "") or ""})
             continue
         if kind == "response":
             resp = payload
+            outcome["phase"] = "narrative"
             yield _sse("visual", resp.visual.model_dump(mode="json"))
             narrative = resp.message or ""
             for i in range(0, len(narrative), _NARRATIVE_CHUNK):
@@ -5002,7 +5079,9 @@ def delete_save_endpoint(game_id: str, request: Request):
         except Conflict as exc:
             prior = receipt_fn(principal, operation_id) if callable(receipt_fn) else None
             if prior:
+                _op_replayed("delete", operation_id)
                 return prior
+            _op_rejected("operation_in_progress", "delete", operation_id)
             raise HTTPException(status_code=409, detail="operation_in_progress") from exc
         except NotFound as exc:
             _fail_operation(claim, "not_found")

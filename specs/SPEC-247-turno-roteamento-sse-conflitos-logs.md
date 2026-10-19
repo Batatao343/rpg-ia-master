@@ -1,6 +1,6 @@
 # SPEC-247 — Turno: decisão do roteador (fonte+motivo), ciclo de vida do SSE e 409 de operação logados
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P1**.
+> **Status:** `in-progress` — implementada em `logs-p1` (REVIEW_REQUIRED; smoke staging pendente)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-240
 > **Desbloqueia:** SPEC-262 (runbook “turno falhou”)
@@ -56,12 +56,12 @@ R1–R3.
 
 ## 5. Critérios de aceite
 
-- [ ] Um turno é reconstruível por `action_ref`: decisão de rota (com fonte), LLMs, entrega SSE, desfecho.
-- [ ] Todo 409 de operação tem linha com motivo.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Um turno é reconstruível por `action_ref`: decisão de rota (com fonte), LLMs, entrega SSE, desfecho.
+- [x] Todo 409 de operação tem linha com motivo.
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] `uv run pytest` verde (suíte completa offline).
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -72,3 +72,7 @@ R1–R3.
 - Nenhum de privacidade (só enums/pseudônimos).
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## Execução (logs-p1, 2026-10-18)
+
+Implementado: `router.decision` (info) com `source`/`fallback_reason`/`jev_mode`/`target_kind` (via contextvar `agents.router.last_decision()`, copiado ao estado por `route_intent_node` → `rpg.turn.route_source/route_fallback_reason`; o payload do router NÃO muda, preservando o golden `off` byte-idêntico da SPEC-217); SSE `sse.started/client_disconnected/worker_finished_after_disconnect/error` + `error_type` no `turn_delivery`; `operation.rejected`/`operation.replayed` em turno, mutações de estado, criação e exclusão. Testes: `tests/test_turn_trace_logs.py`. Observação: desconexão antes do `accepted` ser entregue não inicia worker (comportamento existente). Falta o smoke de staging (§6) e a revisão Sol.

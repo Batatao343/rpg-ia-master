@@ -494,6 +494,8 @@ class GameState(TypedDict):
     
     # --- Campos de Transição ---
     combat_target: Optional[str]
+    route_source: Optional[str]  # TRANSITORIO (SPEC-247): fonte da decisao de rota (combat_gate|interlocutor|recovery|story_regex|jev|classify|classify_fallback)
+    route_fallback_reason: Optional[str]  # TRANSITORIO (SPEC-247): motivo fechado do fallback
     combat_origin_hint: Optional[str]  # causa transitória até combat.origin ser materializada
     # SPEC-203: referências one-shot PROPOSTAS ao spawn (zeradas pelo combat_node):
     # {enemy_id, reason, hint} do encontro sistêmico (storyteller) e "npc:<nome>"
