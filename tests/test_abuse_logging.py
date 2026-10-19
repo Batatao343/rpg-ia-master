@@ -68,7 +68,7 @@ def test_body_limit_logs_and_counts(capsys):
         await send({"type": "http.response.start", "status": 200, "headers": []})
         await send({"type": "http.response.body", "body": b"ok"})
 
-    app = BodyLimitMiddleware(inner, default_limit=10)
+    app = BodyLimitMiddleware(inner, default_limit=10, per_path={"/game/new": 10})
     sent = []
 
     async def receive():
@@ -90,8 +90,28 @@ def test_body_limit_logs_and_counts(capsys):
 
 
 def test_body_limit_route_label_is_templated():
+    from api import app
     from services.body_limit import route_label
-    assert route_label("/game/8a6e0804-2bd0-4672-b79d-d97358571b25/audit-export") == "/game/{id}/audit-export"
+    assert route_label("/game/8a6e0804-2bd0-4672-b79d-d97358571b25/audit-export",
+                       routes=app.routes) == "/game/{id}/audit-export"
+
+
+def test_body_limit_route_label_closed_for_unknown_paths(capsys):
+    """Revisao P2/P3: path aleatorio (inexistente) nunca vira rotulo nem campo de log."""
+    from fastapi.testclient import TestClient
+    from api import app
+    from observability.metrics import metrics
+    from services.body_limit import route_label
+    assert route_label("/nao/existe/abc123") == "other"
+    assert route_label("/nao/existe/abc123", routes=app.routes) == "other"
+    before = {k for k in metrics._values if k[0] == "rpg_http_body_too_large_total"}
+    with TestClient(app) as client:
+        for i in range(3):
+            client.post(f"/random-{i}-zzz", content=b"x" * (256 * 1024 + 1))
+    rows = _lines(capsys, "http.body_too_large")
+    assert rows and all(r["route"] == "other" for r in rows)
+    new = {k for k in metrics._values if k[0] == "rpg_http_body_too_large_total"} - before
+    assert all(dict(k[1])["route"] in {"other"} for k in new)
 
 
 def test_limiter_exception_logged_failopen(capsys):

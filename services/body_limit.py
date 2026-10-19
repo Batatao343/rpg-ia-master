@@ -4,22 +4,35 @@ from __future__ import annotations
 
 import json
 import re
-from typing import Mapping
+from typing import Iterable, Mapping
 
-_UUID_SEGMENT = re.compile(r"/[0-9a-fA-F]{8}-[0-9a-fA-F-]{27,36}(?=/|$)")
-
-
-def route_label(path: str) -> str:
-    """Rotulo de rota sem ids (mesmo template do access log): UUIDs viram ``{id}``."""
-    return _UUID_SEGMENT.sub("/{id}", str(path or ""))[:120]
+_PARAM = re.compile(r"\{[^}]+\}")
 
 
-def log_body_too_large(path: str, limit: int, declared: int | None = None) -> None:
+def route_label(path: str, *, routes: Iterable = (), known: Iterable[str] = ()) -> str:
+    """Rotulo FECHADO de rota (revisao P2/P3): caminho conhecido (``per_path``) ou template da rota
+    registrada no app (``{param}`` -> ``{id}``); qualquer outro path (inexistente, aleatorio) vira
+    ``other`` -- o path cru nunca vira rotulo de metrica nem campo de log."""
+    path = str(path or "")
+    if path in set(known):
+        return path
+    for route in routes:
+        regex = getattr(route, "path_regex", None)
+        template = getattr(route, "path", None)
+        if getattr(route, "methods", None) is None:
+            continue  # Mount (SPA estatica em "/") casa qualquer path: nao e rota de API
+        if regex is not None and isinstance(template, str) and template and regex.match(path):
+            return _PARAM.sub("{id}", template)[:120]
+    return "other"
+
+
+def log_body_too_large(path: str, limit: int, declared: int | None = None, *,
+                       routes: Iterable = (), known: Iterable[str] = ()) -> None:
     """SPEC-246 R3: ``http.body_too_large`` + ``rpg_http_body_too_large_total{route}``. Nunca levanta."""
     try:
         from observability.metrics import metrics
         from observability.telemetry import log_event
-        route = route_label(path)
+        route = route_label(path, routes=routes, known=known)
         metrics.increment("rpg_http_body_too_large_total", {"route": route})
         log_event("http", "body_too_large", level="warning", route=route, limit_bytes=int(limit),
                   declared_bytes=declared)
@@ -54,7 +67,9 @@ class BodyLimitMiddleware:
             if started:
                 return
             started = True
-            log_body_too_large(scope.get("path", ""), limit, declared)
+            log_body_too_large(scope.get("path", ""), limit, declared,
+                               routes=getattr(scope.get("app"), "routes", None) or (),
+                               known=self.per_path)
             from observability.telemetry import correlation
             rid = correlation().get("request_id")   # SPEC-242: envelope unico
             payload = {"detail": "payload_too_large", "code": "payload_too_large"}

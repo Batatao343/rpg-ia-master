@@ -3090,7 +3090,7 @@ async def stripe_webhook(request: Request):
         _wh("too_large", started)
         from services.body_limit import log_body_too_large
         log_body_too_large(request.url.path, MAX_WEBHOOK_BYTES,
-                           int(declared) if declared.isdecimal() else None)
+                           int(declared) if declared.isdecimal() else None, routes=app.routes)
         raise HTTPException(413, 'stripe_body_limit')
     payload = bytearray()
     event = None
@@ -3100,7 +3100,7 @@ async def stripe_webhook(request: Request):
                 if len(payload) + len(chunk) > MAX_WEBHOOK_BYTES:
                     _wh("too_large", started)
                     from services.body_limit import log_body_too_large
-                    log_body_too_large(request.url.path, MAX_WEBHOOK_BYTES)
+                    log_body_too_large(request.url.path, MAX_WEBHOOK_BYTES, routes=app.routes)
                     raise HTTPException(413, 'stripe_body_limit')
                 payload.extend(chunk)
         raw_body = bytes(payload)
@@ -3156,14 +3156,14 @@ async def account_transcription(request: Request):
         if declared is not None and (not declared.isdecimal() or not 0 < int(declared) <= MAX_AUDIO_BYTES):
             from services.body_limit import log_body_too_large
             log_body_too_large(request.url.path, MAX_AUDIO_BYTES,
-                               int(declared) if declared.isdecimal() else None)
+                               int(declared) if declared.isdecimal() else None, routes=app.routes)
             raise SpeechError('audio_bytes', 413)
         payload = bytearray()
         async with __import__('asyncio').timeout(15):
             async for chunk in request.stream():
                 if len(payload) + len(chunk) > MAX_AUDIO_BYTES:
                     from services.body_limit import log_body_too_large
-                    log_body_too_large(request.url.path, MAX_AUDIO_BYTES)
+                    log_body_too_large(request.url.path, MAX_AUDIO_BYTES, routes=app.routes)
                     raise SpeechError('audio_bytes', 413)
                 payload.extend(chunk)
         from infrastructure.speech_finance import PostgresSpeechFinance
