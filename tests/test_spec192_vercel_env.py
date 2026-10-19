@@ -149,3 +149,13 @@ def test_jev_router_primary_requires_owner_flag_and_stays_out_of_preview():
     assert "RPG_JEV_ROUTER_PRIMARY_APPROVED" in ve.stale_names(shadow)
     assert "o primary no staging" in ve.OWNER_PRIMARY_APPROVAL
 
+
+
+def test_daily_cap_override_for_spec236_trip_and_default_restores_five():
+    """SPEC-236 §6.2: teto baixo temporario provoca trip real; push sem a flag volta a 5."""
+    assert ve.build_env(FILES)[0]["RPG_DAILY_SPEND_CAP_BRL"] == "5"
+    low, prev = ve.build_env(FILES, daily_cap_brl="0.01")
+    assert low["RPG_DAILY_SPEND_CAP_BRL"] == "0.01" and "RPG_DAILY_SPEND_CAP_BRL" not in prev
+    for bad in ("0", "-1", "abc"):
+        with pytest.raises(ValueError):
+            ve.build_env(FILES, daily_cap_brl=bad)

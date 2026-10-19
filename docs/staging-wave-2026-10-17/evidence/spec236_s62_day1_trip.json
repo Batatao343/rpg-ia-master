@@ -1,0 +1,123 @@
+{
+  "after": {
+    "audit_recent": [
+      {
+        "actor_id": "system:finops",
+        "created_at": "2026-10-19 12:12:37.242074+00:00",
+        "enabled": false,
+        "key": "stt_fallback_expensive",
+        "previous_enabled": null,
+        "reason": "daily spend cap exceeded: 0.04 > 0.01 BRL"
+      },
+      {
+        "actor_id": "system:finops",
+        "created_at": "2026-10-19 12:12:37.161902+00:00",
+        "enabled": false,
+        "key": "image_generation",
+        "previous_enabled": true,
+        "reason": "daily spend cap exceeded: 0.04 > 0.01 BRL"
+      },
+      {
+        "actor_id": "drill-spec197",
+        "created_at": "2026-10-15 18:27:26.837764+00:00",
+        "enabled": true,
+        "key": "image_generation",
+        "previous_enabled": false,
+        "reason": "SPEC-197 incident drill reset (staging)"
+      },
+      {
+        "actor_id": "drill-spec197",
+        "created_at": "2026-10-15 18:27:20.864392+00:00",
+        "enabled": false,
+        "key": "image_generation",
+        "previous_enabled": null,
+        "reason": "SPEC-197 incident drill (staging)"
+      }
+    ],
+    "cap_day": "2026-10-19",
+    "cap_day_start_utc": "2026-10-19 03:00:00+00:00",
+    "db_now": "2026-10-19 12:12:37.575448+00:00",
+    "fx_usd_brl": "5.0000000000",
+    "spend_brl_estimate": 0.0358,
+    "spend_events": 12,
+    "spend_usd_counts_as_spend": "0.007167902",
+    "switches": {
+      "image_generation": {
+        "actor_id": "system:finops",
+        "enabled": false,
+        "updated_at": "2026-10-19 12:12:37.161902+00:00"
+      },
+      "stt_fallback_expensive": {
+        "actor_id": "system:finops",
+        "enabled": false,
+        "updated_at": "2026-10-19 12:12:37.242074+00:00"
+      }
+    }
+  },
+  "before": {
+    "audit_recent": [
+      {
+        "actor_id": "drill-spec197",
+        "created_at": "2026-10-15 18:27:26.837764+00:00",
+        "enabled": true,
+        "key": "image_generation",
+        "previous_enabled": false,
+        "reason": "SPEC-197 incident drill reset (staging)"
+      },
+      {
+        "actor_id": "drill-spec197",
+        "created_at": "2026-10-15 18:27:20.864392+00:00",
+        "enabled": false,
+        "key": "image_generation",
+        "previous_enabled": null,
+        "reason": "SPEC-197 incident drill (staging)"
+      }
+    ],
+    "cap_day": "2026-10-19",
+    "cap_day_start_utc": "2026-10-19 03:00:00+00:00",
+    "db_now": "2026-10-19 12:12:35.483240+00:00",
+    "fx_usd_brl": "5.0000000000",
+    "spend_brl_estimate": 0.0358,
+    "spend_events": 12,
+    "spend_usd_counts_as_spend": "0.007167902",
+    "switches": {
+      "image_generation": {
+        "actor_id": "drill-spec197",
+        "enabled": true,
+        "updated_at": "2026-10-15 18:27:26.837764+00:00"
+      },
+      "stt_fallback_expensive": {
+        "enabled": true,
+        "row": "absent (default on)"
+      }
+    }
+  },
+  "finops": {
+    "client_at": "2026-10-19T12:12:28.450140+00:00",
+    "status": 200,
+    "summary": {
+      "alert_kinds": "daily_spend_cap",
+      "blocking_alerts": 1,
+      "daily_cap_brl": 0.01,
+      "daily_cap_enabled": true,
+      "daily_cap_error": "",
+      "daily_cap_exceeded": true,
+      "daily_cap_manual_override": "",
+      "daily_cap_switched_off": "image_generation,stt_fallback_expensive",
+      "duration_s": 0.632,
+      "failed": 0,
+      "ok": true,
+      "report_version": "finops-spend-v2",
+      "switches_off": 2
+    }
+  },
+  "health": {
+    "engine": "RPG IA v9.0 Hybrid Memory",
+    "git_sha": "4c4167bc24515b0bc31138435094b8a6757a7aeb",
+    "hardened": true,
+    "profile": "hosted-supabase",
+    "status": "online"
+  },
+  "label": "day1_trip",
+  "ok": true
+}
