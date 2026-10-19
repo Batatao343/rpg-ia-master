@@ -22,6 +22,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # --- IMPORTAÇÃO DOS ESTADOS E AGENTES ---
 from state import GameState
+from observability.telemetry import with_node
 from agents.campaign_manager import campaign_manager_node
 from agents.combat import combat_node
 from agents.npc import npc_actor_node
@@ -40,17 +41,17 @@ def build_game_graph():
     workflow = StateGraph(GameState)
 
     # 1. Adicionar Nós
-    workflow.add_node("campaign_manager", campaign_manager_node)
-    workflow.add_node("dm_router", route_intent_node)
-    workflow.add_node("storyteller", storyteller_node)
-    workflow.add_node("combat_agent", combat_node)
-    workflow.add_node("npc_actor", npc_actor_node)
-    workflow.add_node("loot_agent", loot_node)
-    workflow.add_node("archivist", archive_node) # <--- NOVO
-    workflow.add_node("action_guard", action_guard_node)
-    workflow.add_node("turn_finalizer", turn_finalizer_node)
-    workflow.add_node("turn_prepare", turn_prepare_node)
-    workflow.add_node("dispatch", dispatch_node)
+    workflow.add_node("campaign_manager", with_node("campaign_manager", campaign_manager_node))
+    workflow.add_node("dm_router", with_node("dm_router", route_intent_node))
+    workflow.add_node("storyteller", with_node("storyteller", storyteller_node))
+    workflow.add_node("combat_agent", with_node("combat_agent", combat_node))
+    workflow.add_node("npc_actor", with_node("npc_actor", npc_actor_node))
+    workflow.add_node("loot_agent", with_node("loot_agent", loot_node))
+    workflow.add_node("archivist", with_node("archivist", archive_node)) # <--- NOVO
+    workflow.add_node("action_guard", with_node("action_guard", action_guard_node))
+    workflow.add_node("turn_finalizer", with_node("turn_finalizer", turn_finalizer_node))
+    workflow.add_node("turn_prepare", with_node("turn_prepare", turn_prepare_node))
+    workflow.add_node("dispatch", with_node("dispatch", dispatch_node))
 
     # 2. Definir o Fluxo Inicial
     # R4 (fix-playtest-achados): save morto (game_over) é MEMORIAL — o grafo NÃO

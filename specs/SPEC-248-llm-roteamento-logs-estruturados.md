@@ -1,6 +1,6 @@
 # SPEC-248 — LLM: tentativas, fallbacks, circuito e ativação de Mock/FallbackLLM em log estruturado
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P1**.
+> **Status:** `in-progress` — implementada em `logs-p1` (REVIEW_REQUIRED; smoke staging pendente)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-239, SPEC-240
 > **Desbloqueia:** SPEC-262 (runbook provider fora)
@@ -55,12 +55,12 @@ R1–R5.
 
 ## 5. Critérios de aceite
 
-- [ ] Toda falha de provider tem `http_status`, `latency_ms`, `tier`, `node`, `request_id`.
-- [ ] Mock/FallbackLLM nunca é escolhido em silêncio.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Toda falha de provider tem `http_status`, `latency_ms`, `tier`, `node`, `request_id`.
+- [x] Mock/FallbackLLM nunca é escolhido em silêncio.
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] `uv run pytest` verde (suíte completa offline).
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -71,3 +71,7 @@ R1–R5.
 - Volume: sucesso em `debug`; só falhas em `warning`.
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## Execução (logs-p1, 2026-10-18)
+
+Implementado: `llm.attempt` por candidato (debug em sucesso, warning em falha; provider/model/tier/node/attempt_index/outcome/http_status/error_type/structured_failure_code/latency_ms/fell_back/cost_basis) a partir de `_emit_attempt_telemetry`, `kill_switch` logado, `llm.exhausted`, `llm.mock_selected`/`llm.fallback_llm_selected` (1x por processo e motivo; error fora do perfil legacy), `llm.routes_invalid`; `node` via `observability.telemetry.node_scope/with_node` aplicado aos nós em `main.py`; `rpg.turn` ganha `llm_errors`/`llm_http_statuses`. As strings `_LOG.warning` de tentativa foram removidas (substituídas). `LLMAttemptEvent` ganhou `http_status` e `error_type` (aditivos). Testes: `tests/test_llm_logging.py`. Falta o smoke de staging (§6) e a revisão Sol.

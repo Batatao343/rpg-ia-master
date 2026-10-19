@@ -14,6 +14,7 @@ não decisão do LLM. Overrides por env (R8): RPG_FORCE_MOCK, LLM_PROVIDER (lega
 RPG_ROUTES (JSON).
 """
 import json
+import re
 import logging
 import os
 import threading
@@ -110,6 +111,78 @@ class LLMAttemptEvent:
     structured_failure_code: Optional[str] = None
     recovery: Optional[str] = None
     usage: Optional[dict[str, int | str]] = None
+    http_status: int = 0     # SPEC-248: status HTTP do provider quando a falha o expoe; senao 0
+    error_type: Optional[str] = None   # SPEC-248: classe da excecao (``error`` pode ter texto do provider)
+
+
+_IDENT_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_.:]{0,60}$")
+
+
+def _http_status(exc: BaseException) -> int:
+    """Status HTTP de ``openai.APIStatusError``/``httpx.HTTPStatusError`` etc.; 0 se ausente."""
+    for obj in (exc, getattr(exc, "response", None)):
+        for attr in ("status_code", "http_status", "code"):
+            value = getattr(obj, attr, None)
+            if isinstance(value, int) and 100 <= value <= 599:
+                return value
+    return 0
+
+
+def _log_attempt(provider: str, model: str, tier: "ModelTier", attempt_index: int, outcome: str, *,
+                 fell_back: bool = False, latency_ms: int = 0, error: Optional[str] = None,
+                 http_status: int = 0, structured_failure_code: Optional[str] = None,
+                 usage: Optional[dict] = None) -> None:
+    """SPEC-248 R1: uma linha ``llm.attempt`` por candidato tentado (sem prompt, sem texto de erro)."""
+    try:
+        from observability.telemetry import current_node, log_event
+        error_type = error if isinstance(error, str) and _IDENT_RE.match(error) else (
+            None if not error else "other")
+        log_event(
+            "llm", "attempt", level="debug" if outcome == "success" else "warning",
+            provider=provider, model=model, tier=getattr(tier, "value", str(tier)),
+            node=current_node(), attempt_index=attempt_index, outcome=outcome,
+            http_status=int(http_status or 0), error_type=error_type,
+            structured_failure_code=structured_failure_code, latency_ms=int(latency_ms),
+            fell_back=bool(fell_back), cost_basis="usage" if usage else "none")
+    except Exception:
+        pass
+
+
+def _log_exhausted(tier: "ModelTier", errors: list[str]) -> None:
+    """SPEC-248 R2: todos os candidatos do tier falharam (so provider + tipo de falha)."""
+    try:
+        from observability.telemetry import current_node, log_event
+        attempts = []
+        for item in errors:
+            head = item.split(" ", 1)
+            provider = head[0].split(":", 1)[0]
+            kind = head[1].split(":", 1)[0] if len(head) > 1 else "unknown"
+            attempts.append({"provider": provider, "outcome": kind})
+        log_event("llm", "exhausted", level="error", tier=getattr(tier, "value", str(tier)),
+                  node=current_node(), attempts=attempts[:12])
+    except Exception:
+        pass
+
+
+_ANNOUNCED: set[str] = set()
+
+
+def _announce_once(event: str, reason: str, *, level: str) -> None:
+    """SPEC-248 R3: MockLLM/FallbackLLM nunca sao escolhidos em silencio (1x por processo e motivo)."""
+    key = f"{event}:{reason}"
+    if key in _ANNOUNCED:
+        return
+    _ANNOUNCED.add(key)
+    try:
+        from observability.telemetry import log_event
+        log_event("llm", event, level=level, reason=reason,
+                  profile=(os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() or "legacy"))
+    except Exception:
+        pass
+
+
+def _mock_level() -> str:
+    return "warning" if (os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() or "legacy") == "legacy" else "error"
 
 
 def _usage_snapshot(result: object) -> Optional[dict[str, int | str]]:
@@ -491,6 +564,11 @@ def _emit_telemetry(provider: str, model: str, tier: ModelTier, latency_ms: int,
 
 
 def _emit_attempt_telemetry(event: LLMAttemptEvent) -> None:
+    _log_attempt(event.provider, event.model, event.tier, event.attempt_index, event.outcome,
+                 fell_back=event.fell_back, latency_ms=event.latency_ms,
+                 error=event.error_type or event.error,
+                 http_status=event.http_status, structured_failure_code=event.structured_failure_code,
+                 usage=event.usage)
     for hook in (_ATTEMPT_TELEMETRY_HOOK, _SCOPED_ATTEMPT_HOOK.get()):
         if hook is None:
             continue
@@ -718,6 +796,7 @@ class RoutedLLM:
             fell_back = provider_index > 0
             if _kill_switch_disabled(provider, model):  # SPEC-196: operator switched model off
                 errors.append(f"{provider}:{model} kill_switch")
+                _log_attempt(provider, model, self.tier, attempt_index, "kill_switch", fell_back=fell_back)
                 continue
             circuit_reason = _OPEN_CIRCUITS.get((provider, model))
             if circuit_reason:
@@ -741,7 +820,6 @@ class RoutedLLM:
             except Exception as e:
                 latency_ms = int((time.perf_counter() - build_t0) * 1000)
                 errors.append(f"{provider}:{model} build:{type(e).__name__}")
-                _LOG.warning("build falhou %s:%s (%s)", provider, model, type(e).__name__)
                 _emit_attempt_telemetry(LLMAttemptEvent(
                     provider=provider,
                     model=model,
@@ -751,6 +829,7 @@ class RoutedLLM:
                     fell_back=fell_back,
                     outcome="build_error",
                     error=type(e).__name__,
+                    http_status=_http_status(e),
                     structured=structured_contract is not None,
                 ))
                 attempt_index += 1
@@ -761,7 +840,6 @@ class RoutedLLM:
             except Exception as e:
                 latency_ms = int((time.perf_counter() - build_t0) * 1000)
                 errors.append(f"{provider}:{model} apply:{type(e).__name__}")
-                _LOG.warning("apply falhou %s:%s (%s)", provider, model, type(e).__name__)
                 _emit_attempt_telemetry(LLMAttemptEvent(
                     provider=provider,
                     model=model,
@@ -771,6 +849,7 @@ class RoutedLLM:
                     fell_back=fell_back,
                     outcome="build_error",
                     error=f"apply:{type(e).__name__}",
+                    http_status=_http_status(e),
                     structured=structured_contract is not None,
                 ))
                 attempt_index += 1
@@ -798,7 +877,6 @@ class RoutedLLM:
                 except Exception as e:
                     latency_ms = int((time.perf_counter() - t0) * 1000)
                     errors.append(f"{provider}:{model} invoke:{type(e).__name__}")
-                    _LOG.warning("invoke falhou %s:%s (%s)", provider, model, type(e).__name__)
                     _emit_attempt_telemetry(LLMAttemptEvent(
                         provider=provider,
                         model=model,
@@ -808,6 +886,7 @@ class RoutedLLM:
                         fell_back=fell_back,
                         outcome="invoke_error",
                         error=type(e).__name__,
+                        http_status=_http_status(e),
                         structured=structured_contract is not None,
                         structured_failure_code="transport",
                         usage=_usage_snapshot(e),
@@ -821,12 +900,6 @@ class RoutedLLM:
                 if not valid:
                     last_failure_code = failure_code or "schema_validation"
                     errors.append(f"{provider}:{model} structured:{last_failure_code}")
-                    _LOG.warning(
-                        "structured inválido %s:%s (%s)",
-                        provider,
-                        model,
-                        last_failure_code,
-                    )
                     _emit_attempt_telemetry(LLMAttemptEvent(
                         provider=provider,
                         model=model,
@@ -857,8 +930,7 @@ class RoutedLLM:
                 ))
                 _emit_telemetry(provider, model, self.tier, latency_ms, fell_back)
                 return result
-        _LOG.warning("tier %s: todos os candidatos falharam: %s",
-                     self.tier.value, "; ".join(errors))
+        _log_exhausted(self.tier, errors)
         # conteúdo vazio: sites de narração plain-invoke caem no fallback determinístico;
         # sites structured batem no guard (isinstance/try) do nó.
         return AIMessage(content="")
@@ -881,6 +953,7 @@ class RoutedLLM:
             fell_back = idx > 0
             if _kill_switch_disabled(provider, model):  # SPEC-196
                 errors.append(f"{provider}:{model} kill_switch")
+                _log_attempt(provider, model, self.tier, idx, "kill_switch", fell_back=fell_back)
                 continue
             structured = self._pydantic_structured_contract() is not None
             circuit_reason = _OPEN_CIRCUITS.get((provider, model))
@@ -914,6 +987,7 @@ class RoutedLLM:
                     fell_back=fell_back,
                     outcome="build_error",
                     error=type(e).__name__,
+                    http_status=_http_status(e),
                     structured=structured,
                 ))
                 _open_circuit_if_permanent(provider, model, e)
@@ -941,7 +1015,6 @@ class RoutedLLM:
             except Exception as e:
                 latency_ms = int((time.perf_counter() - t0) * 1000)
                 errors.append(f"{provider}:{model} stream:{type(e).__name__}")
-                _LOG.warning("stream falhou %s:%s (%s)", provider, model, type(e).__name__)
                 _emit_attempt_telemetry(LLMAttemptEvent(
                     provider=provider,
                     model=model,
@@ -951,6 +1024,7 @@ class RoutedLLM:
                     fell_back=fell_back,
                     outcome="stream_error",
                     error=type(e).__name__,
+                    http_status=_http_status(e),
                     structured=structured,
                 ))
                 _open_circuit_if_permanent(provider, model, e)
@@ -977,7 +1051,6 @@ class RoutedLLM:
                 ))
                 raise
             except Exception as e:  # falha no meio do stream: encerra o que veio
-                _LOG.warning("stream interrompido %s:%s (%s)", provider, model, type(e).__name__)
                 latency_ms = int((time.perf_counter() - t0) * 1000)
                 _emit_attempt_telemetry(LLMAttemptEvent(
                     provider=provider,
@@ -988,6 +1061,8 @@ class RoutedLLM:
                     fell_back=fell_back,
                     outcome="stream_interrupted",
                     error=str(e),
+                    error_type=type(e).__name__,
+                    http_status=_http_status(e),
                     structured=structured,
                     usage=usage_snapshot,
                 ))
@@ -1008,7 +1083,7 @@ class RoutedLLM:
             ))
             _emit_telemetry(provider, model, self.tier, latency_ms, fell_back)
             return
-        _LOG.warning("tier %s (stream): todos falharam: %s", self.tier.value, "; ".join(errors))
+        _log_exhausted(self.tier, errors)
         yield AIMessage(content="")
 
 
@@ -1030,7 +1105,8 @@ def _load_routes() -> dict:
         parsed = {ModelTier(name): [tuple(c) for c in cands] for name, cands in raw.items()}
         return {**ROUTES, **parsed}
     except Exception as e:
-        _LOG.warning("RPG_ROUTES inválido (%s); usando ROUTES default", e)
+        from observability.telemetry import log_event
+        log_event("llm", "routes_invalid", level="warning", error_type=type(e).__name__)   # nunca o JSON da env
         return ROUTES
 
 
@@ -1065,12 +1141,15 @@ def _legacy_get_llm(provider: str, temperature: float, tier: ModelTier):
     # Gemini sem chave preserva o comportamento atual (jogável offline via MockLLM).
     if provider == "gemini" and not os.getenv("GOOGLE_API_KEY"):
         if os.getenv("RPG_NO_MOCK"):
+            _announce_once("fallback_llm_selected", "legacy_gemini_no_key", level="error")
             return FallbackLLM("GOOGLE_API_KEY não configurada")
+        _announce_once("mock_selected", "legacy_gemini_no_key", level=_mock_level())
         from mock_llm import MockLLM
         return MockLLM(temperature=temperature)
 
     model = _legacy_model(provider, tier)
     if model is None:
+        _announce_once("fallback_llm_selected", "unknown_provider", level="error")
         return FallbackLLM(f"Provider desconhecido: {provider!r}")
     # embrulha em RoutedLLM (1 candidato) para semântica uniforme de fallback/telemetria
     return RoutedLLM(tier, temperature, [(provider, model)])
@@ -1087,6 +1166,7 @@ def get_llm(temperature: float = 0.1, tier: ModelTier = ModelTier.FAST):
       4. default           → ROUTES (multi-provider com fallback)
     """
     if os.getenv("RPG_FORCE_MOCK"):
+        _announce_once("mock_selected", "force_mock", level=_mock_level())
         from mock_llm import MockLLM
         return MockLLM(temperature=temperature)
 
@@ -1096,7 +1176,9 @@ def get_llm(temperature: float = 0.1, tier: ModelTier = ModelTier.FAST):
 
     if not _any_key_available():
         if os.getenv("RPG_NO_MOCK"):
+            _announce_once("fallback_llm_selected", "no_keys", level="error")
             return FallbackLLM("Nenhuma key de provider configurada")
+        _announce_once("mock_selected", "no_keys", level=_mock_level())
         from mock_llm import MockLLM
         return MockLLM(temperature=temperature)
 

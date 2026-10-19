@@ -155,6 +155,34 @@ def correlation_scope(**values: object) -> Iterator[dict[str, str]]:
         _correlation.reset(token)
 
 
+_node: contextvars.ContextVar[str] = contextvars.ContextVar("rpg_graph_node", default="")
+
+
+def current_node() -> str:
+    """SPEC-248: no do grafo em execucao (para atribuir chamadas LLM a um no)."""
+    return _node.get()
+
+
+@contextmanager
+def node_scope(name: str) -> Iterator[None]:
+    token = _node.set(str(name)[:40])
+    try:
+        yield
+    finally:
+        _node.reset(token)
+
+
+def with_node(name: str, fn):
+    """Embrulha um no do grafo para que ``current_node()`` valha durante sua execucao."""
+    import functools
+
+    @functools.wraps(fn)
+    def _wrapped(*args: Any, **kwargs: Any) -> Any:
+        with node_scope(name):
+            return fn(*args, **kwargs)
+    return _wrapped
+
+
 @contextmanager
 def request_scope(request_id: str) -> Iterator[dict[str, str]]:
     """Raiz de uma requisicao: parte de um contexto LIMPO (nao herda game/action de fora)."""

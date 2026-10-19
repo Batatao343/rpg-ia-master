@@ -1076,6 +1076,14 @@ def _telemetry_hook(provider: str, model: str, tier, latency_ms: int,
 set_llm_telemetry_hook(_telemetry_hook)
 
 
+def _safe_error_type(value: Any) -> Optional[str]:
+    """Classe/codigo fechado (identificador curto); qualquer texto livre vira ``other``."""
+    if not value:
+        return None
+    text = str(value)
+    return text if len(text) <= 60 and text.replace("_", "").replace(".", "").replace(":", "").isalnum() else "other"
+
+
 def _attempt_telemetry_hook(event: LLMAttemptEvent) -> None:
     from observability.metrics import metrics
     tier = getattr(event.tier, "value", str(event.tier))
@@ -1120,6 +1128,8 @@ def _attempt_telemetry_hook(event: LLMAttemptEvent) -> None:
             "structured": bool(event.structured),
             "network_attempted": network_attempted,
             "usage": dict(event.usage) if event.usage else None,
+            "http_status": int(getattr(event, "http_status", 0) or 0),
+            "error_type": _safe_error_type(getattr(event, "error_type", None) or event.error),
         })
 
 
@@ -1154,6 +1164,12 @@ def _llm_log_fields(events: Optional[List[dict]],
                       else "normalized",
         # SPEC-236 R2: provider failures without usage are counted apart, never as spend.
         "llm_failed_no_usage": sum(1 for item in normalized if not item.counts_as_spend),
+        # SPEC-248 R4: classe de erro (top 5) e status HTTP por tentativa, sem texto de provider
+        "llm_errors": dict(Counter(
+            event.get("error_type") for event in attempts
+            if event.get("outcome") != "success" and event.get("error_type")).most_common(5)),
+        "llm_http_statuses": dict(Counter(
+            str(event.get("http_status")) for event in attempts if event.get("http_status"))),
     }
 
 
