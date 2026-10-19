@@ -58,6 +58,9 @@ devolvem o parágrafo no hand-back. Ao abrir a próxima onda, mova estas notas p
 
 <!-- onda:inserir-aqui -->
 
+- **19/10 — Workspace `done`:** melhorias de `docs/melhorias_workspace/` (10 recs + bônus): ESTADO ≤ 8 KB e ROADMAP só plano (histórico em `docs/historico/`), cabeçalho da spec como fonte única (`scripts/spec_index.py`), Project Index só de arquivos rastreados, skills/agents versionados, LF/UTF-8, pytest-xdist + timeout, Ruff incremental com baseline, `AGENTS.md` fonte única. Pendente do dono: variável `EVALUATOR_CHANGE_APPROVED` no environment `eval-governance`.
+- **19/10 — Staging:** SPEC-222 R6 verde (retrato real OpenAI US$ 0,011; `DELETE /game/save` apagou os 2 objetos do bucket no cron seguinte). 222 pendente só de compra fake (sem chave Stripe test) e domínio de produção. SPEC-236 §6.2 dia 1: trip real do teto diário em `2026-10-19T12:12:37Z`; staging restaurado (teto R$ 5, Jev `primary`, `e2e_session` verde). Dia 2 a partir de 20/10 00:00 BRT pelo [roteiro](docs/staging-wave-2026-10-17/spec236-s62-plano.md). Achados: `usage_events` cai em cascata ao apagar a campanha (some do teto/FinOps, contra a retenção da 222); `app.games` sem FK para `auth.users` (13 órfãos no staging).
+
 ## Como rodar
 
 - Python 3.13 via `uv` (o `python` global do Windows é 3.14 — errado). `uv` fica em
