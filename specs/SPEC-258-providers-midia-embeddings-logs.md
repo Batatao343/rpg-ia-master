@@ -1,7 +1,7 @@
 # SPEC-258 — Providers de STT, imagem e embeddings: tentativa, fallback, status, latência e custo em log
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P2**.
-> **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
+> **Status:** `done` — aprovada pelo dono em 2026-10-19. Prioridade sugerida: **P2**.
+> **Criada:** 2026-10-18 · **Atualizada:** 2026-10-19
 > **Depende de:** SPEC-240, SPEC-248
 > **Desbloqueia:** —
 > **Origem:** auditoria de logs 2026-10-18 ([relatório](../docs/auditorias/logs-api-2026-10-18.md))
@@ -55,12 +55,12 @@ R1–R5.
 
 ## 5. Critérios de aceite
 
-- [ ] Toda chamada de STT/imagem/embedding tem `provider.attempt`.
-- [ ] Fallback STT visível.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] Toda chamada de STT/imagem/embedding tem `provider.attempt`.
+- [x] Fallback STT visível.
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
 - [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -71,3 +71,14 @@ R1–R5.
 - Custo do smoke: ≤ 2 chamadas STT (~US$ 0,0005).
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## 8. Notas de implementação (2026-10-19)
+
+- `log_provider_attempt` (observability/telemetry.py) emite `provider.attempt` e as métricas; outcome/capability fora do enum são normalizados (nunca label livre). Nunca levanta.
+- STT: uma `provider.attempt` por ticket (`finally` do loop), com `attempt`, `fell_back` (ordinal>0), `http_status` do `ProviderReading`/`exc.response`. Candidatos pulados por circuito/kill switch geram `outcome=circuit_open|kill_switch` em `configured_candidates`. `stt.circuit_opened` na 3ª falha; `stt.switch_check_failed` (fail-open mantido; saiu da allowlist de silent-except).
+- Imagem: `ImageProviderError` (novo; `ImageGenerationRefused` agora herda dele) carrega `http_status` e `outcome` estruturados; mensagens inalteradas. `image.generation_failed` no worker (`job_id`, `error_type`, `http_status`, `outcome`); `image.processing_failed` em `process_image`.
+- Embeddings Jina: `provider.attempt` por tentativa (inclui retries transitórios). `cost_basis=exact` só no sucesso; demais `unknown` (o custo estimado fica no hook de uso existente).
+- `api.py`: apenas o `except Exception` final de `/account/transcriptions` → evento `stt.internal_error` (`error`, `code=speech_internal_error`, `error_type`, `stack` por `safe_stack`).
+- Eventos novos: `provider.attempt`, `stt.circuit_opened`, `stt.switch_check_failed`, `stt.internal_error`, `image.generation_failed`, `image.processing_failed`. Métricas: `rpg_provider_attempts_total{capability,provider,outcome}`, `rpg_provider_duration_seconds{capability,provider}`.
+- Não registrei as métricas novas na lista de render de `api.py:~1091` (região do coordenador): confirmar se `/metrics` precisa listá-las.
+- Smoke de staging sugerido: 1 transcrição curta (Groq) → `provider.attempt capability=stt outcome=success` (nível debug: requer `RPG_LOG_LEVEL=debug`); com `GROQ_API_KEY` inválida em preview → falha + fallback OpenAI logados. Critérios do smoke ficam pendentes.

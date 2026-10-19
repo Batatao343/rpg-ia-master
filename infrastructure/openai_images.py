@@ -4,15 +4,28 @@ from __future__ import annotations
 
 import base64
 import hashlib
+import time
 
 import httpx
 
 from infrastructure.contracts import InfrastructureError
 from infrastructure.ports import GeneratedImage, ImageGenerationInput
+from observability.telemetry import log_provider_attempt
 
 
-class ImageGenerationRefused(InfrastructureError):
-    pass
+class ImageProviderError(InfrastructureError):
+    """Falha do provider de imagem; ``http_status``/``outcome`` estruturados (SPEC-258 R4)."""
+
+    def __init__(self, message: str, *, http_status: int | None = None,
+                 outcome: str = "http_error") -> None:
+        super().__init__(message)
+        self.http_status = http_status
+        self.outcome = outcome
+
+
+class ImageGenerationRefused(ImageProviderError):
+    def __init__(self, message: str, *, http_status: int | None = None) -> None:
+        super().__init__(message, http_status=http_status, outcome="refused")
 
 
 class OpenAIImageGenerator:
@@ -25,6 +38,30 @@ class OpenAIImageGenerator:
         self.timeout = timeout
 
     def generate(self, request: ImageGenerationInput) -> GeneratedImage:
+        started = time.perf_counter()
+        status: int | None = None
+        outcome = "success"
+        try:
+            image, status = self._generate(request)
+            return image
+        except ImageProviderError as exc:
+            status, outcome = exc.http_status, exc.outcome
+            raise
+        except httpx.TimeoutException:
+            outcome = "timeout"
+            raise
+        except httpx.HTTPError:
+            outcome = "transport_error"
+            raise
+        except Exception:
+            outcome = "invalid_response"
+            raise
+        finally:
+            log_provider_attempt("image", "openai", request.model, outcome, http_status=status,
+                                 latency_ms=(time.perf_counter() - started) * 1000,
+                                 cost_basis="exact" if outcome == "success" else "unknown")
+
+    def _generate(self, request: ImageGenerationInput) -> tuple[GeneratedImage, int]:
         request_key = hashlib.sha256(
             f"{request.model}\n{request.size}\n{request.prompt}".encode()
         ).hexdigest()
@@ -50,15 +87,18 @@ class OpenAIImageGenerator:
                 timeout=self.timeout,
             )
         if response.status_code in (400, 403) and "safety" in response.text.lower():
-            raise ImageGenerationRefused("imagem recusada pela política do provider")
+            raise ImageGenerationRefused("imagem recusada pela política do provider",
+                                         http_status=response.status_code)
         if response.status_code != 200:
-            raise InfrastructureError(f"provider de imagem indisponível ({response.status_code})")
+            raise ImageProviderError(f"provider de imagem indisponível ({response.status_code})",
+                                     http_status=response.status_code)
         payload = response.json()
         encoded = (payload.get("data") or [{}])[0].get("b64_json")
         if not encoded:
-            raise InfrastructureError("provider não retornou bytes de imagem")
+            raise ImageProviderError("provider não retornou bytes de imagem",
+                                     http_status=200, outcome="invalid_response")
         return GeneratedImage(
             base64.b64decode(encoded, validate=True), "image/png",
             response.headers.get("x-request-id"), request.model,
             dict(payload.get("usage") or {}),
-        )
+        ), response.status_code

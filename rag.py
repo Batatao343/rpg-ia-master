@@ -317,9 +317,20 @@ class _JinaEmbeddingsHTTPX(Embeddings):
             timeout=httpx.Timeout(max(0.1, float(timeout_seconds))),
         )
 
+    def _log_attempt(self, outcome: str, attempt: int, started: float,
+                     http_status: Optional[int]) -> None:
+        # SPEC-258: so metadados (nunca o texto embeddado nem URL).
+        from observability.telemetry import log_provider_attempt
+        log_provider_attempt("embedding", "jina", self.model_name, outcome,
+                             http_status=http_status,
+                             latency_ms=(time.perf_counter() - started) * 1000,
+                             attempt=attempt + 1, fell_back=False,
+                             cost_basis="exact" if outcome == "success" else "unknown")
+
     def _embed(self, values: List[str]) -> List[List[float]]:
         last_error: Optional[Exception] = None
         for attempt in range(self.max_attempts):
+            started = time.perf_counter()
             try:
                 response = self._client.post(
                     _JINA_API_URL,
@@ -328,6 +339,7 @@ class _JinaEmbeddingsHTTPX(Embeddings):
                 if (response.status_code in _TRANSIENT_EMBEDDING_STATUS
                         and attempt + 1 < self.max_attempts):
                     _emit_embedding_attempt("jina", self.model_name, "http_error")
+                    self._log_attempt("http_error", attempt, started, response.status_code)
                     last_error = httpx.HTTPStatusError(
                         f"Jina transitório: HTTP {response.status_code}",
                         request=response.request,
@@ -336,6 +348,7 @@ class _JinaEmbeddingsHTTPX(Embeddings):
                     continue
                 if response.status_code >= 400:
                     _emit_embedding_attempt("jina", self.model_name, "http_error")
+                    self._log_attempt("http_error", attempt, started, response.status_code)
                 response.raise_for_status()
                 try:
                     payload = response.json()
@@ -343,11 +356,13 @@ class _JinaEmbeddingsHTTPX(Embeddings):
                     # SPEC-237: the provider answered (and may have billed) -> estimate, not US$ 1.
                     _emit_embedding_attempt("jina", self.model_name, "invalid_response",
                                             _estimated_embedding_usage(values))
+                    self._log_attempt("invalid_response", attempt, started, response.status_code)
                     raise
                 usage = payload.get("usage") if isinstance(payload, dict) else None
                 if not _has_token_usage(usage):
                     usage = _estimated_embedding_usage(values)
                 _emit_embedding_attempt("jina", self.model_name, "response", usage)
+                self._log_attempt("success", attempt, started, response.status_code)
                 rows = payload.get("data") if isinstance(payload, dict) else None
                 if not isinstance(rows, list):
                     raise ValueError("resposta Jina sem lista 'data'")
@@ -359,6 +374,8 @@ class _JinaEmbeddingsHTTPX(Embeddings):
                 return vectors
             except httpx.TransportError as exc:
                 _emit_embedding_attempt("jina", self.model_name, "transport_error")
+                self._log_attempt("timeout" if isinstance(exc, httpx.TimeoutException)
+                                  else "transport_error", attempt, started, None)
                 last_error = exc
                 if attempt + 1 >= self.max_attempts:
                     raise

@@ -112,6 +112,10 @@ class SpeechCircuit:
         with self._lock:
             count = 0 if success else self._state.get(key, (0, 0))[0] + 1
             self._state[key] = (count, time.monotonic() + 60 if count >= 3 else 0)
+        if count == 3:
+            from observability.telemetry import log_event
+            log_event("stt", "circuit_opened", level="warning", provider=candidate.provider,
+                      model=candidate.model, failures=count, open_seconds=60)
 
 
 SPEECH_CIRCUIT = SpeechCircuit()
@@ -122,8 +126,18 @@ def configured_candidates() -> list[Candidate]:
                   Candidate("openai", os.getenv("RPG_SPEECH_OPENAI_MODEL", "gpt-4o-mini-transcribe"))]
     if any(not re.fullmatch(r"[A-Za-z0-9._/-]{1,150}", c.model) for c in candidates):
         raise SpeechError("speech_configuration", 503)
-    return [c for c in candidates if os.getenv(_KEYS[c.provider]) and SPEECH_CIRCUIT.available(c)
-            and _allowed_by_switches(c, primary=candidates[0])]
+    from observability.telemetry import log_provider_attempt
+    chosen: list[Candidate] = []
+    for c in candidates:
+        if not os.getenv(_KEYS[c.provider]):
+            continue
+        if not SPEECH_CIRCUIT.available(c):
+            log_provider_attempt("stt", c.provider, c.model, "circuit_open")
+        elif not _allowed_by_switches(c, primary=candidates[0]):
+            log_provider_attempt("stt", c.provider, c.model, "kill_switch")
+        else:
+            chosen.append(c)
+    return chosen
 
 
 def _allowed_by_switches(candidate: Candidate, *, primary: Candidate) -> bool:
@@ -134,7 +148,10 @@ def _allowed_by_switches(candidate: Candidate, *, primary: Candidate) -> bool:
         if not switches.is_enabled(model_key(candidate.provider, candidate.model)):
             return False
         return candidate == primary or switches.is_enabled(STT_FALLBACK)
-    except Exception:
+    except Exception as exc:
+        from observability.telemetry import log_event
+        log_event("stt", "switch_check_failed", level="warning", error_type=type(exc).__name__,
+                  provider=candidate.provider, model=candidate.model)
         return True
 
 
@@ -208,6 +225,7 @@ async def transcribe_audio(payload: bytes, mime: str, operation_id: UUID,
                            candidates: list[Candidate] | None = None,
                            circuit: SpeechCircuit | None = None) -> dict:
     import hashlib
+    from observability.telemetry import log_provider_attempt
     circuit = circuit or SPEECH_CIRCUIT
     candidates = configured_candidates() if candidates is None else candidates
     events: list[UsageEvent] = []
@@ -228,6 +246,8 @@ async def transcribe_audio(payload: bytes, mime: str, operation_id: UUID,
                 # including cancellation, timeout and internal transport failure.
                 event = speech_event(operation_id, ordinal, candidate.provider, candidate.model,
                                      "unknown", {})
+                started = time.perf_counter()
+                outcome, status = "transport_error", None
                 try:
                     async with asyncio.timeout(22):
                         reading = await (provider or HttpSpeechProvider()).transcribe(candidate, audio)
@@ -242,14 +262,29 @@ async def transcribe_audio(payload: bytes, mime: str, operation_id: UUID,
                         event = speech_event(operation_id, ordinal, candidate.provider, candidate.model,
                                              "success" if success else "error", reading.usage,
                                              duration=duration if 200 <= reading.status < 300 and candidate.provider == "groq" else None)
+                    status = reading.status
+                    outcome = ("success" if success else "http_error"
+                               if not 200 <= reading.status < 300 else "invalid_response")
                     circuit.record(candidate, success)
                     if success:
                         text = reading.text.strip()
                         break
-                except (SpeechError, httpx.HTTPError, TimeoutError):
+                except (SpeechError, httpx.HTTPError, TimeoutError) as exc:
+                    if isinstance(exc, (TimeoutError, httpx.TimeoutException)):
+                        outcome = "timeout"
+                    elif isinstance(exc, SpeechError):
+                        outcome = "invalid_response"
+                    status = getattr(getattr(exc, "response", None), "status_code", None)
+                    if status is not None:
+                        outcome = "http_error"
                     circuit.record(candidate, False)
                 finally:
                     events.append(event)
+                    log_provider_attempt(
+                        "stt", candidate.provider, candidate.model, outcome, http_status=status,
+                        latency_ms=(time.perf_counter() - started) * 1000, attempt=ordinal + 1,
+                        fell_back=ordinal > 0,
+                        cost_basis="exact" if outcome == "success" else "unknown")
             if text is None:
                 raise SpeechError("speech_provider_failed")
         finally:
