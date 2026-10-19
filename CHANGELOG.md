@@ -7,6 +7,8 @@
 
 ## 2026-10-19 — onda: workspace, logs P2/P3, frontend majors, staging (222/236/279/280)
 
+- **19/10 — SPEC-291 `done`:** falhas esporádicas do divisor do split no CI (F17 e `workspace-shell`, valor travado em 50) eram leitura sem espera após o arrasto com CPU carregada; os dois testes usam `expect.poll` (sem sleep, app intacto). 10× cada no chromium, 0 falhas.
+
 - **19/10 — SPEC-289 `done`:** a criatura do encontro `looming_threat` acompanha o tema da ameaça, sem LLM: a ascensão grava a fação (save antigo resolve pelo texto); dentro da região da ameaça sai criatura ligada a ela (combatente da fação ou mesmo radical do nome), porte estrito, nunca Chefe; fora, mesma criatura e flavor "eco distante". Ex.: Corvane nas Ruínas Submersas → Faísca da Destilação / Afogado de Aethelgard. Revisão Opus APPROVED_WITH_FOLLOWUPS ([parecer](handoffs/SPEC-289-review.md)).
 
 - **19/10 — SPEC-290 `done`:** o bônus de sobrevivência de Chefe/Nomeado por Nível do Encontro (SPEC-287) vale também para Chefes gerados pelo LLM (default canônico 12 em Python pela `categoria` fechada; bestiário runtime guarda a base, não acumula) e para o laboratório de combate (cópia, bestiário global intacto). Ex.: `mon_urso_tita` 16 → 40 no laboratório. Revisão Opus APPROVED ([parecer](handoffs/SPEC-290-review.md)).
