@@ -1,0 +1,33 @@
+# Opcional (workspace #10). Instalar uma vez por máquina:
+#   uv tool install pre-commit && pre-commit install
+# Roda só nos arquivos staged (< 3 s). O CI continua sendo o gate obrigatório.
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.3
+    hooks:
+      - id: ruff
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: mixed-line-ending
+        args: [--fix=lf]
+        exclude: '\.(ps1|bat|cmd)$'
+      - id: check-yaml
+        args: [--allow-multiple-documents]
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      - id: check-merge-conflict
+  - repo: local
+    hooks:
+      - id: spec-index-sync
+        name: specs/index.yaml matches spec headers
+        entry: uv run --frozen python scripts/spec_index.py check
+        language: system
+        files: ^specs/
+        pass_filenames: false
+      - id: estado-size
+        name: ESTADO_ATUAL.md <= 8 KB
+        entry: uv run --frozen python scripts/spec_index.py estado-size
+        language: system
+        files: ^ESTADO_ATUAL\.md$
+        pass_filenames: false

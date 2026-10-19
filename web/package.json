@@ -10,6 +10,9 @@
     "test:e2e": "playwright test",
     "test:e2e:list": "playwright test --list",
     "build": "tsc -b && vite build && node scripts/legal.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck:e2e": "tsc -p tsconfig.e2e.json --noEmit",
+    "lint": "eslint src e2e tests",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -23,11 +26,17 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
     "@capacitor/cli": "8.5.3",
+    "@eslint/js": "^9.39.5",
     "@playwright/test": "^1.55.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.39.5",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
     "typescript": "^5.6.3",
+    "typescript-eslint": "^8.71.2",
     "vite": "^5.4.11"
   }
 }
