@@ -73,7 +73,7 @@ jogador nem um aliado dele. Tudo é determinístico, sem RNG novo e sem LLM
   próprio ator ou o mesmo lado não abre a janela de Reação do lado oposto. Ela não é
   um ataque declarado, e o jogador não pode gastar Reação contra um reforço.
 - **R7 — Narração pt-BR.** O log narrável do uso é uma frase em pt-BR, com nomes e
-  sem ids ("X usa Carta em si mesmo/em Y"). O `reposicionar` deixa de pôr o token
+  sem ids ("X usa Carta" ou "X usa Carta em Y"). O `reposicionar` deixa de pôr o token
   técnico `id -> proximo (pre)` na prosa. A telemetria estruturada vai em
   `out["enemy_support_cards"]`, no formato
   `{event: "enemy_support_card", actor_id, card_id, target_id, kind}`.

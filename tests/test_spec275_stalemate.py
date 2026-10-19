@@ -74,6 +74,15 @@ def test_enemy_declaration_falls_to_basic_attack_without_offensive_card():
     scene, actors, sides = _world()
     actors["viuva"]["cartas"] = [SUPPORT_A, SUPPORT_B]
     decl = orch.enemy_declaration(scene, "viuva", actors, sides, rng=random.Random(1))
+    # SPEC-283: Carta de suporte agora pode ser usada — mas só no próprio lado.
+    if decl.acao.kind == "card":
+        assert decl.acao.card_id in (SUPPORT_A, SUPPORT_B)
+        assert decl.acao.target_id == "viuva"
+    # Com as Cartas de suporte gastas, o ataque é básico (SPEC-275 R1).
+    actors["viuva"]["enemy_card_usage"] = {
+        cid: {"used_this_scene": 1, "used_this_turn": 1} for cid in (SUPPORT_A, SUPPORT_B)
+    }
+    decl = orch.enemy_declaration(scene, "viuva", actors, sides, rng=random.Random(1))
     assert decl.acao.kind in ("attack", "tactic")
     assert decl.acao.card_id is None
 

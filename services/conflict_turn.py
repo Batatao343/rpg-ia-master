@@ -385,7 +385,21 @@ def _resolve_attack_step(
                 step.card_id = None
                 effect_kind = "dano"
             else:
-                out["logs"].append(res["log"])
+                log = res["log"]
+                if not is_player_actor and effect_kind in _SUPPORT_EFFECTS:
+                    # SPEC-283 R7: frase narrável em pt-BR (nomes, nunca ids) +
+                    # telemetria estruturada fora da prosa.
+                    log = _support_use_phrase(actor, actor_id, actors_by_id, step, card)
+                    out.setdefault("enemy_support_cards", []).append(
+                        {
+                            "event": "enemy_support_card",
+                            "actor_id": actor_id,
+                            "card_id": step.card_id,
+                            "target_id": step.target_id or actor_id,
+                            "kind": effect_kind,
+                        }
+                    )
+                out["logs"].append(log)
                 out["cards_used"].append(
                     {
                         "actor_id": actor_id,
@@ -559,8 +573,16 @@ def _resolve_support_card(scene, actor, actor_id, actors_by_id, step, card, out)
         out["logs"].append(result.get("log") or result.get("error", ""))
     elif kind == "reposicionar":
         target_id = step.target_id or actor_id
-        result = cs.move_distance(scene, target_id, step.direction or "afastar")
-        out["logs"].append(result.get("log") or result.get("error", ""))
+        direction = step.direction or "afastar"
+        result = cs.move_distance(scene, target_id, direction)
+        if result.get("ok"):
+            # SPEC-283 R7: sem o token técnico `id -> estágio (via)` na prosa.
+            closer = direction in ("aproximar", "approach", "closer", "-")
+            verb = "se aproxima" if closer else "se afasta"
+            where = _DISTANCE_PHRASE.get(str(result.get("distance_state")), "")
+            out["logs"].append(f"{target.get('name', target_id)} {verb}{where}.")
+        else:
+            out["logs"].append(result.get("error", ""))
     else:
         stat = {
             "protecao": "protection",
@@ -578,6 +600,23 @@ def _resolve_support_card(scene, actor, actor_id, actors_by_id, step, card, out)
             "delta": amount,
         }
         out["logs"].append(cm.apply_condition(target, condition))
+
+
+_DISTANCE_PHRASE = {
+    "proximo": " e fica ao alcance",
+    "distante": " e fica à distância",
+    "separado": " e sai do alcance",
+}
+
+
+def _support_use_phrase(actor, actor_id, actors_by_id, step, card) -> str:
+    who = actor.get("name", actor_id)
+    name = card.get("name", step.card_id)
+    target_id = step.target_id
+    if not target_id or target_id == actor_id:
+        return f"{who} usa {name}."
+    target = actors_by_id.get(target_id) or {}
+    return f"{who} usa {name} em {target.get('name', target_id)}."
 
 
 def _effect_amount(effect: dict) -> int:

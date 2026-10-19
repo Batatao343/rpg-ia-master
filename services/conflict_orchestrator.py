@@ -531,7 +531,29 @@ def enemy_declaration(
             else canonical["_ally_available_target"]
         ),
     }.get(action_key)
-    if action_key in {"protect", "stabilize", "flank", "control", "support"}:
+    tactical_keys = {"protect", "stabilize", "flank", "control", "support"}
+    # Manobra tática sem alvo válido degrada para ataque (mesma regra abaixo).
+    effective_action = (
+        "attack" if action_key in tactical_keys and tactical_target is None else action_key
+    )
+    if not forced_attack and effective_action != "stabilize":
+        # SPEC-283: Carta de suporte do bestiário no próprio lado, quando a cena
+        # justifica. Quebra de impasse (SPEC-275 R5) e estabilização vêm antes.
+        choice = _enemy_support_card(
+            scene, actor, actor_id, actors_by_id, sides, canonical, effective_action
+        )
+        if choice is not None:
+            support_card, support_target, direction = choice
+            return ct.TurnDeclaration(
+                actor_id=actor_id,
+                acao=ct.TurnStep(
+                    kind="card",
+                    card_id=support_card,
+                    target_id=support_target,
+                    direction=direction,
+                ),
+            )
+    if action_key in tactical_keys:
         if tactical_target is not None:
             return ct.TurnDeclaration(
                 actor_id=actor_id,
@@ -554,6 +576,85 @@ def enemy_declaration(
             target = actor_id
     step = ct.TurnStep(kind="card" if card_id else "attack", card_id=card_id, target_id=target)
     return ct.TurnDeclaration(actor_id=actor_id, acao=step)
+
+
+# SPEC-283: famílias de Carta de suporte que a IA inimiga sabe usar no próprio lado.
+_ENEMY_DEFENSIVE_SUPPORT = frozenset({"protecao", "buff_defesa"})
+_ENEMY_OFFENSIVE_SUPPORT = frozenset({"buff_dano", "buff_acerto", "vantagem"})
+_ENEMY_MOVE_SUPPORT = frozenset({"reposicionar"})
+
+
+def _has_condition_from(actor: dict | None, card_id: str) -> bool:
+    return any(
+        str(c.get("source") or "") == card_id for c in (actor or {}).get("active_conditions") or []
+    )
+
+
+def _enemy_support_card(
+    scene: dict,
+    actor: dict,
+    actor_id: str,
+    actors_by_id: dict[str, dict],
+    sides: dict[str, list[str]],
+    canonical: dict,
+    action_key: str,
+) -> tuple[str, str, str | None] | None:
+    """SPEC-283 R1/R2/R4/R5: escolhe, sem RNG, uma Carta de suporte do bestiário
+    para o PRÓPRIO lado. Devolve ``(card_id, target_id, direction)`` ou ``None``.
+
+    Ordem: defensiva (aliado em perigo → si mesmo ferido) → ofensiva (aliado na
+    ação ``support`` → si mesmo antes de ``attack``) → movimento (fechar distância
+    antes de ``attack``). O alvo é sempre o ator ou um aliado do mesmo lado — nunca
+    o jogador nem um aliado dele. Custo/frequência/Entropia via
+    ``cards.can_use_enemy_card``; Carta cuja condição ainda está ativa no alvo não
+    é repetida."""
+    from services import cards
+
+    own_side = set(_same_side_ids(actor_id, sides)) | {actor_id}
+    hostile = set(_opposing_ids(actor_id, sides))
+    usable: list[tuple[str, str]] = []
+    for card_id in cards.enemy_card_ids(actor):
+        kind = str(((cards.get_card(card_id) or {}).get("efeito") or {}).get("kind") or "")
+        if kind not in _ENEMY_DEFENSIVE_SUPPORT | _ENEMY_OFFENSIVE_SUPPORT | _ENEMY_MOVE_SUPPORT:
+            continue
+        if cards.can_use_enemy_card(actor, card_id, expected_type="ativa"):
+            usable.append((card_id, kind))
+    if not usable:
+        return None
+
+    def valid(target_id: str | None, card_id: str) -> bool:
+        return bool(
+            target_id
+            and target_id in own_side
+            and target_id not in hostile
+            and _available_for_aid(actors_by_id.get(target_id))
+            and not _has_condition_from(actors_by_id.get(target_id), card_id)
+        )
+
+    self_hurt = bool(canonical.get("vitalidade_baixa")) or _vitality_ratio(actor) <= 0.5
+    for card_id, kind in usable:
+        if kind not in _ENEMY_DEFENSIVE_SUPPORT:
+            continue
+        danger = canonical.get("_ally_danger_target")
+        if valid(danger, card_id):
+            return card_id, danger, None
+        if self_hurt and valid(actor_id, card_id):
+            return card_id, actor_id, None
+    for card_id, kind in usable:
+        if kind not in _ENEMY_OFFENSIVE_SUPPORT:
+            continue
+        ally = canonical.get("_ally_available_target")
+        if action_key == "support" and valid(ally, card_id):
+            return card_id, ally, None
+        if action_key == "attack" and canonical.get("_enemy_target") and valid(actor_id, card_id):
+            return card_id, actor_id, None
+    position = ((scene.get("positions") or {}).get(actor_id)) or {}
+    far = position and position.get("distance_state", "proximo") != "proximo"
+    for card_id, kind in usable:
+        if kind in _ENEMY_MOVE_SUPPORT and action_key == "attack" and far:
+            if valid(actor_id, card_id):
+                return card_id, actor_id, "aproximar"
+    return None
 
 
 def _get_card(card_id: str) -> dict | None:
@@ -1204,6 +1305,32 @@ def _resolve_tactical_action(
 # ==========================================================================
 # Resolução do turno de um ator (compõe conflict_turn + reações + AoO)
 # ==========================================================================
+def _extend_ally_defense(ev: dict, actors_by_id: dict[str, dict], out: dict) -> None:
+    """SPEC-283 R2: buff/debuff tipado expira no fim do turno do PORTADOR
+    (SPEC-232 R1). Proteção posta num aliado que ainda vai agir nesta rodada
+    expiraria antes de qualquer ataque do lado oposto — então ganha +1 turno e
+    passa a cobrir os ataques da próxima rodada, como a defesa posta em si mesmo."""
+    target_id = ev.get("target_id")
+    if ev.get("kind") not in _ENEMY_DEFENSIVE_SUPPORT or target_id == ev.get("actor_id"):
+        return
+    if target_id in (out.get("resolved_turns") or []):
+        return
+    for condition in (actors_by_id.get(target_id) or {}).get("active_conditions") or []:
+        if str(condition.get("source") or "") == str(ev.get("card_id")):
+            condition["duration"] = int(condition.get("duration", 1) or 1) + 1
+
+
+def _own_side_support(step, actor_id: str, sides: dict[str, list[str]]) -> bool:
+    """SPEC-283 R6: Carta de suporte no próprio ator/lado não é ataque declarado —
+    não abre a janela de Reação do lado oposto."""
+    if step.kind != "card" or not step.card_id:
+        return False
+    kind = str(((_get_card(step.card_id) or {}).get("efeito") or {}).get("kind") or "")
+    if kind not in ct._SUPPORT_EFFECTS:
+        return False
+    return step.target_id == actor_id or step.target_id in set(_same_side_ids(actor_id, sides))
+
+
 def _resolve_actor_turn(
     scene: dict,
     actor: dict,
@@ -1226,7 +1353,12 @@ def _resolve_actor_turn(
 
     # Janela de Reação sobre um ataque declarado (06 R1) — reator define Guarda na cena.
     acao = decl.acao
-    if acao is not None and acao.kind in ("attack", "card") and acao.target_id:
+    if (
+        acao is not None
+        and acao.kind in ("attack", "card")
+        and acao.target_id
+        and not _own_side_support(acao, actor_id, sides)
+    ):
         _open_reaction_window(
             scene, actor_id, acao.target_id, actors_by_id, sides, out, state, rng=rng, step=acao
         )
@@ -1242,6 +1374,15 @@ def _resolve_actor_turn(
     out.setdefault("cards_used", []).extend(sub.get("cards_used", []))
     if sub.get("enemy_fallbacks"):
         out.setdefault("enemy_fallbacks", []).extend(sub["enemy_fallbacks"])
+    if sub.get("enemy_support_cards"):
+        out.setdefault("enemy_support_cards", []).extend(sub["enemy_support_cards"])
+        for ev in sub["enemy_support_cards"]:
+            _extend_ally_defense(ev, actors_by_id, out)
+        logger.info(
+            "enemy_support_card actor=%s cards=%s",
+            actor_id,
+            [ev.get("card_id") for ev in sub["enemy_support_cards"]],
+        )
     for tid in sub.get("terminal", []):
         if tid not in out["terminal"]:
             out["terminal"].append(tid)
