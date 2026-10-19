@@ -59,7 +59,6 @@ comportamento ficou idêntico ao da main.
 - P2-2: evitar que `deck-character.spec.ts` regrave evidência versionada fora de captura explícita (dono: frontend; spec futura de higiene de e2e).
 - P2-3: semântica do toolbar da Arena (opcional, sem spec).
 - Flake sob carga: `effects.spec.ts:276` (card.arm @1280) falhou 1x no lote e passou 2/2 isolado.
-- Flake sob carga: `effects.spec.ts:276` (card.arm @1280) falhou 1x no lote e passou 2/2 isolado.
 - Flake sob carga: `dossiers.spec.ts:57` falhou 1 vez no lote de 74 testes e passou 2 vezes isolado.
   Não tem relação com o diff (o DossierBrowser só ganhou supressões de lint e um `if/else` no lugar do ternário).
 
@@ -72,6 +71,5 @@ npm run typecheck:e2e → 0 erros ; npm run typecheck → 0 erros
 CI=1 npx playwright test client-error-dedupe combat-gesture combat-outcome image-quote portrait-overlay visual-surfaces workspace-shell voice-input deck-character dossiers map-tab consent --project=chromium → 72 passed, 1 skipped, 1 flaky (dossiers:57; isolado 5/5 e 1/1 verde)
 CI=1 npx playwright test critical-journeys --project=chromium → 37/37 passed
 CI=1 npx playwright test effects --project=chromium → 41 passed, 7 skipped, 1 flaky (card.arm @1280, linha 276; isolado 2/2 verde)
-CI=1 npx playwright test effects --project=chromium → 41 passed, 7 skipped, 1 flaky (card.arm @1280:276; isolado 2/2 verde)
 sondas Playwright temporárias (ArtworkDialog foco/backdrop/reabrir; ImageQuote foco; hit-test do card de raça) → confirmado acima; arquivos removidos
 ```
