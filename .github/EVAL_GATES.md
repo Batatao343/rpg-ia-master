@@ -6,9 +6,24 @@ scope manifest selects the extra backend and frontend jobs from changed paths.
 No automatic job invokes a real provider or a long campaign.
 
 Changes under `evals/protected-paths.txt` activate the `eval-governance`
-environment. Configure that environment with required reviewers and set its
-`EVALUATOR_CHANGE_APPROVED=true` variable only for an independently reviewed
-evaluator-change task. Without both controls, the job fails closed.
+environment. Configure that environment with required reviewers and keep
+`EVALUATOR_CHANGE_APPROVED=true` as a variable **of that environment** (not of
+the repository). Environment variables only reach the job after a reviewer
+approves the deployment, so the approval click is the single gate and nobody
+toggles the variable per run. Without both controls, the job fails closed.
+
+One-time setup (owner):
+
+```bash
+gh variable set EVALUATOR_CHANGE_APPROVED --env eval-governance --body true
+gh variable delete EVALUATOR_CHANGE_APPROVED   # remove any repository-level copy
+```
+
+Per wave: batch every pending eval authoring into one commit (no product code in
+it), push, then run `/eval-publish` (`scripts/dev/eval_publish.py`). It validates
+the scope, finds the waiting `eval-gates` run and prints the approval link plus
+the exact `gh api … pending_deployments … state=approved` command for the owner.
+Agents never approve the environment and never wait in a loop.
 
 `eval-protected` is manual. Its `eval-provider` environment contains the short
 contract provider key. The job reserves a conservative worst-case estimate
