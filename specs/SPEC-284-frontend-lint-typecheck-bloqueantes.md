@@ -33,7 +33,7 @@ Reescrever os efeitos de carregamento para derived state/Suspense; `web/e2e/cont
   nos dois arquivos do oráculo vertical (`vertical-journey.spec.ts`, `vertical-support.ts`; payloads
   JSON dinâmicos do servidor real) há um disable de arquivo com motivo.
 - **a11y real:** `<label>` sem controle → `span.field__label`; clique redundante nos cards de raça/classe
-  removido (o botão `card__select` já cobre o card inteiro via `::after`); `ArtworkDialog` com listener
+  removido (o botão `card__select` já cobre o card via `::after`, exceto a linha de chips de traço da raça, que tem `z-index: 1` para o `title` e não seleciona mais ao clicar — aceito, ver review); `ArtworkDialog` com listener
   nativo de backdrop e sem `autoFocus` (o `showModal` foca o botão); `ImageQuoteDialog` foca "Cancelar" por
   ref; `role="region"` redundante removido; teclas de seta da Arena passaram para o `role="toolbar"`
   interno. Handlers de teclado delegados / regiões roláveis focáveis / splitter ficam com disable pontual
