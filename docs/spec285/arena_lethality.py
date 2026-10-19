@@ -40,7 +40,6 @@ sys.path.insert(0, os.getcwd())
 logging.disable(logging.CRITICAL)
 
 import encounter_budget as eb  # noqa: E402
-
 from agents.bestiary import load_bestiary  # noqa: E402
 
 try:  # SPEC-203+; o fallback permite medir commits antigos (âncora pré-232)
@@ -54,6 +53,7 @@ except ImportError:  # pragma: no cover
         data["hp"] = data["max_hp"] = data["vitalidade"]
         data["status"] = "ativo"
         return data
+
 
 from combat_mechanics import normalize_categoria  # noqa: E402
 from playtest.runner import _build_initial_state  # noqa: E402
@@ -151,7 +151,9 @@ def hero_decl(bot: str, player: dict, target_id: str) -> ct.TurnDeclaration:
             return ct.TurnDeclaration(
                 actor_id="player", acao=ct.TurnStep(kind="card", card_id=cid, target_id=target_id)
             )
-    return ct.TurnDeclaration(actor_id="player", acao=ct.TurnStep(kind="attack", target_id=target_id))
+    return ct.TurnDeclaration(
+        actor_id="player", acao=ct.TurnStep(kind="attack", target_id=target_id)
+    )
 
 
 def fight(bid: str, n: int, class_name: str, level: int, seed: int, bot: str):
@@ -197,7 +199,15 @@ def run(seeds, levels, bots, classes=CLASSES, categories=CATEGORIES) -> dict:
         for level in levels:
             for cat in categories:
                 n = group_size(cat, level)
-                cell = {"n": n, "fights": 0, "death": 0, "win": 0, "timeout": 0, "rounds": 0, "early_deaths": 0}
+                cell = {
+                    "n": n,
+                    "fights": 0,
+                    "death": 0,
+                    "win": 0,
+                    "timeout": 0,
+                    "rounds": 0,
+                    "early_deaths": 0,
+                }
                 per_class = {}
                 for cls in classes:
                     d = f = 0
@@ -232,7 +242,12 @@ def main() -> None:
         args.bots.split(","),
         categories=args.categories.split(","),
     )
-    print(json.dumps({"seeds": args.seeds, "elapsed_s": round(time.time() - t0, 1), "cells": res}, ensure_ascii=False))
+    print(
+        json.dumps(
+            {"seeds": args.seeds, "elapsed_s": round(time.time() - t0, 1), "cells": res},
+            ensure_ascii=False,
+        )
+    )
 
 
 if __name__ == "__main__":

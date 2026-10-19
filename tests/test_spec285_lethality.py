@@ -180,7 +180,10 @@ def test_tactical_control_denies_exactly_one_target_turn():
     assert controls, "o Místico precisa controlar ao menos uma vez"
     # Cada controle bem-sucedido nega um turno do alvo — não dois.
     controls_before_last = [
-        t for out in rounds[:-1] for t in out.get("tactics", []) if t["action_key"] == "control" and t["ok"]
+        t
+        for out in rounds[:-1]
+        for t in out.get("tactics", [])
+        if t["action_key"] == "control" and t["ok"]
     ]
     assert lost == len(controls_before_last)
 
