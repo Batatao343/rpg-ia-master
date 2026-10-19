@@ -1,6 +1,6 @@
 # SPEC-289 — ameaca-iminente-criatura-tematica
 
-> **Status:** `approved` — dono autorizou em 19/10/2026 tudo que não exige ação externa dele (onda 19/10).
+> **Status:** `done` — dono autorizou em 19/10/2026 tudo que não exige ação externa dele (onda 19/10).
 > **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
 > **Depende de:** SPEC-288 (`done` — criatura canônica no encontro `looming_threat`), SPEC-287 (escala de encontro)
 > **Desbloqueia:** —
@@ -104,7 +104,7 @@ nem saves antigos. Princípio: mecânica é Python; a IA só narra.
 - [x] Tabela ameaça → criatura antes/depois com ameaças reais (§6)
 - [x] `playtest run --profile combate --turns 200` em 3 seeds: 0 erro / 0 `combat.no_progress`
 - [x] Revisão independente Opus (`handoffs/SPEC-289-review.md`) com correções aplicadas
-- [x] Suíte completa 1x (só falhas de índice stale esperadas)
+- [x] Suíte completa 1x: exit 1 só pelas 3 falhas de índice stale esperadas (test_project_index ×2, test_spec_index_tool ×1)
 - [x] Sem `with_structured_output` novo; saves antigos carregam (campo aditivo)
 
 ## 6. Evidência (sem LLM — mudança 100% determinística)
