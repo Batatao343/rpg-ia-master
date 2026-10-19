@@ -1,6 +1,6 @@
 # SPEC-242 — Envelope de erro único `{detail, code, request_id}` e fim de `str(exc)` em respostas
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P1**.
+> **Status:** `in-progress` — implementada em `logs-p1` (REVIEW_REQUIRED; smoke staging pendente)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-241
 > **Desbloqueia:** SPEC-243
@@ -56,13 +56,13 @@ helper + varredura mecânica.
 
 ## 5. Critérios de aceite
 
-- [ ] 100% dos erros com `code` + `request_id`.
-- [ ] Zero `str(exc)` em resposta.
-- [ ] Catálogo documentado e testado.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] 100% dos erros com `code` + `request_id`.
+- [x] Zero `str(exc)` em resposta.
+- [x] Catálogo documentado e testado.
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] `uv run pytest` verde (suíte completa offline).
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -73,3 +73,9 @@ helper + varredura mecânica.
 - Cliente Android antigo ignora `code` (compat garantida por `detail` inalterado).
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## Execução (logs-p1, 2026-10-18)
+
+Implementado: `services/error_codes.py` (catálogo `CODE_DOCS`/`PROSE_CODES`, `ApiError`/`api_error`, `envelope`), `api._error_response` em todos os handlers/middlewares (inclui 429, 413, 401/403/503 de borda, 500), SSE `event: error` com `error_code`+`request_id`. Doc gerado `docs/operacao/CODIGOS_DE_ERRO.md` (+ `web/src/lib/errorCodes.json`) com teste de frescor. Testes: `tests/test_error_envelope.py`; 9 asserções antigas de corpo exato ajustadas para comparar `detail`.
+
+Desvios registrados: (1) `detail` mantém a prosa histórica (compat) e o `code` é derivado via `PROSE_CODES` no handler — não houve varredura de 134 raises; o teste AST garante que todo `HTTPException` mapeia para o catálogo. (2) Os `detail=err` de equip/prepare/levelup são texto de regra de domínio (não de exceção, mostrado ao jogador): mantidos em `detail` com `code` `equip_rejected`/`prepare_rejected`/`levelup_rejected`; os `str(exc)` foram trocados por códigos fechados. (3) No SSE o campo `code` segue numérico (compat do cliente atual); o código estável vai em `error_code`. Falta o smoke de staging (§6) e a revisão Sol.

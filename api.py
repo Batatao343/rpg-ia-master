@@ -70,6 +70,7 @@ from world_utils import starting_world
 # SPEC-218: boot fail-closed. Processo exposto (plataforma/bind) nunca sobe em
 # `legacy`; perfis DB validam a config de segurança já no import, não no 1º request.
 from infrastructure.runtime import assert_boot_policy, docs_enabled, is_hardened
+from services.error_codes import api_error
 
 assert_boot_policy(os.environ)
 _DOCS_ON = docs_enabled(os.environ)
@@ -101,18 +102,26 @@ def _error_code_of(detail: Any) -> str | None:
     return detail if isinstance(detail, str) and _CODE_RE.match(detail) else None
 
 
+def _error_response(status: int, detail: Any, *, code: str | None = None,
+                    headers: dict[str, str] | None = None, **extra: Any) -> JSONResponse:
+    """SPEC-242 R1: envelope unico ``{detail, code, request_id}`` (+ extras aditivos)."""
+    from services.error_codes import envelope
+    rid = _current_request_id()
+    body = envelope(status, detail, code=code, request_id=rid, **extra)
+    hdrs = dict(headers or {})
+    if rid:
+        hdrs["X-Request-ID"] = rid
+    return JSONResponse(body, status_code=status, headers=hdrs or None)
+
+
 @app.exception_handler(StarletteHTTPException)
 async def _http_exception_handler(request: Request, exc: StarletteHTTPException):
-    """SPEC-241 R3: corpo atual preservado + request_id (corpo e header)."""
-    request.state.error_code = _error_code_of(exc.detail)
-    rid = _current_request_id()
-    body: dict[str, Any] = {"detail": exc.detail}
-    if rid:
-        body["request_id"] = rid
-    headers = dict(exc.headers or {})
-    if rid:
-        headers["X-Request-ID"] = rid
-    return JSONResponse(body, status_code=exc.status_code, headers=headers or None)
+    """SPEC-241 R3 + SPEC-242: corpo atual preservado + ``code`` + request_id (corpo e header)."""
+    from services.error_codes import code_for
+    code = code_for(exc.status_code, exc.detail, getattr(exc, "code", None))
+    request.state.error_code = code
+    return _error_response(exc.status_code, exc.detail, code=code, headers=exc.headers,
+                           **getattr(exc, "extra", {}))
 
 
 @app.exception_handler(RequestValidationError)
@@ -125,20 +134,18 @@ async def _validation_exception_handler(request: Request, exc: RequestValidation
                locs=[".".join(str(p) for p in e.get("loc", ())) for e in errors][:20],
                error_count=len(errors))
     rid = _current_request_id()
-    body: dict[str, Any] = {"detail": jsonable_encoder(errors)}
+    body: dict[str, Any] = {"detail": jsonable_encoder(errors), "code": "validation_failed"}
     if rid:
         body["request_id"] = rid
-    return JSONResponse(body, status_code=422)
+    return JSONResponse(body, status_code=422, headers={"X-Request-ID": rid} if rid else None)
 
 
 @app.exception_handler(IncompatibleSaveError)
 async def _incompatible_save_handler(_request, _exc):
     """SPEC-228 R9: save de schema mais novo é recusado, nunca regravado."""
-    return JSONResponse(status_code=409, content={
-        "detail": "Este save foi criado por uma versão mais nova do jogo; "
-                  "atualize o servidor antes de continuar.",
-        "code": "save_schema_newer",
-    })
+    return _error_response(
+        409, "Este save foi criado por uma versão mais nova do jogo; "
+             "atualize o servidor antes de continuar.", code="save_schema_newer")
 
 
 @app.exception_handler(_Unauthorized)
@@ -150,15 +157,14 @@ async def _unauthorized_handler(request, exc):
     request.state.error_code = code
     reject("session_rejected", session_reason(exc), route=request.url.path, public_code=code,
            source="handler")
-    return JSONResponse(status_code=401, content={"detail": code})
+    return _error_response(401, code)
 
 
 @app.exception_handler(AuthUnavailable)
 async def _auth_unavailable_handler(request, _exc):
     """SPEC-245 R1: GoTrue/JWKS fora do ar ou lento => 503 fechado, nunca 500."""
     request.state.error_code = "auth_unavailable"
-    return JSONResponse(status_code=503, content={"detail": "auth_unavailable"},
-                        headers={"Retry-After": "5"})
+    return _error_response(503, "auth_unavailable", headers={"Retry-After": "5"})
 
 
 def _log_csrf_rejection(request: Request, code: str) -> None:
@@ -178,12 +184,12 @@ async def _csrf_handler(request, exc):
     """SPEC-220 R10: Origin/CSRF => 403, para o cliente não disparar refresh/logout."""
     request.state.error_code = exc.code
     _log_csrf_rejection(request, exc.code)
-    return JSONResponse(status_code=403, content={"detail": exc.code})
+    return _error_response(403, exc.code)
 
 
 @app.exception_handler(SessionSecretError)
 async def _session_secret_handler(_request, _exc):
-    return JSONResponse(status_code=503, content={"detail": "server_misconfigured"})
+    return _error_response(503, "server_misconfigured")
 
 
 # Fase 10 (R5): CORS restrito por default; configurável via RPG_CORS_ORIGINS
@@ -259,14 +265,13 @@ async def _session_boundary(request: Request, call_next):
     except CsrfError as exc:
         request.state.error_code = exc.code
         _log_csrf_rejection(request, exc.code)
-        return JSONResponse({"detail": exc.code}, status_code=403)
+        return _error_response(403, exc.code)
     except AuthUnavailable:
         from observability.auth_log import reject
         request.state.error_code = "auth_unavailable"
         reject("session_rejected", "upstream_unavailable", route=request.url.path,
                public_code="auth_unavailable", source="boundary")
-        return JSONResponse({"detail": "auth_unavailable"}, status_code=503,
-                            headers={"Retry-After": "5"})
+        return _error_response(503, "auth_unavailable", headers={"Retry-After": "5"})
     except Unauthorized as exc:
         # Sem cookie nao ha verificacao a amplificar: visitante deslogado (bootstrap da SPA) nao
         # consome o balde, so quem apresenta credencial invalida (SPEC-219 R6, revisao Sol).
@@ -279,13 +284,13 @@ async def _session_boundary(request: Request, call_next):
         throttled = _record_authfail(request) if request.cookies.get("rpg_access") else None
         if throttled is not None:
             return throttled
-        return JSONResponse({"detail": code}, status_code=401)
+        return _error_response(401, code)
     except ValueError:  # segredo de sessão curto/ausente (CsrfSigner/proof)
         from observability.auth_log import reject
         request.state.error_code = "server_misconfigured"
         reject("session_rejected", "server_misconfigured", route=request.url.path,
                public_code="server_misconfigured", source="boundary", level="error")
-        return JSONResponse({"detail": "server_misconfigured"}, status_code=503)
+        return _error_response(503, "server_misconfigured")
     token = set_current_principal(principal)
     try:
         over = _owner_rate_limit(request, principal)   # SPEC-219 R2
@@ -433,8 +438,7 @@ def _unhandled_response(request: Request, route: str, exc: Exception, request_id
     _log_event("http", "unhandled_exception", level="error", route=route,
                method=request.method, error_type=type(exc).__name__,
                stack=safe_stack(exc), request_id=request_id)
-    return JSONResponse(status_code=500, content={
-        "detail": "internal_error", "code": "internal_error", "request_id": request_id})
+    return _error_response(500, "internal_error")
 
 
 async def _correlation_boundary(request: Request, call_next):
@@ -1194,8 +1198,8 @@ def _reject_archived(state: dict) -> None:
     """spec conflito-01 R10: save anterior à migração de Virtudes/Vitalidade é
     ÓRFÃO. Somente-leitura — nenhuma ação o toca (409, nunca 500)."""
     if state.get("archived"):
-        raise HTTPException(
-            status_code=409,
+        raise api_error(
+            409, "game_archived",
             detail=state.get("archived_reason")
             or "Personagem arquivado por migração de sistema — comece uma nova jornada.")
 
@@ -1232,8 +1236,7 @@ async def _rate_limit_metrics(request: Request, call_next):
     while hits and now - hits[0] > _RATE_WINDOW_S:
         hits.popleft()
     if len(hits) >= _METRICS_RATE_PER_MIN:
-        return JSONResponse(status_code=429, content={"detail": "rate_limited"},
-                            headers={"Retry-After": "60"})
+        return _error_response(429, "rate_limited", headers={"Retry-After": "60"})
     hits.append(now)
     return await call_next(request)
 
@@ -1245,8 +1248,9 @@ def _client_ip(request: Request) -> str:
 
 def _blocked_response(detail: str, scope: str, retry_after: int, *, status: int = 429) -> JSONResponse:
     from services.abuse_policy import rate_limited_body
-    return JSONResponse(status_code=status, content=rate_limited_body(detail, scope, retry_after),
-                        headers={"Retry-After": str(max(1, int(retry_after)))})
+    body = rate_limited_body(detail, scope, retry_after)
+    return _error_response(status, body.pop("detail"),
+                           headers={"Retry-After": str(max(1, int(retry_after)))}, **body)
 
 
 @app.middleware("http")
@@ -3034,7 +3038,7 @@ def account_purchases(cursor: Optional[str] = None, limit: int = 20):
     try:
         return _account_reader().purchases(current_principal(), cursor=cursor, limit=limit)
     except ValueError as exc:
-        raise HTTPException(400, str(exc)) from exc
+        raise HTTPException(400, "invalid_request") from exc
 
 
 @app.get('/account/usage')
@@ -3043,7 +3047,7 @@ def account_usage(cursor: Optional[str] = None, limit: int = 20):
     try:
         return _account_reader().usage(current_principal(), cursor=cursor, limit=limit)
     except ValueError as exc:
-        raise HTTPException(400, str(exc)) from exc
+        raise HTTPException(400, "invalid_request") from exc
 
 
 @app.get('/account/series')
@@ -3052,7 +3056,7 @@ def account_series(period: str = '7d'):
     try:
         return _account_reader().series(current_principal(), period)
     except ValueError as exc:
-        raise HTTPException(400, str(exc)) from exc
+        raise HTTPException(400, "invalid_request") from exc
 
 
 @app.get('/game/{game_id}/operations/{operation_id}/cost')
@@ -4580,11 +4584,9 @@ def game_death(req: DeathChoiceRequest):
                 new_state = _cp.resolve_death_choice(state, req.choice)
             except _cp.NoRestorePoint as exc:
                 _fail_operation(claim, "no_restore_point")
-                return JSONResponse(status_code=409, content={
-                    "detail": "Sem ponto de retorno válido; aceite o memorial "
-                              "ou inicie nova jornada.",
-                    "code": "no_restore_point", "death_pending": True,
-                })
+                return _error_response(
+                    409, "Sem ponto de retorno válido; aceite o memorial ou inicie nova jornada.",
+                    code="no_restore_point", death_pending=True)
             response = format_response(new_state)
             _commit_state_mutation(
                 new_state, response.model_dump(mode="json"), claim=claim,
@@ -4685,7 +4687,10 @@ def _stream_turn_events(req: ActionRequest, accepted_game_id: str, principal,
                 if not delivered["done"]:
                     q.put(("response", response))
         except HTTPException as exc:
-            payload = {"detail": exc.detail, "code": exc.status_code}
+            from services.error_codes import code_for
+            payload = {"detail": exc.detail, "code": exc.status_code,       # ``code`` numerico: compat do cliente
+                       "error_code": code_for(exc.status_code, exc.detail, getattr(exc, "code", None)),
+                       "request_id": _current_request_id()}
             if isinstance(exc, QuotaExceeded):     # SPEC-219: cliente mostra "volta em HH:MM"
                 payload.update(scope=exc.scope, retry_after_seconds=exc.retry_after_seconds)
             q.put(("http_error", payload))
@@ -4716,7 +4721,9 @@ def _stream_turn_events(req: ActionRequest, accepted_game_id: str, principal,
             return
         if kind == "exc":
             outcome["value"] = "error"
-            yield _sse("error", {"detail": "Erro interno ao processar o turno."})
+            yield _sse("error", {"detail": "Erro interno ao processar o turno.", "code": 500,
+                                 "error_code": "internal_turn_error",
+                                 "request_id": _current_request_id()})
             return
         if kind == "chunk":
             mode, data = payload
@@ -4806,7 +4813,7 @@ def game_equip(req: EquipRequest):
                 raise HTTPException(status_code=400, detail="Informe item_id ou unequip_slot.")
             if err:
                 _fail_operation(claim, "invalid_equip")
-                raise HTTPException(status_code=400, detail=err)
+                raise api_error(400, "equip_rejected", detail=err)   # err = regra de dominio, nao excecao
 
             state["player"] = player
             import combat_mechanics as cm_mod
@@ -4852,7 +4859,7 @@ def game_cards_prepare(req: PrepareCardsRequest):
                 _fail_operation(claim, "invalid_prepare")
                 allowed, reason = cards.reorganize_status(state)
                 status = 409 if not allowed else 400
-                raise HTTPException(status_code=status, detail=reason or result["error"])
+                raise api_error(status, "prepare_rejected", detail=reason or result["error"])
             state["player"] = probe["player"]
             player = state["player"]
             response = {"ok": True,
@@ -4898,7 +4905,7 @@ def game_levelup(req: LevelUpRequest):
                 subclass_id=req.subclass_id, virtue_card_id=req.virtue_card_id)
             if err:
                 _fail_operation(claim, "invalid_choice")
-                raise HTTPException(status_code=400, detail=err)
+                raise api_error(400, "levelup_rejected", detail=err)
 
             progression_events = list(player.pop("progression_events", []) or [])
             state["player"] = player
@@ -5040,7 +5047,7 @@ def search_chronicle_endpoint(req: ChronicleSearchRequest):
             semantic=semantic,
         )
     except ValueError as exc:
-        raise HTTPException(status_code=422, detail=str(exc)) from exc
+        raise HTTPException(status_code=422, detail="chronicle_query_invalid") from exc
 
 
 @app.get("/game/chronicle/export")

@@ -4314,7 +4314,7 @@ specs:
   lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P0
 - id: SPEC-242
   slug: envelope-erro-api-codigos-estaveis
-  status: draft
+  status: in-progress
   path: specs/SPEC-242-envelope-erro-api-codigos-estaveis.md
   created_commit: null
   created_at: '2026-10-18'

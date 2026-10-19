@@ -209,7 +209,7 @@ def test_csrf_required(world):
     client = world.client_for("tok-a")
     del client.headers["X-CSRF-Token"]
     r = client.post(f"/game/{world.game_id}/audit-export")
-    assert r.status_code == 403 and r.json() == {"detail": "csrf_invalid"}  # SPEC-220 R10
+    assert r.status_code == 403 and r.json()["detail"] == "csrf_invalid"  # SPEC-220 R10
 
 
 def test_deleted_account_401(world):

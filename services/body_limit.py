@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 from typing import Mapping
 
-_BODY = json.dumps({"detail": "payload_too_large"}).encode()
 
 
 class BodyLimitMiddleware:
@@ -34,12 +33,18 @@ class BodyLimitMiddleware:
             if started:
                 return
             started = True
+            from observability.telemetry import correlation
+            rid = correlation().get("request_id")   # SPEC-242: envelope unico
+            payload = {"detail": "payload_too_large", "code": "payload_too_large"}
+            if rid:
+                payload["request_id"] = rid
+            body = json.dumps(payload).encode()
             await send({"type": "http.response.start", "status": 413, "headers": [
                 (b"content-type", b"application/json"),
-                (b"content-length", str(len(_BODY)).encode()),
+                (b"content-length", str(len(body)).encode()),
                 (b"connection", b"close"),
             ]})
-            await send({"type": "http.response.body", "body": _BODY})
+            await send({"type": "http.response.body", "body": body})
 
         if declared is not None and declared > limit:
             return await reject()

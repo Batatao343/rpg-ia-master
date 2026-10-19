@@ -106,7 +106,7 @@ def test_body_acima_do_limite_413_por_content_length(client):
     r = client.post("/auth/login", content=b"x" * (300 * 1024),
                     headers={"content-type": "application/json"})
     assert r.status_code == 413
-    assert r.json() == {"detail": "payload_too_large"}
+    assert r.json()["detail"] == "payload_too_large"
 
 
 def test_body_dentro_do_limite_passa_ao_handler(client):

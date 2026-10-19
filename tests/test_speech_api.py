@@ -125,4 +125,4 @@ def test_internal_error_does_not_expose_transcript_or_provider_body(speech_clien
         raise RuntimeError('secret-key recording filename transcript private')
     monkeypatch.setattr('services.speech_to_text.HttpSpeechProvider.transcribe', fail)
     response = client.post('/account/transcriptions', headers=headers, content=payload)
-    assert response.status_code == 503 and {k: v for k, v in response.json().items() if k != 'request_id'} == {'detail': 'speech_internal_error'}
+    assert response.status_code == 503 and response.json()["detail"] == "speech_internal_error"
