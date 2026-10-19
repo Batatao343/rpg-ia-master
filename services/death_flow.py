@@ -273,7 +273,9 @@ def generate_scar(participant: dict, llm, *, context: Optional[dict] = None) -> 
                 "habilidade_positiva_relacionada": result.habilidade_positiva_relacionada,
                 "origem": result.origem or regiao,
             }
-    except Exception:
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+        log_fallback("death_flow", "scar_generation_failed", exc)
         scar = None
     if scar is None:
         scar = _fallback_scar(participant)

@@ -121,10 +121,14 @@ def propose_world_pulse(state: dict, world: dict, factions, intel,
     llm = get_llm(temperature=0.8, tier=ModelTier.FAST)
     try:
         pulse = llm.with_structured_output(WorldPulse).invoke([sys])
-    except Exception:
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+        log_fallback("world_simulator", "invoke_error", exc)
         return WorldPulseProposal(status="degraded", error_code="invoke_error")
 
     if not isinstance(pulse, WorldPulse):  # FallbackLLM devolve AIMessage
+        from observability.telemetry import log_fallback
+        log_fallback("world_simulator", "structured_invalid")
         return WorldPulseProposal(status="degraded", error_code="invalid_structured")
     return WorldPulseProposal(
         rumor=sanitize_meta_preamble(pulse.rumor or ""),
@@ -162,6 +166,7 @@ def simulate_world(state: dict, world: dict, factions, intel, periods: int = 1) 
     if RAG_AVAILABLE and state.get("game_id") and intents:
         try:
             add_memory_to_session(state["game_id"], intents)
-        except Exception:
-            pass
+        except Exception as exc:
+            from observability.telemetry import log_fallback
+            log_fallback("world_simulator", "rag_unavailable", exc)
     return world, note

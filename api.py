@@ -3173,8 +3173,8 @@ def _meter_auxiliary_operation(kind: str, *, game_id: uuid.UUID | None = None):
             try:
                 coordinator.fail(claim, type(exc).__name__,
                                  usage_events=_captured_usage(claim))
-            except Exception:
-                pass
+            except Exception as fail_exc:
+                _release_failed(claim, fail_exc, exc)
         raise
     finally:
         _llm_turn_events.reset(llm_token)
@@ -3484,8 +3484,8 @@ def new_game(req: CreateCharacterRequest):
             try:
                 get_runtime().turn_coordinator.fail(
                     claim, type(exc).__name__, usage_events=_captured_usage(claim))
-            except Exception:
-                pass
+            except Exception as fail_exc:
+                _release_failed(claim, fail_exc, exc)
         raise
     finally:
         _llm_turn_events.reset(llm_token)
@@ -3754,7 +3754,7 @@ def _op_rejected(reason: str, kind: str, operation_id=None) -> None:
         from observability.telemetry import log_event, pseudonym
         log_event("operation", "rejected", level="warning", reason=reason, op_kind=kind,
                   op_ref=pseudonym(operation_id) if operation_id else None)
-    except Exception:
+    except Exception:  # silent-ok: o log nunca derruba o turno
         pass
 
 
@@ -3764,7 +3764,7 @@ def _op_replayed(kind: str, operation_id=None) -> None:
         from observability.telemetry import log_event, pseudonym
         log_event("operation", "replayed", op_kind=kind,
                   op_ref=pseudonym(operation_id) if operation_id else None)
-    except Exception:
+    except Exception:  # silent-ok: o log nunca derruba o turno
         pass
 
 
@@ -3951,11 +3951,23 @@ def _commit_state_mutation(state: dict, response: dict[str, Any], *, claim,
     except Exception as exc:
         try:
             get_runtime().turn_coordinator.fail(claim, type(exc).__name__)
-        except Exception:
-            pass
+        except Exception as fail_exc:
+            _release_failed(claim, fail_exc, exc)
         raise
     state["_storage_version"] = version
     return dict(receipt["response"])
+
+
+def _release_failed(claim, fail_exc: BaseException, cause: BaseException | None = None) -> None:
+    """SPEC-250 R3: ``turn_coordinator.fail`` falhou => lease possivelmente nao liberado. Nunca levanta."""
+    try:
+        from observability.telemetry import log_event, pseudonym
+        log_event("operation", "release_failed", level="error",
+                  op_ref=pseudonym(getattr(claim, "operation_id", "")),
+                  error_type=type(fail_exc).__name__,
+                  cause_type=type(cause).__name__ if cause is not None else None)
+    except Exception:  # silent-ok: o log nunca mascara a falha original
+        pass
 
 
 def _fail_operation(claim, code: str) -> None:
@@ -3964,8 +3976,8 @@ def _fail_operation(claim, code: str) -> None:
     try:
         from infrastructure.runtime import get_runtime
         get_runtime().turn_coordinator.fail(claim, code)
-    except Exception:
-        pass
+    except Exception as fail_exc:
+        _release_failed(claim, fail_exc)
 
 
 def _commit_turn(
@@ -4196,7 +4208,8 @@ def _log_turn(state: dict, t0: float, eventos_antes: int, error: Optional[str],
               rejections_antes: int = 0,
               llm_attempts: Optional[List[dict]] = None,
               latency_fields: Optional[Dict[str, Any]] = None,
-              latency_ms: Optional[int] = None) -> None:
+              latency_ms: Optional[int] = None,
+              fallbacks: Optional[List[str]] = None) -> None:
     from observability.telemetry import correlation, pseudonym, safe_json
     _turn_logger.info(safe_json({
         "event": "turn", "evt": "turn",
@@ -4214,6 +4227,7 @@ def _log_turn(state: dict, t0: float, eventos_antes: int, error: Optional[str],
         # SPEC-247 R1: fonte da decisao de rota + motivo de fallback (codigos fechados)
         "route_source": state.get("route_source"),
         "route_fallback_reason": state.get("route_fallback_reason"),
+        "fallbacks": dict(Counter(fallbacks or [])),      # SPEC-250 R5: node.reason -> contagem
         **_llm_log_fields(llm_events, llm_attempts),
         **(latency_fields or {}),
     }))
@@ -4263,6 +4277,8 @@ def _run_turn_collected(state: dict, input_text: str,
     acc_token = _llm_turn_events.set([])
     attempt_token = _llm_attempt_events.set([])
     embedding_token = _embedding_attempt_events.set([])
+    from observability.telemetry import begin_fallbacks, end_fallbacks
+    fallback_token, fallbacks = begin_fallbacks()      # SPEC-250 R5
     timeline_token = _lat.bind(timeline)
     if pre_drain:
         # SPEC-213 (perfil DB): projeção pendente drenada na cerca do turno, com o
@@ -4324,7 +4340,7 @@ def _run_turn_collected(state: dict, input_text: str,
         timeline.submit_log(lambda: _log_turn(
             new_state, t0, eventos_antes, None, llm_events,
             rejections_antes=rejections_antes,
-            llm_attempts=llm_attempts,
+            llm_attempts=llm_attempts, fallbacks=fallbacks,
             latency_ms=elapsed_ms,
             latency_fields=_latency_log_fields(
                 timeline, llm_events, llm_attempts,
@@ -4365,18 +4381,20 @@ def _run_turn_collected(state: dict, input_text: str,
                 ))
                 get_runtime().turn_coordinator.fail(
                     claim, type(e).__name__, usage_events=failed_usage)
-            except Exception:
-                pass
+            except Exception as fail_exc:
+                _release_failed(claim, fail_exc, e)
         _log_turn(
             state, t0, eventos_antes, type(e).__name__, _llm_turn_events.get(),
-            rejections_antes=rejections_antes,
+            rejections_antes=rejections_antes, fallbacks=fallbacks,
             llm_attempts=_llm_attempt_events.get(),
             latency_fields=_latency_log_fields(
                 timeline, _llm_turn_events.get(), _llm_attempt_events.get(),
                 action_id=action_id, input_text=input_text))
-        _log_event("api", "turn_failed", level="error", error=type(e).__name__)
+        from observability.telemetry import safe_stack
+        _log_event("api", "turn_failed", level="error", error=type(e).__name__, stack=safe_stack(e))
         raise HTTPException(status_code=500, detail="Erro interno ao processar o turno.")
     finally:
+        end_fallbacks(fallback_token)
         _lat.unbind(timeline_token)
         _llm_turn_events.reset(acc_token)
         _llm_attempt_events.reset(attempt_token)
@@ -4691,7 +4709,7 @@ def _sse_log(event: str, *, level: str = "info", **fields: Any) -> None:
     try:
         from observability.telemetry import log_event
         log_event("sse", event, level=level, **fields)
-    except Exception:
+    except Exception:  # silent-ok: o log nunca derruba o turno
         pass
 
 

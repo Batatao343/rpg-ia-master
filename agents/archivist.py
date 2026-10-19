@@ -84,6 +84,8 @@ _ERROR_SUMMARY_PREFIXES = (
 def _extract_summary_plain(llm, context_msgs: list, current_summary: str) -> str:
     """Fallback plain-text: pede só o resumo sem JSON schema. Retorna string ou ''."""
     if getattr(llm, "is_fallback", False):
+        from observability.telemetry import log_fallback
+        log_fallback("archivist", "fallback_llm_no_summary")
         return ""  # SPEC-234 R5: a mensagem de erro do FallbackLLM nunca vira resumo
     try:
         res = llm.invoke([

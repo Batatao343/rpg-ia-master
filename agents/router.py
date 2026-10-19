@@ -97,7 +97,7 @@ def _tag(payload: dict, source: str, fallback_reason: Optional[str] = None) -> d
         _log_event("router", "decision", route=payload.get("next"), source=source,
                    fallback_reason=fallback_reason, jev_mode=rollout_mode(),
                    target_kind=_target_kind(payload))
-    except Exception:
+    except Exception:  # silent-ok: o log da decisao nunca derruba o turno
         pass
     return payload
 

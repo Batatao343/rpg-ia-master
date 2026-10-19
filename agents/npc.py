@@ -205,7 +205,7 @@ def catalog_owner_id():
     try:
         from infrastructure.request_context import current_principal
         principal = current_principal(required=False)
-    except Exception:
+    except Exception:  # silent-ok: sem principal e o caso esperado em legacy/CLI
         principal = None
     return getattr(principal, "user_id", None)
 
@@ -741,7 +741,9 @@ def npc_actor_node(state: GameState):
                     ) is not False
                 else:
                     rag_ok = add_npc_memory(game_id, npc_id, [fato]) is not False
-            except Exception:
+            except Exception as exc:
+                from observability.telemetry import log_fallback
+                log_fallback("npc", "rag_unavailable", exc)
                 rag_ok = False
         pending_npc_memory = normalize_pending_npc_memory(
             state.get("pending_npc_memory")

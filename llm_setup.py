@@ -144,7 +144,7 @@ def _log_attempt(provider: str, model: str, tier: "ModelTier", attempt_index: in
             http_status=int(http_status or 0), error_type=error_type,
             structured_failure_code=structured_failure_code, latency_ms=int(latency_ms),
             fell_back=bool(fell_back), cost_basis="usage" if usage else "none")
-    except Exception:
+    except Exception:  # silent-ok: o log nunca derruba o turno
         pass
 
 
@@ -160,7 +160,7 @@ def _log_exhausted(tier: "ModelTier", errors: list[str]) -> None:
             attempts.append({"provider": provider, "outcome": kind})
         log_event("llm", "exhausted", level="error", tier=getattr(tier, "value", str(tier)),
                   node=current_node(), attempts=attempts[:12])
-    except Exception:
+    except Exception:  # silent-ok: o log nunca derruba o turno
         pass
 
 
@@ -177,7 +177,7 @@ def _announce_once(event: str, reason: str, *, level: str) -> None:
         from observability.telemetry import log_event
         log_event("llm", event, level=level, reason=reason,
                   profile=(os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() or "legacy"))
-    except Exception:
+    except Exception:  # silent-ok: o log nunca derruba o turno
         pass
 
 

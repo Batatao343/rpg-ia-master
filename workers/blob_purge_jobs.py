@@ -37,7 +37,9 @@ def _deleted_or_absent(blob_store, key: str) -> bool:
         blob_store.open(key).close()
     except FileNotFoundError:
         return True
-    except Exception:
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+        log_fallback("blob_purge", "open_check_failed", exc)
         return False
     return False
 

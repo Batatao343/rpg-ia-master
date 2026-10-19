@@ -151,7 +151,9 @@ def _scene_canonical_entities(state: GameState, factions: list, intel: dict, loc
             seen.add(fid)
     try:
         entities = gr.load_entities()
-    except Exception:
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+        log_fallback("storyteller", "entities_unavailable", exc)
         entities = {}
     names_present = {n.lower() for n in state.get("npcs", {}).keys()}
     loc_l = (loc or "").strip().lower()
@@ -662,7 +664,9 @@ def storyteller_node(state: GameState):
         # Sem emboscada: o mundo gera 1 evento off-screen narrado (e grava no RAG da sessão).
         try:
             world, world_note = simulate_world(state, world, factions, intel, 1 if dest else 2)
-        except Exception:
+        except Exception as exc:
+            from observability.telemetry import log_fallback
+            log_fallback("storyteller", "world_pulse_failed", exc)
             world_note = ""
 
     loc = world.get("current_location", "")
@@ -839,6 +843,8 @@ def storyteller_node(state: GameState):
 
         # Guard crítico: FallbackLLM devolve AIMessage, não o schema solicitado.
         if not isinstance(update, StoryUpdate):
+            from observability.telemetry import log_fallback
+            log_fallback("storyteller", "structured_invalid")
             update = StoryUpdate(narrative=_deterministic_story_fallback(
                 (travel_note, rest_note, world_note, faction_note, weather_note), _ll,
             ))

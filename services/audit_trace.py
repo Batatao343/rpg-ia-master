@@ -245,7 +245,7 @@ def timing_snapshot(timeline: Any) -> Optional[Dict[str, Any]]:
         return None
     try:
         fields = dict(timeline.fields())
-    except Exception:
+    except Exception:  # silent-ok: trilha opcional; export marca `unavailable` (SPEC-207)
         return None
     phases = dict(fields.get("phase_ms") or {})
     phases["persistence"] = None          # ainda aberta dentro do commit
@@ -283,7 +283,7 @@ def _speaker(state: Mapping) -> str:
     from services.interlocutor import response_speaker
     try:
         speaker = response_speaker(state)
-    except Exception:
+    except Exception:  # silent-ok: rotulo de auditoria; padrao seguro "narrator"
         return "narrator"
     if speaker.get("kind") == "npc" and speaker.get("id"):
         return f"npc:{speaker['id']}"

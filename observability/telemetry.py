@@ -103,6 +103,41 @@ def log_event(area: str, event: str, *, level: str = "info", **fields: Any) -> N
         safe_json({**correlation(), "event": f"{area}.{event}", **fields}))
 
 
+_fallbacks: contextvars.ContextVar[list[str] | None] = contextvars.ContextVar(
+    "rpg_turn_fallbacks", default=None)
+_fallback_seen: set[tuple[str, str, str]] = set()
+
+
+def begin_fallbacks() -> tuple[contextvars.Token, list[str]]:
+    """SPEC-250 R5: coleta ``node.reason`` dos fallbacks do turno (contado em ``rpg.turn``)."""
+    bucket: list[str] = []
+    return _fallbacks.set(bucket), bucket
+
+
+def end_fallbacks(token: contextvars.Token) -> None:
+    _fallbacks.reset(token)
+
+
+def log_fallback(node: str, reason: str, exc: BaseException | None = None, **fields: Any) -> None:
+    """SPEC-250 R1: degradacao graciosa visivel. ``<node>.fallback`` (warning) com ``reason`` (codigo
+    fechado) e ``error_type`` (so a classe, nunca a mensagem). Dedupe por (acao, no, motivo)."""
+    try:
+        bucket = _fallbacks.get()
+        if bucket is not None:
+            bucket.append(f"{node}.{reason}")
+        action = correlation().get("action_ref", "")
+        key = (action, node, reason)
+        if action and key in _fallback_seen:
+            return
+        if len(_fallback_seen) > 2000:
+            _fallback_seen.clear()
+        _fallback_seen.add(key)
+        extra = {"error_type": type(exc).__name__} if exc is not None else {}
+        log_event(node, "fallback", level="warning", reason=reason, **extra, **fields)
+    except Exception:  # silent-ok: o log de fallback nunca derruba o turno
+        pass
+
+
 def safe_stack(exc: BaseException, limit: int = 5) -> list[str]:
     """``modulo:linha`` dos ``limit`` frames mais internos do codigo do projeto.
 

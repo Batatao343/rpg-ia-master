@@ -15,6 +15,10 @@ SCAN_DIRS = ("agents", "services", "infrastructure", "workers")
 SCAN_FILES = ("api.py", "llm_setup.py", "rag.py", "persistence.py")
 
 
+# chamadas que contam como "deixa rastro" (log, metrica, telemetria de tentativa, liberacao de lease)
+_ACCEPTED_CALLS = ("log", "metrics.increment", "fallback", "telemetry", "release_failed")
+
+
 def _is_broad(handler: ast.ExceptHandler) -> bool:
     t = handler.type
     if t is None:
@@ -44,8 +48,7 @@ def _logs_or_raises(handler: ast.ExceptHandler) -> bool:
             return True
         if isinstance(node, ast.Call):
             name = _call_name(node).lower()
-            if ("log" in name or "metrics.increment" in name or name.endswith("warn")
-                    or "fallback" in name):
+            if any(token in name for token in _ACCEPTED_CALLS) or name.endswith("warn"):
                 return True
     return False
 

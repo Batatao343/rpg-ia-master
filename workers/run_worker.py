@@ -54,7 +54,9 @@ def build_handlers():
             # pre-dispatch reservation is released and the generation fails (deferred_timeout).
             try:
                 released = finance.release_if_deferred_too_long(generation_id, image_defer_max_age())
-            except Exception:
+            except Exception as exc:
+                from observability.telemetry import log_fallback
+                log_fallback("image_job", "defer_ttl_check_failed", exc)
                 released = False  # never let the TTL check break the pause; retry next defer
             if released:
                 return {"status": "released_deferred", "generation_id": str(generation_id)}

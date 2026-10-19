@@ -26,8 +26,12 @@ def operation_scope(coordinator: Any, claim: Any, *,
         if claim is not None:
             try:
                 coordinator.fail(claim, type(exc).__name__)
-            except Exception:
-                pass  # Fence may already belong to another worker.
+            except Exception as fail_exc:
+                # Fence may already belong to another worker; deixa rastro (lease nao liberado).
+                from observability.telemetry import log_event, pseudonym
+                log_event("operation", "release_failed", level="error",
+                          op_ref=pseudonym(getattr(claim, "operation_id", "")),
+                          error_type=type(fail_exc).__name__, cause_type=type(exc).__name__)
         raise
 
 

@@ -79,7 +79,7 @@ def _record_rejection_metric(proposal: Dict, reason: str) -> None:
             etype = "other"
         metrics.increment("rpg_world_events_rejected_total",
                           {"type": etype, "reason_class": reason_class(reason)})
-    except Exception:
+    except Exception:  # silent-ok: metrica best-effort; a rejeicao ja esta em event_rejections
         pass
 
 
@@ -218,7 +218,7 @@ def prevalidate_event_batch(
         working["quests"] = quests
         try:
             result = validate_proposal(raw_proposal, working)
-        except Exception as exc:
+        except Exception as exc:  # silent-ok: vira ValidationResult(False) => event_rejections + metrica
             result = ValidationResult(False, f"proposta malformada: {exc}")
         results.append(result)
         if not result.ok:
@@ -321,7 +321,7 @@ def process_pending_events(state: Dict) -> Dict:
         else:
             try:
                 result = validate_proposal(raw_proposal, working)
-            except Exception as exc:
+            except Exception as exc:  # silent-ok: vira ValidationResult(False) => event_rejections + metrica
                 result = ValidationResult(False, f"proposta malformada: {exc}")
         if not result.ok:
             _log_event("event", "proposal_rejected", level="info", type=proposal.get('type'))

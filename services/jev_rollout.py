@@ -104,12 +104,12 @@ def _emit(event: JevRolloutEvent) -> None:
             key: value for key, value in event.__dict__.items()
             if key != "mode" and value is not None
         })
-    except Exception:
+    except Exception:  # silent-ok: telemetria do shadow nunca afeta o turno
         pass
     if _telemetry_hook is not None:
         try:
             _telemetry_hook(event)
-        except Exception:
+        except Exception:  # silent-ok: hook de telemetria
             pass
 
 
@@ -137,7 +137,7 @@ def _jev_switched_off() -> bool:
     try:
         from services.kill_switches import JEV, get_switches
         return not get_switches().is_enabled(JEV)
-    except Exception:
+    except Exception:  # silent-ok: kill switch indisponivel => Jev segue o modo configurado
         return False
 
 
@@ -269,7 +269,7 @@ def _evaluate(state: Mapping[str, Any], action: str, backend: DecisionBackend | 
         else:
             result.decision = frozen_decision(state, action, answers)
             result.outcome = "covered" if result.decision["source"] == "jev" else "fallback"
-    except Exception as exc:
+    except Exception as exc:  # silent-ok: outcome vai no evento jev.* (sem texto do provider)
         # Error/timeout/configuration all fall back. Never log provider text.
         result.outcome = exc.code if isinstance(exc, JevError) else "error"
     result.latency_ms = round((time.monotonic() - start) * 1000)
@@ -295,7 +295,7 @@ class JevPending:
         except FutureTimeout:
             evaluation = _Evaluation(outcome="timeout",
                                      latency_ms=round(JEV_DEADLINE_SECONDS * 1000))
-        except Exception:
+        except Exception:  # silent-ok: outcome="error" vai no evento jev.*
             evaluation = _Evaluation(outcome="error")
         self._waited_ms = round((time.monotonic() - before) * 1000)
         return evaluation
@@ -343,7 +343,7 @@ class JevPending:
                 from observability.telemetry import contextualize
                 self._future.add_done_callback(contextualize(
                     lambda _f: self._observe_now(effective, as_payload, state, late=True)))
-            except Exception:
+            except Exception:  # silent-ok: observador do shadow
                 pass
             return
         self._observe_now(effective, as_payload, state)
@@ -364,11 +364,11 @@ class JevPending:
                                      decision["loot_source"], float(evaluation.confidence or 0.0))
                 try:
                     extra.update(_agreement(state, effective, as_payload(routing)))
-                except Exception:
+                except Exception:  # silent-ok: observacao preservada sem a concordancia
                     extra["jev_route"] = routing.route  # agreement unavailable, keep the observation
             _emit(self._event(evaluation, **extra))
-        except Exception:
-            pass  # shadow never affects the turn
+        except Exception:  # silent-ok: shadow never affects the turn
+            pass
 
 
 def _agreement(state: Mapping[str, Any], effective: Mapping[str, Any],
@@ -383,7 +383,7 @@ def _agreement(state: Mapping[str, Any], effective: Mapping[str, Any],
             agree_target = same_route and (
                 target_id_for_name(state, effective.get("combat_target"))
                 == target_id_for_name(state, jev.get("combat_target")))
-        except Exception:
+        except Exception:  # silent-ok: concordancia de alvo indisponivel => None
             agree_target = None
     else:
         agree_target = None

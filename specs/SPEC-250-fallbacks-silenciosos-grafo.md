@@ -1,6 +1,6 @@
 # SPEC-250 — Grafo: todo fallback/guard e `except` silencioso no caminho do turno emite `<nó>.fallback`
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P1**.
+> **Status:** `in-progress` — implementada em `logs-p1` (REVIEW_REQUIRED; smoke staging pendente)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-240
 > **Desbloqueia:** SPEC-251, SPEC-252
@@ -55,12 +55,12 @@ R1–R5.
 
 ## 5. Critérios de aceite
 
-- [ ] Nenhum fallback de nó silencioso; allowlist versionada e documentada.
-- [ ] Lease não liberado sempre deixa linha `error`.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Nenhum fallback de nó silencioso; allowlist versionada e documentada.
+- [x] Lease não liberado sempre deixa linha `error`.
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] `uv run pytest` verde (suíte completa offline).
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -71,3 +71,7 @@ R1–R5.
 - Ruído: `log_fallback` com dedupe por (nó, reason) por turno.
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## Execução (logs-p1, 2026-10-18)
+
+Implementado: `observability.telemetry.log_fallback` (+ coletor por turno → `rpg.turn.fallbacks`), logs nos fallbacks de storyteller/world_simulator/npc/campaign_manager/archivist/death_flow/blob_purge/image defer; `operation.release_failed` (`api._release_failed`, `turn_execution`) nos 5 guards de `turn_coordinator.fail`; scanner AST `tests/silent_except_scan.py` + `tests/test_no_silent_except.py` com allowlist congelada (`tests/data/silent_except_allowlist.txt`, só pode diminuir; anotação `# silent-ok: <motivo>`). Testes: `test_no_silent_except.py`, `test_fallback_logging.py`. Desvios: `agents/combat.py` e `services/conflict_*` NÃO foram tocados (outro agente edita combate) — ficam na allowlist; os demais ~87 sites antigos (api.py, rag.py, persistence.py, content_validator…) permanecem na allowlist para redução gradual. Falta o smoke de staging (§6) e a revisão Sol.
