@@ -169,7 +169,6 @@ test("SPEC-190 export requires reauth and deletion can finish after session revo
   });
   await page.goto(`/?checkout=success&order_id=${orderId}`);
   await expect.poll(() => orderPolls).toBeGreaterThan(0);
-  const initialPolls = orderPolls;
   await expect(page.getByRole("heading", { name: "Dados e segurança da conta" })).toBeVisible();
   const severeAccessibilityIssues = (await new AxeBuilder({ page }).include(".account-lifecycle").analyze())
     .violations.filter(issue => ["serious", "critical"].includes(issue.impact ?? ""));
@@ -187,6 +186,9 @@ test("SPEC-190 export requires reauth and deletion can finish after session revo
   await deleteStarted;
   await expect(page.getByRole("heading", { name: "Exclusão em andamento" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Minha conta" })).toHaveCount(0);
+  // Baseline only once the account screen is gone: before that the checkout
+  // poll (every 5 s) legitimately keeps running, and a slow run sees an extra one.
+  const initialPolls = orderPolls;
   expect(await page.evaluate(() => localStorage.getItem("cronicas_game_id"))).toBeNull();
   await page.evaluate(() => window.dispatchEvent(new Event("rpg:auth-expired")));
   await expect(page.getByRole("heading", { name: "Exclusão em andamento" })).toBeVisible();
