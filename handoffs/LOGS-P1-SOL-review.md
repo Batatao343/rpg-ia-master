@@ -46,12 +46,13 @@
 | Postgres (volume) | lease/versão/pool só em conflito/falha (warning/error); `slow_query` > 500 ms; nada por query em `info`. |
 | SPEC-217 golden | `dm_router_node` não muda o payload (fonte vai por contextvar); golden `off` e diferencial verdes na suíte. No staging (Jev primary) `router.decision source=jev` nos turnos decididos pelo Jev, `interlocutor`/`story_regex` nos gates. |
 | Linhas por turno | Local (MockLLM): POST 4, SSE 6. **Staging (DeepSeek + Jev primary): 5–7 linhas JSON por turno SSE (média ≈ 6,0)**, sob o limite de 256 linhas/requisição da Vercel. |
-| `infra_local` | Supabase local (Docker Desktop iniciado): 158 coletados, 1 falha (#5, corrigida); demais verdes/skip. |
+| `infra_local` | Supabase local (Docker Desktop iniciado): **145 passed, 13 skipped** (skips = GoTrue/API de auditoria/role de runtime não informados), após corrigir #5. |
 
 ## Smoke staging (Vercel `rpg-ia-master-staging` + Supabase `uzeagzcyvxzrpjgrhaql`)
 
 - Deploy `bd2c708` (`GIT_SHA` injetado; `/health` confere, `hardened=true`, `hosted-supabase`, `/openapi.json` 404),
-  redeploy final com a correção #1 (sha no commit desta revisão). **Nenhum env var alterado** (Jev `primary` mantido).
+  redeploy final `563331b` com a correção #1 (`/health` confere; `e2e_session` verde de novo). **Nenhum env var
+  alterado** (Jev `primary` mantido).
 - `e2e_session`: login, cookies, CSRF, novo jogo, 5 turnos SSE, retry com mesmo `action_id`, estado, logout,
   limpeza — **verde**. `sse_disconnect`: exatamente 1 turno — **verde**.
 - Logs: `runtime.boot` por instância (`git_sha` 12, `llm_mode=routes`, `llm_providers_with_key` só nomes,
@@ -65,6 +66,14 @@
 - Não exercitado no staging (cobertos offline/`infra_local`): 409/429 forçados, `db.lease_conflict` com 2 turnos
   concorrentes, job `project_archive` com trace (staging está em `inline`), falha real de provider (exigiria mexer
   em env var).
+
+## Verificação final (HEAD da revisão)
+
+- `uv run pytest` (suíte offline completa): **4005 passed, 223 skipped, 15 deselected**, exit 0.
+- `ruff check .` verde; `npm test` **133/133**; `npm run build` verde.
+- Playwright completo (Chromium empacotado, porta temporária 4213): **240 passed, 38 skipped, 2 failed** — as 2 são
+  artefato da porta temporária (`account-lifecycle` compara a URL com `:4173` fixa); reexecutadas na porta padrão
+  junto com `support-code.spec.ts`: **10/10**. PNGs de evidência sobrescritos foram restaurados.
 
 ## Pendências / follow-ups (não bloqueiam)
 
