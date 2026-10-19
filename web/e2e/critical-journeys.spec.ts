@@ -114,6 +114,7 @@ test("F06 map_travel", async ({ page, backend }) => {
   await expect(travel).toBeEnabled();
   expect(backend.requests.filter((r) => r.path.startsWith("/game/action"))).toHaveLength(0);
   await travel.click();
+  await expect.poll(() => backend.requests.filter((r) => r.path.startsWith("/game/action")).length).toBeGreaterThan(0);
   const sent = backend.requests.filter((r) => r.path.startsWith("/game/action")).at(-1)!;
   expect(JSON.stringify(sent.body ?? "")).toContain("Viajo para Brumalta");
   await expect(page.getByText("A trilha termina nos portões de Brumalta.")).toBeVisible();
