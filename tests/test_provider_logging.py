@@ -33,13 +33,15 @@ def _lines(capsys):
 
 
 def _events(capsys, name):
-    return [l for l in _lines(capsys) if l.get("event") == name]
+    return [ln for ln in _lines(capsys) if ln.get("event") == name]
 
 
 def _wav():
     buf = io.BytesIO()
     with wave.open(buf, "wb") as w:
-        w.setnchannels(1); w.setsampwidth(2); w.setframerate(16000)
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(16000)
         w.writeframes(b"\0\0" * 16000)
     return buf.getvalue()
 

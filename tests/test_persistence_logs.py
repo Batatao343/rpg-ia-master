@@ -26,7 +26,7 @@ def _log():
 
 
 def _events(capsys, name):
-    return [l for l in _lines(capsys) if l.get("event") == name]
+    return [ln for ln in _lines(capsys) if ln.get("event") == name]
 
 
 def test_migration_logged_from_to(capsys):
@@ -62,8 +62,8 @@ def test_atomic_retry_logged(capsys, monkeypatch, tmp_path):
     with pytest.raises(PermissionError):
         persistence._replace_with_retry("a", "b", attempts=3)
     lines = _lines(capsys)
-    retries = [l for l in lines if l.get("event") == "persistence.atomic_retry"]
-    failed = [l for l in lines if l.get("event") == "persistence.atomic_failed"]
+    retries = [ln for ln in lines if ln.get("event") == "persistence.atomic_retry"]
+    failed = [ln for ln in lines if ln.get("event") == "persistence.atomic_failed"]
     assert len(retries) == 2 and len(failed) == 1 and failed[0]["attempts"] == 3
     assert "secret" not in json.dumps(lines)
 

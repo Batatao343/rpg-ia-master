@@ -2,11 +2,9 @@
 import json
 import random
 
-import pytest
 from langchain_core.messages import HumanMessage
 
 import agents.combat as combat
-import gamedata
 from observability import logging_setup
 from services import audit_trace, chase, death_flow, mechanics_trace as mt, reactions
 from services.conflict_damage import resolve_damage_and_wounds

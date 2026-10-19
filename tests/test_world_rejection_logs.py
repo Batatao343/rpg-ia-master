@@ -43,11 +43,11 @@ def test_rejection_has_reason_code(capsys):
     lines = _events(capsys, "event.proposal_rejected")
     assert len(lines) == 2
     from services.world_validators import REASON_CODES
-    for l in lines:
-        assert l["reason_code"] in REASON_CODES and l["source"] in ("llm", "rule", "prevalidation")
-        assert "target_ref" not in l  # nome livre / id de quest nao e id de catalogo
-        assert SENT not in json.dumps(l)
-    assert {l["reason_code"] for l in lines} == {"unknown_target", "invalid_payload"}
+    for ln in lines:
+        assert ln["reason_code"] in REASON_CODES and ln["source"] in ("llm", "rule", "prevalidation")
+        assert "target_ref" not in ln  # nome livre / id de quest nao e id de catalogo
+        assert SENT not in json.dumps(ln)
+    assert {ln["reason_code"] for ln in lines} == {"unknown_target", "invalid_payload"}
 
 
 def test_reason_code_mapping_and_unknown_is_other():
@@ -83,7 +83,7 @@ def test_unique_conflict_event_level(capsys):
     from services import economy
     capsys.readouterr()
     economy.log_trade("craft", {"ok": False, "reason": "Esse artefato já existe no mundo"})
-    out = [json.loads(l) for l in capsys.readouterr().out.splitlines() if l.startswith("{")]
+    out = [json.loads(ln) for ln in capsys.readouterr().out.splitlines() if ln.startswith("{")]
     c = [d for d in out if d.get("event") == "economy.unique_claim_conflict"]
     assert c and c[0]["level"].lower() == "warning"
 
@@ -124,7 +124,7 @@ def test_narrative_rejected_counts(capsys):
         capsys.readouterr()
         _log_narrative_rejected("item", ["unknown_item", "unknown_item", "unique_claimed"])
         lines = _events(capsys, "narrative.rejected")
-        assert {(l["kind"], l["reason_code"], l["count"]) for l in lines} == {
+        assert {(ln["kind"], ln["reason_code"], ln["count"]) for ln in lines} == {
             ("item", "unknown_item", 2), ("item", "unique_claimed", 1)}
         assert bucket.counters == {"item": 3}
     finally:

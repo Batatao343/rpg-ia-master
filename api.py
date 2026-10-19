@@ -88,7 +88,7 @@ app = FastAPI(
 
 
 def _current_request_id() -> str | None:
-    from observability.telemetry import correlation, pseudonym
+    from observability.telemetry import correlation
     return correlation().get("request_id")
 
 
