@@ -28,8 +28,6 @@ infrastructure/audit_source.py::PostgresAuditSource.load::2
 infrastructure/audit_source.py::PostgresAuditSource.load::3
 infrastructure/audit_source.py::PostgresAuditSource.load::4
 infrastructure/audit_source.py::PostgresAuditSource.load::5
-infrastructure/pgvector_memory.py::PgVectorMemoryStore.query::1
-infrastructure/pgvector_memory.py::configured_profile_id::1
 llm_setup.py::RoutedLLM._normalize_internal_structured_result::1
 llm_setup.py::_kill_switch_disabled::1
 llm_setup.py::_provider_slot::1
@@ -40,7 +38,6 @@ persistence.py::list_saves::1
 rag.py::<module>::1
 rag.py::_format_memory_documents::1
 rag.py::_note_degraded::1
-rag.py::_read_meta::1
 rag.py::add_memory_to_session::1
 rag.py::add_npc_memory::1
 rag.py::prepare_shared_query_vector::1

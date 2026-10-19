@@ -1,7 +1,7 @@
 # SPEC-253 — Persistência: migrações de save, schema recusado, checkpoint e retry atômico logados
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P2**.
-> **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
+> **Status:** `done` — aprovada pelo dono em 2026-10-19.
+> **Criada:** 2026-10-18 · **Atualizada:** 2026-10-19
 > **Depende de:** SPEC-240
 > **Desbloqueia:** —
 > **Origem:** auditoria de logs 2026-10-18 ([relatório](../docs/auditorias/logs-api-2026-10-18.md))
@@ -54,12 +54,12 @@ R1–R4.
 
 ## 5. Critérios de aceite
 
-- [ ] Carregar save v3 gera `persistence.migrated from_version=3`.
-- [ ] Nenhum caminho absoluto/`game_id` cru em log.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] Carregar save v3 gera `persistence.migrated from_version=3`.
+- [x] Nenhum caminho absoluto/`game_id` cru em log.
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
 - [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -70,3 +70,12 @@ R1–R4.
 - Nenhum.
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## 8. Notas de implementação (2026-10-19)
+
+- Eventos novos: `persistence.migrated`, `persistence.save_schema_newer`, `persistence.checkpoint_written`, `persistence.checkpoint_restored` (emitido em `services/checkpoints.py`, com `turn`), `persistence.atomic_retry`, `persistence.atomic_failed`, `rag.meta_unreadable`, `vector.profile_fallback`, `vector.semantic_degraded`. Sem métricas novas.
+- `save_schema_newer` é logado em `migrate_state` (onde a versão é conhecida), por isso o handler 409 de `api.py` não foi alterado.
+- Falhas `persistence.*_failed`: campo `error` renomeado para `error_type` (só a classe) + `game_ref` (pseudônimo) + `duration_ms`.
+- `rag._read_meta`: arquivo ausente continua silencioso (índice legado); só meta ilegível loga. `index` = nome lógico (`faiss_lore_index`/`faiss_rules_index`/`session`).
+- Allowlist de except silencioso: 3 entradas removidas (corrigidas).
+- Smoke staging sugerido: n/a perfil DB; observar `persistence.checkpoint_written` por turno e forçar `persistence.migrated` carregando um save v3 localmente.

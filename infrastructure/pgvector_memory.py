@@ -35,7 +35,10 @@ def configured_profile_id() -> str:
         import rag
 
         return rag.embedding_profile_id()
-    except Exception:  # pragma: no cover - rag indisponível: perfil legado
+    except Exception as exc:  # pragma: no cover - rag indisponível: perfil legado
+        from observability.telemetry import log_event
+        log_event("vector", "profile_fallback", level="warning",
+                  error_type=type(exc).__name__, profile="local-1024")
         return "local-1024"
 
 
@@ -240,7 +243,10 @@ class PgVectorMemoryStore:
             elif self.embedder is not None:
                 try:
                     vector = vector_literal(self.embedder(request.text))
-                except Exception:
+                except Exception as exc:
+                    from observability.telemetry import log_event
+                    log_event("vector", "semantic_degraded", level="warning",
+                              error_type=type(exc).__name__)
                     vector = None
             else:
                 vector = None

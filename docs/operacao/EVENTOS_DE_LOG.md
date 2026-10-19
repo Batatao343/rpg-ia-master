@@ -121,16 +121,22 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `payments.google_verify` | `duration_ms`, `order_ref`, `outcome`, `product_id`, `upstream_status` |
 | `payments.immediate_reconcile_failed` | `error_type` |
 | `payments.stripe_webhook` | `apply_result`, `duration_ms`, `error_code`, `event_ref`, `event_type`, `outcome` |
+| `persistence.atomic_failed` | `attempts`, `error_type` |
+| `persistence.atomic_retry` | `attempt`, `attempts`, `error_type` |
 | `persistence.checkpoint_ahead_discarded` | `checkpoint_turn`, `turn` |
-| `persistence.checkpoint_load_failed` | `error` |
-| `persistence.checkpoint_write_failed` | `error` |
+| `persistence.checkpoint_load_failed` | `duration_ms`, `error_type`, `game_ref` |
+| `persistence.checkpoint_restored` | `game_ref`, `turn` |
+| `persistence.checkpoint_write_failed` | `duration_ms`, `error_type`, `game_ref` |
+| `persistence.checkpoint_written` | `duration_ms`, `game_ref`, `turn` |
 | `persistence.combat_normalize_failed` | `error` |
-| `persistence.load_failed` | `error` |
-| `persistence.save_failed` | `error` |
-| `persistence.store_checkpoint_failed` | `error` |
-| `persistence.store_checkpoint_load_failed` | `error` |
-| `persistence.store_load_failed` | `error` |
-| `persistence.store_save_failed` | `error` |
+| `persistence.load_failed` | `duration_ms`, `error_type`, `game_ref` |
+| `persistence.migrated` | `from_version`, `game_ref`, `steps`, `to_version` |
+| `persistence.save_failed` | `duration_ms`, `error_type`, `game_ref` |
+| `persistence.save_schema_newer` | `found_version`, `game_ref`, `supported_version` |
+| `persistence.store_checkpoint_failed` | `duration_ms`, `error_type`, `game_ref` |
+| `persistence.store_checkpoint_load_failed` | `duration_ms`, `error_type`, `game_ref` |
+| `persistence.store_load_failed` | `duration_ms`, `error_type`, `game_ref` |
+| `persistence.store_save_failed` | `duration_ms`, `error_type`, `game_ref` |
 | `pool.request_role_applied` | `role` |
 | `projection.await_failed` | `error` |
 | `projection.derived_failed` | `error` |
@@ -146,6 +152,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `rag.ingest_file_missing` | — |
 | `rag.ingest_started` | `index`, `provider` |
 | `rag.lint_error` | `message`, `path`, `validator` |
+| `rag.meta_unreadable` | `error_type`, `fallback_provider`, `index` |
 | `rag.npc_memory_failed` | `error` |
 | `rag.npc_memory_saved` | `facts` |
 | `rag.reindex_aborted` | `lint_errors` |
@@ -177,6 +184,8 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `storyteller.unknown_item_ignored` | — |
 | `turn` | `error`, `events_applied`, `events_rejected`, `fallbacks`, `game_id_ref`, `latency_ms`, `route`, `route_fallback_reason`, `route_source`, `turn` |
 | `turn_delivery` | `ack_server_ms`, `action_ref`, `outcome`, `pseudo_streaming`, `state_server_ms`, `transport`, `ttfmc_server_ms`, `ttlt_server_ms` |
+| `vector.profile_fallback` | `error_type`, `profile` |
+| `vector.semantic_degraded` | `error_type` |
 | `wallet.recovery_item_failed` | `error_type`, `op_ref`, `stage` |
 | `wallet.reservation_uncertain` | `error_type`, `op_ref`, `stage` |
 | `wallet.settle_failed` | `error_type`, `op_ref`, `stage` |
