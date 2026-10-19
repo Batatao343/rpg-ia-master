@@ -82,7 +82,16 @@ def scan() -> dict[str, set[str]]:
             tree = ast.parse(path.read_text(encoding="utf-8"))
         except (SyntaxError, UnicodeDecodeError):
             continue
+        # So dicts passados a safe_json(...) sao linhas de log; dicts de eventos de jogo
+        # (ex.: ``events.append({"event": ...})``) nao entram no catalogo (revisao Sol).
+        log_dicts = {id(arg) for call in ast.walk(tree) if isinstance(call, ast.Call)
+                     and _name(call).split(".")[-1] == "safe_json"
+                     for arg in call.args if isinstance(arg, ast.Dict)}
+        log_dicts |= {id(kw.value) for call in ast.walk(tree) if isinstance(call, ast.Call)
+                      for kw in call.keywords if kw.arg == "extra" and isinstance(kw.value, ast.Dict)}
         for node in ast.walk(tree):
+            if isinstance(node, ast.Dict) and id(node) not in log_dicts:
+                continue
             if isinstance(node, ast.Dict):        # linhas legadas: safe_json({"event": "turn", ...})
                 keys = [_const(k) for k in node.keys]
                 if "event" in keys and _const(node.values[keys.index("event")])                         and ("evt" in keys or "outcome" in keys or "task" in keys or "stage" in keys

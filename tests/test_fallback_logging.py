@@ -103,6 +103,7 @@ def test_campaign_planner_error_logs_template_used(capsys, monkeypatch):
     capsys.readouterr()
     plan = cm._build_plan(state)
     assert plan["beats"]
-    (line,) = [x for x in _lines(capsys) if x["event"] == "campaign.fallback"]
+    # So a linha desta chamada direta (sem request): threads de turno de outros testes carregam request_id.
+    (line,) = [x for x in _lines(capsys) if x["event"] == "campaign.fallback" and not x.get("request_id")]
     assert line["reason"] == "template_used" and line["error_type"] == "RuntimeError"
     assert SENT not in json.dumps(line)

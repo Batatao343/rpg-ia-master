@@ -72,6 +72,16 @@ def checkout_failed(stage: str, exc: BaseException) -> None:
         pass
 
 
+def fee_reconcile_failed(stage: str, exc: BaseException) -> None:
+    """``payments.fee_reconcile_failed`` (warning): codigo do erro so se for snake_case fechado."""
+    try:
+        code = exc.args[0] if getattr(exc, "args", None) else ""
+        log_event("payments", "fee_reconcile_failed", level="warning", stage=_code(stage),
+                  error_type=type(exc).__name__, error_code=_code(code) if code else None)
+    except Exception:  # silent-ok: o log nunca altera a conciliacao
+        pass
+
+
 def wallet_event(event: str, reservation_id: Any, exc: BaseException, *, stage: str) -> None:
     """``wallet.settle_failed|recovery_item_failed|reservation_uncertain`` (warning)."""
     try:

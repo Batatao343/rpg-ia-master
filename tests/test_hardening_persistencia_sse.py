@@ -179,8 +179,9 @@ def test_worker_sse_persiste_mesmo_se_consumidor_fecha(monkeypatch):
     assert "phase" in next(stream)
     stream.close()
 
-    assert finished.wait(timeout=2)
-    deadline = time.monotonic() + 2
+    # Folga larga sob carga da suite inteira (Windows/OneDrive); o laco sai assim que persistir.
+    assert finished.wait(timeout=10)
+    deadline = time.monotonic() + 10
     loaded = None
     while time.monotonic() < deadline:
         loaded = persistence.load_game_state(persistence.save_path(gid))

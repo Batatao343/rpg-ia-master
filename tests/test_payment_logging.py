@@ -163,3 +163,14 @@ def test_wallet_recovery_item_failure_logged(capsys, monkeypatch):
     assert counts["wallet_errors"] == 1
     _out, lines = _lines(capsys)
     assert [x for x in lines if x["event"] == "wallet.recovery_item_failed"]
+
+
+def test_fee_reconcile_failure_never_logs_free_text(capsys):
+    """Revisao Sol: o codigo do StripeError so entra no log se for snake_case fechado."""
+    from infrastructure.payment_log import fee_reconcile_failed
+    fee_reconcile_failed("payment_economics", StripeError("Card 4242 declined for joe@example.com"))
+    fee_reconcile_failed("payment_economics", StripeError("stripe_economics_unavailable"))
+    out, lines = _lines(capsys)
+    got = [x for x in lines if x["event"] == "payments.fee_reconcile_failed"]
+    assert [x["error_code"] for x in got] == ["other", "stripe_economics_unavailable"]
+    assert "4242" not in out and "example.com" not in out

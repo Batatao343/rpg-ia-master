@@ -403,9 +403,8 @@ class StripePayments:
         try:
             economics = self.adapter.payment_economics(payment_intent)
         except StripeError as exc:
-            from observability.telemetry import log_event
-            log_event("payments", "fee_reconcile_failed", level="warning", stage="payment_economics",
-                      error_type=type(exc).__name__, error_code=str(exc.args[0] if exc.args else "")[:60])
+            from infrastructure.payment_log import fee_reconcile_failed
+            fee_reconcile_failed("payment_economics", exc)
             return
         if not economics:
             return

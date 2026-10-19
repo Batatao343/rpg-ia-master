@@ -5,18 +5,18 @@
 > política de privacidade (SPEC-222 R8) não precisa de novo operador. Reverter/ativar o drain é uma spec própria
 > (fora de escopo aqui) e **exige** atualizar a política de privacidade *antes* de enviar logs a terceiros.
 
-## Limites da plataforma (a confirmar antes de depender deles)
+## Limites da plataforma (verificados em 2026-10-19)
 
-Este ambiente não tem rede para consultar a documentação; os números abaixo são de memória e estão marcados como
-**não verificados**. Confirmar em <https://vercel.com/docs/observability/runtime-logs> no dia em que a decisão for tomada
-e registrar a data aqui.
+Fonte: <https://vercel.com/docs/logs/runtime> (página atualizada em 2026-08-28), consultada na revisão Sol de 2026-10-19.
+O staging roda no plano **Hobby**.
 
-| Item | Valor conhecido | Situação |
+| Item | Valor | Situação |
 |---|---|---|
-| Retenção dos runtime logs (plano Hobby) | curta (ordem de 1 hora) | **não verificado** — por isso o relato deve ser investigado logo |
-| Retenção (Pro / Enterprise) | maior (dias) | **não verificado** |
-| Tamanho máximo por linha | limitado (a Vercel trunca linhas grandes) | **não verificado**; nossas linhas ficam bem abaixo de 2 KB (o `redact` corta strings em 2000 caracteres) |
-| Linhas por segundo | limitado por função | **não verificado** |
+| Retenção dos runtime logs — Hobby | **1 hora** | verificado (2026-10-19) |
+| Retenção — Pro / Enterprise | **1 dia** / **3 dias** (30 dias com Observability Plus) | verificado (2026-10-19) |
+| Tamanho máximo por linha | **256 KB** | verificado; nossas linhas ficam bem abaixo de 2 KB (o `redact` corta strings em 2000 caracteres) |
+| Linhas por requisição | **256 linhas** e **1 MB** somados por requisição; acima disso só as mais recentes ficam consultáveis | verificado; um turno SSE fica na ordem de dezenas de linhas no máximo |
+| `vercel logs` (CLI) | default: últimas 100 entradas dos últimos 30 min; `--since` amplia; busca livre só em `message`/`requestPath` | verificado |
 
 Consequência prática: **a evidência de um relato some rápido no Hobby.** Para auditoria de um turno específico use o
 `audit-export` (SPEC-207, vive no banco) e as tabelas `app.operations`/`app.jobs`/`app.payment_orders`, que não dependem

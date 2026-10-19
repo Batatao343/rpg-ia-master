@@ -186,7 +186,9 @@ def test_cross_account_404(world):
     foreign = other.post(f"/game/{world.game_id}/audit-export")
     missing = other.post(f"/game/{uuid.uuid4()}/audit-export")
     assert foreign.status_code == missing.status_code == 404
-    assert foreign.content == missing.content
+    # request_id (SPEC-241/242) e por requisicao; o resto do corpo e byte-identico (anti-enumeracao).
+    strip = lambda r: {k: v for k, v in r.json().items() if k != "request_id"}  # noqa: E731
+    assert strip(foreign) == strip(missing) and set(foreign.json()) == set(missing.json())
     assert foreign.headers.get("content-type") == missing.headers.get("content-type")
 
 
