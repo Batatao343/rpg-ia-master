@@ -1,5 +1,5 @@
 {
-  "commit_sha": "69f1c6978db55b39533301783b992ce82eaea44e",
+  "commit_sha": "2e48322a1ff1143276a9610acd6dcd4c766e6a53",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -2837,6 +2837,28 @@
       },
       "source": "file:scripts/staging/smoke_ab.py",
       "target": "module:scripts.staging.smoke_ab",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 1
+      },
+      "source": "file:scripts/staging/spec222_art_purge.py",
+      "target": "module:scripts.staging.spec222_art_purge",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 1
+      },
+      "source": "file:scripts/staging/spec236_daily_cap.py",
+      "target": "module:scripts.staging.spec236_daily_cap",
       "type": "contains"
     },
     {
@@ -43917,6 +43939,160 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 22
+      },
+      "source": "module:scripts.staging.spec222_art_purge",
+      "target": "module:scripts.staging",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 46
+      },
+      "source": "module:scripts.staging.spec222_art_purge",
+      "target": "symbol:scripts.staging.spec222_art_purge._cron",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 29
+      },
+      "source": "module:scripts.staging.spec222_art_purge",
+      "target": "symbol:scripts.staging.spec222_art_purge._h",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 36
+      },
+      "source": "module:scripts.staging.spec222_art_purge",
+      "target": "symbol:scripts.staging.spec222_art_purge._hash",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 40
+      },
+      "source": "module:scripts.staging.spec222_art_purge",
+      "target": "symbol:scripts.staging.spec222_art_purge._objects",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 176
+      },
+      "source": "module:scripts.staging.spec222_art_purge",
+      "target": "symbol:scripts.staging.spec222_art_purge.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 57
+      },
+      "source": "module:scripts.staging.spec222_art_purge",
+      "target": "symbol:scripts.staging.spec222_art_purge.run",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 26
+      },
+      "source": "module:scripts.staging.spec236_daily_cap",
+      "target": "module:scripts.staging",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 57
+      },
+      "source": "module:scripts.staging.spec236_daily_cap",
+      "target": "symbol:scripts.staging.spec236_daily_cap.call_finops",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 94
+      },
+      "source": "module:scripts.staging.spec236_daily_cap",
+      "target": "symbol:scripts.staging.spec236_daily_cap.cleanup",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 107
+      },
+      "source": "module:scripts.staging.spec236_daily_cap",
+      "target": "symbol:scripts.staging.spec236_daily_cap.health",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 114
+      },
+      "source": "module:scripts.staging.spec236_daily_cap",
+      "target": "symbol:scripts.staging.spec236_daily_cap.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 33
+      },
+      "source": "module:scripts.staging.spec236_daily_cap",
+      "target": "symbol:scripts.staging.spec236_daily_cap.snapshot",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 70
+      },
+      "source": "module:scripts.staging.spec236_daily_cap",
+      "target": "symbol:scripts.staging.spec236_daily_cap.spend",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "scripts/staging/sse_disconnect.py",
         "line": 16
       },
@@ -44226,7 +44402,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 96
+        "line": 110
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env._load_files",
@@ -44237,7 +44413,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 103
+        "line": 79
+      },
+      "source": "module:scripts.staging.vercel_env",
+      "target": "symbol:scripts.staging.vercel_env._valid_cap",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/vercel_env.py",
+        "line": 117
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.build_env",
@@ -44248,7 +44435,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 199
+        "line": 215
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.main",
@@ -44259,7 +44446,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 160
+        "line": 176
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.push",
@@ -44270,7 +44457,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 183
+        "line": 199
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.remove",
@@ -44281,7 +44468,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 76
+        "line": 90
       },
       "source": "module:scripts.staging.vercel_env",
       "target": "symbol:scripts.staging.vercel_env.stale_names",
@@ -108184,6 +108371,17 @@
       },
       "source": "module:tests.test_spec192_vercel_env",
       "target": "symbol:tests.test_spec192_vercel_env.test_bind_host_accepted_by_runtime_validation",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec192_vercel_env.py",
+        "line": 154
+      },
+      "source": "module:tests.test_spec192_vercel_env",
+      "target": "symbol:tests.test_spec192_vercel_env.test_daily_cap_override_for_spec236_trip_and_default_restores_five",
       "type": "defines"
     },
     {
@@ -173937,6 +174135,479 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 53
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge._cron",
+      "target": "symbol:scripts.staging.s192.now_iso",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 41
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge._objects",
+      "target": "symbol:scripts.staging.s192.query",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 183
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.main",
+      "target": "symbol:scripts.staging.common.write_evidence",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 181
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.main",
+      "target": "symbol:scripts.staging.s192.load_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 182
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.main",
+      "target": "symbol:scripts.staging.spec222_art_purge.run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 62
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.s192.Admin",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 70
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.s192.app_login",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 63
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.s192.now_iso",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 82
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.s192.now_iso",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 109
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.s192.now_iso",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 128
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.s192.now_iso",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 135
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.s192.now_iso",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 152
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.s192.now_iso",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 121
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.s192.query",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 131
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.s192.query",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 136
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.s192.query",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 155
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.s192.query",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 158
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.s192.query",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 76
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.spec222_art_purge._h",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 84
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.spec222_art_purge._h",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 100
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.spec222_art_purge._h",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 134
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.spec222_art_purge._h",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 169
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.spec222_art_purge._hash",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 120
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.spec222_art_purge._objects",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 142
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.spec222_art_purge._objects",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 151
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.spec222_art_purge._objects",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec222_art_purge.py",
+        "line": 162
+      },
+      "source": "symbol:scripts.staging.spec222_art_purge.run",
+      "target": "symbol:scripts.staging.spec222_art_purge._objects",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 64
+      },
+      "source": "symbol:scripts.staging.spec236_daily_cap.call_finops",
+      "target": "symbol:scripts.staging.s192.now_iso",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 101
+      },
+      "source": "symbol:scripts.staging.spec236_daily_cap.cleanup",
+      "target": "symbol:scripts.staging.s192.Admin",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 99
+      },
+      "source": "symbol:scripts.staging.spec236_daily_cap.cleanup",
+      "target": "symbol:scripts.staging.s192.query",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 146
+      },
+      "source": "symbol:scripts.staging.spec236_daily_cap.main",
+      "target": "symbol:scripts.staging.common.write_evidence",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 123
+      },
+      "source": "symbol:scripts.staging.spec236_daily_cap.main",
+      "target": "symbol:scripts.staging.s192.load_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 133
+      },
+      "source": "symbol:scripts.staging.spec236_daily_cap.main",
+      "target": "symbol:scripts.staging.spec236_daily_cap.call_finops",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 131
+      },
+      "source": "symbol:scripts.staging.spec236_daily_cap.main",
+      "target": "symbol:scripts.staging.spec236_daily_cap.cleanup",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 124
+      },
+      "source": "symbol:scripts.staging.spec236_daily_cap.main",
+      "target": "symbol:scripts.staging.spec236_daily_cap.health",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 124
+      },
+      "source": "symbol:scripts.staging.spec236_daily_cap.main",
+      "target": "symbol:scripts.staging.spec236_daily_cap.snapshot",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 128
+      },
+      "source": "symbol:scripts.staging.spec236_daily_cap.main",
+      "target": "symbol:scripts.staging.spec236_daily_cap.snapshot",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 134
+      },
+      "source": "symbol:scripts.staging.spec236_daily_cap.main",
+      "target": "symbol:scripts.staging.spec236_daily_cap.snapshot",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 127
+      },
+      "source": "symbol:scripts.staging.spec236_daily_cap.main",
+      "target": "symbol:scripts.staging.spec236_daily_cap.spend",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 54
+      },
+      "source": "symbol:scripts.staging.spec236_daily_cap.snapshot",
+      "target": "symbol:scripts.staging.s192.query",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 34
+      },
+      "source": "symbol:scripts.staging.spec236_daily_cap.snapshot",
+      "target": "symbol:scripts.staging.spec236_daily_cap.snapshot.q",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 76
+      },
+      "source": "symbol:scripts.staging.spec236_daily_cap.spend",
+      "target": "symbol:scripts.staging.s192.Admin",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec236_daily_cap.py",
+        "line": 81
+      },
+      "source": "symbol:scripts.staging.spec236_daily_cap.spend",
+      "target": "symbol:scripts.staging.s192.app_login",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "scripts/staging/sse_disconnect.py",
         "line": 92
       },
@@ -174653,7 +175324,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 223
+        "line": 132
+      },
+      "source": "symbol:scripts.staging.vercel_env.build_env",
+      "target": "symbol:scripts.staging.vercel_env._valid_cap",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/vercel_env.py",
+        "line": 241
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env._load_files",
@@ -174664,7 +175346,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 225
+        "line": 243
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.build_env",
@@ -174675,7 +175357,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 243
+        "line": 263
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.push",
@@ -174686,7 +175368,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 244
+        "line": 264
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.push",
@@ -174697,7 +175379,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 245
+        "line": 265
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.remove",
@@ -174708,7 +175390,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 236
+        "line": 255
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.stale_names",
@@ -174719,7 +175401,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/vercel_env.py",
-        "line": 245
+        "line": 265
       },
       "source": "symbol:scripts.staging.vercel_env.main",
       "target": "symbol:scripts.staging.vercel_env.stale_names",
@@ -297391,6 +298073,39 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec192_vercel_env.py",
+        "line": 156
+      },
+      "source": "symbol:tests.test_spec192_vercel_env.test_daily_cap_override_for_spec236_trip_and_default_restores_five",
+      "target": "symbol:scripts.staging.vercel_env.build_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec192_vercel_env.py",
+        "line": 157
+      },
+      "source": "symbol:tests.test_spec192_vercel_env.test_daily_cap_override_for_spec236_trip_and_default_restores_five",
+      "target": "symbol:scripts.staging.vercel_env.build_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec192_vercel_env.py",
+        "line": 161
+      },
+      "source": "symbol:tests.test_spec192_vercel_env.test_daily_cap_override_for_spec236_trip_and_default_restores_five",
+      "target": "symbol:scripts.staging.vercel_env.build_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec192_vercel_env.py",
         "line": 88
       },
       "source": "symbol:tests.test_spec192_vercel_env.test_deepseek_key_is_pushed_as_primary_secret_and_never_to_preview",
@@ -326244,6 +326959,20 @@
       "qualified_name": null
     },
     {
+      "id": "file:scripts/staging/spec222_art_purge.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/staging/spec222_art_purge.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:scripts/staging/spec236_daily_cap.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/staging/spec236_daily_cap.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:scripts/staging/sse_disconnect.py",
       "kind": "file",
       "line": 1,
@@ -331982,6 +332711,20 @@
       "line": 1,
       "path": "scripts/staging/smoke_ab.py",
       "qualified_name": "scripts.staging.smoke_ab"
+    },
+    {
+      "id": "module:scripts.staging.spec222_art_purge",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/staging/spec222_art_purge.py",
+      "qualified_name": "scripts.staging.spec222_art_purge"
+    },
+    {
+      "id": "module:scripts.staging.spec236_daily_cap",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/staging/spec236_daily_cap.py",
+      "qualified_name": "scripts.staging.spec236_daily_cap"
     },
     {
       "id": "module:scripts.staging.sse_disconnect",
@@ -353222,6 +353965,97 @@
       "qualified_name": "scripts.staging.smoke_ab.run"
     },
     {
+      "id": "symbol:scripts.staging.spec222_art_purge._cron",
+      "kind": "function",
+      "line": 46,
+      "path": "scripts/staging/spec222_art_purge.py",
+      "qualified_name": "scripts.staging.spec222_art_purge._cron"
+    },
+    {
+      "id": "symbol:scripts.staging.spec222_art_purge._h",
+      "kind": "function",
+      "line": 29,
+      "path": "scripts/staging/spec222_art_purge.py",
+      "qualified_name": "scripts.staging.spec222_art_purge._h"
+    },
+    {
+      "id": "symbol:scripts.staging.spec222_art_purge._hash",
+      "kind": "function",
+      "line": 36,
+      "path": "scripts/staging/spec222_art_purge.py",
+      "qualified_name": "scripts.staging.spec222_art_purge._hash"
+    },
+    {
+      "id": "symbol:scripts.staging.spec222_art_purge._objects",
+      "kind": "function",
+      "line": 40,
+      "path": "scripts/staging/spec222_art_purge.py",
+      "qualified_name": "scripts.staging.spec222_art_purge._objects"
+    },
+    {
+      "id": "symbol:scripts.staging.spec222_art_purge.main",
+      "kind": "function",
+      "line": 176,
+      "path": "scripts/staging/spec222_art_purge.py",
+      "qualified_name": "scripts.staging.spec222_art_purge.main"
+    },
+    {
+      "id": "symbol:scripts.staging.spec222_art_purge.run",
+      "kind": "function",
+      "line": 57,
+      "path": "scripts/staging/spec222_art_purge.py",
+      "qualified_name": "scripts.staging.spec222_art_purge.run"
+    },
+    {
+      "id": "symbol:scripts.staging.spec236_daily_cap.call_finops",
+      "kind": "function",
+      "line": 57,
+      "path": "scripts/staging/spec236_daily_cap.py",
+      "qualified_name": "scripts.staging.spec236_daily_cap.call_finops"
+    },
+    {
+      "id": "symbol:scripts.staging.spec236_daily_cap.cleanup",
+      "kind": "function",
+      "line": 94,
+      "path": "scripts/staging/spec236_daily_cap.py",
+      "qualified_name": "scripts.staging.spec236_daily_cap.cleanup"
+    },
+    {
+      "id": "symbol:scripts.staging.spec236_daily_cap.health",
+      "kind": "function",
+      "line": 107,
+      "path": "scripts/staging/spec236_daily_cap.py",
+      "qualified_name": "scripts.staging.spec236_daily_cap.health"
+    },
+    {
+      "id": "symbol:scripts.staging.spec236_daily_cap.main",
+      "kind": "function",
+      "line": 114,
+      "path": "scripts/staging/spec236_daily_cap.py",
+      "qualified_name": "scripts.staging.spec236_daily_cap.main"
+    },
+    {
+      "id": "symbol:scripts.staging.spec236_daily_cap.snapshot",
+      "kind": "function",
+      "line": 33,
+      "path": "scripts/staging/spec236_daily_cap.py",
+      "qualified_name": "scripts.staging.spec236_daily_cap.snapshot"
+    },
+    {
+      "id": "symbol:scripts.staging.spec236_daily_cap.snapshot.q",
+      "kind": "function",
+      "line": 34,
+      "path": "scripts/staging/spec236_daily_cap.py",
+      "qualified_name": "scripts.staging.spec236_daily_cap.snapshot.q"
+    },
+    {
+      "id": "symbol:scripts.staging.spec236_daily_cap.spend",
+      "kind": "function",
+      "line": 70,
+      "path": "scripts/staging/spec236_daily_cap.py",
+      "qualified_name": "scripts.staging.spec236_daily_cap.spend"
+    },
+    {
       "id": "symbol:scripts.staging.sse_disconnect.exactly_one_turn",
       "kind": "function",
       "line": 22,
@@ -353413,42 +354247,49 @@
     {
       "id": "symbol:scripts.staging.vercel_env._load_files",
       "kind": "function",
-      "line": 96,
+      "line": 110,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env._load_files"
     },
     {
+      "id": "symbol:scripts.staging.vercel_env._valid_cap",
+      "kind": "function",
+      "line": 79,
+      "path": "scripts/staging/vercel_env.py",
+      "qualified_name": "scripts.staging.vercel_env._valid_cap"
+    },
+    {
       "id": "symbol:scripts.staging.vercel_env.build_env",
       "kind": "function",
-      "line": 103,
+      "line": 117,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.build_env"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.main",
       "kind": "function",
-      "line": 199,
+      "line": 215,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.main"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.push",
       "kind": "function",
-      "line": 160,
+      "line": 176,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.push"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.remove",
       "kind": "function",
-      "line": 183,
+      "line": 199,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.remove"
     },
     {
       "id": "symbol:scripts.staging.vercel_env.stale_names",
       "kind": "function",
-      "line": 76,
+      "line": 90,
       "path": "scripts/staging/vercel_env.py",
       "qualified_name": "scripts.staging.vercel_env.stale_names"
     },
@@ -394823,6 +395664,13 @@
       "qualified_name": "tests.test_spec192_vercel_env.test_bind_host_accepted_by_runtime_validation"
     },
     {
+      "id": "symbol:tests.test_spec192_vercel_env.test_daily_cap_override_for_spec236_trip_and_default_restores_five",
+      "kind": "test",
+      "line": 154,
+      "path": "tests/test_spec192_vercel_env.py",
+      "qualified_name": "tests.test_spec192_vercel_env.test_daily_cap_override_for_spec236_trip_and_default_restores_five"
+    },
+    {
       "id": "symbol:tests.test_spec192_vercel_env.test_deepseek_key_is_pushed_as_primary_secret_and_never_to_preview",
       "kind": "test",
       "line": 86,
@@ -401901,5 +402749,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:f4f3cfc021486e4fddbab13b07e784fc58e8bb771db6e48b15887fa5ee6ca06d"
+  "source_tree_hash": "sha256:d2fe18f2c63a91d23da953d90550a56abfffa3f6a6fe8fc2d102e3bc1c89ad84"
 }

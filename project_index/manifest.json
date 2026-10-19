@@ -1,11 +1,11 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "69f1c6978db55b39533301783b992ce82eaea44e",
+  "commit_sha": "2e48322a1ff1143276a9610acd6dcd4c766e6a53",
   "edge_counts": {
-    "calls": 16715,
-    "contains": 693,
-    "defines": 9491,
-    "imports": 1559,
+    "calls": 16761,
+    "contains": 695,
+    "defines": 9506,
+    "imports": 1561,
     "likely_test_for": 959,
     "route_to": 63
   },
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:5af4ef8a388400a17b4b975ba5ec3841109d67e6edd3739c50380aa9d9590da1",
+  "graph_hash": "sha256:50a336e5463329ce13b1e6b0748d0720071982f8454645ee5075a51e2987752f",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -254,6 +254,8 @@
     "scripts/staging/schema_diff.py",
     "scripts/staging/security_wave_smoke.py",
     "scripts/staging/smoke_ab.py",
+    "scripts/staging/spec222_art_purge.py",
+    "scripts/staging/spec236_daily_cap.py",
     "scripts/staging/sse_disconnect.py",
     "scripts/staging/stt_fallback_smoke.py",
     "scripts/staging/synthetic_data.py",
@@ -889,12 +891,12 @@
     "artifact": 9,
     "class": 767,
     "endpoint": 63,
-    "file": 833,
-    "function": 2918,
+    "file": 835,
+    "function": 2932,
     "method": 742,
-    "module": 693,
-    "test": 5063
+    "module": 695,
+    "test": 5064
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:f4f3cfc021486e4fddbab13b07e784fc58e8bb771db6e48b15887fa5ee6ca06d"
+  "source_tree_hash": "sha256:d2fe18f2c63a91d23da953d90550a56abfffa3f6a6fe8fc2d102e3bc1c89ad84"
 }
