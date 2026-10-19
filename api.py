@@ -4285,6 +4285,7 @@ def _log_turn(state: dict, t0: float, eventos_antes: int, error: Optional[str],
         "route_source": state.get("route_source"),
         "route_fallback_reason": state.get("route_fallback_reason"),
         "fallbacks": dict(Counter(fallbacks or [])),      # SPEC-250 R5: node.reason -> contagem
+        "narrative_rejected": dict(getattr(fallbacks, "counters", None) or {}),  # SPEC-252 R2: kind -> contagem
         **_llm_log_fields(llm_events, llm_attempts),
         **(latency_fields or {}),
     }))

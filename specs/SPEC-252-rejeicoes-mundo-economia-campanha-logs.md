@@ -1,7 +1,7 @@
 # SPEC-252 — Rejeições do mundo, guarda narrativa, economia e replanejamento com motivo em log
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P2**.
-> **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
+> **Status:** `done` — aprovada pelo dono em 2026-10-19. Prioridade sugerida: **P2**.
+> **Criada:** 2026-10-18 · **Atualizada:** 2026-10-19
 > **Depende de:** SPEC-240, SPEC-250
 > **Desbloqueia:** —
 > **Origem:** auditoria de logs 2026-10-18 ([relatório](../docs/auditorias/logs-api-2026-10-18.md))
@@ -55,12 +55,12 @@ R1–R5.
 
 ## 5. Critérios de aceite
 
-- [ ] Toda rejeição/recusa tem `reason_code` estável em log.
-- [ ] Sem texto livre.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] Toda rejeição/recusa tem `reason_code` estável em log.
+- [x] Sem texto livre.
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
 - [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -71,3 +71,12 @@ R1–R5.
 - Nenhum.
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## 8. Notas de implementação (2026-10-19)
+
+- `reason_code` é derivado do texto do validador por `world_validators.reason_code` (enum `REASON_CODES`; desconhecido ⇒ `other`) em vez de mudar `ValidationResult` (contrato/estado intactos). `unique_claimed` fica no enum mas só é emitido em `narrative.rejected`/`economy`.
+- `target_ref` só sai se `catalog_ref` achar o id no grafo, mapa ou `ARTIFACTS_DB`; nomes livres e ids de quest são omitidos. `type` agora é saneado para o enum `EventType` (`other` fora dele).
+- `rpg.turn` ganhou `narrative_rejected` (`{kind: contagem}`) via `observability.telemetry.count_turn` (contador no bucket do turno).
+- Campanha: `_build_plan` aceita `_info` opcional para reportar `outcome` (`llm|template|previous_kept`); `campaign.replan` só é emitido quando o replanejamento é de fato tentado (adiamento por combate ativo não gera linha).
+- Eventos novos: `event.proposal_rejected` (campos novos), `narrative.rejected`, `economy.trade`, `economy.unique_claim_conflict`, `campaign.replan`. Métricas novas: nenhuma.
+- Smoke de staging sugerido: comprar sem ouro e propor `quest_completed` sem prova ⇒ `economy.trade outcome=refused reason_code=insufficient_gold` e `event.proposal_rejected reason_code=unproven`; conferir `rpg.turn.narrative_rejected`.
