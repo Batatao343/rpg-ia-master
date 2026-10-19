@@ -1,10 +1,13 @@
----
-id: SPEC-282
-status: done
----
 # SPEC-282 — Timeout das jornadas mobile (M07 axe, M02/M06)
 
-Status: `done` (aprovada pelo dono em 19/10: "tudo que nao exige acao externa dele").
+> **Status:** `done` (aprovada pelo dono em 19/10: "tudo que não exige ação externa dele")
+> **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
+> **Origem:** achado pós-SPEC-216: M07 mobile-single-pane com timeout (também na main)
+> **Depende de:** —
+> **EXECUTOR_MODEL:** `Terra` (≡ Sonnet) · **REVIEW_REQUIRED:** `false` — só configuração de teste
+> **EVAL_AUTHORING_REQUIRED:** `false`
+
+---
 
 ## Achado
 `web/e2e/mobile-single-pane.spec.ts` M07 dava timeout na analise axe nas duas viewports; M02/M06 falhavam esporadicamente.
