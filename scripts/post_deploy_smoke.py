@@ -13,6 +13,16 @@ from urllib.parse import urlparse
 import httpx
 
 
+def _origin(base_url: str) -> str:
+    """scheme://host[:port] sem userinfo/path/query (a URL pode carregar credencial)."""
+    try:
+        parsed = urlparse(base_url or "")
+        port = f":{parsed.port}" if parsed.port else ""
+        return f"{parsed.scheme}://{parsed.hostname}{port}" if parsed.scheme and parsed.hostname else ""
+    except ValueError:
+        return ""
+
+
 def run(
     base_url: str,
     expected_sha: str,
@@ -71,7 +81,7 @@ def run(
         "failed_check": first,
         "failed_checks": failed,
         "http_status": detail[first]["http_status"] if first else 200,
-        "base_origin": f"{parsed.scheme}://{parsed.netloc}",
+        "base_origin": _origin(base_url),
         "expected_git_sha": expected_sha,
         "actual_git_sha": state["actual_sha"],
         "checks": detail,
@@ -94,6 +104,8 @@ def main() -> int:
             "mode": "read-only",
             "status": "failed",
             "failed_check": "setup",
+            "failed_checks": ["setup"],
+            "base_origin": _origin(args.base_url),
             "http_status": None,
             "error_type": type(error).__name__,
             "expected_git_sha": args.expected_git_sha,
