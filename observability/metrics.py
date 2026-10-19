@@ -26,6 +26,8 @@ LABELS = {
     "rpg_operation_lease_age_seconds": {"kind"},
     "rpg_db_duration_seconds": {"operation", "outcome"},
     "rpg_db_pool": {"state"},
+    # SPEC-254 R4: duracao por chamada ao banco; query_name = rotulo ESTATICO (nunca SQL/parametros).
+    "rpg_db_query_seconds": {"query_name"},
     "rpg_metrics_db_error": set(),  # SPEC-221 R2
     "rpg_llm_attempts_total": {"provider", "tier", "outcome"},
     "rpg_llm_duration_seconds": {"provider", "tier", "outcome"},

@@ -4530,7 +4530,7 @@ specs:
   lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P2
 - id: SPEC-254
   slug: postgres-lease-pool-logs
-  status: draft
+  status: in-progress
   path: specs/SPEC-254-postgres-lease-pool-logs.md
   created_commit: null
   created_at: '2026-10-18'

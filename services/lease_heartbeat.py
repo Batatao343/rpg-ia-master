@@ -7,6 +7,7 @@ from collections.abc import Callable, Iterator
 from threading import Event, Thread
 
 from infrastructure.contracts import LeaseHeld
+from infrastructure.db_log import conflict as _db_conflict
 
 
 class LeaseWatch:
@@ -35,8 +36,9 @@ class LeaseWatch:
                 if self._confirm_completed():
                     self.committed.set()
                     return
-            except Exception:
-                pass  # Unknown completion keeps the conservative lease_lost outcome.
+            except Exception:  # silent-ok: desfecho desconhecido => resultado conservador lease_lost
+                pass
+        _db_conflict("lease_conflict", "lease_lost", op_kind="heartbeat")      # SPEC-254 R1
         raise LeaseHeld("lease_lost")
 
 
@@ -58,11 +60,13 @@ def keep_lease_alive(renew: Callable[[], None] | None, *,
                 renew()
             metrics.increment("rpg_lease_renewals_total", {"outcome": "ok"})
             return True
-        except Exception:
+        except Exception as exc:
             if watch.committed.is_set():
                 return False
             watch.lost.set()
             metrics.increment("rpg_lease_renewals_total", {"outcome": "lost"})
+            from observability.telemetry import log_event
+            log_event("db", "lease_renewal_failed", level="warning", error_type=type(exc).__name__)
             return False
 
     def loop() -> None:

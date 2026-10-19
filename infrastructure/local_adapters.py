@@ -447,6 +447,12 @@ class InlineJobQueue:
             if dedupe in self._dedupe:
                 return self._dedupe[dedupe]
             job_id = uuid4()
+            if job.trace is None:     # SPEC-255 R1: correlacao do request de origem
+                from dataclasses import replace
+                from observability.telemetry import correlation
+                current = correlation()
+                job = replace(job, trace={k: current[k] for k in ("request_id", "action_ref")
+                                          if current.get(k)} or None)
             self._jobs[job_id] = _Queued(job_id=job_id, request=job)
             self._dedupe[dedupe] = job_id
             self._order.append(job_id)
@@ -491,7 +497,7 @@ class InlineJobQueue:
             row.attempt = max(0, row.attempt - 1)
             row.status = "queued"
 
-    def fail(self, job_id: UUID, lease_token: UUID, error_code: str) -> None:
+    def fail(self, job_id: UUID, lease_token: UUID, error_code: str) -> dict[str, Any]:
         with self._lock:
             row = self._leased(job_id, lease_token)
             row.error_code = error_code
@@ -500,6 +506,7 @@ class InlineJobQueue:
                 row.status = "dead"
             else:
                 row.status = "queued"
+            return {"status": "dead" if row.status == "dead" else "retry", "next_run_in_s": 0}
 
 
 class MemoryRateLimiter:

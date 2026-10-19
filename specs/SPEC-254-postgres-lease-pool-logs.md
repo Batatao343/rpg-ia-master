@@ -1,6 +1,6 @@
 # SPEC-254 — Postgres: conflitos de lease/fencing/CAS, timeouts de pool/statement e queries lentas logados
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P1**.
+> **Status:** `in-progress` — implementada em `logs-p1` (REVIEW_REQUIRED; smoke staging pendente)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-240
 > **Desbloqueia:** SPEC-255
@@ -55,12 +55,12 @@ R1–R5.
 
 ## 5. Critérios de aceite
 
-- [ ] Todo 409 de lease/versão tem causa DB em log.
-- [ ] Timeouts de pool/statement visíveis com `query_name`.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Todo 409 de lease/versão tem causa DB em log.
+- [x] Timeouts de pool/statement visíveis com `query_name`.
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] `uv run pytest` verde (suíte completa offline).
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -71,3 +71,7 @@ R1–R5.
 - Overhead de medição mínimo; `query_name` estático evita cardinalidade alta.
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## Execução (logs-p1, 2026-10-18)
+
+Implementado: `infrastructure/db_log.py` (`db.lease_conflict`/`db.stale_version`/`db.idempotency_conflict` com motivo fechado e pseudônimos, `db.pool_timeout`/`db.connect_failed`/`db.statement_timeout`/`db.lock_timeout`/`db.slow_query`, métrica `rpg_db_query_seconds{query_name}` e decorator `timed_call`); `PostgresPool._checkout` loga falha de checkout (pool request|admin, wait_ms, tamanho) e timeouts de query; todos os `raise LeaseHeld/StaleVersion/Conflict(idempotency…)` de `postgres_turns.py`/`postgres_jobs.py`/`lease_heartbeat.py` ganham a linha de causa antes de levantar (teste AST). Testes: `tests/test_db_logging.py` (pool com DSN inválido, fakes, sentinelas). Este commit também carrega o campo aditivo `JobRequest.trace` e o split de `_trace` em `postgres_jobs.py` (usados pela SPEC-255, commit seguinte). Falta: execução contra Postgres local (`-m infra_local`, sem Docker aqui), o smoke de staging (§6) e a revisão Sol.

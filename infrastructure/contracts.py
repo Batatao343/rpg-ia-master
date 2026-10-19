@@ -178,6 +178,8 @@ class JobRequest:
     owner_id: UUID | None = None
     game_id: UUID | None = None
     max_attempts: int = 3
+    # SPEC-255: {request_id, action_ref} do request que criou o job (so ids de correlacao).
+    trace: dict[str, str] | None = None
 
 
 @dataclass(frozen=True)

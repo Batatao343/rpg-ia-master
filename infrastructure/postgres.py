@@ -4,7 +4,8 @@ from __future__ import annotations
 from observability.telemetry import log_event as _log_event
 
 import json
-from contextlib import contextmanager
+import time
+from contextlib import ExitStack, contextmanager
 from datetime import UTC, datetime
 from typing import Any, Iterator
 from urllib.parse import parse_qs, urlsplit
@@ -88,21 +89,40 @@ class PostgresPool:
             open=True,
         )
 
-    @contextmanager
-    def _checkout(self, *, request_scoped: bool) -> Iterator[Connection]:
-        with self._pool.connection() as connection:
-            if self._transaction_pooler:
-                # SET LOCAL lives only for this transaction; the serverless
-                # transaction pooler must not retain session settings.
-                connection.execute("SET LOCAL statement_timeout = 15000")
-                connection.execute("SET LOCAL lock_timeout = 5000")
-            if request_scoped and self._request_rls:
-                from infrastructure.request_context import active_principal
+    def _pool_stats(self) -> dict:
+        try:
+            return dict(self._pool.get_stats())
+        except Exception:  # silent-ok: estatistica opcional do pool
+            return {}
 
-                principal = active_principal()
-                if principal is not None:
-                    _apply_request_role(connection, principal.user_id)
-            yield connection
+    @contextmanager
+    def _checkout(self, *, request_scoped: bool, label: str = "request") -> Iterator[Connection]:
+        from infrastructure import db_log
+        started = time.perf_counter()
+        with ExitStack() as stack:
+            try:
+                connection = stack.enter_context(self._pool.connection())
+            except Exception as exc:
+                # SPEC-254 R2: pool_timeout / connect_failed, sem host, DSN ou mensagem.
+                db_log.log_checkout_failure(exc, pool=label, waited_s=time.perf_counter() - started,
+                                            stats=self._pool_stats())
+                raise
+            try:
+                if self._transaction_pooler:
+                    # SET LOCAL lives only for this transaction; the serverless
+                    # transaction pooler must not retain session settings.
+                    connection.execute("SET LOCAL statement_timeout = 15000")
+                    connection.execute("SET LOCAL lock_timeout = 5000")
+                if request_scoped and self._request_rls:
+                    from infrastructure.request_context import active_principal
+
+                    principal = active_principal()
+                    if principal is not None:
+                        _apply_request_role(connection, principal.user_id)
+                yield connection
+            except Exception as exc:
+                db_log.log_query_error(exc)       # SPEC-254 R3: statement/lock timeout
+                raise
 
     @contextmanager
     def connection(self, *, as_admin: bool = False) -> Iterator[Connection]:
@@ -118,7 +138,7 @@ class PostgresPool:
     def admin_connection(self) -> Iterator[Connection]:
         """Worker/cron/ciclo de conta/wallet/rate-limit: nunca troca para `rpg_api`."""
         target = self.admin_pool or self
-        with target._checkout(request_scoped=False) as connection:
+        with target._checkout(request_scoped=False, label="admin") as connection:
             yield connection
 
     def close(self) -> None:

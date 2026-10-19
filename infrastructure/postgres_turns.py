@@ -19,6 +19,7 @@ from infrastructure.contracts import (
     RateLimitDecision,
     StaleVersion,
 )
+from infrastructure.db_log import conflict as _db_conflict, timed_call as _timed
 from infrastructure.postgres import PostgresPool
 from services.usage_metering import UsageEvent
 
@@ -69,6 +70,7 @@ class PostgresTurnCoordinator:
         self.pool = pool
         self.lease_seconds = lease_seconds
 
+    @_timed("turn.claim")
     def claim(
         self,
         principal: Principal,
@@ -97,6 +99,7 @@ class PostgresTurnCoordinator:
                 if not game:
                     raise NotFound("campanha não encontrada")
                 if base_version is not None and int(game["version"]) != int(base_version):
+                    _db_conflict("stale_version", "base_version", op_kind=kind, operation_id=operation_id, game_id=game_id)
                     raise StaleVersion("versão base da operação divergiu")
                 if exclusive and game["active_operation_id"] not in (None, operation_id):
                     fresh = connection.execute(
@@ -104,6 +107,7 @@ class PostgresTurnCoordinator:
                         (game["active_lease_until"],),
                     ).fetchone()["fresh"]
                     if fresh:
+                        _db_conflict("lease_conflict", "game_busy", op_kind=kind, operation_id=operation_id, game_id=game_id)
                         raise LeaseHeld("game_busy")
             inserted = connection.execute(
                 """
@@ -124,19 +128,24 @@ class PostgresTurnCoordinator:
                 (operation_id,),
             ).fetchone()
             if not existing or existing["owner_id"] != principal.user_id:
+                _db_conflict("idempotency_conflict", "key_unavailable", op_kind=kind, operation_id=operation_id, game_id=game_id)
                 raise Conflict("idempotency key indisponível")
             if not inserted:
                 if existing["request_sha256"] != request_hash:
+                    _db_conflict("idempotency_conflict", "request_mismatch", op_kind=kind, operation_id=operation_id, game_id=game_id)
                     raise Conflict("idempotency key reutilizada com request divergente")
                 if not reclaimable(existing, game_id=game_id, kind=kind, base_version=base_version):
+                    _db_conflict("idempotency_conflict", "operation_mismatch", op_kind=kind, operation_id=operation_id, game_id=game_id)
                     raise Conflict("idempotency key reutilizada com operação divergente")
                 if existing["status"] == "completed":
+                    _db_conflict("idempotency_conflict", "completed", op_kind=kind, operation_id=operation_id, game_id=game_id)
                     raise Conflict("operation_completed")
                 if existing["status"] == "running" and existing["lease_until"] is not None:
                     fresh = connection.execute(
                         "select %s > now() as fresh", (existing["lease_until"],),
                     ).fetchone()["fresh"]
                     if fresh:
+                        _db_conflict("lease_conflict", "operation_in_progress", op_kind=kind, operation_id=operation_id, game_id=game_id)
                         raise LeaseHeld("operation_in_progress")
                 connection.execute(
                     """
@@ -157,6 +166,7 @@ class PostgresTurnCoordinator:
                 )
         return OperationClaim(operation_id, token, game_id, base_version, request_hash)
 
+    @_timed("turn.commit_game")
     def commit_game(
         self,
         principal: Principal,
@@ -196,6 +206,7 @@ class PostgresTurnCoordinator:
             ).fetchone()
             if (not operation or operation["status"] != "running"
                     or operation["lease_token"] != claim.lease_token):
+                _db_conflict("lease_conflict", "fence_invalid", op_kind='commit_game', operation_id=claim.operation_id, game_id=claim.game_id)
                 raise LeaseHeld("fencing token inválido")
             old_epoch = int(((previous or {}).get('state', {}).get('continuity') or {}).get('timeline_epoch', 0))
             new_epoch = int((document.get('continuity') or {}).get('timeline_epoch', 0))
@@ -223,6 +234,7 @@ class PostgresTurnCoordinator:
                 ),
             ).fetchone()
             if not row:
+                _db_conflict("stale_version", "commit_divergence", op_kind='commit_game', operation_id=claim.operation_id, game_id=claim.game_id)
                 raise StaleVersion("versão/lease do jogo divergiu no commit")
             committed_version = int(row["version"])
             from services.turn_effects import current_effects
@@ -317,6 +329,7 @@ class PostgresTurnCoordinator:
             )
         return committed_version, persisted_receipt
 
+    @_timed("turn.commit_create")
     def commit_create(
         self, principal: Principal, claim: OperationClaim, state: dict[str, Any],
         *, receipt: Mapping[str, Any], checkpoint: bool = True,
@@ -337,6 +350,7 @@ class PostgresTurnCoordinator:
             ).fetchone()
             if (not operation or operation["status"] != "running"
                     or operation["lease_token"] != claim.lease_token):
+                _db_conflict("lease_conflict", "fence_invalid", op_kind='commit_create', operation_id=claim.operation_id, game_id=claim.game_id)
                 raise LeaseHeld("fencing token inválido")
             row = connection.execute(
                 """insert into app.games
@@ -394,6 +408,7 @@ class PostgresTurnCoordinator:
                                     game_id=game_id, events=usage_events)
         return version, persisted_receipt
 
+    @_timed("turn.commit_delete")
     def commit_delete(
         self, principal: Principal, claim: OperationClaim, game_id: UUID,
         *, receipt: Mapping[str, Any],
@@ -408,6 +423,7 @@ class PostgresTurnCoordinator:
             ).fetchone()
             if (not operation or operation["status"] != "running"
                     or operation["lease_token"] != claim.lease_token):
+                _db_conflict("lease_conflict", "fence_invalid", op_kind='commit_delete', operation_id=claim.operation_id, game_id=claim.game_id)
                 raise LeaseHeld("fencing token inválido")
             # SPEC-222 R6: asset rows cascade with the game, so the object keys are
             # captured first and handed to a durable purge job in the same commit.
@@ -433,6 +449,7 @@ class PostgresTurnCoordinator:
             )
         return persisted
 
+    @_timed("turn.receipt")
     def receipt(self, principal: Principal, operation_id: UUID, *,
                 game_id: UUID | None = None, kind: str | None = None,
                 request_hash: str | None = None) -> dict[str, Any] | None:
@@ -448,6 +465,7 @@ class PostgresTurnCoordinator:
                 # fills game_id. Kind/hash still bind that initial request.
                 if (row['kind'] != kind or row['request_sha256'] != request_hash
                         or (kind != 'new_game' and row['game_id'] != game_id)):
+                    _db_conflict("idempotency_conflict", "request_mismatch", op_kind=kind, operation_id=operation_id)
                     raise Conflict('operation_request_mismatch')
             return row["receipt"] if row["status"] == "completed" else None
 
@@ -463,6 +481,7 @@ class PostgresTurnCoordinator:
         with self.pool.connection() as connection:
             return self._status(connection, claim) == "completed"
 
+    @_timed("turn.heartbeat")
     def heartbeat(self, claim: OperationClaim) -> None:
         interval = timedelta(seconds=self.lease_seconds)
         with self.pool.connection() as connection, connection.transaction():
@@ -482,6 +501,7 @@ class PostgresTurnCoordinator:
                 # transaction that stores the receipt. A tick that lands after it is benign.
                 if self._status(connection, claim) == "completed":
                     return
+                _db_conflict("lease_conflict", "fence_invalid", op_kind='heartbeat', operation_id=claim.operation_id, game_id=claim.game_id)
                 raise LeaseHeld("fencing token inválido")
             if claim.game_id is not None:
                 connection.execute(
@@ -492,6 +512,7 @@ class PostgresTurnCoordinator:
                     (interval, claim.game_id, claim.operation_id, claim.lease_token),
                 )
 
+    @_timed("turn.complete")
     def complete(self, claim: OperationClaim, *, committed_version: int | None,
                  receipt: Mapping[str, Any],
                  usage_events: Sequence[UsageEvent] = ()) -> dict[str, Any]:
@@ -506,6 +527,7 @@ class PostgresTurnCoordinator:
                 (claim.operation_id, claim.lease_token),
             ).fetchone()
             if operation is None or operation["game_id"] != claim.game_id:
+                _db_conflict("lease_conflict", "fence_invalid", op_kind='complete', operation_id=claim.operation_id, game_id=claim.game_id)
                 raise LeaseHeld("fencing token inválido")
             if usage_events:
                 from infrastructure.usage_events import append_usage_events
@@ -521,6 +543,7 @@ class PostgresTurnCoordinator:
                 (committed_version, Jsonb(dict(receipt)), claim.operation_id, claim.lease_token),
             )
             if result.rowcount != 1:
+                _db_conflict("lease_conflict", "worker_late", op_kind='complete', operation_id=claim.operation_id, game_id=claim.game_id)
                 raise LeaseHeld("worker atrasado não pode confirmar")
             if claim.game_id is not None:
                 connection.execute(
@@ -533,6 +556,7 @@ class PostgresTurnCoordinator:
                 )
         return dict(receipt)
 
+    @_timed("turn.fail")
     def fail(self, claim: OperationClaim, error_code: str,
              *, usage_events: Sequence[UsageEvent] = ()) -> None:
         with self.pool.connection() as connection, connection.transaction():
@@ -546,6 +570,7 @@ class PostgresTurnCoordinator:
                 (claim.operation_id, claim.lease_token),
             ).fetchone()
             if operation is None or operation["game_id"] != claim.game_id:
+                _db_conflict("lease_conflict", "fence_invalid", op_kind='fail', operation_id=claim.operation_id, game_id=claim.game_id)
                 raise LeaseHeld("fencing token inválido")
             if usage_events:
                 from infrastructure.usage_events import append_usage_events
@@ -563,6 +588,7 @@ class PostgresTurnCoordinator:
                 (error_code[:100], claim.operation_id, claim.lease_token),
             )
             if result.rowcount != 1:
+                _db_conflict("lease_conflict", "fence_invalid", op_kind='fail', operation_id=claim.operation_id, game_id=claim.game_id)
                 raise LeaseHeld("fencing token inválido")
             if claim.game_id is not None:
                 connection.execute(
