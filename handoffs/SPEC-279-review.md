@@ -62,3 +62,34 @@ RPG_TEST_DATABASE_URL=…:55322 … pytest tests/test_spec279_usage_retention_lo
 script ad hoc (scratchpad, rollback): pg_constraint/pg_trigger/grants de app.usage_events → só game_id FK SET NULL; triggers attribution+fence; rpg_api select,insert
 script ad hoc (scratchpad, rollback): reuso de operation_id após delete da campanha → Conflict "usage replay divergiu" (P1-1 reproduzido)
 ```
+
+## Re-revisão (commit `f12f79b`)
+
+> **Veredito final:** `APPROVED`
+
+- **P1-1 corrigido.** O trigger `operations_refuse_reused_id` (`BEFORE INSERT` em `app.operations`) chama
+  `app.refuse_reused_operation_id()`, que é `security definer`, usa `search_path=''` e teve o grant revogado de
+  `public`/`anon`/`authenticated`/`rpg_api`. Ele devolve `NULL` quando já existe `usage_events` com aquele id.
+  Conferi cada lugar que insere em `app.operations`:
+  - `postgres_turns` claim: `inserted` e `existing` vêm nulos → `Conflict("idempotency key indisponível")`
+    antes de qualquer LLM.
+  - `usage_events._append_job_attempt` e `dynamic_art`: o `select` seguinte não acha a linha → `Conflict`.
+  - `image_quotes`: o id é `uuid5` do quote. Se o insert for pulado, `wallet.reserve` falha fechado com
+    `WalletConflict`.
+
+  Um replay legítimo de operação ainda existente continua igual: com `ON CONFLICT DO NOTHING`, o trigger roda antes
+  da checagem de conflito e o resultado é o mesmo "não inseriu". Não abre vazamento de existência entre owners: a
+  resposta é idêntica à de id de outro owner. A migration segue idempotente (`or replace` +
+  `drop trigger if exists`). O repro ad hoc agora falha no insert da operação (`Conflict usage attribution
+  divergiu`) e não mais depois do efeito.
+- **P3-1 corrigido.** O script de staging só afirma sobre o owner sintético; as somas globais ficam como
+  informação.
+- **P3-2:** passou para a SPEC-280 (o trigger pula owner com tombstone), fora deste diff.
+- Observação sem bloqueio: `test_deleted_operation_id_cannot_be_reclaimed` testa o insert direto, e não
+  `PostgresTurns.claim`. A leitura do código cobre o claim.
+
+```text
+pytest tests/test_spec279_usage_retention.py → 5 passed
+RPG_TEST_DATABASE_URL=…:55322 pytest spec279_local + spec222_retention_local + account_lifecycle_local + wallet_local + image_quotes_local + dynamic_art_local + postgres_jobs_local → 59 passed
+repro ad hoc (rollback): reuso de operation_id após delete → operação não inserida (Conflict antes do efeito)
+```

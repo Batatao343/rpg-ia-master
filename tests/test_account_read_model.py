@@ -27,6 +27,8 @@ class Connection:
         self.calls = []
 
     def execute(self, sql, params):
+        if "pg_catalog.pg_attribute" in sql:   # schema probe (has_column, SPEC-279): no owner data
+            return Result([{"present": 1}])
         self.calls.append((sql, params))
         assert self.owner in params, "every financial query needs the verified owner"
         return Result(self.rows)
