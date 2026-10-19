@@ -6,7 +6,7 @@ export default defineConfig({
   define: { 'process.env.NODE_ENV': JSON.stringify('production') },
   publicDir: false,
   build: {
-    lib: { entry: 'tests/artwork.fixture.tsx', name: 'ArtworkFixture', formats: ['iife'], fileName: () => 'fixture.js' },
+    lib: { entry: 'tests/artwork.fixture.tsx', name: 'ArtworkFixture', formats: ['iife'], fileName: () => 'fixture.js', cssFileName: 'style' },
     emptyOutDir: true,
   },
 });
