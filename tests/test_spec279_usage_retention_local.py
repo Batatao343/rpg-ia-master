@@ -125,3 +125,16 @@ def test_account_erasure_still_removes_usage(db):
         db.execute(f"delete from app.{table} where owner_id=%s", (owner,))
     assert db.execute("select count(*) n from app.usage_events where owner_id=%s",
                       (owner,)).fetchone()["n"] == 0
+
+
+def test_deleted_operation_id_cannot_be_reclaimed(db):
+    """Review P1: a client reusing a deleted operation's id must not run unmetered."""
+    owner = uuid4()
+    game, op, _ = _campaign(db, owner)
+    db.execute("delete from app.games where id=%s", (game,))
+    new_game, _, _ = _campaign(db, owner)
+    inserted = db.execute("""insert into app.operations(id,owner_id,game_id,kind,status,request_sha256)
+        values(%s,%s,%s,'turn','running',%s) on conflict do nothing returning id""",
+                          (op, owner, new_game, "b" * 64)).fetchone()
+    assert inserted is None
+    assert db.execute("select 1 from app.operations where id=%s", (op,)).fetchone() is None

@@ -92,8 +92,8 @@ def run(env: dict) -> dict:
     b, a = out["before_delete"], out["after_delete"]
     out["checks"] = {
         "owner_spend_unchanged": b["owner_spend_usd"] == a["owner_spend_usd"] == COST,
-        "day_spend_unchanged": b["day_spend_usd"] == a["day_spend_usd"],
-        "day_turns_unchanged": b["day_turns"] == a["day_turns"],
+        # day-wide sums/turns are reported (before_delete/after_delete) but not asserted: a real turn
+        # between the two reads would change them for reasons unrelated to this proof.
         "rows_kept": len(out["rows_after_delete"]) == 2 and all(
             r["game_detached"] and r["op_kept"] and r["operation_kind"] == "turn" for r in out["rows_after_delete"]),
         "cleanup_restored_owner": out["after_cleanup"]["owner_spend_usd"] == 0,

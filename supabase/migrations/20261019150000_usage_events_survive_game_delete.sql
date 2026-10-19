@@ -46,4 +46,22 @@ alter table app.usage_events drop constraint if exists usage_events_game_id_fkey
 alter table app.usage_events add constraint usage_events_game_id_fkey
   foreign key (game_id) references app.games(id) on delete set null;
 
+-- An operation id is a client idempotency key. After its operation is deleted, its usage facts
+-- keep the id; reusing it would make the new attempt's usage collide with the old facts
+-- (unique key / replay digest) and escape metering. A reused id is silently not inserted, which
+-- every claimer already treats as "idempotency key unavailable" (insert ... on conflict do nothing).
+create or replace function app.refuse_reused_operation_id() returns trigger
+language plpgsql security definer set search_path = '' as $$
+begin
+  if exists (select 1 from app.usage_events where operation_id = new.id) then
+    return null;
+  end if;
+  return new;
+end;
+$$;
+revoke all on function app.refuse_reused_operation_id() from public, anon, authenticated, rpg_api;
+drop trigger if exists operations_refuse_reused_id on app.operations;
+create trigger operations_refuse_reused_id before insert on app.operations
+  for each row execute function app.refuse_reused_operation_id();
+
 select app.grant_runtime_access();

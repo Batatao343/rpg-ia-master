@@ -46,3 +46,10 @@ def test_readers_keep_events_whose_operation_was_deleted():
         src = re.sub(r"\s+", " ", inspect.getsource(fn))
         assert "left join app.operations o" in src
         assert "coalesce(" in src and "operation_kind" in src
+
+
+def test_reused_operation_id_is_refused_by_trigger():
+    sql = _sql()
+    assert "before insert on app.operations" in sql
+    assert "create or replace function app.refuse_reused_operation_id" in sql
+    assert "drop trigger if exists operations_refuse_reused_id on app.operations" in sql

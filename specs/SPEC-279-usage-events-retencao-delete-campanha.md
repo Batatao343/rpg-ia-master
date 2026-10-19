@@ -40,6 +40,10 @@ Objetivo: o fato de consumo sobrevive ao delete da campanha; só o TTL de 13 mes
 - **R5** — RLS/grants inalterados (`select,insert` para `rpg_api`; policies por owner); o trigger de
   atribuição continua recusando owner/game divergentes. Migration idempotente, termina com
   `select app.grant_runtime_access();`.
+- **R5b** — (revisão P1) Um `operation_id` cuja operação foi apagada mas que ainda tem `usage_events` não
+  pode ser reusado: trigger `BEFORE INSERT` em `app.operations` (`security definer`) devolve `NULL` (insert
+  ignorado), que todo claimer já trata como "idempotency key indisponível" — senão o uso da nova tentativa
+  colidiria com os fatos antigos (chave única/digest) e escaparia da medição.
 - **R6** — Código compatível com schema anterior à migration (`has_column`), como o resto do repositório.
 
 ### Fora de escopo
@@ -106,4 +110,4 @@ limpar (usuário e eventos sintéticos removidos; staging volta ao estado de ant
   conta" ainda tira o gasto do teto do dia; mitigação existente: CAPTCHA + confirmação de e-mail + cota diária
   por owner; se virar problema, spec própria (ex.: agregado diário anônimo).
 - `operation_id` pendurado (operação apagada) é só um UUID opaco; nenhum leitor faz `join` obrigatório
-  com `operations` depois desta spec (`ops_counts`/histórico usam `left join`).
+  com `operations` depois desta spec (`ops_counts`/histórico usam `left join`). Reuso do id é recusado (R5b).
