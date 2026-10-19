@@ -54,5 +54,5 @@ smoke real _narrate, fação desconhecida (Iniciado da Chama Azul), ~12 chamadas
   antes: DeepSeek 2/2 sem nome; Groq 1/1 citou "Iniciado da Chama Azul"
   depois: Groq forçado 3/3 e DeepSeek 3/3 só "Iniciado" (1 menção descritiva "chama azul" à arma, sem nome da fação)
   fação conhecida: sem cláusula, prosa usa "Iniciado"
-suíte completa 1x → ver hand-back
+suíte completa 1x (-n auto) → exit 1 só por 3 falhas de índice stale (spec_index_tool 1, project_index 2), esperadas antes do rebuild no pouso
 ```
