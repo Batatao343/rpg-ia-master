@@ -108,7 +108,28 @@ nem saves antigos. Princípio: mecânica é Python; a IA só narra.
 
 ## 6. Evidência (sem LLM — mudança 100% determinística)
 
-Preenchida na execução.
+Ameaças REAIS de `data/factions.json`, `check_encounter(turn=10)`; nível → porte via
+`forced_encounter_danger` (L1 = porte 2/Minion; L5/L9 = porte 4/Elite quando o perigo é 4).
+Só as linhas que mudaram (as demais — fora da esfera — mantêm a criatura e ganham o flavor de eco distante):
+
+| Ameaça (fação) | Local (perigo) | Nível | Antes | Depois |
+|---|---|---|---|---|
+| Corvane / Destilação (`cultistas_destilacao`) | `ae_ruinas_submersas` (4) | 1 | Mergulhador Saqueador | Faísca da Destilação |
+| idem | `ae_ruinas_submersas` (4) | 5 / 9 | Golem de Carne | Afogado de Aethelgard (rodízio por turno: Cultista da Destilação, Quimera de Cristal Destilado) |
+| idem | `aethelgard` (override 3) | 1 / 5 / 9 | Mergulhador Saqueador / Vigia de Caco | Faísca da Destilação (rodízio com as Elites temáticas no porte 3) |
+| Malagor / Chama Azul (`filhos_chama_azul`) | `na_anel_dourado` (override 4) | 1 | Cão de Rebite | Iniciado da Chama Azul |
+| idem | `na_anel_dourado` (override 4) | 5 / 9 | Golem de Lixo | Golem de Lixo (fallback: não há Elite temática — porte respeitado) |
+| idem | `nova_arcadia` (override 3) | 1 / 5 / 9 | Cão de Rebite / Soldado da Legião de Ferro | Iniciado da Chama Azul |
+| Corvane | `floresta_sussurros` (3) — fora da esfera | 1 | Aranha Lobo | Aranha Lobo + flavor "Ecos de uma ameaça distante: …" |
+| Corvane | `pantano_melancolia` (3) — fora da esfera | 9 | Druida-Renegado | Druida-Renegado (Afogado da Batalha NÃO é puxado) |
+
+E2E no grafo (MockLLM, descanso em `ae_ruinas_submersas`, nível 6, ameaça de Corvane): combate
+abre com **Afogado de Aethelgard** (+ 2º corpo do budget, SPEC-287) e o `COMBAT START` cita Corvane.
+
+Playtest `combate --turns 200` (MockLLM): seeds 11/22/33 → 200/200 turnos, 0 erro, 0 violação,
+0 `combat.no_progress` (runs `20261019-191323-510615`/`-512911`/`-514948`). Nenhuma ascensão
+`invocar_entidade` ocorre em 200 turnos (pace das fações) — o caminho temático é coberto pelos
+testes e pelo E2E acima; o playtest é regressão do resto do encontro.
 
 ## 7. Riscos & compatibilidade
 
