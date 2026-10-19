@@ -37,9 +37,8 @@ class LeaseWatch:
                 if self._confirm_completed():
                     self.committed.set()
                     return
-            except (
-                Exception
-            ):  # silent-ok: desfecho desconhecido => resultado conservador lease_lost
+            # silent-ok: desfecho desconhecido => resultado conservador lease_lost
+            except Exception:
                 pass
         _db_conflict("lease_conflict", "lease_lost", op_kind="heartbeat")  # SPEC-254 R1
         raise LeaseHeld("lease_lost")

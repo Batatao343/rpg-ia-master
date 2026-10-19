@@ -225,8 +225,12 @@ def claim_event(item_id: str, holder: str = "player") -> dict:
 # ---------------------------------------------------------------------------
 # Mercadores — estoque persistente no world state, restock por relógio
 # ---------------------------------------------------------------------------
-def merchants_at(location_id: str) -> list[tuple[str, dict]]:
-    return [(mid, m) for mid, m in MERCHANTS.items() if m.get("location_id") == location_id]
+# fmt: off
+# Texto congelado: inspect.getsource() entra no digest de estrutura (SPEC-238/217 J1b).
+def merchants_at(location_id: str) -> List[Tuple[str, dict]]:
+    return [(mid, m) for mid, m in MERCHANTS.items()
+            if m.get("location_id") == location_id]
+# fmt: on
 
 
 def _ensure_stock(world: dict, mid: str, merchant: dict) -> dict[str, int]:

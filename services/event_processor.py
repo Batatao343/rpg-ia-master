@@ -259,9 +259,8 @@ def prevalidate_event_batch(
         working["quests"] = quests
         try:
             result = validate_proposal(raw_proposal, working)
-        except (
-            Exception
-        ) as exc:  # silent-ok: vira ValidationResult(False) => event_rejections + metrica
+        # silent-ok: vira ValidationResult(False) => event_rejections + metrica
+        except Exception as exc:
             result = ValidationResult(False, f"proposta malformada: {exc}")
         results.append(result)
         if not result.ok:
@@ -375,9 +374,8 @@ def process_pending_events(state: dict) -> dict:
         else:
             try:
                 result = validate_proposal(raw_proposal, working)
-            except (
-                Exception
-            ) as exc:  # silent-ok: vira ValidationResult(False) => event_rejections + metrica
+            # silent-ok: vira ValidationResult(False) => event_rejections + metrica
+            except Exception as exc:
                 result = ValidationResult(False, f"proposta malformada: {exc}")
         if not result.ok:
             _log_proposal_rejected(proposal, result.reason)
