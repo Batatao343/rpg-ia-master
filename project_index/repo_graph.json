@@ -1,5 +1,5 @@
 {
-  "commit_sha": "73156f2c8b85d94bf37279a5d24b5222afee9329",
+  "commit_sha": "156fa8bb7d71c65adcbf91216ede18d8cc292e2b",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -2210,6 +2210,39 @@
       },
       "source": "file:scripts/chaos_test.py",
       "target": "module:scripts.chaos_test",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/check_handoff_names.py",
+        "line": 1
+      },
+      "source": "file:scripts/check_handoff_names.py",
+      "target": "module:scripts.check_handoff_names",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/check_md_links.py",
+        "line": 1
+      },
+      "source": "file:scripts/check_md_links.py",
+      "target": "module:scripts.check_md_links",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/ci_docs_only.py",
+        "line": 1
+      },
+      "source": "file:scripts/ci_docs_only.py",
+      "target": "module:scripts.ci_docs_only",
       "type": "contains"
     },
     {
@@ -6998,6 +7031,17 @@
       "type": "contains"
     },
     {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 1
+      },
+      "source": "file:tests/test_ci_docs_only.py",
+      "target": "module:tests.test_ci_docs_only",
+      "type": "contains"
+    },
+    {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
@@ -11384,6 +11428,17 @@
       },
       "source": "file:tests/test_grounding_boundaries.py",
       "target": "module:tests.test_grounding_boundaries",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_handoff_names.py",
+        "line": 1
+      },
+      "source": "file:tests/test_handoff_names.py",
+      "target": "module:tests.test_handoff_names",
       "type": "contains"
     },
     {
@@ -39555,6 +39610,127 @@
       },
       "source": "module:scripts.chaos_test",
       "target": "symbol:scripts.chaos_test.run",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/check_handoff_names.py",
+        "line": 102
+      },
+      "source": "module:scripts.check_handoff_names",
+      "target": "symbol:scripts.check_handoff_names.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/check_handoff_names.py",
+        "line": 97
+      },
+      "source": "module:scripts.check_handoff_names",
+      "target": "symbol:scripts.check_handoff_names.stale_legacy",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/check_handoff_names.py",
+        "line": 92
+      },
+      "source": "module:scripts.check_handoff_names",
+      "target": "symbol:scripts.check_handoff_names.violations",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/check_md_links.py",
+        "line": 24
+      },
+      "source": "module:scripts.check_md_links",
+      "target": "symbol:scripts.check_md_links.broken_links",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/check_md_links.py",
+        "line": 51
+      },
+      "source": "module:scripts.check_md_links",
+      "target": "symbol:scripts.check_md_links.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/check_md_links.py",
+        "line": 46
+      },
+      "source": "module:scripts.check_md_links",
+      "target": "symbol:scripts.check_md_links.tracked_markdown",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/ci_docs_only.py",
+        "line": 36
+      },
+      "source": "module:scripts.ci_docs_only",
+      "target": "symbol:scripts.ci_docs_only.changed_paths",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/ci_docs_only.py",
+        "line": 49
+      },
+      "source": "module:scripts.ci_docs_only",
+      "target": "symbol:scripts.ci_docs_only.doc_tests",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/ci_docs_only.py",
+        "line": 32
+      },
+      "source": "module:scripts.ci_docs_only",
+      "target": "symbol:scripts.ci_docs_only.docs_only",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/ci_docs_only.py",
+        "line": 25
+      },
+      "source": "module:scripts.ci_docs_only",
+      "target": "symbol:scripts.ci_docs_only.is_doc_path",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/ci_docs_only.py",
+        "line": 57
+      },
+      "source": "module:scripts.ci_docs_only",
+      "target": "symbol:scripts.ci_docs_only.main",
       "type": "defines"
     },
     {
@@ -71835,6 +72011,105 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 96
+      },
+      "source": "module:tests.test_ci_docs_only",
+      "target": "symbol:tests.test_ci_docs_only.test_ci_pins_runner_image_and_node_from_nvmrc",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 87
+      },
+      "source": "module:tests.test_ci_docs_only",
+      "target": "symbol:tests.test_ci_docs_only.test_dependabot_groups_minor_patch_and_leaves_majors_alone",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 55
+      },
+      "source": "module:tests.test_ci_docs_only",
+      "target": "symbol:tests.test_ci_docs_only.test_doc_tests_selection_includes_doc_readers",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 15
+      },
+      "source": "module:tests.test_ci_docs_only",
+      "target": "symbol:tests.test_ci_docs_only.test_docs_only_classification_is_conservative",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 34
+      },
+      "source": "module:tests.test_ci_docs_only",
+      "target": "symbol:tests.test_ci_docs_only.test_docs_only_from_real_git_range",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 61
+      },
+      "source": "module:tests.test_ci_docs_only",
+      "target": "symbol:tests.test_ci_docs_only.test_link_checker_finds_only_unlisted_breaks",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 70
+      },
+      "source": "module:tests.test_ci_docs_only",
+      "target": "symbol:tests.test_ci_docs_only.test_repo_has_no_new_broken_links",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 25
+      },
+      "source": "module:tests.test_ci_docs_only",
+      "target": "symbol:tests.test_ci_docs_only.test_unknown_base_runs_full_suite",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 75
+      },
+      "source": "module:tests.test_ci_docs_only",
+      "target": "symbol:tests.test_ci_docs_only.test_workflows_wire_docs_only_without_touching_eval_gates",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_ci_eval_gates.py",
         "line": 9
       },
@@ -91288,6 +91563,39 @@
       },
       "source": "module:tests.test_grounding_boundaries",
       "target": "symbol:tests.test_grounding_boundaries.test_viagem_interregional_marca_replan_em_todas_as_saidas",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_handoff_names.py",
+        "line": 8
+      },
+      "source": "module:tests.test_handoff_names",
+      "target": "symbol:tests.test_handoff_names.test_every_handoff_name_follows_the_pattern_or_is_legacy",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_handoff_names.py",
+        "line": 12
+      },
+      "source": "module:tests.test_handoff_names",
+      "target": "symbol:tests.test_handoff_names.test_legacy_allowlist_only_shrinks",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_handoff_names.py",
+        "line": 16
+      },
+      "source": "module:tests.test_handoff_names",
+      "target": "symbol:tests.test_handoff_names.test_pattern_accepts_template_names_and_rejects_drift",
       "type": "defines"
     },
     {
@@ -168085,6 +168393,83 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "scripts/check_handoff_names.py",
+        "line": 103
+      },
+      "source": "symbol:scripts.check_handoff_names.main",
+      "target": "symbol:scripts.check_handoff_names.violations",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/check_md_links.py",
+        "line": 58
+      },
+      "source": "symbol:scripts.check_md_links.main",
+      "target": "symbol:scripts.check_md_links.broken_links",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/check_md_links.py",
+        "line": 57
+      },
+      "source": "symbol:scripts.check_md_links.main",
+      "target": "symbol:scripts.check_md_links.tracked_markdown",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/ci_docs_only.py",
+        "line": 33
+      },
+      "source": "symbol:scripts.ci_docs_only.docs_only",
+      "target": "symbol:scripts.ci_docs_only.is_doc_path",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/ci_docs_only.py",
+        "line": 68
+      },
+      "source": "symbol:scripts.ci_docs_only.main",
+      "target": "symbol:scripts.ci_docs_only.changed_paths",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/ci_docs_only.py",
+        "line": 66
+      },
+      "source": "symbol:scripts.ci_docs_only.main",
+      "target": "symbol:scripts.ci_docs_only.doc_tests",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/ci_docs_only.py",
+        "line": 69
+      },
+      "source": "symbol:scripts.ci_docs_only.main",
+      "target": "symbol:scripts.ci_docs_only.docs_only",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "scripts/ci_eval_scope.py",
         "line": 38
       },
@@ -228365,6 +228750,193 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 56
+      },
+      "source": "symbol:tests.test_ci_docs_only.test_doc_tests_selection_includes_doc_readers",
+      "target": "symbol:scripts.ci_docs_only.doc_tests",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 16
+      },
+      "source": "symbol:tests.test_ci_docs_only.test_docs_only_classification_is_conservative",
+      "target": "symbol:scripts.ci_docs_only.docs_only",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 17
+      },
+      "source": "symbol:tests.test_ci_docs_only.test_docs_only_classification_is_conservative",
+      "target": "symbol:scripts.ci_docs_only.docs_only",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 19
+      },
+      "source": "symbol:tests.test_ci_docs_only.test_docs_only_classification_is_conservative",
+      "target": "symbol:scripts.ci_docs_only.docs_only",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 20
+      },
+      "source": "symbol:tests.test_ci_docs_only.test_docs_only_classification_is_conservative",
+      "target": "symbol:scripts.ci_docs_only.docs_only",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 21
+      },
+      "source": "symbol:tests.test_ci_docs_only.test_docs_only_classification_is_conservative",
+      "target": "symbol:scripts.ci_docs_only.docs_only",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 22
+      },
+      "source": "symbol:tests.test_ci_docs_only.test_docs_only_classification_is_conservative",
+      "target": "symbol:scripts.ci_docs_only.docs_only",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 48
+      },
+      "source": "symbol:tests.test_ci_docs_only.test_docs_only_from_real_git_range",
+      "target": "symbol:scripts.ci_docs_only.changed_paths",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 52
+      },
+      "source": "symbol:tests.test_ci_docs_only.test_docs_only_from_real_git_range",
+      "target": "symbol:scripts.ci_docs_only.changed_paths",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 52
+      },
+      "source": "symbol:tests.test_ci_docs_only.test_docs_only_from_real_git_range",
+      "target": "symbol:scripts.ci_docs_only.docs_only",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 35
+      },
+      "source": "symbol:tests.test_ci_docs_only.test_docs_only_from_real_git_range",
+      "target": "symbol:tests.test_ci_docs_only.test_docs_only_from_real_git_range.git",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 66
+      },
+      "source": "symbol:tests.test_ci_docs_only.test_link_checker_finds_only_unlisted_breaks",
+      "target": "symbol:scripts.check_md_links.broken_links",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 72
+      },
+      "source": "symbol:tests.test_ci_docs_only.test_repo_has_no_new_broken_links",
+      "target": "symbol:scripts.check_md_links.main",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 26
+      },
+      "source": "symbol:tests.test_ci_docs_only.test_unknown_base_runs_full_suite",
+      "target": "symbol:scripts.ci_docs_only.changed_paths",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 27
+      },
+      "source": "symbol:tests.test_ci_docs_only.test_unknown_base_runs_full_suite",
+      "target": "symbol:scripts.ci_docs_only.changed_paths",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 28
+      },
+      "source": "symbol:tests.test_ci_docs_only.test_unknown_base_runs_full_suite",
+      "target": "symbol:scripts.ci_docs_only.changed_paths",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ci_docs_only.py",
+        "line": 30
+      },
+      "source": "symbol:tests.test_ci_docs_only.test_unknown_base_runs_full_suite",
+      "target": "symbol:scripts.ci_docs_only.main",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_ci_eval_gates.py",
         "line": 20
       },
@@ -264439,6 +265011,39 @@
       },
       "source": "symbol:tests.test_grounding_boundaries.test_viagem_interregional_marca_replan_em_todas_as_saidas",
       "target": "symbol:tests.test_grounding_boundaries._stub_context",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_handoff_names.py",
+        "line": 9
+      },
+      "source": "symbol:tests.test_handoff_names.test_every_handoff_name_follows_the_pattern_or_is_legacy",
+      "target": "symbol:scripts.check_handoff_names.violations",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_handoff_names.py",
+        "line": 13
+      },
+      "source": "symbol:tests.test_handoff_names.test_legacy_allowlist_only_shrinks",
+      "target": "symbol:scripts.check_handoff_names.stale_legacy",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_handoff_names.py",
+        "line": 24
+      },
+      "source": "symbol:tests.test_handoff_names.test_pattern_accepts_template_names_and_rejects_drift",
+      "target": "symbol:scripts.check_handoff_names.violations",
       "type": "calls"
     },
     {
@@ -334689,6 +335294,27 @@
       "qualified_name": null
     },
     {
+      "id": "file:scripts/check_handoff_names.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/check_handoff_names.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:scripts/check_md_links.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/check_md_links.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:scripts/ci_docs_only.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/ci_docs_only.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:scripts/ci_eval_scope.py",
       "kind": "file",
       "line": 1,
@@ -336558,6 +337184,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/test_ci_docs_only.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_ci_docs_only.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/test_ci_eval_gates.py",
       "kind": "file",
       "line": 1,
@@ -337276,6 +337909,13 @@
       "kind": "file",
       "line": 1,
       "path": "tests/test_grounding_boundaries.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_handoff_names.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_handoff_names.py",
       "qualified_name": null
     },
     {
@@ -340625,6 +341265,27 @@
       "qualified_name": "scripts.chaos_test"
     },
     {
+      "id": "module:scripts.check_handoff_names",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/check_handoff_names.py",
+      "qualified_name": "scripts.check_handoff_names"
+    },
+    {
+      "id": "module:scripts.check_md_links",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/check_md_links.py",
+      "qualified_name": "scripts.check_md_links"
+    },
+    {
+      "id": "module:scripts.ci_docs_only",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/ci_docs_only.py",
+      "qualified_name": "scripts.ci_docs_only"
+    },
+    {
       "id": "module:scripts.ci_eval_scope",
       "kind": "module",
       "line": 1,
@@ -342494,6 +343155,13 @@
       "qualified_name": "tests.test_chronicle_search"
     },
     {
+      "id": "module:tests.test_ci_docs_only",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_ci_docs_only.py",
+      "qualified_name": "tests.test_ci_docs_only"
+    },
+    {
       "id": "module:tests.test_ci_eval_gates",
       "kind": "module",
       "line": 1,
@@ -343213,6 +343881,13 @@
       "line": 1,
       "path": "tests/test_grounding_boundaries.py",
       "qualified_name": "tests.test_grounding_boundaries"
+    },
+    {
+      "id": "module:tests.test_handoff_names",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_handoff_names.py",
+      "qualified_name": "tests.test_handoff_names"
     },
     {
       "id": "module:tests.test_hardening_mechanical_inputs",
@@ -359649,6 +360324,83 @@
       "line": 23,
       "path": "scripts/chaos_test.py",
       "qualified_name": "scripts.chaos_test.run"
+    },
+    {
+      "id": "symbol:scripts.check_handoff_names.main",
+      "kind": "function",
+      "line": 102,
+      "path": "scripts/check_handoff_names.py",
+      "qualified_name": "scripts.check_handoff_names.main"
+    },
+    {
+      "id": "symbol:scripts.check_handoff_names.stale_legacy",
+      "kind": "function",
+      "line": 97,
+      "path": "scripts/check_handoff_names.py",
+      "qualified_name": "scripts.check_handoff_names.stale_legacy"
+    },
+    {
+      "id": "symbol:scripts.check_handoff_names.violations",
+      "kind": "function",
+      "line": 92,
+      "path": "scripts/check_handoff_names.py",
+      "qualified_name": "scripts.check_handoff_names.violations"
+    },
+    {
+      "id": "symbol:scripts.check_md_links.broken_links",
+      "kind": "function",
+      "line": 24,
+      "path": "scripts/check_md_links.py",
+      "qualified_name": "scripts.check_md_links.broken_links"
+    },
+    {
+      "id": "symbol:scripts.check_md_links.main",
+      "kind": "function",
+      "line": 51,
+      "path": "scripts/check_md_links.py",
+      "qualified_name": "scripts.check_md_links.main"
+    },
+    {
+      "id": "symbol:scripts.check_md_links.tracked_markdown",
+      "kind": "function",
+      "line": 46,
+      "path": "scripts/check_md_links.py",
+      "qualified_name": "scripts.check_md_links.tracked_markdown"
+    },
+    {
+      "id": "symbol:scripts.ci_docs_only.changed_paths",
+      "kind": "function",
+      "line": 36,
+      "path": "scripts/ci_docs_only.py",
+      "qualified_name": "scripts.ci_docs_only.changed_paths"
+    },
+    {
+      "id": "symbol:scripts.ci_docs_only.doc_tests",
+      "kind": "function",
+      "line": 49,
+      "path": "scripts/ci_docs_only.py",
+      "qualified_name": "scripts.ci_docs_only.doc_tests"
+    },
+    {
+      "id": "symbol:scripts.ci_docs_only.docs_only",
+      "kind": "function",
+      "line": 32,
+      "path": "scripts/ci_docs_only.py",
+      "qualified_name": "scripts.ci_docs_only.docs_only"
+    },
+    {
+      "id": "symbol:scripts.ci_docs_only.is_doc_path",
+      "kind": "function",
+      "line": 25,
+      "path": "scripts/ci_docs_only.py",
+      "qualified_name": "scripts.ci_docs_only.is_doc_path"
+    },
+    {
+      "id": "symbol:scripts.ci_docs_only.main",
+      "kind": "function",
+      "line": 57,
+      "path": "scripts/ci_docs_only.py",
+      "qualified_name": "scripts.ci_docs_only.main"
     },
     {
       "id": "symbol:scripts.ci_eval_scope._normalized",
@@ -380532,6 +381284,76 @@
       "qualified_name": "tests.test_chronicle_search.test_rrf_semantico_recupera_parafrase"
     },
     {
+      "id": "symbol:tests.test_ci_docs_only.test_ci_pins_runner_image_and_node_from_nvmrc",
+      "kind": "test",
+      "line": 96,
+      "path": "tests/test_ci_docs_only.py",
+      "qualified_name": "tests.test_ci_docs_only.test_ci_pins_runner_image_and_node_from_nvmrc"
+    },
+    {
+      "id": "symbol:tests.test_ci_docs_only.test_dependabot_groups_minor_patch_and_leaves_majors_alone",
+      "kind": "test",
+      "line": 87,
+      "path": "tests/test_ci_docs_only.py",
+      "qualified_name": "tests.test_ci_docs_only.test_dependabot_groups_minor_patch_and_leaves_majors_alone"
+    },
+    {
+      "id": "symbol:tests.test_ci_docs_only.test_doc_tests_selection_includes_doc_readers",
+      "kind": "test",
+      "line": 55,
+      "path": "tests/test_ci_docs_only.py",
+      "qualified_name": "tests.test_ci_docs_only.test_doc_tests_selection_includes_doc_readers"
+    },
+    {
+      "id": "symbol:tests.test_ci_docs_only.test_docs_only_classification_is_conservative",
+      "kind": "test",
+      "line": 15,
+      "path": "tests/test_ci_docs_only.py",
+      "qualified_name": "tests.test_ci_docs_only.test_docs_only_classification_is_conservative"
+    },
+    {
+      "id": "symbol:tests.test_ci_docs_only.test_docs_only_from_real_git_range",
+      "kind": "test",
+      "line": 34,
+      "path": "tests/test_ci_docs_only.py",
+      "qualified_name": "tests.test_ci_docs_only.test_docs_only_from_real_git_range"
+    },
+    {
+      "id": "symbol:tests.test_ci_docs_only.test_docs_only_from_real_git_range.git",
+      "kind": "test",
+      "line": 35,
+      "path": "tests/test_ci_docs_only.py",
+      "qualified_name": "tests.test_ci_docs_only.test_docs_only_from_real_git_range.git"
+    },
+    {
+      "id": "symbol:tests.test_ci_docs_only.test_link_checker_finds_only_unlisted_breaks",
+      "kind": "test",
+      "line": 61,
+      "path": "tests/test_ci_docs_only.py",
+      "qualified_name": "tests.test_ci_docs_only.test_link_checker_finds_only_unlisted_breaks"
+    },
+    {
+      "id": "symbol:tests.test_ci_docs_only.test_repo_has_no_new_broken_links",
+      "kind": "test",
+      "line": 70,
+      "path": "tests/test_ci_docs_only.py",
+      "qualified_name": "tests.test_ci_docs_only.test_repo_has_no_new_broken_links"
+    },
+    {
+      "id": "symbol:tests.test_ci_docs_only.test_unknown_base_runs_full_suite",
+      "kind": "test",
+      "line": 25,
+      "path": "tests/test_ci_docs_only.py",
+      "qualified_name": "tests.test_ci_docs_only.test_unknown_base_runs_full_suite"
+    },
+    {
+      "id": "symbol:tests.test_ci_docs_only.test_workflows_wire_docs_only_without_touching_eval_gates",
+      "kind": "test",
+      "line": 75,
+      "path": "tests/test_ci_docs_only.py",
+      "qualified_name": "tests.test_ci_docs_only.test_workflows_wire_docs_only_without_touching_eval_gates"
+    },
+    {
       "id": "symbol:tests.test_ci_eval_gates.test_change_scope_selects_backend_frontend_and_protected_jobs",
       "kind": "test",
       "line": 18,
@@ -392437,6 +393259,27 @@
       "line": 80,
       "path": "tests/test_grounding_boundaries.py",
       "qualified_name": "tests.test_grounding_boundaries.test_viagem_interregional_marca_replan_em_todas_as_saidas"
+    },
+    {
+      "id": "symbol:tests.test_handoff_names.test_every_handoff_name_follows_the_pattern_or_is_legacy",
+      "kind": "test",
+      "line": 8,
+      "path": "tests/test_handoff_names.py",
+      "qualified_name": "tests.test_handoff_names.test_every_handoff_name_follows_the_pattern_or_is_legacy"
+    },
+    {
+      "id": "symbol:tests.test_handoff_names.test_legacy_allowlist_only_shrinks",
+      "kind": "test",
+      "line": 12,
+      "path": "tests/test_handoff_names.py",
+      "qualified_name": "tests.test_handoff_names.test_legacy_allowlist_only_shrinks"
+    },
+    {
+      "id": "symbol:tests.test_handoff_names.test_pattern_accepts_template_names_and_rejects_drift",
+      "kind": "test",
+      "line": 16,
+      "path": "tests/test_handoff_names.py",
+      "qualified_name": "tests.test_handoff_names.test_pattern_accepts_template_names_and_rejects_drift"
     },
     {
       "id": "symbol:tests.test_hardening_mechanical_inputs._PreparedLLM",
@@ -413132,5 +413975,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:75479cf2b66bec1fceeb3da76dc307e9cb19dcccde234d276265af4d899d1fd3"
+  "source_tree_hash": "sha256:cdaceea2a6f61bffde93e1dd64399f502dc129725575149a72eacfa32d1d35b5"
 }
