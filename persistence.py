@@ -11,6 +11,7 @@ game_id vindo do cliente (valida UUID — anti path-traversal); saves carregam
 import glob
 import json
 import os
+import re
 import shutil
 import tempfile
 import time
@@ -882,6 +883,75 @@ def load_game_state(specific_file: str = None) -> dict[str, Any]:
         return None
 
 
+_LEGACY_ID_KEY = re.compile(r"(?:^|_)ids?$")
+_INSTANCE_SUFFIX = re.compile(r"\s+\d+$")
+
+
+def _legacy_archetype(name: str) -> str:
+    """Chave do bestiário com o mesmo nome (sem sufixo de instância) ou o próprio
+    nome — o fallback que `bestiary_knowledge._archetype_id` já usava."""
+    import gamedata
+
+    base = _INSTANCE_SUFFIX.sub("", name).strip()
+    for key, entry in (gamedata.BESTIARY or {}).items():
+        if isinstance(entry, dict) and str(entry.get("name") or "") == base:
+            return str(key)
+    return name
+
+
+def _rewrite_refs(value: Any, renames: dict[str, str], key: str | None = None) -> Any:
+    if isinstance(value, dict):
+        return {
+            renames.get(k, k) if isinstance(k, str) else k: _rewrite_refs(v, renames, k)
+            for k, v in value.items()
+        }
+    if isinstance(value, list):
+        return [
+            renames.get(v, v) if isinstance(v, str) else _rewrite_refs(v, renames, key)
+            for v in value
+        ]
+    if isinstance(value, str) and key and _LEGACY_ID_KEY.search(key):
+        return renames.get(value, value)
+    return value
+
+
+def backfill_enemy_ids(raw: dict[str, Any]) -> dict[str, Any]:
+    """SPEC-294 R4/R5: inimigo sem `id` (save legado) ganha id opaco e estável
+    `enemy_legacy_<n>` — sem o nome canônico, que vazaria a fação oculta em
+    `enemies[].id`/`valid_targets`. As referências do combate em curso que usavam o
+    nome como id de participante passam ao novo id. Puro e idempotente: sem inimigo
+    sem id, devolve `raw` (mesmo objeto)."""
+    enemies = raw.get("enemies")
+    if not isinstance(enemies, list) or not any(
+        isinstance(e, dict) and not e.get("id") for e in enemies
+    ):
+        return raw
+    taken = {str(e.get("id")) for e in enemies if isinstance(e, dict) and e.get("id")}
+    renames: dict[str, str] = {}
+    out_enemies: list[Any] = []
+    for position, enemy in enumerate(enemies, start=1):
+        if not isinstance(enemy, dict) or enemy.get("id"):
+            out_enemies.append(deepcopy(enemy))
+            continue
+        counter = position
+        while f"enemy_legacy_{counter}" in taken:
+            counter += 1
+        new_id = f"enemy_legacy_{counter}"
+        taken.add(new_id)
+        fixed = deepcopy(enemy)
+        fixed["id"] = new_id
+        name = str(enemy.get("name") or "")
+        if name:
+            renames.setdefault(name, new_id)
+            fixed.setdefault("archetype_id", _legacy_archetype(name))
+        out_enemies.append(fixed)
+    migrated = dict(raw)
+    migrated["enemies"] = out_enemies
+    if renames and isinstance(raw.get("combat"), dict):
+        migrated["combat"] = _rewrite_refs(raw["combat"], renames)
+    return migrated
+
+
 def _normalize_combat_on_load(raw_data: dict[str, Any]) -> dict[str, Any]:
     combat = raw_data.get("combat") or {}
     if not combat:
@@ -904,6 +974,7 @@ def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
     checkpoint reusam). Aplica o pipeline de migrations."""
     # Fase 10: pipeline de migrations (consolida os backfills 3.1/4.1/4.3/4.5)
     raw_data = migrate_state(raw_data)
+    raw_data = backfill_enemy_ids(raw_data)  # SPEC-294: antes do manifesto/combate
     state = {
         # --- Recupera Memória ---
         "game_id": raw_data.get("game_id", "recovered_session"),

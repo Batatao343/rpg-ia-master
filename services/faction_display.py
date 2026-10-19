@@ -194,18 +194,41 @@ def conceal_for(state: Mapping, obj: Any) -> Any:
     return conceal_payload(obj, concealed_name_map(state))
 
 
+def _fold(text: str) -> str:
+    import unicodedata
+
+    decomposed = unicodedata.normalize("NFKD", str(text or ""))
+    stripped = "".join(ch for ch in decomposed if not unicodedata.combining(ch))
+    return _SEP.sub(" ", stripped.casefold()).strip()
+
+
+def _oracle_regex(name: str) -> re.Pattern:
+    r"""SPEC-294 R1: ocorrência de palavra inteira no texto dobrado (sem acento,
+    casefold, `[\s-]+` → espaço) — mesma tolerância de `_name_regex` (plural
+    `s`/`es` nas palavras de conteúdo), com fronteira `\w` como a projeção."""
+    parts = []
+    for word in _fold(name).split(" "):
+        if not word:
+            continue
+        chunk = re.escape(word)
+        if word not in _CONNECTORS and word[-1:].isalpha():
+            chunk += "(?:e?s)?"
+        parts.append(chunk)
+    return re.compile(r"(?<!\w)" + " ".join(parts) + r"(?!\w)")
+
+
 def concealed_name_problems(payload: Any, state: Mapping) -> list[str]:
     """Oráculo R6: nomes canônicos de fação desconhecida presentes em `payload`."""
-    from services.player_knowledge import _norm, _text_of
+    from services.player_knowledge import _text_of
 
     entries = _concealed_entries(state)
     if not entries:
         return []
-    scan = _norm(_text_of(payload))
+    scan = _fold(_text_of(payload))
     return sorted(
         {
             f"e:concealed_faction_name:{fid}"
             for name, (_l, fid) in entries.items()
-            if _norm(name) in scan
+            if _oracle_regex(name).search(scan)
         }
     )

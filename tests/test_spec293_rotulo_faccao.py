@@ -290,5 +290,4 @@ def test_conceal_tolera_espaco_acento_e_plural(text, expected):
     mapping = fd.concealed_name_map({})
     out = fd.conceal_text(text, mapping)
     assert out == expected
-    if out != text or "Azulado" not in text:  # oráculo é substring (mais estrito)
-        assert fd.concealed_name_problems({"t": out}, {}) == []
+    assert fd.concealed_name_problems({"t": out}, {}) == []  # SPEC-294: oráculo com fronteira
