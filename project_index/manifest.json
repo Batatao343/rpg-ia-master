@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "f8e434316e48072a9bd26c61a7b6f790a28ddba5",
+  "commit_sha": "dc76431343fd8686c7c7cdc6bcb46fc9627dc473",
   "edge_counts": {
-    "calls": 17187,
-    "contains": 721,
-    "defines": 9805,
-    "imports": 1585,
-    "likely_test_for": 978,
+    "calls": 17198,
+    "contains": 722,
+    "defines": 9820,
+    "imports": 1586,
+    "likely_test_for": 979,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:469e9f27a7d57e4f223d8139840fd8a57ec8617841815a8a25bf1748e9047756",
+  "graph_hash": "sha256:e7b0b3cffc242716d67d25b766e4af9b9d9d82716bde2b3f8bd4b3f856197ee9",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -583,6 +583,7 @@
     "tests/test_input_normalization.py",
     "tests/test_interlocutor.py",
     "tests/test_itens_vivos.py",
+    "tests/test_jev_client_warm.py",
     "tests/test_jev_decision_backend.py",
     "tests/test_jev_rollout.py",
     "tests/test_jev_router_ab_experiment.py",
@@ -920,14 +921,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 785,
+    "class": 788,
     "endpoint": 63,
-    "file": 866,
-    "function": 3024,
+    "file": 867,
+    "function": 3025,
     "method": 750,
-    "module": 721,
-    "test": 5245
+    "module": 722,
+    "test": 5256
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:cdaceea2a6f61bffde93e1dd64399f502dc129725575149a72eacfa32d1d35b5"
+  "source_tree_hash": "sha256:b13a44a22fd740cd93894556a936ca55a7b5949bc03648aa44738bb3237f7f82"
 }

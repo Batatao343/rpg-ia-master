@@ -1,5 +1,5 @@
 {
-  "commit_sha": "f8e434316e48072a9bd26c61a7b6f790a28ddba5",
+  "commit_sha": "dc76431343fd8686c7c7cdc6bcb46fc9627dc473",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -12022,6 +12022,28 @@
       },
       "source": "file:tests/test_itens_vivos.py",
       "target": "module:tests.test_itens_vivos",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 9
+      },
+      "source": "file:tests/test_jev_client_warm.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 1
+      },
+      "source": "file:tests/test_jev_client_warm.py",
+      "target": "module:tests.test_jev_client_warm",
       "type": "contains"
     },
     {
@@ -56359,7 +56381,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 279
+        "line": 287
       },
       "source": "module:services.jev_rollout",
       "target": "symbol:services.jev_rollout.JevPending",
@@ -56392,7 +56414,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 236
+        "line": 244
       },
       "source": "module:services.jev_rollout",
       "target": "symbol:services.jev_rollout._Evaluation",
@@ -56403,7 +56425,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 374
+        "line": 382
       },
       "source": "module:services.jev_rollout",
       "target": "symbol:services.jev_rollout._agreement",
@@ -56414,7 +56436,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 222
+        "line": 235
       },
       "source": "module:services.jev_rollout",
       "target": "symbol:services.jev_rollout._default_backend",
@@ -56436,7 +56458,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 248
+        "line": 256
       },
       "source": "module:services.jev_rollout",
       "target": "symbol:services.jev_rollout._evaluate",
@@ -56502,7 +56524,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 396
+        "line": 404
       },
       "source": "module:services.jev_rollout",
       "target": "symbol:services.jev_rollout.begin",
@@ -56572,6 +56594,17 @@
       },
       "source": "module:services.jev_rollout",
       "target": "symbol:services.jev_rollout.target_name_for_id",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 222
+      },
+      "source": "module:services.jev_rollout",
+      "target": "symbol:services.jev_rollout.warm_client",
       "type": "defines"
     },
     {
@@ -93730,6 +93763,105 @@
       },
       "source": "module:tests.test_itens_vivos",
       "target": "symbol:tests.test_itens_vivos.test_variedade_de_ativos",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 9
+      },
+      "source": "module:tests.test_jev_client_warm",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 12
+      },
+      "source": "module:tests.test_jev_client_warm",
+      "target": "symbol:tests.test_jev_client_warm._SlowClient",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 21
+      },
+      "source": "module:tests.test_jev_client_warm",
+      "target": "symbol:tests.test_jev_client_warm._reset_client",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 72
+      },
+      "source": "module:tests.test_jev_client_warm",
+      "target": "symbol:tests.test_jev_client_warm.test_build_failure_does_not_break_turn",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 36
+      },
+      "source": "module:tests.test_jev_client_warm",
+      "target": "symbol:tests.test_jev_client_warm.test_client_built_before_deadline_clock",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 90
+      },
+      "source": "module:tests.test_jev_client_warm",
+      "target": "symbol:tests.test_jev_client_warm.test_frozen_import_failure_does_not_break_turn",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 60
+      },
+      "source": "module:tests.test_jev_client_warm",
+      "target": "symbol:tests.test_jev_client_warm.test_injected_backend_skips_warm",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 29
+      },
+      "source": "module:tests.test_jev_client_warm",
+      "target": "symbol:tests.test_jev_client_warm.test_off_does_not_build_client",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 54
+      },
+      "source": "module:tests.test_jev_client_warm",
+      "target": "symbol:tests.test_jev_client_warm.test_warm_is_singleton",
       "type": "defines"
     },
     {
@@ -199931,7 +200063,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 282
+        "line": 290
       },
       "source": "symbol:services.jev_rollout.JevPending",
       "target": "symbol:services.jev_rollout.JevPending.__init__",
@@ -199942,7 +200074,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 303
+        "line": 311
       },
       "source": "symbol:services.jev_rollout.JevPending",
       "target": "symbol:services.jev_rollout.JevPending._event",
@@ -199953,7 +200085,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 351
+        "line": 359
       },
       "source": "symbol:services.jev_rollout.JevPending",
       "target": "symbol:services.jev_rollout.JevPending._observe_now",
@@ -199964,7 +200096,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 290
+        "line": 298
       },
       "source": "symbol:services.jev_rollout.JevPending",
       "target": "symbol:services.jev_rollout.JevPending._result",
@@ -199975,7 +200107,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 333
+        "line": 341
       },
       "source": "symbol:services.jev_rollout.JevPending",
       "target": "symbol:services.jev_rollout.JevPending.observe",
@@ -199986,7 +200118,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 315
+        "line": 323
       },
       "source": "symbol:services.jev_rollout.JevPending",
       "target": "symbol:services.jev_rollout.JevPending.primary_routing",
@@ -199997,7 +200129,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 308
+        "line": 316
       },
       "source": "symbol:services.jev_rollout.JevPending._event",
       "target": "symbol:services.jev_rollout.JevRolloutEvent",
@@ -200008,21 +200140,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 363
+        "line": 371
       },
       "source": "symbol:services.jev_rollout.JevPending._observe_now",
       "target": "symbol:services.jev_rollout.JevRouting",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/jev_rollout.py",
-        "line": 358
-      },
-      "source": "symbol:services.jev_rollout.JevPending._observe_now",
-      "target": "symbol:services.jev_rollout._Evaluation",
       "type": "calls"
     },
     {
@@ -200033,6 +200154,17 @@
         "line": 366
       },
       "source": "symbol:services.jev_rollout.JevPending._observe_now",
+      "target": "symbol:services.jev_rollout._Evaluation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 374
+      },
+      "source": "symbol:services.jev_rollout.JevPending._observe_now",
       "target": "symbol:services.jev_rollout._agreement",
       "type": "calls"
     },
@@ -200041,7 +200173,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 369
+        "line": 377
       },
       "source": "symbol:services.jev_rollout.JevPending._observe_now",
       "target": "symbol:services.jev_rollout._emit",
@@ -200052,7 +200184,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 296
+        "line": 304
       },
       "source": "symbol:services.jev_rollout.JevPending._result",
       "target": "symbol:services.jev_rollout._Evaluation",
@@ -200063,43 +200195,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 299
+        "line": 307
       },
       "source": "symbol:services.jev_rollout.JevPending._result",
       "target": "symbol:services.jev_rollout._Evaluation",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/jev_rollout.py",
-        "line": 322
-      },
-      "source": "symbol:services.jev_rollout.JevPending.primary_routing",
-      "target": "symbol:services.jev_rollout.JevRouting",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/jev_rollout.py",
-        "line": 320
-      },
-      "source": "symbol:services.jev_rollout.JevPending.primary_routing",
-      "target": "symbol:services.jev_rollout._emit",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/jev_rollout.py",
-        "line": 327
-      },
-      "source": "symbol:services.jev_rollout.JevPending.primary_routing",
-      "target": "symbol:services.jev_rollout._emit",
       "type": "calls"
     },
     {
@@ -200110,6 +200209,17 @@
         "line": 330
       },
       "source": "symbol:services.jev_rollout.JevPending.primary_routing",
+      "target": "symbol:services.jev_rollout.JevRouting",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 328
+      },
+      "source": "symbol:services.jev_rollout.JevPending.primary_routing",
       "target": "symbol:services.jev_rollout._emit",
       "type": "calls"
     },
@@ -200118,7 +200228,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 324
+        "line": 335
+      },
+      "source": "symbol:services.jev_rollout.JevPending.primary_routing",
+      "target": "symbol:services.jev_rollout._emit",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 338
+      },
+      "source": "symbol:services.jev_rollout.JevPending.primary_routing",
+      "target": "symbol:services.jev_rollout._emit",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 332
       },
       "source": "symbol:services.jev_rollout.JevPending.primary_routing",
       "target": "symbol:services.jev_rollout.target_name_for_id",
@@ -200129,7 +200261,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 384
+        "line": 392
       },
       "source": "symbol:services.jev_rollout._agreement",
       "target": "symbol:services.jev_rollout.target_id_for_name",
@@ -200140,7 +200272,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 385
+        "line": 393
       },
       "source": "symbol:services.jev_rollout._agreement",
       "target": "symbol:services.jev_rollout.target_id_for_name",
@@ -200151,7 +200283,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 229
+        "line": 237
       },
       "source": "symbol:services.jev_rollout._default_backend",
       "target": "symbol:services.jev_decision.JevDecisionBackend",
@@ -200162,7 +200294,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 251
+        "line": 238
+      },
+      "source": "symbol:services.jev_rollout._default_backend",
+      "target": "symbol:services.jev_rollout.warm_client",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 259
       },
       "source": "symbol:services.jev_rollout._evaluate",
       "target": "symbol:services.jev_rollout._Evaluation",
@@ -200173,7 +200316,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 254
+        "line": 262
       },
       "source": "symbol:services.jev_rollout._evaluate",
       "target": "symbol:services.jev_rollout._default_backend",
@@ -200184,7 +200327,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 270
+        "line": 278
       },
       "source": "symbol:services.jev_rollout._evaluate",
       "target": "symbol:services.jev_rollout.frozen_decision",
@@ -200195,7 +200338,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 253
+        "line": 261
       },
       "source": "symbol:services.jev_rollout._evaluate",
       "target": "symbol:services.jev_rollout.frozen_request",
@@ -200206,7 +200349,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 422
+        "line": 439
       },
       "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout.JevPending",
@@ -200217,7 +200360,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 406
+        "line": 414
       },
       "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout.JevRolloutEvent",
@@ -200228,7 +200371,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 409
+        "line": 417
       },
       "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout.JevRolloutEvent",
@@ -200239,7 +200382,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 412
+        "line": 420
       },
       "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout.JevRolloutEvent",
@@ -200250,43 +200393,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 406
+        "line": 429
       },
       "source": "symbol:services.jev_rollout.begin",
-      "target": "symbol:services.jev_rollout._emit",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/jev_rollout.py",
-        "line": 409
-      },
-      "source": "symbol:services.jev_rollout.begin",
-      "target": "symbol:services.jev_rollout._emit",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/jev_rollout.py",
-        "line": 412
-      },
-      "source": "symbol:services.jev_rollout.begin",
-      "target": "symbol:services.jev_rollout._emit",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/jev_rollout.py",
-        "line": 418
-      },
-      "source": "symbol:services.jev_rollout.begin",
-      "target": "symbol:services.jev_rollout._frozen",
+      "target": "symbol:services.jev_rollout.JevRolloutEvent",
       "type": "calls"
     },
     {
@@ -200297,6 +200407,61 @@
         "line": 414
       },
       "source": "symbol:services.jev_rollout.begin",
+      "target": "symbol:services.jev_rollout._emit",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 417
+      },
+      "source": "symbol:services.jev_rollout.begin",
+      "target": "symbol:services.jev_rollout._emit",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 420
+      },
+      "source": "symbol:services.jev_rollout.begin",
+      "target": "symbol:services.jev_rollout._emit",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 429
+      },
+      "source": "symbol:services.jev_rollout.begin",
+      "target": "symbol:services.jev_rollout._emit",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 427
+      },
+      "source": "symbol:services.jev_rollout.begin",
+      "target": "symbol:services.jev_rollout._frozen",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 422
+      },
+      "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout._idempotency_key",
       "type": "calls"
     },
@@ -200305,7 +200470,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 405
+        "line": 413
       },
       "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout._jev_switched_off",
@@ -200316,7 +200481,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 421
+        "line": 438
       },
       "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout._pool",
@@ -200327,7 +200492,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 411
+        "line": 419
       },
       "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout._threshold",
@@ -200338,10 +200503,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/jev_rollout.py",
-        "line": 402
+        "line": 410
       },
       "source": "symbol:services.jev_rollout.begin",
       "target": "symbol:services.jev_rollout.rollout_mode",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/jev_rollout.py",
+        "line": 433
+      },
+      "source": "symbol:services.jev_rollout.begin",
+      "target": "symbol:services.jev_rollout.warm_client",
       "type": "calls"
     },
     {
@@ -269147,6 +269323,149 @@
       },
       "source": "symbol:tests.test_itens_vivos.test_variedade_de_ativos",
       "target": "symbol:tests.test_itens_vivos._real_db",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 15
+      },
+      "source": "symbol:tests.test_jev_client_warm._SlowClient",
+      "target": "symbol:tests.test_jev_client_warm._SlowClient.__init__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 83
+      },
+      "source": "symbol:tests.test_jev_client_warm.test_build_failure_does_not_break_turn",
+      "target": "symbol:services.jev_rollout.begin",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 77
+      },
+      "source": "symbol:tests.test_jev_client_warm.test_build_failure_does_not_break_turn",
+      "target": "symbol:tests.test_jev_client_warm.test_build_failure_does_not_break_turn._Broken",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 78
+      },
+      "source": "symbol:tests.test_jev_client_warm.test_build_failure_does_not_break_turn._Broken",
+      "target": "symbol:tests.test_jev_client_warm.test_build_failure_does_not_break_turn._Broken.__init__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 43
+      },
+      "source": "symbol:tests.test_jev_client_warm.test_client_built_before_deadline_clock",
+      "target": "symbol:services.jev_rollout.begin",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 99
+      },
+      "source": "symbol:tests.test_jev_client_warm.test_frozen_import_failure_does_not_break_turn",
+      "target": "symbol:services.jev_rollout.begin",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 96
+      },
+      "source": "symbol:tests.test_jev_client_warm.test_frozen_import_failure_does_not_break_turn",
+      "target": "symbol:tests.test_jev_client_warm.test_frozen_import_failure_does_not_break_turn.boom",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 68
+      },
+      "source": "symbol:tests.test_jev_client_warm.test_injected_backend_skips_warm",
+      "target": "symbol:services.jev_rollout.begin",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 64
+      },
+      "source": "symbol:tests.test_jev_client_warm.test_injected_backend_skips_warm",
+      "target": "symbol:tests.test_jev_client_warm.test_injected_backend_skips_warm._B",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 65
+      },
+      "source": "symbol:tests.test_jev_client_warm.test_injected_backend_skips_warm._B",
+      "target": "symbol:tests.test_jev_client_warm.test_injected_backend_skips_warm._B.decide",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 31
+      },
+      "source": "symbol:tests.test_jev_client_warm.test_off_does_not_build_client",
+      "target": "symbol:services.jev_rollout.begin",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 55
+      },
+      "source": "symbol:tests.test_jev_client_warm.test_warm_is_singleton",
+      "target": "symbol:services.jev_rollout.warm_client",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_client_warm.py",
+        "line": 56
+      },
+      "source": "symbol:tests.test_jev_client_warm.test_warm_is_singleton",
+      "target": "symbol:services.jev_rollout.warm_client",
       "type": "calls"
     },
     {
@@ -337996,6 +338315,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/test_jev_client_warm.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_jev_client_warm.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/test_jev_decision_backend.py",
       "kind": "file",
       "line": 1,
@@ -343965,6 +344291,13 @@
       "line": 1,
       "path": "tests/test_itens_vivos.py",
       "qualified_name": "tests.test_itens_vivos"
+    },
+    {
+      "id": "module:tests.test_jev_client_warm",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_jev_client_warm.py",
+      "qualified_name": "tests.test_jev_client_warm"
     },
     {
       "id": "module:tests.test_jev_decision_backend",
@@ -370646,49 +370979,49 @@
     {
       "id": "symbol:services.jev_rollout.JevPending",
       "kind": "class",
-      "line": 279,
+      "line": 287,
       "path": "services/jev_rollout.py",
       "qualified_name": "services.jev_rollout.JevPending"
     },
     {
       "id": "symbol:services.jev_rollout.JevPending.__init__",
       "kind": "method",
-      "line": 282,
+      "line": 290,
       "path": "services/jev_rollout.py",
       "qualified_name": "services.jev_rollout.JevPending.__init__"
     },
     {
       "id": "symbol:services.jev_rollout.JevPending._event",
       "kind": "method",
-      "line": 303,
+      "line": 311,
       "path": "services/jev_rollout.py",
       "qualified_name": "services.jev_rollout.JevPending._event"
     },
     {
       "id": "symbol:services.jev_rollout.JevPending._observe_now",
       "kind": "method",
-      "line": 351,
+      "line": 359,
       "path": "services/jev_rollout.py",
       "qualified_name": "services.jev_rollout.JevPending._observe_now"
     },
     {
       "id": "symbol:services.jev_rollout.JevPending._result",
       "kind": "method",
-      "line": 290,
+      "line": 298,
       "path": "services/jev_rollout.py",
       "qualified_name": "services.jev_rollout.JevPending._result"
     },
     {
       "id": "symbol:services.jev_rollout.JevPending.observe",
       "kind": "method",
-      "line": 333,
+      "line": 341,
       "path": "services/jev_rollout.py",
       "qualified_name": "services.jev_rollout.JevPending.observe"
     },
     {
       "id": "symbol:services.jev_rollout.JevPending.primary_routing",
       "kind": "method",
-      "line": 315,
+      "line": 323,
       "path": "services/jev_rollout.py",
       "qualified_name": "services.jev_rollout.JevPending.primary_routing"
     },
@@ -370709,21 +371042,21 @@
     {
       "id": "symbol:services.jev_rollout._Evaluation",
       "kind": "class",
-      "line": 236,
+      "line": 244,
       "path": "services/jev_rollout.py",
       "qualified_name": "services.jev_rollout._Evaluation"
     },
     {
       "id": "symbol:services.jev_rollout._agreement",
       "kind": "function",
-      "line": 374,
+      "line": 382,
       "path": "services/jev_rollout.py",
       "qualified_name": "services.jev_rollout._agreement"
     },
     {
       "id": "symbol:services.jev_rollout._default_backend",
       "kind": "function",
-      "line": 222,
+      "line": 235,
       "path": "services/jev_rollout.py",
       "qualified_name": "services.jev_rollout._default_backend"
     },
@@ -370737,7 +371070,7 @@
     {
       "id": "symbol:services.jev_rollout._evaluate",
       "kind": "function",
-      "line": 248,
+      "line": 256,
       "path": "services/jev_rollout.py",
       "qualified_name": "services.jev_rollout._evaluate"
     },
@@ -370779,7 +371112,7 @@
     {
       "id": "symbol:services.jev_rollout.begin",
       "kind": "function",
-      "line": 396,
+      "line": 404,
       "path": "services/jev_rollout.py",
       "qualified_name": "services.jev_rollout.begin"
     },
@@ -370824,6 +371157,13 @@
       "line": 174,
       "path": "services/jev_rollout.py",
       "qualified_name": "services.jev_rollout.target_name_for_id"
+    },
+    {
+      "id": "symbol:services.jev_rollout.warm_client",
+      "kind": "function",
+      "line": 222,
+      "path": "services/jev_rollout.py",
+      "qualified_name": "services.jev_rollout.warm_client"
     },
     {
       "id": "symbol:services.job_fence.current_job",
@@ -394689,6 +395029,104 @@
       "qualified_name": "tests.test_itens_vivos.test_variedade_de_ativos"
     },
     {
+      "id": "symbol:tests.test_jev_client_warm._SlowClient",
+      "kind": "class",
+      "line": 12,
+      "path": "tests/test_jev_client_warm.py",
+      "qualified_name": "tests.test_jev_client_warm._SlowClient"
+    },
+    {
+      "id": "symbol:tests.test_jev_client_warm._SlowClient.__init__",
+      "kind": "test",
+      "line": 15,
+      "path": "tests/test_jev_client_warm.py",
+      "qualified_name": "tests.test_jev_client_warm._SlowClient.__init__"
+    },
+    {
+      "id": "symbol:tests.test_jev_client_warm._reset_client",
+      "kind": "test",
+      "line": 21,
+      "path": "tests/test_jev_client_warm.py",
+      "qualified_name": "tests.test_jev_client_warm._reset_client"
+    },
+    {
+      "id": "symbol:tests.test_jev_client_warm.test_build_failure_does_not_break_turn",
+      "kind": "test",
+      "line": 72,
+      "path": "tests/test_jev_client_warm.py",
+      "qualified_name": "tests.test_jev_client_warm.test_build_failure_does_not_break_turn"
+    },
+    {
+      "id": "symbol:tests.test_jev_client_warm.test_build_failure_does_not_break_turn._Broken",
+      "kind": "class",
+      "line": 77,
+      "path": "tests/test_jev_client_warm.py",
+      "qualified_name": "tests.test_jev_client_warm.test_build_failure_does_not_break_turn._Broken"
+    },
+    {
+      "id": "symbol:tests.test_jev_client_warm.test_build_failure_does_not_break_turn._Broken.__init__",
+      "kind": "test",
+      "line": 78,
+      "path": "tests/test_jev_client_warm.py",
+      "qualified_name": "tests.test_jev_client_warm.test_build_failure_does_not_break_turn._Broken.__init__"
+    },
+    {
+      "id": "symbol:tests.test_jev_client_warm.test_client_built_before_deadline_clock",
+      "kind": "test",
+      "line": 36,
+      "path": "tests/test_jev_client_warm.py",
+      "qualified_name": "tests.test_jev_client_warm.test_client_built_before_deadline_clock"
+    },
+    {
+      "id": "symbol:tests.test_jev_client_warm.test_frozen_import_failure_does_not_break_turn",
+      "kind": "test",
+      "line": 90,
+      "path": "tests/test_jev_client_warm.py",
+      "qualified_name": "tests.test_jev_client_warm.test_frozen_import_failure_does_not_break_turn"
+    },
+    {
+      "id": "symbol:tests.test_jev_client_warm.test_frozen_import_failure_does_not_break_turn.boom",
+      "kind": "test",
+      "line": 96,
+      "path": "tests/test_jev_client_warm.py",
+      "qualified_name": "tests.test_jev_client_warm.test_frozen_import_failure_does_not_break_turn.boom"
+    },
+    {
+      "id": "symbol:tests.test_jev_client_warm.test_injected_backend_skips_warm",
+      "kind": "test",
+      "line": 60,
+      "path": "tests/test_jev_client_warm.py",
+      "qualified_name": "tests.test_jev_client_warm.test_injected_backend_skips_warm"
+    },
+    {
+      "id": "symbol:tests.test_jev_client_warm.test_injected_backend_skips_warm._B",
+      "kind": "class",
+      "line": 64,
+      "path": "tests/test_jev_client_warm.py",
+      "qualified_name": "tests.test_jev_client_warm.test_injected_backend_skips_warm._B"
+    },
+    {
+      "id": "symbol:tests.test_jev_client_warm.test_injected_backend_skips_warm._B.decide",
+      "kind": "test",
+      "line": 65,
+      "path": "tests/test_jev_client_warm.py",
+      "qualified_name": "tests.test_jev_client_warm.test_injected_backend_skips_warm._B.decide"
+    },
+    {
+      "id": "symbol:tests.test_jev_client_warm.test_off_does_not_build_client",
+      "kind": "test",
+      "line": 29,
+      "path": "tests/test_jev_client_warm.py",
+      "qualified_name": "tests.test_jev_client_warm.test_off_does_not_build_client"
+    },
+    {
+      "id": "symbol:tests.test_jev_client_warm.test_warm_is_singleton",
+      "kind": "test",
+      "line": 54,
+      "path": "tests/test_jev_client_warm.py",
+      "qualified_name": "tests.test_jev_client_warm.test_warm_is_singleton"
+    },
+    {
       "id": "symbol:tests.test_jev_decision_backend._request",
       "kind": "test",
       "line": 49,
@@ -413975,5 +414413,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:cdaceea2a6f61bffde93e1dd64399f502dc129725575149a72eacfa32d1d35b5"
+  "source_tree_hash": "sha256:b13a44a22fd740cd93894556a936ca55a7b5949bc03648aa44738bb3237f7f82"
 }
