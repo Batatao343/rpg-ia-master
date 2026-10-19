@@ -47,6 +47,15 @@ Pré-requisitos: frente "staging" com o worktree `rpg-staging` (branch `staging-
 `.vercel` ligados ao repo principal (hardlink/junction), sem outro trabalho mexendo no staging ao mesmo tempo.
 Jev `primary` continua ligado em todos os pushes (flags abaixo). Custo esperado: < US$ 0,02.
 
+Ligar os segredos ao worktree (gitignored; nunca commitar) e **remover antes de rodar `pytest`** — com `.env`/
+`.env.staging` na raiz do worktree a suíte offline chega a chamar o Jina de verdade e trava (visto em 19/10):
+
+```powershell
+$m="C:\Users\guilh\OneDrive\Área de Trabalho\rpg-ia-master"; $w="C:\Users\guilh\AppData\Local\Temp\claude\rpg-staging"
+New-Item -ItemType HardLink -Path "$w\.env.staging" -Target "$m\.env.staging"; New-Item -ItemType HardLink -Path "$w\.env" -Target "$m\.env"
+# .vercel ja e junction para o do repo principal; depois do roteiro: Remove-Item "$w\.env","$w\.env.staging"
+```
+
 ```bash
 cd "C:/Users/guilh/AppData/Local/Temp/claude/rpg-staging"
 export PATH="$APPDATA/Python/Python314/Scripts:$PATH" PYTHONUTF8=1 \
