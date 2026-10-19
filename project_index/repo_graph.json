@@ -1,5 +1,5 @@
 {
-  "commit_sha": "b7d4aebaad57b96f7ee8847cf8e4e5fce45733b6",
+  "commit_sha": "8fd831781224005134b9a1ef5a03ecbad6e92e38",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -119180,7 +119180,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec290_chefe_sobrevivencia.py",
-        "line": 191
+        "line": 189
       },
       "source": "module:tests.test_spec290_chefe_sobrevivencia",
       "target": "symbol:tests.test_spec290_chefe_sobrevivencia.test_lab_chefe_save_load_keeps_value",
@@ -327509,7 +327509,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec290_chefe_sobrevivencia.py",
-        "line": 211
+        "line": 209
       },
       "source": "symbol:tests.test_spec290_chefe_sobrevivencia.test_lab_chefe_save_load_keeps_value",
       "target": "symbol:agents.bestiary.template_by_id",
@@ -327520,7 +327520,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec290_chefe_sobrevivencia.py",
-        "line": 198
+        "line": 196
       },
       "source": "symbol:tests.test_spec290_chefe_sobrevivencia.test_lab_chefe_save_load_keeps_value",
       "target": "symbol:tests.test_spec290_chefe_sobrevivencia._chefe_id",
@@ -327685,40 +327685,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec290_chefe_sobrevivencia.py",
+        "line": 177
+      },
+      "source": "symbol:tests.test_spec290_chefe_sobrevivencia.test_real_overlay_round_trip_does_not_accumulate",
+      "target": "symbol:agents.bestiary.generate_new_enemy",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec290_chefe_sobrevivencia.py",
+        "line": 183
+      },
+      "source": "symbol:tests.test_spec290_chefe_sobrevivencia.test_real_overlay_round_trip_does_not_accumulate",
+      "target": "symbol:agents.bestiary.generate_new_enemy",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec290_chefe_sobrevivencia.py",
+        "line": 184
+      },
+      "source": "symbol:tests.test_spec290_chefe_sobrevivencia.test_real_overlay_round_trip_does_not_accumulate",
+      "target": "symbol:agents.bestiary.generate_new_enemy",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec290_chefe_sobrevivencia.py",
         "line": 179
-      },
-      "source": "symbol:tests.test_spec290_chefe_sobrevivencia.test_real_overlay_round_trip_does_not_accumulate",
-      "target": "symbol:agents.bestiary.generate_new_enemy",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec290_chefe_sobrevivencia.py",
-        "line": 185
-      },
-      "source": "symbol:tests.test_spec290_chefe_sobrevivencia.test_real_overlay_round_trip_does_not_accumulate",
-      "target": "symbol:agents.bestiary.generate_new_enemy",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec290_chefe_sobrevivencia.py",
-        "line": 186
-      },
-      "source": "symbol:tests.test_spec290_chefe_sobrevivencia.test_real_overlay_round_trip_does_not_accumulate",
-      "target": "symbol:agents.bestiary.generate_new_enemy",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec290_chefe_sobrevivencia.py",
-        "line": 181
       },
       "source": "symbol:tests.test_spec290_chefe_sobrevivencia.test_real_overlay_round_trip_does_not_accumulate",
       "target": "symbol:agents.bestiary.load_bestiary",
@@ -327729,7 +327729,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec290_chefe_sobrevivencia.py",
-        "line": 188
+        "line": 186
       },
       "source": "symbol:tests.test_spec290_chefe_sobrevivencia.test_real_overlay_round_trip_does_not_accumulate",
       "target": "symbol:agents.bestiary.load_bestiary",
@@ -417339,7 +417339,7 @@
     {
       "id": "symbol:tests.test_spec290_chefe_sobrevivencia.test_lab_chefe_save_load_keeps_value",
       "kind": "test",
-      "line": 191,
+      "line": 189,
       "path": "tests/test_spec290_chefe_sobrevivencia.py",
       "qualified_name": "tests.test_spec290_chefe_sobrevivencia.test_lab_chefe_save_load_keeps_value"
     },
@@ -421181,5 +421181,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:34c9f3496592163e9ca431d4ad28f497ee737f61a08f38331201831277ac3f43"
+  "source_tree_hash": "sha256:6d64e246357e6ee5d6226104b5eb775208d89ef146a969668e3536f7037ea279"
 }
