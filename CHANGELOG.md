@@ -5,6 +5,22 @@
 
 ---
 
+## 2026-10-19 — onda: workspace, logs P2/P3, frontend majors, staging (222/236/279/280)
+
+- **19/10 — SPEC-279 e SPEC-280 `done` (aplicadas no staging, 31/31):** apagar campanha não apaga mais o gasto (`usage_events.game_id` → NULL, `operation_id` opaco, `operation_kind` por trigger, reuso de id de operação apagada recusado). Apagar usuário no Auth apaga os jogos dele por trigger (sem FK: perfis OIDC e donos sintéticos), pulando exclusão de conta registrada (SPEC-190). `scripts/admin_orphan_games.py` (dry-run → `--apply --expect N`) limpou os 13 órfãos do staging com gasto e 9 tabelas financeiras idênticos. Revisões Opus com P1 corrigidos → APPROVED ([279](handoffs/SPEC-279-review.md), [280](handoffs/SPEC-280-review.md)).
+
+- **19/10 — SPEC-278 `done`:** React/react-dom 19.3.1 (+ tipos); bundle +12,7 % bruto / +12,5 % gzip, aceito pelo dono (teto de 5 % da 276 não vale para o React). Nenhuma API removida em uso; build, typecheck, 147 Node, audit 0, Playwright Chromium verdes; flake de timing de `account-lifecycle` corrigido (baseline do poll após a tela de conta sair). Revisão Opus APPROVED ([parecer](handoffs/SPEC-278-review.md)). Dependabot #40/#41 obsoletos.
+
+- **19/10 — Logs P2/P3 no staging:** migration `cron_run_state` aplicada (29/29, upsert do cron via `rpg_admin` ok); deploy `da6186b` com Jev `primary`, teto R$ 5; post_deploy/vercel_smoke/e2e verdes; eventos confirmados: `cron.*` com `run_id`, `client_build`/`build_skew`, `client.error` (Origin cruzada 403), `http.body_too_large`, `abuse.blocked`, `combat.summary`, `economy.trade`. Deploy pela CLI exige `-b GIT_SHA` (skill corrigida).
+- **19/10 — SPEC-276 `done` parcial:** Playwright 1.64 + Vite 8 (bundle +2,5 % bruto / −0,5 % gzip), `npm audit` 0 e `npm-audit-full` bloqueante; fixture e2e aceita o beacon `client-error` (3 jornadas voltaram). TypeScript 7 bloqueado (typescript-eslint exige TS < 6.1) e React 19 bloqueado pelo teto de bundle (+15,7 %) — decisão do dono. Revisão Opus APPROVED_WITH_FOLLOWUPS ([parecer](handoffs/SPEC-276-review.md)). Dependabot #35/#37 obsoletos.
+
+- **19/10 — Logging P2/P3 `done`** (SPEC-244/246/251/252/253/256/258/259/260/261): beacon de erro do cliente (`client.error`, endpoint público fechado, 4 KiB, rate limit `telemetry`, ids normalizados, amostrado) + ErrorBoundary; build id ponta a ponta (`X-RPG-Build`, `build_skew`); 429/413 com rótulo fechado; trace mecânico do combate (`combat.summary`, `audit_trace.mechanics`); `reason_code` fechado em rejeições; cron com `run_id` + `app.cron_run_state`; `provider.attempt` STT/imagem/Jina; billing Android com códigos. Revisão Opus CHANGES_REQUIRED → 10+1 correções → APPROVED ([parecer](handoffs/LOGS-P2P3-review.md)). Pendente: migration `20261019100000_cron_run_state.sql` + deploy + smoke no staging; AVD da 259; SPEC-277 (R2 da 260, relock de evals) `draft`.
+
+- **19/10 — Workspace `done`:** melhorias de `docs/melhorias_workspace/` (10 recs + bônus): ESTADO ≤ 8 KB e ROADMAP só plano (histórico em `docs/historico/`), cabeçalho da spec como fonte única (`scripts/spec_index.py`), Project Index só de arquivos rastreados, skills/agents versionados, LF/UTF-8, pytest-xdist + timeout, Ruff incremental com baseline, `AGENTS.md` fonte única. Pendente do dono: variável `EVALUATOR_CHANGE_APPROVED` no environment `eval-governance`.
+- **19/10 — Staging:** SPEC-222 R6 verde (retrato real OpenAI US$ 0,011; `DELETE /game/save` apagou os 2 objetos do bucket no cron seguinte). 222 pendente só de compra fake (sem chave Stripe test) e domínio de produção. SPEC-236 §6.2 dia 1: trip real do teto diário em `2026-10-19T12:12:37Z`; staging restaurado (teto R$ 5, Jev `primary`, `e2e_session` verde). Dia 2 a partir de 20/10 00:00 BRT pelo [roteiro](docs/staging-wave-2026-10-17/spec236-s62-plano.md). Achados: `usage_events` cai em cascata ao apagar a campanha (some do teto/FinOps, contra a retenção da 222); `app.games` sem FK para `auth.users` (13 órfãos no staging).
+
+---
+
 ## 2026-07-14→16 (16) — DeepSeek primário em tudo + playtest longo 3×100t + 8 specs `draft`
 
 **Roteamento:** DeepSeek promovido a candidato Nº 1 em TODOS os tiers
