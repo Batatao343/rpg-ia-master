@@ -1,8 +1,8 @@
 # SPEC-NNN — revisão <papel> (<tipo>)
 
-> Nome do arquivo: `handoffs/SPEC-NNN-<papel>-<tipo>.md`, com `papel` ∈ {sol, astra,
-> terra, luna} (minúsculo) e `tipo` ∈ {review, independent-review, eval-authoring,
-> port-review}.
+> Nome do arquivo: `handoffs/SPEC-NNN[-<papel>]-<tipo>.md`, com `papel` ∈ {sol, astra,
+> terra, luna} (minúsculo; omitido quando o revisor é o coordenador) e `tipo` ∈ {review,
+> independent-review, eval-authoring, port-review}. Lint: `scripts/check_handoff_names.py`.
 > **Veredito:** `APPROVED` | `APPROVED_WITH_FOLLOWUPS` | `CHANGES_REQUIRED`
 > **Revisor:** <modelo/papel> · **Data:** AAAA-MM-DD · **Commit revisado:** `<sha>`
 
