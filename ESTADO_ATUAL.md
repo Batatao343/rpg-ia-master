@@ -9,7 +9,7 @@
 ## Estado em 10 linhas
 
 - `main` = `4c4167b` (19/10). Única branch não mergeada: `spec-214` (NO_GO, fica fora).
-- Suíte offline: **3.842 passed** (última contagem registrada, 18/10). Atualize
+- Suíte offline: **4.023 passed, 229 skipped** (19/10, branch `workspace-improve`; ~4 min serial, ~1m45 com `-n auto`). Atualize
   **substituindo** este número.
 - Specs (gerado por `spec_index.py summary`): 258 `done` · 12 `draft` · 5 `in-progress`
   (197 gate de release, 198 Google Play, 222 LGPD, 225 supply chain, 236 FinOps).
