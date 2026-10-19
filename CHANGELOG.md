@@ -7,6 +7,8 @@
 
 ## 2026-10-19 — onda: workspace, logs P2/P3, frontend majors, staging (222/236/279/280)
 
+- **19/10 — SPEC-286 `done`:** o perfil de playtest `combate` não viaja mais com o herói inconsciente (declara descanso, que o action_guard aceita — o jogo já tinha saída válida); recusa do guard grava `route="action_guard"` + `guard_code` no JSONL, sem marcar contrato inválido. `combate --turns 200` seeds 21/23/24: exit 0, 0 turnos perdidos (antes 23/24 saíam exit 1).
+
 - **19/10 — SPEC-284 `done`:** `typecheck:e2e` e ESLint do `web/` zerados (4 + 93) com correção real de a11y/hooks; os dois passos agora bloqueiam o CI; teste Playwright de dedupe do beacon (1 POST por erro forçado); prints de evidência da SPEC-209 só com `RPG_SPEC209_SHOTS`. Revisão Opus APPROVED_WITH_FOLLOWUPS ([parecer](handoffs/SPEC-284-review.md)).
 
 - **19/10 — SPEC-283 `done`:** IA inimiga usa as 8 Cartas de suporte ativas do bestiário (proteção/buffs/reposicionar) em si ou num aliado do lado inimigo; determinística, alvo validado, custo/frequência cobrados; nunca mira o jogador; pulada sob silêncio/Provocação/quebra de impasse; suporte no próprio lado não abre Reação. `combate --turns 200` 9 seeds: 0 `no_progress`. Letalidade playtest 0,564 → 0,598, arena 0,707 → 0,730. Revisão Opus CHANGES_REQUIRED → corrigida ([parecer](handoffs/SPEC-283-review.md)). Achado: herói inconsciente prende o perfil `combate` (JSONL `route ''`).
