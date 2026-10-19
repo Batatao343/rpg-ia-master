@@ -74,10 +74,11 @@ def test_post_deploy_smoke_is_read_only_and_checks_sha():
         ("GET", "/data/options"),
         ("GET", "/data/map"),
     ]
-    with pytest.raises(RuntimeError, match="SHA mismatch"):
-        run_post_deploy(
-            "https://rpg.example.test", "fffffff", transport=httpx.MockTransport(handler)
-        )
+    # SPEC-260 R3: falha nao levanta; vira evidencia com status failed.
+    bad = run_post_deploy(
+        "https://rpg.example.test", "fffffff", transport=httpx.MockTransport(handler)
+    )
+    assert bad["status"] == "failed" and bad["failed_check"] == "health"
 
 
 def test_ci_workflows_are_fail_closed_selective_and_have_artifacts():

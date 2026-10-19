@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import time
 from datetime import UTC, datetime
 from pathlib import Path
 from urllib.parse import urlparse
@@ -23,35 +24,57 @@ def run(
         raise ValueError("post-deploy smoke requires HTTPS outside localhost")
     if len(expected_sha) < 7:
         raise ValueError("EXPECTED_GIT_SHA must contain at least seven characters")
-    checks: dict[str, str] = {}
+    detail: dict[str, dict[str, object]] = {}
+    failed: list[str] = []
+    state: dict[str, object] = {"actual_sha": ""}
+
+    def check(name: str, path: str, client: httpx.Client, extra=None) -> None:
+        started = time.monotonic()
+        entry: dict[str, object] = {"status": "passed", "http_status": None}
+        try:
+            response = client.get(path)
+            entry["http_status"] = response.status_code
+            response.raise_for_status()
+            if extra is not None:
+                extra(response)
+        except (RuntimeError, httpx.HTTPError, ValueError) as error:
+            entry["status"] = "failed"
+            entry["error_type"] = type(error).__name__
+            failed.append(name)
+        entry["latency_ms"] = int((time.monotonic() - started) * 1000)
+        detail[name] = entry
+
+    def health_extra(response: httpx.Response) -> None:
+        body = response.json()
+        actual = str(body.get("git_sha") or response.headers.get("x-git-sha") or "")
+        state["actual_sha"] = actual
+        if not actual.startswith(expected_sha) and not expected_sha.startswith(actual):
+            raise RuntimeError("deployed SHA mismatch")
+        # SPEC-218 R9: deploy exposto nunca pode estar em legacy nem sem hardening.
+        if body.get("profile") in (None, "legacy") or body.get("hardened") is not True:
+            raise RuntimeError("deployed profile is not hardened (SPEC-218)")
+
     with httpx.Client(
         base_url=base_url.rstrip("/"),
         timeout=timeout,
         follow_redirects=False,
         transport=transport,
     ) as client:
-        health = client.get("/health")
-        health.raise_for_status()
-        body = health.json()
-        actual_sha = str(body.get("git_sha") or health.headers.get("x-git-sha") or "")
-        if not actual_sha.startswith(expected_sha) and not expected_sha.startswith(actual_sha):
-            raise RuntimeError(f"deployed SHA mismatch: expected {expected_sha}, got {actual_sha or 'missing'}")
-        checks["health"] = "passed"
-        # SPEC-218 R9: deploy exposto nunca pode estar em legacy nem sem hardening.
-        if body.get("profile") in (None, "legacy") or body.get("hardened") is not True:
-            raise RuntimeError("deployed profile is not hardened (SPEC-218)")
-        checks["profile_hardened"] = "passed"
-        checks["git_sha"] = actual_sha
+        check("health", "/health", client, health_extra)
         for path in ("/auth/config", "/data/options", "/data/map"):
-            response = client.get(path)
-            response.raise_for_status()
-            checks[path] = "passed"
+            check(path, path, client)
+    first = failed[0] if failed else None
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "mode": "read-only",
+        "status": "failed" if failed else "passed",
+        "failed_check": first,
+        "failed_checks": failed,
+        "http_status": detail[first]["http_status"] if first else 200,
         "base_origin": f"{parsed.scheme}://{parsed.netloc}",
         "expected_git_sha": expected_sha,
-        "checks": checks,
+        "actual_git_sha": state["actual_sha"],
+        "checks": detail,
         "generated_at": datetime.now(UTC).isoformat(),
     }
 
@@ -64,13 +87,24 @@ def main() -> int:
     args = parser.parse_args()
     try:
         payload = run(args.base_url, args.expected_git_sha)
-    except (ValueError, RuntimeError, httpx.HTTPError, json.JSONDecodeError) as error:
-        print(f"post-deploy smoke failed: {error}")
-        return 1
+    except (ValueError, httpx.HTTPError) as error:
+        # Falha de configuracao/rede antes de qualquer check: evidencia minima.
+        payload = {
+            "schema_version": 2,
+            "mode": "read-only",
+            "status": "failed",
+            "failed_check": "setup",
+            "http_status": None,
+            "error_type": type(error).__name__,
+            "expected_git_sha": args.expected_git_sha,
+            "actual_git_sha": "",
+            "checks": {},
+            "generated_at": datetime.now(UTC).isoformat(),
+        }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(args.output)
-    return 0
+    return 0 if payload["status"] == "passed" else 1
 
 
 if __name__ == "__main__":

@@ -786,6 +786,7 @@ def turn_to_record(rec: TurnRecord) -> dict:
         "events_applied": rec.events_applied,
         "events_rejected": rec.events_rejected,
         "error": rec.error,
+        "traceback": rec.traceback,
         "location_id": rec.location_id,
         "player_hp": rec.player_hp,
         "player_max_hp": rec.player_max_hp,

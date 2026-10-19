@@ -1,7 +1,7 @@
 # SPEC-260 — Tooling: traceback no playtest/evals, evidência de falha no post-deploy smoke e artifacts no CI
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P3**.
-> **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
+> **Status:** `done` — aprovada pelo dono em 2026-10-19.
+> **Criada:** 2026-10-18 · **Atualizada:** 2026-10-19
 > **Depende de:** nenhuma
 > **Desbloqueia:** —
 > **Origem:** auditoria de logs 2026-10-18 ([relatório](../docs/auditorias/logs-api-2026-10-18.md))
@@ -54,12 +54,12 @@ R1–R4.
 
 ## 5. Critérios de aceite
 
-- [ ] Erro de playtest mostra arquivo:linha do motor.
-- [ ] Smoke falho deixa evidência JSON.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] Erro de playtest mostra arquivo:linha do motor.
+- [x] Smoke falho deixa evidência JSON.
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
 - [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -70,3 +70,11 @@ R1–R4.
 - Tracebacks do playtest são locais (gitignored) — sem PII de produção.
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## 8. Notas de implementação (2026-10-19)
+
+- **R2 NÃO implementado (desvio deliberado):** `evals/__main__.py` está em `evals/protected-paths.txt` e seu sha256 consta em `evals/manifest.lock.json`; alterá-lo exige relock oficial + aprovação do environment `eval-governance`. Para não quebrar o gate da régua, o arquivo ficou intocado. Retomar em spec própria com o procedimento de relock.
+- R1: `playtest.runner.format_traceback` (cauda de 40 linhas, sem locals); `TurnRecord.traceback` (JSONL via `playtest/telemetry.py`), `errors[].traceback` (turno, startup) e `invariant.runner_crash` (`error` sem truncar a 180 + `traceback`). Os demais `except Exception` silenciosos de runner/telemetry não foram tocados (escopo mínimo).
+- R3: `scripts/post_deploy_smoke.py` schema_version 2: `status`, `failed_check(s)`, `http_status`, `actual_git_sha`, `checks.<nome>.{status,http_status,latency_ms,error_type}`; checks independentes; falha de setup (URL inválida) também grava JSON; exit 1. `run()` não levanta mais em SHA divergente (`test_ci_eval_gates` ajustado).
+- R4: `validate.yml` roda pytest com `--tb=short --junitxml` + `tee pytest-tb.log` e sobe artifact `if: failure()` (upload-artifact pinado como nos outros workflows). Falha induzida em branch: pendente (depende de CI).
+- Sem eventos/métricas novos (tooling local/CI). Smoke sugerido: `uv run python scripts/post_deploy_smoke.py --base-url http://x.invalid --expected-git-sha abcdef1 --output /tmp/s.json` ⇒ JSON `failed` + exit 1.

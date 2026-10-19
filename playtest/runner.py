@@ -25,6 +25,7 @@ import random
 import re
 import threading
 import time
+import traceback
 import uuid
 from collections import Counter
 from dataclasses import asdict, dataclass, field, is_dataclass
@@ -145,6 +146,7 @@ class TurnRecord:
     events_applied: int = 0
     events_rejected: int = 0
     error: Optional[str] = None
+    traceback: Optional[str] = None  # SPEC-260 R1: <=40 linhas, sem locals
     location_id: str = ""
     player_hp: int = 0
     player_max_hp: int = 0
@@ -1302,11 +1304,14 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                         try:
                             on_turn_end(state, turn)
                         except Exception as e:  # violação de invariante externa = erro
-                            errors.append({"turn": turn, "action": action, "exc": repr(e)})
+                            errors.append({"turn": turn, "action": action, "exc": repr(e),
+                                           "traceback": format_traceback(e)})
                             rec.error = repr(e)
+                            rec.traceback = format_traceback(e)
                 except Exception as e:
                     rec.latency_ms = int((time.monotonic() - t0) * 1000)
                     rec.error = repr(e)
+                    rec.traceback = format_traceback(e)
                     # Timeout é uma saída própria; os nós já observados continuam
                     # auditáveis sem atribuir o custo a uma rota inconclusa.
                     rec.route = (
@@ -1325,7 +1330,8 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                         rec.rag_events
                     )
                     _bump_llm_events_budget(llm_calls, rec.llm_events)
-                    errors.append({"turn": turn, "action": action, "exc": repr(e)})
+                    errors.append({"turn": turn, "action": action, "exc": repr(e),
+                                   "traceback": format_traceback(e)})
                     if isinstance(e, PlaytestTimeoutError):
                         aborted_reason = (
                             f"timeout: {e.phase} excedeu "
@@ -1411,6 +1417,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                 "turn": 0,
                 "action": "<startup>",
                 "exc": repr(exc),
+                "traceback": format_traceback(exc),
                 "phase": "startup",
             })
             aborted_reason = (
@@ -1714,6 +1721,14 @@ def _budget_abort_reason(
     return None
 
 
+def format_traceback(exc: BaseException, max_lines: int = 40) -> str:
+    """Traceback truncado (cauda) via format_exception; sem locals (SPEC-260 R1)."""
+    lines = "".join(
+        traceback.format_exception(type(exc), exc, exc.__traceback__)
+    ).splitlines()
+    return "\n".join(lines[-max_lines:])
+
+
 def _run_invariants(
     state: dict,
     prev_state: Optional[dict],
@@ -1733,7 +1748,8 @@ def _run_invariants(
             "details": {
                 "phase": "import",
                 "exception_type": type(exc).__name__,
-                "error": str(exc)[:180],
+                "error": str(exc),
+                "traceback": format_traceback(exc),
             },
         }]
     try:
@@ -1750,6 +1766,7 @@ def _run_invariants(
             "details": {
                 "phase": "check_all",
                 "exception_type": type(exc).__name__,
-                "error": str(exc)[:180],
+                "error": str(exc),
+                "traceback": format_traceback(exc),
             },
         }]
