@@ -87,7 +87,11 @@ S = "scalar"
 SESSION_SPEC = {k: S for k in ("turn_ref", "epoch", "sequence", "action_ref", "player_text",
                                "route", "speaker", "narration", "delta_ref", "timing_ref",
                                "cost_usd", "trace_available", "context_refs_unavailable")}
-SESSION_SPEC.update(event_ids=("list", S), error_refs=("list", S))
+MECHANICS_STEP_SPEC = {k: ("list", S) if k in ("dice", "kept") else S for k in (
+    "kind", "actor_ref", "target_ref", "dice", "kept", "modifier", "dc_or_defense", "result",
+    "amount", "card_id", "reason")}
+SESSION_SPEC.update(event_ids=("list", S), error_refs=("list", S),
+                    mechanics={"steps": ("list", MECHANICS_STEP_SPEC), "truncated": S})
 DELTA_SPEC = {"delta_ref": S, "turn_ref": S,
               "delta": ("map", {"before": "projected", "after": "projected"})}
 KNOWLEDGE_ITEM_SPEC = {k: S for k in ("source_id", "section", "visibility", "purpose", "npc_id",
@@ -302,6 +306,7 @@ def _files_for(source: AuditSource, units: List[Dict[str, Any]], *,
             "error_refs": error_refs,
             "trace_available": trace is not None,
             "context_refs_unavailable": trace is None,
+            **({"mechanics": trace["mechanics"]} if trace and trace.get("mechanics") else {}),
         })
         if trace:
             knowledge.append({"turn_ref": ref, "speaker": _speaker(unit),

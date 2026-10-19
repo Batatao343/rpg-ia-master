@@ -103,6 +103,9 @@ def trigger_last_stand(participant: dict, *, acao: Optional[dict] = None,
         participant["_last_stand_count"] = int(
             participant.get("_last_stand_count", 0) or 0) + 1
     participant["last_stand_pending"] = True
+    from services import mechanics_trace as mt
+    mt.record_step("death_stage", actor=participant, result="last_stand",
+                   reason="ruptura" if ruptura else None)
     return LastStandResult(
         acao_declarada=dict(acao or {}),
         ruptura_declarada=bool(ruptura),
@@ -119,6 +122,8 @@ def enter_terminal_state(participant: dict) -> dict:
     participant["last_stand_pending"] = False
     participant["last_stand_resolved"] = True
     participant.setdefault("stabilization_attempts", 0)
+    from services import mechanics_trace as mt
+    mt.record_step("death_stage", actor=participant, result="terminal")
     return {"estado_terminal": True}
 
 
@@ -145,6 +150,9 @@ def _revive(target: dict, *, fraction: Optional[float] = None, minimum_one: bool
     gamedata.sync_legacy_hp_aliases(target)
     attempts = int(target.get("stabilization_attempts", 0))
     target["stabilization_attempts"] = 0   # R7: contador por episódio terminal
+    from services import mechanics_trace as mt
+    mt.record_step("death_stage", actor=target, result="revived", amount=target.get("vitalidade"),
+                   reason="auto" if auto else "roll")
     return {"revived": True, "dead": False, "auto": auto, "kit_cargas": kit_cargas,
             "vitalidade": target["vitalidade"],
             "attempts": attempts, "log": log}
@@ -156,6 +164,10 @@ def _die(target: dict, cause: str) -> dict:
     target["vitalidade"] = 0
     import gamedata
     gamedata.sync_legacy_hp_aliases(target)
+    from services import mechanics_trace as mt
+    mt.record_step("death_stage", actor=target, result="dead",
+                   amount=target.get("stabilization_attempts"),
+                   reason="no_helper" if cause.startswith("sem aliado") else "stabilization_exhausted")
     return {"revived": False, "dead": True, "cause": cause, "vitalidade": 0,
             "attempts": int(target.get("stabilization_attempts", 0))}
 
@@ -194,6 +206,9 @@ def attempt_stabilization(target: dict, helper: Optional[dict] = None, *,
                        log=f"Estabilizado (tratamento improvisado, {total}≥{dc}).")
     if attempt >= MAX_STABILIZE_ATTEMPTS:
         return _die(target, "duas falhas de estabilização")
+    from services import mechanics_trace as mt
+    mt.record_step("death_stage", actor=target, result="stabilization_failed", amount=total,
+                   dc_or_defense=dc, kept=roll["kept"], dice=roll["rolled"])
     return {"revived": False, "dead": False, "attempts": attempt,
             "dc": dc, "total": total, "log": f"Falha na estabilização ({total}<{dc})."}
 

@@ -1,7 +1,7 @@
 # SPEC-251 — Trace mecânico do conflito (dados, alvos, dano, reações, morte) em debug log e audit_trace
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P2**.
-> **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
+> **Status:** `done` — aprovada pelo dono em 2026-10-19. Prioridade sugerida: **P2**.
+> **Criada:** 2026-10-18 · **Atualizada:** 2026-10-19
 > **Depende de:** SPEC-239, SPEC-240
 > **Desbloqueia:** —
 > **Origem:** auditoria de logs 2026-10-18 ([relatório](../docs/auditorias/logs-api-2026-10-18.md))
@@ -55,12 +55,12 @@ R1–R5.
 
 ## 5. Critérios de aceite
 
-- [ ] Um combate é reconstruível do `audit_trace` (rolagens → dano → morte).
-- [ ] Paridade determinística comprovada.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] Um combate é reconstruível do `audit_trace` (rolagens → dano → morte).
+- [x] Paridade determinística comprovada.
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
 - [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -71,3 +71,24 @@ R1–R5.
 - Tamanho do `audit_trace` (200 turnos ≈ 208 KB hoje): medir; teto de passos por turno.
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## 8. Notas de implementação (2026-10-19)
+
+- `services/mechanics_trace.py`: contextvar por turno (`scope()` reaproveita o escopo externo), `record_step`
+  (campos fechados, refs por regex de id de catálogo; nome/texto livre vira ausente), teto 64 passos com contador
+  `truncated`; agregados contam também os passos truncados. No-op fora de escopo; nunca toca RNG.
+- Pontos de captura (leitura de valores já calculados): `resolve_attack` (attack), `roll_initiative_by_side`
+  (initiative; `rounds` = nº de iniciativas), `general_test` (save), `resolve_damage_and_wounds` (damage; wrapper
+  fino sobre `_resolve_damage_and_wounds`; `modifier` = excedente, `result` = `ferimento_<cat>` ou resultado),
+  `death_flow` (last_stand/terminal/stabilization_failed/revived/dead), `reactions` (oferta + ataque de
+  oportunidade), `chase.resolve_chase_round` (flee) e redirect de alvo em `agents/combat.py` (`target_not_active`).
+  Passo `condition` está no enum mas sem emissor (efeitos de condição não têm ponto de decisão único).
+- `combat_node` virou wrapper (`_combat_node` é o corpo original): abre o escopo e emite `combat.mechanics`
+  (debug) + `combat.summary` (info). `enemy_damage_dealt` = dano recebido por participantes não-jogador
+  (dano causado pelo lado do herói); `player_damage_taken` = dano recebido pelo jogador.
+- `audit_trace.collecting()` abre também o escopo mecânico (sem tocar `api.py`); `record_turn_trace` grava
+  `mechanics` {steps, truncated} só em turno com conflito. Export: `sessions/<epoch>.jsonl` ganha `mechanics`
+  (allowlist `MECHANICS_STEP_SPEC`), passa pelo scan de PII.
+- Eventos novos: `combat.mechanics`, `combat.summary`. Sem métricas novas.
+- Smoke de staging sugerido: laboratório de combate, 3 rodadas, conferir `combat.summary` no log da Vercel e
+  `mechanics` em `sessions/0.jsonl` do `audit-export`. (Critério `uv run pytest` completo fica com o coordenador.)
