@@ -58,6 +58,8 @@ devolvem o parágrafo no hand-back. Ao abrir a próxima onda, mova estas notas p
 
 <!-- onda:inserir-aqui -->
 
+- **19/10 — SPEC-279 e SPEC-280 `done` (aplicadas no staging, 31/31):** apagar campanha não apaga mais o gasto (`usage_events.game_id` → NULL, `operation_id` opaco, `operation_kind` por trigger, reuso de id de operação apagada recusado). Apagar usuário no Auth apaga os jogos dele por trigger (sem FK: perfis OIDC e donos sintéticos), pulando exclusão de conta registrada (SPEC-190). `scripts/admin_orphan_games.py` (dry-run → `--apply --expect N`) limpou os 13 órfãos do staging com gasto e 9 tabelas financeiras idênticos. Revisões Opus com P1 corrigidos → APPROVED ([279](handoffs/SPEC-279-review.md), [280](handoffs/SPEC-280-review.md)).
+
 - **19/10 — SPEC-278 `done`:** React/react-dom 19.3.1 (+ tipos); bundle +12,7 % bruto / +12,5 % gzip, aceito pelo dono (teto de 5 % da 276 não vale para o React). Nenhuma API removida em uso; build, typecheck, 147 Node, audit 0, Playwright Chromium verdes; flake de timing de `account-lifecycle` corrigido (baseline do poll após a tela de conta sair). Revisão Opus APPROVED ([parecer](handoffs/SPEC-278-review.md)). Dependabot #40/#41 obsoletos.
 
 - **19/10 — Logs P2/P3 no staging:** migration `cron_run_state` aplicada (29/29, upsert do cron via `rpg_admin` ok); deploy `da6186b` com Jev `primary`, teto R$ 5; post_deploy/vercel_smoke/e2e verdes; eventos confirmados: `cron.*` com `run_id`, `client_build`/`build_skew`, `client.error` (Origin cruzada 403), `http.body_too_large`, `abuse.blocked`, `combat.summary`, `economy.trade`. Deploy pela CLI exige `-b GIT_SHA` (skill corrigida).
