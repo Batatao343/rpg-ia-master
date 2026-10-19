@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "a78bcbd541fd7f4bcf535ddbe4368f9600b99349",
+  "commit_sha": "c8adffe2f44db9ba22ca0c3fe643448687800fc9",
   "edge_counts": {
-    "calls": 17620,
-    "contains": 731,
-    "defines": 9983,
-    "imports": 1619,
-    "likely_test_for": 1000,
+    "calls": 17669,
+    "contains": 733,
+    "defines": 10017,
+    "imports": 1624,
+    "likely_test_for": 1005,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:c47998d4b404c25a634c647c4458810f7f235f023ba2cc03cecebff7c420360d",
+  "graph_hash": "sha256:9f75c7c9c57bb952ba69bd4ddd4a531faf1e019cba31e7c73183b2b8d7256bc0",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -332,6 +332,7 @@
     "services/error_codes.py",
     "services/event_processor.py",
     "services/exploration.py",
+    "services/faction_display.py",
     "services/finops.py",
     "services/finops_alerts.py",
     "services/finops_job.py",
@@ -742,6 +743,7 @@
     "tests/test_spec288_causa_morte.py",
     "tests/test_spec289_ameaca_tematica.py",
     "tests/test_spec290_chefe_sobrevivencia.py",
+    "tests/test_spec293_rotulo_faccao.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -933,12 +935,12 @@
     "artifact": 9,
     "class": 795,
     "endpoint": 63,
-    "file": 877,
-    "function": 3064,
+    "file": 879,
+    "function": 3080,
     "method": 750,
-    "module": 731,
-    "test": 5373
+    "module": 733,
+    "test": 5391
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:c4943123abb8e142a530905aae88c09deebb7da7fc0f16a9ed95e1f39f89875e"
+  "source_tree_hash": "sha256:1d21242f3e6c0a7a3a646cbc726c146460879cd82aa6fc8cf335c0338961cdf7"
 }
