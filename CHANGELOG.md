@@ -7,6 +7,8 @@
 
 ## 2026-10-19 — onda: workspace, logs P2/P3, frontend majors, staging (222/236/279/280)
 
+- **19/10 — SPEC-290 `done`:** o bônus de sobrevivência de Chefe/Nomeado por Nível do Encontro (SPEC-287) vale também para Chefes gerados pelo LLM (default canônico 12 em Python pela `categoria` fechada; bestiário runtime guarda a base, não acumula) e para o laboratório de combate (cópia, bestiário global intacto). Ex.: `mon_urso_tita` 16 → 40 no laboratório. Revisão Opus APPROVED ([parecer](handoffs/SPEC-290-review.md)).
+
 - **19/10 — SPEC-287 `done`:** escala de encontro nível 5+ corrigida na causa: piso do orçamento conta corpos de forma superlinear (`floor_cost`, economia de ações) e Chefe/Nomeado ganham +12 de Vitalidade por Nível do Encontro acima de 2 (gerador oficial, teto de 2 passos). Arena níveis 5–8: horda de Lacaio 0,52–0,61 → 0,32–0,36; Lacaio < Padrão < Elite e Lacaio < Chefe; níveis 1–4 idênticos. Playtest morte/combate 0,541 → 0,497, 0 `no_progress`. Revisão Opus APPROVED_WITH_FOLLOWUPS ([parecer](handoffs/SPEC-287-review.md)). Chefe segue abaixo de Padrão/Elite (já era assim no 1–4; "Chefe no topo" = mudança de design, fica como pergunta ao dono).
 
 - **19/10 — SPEC-288 `done`:** causa-raiz no produto: o encontro `looming_threat` criava inimigo com o texto do gancho como nome; agora resolve criatura do bestiário da região (`pick_encounter_enemy`, fonte `systemic` do manifesto), o texto da ameaça segue como flavor da narração. `player_downed` ganha `killer` (espécie) e `killer_id`; crônica e playtest registram a espécie (armadilha → "armadilha"). Seed 21: 0 causas-gancho (antes 4/11). Revisão Opus APPROVED_WITH_FOLLOWUPS ([parecer](handoffs/SPEC-288-review.md)); follow-up: criatura ligada ao tema da ameaça.
