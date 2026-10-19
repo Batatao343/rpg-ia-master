@@ -1,68 +1,33 @@
 # SPEC-281 — jev-client-aquecido-fora-do-prazo
 
-> **Status:** `draft`
+> **Status:** `done`
 > **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
-> **Depende de:** <specs anteriores que precisam estar `done`>
-> **Desbloqueia:** <specs/features que dependem desta>
-
----
+> **Aprovação:** `approved` pelo dono em 19/10 (autorizou tudo que não exige ação externa dele).
+> **Depende de:** SPEC-217 (Jev no router) · **Origem:** revisão da SPEC-277 (`handoffs/SPEC-277-review.md`)
 
 ## 1. Contexto & Objetivo
 
-Por que esta spec existe. Qual problema resolve. 2-4 parágrafos no máximo.
-Referência ao princípio de arquitetura relevante (ver `ROADMAP.md` § Princípios).
+`_default_backend` (`services/jev_rollout.py`) criava o `httpx.Client` (contexto SSL, lento em cold start da Vercel) dentro do worker, isto é, dentro do prazo de 1 s do Jev. O 1º turno de uma instância fria em `primary`/`shadow` podia dar timeout falso e cair no CLASSIFY. Objetivo: construir o client antes de o relógio do prazo começar.
 
 ## 2. Requisitos
 
-Numerados, testáveis. Cada requisito deve poder virar assert.
-
-- **R1** — ...
-- **R2** — ...
+- **R1** — `warm_client()` é um lazy singleton thread-safe do `httpx.Client`.
+- **R2** — `begin()` chama `warm_client()` antes de `started = time.monotonic()` quando `backend is None`, e só depois dos retornos antecipados (off, kill switch, aprovação, limiar).
+- **R3** — Com `RPG_JEV_ROUTER_MODE=off` nada é construído (byte-idêntico).
+- **R4** — Backend injetado não aquece nada.
 
 ### Fora de escopo
-
-Lista explícita do que esta spec NÃO cobre (anti-scope-creep).
+Warm-up no import/boot; mudar o prazo; staging.
 
 ## 3. Design técnico
 
-Detalhe suficiente para uma sessão futura de IA implementar **sem reler o roadmap**:
+Alterado: `services/jev_rollout.py` (`warm_client`; `_default_backend` o reutiliza; `begin` aquece). Novo: `tests/test_jev_client_warm.py`.
 
-- **Arquivos novos** — caminho + responsabilidade
-- **Arquivos alterados** — o que muda em cada um
-- **Schemas** — Pydantic/TypedDict completos (campos, tipos, defaults)
-- **Assinaturas** — funções públicas com tipos
-- **Formatos de dados** — JSON/frontmatter com exemplo real (usar IDs canônicos do projeto, não inventados)
-
-## 4. Plano passo a passo
-
-Etapas ordenadas e testáveis. **Testes primeiro** (TDD): cada etapa nomeia os
-testes a escrever ANTES do código e o que cada um asserta.
-
-### Etapa N — <nome>
-
-1. **Testes** (`tests/test_<...>.py`): `test_x` asserta ...; `test_y` asserta ...
-2. **Implementação:** ...
-3. **Verificação:** `uv run pytest` verde.
+## 4. Plano
+1. Testes: construção lenta (0,4 s) com prazo 0,2 s não conta no relógio; `off` não constrói; singleton; backend injetado não aquece.
+2. Implementação acima.
 
 ## 5. Critérios de aceite
 
-Checklist objetivo. A spec só vira `done` com todos marcados.
-
-- [ ] ...
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo (try/except ou isinstance)
-- [ ] Saves antigos continuam carregando
-
-## 6. Smoke test com LLM real
-
-Checklist manual curto (3-5 requests, dentro da quota Gemini de 20/dia/modelo).
-MockLLM esconde bugs de mapeamento de campo — este passo é obrigatório antes de `done`.
-
-1. ...
-2. ...
-
-## 7. Riscos & compatibilidade
-
-- Compatibilidade com saves antigos: ...
-- Comportamento no MockLLM / FallbackLLM: ...
-- Impacto em quota/latência: ...
+- [x] R1–R4 cobertos por testes.
+- [x] Testes jev/router da SPEC-217 verdes; suíte completa verde.

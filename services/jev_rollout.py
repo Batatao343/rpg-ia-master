@@ -219,15 +219,23 @@ def _pool() -> ThreadPoolExecutor:
         return _executor
 
 
-def _default_backend() -> DecisionBackend:
-    """Shared HTTP client (connection reuse); a cheap adapter per call."""
+def warm_client() -> Any:
+    """Lazy singleton of the shared HTTP client (SSL context is slow on a cold start).
+
+    ``begin`` calls it before the 1 s deadline clock starts (SPEC-281).
+    """
     global _client
-    import httpx
     with _lock:
         if _client is None:
+            import httpx
             _client = httpx.Client()
+        return _client
+
+
+def _default_backend() -> DecisionBackend:
+    """Shared HTTP client (connection reuse); a cheap adapter per call."""
     return JevDecisionBackend(
-        client=_client, timeout_seconds=JEV_DEADLINE_SECONDS,
+        client=warm_client(), timeout_seconds=JEV_DEADLINE_SECONDS,
         total_timeout_seconds=JEV_DEADLINE_SECONDS, max_retries=0,
     )
 
@@ -416,6 +424,8 @@ def begin(state: Mapping[str, Any], action: str, *,
     # must not be charged to the turn's deadline: warm them before the clock starts,
     # otherwise the first turn spuriously times out instead of e.g. "configuration".
     _frozen()
+    if backend is None:
+        warm_client()  # SPEC-281: SSL/pool fora do prazo de 1 s
     started = time.monotonic()
     from observability.telemetry import contextualize  # SPEC-240: request_id/action_ref na thread
     future = _pool().submit(contextualize(_evaluate), dict(state), action, backend, key)
