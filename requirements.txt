@@ -54,7 +54,7 @@ frozenlist==1.8.0
     #   aiosignal
 google-auth==2.56.3
     # via google-genai
-google-genai==2.19.0
+google-genai==2.31.0
     # via langchain-google-genai
 greenlet==3.5.5 ; platform_machine == 'AMD64' or platform_machine == 'WIN32' or platform_machine == 'aarch64' or platform_machine == 'amd64' or platform_machine == 'ppc64le' or platform_machine == 'win32' or platform_machine == 'x86_64'
     # via sqlalchemy
@@ -72,15 +72,16 @@ httpx==0.28.1
     #   google-genai
     #   langchain-core
     #   langgraph-sdk
-    #   langsmith
     #   rpg-ia-master
 httpx-sse==0.4.3
     # via langchain-community
 httpx2==2.12.0
-    # via openai
+    # via
+    #   langsmith
+    #   openai
 httpx2-jsfetch==1.0 ; sys_platform == 'emscripten'
     # via httpx2
-idna==3.19
+idna==3.20
     # via
     #   anyio
     #   httpx
@@ -97,7 +98,7 @@ langchain-classic==1.0.8
     # via langchain-community
 langchain-community==0.4.2
     # via rpg-ia-master
-langchain-core==1.6.0
+langchain-core==1.6.11
     # via
     #   langchain-classic
     #   langchain-community
@@ -109,9 +110,9 @@ langchain-core==1.6.0
     #   langgraph-prebuilt
     #   langgraph-sdk
     #   rpg-ia-master
-langchain-google-genai==4.3.4
+langchain-google-genai==4.4.2
     # via rpg-ia-master
-langchain-openai==1.6.0
+langchain-openai==1.7.2
     # via rpg-ia-master
 langchain-protocol==0.0.18
     # via
@@ -123,7 +124,7 @@ langchain-text-splitters==1.1.2
     #   rpg-ia-master
 langgraph==1.2.11
     # via rpg-ia-master
-langgraph-checkpoint==4.2.0
+langgraph-checkpoint==4.3.0
     # via
     #   langgraph
     #   langgraph-prebuilt
@@ -131,7 +132,7 @@ langgraph-prebuilt==1.1.0
     # via langgraph
 langgraph-sdk==0.4.8
     # via langgraph
-langsmith==0.11.1
+langsmith==0.14.11
     # via
     #   langchain-classic
     #   langchain-community

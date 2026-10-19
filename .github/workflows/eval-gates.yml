@@ -17,10 +17,10 @@ jobs:
       frontend: ${{ steps.scope.outputs.frontend }}
       protected: ${{ steps.scope.outputs.protected }}
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-      - uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5.4.1
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
       - run: uv sync
       - id: scope
         env:
@@ -31,7 +31,7 @@ jobs:
           --base "$BASE_SHA" --head "$HEAD_SHA"
           --manifest readiness_artifacts/evals/change-scope.json
           --github-output "$GITHUB_OUTPUT"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: eval-change-scope
           path: readiness_artifacts/evals/change-scope.json
@@ -43,8 +43,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: eval-governance
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: eval-change-scope
           path: readiness_artifacts/evals
@@ -60,10 +60,10 @@ jobs:
     needs: scope
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-      - uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5.4.1
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
       - run: uv sync
       - run: uv run python -m evals.core.governance check --root .
       - run: uv run python -m project_index check
@@ -79,7 +79,7 @@ jobs:
           --suite npc_knowledge
           --run-id ci-${{ github.run_id }}-${{ github.run_attempt }}
           --output readiness_artifacts/evals
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: deterministic-evals-${{ github.run_id }}-${{ github.run_attempt }}
@@ -92,8 +92,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5.4.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
       - run: uv sync
       - run: >-
           uv run pytest
@@ -101,7 +101,7 @@ jobs:
           tests/test_eval_memory_context.py tests/test_eval_narrative_npc.py
           tests/test_eval_player_knowledge.py tests/test_eval_dossier_leak.py tests/test_eval_gameplay_gate.py tests/test_eval_encounter_manifest.py tests/test_eval_npc_knowledge.py
       - run: uv run python -m playtest run --all --turns 3
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: backend-selective-${{ github.run_id }}-${{ github.run_attempt }}
@@ -114,10 +114,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-      - uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5.4.1
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 20
@@ -142,7 +142,7 @@ jobs:
           uv run python scripts/frontend_eval_report.py
           web/test-results/results.json --suite mobile
           --output readiness_artifacts/evals/frontend-mobile.json --check
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: frontend-evals-${{ github.run_id }}-${{ github.run_attempt }}

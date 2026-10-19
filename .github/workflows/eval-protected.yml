@@ -23,10 +23,10 @@ jobs:
     timeout-minutes: 20
     environment: eval-provider
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5.4.1
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
       - run: uv sync --extra anthropic
       - name: Require protected provider key
         env:
@@ -40,7 +40,7 @@ jobs:
           --max-requests 20 --max-cost-usd 0.20
           --junitxml readiness_artifacts/provider/junit.xml
           --output readiness_artifacts/provider/manifest.json
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: real-provider-short-${{ github.run_id }}-${{ github.run_attempt }}
@@ -53,16 +53,16 @@ jobs:
     timeout-minutes: 20
     environment: eval-holdout
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: astral-sh/setup-uv@0c5e2b8115b80b4c7c5ddf6ffdd634974642d182 # v5.4.1
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
       - name: Require private companion configuration
         env:
           HOLDOUT_REPOSITORY: ${{ vars.HOLDOUT_REPOSITORY }}
           HOLDOUT_TOKEN: ${{ secrets.HOLDOUT_REPOSITORY_TOKEN }}
         run: test -n "$HOLDOUT_REPOSITORY" && test -n "$HOLDOUT_TOKEN"
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: ${{ vars.HOLDOUT_REPOSITORY }}
           token: ${{ secrets.HOLDOUT_REPOSITORY_TOKEN }}
@@ -77,7 +77,7 @@ jobs:
       - run: >-
           uv run python scripts/validate_holdout_aggregate.py
           readiness_artifacts/holdout/aggregate.json
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: private-holdout-aggregate-${{ github.run_id }}-${{ github.run_attempt }}
