@@ -133,3 +133,21 @@ def test_spec275_campaign_game_id_derives_from_seed():
     assert campaign_game_id("combate", 7, 0) != campaign_game_id("combate", 7, 1)
     assert campaign_game_id("combate", 7, 0) != campaign_game_id("combate", 8, 0)
     assert campaign_game_id("combate", None, 0) != campaign_game_id("combate", None, 0)
+
+
+def test_error_record_has_traceback(monkeypatch):
+    """SPEC-260 R1: erro de turno carrega traceback (<=40 linhas) com arquivo:linha."""
+    import main
+
+    class _Boom(_FakeGraph):
+        def stream(self, state, stream_mode=None):
+            raise RuntimeError("boom")
+            yield  # pragma: no cover
+
+    monkeypatch.setattr(main, "app", _Boom())
+    res = run_campaign("explorador", turns=1, seed=0, invariants=False)
+    errs = [e for e in res.errors if e.get("turn") == 1]
+    assert errs and "traceback" in errs[0]
+    tb = errs[0]["traceback"]
+    assert "RuntimeError" in tb and ".py" in tb and len(tb.splitlines()) <= 40
+    assert res.history[0].traceback == tb
