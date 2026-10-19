@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "f9858df1a0062e6c2313cc839581af56ce05474c",
+  "commit_sha": "a6385f1af471b63f7a35e5fe8bb5f558536fd663",
   "edge_counts": {
-    "calls": 17353,
-    "contains": 724,
-    "defines": 9855,
-    "imports": 1597,
-    "likely_test_for": 986,
+    "calls": 17361,
+    "contains": 725,
+    "defines": 9862,
+    "imports": 1600,
+    "likely_test_for": 989,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:02685f558844358774d721004d075a9c4301b92937ab0c14759464bf07b1c2ac",
+  "graph_hash": "sha256:473a0a60af6af539912abd848de606f16634f354da7ba799cf61a043ebb36a18",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -735,6 +735,7 @@
     "tests/test_spec280_orphan_games.py",
     "tests/test_spec280_orphan_games_local.py",
     "tests/test_spec283_enemy_support_cards.py",
+    "tests/test_spec286_heroi_inconsciente.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -924,14 +925,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 789,
+    "class": 790,
     "endpoint": 63,
-    "file": 870,
+    "file": 871,
     "function": 3034,
     "method": 750,
-    "module": 724,
-    "test": 5281
+    "module": 725,
+    "test": 5287
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:a460a567bb4b36cfe4983a17959b62495bad571bb7b77c383edbf2633ea43a92"
+  "source_tree_hash": "sha256:ed39eaf0ab54a7622128d1e5c83272b5f7db690a8f678fff340eaf59900d1b5e"
 }
