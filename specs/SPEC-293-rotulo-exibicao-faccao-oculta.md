@@ -1,6 +1,6 @@
 # SPEC-293 — Rótulo de exibição de combatente de fação oculta
 
-> **Status:** `in-progress` (aprovada: o dono autorizou em 19/10 tudo que não exige ação externa dele)
+> **Status:** `done` (aprovada: o dono autorizou em 19/10 tudo que não exige ação externa dele)
 > **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
 > **Depende de:** SPEC-292 (`concealed_faction`/`public_hint`), SPEC-206/211 (projeção fail-closed e `assert_no_player_leak`)
 > **Desbloqueia:** —
@@ -45,9 +45,11 @@ determinístico reusado (`assert_no_player_leak`), frontend só consome o que a 
   rótulo ≠ canônico. Fação conhecida (`intel[fid].known`) sai do mapa.
 - **R3 — Projeção na borda.** `conceal_payload(obj, mapping)` substitui, em todo **valor** string
   (recursivo; chaves e campos de id — `id`, `*_id`, `*_ids` — intactos), cada nome canônico pelo
-  rótulo, sem diferenciar caixa e com fronteira de palavra; mais longo primeiro. Aplicada em:
-  `format_response` (POST `/game/action`, `/game/state`, `/game/new`, `/game/death`, equip/levelup/
-  cards, replay de `action_id`; o SSE fatia `resp.message` e serializa `resp` → coberto),
+  rótulo, sem diferenciar caixa e com fronteira de palavra; mais longo primeiro; tolera espaço/
+  quebra de linha, acento, hífen↔espaço e plural (revisão P1-1). Aplicada em:
+  `format_response` (POST `/game/action`, `/game/state`, `/game/new`, `/game/death`, replay de
+  `action_id`; o SSE fatia `resp.message` e serializa `resp` → coberto; equip/levelup/cards não
+  passam por ela e não carregam nome de inimigo),
   `project_player_knowledge` (Codex `/game/codex` e base dos dossiês), `build_dossiers`
   (`/game/codex/dossiers`), `/game/history`, `/game/chronicle/search` e `/game/chronicle/export`.
 - **R4 — Interno intacto.** Save, `enemies[].name`, manifesto canônico, `combat_target`, `hint`,
@@ -96,12 +98,12 @@ determinístico reusado (`assert_no_player_leak`), frontend só consome o que a 
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R7 cobertos por teste
-- [ ] Nenhuma superfície de R3 contém nome canônico de fação desconhecida (oráculo (e))
-- [ ] Revelação mostra o nome completo retroativamente
-- [ ] Save/manifesto canônico intactos; saves antigos carregam (sem bump)
-- [ ] Revisão independente Opus (`handoffs/SPEC-293-review.md`)
-- [ ] Suíte completa offline (falhas só de índice stale, esperadas antes do pouso)
+- [x] R1–R7 cobertos por teste
+- [x] Nenhuma superfície de R3 contém nome canônico de fação desconhecida (oráculo (e))
+- [x] Revelação mostra o nome completo retroativamente
+- [x] Save/manifesto canônico intactos; saves antigos carregam (sem bump)
+- [x] Revisão independente Opus (`handoffs/SPEC-293-review.md`)
+- [x] Suíte completa offline (falhas só de índice stale, esperadas antes do pouso)
 
 ## 6. Smoke test com LLM real
 
@@ -114,3 +116,13 @@ do narrador (R7) só troca a fonte do rótulo curto já validada em real na revi
 - Jogador que digita o nome canônico ("ataco o Iniciado da Chama Azul") vê a própria fala com o
   rótulo no histórico — aceitável (fail-closed). A resolução de alvo é interna e usa o canônico.
 - Custo: um regex por resposta (≤ ~20 nomes), desprezível.
+
+## 8. Follow-ups (revisão `handoffs/SPEC-293-review.md`, APPROVED_WITH_FOLLOWUPS)
+
+- P2-1: o oráculo (e) busca substring sem fronteira de palavra (falso positivo em "…Chama Azulado");
+  ajustar exige relock de eval.
+- P2-2: inimigo sem `id` (só save legado) usa o nome como id → canônico em `enemies[].id`.
+- P2-3: `/data/combat-simulator` lista o bestiário com nomes canônicos (anterior a esta spec;
+  decisão do dono).
+- P2-5: projeção custa ~3,5 ms por resposta; cache opcional.
+- Caso novo de eval para o rótulo (dataset protegido) exige relock — follow-up.
