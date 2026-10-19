@@ -1,0 +1,6 @@
+# SPEC-225 R5: falsos positivos do scan semanal do histórico (run 39261158983, 2026-10-19).
+# Todos são texto com barras ("numeros/hex", "acknowledge/consume", "headers/CORS/CSRF/RLS") em
+# commits antigos cujos caminhos foram renomeados depois (o allowlist de paths só cobre o nome atual).
+69a9f70613cff3f0d96b28c9ca263dc071b8c68d:web/src/lib/clientErrors.ts:generic-api-key:50
+d988991fc35f2f4532131eb8c748b7f6609b5d55:docs/rpg-next-jev-golive-plan/examples/spec-model-contract.yaml:generic-api-key:312
+d5478aea81203a8503fd79119c8d05f71d700ca4:specs/fase-10b-observabilidade-backup-caos.md:generic-api-key:51
