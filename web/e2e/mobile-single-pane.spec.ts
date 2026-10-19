@@ -190,9 +190,9 @@ test("M03 composer_visible_with_virtual_keyboard", async ({ page }) => {
   await noOverflow(page);
 });
 
-test("M04 voice_flow_and_mic_release", async ({ page, backend }) => {
+test("M04 voice_flow_and_mic_release", async ({ page, backend, baseURL }) => {
   await fakeMicrophone(page);
-  await page.context().addCookies([{ name: "rpg_csrf", value: "voice-csrf", url: "http://127.0.0.1:4173" }]);
+  await page.context().addCookies([{ name: "rpg_csrf", value: "voice-csrf", url: baseURL }]);
   let uploads = 0;
   let finish!: () => void;
   const gate = new Promise<void>((resolve) => { finish = resolve; });

@@ -49,13 +49,13 @@ async function open(page: Page) {
 const audit = (page: Page) => page.evaluate(() => (window as unknown as { voiceAudit: { captures: number; stops: number; releases: number } }).voiceAudit);
 
 for (const width of [390, 1440]) {
-  test(`SPEC-187 editable transcript, explicit send and a11y at ${width}`, async ({ page, backend }) => {
+  test(`SPEC-187 editable transcript, explicit send and a11y at ${width}`, async ({ page, backend, baseURL }) => {
     await page.setViewportSize({ width, height: 850 });
     await fakeMicrophone(page, "granted", width === 390 ? "audio/mp4" : "audio/webm;codecs=opus");
     let uploads = 0;
     let finish!: () => void;
     const gate = new Promise<void>(resolve => { finish = resolve; });
-    await page.context().addCookies([{ name: "rpg_csrf", value: "voice-csrf", url: "http://127.0.0.1:4173" }]);
+    await page.context().addCookies([{ name: "rpg_csrf", value: "voice-csrf", url: baseURL }]);
     await page.route("**/account/transcriptions", async route => {
       uploads++;
       expect(route.request().headers()["x-csrf-token"]).toBe("voice-csrf");

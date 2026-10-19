@@ -118,6 +118,7 @@ existe (sem build a API sobe sem UI; o `frontend/` vanilla foi removido, SPEC-26
 cd web && npm install          # uma vez (Node ≥22.12, ver web/.nvmrc)
 npm run build                  # gera web/dist (servido por uvicorn na raiz)
 npm run dev                    # dev server :5173 com proxy p/ a API :8000
+npm run test:e2e               # Playwright; porta derivada do checkout (RPG_E2E_PORT força; CI = 4173)
 ```
 
 ---

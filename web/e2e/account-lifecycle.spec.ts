@@ -34,7 +34,7 @@ test("SPEC-190 signup awaits verification and email requests disclose no account
   await expect(page.getByRole("status")).toContainText("Se o endereço puder receber mensagens");
 });
 
-test("SPEC-190 recovery token stays in fragment and is removed before API call", async ({ page, backend }) => {
+test("SPEC-190 recovery token stays in fragment and is removed before API call", async ({ page, backend, baseURL }) => {
   backend.authenticated = false;
   await page.route("**/auth/config", route => route.fulfill(json(unauthenticated)));
   let confirmed: unknown;
@@ -43,7 +43,7 @@ test("SPEC-190 recovery token stays in fragment and is removed before API call",
     return route.fulfill(json({ authenticated: false, message: "Senha atualizada." }));
   });
   await page.goto("/#auth_action=recovery&token_hash=private-reset-token");
-  await expect(page).toHaveURL("http://127.0.0.1:4173/");
+  await expect(page).toHaveURL(new URL("/", baseURL).href);
   await page.getByLabel("Nova senha", { exact: true }).fill("NovaSenhaSegura123!");
   await page.getByLabel("Repita a nova senha").fill("NovaSenhaSegura123!");
   await page.getByRole("button", { name: "Atualizar senha" }).click();
@@ -52,7 +52,7 @@ test("SPEC-190 recovery token stays in fragment and is removed before API call",
   expect(backend.requests.some(item => item.path === "/game/saves")).toBe(false);
 });
 
-test("SPEC-190 verification link opens even with an existing authenticated session", async ({ page, backend }) => {
+test("SPEC-190 verification link opens even with an existing authenticated session", async ({ page, backend, baseURL }) => {
   backend.authenticated = true;
   let verified: unknown;
   await page.route("**/auth/config", route => route.fulfill(json({ ...unauthenticated,
@@ -62,7 +62,7 @@ test("SPEC-190 verification link opens even with an existing authenticated sessi
     return route.fulfill(json({ authenticated: true, csrf_token: "verified" }));
   });
   await page.goto("/#auth_action=verify&token_hash=private-verify-token");
-  await expect(page).toHaveURL("http://127.0.0.1:4173/");
+  await expect(page).toHaveURL(new URL("/", baseURL).href);
   await expect(page.getByRole("heading", { name: "Confirmar e-mail" })).toBeVisible();
   expect(backend.requests.some(item => item.path === "/game/saves")).toBe(false);
   await page.getByRole("button", { name: "Confirmar e-mail" }).click();

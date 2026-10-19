@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import { createHash } from "node:crypto";
 import { existsSync, readdirSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
@@ -15,6 +16,18 @@ function localChromium(): string | undefined {
   return candidates.find(existsSync);
 }
 
+// Workspace C5: porta por worktree. Dois checkouts rodando e2e ao mesmo tempo nunca dividem
+// servidor (com reuseExistingServer, o 2º reusaria o Vite do 1º e testaria o código errado).
+// RPG_E2E_PORT força a porta; no CI fica 4173; local deriva do caminho do checkout (4200-4899).
+function e2ePort(): number {
+  if (process.env.RPG_E2E_PORT) return Number(process.env.RPG_E2E_PORT);
+  if (process.env.CI) return 4173;
+  const digest = createHash("sha1").update(process.cwd().toLowerCase()).digest();
+  return 4200 + (digest.readUInt16BE(0) % 700);
+}
+const PORT = e2ePort();
+const ORIGIN = `http://127.0.0.1:${PORT}`;
+
 export default defineConfig({
   testDir: "./e2e",
   // Execuções concorrentes/em loop isolam artefatos por RPG_PW_OUTPUT_DIR (padrão inalterado).
@@ -26,7 +39,7 @@ export default defineConfig({
   retries: 0,
   reporter: [["list"], ["json", { outputFile: "test-results/results.json" }]],
   use: {
-    baseURL: "http://127.0.0.1:4173",
+    baseURL: ORIGIN,
     browserName: "chromium",
     reducedMotion: "reduce",
     locale: "pt-BR",
@@ -39,9 +52,9 @@ export default defineConfig({
   webServer: {
     // RPG_E2E_SERVER=preview serve web/dist (medição de performance contra o build real).
     command: process.env.RPG_E2E_SERVER === "preview"
-      ? "node ./node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 4173"
-      : "node ./node_modules/vite/bin/vite.js --host 127.0.0.1 --port 4173",
-    url: "http://127.0.0.1:4173",
+      ? `node ./node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port ${PORT} --strictPort`
+      : `node ./node_modules/vite/bin/vite.js --host 127.0.0.1 --port ${PORT} --strictPort`,
+    url: ORIGIN,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },
