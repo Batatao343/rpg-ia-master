@@ -536,7 +536,15 @@ def enemy_declaration(
     effective_action = (
         "attack" if action_key in tactical_keys and tactical_target is None else action_key
     )
-    if not forced_attack and effective_action != "stabilize":
+    if (
+        not forced_attack
+        and effective_action != "stabilize"
+        # Revisão SPEC-283: silenciado não usa Carta (cairia num "ataque" a si
+        # mesmo); provocado ataca a fonte da Provocação; só o lado inimigo.
+        and not cm.has_control(actor, "silence")
+        and taunted_target is None
+        and actor_id in set(sides.get("enemy", []))
+    ):
         # SPEC-283: Carta de suporte do bestiário no próprio lado, quando a cena
         # justifica. Quebra de impasse (SPEC-275 R5) e estabilização vêm antes.
         choice = _enemy_support_card(

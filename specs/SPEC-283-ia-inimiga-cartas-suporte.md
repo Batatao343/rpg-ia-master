@@ -1,6 +1,6 @@
 # SPEC-283 — IA inimiga usa as Cartas de suporte do bestiário
 
-> **Status:** `approved` (dono autorizou em 19/10 tudo que não exige ação externa dele — onda 19/10)
+> **Status:** `done` (aprovada sob a autorização do dono de 19/10 para tudo que não exige ação externa dele; revisão independente Opus com correções — [handoff](../handoffs/SPEC-283-review.md))
 > **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
 > **Origem:** follow-up 1 da revisão Astra da SPEC-275 ([handoff](../handoffs/SPEC-275-ASTRA-review.md), achado R2)
 > **Depende de:** SPEC-275 (`done`), SPEC-232 (`done`)
@@ -155,13 +155,13 @@ jogador nem um aliado dele. Tudo é determinístico, sem RNG novo e sem LLM
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R7 cobertos por testes verdes
-- [ ] `playtest run --profile combate --turns 200` nas seeds 21/22/23: 0 `combat.no_progress`, 0 erro
-- [ ] Medição de letalidade antes/depois registrada (§8)
-- [ ] Suíte completa verde, exceto `test_project_index` stale (esperado até o rebuild no pouso)
-- [ ] Saves antigos continuam carregando (nenhum campo novo persistido)
-- [ ] Revisão independente Opus (`handoffs/SPEC-283-review.md`)
-- [ ] Smoke real DeepSeek com ≤ 10 turnos de combate (§6)
+- [x] R1–R7 cobertos por testes verdes
+- [x] `playtest run --profile combate --turns 200` nas seeds 21/22/23: 0 `combat.no_progress`, 0 erro
+- [x] Medição de letalidade antes/depois registrada (§8)
+- [x] Suíte completa verde, exceto `test_project_index` stale (esperado até o rebuild no pouso)
+- [x] Saves antigos continuam carregando (nenhum campo novo persistido)
+- [x] Revisão independente Opus (`handoffs/SPEC-283-review.md`)
+- [x] Smoke real DeepSeek com ≤ 10 turnos de combate (§6)
 
 ## 6. Smoke test com LLM real
 
@@ -186,4 +186,66 @@ pontos:
 
 ## 8. Evidência
 
-(preenchido na execução)
+Execução em 2026-10-19, branch `spec-283`.
+
+**Testes.** São 18 em `tests/test_spec283_enemy_support_cards.py`, mais o teste
+adaptado da SPEC-275. Suíte completa (`-n auto`): 4.381 coletados, 4.140 passed,
+238 skipped e 3 failed. As 3 falhas são as esperadas de índice stale
+(`test_spec_index_tool::test_real_index_matches_spec_headers` e 2 de
+`test_project_index`), que o coordenador corrige no pouso. Ruff verde.
+
+**R8 (impasse).** O perfil `combate` com `--turns 200` rodou em 9 seeds (21–29),
+MockLLM, antes e depois. Resultado: 0 erros, 0/0 violações e 0
+`combat.no_progress` nas 18 campanhas.
+
+**R9: letalidade (taxa de morte do jogador por combate iniciado).**
+
+| medição | antes (`main` c56dd09) | depois (SPEC-283) |
+|---|---|---|
+| playtest mock `combate` 200t, seeds 21–23 | 25/44 = **0,568** | 24/42 = **0,571** |
+| playtest mock `combate` 200t, seeds 21–29 | 75/133 = **0,564** | 79/132 = **0,598** |
+| arena controlada (29 criaturas com Carta de suporte, em pares, × 30 seeds, Devoto nível 3 só com ataque básico; `docs/spec283/arena_ab.py`) | 615/870 = **0,707**, 4,23 rodadas/luta | 635/870 = **0,730**, 4,70 rodadas/luta |
+
+Na arena, o uso de Carta de suporte inimiga foi de 94 para 1.143. Os 94 de antes
+são `esconder`, que já existia. Leitura dos números:
+
+- No playtest, o efeito por seed vem mascarado pela divergência da campanha:
+  quando uma criatura usa suporte, o resto da campanha muda.
+- Há também poucos encontros com essas criaturas nas regiões visitadas (pântano e
+  cripta).
+- A arena isola o efeito: **+2,3 pp de letalidade e lutas cerca de 11 % mais
+  longas**. O reforço gasta o 1º turno, mas a proteção e os buffs pesam depois.
+- O número vai para a SPEC-285.
+
+**Achado preexistente (fora de escopo, também em `main`).** Ao vencer um combate
+inconsciente, o perfil `combate` continua tentando viajar. O `action_guard` recusa
+a ação e a campanha fica presa até o fim. Isso aparece no manifesto como
+"contrato de linha JSONL inválido" (`route ''`, archivist ausente). Em `main` com a
+seed 21, foram 78 turnos perdidos; nesta branch, seeds 23 e 24 (59 e 175 turnos).
+O exit 1 do `playtest run` nessas seeds vem disso, e não de erro ou violação.
+Precisa de spec própria: perfil de harness e/ou contrato JSONL para turno barrado
+pelo guard.
+
+**Smoke real §6 (DeepSeek).** Combate scriptado de 4 rodadas, Lobo da Aurora Morta
++ Saqueador de Marfim ferido, com narração de verdade por `agents.combat._narrate`:
+
+- 4 chamadas FAST. Uma deu timeout no DeepSeek e caiu no Groq `gpt-oss-120b`.
+  Custo bem abaixo de US$ 0,01.
+- 4 usos de Carta de suporte. O Saqueador usou Rosário de Ossos em si mesmo. O
+  Lobo usou Roubar Calor no Saqueador ferido e Noite no Sangue em si mesmo antes de
+  atacar.
+- A prosa narrou os reforços de forma coerente ("ergue o Rosário de Ossos", "a
+  Noite no Sangue o toma") e não vazou id, `bst_`, `->` nem `enemy_support_card`.
+- Nas rodadas seguintes, os inimigos reforçados derrubaram a heroína.
+
+**Desvio durante a implementação.** O buff tipado expira no fim do turno do
+portador (SPEC-232 R1). Por isso, proteção posta num aliado que ainda vai agir na
+rodada expiraria antes de qualquer ataque do lado oposto. `_extend_ally_defense`
+dá +1 turno nesse caso, só para as famílias defensivas.
+
+**Revisão independente (CHANGES_REQUIRED → corrigida).** Detalhes no
+[handoff](../handoffs/SPEC-283-review.md). O suporte agora é pulado em três casos:
+inimigo silenciado (antes perdia o turno), inimigo provocado (ataca a fonte da
+Provocação) e ator fora do lado inimigo. A asserção do teste da SPEC-275 deixou de
+ser condicional. Foram adicionados testes para R6 com Carta do jogador no próprio
+lado.

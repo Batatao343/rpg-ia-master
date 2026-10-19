@@ -312,3 +312,56 @@ def test_choice_is_deterministic():
     b = _decl(*copy.deepcopy(snap[:1]), "leader", copy.deepcopy(snap[1]), sides)
     assert a.model_dump() == b.model_dump()
     assert (a.acao.card_id, a.acao.target_id) == (MURALHA, "pup")
+
+
+# --- revisão independente (2026-10-19) -----------------------------------------
+
+
+def test_silenced_enemy_skips_support_and_attacks():
+    scene, actors, sides = _world({"wolf": _enemy("wolf", (NOITE,))})
+    actors["wolf"]["active_conditions"].append(
+        {"name": "Silêncio", "dot": 0, "duration": 2, "control": "silence"}
+    )
+    decl = _decl(scene, "wolf", actors, sides)
+    assert decl.acao.kind == "attack" and decl.acao.card_id is None
+    assert decl.acao.target_id == "player"
+
+
+class _AlwaysLow:
+    def random(self):
+        return 0.0
+
+
+def test_taunted_enemy_attacks_taunt_source_instead_of_buffing():
+    scene, actors, sides = _world({"wolf": _enemy("wolf", (NOITE,))})
+    actors["wolf"]["active_conditions"].append(
+        {
+            "name": "Provocação",
+            "dot": 0,
+            "duration": 2,
+            "control": "taunt",
+            "source_actor_id": "player",
+        }
+    )
+    decl = orch.enemy_declaration(scene, "wolf", actors, sides, rng=_AlwaysLow())
+    assert decl.acao.kind == "attack" and decl.acao.card_id is None
+    assert decl.acao.target_id == "player"
+
+
+def test_player_side_actor_never_uses_bestiary_support_cards():
+    scene, actors, sides = _world({"wolf": _enemy("wolf")}, ally_ids=("npc",))
+    actors["npc"]["cartas"] = [NOITE]
+    actors["npc"]["entropy"] = 10
+    decl = _decl(scene, "npc", actors, sides)
+    assert decl.acao.card_id is None
+
+
+def test_player_own_side_support_card_is_not_a_declared_attack():
+    _, _, sides = _world({"wolf": _enemy("wolf")}, ally_ids=("npc",))
+    for target in ("player", "npc"):
+        step = ct.TurnStep(kind="card", card_id=MURALHA, target_id=target)
+        assert orch._own_side_support(step, "player", sides) is True
+    hostile = ct.TurnStep(kind="card", card_id=MURALHA, target_id="wolf")
+    assert orch._own_side_support(hostile, "player", sides) is False
+    attack = ct.TurnStep(kind="card", card_id="bst_golpe_sombras", target_id="wolf")
+    assert orch._own_side_support(attack, "player", sides) is False
