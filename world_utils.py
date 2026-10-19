@@ -911,12 +911,16 @@ def check_encounter(
         )
 
     if threat and danger >= 3:
+        # SPEC-288: a criatura é canônica (bestiário); o texto da ameaça é só flavor.
+        entry = pick_encounter_enemy(
+            loc, eff, turn, bestiary_knowledge=bestiary_knowledge, projection=projection
+        )
         return _stamp(
             {
-                "hint": f"criatura ligada a: {threat}",
+                "hint": entry.get("name") if entry else f"feras/perigos de {region}",
                 "flavor": str(threat),
                 "reason": "looming_threat",
-                "enemy_id": "",
+                "enemy_id": entry.get("id", "") if entry else "",
             }
         )
 

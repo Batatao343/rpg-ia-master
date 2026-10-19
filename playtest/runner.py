@@ -870,6 +870,11 @@ def _count_new_rejections(before: list[dict], after: list[dict]) -> int:
     return sum(max(0, count - old.get(key, 0)) for key, count in new.items())
 
 
+def _death_cause(payload: dict) -> str:
+    """SPEC-288: espécie canônica (killer) -> categoria ambiental (cause) -> desconhecida."""
+    return str(payload.get("killer") or payload.get("cause") or "desconhecida")
+
+
 def _run_turn(
     game_graph,
     state: dict,
@@ -1485,7 +1490,8 @@ def run_campaign(
                         "location_id": str(
                             (state.get("world") or {}).get("current_location_id", "") or ""
                         ),
-                        "cause": _pay.get("killer"),
+                        "cause": _death_cause(_pay),
+                        "killer_id": _pay.get("killer_id") or None,
                     }
                     deaths_log.append(death)
                     rec.death = death

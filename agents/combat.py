@@ -793,6 +793,18 @@ def _is_valid_flee_destination(state: dict, destination_id: str | None) -> bool:
 # ==========================================================================
 # Narração (depois da resolução — LLM FAST, guard)
 # ==========================================================================
+def _killer_identity(active: list) -> tuple[str, str]:
+    """SPEC-288: (espécie canônica, id do bestiário) do inimigo que deu o golpe final."""
+    from services import encounter_manifest as em
+
+    enemy = next((e for e in active or [] if e), None)
+    if not enemy:
+        return "", ""
+    base = em._base_id(enemy.get("id", ""))
+    known = base in (gamedata.BESTIARY or {})
+    return em.species_label_for(enemy), (base if known else str(enemy.get("bestiary_id") or ""))
+
+
 def _narrate_fall(player: dict, logs: list[str], killer: str = "") -> str:
     quem = f" diante de {killer}" if killer else ""
     golpes = "\n".join(f"• {l}" for l in logs[-4:]) if logs else ""
@@ -1371,7 +1383,7 @@ def _combat_node(state: GameState):
     aberturas = prose_guard.ultimas_aberturas(messages)
     loc = state.get("world", {}).get("current_location", "")
     if player_dead:
-        killer = next((e.get("name") for e in active), "")
+        killer = _killer_identity(active)[0]
         narrative = _narrate_fall(player, logs, killer)
     elif is_simulation:
         suffix = "\n\nVitória no laboratório." if victory else "\n\nEscolha a próxima ação."
@@ -1501,7 +1513,7 @@ def _combat_node(state: GameState):
             "stabilization_attempts": int(
                 stabilization.get("attempts", player.get("stabilization_attempts", 0)) or 0
             ),
-            "killer": next((e.get("name") for e in active), ""),
+            "killer": _killer_identity(active)[0],
         }
         result["death_pending"] = True
         result["combat"] = {**combat_meta, "active": False, "scene": None}
@@ -1509,7 +1521,7 @@ def _combat_node(state: GameState):
         result["combat_target"] = None
         result["next"] = None
         result["archive_due"] = not is_simulation
-        killer = next((e.get("name") for e in active), "")
+        killer, killer_id = _killer_identity(active)
         death_events.append(
             {
                 "type": "player_downed",
@@ -1519,6 +1531,7 @@ def _combat_node(state: GameState):
                 + (f" diante de {killer}" if killer else ""),
                 "payload": {
                     "killer": killer,
+                    "killer_id": killer_id,
                     "location": loc,
                     "boss_present": any(
                         str(e.get("categoria", "")).lower() in ("chefe", "nomeado") for e in enemies

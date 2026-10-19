@@ -1,68 +1,46 @@
 # SPEC-288 — playtest-causa-morte-especie
 
-> **Status:** `draft`
-> **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
-> **Depende de:** <specs anteriores que precisam estar `done`>
-> **Desbloqueia:** <specs/features que dependem desta>
-
----
+> **Status:** `done` (autorização do dono de 19/10 para tudo que não exige ação externa dele)
+> **Criada:** 2026-10-19 · **Origem:** achado da SPEC-285 (35 de 120 mortes na main com causa = texto de gancho)
+> **EXECUTOR_MODEL:** `Sonnet` · **REVIEW_REQUIRED:** `false`
 
 ## 1. Contexto & Objetivo
-
-Por que esta spec existe. Qual problema resolve. 2-4 parágrafos no máximo.
-Referência ao princípio de arquitetura relevante (ver `ROADMAP.md` § Princípios).
+O relatório do playtest (seção Mortes) mostrava como causa "criatura ligada a: Corvane reativou uma
+câmara…" em vez da espécie. Causa-raiz é de PRODUTO: `world_utils.check_encounter` (ramo
+`looming_threat`) devolvia `hint="criatura ligada a: <ameaça>"` sem `enemy_id`; o spawn não casava o
+bestiário e criava um inimigo CUJO NOME era o texto do gancho. Esse nome vazava para a narração, para
+`player_downed.payload.killer`, para `continuity.death_history[].cause` (crônica/API) e para o playtest.
+Além disso, mortes não-combate (armadilha) gravam `payload.cause` e o playtest lia só `killer` → `None`.
 
 ## 2. Requisitos
-
-Numerados, testáveis. Cada requisito deve poder virar assert.
-
-- **R1** — ...
-- **R2** — ...
+- **R1** — Encontro `looming_threat` resolve uma criatura canônica do bestiário (`enemy_id`, `hint` = nome da
+  espécie); o texto da ameaça fica em `flavor`. Sem criatura elegível, o hint nunca carrega o texto do gancho.
+- **R2** — `player_downed.payload` ganha `killer_id` (id do bestiário) e `killer` passa a ser a espécie canônica
+  (`species_label_for`, sem sufixo de instância).
+- **R3** — `death_cause` do playtest = `killer` → `cause` (categoria ambiental, ex. "armadilha") → `"desconhecida"`;
+  nunca o texto do gancho. O runner grava também `killer_id` em `deaths_log`.
+- **R4** — Seção Mortes do report mostra a causa canônica.
 
 ### Fora de escopo
-
-Lista explícita do que esta spec NÃO cobre (anti-scope-creep).
+Mortes por clima/DoT sem payload próprio (hoje só combate e armadilha emitem `player_downed`).
 
 ## 3. Design técnico
+- `world_utils.check_encounter`: ramo threat usa `pick_encounter_enemy`.
+- `agents/combat.py`: helper `_killer_identity(active)`.
+- `playtest/runner.py`: causa canônica + `killer_id`.
+- Testes: `tests/test_spec288_causa_morte.py`.
 
-Detalhe suficiente para uma sessão futura de IA implementar **sem reler o roadmap**:
-
-- **Arquivos novos** — caminho + responsabilidade
-- **Arquivos alterados** — o que muda em cada um
-- **Schemas** — Pydantic/TypedDict completos (campos, tipos, defaults)
-- **Assinaturas** — funções públicas com tipos
-- **Formatos de dados** — JSON/frontmatter com exemplo real (usar IDs canônicos do projeto, não inventados)
-
-## 4. Plano passo a passo
-
-Etapas ordenadas e testáveis. **Testes primeiro** (TDD): cada etapa nomeia os
-testes a escrever ANTES do código e o que cada um asserta.
-
-### Etapa N — <nome>
-
-1. **Testes** (`tests/test_<...>.py`): `test_x` asserta ...; `test_y` asserta ...
-2. **Implementação:** ...
-3. **Verificação:** `uv run pytest` verde.
+## 4. Plano
+Testes primeiro, implementação, depois run `combate --turns 200 --seed 21` conferindo o summary.
 
 ## 5. Critérios de aceite
+- [x] testes novos verdes
+- [x] `playtest run --profile combate --turns 200 --seed 21`: nenhuma causa começa com "criatura ligada a"
+- [x] suíte completa (exit)
+- [x] Saves antigos continuam carregando (campos aditivos)
 
-Checklist objetivo. A spec só vira `done` com todos marcados.
+## 6. Smoke real
+Não aplicável: sem structured output novo; caminho determinístico (bestiário Python).
 
-- [ ] ...
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo (try/except ou isinstance)
-- [ ] Saves antigos continuam carregando
-
-## 6. Smoke test com LLM real
-
-Checklist manual curto (3-5 requests, dentro da quota Gemini de 20/dia/modelo).
-MockLLM esconde bugs de mapeamento de campo — este passo é obrigatório antes de `done`.
-
-1. ...
-2. ...
-
-## 7. Riscos & compatibilidade
-
-- Compatibilidade com saves antigos: ...
-- Comportamento no MockLLM / FallbackLLM: ...
-- Impacto em quota/latência: ...
+## 7. Riscos
+Encontro de ameaça agora tem espécie determinística (antes: scanner/LLM inventava pelo texto). Payload aditivo.
