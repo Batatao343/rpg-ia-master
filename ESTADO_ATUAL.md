@@ -29,17 +29,20 @@
 
 ## Bloqueios no dono
 
-| Item | O que o dono faz |
-|---|---|
-| SPEC-197 R-12 | criar cron de produção (staging já tem `pg_cron`) |
-| SPEC-197 `ci_green` | push da `main` local e aguardar CI |
-| SPEC-198 | Play Console + licença real |
-| SPEC-222 | texto legal (`handoffs/SPEC-222-legal-text.md`) + aplicar migration de retenção |
-| SPEC-225 | criar environments `eval-provider`/`eval-holdout`/`post-deploy-smoke` |
-| SPEC-236 §6.2 | autorizar o teste do teto cross-day |
-| Evals autorados (203–216) | aprovar o environment `eval-governance` — use `/eval-publish` |
-| Retenção de logs | decidir além do default Vercel Hobby (1 h) |
-| Jev `primary` em produção | decisão separada (staging já ativo) |
+Só o que exige **ação externa** do dono (autorizações internas já foram dadas em 19/10).
+Coluna "quando ele disser" = o que o coordenador executa na hora.
+
+| Item | Ação do dono | Quando ele disser… |
+|---|---|---|
+| Conta no staging (R-01) | criar/entrar em https://rpg-ia-master-staging.vercel.app e confirmar o e-mail | "confirmei e loguei" → fechar R-01 no risk register + checklist |
+| SPEC-222 compra de teste | criar conta Stripe (modo teste) e colar `STRIPE_SECRET_KEY=sk_test_…` + webhook secret no `.env.staging` | "colei a Stripe" → env no staging, compra de teste, `purchase_token IS NULL`, fechar 222 (exceto domínio) |
+| SPEC-222/197 domínio de produção | comprar domínio e apontar DNS para a Vercel | "comprei o domínio X" → URLs legais, CORS/cookies, checklist |
+| SPEC-197 | contas pagas (Vercel/Supabase Pro), Stripe live, go/no-go ([lista](docs/spec197/decision-request.md)) | "go do beta" → checklist `--env production` e release |
+| SPEC-198 | Play Console (taxa), package ID, service account | "criei o Play Console" → `applicationId`, upload interno, licença real |
+| Logs externos (Axiom) | criar conta Axiom e colar o token no `.env.staging` | "faz o Axiom" → envio direto do app, retenção ~30 d |
+| SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera a 104" → certificação cloud |
+| Plugins não usados | desligar em claude.ai → Settings → Plugins | — |
+| PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
 
 ## Decisões recentes (≤ 7 dias)
 
