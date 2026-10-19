@@ -153,3 +153,61 @@ def test_lab_lacaio_unchanged():
     bid = _lacaio_id()
     for enemy in _lab(bid):
         assert enemy["max_vitalidade"] == int(gamedata.BESTIARY[bid]["max_vitalidade"])
+
+
+# --- Revisão: round-trip real do overlay e do save (não acumula) -------------
+
+
+def test_real_overlay_round_trip_does_not_accumulate(monkeypatch):
+    """Overlay gravado de verdade (save_enemy real) volta na base; dois encontros
+    de cache-hit no nível 4 dão o mesmo valor (base + 24), sem somar de novo."""
+
+    class _Designer:
+        def invoke(self, _msgs):
+            return bestiary.EnemySchema(name="Titã Revisão", description="d", categoria="chefe")
+
+    class _LLM:
+        def with_structured_output(self, _schema):
+            return _Designer()
+
+    monkeypatch.setattr(bestiary, "get_llm", lambda **k: _LLM())
+    monkeypatch.setattr(bestiary, "query_rag", lambda *a, **k: "")
+    hits: list[str] = []
+    monkeypatch.setattr(
+        bestiary, "find_existing_entity", lambda *a, **k: hits[0] if hits else None
+    )
+    first = bestiary.generate_new_enemy("Titã Revisão", encounter_level=4)
+    hits.append(first["id"])
+    stored = bestiary.load_bestiary()[first["id"]]
+    assert stored["vitalidade_por_nivel_encontro"] == 12
+    base = int(stored["max_vitalidade"])
+    assert first["max_vitalidade"] == base + 24
+    again = bestiary.generate_new_enemy("Titã Revisão", encounter_level=4)
+    third = bestiary.generate_new_enemy("Titã Revisão", encounter_level=4)
+    assert again["max_vitalidade"] == third["max_vitalidade"] == base + 24
+    assert int(bestiary.load_bestiary()[first["id"]]["max_vitalidade"]) == base
+
+
+def test_lab_chefe_save_load_keeps_value(tmp_path, monkeypatch):
+    """Reload do laboratório não reaplica o bônus; o laboratório não mexe no
+    bestiário global (nada vaza para o jogo normal)."""
+    import gamedata
+    import persistence
+
+    monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
+    bid = _chefe_id()
+    before = dict(gamedata.BESTIARY[bid])
+    import api
+
+    req = api.CombatSimulatorRequest(
+        class_name=next(iter(gamedata.CLASSES)), level=5, enemy_id=bid, quantity=1
+    )
+    state = api._build_combat_simulator_state(req)
+    scaled = state["enemies"][0]["max_vitalidade"]
+    assert persistence.save_game_state(state) is True
+    loaded = persistence.load_game_state(persistence.save_path(state["game_id"]))
+    assert loaded["enemies"][0]["max_vitalidade"] == scaled
+    assert gamedata.BESTIARY[bid] == before
+    assert bestiary.template_by_id(bid, encounter_level=1)["max_vitalidade"] == int(
+        before["max_vitalidade"]
+    )
