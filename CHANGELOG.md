@@ -7,6 +7,8 @@
 
 ## 2026-10-19 — onda: workspace, logs P2/P3, frontend majors, staging (222/236/279/280)
 
+- **19/10 — SPEC-288 `done`:** causa-raiz no produto: o encontro `looming_threat` criava inimigo com o texto do gancho como nome; agora resolve criatura do bestiário da região (`pick_encounter_enemy`, fonte `systemic` do manifesto), o texto da ameaça segue como flavor da narração. `player_downed` ganha `killer` (espécie) e `killer_id`; crônica e playtest registram a espécie (armadilha → "armadilha"). Seed 21: 0 causas-gancho (antes 4/11). Revisão Opus APPROVED_WITH_FOLLOWUPS ([parecer](handoffs/SPEC-288-review.md)); follow-up: criatura ligada ao tema da ameaça.
+
 - **19/10 — SPEC-285 `done`:** letalidade pós-232/275/283 com meta ancorada na 283/056: proteção do jogador num aliado ganha +1 turno como a do inimigo; controle tático genérico nega 1 turno (não 2 — prendia o alvo); Toque Gélido 5→3 pelo gerador + guarda "carta inimiga não mata sozinha herói cheio de 18". Playtest morte/combate 0,588 → 0,532, 1ª queda mediana 28,5 → 35, matriz SPEC-056 22 → 24, 0 `no_progress`. Revisão Opus APPROVED com 1 P1 corrigido ([parecer](handoffs/SPEC-285-review.md)). Follow-ups: escala de encontro nível 5+ (SPEC-287), causa da morte (SPEC-288).
 
 - **19/10 — SPEC-286 `done`:** o perfil de playtest `combate` não viaja mais com o herói inconsciente (declara descanso, que o action_guard aceita — o jogo já tinha saída válida); recusa do guard grava `route="action_guard"` + `guard_code` no JSONL, sem marcar contrato inválido. `combate --turns 200` seeds 21/23/24: exit 0, 0 turnos perdidos (antes 23/24 saíam exit 1).
