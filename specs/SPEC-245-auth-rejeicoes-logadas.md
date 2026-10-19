@@ -1,6 +1,6 @@
 # SPEC-245 — Auth: toda rejeição logada com motivo interno (GoTrue, sessão, CSRF/Origin, captcha, lockout)
 
-> **Status:** `in-progress` — implementado em 2026-10-18 (branch `logs-p0`); falta a revisão Sol obrigatória e o smoke em staging.
+> **Status:** `done` — implementado em 2026-10-18 (branch `logs-p0`); revisão Sol APPROVED ([handoff](../handoffs/SPEC-239-245-SOL-review.md)) e smoke em staging `358c628` verde (ver `docs/historico/ESTADO_ATUAL-ate-2026-10-19.md`, Logging P0).
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-239, SPEC-240; branch `auth-debug` mergeada (mapeia `email_not_confirmed`/`captcha_failed` — esta spec só adiciona LOG, não muda mapeamento)
 > **Desbloqueia:** SPEC-262 (runbook auth)

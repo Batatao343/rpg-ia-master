@@ -1,6 +1,6 @@
 # SPEC-240 — Correlação automática em todo log (request_id, action_ref, game_ref) inclusive em threads
 
-> **Status:** `in-progress` — implementado em 2026-10-18 (branch `logs-p0`); falta a revisão Sol obrigatória e o smoke em staging.
+> **Status:** `done` — implementado em 2026-10-18 (branch `logs-p0`); revisão Sol APPROVED ([handoff](../handoffs/SPEC-239-245-SOL-review.md)) e smoke em staging `358c628` verde (ver `docs/historico/ESTADO_ATUAL-ate-2026-10-19.md`, Logging P0).
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-239
 > **Desbloqueia:** SPEC-247, 252, 255, 262
