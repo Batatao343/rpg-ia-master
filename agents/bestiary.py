@@ -160,6 +160,8 @@ def materialize_enemy_concept(concept: dict | EnemySchema, *, encounter_level: i
         "max_hp": max_vitality,
         "ac": esquiva,
     }
+    if category in DEFAULT_SURVIVAL_PER_LEVEL:  # SPEC-290
+        data["vitalidade_por_nivel_encontro"] = DEFAULT_SURVIVAL_PER_LEVEL[category]
     return data
 
 
@@ -234,13 +236,23 @@ ENCOUNTER_SURVIVAL_FROM_LEVEL = 3
 ENCOUNTER_SURVIVAL_MAX_STEPS = 2
 
 
+# SPEC-290: valor canônico quando a ficha de Chefe/Nomeado não traz o campo
+# (Chefe gerado pelo LLM, overlay runtime antigo). Espelha o gerador oficial.
+DEFAULT_SURVIVAL_PER_LEVEL = {"chefe": 12, "nomeado": 12}
+
+
 def apply_encounter_survival(data: dict, encounter_level: int) -> dict:
     """SPEC-287: soma `vitalidade_por_nivel_encontro` × min(2, Nível do Encontro − 2).
 
     O campo vem do gerador oficial (`scripts/migrate_bestiary_v4.py`) e só existe
     em Chefe/Nomeado. Muda a cópia recebida (nunca o bestiário em memória)."""
     try:
-        per_level = int(data.get("vitalidade_por_nivel_encontro") or 0)
+        per_level = data.get("vitalidade_por_nivel_encontro")
+        if per_level is None:
+            from combat_mechanics import normalize_categoria
+
+            per_level = DEFAULT_SURVIVAL_PER_LEVEL.get(normalize_categoria(data), 0)
+        per_level = int(per_level or 0)
         level = int(encounter_level or 1)
     except (TypeError, ValueError):
         return data
@@ -248,6 +260,20 @@ def apply_encounter_survival(data: dict, encounter_level: int) -> dict:
     bonus = max(0, per_level) * steps
     if bonus:
         data["max_vitalidade"] = int(data.get("max_vitalidade") or 0) + bonus
+    return data
+
+
+def _scaled_copy(data: dict, encounter_level: int) -> dict:
+    """SPEC-290: ficha devolvida com o bônus de sobrevivência; o overlay salvo fica na base."""
+    out = dict(data)
+    apply_encounter_survival(out, encounter_level)
+    return _ready_v4_vitals(out)
+
+
+def _ready_v4_vitals(data: dict) -> dict:
+    data["vitalidade"] = int(data.get("max_vitalidade") or 0)
+    data["hp"] = data["vitalidade"]
+    data["max_hp"] = data["vitalidade"]
     return data
 
 
@@ -300,7 +326,7 @@ def generate_new_enemy(name: str, context: str = "", *, encounter_level: int = 1
         # Overlay legado gerado por IA: números livres são descartados.
         normalized = materialize_enemy_concept(data, encounter_level=encounter_level)
         save_enemy(normalized)
-        return normalized
+        return _scaled_copy(normalized, encounter_level)
 
     # 2. GERAÇÃO
     _log_event("bestiary", "creating", level="info")
@@ -332,7 +358,7 @@ def generate_new_enemy(name: str, context: str = "", *, encounter_level: int = 1
         data = materialize_enemy_concept(res, encounter_level=encounter_level)
 
         save_enemy(data)
-        return data
+        return _scaled_copy(data, encounter_level)
 
     except Exception as e:
         _log_event("bestiary", "generation_failed", level="error", error=type(e).__name__)

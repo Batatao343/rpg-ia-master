@@ -3214,6 +3214,19 @@ def _build_combat_simulator_state(req: CombatSimulatorRequest) -> dict:
     orchestrator.ensure_combat_sheet(player, is_player=True)
 
     template = gamedata.BESTIARY[req.enemy_id]
+    category = str(template.get("categoria") or "padrao").lower()
+    danger = {
+        "lacaio": 1,
+        "padrao": 2,
+        "elite": 4,
+        "nomeado": 5,
+        "chefe": 6,
+    }.get(category, 2)
+    # SPEC-290: mesmo bônus de sobrevivência de Chefe/Nomeado do jogo real.
+    from agents.bestiary import apply_encounter_survival
+    from services.encounter_preparation import compute_encounter_level
+
+    encounter_level = compute_encounter_level(location_danger=danger, region_danger=danger)
     enemies = []
     for index in range(1, req.quantity + 1):
         enemy = deepcopy(template)
@@ -3232,6 +3245,7 @@ def _build_combat_simulator_state(req: CombatSimulatorRequest) -> dict:
                 "ferimentos": {"leve": [], "grave": [], "critico": []},
             }
         )
+        apply_encounter_survival(enemy, encounter_level)
         enemy["vitalidade"] = int(enemy.get("max_vitalidade") or enemy.get("vitalidade") or 1)
         enemies.append(orchestrator.ensure_combat_sheet(enemy))
 
@@ -3247,14 +3261,7 @@ def _build_combat_simulator_state(req: CombatSimulatorRequest) -> dict:
 
     world = starting_world("Nova Arcádia", req.level)
     world["current_location"] = "Arena do Véu"
-    category = str(template.get("categoria") or "padrao").lower()
-    world["danger_level"] = {
-        "lacaio": 1,
-        "padrao": 2,
-        "elite": 4,
-        "nomeado": 5,
-        "chefe": 6,
-    }.get(category, 2)
+    world["danger_level"] = danger
     game_id = str(uuid.uuid4())
     enemy_label = str(template.get("name") or req.enemy_id)
     return {
