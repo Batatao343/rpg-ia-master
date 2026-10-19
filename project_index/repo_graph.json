@@ -1,5 +1,5 @@
 {
-  "commit_sha": "685346de2cae0da7a5a7d19ba25dca20921ad055",
+  "commit_sha": "87f4426af698705eb672d76137242d7fe40518aa",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -1011,6 +1011,17 @@
       },
       "source": "file:docs/spec283/arena_ab.py",
       "target": "module:docs.spec283.arena_ab",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 1
+      },
+      "source": "file:docs/spec285/arena_lethality.py",
+      "target": "module:docs.spec285.arena_lethality",
       "type": "contains"
     },
     {
@@ -18034,6 +18045,50 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 7
+      },
+      "source": "file:tests/test_spec285_lethality.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 8
+      },
+      "source": "file:tests/test_spec285_lethality.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 9
+      },
+      "source": "file:tests/test_spec285_lethality.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 1
+      },
+      "source": "file:tests/test_spec285_lethality.py",
+      "target": "module:tests.test_spec285_lethality",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec286_heroi_inconsciente.py",
         "line": 5
       },
@@ -25893,6 +25948,204 @@
       },
       "source": "module:docs.spec283.arena_ab",
       "target": "symbol:docs.spec283.arena_ab.run",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 43
+      },
+      "source": "module:docs.spec285.arena_lethality",
+      "target": "module:agents.bestiary",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 58
+      },
+      "source": "module:docs.spec285.arena_lethality",
+      "target": "module:combat_mechanics",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 42
+      },
+      "source": "module:docs.spec285.arena_lethality",
+      "target": "module:encounter_budget",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 59
+      },
+      "source": "module:docs.spec285.arena_lethality",
+      "target": "module:playtest.runner",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 60
+      },
+      "source": "module:docs.spec285.arena_lethality",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 61
+      },
+      "source": "module:docs.spec285.arena_lethality",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 62
+      },
+      "source": "module:docs.spec285.arena_lethality",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 63
+      },
+      "source": "module:docs.spec285.arena_lethality",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 124
+      },
+      "source": "module:docs.spec285.arena_lethality",
+      "target": "symbol:docs.spec285.arena_lethality._card_damage",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 120
+      },
+      "source": "module:docs.spec285.arena_lethality",
+      "target": "symbol:docs.spec285.arena_lethality._card_kind",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 107
+      },
+      "source": "module:docs.spec285.arena_lethality",
+      "target": "symbol:docs.spec285.arena_lethality._instances",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 84
+      },
+      "source": "module:docs.spec285.arena_lethality",
+      "target": "symbol:docs.spec285.arena_lethality.creatures_by_category",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 159
+      },
+      "source": "module:docs.spec285.arena_lethality",
+      "target": "symbol:docs.spec285.arena_lethality.fight",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 95
+      },
+      "source": "module:docs.spec285.arena_lethality",
+      "target": "symbol:docs.spec285.arena_lethality.group_size",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 73
+      },
+      "source": "module:docs.spec285.arena_lethality",
+      "target": "symbol:docs.spec285.arena_lethality.hero",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 132
+      },
+      "source": "module:docs.spec285.arena_lethality",
+      "target": "symbol:docs.spec285.arena_lethality.hero_decl",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 231
+      },
+      "source": "module:docs.spec285.arena_lethality",
+      "target": "symbol:docs.spec285.arena_lethality.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 195
+      },
+      "source": "module:docs.spec285.arena_lethality",
+      "target": "symbol:docs.spec285.arena_lethality.run",
       "type": "defines"
     },
     {
@@ -49616,7 +49869,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1730
+        "line": 1758
       },
       "source": "module:services.conflict_orchestrator",
       "target": "symbol:services.conflict_orchestrator._damage_fingerprint",
@@ -49715,7 +49968,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1316
+        "line": 1319
       },
       "source": "module:services.conflict_orchestrator",
       "target": "symbol:services.conflict_orchestrator._extend_ally_defense",
@@ -49726,7 +49979,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1471
+        "line": 1499
       },
       "source": "module:services.conflict_orchestrator",
       "target": "symbol:services.conflict_orchestrator._find_player",
@@ -49781,7 +50034,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1454
+        "line": 1482
       },
       "source": "module:services.conflict_orchestrator",
       "target": "symbol:services.conflict_orchestrator._hit_events",
@@ -49792,7 +50045,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1750
+        "line": 1778
       },
       "source": "module:services.conflict_orchestrator",
       "target": "symbol:services.conflict_orchestrator._is_cowardly",
@@ -49825,7 +50078,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1616
+        "line": 1644
       },
       "source": "module:services.conflict_orchestrator",
       "target": "symbol:services.conflict_orchestrator._maybe_abyss",
@@ -49880,7 +50133,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1331
+        "line": 1334
       },
       "source": "module:services.conflict_orchestrator",
       "target": "symbol:services.conflict_orchestrator._own_side_support",
@@ -49891,7 +50144,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1467
+        "line": 1495
       },
       "source": "module:services.conflict_orchestrator",
       "target": "symbol:services.conflict_orchestrator._player_id",
@@ -49935,7 +50188,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1704
+        "line": 1732
       },
       "source": "module:services.conflict_orchestrator",
       "target": "symbol:services.conflict_orchestrator._refused_player_item",
@@ -49946,7 +50199,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1342
+        "line": 1345
       },
       "source": "module:services.conflict_orchestrator",
       "target": "symbol:services.conflict_orchestrator._resolve_actor_turn",
@@ -49957,7 +50210,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1538
+        "line": 1566
       },
       "source": "module:services.conflict_orchestrator",
       "target": "symbol:services.conflict_orchestrator._resolve_last_stands",
@@ -50012,7 +50265,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1586
+        "line": 1614
       },
       "source": "module:services.conflict_orchestrator",
       "target": "symbol:services.conflict_orchestrator._stabilizer_for",
@@ -50023,7 +50276,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1761
+        "line": 1789
       },
       "source": "module:services.conflict_orchestrator",
       "target": "symbol:services.conflict_orchestrator._stalemate_guard",
@@ -50067,7 +50320,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1661
+        "line": 1689
       },
       "source": "module:services.conflict_orchestrator",
       "target": "symbol:services.conflict_orchestrator.apply_effect_spec",
@@ -50111,7 +50364,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1485
+        "line": 1513
       },
       "source": "module:services.conflict_orchestrator",
       "target": "symbol:services.conflict_orchestrator.resolve_terminals",
@@ -50122,7 +50375,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1813
+        "line": 1841
       },
       "source": "module:services.conflict_orchestrator",
       "target": "symbol:services.conflict_orchestrator.run_round",
@@ -118046,6 +118299,215 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 7
+      },
+      "source": "module:tests.test_spec285_lethality",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 8
+      },
+      "source": "module:tests.test_spec285_lethality",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 9
+      },
+      "source": "module:tests.test_spec285_lethality",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 31
+      },
+      "source": "module:tests.test_spec285_lethality",
+      "target": "symbol:tests.test_spec285_lethality._ally",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 238
+      },
+      "source": "module:tests.test_spec285_lethality",
+      "target": "symbol:tests.test_spec285_lethality._card_total_damage",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 45
+      },
+      "source": "module:tests.test_spec285_lethality",
+      "target": "symbol:tests.test_spec285_lethality._enemy",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 189
+      },
+      "source": "module:tests.test_spec285_lethality",
+      "target": "symbol:tests.test_spec285_lethality._lost_turns",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 73
+      },
+      "source": "module:tests.test_spec285_lethality",
+      "target": "symbol:tests.test_spec285_lethality._muralha",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 172
+      },
+      "source": "module:tests.test_spec285_lethality",
+      "target": "symbol:tests.test_spec285_lethality._mystic",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 69
+      },
+      "source": "module:tests.test_spec285_lethality",
+      "target": "symbol:tests.test_spec285_lethality._pass",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 14
+      },
+      "source": "module:tests.test_spec285_lethality",
+      "target": "symbol:tests.test_spec285_lethality._player",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 80
+      },
+      "source": "module:tests.test_spec285_lethality",
+      "target": "symbol:tests.test_spec285_lethality._protection_on",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 58
+      },
+      "source": "module:tests.test_spec285_lethality",
+      "target": "symbol:tests.test_spec285_lethality._world",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 127
+      },
+      "source": "module:tests.test_spec285_lethality",
+      "target": "symbol:tests.test_spec285_lethality.test_companion_support_card_on_player_extends_once",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 250
+      },
+      "source": "module:tests.test_spec285_lethality",
+      "target": "symbol:tests.test_spec285_lethality.test_no_enemy_card_kills_standard_hero_alone",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 84
+      },
+      "source": "module:tests.test_spec285_lethality",
+      "target": "symbol:tests.test_spec285_lethality.test_player_protection_on_ally_survives_ally_turn_this_round",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 107
+      },
+      "source": "module:tests.test_spec285_lethality",
+      "target": "symbol:tests.test_spec285_lethality.test_player_protection_on_self_unchanged",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 193
+      },
+      "source": "module:tests.test_spec285_lethality",
+      "target": "symbol:tests.test_spec285_lethality.test_tactical_control_denies_exactly_one_target_turn",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 261
+      },
+      "source": "module:tests.test_spec285_lethality",
+      "target": "symbol:tests.test_spec285_lethality.test_toque_gelido_rebalanced_from_generator",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec286_heroi_inconsciente.py",
         "line": 5
       },
@@ -120159,7 +120621,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 460
+        "line": 462
       },
       "source": "module:tests.test_tactical_archetypes_runtime",
       "target": "symbol:tests.test_tactical_archetypes_runtime._MinimumRng",
@@ -120247,7 +120709,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 575
+        "line": 577
       },
       "source": "module:tests.test_tactical_archetypes_runtime",
       "target": "symbol:tests.test_tactical_archetypes_runtime.test_cartas_inimigas_usam_catalogo_e_economia_propria_com_reacao_uma_vez",
@@ -120258,7 +120720,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 295
+        "line": 297
       },
       "source": "module:tests.test_tactical_archetypes_runtime",
       "target": "symbol:tests.test_tactical_archetypes_runtime.test_combatente_continua_usando_ataque_mecanico",
@@ -120269,7 +120731,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 402
+        "line": 404
       },
       "source": "module:tests.test_tactical_archetypes_runtime",
       "target": "symbol:tests.test_tactical_archetypes_runtime.test_conjurador_curado_controla_sem_ler_action_hint",
@@ -120280,7 +120742,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 431
+        "line": 433
       },
       "source": "module:tests.test_tactical_archetypes_runtime",
       "target": "symbol:tests.test_tactical_archetypes_runtime.test_covarde_curado_sozinho_rende_por_trigger_canonico",
@@ -120291,7 +120753,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 465
+        "line": 467
       },
       "source": "module:tests.test_tactical_archetypes_runtime",
       "target": "symbol:tests.test_tactical_archetypes_runtime.test_estabilizacao_tatica_nao_duplica_tentativa_automatica_no_round",
@@ -120302,7 +120764,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 529
+        "line": 531
       },
       "source": "module:tests.test_tactical_archetypes_runtime",
       "target": "symbol:tests.test_tactical_archetypes_runtime.test_estado_terminal_falha_uma_vez_e_tenta_de_novo_na_rodada_seguinte",
@@ -120313,7 +120775,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 231
+        "line": 233
       },
       "source": "module:tests.test_tactical_archetypes_runtime",
       "target": "symbol:tests.test_tactical_archetypes_runtime.test_estrategista_apoia_combatente_e_vantagem_nao_empilha",
@@ -120324,7 +120786,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 359
+        "line": 361
       },
       "source": "module:tests.test_tactical_archetypes_runtime",
       "target": "symbol:tests.test_tactical_archetypes_runtime.test_gatilhos_curados_sao_derivados_apenas_do_estado_canonico",
@@ -120368,7 +120830,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 256
+        "line": 258
       },
       "source": "module:tests.test_tactical_archetypes_runtime",
       "target": "symbol:tests.test_tactical_archetypes_runtime.test_oportunista_com_vitalidade_baixa_recua_sem_atacar",
@@ -120379,7 +120841,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 330
+        "line": 332
       },
       "source": "module:tests.test_tactical_archetypes_runtime",
       "target": "symbol:tests.test_tactical_archetypes_runtime.test_perfis_curados_recebem_action_key_por_tabela_fechada",
@@ -120390,7 +120852,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 555
+        "line": 557
       },
       "source": "module:tests.test_tactical_archetypes_runtime",
       "target": "symbol:tests.test_tactical_archetypes_runtime.test_sobrevivente_do_last_stand_so_morre_ao_receber_novo_dano",
@@ -120412,7 +120874,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 510
+        "line": 512
       },
       "source": "module:tests.test_tactical_archetypes_runtime",
       "target": "symbol:tests.test_tactical_archetypes_runtime.test_todo_bestiario_curado_normaliza_para_action_keys_fechadas",
@@ -136212,6 +136674,347 @@
       },
       "source": "symbol:docs.spec283.arena_ab.run",
       "target": "symbol:docs.spec283.arena_ab.fight",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 125
+      },
+      "source": "symbol:docs.spec285.arena_lethality._card_damage",
+      "target": "symbol:services.cards.get_card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 121
+      },
+      "source": "symbol:docs.spec285.arena_lethality._card_kind",
+      "target": "symbol:services.cards.get_card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 116
+      },
+      "source": "symbol:docs.spec285.arena_lethality._instances",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 86
+      },
+      "source": "symbol:docs.spec285.arena_lethality.creatures_by_category",
+      "target": "symbol:agents.bestiary.load_bestiary",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 87
+      },
+      "source": "symbol:docs.spec285.arena_lethality.creatures_by_category",
+      "target": "symbol:combat_mechanics.normalize_categoria",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 161
+      },
+      "source": "symbol:docs.spec285.arena_lethality.fight",
+      "target": "symbol:docs.spec285.arena_lethality._instances",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 160
+      },
+      "source": "symbol:docs.spec285.arena_lethality.fight",
+      "target": "symbol:docs.spec285.arena_lethality.hero",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 179
+      },
+      "source": "symbol:docs.spec285.arena_lethality.fight",
+      "target": "symbol:docs.spec285.arena_lethality.hero_decl",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 171
+      },
+      "source": "symbol:docs.spec285.arena_lethality.fight",
+      "target": "symbol:services.conflict_orchestrator._can_act",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 180
+      },
+      "source": "symbol:docs.spec285.arena_lethality.fight",
+      "target": "symbol:services.conflict_orchestrator.run_round",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 167
+      },
+      "source": "symbol:docs.spec285.arena_lethality.fight",
+      "target": "symbol:services.conflict_scene.freeze",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 164
+      },
+      "source": "symbol:docs.spec285.arena_lethality.fight",
+      "target": "symbol:services.conflict_scene.new_scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 166
+      },
+      "source": "symbol:docs.spec285.arena_lethality.fight",
+      "target": "symbol:services.conflict_scene.place",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 99
+      },
+      "source": "symbol:docs.spec285.arena_lethality.group_size",
+      "target": "symbol:encounter_budget.encounter_budget",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 76
+      },
+      "source": "symbol:docs.spec285.arena_lethality.hero",
+      "target": "symbol:playtest.runner._build_initial_state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 81
+      },
+      "source": "symbol:docs.spec285.arena_lethality.hero",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 150
+      },
+      "source": "symbol:docs.spec285.arena_lethality.hero_decl",
+      "target": "symbol:docs.spec285.arena_lethality._card_damage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 139
+      },
+      "source": "symbol:docs.spec285.arena_lethality.hero_decl",
+      "target": "symbol:docs.spec285.arena_lethality._card_kind",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 147
+      },
+      "source": "symbol:docs.spec285.arena_lethality.hero_decl",
+      "target": "symbol:docs.spec285.arena_lethality._card_kind",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 139
+      },
+      "source": "symbol:docs.spec285.arena_lethality.hero_decl",
+      "target": "symbol:services.cards.can_use_card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 147
+      },
+      "source": "symbol:docs.spec285.arena_lethality.hero_decl",
+      "target": "symbol:services.cards.can_use_card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 140
+      },
+      "source": "symbol:docs.spec285.arena_lethality.hero_decl",
+      "target": "symbol:services.conflict_turn.TurnDeclaration",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 151
+      },
+      "source": "symbol:docs.spec285.arena_lethality.hero_decl",
+      "target": "symbol:services.conflict_turn.TurnDeclaration",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 154
+      },
+      "source": "symbol:docs.spec285.arena_lethality.hero_decl",
+      "target": "symbol:services.conflict_turn.TurnDeclaration",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 142
+      },
+      "source": "symbol:docs.spec285.arena_lethality.hero_decl",
+      "target": "symbol:services.conflict_turn.TurnStep",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 152
+      },
+      "source": "symbol:docs.spec285.arena_lethality.hero_decl",
+      "target": "symbol:services.conflict_turn.TurnStep",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 155
+      },
+      "source": "symbol:docs.spec285.arena_lethality.hero_decl",
+      "target": "symbol:services.conflict_turn.TurnStep",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 239
+      },
+      "source": "symbol:docs.spec285.arena_lethality.main",
+      "target": "symbol:docs.spec285.arena_lethality.run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 196
+      },
+      "source": "symbol:docs.spec285.arena_lethality.run",
+      "target": "symbol:docs.spec285.arena_lethality.creatures_by_category",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 216
+      },
+      "source": "symbol:docs.spec285.arena_lethality.run",
+      "target": "symbol:docs.spec285.arena_lethality.fight",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec285/arena_lethality.py",
+        "line": 201
+      },
+      "source": "symbol:docs.spec285.arena_lethality.run",
+      "target": "symbol:docs.spec285.arena_lethality.group_size",
       "type": "calls"
     },
     {
@@ -187039,7 +187842,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1472
+        "line": 1500
       },
       "source": "symbol:services.conflict_orchestrator._find_player",
       "target": "symbol:services.conflict_orchestrator._player_id",
@@ -187061,7 +187864,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1629
+        "line": 1657
       },
       "source": "symbol:services.conflict_orchestrator._maybe_abyss",
       "target": "symbol:services.abyss_events.select_event",
@@ -187072,7 +187875,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1652
+        "line": 1680
       },
       "source": "symbol:services.conflict_orchestrator._maybe_abyss",
       "target": "symbol:services.abyss_events.trigger_event",
@@ -187083,7 +187886,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1658
+        "line": 1686
       },
       "source": "symbol:services.conflict_orchestrator._maybe_abyss",
       "target": "symbol:services.conflict_orchestrator.apply_effect_spec",
@@ -187259,7 +188062,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1336
+        "line": 1339
       },
       "source": "symbol:services.conflict_orchestrator._own_side_support",
       "target": "symbol:services.conflict_orchestrator._get_card",
@@ -187270,7 +188073,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1339
+        "line": 1342
       },
       "source": "symbol:services.conflict_orchestrator._own_side_support",
       "target": "symbol:services.conflict_orchestrator._same_side_ids",
@@ -187325,7 +188128,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1709
+        "line": 1737
       },
       "source": "symbol:services.conflict_orchestrator._refused_player_item",
       "target": "symbol:services.conflict_orchestrator._player_id",
@@ -187336,7 +188139,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1715
+        "line": 1743
       },
       "source": "symbol:services.conflict_orchestrator._refused_player_item",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
@@ -187347,7 +188150,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1426
+        "line": 1454
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:combat_mechanics.apply_blood_leak",
@@ -187358,7 +188161,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1435
+        "line": 1463
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:combat_mechanics.triggered_passives",
@@ -187369,7 +188172,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1433
+        "line": 1461
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_orchestrator._alive",
@@ -187380,7 +188183,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1410
+        "line": 1438
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_orchestrator._apply_player_card_mechanics",
@@ -187391,7 +188194,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1441
+        "line": 1469
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_orchestrator._basic_attack",
@@ -187402,7 +188205,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1359
+        "line": 1362
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_orchestrator._can_act",
@@ -187413,7 +188216,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1433
+        "line": 1461
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_orchestrator._can_act",
@@ -187424,7 +188227,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1432
+        "line": 1460
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_orchestrator._check_terminal",
@@ -187435,7 +188238,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1357
+        "line": 1360
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_orchestrator._declaration_leaves_engagement",
@@ -187446,7 +188249,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1424
+        "line": 1452
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_orchestrator._entropy_event",
@@ -187457,7 +188260,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1431
+        "line": 1459
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_orchestrator._entropy_event",
@@ -187468,7 +188271,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1388
+        "line": 1391
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_orchestrator._extend_ally_defense",
@@ -187479,7 +188282,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1419
+        "line": 1412
+      },
+      "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
+      "target": "symbol:services.conflict_orchestrator._extend_ally_defense",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 1447
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_orchestrator._hit_events",
@@ -187490,7 +188304,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1370
+        "line": 1373
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_orchestrator._open_reaction_window",
@@ -187501,7 +188315,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1368
+        "line": 1371
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_orchestrator._own_side_support",
@@ -187512,7 +188326,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1406
+        "line": 1434
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_orchestrator._player_id",
@@ -187523,7 +188337,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1409
+        "line": 1437
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_orchestrator._player_id",
@@ -187534,7 +188348,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1413
+        "line": 1441
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_orchestrator._player_id",
@@ -187545,7 +188359,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1429
+        "line": 1457
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_orchestrator._record_class_event",
@@ -187556,7 +188370,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1358
+        "line": 1361
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_orchestrator._resolve_opportunity_attacks",
@@ -187567,7 +188381,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1376
+        "line": 1379
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_orchestrator._resolve_tactical_action",
@@ -187578,7 +188392,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1375
+        "line": 1406
+      },
+      "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
+      "target": "symbol:services.conflict_orchestrator._same_side_ids",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 1378
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_scene.reset_turn_budget",
@@ -187589,7 +188414,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1353
+        "line": 1356
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
@@ -187600,7 +188425,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1379
+        "line": 1382
       },
       "source": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "target": "symbol:services.conflict_turn.resolve_turn",
@@ -187611,7 +188436,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1562
+        "line": 1590
       },
       "source": "symbol:services.conflict_orchestrator._resolve_last_stands",
       "target": "symbol:services.conflict_orchestrator._basic_attack",
@@ -187622,7 +188447,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1560
+        "line": 1588
       },
       "source": "symbol:services.conflict_orchestrator._resolve_last_stands",
       "target": "symbol:services.conflict_orchestrator._name",
@@ -187633,7 +188458,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1574
+        "line": 1602
       },
       "source": "symbol:services.conflict_orchestrator._resolve_last_stands",
       "target": "symbol:services.conflict_orchestrator._name",
@@ -187644,7 +188469,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1555
+        "line": 1583
       },
       "source": "symbol:services.conflict_orchestrator._resolve_last_stands",
       "target": "symbol:services.conflict_orchestrator._nearest_target",
@@ -187655,7 +188480,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1557
+        "line": 1585
       },
       "source": "symbol:services.conflict_orchestrator._resolve_last_stands",
       "target": "symbol:services.conflict_orchestrator._opposing_ids",
@@ -187666,7 +188491,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1575
+        "line": 1603
       },
       "source": "symbol:services.conflict_orchestrator._resolve_last_stands",
       "target": "symbol:services.death_flow.enter_terminal_state",
@@ -187677,7 +188502,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1580
+        "line": 1608
       },
       "source": "symbol:services.conflict_orchestrator._resolve_last_stands",
       "target": "symbol:services.death_flow.should_trigger_last_stand",
@@ -187688,7 +188513,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1581
+        "line": 1609
       },
       "source": "symbol:services.conflict_orchestrator._resolve_last_stands",
       "target": "symbol:services.death_flow.trigger_last_stand",
@@ -187864,7 +188689,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1291
+        "line": 1294
       },
       "source": "symbol:services.conflict_orchestrator._resolve_tactical_action",
       "target": "symbol:gamedata.sync_legacy_hp_aliases",
@@ -187908,7 +188733,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1286
+        "line": 1289
       },
       "source": "symbol:services.conflict_orchestrator._resolve_tactical_action",
       "target": "symbol:services.conflict_orchestrator._available_for_aid",
@@ -187930,17 +188755,6 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1294
-      },
-      "source": "symbol:services.conflict_orchestrator._resolve_tactical_action",
-      "target": "symbol:services.conflict_orchestrator._name",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/conflict_orchestrator.py",
         "line": 1297
       },
       "source": "symbol:services.conflict_orchestrator._resolve_tactical_action",
@@ -187952,7 +188766,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1305
+        "line": 1300
       },
       "source": "symbol:services.conflict_orchestrator._resolve_tactical_action",
       "target": "symbol:services.conflict_orchestrator._name",
@@ -187963,7 +188777,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1309
+        "line": 1308
+      },
+      "source": "symbol:services.conflict_orchestrator._resolve_tactical_action",
+      "target": "symbol:services.conflict_orchestrator._name",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 1312
       },
       "source": "symbol:services.conflict_orchestrator._resolve_tactical_action",
       "target": "symbol:services.conflict_orchestrator._name",
@@ -187985,7 +188810,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1310
+        "line": 1313
       },
       "source": "symbol:services.conflict_orchestrator._resolve_tactical_action",
       "target": "symbol:services.conflict_orchestrator._record_tactic",
@@ -188018,7 +188843,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1296
+        "line": 1299
       },
       "source": "symbol:services.conflict_orchestrator._resolve_tactical_action",
       "target": "symbol:services.conflict_scene.grant_tactical_modifier",
@@ -188040,7 +188865,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1299
+        "line": 1302
       },
       "source": "symbol:services.conflict_orchestrator._resolve_tactical_action",
       "target": "symbol:services.conflict_scene.move_distance",
@@ -188051,7 +188876,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1284
+        "line": 1287
       },
       "source": "symbol:services.conflict_orchestrator._resolve_tactical_action",
       "target": "symbol:services.conflict_scene.set_tactical_cooldown",
@@ -188095,7 +188920,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1600
+        "line": 1628
       },
       "source": "symbol:services.conflict_orchestrator._stabilizer_for",
       "target": "symbol:services.conflict_orchestrator._alive",
@@ -188106,7 +188931,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1596
+        "line": 1624
       },
       "source": "symbol:services.conflict_orchestrator._stabilizer_for",
       "target": "symbol:services.conflict_orchestrator._same_side_ids",
@@ -188117,7 +188942,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1605
+        "line": 1633
       },
       "source": "symbol:services.conflict_orchestrator._stabilizer_for",
       "target": "symbol:services.conflict_orchestrator._stabilizer_for.rank",
@@ -188128,7 +188953,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1782
+        "line": 1810
       },
       "source": "symbol:services.conflict_orchestrator._stalemate_guard",
       "target": "symbol:services.conflict_orchestrator._can_act",
@@ -188139,7 +188964,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1770
+        "line": 1798
       },
       "source": "symbol:services.conflict_orchestrator._stalemate_guard",
       "target": "symbol:services.conflict_orchestrator._damage_fingerprint",
@@ -188150,7 +188975,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1784
+        "line": 1812
       },
       "source": "symbol:services.conflict_orchestrator._stalemate_guard",
       "target": "symbol:services.conflict_orchestrator._is_cowardly",
@@ -188161,7 +188986,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1792
+        "line": 1820
       },
       "source": "symbol:services.conflict_orchestrator._stalemate_guard",
       "target": "symbol:services.conflict_orchestrator._name",
@@ -188172,7 +188997,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1805
+        "line": 1833
       },
       "source": "symbol:services.conflict_orchestrator._stalemate_guard",
       "target": "symbol:services.conflict_orchestrator._name",
@@ -188183,7 +189008,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1798
+        "line": 1826
       },
       "source": "symbol:services.conflict_orchestrator._stalemate_guard",
       "target": "symbol:services.conflict_scene._reveal",
@@ -188260,7 +189085,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1698
+        "line": 1726
       },
       "source": "symbol:services.conflict_orchestrator.apply_effect_spec",
       "target": "symbol:combat_mechanics.apply_condition",
@@ -188271,7 +189096,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1696
+        "line": 1724
       },
       "source": "symbol:services.conflict_orchestrator.apply_effect_spec",
       "target": "symbol:combat_mechanics.parse_condition",
@@ -188282,7 +189107,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1682
+        "line": 1710
       },
       "source": "symbol:services.conflict_orchestrator.apply_effect_spec",
       "target": "symbol:services.conflict_damage.resolve_damage_and_wounds",
@@ -188293,7 +189118,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1690
+        "line": 1718
       },
       "source": "symbol:services.conflict_orchestrator.apply_effect_spec",
       "target": "symbol:services.conflict_orchestrator._check_terminal",
@@ -188887,7 +189712,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1515
+        "line": 1543
       },
       "source": "symbol:services.conflict_orchestrator.resolve_terminals",
       "target": "symbol:services.conflict_orchestrator._stabilizer_for",
@@ -188898,7 +189723,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1511
+        "line": 1539
       },
       "source": "symbol:services.conflict_orchestrator.resolve_terminals",
       "target": "symbol:services.conflict_scene.tactical_round",
@@ -188909,7 +189734,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1516
+        "line": 1544
       },
       "source": "symbol:services.conflict_orchestrator.resolve_terminals",
       "target": "symbol:services.death_flow.attempt_stabilization",
@@ -188920,7 +189745,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1972
+        "line": 2000
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:combat_mechanics.apply_entropy_on_kill",
@@ -188931,7 +189756,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1911
+        "line": 1939
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:combat_mechanics.apply_transformacao",
@@ -188942,7 +189767,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1973
+        "line": 2001
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:combat_mechanics.check_recidiva",
@@ -188953,7 +189778,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1944
+        "line": 1972
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:combat_mechanics.has_control",
@@ -188964,7 +189789,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1890
+        "line": 1918
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:combat_mechanics.reset_entropy_turn",
@@ -188975,7 +189800,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1896
+        "line": 1924
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:combat_mechanics.tick_boiler",
@@ -188986,7 +189811,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1934
+        "line": 1962
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._agility",
@@ -188997,7 +189822,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1933
+        "line": 1961
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._can_act",
@@ -189008,65 +189833,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1939
+        "line": 1967
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._can_act",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/conflict_orchestrator.py",
-        "line": 1950
-      },
-      "source": "symbol:services.conflict_orchestrator.run_round",
-      "target": "symbol:services.conflict_orchestrator._can_act",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/conflict_orchestrator.py",
-        "line": 1949
-      },
-      "source": "symbol:services.conflict_orchestrator.run_round",
-      "target": "symbol:services.conflict_orchestrator._check_terminal",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/conflict_orchestrator.py",
-        "line": 1954
-      },
-      "source": "symbol:services.conflict_orchestrator.run_round",
-      "target": "symbol:services.conflict_orchestrator._expire_stat_conditions",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/conflict_orchestrator.py",
-        "line": 1962
-      },
-      "source": "symbol:services.conflict_orchestrator.run_round",
-      "target": "symbol:services.conflict_orchestrator._expire_stat_conditions",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/conflict_orchestrator.py",
-        "line": 1867
-      },
-      "source": "symbol:services.conflict_orchestrator.run_round",
-      "target": "symbol:services.conflict_orchestrator._find_player",
       "type": "calls"
     },
     {
@@ -189077,51 +189847,7 @@
         "line": 1978
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
-      "target": "symbol:services.conflict_orchestrator._maybe_abyss",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/conflict_orchestrator.py",
-        "line": 1953
-      },
-      "source": "symbol:services.conflict_orchestrator.run_round",
-      "target": "symbol:services.conflict_orchestrator._name",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/conflict_orchestrator.py",
-        "line": 1868
-      },
-      "source": "symbol:services.conflict_orchestrator.run_round",
-      "target": "symbol:services.conflict_orchestrator._player_id",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/conflict_orchestrator.py",
-        "line": 1902
-      },
-      "source": "symbol:services.conflict_orchestrator.run_round",
-      "target": "symbol:services.conflict_orchestrator._record_class_event",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/conflict_orchestrator.py",
-        "line": 1913
-      },
-      "source": "symbol:services.conflict_orchestrator.run_round",
-      "target": "symbol:services.conflict_orchestrator._record_class_event",
+      "target": "symbol:services.conflict_orchestrator._can_act",
       "type": "calls"
     },
     {
@@ -189132,6 +189858,83 @@
         "line": 1977
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator._check_terminal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 1982
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator._expire_stat_conditions",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 1990
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator._expire_stat_conditions",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 1895
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator._find_player",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 2006
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator._maybe_abyss",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 1981
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator._name",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 1896
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator._player_id",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 1930
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._record_class_event",
       "type": "calls"
     },
@@ -189140,7 +189943,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1855
+        "line": 1941
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator._record_class_event",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 2005
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator._record_class_event",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 1883
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._refused_player_item",
@@ -189151,7 +189976,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1961
+        "line": 1989
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._resolve_actor_turn",
@@ -189162,7 +189987,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1965
+        "line": 1993
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._resolve_last_stands",
@@ -189173,7 +189998,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1863
+        "line": 1891
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._stalemate_guard",
@@ -189184,7 +190009,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1948
+        "line": 1976
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._tick_conditions_v4",
@@ -189195,7 +190020,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1958
+        "line": 1986
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator.enemy_declaration",
@@ -189206,7 +190031,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1968
+        "line": 1996
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator.resolve_terminals",
@@ -189217,7 +190042,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1925
+        "line": 1953
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_resolution.roll_initiative_by_side",
@@ -189228,7 +190053,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1862
+        "line": 1890
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_scene.advance_tactical_state",
@@ -189239,7 +190064,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1871
+        "line": 1899
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
@@ -189250,7 +190075,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1982
+        "line": 2010
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.death_flow.combat_should_end",
@@ -324502,6 +325327,490 @@
       "type": "calls"
     },
     {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 32
+      },
+      "source": "symbol:tests.test_spec285_lethality._ally",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 245
+      },
+      "source": "symbol:tests.test_spec285_lethality._card_total_damage",
+      "target": "symbol:services.conflict_turn._effect_amount",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 46
+      },
+      "source": "symbol:tests.test_spec285_lethality._enemy",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 74
+      },
+      "source": "symbol:tests.test_spec285_lethality._muralha",
+      "target": "symbol:services.conflict_turn.TurnDeclaration",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 76
+      },
+      "source": "symbol:tests.test_spec285_lethality._muralha",
+      "target": "symbol:services.conflict_turn.TurnStep",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 186
+      },
+      "source": "symbol:tests.test_spec285_lethality._mystic",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 70
+      },
+      "source": "symbol:tests.test_spec285_lethality._pass",
+      "target": "symbol:services.conflict_turn.TurnDeclaration",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 70
+      },
+      "source": "symbol:tests.test_spec285_lethality._pass",
+      "target": "symbol:services.conflict_turn.TurnStep",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 28
+      },
+      "source": "symbol:tests.test_spec285_lethality._player",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 63
+      },
+      "source": "symbol:tests.test_spec285_lethality._world",
+      "target": "symbol:services.conflict_scene.freeze",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 60
+      },
+      "source": "symbol:tests.test_spec285_lethality._world",
+      "target": "symbol:services.conflict_scene.new_scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 62
+      },
+      "source": "symbol:tests.test_spec285_lethality._world",
+      "target": "symbol:services.conflict_scene.place",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 59
+      },
+      "source": "symbol:tests.test_spec285_lethality._world",
+      "target": "symbol:tests.test_spec285_lethality._ally",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 59
+      },
+      "source": "symbol:tests.test_spec285_lethality._world",
+      "target": "symbol:tests.test_spec285_lethality._enemy",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 59
+      },
+      "source": "symbol:tests.test_spec285_lethality._world",
+      "target": "symbol:tests.test_spec285_lethality._player",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 145
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_companion_support_card_on_player_extends_once",
+      "target": "symbol:services.conflict_orchestrator.run_round",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 152
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_companion_support_card_on_player_extends_once",
+      "target": "symbol:services.conflict_turn.TurnDeclaration",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 154
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_companion_support_card_on_player_extends_once",
+      "target": "symbol:services.conflict_turn.TurnStep",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 151
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_companion_support_card_on_player_extends_once",
+      "target": "symbol:tests.test_spec285_lethality._pass",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 158
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_companion_support_card_on_player_extends_once",
+      "target": "symbol:tests.test_spec285_lethality._pass",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 139
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_companion_support_card_on_player_extends_once",
+      "target": "symbol:tests.test_spec285_lethality._world",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 133
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_companion_support_card_on_player_extends_once",
+      "target": "symbol:tests.test_spec285_lethality.test_companion_support_card_on_player_extends_once.spy",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 254
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_no_enemy_card_kills_standard_hero_alone",
+      "target": "symbol:tests.test_spec285_lethality._card_total_damage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 256
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_no_enemy_card_kills_standard_hero_alone",
+      "target": "symbol:tests.test_spec285_lethality._card_total_damage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 89
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_player_protection_on_ally_survives_ally_turn_this_round",
+      "target": "symbol:services.conflict_orchestrator.run_round",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 95
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_player_protection_on_ally_survives_ally_turn_this_round",
+      "target": "symbol:tests.test_spec285_lethality._muralha",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 96
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_player_protection_on_ally_survives_ally_turn_this_round",
+      "target": "symbol:tests.test_spec285_lethality._pass",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 97
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_player_protection_on_ally_survives_ally_turn_this_round",
+      "target": "symbol:tests.test_spec285_lethality._pass",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 103
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_player_protection_on_ally_survives_ally_turn_this_round",
+      "target": "symbol:tests.test_spec285_lethality._protection_on",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 88
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_player_protection_on_ally_survives_ally_turn_this_round",
+      "target": "symbol:tests.test_spec285_lethality._world",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 109
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_player_protection_on_self_unchanged",
+      "target": "symbol:services.conflict_orchestrator.run_round",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 115
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_player_protection_on_self_unchanged",
+      "target": "symbol:tests.test_spec285_lethality._muralha",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 116
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_player_protection_on_self_unchanged",
+      "target": "symbol:tests.test_spec285_lethality._pass",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 117
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_player_protection_on_self_unchanged",
+      "target": "symbol:tests.test_spec285_lethality._pass",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 122
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_player_protection_on_self_unchanged",
+      "target": "symbol:tests.test_spec285_lethality._protection_on",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 108
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_player_protection_on_self_unchanged",
+      "target": "symbol:tests.test_spec285_lethality._world",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 205
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_tactical_control_denies_exactly_one_target_turn",
+      "target": "symbol:services.conflict_orchestrator.run_round",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 199
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_tactical_control_denies_exactly_one_target_turn",
+      "target": "symbol:services.conflict_scene.freeze",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 196
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_tactical_control_denies_exactly_one_target_turn",
+      "target": "symbol:services.conflict_scene.new_scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 198
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_tactical_control_denies_exactly_one_target_turn",
+      "target": "symbol:services.conflict_scene.place",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 221
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_tactical_control_denies_exactly_one_target_turn",
+      "target": "symbol:tests.test_spec285_lethality._lost_turns",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 195
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_tactical_control_denies_exactly_one_target_turn",
+      "target": "symbol:tests.test_spec285_lethality._mystic",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 210
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_tactical_control_denies_exactly_one_target_turn",
+      "target": "symbol:tests.test_spec285_lethality._pass",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec285_lethality.py",
+        "line": 194
+      },
+      "source": "symbol:tests.test_spec285_lethality.test_tactical_control_denies_exactly_one_target_turn",
+      "target": "symbol:tests.test_spec285_lethality._player",
+      "type": "calls"
+    },
+    {
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
@@ -328950,7 +330259,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 461
+        "line": 463
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime._MinimumRng",
       "target": "symbol:tests.test_tactical_archetypes_runtime._MinimumRng.randint",
@@ -329192,7 +330501,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 591
+        "line": 593
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_cartas_inimigas_usam_catalogo_e_economia_propria_com_reacao_uma_vez",
       "target": "symbol:services.conflict_orchestrator.run_round",
@@ -329203,7 +330512,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 603
+        "line": 605
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_cartas_inimigas_usam_catalogo_e_economia_propria_com_reacao_uma_vez",
       "target": "symbol:services.conflict_orchestrator.run_round",
@@ -329214,7 +330523,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 577
+        "line": 579
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_cartas_inimigas_usam_catalogo_e_economia_propria_com_reacao_uma_vez",
       "target": "symbol:tests.test_tactical_archetypes_runtime._actor",
@@ -329225,7 +330534,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 595
+        "line": 597
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_cartas_inimigas_usam_catalogo_e_economia_propria_com_reacao_uma_vez",
       "target": "symbol:tests.test_tactical_archetypes_runtime._attack",
@@ -329236,7 +330545,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 607
+        "line": 609
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_cartas_inimigas_usam_catalogo_e_economia_propria_com_reacao_uma_vez",
       "target": "symbol:tests.test_tactical_archetypes_runtime._attack",
@@ -329247,7 +330556,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 576
+        "line": 578
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_cartas_inimigas_usam_catalogo_e_economia_propria_com_reacao_uma_vez",
       "target": "symbol:tests.test_tactical_archetypes_runtime._player",
@@ -329258,7 +330567,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 586
+        "line": 588
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_cartas_inimigas_usam_catalogo_e_economia_propria_com_reacao_uma_vez",
       "target": "symbol:tests.test_tactical_archetypes_runtime._scene",
@@ -329269,7 +330578,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 302
+        "line": 304
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_combatente_continua_usando_ataque_mecanico",
       "target": "symbol:services.conflict_orchestrator.run_round",
@@ -329280,7 +330589,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 297
+        "line": 299
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_combatente_continua_usando_ataque_mecanico",
       "target": "symbol:tests.test_tactical_archetypes_runtime._actor",
@@ -329291,21 +330600,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 306
+        "line": 308
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_combatente_continua_usando_ataque_mecanico",
       "target": "symbol:tests.test_tactical_archetypes_runtime._pass",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 296
-      },
-      "source": "symbol:tests.test_tactical_archetypes_runtime.test_combatente_continua_usando_ataque_mecanico",
-      "target": "symbol:tests.test_tactical_archetypes_runtime._player",
       "type": "calls"
     },
     {
@@ -329316,6 +330614,17 @@
         "line": 298
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_combatente_continua_usando_ataque_mecanico",
+      "target": "symbol:tests.test_tactical_archetypes_runtime._player",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_tactical_archetypes_runtime.py",
+        "line": 300
+      },
+      "source": "symbol:tests.test_tactical_archetypes_runtime.test_combatente_continua_usando_ataque_mecanico",
       "target": "symbol:tests.test_tactical_archetypes_runtime._scene",
       "type": "calls"
     },
@@ -329324,7 +330633,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 312
+        "line": 314
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_combatente_continua_usando_ataque_mecanico",
       "target": "symbol:tests.test_tactical_archetypes_runtime._tactics",
@@ -329335,21 +330644,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 420
+        "line": 422
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_conjurador_curado_controla_sem_ler_action_hint",
       "target": "symbol:services.conflict_orchestrator.enemy_declaration",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 404
-      },
-      "source": "symbol:tests.test_tactical_archetypes_runtime.test_conjurador_curado_controla_sem_ler_action_hint",
-      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
       "type": "calls"
     },
     {
@@ -329360,6 +330658,17 @@
         "line": 406
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_conjurador_curado_controla_sem_ler_action_hint",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_tactical_archetypes_runtime.py",
+        "line": 408
+      },
+      "source": "symbol:tests.test_tactical_archetypes_runtime.test_conjurador_curado_controla_sem_ler_action_hint",
       "target": "symbol:tests.test_tactical_archetypes_runtime._actor",
       "type": "calls"
     },
@@ -329368,7 +330677,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 403
+        "line": 405
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_conjurador_curado_controla_sem_ler_action_hint",
       "target": "symbol:tests.test_tactical_archetypes_runtime._player",
@@ -329379,7 +330688,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 419
+        "line": 421
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_conjurador_curado_controla_sem_ler_action_hint",
       "target": "symbol:tests.test_tactical_archetypes_runtime._scene",
@@ -329390,7 +330699,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 449
+        "line": 451
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_covarde_curado_sozinho_rende_por_trigger_canonico",
       "target": "symbol:services.conflict_orchestrator.enemy_declaration",
@@ -329401,7 +330710,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 433
+        "line": 435
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_covarde_curado_sozinho_rende_por_trigger_canonico",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -329412,7 +330721,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 435
+        "line": 437
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_covarde_curado_sozinho_rende_por_trigger_canonico",
       "target": "symbol:tests.test_tactical_archetypes_runtime._actor",
@@ -329423,7 +330732,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 432
+        "line": 434
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_covarde_curado_sozinho_rende_por_trigger_canonico",
       "target": "symbol:tests.test_tactical_archetypes_runtime._player",
@@ -329434,7 +330743,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 448
+        "line": 450
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_covarde_curado_sozinho_rende_por_trigger_canonico",
       "target": "symbol:tests.test_tactical_archetypes_runtime._scene",
@@ -329445,7 +330754,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 484
+        "line": 486
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estabilizacao_tatica_nao_duplica_tentativa_automatica_no_round",
       "target": "symbol:services.conflict_orchestrator._resolve_tactical_action",
@@ -329456,21 +330765,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 497
+        "line": 499
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estabilizacao_tatica_nao_duplica_tentativa_automatica_no_round",
       "target": "symbol:services.conflict_orchestrator.resolve_terminals",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 490
-      },
-      "source": "symbol:tests.test_tactical_archetypes_runtime.test_estabilizacao_tatica_nao_duplica_tentativa_automatica_no_round",
-      "target": "symbol:services.conflict_turn.TurnStep",
       "type": "calls"
     },
     {
@@ -329481,7 +330779,7 @@
         "line": 492
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estabilizacao_tatica_nao_duplica_tentativa_automatica_no_round",
-      "target": "symbol:tests.test_tactical_archetypes_runtime._MinimumRng",
+      "target": "symbol:services.conflict_turn.TurnStep",
       "type": "calls"
     },
     {
@@ -329489,7 +330787,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 502
+        "line": 494
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estabilizacao_tatica_nao_duplica_tentativa_automatica_no_round",
       "target": "symbol:tests.test_tactical_archetypes_runtime._MinimumRng",
@@ -329500,7 +330798,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 466
+        "line": 504
+      },
+      "source": "symbol:tests.test_tactical_archetypes_runtime.test_estabilizacao_tatica_nao_duplica_tentativa_automatica_no_round",
+      "target": "symbol:tests.test_tactical_archetypes_runtime._MinimumRng",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_tactical_archetypes_runtime.py",
+        "line": 468
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estabilizacao_tatica_nao_duplica_tentativa_automatica_no_round",
       "target": "symbol:tests.test_tactical_archetypes_runtime._actor",
@@ -329511,7 +330820,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 467
+        "line": 469
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estabilizacao_tatica_nao_duplica_tentativa_automatica_no_round",
       "target": "symbol:tests.test_tactical_archetypes_runtime._actor",
@@ -329522,7 +330831,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 474
+        "line": 476
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estabilizacao_tatica_nao_duplica_tentativa_automatica_no_round",
       "target": "symbol:tests.test_tactical_archetypes_runtime._scene",
@@ -329533,7 +330842,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 543
+        "line": 545
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estado_terminal_falha_uma_vez_e_tenta_de_novo_na_rodada_seguinte",
       "target": "symbol:services.conflict_orchestrator.resolve_terminals",
@@ -329544,7 +330853,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 549
+        "line": 551
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estado_terminal_falha_uma_vez_e_tenta_de_novo_na_rodada_seguinte",
       "target": "symbol:services.conflict_orchestrator.resolve_terminals",
@@ -329555,7 +330864,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 548
+        "line": 550
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estado_terminal_falha_uma_vez_e_tenta_de_novo_na_rodada_seguinte",
       "target": "symbol:services.conflict_scene.advance_tactical_state",
@@ -329566,7 +330875,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 543
+        "line": 545
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estado_terminal_falha_uma_vez_e_tenta_de_novo_na_rodada_seguinte",
       "target": "symbol:tests.test_tactical_archetypes_runtime._MinimumRng",
@@ -329577,7 +330886,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 549
+        "line": 551
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estado_terminal_falha_uma_vez_e_tenta_de_novo_na_rodada_seguinte",
       "target": "symbol:tests.test_tactical_archetypes_runtime._MinimumRng",
@@ -329588,7 +330897,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 530
+        "line": 532
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estado_terminal_falha_uma_vez_e_tenta_de_novo_na_rodada_seguinte",
       "target": "symbol:tests.test_tactical_archetypes_runtime._actor",
@@ -329599,7 +330908,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 531
+        "line": 533
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estado_terminal_falha_uma_vez_e_tenta_de_novo_na_rodada_seguinte",
       "target": "symbol:tests.test_tactical_archetypes_runtime._actor",
@@ -329610,7 +330919,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 540
+        "line": 542
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estado_terminal_falha_uma_vez_e_tenta_de_novo_na_rodada_seguinte",
       "target": "symbol:tests.test_tactical_archetypes_runtime._scene",
@@ -329621,7 +330930,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 239
+        "line": 241
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estrategista_apoia_combatente_e_vantagem_nao_empilha",
       "target": "symbol:services.conflict_orchestrator.run_round",
@@ -329632,7 +330941,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 252
+        "line": 254
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estrategista_apoia_combatente_e_vantagem_nao_empilha",
       "target": "symbol:services.conflict_scene.has_tactical_modifier",
@@ -329643,7 +330952,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 233
+        "line": 235
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estrategista_apoia_combatente_e_vantagem_nao_empilha",
       "target": "symbol:tests.test_tactical_archetypes_runtime._actor",
@@ -329654,7 +330963,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 234
+        "line": 236
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estrategista_apoia_combatente_e_vantagem_nao_empilha",
       "target": "symbol:tests.test_tactical_archetypes_runtime._actor",
@@ -329665,7 +330974,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 243
+        "line": 245
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estrategista_apoia_combatente_e_vantagem_nao_empilha",
       "target": "symbol:tests.test_tactical_archetypes_runtime._pass",
@@ -329676,7 +330985,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 232
+        "line": 234
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estrategista_apoia_combatente_e_vantagem_nao_empilha",
       "target": "symbol:tests.test_tactical_archetypes_runtime._player",
@@ -329687,7 +330996,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 235
+        "line": 237
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estrategista_apoia_combatente_e_vantagem_nao_empilha",
       "target": "symbol:tests.test_tactical_archetypes_runtime._scene",
@@ -329698,7 +331007,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 248
+        "line": 250
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_estrategista_apoia_combatente_e_vantagem_nao_empilha",
       "target": "symbol:tests.test_tactical_archetypes_runtime._tactics",
@@ -329709,7 +331018,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 387
+        "line": 389
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_gatilhos_curados_sao_derivados_apenas_do_estado_canonico",
       "target": "symbol:services.conflict_orchestrator.derive_tactical_scene_state",
@@ -329720,29 +331029,62 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
+        "line": 374
+      },
+      "source": "symbol:tests.test_tactical_archetypes_runtime.test_gatilhos_curados_sao_derivados_apenas_do_estado_canonico",
+      "target": "symbol:services.conflict_scene.engage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_tactical_archetypes_runtime.py",
+        "line": 375
+      },
+      "source": "symbol:tests.test_tactical_archetypes_runtime.test_gatilhos_curados_sao_derivados_apenas_do_estado_canonico",
+      "target": "symbol:services.conflict_scene.engage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_tactical_archetypes_runtime.py",
+        "line": 363
+      },
+      "source": "symbol:tests.test_tactical_archetypes_runtime.test_gatilhos_curados_sao_derivados_apenas_do_estado_canonico",
+      "target": "symbol:tests.test_tactical_archetypes_runtime._actor",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_tactical_archetypes_runtime.py",
+        "line": 364
+      },
+      "source": "symbol:tests.test_tactical_archetypes_runtime.test_gatilhos_curados_sao_derivados_apenas_do_estado_canonico",
+      "target": "symbol:tests.test_tactical_archetypes_runtime._actor",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_tactical_archetypes_runtime.py",
+        "line": 371
+      },
+      "source": "symbol:tests.test_tactical_archetypes_runtime.test_gatilhos_curados_sao_derivados_apenas_do_estado_canonico",
+      "target": "symbol:tests.test_tactical_archetypes_runtime._actor",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_tactical_archetypes_runtime.py",
         "line": 372
-      },
-      "source": "symbol:tests.test_tactical_archetypes_runtime.test_gatilhos_curados_sao_derivados_apenas_do_estado_canonico",
-      "target": "symbol:services.conflict_scene.engage",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 373
-      },
-      "source": "symbol:tests.test_tactical_archetypes_runtime.test_gatilhos_curados_sao_derivados_apenas_do_estado_canonico",
-      "target": "symbol:services.conflict_scene.engage",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 361
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_gatilhos_curados_sao_derivados_apenas_do_estado_canonico",
       "target": "symbol:tests.test_tactical_archetypes_runtime._actor",
@@ -329756,39 +331098,6 @@
         "line": 362
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_gatilhos_curados_sao_derivados_apenas_do_estado_canonico",
-      "target": "symbol:tests.test_tactical_archetypes_runtime._actor",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 369
-      },
-      "source": "symbol:tests.test_tactical_archetypes_runtime.test_gatilhos_curados_sao_derivados_apenas_do_estado_canonico",
-      "target": "symbol:tests.test_tactical_archetypes_runtime._actor",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 370
-      },
-      "source": "symbol:tests.test_tactical_archetypes_runtime.test_gatilhos_curados_sao_derivados_apenas_do_estado_canonico",
-      "target": "symbol:tests.test_tactical_archetypes_runtime._actor",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 360
-      },
-      "source": "symbol:tests.test_tactical_archetypes_runtime.test_gatilhos_curados_sao_derivados_apenas_do_estado_canonico",
       "target": "symbol:tests.test_tactical_archetypes_runtime._player",
       "type": "calls"
     },
@@ -329797,7 +331106,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 371
+        "line": 373
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_gatilhos_curados_sao_derivados_apenas_do_estado_canonico",
       "target": "symbol:tests.test_tactical_archetypes_runtime._scene",
@@ -329984,7 +331293,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 218
+        "line": 220
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_mistico_controla_um_turno_e_respeita_cooldown_fechado",
       "target": "symbol:services.conflict_orchestrator.run_round",
@@ -329995,7 +331304,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 228
+        "line": 230
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_mistico_controla_um_turno_e_respeita_cooldown_fechado",
       "target": "symbol:services.conflict_scene.tactical_cooldown",
@@ -330028,7 +331337,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 222
+        "line": 224
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_mistico_controla_um_turno_e_respeita_cooldown_fechado",
       "target": "symbol:tests.test_tactical_archetypes_runtime._pass",
@@ -330072,7 +331381,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 226
+        "line": 228
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_mistico_controla_um_turno_e_respeita_cooldown_fechado",
       "target": "symbol:tests.test_tactical_archetypes_runtime._tactics",
@@ -330083,7 +331392,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 269
+        "line": 271
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_oportunista_com_vitalidade_baixa_recua_sem_atacar",
       "target": "symbol:services.conflict_orchestrator.run_round",
@@ -330094,7 +331403,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 282
+        "line": 284
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_oportunista_com_vitalidade_baixa_recua_sem_atacar",
       "target": "symbol:services.conflict_orchestrator.run_round",
@@ -330105,7 +331414,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 258
+        "line": 260
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_oportunista_com_vitalidade_baixa_recua_sem_atacar",
       "target": "symbol:tests.test_tactical_archetypes_runtime._actor",
@@ -330116,7 +331425,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 273
+        "line": 275
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_oportunista_com_vitalidade_baixa_recua_sem_atacar",
       "target": "symbol:tests.test_tactical_archetypes_runtime._pass",
@@ -330127,7 +331436,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 286
+        "line": 288
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_oportunista_com_vitalidade_baixa_recua_sem_atacar",
       "target": "symbol:tests.test_tactical_archetypes_runtime._pass",
@@ -330138,7 +331447,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 257
+        "line": 259
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_oportunista_com_vitalidade_baixa_recua_sem_atacar",
       "target": "symbol:tests.test_tactical_archetypes_runtime._player",
@@ -330149,7 +331458,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 265
+        "line": 267
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_oportunista_com_vitalidade_baixa_recua_sem_atacar",
       "target": "symbol:tests.test_tactical_archetypes_runtime._scene",
@@ -330160,7 +331469,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 278
+        "line": 280
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_oportunista_com_vitalidade_baixa_recua_sem_atacar",
       "target": "symbol:tests.test_tactical_archetypes_runtime._tactics",
@@ -330171,7 +331480,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 331
+        "line": 333
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_perfis_curados_recebem_action_key_por_tabela_fechada",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -330182,7 +331491,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 566
+        "line": 568
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_sobrevivente_do_last_stand_so_morre_ao_receber_novo_dano",
       "target": "symbol:services.conflict_orchestrator._check_terminal",
@@ -330193,7 +331502,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 570
+        "line": 572
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_sobrevivente_do_last_stand_so_morre_ao_receber_novo_dano",
       "target": "symbol:services.conflict_orchestrator._check_terminal",
@@ -330204,7 +331513,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 556
+        "line": 558
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_sobrevivente_do_last_stand_so_morre_ao_receber_novo_dano",
       "target": "symbol:tests.test_tactical_archetypes_runtime._player",
@@ -330303,7 +331612,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 511
+        "line": 513
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_todo_bestiario_curado_normaliza_para_action_keys_fechadas",
       "target": "symbol:agents.bestiary._read_json",
@@ -330314,7 +331623,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_tactical_archetypes_runtime.py",
-        "line": 521
+        "line": 523
       },
       "source": "symbol:tests.test_tactical_archetypes_runtime.test_todo_bestiario_curado_normaliza_para_action_keys_fechadas",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -337402,6 +338711,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:docs/spec285/arena_lethality.py",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/spec285/arena_lethality.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:encounter_budget.py",
       "kind": "file",
       "line": 1,
@@ -341931,6 +343247,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/test_spec285_lethality.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_spec285_lethality.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/test_spec286_heroi_inconsciente.py",
       "kind": "file",
       "line": 1,
@@ -343406,6 +344729,13 @@
       "line": 1,
       "path": "docs/spec283/arena_ab.py",
       "qualified_name": "docs.spec283.arena_ab"
+    },
+    {
+      "id": "module:docs.spec285.arena_lethality",
+      "kind": "module",
+      "line": 1,
+      "path": "docs/spec285/arena_lethality.py",
+      "qualified_name": "docs.spec285.arena_lethality"
     },
     {
       "id": "module:encounter_budget",
@@ -347937,6 +349267,13 @@
       "qualified_name": "tests.test_spec283_enemy_support_cards"
     },
     {
+      "id": "module:tests.test_spec285_lethality",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_spec285_lethality.py",
+      "qualified_name": "tests.test_spec285_lethality"
+    },
+    {
       "id": "module:tests.test_spec286_heroi_inconsciente",
       "kind": "module",
       "line": 1,
@@ -351715,6 +353052,76 @@
       "line": 89,
       "path": "docs/spec283/arena_ab.py",
       "qualified_name": "docs.spec283.arena_ab.run"
+    },
+    {
+      "id": "symbol:docs.spec285.arena_lethality._card_damage",
+      "kind": "function",
+      "line": 124,
+      "path": "docs/spec285/arena_lethality.py",
+      "qualified_name": "docs.spec285.arena_lethality._card_damage"
+    },
+    {
+      "id": "symbol:docs.spec285.arena_lethality._card_kind",
+      "kind": "function",
+      "line": 120,
+      "path": "docs/spec285/arena_lethality.py",
+      "qualified_name": "docs.spec285.arena_lethality._card_kind"
+    },
+    {
+      "id": "symbol:docs.spec285.arena_lethality._instances",
+      "kind": "function",
+      "line": 107,
+      "path": "docs/spec285/arena_lethality.py",
+      "qualified_name": "docs.spec285.arena_lethality._instances"
+    },
+    {
+      "id": "symbol:docs.spec285.arena_lethality.creatures_by_category",
+      "kind": "function",
+      "line": 84,
+      "path": "docs/spec285/arena_lethality.py",
+      "qualified_name": "docs.spec285.arena_lethality.creatures_by_category"
+    },
+    {
+      "id": "symbol:docs.spec285.arena_lethality.fight",
+      "kind": "function",
+      "line": 159,
+      "path": "docs/spec285/arena_lethality.py",
+      "qualified_name": "docs.spec285.arena_lethality.fight"
+    },
+    {
+      "id": "symbol:docs.spec285.arena_lethality.group_size",
+      "kind": "function",
+      "line": 95,
+      "path": "docs/spec285/arena_lethality.py",
+      "qualified_name": "docs.spec285.arena_lethality.group_size"
+    },
+    {
+      "id": "symbol:docs.spec285.arena_lethality.hero",
+      "kind": "function",
+      "line": 73,
+      "path": "docs/spec285/arena_lethality.py",
+      "qualified_name": "docs.spec285.arena_lethality.hero"
+    },
+    {
+      "id": "symbol:docs.spec285.arena_lethality.hero_decl",
+      "kind": "function",
+      "line": 132,
+      "path": "docs/spec285/arena_lethality.py",
+      "qualified_name": "docs.spec285.arena_lethality.hero_decl"
+    },
+    {
+      "id": "symbol:docs.spec285.arena_lethality.main",
+      "kind": "function",
+      "line": 231,
+      "path": "docs/spec285/arena_lethality.py",
+      "qualified_name": "docs.spec285.arena_lethality.main"
+    },
+    {
+      "id": "symbol:docs.spec285.arena_lethality.run",
+      "kind": "function",
+      "line": 195,
+      "path": "docs/spec285/arena_lethality.py",
+      "qualified_name": "docs.spec285.arena_lethality.run"
     },
     {
       "id": "symbol:encounter_budget.clamp_encounter",
@@ -369058,7 +370465,7 @@
     {
       "id": "symbol:services.conflict_orchestrator._damage_fingerprint",
       "kind": "function",
-      "line": 1730,
+      "line": 1758,
       "path": "services/conflict_orchestrator.py",
       "qualified_name": "services.conflict_orchestrator._damage_fingerprint"
     },
@@ -369128,14 +370535,14 @@
     {
       "id": "symbol:services.conflict_orchestrator._extend_ally_defense",
       "kind": "function",
-      "line": 1316,
+      "line": 1319,
       "path": "services/conflict_orchestrator.py",
       "qualified_name": "services.conflict_orchestrator._extend_ally_defense"
     },
     {
       "id": "symbol:services.conflict_orchestrator._find_player",
       "kind": "function",
-      "line": 1471,
+      "line": 1499,
       "path": "services/conflict_orchestrator.py",
       "qualified_name": "services.conflict_orchestrator._find_player"
     },
@@ -369170,14 +370577,14 @@
     {
       "id": "symbol:services.conflict_orchestrator._hit_events",
       "kind": "function",
-      "line": 1454,
+      "line": 1482,
       "path": "services/conflict_orchestrator.py",
       "qualified_name": "services.conflict_orchestrator._hit_events"
     },
     {
       "id": "symbol:services.conflict_orchestrator._is_cowardly",
       "kind": "function",
-      "line": 1750,
+      "line": 1778,
       "path": "services/conflict_orchestrator.py",
       "qualified_name": "services.conflict_orchestrator._is_cowardly"
     },
@@ -369198,7 +370605,7 @@
     {
       "id": "symbol:services.conflict_orchestrator._maybe_abyss",
       "kind": "function",
-      "line": 1616,
+      "line": 1644,
       "path": "services/conflict_orchestrator.py",
       "qualified_name": "services.conflict_orchestrator._maybe_abyss"
     },
@@ -369233,14 +370640,14 @@
     {
       "id": "symbol:services.conflict_orchestrator._own_side_support",
       "kind": "function",
-      "line": 1331,
+      "line": 1334,
       "path": "services/conflict_orchestrator.py",
       "qualified_name": "services.conflict_orchestrator._own_side_support"
     },
     {
       "id": "symbol:services.conflict_orchestrator._player_id",
       "kind": "function",
-      "line": 1467,
+      "line": 1495,
       "path": "services/conflict_orchestrator.py",
       "qualified_name": "services.conflict_orchestrator._player_id"
     },
@@ -369268,21 +370675,21 @@
     {
       "id": "symbol:services.conflict_orchestrator._refused_player_item",
       "kind": "function",
-      "line": 1704,
+      "line": 1732,
       "path": "services/conflict_orchestrator.py",
       "qualified_name": "services.conflict_orchestrator._refused_player_item"
     },
     {
       "id": "symbol:services.conflict_orchestrator._resolve_actor_turn",
       "kind": "function",
-      "line": 1342,
+      "line": 1345,
       "path": "services/conflict_orchestrator.py",
       "qualified_name": "services.conflict_orchestrator._resolve_actor_turn"
     },
     {
       "id": "symbol:services.conflict_orchestrator._resolve_last_stands",
       "kind": "function",
-      "line": 1538,
+      "line": 1566,
       "path": "services/conflict_orchestrator.py",
       "qualified_name": "services.conflict_orchestrator._resolve_last_stands"
     },
@@ -369317,21 +370724,21 @@
     {
       "id": "symbol:services.conflict_orchestrator._stabilizer_for",
       "kind": "function",
-      "line": 1586,
+      "line": 1614,
       "path": "services/conflict_orchestrator.py",
       "qualified_name": "services.conflict_orchestrator._stabilizer_for"
     },
     {
       "id": "symbol:services.conflict_orchestrator._stabilizer_for.rank",
       "kind": "function",
-      "line": 1605,
+      "line": 1633,
       "path": "services/conflict_orchestrator.py",
       "qualified_name": "services.conflict_orchestrator._stabilizer_for.rank"
     },
     {
       "id": "symbol:services.conflict_orchestrator._stalemate_guard",
       "kind": "function",
-      "line": 1761,
+      "line": 1789,
       "path": "services/conflict_orchestrator.py",
       "qualified_name": "services.conflict_orchestrator._stalemate_guard"
     },
@@ -369359,7 +370766,7 @@
     {
       "id": "symbol:services.conflict_orchestrator.apply_effect_spec",
       "kind": "function",
-      "line": 1661,
+      "line": 1689,
       "path": "services/conflict_orchestrator.py",
       "qualified_name": "services.conflict_orchestrator.apply_effect_spec"
     },
@@ -369387,14 +370794,14 @@
     {
       "id": "symbol:services.conflict_orchestrator.resolve_terminals",
       "kind": "function",
-      "line": 1485,
+      "line": 1513,
       "path": "services/conflict_orchestrator.py",
       "qualified_name": "services.conflict_orchestrator.resolve_terminals"
     },
     {
       "id": "symbol:services.conflict_orchestrator.run_round",
       "kind": "function",
-      "line": 1813,
+      "line": 1841,
       "path": "services/conflict_orchestrator.py",
       "qualified_name": "services.conflict_orchestrator.run_round"
     },
@@ -413506,6 +414913,125 @@
       "qualified_name": "tests.test_spec283_enemy_support_cards.test_taunted_enemy_attacks_taunt_source_instead_of_buffing"
     },
     {
+      "id": "symbol:tests.test_spec285_lethality._ally",
+      "kind": "test",
+      "line": 31,
+      "path": "tests/test_spec285_lethality.py",
+      "qualified_name": "tests.test_spec285_lethality._ally"
+    },
+    {
+      "id": "symbol:tests.test_spec285_lethality._card_total_damage",
+      "kind": "test",
+      "line": 238,
+      "path": "tests/test_spec285_lethality.py",
+      "qualified_name": "tests.test_spec285_lethality._card_total_damage"
+    },
+    {
+      "id": "symbol:tests.test_spec285_lethality._enemy",
+      "kind": "test",
+      "line": 45,
+      "path": "tests/test_spec285_lethality.py",
+      "qualified_name": "tests.test_spec285_lethality._enemy"
+    },
+    {
+      "id": "symbol:tests.test_spec285_lethality._lost_turns",
+      "kind": "test",
+      "line": 189,
+      "path": "tests/test_spec285_lethality.py",
+      "qualified_name": "tests.test_spec285_lethality._lost_turns"
+    },
+    {
+      "id": "symbol:tests.test_spec285_lethality._muralha",
+      "kind": "test",
+      "line": 73,
+      "path": "tests/test_spec285_lethality.py",
+      "qualified_name": "tests.test_spec285_lethality._muralha"
+    },
+    {
+      "id": "symbol:tests.test_spec285_lethality._mystic",
+      "kind": "test",
+      "line": 172,
+      "path": "tests/test_spec285_lethality.py",
+      "qualified_name": "tests.test_spec285_lethality._mystic"
+    },
+    {
+      "id": "symbol:tests.test_spec285_lethality._pass",
+      "kind": "test",
+      "line": 69,
+      "path": "tests/test_spec285_lethality.py",
+      "qualified_name": "tests.test_spec285_lethality._pass"
+    },
+    {
+      "id": "symbol:tests.test_spec285_lethality._player",
+      "kind": "test",
+      "line": 14,
+      "path": "tests/test_spec285_lethality.py",
+      "qualified_name": "tests.test_spec285_lethality._player"
+    },
+    {
+      "id": "symbol:tests.test_spec285_lethality._protection_on",
+      "kind": "test",
+      "line": 80,
+      "path": "tests/test_spec285_lethality.py",
+      "qualified_name": "tests.test_spec285_lethality._protection_on"
+    },
+    {
+      "id": "symbol:tests.test_spec285_lethality._world",
+      "kind": "test",
+      "line": 58,
+      "path": "tests/test_spec285_lethality.py",
+      "qualified_name": "tests.test_spec285_lethality._world"
+    },
+    {
+      "id": "symbol:tests.test_spec285_lethality.test_companion_support_card_on_player_extends_once",
+      "kind": "test",
+      "line": 127,
+      "path": "tests/test_spec285_lethality.py",
+      "qualified_name": "tests.test_spec285_lethality.test_companion_support_card_on_player_extends_once"
+    },
+    {
+      "id": "symbol:tests.test_spec285_lethality.test_companion_support_card_on_player_extends_once.spy",
+      "kind": "test",
+      "line": 133,
+      "path": "tests/test_spec285_lethality.py",
+      "qualified_name": "tests.test_spec285_lethality.test_companion_support_card_on_player_extends_once.spy"
+    },
+    {
+      "id": "symbol:tests.test_spec285_lethality.test_no_enemy_card_kills_standard_hero_alone",
+      "kind": "test",
+      "line": 250,
+      "path": "tests/test_spec285_lethality.py",
+      "qualified_name": "tests.test_spec285_lethality.test_no_enemy_card_kills_standard_hero_alone"
+    },
+    {
+      "id": "symbol:tests.test_spec285_lethality.test_player_protection_on_ally_survives_ally_turn_this_round",
+      "kind": "test",
+      "line": 84,
+      "path": "tests/test_spec285_lethality.py",
+      "qualified_name": "tests.test_spec285_lethality.test_player_protection_on_ally_survives_ally_turn_this_round"
+    },
+    {
+      "id": "symbol:tests.test_spec285_lethality.test_player_protection_on_self_unchanged",
+      "kind": "test",
+      "line": 107,
+      "path": "tests/test_spec285_lethality.py",
+      "qualified_name": "tests.test_spec285_lethality.test_player_protection_on_self_unchanged"
+    },
+    {
+      "id": "symbol:tests.test_spec285_lethality.test_tactical_control_denies_exactly_one_target_turn",
+      "kind": "test",
+      "line": 193,
+      "path": "tests/test_spec285_lethality.py",
+      "qualified_name": "tests.test_spec285_lethality.test_tactical_control_denies_exactly_one_target_turn"
+    },
+    {
+      "id": "symbol:tests.test_spec285_lethality.test_toque_gelido_rebalanced_from_generator",
+      "kind": "test",
+      "line": 261,
+      "path": "tests/test_spec285_lethality.py",
+      "qualified_name": "tests.test_spec285_lethality.test_toque_gelido_rebalanced_from_generator"
+    },
+    {
       "id": "symbol:tests.test_spec286_heroi_inconsciente._GuardGraph",
       "kind": "class",
       "line": 33,
@@ -414901,14 +416427,14 @@
     {
       "id": "symbol:tests.test_tactical_archetypes_runtime._MinimumRng",
       "kind": "class",
-      "line": 460,
+      "line": 462,
       "path": "tests/test_tactical_archetypes_runtime.py",
       "qualified_name": "tests.test_tactical_archetypes_runtime._MinimumRng"
     },
     {
       "id": "symbol:tests.test_tactical_archetypes_runtime._MinimumRng.randint",
       "kind": "test",
-      "line": 461,
+      "line": 463,
       "path": "tests/test_tactical_archetypes_runtime.py",
       "qualified_name": "tests.test_tactical_archetypes_runtime._MinimumRng.randint"
     },
@@ -414964,56 +416490,56 @@
     {
       "id": "symbol:tests.test_tactical_archetypes_runtime.test_cartas_inimigas_usam_catalogo_e_economia_propria_com_reacao_uma_vez",
       "kind": "test",
-      "line": 575,
+      "line": 577,
       "path": "tests/test_tactical_archetypes_runtime.py",
       "qualified_name": "tests.test_tactical_archetypes_runtime.test_cartas_inimigas_usam_catalogo_e_economia_propria_com_reacao_uma_vez"
     },
     {
       "id": "symbol:tests.test_tactical_archetypes_runtime.test_combatente_continua_usando_ataque_mecanico",
       "kind": "test",
-      "line": 295,
+      "line": 297,
       "path": "tests/test_tactical_archetypes_runtime.py",
       "qualified_name": "tests.test_tactical_archetypes_runtime.test_combatente_continua_usando_ataque_mecanico"
     },
     {
       "id": "symbol:tests.test_tactical_archetypes_runtime.test_conjurador_curado_controla_sem_ler_action_hint",
       "kind": "test",
-      "line": 402,
+      "line": 404,
       "path": "tests/test_tactical_archetypes_runtime.py",
       "qualified_name": "tests.test_tactical_archetypes_runtime.test_conjurador_curado_controla_sem_ler_action_hint"
     },
     {
       "id": "symbol:tests.test_tactical_archetypes_runtime.test_covarde_curado_sozinho_rende_por_trigger_canonico",
       "kind": "test",
-      "line": 431,
+      "line": 433,
       "path": "tests/test_tactical_archetypes_runtime.py",
       "qualified_name": "tests.test_tactical_archetypes_runtime.test_covarde_curado_sozinho_rende_por_trigger_canonico"
     },
     {
       "id": "symbol:tests.test_tactical_archetypes_runtime.test_estabilizacao_tatica_nao_duplica_tentativa_automatica_no_round",
       "kind": "test",
-      "line": 465,
+      "line": 467,
       "path": "tests/test_tactical_archetypes_runtime.py",
       "qualified_name": "tests.test_tactical_archetypes_runtime.test_estabilizacao_tatica_nao_duplica_tentativa_automatica_no_round"
     },
     {
       "id": "symbol:tests.test_tactical_archetypes_runtime.test_estado_terminal_falha_uma_vez_e_tenta_de_novo_na_rodada_seguinte",
       "kind": "test",
-      "line": 529,
+      "line": 531,
       "path": "tests/test_tactical_archetypes_runtime.py",
       "qualified_name": "tests.test_tactical_archetypes_runtime.test_estado_terminal_falha_uma_vez_e_tenta_de_novo_na_rodada_seguinte"
     },
     {
       "id": "symbol:tests.test_tactical_archetypes_runtime.test_estrategista_apoia_combatente_e_vantagem_nao_empilha",
       "kind": "test",
-      "line": 231,
+      "line": 233,
       "path": "tests/test_tactical_archetypes_runtime.py",
       "qualified_name": "tests.test_tactical_archetypes_runtime.test_estrategista_apoia_combatente_e_vantagem_nao_empilha"
     },
     {
       "id": "symbol:tests.test_tactical_archetypes_runtime.test_gatilhos_curados_sao_derivados_apenas_do_estado_canonico",
       "kind": "test",
-      "line": 359,
+      "line": 361,
       "path": "tests/test_tactical_archetypes_runtime.py",
       "qualified_name": "tests.test_tactical_archetypes_runtime.test_gatilhos_curados_sao_derivados_apenas_do_estado_canonico"
     },
@@ -415041,21 +416567,21 @@
     {
       "id": "symbol:tests.test_tactical_archetypes_runtime.test_oportunista_com_vitalidade_baixa_recua_sem_atacar",
       "kind": "test",
-      "line": 256,
+      "line": 258,
       "path": "tests/test_tactical_archetypes_runtime.py",
       "qualified_name": "tests.test_tactical_archetypes_runtime.test_oportunista_com_vitalidade_baixa_recua_sem_atacar"
     },
     {
       "id": "symbol:tests.test_tactical_archetypes_runtime.test_perfis_curados_recebem_action_key_por_tabela_fechada",
       "kind": "test",
-      "line": 330,
+      "line": 332,
       "path": "tests/test_tactical_archetypes_runtime.py",
       "qualified_name": "tests.test_tactical_archetypes_runtime.test_perfis_curados_recebem_action_key_por_tabela_fechada"
     },
     {
       "id": "symbol:tests.test_tactical_archetypes_runtime.test_sobrevivente_do_last_stand_so_morre_ao_receber_novo_dano",
       "kind": "test",
-      "line": 555,
+      "line": 557,
       "path": "tests/test_tactical_archetypes_runtime.py",
       "qualified_name": "tests.test_tactical_archetypes_runtime.test_sobrevivente_do_last_stand_so_morre_ao_receber_novo_dano"
     },
@@ -415069,7 +416595,7 @@
     {
       "id": "symbol:tests.test_tactical_archetypes_runtime.test_todo_bestiario_curado_normaliza_para_action_keys_fechadas",
       "kind": "test",
-      "line": 510,
+      "line": 512,
       "path": "tests/test_tactical_archetypes_runtime.py",
       "qualified_name": "tests.test_tactical_archetypes_runtime.test_todo_bestiario_curado_normaliza_para_action_keys_fechadas"
     },
@@ -417308,5 +418834,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:ed39eaf0ab54a7622128d1e5c83272b5f7db690a8f678fff340eaf59900d1b5e"
+  "source_tree_hash": "sha256:8f327deb9525f8a96630d9f503ef90403bb245d42ff616cb9711886a7f2e08a4"
 }

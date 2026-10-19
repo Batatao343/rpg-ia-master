@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "685346de2cae0da7a5a7d19ba25dca20921ad055",
+  "commit_sha": "87f4426af698705eb672d76137242d7fe40518aa",
   "edge_counts": {
-    "calls": 17361,
-    "contains": 725,
-    "defines": 9862,
-    "imports": 1600,
-    "likely_test_for": 989,
+    "calls": 17437,
+    "contains": 727,
+    "defines": 9889,
+    "imports": 1611,
+    "likely_test_for": 992,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:1f65f9ae57d0bfc754d8a0038c63d33e6b8c604c4c901fa0a2f90e9d1b637a3e",
+  "graph_hash": "sha256:446dd6e231fcc52af9ce75b2060daae780eaccc12628917b93ed2a4a4c9f887e",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -86,6 +86,7 @@
     "docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
     "docs/spec221/evidence/local_smoke.py",
     "docs/spec283/arena_ab.py",
+    "docs/spec285/arena_lethality.py",
     "encounter_budget.py",
     "evals/__init__.py",
     "evals/__main__.py",
@@ -735,6 +736,7 @@
     "tests/test_spec280_orphan_games.py",
     "tests/test_spec280_orphan_games_local.py",
     "tests/test_spec283_enemy_support_cards.py",
+    "tests/test_spec285_lethality.py",
     "tests/test_spec286_heroi_inconsciente.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
@@ -927,12 +929,12 @@
     "artifact": 9,
     "class": 790,
     "endpoint": 63,
-    "file": 871,
-    "function": 3034,
+    "file": 873,
+    "function": 3044,
     "method": 750,
-    "module": 725,
-    "test": 5287
+    "module": 727,
+    "test": 5304
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:ed39eaf0ab54a7622128d1e5c83272b5f7db690a8f678fff340eaf59900d1b5e"
+  "source_tree_hash": "sha256:8f327deb9525f8a96630d9f503ef90403bb245d42ff616cb9711886a7f2e08a4"
 }
