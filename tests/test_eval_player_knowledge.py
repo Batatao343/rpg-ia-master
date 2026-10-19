@@ -24,7 +24,7 @@ METRICS = (
 def test_corpus_covers_the_spec_206_evidence_list() -> None:
     cases = load_cases(ROOT / "evals" / DATASET)
 
-    assert len(cases) == 29
+    assert len(cases) == 34
     assert {case.oracle for case in cases} == {"player_knowledge"}
     assert {case.suite for case in cases} == {"player_knowledge"}
     assert {case.input["operation"] for case in cases} == {"project", "oracle_mutation"}
@@ -70,7 +70,7 @@ def test_corpus_passes_with_zero_leak_and_full_consistency() -> None:
 
     assert result.passed is True
     assert result.error_case_ids == []
-    assert len(result.results) == 29
+    assert len(result.results) == 34
     assert result.metric_values == {
         "player_knowledge_leak_count": 0.0,
         "player_knowledge_kind_accuracy": 1.0,
