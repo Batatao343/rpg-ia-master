@@ -1,6 +1,6 @@
 # SPEC-225 — Higiene de supply chain, CI e release: gitignore, permissões/pins de workflows, compras de teste do Play
 
-> **Status:** `in-progress`
+> **Status:** `done` (19/10: critério da compra de license tester movido para a SPEC-198 — depende de Play Console + aparelho com Play Store)
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-19
 > **Depende de:** nenhuma · complementa SPEC-173 `done` e SPEC-194/198 (ordem final 2026-10-15)
 > **Desbloqueia:** gate de release SPEC-197/198 (ordem final 2026-10-15)
@@ -67,7 +67,7 @@ Objetivo: fechar a higiene preventiva com testes de contrato no CI e uma regra f
 - [x] `git check-ignore` confirma a lista.
 - [x] Dependabot abriu PRs (#28–#42); Environments verificados e anotados (os 4 com *deployment branches = main* e reviewer Batatao343; `ENVIRONMENTS_VERIFIED: 2026-10-19`).
 - [x] Sem a env (teste unitário) → 409 e sem consume.
-- [ ] Staging Android (`RPG_PLAY_ACCEPT_TEST_PURCHASES=1`): compra de license tester continua creditando (**bloqueado por SPEC-198**: exige app na trilha interna do Play Console com license tester e aparelho com Play Store; o AVD `rpg34` é `google_apis` sem Play. Quem age: dono (Play Console) + frente de staging (env).
+- [x] ~~Staging Android (`RPG_PLAY_ACCEPT_TEST_PURCHASES=1`): compra de license tester continua creditando (**bloqueado por SPEC-198**: exige app na trilha interna do Play Console com license tester e aparelho com Play Store; o AVD `rpg34` é `google_apis` sem Play. Quem age: dono (Play Console) + frente de staging (env).~~ **Movido para a SPEC-198 em 19/10** (coordenador, com autorização do dono).
 
 ## 6. Smoke test
 Sem LLM/pagamento real: CI do PR + `scripts/release/checklist.py --env staging` verde.

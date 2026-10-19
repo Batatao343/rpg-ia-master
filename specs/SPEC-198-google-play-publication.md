@@ -44,6 +44,7 @@ App Store/iOS; ASO/marketing.
 
 - [ ] package ID definitivo aprovado antes de ficar imutável na loja.
 - [ ] compras reais/teste verificadas server-side.
+- [ ] (herdado da SPEC-225, 19/10) staging Android com `RPG_PLAY_ACCEPT_TEST_PURCHASES=1`: compra de **license tester** (`purchaseType=0`) continua creditando — exige app na trilha interna com license tester e aparelho com Play Store.
 - [ ] wallet web↔Android sincroniza.
 - [ ] app não expõe Stripe link no v1.
 - [ ] Data Safety/Privacy/Support preenchidos.
