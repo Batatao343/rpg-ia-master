@@ -19,7 +19,7 @@ concurrency:
 jobs:
   real-provider-short:
     if: inputs.mode == 'real-provider-short'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # pin: ubuntu-latest migra de imagem sem aviso
     timeout-minutes: 20
     environment: eval-provider
     steps:
@@ -49,7 +49,7 @@ jobs:
 
   private-holdout:
     if: inputs.mode == 'private-holdout'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # pin: ubuntu-latest migra de imagem sem aviso
     timeout-minutes: 20
     environment: eval-holdout
     steps:

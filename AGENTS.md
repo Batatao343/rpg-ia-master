@@ -115,7 +115,7 @@ força o mock mesmo com chave (usado pela suíte); `RPG_NO_MOCK=1` força o `Fal
 existe (sem build a API sobe sem UI; o `frontend/` vanilla foi removido, SPEC-267). Build e dev:
 
 ```bash
-cd web && npm install          # uma vez (Node ≥20)
+cd web && npm install          # uma vez (Node ≥22.12, ver web/.nvmrc)
 npm run build                  # gera web/dist (servido por uvicorn na raiz)
 npm run dev                    # dev server :5173 com proxy p/ a API :8000
 ```
