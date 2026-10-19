@@ -1,68 +1,64 @@
 # SPEC-278 — react-19-upgrade
 
-> **Status:** `draft`
+> **Status:** `approved` (decisão do dono, 19/10: o teto de 5 % de bundle da SPEC-276 NÃO vale para o React 19; o crescimento é aceito)
 > **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
-> **Depende de:** <specs anteriores que precisam estar `done`>
-> **Desbloqueia:** <specs/features que dependem desta>
+> **Depende de:** SPEC-276 (`done`, Etapa 4 bloqueada pela R4)
+> **Desbloqueia:** PRs Dependabot #40/#41 ficam obsoletos (fechar)
 
 ---
 
 ## 1. Contexto & Objetivo
 
-Por que esta spec existe. Qual problema resolve. 2-4 parágrafos no máximo.
-Referência ao princípio de arquitetura relevante (ver `ROADMAP.md` § Princípios).
+A SPEC-276 (§8, Etapa 4) bloqueou o React 19 porque o bundle crescia +15,7 % bruto / +12,1 % gzip, acima do teto de 5 %. O dono decidiu em 19/10 que esse teto não se aplica ao React 19 (o `react-dom` 19 é ~79 kB maior minificado e não há corte razoável). Esta spec executa a atualização isolada: `react` + `react-dom` 19 juntos, com `@types/react` e `@types/react-dom`.
 
 ## 2. Requisitos
 
-Numerados, testáveis. Cada requisito deve poder virar assert.
-
-- **R1** — ...
-- **R2** — ...
+- **R1** — `react` e `react-dom` em 19.3.1 (mesma versão), tipos 19.3.0.
+- **R2** — Nenhuma API removida do React 19 em uso (`defaultProps` em função, `propTypes`, string refs, `ReactDOM.render`, `findDOMNode`, `react-dom/test-utils`); `forwardRef` segue suportado e fica.
+- **R3** — `npm run build`, `npm run typecheck` (0 erros), `npm test`, `npm audit` (0) verdes; Playwright Chromium completo sem regressão contra a `main`.
+- **R4** — Bundle antes/depois registrado (§8). Sem teto de crescimento, por decisão do dono.
 
 ### Fora de escopo
-
-Lista explícita do que esta spec NÃO cobre (anti-scope-creep).
+TypeScript 7 (bloqueado na 276), code splitting, migração de `forwardRef` para ref-como-prop.
 
 ## 3. Design técnico
 
-Detalhe suficiente para uma sessão futura de IA implementar **sem reler o roadmap**:
+- `web/package.json`/`package-lock.json`: react/react-dom 19.3.1; @types 19.3.0.
+- `web/src/workspace/useModalFocus.ts`: `ref: RefObject<HTMLElement | null>` (em 19, `useRef<T>(null)` devolve `RefObject<T | null>`).
+- `motion` ^12.42 já é compatível com React 19 (peer `^18 || ^19`); sem mudança.
 
-- **Arquivos novos** — caminho + responsabilidade
-- **Arquivos alterados** — o que muda em cada um
-- **Schemas** — Pydantic/TypedDict completos (campos, tipos, defaults)
-- **Assinaturas** — funções públicas com tipos
-- **Formatos de dados** — JSON/frontmatter com exemplo real (usar IDs canônicos do projeto, não inventados)
+## 4. Plano
 
-## 4. Plano passo a passo
-
-Etapas ordenadas e testáveis. **Testes primeiro** (TDD): cada etapa nomeia os
-testes a escrever ANTES do código e o que cada um asserta.
-
-### Etapa N — <nome>
-
-1. **Testes** (`tests/test_<...>.py`): `test_x` asserta ...; `test_y` asserta ...
-2. **Implementação:** ...
-3. **Verificação:** `uv run pytest` verde.
+1. `npm i react@19.3.1 react-dom@19.3.1` e `npm i -D @types/react@19.3.0 @types/react-dom@19.3.0`.
+2. Corrigir os 3 erros de tipo (modais) pela assinatura de `useModalFocus`.
+3. Verificar build/typecheck/test/audit/lint/Playwright.
 
 ## 5. Critérios de aceite
 
-Checklist objetivo. A spec só vira `done` com todos marcados.
+- [x] `npm run build` verde
+- [x] `npm run typecheck` 0 erros; `typecheck:e2e` 4 (= SPEC-276, sem piora); `lint` 93 (= main)
+- [x] `npm test` 147/147
+- [x] `npm audit` 0
+- [x] Playwright Chromium completo sem regressão (§8)
+- [ ] `uv run pytest` completo (§8)
+- [ ] Revisão independente Opus em `handoffs/SPEC-278-review.md`
 
-- [ ] ...
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo (try/except ou isinstance)
-- [ ] Saves antigos continuam carregando
-
-## 6. Smoke test com LLM real
-
-Checklist manual curto (3-5 requests, dentro da quota Gemini de 20/dia/modelo).
-MockLLM esconde bugs de mapeamento de campo — este passo é obrigatório antes de `done`.
-
-1. ...
-2. ...
+## 6. Smoke
+Sem LLM: só toolchain do cliente; o smoke é o Playwright contra o build.
 
 ## 7. Riscos & compatibilidade
+- Saves/API inalterados (só `web/`).
+- Rollback: `git revert` + `npm ci`.
 
-- Compatibilidade com saves antigos: ...
-- Comportamento no MockLLM / FallbackLLM: ...
-- Impacto em quota/latência: ...
+## 8. Execução (registro)
+
+Bundle (soma de `.js`/`.css` em `web/dist/assets`, bruto / gzip -9), baseline = `main` `f8deeba`:
+
+| | bruto | gzip |
+|---|---|---|
+| React 18.3 | 622 832 B | 181 057 B |
+| React 19.3.1 | 702 005 B (+12,7 %) | 203 668 B (+12,5 %) |
+
+Crescimento aceito pelo dono. Única mudança de código: `useModalFocus`. Nenhuma API removida em uso.
+
+Playwright `CI=1 --project=chromium`: 181 passed, 35 skipped (opt-in), 1 failed (`account-lifecycle` "export requires reauth...", polling por tempo sob carga). O arquivo isolado passa 9/9 tanto no React 18 (`main`) quanto no React 19 -> flake de timing sob carga, não regressão.

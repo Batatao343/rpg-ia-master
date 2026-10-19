@@ -4,7 +4,7 @@ const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]), select
 
 /** SPEC-204 R16 / SPEC-201 A09 (M26): foco inicial dentro do diálogo, Tab preso
  *  nele, Esc opcional e devolução do foco ao elemento de origem ao fechar. */
-export function useModalFocus(ref: RefObject<HTMLElement>, onEscape?: () => void) {
+export function useModalFocus(ref: RefObject<HTMLElement | null>, onEscape?: () => void) {
   const escape = useRef(onEscape);
   escape.current = onEscape;
   useEffect(() => {
