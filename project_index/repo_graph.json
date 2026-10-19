@@ -1,5 +1,5 @@
 {
-  "commit_sha": "87f4426af698705eb672d76137242d7fe40518aa",
+  "commit_sha": "db4a3964cd7e12e97748a1f606cb2b4ceb863951",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -18130,6 +18130,61 @@
       "type": "contains"
     },
     {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 5
+      },
+      "source": "file:tests/test_spec288_causa_morte.py",
+      "target": "file:agents/combat.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 3
+      },
+      "source": "file:tests/test_spec288_causa_morte.py",
+      "target": "file:gamedata.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 6
+      },
+      "source": "file:tests/test_spec288_causa_morte.py",
+      "target": "file:playtest/runner.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 4
+      },
+      "source": "file:tests/test_spec288_causa_morte.py",
+      "target": "file:world_utils.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 1
+      },
+      "source": "file:tests/test_spec288_causa_morte.py",
+      "target": "module:tests.test_spec288_causa_morte",
+      "type": "contains"
+    },
+    {
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
@@ -20444,7 +20499,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1678
+        "line": 1691
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._apply_flee_travel",
@@ -20455,7 +20510,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1626
+        "line": 1639
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._apply_weather_hazard",
@@ -20466,7 +20521,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1562
+        "line": 1575
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._attempt_flee",
@@ -20488,7 +20543,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1551
+        "line": 1564
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._can_attempt_flee",
@@ -20532,7 +20587,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 939
+        "line": 951
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._combat_node",
@@ -20576,7 +20631,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 890
+        "line": 902
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._encounter_outcome",
@@ -20598,7 +20653,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 907
+        "line": 919
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._finish_encounter",
@@ -20653,6 +20708,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
+        "line": 796
+      },
+      "source": "module:agents.combat",
+      "target": "symbol:agents.combat._killer_identity",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
         "line": 127
       },
       "source": "module:agents.combat",
@@ -20664,7 +20730,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1751
+        "line": 1764
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._merge_formal_party",
@@ -20686,7 +20752,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 806
+        "line": 818
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._narrate",
@@ -20697,7 +20763,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 796
+        "line": 808
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._narrate_fall",
@@ -20741,7 +20807,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1716
+        "line": 1729
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._reflect_scene_allies",
@@ -20752,7 +20818,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1659
+        "line": 1672
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._register_environmental_damage_terminal",
@@ -20807,7 +20873,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 929
+        "line": 941
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat.combat_node",
@@ -37219,7 +37285,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1784
+        "line": 1790
       },
       "source": "module:playtest.runner",
       "target": "symbol:playtest.runner._attach_telemetry",
@@ -37230,7 +37296,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1819
+        "line": 1825
       },
       "source": "module:playtest.runner",
       "target": "symbol:playtest.runner._budget_abort_reason",
@@ -37252,7 +37318,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1808
+        "line": 1814
       },
       "source": "module:playtest.runner",
       "target": "symbol:playtest.runner._bump_llm_events_budget",
@@ -37263,7 +37329,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 985
+        "line": 990
       },
       "source": "module:playtest.runner",
       "target": "symbol:playtest.runner._campaign_experience_violations",
@@ -37296,7 +37362,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1746
+        "line": 873
+      },
+      "source": "module:playtest.runner",
+      "target": "symbol:playtest.runner._death_cause",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/runner.py",
+        "line": 1752
       },
       "source": "module:playtest.runner",
       "target": "symbol:playtest.runner._fill_economy_metrics",
@@ -37307,7 +37384,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1585
+        "line": 1591
       },
       "source": "module:playtest.runner",
       "target": "symbol:playtest.runner._fill_state_metrics",
@@ -37329,7 +37406,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1709
+        "line": 1715
       },
       "source": "module:playtest.runner",
       "target": "symbol:playtest.runner._inventory_liquidation_value",
@@ -37340,7 +37417,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 972
+        "line": 977
       },
       "source": "module:playtest.runner",
       "target": "symbol:playtest.runner._is_explicit_quest_request",
@@ -37384,7 +37461,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1729
+        "line": 1735
       },
       "source": "module:playtest.runner",
       "target": "symbol:playtest.runner._merchant_action_family",
@@ -37428,7 +37505,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 960
+        "line": 965
       },
       "source": "module:playtest.runner",
       "target": "symbol:playtest.runner._observed_resolved_action",
@@ -37483,7 +37560,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1839
+        "line": 1845
       },
       "source": "module:playtest.runner",
       "target": "symbol:playtest.runner._run_invariants",
@@ -37494,7 +37571,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 873
+        "line": 878
       },
       "source": "module:playtest.runner",
       "target": "symbol:playtest.runner._run_turn",
@@ -37505,7 +37582,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 947
+        "line": 952
       },
       "source": "module:playtest.runner",
       "target": "symbol:playtest.runner._run_turn_projected",
@@ -37560,7 +37637,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1833
+        "line": 1839
       },
       "source": "module:playtest.runner",
       "target": "symbol:playtest.runner.format_traceback",
@@ -37582,7 +37659,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1038
+        "line": 1043
       },
       "source": "module:playtest.runner",
       "target": "symbol:playtest.runner.run_campaign",
@@ -37857,7 +37934,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/telemetry.py",
-        "line": 1421
+        "line": 1425
       },
       "source": "module:playtest.telemetry",
       "target": "symbol:playtest.telemetry.persist_campaign",
@@ -118596,6 +118673,116 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 5
+      },
+      "source": "module:tests.test_spec288_causa_morte",
+      "target": "module:agents.combat",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 3
+      },
+      "source": "module:tests.test_spec288_causa_morte",
+      "target": "module:gamedata",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 6
+      },
+      "source": "module:tests.test_spec288_causa_morte",
+      "target": "module:playtest.runner",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 4
+      },
+      "source": "module:tests.test_spec288_causa_morte",
+      "target": "module:world_utils",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 31
+      },
+      "source": "module:tests.test_spec288_causa_morte",
+      "target": "symbol:tests.test_spec288_causa_morte.test_death_cause_prefers_killer_then_category",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 64
+      },
+      "source": "module:tests.test_spec288_causa_morte",
+      "target": "symbol:tests.test_spec288_causa_morte.test_killer_identity_legacy_hook_name_does_not_crash",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 23
+      },
+      "source": "module:tests.test_spec288_causa_morte",
+      "target": "symbol:tests.test_spec288_causa_morte.test_killer_identity_strips_instance_suffix_and_gives_bestiary_id",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 51
+      },
+      "source": "module:tests.test_spec288_causa_morte",
+      "target": "symbol:tests.test_spec288_causa_morte.test_looming_threat_feeds_canonical_systemic_manifest_source",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 9
+      },
+      "source": "module:tests.test_spec288_causa_morte",
+      "target": "symbol:tests.test_spec288_causa_morte.test_looming_threat_hint_is_species_not_hook_text",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 37
+      },
+      "source": "module:tests.test_spec288_causa_morte",
+      "target": "symbol:tests.test_spec288_causa_morte.test_looming_threat_picks_regional_bestiary_creature_deterministically",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec_index.py",
         "line": 47
       },
@@ -123822,7 +124009,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 994
+        "line": 998
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils._advance_weather_once",
@@ -123899,7 +124086,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1030
+        "line": 1034
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils._has_light_source",
@@ -123943,7 +124130,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 947
+        "line": 951
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils._weather_table",
@@ -123976,7 +124163,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 982
+        "line": 986
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.advance_weather",
@@ -124042,7 +124229,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1334
+        "line": 1338
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.clock_label",
@@ -124064,7 +124251,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1159
+        "line": 1163
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.detection_check",
@@ -124174,7 +124361,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1054
+        "line": 1058
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.light_level",
@@ -124196,7 +124383,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 960
+        "line": 964
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.maybe_start_global_weather",
@@ -124251,7 +124438,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1311
+        "line": 1315
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.resolve_track",
@@ -124262,7 +124449,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1193
+        "line": 1197
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.resolve_trap",
@@ -124273,7 +124460,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1183
+        "line": 1187
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.roll_encounter_type",
@@ -124284,7 +124471,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1339
+        "line": 1343
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.starting_world",
@@ -124306,7 +124493,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1139
+        "line": 1143
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.trigger_global_weather",
@@ -124317,7 +124504,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1097
+        "line": 1101
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.weather_effects",
@@ -126088,7 +126275,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1578
+        "line": 1591
       },
       "source": "symbol:agents.combat._attempt_flee",
       "target": "symbol:agents.combat.FleeDecision",
@@ -126099,7 +126286,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1584
+        "line": 1597
       },
       "source": "symbol:agents.combat._attempt_flee",
       "target": "symbol:agents.combat.FleeDecision",
@@ -126110,7 +126297,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1608
+        "line": 1621
       },
       "source": "symbol:agents.combat._attempt_flee",
       "target": "symbol:agents.combat.FleeDecision",
@@ -126121,7 +126308,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1623
+        "line": 1636
       },
       "source": "symbol:agents.combat._attempt_flee",
       "target": "symbol:agents.combat.FleeDecision",
@@ -126132,7 +126319,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1577
+        "line": 1590
       },
       "source": "symbol:agents.combat._attempt_flee",
       "target": "symbol:agents.combat._can_attempt_flee",
@@ -126143,7 +126330,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1583
+        "line": 1596
       },
       "source": "symbol:agents.combat._attempt_flee",
       "target": "symbol:combat_mechanics.has_control",
@@ -126176,7 +126363,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1539
+        "line": 1552
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._apply_flee_travel",
@@ -126187,7 +126374,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1195
+        "line": 1207
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._apply_weather_hazard",
@@ -126198,7 +126385,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1200
+        "line": 1212
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._attempt_flee",
@@ -126209,7 +126396,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1198
+        "line": 1210
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._can_attempt_flee",
@@ -126220,7 +126407,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1094
+        "line": 1106
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._canonical_player_action",
@@ -126231,7 +126418,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1301
+        "line": 1313
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._canonical_player_action",
@@ -126242,7 +126429,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1256
+        "line": 1268
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._card_target_for",
@@ -126253,7 +126440,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1407
+        "line": 1419
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._downed_identity_tokens",
@@ -126264,7 +126451,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1189
+        "line": 1201
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._early_game_reaction_initiator",
@@ -126275,7 +126462,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1095
+        "line": 1107
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._encounter_outcome",
@@ -126286,7 +126473,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1435
+        "line": 1447
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._encounter_outcome",
@@ -126297,7 +126484,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1204
+        "line": 1216
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._enforce_flee_attempt_limit",
@@ -126308,7 +126495,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1098
+        "line": 1110
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._finish_encounter",
@@ -126319,7 +126506,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1432
+        "line": 1444
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._finish_encounter",
@@ -126330,7 +126517,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1203
+        "line": 1215
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._is_valid_flee_destination",
@@ -126341,7 +126528,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1480
+        "line": 1492
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._kill_events",
@@ -126352,7 +126539,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1137
+        "line": 1386
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._killer_identity",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1516
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._killer_identity",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1524
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._killer_identity",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1149
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._last_human_text",
@@ -126363,7 +126583,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1456
+        "line": 1468
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._merge_formal_party",
@@ -126374,7 +126594,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1312
+        "line": 1324
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._mirror_vitals",
@@ -126385,7 +126605,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1314
+        "line": 1326
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._mirror_vitals",
@@ -126396,7 +126616,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1316
+        "line": 1328
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._mirror_vitals",
@@ -126407,7 +126627,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1383
+        "line": 1395
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._narrate",
@@ -126418,7 +126638,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1375
+        "line": 1387
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._narrate_fall",
@@ -126429,7 +126649,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1234
+        "line": 1246
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._parse_turn_declaration",
@@ -126440,7 +126660,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1011
+        "line": 1023
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._prepare_scene",
@@ -126451,7 +126671,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1477
+        "line": 1489
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._reflect_scene_allies",
@@ -126462,7 +126682,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1196
+        "line": 1208
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._register_environmental_damage_terminal",
@@ -126473,7 +126693,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 996
+        "line": 1008
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._spawn_v4_enemies",
@@ -126484,7 +126704,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1012
+        "line": 1024
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._sync_enemy_knowledge",
@@ -126495,7 +126715,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1276
+        "line": 1288
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._sync_enemy_knowledge",
@@ -126506,7 +126726,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1319
+        "line": 1331
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:llm_setup.get_llm",
@@ -126517,7 +126737,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1048
+        "line": 1060
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -126528,7 +126748,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 945
+        "line": 957
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -126539,7 +126759,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 946
+        "line": 958
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -126550,7 +126770,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1006
+        "line": 1018
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -126561,7 +126781,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1008
+        "line": 1020
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -126572,54 +126792,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1076
+        "line": 1088
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1077
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1122
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1123
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1266
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:services.conflict_orchestrator.run_round",
       "type": "calls"
     },
     {
@@ -126630,7 +126806,7 @@
         "line": 1089
       },
       "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:services.conflict_summary.build_summary",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
       "type": "calls"
     },
     {
@@ -126638,7 +126814,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1398
+        "line": 1134
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1135
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1278
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:services.conflict_orchestrator.run_round",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1101
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_summary.build_summary",
@@ -126652,6 +126861,17 @@
         "line": 1410
       },
       "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:services.conflict_summary.build_summary",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1422
+      },
+      "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_summary.narrative_or_fallback",
       "type": "calls"
     },
@@ -126660,7 +126880,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1140
+        "line": 1152
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
@@ -126671,7 +126891,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1226
+        "line": 1238
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
@@ -126682,7 +126902,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1228
+        "line": 1240
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_turn.TurnStep",
@@ -126693,7 +126913,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1380
+        "line": 1392
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.context_builder.build_context_pack",
@@ -126704,7 +126924,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1318
+        "line": 1330
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.death_flow.check_scar_required",
@@ -126715,7 +126935,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1344
+        "line": 1356
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.death_flow.critical_spaces_full",
@@ -126726,7 +126946,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1320
+        "line": 1332
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.death_flow.generate_scar",
@@ -126737,7 +126957,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1347
+        "line": 1359
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.death_flow.post_combat_consciousness",
@@ -126748,7 +126968,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1346
+        "line": 1358
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.death_flow.reset_terminal_episode",
@@ -126759,7 +126979,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1013
+        "line": 1025
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.discovery.record_encounter",
@@ -126770,7 +126990,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1334
+        "line": 1346
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.discovery.record_kills",
@@ -126847,7 +127067,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1760
+        "line": 1773
       },
       "source": "symbol:agents.combat._merge_formal_party",
       "target": "symbol:agents.combat._mirror_vitals",
@@ -126869,7 +127089,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 866
+        "line": 878
       },
       "source": "symbol:agents.combat._narrate",
       "target": "symbol:llm_setup.get_llm",
@@ -126880,7 +127100,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 881
+        "line": 893
       },
       "source": "symbol:agents.combat._narrate",
       "target": "symbol:observability.telemetry.log_event",
@@ -127298,7 +127518,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1741
+        "line": 1754
       },
       "source": "symbol:agents.combat._reflect_scene_allies",
       "target": "symbol:gamedata.sync_legacy_hp_aliases",
@@ -127309,7 +127529,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1672
+        "line": 1685
       },
       "source": "symbol:agents.combat._register_environmental_damage_terminal",
       "target": "symbol:gamedata.sync_legacy_hp_aliases",
@@ -127320,7 +127540,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1666
+        "line": 1679
       },
       "source": "symbol:agents.combat._register_environmental_damage_terminal",
       "target": "symbol:services.death_flow.critical_spaces_full",
@@ -127331,7 +127551,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1674
+        "line": 1687
       },
       "source": "symbol:agents.combat._register_environmental_damage_terminal",
       "target": "symbol:services.death_flow.should_trigger_last_stand",
@@ -127342,7 +127562,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1675
+        "line": 1688
       },
       "source": "symbol:agents.combat._register_environmental_damage_terminal",
       "target": "symbol:services.death_flow.trigger_last_stand",
@@ -127529,7 +127749,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 934
+        "line": 946
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:agents.combat._combat_node",
@@ -164038,7 +164258,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1812
+        "line": 1818
       },
       "source": "symbol:playtest.runner._bump_llm_events_budget",
       "target": "symbol:playtest.runner._network_events",
@@ -164060,7 +164280,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1754
+        "line": 1760
       },
       "source": "symbol:playtest.runner._fill_economy_metrics",
       "target": "symbol:playtest.runner._inventory_liquidation_value",
@@ -164071,7 +164291,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1773
+        "line": 1779
       },
       "source": "symbol:playtest.runner._fill_economy_metrics",
       "target": "symbol:playtest.runner._inventory_liquidation_value",
@@ -164082,7 +164302,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1781
+        "line": 1787
       },
       "source": "symbol:playtest.runner._fill_economy_metrics",
       "target": "symbol:playtest.runner._merchant_action_family",
@@ -164181,7 +164401,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1860
+        "line": 1866
       },
       "source": "symbol:playtest.runner._run_invariants",
       "target": "symbol:playtest.runner.format_traceback",
@@ -164192,7 +164412,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1885
+        "line": 1891
       },
       "source": "symbol:playtest.runner._run_invariants",
       "target": "symbol:playtest.runner.format_traceback",
@@ -164203,7 +164423,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 953
+        "line": 958
       },
       "source": "symbol:playtest.runner._run_turn_projected",
       "target": "symbol:playtest.runner._run_turn",
@@ -164280,7 +164500,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1541
+        "line": 1547
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner.CampaignResult",
@@ -164291,7 +164511,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1248
+        "line": 1253
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner.TurnRecord",
@@ -164302,7 +164522,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1315
+        "line": 1320
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._attach_telemetry",
@@ -164313,7 +164533,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1427
+        "line": 1432
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._attach_telemetry",
@@ -164324,7 +164544,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1191
+        "line": 1196
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._budget_abort_reason",
@@ -164335,7 +164555,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1505
+        "line": 1511
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._budget_abort_reason",
@@ -164346,7 +164566,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1157
+        "line": 1162
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._build_initial_state",
@@ -164357,7 +164577,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1185
+        "line": 1190
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._bump_llm_events_budget",
@@ -164368,7 +164588,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1318
+        "line": 1323
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._bump_llm_events_budget",
@@ -164379,7 +164599,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1430
+        "line": 1435
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._bump_llm_events_budget",
@@ -164390,7 +164610,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1518
+        "line": 1524
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._bump_llm_events_budget",
@@ -164401,7 +164621,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1560
+        "line": 1566
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._campaign_experience_violations",
@@ -164412,7 +164632,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1146
+        "line": 1151
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._clear_caches",
@@ -164423,7 +164643,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1299
+        "line": 1304
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._count_new_rejections",
@@ -164434,7 +164654,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1263
+        "line": 1493
+      },
+      "source": "symbol:playtest.runner.run_campaign",
+      "target": "symbol:playtest.runner._death_cause",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/runner.py",
+        "line": 1268
+      },
+      "source": "symbol:playtest.runner.run_campaign",
+      "target": "symbol:playtest.runner._fill_economy_metrics",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/runner.py",
+        "line": 1319
+      },
+      "source": "symbol:playtest.runner.run_campaign",
+      "target": "symbol:playtest.runner._fill_economy_metrics",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/runner.py",
+        "line": 1431
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._fill_economy_metrics",
@@ -164448,7 +164701,7 @@
         "line": 1314
       },
       "source": "symbol:playtest.runner.run_campaign",
-      "target": "symbol:playtest.runner._fill_economy_metrics",
+      "target": "symbol:playtest.runner._fill_state_metrics",
       "type": "calls"
     },
     {
@@ -164456,18 +164709,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1426
-      },
-      "source": "symbol:playtest.runner.run_campaign",
-      "target": "symbol:playtest.runner._fill_economy_metrics",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "playtest/runner.py",
-        "line": 1309
+        "line": 1430
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._fill_state_metrics",
@@ -164478,18 +164720,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1425
-      },
-      "source": "symbol:playtest.runner.run_campaign",
-      "target": "symbol:playtest.runner._fill_state_metrics",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "playtest/runner.py",
-        "line": 1140
+        "line": 1145
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._force_mock",
@@ -164500,7 +164731,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1259
+        "line": 1264
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._is_explicit_quest_request",
@@ -164511,7 +164742,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1143
+        "line": 1148
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._isolated_runtime_cache",
@@ -164522,7 +164753,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1142
+        "line": 1147
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._isolated_saves",
@@ -164533,7 +164764,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1304
+        "line": 1309
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._last_ai_text",
@@ -164544,7 +164775,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1122
+        "line": 1127
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._normalize_llm_event",
@@ -164555,7 +164786,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1137
+        "line": 1142
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._normalize_rag_event",
@@ -164566,7 +164797,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1289
+        "line": 1294
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._observed_resolved_action",
@@ -164577,7 +164808,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1141
+        "line": 1146
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._offline_embeddings",
@@ -164588,7 +164819,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1317
+        "line": 1322
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._rag_memory_counts",
@@ -164599,7 +164830,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1429
+        "line": 1434
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._rag_memory_counts",
@@ -164610,7 +164841,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1184
+        "line": 1189
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._require_persisted",
@@ -164621,7 +164852,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1277
+        "line": 1282
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._require_persisted",
@@ -164632,7 +164863,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1495
+        "line": 1501
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._require_persisted",
@@ -164643,7 +164874,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1206
+        "line": 1211
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._resolve_profile_progression",
@@ -164654,7 +164885,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1373
+        "line": 1378
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._run_invariants",
@@ -164665,7 +164896,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1267
+        "line": 1272
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._run_turn_projected",
@@ -164676,7 +164907,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1170
+        "line": 1175
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._run_with_watchdog",
@@ -164687,7 +164918,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1266
+        "line": 1271
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._run_with_watchdog",
@@ -164698,7 +164929,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1144
+        "line": 1149
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner._seeded_random_factory",
@@ -164709,7 +164940,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1406
+        "line": 1411
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner.format_traceback",
@@ -164720,7 +164951,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1410
+        "line": 1415
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner.format_traceback",
@@ -164731,7 +164962,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1414
+        "line": 1419
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner.format_traceback",
@@ -164742,7 +164973,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1436
+        "line": 1441
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner.format_traceback",
@@ -164753,7 +164984,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1524
+        "line": 1530
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner.format_traceback",
@@ -164764,7 +164995,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1121
+        "line": 1126
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner.run_campaign._llm_hook",
@@ -164775,7 +165006,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1136
+        "line": 1141
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner.run_campaign._rag_hook",
@@ -164786,7 +165017,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1197
+        "line": 1202
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner.terminal_llm_invocation_count",
@@ -164797,7 +165028,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1319
+        "line": 1324
       },
       "source": "symbol:playtest.runner.run_campaign",
       "target": "symbol:playtest.runner.terminal_llm_invocation_count",
@@ -164808,7 +165039,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1122
+        "line": 1127
       },
       "source": "symbol:playtest.runner.run_campaign._llm_hook",
       "target": "symbol:playtest.runner._normalize_llm_event",
@@ -164819,7 +165050,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/runner.py",
-        "line": 1137
+        "line": 1142
       },
       "source": "symbol:playtest.runner.run_campaign._rag_hook",
       "target": "symbol:playtest.runner._normalize_rag_event",
@@ -165039,7 +165270,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/telemetry.py",
-        "line": 1027
+        "line": 1031
       },
       "source": "symbol:playtest.telemetry.build_summary",
       "target": "symbol:playtest.runner.terminal_llm_invocation_count",
@@ -165050,7 +165281,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/telemetry.py",
-        "line": 1126
+        "line": 1130
       },
       "source": "symbol:playtest.telemetry.build_summary",
       "target": "symbol:playtest.telemetry._min_active_entropy_cost",
@@ -165061,7 +165292,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/telemetry.py",
-        "line": 1054
+        "line": 1058
       },
       "source": "symbol:playtest.telemetry.build_summary",
       "target": "symbol:playtest.telemetry._percentile",
@@ -165072,7 +165303,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/telemetry.py",
-        "line": 1055
+        "line": 1059
       },
       "source": "symbol:playtest.telemetry.build_summary",
       "target": "symbol:playtest.telemetry._percentile",
@@ -165083,7 +165314,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/telemetry.py",
-        "line": 1309
+        "line": 1313
       },
       "source": "symbol:playtest.telemetry.build_summary",
       "target": "symbol:playtest.telemetry._percentile",
@@ -165094,7 +165325,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/telemetry.py",
-        "line": 1106
+        "line": 1110
       },
       "source": "symbol:playtest.telemetry.build_summary",
       "target": "symbol:playtest.telemetry.build_summary._pct",
@@ -165204,7 +165435,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/telemetry.py",
-        "line": 1446
+        "line": 1450
       },
       "source": "symbol:playtest.telemetry.persist_campaign",
       "target": "symbol:playtest.telemetry._read_json",
@@ -165215,7 +165446,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/telemetry.py",
-        "line": 1497
+        "line": 1501
       },
       "source": "symbol:playtest.telemetry.persist_campaign",
       "target": "symbol:playtest.telemetry._write_json",
@@ -165226,7 +165457,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/telemetry.py",
-        "line": 1441
+        "line": 1445
       },
       "source": "symbol:playtest.telemetry.persist_campaign",
       "target": "symbol:playtest.telemetry.build_summary",
@@ -165237,7 +165468,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/telemetry.py",
-        "line": 1425
+        "line": 1429
       },
       "source": "symbol:playtest.telemetry.persist_campaign",
       "target": "symbol:playtest.telemetry.run_dir",
@@ -165248,7 +165479,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/telemetry.py",
-        "line": 1428
+        "line": 1432
       },
       "source": "symbol:playtest.telemetry.persist_campaign",
       "target": "symbol:playtest.telemetry.turn_to_record",
@@ -165259,7 +165490,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/telemetry.py",
-        "line": 1439
+        "line": 1443
       },
       "source": "symbol:playtest.telemetry.persist_campaign",
       "target": "symbol:playtest.telemetry.write_turn",
@@ -325913,6 +326144,160 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 32
+      },
+      "source": "symbol:tests.test_spec288_causa_morte.test_death_cause_prefers_killer_then_category",
+      "target": "symbol:playtest.runner._death_cause",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 33
+      },
+      "source": "symbol:tests.test_spec288_causa_morte.test_death_cause_prefers_killer_then_category",
+      "target": "symbol:playtest.runner._death_cause",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 34
+      },
+      "source": "symbol:tests.test_spec288_causa_morte.test_death_cause_prefers_killer_then_category",
+      "target": "symbol:playtest.runner._death_cause",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 66
+      },
+      "source": "symbol:tests.test_spec288_causa_morte.test_killer_identity_legacy_hook_name_does_not_crash",
+      "target": "symbol:agents.combat._killer_identity",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 69
+      },
+      "source": "symbol:tests.test_spec288_causa_morte.test_killer_identity_legacy_hook_name_does_not_crash",
+      "target": "symbol:agents.combat._killer_identity",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 26
+      },
+      "source": "symbol:tests.test_spec288_causa_morte.test_killer_identity_strips_instance_suffix_and_gives_bestiary_id",
+      "target": "symbol:agents.combat._killer_identity",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 58
+      },
+      "source": "symbol:tests.test_spec288_causa_morte.test_looming_threat_feeds_canonical_systemic_manifest_source",
+      "target": "symbol:gamedata.seed_factions",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 58
+      },
+      "source": "symbol:tests.test_spec288_causa_morte.test_looming_threat_feeds_canonical_systemic_manifest_source",
+      "target": "symbol:world_utils.check_encounter",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 14
+      },
+      "source": "symbol:tests.test_spec288_causa_morte.test_looming_threat_hint_is_species_not_hook_text",
+      "target": "symbol:gamedata.seed_factions",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 14
+      },
+      "source": "symbol:tests.test_spec288_causa_morte.test_looming_threat_hint_is_species_not_hook_text",
+      "target": "symbol:world_utils.check_encounter",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 42
+      },
+      "source": "symbol:tests.test_spec288_causa_morte.test_looming_threat_picks_regional_bestiary_creature_deterministically",
+      "target": "symbol:gamedata.seed_factions",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 43
+      },
+      "source": "symbol:tests.test_spec288_causa_morte.test_looming_threat_picks_regional_bestiary_creature_deterministically",
+      "target": "symbol:gamedata.seed_factions",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 42
+      },
+      "source": "symbol:tests.test_spec288_causa_morte.test_looming_threat_picks_regional_bestiary_creature_deterministically",
+      "target": "symbol:world_utils.check_encounter",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec288_causa_morte.py",
+        "line": 43
+      },
+      "source": "symbol:tests.test_spec288_causa_morte.test_looming_threat_picks_regional_bestiary_creature_deterministically",
+      "target": "symbol:world_utils.check_encounter",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec_index.py",
         "line": 49
       },
@@ -337112,7 +337497,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1001
+        "line": 1005
       },
       "source": "symbol:world_utils._advance_weather_once",
       "target": "symbol:world_utils._weather_table",
@@ -337123,7 +337508,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1010
+        "line": 1014
       },
       "source": "symbol:world_utils._advance_weather_once",
       "target": "symbol:world_utils.maybe_start_global_weather",
@@ -337189,7 +337574,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 990
+        "line": 994
       },
       "source": "symbol:world_utils.advance_weather",
       "target": "symbol:world_utils._advance_weather_once",
@@ -337200,7 +337585,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 991
+        "line": 995
       },
       "source": "symbol:world_utils.advance_weather",
       "target": "symbol:world_utils._advance_weather_once",
@@ -337530,7 +337915,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 924
+        "line": 915
+      },
+      "source": "symbol:world_utils.check_encounter",
+      "target": "symbol:world_utils.pick_encounter_enemy",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "world_utils.py",
+        "line": 928
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils.pick_encounter_enemy",
@@ -337739,7 +338135,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1069
+        "line": 1073
       },
       "source": "symbol:world_utils.light_level",
       "target": "symbol:world_utils._has_light_source",
@@ -337761,7 +338157,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 978
+        "line": 982
       },
       "source": "symbol:world_utils.maybe_start_global_weather",
       "target": "symbol:world_utils.trigger_global_weather",
@@ -337849,7 +338245,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1317
+        "line": 1321
       },
       "source": "symbol:world_utils.resolve_track",
       "target": "symbol:world_utils.pick_encounter_enemy",
@@ -337860,7 +338256,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1243
+        "line": 1247
       },
       "source": "symbol:world_utils.resolve_trap",
       "target": "symbol:gamedata.sync_vitality",
@@ -337871,7 +338267,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1341
+        "line": 1345
       },
       "source": "symbol:world_utils.starting_world",
       "target": "symbol:gamedata.start_location_for_region",
@@ -337882,7 +338278,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1344
+        "line": 1348
       },
       "source": "symbol:world_utils.starting_world",
       "target": "symbol:world_utils._weather_table",
@@ -337904,7 +338300,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1103
+        "line": 1107
       },
       "source": "symbol:world_utils.weather_effects",
       "target": "symbol:world_utils._weather_table",
@@ -343258,6 +343654,13 @@
       "kind": "file",
       "line": 1,
       "path": "tests/test_spec286_heroi_inconsciente.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_spec288_causa_morte.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_spec288_causa_morte.py",
       "qualified_name": null
     },
     {
@@ -349281,6 +349684,13 @@
       "qualified_name": "tests.test_spec286_heroi_inconsciente"
     },
     {
+      "id": "module:tests.test_spec288_causa_morte",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_spec288_causa_morte.py",
+      "qualified_name": "tests.test_spec288_causa_morte"
+    },
+    {
       "id": "module:tests.test_spec_index",
       "kind": "module",
       "line": 1,
@@ -349920,21 +350330,21 @@
     {
       "id": "symbol:agents.combat._apply_flee_travel",
       "kind": "function",
-      "line": 1678,
+      "line": 1691,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._apply_flee_travel"
     },
     {
       "id": "symbol:agents.combat._apply_weather_hazard",
       "kind": "function",
-      "line": 1626,
+      "line": 1639,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._apply_weather_hazard"
     },
     {
       "id": "symbol:agents.combat._attempt_flee",
       "kind": "function",
-      "line": 1562,
+      "line": 1575,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._attempt_flee"
     },
@@ -349948,7 +350358,7 @@
     {
       "id": "symbol:agents.combat._can_attempt_flee",
       "kind": "function",
-      "line": 1551,
+      "line": 1564,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._can_attempt_flee"
     },
@@ -349976,7 +350386,7 @@
     {
       "id": "symbol:agents.combat._combat_node",
       "kind": "function",
-      "line": 939,
+      "line": 951,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._combat_node"
     },
@@ -350004,7 +350414,7 @@
     {
       "id": "symbol:agents.combat._encounter_outcome",
       "kind": "function",
-      "line": 890,
+      "line": 902,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._encounter_outcome"
     },
@@ -350018,7 +350428,7 @@
     {
       "id": "symbol:agents.combat._finish_encounter",
       "kind": "function",
-      "line": 907,
+      "line": 919,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._finish_encounter"
     },
@@ -350051,6 +350461,13 @@
       "qualified_name": "agents.combat._kill_events"
     },
     {
+      "id": "symbol:agents.combat._killer_identity",
+      "kind": "function",
+      "line": 796,
+      "path": "agents/combat.py",
+      "qualified_name": "agents.combat._killer_identity"
+    },
+    {
       "id": "symbol:agents.combat._last_human_text",
       "kind": "function",
       "line": 127,
@@ -350060,7 +350477,7 @@
     {
       "id": "symbol:agents.combat._merge_formal_party",
       "kind": "function",
-      "line": 1751,
+      "line": 1764,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._merge_formal_party"
     },
@@ -350074,14 +350491,14 @@
     {
       "id": "symbol:agents.combat._narrate",
       "kind": "function",
-      "line": 806,
+      "line": 818,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._narrate"
     },
     {
       "id": "symbol:agents.combat._narrate_fall",
       "kind": "function",
-      "line": 796,
+      "line": 808,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._narrate_fall"
     },
@@ -350116,14 +350533,14 @@
     {
       "id": "symbol:agents.combat._reflect_scene_allies",
       "kind": "function",
-      "line": 1716,
+      "line": 1729,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._reflect_scene_allies"
     },
     {
       "id": "symbol:agents.combat._register_environmental_damage_terminal",
       "kind": "function",
-      "line": 1659,
+      "line": 1672,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._register_environmental_damage_terminal"
     },
@@ -350158,7 +350575,7 @@
     {
       "id": "symbol:agents.combat.combat_node",
       "kind": "function",
-      "line": 929,
+      "line": 941,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat.combat_node"
     },
@@ -362646,14 +363063,14 @@
     {
       "id": "symbol:playtest.runner._attach_telemetry",
       "kind": "function",
-      "line": 1784,
+      "line": 1790,
       "path": "playtest/runner.py",
       "qualified_name": "playtest.runner._attach_telemetry"
     },
     {
       "id": "symbol:playtest.runner._budget_abort_reason",
       "kind": "function",
-      "line": 1819,
+      "line": 1825,
       "path": "playtest/runner.py",
       "qualified_name": "playtest.runner._budget_abort_reason"
     },
@@ -362667,14 +363084,14 @@
     {
       "id": "symbol:playtest.runner._bump_llm_events_budget",
       "kind": "function",
-      "line": 1808,
+      "line": 1814,
       "path": "playtest/runner.py",
       "qualified_name": "playtest.runner._bump_llm_events_budget"
     },
     {
       "id": "symbol:playtest.runner._campaign_experience_violations",
       "kind": "function",
-      "line": 985,
+      "line": 990,
       "path": "playtest/runner.py",
       "qualified_name": "playtest.runner._campaign_experience_violations"
     },
@@ -362700,16 +363117,23 @@
       "qualified_name": "playtest.runner._count_new_rejections.identity"
     },
     {
+      "id": "symbol:playtest.runner._death_cause",
+      "kind": "function",
+      "line": 873,
+      "path": "playtest/runner.py",
+      "qualified_name": "playtest.runner._death_cause"
+    },
+    {
       "id": "symbol:playtest.runner._fill_economy_metrics",
       "kind": "function",
-      "line": 1746,
+      "line": 1752,
       "path": "playtest/runner.py",
       "qualified_name": "playtest.runner._fill_economy_metrics"
     },
     {
       "id": "symbol:playtest.runner._fill_state_metrics",
       "kind": "function",
-      "line": 1585,
+      "line": 1591,
       "path": "playtest/runner.py",
       "qualified_name": "playtest.runner._fill_state_metrics"
     },
@@ -362723,14 +363147,14 @@
     {
       "id": "symbol:playtest.runner._inventory_liquidation_value",
       "kind": "function",
-      "line": 1709,
+      "line": 1715,
       "path": "playtest/runner.py",
       "qualified_name": "playtest.runner._inventory_liquidation_value"
     },
     {
       "id": "symbol:playtest.runner._is_explicit_quest_request",
       "kind": "function",
-      "line": 972,
+      "line": 977,
       "path": "playtest/runner.py",
       "qualified_name": "playtest.runner._is_explicit_quest_request"
     },
@@ -362758,7 +363182,7 @@
     {
       "id": "symbol:playtest.runner._merchant_action_family",
       "kind": "function",
-      "line": 1729,
+      "line": 1735,
       "path": "playtest/runner.py",
       "qualified_name": "playtest.runner._merchant_action_family"
     },
@@ -362786,7 +363210,7 @@
     {
       "id": "symbol:playtest.runner._observed_resolved_action",
       "kind": "function",
-      "line": 960,
+      "line": 965,
       "path": "playtest/runner.py",
       "qualified_name": "playtest.runner._observed_resolved_action"
     },
@@ -362856,21 +363280,21 @@
     {
       "id": "symbol:playtest.runner._run_invariants",
       "kind": "function",
-      "line": 1839,
+      "line": 1845,
       "path": "playtest/runner.py",
       "qualified_name": "playtest.runner._run_invariants"
     },
     {
       "id": "symbol:playtest.runner._run_turn",
       "kind": "function",
-      "line": 873,
+      "line": 878,
       "path": "playtest/runner.py",
       "qualified_name": "playtest.runner._run_turn"
     },
     {
       "id": "symbol:playtest.runner._run_turn_projected",
       "kind": "function",
-      "line": 947,
+      "line": 952,
       "path": "playtest/runner.py",
       "qualified_name": "playtest.runner._run_turn_projected"
     },
@@ -362926,7 +363350,7 @@
     {
       "id": "symbol:playtest.runner.format_traceback",
       "kind": "function",
-      "line": 1833,
+      "line": 1839,
       "path": "playtest/runner.py",
       "qualified_name": "playtest.runner.format_traceback"
     },
@@ -362947,21 +363371,21 @@
     {
       "id": "symbol:playtest.runner.run_campaign",
       "kind": "function",
-      "line": 1038,
+      "line": 1043,
       "path": "playtest/runner.py",
       "qualified_name": "playtest.runner.run_campaign"
     },
     {
       "id": "symbol:playtest.runner.run_campaign._llm_hook",
       "kind": "function",
-      "line": 1121,
+      "line": 1126,
       "path": "playtest/runner.py",
       "qualified_name": "playtest.runner.run_campaign._llm_hook"
     },
     {
       "id": "symbol:playtest.runner.run_campaign._rag_hook",
       "kind": "function",
-      "line": 1136,
+      "line": 1141,
       "path": "playtest/runner.py",
       "qualified_name": "playtest.runner.run_campaign._rag_hook"
     },
@@ -363115,7 +363539,7 @@
     {
       "id": "symbol:playtest.telemetry.build_summary._pct",
       "kind": "function",
-      "line": 1106,
+      "line": 1110,
       "path": "playtest/telemetry.py",
       "qualified_name": "playtest.telemetry.build_summary._pct"
     },
@@ -363143,7 +363567,7 @@
     {
       "id": "symbol:playtest.telemetry.persist_campaign",
       "kind": "function",
-      "line": 1421,
+      "line": 1425,
       "path": "playtest/telemetry.py",
       "qualified_name": "playtest.telemetry.persist_campaign"
     },
@@ -415081,6 +415505,48 @@
       "qualified_name": "tests.test_spec286_heroi_inconsciente.test_profiles_never_travel_when_unconscious"
     },
     {
+      "id": "symbol:tests.test_spec288_causa_morte.test_death_cause_prefers_killer_then_category",
+      "kind": "test",
+      "line": 31,
+      "path": "tests/test_spec288_causa_morte.py",
+      "qualified_name": "tests.test_spec288_causa_morte.test_death_cause_prefers_killer_then_category"
+    },
+    {
+      "id": "symbol:tests.test_spec288_causa_morte.test_killer_identity_legacy_hook_name_does_not_crash",
+      "kind": "test",
+      "line": 64,
+      "path": "tests/test_spec288_causa_morte.py",
+      "qualified_name": "tests.test_spec288_causa_morte.test_killer_identity_legacy_hook_name_does_not_crash"
+    },
+    {
+      "id": "symbol:tests.test_spec288_causa_morte.test_killer_identity_strips_instance_suffix_and_gives_bestiary_id",
+      "kind": "test",
+      "line": 23,
+      "path": "tests/test_spec288_causa_morte.py",
+      "qualified_name": "tests.test_spec288_causa_morte.test_killer_identity_strips_instance_suffix_and_gives_bestiary_id"
+    },
+    {
+      "id": "symbol:tests.test_spec288_causa_morte.test_looming_threat_feeds_canonical_systemic_manifest_source",
+      "kind": "test",
+      "line": 51,
+      "path": "tests/test_spec288_causa_morte.py",
+      "qualified_name": "tests.test_spec288_causa_morte.test_looming_threat_feeds_canonical_systemic_manifest_source"
+    },
+    {
+      "id": "symbol:tests.test_spec288_causa_morte.test_looming_threat_hint_is_species_not_hook_text",
+      "kind": "test",
+      "line": 9,
+      "path": "tests/test_spec288_causa_morte.py",
+      "qualified_name": "tests.test_spec288_causa_morte.test_looming_threat_hint_is_species_not_hook_text"
+    },
+    {
+      "id": "symbol:tests.test_spec288_causa_morte.test_looming_threat_picks_regional_bestiary_creature_deterministically",
+      "kind": "test",
+      "line": 37,
+      "path": "tests/test_spec288_causa_morte.py",
+      "qualified_name": "tests.test_spec288_causa_morte.test_looming_threat_picks_regional_bestiary_creature_deterministically"
+    },
+    {
       "id": "symbol:tests.test_spec_index._apply",
       "kind": "test",
       "line": 47,
@@ -418499,7 +418965,7 @@
     {
       "id": "symbol:world_utils._advance_weather_once",
       "kind": "function",
-      "line": 994,
+      "line": 998,
       "path": "world_utils.py",
       "qualified_name": "world_utils._advance_weather_once"
     },
@@ -418548,7 +419014,7 @@
     {
       "id": "symbol:world_utils._has_light_source",
       "kind": "function",
-      "line": 1030,
+      "line": 1034,
       "path": "world_utils.py",
       "qualified_name": "world_utils._has_light_source"
     },
@@ -418576,7 +419042,7 @@
     {
       "id": "symbol:world_utils._weather_table",
       "kind": "function",
-      "line": 947,
+      "line": 951,
       "path": "world_utils.py",
       "qualified_name": "world_utils._weather_table"
     },
@@ -418597,7 +419063,7 @@
     {
       "id": "symbol:world_utils.advance_weather",
       "kind": "function",
-      "line": 982,
+      "line": 986,
       "path": "world_utils.py",
       "qualified_name": "world_utils.advance_weather"
     },
@@ -418646,7 +419112,7 @@
     {
       "id": "symbol:world_utils.clock_label",
       "kind": "function",
-      "line": 1334,
+      "line": 1338,
       "path": "world_utils.py",
       "qualified_name": "world_utils.clock_label"
     },
@@ -418660,7 +419126,7 @@
     {
       "id": "symbol:world_utils.detection_check",
       "kind": "function",
-      "line": 1159,
+      "line": 1163,
       "path": "world_utils.py",
       "qualified_name": "world_utils.detection_check"
     },
@@ -418730,7 +419196,7 @@
     {
       "id": "symbol:world_utils.light_level",
       "kind": "function",
-      "line": 1054,
+      "line": 1058,
       "path": "world_utils.py",
       "qualified_name": "world_utils.light_level"
     },
@@ -418744,7 +419210,7 @@
     {
       "id": "symbol:world_utils.maybe_start_global_weather",
       "kind": "function",
-      "line": 960,
+      "line": 964,
       "path": "world_utils.py",
       "qualified_name": "world_utils.maybe_start_global_weather"
     },
@@ -418786,28 +419252,28 @@
     {
       "id": "symbol:world_utils.resolve_track",
       "kind": "function",
-      "line": 1311,
+      "line": 1315,
       "path": "world_utils.py",
       "qualified_name": "world_utils.resolve_track"
     },
     {
       "id": "symbol:world_utils.resolve_trap",
       "kind": "function",
-      "line": 1193,
+      "line": 1197,
       "path": "world_utils.py",
       "qualified_name": "world_utils.resolve_trap"
     },
     {
       "id": "symbol:world_utils.roll_encounter_type",
       "kind": "function",
-      "line": 1183,
+      "line": 1187,
       "path": "world_utils.py",
       "qualified_name": "world_utils.roll_encounter_type"
     },
     {
       "id": "symbol:world_utils.starting_world",
       "kind": "function",
-      "line": 1339,
+      "line": 1343,
       "path": "world_utils.py",
       "qualified_name": "world_utils.starting_world"
     },
@@ -418821,18 +419287,18 @@
     {
       "id": "symbol:world_utils.trigger_global_weather",
       "kind": "function",
-      "line": 1139,
+      "line": 1143,
       "path": "world_utils.py",
       "qualified_name": "world_utils.trigger_global_weather"
     },
     {
       "id": "symbol:world_utils.weather_effects",
       "kind": "function",
-      "line": 1097,
+      "line": 1101,
       "path": "world_utils.py",
       "qualified_name": "world_utils.weather_effects"
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:8f327deb9525f8a96630d9f503ef90403bb245d42ff616cb9711886a7f2e08a4"
+  "source_tree_hash": "sha256:cf06e9e0107873a63ae8c2109fbfdf7a46f42e046dd82bff6dbf473c90a5cfdc"
 }
