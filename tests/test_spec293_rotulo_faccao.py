@@ -268,3 +268,27 @@ def test_clausula_narrador_usa_rotulo():
     )
     assert _concealed_species(druida, [], {}) == [("Druida-Renegado", fd.GENERIC_LABEL)]
     assert _concealed_species(manifest, [], _intel_known()) == []
+
+
+# --- revisão: variações de prosa do LLM -------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("O Iniciado da Chama  Azul avança", "O Iniciado avança"),
+        ("O Iniciado da\nChama Azul avança", "O Iniciado avança"),
+        ("A Cultista da Destilacao ri", "A Cultista ri"),
+        ("O Druida Renegado uiva", f"O {fd.GENERIC_LABEL} uiva"),
+        ("Dois Iniciados da Chama Azul cercam", "Dois Iniciados cercam"),
+        ("Três Degoladores da Mão Sombria", "Três Degoladores"),
+        ("Os Druidas-Renegados atacam", "Os Combatentes desconhecidos atacam"),
+        ("Iniciado da Chama Azulado", "Iniciado da Chama Azulado"),
+    ],
+)
+def test_conceal_tolera_espaco_acento_e_plural(text, expected):
+    mapping = fd.concealed_name_map({})
+    out = fd.conceal_text(text, mapping)
+    assert out == expected
+    if out != text or "Azulado" not in text:  # oráculo é substring (mais estrito)
+        assert fd.concealed_name_problems({"t": out}, {}) == []

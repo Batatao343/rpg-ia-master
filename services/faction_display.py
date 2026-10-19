@@ -89,21 +89,70 @@ def concealed_name_map(state: Mapping) -> dict[str, str]:
     return {name: label for name, (label, _fid) in _concealed_entries(state).items()}
 
 
+_VARIANTS = {
+    "a": "aáàâãä",
+    "e": "eéèêë",
+    "i": "iíìîï",
+    "o": "oóòôõö",
+    "u": "uúùûü",
+    "c": "cç",
+    "n": "nñ",
+}
+_CONNECTORS = {"da", "de", "do", "das", "dos"}
+_SEP = re.compile(r"[\s\-]+")
+
+
+def _base_char(ch: str) -> str:
+    import unicodedata
+
+    return unicodedata.normalize("NFD", ch)[:1].lower()
+
+
+def _name_regex(name: str) -> str:
+    """Revisão SPEC-293: tolera caixa, acento, espaço/quebra/hífen entre palavras e
+    plural (`s`/`es`) das palavras de conteúdo — a prosa do LLM varia nesses eixos."""
+    parts = []
+    for word in _SEP.split(name.strip()):
+        if not word:
+            continue
+        chars = "".join(
+            f"[{_VARIANTS[b]}]" if (b := _base_char(ch)) in _VARIANTS else re.escape(ch)
+            for ch in word
+        )
+        if word.casefold() not in _CONNECTORS and word[-1:].isalpha():
+            chars += "(?:e?s)?"
+        parts.append(chars)
+    return r"[\s\-]+".join(parts)
+
+
 def _pattern(mapping: Mapping[str, str]) -> re.Pattern | None:
     if not mapping:
         return None
     names = sorted(mapping, key=len, reverse=True)
-    return re.compile(
-        r"(?<!\w)(" + "|".join(re.escape(n) for n in names) + r")(?!\w)", re.IGNORECASE
-    )
+    alts = "|".join(f"(?P<n{i}>{_name_regex(n)})" for i, n in enumerate(names))
+    return re.compile(r"(?<!\w)(?:" + alts + r")(?!\w)", re.IGNORECASE)
+
+
+def _pluralize(label: str, suffix: str) -> str:
+    if not suffix:
+        return label
+    if label.startswith(GENERIC_LABEL):
+        return "Combatentes desconhecidos" + label[len(GENERIC_LABEL) :]
+    head, sep, tail = label.partition(" ")
+    return head + suffix + sep + tail
 
 
 def _replacer(mapping: Mapping[str, str]):
-    folded = {k.casefold(): v for k, v in mapping.items()}
+    names = sorted(mapping, key=len, reverse=True)
 
     def repl(match: re.Match) -> str:
-        label = folded.get(match.group(1).casefold(), match.group(1))
-        if match.group(1)[:1].islower():
+        canon = names[int(str(match.lastgroup)[1:])]
+        found = match.group(0)
+        first_found = _SEP.split(found, maxsplit=1)[0]
+        first_canon = _SEP.split(canon.strip(), maxsplit=1)[0]
+        suffix = first_found[len(first_canon) :].lower()
+        label = _pluralize(mapping[canon], suffix)
+        if found[:1].islower():
             return label[:1].lower() + label[1:]
         return label
 
