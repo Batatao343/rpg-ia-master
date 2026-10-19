@@ -354,19 +354,24 @@ def reason_code(reason: str) -> str:
         return "duplicate"
     if text.startswith("proposta malformada"):
         return "malformed"
-    if "id desconhecido" in text or "não existe no ARTIFACTS_DB" in text             or "não é local do mapa" in text or "relação desconhecida" in text:
+    if ("id desconhecido" in text or "não existe no ARTIFACTS_DB" in text
+            or "não é local do mapa" in text or "relação desconhecida" in text):
         return "unknown_target"
-    if "não é do type" in text or "não é facção" in text or "não é item único" in text             or "não é uma facção conhecida" in text or "sempre do player" in text             or "exige actor player" in text:
+    if ("não é do type" in text or "não é facção" in text or "não é item único" in text
+            or "não é uma facção conhecida" in text or "sempre do player" in text
+            or "exige actor player" in text):
         return "wrong_type"
     if "não é uma quest ativa" in text:
         return "not_active"
     if "nenhum segredo" in text:
         return "no_secret"
-    if "já está morto" in text or "já revelado" in text or "já ocorreu" in text             or "derrotada" in text or "bloqueada" in text:
+    if ("já está morto" in text or "já revelado" in text or "já ocorreu" in text
+            or "derrotada" in text or "bloqueada" in text):
         return "already_done"
     if "sem conexão" in text or "não têm conexão" in text:
         return "no_connection"
-    if "ausente" in text or "inválido" in text or "fora do plano" in text             or "sem campaign_plan" in text:
+    if ("ausente" in text or "inválido" in text or "fora do plano" in text
+            or "sem campaign_plan" in text):
         return "invalid_payload"
     return "other"
 

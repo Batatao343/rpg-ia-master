@@ -105,16 +105,20 @@ def _should_replan(state: GameState) -> bool:
 
 def _replan_reason(state: GameState) -> str:
     """SPEC-252 R4: motivo FECHADO do replanejamento (só observabilidade; mesma ordem de
-    `_should_replan`): needs_replan | first_plan | region_change | periodic."""
+    `_should_replan`): needs_replan | first_plan | region_change | periodic | arc_finished."""
     if state.get("needs_replan"):
         return "needs_replan"
     plan = state.get("campaign_plan")
     if not plan:
         return "first_plan"
     world = state.get("world", {})
-    if plan.get("location") and plan["location"] != world.get("current_location")             and not _same_region(plan["location"], world.get("current_location", "")):
+    if (plan.get("location") and plan["location"] != world.get("current_location")
+            and not _same_region(plan["location"], world.get("current_location", ""))):
         return "region_change"
-    return "periodic"
+    last_turn = plan.get("last_planned_turn", -REPLAN_INTERVAL)
+    if world.get("turn_count", 0) - last_turn >= REPLAN_INTERVAL:
+        return "periodic"
+    return "arc_finished"
 
 
 def _build_plan(state: GameState, _info: Optional[dict] = None) -> CampaignPlan:
@@ -322,8 +326,9 @@ def _campaign_manager_node(state: GameState):
 
     _log_event("campaign", "generating_plot", level="info")
     _plan_info: dict = {}
+    _reason = _replan_reason(effective_state)   # antes do build (que pode mexer no estado)
     new_plan = _build_plan(effective_state, _plan_info)
-    _log_event("campaign", "replan", level="info", reason=_replan_reason(effective_state),
+    _log_event("campaign", "replan", level="info", reason=_reason,
                outcome=_plan_info.get("outcome", "llm" if new_plan else "previous_kept"))
     # spec beats-visibilidade-ptbr (R4): não conseguiu um plano em pt-BR → mantém
     # o anterior e deixa needs_replan ligado para tentar de novo no próximo turno.
