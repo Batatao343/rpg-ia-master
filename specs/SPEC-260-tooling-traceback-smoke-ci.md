@@ -73,7 +73,7 @@ R1–R4.
 
 ## 8. Notas de implementação (2026-10-19)
 
-- **R2 NÃO implementado (desvio deliberado):** `evals/__main__.py` está em `evals/protected-paths.txt` e seu sha256 consta em `evals/manifest.lock.json`; alterá-lo exige relock oficial + aprovação do environment `eval-governance`. Para não quebrar o gate da régua, o arquivo ficou intocado. Retomar em spec própria com o procedimento de relock: [SPEC-276](SPEC-276-evals-cli-traceback.md) (`draft`).
+- **R2 NÃO implementado (desvio deliberado):** `evals/__main__.py` está em `evals/protected-paths.txt` e seu sha256 consta em `evals/manifest.lock.json`; alterá-lo exige relock oficial + aprovação do environment `eval-governance`. Para não quebrar o gate da régua, o arquivo ficou intocado. Retomar em spec própria com o procedimento de relock: [SPEC-277](SPEC-277-evals-cli-traceback.md) (`draft`).
 - R1: `playtest.runner.format_traceback` (cauda de 40 linhas, sem locals); `TurnRecord.traceback` (JSONL via `playtest/telemetry.py`), `errors[].traceback` (turno, startup) e `invariant.runner_crash` (`error` sem truncar a 180 + `traceback`). Os demais `except Exception` silenciosos de runner/telemetry não foram tocados (escopo mínimo).
 - R3: `scripts/post_deploy_smoke.py` schema_version 2: `status`, `failed_check(s)`, `http_status`, `actual_git_sha`, `checks.<nome>.{status,http_status,latency_ms,error_type}`; checks independentes; falha de setup (URL inválida) também grava JSON; exit 1. `run()` não levanta mais em SHA divergente (`test_ci_eval_gates` ajustado).
 - R4: `validate.yml` roda pytest com `--tb=short --junitxml` + `tee pytest-tb.log` e sobe artifact `if: failure()` (upload-artifact pinado como nos outros workflows). Falha induzida em branch: pendente (depende de CI).

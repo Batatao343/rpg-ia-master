@@ -1,4 +1,4 @@
-# SPEC-276 — Evals CLI: traceback e `error_type` na falha (follow-up da SPEC-260 R2)
+# SPEC-277 — Evals CLI: traceback e `error_type` na falha (follow-up da SPEC-260 R2)
 
 > **Status:** `draft`
 > **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
