@@ -145,6 +145,10 @@ def recover_wallet_reservations(pool, max_items: int = 50, *, owner_id: UUID | N
         except Exception as exc:
             from infrastructure.payment_log import wallet_event
             wallet_event("recovery_item_failed", row["reservation_id"], exc, stage="resolve")
+            from observability.telemetry import log_event, pseudonym
+            log_event("cron", "item_failed", level="warning", task="operations",
+                      item_kind="wallet_reservation", item_ref=pseudonym(row["reservation_id"]),
+                      error_type=type(exc).__name__)
             counts["wallet_errors"] += 1
             continue
         key = f"wallet_{outcome}"

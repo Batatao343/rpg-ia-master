@@ -1,7 +1,7 @@
 # SPEC-256 — Crons: run_id, linha de início, falhas por item e autenticação rejeitada
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P2**.
-> **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
+> **Status:** `done` — aprovada pelo dono em 2026-10-19. Prioridade sugerida: **P2**.
+> **Criada:** 2026-10-18 · **Atualizada:** 2026-10-19
 > **Depende de:** SPEC-255
 > **Desbloqueia:** SPEC-262
 > **Origem:** auditoria de logs 2026-10-18 ([relatório](../docs/auditorias/logs-api-2026-10-18.md))
@@ -55,12 +55,12 @@ R1–R5.
 
 ## 5. Critérios de aceite
 
-- [ ] Toda execução de cron reconstruível por `run_id`.
-- [ ] Falhas por item nunca silenciosas.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] Toda execução de cron reconstruível por `run_id`.
+- [x] Falhas por item nunca silenciosas.
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
 - [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -71,3 +71,21 @@ R1–R5.
 - Nenhum.
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## 8. Notas de implementação (2026-10-19)
+
+- **R3:** nova tabela `app.cron_run_state (task pk, consecutive_failures, last_outcome, updated_at)` em
+  `supabase/migrations/20261019100000_cron_run_state.sql` (idempotente, RLS enable+force, sem grants a
+  anon/authenticated/rpg_api; acesso pelo pool admin). `app.cron_health_alerts` foi descartada: só guarda alertas
+  (>=3), não um contador. Upsert atômico `consecutive_failures + 1` / zera em sucesso. Sem pool (legacy/testes) ou
+  com erro de banco: contador em memória + `cron.state_unavailable` (warning, só `error_type`); o cron nunca quebra.
+  **PENDENTE para o coordenador: aplicar a migration no staging** (sem ela, cai no fallback em memória com warning).
+- **Compat:** a linha existente (`"event": "rpg.cron"`, logger `rpg.cron`) foi mantida e ganhou `run_id`
+  (correlação); não foi duplicada como `cron.finished`. Os testes antigos foram ajustados para filtrar por esse evento.
+- `run_id` = 12 hex, via `correlation_scope`, presente em todas as linhas da execução.
+- **R4:** `cron.item_failed` em `scripts/recover_account_deletions.py` (account_deletion), `services/wallet_recovery.py`
+  (wallet_reservation, por reserva), varredura de wallet em `/operations` (item `sweep`) e `_finops_recorder`.
+- **Eventos novos:** `cron.started`, `cron.failed` (error; `error_type` + `stack` via `safe_stack`), `cron.item_failed`,
+  `cron.auth_rejected` (`reason` missing|invalid|not_configured), `cron.state_unavailable`. Métricas: nenhuma.
+- **Smoke de staging sugerido:** aplicar a migration; `POST /internal/cron/jobs` com Bearer => `cron.started` e
+  `rpg.cron` com mesmo `run_id`; sem Bearer => `cron.auth_rejected reason=missing`; conferir `select * from app.cron_run_state`.
