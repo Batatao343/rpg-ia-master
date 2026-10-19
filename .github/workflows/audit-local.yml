@@ -10,7 +10,25 @@ on:
 permissions:
   contents: read
 jobs:
+  scope:
+    # Workspace C6: mudança só de docs não sobe Supabase/browser (ver scripts/ci_docs_only.py).
+    runs-on: ubuntu-24.04  # pin: ubuntu-latest migra de imagem sem aviso
+    outputs:
+      docs_only: ${{ steps.scope.outputs.docs_only }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: scope
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python3 scripts/ci_docs_only.py --base "$BASE_SHA" --head "$HEAD_SHA" --github-output "$GITHUB_OUTPUT"
+
   infra-browser:
+    needs: scope
+    if: needs.scope.outputs.docs_only != 'true'
     runs-on: ubuntu-24.04  # pin: ubuntu-latest migra de imagem sem aviso
     timeout-minutes: 35
     steps:

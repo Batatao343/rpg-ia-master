@@ -1,0 +1,8 @@
+docs/playtests/smoke-conflito-v4-2026-07-25.md -> ../../playtest_runs/20260725-101933/combate_0.jsonl
+docs/playtests/smoke-conflito-v4-2026-07-25.md -> ../../playtest_runs/20260725-101933/combate_0.summary.json
+docs/playtests/smoke-conflito-v4-2026-07-25.md -> ../../playtest_runs/20260725-101933/mapa_breaker_0.summary.json
+docs/playtests/smoke-conflito-v4-2026-07-25.md -> ../../playtest_runs/20260725-101933/report.md
+docs/playtests/smoke-conflito-v4-2026-07-25.md -> ../../playtest_runs/20260725-101933/secret_rusher_0.jsonl
+docs/playtests/smoke-conflito-v4-2026-07-25.md -> ../../playtest_runs/20260725-101933/transcript.md
+docs/spec214/README.md -> ../../handoffs/SPEC-214-eval-authoring.md
+specs/SPEC-214-memoria-hierarquica-cache-cena.md -> ../handoffs/SPEC-214-eval-authoring.md

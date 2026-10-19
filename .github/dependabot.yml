@@ -1,4 +1,5 @@
 # SPEC-225 R3: atualizações semanais de actions (pins por SHA), dependências Python e npm.
+# Workspace C6: minor+patch agrupados em 1 PR por ecossistema; major sai sozinho (revisão própria).
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -7,15 +8,24 @@ updates:
       interval: weekly
     commit-message:
       prefix: "ci"
+    groups:
+      actions-minor-patch:
+        update-types: [minor, patch]
   - package-ecosystem: pip
     directory: "/"
     schedule:
       interval: weekly
     commit-message:
       prefix: "deps"
+    groups:
+      pip-minor-patch:
+        update-types: [minor, patch]
   - package-ecosystem: npm
     directory: "/web"
     schedule:
       interval: weekly
     commit-message:
       prefix: "deps"
+    groups:
+      npm-minor-patch:
+        update-types: [minor, patch]

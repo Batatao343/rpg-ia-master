@@ -7,9 +7,46 @@ on:
     - cron: "23 6 * * 1"
 permissions:
   contents: read
+concurrency:
+  # Workspace C6: PR com push novo cancela o run anterior; na main todo commit termina.
+  group: validate-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
+  scope:
+    # Workspace C6: push/PR só de docs (docs/, handoffs/, proximas-specs/, *.md da raiz)
+    # pula a suíte pesada e roda o job docs-only. Base desconhecida => suíte completa.
+    runs-on: ubuntu-24.04  # pin: ubuntu-latest migra de imagem sem aviso
+    outputs:
+      docs_only: ${{ steps.scope.outputs.docs_only }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: scope
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python3 scripts/ci_docs_only.py --base "$BASE_SHA" --head "$HEAD_SHA" --github-output "$GITHUB_OUTPUT"
+
+  docs-only:
+    needs: scope
+    if: github.event_name != 'schedule' && needs.scope.outputs.docs_only == 'true'
+    runs-on: ubuntu-24.04  # pin: ubuntu-latest migra de imagem sem aviso
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      - run: uv sync --extra anthropic
+      - run: uv run python scripts/validate_content.py
+      - run: uv run python scripts/check_md_links.py --baseline scripts/md_links_baseline.txt
+      # Testes que leem documentação (catálogos, AGENTS.md, specs...) continuam rodando.
+      - run: uv run pytest -q -n auto --tb=short $(python3 scripts/ci_docs_only.py --doc-tests)
+        shell: bash
+
   test:
-    if: github.event_name != 'schedule'
+    needs: scope
+    if: github.event_name != 'schedule' && needs.scope.outputs.docs_only != 'true'
     runs-on: ubuntu-24.04  # pin: ubuntu-latest migra de imagem sem aviso
     timeout-minutes: 30
     steps:
@@ -73,6 +110,8 @@ jobs:
 
   npm-audit-full:
     # SPEC-225 R6 / SPEC-276: árvore completa (inclui dev) bloqueante desde a migração para Vite 8 (D-A).
+    needs: scope
+    if: needs.scope.outputs.docs_only != 'true'
     runs-on: ubuntu-24.04  # pin: ubuntu-latest migra de imagem sem aviso
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
