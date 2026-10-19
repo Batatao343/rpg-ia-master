@@ -42,7 +42,9 @@ def provider(monkeypatch):
     return SupabaseIdentityProvider(BASE + "/", "publishable"), calls, user
 
 
-@pytest.mark.parametrize("token", [
+# Os JWTs contêm time.time(): ids explícitos e estáveis, senão o id muda a cada
+# coleta e o pytest-xdist recusa a execução ("Different tests were collected").
+_REJECTED_TOKENS = [
     "garbage",
     "a.b",
     "a.b.c.d",
@@ -55,7 +57,10 @@ def provider(monkeypatch):
     jwt(iss=None),
     "x." + base64.urlsafe_b64encode(b"[1,2]").decode() + ".s",
     "x." + b64({"exp": "soon", "aud": "authenticated", "iss": f"{BASE}/auth/v1"}) + ".s",
-])
+]
+
+
+@pytest.mark.parametrize("token", _REJECTED_TOKENS, ids=[f"token{i}" for i in range(len(_REJECTED_TOKENS))])
 def test_malformed_or_foreign_tokens_never_reach_the_network(provider, token):
     identity, calls, _user = provider
     for _ in range(50):
