@@ -61,6 +61,8 @@ devolvem o parágrafo no hand-back. Ao abrir a próxima onda, mova estas notas p
 
 <!-- onda:inserir-aqui -->
 
+- **19/10 — Workspace, 2ª passada:** CI em Node 22 (`web/.nvmrc`) e runners fixos `ubuntu-24.04`; porta do Playwright por checkout (`RPG_E2E_PORT`), dois worktrees rodam e2e juntos; push só de docs pula a suíte pesada (job `docs-only`; `eval-gates` intacto); Dependabot agrupa minor/patch; lint de nome de handoff; `proximas-specs/` → `docs/historico/proximas-specs/`. Achado: M07 mobile (timeout do axe) já falhava na main.
+
 - **19/10 — SPEC-277 `done`:** CLI de evals mostra no stderr suite, `case_id` e traceback (≤ 40 linhas, só frames + classe, **sem a mensagem**, para não vazar caso do holdout no log do Actions); JSON ganha `errors:[{case_id,error_type}]`. Relock só dos 2 hashes; revisão Opus APPROVED com 1 correção ([parecer](handoffs/SPEC-277-review.md)). Flake do teste Jev sem chave sob xdist corrigido.
 
 - **19/10 (onda):** workspace, logs P2/P3 (+ staging), SPEC-222 delete com arte, SPEC-236 §6.2 dia 1, SPEC-276 (Vite 8/Playwright 1.64), SPEC-278 (React 19), SPEC-279/280 (gasto sobrevive ao delete; órfãos) — todos na main com CI verde. Detalhe por frente em `CHANGELOG.md` § 2026-10-19. Pendente: SPEC-236 §6.2 dia 2 (20/10, [roteiro](docs/staging-wave-2026-10-17/spec236-s62-plano.md)).
