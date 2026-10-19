@@ -1,6 +1,6 @@
 # SPEC-275 — Impasse eterno no conflito: inimigo oculto "ataca" com Carta de suporte recusada
 
-> **Status:** `draft`
+> **Status:** `in-progress` (implementada; aguarda revisão independente Astra)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Origem:** revisão SPEC-272 2026-10-18 (achado: `combat.no_progress` em `playtest run --profile combate --turns 200`, offline)
 > **Depende de:** —
@@ -174,19 +174,19 @@ Implementar §3 em `conflict_orchestrator.py`/`conflict_turn.py` e rodar a Etapa
 
 ## 5. Critérios de aceite
 
-- [ ] Testes da Etapa 1 escritos antes do código e verdes depois.
-- [ ] **Sem mudar o perfil** (só R1–R4): 10 execuções consecutivas de
+- [x] Testes da Etapa 1 escritos antes do código e verdes depois.
+- [x] **Sem mudar o perfil** (só R1–R4): 10 execuções consecutivas de
       `uv run --frozen python -m playtest run --profile combate --turns 200` em
       checkout limpo (sem `saves_playtest/`, sem `data/runtime/`) dão **0**
       `combat.no_progress`.
-- [ ] Com R6: `--seed 0` repetido 3× produz o mesmo `summary.json`, ignorando
+- [x] Com R6: `--seed 0` repetido 3× produz o mesmo `summary.json`, ignorando
       latência e timestamps.
-- [ ] `--all --turns 50` sem novas violações `error` em relação à main.
-- [ ] Nenhum teste de combate existente regride. Em especial: SPEC-232 R5 (recusa sem
+- [x] `--all --turns 50` sem novas violações `error` em relação à main.
+- [x] Nenhum teste de combate existente regride. Em especial: SPEC-232 R5 (recusa sem
       custo do jogador), Mimetismo Morto (`esconder` repetido), SPEC-203 (manifesto)
       e SPEC-205 (`valid_targets`).
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Saves antigos com conflito ativo continuam carregando (`stalemate_rounds` ausente = 0).
+- [x] `uv run pytest` verde (suíte completa offline).
+- [x] Saves antigos com conflito ativo continuam carregando (`stalemate_rounds` ausente = 0).
 
 ## 6. Smoke test com LLM real
 
@@ -201,7 +201,7 @@ O motor é Python puro, então o LLM só narra.
   dificuldade efetiva sobe (como na SPEC-232). Medir no playtest `--all` e, se
   preciso, levar para SPEC-049.
 - **R5 é decisão de design.** A alternativa é só R1–R4 mais o fim do conflito por
-  fuga. O dono decide antes de `approved`. R1–R4 já resolvem o impasse observado.
+  fuga. **Decisão do dono (2026-10-18): "Corrige com R5"** — R5 implementado com o default da spec (covarde foge; demais revelam e atacam; K=6 rodadas sem dano; contador em `scene["stalemate"]`, não em `combat`, pois `run_round` só recebe a cena). R7 não implementado (opcional). R1–R4 já resolvem o impasse observado.
 - **Harness:** com o `game_id` determinístico (R6), duas campanhas com o mesmo seed
   na mesma run colidem no save, então o índice da campanha entra no `uuid5`.
 - **MockLLM / FallbackLLM:** nenhum caminho novo de structured output.

@@ -10,6 +10,7 @@ uma manobra, um ataque/Carta, uso de objeto ou movimento. O jogador e a IA
 (perfil tático, conflito-08) emitem essa estrutura — não texto livre.
 """
 import random
+import logging
 from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field
@@ -21,6 +22,8 @@ from services import death_flow
 from services.conflict_resolution import resolve_attack, virtude_para_tipo, virtude_value
 
 _MANEUVERS = {"engajar", "desengajar", "guardar", "esconder", "procurar", "mover"}
+
+logger = logging.getLogger("rpg.conflict")
 
 
 # ==========================================================================
@@ -308,11 +311,21 @@ def _resolve_attack_step(scene, actor, actor_id, actors_by_id, step, out, *, sta
         support = effect_kind in _SUPPORT_EFFECTS
         reason = _invalid_target_reason(scene, actor, actor_id, actors_by_id, step,
                                         support=support, sides=sides)
-        if reason:
+        if reason and not is_player_actor:
+            # SPEC-275 R3: declaração recusada de INIMIGO não é no-op — cai UMA
+            # vez em ataque básico no mesmo alvo (nada cobrado); se também for
+            # recusado, o bloco abaixo registra a recusa e o turno passa.
+            out["logs"].append(reason)
+            out["logs"].append("enemy_declaration_fallback: ataque básico.")
+            logger.info("enemy_declaration_fallback actor=%s", actor_id)
+            card, step.card_id, effect_kind = None, None, "dano"
+        elif reason:
             # SPEC-232 R5: nada foi cobrado — Entropia e frequência intactas.
             out["logs"].append(reason)
             return
-        if is_player_actor:
+        if card is None:
+            res = None          # SPEC-275 R3: caiu em ataque básico
+        elif is_player_actor:
             res = None if state is None else (
                 cards.use_ruptura(state, step.card_id) if ruptura
                 else cards.use_card(state, step.card_id)

@@ -331,6 +331,17 @@ def resolve_class_name(raw: str) -> str:
     raise KeyError(f"classe desconhecida: {raw!r} (conhecidas: {sorted(CLASSES)})")
 
 
+_PLAYTEST_NS = uuid.UUID("6b0c8a52-275e-4c1a-9f0e-2750a11c0275")
+
+
+def campaign_game_id(profile: str, seed: Optional[int], discriminator: object = 0) -> str:
+    """SPEC-275 R6: game_id do harness derivado do seed (reprodutível); sem seed
+    segue aleatório. Só o harness — o jogo de produção continua com uuid4."""
+    if seed is None:
+        return str(uuid.uuid4())
+    return str(uuid.uuid5(_PLAYTEST_NS, f"{profile}:{seed}:{discriminator}"))
+
+
 def _build_initial_state(profile: str, seed: int,
                          class_name: Optional[str] = None,
                          start_level: int = 1) -> dict:
@@ -351,7 +362,7 @@ def _build_initial_state(profile: str, seed: int,
     final_char = create_player_character(char_input)
     level = int(char_input["level"])
 
-    game_id = str(uuid.uuid4())
+    game_id = campaign_game_id(profile, seed, f"{class_name}:{start_level}")
     region = final_char["region"]
     initial = {
         "game_id": game_id,
@@ -457,6 +468,25 @@ def _build_initial_state(profile: str, seed: int,
 
 
 # --- helpers de ambiente ----------------------------------------------------
+
+@contextlib.contextmanager
+def _seeded_random_factory():
+    """SPEC-275 R6: ``random.Random()`` sem argumento (rng=None nos serviços do
+    motor) semeia do ``os.urandom`` e quebra a reprodutibilidade por seed. Durante
+    a campanha, o construtor sem seed passa a derivar do ``random`` global já
+    semeado. Só o harness; produção não passa por aqui."""
+    original = random.Random
+
+    class _SeededRandom(original):
+        def __init__(self, x=None):
+            super().__init__(random.getrandbits(64) if x is None else x)
+
+    random.Random = _SeededRandom
+    try:
+        yield
+    finally:
+        random.Random = original
+
 
 @contextlib.contextmanager
 def _isolated_saves():
@@ -1028,7 +1058,7 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
 
     with _force_mock(active=not use_real_llm), \
             _offline_embeddings(active=not use_real_llm), _isolated_saves(), \
-            _isolated_runtime_cache():
+            _isolated_runtime_cache(), _seeded_random_factory():
         _clear_caches()
         random.seed(seed)  # reproduz MockLLM + combate da campanha inteira
         from main import app as game_graph

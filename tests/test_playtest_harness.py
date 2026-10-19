@@ -124,3 +124,12 @@ def test_report_renderiza_secao_de_mortes():
     md = render_markdown(rep)
     assert "## Mortes" in md
     assert "Skallgard" in md and "Afogado" in md
+
+
+def test_spec275_campaign_game_id_derives_from_seed():
+    """R6: com seed, o game_id da campanha é determinístico; sem seed segue aleatório."""
+    from playtest.runner import campaign_game_id
+    assert campaign_game_id("combate", 7, 0) == campaign_game_id("combate", 7, 0)
+    assert campaign_game_id("combate", 7, 0) != campaign_game_id("combate", 7, 1)
+    assert campaign_game_id("combate", 7, 0) != campaign_game_id("combate", 8, 0)
+    assert campaign_game_id("combate", None, 0) != campaign_game_id("combate", None, 0)

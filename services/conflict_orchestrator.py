@@ -19,6 +19,8 @@ determinístico e ZERO LLM em resolução:
 O jogador chega com a `TurnDeclaration` já montada (parse CLASSIFY no nó).
 """
 import copy
+import json
+import logging
 import random
 from typing import Dict, List, Optional
 
@@ -455,6 +457,8 @@ def enemy_declaration(scene: dict, actor_id: str, actors_by_id: Dict[str, dict],
     if taunted_target is not None:
         target = taunted_target
 
+    if actor.pop("_forced_attack", None) and action_key not in {"flee", "surrender"}:
+        action_key = "attack"      # SPEC-275 R5: quebra de impasse — ataca.
     if action_key == "control" and not canonical["controle_disponivel"]:
         action_key = "attack"
     if action_key == "flank" and not canonical["sem_flanco"]:
@@ -502,9 +506,19 @@ def enemy_declaration(scene: dict, actor_id: str, actors_by_id: Dict[str, dict],
 
     # Carta de inimigo (conflito-15: `cartas`) quando houver Entropia; senão ataque básico.
     card_id = _enemy_offensive_card(actor, scene=scene, actor_id=actor_id)
+    if card_id:
+        # SPEC-275 R2: Carta de suporte mira o próprio lado, nunca o jogador.
+        kind = str(((_get_card(card_id) or {}).get("efeito") or {}).get("kind") or "")
+        if kind in ct._SUPPORT_EFFECTS:
+            target = actor_id
     step = ct.TurnStep(kind="card" if card_id else "attack",
                        card_id=card_id, target_id=target)
     return ct.TurnDeclaration(actor_id=actor_id, acao=step)
+
+
+def _get_card(card_id: str) -> Optional[dict]:
+    from services import cards
+    return cards.get_card(card_id)
 
 
 def _enemy_offensive_card(
@@ -520,6 +534,11 @@ def _enemy_offensive_card(
         # Esconder-se de novo enquanto já oculto não cria mudança mecânica e
         # pode bloquear o conflito para sempre (Mimetismo Morto da matriz A).
         if effect_kind == "esconder" and position.get("ocultacao") == "escondido":
+            continue
+        # SPEC-275 R1: "ofensiva" de verdade — Carta de suporte recusada contra
+        # o jogador deixava o inimigo inerte para sempre.
+        # `esconder` segue elegível (Mimetismo Morto) — mira o próprio ator (R2).
+        if effect_kind not in ct._ATTACK_EFFECTS and effect_kind != "esconder":
             continue
         if cards.can_use_enemy_card(actor, card_id, expected_type="ativa"):
             return card_id
@@ -1330,6 +1349,67 @@ def _refused_player_item(actors_by_id, sides, declarations) -> str:
     return ""
 
 
+logger = logging.getLogger("rpg.conflict")
+STALEMATE_ROUNDS = 6
+
+
+def _damage_fingerprint(actors_by_id: Dict[str, dict]) -> str:
+    """Só dano/estado vital — posição e ocultação ficam de fora de propósito
+    (esconder/revelar em ciclo é exatamente o impasse)."""
+    bits = []
+    for aid in sorted(actors_by_id):
+        a = actors_by_id[aid]
+        bits.append((aid, int(a.get("vitalidade", a.get("hp", 0)) or 0),
+                     str(a.get("status") or ""), bool(a.get("dead")),
+                     bool(a.get("fled")), bool(a.get("surrendered")),
+                     json.dumps(a.get("ferimentos") or {}, sort_keys=True,
+                                default=str)))
+    return json.dumps(bits, default=str)
+
+
+def _is_cowardly(actor: dict) -> bool:
+    profile = actor.get("tactical_profile") or {}
+    names = (actor.get("tactical_archetype"), actor.get("arquetipo"),
+             actor.get("profile"), profile.get("archetype") if isinstance(profile, dict) else None)
+    return any(str(n or "").startswith("covarde") for n in names)
+
+
+def _stalemate_guard(scene: dict, actors_by_id: Dict[str, dict],
+                     sides: Dict[str, List[str]]) -> List[str]:
+    """SPEC-275 R5 (decisão do dono 2026-10-18): após ``STALEMATE_ROUNDS``
+    rodadas seguidas SEM dano, o motor quebra o impasse, 100% determinístico:
+    inimigos ``covarde*`` fogem (``fled``); os demais perdem a ocultação e
+    atacam na rodada seguinte. Contador em ``scene["stalemate"]`` (persistido
+    junto da cena; ausente em saves antigos = 0). Devolve eventos."""
+    fp = _damage_fingerprint(actors_by_id)
+    st = scene.setdefault("stalemate", {"rounds": 0, "fp": fp})
+    if st.get("fp") != fp:
+        st["rounds"], st["fp"] = 0, fp
+        return []
+    st["rounds"] = int(st.get("rounds", 0) or 0) + 1
+    if st["rounds"] <= STALEMATE_ROUNDS:
+        return []
+    st["rounds"] = 0
+    events = []
+    for eid in sides.get("enemy", []):
+        enemy = actors_by_id.get(eid)
+        if enemy is None or not _can_act(enemy):
+            continue
+        if _is_cowardly(enemy):
+            enemy["fled"] = True
+            enemy["status"] = "fugiu"
+            events.append(f"conflict_stalemate_broken: {_name(enemy)} foge do impasse.")
+        else:
+            pos = (scene.get("positions") or {}).get(eid)
+            if pos is not None:
+                cs._reveal(pos)
+            enemy["_forced_attack"] = True
+            events.append(f"conflict_stalemate_broken: {_name(enemy)} sai da ocultação e ataca.")
+    if events:
+        logger.info("conflict_stalemate_broken events=%s", len(events))
+    return events
+
+
 def run_round(scene: dict, actors_by_id: Dict[str, dict], sides: Dict[str, List[str]],
               state: Optional[dict] = None, *, declarations: Optional[dict] = None,
               prepared_abyss: Optional[List[dict]] = None, scene_state: Optional[dict] = None,
@@ -1362,6 +1442,7 @@ def run_round(scene: dict, actors_by_id: Dict[str, dict], sides: Dict[str, List[
         out["action_refused"] = True
         return out
     cs.advance_tactical_state(scene)
+    out["logs"].extend(_stalemate_guard(scene, actors_by_id, sides))
     player = _find_player(actors_by_id, sides)
     player_id = _player_id(sides)
     player_decl = declarations.get(player_id) if player_id else None
