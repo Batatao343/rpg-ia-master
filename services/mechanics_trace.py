@@ -24,7 +24,8 @@ _bucket: contextvars.ContextVar[Optional["_Bucket"]] = contextvars.ContextVar(
 
 
 class _Bucket:
-    def __init__(self) -> None:
+    def __init__(self, recording: bool = True) -> None:
+        self.recording = recording   # revisao P2/P3: so grava dentro do escopo do combate
         self.steps: List[Dict[str, Any]] = []
         self.truncated = 0
         self.agg: Dict[str, Any] = {
@@ -33,13 +34,22 @@ class _Bucket:
 
 
 @contextmanager
-def scope() -> Iterator["_Bucket"]:
-    """Abre o coletor do turno; aninhado, reaproveita o do escopo externo."""
+def scope(*, recording: bool = True) -> Iterator["_Bucket"]:
+    """Abre o coletor; aninhado, reaproveita o do escopo externo.
+
+    ``recording=False`` (coletor do turno em ``audit_trace.collecting``) so guarda o balde: passos
+    de nos fora do combate (teste geral do storyteller, dano de viagem/clima) NAO entram. O
+    escopo interno do ``combat_node`` liga a gravacao enquanto dura (e restaura ao sair)."""
     current = _bucket.get()
     if current is not None:
-        yield current
+        previous = current.recording
+        current.recording = previous or recording
+        try:
+            yield current
+        finally:
+            current.recording = previous
         return
-    bucket = _Bucket()
+    bucket = _Bucket(recording)
     token = _bucket.set(bucket)
     try:
         yield bucket
@@ -87,7 +97,7 @@ def record_step(kind: str, *, actor: Any = None, target: Any = None, dice: Any =
                 result: Any = None, amount: Any = None, card_id: Any = None,
                 reason: Any = None) -> None:
     bucket = _bucket.get()
-    if bucket is None or kind not in KINDS:
+    if bucket is None or not bucket.recording or kind not in KINDS:
         return
     try:
         step: Dict[str, Any] = {"kind": kind, "actor_ref": ref_of(actor),

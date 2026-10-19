@@ -83,7 +83,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `economy.trade` | `gold_delta`, `item_id`, `mode`, `outcome`, `reason_code` |
 | `economy.unique_claim_conflict` | `item_id`, `source` |
 | `event.applied` | `event_id`, `type` |
-| `event.proposal_rejected` | — |
+| `event.proposal_rejected` | `reason_code`, `source`, `target_ref`, `type` |
 | `gamedata.artifact_save_failed` | `error` |
 | `gamedata.artifact_saved` | — |
 | `gamedata.file_missing` | `file` |

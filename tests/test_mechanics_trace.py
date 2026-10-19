@@ -140,3 +140,36 @@ def test_export_includes_mechanics_and_passes_scan():
     mech = rows[0]["mechanics"]
     assert mech["steps"][0]["dice"] == [7, 3] and mech["truncated"] == 2 and "extra" not in mech
     assert "mechanics" not in rows[1]
+
+
+def test_turn_scope_records_only_inside_combat():
+    """Revisao P2/P3: passo mecanico fora do combat_node (storyteller/viagem) nao entra no trace."""
+    hero, foe = _actor("player", player=True), _actor("mon_cao_rebite")
+    with audit_trace.collecting():
+        resolve_damage_and_wounds(hero, damage_base=2, damage_type="cortante")   # ex.: clima/viagem
+        assert mt.snapshot() is None
+        with mt.scope():                                                          # combat_node
+            resolve_attack(hero, foe, virtude_key="forca", rng=random.Random(2))
+        resolve_damage_and_wounds(hero, damage_base=2, damage_type="cortante")
+        snap = mt.snapshot()
+    assert [s["kind"] for s in snap["steps"]] == ["attack"]
+
+
+def test_trace_crosses_langgraph_executor():
+    """R3 via grafo: o coletor aberto em collecting() (como api._run_turn_collected) recebe os passos
+    do combat_node executado pelo LangGraph (contextvar copiado para o executor)."""
+    from langgraph.graph import END, START, StateGraph
+    from state import GameState
+    graph = StateGraph(GameState)
+    graph.add_node("combat_agent", combat.combat_node)
+    graph.add_edge(START, "combat_agent")
+    graph.add_edge("combat_agent", END)
+    app = graph.compile()
+    random.seed(5)
+    state = {"game_id": "p", "messages": [HumanMessage(content="Ataco o Goblin 1")],
+             "player": _player(), "enemies": [_enemy(hp=40)], "combat": {"active": True},
+             "world": _world(), "party": [], "npcs": {}}
+    with audit_trace.collecting():
+        final = app.invoke(state)
+        entry = audit_trace.record_turn_trace(dict(final), action_id="g1")
+    assert entry["mechanics"]["steps"]

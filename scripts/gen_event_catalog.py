@@ -42,6 +42,7 @@ OVERRIDES: dict[str, tuple[str, ...]] = {
     "db.stale_version": ("game_ref", "op_kind", "op_ref", "reason"),
     "db.idempotency_conflict": ("game_ref", "op_kind", "op_ref", "reason"),
     "db.statement_timeout": ("error_type", "query_name"),
+    "event.proposal_rejected": ("reason_code", "source", "target_ref", "type"),   # SPEC-252 R1 (**fields)
     "db.lock_timeout": ("error_type", "query_name"),
     "llm.attempt": ("attempt_index", "cost_basis", "error_type", "fell_back", "http_status", "latency_ms",
                     "model", "node", "outcome", "provider", "structured_failure_code", "tier"),

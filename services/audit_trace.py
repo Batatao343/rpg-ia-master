@@ -55,7 +55,7 @@ def collecting() -> Iterator[List[Dict[str, Any]]]:
     bucket: List[Dict[str, Any]] = []
     token = _refs.set(bucket)
     try:
-        with mechanics_trace.scope():   # SPEC-251: passos do conflito do mesmo turno
+        with mechanics_trace.scope(recording=False):   # SPEC-251: so os passos do combat_node do turno
             yield bucket
     finally:
         _refs.reset(token)
