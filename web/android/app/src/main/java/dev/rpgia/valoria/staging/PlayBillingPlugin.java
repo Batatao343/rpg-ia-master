@@ -1,5 +1,6 @@
 package dev.rpgia.valoria.staging;
 
+import android.util.Log;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
@@ -36,6 +37,16 @@ public class PlayBillingPlugin extends Plugin {
 
     private interface Ready { void run(BillingClient c); }
 
+    /** SPEC-259 R1/R2: codigo por etapa + responseCode + debugMessage saneada; logcat sem token. */
+    private static void fail(PluginCall call, String code, BillingResult r, String stage) {
+        int rc = r == null ? -1 : r.getResponseCode();
+        String debug = r == null ? "" : BillingErrors.safeDebug(r.getDebugMessage());
+        Log.w(BillingErrors.TAG, BillingErrors.logLine(code, rc) + " debugMessage=" + debug);
+        JSObject data = new JSObject().put("responseCode", rc).put("stage", stage);
+        if (r != null) data.put("debugMessage", debug);
+        call.reject(code, code, data);
+    }
+
     private synchronized void withClient(PluginCall call, Ready then) {
         if (client == null) {
             client = BillingClient.newBuilder(getContext())
@@ -49,7 +60,7 @@ public class PlayBillingPlugin extends Plugin {
         c.startConnection(new BillingClientStateListener() {
             @Override public void onBillingSetupFinished(BillingResult r) {
                 if (r.getResponseCode() == BillingClient.BillingResponseCode.OK) then.run(c);
-                else call.reject("billing_unavailable", String.valueOf(r.getResponseCode()));
+                else fail(call, BillingErrors.UNAVAILABLE, r, "setup");
             }
             @Override public void onBillingServiceDisconnected() { /* auto reconnection enabled */ }
         });
@@ -73,7 +84,11 @@ public class PlayBillingPlugin extends Plugin {
     @PluginMethod
     public void getProducts(PluginCall call) {
         final List<String> ids;
-        try { ids = ids(call); } catch (JSONException e) { call.reject("bad_product_ids"); return; }
+        try { ids = ids(call); } catch (JSONException e) {
+            Log.w(BillingErrors.TAG, BillingErrors.BAD_JSON);
+            call.reject(BillingErrors.BAD_JSON, BillingErrors.BAD_JSON);
+            return;
+        }
         if (ids.isEmpty()) { call.resolve(new JSObject().put("products", new JSArray())); return; }
         if (fake()) {
             JSArray arr = new JSArray();
@@ -86,7 +101,7 @@ public class PlayBillingPlugin extends Plugin {
         }
         withClient(call, c -> c.queryProductDetailsAsync(query(ids), (result, details) -> {
             if (result.getResponseCode() != BillingClient.BillingResponseCode.OK) {
-                call.reject("billing_error", String.valueOf(result.getResponseCode()));
+                fail(call, BillingErrors.QUERY_FAILED, result, "products");
                 return;
             }
             JSArray arr = new JSArray();
@@ -131,7 +146,7 @@ public class PlayBillingPlugin extends Plugin {
                 else if (code == BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED) {
                     emitOwned(c);
                     call.resolve(new JSObject().put("alreadyOwned", true));
-                } else call.reject("billing_error", String.valueOf(code));
+                } else fail(call, BillingErrors.LAUNCH_FAILED, r, "launch");
             });
         }));
     }
@@ -143,7 +158,7 @@ public class PlayBillingPlugin extends Plugin {
             QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build(),
             (result, purchases) -> {
                 if (result.getResponseCode() != BillingClient.BillingResponseCode.OK) {
-                    call.reject("billing_error", String.valueOf(result.getResponseCode()));
+                    fail(call, BillingErrors.QUERY_FAILED, result, "pending");
                     return;
                 }
                 JSArray arr = new JSArray();
@@ -168,7 +183,9 @@ public class PlayBillingPlugin extends Plugin {
         } else if (code == BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED && client != null) {
             emitOwned(client);
         } else if (code != BillingClient.BillingResponseCode.OK || purchases == null) {
-            notifyListeners("purchaseError", new JSObject().put("code", code));
+            Log.w(BillingErrors.TAG, BillingErrors.logLine("billing_purchase_update_failed", code));
+            notifyListeners("purchaseError", new JSObject().put("code", code)
+                .put("debugMessage", BillingErrors.safeDebug(result.getDebugMessage())));
         } else {
             for (Purchase p : purchases) for (String pid : p.getProducts()) notifyListeners("purchaseUpdated", toJs(p, pid));
         }

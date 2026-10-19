@@ -1,4 +1,17 @@
 import type { PurchaseAdapter, StoreProduct, PurchaseResult } from './types';
+import { reportClientError } from '../lib/clientErrors';
+
+/** SPEC-259 R5: erro do plugin nativo -> beacon `kind=native` (codigo + responseCode; nunca token/produto). */
+export function nativeBillingCode(err: unknown): string {
+  const e = err as { code?: unknown; data?: { responseCode?: unknown } } | null;
+  const code = typeof e?.code === 'string' && /^[a-z0-9_]{1,40}$/.test(e.code) ? e.code : 'billing_unknown';
+  const rc = e?.data?.responseCode;
+  return typeof rc === 'number' && Number.isInteger(rc) ? `${code}:${rc}` : code;
+}
+
+function reportNative(err: unknown): void {
+  reportClientError({ kind: 'native', error: { name: 'PlayBillingError' }, code: nativeBillingCode(err) });
+}
 
 /**
  * SPEC-194 native Play Billing. Trust model: the plugin and its events are UNTRUSTED input; the
@@ -56,7 +69,10 @@ export class AndroidPlayAdapter implements PurchaseAdapter {
     return this.listening ||= (async () => {
       await plugin.addListener('purchaseUpdated', (e: PlayPurchaseEvent) => { void this.handle(e); });
       await plugin.addListener('purchaseCancelled', () => this.emit({ status: 'cancelled' }));
-      await plugin.addListener('purchaseError', () => this.emit({ status: 'error', code: 'billing_error' }));
+      await plugin.addListener('purchaseError', (e: { code?: unknown }) => {
+        reportNative({ code: 'billing_purchase_update_failed', data: { responseCode: e?.code } });
+        this.emit({ status: 'error', code: 'billing_error' });
+      });
     })();
   }
 
@@ -69,7 +85,8 @@ export class AndroidPlayAdapter implements PurchaseAdapter {
     if (this.disabled) return [];
     const { items } = await this.backend.products();
     if (!items.length) return [];
-    const { products } = await plugin.getProducts({ productIds: items.map(i => i.product_id) });
+    const { products } = await plugin.getProducts({ productIds: items.map(i => i.product_id) })
+      .catch((err: unknown) => { reportNative(err); throw err; });
     const byId = new Map(products.map(p => [p.productId, p]));
     const out: StoreProduct[] = [];
     for (const i of items) {
@@ -85,7 +102,8 @@ export class AndroidPlayAdapter implements PurchaseAdapter {
     this.disabled = profile.purchases_disabled === true;
     if (this.disabled || !profile.obfuscated_account_id) return { status: 'disabled' };
     await this.listen();
-    const res = await plugin.purchase({ productId, obfuscatedAccountId: profile.obfuscated_account_id });
+    const res = await plugin.purchase({ productId, obfuscatedAccountId: profile.obfuscated_account_id })
+      .catch((err: unknown) => { reportNative(err); throw err; });
     if (res.cancelled) { const r: PurchaseResult = { status: 'cancelled' }; this.emit(r); return r; }
     return { status: 'started', productId };
   }
@@ -128,7 +146,8 @@ export class AndroidPlayAdapter implements PurchaseAdapter {
   restorePending(): Promise<PurchaseResult[]> {
     return this.restoring ||= (async () => {
       try {
-        const { purchases } = await this.need().queryPendingPurchases();
+        const { purchases } = await this.need().queryPendingPurchases()
+          .catch((err: unknown) => { reportNative(err); throw err; });
         return await Promise.all((purchases || []).map(p => this.handle(p)));
       } finally { this.restoring = null; }
     })();

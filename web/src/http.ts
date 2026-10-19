@@ -1,6 +1,7 @@
 import { isAndroidClient } from './native/platform';
 import { BUILD_ID } from './build';
 import { reportClientError } from './lib/clientErrors';
+import { appVersion } from './native/appVersion';
 import { isCodeLike, messageFor, rateLimitNotice, STALE_PAGE_MESSAGE } from './lib/errorMessages';
 
 export { rateLimitNotice, STALE_PAGE_MESSAGE };
@@ -28,6 +29,8 @@ function optionsWithAuth(opts: RequestInit): RequestInit {
   if (!headers.has("Content-Type")) headers.set("Content-Type", "application/json");
   if (isAndroidClient()) headers.set('X-RPG-Client', 'android');
   headers.set('X-RPG-Build', BUILD_ID);   // SPEC-261 R2: cliente x servidor no access log
+  const version = appVersion();
+  if (version) headers.set('X-RPG-App-Version', version);   // SPEC-259 R4
   if (!['GET', 'HEAD', 'OPTIONS'].includes((opts.method || 'GET').toUpperCase())) {
     const csrf = document.cookie.split('; ').find(row => row.startsWith('rpg_csrf='))?.split('=')[1];
     if (csrf) headers.set('X-CSRF-Token', decodeURIComponent(csrf));

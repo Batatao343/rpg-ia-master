@@ -1,7 +1,7 @@
 # SPEC-259 — Android: códigos distintos de billing com debugMessage, console do WebView em debug e versão do app nas requisições
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P3**.
-> **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
+> **Status:** `done` — aprovada pelo dono em 2026-10-19; implementada em 2026-10-19 (smoke no AVD pendente). Prioridade sugerida: **P3**.
+> **Criada:** 2026-10-18 · **Atualizada:** 2026-10-19
 > **Depende de:** SPEC-244, SPEC-261
 > **Desbloqueia:** —
 > **Origem:** auditoria de logs 2026-10-18 ([relatório](../docs/auditorias/logs-api-2026-10-18.md))
@@ -55,12 +55,12 @@ R1–R5.
 
 ## 5. Critérios de aceite
 
-- [ ] Cada falha de billing tem código distinto + `debugMessage` no JS e no logcat.
-- [ ] `app_version` aparece no access log.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] Cada falha de billing tem código distinto + `debugMessage` no JS e no logcat.
+- [x] `app_version` aparece no access log.
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
 - [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -71,3 +71,28 @@ R1–R5.
 - Data Safety: logcat local só; nada sai do aparelho além do header de versão.
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## 8. Notas de implementação (2026-10-19)
+
+- **R1/R2** `BillingErrors.java` (Java puro, testado por `BillingErrorsTest` — 5 testes JUnit): códigos
+  `billing_unavailable` (setup), `billing_query_failed` (`stage=products|pending`), `billing_launch_failed`,
+  `billing_bad_json`; `call.reject(code, code, {responseCode, stage, debugMessage})`, `debugMessage` saneada (≤ 120 chars,
+  sequências opacas ≥ 24 chars ⇒ `[redacted]`, sem controle). `Log.w("RPGBilling", "<code> responseCode=<n>
+  debugMessage=<saneada>")` — nunca token/produto/conta. `purchaseError` (listener) também leva `debugMessage` e loga
+  `billing_purchase_update_failed`.
+- **Desvio:** não existe `billing_ack_failed` — o plugin NUNCA confirma/consome (o servidor consome após creditar,
+  SPEC-194); não há etapa de ack no shell para falhar.
+- **R3** `MainActivity.onConsoleMessage`: `ERROR`/`WARNING` do console do WebView ⇒ logcat `RPGWebView`, só em
+  `BuildConfig.DEBUG`.
+- **R4** versão do app: `web/src/native/appVersion.ts` lê `versionName+versionCode` do shell (plugin nativo `App`
+  do Capacitor, `App.getInfo()`), formato fechado; `http.ts` envia `X-RPG-App-Version` quando conhecida (requisições
+  antes da leitura do boot saem sem ela). Access log `app_version` (formato fechado; senão `other`) — teste
+  `tests/test_api_access_log.py::test_app_version_logged` (commit da SPEC-261, mesma função `_client_build_fields`).
+- **R5** `androidPlay.ts`: rejeição de `getProducts`/`purchase`/`queryPendingPurchases` e o evento `purchaseError` ⇒
+  beacon `kind=native`, `error_name=PlayBillingError`, `code=<codigo>:<responseCode>` (SPEC-244); o erro segue
+  propagando como antes. Teste `web/tests/nativeLogs.test.mjs`.
+- **Verificado offline (19/10):** `npm run build`, `tsc -b`, `node --test` (todos), `gradlew assembleDebug` +
+  `:app:testDebugUnitTest` com JDK 21 (APK debug gerado; `BillingErrorsTest` 5/5).
+- **Pendente (exige AVD `rpg34`, não executado — sem evidência inventada):** compra fake cancelada/erro no emulador
+  mostrando `billing_*` com `responseCode` no JS e no `adb logcat -s RPGBilling RPGWebView`; requisição do WebView com
+  `X-RPG-App-Version: 1.0.0+1` e `http.request app_version=1.0.0+1` no log do staging.

@@ -7,9 +7,11 @@ import { App } from "./App";
 import { initEffects } from "./design/motion";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { installGlobalErrorHandlers } from "./lib/clientErrors";
+import { loadAppVersion } from "./native/appVersion";
 
 initEffects();
 installGlobalErrorHandlers();   // SPEC-244 R2
+void loadAppVersion();          // SPEC-259 R4 (no-op no web)
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

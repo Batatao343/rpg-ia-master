@@ -2,6 +2,8 @@ package dev.rpgia.valoria.staging;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.webkit.ConsoleMessage;
 import android.webkit.PermissionRequest;
 import android.webkit.WebView;
 import com.getcapacitor.Bridge;
@@ -32,6 +34,18 @@ public class MainActivity extends BridgeActivity {
                     return;
                 }
                 super.onPermissionRequest(request);
+            }
+
+            // SPEC-259 R3: so em build DEBUG, erros/avisos do console do WebView vao ao logcat.
+            @Override
+            public boolean onConsoleMessage(ConsoleMessage m) {
+                if (BuildConfig.DEBUG && m != null) {
+                    ConsoleMessage.MessageLevel level = m.messageLevel();
+                    String line = m.message() + " @" + m.sourceId() + ":" + m.lineNumber();
+                    if (level == ConsoleMessage.MessageLevel.ERROR) Log.e("RPGWebView", line);
+                    else if (level == ConsoleMessage.MessageLevel.WARNING) Log.w("RPGWebView", line);
+                }
+                return super.onConsoleMessage(m);
             }
         });
     }
