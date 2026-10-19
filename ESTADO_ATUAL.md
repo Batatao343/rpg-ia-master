@@ -61,6 +61,8 @@ devolvem o parágrafo no hand-back. Ao abrir a próxima onda, mova estas notas p
 
 <!-- onda:inserir-aqui -->
 
+- **19/10 — SPEC-225 `done`:** CI verde com secret-scan/pip-audit/npm audit, Dependabot ativo, 4 environments só `main` + reviewer (`post-deploy-smoke` ganhou reviewer); 1º scan semanal do gitleaks tinha 3 falsos positivos (caminhos renomeados) → `.gitleaksignore`, 568 commits limpos. Critério da compra de license tester movido para a SPEC-198. **SPEC-259 reaberta:** no AVD `rpg34` R1–R3 ok, mas o app nunca envia `X-RPG-App-Version` (plugin do Capacitor registra ~200 ms depois da leitura).
+
 - **19/10 — SPEC-281 `done`:** o client HTTP do Jev é construído antes do prazo de 1 s (1º turno de instância fria não dá mais timeout falso); falha ao construir o client ou ao importar a política congelada cai no CLASSIFY em vez de derrubar o turno; `off` intacto. Revisão Opus APPROVED com 1 P1 corrigido ([parecer](handoffs/SPEC-281-review.md)). Vale no staging no próximo deploy.
 
 - **19/10 — Workspace, 2ª passada:** CI em Node 22 (`web/.nvmrc`) e runners fixos `ubuntu-24.04`; porta do Playwright por checkout (`RPG_E2E_PORT`), dois worktrees rodam e2e juntos; push só de docs pula a suíte pesada (job `docs-only`; `eval-gates` intacto); Dependabot agrupa minor/patch; lint de nome de handoff; `proximas-specs/` → `docs/historico/proximas-specs/`. Achado: M07 mobile (timeout do axe) já falhava na main.
