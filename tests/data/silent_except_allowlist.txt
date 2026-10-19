@@ -74,7 +74,6 @@ services/player_knowledge.py::_memory_rows::1
 services/player_knowledge.py::_notes_for::1
 services/projections.py::normalize_plan::1
 services/quest_log.py::_valid_entity_ids::1
-services/speech_to_text.py::_allowed_by_switches::1
 services/tactical_profile.py::generate_tactical_profile::1
 services/world_validators.py::validate_proposal::1
 workers/projection_jobs.py::make_handler.project.capture::1

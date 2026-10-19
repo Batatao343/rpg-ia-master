@@ -54,6 +54,8 @@ def process_image(payload: bytes) -> list[ProcessedAsset]:
                 raise ValueError("formato de imagem não permitido")
             clean = source.convert("RGB")
     except (UnidentifiedImageError, OSError) as exc:
+        from observability.telemetry import log_event
+        log_event("image", "processing_failed", level="warning", error_type=type(exc).__name__)
         raise ValueError("conteúdo não é uma imagem válida") from exc
     result: list[ProcessedAsset] = []
     for variant, bounds in VARIANTS.items():

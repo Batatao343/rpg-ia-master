@@ -34,6 +34,9 @@ LABELS = {
     "rpg_llm_attempts_total": {"provider", "tier", "outcome"},
     "rpg_llm_duration_seconds": {"provider", "tier", "outcome"},
     "rpg_llm_cost_usd_total": {"provider", "tier", "basis"},
+    # SPEC-258: STT/imagem/embedding (capability fechada; outcome = enum de provider.attempt).
+    "rpg_provider_attempts_total": {"capability", "provider", "outcome"},
+    "rpg_provider_duration_seconds": {"capability", "provider"},
     "rpg_rag_duration_seconds": {"scope", "outcome"},
     "rpg_rag_degraded_total": {"source"},  # SPEC-234 R10 (source fechado: lore|session|npc|...)
     # SPEC-223 R8: proposta de evento rejeitada (type = EventType|other; reason_class

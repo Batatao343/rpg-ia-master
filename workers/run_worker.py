@@ -86,7 +86,16 @@ def build_handlers():
                 generation_id, asset_id=UUID(str(payload["asset_id"])), result=result,
             )
             return result
-        except Exception:
+        except Exception as exc:
+            from observability.telemetry import log_event
+            from services.job_fence import current_job
+            job = current_job()
+            status = getattr(exc, "http_status", None)
+            log_event("image", "generation_failed", level="warning",
+                      job_id=str(job.job_id) if job is not None else None,
+                      error_type=type(exc).__name__,
+                      http_status=status if isinstance(status, int) else None,
+                      outcome=getattr(exc, "outcome", "unknown"))
             finance.hold_or_release(generation_id)
             raise
 

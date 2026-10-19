@@ -92,6 +92,8 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `http.request` | `client`, `duration_ms`, `error_code`, `method`, `owner_ref`, `request_id`, `route`, `status` |
 | `http.unhandled_exception` | `error_type`, `method`, `request_id`, `route`, `stack` |
 | `http.validation_failed` | `error_count`, `locs`, `method` |
+| `image.generation_failed` | `error_type`, `http_status`, `job_id`, `outcome` |
+| `image.processing_failed` | `error_type` |
 | `image_job.fallback` | — |
 | `jev.primary` | Decisao do Jev no router (modo primary). |
 | `jev.shadow` | Observacao do Jev no router (modo shadow). |
@@ -154,6 +156,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `projection.post_response_db_failed` | `error` |
 | `projection.pre_turn_failed` | `error` |
 | `prologue.failed` | `error` |
+| `provider.attempt` | `attempt`, `capability`, `cost_basis`, `fell_back`, `http_status`, `latency_ms`, `model`, `outcome`, `provider` |
 | `quest.active_cap_reached` | `cap` |
 | `quest.failed` | — |
 | `quest.proposal_duplicate_ignored` | — |
@@ -192,6 +195,9 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `storyteller.fallback` | — |
 | `storyteller.unique_item_claimed_ignored` | `item_id` |
 | `storyteller.unknown_item_ignored` | — |
+| `stt.circuit_opened` | `failures`, `model`, `open_seconds`, `provider` |
+| `stt.internal_error` | `code`, `error_type`, `stack` |
+| `stt.switch_check_failed` | `error_type`, `model`, `provider` |
 | `turn` | `error`, `events_applied`, `events_rejected`, `fallbacks`, `game_id_ref`, `latency_ms`, `narrative_rejected`, `route`, `route_fallback_reason`, `route_source`, `turn` |
 | `turn_delivery` | `ack_server_ms`, `action_ref`, `outcome`, `pseudo_streaming`, `state_server_ms`, `transport`, `ttfmc_server_ms`, `ttlt_server_ms` |
 | `vector.profile_fallback` | `error_type`, `profile` |

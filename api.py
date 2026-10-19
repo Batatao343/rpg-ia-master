@@ -3101,7 +3101,10 @@ async def account_transcription(request: Request):
         raise HTTPException(503, 'speech_pricing_unavailable') from None
     except (ValueError, TimeoutError):
         raise HTTPException(422, 'speech_request_invalid') from None
-    except Exception:
+    except Exception as exc:
+        from observability.telemetry import log_event, safe_stack
+        log_event("stt", "internal_error", level="error", code="speech_internal_error",
+                  error_type=type(exc).__name__, stack=safe_stack(exc))
         raise HTTPException(503, 'speech_internal_error') from None
 
 
