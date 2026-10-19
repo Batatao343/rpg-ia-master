@@ -43,7 +43,25 @@ test('SPEC-259 R4: versao do app em formato fechado, so no Android', async () =>
   assert.equal(await loadAppVersion(async () => ({ version: '1.0.0', build: '7' }), true), '1.0.0+7');
   assert.equal(appVersion(), '1.0.0+7');
   assert.equal(await loadAppVersion(async () => ({ version: '1.0 <x>', build: '7' }), true), null);
-  assert.equal(await loadAppVersion(async () => { throw new Error('no plugin'); }, true), null);
+  assert.equal(await loadAppVersion(async () => { throw new Error('no plugin'); }, true, { attempts: 2, delayMs: 1 }), null);
+});
+
+test('SPEC-259 R4: plugin App registrado depois do boot -> retenta e nao cacheia a falha transitoria', async () => {
+  const { loadAppVersion, appVersion } = await load('native/appVersion');
+  let calls = 0;
+  const lateReader = async () => { calls += 1; if (calls < 3) throw new Error('app_plugin_unavailable'); return { version: '1.0.0', build: '1' }; };
+  const fast = { attempts: 5, delayMs: 1 };
+  assert.equal(await loadAppVersion(lateReader, true, fast), '1.0.0+1');
+  assert.equal(calls, 3);
+  assert.equal(appVersion(), '1.0.0+1');
+  // esgotou as tentativas: null, sem travar
+  let n = 0;
+  assert.equal(await loadAppVersion(async () => { n += 1; throw new Error('app_plugin_unavailable'); }, true, fast), null);
+  assert.equal(n, 5);
+  // formato invalido nao e transitorio: 1 leitura so
+  let m = 0;
+  assert.equal(await loadAppVersion(async () => { m += 1; return { version: 'x', build: '1' }; }, true, fast), null);
+  assert.equal(m, 1);
 });
 
 test('logcat de release do billing: debugMessage so sob BuildConfig.DEBUG (SPEC-259 R2)', async () => {

@@ -1,6 +1,6 @@
 # SPEC-259 — Android: códigos distintos de billing com debugMessage, console do WebView em debug e versão do app nas requisições
 
-> **Status:** `in-progress` — aprovada pelo dono em 2026-10-19; implementada em 2026-10-19; smoke no AVD `rpg34` em 2026-10-19: R1/R2/R3 ok, **R4 falhou** (o shell nunca envia `X-RPG-App-Version`; ver §9). Prioridade sugerida: **P3**.
+> **Status:** `in-progress` — aprovada pelo dono em 2026-10-19; implementada em 2026-10-19; smoke no AVD `rpg34` em 2026-10-19: R1/R2/R3 ok, **R4 falhou** (ver §9); correção em §10, aguardando novo smoke R4. Prioridade sugerida: **P3**.
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-19
 > **Depende de:** SPEC-244, SPEC-261
 > **Desbloqueia:** —
@@ -111,3 +111,10 @@ Detalhe e evidência: [docs/spec259/README.md](../docs/spec259/README.md). APK d
   `client=android`. Causa medida: `loadAppVersion()` roda na carga do módulo, quando `Capacitor.registerPlugin` ainda não
   existe (aparece ~200 ms depois); lança `app_plugin_unavailable` e o cache fica `null` para sempre. Correção sugerida no
   README (esperar `registerPlugin` ou reler de forma preguiçosa) + repetir o smoke. Quem age: executor da 259 (código web).
+
+## 10. Correção do R4 (2026-10-19)
+
+`loadAppVersion()` agora trata falha de leitura do plugin `App` como transitória: retenta até 15 × 200 ms (3 s) sem
+bloquear o boot e sem cachear a falha; formato inválido continua descartado na hora (1 leitura). Requisições anteriores
+à resolução saem sem o header (aceito: são as do bootstrap). Teste Node novo cobre plugin tardio, esgotamento e formato
+inválido. Falta repetir o smoke R4 no AVD contra o staging redeployado da main com este fix.
