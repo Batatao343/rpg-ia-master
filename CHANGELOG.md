@@ -7,6 +7,8 @@
 
 ## 2026-10-19 — onda: workspace, logs P2/P3, frontend majors, staging (222/236/279/280)
 
+- **19/10 — Ruff degraus 2–3:** `I` e `UP` (py313, só fixes seguros; 173 restantes no baseline gerado) + `ruff format` no repo (~720 arquivos) e `ruff format --check` no CI/pre-commit. Fora do format e de I/UP: régua de eval, `evals/experiments` (digests congelados das SPEC-217/238 hasheiam o código-fonte), `data/`, `lore_nova/`, `faiss_*`; `merchants_at` com `fmt: off`; `# silent-ok` mantidos na linha anterior ao `except`.
+
 - **19/10 — SPEC-259 `done` + staging `65c0f23`:** a versão do app Android agora chega no access log (`app_version=1.0.0+1`, `client=android`): a leitura do plugin `App` tenta de novo por até 3 s sem bloquear o boot. Smoke no AVD `rpg34` verde. Staging redeployado em `65c0f23` (Jev `primary`, teto R$ 5; post_deploy/vercel_smoke/e2e verdes); 1ª chamada Jev pós-deploy 285 ms, sem timeout (SPEC-281).
 
 - **19/10 — SPEC-282 `done`:** o "timeout do axe" no M07 mobile não era a11y nem app: cada jornada leva 4–12 s sozinha e estourava o teto default de 30 s com a CPU disputada. Teto de 90 s no arquivo `mobile-single-pane` (asserções serious/critical intactas); 14/14 em 3 repetições. Achado: nesta máquina o Playwright completo leva ~8 min e timeouts de 30 s aparecem em outras specs sob carga; no CI passa.
