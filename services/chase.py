@@ -154,6 +154,10 @@ def resolve_chase_round(chase: dict, *, condutor_virtude: int = 0, difficulty: i
     chase["escapou"] = new == "escapou"
     chase["_last"] = {"total": total, "difficulty": int(difficulty),
                       "sucesso": sucesso, "advantage": adv}
+    from services import mechanics_trace as mt
+    mt.record_step("flee", actor="player", dice=roll["rolled"], kept=roll["kept"],
+                   modifier=condutor_virtude, dc_or_defense=difficulty, amount=total,
+                   result="sucesso" if sucesso else "falha", reason=new)
     return chase
 
 

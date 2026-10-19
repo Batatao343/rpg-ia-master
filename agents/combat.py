@@ -802,6 +802,15 @@ def _finish_encounter(combat_meta: Dict, enemies: List[Dict], outcome: str, *,
 # NÓ PRINCIPAL
 # ==========================================================================
 def combat_node(state: GameState):
+    """SPEC-251: abre o trace mecânico do turno e emite combat.mechanics/summary."""
+    from services import mechanics_trace as _mt
+    with _mt.scope():
+        result = _combat_node(state)
+        _mt.emit_turn_logs()
+    return result
+
+
+def _combat_node(state: GameState):
     messages = state.get("messages", [])
     if not messages:
         return {"next": "dm_router"}
@@ -1068,6 +1077,9 @@ def combat_node(state: GameState):
         # alvo inválido (inimigo já caiu / declaração pré-computada) → 1º inimigo ativo
         if decl.acao and decl.acao.kind == "attack" and \
                 decl.acao.target_id not in {e["id"] for e in active}:
+            from services import mechanics_trace as _mt
+            _mt.record_step("target_redirect", actor=_PLAYER_ID, target=active[0]["id"],
+                            reason="target_not_active")
             decl.acao.target_id = active[0]["id"]
         elif decl.acao and decl.acao.kind == "card":
             from services import cards

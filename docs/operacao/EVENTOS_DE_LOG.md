@@ -50,6 +50,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `codex.no_embeddings` | — |
 | `combat.budget_failed` | `error` |
 | `combat.enemy_knowledge_failed` | — |
+| `combat.mechanics` | `step_count`, `steps`, `truncated` |
 | `combat.narrate_failed` | `error` |
 | `combat.parse_failed` | `error` |
 | `combat.prep_failed` | `error` |
@@ -60,6 +61,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.spawn_identity_mismatch` | — |
 | `combat.spawn_scanner_discarded` | — |
 | `combat.started` | `enemies` |
+| `combat.summary` | — |
 | `db.connect_failed` | `attempt`, `error_type`, `pool`, `wait_ms` |
 | `db.idempotency_conflict` | `game_ref`, `op_kind`, `op_ref`, `reason` |
 | `db.lease_conflict` | `game_ref`, `op_kind`, `op_ref`, `reason` |

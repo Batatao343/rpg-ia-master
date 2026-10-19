@@ -51,10 +51,12 @@ def trace_limit() -> int:
 @contextmanager
 def collecting() -> Iterator[List[Dict[str, Any]]]:
     """Abre o coletor de refs do turno (api._run_turn_collected)."""
+    from services import mechanics_trace
     bucket: List[Dict[str, Any]] = []
     token = _refs.set(bucket)
     try:
-        yield bucket
+        with mechanics_trace.scope():   # SPEC-251: passos do conflito do mesmo turno
+            yield bucket
     finally:
         _refs.reset(token)
 
@@ -454,6 +456,10 @@ def record_turn_trace(state: dict, *, previous_state: Optional[Mapping] = None,
         "timing_partial": timing is not None,
         **reveal_status(state),
     }
+    from services import mechanics_trace
+    mechanics = mechanics_trace.snapshot()
+    if mechanics:   # SPEC-251: aditivo, ausente em turno sem conflito
+        entry["mechanics"] = mechanics
     trace = expand_trace(state.get("audit_trace") or [])
     if action_ref:
         trace = [row for row in trace if row.get("action_ref") != action_ref]

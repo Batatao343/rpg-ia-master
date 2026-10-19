@@ -151,6 +151,9 @@ def offer_reaction(chain: dict, participant_id: str, card_id: str, *,
     })
     chain["used_common_reaction"].append(participant_id)
     chain["used_cards"].append(pair)
+    from services import mechanics_trace as mt
+    mt.record_step("reaction", actor=participant_id, card_id=card_id, amount=custo,
+                   result="offered")
     return True
 
 
@@ -221,6 +224,8 @@ def trigger_opportunity_attack(scene: dict, leaving_id: str, *,
             "attacker": other, "target": leaving_id,
             "kind": "opportunity_attack", "counts_common": False,
         })
+        from services import mechanics_trace as mt
+        mt.record_step("reaction", actor=other, target=leaving_id, result="opportunity_attack")
     return out
 
 

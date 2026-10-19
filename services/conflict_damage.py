@@ -201,7 +201,7 @@ def _active_defense(target: dict, use_shield: bool) -> Optional[dict]:
     return target.get("armor")
 
 
-def resolve_damage_and_wounds(target: dict, *, damage_base: int,
+def _resolve_damage_and_wounds(target: dict, *, damage_base: int,
                               damage_type: str = "cortante", crit_mult: int = 1,
                               directed_region: Optional[str] = None,
                               ignore_resistance: bool = False,
@@ -332,6 +332,20 @@ def resolve_damage_and_wounds(target: dict, *, damage_base: int,
             "wound": wound, "protegido": protegido, "resultado": resultado,
             "secondary": secondary, "vitalidade": target["vitalidade"],
             "regiao": region, "log": log}
+
+
+def resolve_damage_and_wounds(target: dict, **kwargs) -> dict:
+    """Wrapper fino: resolve (ver `_resolve_damage_and_wounds`) e registra o passo
+    de trace SPEC-251 (só leitura do resultado; sem RNG)."""
+    res = _resolve_damage_and_wounds(target, **kwargs)
+    from services import mechanics_trace as mt
+    wound = res.get("wound") or {}
+    cat = mt.token(f"ferimento_{wound.get('categoria')}") if wound else None
+    mt.record_step("damage", target=target, amount=res.get("dano_final"),
+                   modifier=res.get("excedente"),
+                   result=cat or res.get("resultado"),
+                   reason=str(kwargs.get("damage_type") or "").lower() or None)
+    return res
 
 
 def _apply_sangramento(target: dict, secondary: List[dict]) -> None:

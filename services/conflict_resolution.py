@@ -105,6 +105,12 @@ def _side_roll(participants: List[dict], rng) -> Dict:
     return {"dice": dados, "agilidade": ag, "total": sum(dados) + ag}
 
 
+def _trace_initiative(order: List[str], rolls: Dict) -> None:
+    from services import mechanics_trace as mt
+    dice = [d for side in order for d in ((rolls.get(side) or {}).get("dice") or [])]
+    mt.record_step("initiative", dice=dice, result=order[0] if order else None)
+
+
 def roll_initiative_by_side(sides: Dict[str, List[dict]], *,
                             initiator: Optional[str] = None, rng=None) -> Dict:
     """R2: se `initiator` iniciou claramente, age primeiro sem disputa; senão cada
@@ -115,9 +121,11 @@ def roll_initiative_by_side(sides: Dict[str, List[dict]], *,
         outros = [s for s in sides if s != initiator]
         rolls = {s: _side_roll(sides[s], rng) for s in outros}
         ordem = [initiator] + sorted(outros, key=lambda s: rolls[s]["total"], reverse=True)
+        _trace_initiative(ordem, rolls)
         return {"order": ordem, "auto": True, "rolls": {initiator: None, **rolls}}
     rolls = {s: _side_roll(sides[s], rng) for s in sides}
     ordem = sorted(sides, key=lambda s: rolls[s]["total"], reverse=True)
+    _trace_initiative(ordem, rolls)
     return {"order": ordem, "auto": False, "rolls": rolls}
 
 
@@ -160,6 +168,9 @@ def resolve_attack(attacker: dict, target: dict, *,
         acerto = total >= esq
         resultado, mult = ("acerto" if acerto else "erro"), 1
 
+    from services import mechanics_trace as mt
+    mt.record_step("attack", actor=attacker, target=target, dice=roll["rolled"], kept=kept,
+                   modifier=vval + modificador, dc_or_defense=esq, result=resultado, amount=total)
     return {
         "dice_rolled": roll["rolled"], "dice_kept": kept, "virtude": vval,
         "modificador": modificador, "total": total, "esquiva_alvo": esq, "resultado": resultado,
@@ -193,6 +204,9 @@ def general_test(actor: dict, virtude_key: str, dificuldade, *,
         consequencia = "desfavoravel"
     else:
         consequencia = "puro"
+    from services import mechanics_trace as mt
+    mt.record_step("save", actor=actor, dice=impetos + [pressagio], kept=[impeto], modifier=vval,
+                   dc_or_defense=dc, result="sucesso" if total >= dc else "falha", amount=total)
     return {
         "impeto": impeto, "impetos_rolados": impetos, "pressagio": pressagio,
         "virtude": vval, "total": total, "dificuldade": dc,
