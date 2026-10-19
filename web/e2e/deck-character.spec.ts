@@ -187,12 +187,12 @@ test("split 50%: uma única região rolável por aba + evidência 1440", async (
   await expect(page.getByRole("separator", { name: "Redimensionar chat e painel" })).toHaveAttribute("aria-valuenow", "50");
   const deck = await scrollRegions(page);
   expect(deck.length, deck.join(" | ")).toBeLessThanOrEqual(1);
-  await page.screenshot({ path: `${EVIDENCE}/1440-split50-combate.png`, scale: "css" });
+  if (process.env.RPG_SPEC209_SHOTS) await page.screenshot({ path: `${EVIDENCE}/1440-split50-combate.png`, scale: "css" });
   await page.getByRole("tab", { name: "Personagem" }).click();
   await expect(page.getByText("Cicatrizes")).toBeVisible();
   const sheet = await scrollRegions(page);
   expect(sheet.length, sheet.join(" | ")).toBeLessThanOrEqual(1);
-  await page.screenshot({ path: `${EVIDENCE}/1440-split50-personagem.png`, scale: "css" });
+  if (process.env.RPG_SPEC209_SHOTS) await page.screenshot({ path: `${EVIDENCE}/1440-split50-personagem.png`, scale: "css" });
 });
 
 test("evidência 390: deck e ficha", async ({ page, backend }) => {
@@ -200,10 +200,10 @@ test("evidência 390: deck e ficha", async ({ page, backend }) => {
   seed(backend);
   await openTab(page, 390, "Combate");
   await expect(page.getByRole("heading", { name: /Preparação/ })).toBeVisible();
-  await page.screenshot({ path: `${EVIDENCE}/390-combate.png`, scale: "css" });
+  if (process.env.RPG_SPEC209_SHOTS) await page.screenshot({ path: `${EVIDENCE}/390-combate.png`, scale: "css" });
   await goSurface(page, "Personagem");
   await expect(page.getByText("Cicatrizes")).toBeVisible();
-  await page.screenshot({ path: `${EVIDENCE}/390-personagem.png`, scale: "css" });
+  if (process.env.RPG_SPEC209_SHOTS) await page.screenshot({ path: `${EVIDENCE}/390-personagem.png`, scale: "css" });
 });
 
 test("R13: 'atualizando…' enquanto o servidor não confirma, some depois", async ({ page, backend }) => {
