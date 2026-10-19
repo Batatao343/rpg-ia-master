@@ -17,7 +17,9 @@ nome e mostram só nomes. Rode do checkout principal (é onde está o `.env.stag
    estado atual descrito em `ESTADO_ATUAL.md`.
 3. Migrations pendentes primeiro (expand/contract): `scripts/staging/migrations.py status`
    → se houver pendente, `push` (plano) → `push --apply`.
-4. Deploy: `vercel deploy --prod -e GIT_SHA=$(git rev-parse HEAD)` (~90–110 s; Bash com
+4. Deploy: `vercel deploy --prod -e GIT_SHA=$(git rev-parse HEAD) -b GIT_SHA=$(git rev-parse HEAD)`
+   (`-e` = runtime/`/health`; `-b` = build do bundle web — sem ele o `X-RPG-Build` sai `dev+…` e o
+   `build_skew` nunca dispara; o upload não leva `.git`) (~90–110 s; Bash com
    `timeout: 300000`).
 5. Verificação (uma chamada cada):
    - `uv run --frozen python scripts/post_deploy_smoke.py --base-url https://rpg-ia-master-staging.vercel.app --expected-git-sha $(git rev-parse HEAD) --output readiness_artifacts/post_deploy.json`

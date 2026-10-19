@@ -1,0 +1,34 @@
+{
+  "schema_version": 2,
+  "mode": "read-only",
+  "status": "passed",
+  "failed_check": null,
+  "failed_checks": [],
+  "http_status": 200,
+  "base_origin": "https://rpg-ia-master-staging.vercel.app",
+  "expected_git_sha": "da6186bd2bda7bb1a03ebd96576f3963692e401f",
+  "actual_git_sha": "da6186bd2bda7bb1a03ebd96576f3963692e401f",
+  "checks": {
+    "health": {
+      "status": "passed",
+      "http_status": 200,
+      "latency_ms": 100
+    },
+    "/auth/config": {
+      "status": "passed",
+      "http_status": 200,
+      "latency_ms": 33
+    },
+    "/data/options": {
+      "status": "passed",
+      "http_status": 200,
+      "latency_ms": 37
+    },
+    "/data/map": {
+      "status": "passed",
+      "http_status": 200,
+      "latency_ms": 38
+    }
+  },
+  "generated_at": "2026-10-19T13:38:35.181160+00:00"
+}

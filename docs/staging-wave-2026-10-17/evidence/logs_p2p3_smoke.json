@@ -1,0 +1,516 @@
+{
+  "what": "Smoke de logs P2/P3 no staging, deploy da6186b",
+  "deploy": {
+    "git_sha": "da6186bd2bda7bb1a03ebd96576f3963692e401f",
+    "bundle_build": "da6186b+202610191331",
+    "note": "1o deploy (-e GIT_SHA) gerou bundle 'dev+...'; redeploy com -e e -b GIT_SHA estampa o sha no bundle",
+    "jev_mode": "primary",
+    "daily_cap_brl": 5,
+    "text_cap": true,
+    "projection_mode": "inline"
+  },
+  "http_checks": {
+    "cron_auth_rejected": {
+      "missing": 401,
+      "invalid": 401,
+      "request_ids": [
+        "21ef4fe8858645c388e8b18c1c5af1a3",
+        "0cea5daea6bb416e9f958f2828321d36"
+      ]
+    },
+    "client_build": {
+      "current": 200,
+      "stale": 200,
+      "request_ids": [
+        "f95bc1125a0a429da6f769775b769616",
+        "cd7efba6457242c9b832e6465f1c72ca"
+      ],
+      "build_now": "da6186b+202610191300"
+    },
+    "client_error": {
+      "valid": 204,
+      "cross_origin": 403,
+      "oversized": 413,
+      "code": "smoke_p2p3_979e3e",
+      "beacon_request_id": "smk76fd69ceb384",
+      "request_ids": [
+        "6d755b734cf44eb8b0f66f264c31899f",
+        "f6357ba6269f4ee8b5bcc9451a057a82",
+        "e23b5d7cfd414217ada8081809d58db9"
+      ]
+    },
+    "abuse_blocked": {
+      "first_429_after": 28,
+      "retry_after": "58",
+      "request_id": "366a39a9d0bc49f88074c449ff4d201c",
+      "statuses": [
+        204,
+        429
+      ]
+    },
+    "new_game": {
+      "status": 200,
+      "simulated": false
+    },
+    "turns": [
+      {
+        "action": "Compro 1 Lâmina do R",
+        "status": 200,
+        "has_done": true,
+        "has_error": false,
+        "turn_count": 2
+      },
+      {
+        "action": "Saco minha arma e at",
+        "status": 200,
+        "has_done": true,
+        "has_error": false,
+        "turn_count": 3
+      },
+      {
+        "action": "Ataco o inimigo com ",
+        "status": 200,
+        "has_done": true,
+        "has_error": false,
+        "turn_count": 4
+      },
+      {
+        "action": "Ataco de novo o inim",
+        "status": 200,
+        "has_done": true,
+        "has_error": false,
+        "turn_count": 5
+      },
+      {
+        "action": "Ataco mais uma vez.",
+        "status": 200,
+        "has_done": true,
+        "has_error": false,
+        "turn_count": 6
+      }
+    ],
+    "combat_active_end": true
+  },
+  "cleanup": {
+    "games_deleted": 1,
+    "user_delete_status": 200
+  },
+  "logs": {
+    "cron.auth_rejected": {
+      "matched_in_window": 8,
+      "sample": [
+        {
+          "event": "cron.auth_rejected",
+          "level": "warning",
+          "logger": "rpg.cron",
+          "reason": "invalid",
+          "request_id": "0cea5daea6bb416e9f958f2828321d36",
+          "path": "/internal/cron/jobs"
+        },
+        {
+          "event": "cron.auth_rejected",
+          "level": "warning",
+          "logger": "rpg.cron",
+          "reason": "missing",
+          "request_id": "21ef4fe8858645c388e8b18c1c5af1a3",
+          "path": "/internal/cron/jobs"
+        },
+        {
+          "event": "cron.auth_rejected",
+          "level": "warning",
+          "logger": "rpg.cron",
+          "reason": "missing",
+          "request_id": "39a7e1b0fc564a52b7da465932020c09",
+          "path": "/internal/cron/operations"
+        },
+        {
+          "event": "cron.auth_rejected",
+          "level": "warning",
+          "logger": "rpg.cron",
+          "reason": "missing",
+          "request_id": "88cd61e325704a3aa0376db415bcfc5a",
+          "path": "/internal/cron/account-deletions"
+        },
+        {
+          "event": "cron.auth_rejected",
+          "level": "warning",
+          "logger": "rpg.cron",
+          "reason": "missing",
+          "request_id": "84256a77f5f24070a0ab31bd2814a13c",
+          "path": "/internal/cron/jobs"
+        },
+        {
+          "event": "cron.auth_rejected",
+          "level": "warning",
+          "logger": "rpg.cron",
+          "reason": "missing",
+          "request_id": "033db55262114c6a8b60119f257df0ba",
+          "path": "/internal/cron/operations"
+        }
+      ]
+    },
+    "cron.started": {
+      "matched_in_window": 12,
+      "sample": [
+        {
+          "event": "cron.started",
+          "level": "info",
+          "logger": "rpg.cron",
+          "request_id": "1409ff82325f48f0a458ea58eeefb296",
+          "run_id": "79645392598d",
+          "task": "jobs",
+          "path": "/internal/cron/jobs"
+        },
+        {
+          "event": "cron.started",
+          "level": "info",
+          "logger": "rpg.cron",
+          "request_id": "8db5235a4fbc4dad8fe08569194d6ce7",
+          "run_id": "c74af9a282e0",
+          "task": "jobs",
+          "path": "/internal/cron/jobs"
+        },
+        {
+          "event": "cron.started",
+          "level": "info",
+          "logger": "rpg.cron",
+          "request_id": "478ab94c4dc94a09aa74df43b39283c0",
+          "run_id": "658aa130ee89",
+          "task": "jobs",
+          "path": "/internal/cron/jobs"
+        }
+      ]
+    },
+    "rpg.cron": {
+      "matched_in_window": 3,
+      "sample": [
+        {
+          "consecutive_failures": 0,
+          "dead": 0,
+          "deferred": 0,
+          "event": "rpg.cron",
+          "failed": 0,
+          "level": "info",
+          "logger": "rpg.cron",
+          "outcome": "ok",
+          "processed": 6,
+          "request_id": "1409ff82325f48f0a458ea58eeefb296",
+          "run_id": "79645392598d",
+          "task": "jobs",
+          "path": "/internal/cron/jobs"
+        },
+        {
+          "consecutive_failures": 0,
+          "dead": 0,
+          "deferred": 0,
+          "event": "rpg.cron",
+          "failed": 0,
+          "level": "info",
+          "logger": "rpg.cron",
+          "outcome": "ok",
+          "processed": 0,
+          "request_id": "8db5235a4fbc4dad8fe08569194d6ce7",
+          "run_id": "c74af9a282e0",
+          "task": "jobs",
+          "path": "/internal/cron/jobs"
+        },
+        {
+          "consecutive_failures": 0,
+          "dead": 0,
+          "deferred": 0,
+          "event": "rpg.cron",
+          "failed": 0,
+          "level": "info",
+          "logger": "rpg.cron",
+          "outcome": "ok",
+          "processed": 0,
+          "request_id": "478ab94c4dc94a09aa74df43b39283c0",
+          "run_id": "658aa130ee89",
+          "task": "jobs",
+          "path": "/internal/cron/jobs"
+        }
+      ]
+    },
+    "client.error_valid": {
+      "matched_in_window": 1,
+      "sample": [
+        {
+          "beacon_request_id": "6d755b734cf44eb8b0f66f264c31899f",
+          "build": "da6186b+202610191300",
+          "client": "web",
+          "code": "smoke_p2p3_979e3e",
+          "error_name": "TypeError",
+          "event": "client.error",
+          "kind": "network",
+          "level": "warning",
+          "logger": "rpg.client",
+          "request_id": "smk76fd69ceb384",
+          "route": "/game/action/stream",
+          "stack": [
+            "assets/index-abc.js:1:200"
+          ],
+          "path": "/telemetry/client-error"
+        }
+      ]
+    },
+    "client_error_cross_origin": {
+      "matched_in_window": 1,
+      "sample": [
+        {
+          "client": "unknown",
+          "duration_ms": 21,
+          "error_code": "origin_denied",
+          "event": "http.request",
+          "level": "warning",
+          "logger": "rpg.http",
+          "method": "POST",
+          "request_id": "f6357ba6269f4ee8b5bcc9451a057a82",
+          "route": "/telemetry/client-error",
+          "status": 403,
+          "path": "/telemetry/client-error"
+        }
+      ]
+    },
+    "http.body_too_large": {
+      "matched_in_window": 1,
+      "sample": [
+        {
+          "declared_bytes": 6433,
+          "event": "http.body_too_large",
+          "level": "warning",
+          "limit_bytes": 4096,
+          "logger": "rpg.http",
+          "request_id": "e23b5d7cfd414217ada8081809d58db9",
+          "route": "/telemetry/client-error",
+          "path": "/telemetry/client-error"
+        }
+      ]
+    },
+    "abuse.blocked": {
+      "matched_in_window": 1,
+      "sample": [
+        {
+          "cls": "telemetry",
+          "event": "abuse.blocked",
+          "level": "warning",
+          "limit": 30,
+          "logger": "rpg.abuse",
+          "request_id": "366a39a9d0bc49f88074c449ff4d201c",
+          "retry_after_s": 58,
+          "scope": "ip",
+          "path": "/telemetry/client-error"
+        }
+      ]
+    },
+    "combat.summary": {
+      "matched_in_window": 4,
+      "sample": [
+        {
+          "death_stage_reached": null,
+          "enemy_damage_dealt": 0,
+          "event": "combat.summary",
+          "level": "info",
+          "logger": "rpg.combat",
+          "player_damage_taken": 0,
+          "reactions": 0,
+          "request_id": "b8219a4fd19a4ce18cd189861c22c4d1",
+          "rounds": 1,
+          "target_redirects": 0,
+          "path": "/game/action/stream"
+        },
+        {
+          "death_stage_reached": null,
+          "enemy_damage_dealt": 0,
+          "event": "combat.summary",
+          "level": "info",
+          "logger": "rpg.combat",
+          "player_damage_taken": 3,
+          "reactions": 0,
+          "request_id": "446ed8bd55a8491eba6dcbcfb5447668",
+          "rounds": 1,
+          "target_redirects": 0,
+          "path": "/game/action/stream"
+        },
+        {
+          "death_stage_reached": null,
+          "enemy_damage_dealt": 0,
+          "event": "combat.summary",
+          "level": "info",
+          "logger": "rpg.combat",
+          "player_damage_taken": 0,
+          "reactions": 1,
+          "request_id": "d4f2553c36d84f39af239f6022c3f2a3",
+          "rounds": 1,
+          "target_redirects": 0,
+          "path": "/game/action/stream"
+        },
+        {
+          "death_stage_reached": null,
+          "enemy_damage_dealt": 13,
+          "event": "combat.summary",
+          "level": "info",
+          "logger": "rpg.combat",
+          "player_damage_taken": 0,
+          "reactions": 1,
+          "request_id": "5365700a7a824cbebca4676905f452d3",
+          "rounds": 1,
+          "target_redirects": 0,
+          "path": "/game/action/stream"
+        }
+      ]
+    },
+    "economy.trade": {
+      "matched_in_window": 1,
+      "sample": [
+        {
+          "event": "economy.trade",
+          "gold_delta": 0,
+          "level": "info",
+          "logger": "rpg.economy",
+          "mode": "buy",
+          "outcome": "refused",
+          "reason_code": "no_merchant",
+          "request_id": "1c9dd6a89b6c454eb3dbc5e09a9e4f9f",
+          "path": "/game/action/stream"
+        }
+      ]
+    },
+    "router.decision": {
+      "matched_in_window": 6,
+      "sample": [
+        {
+          "event": "router.decision",
+          "jev_mode": "primary",
+          "level": "info",
+          "logger": "rpg.router",
+          "request_id": "b8219a4fd19a4ce18cd189861c22c4d1",
+          "route": "combat_agent",
+          "source": "combat_gate",
+          "path": "/game/action/stream"
+        },
+        {
+          "event": "router.decision",
+          "jev_mode": "primary",
+          "level": "info",
+          "logger": "rpg.router",
+          "request_id": "446ed8bd55a8491eba6dcbcfb5447668",
+          "route": "combat_agent",
+          "source": "combat_gate",
+          "path": "/game/action/stream"
+        },
+        {
+          "event": "router.decision",
+          "jev_mode": "primary",
+          "level": "info",
+          "logger": "rpg.router",
+          "request_id": "d4f2553c36d84f39af239f6022c3f2a3",
+          "route": "combat_agent",
+          "source": "jev",
+          "path": "/game/action/stream"
+        },
+        {
+          "event": "router.decision",
+          "jev_mode": "primary",
+          "level": "info",
+          "logger": "rpg.router",
+          "request_id": "5365700a7a824cbebca4676905f452d3",
+          "route": "combat_agent",
+          "source": "jev",
+          "path": "/game/action/stream"
+        },
+        {
+          "event": "router.decision",
+          "jev_mode": "primary",
+          "level": "info",
+          "logger": "rpg.router",
+          "request_id": "1c9dd6a89b6c454eb3dbc5e09a9e4f9f",
+          "route": "loot",
+          "source": "jev",
+          "path": "/game/action/stream"
+        },
+        {
+          "event": "router.decision",
+          "jev_mode": "primary",
+          "level": "info",
+          "logger": "rpg.router",
+          "request_id": "a9f00f8ba728491d835e3d1fd0d52c80",
+          "route": "storyteller",
+          "source": "interlocutor",
+          "path": "/game/new"
+        }
+      ]
+    },
+    "client_build_current": {
+      "sample": [
+        {
+          "client": "web",
+          "client_build": "da6186b+202610191331",
+          "duration_ms": 209,
+          "error_code": null,
+          "event": "http.request",
+          "level": "info",
+          "logger": "rpg.http",
+          "method": "POST",
+          "request_id": "8365eed7478846778343f1b1b748585c",
+          "route": "/telemetry/client-error",
+          "status": 204,
+          "path": "/telemetry/client-error"
+        }
+      ]
+    },
+    "client_build_stale": {
+      "sample": [
+        {
+          "build_skew": true,
+          "client": "web",
+          "client_build": "0000000+202610010000",
+          "duration_ms": 28,
+          "error_code": null,
+          "event": "http.request",
+          "level": "info",
+          "logger": "rpg.http",
+          "method": "POST",
+          "request_id": "6d7a44a8196c44ee8e4251c70386b483",
+          "route": "/telemetry/client-error",
+          "status": 204,
+          "path": "/telemetry/client-error"
+        }
+      ]
+    },
+    "provider.attempt": {
+      "matched_in_window": 0,
+      "note": "sucesso sai em debug; nenhuma falha de STT/imagem/embedding no periodo; nao forcado"
+    },
+    "cron.state_unavailable": {
+      "matched_in_window": 0
+    }
+  },
+  "cron_run_state_after_vercel_smoke": [
+    {
+      "task": "operations",
+      "consecutive_failures": 0,
+      "last_outcome": "ok"
+    },
+    {
+      "task": "account_deletions",
+      "consecutive_failures": 0,
+      "last_outcome": "ok"
+    },
+    {
+      "task": "jobs",
+      "consecutive_failures": 0,
+      "last_outcome": "ok"
+    }
+  ],
+  "cron_run_state_rls": {
+    "rls": true,
+    "force_rls": true,
+    "policies": [
+      "admin_all(rpg_admin)",
+      "runtime_all(rpg_runtime)"
+    ],
+    "rpg_api_select": false,
+    "anon_select": false
+  },
+  "pii_note": "so campos de allowlist; ids sao request_id aleatorios; sem pseudonimos de dono/jogo, email ou IP"
+}
