@@ -58,6 +58,8 @@ devolvem o parágrafo no hand-back. Ao abrir a próxima onda, mova estas notas p
 
 <!-- onda:inserir-aqui -->
 
+- **19/10 — SPEC-278 `done`:** React/react-dom 19.3.1 (+ tipos); bundle +12,7 % bruto / +12,5 % gzip, aceito pelo dono (teto de 5 % da 276 não vale para o React). Nenhuma API removida em uso; build, typecheck, 147 Node, audit 0, Playwright Chromium verdes; flake de timing de `account-lifecycle` corrigido (baseline do poll após a tela de conta sair). Revisão Opus APPROVED ([parecer](handoffs/SPEC-278-review.md)). Dependabot #40/#41 obsoletos.
+
 - **19/10 — Logs P2/P3 no staging:** migration `cron_run_state` aplicada (29/29, upsert do cron via `rpg_admin` ok); deploy `da6186b` com Jev `primary`, teto R$ 5; post_deploy/vercel_smoke/e2e verdes; eventos confirmados: `cron.*` com `run_id`, `client_build`/`build_skew`, `client.error` (Origin cruzada 403), `http.body_too_large`, `abuse.blocked`, `combat.summary`, `economy.trade`. Deploy pela CLI exige `-b GIT_SHA` (skill corrigida).
 - **19/10 — SPEC-276 `done` parcial:** Playwright 1.64 + Vite 8 (bundle +2,5 % bruto / −0,5 % gzip), `npm audit` 0 e `npm-audit-full` bloqueante; fixture e2e aceita o beacon `client-error` (3 jornadas voltaram). TypeScript 7 bloqueado (typescript-eslint exige TS < 6.1) e React 19 bloqueado pelo teto de bundle (+15,7 %) — decisão do dono. Revisão Opus APPROVED_WITH_FOLLOWUPS ([parecer](handoffs/SPEC-276-review.md)). Dependabot #35/#37 obsoletos.
 
