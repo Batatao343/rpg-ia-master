@@ -34,17 +34,18 @@ def test_log_fallback_has_reason_and_error_type_only(capsys):
     assert SENT not in json.dumps(line)
 
 
-def test_dedupe_per_action_but_counted_per_turn(capsys):
-    from observability.telemetry import correlation_scope
+def test_dedupe_per_turn_but_counted_per_turn(capsys):
     token, bucket = begin_fallbacks()
     try:
-        with correlation_scope(action_id=str(uuid.uuid4())):
-            for _ in range(3):
-                log_fallback("npc", "rag_unavailable")
+        for _ in range(3):
+            log_fallback("npc", "rag_unavailable")
     finally:
         end_fallbacks(token)
     assert len([x for x in _lines(capsys) if x["event"] == "npc.fallback"]) == 1
     assert bucket == ["npc.rag_unavailable"] * 3
+    log_fallback("npc", "rag_unavailable")           # fora de um turno: sem dedupe
+    log_fallback("npc", "rag_unavailable")
+    assert len([x for x in _lines(capsys) if x["event"] == "npc.fallback"]) == 2
 
 
 def test_storyteller_with_fallback_llm_logs_structured_invalid(capsys, monkeypatch):

@@ -103,14 +103,21 @@ def log_event(area: str, event: str, *, level: str = "info", **fields: Any) -> N
         safe_json({**correlation(), "event": f"{area}.{event}", **fields}))
 
 
-_fallbacks: contextvars.ContextVar[list[str] | None] = contextvars.ContextVar(
+class _FallbackBucket(list):
+    """Fallbacks do turno (``node.reason``, com repeticao) + chaves ja logadas neste turno."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.seen: set[tuple[str, str]] = set()
+
+
+_fallbacks: contextvars.ContextVar[_FallbackBucket | None] = contextvars.ContextVar(
     "rpg_turn_fallbacks", default=None)
-_fallback_seen: set[tuple[str, str, str]] = set()
 
 
 def begin_fallbacks() -> tuple[contextvars.Token, list[str]]:
     """SPEC-250 R5: coleta ``node.reason`` dos fallbacks do turno (contado em ``rpg.turn``)."""
-    bucket: list[str] = []
+    bucket = _FallbackBucket()
     return _fallbacks.set(bucket), bucket
 
 
@@ -120,18 +127,15 @@ def end_fallbacks(token: contextvars.Token) -> None:
 
 def log_fallback(node: str, reason: str, exc: BaseException | None = None, **fields: Any) -> None:
     """SPEC-250 R1: degradacao graciosa visivel. ``<node>.fallback`` (warning) com ``reason`` (codigo
-    fechado) e ``error_type`` (so a classe, nunca a mensagem). Dedupe por (acao, no, motivo)."""
+    fechado) e ``error_type`` (so a classe, nunca a mensagem). Dentro de um turno, a linha sai 1x por
+    (no, motivo); a contagem completa vai em ``rpg.turn.fallbacks``."""
     try:
         bucket = _fallbacks.get()
         if bucket is not None:
             bucket.append(f"{node}.{reason}")
-        action = correlation().get("action_ref", "")
-        key = (action, node, reason)
-        if action and key in _fallback_seen:
-            return
-        if len(_fallback_seen) > 2000:
-            _fallback_seen.clear()
-        _fallback_seen.add(key)
+            if (node, reason) in bucket.seen:
+                return
+            bucket.seen.add((node, reason))
         extra = {"error_type": type(exc).__name__} if exc is not None else {}
         log_event(node, "fallback", level="warning", reason=reason, **extra, **fields)
     except Exception:  # silent-ok: o log de fallback nunca derruba o turno
