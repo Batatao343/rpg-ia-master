@@ -1,6 +1,6 @@
 # SPEC-277 — Evals CLI: traceback e `error_type` na falha (follow-up da SPEC-260 R2)
 
-> **Status:** `draft`
+> **Status:** `approved` (dono, 19/10: autorizou tudo que não exige ação externa dele)
 > **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
 > **Origem:** revisão independente logs P2/P3 (achado 10, [parecer](../handoffs/LOGS-P2P3-review.md)); SPEC-260 R2 ficou fora por desvio deliberado
 > **Depende de:** SPEC-260
@@ -33,12 +33,12 @@ para seguir o procedimento de publicação de evals.
 ## 4. Plano
 
 1. Teste primeiro: caso sintético que levanta → stderr com `case_id` + traceback; JSON com `error_type`, sem mensagem.
-2. Implementar em `evals/__main__.py` (mínimo).
+2. Implementar (mínimo). **Desvio:** a exceção por caso é capturada em `evals/core/runner.py` (também protegido; traceback se perdia ali), então o stderr (suite, case_id, cauda ≤ 40 linhas) sai do runner; `evals/__main__.py` acrescenta `errors: [{case_id, error_type}]` ao JSON do CLI (classe da exceção, nunca a mensagem). Ambos entram no mesmo relock.
 3. Relock + `/eval-publish` para aprovação do dono.
 
 ## 5. Critérios de aceite
 
-- [ ] stderr com suíte, `case_id` e traceback na falha de um caso.
-- [ ] `error_type` no JSON, sem a mensagem da exceção.
-- [ ] Contagens idênticas antes/depois em uma suíte sem falhas.
+- [x] stderr com suíte, `case_id` e traceback na falha de um caso.
+- [x] `error_type` no JSON, sem a mensagem da exceção.
+- [x] Contagens idênticas antes/depois em uma suíte sem falhas.
 - [ ] `eval-gates` verde após o relock aprovado.

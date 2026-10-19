@@ -9,6 +9,7 @@ from pathlib import Path
 from evals.core.compare import compare_runs
 from evals.core.governance import GovernanceError
 from evals.core.runner import EvalRunnerError, run_eval, write_run
+from evals.core.schemas import EvalRunResult
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -30,6 +31,16 @@ def _parser() -> argparse.ArgumentParser:
     compare.add_argument("--baseline", type=Path, required=True)
     compare.add_argument("--output", type=Path)
     return parser
+
+
+def _error_rows(result: EvalRunResult) -> list[dict[str, str]]:
+    """Case id + exception class only; the message may carry dataset content."""
+
+    rows: list[dict[str, str]] = []
+    for case_id in result.error_case_ids:
+        first = (result.case_diagnostics.get(case_id) or [""])[0]
+        rows.append({"case_id": case_id, "error_type": first.split(":", 1)[0] or "Exception"})
+    return rows
 
 
 def main() -> int:
@@ -58,6 +69,7 @@ def main() -> int:
                         "metrics": result.metric_values,
                         "aggregates": result.aggregates,
                         "hard_failures": result.hard_failures,
+                        "errors": _error_rows(result),
                     },
                     ensure_ascii=False,
                     sort_keys=True,

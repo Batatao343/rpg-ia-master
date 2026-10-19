@@ -6,6 +6,8 @@ import json
 import os
 import platform
 import random
+import sys
+import traceback
 from datetime import UTC, datetime
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -367,6 +369,18 @@ def _aggregates(cases: list[EvalCase], results: list[EvalCaseResult]) -> dict[st
     return aggregates
 
 
+_TRACEBACK_TAIL_LINES = 40
+
+
+def _report_case_error(case: EvalCase, error: Exception) -> None:
+    """Print suite, case id and a bounded traceback (no locals) to stderr."""
+
+    tail = traceback.format_exception(type(error), error, error.__traceback__)
+    lines = "".join(tail).splitlines()[-_TRACEBACK_TAIL_LINES:]
+    header = f"eval case error: suite={case.suite} case_id={case.id}"
+    print("\n".join([header, *lines]), file=sys.stderr)
+
+
 def run_eval(
     root: Path,
     *,
@@ -478,6 +492,7 @@ def run_eval(
                 error_case_ids.append(case.id)
                 diagnostics[case.id] = [f"{type(error).__name__}: {error}"]
                 hard_failures.append(f"case error: {case.id}")
+                _report_case_error(case, error)
     finally:
         random.setstate(random_state)
         if previous_force_mock is None:

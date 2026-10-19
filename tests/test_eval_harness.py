@@ -223,3 +223,68 @@ def test_product_identity_changes_for_dirty_worktree_bytes(tmp_path: Path) -> No
     assert dirty_tree != clean_tree
     assert clean_dirty is False
     assert dirty is True
+
+
+def test_cli_error_case_reports_traceback_on_stderr_and_error_type_without_message(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    secret = "dataset-secret-payload-123"
+
+    class BoomAdapter:
+        adapter_id = "boom"
+
+        def execute(self, case: AdapterCase) -> AdapterOutput:
+            raise KeyError(secret)
+
+    monkeypatch.setattr(
+        "evals.core.runner.default_registry",
+        lambda: AdapterRegistry({"governance": BoomAdapter()}),
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "evals",
+            "--root",
+            str(ROOT),
+            "run",
+            "--dataset",
+            GOVERNANCE_DATASET,
+            "--case",
+            "governance.exact.bad",
+            "--run-id",
+            "cli-error-case",
+            "--output",
+            str(tmp_path),
+        ],
+    )
+
+    assert main() == 1
+    captured = capsys.readouterr()
+    assert "governance.exact.bad" in captured.err
+    assert "suite=governance" in captured.err
+    assert "Traceback" in captured.err
+    assert "KeyError" in captured.err
+    assert len(captured.err.splitlines()) <= 45
+    payload = json.loads(captured.out.strip().splitlines()[-1])
+    assert payload["errors"] == [{"case_id": "governance.exact.bad", "error_type": "KeyError"}]
+    assert secret not in captured.out
+    # Accounting unchanged: error case is an error, not a skip.
+    saved = json.loads((tmp_path / "cli-error-case.json").read_text(encoding="utf-8"))
+    assert saved["error_case_ids"] == ["governance.exact.bad"]
+    assert saved["skipped_case_ids"] == []
+
+
+def test_cli_stdout_has_no_errors_key_content_for_clean_run(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["evals", "--root", str(ROOT), "run", "--dataset", HARNESS_DATASET,
+         "--run-id", "cli-clean", "--output", str(tmp_path)],
+    )
+    assert main() == 0
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert json.loads(captured.out.strip().splitlines()[-1])["errors"] == []
