@@ -42,6 +42,7 @@ Coluna "quando ele disser" = o que o coordenador executa na hora.
 | Logs externos (Axiom) | criar conta Axiom e colar o token no `.env.staging` | "faz o Axiom" → envio direto do app, retenção ~30 d |
 | SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera a 104" → certificação cloud |
 | Plugins não usados | desligar em claude.ai → Settings → Plugins | — |
+| Design: "Chefe no topo" | decidir se o Chefe deve ser o encontro mais letal do nível (hoje: abaixo de Padrão/Elite, acima de Lacaio — [SPEC-287](specs/SPEC-287-encontros-escala-nivel-5-plus.md)) | "Chefe no topo: sim" → spec de séquito/ações extras por Nível do Encontro |
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
 
 ## Decisões recentes (≤ 7 dias)
