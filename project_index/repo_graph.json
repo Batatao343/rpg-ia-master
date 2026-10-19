@@ -1,5 +1,5 @@
 {
-  "commit_sha": "f1693e1a5d47dbf34f5513dab505842211cc9dd7",
+  "commit_sha": "75ed505df732b4be2961d67aa952b868320dfd91",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -20620,7 +20620,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1691
+        "line": 1737
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._apply_flee_travel",
@@ -20631,7 +20631,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1639
+        "line": 1685
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._apply_weather_hazard",
@@ -20642,7 +20642,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1575
+        "line": 1621
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._attempt_flee",
@@ -20664,7 +20664,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1564
+        "line": 1610
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._can_attempt_flee",
@@ -20708,10 +20708,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 951
+        "line": 994
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._combat_node",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 845
+      },
+      "source": "module:agents.combat",
+      "target": "symbol:agents.combat._concealed_species",
       "type": "defines"
     },
     {
@@ -20752,7 +20763,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 902
+        "line": 945
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._encounter_outcome",
@@ -20774,7 +20785,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 919
+        "line": 818
+      },
+      "source": "module:agents.combat",
+      "target": "symbol:agents.combat._faction_withhold_clause",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 962
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._finish_encounter",
@@ -20851,7 +20873,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1764
+        "line": 1810
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._merge_formal_party",
@@ -20873,7 +20895,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 818
+        "line": 859
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._narrate",
@@ -20928,7 +20950,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1729
+        "line": 1775
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._reflect_scene_allies",
@@ -20939,7 +20961,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1672
+        "line": 1718
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._register_environmental_damage_terminal",
@@ -20994,7 +21016,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 941
+        "line": 984
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat.combat_node",
@@ -21940,7 +21962,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 377
+        "line": 382
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._dedupe_encounter",
@@ -21951,7 +21973,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 393
+        "line": 398
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -21962,7 +21984,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 315
+        "line": 320
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._guard_mediation_secret",
@@ -21973,7 +21995,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 126
+        "line": 131
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._inventory_counts",
@@ -21984,7 +22006,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 121
+        "line": 126
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._is_monetary_claim",
@@ -21995,7 +22017,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 305
+        "line": 310
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._log_narrative_rejected",
@@ -22006,7 +22028,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 232
+        "line": 237
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._mediated_subject_view",
@@ -22017,7 +22039,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 254
+        "line": 259
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._mediation_clause",
@@ -22028,7 +22050,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 214
+        "line": 219
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._npc_fallback_clause",
@@ -22039,7 +22061,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 348
+        "line": 353
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._player_facing_note",
@@ -22050,7 +22072,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 193
+        "line": 198
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._quests_ativas_block",
@@ -22061,7 +22083,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 134
+        "line": 139
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._reward_confirmation",
@@ -22072,7 +22094,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 151
+        "line": 156
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._scene_canonical_entities",
@@ -22083,7 +22105,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 409
+        "line": 414
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._with_new_npc",
@@ -22105,7 +22127,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 479
+        "line": 484
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller.storyteller_node",
@@ -119169,6 +119191,28 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 197
+      },
+      "source": "module:tests.test_spec289_ameaca_tematica",
+      "target": "symbol:tests.test_spec289_ameaca_tematica._enc_intel",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 148
+      },
+      "source": "module:tests.test_spec289_ameaca_tematica",
+      "target": "symbol:tests.test_spec289_ameaca_tematica._themed",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
         "line": 24
       },
       "source": "module:tests.test_spec289_ameaca_tematica",
@@ -119191,6 +119235,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 233
+      },
+      "source": "module:tests.test_spec289_ameaca_tematica",
+      "target": "symbol:tests.test_spec289_ameaca_tematica.test_controlled_branch_public_hint_hides_unknown_faction",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
         "line": 49
       },
       "source": "module:tests.test_spec289_ameaca_tematica",
@@ -119202,10 +119257,65 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 228
+      },
+      "source": "module:tests.test_spec289_ameaca_tematica",
+      "target": "symbol:tests.test_spec289_ameaca_tematica.test_creature_without_faction_has_plain_public_hint",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 249
+      },
+      "source": "module:tests.test_spec289_ameaca_tematica",
+      "target": "symbol:tests.test_spec289_ameaca_tematica.test_handoff_carries_public_hint_and_narrator_clause",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
         "line": 28
       },
       "source": "module:tests.test_spec289_ameaca_tematica",
       "target": "symbol:tests.test_spec289_ameaca_tematica.test_invocar_entidade_stamps_faction",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 215
+      },
+      "source": "module:tests.test_spec289_ameaca_tematica",
+      "target": "symbol:tests.test_spec289_ameaca_tematica.test_looming_elite_creature_of_faction_hides_unknown_faction",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 204
+      },
+      "source": "module:tests.test_spec289_ameaca_tematica",
+      "target": "symbol:tests.test_spec289_ameaca_tematica.test_looming_public_hint_hides_unknown_faction",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 266
+      },
+      "source": "module:tests.test_spec289_ameaca_tematica",
+      "target": "symbol:tests.test_spec289_ameaca_tematica.test_narrator_clause_overrides_canonical_name_with_short_label",
       "type": "defines"
     },
     {
@@ -119239,6 +119349,28 @@
       },
       "source": "module:tests.test_spec289_ameaca_tematica",
       "target": "symbol:tests.test_spec289_ameaca_tematica.test_porte_strict_falls_back_when_no_themed_elite",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 153
+      },
+      "source": "module:tests.test_spec289_ameaca_tematica",
+      "target": "symbol:tests.test_spec289_ameaca_tematica.test_single_themed_creature_fresh_population_stays_exclusive",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 170
+      },
+      "source": "module:tests.test_spec289_ameaca_tematica",
+      "target": "symbol:tests.test_spec289_ameaca_tematica.test_single_themed_creature_hunted_out_mixes_regional_pool",
       "type": "defines"
     },
     {
@@ -124735,7 +124867,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1104
+        "line": 1178
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils._advance_weather_once",
@@ -124812,7 +124944,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1140
+        "line": 1214
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils._has_light_source",
@@ -124867,7 +124999,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1057
+        "line": 1131
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils._weather_table",
@@ -124900,7 +125032,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1092
+        "line": 1166
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.advance_weather",
@@ -124955,7 +125087,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 910
+        "line": 975
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.check_encounter",
@@ -124966,10 +125098,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1444
+        "line": 1518
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.clock_label",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "world_utils.py",
+        "line": 804
+      },
+      "source": "module:world_utils",
+      "target": "symbol:world_utils.concealed_faction",
       "type": "defines"
     },
     {
@@ -124988,7 +125131,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1269
+        "line": 1343
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.detection_check",
@@ -125054,7 +125197,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 896
+        "line": 961
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.forced_encounter_danger",
@@ -125098,7 +125241,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1164
+        "line": 1238
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.light_level",
@@ -125120,7 +125263,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1070
+        "line": 1144
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.maybe_start_global_weather",
@@ -125131,10 +125274,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 801
+        "line": 848
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.pick_encounter_enemy",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "world_utils.py",
+        "line": 825
+      },
+      "source": "module:world_utils",
+      "target": "symbol:world_utils.public_encounter_hint",
       "type": "defines"
     },
     {
@@ -125175,7 +125329,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1421
+        "line": 1495
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.resolve_track",
@@ -125186,7 +125340,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1303
+        "line": 1377
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.resolve_trap",
@@ -125197,7 +125351,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1293
+        "line": 1367
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.roll_encounter_type",
@@ -125208,7 +125362,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1449
+        "line": 1523
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.starting_world",
@@ -125263,7 +125417,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1249
+        "line": 1323
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.trigger_global_weather",
@@ -125274,7 +125428,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1207
+        "line": 833
+      },
+      "source": "module:world_utils",
+      "target": "symbol:world_utils.unknown_faction_names",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "world_utils.py",
+        "line": 1281
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.weather_effects",
@@ -127122,7 +127287,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1591
+        "line": 1637
       },
       "source": "symbol:agents.combat._attempt_flee",
       "target": "symbol:agents.combat.FleeDecision",
@@ -127133,7 +127298,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1597
+        "line": 1643
       },
       "source": "symbol:agents.combat._attempt_flee",
       "target": "symbol:agents.combat.FleeDecision",
@@ -127144,7 +127309,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1621
+        "line": 1667
+      },
+      "source": "symbol:agents.combat._attempt_flee",
+      "target": "symbol:agents.combat.FleeDecision",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1682
       },
       "source": "symbol:agents.combat._attempt_flee",
       "target": "symbol:agents.combat.FleeDecision",
@@ -127158,17 +127334,6 @@
         "line": 1636
       },
       "source": "symbol:agents.combat._attempt_flee",
-      "target": "symbol:agents.combat.FleeDecision",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1590
-      },
-      "source": "symbol:agents.combat._attempt_flee",
       "target": "symbol:agents.combat._can_attempt_flee",
       "type": "calls"
     },
@@ -127177,7 +127342,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1596
+        "line": 1642
       },
       "source": "symbol:agents.combat._attempt_flee",
       "target": "symbol:combat_mechanics.has_control",
@@ -127210,7 +127375,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1552
+        "line": 1598
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._apply_flee_travel",
@@ -127221,7 +127386,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1207
+        "line": 1250
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._apply_weather_hazard",
@@ -127232,7 +127397,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1212
+        "line": 1255
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._attempt_flee",
@@ -127243,7 +127408,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1210
+        "line": 1253
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._can_attempt_flee",
@@ -127254,7 +127419,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1106
+        "line": 1149
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._canonical_player_action",
@@ -127265,7 +127430,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1313
+        "line": 1356
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._canonical_player_action",
@@ -127276,7 +127441,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1268
+        "line": 1311
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._card_target_for",
@@ -127287,7 +127452,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1419
+        "line": 1465
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._downed_identity_tokens",
@@ -127298,7 +127463,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1201
+        "line": 1244
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._early_game_reaction_initiator",
@@ -127309,7 +127474,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1107
+        "line": 1150
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._encounter_outcome",
@@ -127320,7 +127485,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1447
+        "line": 1493
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._encounter_outcome",
@@ -127331,7 +127496,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1216
+        "line": 1259
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._enforce_flee_attempt_limit",
@@ -127342,7 +127507,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1110
+        "line": 1448
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._faction_withhold_clause",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1153
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._finish_encounter",
@@ -127353,7 +127529,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1444
+        "line": 1490
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._finish_encounter",
@@ -127364,7 +127540,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1215
+        "line": 1258
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._is_valid_flee_destination",
@@ -127375,7 +127551,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1492
+        "line": 1538
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._kill_events",
@@ -127386,7 +127562,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1386
+        "line": 1429
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._killer_identity",
@@ -127397,7 +127573,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1516
+        "line": 1562
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._killer_identity",
@@ -127408,7 +127584,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1524
+        "line": 1570
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._killer_identity",
@@ -127419,7 +127595,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1149
+        "line": 1192
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._last_human_text",
@@ -127430,7 +127606,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1468
+        "line": 1514
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._merge_formal_party",
@@ -127441,7 +127617,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1324
+        "line": 1367
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._mirror_vitals",
@@ -127452,7 +127628,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1326
+        "line": 1369
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._mirror_vitals",
@@ -127463,7 +127639,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1328
+        "line": 1371
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._mirror_vitals",
@@ -127474,7 +127650,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1395
+        "line": 1438
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._narrate",
@@ -127485,7 +127661,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1387
+        "line": 1430
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._narrate_fall",
@@ -127496,7 +127672,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1246
+        "line": 1289
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._parse_turn_declaration",
@@ -127507,7 +127683,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1023
+        "line": 1066
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._prepare_scene",
@@ -127518,7 +127694,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1489
+        "line": 1535
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._reflect_scene_allies",
@@ -127529,7 +127705,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1208
+        "line": 1251
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._register_environmental_damage_terminal",
@@ -127540,7 +127716,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1008
+        "line": 1051
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._spawn_v4_enemies",
@@ -127551,18 +127727,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1024
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:agents.combat._sync_enemy_knowledge",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1288
+        "line": 1067
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._sync_enemy_knowledge",
@@ -127576,6 +127741,17 @@
         "line": 1331
       },
       "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._sync_enemy_knowledge",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1374
+      },
+      "source": "symbol:agents.combat._combat_node",
       "target": "symbol:llm_setup.get_llm",
       "type": "calls"
     },
@@ -127584,7 +127760,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1060
+        "line": 1103
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -127595,7 +127771,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 957
+        "line": 1000
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -127606,7 +127782,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 958
+        "line": 1001
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -127617,7 +127793,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1018
+        "line": 1061
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -127628,7 +127804,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1020
+        "line": 1063
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -127639,7 +127815,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1088
+        "line": 1131
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -127650,7 +127826,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1089
+        "line": 1132
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -127661,7 +127837,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1134
+        "line": 1177
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -127672,7 +127848,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1135
+        "line": 1178
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -127683,7 +127859,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1278
+        "line": 1321
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_orchestrator.run_round",
@@ -127694,7 +127870,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1101
+        "line": 1144
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_summary.build_summary",
@@ -127705,7 +127881,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1410
+        "line": 1456
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_summary.build_summary",
@@ -127716,7 +127892,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1422
+        "line": 1468
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_summary.narrative_or_fallback",
@@ -127727,7 +127903,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1152
+        "line": 1195
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
@@ -127738,7 +127914,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1238
+        "line": 1281
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
@@ -127749,7 +127925,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1240
+        "line": 1283
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_turn.TurnStep",
@@ -127760,7 +127936,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1392
+        "line": 1435
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.context_builder.build_context_pack",
@@ -127771,7 +127947,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1330
+        "line": 1373
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.death_flow.check_scar_required",
@@ -127782,7 +127958,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1356
+        "line": 1399
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.death_flow.critical_spaces_full",
@@ -127793,7 +127969,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1332
+        "line": 1375
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.death_flow.generate_scar",
@@ -127804,7 +127980,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1359
+        "line": 1402
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.death_flow.post_combat_consciousness",
@@ -127815,7 +127991,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1358
+        "line": 1401
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.death_flow.reset_terminal_episode",
@@ -127826,7 +128002,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1025
+        "line": 1068
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.discovery.record_encounter",
@@ -127837,7 +128013,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1346
+        "line": 1389
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.discovery.record_kills",
@@ -127852,6 +128028,17 @@
       },
       "source": "symbol:agents.combat._early_game_reaction_initiator",
       "target": "symbol:gamedata.get_location",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 835
+      },
+      "source": "symbol:agents.combat._faction_withhold_clause",
+      "target": "symbol:agents.combat._concealed_species",
       "type": "calls"
     },
     {
@@ -127914,7 +128101,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1773
+        "line": 1819
       },
       "source": "symbol:agents.combat._merge_formal_party",
       "target": "symbol:agents.combat._mirror_vitals",
@@ -127936,7 +128123,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 878
+        "line": 921
       },
       "source": "symbol:agents.combat._narrate",
       "target": "symbol:llm_setup.get_llm",
@@ -127947,7 +128134,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 893
+        "line": 936
       },
       "source": "symbol:agents.combat._narrate",
       "target": "symbol:observability.telemetry.log_event",
@@ -128365,7 +128552,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1754
+        "line": 1800
       },
       "source": "symbol:agents.combat._reflect_scene_allies",
       "target": "symbol:gamedata.sync_legacy_hp_aliases",
@@ -128376,7 +128563,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1685
+        "line": 1731
       },
       "source": "symbol:agents.combat._register_environmental_damage_terminal",
       "target": "symbol:gamedata.sync_legacy_hp_aliases",
@@ -128387,7 +128574,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1679
+        "line": 1725
       },
       "source": "symbol:agents.combat._register_environmental_damage_terminal",
       "target": "symbol:services.death_flow.critical_spaces_full",
@@ -128398,7 +128585,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1687
+        "line": 1733
       },
       "source": "symbol:agents.combat._register_environmental_damage_terminal",
       "target": "symbol:services.death_flow.should_trigger_last_stand",
@@ -128409,7 +128596,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1688
+        "line": 1734
       },
       "source": "symbol:agents.combat._register_environmental_damage_terminal",
       "target": "symbol:services.death_flow.trigger_last_stand",
@@ -128596,7 +128783,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 946
+        "line": 989
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:agents.combat._combat_node",
@@ -130136,7 +130323,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 395
+        "line": 400
       },
       "source": "symbol:agents.storyteller._deterministic_story_fallback",
       "target": "symbol:agents.storyteller._player_facing_note",
@@ -130147,7 +130334,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 326
+        "line": 331
       },
       "source": "symbol:agents.storyteller._guard_mediation_secret",
       "target": "symbol:agents.storyteller._mediated_subject_view",
@@ -130158,7 +130345,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 311
+        "line": 316
       },
       "source": "symbol:agents.storyteller._log_narrative_rejected",
       "target": "symbol:observability.telemetry.log_event",
@@ -130169,7 +130356,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 281
+        "line": 286
       },
       "source": "symbol:agents.storyteller._mediation_clause",
       "target": "symbol:agents.storyteller._mediated_subject_view",
@@ -130180,7 +130367,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 202
+        "line": 207
       },
       "source": "symbol:agents.storyteller._quests_ativas_block",
       "target": "symbol:agents.storyteller._quests_ativas_block._prova",
@@ -130191,7 +130378,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 205
+        "line": 210
       },
       "source": "symbol:agents.storyteller._quests_ativas_block",
       "target": "symbol:services.quest_log.has_completion_proof",
@@ -130202,7 +130389,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 205
+        "line": 210
       },
       "source": "symbol:agents.storyteller._quests_ativas_block._prova",
       "target": "symbol:services.quest_log.has_completion_proof",
@@ -130213,7 +130400,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 140
+        "line": 145
       },
       "source": "symbol:agents.storyteller._reward_confirmation",
       "target": "symbol:agents.storyteller._inventory_counts",
@@ -130224,21 +130411,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 141
+        "line": 146
       },
       "source": "symbol:agents.storyteller._reward_confirmation",
       "target": "symbol:agents.storyteller._inventory_counts",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/storyteller.py",
-        "line": 166
-      },
-      "source": "symbol:agents.storyteller._scene_canonical_entities",
-      "target": "symbol:services.graph_resolver.get_entity",
       "type": "calls"
     },
     {
@@ -130249,6 +130425,17 @@
         "line": 171
       },
       "source": "symbol:agents.storyteller._scene_canonical_entities",
+      "target": "symbol:services.graph_resolver.get_entity",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/storyteller.py",
+        "line": 176
+      },
+      "source": "symbol:agents.storyteller._scene_canonical_entities",
       "target": "symbol:services.graph_resolver.load_entities",
       "type": "calls"
     },
@@ -130257,7 +130444,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 439
+        "line": 444
       },
       "source": "symbol:agents.storyteller._with_new_npc",
       "target": "symbol:agents.npc.generate_new_npc",
@@ -130268,7 +130455,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 994
+        "line": 999
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller.StoryUpdate",
@@ -130279,7 +130466,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 657
+        "line": 662
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._dedupe_encounter",
@@ -130290,7 +130477,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 995
+        "line": 1000
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -130301,7 +130488,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1056
+        "line": 1061
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -130312,7 +130499,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1070
+        "line": 1075
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -130323,7 +130510,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1407
+        "line": 1412
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -130334,7 +130521,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1089
+        "line": 1094
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._guard_mediation_secret",
@@ -130345,7 +130532,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1229
+        "line": 1234
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._is_monetary_claim",
@@ -130356,7 +130543,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1269
+        "line": 1274
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._log_narrative_rejected",
@@ -130367,7 +130554,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1301
+        "line": 1306
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._log_narrative_rejected",
@@ -130378,7 +130565,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1395
+        "line": 1400
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._log_narrative_rejected",
@@ -130389,7 +130576,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 888
+        "line": 893
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._mediation_clause",
@@ -130400,7 +130587,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 886
+        "line": 891
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._npc_fallback_clause",
@@ -130411,7 +130598,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 883
+        "line": 888
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._quests_ativas_block",
@@ -130422,7 +130609,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1291
+        "line": 1296
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._reward_confirmation",
@@ -130433,7 +130620,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 881
+        "line": 886
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._scene_canonical_entities",
@@ -130444,7 +130631,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1176
+        "line": 1181
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._with_new_npc",
@@ -130455,7 +130642,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 712
+        "line": 717
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller.encounter_handoff",
@@ -130466,7 +130653,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 786
+        "line": 791
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.world_simulator.simulate_world",
@@ -130477,7 +130664,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 862
+        "line": 867
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:llm_setup.get_llm",
@@ -130488,18 +130675,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1235
-      },
-      "source": "symbol:agents.storyteller.storyteller_node",
-      "target": "symbol:observability.telemetry.log_event",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/storyteller.py",
-        "line": 1248
+        "line": 1240
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -130521,7 +130697,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1403
+        "line": 1258
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -130532,7 +130708,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 805
+        "line": 1408
+      },
+      "source": "symbol:agents.storyteller.storyteller_node",
+      "target": "symbol:observability.telemetry.log_event",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/storyteller.py",
+        "line": 810
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.context_builder.build_context_pack",
@@ -130543,7 +130730,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 738
+        "line": 743
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.discovery.record_rumor",
@@ -130554,7 +130741,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 987
+        "line": 992
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.prompt_guard.guard_messages",
@@ -130565,7 +130752,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1355
+        "line": 1360
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.quest_log.register_proposed_quests",
@@ -130576,7 +130763,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1363
+        "line": 1368
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.quest_log.sync_action_progress",
@@ -130587,7 +130774,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1358
+        "line": 1363
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.quest_log.sync_location_progress",
@@ -130598,7 +130785,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 535
+        "line": 540
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.advance_factions",
@@ -130609,7 +130796,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 588
+        "line": 593
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.advance_factions",
@@ -130620,7 +130807,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1114
+        "line": 1119
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.apply_reputation",
@@ -130631,7 +130818,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 586
+        "line": 591
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.apply_rest",
@@ -130642,7 +130829,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 534
+        "line": 539
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.apply_travel",
@@ -130653,7 +130840,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 646
+        "line": 651
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.check_encounter",
@@ -130664,7 +130851,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 596
+        "line": 601
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.clock_label",
@@ -130675,7 +130862,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 600
+        "line": 605
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.clock_label",
@@ -130686,7 +130873,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 915
+        "line": 920
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.clock_label",
@@ -130697,7 +130884,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 502
+        "line": 507
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.ensure_faction_intel",
@@ -130708,7 +130895,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 501
+        "line": 506
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.ensure_factions",
@@ -130719,7 +130906,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 491
+        "line": 496
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.ensure_world",
@@ -130730,7 +130917,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 504
+        "line": 509
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.find_travel_destination",
@@ -130741,7 +130928,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 578
+        "line": 583
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.is_rest",
@@ -130752,7 +130939,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 503
+        "line": 508
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.is_travel_intent",
@@ -130763,7 +130950,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 536
+        "line": 541
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.resolve_faction_completions",
@@ -130774,7 +130961,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 589
+        "line": 594
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.resolve_faction_completions",
@@ -327630,10 +327817,87 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 201
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica._enc_intel",
+      "target": "symbol:gamedata.seed_factions",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 201
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica._enc_intel",
+      "target": "symbol:world_utils.check_encounter",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 149
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica._themed",
+      "target": "symbol:world_utils.threat_faction",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 150
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica._themed",
+      "target": "symbol:world_utils.threat_theme_match",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
         "line": 71
       },
       "source": "symbol:tests.test_spec289_ameaca_tematica.test_chama_azul_in_sphere_prefers_faction_creature",
       "target": "symbol:tests.test_spec289_ameaca_tematica._enc",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 238
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_controlled_branch_public_hint_hides_unknown_faction",
+      "target": "symbol:gamedata.seed_factions",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 239
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_controlled_branch_public_hint_hides_unknown_faction",
+      "target": "symbol:world_utils.check_encounter",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 245
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_controlled_branch_public_hint_hides_unknown_faction",
+      "target": "symbol:world_utils.check_encounter",
       "type": "calls"
     },
     {
@@ -327718,6 +327982,39 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 229
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_creature_without_faction_has_plain_public_hint",
+      "target": "symbol:tests.test_spec289_ameaca_tematica._enc_intel",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 258
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_handoff_carries_public_hint_and_narrator_clause",
+      "target": "symbol:gamedata.seed_factions",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 253
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_handoff_carries_public_hint_and_narrator_clause",
+      "target": "symbol:tests.test_spec289_ameaca_tematica._enc_intel",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
         "line": 29
       },
       "source": "symbol:tests.test_spec289_ameaca_tematica.test_invocar_entidade_stamps_faction",
@@ -327733,6 +328030,61 @@
       },
       "source": "symbol:tests.test_spec289_ameaca_tematica.test_invocar_entidade_stamps_faction",
       "target": "symbol:world_utils.resolve_faction_completions",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 220
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_looming_elite_creature_of_faction_hides_unknown_faction",
+      "target": "symbol:gamedata.seed_factions",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 219
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_looming_elite_creature_of_faction_hides_unknown_faction",
+      "target": "symbol:world_utils.check_encounter",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 205
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_looming_public_hint_hides_unknown_faction",
+      "target": "symbol:tests.test_spec289_ameaca_tematica._enc_intel",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 210
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_looming_public_hint_hides_unknown_faction",
+      "target": "symbol:tests.test_spec289_ameaca_tematica._enc_intel",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 271
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_narrator_clause_overrides_canonical_name_with_short_label",
+      "target": "symbol:gamedata.seed_factions",
       "type": "calls"
     },
     {
@@ -327832,6 +328184,116 @@
       },
       "source": "symbol:tests.test_spec289_ameaca_tematica.test_porte_strict_falls_back_when_no_themed_elite",
       "target": "symbol:tests.test_spec289_ameaca_tematica._tier",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 156
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_single_themed_creature_fresh_population_stays_exclusive",
+      "target": "symbol:gamedata.get_location",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 165
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_single_themed_creature_fresh_population_stays_exclusive",
+      "target": "symbol:tests.test_spec289_ameaca_tematica._themed",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 158
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_single_themed_creature_fresh_population_stays_exclusive",
+      "target": "symbol:world_utils.pick_encounter_enemy",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 186
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_single_themed_creature_hunted_out_mixes_regional_pool",
+      "target": "symbol:encounter_budget.is_boss",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 173
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_single_themed_creature_hunted_out_mixes_regional_pool",
+      "target": "symbol:gamedata.get_location",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 177
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_single_themed_creature_hunted_out_mixes_regional_pool",
+      "target": "symbol:tests.test_spec289_ameaca_tematica._themed",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 190
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_single_themed_creature_hunted_out_mixes_regional_pool",
+      "target": "symbol:tests.test_spec289_ameaca_tematica._themed",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 186
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_single_themed_creature_hunted_out_mixes_regional_pool",
+      "target": "symbol:tests.test_spec289_ameaca_tematica._tier",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 176
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_single_themed_creature_hunted_out_mixes_regional_pool",
+      "target": "symbol:world_utils.pick_encounter_enemy",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec289_ameaca_tematica.py",
+        "line": 189
+      },
+      "source": "symbol:tests.test_spec289_ameaca_tematica.test_single_themed_creature_hunted_out_mixes_regional_pool",
+      "target": "symbol:world_utils.pick_encounter_enemy",
       "type": "calls"
     },
     {
@@ -339708,7 +340170,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1111
+        "line": 1185
       },
       "source": "symbol:world_utils._advance_weather_once",
       "target": "symbol:world_utils._weather_table",
@@ -339719,7 +340181,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1120
+        "line": 1194
       },
       "source": "symbol:world_utils._advance_weather_once",
       "target": "symbol:world_utils.maybe_start_global_weather",
@@ -339785,7 +340247,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1100
+        "line": 1174
       },
       "source": "symbol:world_utils.advance_weather",
       "target": "symbol:world_utils._advance_weather_once",
@@ -339796,7 +340258,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1101
+        "line": 1175
       },
       "source": "symbol:world_utils.advance_weather",
       "target": "symbol:world_utils._advance_weather_once",
@@ -340038,7 +340500,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 945
+        "line": 1010
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:gamedata.get_location",
@@ -340049,7 +340511,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 942
+        "line": 1007
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils._effective_danger",
@@ -340060,7 +340522,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 944
+        "line": 1009
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils._hostile_ruler",
@@ -340071,7 +340533,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 959
+        "line": 1024
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils._pop_active_alert",
@@ -340082,7 +340544,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 954
+        "line": 1019
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils.check_encounter._stamp",
@@ -340093,7 +340555,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 931
+        "line": 996
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils.ensure_faction_intel",
@@ -340104,7 +340566,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 951
+        "line": 1016
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils.forced_encounter_danger",
@@ -340115,7 +340577,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 973
+        "line": 1038
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils.pick_encounter_enemy",
@@ -340126,7 +340588,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1008
+        "line": 1078
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils.pick_encounter_enemy",
@@ -340137,7 +340599,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1034
+        "line": 1108
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils.pick_encounter_enemy",
@@ -340148,7 +340610,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1005
+        "line": 1065
+      },
+      "source": "symbol:world_utils.check_encounter",
+      "target": "symbol:world_utils.public_encounter_hint",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "world_utils.py",
+        "line": 1095
+      },
+      "source": "symbol:world_utils.check_encounter",
+      "target": "symbol:world_utils.public_encounter_hint",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "world_utils.py",
+        "line": 1075
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils.threat_faction",
@@ -340159,7 +340643,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1006
+        "line": 1076
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils.threat_sphere",
@@ -340170,10 +340654,43 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1007
+        "line": 1077
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils.threat_theme_match",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "world_utils.py",
+        "line": 814
+      },
+      "source": "symbol:world_utils.concealed_faction",
+      "target": "symbol:gamedata.seed_factions",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "world_utils.py",
+        "line": 820
+      },
+      "source": "symbol:world_utils.concealed_faction",
+      "target": "symbol:world_utils._theme_stems",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "world_utils.py",
+        "line": 809
+      },
+      "source": "symbol:world_utils.concealed_faction",
+      "target": "symbol:world_utils.ensure_faction_intel",
       "type": "calls"
     },
     {
@@ -340379,7 +340896,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1179
+        "line": 1253
       },
       "source": "symbol:world_utils.light_level",
       "target": "symbol:world_utils._has_light_source",
@@ -340401,7 +340918,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1088
+        "line": 1162
       },
       "source": "symbol:world_utils.maybe_start_global_weather",
       "target": "symbol:world_utils.trigger_global_weather",
@@ -340412,7 +340929,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 831
+        "line": 878
       },
       "source": "symbol:world_utils.pick_encounter_enemy",
       "target": "symbol:world_utils._bestiary_by_faction",
@@ -340423,11 +340940,33 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 848
+        "line": 922
+      },
+      "source": "symbol:world_utils.pick_encounter_enemy",
+      "target": "symbol:world_utils.pick_encounter_enemy._base",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "world_utils.py",
+        "line": 895
       },
       "source": "symbol:world_utils.pick_encounter_enemy",
       "target": "symbol:world_utils.pick_encounter_enemy.tier",
       "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "world_utils.py",
+        "line": 829
+      },
+      "source": "symbol:world_utils.public_encounter_hint",
+      "target": "symbol:world_utils.concealed_faction",
+      "type": "calls"
     },
     {
       "confidence": "static_best_effort",
@@ -340489,7 +341028,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1427
+        "line": 1501
       },
       "source": "symbol:world_utils.resolve_track",
       "target": "symbol:world_utils.pick_encounter_enemy",
@@ -340500,7 +341039,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1353
+        "line": 1427
       },
       "source": "symbol:world_utils.resolve_trap",
       "target": "symbol:gamedata.sync_vitality",
@@ -340511,7 +341050,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1451
+        "line": 1525
       },
       "source": "symbol:world_utils.starting_world",
       "target": "symbol:gamedata.start_location_for_region",
@@ -340522,7 +341061,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1454
+        "line": 1528
       },
       "source": "symbol:world_utils.starting_world",
       "target": "symbol:world_utils._weather_table",
@@ -340610,7 +341149,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1213
+        "line": 840
+      },
+      "source": "symbol:world_utils.unknown_faction_names",
+      "target": "symbol:gamedata.seed_factions",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "world_utils.py",
+        "line": 835
+      },
+      "source": "symbol:world_utils.unknown_faction_names",
+      "target": "symbol:world_utils.ensure_faction_intel",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "world_utils.py",
+        "line": 1287
       },
       "source": "symbol:world_utils.weather_effects",
       "target": "symbol:world_utils._weather_table",
@@ -352710,21 +353271,21 @@
     {
       "id": "symbol:agents.combat._apply_flee_travel",
       "kind": "function",
-      "line": 1691,
+      "line": 1737,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._apply_flee_travel"
     },
     {
       "id": "symbol:agents.combat._apply_weather_hazard",
       "kind": "function",
-      "line": 1639,
+      "line": 1685,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._apply_weather_hazard"
     },
     {
       "id": "symbol:agents.combat._attempt_flee",
       "kind": "function",
-      "line": 1575,
+      "line": 1621,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._attempt_flee"
     },
@@ -352738,7 +353299,7 @@
     {
       "id": "symbol:agents.combat._can_attempt_flee",
       "kind": "function",
-      "line": 1564,
+      "line": 1610,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._can_attempt_flee"
     },
@@ -352766,9 +353327,16 @@
     {
       "id": "symbol:agents.combat._combat_node",
       "kind": "function",
-      "line": 951,
+      "line": 994,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._combat_node"
+    },
+    {
+      "id": "symbol:agents.combat._concealed_species",
+      "kind": "function",
+      "line": 845,
+      "path": "agents/combat.py",
+      "qualified_name": "agents.combat._concealed_species"
     },
     {
       "id": "symbol:agents.combat._default_card_target",
@@ -352794,7 +353362,7 @@
     {
       "id": "symbol:agents.combat._encounter_outcome",
       "kind": "function",
-      "line": 902,
+      "line": 945,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._encounter_outcome"
     },
@@ -352806,9 +353374,16 @@
       "qualified_name": "agents.combat._enforce_flee_attempt_limit"
     },
     {
+      "id": "symbol:agents.combat._faction_withhold_clause",
+      "kind": "function",
+      "line": 818,
+      "path": "agents/combat.py",
+      "qualified_name": "agents.combat._faction_withhold_clause"
+    },
+    {
       "id": "symbol:agents.combat._finish_encounter",
       "kind": "function",
-      "line": 919,
+      "line": 962,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._finish_encounter"
     },
@@ -352857,7 +353432,7 @@
     {
       "id": "symbol:agents.combat._merge_formal_party",
       "kind": "function",
-      "line": 1764,
+      "line": 1810,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._merge_formal_party"
     },
@@ -352871,7 +353446,7 @@
     {
       "id": "symbol:agents.combat._narrate",
       "kind": "function",
-      "line": 818,
+      "line": 859,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._narrate"
     },
@@ -352913,14 +353488,14 @@
     {
       "id": "symbol:agents.combat._reflect_scene_allies",
       "kind": "function",
-      "line": 1729,
+      "line": 1775,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._reflect_scene_allies"
     },
     {
       "id": "symbol:agents.combat._register_environmental_damage_terminal",
       "kind": "function",
-      "line": 1672,
+      "line": 1718,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._register_environmental_damage_terminal"
     },
@@ -352955,7 +353530,7 @@
     {
       "id": "symbol:agents.combat.combat_node",
       "kind": "function",
-      "line": 941,
+      "line": 984,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat.combat_node"
     },
@@ -353305,105 +353880,105 @@
     {
       "id": "symbol:agents.storyteller._dedupe_encounter",
       "kind": "function",
-      "line": 377,
+      "line": 382,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._dedupe_encounter"
     },
     {
       "id": "symbol:agents.storyteller._deterministic_story_fallback",
       "kind": "function",
-      "line": 393,
+      "line": 398,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._deterministic_story_fallback"
     },
     {
       "id": "symbol:agents.storyteller._guard_mediation_secret",
       "kind": "function",
-      "line": 315,
+      "line": 320,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._guard_mediation_secret"
     },
     {
       "id": "symbol:agents.storyteller._inventory_counts",
       "kind": "function",
-      "line": 126,
+      "line": 131,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._inventory_counts"
     },
     {
       "id": "symbol:agents.storyteller._is_monetary_claim",
       "kind": "function",
-      "line": 121,
+      "line": 126,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._is_monetary_claim"
     },
     {
       "id": "symbol:agents.storyteller._log_narrative_rejected",
       "kind": "function",
-      "line": 305,
+      "line": 310,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._log_narrative_rejected"
     },
     {
       "id": "symbol:agents.storyteller._mediated_subject_view",
       "kind": "function",
-      "line": 232,
+      "line": 237,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._mediated_subject_view"
     },
     {
       "id": "symbol:agents.storyteller._mediation_clause",
       "kind": "function",
-      "line": 254,
+      "line": 259,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._mediation_clause"
     },
     {
       "id": "symbol:agents.storyteller._npc_fallback_clause",
       "kind": "function",
-      "line": 214,
+      "line": 219,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._npc_fallback_clause"
     },
     {
       "id": "symbol:agents.storyteller._player_facing_note",
       "kind": "function",
-      "line": 348,
+      "line": 353,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._player_facing_note"
     },
     {
       "id": "symbol:agents.storyteller._quests_ativas_block",
       "kind": "function",
-      "line": 193,
+      "line": 198,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._quests_ativas_block"
     },
     {
       "id": "symbol:agents.storyteller._quests_ativas_block._prova",
       "kind": "function",
-      "line": 202,
+      "line": 207,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._quests_ativas_block._prova"
     },
     {
       "id": "symbol:agents.storyteller._reward_confirmation",
       "kind": "function",
-      "line": 134,
+      "line": 139,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._reward_confirmation"
     },
     {
       "id": "symbol:agents.storyteller._scene_canonical_entities",
       "kind": "function",
-      "line": 151,
+      "line": 156,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._scene_canonical_entities"
     },
     {
       "id": "symbol:agents.storyteller._with_new_npc",
       "kind": "function",
-      "line": 409,
+      "line": 414,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._with_new_npc"
     },
@@ -353417,7 +353992,7 @@
     {
       "id": "symbol:agents.storyteller.storyteller_node",
       "kind": "function",
-      "line": 479,
+      "line": 484,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller.storyteller_node"
     },
@@ -418067,6 +418642,20 @@
       "qualified_name": "tests.test_spec289_ameaca_tematica._enc"
     },
     {
+      "id": "symbol:tests.test_spec289_ameaca_tematica._enc_intel",
+      "kind": "test",
+      "line": 197,
+      "path": "tests/test_spec289_ameaca_tematica.py",
+      "qualified_name": "tests.test_spec289_ameaca_tematica._enc_intel"
+    },
+    {
+      "id": "symbol:tests.test_spec289_ameaca_tematica._themed",
+      "kind": "test",
+      "line": 148,
+      "path": "tests/test_spec289_ameaca_tematica.py",
+      "qualified_name": "tests.test_spec289_ameaca_tematica._themed"
+    },
+    {
       "id": "symbol:tests.test_spec289_ameaca_tematica._tier",
       "kind": "test",
       "line": 24,
@@ -418081,6 +418670,13 @@
       "qualified_name": "tests.test_spec289_ameaca_tematica.test_chama_azul_in_sphere_prefers_faction_creature"
     },
     {
+      "id": "symbol:tests.test_spec289_ameaca_tematica.test_controlled_branch_public_hint_hides_unknown_faction",
+      "kind": "test",
+      "line": 233,
+      "path": "tests/test_spec289_ameaca_tematica.py",
+      "qualified_name": "tests.test_spec289_ameaca_tematica.test_controlled_branch_public_hint_hides_unknown_faction"
+    },
+    {
       "id": "symbol:tests.test_spec289_ameaca_tematica.test_corvane_in_sphere_picks_themed_creature",
       "kind": "test",
       "line": 49,
@@ -418088,11 +418684,46 @@
       "qualified_name": "tests.test_spec289_ameaca_tematica.test_corvane_in_sphere_picks_themed_creature"
     },
     {
+      "id": "symbol:tests.test_spec289_ameaca_tematica.test_creature_without_faction_has_plain_public_hint",
+      "kind": "test",
+      "line": 228,
+      "path": "tests/test_spec289_ameaca_tematica.py",
+      "qualified_name": "tests.test_spec289_ameaca_tematica.test_creature_without_faction_has_plain_public_hint"
+    },
+    {
+      "id": "symbol:tests.test_spec289_ameaca_tematica.test_handoff_carries_public_hint_and_narrator_clause",
+      "kind": "test",
+      "line": 249,
+      "path": "tests/test_spec289_ameaca_tematica.py",
+      "qualified_name": "tests.test_spec289_ameaca_tematica.test_handoff_carries_public_hint_and_narrator_clause"
+    },
+    {
       "id": "symbol:tests.test_spec289_ameaca_tematica.test_invocar_entidade_stamps_faction",
       "kind": "test",
       "line": 28,
       "path": "tests/test_spec289_ameaca_tematica.py",
       "qualified_name": "tests.test_spec289_ameaca_tematica.test_invocar_entidade_stamps_faction"
+    },
+    {
+      "id": "symbol:tests.test_spec289_ameaca_tematica.test_looming_elite_creature_of_faction_hides_unknown_faction",
+      "kind": "test",
+      "line": 215,
+      "path": "tests/test_spec289_ameaca_tematica.py",
+      "qualified_name": "tests.test_spec289_ameaca_tematica.test_looming_elite_creature_of_faction_hides_unknown_faction"
+    },
+    {
+      "id": "symbol:tests.test_spec289_ameaca_tematica.test_looming_public_hint_hides_unknown_faction",
+      "kind": "test",
+      "line": 204,
+      "path": "tests/test_spec289_ameaca_tematica.py",
+      "qualified_name": "tests.test_spec289_ameaca_tematica.test_looming_public_hint_hides_unknown_faction"
+    },
+    {
+      "id": "symbol:tests.test_spec289_ameaca_tematica.test_narrator_clause_overrides_canonical_name_with_short_label",
+      "kind": "test",
+      "line": 266,
+      "path": "tests/test_spec289_ameaca_tematica.py",
+      "qualified_name": "tests.test_spec289_ameaca_tematica.test_narrator_clause_overrides_canonical_name_with_short_label"
     },
     {
       "id": "symbol:tests.test_spec289_ameaca_tematica.test_out_of_sphere_keeps_regional_and_frames_flavor",
@@ -418114,6 +418745,20 @@
       "line": 76,
       "path": "tests/test_spec289_ameaca_tematica.py",
       "qualified_name": "tests.test_spec289_ameaca_tematica.test_porte_strict_falls_back_when_no_themed_elite"
+    },
+    {
+      "id": "symbol:tests.test_spec289_ameaca_tematica.test_single_themed_creature_fresh_population_stays_exclusive",
+      "kind": "test",
+      "line": 153,
+      "path": "tests/test_spec289_ameaca_tematica.py",
+      "qualified_name": "tests.test_spec289_ameaca_tematica.test_single_themed_creature_fresh_population_stays_exclusive"
+    },
+    {
+      "id": "symbol:tests.test_spec289_ameaca_tematica.test_single_themed_creature_hunted_out_mixes_regional_pool",
+      "kind": "test",
+      "line": 170,
+      "path": "tests/test_spec289_ameaca_tematica.py",
+      "qualified_name": "tests.test_spec289_ameaca_tematica.test_single_themed_creature_hunted_out_mixes_regional_pool"
     },
     {
       "id": "symbol:tests.test_spec289_ameaca_tematica.test_stamped_faction_wins_over_text",
@@ -421772,7 +422417,7 @@
     {
       "id": "symbol:world_utils._advance_weather_once",
       "kind": "function",
-      "line": 1104,
+      "line": 1178,
       "path": "world_utils.py",
       "qualified_name": "world_utils._advance_weather_once"
     },
@@ -421821,7 +422466,7 @@
     {
       "id": "symbol:world_utils._has_light_source",
       "kind": "function",
-      "line": 1140,
+      "line": 1214,
       "path": "world_utils.py",
       "qualified_name": "world_utils._has_light_source"
     },
@@ -421856,7 +422501,7 @@
     {
       "id": "symbol:world_utils._weather_table",
       "kind": "function",
-      "line": 1057,
+      "line": 1131,
       "path": "world_utils.py",
       "qualified_name": "world_utils._weather_table"
     },
@@ -421877,7 +422522,7 @@
     {
       "id": "symbol:world_utils.advance_weather",
       "kind": "function",
-      "line": 1092,
+      "line": 1166,
       "path": "world_utils.py",
       "qualified_name": "world_utils.advance_weather"
     },
@@ -421912,23 +422557,30 @@
     {
       "id": "symbol:world_utils.check_encounter",
       "kind": "function",
-      "line": 910,
+      "line": 975,
       "path": "world_utils.py",
       "qualified_name": "world_utils.check_encounter"
     },
     {
       "id": "symbol:world_utils.check_encounter._stamp",
       "kind": "function",
-      "line": 954,
+      "line": 1019,
       "path": "world_utils.py",
       "qualified_name": "world_utils.check_encounter._stamp"
     },
     {
       "id": "symbol:world_utils.clock_label",
       "kind": "function",
-      "line": 1444,
+      "line": 1518,
       "path": "world_utils.py",
       "qualified_name": "world_utils.clock_label"
+    },
+    {
+      "id": "symbol:world_utils.concealed_faction",
+      "kind": "function",
+      "line": 804,
+      "path": "world_utils.py",
+      "qualified_name": "world_utils.concealed_faction"
     },
     {
       "id": "symbol:world_utils.decay_danger_overrides",
@@ -421940,7 +422592,7 @@
     {
       "id": "symbol:world_utils.detection_check",
       "kind": "function",
-      "line": 1269,
+      "line": 1343,
       "path": "world_utils.py",
       "qualified_name": "world_utils.detection_check"
     },
@@ -421982,7 +422634,7 @@
     {
       "id": "symbol:world_utils.forced_encounter_danger",
       "kind": "function",
-      "line": 896,
+      "line": 961,
       "path": "world_utils.py",
       "qualified_name": "world_utils.forced_encounter_danger"
     },
@@ -422010,7 +422662,7 @@
     {
       "id": "symbol:world_utils.light_level",
       "kind": "function",
-      "line": 1164,
+      "line": 1238,
       "path": "world_utils.py",
       "qualified_name": "world_utils.light_level"
     },
@@ -422024,23 +422676,37 @@
     {
       "id": "symbol:world_utils.maybe_start_global_weather",
       "kind": "function",
-      "line": 1070,
+      "line": 1144,
       "path": "world_utils.py",
       "qualified_name": "world_utils.maybe_start_global_weather"
     },
     {
       "id": "symbol:world_utils.pick_encounter_enemy",
       "kind": "function",
-      "line": 801,
+      "line": 848,
       "path": "world_utils.py",
       "qualified_name": "world_utils.pick_encounter_enemy"
     },
     {
+      "id": "symbol:world_utils.pick_encounter_enemy._base",
+      "kind": "function",
+      "line": 922,
+      "path": "world_utils.py",
+      "qualified_name": "world_utils.pick_encounter_enemy._base"
+    },
+    {
       "id": "symbol:world_utils.pick_encounter_enemy.tier",
       "kind": "function",
-      "line": 848,
+      "line": 895,
       "path": "world_utils.py",
       "qualified_name": "world_utils.pick_encounter_enemy.tier"
+    },
+    {
+      "id": "symbol:world_utils.public_encounter_hint",
+      "kind": "function",
+      "line": 825,
+      "path": "world_utils.py",
+      "qualified_name": "world_utils.public_encounter_hint"
     },
     {
       "id": "symbol:world_utils.recovery_rest_safe",
@@ -422066,28 +422732,28 @@
     {
       "id": "symbol:world_utils.resolve_track",
       "kind": "function",
-      "line": 1421,
+      "line": 1495,
       "path": "world_utils.py",
       "qualified_name": "world_utils.resolve_track"
     },
     {
       "id": "symbol:world_utils.resolve_trap",
       "kind": "function",
-      "line": 1303,
+      "line": 1377,
       "path": "world_utils.py",
       "qualified_name": "world_utils.resolve_trap"
     },
     {
       "id": "symbol:world_utils.roll_encounter_type",
       "kind": "function",
-      "line": 1293,
+      "line": 1367,
       "path": "world_utils.py",
       "qualified_name": "world_utils.roll_encounter_type"
     },
     {
       "id": "symbol:world_utils.starting_world",
       "kind": "function",
-      "line": 1449,
+      "line": 1523,
       "path": "world_utils.py",
       "qualified_name": "world_utils.starting_world"
     },
@@ -422129,18 +422795,25 @@
     {
       "id": "symbol:world_utils.trigger_global_weather",
       "kind": "function",
-      "line": 1249,
+      "line": 1323,
       "path": "world_utils.py",
       "qualified_name": "world_utils.trigger_global_weather"
     },
     {
+      "id": "symbol:world_utils.unknown_faction_names",
+      "kind": "function",
+      "line": 833,
+      "path": "world_utils.py",
+      "qualified_name": "world_utils.unknown_faction_names"
+    },
+    {
       "id": "symbol:world_utils.weather_effects",
       "kind": "function",
-      "line": 1207,
+      "line": 1281,
       "path": "world_utils.py",
       "qualified_name": "world_utils.weather_effects"
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:bc720a5e07bf0cba3f9d6ecb922ff5a99314d1f9e0a64875c71445e4c7d3d995"
+  "source_tree_hash": "sha256:c4943123abb8e142a530905aae88c09deebb7da7fc0f16a9ed95e1f39f89875e"
 }
