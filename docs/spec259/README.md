@@ -30,3 +30,15 @@ instante `window.Capacitor` já existe (`isNativePlatform() === true`), mas `Cap
 Correção sugerida (pequena, spec 259 ou follow-up): em `loadAppVersion`, esperar `registerPlugin` (poll curto, ex.
 até 3 s) antes de desistir, ou reler a versão de forma preguiçosa em `appVersion()` enquanto `cached` for `null` no
 Android. Depois, repetir este smoke (`header_on_api_request` e `app_version=1.0.0+1` no access log).
+
+## Reteste do R4 após o fix (2026-10-19, staging `65c0f23`)
+
+**R4 verde.** O fix (retentativa da leitura do plugin `App` por até 3 s) foi deployado no staging `65c0f23`, e o mesmo APK foi
+usado no AVD `rpg34`. As requisições depois do bootstrap levam `X-RPG-App-Version: 1.0.0+1`, e o access log tem
+`app_version=1.0.0+1` com `client=android` em 5 rotas `/account/*`. As 3 primeiras requisições do boot saem sem o header (aceito).
+`/account/purchases/google/profile` deu 503 porque o Play não está configurado no staging (SPEC-198), sem relação com o R4.
+Evidência: [`evidence/spec259_avd_smoke_r4fix.json`](evidence/spec259_avd_smoke_r4fix.json),
+[`evidence/staging_access_log_r4fix.json`](evidence/staging_access_log_r4fix.json), `evidence/spec259_avd_staging_r4fix.jpg`.
+
+SPEC-281 no mesmo deploy: a primeira chamada Jev pós-deploy (`jev.primary`, `outcome=primary`) levou 285 ms, sem `timeout`.
+As 3 chamadas Jev da e2e_session levaram 243–285 ms. Detalhe: [`evidence/jev_first_turns_65c0f23.json`](evidence/jev_first_turns_65c0f23.json).

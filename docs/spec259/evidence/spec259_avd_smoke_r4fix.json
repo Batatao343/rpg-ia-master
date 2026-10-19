@@ -1,0 +1,195 @@
+{
+  "spec": "SPEC-259",
+  "when": "2026-10-19T18:04:04.620Z",
+  "apk": "debug, PLAY_BILLING_FAKE=false, server.url=staging (mesmo APK do smoke anterior, nao reinstalado)",
+  "staging_sha": "65c0f23",
+  "checks": {
+    "platform": "android",
+    "app_info": {
+      "version": "1.0.0",
+      "build": "1"
+    },
+    "header_on_api_request": true,
+    "logcat_has_code_and_responseCode": true,
+    "logcat_no_token": true
+  },
+  "package_version": [
+    "versionCode=1 minSdk=24 targetSdk=36",
+    "versionName=1.0.0"
+  ],
+  "verify_status": 200,
+  "clicked_account": "Conta · 0 Estilhas",
+  "requests": [
+    {
+      "path": "/auth/config",
+      "method": "GET",
+      "app_version": null,
+      "client": "android",
+      "request_id": "c8554fbb27d1"
+    },
+    {
+      "path": "/auth/refresh",
+      "method": "POST",
+      "app_version": null,
+      "client": "android",
+      "request_id": "36278fc77bf7"
+    },
+    {
+      "path": "/auth/verify",
+      "method": "POST",
+      "app_version": null,
+      "client": "android",
+      "request_id": null
+    },
+    {
+      "path": "/",
+      "method": "GET",
+      "app_version": null,
+      "client": null,
+      "request_id": null
+    },
+    {
+      "path": "/auth/config",
+      "method": "GET",
+      "app_version": null,
+      "client": "android",
+      "request_id": "e8ef7983314a"
+    },
+    {
+      "path": "/account/balance",
+      "method": "GET",
+      "app_version": null,
+      "client": "android",
+      "request_id": "f399247fb990"
+    },
+    {
+      "path": "/game/saves",
+      "method": "GET",
+      "app_version": null,
+      "client": "android",
+      "request_id": "2d85620ad841"
+    },
+    {
+      "path": "/data/options",
+      "method": "GET",
+      "app_version": "1.0.0+1",
+      "client": "android",
+      "request_id": "9515f444a95a"
+    },
+    {
+      "path": "/data/onboarding",
+      "method": "GET",
+      "app_version": "1.0.0+1",
+      "client": "android",
+      "request_id": "7f39dd44946c"
+    },
+    {
+      "path": "/telemetry/client-error",
+      "method": "POST",
+      "app_version": null,
+      "client": null,
+      "request_id": null
+    },
+    {
+      "path": "/account/balance",
+      "method": "GET",
+      "app_version": "1.0.0+1",
+      "client": "android",
+      "request_id": "201753a06024"
+    },
+    {
+      "path": "/account/series",
+      "method": "GET",
+      "app_version": "1.0.0+1",
+      "client": "android",
+      "request_id": "73fe73e5cbb0"
+    },
+    {
+      "path": "/account/usage",
+      "method": "GET",
+      "app_version": "1.0.0+1",
+      "client": "android",
+      "request_id": "94a12116fb38"
+    },
+    {
+      "path": "/account/purchases",
+      "method": "GET",
+      "app_version": "1.0.0+1",
+      "client": "android",
+      "request_id": "f9136b720fc8"
+    },
+    {
+      "path": "/account/purchases/google/profile",
+      "method": "GET",
+      "app_version": "1.0.0+1",
+      "client": "android",
+      "request_id": "58445b836036"
+    }
+  ],
+  "billing_getProducts": {
+    "ok": false,
+    "code": "billing_query_failed",
+    "message": "billing_query_failed",
+    "data": {
+      "responseCode": -1,
+      "stage": "products",
+      "debugMessage": "Service connection is disconnected."
+    }
+  },
+  "billing_purchase": {
+    "ok": false,
+    "message": "product_unavailable"
+  },
+  "logcat_RPGBilling": [
+    "W RPGWebView: Capacitor plugin \"App\" already registered. Cannot register plugins twice. @https://rpg-ia-master-staging.vercel.app/assets/esm-BLN9EKHd.js:1\r",
+    "W RPGWebView: Unrecognized feature: 'xr-spatial-tracking'. @https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit:2\r",
+    "W RPGWebView: Error with Permissions-Policy header: Unrecognized feature: 'hid'. @:0\r",
+    "W RPGWebView: Error with Permissions-Policy header: Unrecognized feature: 'payment'. @:0\r",
+    "W RPGWebView: Error with Permissions-Policy header: Unrecognized feature: 'serial'. @:0\r",
+    "W RPGWebView: Error with Permissions-Policy header: Unrecognized feature: 'usb'. @:0\r",
+    "W RPGWebView: Error with Permissions-Policy header: Unrecognized feature: 'xr-spatial-tracking'. @:0\r",
+    "W RPGWebView: Failed to create WebGPU Context Provider @https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/f/av0/rch/zarj6/0x4AAAAAAFaJcL9Dy_uAm4Dl/auto/fbE/new/normal?lang=auto:1\r",
+    "W RPGWebView: OTS parsing error: Size of decompressed WOFF 2.0 is less than compressed size @https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/f/av0/rch/zarj6/0x4AAAAAAFaJcL9Dy_uAm4Dl/auto/fbE/new/normal?lang=auto:1\r",
+    "E RPGWebView: %c%d font-size:0;color:transparent NaN @https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/f/av0/rch/zarj6/0x4AAAAAAFaJcL9Dy_uAm4Dl/auto/fbE/new/normal?lang=auto:1\r",
+    "E RPGWebView: %c%d font-size:0;color:transparent NaN @https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/f/av0/rch/zarj6/0x4AAAAAAFaJcL9Dy_uAm4Dl/auto/fbE/new/normal?lang=auto:1\r",
+    "W RPGWebView: %c%d font-size:0;color:transparent NaN @https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/f/av0/rch/zarj6/0x4AAAAAAFaJcL9Dy_uAm4Dl/auto/fbE/new/normal?lang=auto:1\r",
+    "W RPGWebView: %c%d font-size:0;color:transparent NaN @https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/f/av0/rch/zarj6/0x4AAAAAAFaJcL9Dy_uAm4Dl/auto/fbE/new/normal?lang=auto:1\r",
+    "E RPGWebView: Refused to connect to 'data:,' because it violates the following Content Security Policy directive: \"connect-src 'self' https://hagen.challenges.cloudflare.com https://brunhild.challenges.cloudflare.com https://valid.alg13.dnstest.challenges.cloudflare.com https://invalid.alg13.dnstest.challenges.cloudflare.com https://dual-valid.mldsa44.dnstest.challenges.cloudflare.com https://valid.mldsa44.dnstest.challenges.cloudflare.com https://dnstest.dev\".\r",
+    "E RPGWebView:  @https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/f/av0/rch/zarj6/0x4AAAAAAFaJcL9Dy_uAm4Dl/auto/fbE/new/normal?lang=auto:1\r",
+    "E RPGWebView: Refused to connect to 'data:,' because it violates the following Content Security Policy directive: \"connect-src 'self' https://hagen.challenges.cloudflare.com https://brunhild.challenges.cloudflare.com https://valid.alg13.dnstest.challenges.cloudflare.com https://invalid.alg13.dnstest.challenges.cloudflare.com https://dual-valid.mldsa44.dnstest.challenges.cloudflare.com https://valid.mldsa44.dnstest.challenges.cloudflare.com https://dnstest.dev\".\r",
+    "E RPGWebView:  @https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/f/av0/rch/zarj6/0x4AAAAAAFaJcL9Dy_uAm4Dl/auto/fbE/new/normal?lang=auto:1\r",
+    "E RPGWebView: Refused to connect to 'data:,' because it violates the following Content Security Policy directive: \"connect-src 'self' https://hagen.challenges.cloudflare.com https://brunhild.challenges.cloudflare.com https://valid.alg13.dnstest.challenges.cloudflare.com https://invalid.alg13.dnstest.challenges.cloudflare.com https://dual-valid.mldsa44.dnstest.challenges.cloudflare.com https://valid.mldsa44.dnstest.challenges.cloudflare.com https://dnstest.dev\".\r",
+    "E RPGWebView:  @https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/f/av0/rch/zarj6/0x4AAAAAAFaJcL9Dy_uAm4Dl/auto/fbE/new/normal?lang=auto:1\r",
+    "E RPGWebView: Refused to connect to 'data:,' because it violates the document's Content Security Policy. @https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/f/av0/rch/zarj6/0x4AAAAAAFaJcL9Dy_uAm4Dl/auto/fbE/new/normal?lang=auto:1\r",
+    "W RPGWebView: Capacitor plugin \"App\" already registered. Cannot register plugins twice. @https://rpg-ia-master-staging.vercel.app/assets/esm-BLN9EKHd.js:1\r",
+    "W RPGBilling: billing_query_failed responseCode=-1 debugMessage=Service connection is disconnected.\r",
+    "E RPGWebView: [object Object] @:330\r",
+    "W RPGWebView: Unrecognized feature: 'xr-spatial-tracking'. @https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit:2\r",
+    "W RPGWebView: Error with Permissions-Policy header: Unrecognized feature: 'hid'. @:0\r",
+    "W RPGWebView: Error with Permissions-Policy header: Unrecognized feature: 'payment'. @:0\r",
+    "W RPGWebView: Error with Permissions-Policy header: Unrecognized feature: 'serial'. @:0\r",
+    "W RPGWebView: Error with Permissions-Policy header: Unrecognized feature: 'usb'. @:0\r",
+    "W RPGWebView: Error with Permissions-Policy header: Unrecognized feature: 'xr-spatial-tracking'. @:0\r",
+    "W RPGWebView: Failed to create WebGPU Context Provider @https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/f/av0/rch/9yj06/0x4AAAAAAFaJcL9Dy_uAm4Dl/auto/fbE/new/normal?lang=auto:1\r",
+    "E RPGWebView: %c%d font-size:0;color:transparent NaN @https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/f/av0/rch/9yj06/0x4AAAAAAFaJcL9Dy_uAm4Dl/auto/fbE/new/normal?lang=auto:1\r",
+    "E RPGWebView: %c%d font-size:0;color:transparent NaN @https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/f/av0/rch/9yj06/0x4AAAAAAFaJcL9Dy_uAm4Dl/auto/fbE/new/normal?lang=auto:1\r",
+    "W RPGWebView: %c%d font-size:0;color:transparent NaN @https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/f/av0/rch/9yj06/0x4AAAAAAFaJcL9Dy_uAm4Dl/auto/fbE/new/normal?lang=auto:1\r",
+    "W RPGWebView: %c%d font-size:0;color:transparent NaN @https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/f/av0/rch/9yj06/0x4AAAAAAFaJcL9Dy_uAm4Dl/auto/fbE/new/normal?lang=auto:1\r",
+    "W RPGWebView: OTS parsing error: Size of decompressed WOFF 2.0 is less than compressed size @https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/f/av0/rch/9yj06/0x4AAAAAAFaJcL9Dy_uAm4Dl/auto/fbE/new/normal?lang=auto:1\r",
+    "E RPGWebView: Refused to connect to 'data:,' because it violates the following Content Security Policy directive: \"connect-src 'self' https://hagen.challenges.cloudflare.com https://brunhild.challenges.cloudflare.com https://valid.alg13.dnstest.challenges.cloudflare.com https://invalid.alg13.dnstest.challenges.cloudflare.com https://dual-valid.mldsa44.dnstest.challenges.cloudflare.com https://valid.mldsa44.dnstest.challenges.cloudflare.com https://dnstest.dev\".\r",
+    "E RPGWebView:  @https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/f/av0/rch/9yj06/0x4AAAAAAFaJcL9Dy_uAm4Dl/auto/fbE/new/normal?lang=auto:1\r",
+    "E RPGWebView: Refused to connect to 'data:,' because it violates the following Content Security Policy directive: \"connect-src 'self' https://hagen.challenges.cloudflare.com https://brunhild.challenges.cloudflare.com https://valid.alg13.dnstest.challenges.cloudflare.com https://invalid.alg13.dnstest.challenges.cloudflare.com https://dual-valid.mldsa44.dnstest.challenges.cloudflare.com https://valid.mldsa44.dnstest.challenges.cloudflare.com https://dnstest.dev\".\r",
+    "E RPGWebView:  @https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/f/av0/rch/9yj06/0x4AAAAAAFaJcL9Dy_uAm4Dl/auto/fbE/new/normal?lang=auto:1\r",
+    "E RPGWebView: Refused to connect to 'data:,' because it violates the following Content Security Policy directive: \"connect-src 'self' https://hagen.challenges.cloudflare.com https://brunhild.challenges.cloudflare.com https://valid.alg13.dnstest.challenges.cloudflare.com https://invalid.alg13.dnstest.challenges.cloudflare.com https://dual-valid.mldsa44.dnstest.challenges.cloudflare.com https://valid.mldsa44.dnstest.challenges.cloudflare.com https://dnstest.dev\".\r",
+    "E RPGWebView:  @https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/f/av0/rch/9yj06/0x4AAAAAAFaJcL9Dy_uAm4Dl/auto/fbE/new/normal?lang=auto:1\r",
+    "E RPGWebView: Refused to connect to 'data:,' because it violates the document's Content Security Policy. @https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/f/av0/rch/9yj06/0x4AAAAAAFaJcL9Dy_uAm4Dl/auto/fbE/new/normal?lang=auto:1\r",
+    "W RPGBilling: billing_query_failed responseCode=-1 debugMessage=Service connection is disconnected.\r",
+    "E RPGWebView: [object Object] @:330\r",
+    "W RPGWebView: Capacitor plugin \"App\" already registered. Cannot register plugins twice. @https://rpg-ia-master-staging.vercel.app/assets/esm-BLN9EKHd.js:1\r",
+    "W RPGWebView: Capacitor plugin \"PlayBilling\" already registered. Cannot register plugins twice. @https://rpg-ia-master-staging.vercel.app/assets/esm-BLN9EKHd.js:1\r",
+    "W RPGBilling: billing_query_failed responseCode=-1 debugMessage=Service connection is disconnected.\r",
+    "E RPGWebView: [object Object] @:330\r",
+    "W RPGWebView: Capacitor plugin \"PlayBilling\" already registered. Cannot register plugins twice. @https://rpg-ia-master-staging.vercel.app/assets/esm-BLN9EKHd.js:1\r",
+    "E RPGWebView: [object Object] @:330"
+  ]
+}

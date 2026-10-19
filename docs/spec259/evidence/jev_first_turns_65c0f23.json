@@ -1,0 +1,104 @@
+{
+  "source": "vercel logs --json, staging 65c0f23 logo apos o deploy (e2e_session, 5 turnos)",
+  "rows": [
+    {
+      "ts": "2026-10-19T17:55:34.894Z",
+      "event": "router.decision",
+      "source": "interlocutor",
+      "route": "storyteller",
+      "jev_mode": "primary",
+      "outcome": null,
+      "latency_ms": null,
+      "fallback_reason": null,
+      "model": null
+    },
+    {
+      "ts": "2026-10-19T17:55:43.233Z",
+      "event": "router.decision",
+      "source": "interlocutor",
+      "route": "storyteller",
+      "jev_mode": "primary",
+      "outcome": null,
+      "latency_ms": null,
+      "fallback_reason": null,
+      "model": null
+    },
+    {
+      "ts": "2026-10-19T17:55:49.497Z",
+      "event": "jev.primary",
+      "source": null,
+      "route": null,
+      "jev_mode": null,
+      "outcome": "primary",
+      "latency_ms": 285,
+      "fallback_reason": null,
+      "model": "jev-1.13.0"
+    },
+    {
+      "ts": "2026-10-19T17:55:49.498Z",
+      "event": "router.decision",
+      "source": "jev",
+      "route": "storyteller",
+      "jev_mode": "primary",
+      "outcome": null,
+      "latency_ms": null,
+      "fallback_reason": null,
+      "model": null
+    },
+    {
+      "ts": "2026-10-19T17:55:54.946Z",
+      "event": "jev.primary",
+      "source": null,
+      "route": null,
+      "jev_mode": null,
+      "outcome": "primary",
+      "latency_ms": 243,
+      "fallback_reason": null,
+      "model": "jev-1.13.0"
+    },
+    {
+      "ts": "2026-10-19T17:55:54.947Z",
+      "event": "router.decision",
+      "source": "jev",
+      "route": "npc_actor",
+      "jev_mode": "primary",
+      "outcome": null,
+      "latency_ms": null,
+      "fallback_reason": null,
+      "model": null
+    },
+    {
+      "ts": "2026-10-19T17:56:00.016Z",
+      "event": "jev.primary",
+      "source": null,
+      "route": null,
+      "jev_mode": null,
+      "outcome": "primary",
+      "latency_ms": 262,
+      "fallback_reason": null,
+      "model": "jev-1.13.0"
+    },
+    {
+      "ts": "2026-10-19T17:56:00.017Z",
+      "event": "router.decision",
+      "source": "jev",
+      "route": "storyteller",
+      "jev_mode": "primary",
+      "outcome": null,
+      "latency_ms": null,
+      "fallback_reason": null,
+      "model": null
+    },
+    {
+      "ts": "2026-10-19T17:56:05.295Z",
+      "event": "router.decision",
+      "source": "story_regex",
+      "route": "storyteller",
+      "jev_mode": "primary",
+      "outcome": null,
+      "latency_ms": null,
+      "fallback_reason": null,
+      "model": null
+    }
+  ]
+}

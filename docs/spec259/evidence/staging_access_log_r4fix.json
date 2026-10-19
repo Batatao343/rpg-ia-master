@@ -1,0 +1,95 @@
+{
+  "source": "vercel logs --environment production --json (staging 65c0f23), linhas http.request client=android do smoke AVD rpg34 (2a rodada, com clique em Conta)",
+  "lines": [
+    {
+      "ts": "2026-10-19T18:01:24.921Z",
+      "method": "POST",
+      "route": "/auth/verify",
+      "status": 200,
+      "client": "android",
+      "client_build": null,
+      "app_version": null,
+      "request_id": "c22c313639e54e45b6ddf7a148a0d657"
+    },
+    {
+      "ts": "2026-10-19T18:01:26.215Z",
+      "method": "GET",
+      "route": "/account/balance",
+      "status": 200,
+      "client": "android",
+      "client_build": "65c0f23+202610191753",
+      "app_version": null,
+      "request_id": "7510c29819cf"
+    },
+    {
+      "ts": "2026-10-19T18:04:24.605Z",
+      "method": "POST",
+      "route": "/auth/verify",
+      "status": 200,
+      "client": "android",
+      "client_build": null,
+      "app_version": null,
+      "request_id": "c1730ddd5eab443eaa2129eddd2bd85e"
+    },
+    {
+      "ts": "2026-10-19T18:04:25.318Z",
+      "method": "GET",
+      "route": "/account/balance",
+      "status": 200,
+      "client": "android",
+      "client_build": "65c0f23+202610191753",
+      "app_version": null,
+      "request_id": "f399247fb990"
+    },
+    {
+      "ts": "2026-10-19T18:04:43.307Z",
+      "method": "GET",
+      "route": "/account/balance",
+      "status": 200,
+      "client": "android",
+      "client_build": "65c0f23+202610191753",
+      "app_version": "1.0.0+1",
+      "request_id": "201753a06024"
+    },
+    {
+      "ts": "2026-10-19T18:04:43.342Z",
+      "method": "GET",
+      "route": "/account/purchases",
+      "status": 200,
+      "client": "android",
+      "client_build": "65c0f23+202610191753",
+      "app_version": "1.0.0+1",
+      "request_id": "f9136b720fc8"
+    },
+    {
+      "ts": "2026-10-19T18:04:43.402Z",
+      "method": "GET",
+      "route": "/account/usage",
+      "status": 200,
+      "client": "android",
+      "client_build": "65c0f23+202610191753",
+      "app_version": "1.0.0+1",
+      "request_id": "94a12116fb38"
+    },
+    {
+      "ts": "2026-10-19T18:04:43.436Z",
+      "method": "GET",
+      "route": "/account/purchases/google/profile",
+      "status": 503,
+      "client": "android",
+      "client_build": "65c0f23+202610191753",
+      "app_version": "1.0.0+1",
+      "request_id": "58445b836036"
+    },
+    {
+      "ts": "2026-10-19T18:04:43.443Z",
+      "method": "GET",
+      "route": "/account/series",
+      "status": 200,
+      "client": "android",
+      "client_build": "65c0f23+202610191753",
+      "app_version": "1.0.0+1",
+      "request_id": "73fe73e5cbb0"
+    }
+  ]
+}

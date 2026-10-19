@@ -1,6 +1,6 @@
 # SPEC-259 — Android: códigos distintos de billing com debugMessage, console do WebView em debug e versão do app nas requisições
 
-> **Status:** `in-progress` — aprovada pelo dono em 2026-10-19; implementada em 2026-10-19; smoke no AVD `rpg34` em 2026-10-19: R1/R2/R3 ok, **R4 falhou** (ver §9); correção em §10, aguardando novo smoke R4. Prioridade sugerida: **P3**.
+> **Status:** `done` — aprovada pelo dono em 2026-10-19; implementada em 2026-10-19; smoke no AVD `rpg34` em 2026-10-19: R1/R2/R3 ok, R4 falhou (§9), corrigido (§10) e verde no staging `65c0f23` (§11). Prioridade sugerida: **P3**.
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-19
 > **Depende de:** SPEC-244, SPEC-261
 > **Desbloqueia:** —
@@ -56,9 +56,9 @@ R1–R5.
 ## 5. Critérios de aceite
 
 - [x] Cada falha de billing tem código distinto + `debugMessage` no JS; logcat de release só código + `responseCode` (R2), `debugMessage` saneada só em `BuildConfig.DEBUG`.
-- [ ] `app_version` aparece no access log (unitário ok; no AVD contra o staging o header não sai — §9).
+- [x] `app_version` aparece no access log (AVD `rpg34` contra o staging `65c0f23`: `app_version=1.0.0+1` com `client=android` — §11).
 - [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
-- [ ] `uv run pytest` verde (suíte completa offline).
+- [x] `uv run pytest` verde (suíte completa offline; na branch só falhou o Project Index desatualizado, regenerado no pouso `65c0f23`).
 - [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
 - [x] Saves antigos continuam carregando.
 
@@ -118,3 +118,17 @@ Detalhe e evidência: [docs/spec259/README.md](../docs/spec259/README.md). APK d
 bloquear o boot e sem cachear a falha; formato inválido continua descartado na hora (1 leitura). Requisições anteriores
 à resolução saem sem o header (aceito: são as do bootstrap). Teste Node novo cobre plugin tardio, esgotamento e formato
 inválido. Falta repetir o smoke R4 no AVD contra o staging redeployado da main com este fix.
+
+## 11. Smoke R4 no AVD `rpg34` contra o staging `65c0f23` (2026-10-19)
+
+Staging redeployado da main `65c0f23` (`/health` com o sha, `hardened=true`; post_deploy_smoke, vercel_smoke e
+e2e_session verdes; Jev `primary`). Mesmo APK debug do §9 (Billing real, `server.url` = staging, não reinstalado: a
+correção está no bundle web servido pelo staging). Usuário sintético por `generate_link`, apagado ao fim (200, `exists=false`).
+
+- No WebView (CDP), as requisições do bootstrap (`/auth/config`, `/account/balance`, `/game/saves`) saem antes de o plugin
+  resolver e vão sem o header, como aceito no §10. A partir de `/data/options` todas levam `X-RPG-App-Version: 1.0.0+1`.
+- Access log (`vercel logs --json`): depois do clique em "Conta", as linhas `http.request` de `/account/balance`, `/account/series`,
+  `/account/usage`, `/account/purchases` e `/account/purchases/google/profile` têm `client=android`,
+  `client_build=65c0f23+202610191753` e `app_version=1.0.0+1`. `/data/*` não aparece no log de função (servido em cache).
+- R1/R2 repetidos ok (`billing_query_failed` + `responseCode`, logcat sem token).
+- Evidência: `docs/spec259/evidence/spec259_avd_smoke_r4fix.json`, `staging_access_log_r4fix.json`, `spec259_avd_staging_r4fix.jpg`.
