@@ -418,9 +418,17 @@ export class DeterministicBackend {
     return this.json(route, { detail: `fixture route missing: ${path}` }, 404);
   }
 
+  clientErrorBeacons = 0;
+
   async install(page: Page) {
     await page.route("**/*", async (route) => {
       const path = new URL(route.request().url()).pathname;
+      // SPEC-244: beacon de erro do cliente. Aceito e contado; o teste decide se
+      // algum erro de cliente é esperado olhando `clientErrorBeacons`.
+      if (path === "/telemetry/client-error") {
+        this.clientErrorBeacons += 1;
+        return route.fulfill({ status: 204, body: "" });
+      }
       if (path.startsWith("/auth/") || path.startsWith("/data/") || path.startsWith("/game/") || path.startsWith("/account/")) return this.handleApi(route);
       return route.continue();
     });
