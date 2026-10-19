@@ -61,19 +61,9 @@ devolvem o parágrafo no hand-back. Ao abrir a próxima onda, mova estas notas p
 
 <!-- onda:inserir-aqui -->
 
-- **19/10 — SPEC-259 `done` + staging `65c0f23`:** a versão do app Android agora chega no access log (`app_version=1.0.0+1`, `client=android`): a leitura do plugin `App` tenta de novo por até 3 s sem bloquear o boot. Smoke no AVD `rpg34` verde. Staging redeployado em `65c0f23` (Jev `primary`, teto R$ 5; post_deploy/vercel_smoke/e2e verdes); 1ª chamada Jev pós-deploy 285 ms, sem timeout (SPEC-281).
-
-- **19/10 — SPEC-282 `done`:** o "timeout do axe" no M07 mobile não era a11y nem app: cada jornada leva 4–12 s sozinha e estourava o teto default de 30 s com a CPU disputada. Teto de 90 s no arquivo `mobile-single-pane` (asserções serious/critical intactas); 14/14 em 3 repetições. Achado: nesta máquina o Playwright completo leva ~8 min e timeouts de 30 s aparecem em outras specs sob carga; no CI passa.
-
-- **19/10 — SPEC-225 `done`:** CI verde com secret-scan/pip-audit/npm audit, Dependabot ativo, 4 environments só `main` + reviewer (`post-deploy-smoke` ganhou reviewer); 1º scan semanal do gitleaks tinha 3 falsos positivos (caminhos renomeados) → `.gitleaksignore`, 568 commits limpos. Critério da compra de license tester movido para a SPEC-198. **SPEC-259 reaberta:** no AVD `rpg34` R1–R3 ok, mas o app nunca envia `X-RPG-App-Version` (plugin do Capacitor registra ~200 ms depois da leitura).
-
-- **19/10 — SPEC-281 `done`:** o client HTTP do Jev é construído antes do prazo de 1 s (1º turno de instância fria não dá mais timeout falso); falha ao construir o client ou ao importar a política congelada cai no CLASSIFY em vez de derrubar o turno; `off` intacto. Revisão Opus APPROVED com 1 P1 corrigido ([parecer](handoffs/SPEC-281-review.md)). Vale no staging no próximo deploy.
-
-- **19/10 — Workspace, 2ª passada:** CI em Node 22 (`web/.nvmrc`) e runners fixos `ubuntu-24.04`; porta do Playwright por checkout (`RPG_E2E_PORT`), dois worktrees rodam e2e juntos; push só de docs pula a suíte pesada (job `docs-only`; `eval-gates` intacto); Dependabot agrupa minor/patch; lint de nome de handoff; `proximas-specs/` → `docs/historico/proximas-specs/`. Achado: M07 mobile (timeout do axe) já falhava na main.
-
-- **19/10 — SPEC-277 `done`:** CLI de evals mostra no stderr suite, `case_id` e traceback (≤ 40 linhas, só frames + classe, **sem a mensagem**, para não vazar caso do holdout no log do Actions); JSON ganha `errors:[{case_id,error_type}]`. Relock só dos 2 hashes; revisão Opus APPROVED com 1 correção ([parecer](handoffs/SPEC-277-review.md)). Flake do teste Jev sem chave sob xdist corrigido.
-
 - **19/10 (onda):** workspace, logs P2/P3 (+ staging), SPEC-222 delete com arte, SPEC-236 §6.2 dia 1, SPEC-276 (Vite 8/Playwright 1.64), SPEC-278 (React 19), SPEC-279/280 (gasto sobrevive ao delete; órfãos) — todos na main com CI verde. Detalhe por frente em `CHANGELOG.md` § 2026-10-19. Pendente: SPEC-236 §6.2 dia 2 (20/10, [roteiro](docs/staging-wave-2026-10-17/spec236-s62-plano.md)).
+
+- **19/10 (onda, cont.):** SPEC-225/259/277/281/282 `done`; workspace 2ª passada; staging em `65c0f23` (Jev primary, teto R$ 5). Detalhe em `CHANGELOG.md` § 2026-10-19.
 
 ## Como rodar
 
