@@ -373,10 +373,15 @@ _TRACEBACK_TAIL_LINES = 40
 
 
 def _report_case_error(case: EvalCase, error: Exception) -> None:
-    """Print suite, case id and a bounded traceback (no locals) to stderr."""
+    """Print suite, case id and a bounded traceback to stderr.
 
-    tail = traceback.format_exception(type(error), error, error.__traceback__)
-    lines = "".join(tail).splitlines()[-_TRACEBACK_TAIL_LINES:]
+    Stack frames and the exception class only: no locals and never the exception
+    message (nor chained causes), which may carry protected/holdout case content.
+    """
+
+    frames = "".join(traceback.format_tb(error.__traceback__)).splitlines()
+    lines = ["Traceback (most recent call last):", *frames,
+             f"{type(error).__name__} (message omitted)"][-_TRACEBACK_TAIL_LINES:]
     header = f"eval case error: suite={case.suite} case_id={case.id}"
     print("\n".join([header, *lines]), file=sys.stderr)
 

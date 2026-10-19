@@ -471,9 +471,21 @@ def test_missing_key_falls_back_to_classify(monkeypatch: pytest.MonkeyPatch) -> 
         monkeypatch.delenv(name, raising=False)
     monkeypatch.setattr(jd, "load_dotenv", lambda *a, **k: False)
     monkeypatch.setattr(jev_rollout, "_jev_switched_off", lambda: False)
+    # Isolation (flaked under xdist as "timeout"): the shared httpx client (SSL context,
+    # slow on a loaded box) and the module pool (may hold other tests' work) are built
+    # inside the 1 s deadline. Neither matters here: the missing key raises before any
+    # request. Placeholder client + private pool keep only the key check on the clock.
+    from concurrent.futures import ThreadPoolExecutor
+    pool = ThreadPoolExecutor(max_workers=1)
+    monkeypatch.setattr(jev_rollout, "_client", object())
+    monkeypatch.setattr(jev_rollout, "_pool", lambda: pool)
     events: list[Any] = []
     jev_rollout.set_jev_rollout_telemetry_hook(events.append)
-    payload, llm = run_scenario(monkeypatch, _scene("Olho o altar"), {"route": "loot"})
+    try:
+        payload, llm = run_scenario(monkeypatch, _scene("Olho o altar"), {"route": "loot"})
+    finally:
+        jev_rollout.set_jev_rollout_telemetry_hook(None)
+        pool.shutdown(wait=True)
     assert llm.calls == 1 and payload["next"] == "loot"
     assert events[-1].outcome == "configuration"
 

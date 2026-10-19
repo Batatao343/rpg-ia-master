@@ -269,6 +269,7 @@ def test_cli_error_case_reports_traceback_on_stderr_and_error_type_without_messa
     payload = json.loads(captured.out.strip().splitlines()[-1])
     assert payload["errors"] == [{"case_id": "governance.exact.bad", "error_type": "KeyError"}]
     assert secret not in captured.out
+    assert secret not in captured.err  # message may carry dataset content (SPEC-277 R2)
     # Accounting unchanged: error case is an error, not a skip.
     saved = json.loads((tmp_path / "cli-error-case.json").read_text(encoding="utf-8"))
     assert saved["error_case_ids"] == ["governance.exact.bad"]
