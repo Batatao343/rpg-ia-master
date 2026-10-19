@@ -118,7 +118,7 @@ def test_frontend_suite_has_every_hard_gate_and_no_fixed_sleep():
 def test_frontend_toolchain_and_visual_snapshot_are_pinned():
     package = json.loads((WEB / "package.json").read_text(encoding="utf-8"))
     assert package["scripts"]["test:e2e"] == "playwright test"
-    assert package["devDependencies"]["@playwright/test"] == "^1.55.1"
+    assert package["devDependencies"]["@playwright/test"] == "^1.64.1"
     assert package["devDependencies"]["@axe-core/playwright"] == "^4.10.2"
     visual = (WEB / "e2e/visual-surfaces.spec.ts").read_text(encoding="utf-8")
     assert 'process.platform !== "linux"' in visual
