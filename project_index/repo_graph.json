@@ -1,5 +1,5 @@
 {
-  "commit_sha": "a876e41915ec276f2601a3f175b91ec43b555d36",
+  "commit_sha": "0d4f1f329bf0193cab78a019240184aaf7637eea",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -18133,6 +18133,28 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 9
+      },
+      "source": "file:tests/test_spec287_encounter_scale.py",
+      "target": "file:encounter_budget.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 1
+      },
+      "source": "file:tests/test_spec287_encounter_scale.py",
+      "target": "module:tests.test_spec287_encounter_scale",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec288_causa_morte.py",
         "line": 5
       },
@@ -20059,6 +20081,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
+        "line": 254
+      },
+      "source": "module:agents.bestiary",
+      "target": "symbol:agents.bestiary._ready_v4",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/bestiary.py",
         "line": 70
       },
       "source": "module:agents.bestiary",
@@ -20070,7 +20103,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 249
+        "line": 237
+      },
+      "source": "module:agents.bestiary",
+      "target": "symbol:agents.bestiary.apply_encounter_survival",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/bestiary.py",
+        "line": 279
       },
       "source": "module:agents.bestiary",
       "target": "symbol:agents.bestiary.generate_new_enemy",
@@ -20114,7 +20158,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 230
+        "line": 264
       },
       "source": "module:agents.bestiary",
       "target": "symbol:agents.bestiary.template_by_id",
@@ -26109,7 +26153,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 124
+        "line": 130
       },
       "source": "module:docs.spec285.arena_lethality",
       "target": "symbol:docs.spec285.arena_lethality._card_damage",
@@ -26120,7 +26164,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 120
+        "line": 126
       },
       "source": "module:docs.spec285.arena_lethality",
       "target": "symbol:docs.spec285.arena_lethality._card_kind",
@@ -26131,7 +26175,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 107
+        "line": 113
       },
       "source": "module:docs.spec285.arena_lethality",
       "target": "symbol:docs.spec285.arena_lethality._instances",
@@ -26153,7 +26197,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 159
+        "line": 165
       },
       "source": "module:docs.spec285.arena_lethality",
       "target": "symbol:docs.spec285.arena_lethality.fight",
@@ -26186,7 +26230,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 132
+        "line": 138
       },
       "source": "module:docs.spec285.arena_lethality",
       "target": "symbol:docs.spec285.arena_lethality.hero_decl",
@@ -26197,7 +26241,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 231
+        "line": 240
       },
       "source": "module:docs.spec285.arena_lethality",
       "target": "symbol:docs.spec285.arena_lethality.main",
@@ -26208,7 +26252,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 195
+        "line": 204
       },
       "source": "module:docs.spec285.arena_lethality",
       "target": "symbol:docs.spec285.arena_lethality.run",
@@ -26219,7 +26263,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "encounter_budget.py",
-        "line": 42
+        "line": 47
+      },
+      "source": "module:encounter_budget",
+      "target": "symbol:encounter_budget.action_economy_multiplier",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "encounter_budget.py",
+        "line": 82
       },
       "source": "module:encounter_budget",
       "target": "symbol:encounter_budget.clamp_encounter",
@@ -26230,7 +26285,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "encounter_budget.py",
-        "line": 25
+        "line": 65
       },
       "source": "module:encounter_budget",
       "target": "symbol:encounter_budget.encounter_budget",
@@ -26241,10 +26296,32 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "encounter_budget.py",
-        "line": 94
+        "line": 134
       },
       "source": "module:encounter_budget",
       "target": "symbol:encounter_budget.fill_encounter",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "encounter_budget.py",
+        "line": 52
+      },
+      "source": "module:encounter_budget",
+      "target": "symbol:encounter_budget.floor_cost",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "encounter_budget.py",
+        "line": 38
+      },
+      "source": "module:encounter_budget",
+      "target": "symbol:encounter_budget.is_boss",
       "type": "defines"
     },
     {
@@ -41828,7 +41905,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 420
+        "line": 425
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4.P",
@@ -41839,7 +41916,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 1206
+        "line": 1211
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4._build_new_creatures",
@@ -41850,7 +41927,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 50
+        "line": 55
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4._ecard",
@@ -41861,7 +41938,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 678
+        "line": 683
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4._has",
@@ -41872,7 +41949,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 733
+        "line": 738
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4._virt_bucket",
@@ -41883,7 +41960,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 683
+        "line": 688
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4.infer_archetype",
@@ -41894,7 +41971,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 738
+        "line": 743
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4.infer_virtudes",
@@ -41905,7 +41982,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 1289
+        "line": 1299
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4.main",
@@ -41916,7 +41993,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 1250
+        "line": 1255
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4.migrate_creature",
@@ -41927,7 +42004,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 766
+        "line": 771
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4.theme_cards",
@@ -41938,7 +42015,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 753
+        "line": 758
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4.theme_resist",
@@ -53422,7 +53499,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/ecology.py",
-        "line": 117
+        "line": 119
       },
       "source": "module:services.ecology",
       "target": "symbol:services.ecology.regional_rarity_label",
@@ -118673,6 +118750,193 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 9
+      },
+      "source": "module:tests.test_spec287_encounter_scale",
+      "target": "module:encounter_budget",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 12
+      },
+      "source": "module:tests.test_spec287_encounter_scale",
+      "target": "symbol:tests.test_spec287_encounter_scale._body",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 104
+      },
+      "source": "module:tests.test_spec287_encounter_scale",
+      "target": "symbol:tests.test_spec287_encounter_scale._chefes_and_others",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 16
+      },
+      "source": "module:tests.test_spec287_encounter_scale",
+      "target": "symbol:tests.test_spec287_encounter_scale._fill",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 32
+      },
+      "source": "module:tests.test_spec287_encounter_scale",
+      "target": "symbol:tests.test_spec287_encounter_scale._legacy_fill_count",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 96
+      },
+      "source": "module:tests.test_spec287_encounter_scale",
+      "target": "symbol:tests.test_spec287_encounter_scale.test_clamp_stays_linear",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 56
+      },
+      "source": "module:tests.test_spec287_encounter_scale",
+      "target": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_boss_is_linear_and_not_counted_as_body",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 44
+      },
+      "source": "module:tests.test_spec287_encounter_scale",
+      "target": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_single_body_is_linear",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 49
+      },
+      "source": "module:tests.test_spec287_encounter_scale",
+      "target": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_superlinear_in_bodies",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 154
+      },
+      "source": "module:tests.test_spec287_encounter_scale",
+      "target": "symbol:tests.test_spec287_encounter_scale.test_generate_new_enemy_cache_hit_applies_survival",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 114
+      },
+      "source": "module:tests.test_spec287_encounter_scale",
+      "target": "symbol:tests.test_spec287_encounter_scale.test_generator_sets_survival_only_on_chefe_and_nomeado",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 90
+      },
+      "source": "module:tests.test_spec287_encounter_scale",
+      "target": "symbol:tests.test_spec287_encounter_scale.test_lacaio_horde_floor_shrinks_at_level_8",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 67
+      },
+      "source": "module:tests.test_spec287_encounter_scale",
+      "target": "symbol:tests.test_spec287_encounter_scale.test_levels_1_to_4_floor_unchanged",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 82
+      },
+      "source": "module:tests.test_spec287_encounter_scale",
+      "target": "symbol:tests.test_spec287_encounter_scale.test_levels_5_to_8_floor_at_most_two_bodies",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 177
+      },
+      "source": "module:tests.test_spec287_encounter_scale",
+      "target": "symbol:tests.test_spec287_encounter_scale.test_random_pool_excludes_boss_by_category",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 166
+      },
+      "source": "module:tests.test_spec287_encounter_scale",
+      "target": "symbol:tests.test_spec287_encounter_scale.test_survival_bonus_is_capped",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 135
+      },
+      "source": "module:tests.test_spec287_encounter_scale",
+      "target": "symbol:tests.test_spec287_encounter_scale.test_template_by_id_survival_scales_from_encounter_level_3",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec288_causa_morte.py",
         "line": 5
       },
@@ -124009,7 +124273,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 998
+        "line": 1000
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils._advance_weather_once",
@@ -124086,7 +124350,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1034
+        "line": 1036
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils._has_light_source",
@@ -124130,7 +124394,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 951
+        "line": 953
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils._weather_table",
@@ -124163,7 +124427,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 986
+        "line": 988
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.advance_weather",
@@ -124218,7 +124482,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 822
+        "line": 824
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.check_encounter",
@@ -124229,7 +124493,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1338
+        "line": 1340
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.clock_label",
@@ -124251,7 +124515,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1163
+        "line": 1165
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.detection_check",
@@ -124317,7 +124581,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 808
+        "line": 810
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.forced_encounter_danger",
@@ -124361,7 +124625,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1058
+        "line": 1060
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.light_level",
@@ -124383,7 +124647,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 964
+        "line": 966
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.maybe_start_global_weather",
@@ -124438,7 +124702,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1315
+        "line": 1317
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.resolve_track",
@@ -124449,7 +124713,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1197
+        "line": 1199
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.resolve_trap",
@@ -124460,7 +124724,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1187
+        "line": 1189
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.roll_encounter_type",
@@ -124471,7 +124735,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1343
+        "line": 1345
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.starting_world",
@@ -124493,7 +124757,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1143
+        "line": 1145
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.trigger_global_weather",
@@ -124504,7 +124768,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1101
+        "line": 1103
       },
       "source": "module:world_utils",
       "target": "symbol:world_utils.weather_effects",
@@ -125780,7 +126044,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 286
+        "line": 255
+      },
+      "source": "symbol:agents.bestiary._ready_v4",
+      "target": "symbol:agents.bestiary.apply_encounter_survival",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/bestiary.py",
+        "line": 312
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary._infer_tier_from_name",
@@ -125791,7 +126066,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 317
+        "line": 299
+      },
+      "source": "symbol:agents.bestiary.generate_new_enemy",
+      "target": "symbol:agents.bestiary._ready_v4",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/bestiary.py",
+        "line": 343
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary._slug",
@@ -125802,7 +126088,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 254
+        "line": 284
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary.load_bestiary",
@@ -125813,7 +126099,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 275
+        "line": 301
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary.materialize_enemy_concept",
@@ -125824,7 +126110,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 306
+        "line": 332
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary.materialize_enemy_concept",
@@ -125835,7 +126121,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 314
+        "line": 340
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary.materialize_enemy_concept",
@@ -125846,7 +126132,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 266
+        "line": 296
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary.save_enemy",
@@ -125857,7 +126143,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 276
+        "line": 302
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary.save_enemy",
@@ -125868,7 +126154,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 308
+        "line": 334
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary.save_enemy",
@@ -125879,7 +126165,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 257
+        "line": 287
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.librarian.find_existing_entity",
@@ -125890,7 +126176,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 286
+        "line": 312
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:llm_setup.get_llm",
@@ -125901,7 +126187,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 259
+        "line": 289
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:observability.telemetry.log_event",
@@ -125912,7 +126198,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 264
+        "line": 294
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:observability.telemetry.log_event",
@@ -125923,7 +126209,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 280
+        "line": 306
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:observability.telemetry.log_event",
@@ -125934,7 +126220,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 312
+        "line": 338
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:observability.telemetry.log_event",
@@ -126000,7 +126286,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 233
+        "line": 273
+      },
+      "source": "symbol:agents.bestiary.template_by_id",
+      "target": "symbol:agents.bestiary._ready_v4",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/bestiary.py",
+        "line": 267
       },
       "source": "symbol:agents.bestiary.template_by_id",
       "target": "symbol:agents.bestiary.load_bestiary",
@@ -126011,7 +126308,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 244
+        "line": 274
       },
       "source": "symbol:agents.bestiary.template_by_id",
       "target": "symbol:agents.bestiary.materialize_enemy_concept",
@@ -136901,7 +137198,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 125
+        "line": 131
       },
       "source": "symbol:docs.spec285.arena_lethality._card_damage",
       "target": "symbol:services.cards.get_card",
@@ -136912,7 +137209,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 121
+        "line": 127
       },
       "source": "symbol:docs.spec285.arena_lethality._card_kind",
       "target": "symbol:services.cards.get_card",
@@ -136923,7 +137220,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 116
+        "line": 122
       },
       "source": "symbol:docs.spec285.arena_lethality._instances",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -136956,7 +137253,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 161
+        "line": 170
       },
       "source": "symbol:docs.spec285.arena_lethality.fight",
       "target": "symbol:docs.spec285.arena_lethality._instances",
@@ -136967,7 +137264,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 160
+        "line": 169
       },
       "source": "symbol:docs.spec285.arena_lethality.fight",
       "target": "symbol:docs.spec285.arena_lethality.hero",
@@ -136978,7 +137275,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 179
+        "line": 188
       },
       "source": "symbol:docs.spec285.arena_lethality.fight",
       "target": "symbol:docs.spec285.arena_lethality.hero_decl",
@@ -136989,7 +137286,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 171
+        "line": 180
       },
       "source": "symbol:docs.spec285.arena_lethality.fight",
       "target": "symbol:services.conflict_orchestrator._can_act",
@@ -137000,7 +137297,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 180
+        "line": 189
       },
       "source": "symbol:docs.spec285.arena_lethality.fight",
       "target": "symbol:services.conflict_orchestrator.run_round",
@@ -137011,7 +137308,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 167
+        "line": 176
       },
       "source": "symbol:docs.spec285.arena_lethality.fight",
       "target": "symbol:services.conflict_scene.freeze",
@@ -137022,7 +137319,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 164
+        "line": 173
       },
       "source": "symbol:docs.spec285.arena_lethality.fight",
       "target": "symbol:services.conflict_scene.new_scene",
@@ -137033,7 +137330,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 166
+        "line": 175
       },
       "source": "symbol:docs.spec285.arena_lethality.fight",
       "target": "symbol:services.conflict_scene.place",
@@ -137077,7 +137374,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 150
+        "line": 156
       },
       "source": "symbol:docs.spec285.arena_lethality.hero_decl",
       "target": "symbol:docs.spec285.arena_lethality._card_damage",
@@ -137088,7 +137385,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 139
+        "line": 145
       },
       "source": "symbol:docs.spec285.arena_lethality.hero_decl",
       "target": "symbol:docs.spec285.arena_lethality._card_kind",
@@ -137099,7 +137396,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 147
+        "line": 153
       },
       "source": "symbol:docs.spec285.arena_lethality.hero_decl",
       "target": "symbol:docs.spec285.arena_lethality._card_kind",
@@ -137110,7 +137407,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 139
+        "line": 145
       },
       "source": "symbol:docs.spec285.arena_lethality.hero_decl",
       "target": "symbol:services.cards.can_use_card",
@@ -137121,7 +137418,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 147
+        "line": 153
       },
       "source": "symbol:docs.spec285.arena_lethality.hero_decl",
       "target": "symbol:services.cards.can_use_card",
@@ -137132,7 +137429,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 140
+        "line": 146
       },
       "source": "symbol:docs.spec285.arena_lethality.hero_decl",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
@@ -137143,7 +137440,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 151
+        "line": 157
       },
       "source": "symbol:docs.spec285.arena_lethality.hero_decl",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
@@ -137154,7 +137451,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 154
+        "line": 160
       },
       "source": "symbol:docs.spec285.arena_lethality.hero_decl",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
@@ -137165,7 +137462,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 142
+        "line": 148
       },
       "source": "symbol:docs.spec285.arena_lethality.hero_decl",
       "target": "symbol:services.conflict_turn.TurnStep",
@@ -137176,7 +137473,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 152
+        "line": 158
       },
       "source": "symbol:docs.spec285.arena_lethality.hero_decl",
       "target": "symbol:services.conflict_turn.TurnStep",
@@ -137187,7 +137484,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 155
+        "line": 161
       },
       "source": "symbol:docs.spec285.arena_lethality.hero_decl",
       "target": "symbol:services.conflict_turn.TurnStep",
@@ -137198,7 +137495,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 239
+        "line": 248
       },
       "source": "symbol:docs.spec285.arena_lethality.main",
       "target": "symbol:docs.spec285.arena_lethality.run",
@@ -137209,7 +137506,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 196
+        "line": 205
       },
       "source": "symbol:docs.spec285.arena_lethality.run",
       "target": "symbol:docs.spec285.arena_lethality.creatures_by_category",
@@ -137220,7 +137517,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 216
+        "line": 225
       },
       "source": "symbol:docs.spec285.arena_lethality.run",
       "target": "symbol:docs.spec285.arena_lethality.fight",
@@ -137231,7 +137528,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec285/arena_lethality.py",
-        "line": 201
+        "line": 210
       },
       "source": "symbol:docs.spec285.arena_lethality.run",
       "target": "symbol:docs.spec285.arena_lethality.group_size",
@@ -137242,7 +137539,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "encounter_budget.py",
-        "line": 61
+        "line": 101
       },
       "source": "symbol:encounter_budget.clamp_encounter",
       "target": "symbol:encounter_budget.clamp_encounter._template",
@@ -137253,7 +137550,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "encounter_budget.py",
-        "line": 54
+        "line": 94
       },
       "source": "symbol:encounter_budget.clamp_encounter",
       "target": "symbol:encounter_budget.tier_cost",
@@ -137264,7 +137561,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "encounter_budget.py",
-        "line": 55
+        "line": 95
       },
       "source": "symbol:encounter_budget.clamp_encounter",
       "target": "symbol:encounter_budget.tier_cost",
@@ -137275,7 +137572,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "encounter_budget.py",
-        "line": 57
+        "line": 97
       },
       "source": "symbol:encounter_budget.clamp_encounter",
       "target": "symbol:encounter_budget.tier_cost",
@@ -137286,7 +137583,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "encounter_budget.py",
-        "line": 79
+        "line": 119
       },
       "source": "symbol:encounter_budget.clamp_encounter",
       "target": "symbol:encounter_budget.tier_cost",
@@ -137297,7 +137594,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "encounter_budget.py",
-        "line": 81
+        "line": 121
       },
       "source": "symbol:encounter_budget.clamp_encounter",
       "target": "symbol:encounter_budget.tier_cost",
@@ -137308,9 +137605,42 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "encounter_budget.py",
-        "line": 105
+        "line": 147
       },
       "source": "symbol:encounter_budget.fill_encounter",
+      "target": "symbol:encounter_budget.floor_cost",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "encounter_budget.py",
+        "line": 158
+      },
+      "source": "symbol:encounter_budget.fill_encounter",
+      "target": "symbol:encounter_budget.floor_cost",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "encounter_budget.py",
+        "line": 62
+      },
+      "source": "symbol:encounter_budget.floor_cost",
+      "target": "symbol:encounter_budget.action_economy_multiplier",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "encounter_budget.py",
+        "line": 58
+      },
+      "source": "symbol:encounter_budget.floor_cost",
       "target": "symbol:encounter_budget.tier_cost",
       "type": "calls"
     },
@@ -137319,9 +137649,42 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "encounter_budget.py",
-        "line": 116
+        "line": 59
       },
-      "source": "symbol:encounter_budget.fill_encounter",
+      "source": "symbol:encounter_budget.floor_cost",
+      "target": "symbol:encounter_budget.tier_cost",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "encounter_budget.py",
+        "line": 60
+      },
+      "source": "symbol:encounter_budget.floor_cost",
+      "target": "symbol:encounter_budget.tier_cost",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "encounter_budget.py",
+        "line": 61
+      },
+      "source": "symbol:encounter_budget.floor_cost",
+      "target": "symbol:encounter_budget.tier_cost",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "encounter_budget.py",
+        "line": 42
+      },
+      "source": "symbol:encounter_budget.is_boss",
       "target": "symbol:encounter_budget.tier_cost",
       "type": "calls"
     },
@@ -172563,7 +172926,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 688
+        "line": 693
       },
       "source": "symbol:scripts.migrate_bestiary_v4.infer_archetype",
       "target": "symbol:scripts.migrate_bestiary_v4._has",
@@ -172574,7 +172937,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 692
+        "line": 697
       },
       "source": "symbol:scripts.migrate_bestiary_v4.infer_archetype",
       "target": "symbol:scripts.migrate_bestiary_v4._has",
@@ -172585,7 +172948,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 694
+        "line": 699
       },
       "source": "symbol:scripts.migrate_bestiary_v4.infer_archetype",
       "target": "symbol:scripts.migrate_bestiary_v4._has",
@@ -172596,7 +172959,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 701
+        "line": 706
       },
       "source": "symbol:scripts.migrate_bestiary_v4.infer_archetype",
       "target": "symbol:scripts.migrate_bestiary_v4._has",
@@ -172607,7 +172970,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 703
+        "line": 708
       },
       "source": "symbol:scripts.migrate_bestiary_v4.infer_archetype",
       "target": "symbol:scripts.migrate_bestiary_v4._has",
@@ -172618,7 +172981,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 727
+        "line": 732
       },
       "source": "symbol:scripts.migrate_bestiary_v4.infer_archetype",
       "target": "symbol:scripts.migrate_bestiary_v4._has",
@@ -172629,7 +172992,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 741
+        "line": 746
       },
       "source": "symbol:scripts.migrate_bestiary_v4.infer_virtudes",
       "target": "symbol:scripts.migrate_bestiary_v4._virt_bucket",
@@ -172640,7 +173003,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 742
+        "line": 747
       },
       "source": "symbol:scripts.migrate_bestiary_v4.infer_virtudes",
       "target": "symbol:scripts.migrate_bestiary_v4._virt_bucket",
@@ -172651,7 +173014,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 743
+        "line": 748
       },
       "source": "symbol:scripts.migrate_bestiary_v4.infer_virtudes",
       "target": "symbol:scripts.migrate_bestiary_v4._virt_bucket",
@@ -172662,7 +173025,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 744
+        "line": 749
       },
       "source": "symbol:scripts.migrate_bestiary_v4.infer_virtudes",
       "target": "symbol:scripts.migrate_bestiary_v4._virt_bucket",
@@ -172673,7 +173036,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 745
+        "line": 750
       },
       "source": "symbol:scripts.migrate_bestiary_v4.infer_virtudes",
       "target": "symbol:scripts.migrate_bestiary_v4._virt_bucket",
@@ -172684,7 +173047,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 1302
+        "line": 1312
       },
       "source": "symbol:scripts.migrate_bestiary_v4.main",
       "target": "symbol:scripts.migrate_bestiary_v4.migrate_creature",
@@ -172695,7 +173058,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 1259
+        "line": 1264
       },
       "source": "symbol:scripts.migrate_bestiary_v4.migrate_creature",
       "target": "symbol:scripts.migrate_bestiary_v4.infer_archetype",
@@ -172706,7 +173069,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 1261
+        "line": 1266
       },
       "source": "symbol:scripts.migrate_bestiary_v4.migrate_creature",
       "target": "symbol:scripts.migrate_bestiary_v4.infer_virtudes",
@@ -172717,7 +173080,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 1281
+        "line": 1291
       },
       "source": "symbol:scripts.migrate_bestiary_v4.migrate_creature",
       "target": "symbol:scripts.migrate_bestiary_v4.theme_cards",
@@ -172728,7 +173091,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 1272
+        "line": 1282
       },
       "source": "symbol:scripts.migrate_bestiary_v4.migrate_creature",
       "target": "symbol:scripts.migrate_bestiary_v4.theme_resist",
@@ -172739,7 +173102,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 767
+        "line": 772
       },
       "source": "symbol:scripts.migrate_bestiary_v4.theme_cards",
       "target": "symbol:scripts.migrate_bestiary_v4._has",
@@ -172750,7 +173113,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 756
+        "line": 761
       },
       "source": "symbol:scripts.migrate_bestiary_v4.theme_resist",
       "target": "symbol:scripts.migrate_bestiary_v4._has",
@@ -195927,7 +196290,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/ecology.py",
-        "line": 119
+        "line": 121
       },
       "source": "symbol:services.ecology.regional_rarity_label",
       "target": "symbol:services.ecology.hunt_pressure",
@@ -326144,6 +326507,402 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 22
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale._fill",
+      "target": "symbol:encounter_budget.fill_encounter",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 99
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_clamp_stays_linear",
+      "target": "symbol:encounter_budget.clamp_encounter",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 98
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_clamp_stays_linear",
+      "target": "symbol:tests.test_spec287_encounter_scale._body",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 57
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_boss_is_linear_and_not_counted_as_body",
+      "target": "symbol:encounter_budget.floor_cost",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 58
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_boss_is_linear_and_not_counted_as_body",
+      "target": "symbol:encounter_budget.floor_cost",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 60
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_boss_is_linear_and_not_counted_as_body",
+      "target": "symbol:encounter_budget.floor_cost",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 57
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_boss_is_linear_and_not_counted_as_body",
+      "target": "symbol:tests.test_spec287_encounter_scale._body",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 59
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_boss_is_linear_and_not_counted_as_body",
+      "target": "symbol:tests.test_spec287_encounter_scale._body",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 60
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_boss_is_linear_and_not_counted_as_body",
+      "target": "symbol:tests.test_spec287_encounter_scale._body",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 46
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_single_body_is_linear",
+      "target": "symbol:encounter_budget.floor_cost",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 46
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_single_body_is_linear",
+      "target": "symbol:tests.test_spec287_encounter_scale._body",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 50
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_superlinear_in_bodies",
+      "target": "symbol:encounter_budget.floor_cost",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 51
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_superlinear_in_bodies",
+      "target": "symbol:encounter_budget.floor_cost",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 52
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_superlinear_in_bodies",
+      "target": "symbol:encounter_budget.floor_cost",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 53
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_superlinear_in_bodies",
+      "target": "symbol:encounter_budget.floor_cost",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 50
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_superlinear_in_bodies",
+      "target": "symbol:tests.test_spec287_encounter_scale._body",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 51
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_superlinear_in_bodies",
+      "target": "symbol:tests.test_spec287_encounter_scale._body",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 52
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_superlinear_in_bodies",
+      "target": "symbol:tests.test_spec287_encounter_scale._body",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 53
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_superlinear_in_bodies",
+      "target": "symbol:tests.test_spec287_encounter_scale._body",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 157
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_generate_new_enemy_cache_hit_applies_survival",
+      "target": "symbol:tests.test_spec287_encounter_scale._chefes_and_others",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 123
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_generator_sets_survival_only_on_chefe_and_nomeado",
+      "target": "symbol:tests.test_spec287_encounter_scale._chefes_and_others",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 91
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_lacaio_horde_floor_shrinks_at_level_8",
+      "target": "symbol:encounter_budget.encounter_budget",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 93
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_lacaio_horde_floor_shrinks_at_level_8",
+      "target": "symbol:tests.test_spec287_encounter_scale._body",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 93
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_lacaio_horde_floor_shrinks_at_level_8",
+      "target": "symbol:tests.test_spec287_encounter_scale._fill",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 92
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_lacaio_horde_floor_shrinks_at_level_8",
+      "target": "symbol:tests.test_spec287_encounter_scale._legacy_fill_count",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 71
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_levels_1_to_4_floor_unchanged",
+      "target": "symbol:encounter_budget.encounter_budget",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 73
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_levels_1_to_4_floor_unchanged",
+      "target": "symbol:tests.test_spec287_encounter_scale._body",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 73
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_levels_1_to_4_floor_unchanged",
+      "target": "symbol:tests.test_spec287_encounter_scale._fill",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 75
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_levels_1_to_4_floor_unchanged",
+      "target": "symbol:tests.test_spec287_encounter_scale._legacy_fill_count",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 77
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_levels_1_to_4_floor_unchanged",
+      "target": "symbol:tests.test_spec287_encounter_scale._legacy_fill_count",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 84
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_levels_5_to_8_floor_at_most_two_bodies",
+      "target": "symbol:encounter_budget.encounter_budget",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 87
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_levels_5_to_8_floor_at_most_two_bodies",
+      "target": "symbol:encounter_budget.floor_cost",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 85
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_levels_5_to_8_floor_at_most_two_bodies",
+      "target": "symbol:tests.test_spec287_encounter_scale._body",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 85
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_levels_5_to_8_floor_at_most_two_bodies",
+      "target": "symbol:tests.test_spec287_encounter_scale._fill",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 170
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_survival_bonus_is_capped",
+      "target": "symbol:tests.test_spec287_encounter_scale._chefes_and_others",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec287_encounter_scale.py",
+        "line": 138
+      },
+      "source": "symbol:tests.test_spec287_encounter_scale.test_template_by_id_survival_scales_from_encounter_level_3",
+      "target": "symbol:tests.test_spec287_encounter_scale._chefes_and_others",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec288_causa_morte.py",
         "line": 32
       },
@@ -337497,7 +338256,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1005
+        "line": 1007
       },
       "source": "symbol:world_utils._advance_weather_once",
       "target": "symbol:world_utils._weather_table",
@@ -337508,7 +338267,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1014
+        "line": 1016
       },
       "source": "symbol:world_utils._advance_weather_once",
       "target": "symbol:world_utils.maybe_start_global_weather",
@@ -337574,7 +338333,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 994
+        "line": 996
       },
       "source": "symbol:world_utils.advance_weather",
       "target": "symbol:world_utils._advance_weather_once",
@@ -337585,7 +338344,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 995
+        "line": 997
       },
       "source": "symbol:world_utils.advance_weather",
       "target": "symbol:world_utils._advance_weather_once",
@@ -337827,7 +338586,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 857
+        "line": 859
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:gamedata.get_location",
@@ -337838,7 +338597,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 854
+        "line": 856
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils._effective_danger",
@@ -337849,7 +338608,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 856
+        "line": 858
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils._hostile_ruler",
@@ -337860,7 +338619,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 871
+        "line": 873
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils._pop_active_alert",
@@ -337871,7 +338630,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 866
+        "line": 868
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils.check_encounter._stamp",
@@ -337882,7 +338641,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 843
+        "line": 845
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils.ensure_faction_intel",
@@ -337893,7 +338652,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 863
+        "line": 865
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils.forced_encounter_danger",
@@ -337904,7 +338663,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 885
+        "line": 887
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils.pick_encounter_enemy",
@@ -337915,7 +338674,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 915
+        "line": 917
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils.pick_encounter_enemy",
@@ -337926,7 +338685,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 928
+        "line": 930
       },
       "source": "symbol:world_utils.check_encounter",
       "target": "symbol:world_utils.pick_encounter_enemy",
@@ -338135,7 +338894,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1073
+        "line": 1075
       },
       "source": "symbol:world_utils.light_level",
       "target": "symbol:world_utils._has_light_source",
@@ -338157,7 +338916,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 982
+        "line": 984
       },
       "source": "symbol:world_utils.maybe_start_global_weather",
       "target": "symbol:world_utils.trigger_global_weather",
@@ -338179,7 +338938,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 768
+        "line": 770
       },
       "source": "symbol:world_utils.pick_encounter_enemy",
       "target": "symbol:world_utils.pick_encounter_enemy.tier",
@@ -338245,7 +339004,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1321
+        "line": 1323
       },
       "source": "symbol:world_utils.resolve_track",
       "target": "symbol:world_utils.pick_encounter_enemy",
@@ -338256,7 +339015,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1247
+        "line": 1249
       },
       "source": "symbol:world_utils.resolve_trap",
       "target": "symbol:gamedata.sync_vitality",
@@ -338267,7 +339026,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1345
+        "line": 1347
       },
       "source": "symbol:world_utils.starting_world",
       "target": "symbol:gamedata.start_location_for_region",
@@ -338278,7 +339037,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1348
+        "line": 1350
       },
       "source": "symbol:world_utils.starting_world",
       "target": "symbol:world_utils._weather_table",
@@ -338300,7 +339059,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "world_utils.py",
-        "line": 1107
+        "line": 1109
       },
       "source": "symbol:world_utils.weather_effects",
       "target": "symbol:world_utils._weather_table",
@@ -343654,6 +344413,13 @@
       "kind": "file",
       "line": 1,
       "path": "tests/test_spec286_heroi_inconsciente.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_spec287_encounter_scale.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_spec287_encounter_scale.py",
       "qualified_name": null
     },
     {
@@ -349684,6 +350450,13 @@
       "qualified_name": "tests.test_spec286_heroi_inconsciente"
     },
     {
+      "id": "module:tests.test_spec287_encounter_scale",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_spec287_encounter_scale.py",
+      "qualified_name": "tests.test_spec287_encounter_scale"
+    },
+    {
       "id": "module:tests.test_spec288_causa_morte",
       "kind": "module",
       "line": 1,
@@ -350181,6 +350954,13 @@
       "qualified_name": "agents.bestiary._read_json"
     },
     {
+      "id": "symbol:agents.bestiary._ready_v4",
+      "kind": "function",
+      "line": 254,
+      "path": "agents/bestiary.py",
+      "qualified_name": "agents.bestiary._ready_v4"
+    },
+    {
       "id": "symbol:agents.bestiary._slug",
       "kind": "function",
       "line": 70,
@@ -350188,9 +350968,16 @@
       "qualified_name": "agents.bestiary._slug"
     },
     {
+      "id": "symbol:agents.bestiary.apply_encounter_survival",
+      "kind": "function",
+      "line": 237,
+      "path": "agents/bestiary.py",
+      "qualified_name": "agents.bestiary.apply_encounter_survival"
+    },
+    {
       "id": "symbol:agents.bestiary.generate_new_enemy",
       "kind": "function",
-      "line": 249,
+      "line": 279,
       "path": "agents/bestiary.py",
       "qualified_name": "agents.bestiary.generate_new_enemy"
     },
@@ -350218,7 +351005,7 @@
     {
       "id": "symbol:agents.bestiary.template_by_id",
       "kind": "function",
-      "line": 230,
+      "line": 264,
       "path": "agents/bestiary.py",
       "qualified_name": "agents.bestiary.template_by_id"
     },
@@ -353473,21 +354260,21 @@
     {
       "id": "symbol:docs.spec285.arena_lethality._card_damage",
       "kind": "function",
-      "line": 124,
+      "line": 130,
       "path": "docs/spec285/arena_lethality.py",
       "qualified_name": "docs.spec285.arena_lethality._card_damage"
     },
     {
       "id": "symbol:docs.spec285.arena_lethality._card_kind",
       "kind": "function",
-      "line": 120,
+      "line": 126,
       "path": "docs/spec285/arena_lethality.py",
       "qualified_name": "docs.spec285.arena_lethality._card_kind"
     },
     {
       "id": "symbol:docs.spec285.arena_lethality._instances",
       "kind": "function",
-      "line": 107,
+      "line": 113,
       "path": "docs/spec285/arena_lethality.py",
       "qualified_name": "docs.spec285.arena_lethality._instances"
     },
@@ -353501,7 +354288,7 @@
     {
       "id": "symbol:docs.spec285.arena_lethality.fight",
       "kind": "function",
-      "line": 159,
+      "line": 165,
       "path": "docs/spec285/arena_lethality.py",
       "qualified_name": "docs.spec285.arena_lethality.fight"
     },
@@ -353522,51 +354309,72 @@
     {
       "id": "symbol:docs.spec285.arena_lethality.hero_decl",
       "kind": "function",
-      "line": 132,
+      "line": 138,
       "path": "docs/spec285/arena_lethality.py",
       "qualified_name": "docs.spec285.arena_lethality.hero_decl"
     },
     {
       "id": "symbol:docs.spec285.arena_lethality.main",
       "kind": "function",
-      "line": 231,
+      "line": 240,
       "path": "docs/spec285/arena_lethality.py",
       "qualified_name": "docs.spec285.arena_lethality.main"
     },
     {
       "id": "symbol:docs.spec285.arena_lethality.run",
       "kind": "function",
-      "line": 195,
+      "line": 204,
       "path": "docs/spec285/arena_lethality.py",
       "qualified_name": "docs.spec285.arena_lethality.run"
     },
     {
+      "id": "symbol:encounter_budget.action_economy_multiplier",
+      "kind": "function",
+      "line": 47,
+      "path": "encounter_budget.py",
+      "qualified_name": "encounter_budget.action_economy_multiplier"
+    },
+    {
       "id": "symbol:encounter_budget.clamp_encounter",
       "kind": "function",
-      "line": 42,
+      "line": 82,
       "path": "encounter_budget.py",
       "qualified_name": "encounter_budget.clamp_encounter"
     },
     {
       "id": "symbol:encounter_budget.clamp_encounter._template",
       "kind": "function",
-      "line": 61,
+      "line": 101,
       "path": "encounter_budget.py",
       "qualified_name": "encounter_budget.clamp_encounter._template"
     },
     {
       "id": "symbol:encounter_budget.encounter_budget",
       "kind": "function",
-      "line": 25,
+      "line": 65,
       "path": "encounter_budget.py",
       "qualified_name": "encounter_budget.encounter_budget"
     },
     {
       "id": "symbol:encounter_budget.fill_encounter",
       "kind": "function",
-      "line": 94,
+      "line": 134,
       "path": "encounter_budget.py",
       "qualified_name": "encounter_budget.fill_encounter"
+    },
+    {
+      "id": "symbol:encounter_budget.floor_cost",
+      "kind": "function",
+      "line": 52,
+      "path": "encounter_budget.py",
+      "qualified_name": "encounter_budget.floor_cost"
+    },
+    {
+      "id": "symbol:encounter_budget.is_boss",
+      "kind": "function",
+      "line": 38,
+      "path": "encounter_budget.py",
+      "qualified_name": "encounter_budget.is_boss"
     },
     {
       "id": "symbol:encounter_budget.tier_cost",
@@ -366017,77 +366825,77 @@
     {
       "id": "symbol:scripts.migrate_bestiary_v4.P",
       "kind": "function",
-      "line": 420,
+      "line": 425,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4.P"
     },
     {
       "id": "symbol:scripts.migrate_bestiary_v4._build_new_creatures",
       "kind": "function",
-      "line": 1206,
+      "line": 1211,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4._build_new_creatures"
     },
     {
       "id": "symbol:scripts.migrate_bestiary_v4._ecard",
       "kind": "function",
-      "line": 50,
+      "line": 55,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4._ecard"
     },
     {
       "id": "symbol:scripts.migrate_bestiary_v4._has",
       "kind": "function",
-      "line": 678,
+      "line": 683,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4._has"
     },
     {
       "id": "symbol:scripts.migrate_bestiary_v4._virt_bucket",
       "kind": "function",
-      "line": 733,
+      "line": 738,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4._virt_bucket"
     },
     {
       "id": "symbol:scripts.migrate_bestiary_v4.infer_archetype",
       "kind": "function",
-      "line": 683,
+      "line": 688,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4.infer_archetype"
     },
     {
       "id": "symbol:scripts.migrate_bestiary_v4.infer_virtudes",
       "kind": "function",
-      "line": 738,
+      "line": 743,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4.infer_virtudes"
     },
     {
       "id": "symbol:scripts.migrate_bestiary_v4.main",
       "kind": "function",
-      "line": 1289,
+      "line": 1299,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4.main"
     },
     {
       "id": "symbol:scripts.migrate_bestiary_v4.migrate_creature",
       "kind": "function",
-      "line": 1250,
+      "line": 1255,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4.migrate_creature"
     },
     {
       "id": "symbol:scripts.migrate_bestiary_v4.theme_cards",
       "kind": "function",
-      "line": 766,
+      "line": 771,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4.theme_cards"
     },
     {
       "id": "symbol:scripts.migrate_bestiary_v4.theme_resist",
       "kind": "function",
-      "line": 753,
+      "line": 758,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4.theme_resist"
     },
@@ -373115,7 +373923,7 @@
     {
       "id": "symbol:services.ecology.regional_rarity_label",
       "kind": "function",
-      "line": 117,
+      "line": 119,
       "path": "services/ecology.py",
       "qualified_name": "services.ecology.regional_rarity_label"
     },
@@ -415505,6 +416313,118 @@
       "qualified_name": "tests.test_spec286_heroi_inconsciente.test_profiles_never_travel_when_unconscious"
     },
     {
+      "id": "symbol:tests.test_spec287_encounter_scale._body",
+      "kind": "test",
+      "line": 12,
+      "path": "tests/test_spec287_encounter_scale.py",
+      "qualified_name": "tests.test_spec287_encounter_scale._body"
+    },
+    {
+      "id": "symbol:tests.test_spec287_encounter_scale._chefes_and_others",
+      "kind": "test",
+      "line": 104,
+      "path": "tests/test_spec287_encounter_scale.py",
+      "qualified_name": "tests.test_spec287_encounter_scale._chefes_and_others"
+    },
+    {
+      "id": "symbol:tests.test_spec287_encounter_scale._fill",
+      "kind": "test",
+      "line": 16,
+      "path": "tests/test_spec287_encounter_scale.py",
+      "qualified_name": "tests.test_spec287_encounter_scale._fill"
+    },
+    {
+      "id": "symbol:tests.test_spec287_encounter_scale._legacy_fill_count",
+      "kind": "test",
+      "line": 32,
+      "path": "tests/test_spec287_encounter_scale.py",
+      "qualified_name": "tests.test_spec287_encounter_scale._legacy_fill_count"
+    },
+    {
+      "id": "symbol:tests.test_spec287_encounter_scale.test_clamp_stays_linear",
+      "kind": "test",
+      "line": 96,
+      "path": "tests/test_spec287_encounter_scale.py",
+      "qualified_name": "tests.test_spec287_encounter_scale.test_clamp_stays_linear"
+    },
+    {
+      "id": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_boss_is_linear_and_not_counted_as_body",
+      "kind": "test",
+      "line": 56,
+      "path": "tests/test_spec287_encounter_scale.py",
+      "qualified_name": "tests.test_spec287_encounter_scale.test_floor_cost_boss_is_linear_and_not_counted_as_body"
+    },
+    {
+      "id": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_single_body_is_linear",
+      "kind": "test",
+      "line": 44,
+      "path": "tests/test_spec287_encounter_scale.py",
+      "qualified_name": "tests.test_spec287_encounter_scale.test_floor_cost_single_body_is_linear"
+    },
+    {
+      "id": "symbol:tests.test_spec287_encounter_scale.test_floor_cost_superlinear_in_bodies",
+      "kind": "test",
+      "line": 49,
+      "path": "tests/test_spec287_encounter_scale.py",
+      "qualified_name": "tests.test_spec287_encounter_scale.test_floor_cost_superlinear_in_bodies"
+    },
+    {
+      "id": "symbol:tests.test_spec287_encounter_scale.test_generate_new_enemy_cache_hit_applies_survival",
+      "kind": "test",
+      "line": 154,
+      "path": "tests/test_spec287_encounter_scale.py",
+      "qualified_name": "tests.test_spec287_encounter_scale.test_generate_new_enemy_cache_hit_applies_survival"
+    },
+    {
+      "id": "symbol:tests.test_spec287_encounter_scale.test_generator_sets_survival_only_on_chefe_and_nomeado",
+      "kind": "test",
+      "line": 114,
+      "path": "tests/test_spec287_encounter_scale.py",
+      "qualified_name": "tests.test_spec287_encounter_scale.test_generator_sets_survival_only_on_chefe_and_nomeado"
+    },
+    {
+      "id": "symbol:tests.test_spec287_encounter_scale.test_lacaio_horde_floor_shrinks_at_level_8",
+      "kind": "test",
+      "line": 90,
+      "path": "tests/test_spec287_encounter_scale.py",
+      "qualified_name": "tests.test_spec287_encounter_scale.test_lacaio_horde_floor_shrinks_at_level_8"
+    },
+    {
+      "id": "symbol:tests.test_spec287_encounter_scale.test_levels_1_to_4_floor_unchanged",
+      "kind": "test",
+      "line": 67,
+      "path": "tests/test_spec287_encounter_scale.py",
+      "qualified_name": "tests.test_spec287_encounter_scale.test_levels_1_to_4_floor_unchanged"
+    },
+    {
+      "id": "symbol:tests.test_spec287_encounter_scale.test_levels_5_to_8_floor_at_most_two_bodies",
+      "kind": "test",
+      "line": 82,
+      "path": "tests/test_spec287_encounter_scale.py",
+      "qualified_name": "tests.test_spec287_encounter_scale.test_levels_5_to_8_floor_at_most_two_bodies"
+    },
+    {
+      "id": "symbol:tests.test_spec287_encounter_scale.test_random_pool_excludes_boss_by_category",
+      "kind": "test",
+      "line": 177,
+      "path": "tests/test_spec287_encounter_scale.py",
+      "qualified_name": "tests.test_spec287_encounter_scale.test_random_pool_excludes_boss_by_category"
+    },
+    {
+      "id": "symbol:tests.test_spec287_encounter_scale.test_survival_bonus_is_capped",
+      "kind": "test",
+      "line": 166,
+      "path": "tests/test_spec287_encounter_scale.py",
+      "qualified_name": "tests.test_spec287_encounter_scale.test_survival_bonus_is_capped"
+    },
+    {
+      "id": "symbol:tests.test_spec287_encounter_scale.test_template_by_id_survival_scales_from_encounter_level_3",
+      "kind": "test",
+      "line": 135,
+      "path": "tests/test_spec287_encounter_scale.py",
+      "qualified_name": "tests.test_spec287_encounter_scale.test_template_by_id_survival_scales_from_encounter_level_3"
+    },
+    {
       "id": "symbol:tests.test_spec288_causa_morte.test_death_cause_prefers_killer_then_category",
       "kind": "test",
       "line": 31,
@@ -418965,7 +419885,7 @@
     {
       "id": "symbol:world_utils._advance_weather_once",
       "kind": "function",
-      "line": 998,
+      "line": 1000,
       "path": "world_utils.py",
       "qualified_name": "world_utils._advance_weather_once"
     },
@@ -419014,7 +419934,7 @@
     {
       "id": "symbol:world_utils._has_light_source",
       "kind": "function",
-      "line": 1034,
+      "line": 1036,
       "path": "world_utils.py",
       "qualified_name": "world_utils._has_light_source"
     },
@@ -419042,7 +419962,7 @@
     {
       "id": "symbol:world_utils._weather_table",
       "kind": "function",
-      "line": 951,
+      "line": 953,
       "path": "world_utils.py",
       "qualified_name": "world_utils._weather_table"
     },
@@ -419063,7 +419983,7 @@
     {
       "id": "symbol:world_utils.advance_weather",
       "kind": "function",
-      "line": 986,
+      "line": 988,
       "path": "world_utils.py",
       "qualified_name": "world_utils.advance_weather"
     },
@@ -419098,21 +420018,21 @@
     {
       "id": "symbol:world_utils.check_encounter",
       "kind": "function",
-      "line": 822,
+      "line": 824,
       "path": "world_utils.py",
       "qualified_name": "world_utils.check_encounter"
     },
     {
       "id": "symbol:world_utils.check_encounter._stamp",
       "kind": "function",
-      "line": 866,
+      "line": 868,
       "path": "world_utils.py",
       "qualified_name": "world_utils.check_encounter._stamp"
     },
     {
       "id": "symbol:world_utils.clock_label",
       "kind": "function",
-      "line": 1338,
+      "line": 1340,
       "path": "world_utils.py",
       "qualified_name": "world_utils.clock_label"
     },
@@ -419126,7 +420046,7 @@
     {
       "id": "symbol:world_utils.detection_check",
       "kind": "function",
-      "line": 1163,
+      "line": 1165,
       "path": "world_utils.py",
       "qualified_name": "world_utils.detection_check"
     },
@@ -419168,7 +420088,7 @@
     {
       "id": "symbol:world_utils.forced_encounter_danger",
       "kind": "function",
-      "line": 808,
+      "line": 810,
       "path": "world_utils.py",
       "qualified_name": "world_utils.forced_encounter_danger"
     },
@@ -419196,7 +420116,7 @@
     {
       "id": "symbol:world_utils.light_level",
       "kind": "function",
-      "line": 1058,
+      "line": 1060,
       "path": "world_utils.py",
       "qualified_name": "world_utils.light_level"
     },
@@ -419210,7 +420130,7 @@
     {
       "id": "symbol:world_utils.maybe_start_global_weather",
       "kind": "function",
-      "line": 964,
+      "line": 966,
       "path": "world_utils.py",
       "qualified_name": "world_utils.maybe_start_global_weather"
     },
@@ -419224,7 +420144,7 @@
     {
       "id": "symbol:world_utils.pick_encounter_enemy.tier",
       "kind": "function",
-      "line": 768,
+      "line": 770,
       "path": "world_utils.py",
       "qualified_name": "world_utils.pick_encounter_enemy.tier"
     },
@@ -419252,28 +420172,28 @@
     {
       "id": "symbol:world_utils.resolve_track",
       "kind": "function",
-      "line": 1315,
+      "line": 1317,
       "path": "world_utils.py",
       "qualified_name": "world_utils.resolve_track"
     },
     {
       "id": "symbol:world_utils.resolve_trap",
       "kind": "function",
-      "line": 1197,
+      "line": 1199,
       "path": "world_utils.py",
       "qualified_name": "world_utils.resolve_trap"
     },
     {
       "id": "symbol:world_utils.roll_encounter_type",
       "kind": "function",
-      "line": 1187,
+      "line": 1189,
       "path": "world_utils.py",
       "qualified_name": "world_utils.roll_encounter_type"
     },
     {
       "id": "symbol:world_utils.starting_world",
       "kind": "function",
-      "line": 1343,
+      "line": 1345,
       "path": "world_utils.py",
       "qualified_name": "world_utils.starting_world"
     },
@@ -419287,18 +420207,18 @@
     {
       "id": "symbol:world_utils.trigger_global_weather",
       "kind": "function",
-      "line": 1143,
+      "line": 1145,
       "path": "world_utils.py",
       "qualified_name": "world_utils.trigger_global_weather"
     },
     {
       "id": "symbol:world_utils.weather_effects",
       "kind": "function",
-      "line": 1101,
+      "line": 1103,
       "path": "world_utils.py",
       "qualified_name": "world_utils.weather_effects"
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:cf06e9e0107873a63ae8c2109fbfdf7a46f42e046dd82bff6dbf473c90a5cfdc"
+  "source_tree_hash": "sha256:4c8b020719bd124cac8a771e0986b48f5c4758be65f90fff5149cab383dbe66d"
 }
