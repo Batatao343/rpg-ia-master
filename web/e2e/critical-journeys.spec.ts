@@ -385,6 +385,8 @@ test("F17 workspace_modes", async ({ page, backend }) => {
   await page.mouse.down();
   await page.mouse.move(wsBox.x + wsBox.width * 0.35, handle.y + 170, { steps: 6 });
   await page.mouse.up();
+  // pointermove é evento contínuo: o React pode renderizar o ratio depois do mouse.up (CPU carregada).
+  await expect.poll(async () => Number(await sep.getAttribute("aria-valuenow"))).toBeLessThanOrEqual(39);
   const dragged = Number(await sep.getAttribute("aria-valuenow"));
   expect(dragged).toBeGreaterThanOrEqual(31); expect(dragged).toBeLessThanOrEqual(39);
   await panelTab(page, "Mapa").click();

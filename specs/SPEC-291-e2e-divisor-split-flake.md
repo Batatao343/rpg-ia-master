@@ -1,68 +1,28 @@
 # SPEC-291 — e2e-divisor-split-flake
 
-> **Status:** `draft`
+> **Status:** `done` (autorização do dono de 19/10 para tudo que não exige ação externa dele)
 > **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
-> **Depende de:** <specs anteriores que precisam estar `done`>
-> **Desbloqueia:** <specs/features que dependem desta>
-
----
+> **Origem:** CI eval-gates do commit b90436c: F17 (`critical-journeys.spec.ts:337`) e
+> `workspace-shell.spec.ts:166` falharam com o divisor em 50 após o arrasto; o push seguinte passou.
+> **EXECUTOR_MODEL:** `Sonnet` · **REVIEW_REQUIRED:** `false` (teste e2e)
 
 ## 1. Contexto & Objetivo
 
-Por que esta spec existe. Qual problema resolve. 2-4 parágrafos no máximo.
-Referência ao princípio de arquitetura relevante (ver `ROADMAP.md` § Princípios).
+Após o arrasto do divisor (`mouse.down` → `mouse.move` ×6 → `mouse.up`) os testes liam
+`aria-valuenow` uma única vez, sem espera. O componente (`Workspace.tsx`) calcula o ratio em
+`pointermove` de janela com `getBoundingClientRect` ao vivo (sem ref desatualizada, estado
+inicial síncrono do `localStorage`); `pointermove` é evento contínuo e o React pode adiar o
+render para depois do `mouse.up` sob CPU carregada (suíte inteira em CI). Resultado: leitura
+do valor antigo (50). Não há corrida no app; o defeito é de leitura não determinística no teste.
+Rodar o teste isolado passa (10/10), por isso só aparecia na suíte cheia.
 
 ## 2. Requisitos
 
-Numerados, testáveis. Cada requisito deve poder virar assert.
-
-- **R1** — ...
-- **R2** — ...
-
-### Fora de escopo
-
-Lista explícita do que esta spec NÃO cobre (anti-scope-creep).
-
-## 3. Design técnico
-
-Detalhe suficiente para uma sessão futura de IA implementar **sem reler o roadmap**:
-
-- **Arquivos novos** — caminho + responsabilidade
-- **Arquivos alterados** — o que muda em cada um
-- **Schemas** — Pydantic/TypedDict completos (campos, tipos, defaults)
-- **Assinaturas** — funções públicas com tipos
-- **Formatos de dados** — JSON/frontmatter com exemplo real (usar IDs canônicos do projeto, não inventados)
-
-## 4. Plano passo a passo
-
-Etapas ordenadas e testáveis. **Testes primeiro** (TDD): cada etapa nomeia os
-testes a escrever ANTES do código e o que cada um asserta.
-
-### Etapa N — <nome>
-
-1. **Testes** (`tests/test_<...>.py`): `test_x` asserta ...; `test_y` asserta ...
-2. **Implementação:** ...
-3. **Verificação:** `uv run pytest` verde.
+- **R1** — Os dois testes esperam o ratio estabilizar com `expect.poll` antes de ler o valor
+  arrastado; sem `sleep`. Os asserts de faixa permanecem iguais.
+- **R2** — Nenhum arquivo protegido (`evals/protected-paths.txt`) alterado; app inalterado.
 
 ## 5. Critérios de aceite
 
-Checklist objetivo. A spec só vira `done` com todos marcados.
-
-- [ ] ...
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo (try/except ou isinstance)
-- [ ] Saves antigos continuam carregando
-
-## 6. Smoke test com LLM real
-
-Checklist manual curto (3-5 requests, dentro da quota Gemini de 20/dia/modelo).
-MockLLM esconde bugs de mapeamento de campo — este passo é obrigatório antes de `done`.
-
-1. ...
-2. ...
-
-## 7. Riscos & compatibilidade
-
-- Compatibilidade com saves antigos: ...
-- Comportamento no MockLLM / FallbackLLM: ...
-- Impacto em quota/latência: ...
+- [x] `critical-journeys.spec.ts` F17 e `workspace-shell.spec.ts` divisor: 10× cada, 0 falhas
+- [x] Suíte Python offline verde (exit 0)

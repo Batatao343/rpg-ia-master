@@ -193,6 +193,8 @@ test.describe("desktop 1440", () => {
     await page.mouse.down();
     await page.mouse.move(grid.x + grid.width * 0.7, box.y + 220, { steps: 6 });
     await page.mouse.up();
+    // pointermove é evento contínuo: o React pode renderizar o ratio depois do mouse.up (CPU carregada).
+    await expect.poll(async () => Number(await sep.getAttribute("aria-valuenow"))).toBeGreaterThanOrEqual(66);
     const dragged = Number(await sep.getAttribute("aria-valuenow"));
     expect(dragged).toBeGreaterThanOrEqual(66);
     expect(dragged).toBeLessThanOrEqual(maxOf(max));
