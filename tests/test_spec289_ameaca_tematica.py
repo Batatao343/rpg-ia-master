@@ -253,6 +253,8 @@ def test_handoff_carries_public_hint_and_narrator_clause():
     enc = _enc_intel("nova_arcadia", CHAMA, {}, override=3)
     ho = encounter_handoff(enc)
     assert ho["public_hint"] == enc["public_hint"] and ho["hint"] == enc["hint"]
+    plain = encounter_handoff({"hint": "Bandido", "public_hint": "Bandido", "reason": "random"})
+    assert "public_hint" not in plain
     facs = gamedata.seed_factions()
     manifest = {"participants": [{"faction_id": "filhos_chama_azul"}, {"faction_id": ""}]}
     clause = _faction_withhold_clause(manifest, facs, {})

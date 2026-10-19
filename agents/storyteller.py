@@ -111,13 +111,16 @@ def encounter_handoff(enc: dict) -> dict:
     """SPEC-203 R3(a): referência canônica one-shot do encontro sistêmico para o
     spawn do combate (o `enemy_id` do bestiário não se perde no handoff)."""
     enc = enc or {}
-    return {
+    out = {
         "enemy_id": str(enc.get("enemy_id") or ""),
         "reason": str(enc.get("reason") or ""),
         "hint": str(enc.get("hint") or ""),
-        # SPEC-292: rótulo seguro p/ o jogador (não expõe fação desconhecida)
-        "public_hint": str(enc.get("public_hint") or enc.get("hint") or ""),
     }
+    # SPEC-292: rótulo seguro p/ o jogador só quando difere do canônico (fação oculta)
+    public = str(enc.get("public_hint") or "")
+    if public and public != out["hint"]:
+        out["public_hint"] = public
+    return out
 
 
 def _is_monetary_claim(value: object) -> bool:
