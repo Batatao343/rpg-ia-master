@@ -197,7 +197,7 @@
       "virtude_permitida": [],
       "efeito": {
         "kind": "dot",
-        "dano_base": 5,
+        "dano_base": 3,
         "duracao": 3
       },
       "descricao": "O frio do outro lado drena a vida devagar.",

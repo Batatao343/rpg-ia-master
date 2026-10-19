@@ -155,7 +155,7 @@ ENEMY_CARDS = [
     _ecard(
         "bst_toque_gelido",
         "Toque Gélido da Morte",
-        {"kind": "dot", "dano_base": 5, "duracao": 3},
+        {"kind": "dot", "dano_base": 3, "duracao": 3},
         freq="cena",
         oculta=True,
         desc="O frio do outro lado drena a vida devagar.",

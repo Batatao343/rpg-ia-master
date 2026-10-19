@@ -20,7 +20,7 @@ Dois bots do herói:
   Carta preparada abaixo de 50 % de Vitalidade; senão usa a Carta de ataque
   preparada de maior dano que puder pagar; senão ataque básico.
 
-Métrica: taxa de morte do herói por combate (morte = Estado Terminal/Vitalidade
+Métrica: taxa de morte do herói por combate (e `early_deaths`: mortes em ≤ 2 rodadas, SPEC-056 R2b) (morte = Estado Terminal/Vitalidade
 0 sem aliado, como na arena da SPEC-283). Saída: JSON em stdout.
 """
 
@@ -197,7 +197,7 @@ def run(seeds, levels, bots, classes=CLASSES, categories=CATEGORIES) -> dict:
         for level in levels:
             for cat in categories:
                 n = group_size(cat, level)
-                cell = {"n": n, "fights": 0, "death": 0, "win": 0, "timeout": 0, "rounds": 0}
+                cell = {"n": n, "fights": 0, "death": 0, "win": 0, "timeout": 0, "rounds": 0, "early_deaths": 0}
                 per_class = {}
                 for cls in classes:
                     d = f = 0
@@ -205,6 +205,7 @@ def run(seeds, levels, bots, classes=CLASSES, categories=CATEGORIES) -> dict:
                         for seed in seeds:
                             outcome, rounds = fight(bid, n, cls, level, seed, bot)
                             cell[outcome] += 1
+                            cell["early_deaths"] += outcome == "death" and rounds <= 2
                             cell["fights"] += 1
                             cell["rounds"] += rounds
                             f += 1

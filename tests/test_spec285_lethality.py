@@ -183,3 +183,36 @@ def test_tactical_control_denies_exactly_one_target_turn():
         t for out in rounds[:-1] for t in out.get("tactics", []) if t["action_key"] == "control" and t["ok"]
     ]
     assert lost == len(controls_before_last)
+
+
+# --- R5: nenhuma Carta de inimigo mata sozinha um herói padrão cheio ----------
+
+HEROI_PADRAO_VITALIDADE = 18  # Corpo 3 × 6 (conflito-01): 3 das 5 classes no nível 1
+
+
+def _card_total_damage(card: dict) -> int:
+    """Acerto (`dano_base`) + DoT completo (`dano_base` × `duracao`): é o que
+    `_apply_attack_card_effect` aplica numa única Carta que acerta."""
+    efeito = card.get("efeito") or {}
+    base = int(efeito.get("dano_base") or 0)
+    if efeito.get("kind") == "dot":
+        return base + base * max(1, int(efeito.get("duracao") or 1))
+    return base
+
+
+def test_no_enemy_card_kills_standard_hero_alone():
+    from services import cards
+
+    over = {
+        cid: _card_total_damage(card)
+        for cid, card in cards.all_cards().items()
+        if cid.startswith("bst_") and _card_total_damage(card) >= HEROI_PADRAO_VITALIDADE
+    }
+    assert over == {}
+
+
+def test_toque_gelido_rebalanced_from_generator():
+    from services import cards
+
+    efeito = cards.get_card("bst_toque_gelido")["efeito"]
+    assert efeito == {"kind": "dot", "dano_base": 3, "duracao": 3}
