@@ -88,7 +88,7 @@ app = FastAPI(
 
 
 def _current_request_id() -> str | None:
-    from observability.telemetry import correlation
+    from observability.telemetry import correlation, pseudonym
     return correlation().get("request_id")
 
 
@@ -2404,6 +2404,23 @@ class ClientErrorReport(BaseModel):
     stack: list[Annotated[str, Field(pattern=_STACK_FRAME)]] = Field(default_factory=list, max_length=20)
     ts: Optional[int] = Field(default=None, ge=0, le=10**14)
 
+    @field_validator("route")
+    @classmethod
+    def _route_as_template(cls, value: Optional[str]) -> Optional[str]:
+        """Revisao P2/P3: o servidor nao confia no ``routeTemplate`` do cliente -- segmento com cara
+        de id (hex/uuid >= 16, so digitos) vira ``{id}`` (nunca ``game_id`` em claro no log)."""
+        if value is None:
+            return None
+        return "/".join("{id}" if _ID_SEGMENT.fullmatch(seg) else seg for seg in value.split("/"))
+
+
+_ID_SEGMENT = re.compile(r"[0-9a-fA-F-]{16,}|\d+")
+# Revisao P2/P3: sob abuso (IPs distribuidos), ``client.error`` sai 1x/min por assinatura; a metrica conta tudo.
+_CLIENT_ERROR_LOG_INTERVAL_S = 60.0
+_client_error_last: Dict[tuple, float] = {}
+_CLIENT_ERROR_LOG_MAX_PER_MIN = 600
+_client_error_window: List[float] = [0.0, 0]   # [inicio da janela, linhas emitidas]
+
 
 @app.post(_CLIENT_ERROR_PATH, status_code=204, include_in_schema=False)
 def client_error(report: ClientErrorReport, request: Request):
@@ -2417,12 +2434,29 @@ def client_error(report: ClientErrorReport, request: Request):
     if origin and origin.rstrip("/") not in {o.rstrip("/") for o in _CORS_ORIGINS}:
         raise HTTPException(status_code=403, detail="origin_denied")
     from observability.metrics import metrics
-    from observability.telemetry import correlation
+    from observability.telemetry import correlation, pseudonym
     metrics.increment("rpg_client_errors_total", {"kind": report.kind})
     beacon_id = correlation().get("request_id")
     fields = {k: v for k, v in report.model_dump().items() if v not in (None, [])}
     if report.request_id:   # o id da requisicao que falhou vence (busca pelo codigo de suporte)
         fields["beacon_request_id"] = beacon_id
+    # Repeticao identica (mesmo IP+assinatura+request_id) sai 1x/min; teto GLOBAL de linhas/min contra
+    # IPs distribuidos. O request_id entra na assinatura para nao esconder o codigo de suporte de outra falha.
+    signature = (pseudonym(_client_ip(request)), report.kind, report.code, report.error_name,
+                 report.route, report.request_id)
+    now = time.monotonic()
+    last = _client_error_last.get(signature)
+    if last is not None and now - last < _CLIENT_ERROR_LOG_INTERVAL_S:
+        return Response(status_code=204)
+    window = _client_error_window
+    if now - window[0] >= _CLIENT_ERROR_LOG_INTERVAL_S:
+        window[0], window[1] = now, 0
+    if window[1] >= _CLIENT_ERROR_LOG_MAX_PER_MIN:
+        return Response(status_code=204)
+    window[1] += 1
+    if len(_client_error_last) > 5000:
+        _client_error_last.clear()
+    _client_error_last[signature] = now
     _log_event("client", "error", level="warning", **fields)
     return Response(status_code=204)
 

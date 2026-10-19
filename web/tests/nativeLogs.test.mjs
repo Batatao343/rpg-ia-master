@@ -45,3 +45,12 @@ test('SPEC-259 R4: versao do app em formato fechado, so no Android', async () =>
   assert.equal(await loadAppVersion(async () => ({ version: '1.0 <x>', build: '7' }), true), null);
   assert.equal(await loadAppVersion(async () => { throw new Error('no plugin'); }, true), null);
 });
+
+test('logcat de release do billing: debugMessage so sob BuildConfig.DEBUG (SPEC-259 R2)', async () => {
+  const { readFile } = await import('node:fs/promises');
+  const src = await readFile(new URL('../android/app/src/main/java/dev/rpgia/valoria/staging/PlayBillingPlugin.java', import.meta.url), 'utf8');
+  const statements = src.split(';').filter(s => s.includes('Log.'));
+  for (const s of statements) {
+    if (s.includes('debugMessage')) assert.ok(s.includes('BuildConfig.DEBUG'), s.trim());
+  }
+});

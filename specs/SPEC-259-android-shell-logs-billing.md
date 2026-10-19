@@ -55,7 +55,7 @@ R1–R5.
 
 ## 5. Critérios de aceite
 
-- [x] Cada falha de billing tem código distinto + `debugMessage` no JS e no logcat.
+- [x] Cada falha de billing tem código distinto + `debugMessage` no JS; logcat de release só código + `responseCode` (R2), `debugMessage` saneada só em `BuildConfig.DEBUG`.
 - [x] `app_version` aparece no access log.
 - [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
 - [ ] `uv run pytest` verde (suíte completa offline).
@@ -77,8 +77,8 @@ R1–R5.
 - **R1/R2** `BillingErrors.java` (Java puro, testado por `BillingErrorsTest` — 5 testes JUnit): códigos
   `billing_unavailable` (setup), `billing_query_failed` (`stage=products|pending`), `billing_launch_failed`,
   `billing_bad_json`; `call.reject(code, code, {responseCode, stage, debugMessage})`, `debugMessage` saneada (≤ 120 chars,
-  sequências opacas ≥ 24 chars ⇒ `[redacted]`, sem controle). `Log.w("RPGBilling", "<code> responseCode=<n>
-  debugMessage=<saneada>")` — nunca token/produto/conta. `purchaseError` (listener) também leva `debugMessage` e loga
+  sequências opacas ≥ 24 chars ⇒ `[redacted]`, sem controle). `Log.w("RPGBilling", "<code> responseCode=<n>")`
+  (` debugMessage=<saneada>` só em `BuildConfig.DEBUG`, revisão P2/P3) — nunca token/produto/conta. `purchaseError` (listener) também leva `debugMessage` e loga
   `billing_purchase_update_failed`.
 - **Desvio:** não existe `billing_ack_failed` — o plugin NUNCA confirma/consome (o servidor consome após creditar,
   SPEC-194); não há etapa de ack no shell para falhar.

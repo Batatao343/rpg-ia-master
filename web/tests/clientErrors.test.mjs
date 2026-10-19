@@ -56,8 +56,18 @@ test('falha do beacon nunca gera outro beacon nem lanca', async () => {
   resetClientErrors();
   let calls = 0;
   setNav({ sendBeacon: () => { calls++; throw new Error('boom'); } });
-  assert.equal(reportClientError({ kind: 'unhandled', error: new Error('x') }, 0), false);
-  assert.equal(calls, 1);
+  const prev = globalThis.fetch;
+  let fetches = 0;
+  globalThis.fetch = async () => { fetches++; throw new TypeError('Failed to fetch'); };
+  try {
+    // beacon lanca -> 1 tentativa por fetch (rejeitada e engolida); nada recursa nem lanca
+    assert.equal(reportClientError({ kind: 'unhandled', error: new Error('x') }, 0), true);
+    await new Promise(r => setTimeout(r, 0));
+    assert.equal(calls, 1);
+    assert.equal(fetches, 1);
+  } finally {
+    globalThis.fetch = prev;
+  }
 });
 
 test('http: fetch sem resposta reporta kind=network com request_id e relanca o TypeError', async () => {
@@ -70,4 +80,21 @@ test('http: fetch sem resposta reporta kind=network com request_id e relanca o T
   assert.equal(sent.kind, 'network');
   assert.equal(sent.route, '/game/saves');
   assert.match(sent.request_id, /^[0-9a-f]{12}$/);
+});
+
+test('sendBeacon que lanca cai no fetch keepalive (revisao P2/P3)', async () => {
+  const mod = await load('lib/clientErrors');
+  mod.resetClientErrors();
+  setNav({ sendBeacon: () => { throw new TypeError('blob type not allowed'); } });
+  const calls = [];
+  const prev = globalThis.fetch;
+  globalThis.fetch = (url, init) => { calls.push({ url, init }); return Promise.resolve({ ok: true }); };
+  try {
+    assert.equal(mod.reportClientError({ kind: 'unhandled', error: new Error('x') }, 5000), true);
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].url, '/telemetry/client-error');
+    assert.equal(calls[0].init.keepalive, true);
+  } finally {
+    globalThis.fetch = prev;
+  }
 });

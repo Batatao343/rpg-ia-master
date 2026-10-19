@@ -18,6 +18,8 @@ def client(monkeypatch):
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
     monkeypatch.delenv("RPG_CLIENT_ERROR_REPORT", raising=False)
     api._rate_hits.clear()
+    api._client_error_last.clear()
+    api._client_error_window[:] = [0.0, 0]
     logging_setup.configure_logging({"RPG_LOG_LEVEL": "debug"})
     from fastapi.testclient import TestClient
     return TestClient(api.app, raise_server_exceptions=False)
@@ -106,3 +108,34 @@ def test_cross_origin_rejected(client, monkeypatch):
     monkeypatch.setattr(api, "_database_profile", lambda: True)
     r = client.post("/telemetry/client-error", json=GOOD, headers={"Origin": "https://evil.example"})
     assert r.status_code == 403
+
+
+def test_route_ids_templated_server_side(client, capsys):
+    """Revisao P2/P3: cliente sem routeTemplate nao poe game_id em claro no log."""
+    body = {**GOOD, "route": "/game/8a6e0804-2bd0-4672-b79d-d97358571b25/turn/42"}
+    assert client.post("/telemetry/client-error", json=body).status_code == 204
+    row = _events(capsys, "client.error")[0]
+    assert row["route"] == "/game/{id}/turn/{id}"
+    assert "8a6e0804" not in json.dumps(row)
+
+
+def test_identical_repeat_sampled_but_counted(client, capsys):
+    from observability.metrics import metrics
+    key = ("rpg_client_errors_total", (("kind", "render"),))
+    before = metrics._values.get(key, 0)
+    for _ in range(3):
+        assert client.post("/telemetry/client-error", json=GOOD).status_code == 204
+    assert len(_events(capsys, "client.error")) == 1
+    assert metrics._values.get(key, 0) - before == 3
+    other = {**GOOD, "request_id": "zzz999yyy888"}     # outra falha: codigo de suporte proprio
+    assert client.post("/telemetry/client-error", json=other).status_code == 204
+    assert len(_events(capsys, "client.error")) == 1
+
+
+def test_global_line_ceiling(client, capsys, monkeypatch):
+    import api
+    monkeypatch.setattr(api, "_CLIENT_ERROR_LOG_MAX_PER_MIN", 2)
+    for i in range(4):
+        body = {**GOOD, "request_id": f"req{i:09d}"}
+        assert client.post("/telemetry/client-error", json=body).status_code == 204
+    assert len(_events(capsys, "client.error")) == 2

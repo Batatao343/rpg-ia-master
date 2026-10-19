@@ -37,11 +37,13 @@ public class PlayBillingPlugin extends Plugin {
 
     private interface Ready { void run(BillingClient c); }
 
-    /** SPEC-259 R1/R2: codigo por etapa + responseCode + debugMessage saneada; logcat sem token. */
+    /** SPEC-259 R1/R2: codigo por etapa + responseCode; logcat de release so codigo+responseCode
+     *  (debugMessage saneada so no build debug); a mensagem saneada segue no objeto para o JS. */
     private static void fail(PluginCall call, String code, BillingResult r, String stage) {
         int rc = r == null ? -1 : r.getResponseCode();
         String debug = r == null ? "" : BillingErrors.safeDebug(r.getDebugMessage());
-        Log.w(BillingErrors.TAG, BillingErrors.logLine(code, rc) + " debugMessage=" + debug);
+        Log.w(BillingErrors.TAG, BillingErrors.logLine(code, rc)
+                + (BuildConfig.DEBUG ? " debugMessage=" + debug : ""));
         JSObject data = new JSObject().put("responseCode", rc).put("stage", stage);
         if (r != null) data.put("debugMessage", debug);
         call.reject(code, code, data);

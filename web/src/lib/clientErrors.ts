@@ -94,7 +94,10 @@ export function buildPayload(input: ClientErrorInput, now = Date.now()): ClientE
 function transmit(body: string): void {
   const nav = (globalThis as { navigator?: { sendBeacon?: (url: string, data: Blob) => boolean } }).navigator;
   if (nav?.sendBeacon && typeof Blob !== 'undefined') {
-    if (nav.sendBeacon(ENDPOINT, new Blob([body], { type: 'application/json' }))) return;
+    // sendBeacon pode LANCAR (Blob application/json nao e CORS-safelisted em alguns Chromium): cai no fetch.
+    try {
+      if (nav.sendBeacon(ENDPOINT, new Blob([body], { type: 'application/json' }))) return;
+    } catch { /* fallback abaixo */ }
   }
   const f = (globalThis as { fetch?: typeof fetch }).fetch;
   if (f) void f(ENDPOINT, { method: 'POST', body, keepalive: true, credentials: 'same-origin',
