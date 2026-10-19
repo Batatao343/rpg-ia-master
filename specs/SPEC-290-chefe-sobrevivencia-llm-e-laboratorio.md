@@ -1,6 +1,6 @@
 # SPEC-290 — Sobrevivência do Chefe: LLM e laboratório
 
-> **Status:** `approved` (autorização do dono de 19/10 para tudo que não exige ação externa dele)
+> **Status:** `done` (autorização do dono de 19/10 para tudo que não exige ação externa dele)
 > **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
 > **Origem:** follow-up P2-2 da revisão da SPEC-287 (`handoffs/SPEC-287-review.md`, `docs/spec287/README.md`)
 > **Depende de:** SPEC-287 (`done`) · **Paralela a:** SPEC-289 (não toca `world_utils.check_encounter`/`pick_encounter_enemy`)

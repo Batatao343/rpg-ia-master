@@ -173,9 +173,7 @@ def test_real_overlay_round_trip_does_not_accumulate(monkeypatch):
     monkeypatch.setattr(bestiary, "get_llm", lambda **k: _LLM())
     monkeypatch.setattr(bestiary, "query_rag", lambda *a, **k: "")
     hits: list[str] = []
-    monkeypatch.setattr(
-        bestiary, "find_existing_entity", lambda *a, **k: hits[0] if hits else None
-    )
+    monkeypatch.setattr(bestiary, "find_existing_entity", lambda *a, **k: hits[0] if hits else None)
     first = bestiary.generate_new_enemy("Titã Revisão", encounter_level=4)
     hits.append(first["id"])
     stored = bestiary.load_bestiary()[first["id"]]
