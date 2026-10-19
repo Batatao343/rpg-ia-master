@@ -1009,7 +1009,11 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
                 ),
                 "location": death_payload.get("location"),
                 "location_id": (final.get("world") or {}).get("current_location_id"),
-                "cause": death_payload.get("killer"),
+                # SPEC-288 R3: mesma ordem do runner (killer -> cause -> desconhecida).
+                "cause": str(
+                    death_payload.get("killer") or death_payload.get("cause") or "desconhecida"
+                ),
+                "killer_id": death_payload.get("killer_id") or None,
             }
         ]
 
