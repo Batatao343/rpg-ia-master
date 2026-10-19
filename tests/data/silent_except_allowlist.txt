@@ -13,9 +13,7 @@ api.py::_game_lock::1
 api.py::_latency_log_fields::1
 api.py::_load_metrics_sql::1
 api.py::_log_turn_delivery::1
-api.py::_owner_rate_limit::1
 api.py::_publish_timeline::1
-api.py::_record_authfail::1
 api.py::_run_turn_collected._timeline_progress::1
 api.py::_stream_turn_events._observe_delivery::1
 api.py::_stream_turn_events::1
@@ -47,7 +45,6 @@ rag.py::prepare_shared_query_vector::1
 rag.py::prepare_shared_query_vector::2
 rag.py::query_rag::1
 services/abuse_policy.py::client_ip::1
-services/abuse_policy.py::record_block::1
 services/cards.py::_load_cards::1
 services/cards.py::_load_virtue_suggestions::1
 services/cards.py::with_location::1

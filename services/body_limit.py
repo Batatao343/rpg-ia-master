@@ -3,7 +3,28 @@
 from __future__ import annotations
 
 import json
+import re
 from typing import Mapping
+
+_UUID_SEGMENT = re.compile(r"/[0-9a-fA-F]{8}-[0-9a-fA-F-]{27,36}(?=/|$)")
+
+
+def route_label(path: str) -> str:
+    """Rotulo de rota sem ids (mesmo template do access log): UUIDs viram ``{id}``."""
+    return _UUID_SEGMENT.sub("/{id}", str(path or ""))[:120]
+
+
+def log_body_too_large(path: str, limit: int, declared: int | None = None) -> None:
+    """SPEC-246 R3: ``http.body_too_large`` + ``rpg_http_body_too_large_total{route}``. Nunca levanta."""
+    try:
+        from observability.metrics import metrics
+        from observability.telemetry import log_event
+        route = route_label(path)
+        metrics.increment("rpg_http_body_too_large_total", {"route": route})
+        log_event("http", "body_too_large", level="warning", route=route, limit_bytes=int(limit),
+                  declared_bytes=declared)
+    except Exception:  # silent-ok: o log do 413 nunca derruba a resposta
+        pass
 
 
 
@@ -33,6 +54,7 @@ class BodyLimitMiddleware:
             if started:
                 return
             started = True
+            log_body_too_large(scope.get("path", ""), limit, declared)
             from observability.telemetry import correlation
             rid = correlation().get("request_id")   # SPEC-242: envelope unico
             payload = {"detail": "payload_too_large", "code": "payload_too_large"}

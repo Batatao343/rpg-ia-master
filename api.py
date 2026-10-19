@@ -332,14 +332,16 @@ def _record_authfail(request: Request) -> "JSONResponse | None":
     try:
         decision = get_runtime().rate_limiter.consume(
             key, limit=AUTHFAIL_LIMIT[0], window_seconds=AUTHFAIL_LIMIT[1])
-    except Exception:
+    except Exception as exc:  # fail-open (SPEC-219), visivel (SPEC-246 R4)
+        abuse_policy.limiter_unavailable("authfail", exc)
         return None
     if decision.allowed:
         return None
     if len(_authfail_until) > 2000:
         _authfail_until.clear()
     _authfail_until[key] = time.monotonic() + decision.retry_after_seconds
-    abuse_policy.record_block("session", "authfail", ip=_client_ip(request))
+    abuse_policy.record_block("session", "authfail", ip=_client_ip(request),
+                              retry_after=decision.retry_after_seconds, limit=AUTHFAIL_LIMIT[0])
     return _blocked_response("rate_limited", "authfail", decision.retry_after_seconds)
 
 
@@ -855,6 +857,9 @@ def game_audit_export(game_id: str, request: Request):
     decision = runtime.rate_limiter.consume(
         f"audit-export:{pseudonym(principal.user_id)}", limit=3, window_seconds=600)
     if not decision.allowed:
+        from services.abuse_policy import record_block
+        record_block("audit_export", "owner", owner=principal.user_id,
+                     retry_after=decision.retry_after_seconds, limit=3)
         raise HTTPException(429, "audit_export_rate_limit",
                             headers={"Retry-After": str(decision.retry_after_seconds)})
     try:
@@ -1252,6 +1257,8 @@ async def _rate_limit_metrics(request: Request, call_next):
     while hits and now - hits[0] > _RATE_WINDOW_S:
         hits.popleft()
     if len(hits) >= _METRICS_RATE_PER_MIN:
+        from services.abuse_policy import record_block
+        record_block("metrics", "ip", ip=ip, retry_after=60, limit=_METRICS_RATE_PER_MIN)
         return _error_response(429, "rate_limited", headers={"Retry-After": "60"})
     hits.append(now)
     return await call_next(request)
@@ -1289,7 +1296,8 @@ async def _rate_limit(request: Request, call_next):
         decision = get_runtime().rate_limiter.consume(
             f"ip:{pseudonym(ip)}:{cls.name}", limit=ip_limit, window_seconds=cls.window_s)
         if not decision.allowed:
-            abuse_policy.record_block(cls.name, "ip", ip=ip)
+            abuse_policy.record_block(cls.name, "ip", ip=ip, retry_after=decision.retry_after_seconds,
+                                      limit=ip_limit)
             return _blocked_response("rate_limited", "ip", decision.retry_after_seconds)
         return await call_next(request)
     # legacy: janela deslizante em memoria (R11), mesma lista de classes.
@@ -1303,8 +1311,9 @@ async def _rate_limit(request: Request, call_next):
     while hits and now - hits[0] > cls.window_s:
         hits.popleft()
     if len(hits) >= ip_limit:
-        abuse_policy.record_block(cls.name, "ip", ip=ip)
-        return _blocked_response("rate_limited", "ip", int(cls.window_s - (now - hits[0])) + 1)
+        retry_after = int(cls.window_s - (now - hits[0])) + 1
+        abuse_policy.record_block(cls.name, "ip", ip=ip, retry_after=retry_after, limit=ip_limit)
+        return _blocked_response("rate_limited", "ip", retry_after)
     hits.append(now)
     return await call_next(request)
 
@@ -1327,11 +1336,13 @@ def _owner_rate_limit(request: Request, principal) -> "JSONResponse | None":
         from infrastructure.runtime import get_runtime
         decision = get_runtime().rate_limiter.consume(
             f"user:{principal.user_id}:{cls.name}", limit=owner_limit, window_seconds=cls.window_s)
-    except Exception:
+    except Exception as exc:  # fail-open (SPEC-219), visivel (SPEC-246 R4)
+        abuse_policy.limiter_unavailable("owner_minute", exc)
         return None
     if decision.allowed:
         return None
-    abuse_policy.record_block(cls.name, "owner", owner=principal.user_id)
+    abuse_policy.record_block(cls.name, "owner", owner=principal.user_id,
+                              retry_after=decision.retry_after_seconds, limit=owner_limit)
     return _blocked_response("rate_limited", "owner", decision.retry_after_seconds)
 
 
@@ -1369,8 +1380,9 @@ def _enforce_owner_budget(cls_name: str, *, minute: bool = False, daily: bool = 
         return PostgresFinopsReader(runtime.game_store.pool)
 
     if text_cap_exceeded(_reader):
-        abuse_policy.record_block(cls_name, "cap", owner=principal.user_id)
-        raise QuotaExceeded("daily_spend_cap", "cap", abuse_policy.seconds_until_utc_midnight(), 503)
+        cap_retry = abuse_policy.seconds_until_utc_midnight()
+        abuse_policy.record_block(cls_name, "cap", owner=principal.user_id, retry_after=cap_retry)
+        raise QuotaExceeded("daily_spend_cap", "cap", cap_retry, 503)
     cls = abuse_policy.ROUTE_CLASSES[cls_name]
     if minute:
         _ip, owner_limit = abuse_policy.limits_for(cls)
@@ -1378,7 +1390,8 @@ def _enforce_owner_budget(cls_name: str, *, minute: bool = False, daily: bool = 
             decision = runtime.rate_limiter.consume(
                 f"user:{principal.user_id}:{cls.name}", limit=owner_limit, window_seconds=cls.window_s)
             if not decision.allowed:
-                abuse_policy.record_block(cls.name, "owner", owner=principal.user_id)
+                abuse_policy.record_block(cls.name, "owner", owner=principal.user_id,
+                                          retry_after=decision.retry_after_seconds, limit=owner_limit)
                 raise QuotaExceeded("rate_limited", "owner", decision.retry_after_seconds)
     limit = abuse_policy.daily_quota_limit()
     quota = getattr(runtime, "daily_quota", None)
@@ -1386,11 +1399,12 @@ def _enforce_owner_budget(cls_name: str, *, minute: bool = False, daily: bool = 
         return
     try:
         verdict = quota.bump(principal.user_id, cls_name, limit)
-    except Exception:  # contador indisponivel nao pode derrubar o jogo (o IP/owner/min seguem valendo)
-        _log_event("api", "daily_quota_unavailable", level="warning")
+    except Exception as exc:  # contador indisponivel nao pode derrubar o jogo (o IP/owner/min seguem valendo)
+        abuse_policy.limiter_unavailable("daily_quota", exc)
         return
     if not verdict.allowed:
-        abuse_policy.record_block(cls_name, "daily", owner=principal.user_id)
+        abuse_policy.record_block(cls_name, "daily", owner=principal.user_id,
+                                  retry_after=verdict.retry_after_seconds, limit=limit)
         raise QuotaExceeded("daily_quota_exceeded", "daily", verdict.retry_after_seconds)
 
 
@@ -2994,6 +3008,9 @@ async def stripe_webhook(request: Request):
     declared = request.headers.get('content-length')
     if declared is not None and (not declared.isdecimal() or int(declared) > MAX_WEBHOOK_BYTES):
         _wh("too_large", started)
+        from services.body_limit import log_body_too_large
+        log_body_too_large(request.url.path, MAX_WEBHOOK_BYTES,
+                           int(declared) if declared.isdecimal() else None)
         raise HTTPException(413, 'stripe_body_limit')
     payload = bytearray()
     event = None
@@ -3002,6 +3019,8 @@ async def stripe_webhook(request: Request):
             async for chunk in request.stream():
                 if len(payload) + len(chunk) > MAX_WEBHOOK_BYTES:
                     _wh("too_large", started)
+                    from services.body_limit import log_body_too_large
+                    log_body_too_large(request.url.path, MAX_WEBHOOK_BYTES)
                     raise HTTPException(413, 'stripe_body_limit')
                 payload.extend(chunk)
         raw_body = bytes(payload)
@@ -3045,6 +3064,9 @@ async def account_transcription(request: Request):
         f'speech:{principal.user_id}', limit=5, window_seconds=60,
     )
     if not decision.allowed:
+        from services.abuse_policy import record_block
+        record_block('stt', 'owner', owner=principal.user_id,
+                     retry_after=decision.retry_after_seconds, limit=5)
         raise HTTPException(429, 'speech_rate_limit',
                             headers={'Retry-After': str(decision.retry_after_seconds)})
     try:
@@ -3052,11 +3074,16 @@ async def account_transcription(request: Request):
         mime = canonical_mime(request.headers.get('content-type', ''))
         declared = request.headers.get('content-length')
         if declared is not None and (not declared.isdecimal() or not 0 < int(declared) <= MAX_AUDIO_BYTES):
+            from services.body_limit import log_body_too_large
+            log_body_too_large(request.url.path, MAX_AUDIO_BYTES,
+                               int(declared) if declared.isdecimal() else None)
             raise SpeechError('audio_bytes', 413)
         payload = bytearray()
         async with __import__('asyncio').timeout(15):
             async for chunk in request.stream():
                 if len(payload) + len(chunk) > MAX_AUDIO_BYTES:
+                    from services.body_limit import log_body_too_large
+                    log_body_too_large(request.url.path, MAX_AUDIO_BYTES)
                     raise SpeechError('audio_bytes', 413)
                 payload.extend(chunk)
         from infrastructure.speech_finance import PostgresSpeechFinance

@@ -166,15 +166,46 @@ def rate_limited_body(detail: str, scope: str, retry_after: int) -> dict[str, An
     return {"detail": detail, "scope": scope, "retry_after_seconds": int(retry_after)}
 
 
-def record_block(cls: str, scope: str, *, owner: Any = None, ip: str | None = None) -> None:
-    """Metrica (labels fechados, sem ids) + log pseudonimizado. Nunca levanta."""
+# SPEC-246: sob ataque, ``abuse.blocked`` sai 1x/min por (classe, escopo, chave); a metrica conta todos.
+_BLOCK_LOG_INTERVAL_S = 60.0
+_block_log_last: dict[tuple[str, str, str], float] = {}
+
+
+def record_block(cls: str, scope: str, *, owner: Any = None, ip: str | None = None,
+                 retry_after: int | None = None, limit: int | None = None) -> None:
+    """Metrica (labels fechados, sem ids) + log JSON pseudonimizado e amostrado. Nunca levanta."""
+    try:
+        import time
+        from observability.metrics import metrics
+        from observability.telemetry import log_event, pseudonym
+        metrics.increment("rpg_rate_limited_total", {"class": cls, "scope": scope})
+        owner_ref = pseudonym(owner) if owner else None
+        ip_ref = pseudonym(ip) if ip else None
+        key = (cls, scope, owner_ref or ip_ref or "")
+        now = time.monotonic()
+        last = _block_log_last.get(key)
+        if last is not None and now - last < _BLOCK_LOG_INTERVAL_S:
+            return
+        if len(_block_log_last) > 5000:
+            _block_log_last.clear()
+        _block_log_last[key] = now
+        log_event("abuse", "blocked", level="warning", cls=cls, scope=scope,
+                  owner_ref=owner_ref, ip_ref=ip_ref,
+                  retry_after_s=int(retry_after) if retry_after is not None else None,
+                  limit=int(limit) if limit is not None else None)
+    except Exception:  # silent-ok: contabilidade de bloqueio nunca derruba a resposta 429
+        pass
+
+
+def limiter_unavailable(site: str, exc: BaseException) -> None:
+    """SPEC-246 R4: limitador/cota indisponivel segue FAIL-OPEN (SPEC-219), mas visivel.
+
+    ``site`` e um codigo fechado (authfail|owner_minute|daily_quota); so a classe da excecao."""
     try:
         from observability.metrics import metrics
-        from observability.telemetry import pseudonym
-        metrics.increment("rpg_rate_limited_total", {"class": cls, "scope": scope})
         from observability.telemetry import log_event
-        log_event("abuse", "blocked", level="warning", cls=cls, scope=scope,
-                  owner_ref=pseudonym(owner) if owner else None,
-                  ip_ref=pseudonym(ip) if ip else None)
-    except Exception:
+        metrics.increment("rpg_rate_limiter_errors_total", {"site": site})
+        log_event("abuse", "limiter_unavailable", level="error", site=site,
+                  error_type=type(exc).__name__)
+    except Exception:  # silent-ok: o log do fail-open nunca derruba a rota
         pass

@@ -56,6 +56,10 @@ LABELS = {
     "rpg_kill_switch_load_errors_total": {"error"},
     # SPEC-219 R9: bloqueio anti-abuso (class fechada; scope=ip|owner|daily|authfail|cap).
     "rpg_rate_limited_total": {"class", "scope"},
+    # SPEC-246: limitador/cota indisponivel (fail-open); site fechado: authfail|owner_minute|daily_quota.
+    "rpg_rate_limiter_errors_total": {"site"},
+    # SPEC-246 R3: 413 por rota (template com {id}, nunca ids).
+    "rpg_http_body_too_large_total": {"route"},
     # SPEC-245: rejeições de auth por motivo interno fechado (nunca e-mail/IP/token).
     "rpg_auth_rejections_total": {"reason"},
 }

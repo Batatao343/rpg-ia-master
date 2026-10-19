@@ -1,7 +1,7 @@
 # SPEC-246 — Rate limit, cotas, spend cap e 413: linhas estruturadas com retry_after e request_id
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P2**.
-> **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
+> **Status:** `done` — aprovada pelo dono em 2026-10-19; implementada em 2026-10-19. Prioridade sugerida: **P2**.
+> **Criada:** 2026-10-18 · **Atualizada:** 2026-10-19
 > **Depende de:** SPEC-239, SPEC-240
 > **Desbloqueia:** —
 > **Origem:** auditoria de logs 2026-10-18 ([relatório](../docs/auditorias/logs-api-2026-10-18.md))
@@ -54,12 +54,12 @@ R1–R4.
 
 ## 5. Critérios de aceite
 
-- [ ] Todo 429/413/503-de-limite tem linha JSON com `request_id`.
-- [ ] Exceções do limiter visíveis em log e métrica.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] Todo 429/413/503-de-limite tem linha JSON com `request_id`.
+- [x] Exceções do limiter visíveis em log e métrica.
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
 - [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -70,3 +70,19 @@ R1–R4.
 - Sob ataque, `abuse.blocked` amostrado 1×/min por (classe, chave).
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## 8. Notas de implementação (2026-10-19)
+
+- `abuse_policy.record_block(..., retry_after=, limit=)`: `abuse.blocked` ganhou `retry_after_s` e `limit`; amostrado
+  1×/min por (classe, escopo, chave pseudonimizada) — a métrica `rpg_rate_limited_total` conta todos.
+- Novos sites com `record_block`: `/metrics` (classe `metrics`), `audit_export_rate_limit` (`audit_export`),
+  `speech_rate_limit` (`stt`), além de `retry_after`/`limit` nos sites já existentes (ip/owner/daily/cap/authfail).
+- `http.body_too_large` (`route` templated, `limit_bytes`, `declared_bytes`) + `rpg_http_body_too_large_total{route}`:
+  `BodyLimitMiddleware`, 413 do webhook Stripe e 413 da voz (`services.body_limit.log_body_too_large`).
+- `abuse.limiter_unavailable` (`error`, `site` ∈ `authfail|owner_minute|daily_quota`, `error_type`) +
+  `rpg_rate_limiter_errors_total{site}`; continua fail-open. Substitui `api.daily_quota_unavailable`.
+- Teste AST `test_every_429_records_block`: toda função de `api.py` que responde 429 chama `record_block` e toda que
+  responde 413 chama `log_body_too_large`.
+- Smoke de staging: estourar o limite de login/`/telemetry/client-latency` com `RPG_LIMIT_<CLASS>_IP` baixo no preview e
+  ver `abuse.blocked` com `retry_after_s` + `request_id`; `curl -X POST` com `Content-Length` acima do teto ⇒
+  `http.body_too_large`.

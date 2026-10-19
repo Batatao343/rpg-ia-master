@@ -5,12 +5,12 @@ sem entrada aqui faz ``tests/test_log_event_registry.py`` falhar.
 """
 
 EVENTS: dict[str, tuple[str, ...]] = {
-    'abuse.blocked': ('cls', 'ip_ref', 'owner_ref', 'scope'),
+    'abuse.blocked': ('cls', 'ip_ref', 'limit', 'owner_ref', 'retry_after_s', 'scope'),
+    'abuse.limiter_unavailable': ('error_type', 'site'),
     'account.delete.finish_failed': ('error_type', 'owner_ref', 'request_id'),
     'api.audit_trace_not_written': ('error',),
     'api.character_create': (),
     'api.checkpoint_deferred': (),
-    'api.daily_quota_unavailable': (),
     'api.new_game_failed': ('error',),
     'api.turn_failed': ('error', 'stack'),
     'archivist.both_paths_failed': (),
@@ -79,6 +79,7 @@ EVENTS: dict[str, tuple[str, ...]] = {
     'graph.component_ignored': ('entity_id',),
     'graph.extra_entity_ignored': ('entity_id',),
     'graph.read_failed': ('error',),
+    'http.body_too_large': ('declared_bytes', 'limit_bytes', 'route'),
     'http.request': ('client', 'duration_ms', 'error_code', 'method', 'owner_ref', 'request_id', 'route', 'status'),
     'http.unhandled_exception': ('error_type', 'method', 'request_id', 'route', 'stack'),
     'http.validation_failed': ('error_count', 'locs', 'method'),
