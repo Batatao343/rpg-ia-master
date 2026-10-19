@@ -79,6 +79,9 @@ def test_porte_strict_falls_back_when_no_themed_elite():
     legacy = _enc("na_anel_dourado", "texto sem dono", level=9, override=4)
     assert with_theme["enemy_id"] == legacy["enemy_id"]
     assert _tier(gamedata.BESTIARY[with_theme["enemy_id"]]) == "elite"
+    # revisão P2-1: fallback na esfera emoldura o flavor (não cola o tema na fera)
+    assert "Palácio de Obsidiana" in with_theme["flavor"]
+    assert with_theme["flavor"] != CHAMA and "outra coisa" in with_theme["flavor"]
 
 
 def test_out_of_sphere_keeps_regional_and_frames_flavor():

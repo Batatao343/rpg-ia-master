@@ -1004,17 +1004,23 @@ def check_encounter(
         # fora dela, fauna local e o texto vira eco distante (não cola o tema na fera).
         tfac = threat_faction(world, factions)
         in_sphere = bool(tfac) and loc.get("region_id") in threat_sphere(tfac)
+        theme = threat_theme_match(tfac, str(threat)) if in_sphere else None
         entry = pick_encounter_enemy(
             loc,
             eff,
             turn,
             bestiary_knowledge=bestiary_knowledge,
             projection=projection,
-            theme=threat_theme_match(tfac, str(threat)) if in_sphere else None,
+            theme=theme,
         )
         flavor = str(threat)
         if tfac and not in_sphere:
             flavor = f"Ecos de uma ameaça distante: {threat} Aqui, porém, o perigo é outro."
+        elif theme is not None and entry and theme(entry) == 0:
+            # revisão P2-1: na esfera, mas sem criatura temática no porte (fallback).
+            flavor = (
+                f"A ameaça ronda a região: {threat} O que te ataca agora, porém, é outra coisa."
+            )
         return _stamp(
             {
                 "hint": entry.get("name") if entry else f"feras/perigos de {region}",

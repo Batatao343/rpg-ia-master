@@ -45,7 +45,8 @@ nem saves antigos. Princípio: mecânica é Python; a IA só narra.
   por turno no caminho legado; no ponderado (Fase 6.3) a pontuação multiplica o peso —, respeitando o porte ESTRITO do
   perigo efetivo (`forced_encounter_danger`): ≤2 só Minion; 3 qualquer; ≥4 só Elite. BOSS
   nunca (mesmo filtro por categoria da SPEC-287). Sem criatura temática compatível → sorteio
-  atual (fallback). A camada temática não abre vaga a migrantes.
+  atual (fallback), e o `flavor` emoldura a ameaça como algo que ronda a região (revisão P2-1).
+  A camada temática não abre vaga a migrantes.
 - **R5 — Fora da esfera.** Criatura regional (comportamento atual) e o `flavor` deixa claro que a
   ameaça está longe (o texto da ameaça continua presente, emoldurado como eco distante), para o
   narrador não colar o tema na fauna local.
@@ -99,12 +100,12 @@ nem saves antigos. Princípio: mecânica é Python; a IA só narra.
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R7 cobertos por testes (`tests/test_spec289_ameaca_tematica.py`)
-- [ ] Tabela ameaça → criatura antes/depois com ameaças reais (§6)
-- [ ] `playtest run --profile combate --turns 200` em 3 seeds: 0 erro / 0 `combat.no_progress`
-- [ ] Revisão independente Opus (`handoffs/SPEC-289-review.md`) com correções aplicadas
-- [ ] Suíte completa 1x (só falhas de índice stale esperadas)
-- [ ] Sem `with_structured_output` novo; saves antigos carregam (campo aditivo)
+- [x] R1–R7 cobertos por testes (`tests/test_spec289_ameaca_tematica.py`)
+- [x] Tabela ameaça → criatura antes/depois com ameaças reais (§6)
+- [x] `playtest run --profile combate --turns 200` em 3 seeds: 0 erro / 0 `combat.no_progress`
+- [x] Revisão independente Opus (`handoffs/SPEC-289-review.md`) com correções aplicadas
+- [x] Suíte completa 1x (só falhas de índice stale esperadas)
+- [x] Sem `with_structured_output` novo; saves antigos carregam (campo aditivo)
 
 ## 6. Evidência (sem LLM — mudança 100% determinística)
 
@@ -118,7 +119,7 @@ Só as linhas que mudaram (as demais — fora da esfera — mantêm a criatura e
 | idem | `ae_ruinas_submersas` (4) | 5 / 9 | Golem de Carne | Afogado de Aethelgard (rodízio por turno: Cultista da Destilação, Quimera de Cristal Destilado) |
 | idem | `aethelgard` (override 3) | 1 / 5 / 9 | Mergulhador Saqueador / Vigia de Caco | Faísca da Destilação (rodízio com as Elites temáticas no porte 3) |
 | Malagor / Chama Azul (`filhos_chama_azul`) | `na_anel_dourado` (override 4) | 1 | Cão de Rebite | Iniciado da Chama Azul |
-| idem | `na_anel_dourado` (override 4) | 5 / 9 | Golem de Lixo | Golem de Lixo (fallback: não há Elite temática — porte respeitado) |
+| idem | `na_anel_dourado` (override 4) | 5 / 9 | Golem de Lixo | Golem de Lixo (fallback: não há Elite temática — porte respeitado; flavor emoldurado) |
 | idem | `nova_arcadia` (override 3) | 1 / 5 / 9 | Cão de Rebite / Soldado da Legião de Ferro | Iniciado da Chama Azul |
 | Corvane | `floresta_sussurros` (3) — fora da esfera | 1 | Aranha Lobo | Aranha Lobo + flavor "Ecos de uma ameaça distante: …" |
 | Corvane | `pantano_melancolia` (3) — fora da esfera | 9 | Druida-Renegado | Druida-Renegado (Afogado da Batalha NÃO é puxado) |
@@ -138,3 +139,10 @@ testes e pelo E2E acima; o playtest é regressão do resto do encontro.
   esfera, então "Afogado da Batalha" (pântano) não é puxado pela ameaça de Corvane.
 - Mock/Fallback LLM: não afetados (zero LLM). Quota/latência: zero.
 - Ponderação 6.3 dentro do subconjunto temático segue a mesma (pressão de caça/fação).
+
+## 8. Revisão
+
+Opus independente — `handoffs/SPEC-289-review.md`: APPROVED_WITH_FOLLOWUPS, sem P0/P1.
+P2-1 corrigido (flavor emoldurado no fallback dentro da esfera). P2-2 (criatura temática única
+ignora pressão de caça da 6.3) e P2-3 (nome do combatente revela a fação, igual ao ramo
+`controlled`) ficam registrados como follow-up aceito.
