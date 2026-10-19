@@ -1,6 +1,6 @@
 # SPEC-243 — Frontend: mapa central código→mensagem e “código de suporte” (request_id) em todo erro
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P1**.
+> **Status:** `in-progress` — implementada em `logs-p1` (REVIEW_REQUIRED; smoke staging pendente)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-241, SPEC-242; branch `auth-debug` mergeada (`web/src/lib/authErrors.ts`)
 > **Desbloqueia:** SPEC-262 (runbook “usuário reportou erro”)
@@ -55,12 +55,12 @@ R1–R5.
 
 ## 5. Critérios de aceite
 
-- [ ] Nenhum código snake_case cru visível na UI (e2e varre banners).
-- [ ] Todo erro mostra código de suporte copiável.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Nenhum código snake_case cru visível na UI (e2e varre banners).
+- [x] Todo erro mostra código de suporte copiável.
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] `uv run pytest` verde (suíte completa offline).
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -71,3 +71,7 @@ R1–R5.
 - Coordenar com o merge da `auth-debug` (não duplicar o mapa de auth; absorver).
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## Execução (logs-p1, 2026-10-18)
+
+Implementado: `web/src/lib/errorMessages.ts` (mapa único código→pt-BR, cobre todo o catálogo da 242 via `errorCodes.json`; absorve `authErrors.ts`, `rateLimitNotice`, `STALE_PAGE_*` e o mapa de voz), `HttpError.requestId`, `X-Request-ID` do cliente em toda chamada (inclui falha de rede e upload de voz), SSE com `request_id`/`error_code`, `components/SupportCode.tsx` (código de suporte copiável) em Banner e AuthScreen. Testes: `web/tests/errorMessages.test.mjs`, e2e `web/e2e/support-code.spec.ts` (Chromium empacotado). Desvio: prosa pt-BR vinda do servidor é preservada (só código cru/desconhecido vira mensagem do mapa/genérica). Falta o smoke de staging (§6) e a revisão Sol; jornada crítica não precisou de adaptação.

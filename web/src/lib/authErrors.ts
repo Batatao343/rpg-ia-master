@@ -3,7 +3,8 @@
 
 export type AuthFlow = "login" | "signup" | "email";
 
-const STALE_PAGE = "A proteção desta página expirou. Recarregue a página e tente de novo.";
+import { MESSAGES } from "./errorMessages";
+
 const GENERIC = "Não foi possível concluir agora. Tente novamente mais tarde.";
 
 export function authErrorMessage(error: unknown, flow: AuthFlow): string {
@@ -15,21 +16,8 @@ export function authErrorMessage(error: unknown, flow: AuthFlow): string {
       ? `Muitas tentativas. Aguarde ${Math.ceil(retry / 60)} min e tente de novo.`
       : "Muitas tentativas. Aguarde alguns minutos e tente de novo.";
   }
+  if (code in MESSAGES && code !== "validation_error" && code !== "rate_limited") return MESSAGES[code];   // SPEC-243: mapa unico
   switch (code) {
-    case "credentials_invalid":
-      return "E-mail ou senha incorretos.";
-    case "email_not_confirmed":
-      return "Confirme seu e-mail antes de entrar: abra o link que enviamos. Não chegou? Use “Reenviar confirmação de e-mail”.";
-    case "captcha_invalid":
-    case "captcha_required":
-      return "A verificação anti-robô expirou ou falhou. Refaça a verificação e tente de novo.";
-    case "csrf_invalid":
-    case "origin_denied":
-      return STALE_PAGE;
-    case "captcha_unavailable":
-    case "auth_unavailable":   // SPEC-245 R1: GoTrue/JWKS fora do ar => 503
-    case "server_misconfigured":
-      return "O serviço de contas está indisponível no momento. Tente novamente mais tarde.";
     case "validation_error":
       return flow === "login" ? "Verifique o e-mail e a senha informados."
         : flow === "signup" ? "Verifique os dados: e-mail válido e senha com no mínimo 10 caracteres."

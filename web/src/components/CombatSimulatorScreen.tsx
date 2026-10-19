@@ -1,3 +1,4 @@
+import { errMsg, errRequestId } from "../lib/errorMessages";
 import { useEffect, useMemo, useState } from "react";
 import * as api from "../api";
 import type {
@@ -18,7 +19,7 @@ interface Props {
   busy: boolean;
   onStart: (payload: CombatSimulatorPayload) => void;
   onBack: () => void;
-  onError: (message: string) => void;
+  onError: (message: string, requestId?: string) => void;
 }
 
 export function CombatSimulatorScreen({ busy, onStart, onBack, onError }: Props) {
@@ -36,8 +37,7 @@ export function CombatSimulatorScreen({ busy, onStart, onBack, onError }: Props)
         setEnemyId((current) => current || loaded.enemies[0]?.id || "");
       })
       .catch((error: unknown) => {
-        const detail = error instanceof Error ? error.message : String(error);
-        onError(`Não consegui abrir o laboratório. (${detail})`);
+        onError(`Não consegui abrir o laboratório. (${errMsg(error)})`, errRequestId(error));
       });
   }, [onError]);
 

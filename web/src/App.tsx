@@ -22,6 +22,7 @@ import type { LevelUpPick } from "./components/LevelUpModal";
 import { CombatSimulatorScreen } from "./components/CombatSimulatorScreen";
 import { AuthScreen, hasEmailActionLink } from "./components/AuthScreen";
 import { authErrorMessage } from "./lib/authErrors";
+import { errMsg, errRequestId } from "./lib/errorMessages";
 import { AccountScreen, shards } from "./components/AccountScreen";
 
 import { ImageQuoteDialog } from "./components/ImageQuoteDialog";
@@ -73,6 +74,7 @@ export function App() {
   const [continueData, setContinueData] = useState<GameResponse | null>(null);
   const [saves, setSaves] = useState<SaveSummary[]>([]);
   const [authError, setAuthError] = useState("");
+  const [authErrorId, setAuthErrorId] = useState<string | undefined>(undefined);
   const [authNotice, setAuthNotice] = useState("");
   const [authConfig, setAuthConfig] = useState<api.AuthConfig>();
   const [authRequired, setAuthRequired] = useState(false);
@@ -225,7 +227,7 @@ export function App() {
 
   async function handleLogin(email: string, password: string, create: boolean, captchaToken?: string) {
     setBusy(true);
-    setAuthError(""); setAuthNotice("");
+    setAuthError(""); setAuthErrorId(undefined); setAuthNotice("");
     try {
       const result = await (create ? api.signup(email, password, captchaToken) : api.login(email, password, captchaToken));
       if (!result.authenticated) {
@@ -235,6 +237,7 @@ export function App() {
       await completeAuthenticatedSession();
     } catch (error) {
       setAuthError(authErrorMessage(error, create ? "signup" : "login"));
+      setAuthErrorId(errRequestId(error));
     } finally {
       setBusy(false);
     }
@@ -289,7 +292,7 @@ export function App() {
       setSaves([]);
       setScreen("auth");
     } catch (error) {
-      setBanner({ msg: "Não foi possível encerrar a sessão: " + errMsg(error), kind: "error" });
+      setBanner({ msg: "Não foi possível encerrar a sessão: " + errMsg(error), kind: "error", requestId: errRequestId(error) });
     } finally {
       setBusy(false);
     }
@@ -364,7 +367,7 @@ export function App() {
       const quote = await api.requestImageQuote(id, type, reformulation, offerId);
       if (session.current === generation) setImageQuote({ quote, gameId: id, session: generation, actionId: crypto.randomUUID() });
     } catch (error) {
-      if (session.current === generation) setBanner({ msg: "Cotação indisponível: " + errMsg(error), kind: "warn" });
+      if (session.current === generation) setBanner({ msg: "Cotação indisponível: " + errMsg(error), kind: "warn", requestId: errRequestId(error) });
     } finally { if (session.current === generation) setImageBusy(false); }
   }
 
@@ -409,7 +412,7 @@ export function App() {
     } catch (err) {
       if (session.current !== generation) return;
       setScreen("create");
-      setBanner({ msg: "Falha ao criar personagem: " + errMsg(err), kind: "error" });
+      setBanner({ msg: "Falha ao criar personagem: " + errMsg(err), kind: "error", requestId: errRequestId(err) });
     } finally {
       if (session.current === generation) { setThinking(false); setBusy(false); }
     }
@@ -430,7 +433,7 @@ export function App() {
     } catch (err) {
       if (session.current !== generation) return;
       setScreen("simulator");
-      setBanner({ msg: "Falha ao abrir a arena: " + errMsg(err), kind: "error" });
+      setBanner({ msg: "Falha ao abrir a arena: " + errMsg(err), kind: "error", requestId: errRequestId(err) });
     } finally {
       if (session.current === generation) { setThinking(false); setBusy(false); }
     }
@@ -586,7 +589,7 @@ export function App() {
           void refreshTurnCost(gid, operation.operation_id, entryId, generation, user); }
       }
     } catch (error) {
-      if (active()) setBanner({ msg: "Ação não confirmada: " + errMsg(error), kind: "error" });
+      if (active()) setBanner({ msg: "Ação não confirmada: " + errMsg(error), kind: "error", requestId: errRequestId(error) });
       // SPEC-205 R9: alvo velho — refaz a mira com o estado novo do servidor.
       if (error instanceof api.HttpError && error.code === "invalid_target" && active()) {
         try { const fresh = await api.getState(gid); if (active()) setData(fresh); } catch { /* o banner já explica */ }
@@ -645,7 +648,7 @@ export function App() {
       }
       await loadHistory(gid, generation);
     } catch (err) {
-      if (session.current === generation) setBanner({ msg: "Não consegui abrir a campanha: " + errMsg(err), kind: "error" });
+      if (session.current === generation) setBanner({ msg: "Não consegui abrir a campanha: " + errMsg(err), kind: "error", requestId: errRequestId(err) });
     } finally {
       if (session.current === generation) setBusy(false);
     }
@@ -664,7 +667,7 @@ export function App() {
       setSaves(list);
       if (list.length === 0) setScreen("create");
     } catch (err) {
-      setBanner({ msg: "Não consegui excluir: " + errMsg(err), kind: "error" });
+      setBanner({ msg: "Não consegui excluir: " + errMsg(err), kind: "error", requestId: errRequestId(err) });
     } finally {
       setBusy(false);
     }
@@ -679,8 +682,8 @@ export function App() {
     setData(null);
   }
 
-  const handleUiError = useCallback((message: string) => {
-    setBanner({ msg: message, kind: "error" });
+  const handleUiError = useCallback((message: string, requestId?: string) => {
+    setBanner({ msg: message, kind: "error", requestId });
   }, []);
 
   // Fase 4.3: equipar/desequipar e recarregar o estado completo (AC/ataque derivam).
@@ -695,7 +698,7 @@ export function App() {
       setData(r);
     } catch (err) {
       if (session.current !== generation) return;
-      setBanner({ msg: "Não deu para equipar: " + errMsg(err), kind: "error" });
+      setBanner({ msg: "Não deu para equipar: " + errMsg(err), kind: "error", requestId: errRequestId(err) });
     } finally {
       if (session.current === generation) setBusy(false);
     }
@@ -735,7 +738,7 @@ export function App() {
       );
     } catch (err) {
       if (session.current !== generation) return;
-      setBanner({ msg: "Escolha recusada: " + errMsg(err), kind: "error" });
+      setBanner({ msg: "Escolha recusada: " + errMsg(err), kind: "error", requestId: errRequestId(err) });
     } finally {
       if (session.current === generation) setBusy(false);
     }
@@ -753,7 +756,7 @@ export function App() {
       if (r.game_id) await loadHistory(r.game_id, generation);
     } catch (err) {
       if (session.current !== generation) return;
-      setBanner({ msg: "A Roda hesitou: " + errMsg(err), kind: "error" });
+      setBanner({ msg: "A Roda hesitou: " + errMsg(err), kind: "error", requestId: errRequestId(err) });
     } finally {
       if (session.current === generation) setBusy(false);
     }
@@ -823,8 +826,8 @@ export function App() {
         ) : screen === "auth" ? (
           <motion.div key="auth" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <AuthScreen busy={busy} onLogin={handleLogin} onAuthenticated={completeAuthenticatedSession}
-              config={authConfig} error={authError} notice={authNotice}
-              onClearMessages={() => { setAuthError(""); setAuthNotice(""); }} />
+              config={authConfig} error={authError} errorRequestId={authErrorId} notice={authNotice}
+              onClearMessages={() => { setAuthError(""); setAuthErrorId(undefined); setAuthNotice(""); }} />
           </motion.div>
         ) : screen === "account" ? (
           <motion.div key="account" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -930,6 +933,3 @@ function LegalLinks() {
   );
 }
 
-function errMsg(err: unknown): string {
-  return err instanceof Error ? err.message : String(err);
-}

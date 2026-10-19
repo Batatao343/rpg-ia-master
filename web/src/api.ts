@@ -18,6 +18,7 @@ import type {
 
 import { formatDetail, http, HttpError, rateLimitNotice, uploadAudio } from "./http";
 import { setClientLatencyReport } from "./lib/turnLatency";
+import { messageFor } from "./lib/errorMessages";
 export { HttpError } from "./http";
 export { refreshSessionOnce } from "./http";
 
@@ -168,17 +169,20 @@ export async function sendActionStream(
   const handleEvent = (name: string, data: string) => {
     const payload = JSON.parse(data);
     handlers.onEvent?.(name, payload);
+    const rid = typeof payload?.request_id === "string" ? payload.request_id : undefined;
     if (name === "error") {
       // SPEC-205: detail estruturado (ex.: invalid_target) preserva code/mensagem.
       if (payload.detail && typeof payload.detail === "object") {
         const formatted = formatDetail(payload.detail, "erro no stream");
-        throw new HttpError(Number(payload.code || 500), formatted.code, formatted.message);
+        throw new HttpError(Number(payload.code || 500), formatted.code, messageFor(formatted.code, formatted.message), undefined, rid);
       }
       if (typeof payload.detail === "string") {
         const notice = rateLimitNotice(payload.detail, payload.retry_after_seconds);   // SPEC-219
-        if (notice) throw new HttpError(Number(payload.code || 429), payload.detail, notice, payload.retry_after_seconds);
+        if (notice) throw new HttpError(Number(payload.code || 429), payload.detail, notice, payload.retry_after_seconds, rid);
       }
-      throw new HttpError(Number(payload.code || 500), "stream_error", payload.detail || "erro no stream");
+      // SPEC-242 R5: ``error_code`` (string estavel) + ``request_id`` no evento de erro; ``code`` segue numerico.
+      const errorCode = typeof payload.error_code === "string" ? payload.error_code : "stream_error";
+      throw new HttpError(Number(payload.code || 500), errorCode, messageFor(errorCode, payload.detail), undefined, rid);
     }
     if (name === "phase") handlers.onPhase?.(payload.node);
     else if (name === "route") handlers.onRoute?.(payload.route);

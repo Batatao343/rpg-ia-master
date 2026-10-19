@@ -1,23 +1,17 @@
 import { isAndroidClient } from './native/platform';
+import { isCodeLike, messageFor, rateLimitNotice, STALE_PAGE_MESSAGE } from './lib/errorMessages';
+
+export { rateLimitNotice, STALE_PAGE_MESSAGE };
 
 export class HttpError extends Error {
   constructor(public status: number, public code: string, detail: string,
-    public retryAfterSeconds?: number) { super(detail); }
+    public retryAfterSeconds?: number, public requestId?: string) { super(detail); }
 }
 
-/** SPEC-219: 429 de abuso vira aviso legivel, sem retry automatico. Retorna null se nao for um. */
-export function rateLimitNotice(code: string, retryAfterSeconds?: number, now: Date = new Date()): string | null {
-  const wait = Math.max(1, Math.ceil(Number(retryAfterSeconds) || 0));
-  if (code === 'daily_quota_exceeded') {
-    const back = new Date(now.getTime() + wait * 1000);
-    const hh = String(back.getHours()).padStart(2, '0');
-    const mm = String(back.getMinutes()).padStart(2, '0');
-    return `Cota diária de turnos atingida; volta às ${hh}:${mm}.`;
-  }
-  if (code === 'rate_limited') return `Muitas ações em pouco tempo. Aguarde ${wait} s e tente de novo.`;
-  if (code === 'daily_spend_cap') return 'O servidor atingiu o limite de custo de hoje. Tente novamente mais tarde.';
-  if (code === 'too_many_open_orders') return 'Há compras abertas demais. Conclua ou aguarde expirar antes de iniciar outra.';
-  return null;
+/** SPEC-243 R4: id de correlacao gerado no cliente (o servidor aceita [A-Za-z0-9._:-]{8,64}). */
+export function newRequestId(): string {
+  const c = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
+  return c?.randomUUID ? c.randomUUID() : `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 12)}`;
 }
 
 let refreshing: Promise<void> | null = null;
@@ -25,6 +19,7 @@ let authVersion = 0;
 
 function optionsWithAuth(opts: RequestInit): RequestInit {
   const headers = new Headers(opts.headers);
+  if (!headers.has("X-Request-ID")) headers.set("X-Request-ID", newRequestId());
   if (!headers.has("Content-Type")) headers.set("Content-Type", "application/json");
   if (isAndroidClient()) headers.set('X-RPG-Client', 'android');
   if (!['GET', 'HEAD', 'OPTIONS'].includes((opts.method || 'GET').toUpperCase())) {
@@ -60,15 +55,18 @@ export function formatDetail(detail: unknown, fallback: string): { code: string;
 
 /** SPEC-220 R10: Origin/CSRF => 403; é página desatualizada, não sessão expirada. */
 export const STALE_PAGE_CODES = new Set(['csrf_invalid', 'origin_denied']);
-export const STALE_PAGE_MESSAGE = 'A proteção desta página expirou. Recarregue a página e tente de novo.';
 
-async function errorFor(response: Response): Promise<HttpError> {
+async function errorFor(response: Response, sentRequestId?: string): Promise<HttpError> {
   const fallback = response.statusText || 'Falha na requisição';
   let formatted = { code: fallback, message: fallback };
   let retryAfter: number | undefined;
+  let requestId = response.headers?.get?.('X-Request-ID') || sentRequestId || undefined;
   try {
     const body = await response.json();
     formatted = formatDetail(body.detail, fallback);
+    // SPEC-242: ``code`` estavel do envelope; o codigo derivado do detail vence quando ja e um codigo.
+    if (!isCodeLike(formatted.code) && isCodeLike(body.code)) formatted = { ...formatted, code: body.code };
+    if (typeof body.request_id === 'string' && body.request_id) requestId = body.request_id;
     if (typeof body.retry_after_seconds === 'number') retryAfter = body.retry_after_seconds;
   } catch { /* non-JSON */ }
   if (retryAfter === undefined) {
@@ -77,12 +75,14 @@ async function errorFor(response: Response): Promise<HttpError> {
   }
   if (response.status === 429 || response.status === 503) {
     const notice = rateLimitNotice(formatted.code, retryAfter);
-    if (notice) return new HttpError(response.status, formatted.code, notice, retryAfter);
+    if (notice) return new HttpError(response.status, formatted.code, notice, retryAfter, requestId);
   }
   if (response.status === 403 && STALE_PAGE_CODES.has(formatted.code)) {
     formatted = { code: formatted.code, message: STALE_PAGE_MESSAGE };
   }
-  return new HttpError(response.status, formatted.code, formatted.message, retryAfter);
+  // SPEC-243 R2: codigo cru nunca vira mensagem; prosa do servidor (pt-BR) e preservada.
+  const message = messageFor(formatted.code, formatted.message, retryAfter);
+  return new HttpError(response.status, formatted.code, message, retryAfter, requestId);
 }
 
 // SPEC-193: one-shot cookie-session refresh used by the native boot (never loops).
@@ -90,9 +90,23 @@ export async function refreshSessionOnce(): Promise<boolean> {
   try { return (await fetch('/auth/refresh', optionsWithAuth({ method: 'POST' }))).ok; } catch { return false; }
 }
 
+async function fetchWithId(path: string, opts: RequestInit): Promise<{ response: Response; requestId: string }> {
+  const options = optionsWithAuth(opts);
+  const requestId = new Headers(options.headers).get('X-Request-ID') || '';
+  try {
+    return { response: await fetch(path, options), requestId };
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') throw error;
+    // Sem resposta: o id local ainda permite ao suporte procurar a requisicao no servidor.
+    throw new HttpError(0, 'network_error', messageFor('network_error'), undefined, requestId);
+  }
+}
+
 export async function http(path: string, opts: RequestInit = {}): Promise<Response> {
   const version = authVersion;
-  let response = await fetch(path, optionsWithAuth(opts));
+  const first = await fetchWithId(path, opts);
+  let response = first.response;
+  let sentId = first.requestId;
   if (response.status === 401 && !path.startsWith('/auth/')) {
     if (version === authVersion) {
       if (!refreshing) {
@@ -107,11 +121,13 @@ export async function http(path: string, opts: RequestInit = {}): Promise<Respon
         throw error;
       }
     }
-    response = await fetch(path, optionsWithAuth(opts));
+    const retry = await fetchWithId(path, opts);
+    response = retry.response;
+    sentId = retry.requestId;
   }
   if (!response.ok) {
     if (response.status === 401 && typeof window !== 'undefined') window.dispatchEvent(new Event('rpg:auth-expired'));
-    throw await errorFor(response);
+    throw await errorFor(response, sentId);
   }
   return response;
 }
@@ -122,13 +138,14 @@ export function uploadAudio(audio: Blob, operationId: string, signal: AbortSigna
   return new Promise((resolve, reject) => {
     if (signal.aborted) { reject(new DOMException('Cancelado', 'AbortError')); return; }
     const xhr = new XMLHttpRequest();
+    const sentId = newRequestId();
     const abort = () => xhr.abort();
     const cleanup = () => signal.removeEventListener('abort', abort);
     xhr.open('POST', '/account/transcriptions');
     xhr.withCredentials = true;
     xhr.timeout = 90_000;
     const options = optionsWithAuth({ method: 'POST', headers: {
-      'Content-Type': audio.type, 'X-Operation-Id': operationId,
+      'Content-Type': audio.type, 'X-Operation-Id': operationId, 'X-Request-ID': sentId,
     } });
     new Headers(options.headers).forEach((value, key) => xhr.setRequestHeader(key, value));
     xhr.upload.onload = uploaded;
@@ -143,17 +160,9 @@ export function uploadAudio(audio: Blob, operationId: string, signal: AbortSigna
       if (xhr.status < 200 || xhr.status >= 300) {
         if (xhr.status === 401) window.dispatchEvent(new Event('rpg:auth-expired'));
         const code = String(body.detail || 'speech_failed');
-        const messages: Record<string, string> = {
-          speech_disabled: 'Entrada de voz indisponível nesta sessão. Continue digitando.',
-          speech_insufficient_balance: 'Saldo insuficiente para transcrever. Continue digitando.',
-          speech_rate_limit: 'Muitas gravações seguidas. Aguarde um minuto ou continue digitando.',
-          audio_bytes: 'Áudio muito grande. Grave uma ação mais curta.',
-          audio_decoder_unavailable: 'Este navegador não conseguiu preparar o áudio para o servidor. Continue digitando.',
-          audio_mime: 'Formato de áudio não aceito. Continue digitando.',
-          audio_duration: 'Áudio longo demais. Grave até 60 segundos.',
-        };
-        const detail = messages[code] || (code.includes(' ') ? code : 'Não foi possível transcrever o áudio. Continue digitando.');
-        reject(new HttpError(xhr.status, code, detail));
+        const detail = messageFor(isCodeLike(code) ? code : 'speech_failed', code.includes(' ') ? code : undefined);
+        const rid = xhr.getResponseHeader?.('X-Request-ID') || (typeof body.request_id === 'string' ? body.request_id : undefined);
+        reject(new HttpError(xhr.status, code, detail, undefined, rid || sentId));
       } else if (typeof body.text !== 'string') {
         reject(new Error('Resposta de transcrição inválida. Continue digitando.'));
       } else resolve(body);

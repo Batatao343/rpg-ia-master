@@ -1323,3 +1323,8 @@ article.card[data-selected="true"]::before {
 .auth-consent__age { display: flex; gap: 0.55rem; align-items: center; cursor: pointer; }
 .auth-consent__age input { width: 1.1rem; height: 1.1rem; accent-color: currentColor; }
 .auth-legal { display: flex; gap: 1.2rem; justify-content: center; margin-top: 1.2rem; font-size: 0.9rem; }
+
+/* SPEC-243: codigo de suporte copiavel (banner de erro) */
+.support-code { display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.4rem; margin-left: 0.5rem; font-size: 0.82rem; opacity: 0.95; }
+.support-code code { font-family: ui-monospace, monospace; letter-spacing: 0.04em; }
+.support-code-copy { min-height: 28px; padding: 0.1rem 0.6rem; border: 1px solid currentColor; border-radius: 999px; background: transparent; color: inherit; font: inherit; cursor: pointer; }

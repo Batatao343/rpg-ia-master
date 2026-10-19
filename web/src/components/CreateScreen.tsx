@@ -1,3 +1,4 @@
+import { errMsg, errRequestId } from "../lib/errorMessages";
 import { useEffect, useMemo, useState } from "react";
 import * as api from "../api";
 import type {
@@ -51,7 +52,7 @@ interface Props {
   onCreate: (payload: CreatePayload) => void;
   onContinue: () => void;
   onSimulate: () => void;
-  onError: (msg: string) => void;
+  onError: (msg: string, requestId?: string) => void;
 }
 
 export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimulate, onError }: Props) {
@@ -83,7 +84,7 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
         setRegion((rg) => rg || o.regions[0] || "");
       })
       .catch((e) =>
-        onError("Não consegui carregar as opções. A API está rodando? (" + (e?.message || e) + ")"),
+        onError("Não consegui carregar as opções. A API está rodando? (" + errMsg(e) + ")", errRequestId(e)),
       );
   }, [onError]);
 
@@ -122,7 +123,7 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
       const r = await api.postPrologue(payload());
       setScenario(r.scenario);
     } catch (e) {
-      onError("O prólogo falhou: " + ((e as Error)?.message || e));
+      onError("O prólogo falhou: " + errMsg(e), errRequestId(e));
       setStep(4);
     } finally {
       setPrologueBusy(false);
@@ -147,7 +148,7 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
       });
       setArtBrief(result.rendered_prompt);
     } catch (error) {
-      onError("Não consegui montar o brief visual: " + ((error as Error)?.message || error));
+      onError("Não consegui montar o brief visual: " + errMsg(error), errRequestId(error));
     } finally {
       setArtBriefBusy(false);
     }

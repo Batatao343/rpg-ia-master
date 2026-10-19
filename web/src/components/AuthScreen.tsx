@@ -3,6 +3,8 @@ import * as api from "../api";
 import { Frame } from "./ornaments";
 import { TurnstileChallenge } from "./TurnstileChallenge";
 import { authErrorMessage } from "../lib/authErrors";
+import { errRequestId } from "../lib/errorMessages";
+import { SupportCode } from "./SupportCode";
 
 type Mode = "login" | "signup" | "reset_request" | "verify_request" | "verify_link" | "reset_link";
 
@@ -20,12 +22,14 @@ const emailLink = typeof window === "undefined" ? null : readEmailLink();
 export const hasEmailActionLink = emailLink !== null;
 const genericEmailNotice = "Se o endereço puder receber mensagens, enviaremos as instruções.";
 
-export function AuthScreen({ busy, onLogin, onAuthenticated, config, error, notice, onClearMessages }: {
+export function AuthScreen({ busy, onLogin, onAuthenticated, config, error, errorRequestId, notice, onClearMessages }: {
   busy: boolean;
   onLogin: (email: string, password: string, create: boolean, captchaToken?: string) => Promise<void>;
   onAuthenticated: () => Promise<void>;
   config?: api.AuthConfig;
   error?: string;
+  /** SPEC-243: request_id do erro vindo do pai (login/cadastro). */
+  errorRequestId?: string;
   notice?: string;
   /** Limpa erro/aviso vindos do pai (ex.: falha de login) ao trocar de tela. */
   onClearMessages?: () => void;
@@ -39,6 +43,7 @@ export function AuthScreen({ busy, onLogin, onAuthenticated, config, error, noti
   const [captchaRevision, setCaptchaRevision] = useState(0);
   const [localBusy, setLocalBusy] = useState(false);
   const [localError, setLocalError] = useState("");
+  const [localErrorId, setLocalErrorId] = useState<string | undefined>(undefined);
   const [localNotice, setLocalNotice] = useState("");
   // SPEC-222 R9 (D-D): idade mínima 18, autodeclarada e obrigatória no cadastro.
   const [ageConfirmed, setAgeConfirmed] = useState(false);
@@ -57,7 +62,7 @@ export function AuthScreen({ busy, onLogin, onAuthenticated, config, error, noti
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (working || (needsCaptcha && !captchaToken) || (mode === "signup" && !ageConfirmed)) return;
-    setLocalError(""); setLocalNotice(""); onClearMessages?.();
+    setLocalError(""); setLocalErrorId(undefined); setLocalNotice(""); onClearMessages?.();
     try {
       if (mode === "login" || mode === "signup") {
         await onLogin(email, password, mode === "signup", captchaToken || undefined);
@@ -85,6 +90,7 @@ export function AuthScreen({ busy, onLogin, onAuthenticated, config, error, noti
       const linkError = mode === "verify_link" || mode === "reset_link";
       setLocalError(linkError ? "Link inválido ou expirado. Solicite um novo e-mail."
         : authErrorMessage(cause, "email"));
+      setLocalErrorId(errRequestId(cause));
     } finally {
       setLocalBusy(false);
       if (needsCaptcha) { setCaptchaToken(""); setCaptchaRevision(value => value + 1); }
@@ -143,7 +149,12 @@ export function AuthScreen({ busy, onLogin, onAuthenticated, config, error, noti
             Declaro ter 18 anos ou mais.
           </label>
         </div>}
-        {(localError || error) && <p role="alert" className="muted">{localError || error}</p>}
+        {(localError || error) && (
+          <p role="alert" className="muted">
+            {localError || error}{" "}
+            <SupportCode requestId={localError ? localErrorId : errorRequestId} />
+          </p>
+        )}
         {(localNotice || notice) && <p role="status" className="muted">{localNotice || notice}</p>}
         <button className="btn btn--primary"
           disabled={working || (needsCaptcha && !captchaToken) || (mode === "signup" && !ageConfirmed)}>
