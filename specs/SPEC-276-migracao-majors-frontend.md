@@ -1,8 +1,9 @@
 # SPEC-276 — Migração das versões principais do frontend (Vite 8, React 19, TypeScript 7, Playwright 1.64)
 
-> **Status:** `approved` — o dono aprovou a execução em 19/10 ("escreve e executa").
+> **Status:** `done` (parcial pela R5) — aprovada e executada em 19/10 ("escreve e executa"). Entregues Playwright 1.64,
+> Vite 8 + plugin-react 6 e `npm audit` limpo; TypeScript 7 e React 19 **bloqueados** (ver §8).
 > **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
-> **Depende de:** nada (`web/` em `main` 4c4167b)
+> **Depende de:** nada (`web/` em `main`; rebaseada sobre `da6186b`, que trouxe ESLint/`typecheck:e2e`)
 > **Desbloqueia:** fechar os PRs do Dependabot #35, #37, #40, #41, #42; atualizações semanais de npm voltam a ser minor/patch
 
 ---
@@ -33,6 +34,9 @@ migração por etapas, um major por commit, com rollback por `git revert` do com
 - **R4** — Bundle de produção (JS+CSS em `web/dist/assets`, bytes brutos e gzip) não cresce mais de 5 % sobre a linha de base.
 - **R5** — Major inviável (quebra sem saída razoável ou dependência sem suporte) é interrompido e documentado na §8;
   as etapas que passaram são entregues.
+- **R6** — (pedido do coordenador, 19/10) `npm audit` da árvore completa limpo no fim; o que não tiver correção sem
+  quebra vai para allowlist com prazo (padrão SPEC-225). Com o audit limpo, o job `npm-audit-full` deixa de ser informativo.
+- **R7** — `npm run typecheck:e2e` e `npm run lint` (não bloqueantes no CI desde o Workspace #10) não pioram em relação à `main`.
 
 ### Fora de escopo
 
@@ -110,6 +114,8 @@ JS 510 743 B (gzip 163,1 kB) + CSS 91 981 B (gzip 17,8 kB).
 - [ ] Bundle JS+CSS (bruto e gzip) ≤ linha de base + 5 %
 - [ ] Smoke visual 390×844 e 1440×900 contra `vite preview` sem erro de console/pageerror
 - [ ] Nenhum arquivo protegido de eval alterado
+- [ ] `npm audit` (árvore completa) com 0 vulnerabilidades
+- [ ] `typecheck:e2e`/`lint` sem piora contra a `main`
 - [ ] `uv run pytest` verde (o backend serve `web/dist`)
 - [ ] Revisão independente Opus em `handoffs/SPEC-276-review.md`
 
@@ -126,4 +132,29 @@ Sem LLM: a mudança é só de toolchain do cliente. O smoke é visual/console (�
 
 ## 8. Execução (registro)
 
-_preenchido durante a execução_
+Medição de tamanho: soma dos `.js`/`.css` de `web/dist/assets`, bytes brutos e gzip -9 (Python `gzip`).
+Linha de base final = `main` `da6186b`: **607 570 B / 181 877 B gzip**.
+
+| Etapa | Resultado | Commit |
+|---|---|---|
+| 1 Playwright 1.64.1 | **entregue.** Nenhuma API removida em uso. Exige `npx playwright install chromium` (o CI já faz). `typecheck:e2e` cai de 25 para 4 erros (tipos novos do runner). | `0375dba` |
+| 2 TypeScript 7.0.2 | **bloqueado.** Funcionou antes do rebase (só `src/vite-env.d.ts` para `noUncheckedSideEffectImports` e `voice.test.mjs` sem `ts.transpileModule`), mas a `main` trouxe `typescript-eslint` 8.71 com peer `typescript >=4.8.4 <6.1.0`: o TS 7 não tem API programática e o `npm ci` recusaria o peer. Sem saída razoável até o typescript-eslint suportar o TS 7 (ou a 7.1 trazer a API nova). Caminho intermediário possível: TS 6.0 (fora do escopo dos PRs). | — |
+| 3 Vite 8.3.4 + plugin-react 6.1.2 | **entregue.** `esbuild` explícito (os testes Node o importam; o Vite 8 o tornou opcional). `build.target` fixado no alvo `modules` do Vite 5 (es2020/chrome87/safari14/firefox78/edge88) para não derrubar WebView/iOS antigos. Bundle **622 832 B (+2,5 %) / 181 058 B gzip (−0,5 %)**; o CSS cresce ~13 kB porque o Lightning CSS gera fallbacks para esse alvo. Build 1,7 s → 0,36 s. | `962ce43` |
+| 4 React 19.3.1 | **bloqueado pela R4.** Compila com uma mudança de tipo (`useModalFocus(ref: RefObject<HTMLElement \| null>)`), mas o bundle sobe para **697 188 B (+15,7 %) / 201 905 B gzip (+12,1 %)** — o `react-dom` 19 é ~79 kB maior minificado. Não há corte razoável que compense; decidir com o dono se o teto de 5 % vale para o React (code splitting das abas reduziria só o carregamento inicial, não o total). | — |
+| R6 audit | **entregue.** O Vite 8 elimina esbuild/postcss/nanoid/source-map-js; `npm audit fix` sobe browserslist/baseline-browser-mapping (via eslint-plugin-react-hooks); `uuid <11.1.1` (via `@capacitor/cli` > `xcode`) fica fixado por `overrides` em `^11.1.1` — o xcode só chama `require('uuid').v4()`, mantido no uuid 11 (o `--force` rebaixaria o `@capacitor/cli`). Sem allowlist. `npm audit`: **0**. `npm-audit-full` passa a bloqueante. | `c6eb24c` |
+
+Verificação do estado final (branch rebaseada sobre `da6186b`):
+
+- `npm run build` verde; `npm run typecheck` 0 erros; `npm test` **147/147**; `typecheck:e2e` 4 erros (main 25); `lint` 93 problemas (= main).
+- Playwright completo (280 testes; `RPG_E2E_SERVER=preview`, que mede o build real e é estável nesta máquina compartilhada):
+  234 passados, 38 pulados (opt-in), 8 falhas; reexecução das falhas com 1 worker no dev server (modo do CI): 5 passam,
+  **3 falham igual na `main` `da6186b`**: `account.spec` "fallback updates technical cost", F14 `network_failure_recovery`
+  e `workspace-shell` "10 trocas de aba" — o beacon novo `POST /telemetry/client-error` responde 404 no servidor de teste
+  e o guard de console reprova. Não é regressão desta spec (arquivo de fixture/eval protegido — fica para o coordenador).
+  As falhas de 1ª passada que somem na reexecução são timing de máquina carregada (as duas `voice-input` dependem do dev
+  server, pois servem `/tests/*.fixture.html`; os `perf 4x CPU` medem long task sob carga) e aparecem igual na linha de base.
+- Smoke visual contra a API real (MockLLM) servindo `web/dist`, 390×844 e 1440×900: tela inicial e arena do Laboratório
+  de combate sem erro de console/pageerror e sem overflow horizontal.
+- Validação por etapa antes do rebase (sobre `4c4167b`): Playwright completo verde (mesmo critério) após Playwright 1.64 e após Vite 8.
+
+PRs do Dependabot: #35 (vite) e #37 (playwright) ficam obsoletos com o merge; #40/#41 (React) e #42 (TS 7) seguem bloqueados.
