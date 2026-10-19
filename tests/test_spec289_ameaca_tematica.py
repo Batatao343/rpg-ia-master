@@ -261,3 +261,22 @@ def test_handoff_carries_public_hint_and_narrator_clause():
     assert "Chama Azul" in clause and "NÃO" in clause  # o aviso cita o nome só p/ proibi-lo
     assert _faction_withhold_clause(manifest, facs, {"filhos_chama_azul": {"known": True}}) == ""
     assert _faction_withhold_clause(None, facs, {}) == ""
+
+
+def test_narrator_clause_overrides_canonical_name_with_short_label():
+    """Revisão SPEC-292: o nome canônico carrega o radical da fação -> a cláusula
+    manda chamar o combatente só pelo papel (smoke real: Groq repetia o nome inteiro)."""
+    from agents.combat import _faction_withhold_clause
+
+    facs = gamedata.seed_factions()
+    manifest = {
+        "participants": [
+            {"faction_id": "filhos_chama_azul", "species_label": "Iniciado da Chama Azul"},
+            {"faction_id": "", "species_label": "Lobo Cinzento"},
+        ]
+    }
+    clause = _faction_withhold_clause(manifest, facs, {})
+    assert "'Iniciado da Chama Azul' apenas de 'Iniciado'" in clause
+    assert "Lobo" not in clause
+    known = {"filhos_chama_azul": {"known": True}}
+    assert _faction_withhold_clause(manifest, facs, known) == ""

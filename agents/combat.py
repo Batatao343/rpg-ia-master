@@ -824,12 +824,36 @@ def _faction_withhold_clause(manifest, factions, intel) -> str:
     names = unknown_faction_names(ids, factions, intel)
     if not names:
         return ""
-    return (
+    clause = (
         "O herói NÃO conhece as facções: "
         + "; ".join(names)
         + ". NÃO cite esses nomes nem o nome de organização dos inimigos — descreva-os "
         "por aparência, armas e comportamento."
     )
+    # Revisão SPEC-292: o NOME da criatura carrega o radical da fação ("Iniciado da
+    # Chama Azul"); sem esta exceção ao elenco o fallback (Groq) repetiu o nome inteiro.
+    hidden = _concealed_species(manifest, factions, intel)
+    if hidden:
+        clause += (
+            " Prevalece sobre o elenco canônico: chame "
+            + "; ".join(f"'{full}' apenas de '{short}'" for full, short in hidden)
+            + " — NUNCA pelo nome completo."
+        )
+    return clause
+
+
+def _concealed_species(manifest, factions, intel) -> list[tuple[str, str]]:
+    """(nome canônico, rótulo curto) das espécies cujo nome expõe fação desconhecida."""
+    from world_utils import concealed_faction
+
+    out: list[tuple[str, str]] = []
+    for p in (manifest or {}).get("participants") or []:
+        full = str(p.get("species_label") or "")
+        entry = {"faction": p.get("faction_id"), "name": full}
+        if full and concealed_faction(entry, factions, intel) and full not in dict(out):
+            short = re.split(r"\s+d(?:a|e|o|as|os)\s+|\s*\(", full, maxsplit=1)[0].strip()
+            out.append((full, short or "combatente"))
+    return out
 
 
 def _narrate(
