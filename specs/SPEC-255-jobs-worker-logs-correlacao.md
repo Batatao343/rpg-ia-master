@@ -1,6 +1,6 @@
 # SPEC-255 — Fila de jobs: logs por job (claim, sucesso, falha, retry, dead) e correlação com a requisição de origem
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P1**.
+> **Status:** `in-progress` — implementada em `logs-p1` (REVIEW_REQUIRED; smoke staging pendente)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-240, SPEC-254
 > **Desbloqueia:** SPEC-256
@@ -55,12 +55,12 @@ R1–R5.
 
 ## 5. Critérios de aceite
 
-- [ ] Buscar um `request_id` de turno retorna também o job `project_archive` que ele gerou.
-- [ ] Nenhum job falha com `handler_error` genérico.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Buscar um `request_id` de turno retorna também o job `project_archive` que ele gerou.
+- [x] Nenhum job falha com `handler_error` genérico.
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] `uv run pytest` verde (suíte completa offline).
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -71,3 +71,7 @@ R1–R5.
 - Payload de job: só ids de correlação, nada de conteúdo.
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## Execução (logs-p1, 2026-10-18)
+
+Implementado: `JobRequest.trace` ({request_id, action_ref}, aditivo; vai em `payload._trace`, retirado no lease; jobs antigos sem trace funcionam), `JobWorker` abre `correlation_scope` com o request de origem e emite `job.started/completed/failed/dead/deferred/lease_lost` (`error_code` = código do handler ou `exc:<Classe>`, nunca só `handler_error`), `fail()` devolve `{status,next_run_in_s}`, `drain_jobs` retorna `failed/dead/deferred`, expiração de lease que mata job emite `job.dead reason=lease_expired_max_attempts`; falhas silenciosas de `run_worker`/`blob_purge_jobs` agora logam. Testes: `tests/test_job_logging.py`. Falta: Postgres local (`infra_local`), smoke de staging com `post_response` (§6) e a revisão Sol.

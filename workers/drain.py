@@ -38,6 +38,7 @@ def drain_jobs(
         worker = JobWorker(get_runtime().job_queue, build_handlers(), worker_id=worker_id)
     processed = 0
     reason = "empty"
+    before = dict(getattr(worker, "stats", None) or {})
     while True:
         if processed >= max_jobs:
             reason = "max_jobs"
@@ -49,5 +50,11 @@ def drain_jobs(
             reason = "empty"
             break
         processed += 1
+    after = dict(getattr(worker, "stats", None) or {})
+
+    def delta(key: str) -> int:        # SPEC-255 R4: o cron deriva o outcome daqui
+        return int(after.get(key, 0)) - int(before.get(key, 0))
+
     return {"processed": processed, "stopped_reason": reason,
-            "elapsed_s": round(clock() - started, 3)}
+            "elapsed_s": round(clock() - started, 3),
+            "failed": delta("failed"), "dead": delta("dead"), "deferred": delta("deferred")}
