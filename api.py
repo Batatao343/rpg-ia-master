@@ -19,7 +19,8 @@ import uuid  # <--- Necessário para gerar IDs de sessão
 from collections import Counter, defaultdict, deque
 from contextlib import contextmanager, nullcontext
 from copy import deepcopy
-from typing import Annotated, Any, Dict, Iterator, List, Literal, Optional
+from typing import Annotated, Any, Dict, List, Literal, Optional
+from collections.abc import Iterator
 
 import uvicorn
 from fastapi import FastAPI, HTTPException, Request, Response
@@ -461,12 +462,12 @@ def _server_git_sha() -> str:
     return (os.getenv("GIT_SHA") or os.getenv("VERCEL_GIT_COMMIT_SHA") or "").strip().lower()
 
 
-def _client_build_fields(request: Request) -> Dict[str, Any]:
+def _client_build_fields(request: Request) -> dict[str, Any]:
     """SPEC-261 R2 / SPEC-259 R4: build do bundle web e versao do app Android no access log.
 
     Formatos fechados (header fora do formato vira ``other``); ``build_skew`` so quando o sha do
     bundle difere do sha do servidor (cliente velho em cache x API nova)."""
-    fields: Dict[str, Any] = {}
+    fields: dict[str, Any] = {}
     raw = request.headers.get("x-rpg-build", "").strip()
     if raw:
         build = raw if _CLIENT_BUILD_RE.fullmatch(raw) else "other"
@@ -1101,11 +1102,11 @@ def _captured_usage(claim):
 
 # Hardening 2026-08-11: mutações do mesmo save são serializadas no processo.
 # A Fase 10b substituirá isto por transação/lock distribuído no storage.
-_game_locks: Dict[str, threading.RLock] = {}
+_game_locks: dict[str, threading.RLock] = {}
 _game_locks_guard = threading.Lock()
 
 
-def _game_lock(game_id: Optional[str]) -> threading.RLock:
+def _game_lock(game_id: str | None) -> threading.RLock:
     if not game_id:
         # SPEC-228 R8: sem game_id, trava pelo UUID REAL do save mais recente
         # (legacy), para serializar com requisições que trazem o UUID.
@@ -1138,7 +1139,7 @@ def _telemetry_hook(provider: str, model: str, tier, latency_ms: int,
 set_llm_telemetry_hook(_telemetry_hook)
 
 
-def _safe_error_type(value: Any) -> Optional[str]:
+def _safe_error_type(value: Any) -> str | None:
     """Classe/codigo fechado (identificador curto); qualquer texto livre vira ``other``."""
     if not value:
         return None
@@ -1198,8 +1199,8 @@ def _attempt_telemetry_hook(event: LLMAttemptEvent) -> None:
 set_llm_attempt_telemetry_hook(_attempt_telemetry_hook)
 
 
-def _llm_log_fields(events: Optional[List[dict]],
-                    attempts: Optional[List[dict]] = None) -> Dict[str, Any]:
+def _llm_log_fields(events: list[dict] | None,
+                    attempts: list[dict] | None = None) -> dict[str, Any]:
     events = events or []
     attempts = attempts or []
     network_attempts = [
@@ -1235,8 +1236,8 @@ def _llm_log_fields(events: Optional[List[dict]],
     }
 
 
-def _usage_attempts(events: Optional[List[dict]],
-                    attempts: Optional[List[dict]]) -> List[dict]:
+def _usage_attempts(events: list[dict] | None,
+                    attempts: list[dict] | None) -> list[dict]:
     if attempts:
         return list(attempts)
     return [
@@ -1245,7 +1246,7 @@ def _usage_attempts(events: Optional[List[dict]],
     ]
 
 
-def _resolve_save_file(game_id: Optional[str]) -> Optional[str]:
+def _resolve_save_file(game_id: str | None) -> str | None:
     """game_id do cliente -> caminho de save validado (Fase 10, R1/R2).
 
     None passa (carrega o save mais recente); não-UUID -> HTTP 400 sem tocar
@@ -1285,7 +1286,7 @@ def _reject_archived(state: dict) -> None:
 # Fase 10 (R6): rate limit mínimo por IP (janela deslizante em memória).
 # RPG_RATE_LIMIT = req/min em /game/action e /game/new; 0 desliga (suíte/smoke).
 _RATE_WINDOW_S = 60.0
-_rate_hits: Dict[str, deque] = defaultdict(deque)
+_rate_hits: dict[str, deque] = defaultdict(deque)
 _CLIENT_LATENCY_PATH = "/telemetry/client-latency"
 _CLIENT_ERROR_PATH = "/telemetry/client-error"
 
@@ -1298,7 +1299,7 @@ def _rate_limit_max() -> int:
 
 
 _METRICS_RATE_PER_MIN = 12
-_metrics_hits: Dict[str, deque] = defaultdict(deque)
+_metrics_hits: dict[str, deque] = defaultdict(deque)
 
 
 async def _rate_limit_metrics(request: Request, call_next):
@@ -1475,14 +1476,14 @@ class CreateCharacterRequest(BaseModel):
     class_name: str = Field(max_length=40)
     region: str = Field(max_length=60)
     level: int = Field(1, ge=1, le=20)
-    backstory: Optional[str] = Field("", max_length=2000)  # null -> "" (SPEC-235 R9)
+    backstory: str | None = Field("", max_length=2000)  # null -> "" (SPEC-235 R9)
     appearance: str = Field("", max_length=1000)
     visual_exclusions: str = Field("", max_length=500)
     # spec inicio-personalizado (R4): cenário aprovado no passo de prólogo.
     # StartScenarioIn re-valida na borda (limites de campo, beats ≤ 5, npcs ≤ 2
     # → excedente = 422). None = fluxo clássico, byte a byte o atual (R6).
-    scenario: Optional[StartScenarioIn] = None
-    action_id: Optional[str] = Field(default=None, max_length=36)
+    scenario: StartScenarioIn | None = None
+    action_id: str | None = Field(default=None, max_length=36)
 
     @field_validator("class_name")
     @classmethod
@@ -1512,22 +1513,20 @@ class CreateCharacterRequest(BaseModel):
 class ActionRequest(BaseModel):
     # Auditoria A7: ação vira prompt — sem teto, request gigante = custo/latência.
     input_text: str = Field(max_length=2000)
-    game_id: Optional[str] = None # Opcional: permite especificar qual save carregar
-    action_id: Optional[str] = Field(default=None, max_length=36)
+    game_id: str | None = None # Opcional: permite especificar qual save carregar
+    action_id: str | None = Field(default=None, max_length=36)
     # conflito-16: seleção tática canônica da UI; o motor revalida tudo.
-    card_id: Optional[str] = Field(default=None, max_length=128)
-    target_id: Optional[str] = Field(default=None, max_length=128)
+    card_id: str | None = Field(default=None, max_length=128)
+    target_id: str | None = Field(default=None, max_length=128)
     ruptura: bool = False
-    reaction_card_id: Optional[str] = Field(default=None, max_length=128)
+    reaction_card_id: str | None = Field(default=None, max_length=128)
     # Laboratório/UI tática: ações fechadas evitam parse LLM de chips mecânicos.
-    action_kind: Optional[Literal["attack", "maneuver", "pass", "flee"]] = None
-    maneuver: Optional[Literal[
-        "engajar", "desengajar", "guardar", "esconder", "procurar"
-    ]] = None
+    action_kind: Literal["attack", "maneuver", "pass", "flee"] | None = None
+    maneuver: Literal["engajar", "desengajar", "guardar", "esconder", "procurar"] | None = None
 
     @field_validator("action_id")
     @classmethod
-    def _canonical_action_id(cls, value: Optional[str]) -> Optional[str]:
+    def _canonical_action_id(cls, value: str | None) -> str | None:
         if value is None:
             return None
         try:
@@ -1562,7 +1561,7 @@ class ArtConfirmRequest(BaseModel):
 class ArtQuoteRequest(BaseModel):
     model_config = {"extra": "forbid"}
     image_type: Literal["player", "npc", "scene"] = "player"
-    offer_id: Optional[uuid.UUID] = None
+    offer_id: uuid.UUID | None = None
     reformulation: bool = False
 
 
@@ -1575,7 +1574,7 @@ class CombatSimulatorRequest(BaseModel):
     level: Literal[1, 3, 5, 10] = 1
     enemy_id: str = Field(min_length=1, max_length=128)
     quantity: int = Field(default=1, ge=1, le=3)
-    action_id: Optional[str] = Field(default=None, max_length=36)
+    action_id: str | None = Field(default=None, max_length=36)
 
     @field_validator("class_name")
     @classmethod
@@ -1593,29 +1592,29 @@ class CombatSimulatorRequest(BaseModel):
 
 class EquipRequest(BaseModel):
     """Fase 4.3: equipa item do inventário (slot deduzido do tipo) ou desequipa slot."""
-    item_id: Optional[str] = None   # equipar este item
-    unequip_slot: Optional[str] = None  # OU esvaziar este slot
-    game_id: Optional[str] = None
-    action_id: Optional[str] = Field(default=None, max_length=36)
+    item_id: str | None = None   # equipar este item
+    unequip_slot: str | None = None  # OU esvaziar este slot
+    game_id: str | None = None
+    action_id: str | None = Field(default=None, max_length=36)
 
 class PrepareCardsRequest(BaseModel):
     """SPEC-209 R4: prepara/troca Cartas fora de combate (validação 100% Python)."""
-    game_id: Optional[str] = None
-    prepared: List[str] = Field(default_factory=list, max_length=64)
-    action_id: Optional[str] = Field(default=None, max_length=36)
+    game_id: str | None = None
+    prepared: list[str] = Field(default_factory=list, max_length=64)
+    action_id: str | None = Field(default=None, max_length=36)
 
 class LevelUpRequest(BaseModel):
     """Conflito v2: consome escolha de Carta/evolução ou de Virtude."""
     choice_id: str
-    card_id: Optional[str] = None
-    evolve_card_id: Optional[str] = None
-    caminho: Optional[str] = None
-    virtude: Optional[str] = None
-    attr: Optional[str] = None
-    subclass_id: Optional[str] = None
-    virtue_card_id: Optional[str] = None
-    game_id: Optional[str] = None
-    action_id: Optional[str] = Field(default=None, max_length=36)
+    card_id: str | None = None
+    evolve_card_id: str | None = None
+    caminho: str | None = None
+    virtude: str | None = None
+    attr: str | None = None
+    subclass_id: str | None = None
+    virtue_card_id: str | None = None
+    game_id: str | None = None
+    action_id: str | None = Field(default=None, max_length=36)
 
 
 class ChronicleSearchRequest(BaseModel):
@@ -1651,7 +1650,7 @@ class SceneVisualResponse(BaseModel):
     location_id: str
     location_name: str
     scope: Literal["exact", "regional", "placeholder"]
-    asset: Optional[VisualAssetResponse] = None
+    asset: VisualAssetResponse | None = None
 
 
 class VisualCueResponse(BaseModel):
@@ -1659,47 +1658,47 @@ class VisualCueResponse(BaseModel):
     subject_id: str
     subject_name: str
     caption: str
-    asset: Optional[VisualAssetResponse] = None
+    asset: VisualAssetResponse | None = None
     fallback: bool
 
 
 class VisualResponse(BaseModel):
     scene: SceneVisualResponse
-    cue: Optional[VisualCueResponse] = None
+    cue: VisualCueResponse | None = None
 
 class GameResponse(BaseModel):
     timeline_epoch: int = 0
-    portrait_generation_id: Optional[str] = None
+    portrait_generation_id: str | None = None
     game_id: str # <--- Novo: Frontend precisa saber o ID
     message: str
     message_type: str
     # SPEC-202 R9: quem respondeu — {kind: narrator|npc|system, id, name, reason}.
-    speaker: Dict[str, str] = {}
-    player_stats: Dict[str, Any]
+    speaker: dict[str, str] = {}
+    player_stats: dict[str, Any]
     # Fase 4.3: estruturado — {id, name, qty, type, equipped, slot}
-    inventory: List[Dict[str, Any]]
+    inventory: list[dict[str, Any]]
     current_location: str
     narrative_summary: str # <--- Novo: Frontend pode mostrar o resumo
-    last_turn_log: List[Dict[str, Any]]
+    last_turn_log: list[dict[str, Any]]
     simulated: bool = False # True quando rodando em modo simulado (sem API key)
-    world: Dict[str, Any] = {} # location_id, day, period, visited (fog of war), danger
-    quest: Dict[str, Any] = {} # objetivo atual, beats (status), clímax, progresso
-    combat: Dict[str, Any] = {} # inimigos, condições, iniciativa, round, cooldowns
-    npcs: List[Dict[str, Any]] = [] # NPCs conhecidos (nome, papel, local, relação, última lembrança)
-    art_offers: List[Dict[str, str]] = []
-    art_generations: List[Dict[str, str]] = []
-    chronicle: List[Dict[str, Any]] = [] # capítulos: {title, started_turn, location, entries[{text,turn,kind,event_id?}]}
-    factions: List[Dict[str, Any]] = [] # fações vivas: objetivo, progresso, postura, reputação
-    party: List[Dict[str, Any]] = [] # Fase 4.5: companheiros {name, hp, max_hp, active, archetype, status}
+    world: dict[str, Any] = {} # location_id, day, period, visited (fog of war), danger
+    quest: dict[str, Any] = {} # objetivo atual, beats (status), clímax, progresso
+    combat: dict[str, Any] = {} # inimigos, condições, iniciativa, round, cooldowns
+    npcs: list[dict[str, Any]] = [] # NPCs conhecidos (nome, papel, local, relação, última lembrança)
+    art_offers: list[dict[str, str]] = []
+    art_generations: list[dict[str, str]] = []
+    chronicle: list[dict[str, Any]] = [] # capítulos: {title, started_turn, location, entries[{text,turn,kind,event_id?}]}
+    factions: list[dict[str, Any]] = [] # fações vivas: objetivo, progresso, postura, reputação
+    party: list[dict[str, Any]] = [] # Fase 4.5: companheiros {name, hp, max_hp, active, archetype, status}
     death_pending: bool = False # spec checkpoints-morte: queda letal — abre a tela de morte no cliente
     game_over: bool = False     # memorial/bloqueio definitivo; Vitalidade 0 não basta
-    death: Dict[str, Any] = {}  # conflito-16: Última Ação/Terminal/estabilização
-    continuity: Dict[str, Any] = {}
-    combat_simulation: Dict[str, Any] = {}
-    turn_outcome: Dict[str, Any] = {}  # SPEC-199: ganhos do turno (XP/ouro/itens/missões)
-    combat_result: Dict[str, Any] = {}  # SPEC-203: desfecho do encontro (turno de término)
+    death: dict[str, Any] = {}  # conflito-16: Última Ação/Terminal/estabilização
+    continuity: dict[str, Any] = {}
+    combat_simulation: dict[str, Any] = {}
+    turn_outcome: dict[str, Any] = {}  # SPEC-199: ganhos do turno (XP/ouro/itens/missões)
+    combat_result: dict[str, Any] = {}  # SPEC-203: desfecho do encontro (turno de término)
     # SPEC-213 R13: só status/versões das projeções derivadas (nunca conteúdo).
-    projections: Dict[str, Any] = {}
+    projections: dict[str, Any] = {}
     visual: VisualResponse
 
 # --- HELPER: FORMATA RESPOSTA ---
@@ -1716,12 +1715,12 @@ def _public_art_refs(state: dict) -> dict:
                            for row in state.get("art_offers") or []]}
 
 
-def _response_speaker(state: dict) -> Dict[str, str]:
+def _response_speaker(state: dict) -> dict[str, str]:
     from services.interlocutor import response_speaker
     return response_speaker(state)
 
 
-def format_response(state: dict, *, cue_action_key: Optional[str] = None) -> GameResponse:
+def format_response(state: dict, *, cue_action_key: str | None = None) -> GameResponse:
     # Pega a última mensagem
     from services.turn_outcome import player_facing_message
     last_content = player_facing_message(state)
@@ -1827,7 +1826,7 @@ def format_response(state: dict, *, cue_action_key: Optional[str] = None) -> Gam
     )
 
 
-def _inventory_block(player: dict) -> List[Dict[str, Any]]:
+def _inventory_block(player: dict) -> list[dict[str, Any]]:
     """Fase 4.3: inventário estruturado com nome canônico (nunca title() sobre id)."""
     import inventory as inv_mod
     from gamedata import ARTIFACTS_DB
@@ -1860,7 +1859,7 @@ def _abyss_tier_view(player: dict) -> str:
     return _cm.abyss_tier(player)
 
 
-def _can_reorganize_view(state: dict) -> Dict[str, Any]:
+def _can_reorganize_view(state: dict) -> dict[str, Any]:
     from services import cards
     allowed, reason = cards.reorganize_status(state)
     return {"allowed": bool(allowed), "reason": reason}
@@ -1871,7 +1870,7 @@ def _prepared_slots(player: dict) -> int:
     return int(cards.prepare_slots_for_level(player.get("level", 1)))
 
 
-def _virtue_cards_view(player: dict) -> List[Dict[str, Any]]:
+def _virtue_cards_view(player: dict) -> list[dict[str, Any]]:
     from services import cards
     out = []
     for row in player.get("virtue_cards") or []:
@@ -1885,7 +1884,7 @@ def _virtue_cards_view(player: dict) -> List[Dict[str, Any]]:
     return out
 
 
-def _evolvable_card_ids(player: dict) -> List[str]:
+def _evolvable_card_ids(player: dict) -> list[str]:
     from services import cards
     if int(player.get("level", 1) or 1) < 4:
         return []
@@ -1894,7 +1893,7 @@ def _evolvable_card_ids(player: dict) -> List[str]:
             if (cards.get_card(cid) or {}).get("evolucao") and cid not in done]
 
 
-def _scars_view(player: dict) -> List[Dict[str, str]]:
+def _scars_view(player: dict) -> list[dict[str, str]]:
     out = []
     for scar in player.get("scars") or []:
         if not isinstance(scar, dict):
@@ -1904,7 +1903,7 @@ def _scars_view(player: dict) -> List[Dict[str, str]]:
     return out
 
 
-def _cards_block(player: dict, *, prepared_only: bool = False) -> List[Dict[str, Any]]:
+def _cards_block(player: dict, *, prepared_only: bool = False) -> list[dict[str, Any]]:
     """View autoral + disponibilidade mecânica das Cartas.
 
     O frontend nunca tenta reproduzir frequência/custo por conta própria: recebe
@@ -1957,7 +1956,7 @@ def _cards_block(player: dict, *, prepared_only: bool = False) -> List[Dict[str,
     return out
 
 
-def _death_block(state: dict) -> Dict[str, Any]:
+def _death_block(state: dict) -> dict[str, Any]:
     player = state.get("player") or {}
     combat = state.get("combat") or {}
     context = combat.get("death_context") or {}
@@ -1970,7 +1969,7 @@ def _death_block(state: dict) -> Dict[str, Any]:
     continuity = _continuity_block(state)
     canonical = int(continuity.get("canonical_turn", 0) or 0)
     # SPEC-228 R6/R10: o turno de retorno vem do checkpoint REAL em disco.
-    checkpoint: Optional[int] = None
+    checkpoint: int | None = None
     if state.get("game_id"):
         try:
             checkpoint = persistence_module.checkpoint_turn(str(state["game_id"]))
@@ -1997,14 +1996,14 @@ def _death_block(state: dict) -> Dict[str, Any]:
     }
 
 
-def _continuity_block(state: dict) -> Dict[str, Any]:
+def _continuity_block(state: dict) -> dict[str, Any]:
     from services.continuity import normalize
     canonical = int((state.get("world") or {}).get("turn_count", 0) or 0)
     meta = normalize(state.get("continuity"), canonical_turn=canonical)
     return {**meta, "canonical_turn": canonical}
 
 
-def _levelup_block(player: dict) -> Dict[str, Any]:
+def _levelup_block(player: dict) -> dict[str, Any]:
     """Escolhas pendentes + Cartas elegíveis/evoluções."""
     pending = player.get("pending_choices", []) or []
     if not pending:
@@ -2050,9 +2049,9 @@ def _levelup_block(player: dict) -> Dict[str, Any]:
     }
 
 
-def _chronicle_block(chronicle: list) -> List[Dict[str, Any]]:
+def _chronicle_block(chronicle: list) -> list[dict[str, Any]]:
     """Capítulos da crônica para o HUD (Fase 3.1) — filtra entradas vazias."""
-    out: List[Dict[str, Any]] = []
+    out: list[dict[str, Any]] = []
     for cap in chronicle:
         if not isinstance(cap, dict):
             continue
@@ -2071,7 +2070,7 @@ def _chronicle_block(chronicle: list) -> List[Dict[str, Any]]:
 
 
 def _factions_block(factions: list, intel: dict, turn: int = 0,
-                    event_log: Optional[list] = None, projection: Optional[dict] = None) -> List[Dict[str, Any]]:
+                    event_log: list | None = None, projection: dict | None = None) -> list[dict[str, Any]]:
     """
     Fações para o HUD — não-onisciência: só as que o jogador CONHECE (intel.known).
     Objetivo só se aprendido; progresso é o SNAPSHOT que o jogador viu (nunca o ao vivo);
@@ -2111,7 +2110,7 @@ def _factions_block(factions: list, intel: dict, turn: int = 0,
     return out
 
 
-def _npcs_block(npcs: dict, state: Optional[dict] = None) -> List[Dict[str, Any]]:
+def _npcs_block(npcs: dict, state: dict | None = None) -> list[dict[str, Any]]:
     """Camada 2 (spec npcs-3-camadas): só NPCs conhecidos, com traits REVELADOS
     — hidden_traits NUNCA sai pela API (R9). SPEC-211: com `state`, NPC de entidade
     `hidden`/`secret` sem reveal aceito (regra fail-closed da SPEC-206) também some."""
@@ -2132,14 +2131,14 @@ def _simulation_manifest(enemies: list, game_id: str, scene: dict) -> dict:
                              encounter_id=f"{game_id}:sim", scene=scene)
 
 
-def _combat_result(state: dict) -> Dict[str, Any]:
+def _combat_result(state: dict) -> dict[str, Any]:
     """SPEC-203 R7: desfecho do turno de término, derivado de estado persistido."""
     from services import encounter_manifest as em
     from services.turn_outcome import public_outcome
     return em.result_view(state.get("combat"), public_outcome(state.get("last_turn_outcome")))
 
 
-def _targeting_cards(state: dict, cards_view: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def _targeting_cards(state: dict, cards_view: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """SPEC-205 R7: `valid_targets`/`invalid_reason` por Carta, calculados em Python."""
     from services import combat_targeting as targeting
     for row in cards_view:
@@ -2147,7 +2146,7 @@ def _targeting_cards(state: dict, cards_view: List[Dict[str, Any]]) -> List[Dict
     return cards_view
 
 
-def _combat_block(state: dict) -> Dict[str, Any]:
+def _combat_block(state: dict) -> dict[str, Any]:
     """View tática pública do conflito, sem vazar ficha secreta de inimigo."""
     meta = state.get("combat") or {}
     enemies = state.get("enemies") or []
@@ -2262,7 +2261,7 @@ def _combat_block(state: dict) -> Dict[str, Any]:
     }
 
 
-def _quest_block(plan: dict, quests: list, world: Optional[dict] = None) -> Dict[str, Any]:
+def _quest_block(plan: dict, quests: list, world: dict | None = None) -> dict[str, Any]:
     """Fase 3.3: main (view do campaign_plan) + side quests + markers pro mapa."""
     plan = plan or {}
     beats = plan.get("beats", []) or []
@@ -2290,8 +2289,8 @@ def _quest_block(plan: dict, quests: list, world: Optional[dict] = None) -> Dict
     return {"main": main, "side": active + resolved, "markers": quest_log.quest_markers(quests)}
 
 
-def _world_block(w: dict, projection: Optional[dict] = None, event_log: Optional[list] = None,
-                 player: Optional[dict] = None) -> Dict[str, Any]:
+def _world_block(w: dict, projection: dict | None = None, event_log: list | None = None,
+                 player: dict | None = None) -> dict[str, Any]:
     clock = w.get("world_clock") or {}
     turn = w.get("turn_count", 0)
     # spec itens-vivos-e-luz (R7): estado de luz p/ o HUD (precisa do player p/
@@ -2330,7 +2329,7 @@ def _world_block(w: dict, projection: Optional[dict] = None, event_log: Optional
     }
 
 
-def _interiors_block(loc_id: str) -> Dict[str, Any]:
+def _interiors_block(loc_id: str) -> dict[str, Any]:
     from services.map_view import interiors_block
     return interiors_block(loc_id)
 
@@ -2359,11 +2358,11 @@ class ClientLatencyReport(BaseModel):
     model_config = ConfigDict(extra="forbid")
     action_id: uuid.UUID
     transport: Literal["stream", "post"]
-    ack_ms: Optional[int] = None
-    first_phase_ms: Optional[int] = None
-    ttfmc_ms: Optional[int] = None
-    ttlt_ms: Optional[int] = None
-    state_ms: Optional[int] = None
+    ack_ms: int | None = None
+    first_phase_ms: int | None = None
+    ttfmc_ms: int | None = None
+    ttlt_ms: int | None = None
+    state_ms: int | None = None
     outcome: Literal["ok", "error", "aborted"] = "ok"
 
     @field_validator("ack_ms", "first_phase_ms", "ttfmc_ms", "ttlt_ms", "state_ms",
@@ -2419,17 +2418,17 @@ class ClientErrorReport(BaseModel):
     model_config = ConfigDict(extra="forbid")
     kind: Literal["render", "unhandled", "network", "sse", "native"]
     error_name: str = Field(pattern=r"^[A-Za-z_$][A-Za-z0-9_$.]{0,59}$")
-    code: Optional[str] = Field(default=None, pattern=r"^[a-z0-9_.:-]{1,64}$")
-    route: Optional[str] = Field(default=None, pattern=r"^/[A-Za-z0-9_/{}.-]{0,120}$")
-    request_id: Optional[str] = Field(default=None, pattern=r"^[A-Za-z0-9._:-]{8,64}$")
-    build: Optional[str] = Field(default=None, pattern=r"^(?:[0-9a-f]{7}|dev)\+\d{12}$")
+    code: str | None = Field(default=None, pattern=r"^[a-z0-9_.:-]{1,64}$")
+    route: str | None = Field(default=None, pattern=r"^/[A-Za-z0-9_/{}.-]{0,120}$")
+    request_id: str | None = Field(default=None, pattern=r"^[A-Za-z0-9._:-]{8,64}$")
+    build: str | None = Field(default=None, pattern=r"^(?:[0-9a-f]{7}|dev)\+\d{12}$")
     client: Literal["web", "android"] = "web"
     stack: list[Annotated[str, Field(pattern=_STACK_FRAME)]] = Field(default_factory=list, max_length=20)
-    ts: Optional[int] = Field(default=None, ge=0, le=10**14)
+    ts: int | None = Field(default=None, ge=0, le=10**14)
 
     @field_validator("route")
     @classmethod
-    def _route_as_template(cls, value: Optional[str]) -> Optional[str]:
+    def _route_as_template(cls, value: str | None) -> str | None:
         """Revisao P2/P3: o servidor nao confia no ``routeTemplate`` do cliente -- segmento com cara
         de id (hex/uuid >= 16, so digitos) vira ``{id}`` (nunca ``game_id`` em claro no log)."""
         if value is None:
@@ -2440,9 +2439,9 @@ class ClientErrorReport(BaseModel):
 _ID_SEGMENT = re.compile(r"[0-9a-fA-F-]{16,}|\d+")
 # Revisao P2/P3: sob abuso (IPs distribuidos), ``client.error`` sai 1x/min por assinatura; a metrica conta tudo.
 _CLIENT_ERROR_LOG_INTERVAL_S = 60.0
-_client_error_last: Dict[tuple, float] = {}
+_client_error_last: dict[tuple, float] = {}
 _CLIENT_ERROR_LOG_MAX_PER_MIN = 600
-_client_error_window: List[float] = [0.0, 0]   # [inicio da janela, linhas emitidas]
+_client_error_window: list[float] = [0.0, 0]   # [inicio da janela, linhas emitidas]
 
 
 @app.post(_CLIENT_ERROR_PATH, status_code=204, include_in_schema=False)
@@ -2611,7 +2610,7 @@ def prometheus_metrics(request: Request):
     )
 
 
-def combat_simulator_options() -> Dict[str, Any]:
+def combat_simulator_options() -> dict[str, Any]:
     """Catálogo público mínimo do laboratório, derivado dos dados canônicos."""
     allowed = {"lacaio", "padrao", "elite", "chefe", "nomeado"}
     enemies = []
@@ -2825,7 +2824,7 @@ def get_onboarding():
     return data
 
 @app.get("/game/map")
-def get_game_map(game_id: Optional[str] = None):
+def get_game_map(game_id: str | None = None):
     """SPEC-210: mapa do JOGO com fog server-side (só visitados + adjacentes).
 
     Mesmo guard de save de /game/state (UUID validado; 404 sem save; em perfis
@@ -2839,7 +2838,7 @@ def get_game_map(game_id: Optional[str] = None):
 
 
 @app.get("/data/map")
-def get_world_map(game_id: Optional[str] = None):
+def get_world_map(game_id: str | None = None):
     """Grafo de locais (Fase 0) para o mapa com fog of war no frontend.
 
     spec mapa-sublocais (R7): interiores NÃO aparecem no mapa-múndi —
@@ -2863,7 +2862,7 @@ def get_world_map(game_id: Optional[str] = None):
     return data
 
 @app.get("/game/state")
-def get_current_state(game_id: Optional[str] = None):
+def get_current_state(game_id: str | None = None):
     """
     Carrega o jogo. Se game_id for passado, carrega aquele especifico.
     Caso contrario, carrega o ultimo modificado.
@@ -2882,7 +2881,7 @@ def get_current_state(game_id: Optional[str] = None):
     return format_response(state)
 
 @app.get("/game/codex")
-def get_player_codex(game_id: Optional[str] = None):
+def get_player_codex(game_id: str | None = None):
     """Codex do jogador (Fase 3.2) — locais/fações/personagens/criaturas/segredos
     já registrados no save. On-demand (fora do GameResponse) para não inchar o turno."""
     file_to_load = _resolve_save_file(game_id)
@@ -2893,7 +2892,7 @@ def get_player_codex(game_id: Optional[str] = None):
     return player_codex(state)
 
 @app.get("/game/codex/dossiers")
-def get_codex_dossiers(response: Response, game_id: Optional[str] = None):
+def get_codex_dossiers(response: Response, game_id: str | None = None):
     """SPEC-211 — dossiês vivos (NPC/local/facção/segredo/crônica + bestiário).
     Projeção somente leitura sobre o save, sobre a projeção player-facing da
     SPEC-206 (fail-closed). `GET /game/codex` segue inalterado."""
@@ -2908,7 +2907,7 @@ def get_codex_dossiers(response: Response, game_id: Optional[str] = None):
     return DossiersResponseModel.model_validate(build_dossiers(state)).model_dump(exclude_unset=True)
 
 @app.get('/game/history')
-def game_history(game_id: str, cursor: Optional[str] = None, limit: int = 50):
+def game_history(game_id: str, cursor: str | None = None, limit: int = 50):
     state = load_game_state(_resolve_save_file(game_id))
     if not state:
         raise HTTPException(404, 'Jogo não encontrado.')
@@ -3256,7 +3255,7 @@ async def account_transcription(request: Request):
 
 
 @app.get('/account/purchases')
-def account_purchases(cursor: Optional[str] = None, limit: int = 20):
+def account_purchases(cursor: str | None = None, limit: int = 20):
     from infrastructure.request_context import current_principal
     try:
         return _account_reader().purchases(current_principal(), cursor=cursor, limit=limit)
@@ -3265,7 +3264,7 @@ def account_purchases(cursor: Optional[str] = None, limit: int = 20):
 
 
 @app.get('/account/usage')
-def account_usage(cursor: Optional[str] = None, limit: int = 20):
+def account_usage(cursor: str | None = None, limit: int = 20):
     from infrastructure.request_context import current_principal
     try:
         return _account_reader().usage(current_principal(), cursor=cursor, limit=limit)
@@ -3876,11 +3875,11 @@ def _append_player_input(state: dict, input_text: str) -> None:
 _ACTION_LEDGER_LIMIT = 64
 
 
-def _action_already_processed(state: dict, action_id: Optional[str]) -> bool:
+def _action_already_processed(state: dict, action_id: str | None) -> bool:
     return bool(action_id and action_id in (state.get("processed_action_ids") or []))
 
 
-def _mark_action_processed(state: dict, action_id: Optional[str]) -> None:
+def _mark_action_processed(state: dict, action_id: str | None) -> None:
     if not action_id:
         return
     ledger = [str(value) for value in (state.get("processed_action_ids") or [])
@@ -4026,7 +4025,7 @@ def _begin_turn_operation(state: dict, req: ActionRequest):
     return claim, request_hash, None
 
 
-def _failed_pending_operation(state: dict) -> Optional[str]:
+def _failed_pending_operation(state: dict) -> str | None:
     """SPEC-235 R3: id da operação ``turn`` falha ainda não superada (perfil durável).
 
     Uma falha é "superada" quando uma operação posterior do mesmo jogo concluiu.
@@ -4049,7 +4048,7 @@ def _failed_pending_operation(state: dict) -> Optional[str]:
     return str(row["id"]) if row else None
 
 
-def _begin_state_mutation(state: dict, *, action_id: Optional[str], kind: str,
+def _begin_state_mutation(state: dict, *, action_id: str | None, kind: str,
                           payload: dict[str, Any]):
     if not _database_profile():
         return None, "", None
@@ -4332,10 +4331,10 @@ def _apply_action_options(state: dict, req: ActionRequest) -> None:
         }
 
 
-def _latency_log_fields(timeline, llm_events: Optional[List[dict]],
-                        llm_attempts: Optional[List[dict]], *,
-                        action_id: Optional[str] = None,
-                        input_text: str = "") -> Dict[str, Any]:
+def _latency_log_fields(timeline, llm_events: list[dict] | None,
+                        llm_attempts: list[dict] | None, *,
+                        action_id: str | None = None,
+                        input_text: str = "") -> dict[str, Any]:
     """SPEC-200 R5/R17: campos ADITIVOS da linha `rpg.turn`. Nunca levanta e
     nunca leva texto do jogador nem game_id cru (so contagens, ms e pseudonimos)."""
     if timeline is None:
@@ -4348,7 +4347,7 @@ def _latency_log_fields(timeline, llm_events: Optional[List[dict]],
         attempts = list(llm_attempts or [])
         network = [a for a in attempts if a.get(
             "network_attempted", a.get("outcome") not in {"build_error", "circuit_open"})]
-        by_tier: Dict[str, Dict[str, Any]] = {}
+        by_tier: dict[str, dict[str, Any]] = {}
         for item in network:
             row = by_tier.setdefault(str(item.get("tier") or "?"), {
                 "attempts": 0, "failed": 0, "fallbacks": 0, "latency_ms": 0})
@@ -4411,13 +4410,13 @@ def _turn_route(timeline) -> str:
     return "/game/action/stream" if getattr(timeline, "transport", "") == "stream" else "/game/action"
 
 
-def _log_turn(state: dict, t0: float, eventos_antes: int, error: Optional[str],
-              llm_events: Optional[List[dict]] = None, *,
+def _log_turn(state: dict, t0: float, eventos_antes: int, error: str | None,
+              llm_events: list[dict] | None = None, *,
               rejections_antes: int = 0,
-              llm_attempts: Optional[List[dict]] = None,
-              latency_fields: Optional[Dict[str, Any]] = None,
-              latency_ms: Optional[int] = None,
-              fallbacks: Optional[List[str]] = None) -> None:
+              llm_attempts: list[dict] | None = None,
+              latency_fields: dict[str, Any] | None = None,
+              latency_ms: int | None = None,
+              fallbacks: list[str] | None = None) -> None:
     from observability.telemetry import correlation, pseudonym, safe_json
     _turn_logger.info(safe_json({
         "event": "turn", "evt": "turn",
@@ -4458,9 +4457,9 @@ def _record_audit_trace(new_state: dict, previous_state: dict, *, action_id, tim
 
 
 def _run_turn(state: dict, input_text: str,
-              action_id: Optional[str] = None, *, claim=None,
+              action_id: str | None = None, *, claim=None,
               request_hash: str = "", progress=None,
-              timeline=None, out: Optional[dict] = None,
+              timeline=None, out: dict | None = None,
               pre_drain: bool = False) -> GameResponse:
     from rag import embedding_usage_scope
     from services.audit_trace import collecting as _audit_collecting
@@ -4472,9 +4471,9 @@ def _run_turn(state: dict, input_text: str,
 
 
 def _run_turn_collected(state: dict, input_text: str,
-              action_id: Optional[str] = None, *, claim=None,
+              action_id: str | None = None, *, claim=None,
               request_hash: str = "", progress=None,
-              timeline=None, out: Optional[dict] = None,
+              timeline=None, out: dict | None = None,
               pre_drain: bool = False) -> GameResponse:
     """Miolo do turno (spec streaming-turno-sse R2): grafo + save + log.
     Compartilhado pelo POST clássico e pelo stream — carga/validações ficam
@@ -4610,7 +4609,7 @@ def _run_turn_collected(state: dict, input_text: str,
         _embedding_attempt_events.reset(embedding_token)
 
 
-def _load_unlocked_or_locked(file_to_load, game_id: Optional[str]):
+def _load_unlocked_or_locked(file_to_load, game_id: str | None):
     """Leitura sem lock (caminho comum); se falhar no perfil legacy, relê sob o
     lock do jogo. SPEC-213: com a projeção pós-resposta o save é regravado logo
     após a entrega, e no Windows uma leitura concorrente ao `os.replace` pode
@@ -4644,7 +4643,7 @@ def _pre_drain_in_turn(state: dict) -> dict:
         return state
 
 
-def _await_projection_db(state: dict, game_id: Optional[str]) -> dict:
+def _await_projection_db(state: dict, game_id: str | None) -> dict:
     """R10 em perfil DB: se o job da projeção pendente está RODANDO (outra
     request/worker), espera até `RPG_PROJECTION_WAIT_SECONDS` e relê o jogo, em
     vez de repetir o LLM. Fila parada/sem dono → segue; o turno drena na cerca."""
@@ -4822,9 +4821,9 @@ def game_action(req: ActionRequest):
 
 
 class DeathChoiceRequest(BaseModel):
-    game_id: Optional[str] = None
+    game_id: str | None = None
     choice: str = Field(pattern="^(continue|accept)$")  # Continuar do checkpoint / Aceitar o fim
-    action_id: Optional[str] = Field(default=None, max_length=36)
+    action_id: str | None = Field(default=None, max_length=36)
 
 
 @app.post("/game/death", response_model=GameResponse)
@@ -4930,7 +4929,7 @@ def _worker_done(outcome: dict, result: str) -> None:
         _sse_log("worker_finished_after_disconnect", outcome=result)
 
 
-def _log_turn_delivery(timeline, outcome: str, error_type: Optional[str] = None) -> None:
+def _log_turn_delivery(timeline, outcome: str, error_type: str | None = None) -> None:
     """Linha `evt:"turn_delivery"`: marcas de entrega que so existem apos o worker
     ter logado `rpg.turn` (ttfmc/ttlt). Sem texto, sem game_id cru."""
     try:
@@ -4974,7 +4973,7 @@ def _stream_turn_events(req: ActionRequest, accepted_game_id: str, principal,
                         (timeline.mark_ms("accepted") or 0) / 1000)
     except Exception:
         pass
-    q: "queue.Queue" = queue.Queue()
+    q: queue.Queue = queue.Queue()
 
     def _worker():
         result = "ok"
@@ -5282,7 +5281,7 @@ class SaveSummary(BaseModel):
     updated_at: float  # epoch (mtime)
 
 
-@app.get("/game/saves", response_model=List[SaveSummary])
+@app.get("/game/saves", response_model=list[SaveSummary])
 def get_saves():
     """R1: lista as campanhas salvas (mtime desc; corrompido é pulado)."""
     import persistence as persistence_mod
@@ -5374,7 +5373,7 @@ def search_chronicle_endpoint(req: ChronicleSearchRequest):
 
 
 @app.get("/game/chronicle/export")
-def export_chronicle(game_id: Optional[str] = None):
+def export_chronicle(game_id: str | None = None):
     """R5: crônica como .txt (download) com separadores por capítulo."""
     from fastapi.responses import PlainTextResponse
     file_to_load = _resolve_save_file(game_id)
@@ -5383,7 +5382,7 @@ def export_chronicle(game_id: Optional[str] = None):
         raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
 
     player = state.get("player") or {}
-    lines: List[str] = [f"CRÔNICA DE {player.get('name', 'HERÓI').upper()}",
+    lines: list[str] = [f"CRÔNICA DE {player.get('name', 'HERÓI').upper()}",
                         f"{player.get('class_name', '')} — {state.get('world', {}).get('current_location', '')}",
                         ""]
     for cap in state.get("chronicle") or []:

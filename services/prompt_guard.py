@@ -17,7 +17,8 @@ defesa em profundidade contra o LLM obedecer a instruções embutidas no texto.
 from __future__ import annotations
 
 import re
-from typing import Iterable, List
+from typing import List
+from collections.abc import Iterable
 
 PLAYER_INPUT_TAG = "entrada_do_jogador"
 _OPEN = f"<{PLAYER_INPUT_TAG}>"
@@ -69,11 +70,11 @@ def unwrap_player_input(text: object) -> str:
     return _unescape(value[len(_OPEN):-len(_CLOSE)])
 
 
-def guard_messages(messages: Iterable) -> List:
+def guard_messages(messages: Iterable) -> list:
     """Cópia da lista com o conteúdo de cada ``HumanMessage`` (str) delimitado."""
     from langchain_core.messages import HumanMessage
 
-    out: List = []
+    out: list = []
     for message in messages or []:
         if isinstance(message, HumanMessage) and isinstance(message.content, str):
             out.append(message.model_copy(

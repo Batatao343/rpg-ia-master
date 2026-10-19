@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import os
 from dataclasses import asdict
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from hashlib import sha256
 from uuid import NAMESPACE_URL, UUID, uuid4, uuid5
 
@@ -36,7 +36,7 @@ class ImageQuoteRepository:
 
     def issue(self, principal: Principal, game_id: UUID, *, request: ArtGenerationRequest,
               brief: dict, model: str, profile_version: str, reformulation: bool = False) -> dict:
-        now = self.at or datetime.now(timezone.utc)
+        now = self.at or datetime.now(UTC)
         require_image_prices(model, now)
         with admin_connection(self.pool) as connection, connection.transaction():
             game = connection.execute(
@@ -102,7 +102,7 @@ class ImageQuoteRepository:
         prior = connection.execute("select * from app.art_generations where image_quote_id=%s", (quote_id,)).fetchone()
         if prior:
             return dict(prior)
-        now = self.at or datetime.now(timezone.utc)
+        now = self.at or datetime.now(UTC)
         if quote["expires_at"] <= now or quote["timeline_epoch"] != epoch:
             raise Conflict("quote expirado ou de outra linha temporal")
         generation_id = uuid5(NAMESPACE_URL, f"image-quote:{quote_id}")
@@ -155,7 +155,7 @@ class ImageQuoteRepository:
                 raise Conflict("imagem sem quote confirmado ou requer reconciliação")
             quote = self.get(Principal(owner_id, "worker", str(owner_id)), game_id,
                              row["image_quote_id"], connection=connection)
-            require_image_prices(quote["model"], self.at or datetime.now(timezone.utc))
+            require_image_prices(quote["model"], self.at or datetime.now(UTC))
             if quote["image_rate_card_version"] != IMAGE_PRICING_VERSION:
                 raise PricingUnavailable("image pricing changed; a new quote is required")
             if (row["model"] != quote["model"] or row["prompt_hash"] != quote["prompt_hash"]

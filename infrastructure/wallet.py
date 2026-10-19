@@ -9,9 +9,9 @@ from __future__ import annotations
 from collections import Counter
 from contextlib import contextmanager
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from decimal import Decimal
-from typing import Iterator, Sequence
+from collections.abc import Iterator, Sequence
 from uuid import UUID, uuid4
 
 from infrastructure.contracts import Principal
@@ -291,7 +291,7 @@ class PostgresWallet:
         if reference_type == "operation":
             if UUID(reference_id) != usage_operation_id:
                 raise WalletConflict("operation_id de usage divergente")
-        at = at or datetime.now(timezone.utc)
+        at = at or datetime.now(UTC)
         scope = admin_connection(self.pool) if connection is None else system_scope(connection)
         with scope as connection, connection.transaction():
             if usage_operation_id is not None:
@@ -364,7 +364,7 @@ class PostgresWallet:
         _reference(attempt_key)
         _reference(provider, 100)
         _reference(model, 150)
-        at = at or datetime.now(timezone.utc)
+        at = at or datetime.now(UTC)
         with admin_connection(self.pool) as connection, connection.transaction():
             row = self._locked_reservation(connection, principal, reservation_id)
             if row["fence_token"] != fence_token or row["status"] not in ("reserved", "effect_started"):
@@ -529,7 +529,7 @@ class PostgresWallet:
                 (row["pricing_version_id"],),
             ).fetchone()
             quote = quote_usage(readings, version_from_record(version_row),
-                                at=at or datetime.now(timezone.utc),
+                                at=at or datetime.now(UTC),
                                 authorized_snapshot=True)
             debit = quote.shard_milli_debited
             if cap_confirmed_image:
@@ -586,7 +586,7 @@ class PostgresWallet:
                 if operation is None or operation["owner_id"] != principal.user_id:
                     raise UncertainEffect("operation ausente; reconciliação manual necessária")
                 if (operation["status"] == "running" and operation["lease_until"] is not None
-                        and operation["lease_until"] > datetime.now(timezone.utc)):
+                        and operation["lease_until"] > datetime.now(UTC)):
                     raise UncertainEffect("lease de operação ainda ativo")
             row = self._locked_reservation(connection, principal, reservation_id)
             if row["status"] in ("settled", "released"):
@@ -666,7 +666,7 @@ class PostgresWallet:
                 (row["pricing_version_id"],),
             ).fetchone()
             debit = quote_usage(readings, version_from_record(version_row),
-                                at=datetime.now(timezone.utc),
+                                at=datetime.now(UTC),
                                 authorized_snapshot=True).shard_milli_debited
             if debit > int(row["ceiling_milli"]):
                 _record_anomaly(connection, reservation_id, debit - int(row["ceiling_milli"]))

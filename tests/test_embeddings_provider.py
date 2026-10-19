@@ -25,7 +25,7 @@ class FakeEmbeddings(Embeddings):
         self.dims = dims
 
     def _vec(self, text: str):
-        h = hashlib.sha256(f"{self.tag}:{text}".encode("utf-8")).digest()
+        h = hashlib.sha256(f"{self.tag}:{text}".encode()).digest()
         return [h[i % len(h)] / 255.0 for i in range(self.dims)]
 
     def embed_documents(self, texts):

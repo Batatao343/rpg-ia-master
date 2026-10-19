@@ -45,7 +45,7 @@ def _fold_region(value: object) -> str:
     )
 
 
-def anatomical_regions(target: dict) -> List[str]:
+def anatomical_regions(target: dict) -> list[str]:
     """Regiões válidas da anatomia da ficha, com fallback humanoide fechado."""
     raw = (
         target.get("regioes_anatomicas")
@@ -56,7 +56,7 @@ def anatomical_regions(target: dict) -> List[str]:
         raw = raw.get("regioes") or raw.get("regions") or list(raw)
     if not isinstance(raw, (list, tuple)) or not raw:
         return list(DEFAULT_HIT_REGIONS)
-    regions: List[str] = []
+    regions: list[str] = []
     for value in raw:
         folded = _fold_region(value)
         canonical = _KNOWN_REGION_ALIASES.get(folded, folded.replace(" ", "_"))
@@ -65,7 +65,7 @@ def anatomical_regions(target: dict) -> List[str]:
     return regions or list(DEFAULT_HIT_REGIONS)
 
 
-def canonical_hit_region(target: dict, region: object) -> Optional[str]:
+def canonical_hit_region(target: dict, region: object) -> str | None:
     folded = _fold_region(region)
     if not folded:
         return None
@@ -104,7 +104,7 @@ def combine_category(a: str, b: str) -> str:
     return _ORD_INV[min(3, _ORD.get(a, 1) + _ORD.get(b, 1))]
 
 
-def _wound_spaces(target: dict) -> Dict[str, int]:
+def _wound_spaces(target: dict) -> dict[str, int]:
     if target.get("ferimento_espacos"):
         return target["ferimento_espacos"]
     corpo = (target.get("virtudes") or {}).get("corpo", 0)
@@ -164,7 +164,7 @@ def apply_wound(target: dict, categoria: str, regiao: str) -> dict:
 # --------------------------------------------------------------------------
 # Resistência / Vulnerabilidade / Imunidade (R4)
 # --------------------------------------------------------------------------
-def net_resistance(sources: List[str]) -> int:
+def net_resistance(sources: list[str]) -> int:
     """Compensa Resistência × Vulnerabilidade pela intensidade; fontes iguais não
     acumulam (R4). Retorna o modificador líquido de dano."""
     seen = set()
@@ -194,7 +194,7 @@ def _resist_modifier(target: dict, dtype: str, ignore_resistance: bool) -> int:
 # --------------------------------------------------------------------------
 # Pipeline principal (ordem fixa R8)
 # --------------------------------------------------------------------------
-def _active_defense(target: dict, use_shield: bool) -> Optional[dict]:
+def _active_defense(target: dict, use_shield: bool) -> dict | None:
     """Armadura e escudo NÃO somam (R6): escolhe um por ataque Defensável."""
     if use_shield and target.get("shield"):
         return target["shield"]
@@ -203,7 +203,7 @@ def _active_defense(target: dict, use_shield: bool) -> Optional[dict]:
 
 def _resolve_damage_and_wounds(target: dict, *, damage_base: int,
                               damage_type: str = "cortante", crit_mult: int = 1,
-                              directed_region: Optional[str] = None,
+                              directed_region: str | None = None,
                               ignore_resistance: bool = False,
                               use_shield: bool = False,
                               defensavel: bool = True,
@@ -214,8 +214,8 @@ def _resolve_damage_and_wounds(target: dict, *, damage_base: int,
     SPEC-232 R7: `bypass_armor=True` (DoT, clima, auto-dano) ignora armadura,
     escudo E Proteção de condição — Integridade fica intacta. `defensavel`
     segue governando só o escudo (conflito-05 R6)."""
-    log: List[str] = []
-    secondary: List[dict] = []
+    log: list[str] = []
+    secondary: list[dict] = []
     dtype = str(damage_type or "").lower()
     is_fisico = dtype in gamedata.DANO_FISICO
     region = select_hit_region(target, directed_region, rng=rng)
@@ -348,7 +348,7 @@ def resolve_damage_and_wounds(target: dict, **kwargs) -> dict:
     return res
 
 
-def _apply_sangramento(target: dict, secondary: List[dict]) -> None:
+def _apply_sangramento(target: dict, secondary: list[dict]) -> None:
     """Sangramento (Cortante, R2): 1 Vitalidade ao fim do próximo turno, NÃO
     acumula. Reaproveita o schema Condition (evita DoT paralelo)."""
     conds = target.setdefault("active_conditions", [])

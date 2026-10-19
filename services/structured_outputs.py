@@ -48,7 +48,7 @@ class ProposedWorldEvent(BaseModel):
     actor_id: str = Field(default="player", description="Quem causou. 'player' ou id canônico.")
     target_id: str = Field(description="Entidade afetada — id EXATO de entities.json.")
     detail: str = Field(default="", description="1 frase objetiva do que aconteceu.")
-    payload: Dict = Field(default_factory=dict, description="Dados extras por tipo (ex.: new_controller_id).")
+    payload: dict = Field(default_factory=dict, description="Dados extras por tipo (ex.: new_controller_id).")
 
 
 class ProposedQuest(BaseModel):

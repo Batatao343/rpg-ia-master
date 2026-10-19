@@ -93,7 +93,7 @@ def test_spec234_profile_ensure_migrate_and_isolation():
         # perfil divergente entre stage e set_embedding é recusado (não mistura)
         with pytest.raises(Conflict):
             other.set_embedding(doc_new, _VEC_A, content_sha256=hashlib.sha256(
-                "A lanterna azul de Brekmar".encode()).hexdigest())
+                b"A lanterna azul de Brekmar").hexdigest())
     finally:
         with pool.connection() as connection, connection.transaction():
             if foreign_legacy:

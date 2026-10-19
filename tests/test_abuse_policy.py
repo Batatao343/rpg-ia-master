@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import ast
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 from types import SimpleNamespace
 from uuid import uuid4
@@ -140,14 +140,14 @@ def test_account_security_and_captcha_use_client_ip(monkeypatch):
 def test_memory_daily_quota_limits_per_owner_and_day():
     q = ap.MemoryDailyQuota()
     a, b = uuid4(), uuid4()
-    noon = datetime(2026, 10, 17, 12, 0, tzinfo=timezone.utc)
+    noon = datetime(2026, 10, 17, 12, 0, tzinfo=UTC)
     for _ in range(600):
         assert q.bump(a, "turn", 600, now=noon).allowed
     denied = q.bump(a, "turn", 600, now=noon)
     assert not denied.allowed and denied.retry_after_seconds == 12 * 3600
     assert q.bump(b, "turn", 600, now=noon).allowed                  # outro owner
     assert q.bump(a, "llm_aux", 600, now=noon).allowed               # outra classe
-    assert q.bump(a, "turn", 600, now=datetime(2026, 10, 18, 0, 0, 1, tzinfo=timezone.utc)).allowed
+    assert q.bump(a, "turn", 600, now=datetime(2026, 10, 18, 0, 0, 1, tzinfo=UTC)).allowed
 
 
 # --- API em perfil DB (identidade/limiter/cota falsos) ---------------------------------------

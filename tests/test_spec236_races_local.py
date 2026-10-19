@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import os
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from threading import Barrier
 from uuid import uuid4
 
@@ -17,7 +17,7 @@ from services.usage_metering import RATE_CARD_VERSION, normalize_attempts
 from tests.fakes.local_pricing import installed_card_max_age_seconds
 
 pytestmark = pytest.mark.infra_local
-AT = datetime(2026, 10, 12, 12, tzinfo=timezone.utc)
+AT = datetime(2026, 10, 12, 12, tzinfo=UTC)
 
 
 @pytest.fixture

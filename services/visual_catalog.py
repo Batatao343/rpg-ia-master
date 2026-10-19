@@ -7,7 +7,8 @@ import re
 from copy import deepcopy
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Mapping, Optional
+from typing import Any, Optional
+from collections.abc import Mapping
 
 import gamedata
 from services.entity_identity import normalize_entity_label, resolve_npc_entity_id
@@ -45,7 +46,7 @@ def _asset_index() -> dict[tuple[str, str], dict[str, Any]]:
     }
 
 
-def _public_asset(asset: Optional[dict[str, Any]]) -> Optional[dict[str, Any]]:
+def _public_asset(asset: dict[str, Any] | None) -> dict[str, Any] | None:
     if not asset or asset.get("visibility") != "public":
         return None
     return {
@@ -55,7 +56,7 @@ def _public_asset(asset: Optional[dict[str, Any]]) -> Optional[dict[str, Any]]:
     }
 
 
-def visual_for(subject_type: str, subject_id: str) -> Optional[dict[str, Any]]:
+def visual_for(subject_type: str, subject_id: str) -> dict[str, Any] | None:
     return _public_asset(_asset_index().get((subject_type, subject_id)))
 
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """prologue.py — Início de campanha personalizado (spec inicio-personalizado).
 
 Gera o cenário de abertura a partir da ficha + descrição livre do jogador:
@@ -44,9 +43,9 @@ class StartScenario(BaseModel):
     prologue: str = Field(description="Prólogo para o JOGADOR, 2ª pessoa, 100-180 palavras, pt-BR")
     opening_scene_brief: str = Field(description="Brief para o narrador: local, situação e tensão da 1ª cena (2-4 frases)")
     arc_title: str = Field(description="Título do arco, 3-6 palavras, pt-BR")
-    beats: List[str] = Field(description="3 a 5 beats pessoais, 1-2 frases cada")
+    beats: list[str] = Field(description="3 a 5 beats pessoais, 1-2 frases cada")
     climax: str = Field(description="Clímax do arco em 1-2 frases")
-    seed_npcs: List[SeedNPC] = Field(default_factory=list,
+    seed_npcs: list[SeedNPC] = Field(default_factory=list,
                                      description="0 a 2 NPCs novos da história pessoal")
 
 
@@ -64,9 +63,9 @@ class StartScenarioIn(StartScenario):
     prologue: str = Field(max_length=2000)
     opening_scene_brief: str = Field(max_length=1200)
     arc_title: str = Field(max_length=80)
-    beats: List[str] = Field(max_length=5)
+    beats: list[str] = Field(max_length=5)
     climax: str = Field(max_length=300)
-    seed_npcs: List[SeedNPCIn] = Field(default_factory=list, max_length=2)
+    seed_npcs: list[SeedNPCIn] = Field(default_factory=list, max_length=2)
 
 
 def _region_context(region_name: str) -> str:
@@ -157,7 +156,7 @@ def _normalize(scenario: StartScenario, char_input: dict) -> StartScenario:
     return StartScenario(**data)
 
 
-def build_start_scenario(char_input: dict) -> Tuple[StartScenario, bool]:
+def build_start_scenario(char_input: dict) -> tuple[StartScenario, bool]:
     """Monta contexto, chama SMART, aplica guard; retorna (scenario, mock)."""
     llm = get_llm(temperature=0.7, tier=ModelTier.SMART)
     mock = bool(getattr(llm, "is_mock", False))

@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from urllib.parse import urlsplit
 from uuid import UUID, uuid4
 
@@ -28,7 +28,7 @@ def fund_audit_portrait(user_id: UUID) -> None:
     if not profile_id.startswith("audit-image-"):
         raise RuntimeError("audit image pricing profile must be synthetic")
     version_id = f"{profile_id}-version"
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     pool = PostgresPool(db_url)
     try:
         with pool.connection() as connection, connection.transaction():

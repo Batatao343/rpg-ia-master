@@ -33,15 +33,15 @@ _TARGETED_MANEUVERS = {"engajar", "procurar"}
 
 @dataclass
 class TargetingResult:
-    valid_targets: List[str] = field(default_factory=list)
-    invalid_reason: Optional[str] = None
+    valid_targets: list[str] = field(default_factory=list)
+    invalid_reason: str | None = None
 
-    def as_dict(self) -> Dict:
+    def as_dict(self) -> dict:
         return {"valid_targets": list(self.valid_targets),
                 "invalid_reason": self.invalid_reason}
 
 
-def _enemies(state: dict) -> List[dict]:
+def _enemies(state: dict) -> list[dict]:
     return [e for e in (state.get("enemies") or []) if isinstance(e, dict)]
 
 
@@ -49,7 +49,7 @@ def _enemy_id(enemy: dict) -> str:
     return str(enemy.get("id") or enemy.get("name") or "")
 
 
-def friendly_ids(state: dict) -> List[str]:
+def friendly_ids(state: dict) -> list[str]:
     """Herói + aliados presentes (party ativa e aliados transitórios de cena)."""
     import party as party_mod
     ids = [PLAYER_ID]
@@ -69,7 +69,7 @@ def friendly_ids(state: dict) -> List[str]:
     return ids
 
 
-def _combat_gate(state: dict) -> Optional[str]:
+def _combat_gate(state: dict) -> str | None:
     if not (state.get("combat") or {}).get("active"):
         return "combat_inactive"
     if state.get("death_pending") or state.get("game_over"):
@@ -84,7 +84,7 @@ def _enemy_targets(state: dict) -> TargetingResult:
     if not alive:
         return TargetingResult([], "target_dead")
     scene = (state.get("combat") or {}).get("scene") or {}
-    visible: List[str] = []
+    visible: list[str] = []
     for enemy in alive:
         eid = _enemy_id(enemy)
         if scene.get("positions", {}).get(PLAYER_ID):
@@ -129,7 +129,7 @@ def valid_targets_for_card(state: dict, card_id: str) -> TargetingResult:
 
 
 def basic_action_targeting(state: dict, kind: str,
-                           maneuver: Optional[str] = None) -> TargetingResult:
+                           maneuver: str | None = None) -> TargetingResult:
     """Ataque básico, passar, fugir e manobras táticas."""
     gate = _combat_gate(state)
     if gate:
@@ -139,15 +139,15 @@ def basic_action_targeting(state: dict, kind: str,
     return TargetingResult([], None)
 
 
-def basic_actions(state: dict) -> List[Dict]:
+def basic_actions(state: dict) -> list[dict]:
     """`combat.basic_actions[]` (R7): ataque, manobras, passar e fugir."""
-    out: List[Dict] = []
+    out: list[dict] = []
     for kind, maneuver in (
         [("attack", None)]
         + [("maneuver", m) for m in MANEUVERS]
         + [("pass", None), ("flee", None)]
     ):
-        row: Dict = {"kind": kind}
+        row: dict = {"kind": kind}
         if maneuver:
             row["maneuver"] = maneuver
         row.update(basic_action_targeting(state, kind, maneuver).as_dict())
@@ -156,12 +156,12 @@ def basic_actions(state: dict) -> List[Dict]:
     return out
 
 
-def card_targeting(state: dict, card_id: str) -> Dict:
+def card_targeting(state: dict, card_id: str) -> dict:
     return valid_targets_for_card(state, card_id).as_dict()
 
 
-def check_declared_target(state: dict, *, card_id: Optional[str], action_kind: Optional[str],
-                          maneuver: Optional[str], target_id: Optional[str]) -> Optional[str]:
+def check_declared_target(state: dict, *, card_id: str | None, action_kind: str | None,
+                          maneuver: str | None, target_id: str | None) -> str | None:
     """R9: motivo de rejeição de borda para um `target_id` explícito, ou None.
 
     Só rejeita por razão relativa ao ALVO (alvo fora da lista ou sem alvo

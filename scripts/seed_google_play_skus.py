@@ -17,7 +17,7 @@ sys.path.insert(0, str(_P(__file__).resolve().parents[1]))
 import argparse
 import json
 import re
-from typing import Sequence
+from collections.abc import Sequence
 
 PRODUCT_RE = re.compile(r"[a-z0-9][a-z0-9_.]{0,127}")
 

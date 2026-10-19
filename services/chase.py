@@ -52,7 +52,7 @@ def initial_track(distance_state: str) -> str:
     return _DISTANCE_TO_TRACK.get(str(distance_state or "").lower(), "pressionado")
 
 
-def will_pursue(pursuer: dict, scene_state: Optional[dict] = None) -> bool:
+def will_pursue(pursuer: dict, scene_state: dict | None = None) -> bool:
     """R3: política fechada; prosa livre nunca autoriza perseguição."""
     profile = pursuer.get("tactical_profile") or {}
     policy = str(
@@ -61,8 +61,8 @@ def will_pursue(pursuer: dict, scene_state: Optional[dict] = None) -> bool:
     return policy == "persegue"
 
 
-def start_chase(scene: dict, fugitive_id: str, pursuers: List[dict], *,
-                scene_state: Optional[dict] = None) -> dict:
+def start_chase(scene: dict, fugitive_id: str, pursuers: list[dict], *,
+                scene_state: dict | None = None) -> dict:
     """R2/R3: inicia a perseguição. Posição inicial pela distância do fugitivo;
     perseguidores filtrados pelo perfil (só os que decidem seguir). Sem perseguidor
     disposto → escapou."""
@@ -75,8 +75,8 @@ def start_chase(scene: dict, fugitive_id: str, pursuers: List[dict], *,
             "fugitive_id": fugitive_id, "alcancado": False, "escapou": trilha == "escapou"}
 
 
-def can_resume(chase: Optional[dict], fugitive_id: str,
-               pursuers: List[dict]) -> bool:
+def can_resume(chase: dict | None, fugitive_id: str,
+               pursuers: list[dict]) -> bool:
     """Confirma que um snapshot pertence à perseguição ativa atual.
 
     Estados terminais nunca são retomados. A comparação fechada dos IDs evita
@@ -125,7 +125,7 @@ def luck_roll(rng=None) -> int:
     return 0
 
 
-def luck_to_advantage(rolls: List[int]) -> int:
+def luck_to_advantage(rolls: list[int]) -> int:
     """R5: Ajuda e Complicação se anulam; saldo positivo = Vantagem (+1), negativo =
     Desvantagem (-1), empate = normal. NÃO acumula além de 1 (só o sinal importa)."""
     net = sum(1 if r > 0 else (-1 if r < 0 else 0) for r in rolls or [])
@@ -133,7 +133,7 @@ def luck_to_advantage(rolls: List[int]) -> int:
 
 
 def resolve_chase_round(chase: dict, *, condutor_virtude: int = 0, difficulty: int = 12,
-                        companion_luck: Optional[List[int]] = None, rng=None) -> dict:
+                        companion_luck: list[int] | None = None, rng=None) -> dict:
     """R2/R4/R5: um round de perseguição. Sucesso avança 1 na trilha; falha recua 1
     (abaixo de Pressionado = alcançado, combate normal retorna)."""
     if chase.get("trilha") == "escapou":
@@ -163,7 +163,7 @@ def resolve_chase_round(chase: dict, *, condutor_virtude: int = 0, difficulty: i
 # ==========================================================================
 # Etapa 4 — abandono + simulação automática (R6)
 # ==========================================================================
-def abandon_companion(party: List[dict], companion_id: str) -> Optional[dict]:
+def abandon_companion(party: list[dict], companion_id: str) -> dict | None:
     """R6: remove o companheiro da party (separado) e o devolve pra simulação de
     destino. A Complicação que ele geraria some junto (ele sai do pool de Sorte)."""
     for i, m in enumerate(list(party or [])):
@@ -174,7 +174,7 @@ def abandon_companion(party: List[dict], companion_id: str) -> Optional[dict]:
     return None
 
 
-def _weighted_choice(rng: random.Random, weights: Dict[str, float]) -> str:
+def _weighted_choice(rng: random.Random, weights: dict[str, float]) -> str:
     total = sum(weights.values()) or 1.0
     pick = rng.random() * total
     acc = 0.0
@@ -185,7 +185,7 @@ def _weighted_choice(rng: random.Random, weights: Dict[str, float]) -> str:
     return next(iter(weights))
 
 
-def simulate_abandoned_companion(companion: dict, scene_state: Optional[dict],
+def simulate_abandoned_companion(companion: dict, scene_state: dict | None,
                                  seed) -> dict:
     """R6: destino do companheiro abandonado por SIMULAÇÃO automática completa —
     estado, perfil, terreno, perseguidores — DETERMINÍSTICA por seed (nunca

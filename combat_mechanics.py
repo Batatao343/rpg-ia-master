@@ -34,7 +34,7 @@ def normalize_attr(attr: str) -> str:
     return _ATTR_ALIASES.get(str(attr).lower(), str(attr).lower())
 
 
-def attr_mods(attributes: Dict) -> Dict[str, int]:
+def attr_mods(attributes: dict) -> dict[str, int]:
     """Mods normalizados (str/dex/con/int/wis/cha). Ausente -> 0.
     LEGADO — usado só pelo INIMIGO (attributes D&D). O jogador usa Virtudes."""
     out = {k: 0 for k in ("str", "dex", "con", "int", "wis", "cha")}
@@ -48,7 +48,7 @@ def attr_mods(attributes: Dict) -> Dict[str, int]:
     return out
 
 
-def virtude_mods(virtudes: Dict) -> Dict[str, int]:
+def virtude_mods(virtudes: dict) -> dict[str, int]:
     """spec conflito-01: mapeia as 5 Virtudes (0-5) para os mods legados que o
     motor antigo espera (str/dex/con/int/wis/cha). Ponte transicional até a
     fórmula 2d10+Virtude da conflito-04. mente cobre int E wis (sem Virtude
@@ -64,7 +64,7 @@ def virtude_mods(virtudes: Dict) -> Dict[str, int]:
     }
 
 
-def actor_mods(actor: Dict) -> Dict[str, int]:
+def actor_mods(actor: dict) -> dict[str, int]:
     """Mods de combate do ator. Jogador tem `virtudes` (Virtude->mod); inimigo/
     aliado legado tem `attributes` (D&D). NUNCA lê `attributes` do jogador (R8)."""
     if actor.get("virtudes"):
@@ -87,10 +87,10 @@ def early_game_damage_bonus(level: int) -> int:
     return 0
 
 
-def roll_dice_numeric(formula: str) -> Tuple[int, str]:
+def roll_dice_numeric(formula: str) -> tuple[int, str]:
     """Soma todas as expressões NdM(+/-K) de `formula`. Retorna (total, detalhe)."""
     total = 0
-    details: List[str] = []
+    details: list[str] = []
     for m in re.finditer(r"(\d+)d(\d+)(?:\s*([+-])\s*(\d+))?", str(formula)):
         count, sides = int(m.group(1)), int(m.group(2))
         rolls = [random.randint(1, sides) for _ in range(count)]
@@ -118,7 +118,7 @@ def roll_dice_numeric(formula: str) -> Tuple[int, str]:
 # --------------------------------------------------------------------------
 # Condições / DoT
 # --------------------------------------------------------------------------
-def parse_condition(text: str, source: str = "") -> Dict:
+def parse_condition(text: str, source: str = "") -> dict:
     """
     Converte um efeito textual legado em Condition estruturada.
     Ex.: "Sangramento (3 dano/turno)"  -> dot=3, duration=3
@@ -176,7 +176,7 @@ def parse_condition(text: str, source: str = "") -> Dict:
 
 # SPEC-232 (R1/R4): efeito mecânico das condições nomeadas usadas pelos dados.
 # Valores modestos e simétricos (jogador e inimigo sofrem igual) — [BALANCEAR].
-NAMED_CONDITIONS: Dict[str, Dict] = {
+NAMED_CONDITIONS: dict[str, dict] = {
     "exposto": {"stat": "ac", "delta": -2},
     "cego": {"stat": "advantage", "delta": -1},
     "enfraquecido": {"stat": "damage", "delta": -2},
@@ -188,7 +188,7 @@ NAMED_CONDITIONS: Dict[str, Dict] = {
 }
 
 
-def class_passives(entity: Dict) -> List[Dict]:
+def class_passives(entity: dict) -> list[dict]:
     """Fase 4.2: passive_effects data-driven da classe (classes.json). [] p/ inimigos."""
     cname = entity.get("class_name")
     if not cname:
@@ -217,7 +217,7 @@ _TRIGGERED_PASSIVE = {"vantagem": "on_attack", "dano": "on_hit",
                       "aplicar_condicao": "on_hit", "contra_ataque": "on_hit_taken"}
 
 
-def _card_effect_value(effect: Dict) -> int:
+def _card_effect_value(effect: dict) -> int:
     for key in ("valor", "dano_base"):
         if effect.get(key) is not None:
             try:
@@ -227,14 +227,14 @@ def _card_effect_value(effect: Dict) -> int:
     return 1
 
 
-def _virtue_value(entity: Dict, key: str) -> int:
+def _virtue_value(entity: dict, key: str) -> int:
     try:
         return int((entity.get("virtudes") or {}).get(key, 0) or 0)
     except (TypeError, ValueError):
         return 0
 
 
-def _normalize_card_passive(card: Dict, entity: Dict, *, mastery: int = 0) -> Optional[Dict]:
+def _normalize_card_passive(card: dict, entity: dict, *, mastery: int = 0) -> dict | None:
     from gamedata import normalize_virtude, virtue_card_stage
     effect = card.get("efeito") or {}
     kind = str(effect.get("kind") or "")
@@ -266,7 +266,7 @@ def _normalize_card_passive(card: Dict, entity: Dict, *, mastery: int = 0) -> Op
     return None
 
 
-def learned_passives(entity: Dict, *, abilities_db=None) -> List[Dict]:
+def learned_passives(entity: dict, *, abilities_db=None) -> list[dict]:
     """SPEC-232 R2 (D-B default): ponto ÚNICO de verdade das passivas de Carta.
 
     Agrega Cartas `passiva` do Acervo (`known_cards`/`prepared_cards`, ou as
@@ -277,7 +277,7 @@ def learned_passives(entity: Dict, *, abilities_db=None) -> List[Dict]:
     from services import cards as cards_svc
     db = abilities_db
     lookup = (lambda cid: db.get(cid)) if db is not None else cards_svc.get_card
-    out: List[Dict] = []
+    out: list[dict] = []
     seen = set()
     ids = list(entity.get("known_cards") or []) + list(entity.get("prepared_cards") or [])
     if not entity.get("is_player"):
@@ -307,14 +307,14 @@ def learned_passives(entity: Dict, *, abilities_db=None) -> List[Dict]:
     return out
 
 
-def equipped_ids(entity: Dict) -> List[str]:
+def equipped_ids(entity: dict) -> list[str]:
     """SPEC-227 R5: ids dos slots de equipamento COM posse no inventário —
     slot órfão (item vendido/perdido) não dá bônus nem passiva."""
     from inventory import equipped_items
     return equipped_items(entity)
 
 
-def item_passives(entity: Dict, *, artifacts_db=None) -> List[Dict]:
+def item_passives(entity: dict, *, artifacts_db=None) -> list[dict]:
     """spec itens-vivos-e-luz (R1): passive_effects dos itens EQUIPADOS (slots).
     Mesmo vocabulário das passivas de classe/habilidade. Sem `equipment` (fichas
     antigas), cai no scan legado do inventário — igual a compute_player_combat_stats.
@@ -326,7 +326,7 @@ def item_passives(entity: Dict, *, artifacts_db=None) -> List[Dict]:
     else:
         ids = [e.get("id") if isinstance(e, dict) else e
                for e in (entity.get("inventory") or [])]
-    out: List[Dict] = []
+    out: list[dict] = []
     for iid in ids:
         item = db.get(iid) or {}
         # só passivas TIPADAS (dict); legado tem strings de flavor (ex.: 'corda')
@@ -335,7 +335,7 @@ def item_passives(entity: Dict, *, artifacts_db=None) -> List[Dict]:
     return out
 
 
-def player_passives(entity: Dict, *, abilities_db=None) -> List[Dict]:
+def player_passives(entity: dict, *, abilities_db=None) -> list[dict]:
     """Passivas efetivas do JOGADOR: classe + aprendidas na árvore (R2) + itens
     equipados (spec itens-vivos-e-luz R1). Callsites de combate do jogador leem
     daqui; inimigos seguem em class_passives (inimigo não tem árvore nem slots)."""
@@ -348,7 +348,7 @@ MODIFIER_STATS = ("damage", "ac", "attack", "save", "protection", "advantage",
                   "initiative", "dot", "heal", "vitality", "social")
 
 
-def condition_modifiers(entity: Dict) -> Dict[str, int]:
+def condition_modifiers(entity: dict) -> dict[str, int]:
     """Fase 4.2: soma dos deltas das condições ativas por stat.
 
     Buff/debuff tipado ({stat, delta}) entra direto; `fear` embute -2 de acerto.
@@ -367,7 +367,7 @@ def condition_modifiers(entity: Dict) -> Dict[str, int]:
     return out
 
 
-def passive_modifiers(entity: Dict) -> Dict[str, int]:
+def passive_modifiers(entity: dict) -> dict[str, int]:
     """SPEC-232 R2: soma das passivas ESTÁTICAS (Cartas passiva/virtude + itens
     equipados + classe) por stat. Inimigo só tem Cartas embutidas."""
     out = {k: 0 for k in MODIFIER_STATS}
@@ -388,7 +388,7 @@ def passive_modifiers(entity: Dict) -> Dict[str, int]:
     return out
 
 
-def combat_modifiers(entity: Dict) -> Dict[str, int]:
+def combat_modifiers(entity: dict) -> dict[str, int]:
     """SPEC-232 R1/R2: modificador efetivo do motor v2 = condições ativas +
     passivas estáticas. Fonte única lida por resolução de ataque, Esquiva,
     dano, Proteção, iniciativa, cura e DoT."""
@@ -403,7 +403,7 @@ def _fold(text: str) -> str:
     return raw.strip().lower()
 
 
-def damage_type_bonus(entity: Dict, damage_type: str) -> int:
+def damage_type_bonus(entity: dict, damage_type: str) -> int:
     """Passiva `damage_type` (itens): +delta quando o dano causado é do tipo
     declarado (comparação sem acento/caixa). SPEC-232 R4: antes sem consumidor."""
     wanted = _fold(damage_type)
@@ -418,18 +418,18 @@ def damage_type_bonus(entity: Dict, damage_type: str) -> int:
     return total
 
 
-def triggered_passives(entity: Dict, trigger: str) -> List[Dict]:
+def triggered_passives(entity: dict, trigger: str) -> list[dict]:
     """Passivas de gatilho (tier 7/8, custo/frequência próprios) para `trigger`."""
     return [pe for pe in learned_passives(entity) if pe.get("trigger") == trigger]
 
 
-def has_control(entity: Dict, kind: str) -> bool:
+def has_control(entity: dict, kind: str) -> bool:
     """Fase 4.2: True se há condição de controle ativa ("stun"/"root"/"fear")."""
     return any(c.get("control") == kind
                for c in entity.get("active_conditions", []) or [])
 
 
-def is_condition_resisted(entity: Dict, cond_name: str) -> bool:
+def is_condition_resisted(entity: dict, cond_name: str) -> bool:
     """True se o nome da condição bate (substring) com um resist do alvo
     (racial 2.5b em `condition_resists` OU passiva de classe 4.2 trigger=resist)."""
     name = str(cond_name or "").lower()
@@ -439,7 +439,7 @@ def is_condition_resisted(entity: Dict, cond_name: str) -> bool:
     return any(r and r in name for r in resists)
 
 
-def apply_condition(entity: Dict, cond: Dict) -> str:
+def apply_condition(entity: dict, cond: dict) -> str:
     """Anexa/atualiza uma condição no alvo. Refresca duração se já existir.
 
     Fase 2.5b: resists raciais (`entity["condition_resists"]`) anulam a condição
@@ -456,10 +456,10 @@ def apply_condition(entity: Dict, cond: Dict) -> str:
     return f"{entity.get('name','Alvo')}: ganha condição {cond['name']}"
 
 
-def tick_conditions(entity: Dict, *, rng=None) -> List[str]:
+def tick_conditions(entity: dict, *, rng=None) -> list[str]:
     """Aplica DoT, decrementa duração, remove expiradas. Mutação in-place."""
-    logs: List[str] = []
-    survivors: List[Dict] = []
+    logs: list[str] = []
+    survivors: list[dict] = []
     name = entity.get("name", "Alvo")
     for c in entity.get("active_conditions", []) or []:
         dot = int(c.get("dot", 0) or 0)
@@ -536,7 +536,7 @@ _DOC_ONLY_SPECIAL_RULES = {
     # domain_decay = overrides de entropy_trigger por branch do Corruptor.
     "heal_abyss", "domain_decay",
 }
-HANDLED_KINDS: Dict[str, set] = {
+HANDLED_KINDS: dict[str, set] = {
     "entropy_trigger": {"on_damage_taken", "on_self_harm", "on_decay_nearby",
                         "on_channel", "on_ally_suffer"},
     "special_rule": {"taunt_scales_with_entropy", "blood_leak", "boiler"}
@@ -552,18 +552,18 @@ HANDLED_KINDS: Dict[str, set] = {
 }
 
 
-def _abilities_db(explicit=None) -> Dict:
+def _abilities_db(explicit=None) -> dict:
     if explicit is not None:
         return explicit
     from services.cards import all_cards
     return all_cards()
 
 
-def _classes_db(explicit=None) -> Dict:
+def _classes_db(explicit=None) -> dict:
     return explicit if explicit is not None else CLASSES
 
 
-def _branch_of(player: Dict, adb: Dict) -> Optional[str]:
+def _branch_of(player: dict, adb: dict) -> str | None:
     """Subclasse = primeira Carta conhecida com `subclasse`."""
     if player.get("subclass"):
         return str(player["subclass"])
@@ -574,7 +574,7 @@ def _branch_of(player: Dict, adb: Dict) -> Optional[str]:
     return None
 
 
-def entropy_config(player: Dict, *, classes_db=None, abilities_db=None) -> Dict:
+def entropy_config(player: dict, *, classes_db=None, abilities_db=None) -> dict:
     """Merge da entropy_trigger/special_rule/abyss da classe com overrides do branch.
     Fonte ÚNICA de números — nunca hardcode em callsite."""
     cdb = _classes_db(classes_db)
@@ -594,7 +594,7 @@ def entropy_config(player: Dict, *, classes_db=None, abilities_db=None) -> Dict:
     return cfg
 
 
-def abyss_tier(player: Dict, *, classes_db=None) -> str:
+def abyss_tier(player: dict, *, classes_db=None) -> str:
     """'nenhum'|'leve'|'moderado'|'severo' a partir de abyss_charge + thresholds."""
     charge = int(player.get("abyss_charge", 0) or 0)
     thr = (entropy_config(player, classes_db=classes_db).get("abyss") or {}).get(
@@ -610,13 +610,13 @@ def _tier_index(tier: str) -> int:
     return _ABYSS_TIERS.index(tier) if tier in _ABYSS_TIERS else 0
 
 
-def reset_entropy_turn(player: Dict) -> None:
+def reset_entropy_turn(player: dict) -> None:
     """Zera o contador de ativações do gatilho no turno (chamar no início do round)."""
     player["_entropy_trigger_turn"] = 0
 
 
-def apply_entropy_trigger(player: Dict, event: Dict, logs: Optional[List[str]] = None,
-                          *, classes_db=None, abilities_db=None) -> List[str]:
+def apply_entropy_trigger(player: dict, event: dict, logs: list[str] | None = None,
+                          *, classes_db=None, abilities_db=None) -> list[str]:
     """Aciona o gatilho da classe se `event["kind"]` casa. Soma Entropia (clamp em
     max_entropy) e Carga (charge_per, respeitando per_turn_cap por turno). Muta player.
     `event` = {"kind": ..., "amount"?: int, "decay_kind"?: str}."""
@@ -677,7 +677,7 @@ def apply_entropy_trigger(player: Dict, event: Dict, logs: Optional[List[str]] =
 
 
 # --- Regras especiais (§3.5) -----------------------------------------------
-def taunt_aggro_multiplier(player: Dict, *, classes_db=None) -> float:
+def taunt_aggro_multiplier(player: dict, *, classes_db=None) -> float:
     """Devoto: eficácia da provocação = 1 + min(cap, per_entropy*Entropia)."""
     sr = entropy_config(player, classes_db=classes_db).get("special_rule") or {}
     if sr.get("kind") != "taunt_scales_with_entropy":
@@ -687,8 +687,8 @@ def taunt_aggro_multiplier(player: Dict, *, classes_db=None) -> float:
     return 1.0 + min(cap, per * int(player.get("entropy", 0) or 0))
 
 
-def apply_blood_leak(player: Dict, logs: Optional[List[str]] = None,
-                     *, classes_db=None) -> List[str]:
+def apply_blood_leak(player: dict, logs: list[str] | None = None,
+                     *, classes_db=None) -> list[str]:
     """Sangromante: ao ser acertado, vaza leak_frac da Entropia de sangue não gasta."""
     logs = logs if logs is not None else []
     sr = entropy_config(player, classes_db=classes_db).get("special_rule") or {}
@@ -705,7 +705,7 @@ def apply_blood_leak(player: Dict, logs: Optional[List[str]] = None,
     return logs
 
 
-def arm_boiler(player: Dict, ability: Dict, *, classes_db=None) -> None:
+def arm_boiler(player: dict, ability: dict, *, classes_db=None) -> None:
     """Arcanista: ability marcada `cools` VAZA (desarma); qualquer outra ARMA a caldeira."""
     sr = entropy_config(player, classes_db=classes_db).get("special_rule") or {}
     if sr.get("kind") != "boiler":
@@ -716,8 +716,8 @@ def arm_boiler(player: Dict, ability: Dict, *, classes_db=None) -> None:
         player["_cool_deadline"] = int(sr.get("cool_deadline", 3) or 3)
 
 
-def tick_boiler(player: Dict, logs: Optional[List[str]] = None,
-                *, classes_db=None, rng=None) -> List[str]:
+def tick_boiler(player: dict, logs: list[str] | None = None,
+                *, classes_db=None, rng=None) -> list[str]:
     """Arcanista: decrementa o prazo da caldeira; estoura (auto-dano) se vencer
     sem vazão. Chamar 1x por round do Arcanista."""
     logs = logs if logs is not None else []
@@ -752,8 +752,8 @@ def tick_boiler(player: Dict, logs: Optional[List[str]] = None,
     return logs
 
 
-def reduce_ally_abyss(medic: Dict, ally: Dict, amount: int,
-                      *, cost: int = 2) -> Tuple[bool, str]:
+def reduce_ally_abyss(medic: dict, ally: dict, amount: int,
+                      *, cost: int = 2) -> tuple[bool, str]:
     """R9 — Médico gasta Entropia p/ reduzir a Carga do Abismo de um ALIADO.
     Único da classe. Determinístico. Retorna (ok, log)."""
     if medic.get("class_name") != "Médico de Campo":
@@ -768,8 +768,8 @@ def reduce_ally_abyss(medic: Dict, ally: Dict, amount: int,
 
 
 # --- Consequências de Carga (§3.6) -----------------------------------------
-def apply_scar(player: Dict, ability: Dict, logs: Optional[List[str]] = None,
-               *, classes_db=None) -> List[str]:
+def apply_scar(player: dict, ability: dict, logs: list[str] | None = None,
+               *, classes_db=None) -> list[str]:
     """Sangromante — Cicatriz: habilidade `peak` reduz max_hp PERMANENTE + soma Carga."""
     logs = logs if logs is not None else []
     ab = entropy_config(player, classes_db=classes_db).get("abyss") or {}
@@ -792,7 +792,7 @@ def apply_scar(player: Dict, ability: Dict, logs: Optional[List[str]] = None,
     return logs
 
 
-def dependencia_cost(player: Dict, cost: int, *, classes_db=None) -> int:
+def dependencia_cost(player: dict, cost: int, *, classes_db=None) -> int:
     """Arcanista — Dependência: sem instrumento (weapon) + Carga >= moderado,
     o custo de Entropia sobe por no_instrument_cost_mult."""
     if cost <= 0:
@@ -807,8 +807,8 @@ def dependencia_cost(player: Dict, cost: int, *, classes_db=None) -> int:
     return cost
 
 
-def apply_transformacao(player: Dict, logs: Optional[List[str]] = None,
-                        *, classes_db=None, abilities_db=None) -> List[str]:
+def apply_transformacao(player: dict, logs: list[str] | None = None,
+                        *, classes_db=None, abilities_db=None) -> list[str]:
     """Corruptor — Transformação: por patamar, um debuff conforme o domínio (branch)."""
     logs = logs if logs is not None else []
     ab = entropy_config(player, classes_db=classes_db, abilities_db=abilities_db).get("abyss") or {}
@@ -837,8 +837,8 @@ def apply_transformacao(player: Dict, logs: Optional[List[str]] = None,
     return logs
 
 
-def apply_entropy_on_kill(player: Dict, dead_count: int,
-                          logs: Optional[List[str]] = None) -> List[str]:
+def apply_entropy_on_kill(player: dict, dead_count: int,
+                          logs: list[str] | None = None) -> list[str]:
     """spec arvores-habilidade-classes: passiva entropy_on_kill — matar inimigo
     devolve Entropia (amount × mortos, clamp em max_entropy). Sem Carga (não é
     gatilho de classe — é colheita)."""
@@ -862,8 +862,8 @@ def apply_entropy_on_kill(player: Dict, dead_count: int,
 
 
 
-def check_recidiva(player: Dict, logs: Optional[List[str]] = None,
-                   *, classes_db=None) -> Tuple[List[str], Optional[Dict]]:
+def check_recidiva(player: dict, logs: list[str] | None = None,
+                   *, classes_db=None) -> tuple[list[str], dict | None]:
     """Médico — Recidiva: oculta até cruzar 'severo'; então UM colapso (condição
     forte + evento de crônica). Flag _recidiva_fired impede repetir."""
     logs = logs if logs is not None else []
@@ -886,7 +886,7 @@ def check_recidiva(player: Dict, logs: Optional[List[str]] = None,
 # --------------------------------------------------------------------------
 # Stats de combate do player (centraliza a lógica antes em combat.py)
 # --------------------------------------------------------------------------
-def compute_player_combat_stats(player: Dict) -> Dict:
+def compute_player_combat_stats(player: dict) -> dict:
     """AC, bônus de ataque e atributo de ataque a partir do EQUIPAMENTO (Fase 4.3:
     só os slots contam — fim do auto-scan do inventário inteiro). Sem `equipment`
     (fichas antigas em memória/testes), cai no scan legado por compatibilidade."""
@@ -959,7 +959,7 @@ def compute_player_combat_stats(player: Dict) -> Dict:
 # --------------------------------------------------------------------------
 # Resolução de turnos
 # --------------------------------------------------------------------------
-def _condition_from_effect(eff: Dict, source: str) -> Optional[Dict]:
+def _condition_from_effect(eff: dict, source: str) -> dict | None:
     """Fase 4.2: effect tipado (schema 4.1) -> Condition. heal não vira condição."""
     kind = eff.get("kind")
     dur = int(eff.get("duration", 1) or 1)

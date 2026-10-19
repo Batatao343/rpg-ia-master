@@ -11,7 +11,8 @@ Não reusa `observability.telemetry.redact`: seu `_SENSITIVE_KEYS` apaga
 from __future__ import annotations
 
 import re
-from typing import Any, Iterable, List, Mapping, Tuple
+from typing import Any, List, Tuple
+from collections.abc import Iterable, Mapping
 
 PRIVATE_LABEL = "privado — referência de auditoria"
 
@@ -52,7 +53,7 @@ _RAW_DIGITS = re.compile(r"(?<![\w.])\d{11}(?![\w]|\.\d)")
 _IPV6_COMPRESSED = re.compile(
     r"(?i)(?<![0-9a-f:])(?:(?:[0-9a-f]{1,4}:){1,7}|:):(?:[0-9a-f]{1,4}(?::[0-9a-f]{1,4}){0,6})?(?![0-9a-f:])")
 
-_SCRUBBERS: Tuple[Tuple[re.Pattern, str], ...] = (
+_SCRUBBERS: tuple[tuple[re.Pattern, str], ...] = (
     (_URL_WITH_CREDENTIALS, "url"),
     (_SIGNED_URL, "url"),
     (_BEARER, "token"),
@@ -83,7 +84,7 @@ def scrub_text(text: Any) -> str:
     return out
 
 
-def _owner_forms(owner_values: Iterable[str]) -> List[str]:
+def _owner_forms(owner_values: Iterable[str]) -> list[str]:
     forms: set[str] = set()
     for value in owner_values or ():
         raw = str(value or "").strip()
@@ -95,7 +96,7 @@ def _owner_forms(owner_values: Iterable[str]) -> List[str]:
     return sorted(forms, key=len, reverse=True)
 
 
-def _clean_string(value: Any, owner_forms: List[str]) -> str:
+def _clean_string(value: Any, owner_forms: list[str]) -> str:
     out = str(value)
     for form in owner_forms:
         out = re.sub(re.escape(form), "[REDACTED:owner]", out, flags=re.IGNORECASE)
@@ -111,7 +112,7 @@ def _clean_string(value: Any, owner_forms: List[str]) -> str:
 Spec = Any
 
 
-def _scalar(value: Any, owner_forms: List[str]) -> Any:
+def _scalar(value: Any, owner_forms: list[str]) -> Any:
     if value is None or isinstance(value, bool) or isinstance(value, (int, float)):
         return value
     if isinstance(value, str):
@@ -119,7 +120,7 @@ def _scalar(value: Any, owner_forms: List[str]) -> Any:
     return None
 
 
-def _projected(value: Any, owner_forms: List[str], depth: int = 0) -> Any:
+def _projected(value: Any, owner_forms: list[str], depth: int = 0) -> Any:
     if depth > 6:
         return None
     if isinstance(value, Mapping):
@@ -130,7 +131,7 @@ def _projected(value: Any, owner_forms: List[str], depth: int = 0) -> Any:
     return _scalar(value, owner_forms)
 
 
-def _apply(value: Any, spec: Spec, owner_forms: List[str]) -> Any:
+def _apply(value: Any, spec: Spec, owner_forms: list[str]) -> Any:
     if spec == "scalar":
         return _scalar(value, owner_forms)
     if spec == "projected":
@@ -157,14 +158,14 @@ def redact_record(obj: Any, *, spec: Spec, owner_values: Iterable[str] = ()) -> 
     return _apply(obj, spec, _owner_forms(owner_values))
 
 
-_SCAN: Tuple[Tuple[re.Pattern, str], ...] = tuple(
+_SCAN: tuple[tuple[re.Pattern, str], ...] = tuple(
     (pattern, kind) for pattern, kind in _SCRUBBERS if pattern is not _PHONE)
 _AUDIO_MARKERS = re.compile(r"(?i)data:audio/|\b(?:RIFF....WAVE|OggS|ftypM4A)")
 
 
-def scan_pii(text: str, *, owner_values: Iterable[str] = ()) -> List[str]:
+def scan_pii(text: str, *, owner_values: Iterable[str] = ()) -> list[str]:
     """Achados (tipos) de PII em `text`. Vazio = limpo."""
-    findings: List[str] = []
+    findings: list[str] = []
     for pattern, kind in _SCAN:
         if pattern.search(text):
             findings.append(kind)

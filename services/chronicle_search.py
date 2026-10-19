@@ -5,7 +5,8 @@ from __future__ import annotations
 import re
 import unicodedata
 from dataclasses import dataclass
-from typing import Any, Iterable
+from typing import Any
+from collections.abc import Iterable
 
 from services.chronicle import ensure_chronicle_ids
 

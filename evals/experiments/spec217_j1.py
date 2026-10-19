@@ -16,9 +16,10 @@ import json
 import os
 import time
 from dataclasses import asdict
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
-from typing import Any, Callable, Mapping
+from typing import Any
+from collections.abc import Callable, Mapping
 
 from dotenv import load_dotenv
 
@@ -82,7 +83,7 @@ class CallLedger:
         data["total_calls"] += 1
         data["entries"].append({
             "n": data["total_calls"], "phase": phase, "case_id": case_id, "provider": provider,
-            "at": datetime.now(timezone.utc).isoformat(),
+            "at": datetime.now(UTC).isoformat(),
         })
         data["reserved_usd"] = round(data["total_calls"] * RESERVED_USD_PER_CALL, 2)
         _write_json(self.path, data)
@@ -121,7 +122,7 @@ def run_phase(
     output_dir.mkdir(parents=True, exist_ok=False)
     raw_path = output_dir / "raw.json"
     raw: dict[str, Any] = {**meta, "phase": phase, "status": "in_progress",
-                           "started_at": datetime.now(timezone.utc).isoformat(),
+                           "started_at": datetime.now(UTC).isoformat(),
                            phase: {"rows": []}}
     _write_json(raw_path, raw)
     try:
@@ -154,7 +155,7 @@ def run_phase(
         raw["status"] = "blocked-by-provider"
         raw["blocker"] = f"{type(exc).__name__}: {getattr(exc, 'code', 'jev_error')}"
     finally:
-        raw["finished_at"] = datetime.now(timezone.utc).isoformat()
+        raw["finished_at"] = datetime.now(UTC).isoformat()
         raw["ledger_after"] = {k: v for k, v in ledger.read().items() if k != "entries"}
         _write_json(raw_path, raw)
     return raw
@@ -209,7 +210,7 @@ def main() -> None:
     if os.getenv("TYPESAFE_API_KEY") is None and os.getenv("JEVMODEL_API_KEY") is None:
         raise SystemExit("TypeSafe key not configured")
     eligible = eligible_cases(cases)
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     run_id = f"SPEC-217-J1-{args.phase}-{stamp}"
     ledger = CallLedger()
     if args.phase == "p1":

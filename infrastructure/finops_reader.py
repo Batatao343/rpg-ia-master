@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import timedelta
 from decimal import Decimal
-from typing import Mapping
+from collections.abc import Mapping
 
 from infrastructure.db_roles import admin_connection
 from infrastructure.usage_events import has_column, spend_schema_ready

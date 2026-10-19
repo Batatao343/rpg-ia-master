@@ -84,7 +84,7 @@ class _LLM:
         self.decision = decision
         self.calls = 0
 
-    def with_structured_output(self, *_a: Any, **_k: Any) -> "_LLM":
+    def with_structured_output(self, *_a: Any, **_k: Any) -> _LLM:
         return self
 
     def invoke(self, _messages: Any) -> RouterDecision:

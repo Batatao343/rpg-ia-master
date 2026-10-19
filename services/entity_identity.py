@@ -4,7 +4,8 @@ from __future__ import annotations
 import re
 import unicodedata
 from functools import lru_cache
-from typing import Any, Mapping, Optional
+from typing import Any, Optional
+from collections.abc import Mapping
 
 from services import graph_resolver as gr
 
@@ -39,7 +40,7 @@ def find_runtime_npc_key(
     npcs: Mapping[str, Any] | None,
     reference: str,
     candidate: Mapping[str, Any] | None = None,
-) -> Optional[str]:
+) -> str | None:
     """Resolve referência por chave, nome ou id para UMA ficha já existente."""
     wanted = runtime_npc_aliases(reference, candidate)
     if not wanted:
@@ -151,7 +152,7 @@ def _npc_index() -> tuple[dict[str, str], set[str]]:
     return by_label, ids
 
 
-def resolve_npc_entity_id(npc: Mapping[str, Any], fallback_name: str = "") -> Optional[str]:
+def resolve_npc_entity_id(npc: Mapping[str, Any], fallback_name: str = "") -> str | None:
     by_label, ids = _npc_index()
     explicit = str(npc.get("id") or "")
     if explicit in ids:

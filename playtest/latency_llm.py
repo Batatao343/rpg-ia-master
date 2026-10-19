@@ -16,7 +16,8 @@ import random
 import sys
 import time
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Dict, List, Optional
+from collections.abc import Callable
 
 from llm_setup import LLMAttemptEvent, ModelTier, _emit_attempt_telemetry, _emit_telemetry
 
@@ -25,7 +26,7 @@ PROFILE_VERSION = 1
 # tier -> (base_ms, jitter_fraction)
 _TYPICAL = {"classify": (300, 0.20), "fast": (2500, 0.20), "smart": (4000, 0.20)}
 
-PROFILES: Dict[str, Dict[str, Any]] = {
+PROFILES: dict[str, dict[str, Any]] = {
     "flat-fast": {"tiers": {"classify": (50, 0.0), "fast": (100, 0.0), "smart": (150, 0.0)},
                   "tail_prob": 0.0, "tail_mult": 1.0, "fallback_once": False},
     "typical": {"tiers": _TYPICAL, "tail_prob": 0.0, "tail_mult": 1.0, "fallback_once": False},
@@ -53,7 +54,7 @@ class LatencyContext:
     seed: int = 0
     mode: str = "virtual"            # virtual | scaled
     scale: float = 1.0
-    clock: Optional[Callable[[], float]] = None   # FakeClock (tem .advance) no modo virtual
+    clock: Callable[[], float] | None = None   # FakeClock (tem .advance) no modo virtual
     journey: str = ""
     rep: int = 0
     call_index: int = 0
@@ -159,9 +160,9 @@ class LatencyInjectingLLM:
         return getattr(self._inner, name)
 
 
-_installed: List[tuple] = []
-_ORIGINAL: Optional[Callable[..., Any]] = None
-_CURRENT: Optional[LatencyContext] = None
+_installed: list[tuple] = []
+_ORIGINAL: Callable[..., Any] | None = None
+_CURRENT: LatencyContext | None = None
 
 
 def _shim(temperature: float = 0.1, tier: ModelTier = ModelTier.FAST):

@@ -23,7 +23,7 @@ from services import economy
 
 def arrival_rng(game_id: str, location_id: str, turn: int) -> random.Random:
     """RNG estável entre processos para a descoberta de uma chegada."""
-    raw = f"{game_id}|{location_id}|{int(turn)}".encode("utf-8")
+    raw = f"{game_id}|{location_id}|{int(turn)}".encode()
     seed = int.from_bytes(hashlib.sha256(raw).digest()[:8], "big")
     return random.Random(seed)
 
@@ -34,7 +34,7 @@ def discovery_chance(danger: int) -> float:
 
 
 def roll_discovery(world: dict, loc: dict, player_level: int,
-                   rng: Optional[random.Random] = None) -> Optional[dict]:
+                   rng: random.Random | None = None) -> dict | None:
     """Achado ambiental na PRIMEIRA visita (o caller garante o fog of war).
     Devolve {item_id, qty, gold, rarity} ou None. Passiva NUNCA concede único."""
     rng = rng or random.Random()
@@ -57,7 +57,7 @@ def roll_discovery(world: dict, loc: dict, player_level: int,
             "rarity": roll.get("rarity", "comum")}
 
 
-def resolve_treasure(world: dict, loc: dict) -> Optional[dict]:
+def resolve_treasure(world: dict, loc: dict) -> dict | None:
     """Baú CURADO de um local (`treasure` no world_map): {gold?, items?:[id...]}.
     One-shot (world.looted_locations). Devolve {items:[id...], gold, loc_id} ou
     None (sem baú ou já saqueado). Não muta — o apply_grant marca looted."""
@@ -76,11 +76,11 @@ def resolve_treasure(world: dict, loc: dict) -> Optional[dict]:
     return {"items": items, "gold": gold, "loc_id": loc_id}
 
 
-def _grant_items(player: dict, item_ids: List[str],
-                 projection: Optional[dict] = None) -> Tuple[List[str], list]:
+def _grant_items(player: dict, item_ids: list[str],
+                 projection: dict | None = None) -> tuple[list[str], list]:
     """Adiciona itens ao inventário; devolve (labels, eventos de claim de único)."""
     from inventory import add_item, is_unique, item_display, make_entry
-    labels: List[str] = []
+    labels: list[str] = []
     unique_events: list = []
     for iid in item_ids:
         if not economy.is_unique_available(iid, projection):
@@ -93,10 +93,10 @@ def _grant_items(player: dict, item_ids: List[str],
 
 
 def discover_on_arrival(player: dict, world: dict, loc: dict, player_level: int,
-                        rng: Optional[random.Random] = None,
-                        projection: Optional[dict] = None,
+                        rng: random.Random | None = None,
+                        projection: dict | None = None,
                         *, first_visit: bool = True,
-                        ) -> Tuple[str, list]:
+                        ) -> tuple[str, list]:
     """Entrypoint do storyteller ao CHEGAR num local novo. Resolve baú curado
     (prioridade) OU achado ambiental, MUTA player.inventory/gold + world (marca
     looted), e devolve (nota_para_o_narrador, eventos_de_claim). Nota "" = nada."""

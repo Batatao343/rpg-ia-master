@@ -29,7 +29,8 @@ import traceback
 import uuid
 from collections import Counter
 from dataclasses import asdict, dataclass, field, is_dataclass
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Dict, List, Optional
+from collections.abc import Callable
 
 # Diretório de saves isolado das campanhas de playtest (spec R7).
 PLAYTEST_SAVES_DIR = os.getenv("RPG_PLAYTEST_SAVES_DIR", "saves_playtest")
@@ -48,7 +49,7 @@ class PlaytestTimeoutError(TimeoutError):
     """Watchdog do harness; a operação vencida permanece apenas em thread daemon."""
 
     def __init__(self, phase: str, timeout_seconds: float, *,
-                 elapsed_seconds: Optional[float] = None):
+                 elapsed_seconds: float | None = None):
         self.phase = str(phase)
         self.timeout_seconds = float(timeout_seconds)
         self.elapsed_seconds = float(
@@ -125,16 +126,16 @@ class TurnRecord:
     latency_ms: int
     game_id: str = ""
     save_path: str = ""
-    provider: Optional[str] = None
-    model: Optional[str] = None
-    tier: Optional[str] = None
+    provider: str | None = None
+    model: str | None = None
+    tier: str | None = None
     fell_back: bool = False
     # Fase 5.3: todos os invokes de LLM do turno (p/ custo agregado) e métricas
     # de estado capturadas pós-turno (alimentam a telemetria JSONL).
-    llm_events: List[dict] = field(default_factory=list)
-    rag_events: List[dict] = field(default_factory=list)
-    nodes_executed: List[str] = field(default_factory=list)
-    node_latency_ms: Dict[str, int] = field(default_factory=dict)
+    llm_events: list[dict] = field(default_factory=list)
+    rag_events: list[dict] = field(default_factory=list)
+    nodes_executed: list[str] = field(default_factory=list)
+    node_latency_ms: dict[str, int] = field(default_factory=dict)
     combat_executed: bool = False
     combat_active_before: bool = False
     combat_round_before: int = 0
@@ -145,8 +146,8 @@ class TurnRecord:
     resolved_action: dict = field(default_factory=dict)
     events_applied: int = 0
     events_rejected: int = 0
-    error: Optional[str] = None
-    traceback: Optional[str] = None  # SPEC-260 R1: <=40 linhas, sem locals
+    error: str | None = None
+    traceback: str | None = None  # SPEC-260 R1: <=40 linhas, sem locals
     location_id: str = ""
     player_hp: int = 0
     player_max_hp: int = 0
@@ -166,29 +167,29 @@ class TurnRecord:
     # combate (não o snapshot) — quanto foi pago + se usou habilidade ativa.
     entropy_spent: int = 0
     used_active_ability: bool = False
-    ability_id: Optional[str] = None
-    class_mechanics: List[dict] = field(default_factory=list)
+    ability_id: str | None = None
+    class_mechanics: list[dict] = field(default_factory=list)
     # Hardening pós-smoke: snapshots mecânicos auditáveis. Reações só pertencem
     # ao turno em que o combat_agent executou; Ferimentos cobrem player e todos
     # os inimigos ainda materializados no estado pós-turno.
-    reactions: List[dict] = field(default_factory=list)
-    last_tactics: List[dict] = field(default_factory=list)
-    player_wounds: Dict[str, list] = field(default_factory=dict)
-    enemy_wounds: Dict[str, Dict[str, list]] = field(default_factory=dict)
-    conflict_wounds: Dict[str, list] = field(default_factory=dict)
+    reactions: list[dict] = field(default_factory=list)
+    last_tactics: list[dict] = field(default_factory=list)
+    player_wounds: dict[str, list] = field(default_factory=dict)
+    enemy_wounds: dict[str, dict[str, list]] = field(default_factory=dict)
+    conflict_wounds: dict[str, list] = field(default_factory=dict)
     # spec hardening-memoria-proveniencia: snapshot cumulativo auditável.
-    memory_by_provenance: Dict[str, int] = field(default_factory=dict)
-    memory_writes_by_provenance: Dict[str, int] = field(default_factory=dict)
+    memory_by_provenance: dict[str, int] = field(default_factory=dict)
+    memory_writes_by_provenance: dict[str, int] = field(default_factory=dict)
     memory_rejections: int = 0
     memory_promotions: int = 0
-    violations: List[str] = field(default_factory=list)
-    violation_details: List[dict] = field(default_factory=list)
-    death: Optional[dict] = None
+    violations: list[str] = field(default_factory=list)
+    violation_details: list[dict] = field(default_factory=list)
+    death: dict | None = None
     death_pending: bool = False
     game_over: bool = False
     # Narração que o jogador leria no turno (p/ transcript qualitativo do prompt).
     narrative: str = ""
-    progression_choices: List[dict] = field(default_factory=list)
+    progression_choices: list[dict] = field(default_factory=list)
     # Remediação playtest real 100t: pedido social e conversão no mesmo turno.
     quest_requested: bool = False
     quests_before: int = 0
@@ -198,7 +199,7 @@ class TurnRecord:
     session_action_count: int = 0
     canonical_turn: int = 0
     timeline_epoch: int = 0
-    memory_by_confidence: Dict[str, int] = field(default_factory=dict)
+    memory_by_confidence: dict[str, int] = field(default_factory=dict)
     stale_speculative_memories: int = 0
     # Spec playtest comerciante: ledger mecânico, sem parsing da narração.
     economy_action: dict = field(default_factory=dict)
@@ -217,27 +218,27 @@ class CampaignResult:
     profile: str
     seed: int
     turns_completed: int
-    errors: List[dict]
-    history: List[TurnRecord]
+    errors: list[dict]
+    history: list[TurnRecord]
     final_state: dict
     save_path: str
     # Fase 5.2: violações de invariante coletadas por turno (campanha não para).
-    violations: List[dict] = field(default_factory=list)
+    violations: list[dict] = field(default_factory=list)
     mock: bool = True
-    aborted_reason: Optional[str] = None  # Fase 5.3: teto de requests/custo
+    aborted_reason: str | None = None  # Fase 5.3: teto de requests/custo
     # spec checkpoints-morte (D6): mortes que dispararam auto-restore (turno/local/causa).
-    deaths_log: List[dict] = field(default_factory=list)
+    deaths_log: list[dict] = field(default_factory=list)
     turns_requested: int = 0
-    startup_llm_events: List[dict] = field(default_factory=list)
-    startup_rag_events: List[dict] = field(default_factory=list)
+    startup_llm_events: list[dict] = field(default_factory=list)
+    startup_rag_events: list[dict] = field(default_factory=list)
     invariants_enabled: bool = True
-    scenario: Optional[str] = None
+    scenario: str | None = None
     start_level: int = 1
 
 
 def _resolve_profile_progression(
     state: dict, profile: object, *, force: bool = False,
-) -> List[dict]:
+) -> list[dict]:
     """Simula o modal de level-up apenas para perfis que optam por isso."""
     if not force and not getattr(profile, "resolve_progression", False):
         return []
@@ -246,12 +247,12 @@ def _resolve_profile_progression(
     from services import cards
 
     player = dict(state.get("player") or {})
-    applied: List[dict] = []
+    applied: list[dict] = []
     # Uma subida pode enfileirar carta + virtude; consome ambas como a UI faria.
     for choice in list(player.get("pending_choices") or []):
         choice_id = str(choice.get("id") or "")
         kind = str(choice.get("kind") or "")
-        kwargs: Dict[str, str] = {}
+        kwargs: dict[str, str] = {}
         selected = ""
         if kind == "virtude":
             virtues = player.get("virtudes") or {}
@@ -337,7 +338,7 @@ def resolve_class_name(raw: str) -> str:
 _PLAYTEST_NS = uuid.UUID("6b0c8a52-275e-4c1a-9f0e-2750a11c0275")
 
 
-def campaign_game_id(profile: str, seed: Optional[int], discriminator: object = 0) -> str:
+def campaign_game_id(profile: str, seed: int | None, discriminator: object = 0) -> str:
     """SPEC-275 R6: game_id do harness derivado do seed (reprodutível); sem seed
     segue aleatório. Só o harness — o jogo de produção continua com uuid4."""
     if seed is None:
@@ -346,7 +347,7 @@ def campaign_game_id(profile: str, seed: Optional[int], discriminator: object = 
 
 
 def _build_initial_state(profile: str, seed: int,
-                         class_name: Optional[str] = None,
+                         class_name: str | None = None,
                          start_level: int = 1,
                          random_game_id: bool = False) -> dict:
     """Monta o estado inicial da campanha — MESMO shape de api.new_game."""
@@ -567,10 +568,10 @@ def _offline_embeddings(active: bool):
     from agents import npc as npc_module
     from agents import world_simulator as world_module
 
-    session_store: Dict[str, List[str]] = {}
-    npc_store: Dict[tuple[str, str], List[str]] = {}
+    session_store: dict[str, list[str]] = {}
+    npc_store: dict[tuple[str, str], list[str]] = {}
 
-    def _capture_offline_memory(game_id: str) -> Optional[Dict[str, bytes]]:
+    def _capture_offline_memory(game_id: str) -> dict[str, bytes] | None:
         payload = {
             "session": list(session_store.get(str(game_id), [])),
             "npcs": {
@@ -585,7 +586,7 @@ def _offline_embeddings(active: bool):
             payload, ensure_ascii=False, sort_keys=True).encode("utf-8")}
 
     def _restore_offline_memory(game_id: str,
-                                captured: Optional[Dict[str, bytes]]) -> None:
+                                captured: dict[str, bytes] | None) -> None:
         gid = str(game_id)
         session_store.pop(gid, None)
         for key in [key for key in npc_store if key[0] == gid]:
@@ -599,7 +600,7 @@ def _offline_embeddings(active: bool):
         for npc_id, values in (payload.get("npcs") or {}).items():
             npc_store[(gid, str(npc_id))] = list(values)
 
-    def _offline_path(game_id: str, npc_id: Optional[str] = None) -> str:
+    def _offline_path(game_id: str, npc_id: str | None = None) -> str:
         session = rag._safe_storage_component(game_id, "session")
         if npc_id is None:
             return f"memory://playtest/{session}/session"
@@ -607,7 +608,7 @@ def _offline_embeddings(active: bool):
         return f"memory://playtest/{session}/{npc}"
 
     def _write_session(
-        game_id: str, texts: List[str], *, metadatas: Optional[List[Dict]] = None,
+        game_id: str, texts: list[str], *, metadatas: list[dict] | None = None,
     ) -> bool:
         valid = bool(game_id and isinstance(texts, list) and texts)
         path = _offline_path(str(game_id)) if game_id else ""
@@ -630,9 +631,9 @@ def _offline_embeddings(active: bool):
     def _write_npc(
         game_id: str,
         npc_id: str,
-        texts: List[str],
+        texts: list[str],
         *,
-        metadatas: Optional[List[Dict]] = None,
+        metadatas: list[dict] | None = None,
     ) -> bool:
         valid = bool(game_id and npc_id and isinstance(texts, list) and texts)
         path = (
@@ -766,7 +767,7 @@ def _normalize_rag_event(raw: Any) -> dict:
     }
 
 
-def _rag_memory_counts(events: List[dict]) -> Dict[str, int]:
+def _rag_memory_counts(events: list[dict]) -> dict[str, int]:
     counts: Counter = Counter()
     for event in events:
         if not event.get("success"):
@@ -778,19 +779,19 @@ def _rag_memory_counts(events: List[dict]) -> Dict[str, int]:
     return dict(counts)
 
 
-def _network_events(events: List[dict]) -> List[dict]:
+def _network_events(events: list[dict]) -> list[dict]:
     return [event for event in events if event.get("network_attempted", True)]
 
 
-def terminal_llm_invocation_count(events: List[dict]) -> int:
+def terminal_llm_invocation_count(events: list[dict]) -> int:
     """Conta invokes roteados que esgotaram candidatos sem nenhum sucesso.
 
     ``attempt_index == 0`` abre uma nova invocação; índices seguintes são
     fallbacks da mesma chamada. Circuit/build skips também pertencem ao grupo e
     um sucesso posterior torna a invocação válida.
     """
-    groups: List[List[dict]] = []
-    current: List[dict] = []
+    groups: list[list[dict]] = []
+    current: list[dict] = []
     for raw in events or []:
         if not isinstance(raw, dict):
             continue
@@ -810,7 +811,7 @@ def terminal_llm_invocation_count(events: List[dict]) -> int:
     )
 
 
-def _count_new_rejections(before: List[dict], after: List[dict]) -> int:
+def _count_new_rejections(before: list[dict], after: list[dict]) -> int:
     """Conta conteúdo novo mesmo quando o buffer circular continua em 100 itens."""
     def identity(item: object) -> str:
         try:
@@ -824,9 +825,9 @@ def _count_new_rejections(before: List[dict], after: List[dict]) -> int:
 
 
 def _run_turn(game_graph, state: dict, *,
-              nodes_executed: Optional[List[str]] = None,
-              node_observations: Optional[dict] = None,
-              node_latency_ms: Optional[dict] = None) -> tuple[dict, str]:
+              nodes_executed: list[str] | None = None,
+              node_observations: dict | None = None,
+              node_latency_ms: dict | None = None) -> tuple[dict, str]:
     """Invoca o grafo capturando a DECISÃO do `dm_router` (spec R3): a rota fiel
     é o `next` que o router escolheu, não o `next` do estado final (combate/loot
     sobrescrevem). Se o combate está ATIVO na entrada do turno, a rota é
@@ -899,7 +900,7 @@ def _run_turn_projected(game_graph, state: dict, **kwargs) -> tuple[dict, str]:
     return new_state, route
 
 
-def _observed_resolved_action(node_observations: Optional[dict]) -> dict:
+def _observed_resolved_action(node_observations: dict | None) -> dict:
     """Resultado mecânico emitido pelo combat node neste invoke, ou vazio.
 
     ``combat.last_player_action`` é estado persistente do jogo e não pode ser
@@ -923,13 +924,13 @@ def _is_explicit_quest_request(action: str) -> bool:
 
 def _campaign_experience_violations(
     profile: str,
-    history: List[TurnRecord],
+    history: list[TurnRecord],
     final_state: dict,
-) -> List[dict]:
+) -> list[dict]:
     """Oráculos agregados: alertam validade/viés sem fingir bug por turno."""
     if profile != "normal" or not history:
         return []
-    out: List[dict] = []
+    out: list[dict] = []
     total = len(history)
     combat_turns = len([
         record for record in history
@@ -971,13 +972,13 @@ def _campaign_experience_violations(
 
 def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                  use_real_llm: bool = False,
-                 on_turn_end: Optional[Callable[[dict, int], None]] = None,
+                 on_turn_end: Callable[[dict, int], None] | None = None,
                  invariants: bool = True,
                  max_requests: int = 0,
                  max_cost: float = 0.0,
-                 class_name: Optional[str] = None,
-                 turn_timeout_seconds: Optional[float] = None,
-                 scenario: Optional[str] = None,
+                 class_name: str | None = None,
+                 turn_timeout_seconds: float | None = None,
+                 scenario: str | None = None,
                  start_level: int = 1,
                  provider_min_interval_seconds: float = 0.0,
                  require_all_llm_invocations_successful: bool = False,
@@ -1009,16 +1010,16 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
     prof.reset()  # spec fix-explorador-loop: perfis são singleton — zera memória por campanha
     prof_rng = random.Random(seed)
 
-    errors: List[dict] = []
-    history: List[TurnRecord] = []
-    violations: List[dict] = []
-    aborted_reason: Optional[str] = None
+    errors: list[dict] = []
+    history: list[TurnRecord] = []
+    violations: list[dict] = []
+    aborted_reason: str | None = None
     llm_calls = {"count": 0, "cost": 0.0}
-    deaths_log: List[dict] = []  # spec checkpoints-morte (D6)
-    startup_llm_events: List[dict] = []
-    startup_rag_events: List[dict] = []
-    llm_sink: List[dict] = startup_llm_events
-    rag_sink: List[dict] = startup_rag_events
+    deaths_log: list[dict] = []  # spec checkpoints-morte (D6)
+    startup_llm_events: list[dict] = []
+    startup_rag_events: list[dict] = []
+    llm_sink: list[dict] = startup_llm_events
+    rag_sink: list[dict] = startup_rag_events
     state: dict = {}
     game_id = ""
     final_path = ""
@@ -1144,8 +1145,8 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                     decision.flee_destination_id if decision.mode == "flee" else None
                 )
 
-                turn_events: List[dict] = []
-                turn_rag_events: List[dict] = []
+                turn_events: list[dict] = []
+                turn_rag_events: list[dict] = []
                 llm_sink = turn_events
                 rag_sink = turn_rag_events
                 t0 = time.monotonic()
@@ -1162,8 +1163,8 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
                 except Exception:
                     _inv = None
                     progress_before = None
-                nodes: List[str] = []
-                node_timings: Dict[str, int] = {}
+                nodes: list[str] = []
+                node_timings: dict[str, int] = {}
                 node_observations: dict = {}
                 decision_record = decision.to_record()
                 rec = TurnRecord(
@@ -1477,7 +1478,7 @@ def _fill_state_metrics(
     rec: TurnRecord,
     state: dict,
     *,
-    combat_observation: Optional[dict] = None,
+    combat_observation: dict | None = None,
 ) -> None:
     observed = combat_observation or {}
     player = observed.get("player") or state.get("player", {}) or {}
@@ -1645,7 +1646,7 @@ def _merchant_action_family(rec: TurnRecord) -> str:
 
 
 def _fill_economy_metrics(
-    rec: TurnRecord, before: dict, after: Optional[dict],
+    rec: TurnRecord, before: dict, after: dict | None,
 ) -> None:
     from services.economy import public_market_snapshot
 
@@ -1680,7 +1681,7 @@ def _fill_economy_metrics(
     rec.action_family = _merchant_action_family(rec)
 
 
-def _attach_telemetry(rec: TurnRecord, events: List[dict]) -> None:
+def _attach_telemetry(rec: TurnRecord, events: list[dict]) -> None:
     """Escolhe o evento representativo do turno (o que casa a rota; senão o
     último) e guarda TODOS os invokes p/ custo agregado (5.3)."""
     rec.llm_events = events
@@ -1702,7 +1703,7 @@ def _attach_telemetry(rec: TurnRecord, events: List[dict]) -> None:
     rec.fell_back = any(e.get("fell_back") for e in events)
 
 
-def _bump_llm_events_budget(budget: dict, events: List[dict]) -> None:
+def _bump_llm_events_budget(budget: dict, events: list[dict]) -> None:
     """Conta tentativas de rede, inclusive falhas; build_error não é request."""
     from playtest import pricing
     network = _network_events(events)
@@ -1714,7 +1715,7 @@ def _bump_llm_events_budget(budget: dict, events: List[dict]) -> None:
 
 def _budget_abort_reason(
     budget: dict, *, max_requests: int, max_cost: float, phase: str,
-) -> Optional[str]:
+) -> str | None:
     if max_requests and budget["count"] >= max_requests:
         return (
             f"max_requests atingido ({budget['count']}/{max_requests}, {phase})"
@@ -1734,11 +1735,11 @@ def format_traceback(exc: BaseException, max_lines: int = 40) -> str:
 
 def _run_invariants(
     state: dict,
-    prev_state: Optional[dict],
+    prev_state: dict | None,
     turn: int,
     *,
-    context: Optional[dict] = None,
-) -> List[dict]:
+    context: dict | None = None,
+) -> list[dict]:
     """Chama playtest.invariants.check_all se o módulo existir (Fase 5.2)."""
     try:
         from playtest import invariants as inv

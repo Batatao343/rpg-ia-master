@@ -15,7 +15,8 @@ import re
 import unicodedata
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Literal, Mapping
+from typing import Any, Literal
+from collections.abc import Mapping
 
 from evals.core.hashing import sha256_file
 from evals.experiments.jev_router_ab import QUESTION as LEGACY_ROUTE_QUESTION

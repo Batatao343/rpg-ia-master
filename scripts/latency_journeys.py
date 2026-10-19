@@ -7,7 +7,8 @@ invalida a comparacao com runs antigos (suba ``JOURNEYS_VERSION``).
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Callable, List
+from typing import List
+from collections.abc import Callable
 
 JOURNEYS_VERSION = 1
 
@@ -33,11 +34,11 @@ class Journey:
     name: str
     description: str
     expected_route: str
-    warmup: List[str] = field(default_factory=list)
-    turns: List[str] = field(default_factory=list)
-    turns_factory: Callable[[], List[str]] | None = None
+    warmup: list[str] = field(default_factory=list)
+    turns: list[str] = field(default_factory=list)
+    turns_factory: Callable[[], list[str]] | None = None
 
-    def measured_turns(self) -> List[str]:
+    def measured_turns(self) -> list[str]:
         return list(self.turns_factory()) if self.turns_factory else list(self.turns)
 
 
@@ -62,7 +63,7 @@ JOURNEYS = {
 }
 
 
-def select(spec: str) -> List[Journey]:
+def select(spec: str) -> list[Journey]:
     if spec.strip().lower() == "all":
         return list(JOURNEYS.values())
     chosen = []

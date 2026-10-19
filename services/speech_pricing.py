@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from decimal import ROUND_UP, Decimal, InvalidOperation
 from hashlib import sha256
 from pathlib import Path
@@ -25,8 +25,8 @@ def speech_bound(provider: str, model: str) -> Decimal | None:
 
 
 def require_speech_prices(at: datetime) -> None:
-    observed = datetime.fromisoformat(_CARD["observed_at"]).replace(tzinfo=timezone.utc)
-    age = at.astimezone(timezone.utc) - observed
+    observed = datetime.fromisoformat(_CARD["observed_at"]).replace(tzinfo=UTC)
+    age = at.astimezone(UTC) - observed
     from services.shard_pricing import PricingUnavailable, rate_card_max_age
     if age < timedelta(0) or age > rate_card_max_age():
         raise PricingUnavailable("speech rate card stale")

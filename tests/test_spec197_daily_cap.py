@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import os
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from decimal import Decimal as D
 
 import pytest
@@ -14,7 +14,7 @@ from services.daily_spend_cap import ACTOR, CAP_SWITCHES, day_start, evaluate_da
 from services.finops_job import run_finops
 from services.kill_switches import IMAGE, NEW_PURCHASES, STT_FALLBACK, MemorySwitchStore
 
-NOW = datetime(2026, 10, 15, 15, tzinfo=timezone.utc)
+NOW = datetime(2026, 10, 15, 15, tzinfo=UTC)
 PRICING = {"v1": finops.PricingRef("v1", D("5"), {})}
 
 
@@ -69,7 +69,7 @@ def test_partially_off_only_writes_missing(monkeypatch):
 
 
 def test_day_boundary_uses_sao_paulo_midnight():
-    assert day_start(NOW) == datetime(2026, 10, 15, 3, tzinfo=timezone.utc)
+    assert day_start(NOW) == datetime(2026, 10, 15, 3, tzinfo=UTC)
 
 
 def test_invalid_cap_value_disables(monkeypatch):
@@ -135,7 +135,7 @@ def test_model_switches_invalid_key_errors(monkeypatch):
 def test_manual_reenable_same_day_not_retripped(monkeypatch):
     import time
     monkeypatch.setenv("RPG_DAILY_SPEND_CAP_BRL", "1")
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     store = MemorySwitchStore()
     evaluate_daily_cap(reader("5"), store, now, D("5"))
     store.set(IMAGE, True, actor_id="human", reason="ok")

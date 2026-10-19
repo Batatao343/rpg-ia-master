@@ -6,7 +6,7 @@ Orders/SKUs own money and credit units; metadata is only an opaque lookup.
 from __future__ import annotations
 
 import re
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from decimal import Decimal
 from uuid import UUID, uuid4
 
@@ -86,7 +86,7 @@ class StripePayments:
         self.at = at
 
     def _now(self) -> datetime:
-        return self.at or datetime.now(timezone.utc)
+        return self.at or datetime.now(UTC)
 
     def skus(self) -> dict:
         items = []

@@ -19,7 +19,7 @@ sys.path.insert(0, str(_P(__file__).resolve().parents[1]))
 import argparse
 import json
 import sys
-from typing import Sequence
+from collections.abc import Sequence
 
 from services.kill_switches import KEY_RE, validate_change
 

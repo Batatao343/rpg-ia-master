@@ -106,8 +106,8 @@ def _reaction_action(card: dict, participant_id: str) -> dict:
 
 
 def offer_reaction(chain: dict, participant_id: str, card_id: str, *,
-                   card: Optional[dict] = None, reactor: Optional[dict] = None,
-                   respond_to_link: Optional[int] = None) -> bool:
+                   card: dict | None = None, reactor: dict | None = None,
+                   respond_to_link: int | None = None) -> bool:
     """Oferece uma reação COMUM na cadeia. Valida, nesta ordem (R1/R2/R3):
       1. cadeia aberta;
       2. Carta existe e é `tipo == "reacao"`;
@@ -157,7 +157,7 @@ def offer_reaction(chain: dict, participant_id: str, card_id: str, *,
     return True
 
 
-def resolve_chain(chain: dict) -> List[dict]:
+def resolve_chain(chain: dict) -> list[dict]:
     """R3: fecha a cadeia (ninguém mais reage) e devolve as reações resolvidas na
     ordem em que foram oferecidas. Idempotente."""
     chain["closed"] = True
@@ -167,9 +167,9 @@ def resolve_chain(chain: dict) -> List[dict]:
 # --------------------------------------------------------------------------
 # Ordem de reação (R4)
 # --------------------------------------------------------------------------
-def reaction_order(candidates: List[str], action: dict, *,
-                   stats_by_id: Optional[Dict[str, dict]] = None,
-                   target_allies: List[str] = (), actor_allies: List[str] = ()) -> List[str]:
+def reaction_order(candidates: list[str], action: dict, *,
+                   stats_by_id: dict[str, dict] | None = None,
+                   target_allies: list[str] = (), actor_allies: list[str] = ()) -> list[str]:
     """R4: ordena candidatos por prioridade — alvo direto → aliados do alvo →
     aliados do ator → maior Agilidade → id (desempate estável)."""
     targets = set(action.get("targets") or [])
@@ -199,8 +199,8 @@ def reaction_order(candidates: List[str], action: dict, *,
 # Ataque de Oportunidade (R5) — universal, FORA do limite de cadeia comum
 # --------------------------------------------------------------------------
 def trigger_opportunity_attack(scene: dict, leaving_id: str, *,
-                               allies: List[str] = (),
-                               stats_by_id: Optional[Dict[str, dict]] = None) -> List[dict]:
+                               allies: list[str] = (),
+                               stats_by_id: dict[str, dict] | None = None) -> list[dict]:
     """R5: quem abandona um Engajamento SEM Desengajar provoca um Ataque de
     Oportunidade de CADA inimigo Engajado, consciente e capaz. Não conta pro limite
     de reação comum — cada apto faz o seu. Vale nos dois sentidos (party ou inimigo
@@ -211,7 +211,7 @@ def trigger_opportunity_attack(scene: dict, leaving_id: str, *,
         return []
     stats = stats_by_id or {}
     ally_set = set(allies)
-    out: List[dict] = []
+    out: list[dict] = []
     for other in pos.get("engaged_with", []):
         if other in ally_set or other == leaving_id:
             continue
@@ -232,6 +232,6 @@ def trigger_opportunity_attack(scene: dict, leaving_id: str, *,
 # --------------------------------------------------------------------------
 # Carga preguiçosa da Carta (evita ciclo de import com services.cards)
 # --------------------------------------------------------------------------
-def _get_card(card_id: str) -> Optional[dict]:
+def _get_card(card_id: str) -> dict | None:
     from services import cards
     return cards.get_card(card_id)

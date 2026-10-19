@@ -2,7 +2,7 @@
 import hashlib
 import os
 from contextlib import nullcontext
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 from types import SimpleNamespace
 from uuid import uuid4
@@ -46,7 +46,7 @@ def payment_case():
             class Pool:
                 def connection(self):
                     return nullcontext(db)
-            at = datetime(2026, 10, 13, 12, tzinfo=timezone.utc)
+            at = datetime(2026, 10, 13, 12, tzinfo=UTC)
             version, sku = "stripe-" + str(uuid4()), "stripe-" + str(uuid4())
             db.execute("""insert into app.pricing_versions
                 (version_id,shard_budget_unit_brl,fx_usd_brl,fx_source,fx_observed_at,fx_max_age_seconds,

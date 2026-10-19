@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import os
 from contextlib import nullcontext
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from decimal import Decimal
 from types import SimpleNamespace
 from uuid import uuid4
@@ -74,7 +74,7 @@ def rb():
             pytest.skip("migration SPEC-222 não aplicada")
         version, gp_sku = ("lab-" + uuid4().hex[:12] for _ in range(2))
         product = "gp_" + uuid4().hex[:12]
-        at = datetime.now(timezone.utc)
+        at = datetime.now(UTC)
         db.execute("""insert into app.pricing_versions
             (version_id,shard_budget_unit_brl,fx_usd_brl,fx_source,fx_observed_at,fx_max_age_seconds,
              fx_buffer_rate,rate_card_version,rate_card_sha256,rate_card_source,

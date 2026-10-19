@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass
-from typing import Any, Mapping
+from typing import Any
+from collections.abc import Mapping
 from uuid import NAMESPACE_URL, uuid5
 
 from services.visual_catalog import visual_for

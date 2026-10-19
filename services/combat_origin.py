@@ -14,7 +14,7 @@ def normalize(value: object) -> str:
     return value if value in ORIGINS else "unknown"
 
 
-def from_encounter(encounter: Dict[str, Any] | None, world: Dict[str, Any] | None,
+def from_encounter(encounter: dict[str, Any] | None, world: dict[str, Any] | None,
                    *, trigger: str = "travel") -> str:
     encounter, world = encounter or {}, world or {}
     if (world.get("chase") or {}).get("active") or encounter.get("reason") == "recurrence":
@@ -28,7 +28,7 @@ def from_encounter(encounter: Dict[str, Any] | None, world: Dict[str, Any] | Non
     return "travel_encounter"
 
 
-def materialize(combat: Dict[str, Any] | None, hint: object) -> str:
+def materialize(combat: dict[str, Any] | None, hint: object) -> str:
     current = normalize(hint)
     if current != "unknown":
         return current

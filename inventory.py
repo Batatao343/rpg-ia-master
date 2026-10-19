@@ -35,7 +35,7 @@ def _fold(s: str) -> str:
     return "".join(c for c in nfkd if not unicodedata.combining(c)).strip().lower()
 
 
-def resolve_item_name(name: str) -> Optional[str]:
+def resolve_item_name(name: str) -> str | None:
     """Nome livre -> id canônico (id direto, ou match de nome case/acento-insensitive)."""
     if not name:
         return None
@@ -60,7 +60,7 @@ def is_stackable(item_id: str) -> bool:
     return str(item.get("type", "")).lower() in _STACKABLE_TYPES
 
 
-def item_display(entry: Dict) -> str:
+def item_display(entry: dict) -> str:
     """Nome exibível SEMPRE do ARTIFACTS_DB (nunca title() sobre id — bug 4.3)."""
     iid = entry.get("id", "")
     if iid == UNKNOWN_ID:
@@ -69,7 +69,7 @@ def item_display(entry: Dict) -> str:
     return item.get("name", iid) if item else (entry.get("display_name") or iid)
 
 
-def make_entry(id_or_name: str, qty: int = 1) -> Dict:
+def make_entry(id_or_name: str, qty: int = 1) -> dict:
     iid = resolve_item_name(id_or_name)
     if iid:
         return {"id": iid, "qty": max(1, int(qty))}
@@ -77,7 +77,7 @@ def make_entry(id_or_name: str, qty: int = 1) -> Dict:
             "display_name": str(id_or_name)}
 
 
-def add_item(inv: List[Dict], id_or_name: str, qty: int = 1) -> List[Dict]:
+def add_item(inv: list[dict], id_or_name: str, qty: int = 1) -> list[dict]:
     """Adiciona empilhando quando stackable (desconhecidos empilham por display_name)."""
     out = [dict(e) for e in inv or []]
     entry = make_entry(id_or_name, qty)
@@ -91,8 +91,8 @@ def add_item(inv: List[Dict], id_or_name: str, qty: int = 1) -> List[Dict]:
     return out
 
 
-def remove_item(inv: List[Dict], item_id: str, qty: int = 1, *,
-                display_name: Optional[str] = None) -> Tuple[List[Dict], bool]:
+def remove_item(inv: list[dict], item_id: str, qty: int = 1, *,
+                display_name: str | None = None) -> tuple[list[dict], bool]:
     """Consome `qty` ATRAVÉS de todas as entradas do mesmo item (não-empilháveis
     vivem em entradas separadas). Soma insuficiente -> (inv original, False), sem
     mutar nada. `display_name` desambigua itens livres (`item_desconhecido`)."""
@@ -122,15 +122,15 @@ def remove_item(inv: List[Dict], item_id: str, qty: int = 1, *,
     return [e for i, e in enumerate(out) if i not in drop], True
 
 
-def get_qty(inv: List[Dict], item_id: str) -> int:
+def get_qty(inv: list[dict], item_id: str) -> int:
     return sum(int(e.get("qty", 1)) for e in inv or [] if e.get("id") == item_id)
 
 
-def has_item(inv: List[Dict], item_id: str) -> bool:
+def has_item(inv: list[dict], item_id: str) -> bool:
     return get_qty(inv, item_id) > 0
 
 
-def find_in_inventory(inv: List[Dict], ref: str) -> Optional[str]:
+def find_in_inventory(inv: list[dict], ref: str) -> str | None:
     """Referência livre ('poção', id, nome) -> id de um item PRESENTE no inventário."""
     if not ref:
         return None
@@ -144,7 +144,7 @@ def find_in_inventory(inv: List[Dict], ref: str) -> Optional[str]:
     return None
 
 
-def find_entry_in_inventory(inv: List[Dict], ref: str) -> Optional[Dict]:
+def find_entry_in_inventory(inv: list[dict], ref: str) -> dict | None:
     """Como `find_in_inventory`, mas devolve a ENTRADA ({id, qty, display_name?}) —
     itens livres precisam do display_name para não confundir `item_desconhecido`."""
     if not ref:
@@ -161,7 +161,7 @@ def find_entry_in_inventory(inv: List[Dict], ref: str) -> Optional[Dict]:
     return None
 
 
-def resolve_flavor_item(name: str) -> Dict:
+def resolve_flavor_item(name: str) -> dict:
     """Entrada SEGURA para nome livre vindo do LLM (sabor de criação/narração):
     só itens comuns resolvem; raro+ ou único vira `item_desconhecido` (sem claim,
     sem bônus). Usa a mesma escala de raridade da economia."""
@@ -180,14 +180,14 @@ _COMMON_RARITIES = {"comum", "common"}
 # ---------------------------------------------------------------------------
 # Equipamento (slots)
 # ---------------------------------------------------------------------------
-def ensure_equipment(player: Dict) -> Dict:
+def ensure_equipment(player: dict) -> dict:
     eq = dict(player.get("equipment") or {})
     for s in SLOTS:
         eq.setdefault(s, None)
     return eq
 
 
-def slot_for(item_id: str) -> Optional[str]:
+def slot_for(item_id: str) -> str | None:
     itype = str((ARTIFACTS_DB.get(item_id) or {}).get("type", "")).lower()
     for slot, types in _SLOT_TYPES.items():
         if itype in types:
@@ -195,7 +195,7 @@ def slot_for(item_id: str) -> Optional[str]:
     return None
 
 
-def equip(player: Dict, item_id: str) -> Tuple[Dict, Optional[str]]:
+def equip(player: dict, item_id: str) -> tuple[dict, str | None]:
     """Equipa item DO INVENTÁRIO no slot do tipo dele. Erro -> player intocado."""
     iid = resolve_item_name(item_id) or item_id
     if not has_item(player.get("inventory") or [], iid):
@@ -210,7 +210,7 @@ def equip(player: Dict, item_id: str) -> Tuple[Dict, Optional[str]]:
     return p, None
 
 
-def unequip(player: Dict, slot: str) -> Tuple[Dict, Optional[str]]:
+def unequip(player: dict, slot: str) -> tuple[dict, str | None]:
     if slot not in SLOTS:
         return player, f"Slot inválido: {slot}"
     p = dict(player)
@@ -220,14 +220,14 @@ def unequip(player: Dict, slot: str) -> Tuple[Dict, Optional[str]]:
     return p, None
 
 
-def equipped_items(player: Dict) -> List[str]:
+def equipped_items(player: dict) -> list[str]:
     """Ids dos slots preenchidos COM posse no inventário (slot órfão não conta)."""
     inv_ = player.get("inventory") or []
     return [v for v in (player.get("equipment") or {}).values()
             if v and has_item(inv_, v)]
 
 
-def reconcile_equipment(player: Dict) -> Tuple[Dict, List[str]]:
+def reconcile_equipment(player: dict) -> tuple[dict, list[str]]:
     """Esvazia slots cujo item não está mais no inventário. Pura (cópia)."""
     p = dict(player)
     eq = dict(p.get("equipment") or {})
@@ -243,14 +243,14 @@ def reconcile_equipment(player: Dict) -> Tuple[Dict, List[str]]:
 # ---------------------------------------------------------------------------
 # Uso em combate (Fase 4.3 R4) — resolução 100% Python
 # ---------------------------------------------------------------------------
-def use_item_in_combat(player: Dict, item_ref: str,
-                       target: Optional[Dict] = None) -> Tuple[Dict, List[str]]:
+def use_item_in_combat(player: dict, item_ref: str,
+                       target: dict | None = None) -> tuple[dict, list[str]]:
     """Wrapper de compatibilidade de `try_use_item` -> (player, logs)."""
     res = try_use_item(player, item_ref, target)
     return res["player"], res["logs"]
 
 
-def _vitality_full(p: Dict) -> bool:
+def _vitality_full(p: dict) -> bool:
     if p.get("vitalidade") is not None or isinstance(p.get("virtudes"), dict):
         import gamedata
         q = dict(p)
@@ -259,8 +259,8 @@ def _vitality_full(p: Dict) -> bool:
     return int(p.get("hp", 0) or 0) >= int(p.get("max_hp", p.get("hp", 0)) or 0)
 
 
-def try_use_item(player: Dict, item_ref: str, target: Optional[Dict] = None,
-                 rng=None) -> Dict:
+def try_use_item(player: dict, item_ref: str, target: dict | None = None,
+                 rng=None) -> dict:
     """SPEC-227 R8: valida ANTES de consumir. Retorna
     {ok, reason, consumed_turn, logs, player}; recusa deixa player/inventário
     intactos e `consumed_turn=False`. Consome 1 unidade e aplica o efeito mecânico.
@@ -272,7 +272,7 @@ def try_use_item(player: Dict, item_ref: str, target: Optional[Dict] = None,
     inventário/efeito nenhum -> log de falha, turno NÃO consumido pelo chamador."""
     import combat_mechanics as cm
 
-    def _refuse(msg: str) -> Dict:
+    def _refuse(msg: str) -> dict:
         return {"ok": False, "reason": msg, "consumed_turn": False,
                 "logs": [msg], "player": player}
 
@@ -304,7 +304,7 @@ def try_use_item(player: Dict, item_ref: str, target: Optional[Dict] = None,
         return _refuse("Vitalidade já está cheia.")
 
     p = dict(player)
-    logs: List[str] = []
+    logs: list[str] = []
     new_inv, ok = remove_item(inv, iid, 1)
     if not ok:
         return _refuse(f"Não há '{item_ref}' no inventário.")
@@ -362,7 +362,7 @@ def try_use_item(player: Dict, item_ref: str, target: Optional[Dict] = None,
 # ---------------------------------------------------------------------------
 # Backfill de saves antigos (R7)
 # ---------------------------------------------------------------------------
-def backfill_inventory(player: Dict) -> Dict:
+def backfill_inventory(player: dict) -> dict:
     """List[str] -> List[{id, qty}] + equipment default (melhor arma/armadura,
     reproduzindo o auto-equip antigo UMA vez). Idempotente."""
     p = dict(player)

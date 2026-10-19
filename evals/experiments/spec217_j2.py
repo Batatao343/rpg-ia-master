@@ -33,10 +33,11 @@ import json
 import os
 import random
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from fractions import Fraction
 from pathlib import Path
-from typing import Any, Callable, Mapping
+from typing import Any
+from collections.abc import Callable, Mapping
 
 from evals.core.hashing import repository_identity, sha256_file
 from evals.experiments import jev_router_hybrid as hybrid
@@ -170,7 +171,7 @@ class J2Ledger:
         data["total_calls"] += 1
         data["total_cap"] = self.total_cap
         data["entries"].append({"n": data["total_calls"], "phase": phase, "case_id": case_id,
-                                "provider": provider, "at": datetime.now(timezone.utc).isoformat()})
+                                "provider": provider, "at": datetime.now(UTC).isoformat()})
         data["reserved_usd"] = round(data["total_calls"] * hybrid.RESERVED_USD_PER_CALL, 2)
         _write_json(self.path, data)
         return data["total_calls"]
@@ -178,7 +179,7 @@ class J2Ledger:
     def stamp_j2(self, run_id: str) -> None:
         data = self.read()
         data.setdefault("j2_runs", []).append({"run_id": run_id,
-                                               "at": datetime.now(timezone.utc).isoformat()})
+                                               "at": datetime.now(UTC).isoformat()})
         _write_json(self.path, data)
 
 
@@ -190,7 +191,7 @@ def claim_single_run(marker: Path, ledger: J2Ledger, run_id: str,
         raise CorpusError("J2 already ran on the FROZEN corpus; a rerun needs owner authorization")
     marker.parent.mkdir(parents=True, exist_ok=True)
     history = json.loads(marker.read_text(encoding="utf-8")) if marker.exists() else {"runs": []}
-    history["runs"].append({"run_id": run_id, "at": datetime.now(timezone.utc).isoformat(),
+    history["runs"].append({"run_id": run_id, "at": datetime.now(UTC).isoformat(),
                             "owner_rerun_authorization": owner_rerun_authorization})
     _write_json(marker, history)
     ledger.stamp_j2(run_id)
@@ -372,7 +373,7 @@ def run_j2(*, eligible: list[Case], gates: Mapping[str, str], sanity: Case,
     plan = pairing_plan(sorted(by_id), seed)
     raw: dict[str, Any] = {
         **meta, "stage": "J2", "status": "in_progress",
-        "started_at": datetime.now(timezone.utc).isoformat(),
+        "started_at": datetime.now(UTC).isoformat(),
         "pairing_seed": seed, "pairing_plan": plan, "replicates": REPLICATES,
         "eligible_ids": sorted(by_id), "gate_routes": dict(sorted(gates.items())),
         "sanity_case": {"id": sanity.id, "input": sanity.input},
@@ -409,7 +410,7 @@ def run_j2(*, eligible: list[Case], gates: Mapping[str, str], sanity: Case,
         raw["status"] = "blocked-by-provider"
         raw["blocker"] = str(exc)
     finally:
-        raw["finished_at"] = datetime.now(timezone.utc).isoformat()
+        raw["finished_at"] = datetime.now(UTC).isoformat()
         raw["ledger_after"] = {k: v for k, v in ledger.read().items() if k != "entries"}
         _write_json(raw_path, raw)
     return raw
@@ -672,7 +673,7 @@ def main() -> None:
     needed = required_calls(len(eligible))
     if ledger.remaining() < needed:
         raise SystemExit(f"{needed} calls needed, {ledger.remaining()} remain in the J2 cap")
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     run_id = f"SPEC-217-J2-{stamp}"
     claim_single_run(MARKER, ledger, run_id, args.owner_rerun_authorization)
     meta = {"run_id": run_id, "spec": "SPEC-217", "spec_loot": "SPEC-238",

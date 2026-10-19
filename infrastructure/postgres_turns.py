@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from datetime import timedelta
 from decimal import Decimal
-from typing import Any, Mapping, Sequence
+from typing import Any
+from collections.abc import Mapping, Sequence
 from uuid import UUID, uuid4
 
 from psycopg.types.json import Jsonb

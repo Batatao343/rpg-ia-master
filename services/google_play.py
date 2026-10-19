@@ -70,7 +70,7 @@ class ProductPurchase:
     purchase_type: int | None
 
     @classmethod
-    def from_api(cls, data: dict) -> "ProductPurchase":
+    def from_api(cls, data: dict) -> ProductPurchase:
         if not isinstance(data, dict) or not isinstance(data.get("productId"), str):
             raise GooglePlayError("google_play_response_invalid")
 
@@ -103,7 +103,7 @@ class GooglePlaySettings:
     service_account: dict
 
     @classmethod
-    def from_env(cls) -> "GooglePlaySettings":
+    def from_env(cls) -> GooglePlaySettings:
         package = os.getenv("GOOGLE_PLAY_PACKAGE_NAME", "")
         raw = os.getenv("GOOGLE_PLAY_SERVICE_ACCOUNT_JSON", "").strip()
         try:
@@ -119,11 +119,11 @@ class GooglePlaySettings:
         return cls(package, account)
 
 
-_shared: tuple[tuple, "GooglePlayClient"] | None = None
+_shared: tuple[tuple, GooglePlayClient] | None = None
 _shared_lock = threading.Lock()
 
 
-def shared_client() -> "GooglePlayClient":
+def shared_client() -> GooglePlayClient:
     """Per-process client (keeps the OAuth bearer between requests). Rebuilt if the env changes."""
     global _shared
     key = (os.getenv("GOOGLE_PLAY_PACKAGE_NAME", ""), os.getenv("GOOGLE_PLAY_SERVICE_ACCOUNT_JSON", ""))

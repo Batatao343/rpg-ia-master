@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse
 import json
 from dataclasses import asdict
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from decimal import Decimal
 from pathlib import Path
 from uuid import uuid4
@@ -51,7 +51,7 @@ def main(argv: list[str] | None = None) -> int:
             Decimal(sku_data["gross_brl"]), sku_data["shard_milli"],
             sku_data["pricing_version"],
         )
-        at = datetime.fromisoformat(args.at.replace("Z", "+00:00")) if args.at else datetime.now(timezone.utc)
+        at = datetime.fromisoformat(args.at.replace("Z", "+00:00")) if args.at else datetime.now(UTC)
         purchase = quote_purchase(sku, version, at=at)
         report = contribution_report([purchase], fixed_infra_brl=Decimal(args.fixed_infra_brl))
         result: dict = {"simulation_only": True, "purchase": asdict(purchase), "report": report}

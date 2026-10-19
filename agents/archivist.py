@@ -38,7 +38,7 @@ from state import GameState
 
 class MemoryUpdate(BaseModel):
     new_summary: str = Field(description="Um parágrafo resumindo a situação ATUAL e imediata da história.")
-    important_facts: List[str] = Field(description="Fatos PERMANENTES para o banco de dados. Lista vazia se nada importante.")
+    important_facts: list[str] = Field(description="Fatos PERMANENTES para o banco de dados. Lista vazia se nada importante.")
     chronicle_entry: str = Field(
         default="",
         description="Feito digno de canção: 1-3 frases em prosa de menestrel (3ª pessoa, épico-sombrio). Vazio se turno banal.",
@@ -54,7 +54,7 @@ class MemoryUpdate(BaseModel):
         ANTES da validação de tipo, preservando a memória do turno."""
         if not isinstance(v, list):
             return v
-        out: List[str] = []
+        out: list[str] = []
         allowed_keys = ("content", "fato", "fact", "text", "desc", "value", "description")
         for item in v:
             if isinstance(item, str):
@@ -114,7 +114,7 @@ _VECTOR_RETRY_EVERY = 3  # SPEC-234 R1/D-B: no maximo 1 retry vetorial a cada 3 
 _ARCHIVE_EVERY = 10  # turnos sem evento relevante antes de forçar um arquivamento
 
 
-def _persist_memory_records(game_id: str, records: List[dict]) -> bool:
+def _persist_memory_records(game_id: str, records: list[dict]) -> bool:
     """Write único com metadata; aceita stubs antigos de dois argumentos."""
     records = normalize_memory_facts(records)
     if not records:
@@ -144,9 +144,9 @@ def _persist_memory_records(game_id: str, records: List[dict]) -> bool:
     return ok is not False
 
 
-def _validate_candidates(candidates: List[dict], state: dict) -> tuple[List[dict], List[dict]]:
-    accepted: List[dict] = []
-    rejected: List[dict] = []
+def _validate_candidates(candidates: list[dict], state: dict) -> tuple[list[dict], list[dict]]:
+    accepted: list[dict] = []
+    rejected: list[dict] = []
     for candidate in normalize_memory_facts(candidates):
         record, reason = validate_memory_fact(candidate, state)
         if record is not None:
@@ -162,9 +162,9 @@ def _validate_candidates(candidates: List[dict], state: dict) -> tuple[List[dict
     return accepted, rejected
 
 
-def _event_memory_records(events: List[dict], state: dict) -> List[dict]:
+def _event_memory_records(events: list[dict], state: dict) -> list[dict]:
     projection = state.get("world_projection") or {}
-    records: List[dict] = []
+    records: list[dict] = []
     for event in events:
         if not isinstance(event, dict) or not event.get("event_id"):
             continue
@@ -716,7 +716,7 @@ def _archive_node(state: GameState, *, event_updates: dict | None = None,
             "memory_promotions": memory_promotions,
         }
 
-    def persist_records(candidates: List[dict]) -> bool:
+    def persist_records(candidates: list[dict]) -> bool:
         nonlocal memory_facts, pending_memory_facts
         nonlocal memory_rejections, memory_promotions
         accepted, rejected = _validate_candidates(candidates, effective_state)

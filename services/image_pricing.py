@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import replace
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from decimal import ROUND_UP, Decimal, localcontext
 from hashlib import sha256
 from pathlib import Path
@@ -18,7 +18,7 @@ IMAGE_PRICING_VERSION = _CARD["version"] + "-" + sha256(_BYTES).hexdigest()[:16]
 
 def require_image_prices(model: str, at: datetime) -> None:
     observed = datetime.fromisoformat(_CARD["observed_at"])
-    age = at.astimezone(timezone.utc) - observed
+    age = at.astimezone(UTC) - observed
     if model != _CARD["model"] or not timedelta(0) <= age <= rate_card_max_age():
         raise PricingUnavailable("image model/rate card unavailable or stale")
 

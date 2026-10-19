@@ -18,7 +18,8 @@ import os
 import re
 import threading
 import time
-from typing import Callable, Mapping, Protocol
+from typing import Protocol
+from collections.abc import Callable, Mapping
 
 from observability.metrics import metrics
 

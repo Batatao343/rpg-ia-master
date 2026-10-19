@@ -13,7 +13,7 @@ from typing import Dict, List, Optional, Tuple
 
 # Frases-assinatura da VERDADE oculta (não do rumor público — 7.3 separou os dois).
 # Curadas dos docs `visibility: hidden`. Movidas de playtest/invariants.py (R1).
-SECRET_SIGNATURES: Dict[str, List[str]] = {
+SECRET_SIGNATURES: dict[str, list[str]] = {
     "pacto_valerius": [
         "pacto com valerius", "pacto com daruun", "consumiu a família",
         "cedeu a família", "em troca de imortalidade",
@@ -37,7 +37,7 @@ SECRET_SIGNATURES: Dict[str, List[str]] = {
 # de um `secret_revealed` aceito, liberam o segredo. (D-A: `pacto_valerius` mapeia
 # para as entidades existentes envolvidas; nao ha entidade propria.) Fonte:
 # data/secret_entities.json; o lint valida que cada ID existe no grafo.
-def _load_secret_entity_ids() -> Dict[str, frozenset]:
+def _load_secret_entity_ids() -> dict[str, frozenset]:
     import json
     import os
 
@@ -54,10 +54,10 @@ def _load_secret_entity_ids() -> Dict[str, frozenset]:
     }
 
 
-SECRET_ENTITY_IDS: Dict[str, frozenset] = _load_secret_entity_ids()
+SECRET_ENTITY_IDS: dict[str, frozenset] = _load_secret_entity_ids()
 
 # Rumor PÚBLICO neutro que substitui o beat vazado (R2) — nada revela a verdade.
-PUBLIC_RUMOR: Dict[str, str] = {
+PUBLIC_RUMOR: dict[str, str] = {
     "pacto_valerius": "os boatos em torno da ascensão de Valerius",
     "rede_carmesim": "os rumores sobre a Rede Carmesim",
     "arauto_identidade": "as lendas sobre o Arauto e a queda de Aethelgard",
@@ -75,7 +75,7 @@ def revealed_corpus(state: dict) -> str:
     repetindo isso NÃO é vazamento — o jogador já sabe. O resumo do arquivista é
     o registro diegético desse conhecimento; `known_secrets` é o registro
     explícito (quando o fluxo de reveal o preenche)."""
-    parts: List[str] = []
+    parts: list[str] = []
     for ev in state.get("event_log", []) or []:
         if isinstance(ev, dict) and ev.get("type") == "secret_revealed":
             parts.append(str(ev.get("payload", {})))
@@ -94,7 +94,7 @@ def revealed_corpus(state: dict) -> str:
     return " ".join(parts).lower()
 
 
-def find_unrevealed(text: str, state: dict) -> Optional[Tuple[str, str]]:
+def find_unrevealed(text: str, state: dict) -> tuple[str, str] | None:
     """Se `text` contém a assinatura de um segredo AINDA NÃO revelado, devolve
     (secret_id, phrase). None caso contrário."""
     low = (text or "").lower()

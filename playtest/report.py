@@ -18,18 +18,18 @@ from typing import Dict, List, Optional, Tuple
 @dataclass
 class RunReport:
     run_id: str
-    campaigns: List[dict]                 # summaries
-    top_violations: List[Tuple[str, int]]
-    top_errors: List[Tuple[str, int]]     # por rota do grafo
-    deltas: Optional[dict]                # vs baseline (None sem baseline)
+    campaigns: list[dict]                 # summaries
+    top_violations: list[tuple[str, int]]
+    top_errors: list[tuple[str, int]]     # por rota do grafo
+    deltas: dict | None                # vs baseline (None sem baseline)
     mock_any: bool = False
     status: str = "legacy"
     complete: bool = True
     completeness: dict = field(default_factory=dict)
-    violation_samples: Dict[str, dict] = field(default_factory=dict)
+    violation_samples: dict[str, dict] = field(default_factory=dict)
 
 
-def _load_summaries(run_dir: str) -> List[dict]:
+def _load_summaries(run_dir: str) -> list[dict]:
     out = []
     for path in sorted(glob.glob(os.path.join(run_dir, "*.summary.json"))):
         try:
@@ -58,7 +58,7 @@ def _errors_by_route(run_dir: str) -> Counter:
     return c
 
 
-def _totais(summaries: List[dict]) -> dict:
+def _totais(summaries: list[dict]) -> dict:
     return {
         "campaigns": len(summaries),
         "errors": sum(int(s.get("errors", 0)) for s in summaries),
@@ -72,12 +72,12 @@ def _totais(summaries: List[dict]) -> dict:
     }
 
 
-def aggregate(run_dir: str, baseline_dir: Optional[str] = None) -> RunReport:
+def aggregate(run_dir: str, baseline_dir: str | None = None) -> RunReport:
     summaries = _load_summaries(run_dir)
     run_id = os.path.basename(os.path.normpath(run_dir))
 
     viol: Counter = Counter()
-    violation_samples: Dict[str, dict] = {}
+    violation_samples: dict[str, dict] = {}
     for s in summaries:
         for cid, n in (s.get("violations") or {}).items():
             viol[cid] += int(n)
@@ -115,7 +115,7 @@ def render_transcript(run_dir: str) -> str:
     """Transcrito QUALITATIVO por turno (ação do jogador → rota → narração do
     LLM) de todas as campanhas do run. Serve p/ julgar o PROMPT: coerência,
     repetição, se o narrador ignora estado, se falta algo. Legível no editor."""
-    L: List[str] = [f"# Transcrito de playtest — `{os.path.basename(os.path.normpath(run_dir))}`", ""]
+    L: list[str] = [f"# Transcrito de playtest — `{os.path.basename(os.path.normpath(run_dir))}`", ""]
     for path in sorted(glob.glob(os.path.join(run_dir, "*.jsonl"))):
         stem = os.path.basename(path)[:-6]  # tira .jsonl
         L.append(f"## Campanha `{stem}`")
@@ -150,7 +150,7 @@ def _fmt(n) -> str:
 
 
 def render_markdown(report: RunReport) -> str:
-    L: List[str] = []
+    L: list[str] = []
     L.append(f"# Relatório de playtest — `{report.run_id}`")
     L.append("")
     if not report.complete:

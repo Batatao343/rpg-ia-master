@@ -120,7 +120,7 @@ def smart_title(text: str) -> str:
     return " ".join(parts)
 
 
-def resolve_location(text: str) -> Optional[str]:
+def resolve_location(text: str) -> str | None:
     plain = _strip_accents(text).lower()
     for keyword, loc_id in _LOCATION_KEYWORDS:
         if keyword in plain:
@@ -131,7 +131,7 @@ def resolve_location(text: str) -> Optional[str]:
 @dataclass
 class Block:
     categoria: str
-    tags: List[str]
+    tags: list[str]
     title: str
     body: str
     section: str = ""  # cabeçalho ####/LOCAL: vigente quando o bloco começou
@@ -140,12 +140,12 @@ class Block:
 _DIVIDER_RE = re.compile(r"^\s*(#{4,}|={4,}|-{3,})\s*$")
 
 
-def parse_categoria_blocks(path: str) -> List[Block]:
+def parse_categoria_blocks(path: str) -> list[Block]:
     """Divide um arquivo em blocos [CATEGORIA: X] / [TAGS: ...] / TÍTULO / corpo."""
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         lines = f.read().splitlines()
 
-    blocks: List[Block] = []
+    blocks: list[Block] = []
     current_section = ""
     i = 0
     while i < len(lines):
@@ -165,7 +165,7 @@ def parse_categoria_blocks(path: str) -> List[Block]:
         categoria = m.group(1).strip()
         block_section = current_section  # seção vigente QUANDO o bloco começou
         i += 1
-        tags: List[str] = []
+        tags: list[str] = []
         if i < len(lines):
             mt = re.match(r"^\[TAGS:\s*(.+?)\]\s*$", lines[i])
             if mt:
@@ -184,7 +184,7 @@ def parse_categoria_blocks(path: str) -> List[Block]:
         # Verme-Primordial, segredo) vazava para um único doc público de 1600
         # linhas. Também parar em [CRIATURA:/MATERIAL:/ITEM: fecha o bloco no lugar
         # certo (esses marcadores nunca aparecem no CORPO de um [CATEGORIA:]).
-        body_lines: List[str] = []
+        body_lines: list[str] = []
         while i < len(lines) and not re.match(r"^\[(CATEGORIA|CRIATURA|MATERIAL|ITEM):", lines[i]):
             stripped = lines[i].strip()
             if re.match(r"^(#{4,}|={4,})$", stripped) and i + 1 < len(lines):
@@ -238,10 +238,10 @@ class TimelineSection:
     visibility: str   # "public" | "hidden"
 
 
-def _split_paragraphs(era_body: List[str]) -> List[str]:
+def _split_paragraphs(era_body: list[str]) -> list[str]:
     """Parágrafos de uma era: linhas em branco e divisores `---` separam; divisor é descartado."""
-    paras: List[str] = []
-    cur: List[str] = []
+    paras: list[str] = []
+    cur: list[str] = []
     for ln in era_body:
         if _DIVIDER_RE.match(ln.strip()) or not ln.strip():
             if cur:
@@ -254,24 +254,24 @@ def _split_paragraphs(era_body: List[str]) -> List[str]:
     return [p for p in paras if p]
 
 
-def parse_timeline(path: str) -> List[TimelineSection]:
+def parse_timeline(path: str) -> list[TimelineSection]:
     """Divide timeline_completa.txt em docs por era (`ERA N — …`) e visibilidade.
 
     Prosa, não formato `[CATEGORIA:]`. Preâmbulo antes de "ERA 0" é descartado. Dentro de
     cada era os parágrafos são agrupados em runs contíguos de mesma visibilidade — os
     trechos cobertos por `_TIMELINE_HIDDEN_CLUSTERS` viram `hidden`, o resto `public`.
     """
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         lines = f.read().splitlines()
 
     era_re = re.compile(r"^ERA\s+(\d+)\s+—\s+(.+?)\s*$")
-    era_starts: List[Tuple[int, int, str]] = []  # (line_idx, era_num, era_title)
+    era_starts: list[tuple[int, int, str]] = []  # (line_idx, era_num, era_title)
     for idx, line in enumerate(lines):
         m = era_re.match(line)
         if m:
             era_starts.append((idx, int(m.group(1)), m.group(2).strip()))
 
-    sections: List[TimelineSection] = []
+    sections: list[TimelineSection] = []
     for i, (start, era_num, era_title) in enumerate(era_starts):
         end = era_starts[i + 1][0] if i + 1 < len(era_starts) else len(lines)
         paras = _split_paragraphs(lines[start + 1:end])
@@ -291,8 +291,8 @@ def parse_timeline(path: str) -> List[TimelineSection]:
 
         # emite runs contíguos de mesma visibilidade como 1 doc cada
         seq = 0
-        run: List[str] = []
-        run_hidden: Optional[bool] = None
+        run: list[str] = []
+        run_hidden: bool | None = None
         for p, h in zip(paras, hidden):
             if run_hidden is None or h == run_hidden:
                 run.append(p)
@@ -312,15 +312,15 @@ def parse_timeline(path: str) -> List[TimelineSection]:
     return sections
 
 
-def parse_marker_entries(path: str, marker: str) -> List[Tuple[str, str, str, str]]:
+def parse_marker_entries(path: str, marker: str) -> list[tuple[str, str, str, str]]:
     """Extrai entradas `[<marker>: Nome]` -> (nome, corpo, local_header, secao).
 
     Usado por creatures.txt ([CRIATURA:]) e items.txt ([MATERIAL:]/[ITEM:]).
     """
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         lines = f.read().splitlines()
 
-    entries: List[Tuple[str, str, str, str]] = []
+    entries: list[tuple[str, str, str, str]] = []
     current_local = ""
     current_section = ""
     i = 0
@@ -344,7 +344,7 @@ def parse_marker_entries(path: str, marker: str) -> List[Tuple[str, str, str, st
         name = m.group(1).strip()
         suffix = (m.group(2) or "").strip()
         i += 1
-        body_lines: List[str] = []
+        body_lines: list[str] = []
         while i < len(lines):
             nxt = lines[i]
             if (nxt.startswith("[") and re.match(r"^\[(CRIATURA|MATERIAL|ITEM|CATEGORIA)", nxt)) \
@@ -378,9 +378,9 @@ def _dump_md(path: str, frontmatter: dict, body: str) -> None:
         f.write(f"---\n{fm}\n---\n\n{body}\n")
 
 
-def _parse_md(path: str) -> Tuple[dict, str]:
+def _parse_md(path: str) -> tuple[dict, str]:
     """(frontmatter, corpo) de um .md do Codex; frontmatter quebrado -> ({}, "")."""
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         text = f.read()
     parts = text.split("---", 2)
     if len(parts) < 3:
@@ -395,7 +395,7 @@ def _parse_md(path: str) -> Tuple[dict, str]:
 # Segredos de NPC (Fase 7.3)
 # ---------------------------------------------------------------------------
 
-def split_npc_secrets(body: str) -> Tuple[str, str]:
+def split_npc_secrets(body: str) -> tuple[str, str]:
     """Divide o corpo de um NPC em (publico, secreto) por rótulo de parágrafo.
 
     Parágrafo = bloco separado por linha em branco. Rótulo = texto antes do
@@ -404,8 +404,8 @@ def split_npc_secrets(body: str) -> Tuple[str, str]:
     compartilhada com o lint anti-regressão). Sem rótulo (linha sem ':') =
     público. Título '# ...' fica no público.
     """
-    publicos: List[str] = []
-    secretos: List[str] = []
+    publicos: list[str] = []
+    secretos: list[str] = []
     for paragraph in re.split(r"\n\s*\n", body):
         if not paragraph.strip():
             continue
@@ -440,14 +440,14 @@ def load_overrides(path: str = OVERRIDES_PATH) -> dict:
     """Lê data/codex_overrides.yaml -> {id: patch}. Ausente/vazio -> {}."""
     if not os.path.isfile(path):
         return {}
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         data = yaml.safe_load(f)
     return data if isinstance(data, dict) else {}
 
 
-def _codex_paths_by_id(codex_dir: str) -> Dict[str, str]:
+def _codex_paths_by_id(codex_dir: str) -> dict[str, str]:
     """id -> path; write_codex_file garante nome do arquivo == id (lint 7.1 valida)."""
-    mapping: Dict[str, str] = {}
+    mapping: dict[str, str] = {}
     for root, _dirs, files in os.walk(codex_dir):
         for fname in files:
             if fname.endswith(".md"):
@@ -455,15 +455,15 @@ def _codex_paths_by_id(codex_dir: str) -> Dict[str, str]:
     return mapping
 
 
-def apply_overrides(entities: Dict[str, dict], overrides: dict,
-                    codex_dir: str = CODEX_DIR) -> List[str]:
+def apply_overrides(entities: dict[str, dict], overrides: dict,
+                    codex_dir: str = CODEX_DIR) -> list[str]:
     """Aplica patches nos .md gerados e no dict de entidades.
 
     Precedência: gerado < override. Arquivo `curated: true` nunca recebe
     override (lint 7.2 acusa AVISO). Retorna ids não encontrados no Codex
     (o main imprime; lint acusa como ERRO).
     """
-    orfaos: List[str] = []
+    orfaos: list[str] = []
     paths = _codex_paths_by_id(codex_dir)
     for override_id in sorted(overrides):
         patch = overrides[override_id] or {}
@@ -518,7 +518,7 @@ def unique_id(base: str, taken: set, fallback_suffix: str = "") -> str:
     return f"{base}_{n}"
 
 
-def main() -> Dict[str, dict]:
+def main() -> dict[str, dict]:
     # regenera do zero (idempotente por substituição total). Apaga só os .md —
     # rmtree do diretório falha no Windows/OneDrive (lock de sync).
     # Arquivos `curated: true` são manuais e sobrevivem (Fase 7.2).
@@ -533,10 +533,10 @@ def main() -> Dict[str, dict]:
                 os.remove(path)
     os.makedirs(GRAPH_DIR, exist_ok=True)
 
-    entities: Dict[str, dict] = {}
+    entities: dict[str, dict] = {}
 
-    def register(entity_id: str, etype: str, name: str, tags: List[str],
-                 visibility: str = "public", aliases: Optional[List[str]] = None) -> None:
+    def register(entity_id: str, etype: str, name: str, tags: list[str],
+                 visibility: str = "public", aliases: list[str] | None = None) -> None:
         entities[entity_id] = {
             "id": entity_id,
             "type": etype,
@@ -646,7 +646,7 @@ def main() -> Dict[str, dict]:
         }, f"# {name}\n\n{body}")
 
     # --- items.txt — artefatos únicos viram entidade; resto agrupa por região ---
-    grouped_items: Dict[str, List[str]] = {}
+    grouped_items: dict[str, list[str]] = {}
     for marker in ("MATERIAL", "ITEM"):
         for name, body, local, section in parse_marker_entries(
                 os.path.join(LORE_DIR, "items.txt"), marker):
@@ -701,7 +701,7 @@ def main() -> Dict[str, dict]:
         ("rumors.txt", "rumors", "story_rumores", "Rumores"),
         ("daily_life.txt", "world_story", "story_cotidiano", "Cotidiano"),
     ):
-        grouped: Dict[str, List[str]] = {}
+        grouped: dict[str, list[str]] = {}
         for blk in parse_categoria_blocks(os.path.join(LORE_DIR, fname)):
             loc_id = resolve_location(" ".join(blk.tags)) or "diversos"
             grouped.setdefault(loc_id, []).append(
@@ -752,7 +752,7 @@ if __name__ == "__main__":
         except Exception:
             pass
     ents = main()
-    by_type: Dict[str, int] = {}
+    by_type: dict[str, int] = {}
     for e in ents.values():
         by_type[e["type"]] = by_type.get(e["type"], 0) + 1
     total_md = sum(len(files) for _, _, files in os.walk(CODEX_DIR))

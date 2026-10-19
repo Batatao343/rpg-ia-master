@@ -18,7 +18,8 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import Any, Literal, Mapping, Optional
+from typing import Any, Literal, Optional
+from collections.abc import Mapping
 
 from services.entity_identity import (
     find_runtime_npc_key,
@@ -125,10 +126,10 @@ _QUOTE_RE = re.compile(r"[\"“”«»]")
 class InterlocutorResolution:
     route: str                       # RouteType.value
     speaker_kind: SpeakerKind
-    npc_state_key: Optional[str]     # chave em state["npcs"]/party; só se npc ou absent_known
-    mediated_subject_id: Optional[str]  # NPC de quem o narrador fala (R2/R7/R8)
+    npc_state_key: str | None     # chave em state["npcs"]/party; só se npc ou absent_known
+    mediated_subject_id: str | None  # NPC de quem o narrador fala (R2/R7/R8)
     reason: ReasonCode
-    fallback_hint: Optional[str]     # vira npc_fallback_hint quando npc_unknown_absent
+    fallback_hint: str | None     # vira npc_fallback_hint quando npc_unknown_absent
 
 
 # ---------------------------------------------------------------------------
@@ -143,7 +144,7 @@ def _has_alias(norm_text: str, alias: str) -> bool:
     return len(alias) >= MIN_ALIAS_LEN and f" {alias} " in f" {norm_text} "
 
 
-def _row_for(state: Mapping[str, Any], key: str) -> Optional[dict]:
+def _row_for(state: Mapping[str, Any], key: str) -> dict | None:
     npcs = state.get("npcs") or {}
     found = find_runtime_npc_key(npcs, key)
     if found is not None and isinstance(npcs.get(found), dict):
@@ -156,7 +157,7 @@ def _row_for(state: Mapping[str, Any], key: str) -> Optional[dict]:
     return None
 
 
-def _short_alias(row: Mapping[str, Any] | None, key: str) -> Optional[str]:
+def _short_alias(row: Mapping[str, Any] | None, key: str) -> str | None:
     """Primeiro token significativo do nome (ex.: 'Velha Magda' → 'magda')."""
     name = str((row or {}).get("name") or key)
     for token in normalize_runtime_npc_ref(name).split():
@@ -165,9 +166,9 @@ def _short_alias(row: Mapping[str, Any] | None, key: str) -> Optional[str]:
     return None
 
 
-def _alias_map(state: Mapping[str, Any], keys: list[str]) -> dict[str, Optional[str]]:
+def _alias_map(state: Mapping[str, Any], keys: list[str]) -> dict[str, str | None]:
     """alias normalizado → chave; alias que casa ≥2 chaves vira None (ambíguo)."""
-    out: dict[str, Optional[str]] = {}
+    out: dict[str, str | None] = {}
 
     def put(alias: str, key: str) -> None:
         if len(alias) < MIN_ALIAS_LEN or alias in _STOP_TOKENS:
@@ -205,7 +206,7 @@ def _known_keys(state: Mapping[str, Any]) -> list[str]:
     return list(dict.fromkeys(keys))
 
 
-def _mentions(norm_text: str, amap: Mapping[str, Optional[str]]) -> list[str]:
+def _mentions(norm_text: str, amap: Mapping[str, str | None]) -> list[str]:
     """Chaves citadas no texto, na ordem de aparição (alias mais longo vence)."""
     hits: list[tuple[int, str]] = []
     taken: list[tuple[int, int]] = []
@@ -225,7 +226,7 @@ def _mentions(norm_text: str, amap: Mapping[str, Optional[str]]) -> list[str]:
     return list(dict.fromkeys(key for _pos, key in sorted(hits)))
 
 
-def _match_target(tnorm: str, amap: Mapping[str, Optional[str]]) -> Optional[str]:
+def _match_target(tnorm: str, amap: Mapping[str, str | None]) -> str | None:
     if not tnorm:
         return None
     if tnorm in amap:
@@ -257,7 +258,7 @@ def _strip_article(tnorm: str) -> str:
     return re.sub(r"^(?:o|a|os|as|um|uma)\s+", "", tnorm).strip()
 
 
-def generic_role(tnorm: str) -> Optional[str]:
+def generic_role(tnorm: str) -> str | None:
     """Papel genérico da lista fechada (R6). Nome próprio nunca entra."""
     bare = _strip_article(tnorm)
     bare = re.sub(r"\s+(?:local|da taverna|do porto|do mercado|da cidade)$", "", bare)
@@ -291,7 +292,7 @@ def _is_description(norm: str) -> bool:
     return any(rx.search(norm) for rx in _DESCRIPTION_RES)
 
 
-def addressed_in_scene(state: Mapping[str, Any], text: str) -> Optional[tuple[str, str]]:
+def addressed_in_scene(state: Mapping[str, Any], text: str) -> tuple[str, str] | None:
     """(chave, motivo) quando o jogador se dirige EXPLICITAMENTE a um NPC em cena."""
     amap = _alias_map(state, scene_keys(state))
     if not any(amap.values()):
@@ -317,7 +318,7 @@ def addressed_in_scene(state: Mapping[str, Any], text: str) -> Optional[tuple[st
     return None
 
 
-def _continuity_key(state: Mapping[str, Any], in_scene: list[str]) -> Optional[str]:
+def _continuity_key(state: Mapping[str, Any], in_scene: list[str]) -> str | None:
     last = state.get("last_speaker") or {}
     if not isinstance(last, Mapping):
         return None
@@ -340,7 +341,7 @@ def _continuity_key(state: Mapping[str, Any], in_scene: list[str]) -> Optional[s
     return None
 
 
-def _first_known_subject(state: Mapping[str, Any], norm: str) -> Optional[str]:
+def _first_known_subject(state: Mapping[str, Any], norm: str) -> str | None:
     found = _mentions(norm, _alias_map(state, _known_keys(state)))
     return canonical_npc_id(state, found[0]) if found else None
 
@@ -357,7 +358,7 @@ STORY = "storyteller"
 NPC = "npc_actor"
 
 
-def pre_classify(state: Mapping[str, Any], text: str) -> Optional[InterlocutorResolution]:
+def pre_classify(state: Mapping[str, Any], text: str) -> InterlocutorResolution | None:
     """R2/R3 determinísticos ANTES do CLASSIFY. None = seguir para o CLASSIFY."""
     text = str(text or "")
     if not text.strip():
@@ -379,7 +380,7 @@ def pre_classify(state: Mapping[str, Any], text: str) -> Optional[InterlocutorRe
     return None
 
 
-def _text_role_target(norm: str) -> Optional[str]:
+def _text_role_target(norm: str) -> str | None:
     match = re.search(rf"\b{_TALK_VERBS}\s+{_PREP}\s+{_ARTICLES}(\w+)", norm)
     if match and match.group(1) in GENERIC_ROLES:
         return match.group(1)
@@ -387,7 +388,7 @@ def _text_role_target(norm: str) -> Optional[str]:
 
 
 def post_classify(state: Mapping[str, Any], text: str, route: str,
-                  target: Optional[str]) -> InterlocutorResolution:
+                  target: str | None) -> InterlocutorResolution:
     """R3–R8 sobre a decisão do CLASSIFY (nenhuma chamada LLM)."""
     text = str(text or "")
     norm = _norm(text)
@@ -498,7 +499,7 @@ def _action_refused(state: Mapping[str, Any]) -> bool:
     return isinstance(action, Mapping) and action.get("allowed", True) is False
 
 
-def _carry_last_npc(state: Mapping[str, Any]) -> Optional[dict]:
+def _carry_last_npc(state: Mapping[str, Any]) -> dict | None:
     last = state.get("last_speaker") or {}
     if not isinstance(last, Mapping):
         return None

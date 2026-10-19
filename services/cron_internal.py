@@ -10,7 +10,8 @@ import logging
 import os
 import threading
 import time
-from typing import Any, Callable
+from typing import Any
+from collections.abc import Callable
 from uuid import uuid4
 
 from fastapi import APIRouter, HTTPException, Request

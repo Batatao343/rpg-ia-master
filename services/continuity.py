@@ -7,7 +7,7 @@ from typing import Any, Dict
 MAX_DEATH_HISTORY = 32
 
 
-def normalize(value: Dict[str, Any] | None, *, canonical_turn: int = 0) -> Dict[str, Any]:
+def normalize(value: dict[str, Any] | None, *, canonical_turn: int = 0) -> dict[str, Any]:
     value = deepcopy(value or {})
     action_count = (
         max(0, int(value.get("session_action_count", 0) or 0))
@@ -32,20 +32,20 @@ def normalize(value: Dict[str, Any] | None, *, canonical_turn: int = 0) -> Dict[
     }
 
 
-def advance_action(value: Dict[str, Any] | None, *, canonical_turn: int) -> Dict[str, Any]:
+def advance_action(value: dict[str, Any] | None, *, canonical_turn: int) -> dict[str, Any]:
     out = normalize(value, canonical_turn=max(0, canonical_turn - 1))
     out["session_action_count"] += 1
     return out
 
 
-def mark_checkpoint(value: Dict[str, Any] | None, *, canonical_turn: int) -> Dict[str, Any]:
+def mark_checkpoint(value: dict[str, Any] | None, *, canonical_turn: int) -> dict[str, Any]:
     out = normalize(value, canonical_turn=canonical_turn)
     out["last_checkpoint_turn"] = int(canonical_turn)
     out["checkpoint_deferred"] = False
     return out
 
 
-def after_restore(dead_state: dict, restored_state: dict) -> Dict[str, Any]:
+def after_restore(dead_state: dict, restored_state: dict) -> dict[str, Any]:
     dead_turn = int((dead_state.get("world") or {}).get("turn_count", 0) or 0)
     restored_turn = int((restored_state.get("world") or {}).get("turn_count", 0) or 0)
     meta = normalize(dead_state.get("continuity"), canonical_turn=dead_turn)

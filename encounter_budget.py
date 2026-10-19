@@ -15,7 +15,7 @@ CATEGORIA_COST = {"lacaio": 2, "padrao": 3, "elite": 5, "chefe": 12, "nomeado": 
 BASE_BY_DANGER = {1: 2, 2: 4, 3: 7, 4: 10}
 
 
-def tier_cost(enemy: Dict) -> int:
+def tier_cost(enemy: dict) -> int:
     from combat_mechanics import normalize_categoria
     return CATEGORIA_COST[normalize_categoria(enemy)]
 
@@ -37,9 +37,9 @@ def encounter_budget(player_level: int, danger: int, allies_count: int = 0) -> i
     return min(raw, cap)
 
 
-def clamp_encounter(enemies: List[Dict], budget: int,
+def clamp_encounter(enemies: list[dict], budget: int,
                     player_level: int = 0, *,
-                    protected: Optional[set] = None) -> Tuple[List[Dict], List[str]]:
+                    protected: set | None = None) -> tuple[list[dict], list[str]]:
     """Corta o excedente do orçamento. Regras: boss NUNCA é cortado; prioriza
     VARIEDADE (1 de cada template antes de repetições); mantém >= 1 inimigo.
     Nível 1 (spec balanceamento-early-game R2.1): no máximo 1 elite — burst de
@@ -56,12 +56,12 @@ def clamp_encounter(enemies: List[Dict], budget: int,
         for extra in elites[1:]:
             rest.remove(extra)
 
-    def _template(e: Dict) -> str:
+    def _template(e: dict) -> str:
         import re
         return re.sub(r"_\d+$", "", str(e.get("id", e.get("name", "?"))))
 
     # variedade primeiro: 1ª instância de cada template, depois repetições
-    seen: Dict[str, int] = {}
+    seen: dict[str, int] = {}
     canonical, firsts, repeats = [], [], []
     protected = set(protected or ())
     for e in sorted(rest, key=tier_cost, reverse=True):  # elites antes de minions
@@ -85,15 +85,15 @@ def clamp_encounter(enemies: List[Dict], budget: int,
     return kept, logs
 
 
-def fill_encounter(enemies: List[Dict], budget: int, loc: Dict, danger: int,
-                   turn: int = 0, make_instance=None) -> Tuple[List[Dict], List[str]]:
+def fill_encounter(enemies: list[dict], budget: int, loc: dict, danger: int,
+                   turn: int = 0, make_instance=None) -> tuple[list[dict], list[str]]:
     """PISO (budget/2): local perigoso reforça encontro fraco com criatura regional.
     `make_instance(entry, i)` transforma a entrada do bestiário em instância de
     combate (injetado pelo chamador para reusar o pipeline do spawn)."""
     import world_utils as wu
 
     kept = list(enemies)
-    logs: List[str] = []
+    logs: list[str] = []
     floor = max(TIER_COST["minion"], budget // 2)
     spent = sum(tier_cost(e) for e in kept)
     i = 0

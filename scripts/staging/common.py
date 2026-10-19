@@ -8,7 +8,8 @@ import json
 import os
 import re
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any
+from collections.abc import Mapping
 
 ROOT = Path(__file__).resolve().parents[2]
 REDACTED = "[REDACTED]"

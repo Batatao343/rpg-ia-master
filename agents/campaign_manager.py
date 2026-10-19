@@ -19,7 +19,7 @@ class CampaignPlanModel(BaseModel):
     """Structured response format for the campaign planner LLM."""
 
     location: str = Field(description="Scene location the plan is for")
-    beats: List[str] = Field(
+    beats: list[str] = Field(
         min_length=3,
         description="Ordered story beats leading to the climax — SEMPRE em português do Brasil (pt-BR), NUNCA em inglês",
     )
@@ -35,7 +35,7 @@ class CampaignPlanModel(BaseModel):
 
     @field_validator("beats")
     @classmethod
-    def validate_beats(cls, beats: List[str]) -> List[str]:
+    def validate_beats(cls, beats: list[str]) -> list[str]:
         """Normalize provider output before enforcing the 3–5 beat contract.
 
         An otherwise valid plan must not be discarded only because a provider
@@ -120,7 +120,7 @@ def _replan_reason(state: GameState) -> str:
     return "arc_finished"
 
 
-def _build_plan(state: GameState, _info: Optional[dict] = None) -> CampaignPlan:
+def _build_plan(state: GameState, _info: dict | None = None) -> CampaignPlan:
     """Generate a structured campaign plan for the current scene using RAG context."""
 
     world = state.get("world", {})
@@ -217,7 +217,7 @@ def _build_plan(state: GameState, _info: Optional[dict] = None) -> CampaignPlan:
         # R2: sanitiza a verdade oculta no TEXTO (beats/climax/arc_title).
         if _info is not None:
             _info["outcome"] = "llm"
-        beats: List[CampaignBeat] = [
+        beats: list[CampaignBeat] = [
             {"description": sanitize_beat(beat, state), "status": "pending"}
             for beat in plan.beats
         ]
@@ -251,7 +251,7 @@ def _build_plan(state: GameState, _info: Optional[dict] = None) -> CampaignPlan:
             _info["outcome"] = "template"
         # spec beats-visibilidade-ptbr (achado F): o fallback ERA em inglês —
         # fonte real do "beat em inglês" quando o LLM falha. Agora em pt-BR.
-        fallback_beats: List[CampaignBeat] = [
+        fallback_beats: list[CampaignBeat] = [
             {"description": f"Explore os mistérios de {current_loc}.", "status": "pending"},
             {"description": "Enfrente um desafio ligado ao ambiente local.", "status": "pending"},
             {"description": "Faça uma descoberta importante ou encare uma ameaça.", "status": "pending"},

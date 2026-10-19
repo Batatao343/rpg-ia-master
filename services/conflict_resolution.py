@@ -64,7 +64,7 @@ def _d10(rng) -> int:
     return rng.randint(1, 10)
 
 
-def roll_kept(advantage: int, rng) -> Dict:
+def roll_kept(advantage: int, rng) -> dict:
     """R6: advantage>0 = Vantagem (3d10, mantém 2 maiores); <0 = Desvantagem (3d10,
     mantém 2 menores); 0 = normal (2d10). Sinal só — não acumula dados extras."""
     net = 1 if advantage > 0 else (-1 if advantage < 0 else 0)
@@ -77,7 +77,7 @@ def roll_kept(advantage: int, rng) -> Dict:
     return {"rolled": rolled, "kept": kept}
 
 
-def _crit_from_kept(kept: List[int]) -> Optional[str]:
+def _crit_from_kept(kept: list[int]) -> str | None:
     """R5: dupla 1-9 nos dados MANTIDOS = Crítico; dupla 10 = Supercrítico."""
     a, b = kept[0], kept[1]
     if a == b:
@@ -98,21 +98,21 @@ def _initiative_value(actor: dict) -> int:
         combat_modifiers(actor).get("initiative", 0) or 0)
 
 
-def _side_roll(participants: List[dict], rng) -> Dict:
+def _side_roll(participants: list[dict], rng) -> dict:
     ag = max((_initiative_value(p) for p in participants
               if p.get("conscious", True)), default=0)
     dados = [_d10(rng), _d10(rng)]
     return {"dice": dados, "agilidade": ag, "total": sum(dados) + ag}
 
 
-def _trace_initiative(order: List[str], rolls: Dict) -> None:
+def _trace_initiative(order: list[str], rolls: dict) -> None:
     from services import mechanics_trace as mt
     dice = [d for side in order for d in ((rolls.get(side) or {}).get("dice") or [])]
     mt.record_step("initiative", dice=dice, result=order[0] if order else None)
 
 
-def roll_initiative_by_side(sides: Dict[str, List[dict]], *,
-                            initiator: Optional[str] = None, rng=None) -> Dict:
+def roll_initiative_by_side(sides: dict[str, list[dict]], *,
+                            initiator: str | None = None, rng=None) -> dict:
     """R2: se `initiator` iniciou claramente, age primeiro sem disputa; senão cada
     lado rola 2d10 + maior Agilidade consciente e o maior total age primeiro.
     Retorna {"order": [side...], "auto": bool, "rolls": {side: roll|None}}."""
@@ -133,10 +133,10 @@ def roll_initiative_by_side(sides: Dict[str, List[dict]], *,
 # Ataque: 2d10 + Virtude vs Esquiva (R4/R5/R6/R8)
 # --------------------------------------------------------------------------
 def resolve_attack(attacker: dict, target: dict, *,
-                   virtude_key: Optional[str] = None,
-                   virtude_value_override: Optional[int] = None,
+                   virtude_key: str | None = None,
+                   virtude_value_override: int | None = None,
                    advantage: int = 0, ruptura: bool = False,
-                   esquiva: Optional[int] = None, rng=None) -> Dict:
+                   esquiva: int | None = None, rng=None) -> dict:
     """Resolve um ataque. Retorna a matemática COMPLETA (R9): dados rolados/mantidos,
     Virtude, total, Esquiva, resultado (erro/acerto/critico/supercritico) e o
     multiplicador do efeito PRINCIPAL. Ruptura concede Vantagem (R8)."""
@@ -183,7 +183,7 @@ def resolve_attack(attacker: dict, target: dict, *,
 # Testes gerais: Ímpeto + Presságio + Virtude vs dificuldade (R7/R8)
 # --------------------------------------------------------------------------
 def general_test(actor: dict, virtude_key: str, dificuldade, *,
-                 ruptura: bool = False, rng=None) -> Dict:
+                 ruptura: bool = False, rng=None) -> dict:
     """Teste FORA de ataque. Ímpeto maior = consequência favorável; Presságio maior
     = desfavorável; empate = puro. Ruptura: 2 dados de Ímpeto, mantém o maior (R8).
     Ataques NÃO usam esta matriz."""

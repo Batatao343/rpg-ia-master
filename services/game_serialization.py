@@ -5,7 +5,8 @@ from __future__ import annotations
 import hashlib
 import json
 from copy import deepcopy
-from typing import Any, Mapping
+from typing import Any
+from collections.abc import Mapping
 
 
 def serialize_game_state(state: Mapping[str, Any]) -> dict[str, Any]:

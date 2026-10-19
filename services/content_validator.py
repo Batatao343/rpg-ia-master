@@ -93,8 +93,8 @@ def _norm(text: str) -> str:
     return _strip_accents(str(text)).casefold().strip()
 
 
-def _codex_md_paths(codex_dir: str) -> List[str]:
-    paths: List[str] = []
+def _codex_md_paths(codex_dir: str) -> list[str]:
+    paths: list[str] = []
     for root, _dirs, files in os.walk(codex_dir):
         for fname in sorted(files):
             if fname.endswith(".md"):
@@ -102,10 +102,10 @@ def _codex_md_paths(codex_dir: str) -> List[str]:
     return paths
 
 
-def _parse_codex(codex_dir: str) -> List[Tuple[str, dict, str]]:
+def _parse_codex(codex_dir: str) -> list[tuple[str, dict, str]]:
     """(path, frontmatter, body) dos .md parseáveis — erro de parse é papel
     do validate_frontmatter; aqui arquivo quebrado é pulado em silêncio."""
-    parsed: List[Tuple[str, dict, str]] = []
+    parsed: list[tuple[str, dict, str]] = []
     for path in _codex_md_paths(codex_dir):
         try:
             frontmatter, body = parse_codex_file(path)
@@ -119,11 +119,11 @@ def _read_graph_json(graph_dir: str, filename: str, default):
     path = os.path.join(graph_dir, filename)
     if not os.path.exists(path):
         return default
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         return json.load(f)
 
 
-def _merged_entities(graph_dir: str) -> Dict[str, dict]:
+def _merged_entities(graph_dir: str) -> dict[str, dict]:
     """entities.json ∪ entities_extra.json lidos FRESCOS do disco (canônico vence)."""
     base = _read_graph_json(graph_dir, "entities.json", {})
     extra = _read_graph_json(graph_dir, "entities_extra.json", {})
@@ -138,9 +138,9 @@ def _merged_entities(graph_dir: str) -> Dict[str, dict]:
 # Validadores
 # ---------------------------------------------------------------------------
 
-def validate_frontmatter(codex_dir: str = CODEX_DIR) -> List[Finding]:
+def validate_frontmatter(codex_dir: str = CODEX_DIR) -> list[Finding]:
     """R1 — frontmatter completo, id == nome do arquivo, type/visibility canônicos."""
-    findings: List[Finding] = []
+    findings: list[Finding] = []
     for path in _codex_md_paths(codex_dir):
         try:
             frontmatter, _body = parse_codex_file(path)
@@ -173,12 +173,12 @@ def validate_frontmatter(codex_dir: str = CODEX_DIR) -> List[Finding]:
     return findings
 
 
-def validate_ids(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) -> List[Finding]:
+def validate_ids(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) -> list[Finding]:
     """R2 — ids únicos no Codex; extra não conflita com canônico; components só
     referencia ids existentes."""
-    findings: List[Finding] = []
+    findings: list[Finding] = []
 
-    seen: Dict[str, str] = {}
+    seen: dict[str, str] = {}
     for path, frontmatter, _body in _parse_codex(codex_dir):
         entity_id = str(frontmatter.get("id", ""))
         if entity_id in seen:
@@ -210,10 +210,10 @@ def validate_ids(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) -> List
     return findings
 
 
-def validate_references(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) -> List[Finding]:
+def validate_references(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) -> list[Finding]:
     """R3 — related_entities apontam para entidades; edges íntegras e dentro
     das constraints de relation_types.json."""
-    findings: List[Finding] = []
+    findings: list[Finding] = []
     entities = _merged_entities(graph_dir)
 
     for path, frontmatter, _body in _parse_codex(codex_dir):
@@ -268,20 +268,20 @@ def validate_references(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) 
     return findings
 
 
-def validate_aliases(graph_dir: str = GRAPH_DIR) -> List[Finding]:
+def validate_aliases(graph_dir: str = GRAPH_DIR) -> list[Finding]:
     """R4 — alias normalizado não repete entre entidades nem colide com
     name/id de OUTRA entidade."""
-    findings: List[Finding] = []
+    findings: list[Finding] = []
     entities = _merged_entities(graph_dir)
     entities_path = os.path.join(graph_dir, "entities.json")
 
     # claves normalizadas -> dono (id) por origem name/id
-    claimed: Dict[str, str] = {}
+    claimed: dict[str, str] = {}
     for eid, ent in entities.items():
         claimed.setdefault(_norm(eid), eid)
         claimed.setdefault(_norm(ent.get("name", "")), eid)
 
-    alias_owner: Dict[str, str] = {}
+    alias_owner: dict[str, str] = {}
     for eid, ent in sorted(entities.items()):
         for alias in ent.get("aliases") or []:
             key = _norm(alias)
@@ -310,9 +310,9 @@ def paragraph_label(paragraph: str) -> str:
     return _norm(first.split(":", 1)[0])
 
 
-def _secret_labels_in(body: str) -> List[str]:
+def _secret_labels_in(body: str) -> list[str]:
     """Rótulos secretos presentes nos parágrafos de um corpo de doc de NPC."""
-    achados: List[str] = []
+    achados: list[str] = []
     for paragraph in re.split(r"\n\s*\n", body):
         rotulo = paragraph_label(paragraph)
         if rotulo in NPC_SECRET_LABELS:
@@ -320,14 +320,14 @@ def _secret_labels_in(body: str) -> List[str]:
     return achados
 
 
-def validate_visibility(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) -> List[Finding]:
+def validate_visibility(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR) -> list[Finding]:
     """R5 — type secret ⇒ visibility secret; doc public não referencia entidade/
     doc secret; visibility das entidades do grafo é canônica."""
-    findings: List[Finding] = []
+    findings: list[Finding] = []
     entities = _merged_entities(graph_dir)
 
     # mapa id -> visibility (entidades do grafo + docs do Codex)
-    vis_map: Dict[str, str] = {
+    vis_map: dict[str, str] = {
         eid: ent.get("visibility", "public") for eid, ent in entities.items()
     }
     parsed = _parse_codex(codex_dir)
@@ -383,7 +383,7 @@ _MOJIBAKE_RE = re.compile("[ÃÂ][-¿]|â€")
 
 def _default_encoding_paths(codex_dir: str = CODEX_DIR,
                             graph_dir: str = GRAPH_DIR,
-                            lore_dir: str = LORE_DIR) -> List[str]:
+                            lore_dir: str = LORE_DIR) -> list[str]:
     paths = _codex_md_paths(codex_dir)
     for base, ext in ((lore_dir, ".txt"), (graph_dir, ".json")):
         if os.path.isdir(base):
@@ -393,9 +393,9 @@ def _default_encoding_paths(codex_dir: str = CODEX_DIR,
     return paths
 
 
-def validate_encoding(paths: Optional[List[str]] = None) -> List[Finding]:
+def validate_encoding(paths: list[str] | None = None) -> list[Finding]:
     """R6 — UTF-8 estrito (ERRO); heurística de mojibake (AVISO)."""
-    findings: List[Finding] = []
+    findings: list[Finding] = []
     for path in (paths if paths is not None else _default_encoding_paths()):
         with open(path, "rb") as f:
             raw = f.read()
@@ -421,13 +421,13 @@ _REGISTRABLE_TYPES = {"location", "faction", "npc", "race", "monster", "artifact
 
 def validate_overrides(codex_dir: str = CODEX_DIR,
                        overrides_path: str = OVERRIDES_PATH,
-                       graph_dir: str = GRAPH_DIR) -> List[Finding]:
+                       graph_dir: str = GRAPH_DIR) -> list[Finding]:
     """Fase 7.2 — override órfão é ERRO; override em arquivo curated e doc
     curated registrável sem entidade são AVISO."""
-    findings: List[Finding] = []
+    findings: list[Finding] = []
     overrides: dict = {}
     if os.path.isfile(overrides_path):
-        with open(overrides_path, "r", encoding="utf-8") as f:
+        with open(overrides_path, encoding="utf-8") as f:
             data = yaml.safe_load(f)
         if isinstance(data, dict):
             overrides = data
@@ -501,7 +501,7 @@ def creature_signature(creature: dict) -> tuple:
     )
 
 
-def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> List[Finding]:
+def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Finding]:
     """conflito-14 Etapa 5: lint das Cartas autorais (`origem == conflito-14`).
 
     Campos obrigatórios, efeito no catálogo fechado, dano ancorado na categoria de
@@ -509,7 +509,7 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> List[Findi
     Cartas centrais. Só valida as autorais — os exemplos do motor (conflito-02)
     usam schema opaco de propósito."""
     from services.cards import CARD_EFFECT_KINDS, DANO_BASE_ARMA, valid_class_mechanics
-    findings: List[Finding] = []
+    findings: list[Finding] = []
     if not os.path.isdir(cards_dir):
         return findings
     PATAMAR = {"inicial", "avancado", "superior", "epico_i", "epico_ii",
@@ -533,9 +533,9 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> List[Findi
                     f"{where}: dano_base {eff.get('dano_base')} < base da arma "
                     f"{DANO_BASE_ARMA[cat]}"))
 
-    active_signatures: Dict[tuple, tuple[str, str]] = {}
-    seen_ids: Dict[str, str] = {}
-    late_cards: List[dict] = []
+    active_signatures: dict[tuple, tuple[str, str]] = {}
+    seen_ids: dict[str, str] = {}
+    late_cards: list[dict] = []
     for fn in sorted(os.listdir(cards_dir)):
         if not fn.endswith(".json"):
             continue
@@ -623,7 +623,7 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> List[Findi
                 f"distribuição tardia inválida: total/tronco/ramo/ápice="
                 f"{len(late_cards)}/{len(trunks)}/{len(branch)}/{len(apex)}",
             ))
-        by_branch: Dict[tuple[str, str], List[dict]] = {}
+        by_branch: dict[tuple[str, str], list[dict]] = {}
         for card in late_cards:
             if card.get("subclasse"):
                 by_branch.setdefault((card.get("classe"), card.get("subclasse")), []).append(card)
@@ -640,7 +640,7 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> List[Findi
 
 
 def validate_bestiary(bestiary_path: str = os.path.join("data", "bestiary.json"),
-                      cards_dir: str = os.path.join("data", "cards")) -> List[Finding]:
+                      cards_dir: str = os.path.join("data", "cards")) -> list[Finding]:
     """conflito-15 Etapa 5: lint do bestiário migrado (schema v4).
 
     categoria válida, Virtudes 0-5, Vitalidade coerente com Corpo, resistências
@@ -648,7 +648,7 @@ def validate_bestiary(bestiary_path: str = os.path.join("data", "bestiary.json")
     rendição (ou não-fuga INTENCIONAL via resistência 'absoluta'), e ≥1 Carta
     assinatura OCULTA existente por criatura."""
     import gamedata
-    findings: List[Finding] = []
+    findings: list[Finding] = []
     if not os.path.isfile(bestiary_path):
         return findings
     try:
@@ -677,7 +677,7 @@ def validate_bestiary(bestiary_path: str = os.path.join("data", "bestiary.json")
             except Exception:
                 continue
 
-    volume_signatures: Dict[tuple, str] = {}
+    volume_signatures: dict[tuple, str] = {}
     for cid, cre in best.items():
         p = bestiary_path
         cat = cre.get("categoria")
@@ -749,7 +749,7 @@ def validate_bestiary(bestiary_path: str = os.path.join("data", "bestiary.json")
             str(loc.get("region_id")) for loc in locations
             if loc.get("start") and loc.get("region_id")
         }
-        by_region: Dict[str, list] = {region: [] for region in encounter_regions}
+        by_region: dict[str, list] = {region: [] for region in encounter_regions}
         for creature in best.values():
             for region in creature.get("regions") or []:
                 if region in by_region:
@@ -770,9 +770,9 @@ def validate_bestiary(bestiary_path: str = os.path.join("data", "bestiary.json")
 
 
 def validate_visual_assets(catalog_path: str = VISUAL_CATALOG_PATH,
-                           public_root: str = os.path.join("web", "public")) -> List[Finding]:
+                           public_root: str = os.path.join("web", "public")) -> list[Finding]:
     """Fase 8A: identidade, cobertura, segurança e integridade dos WebP públicos."""
-    findings: List[Finding] = []
+    findings: list[Finding] = []
     if not os.path.isfile(catalog_path):
         return [Finding("visual_assets", "error", catalog_path, "", "catálogo ausente")]
     try:
@@ -852,13 +852,13 @@ def validate_visual_assets(catalog_path: str = VISUAL_CATALOG_PATH,
     return findings
 
 
-def validate_secret_entity_ids(graph_dir: str = GRAPH_DIR) -> List[Finding]:
+def validate_secret_entity_ids(graph_dir: str = GRAPH_DIR) -> list[Finding]:
     """SPEC-234 R3 - todo ID de `SECRET_ENTITY_IDS` precisa existir no grafo."""
     from services.secret_signatures import SECRET_ENTITY_IDS, SECRET_SIGNATURES
 
     merged = _merged_entities(graph_dir)
     path = os.path.join("services", "secret_signatures.py")
-    findings: List[Finding] = []
+    findings: list[Finding] = []
     for secret_id in SECRET_SIGNATURES:
         if not SECRET_ENTITY_IDS.get(secret_id):
             findings.append(Finding(
@@ -874,10 +874,10 @@ def validate_secret_entity_ids(graph_dir: str = GRAPH_DIR) -> List[Finding]:
 
 
 def validate_all(codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR,
-                 overrides_path: str = OVERRIDES_PATH) -> List[Finding]:
+                 overrides_path: str = OVERRIDES_PATH) -> list[Finding]:
     """Roda todos os validadores; aplica whitelist; ordena por
     (severity, validator, path, entity_id) — erros primeiro."""
-    findings: List[Finding] = []
+    findings: list[Finding] = []
     findings.extend(validate_frontmatter(codex_dir))
     findings.extend(validate_ids(codex_dir, graph_dir))
     findings.extend(validate_references(codex_dir, graph_dir))

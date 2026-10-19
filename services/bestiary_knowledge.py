@@ -32,7 +32,7 @@ def public_panel(enemy: dict) -> dict:
     """R7: só os campos SEMPRE visíveis. Cartas não usadas, Virtudes, perfil
     tático, prioridades, espaços de Ferimento e resistências não ativadas ficam
     FORA — expostos só via revelação (R8/R9)."""
-    panel: Dict[str, object] = {}
+    panel: dict[str, object] = {}
     for f in _PUBLIC_FIELDS:
         if f in enemy:
             panel[f] = enemy[f]
@@ -74,8 +74,8 @@ def _archetype_id(entry: dict) -> str:
                or entry.get("id") or entry.get("name") or "desconhecido")
 
 
-def _persist(archetype: str, *, card: Optional[str] = None,
-             resistance: Optional[str] = None,
+def _persist(archetype: str, *, card: str | None = None,
+             resistance: str | None = None,
              owner_id: UUID = _LEGACY_OWNER_ID,
              game_id: UUID = _LEGACY_GAME_ID) -> None:
     data = _load_all(owner_id=owner_id, game_id=game_id)

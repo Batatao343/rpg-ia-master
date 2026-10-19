@@ -19,7 +19,8 @@ import os
 import sys
 from decimal import Decimal
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any
+from collections.abc import Sequence
 
 FINANCIAL_TABLES = ("wallet_accounts", "wallet_entries", "wallet_reservations", "wallet_attempt_tickets",
                     "wallet_settled_usage", "payment_orders", "wallet_debt_entries",

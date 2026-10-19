@@ -16,7 +16,8 @@ import statistics
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any, Callable, Mapping
+from typing import Any
+from collections.abc import Callable, Mapping
 from uuid import uuid4
 
 import httpx

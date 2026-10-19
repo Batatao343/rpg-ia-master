@@ -13,9 +13,10 @@ import json
 import os
 import zipfile
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Mapping, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
+from collections.abc import Iterable, Mapping
 
 from services.audit_redaction import (
     PRIVATE_LABEL,
@@ -48,7 +49,7 @@ class AuditLimits:
     max_bytes: int = DEFAULT_MAX_BYTES
 
     @classmethod
-    def from_env(cls) -> "AuditLimits":
+    def from_env(cls) -> AuditLimits:
         def _int(name: str, default: int) -> int:
             try:
                 return max(1, int(os.getenv(name, str(default))))
@@ -62,22 +63,22 @@ class AuditLimits:
 class AuditSource:
     """Dados já lidos e filtrados pelo dono. `None` = fonte indisponível."""
     game_id: str
-    state: Dict[str, Any]
-    state_version: Optional[int] = None
-    turns: Optional[List[Dict[str, Any]]] = None          # app.turns (+ op id)
-    turns_reason: Optional[str] = None
-    usage_cost: Optional[Dict[str, str]] = None           # operation_id -> USD
-    usage_reason: Optional[str] = None
-    events_by_turn: Optional[Dict[int, List[str]]] = None  # app.game_events
-    events_reason: Optional[str] = None
-    failed_operations: List[Dict[str, Any]] = field(default_factory=list)
+    state: dict[str, Any]
+    state_version: int | None = None
+    turns: list[dict[str, Any]] | None = None          # app.turns (+ op id)
+    turns_reason: str | None = None
+    usage_cost: dict[str, str] | None = None           # operation_id -> USD
+    usage_reason: str | None = None
+    events_by_turn: dict[int, list[str]] | None = None  # app.game_events
+    events_reason: str | None = None
+    failed_operations: list[dict[str, Any]] = field(default_factory=list)
     owner_values: set = field(default_factory=set)
 
 
 @dataclass
 class AuditBundle:
-    files: Dict[str, bytes]
-    manifest: Dict[str, Any]
+    files: dict[str, bytes]
+    manifest: dict[str, Any]
 
 
 # --------------------------------------------------------------------------- #
@@ -135,28 +136,28 @@ def _turn_ref(epoch: int, turn: int) -> str:
     return f"t:{epoch}:{turn}"
 
 
-def _scrub_player(text: Any) -> Optional[str]:
+def _scrub_player(text: Any) -> str | None:
     return None if text is None else str(text)
 
 
 # --------------------------------------------------------------------------- #
 # Montagem
 # --------------------------------------------------------------------------- #
-def _turn_units(source: AuditSource) -> List[Dict[str, Any]]:
+def _turn_units(source: AuditSource) -> list[dict[str, Any]]:
     """Uma unidade por linha do narrador em presentation_history."""
     from observability.telemetry import pseudonym
     state = source.state
     history = [row for row in state.get("presentation_history") or [] if isinstance(row, dict)]
     players = {(int(r.get("epoch", 0) or 0), int(r.get("turn", 0) or 0)): r.get("text")
                for r in history if r.get("role") == "player"}
-    traces: Dict[Tuple[int, int], Dict[str, Any]] = {}
+    traces: dict[tuple[int, int], dict[str, Any]] = {}
     from services.audit_trace import expand_trace
     for row in expand_trace(state.get("audit_trace") or []):
         if isinstance(row, dict):
             traces[(int(row.get("epoch", 0) or 0), int(row.get("turn", 0) or 0))] = row
     turn_rows = {str(r.get("presentation_entry_id")): r for r in source.turns or []
                  if r.get("presentation_entry_id")}
-    units: List[Dict[str, Any]] = []
+    units: list[dict[str, Any]] = []
     for index, row in enumerate(r for r in history if r.get("role") == "narrator"):
         key = (int(row.get("epoch", 0) or 0), int(row.get("turn", 0) or 0))
         db = turn_rows.get(str(row.get("id")))
@@ -173,7 +174,7 @@ def _turn_units(source: AuditSource) -> List[Dict[str, Any]]:
     return units
 
 
-def _speaker(unit: Dict[str, Any]) -> str:
+def _speaker(unit: dict[str, Any]) -> str:
     trace = unit["trace"]
     if trace and trace.get("speaker"):
         return str(trace["speaker"])
@@ -184,7 +185,7 @@ def _speaker(unit: Dict[str, Any]) -> str:
     return "system" if kind == "system" else "narrator"
 
 
-def _knowledge_items(trace: Mapping) -> List[Dict[str, Any]]:
+def _knowledge_items(trace: Mapping) -> list[dict[str, Any]]:
     items = []
     from services.audit_trace import iter_context_refs
     for ref in iter_context_refs(trace):
@@ -208,7 +209,7 @@ def _knowledge_items(trace: Mapping) -> List[Dict[str, Any]]:
     return items
 
 
-def _private_reference(state: Mapping) -> Dict[str, Any]:
+def _private_reference(state: Mapping) -> dict[str, Any]:
     from services.memory_provenance import accepted_secret_ids
     from services.secret_signatures import SECRET_SIGNATURES
     plan = state.get("campaign_plan") or {}
@@ -225,7 +226,7 @@ def _private_reference(state: Mapping) -> Dict[str, Any]:
     }
 
 
-def _initial_projection(final: Dict[str, Any], deltas: List[Dict[str, Any]]) -> Dict[str, Any]:
+def _initial_projection(final: dict[str, Any], deltas: list[dict[str, Any]]) -> dict[str, Any]:
     """Reaplica os deltas ao contrário a partir da projeção final."""
     proj = json.loads(_dumps(final))
     map_keys = sorted((k for k, v in proj.items() if isinstance(v, dict)), key=len, reverse=True)
@@ -252,21 +253,21 @@ def _sensitive_values(source: AuditSource) -> set:
     return {str(v) for v in source.owner_values if v} | {str(source.game_id)}
 
 
-def _files_for(source: AuditSource, units: List[Dict[str, Any]], *,
-               truncated: bool, truncation_reason: Optional[str], build_sha: str,
-               generated_at: str) -> Dict[str, bytes]:
+def _files_for(source: AuditSource, units: list[dict[str, Any]], *,
+               truncated: bool, truncation_reason: str | None, build_sha: str,
+               generated_at: str) -> dict[str, bytes]:
     from observability.telemetry import pseudonym
     from persistence import SCHEMA_VERSION
     from services.audit_trace import trace_limit
     from services.player_knowledge import TAXONOMY_VERSION
 
     owner = _sensitive_values(source)
-    sessions: Dict[int, List[Dict[str, Any]]] = {}
+    sessions: dict[int, list[dict[str, Any]]] = {}
     deltas, knowledge, errors, timings, delta_maps = [], [], [], [], []
     for unit in units:
         ref = _turn_ref(unit["epoch"], unit["turn"])
         trace, db = unit["trace"], unit["db"]
-        error_refs: List[str] = []
+        error_refs: list[str] = []
         if trace:
             for i, err in enumerate(trace.get("errors") or []):
                 eref = f"e:{unit['epoch']}:{unit['turn']}:{i}"
@@ -329,7 +330,7 @@ def _files_for(source: AuditSource, units: List[Dict[str, Any]], *,
                        "turn_ref": None, "action_ref": pseudonym(op.get("operation_id")),
                        "node": None, "tier": None, "code": "turn_failed", "recovered": False,
                        "fallback": "none", "error_class": op.get("error_class")})
-    unavailable: Dict[str, str] = {}
+    unavailable: dict[str, str] = {}
     for name, value, reason in (("turns", source.turns, source.turns_reason),
                                 ("usage_events", source.usage_cost, source.usage_reason),
                                 ("game_events", source.events_by_turn, source.events_reason)):
@@ -356,7 +357,7 @@ def _files_for(source: AuditSource, units: List[Dict[str, Any]], *,
     def red(rows, spec):
         return [redact_record(r, spec=spec, owner_values=owner) for r in rows]
 
-    files: Dict[str, bytes] = {}
+    files: dict[str, bytes] = {}
     session_names = []
     for epoch in sorted(sessions):
         name = f"sessions/{epoch}.jsonl"
@@ -401,7 +402,7 @@ def _files_for(source: AuditSource, units: List[Dict[str, Any]], *,
     return files
 
 
-def _scan_files(files: Mapping[str, bytes], owner_values: Iterable[str]) -> List[str]:
+def _scan_files(files: Mapping[str, bytes], owner_values: Iterable[str]) -> list[str]:
     problems = []
     for name, data in sorted(files.items()):
         if name.endswith(".md"):
@@ -428,8 +429,8 @@ def write_zip(files: Mapping[str, bytes]) -> bytes:
 
 def build_audit_bundle(source: AuditSource, *, limits: AuditLimits = AuditLimits(),
                        build_sha: str = "unknown",
-                       generated_at: Optional[str] = None) -> AuditBundle:
-    generated_at = generated_at or datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+                       generated_at: str | None = None) -> AuditBundle:
+    generated_at = generated_at or datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     units = _turn_units(source)
     truncated, reason = False, None
     if len(units) > limits.max_turns:
@@ -452,9 +453,9 @@ def build_audit_bundle(source: AuditSource, *, limits: AuditLimits = AuditLimits
     return AuditBundle(files=files, manifest=manifest)
 
 
-def verify_audit_zip(data: bytes, *, owner_values: Iterable[str] = ()) -> List[str]:
+def verify_audit_zip(data: bytes, *, owner_values: Iterable[str] = ()) -> list[str]:
     """[] = íntegro: arquivos obrigatórios, hashes do manifest e scan de PII."""
-    problems: List[str] = []
+    problems: list[str] = []
     try:
         with zipfile.ZipFile(io.BytesIO(data)) as archive:
             files = {name: archive.read(name) for name in archive.namelist()}
@@ -484,8 +485,8 @@ def verify_audit_zip(data: bytes, *, owner_values: Iterable[str] = ()) -> List[s
     return problems
 
 
-def bundle_zip(source: AuditSource, *, limits: Optional[AuditLimits] = None,
-               build_sha: str = "unknown", generated_at: Optional[str] = None) -> bytes:
+def bundle_zip(source: AuditSource, *, limits: AuditLimits | None = None,
+               build_sha: str = "unknown", generated_at: str | None = None) -> bytes:
     bundle = build_audit_bundle(source, limits=limits or AuditLimits.from_env(),
                                 build_sha=build_sha, generated_at=generated_at)
     data = write_zip(bundle.files)

@@ -21,9 +21,10 @@ import inspect
 import json
 import os
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any
+from collections.abc import Mapping
 
 from evals.core.hashing import sha256_file
 from evals.experiments import jev_router_hybrid as hybrid
@@ -169,7 +170,7 @@ def load_oracle(path: Path = ORACLE) -> dict[str, str]:
 
 
 def _rank(case_id: str) -> str:
-    return hashlib.sha256(f"{SAMPLE_SEED}|{case_id}".encode("utf-8")).hexdigest()
+    return hashlib.sha256(f"{SAMPLE_SEED}|{case_id}".encode()).hexdigest()
 
 
 def j1b_sample(eligible: list[Case]) -> list[Case]:
@@ -403,7 +404,7 @@ class J1bLedger:
         data["total_calls"] += 1
         data["total_cap"] = self.total_cap
         data["entries"].append({"n": data["total_calls"], "phase": phase, "case_id": case_id,
-                                "provider": provider, "at": datetime.now(timezone.utc).isoformat()})
+                                "provider": provider, "at": datetime.now(UTC).isoformat()})
         data["reserved_usd"] = round(data["total_calls"] * hybrid.RESERVED_USD_PER_CALL, 2)
         _write_json(self.path, data)
         return data["total_calls"]
@@ -438,7 +439,7 @@ def main() -> None:
     ledger = J1bLedger()
     if len(sample) > ledger.remaining():
         raise SystemExit(f"{len(sample)} calls needed, {ledger.remaining()} remain in the J1b cap")
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     run_id = f"SPEC-238-J1b-{stamp}"
     meta = {**_meta(digest, run_id), "stage": "J1b", "spec_j1b": "SPEC-238",
             "oracle_hash": ORACLE_SHA256, "base_variant": FROZEN_J1_POLICY.variant_id,

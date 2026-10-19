@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import argparse
 from contextlib import nullcontext
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from decimal import Decimal
 from uuid import uuid4
 
@@ -35,7 +35,7 @@ def _measure(conn, owner) -> dict:
     from infrastructure.finops_reader import PostgresFinopsReader
     reader = PostgresFinopsReader(_Pool(conn))
     from services.daily_spend_cap import day_start
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     since, until = day_start(now), now + timedelta(minutes=5)
     day = sum((g.cost_usd for g in reader.usage_groups(since, until) if g.counts_as_spend), Decimal(0))
     mine = reader.owner_usage(since, until).get(str(owner))

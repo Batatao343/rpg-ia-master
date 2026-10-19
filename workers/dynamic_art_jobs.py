@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import hashlib
 from io import BytesIO
-from typing import Callable
+from collections.abc import Callable
 from uuid import UUID
 
 from infrastructure.contracts import BlobMetadata

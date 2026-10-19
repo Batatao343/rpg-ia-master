@@ -61,7 +61,7 @@ def to_virtude_key(key: str) -> str:
     return _ATTR_TO_VIRTUDE.get(str(key or "").strip().lower(), str(key or "").strip().lower())
 
 
-def validate_virtude_distribution(virtudes: Dict[str, int]) -> None:
+def validate_virtude_distribution(virtudes: dict[str, int]) -> None:
     """Rejeita distribuição de Virtudes fora do multiset 4/3/2/1/1 (R2).
 
     Levanta ValueError com mensagem clara. Aceita SÓ as 5 chaves canônicas,
@@ -88,7 +88,7 @@ def validate_virtude_distribution(virtudes: Dict[str, int]) -> None:
         )
 
 
-def recommended_virtudes(class_name: str) -> Dict[str, int]:
+def recommended_virtudes(class_name: str) -> dict[str, int]:
     """Distribuição RECOMENDADA da classe (base_stats.virtudes) — nunca vinculante."""
     data = CLASSES.get(class_name, {}) if isinstance(CLASSES, dict) else {}
     rec = (data.get("base_stats", {}) or {}).get("virtudes")
@@ -101,7 +101,7 @@ def recommended_virtudes(class_name: str) -> Dict[str, int]:
     return dict(_DEFAULT_VIRTUDES)
 
 
-def _resolve_virtudes(user_input: Dict[str, Any], class_name: str) -> Dict[str, int]:
+def _resolve_virtudes(user_input: dict[str, Any], class_name: str) -> dict[str, int]:
     """Virtudes escolhidas pelo jogador (validadas) ou recomendação da classe."""
     escolhidas = user_input.get("virtudes")
     if escolhidas:
@@ -115,8 +115,8 @@ def _resolve_virtudes(user_input: Dict[str, Any], class_name: str) -> Dict[str, 
 
 class PlayerFlavorSchema(BaseModel):
     """A IA só sugere sabor textual — Virtudes vêm do jogador, não do LLM."""
-    inventory: List[str] = Field(description="Itens baseados na Região e Lore.")
-    flavor_abilities: List[str] = Field(description="2 ou 3 magias/truques extras (Flavor) além da passiva.")
+    inventory: list[str] = Field(description="Itens baseados na Região e Lore.")
+    flavor_abilities: list[str] = Field(description="2 ou 3 magias/truques extras (Flavor) além da passiva.")
 
 # --- LÓGICA AUXILIAR ---
 
@@ -124,7 +124,7 @@ def _prof_bonus(level: int) -> int:
     return 2 + ((int(level) - 1) // 4)
 
 
-def _calculate_attack_bonus(class_name: str, virtudes: Dict[str, int], level: int) -> int:
+def _calculate_attack_bonus(class_name: str, virtudes: dict[str, int], level: int) -> int:
     """attack_bonus = Virtude primária da classe + bônus de proficiência.
 
     Ponte transicional: o motor antigo ainda soma um attack_bonus; a fórmula real
@@ -135,7 +135,7 @@ def _calculate_attack_bonus(class_name: str, virtudes: Dict[str, int], level: in
     return int(virtudes.get(primary, 0)) + _prof_bonus(level)
 
 
-def find_race(race: str) -> Dict:
+def find_race(race: str) -> dict:
     """Resolve a raça de data/origins.json por id ou nome (case-insensitive)."""
     races = (load_json_data("origins.json") or {}).get("races", [])
     key = str(race or "").strip().lower()
@@ -145,7 +145,7 @@ def find_race(race: str) -> Dict:
     return {}
 
 
-def apply_racial_traits(sheet: Dict[str, Any], race: str) -> Dict[str, Any]:
+def apply_racial_traits(sheet: dict[str, Any], race: str) -> dict[str, Any]:
     """
     Aplica os traits mecânicos da raça (Fase 2.5b) sobre a ficha, em Python
     determinístico — pós-LLM, nunca confiando na IA para números.
@@ -156,9 +156,9 @@ def apply_racial_traits(sheet: Dict[str, Any], race: str) -> Dict[str, Any]:
     """
     race_data = find_race(race)
     traits = race_data.get("traits", []) or []
-    names: List[str] = []
-    resists: List[str] = []
-    save_bonus: Dict[str, int] = {}
+    names: list[str] = []
+    resists: list[str] = []
+    save_bonus: dict[str, int] = {}
 
     for t in traits:
         names.append(t.get("name", t.get("id", "?")))
@@ -190,8 +190,8 @@ def apply_racial_traits(sheet: Dict[str, Any], race: str) -> Dict[str, Any]:
     return sheet
 
 
-def _resolve_starting_cards(user_input: Dict[str, Any], class_name: str,
-                            virtudes: Dict[str, int]) -> Dict[str, Any]:
+def _resolve_starting_cards(user_input: dict[str, Any], class_name: str,
+                            virtudes: dict[str, int]) -> dict[str, Any]:
     """spec conflito-02: monta Acervo (6) + Preparadas (4) + 2 Cartas de Virtude.
 
     Vem do JOGADOR (wizard) quando fornecido; senão auto-seleciona do pool da
@@ -258,7 +258,7 @@ def _resolve_starting_cards(user_input: Dict[str, Any], class_name: str,
     }
 
 
-def _get_class_data(class_name: str) -> Dict:
+def _get_class_data(class_name: str) -> dict:
     """Retorna os dados oficiais da classe ou um padrão genérico."""
     if class_name in CLASSES:
         return CLASSES[class_name]
@@ -269,8 +269,8 @@ def _get_class_data(class_name: str) -> Dict:
 
 # --- FUNÇÃO PRINCIPAL ---
 
-def create_player_character(user_input: Dict[str, Any], *,
-                            use_llm_flavor: bool = True) -> Dict[str, Any]:
+def create_player_character(user_input: dict[str, Any], *,
+                            use_llm_flavor: bool = True) -> dict[str, Any]:
     name = user_input.get("name", "Herói")
     p_class = user_input.get("class_name", "Aventureiro")
     race = user_input.get("race", "Humano")
@@ -302,7 +302,7 @@ def create_player_character(user_input: Dict[str, Any], *,
     final_entropy = base_entropy + int(level_gains.get("entropy", 0) or 0) * (level - 1)
 
     # 4. LORE + geração de sabor via IA (só inventário/flavor — Virtudes NÃO vêm do LLM)
-    flavor_data: Dict[str, Any] = {}
+    flavor_data: dict[str, Any] = {}
     if use_llm_flavor:
         region_lore = _get_region_lore(region)
         llm = get_llm(temperature=0.6, tier=ModelTier.SMART)
@@ -361,7 +361,7 @@ def create_player_character(user_input: Dict[str, Any], *,
 
     # 6. Inventário estruturado — starting_equipment canônico + flavor do LLM
     from inventory import add_item, backfill_inventory
-    inv: List[Dict] = []
+    inv: list[dict] = []
     for iid in class_data.get("starting_equipment", []) or []:
         inv = add_item(inv, iid, 1)
     from inventory import resolve_flavor_item
@@ -391,7 +391,7 @@ def create_player_character(user_input: Dict[str, Any], *,
     return sheet
 
 
-def _append_free(inv: List[Dict], name: str) -> List[Dict]:
+def _append_free(inv: list[dict], name: str) -> list[dict]:
     """Nome livre que colide com raro/único: entra como `item_desconhecido`."""
     from inventory import UNKNOWN_ID
     out = [dict(e) for e in inv]
@@ -403,7 +403,7 @@ def _append_free(inv: List[Dict], name: str) -> List[Dict]:
     return out
 
 
-def _level_up_deterministic(sheet: Dict[str, Any], target_level: int) -> Dict[str, Any]:
+def _level_up_deterministic(sheet: dict[str, Any], target_level: int) -> dict[str, Any]:
     """Sobe o nível 1 -> target_level por XP e resolve as escolhas de forma
     determinística (progression.auto_resolve_choices). Vitalidade/Entropia cheias."""
     import progression

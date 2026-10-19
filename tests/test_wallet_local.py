@@ -6,7 +6,7 @@ import json
 import os
 import random
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from uuid import UUID, uuid4
 
 import pytest
@@ -25,7 +25,7 @@ from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RA
 from services.usage_metering import RATE_CARD_VERSION, normalize_attempts
 
 pytestmark = pytest.mark.infra_local
-TEST_AT = datetime(2026, 10, 8, 12, tzinfo=timezone.utc)
+TEST_AT = datetime(2026, 10, 8, 12, tzinfo=UTC)
 
 
 @pytest.fixture
@@ -204,7 +204,7 @@ def test_exact_usage_settles_once_after_pricing_expires(wallet_case):
     result = wallet.settle_usage(principal, reserve.reservation_id,
                                  fence_token=reserve.fence_token,
                                  usage_event_ids=[events[0].event_id],
-                                 at=datetime.now(timezone.utc) + timedelta(days=2))
+                                 at=datetime.now(UTC) + timedelta(days=2))
     assert result.status == "settled" and result.settled_milli > 0
     assert result.settled_milli + result.released_milli == 20
     assert wallet.settle_usage(principal, reserve.reservation_id,
@@ -378,7 +378,7 @@ def test_operation_reclaim_keeps_ticketed_hold_and_fences_old_worker(wallet_case
 
     wallet, principal, version, _, dsn = wallet_case
     operation_id = uuid4()
-    lease = datetime.now(timezone.utc) + timedelta(minutes=5)
+    lease = datetime.now(UTC) + timedelta(minutes=5)
     with psycopg.connect(dsn) as connection:
         connection.execute(
             "insert into app.operations(id,owner_id,kind,status,request_sha256,lease_until) "
@@ -397,7 +397,7 @@ def test_operation_reclaim_keeps_ticketed_hold_and_fences_old_worker(wallet_case
         wallet.recover(principal, held.reservation_id, new_fence_token=uuid4())
     with psycopg.connect(dsn) as connection:
         connection.execute("update app.operations set lease_until=%s where id=%s",
-                           (datetime.now(timezone.utc) - timedelta(seconds=1), operation_id))
+                           (datetime.now(UTC) - timedelta(seconds=1), operation_id))
     new_fence = uuid4()
     uncertain = wallet.recover(principal, held.reservation_id,
                                new_fence_token=new_fence)

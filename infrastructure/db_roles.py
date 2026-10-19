@@ -12,7 +12,8 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from typing import Any, ContextManager, Iterator
+from typing import Any, ContextManager
+from collections.abc import Iterator
 
 REQUEST_DB_ROLE = "rpg_api"
 

@@ -28,7 +28,7 @@ def _in_combat(state: dict) -> bool:
     return bool(meta.get("active")) and bool(enemies)
 
 
-def _npcs_in_scene(state: dict) -> List[str]:
+def _npcs_in_scene(state: dict) -> list[str]:
     out = []
     for name, data in (state.get("npcs") or {}).items():
         if not isinstance(data, dict):
@@ -42,7 +42,7 @@ def _current_id(state: dict) -> str:
     return (state.get("world") or {}).get("current_location_id", "") or ""
 
 
-def _connections(loc_id: str) -> List[dict]:
+def _connections(loc_id: str) -> list[dict]:
     from gamedata import get_connections
     return get_connections(loc_id)
 
@@ -70,11 +70,11 @@ def _fatal_location_ids(state: dict) -> set[str]:
     return fatal
 
 
-def _next_hop_toward(current_id: str, target_id: str) -> Optional[dict]:
+def _next_hop_toward(current_id: str, target_id: str) -> dict | None:
     """BFS pequeno no mapa público; devolve somente o próximo passo adjacente."""
     if not current_id or not target_id or current_id == target_id:
         return None
-    queue: List[tuple[str, Optional[dict]]] = [(current_id, None)]
+    queue: list[tuple[str, dict | None]] = [(current_id, None)]
     seen = {current_id}
     while queue:
         location_id, first_hop = queue.pop(0)
@@ -106,8 +106,8 @@ class ProfileDecision:
 
     text: str
     mode: DecisionMode
-    declaration: Optional[dict] = None
-    flee_destination_id: Optional[str] = None
+    declaration: dict | None = None
+    flee_destination_id: str | None = None
 
     def __post_init__(self) -> None:
         text = str(self.text or "").strip()
@@ -218,7 +218,7 @@ def _recovery_decision(state: dict) -> ProfileDecision:
     )
 
 
-def _healing_item(state: dict) -> Optional[dict]:
+def _healing_item(state: dict) -> dict | None:
     """Primeiro consumível de cura real e disponível no inventário."""
     from gamedata import ARTIFACTS_DB
     from inventory import item_display
@@ -234,7 +234,7 @@ def _healing_item(state: dict) -> Optional[dict]:
     return None
 
 
-def _target_name(state: dict, target_id: Optional[str]) -> str:
+def _target_name(state: dict, target_id: str | None) -> str:
     if target_id == "player":
         return (state.get("player") or {}).get("name", "mim")
     for enemy in state.get("enemies") or []:
@@ -256,7 +256,7 @@ def _vitality_ratio(actor: dict) -> float:
     return current / maximum if maximum > 0 else 1.0
 
 
-def _card_target_id(state: dict, card: dict, enemy_id: str) -> Optional[str]:
+def _card_target_id(state: dict, card: dict, enemy_id: str) -> str | None:
     """Escolhe alvo mecânico útil sem pedir julgamento ao LLM."""
     kind = str((card.get("efeito") or {}).get("kind") or "")
     if kind not in _FRIENDLY_CARD_EFFECTS:
@@ -362,7 +362,7 @@ def _combat_decision(state: dict, rng: random.Random) -> ProfileDecision:
     target = enemies[rng.randrange(len(enemies))]
     tid = target.get("id") or target.get("name")
     entropy = int(player.get("entropy", 0) or 0)
-    payable_cards: List[tuple[str, str]] = []
+    payable_cards: list[tuple[str, str]] = []
     for cid in (player.get("prepared_cards") or []):
         c = cards.get_card(cid)
         if not c:
@@ -533,10 +533,10 @@ class ObservedQuote:
 @dataclass
 class TradeGoal:
     phase: Literal["survey", "acquire", "travel", "liquidate", "reassess"]
-    item_id: Optional[str] = None
-    source_location_id: Optional[str] = None
-    destination_location_id: Optional[str] = None
-    expected_margin: Optional[int] = None
+    item_id: str | None = None
+    source_location_id: str | None = None
+    destination_location_id: str | None = None
+    expected_margin: int | None = None
 
 
 class Comerciante(_Base):
@@ -545,25 +545,25 @@ class Comerciante(_Base):
     resolve_progression = True
 
     def reset(self) -> None:
-        self.quote_book: Dict[tuple[str, str], ObservedQuote] = {}
-        self.acquisition_cost: Dict[str, int] = {}
-        self.known_markets: Dict[str, str] = {}
+        self.quote_book: dict[tuple[str, str], ObservedQuote] = {}
+        self.acquisition_cost: dict[str, int] = {}
+        self.known_markets: dict[str, str] = {}
         self.goal = TradeGoal("survey")
-        self.action_counts: Dict[str, int] = {
+        self.action_counts: dict[str, int] = {
             "economy": 0, "exploration": 0, "social": 0,
             "quest": 0, "survival": 0,
         }
         self._decision_count = 0
         self._last_action_id = ""
-        self._recent_locations: List[str] = []
-        self._market_actions: Dict[tuple[str, int], int] = {}
+        self._recent_locations: list[str] = []
+        self._market_actions: dict[tuple[str, int], int] = {}
         self._position_markets: set[str] = set()
         self._avoided_locations: set[str] = set()
         self._last_epoch = 0
         self._last_observed_location = ""
         self._last_travel_destination_id = ""
 
-    def observe(self, state: dict) -> Optional[dict]:
+    def observe(self, state: dict) -> dict | None:
         from services.economy import public_market_snapshot
 
         if not hasattr(self, "quote_book"):
@@ -632,7 +632,7 @@ class Comerciante(_Base):
         self._last_travel_destination_id = str(target.get("id") or "")
         return self._record("exploration", text)
 
-    def _sell_candidate(self, state: dict) -> Optional[tuple[str, str]]:
+    def _sell_candidate(self, state: dict) -> tuple[str, str] | None:
         from gamedata import ARTIFACTS_DB
         from inventory import is_unique, item_display
 
@@ -768,7 +768,7 @@ class Comerciante(_Base):
         )
 
     def _next_market_action(
-        self, state: dict, rng: random.Random, snapshot: Optional[dict],
+        self, state: dict, rng: random.Random, snapshot: dict | None,
     ) -> str:
         self._decision_count += 1
         n = self._decision_count
@@ -1262,7 +1262,7 @@ class Normal(_Base):
         return "Descanso num lugar razoavelmente seguro e organizo meus pertences."
 
 
-PROFILES: Dict[str, Profile] = {
+PROFILES: dict[str, Profile] = {
     p.name: p for p in [
         Agressivo(), Explorador(), Comerciante(), Diplomatico(), Troll(),
         MapaBreaker(), Combate(), NpcOnly(), LootAbuser(), SecretRusher(),

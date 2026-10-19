@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import logging
 import os
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from typing import Protocol
 from uuid import UUID, uuid4
 
@@ -196,7 +196,7 @@ class PostgresPurchaseStore:
                 self.wallet.credit_verified_purchase(
                     Principal(owner_id, "google_play", str(owner_id)), channel=CHANNEL,
                     payment_id=order_id, sku_id=sku["sku_id"], verified=True, connection=db)
-                when = (datetime.fromtimestamp(facts.purchase_time_millis / 1000, timezone.utc)
+                when = (datetime.fromtimestamp(facts.purchase_time_millis / 1000, UTC)
                         if facts.purchase_time_millis else None)
                 db.execute("""insert into app.google_play_purchases
                     (purchase_id,owner_id,product_id,sku_id,pricing_version_id,token_sha256,

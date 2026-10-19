@@ -20,8 +20,8 @@ def _edge_cost(from_id: str, to_id: str) -> int:
 
 
 @lru_cache(maxsize=64)
-def _distances_from(from_id: str) -> Dict[str, int]:
-    dist: Dict[str, int] = {from_id: 0}
+def _distances_from(from_id: str) -> dict[str, int]:
+    dist: dict[str, int] = {from_id: 0}
     heap = [(0, from_id)]
     while heap:
         d, node = heapq.heappop(heap)
@@ -38,7 +38,7 @@ def _distances_from(from_id: str) -> Dict[str, int]:
     return dist
 
 
-def travel_periods(from_id: str, to_id: str) -> Optional[int]:
+def travel_periods(from_id: str, to_id: str) -> int | None:
     """Menor custo em períodos de `from_id` até `to_id`; None se inalcançável
     ou se algum dos ids não existe no mapa."""
     if not from_id or not to_id:
@@ -48,7 +48,7 @@ def travel_periods(from_id: str, to_id: str) -> Optional[int]:
     return _distances_from(str(from_id)).get(str(to_id))
 
 
-def reachable_within(from_id: str, radius: int) -> Dict[str, int]:
+def reachable_within(from_id: str, radius: int) -> dict[str, int]:
     """Locais alcançáveis com custo ≤ radius (inclui o próprio)."""
     if not gamedata.get_location(from_id):
         return {}

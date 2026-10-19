@@ -23,10 +23,10 @@ from __future__ import annotations
 import json
 from collections import defaultdict
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from decimal import ROUND_CEILING, ROUND_HALF_EVEN, Decimal
 from pathlib import Path
-from typing import Iterable, Mapping, Sequence
+from collections.abc import Iterable, Mapping, Sequence
 
 TARGET_MARGIN = Decimal("0.05")
 _CENT = Decimal("0.01")
@@ -44,7 +44,7 @@ def report_channel(sku_channel: str) -> str:
 
 
 def week_cohort(moment: datetime) -> str:
-    utc = moment.astimezone(timezone.utc) if moment.tzinfo else moment.replace(tzinfo=timezone.utc)
+    utc = moment.astimezone(UTC) if moment.tzinfo else moment.replace(tzinfo=UTC)
     year, week, _ = utc.isocalendar()
     return f"{year}-W{week:02d}"
 

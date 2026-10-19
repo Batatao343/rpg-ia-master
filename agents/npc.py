@@ -108,11 +108,11 @@ class NPCSchema(BaseModel):
     persona: str
     appearance: str
     initial_relationship: int = 5
-    attributes: Dict[str, int] = Field(
+    attributes: dict[str, int] = Field(
         description="Stats base: str, dex, con, int, wis, cha. Padrão humano é 10.",
         json_schema_extra={"example": {"str": 10, "dex": 12, "con": 10, "int": 14, "wis": 16, "cha": 18}}
     )
-    combat_stats: Dict = Field(description="HP, AC e Attacks", default={"hp": 10, "ac": 10, "attacks": []})
+    combat_stats: dict = Field(description="HP, AC e Attacks", default={"hp": 10, "ac": 10, "attacks": []})
 
 class FactionReveal(BaseModel):
     faction_id: str = Field(description="id EXATO de uma facção listada em <FACÇÕES_DO_MUNDO>.")
@@ -141,7 +141,7 @@ class NPCResponse(BaseModel):
     @classmethod
     def _clamp_relationship(cls, value):
         return clamp_relationship_change(value)
-    faction_reveals: List[FactionReveal] = Field(
+    faction_reveals: list[FactionReveal] = Field(
         default_factory=list,
         description=(
             "Facções sobre as quais ESTE NPC contou algo ao jogador NESTE turno. "
@@ -149,7 +149,7 @@ class NPCResponse(BaseModel):
             "Vazio caso contrário. Use o faction_id EXATO da lista."
         ),
     )
-    proposed_quests: List[ProposedQuest] = Field(
+    proposed_quests: list[ProposedQuest] = Field(
         default_factory=list,
         description=(
             "APENAS se você (o NPC) pediu algo CONCRETO ao jogador NESTE turno (uma "
@@ -216,7 +216,7 @@ def _load_legacy_npc_file() -> dict:
     if not os.path.exists(NPC_DB_FILE):
         return {}
     try:
-        with open(NPC_DB_FILE, 'r', encoding='utf-8') as f:
+        with open(NPC_DB_FILE, encoding='utf-8') as f:
             return json.load(f)
     except Exception as e:
         _log_event("npc", "db_read_failed", level="warning", error=type(e).__name__)
@@ -595,7 +595,7 @@ def npc_actor_node(state: GameState):
     # quando o jogador insiste no mesmo assunto (achado do playtest real).
     _nome = npc_data.get("name", npc_name)
     ultima_fala = "—"
-    aberturas_recentes: List[str] = []
+    aberturas_recentes: list[str] = []
     for _m in reversed(messages):
         _c = str(getattr(_m, "content", "") or "").strip()
         if getattr(_m, "type", "") == "ai" and _c.startswith(f"**{_nome}"):

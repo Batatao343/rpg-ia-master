@@ -2,7 +2,7 @@
 import os
 from contextlib import nullcontext
 from dataclasses import replace
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from pathlib import Path
 from types import SimpleNamespace
 from uuid import UUID, uuid4
@@ -42,7 +42,7 @@ def image_case(monkeypatch):
                 def connection(self):
                     return nullcontext(connection)
             pool = Pool()
-            at = datetime(2026, 10, 12, 12, tzinfo=timezone.utc)
+            at = datetime(2026, 10, 12, 12, tzinfo=UTC)
             class FixedDatetime(datetime):
                 @classmethod
                 def now(cls, tz=None):

@@ -60,7 +60,7 @@ _IMPACT_BY_TYPE = {
 }
 _DEFAULT_IMPACT = 0.4
 
-EVENT_TEMPLATES: Dict[str, str] = {
+EVENT_TEMPLATES: dict[str, str] = {
     "npc_killed": "[turno {turn}] {target} foi morto (por: {actor}).",
     "location_control_changed": "[turno {turn}] {controller} assumiu o controle de {target}.",
     "faction_relation_changed": "[turno {turn}] Relação de {target} mudou ({relation}) com {other}.",
@@ -78,7 +78,7 @@ _WORD = re.compile(r"[\wáàâãéêíóôõúüç]+", re.IGNORECASE)
 @dataclass
 class ContextBudget:
     max_tokens: int = 3500
-    reserved: Dict[str, float] = field(default_factory=lambda: {
+    reserved: dict[str, float] = field(default_factory=lambda: {
         "current_state": 0.25,
         "active_location": 0.20,
         "relations": 0.15,
@@ -105,10 +105,10 @@ class ContextPack:
     memory_block: str
     total_tokens_est: int
     dropped: int
-    evidence_ids: List[str] = field(default_factory=list)
-    discarded_evidence: List[Dict[str, str]] = field(default_factory=list)
+    evidence_ids: list[str] = field(default_factory=list)
+    discarded_evidence: list[dict[str, str]] = field(default_factory=list)
     # SPEC-207 R7: refs SEM texto ({source_id, section, visibility} + selo SPEC-206).
-    context_refs: List[Dict[str, Any]] = field(default_factory=list)
+    context_refs: list[dict[str, Any]] = field(default_factory=list)
 
 
 # --------------------------------------------------------------------------- #
@@ -124,7 +124,7 @@ def _terms(s: str) -> set:
 
 
 def score_fact(fact_text: str, *, query: str, current_loc: str,
-               scene_entities: List[str], impact: float, turns_ago: int) -> float:
+               scene_entities: list[str], impact: float, turns_ago: int) -> float:
     """Score composto (0..~1) de um fato dinâmico. Sem embeddings — barato/offline."""
     fact_terms = _terms(fact_text)
     q_terms = _terms(query)
@@ -149,7 +149,7 @@ def score_fact(fact_text: str, *, query: str, current_loc: str,
 # --------------------------------------------------------------------------- #
 # Rendering determinístico de eventos/edges/entidades
 # --------------------------------------------------------------------------- #
-def _name(entity_id: Optional[str]) -> str:
+def _name(entity_id: str | None) -> str:
     if not entity_id:
         return entity_id or ""
     ent = gr.get_entity(entity_id)
@@ -158,7 +158,7 @@ def _name(entity_id: Optional[str]) -> str:
     return entity_id
 
 
-def render_event(event: Dict, projection: Optional[Dict] = None) -> str:
+def render_event(event: dict, projection: dict | None = None) -> str:
     """1 frase determinística por GameEvent. `secret_revealed` NÃO passa por aqui
     (é renderizado de world_projection.revealed_facts). Tipo desconhecido → ""."""
     etype = event.get("type")
@@ -180,9 +180,9 @@ def render_event(event: Dict, projection: Optional[Dict] = None) -> str:
 # --------------------------------------------------------------------------- #
 # Coleta de fatos dinâmicos
 # --------------------------------------------------------------------------- #
-def collect_dynamic_facts(state: Dict, *, purpose: str, query: str,
-                          current_loc: str, scene_entities: List[str],
-                          knowledge_filter: Optional[set] = None) -> List[ScoredFact]:
+def collect_dynamic_facts(state: dict, *, purpose: str, query: str,
+                          current_loc: str, scene_entities: list[str],
+                          knowledge_filter: set | None = None) -> list[ScoredFact]:
     """Renderiza event_log + revealed_facts + edges + entities + summaries em
     ScoredFacts (já pontuados). Não inclui lore/memória (essas vêm do RAG).
 
@@ -195,7 +195,7 @@ def collect_dynamic_facts(state: Dict, *, purpose: str, query: str,
     current_turn = int(world.get("turn_count", 0) or 0)
     include_hidden = purpose == "planning"
 
-    facts: List[ScoredFact] = []
+    facts: list[ScoredFact] = []
 
     def add(text: str, section: str, *, impact: float, turns_ago: int, sid: str = ""):
         if not text:
@@ -285,13 +285,13 @@ def collect_dynamic_facts(state: Dict, *, purpose: str, query: str,
 # --------------------------------------------------------------------------- #
 # Montador de seções + budget
 # --------------------------------------------------------------------------- #
-def _assemble(facts: List[ScoredFact], budget: ContextBudget):
+def _assemble(facts: list[ScoredFact], budget: ContextBudget):
     """Preenche cada seção na ordem de `budget.reserved` até a cota (em tokens);
     sobra de cota rola para a próxima seção. Corta no limite global (margem 5%)."""
     visibility_rank = {"public": 0, "hidden": 1, "secret": 2}
     maximum_visibility = visibility_rank.get(budget.max_visibility, -1)
-    by_section: Dict[str, List[ScoredFact]] = {}
-    discarded_evidence: List[Dict[str, str]] = []
+    by_section: dict[str, list[ScoredFact]] = {}
+    discarded_evidence: list[dict[str, str]] = []
     visibility_dropped = 0
     for f in facts:
         if visibility_rank.get(f.visibility, 3) > maximum_visibility:
@@ -311,12 +311,12 @@ def _assemble(facts: List[ScoredFact], budget: ContextBudget):
     used_total = _WRAPPER_TOKENS
     carry = 0.0
     dropped = visibility_dropped
-    chosen: Dict[str, List[ScoredFact]] = {}
+    chosen: dict[str, list[ScoredFact]] = {}
 
     for section, pct in budget.reserved.items():
         quota = budget.max_tokens * pct + carry
         section_used = 0.0
-        picked: List[ScoredFact] = []
+        picked: list[ScoredFact] = []
         for fct in by_section.get(section, []):
             t = estimate_tokens(fct.text)
             if section_used + t <= quota and used_total + t <= hard_cap:
@@ -352,11 +352,11 @@ def _assemble(facts: List[ScoredFact], budget: ContextBudget):
     return chosen, used_total, dropped, discarded_evidence
 
 
-def _block(facts: List[ScoredFact]) -> str:
+def _block(facts: list[ScoredFact]) -> str:
     return "\n".join(f.text for f in facts)
 
 
-def assemble_pack(facts: List[ScoredFact], budget: ContextBudget,
+def assemble_pack(facts: list[ScoredFact], budget: ContextBudget,
                   lore_text: str = "", memory_text: str = "") -> ContextPack:
     """Ranqueia + orça + renderiza os três blocos do ContextPack.
 
@@ -375,7 +375,7 @@ def assemble_pack(facts: List[ScoredFact], budget: ContextBudget,
             visibility="public",
         ))
     if memory_text:
-        chunks: List[str] = []
+        chunks: list[str] = []
         for line in (part.strip() for part in memory_text.splitlines()):
             if not line:
                 continue
@@ -438,7 +438,7 @@ def assemble_pack(facts: List[ScoredFact], budget: ContextBudget,
 # --------------------------------------------------------------------------- #
 # Cartas utilitárias no contexto do narrador (cutover conflito-13)
 # --------------------------------------------------------------------------- #
-def utility_context_block(player: Dict, *, abilities_db=None) -> str:
+def utility_context_block(player: dict, *, abilities_db=None) -> str:
     """Capacidades FORA de combate que o herói conhece (`tipo=utilitaria`).
 
     O gate é determinístico (conhece/não conhece); a LLM só narra. Devolve ""
@@ -470,9 +470,9 @@ def utility_context_block(player: Dict, *, abilities_db=None) -> str:
 # --------------------------------------------------------------------------- #
 # Entrada pública
 # --------------------------------------------------------------------------- #
-def build_context_pack(state: Dict, query: str, purpose: str,
-                       token_budget: int = 3500, game_id: Optional[str] = None,
-                       npc_id: Optional[str] = None) -> ContextPack:
+def build_context_pack(state: dict, query: str, purpose: str,
+                       token_budget: int = 3500, game_id: str | None = None,
+                       npc_id: str | None = None) -> ContextPack:
     """SPEC-200: mede a fase `context` (no-op sem timeline). Sem mudar comportamento."""
     from observability.latency import TurnPhase
     from observability.latency import phase as _phase
@@ -484,9 +484,9 @@ def build_context_pack(state: Dict, query: str, purpose: str,
     return pack
 
 
-def _build_context_pack(state: Dict, query: str, purpose: str,
-                        token_budget: int = 3500, game_id: Optional[str] = None,
-                        npc_id: Optional[str] = None) -> ContextPack:
+def _build_context_pack(state: dict, query: str, purpose: str,
+                        token_budget: int = 3500, game_id: str | None = None,
+                        npc_id: str | None = None) -> ContextPack:
     """Monta o ContextPack. Lore canônico e memória de sessão são buscados e
     rotulados separadamente; `npc_id` inclui ainda a memória privada do NPC."""
     if purpose not in PURPOSES:
@@ -614,7 +614,7 @@ def _build_context_pack(state: Dict, query: str, purpose: str,
 
 
 def active_memory_facts(rows, *, current_turn: int,
-                        state: Optional[dict] = None) -> list[dict]:
+                        state: dict | None = None) -> list[dict]:
     """Contexto ativo: especulação não confirmada expira após 20 turnos."""
     records = normalize_memory_facts(rows)
     from services.narrative_evidence import build_evidence, validate_narrative

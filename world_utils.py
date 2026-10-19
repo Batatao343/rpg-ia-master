@@ -98,7 +98,7 @@ def _all_location_names() -> list:
     ]
 
 
-def is_travel_intent(text: str, world: Optional[dict] = None) -> bool:
+def is_travel_intent(text: str, world: dict | None = None) -> bool:
     """True somente para ordem explícita de deslocamento a um DESTINO.
 
     SPEC-229 R1: verbo fechado + preposição + (destino que resolve no mapa OU
@@ -156,7 +156,7 @@ def invalid_travel_message(world: dict, text: str) -> str:
     )
 
 
-def find_travel_destination(world: dict, text: str) -> Optional[dict]:
+def find_travel_destination(world: dict, text: str) -> dict | None:
     """
     Se o texto cita um local CONECTADO ao atual (com ou sem verbo de movimento),
     retorna o nó de destino; senão None. Case/acento-insensitive.
@@ -220,7 +220,7 @@ def apply_travel(world: dict, dest: dict) -> dict:
     return world
 
 
-def apply_rest(player: dict, world: dict, allies: list = None) -> Tuple[dict, dict]:
+def apply_rest(player: dict, world: dict, allies: list = None) -> tuple[dict, dict]:
     """Descanso: recupera ~metade dos recursos e avança 2 períodos.
     Fase 6.5: clima com `rest_block` (miasma etc.) NEGA o descanso ao relento —
     o tempo passa (1 período de tentativa), mas nada recupera.
@@ -323,7 +323,7 @@ def ensure_factions(factions) -> list:
     return out
 
 
-def advance_factions(factions, periods: int = 1) -> Tuple[list, list]:
+def advance_factions(factions, periods: int = 1) -> tuple[list, list]:
     """
     Avança o progresso de cada facção em `pace * periods` (determinístico, sem RNG).
     Marca como concluída ao cruzar 100 e devolve eventos das que ACABARAM de concluir.
@@ -370,7 +370,7 @@ def _raise_danger(world: dict, loc_id: str) -> None:
         world["danger_level"] = overrides[loc_id]
 
 
-def resolve_faction_completions(factions, world, events, intel) -> Tuple[list, dict, str]:
+def resolve_faction_completions(factions, world, events, intel) -> tuple[list, dict, str]:
     """
     Aplica a ASCENSÃO de cada facção que concluiu o objetivo (`events` vem de `advance_factions`):
     o mundo muda de verdade (domina local, expande região, eleva perigo, invoca entidade, elimina
@@ -512,7 +512,7 @@ def _direction_sign(direction: str) -> int:
 
 
 def apply_reputation(factions, faction_id: str, direction: str,
-                     step: int = REP_STEP) -> Tuple[list, Optional[dict]]:
+                     step: int = REP_STEP) -> tuple[list, dict | None]:
     """
     Aplica delta FIXO de reputação a uma fação identificada pelo id.
     direction: 'ajudou' (+) | 'prejudicou' (-). Clampa em [-100, 100] e
@@ -869,7 +869,7 @@ GLOBAL_WEATHER_BASE_CHANCE = 0.06   # [BALANCEAR] por período sem evento ativo
 GLOBAL_WEATHER_DANGER_STEP = 0.03   # [BALANCEAR] +chance por nível de perigo >1
 
 
-def maybe_start_global_weather(world: dict, rng=None) -> Optional[str]:
+def maybe_start_global_weather(world: dict, rng=None) -> str | None:
     """R1/R2: SEM evento global ativo, rola p/ iniciar um da lista curada
     (weather.json:global_events). Chance = base + step×(danger−1). Determinístico
     via `rng`. Reusa trigger_global_weather. Retorna a desc do evento ou None."""
@@ -1061,7 +1061,7 @@ def roll_encounter_type(danger: int, rng=None) -> str:
 
 
 def resolve_trap(player: dict, loc: dict, danger: int, rng=None, *,
-                 helper: Optional[dict] = None) -> tuple:
+                 helper: dict | None = None) -> tuple:
     """Fase 6.4 (R3): armadilha 100%% Python — save vs DC 10+2×danger; falha =
     {danger}d6 + condição temática da região (data/traps.json); sucesso = XP de
     esquiva. Retorna (player_atualizado, logs, trap_dict)."""

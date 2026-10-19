@@ -10,7 +10,8 @@ Vocabulário de conhecimento = SPEC-206 (`KnowledgeStamp`), reutilizado literal.
 """
 from __future__ import annotations
 
-from typing import Any, Dict, List, Literal, Mapping, Optional
+from typing import Any, Dict, List, Literal, Optional
+from collections.abc import Mapping
 
 from pydantic import BaseModel, ConfigDict, ValidationError
 
@@ -25,8 +26,8 @@ class KnowledgeStampModel(_Strict):
     source_kind: str
     source_ref: str
     label: str
-    first_seen_turn: Optional[int] = None
-    last_updated_turn: Optional[int] = None
+    first_seen_turn: int | None = None
+    last_updated_turn: int | None = None
     stale: bool = False
 
 
@@ -38,7 +39,7 @@ class NoteModel(KnowledgeStampModel):
 class ArtModel(_Strict):
     asset_id: str
     alt: str
-    placeholder_color: Optional[str] = None
+    placeholder_color: str | None = None
     variants: Any = None
 
 
@@ -51,7 +52,7 @@ class EncounterModel(_Strict):
     turn: int
     location_id: str = ""
     outcome: str
-    encounter_id: Optional[str] = None
+    encounter_id: str | None = None
 
 
 class _DossierBase(_Strict):
@@ -60,9 +61,9 @@ class _DossierBase(_Strict):
     title: str
     last_updated_turn: int
     version: int
-    art: Optional[ArtModel] = None
+    art: ArtModel | None = None
     knowledge: KnowledgeStampModel
-    notes: List[NoteModel] = []
+    notes: list[NoteModel] = []
 
 
 class NpcDossierModel(_DossierBase):
@@ -72,20 +73,20 @@ class NpcDossierModel(_DossierBase):
     relationship: int = 5
     disposition_label: str = ""
     knowledge_source: str = "met"
-    revealed_traits: List[Dict[str, Any]] = []
-    claims: List[ClaimModel] = []
-    appears_to_know: List[ClaimModel] = []
-    encounters: List[EncounterModel] = []
-    last_seen_turn: Optional[int] = None
+    revealed_traits: list[dict[str, Any]] = []
+    claims: list[ClaimModel] = []
+    appears_to_know: list[ClaimModel] = []
+    encounters: list[EncounterModel] = []
+    last_seen_turn: int | None = None
     body: str = ""
 
 
 class LocationDossierModel(_DossierBase):
     body: str = ""
     region: str = ""
-    npcs: List[str] = []
-    creatures: List[str] = []
-    events: List[EncounterModel] = []
+    npcs: list[str] = []
+    creatures: list[str] = []
+    events: list[EncounterModel] = []
 
 
 class FactionDossierModel(_DossierBase):
@@ -95,7 +96,7 @@ class FactionDossierModel(_DossierBase):
     region: str = ""
     disposition: str = ""
     reputation: int = 0
-    progress: Optional[int] = None
+    progress: int | None = None
     intel_stale: bool = False
     stale_label: str = ""
 
@@ -109,18 +110,18 @@ class SecretDossierModel(_DossierBase):
 class CreatureDossierModel(_DossierBase):
     tier: int
     tier_name: str
-    regions: List[str] = []
-    rarity_note: Optional[str] = None
-    first_seen_turn: Optional[int] = None
-    description: Optional[str] = None
-    type: Optional[str] = None
-    max_hp: Optional[int] = None
-    defense: Optional[int] = None
-    attacks: Optional[List[Any]] = None
-    behavior: Optional[Dict[str, Any]] = None
-    loot: Optional[List[Any]] = None
-    revealed_cards: Optional[List[Dict[str, str]]] = None
-    revealed_resistances: Optional[List[str]] = None
+    regions: list[str] = []
+    rarity_note: str | None = None
+    first_seen_turn: int | None = None
+    description: str | None = None
+    type: str | None = None
+    max_hp: int | None = None
+    defense: int | None = None
+    attacks: list[Any] | None = None
+    behavior: dict[str, Any] | None = None
+    loot: list[Any] | None = None
+    revealed_cards: list[dict[str, str]] | None = None
+    revealed_resistances: list[str] | None = None
 
 
 class ChronicleChapterIndexModel(_Strict):
@@ -129,23 +130,23 @@ class ChronicleChapterIndexModel(_Strict):
     started_turn: int = 0
     location: str = ""
     entry_count: int = 0
-    entity_ids: List[str] = []
+    entity_ids: list[str] = []
 
 
 class DossierSectionsModel(_Strict):
-    npcs: List[NpcDossierModel]
-    locations: List[LocationDossierModel]
-    factions: List[FactionDossierModel]
-    secrets: List[SecretDossierModel]
-    chronicle_index: List[ChronicleChapterIndexModel]
+    npcs: list[NpcDossierModel]
+    locations: list[LocationDossierModel]
+    factions: list[FactionDossierModel]
+    secrets: list[SecretDossierModel]
+    chronicle_index: list[ChronicleChapterIndexModel]
 
 
 class DossiersResponseModel(_Strict):
     version: int
     generated_at_turn: int
     sections: DossierSectionsModel
-    bestiary: List[CreatureDossierModel]
-    meta: Dict[str, Any]
+    bestiary: list[CreatureDossierModel]
+    meta: dict[str, Any]
 
 
 # Chaves de estado privado que NUNCA podem aparecer em nenhum nível do payload.
@@ -156,7 +157,7 @@ FORBIDDEN_KEYS = frozenset({
 })
 
 
-def _walk(value: Any, path: str, out: List[str]) -> None:
+def _walk(value: Any, path: str, out: list[str]) -> None:
     if isinstance(value, Mapping):
         for key, child in value.items():
             if str(key) in FORBIDDEN_KEYS:
@@ -167,9 +168,9 @@ def _walk(value: Any, path: str, out: List[str]) -> None:
             _walk(child, f"{path}[{index}]", out)
 
 
-def assert_no_private_fields(payload: Mapping) -> List[str]:
+def assert_no_private_fields(payload: Mapping) -> list[str]:
     """[] = ok. Allowlist estrita (modelo `extra=forbid`) + chaves proibidas."""
-    problems: List[str] = []
+    problems: list[str] = []
     try:
         DossiersResponseModel.model_validate(payload)
     except ValidationError as exc:

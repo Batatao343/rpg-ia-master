@@ -25,7 +25,8 @@ from collections import Counter
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, Iterator, List, Literal, Optional
+from typing import Any, Dict, List, Literal, Optional
+from collections.abc import Callable, Iterator
 
 import httpx
 from dotenv import load_dotenv
@@ -75,9 +76,9 @@ _META_FILE = "embeddings_meta.json"
 
 # Cadeia ordenada: primário → ... → último fallback. Gemini SEMPRE por último
 # (decisão do usuário 2026-07-16: caro/sem créditos; só assume sem outro).
-EMBEDDING_ROUTES: List[str] = ["jina", "openai", "ollama", "gemini"]
+EMBEDDING_ROUTES: list[str] = ["jina", "openai", "ollama", "gemini"]
 
-_PROVIDER_MODELS: Dict[str, str] = {
+_PROVIDER_MODELS: dict[str, str] = {
     "jina": "jina-embeddings-v3",
     "openai": "text-embedding-3-small",
     "ollama": "bge-m3",
@@ -87,8 +88,8 @@ _PROVIDER_MODELS: Dict[str, str] = {
 # Provider assumido por índice LEGADO (gerado antes da meta) — histórico Google.
 _LEGACY_PROVIDER = "gemini"
 
-_embeddings_cache: Dict[str, object] = {}   # provider -> objeto de embeddings
-_active_provider_name: Optional[str] = None  # provider resolvido para ESCRITA
+_embeddings_cache: dict[str, object] = {}   # provider -> objeto de embeddings
+_active_provider_name: str | None = None  # provider resolvido para ESCRITA
 
 
 RAGOperation = Literal["add_session_memory", "add_npc_memory"]
@@ -101,12 +102,12 @@ class RAGOperationEvent:
     operation: RAGOperation
     success: bool
     game_id: str
-    npc_id: Optional[str]
+    npc_id: str | None
     path: str
     facts_count: int
-    provider: Optional[str]
-    error: Optional[str]
-    provenance_counts: Dict[str, int] = field(default_factory=dict)
+    provider: str | None
+    error: str | None
+    provenance_counts: dict[str, int] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -123,14 +124,14 @@ class RetrievedEvidence:
     score: float
     text: str
     visibility: str
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
-_RAG_OPERATION_HOOK: Optional[Callable[[RAGOperationEvent], None]] = None
+_RAG_OPERATION_HOOK: Callable[[RAGOperationEvent], None] | None = None
 
 
 def set_rag_operation_hook(
-        fn: Optional[Callable[[RAGOperationEvent], None]]) -> None:
+        fn: Callable[[RAGOperationEvent], None] | None) -> None:
     """Registra callback para cada ``add_*``; ``None`` desliga o hook."""
     global _RAG_OPERATION_HOOK
     _RAG_OPERATION_HOOK = fn
@@ -151,12 +152,12 @@ def _rag_operation_result(
         success: bool,
         *,
         game_id: str,
-        npc_id: Optional[str],
+        npc_id: str | None,
         path: str,
         facts_count: int,
-        provider: Optional[str],
-        error: Optional[str],
-        metadatas: Optional[List[Dict]] = None,
+        provider: str | None,
+        error: str | None,
+        metadatas: list[dict] | None = None,
 ) -> bool:
     provenance_counts = dict(Counter(
         str(metadata.get("memory_provenance") or "legacy_unverified")
@@ -256,7 +257,7 @@ class _ScopedMeteredEmbeddings(Embeddings):
         self.provider = provider
         self.model = model
 
-    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+    def embed_documents(self, texts: list[str]) -> list[list[float]]:
         try:
             vectors = self.delegate.embed_documents(texts)
         except Exception:
@@ -265,7 +266,7 @@ class _ScopedMeteredEmbeddings(Embeddings):
         _emit_embedding_attempt(self.provider, self.model, "response")
         return vectors
 
-    def embed_query(self, text: str) -> List[float]:
+    def embed_query(self, text: str) -> list[float]:
         try:
             vector = self.delegate.embed_query(text)
         except Exception:
@@ -289,7 +290,7 @@ def _has_token_usage(usage: object) -> bool:
                and usage[key] >= 0 for key in ("prompt_tokens", "input_tokens", "total_tokens"))
 
 
-def _estimated_embedding_usage(values: List[str]) -> dict[str, int]:
+def _estimated_embedding_usage(values: list[str]) -> dict[str, int]:
     """SPEC-237: no usage block -> conservative estimate (~2 chars/token), flagged; no text."""
     chars = sum(len(value) for value in values)
     return {"input_tokens": -(-chars // 2), "units_estimated": 1}
@@ -306,7 +307,7 @@ class _JinaEmbeddingsHTTPX(Embeddings):
 
     def __init__(self, *, api_key: str, model_name: str,
                  timeout_seconds: float = 30.0, max_attempts: int = 2,
-                 client: Optional[httpx.Client] = None) -> None:
+                 client: httpx.Client | None = None) -> None:
         self.model_name = model_name
         self.max_attempts = max(1, int(max_attempts))
         self._client = client or httpx.Client(
@@ -319,7 +320,7 @@ class _JinaEmbeddingsHTTPX(Embeddings):
         )
 
     def _log_attempt(self, outcome: str, attempt: int, started: float,
-                     http_status: Optional[int]) -> None:
+                     http_status: int | None) -> None:
         # SPEC-258: so metadados (nunca o texto embeddado nem URL).
         from observability.telemetry import log_provider_attempt
         log_provider_attempt("embedding", "jina", self.model_name, outcome,
@@ -328,8 +329,8 @@ class _JinaEmbeddingsHTTPX(Embeddings):
                              attempt=attempt + 1, fell_back=False,
                              cost_basis="exact" if outcome == "success" else "unknown")
 
-    def _embed(self, values: List[str]) -> List[List[float]]:
-        last_error: Optional[Exception] = None
+    def _embed(self, values: list[str]) -> list[list[float]]:
+        last_error: Exception | None = None
         for attempt in range(self.max_attempts):
             started = time.perf_counter()
             try:
@@ -384,10 +385,10 @@ class _JinaEmbeddingsHTTPX(Embeddings):
             raise last_error
         raise RuntimeError("Jina não executou nenhuma tentativa")
 
-    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+    def embed_documents(self, texts: list[str]) -> list[list[float]]:
         return self._embed(list(texts))
 
-    def embed_query(self, text: str) -> List[float]:
+    def embed_query(self, text: str) -> list[float]:
         return self._embed([text])[0]
 
 
@@ -421,7 +422,7 @@ def _build_gemini():
     return GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
 
 
-def _default_builders() -> Dict[str, Callable[[], object]]:
+def _default_builders() -> dict[str, Callable[[], object]]:
     return {
         "jina": _build_jina,
         "openai": _build_openai,
@@ -430,7 +431,7 @@ def _default_builders() -> Dict[str, Callable[[], object]]:
     }
 
 
-_EMBEDDING_BUILDERS: Dict[str, Callable[[], object]] = _default_builders()
+_EMBEDDING_BUILDERS: dict[str, Callable[[], object]] = _default_builders()
 
 
 # --- Disponibilidade + resolução da cadeia ----------------------------------
@@ -472,7 +473,7 @@ def _provider_available(provider: str) -> bool:
     return False
 
 
-def _resolve_provider() -> Optional[str]:
+def _resolve_provider() -> str | None:
     """Provider ativo para ESCRITA. `RPG_EMBEDDINGS=<p>` força um candidato
     (pula a cadeia; análogo ao LLM_PROVIDER). Senão, primeiro da cadeia
     disponível. None = nenhum candidato → embeddings desativados."""
@@ -485,7 +486,7 @@ def _resolve_provider() -> Optional[str]:
     return None
 
 
-def get_embeddings_for(provider: str) -> Optional[object]:
+def get_embeddings_for(provider: str) -> object | None:
     """Constrói (com cache) o objeto de embeddings de UM provider específico.
     Usado para abrir índice pinado. None se o builder falhar (key/dep faltando)."""
     if provider in _embeddings_cache:
@@ -504,13 +505,13 @@ def get_embeddings_for(provider: str) -> Optional[object]:
 
 
 # SPEC-234 R9: dimensao do vetor por provider (o pgvector so aceita 1024).
-_PROVIDER_DIMS: Dict[str, int] = {
+_PROVIDER_DIMS: dict[str, int] = {
     "jina": 1024, "openai": 1024, "ollama": 1024, "gemini": 3072,
 }
 PGVECTOR_DIMENSIONS = 1024
 
 
-def embedding_profile_id(provider: Optional[str] = None) -> str:
+def embedding_profile_id(provider: str | None = None) -> str:
     """ID do perfil de embedding: `{provider}-{modelo}-{dim}` (R9).
 
     Sem provider resolvido devolve o perfil legado `local-1024`.
@@ -523,7 +524,7 @@ def embedding_profile_id(provider: Optional[str] = None) -> str:
     return re.sub(r"[^a-z0-9._-]+", "-", f"{provider}-{model}-{dims}".lower())
 
 
-def validate_pgvector_provider(provider: Optional[str] = None) -> None:
+def validate_pgvector_provider(provider: str | None = None) -> None:
     """Recusa, na inicializacao, provider cuja dimensao != 1024 (R9)."""
     provider = (provider or _resolve_provider() or "").strip().lower()
     dims = _PROVIDER_DIMS.get(provider)
@@ -543,12 +544,12 @@ def _note_degraded(source: str) -> None:
         pass
 
 
-def active_provider() -> Optional[str]:
+def active_provider() -> str | None:
     """Provider resolvido na última chamada a get_embeddings() (para meta)."""
     return _active_provider_name
 
 
-def get_embeddings() -> Optional[object]:
+def get_embeddings() -> object | None:
     """Embeddings do provider ATIVO (cabeça da cadeia disponível). Mantém a
     assinatura/singleton histórica. None → embeddings desativados (sem provider
     ou builder falhou); o jogo segue sem RAG."""
@@ -590,9 +591,9 @@ def _write_meta(dir_path: str, provider: str) -> bool:
         return False
 
 
-def _read_meta(dir_path: str) -> Optional[dict]:
+def _read_meta(dir_path: str) -> dict | None:
     try:
-        with open(_meta_path(dir_path), "r", encoding="utf-8") as fh:
+        with open(_meta_path(dir_path), encoding="utf-8") as fh:
             return json.load(fh)
     except FileNotFoundError:
         return None
@@ -605,7 +606,7 @@ def _read_meta(dir_path: str) -> Optional[dict]:
         return None
 
 
-def _embeddings_for_index(dir_path: str) -> Optional[object]:
+def _embeddings_for_index(dir_path: str) -> object | None:
     """Embeddings PINADOS a um índice existente: usa o provider da meta.
     Índice legado SEM meta → assume gemini (comportamento histórico, R2).
     Meta presente mas sem provider nomeado → reabre com o provider ATIVO
@@ -683,7 +684,7 @@ def _has_faiss_index(path: str) -> bool:
 _VIS_ORDER = {"public": 0, "hidden": 1, "secret": 2}
 
 
-def vis_rank(visibility: Optional[str]) -> int:
+def vis_rank(visibility: str | None) -> int:
     """Rank de visibilidade. Sem metadado = public; valor desconhecido = secret
     (falha fechada: nunca vazar por typo)."""
     if visibility is None:
@@ -693,13 +694,13 @@ def vis_rank(visibility: Optional[str]) -> int:
 
 def query_faiss_evidence(
     db: Any,
-    vector: List[float],
+    vector: list[float],
     *,
     k: int = 5,
-    fetch_k: Optional[int] = None,
-    max_visibility: Optional[str] = None,
+    fetch_k: int | None = None,
+    max_visibility: str | None = None,
     source: str = "lore",
-) -> List[RetrievedEvidence]:
+) -> list[RetrievedEvidence]:
     """Return the same FAISS ranking used by production as structured evidence.
 
     The text-returning production APIs format this trace after ranking. Evals can
@@ -719,7 +720,7 @@ def query_faiss_evidence(
         [float(value) for value in vector],
         k=candidate_count,
     )
-    evidence: List[RetrievedEvidence] = []
+    evidence: list[RetrievedEvidence] = []
     seen_ids: set[str] = set()
     for document, distance in candidates:
         metadata = dict(getattr(document, "metadata", {}) or {})
@@ -857,7 +858,7 @@ def query_session_memory(query: str, game_id: str) -> str:
     return _format_memory_documents(_query_session_documents(query, game_id, k=6))
 
 
-def prepare_shared_query_vector(query: str, paths: List[str]) -> tuple[Optional[List[float]], Optional[str], Optional[str]]:
+def prepare_shared_query_vector(query: str, paths: list[str]) -> tuple[list[float] | None, str | None, str | None]:
     """Embed once when every existing FAISS scope uses the same pinned profile."""
     if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
         embeddings = get_embeddings()
@@ -904,7 +905,7 @@ def prepare_shared_query_vector(query: str, paths: List[str]) -> tuple[Optional[
     return vector, provider, _PROVIDER_MODELS.get(provider)
 
 
-def query_global_by_vector(vector: List[float], index_name: str = "lore",
+def query_global_by_vector(vector: list[float], index_name: str = "lore",
                            max_visibility: str = "public") -> str:
     if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
         from infrastructure.contracts import MemoryQuery
@@ -939,7 +940,7 @@ def query_global_by_vector(vector: List[float], index_name: str = "lore",
         return ""
 
 
-def query_session_by_vector(vector: List[float], game_id: str, *, k: int = 6) -> str:
+def query_session_by_vector(vector: list[float], game_id: str, *, k: int = 6) -> str:
     if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
         from infrastructure.contracts import MemoryQuery
         from infrastructure.request_context import current_principal
@@ -969,7 +970,7 @@ def query_session_by_vector(vector: List[float], game_id: str, *, k: int = 6) ->
         return ""
 
 
-def query_npc_by_vector(vector: List[float], game_id: str, npc_id: str, *, k: int = 3) -> str:
+def query_npc_by_vector(vector: list[float], game_id: str, npc_id: str, *, k: int = 3) -> str:
     if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
         from infrastructure.contracts import MemoryQuery
         from infrastructure.request_context import current_principal
@@ -999,9 +1000,9 @@ def query_npc_by_vector(vector: List[float], game_id: str, npc_id: str, *, k: in
         return ""
 
 
-def context_index_paths(*, game_id: Optional[str] = None,
-                        npc_id: Optional[str] = None,
-                        index_name: str = "lore") -> List[str]:
+def context_index_paths(*, game_id: str | None = None,
+                        npc_id: str | None = None,
+                        index_name: str = "lore") -> list[str]:
     paths = [get_global_db_path(index_name)]
     if game_id:
         paths.append(_get_session_path(game_id))
@@ -1010,7 +1011,7 @@ def context_index_paths(*, game_id: Optional[str] = None,
     return paths
 
 
-def _query_rag_impl(query: str, index_name: str = "lore", game_id: Optional[str] = None,
+def _query_rag_impl(query: str, index_name: str = "lore", game_id: str | None = None,
                     max_visibility: str = "public") -> str:
     """
     Busca contexto de forma híbrida:
@@ -1079,7 +1080,7 @@ def _query_rag_impl(query: str, index_name: str = "lore", game_id: Optional[str]
     return "\n---\n".join(parts)
 
 
-def query_rag(query: str, index_name: str = "lore", game_id: Optional[str] = None,
+def query_rag(query: str, index_name: str = "lore", game_id: str | None = None,
               max_visibility: str = "public") -> str:
     """Boundary observável da busca híbrida, sem expor consulta nem IDs."""
     started = time.perf_counter()
@@ -1104,9 +1105,9 @@ def query_rag(query: str, index_name: str = "lore", game_id: Optional[str] = Non
 
 def add_memory_to_session(
     game_id: str,
-    texts: List[str],
+    texts: list[str],
     *,
-    metadatas: Optional[List[Dict]] = None,
+    metadatas: list[dict] | None = None,
 ) -> bool:
     """Adiciona fatos à sessão e informa se a gravação física terminou."""
     facts_count = len(texts) if isinstance(texts, list) else 0
@@ -1136,7 +1137,7 @@ def add_memory_to_session(
             for index, text in enumerate(texts):
                 metadata = dict((metadatas or [{}] * len(texts))[index] or {})
                 digest = hashlib.sha256(
-                    f"{game_id}:{text}:{metadata}".encode("utf-8")
+                    f"{game_id}:{text}:{metadata}".encode()
                 ).hexdigest()
                 store.stage(MemoryWriteIntent(
                     document=MemoryDocument(
@@ -1159,7 +1160,7 @@ def add_memory_to_session(
             )
 
     session_path = ""
-    provider: Optional[str] = None
+    provider: str | None = None
     try:
         session_path = _get_session_path(game_id)
         if _has_faiss_index(session_path):
@@ -1249,9 +1250,9 @@ def _get_npc_path(game_id: str, npc_id: str) -> str:
 def add_npc_memory(
     game_id: str,
     npc_id: str,
-    texts: List[str],
+    texts: list[str],
     *,
-    metadatas: Optional[List[Dict]] = None,
+    metadatas: list[dict] | None = None,
 ) -> bool:
     """Adiciona fatos ao namespace do NPC e retorna sucesso físico."""
     facts_count = len(texts) if isinstance(texts, list) else 0
@@ -1279,7 +1280,7 @@ def add_npc_memory(
             for index, text in enumerate(texts):
                 metadata = dict((metadatas or [{}] * len(texts))[index] or {})
                 digest = hashlib.sha256(
-                    f"{game_id}:{npc_id}:{text}:{metadata}".encode("utf-8")
+                    f"{game_id}:{npc_id}:{text}:{metadata}".encode()
                 ).hexdigest()
                 store.stage(MemoryWriteIntent(
                     document=MemoryDocument(
@@ -1303,7 +1304,7 @@ def add_npc_memory(
             )
 
     npc_path = ""
-    provider: Optional[str] = None
+    provider: str | None = None
     try:
         npc_path = _get_npc_path(game_id, npc_id)
         if _has_faiss_index(npc_path):

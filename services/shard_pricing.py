@@ -9,11 +9,11 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from datetime import datetime, time, timedelta, timezone
+from datetime import datetime, time, timedelta, timezone, UTC
 from decimal import ROUND_CEILING, Decimal, localcontext
 from hashlib import sha256
 from pathlib import Path
-from typing import Mapping, Sequence
+from collections.abc import Mapping, Sequence
 
 from services.usage_metering import RATE_CARD_VERSION, UsageEvent
 
@@ -26,7 +26,7 @@ _INSTALLED_CARD_BYTES = _INSTALLED_CARD_PATH.read_bytes()
 INSTALLED_RATE_CARD_SHA256 = sha256(_INSTALLED_CARD_BYTES).hexdigest()
 INSTALLED_RATE_CARD_OBSERVED_AT = datetime.combine(
     datetime.fromisoformat(json.loads(_INSTALLED_CARD_BYTES)["observed_at"]).date(),
-    time.min, tzinfo=timezone.utc,
+    time.min, tzinfo=UTC,
 )
 
 
@@ -85,7 +85,7 @@ def _ratio_units(amount: Decimal, unit: Decimal, *, ceiling: bool) -> int:
 def _utc(value: datetime) -> datetime:
     if not isinstance(value, datetime) or value.tzinfo is None or value.utcoffset() is None:
         raise PricingUnavailable("data precisa de timezone")
-    return value.astimezone(timezone.utc)
+    return value.astimezone(UTC)
 
 
 @dataclass(frozen=True)

@@ -52,7 +52,7 @@ def minion_defeated_by_wound(actor: dict) -> bool:
 # ==========================================================================
 # Detecção do último Crítico (R1) — hook do pipeline de dano (fiação: conflito-13)
 # ==========================================================================
-def _wound_spaces(actor: dict) -> Dict[str, int]:
+def _wound_spaces(actor: dict) -> dict[str, int]:
     if actor.get("ferimento_espacos"):
         return actor["ferimento_espacos"]
     import gamedata
@@ -81,13 +81,13 @@ def should_trigger_last_stand(actor: dict) -> bool:
 # ==========================================================================
 class LastStandResult(BaseModel):
     vantagem_extrema: bool = True
-    acao_declarada: Dict = Field(default_factory=dict)
+    acao_declarada: dict = Field(default_factory=dict)
     ruptura_declarada: bool = False
     entra_em_estado_terminal: bool = True
     ignora_recursos: bool = True
 
 
-def trigger_last_stand(participant: dict, *, acao: Optional[dict] = None,
+def trigger_last_stand(participant: dict, *, acao: dict | None = None,
                        ruptura: bool = False) -> dict:
     """R1: dispara a Última Ação imediatamente (mesmo fora da ordem). Vantagem
     extrema, ignora limitações dos Ferimentos e recursos ausentes; pode declarar
@@ -136,7 +136,7 @@ def reset_terminal_episode(participant: dict) -> None:
     participant["stabilization_attempts"] = 0
 
 
-def _revive(target: dict, *, fraction: Optional[float] = None, minimum_one: bool = False,
+def _revive(target: dict, *, fraction: float | None = None, minimum_one: bool = False,
             auto: bool = False, kit_cargas: int = 0, log: str = "") -> dict:
     maxv = int(target.get("max_vitalidade", 0) or 0)
     if fraction is not None:
@@ -172,7 +172,7 @@ def _die(target: dict, cause: str) -> dict:
             "attempts": int(target.get("stabilization_attempts", 0))}
 
 
-def attempt_stabilization(target: dict, helper: Optional[dict] = None, *,
+def attempt_stabilization(target: dict, helper: dict | None = None, *,
                           has_kit: bool = False, is_medico: bool = False,
                           has_potion: bool = False, rng=None) -> dict:
     """R3/R4: resolve uma tentativa de tirar o alvo do Estado Terminal.
@@ -243,7 +243,7 @@ def check_scar_required(participant: dict) -> bool:
     return bool(participant.get("scar_pending"))
 
 
-def _scar_prompt(participant: dict, context: Optional[dict]) -> str:
+def _scar_prompt(participant: dict, context: dict | None) -> str:
     ctx = context or {}
     fer = participant.get("ferimentos") or {}
     regioes = [w.get("regiao") for c in ("critico", "grave") for w in fer.get(c, [])]
@@ -271,11 +271,11 @@ def _fallback_scar(participant: dict) -> dict:
     }
 
 
-def generate_scar(participant: dict, llm, *, context: Optional[dict] = None) -> dict:
+def generate_scar(participant: dict, llm, *, context: dict | None = None) -> dict:
     """R6: gera a Cicatriz pós-combate via LLM (structured output) com o GUARD de
     resiliência obrigatório — `FallbackLLM`/erro cai num template determinístico.
     Anexa em `participant['scars']`, limpa `scar_pending`. Jogador não pode recusar."""
-    scar: Optional[dict] = None
+    scar: dict | None = None
     try:
         result = llm.with_structured_output(ScarModel).invoke(_scar_prompt(participant, context))
         if isinstance(result, ScarModel):
@@ -305,7 +305,7 @@ def generate_scar(participant: dict, llm, *, context: Optional[dict] = None) -> 
 _LETHAL_FORMS = frozenset({"destruicao_total", "queda_fatal"})
 
 
-def can_be_nonlethal(attack_form: Optional[dict]) -> bool:
+def can_be_nonlethal(attack_form: dict | None) -> bool:
     """R8: o golpe final pode ser declarado não-letal, SALVO se a forma do ataque
     for destruição total, queda fatal ou efeito explicitamente letal."""
     form = attack_form or {}

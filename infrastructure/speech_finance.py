@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import os
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from uuid import UUID, uuid4
 
 from infrastructure.contracts import Principal
@@ -25,7 +25,7 @@ class PostgresSpeechFinance:
         self.reservation = None
 
     def begin(self, operation_id: UUID, request_hash: str, candidates: list[Candidate]) -> None:
-        now = self.at or datetime.now(timezone.utc)
+        now = self.at or datetime.now(UTC)
         require_speech_prices(now)
         version_id = os.getenv("RPG_SPEECH_PRICING_VERSION", "")
         with admin_connection(self.pool) as connection:

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from uuid import uuid4
 
 import pytest
@@ -29,7 +29,7 @@ def test_catalog_roundtrip_immutable_and_backend_read_only() -> None:
         pytest.skip("RPG_TEST_DATABASE_URL ausente")
     version_id = "simulation-" + str(uuid4())
     sku_id = "simulation-" + str(uuid4())
-    now = datetime(2026, 10, 8, 12, tzinfo=timezone.utc)
+    now = datetime(2026, 10, 8, 12, tzinfo=UTC)
     card_observed = INSTALLED_RATE_CARD_OBSERVED_AT
     with psycopg.connect(dsn, row_factory=dict_row) as connection:
         if connection.execute("select to_regclass('app.pricing_versions') as table_name").fetchone()["table_name"] is None:

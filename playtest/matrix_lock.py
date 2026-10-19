@@ -6,9 +6,9 @@ import os
 import socket
 import sys
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
-from typing import Iterator
+from collections.abc import Iterator
 from uuid import uuid4
 
 
@@ -84,7 +84,7 @@ def matrix_single_flight(path: Path | None = None) -> Iterator[dict]:
         "pid": os.getpid(),
         "host": socket.gethostname(),
         "token": token,
-        "started_at": datetime.now(timezone.utc).isoformat(),
+        "started_at": datetime.now(UTC).isoformat(),
     }
 
     while True:

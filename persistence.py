@@ -72,7 +72,7 @@ SCHEMA_VERSION = 8
 MAX_REJECTED_ITEM_CLAIMS = 100
 
 
-def normalize_rejected_item_claims(value) -> List[str]:
+def normalize_rejected_item_claims(value) -> list[str]:
     """Ledger compacto de itens que a prosa tentou conceder sem autoridade."""
     if not isinstance(value, (list, tuple)):
         return []
@@ -100,7 +100,7 @@ def save_path(game_id: str) -> str:
 
 
 # --- Compatibilidade de save (hard cut v4) ----------------------------------
-def _migrate_v3_to_v4(raw: Dict[str, Any]) -> Dict[str, Any]:
+def _migrate_v3_to_v4(raw: dict[str, Any]) -> dict[str, Any]:
     """spec conflito-01 R9/R10 (HARD CUTOVER): 6 atributos → 5 Virtudes +
     Vitalidade/Ferimentos. NÃO há conversão automática dos atributos antigos —
     a migração apenas MARCA o save como órfão/arquivado (mesma política dos saves
@@ -166,7 +166,7 @@ def _normalize_vitality_actor(actor: Any) -> Any:
     return normalized
 
 
-def _migrate_v4_to_v5(raw: Dict[str, Any]) -> Dict[str, Any]:
+def _migrate_v4_to_v5(raw: dict[str, Any]) -> dict[str, Any]:
     migrated = deepcopy(raw)
     if "player" in migrated:
         migrated["player"] = _normalize_vitality_actor(migrated.get("player"))
@@ -202,7 +202,7 @@ def _migrate_v4_to_v5(raw: Dict[str, Any]) -> Dict[str, Any]:
     return migrated
 
 
-def _migrate_v5_to_v6(raw: Dict[str, Any]) -> Dict[str, Any]:
+def _migrate_v5_to_v6(raw: dict[str, Any]) -> dict[str, Any]:
     migrated = deepcopy(raw)
     migrated["visual_seen_entity_ids"] = list(dict.fromkeys(
         str(value) for value in (migrated.get("visual_seen_entity_ids") or []) if value
@@ -215,7 +215,7 @@ def _migrate_v5_to_v6(raw: Dict[str, Any]) -> Dict[str, Any]:
     return migrated
 
 
-def _migrate_v6_to_v7(raw: Dict[str, Any]) -> Dict[str, Any]:
+def _migrate_v6_to_v7(raw: dict[str, Any]) -> dict[str, Any]:
     migrated = deepcopy(raw)
     from services.continuity import normalize
     canonical_turn = int((migrated.get("world") or {}).get("turn_count", 0) or 0)
@@ -226,7 +226,7 @@ def _migrate_v6_to_v7(raw: Dict[str, Any]) -> Dict[str, Any]:
     return migrated
 
 
-def _migrate_v7_to_v8(raw: Dict[str, Any]) -> Dict[str, Any]:
+def _migrate_v7_to_v8(raw: dict[str, Any]) -> dict[str, Any]:
     migrated = deepcopy(raw)
     from progression import normalize_player_progression
     from services.chronicle import ensure_chronicle_ids
@@ -251,11 +251,11 @@ def _ms(t0: float) -> int:
     return int((time.monotonic() - t0) * 1000)
 
 
-def _game_ref(game_id: Any) -> Optional[str]:
+def _game_ref(game_id: Any) -> str | None:
     return _pseudonym(game_id) if game_id else None
 
 
-def migrate_state(raw: Dict[str, Any]) -> Dict[str, Any]:
+def migrate_state(raw: dict[str, Any]) -> dict[str, Any]:
     """Arquiva saves pré-v4 e normaliza v4→v6. Puro e idempotente."""
     version = int(raw.get("schema_version", 0) or 0)
     result = _migrate_state(raw, version)
@@ -266,7 +266,7 @@ def migrate_state(raw: Dict[str, Any]) -> Dict[str, Any]:
     return result
 
 
-def _migrate_state(raw: Dict[str, Any], version: int) -> Dict[str, Any]:
+def _migrate_state(raw: dict[str, Any], version: int) -> dict[str, Any]:
     if version > SCHEMA_VERSION:
         _log_event("persistence", "save_schema_newer", level="warning",
                    found_version=version, supported_version=SCHEMA_VERSION,
@@ -286,17 +286,17 @@ def _migrate_state(raw: Dict[str, Any], version: int) -> Dict[str, Any]:
         migrated = _migrate_v6_to_v7(migrated)
     return _migrate_v7_to_v8(migrated)
 
-def _serialize_messages(messages: List[BaseMessage]) -> List[Dict[str, Any]]:
+def _serialize_messages(messages: list[BaseMessage]) -> list[dict[str, Any]]:
     """Converte mensagens LangChain para dicts JSON (SPEC-228 R11: preserva
     ToolMessage, additional_kwargs, name, id e tool_calls)."""
     from langchain_core.messages import messages_to_dict
     return messages_to_dict(list(messages))
 
 
-def _deserialize_messages(data: List[Dict[str, Any]]) -> List[BaseMessage]:
+def _deserialize_messages(data: list[dict[str, Any]]) -> list[BaseMessage]:
     """Lê o formato novo (messages_to_dict) e o legado {type, content}."""
     from langchain_core.messages import messages_from_dict
-    out: List[BaseMessage] = []
+    out: list[BaseMessage] = []
     for item in data or []:
         if not isinstance(item, dict):
             continue
@@ -315,7 +315,7 @@ def _deserialize_messages(data: List[Dict[str, Any]]) -> List[BaseMessage]:
             out.append(SystemMessage(content=content))
     return out
 
-def get_latest_save_file() -> Optional[str]:
+def get_latest_save_file() -> str | None:
     """Retorna o caminho do arquivo de save mais recente na pasta saves/."""
     if not os.path.exists(SAVES_DIR):
         return None
@@ -332,7 +332,7 @@ def get_latest_save_file() -> Optional[str]:
 SESSION_MEMORY_DIR = os.path.join("data", "saves_memory")
 
 
-def _iter_live_save_files() -> List[str]:
+def _iter_live_save_files() -> list[str]:
     """Arquivos de campanha, nunca slots internos de checkpoint."""
     return [
         path for path in glob.glob(os.path.join(SAVES_DIR, "*.json"))
@@ -340,7 +340,7 @@ def _iter_live_save_files() -> List[str]:
     ]
 
 
-def list_saves() -> List[Dict[str, Any]]:
+def list_saves() -> list[dict[str, Any]]:
     """Resumo de todos os saves de `saves/*.json`, ordenado por mtime desc.
     Leitura TOLERANTE: arquivo corrompido/ilegível é pulado, nunca derruba a
     lista (R1)."""
@@ -369,7 +369,7 @@ def list_saves() -> List[Dict[str, Any]]:
         return out
     if not os.path.isdir(SAVES_DIR):
         return []
-    out: List[Dict[str, Any]] = []
+    out: list[dict[str, Any]] = []
     for path in _iter_live_save_files():
         try:
             with open(path, encoding="utf-8") as f:
@@ -507,12 +507,12 @@ def restore_checkpoint_memory(game_id: str) -> bool:
         raise
 
 
-def capture_session_memory(game_id: str) -> Optional[Dict[str, bytes]]:
+def capture_session_memory(game_id: str) -> dict[str, bytes] | None:
     """Representação portátil usada somente pelos snapshots in-memory do harness."""
     source = _safe_session_memory_path(game_id)
     if not os.path.isdir(source):
         return None
-    captured: Dict[str, bytes] = {}
+    captured: dict[str, bytes] = {}
     for root, _dirs, files in os.walk(source):
         for name in files:
             path = os.path.join(root, name)
@@ -523,7 +523,7 @@ def capture_session_memory(game_id: str) -> Optional[Dict[str, bytes]]:
 
 
 def restore_captured_session_memory(game_id: str,
-                                    captured: Optional[Dict[str, bytes]]) -> None:
+                                    captured: dict[str, bytes] | None) -> None:
     destination = _safe_session_memory_path(game_id)
     shutil.rmtree(destination, ignore_errors=True)
     if captured is None:
@@ -552,7 +552,7 @@ def _safe_save_path(game_id: str, suffix: str = "") -> str:
         return os.path.join(SAVES_DIR, f"{safe}{suffix}.json")
 
 
-def _atomic_write_json(file_path: str, data: Dict[str, Any]) -> None:
+def _atomic_write_json(file_path: str, data: dict[str, Any]) -> None:
     """Grava JSON completo e troca o destino atomicamente no mesmo volume."""
     directory = os.path.dirname(os.path.abspath(file_path))
     os.makedirs(directory, exist_ok=True)
@@ -588,7 +588,7 @@ def _projection_plan(raw):
     return normalize_plan(raw)
 
 
-def _state_to_save_data(state: Dict[str, Any], game_id: str) -> Dict[str, Any]:
+def _state_to_save_data(state: dict[str, Any], game_id: str) -> dict[str, Any]:
     """Monta o dict serializável a partir do GameState (fonte única — save vivo
     E checkpoint reusam, pra nunca divergirem de campo)."""
     player = _normalize_vitality_actor(state.get("player") or {})
@@ -699,7 +699,7 @@ def _state_to_save_data(state: Dict[str, Any], game_id: str) -> Dict[str, Any]:
     }
 
 
-def save_game_state(state: Dict[str, Any]) -> bool:
+def save_game_state(state: dict[str, Any]) -> bool:
     """
     Salva o estado completo do jogo em JSON na pasta 'saves/'.
     Usa o 'game_id' como nome do arquivo.
@@ -749,7 +749,7 @@ def save_game_state(state: Dict[str, Any]) -> bool:
                    game_ref=_game_ref(state.get("game_id")), duration_ms=_ms(_t0))
         return False
 
-def load_game_state(specific_file: str = None) -> Dict[str, Any]:
+def load_game_state(specific_file: str = None) -> dict[str, Any]:
     """
     Carrega o jogo. Se specific_file não for passado, carrega o mais recente.
     """
@@ -798,7 +798,7 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
         return None
 
     try:
-        with open(target_file, 'r', encoding='utf-8') as f:
+        with open(target_file, encoding='utf-8') as f:
             raw_data = json.load(f)
         return _raw_to_state(raw_data)
 
@@ -810,7 +810,7 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
         return None
 
 
-def _normalize_combat_on_load(raw_data: Dict[str, Any]) -> Dict[str, Any]:
+def _normalize_combat_on_load(raw_data: dict[str, Any]) -> dict[str, Any]:
     combat = raw_data.get("combat") or {}
     if not combat:
         return {}
@@ -823,7 +823,7 @@ def _normalize_combat_on_load(raw_data: Dict[str, Any]) -> Dict[str, Any]:
         return combat
 
 
-def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
+def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
     """Reconstrói o GameState a partir do dict salvo (fonte única — save vivo E
     checkpoint reusam). Aplica o pipeline de migrations."""
     # Fase 10: pipeline de migrations (consolida os backfills 3.1/4.1/4.3/4.5)
@@ -953,14 +953,14 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
 
 # --- spec checkpoints-morte: slot de checkpoint (1 por save, sobrescreve) -----
 
-def _log_checkpoint_written(state: Dict[str, Any], t0: float) -> None:
+def _log_checkpoint_written(state: dict[str, Any], t0: float) -> None:
     _log_event("persistence", "checkpoint_written", level="info",
                game_ref=_game_ref(state.get("game_id")),
                turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
                duration_ms=_ms(t0))
 
 
-def save_checkpoint(state: Dict[str, Any]) -> bool:
+def save_checkpoint(state: dict[str, Any]) -> bool:
     """Grava o snapshot restaurável em `saves/{game_id}.checkpoint.json` (D5: 1
     slot, sobrescreve). Mesmo formato do save vivo — reusa `_state_to_save_data`."""
     _t0 = time.monotonic()
@@ -992,8 +992,8 @@ def save_checkpoint(state: Dict[str, Any]) -> bool:
             _log_event("persistence", "store_checkpoint_failed", level="error", error_type=type(e).__name__,
                    game_ref=_game_ref(state.get("game_id")), duration_ms=_ms(_t0))
             return False
-    memory_backup: Optional[str] = None
-    memory_destination: Optional[str] = None
+    memory_backup: str | None = None
+    memory_destination: str | None = None
     memory_existed = False
     try:
         if not os.path.exists(SAVES_DIR):
@@ -1034,14 +1034,14 @@ def has_checkpoint(game_id: str) -> bool:
     if not os.path.exists(path):
         return False
     try:
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             raw = json.load(f)
     except Exception:
         return False
     return isinstance(raw, dict) and "schema_version" in raw and isinstance(raw.get("player"), dict)
 
 
-def checkpoint_turn(game_id: str) -> Optional[int]:
+def checkpoint_turn(game_id: str) -> int | None:
     """Turno canônico do checkpoint REAL em disco (None se ausente/ilegível)."""
     cp = load_checkpoint(game_id)
     if not cp:
@@ -1049,7 +1049,7 @@ def checkpoint_turn(game_id: str) -> Optional[int]:
     return int((cp.get("world") or {}).get("turn_count", 0) or 0)
 
 
-def ensure_synthetic_checkpoint(state: Dict[str, Any]) -> bool:
+def ensure_synthetic_checkpoint(state: dict[str, Any]) -> bool:
     """SPEC-228 R4: save sem checkpoint válido ganha um checkpoint sintético do
     estado atual, marcado `synthetic_from_turn`. Retorna se gravou."""
     if (not state or not state.get("game_id") or state.get("archived")
@@ -1077,7 +1077,7 @@ def ensure_synthetic_checkpoint(state: Dict[str, Any]) -> bool:
     return save_checkpoint(snap)
 
 
-def load_checkpoint(game_id: str) -> Optional[Dict[str, Any]]:
+def load_checkpoint(game_id: str) -> dict[str, Any] | None:
     """Carrega o checkpoint do `game_id` (None se não houver). Reconstrói via
     `_raw_to_state` (mesmo pipeline de migrations do save vivo)."""
     _t0 = time.monotonic()
@@ -1099,7 +1099,7 @@ def load_checkpoint(game_id: str) -> Optional[Dict[str, Any]]:
     if not os.path.exists(path):
         return None
     try:
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             return _raw_to_state(json.load(f))
     except Exception as e:
         _log_event("persistence", "checkpoint_load_failed", level="warning", error_type=type(e).__name__,

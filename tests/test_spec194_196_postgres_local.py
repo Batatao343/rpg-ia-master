@@ -7,7 +7,7 @@ from __future__ import annotations
 import os
 import threading
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from decimal import Decimal
 from types import SimpleNamespace
 from uuid import uuid4
@@ -69,7 +69,7 @@ def lab():
                 pytest.skip("migrations SPEC-194/195/196 não aplicadas")
         version, product, web_sku, gp_sku = ("lab-" + uuid4().hex[:12] for _ in range(4))
         product = "gp_" + uuid4().hex[:12]
-        at = datetime.now(timezone.utc)
+        at = datetime.now(UTC)
         c.execute("""insert into app.pricing_versions
             (version_id,shard_budget_unit_brl,fx_usd_brl,fx_source,fx_observed_at,fx_max_age_seconds,
              fx_buffer_rate,rate_card_version,rate_card_sha256,rate_card_source,
@@ -325,7 +325,7 @@ def test_finops_reader_returns_expected_aggregates_for_seeded_scenario(lab_rb):
     reader = PostgresFinopsReader(lab.pool)
     refs, fresh = reader.pricing()
     assert lab.version in refs and "google_play" in refs[lab.version].fees and fresh
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     mine = [p for p in reader.purchases(now - timedelta(hours=1), now + timedelta(hours=1))
             if p.owner_key == str(owner.user_id)]
     assert {p.sku_channel for p in mine} == {"web", "google_play"} and len(mine) == 2

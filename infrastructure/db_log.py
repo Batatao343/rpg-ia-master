@@ -11,7 +11,8 @@ import os
 import time
 from contextlib import contextmanager
 from contextvars import ContextVar
-from typing import Any, Callable, Iterator
+from typing import Any
+from collections.abc import Callable, Iterator
 
 from observability.telemetry import log_event, pseudonym
 

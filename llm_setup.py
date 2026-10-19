@@ -24,7 +24,8 @@ from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass
 from enum import Enum
-from typing import TYPE_CHECKING, Callable, Literal, Optional
+from typing import TYPE_CHECKING, Literal, Optional
+from collections.abc import Callable
 
 from dotenv import load_dotenv
 from langchain_core.messages import AIMessage, HumanMessage
@@ -106,13 +107,13 @@ class LLMAttemptEvent:
     latency_ms: int
     fell_back: bool
     outcome: LLMAttemptOutcome
-    error: Optional[str]
+    error: str | None
     structured: bool
-    structured_failure_code: Optional[str] = None
-    recovery: Optional[str] = None
-    usage: Optional[dict[str, int | str]] = None
+    structured_failure_code: str | None = None
+    recovery: str | None = None
+    usage: dict[str, int | str] | None = None
     http_status: int = 0     # SPEC-248: status HTTP do provider quando a falha o expoe; senao 0
-    error_type: Optional[str] = None   # SPEC-248: classe da excecao (``error`` pode ter texto do provider)
+    error_type: str | None = None   # SPEC-248: classe da excecao (``error`` pode ter texto do provider)
 
 
 _IDENT_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_.:]{0,60}$")
@@ -129,9 +130,9 @@ def _http_status(exc: BaseException) -> int:
 
 
 def _log_attempt(provider: str, model: str, tier: "ModelTier", attempt_index: int, outcome: str, *,
-                 fell_back: bool = False, latency_ms: int = 0, error: Optional[str] = None,
-                 http_status: int = 0, structured_failure_code: Optional[str] = None,
-                 usage: Optional[dict] = None) -> None:
+                 fell_back: bool = False, latency_ms: int = 0, error: str | None = None,
+                 http_status: int = 0, structured_failure_code: str | None = None,
+                 usage: dict | None = None) -> None:
     """SPEC-248 R1: uma linha ``llm.attempt`` por candidato tentado (sem prompt, sem texto de erro)."""
     try:
         from observability.telemetry import current_node, log_event
@@ -185,7 +186,7 @@ def _mock_level() -> str:
     return "warning" if (os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() or "legacy") == "legacy" else "error"
 
 
-def _usage_snapshot(result: object) -> Optional[dict[str, int | str]]:
+def _usage_snapshot(result: object) -> dict[str, int | str] | None:
     """Copy only numeric usage/cost metadata, never content or raw responses."""
     if isinstance(result, Mapping) and "raw" in result:
         result = result["raw"]
@@ -489,11 +490,11 @@ def _get_cached_client(provider: str, model: str, temperature: float) -> "BaseLa
 # ---------------------------------------------------------------------------
 # Telemetria (R9) — hook opcional consumido pela Fase 5.3
 # ---------------------------------------------------------------------------
-_TELEMETRY_HOOK: Optional[Callable[[str, str, ModelTier, int, bool], None]] = None
-_ATTEMPT_TELEMETRY_HOOK: Optional[Callable[[LLMAttemptEvent], None]] = None
-_SCOPED_ATTEMPT_HOOK: ContextVar[Optional[Callable[[LLMAttemptEvent], None]]] = ContextVar(
+_TELEMETRY_HOOK: Callable[[str, str, ModelTier, int, bool], None] | None = None
+_ATTEMPT_TELEMETRY_HOOK: Callable[[LLMAttemptEvent], None] | None = None
+_SCOPED_ATTEMPT_HOOK: ContextVar[Callable[[LLMAttemptEvent], None] | None] = ContextVar(
     "scoped_llm_attempt_hook", default=None)
-_SCOPED_SPEND_GUARD: ContextVar[Optional[Callable[[str, str], None]]] = ContextVar(
+_SCOPED_SPEND_GUARD: ContextVar[Callable[[str, str], None] | None] = ContextVar(
     "scoped_llm_spend_guard", default=None)
 
 
@@ -535,7 +536,7 @@ def _authorize_provider_attempt(provider: str, model: str) -> None:
         guard(provider, model)
 
 
-def set_llm_telemetry_hook(fn: Optional[Callable[[str, str, ModelTier, int, bool], None]]) -> None:
+def set_llm_telemetry_hook(fn: Callable[[str, str, ModelTier, int, bool], None] | None) -> None:
     """Registra callback `(provider, model, tier, latency_ms, fell_back)` disparado
     após cada invoke bem-sucedido. `None` desliga. Custo zero se não registrado."""
     global _TELEMETRY_HOOK
@@ -543,7 +544,7 @@ def set_llm_telemetry_hook(fn: Optional[Callable[[str, str, ModelTier, int, bool
 
 
 def set_llm_attempt_telemetry_hook(
-        fn: Optional[Callable[[LLMAttemptEvent], None]]) -> None:
+        fn: Callable[[LLMAttemptEvent], None] | None) -> None:
     """Registra callback estruturado para CADA candidato tentado.
 
     Diferente do hook legado success-only, este recebe também build/invoke
@@ -592,7 +593,7 @@ class RoutedLLM:
     is_mock = False
 
     def __init__(self, tier: ModelTier, temperature: float, candidates: list,
-                 _transforms: Optional[list] = None):
+                 _transforms: list | None = None):
         self.tier = tier
         self.temperature = temperature
         self.candidates = [tuple(c) for c in candidates]
@@ -666,7 +667,7 @@ class RoutedLLM:
         return input
 
     def _input_for_structured_retry(
-        self, input, provider: str, failure_code: Optional[str] = None,
+        self, input, provider: str, failure_code: str | None = None,
     ):
         """Prepare a semantic regeneration after a malformed tool response.
 
@@ -685,7 +686,7 @@ class RoutedLLM:
             "e responda somente pela ferramenta solicitada."
         ))]
 
-    def _validate_structured_result(self, result) -> tuple[bool, Optional[str], bool]:
+    def _validate_structured_result(self, result) -> tuple[bool, str | None, bool]:
         """Valida a pós-condição que providers nem sempre cumprem.
 
         Schemas não-Pydantic e invocações plain mantêm a compatibilidade
@@ -719,7 +720,7 @@ class RoutedLLM:
         return True, None, True
 
     @staticmethod
-    def _json_object_from_text(content: object) -> Optional[dict]:
+    def _json_object_from_text(content: object) -> dict | None:
         """Extract one bounded JSON object without eval or permissive coercion."""
         if isinstance(content, list):
             content = " ".join(
@@ -750,7 +751,7 @@ class RoutedLLM:
 
     def _normalize_internal_structured_result(
         self, result,
-    ) -> tuple[object, Optional[str], Optional[str]]:
+    ) -> tuple[object, str | None, str | None]:
         """Restore the caller's return shape and recover valid raw JSON locally."""
         contract = self._pydantic_structured_contract()
         if contract is None:
@@ -862,7 +863,7 @@ class RoutedLLM:
                 STRUCTURED_SEMANTIC_MAX_ATTEMPTS
                 if structured_contract is not None else 1
             )
-            last_failure_code: Optional[str] = None
+            last_failure_code: str | None = None
             for semantic_attempt in range(semantic_attempts):
                 request_input = (
                     self._input_for_structured_retry(input, provider, last_failure_code)
@@ -1112,7 +1113,7 @@ def _load_routes() -> dict:
 
 # Modelos por-tier do provider legado (LLM_PROVIDER=<x>). Gemini mantém o
 # comportamento atual; ollama/openai leem env por-tier.
-def _legacy_model(provider: str, tier: ModelTier) -> Optional[str]:
+def _legacy_model(provider: str, tier: ModelTier) -> str | None:
     if provider == "gemini":
         return {
             ModelTier.CLASSIFY: "gemini-flash-lite-latest",

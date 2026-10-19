@@ -10,7 +10,8 @@ import platform
 import re
 import subprocess
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
+from collections.abc import Iterable
 
 # F30-F34 are reserved for the SPEC-210 map journeys (authored on a parallel branch).
 JOURNEY_IDS = tuple(f"F{i:02d}" for i in (*range(1, 31), *range(35, 41)))

@@ -15,7 +15,8 @@ import logging
 import re
 import unicodedata
 from copy import deepcopy
-from typing import Any, Dict, Iterable, List, Literal, Optional
+from typing import Any, Dict, List, Literal, Optional
+from collections.abc import Iterable
 
 from pydantic import BaseModel, Field
 
@@ -67,8 +68,8 @@ class EncounterManifest(BaseModel):
     origin: str = "unknown"
     source: Source = "fallback"
     target_ref: str = ""
-    participants: List[EncounterParticipant] = Field(default_factory=list)
-    events: List[EncounterCompositionEvent] = Field(default_factory=list)
+    participants: list[EncounterParticipant] = Field(default_factory=list)
+    events: list[EncounterCompositionEvent] = Field(default_factory=list)
     frozen: bool = False
     schema_: int = Field(default=1, alias="schema")
 
@@ -110,7 +111,7 @@ def _singular(token: str) -> str:
     return token
 
 
-def name_tokens(text: str) -> List[str]:
+def name_tokens(text: str) -> list[str]:
     """Tokens de conteúdo normalizados (sem acento/caixa, singularizados)."""
     return [_singular(t) for t in re.split(r"[^a-z0-9]+", _fold(text))
             if t and t not in _STOP and not t.isdigit()]
@@ -134,12 +135,12 @@ def hint_count(text: str, *, maximum: int = 12) -> int:
     return 2 if _is_plural(text) else 1
 
 
-def _bestiary() -> Dict[str, dict]:
+def _bestiary() -> dict[str, dict]:
     import gamedata
     return dict(gamedata.BESTIARY or {})
 
 
-def resolve_bestiary_name(text: str, bestiary: Optional[Dict[str, dict]] = None) -> Optional[str]:
+def resolve_bestiary_name(text: str, bestiary: dict[str, dict] | None = None) -> str | None:
     """Nome livre → id do bestiário quando os tokens de conteúdo batem EXATAMENTE
     com o nome (ou o id) de uma entrada. Ambíguo → menor id (estável)."""
     wanted = tuple(sorted(set(name_tokens(text))))
@@ -166,8 +167,8 @@ def is_generic_hint(text: str) -> bool:
 # ---------------------------------------------------------------------------
 # Fonte canônica (R3)
 # ---------------------------------------------------------------------------
-def resolve_canonical_source(state: Dict[str, Any], combat_target: Optional[str],
-                             encounter_hint: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+def resolve_canonical_source(state: dict[str, Any], combat_target: str | None,
+                             encounter_hint: dict[str, Any] | None) -> dict[str, Any] | None:
     """Ordem: (a) `enemy_id` do encontro sistêmico; (b) NPC em cena casado com
     o alvo do router; (c) alvo/ameaça já resolvida (alert/facção ou nome exato do
     bestiário). None → o chamador cai no scanner (d)."""
@@ -211,7 +212,7 @@ def _base_id(enemy_id: str) -> str:
     return re.sub(r"_\d+$", "", str(enemy_id or ""))
 
 
-def species_label_for(enemy: Dict[str, Any]) -> str:
+def species_label_for(enemy: dict[str, Any]) -> str:
     """Rótulo de espécie estável: nome do template (sem sufixo numérico)."""
     import gamedata
     base = _base_id(enemy.get("id", ""))
@@ -221,8 +222,8 @@ def species_label_for(enemy: Dict[str, Any]) -> str:
     return re.sub(r"\s+\d+$", "", str(enemy.get("name") or base or "Inimigo")).strip()
 
 
-def _participant(enemy: Dict[str, Any], *, presence: str = "present",
-                 zone_id: str = "z0", role: str = "hostile") -> Dict[str, Any]:
+def _participant(enemy: dict[str, Any], *, presence: str = "present",
+                 zone_id: str = "z0", role: str = "hostile") -> dict[str, Any]:
     import gamedata
     base = _base_id(enemy.get("id", ""))
     bestiary_id = base if base in (gamedata.BESTIARY or {}) else str(enemy.get("bestiary_id") or "")
@@ -247,8 +248,8 @@ def event_id_for(encounter_id: str, kind: str, participant_id: str, round_: int)
     return hashlib.sha256(raw.encode()).hexdigest()[:16]
 
 
-def build_manifest(enemies: Iterable[Dict[str, Any]], *, source: str, origin: str,
-                   encounter_id: str, target_ref: str = "", scene: Optional[dict] = None,
+def build_manifest(enemies: Iterable[dict[str, Any]], *, source: str, origin: str,
+                   encounter_id: str, target_ref: str = "", scene: dict | None = None,
                    joined_ids: Iterable[str] = (), cut_ids: Iterable[str] = (),
                    cause_joined: str = "budget_fill", cause_cut: str = "budget_clamp") -> dict:
     """Congela o elenco do spawn. `joined_ids` (reforço regional) entram como
@@ -274,7 +275,7 @@ def build_manifest(enemies: Iterable[Dict[str, Any]], *, source: str, origin: st
     return manifest
 
 
-def manifest_from_legacy(enemies: Iterable[Dict[str, Any]], combat: Dict[str, Any],
+def manifest_from_legacy(enemies: Iterable[dict[str, Any]], combat: dict[str, Any],
                          *, game_id: str = "game") -> dict:
     """Save antigo/manifesto corrompido → manifesto `legacy_migrated` derivado de
     `enemies` (identidade = o que já estava persistido)."""
@@ -328,10 +329,10 @@ def assert_immutable(before: dict, after: dict) -> None:
                 raise ValueError(f"participante congelado mudou {key}: {p['participant_id']}")
 
 
-def validate_roster(manifest: dict, enemies: Iterable[Dict[str, Any]]) -> List[str]:
+def validate_roster(manifest: dict, enemies: Iterable[dict[str, Any]]) -> list[str]:
     """Violações do elenco da rodada contra o manifesto (vazio = ok)."""
     by_id = {p["participant_id"]: p for p in manifest.get("participants") or []}
-    violations: List[str] = []
+    violations: list[str] = []
     for enemy in enemies or []:
         pid = str(enemy.get("id") or enemy.get("name") or "")
         part = by_id.get(pid)
@@ -343,7 +344,7 @@ def validate_roster(manifest: dict, enemies: Iterable[Dict[str, Any]]) -> List[s
     return violations
 
 
-def reconcile_roster(manifest: dict, enemies: List[Dict[str, Any]], round_: int):
+def reconcile_roster(manifest: dict, enemies: list[dict[str, Any]], round_: int):
     """Produção: manifesto é a verdade. Intrusos saem com evento `cut`
     (`roster_violation`); participantes ativos sumidos ganham `departed`."""
     violations = validate_roster(manifest, enemies)
@@ -361,7 +362,7 @@ def reconcile_roster(manifest: dict, enemies: List[Dict[str, Any]], round_: int)
     return manifest, kept, violations
 
 
-def sync_statuses(manifest: dict, enemies: Iterable[Dict[str, Any]], round_: int) -> dict:
+def sync_statuses(manifest: dict, enemies: Iterable[dict[str, Any]], round_: int) -> dict:
     """Pós-rodada: cada saída (morte/fuga/rendição/captura) vira evento."""
     for enemy in enemies or []:
         pid = str(enemy.get("id") or enemy.get("name") or "")
@@ -388,7 +389,7 @@ def sync_statuses(manifest: dict, enemies: Iterable[Dict[str, Any]], round_: int
 # ---------------------------------------------------------------------------
 # State machine (R5)
 # ---------------------------------------------------------------------------
-def transition(combat: Dict[str, Any], to_phase: str, outcome: Optional[str] = None) -> dict:
+def transition(combat: dict[str, Any], to_phase: str, outcome: str | None = None) -> dict:
     current = combat.get("phase") or None
     if to_phase not in PHASES:
         raise InvalidEncounterTransition(f"fase desconhecida: {to_phase}")
@@ -407,8 +408,8 @@ def transition(combat: Dict[str, Any], to_phase: str, outcome: Optional[str] = N
     return out
 
 
-def safe_transition(combat: Dict[str, Any], to_phase: str,
-                    outcome: Optional[str] = None) -> dict:
+def safe_transition(combat: dict[str, Any], to_phase: str,
+                    outcome: str | None = None) -> dict:
     """Produção: transição inválida é registrada (log + `phase_violations`),
     nunca silenciosa e nunca derruba o turno."""
     try:
@@ -420,7 +421,7 @@ def safe_transition(combat: Dict[str, Any], to_phase: str,
         return out
 
 
-def end_combat(combat: Dict[str, Any], outcome: str) -> dict:
+def end_combat(combat: dict[str, Any], outcome: str) -> dict:
     """Leva a fase até `ended` pelo caminho permitido a partir da atual."""
     phase = combat.get("phase") or None
     out = dict(combat)
@@ -437,7 +438,7 @@ def end_combat(combat: Dict[str, Any], outcome: str) -> dict:
     return safe_transition(out, "ended", outcome)
 
 
-def next_step(combat: Dict[str, Any]) -> str:
+def next_step(combat: dict[str, Any]) -> str:
     """Próximo passo causal de uma fase (R11): combate ou exploração."""
     phase = (combat or {}).get("phase")
     if phase in ("entering", "active", "resolving") and (combat or {}).get("active", True):
@@ -445,7 +446,7 @@ def next_step(combat: Dict[str, Any]) -> str:
     return "explore"
 
 
-def normalize_combat(combat: Any, enemies: Iterable[Dict[str, Any]] = (),
+def normalize_combat(combat: Any, enemies: Iterable[dict[str, Any]] = (),
                      *, game_id: str = "game") -> dict:
     """Normalização ADITIVA e idempotente no load (sem bump de schema): combate
     ativo sem manifesto válido ganha manifesto `legacy_migrated` + fase `active`;
@@ -471,7 +472,7 @@ def normalize_combat(combat: Any, enemies: Iterable[Dict[str, Any]] = (),
 # ---------------------------------------------------------------------------
 # Views públicas (R7)
 # ---------------------------------------------------------------------------
-def _hidden_ids(scene: Optional[dict]) -> set:
+def _hidden_ids(scene: dict | None) -> set:
     hidden = set()
     for pid, pos in ((scene or {}).get("positions") or {}).items():
         if isinstance(pos, dict) and "player" in (pos.get("hidden_from") or []):
@@ -479,7 +480,7 @@ def _hidden_ids(scene: Optional[dict]) -> set:
     return hidden
 
 
-def public_view(manifest: Optional[dict], scene: Optional[dict] = None) -> dict:
+def public_view(manifest: dict | None, scene: dict | None = None) -> dict:
     """Só campos públicos e participantes percebidos pelo protagonista."""
     if not manifest:
         return {}
@@ -519,7 +520,7 @@ def build_result(manifest: dict, outcome: str, ended_round: int, *,
     }
 
 
-def result_view(combat: Optional[dict], turn_outcome: Optional[dict]) -> dict:
+def result_view(combat: dict | None, turn_outcome: dict | None) -> dict:
     """`combat_result` derivado de estado persistido: aparece no turno de término
     (o `receipt_id` do último turno é o `xp_event_ref` do resultado) e, por isso,
     sobrevive a reload antes de "Continuar"."""

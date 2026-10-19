@@ -159,7 +159,7 @@ def state(root: Path, field: str, limit: int = 12) -> dict[str, Any]:
 class PurePath(str):
     """Normalize repo paths without touching the filesystem."""
 
-    def __new__(cls, value: str) -> "PurePath":
+    def __new__(cls, value: str) -> PurePath:
         return str.__new__(cls, value.replace("\\", "/").removeprefix("./"))
 
 

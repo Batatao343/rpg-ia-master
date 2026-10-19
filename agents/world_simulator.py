@@ -160,7 +160,7 @@ def apply_world_pulse(world: dict, proposal: WorldPulseProposal) -> tuple[dict, 
     )
 
 
-def simulate_world(state: dict, world: dict, factions, intel, periods: int = 1) -> Tuple[dict, str]:
+def simulate_world(state: dict, world: dict, factions, intel, periods: int = 1) -> tuple[dict, str]:
     """Compatibility boundary: propose → apply → persist derived intent."""
     proposal = propose_world_pulse(state, world, factions, intel, periods)
     world, note, intents = apply_world_pulse(world, proposal)

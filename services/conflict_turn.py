@@ -31,34 +31,34 @@ logger = logging.getLogger("rpg.conflict")
 # ==========================================================================
 class TurnStep(BaseModel):
     kind: str = "pass"                 # attack | card | item | maneuver | object | move | pass
-    card_id: Optional[str] = None
-    item_id: Optional[str] = None
-    target_id: Optional[str] = None
-    maneuver: Optional[str] = None     # engajar|desengajar|guardar|esconder|procurar|mover
-    direction: Optional[str] = None    # p/ mover: aproximar|afastar
-    virtude: Optional[str] = None
-    source: Optional[str] = None       # p/ esconder: fonte plausível
-    object_id: Optional[str] = None
-    interaction: Optional[str] = None
-    params: Dict = Field(default_factory=dict)
+    card_id: str | None = None
+    item_id: str | None = None
+    target_id: str | None = None
+    maneuver: str | None = None     # engajar|desengajar|guardar|esconder|procurar|mover
+    direction: str | None = None    # p/ mover: aproximar|afastar
+    virtude: str | None = None
+    source: str | None = None       # p/ esconder: fonte plausível
+    object_id: str | None = None
+    interaction: str | None = None
+    params: dict = Field(default_factory=dict)
 
 
 class TurnDeclaration(BaseModel):
     actor_id: str
-    pre_acao: Optional[TurnStep] = None
-    acao: Optional[TurnStep] = None
-    pos_acao: Optional[TurnStep] = None
+    pre_acao: TurnStep | None = None
+    acao: TurnStep | None = None
+    pos_acao: TurnStep | None = None
     # conflito-16: escolha antecipada da Carta que deve responder caso o
     # protagonista vire alvo nesta rodada. A janela ainda é validada pelo motor.
-    reaction_card_id: Optional[str] = None
+    reaction_card_id: str | None = None
 
 
 # ==========================================================================
 # Resolução de um turno
 # ==========================================================================
-def resolve_turn(scene: dict, actors_by_id: Dict[str, dict], declaration, *,
-                 state: Optional[dict] = None, rng=None,
-                 sides: Optional[Dict[str, List[str]]] = None) -> dict:
+def resolve_turn(scene: dict, actors_by_id: dict[str, dict], declaration, *,
+                 state: dict | None = None, rng=None,
+                 sides: dict[str, list[str]] | None = None) -> dict:
     """Resolve um turno inteiro. `actors_by_id` mapeia participant_id → ficha
     (player/inimigo/aliado). `state` (opcional) leva o jogador p/ a economia de
     Cartas. `sides` (opcional) define hostilidade para validar alvo (SPEC-232
@@ -142,7 +142,7 @@ def _resolve_maneuver(scene, actor_id, step, out):
     out["logs"].append(r.get("log") or r.get("error", ""))
 
 
-def _virtude_key(card: Optional[dict], step, actor: dict) -> str:
+def _virtude_key(card: dict | None, step, actor: dict) -> str:
     if step.virtude:
         return step.virtude
     if card:
@@ -166,7 +166,7 @@ _SUPPORT_EFFECTS = {
 }
 
 
-def _damage_from(card: Optional[dict], actor: dict, step) -> tuple:
+def _damage_from(card: dict | None, actor: dict, step) -> tuple:
     """Dano-base do ataque na escala NOVA (conflito-05/14): dano FLAT, não dados.
     Precedência: `efeito.dano_base` da Carta → categoria de arma da Carta →
     fórmula legada (Carta/step/`attack_formula`, mantida p/ inimigo legado e testes)
@@ -196,7 +196,7 @@ def _damage_from(card: Optional[dict], actor: dict, step) -> tuple:
     return _DANO_BASICO_DEFAULT, dtype
 
 
-def _side_of(actor_id: str, sides) -> Optional[str]:
+def _side_of(actor_id: str, sides) -> str | None:
     """Lado declarado pelo orquestrador; None quando o chamador não informou
     `sides` (motor puro/testes) — aí a hostilidade não é inferida."""
     if not sides:
@@ -208,14 +208,14 @@ def _side_of(actor_id: str, sides) -> Optional[str]:
     return None
 
 
-def _same_side(a_id: str, b_id: str, sides) -> Optional[bool]:
+def _same_side(a_id: str, b_id: str, sides) -> bool | None:
     a, b = _side_of(a_id, sides), _side_of(b_id, sides)
     if a is None or b is None:
         return None
     return a == b
 
 
-def _targetable(target: Optional[dict]) -> bool:
+def _targetable(target: dict | None) -> bool:
     if not target:
         return False
     if target.get("dead") or target.get("fled") or target.get("surrendered"):
@@ -224,7 +224,7 @@ def _targetable(target: Optional[dict]) -> bool:
 
 
 def _invalid_target_reason(scene, actor, actor_id, actors_by_id, step, *, support,
-                           sides) -> Optional[str]:
+                           sides) -> str | None:
     """SPEC-232 R5: valida o alvo ANTES de qualquer custo. Ofensiva: vivo,
     hostil, não o próprio ator, mirável. Suporte: vivo e do mesmo lado (ou o
     próprio ator quando sem alvo)."""
@@ -253,7 +253,7 @@ def _invalid_target_reason(scene, actor, actor_id, actors_by_id, step, *, suppor
     return None
 
 
-def _is_melee(card: Optional[dict], step) -> bool:
+def _is_melee(card: dict | None, step) -> bool:
     """Ataque corpo a corpo: básico (sem Carta) ou Carta ancorada em arma."""
     if step.params.get("ranged"):
         return False
@@ -262,7 +262,7 @@ def _is_melee(card: Optional[dict], step) -> bool:
     return (card.get("efeito") or {}).get("categoria_arma") in _DANO_BASE_ARMA
 
 
-def _fire_triggered_passive(actor, trigger: str, out) -> List[dict]:
+def _fire_triggered_passive(actor, trigger: str, out) -> list[dict]:
     """Dispara passivas de gatilho (tier 7/8) do JOGADOR: cobra custo/frequência
     da Carta via `cards.use_passive`; só devolve as que pagaram."""
     if not actor.get("is_player"):

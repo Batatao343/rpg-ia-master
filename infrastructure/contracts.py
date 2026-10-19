@@ -9,7 +9,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime
 from io import BufferedIOBase
-from typing import Any, BinaryIO, Literal, Mapping, Protocol
+from typing import Any, BinaryIO, Literal, Protocol
+from collections.abc import Mapping
 from uuid import UUID
 
 

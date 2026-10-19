@@ -30,7 +30,7 @@ LOSS_OF_COMMAND = frozenset({
 # Arquétipos mecânicos de NPC são um catálogo fechado. Role/persona só escolhem
 # uma entrada; nunca produzem diretamente uma regra de combate.
 NPC_TACTICAL_FALLBACK = "equilibrado"
-_NPC_TACTICAL_PROFILES: Dict[str, dict] = {
+_NPC_TACTICAL_PROFILES: dict[str, dict] = {
     "guardiao": {"priorities": [
         {"trigger": "aliado_em_perigo", "tipo": "obrigatorio",
          "action_key": "protect",
@@ -110,7 +110,7 @@ _NPC_TACTICAL_PROFILES: Dict[str, dict] = {
 }
 NPC_TACTICAL_ARCHETYPES = frozenset(_NPC_TACTICAL_PROFILES)
 
-_ENEMY_ARCHETYPE_ACTIONS: Dict[str, Dict[str, str]] = {
+_ENEMY_ARCHETYPE_ACTIONS: dict[str, dict[str, str]] = {
     # Conceitos materializados pelo gerador categórico.
     "equilibrado": {"sempre": "attack"},
     "bruto": {"muito_ferido": "flee", "sempre": "attack"},
@@ -201,7 +201,7 @@ def _trigger_valid(trigger: str, scene_state: dict) -> bool:
     return bool((scene_state or {}).get(t))
 
 
-def pick_action(profile: dict, scene_state: Optional[dict] = None) -> dict:
+def pick_action(profile: dict, scene_state: dict | None = None) -> dict:
     """R1/R2: devolve a decisão da PRIMEIRA prioridade cujo gatilho é válido —
     ordem = precedência. Cobre ação/alvo/recurso/reação/fuga/rendição via
     `action_hint`. 'oferta' pede escolha ao jogador; 'obrigatorio' executa sem
@@ -280,7 +280,7 @@ def profile_takes_over(member: dict) -> bool:
     return loses_command(member)
 
 
-def player_retains_party_control(party: List[dict]) -> bool:
+def player_retains_party_control(party: list[dict]) -> bool:
     """R6: o jogador mantém o controle da party enquanto QUALQUER membro consciente
     e comandável estiver no conflito — mesmo com o protagonista fora."""
     return any(player_controls_member(m) for m in (party or []))
@@ -298,11 +298,11 @@ class PriorityModel(BaseModel):
     ] = "attack"
     action_hint: str = ""
     resistance: Literal["flexivel", "resistente", "absoluta", "autonoma"] = "flexivel"
-    blocks: List[str] = Field(default_factory=list)
+    blocks: list[str] = Field(default_factory=list)
 
 
 class TacticalProfileModel(BaseModel):
-    priorities: List[PriorityModel] = Field(default_factory=list)
+    priorities: list[PriorityModel] = Field(default_factory=list)
 
 
 def _default_profile() -> dict:
@@ -346,7 +346,7 @@ def npc_profile_for_archetype(archetype: object) -> dict:
     return deepcopy(_NPC_TACTICAL_PROFILES[key])
 
 
-def normalize_runtime_profile(actor: dict, profile: Optional[dict] = None) -> dict:
+def normalize_runtime_profile(actor: dict, profile: dict | None = None) -> dict:
     """Preenche ``action_key`` dos perfis curados sem interpretar sua prosa.
 
     Só arquétipos e gatilhos presentes na tabela fechada são materializados.
@@ -388,7 +388,7 @@ def legacy_action_key(action_hint: object) -> str:
     return "attack"
 
 
-def generate_tactical_profile(archetype: str, llm, *, context: Optional[dict] = None) -> dict:
+def generate_tactical_profile(archetype: str, llm, *, context: dict | None = None) -> dict:
     """R5: gera o perfil tático via LLM robusta (tier SMART), com o GUARD de
     resiliência obrigatório — `FallbackLLM`/erro cai num perfil default
     determinístico. Chamado UMA vez na criação, nunca em combate."""
@@ -410,7 +410,7 @@ def generate_tactical_profile(archetype: str, llm, *, context: Optional[dict] = 
 
 
 def get_or_generate_profile(entry: dict, archetype: str, llm, *,
-                            context: Optional[dict] = None) -> dict:
+                            context: dict | None = None) -> dict:
     """Cacheia agressivamente (risco §7): se a ficha JÁ tem `tactical_profile`,
     reusa sem tocar no LLM; senão gera 1× e grava na ficha."""
     existing = entry.get("tactical_profile")

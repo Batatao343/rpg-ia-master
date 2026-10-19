@@ -18,7 +18,7 @@ from services import graph_resolver as gr
 from services.codex_loader import codex_body
 
 
-def _bestiary_db() -> Dict:
+def _bestiary_db() -> dict:
     """spec isolar-cache-runtime (R2): view unificada curadoria ∪ overlay —
     criatura GERADA em jogo também entra no codex do jogador (lazy import p/
     não puxar o módulo de geração no import do serviço)."""
@@ -35,7 +35,7 @@ BESTIARY_TIERS = {
 }
 
 
-def normalize_bestiary_id(enemy: Dict) -> str:
+def normalize_bestiary_id(enemy: dict) -> str:
     """Id de instância de combate -> chave real de data/bestiary.json.
 
     `enemy["id"]` de instância vem como `{bestiary_id}_{N}` (spawn em
@@ -57,7 +57,7 @@ def normalize_bestiary_id(enemy: Dict) -> str:
     return ""
 
 
-def _bump(bk: Dict, creature_id: str, turn: int, **deltas: int) -> Dict:
+def _bump(bk: dict, creature_id: str, turn: int, **deltas: int) -> dict:
     entry = dict(bk.get(creature_id) or {})
     for field, delta in deltas.items():
         entry[field] = int(entry.get(field, 0)) + delta
@@ -66,7 +66,7 @@ def _bump(bk: Dict, creature_id: str, turn: int, **deltas: int) -> Dict:
     return entry
 
 
-def record_encounter(bk: Dict, enemies: List[Dict], turn: int = 0) -> Dict:
+def record_encounter(bk: dict, enemies: list[dict], turn: int = 0) -> dict:
     """Spawn de combate: cada criatura distinta ganha seen+1 e fought+1 (1x/combate)."""
     bk = dict(bk or {})
     seen_ids = set()
@@ -79,7 +79,7 @@ def record_encounter(bk: Dict, enemies: List[Dict], turn: int = 0) -> Dict:
     return bk
 
 
-def record_kills(bk: Dict, dead: List[Dict], turn: int = 0) -> Dict:
+def record_kills(bk: dict, dead: list[dict], turn: int = 0) -> dict:
     """Uma instância morta = defeated+1 (conta por instância, não por espécie)."""
     bk = dict(bk or {})
     for enemy in dead:
@@ -90,7 +90,7 @@ def record_kills(bk: Dict, dead: List[Dict], turn: int = 0) -> Dict:
     return bk
 
 
-def record_rumor(bk: Dict, creature_id: str, turn: int = 0) -> Dict:
+def record_rumor(bk: dict, creature_id: str, turn: int = 0) -> dict:
     """Criatura nomeada num hint/alerta antes do combate: só seen+1."""
     if not creature_id:
         return dict(bk or {})
@@ -99,7 +99,7 @@ def record_rumor(bk: Dict, creature_id: str, turn: int = 0) -> Dict:
     return bk
 
 
-def knowledge_tier(entry: Dict) -> int:
+def knowledge_tier(entry: dict) -> int:
     """Maior grau alcançado pelos contadores. 0 = não mostra no codex."""
     entry = entry or {}
     tier = 0
@@ -109,12 +109,12 @@ def knowledge_tier(entry: Dict) -> int:
     return tier
 
 
-def bestiary_view(bk: Dict, turn: int = 0) -> List[Dict]:
+def bestiary_view(bk: dict, turn: int = 0) -> list[dict]:
     """Junta contadores + bestiário (curadoria ∪ overlay), revelando por grau.
     Fase 6.3: entrada ganha rótulo de raridade regional (pressão de caça)."""
     from services.ecology import regional_rarity_label
     db = _bestiary_db()
-    out: List[Dict] = []
+    out: list[dict] = []
     for creature_id, entry in (bk or {}).items():
         tier = knowledge_tier(entry)
         if tier <= 0:
@@ -122,7 +122,7 @@ def bestiary_view(bk: Dict, turn: int = 0) -> List[Dict]:
         base = db.get(creature_id)
         if not base:
             continue
-        view: Dict = {
+        view: dict = {
             "id": creature_id,
             "tier": tier,
             "tier_name": BESTIARY_TIERS[tier][0],
@@ -148,7 +148,7 @@ def bestiary_view(bk: Dict, turn: int = 0) -> List[Dict]:
     return out
 
 
-def _locations_block(state: Dict) -> List[Dict]:
+def _locations_block(state: dict) -> list[dict]:
     world = state.get("world") or {}
     out = []
     for loc_id in world.get("visited", []) or []:
@@ -161,7 +161,7 @@ def _locations_block(state: Dict) -> List[Dict]:
     return out
 
 
-def _factions_block(state: Dict) -> List[Dict]:
+def _factions_block(state: dict) -> list[dict]:
     intel = state.get("faction_intel") or {}
     out = []
     for faction in state.get("factions") or []:
@@ -182,7 +182,7 @@ def _factions_block(state: Dict) -> List[Dict]:
     return out
 
 
-def _characters_block(state: Dict) -> List[Dict]:
+def _characters_block(state: dict) -> list[dict]:
     out = []
     from services.entity_identity import resolve_npc_entity_id
     from services.npc_layers import trait_names
@@ -207,7 +207,7 @@ def _characters_block(state: Dict) -> List[Dict]:
     return out
 
 
-def _secrets_block(state: Dict) -> List[Dict]:
+def _secrets_block(state: dict) -> list[dict]:
     facts = ((state.get("world_projection") or {}).get("revealed_facts") or {})
     out = []
     for event_id, fact in facts.items():
@@ -221,7 +221,7 @@ def _secrets_block(state: Dict) -> List[Dict]:
     return out
 
 
-def _raw_codex(state: Dict) -> Dict[str, List[Dict]]:
+def _raw_codex(state: dict) -> dict[str, list[dict]]:
     return {
         "locations": _locations_block(state),
         "factions": _factions_block(state),
@@ -232,7 +232,7 @@ def _raw_codex(state: Dict) -> Dict[str, List[Dict]]:
     }
 
 
-def player_codex(state: Dict) -> Dict:
+def player_codex(state: dict) -> dict:
     """Codex agregado — só o que já está registrado no save. Zero LLM.
 
     SPEC-206: os blocos crus passam pela projeção player-facing, que anota cada

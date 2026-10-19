@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import replace
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from decimal import ROUND_CEILING, ROUND_FLOOR, Decimal
 from random import Random
 from uuid import uuid4
@@ -25,7 +25,7 @@ from services.shard_pricing import (
 )
 from services.usage_metering import RATE_CARD_VERSION, UsageEvent, normalize_attempts
 
-NOW = datetime(2026, 10, 8, 12, tzinfo=timezone.utc)
+NOW = datetime(2026, 10, 8, 12, tzinfo=UTC)
 
 
 def version(**changes) -> PricingVersion:

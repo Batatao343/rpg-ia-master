@@ -8,8 +8,9 @@ from __future__ import annotations
 
 import os
 import re
-from datetime import datetime, timedelta, timezone
-from typing import Any, Mapping, NamedTuple
+from datetime import datetime, timedelta, timezone, UTC
+from typing import Any, NamedTuple
+from collections.abc import Mapping
 
 _ID = r"[^/]+"
 
@@ -142,7 +143,7 @@ class QuotaDecision(NamedTuple):
 
 
 def seconds_until_utc_midnight(now: datetime | None = None) -> int:
-    now = now or datetime.now(timezone.utc)
+    now = now or datetime.now(UTC)
     nxt = (now + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
     return max(1, int((nxt - now).total_seconds()))
 
@@ -154,7 +155,7 @@ class MemoryDailyQuota:
         self._counts: dict[tuple[str, str, str], int] = {}
 
     def bump(self, owner_id: Any, cls: str, limit: int, *, now: datetime | None = None) -> QuotaDecision:
-        now = now or datetime.now(timezone.utc)
+        now = now or datetime.now(UTC)
         key = (str(owner_id), now.date().isoformat(), cls)
         count = self._counts.get(key, 0)
         if count >= limit:

@@ -13,7 +13,8 @@ import json
 import os
 import secrets
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any
+from collections.abc import Mapping
 from uuid import UUID, uuid4
 
 import httpx

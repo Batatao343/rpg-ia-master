@@ -68,7 +68,7 @@ def _base_route_payload(route: RouteType, world: dict) -> dict:
     }
 
 
-_LAST_DECISION: ContextVar[Optional[dict]] = ContextVar("router_last_decision", default=None)
+_LAST_DECISION: ContextVar[dict | None] = ContextVar("router_last_decision", default=None)
 
 
 def reset_last_decision() -> None:
@@ -86,7 +86,7 @@ def _target_kind(payload: dict) -> str:
     return "enemy" if payload.get("combat_target") else "none"
 
 
-def _tag(payload: dict, source: str, fallback_reason: Optional[str] = None) -> dict:
+def _tag(payload: dict, source: str, fallback_reason: str | None = None) -> dict:
     """SPEC-247 R1: fonte da decisao de rota + motivo de fallback (codigos fechados).
 
     NAO muda o payload (o contrato ``off`` do SPEC-217 e byte-identico): guarda a decisao num
@@ -170,10 +170,10 @@ def _combat_gate(state: GameState, world: dict, combat: dict):
 
 class RouterDecision(BaseModel):
     route: RouteType
-    loot_context: Optional[Literal["TREASURE", "SHOP", "CRAFT"]] = Field(
+    loot_context: Literal["TREASURE", "SHOP", "CRAFT"] | None = Field(
         description="Se for LOOT: 'TREASURE', 'SHOP' ou 'CRAFT'."
     )
-    target: Optional[str] = Field(description="Se for COMBAT, quem é o inimigo? Ex: 'Goblin', 'Guarda', 'O Vulto'.")
+    target: str | None = Field(description="Se for COMBAT, quem é o inimigo? Ex: 'Goblin', 'Guarda', 'O Vulto'.")
     reasoning: str
     confidence: float
 

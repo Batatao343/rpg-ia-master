@@ -10,7 +10,8 @@ import json
 from dataclasses import dataclass
 from decimal import ROUND_UP, Decimal, InvalidOperation
 from pathlib import Path
-from typing import Any, Literal, Mapping, Sequence
+from typing import Any, Literal
+from collections.abc import Mapping, Sequence
 from uuid import UUID, uuid5
 
 from services.embedding_pricing import EMBEDDING_PRICING_VERSION, embedding_cost

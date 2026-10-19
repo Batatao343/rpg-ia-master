@@ -13,6 +13,7 @@ import pytest
 
 from infrastructure.contracts import Principal
 from infrastructure.request_context import principal_scope
+from datetime import UTC
 
 pytestmark = [pytest.mark.infra_local, pytest.mark.security_local]
 
@@ -238,7 +239,7 @@ def _image_quote_case(world, monkeypatch):
     from services.usage_metering import RATE_CARD_VERSION
     from tests.fakes.local_pricing import installed_card_max_age_seconds
 
-    at = datetime(2026, 10, 12, 12, tzinfo=timezone.utc)
+    at = datetime(2026, 10, 12, 12, tzinfo=UTC)
 
     class FixedDatetime(datetime):
         @classmethod

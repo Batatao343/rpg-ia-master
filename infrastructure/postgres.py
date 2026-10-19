@@ -6,7 +6,8 @@ import json
 import time
 from contextlib import ExitStack, contextmanager
 from datetime import UTC, datetime
-from typing import Any, Iterator
+from typing import Any
+from collections.abc import Iterator
 from urllib.parse import parse_qs, urlsplit
 from uuid import UUID
 
@@ -62,7 +63,7 @@ class PostgresPool:
     def __init__(self, dsn: str, *, min_size: int = 0, max_size: int = 4,
                  timeout: float = 5.0, transaction_pooler: bool = False,
                  connect_timeout: float = 5.0, request_rls: bool = False,
-                 admin_pool: "PostgresPool | None" = None):
+                 admin_pool: PostgresPool | None = None):
         if ConnectionPool is None:
             raise RuntimeError("instale psycopg: uv sync")
         kwargs: dict[str, Any] = {"row_factory": dict_row, "connect_timeout": max(1, int(round(connect_timeout)))}

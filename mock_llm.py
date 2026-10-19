@@ -93,9 +93,9 @@ def _value_for(annotation):
     origin = typing.get_origin(annotation)
     args = typing.get_args(annotation)
 
-    if origin in (list, typing.List):
+    if origin in (list, list):
         return []
-    if origin in (dict, typing.Dict):
+    if origin in (dict, dict):
         return {}
     if origin is typing.Union:  # inclui Optional
         non_none = [a for a in args if a is not type(None)]

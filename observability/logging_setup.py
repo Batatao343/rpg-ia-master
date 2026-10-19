@@ -11,8 +11,9 @@ import logging
 import os
 import re
 import sys
-from datetime import datetime, timezone
-from typing import Any, Mapping
+from datetime import datetime, timezone, UTC
+from typing import Any
+from collections.abc import Mapping
 
 from observability.telemetry import correlation, redact
 
@@ -61,7 +62,7 @@ class JsonLineFormatter(logging.Formatter):
         data.setdefault("instance_ref", INSTANCE_REF)
         data["level"] = record.levelname.lower()
         data["logger"] = record.name
-        data["ts"] = datetime.fromtimestamp(record.created, timezone.utc).isoformat(
+        data["ts"] = datetime.fromtimestamp(record.created, UTC).isoformat(
             timespec="milliseconds").replace("+00:00", "Z")
         return json.dumps(data, ensure_ascii=False, sort_keys=True, default=str)
 

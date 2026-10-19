@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import os
 from contextlib import nullcontext
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from decimal import Decimal
 from uuid import uuid4
 
@@ -59,8 +59,8 @@ def _campaign(db, owner):
 
 
 def _day_spend(reader, owner):
-    since = datetime.now(timezone.utc) - timedelta(days=1)
-    until = datetime.now(timezone.utc) + timedelta(minutes=5)
+    since = datetime.now(UTC) - timedelta(days=1)
+    until = datetime.now(UTC) + timedelta(minutes=5)
     groups = sum((g.cost_usd for g in reader.usage_groups(since, until) if g.counts_as_spend), Decimal(0))
     per_owner = reader.owner_usage(since, until).get(str(owner))
     return groups, per_owner, reader.ops_counts(since, until).turns

@@ -37,12 +37,12 @@ class EnemySchema(BaseModel):
     arquetipo: Literal["equilibrado", "bruto", "agil", "astuto", "mistico"] = "equilibrado"
     estilo_ataque: Literal["corpo_a_corpo", "distancia", "magico", "area"] = "corpo_a_corpo"
     nome_ataque: str = "Ataque"
-    abilities: List[str] = Field(default_factory=list)
-    loot: List[str] = Field(default_factory=list)
-    regions: List[str] = Field(default_factory=list, description="Ids das regiões onde a criatura ocorre (ex.: 'skallgard')")
+    abilities: list[str] = Field(default_factory=list)
+    loot: list[str] = Field(default_factory=list)
+    regions: list[str] = Field(default_factory=list, description="Ids das regiões onde a criatura ocorre (ex.: 'skallgard')")
 
 
-_VIRTUDE_TEMPLATES: Dict[str, Dict[str, int]] = {
+_VIRTUDE_TEMPLATES: dict[str, dict[str, int]] = {
     "equilibrado": {"forca": 2, "agilidade": 2, "corpo": 2, "mente": 2, "carisma": 1},
     "bruto": {"forca": 3, "agilidade": 1, "corpo": 3, "mente": 1, "carisma": 1},
     "agil": {"forca": 1, "agilidade": 3, "corpo": 2, "mente": 2, "carisma": 1},
@@ -77,7 +77,7 @@ def _profile_for_archetype(archetype: str) -> dict:
 
 
 def materialize_enemy_concept(concept: dict | EnemySchema, *,
-                              encounter_level: int = 1) -> Dict:
+                              encounter_level: int = 1) -> dict:
     """Converte conceito categórico em ficha v4. Ignora deliberadamente qualquer
     HP/AC/atributo/dano livre que exista no dict de entrada."""
     raw = concept.model_dump() if isinstance(concept, EnemySchema) else dict(concept or {})
@@ -150,16 +150,16 @@ def _overlay_path() -> str:
     return runtime_cache_path("bestiary_runtime.json")
 
 
-def _read_json(path: str) -> Dict:
+def _read_json(path: str) -> dict:
     if not os.path.exists(path): return {}
     try:
-        with open(path, 'r', encoding='utf-8') as f: return json.load(f)
+        with open(path, encoding='utf-8') as f: return json.load(f)
     except Exception as e:
         _log_event("bestiary", "read_failed", level="warning", error=type(e).__name__)
         return {}
 
 
-def load_bestiary() -> Dict:
+def load_bestiary() -> dict:
     """View unificada: curadoria ∪ overlay runtime (curadoria VENCE conflito de
     id — gerado nunca sombreia entrada curada)."""
     from agents.npc import catalog_owner_id
@@ -172,7 +172,7 @@ def load_bestiary() -> Dict:
     return {**own, **overlay, **_read_json(BESTIARY_FILE)}
 
 
-def save_enemy(data: Dict):
+def save_enemy(data: dict):
     """Grava SÓ no overlay runtime — nunca em data/bestiary.json."""
     from infrastructure.runtime import get_runtime
 
@@ -194,7 +194,7 @@ def _infer_tier_from_name(name: str) -> ModelTier:
     return ModelTier.FAST
 
 # --- GERADOR ---
-def template_by_id(enemy_id: str, *, encounter_level: int = 1) -> Optional[Dict]:
+def template_by_id(enemy_id: str, *, encounter_level: int = 1) -> dict | None:
     """SPEC-203 R3: ficha de um id canônico do bestiário, SEM LLM (nem librarian).
     Mesmo contrato do cache-hit de `generate_new_enemy`."""
     db = load_bestiary()
@@ -214,7 +214,7 @@ def template_by_id(enemy_id: str, *, encounter_level: int = 1) -> Optional[Dict]
 
 
 def generate_new_enemy(name: str, context: str = "", *,
-                       encounter_level: int = 1) -> Dict:
+                       encounter_level: int = 1) -> dict:
     from services.prompt_guard import sanitize_entity_name
     name = sanitize_entity_name(name) or "Criatura"  # SPEC-223 R7
     # 1. CHECK-FIRST

@@ -35,7 +35,7 @@ from services import graph_resolver as gr
 
 RULES_PATH = os.path.join("data", "graph", "world_rules.json")
 
-_rules_cache: Optional[List[dict]] = None
+_rules_cache: list[dict] | None = None
 
 # Sufixo de índice numérico no fim de um path: "...rival_factions[0]"
 _INDEX_RE = re.compile(r"^(.*)\[(\d+)\]$")
@@ -97,7 +97,7 @@ def resolve_path(expr: Any, ctx: dict) -> Any:
 # --- conditions -------------------------------------------------------------
 
 def check_conditions(rule: dict, event: dict, projection: dict,
-                     state: Optional[dict] = None) -> bool:
+                     state: dict | None = None) -> bool:
     """True se TODAS as conditions da regra passarem (AND). Regra sem conditions → True.
 
     Suporta: target_has_component | target_missing_component | target_has_tag |
@@ -146,7 +146,7 @@ def check_conditions(rule: dict, event: dict, projection: dict,
 
 # --- carga de regras --------------------------------------------------------
 
-def load_rules() -> List[dict]:
+def load_rules() -> list[dict]:
     """Lê world_rules.json (cache em módulo). Ausente/ilegível → []."""
     global _rules_cache
     if _rules_cache is None:
@@ -154,7 +154,7 @@ def load_rules() -> List[dict]:
             _rules_cache = []
         else:
             try:
-                with open(RULES_PATH, "r", encoding="utf-8") as f:
+                with open(RULES_PATH, encoding="utf-8") as f:
                     _rules_cache = json.load(f)
             except Exception as exc:
                 _log_event("rule", "read_failed", level="warning", error=type(exc).__name__)
@@ -174,7 +174,7 @@ def _arg(value: Any, ctx: dict) -> Any:
     return value
 
 
-def _led_faction(npc_id: str, proj: dict) -> Optional[str]:
+def _led_faction(npc_id: str, proj: dict) -> str | None:
     """Fação liderada pelo NPC (edge `leads`), ou None."""
     for e in gr.resolve_edges(proj, entity_id=npc_id, edge_type="leads", include_hidden=True):
         if e.get("source") == npc_id:
@@ -182,21 +182,21 @@ def _led_faction(npc_id: str, proj: dict) -> Optional[str]:
     return None
 
 
-def _controlled_locations(npc_id: str, proj: dict) -> List[str]:
+def _controlled_locations(npc_id: str, proj: dict) -> list[str]:
     """Locais controlados pelo NPC morto E pela fação que ele lidera (edges `controls`)."""
     sources = {npc_id}
     led = _led_faction(npc_id, proj)
     if led:
         sources.add(led)
-    locs: List[str] = []
+    locs: list[str] = []
     for e in gr.resolve_edges(proj, edge_type="controls", include_hidden=True):
         if e.get("source") in sources and e.get("target") not in locs:
             locs.append(e.get("target"))
     return locs
 
 
-def _rival_faction(location: str, dead_faction: Optional[str], component: dict,
-                   proj: dict) -> Optional[str]:
+def _rival_faction(location: str, dead_faction: str | None, component: dict,
+                   proj: dict) -> str | None:
     """Quem ocupa o vácuo: override do componente → 1º enemy_of da fação → 1ª outra
     fação com operates_in no local. None se nada aplicável."""
     override = (component.get("power_vacuum_trigger") or {}).get("rival_faction_override")
@@ -249,7 +249,7 @@ def _new_event(etype: str, target_id: str, payload: dict, actor_id: str) -> dict
     }
 
 
-def execute_action(action: dict, event: dict, state: dict) -> List[dict]:
+def execute_action(action: dict, event: dict, state: dict) -> list[dict]:
     """Executa UMA ação. Ops diretas mutam state['world_projection'] in place;
     `emit_event` RETORNA os GameEvents derivados (source='rule_engine'). Demais → [].
 
@@ -342,7 +342,7 @@ def execute_action(action: dict, event: dict, state: dict) -> List[dict]:
 
 # --- orquestração da cascata ------------------------------------------------
 
-def run_rules(event: dict, state: dict, depth: int = 0) -> List[dict]:
+def run_rules(event: dict, state: dict, depth: int = 0) -> list[dict]:
     """Dispara as regras casadas por `event`, aplica os derivados na projection e recursa
     até profundidade 2 (anti-loop). Devolve a lista PLANA de eventos derivados
     (source='rule_engine') para o event_processor anexar ao event_log.
@@ -353,7 +353,7 @@ def run_rules(event: dict, state: dict, depth: int = 0) -> List[dict]:
     from services.event_processor import apply_event  # lazy: evita import circular
 
     state.setdefault("world_projection", {})
-    derived_all: List[dict] = []
+    derived_all: list[dict] = []
 
     for rule in load_rules():
         if rule.get("trigger") != event.get("type"):
@@ -361,7 +361,7 @@ def run_rules(event: dict, state: dict, depth: int = 0) -> List[dict]:
         if not check_conditions(rule, event, state["world_projection"], state):
             continue
         try:
-            emitted: List[dict] = []
+            emitted: list[dict] = []
             for action in rule.get("actions", []) or []:
                 emitted += execute_action(action, event, state)
         except RuleActionError as exc:

@@ -37,7 +37,7 @@ def _danger(state: dict) -> int:
     return int((state.get("world") or {}).get("danger_level", 1) or 1)
 
 
-def entered_safe_zone(state: dict, prev: Optional[dict]) -> bool:
+def entered_safe_zone(state: dict, prev: dict | None) -> bool:
     """True se o jogador ACABOU de chegar numa zona segura (mudou de local E
     danger <= SAFE_DANGER). Sem `prev`, considera só o perigo atual."""
     if _danger(state) > SAFE_DANGER:
@@ -47,7 +47,7 @@ def entered_safe_zone(state: dict, prev: Optional[dict]) -> bool:
     return bool(cur) and cur != old
 
 
-def should_checkpoint(state: dict, prev: Optional[dict] = None) -> bool:
+def should_checkpoint(state: dict, prev: dict | None = None) -> bool:
     """D1: grava a cada CHECKPOINT_EVERY turnos OU ao entrar em zona segura.
     Nunca grava com o jogo encerrado (memorial) ou morte pendente."""
     from services.actor_lifecycle import transition_readiness
@@ -61,7 +61,7 @@ def should_checkpoint(state: dict, prev: Optional[dict] = None) -> bool:
     return entered_safe_zone(state, prev)
 
 
-def snapshot(state: dict) -> Optional[dict]:
+def snapshot(state: dict) -> dict | None:
     """Cópia profunda do estado e da memória externa usada pelo harness."""
     from services.actor_lifecycle import transition_readiness
     if not transition_readiness(state)["ready"]:
@@ -79,7 +79,7 @@ def snapshot(state: dict) -> Optional[dict]:
     return snap
 
 
-def maybe_write(state: dict, prev: Optional[dict] = None) -> bool:
+def maybe_write(state: dict, prev: dict | None = None) -> bool:
     """Grava o checkpoint em disco se a cadência (D1) mandar. Retorna se gravou."""
     if should_checkpoint(state, prev):
         return write_now(state)
@@ -115,8 +115,8 @@ def _sanitize_legacy_combat_checkpoint(restored: dict) -> dict:
 
 
 def resolve_death_choice(state: dict, choice: str, *,
-                         checkpoint: Optional[dict] = None,
-                         initial_state: Optional[dict] = None,
+                         checkpoint: dict | None = None,
+                         initial_state: dict | None = None,
                          strict: bool = True) -> dict:
     """Resolve a tela de morte (D2). Não muta o estado de entrada.
 
@@ -138,7 +138,7 @@ def resolve_death_choice(state: dict, choice: str, *,
             turn = _turn(new)
             epoch = int((new.get("continuity") or {}).get("timeline_epoch", 0) or 0)
             event_id = hashlib.sha256(
-                f"{new.get('game_id', '')}:{epoch}:{turn}:player_died".encode("utf-8")
+                f"{new.get('game_id', '')}:{epoch}:{turn}:player_died".encode()
             ).hexdigest()[:32]
             event = {
                 "event_id": event_id,
@@ -160,7 +160,7 @@ def resolve_death_choice(state: dict, choice: str, *,
                 )
         return new
 
-    restored: Optional[dict] = None
+    restored: dict | None = None
     if checkpoint is not None:
         restored = copy.deepcopy(checkpoint)
         captured = restored.pop("_checkpoint_memory_snapshot", None)

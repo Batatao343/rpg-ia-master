@@ -34,11 +34,11 @@ TURN_BUDGET = {"pre_acao": 1, "acao": 1, "pos_acao": 1}
 _PRE_OU_POS = "pre_ou_pos"
 
 
-def _pos(scene: dict, participant_id: str) -> Optional[dict]:
+def _pos(scene: dict, participant_id: str) -> dict | None:
     return (scene.get("positions") or {}).get(participant_id)
 
 
-def _spend_budget(pos: dict, cost: str) -> Optional[str]:
+def _spend_budget(pos: dict, cost: str) -> str | None:
     """Debita 1 do orçamento; devolve o estado gasto ou None se indisponível.
     `pre_ou_pos` tenta Pré-Ação e cai pra Pós-Ação (R6)."""
     b = pos.setdefault("budget", dict(TURN_BUDGET))
@@ -163,7 +163,7 @@ def validate_effect_kind(effect: dict) -> bool:
 
 
 # --- Construção --------------------------------------------------------------
-def new_scene(zones: Optional[List[dict]] = None) -> dict:
+def new_scene(zones: list[dict] | None = None) -> dict:
     return {
         "zones": list(zones or [{"id": "z0", "name": "Campo", "connections": []}]),
         "positions": {},
@@ -239,7 +239,7 @@ def engage(scene: dict, a: str, b: str, *, via: str = _PRE_OU_POS, spend: bool =
     return {"ok": True, "error": None, "via": used, "log": f"{a} e {b} engajados."}
 
 
-def disengage(scene: dict, a: str, b: Optional[str] = None, *, spend: bool = True) -> dict:
+def disengage(scene: dict, a: str, b: str | None = None, *, spend: bool = True) -> dict:
     """R7: Desengajar custa a Ação e encerra COM SEGURANÇA os Engajamentos (sem AoO).
     `b=None` desengaja de todos. `spend=False` só desfaz a relação."""
     pa = _pos(scene, a)
@@ -263,7 +263,7 @@ def is_engaged(scene: dict, a: str, b: str) -> bool:
 
 # --- Postura / Ocultação (R4) ------------------------------------------------
 def set_postura(scene: dict, participant_id: str, state: str, *,
-                mode: str = "sustentado", cause: Optional[str] = None) -> dict:
+                mode: str = "sustentado", cause: str | None = None) -> dict:
     """Protegido/Exposto momentâneo (só o próximo ataque) ou sustentado (persiste
     enquanto a causa concreta existir)."""
     pos = (scene.get("positions") or {}).get(participant_id)
@@ -314,7 +314,7 @@ def add_object(scene: dict, obj: dict, *, from_trigger: bool = False) -> dict:
     return {"ok": True, "error": None, "log": f"Objeto '{o.get('name', o.get('id'))}' na cena."}
 
 
-def visible_objects(scene: dict) -> List[dict]:
+def visible_objects(scene: dict) -> list[dict]:
     """Objetos que o jogador ENXERGA: não-destruídos e (não-secretos OU já
     descobertos) (R7). Cada interação expõe só label+cost, nunca o effect (R5)."""
     out = []
@@ -341,7 +341,7 @@ def discover_object(scene: dict, object_id: str) -> dict:
     return {"ok": False, "error": f"Objeto '{object_id}' não existe.", "log": ""}
 
 
-def _find_object(scene: dict, object_id: str) -> Optional[dict]:
+def _find_object(scene: dict, object_id: str) -> dict | None:
     for o in scene.get("objects", []):
         if o.get("id") == object_id:
             return o
@@ -446,8 +446,8 @@ def _reveal(pos: dict) -> None:
     pos.pop("hide_source", None)
 
 
-def hide(scene: dict, participant_id: str, *, source: Optional[str] = None,
-         observers: Optional[List[str]] = None, spend: bool = True) -> dict:
+def hide(scene: dict, participant_id: str, *, source: str | None = None,
+         observers: list[str] | None = None, spend: bool = True) -> dict:
     """R9: Esconder-se custa a Ação e EXIGE fonte plausível (escuridão, fumaça,
     vegetação, multidão, cobertura, obstáculo). Ocultação é RELATIVA — fica
     Escondido de `observers` (default: todos os outros da cena)."""
@@ -503,7 +503,7 @@ def search(scene: dict, searcher_id: str, target_id: str, *,
             "log": f"{searcher_id} encontra {target_id}."}
 
 
-def alert_party(scene: dict, alerter_id: str, target_id: str, party_ids: List[str], *,
+def alert_party(scene: dict, alerter_id: str, target_id: str, party_ids: list[str], *,
                 spend: bool = True) -> dict:
     """R10: alertar a party custa Pré/Pós-Ação e PROPAGA a posição APROXIMADA do
     escondido para todos os aliados (podem atacar com Desvantagem — não o revela)."""

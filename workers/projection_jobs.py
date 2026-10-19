@@ -9,7 +9,8 @@ backoff; o próximo turno, dentro da própria cerca, drena se ainda pendente).
 """
 from __future__ import annotations
 
-from typing import Any, Callable, Optional
+from typing import Any, Optional
+from collections.abc import Callable
 from uuid import UUID
 
 from infrastructure.db_roles import admin_connection
@@ -28,7 +29,7 @@ class ProjectionRetry(RuntimeError):
 
 
 def apply_projection(pool, payload: dict[str, Any], *,
-                     executor: Optional[Callable[[dict, dict], dict]] = None,
+                     executor: Callable[[dict, dict], dict] | None = None,
                      memory_store: Any = None) -> dict[str, Any]:
     from infrastructure.contracts import Principal
     from infrastructure.postgres import PostgresGameStore

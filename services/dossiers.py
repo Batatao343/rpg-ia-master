@@ -12,7 +12,8 @@ Vocabulário de conhecimento: `KnowledgeStamp` da SPEC-206, sem rótulos locais.
 from __future__ import annotations
 
 import os
-from typing import Any, Dict, List, Mapping, Optional
+from typing import Any, Dict, List, Optional
+from collections.abc import Mapping
 
 from services import discovery
 from services import graph_resolver as gr
@@ -52,7 +53,7 @@ def disposition_label(relationship: Any) -> str:
     return _DISPOSITION_BANDS[-1][1]
 
 
-def _turn(value: Any) -> Optional[int]:
+def _turn(value: Any) -> int | None:
     if isinstance(value, bool) or value is None:
         return None
     try:
@@ -67,7 +68,7 @@ def _max_turn(*values: Any) -> int:
     return max(turns) if turns else 0
 
 
-def _art(subject_type: str, subject_id: Optional[str]) -> Optional[dict]:
+def _art(subject_type: str, subject_id: str | None) -> dict | None:
     """Arte só por ID canônico com asset público no catálogo (R9)."""
     if not subject_id:
         return None
@@ -86,15 +87,15 @@ def _art(subject_type: str, subject_id: Optional[str]) -> Optional[dict]:
     }
 
 
-def _notes_turn(notes: List[dict]) -> int:
+def _notes_turn(notes: list[dict]) -> int:
     return _max_turn(*[n.get("last_updated_turn") for n in notes])
 
 
-def _events_about(state: Mapping, entity_id: Optional[str]) -> List[dict]:
+def _events_about(state: Mapping, entity_id: str | None) -> list[dict]:
     """Eventos canônicos de tipo público que citam a entidade (alvo)."""
     if not entity_id or not entity_is_player_visible(entity_id, state):
         return []
-    out: List[dict] = []
+    out: list[dict] = []
     for event in state.get("event_log") or []:
         if not isinstance(event, Mapping) or event.get("target_id") != entity_id:
             continue
@@ -118,9 +119,9 @@ def _claim(note: Mapping) -> dict:
 # NPC
 # ---------------------------------------------------------------------------
 
-def _npc_index(state: Mapping) -> Dict[str, tuple]:
+def _npc_index(state: Mapping) -> dict[str, tuple]:
     """nome exibível -> (chave, npc) dos NPCs do runtime."""
-    out: Dict[str, tuple] = {}
+    out: dict[str, tuple] = {}
     for key, npc in (state.get("npcs") or {}).items():
         if isinstance(npc, dict):
             out.setdefault(str(npc.get("name", key)), (key, npc))
@@ -139,7 +140,7 @@ def npc_dossier(entry: Mapping, state: Mapping, npc_index: Mapping) -> dict:
     appears = [_claim(n) for n in notes
                if n.get("source_kind") == "player_observation"
                and n.get("knowledge_kind") in ("perception", "suspicion")]
-    encounters: List[dict] = []
+    encounters: list[dict] = []
     created = _turn(npc.get("created_turn"))
     if created is not None and (npc.get("knowledge_source", "met") or "met") == "met":
         encounters.append({"turn": created, "location_id": "", "outcome": "primeiro contato"})
@@ -171,8 +172,8 @@ def npc_dossier(entry: Mapping, state: Mapping, npc_index: Mapping) -> dict:
 # Local / Facção / Segredo
 # ---------------------------------------------------------------------------
 
-def location_dossier(entry: Mapping, state: Mapping, npcs: List[dict],
-                     creatures: List[dict]) -> dict:
+def location_dossier(entry: Mapping, state: Mapping, npcs: list[dict],
+                     creatures: list[dict]) -> dict:
     loc_id = str(entry["id"])
     name = str(entry.get("name", loc_id))
     ent = gr.get_entity(loc_id) or {}
@@ -251,7 +252,7 @@ def _revealed_for(base: Mapping, tier: int) -> tuple:
         from services import cards
         data = bk._load_all().get(bk._archetype_id(base), {})
         exclusive = set(base.get("variant_exclusive_cards") or [])
-        out_cards: List[Dict[str, str]] = []
+        out_cards: list[dict[str, str]] = []
         for card_id in data.get("revealed_cards") or []:
             if card_id in exclusive:
                 continue
@@ -271,7 +272,7 @@ def creature_dossier(entry: Mapping, state: Mapping) -> dict:
     tier = int(entry["tier"])
     notes = list(entry.get("notes") or [])
     updated = _max_turn(rec.get("last_update_turn"), _notes_turn(notes))
-    out: Dict[str, Any] = {
+    out: dict[str, Any] = {
         "id": cid, "kind": "creature", "title": str(entry.get("name", "")),
         "last_updated_turn": updated, "version": updated,
         "art": _art("creature", cid),
@@ -298,16 +299,16 @@ def creature_dossier(entry: Mapping, state: Mapping) -> dict:
 # Crônica (índice por capítulo)
 # ---------------------------------------------------------------------------
 
-def chronicle_index(state: Mapping, known_ids: set) -> List[dict]:
+def chronicle_index(state: Mapping, known_ids: set) -> list[dict]:
     targets = {e.get("event_id"): e.get("target_id")
                for e in state.get("event_log") or [] if isinstance(e, Mapping)}
-    out: List[dict] = []
+    out: list[dict] = []
     for cap in state.get("chronicle") or []:
         if not isinstance(cap, Mapping):
             continue
         entries = [e for e in cap.get("entries") or []
                    if isinstance(e, Mapping) and str(e.get("text", "")).strip()]
-        ids: List[str] = []
+        ids: list[str] = []
         for e in entries:
             tid = targets.get(e.get("event_id"))
             if tid and tid in known_ids and tid not in ids:
@@ -331,7 +332,7 @@ def build_dossiers(state: Mapping) -> dict:
     from services.player_knowledge import TAXONOMY_VERSION
     codex = discovery.player_codex(dict(state))  # já projetado + fail-closed
     npc_index = _npc_index(state)
-    npcs: List[dict] = []
+    npcs: list[dict] = []
     for entry in codex["characters"]:
         try:
             npcs.append(npc_dossier(entry, state, npc_index))

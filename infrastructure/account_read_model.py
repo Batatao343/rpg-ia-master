@@ -5,7 +5,7 @@ usage telemetry is activity, not a charge.
 """
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from decimal import Decimal
 from uuid import UUID
 
@@ -113,7 +113,7 @@ class PostgresAccountReader:
     def series(self, principal: Principal, period: str, *, now: datetime | None = None) -> dict:
         if period not in {"24h", "7d", "30d"}:
             raise ValueError("período inválido")
-        now = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
+        now = (now or datetime.now(UTC)).astimezone(UTC)
         hourly = period == "24h"
         unit = timedelta(hours=1) if hourly else timedelta(days=1)
         end = now.replace(minute=0, second=0, microsecond=0) if hourly else now.replace(
@@ -136,7 +136,7 @@ class PostgresAccountReader:
                 group by 1,2""",
                 ("hour" if hourly else "day", principal.user_id, start, end + unit),
             ).fetchall()
-        totals = {(r["bucket"].astimezone(timezone.utc), r["category"]):
+        totals = {(r["bucket"].astimezone(UTC), r["category"]):
                   int(r["amount_milli"]) for r in rows}
         points = []
         category_totals = {cat: 0 for cat in ("game", "image", "voice")}

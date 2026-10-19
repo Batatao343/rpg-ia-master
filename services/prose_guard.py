@@ -171,7 +171,7 @@ def contains_engine_marker(text: str) -> bool:
     return bool(_ENGINE_MARKERS.search(str(text or "")))
 
 
-def vary_repeated_opening(text: str, recent_openings: List[str], *,
+def vary_repeated_opening(text: str, recent_openings: list[str], *,
                           salt: str = "") -> str:
     """Quebra abertura literalmente repetida com transição neutra e estável.
 
@@ -182,7 +182,7 @@ def vary_repeated_opening(text: str, recent_openings: List[str], *,
     recent = [str(item or "").strip() for item in recent_openings if str(item or "").strip()]
     if not value or not any(repeats(value, item) for item in recent):
         return value
-    digest = hashlib.sha256(f"{salt}|{value}".encode("utf-8")).digest()
+    digest = hashlib.sha256(f"{salt}|{value}".encode()).digest()
     start = int.from_bytes(digest[:2], "big") % len(_NEUTRAL_TRANSITIONS)
     for offset in range(len(_NEUTRAL_TRANSITIONS)):
         prefix = _NEUTRAL_TRANSITIONS[(start + offset) % len(_NEUTRAL_TRANSITIONS)]
@@ -192,7 +192,7 @@ def vary_repeated_opening(text: str, recent_openings: List[str], *,
     return _NEUTRAL_TRANSITIONS[start] + value
 
 
-def remove_rejected_claims(text: str, rejected_terms: List[str]) -> str:
+def remove_rejected_claims(text: str, rejected_terms: list[str]) -> str:
     """Remove frases que afirmam um item/evento rejeitado pelo motor.
 
     A comparação é literal e case-insensitive; não tenta inferir semântica.
@@ -213,7 +213,7 @@ def remove_rejected_claims(text: str, rejected_terms: List[str]) -> str:
             if not re.search(r"\b(?:ouro|moedas?)\b", paragraph, re.IGNORECASE)
         )
     chunks = re.split(r"(?<=[.!?])(\s+)", value)
-    kept: List[str] = []
+    kept: list[str] = []
     for index in range(0, len(chunks), 2):
         sentence = chunks[index]
         separator = chunks[index + 1] if index + 1 < len(chunks) else ""
@@ -223,10 +223,10 @@ def remove_rejected_claims(text: str, rejected_terms: List[str]) -> str:
     return "".join(kept).strip()
 
 
-def ultimas_aberturas(messages, n: int = 2, words: int = 12) -> List[str]:
+def ultimas_aberturas(messages, n: int = 2, words: int = 12) -> list[str]:
     """As `n` últimas aberturas de narração (mensagens não-humanas) do histórico,
     com ~`words` palavras cada — para o prompt pedir variação (R1)."""
-    out: List[str] = []
+    out: list[str] = []
     for m in reversed(messages or []):
         content = getattr(m, "content", "")
         if content and getattr(m, "type", "") != "human":
@@ -244,7 +244,7 @@ def repeats(a: str, b: str, words: int = 6) -> bool:
     return bool(oa) and oa == opening(b, words)
 
 
-def openings_clause(aberturas: List[str]) -> str:
+def openings_clause(aberturas: list[str]) -> str:
     """Cláusula de prompt (R1): pede para NÃO repetir a estrutura/imagem das
     aberturas recentes. Vazio se não há histórico."""
     if not aberturas:

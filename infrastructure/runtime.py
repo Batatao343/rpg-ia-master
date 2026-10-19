@@ -11,7 +11,8 @@ import socket
 import threading
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable, Mapping, NamedTuple
+from typing import NamedTuple
+from collections.abc import Callable, Mapping
 from urllib.parse import parse_qsl, urlsplit
 from uuid import UUID
 
@@ -188,7 +189,7 @@ class RuntimeConfig:
     db_connect_timeout: float = 5.0
 
     @classmethod
-    def from_env(cls, env: Mapping[str, str] | None = None) -> "RuntimeConfig":
+    def from_env(cls, env: Mapping[str, str] | None = None) -> RuntimeConfig:
         values = os.environ if env is None else env
         profile = values.get("RPG_RUNTIME_PROFILE", "legacy").strip().lower()
         defaults = {
@@ -398,7 +399,7 @@ KILL_SWITCH_HOSTED_FAIL_CLOSED = ("image_generation", "stt_fallback_expensive")
 
 class Requirement(NamedTuple):
     name: str
-    check: Callable[[Mapping[str, str]], "str | None"]
+    check: Callable[[Mapping[str, str]], str | None]
 
 
 def _profile_of(env: Mapping[str, str]) -> str:
@@ -428,7 +429,7 @@ def exposure_markers(env: Mapping[str, str]) -> set[str]:
     return found
 
 
-def _cors_problem(env: Mapping[str, str]) -> "str | None":
+def _cors_problem(env: Mapping[str, str]) -> str | None:
     raw = str(env.get("RPG_CORS_ORIGINS", "")).strip()
     items = [item.strip() for item in raw.split(",") if item.strip()]
     if not items:
@@ -449,7 +450,7 @@ def _cors_problem(env: Mapping[str, str]) -> "str | None":
     return None
 
 
-def _provider_key_problem(env: Mapping[str, str]) -> "str | None":
+def _provider_key_problem(env: Mapping[str, str]) -> str | None:
     if _flag(env, "RPG_NO_MOCK"):
         return None
     from llm_setup import PROVIDER_KEY_ENV
@@ -459,7 +460,7 @@ def _provider_key_problem(env: Mapping[str, str]) -> "str | None":
     return "sem chave de provider e RPG_NO_MOCK!=1 (cairia em MockLLM)"
 
 
-def _rate_limit_problem(env: Mapping[str, str]) -> "str | None":
+def _rate_limit_problem(env: Mapping[str, str]) -> str | None:
     raw = str(env.get("RPG_RATE_LIMIT", "")).strip()
     if not raw:
         return None
@@ -469,11 +470,11 @@ def _rate_limit_problem(env: Mapping[str, str]) -> "str | None":
         return "deve ser inteiro >= 1"
 
 
-def _secret_len(name: str) -> Callable[[Mapping[str, str]], "str | None"]:
+def _secret_len(name: str) -> Callable[[Mapping[str, str]], str | None]:
     return lambda env: None if len(str(env.get(name, ""))) >= 32 else "ausente ou < 32 caracteres"
 
 
-def _captcha_problem(env: Mapping[str, str]) -> "str | None":
+def _captcha_problem(env: Mapping[str, str]) -> str | None:
     if not _flag(env, "RPG_AUTH_CAPTCHA_REQUIRED"):
         return "deve ser 1"
     if not str(env.get("RPG_TURNSTILE_SITE_KEY", "")).strip():
@@ -484,12 +485,12 @@ def _captcha_problem(env: Mapping[str, str]) -> "str | None":
     return None
 
 
-def _forbidden_problem(env: Mapping[str, str]) -> "str | None":
+def _forbidden_problem(env: Mapping[str, str]) -> str | None:
     present = [name for name in FORBIDDEN_IN_HOSTED if _truthy(env, name)]
     return ("variaveis proibidas presentes: " + ",".join(present)) if present else None
 
 
-def _llm_provider_problem(env: Mapping[str, str]) -> "str | None":
+def _llm_provider_problem(env: Mapping[str, str]) -> str | None:
     value = str(env.get("LLM_PROVIDER", "")).strip().lower()
     return None if not value or value in _LLM_PROVIDER_ALLOWLIST else "fora da allowlist"
 
@@ -732,7 +733,7 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
         raise
 
 
-def apply_serverless_defaults(env: "os._Environ[str] | dict[str, str] | None" = None) -> str | None:
+def apply_serverless_defaults(env: os._Environ[str] | dict[str, str] | None = None) -> str | None:
     """SPEC-192: em Vercel (FS somente leitura salvo /tmp) o perfil hosted-* grava
     caches de runtime em /tmp. Respeita override explícito; devolve o diretório
     aplicado (ou None se nada mudou)."""

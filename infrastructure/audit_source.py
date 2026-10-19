@@ -27,7 +27,7 @@ class PostgresAuditSource:
     def __init__(self, pool, game_store, principal: Principal) -> None:
         self.pool, self.store, self.principal = pool, game_store, principal
 
-    def load(self, game_id: UUID, *, owner_email: Optional[str] = None) -> Optional[AuditSource]:
+    def load(self, game_id: UUID, *, owner_email: str | None = None) -> AuditSource | None:
         owner = self.principal.user_id
         with admin_connection(self.pool) as db:
             if db.execute("select 1 from app.account_deletions where owner_id=%s",
@@ -76,7 +76,7 @@ class PostgresAuditSource:
                     """select event_id, turn from app.game_events
                        where owner_id=%s and game_id=%s order by turn, event_id""",
                     (owner, game_id)).fetchall()
-            events: Dict[int, List[str]] = {}
+            events: dict[int, list[str]] = {}
             for row in rows:
                 events.setdefault(int(row["turn"]), []).append(str(row["event_id"]))
             source.events_by_turn = events
@@ -97,7 +97,7 @@ class PostgresAuditSource:
         return source
 
 
-def _safe_class(value: Any) -> Optional[str]:
+def _safe_class(value: Any) -> str | None:
     import re
     text = str(value or "")
     return text if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]{0,60}", text) else None

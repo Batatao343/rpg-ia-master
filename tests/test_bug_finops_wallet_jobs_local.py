@@ -6,7 +6,7 @@ import io
 import os
 import wave
 from contextlib import nullcontext
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from decimal import Decimal
 from pathlib import Path
 from types import SimpleNamespace
@@ -23,7 +23,7 @@ from services.usage_metering import RATE_CARD_VERSION, normalize_attempts
 from tests.fakes.local_pricing import installed_card_max_age_seconds
 
 pytestmark = pytest.mark.infra_local
-AT = datetime(2026, 10, 12, 12, tzinfo=timezone.utc)
+AT = datetime(2026, 10, 12, 12, tzinfo=UTC)
 GROQ = Candidate("groq", "whisper-large-v3-turbo")
 OPENAI = Candidate("openai", "gpt-4o-mini-transcribe")
 MIGRATION = Path("supabase/migrations/20261017100000_usage_counts_as_spend.sql")
@@ -150,8 +150,8 @@ def test_failed_attempt_is_persisted_at_zero_outside_turn_cost(db_case):
     assert [(r["cost_usd"], r["counts_as_spend"]) for r in rows] == [
         (Decimal("0"), False), (Decimal("0.000330000"), True)]
     from infrastructure.finops_reader import PostgresFinopsReader
-    since = datetime(2000, 1, 1, tzinfo=timezone.utc)
-    until = datetime(2100, 1, 1, tzinfo=timezone.utc)
+    since = datetime(2000, 1, 1, tzinfo=UTC)
+    until = datetime(2100, 1, 1, tzinfo=UTC)
     mine = [g for g in PostgresFinopsReader(c.pool).usage_groups(since, until)
             if g.provider == "deepseek" and g.cost_basis == "failed_no_usage"]
     assert mine and all(g.cost_usd == 0 and not g.counts_as_spend for g in mine)
@@ -208,7 +208,7 @@ def test_cron_settles_exact_usage_and_holds_unknown(db_case):
     assert status["exact"]["status"] == "settled" and status["exact"]["settled_milli"] >= 1
     assert status["unknown"]["status"] == "uncertain"
     from infrastructure.finops_reader import PostgresFinopsReader
-    held, age, _ = PostgresFinopsReader(c.pool).wallet_holds(datetime.now(timezone.utc))
+    held, age, _ = PostgresFinopsReader(c.pool).wallet_holds(datetime.now(UTC))
     assert held >= 1 and age > 0
     assert _ledger(c) == (c.wallet.balance(c.owner).available_milli,
                           c.wallet.balance(c.owner).reserved_milli)
@@ -519,12 +519,12 @@ def test_code_degrades_safely_without_the_migration(db_case, monkeypatch):
     # legacy CHECK: the failed attempt is stored as a zero-cost estimate (never US$ 1)
     assert [(r["cost_usd"], r["cost_basis"], r["billing_exact"]) for r in rows] == [
         (Decimal("0"), "estimated", False), (Decimal("5.000000000"), "provider_reported", True)]
-    since = datetime(2000, 1, 1, tzinfo=timezone.utc)
-    until = datetime(2100, 1, 1, tzinfo=timezone.utc)
+    since = datetime(2000, 1, 1, tzinfo=UTC)
+    until = datetime(2100, 1, 1, tzinfo=UTC)
     reader = PostgresFinopsReader(c.pool)
     assert reader.usage_groups(since, until) and reader.owner_usage(since, until) is not None
     reader.ops_counts(since, until)
-    assert reader.wallet_holds(datetime.now(timezone.utc))[2] == 0
+    assert reader.wallet_holds(datetime.now(UTC))[2] == 0
     PostgresAccountReader(c.pool).usage(c.owner)
     # over-ceiling settle still caps (the anomaly column is simply absent)
     done = c.wallet.settle_usage(c.owner, reservation.reservation_id,

@@ -8,7 +8,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from contextvars import copy_context
 from dataclasses import dataclass
-from typing import Callable
+from collections.abc import Callable
 
 _LIMITERS: dict[tuple[str, int], threading.BoundedSemaphore] = {}
 _LIMITERS_LOCK = threading.Lock()

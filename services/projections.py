@@ -23,7 +23,8 @@ import time
 from contextlib import contextmanager
 from contextvars import ContextVar
 from copy import deepcopy
-from typing import Any, Callable, Dict, Iterator, List, Literal, Optional, TypedDict
+from typing import Any, Dict, List, Literal, Optional, TypedDict
+from collections.abc import Callable, Iterator
 
 from observability.telemetry import log_event as _log_event
 
@@ -39,9 +40,9 @@ ERROR_CODES = ("exception", "timeout", "epoch_mismatch", "superseded", "invarian
 class ProjectionEntry(TypedDict):
     status: Literal["pending", "completed", "failed", "stale"]
     projected_version: int
-    action_id: Optional[str]
+    action_id: str | None
     attempts: int
-    last_error_code: Optional[str]
+    last_error_code: str | None
 
 
 class ProjectionState(TypedDict):
@@ -73,7 +74,7 @@ def wait_seconds() -> float:
 
 
 @contextmanager
-def deferral_scope(enabled: Optional[bool] = None) -> Iterator[bool]:
+def deferral_scope(enabled: bool | None = None) -> Iterator[bool]:
     """Abre a janela em que o arquivista pode adiar derivados. Só quem DRENA a
     projeção sob o lock do turno (API, playtest) deve abrir esta janela."""
     active = projection_mode() == "post_response" if enabled is None else bool(enabled)
@@ -126,13 +127,13 @@ def normalize_projection_state(raw: Any, state: dict) -> ProjectionState:
     session, epoch = _continuity(state)
     raw = raw if isinstance(raw, dict) else {}
     canonical = max(_int(raw.get("canonical_version")), session)
-    out: Dict[str, Any] = {"canonical_version": canonical, "timeline_epoch": epoch}
+    out: dict[str, Any] = {"canonical_version": canonical, "timeline_epoch": epoch}
     for name in PROJECTIONS:
         out[name] = _entry(raw.get(name), canonical)
     return out  # type: ignore[return-value]
 
 
-def normalize_plan(raw: Any) -> Optional[dict]:
+def normalize_plan(raw: Any) -> dict | None:
     """``pending_derived``: só a linha de base mínima (ids, nunca texto)."""
     if not isinstance(raw, dict):
         return None
@@ -152,7 +153,7 @@ def normalize_plan(raw: Any) -> Optional[dict]:
         return None
 
 
-def make_plan(*, new_event_ids: List[str], new_rejections: bool, turn: int,
+def make_plan(*, new_event_ids: list[str], new_rejections: bool, turn: int,
               epoch: int) -> dict:
     return normalize_plan({
         "new_event_ids": list(new_event_ids), "new_rejections": new_rejections,
@@ -160,7 +161,7 @@ def make_plan(*, new_event_ids: List[str], new_rejections: bool, turn: int,
     })  # type: ignore[return-value]
 
 
-def stamp_commit(state: dict, action_id: Optional[str]) -> dict:
+def stamp_commit(state: dict, action_id: str | None) -> dict:
     """Chamado no commit do turno (dono: API/playtest). Incrementa a versão
     canônica e marca as projeções adiadas como ``pending``. Muta e devolve."""
     raw = state.get("projection_state")
@@ -230,7 +231,7 @@ def dedupe_key(game_id: Any, epoch: int, action_id: str) -> str:
     return f"{game_id}:{int(epoch)}:archive:{action_id}"
 
 
-def job_payload(document: dict) -> Optional[dict]:
+def job_payload(document: dict) -> dict | None:
     """Payload do job ``project_archive`` para o documento commitado (ou None)."""
     plan = normalize_plan(document.get("pending_derived"))
     if plan is None or plan["canonical_version"] is None or not plan["action_id"]:
@@ -267,7 +268,7 @@ _DEATH_WORDS = re.compile(
 )
 
 
-def strip_dead_npc_presence(text: str, state: dict) -> tuple[str, List[dict]]:
+def strip_dead_npc_presence(text: str, state: dict) -> tuple[str, list[dict]]:
     """Remove frases do derivado que citam NPC canonicamente morto SEM falar da
     morte (presença/fala de morto = reintrodução). Conservador: qualquer
     vocabulário de morte/memória ou marcador de relato preserva a frase."""
@@ -284,8 +285,8 @@ def strip_dead_npc_presence(text: str, state: dict) -> tuple[str, List[dict]]:
     if not text or not names:
         return text, []
     pieces = re.split(r"((?<=[.!?])\s+|\n+)", str(text))
-    kept: List[str] = []
-    rejected: List[dict] = []
+    kept: list[str] = []
+    rejected: list[dict] = []
     turn = str(_int((state.get("world") or {}).get("turn_count", 0)))
     for index in range(0, len(pieces), 2):
         sentence = pieces[index]
@@ -306,9 +307,9 @@ def strip_dead_npc_presence(text: str, state: dict) -> tuple[str, List[dict]]:
 # --- execução ------------------------------------------------------------------
 
 def run_pending(state: dict, *,
-                executor: Optional[Callable[[dict, dict], dict]] = None,
+                executor: Callable[[dict, dict], dict] | None = None,
                 clock: Callable[[], float] = time.monotonic,
-                timeout: Optional[float] = None) -> dict:
+                timeout: float | None = None) -> dict:
     """Executa a projeção pendente sobre o estado CANÔNICO atual (modo A).
 
     Deve ser chamado pelo dono do lock do turno. Nunca levanta: falha vira
@@ -334,7 +335,7 @@ def run_pending(state: dict, *,
         from agents.archivist import run_derived_projection as executor  # noqa: N813
     limit = wait_seconds() if timeout is None else float(timeout)
     started = clock()
-    error: Optional[str] = None
+    error: str | None = None
     result: dict = {}
     try:
         result = dict(executor(state, plan) or {})

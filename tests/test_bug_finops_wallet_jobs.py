@@ -3,7 +3,7 @@ STT definitive rejection, rate-card window, benign post-commit heartbeat, fail-c
 from __future__ import annotations
 
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from decimal import Decimal as D
 from uuid import UUID
 
@@ -19,7 +19,7 @@ from services.kill_switches import IMAGE, STT_FALLBACK, KillSwitches, MemorySwit
 from services.usage_metering import exact_billable_cost, normalize_attempts, operation_cost
 
 OPERATION = UUID("22222222-2222-4222-8222-222222222222")
-NOW = datetime(2026, 10, 15, 15, tzinfo=timezone.utc)
+NOW = datetime(2026, 10, 15, 15, tzinfo=UTC)
 PRICING = {"v1": finops.PricingRef("v1", D("5"), {})}
 
 
@@ -170,7 +170,7 @@ def _cap_reader(usd: str) -> FakeFinopsReader:
 
 def test_manual_override_only_same_day(monkeypatch):
     monkeypatch.setenv("RPG_DAILY_SPEND_CAP_BRL", "1")
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     from services.daily_spend_cap import day_start
     since = day_start(now)
     # yesterday's trip + this morning's re-enable must NOT disarm today's cap

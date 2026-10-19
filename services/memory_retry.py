@@ -6,7 +6,8 @@ sanitizado pelo nó de NPC.
 """
 from __future__ import annotations
 
-from typing import Dict, Iterable, List
+from typing import Dict, List
+from collections.abc import Iterable
 
 MAX_PENDING_NPC_MEMORY = 50
 MAX_NPC_ID_LENGTH = 120
@@ -17,9 +18,9 @@ def _clean_text(value, *, limit: int) -> str:
     return " ".join(str(value or "").split())[:limit].strip()
 
 
-def normalize_pending_npc_memory(rows: Iterable | None) -> List[Dict]:
+def normalize_pending_npc_memory(rows: Iterable | None) -> list[dict]:
     """Normaliza, deduplica e limita a fila, tolerando saves adulterados."""
-    normalized: List[Dict] = []
+    normalized: list[dict] = []
     seen: set[tuple[str, str]] = set()
     for row in rows or []:
         if not isinstance(row, dict):
@@ -48,7 +49,7 @@ def normalize_pending_npc_memory(rows: Iterable | None) -> List[Dict]:
     return normalized[-MAX_PENDING_NPC_MEMORY:]
 
 
-def enqueue_npc_memory(rows: Iterable | None, npc_id: str, fact: str) -> List[Dict]:
+def enqueue_npc_memory(rows: Iterable | None, npc_id: str, fact: str) -> list[dict]:
     """Anexa uma escrita sem duplicá-la e reaplica o limite da fila."""
     return normalize_pending_npc_memory([
         *normalize_pending_npc_memory(rows),

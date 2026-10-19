@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Testes da spec inicio-personalizado — prólogo + seed de arco pessoal.
 
 Suíte offline (RPG_FORCE_MOCK=1 via conftest): MockLLM devolve a fixture

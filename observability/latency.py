@@ -13,7 +13,8 @@ import threading
 import time
 from contextlib import contextmanager
 from enum import Enum
-from typing import Any, Callable, Dict, Iterator, List, Optional
+from typing import Any, Dict, List, Optional
+from collections.abc import Callable, Iterator
 
 
 class TurnPhase(str, Enum):
@@ -28,7 +29,7 @@ class TurnPhase(str, Enum):
 PHASES = tuple(p.value for p in TurnPhase)
 
 # Nós do grafo -> fase (R2). Nós desconhecidos caem em OTHER.
-NODE_PHASE: Dict[str, TurnPhase] = {
+NODE_PHASE: dict[str, TurnPhase] = {
     "dm_router": TurnPhase.ROUTER,
     "campaign_manager": TurnPhase.ROUTER,
     "storyteller": TurnPhase.NARRATOR,
@@ -72,7 +73,7 @@ class FakeClock:
 _clock_source: Callable[[], float] = time.monotonic
 
 
-def set_clock(fn: Optional[Callable[[], float]]) -> None:
+def set_clock(fn: Callable[[], float] | None) -> None:
     """Troca o relógio default das timelines novas (None = monotonic)."""
     global _clock_source
     _clock_source = fn or time.monotonic
@@ -82,14 +83,14 @@ def now() -> float:
     return _clock_source()
 
 
-_sinks: List[Callable[[Dict[str, Any]], None]] = []
+_sinks: list[Callable[[dict[str, Any]], None]] = []
 
 
-def add_sink(fn: Callable[[Dict[str, Any]], None]) -> None:
+def add_sink(fn: Callable[[dict[str, Any]], None]) -> None:
     _sinks.append(fn)
 
 
-def remove_sink(fn: Callable[[Dict[str, Any]], None]) -> None:
+def remove_sink(fn: Callable[[dict[str, Any]], None]) -> None:
     try:
         _sinks.remove(fn)
     except ValueError:
@@ -99,23 +100,23 @@ def remove_sink(fn: Callable[[Dict[str, Any]], None]) -> None:
 class TurnTimeline:
     """Marcas de entrega + acumulador de fases exclusivas (thread-safe)."""
 
-    def __init__(self, clock: Optional[Callable[[], float]] = None, *,
+    def __init__(self, clock: Callable[[], float] | None = None, *,
                  transport: str = "post") -> None:
         self._clock = clock or _clock_source
         self._lock = threading.RLock()
         self.transport = transport
         self.t0 = self._clock()
         self._cursor = self.t0
-        self._end: Optional[float] = None
-        self._marks: Dict[str, float] = {}
-        self._phase_s: Dict[str, float] = {p: 0.0 for p in PHASES}
-        self._stack: List[str] = []
+        self._end: float | None = None
+        self._marks: dict[str, float] = {}
+        self._phase_s: dict[str, float] = {p: 0.0 for p in PHASES}
+        self._stack: list[str] = []
         self._unassigned = 0.0
-        self._pending_attempts: Dict[str, int] = {}
-        self._llm_by_phase: Dict[str, int] = {}
-        self.extra: Dict[str, Any] = {}
+        self._pending_attempts: dict[str, int] = {}
+        self._llm_by_phase: dict[str, int] = {}
+        self.extra: dict[str, Any] = {}
         self._log_hold = False
-        self._log_pending: Optional[Callable[[], None]] = None
+        self._log_pending: Callable[[], None] | None = None
 
     # --- linha rpg.turn adiada (SPEC-212 R13) ---------------------------------
     def hold_log(self) -> None:
@@ -149,7 +150,7 @@ class TurnTimeline:
         with self._lock:
             self._marks.setdefault(name, self._clock())
 
-    def mark_ms(self, name: str) -> Optional[int]:
+    def mark_ms(self, name: str) -> int | None:
         with self._lock:
             value = self._marks.get(name)
         return None if value is None else int(round((value - self.t0) * 1000))
@@ -228,7 +229,7 @@ class TurnTimeline:
             end = self._end if self._end is not None else self._clock()
         return int(round((end - self.t0) * 1000))
 
-    def phase_ms(self) -> Dict[str, int]:
+    def phase_ms(self) -> dict[str, int]:
         """Fases em ms inteiros; soma == total_ms() (resto vai à maior fase)."""
         with self._lock:
             values = {p: int(round(s * 1000)) for p, s in self._phase_s.items()}
@@ -240,11 +241,11 @@ class TurnTimeline:
                 values[biggest] += drift
         return values
 
-    def llm_by_phase(self) -> Dict[str, int]:
+    def llm_by_phase(self) -> dict[str, int]:
         with self._lock:
             return dict(self._llm_by_phase)
 
-    def fields(self) -> Dict[str, Any]:
+    def fields(self) -> dict[str, Any]:
         return {
             "transport": self.transport,
             "pseudo_streaming": PSEUDO_STREAMING,
@@ -261,11 +262,11 @@ class TurnTimeline:
 # Fixo enquanto _stream_turn fatiar mensagem pronta (SPEC-200, definições).
 PSEUDO_STREAMING = True
 
-_current: contextvars.ContextVar[Optional[TurnTimeline]] = contextvars.ContextVar(
+_current: contextvars.ContextVar[TurnTimeline | None] = contextvars.ContextVar(
     "rpg_turn_timeline", default=None)
 
 
-def current_timeline() -> Optional[TurnTimeline]:
+def current_timeline() -> TurnTimeline | None:
     return _current.get()
 
 
@@ -280,7 +281,7 @@ def phase(phase_: TurnPhase) -> Iterator[None]:
         yield
 
 
-def bind(timeline: Optional[TurnTimeline]) -> contextvars.Token:
+def bind(timeline: TurnTimeline | None) -> contextvars.Token:
     return _current.set(timeline)
 
 
@@ -307,7 +308,7 @@ def accumulate(key: str) -> Iterator[None]:
             timeline.extra[key] = int(timeline.extra.get(key, 0)) + spent
 
 
-def publish(record: Dict[str, Any]) -> None:
+def publish(record: dict[str, Any]) -> None:
     """Entrega o registro final a sinks (baseline). Nunca levanta."""
     for sink in list(_sinks):
         try:
@@ -316,9 +317,9 @@ def publish(record: Dict[str, Any]) -> None:
             pass
 
 
-def summarize_phases(records: List[Dict[str, Any]]) -> Dict[str, Dict[str, float]]:
+def summarize_phases(records: list[dict[str, Any]]) -> dict[str, dict[str, float]]:
     """p50/p95 (nearest-rank) e participação de cada fase sobre os registros."""
-    out: Dict[str, Dict[str, float]] = {}
+    out: dict[str, dict[str, float]] = {}
     totals = [sum((r.get("phase_ms") or {}).values()) for r in records]
     grand = sum(totals) or 1
     for p in PHASES:
@@ -328,7 +329,7 @@ def summarize_phases(records: List[Dict[str, Any]]) -> Dict[str, Dict[str, float
     return out
 
 
-def percentile(values: List[int], pct: float) -> int:
+def percentile(values: list[int], pct: float) -> int:
     """Nearest-rank (mesmo critério de playtest.telemetry._percentile)."""
     if not values:
         return 0

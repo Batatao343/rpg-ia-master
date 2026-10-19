@@ -101,17 +101,17 @@ def _pid_is_alive(pid: int) -> bool:
 def begin_run(
     run_id: str,
     *,
-    profiles: List[str],
+    profiles: list[str],
     turns: int,
     seed: int,
     real: bool,
-    class_name: Optional[str] = None,
+    class_name: str | None = None,
     invariants_enabled: bool = True,
-    scenario: Optional[str] = None,
-    seeds_by_profile: Optional[Dict[str, int]] = None,
+    scenario: str | None = None,
+    seeds_by_profile: dict[str, int] | None = None,
     start_level: int = 1,
-    campaign_matrix: Optional[List[dict]] = None,
-    routes_profile: Optional[str] = None,
+    campaign_matrix: list[dict] | None = None,
+    routes_profile: str | None = None,
     provider_min_interval_seconds: float = 0.0,
     require_all_llm_invocations_successful: bool = False,
 ) -> dict:
@@ -158,13 +158,13 @@ def begin_run(
 
 
 def recover_stale_runs(*, max_age_seconds: int = 21600,
-                       now: Optional[datetime] = None) -> List[str]:
+                       now: datetime | None = None) -> list[str]:
     """Fecha manifestos ``running`` antigos deixados por processo interrompido.
 
     Runs recentes são preservadas para não interferir em outro playtest ativo.
     """
     current = now or datetime.now()
-    recovered: List[str] = []
+    recovered: list[str] = []
     pattern = os.path.join(PLAYTEST_RUNS_DIR, "*", RUN_META_FILENAME)
     for path in sorted(glob.glob(pattern)):
         meta = _read_json(path)
@@ -196,7 +196,7 @@ def recover_stale_runs(*, max_age_seconds: int = 21600,
     return recovered
 
 
-def touch_run(run_id: str, *, now: Optional[datetime] = None) -> bool:
+def touch_run(run_id: str, *, now: datetime | None = None) -> bool:
     """Atualiza prova de vida de manifesto em execução; False se não aplicável."""
     path = _meta_path(run_id)
     meta = _read_json(path)
@@ -224,7 +224,7 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
         value for value in (meta.get("campaigns") or {}).values()
         if isinstance(value, dict)
     ]
-    by_profile: Dict[str, List[dict]] = {}
+    by_profile: dict[str, list[dict]] = {}
     for campaign in campaigns:
         by_profile.setdefault(str(campaign.get("profile") or ""), []).append(campaign)
 
@@ -239,15 +239,15 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
         profile for profile in by_profile
         if profile not in set(expected_profiles)
     )
-    incomplete_campaigns: List[dict] = []
-    missing_summaries: List[str] = []
-    invalid_summaries: List[dict] = []
-    missing_jsonls: List[str] = []
-    invalid_jsonls: List[dict] = []
-    missing_saves: List[str] = []
-    invalid_saves: List[dict] = []
-    artifact_mismatches: List[dict] = []
-    configuration_errors: List[str] = []
+    incomplete_campaigns: list[dict] = []
+    missing_summaries: list[str] = []
+    invalid_summaries: list[dict] = []
+    missing_jsonls: list[str] = []
+    invalid_jsonls: list[dict] = []
+    missing_saves: list[str] = []
+    invalid_saves: list[dict] = []
+    artifact_mismatches: list[dict] = []
+    configuration_errors: list[str] = []
 
     if not expected_profiles:
         configuration_errors.append("manifesto não declara perfis esperados")
@@ -266,7 +266,7 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
             "actual": actual_value,
         })
 
-    def load_json_artifact(path: str) -> tuple[Optional[dict], Optional[str]]:
+    def load_json_artifact(path: str) -> tuple[dict | None, str | None]:
         try:
             with open(path, encoding="utf-8") as fp:
                 value = json.load(fp)
@@ -276,8 +276,8 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
             return None, f"raiz {type(value).__name__}, esperado objeto"
         return value, None
 
-    def load_jsonl_artifact(path: str) -> tuple[List[dict], Optional[str]]:
-        rows: List[dict] = []
+    def load_jsonl_artifact(path: str) -> tuple[list[dict], str | None]:
+        rows: list[dict] = []
         try:
             with open(path, encoding="utf-8") as fp:
                 lines = fp.readlines()
@@ -303,10 +303,10 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
 
     for profile in expected_profiles:
         for campaign in by_profile.get(profile, []):
-            reasons: List[str] = []
+            reasons: list[str] = []
             summary_name = str(campaign.get("summary_file") or "")
             summary_path = os.path.join(directory, summary_name)
-            summary: Optional[dict] = None
+            summary: dict | None = None
             if not summary_name or not os.path.isfile(summary_path):
                 missing_summaries.append(summary_name or f"{profile}:<summary>")
                 reasons.append("summary ausente")
@@ -322,7 +322,7 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
 
             jsonl_name = str(campaign.get("jsonl_file") or "")
             jsonl_path = os.path.join(directory, jsonl_name)
-            rows: List[dict] = []
+            rows: list[dict] = []
             if not jsonl_name or not os.path.isfile(jsonl_path):
                 missing_jsonls.append(jsonl_name or f"{profile}:<jsonl>")
                 reasons.append("JSONL ausente")
@@ -456,7 +456,7 @@ def _manifest_completeness(meta: dict, directory: str) -> dict:
                             })
                             reasons.append("JSONL sem campos obrigatórios")
                             break
-                        row_contract_errors: List[str] = []
+                        row_contract_errors: list[str] = []
                         if row.get("route") not in {
                             "storyteller", "combat_agent", "npc_actor", "loot",
                             "timeout",
@@ -730,7 +730,7 @@ def inspect_run(run_id_or_dir: str) -> dict:
 
 
 def finish_run(run_id: str, *, status: str = "complete",
-               reason: Optional[str] = None) -> dict:
+               reason: str | None = None) -> dict:
     """Fecha o manifesto; `complete` só é verdadeiro se os artefatos provarem."""
     path = _meta_path(run_id)
     meta = _read_json(path)
@@ -848,7 +848,7 @@ def write_turn(fp, record: dict) -> None:
     fp.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 
-def _percentile(values: List[int], pct: float) -> int:
+def _percentile(values: list[int], pct: float) -> int:
     if not values:
         return 0
     s = sorted(values)
@@ -864,7 +864,7 @@ def _min_active_entropy_cost(player: dict) -> int:
         from services import cards
     except Exception:
         return 0
-    costs: List[int] = []
+    costs: list[int] = []
     for aid in (player.get("prepared_cards") or []):
         ab = cards.get_card(str(aid))
         if not isinstance(ab, dict):
@@ -877,14 +877,14 @@ def _min_active_entropy_cost(player: dict) -> int:
     return min(costs) if costs else 0
 
 
-def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
+def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
     """Métricas agregadas da campanha (spec 5.3 R2)."""
     routes: dict = {}
     violations: dict = {}
     violation_samples: dict = {}
     providers: dict = {}
     cost_by_tier: dict = {}
-    latencies: List[int] = []
+    latencies: list[int] = []
     fell_back_turns = 0
     action_kinds: Counter = Counter()
 
@@ -968,7 +968,7 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
                 event.get("provenance_counts") or {}
             ).items()
         })
-    rag_operations: Dict[str, int] = {}
+    rag_operations: dict[str, int] = {}
     for event in all_rag_events:
         operation = str(event.get("operation") or "?")
         rag_operations[operation] = rag_operations.get(operation, 0) + 1
@@ -1067,7 +1067,7 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
             if quest_requests else None
         ),
     }
-    node_samples: Dict[str, List[int]] = {}
+    node_samples: dict[str, list[int]] = {}
     for row in turn_records:
         for node, value in dict(row.get("node_latency_ms") or {}).items():
             node_samples.setdefault(str(node), []).append(int(value or 0))
@@ -1099,7 +1099,7 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
         )
         for row in turn_records if row.get("combat_ended")
     ]
-    combat_end_hp_pcts: List[float] = []
+    combat_end_hp_pcts: list[float] = []
     prev_combat = False
     for r in turn_records:
         now_combat = bool(r.get("combat_active"))
@@ -1208,7 +1208,7 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
         } | {str(row["region_id"]) for row in market_rows if row.get("region_id")}
     except Exception:
         region_ids = set(location_ids)
-    acquisition: Dict[str, List[int]] = {}
+    acquisition: dict[str, list[int]] = {}
     realized_margin = 0
     for row in successful_economy:
         item_id = str(row.get("item_id") or "")
@@ -1227,7 +1227,7 @@ def build_summary(result: CampaignResult, turn_records: List[dict]) -> dict:
         family: round(100.0 * count / max(1, len(turn_records)), 1)
         for family, count in sorted(family_counts.items())
     }
-    stock_seen: Dict[tuple[str, str], int] = {}
+    stock_seen: dict[tuple[str, str], int] = {}
     restocks_observed = 0
     stock_rows = market_rows or economy_rows
     for row in stock_rows:

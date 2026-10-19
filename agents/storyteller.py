@@ -46,13 +46,13 @@ class StoryUpdate(BaseModel):
     # default "" (não required): Gemini real às vezes omite o campo num schema
     # grande — melhor narrar via fallback do que perder o turno (smoke 2026-07-05)
     narrative: str = Field(default="", description="O texto narrativo da resposta. OBRIGATÓRIO: sempre preencha.")
-    introduced_npcs: List[str] = Field(
+    introduced_npcs: list[str] = Field(
         default_factory=list,
         description="Nomes de personagens que ENTRARAM na cena neste turno (novos ou conhecidos que reapareceram).")
-    npcs_left_scene: List[str] = Field(
+    npcs_left_scene: list[str] = Field(
         default_factory=list,
         description="Nomes de personagens JÁ CONHECIDOS que SAÍRAM da cena neste turno (foram embora, morreram, sumiram). Vazio se ninguém saiu.")
-    faction_impacts: List[FactionImpact] = Field(
+    faction_impacts: list[FactionImpact] = Field(
         default_factory=list,
         description=(
             "Fações afetadas pela AÇÃO do jogador NESTE turno. Vazio se a ação não ajuda "
@@ -66,7 +66,7 @@ class StoryUpdate(BaseModel):
             "da cena (o beat ativo). Caso contrário False. Não marque True por progresso vago."
         ),
     )
-    proposed_events: List[ProposedWorldEvent] = Field(
+    proposed_events: list[ProposedWorldEvent] = Field(
         default_factory=list,
         description=(
             "APENAS se a ação deste turno causou mudança PERSISTENTE no mundo "
@@ -76,7 +76,7 @@ class StoryUpdate(BaseModel):
             "type='quest_completed' com target_id=quest_id e payload={'quest_id': quest_id}."
         ),
     )
-    proposed_quests: List[ProposedQuest] = Field(
+    proposed_quests: list[ProposedQuest] = Field(
         default_factory=list,
         description=(
             "APENAS se um personagem PRESENTE NA CENA ofereceu uma missão CONCRETA ao "
@@ -85,7 +85,7 @@ class StoryUpdate(BaseModel):
             "destino for claro. Deixe vazio na dúvida — não invente missões."
         ),
     )
-    items_gained: List[str] = Field(
+    items_gained: list[str] = Field(
         default_factory=list,
         description=(
             "APENAS se a narrativa deu um item CONCRETO ao jogador NESTE turno "
@@ -122,7 +122,7 @@ def _inventory_counts(player: dict) -> Counter:
 
 def _reward_confirmation(before: dict, after: dict) -> str:
     """Linha canônica derivada somente do delta mecânico confirmado."""
-    rewards: List[str] = []
+    rewards: list[str] = []
     gold_delta = int(after.get("gold", 0) or 0) - int(before.get("gold", 0) or 0)
     if gold_delta > 0:
         rewards.append(f"+{gold_delta} de ouro")
@@ -142,7 +142,7 @@ def _scene_canonical_entities(state: GameState, factions: list, intel: dict, loc
     Fações conhecidas já trazem id canônico; local e NPCs presentes casam por nome com o
     grafo (best-effort). Defensivo: qualquer falha vira lista vazia (o validator é o gate real).
     """
-    lines: List[str] = []
+    lines: list[str] = []
     seen = set()
     for f in factions:
         fid = f.get("id")
@@ -172,7 +172,7 @@ def _scene_canonical_entities(state: GameState, factions: list, intel: dict, loc
     return "\n".join(lines) or "Nenhuma entidade canônica identificada na cena."
 
 
-def _quests_ativas_block(quests: List[Dict], state: Optional[Dict] = None) -> str:
+def _quests_ativas_block(quests: list[dict], state: dict | None = None) -> str:
     """Fase 3.3: side quests ativas — o LLM só pode referenciar estes ids em quest_completed.
 
     SPEC-223 R1: cada linha diz se o ESTADO já prova a conclusão; sem prova o
@@ -181,7 +181,7 @@ def _quests_ativas_block(quests: List[Dict], state: Optional[Dict] = None) -> st
     if not ativas:
         return "Nenhuma missão pendente registrada."
 
-    def _prova(q: Dict) -> str:
+    def _prova(q: dict) -> str:
         if state is None:
             return ""
         ok, _why = quest_log.has_completion_proof(q, state)
@@ -206,7 +206,7 @@ def _npc_fallback_clause(state: GameState) -> str:
             f"esta direção ÚTIL e canônica: {direction}")
 
 
-def _mediated_subject_view(state: GameState) -> Optional[dict]:
+def _mediated_subject_view(state: GameState) -> dict | None:
     """SPEC-202 R11: recorte PÚBLICO (camada 2) do NPC de quem o narrador fala."""
     subject_id = state.get("mediated_subject_id")
     if not subject_id:
@@ -262,7 +262,7 @@ def _mediation_clause(state: GameState) -> str:
     return clause
 
 
-def _log_narrative_rejected(kind: str, codes: List[str]) -> None:
+def _log_narrative_rejected(kind: str, codes: list[str]) -> None:
     """SPEC-252 R2: `narrative.rejected` (kind item|event|mediation + reason_code fechado), 1 linha
     por (kind, reason_code) com `count`; a contagem por kind tambem vai em `rpg.turn`."""
     from observability.telemetry import count_turn
@@ -271,7 +271,7 @@ def _log_narrative_rejected(kind: str, codes: List[str]) -> None:
     count_turn(kind, len(codes))
 
 
-def _guard_mediation_secret(text: str, state: GameState) -> tuple[str, List[str]]:
+def _guard_mediation_secret(text: str, state: GameState) -> tuple[str, list[str]]:
     """SPEC-202 R11: parágrafo mediado com assinatura de segredo não revelado vira
     descrição observável neutra (determinística) + registro de rejeição."""
     from services import interlocutor
@@ -285,9 +285,9 @@ def _guard_mediation_secret(text: str, state: GameState) -> tuple[str, List[str]
     who = view.get("name") or "A cena"
     neutral = (f"{who} não deixa transparecer mais do que o óbvio; o que você "
                "consegue observar não basta para afirmar nada além disso.")
-    rejections: List[str] = []
+    rejections: list[str] = []
     paragraphs = str(text).split("\n\n")
-    out: List[str] = []
+    out: list[str] = []
     for paragraph in paragraphs:
         found = find_unrevealed(paragraph, state)
         if found:
@@ -357,8 +357,8 @@ def _deterministic_story_fallback(notes, light: dict) -> str:
     return "\n".join(parts) or (
         "O momento passa em silêncio; o mundo aguarda seu próximo passo."
     )
-def _with_new_npc(npcs: Dict[str, Dict], new_name: str, loc: str, narrative_text: str,
-                  game_id: str = "", home_id: str = "", turn: int = 0) -> Dict[str, Dict]:
+def _with_new_npc(npcs: dict[str, dict], new_name: str, loc: str, narrative_text: str,
+                  game_id: str = "", home_id: str = "", turn: int = 0) -> dict[str, dict]:
     from services import npc_layers
     from services.entity_identity import find_runtime_npc_key
 
@@ -1062,8 +1062,8 @@ def storyteller_node(state: GameState):
             )
             if str(g).strip()
         ]
-        rejected_claims: List[str] = []
-        rejected_item_codes: List[str] = []
+        rejected_claims: list[str] = []
+        rejected_item_codes: list[str] = []
         if gained:
             from inventory import add_item, get_qty, is_unique, resolve_item_name
             from services.economy import claim_event, is_unique_available

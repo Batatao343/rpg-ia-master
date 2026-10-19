@@ -6,7 +6,7 @@ Canonical migrations are instantiated under an isolated schema; app is untouched
 import os
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 from threading import Barrier
 from types import SimpleNamespace
@@ -53,7 +53,7 @@ def concurrent_payments():
                 sql = Path("supabase/migrations", filename).read_text(encoding="utf-8")
                 admin.execute(sql.replace("app.", schema + ".").replace("public.", schema + "."))
             db = Connection(admin)
-            at = datetime(2026, 10, 13, 12, tzinfo=timezone.utc)
+            at = datetime(2026, 10, 13, 12, tzinfo=UTC)
             version, sku = "race-v", "race-sku"
             db.execute("""insert into app.pricing_versions
                 (version_id,shard_budget_unit_brl,fx_usd_brl,fx_source,fx_observed_at,fx_max_age_seconds,

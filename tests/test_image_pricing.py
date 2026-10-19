@@ -1,5 +1,5 @@
 """Documented direct Images API counter arithmetic and unsupported-format gates."""
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from decimal import Decimal
 from uuid import uuid4
 
@@ -47,10 +47,10 @@ def test_incomplete_or_inconsistent_counter_breakdown_is_not_exact(usage):
 
 def test_unpublished_model_and_stale_card_cannot_authorize_dispatch():
     with pytest.raises(PricingUnavailable):
-        require_image_prices("unpublished", datetime(2026, 10, 12, tzinfo=timezone.utc))
+        require_image_prices("unpublished", datetime(2026, 10, 12, tzinfo=UTC))
     with pytest.raises(PricingUnavailable):
         # SPEC-236 R7: default window is 30 d (RPG_RATE_CARD_MAX_AGE_DAYS), was a fixed 7 d.
-        require_image_prices(MODEL, datetime(2026, 11, 12, tzinfo=timezone.utc))
+        require_image_prices(MODEL, datetime(2026, 11, 12, tzinfo=UTC))
     assert not reading(USAGE, "unpublished").billing_exact
 
 

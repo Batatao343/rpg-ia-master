@@ -13,7 +13,7 @@ from typing import Dict, List, Literal, Optional, Tuple, TypedDict
 from gamedata import load_json_data
 from services import graph_resolver as gr
 
-COMPANION_TEMPLATES: Dict[str, dict] = load_json_data("companions.json") or {}
+COMPANION_TEMPLATES: dict[str, dict] = load_json_data("companions.json") or {}
 
 RECRUIT_MIN_REL = 7   # relationship 0..10 (escala da Fase 2)
 RECRUIT_MIN_INTERACTIONS = 2  # SPEC-223 R4: vínculo exige convivência registrada
@@ -78,7 +78,7 @@ def _fold(s: str) -> str:
     return "".join(c for c in n if not unicodedata.combining(c)).lower()
 
 
-def _archetype_for(npc: Dict) -> str:
+def _archetype_for(npc: dict) -> str:
     blob = _fold(" ".join(str(npc.get(k, "")) for k in ("role", "persona", "appearance")))
     for arch, words in _ARCHETYPE_WORDS.items():
         if any(w in blob for w in words):
@@ -86,7 +86,7 @@ def _archetype_for(npc: Dict) -> str:
     return "capanga"
 
 
-def _has_complete_v4_sheet(npc: Dict) -> bool:
+def _has_complete_v4_sheet(npc: dict) -> bool:
     if not all(
         field in npc and npc[field] is not None
         for field in _NPC_V4_REQUIRED_FIELDS
@@ -102,12 +102,12 @@ def _has_complete_v4_sheet(npc: Dict) -> bool:
     return isinstance(profile, dict) and bool(profile.get("priorities"))
 
 
-def _valid_partial_virtudes(raw: object) -> Optional[Dict[str, int]]:
+def _valid_partial_virtudes(raw: object) -> dict[str, int] | None:
     """Aceita somente uma ficha v4 parcial fechada (0..5), nunca attributes."""
     if not isinstance(raw, dict):
         return None
     keys = ("forca", "agilidade", "corpo", "mente", "carisma")
-    out: Dict[str, int] = {}
+    out: dict[str, int] = {}
     for key in keys:
         try:
             value = int(raw[key])
@@ -119,7 +119,7 @@ def _valid_partial_virtudes(raw: object) -> Optional[Dict[str, int]]:
     return out
 
 
-def _legacy_npc_sheet(npc: Dict, name: str) -> Dict:
+def _legacy_npc_sheet(npc: dict, name: str) -> dict:
     """Materializa legado só de conceitos/categorias fechadas em Python.
 
     ``attributes`` e ``combat_stats`` são deliberadamente excluídos. Estado
@@ -181,7 +181,7 @@ def _legacy_npc_sheet(npc: Dict, name: str) -> Dict:
     return sheet
 
 
-def _npc_v4_sheet(npc: Dict, name: str) -> Dict:
+def _npc_v4_sheet(npc: dict, name: str) -> dict:
     if not _has_complete_v4_sheet(npc):
         return _legacy_npc_sheet(npc, name)
     return {
@@ -191,7 +191,7 @@ def _npc_v4_sheet(npc: Dict, name: str) -> Dict:
     }
 
 
-def make_companion_from_npc(npc: Dict, name: str) -> Dict:
+def make_companion_from_npc(npc: dict, name: str) -> dict:
     """Copia a ficha v4 do NPC ou materializa legado por tabelas Python.
 
     Templates fornecem somente aliases/ataques legados de compatibilidade.
@@ -234,20 +234,20 @@ def make_companion_from_npc(npc: Dict, name: str) -> Dict:
     return normalized
 
 
-def active_allies(state: Dict) -> List[Dict]:
+def active_allies(state: dict) -> list[dict]:
     return [c for c in (state.get("party") or [])
             if c.get("active") and c.get("status", "ativo") == "ativo"
             and not c.get("dead") and not c.get("fled")
             and not c.get("surrendered") and c.get("conscious", True)]
 
 
-def _relationship(npc: Dict) -> int:
+def _relationship(npc: dict) -> int:
     """SPEC-230 R6: 0 é valor válido (não cai no default 5)."""
     rel = npc.get("relationship")
     return 5 if rel is None else int(rel)
 
 
-def scene_allies(state: Dict, *, excluded: Optional[List[str]] = None) -> List[Dict]:
+def scene_allies(state: dict, *, excluded: list[str] | None = None) -> list[dict]:
     """spec aliados-em-combate (R2): NPCs amigos EM CENA (in_scene) que não são
     party formal → companheiros TRANSITÓRIOS (`transient=True`) p/ este combate.
     Gate determinístico: in_scene ∧ relationship>=SCENE_ALLY_MIN_REL ∧ fação
@@ -263,7 +263,7 @@ def scene_allies(state: Dict, *, excluded: Optional[List[str]] = None) -> List[D
         if isinstance(c, dict):
             already.add(c.get("origin_npc") or "")
             already.add(c.get("name") or "")
-    out: List[Dict] = []
+    out: list[dict] = []
     for name, npc in (state.get("npcs") or {}).items():
         if not isinstance(npc, dict) or not is_in_scene(npc):
             continue
@@ -288,7 +288,7 @@ def scene_allies(state: Dict, *, excluded: Optional[List[str]] = None) -> List[D
     return out
 
 
-def recruitment_decision(state: Dict, npc_name: str) -> RecruitmentDecision:
+def recruitment_decision(state: dict, npc_name: str) -> RecruitmentDecision:
     """Single trait-aware authority used by product and playtest profiles."""
     from services.entity_identity import find_runtime_npc_key, runtime_npc_aliases
 
@@ -329,7 +329,7 @@ def recruitment_decision(state: Dict, npc_name: str) -> RecruitmentDecision:
     return result(True, "ok", "")
 
 
-def interaction_count(npc: Dict) -> int:
+def interaction_count(npc: dict) -> int:
     """SPEC-223 R4: conversas registradas pelo motor (contador de camadas ou memória)."""
     try:
         counted = int((npc or {}).get("interaction_count", 0) or 0)
@@ -339,14 +339,14 @@ def interaction_count(npc: Dict) -> int:
     return max(counted, len(memory) if isinstance(memory, list) else 0)
 
 
-def can_recruit(state: Dict, npc_name: str) -> Tuple[bool, str]:
+def can_recruit(state: dict, npc_name: str) -> tuple[bool, str]:
     """Gate DETERMINÍSTICO (o LLM só narra o sim/não):
     relationship >= 7 ∧ party ativa < 3 ∧ NPC não é de fação hostil ao jogador."""
     decision = recruitment_decision(state, npc_name)
     return decision["ok"], decision["public_hint"]
 
 
-def recruit(state: Dict, npc_name: str) -> Tuple[Optional[List[Dict]], str]:
+def recruit(state: dict, npc_name: str) -> tuple[list[dict] | None, str]:
     """(nova party, motivo). None = recusado (motivo explica)."""
     ok, reason = can_recruit(state, npc_name)
     if not ok:
@@ -360,14 +360,14 @@ def recruit(state: Dict, npc_name: str) -> Tuple[Optional[List[Dict]], str]:
     return list(state.get("party") or []) + [comp], ""
 
 
-def dismiss(state: Dict, name: str) -> Tuple[List[Dict], bool]:
+def dismiss(state: dict, name: str) -> tuple[list[dict], bool]:
     """Remove da party (relationship do NPC fica preservado em state['npcs'])."""
     party = list(state.get("party") or [])
     new = [c for c in party if _fold(c.get("name", "")) != _fold(name)]
     return new, len(new) != len(party)
 
 
-def set_waiting(state: Dict, name: str, location: str = "") -> Tuple[List[Dict], bool]:
+def set_waiting(state: dict, name: str, location: str = "") -> tuple[list[dict], bool]:
     party = [dict(c) for c in state.get("party") or []]
     found = False
     for c in party:
@@ -378,7 +378,7 @@ def set_waiting(state: Dict, name: str, location: str = "") -> Tuple[List[Dict],
     return party, found
 
 
-def set_following(state: Dict, name: str) -> Tuple[List[Dict], bool]:
+def set_following(state: dict, name: str) -> tuple[list[dict], bool]:
     party = [dict(c) for c in state.get("party") or []]
     found = False
     for c in party:
@@ -397,14 +397,14 @@ PARTY_COMMANDS = (
 )
 
 
-def detect_party_command(text: str) -> Optional[str]:
+def detect_party_command(text: str) -> str | None:
     for rx, cmd in PARTY_COMMANDS:
         if rx.search(text or ""):
             return cmd
     return None
 
 
-def backfill_party(party: List) -> List[Dict]:
+def backfill_party(party: list) -> list[dict]:
     """Save antigo (CompanionState mínimo) ganha os campos de combate da 4.5."""
     out = []
     for c in party or []:

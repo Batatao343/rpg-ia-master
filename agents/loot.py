@@ -95,7 +95,7 @@ def _parse_trade_intent(state: GameState, loot_source: str, text: str) -> TradeI
 
 
 def _narrate(context: str, fallback_text: str,
-             canonical_summary: Optional[dict] = None) -> str:
+             canonical_summary: dict | None = None) -> str:
     """1 chamada SMART para prosa curta; qualquer falha cai no texto mecânico."""
     try:
         llm = get_llm(temperature=0.6, tier=ModelTier.FAST)

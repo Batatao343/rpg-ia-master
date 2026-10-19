@@ -35,7 +35,7 @@ DEFAULT_LEVEL_GAINS = {"hp": 5, "entropy": 2}
 # ---------------------------------------------------------------------------
 # XP
 # ---------------------------------------------------------------------------
-def xp_for_kills(dead_enemies: List[Dict]) -> int:
+def xp_for_kills(dead_enemies: list[dict]) -> int:
     """XP por inimigos MORTOS neste round (fugitivo não entra na lista)."""
     total = 0
     for e in dead_enemies or []:
@@ -44,13 +44,13 @@ def xp_for_kills(dead_enemies: List[Dict]) -> int:
     return total
 
 
-def xp_to_next(level: int) -> Optional[int]:
+def xp_to_next(level: int) -> int | None:
     """Limiar de XP acumulado do próximo nível; None se já está no cap."""
     nxt = int(level) + 1
     return XP_TABLE.get(nxt) if nxt <= MAX_LEVEL else None
 
 
-def _level_gains_for(class_name: str, classes_db: Optional[Dict]) -> Dict[str, int]:
+def _level_gains_for(class_name: str, classes_db: dict | None) -> dict[str, int]:
     db = classes_db if classes_db is not None else CLASSES
     gains = (db.get(class_name) or {}).get("level_gains") or DEFAULT_LEVEL_GAINS
     return {
@@ -59,7 +59,7 @@ def _level_gains_for(class_name: str, classes_db: Optional[Dict]) -> Dict[str, i
     }
 
 
-def _entropy_gain_for(class_name: str, level: int, classes_db: Optional[Dict]) -> int:
+def _entropy_gain_for(class_name: str, level: int, classes_db: dict | None) -> int:
     if level <= 10:
         return _level_gains_for(class_name, classes_db)["entropy"]
     db = classes_db if classes_db is not None else CLASSES
@@ -67,18 +67,18 @@ def _entropy_gain_for(class_name: str, level: int, classes_db: Optional[Dict]) -
     return int((curve.get("gains") or {}).get(str(level), 0) or 0)
 
 
-def _entropy_cap_for(class_name: str, classes_db: Optional[Dict]) -> Optional[int]:
+def _entropy_cap_for(class_name: str, classes_db: dict | None) -> int | None:
     db = classes_db if classes_db is not None else CLASSES
     cap = ((db.get(class_name) or {}).get("late_entropy_curve") or {}).get("cap")
     return int(cap) if cap is not None else None
 
 
-def _append_choice_once(player: Dict, choice: Dict) -> None:
+def _append_choice_once(player: dict, choice: dict) -> None:
     if not any(row.get("id") == choice["id"] for row in player["pending_choices"]):
         player["pending_choices"].append(choice)
 
 
-def _apex_card_id(player: Dict) -> Optional[str]:
+def _apex_card_id(player: dict) -> str | None:
     from services.cards import cards_for_class
     branch = player.get("subclass")
     if not branch:
@@ -89,7 +89,7 @@ def _apex_card_id(player: Dict) -> Optional[str]:
     return matches[0] if len(matches) == 1 else None
 
 
-def grant_apex_if_due(player: Dict, new_level: int) -> Tuple[Dict, Optional[str]]:
+def grant_apex_if_due(player: dict, new_level: int) -> tuple[dict, str | None]:
     p = dict(player)
     p["known_cards"] = list(p.get("known_cards") or [])
     p["progression_grants"] = list(p.get("progression_grants") or [])
@@ -107,8 +107,8 @@ def grant_apex_if_due(player: Dict, new_level: int) -> Tuple[Dict, Optional[str]
     return p, None
 
 
-def grant_xp(player: Dict, amount: int, *,
-             classes_db: Optional[Dict] = None) -> Tuple[Dict, List[Dict]]:
+def grant_xp(player: dict, amount: int, *,
+             classes_db: dict | None = None) -> tuple[dict, list[dict]]:
     """Soma XP e processa level ups (multi-level em sequência).
 
     Retorna (player_atualizado, eventos level_up). Por nível: máximos sobem pela
@@ -122,7 +122,7 @@ def grant_xp(player: Dict, amount: int, *,
     is_v4 = p.get("vitalidade") is not None or isinstance(p.get("virtudes"), dict)
     if is_v4:
         gamedata.sync_vitality(p)
-    events: List[Dict] = []
+    events: list[dict] = []
 
     class_name = str(p.get("class_name", ""))
     gains = _level_gains_for(class_name, classes_db)
@@ -189,7 +189,7 @@ def grant_xp(player: Dict, amount: int, *,
 # ---------------------------------------------------------------------------
 # Acervo / subclasse
 # ---------------------------------------------------------------------------
-def player_branch(player: Dict, *, abilities_db: Optional[Dict] = None) -> Optional[str]:
+def player_branch(player: dict, *, abilities_db: dict | None = None) -> str | None:
     """Subclasse derivada da primeira Carta conhecida que declara subclasse."""
     if player.get("subclass"):
         return str(player["subclass"])
@@ -205,7 +205,7 @@ def player_branch(player: Dict, *, abilities_db: Optional[Dict] = None) -> Optio
     return None
 
 
-def eligible_subclasses(player: Dict) -> List[Dict]:
+def eligible_subclasses(player: dict) -> list[dict]:
     class_data = CLASSES.get(str(player.get("class_name", ""))) or {}
     result = []
     for subclass_id, branch in (class_data.get("branches") or {}).items():
@@ -220,7 +220,7 @@ def eligible_subclasses(player: Dict) -> List[Dict]:
     return result
 
 
-def eligible_cards(player: Dict) -> List[str]:
+def eligible_cards(player: dict) -> list[str]:
     """Cartas ainda não conhecidas da classe e da subclasse já escolhida."""
     from services import cards
     known = set(player.get("known_cards") or [])
@@ -238,12 +238,12 @@ def eligible_cards(player: Dict) -> List[str]:
     ]
 
 
-def effective_virtue_card_stage(card_choice: Dict) -> int:
+def effective_virtue_card_stage(card_choice: dict) -> int:
     return max(1, min(5, int(card_choice.get("estagio", 1) or 1)
                       + int(card_choice.get("mastery", 0) or 0)))
 
 
-def normalize_player_progression(player: Dict) -> Dict:
+def normalize_player_progression(player: dict) -> dict:
     """Backfill aditivo/idempotente para saves anteriores ao cap 20."""
     p = dict(player)
     p["known_cards"] = list(p.get("known_cards") or [])
@@ -283,16 +283,16 @@ def normalize_player_progression(player: Dict) -> Dict:
     return p
 
 
-def apply_choice(player: Dict, choice_id: str, *,
-                 ability_id: Optional[str] = None,
-                 attr: Optional[str] = None,
-                 virtude: Optional[str] = None,
-                 card_id: Optional[str] = None,
-                 evolve_card_id: Optional[str] = None,
-                 caminho: Optional[str] = None,
-                 virtue_card_id: Optional[str] = None,
-                 subclass_id: Optional[str] = None,
-                 abilities_db: Optional[Dict] = None) -> Tuple[Dict, Optional[str]]:
+def apply_choice(player: dict, choice_id: str, *,
+                 ability_id: str | None = None,
+                 attr: str | None = None,
+                 virtude: str | None = None,
+                 card_id: str | None = None,
+                 evolve_card_id: str | None = None,
+                 caminho: str | None = None,
+                 virtue_card_id: str | None = None,
+                 subclass_id: str | None = None,
+                 abilities_db: dict | None = None) -> tuple[dict, str | None]:
     """Valida e consome UMA pending_choice. Retorna (player, erro|None).
 
     Erro deixa o player ORIGINAL intocado (validação server-side do /game/levelup)."""
@@ -386,7 +386,7 @@ def apply_choice(player: Dict, choice_id: str, *,
     return p, None
 
 
-def auto_resolve_choices(player: Dict, *, max_passes: int = 25) -> Dict:
+def auto_resolve_choices(player: dict, *, max_passes: int = 25) -> dict:
     """Resolve TODAS as pending_choices de forma determinística (menor Virtude,
     primeira subclasse elegível, primeira Carta por id…). Usado na criação em nível
     alto (SPEC-227 R9). Mesmas regras do harness `start_level`; sem aleatoriedade."""
@@ -397,7 +397,7 @@ def auto_resolve_choices(player: Dict, *, max_passes: int = 25) -> Dict:
         applied_any = False
         for choice in list(p.get("pending_choices") or []):
             kind = str(choice.get("kind") or "")
-            kwargs: Dict[str, str] = {}
+            kwargs: dict[str, str] = {}
             if kind == "virtude":
                 virtues = p.get("virtudes") or {}
                 eligible = [k for k in gamedata.VIRTUDES

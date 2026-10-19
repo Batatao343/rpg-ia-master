@@ -26,7 +26,7 @@ def load_json_data(filename: str) -> dict:
     """Carrega um arquivo JSON da pasta data. Retorna dict vazio se falhar."""
     file_path = os.path.join(DATA_DIR, filename)
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             # Tenta carregar. Se o arquivo estiver vazio, json.load falha.
             content = f.read().strip()
             if not content: return {}
@@ -45,7 +45,7 @@ def _read_json_file(file_path: str) -> dict:
     if not os.path.exists(file_path):
         return {}
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read().strip()
             return json.loads(content) if content else {}
     except Exception:

@@ -14,9 +14,10 @@ import os
 import time
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any
+from collections.abc import Iterator
 from uuid import uuid4
 
 from dotenv import load_dotenv
@@ -394,13 +395,13 @@ def run(output_dir: Path, budget: Budget | None = None) -> dict[str, Any]:
     if minimum > budget.max_calls or minimum * budget.reserved_per_call_usd > budget.max_cost_usd:
         raise ExperimentBlocked(f"minimum {minimum} calls exceed approved cap")
     output_dir.mkdir(parents=True, exist_ok=False)
-    run_id = datetime.now(timezone.utc).strftime("SPEC-178-%Y%m%dT%H%M%SZ") + "-" + uuid4().hex[:8]
+    run_id = datetime.now(UTC).strftime("SPEC-178-%Y%m%dT%H%M%SZ") + "-" + uuid4().hex[:8]
     product_sha, product_tree_hash, product_dirty = repository_identity(ROOT)
     raw: dict[str, Any] = {
         "run_id": run_id, "product_sha": product_sha,
         "product_tree_hash": product_tree_hash, "product_dirty": product_dirty,
         "dataset_hash": dataset_hash,
-        "started_at": datetime.now(timezone.utc).isoformat(),
+        "started_at": datetime.now(UTC).isoformat(),
         "case_order": pre["case_ids"], "eligible_ids": pre["eligible_ids"],
         "gated_routes": pre["gated_routes"], "budget": asdict(budget),
         "sanity": {}, "replicas": [], "status": "in_progress",

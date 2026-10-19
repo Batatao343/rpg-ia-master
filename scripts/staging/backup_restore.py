@@ -16,7 +16,8 @@ import os
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any
+from collections.abc import Mapping
 from urllib.parse import urlparse
 
 import httpx

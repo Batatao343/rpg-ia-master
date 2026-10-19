@@ -19,27 +19,27 @@ from pydantic import BaseModel, Field, model_validator
 
 class ConflictSummary(BaseModel):
     conflict_id: str = ""
-    conflict_turn: Optional[int] = None
-    participantes: List[str] = Field(default_factory=list)
-    sobreviventes: List[str] = Field(default_factory=list)
-    mortos: List[str] = Field(default_factory=list)
-    caidos: List[str] = Field(default_factory=list)
-    inconscientes: List[str] = Field(default_factory=list)
-    rendidos: List[str] = Field(default_factory=list)
-    fugitivos: List[str] = Field(default_factory=list)
-    capturados: List[str] = Field(default_factory=list)
-    ferimentos: Dict[str, List[Dict]] = Field(default_factory=dict)
-    cicatrizes_a_gerar: List[str] = Field(default_factory=list)
-    recursos_gastos: Dict[str, int] = Field(default_factory=dict)
-    cartas_descobertas: List[str] = Field(default_factory=list)
-    resistencias_descobertas: List[str] = Field(default_factory=list)
-    objetos_utilizados: List[str] = Field(default_factory=list)
-    mudancas_permanentes_cenario: List[str] = Field(default_factory=list)
-    companheiros_separados: List[Dict] = Field(default_factory=list)
-    decisoes_morais: List[str] = Field(default_factory=list)
-    fatos_de_relacao: List[str] = Field(default_factory=list)
-    loot_obtido: List[Dict] = Field(default_factory=list)
-    estado_final_party: Dict = Field(default_factory=dict)
+    conflict_turn: int | None = None
+    participantes: list[str] = Field(default_factory=list)
+    sobreviventes: list[str] = Field(default_factory=list)
+    mortos: list[str] = Field(default_factory=list)
+    caidos: list[str] = Field(default_factory=list)
+    inconscientes: list[str] = Field(default_factory=list)
+    rendidos: list[str] = Field(default_factory=list)
+    fugitivos: list[str] = Field(default_factory=list)
+    capturados: list[str] = Field(default_factory=list)
+    ferimentos: dict[str, list[dict]] = Field(default_factory=dict)
+    cicatrizes_a_gerar: list[str] = Field(default_factory=list)
+    recursos_gastos: dict[str, int] = Field(default_factory=dict)
+    cartas_descobertas: list[str] = Field(default_factory=list)
+    resistencias_descobertas: list[str] = Field(default_factory=list)
+    objetos_utilizados: list[str] = Field(default_factory=list)
+    mudancas_permanentes_cenario: list[str] = Field(default_factory=list)
+    companheiros_separados: list[dict] = Field(default_factory=list)
+    decisoes_morais: list[str] = Field(default_factory=list)
+    fatos_de_relacao: list[str] = Field(default_factory=list)
+    loot_obtido: list[dict] = Field(default_factory=list)
+    estado_final_party: dict = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def _ensure_identity(self):
@@ -53,7 +53,7 @@ class ConflictSummary(BaseModel):
 CONSUMED_CONFLICT_IDS_LIMIT = 64
 
 
-def ensure_conflict_id(summary: dict, *, turn: Optional[int] = None) -> str:
+def ensure_conflict_id(summary: dict, *, turn: int | None = None) -> str:
     """Retorna o ID existente ou deriva um fallback estável do conteúdo.
 
     O fallback é somente rede de segurança para produtores antigos. O produtor
@@ -85,9 +85,9 @@ def ensure_conflict_id(summary: dict, *, turn: Optional[int] = None) -> str:
     return f"conflict{turn_part}-{digest}"
 
 
-def normalize_consumed_conflict_ids(values) -> List[str]:
+def normalize_consumed_conflict_ids(values) -> list[str]:
     """Normaliza o ledger persistente, preservando ordem e o limite mais novo."""
-    out: List[str] = []
+    out: list[str] = []
     for value in values or []:
         conflict_id = str(value or "").strip()
         if conflict_id and conflict_id not in out:
@@ -95,7 +95,7 @@ def normalize_consumed_conflict_ids(values) -> List[str]:
     return out[-CONSUMED_CONFLICT_IDS_LIMIT:]
 
 
-def append_consumed_conflict_id(values, conflict_id: str) -> List[str]:
+def append_consumed_conflict_id(values, conflict_id: str) -> list[str]:
     ledger = normalize_consumed_conflict_ids(values)
     normalized = str(conflict_id or "").strip()
     if not normalized or normalized in ledger:
@@ -107,7 +107,7 @@ def _pid(p: dict) -> str:
     return p.get("name") or p.get("id") or "?"
 
 
-def _flatten_wounds(p: dict) -> List[dict]:
+def _flatten_wounds(p: dict) -> list[dict]:
     fer = p.get("ferimentos") or {}
     out = []
     for cat in ("critico", "grave", "leve"):
@@ -118,12 +118,12 @@ def _flatten_wounds(p: dict) -> List[dict]:
 # ==========================================================================
 # Etapa 1 — build_summary (R2/R4)
 # ==========================================================================
-def build_summary(participants: List[dict], *, scene: Optional[dict] = None,
-                  chase_state: Optional[dict] = None,
-                  death_outcomes: Optional[List[dict]] = None,
-                  loot_result: Optional[List[dict]] = None,
-                  resources_spent: Optional[Dict[str, int]] = None,
-                  extras: Optional[dict] = None) -> dict:
+def build_summary(participants: list[dict], *, scene: dict | None = None,
+                  chase_state: dict | None = None,
+                  death_outcomes: list[dict] | None = None,
+                  loot_result: list[dict] | None = None,
+                  resources_spent: dict[str, int] | None = None,
+                  extras: dict | None = None) -> dict:
     """R2/R4: monta o resumo canônico a partir do estado FINAL já resolvido (sem
     LLM). `participants` traz o estado de cada um (dead/conscious/surrendered/fled/
     captured/incapacitated/ferimentos/scar_pending). `extras` cobre os campos
@@ -209,7 +209,7 @@ def build_summary(participants: List[dict], *, scene: Optional[dict] = None,
 # Etapa 2 — integração de loot (R1) — reaproveita economy.roll_loot como está
 # ==========================================================================
 def loot_context(summary: dict, *, region_id: str = "default",
-                 encounter_level: Optional[int] = None, danger_level: int = 1) -> dict:
+                 encounter_level: int | None = None, danger_level: int = 1) -> dict:
     """R1: parâmetros pro loot a partir do resultado do conflito. A raridade passa
     a refletir o Nível do Encontro (`conflito-11`) quando disponível, no lugar do
     `danger_level` bruto — MAS `economy.roll_loot(region_id, danger, ...)` fica
@@ -227,7 +227,7 @@ def validate_narrative_consistency(summary: dict, proposed: dict) -> dict:
     morte→fuga, libertar capturado ou restaurar cenário destruído SEM um novo
     acontecimento posterior explícito (`proposed['novo_acontecimento']`). Retorna
     {ok, violations}."""
-    violations: List[str] = []
+    violations: list[str] = []
     novo = bool(proposed.get("novo_acontecimento"))
     mortos = set(summary.get("mortos") or [])
     capturados = set(summary.get("capturados") or [])
@@ -244,10 +244,10 @@ def validate_narrative_consistency(summary: dict, proposed: dict) -> dict:
     return {"ok": not violations, "violations": violations}
 
 
-def summary_facts(summary: dict) -> List[str]:
+def summary_facts(summary: dict) -> list[str]:
     """Fatos canônicos a persistir na memória (archivist): mortes, rendições,
     capturas, fugas, Cicatrizes, mudanças de cenário e fatos de relação."""
-    facts: List[str] = []
+    facts: list[str] = []
     for nome in summary.get("mortos") or []:
         facts.append(f"{nome} morreu no conflito.")
     for nome in summary.get("caidos") or []:
@@ -275,7 +275,7 @@ def summary_facts(summary: dict) -> List[str]:
 
 def canonical_summary_text(summary: dict) -> str:
     """Representação curta, determinística e própria para prompt/crônica."""
-    clauses: List[str] = []
+    clauses: list[str] = []
     mapping = (
         ("mortos", "Mortos"),
         ("caidos", "Caídos"),
@@ -311,7 +311,7 @@ def validate_narrative_text(summary: dict, text: str) -> dict:
     contrato de prompt.
     """
     lowered = str(text or "").casefold()
-    violations: List[str] = []
+    violations: list[str] = []
     alive_terms = r"\b(vivo|viva|sobrevive|sobreviveu|ergueu-se|levanta-se|escapa|foge|fugiu)\b"
     free_terms = r"\b(livre|liberto|liberta|libertado|libertada|escapa|foge|fugiu)\b"
     def _subject_hit(key: str, terms: str) -> bool:

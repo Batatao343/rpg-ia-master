@@ -22,7 +22,7 @@ RECENT_TURNS = 30
 STABILITY_LABELS = ((-100, "em colapso"), (-30, "instável"), (30, "estável"))
 
 
-def reputation_history(event_log: List[Dict], faction_id: str, limit: int = 20) -> List[Dict]:
+def reputation_history(event_log: list[dict], faction_id: str, limit: int = 20) -> list[dict]:
     """Últimos `limit` eventos `reputation_changed` da fação, em ordem cronológica."""
     events = [e for e in (event_log or [])
               if e.get("type") == "reputation_changed" and e.get("target_id") == faction_id]
@@ -34,7 +34,7 @@ def reputation_history(event_log: List[Dict], faction_id: str, limit: int = 20) 
             for e in events]
 
 
-def stability_label(projection: Optional[Dict], faction_id: str) -> str:
+def stability_label(projection: dict | None, faction_id: str) -> str:
     """Rótulo qualitativo — o número interno de stability NUNCA sai daqui pra fora."""
     ent = ((projection or {}).get("entities") or {}).get(faction_id) or {}
     stability = ent.get("stability")
@@ -47,8 +47,8 @@ def stability_label(projection: Optional[Dict], faction_id: str) -> str:
     return "estável"
 
 
-def recent_control_changes(event_log: List[Dict], visited: List[str], current_turn: int,
-                           window: int = RECENT_TURNS) -> List[Dict]:
+def recent_control_changes(event_log: list[dict], visited: list[str], current_turn: int,
+                           window: int = RECENT_TURNS) -> list[dict]:
     """`location_control_changed` recentes em locais visitados (fog of war vale aqui também)."""
     visited_set = set(visited or [])
     out = []
@@ -69,7 +69,7 @@ def recent_control_changes(event_log: List[Dict], visited: List[str], current_tu
     return out
 
 
-def active_threats(world: Optional[Dict], current_turn: int) -> List[Dict]:
+def active_threats(world: dict | None, current_turn: int) -> list[dict]:
     """`threat_alerts` não expirados — só LEITURA (não consome; isso é check_encounter)."""
     out = []
     for a in (world or {}).get("threat_alerts") or []:
@@ -80,11 +80,11 @@ def active_threats(world: Optional[Dict], current_turn: int) -> List[Dict]:
     return out
 
 
-def visible_controllers(world: Optional[Dict], projection: Optional[Dict]) -> Dict[str, str]:
+def visible_controllers(world: dict | None, projection: dict | None) -> dict[str, str]:
     """Local visitado -> NOME de quem controla (projection 2.5+ vence legado Fase 2)."""
     world = world or {}
     legacy = world.get("controlled") or {}
-    out: Dict[str, str] = {}
+    out: dict[str, str] = {}
     for loc_id in world.get("visited") or []:
         controller_id = gr.get_current_controller(loc_id, projection, include_hidden=False)
         controller_id = controller_id or legacy.get(loc_id)

@@ -21,15 +21,15 @@ CODEX_DIR = os.path.join("data", "codex")
 CAMPOS_OBRIGATORIOS = ("id", "type", "name", "tags", "visibility")
 CODEX_BODY_MAX_CHARS = 2000
 
-_codex_index_cache: Optional[Dict[str, str]] = None
+_codex_index_cache: dict[str, str] | None = None
 
 
-def parse_codex_file(path: str) -> Tuple[dict, str]:
+def parse_codex_file(path: str) -> tuple[dict, str]:
     """Lê um .md do Codex → (frontmatter, corpo).
 
     Levanta ValueError se o frontmatter faltar ou não tiver campo obrigatório.
     """
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         text = f.read()
 
     if not text.startswith("---"):
@@ -48,10 +48,10 @@ def parse_codex_file(path: str) -> Tuple[dict, str]:
     return frontmatter, parts[2].strip()
 
 
-def load_codex(codex_dir: str = CODEX_DIR) -> List[Document]:
+def load_codex(codex_dir: str = CODEX_DIR) -> list[Document]:
     """1 Document por chunk (500/50) com metadata do frontmatter. Offline."""
     splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-    docs: List[Document] = []
+    docs: list[Document] = []
 
     for root, _dirs, files in os.walk(codex_dir):
         for fname in sorted(files):
@@ -71,7 +71,7 @@ def load_codex(codex_dir: str = CODEX_DIR) -> List[Document]:
     return docs
 
 
-def codex_index(codex_dir: str = CODEX_DIR) -> Dict[str, str]:
+def codex_index(codex_dir: str = CODEX_DIR) -> dict[str, str]:
     """id -> path do .md do Codex (cache em módulo; varre o frontmatter 1x).
 
     Fase 3.2: usado por `codex_body` para achar o documento de uma entidade
@@ -79,7 +79,7 @@ def codex_index(codex_dir: str = CODEX_DIR) -> Dict[str, str]:
     """
     global _codex_index_cache
     if _codex_index_cache is None:
-        index: Dict[str, str] = {}
+        index: dict[str, str] = {}
         for root, _dirs, files in os.walk(codex_dir):
             for fname in sorted(files):
                 if not fname.endswith(".md"):
@@ -95,7 +95,7 @@ def codex_index(codex_dir: str = CODEX_DIR) -> Dict[str, str]:
     return _codex_index_cache
 
 
-def codex_body(entity_id: Optional[str], codex_dir: str = CODEX_DIR) -> str:
+def codex_body(entity_id: str | None, codex_dir: str = CODEX_DIR) -> str:
     """Corpo do .md de `entity_id`, truncado (~2000 chars), só se `visibility: public`.
 
     Documento `hidden`/`secret` (ou id sem entrada no Codex) -> "" — não-onisciência.

@@ -65,7 +65,7 @@ extend-exclude = ["web", "docs", "saves*", "data/runtime", "data", "lore_nova", 
 # Degrau 1: pyflakes (F), bugbear (B) e estrutura (E4/E7/E9). E501 fica fora;
 # B905 (zip sem strict) entra depois com --fix. Degraus 2–3 (I, UP, ruff format)
 # são commits mecânicos a fazer sem worktrees vivos — ver docs/guias/TESTES.md.
-select = ["E4", "E7", "E9", "F", "B", "I"]
+select = ["E4", "E7", "E9", "F", "B", "I", "UP"]
 ignore = ["E501", "B905"]
 
 [tool.ruff.lint.extend-per-file-ignores]

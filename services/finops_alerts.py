@@ -14,9 +14,9 @@ from __future__ import annotations
 import os
 import re
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from decimal import Decimal
-from typing import Iterable, Mapping, Sequence
+from collections.abc import Iterable, Mapping, Sequence
 
 from observability.metrics import metrics
 from services.finops import TARGET_MARGIN, SkuMargin
@@ -110,7 +110,7 @@ class Thresholds:
     backlog_age_seconds: float = 3600.0
 
     @classmethod
-    def from_env(cls) -> "Thresholds":
+    def from_env(cls) -> Thresholds:
         e = os.getenv
         return cls(
             float(e("RPG_FINOPS_SPIKE_FACTOR", "3")), float(e("RPG_FINOPS_SPIKE_MIN_USD", "1")),
@@ -307,7 +307,7 @@ def installed_freshness() -> list[Freshness]:
     from services.speech_pricing import _CARD as speech_card
 
     def seen(card) -> datetime:
-        return datetime.fromisoformat(card["observed_at"]).replace(tzinfo=timezone.utc) \
+        return datetime.fromisoformat(card["observed_at"]).replace(tzinfo=UTC) \
             if "T" not in card["observed_at"] else datetime.fromisoformat(card["observed_at"])
 
     from services.shard_pricing import rate_card_max_age
@@ -327,7 +327,7 @@ def require_paid_effect(category: str, *, now: datetime | None = None) -> None:
     if os.getenv("RPG_FINOPS_BLOCK_STALE", "1") == "0":
         return
     name = {"image": "image", "stt": "speech", "llm": "llm"}[category]
-    moment = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
+    moment = (now or datetime.now(UTC)).astimezone(UTC)
     stale = [a for a in stale_rate_cards(
         [f for f in installed_freshness() if f.name == name], moment)]
     if stale:

@@ -11,7 +11,8 @@ import os
 import re
 from contextlib import contextmanager
 from dataclasses import dataclass
-from typing import Any, Iterator, Mapping
+from typing import Any
+from collections.abc import Iterator, Mapping
 from uuid import uuid4
 
 _correlation: contextvars.ContextVar[dict[str, str]] = contextvars.ContextVar(

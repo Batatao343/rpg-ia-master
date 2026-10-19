@@ -7,7 +7,7 @@ import gamedata
 from services.objectives import public_objective
 
 
-def build_social_direction(state: Dict[str, Any]) -> str:
+def build_social_direction(state: dict[str, Any]) -> str:
     world = state.get("world") or {}
     current_id = str(world.get("current_location_id") or "")
     connections = list(gamedata.get_connections(current_id)) if current_id else []

@@ -9,7 +9,7 @@ import shutil
 import tempfile
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Iterable
+from collections.abc import Iterable
 
 MANIFEST_VERSION = 1
 

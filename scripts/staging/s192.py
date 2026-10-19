@@ -9,7 +9,7 @@ import secrets
 import statistics
 import subprocess
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 from uuid import uuid4
 
@@ -32,7 +32,7 @@ def load_env() -> dict[str, str]:
 
 
 def now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 def evidence(name: str, payload: dict) -> Path:

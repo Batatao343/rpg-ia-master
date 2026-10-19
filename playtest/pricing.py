@@ -45,6 +45,6 @@ def estimate_cost(model: str, tokens_in: int = _EST_TOKENS_IN,
     return (tokens_in * price_in + tokens_out * price_out) / 1_000_000.0
 
 
-def turn_cost(llm_events: List[dict]) -> float:
+def turn_cost(llm_events: list[dict]) -> float:
     """Soma o custo estimado de todos os invokes de LLM de um turno."""
     return sum(estimate_cost(e.get("model", "")) for e in llm_events)

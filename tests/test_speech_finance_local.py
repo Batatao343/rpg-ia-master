@@ -5,7 +5,7 @@ import asyncio
 import io
 import os
 import wave
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from decimal import Decimal
 from pathlib import Path
 from types import SimpleNamespace
@@ -25,7 +25,7 @@ from services.usage_metering import RATE_CARD_VERSION
 from tests.fakes.local_pricing import installed_card_max_age_seconds
 
 pytestmark = pytest.mark.infra_local
-AT = datetime(2026, 10, 12, 12, tzinfo=timezone.utc)
+AT = datetime(2026, 10, 12, 12, tzinfo=UTC)
 GROQ = Candidate('groq', 'whisper-large-v3-turbo')
 OPENAI = Candidate('openai', 'gpt-4o-mini-transcribe')
 

@@ -17,7 +17,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from datetime import timedelta, timezone
+from datetime import timedelta, timezone, UTC
 from uuid import uuid4
 
 import httpx
@@ -32,7 +32,7 @@ TZ = timezone(timedelta(hours=-3))  # RPG_DAILY_SPEND_TZ_OFFSET_HOURS default (A
 def snapshot(env: dict) -> dict:
     def q(conn):
         now = conn.execute("select now() as n").fetchone()["n"]
-        since = now.astimezone(TZ).replace(hour=0, minute=0, second=0, microsecond=0).astimezone(timezone.utc)
+        since = now.astimezone(TZ).replace(hour=0, minute=0, second=0, microsecond=0).astimezone(UTC)
         spend = conn.execute(
             "select coalesce(sum(cost_usd),0) usd, count(*) n from app.usage_events "
             "where created_at >= %s and created_at <= %s and counts_as_spend", (since, now)).fetchone()

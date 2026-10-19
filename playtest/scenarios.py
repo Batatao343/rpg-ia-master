@@ -96,7 +96,7 @@ def prepare(name: str, state: dict) -> dict:
     return prepared
 
 
-def decision_for(name: str, turn: int, state: dict) -> Optional[ProfileDecision]:
+def decision_for(name: str, turn: int, state: dict) -> ProfileDecision | None:
     """A primeira ação é inequívoca; turnos extras voltam ao perfil normal."""
     profile_for(name)
     if int(turn) != 1:

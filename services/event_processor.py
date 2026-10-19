@@ -44,9 +44,9 @@ def _safe_int(value, default: int = 0) -> int:
         return default
 
 
-def _bounded_rejections(rows: list[Dict]) -> list[Dict]:
+def _bounded_rejections(rows: list[dict]) -> list[dict]:
     """Mantém auditoria útil sem deixar o save crescer indefinidamente."""
-    unique: dict[tuple, Dict] = {}
+    unique: dict[tuple, dict] = {}
     for row in rows:
         if not isinstance(row, dict):
             continue
@@ -66,7 +66,7 @@ def _bounded_rejections(rows: list[Dict]) -> list[Dict]:
     return list(unique.values())[-_MAX_EVENT_REJECTIONS:]
 
 
-def _log_proposal_rejected(proposal: Dict, reason: str) -> None:
+def _log_proposal_rejected(proposal: dict, reason: str) -> None:
     """SPEC-252 R1: `reason_code` (enum fechado), `target_ref` (so id de catalogo) e `source`.
     O texto livre do motivo continua so em `event_rejections`."""
     try:
@@ -87,7 +87,7 @@ def _log_proposal_rejected(proposal: Dict, reason: str) -> None:
         pass
 
 
-def _record_rejection_metric(proposal: Dict, reason: str) -> None:
+def _record_rejection_metric(proposal: dict, reason: str) -> None:
     """SPEC-223 R8: `rpg_world_events_rejected_total{type, reason_class}` (labels fechados)."""
     try:
         from typing import get_args
@@ -103,8 +103,8 @@ def _record_rejection_metric(proposal: Dict, reason: str) -> None:
         pass
 
 
-def _canonicalize_proposal(proposal: Dict, state: Dict | None = None,
-                           projection: Dict | None = None) -> Dict:
+def _canonicalize_proposal(proposal: dict, state: dict | None = None,
+                           projection: dict | None = None) -> dict:
     """SPEC-223 R2: o LLM só SINALIZA a revelação; o texto vem do grafo
     (restrito às edges ancoradas na cena quando o alvo não está nela)."""
     if proposal.get("type") != "secret_revealed" or is_engine_proposal(proposal):
@@ -116,7 +116,7 @@ def _canonicalize_proposal(proposal: Dict, state: Dict | None = None,
     return {**proposal, "detail": detail, "payload": payload}
 
 
-def apply_event(event: Dict, projection: Dict) -> Dict:
+def apply_event(event: dict, projection: dict) -> dict:
     """Efeito DIRETO de um GameEvent na projection. Puro: não muta o argumento."""
     proj = copy.deepcopy(projection or {})
     etype = event.get("type")
@@ -196,7 +196,7 @@ def apply_event(event: Dict, projection: Dict) -> Dict:
     return proj
 
 
-def _build_event(proposal: Dict, turn: int) -> Dict:
+def _build_event(proposal: dict, turn: int) -> dict:
     """Proposta validada → GameEvent (uuid, turn, source). Preserva `detail` no payload."""
     payload = dict(proposal.get("payload", {}) or {})
     detail = proposal.get("detail", "")
@@ -214,8 +214,8 @@ def _build_event(proposal: Dict, turn: int) -> Dict:
 
 
 def prevalidate_event_batch(
-    proposals: list[Dict],
-    state: Dict,
+    proposals: list[dict],
+    state: dict,
 ) -> list[ValidationResult]:
     """Pré-valida um lote na mesma ordem em que o processor o aplicaria.
 
@@ -262,7 +262,7 @@ def prevalidate_event_batch(
     return results
 
 
-def _revert_reputation(factions: list, proposal: Dict) -> list:
+def _revert_reputation(factions: list, proposal: dict) -> list:
     """SPEC-226 R8: o storyteller aplica a reputação ao propor; se o pipeline
     rejeita o `reputation_changed`, o delta exato aplicado é desfeito (estado e
     log nunca divergem). Só proposta do motor (`source=storyteller`) com delta."""
@@ -288,7 +288,7 @@ def _revert_reputation(factions: list, proposal: Dict) -> list:
     return out
 
 
-def process_pending_events(state: Dict) -> Dict:
+def process_pending_events(state: dict) -> dict:
     """Valida/aplica a fila `pending_world_events`. Retorna updates parciais do GameState.
 
     Fila vazia → `{}` (no-op barato). Caso contrário devolve
@@ -314,7 +314,7 @@ def process_pending_events(state: Dict) -> Dict:
     event_rejections = _bounded_rejections(original_rejections)
     rejection_count_before = len(event_rejections)
 
-    def _chronicle_milestone(ev: Dict, proj: Dict) -> None:
+    def _chronicle_milestone(ev: dict, proj: dict) -> None:
         nonlocal chronicle, chronicle_changed
         milestone = render_milestone(ev, proj)
         if milestone:

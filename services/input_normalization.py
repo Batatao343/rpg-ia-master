@@ -19,7 +19,7 @@ _EMPTY_ENTITY_REFS = frozenset({
 })
 
 
-def optional_entity_ref(value: object) -> Optional[str]:
+def optional_entity_ref(value: object) -> str | None:
     """Retorna uma referência aparada ou ``None`` para sentinelas de ausência."""
     if value is None:
         return None

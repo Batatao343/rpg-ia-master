@@ -13,7 +13,8 @@ outra chave sem teste derruba a suíte.
 import json
 import os
 import random
-from typing import Callable, Dict, Set
+from typing import Dict, Set
+from collections.abc import Callable
 
 import pytest
 
@@ -35,12 +36,12 @@ def _card_effects(card: dict):
         yield evo.get("ruptura") or {}
 
 
-def inventory() -> Dict[str, Set[str]]:
+def inventory() -> dict[str, set[str]]:
     """{chave: {origens}} de tudo que os dados declaram como mecânica."""
     from gamedata import ARTIFACTS_DB, CLASSES
     from services.cards import all_cards
 
-    found: Dict[str, Set[str]] = {}
+    found: dict[str, set[str]] = {}
 
     def add(key: str, origin: str) -> None:
         found.setdefault(key, set()).add(origin)
@@ -576,7 +577,7 @@ def _trait_test(ctx: str) -> Callable[[], None]:
 # ==========================================================================
 # Registro chave → teste de efeito
 # ==========================================================================
-EFFECT_TESTS: Dict[str, Callable[[], None]] = {}
+EFFECT_TESTS: dict[str, Callable[[], None]] = {}
 for _k in ("dano", "contra_ataque", "dot", "aplicar_condicao", "taunt", "marca", "empurrao",
            "cura", "estabilizar", "protecao", "vantagem", "buff_defesa", "buff_acerto",
            "buff_dano", "reposicionar", "esconder", "purga_condicao", "reduzir_carga_aliado"):

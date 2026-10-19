@@ -17,7 +17,7 @@ A grace period keeps the sweep away from requests that are still finishing norma
 from __future__ import annotations
 
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -99,7 +99,7 @@ def _resolve_operation(pool, wallet, principal: Principal, row: dict) -> str:
     # worker owns it and may still issue a ticket); settle only when every ticket has exact usage.
     lease_until = row.get("lease_until")
     if (row.get("op_status") == "running" and lease_until is not None
-            and lease_until > datetime.now(timezone.utc)):
+            and lease_until > datetime.now(UTC)):
         return "skipped"
     with admin_connection(pool) as connection:
         tickets = connection.execute(

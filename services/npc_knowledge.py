@@ -26,7 +26,8 @@ import logging
 import os
 import re
 import unicodedata
-from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
+from collections.abc import Iterable
 
 logger = logging.getLogger("rpg.npc_knowledge")
 
@@ -43,7 +44,7 @@ EVENT_SCAN_WINDOW = 200               # só eventos recentes entram (todos do tu
 
 RUMOR = "rumor"
 # tipo -> (p de entrega por hop, raio máx. em períodos, hops)  [BALANCEAR]
-SUBJECT_PARAMS: Dict[str, Tuple[float, int, int]] = {
+SUBJECT_PARAMS: dict[str, tuple[float, int, int]] = {
     "npc_killed": (0.8, 15, 2),
     "location_control_changed": (0.9, 20, 2),
     "route_blocked": (0.7, 10, 1),
@@ -71,7 +72,7 @@ def mode() -> str:
     return raw if raw in MODES else "off"
 
 
-def clock_index(world: Optional[dict]) -> int:
+def clock_index(world: dict | None) -> int:
     """`day*5 + índice do período` (mesmo relógio de `world_utils.advance_clock`)."""
     from world_utils import PERIODS
     clock = (world or {}).get("world_clock") or {}
@@ -93,7 +94,7 @@ def _fold(text: str) -> str:
     return "".join(c for c in nfkd if not unicodedata.combining(c)).casefold()
 
 
-def _int(value: Any) -> Optional[int]:
+def _int(value: Any) -> int | None:
     if isinstance(value, bool):
         return None
     try:
@@ -140,7 +141,7 @@ def holder_id(state: dict, ref: str) -> str:
     return f"npc:{ref if ref.startswith('npc_') else _slug(ref)}"
 
 
-def _holders_for(state: dict, ref: str) -> Set[str]:
+def _holders_for(state: dict, ref: str) -> set[str]:
     out = {holder_id(state, ref)}
     raw = str(ref or "").strip()
     if raw:
@@ -148,10 +149,10 @@ def _holders_for(state: dict, ref: str) -> Set[str]:
     return {h for h in out if h}
 
 
-def _present_holders(state: dict) -> List[str]:
+def _present_holders(state: dict) -> list[str]:
     """Testemunhas possíveis: NPCs em cena no local atual + party ativa presente."""
     from services.npc_layers import npcs_in_scene
-    seen: List[str] = []
+    seen: list[str] = []
     for name in npcs_in_scene(state):
         hid = holder_id(state, name)
         if hid and hid not in seen:
@@ -159,7 +160,7 @@ def _present_holders(state: dict) -> List[str]:
     return seen
 
 
-def _residents(state: dict, location_id: str) -> List[str]:
+def _residents(state: dict, location_id: str) -> list[str]:
     """NPCs que vivem em `location_id` (fora da party ativa) + party esperando lá."""
     import gamedata
     from services.npc_layers import npc_alive
@@ -168,7 +169,7 @@ def _residents(state: dict, location_id: str) -> List[str]:
     active_party = {holder_id(state, str(c.get("name") or ""))
                     for c in state.get("party") or []
                     if isinstance(c, dict) and c.get("active")}
-    out: List[str] = []
+    out: list[str] = []
     for key, row in sorted((state.get("npcs") or {}).items(), key=lambda kv: str(kv[0])):
         if not isinstance(row, dict) or not npc_alive(row):
             continue
@@ -189,14 +190,14 @@ def _residents(state: dict, location_id: str) -> List[str]:
 # --------------------------------------------------------------------------- #
 # Assuntos
 # --------------------------------------------------------------------------- #
-def _event_by_id(state: dict, event_id: str) -> Optional[dict]:
+def _event_by_id(state: dict, event_id: str) -> dict | None:
     for ev in reversed(state.get("event_log") or []):
         if isinstance(ev, dict) and ev.get("event_id") == event_id:
             return ev
     return None
 
 
-def _memory_by_id(state: dict, memory_id: str) -> Optional[dict]:
+def _memory_by_id(state: dict, memory_id: str) -> dict | None:
     for row in state.get("memory_facts") or []:
         if isinstance(row, dict) and row.get("memory_id") == memory_id:
             return row
@@ -230,7 +231,7 @@ def _is_secret(state: dict, text: str) -> bool:
     return bool(text) and bool(find_strict_unrevealed(text, state))
 
 
-def _params(state: dict, kind: str, subject_id: str) -> Optional[Tuple[float, int, int]]:
+def _params(state: dict, kind: str, subject_id: str) -> tuple[float, int, int] | None:
     stype = _subject_type(state, kind, subject_id)
     params = SUBJECT_PARAMS.get(stype)
     if not params or stype in WITNESS_ONLY_TYPES:
@@ -269,11 +270,11 @@ def _link(holder: str, kind: str, subject_id: str, relation: str, *, source: str
     return row
 
 
-def _holder_subjects(links: Iterable[dict], holder: str) -> Set[str]:
+def _holder_subjects(links: Iterable[dict], holder: str) -> set[str]:
     return {lk["subject_id"] for lk in links if lk.get("holder_id") == holder}
 
 
-def record_witnesses(state: dict, event: dict, location_id: str, clock: int) -> List[dict]:
+def record_witnesses(state: dict, event: dict, location_id: str, clock: int) -> list[dict]:
     """R2: NPCs presentes em `location_id` (o local atual) viram testemunhas."""
     if not isinstance(event, dict) or not _witnessable(event):
         return []
@@ -285,7 +286,7 @@ def record_witnesses(state: dict, event: dict, location_id: str, clock: int) -> 
         return []
     target = holder_id(state, str(event.get("target_id") or "")) if event.get(
         "target_id") else ""
-    out: List[dict] = []
+    out: list[dict] = []
     for hid in _present_holders(state):
         if hid == target:
             continue
@@ -297,7 +298,7 @@ def record_witnesses(state: dict, event: dict, location_id: str, clock: int) -> 
     return out
 
 
-def _entity_names(state: dict, entity_id: str) -> Set[str]:
+def _entity_names(state: dict, entity_id: str) -> set[str]:
     from services import graph_resolver as gr
     from services.entity_identity import find_runtime_npc_key
     names = {str(entity_id)}
@@ -316,7 +317,7 @@ def _entity_names(state: dict, entity_id: str) -> Set[str]:
     return {_fold(n).strip() for n in names if n and n.strip()}
 
 
-def _mentions(folded_text: str, names: Set[str]) -> bool:
+def _mentions(folded_text: str, names: set[str]) -> bool:
     for name in names:
         if re.search(rf"(?<!\w){re.escape(name)}(?!\w)", folded_text):
             return True
@@ -327,9 +328,9 @@ def _mentions(folded_text: str, names: Set[str]) -> bool:
     return False
 
 
-def _player_known_events(state: dict) -> List[dict]:
+def _player_known_events(state: dict) -> list[dict]:
     """Assuntos que o JOGADOR conhece: eventos registrados na crônica dele."""
-    ids: Set[str] = set()
+    ids: set[str] = set()
     for chapter in state.get("chronicle") or []:
         for entry in (chapter or {}).get("entries") or [] if isinstance(chapter, dict) else []:
             if isinstance(entry, dict) and entry.get("event_id"):
@@ -339,7 +340,7 @@ def _player_known_events(state: dict) -> List[dict]:
             and str(ev.get("type") or "") in SUBJECT_PARAMS]
 
 
-def record_player_told(state: dict, npc_id: str, player_text: str, clock: int) -> List[dict]:
+def record_player_told(state: dict, npc_id: str, player_text: str, clock: int) -> list[dict]:
     """R9: o jogador menciona entidade de um assunto que ELE conhece → `told_to`
     (+`believed_by` se relação ≥ BELIEF_MIN_RELATIONSHIP). Nunca cria fato."""
     from services.entity_identity import find_runtime_npc_key
@@ -353,7 +354,7 @@ def record_player_told(state: dict, npc_id: str, player_text: str, clock: int) -
     rel = _int((row or {}).get("relationship"))
     rel = 5 if rel is None else rel
     already = _holder_subjects(state.get("knowledge_links") or [], holder)
-    out: List[dict] = []
+    out: list[dict] = []
     for ev in _player_known_events(state):
         sid = str(ev["event_id"])
         if sid in already or not ev.get("target_id"):
@@ -370,14 +371,14 @@ def record_player_told(state: dict, npc_id: str, player_text: str, clock: int) -
     return out
 
 
-def inherit_local(state: dict, npc_id: str, location_id: str, clock: int) -> List[dict]:
+def inherit_local(state: dict, npc_id: str, location_id: str, clock: int) -> list[dict]:
     """R10: NPC novo em L herda, como rumor local, só o que JÁ chegou a L."""
     holder = holder_id(state, npc_id)
     heard = (state.get("location_heard") or {}).get(location_id) or []
     if not holder or not heard:
         return []
     already = _holder_subjects(state.get("knowledge_links") or [], holder)
-    out: List[dict] = []
+    out: list[dict] = []
     for sid in heard:
         if sid in already:
             continue
@@ -397,8 +398,8 @@ def inherit_local(state: dict, npc_id: str, location_id: str, clock: int) -> Lis
 # --------------------------------------------------------------------------- #
 def schedule_propagation(state: dict, subject_kind: str, subject_id: str,
                          from_location_id: str, clock: int, hop: int = 1, *,
-                         origin_location_id: Optional[str] = None,
-                         origin_clock: Optional[int] = None) -> List[dict]:
+                         origin_location_id: str | None = None,
+                         origin_clock: int | None = None) -> list[dict]:
     """R3/R4: agenda entregas seeded a partir de `from_location_id`."""
     from services.world_distance import reachable_within, travel_periods
     params = _params(state, subject_kind, subject_id)
@@ -424,7 +425,7 @@ def schedule_propagation(state: dict, subject_kind: str, subject_id: str,
         if from_origin is None or from_origin > radius:
             continue
         cands.append((0 if loc in npc_locs else 1, dist, loc))
-    out: List[dict] = []
+    out: list[dict] = []
     game_id = str(state.get("game_id") or "")
     for _rank, dist, loc in sorted(cands)[:MAX_DESTINATIONS]:
         seed = int(_sha(game_id, subject_id, from_location_id, loc, hop), 16)
@@ -443,7 +444,7 @@ def schedule_propagation(state: dict, subject_kind: str, subject_id: str,
     return out
 
 
-def _add_heard(heard: Dict[str, List[str]], loc: str, sid: str) -> None:
+def _add_heard(heard: dict[str, list[str]], loc: str, sid: str) -> None:
     if not loc or not sid:
         return
     rows = heard.setdefault(loc, [])
@@ -562,15 +563,15 @@ def turn_updates(state: dict) -> dict:
 # --------------------------------------------------------------------------- #
 # Leitura (contexto do NPC)
 # --------------------------------------------------------------------------- #
-def _holder_links(state: dict, npc_id: str) -> List[dict]:
+def _holder_links(state: dict, npc_id: str) -> list[dict]:
     holders = _holders_for(state, npc_id)
     now = clock_index(_world(state))
     rows = normalize_knowledge(state, legacy_default=False)["knowledge_links"]
     return [lk for lk in rows if lk["holder_id"] in holders and lk["acquired_clock"] <= now]
 
 
-def known_subject_ids(state: dict, npc_id: str) -> Dict[str, Set[str]]:
-    out: Dict[str, Set[str]] = {"observed": set(), "believed": set(), "heard": set()}
+def known_subject_ids(state: dict, npc_id: str) -> dict[str, set[str]]:
+    out: dict[str, set[str]] = {"observed": set(), "believed": set(), "heard": set()}
     for lk in _holder_links(state, npc_id):
         key = {"observed_by": "observed", "believed_by": "believed",
                "told_to": "heard"}[lk["relation"]]
@@ -595,11 +596,11 @@ def _source_label(state: dict, source: str) -> str:
 
 
 def knowledge_lines(state: dict, npc_id: str,
-                    limit: int = NPC_KNOWLEDGE_CONTEXT_MAX) -> List[Tuple[str, str]]:
+                    limit: int = NPC_KNOWLEDGE_CONTEXT_MAX) -> list[tuple[str, str]]:
     """Até `limit` linhas rotuladas (`[VIU]`/`[OUVIU DE …]`/`[BOATO …]`), mais
     recentes primeiro. Conteúdo com assinatura secreta não revelada falha
     fechado (nunca entra no prompt)."""
-    agg: Dict[str, dict] = {}
+    agg: dict[str, dict] = {}
     for lk in _holder_links(state, npc_id):
         row = agg.setdefault(lk["subject_id"], {"kind": lk["subject_kind"], "rels": set(),
                                                 "clock": -1, "source": "world"})
@@ -607,7 +608,7 @@ def knowledge_lines(state: dict, npc_id: str,
         row["clock"] = max(row["clock"], lk["acquired_clock"])
         if lk["relation"] == "told_to":
             row["source"] = lk.get("source") or "world"
-    out: List[Tuple[str, str]] = []
+    out: list[tuple[str, str]] = []
     for sid, row in sorted(agg.items(), key=lambda kv: (-kv[1]["clock"], kv[0])):
         if len(out) >= max(0, int(limit)):
             break
@@ -636,7 +637,7 @@ def npc_knowledge_block(state: dict, npc_id: str, limit: int = NPC_KNOWLEDGE_CON
 # --------------------------------------------------------------------------- #
 # Normalização (save/load, tolerante a adulteração)
 # --------------------------------------------------------------------------- #
-def _norm_link(raw: Any) -> Optional[dict]:
+def _norm_link(raw: Any) -> dict | None:
     if not isinstance(raw, dict):
         return None
     holder, sid = raw.get("holder_id"), raw.get("subject_id")
@@ -665,7 +666,7 @@ def _norm_link(raw: Any) -> Optional[dict]:
     return row
 
 
-def _norm_delivery(raw: Any) -> Optional[dict]:
+def _norm_delivery(raw: Any) -> dict | None:
     if not isinstance(raw, dict):
         return None
     strs = ("delivery_id", "subject_id", "from_location_id", "to_location_id")
@@ -687,11 +688,11 @@ def _norm_delivery(raw: Any) -> Optional[dict]:
     return row
 
 
-def _cap_links(links: List[dict]) -> List[dict]:
+def _cap_links(links: list[dict]) -> list[dict]:
     excess = len(links) - MAX_KNOWLEDGE_LINKS
     if excess <= 0:
         return links
-    drop: Set[int] = set()
+    drop: set[int] = set()
     # despejo: links `loc:` mais antigos, depois não-testemunho, nunca observed_by
     for predicate in (lambda lk: lk["holder_id"].startswith("loc:"),
                       lambda lk: lk["relation"] != "observed_by"):
@@ -709,24 +710,24 @@ def normalize_knowledge(raw: Any, *, legacy_default: bool = True) -> dict:
     """Normaliza os 4 campos do ledger. `legacy_default` vale quando a chave
     `knowledge_links` não existe (save pré-SPEC-215 → True)."""
     raw = raw if isinstance(raw, dict) else {}
-    links: Dict[str, dict] = {}
+    links: dict[str, dict] = {}
     for item in raw.get("knowledge_links") if isinstance(raw.get("knowledge_links"), list) else []:
         row = _norm_link(item)
         if row and row["link_id"] not in links:
             links[row["link_id"]] = row
     ordered = sorted(links.values(),
                      key=lambda lk: (lk["acquired_clock"], lk["acquired_turn"], lk["link_id"]))
-    queue: Dict[str, dict] = {}
+    queue: dict[str, dict] = {}
     for item in raw.get("knowledge_queue") if isinstance(raw.get("knowledge_queue"), list) else []:
         row = _norm_delivery(item)
         if row and row["delivery_id"] not in queue:
             queue[row["delivery_id"]] = row
     q_sorted = sorted(queue.values(), key=lambda d: (d["due_clock"], d["delivery_id"]))
     heard_raw = raw.get("location_heard") if isinstance(raw.get("location_heard"), dict) else {}
-    heard: Dict[str, List[str]] = {}
+    heard: dict[str, list[str]] = {}
     for loc in sorted(k for k in heard_raw if isinstance(k, str) and k)[:MAX_HEARD_LOCATIONS]:
         vals = heard_raw.get(loc)
-        seen: List[str] = []
+        seen: list[str] = []
         for sid in vals if isinstance(vals, list) else []:
             if isinstance(sid, str) and sid and sid not in seen:
                 seen.append(sid)
@@ -744,7 +745,7 @@ def normalize_knowledge(raw: Any, *, legacy_default: bool = True) -> dict:
 # --------------------------------------------------------------------------- #
 # Gate de contexto (consumido por services.context_builder)
 # --------------------------------------------------------------------------- #
-def context_gate(state: dict, npc_id: str) -> Optional[dict]:
+def context_gate(state: dict, npc_id: str) -> dict | None:
     """None com `off`. Senão {mode, lines, filter} — `filter` = assuntos
     selecionados (≤8). Falha interna → lines=[], filter=set() (fail-closed)."""
     current = mode()

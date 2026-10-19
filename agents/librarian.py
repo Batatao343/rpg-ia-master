@@ -14,9 +14,9 @@ from observability.telemetry import log_event as _log_event
 
 class EntityMatch(BaseModel):
     match_found: bool = Field(description="True se o pedido se refere a algo que já existe na lista.")
-    existing_id: Optional[str] = Field(description="O ID exato da lista que corresponde ao pedido. Null se não houver match.")
+    existing_id: str | None = Field(description="O ID exato da lista que corresponde ao pedido. Null se não houver match.")
 
-def find_existing_entity(user_query: str, entity_type: str, existing_ids: List[str]) -> Optional[str]:
+def find_existing_entity(user_query: str, entity_type: str, existing_ids: list[str]) -> str | None:
     """
     Usa IA para verificar se 'Varg' é o mesmo que 'Varg, o Açougueiro'.
     Retorna o ID existente ou None se for algo novo.

@@ -1,7 +1,7 @@
 """SPEC-185 owner-scoped, bounded read projection contract."""
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from uuid import uuid4
 
 from infrastructure.account_read_model import PostgresAccountReader
@@ -97,7 +97,7 @@ def test_record_history_returns_only_new_narrator_key_and_restore_gets_new_key()
 
 def test_account_reads_are_owner_scoped_and_keyset_bounded():
     user = principal()
-    at = datetime(2026, 10, 9, tzinfo=timezone.utc)
+    at = datetime(2026, 10, 9, tzinfo=UTC)
     row = {"event_id": uuid4(), "created_at": at, "game_id": uuid4(),
            "category": "game", "operation_kind": "turn"}
     db = Connection(user.user_id, [row] * 21)
@@ -112,7 +112,7 @@ def test_account_reads_are_owner_scoped_and_keyset_bounded():
 
 def test_purchase_history_uses_signed_kind_and_stable_keyset():
     user = principal()
-    at = datetime(2026, 10, 9, tzinfo=timezone.utc)
+    at = datetime(2026, 10, 9, tzinfo=UTC)
     rows = [{"entry_id": uuid4(), "entry_type": "refund", "amount_milli": 250,
              "created_at": at} for _ in range(3)]
     db = Connection(user.user_id, rows)
@@ -128,7 +128,7 @@ def test_series_has_server_filled_zero_bins_and_only_settlement_sql():
     user = principal()
     db = Connection(user.user_id, [])
     series = PostgresAccountReader(Pool(db)).series(user, "24h",
-        now=datetime(2026, 10, 9, 12, tzinfo=timezone.utc))
+        now=datetime(2026, 10, 9, 12, tzinfo=UTC))
     assert len(series["points"]) == 24
     assert series["totals"] == {"game": "0", "image": "0", "voice": "0"}
     assert all(point["game"] == point["image"] == point["voice"] == "0"
@@ -140,12 +140,12 @@ def test_series_has_server_filled_zero_bins_and_only_settlement_sql():
 
 def test_series_totals_are_calculated_on_server():
     user = principal()
-    start = datetime(2026, 10, 3, tzinfo=timezone.utc)
+    start = datetime(2026, 10, 3, tzinfo=UTC)
     db = Connection(user.user_id, [
         {"bucket": start, "category": "game", "amount_milli": 1250},
         {"bucket": start, "category": "image", "amount_milli": 500},
     ])
     series = PostgresAccountReader(Pool(db)).series(user, "7d",
-        now=datetime(2026, 10, 9, 12, tzinfo=timezone.utc))
+        now=datetime(2026, 10, 9, 12, tzinfo=UTC))
     assert series["totals"] == {"game": "1250", "image": "500", "voice": "0"}
     assert series["points"][0]["total"] == "1750"

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Testes da spec onboarding-valoria — cobertura, limites e endpoint.
 
 Garante que data/onboarding.json cobre TODAS as regiões/classes/raças dos

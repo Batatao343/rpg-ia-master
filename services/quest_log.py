@@ -40,7 +40,7 @@ QUEST_ACTION_RE = re.compile(
 )
 
 
-def _as_dict(proposal: Union[Dict, object]) -> Dict:
+def _as_dict(proposal: dict | object) -> dict:
     """Normaliza ProposedQuest (Pydantic) ou dict cru pro mesmo formato."""
     if hasattr(proposal, "model_dump"):
         return proposal.model_dump()
@@ -59,7 +59,7 @@ def _valid_entity_ids() -> set:
         return set()
 
 
-def register_proposed_quests(quests: List[Dict], proposals: List, *, turn: int = 0) -> Tuple[List[Dict], List[Dict]]:
+def register_proposed_quests(quests: list[dict], proposals: list, *, turn: int = 0) -> tuple[list[dict], list[dict]]:
     """PURO. Valida/cria side quests a partir de propostas do LLM.
 
     Retorna (lista_nova, criadas). Regras (nunca levanta, só ignora ou zera campo):
@@ -70,7 +70,7 @@ def register_proposed_quests(quests: List[Dict], proposals: List, *, turn: int =
     - já no teto de ativas (MAX_ACTIVE_QUESTS) -> ignora com log
     """
     quests = list(quests or [])
-    created: List[Dict] = []
+    created: list[dict] = []
     if not proposals:
         return quests, created
 
@@ -121,7 +121,7 @@ def register_proposed_quests(quests: List[Dict], proposals: List, *, turn: int =
     return quests, created
 
 
-def complete_quest(quests: List[Dict], quest_id: str, turn: int = 0) -> List[Dict]:
+def complete_quest(quests: list[dict], quest_id: str, turn: int = 0) -> list[dict]:
     """PURO. Quest ATIVA com esse id -> completed. Id ausente/já resolvida -> sem mudança."""
     out = []
     for q in quests or []:
@@ -131,9 +131,9 @@ def complete_quest(quests: List[Dict], quest_id: str, turn: int = 0) -> List[Dic
     return out
 
 
-def sync_location_progress(quests: List[Dict], location_id: str, *, turn: int = 0) -> List[Dict]:
+def sync_location_progress(quests: list[dict], location_id: str, *, turn: int = 0) -> list[dict]:
     """Registra chegada ao alvo uma única vez, sem concluir a missão."""
-    out: List[Dict] = []
+    out: list[dict] = []
     for original in quests or []:
         q = dict(original)
         progress = list(q.get("progress_log") or [])
@@ -182,12 +182,12 @@ def _is_distinct(tokens: frozenset, existing: list) -> bool:
 
 
 def sync_action_progress(
-    quests: List[Dict],
+    quests: list[dict],
     location_id: str,
     action_text: str,
     *,
     turn: int = 0,
-) -> Tuple[List[Dict], List[str]]:
+) -> tuple[list[dict], list[str]]:
     """Registra investigação verificável e sinaliza conclusão determinística.
 
     A ação precisa ocorrer no local-alvo já alcançado, conter um verbo de busca
@@ -201,8 +201,8 @@ def sync_action_progress(
     generic_reference = bool(
         action_words & {"missao", "pista", "investigo", "investigar", "retomo"}
     )
-    ready_ids: List[str] = []
-    out: List[Dict] = []
+    ready_ids: list[str] = []
+    out: list[dict] = []
     fp_tokens = normalize_fingerprint(action)
     fingerprint = " ".join(sorted(fp_tokens))
     for original in quests or []:
@@ -233,7 +233,7 @@ def sync_action_progress(
                     "detail": action,
                     "fingerprint": fingerprint,
                 })
-            distinct: List[frozenset] = []
+            distinct: list[frozenset] = []
             for row in progress:
                 if row.get("kind") != "investigation":
                     continue
@@ -264,11 +264,11 @@ def _fold_name(value: object) -> str:
     return " ".join(plain.casefold().split())
 
 
-def sync_npc_interaction(quests: List[Dict], npc_name: str, *, turn: int = 0) -> List[Dict]:
+def sync_npc_interaction(quests: list[dict], npc_name: str, *, turn: int = 0) -> list[dict]:
     """PURO. Conversa real com o NPC de ORIGEM de uma quest ativa vira evidência
     (`npc_interaction`) — 1 linha por turno, nunca no turno de criação."""
     who = _fold_name(npc_name)
-    out: List[Dict] = []
+    out: list[dict] = []
     for original in quests or []:
         q = dict(original)
         progress = list(q.get("progress_log") or [])
@@ -292,7 +292,7 @@ def _safe_turn(value) -> int:
         return 0
 
 
-def has_completion_proof(quest: Dict, state: Dict) -> Tuple[bool, str]:
+def has_completion_proof(quest: dict, state: dict) -> tuple[bool, str]:
     """SPEC-223 R1 (D-A default (a)+(b)+(c)). PURO.
 
     (a) quest com alvo: `progress_log` tem `location_reached`;
@@ -322,10 +322,10 @@ def has_completion_proof(quest: Dict, state: Dict) -> Tuple[bool, str]:
     return True, ""
 
 
-def complete_quest_with_reward(quests: List[Dict], quest_id: str,
-                               turn: int = 0) -> Tuple[List[Dict], int]:
+def complete_quest_with_reward(quests: list[dict], quest_id: str,
+                               turn: int = 0) -> tuple[list[dict], int]:
     """Conclui e materializa a recompensa fixa uma vez. Retorna ouro concedido."""
-    out: List[Dict] = []
+    out: list[dict] = []
     reward = 0
     for original in quests or []:
         q = dict(original)
@@ -342,7 +342,7 @@ def complete_quest_with_reward(quests: List[Dict], quest_id: str,
     return out, reward
 
 
-def fail_orphan_quests(quests: List[Dict], dead_entity_id: str, turn: int = 0) -> Tuple[List[Dict], List[Dict]]:
+def fail_orphan_quests(quests: list[dict], dead_entity_id: str, turn: int = 0) -> tuple[list[dict], list[dict]]:
     """PURO. Quests ATIVAS com origin_entity_id == dead_entity_id -> failed.
 
     Retorna (lista_nova, eventos `quest_failed` — 1 por quest, source="system").
@@ -351,7 +351,7 @@ def fail_orphan_quests(quests: List[Dict], dead_entity_id: str, turn: int = 0) -
     if not dead_entity_id:
         return list(quests or []), []
     out = []
-    events: List[Dict] = []
+    events: list[dict] = []
     for q in quests or []:
         if q.get("status") == "active" and q.get("origin_entity_id") == dead_entity_id:
             q = {**q, "status": "failed", "resolved_turn": int(turn)}
@@ -369,7 +369,7 @@ def fail_orphan_quests(quests: List[Dict], dead_entity_id: str, turn: int = 0) -
     return out, events
 
 
-def quest_markers(quests: List[Dict]) -> List[Dict]:
+def quest_markers(quests: list[dict]) -> list[dict]:
     """Quests ativas com local válido -> [{"quest_id", "location_id"}] pro mapa."""
     return [{"quest_id": q["id"], "location_id": q["location_id"]}
             for q in (quests or [])

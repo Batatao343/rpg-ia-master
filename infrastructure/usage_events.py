@@ -154,7 +154,7 @@ def _append_job_attempt(pool, job, attempts: Sequence[dict], *, job_kind: str,
         if row["kind"] != job_kind or row["owner_id"] is None:
             raise Conflict("job de usage sem owner")
         request_hash = sha256(
-            f"{operation_kind}:{job.job_id}:{row['dedupe_key']}".encode("utf-8")
+            f"{operation_kind}:{job.job_id}:{row['dedupe_key']}".encode()
         ).hexdigest()
         connection.execute(
             """insert into app.operations

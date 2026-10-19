@@ -110,7 +110,7 @@ TIPOS_CONHECIDOS = {"location", "faction", "npc", "race", "monster", "artifact"}
 
 
 def _load_json(*parts):
-    with open(os.path.join(*parts), "r", encoding="utf-8") as f:
+    with open(os.path.join(*parts), encoding="utf-8") as f:
         return json.load(f)
 
 

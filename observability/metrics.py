@@ -6,7 +6,7 @@ import math
 import re
 import threading
 from collections import Counter, defaultdict
-from typing import Mapping
+from collections.abc import Mapping
 
 LABELS = {
     "rpg_lease_renewals_total": {"outcome"},

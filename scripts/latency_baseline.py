@@ -57,7 +57,7 @@ def _git_sha() -> str:
         return "unknown"
 
 
-def fingerprint(mode: str, profile: str, journeys: List[str]) -> Dict[str, Any]:
+def fingerprint(mode: str, profile: str, journeys: list[str]) -> dict[str, Any]:
     from scripts import latency_journeys as lj
     return {
         "git_sha": _git_sha(),
@@ -77,28 +77,28 @@ _COMPARABLE_KEYS = ("mode", "profile", "execution_mode", "python", "pseudo_strea
                     "journeys", "journeys_version", "schema_version")
 
 
-def fingerprint_mismatch(a: Dict[str, Any], b: Dict[str, Any]) -> List[str]:
+def fingerprint_mismatch(a: dict[str, Any], b: dict[str, Any]) -> list[str]:
     return [k for k in _COMPARABLE_KEYS if a.get(k) != b.get(k)]
 
 
-def _stats(values: List[int]) -> Dict[str, Any]:
+def _stats(values: list[int]) -> dict[str, Any]:
     vals = [int(v) for v in values if v is not None]
     return {"n": len(vals), "p50": percentile(vals, 50), "p95": percentile(vals, 95),
             "max": max(vals, default=0)}
 
 
 # ------------------------------------------------------------------- agregacao
-def aggregate(records: List[Dict[str, Any]], fp: Dict[str, Any]) -> Dict[str, Any]:
-    by_journey: Dict[str, List[Dict[str, Any]]] = {}
+def aggregate(records: list[dict[str, Any]], fp: dict[str, Any]) -> dict[str, Any]:
+    by_journey: dict[str, list[dict[str, Any]]] = {}
     for rec in records:
         by_journey.setdefault(rec["journey"], []).append(rec)
 
-    def block(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
-        out: Dict[str, Any] = {"n": len(rows), "indicative": len(rows) < INDICATIVE_BELOW}
+    def block(rows: list[dict[str, Any]]) -> dict[str, Any]:
+        out: dict[str, Any] = {"n": len(rows), "indicative": len(rows) < INDICATIVE_BELOW}
         for key in METRICS:
             out[METRIC_LABEL[key]] = _stats([r.get(key) for r in rows])
         out["phases"] = lat.summarize_phases(rows)
-        sizes: Dict[str, Any] = {}
+        sizes: dict[str, Any] = {}
         for size in ("short", "medium", "long"):
             sub = [r for r in rows if r.get("input_size") == size]
             if sub:
@@ -156,8 +156,8 @@ def _isolated_env(work: Path, *, offline: bool):
                 os.environ[key] = value
 
 
-def _read_stream(client, game_id: str, text: str, action_id: str) -> List[str]:
-    events: List[str] = []
+def _read_stream(client, game_id: str, text: str, action_id: str) -> list[str]:
+    events: list[str] = []
     with client.stream("POST", "/game/action/stream",
                        json={"input_text": text, "game_id": game_id,
                              "action_id": action_id}) as response:
@@ -172,7 +172,7 @@ def _read_stream(client, game_id: str, text: str, action_id: str) -> List[str]:
     return events
 
 
-def _wait_record(sink: List[Dict[str, Any]], count: int, timeout: float = 10.0) -> None:
+def _wait_record(sink: list[dict[str, Any]], count: int, timeout: float = 10.0) -> None:
     deadline = time.monotonic() + timeout
     while len(sink) < count and time.monotonic() < deadline:
         time.sleep(0.005)
@@ -181,8 +181,8 @@ def _wait_record(sink: List[Dict[str, Any]], count: int, timeout: float = 10.0) 
 
 
 def execute(journeys, reps: int, seed: int, profile: str, mode: str, scale: float,
-            work: Path, *, real: bool = False, max_requests: Optional[int] = None,
-            max_cost: Optional[float] = None, progress=None) -> List[Dict[str, Any]]:
+            work: Path, *, real: bool = False, max_requests: int | None = None,
+            max_cost: float | None = None, progress=None) -> list[dict[str, Any]]:
     """Roda as jornadas in-process (TestClient, SSE real) e devolve os registros."""
     import random
 
@@ -190,8 +190,8 @@ def execute(journeys, reps: int, seed: int, profile: str, mode: str, scale: floa
 
     from playtest.latency_llm import LatencyContext, install, uninstall
 
-    records: List[Dict[str, Any]] = []
-    sink: List[Dict[str, Any]] = []
+    records: list[dict[str, Any]] = []
+    sink: list[dict[str, Any]] = []
     clock = lat.FakeClock() if (mode == "virtual" and not real) else None
     ctx = None if real else LatencyContext(profile=profile, seed=seed, mode=mode,
                                           scale=scale, clock=clock)
@@ -256,11 +256,11 @@ def execute(journeys, reps: int, seed: int, profile: str, mode: str, scale: floa
 
 
 # -------------------------------------------------------------------- relatorio
-def _row(label: str, st: Dict[str, Any]) -> str:
+def _row(label: str, st: dict[str, Any]) -> str:
     return f"| {label} | {st['n']} | {st['p50']} | {st['p95']} | {st['max']} |"
 
 
-def render_report(summary: Dict[str, Any]) -> str:
+def render_report(summary: dict[str, Any]) -> str:
     fp = summary["fingerprint"]
     lines = ["# Baseline de latencia percebida (SPEC-200)", "",
              "## Fingerprint de ambiente", ""]
@@ -293,7 +293,7 @@ def render_report(summary: Dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def compare_runs(a: Dict[str, Any], b: Dict[str, Any], *, allow_mismatch: bool) -> str:
+def compare_runs(a: dict[str, Any], b: dict[str, Any], *, allow_mismatch: bool) -> str:
     bad = fingerprint_mismatch(a["fingerprint"], b["fingerprint"])
     if bad and not allow_mismatch:
         raise SystemExit("fingerprints incompativeis (" + ", ".join(bad) +
@@ -357,7 +357,7 @@ def cmd_run(args) -> int:
     return 0
 
 
-def _load_summary(run: str, out_dir: Optional[str]) -> Dict[str, Any]:
+def _load_summary(run: str, out_dir: str | None) -> dict[str, Any]:
     root = Path(out_dir) if out_dir else RUNS_DIR
     path = Path(run) / "summary.json" if Path(run).is_dir() else root / run / "summary.json"
     return json.loads(path.read_text(encoding="utf-8"))
@@ -432,7 +432,7 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv: Optional[List[str]] = None) -> int:
+def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     return int(args.fn(args) or 0)
 

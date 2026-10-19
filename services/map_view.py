@@ -19,7 +19,7 @@ NO_DIRECT_ROUTE = "Sem rota direta daqui."
 BLOCKED_REASON = "Rota bloqueada."
 
 
-def interiors_block(loc_id: str) -> Dict[str, Any]:
+def interiors_block(loc_id: str) -> dict[str, Any]:
     """Interiores do local atual ("Locais daqui") + caminho de volta ao pai."""
     loc = gamedata.get_location(loc_id) or {}
     here = [
@@ -35,12 +35,12 @@ def interiors_block(loc_id: str) -> Dict[str, Any]:
     return {"here": here, "exit_to": exit_to}
 
 
-def _blocked_pairs(projection: Optional[dict]) -> set:
+def _blocked_pairs(projection: dict | None) -> set:
     return {frozenset((r.get("a", ""), r.get("b", "")))
             for r in (projection or {}).get("blocked_routes", []) or []}
 
 
-def travel_gate(state: dict) -> Dict[str, Any]:
+def travel_gate(state: dict) -> dict[str, Any]:
     """R7: motivo (pt-BR) pelo qual 'Viajar' fica desabilitado; o backend segue
     sendo a autoridade (_combat_gate converte viagem em fuga)."""
     if state.get("archived"):
@@ -62,7 +62,7 @@ def _anchor_id(world: dict) -> str:
     return cur
 
 
-def _travel_options(world: dict, blocked: set) -> List[Dict[str, Any]]:
+def _travel_options(world: dict, blocked: set) -> list[dict[str, Any]]:
     cur = world.get("current_location_id", "") or ""
     dests = list(gamedata.get_connections(cur))
     loc = gamedata.get_location(cur) or {}
@@ -79,7 +79,7 @@ def _travel_options(world: dict, blocked: set) -> List[Dict[str, Any]]:
     return out
 
 
-def build_map_view(state: dict) -> Dict[str, Any]:
+def build_map_view(state: dict) -> dict[str, Any]:
     world = dict(state.get("world") or {})
     projection = state.get("world_projection") or {}
     blocked = _blocked_pairs(projection)
@@ -99,7 +99,7 @@ def build_map_view(state: dict) -> Dict[str, Any]:
                      if isinstance(q, dict) and q.get("status") == "active" and q.get("location_id")}
 
     # Conjunto enviado: visitados (nao-interior) + adjacentes (connections da ancora).
-    sent: Dict[str, str] = {}
+    sent: dict[str, str] = {}
     for vid in visited:
         loc = gamedata.get_location(vid) or {}
         if loc and loc.get("kind") != "interior":
@@ -110,7 +110,7 @@ def build_map_view(state: dict) -> Dict[str, Any]:
             if c.get("kind") != "interior":
                 sent.setdefault(c["id"], "adjacent")
 
-    nodes: List[Dict[str, Any]] = []
+    nodes: list[dict[str, Any]] = []
     for lid, kind in sent.items():
         loc = gamedata.get_location(lid) or {}
         if not loc:
@@ -125,7 +125,7 @@ def build_map_view(state: dict) -> Dict[str, Any]:
             st = "visitado"
         else:
             st = "adjacente"
-        node: Dict[str, Any] = {"id": lid, "state": st, "name": loc.get("name", lid),
+        node: dict[str, Any] = {"id": lid, "state": st, "name": loc.get("name", lid),
                                 "coords": dict(loc.get("coords") or {"x": 50, "y": 50})}
         if not is_cur:
             opt = opt_by_id.get(lid)
@@ -158,7 +158,7 @@ def build_map_view(state: dict) -> Dict[str, Any]:
     edges.sort(key=lambda e: (e["a"], e["b"]))
     nodes.sort(key=lambda n: n["id"])
 
-    view: Dict[str, Any] = {
+    view: dict[str, Any] = {
         "game_id": state.get("game_id", ""),
         "turn_count": turn,
         "current_id": cur,
@@ -177,7 +177,7 @@ def build_map_view(state: dict) -> Dict[str, Any]:
     return view
 
 
-def legacy_filtered_map(state: dict) -> Dict[str, Any]:
+def legacy_filtered_map(state: dict) -> dict[str, Any]:
     """`GET /data/map?game_id=`: mesmo formato legado, so com os nos da view
     (adjacentes sem lore/perigo/conexoes). Sem game_id o endpoint global segue
     igual (CLI/smoke)."""

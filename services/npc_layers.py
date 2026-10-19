@@ -18,13 +18,13 @@ from typing import Dict, List, Optional, Tuple
 
 from gamedata import load_json_data
 
-_traits_cache: Optional[Dict[str, dict]] = None
+_traits_cache: dict[str, dict] | None = None
 
 # Contextos canônicos de DC (R2). Novos contextos = decisão de spec.
 DC_CONTEXTS = ("persuasao", "intimidacao", "comercio", "insight")
 
 
-def traits_catalog() -> Dict[str, dict]:
+def traits_catalog() -> dict[str, dict]:
     """Catálogo id -> trait de data/traits.json (cache em módulo)."""
     global _traits_cache
     if _traits_cache is None:
@@ -34,8 +34,8 @@ def traits_catalog() -> Dict[str, dict]:
 
 
 def roll_hidden_traits(npc_id: str, game_id: str,
-                       k_range: Tuple[int, int] = (1, 3),
-                       region_tag: str = "") -> List[str]:
+                       k_range: tuple[int, int] = (1, 3),
+                       region_tag: str = "") -> list[str]:
     """Sorteio determinístico de traits ocultos (R3).
 
     Seed = sha256(npc_id + game_id): mesmo NPC no mesmo save sorteia IGUAL
@@ -44,15 +44,15 @@ def roll_hidden_traits(npc_id: str, game_id: str,
     catalog = traits_catalog()
     if not catalog:
         return []
-    seed = int(hashlib.sha256(f"{npc_id}|{game_id}".encode("utf-8")).hexdigest(), 16)
+    seed = int(hashlib.sha256(f"{npc_id}|{game_id}".encode()).hexdigest(), 16)
     rng = random.Random(seed)
     k = rng.randint(*k_range)
 
-    pool: List[str] = []
+    pool: list[str] = []
     for tid, trait in sorted(catalog.items()):
         peso = 2 if region_tag and region_tag in (trait.get("tags") or []) else 1
         pool.extend([tid] * peso)
-    escolhidos: List[str] = []
+    escolhidos: list[str] = []
     while pool and len(escolhidos) < k:
         pick = rng.choice(pool)
         escolhidos.append(pick)
@@ -61,7 +61,7 @@ def roll_hidden_traits(npc_id: str, game_id: str,
 
 
 def ensure_npc_fields(npc: dict, game_id: str, home_location_id: str = "",
-                      in_scene: Optional[bool] = None) -> dict:
+                      in_scene: bool | None = None) -> dict:
     """Backfill idempotente dos campos de camada (R1). Não sobrescreve existentes.
 
     `in_scene=None` preserva o valor atual (ausente = legado, tratado como
@@ -126,12 +126,12 @@ def is_in_scene(npc: dict) -> bool:
     return bool(npc.get("in_scene", True))
 
 
-def npcs_in_scene(state: Dict) -> List[str]:
+def npcs_in_scene(state: dict) -> list[str]:
     """spec npc-fallback-sem-alvo (R1): interlocutores DISPONÍVEIS agora —
     NPCs `in_scene` no dict `npcs` + membros de party PRESENTES (ativos, não
     `waiting`). Ordem: NPCs da cena primeiro, depois aliados. Usado para
     resolver alvo quando o router não nomeou ninguém."""
-    out: List[str] = []
+    out: list[str] = []
     loc = str((state.get("world") or {}).get("current_location_id") or "")
     for name, npc in (state.get("npcs") or {}).items():
         home = str(npc.get("home_location_id") or "") if isinstance(npc, dict) else ""
@@ -146,7 +146,7 @@ def npcs_in_scene(state: Dict) -> List[str]:
     return out
 
 
-def npcs_for_context(state: Dict) -> List[str]:
+def npcs_for_context(state: dict) -> list[str]:
     """spec encontros-dedupe (R1/R2): NPCs elegíveis para o CONTEXTO do narrador.
     Entram: quem está `in_scene`, membros de party, e NPCs VINCULADOS ao local
     atual (`home_location_id`). Um NPC gerado por encontro fica preso ao local
@@ -157,7 +157,7 @@ def npcs_for_context(state: Dict) -> List[str]:
     loc = world.get("current_location_id", "") or ""
     party_names = {c.get("name") for c in (state.get("party") or [])
                    if isinstance(c, dict) and npc_alive(c)}
-    out: List[str] = []
+    out: list[str] = []
     for name, npc in (state.get("npcs") or {}).items():
         if not isinstance(npc, dict) or not npc_alive(npc):
             continue
@@ -173,7 +173,7 @@ def npcs_for_context(state: Dict) -> List[str]:
     return out
 
 
-def reset_scene(npcs: Dict[str, dict]) -> Dict[str, dict]:
+def reset_scene(npcs: dict[str, dict]) -> dict[str, dict]:
     """Viagem: ninguém teleporta junto — in_scene=False para todos (R5).
     (Companions de party têm estado próprio e não vivem neste dict.)"""
     return {
@@ -182,14 +182,14 @@ def reset_scene(npcs: Dict[str, dict]) -> Dict[str, dict]:
     }
 
 
-def tick_interaction(npc: dict) -> Tuple[dict, List[str]]:
+def tick_interaction(npc: dict) -> tuple[dict, list[str]]:
     """Fim de turno de conversa bem-sucedida (R7): incrementa contagem e move
     traits maduros (interaction_count >= reveal_after) para revealed.
     Retorna (npc_atualizado, ids_revelados_NESTE_turno)."""
     npc = dict(npc)
     npc["interaction_count"] = int(npc.get("interaction_count", 0)) + 1
     catalog = traits_catalog()
-    revelados: List[str] = []
+    revelados: list[str] = []
     hidden = list(npc.get("hidden_traits") or [])
     revealed = list(npc.get("revealed_traits") or [])
     for tid in list(hidden):
@@ -212,7 +212,7 @@ def trait_dc_modifier(npc: dict, contexto: str) -> int:
     return total
 
 
-def trait_names(trait_ids: List[str]) -> List[dict]:
+def trait_names(trait_ids: list[str]) -> list[dict]:
     """[{id, name, description}] p/ prompt/frontend — só o que foi passado
     (chame com revealed_traits; hidden nunca sai daqui pra cima)."""
     catalog = traits_catalog()
@@ -225,7 +225,7 @@ def trait_names(trait_ids: List[str]) -> List[dict]:
     return out
 
 
-def visible_npc_view(npcs: Dict[str, dict]) -> List[dict]:
+def visible_npc_view(npcs: dict[str, dict]) -> list[dict]:
     """Camada 2 para a API (R8/R9): só conhecidos, SEM hidden_traits."""
     out = []
     for key, npc in (npcs or {}).items():

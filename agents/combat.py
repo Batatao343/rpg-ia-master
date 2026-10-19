@@ -43,7 +43,7 @@ class FleeDecision(NamedTuple):
     """Resultado único de perseguição, compatível com o unpack legado."""
 
     escaped: bool
-    logs: List[str]
+    logs: list[str]
     chase: dict
 
     @property
@@ -80,7 +80,7 @@ class EnemyIdentification(BaseModel):
 class EncounterScanner(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    detected_enemies: List[EnemyIdentification] = Field(
+    detected_enemies: list[EnemyIdentification] = Field(
         max_length=_MAX_SCANNER_TYPES)
     flavor_text: str = Field(description="Descrição curta da entrada dos inimigos em combate.")
 
@@ -88,7 +88,7 @@ class EncounterScanner(BaseModel):
 # ==========================================================================
 # Eventos canônicos de morte de inimigo (mantidos do motor antigo)
 # ==========================================================================
-def _canonical_enemy_id(enemy: Dict) -> Optional[str]:
+def _canonical_enemy_id(enemy: dict) -> str | None:
     raw = (enemy.get("id") or "").strip()
     if not raw:
         return None
@@ -100,7 +100,7 @@ def _canonical_enemy_id(enemy: Dict) -> Optional[str]:
     return None
 
 
-def _kill_events(dead: List[Dict]) -> List[Dict]:
+def _kill_events(dead: list[dict]) -> list[dict]:
     kills = []
     for e in dead:
         cid = _canonical_enemy_id(e)
@@ -113,7 +113,7 @@ def _kill_events(dead: List[Dict]) -> List[Dict]:
     return kills
 
 
-def _last_human_text(messages: List) -> str:
+def _last_human_text(messages: list) -> str:
     for m in reversed(messages or []):
         if isinstance(m, HumanMessage):
             return str(m.content)
@@ -123,9 +123,9 @@ def _last_human_text(messages: List) -> str:
 # ==========================================================================
 # Preparação da cena (ANTES do conflito — LLM identifica; guard obrigatório)
 # ==========================================================================
-def _bounded_enemy_groups(scan: EncounterScanner) -> List[tuple[str, int]]:
+def _bounded_enemy_groups(scan: EncounterScanner) -> list[tuple[str, int]]:
     """Normaliza/deduplica o scanner inteiro antes de chamar qualquer factory."""
-    grouped: Dict[str, dict] = {}
+    grouped: dict[str, dict] = {}
     for ident in (scan.detected_enemies or [])[:_MAX_SCANNER_TYPES]:
         raw_name = (
             ident.get("name")
@@ -150,7 +150,7 @@ def _bounded_enemy_groups(scan: EncounterScanner) -> List[tuple[str, int]]:
         )
 
     remaining = _MAX_SCANNER_TOTAL
-    bounded: List[tuple[str, int]] = []
+    bounded: list[tuple[str, int]] = []
     for entry in grouped.values():
         if remaining <= 0:
             break
@@ -161,7 +161,7 @@ def _bounded_enemy_groups(scan: EncounterScanner) -> List[tuple[str, int]]:
     return bounded
 
 
-def _grounded_template(name: str, context: str, encounter_level: int) -> Dict:
+def _grounded_template(name: str, context: str, encounter_level: int) -> dict:
     """Factory do bestiário com trava de identidade (SPEC-203 R3/H3): se o
     dedupe/gerador devolver OUTRA espécie, descarta e materializa o nome pedido."""
     from services import encounter_manifest as em
@@ -179,7 +179,7 @@ def _grounded_template(name: str, context: str, encounter_level: int) -> Dict:
     }, encounter_level=encounter_level)
 
 
-def _instances(template: Dict, count: int, next_by_template: Dict[str, int]) -> List[Dict]:
+def _instances(template: dict, count: int, next_by_template: dict[str, int]) -> list[dict]:
     out = []
     base_id = str(template.get("id") or "enemy")
     for _ in range(count):
@@ -193,7 +193,7 @@ def _instances(template: Dict, count: int, next_by_template: Dict[str, int]) -> 
     return out
 
 
-def _sync_enemy_knowledge(enemies: List[Dict], *, load_persisted: bool = False) -> None:
+def _sync_enemy_knowledge(enemies: list[dict], *, load_persisted: bool = False) -> None:
     """SPEC-272 (liga SPEC-069 R8): Carta que o inimigo já usou fica revelada no
     painel de combate; no início do encontro, o que o bestiário já sabe do arquétipo
     começa revelado. Persistir/ler o overlay compartilhado só no perfil `legacy` —
@@ -225,8 +225,8 @@ def _sync_enemy_knowledge(enemies: List[Dict], *, load_persisted: bool = False) 
             _log_event("combat", "enemy_knowledge_failed", level="warning")
 
 
-def _spawn_v4_enemies(messages: List, target_hint: str, state: Optional[Dict],
-                      meta: Optional[Dict] = None) -> tuple:
+def _spawn_v4_enemies(messages: list, target_hint: str, state: dict | None,
+                      meta: dict | None = None) -> tuple:
     """Monta o elenco do encontro e converte CADA um em ficha v4.
 
     SPEC-203 R3 — ordem determinística: (a) `enemy_id` do encontro sistêmico;
@@ -236,7 +236,7 @@ def _spawn_v4_enemies(messages: List, target_hint: str, state: Optional[Dict],
     from services import encounter_manifest as em
     meta = meta if meta is not None else {}
     _log_event("combat", "preparing_encounter", level="info")
-    enemies: List[Dict] = []
+    enemies: list[dict] = []
     flavor = "Algo hostil emerge."
     world = (state or {}).get("world") or {}
     encounter_level = prep.compute_encounter_level(
@@ -249,7 +249,7 @@ def _spawn_v4_enemies(messages: List, target_hint: str, state: Optional[Dict],
         f"{target_hint}; local={world.get('current_location', 'desconhecido')}; "
         f"nível_do_encontro={encounter_level}"
     )
-    next_instance_by_template: Dict[str, int] = {}
+    next_instance_by_template: dict[str, int] = {}
     protected: set = set()
     canonical = em.resolve_canonical_source(
         state or {}, target_hint, (state or {}).get("combat_encounter_hint"))
@@ -314,9 +314,9 @@ def _spawn_v4_enemies(messages: List, target_hint: str, state: Optional[Dict],
     return enemies, flavor
 
 
-def _apply_encounter_budget(enemies: List[Dict], state: Dict, flavor: str, *,
-                            protected: Optional[set] = None,
-                            report: Optional[Dict] = None) -> tuple:
+def _apply_encounter_budget(enemies: list[dict], state: dict, flavor: str, *,
+                            protected: set | None = None,
+                            report: dict | None = None) -> tuple:
     """SPEC-203 R4: clamp/fill seguem a regra numérica, mas o alvo canônico não
     perde vaga por variedade e todo corte/reforço é reportado (ids) para virar
     evento de composição no manifesto."""
@@ -357,9 +357,9 @@ def _apply_encounter_budget(enemies: List[Dict], state: Dict, flavor: str, *,
     return enemies, flavor
 
 
-def _early_game_reaction_initiator(state: Dict, player: Dict,
-                                   initiator: Optional[str], *,
-                                   combat_round: Optional[int] = None) -> Optional[str]:
+def _early_game_reaction_initiator(state: dict, player: dict,
+                                   initiator: str | None, *,
+                                   combat_round: int | None = None) -> str | None:
     """Garante uma primeira decisão a herói novo e saudável fora de apex.
 
     [BALANCEAR] A baseline real encontrou mortes de nível 1–2 em emboscadas antes
@@ -386,7 +386,7 @@ def _early_game_reaction_initiator(state: Dict, player: Dict,
 _PREPARED_CATEGORIES = {"elite", "chefe", "nomeado", "boss"}
 
 
-def _wants_prepared_scene(player: Dict, enemies: List[Dict]) -> bool:
+def _wants_prepared_scene(player: dict, enemies: list[dict]) -> bool:
     """D-A: Carga ≥ leve OU inimigo de categoria ≥ Elite."""
     try:
         if cm.abyss_tier(player) != "nenhum":
@@ -397,7 +397,7 @@ def _wants_prepared_scene(player: Dict, enemies: List[Dict]) -> bool:
                in _PREPARED_CATEGORIES for e in enemies or [])
 
 
-def _prepare_scene(state: Dict, enemies: List[Dict], player: Dict, allies: List[Dict]) -> dict:
+def _prepare_scene(state: dict, enemies: list[dict], player: dict, allies: list[dict]) -> dict:
     """Monta a cena JOGÁVEL em Python com zonas mínimas e seguras. O Nível do
     Encontro é perigo ABSOLUTO (11 R6), nunca depende da party."""
     world = state.get("world") or {}
@@ -441,7 +441,7 @@ def _prepare_scene(state: Dict, enemies: List[Dict], player: Dict, allies: List[
 # ==========================================================================
 # Identificação da ação do jogador (fala livre → TurnDeclaration, CLASSIFY)
 # ==========================================================================
-def _prepared_cards_catalog(player: Dict) -> str:
+def _prepared_cards_catalog(player: dict) -> str:
     from services import cards
     linhas = []
     for cid in (player.get("prepared_cards") or []):
@@ -453,7 +453,7 @@ def _prepared_cards_catalog(player: Dict) -> str:
     return "\n".join(linhas) or "- (nenhuma carta preparada; use ataque básico)"
 
 
-def _usable_items_catalog(player: Dict) -> str:
+def _usable_items_catalog(player: dict) -> str:
     from gamedata import ARTIFACTS_DB
     from inventory import item_display
     lines = []
@@ -467,7 +467,7 @@ def _usable_items_catalog(player: Dict) -> str:
     return "\n".join(lines) or "- (nenhum consumível)"
 
 
-def _default_card_target(card: Dict, enemy_id: Optional[str]) -> str:
+def _default_card_target(card: dict, enemy_id: str | None) -> str:
     """Cartas benéficas sem alvo explícito afetam o próprio jogador. Evita que
     chips como Cura/Proteção herdem mecanicamente o primeiro inimigo."""
     kind = str((card.get("efeito") or {}).get("kind") or "")
@@ -476,8 +476,8 @@ def _default_card_target(card: Dict, enemy_id: Optional[str]) -> str:
     return _PLAYER_ID if kind in _SUPPORT_EFFECTS else (enemy_id or _PLAYER_ID)
 
 
-def _card_target_for(card: Dict, declared: Optional[str], *, active_ids: List[str],
-                     friendly_ids: List[str]) -> str:
+def _card_target_for(card: dict, declared: str | None, *, active_ids: list[str],
+                     friendly_ids: list[str]) -> str:
     """SPEC-232 R5: alvo de Carta validado na borda do nó. Ofensiva só mira um
     inimigo ATIVO (nunca o jogador nem um morto); suporte só mira o próprio lado.
     Inválido → alvo default da Carta."""
@@ -488,7 +488,7 @@ def _card_target_for(card: Dict, declared: Optional[str], *, active_ids: List[st
     return _default_card_target(card, active_ids[0] if active_ids else None)
 
 
-def _parse_turn_declaration(player: Dict, enemies: List[Dict], intent: str,
+def _parse_turn_declaration(player: dict, enemies: list[dict], intent: str,
                             scene: dict) -> TurnDeclaration:
     """A IA IDENTIFICA a fala do jogador → `TurnDeclaration` estruturada (só
     identifica, não resolve). Guard de fallback: ataque básico no 1º inimigo.
@@ -589,7 +589,7 @@ def _parse_turn_declaration(player: Dict, enemies: List[Dict], intent: str,
 # ==========================================================================
 # Alias Vitalidade→hp (compatibilidade pública)
 # ==========================================================================
-def _mirror_vitals(actor: Dict) -> None:
+def _mirror_vitals(actor: dict) -> None:
     """Sincroniza apenas os aliases de borda e o status textual."""
     import gamedata
     gamedata.sync_legacy_hp_aliases(actor)
@@ -603,12 +603,12 @@ def _mirror_vitals(actor: Dict) -> None:
         actor.setdefault("status", "ativo")
 
 
-def _canonical_player_action(declaration: Optional[TurnDeclaration], out: dict, *,
+def _canonical_player_action(declaration: TurnDeclaration | None, out: dict, *,
                              attempted: bool = True,
                              flee_requested: bool = False,
                              hero_fled: bool = False,
-                             flee_destination_id: Optional[str] = None,
-                             chase_state: Optional[dict] = None) -> dict:
+                             flee_destination_id: str | None = None,
+                             chase_state: dict | None = None) -> dict:
     """Contrato mecânico consumido pelo harness; não depende da prosa do LLM."""
     step = declaration.acao if declaration is not None else None
     if flee_requested:
@@ -683,7 +683,7 @@ def _enforce_flee_attempt_limit(chase_state: dict, *, attempts: int) -> tuple[bo
     return True, chase
 
 
-def _is_valid_flee_destination(state: Dict, destination_id: Optional[str]) -> bool:
+def _is_valid_flee_destination(state: dict, destination_id: str | None) -> bool:
     if not destination_id:
         return False
     current_id = str((state.get("world") or {}).get("current_location_id") or "")
@@ -700,7 +700,7 @@ def _is_valid_flee_destination(state: Dict, destination_id: Optional[str]) -> bo
 # ==========================================================================
 # Narração (depois da resolução — LLM FAST, guard)
 # ==========================================================================
-def _narrate_fall(player: Dict, logs: List[str], killer: str = "") -> str:
+def _narrate_fall(player: dict, logs: list[str], killer: str = "") -> str:
     quem = f" diante de {killer}" if killer else ""
     golpes = "\n".join(f"• {l}" for l in logs[-4:]) if logs else ""
     return (f"⚔️ {golpes}\n\n☠️ Você tomba{quem}. A escuridão te engole — mas a "
@@ -708,10 +708,10 @@ def _narrate_fall(player: Dict, logs: List[str], killer: str = "") -> str:
             f"ou aceitar o fim aqui?").strip()
 
 
-def _narrate(player: Dict, enemies: List[Dict], logs: List[str],
-             spawned_flavor: Optional[str], intent: str, victory: bool,
-             world_ctx: str, aberturas: Optional[List[str]] = None,
-             manifest: Optional[Dict] = None) -> str:
+def _narrate(player: dict, enemies: list[dict], logs: list[str],
+             spawned_flavor: str | None, intent: str, victory: bool,
+             world_ctx: str, aberturas: list[str] | None = None,
+             manifest: dict | None = None) -> str:
     from services import prose_guard
     canonical = sorted({p.get("species_label", "") for p in
                         (manifest or {}).get("participants") or [] if p.get("species_label")})
@@ -765,7 +765,7 @@ def _narrate(player: Dict, enemies: List[Dict], logs: List[str],
 # ==========================================================================
 # SPEC-203 — desfecho do encontro
 # ==========================================================================
-def _encounter_outcome(*, player: Dict, enemies: List[Dict], hero_fled: bool,
+def _encounter_outcome(*, player: dict, enemies: list[dict], hero_fled: bool,
                        player_dead: bool) -> str:
     if player_dead:
         return "death"
@@ -781,8 +781,8 @@ def _encounter_outcome(*, player: Dict, enemies: List[Dict], hero_fled: bool,
     return "victory"
 
 
-def _finish_encounter(combat_meta: Dict, enemies: List[Dict], outcome: str, *,
-                      loot: bool) -> Dict:
+def _finish_encounter(combat_meta: dict, enemies: list[dict], outcome: str, *,
+                      loot: bool) -> dict:
     """Leva o encontro a `ended` e grava o snapshot do desfecho (R7)."""
     from services import encounter_manifest as em
     meta = dict(combat_meta)
@@ -857,7 +857,7 @@ def _combat_node(state: GameState):
     # testes/e2e). Nesse caso preservamos os combatentes e apenas construímos a
     # cena ausente; só pedimos spawn quando não há inimigo ativo.
     from services import encounter_manifest as em
-    spawn_meta: Dict = {}
+    spawn_meta: dict = {}
     if is_start or not scene:
         import party as party_mod
         party = party_mod.backfill_party(state.get("party") or [])
@@ -963,7 +963,7 @@ def _combat_node(state: GameState):
     player["_party_active"] = bool(allies)
     ally_ids = [a.get("id") or a.get("name") for a in allies]
 
-    actors_by_id: Dict[str, dict] = {_PLAYER_ID: player}
+    actors_by_id: dict[str, dict] = {_PLAYER_ID: player}
     for e in enemies:
         actors_by_id[e["id"]] = e
     for a in allies:
@@ -1007,7 +1007,7 @@ def _combat_node(state: GameState):
     rng = random
 
     hero_fled = False
-    logs: List[str] = []
+    logs: list[str] = []
     world_out = None
     world = state.get("world") or {}
     from world_utils import DARK_COMBAT_PENALTY, light_level, weather_effects
@@ -1032,7 +1032,7 @@ def _combat_node(state: GameState):
         world_out.pop("encounter_surprise", None)
     weather_logs = _apply_weather_hazard(player, world, rng=rng)
     _register_environmental_damage_terminal(player, weather_logs)
-    resolved_decl: Optional[TurnDeclaration] = declaration
+    resolved_decl: TurnDeclaration | None = declaration
     flee_allowed = _can_attempt_flee(player)
     if flee_requested and flee_allowed:
         hero_fled, flee_logs, chase_state = _attempt_flee(
@@ -1181,7 +1181,7 @@ def _combat_node(state: GameState):
     victory = combat_over and not player_dead and not hero_fled and bool(dead)
 
     # ---- XP determinístico (fugitivo/queda letal não contam) ----
-    level_up_events: List[Dict] = []
+    level_up_events: list[dict] = []
     kill_xp = 0  # SPEC-226 R10: ganho individual p/ o guard narrativo
     if newly_dead and not player_dead and not is_simulation:
         import progression as pg
@@ -1348,7 +1348,7 @@ def _combat_node(state: GameState):
 # ===========================================================================
 # Fuga (chase, conflito-09) + reflexos auxiliares
 # ===========================================================================
-def _can_attempt_flee(player: Dict) -> bool:
+def _can_attempt_flee(player: dict) -> bool:
     """Fuga exige protagonista em fase capaz de iniciar uma perseguição."""
     return bool(player.get("conscious", True)) \
         and not bool(player.get("dead")) \
@@ -1357,8 +1357,8 @@ def _can_attempt_flee(player: Dict) -> bool:
         and not bool(player.get("incapacitated"))
 
 
-def _attempt_flee(scene: dict, player: Dict, active: List[Dict], sides: dict, rng,
-                  *, existing_chase: Optional[dict] = None) -> FleeDecision:
+def _attempt_flee(scene: dict, player: dict, active: list[dict], sides: dict, rng,
+                  *, existing_chase: dict | None = None) -> FleeDecision:
     """Tenta escapar via motor de perseguição (09). Enredado (root) não foge.
     Sucesso na trilha (Escapou) encerra o combate; senão o herói segue preso."""
     import combat_mechanics as cm
@@ -1399,7 +1399,7 @@ def _attempt_flee(scene: dict, player: Dict, active: List[Dict], sides: dict, rn
     return FleeDecision(False, [log], chase_state)
 
 
-def _apply_weather_hazard(player: Dict, world: Dict, *, rng=None) -> List[str]:
+def _apply_weather_hazard(player: dict, world: dict, *, rng=None) -> list[str]:
     """Clima continua mecânico no conflito v2. Dano ambiental exterior reduz
     Vitalidade (não HP d20); o espelho para HP é feito no fim da rodada."""
     from world_utils import weather_effects
@@ -1427,7 +1427,7 @@ def _apply_weather_hazard(player: Dict, world: Dict, *, rng=None) -> List[str]:
     ]
 
 
-def _register_environmental_damage_terminal(player: Dict, damage_logs: List[str]) -> None:
+def _register_environmental_damage_terminal(player: dict, damage_logs: list[str]) -> None:
     """Fia dano pré-rodada ao mesmo fluxo terminal usado pelos ataques.
 
     O clima é resolvido antes da perseguição. Sem este gate, um herói podia
@@ -1446,8 +1446,8 @@ def _register_environmental_damage_terminal(player: Dict, damage_logs: List[str]
         death_flow.trigger_last_stand(player)
 
 
-def _apply_flee_travel(state: Dict, result: Dict, flee_dest_id: str, player: Dict,
-                       logs: List[str]) -> None:
+def _apply_flee_travel(state: dict, result: dict, flee_dest_id: str, player: dict,
+                       logs: list[str]) -> None:
     import world_utils as wu
     from gamedata import get_location
     from services import npc_layers
@@ -1484,8 +1484,8 @@ def _apply_flee_travel(state: Dict, result: Dict, flee_dest_id: str, player: Dic
     result["combat_origin_hint"] = None
 
 
-def _reflect_scene_allies(state: Dict, scene_tr: List[Dict], allies: List[Dict],
-                          combat_over: bool) -> Dict:
+def _reflect_scene_allies(state: dict, scene_tr: list[dict], allies: list[dict],
+                          combat_over: bool) -> dict:
     """Aliado TRANSITÓRIO reflete Vitalidade/morte no NPC de origem (sem 'aliado
     imortal'). Não vira party permanente."""
     npcs_out = {**(state.get("npcs") or {})}
@@ -1511,14 +1511,14 @@ def _reflect_scene_allies(state: Dict, scene_tr: List[Dict], allies: List[Dict],
     return npcs_out
 
 
-def _merge_formal_party(party: List[Dict], live_allies: List[Dict]) -> List[Dict]:
+def _merge_formal_party(party: list[dict], live_allies: list[dict]) -> list[dict]:
     """Persiste a ficha v4 mutada dos companheiros formais (transitórios ficam fora)."""
     live_by_id = {
         str(a.get("id") or a.get("name")): a
         for a in live_allies
         if not a.get("transient")
     }
-    merged: List[Dict] = []
+    merged: list[dict] = []
     for companion in party:
         key = str(companion.get("id") or companion.get("name"))
         live = dict(live_by_id.get(key) or companion)

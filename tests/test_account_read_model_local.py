@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import os
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 from uuid import uuid4
 
@@ -39,7 +39,7 @@ def test_account_sql_uses_utc_owner_and_index_in_real_postgres():
     a, b, game, operation, event, reservation, entry = (uuid4() for _ in range(7))
     owner_a, owner_b = Principal(a, "test", str(a)), Principal(b, "test", str(b))
     version = "account-local-" + str(uuid4())
-    at = datetime(2026, 10, 9, 0, 30, tzinfo=timezone.utc)
+    at = datetime(2026, 10, 9, 0, 30, tzinfo=UTC)
     with psycopg.connect(dsn, row_factory=dict_row) as connection:
         try:
             if connection.execute("select to_regclass('app.wallet_entries') as relation").fetchone()["relation"] is None:
@@ -108,10 +108,10 @@ def test_account_sql_uses_utc_owner_and_index_in_real_postgres():
                             "technical_cost_basis": "usage_ledger", "technical_cost_exact": False}}
             assert reader.history_costs(owner_b, game, record) == {}
             assert reader.operation_cost(owner_b, game, operation) is None
-            series = reader.series(owner_a, "7d", now=datetime(2026, 10, 9, 12, tzinfo=timezone.utc))
+            series = reader.series(owner_a, "7d", now=datetime(2026, 10, 9, 12, tzinfo=UTC))
             assert series["totals"]["voice"] == "1000"
             assert series["points"][-1]["voice"] == "1000"  # UTC day 9, local day 8
-            assert reader.series(owner_b, "7d", now=datetime(2026, 10, 9, 12, tzinfo=timezone.utc))["totals"]["voice"] == "0"
+            assert reader.series(owner_b, "7d", now=datetime(2026, 10, 9, 12, tzinfo=UTC))["totals"]["voice"] == "0"
             connection.execute(
                 """with ops as (
                   insert into app.operations(id,owner_id,game_id,kind,status,request_sha256)

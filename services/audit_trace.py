@@ -15,7 +15,8 @@ import contextvars
 import os
 import re
 from contextlib import contextmanager
-from typing import Any, Dict, Iterable, Iterator, List, Mapping, Optional
+from typing import Any, Dict, List, Optional
+from collections.abc import Iterable, Iterator, Mapping
 
 from services.memory_provenance import _CONFIDENCE_BY_PROVENANCE, accepted_secret_ids
 
@@ -37,7 +38,7 @@ ERROR_CODES = {
     "build_error": "llm_build_error",
 }
 
-_refs: contextvars.ContextVar[Optional[List[Dict[str, Any]]]] = contextvars.ContextVar(
+_refs: contextvars.ContextVar[list[dict[str, Any]] | None] = contextvars.ContextVar(
     "rpg_audit_context_refs", default=None)
 
 
@@ -49,10 +50,10 @@ def trace_limit() -> int:
 
 
 @contextmanager
-def collecting() -> Iterator[List[Dict[str, Any]]]:
+def collecting() -> Iterator[list[dict[str, Any]]]:
     """Abre o coletor de refs do turno (api._run_turn_collected)."""
     from services import mechanics_trace
-    bucket: List[Dict[str, Any]] = []
+    bucket: list[dict[str, Any]] = []
     token = _refs.set(bucket)
     try:
         with mechanics_trace.scope(recording=False):   # SPEC-251: so os passos do combat_node do turno
@@ -61,7 +62,7 @@ def collecting() -> Iterator[List[Dict[str, Any]]]:
         _refs.reset(token)
 
 
-def collected_refs() -> List[Dict[str, Any]]:
+def collected_refs() -> list[dict[str, Any]]:
     return list(_refs.get() or [])
 
 
@@ -79,10 +80,10 @@ _KIND_BY_PROVENANCE = {
 }
 
 
-def classify_fact(*, section: str, source_id: str, visibility: str, text: str) -> Dict[str, Any]:
+def classify_fact(*, section: str, source_id: str, visibility: str, text: str) -> dict[str, Any]:
     """Ref de contexto: só id/seção/visibilidade + selo SPEC-206 derivado do
     rótulo estrutural já presente no texto (nunca do LLM). Não guarda o texto."""
-    ref: Dict[str, Any] = {"source_id": str(source_id or ""), "section": str(section or ""),
+    ref: dict[str, Any] = {"source_id": str(source_id or ""), "section": str(section or ""),
                            "visibility": str(visibility or "public"),
                            "knowledge_kind": None, "certainty": None, "source_kind": None}
     if section == "session_memory":
@@ -110,7 +111,7 @@ def classify_fact(*, section: str, source_id: str, visibility: str, text: str) -
     return ref
 
 
-def note_context(pack: Any, *, purpose: str, npc_id: Optional[str] = None) -> None:
+def note_context(pack: Any, *, purpose: str, npc_id: str | None = None) -> None:
     """Anexa as refs de um ContextPack ao coletor do turno (no-op sem coletor)."""
     bucket = _refs.get()
     if bucket is None:
@@ -135,17 +136,17 @@ def _scalar(value: Any) -> Any:
     return str(value)
 
 
-def project_state(state: Mapping) -> Dict[str, Any]:
+def project_state(state: Mapping) -> dict[str, Any]:
     """Projeção mínima e FECHADA do estado (sem cópia inteira)."""
     state = state or {}
     player = state.get("player") or {}
     world = state.get("world") or {}
     combat = state.get("combat") or {}
-    out: Dict[str, Any] = {}
+    out: dict[str, Any] = {}
     for key in ("vitalidade", "max_vitalidade", "entropy", "max_entropy", "abyss_charge",
                 "gold", "xp", "level"):
         out[f"player.{key}"] = _scalar(player.get(key))
-    inventory: Dict[str, int] = {}
+    inventory: dict[str, int] = {}
     for item in player.get("inventory") or []:
         if isinstance(item, Mapping):
             item_id = str(item.get("id") or item.get("name") or "")
@@ -168,19 +169,19 @@ def project_state(state: Mapping) -> Dict[str, Any]:
     out["world.danger_level"] = _scalar(world.get("danger_level"))
     out["combat.active"] = bool(combat.get("active")) if isinstance(combat, Mapping) else False
     out["combat.round"] = _scalar(combat.get("round")) if isinstance(combat, Mapping) else None
-    enemies: Dict[str, Any] = {}
+    enemies: dict[str, Any] = {}
     for index, enemy in enumerate(state.get("enemies") or []):
         if isinstance(enemy, Mapping):
             key = str(enemy.get("id") or enemy.get("name") or f"enemy_{index}")
             enemies[key] = _scalar(enemy.get("vitalidade", enemy.get("hp")))
     out["combat.enemies"] = dict(sorted(enemies.items()))
-    npcs: Dict[str, Any] = {}
+    npcs: dict[str, Any] = {}
     for name, npc in (state.get("npcs") or {}).items():
         if isinstance(npc, Mapping):
             npcs[str(name)] = {"in_scene": bool(npc.get("in_scene")),
                                "relationship": _scalar(npc.get("relationship"))}
     out["npcs"] = dict(sorted(npcs.items()))
-    quests: Dict[str, Any] = {}
+    quests: dict[str, Any] = {}
     for quest in state.get("quests") or []:
         if isinstance(quest, Mapping) and quest.get("id"):
             quests[str(quest["id"])] = _scalar(quest.get("status"))
@@ -188,9 +189,9 @@ def project_state(state: Mapping) -> Dict[str, Any]:
     return out
 
 
-def diff_projection(before: Mapping, after: Mapping) -> Dict[str, Dict[str, Any]]:
+def diff_projection(before: Mapping, after: Mapping) -> dict[str, dict[str, Any]]:
     """Diff por caminho; mapas por id viram caminhos `npcs.<id>` etc."""
-    delta: Dict[str, Dict[str, Any]] = {}
+    delta: dict[str, dict[str, Any]] = {}
     for key in sorted(set(before) | set(after)):
         old, new = before.get(key), after.get(key)
         if isinstance(old, dict) or isinstance(new, dict):
@@ -215,8 +216,8 @@ def _grown(before: Any, after: Any) -> int:
 
 
 def turn_errors(previous_state: Mapping, state: Mapping,
-                llm_attempts: Iterable[Mapping] = ()) -> List[Dict[str, Any]]:
-    errors: List[Dict[str, Any]] = []
+                llm_attempts: Iterable[Mapping] = ()) -> list[dict[str, Any]]:
+    errors: list[dict[str, Any]] = []
     attempts = [a for a in (llm_attempts or []) if isinstance(a, Mapping)]
     for index, attempt in enumerate(attempts):
         outcome = str(attempt.get("outcome") or "")
@@ -241,7 +242,7 @@ def turn_errors(previous_state: Mapping, state: Mapping,
     return errors
 
 
-def timing_snapshot(timeline: Any) -> Optional[Dict[str, Any]]:
+def timing_snapshot(timeline: Any) -> dict[str, Any] | None:
     """Copia a TurnTimeline da SPEC-200 com os nomes dela. None sem timeline."""
     if timeline is None:
         return None
@@ -269,7 +270,7 @@ def timing_snapshot(timeline: Any) -> Optional[Dict[str, Any]]:
     return {key: snap[key] for key in _TIMING_KEYS}
 
 
-def reveal_status(state: Mapping) -> Dict[str, Any]:
+def reveal_status(state: Mapping) -> dict[str, Any]:
     """Critério estrito (SPEC-206 R5) + sinal de divergência do corpus permissivo."""
     from services.secret_signatures import SECRET_SIGNATURES, revealed_corpus
     accepted = sorted(accepted_secret_ids(dict(state)))
@@ -298,12 +299,12 @@ _REF_GROUP_KEYS = ("section", "visibility", "purpose", "npc_id",
                    "knowledge_kind", "certainty", "source_kind")
 
 
-def _dedupe_refs(refs: Iterable[Mapping]) -> List[Dict[str, Any]]:
+def _dedupe_refs(refs: Iterable[Mapping]) -> list[dict[str, Any]]:
     """Dedup + compactação: refs com os mesmos atributos viram UM grupo com a lista
     de `source_ids` (só chaves não nulas). Um turno real tem ~90 refs; por item com
     todas as chaves a linha passava de 19 KB e o ring de 200 inflava o save (~4 MB)."""
     seen: set = set()
-    groups: Dict[tuple, Dict[str, Any]] = {}
+    groups: dict[tuple, dict[str, Any]] = {}
     for ref in refs:
         key = (ref.get("source_id"), ref.get("purpose"), ref.get("npc_id"))
         if not ref.get("source_id") or key in seen:
@@ -319,7 +320,7 @@ def _dedupe_refs(refs: Iterable[Mapping]) -> List[Dict[str, Any]]:
     return list(groups.values())
 
 
-def iter_context_refs(trace_row: Mapping) -> Iterator[Dict[str, Any]]:
+def iter_context_refs(trace_row: Mapping) -> Iterator[dict[str, Any]]:
     """Expande `context_refs` (grupos compactos ou itens legados) em refs planas.
     Linha codificada como delta (`refs_add`/`refs_drop`) precisa de `expand_trace`."""
     for ref in (trace_row or {}).get("context_refs") or []:
@@ -333,13 +334,13 @@ def iter_context_refs(trace_row: Mapping) -> Iterator[Dict[str, Any]]:
             yield {"source_id": ref.get("source_id"), **base}
 
 
-def _flat(groups: Any) -> List[tuple]:
+def _flat(groups: Any) -> list[tuple]:
     return [(str(r["source_id"]),) + tuple(r.get(k) for k in _REF_GROUP_KEYS)
             for r in iter_context_refs({"context_refs": groups})]
 
 
-def _group(flat: Iterable[tuple]) -> List[Dict[str, Any]]:
-    groups: Dict[tuple, Dict[str, Any]] = {}
+def _group(flat: Iterable[tuple]) -> list[dict[str, Any]]:
+    groups: dict[tuple, dict[str, Any]] = {}
     for item in flat:
         attrs = item[1:]
         group = groups.get(attrs)
@@ -358,7 +359,7 @@ def _base(group: Mapping) -> tuple:
     return tuple(group.get(k) for k in _BASE_KEYS)
 
 
-def _prev_ids(prev_groups: List[Dict[str, Any]], group: Mapping) -> Optional[List[str]]:
+def _prev_ids(prev_groups: list[dict[str, Any]], group: Mapping) -> list[str] | None:
     key = _base(group)
     for candidate in prev_groups:
         if _base(candidate) == key:
@@ -366,16 +367,16 @@ def _prev_ids(prev_groups: List[Dict[str, Any]], group: Mapping) -> Optional[Lis
     return None
 
 
-def expand_trace(rows: Any) -> List[Dict[str, Any]]:
+def expand_trace(rows: Any) -> list[dict[str, Any]]:
     """Ring codificado → linhas com `context_refs` completo (grupos com `source_ids`).
     Lê também o formato item-a-item e o agrupado sem delta."""
-    out: List[Dict[str, Any]] = []
-    prev: List[Dict[str, Any]] = []
+    out: list[dict[str, Any]] = []
+    prev: list[dict[str, Any]] = []
     for raw in rows if isinstance(rows, list) else []:
         if not isinstance(raw, dict):
             continue
         row = dict(raw)
-        flat: List[tuple] = []
+        flat: list[tuple] = []
         for ref in row.get("context_refs") or []:
             if isinstance(ref, Mapping) and ref.get("ids_prev"):
                 drop = set(ref.get("ids_drop") or [])
@@ -393,17 +394,17 @@ def expand_trace(rows: Any) -> List[Dict[str, Any]]:
     return out
 
 
-def encode_trace(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def encode_trace(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Linhas completas → ring compacto. Cada grupo cujos `source_ids` derivam do
     grupo de mesma seção/visibilidade/selo da linha anterior guarda só o delta
     (`ids_prev` + `ids_add`/`ids_drop`): o contexto de um local quase não muda
     entre turnos (mesmo trocando narrador↔NPC). A 1ª linha do ring é sempre completa."""
-    out: List[Dict[str, Any]] = []
-    prev: Optional[List[Dict[str, Any]]] = None
+    out: list[dict[str, Any]] = []
+    prev: list[dict[str, Any]] | None = None
     for raw in rows:
         row = dict(raw)
         groups = _group(_flat(row.get("context_refs")))
-        encoded: List[Dict[str, Any]] = []
+        encoded: list[dict[str, Any]] = []
         for group in groups:
             ids = list(group["source_ids"])
             base_ids = _prev_ids(prev, group) if prev is not None else None
@@ -430,10 +431,10 @@ def encode_trace(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     return out
 
 
-def record_turn_trace(state: dict, *, previous_state: Optional[Mapping] = None,
-                      action_id: Optional[str] = None, timeline: Any = None,
+def record_turn_trace(state: dict, *, previous_state: Mapping | None = None,
+                      action_id: str | None = None, timeline: Any = None,
                       llm_attempts: Iterable[Mapping] = (),
-                      context_refs: Optional[Iterable[Mapping]] = None) -> Dict[str, Any]:
+                      context_refs: Iterable[Mapping] | None = None) -> dict[str, Any]:
     """Grava UMA linha por action_id (replay idempotente) no ring buffer."""
     from observability.telemetry import pseudonym
     world = state.get("world") or {}
@@ -442,7 +443,7 @@ def record_turn_trace(state: dict, *, previous_state: Optional[Mapping] = None,
     action_ref = pseudonym(action_id) if action_id else None
     timing = timing_snapshot(timeline)
     refs = collected_refs() if context_refs is None else list(context_refs)
-    entry: Dict[str, Any] = {
+    entry: dict[str, Any] = {
         "turn": turn,
         "epoch": epoch,
         "action_ref": action_ref,
@@ -471,7 +472,7 @@ def record_turn_trace(state: dict, *, previous_state: Optional[Mapping] = None,
     return entry
 
 
-def normalize_audit_trace(value: Any) -> List[Dict[str, Any]]:
+def normalize_audit_trace(value: Any) -> list[dict[str, Any]]:
     """Load/save: lista de dicts, cortada no limite (idempotente)."""
     if not isinstance(value, list):
         return []

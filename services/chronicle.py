@@ -31,7 +31,7 @@ CHRONICLE_EVENT_TYPES = {
 
 # Templates voltados ao JOGADOR (prosa curta), diferentes dos EVENT_TEMPLATES
 # telegráficos do context_builder (que servem ao LLM).
-CHRONICLE_TEMPLATES: Dict[str, str] = {
+CHRONICLE_TEMPLATES: dict[str, str] = {
     "npc_killed": "{target} tombou{by_player}.",
     "location_control_changed": "{controller} tomou o controle de {target}.",
     "quest_completed": "A missão \"{target}\" foi concluída.",
@@ -48,7 +48,7 @@ CHRONICLE_TEMPLATES: Dict[str, str] = {
 _DEFAULT_TITLE = "Crônica da jornada"
 
 
-def render_milestone(event: Dict, projection: Dict) -> str:
+def render_milestone(event: dict, projection: dict) -> str:
     """1 frase de milestone para o jogador. Tipo fora de CHRONICLE_EVENT_TYPES → ""."""
     etype = event.get("type")
     if etype not in CHRONICLE_EVENT_TYPES:
@@ -101,15 +101,15 @@ def render_milestone(event: Dict, projection: Dict) -> str:
     )
 
 
-def _new_chapter(title: str, turn: int, location: str) -> Dict:
+def _new_chapter(title: str, turn: int, location: str) -> dict:
     seed = f"valoria:chronicle:{title}:{turn}:{location}"
     return {"chapter_id": uuid5(NAMESPACE_URL, seed).hex, "title": title,
             "started_turn": turn, "location": location, "entries": []}
 
 
-def ensure_chronicle_ids(chronicle: List[Dict], *, game_id: str = "legacy") -> List[Dict]:
+def ensure_chronicle_ids(chronicle: list[dict], *, game_id: str = "legacy") -> list[dict]:
     """Backfill puro/idempotente de IDs sem usar título como identidade runtime."""
-    chapters: List[Dict] = []
+    chapters: list[dict] = []
     for chapter_index, raw_chapter in enumerate(chronicle or []):
         chapter = dict(raw_chapter)
         chapter_seed = hashlib.sha256(
@@ -129,15 +129,15 @@ def ensure_chronicle_ids(chronicle: List[Dict], *, game_id: str = "legacy") -> L
     return chapters
 
 
-def append_entry(chronicle: List[Dict], *, text: str, turn: int,
-                 kind: str, event_id: str = "") -> List[Dict]:
+def append_entry(chronicle: list[dict], *, text: str, turn: int,
+                 kind: str, event_id: str = "") -> list[dict]:
     """PURO: retorna cópia com a entrada no capítulo atual (cria capítulo se vazio)."""
     chapters = list(chronicle or [])
     if not chapters:
         chapters = [_new_chapter(_DEFAULT_TITLE, 0, "")]
     last = dict(chapters[-1])
     entries = list(last.get("entries") or [])
-    entry: Dict = {"text": text, "turn": turn, "kind": kind}
+    entry: dict = {"text": text, "turn": turn, "kind": kind}
     if event_id:
         entry["event_id"] = event_id
     seed = f"{last.get('chapter_id', '')}:{len(entries)}:{turn}:{kind}:{event_id}:{text}"
@@ -148,8 +148,8 @@ def append_entry(chronicle: List[Dict], *, text: str, turn: int,
     return chapters
 
 
-def open_chapter(chronicle: List[Dict], *, title: str, turn: int,
-                 location: str) -> List[Dict]:
+def open_chapter(chronicle: list[dict], *, title: str, turn: int,
+                 location: str) -> list[dict]:
     """Abre capítulo novo. Mesmo título do capítulo atual → no-op (lista original)."""
     if chronicle and (chronicle[-1].get("title") or "") == title:
         return chronicle

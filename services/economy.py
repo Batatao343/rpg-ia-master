@@ -14,7 +14,8 @@ from __future__ import annotations
 import copy
 import logging
 import random
-from typing import Any, Dict, List, Mapping, Optional, Tuple, TypedDict
+from typing import Any, Dict, List, Optional, Tuple, TypedDict
+from collections.abc import Mapping
 
 from gamedata import ARTIFACTS_DB, get_location, load_json_data
 from inventory import (
@@ -31,9 +32,9 @@ from inventory import (
 )
 from services import graph_resolver as gr
 
-RECIPES: Dict[str, dict] = load_json_data("recipes.json") or {}
-MERCHANTS: Dict[str, dict] = load_json_data("merchants.json") or {}
-LOOT_TABLES: Dict[str, dict] = load_json_data("loot_tables.json") or {}
+RECIPES: dict[str, dict] = load_json_data("recipes.json") or {}
+MERCHANTS: dict[str, dict] = load_json_data("merchants.json") or {}
+LOOT_TABLES: dict[str, dict] = load_json_data("loot_tables.json") or {}
 
 
 class MarketQuote(TypedDict):
@@ -50,8 +51,8 @@ class PublicMarketSnapshot(TypedDict):
     merchant_name: str
     day: int
     turn: int
-    quotes: List[MarketQuote]
-    known_recipes: List[str]
+    quotes: list[MarketQuote]
+    known_recipes: list[str]
 
 RARITY_BASE = {
     "common": 25, "comum": 25,
@@ -97,12 +98,12 @@ def _controller_disposition(state: dict, location_id: str) -> str:
 SCARCE_MULT = 1.8
 
 
-def _blocked_pairs(projection: Optional[dict]) -> set:
+def _blocked_pairs(projection: dict | None) -> set:
     return {frozenset((r.get("a"), r.get("b")))
             for r in (projection or {}).get("blocked_routes", []) or []}
 
 
-def is_reachable(loc_a: str, loc_b: str, projection: Optional[dict]) -> bool:
+def is_reachable(loc_a: str, loc_b: str, projection: dict | None) -> bool:
     """BFS nas connections do mapa MENOS as rotas bloqueadas (par não-direcionado)."""
     if loc_a == loc_b:
         return True
@@ -121,7 +122,7 @@ def is_reachable(loc_a: str, loc_b: str, projection: Optional[dict]) -> bool:
     return False
 
 
-def producing_locations(item_id: str) -> List[str]:
+def producing_locations(item_id: str) -> list[str]:
     """Locais cujo economy_tags intersecta o do item (regiões produtoras)."""
     from gamedata import WORLD_MAP
     item_tags = set((ARTIFACTS_DB.get(item_id) or {}).get("economy_tags") or [])
@@ -132,7 +133,7 @@ def producing_locations(item_id: str) -> List[str]:
 
 
 def supply_factor(item_id: str, location_id: str,
-                  projection: Optional[dict] = None) -> float:
+                  projection: dict | None = None) -> float:
     """Fase 6.1: 0.6 produzido AQUI · 1.0 produtor alcançável · 1.8 escasso
     (todas as rotas até produtores bloqueadas). Item sem tags → 1.0 sempre."""
     producers = producing_locations(item_id)
@@ -148,7 +149,7 @@ def supply_factor(item_id: str, location_id: str,
 
 
 def price(item_id: str, *, mode: str, state: dict,
-          merchant: Optional[dict] = None) -> int:
+          merchant: dict | None = None) -> int:
     """Preço final determinístico. mode: 'buy' (jogador compra) | 'sell' (vende)."""
     location_id = (state.get("world") or {}).get("current_location_id", "")
     p = float(base_price(item_id))
@@ -167,7 +168,7 @@ def price(item_id: str, *, mode: str, state: dict,
 # ---------------------------------------------------------------------------
 # Fase 6.2 — itens únicos: um por mundo
 # ---------------------------------------------------------------------------
-def is_unique_available(item_id: str, projection: Optional[dict]) -> bool:
+def is_unique_available(item_id: str, projection: dict | None) -> bool:
     """True se o item único ainda NÃO foi reclamado (ou não é único).
     holder="world" = voltou ao pool (saqueado no downed — spec balanceamento R3):
     pode reaparecer em loot/loja/inimigo como se nunca tivesse sido reclamado."""
@@ -178,7 +179,7 @@ def is_unique_available(item_id: str, projection: Optional[dict]) -> bool:
     return entry is None or entry.get("holder") == "world"
 
 
-def unique_holder(item_id: str, projection: Optional[dict]) -> Optional[str]:
+def unique_holder(item_id: str, projection: dict | None) -> str | None:
     entry = ((projection or {}).get("unique_items") or {}).get(item_id)
     return entry.get("holder") if entry else None
 
@@ -194,12 +195,12 @@ def claim_event(item_id: str, holder: str = "player") -> dict:
 # ---------------------------------------------------------------------------
 # Mercadores — estoque persistente no world state, restock por relógio
 # ---------------------------------------------------------------------------
-def merchants_at(location_id: str) -> List[Tuple[str, dict]]:
+def merchants_at(location_id: str) -> list[tuple[str, dict]]:
     return [(mid, m) for mid, m in MERCHANTS.items()
             if m.get("location_id") == location_id]
 
 
-def _ensure_stock(world: dict, mid: str, merchant: dict) -> Dict[str, int]:
+def _ensure_stock(world: dict, mid: str, merchant: dict) -> dict[str, int]:
     stocks = world.setdefault("merchant_stocks", {})
     if mid not in stocks:
         stocks[mid] = dict(merchant.get("base_stock") or {})
@@ -221,7 +222,7 @@ def clamp_gold(player: dict, value: int) -> int:
     return value
 
 
-def restock(world: dict, *, projection: Optional[dict] = None) -> dict:
+def restock(world: dict, *, projection: dict | None = None) -> dict:
     """Reabastece mercadores vencidos pelo relógio (determinístico, idempotente).
     SPEC-227 R6: item ÚNICO que o próprio mercador segura (jogador vendeu) sobrevive
     ao restock; o estoque base nunca apaga posse registrada."""
@@ -240,7 +241,7 @@ def restock(world: dict, *, projection: Optional[dict] = None) -> dict:
     return world
 
 
-def merchant_stock(state: dict, location_id: str) -> Tuple[Optional[str], Dict[str, int]]:
+def merchant_stock(state: dict, location_id: str) -> tuple[str | None, dict[str, int]]:
     """(merchant_id, estoque EFETIVO). Local hostil esconde itens raros+ (R6)."""
     here = merchants_at(location_id)
     if not here:
@@ -266,7 +267,7 @@ def merchant_stock(state: dict, location_id: str) -> Tuple[Optional[str], Dict[s
 
 def public_market_snapshot(
     state: Mapping[str, Any],
-) -> Optional[PublicMarketSnapshot]:
+) -> PublicMarketSnapshot | None:
     """Visão pública e read-only do mercado no local atual.
 
     `merchant_stock` inicializa estoque por compatibilidade com o motor. Para uma
@@ -280,7 +281,7 @@ def public_market_snapshot(
     if not mid:
         return None
     merchant = MERCHANTS.get(mid) or {}
-    quotes: List[MarketQuote] = []
+    quotes: list[MarketQuote] = []
     for item_id, qty in sorted(stock.items()):
         quotes.append({
             "item_id": item_id,
@@ -327,7 +328,7 @@ def public_market_snapshot(
 # ---------------------------------------------------------------------------
 # Transações (buy / sell / craft) — o LLM só narra o TradeOutcome
 # ---------------------------------------------------------------------------
-def _resolve_ref_in(ref: str, candidates: List[str]) -> Optional[str]:
+def _resolve_ref_in(ref: str, candidates: list[str]) -> str | None:
     rid = resolve_item_name(ref)
     if rid and rid in candidates:
         return rid
@@ -371,7 +372,7 @@ def log_trade(mode: str, outcome: dict) -> None:
         from observability.telemetry import log_event
         ok = bool(outcome.get("ok"))
         code = "ok" if ok else trade_reason_code(outcome.get("reason"))
-        fields: Dict[str, Any] = {
+        fields: dict[str, Any] = {
             "mode": mode if mode in ("buy", "sell", "craft") else "other",
             "outcome": "ok" if ok else "refused", "reason_code": code,
             "gold_delta": int(outcome.get("gold_delta", 0) or 0),
@@ -464,7 +465,7 @@ def _fold_key(s: str) -> str:
     return _fold(str(s).replace("_", " "))
 
 
-def find_recipe(ref: str) -> Optional[Tuple[str, dict]]:
+def find_recipe(ref: str) -> tuple[str, dict] | None:
     folded = _fold_key(ref)
     for rid, r in RECIPES.items():
         result = r.get("result_id", "")
@@ -529,9 +530,9 @@ def execute_craft(state: dict, item_ref: str) -> dict:
 # ---------------------------------------------------------------------------
 # Drop tables — raridade rolada em Python (LLM só descreve)
 # ---------------------------------------------------------------------------
-def roll_loot(region_id: str, danger: int, rng: Optional[random.Random] = None,
-              projection: Optional[dict] = None,
-              bestiary_knowledge: Optional[dict] = None, turn: int = 0,
+def roll_loot(region_id: str, danger: int, rng: random.Random | None = None,
+              projection: dict | None = None,
+              bestiary_knowledge: dict | None = None, turn: int = 0,
               boost: bool = False) -> dict:
     """Sorteia raridade (pesos por banda de perigo) e item do pool da região.
     Retorna {"item_id", "rarity", "gold"} — item_id None se pool vazio (só ouro).
@@ -541,7 +542,7 @@ def roll_loot(region_id: str, danger: int, rng: Optional[random.Random] = None,
     rng = rng or random.Random()
     table = LOOT_TABLES.get(region_id) or LOOT_TABLES.get("default") or {}
     band = "3-4" if boost else ("1-2" if int(danger or 1) <= 2 else "3-4")
-    weights: Dict[str, int] = dict(table.get(band) or {"comum": 100})
+    weights: dict[str, int] = dict(table.get(band) or {"comum": 100})
     rarities = list(weights.keys())
     pick = rng.choices(rarities, weights=[max(0, int(weights[r])) for r in rarities], k=1)[0]
     pools = table.get("pools") or {}

@@ -4,7 +4,7 @@ from __future__ import annotations
 import asyncio
 import io
 import wave
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from decimal import Decimal
 from pathlib import Path
 from types import SimpleNamespace
@@ -334,7 +334,7 @@ def test_quote_accepts_only_registered_exact_speech_card():
     version = SimpleNamespace(version_id='test', fx_usd_brl=Decimal('5'),
                               fx_buffer_rate=Decimal('0.1'), shard_budget_unit_brl=Decimal('0.03'))
     assert event.pricing_version == SPEECH_PRICING_VERSION
-    assert quote_usage([event], version, at=datetime.now(timezone.utc), authorized_snapshot=True).shard_milli_debited == 1
+    assert quote_usage([event], version, at=datetime.now(UTC), authorized_snapshot=True).shard_milli_debited == 1
     with pytest.raises(PricingUnavailable):
         quote_usage([replace(event, pricing_version='unregistered')], version,
-                    at=datetime.now(timezone.utc), authorized_snapshot=True)
+                    at=datetime.now(UTC), authorized_snapshot=True)

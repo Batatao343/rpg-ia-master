@@ -18,9 +18,9 @@ from observability.telemetry import log_event as _log_event
 
 GRAPH_DIR = os.path.join("data", "graph")
 
-_entities_cache: Optional[Dict[str, dict]] = None
-_edges_cache: Optional[List[dict]] = None
-_relation_types_cache: Optional[Dict[str, dict]] = None
+_entities_cache: dict[str, dict] | None = None
+_edges_cache: list[dict] | None = None
+_relation_types_cache: dict[str, dict] | None = None
 
 
 def _read_json(filename: str, default):
@@ -28,14 +28,14 @@ def _read_json(filename: str, default):
     if not os.path.exists(path):
         return default
     try:
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             return json.load(f)
     except Exception as exc:
         _log_event("graph", "read_failed", level="warning", error=type(exc).__name__)
         return default
 
 
-def load_entities() -> Dict[str, dict]:
+def load_entities() -> dict[str, dict]:
     """Lookup canônico de entidades (cache em módulo).
 
     União de `entities.json` (gerado por migrate_lore_nova.py) com
@@ -70,14 +70,14 @@ def load_entities() -> Dict[str, dict]:
     return _entities_cache
 
 
-def load_base_edges() -> List[dict]:
+def load_base_edges() -> list[dict]:
     global _edges_cache
     if _edges_cache is None:
         _edges_cache = _read_json("edges.json", [])
     return _edges_cache
 
 
-def load_relation_types() -> Dict[str, dict]:
+def load_relation_types() -> dict[str, dict]:
     global _relation_types_cache
     if _relation_types_cache is None:
         _relation_types_cache = _read_json("relation_types.json", {})
@@ -92,14 +92,14 @@ def clear_cache() -> None:
     _relation_types_cache = None
 
 
-def get_entity(entity_id: str) -> Optional[dict]:
+def get_entity(entity_id: str) -> dict | None:
     return load_entities().get(entity_id)
 
 
-def resolve_edges(projection: Optional[dict], *,
-                  entity_id: Optional[str] = None,
-                  edge_type: Optional[str] = None,
-                  include_hidden: bool = False) -> List[dict]:
+def resolve_edges(projection: dict | None, *,
+                  entity_id: str | None = None,
+                  edge_type: str | None = None,
+                  include_hidden: bool = False) -> list[dict]:
     """Edges efetivas AGORA: base − disabled + dynamic, com filtro de visibilidade.
 
     - `entity_id`: só edges onde a entidade é source ou target.
@@ -109,7 +109,7 @@ def resolve_edges(projection: Optional[dict], *,
     projection = projection or {}
     disabled_ids = {d.get("edge_id") for d in projection.get("disabled_edges", [])}
 
-    effective: List[dict] = [
+    effective: list[dict] = [
         e for e in load_base_edges() if e.get("id") not in disabled_ids
     ]
     # SPEC-233 R4: desativações (`edge_id`) valem também para edges dinâmicas (`dyn_*`).
@@ -117,7 +117,7 @@ def resolve_edges(projection: Optional[dict], *,
         e for e in projection.get("dynamic_edges", []) if e.get("id") not in disabled_ids
     )
 
-    result: List[dict] = []
+    result: list[dict] = []
     for edge in effective:
         if not include_hidden and edge.get("visibility", "public") != "public":
             continue
@@ -129,8 +129,8 @@ def resolve_edges(projection: Optional[dict], *,
     return result
 
 
-def get_current_controller(location_id: str, projection: Optional[dict],
-                           include_hidden: bool = True) -> Optional[str]:
+def get_current_controller(location_id: str, projection: dict | None,
+                           include_hidden: bool = True) -> str | None:
     """Quem controla o local AGORA. Dynamic edge vence base (é mais recente).
 
     Default (`include_hidden=True`) é a verdade do mundo, considera edges hidden/
@@ -144,7 +144,7 @@ def get_current_controller(location_id: str, projection: Optional[dict],
     return controller
 
 
-def is_alive(entity_id: str, projection: Optional[dict]) -> bool:
+def is_alive(entity_id: str, projection: dict | None) -> bool:
     """Default True: entidade sem EntityState na projection está viva."""
     projection = projection or {}
     ent_state = projection.get("entities", {}).get(entity_id, {})

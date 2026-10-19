@@ -14,7 +14,7 @@ import re
 import subprocess
 import time
 from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 from typing import Any, Literal
 from uuid import uuid4
@@ -526,12 +526,12 @@ def run(
         raise ExperimentBlocked("SPEC-179 corpus and product code must be committed before live calls")
     if (resume_from is None) != (resume_sha256 is None):
         raise ExperimentBlocked("resume-from and resume-sha256 must be provided together")
-    run_id = datetime.now(timezone.utc).strftime("SPEC-179-%Y%m%dT%H%M%SZ") + "-" + uuid4().hex[:8]
+    run_id = datetime.now(UTC).strftime("SPEC-179-%Y%m%dT%H%M%SZ") + "-" + uuid4().hex[:8]
     if resume_from is None:
         raw: dict[str, Any] = {
             "run_id": run_id, "product_sha": product_sha, "product_tree_hash": tree_hash,
             "product_dirty": dirty, "corpus_hash": digest,
-            "started_at": datetime.now(timezone.utc).isoformat(),
+            "started_at": datetime.now(UTC).isoformat(),
             "case_order": [case.id for case in cases], "budget": asdict(budget),
             "rows": [], "status": "in_progress",
         }
@@ -542,7 +542,7 @@ def run(
         raw["run_id"] = run_id
         raw["product_sha"] = product_sha
         raw["product_tree_hash"] = tree_hash
-        raw["started_at"] = datetime.now(timezone.utc).isoformat()
+        raw["started_at"] = datetime.now(UTC).isoformat()
         raw["budget"] = asdict(budget)
     output_dir.mkdir(parents=True, exist_ok=False)
     path = output_dir / "raw.json"

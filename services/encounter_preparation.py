@@ -32,7 +32,7 @@ _EVENT_TYPE_BONUS = {"comum": 0, "emboscada": 1, "cacada": 1, "ritual": 2,
                      "invasao": 2, "apex": 3, "chefe": 3}
 _IMPORTANCE_BONUS = {"trivial": -1, "comum": 0, "importante": 1, "climax": 2}
 
-_POTENCY: Optional[dict] = None
+_POTENCY: dict | None = None
 
 
 # ==========================================================================
@@ -88,7 +88,7 @@ _POTENCY_DIMENSION = {
 
 
 def materialize_effect(effect: dict, encounter_level: int, *,
-                       valid_targets: Optional[set[str]] = None) -> Optional[dict]:
+                       valid_targets: set[str] | None = None) -> dict | None:
     """Materializa um EffectSpec categórico. Números recebidos são sempre
     descartados e recalculados; assim nem um dict aberto vindo de provider
     consegue dirigir a mecânica."""
@@ -154,7 +154,7 @@ def normalize_prepared_scene(scene: dict, encounter_level: int) -> dict:
     são substituídos por valores derivados/constantes do contrato.
     """
     out = deepcopy(scene or {})
-    errors: List[str] = []
+    errors: list[str] = []
     targets = _scene_target_ids(out)
 
     def normalize_holder(holder: dict, label: str) -> None:
@@ -226,7 +226,7 @@ def validate_creature_selection(creature: dict, region: str, *,
 def validate_preparation(scene: dict) -> dict:
     """R4/R8: efeitos só do catálogo fechado; objeto interativo só com base
     narrativa; evento do Abismo só com base na cena. Retorna {ok, errors}."""
-    errors: List[str] = list(scene.get("_normalization_errors") or [])
+    errors: list[str] = list(scene.get("_normalization_errors") or [])
     objetos = scene.get("objects") or []
     obj_tokens = objetos  # abyss valida contra os próprios objetos da cena
 
@@ -275,8 +275,8 @@ def validate_preparation(scene: dict) -> dict:
 # reforços/condições de fim não têm consumidor no loop e saíram do pedido.
 class PreparedEffectParams(BaseModel):
     model_config = ConfigDict(extra="ignore")
-    target: Optional[str] = Field(None, description="id de um participante listado (só p/ damage/apply_condition/reposition)")
-    condition: Optional[str] = Field(None, description="nome da condição (apply_condition)")
+    target: str | None = Field(None, description="id de um participante listado (só p/ damage/apply_condition/reposition)")
+    condition: str | None = Field(None, description="nome da condição (apply_condition)")
 
 
 class PreparedEffect(BaseModel):
@@ -297,14 +297,14 @@ class PreparedObject(BaseModel):
     id: str
     name: str = ""
     base_narrativa: str = Field("", description="onde o objeto aparece na cena (curto)")
-    interactions: List[PreparedInteraction] = Field(default_factory=list)
+    interactions: list[PreparedInteraction] = Field(default_factory=list)
 
 
 class PreparedZone(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str
     name: str = ""
-    connections: List[str] = Field(default_factory=list)
+    connections: list[str] = Field(default_factory=list)
 
 
 class PreparedAbyssEvent(BaseModel):
@@ -317,10 +317,10 @@ class PreparedAbyssEvent(BaseModel):
 class PreparedScene(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
-    zones: List[PreparedZone] = Field(default_factory=list, description="1 a 3 zonas")
-    objects: List[PreparedObject] = Field(default_factory=list, description="0 a 2 objetos")
-    abyss_events: List[PreparedAbyssEvent] = Field(default_factory=list, description="0 ou 1 evento")
-    objectives: List[str] = Field(default_factory=list, description="até 2, curtos")
+    zones: list[PreparedZone] = Field(default_factory=list, description="1 a 3 zonas")
+    objects: list[PreparedObject] = Field(default_factory=list, description="0 a 2 objetos")
+    abyss_events: list[PreparedAbyssEvent] = Field(default_factory=list, description="0 ou 1 evento")
+    objectives: list[str] = Field(default_factory=list, description="até 2, curtos")
 
 
 _PREP_TIMEOUT_DEFAULT = 12.0
@@ -351,7 +351,7 @@ def _trim_prepared(scene: dict) -> dict:
     return scene
 
 
-def fallback_safe_scene(context: Optional[dict] = None) -> dict:
+def fallback_safe_scene(context: dict | None = None) -> dict:
     """R9: cena simplificada DETERMINÍSTICA quando toda a cadeia de providers falha
     — sem zonas/objetos elaborados, sem inventar nada. O conflito nunca trava sem
     começar. Inimigos vêm do contexto (já nomeados na narrativa)."""

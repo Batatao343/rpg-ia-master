@@ -93,7 +93,7 @@ def _usos_restantes(event: dict) -> int:
     return int(event.get("usos_restantes", event.get("usos_permitidos", 1)) or 0)
 
 
-def can_trigger(event: dict, scene_state: Optional[dict], charges_available: int, *,
+def can_trigger(event: dict, scene_state: dict | None, charges_available: int, *,
                 scene_objects=None) -> bool:
     """R2: pode carregar SE Cargas suficientes + usos restantes + gatilho válido no
     estado da cena (+ base na cena, quando os objetos forem passados). 100%
@@ -109,8 +109,8 @@ def can_trigger(event: dict, scene_state: Optional[dict], charges_available: int
     return True
 
 
-def select_event(events: List[dict], scene_state: Optional[dict], charges_available: int, *,
-                 seed=None, scene_objects=None) -> Optional[dict]:
+def select_event(events: list[dict], scene_state: dict | None, charges_available: int, *,
+                 seed=None, scene_objects=None) -> dict | None:
     """R2: entre os eventos que podem carregar, a maior PRIORIDADE vence; empate é
     resolvido deterministicamente por seed (ou por id, estável). Sem candidato → None."""
     candidatos = [e for e in (events or [])
@@ -130,7 +130,7 @@ def select_event(events: List[dict], scene_state: Optional[dict], charges_availa
 # ==========================================================================
 # Etapa 3 — proibições do Abismo (R4/R6)
 # ==========================================================================
-def validate_abyss_effect(effect: dict, *, context: Optional[dict] = None) -> Tuple[bool, str]:
+def validate_abyss_effect(effect: dict, *, context: dict | None = None) -> tuple[bool, str]:
     """R4/R6: o que o Abismo pode/não pode. Retorna (ok, motivo). Proíbe: desfazer
     sucesso já resolvido, controlar mentalmente / obrigar contra a personalidade,
     criar Ferimento direto, agravar Ferimento fora do combate normal, e qualquer
@@ -156,8 +156,8 @@ def validate_abyss_effect(effect: dict, *, context: Optional[dict] = None) -> Tu
 # ==========================================================================
 # Etapa 4 — disparo + assinatura + exposição de gasto (R3)
 # ==========================================================================
-def trigger_event(event: dict, scene_state: Optional[dict] = None, *,
-                  context: Optional[dict] = None) -> dict:
+def trigger_event(event: dict, scene_state: dict | None = None, *,
+                  context: dict | None = None) -> dict:
     """Dispara um evento preparado: valida as proibições (R4/R6), decrementa os usos
     e devolve o EffectSpec (aplicado pelo mesmo aplicador da conflito-03) + o log com
     a assinatura fixa e o gasto de Carga reportado IMEDIATAMENTE (R3). NÃO chama LLM."""

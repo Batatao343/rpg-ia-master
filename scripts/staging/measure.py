@@ -7,7 +7,7 @@ import json
 import re
 import sys
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 
 import httpx
 
@@ -95,8 +95,8 @@ def main(argv=None) -> int:
                      "regions": dep.get("regions"), "function_max_duration_s": 300,
                      "build_duration_s": round((dep.get("buildingAt") and (dep.get("ready", 0) - dep["buildingAt"]) / 1000) or 0),
                      "bundle_mb_mentions": bundle_mb_from_events(texts)[-6:]}
-    frm = (datetime.now(timezone.utc) - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
-    to = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    frm = (datetime.now(UTC) - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    to = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%S.000Z")
     u = httpx.get("https://api.vercel.com/v1/usage", headers=vh, timeout=60,
                   params={"teamId": TEAM_ID, "from": frm, "to": to})
     out["vercel_usage_api"] = {"status": u.status_code, "body": s192.common.redact_text(u.text[:600])}

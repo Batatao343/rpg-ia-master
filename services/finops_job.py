@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from decimal import Decimal
 from pathlib import Path
 
@@ -29,7 +29,7 @@ def run_finops(reader, now: datetime | None = None, *, report_days: int | None =
                fixed_path: Path | None = None, recorder=None, switch_store=None) -> dict:
     """``recorder.record(now, summary, alerts)`` (optional) persists the evaluation owner-free so
     staleness is checkable via SQL when there is no Prometheus scrape target (Vercel)."""
-    now = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
+    now = (now or datetime.now(UTC)).astimezone(UTC)
     report_days = report_days or int(os.getenv("RPG_FINOPS_REPORT_DAYS", "30"))
     alert_hours = alert_hours or int(os.getenv("RPG_FINOPS_ALERT_HOURS", "24"))
     pricing, fresh = reader.pricing()

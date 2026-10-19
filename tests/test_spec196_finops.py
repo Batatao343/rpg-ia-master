@@ -5,7 +5,7 @@ import json
 import os
 import re
 from contextlib import contextmanager
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from decimal import Decimal
 from pathlib import Path
 from types import SimpleNamespace
@@ -30,7 +30,7 @@ from services.google_play import GooglePlayError, obfuscated_account_id
 from services.shard_pricing import PricingUnavailable
 
 D = Decimal
-T0 = datetime(2026, 10, 14, 12, tzinfo=timezone.utc)
+T0 = datetime(2026, 10, 14, 12, tzinfo=UTC)
 PRICING = {"v1": finops.PricingRef("v1", D("5"), {
     "web": finops.FeeRate(D("0.04"), D("0.20")), "google_play": finops.FeeRate(D("0.15"), D("0"))})}
 
@@ -94,7 +94,7 @@ def test_target_check_per_sku_channel_version_no_cross_mixing():
 
 
 def test_cohort_is_week_of_first_purchase_even_outside_window():
-    old = datetime(2026, 9, 1, tzinfo=timezone.utc)
+    old = datetime(2026, 9, 1, tzinfo=UTC)
     rows, _, _ = finops.compute_margins([purchase(first=old)], PRICING, {})
     assert rows[0].cohort == finops.week_cohort(old) == "2026-W36"
 
@@ -144,7 +144,7 @@ def test_stale_rate_card_alerts_and_blocks_paid_effect(monkeypatch):
     alert = fa.stale_rate_cards([fa.Freshness("fx", T0 - timedelta(days=3), timedelta(days=1))], T0)
     assert alert and alert[0].blocking and alert[0].provider == "fx"
     assert not fa.stale_rate_cards([fa.Freshness("fx", T0, timedelta(days=1))], T0)
-    far = datetime.now(timezone.utc) + timedelta(days=400)
+    far = datetime.now(UTC) + timedelta(days=400)
     with pytest.raises(PricingUnavailable):
         fa.require_paid_effect("image", now=far)
     monkeypatch.setenv("RPG_FINOPS_BLOCK_STALE", "0")
@@ -392,7 +392,7 @@ def test_cron_finops_auth_and_owner_free_response(monkeypatch):
     assert client.post("/internal/cron/finops", headers={"Authorization": "Bearer nope"}).status_code == 401
     owner = str(uuid4())
     reader = FakeFinopsReader(pricing_refs=PRICING,
-                              purchase_facts=[purchase(owner=owner, at=datetime.now(timezone.utc) - timedelta(days=1))])
+                              purchase_facts=[purchase(owner=owner, at=datetime.now(UTC) - timedelta(days=1))])
     monkeypatch.setattr(cron_internal, "_finops_reader", lambda: reader)
     res = client.post("/internal/cron/finops", headers={"Authorization": f"Bearer {secret}"})
     assert res.status_code == 200 and res.json()["ok"] and owner not in res.text

@@ -104,14 +104,14 @@ _RESET_CASCADE = {
 _ALL_COUNTERS = ("used_this_turn", "used_this_scene",
                  "used_since_short_rest", "used_since_long_rest")
 
-_CARDS: Optional[Dict[str, dict]] = None
+_CARDS: dict[str, dict] | None = None
 
 
-def _load_cards() -> Dict[str, dict]:
+def _load_cards() -> dict[str, dict]:
     global _CARDS
     if _CARDS is not None:
         return _CARDS
-    out: Dict[str, dict] = {}
+    out: dict[str, dict] = {}
     for path in sorted(glob.glob(os.path.join(gamedata.DATA_DIR, "cards", "*.json"))):
         try:
             with open(path, encoding="utf-8") as f:
@@ -132,15 +132,15 @@ def reload_cards() -> None:
     _VIRTUE_SUGGESTIONS = None
 
 
-def all_cards() -> Dict[str, dict]:
+def all_cards() -> dict[str, dict]:
     return _load_cards()
 
 
-def get_card(card_id: str) -> Optional[dict]:
+def get_card(card_id: str) -> dict | None:
     return _load_cards().get(card_id)
 
 
-def effective_card(player: dict, card_id: str, *, ruptura: bool = False) -> Optional[dict]:
+def effective_card(player: dict, card_id: str, *, ruptura: bool = False) -> dict | None:
     """Carta efetiva após evolução A/B e, opcionalmente, Ruptura. Retorna cópia;
     nunca altera o catálogo autoral."""
     base = get_card(card_id)
@@ -165,7 +165,7 @@ def effective_card(player: dict, card_id: str, *, ruptura: bool = False) -> Opti
     return card
 
 
-def cards_for_class(class_name: str, subclass: str = "") -> List[dict]:
+def cards_for_class(class_name: str, subclass: str = "") -> list[dict]:
     """Cartas de classe/subclasse (exclui Cartas de Virtude, tipo 'virtude')."""
     out = []
     for c in _load_cards().values():
@@ -177,19 +177,19 @@ def cards_for_class(class_name: str, subclass: str = "") -> List[dict]:
     return out
 
 
-def virtue_cards_pool() -> List[dict]:
+def virtue_cards_pool() -> list[dict]:
     return [c for c in _load_cards().values() if c.get("tipo") == "virtude"]
 
 
-_VIRTUE_SUGGESTIONS: Optional[Dict[str, List[str]]] = None
+_VIRTUE_SUGGESTIONS: dict[str, list[str]] | None = None
 
 
-def _load_virtue_suggestions() -> Dict[str, List[str]]:
+def _load_virtue_suggestions() -> dict[str, list[str]]:
     global _VIRTUE_SUGGESTIONS
     if _VIRTUE_SUGGESTIONS is not None:
         return _VIRTUE_SUGGESTIONS
     path = os.path.join(gamedata.DATA_DIR, "cards", "virtude_sugeridas.json")
-    data: Dict[str, List[str]] = {}
+    data: dict[str, list[str]] = {}
     try:
         with open(path, encoding="utf-8") as f:
             data = (json.load(f) or {}).get("sugestoes", {})
@@ -199,7 +199,7 @@ def _load_virtue_suggestions() -> Dict[str, List[str]]:
     return data
 
 
-def suggested_virtue_cards(class_name: str, subclass: str = "") -> List[str]:
+def suggested_virtue_cards(class_name: str, subclass: str = "") -> list[str]:
     """R6: 2 Cartas de Virtude sugeridas por combinação classe/subclasse (só
     recomendação — o jogador escolhe livremente na criação, conflito-02)."""
     key = f"{class_name}/{subclass}" if subclass else class_name
@@ -264,7 +264,7 @@ def reorganize_status(state: dict) -> tuple:
     return False, "Perigo alto demais neste local para reorganizar as Cartas."
 
 
-def set_prepared(state: dict, prepared: List[str]) -> dict:
+def set_prepared(state: dict, prepared: list[str]) -> dict:
     """Aplica uma nova lista de preparadas. Valida: reorganização permitida,
     subconjunto do Acervo, dentro do limite do nível. Mantém card_usage."""
     if not can_reorganize(state):
@@ -372,9 +372,9 @@ def can_use_card(player: dict, card_id: str) -> bool:
     return _entropy_cost(player, card) <= int(player.get("entropy", 0) or 0)
 
 
-def enemy_card_ids(actor: dict) -> List[str]:
+def enemy_card_ids(actor: dict) -> list[str]:
     """IDs autorais fechados da ficha inimiga; payload inline nunca vira regra."""
-    out: List[str] = []
+    out: list[str] = []
     for entry in (actor.get("cartas") or actor.get("enemy_cards") or []):
         card_id = entry.get("id") if isinstance(entry, dict) else entry
         card_id = str(card_id or "").strip()
@@ -384,7 +384,7 @@ def enemy_card_ids(actor: dict) -> List[str]:
 
 
 def can_use_enemy_card(actor: dict, card_id: str, *,
-                       expected_type: Optional[str] = None) -> bool:
+                       expected_type: str | None = None) -> bool:
     """Economia própria do inimigo, independente do deck preparado do player."""
     if card_id not in set(enemy_card_ids(actor)):
         return False
@@ -428,8 +428,8 @@ def reset_enemy_card_usage(actor: dict, scope: str) -> None:
             entry[key] = 0
 
 
-def combat_card_suggestions(player: dict, enemies: List[dict],
-                            combat: Optional[dict]) -> List[str]:
+def combat_card_suggestions(player: dict, enemies: list[dict],
+                            combat: dict | None) -> list[str]:
     """Chips transitórios até a UI de Cartas (conflito-16): Cartas preparadas
     utilizáveis + poção + fuga. Zero dependência do catálogo d20 antigo."""
     active = [e for e in (enemies or []) if isinstance(e, dict)

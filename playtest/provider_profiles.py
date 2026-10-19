@@ -6,7 +6,8 @@ import os
 import time
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Callable, Iterator, Mapping, Optional
+from typing import Optional
+from collections.abc import Callable, Iterator, Mapping
 
 from langchain_core.messages import AIMessage, HumanMessage
 from pydantic import BaseModel
@@ -37,7 +38,7 @@ def get_routes_profile(name: str) -> dict[str, list[list[str]]]:
 
 
 @contextmanager
-def activated_routes_profile(name: Optional[str]) -> Iterator[None]:
+def activated_routes_profile(name: str | None) -> Iterator[None]:
     previous = os.environ.get("RPG_ROUTES")
     previous_deepseek_timeout = os.environ.get("DEEPSEEK_TIMEOUT_SECONDS")
     if name:

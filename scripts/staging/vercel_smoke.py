@@ -6,7 +6,7 @@ import argparse
 import json
 import statistics
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 
 import httpx
@@ -37,7 +37,7 @@ def _hdrs(r) -> dict:
 
 
 def run(base: str, secret: str) -> dict:
-    out: dict = {"base": base, "at": datetime.now(timezone.utc).isoformat(), "checks": {}}
+    out: dict = {"base": base, "at": datetime.now(UTC).isoformat(), "checks": {}}
     c = httpx.Client(timeout=90, follow_redirects=False)
     ck = out["checks"]
     r, ms, err = _req(c, "GET", f"{base}/health", retries=1)  # 1a request = cold (se frio)

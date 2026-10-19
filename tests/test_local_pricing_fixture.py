@@ -8,7 +8,7 @@ the card was observed, and every local paid-effect test started returning
 """
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from decimal import Decimal
 
 import pytest
@@ -43,7 +43,7 @@ def test_fixture_window_stays_fresh_regardless_of_wall_clock(days_after):
 
 
 def test_old_fixed_window_was_a_time_bomb():
-    now = datetime(2026, 10, 18, 2, 21, tzinfo=timezone.utc)
+    now = datetime(2026, 10, 18, 2, 21, tzinfo=UTC)
     with pytest.raises(PricingUnavailable):
         _version(864000, now).require_fresh(now)
 

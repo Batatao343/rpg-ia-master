@@ -21,7 +21,8 @@ import json
 import logging
 import os
 import re
-from typing import Any, Dict, Iterable, List, Literal, Mapping, Optional, TypedDict, get_args
+from typing import Any, Dict, List, Literal, Optional, TypedDict, get_args
+from collections.abc import Iterable, Mapping
 
 from services.memory_provenance import (
     _CONFIDENCE_BY_PROVENANCE,
@@ -41,7 +42,7 @@ TAXONOMY_VERSION = 1
 
 KnowledgeKind = Literal["fact", "report", "rumor", "suspicion", "perception"]
 KNOWLEDGE_KINDS: frozenset = frozenset(get_args(KnowledgeKind))
-KIND_LABEL_PT: Dict[str, str] = {
+KIND_LABEL_PT: dict[str, str] = {
     "fact": "Fato confirmado",
     "report": "Relato",
     "rumor": "Rumor",
@@ -73,8 +74,8 @@ class KnowledgeStamp(TypedDict):
     source_kind: MemoryProvenance
     source_ref: str
     label: str
-    first_seen_turn: Optional[int]
-    last_updated_turn: Optional[int]
+    first_seen_turn: int | None
+    last_updated_turn: int | None
     stale: bool
 
 
@@ -83,7 +84,7 @@ class KnowledgeNote(KnowledgeStamp):
     text: str
 
 
-def _turn(value: Any) -> Optional[int]:
+def _turn(value: Any) -> int | None:
     """Turno válido do save ou None — nunca inventado (R3)."""
     if isinstance(value, bool) or value is None:
         return None
@@ -95,16 +96,16 @@ def _turn(value: Any) -> Optional[int]:
 
 
 def _current_turn(state: Mapping) -> int:
-    return _turn(((state.get("world") or {}).get("turn_count"))) or 0
+    return _turn((state.get("world") or {}).get("turn_count")) or 0
 
 
 def _is_rumor_text(text: str) -> bool:
     return bool(QUALIFIED_MARKER.search(_fold(text)))
 
 
-def _stamp(kind: str, source_kind: str, ref: str, first: Optional[int],
-           last: Optional[int], *, stale: bool = False,
-           label: Optional[str] = None) -> KnowledgeStamp:
+def _stamp(kind: str, source_kind: str, ref: str, first: int | None,
+           last: int | None, *, stale: bool = False,
+           label: str | None = None) -> KnowledgeStamp:
     if kind not in KNOWLEDGE_KINDS:
         raise ValueError(f"knowledge_kind fora da taxonomia: {kind!r}")
     return KnowledgeStamp(
@@ -195,7 +196,7 @@ def derive_stamp(origin: str, record: Mapping, state: Mapping) -> KnowledgeStamp
 _VIS_ORDER = {"public": 0, "hidden": 1, "secret": 2}
 
 
-def _vis_rank(visibility: Optional[str]) -> int:
+def _vis_rank(visibility: str | None) -> int:
     """Mesma regra de `rag.vis_rank` (sem importar o módulo RAG — R14):
     sem metadado = public; valor desconhecido = secret."""
     if visibility is None:
@@ -207,8 +208,8 @@ _FM_RE = re.compile(r"^---\s*\n(.*?)\n---", re.DOTALL)
 _FM_FIELD = re.compile(r"^(id|name|visibility):\s*(.*?)\s*$", re.MULTILINE)
 
 
-def _frontmatter_fields(path: str) -> Dict[str, str]:
-    with open(path, "r", encoding="utf-8") as fh:
+def _frontmatter_fields(path: str) -> dict[str, str]:
+    with open(path, encoding="utf-8") as fh:
         head = fh.read(4096)
     match = _FM_RE.match(head)
     if not match:
@@ -217,9 +218,9 @@ def _frontmatter_fields(path: str) -> Dict[str, str]:
 
 
 @functools.lru_cache(maxsize=4)
-def _codex_meta(codex_dir: str) -> Dict[str, Dict[str, str]]:
+def _codex_meta(codex_dir: str) -> dict[str, dict[str, str]]:
     """id -> {name, visibility} lendo só o frontmatter (cacheado por diretório)."""
-    out: Dict[str, Dict[str, str]] = {}
+    out: dict[str, dict[str, str]] = {}
     for root, _dirs, files in os.walk(codex_dir):
         for fname in sorted(files):
             if not fname.endswith(".md"):
@@ -235,7 +236,7 @@ def _codex_dir() -> str:
     return CODEX_DIR
 
 
-def _entity_visibility(entity_id: str) -> Optional[str]:
+def _entity_visibility(entity_id: str) -> str | None:
     """Visibilidade mais restritiva entre grafo e frontmatter do Codex.
     Indisponibilidade de qualquer fonte => 'secret' (fail-closed, §3.6)."""
     try:
@@ -255,7 +256,7 @@ def _accepted_folded(state: Mapping) -> set:
     return {item.casefold() for item in accepted_secret_ids(dict(state))}
 
 
-def entity_is_player_visible(entity_id: Optional[str], state: Mapping) -> bool:
+def entity_is_player_visible(entity_id: str | None, state: Mapping) -> bool:
     """Entidade sem id canônico não tem metadado de visibilidade (chamador já
     filtrou por `known_by_player`). Não-public só com `secret_revealed` aceito
     (R4/R5) — `narrative_summary`/`known_secrets` nunca liberam."""
@@ -266,12 +267,12 @@ def entity_is_player_visible(entity_id: Optional[str], state: Mapping) -> bool:
     return entity_id.casefold() in _accepted_folded(state)
 
 
-def _hidden_catalog(state: Mapping) -> Dict[str, str]:
+def _hidden_catalog(state: Mapping) -> dict[str, str]:
     """id -> nome das entidades não-public ainda não reveladas (grafo + Codex)."""
     from services import graph_resolver as gr
     accepted = _accepted_folded(state)
-    out: Dict[str, str] = {}
-    sources: List[tuple] = []
+    out: dict[str, str] = {}
+    sources: list[tuple] = []
     for eid, ent in (gr.load_entities() or {}).items():
         if isinstance(ent, dict):
             sources.append((eid, ent.get("visibility"), ent.get("name", "")))
@@ -296,7 +297,7 @@ def _norm(text: Any) -> str:
 
 def _text_of(obj: Any) -> str:
     """Concatena as folhas string/num de um JSON (valores, não chaves)."""
-    out: List[str] = []
+    out: list[str] = []
 
     def walk(value: Any) -> None:
         if isinstance(value, Mapping):
@@ -312,7 +313,7 @@ def _text_of(obj: Any) -> str:
     return _FIELD_SEP.join(out)
 
 
-def _strict_unrevealed(text: str, state: Mapping) -> Optional[str]:
+def _strict_unrevealed(text: str, state: Mapping) -> str | None:
     """`find_strict_unrevealed` + mesma checagem sobre texto normalizado."""
     hit = find_strict_unrevealed(text, dict(state))
     if hit:
@@ -329,7 +330,7 @@ def _strict_unrevealed(text: str, state: Mapping) -> Optional[str]:
     return None
 
 
-def _mentions_hidden(text: str, hidden: Mapping[str, str]) -> Optional[str]:
+def _mentions_hidden(text: str, hidden: Mapping[str, str]) -> str | None:
     low = _norm(text)
     if not low:
         return None
@@ -378,7 +379,7 @@ def _anchor_and_origin(category: str, entry: Mapping, state: Mapping) -> tuple:
     raise ValueError(f"categoria desconhecida: {category!r}")
 
 
-def _memory_rows(state: Mapping) -> List[dict]:
+def _memory_rows(state: Mapping) -> list[dict]:
     from services.memory_provenance import normalize_memory_facts
     try:
         return normalize_memory_facts(state.get("memory_facts") or [])
@@ -386,12 +387,12 @@ def _memory_rows(state: Mapping) -> List[dict]:
         return []
 
 
-def _notes_for(anchors: Iterable[str], memory: List[dict], state: Mapping,
-               hidden: Mapping[str, str], counter: Dict[str, int]) -> List[KnowledgeNote]:
+def _notes_for(anchors: Iterable[str], memory: list[dict], state: Mapping,
+               hidden: Mapping[str, str], counter: dict[str, int]) -> list[KnowledgeNote]:
     folded = {a.casefold() for a in anchors if a}
     if not folded:
         return []
-    notes: List[KnowledgeNote] = []
+    notes: list[KnowledgeNote] = []
     for row in memory:
         entity_ids = [str(e) for e in row.get("canonical_entity_ids") or []]
         if not any(e.casefold() in folded for e in entity_ids):
@@ -422,9 +423,9 @@ def project_player_knowledge(state: Mapping, raw: Mapping[str, list]) -> dict:
     hidden = _hidden_catalog(state)
     memory = _memory_rows(state)
     counter = {"redactions": 0}
-    out: Dict[str, Any] = {}
+    out: dict[str, Any] = {}
     for category in CATEGORIES:
-        projected: List[dict] = []
+        projected: list[dict] = []
         for entry in raw.get(category) or []:
             try:
                 if not isinstance(entry, Mapping):
@@ -499,9 +500,9 @@ def _fact_has_source(stamp: Mapping, state: Mapping) -> bool:
     return False
 
 
-def assert_no_player_leak(codex: Mapping, state: Mapping) -> List[str]:
+def assert_no_player_leak(codex: Mapping, state: Mapping) -> list[str]:
     """[] = ok. Cada string descreve um vazamento (sem texto do segredo)."""
-    problems: List[str] = []
+    problems: list[str] = []
     blob = json.dumps(codex, ensure_ascii=False, default=str)
     # chaves + valores (normalizados) — acento/quebra de linha não escapam
     scan = blob + _FIELD_SEP + _text_of(codex)

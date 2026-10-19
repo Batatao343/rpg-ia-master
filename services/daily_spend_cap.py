@@ -16,7 +16,7 @@ from __future__ import annotations
 import os
 import re
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from decimal import Decimal, InvalidOperation
 
 from services.finops_alerts import Alert
@@ -110,7 +110,7 @@ def text_cap_exceeded(reader_factory, *, now: datetime | None = None,
     exceeded = False
     try:
         reader = reader_factory()
-        moment = now or datetime.now(timezone.utc)
+        moment = now or datetime.now(UTC)
         refs, _fresh = reader.pricing()
         fx = list(refs.values())[-1].fx_usd_brl if refs else DEFAULT_FX
         res = evaluate_daily_cap(reader, None, moment, fx)
@@ -123,9 +123,9 @@ def text_cap_exceeded(reader_factory, *, now: datetime | None = None,
 
 def _ts(v) -> datetime | None:
     if isinstance(v, datetime):
-        return v if v.tzinfo else v.replace(tzinfo=timezone.utc)
+        return v if v.tzinfo else v.replace(tzinfo=UTC)
     if isinstance(v, (int, float)):
-        return datetime.fromtimestamp(v, timezone.utc)
+        return datetime.fromtimestamp(v, UTC)
     return None
 
 
@@ -155,7 +155,7 @@ def day_start(now: datetime) -> datetime:
     hours = tz_offset_hours()
     tz = timezone(timedelta(hours=hours))
     local = now.astimezone(tz)
-    return local.replace(hour=0, minute=0, second=0, microsecond=0).astimezone(timezone.utc)
+    return local.replace(hour=0, minute=0, second=0, microsecond=0).astimezone(UTC)
 
 
 @dataclass

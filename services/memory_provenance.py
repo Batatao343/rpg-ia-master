@@ -10,7 +10,8 @@ import hashlib
 import json
 import re
 import unicodedata
-from typing import Dict, Iterable, List, Literal, Optional
+from typing import Dict, List, Literal, Optional
+from collections.abc import Iterable
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
@@ -30,7 +31,7 @@ MAX_PENDING_MEMORY_FACTS = 100
 MAX_MEMORY_REJECTIONS = 100
 MAX_MEMORY_PROMOTIONS = 100
 
-_CONFIDENCE_BY_PROVENANCE: Dict[str, MemoryConfidence] = {
+_CONFIDENCE_BY_PROVENANCE: dict[str, MemoryConfidence] = {
     "canonical_event": "confirmed",
     "player_observation": "reported",
     "npc_claim": "reported",
@@ -56,9 +57,9 @@ class MemoryFactRecord(BaseModel):
     text: str = Field(min_length=1, max_length=480)
     provenance: MemoryProvenance
     confidence: MemoryConfidence = "speculative"
-    source_id: Optional[str] = None
-    source_turn: Optional[int] = Field(default=None, ge=0)
-    canonical_entity_ids: List[str] = Field(default_factory=list)
+    source_id: str | None = None
+    source_turn: int | None = Field(default=None, ge=0)
+    canonical_entity_ids: list[str] = Field(default_factory=list)
     # SPEC-234 R1: estado da copia vetorial derivada (ledger e a fonte primaria).
     vector_status: Literal["written", "pending", "failed"] = "written"
 
@@ -104,10 +105,10 @@ def make_memory_fact(
     text: str,
     *,
     provenance: MemoryProvenance,
-    confidence: Optional[MemoryConfidence] = None,
-    source_id: Optional[str] = None,
-    source_turn: Optional[int] = None,
-    canonical_entity_ids: Optional[Iterable[str]] = None,
+    confidence: MemoryConfidence | None = None,
+    source_id: str | None = None,
+    source_turn: int | None = None,
+    canonical_entity_ids: Iterable[str] | None = None,
 ) -> dict:
     """Cria registro e ignora qualquer tentativa de elevar ``confidence``."""
     record = MemoryFactRecord(
@@ -121,9 +122,9 @@ def make_memory_fact(
     return record.model_dump(mode="json")
 
 
-def normalize_memory_facts(rows: Iterable | None, *, pending: bool = False) -> List[dict]:
+def normalize_memory_facts(rows: Iterable | None, *, pending: bool = False) -> list[dict]:
     """Normaliza ledger/fila. Strings antigas viram ``legacy_unverified``."""
-    normalized: List[dict] = []
+    normalized: list[dict] = []
     seen: set[str] = set()
     for raw in rows or []:
         try:
@@ -174,7 +175,7 @@ def accepted_secret_ids(state: dict) -> set[str]:
     return revealed
 
 
-def find_strict_unrevealed(text: str, state: dict) -> Optional[str]:
+def find_strict_unrevealed(text: str, state: dict) -> str | None:
     """Detecta assinatura oculta considerando apenas ``secret_revealed`` aceito."""
     low = str(text or "").casefold()
     revealed = {item.casefold() for item in accepted_secret_ids(state)}
@@ -204,7 +205,7 @@ def applicable_source_ids(state: dict) -> set[str]:
     return sources
 
 
-def source_is_applicable(source_id: Optional[str], state: dict) -> bool:
+def source_is_applicable(source_id: str | None, state: dict) -> bool:
     if not source_id:
         return False
     if source_id in applicable_source_ids(state):
@@ -242,7 +243,7 @@ def _fold(value: str) -> str:
     ).casefold()
 
 
-def canonical_location_contradiction(text: str) -> Optional[dict]:
+def canonical_location_contradiction(text: str) -> dict | None:
     """Return an explicit location-to-wrong-region assertion, if present.
 
     Mere co-occurrence is intentionally insufficient: travel and comparisons
@@ -322,7 +323,7 @@ _NPC_SIZES = (
 )
 
 
-def _first_identity_label(text: str, catalog) -> Optional[str]:
+def _first_identity_label(text: str, catalog) -> str | None:
     folded = _fold(text)
     for label, terms in catalog:
         if any(re.search(rf"\b{re.escape(_fold(term))}\b", folded) for term in terms):
@@ -342,7 +343,7 @@ def _npc_descriptor(text: str, npc_name: str) -> str:
     return match.group("descriptor") if match else ""
 
 
-def npc_identity_contradiction(text: str, state: dict) -> Optional[dict]:
+def npc_identity_contradiction(text: str, state: dict) -> dict | None:
     """Espécie/porte explícitos não podem trocar a ficha canônica do NPC."""
     from services.entity_identity import coalesce_runtime_npcs
 
@@ -391,7 +392,7 @@ def sanitize_npc_identity_grounding(text: str, state: dict) -> tuple[str, list[d
 _POSSESSION_VERB = r"(?:carrega|possui|leva\s+consigo|tem\s+no\s+inventario)"
 
 
-def inventory_possession_contradiction(text: str, state: dict) -> Optional[dict]:
+def inventory_possession_contradiction(text: str, state: dict) -> dict | None:
     """Detecta apenas afirmações explícitas de posse do jogador.
 
     O inventário mecânico prevalece sobre uma recusa antiga: se o objeto foi
@@ -459,7 +460,7 @@ def sanitize_inventory_grounding(text: str, state: dict) -> tuple[str, list[dict
     return " ".join(accepted).strip(), rejected
 
 
-def validate_memory_fact(record: dict, state: dict) -> tuple[Optional[dict], Optional[str]]:
+def validate_memory_fact(record: dict, state: dict) -> tuple[dict | None, str | None]:
     """Falha fechada: segredo não revelado ou confirmação sem prova é recusado."""
     normalized = normalize_memory_facts([record])
     if not normalized:
@@ -501,7 +502,7 @@ def validate_memory_fact(record: dict, state: dict) -> tuple[Optional[dict], Opt
     return item, None
 
 
-def commit_memory_facts(existing: Iterable | None, new: Iterable | None) -> tuple[List[dict], int]:
+def commit_memory_facts(existing: Iterable | None, new: Iterable | None) -> tuple[list[dict], int]:
     """Merge por texto, idempotente, preferindo a versão de maior confiança."""
     ledger = normalize_memory_facts(existing)
     by_text = {item["text"].casefold(): item for item in ledger}
@@ -523,10 +524,10 @@ def commit_memory_facts(existing: Iterable | None, new: Iterable | None) -> tupl
     return [by_text[key] for key in order][-MAX_MEMORY_FACTS:], promotions
 
 
-def set_vector_status(ledger: Iterable | None, memory_ids: Iterable[str], status: str) -> List[dict]:
+def set_vector_status(ledger: Iterable | None, memory_ids: Iterable[str], status: str) -> list[dict]:
     """Marca o estado da copia vetorial de registros do ledger (SPEC-234 R1)."""
     ids = set(memory_ids)
-    out: List[dict] = []
+    out: list[dict] = []
     for item in normalize_memory_facts(ledger):
         if item["memory_id"] in ids:
             item = {**item, "vector_status": status}
@@ -566,6 +567,6 @@ def format_memory_fact(record: dict) -> str:
     return f"[{' | '.join(details)}] {item['text']}"
 
 
-def bounded_audit_rows(rows: Iterable | None, *, limit: int) -> List[dict]:
+def bounded_audit_rows(rows: Iterable | None, *, limit: int) -> list[dict]:
     clean = [dict(row) for row in rows or [] if isinstance(row, dict)]
     return clean[-limit:]
