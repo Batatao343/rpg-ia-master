@@ -1,5 +1,5 @@
 {
-  "commit_sha": "b8660d986eaae7eed3a802eb32dff1d7c3babc0c",
+  "commit_sha": "73156f2c8b85d94bf37279a5d24b5222afee9329",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -25691,7 +25691,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/__main__.py",
-        "line": 14
+        "line": 12
+      },
+      "source": "module:evals.__main__",
+      "target": "module:evals.core.schemas",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/__main__.py",
+        "line": 36
+      },
+      "source": "module:evals.__main__",
+      "target": "symbol:evals.__main__._error_rows",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/__main__.py",
+        "line": 15
       },
       "source": "module:evals.__main__",
       "target": "symbol:evals.__main__._parser",
@@ -25702,7 +25724,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/__main__.py",
-        "line": 35
+        "line": 46
       },
       "source": "module:evals.__main__",
       "target": "symbol:evals.__main__.main",
@@ -26285,7 +26307,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 13
+        "line": 15
       },
       "source": "module:evals.core.runner",
       "target": "module:evals.core.adapters",
@@ -26296,7 +26318,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 14
+        "line": 16
       },
       "source": "module:evals.core.runner",
       "target": "module:evals.core.governance",
@@ -26307,7 +26329,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 15
+        "line": 17
       },
       "source": "module:evals.core.runner",
       "target": "module:evals.core.hashing",
@@ -26318,7 +26340,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 16
+        "line": 18
       },
       "source": "module:evals.core.runner",
       "target": "module:evals.core.schemas",
@@ -26329,7 +26351,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 17
+        "line": 19
       },
       "source": "module:evals.core.runner",
       "target": "module:evals.evaluators",
@@ -26340,7 +26362,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 30
+        "line": 32
       },
       "source": "module:evals.core.runner",
       "target": "symbol:evals.core.runner.EvalRunnerError",
@@ -26351,7 +26373,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 305
+        "line": 307
       },
       "source": "module:evals.core.runner",
       "target": "symbol:evals.core.runner._aggregates",
@@ -26362,7 +26384,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 50
+        "line": 52
       },
       "source": "module:evals.core.runner",
       "target": "symbol:evals.core.runner._filter_cases",
@@ -26373,7 +26395,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 73
+        "line": 75
       },
       "source": "module:evals.core.runner",
       "target": "symbol:evals.core.runner._metric_values",
@@ -26384,7 +26406,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 34
+        "line": 375
+      },
+      "source": "module:evals.core.runner",
+      "target": "symbol:evals.core.runner._report_case_error",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/core/runner.py",
+        "line": 36
       },
       "source": "module:evals.core.runner",
       "target": "symbol:evals.core.runner._selected_datasets",
@@ -26395,7 +26428,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 561
+        "line": 581
       },
       "source": "module:evals.core.runner",
       "target": "symbol:evals.core.runner.load_run",
@@ -26406,7 +26439,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 370
+        "line": 389
       },
       "source": "module:evals.core.runner",
       "target": "symbol:evals.core.runner.run_eval",
@@ -26417,7 +26450,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 519
+        "line": 539
       },
       "source": "module:evals.core.runner",
       "target": "symbol:evals.core.runner.write_run",
@@ -82418,10 +82451,32 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_harness.py",
+        "line": 228
+      },
+      "source": "module:tests.test_eval_harness",
+      "target": "symbol:tests.test_eval_harness.test_cli_error_case_reports_traceback_on_stderr_and_error_type_without_message",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_eval_harness.py",
         "line": 83
       },
       "source": "module:tests.test_eval_harness",
       "target": "symbol:tests.test_eval_harness.test_cli_returns_nonzero_for_known_bad",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_eval_harness.py",
+        "line": 279
+      },
+      "source": "module:tests.test_eval_harness",
+      "target": "symbol:tests.test_eval_harness.test_cli_stdout_has_no_errors_key_content_for_clean_run",
       "type": "defines"
     },
     {
@@ -93858,7 +93913,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 481
+        "line": 493
       },
       "source": "module:tests.test_jev_router_port",
       "target": "symbol:tests.test_jev_router_port.test_frozen_policy_import_is_outside_the_deadline",
@@ -93891,7 +93946,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 503
+        "line": 515
       },
       "source": "module:tests.test_jev_router_port",
       "target": "symbol:tests.test_jev_router_port.test_more_python_gates_precede_jev",
@@ -94023,7 +94078,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 514
+        "line": 526
       },
       "source": "module:tests.test_jev_router_port",
       "target": "symbol:tests.test_jev_router_port.test_shadow_classify_failure_still_observed",
@@ -94045,7 +94100,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 522
+        "line": 534
       },
       "source": "module:tests.test_jev_router_port",
       "target": "symbol:tests.test_jev_router_port.test_shadow_does_not_mutate_state",
@@ -134954,7 +135009,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/__main__.py",
-        "line": 36
+        "line": 72
+      },
+      "source": "symbol:evals.__main__.main",
+      "target": "symbol:evals.__main__._error_rows",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/__main__.py",
+        "line": 47
       },
       "source": "symbol:evals.__main__.main",
       "target": "symbol:evals.__main__._parser",
@@ -134965,7 +135031,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/__main__.py",
-        "line": 68
+        "line": 80
       },
       "source": "symbol:evals.__main__.main",
       "target": "symbol:evals.core.compare.compare_runs",
@@ -134976,7 +135042,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/__main__.py",
-        "line": 40
+        "line": 51
       },
       "source": "symbol:evals.__main__.main",
       "target": "symbol:evals.core.runner.run_eval",
@@ -134987,7 +135053,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/__main__.py",
-        "line": 50
+        "line": 61
       },
       "source": "symbol:evals.__main__.main",
       "target": "symbol:evals.core.runner.write_run",
@@ -137385,7 +137451,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 65
+        "line": 67
       },
       "source": "symbol:evals.core.runner._filter_cases",
       "target": "symbol:evals.core.runner.EvalRunnerError",
@@ -137396,7 +137462,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 69
+        "line": 71
       },
       "source": "symbol:evals.core.runner._filter_cases",
       "target": "symbol:evals.core.runner.EvalRunnerError",
@@ -137407,7 +137473,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 216
+        "line": 218
       },
       "source": "symbol:evals.core.runner._metric_values",
       "target": "symbol:evals.core.runner._metric_values._value",
@@ -137418,7 +137484,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 40
+        "line": 42
       },
       "source": "symbol:evals.core.runner._selected_datasets",
       "target": "symbol:evals.core.runner.EvalRunnerError",
@@ -137429,7 +137495,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 45
+        "line": 47
       },
       "source": "symbol:evals.core.runner._selected_datasets",
       "target": "symbol:evals.core.runner.EvalRunnerError",
@@ -137440,7 +137506,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 565
+        "line": 585
       },
       "source": "symbol:evals.core.runner.load_run",
       "target": "symbol:evals.core.governance.GovernanceError",
@@ -137451,7 +137517,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 454
+        "line": 473
       },
       "source": "symbol:evals.core.runner.run_eval",
       "target": "symbol:evals.core.adapters.AdapterCase.from_eval_case",
@@ -137462,7 +137528,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 425
+        "line": 444
       },
       "source": "symbol:evals.core.runner.run_eval",
       "target": "symbol:evals.core.adapters.default_registry",
@@ -137473,7 +137539,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 390
+        "line": 409
       },
       "source": "symbol:evals.core.runner.run_eval",
       "target": "symbol:evals.core.governance.load_cases",
@@ -137484,7 +137550,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 489
+        "line": 509
       },
       "source": "symbol:evals.core.runner.run_eval",
       "target": "symbol:evals.core.governance.load_metrics_registry",
@@ -137495,7 +137561,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 385
+        "line": 404
       },
       "source": "symbol:evals.core.runner.run_eval",
       "target": "symbol:evals.core.governance.validate_repository",
@@ -137506,7 +137572,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 416
+        "line": 435
       },
       "source": "symbol:evals.core.runner.run_eval",
       "target": "symbol:evals.core.hashing.case_selection_hash",
@@ -137517,7 +137583,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 399
+        "line": 418
       },
       "source": "symbol:evals.core.runner.run_eval",
       "target": "symbol:evals.core.hashing.repository_identity",
@@ -137528,7 +137594,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 392
+        "line": 411
       },
       "source": "symbol:evals.core.runner.run_eval",
       "target": "symbol:evals.core.runner.EvalRunnerError",
@@ -137539,7 +137605,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 401
+        "line": 420
       },
       "source": "symbol:evals.core.runner.run_eval",
       "target": "symbol:evals.core.runner.EvalRunnerError",
@@ -137550,7 +137616,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 452
+        "line": 471
       },
       "source": "symbol:evals.core.runner.run_eval",
       "target": "symbol:evals.core.runner.EvalRunnerError",
@@ -137561,7 +137627,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 513
+        "line": 533
       },
       "source": "symbol:evals.core.runner.run_eval",
       "target": "symbol:evals.core.runner._aggregates",
@@ -137572,7 +137638,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 395
+        "line": 414
       },
       "source": "symbol:evals.core.runner.run_eval",
       "target": "symbol:evals.core.runner._filter_cases",
@@ -137583,7 +137649,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 488
+        "line": 508
       },
       "source": "symbol:evals.core.runner.run_eval",
       "target": "symbol:evals.core.runner._metric_values",
@@ -137594,7 +137660,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 386
+        "line": 500
+      },
+      "source": "symbol:evals.core.runner.run_eval",
+      "target": "symbol:evals.core.runner._report_case_error",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "evals/core/runner.py",
+        "line": 405
       },
       "source": "symbol:evals.core.runner.run_eval",
       "target": "symbol:evals.core.runner._selected_datasets",
@@ -137605,7 +137682,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 406
+        "line": 425
       },
       "source": "symbol:evals.core.runner.run_eval",
       "target": "symbol:evals.core.schemas.EvalRunMetadata",
@@ -137616,7 +137693,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 504
+        "line": 524
       },
       "source": "symbol:evals.core.runner.run_eval",
       "target": "symbol:evals.core.schemas.EvalRunResult",
@@ -137627,7 +137704,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "evals/core/runner.py",
-        "line": 524
+        "line": 544
       },
       "source": "symbol:evals.core.runner.write_run",
       "target": "symbol:evals.core.runner.EvalRunnerError",
@@ -248958,9 +249035,64 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_eval_harness.py",
+        "line": 262
+      },
+      "source": "symbol:tests.test_eval_harness.test_cli_error_case_reports_traceback_on_stderr_and_error_type_without_message",
+      "target": "symbol:evals.__main__.main",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_eval_harness.py",
+        "line": 241
+      },
+      "source": "symbol:tests.test_eval_harness.test_cli_error_case_reports_traceback_on_stderr_and_error_type_without_message",
+      "target": "symbol:evals.core.adapters.AdapterRegistry",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_eval_harness.py",
+        "line": 233
+      },
+      "source": "symbol:tests.test_eval_harness.test_cli_error_case_reports_traceback_on_stderr_and_error_type_without_message",
+      "target": "symbol:tests.test_eval_harness.test_cli_error_case_reports_traceback_on_stderr_and_error_type_without_message.BoomAdapter",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_eval_harness.py",
+        "line": 236
+      },
+      "source": "symbol:tests.test_eval_harness.test_cli_error_case_reports_traceback_on_stderr_and_error_type_without_message.BoomAdapter",
+      "target": "symbol:tests.test_eval_harness.test_cli_error_case_reports_traceback_on_stderr_and_error_type_without_message.BoomAdapter.execute",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_eval_harness.py",
         "line": 103
       },
       "source": "symbol:tests.test_eval_harness.test_cli_returns_nonzero_for_known_bad",
+      "target": "symbol:evals.__main__.main",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_eval_harness.py",
+        "line": 288
+      },
+      "source": "symbol:tests.test_eval_harness.test_cli_stdout_has_no_errors_key_content_for_clean_run",
       "target": "symbol:evals.__main__.main",
       "type": "calls"
     },
@@ -269847,7 +269979,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 499
+        "line": 511
       },
       "source": "symbol:tests.test_jev_router_port.test_frozen_policy_import_is_outside_the_deadline",
       "target": "symbol:services.jev_rollout.begin",
@@ -269858,7 +269990,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 499
+        "line": 511
       },
       "source": "symbol:tests.test_jev_router_port.test_frozen_policy_import_is_outside_the_deadline",
       "target": "symbol:tests.test_jev_router_port.FakeJev",
@@ -269869,7 +270001,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 499
+        "line": 511
       },
       "source": "symbol:tests.test_jev_router_port.test_frozen_policy_import_is_outside_the_deadline",
       "target": "symbol:tests.test_jev_router_port._scene",
@@ -269880,7 +270012,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 490
+        "line": 502
       },
       "source": "symbol:tests.test_jev_router_port.test_frozen_policy_import_is_outside_the_deadline",
       "target": "symbol:tests.test_jev_router_port.test_frozen_policy_import_is_outside_the_deadline._Clock",
@@ -269891,7 +270023,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 486
+        "line": 498
       },
       "source": "symbol:tests.test_jev_router_port.test_frozen_policy_import_is_outside_the_deadline",
       "target": "symbol:tests.test_jev_router_port.test_frozen_policy_import_is_outside_the_deadline.frozen",
@@ -269902,7 +270034,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 491
+        "line": 503
       },
       "source": "symbol:tests.test_jev_router_port.test_frozen_policy_import_is_outside_the_deadline._Clock",
       "target": "symbol:tests.test_jev_router_port.test_frozen_policy_import_is_outside_the_deadline._Clock.monotonic",
@@ -269957,7 +270089,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 475
+        "line": 483
       },
       "source": "symbol:tests.test_jev_router_port.test_missing_key_falls_back_to_classify",
       "target": "symbol:services.jev_rollout.set_jev_rollout_telemetry_hook",
@@ -269968,7 +270100,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 476
+        "line": 487
+      },
+      "source": "symbol:tests.test_jev_router_port.test_missing_key_falls_back_to_classify",
+      "target": "symbol:services.jev_rollout.set_jev_rollout_telemetry_hook",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_jev_router_port.py",
+        "line": 485
       },
       "source": "symbol:tests.test_jev_router_port.test_missing_key_falls_back_to_classify",
       "target": "symbol:tests.test_jev_router_port._scene",
@@ -269979,7 +270122,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 476
+        "line": 485
       },
       "source": "symbol:tests.test_jev_router_port.test_missing_key_falls_back_to_classify",
       "target": "symbol:tests.test_jev_router_port.run_scenario",
@@ -269990,7 +270133,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 505
+        "line": 517
       },
       "source": "symbol:tests.test_jev_router_port.test_more_python_gates_precede_jev",
       "target": "symbol:tests.test_jev_router_port.FakeJev",
@@ -270001,7 +270144,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 508
+        "line": 520
       },
       "source": "symbol:tests.test_jev_router_port.test_more_python_gates_precede_jev",
       "target": "symbol:tests.test_jev_router_port._scene",
@@ -270012,7 +270155,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 509
+        "line": 521
       },
       "source": "symbol:tests.test_jev_router_port.test_more_python_gates_precede_jev",
       "target": "symbol:tests.test_jev_router_port._scene",
@@ -270023,7 +270166,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 506
+        "line": 518
       },
       "source": "symbol:tests.test_jev_router_port.test_more_python_gates_precede_jev",
       "target": "symbol:tests.test_jev_router_port._use",
@@ -270034,7 +270177,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 508
+        "line": 520
       },
       "source": "symbol:tests.test_jev_router_port.test_more_python_gates_precede_jev",
       "target": "symbol:tests.test_jev_router_port.run_scenario",
@@ -270045,7 +270188,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 510
+        "line": 522
       },
       "source": "symbol:tests.test_jev_router_port.test_more_python_gates_precede_jev",
       "target": "symbol:tests.test_jev_router_port.run_scenario",
@@ -270551,7 +270694,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 515
+        "line": 527
       },
       "source": "symbol:tests.test_jev_router_port.test_shadow_classify_failure_still_observed",
       "target": "symbol:tests.test_jev_router_port.FakeJev",
@@ -270562,7 +270705,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 517
+        "line": 529
       },
       "source": "symbol:tests.test_jev_router_port.test_shadow_classify_failure_still_observed",
       "target": "symbol:tests.test_jev_router_port._run_shadow",
@@ -270573,7 +270716,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 517
+        "line": 529
       },
       "source": "symbol:tests.test_jev_router_port.test_shadow_classify_failure_still_observed",
       "target": "symbol:tests.test_jev_router_port._scene",
@@ -270584,7 +270727,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 516
+        "line": 528
       },
       "source": "symbol:tests.test_jev_router_port.test_shadow_classify_failure_still_observed",
       "target": "symbol:tests.test_jev_router_port._use",
@@ -270661,7 +270804,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 525
+        "line": 537
       },
       "source": "symbol:tests.test_jev_router_port.test_shadow_does_not_mutate_state",
       "target": "symbol:tests.test_jev_router_port.FakeJev",
@@ -270672,7 +270815,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 529
+        "line": 541
       },
       "source": "symbol:tests.test_jev_router_port.test_shadow_does_not_mutate_state",
       "target": "symbol:tests.test_jev_router_port._run_shadow",
@@ -270683,7 +270826,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 527
+        "line": 539
       },
       "source": "symbol:tests.test_jev_router_port.test_shadow_does_not_mutate_state",
       "target": "symbol:tests.test_jev_router_port._scene",
@@ -270694,7 +270837,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_router_port.py",
-        "line": 526
+        "line": 538
       },
       "source": "symbol:tests.test_jev_router_port.test_shadow_does_not_mutate_state",
       "target": "symbol:tests.test_jev_router_port._use",
@@ -347979,16 +348122,23 @@
       "qualified_name": "encounter_budget.tier_cost"
     },
     {
+      "id": "symbol:evals.__main__._error_rows",
+      "kind": "function",
+      "line": 36,
+      "path": "evals/__main__.py",
+      "qualified_name": "evals.__main__._error_rows"
+    },
+    {
       "id": "symbol:evals.__main__._parser",
       "kind": "function",
-      "line": 14,
+      "line": 15,
       "path": "evals/__main__.py",
       "qualified_name": "evals.__main__._parser"
     },
     {
       "id": "symbol:evals.__main__.main",
       "kind": "function",
-      "line": 35,
+      "line": 46,
       "path": "evals/__main__.py",
       "qualified_name": "evals.__main__.main"
     },
@@ -348541,63 +348691,70 @@
     {
       "id": "symbol:evals.core.runner.EvalRunnerError",
       "kind": "class",
-      "line": 30,
+      "line": 32,
       "path": "evals/core/runner.py",
       "qualified_name": "evals.core.runner.EvalRunnerError"
     },
     {
       "id": "symbol:evals.core.runner._aggregates",
       "kind": "function",
-      "line": 305,
+      "line": 307,
       "path": "evals/core/runner.py",
       "qualified_name": "evals.core.runner._aggregates"
     },
     {
       "id": "symbol:evals.core.runner._filter_cases",
       "kind": "function",
-      "line": 50,
+      "line": 52,
       "path": "evals/core/runner.py",
       "qualified_name": "evals.core.runner._filter_cases"
     },
     {
       "id": "symbol:evals.core.runner._metric_values",
       "kind": "function",
-      "line": 73,
+      "line": 75,
       "path": "evals/core/runner.py",
       "qualified_name": "evals.core.runner._metric_values"
     },
     {
       "id": "symbol:evals.core.runner._metric_values._value",
       "kind": "function",
-      "line": 216,
+      "line": 218,
       "path": "evals/core/runner.py",
       "qualified_name": "evals.core.runner._metric_values._value"
     },
     {
+      "id": "symbol:evals.core.runner._report_case_error",
+      "kind": "function",
+      "line": 375,
+      "path": "evals/core/runner.py",
+      "qualified_name": "evals.core.runner._report_case_error"
+    },
+    {
       "id": "symbol:evals.core.runner._selected_datasets",
       "kind": "function",
-      "line": 34,
+      "line": 36,
       "path": "evals/core/runner.py",
       "qualified_name": "evals.core.runner._selected_datasets"
     },
     {
       "id": "symbol:evals.core.runner.load_run",
       "kind": "function",
-      "line": 561,
+      "line": 581,
       "path": "evals/core/runner.py",
       "qualified_name": "evals.core.runner.load_run"
     },
     {
       "id": "symbol:evals.core.runner.run_eval",
       "kind": "function",
-      "line": 370,
+      "line": 389,
       "path": "evals/core/runner.py",
       "qualified_name": "evals.core.runner.run_eval"
     },
     {
       "id": "symbol:evals.core.runner.write_run",
       "kind": "function",
-      "line": 519,
+      "line": 539,
       "path": "evals/core/runner.py",
       "qualified_name": "evals.core.runner.write_run"
     },
@@ -386752,11 +386909,39 @@
       "qualified_name": "tests.test_eval_harness.test_adapter_view_cannot_read_fixture_authored_expected.AdversarialAdapter.execute"
     },
     {
+      "id": "symbol:tests.test_eval_harness.test_cli_error_case_reports_traceback_on_stderr_and_error_type_without_message",
+      "kind": "test",
+      "line": 228,
+      "path": "tests/test_eval_harness.py",
+      "qualified_name": "tests.test_eval_harness.test_cli_error_case_reports_traceback_on_stderr_and_error_type_without_message"
+    },
+    {
+      "id": "symbol:tests.test_eval_harness.test_cli_error_case_reports_traceback_on_stderr_and_error_type_without_message.BoomAdapter",
+      "kind": "class",
+      "line": 233,
+      "path": "tests/test_eval_harness.py",
+      "qualified_name": "tests.test_eval_harness.test_cli_error_case_reports_traceback_on_stderr_and_error_type_without_message.BoomAdapter"
+    },
+    {
+      "id": "symbol:tests.test_eval_harness.test_cli_error_case_reports_traceback_on_stderr_and_error_type_without_message.BoomAdapter.execute",
+      "kind": "test",
+      "line": 236,
+      "path": "tests/test_eval_harness.py",
+      "qualified_name": "tests.test_eval_harness.test_cli_error_case_reports_traceback_on_stderr_and_error_type_without_message.BoomAdapter.execute"
+    },
+    {
       "id": "symbol:tests.test_eval_harness.test_cli_returns_nonzero_for_known_bad",
       "kind": "test",
       "line": 83,
       "path": "tests/test_eval_harness.py",
       "qualified_name": "tests.test_eval_harness.test_cli_returns_nonzero_for_known_bad"
+    },
+    {
+      "id": "symbol:tests.test_eval_harness.test_cli_stdout_has_no_errors_key_content_for_clean_run",
+      "kind": "test",
+      "line": 279,
+      "path": "tests/test_eval_harness.py",
+      "qualified_name": "tests.test_eval_harness.test_cli_stdout_has_no_errors_key_content_for_clean_run"
     },
     {
       "id": "symbol:tests.test_eval_harness.test_comparison_accepts_compatible_runs_and_rejects_identity_drift",
@@ -394111,28 +394296,28 @@
     {
       "id": "symbol:tests.test_jev_router_port.test_frozen_policy_import_is_outside_the_deadline",
       "kind": "test",
-      "line": 481,
+      "line": 493,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port.test_frozen_policy_import_is_outside_the_deadline"
     },
     {
       "id": "symbol:tests.test_jev_router_port.test_frozen_policy_import_is_outside_the_deadline._Clock",
       "kind": "class",
-      "line": 490,
+      "line": 502,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port.test_frozen_policy_import_is_outside_the_deadline._Clock"
     },
     {
       "id": "symbol:tests.test_jev_router_port.test_frozen_policy_import_is_outside_the_deadline._Clock.monotonic",
       "kind": "test",
-      "line": 491,
+      "line": 503,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port.test_frozen_policy_import_is_outside_the_deadline._Clock.monotonic"
     },
     {
       "id": "symbol:tests.test_jev_router_port.test_frozen_policy_import_is_outside_the_deadline.frozen",
       "kind": "test",
-      "line": 486,
+      "line": 498,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port.test_frozen_policy_import_is_outside_the_deadline.frozen"
     },
@@ -394153,7 +394338,7 @@
     {
       "id": "symbol:tests.test_jev_router_port.test_more_python_gates_precede_jev",
       "kind": "test",
-      "line": 503,
+      "line": 515,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port.test_more_python_gates_precede_jev"
     },
@@ -394237,7 +394422,7 @@
     {
       "id": "symbol:tests.test_jev_router_port.test_shadow_classify_failure_still_observed",
       "kind": "test",
-      "line": 514,
+      "line": 526,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port.test_shadow_classify_failure_still_observed"
     },
@@ -394251,7 +394436,7 @@
     {
       "id": "symbol:tests.test_jev_router_port.test_shadow_does_not_mutate_state",
       "kind": "test",
-      "line": 522,
+      "line": 534,
       "path": "tests/test_jev_router_port.py",
       "qualified_name": "tests.test_jev_router_port.test_shadow_does_not_mutate_state"
     },
@@ -412947,5 +413132,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:a4367c57681111970ba6a2cd73b59d422e1532861507875e86f2a41e2c394c28"
+  "source_tree_hash": "sha256:75479cf2b66bec1fceeb3da76dc307e9cb19dcccde234d276265af4d899d1fd3"
 }

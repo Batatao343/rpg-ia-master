@@ -4884,7 +4884,7 @@ specs:
   lineage_note: Authored from revisão SPEC-272 2026-10-18 (combat.no_progress no playtest combate 200t); draft awaiting approval
 - id: SPEC-277
   slug: evals-cli-traceback
-  status: draft
+  status: done
   path: specs/SPEC-277-evals-cli-traceback.md
   created_commit: 971e5cbb77a642354087dfb45f4da4e30807c741
   created_at: '2026-10-19T10:11:22-03:00'
