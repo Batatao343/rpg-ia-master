@@ -425,7 +425,10 @@ def begin(state: Mapping[str, Any], action: str, *,
     # otherwise the first turn spuriously times out instead of e.g. "configuration".
     _frozen()
     if backend is None:
-        warm_client()  # SPEC-281: SSL/pool fora do prazo de 1 s
+        try:
+            warm_client()  # SPEC-281: SSL/pool fora do prazo de 1 s
+        except Exception:  # silent-ok: o worker refaz e cai em outcome "error" -> CLASSIFY
+            pass  # build failure must never break the turn (same as before SPEC-281)
     started = time.monotonic()
     from observability.telemetry import contextualize  # SPEC-240: request_id/action_ref na thread
     future = _pool().submit(contextualize(_evaluate), dict(state), action, backend, key)

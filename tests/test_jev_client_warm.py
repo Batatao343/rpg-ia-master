@@ -38,10 +38,6 @@ def test_client_built_before_deadline_clock(monkeypatch: pytest.MonkeyPatch) -> 
     monkeypatch.setattr(jev_rollout, "_jev_switched_off", lambda: False)
     monkeypatch.setattr(jev_rollout, "JEV_DEADLINE_SECONDS", 0.2)  # < construção (0.4 s)
 
-    class _Backend:
-        def decide(self, request, *, idempotency_key):
-            raise RuntimeError("stop")
-
     # backend=None => caminho de produção (_default_backend dentro do worker).
     t0 = time.monotonic()
     pending = jev_rollout.begin({}, "ando")
@@ -52,6 +48,7 @@ def test_client_built_before_deadline_clock(monkeypatch: pytest.MonkeyPatch) -> 
     # O relógio só começou depois: a espera não inclui os 0.4 s de construção.
     assert time.monotonic() - pending._started < 0.2
     assert jev_rollout._client is not None
+    pending._future.result(timeout=10)  # no worker outliving the test (would rebuild a real client)
 
 
 def test_warm_is_singleton(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -70,3 +67,21 @@ def test_injected_backend_skips_warm(monkeypatch: pytest.MonkeyPatch) -> None:
 
     assert jev_rollout.begin({}, "ando", backend=_B()) is not None
     assert _SlowClient.built == 0
+
+
+def test_build_failure_does_not_break_turn(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Falha ao construir o client nunca levanta no router: cai em outcome de erro -> CLASSIFY."""
+    monkeypatch.setenv("RPG_JEV_ROUTER_MODE", "shadow")
+    monkeypatch.setattr(jev_rollout, "_jev_switched_off", lambda: False)
+
+    class _Broken:
+        def __init__(self) -> None:
+            raise OSError("ssl store unavailable")
+
+    import httpx
+    monkeypatch.setattr(httpx, "Client", _Broken)
+    pending = jev_rollout.begin({}, "ando")
+    assert pending is not None
+    evaluation = pending._future.result(timeout=10)
+    assert evaluation.outcome != "covered"
+    assert jev_rollout._client is None
