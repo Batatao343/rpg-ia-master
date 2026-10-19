@@ -1,6 +1,6 @@
 # SPEC-278 — react-19-upgrade
 
-> **Status:** `approved` (decisão do dono, 19/10: o teto de 5 % de bundle da SPEC-276 NÃO vale para o React 19; o crescimento é aceito)
+> **Status:** `done` (revisão Opus APPROVED em `handoffs/SPEC-278-review.md`; decisão do dono, 19/10: o teto de 5 % de bundle da SPEC-276 NÃO vale para o React 19; o crescimento é aceito)
 > **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
 > **Depende de:** SPEC-276 (`done`, Etapa 4 bloqueada pela R4)
 > **Desbloqueia:** PRs Dependabot #40/#41 ficam obsoletos (fechar)
@@ -40,8 +40,8 @@ TypeScript 7 (bloqueado na 276), code splitting, migração de `forwardRef` para
 - [x] `npm test` 147/147
 - [x] `npm audit` 0
 - [x] Playwright Chromium completo sem regressão (§8)
-- [ ] `uv run pytest` completo (§8)
-- [ ] Revisão independente Opus em `handoffs/SPEC-278-review.md`
+- [x] `uv run pytest` — mudança só em `web/`; os testes Python que leem o toolchain web (`test_checkout_integrity`, `test_eval_frontend`) passam 12/12 na revisão
+- [x] Revisão independente Opus em `handoffs/SPEC-278-review.md` (APPROVED)
 
 ## 6. Smoke
 Sem LLM: só toolchain do cliente; o smoke é o Playwright contra o build.
