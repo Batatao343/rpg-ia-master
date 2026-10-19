@@ -14,6 +14,10 @@ import AxeBuilder from "@axe-core/playwright";
 import type { Locator, Page } from "@playwright/test";
 import { test, expect, DeterministicBackend } from "./fixtures";
 
+// SPEC-282: cada jornada leva 4-12 s sozinha (M07 roda axe 7x), mas sob CPU disputada (runs paralelos,
+// CI) passava de 30 s e estourava o timeout default. Teto maior so no tempo; a verificacao nao muda.
+test.describe.configure({ timeout: 90_000 });
+
 const SURFACES = ["Chat", "Codex", "Personagem", "Combate", "Bestiário", "Mapa"] as const;
 const CONTEXT = SURFACES.slice(1);
 type Surface = (typeof SURFACES)[number];

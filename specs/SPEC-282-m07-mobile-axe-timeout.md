@@ -1,68 +1,22 @@
-# SPEC-282 — m07-mobile-axe-timeout
-
-> **Status:** `draft`
-> **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
-> **Depende de:** <specs anteriores que precisam estar `done`>
-> **Desbloqueia:** <specs/features que dependem desta>
-
 ---
+id: SPEC-282
+status: done
+---
+# SPEC-282 — Timeout das jornadas mobile (M07 axe, M02/M06)
 
-## 1. Contexto & Objetivo
+Status: `done` (aprovada pelo dono em 19/10: "tudo que nao exige acao externa dele").
 
-Por que esta spec existe. Qual problema resolve. 2-4 parágrafos no máximo.
-Referência ao princípio de arquitetura relevante (ver `ROADMAP.md` § Princípios).
+## Achado
+`web/e2e/mobile-single-pane.spec.ts` M07 dava timeout na analise axe nas duas viewports; M02/M06 falhavam esporadicamente.
 
-## 2. Requisitos
+## Causa real
+Nao e axe lento nem DOM grande nem animacao: sozinho, M07 passa em ~12 s (7 analises axe, <1 s cada; M02 sem axe leva 9,5 s) e nao ha
+animacao rodando (o proprio teste afirma 0). O timeout default de 30 s por teste estoura quando a CPU esta disputada (runs paralelos de
+outros agentes: o arquivo inteiro levou 2,7 min em vez de 56 s). Sem defeito de a11y/performance do app.
 
-Numerados, testáveis. Cada requisito deve poder virar assert.
+## Correcao
+`test.describe.configure({ timeout: 90_000 })` no arquivo. Verificacao de a11y inalterada (serious/critical continuam bloqueando).
+Nenhum arquivo protegido tocado.
 
-- **R1** — ...
-- **R2** — ...
-
-### Fora de escopo
-
-Lista explícita do que esta spec NÃO cobre (anti-scope-creep).
-
-## 3. Design técnico
-
-Detalhe suficiente para uma sessão futura de IA implementar **sem reler o roadmap**:
-
-- **Arquivos novos** — caminho + responsabilidade
-- **Arquivos alterados** — o que muda em cada um
-- **Schemas** — Pydantic/TypedDict completos (campos, tipos, defaults)
-- **Assinaturas** — funções públicas com tipos
-- **Formatos de dados** — JSON/frontmatter com exemplo real (usar IDs canônicos do projeto, não inventados)
-
-## 4. Plano passo a passo
-
-Etapas ordenadas e testáveis. **Testes primeiro** (TDD): cada etapa nomeia os
-testes a escrever ANTES do código e o que cada um asserta.
-
-### Etapa N — <nome>
-
-1. **Testes** (`tests/test_<...>.py`): `test_x` asserta ...; `test_y` asserta ...
-2. **Implementação:** ...
-3. **Verificação:** `uv run pytest` verde.
-
-## 5. Critérios de aceite
-
-Checklist objetivo. A spec só vira `done` com todos marcados.
-
-- [ ] ...
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo (try/except ou isinstance)
-- [ ] Saves antigos continuam carregando
-
-## 6. Smoke test com LLM real
-
-Checklist manual curto (3-5 requests, dentro da quota Gemini de 20/dia/modelo).
-MockLLM esconde bugs de mapeamento de campo — este passo é obrigatório antes de `done`.
-
-1. ...
-2. ...
-
-## 7. Riscos & compatibilidade
-
-- Compatibilidade com saves antigos: ...
-- Comportamento no MockLLM / FallbackLLM: ...
-- Impacto em quota/latência: ...
+## Criterios de aceite
+- [x] M01-M07 x 2 viewports verdes em repeticoes (ver hand-back).
