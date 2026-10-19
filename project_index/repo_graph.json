@@ -1,5 +1,5 @@
 {
-  "commit_sha": "2e48322a1ff1143276a9610acd6dcd4c766e6a53",
+  "commit_sha": "d7878b8e496ef65fd8a9f7fa1384a93f8eab6e46",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -2238,6 +2238,39 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "scripts/dev/eval_publish.py",
+        "line": 1
+      },
+      "source": "file:scripts/dev/eval_publish.py",
+      "target": "module:scripts.dev.eval_publish",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/ruff_baseline.py",
+        "line": 1
+      },
+      "source": "file:scripts/dev/ruff_baseline.py",
+      "target": "module:scripts.dev.ruff_baseline",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/transcript_stats.py",
+        "line": 1
+      },
+      "source": "file:scripts/dev/transcript_stats.py",
+      "target": "module:scripts.dev.transcript_stats",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "scripts/dev_stack.py",
         "line": 1
       },
@@ -2606,6 +2639,17 @@
       },
       "source": "file:scripts/smoke_local_profile.py",
       "target": "module:scripts.smoke_local_profile",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 1
+      },
+      "source": "file:scripts/spec_index.py",
+      "target": "module:scripts.spec_index",
       "type": "contains"
     },
     {
@@ -8260,6 +8304,17 @@
       },
       "source": "file:tests/test_dev_stack.py",
       "target": "module:tests.test_dev_stack",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_dev_tooling.py",
+        "line": 1
+      },
+      "source": "file:tests/test_dev_tooling.py",
+      "target": "module:tests.test_dev_tooling",
       "type": "contains"
     },
     {
@@ -17445,6 +17500,17 @@
       },
       "source": "file:tests/test_spec_index.py",
       "target": "module:tests.test_spec_index",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 1
+      },
+      "source": "file:tests/test_spec_index_tool.py",
+      "target": "module:tests.test_spec_index_tool",
       "type": "contains"
     },
     {
@@ -36944,7 +37010,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 185
+        "line": 190
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator.PythonUnit",
@@ -36955,7 +37021,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 490
+        "line": 495
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator._CallCollector",
@@ -36966,7 +37032,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 206
+        "line": 211
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator._WriteCollector",
@@ -36977,7 +37043,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 138
+        "line": 143
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator._absolute_import_from",
@@ -36988,7 +37054,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 198
+        "line": 203
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator._bound_names",
@@ -37010,7 +37076,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 167
+        "line": 172
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator._edge",
@@ -37021,7 +37087,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 384
+        "line": 389
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator._endpoint_decorators",
@@ -37032,7 +37098,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 98
+        "line": 103
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator._excluded",
@@ -37043,7 +37109,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 309
+        "line": 314
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator._fastapi_bindings",
@@ -37054,7 +37120,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 499
+        "line": 504
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator._function_nodes",
@@ -37087,7 +37153,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 507
+        "line": 512
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator._graph_schema_hash",
@@ -37098,7 +37164,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 745
+        "line": 750
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator._load_curated",
@@ -37109,7 +37175,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 130
+        "line": 135
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator._module_name",
@@ -37120,7 +37186,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 151
+        "line": 156
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator._node",
@@ -37131,7 +37197,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 404
+        "line": 409
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator._parse_python",
@@ -37142,7 +37208,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 303
+        "line": 308
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator._possible_writes",
@@ -37153,7 +37219,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 791
+        "line": 796
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator._read_json",
@@ -37175,7 +37241,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 118
+        "line": 123
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator._source_tree_hash",
@@ -37186,7 +37252,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 776
+        "line": 781
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator.build_index",
@@ -37197,7 +37263,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 801
+        "line": 806
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator.check_index",
@@ -37208,7 +37274,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 103
+        "line": 108
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator.discover_files",
@@ -37219,7 +37285,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 815
+        "line": 820
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator.freshness_status",
@@ -37230,7 +37296,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 518
+        "line": 523
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator.generate",
@@ -37241,7 +37307,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 755
+        "line": 760
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator.validate_curated_files",
@@ -37252,7 +37318,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 656
+        "line": 661
       },
       "source": "module:project_index.generator",
       "target": "symbol:project_index.generator.validate_graph",
@@ -38906,6 +38972,116 @@
       },
       "source": "module:scripts.content_report",
       "target": "symbol:scripts.content_report.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/eval_publish.py",
+        "line": 27
+      },
+      "source": "module:scripts.dev.eval_publish",
+      "target": "module:scripts.ci_eval_scope",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/eval_publish.py",
+        "line": 33
+      },
+      "source": "module:scripts.dev.eval_publish",
+      "target": "symbol:scripts.dev.eval_publish._run",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/eval_publish.py",
+        "line": 38
+      },
+      "source": "module:scripts.dev.eval_publish",
+      "target": "symbol:scripts.dev.eval_publish.approval_command",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/eval_publish.py",
+        "line": 46
+      },
+      "source": "module:scripts.dev.eval_publish",
+      "target": "symbol:scripts.dev.eval_publish.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/ruff_baseline.py",
+        "line": 39
+      },
+      "source": "module:scripts.dev.ruff_baseline",
+      "target": "symbol:scripts.dev.ruff_baseline.current_debt",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/ruff_baseline.py",
+        "line": 64
+      },
+      "source": "module:scripts.dev.ruff_baseline",
+      "target": "symbol:scripts.dev.ruff_baseline.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/ruff_baseline.py",
+        "line": 31
+      },
+      "source": "module:scripts.dev.ruff_baseline",
+      "target": "symbol:scripts.dev.ruff_baseline.render",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/transcript_stats.py",
+        "line": 30
+      },
+      "source": "module:scripts.dev.transcript_stats",
+      "target": "symbol:scripts.dev.transcript_stats._text",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/transcript_stats.py",
+        "line": 84
+      },
+      "source": "module:scripts.dev.transcript_stats",
+      "target": "symbol:scripts.dev.transcript_stats.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/transcript_stats.py",
+        "line": 38
+      },
+      "source": "module:scripts.dev.transcript_stats",
+      "target": "symbol:scripts.dev.transcript_stats.scan",
       "type": "defines"
     },
     {
@@ -41865,6 +42041,171 @@
       },
       "source": "module:scripts.smoke_local_profile",
       "target": "symbol:scripts.smoke_local_profile.run",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 52
+      },
+      "source": "module:scripts.spec_index",
+      "target": "symbol:scripts.spec_index.Spec",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 47
+      },
+      "source": "module:scripts.spec_index",
+      "target": "symbol:scripts.spec_index.SpecIndexError",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 128
+      },
+      "source": "module:scripts.spec_index",
+      "target": "symbol:scripts.spec_index._created",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 61
+      },
+      "source": "module:scripts.spec_index",
+      "target": "symbol:scripts.spec_index._git",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 103
+      },
+      "source": "module:scripts.spec_index",
+      "target": "symbol:scripts.spec_index._load_index",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 72
+      },
+      "source": "module:scripts.spec_index",
+      "target": "symbol:scripts.spec_index._title",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 136
+      },
+      "source": "module:scripts.spec_index",
+      "target": "symbol:scripts.spec_index.build",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 261
+      },
+      "source": "module:scripts.spec_index",
+      "target": "symbol:scripts.spec_index.create_spec",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 276
+      },
+      "source": "module:scripts.spec_index",
+      "target": "symbol:scripts.spec_index.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 249
+      },
+      "source": "module:scripts.spec_index",
+      "target": "symbol:scripts.spec_index.next_id",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 110
+      },
+      "source": "module:scripts.spec_index",
+      "target": "symbol:scripts.spec_index.problems",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 211
+      },
+      "source": "module:scripts.spec_index",
+      "target": "symbol:scripts.spec_index.recent",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 80
+      },
+      "source": "module:scripts.spec_index",
+      "target": "symbol:scripts.spec_index.scan",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 203
+      },
+      "source": "module:scripts.spec_index",
+      "target": "symbol:scripts.spec_index.summary",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 236
+      },
+      "source": "module:scripts.spec_index",
+      "target": "symbol:scripts.spec_index.write_recent",
       "type": "defines"
     },
     {
@@ -60781,7 +61122,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/conftest.py",
-        "line": 80
+        "line": 106
       },
       "source": "module:tests.conftest",
       "target": "symbol:tests.conftest._force_request_rls",
@@ -60792,7 +61133,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/conftest.py",
-        "line": 34
+        "line": 55
       },
       "source": "module:tests.conftest",
       "target": "symbol:tests.conftest._isolated_runtime_cache",
@@ -60803,7 +61144,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/conftest.py",
-        "line": 47
+        "line": 68
       },
       "source": "module:tests.conftest",
       "target": "symbol:tests.conftest._isolated_saves_and_memory",
@@ -60814,7 +61155,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/conftest.py",
-        "line": 28
+        "line": 49
       },
       "source": "module:tests.conftest",
       "target": "symbol:tests.conftest._no_exposure_markers",
@@ -60825,10 +61166,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/conftest.py",
-        "line": 65
+        "line": 91
       },
       "source": "module:tests.conftest",
       "target": "symbol:tests.conftest._no_real_embeddings",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/conftest.py",
+        "line": 28
+      },
+      "source": "module:tests.conftest",
+      "target": "symbol:tests.conftest.pytest_configure",
       "type": "defines"
     },
     {
@@ -77054,6 +77406,61 @@
       },
       "source": "module:tests.test_dev_stack",
       "target": "symbol:tests.test_dev_stack.test_status_remove_segredos_e_credencial_do_dsn",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_dev_tooling.py",
+        "line": 19
+      },
+      "source": "module:tests.test_dev_tooling",
+      "target": "symbol:tests.test_dev_tooling._frontmatter",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_dev_tooling.py",
+        "line": 35
+      },
+      "source": "module:tests.test_dev_tooling",
+      "target": "symbol:tests.test_dev_tooling.test_agent_types_pin_a_model",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_dev_tooling.py",
+        "line": 48
+      },
+      "source": "module:tests.test_dev_tooling",
+      "target": "symbol:tests.test_dev_tooling.test_eval_publish_prints_owner_approval_command",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_dev_tooling.py",
+        "line": 41
+      },
+      "source": "module:tests.test_dev_tooling",
+      "target": "symbol:tests.test_dev_tooling.test_settings_json_is_valid_and_hook_is_checkout_relative",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_dev_tooling.py",
+        "line": 27
+      },
+      "source": "module:tests.test_dev_tooling",
+      "target": "symbol:tests.test_dev_tooling.test_versioned_skills_have_frontmatter_and_no_hardcoded_checkout",
       "type": "defines"
     },
     {
@@ -102735,7 +103142,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_project_index.py",
-        "line": 226
+        "line": 239
       },
       "source": "module:tests.test_project_index",
       "target": "symbol:tests.test_project_index.test_committing_generated_artifacts_warns_without_infinite_staleness",
@@ -102768,7 +103175,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_project_index.py",
-        "line": 239
+        "line": 252
       },
       "source": "module:tests.test_project_index",
       "target": "symbol:tests.test_project_index.test_real_index_excludes_content_and_queries_are_bounded",
@@ -102779,10 +103186,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_project_index.py",
-        "line": 255
+        "line": 268
       },
       "source": "module:tests.test_project_index",
       "target": "symbol:tests.test_project_index.test_real_index_locates_symbols_tests_and_curated_state",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_project_index.py",
+        "line": 226
+      },
+      "source": "module:tests.test_project_index",
+      "target": "symbol:tests.test_project_index.test_untracked_files_do_not_make_index_stale",
       "type": "defines"
     },
     {
@@ -106739,7 +107157,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 118
+        "line": 123
       },
       "source": "module:tests.test_session_boundary_authfail",
       "target": "symbol:tests.test_session_boundary_authfail.test_account_removal_and_global_revoke_forget_the_user",
@@ -106750,7 +107168,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 81
+        "line": 86
       },
       "source": "module:tests.test_session_boundary_authfail",
       "target": "symbol:tests.test_session_boundary_authfail.test_cache_expires_and_can_be_disabled",
@@ -106761,7 +107179,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 170
+        "line": 175
       },
       "source": "module:tests.test_session_boundary_authfail",
       "target": "symbol:tests.test_session_boundary_authfail.test_cache_never_outlives_the_token_exp",
@@ -106772,7 +107190,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 67
+        "line": 72
       },
       "source": "module:tests.test_session_boundary_authfail",
       "target": "symbol:tests.test_session_boundary_authfail.test_clock_skew_tolerance_accepts_just_expired",
@@ -106783,7 +107201,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 160
+        "line": 165
       },
       "source": "module:tests.test_session_boundary_authfail",
       "target": "symbol:tests.test_session_boundary_authfail.test_deeply_nested_payload_is_unauthorized_not_500",
@@ -106794,7 +107212,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 104
+        "line": 109
       },
       "source": "module:tests.test_session_boundary_authfail",
       "target": "symbol:tests.test_session_boundary_authfail.test_logout_and_refresh_invalidate_the_cache",
@@ -106805,7 +107223,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 59
+        "line": 64
       },
       "source": "module:tests.test_session_boundary_authfail",
       "target": "symbol:tests.test_session_boundary_authfail.test_malformed_or_foreign_tokens_never_reach_the_network",
@@ -106816,7 +107234,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 94
+        "line": 99
       },
       "source": "module:tests.test_session_boundary_authfail",
       "target": "symbol:tests.test_session_boundary_authfail.test_remote_rejection_is_not_cached",
@@ -106827,7 +107245,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 73
+        "line": 78
       },
       "source": "module:tests.test_session_boundary_authfail",
       "target": "symbol:tests.test_session_boundary_authfail.test_same_valid_token_is_verified_remotely_once_per_ttl",
@@ -106838,7 +107256,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 129
+        "line": 134
       },
       "source": "module:tests.test_session_boundary_authfail",
       "target": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit",
@@ -114157,6 +114575,105 @@
       },
       "source": "module:tests.test_spec_index",
       "target": "symbol:tests.test_spec_index.test_migration_tie_done_evidence_relative_references_and_idempotence",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 39
+      },
+      "source": "module:tests.test_spec_index_tool",
+      "target": "symbol:tests.test_spec_index_tool._git",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 49
+      },
+      "source": "module:tests.test_spec_index_tool",
+      "target": "symbol:tests.test_spec_index_tool._spec",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 54
+      },
+      "source": "module:tests.test_spec_index_tool",
+      "target": "symbol:tests.test_spec_index_tool.repo",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 71
+      },
+      "source": "module:tests.test_spec_index_tool",
+      "target": "symbol:tests.test_spec_index_tool.test_build_edits_only_status_line_and_appends_new_specs",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 88
+      },
+      "source": "module:tests.test_spec_index_tool",
+      "target": "symbol:tests.test_spec_index_tool.test_build_refuses_to_drop_indexed_spec",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 130
+      },
+      "source": "module:tests.test_spec_index_tool",
+      "target": "symbol:tests.test_spec_index_tool.test_estado_stays_within_budget",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 108
+      },
+      "source": "module:tests.test_spec_index_tool",
+      "target": "symbol:tests.test_spec_index_tool.test_next_id_sees_reserved_branches_and_creates_from_template",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 124
+      },
+      "source": "module:tests.test_spec_index_tool",
+      "target": "symbol:tests.test_spec_index_tool.test_real_index_matches_spec_headers",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 95
+      },
+      "source": "module:tests.test_spec_index_tool",
+      "target": "symbol:tests.test_spec_index_tool.test_recent_writes_between_markers",
       "type": "defines"
     },
     {
@@ -159814,7 +160331,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 491
+        "line": 496
       },
       "source": "symbol:project_index.generator._CallCollector",
       "target": "symbol:project_index.generator._CallCollector.__init__",
@@ -159825,7 +160342,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 494
+        "line": 499
       },
       "source": "symbol:project_index.generator._CallCollector",
       "target": "symbol:project_index.generator._CallCollector.visit_Call",
@@ -159836,7 +160353,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 209
+        "line": 214
       },
       "source": "symbol:project_index.generator._WriteCollector",
       "target": "symbol:project_index.generator._WriteCollector.__init__",
@@ -159847,7 +160364,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 236
+        "line": 241
       },
       "source": "symbol:project_index.generator._WriteCollector",
       "target": "symbol:project_index.generator._WriteCollector._visit_function_header",
@@ -159858,7 +160375,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 261
+        "line": 266
       },
       "source": "symbol:project_index.generator._WriteCollector",
       "target": "symbol:project_index.generator._WriteCollector.visit_AsyncFunctionDef",
@@ -159869,7 +160386,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 217
+        "line": 222
       },
       "source": "symbol:project_index.generator._WriteCollector",
       "target": "symbol:project_index.generator._WriteCollector.visit_Attribute",
@@ -159880,7 +160397,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 226
+        "line": 231
       },
       "source": "symbol:project_index.generator._WriteCollector",
       "target": "symbol:project_index.generator._WriteCollector.visit_Call",
@@ -159891,7 +160408,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 265
+        "line": 270
       },
       "source": "symbol:project_index.generator._WriteCollector",
       "target": "symbol:project_index.generator._WriteCollector.visit_ClassDef",
@@ -159902,7 +160419,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 283
+        "line": 288
       },
       "source": "symbol:project_index.generator._WriteCollector",
       "target": "symbol:project_index.generator._WriteCollector.visit_ExceptHandler",
@@ -159913,7 +160430,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 257
+        "line": 262
       },
       "source": "symbol:project_index.generator._WriteCollector",
       "target": "symbol:project_index.generator._WriteCollector.visit_FunctionDef",
@@ -159924,7 +160441,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 277
+        "line": 282
       },
       "source": "symbol:project_index.generator._WriteCollector",
       "target": "symbol:project_index.generator._WriteCollector.visit_Import",
@@ -159935,7 +160452,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 280
+        "line": 285
       },
       "source": "symbol:project_index.generator._WriteCollector",
       "target": "symbol:project_index.generator._WriteCollector.visit_ImportFrom",
@@ -159946,7 +160463,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 274
+        "line": 279
       },
       "source": "symbol:project_index.generator._WriteCollector",
       "target": "symbol:project_index.generator._WriteCollector.visit_Lambda",
@@ -159957,7 +160474,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 288
+        "line": 293
       },
       "source": "symbol:project_index.generator._WriteCollector",
       "target": "symbol:project_index.generator._WriteCollector.visit_MatchAs",
@@ -159968,7 +160485,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 297
+        "line": 302
       },
       "source": "symbol:project_index.generator._WriteCollector",
       "target": "symbol:project_index.generator._WriteCollector.visit_MatchMapping",
@@ -159979,7 +160496,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 293
+        "line": 298
       },
       "source": "symbol:project_index.generator._WriteCollector",
       "target": "symbol:project_index.generator._WriteCollector.visit_MatchStar",
@@ -159990,7 +160507,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 213
+        "line": 218
       },
       "source": "symbol:project_index.generator._WriteCollector",
       "target": "symbol:project_index.generator._WriteCollector.visit_Name",
@@ -160001,7 +160518,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 202
+        "line": 207
       },
       "source": "symbol:project_index.generator._bound_names",
       "target": "symbol:project_index.generator._bound_names",
@@ -160012,7 +160529,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 380
+        "line": 385
       },
       "source": "symbol:project_index.generator._fastapi_bindings",
       "target": "symbol:project_index.generator._bound_names",
@@ -160023,7 +160540,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 317
+        "line": 322
       },
       "source": "symbol:project_index.generator._fastapi_bindings",
       "target": "symbol:project_index.generator._fastapi_bindings.shadow",
@@ -160034,7 +160551,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 324
+        "line": 329
       },
       "source": "symbol:project_index.generator._fastapi_bindings",
       "target": "symbol:project_index.generator._possible_writes",
@@ -160045,7 +160562,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 330
+        "line": 335
       },
       "source": "symbol:project_index.generator._fastapi_bindings",
       "target": "symbol:project_index.generator._possible_writes",
@@ -160056,7 +160573,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 363
+        "line": 368
       },
       "source": "symbol:project_index.generator._fastapi_bindings",
       "target": "symbol:project_index.generator._possible_writes",
@@ -160067,7 +160584,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 366
+        "line": 371
       },
       "source": "symbol:project_index.generator._fastapi_bindings",
       "target": "symbol:project_index.generator._possible_writes",
@@ -160089,7 +160606,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 91
+        "line": 96
       },
       "source": "symbol:project_index.generator._git_visible_files",
       "target": "symbol:project_index.generator.ProjectIndexError",
@@ -160100,7 +160617,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 512
+        "line": 517
       },
       "source": "symbol:project_index.generator._graph_schema_hash",
       "target": "symbol:project_index.generator.ProjectIndexError",
@@ -160111,7 +160628,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 514
+        "line": 519
       },
       "source": "symbol:project_index.generator._graph_schema_hash",
       "target": "symbol:project_index.generator.ProjectIndexError",
@@ -160122,7 +160639,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 515
+        "line": 520
       },
       "source": "symbol:project_index.generator._graph_schema_hash",
       "target": "symbol:project_index.generator._canonical_json",
@@ -160133,7 +160650,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 515
+        "line": 520
       },
       "source": "symbol:project_index.generator._graph_schema_hash",
       "target": "symbol:project_index.generator._sha256",
@@ -160144,7 +160661,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 749
+        "line": 754
       },
       "source": "symbol:project_index.generator._load_curated",
       "target": "symbol:project_index.generator.ProjectIndexError",
@@ -160155,76 +160672,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 751
+        "line": 756
       },
       "source": "symbol:project_index.generator._load_curated",
       "target": "symbol:project_index.generator.ProjectIndexError",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "project_index/generator.py",
-        "line": 410
-      },
-      "source": "symbol:project_index.generator._parse_python",
-      "target": "symbol:project_index.generator.ProjectIndexError",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "project_index/generator.py",
-        "line": 476
-      },
-      "source": "symbol:project_index.generator._parse_python",
-      "target": "symbol:project_index.generator.PythonUnit",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "project_index/generator.py",
-        "line": 421
-      },
-      "source": "symbol:project_index.generator._parse_python",
-      "target": "symbol:project_index.generator._absolute_import_from",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "project_index/generator.py",
-        "line": 449
-      },
-      "source": "symbol:project_index.generator._parse_python",
-      "target": "symbol:project_index.generator._edge",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "project_index/generator.py",
-        "line": 459
-      },
-      "source": "symbol:project_index.generator._parse_python",
-      "target": "symbol:project_index.generator._edge",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "project_index/generator.py",
-        "line": 453
-      },
-      "source": "symbol:project_index.generator._parse_python",
-      "target": "symbol:project_index.generator._endpoint_decorators",
       "type": "calls"
     },
     {
@@ -160235,6 +160686,72 @@
         "line": 415
       },
       "source": "symbol:project_index.generator._parse_python",
+      "target": "symbol:project_index.generator.ProjectIndexError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "project_index/generator.py",
+        "line": 481
+      },
+      "source": "symbol:project_index.generator._parse_python",
+      "target": "symbol:project_index.generator.PythonUnit",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "project_index/generator.py",
+        "line": 426
+      },
+      "source": "symbol:project_index.generator._parse_python",
+      "target": "symbol:project_index.generator._absolute_import_from",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "project_index/generator.py",
+        "line": 454
+      },
+      "source": "symbol:project_index.generator._parse_python",
+      "target": "symbol:project_index.generator._edge",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "project_index/generator.py",
+        "line": 464
+      },
+      "source": "symbol:project_index.generator._parse_python",
+      "target": "symbol:project_index.generator._edge",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "project_index/generator.py",
+        "line": 458
+      },
+      "source": "symbol:project_index.generator._parse_python",
+      "target": "symbol:project_index.generator._endpoint_decorators",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "project_index/generator.py",
+        "line": 420
+      },
+      "source": "symbol:project_index.generator._parse_python",
       "target": "symbol:project_index.generator._fastapi_bindings",
       "type": "calls"
     },
@@ -160243,7 +160760,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 406
+        "line": 411
       },
       "source": "symbol:project_index.generator._parse_python",
       "target": "symbol:project_index.generator._module_name",
@@ -160254,7 +160771,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 448
+        "line": 453
       },
       "source": "symbol:project_index.generator._parse_python",
       "target": "symbol:project_index.generator._node",
@@ -160265,7 +160782,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 457
+        "line": 462
       },
       "source": "symbol:project_index.generator._parse_python",
       "target": "symbol:project_index.generator._node",
@@ -160276,7 +160793,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 432
+        "line": 437
       },
       "source": "symbol:project_index.generator._parse_python",
       "target": "symbol:project_index.generator._parse_python.visit_def",
@@ -160287,7 +160804,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 449
+        "line": 454
       },
       "source": "symbol:project_index.generator._parse_python.visit_def",
       "target": "symbol:project_index.generator._edge",
@@ -160298,7 +160815,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 459
+        "line": 464
       },
       "source": "symbol:project_index.generator._parse_python.visit_def",
       "target": "symbol:project_index.generator._edge",
@@ -160309,7 +160826,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 453
+        "line": 458
       },
       "source": "symbol:project_index.generator._parse_python.visit_def",
       "target": "symbol:project_index.generator._endpoint_decorators",
@@ -160320,7 +160837,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 448
+        "line": 453
       },
       "source": "symbol:project_index.generator._parse_python.visit_def",
       "target": "symbol:project_index.generator._node",
@@ -160331,7 +160848,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 457
+        "line": 462
       },
       "source": "symbol:project_index.generator._parse_python.visit_def",
       "target": "symbol:project_index.generator._node",
@@ -160342,7 +160859,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 304
+        "line": 309
       },
       "source": "symbol:project_index.generator._possible_writes",
       "target": "symbol:project_index.generator._WriteCollector",
@@ -160353,7 +160870,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 795
+        "line": 800
       },
       "source": "symbol:project_index.generator._read_json",
       "target": "symbol:project_index.generator.ProjectIndexError",
@@ -160364,7 +160881,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 797
+        "line": 802
       },
       "source": "symbol:project_index.generator._read_json",
       "target": "symbol:project_index.generator.ProjectIndexError",
@@ -160375,7 +160892,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 779
+        "line": 784
       },
       "source": "symbol:project_index.generator.build_index",
       "target": "symbol:project_index.generator.generate",
@@ -160386,7 +160903,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 778
+        "line": 783
       },
       "source": "symbol:project_index.generator.build_index",
       "target": "symbol:project_index.generator.validate_curated_files",
@@ -160397,7 +160914,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 808
+        "line": 813
       },
       "source": "symbol:project_index.generator.check_index",
       "target": "symbol:project_index.generator.ProjectIndexError",
@@ -160408,32 +160925,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 811
+        "line": 816
       },
       "source": "symbol:project_index.generator.check_index",
       "target": "symbol:project_index.generator.ProjectIndexError",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "project_index/generator.py",
-        "line": 804
-      },
-      "source": "symbol:project_index.generator.check_index",
-      "target": "symbol:project_index.generator._read_json",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "project_index/generator.py",
-        "line": 805
-      },
-      "source": "symbol:project_index.generator.check_index",
-      "target": "symbol:project_index.generator._read_json",
       "type": "calls"
     },
     {
@@ -160444,6 +160939,28 @@
         "line": 809
       },
       "source": "symbol:project_index.generator.check_index",
+      "target": "symbol:project_index.generator._read_json",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "project_index/generator.py",
+        "line": 810
+      },
+      "source": "symbol:project_index.generator.check_index",
+      "target": "symbol:project_index.generator._read_json",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "project_index/generator.py",
+        "line": 814
+      },
+      "source": "symbol:project_index.generator.check_index",
       "target": "symbol:project_index.generator.generate",
       "type": "calls"
     },
@@ -160452,7 +160969,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 803
+        "line": 808
       },
       "source": "symbol:project_index.generator.check_index",
       "target": "symbol:project_index.generator.validate_curated_files",
@@ -160463,7 +160980,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 109
+        "line": 114
       },
       "source": "symbol:project_index.generator.discover_files",
       "target": "symbol:project_index.generator._excluded",
@@ -160474,7 +160991,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 105
+        "line": 110
       },
       "source": "symbol:project_index.generator.discover_files",
       "target": "symbol:project_index.generator._git_visible_files",
@@ -160485,7 +161002,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 818
+        "line": 823
       },
       "source": "symbol:project_index.generator.freshness_status",
       "target": "symbol:project_index.generator._git_head",
@@ -160496,7 +161013,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 600
+        "line": 605
       },
       "source": "symbol:project_index.generator.generate",
       "target": "symbol:project_index.generator._CallCollector",
@@ -160507,7 +161024,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 556
+        "line": 561
       },
       "source": "symbol:project_index.generator.generate",
       "target": "symbol:project_index.generator._absolute_import_from",
@@ -160518,7 +161035,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 620
+        "line": 625
       },
       "source": "symbol:project_index.generator.generate",
       "target": "symbol:project_index.generator._canonical_json",
@@ -160529,120 +161046,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 644
+        "line": 649
       },
       "source": "symbol:project_index.generator.generate",
       "target": "symbol:project_index.generator._canonical_json",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "project_index/generator.py",
-        "line": 536
-      },
-      "source": "symbol:project_index.generator.generate",
-      "target": "symbol:project_index.generator._edge",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "project_index/generator.py",
-        "line": 577
-      },
-      "source": "symbol:project_index.generator.generate",
-      "target": "symbol:project_index.generator._edge",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "project_index/generator.py",
-        "line": 581
-      },
-      "source": "symbol:project_index.generator.generate",
-      "target": "symbol:project_index.generator._edge",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "project_index/generator.py",
-        "line": 616
-      },
-      "source": "symbol:project_index.generator.generate",
-      "target": "symbol:project_index.generator._edge",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "project_index/generator.py",
-        "line": 591
-      },
-      "source": "symbol:project_index.generator.generate",
-      "target": "symbol:project_index.generator._function_nodes",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "project_index/generator.py",
-        "line": 521
-      },
-      "source": "symbol:project_index.generator.generate",
-      "target": "symbol:project_index.generator._git_head",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "project_index/generator.py",
-        "line": 645
-      },
-      "source": "symbol:project_index.generator.generate",
-      "target": "symbol:project_index.generator._graph_schema_hash",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "project_index/generator.py",
-        "line": 532
-      },
-      "source": "symbol:project_index.generator.generate",
-      "target": "symbol:project_index.generator._node",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "project_index/generator.py",
-        "line": 533
-      },
-      "source": "symbol:project_index.generator.generate",
-      "target": "symbol:project_index.generator._node",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "project_index/generator.py",
-        "line": 539
-      },
-      "source": "symbol:project_index.generator.generate",
-      "target": "symbol:project_index.generator._node",
       "type": "calls"
     },
     {
@@ -160653,6 +161060,83 @@
         "line": 541
       },
       "source": "symbol:project_index.generator.generate",
+      "target": "symbol:project_index.generator._edge",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "project_index/generator.py",
+        "line": 582
+      },
+      "source": "symbol:project_index.generator.generate",
+      "target": "symbol:project_index.generator._edge",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "project_index/generator.py",
+        "line": 586
+      },
+      "source": "symbol:project_index.generator.generate",
+      "target": "symbol:project_index.generator._edge",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "project_index/generator.py",
+        "line": 621
+      },
+      "source": "symbol:project_index.generator.generate",
+      "target": "symbol:project_index.generator._edge",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "project_index/generator.py",
+        "line": 596
+      },
+      "source": "symbol:project_index.generator.generate",
+      "target": "symbol:project_index.generator._function_nodes",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "project_index/generator.py",
+        "line": 526
+      },
+      "source": "symbol:project_index.generator.generate",
+      "target": "symbol:project_index.generator._git_head",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "project_index/generator.py",
+        "line": 650
+      },
+      "source": "symbol:project_index.generator.generate",
+      "target": "symbol:project_index.generator._graph_schema_hash",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "project_index/generator.py",
+        "line": 537
+      },
+      "source": "symbol:project_index.generator.generate",
       "target": "symbol:project_index.generator._node",
       "type": "calls"
     },
@@ -160661,7 +161145,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 530
+        "line": 538
+      },
+      "source": "symbol:project_index.generator.generate",
+      "target": "symbol:project_index.generator._node",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "project_index/generator.py",
+        "line": 544
+      },
+      "source": "symbol:project_index.generator.generate",
+      "target": "symbol:project_index.generator._node",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "project_index/generator.py",
+        "line": 546
+      },
+      "source": "symbol:project_index.generator.generate",
+      "target": "symbol:project_index.generator._node",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "project_index/generator.py",
+        "line": 535
       },
       "source": "symbol:project_index.generator.generate",
       "target": "symbol:project_index.generator._parse_python",
@@ -160672,7 +161189,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 644
+        "line": 649
       },
       "source": "symbol:project_index.generator.generate",
       "target": "symbol:project_index.generator._sha256",
@@ -160683,7 +161200,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 522
+        "line": 527
       },
       "source": "symbol:project_index.generator.generate",
       "target": "symbol:project_index.generator._source_tree_hash",
@@ -160694,7 +161211,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 520
+        "line": 525
       },
       "source": "symbol:project_index.generator.generate",
       "target": "symbol:project_index.generator.discover_files",
@@ -160705,7 +161222,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 636
+        "line": 641
       },
       "source": "symbol:project_index.generator.generate",
       "target": "symbol:project_index.generator.validate_graph",
@@ -160716,7 +161233,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 773
+        "line": 778
       },
       "source": "symbol:project_index.generator.validate_curated_files",
       "target": "symbol:project_index.generator.ProjectIndexError",
@@ -160727,7 +161244,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 757
+        "line": 762
       },
       "source": "symbol:project_index.generator.validate_curated_files",
       "target": "symbol:project_index.generator._load_curated",
@@ -160738,7 +161255,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 758
+        "line": 763
       },
       "source": "symbol:project_index.generator.validate_curated_files",
       "target": "symbol:project_index.generator._load_curated",
@@ -160749,7 +161266,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 759
+        "line": 764
       },
       "source": "symbol:project_index.generator.validate_curated_files",
       "target": "symbol:project_index.generator._load_curated",
@@ -160760,29 +161277,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 677
-      },
-      "source": "symbol:project_index.generator.validate_graph",
-      "target": "symbol:project_index.generator.ProjectIndexError",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "project_index/generator.py",
-        "line": 679
-      },
-      "source": "symbol:project_index.generator.validate_graph",
-      "target": "symbol:project_index.generator.ProjectIndexError",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "project_index/generator.py",
-        "line": 681
+        "line": 682
       },
       "source": "symbol:project_index.generator.validate_graph",
       "target": "symbol:project_index.generator.ProjectIndexError",
@@ -160804,7 +161299,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 688
+        "line": 686
       },
       "source": "symbol:project_index.generator.validate_graph",
       "target": "symbol:project_index.generator.ProjectIndexError",
@@ -160815,7 +161310,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 692
+        "line": 689
       },
       "source": "symbol:project_index.generator.validate_graph",
       "target": "symbol:project_index.generator.ProjectIndexError",
@@ -160826,7 +161321,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 704
+        "line": 693
       },
       "source": "symbol:project_index.generator.validate_graph",
       "target": "symbol:project_index.generator.ProjectIndexError",
@@ -160837,7 +161332,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 707
+        "line": 697
       },
       "source": "symbol:project_index.generator.validate_graph",
       "target": "symbol:project_index.generator.ProjectIndexError",
@@ -160848,7 +161343,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 713
+        "line": 709
       },
       "source": "symbol:project_index.generator.validate_graph",
       "target": "symbol:project_index.generator.ProjectIndexError",
@@ -160859,7 +161354,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 720
+        "line": 712
       },
       "source": "symbol:project_index.generator.validate_graph",
       "target": "symbol:project_index.generator.ProjectIndexError",
@@ -160870,7 +161365,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 722
+        "line": 718
       },
       "source": "symbol:project_index.generator.validate_graph",
       "target": "symbol:project_index.generator.ProjectIndexError",
@@ -160881,7 +161376,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 724
+        "line": 725
       },
       "source": "symbol:project_index.generator.validate_graph",
       "target": "symbol:project_index.generator.ProjectIndexError",
@@ -160892,7 +161387,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 740
+        "line": 727
       },
       "source": "symbol:project_index.generator.validate_graph",
       "target": "symbol:project_index.generator.ProjectIndexError",
@@ -160903,7 +161398,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "project_index/generator.py",
-        "line": 742
+        "line": 729
+      },
+      "source": "symbol:project_index.generator.validate_graph",
+      "target": "symbol:project_index.generator.ProjectIndexError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "project_index/generator.py",
+        "line": 745
+      },
+      "source": "symbol:project_index.generator.validate_graph",
+      "target": "symbol:project_index.generator.ProjectIndexError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "project_index/generator.py",
+        "line": 747
       },
       "source": "symbol:project_index.generator.validate_graph",
       "target": "symbol:project_index.generator.ProjectIndexError",
@@ -164097,6 +164614,149 @@
       },
       "source": "symbol:scripts.content_report.main",
       "target": "symbol:scripts.content_report.coverage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/eval_publish.py",
+        "line": 55
+      },
+      "source": "symbol:scripts.dev.eval_publish.main",
+      "target": "symbol:scripts.ci_eval_scope.classify",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/eval_publish.py",
+        "line": 54
+      },
+      "source": "symbol:scripts.dev.eval_publish.main",
+      "target": "symbol:scripts.ci_eval_scope.git_changed",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/eval_publish.py",
+        "line": 53
+      },
+      "source": "symbol:scripts.dev.eval_publish.main",
+      "target": "symbol:scripts.dev.eval_publish._run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/eval_publish.py",
+        "line": 69
+      },
+      "source": "symbol:scripts.dev.eval_publish.main",
+      "target": "symbol:scripts.dev.eval_publish._run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/eval_publish.py",
+        "line": 74
+      },
+      "source": "symbol:scripts.dev.eval_publish.main",
+      "target": "symbol:scripts.dev.eval_publish._run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/eval_publish.py",
+        "line": 78
+      },
+      "source": "symbol:scripts.dev.eval_publish.main",
+      "target": "symbol:scripts.dev.eval_publish._run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/eval_publish.py",
+        "line": 88
+      },
+      "source": "symbol:scripts.dev.eval_publish.main",
+      "target": "symbol:scripts.dev.eval_publish._run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/eval_publish.py",
+        "line": 95
+      },
+      "source": "symbol:scripts.dev.eval_publish.main",
+      "target": "symbol:scripts.dev.eval_publish.approval_command",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/ruff_baseline.py",
+        "line": 68
+      },
+      "source": "symbol:scripts.dev.ruff_baseline.main",
+      "target": "symbol:scripts.dev.ruff_baseline.current_debt",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/ruff_baseline.py",
+        "line": 68
+      },
+      "source": "symbol:scripts.dev.ruff_baseline.main",
+      "target": "symbol:scripts.dev.ruff_baseline.render",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/transcript_stats.py",
+        "line": 89
+      },
+      "source": "symbol:scripts.dev.transcript_stats.main",
+      "target": "symbol:scripts.dev.transcript_stats.scan",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/transcript_stats.py",
+        "line": 91
+      },
+      "source": "symbol:scripts.dev.transcript_stats.main",
+      "target": "symbol:scripts.dev.transcript_stats.scan",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/dev/transcript_stats.py",
+        "line": 69
+      },
+      "source": "symbol:scripts.dev.transcript_stats.scan",
+      "target": "symbol:scripts.dev.transcript_stats._text",
       "type": "calls"
     },
     {
@@ -169784,6 +170444,325 @@
       },
       "source": "symbol:scripts.smoke_local_profile.run",
       "target": "symbol:scripts.smoke_local_profile._login",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 129
+      },
+      "source": "symbol:scripts.spec_index._created",
+      "target": "symbol:scripts.spec_index._git",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 146
+      },
+      "source": "symbol:scripts.spec_index.build",
+      "target": "symbol:scripts.spec_index.SpecIndexError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 158
+      },
+      "source": "symbol:scripts.spec_index.build",
+      "target": "symbol:scripts.spec_index.SpecIndexError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 163
+      },
+      "source": "symbol:scripts.spec_index.build",
+      "target": "symbol:scripts.spec_index.SpecIndexError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 171
+      },
+      "source": "symbol:scripts.spec_index.build",
+      "target": "symbol:scripts.spec_index._created",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 140
+      },
+      "source": "symbol:scripts.spec_index.build",
+      "target": "symbol:scripts.spec_index._load_index",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 139
+      },
+      "source": "symbol:scripts.spec_index.build",
+      "target": "symbol:scripts.spec_index.scan",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 263
+      },
+      "source": "symbol:scripts.spec_index.create_spec",
+      "target": "symbol:scripts.spec_index.SpecIndexError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 266
+      },
+      "source": "symbol:scripts.spec_index.create_spec",
+      "target": "symbol:scripts.spec_index.SpecIndexError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 295
+      },
+      "source": "symbol:scripts.spec_index.main",
+      "target": "symbol:scripts.spec_index.build",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 319
+      },
+      "source": "symbol:scripts.spec_index.main",
+      "target": "symbol:scripts.spec_index.create_spec",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 315
+      },
+      "source": "symbol:scripts.spec_index.main",
+      "target": "symbol:scripts.spec_index.next_id",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 298
+      },
+      "source": "symbol:scripts.spec_index.main",
+      "target": "symbol:scripts.spec_index.problems",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 308
+      },
+      "source": "symbol:scripts.spec_index.main",
+      "target": "symbol:scripts.spec_index.recent",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 306
+      },
+      "source": "symbol:scripts.spec_index.main",
+      "target": "symbol:scripts.spec_index.summary",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 310
+      },
+      "source": "symbol:scripts.spec_index.main",
+      "target": "symbol:scripts.spec_index.write_recent",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 256
+      },
+      "source": "symbol:scripts.spec_index.next_id",
+      "target": "symbol:scripts.spec_index._git",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 252
+      },
+      "source": "symbol:scripts.spec_index.next_id",
+      "target": "symbol:scripts.spec_index._load_index",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 250
+      },
+      "source": "symbol:scripts.spec_index.next_id",
+      "target": "symbol:scripts.spec_index.scan",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 112
+      },
+      "source": "symbol:scripts.spec_index.problems",
+      "target": "symbol:scripts.spec_index._load_index",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 111
+      },
+      "source": "symbol:scripts.spec_index.problems",
+      "target": "symbol:scripts.spec_index.scan",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 215
+      },
+      "source": "symbol:scripts.spec_index.recent",
+      "target": "symbol:scripts.spec_index._git",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 225
+      },
+      "source": "symbol:scripts.spec_index.recent",
+      "target": "symbol:scripts.spec_index._git",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 212
+      },
+      "source": "symbol:scripts.spec_index.recent",
+      "target": "symbol:scripts.spec_index.scan",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 92
+      },
+      "source": "symbol:scripts.spec_index.scan",
+      "target": "symbol:scripts.spec_index.Spec",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 91
+      },
+      "source": "symbol:scripts.spec_index.scan",
+      "target": "symbol:scripts.spec_index.SpecIndexError",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 98
+      },
+      "source": "symbol:scripts.spec_index.scan",
+      "target": "symbol:scripts.spec_index._title",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 204
+      },
+      "source": "symbol:scripts.spec_index.summary",
+      "target": "symbol:scripts.spec_index.scan",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/spec_index.py",
+        "line": 241
+      },
+      "source": "symbol:scripts.spec_index.write_recent",
+      "target": "symbol:scripts.spec_index.SpecIndexError",
       "type": "calls"
     },
     {
@@ -203737,7 +204716,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/conftest.py",
-        "line": 138
+        "line": 164
       },
       "source": "symbol:tests.conftest._force_request_rls",
       "target": "symbol:tests.conftest._force_request_rls.claim_scoped",
@@ -203748,7 +204727,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/conftest.py",
-        "line": 91
+        "line": 117
       },
       "source": "symbol:tests.conftest._force_request_rls",
       "target": "symbol:tests.conftest._force_request_rls.patched",
@@ -203759,7 +204738,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/conftest.py",
-        "line": 131
+        "line": 157
       },
       "source": "symbol:tests.conftest._force_request_rls",
       "target": "symbol:tests.conftest._force_request_rls.remembering_claim",
@@ -203770,7 +204749,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/conftest.py",
-        "line": 104
+        "line": 130
       },
       "source": "symbol:tests.conftest._force_request_rls",
       "target": "symbol:tests.conftest._force_request_rls.scoped",
@@ -203781,7 +204760,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/conftest.py",
-        "line": 140
+        "line": 166
       },
       "source": "symbol:tests.conftest._force_request_rls.claim_scoped",
       "target": "symbol:tests.conftest._force_request_rls.claim_scoped.wrapper",
@@ -203792,7 +204771,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/conftest.py",
-        "line": 108
+        "line": 134
       },
       "source": "symbol:tests.conftest._force_request_rls.scoped",
       "target": "symbol:tests.conftest._force_request_rls.scoped.wrapper",
@@ -236521,6 +237500,39 @@
       },
       "source": "symbol:tests.test_dev_stack.test_status_remove_segredos_e_credencial_do_dsn.runner",
       "target": "symbol:tests.test_dev_stack._result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_dev_tooling.py",
+        "line": 36
+      },
+      "source": "symbol:tests.test_dev_tooling.test_agent_types_pin_a_model",
+      "target": "symbol:tests.test_dev_tooling._frontmatter",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_dev_tooling.py",
+        "line": 49
+      },
+      "source": "symbol:tests.test_dev_tooling.test_eval_publish_prints_owner_approval_command",
+      "target": "symbol:scripts.dev.eval_publish.approval_command",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_dev_tooling.py",
+        "line": 29
+      },
+      "source": "symbol:tests.test_dev_tooling.test_versioned_skills_have_frontmatter_and_no_hardcoded_checkout",
+      "target": "symbol:tests.test_dev_tooling._frontmatter",
       "type": "calls"
     },
     {
@@ -286556,7 +287568,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_project_index.py",
-        "line": 228
+        "line": 241
       },
       "source": "symbol:tests.test_project_index.test_committing_generated_artifacts_warns_without_infinite_staleness",
       "target": "symbol:project_index.generator.build_index",
@@ -286567,7 +287579,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_project_index.py",
-        "line": 233
+        "line": 246
       },
       "source": "symbol:tests.test_project_index.test_committing_generated_artifacts_warns_without_infinite_staleness",
       "target": "symbol:project_index.generator.check_index",
@@ -286578,7 +287590,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_project_index.py",
-        "line": 236
+        "line": 249
       },
       "source": "symbol:tests.test_project_index.test_committing_generated_artifacts_warns_without_infinite_staleness",
       "target": "symbol:project_index.generator.freshness_status",
@@ -286589,7 +287601,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_project_index.py",
-        "line": 227
+        "line": 240
       },
       "source": "symbol:tests.test_project_index.test_committing_generated_artifacts_warns_without_infinite_staleness",
       "target": "symbol:tests.test_project_index._fixture_repo",
@@ -286600,7 +287612,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_project_index.py",
-        "line": 230
+        "line": 243
       },
       "source": "symbol:tests.test_project_index.test_committing_generated_artifacts_warns_without_infinite_staleness",
       "target": "symbol:tests.test_project_index._git",
@@ -286611,7 +287623,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_project_index.py",
-        "line": 231
+        "line": 244
       },
       "source": "symbol:tests.test_project_index.test_committing_generated_artifacts_warns_without_infinite_staleness",
       "target": "symbol:tests.test_project_index._git",
@@ -286743,7 +287755,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_project_index.py",
-        "line": 240
+        "line": 253
       },
       "source": "symbol:tests.test_project_index.test_real_index_excludes_content_and_queries_are_bounded",
       "target": "symbol:project_index.generator.check_index",
@@ -286754,7 +287766,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_project_index.py",
-        "line": 245
+        "line": 258
       },
       "source": "symbol:tests.test_project_index.test_real_index_excludes_content_and_queries_are_bounded",
       "target": "symbol:project_index.query.query",
@@ -286765,7 +287777,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_project_index.py",
-        "line": 257
+        "line": 270
       },
       "source": "symbol:tests.test_project_index.test_real_index_locates_symbols_tests_and_curated_state",
       "target": "symbol:project_index.query.lookup_tests",
@@ -286776,7 +287788,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_project_index.py",
-        "line": 258
+        "line": 271
       },
       "source": "symbol:tests.test_project_index.test_real_index_locates_symbols_tests_and_curated_state",
       "target": "symbol:project_index.query.state",
@@ -286787,10 +287799,65 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_project_index.py",
-        "line": 256
+        "line": 269
       },
       "source": "symbol:tests.test_project_index.test_real_index_locates_symbols_tests_and_curated_state",
       "target": "symbol:project_index.query.symbol",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_project_index.py",
+        "line": 228
+      },
+      "source": "symbol:tests.test_project_index.test_untracked_files_do_not_make_index_stale",
+      "target": "symbol:project_index.generator.build_index",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_project_index.py",
+        "line": 232
+      },
+      "source": "symbol:tests.test_project_index.test_untracked_files_do_not_make_index_stale",
+      "target": "symbol:project_index.generator.check_index",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_project_index.py",
+        "line": 236
+      },
+      "source": "symbol:tests.test_project_index.test_untracked_files_do_not_make_index_stale",
+      "target": "symbol:project_index.generator.check_index",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_project_index.py",
+        "line": 227
+      },
+      "source": "symbol:tests.test_project_index.test_untracked_files_do_not_make_index_stale",
+      "target": "symbol:tests.test_project_index._fixture_repo",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_project_index.py",
+        "line": 234
+      },
+      "source": "symbol:tests.test_project_index.test_untracked_files_do_not_make_index_stale",
+      "target": "symbol:tests.test_project_index._git",
       "type": "calls"
     },
     {
@@ -294608,7 +295675,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 120
+        "line": 125
       },
       "source": "symbol:tests.test_session_boundary_authfail.test_account_removal_and_global_revoke_forget_the_user",
       "target": "symbol:tests.test_session_boundary_authfail.jwt",
@@ -294619,7 +295686,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 83
+        "line": 88
       },
       "source": "symbol:tests.test_session_boundary_authfail.test_cache_expires_and_can_be_disabled",
       "target": "symbol:tests.test_session_boundary_authfail.jwt",
@@ -294630,7 +295697,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 172
+        "line": 177
       },
       "source": "symbol:tests.test_session_boundary_authfail.test_cache_never_outlives_the_token_exp",
       "target": "symbol:tests.test_session_boundary_authfail.jwt",
@@ -294641,7 +295708,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 69
+        "line": 74
       },
       "source": "symbol:tests.test_session_boundary_authfail.test_clock_skew_tolerance_accepts_just_expired",
       "target": "symbol:tests.test_session_boundary_authfail.jwt",
@@ -294652,7 +295719,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 106
+        "line": 111
       },
       "source": "symbol:tests.test_session_boundary_authfail.test_logout_and_refresh_invalidate_the_cache",
       "target": "symbol:tests.test_session_boundary_authfail.jwt",
@@ -294663,7 +295730,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 97
+        "line": 102
       },
       "source": "symbol:tests.test_session_boundary_authfail.test_remote_rejection_is_not_cached",
       "target": "symbol:tests.test_session_boundary_authfail.jwt",
@@ -294674,7 +295741,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 75
+        "line": 80
       },
       "source": "symbol:tests.test_session_boundary_authfail.test_same_valid_token_is_verified_remotely_once_per_ttl",
       "target": "symbol:tests.test_session_boundary_authfail.jwt",
@@ -294685,7 +295752,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 148
+        "line": 153
       },
       "source": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit",
       "target": "symbol:infrastructure.supabase_identity.SupabaseIdentityProvider",
@@ -294696,7 +295763,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 149
+        "line": 154
       },
       "source": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit",
       "target": "symbol:tests.test_session_boundary_authfail.jwt",
@@ -294707,7 +295774,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 141
+        "line": 146
       },
       "source": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit",
       "target": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Db",
@@ -294718,7 +295785,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 146
+        "line": 151
       },
       "source": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit",
       "target": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Pool",
@@ -294729,7 +295796,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 137
+        "line": 142
       },
       "source": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit",
       "target": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Row",
@@ -294740,7 +295807,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 142
+        "line": 147
       },
       "source": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Db",
       "target": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Db.__enter__",
@@ -294751,7 +295818,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 143
+        "line": 148
       },
       "source": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Db",
       "target": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Db.__exit__",
@@ -294762,7 +295829,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 144
+        "line": 149
       },
       "source": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Db",
       "target": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Db.execute",
@@ -294773,7 +295840,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 147
+        "line": 152
       },
       "source": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Pool",
       "target": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Pool.connection",
@@ -294784,7 +295851,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_session_boundary_authfail.py",
-        "line": 138
+        "line": 143
       },
       "source": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Row",
       "target": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Row.fetchone",
@@ -313857,6 +314924,248 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 63
+      },
+      "source": "symbol:tests.test_spec_index_tool.repo",
+      "target": "symbol:tests.test_spec_index_tool._git",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 64
+      },
+      "source": "symbol:tests.test_spec_index_tool.repo",
+      "target": "symbol:tests.test_spec_index_tool._git",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 65
+      },
+      "source": "symbol:tests.test_spec_index_tool.repo",
+      "target": "symbol:tests.test_spec_index_tool._git",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 66
+      },
+      "source": "symbol:tests.test_spec_index_tool.repo",
+      "target": "symbol:tests.test_spec_index_tool._git",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 67
+      },
+      "source": "symbol:tests.test_spec_index_tool.repo",
+      "target": "symbol:tests.test_spec_index_tool._git",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 58
+      },
+      "source": "symbol:tests.test_spec_index_tool.repo",
+      "target": "symbol:tests.test_spec_index_tool._spec",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 76
+      },
+      "source": "symbol:tests.test_spec_index_tool.test_build_edits_only_status_line_and_appends_new_specs",
+      "target": "symbol:scripts.spec_index.build",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 85
+      },
+      "source": "symbol:tests.test_spec_index_tool.test_build_edits_only_status_line_and_appends_new_specs",
+      "target": "symbol:scripts.spec_index.build",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 74
+      },
+      "source": "symbol:tests.test_spec_index_tool.test_build_edits_only_status_line_and_appends_new_specs",
+      "target": "symbol:scripts.spec_index.problems",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 84
+      },
+      "source": "symbol:tests.test_spec_index_tool.test_build_edits_only_status_line_and_appends_new_specs",
+      "target": "symbol:scripts.spec_index.problems",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 72
+      },
+      "source": "symbol:tests.test_spec_index_tool.test_build_edits_only_status_line_and_appends_new_specs",
+      "target": "symbol:tests.test_spec_index_tool._spec",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 73
+      },
+      "source": "symbol:tests.test_spec_index_tool.test_build_edits_only_status_line_and_appends_new_specs",
+      "target": "symbol:tests.test_spec_index_tool._spec",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 92
+      },
+      "source": "symbol:tests.test_spec_index_tool.test_build_refuses_to_drop_indexed_spec",
+      "target": "symbol:scripts.spec_index.build",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 90
+      },
+      "source": "symbol:tests.test_spec_index_tool.test_build_refuses_to_drop_indexed_spec",
+      "target": "symbol:scripts.spec_index.problems",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 113
+      },
+      "source": "symbol:tests.test_spec_index_tool.test_next_id_sees_reserved_branches_and_creates_from_template",
+      "target": "symbol:scripts.spec_index.create_spec",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 121
+      },
+      "source": "symbol:tests.test_spec_index_tool.test_next_id_sees_reserved_branches_and_creates_from_template",
+      "target": "symbol:scripts.spec_index.create_spec",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 109
+      },
+      "source": "symbol:tests.test_spec_index_tool.test_next_id_sees_reserved_branches_and_creates_from_template",
+      "target": "symbol:scripts.spec_index.next_id",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 111
+      },
+      "source": "symbol:tests.test_spec_index_tool.test_next_id_sees_reserved_branches_and_creates_from_template",
+      "target": "symbol:scripts.spec_index.next_id",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 110
+      },
+      "source": "symbol:tests.test_spec_index_tool.test_next_id_sees_reserved_branches_and_creates_from_template",
+      "target": "symbol:tests.test_spec_index_tool._git",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 127
+      },
+      "source": "symbol:tests.test_spec_index_tool.test_real_index_matches_spec_headers",
+      "target": "symbol:scripts.spec_index.problems",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 98
+      },
+      "source": "symbol:tests.test_spec_index_tool.test_recent_writes_between_markers",
+      "target": "symbol:scripts.spec_index.recent",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec_index_tool.py",
+        "line": 101
+      },
+      "source": "symbol:tests.test_spec_index_tool.test_recent_writes_between_markers",
+      "target": "symbol:scripts.spec_index.write_recent",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec_migration_safety.py",
         "line": 26
       },
@@ -326574,6 +327883,27 @@
       "qualified_name": null
     },
     {
+      "id": "file:scripts/dev/eval_publish.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/dev/eval_publish.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:scripts/dev/ruff_baseline.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/dev/ruff_baseline.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:scripts/dev/transcript_stats.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/dev/transcript_stats.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:scripts/dev_stack.py",
       "kind": "file",
       "line": 1,
@@ -326809,6 +328139,13 @@
       "kind": "file",
       "line": 1,
       "path": "scripts/smoke_local_profile.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:scripts/spec_index.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/spec_index.py",
       "qualified_name": null
     },
     {
@@ -328618,6 +329955,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/test_dev_tooling.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_dev_tooling.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/test_dossier_leak.py",
       "kind": "file",
       "line": 1,
@@ -330144,6 +331488,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/test_spec_index_tool.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_spec_index_tool.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/test_spec_migration_safety.py",
       "kind": "file",
       "line": 1,
@@ -330582,6 +331933,13 @@
       "kind": "file",
       "line": 1,
       "path": "web/e2e/workspace-shell.spec.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/eslint.config.js",
+      "kind": "file",
+      "line": 1,
+      "path": "web/eslint.config.js",
       "qualified_name": null
     },
     {
@@ -332328,6 +333686,27 @@
       "qualified_name": "scripts.content_report"
     },
     {
+      "id": "module:scripts.dev.eval_publish",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/dev/eval_publish.py",
+      "qualified_name": "scripts.dev.eval_publish"
+    },
+    {
+      "id": "module:scripts.dev.ruff_baseline",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/dev/ruff_baseline.py",
+      "qualified_name": "scripts.dev.ruff_baseline"
+    },
+    {
+      "id": "module:scripts.dev.transcript_stats",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/dev/transcript_stats.py",
+      "qualified_name": "scripts.dev.transcript_stats"
+    },
+    {
       "id": "module:scripts.dev_stack",
       "kind": "module",
       "line": 1,
@@ -332564,6 +333943,13 @@
       "line": 1,
       "path": "scripts/smoke_local_profile.py",
       "qualified_name": "scripts.smoke_local_profile"
+    },
+    {
+      "id": "module:scripts.spec_index",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/spec_index.py",
+      "qualified_name": "scripts.spec_index"
     },
     {
       "id": "module:scripts.staging",
@@ -334372,6 +335758,13 @@
       "qualified_name": "tests.test_dev_stack"
     },
     {
+      "id": "module:tests.test_dev_tooling",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_dev_tooling.py",
+      "qualified_name": "tests.test_dev_tooling"
+    },
+    {
       "id": "module:tests.test_dossier_leak",
       "kind": "module",
       "line": 1,
@@ -335896,6 +337289,13 @@
       "line": 1,
       "path": "tests/test_spec_index.py",
       "qualified_name": "tests.test_spec_index"
+    },
+    {
+      "id": "module:tests.test_spec_index_tool",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_spec_index_tool.py",
+      "qualified_name": "tests.test_spec_index_tool"
     },
     {
       "id": "module:tests.test_spec_migration_safety",
@@ -349676,154 +351076,154 @@
     {
       "id": "symbol:project_index.generator.PythonUnit",
       "kind": "class",
-      "line": 185,
+      "line": 190,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator.PythonUnit"
     },
     {
       "id": "symbol:project_index.generator._CallCollector",
       "kind": "class",
-      "line": 490,
+      "line": 495,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._CallCollector"
     },
     {
       "id": "symbol:project_index.generator._CallCollector.__init__",
       "kind": "method",
-      "line": 491,
+      "line": 496,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._CallCollector.__init__"
     },
     {
       "id": "symbol:project_index.generator._CallCollector.visit_Call",
       "kind": "method",
-      "line": 494,
+      "line": 499,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._CallCollector.visit_Call"
     },
     {
       "id": "symbol:project_index.generator._WriteCollector",
       "kind": "class",
-      "line": 206,
+      "line": 211,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._WriteCollector"
     },
     {
       "id": "symbol:project_index.generator._WriteCollector.__init__",
       "kind": "method",
-      "line": 209,
+      "line": 214,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._WriteCollector.__init__"
     },
     {
       "id": "symbol:project_index.generator._WriteCollector._visit_function_header",
       "kind": "method",
-      "line": 236,
+      "line": 241,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._WriteCollector._visit_function_header"
     },
     {
       "id": "symbol:project_index.generator._WriteCollector.visit_AsyncFunctionDef",
       "kind": "method",
-      "line": 261,
+      "line": 266,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._WriteCollector.visit_AsyncFunctionDef"
     },
     {
       "id": "symbol:project_index.generator._WriteCollector.visit_Attribute",
       "kind": "method",
-      "line": 217,
+      "line": 222,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._WriteCollector.visit_Attribute"
     },
     {
       "id": "symbol:project_index.generator._WriteCollector.visit_Call",
       "kind": "method",
-      "line": 226,
+      "line": 231,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._WriteCollector.visit_Call"
     },
     {
       "id": "symbol:project_index.generator._WriteCollector.visit_ClassDef",
       "kind": "method",
-      "line": 265,
+      "line": 270,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._WriteCollector.visit_ClassDef"
     },
     {
       "id": "symbol:project_index.generator._WriteCollector.visit_ExceptHandler",
       "kind": "method",
-      "line": 283,
+      "line": 288,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._WriteCollector.visit_ExceptHandler"
     },
     {
       "id": "symbol:project_index.generator._WriteCollector.visit_FunctionDef",
       "kind": "method",
-      "line": 257,
+      "line": 262,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._WriteCollector.visit_FunctionDef"
     },
     {
       "id": "symbol:project_index.generator._WriteCollector.visit_Import",
       "kind": "method",
-      "line": 277,
+      "line": 282,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._WriteCollector.visit_Import"
     },
     {
       "id": "symbol:project_index.generator._WriteCollector.visit_ImportFrom",
       "kind": "method",
-      "line": 280,
+      "line": 285,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._WriteCollector.visit_ImportFrom"
     },
     {
       "id": "symbol:project_index.generator._WriteCollector.visit_Lambda",
       "kind": "method",
-      "line": 274,
+      "line": 279,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._WriteCollector.visit_Lambda"
     },
     {
       "id": "symbol:project_index.generator._WriteCollector.visit_MatchAs",
       "kind": "method",
-      "line": 288,
+      "line": 293,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._WriteCollector.visit_MatchAs"
     },
     {
       "id": "symbol:project_index.generator._WriteCollector.visit_MatchMapping",
       "kind": "method",
-      "line": 297,
+      "line": 302,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._WriteCollector.visit_MatchMapping"
     },
     {
       "id": "symbol:project_index.generator._WriteCollector.visit_MatchStar",
       "kind": "method",
-      "line": 293,
+      "line": 298,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._WriteCollector.visit_MatchStar"
     },
     {
       "id": "symbol:project_index.generator._WriteCollector.visit_Name",
       "kind": "method",
-      "line": 213,
+      "line": 218,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._WriteCollector.visit_Name"
     },
     {
       "id": "symbol:project_index.generator._absolute_import_from",
       "kind": "function",
-      "line": 138,
+      "line": 143,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._absolute_import_from"
     },
     {
       "id": "symbol:project_index.generator._bound_names",
       "kind": "function",
-      "line": 198,
+      "line": 203,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._bound_names"
     },
@@ -349837,42 +351237,42 @@
     {
       "id": "symbol:project_index.generator._edge",
       "kind": "function",
-      "line": 167,
+      "line": 172,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._edge"
     },
     {
       "id": "symbol:project_index.generator._endpoint_decorators",
       "kind": "function",
-      "line": 384,
+      "line": 389,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._endpoint_decorators"
     },
     {
       "id": "symbol:project_index.generator._excluded",
       "kind": "function",
-      "line": 98,
+      "line": 103,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._excluded"
     },
     {
       "id": "symbol:project_index.generator._fastapi_bindings",
       "kind": "function",
-      "line": 309,
+      "line": 314,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._fastapi_bindings"
     },
     {
       "id": "symbol:project_index.generator._fastapi_bindings.shadow",
       "kind": "function",
-      "line": 317,
+      "line": 322,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._fastapi_bindings.shadow"
     },
     {
       "id": "symbol:project_index.generator._function_nodes",
       "kind": "function",
-      "line": 499,
+      "line": 504,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._function_nodes"
     },
@@ -349893,56 +351293,56 @@
     {
       "id": "symbol:project_index.generator._graph_schema_hash",
       "kind": "function",
-      "line": 507,
+      "line": 512,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._graph_schema_hash"
     },
     {
       "id": "symbol:project_index.generator._load_curated",
       "kind": "function",
-      "line": 745,
+      "line": 750,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._load_curated"
     },
     {
       "id": "symbol:project_index.generator._module_name",
       "kind": "function",
-      "line": 130,
+      "line": 135,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._module_name"
     },
     {
       "id": "symbol:project_index.generator._node",
       "kind": "function",
-      "line": 151,
+      "line": 156,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._node"
     },
     {
       "id": "symbol:project_index.generator._parse_python",
       "kind": "function",
-      "line": 404,
+      "line": 409,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._parse_python"
     },
     {
       "id": "symbol:project_index.generator._parse_python.visit_def",
       "kind": "function",
-      "line": 432,
+      "line": 437,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._parse_python.visit_def"
     },
     {
       "id": "symbol:project_index.generator._possible_writes",
       "kind": "function",
-      "line": 303,
+      "line": 308,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._possible_writes"
     },
     {
       "id": "symbol:project_index.generator._read_json",
       "kind": "function",
-      "line": 791,
+      "line": 796,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._read_json"
     },
@@ -349956,56 +351356,56 @@
     {
       "id": "symbol:project_index.generator._source_tree_hash",
       "kind": "function",
-      "line": 118,
+      "line": 123,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator._source_tree_hash"
     },
     {
       "id": "symbol:project_index.generator.build_index",
       "kind": "function",
-      "line": 776,
+      "line": 781,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator.build_index"
     },
     {
       "id": "symbol:project_index.generator.check_index",
       "kind": "function",
-      "line": 801,
+      "line": 806,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator.check_index"
     },
     {
       "id": "symbol:project_index.generator.discover_files",
       "kind": "function",
-      "line": 103,
+      "line": 108,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator.discover_files"
     },
     {
       "id": "symbol:project_index.generator.freshness_status",
       "kind": "function",
-      "line": 815,
+      "line": 820,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator.freshness_status"
     },
     {
       "id": "symbol:project_index.generator.generate",
       "kind": "function",
-      "line": 518,
+      "line": 523,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator.generate"
     },
     {
       "id": "symbol:project_index.generator.validate_curated_files",
       "kind": "function",
-      "line": 755,
+      "line": 760,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator.validate_curated_files"
     },
     {
       "id": "symbol:project_index.generator.validate_graph",
       "kind": "function",
-      "line": 656,
+      "line": 661,
       "path": "project_index/generator.py",
       "qualified_name": "project_index.generator.validate_graph"
     },
@@ -351023,6 +352423,69 @@
       "line": 60,
       "path": "scripts/content_report.py",
       "qualified_name": "scripts.content_report.main"
+    },
+    {
+      "id": "symbol:scripts.dev.eval_publish._run",
+      "kind": "function",
+      "line": 33,
+      "path": "scripts/dev/eval_publish.py",
+      "qualified_name": "scripts.dev.eval_publish._run"
+    },
+    {
+      "id": "symbol:scripts.dev.eval_publish.approval_command",
+      "kind": "function",
+      "line": 38,
+      "path": "scripts/dev/eval_publish.py",
+      "qualified_name": "scripts.dev.eval_publish.approval_command"
+    },
+    {
+      "id": "symbol:scripts.dev.eval_publish.main",
+      "kind": "function",
+      "line": 46,
+      "path": "scripts/dev/eval_publish.py",
+      "qualified_name": "scripts.dev.eval_publish.main"
+    },
+    {
+      "id": "symbol:scripts.dev.ruff_baseline.current_debt",
+      "kind": "function",
+      "line": 39,
+      "path": "scripts/dev/ruff_baseline.py",
+      "qualified_name": "scripts.dev.ruff_baseline.current_debt"
+    },
+    {
+      "id": "symbol:scripts.dev.ruff_baseline.main",
+      "kind": "function",
+      "line": 64,
+      "path": "scripts/dev/ruff_baseline.py",
+      "qualified_name": "scripts.dev.ruff_baseline.main"
+    },
+    {
+      "id": "symbol:scripts.dev.ruff_baseline.render",
+      "kind": "function",
+      "line": 31,
+      "path": "scripts/dev/ruff_baseline.py",
+      "qualified_name": "scripts.dev.ruff_baseline.render"
+    },
+    {
+      "id": "symbol:scripts.dev.transcript_stats._text",
+      "kind": "function",
+      "line": 30,
+      "path": "scripts/dev/transcript_stats.py",
+      "qualified_name": "scripts.dev.transcript_stats._text"
+    },
+    {
+      "id": "symbol:scripts.dev.transcript_stats.main",
+      "kind": "function",
+      "line": 84,
+      "path": "scripts/dev/transcript_stats.py",
+      "qualified_name": "scripts.dev.transcript_stats.main"
+    },
+    {
+      "id": "symbol:scripts.dev.transcript_stats.scan",
+      "kind": "function",
+      "line": 38,
+      "path": "scripts/dev/transcript_stats.py",
+      "qualified_name": "scripts.dev.transcript_stats.scan"
     },
     {
       "id": "symbol:scripts.dev_stack.DoctorReport",
@@ -352710,6 +354173,111 @@
       "line": 37,
       "path": "scripts/smoke_local_profile.py",
       "qualified_name": "scripts.smoke_local_profile.run"
+    },
+    {
+      "id": "symbol:scripts.spec_index.Spec",
+      "kind": "class",
+      "line": 52,
+      "path": "scripts/spec_index.py",
+      "qualified_name": "scripts.spec_index.Spec"
+    },
+    {
+      "id": "symbol:scripts.spec_index.SpecIndexError",
+      "kind": "class",
+      "line": 47,
+      "path": "scripts/spec_index.py",
+      "qualified_name": "scripts.spec_index.SpecIndexError"
+    },
+    {
+      "id": "symbol:scripts.spec_index._created",
+      "kind": "function",
+      "line": 128,
+      "path": "scripts/spec_index.py",
+      "qualified_name": "scripts.spec_index._created"
+    },
+    {
+      "id": "symbol:scripts.spec_index._git",
+      "kind": "function",
+      "line": 61,
+      "path": "scripts/spec_index.py",
+      "qualified_name": "scripts.spec_index._git"
+    },
+    {
+      "id": "symbol:scripts.spec_index._load_index",
+      "kind": "function",
+      "line": 103,
+      "path": "scripts/spec_index.py",
+      "qualified_name": "scripts.spec_index._load_index"
+    },
+    {
+      "id": "symbol:scripts.spec_index._title",
+      "kind": "function",
+      "line": 72,
+      "path": "scripts/spec_index.py",
+      "qualified_name": "scripts.spec_index._title"
+    },
+    {
+      "id": "symbol:scripts.spec_index.build",
+      "kind": "function",
+      "line": 136,
+      "path": "scripts/spec_index.py",
+      "qualified_name": "scripts.spec_index.build"
+    },
+    {
+      "id": "symbol:scripts.spec_index.create_spec",
+      "kind": "function",
+      "line": 261,
+      "path": "scripts/spec_index.py",
+      "qualified_name": "scripts.spec_index.create_spec"
+    },
+    {
+      "id": "symbol:scripts.spec_index.main",
+      "kind": "function",
+      "line": 276,
+      "path": "scripts/spec_index.py",
+      "qualified_name": "scripts.spec_index.main"
+    },
+    {
+      "id": "symbol:scripts.spec_index.next_id",
+      "kind": "function",
+      "line": 249,
+      "path": "scripts/spec_index.py",
+      "qualified_name": "scripts.spec_index.next_id"
+    },
+    {
+      "id": "symbol:scripts.spec_index.problems",
+      "kind": "function",
+      "line": 110,
+      "path": "scripts/spec_index.py",
+      "qualified_name": "scripts.spec_index.problems"
+    },
+    {
+      "id": "symbol:scripts.spec_index.recent",
+      "kind": "function",
+      "line": 211,
+      "path": "scripts/spec_index.py",
+      "qualified_name": "scripts.spec_index.recent"
+    },
+    {
+      "id": "symbol:scripts.spec_index.scan",
+      "kind": "function",
+      "line": 80,
+      "path": "scripts/spec_index.py",
+      "qualified_name": "scripts.spec_index.scan"
+    },
+    {
+      "id": "symbol:scripts.spec_index.summary",
+      "kind": "function",
+      "line": 203,
+      "path": "scripts/spec_index.py",
+      "qualified_name": "scripts.spec_index.summary"
+    },
+    {
+      "id": "symbol:scripts.spec_index.write_recent",
+      "kind": "function",
+      "line": 236,
+      "path": "scripts/spec_index.py",
+      "qualified_name": "scripts.spec_index.write_recent"
     },
     {
       "id": "symbol:scripts.staging.account_deletion_recovery.cron_call",
@@ -364747,79 +366315,86 @@
     {
       "id": "symbol:tests.conftest._force_request_rls",
       "kind": "test",
-      "line": 80,
+      "line": 106,
       "path": "tests/conftest.py",
       "qualified_name": "tests.conftest._force_request_rls"
     },
     {
       "id": "symbol:tests.conftest._force_request_rls.claim_scoped",
       "kind": "test",
-      "line": 138,
+      "line": 164,
       "path": "tests/conftest.py",
       "qualified_name": "tests.conftest._force_request_rls.claim_scoped"
     },
     {
       "id": "symbol:tests.conftest._force_request_rls.claim_scoped.wrapper",
       "kind": "test",
-      "line": 140,
+      "line": 166,
       "path": "tests/conftest.py",
       "qualified_name": "tests.conftest._force_request_rls.claim_scoped.wrapper"
     },
     {
       "id": "symbol:tests.conftest._force_request_rls.patched",
       "kind": "test",
-      "line": 91,
+      "line": 117,
       "path": "tests/conftest.py",
       "qualified_name": "tests.conftest._force_request_rls.patched"
     },
     {
       "id": "symbol:tests.conftest._force_request_rls.remembering_claim",
       "kind": "test",
-      "line": 131,
+      "line": 157,
       "path": "tests/conftest.py",
       "qualified_name": "tests.conftest._force_request_rls.remembering_claim"
     },
     {
       "id": "symbol:tests.conftest._force_request_rls.scoped",
       "kind": "test",
-      "line": 104,
+      "line": 130,
       "path": "tests/conftest.py",
       "qualified_name": "tests.conftest._force_request_rls.scoped"
     },
     {
       "id": "symbol:tests.conftest._force_request_rls.scoped.wrapper",
       "kind": "test",
-      "line": 108,
+      "line": 134,
       "path": "tests/conftest.py",
       "qualified_name": "tests.conftest._force_request_rls.scoped.wrapper"
     },
     {
       "id": "symbol:tests.conftest._isolated_runtime_cache",
       "kind": "test",
-      "line": 34,
+      "line": 55,
       "path": "tests/conftest.py",
       "qualified_name": "tests.conftest._isolated_runtime_cache"
     },
     {
       "id": "symbol:tests.conftest._isolated_saves_and_memory",
       "kind": "test",
-      "line": 47,
+      "line": 68,
       "path": "tests/conftest.py",
       "qualified_name": "tests.conftest._isolated_saves_and_memory"
     },
     {
       "id": "symbol:tests.conftest._no_exposure_markers",
       "kind": "test",
-      "line": 28,
+      "line": 49,
       "path": "tests/conftest.py",
       "qualified_name": "tests.conftest._no_exposure_markers"
     },
     {
       "id": "symbol:tests.conftest._no_real_embeddings",
       "kind": "test",
-      "line": 65,
+      "line": 91,
       "path": "tests/conftest.py",
       "qualified_name": "tests.conftest._no_real_embeddings"
+    },
+    {
+      "id": "symbol:tests.conftest.pytest_configure",
+      "kind": "test",
+      "line": 28,
+      "path": "tests/conftest.py",
+      "qualified_name": "tests.conftest.pytest_configure"
     },
     {
       "id": "symbol:tests.fakes.fake_image_generator.FakeImageGenerator",
@@ -375446,6 +377021,41 @@
       "line": 63,
       "path": "tests/test_dev_stack.py",
       "qualified_name": "tests.test_dev_stack.test_status_remove_segredos_e_credencial_do_dsn.runner"
+    },
+    {
+      "id": "symbol:tests.test_dev_tooling._frontmatter",
+      "kind": "test",
+      "line": 19,
+      "path": "tests/test_dev_tooling.py",
+      "qualified_name": "tests.test_dev_tooling._frontmatter"
+    },
+    {
+      "id": "symbol:tests.test_dev_tooling.test_agent_types_pin_a_model",
+      "kind": "test",
+      "line": 35,
+      "path": "tests/test_dev_tooling.py",
+      "qualified_name": "tests.test_dev_tooling.test_agent_types_pin_a_model"
+    },
+    {
+      "id": "symbol:tests.test_dev_tooling.test_eval_publish_prints_owner_approval_command",
+      "kind": "test",
+      "line": 48,
+      "path": "tests/test_dev_tooling.py",
+      "qualified_name": "tests.test_dev_tooling.test_eval_publish_prints_owner_approval_command"
+    },
+    {
+      "id": "symbol:tests.test_dev_tooling.test_settings_json_is_valid_and_hook_is_checkout_relative",
+      "kind": "test",
+      "line": 41,
+      "path": "tests/test_dev_tooling.py",
+      "qualified_name": "tests.test_dev_tooling.test_settings_json_is_valid_and_hook_is_checkout_relative"
+    },
+    {
+      "id": "symbol:tests.test_dev_tooling.test_versioned_skills_have_frontmatter_and_no_hardcoded_checkout",
+      "kind": "test",
+      "line": 27,
+      "path": "tests/test_dev_tooling.py",
+      "qualified_name": "tests.test_dev_tooling.test_versioned_skills_have_frontmatter_and_no_hardcoded_checkout"
     },
     {
       "id": "symbol:tests.test_dossier_leak._state",
@@ -391522,7 +393132,7 @@
     {
       "id": "symbol:tests.test_project_index.test_committing_generated_artifacts_warns_without_infinite_staleness",
       "kind": "test",
-      "line": 226,
+      "line": 239,
       "path": "tests/test_project_index.py",
       "qualified_name": "tests.test_project_index.test_committing_generated_artifacts_warns_without_infinite_staleness"
     },
@@ -391543,16 +393153,23 @@
     {
       "id": "symbol:tests.test_project_index.test_real_index_excludes_content_and_queries_are_bounded",
       "kind": "test",
-      "line": 239,
+      "line": 252,
       "path": "tests/test_project_index.py",
       "qualified_name": "tests.test_project_index.test_real_index_excludes_content_and_queries_are_bounded"
     },
     {
       "id": "symbol:tests.test_project_index.test_real_index_locates_symbols_tests_and_curated_state",
       "kind": "test",
-      "line": 255,
+      "line": 268,
       "path": "tests/test_project_index.py",
       "qualified_name": "tests.test_project_index.test_real_index_locates_symbols_tests_and_curated_state"
+    },
+    {
+      "id": "symbol:tests.test_project_index.test_untracked_files_do_not_make_index_stale",
+      "kind": "test",
+      "line": 226,
+      "path": "tests/test_project_index.py",
+      "qualified_name": "tests.test_project_index.test_untracked_files_do_not_make_index_stale"
     },
     {
       "id": "symbol:tests.test_project_index_ab_harness.test_a_cannot_call_index",
@@ -394329,126 +395946,126 @@
     {
       "id": "symbol:tests.test_session_boundary_authfail.test_account_removal_and_global_revoke_forget_the_user",
       "kind": "test",
-      "line": 118,
+      "line": 123,
       "path": "tests/test_session_boundary_authfail.py",
       "qualified_name": "tests.test_session_boundary_authfail.test_account_removal_and_global_revoke_forget_the_user"
     },
     {
       "id": "symbol:tests.test_session_boundary_authfail.test_cache_expires_and_can_be_disabled",
       "kind": "test",
-      "line": 81,
+      "line": 86,
       "path": "tests/test_session_boundary_authfail.py",
       "qualified_name": "tests.test_session_boundary_authfail.test_cache_expires_and_can_be_disabled"
     },
     {
       "id": "symbol:tests.test_session_boundary_authfail.test_cache_never_outlives_the_token_exp",
       "kind": "test",
-      "line": 170,
+      "line": 175,
       "path": "tests/test_session_boundary_authfail.py",
       "qualified_name": "tests.test_session_boundary_authfail.test_cache_never_outlives_the_token_exp"
     },
     {
       "id": "symbol:tests.test_session_boundary_authfail.test_clock_skew_tolerance_accepts_just_expired",
       "kind": "test",
-      "line": 67,
+      "line": 72,
       "path": "tests/test_session_boundary_authfail.py",
       "qualified_name": "tests.test_session_boundary_authfail.test_clock_skew_tolerance_accepts_just_expired"
     },
     {
       "id": "symbol:tests.test_session_boundary_authfail.test_deeply_nested_payload_is_unauthorized_not_500",
       "kind": "test",
-      "line": 160,
+      "line": 165,
       "path": "tests/test_session_boundary_authfail.py",
       "qualified_name": "tests.test_session_boundary_authfail.test_deeply_nested_payload_is_unauthorized_not_500"
     },
     {
       "id": "symbol:tests.test_session_boundary_authfail.test_logout_and_refresh_invalidate_the_cache",
       "kind": "test",
-      "line": 104,
+      "line": 109,
       "path": "tests/test_session_boundary_authfail.py",
       "qualified_name": "tests.test_session_boundary_authfail.test_logout_and_refresh_invalidate_the_cache"
     },
     {
       "id": "symbol:tests.test_session_boundary_authfail.test_malformed_or_foreign_tokens_never_reach_the_network",
       "kind": "test",
-      "line": 59,
+      "line": 64,
       "path": "tests/test_session_boundary_authfail.py",
       "qualified_name": "tests.test_session_boundary_authfail.test_malformed_or_foreign_tokens_never_reach_the_network"
     },
     {
       "id": "symbol:tests.test_session_boundary_authfail.test_remote_rejection_is_not_cached",
       "kind": "test",
-      "line": 94,
+      "line": 99,
       "path": "tests/test_session_boundary_authfail.py",
       "qualified_name": "tests.test_session_boundary_authfail.test_remote_rejection_is_not_cached"
     },
     {
       "id": "symbol:tests.test_session_boundary_authfail.test_same_valid_token_is_verified_remotely_once_per_ttl",
       "kind": "test",
-      "line": 73,
+      "line": 78,
       "path": "tests/test_session_boundary_authfail.py",
       "qualified_name": "tests.test_session_boundary_authfail.test_same_valid_token_is_verified_remotely_once_per_ttl"
     },
     {
       "id": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit",
       "kind": "test",
-      "line": 129,
+      "line": 134,
       "path": "tests/test_session_boundary_authfail.py",
       "qualified_name": "tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit"
     },
     {
       "id": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Db",
       "kind": "class",
-      "line": 141,
+      "line": 146,
       "path": "tests/test_session_boundary_authfail.py",
       "qualified_name": "tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Db"
     },
     {
       "id": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Db.__enter__",
       "kind": "test",
-      "line": 142,
+      "line": 147,
       "path": "tests/test_session_boundary_authfail.py",
       "qualified_name": "tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Db.__enter__"
     },
     {
       "id": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Db.__exit__",
       "kind": "test",
-      "line": 143,
+      "line": 148,
       "path": "tests/test_session_boundary_authfail.py",
       "qualified_name": "tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Db.__exit__"
     },
     {
       "id": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Db.execute",
       "kind": "test",
-      "line": 144,
+      "line": 149,
       "path": "tests/test_session_boundary_authfail.py",
       "qualified_name": "tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Db.execute"
     },
     {
       "id": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Pool",
       "kind": "class",
-      "line": 146,
+      "line": 151,
       "path": "tests/test_session_boundary_authfail.py",
       "qualified_name": "tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Pool"
     },
     {
       "id": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Pool.connection",
       "kind": "test",
-      "line": 147,
+      "line": 152,
       "path": "tests/test_session_boundary_authfail.py",
       "qualified_name": "tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Pool.connection"
     },
     {
       "id": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Row",
       "kind": "class",
-      "line": 137,
+      "line": 142,
       "path": "tests/test_session_boundary_authfail.py",
       "qualified_name": "tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Row"
     },
     {
       "id": "symbol:tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Row.fetchone",
       "kind": "test",
-      "line": 138,
+      "line": 143,
       "path": "tests/test_session_boundary_authfail.py",
       "qualified_name": "tests.test_session_boundary_authfail.test_session_revocation_is_checked_in_db_even_on_cache_hit.Row.fetchone"
     },
@@ -399248,6 +400865,69 @@
       "qualified_name": "tests.test_spec_index.test_migration_tie_done_evidence_relative_references_and_idempotence"
     },
     {
+      "id": "symbol:tests.test_spec_index_tool._git",
+      "kind": "test",
+      "line": 39,
+      "path": "tests/test_spec_index_tool.py",
+      "qualified_name": "tests.test_spec_index_tool._git"
+    },
+    {
+      "id": "symbol:tests.test_spec_index_tool._spec",
+      "kind": "test",
+      "line": 49,
+      "path": "tests/test_spec_index_tool.py",
+      "qualified_name": "tests.test_spec_index_tool._spec"
+    },
+    {
+      "id": "symbol:tests.test_spec_index_tool.repo",
+      "kind": "test",
+      "line": 54,
+      "path": "tests/test_spec_index_tool.py",
+      "qualified_name": "tests.test_spec_index_tool.repo"
+    },
+    {
+      "id": "symbol:tests.test_spec_index_tool.test_build_edits_only_status_line_and_appends_new_specs",
+      "kind": "test",
+      "line": 71,
+      "path": "tests/test_spec_index_tool.py",
+      "qualified_name": "tests.test_spec_index_tool.test_build_edits_only_status_line_and_appends_new_specs"
+    },
+    {
+      "id": "symbol:tests.test_spec_index_tool.test_build_refuses_to_drop_indexed_spec",
+      "kind": "test",
+      "line": 88,
+      "path": "tests/test_spec_index_tool.py",
+      "qualified_name": "tests.test_spec_index_tool.test_build_refuses_to_drop_indexed_spec"
+    },
+    {
+      "id": "symbol:tests.test_spec_index_tool.test_estado_stays_within_budget",
+      "kind": "test",
+      "line": 130,
+      "path": "tests/test_spec_index_tool.py",
+      "qualified_name": "tests.test_spec_index_tool.test_estado_stays_within_budget"
+    },
+    {
+      "id": "symbol:tests.test_spec_index_tool.test_next_id_sees_reserved_branches_and_creates_from_template",
+      "kind": "test",
+      "line": 108,
+      "path": "tests/test_spec_index_tool.py",
+      "qualified_name": "tests.test_spec_index_tool.test_next_id_sees_reserved_branches_and_creates_from_template"
+    },
+    {
+      "id": "symbol:tests.test_spec_index_tool.test_real_index_matches_spec_headers",
+      "kind": "test",
+      "line": 124,
+      "path": "tests/test_spec_index_tool.py",
+      "qualified_name": "tests.test_spec_index_tool.test_real_index_matches_spec_headers"
+    },
+    {
+      "id": "symbol:tests.test_spec_index_tool.test_recent_writes_between_markers",
+      "kind": "test",
+      "line": 95,
+      "path": "tests/test_spec_index_tool.py",
+      "qualified_name": "tests.test_spec_index_tool.test_recent_writes_between_markers"
+    },
+    {
       "id": "symbol:tests.test_spec_migration_safety._git",
       "kind": "test",
       "line": 16,
@@ -402749,5 +404429,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:d2fe18f2c63a91d23da953d90550a56abfffa3f6a6fe8fc2d102e3bc1c89ad84"
+  "source_tree_hash": "sha256:72039e8ed6ea5aa8da9bebb7d69cc982d63da8093923236b71de5bcc4f5b9c14"
 }

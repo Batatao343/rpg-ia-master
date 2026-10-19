@@ -1,11 +1,11 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "2e48322a1ff1143276a9610acd6dcd4c766e6a53",
+  "commit_sha": "d7878b8e496ef65fd8a9f7fa1384a93f8eab6e46",
   "edge_counts": {
-    "calls": 16761,
-    "contains": 695,
-    "defines": 9506,
-    "imports": 1561,
+    "calls": 16833,
+    "contains": 701,
+    "defines": 9546,
+    "imports": 1562,
     "likely_test_for": 959,
     "route_to": 63
   },
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:50a336e5463329ce13b1e6b0748d0720071982f8454645ee5075a51e2987752f",
+  "graph_hash": "sha256:711f01612bb2b11954a6985761318b7592bb9e8d0aede1d4ba677ea9a4c299ff",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -199,6 +199,9 @@
     "scripts/ci_eval_scope.py",
     "scripts/cloud_doctor.py",
     "scripts/content_report.py",
+    "scripts/dev/eval_publish.py",
+    "scripts/dev/ruff_baseline.py",
+    "scripts/dev/transcript_stats.py",
     "scripts/dev_stack.py",
     "scripts/export_game_audit.py",
     "scripts/export_game_data.py",
@@ -233,6 +236,7 @@
     "scripts/run_llm_contract_gate.py",
     "scripts/seed_google_play_skus.py",
     "scripts/smoke_local_profile.py",
+    "scripts/spec_index.py",
     "scripts/staging/__init__.py",
     "scripts/staging/account_deletion_recovery.py",
     "scripts/staging/auth_config.py",
@@ -491,6 +495,7 @@
     "tests/test_db_logging.py",
     "tests/test_death_flow.py",
     "tests/test_dev_stack.py",
+    "tests/test_dev_tooling.py",
     "tests/test_dossier_leak.py",
     "tests/test_dossiers.py",
     "tests/test_dossiers_api.py",
@@ -709,6 +714,7 @@
     "tests/test_spec272_conflito_ligado.py",
     "tests/test_spec275_stalemate.py",
     "tests/test_spec_index.py",
+    "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
     "tests/test_speech_api.py",
     "tests/test_speech_finance_local.py",
@@ -772,6 +778,7 @@
     "web/e2e/visual-surfaces.spec.ts",
     "web/e2e/voice-input.spec.ts",
     "web/e2e/workspace-shell.spec.ts",
+    "web/eslint.config.js",
     "web/package.json",
     "web/playwright.config.ts",
     "web/src/api.ts",
@@ -889,14 +896,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 767,
+    "class": 769,
     "endpoint": 63,
-    "file": 835,
-    "function": 2932,
+    "file": 842,
+    "function": 2954,
     "method": 742,
-    "module": 695,
-    "test": 5064
+    "module": 701,
+    "test": 5080
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:d2fe18f2c63a91d23da953d90550a56abfffa3f6a6fe8fc2d102e3bc1c89ad84"
+  "source_tree_hash": "sha256:72039e8ed6ea5aa8da9bebb7d69cc982d63da8093923236b71de5bcc4f5b9c14"
 }
