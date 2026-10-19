@@ -576,7 +576,14 @@ def _read_meta(dir_path: str) -> Optional[dict]:
     try:
         with open(_meta_path(dir_path), "r", encoding="utf-8") as fh:
             return json.load(fh)
-    except Exception:
+    except FileNotFoundError:
+        return None
+    except Exception as exc:
+        from observability.telemetry import log_event
+        base = os.path.basename(os.path.normpath(dir_path))
+        index = base if base in ("faiss_lore_index", "faiss_rules_index") else "session"
+        log_event("rag", "meta_unreadable", level="warning", index=index,
+                  error_type=type(exc).__name__, fallback_provider="gemini")
         return None
 
 

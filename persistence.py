@@ -7,7 +7,7 @@ Fase 10: `save_path()` é o ÚNICO lugar que monta caminho de save a partir de
 game_id vindo do cliente (valida UUID — anti path-traversal); saves carregam
 `schema_version` e passam pelo hard cut de compatibilidade no load.
 """
-from observability.telemetry import log_event as _log_event
+from observability.telemetry import log_event as _log_event, pseudonym as _pseudonym
 import os
 import json
 import glob
@@ -49,8 +49,12 @@ def _replace_with_retry(source: str, destination: str, *, attempts: int = 6) -> 
         except PermissionError as exc:
             last_error = exc
             if attempt + 1 < attempts:
+                _log_event("persistence", "atomic_retry", level="debug",
+                           attempt=attempt + 1, attempts=attempts, error_type=type(exc).__name__)
                 time.sleep(0.01 * (2 ** attempt))
     assert last_error is not None
+    _log_event("persistence", "atomic_failed", level="error",
+               attempts=attempts, error_type=type(last_error).__name__)
     raise last_error
 
 # Versão atual do schema de save (Fase 10). Save sem o campo = versão 0.
@@ -240,10 +244,30 @@ class IncompatibleSaveError(Exception):
     """Save gravado por um schema mais novo que o suportado (SPEC-228 R9)."""
 
 
+def _ms(t0: float) -> int:
+    return int((time.monotonic() - t0) * 1000)
+
+
+def _game_ref(game_id: Any) -> Optional[str]:
+    return _pseudonym(game_id) if game_id else None
+
+
 def migrate_state(raw: Dict[str, Any]) -> Dict[str, Any]:
     """Arquiva saves pré-v4 e normaliza v4→v6. Puro e idempotente."""
     version = int(raw.get("schema_version", 0) or 0)
+    result = _migrate_state(raw, version)
+    if version < SCHEMA_VERSION:
+        _log_event("persistence", "migrated", level="info",
+                   from_version=version, to_version=SCHEMA_VERSION,
+                   steps=SCHEMA_VERSION - version, game_ref=_game_ref(raw.get("game_id")))
+    return result
+
+
+def _migrate_state(raw: Dict[str, Any], version: int) -> Dict[str, Any]:
     if version > SCHEMA_VERSION:
+        _log_event("persistence", "save_schema_newer", level="warning",
+                   found_version=version, supported_version=SCHEMA_VERSION,
+                   game_ref=_game_ref(raw.get("game_id")))
         raise IncompatibleSaveError(
             f"save de versão mais nova (v{version} > v{SCHEMA_VERSION})")
     if version < 4:
@@ -677,6 +701,7 @@ def save_game_state(state: Dict[str, Any]) -> bool:
     Salva o estado completo do jogo em JSON na pasta 'saves/'.
     Usa o 'game_id' como nome do arquivo.
     """
+    _t0 = time.monotonic()
     if not state: return False
 
     if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
@@ -695,7 +720,8 @@ def save_game_state(state: Dict[str, Any]) -> bool:
             state["_storage_version"] = stored.version
             return True
         except Exception as e:
-            _log_event("persistence", "store_save_failed", level="error", error=type(e).__name__)
+            _log_event("persistence", "store_save_failed", level="error", error_type=type(e).__name__,
+                   game_ref=_game_ref(state.get("game_id")), duration_ms=_ms(_t0))
             return False
 
     try:
@@ -716,13 +742,15 @@ def save_game_state(state: Dict[str, Any]) -> bool:
         return True
 
     except Exception as e:
-        _log_event("persistence", "save_failed", level="error", error=type(e).__name__)
+        _log_event("persistence", "save_failed", level="error", error_type=type(e).__name__,
+                   game_ref=_game_ref(state.get("game_id")), duration_ms=_ms(_t0))
         return False
 
 def load_game_state(specific_file: str = None) -> Dict[str, Any]:
     """
     Carrega o jogo. Se specific_file não for passado, carrega o mais recente.
     """
+    _t0 = time.monotonic()
     if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
         try:
             from infrastructure.request_context import current_principal
@@ -754,7 +782,8 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
         except IncompatibleSaveError:
             raise
         except Exception as e:
-            _log_event("persistence", "store_load_failed", level="warning", error=type(e).__name__)
+            _log_event("persistence", "store_load_failed", level="warning", error_type=type(e).__name__,
+                   game_ref=_game_ref(specific_file and os.path.basename(str(specific_file)).removesuffix(".json")), duration_ms=_ms(_t0))
             return None
 
     target_file = specific_file
@@ -773,7 +802,8 @@ def load_game_state(specific_file: str = None) -> Dict[str, Any]:
     except IncompatibleSaveError:
         raise
     except Exception as e:
-        _log_event("persistence", "load_failed", level="warning", error=type(e).__name__)
+        _log_event("persistence", "load_failed", level="warning", error_type=type(e).__name__,
+                   game_ref=_game_ref(target_file and os.path.basename(str(target_file)).removesuffix(".json")), duration_ms=_ms(_t0))
         return None
 
 
@@ -920,9 +950,17 @@ def _raw_to_state(raw_data: Dict[str, Any]) -> Dict[str, Any]:
 
 # --- spec checkpoints-morte: slot de checkpoint (1 por save, sobrescreve) -----
 
+def _log_checkpoint_written(state: Dict[str, Any], t0: float) -> None:
+    _log_event("persistence", "checkpoint_written", level="info",
+               game_ref=_game_ref(state.get("game_id")),
+               turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
+               duration_ms=_ms(t0))
+
+
 def save_checkpoint(state: Dict[str, Any]) -> bool:
     """Grava o snapshot restaurável em `saves/{game_id}.checkpoint.json` (D5: 1
     slot, sobrescreve). Mesmo formato do save vivo — reusa `_state_to_save_data`."""
+    _t0 = time.monotonic()
     if not state:
         return False
     from services.actor_lifecycle import transition_readiness
@@ -945,9 +983,11 @@ def save_checkpoint(state: Dict[str, Any]) -> bool:
             if stored is None or not hasattr(store, "save_checkpoint"):
                 return False
             store.save_checkpoint(principal, stored, state)
+            _log_checkpoint_written(state, _t0)
             return True
         except Exception as e:
-            _log_event("persistence", "store_checkpoint_failed", level="error", error=type(e).__name__)
+            _log_event("persistence", "store_checkpoint_failed", level="error", error_type=type(e).__name__,
+                   game_ref=_game_ref(state.get("game_id")), duration_ms=_ms(_t0))
             return False
     memory_backup: Optional[str] = None
     memory_destination: Optional[str] = None
@@ -969,6 +1009,7 @@ def save_checkpoint(state: Dict[str, Any]) -> bool:
         _atomic_write_json(path, _state_to_save_data(state, game_id))
         if memory_backup:
             shutil.rmtree(memory_backup, ignore_errors=True)
+        _log_checkpoint_written(state, _t0)
         return True
     except Exception as e:
         if memory_destination:
@@ -977,7 +1018,8 @@ def save_checkpoint(state: Dict[str, Any]) -> bool:
                 _replace_with_retry(memory_backup, memory_destination)
         if memory_backup:
             shutil.rmtree(memory_backup, ignore_errors=True)
-        _log_event("persistence", "checkpoint_write_failed", level="error", error=type(e).__name__)
+        _log_event("persistence", "checkpoint_write_failed", level="error", error_type=type(e).__name__,
+                   game_ref=_game_ref(state.get("game_id")), duration_ms=_ms(_t0))
         return False
 
 
@@ -1035,6 +1077,7 @@ def ensure_synthetic_checkpoint(state: Dict[str, Any]) -> bool:
 def load_checkpoint(game_id: str) -> Optional[Dict[str, Any]]:
     """Carrega o checkpoint do `game_id` (None se não houver). Reconstrói via
     `_raw_to_state` (mesmo pipeline de migrations do save vivo)."""
+    _t0 = time.monotonic()
     if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
         try:
             from infrastructure.request_context import current_principal
@@ -1046,7 +1089,8 @@ def load_checkpoint(game_id: str) -> Optional[Dict[str, Any]]:
                 return None
             return store.get_checkpoint(principal, uuid.UUID(str(game_id)))
         except Exception as e:
-            _log_event("persistence", "store_checkpoint_load_failed", level="warning", error=type(e).__name__)
+            _log_event("persistence", "store_checkpoint_load_failed", level="warning", error_type=type(e).__name__,
+                   game_ref=_game_ref(game_id), duration_ms=_ms(_t0))
             return None
     path = _safe_save_path(game_id, suffix=".checkpoint")
     if not os.path.exists(path):
@@ -1055,5 +1099,6 @@ def load_checkpoint(game_id: str) -> Optional[Dict[str, Any]]:
         with open(path, "r", encoding="utf-8") as f:
             return _raw_to_state(json.load(f))
     except Exception as e:
-        _log_event("persistence", "checkpoint_load_failed", level="warning", error=type(e).__name__)
+        _log_event("persistence", "checkpoint_load_failed", level="warning", error_type=type(e).__name__,
+                   game_ref=_game_ref(game_id), duration_ms=_ms(_t0))
         return None

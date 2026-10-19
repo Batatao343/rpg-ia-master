@@ -193,4 +193,8 @@ def resolve_death_choice(state: dict, choice: str, *,
     # (carrega a da linha do tempo viva) e a projeção da época antiga é cancelada.
     from services.projections import carry_over_restore
     carry_over_restore(state, restored)
+    from observability.telemetry import log_event
+    log_event("persistence", "checkpoint_restored", level="info",
+              game_ref=persistence._game_ref(restored.get("game_id") or state.get("game_id")),
+              turn=int((restored.get("world") or {}).get("turn_count", 0) or 0))
     return restored
