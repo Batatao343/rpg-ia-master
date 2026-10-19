@@ -399,7 +399,7 @@ def build_dossiers(state: Mapping) -> dict:
     known_ids = {d["id"] for d in npcs + locations + factions}
     every = npcs + locations + factions + secrets + creatures
     turn = _turn((state.get("world") or {}).get("turn_count")) or 0
-    return {
+    out = {
         "version": _max_turn(*[d["version"] for d in every]),
         "generated_at_turn": turn,
         "sections": {
@@ -412,3 +412,7 @@ def build_dossiers(state: Mapping) -> dict:
         "bestiary": creatures,
         "meta": {"taxonomy_version": TAXONOMY_VERSION},
     }
+    from services.faction_display import conceal_for
+
+    # SPEC-293 R3: o codex já vem projetado; rótulo reaplicado no agregado (fail-closed).
+    return conceal_for(state, out)

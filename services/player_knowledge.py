@@ -471,6 +471,10 @@ def project_player_knowledge(state: Mapping, raw: Mapping[str, list]) -> dict:
                     "entrada omitida", extra={"category": category, "reason": type(exc).__name__}
                 )
         out[category] = projected
+    # SPEC-293 R3: combatente de fação desconhecida aparece só pelo papel.
+    from services.faction_display import conceal_for
+
+    out = conceal_for(state, out)
     out["meta"] = {
         "taxonomy_version": TAXONOMY_VERSION,
         "counts": {c: len(out[c]) for c in CATEGORIES},
@@ -571,4 +575,9 @@ def assert_no_player_leak(codex: Mapping, state: Mapping) -> list[str]:
             problems.append(f"d:kind_outside_taxonomy:{category}")
         elif kind == "fact" and not _fact_has_source(stamp, state):
             problems.append(f"d:fact_without_source:{category}:{stamp.get('source_ref', '')}")
+
+    # (e) SPEC-293: nome canônico de combatente de fação que o jogador não conhece
+    from services.faction_display import concealed_name_problems
+
+    problems.extend(concealed_name_problems(codex, state))
     return problems

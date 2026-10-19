@@ -2080,6 +2080,18 @@ def _response_speaker(state: dict) -> dict[str, str]:
 
 
 def format_response(state: dict, *, cue_action_key: str | None = None) -> GameResponse:
+    """SPEC-293 R3: toda resposta de turno/estado passa pelo rótulo de exibição por
+    observador (combatente de fação desconhecida aparece só pelo papel)."""
+    from services.faction_display import conceal_payload, concealed_name_map
+
+    response = _format_response_raw(state, cue_action_key=cue_action_key)
+    mapping = concealed_name_map(state)
+    if not mapping:
+        return response
+    return GameResponse.model_validate(conceal_payload(response.model_dump(), mapping))
+
+
+def _format_response_raw(state: dict, *, cue_action_key: str | None = None) -> GameResponse:
     # Pega a última mensagem
     from services.turn_outcome import player_facing_message
 
@@ -3506,6 +3518,9 @@ def game_history(game_id: str, cursor: str | None = None, limit: int = 50):
         page["entries"] = [dict(entry) for entry in page["entries"]]
     except (ValueError, TypeError) as exc:
         raise HTTPException(409, "history_cursor_stale") from exc
+    from services.faction_display import conceal_for
+
+    page["entries"] = conceal_for(state, page["entries"])  # SPEC-293 R3
     # Financial data is an optional read projection. A failed query must never
     # hide the narrative or invent zero spend.
     if _database_profile() and page["entries"]:
@@ -6594,11 +6609,16 @@ def search_chronicle_endpoint(req: ChronicleSearchRequest):
                         req.query,
                         top_k=req.top_k,
                     )
-        return search_chronicle(
-            state.get("chronicle") or [],
-            req.query,
-            top_k=req.top_k,
-            semantic=semantic,
+        from services.faction_display import conceal_for
+
+        return conceal_for(  # SPEC-293 R3
+            state,
+            search_chronicle(
+                state.get("chronicle") or [],
+                req.query,
+                top_k=req.top_k,
+                semantic=semantic,
+            ),
         )
     except ValueError as exc:
         raise HTTPException(status_code=422, detail="chronicle_query_invalid") from exc
@@ -6640,7 +6660,10 @@ def export_chronicle(game_id: str | None = None):
     disposition = (
         f"attachment; filename=\"cronica_{ascii_name}.txt\"; filename*=UTF-8''cronica_{quoted}.txt"
     )
-    return PlainTextResponse("\n".join(lines), headers={"Content-Disposition": disposition})
+    from services.faction_display import conceal_for
+
+    text = conceal_for(state, "\n".join(lines))  # SPEC-293 R3
+    return PlainTextResponse(text, headers={"Content-Disposition": disposition})
 
 
 # --- FRONTEND ESTÁTICO ---

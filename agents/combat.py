@@ -844,15 +844,15 @@ def _faction_withhold_clause(manifest, factions, intel) -> str:
 
 def _concealed_species(manifest, factions, intel) -> list[tuple[str, str]]:
     """(nome canônico, rótulo curto) das espécies cujo nome expõe fação desconhecida."""
-    from world_utils import concealed_faction
+    # SPEC-293 R7: mesmo rótulo de exibição do HUD/Bestiário (services.faction_display).
+    from services.faction_display import display_label
 
     out: list[tuple[str, str]] = []
     for p in (manifest or {}).get("participants") or []:
         full = str(p.get("species_label") or "")
-        entry = {"faction": p.get("faction_id"), "name": full}
-        if full and concealed_faction(entry, factions, intel) and full not in dict(out):
-            short = re.split(r"\s+d(?:a|e|o|as|os)\s+|\s*\(", full, maxsplit=1)[0].strip()
-            out.append((full, short or "combatente"))
+        short = display_label(full, str(p.get("faction_id") or ""), factions, intel)
+        if full and short != full and full not in dict(out):
+            out.append((full, short))
     return out
 
 
