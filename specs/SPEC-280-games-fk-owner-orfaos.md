@@ -31,15 +31,20 @@ recusaria todo jogo nesses perfis. O tratamento equivalente para o perfil Supaba
   checkpoints/eventos/turnos/operações/memória/assets do jogo. `usage_events` sobrevivem (SPEC-279:
   `game_id` vira NULL); nenhuma tabela financeira (`wallet_*`, `payment_*`, `google_play_purchases`,
   `purchase_reconciliation_state`) é tocada.
-- **R2** — O trigger nunca impede a exclusão no Auth por motivo próprio: função `security definer`,
-  `search_path=''`, sem `raise`; no fluxo SPEC-190 os jogos já foram apagados e o delete é no-op.
+- **R2** — O trigger nunca impede a exclusão no Auth: função `security definer`, `search_path=''`; owner com
+  tombstone da SPEC-190 (`account_deletions`, qualquer status) é pulado — a cascata (`usage_events` SET NULL
+  é UPDATE) bateria na cerca `account_write_fence` e o GoTrue falharia; esses jogos são do worker da 190.
+  A migration recusa aplicar sem `BYPASSRLS` no dono da função (com `FORCE RLS` em `app.games` o delete
+  seria no-op silencioso).
 - **R3** — Migration idempotente e portátil: só cria o trigger se `auth.users` existir (`to_regclass`);
   `create or replace function` + `drop trigger if exists`; `revoke` da função para `public/anon/authenticated/
   rpg_api`; termina com `select app.grant_runtime_access();`.
 - **R4** — Limpeza dos órfãos existentes por `scripts/admin_orphan_games.py --dsn-env VAR [--env-file F]`:
   - **dry-run por padrão**: conta jogos órfãos (owner sem linha em `auth.users`), owners distintos e
     `usage_events` ligados a eles (quantidade e soma que conta como gasto); saída só com contagens (sem ids);
-  - exclui owners com exclusão de conta em andamento (`account_deletions.status='deleting'` — a SPEC-190 cuida);
+  - exclui owners com qualquer tombstone em `account_deletions` (a SPEC-190 cuida);
+  - só para bancos do perfil `hosted-supabase` (banco misto OIDC+Auth: o `--expect` do dry-run é a barreira);
+  - depois do `--apply` o dry-run é refeito e o script sai com código 1 se ainda houver órfãos;
   - **recusa** se `auth.users` não existe ou está vazio (perfil OIDC: tudo pareceria órfão);
   - **recusa** se `usage_events.game_id` ainda cascateia (SPEC-279 não aplicada — apagaria gasto);
   - `--apply --expect N` só apaga se o número de órfãos medido na mesma transação for exatamente N (o

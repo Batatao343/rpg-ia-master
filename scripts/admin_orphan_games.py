@@ -3,7 +3,9 @@
 Dry-run by default; prints counts only (no ids/PII). Deleting needs ``--apply --expect N`` where N is the
 orphan count seen in the dry-run. Refuses when auth.users is missing/empty (OIDC profile: everything would
 look orphaned) or when usage_events still cascades from games (SPEC-279 not applied: spend would vanish).
-Owners with an account deletion in progress (SPEC-190) are left to that flow.
+Owners with any SPEC-190 tombstone (deleting/deleted) are left to that flow. Only for databases of the
+``hosted-supabase`` profile: in a mixed database (OIDC owners + some Auth users) OIDC games would look
+orphaned — the ``--expect`` count from the dry-run is the last barrier, so read it before applying.
 
   uv run --frozen python scripts/admin_orphan_games.py --dsn-env RPG_STAGING_DB_URL --env-file .env.staging
   uv run --frozen python scripts/admin_orphan_games.py --dsn-env RPG_STAGING_DB_URL --env-file .env.staging \
@@ -25,8 +27,7 @@ FINANCIAL_TABLES = ("wallet_accounts", "wallet_entries", "wallet_reservations", 
 
 _ORPHANS = """select g.id, g.owner_id from app.games g
     where not exists (select 1 from auth.users u where u.id = g.owner_id)
-      and not exists (select 1 from app.account_deletions d
-                      where d.owner_id = g.owner_id and d.status = 'deleting')"""
+      and not exists (select 1 from app.account_deletions d where d.owner_id = g.owner_id)"""
 
 
 class OrphanCleanupRefused(RuntimeError):
@@ -72,11 +73,11 @@ def plan(conn) -> dict:
     owners = sorted({_col(r, "owner_id", 1) for r in rows})
     snap = _snapshot(conn, owners)
     skipped = _one(conn, """select count(*) from app.games g join app.account_deletions d
-        on d.owner_id = g.owner_id and d.status = 'deleting'
+        on d.owner_id = g.owner_id
         where not exists (select 1 from auth.users u where u.id = g.owner_id)""")
     return {"orphan_games": len(rows), "orphan_owners": len(owners),
             "orphan_usage_events": snap["usage_events"], "orphan_usage_spend_usd": snap["spend_usd"],
-            "skipped_account_deletion_in_progress": int(skipped)}
+            "skipped_account_deletion_tombstone": int(skipped)}
 
 
 def apply(conn, expect: int) -> dict:
@@ -131,14 +132,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         if a.apply:
             with conn.transaction():
                 result["apply"] = apply(conn, a.expect)
-        result["plan"] = plan(conn)   # after apply: must be 0
+        result["plan"] = plan(conn)
         conn.rollback()
+    result["ok"] = not (a.apply and result["plan"]["orphan_games"])   # after apply: must be 0
     text = json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True, default=str)
     if a.out:
         Path(a.out).parent.mkdir(parents=True, exist_ok=True)
         Path(a.out).write_text(text + "\n", encoding="utf-8")
     print(text)
-    return 0
+    return 0 if result["ok"] else 1
 
 
 if __name__ == "__main__":

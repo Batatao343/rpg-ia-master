@@ -20,7 +20,8 @@ def test_trigger_after_delete_on_auth_users_is_definer_and_portable():
     assert "security definer set search_path = ''" in sql
     assert "delete from app.games where owner_id = old.id" in sql
     assert "to_regclass('auth.users')" in sql
-    assert "raise" not in sql                     # never blocks an Auth deletion by itself
+    assert "if exists (select 1 from app.account_deletions where owner_id = old.id) then return old" in sql
+    assert "rolbypassrls" in sql
 
 
 def test_migration_is_idempotent_and_locked_down():

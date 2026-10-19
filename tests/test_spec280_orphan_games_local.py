@@ -69,7 +69,7 @@ def test_plan_and_apply_remove_only_orphans_and_keep_spend(db):
     deleting_game, _ = _game(db, deleting_owner)
     db.execute("insert into app.account_deletions(owner_id) values(%s)", (deleting_owner,))
     p = plan(db)
-    assert p["orphan_games"] >= 1 and p["skipped_account_deletion_in_progress"] >= 1
+    assert p["orphan_games"] >= 1 and p["skipped_account_deletion_tombstone"] >= 1
     assert p["orphan_usage_spend_usd"] >= Decimal("0.25")
     assert "ids" not in str(p) and str(orphan_owner) not in str(p)
     with pytest.raises(OrphanCleanupRefused):
@@ -93,3 +93,24 @@ def test_refuses_when_usage_still_cascades(db):
         foreign key (game_id) references app.games(id) on delete cascade""")
     with pytest.raises(OrphanCleanupRefused):
         plan(db)
+
+
+def test_auth_delete_of_tombstoned_owner_never_fails(db):
+    """Review P1: a SPEC-190 tombstone + remaining games must not make the Auth delete raise."""
+    owner = _auth_user(db)
+    game, event = _game(db, owner)
+    db.execute("insert into app.account_deletions(owner_id) values(%s)", (owner,))
+    db.execute("delete from auth.users where id=%s", (owner,))
+    assert db.execute("select 1 from app.games where id=%s", (game,)).fetchone() is not None  # left to SPEC-190
+
+
+def test_deleted_tombstone_owner_is_not_an_orphan_candidate(db):
+    from scripts.admin_orphan_games import plan
+    before = plan(db)
+    owner = uuid4()
+    _game(db, owner)
+    db.execute("insert into app.account_deletions(owner_id,status,completed_at) values(%s,'deleted',now())",
+                (owner,))
+    after = plan(db)
+    assert after["orphan_games"] == before["orphan_games"]
+    assert after["skipped_account_deletion_tombstone"] == before["skipped_account_deletion_tombstone"] + 1
