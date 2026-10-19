@@ -253,6 +253,7 @@ class WorldState(TypedDict, total=False):
     controlled: dict[str, str]  # location_id -> faction_id (local dominado por fação)
     danger_overrides: dict[str, int]  # location_id -> perigo elevado por ascensão (teto 4)
     looming_threat: str  # ameaça invocada (entidade) pairando sobre o mundo
+    looming_threat_faction: str  # SPEC-289: fação que invocou a ameaça (tema da criatura)
     last_encounter_turn: int  # turno do último encontro automático (cooldown)
     threat_alerts: list[
         dict

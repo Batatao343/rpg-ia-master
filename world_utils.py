@@ -444,6 +444,7 @@ def resolve_faction_completions(factions, world, events, intel) -> tuple[list, d
         elif atype == "invocar_entidade":
             if asc.get("threat"):
                 world["looming_threat"] = asc["threat"]
+                world["looming_threat_faction"] = fid  # SPEC-289 R1
             if asc.get("target"):
                 _raise_danger(world, asc["target"])
         elif atype == "eliminar_faccao":
@@ -725,6 +726,78 @@ def _bestiary_by_faction(faction_id: str):
     return None
 
 
+def _theme_stems(text: str) -> set:
+    """SPEC-289 R3b: radicais de palavras (sem acento/caixa, >=5 letras, sem `s`
+    final, 6 primeiras letras). Determinístico — base do casamento ameaça↔criatura."""
+    import re
+    import unicodedata
+
+    norm = "".join(
+        c
+        for c in unicodedata.normalize("NFD", str(text or "").lower())
+        if unicodedata.category(c) != "Mn"
+    )
+    out = set()
+    for w in re.findall(r"[a-z]+", norm):
+        w = w[:-1] if w.endswith("s") else w
+        if len(w) >= 5:
+            out.add(w[:6])
+    return out
+
+
+def threat_faction(world: dict, factions) -> dict | None:
+    """SPEC-289 R1: fação que invocou a `looming_threat` — campo gravado na ascensão;
+    save antigo: casa o texto com `ascension.threat` das fações vivas, depois dos seeds."""
+    world = world or {}
+    threat = str(world.get("looming_threat") or "").strip()
+    fid = world.get("looming_threat_faction") or ""
+    for pool in (list(factions or []), gamedata.seed_factions()):
+        for f in pool:
+            if not isinstance(f, dict):
+                continue
+            asc = f.get("ascension") or {}
+            if asc.get("type") != "invocar_entidade":
+                continue
+            if fid and f.get("id") == fid:
+                return f
+            if not fid and threat and str(asc.get("threat") or "").strip() == threat:
+                return f
+    return None
+
+
+def threat_sphere(faction: dict) -> set:
+    """SPEC-289 R2: regiões onde a ameaça se manifesta — região do local-alvo da
+    ascensão ∪ região de origem da fação (nome de exibição -> region_id)."""
+    out = set()
+    asc = (faction or {}).get("ascension") or {}
+    tgt = gamedata.get_location(asc.get("target") or "") or {}
+    if tgt.get("region_id"):
+        out.add(tgt["region_id"])
+    home = (faction or {}).get("region") or ""
+    for loc in gamedata.WORLD_MAP.get("locations", []):
+        if home and loc.get("region") == home and loc.get("region_id"):
+            out.add(loc["region_id"])
+    return out
+
+
+def threat_theme_match(faction: dict, threat_text: str):
+    """SPEC-289 R3: pontua a afinidade de uma criatura com a ameaça —
+    2 = combatente da fação; 1 = nome casa radical do texto (atual ou autorado da
+    ascensão); 0 = sem tema."""
+    fid = (faction or {}).get("id") or ""
+    canon = ((faction or {}).get("ascension") or {}).get("threat") or ""
+    stems = _theme_stems(threat_text) | _theme_stems(canon)  # texto atual ∪ autorado
+
+    def score(entry: dict) -> int:
+        if fid and (entry or {}).get("faction") == fid:
+            return 2
+        if stems and _theme_stems((entry or {}).get("name", "")) & stems:
+            return 1
+        return 0
+
+    return score
+
+
 def pick_encounter_enemy(
     loc: dict,
     danger: int,
@@ -734,6 +807,7 @@ def pick_encounter_enemy(
     bestiary_knowledge: dict = None,
     projection: dict = None,
     rng=None,
+    theme=None,
 ):
     """
     Fase 2.5b (R11): sorteio DETERMINÍSTICO de criatura concreta do bestiário.
@@ -747,6 +821,10 @@ def pick_encounter_enemy(
     local pesa x2, e fauna local rareada abre vaga p/ 1 migrante de região
     conectada (rotas bloqueadas da 6.1 barram). Sem os dados -> comportamento
     legado (round-robin por turno), retrocompatível.
+    SPEC-289: `theme` (callable entry->int, de `threat_theme_match`) restringe o
+    sorteio às criaturas temáticas (pontuação > 0) no porte ESTRITO do perigo
+    (<=2 Minion; 3 qualquer; >=4 Elite); no sorteio ponderado a pontuação multiplica
+    o peso (fação x2). Sem nenhuma temática -> sorteio normal. Sem migrantes.
     Retorna a ENTRADA do bestiário ou None (chamador cai no hint genérico).
     """
     if faction_id:
@@ -776,6 +854,13 @@ def pick_encounter_enemy(
         filtered = pool
     else:
         filtered = [e for e in pool if tier(e) == "elite"] or pool
+    themed = False
+    if theme is not None:
+        strict = filtered if danger <= 3 else [e for e in pool if tier(e) == "elite"]
+        hits = [e for e in strict if theme(e) > 0]
+        if hits:
+            filtered = hits
+            themed = True
     pool = sorted(filtered or pool, key=lambda e: e.get("id", ""))
 
     if bestiary_knowledge is None and projection is None:
@@ -788,12 +873,13 @@ def pick_encounter_enemy(
     weights = [
         eco3.hunt_pressure(e.get("id", ""), bestiary_knowledge, turn)
         * eco3.faction_boost(e, loc_id, projection)
+        * (theme(e) if themed else 1)  # SPEC-289: combatente da fação pesa x2
         for e in pool
     ]
 
     # fauna local rareada -> no máx. 1 migrante entra no sorteio (peso 0.5)
     avg = sum(weights) / max(1, len(weights))
-    if avg < eco3.MIGRANT_THRESHOLD + 0.2:
+    if not themed and avg < eco3.MIGRANT_THRESHOLD + 0.2:
         migrants = eco3.migrant_candidates(loc, gamedata.BESTIARY or {}, projection)
         migrants = [m for m in migrants if tier(m) == "minion" or danger >= 3]
         if migrants:
@@ -914,13 +1000,25 @@ def check_encounter(
 
     if threat and danger >= 3:
         # SPEC-288: a criatura é canônica (bestiário); o texto da ameaça é só flavor.
+        # SPEC-289: dentro da esfera da ameaça, prefere criatura TEMÁTICA da região;
+        # fora dela, fauna local e o texto vira eco distante (não cola o tema na fera).
+        tfac = threat_faction(world, factions)
+        in_sphere = bool(tfac) and loc.get("region_id") in threat_sphere(tfac)
         entry = pick_encounter_enemy(
-            loc, eff, turn, bestiary_knowledge=bestiary_knowledge, projection=projection
+            loc,
+            eff,
+            turn,
+            bestiary_knowledge=bestiary_knowledge,
+            projection=projection,
+            theme=threat_theme_match(tfac, str(threat)) if in_sphere else None,
         )
+        flavor = str(threat)
+        if tfac and not in_sphere:
+            flavor = f"Ecos de uma ameaça distante: {threat} Aqui, porém, o perigo é outro."
         return _stamp(
             {
                 "hint": entry.get("name") if entry else f"feras/perigos de {region}",
-                "flavor": str(threat),
+                "flavor": flavor,
                 "reason": "looming_threat",
                 "enemy_id": entry.get("id", "") if entry else "",
             }
