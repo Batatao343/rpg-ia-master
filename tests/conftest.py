@@ -24,6 +24,27 @@ for _name in _EXPOSURE_ENV:
     os.environ.pop(_name, None)
 
 
+@pytest.hookimpl(tryfirst=True)
+def pytest_configure(config):
+    """Windows + pytest-xdist: short per-checkout basetemp (workspace #5).
+
+    xdist adds ``popen-gwN`` to every tmp path; nested blob paths then pass the
+    260-char MAX_PATH and ``os.replace`` fails with WinError 3. A short, per-checkout
+    directory keeps paths short and parallel worktrees from wiping each other.
+    """
+    import hashlib
+    import sys
+    import tempfile
+    from pathlib import Path
+
+    if sys.platform != "win32" or os.environ.get("PYTEST_XDIST_WORKER"):
+        return
+    if config.option.basetemp or not getattr(config.option, "numprocesses", None):
+        return
+    checkout = hashlib.sha1(str(Path(__file__).resolve().parents[1]).encode()).hexdigest()[:8]
+    config.option.basetemp = str(Path(tempfile.gettempdir()) / f"pt-{checkout}")
+
+
 @pytest.fixture(autouse=True)
 def _no_exposure_markers(monkeypatch):
     for name in _EXPOSURE_ENV:
@@ -59,6 +80,11 @@ def _isolated_saves_and_memory(monkeypatch, tmp_path):
     monkeypatch.setattr(persistence, "SAVES_DIR", str(saves_dir))
     monkeypatch.setattr(persistence, "SESSION_MEMORY_DIR", str(memory_dir))
     monkeypatch.setattr(rag, "SAVES_DIR", str(memory_dir))
+    # Playtest campaigns derive game_id from the seed (SPEC-275): with a shared
+    # `saves_playtest/`, two pytest-xdist workers running the same seed collide.
+    import playtest.runner as playtest_runner
+
+    monkeypatch.setattr(playtest_runner, "PLAYTEST_SAVES_DIR", str(tmp_path / "saves_playtest"))
 
 
 @pytest.fixture(autouse=True)
