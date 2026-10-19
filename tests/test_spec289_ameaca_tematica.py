@@ -139,3 +139,123 @@ def test_themed_pick_skips_boss_and_respects_weighted_path():
             loc, 4, seed, bestiary_knowledge={}, projection={}, rng=random.Random(seed), theme=theme
         )
         assert theme(e) > 0 and not is_boss(e) and _tier(e) == "elite"
+
+
+# ---------------------------------------------------------------------------
+# SPEC-292 — follow-ups: P2-2 (criatura temática única x pressão de caça) e
+# P2-3 (nome do combatente não expõe a fação ao jogador que não a conhece)
+# ---------------------------------------------------------------------------
+def _themed(loc_id=None):
+    fac = wu.threat_faction({"looming_threat": CORVANE}, [])
+    return wu.threat_theme_match(fac, CORVANE)
+
+
+def test_single_themed_creature_fresh_population_stays_exclusive():
+    import random
+
+    loc = gamedata.get_location("ae_ruinas_submersas")
+    for seed in range(15):
+        e = wu.pick_encounter_enemy(
+            loc,
+            2,
+            10,
+            bestiary_knowledge={},
+            projection={},
+            rng=random.Random(seed),
+            theme=_themed(),
+        )
+        assert e["id"] == "mon_faisca_destilacao"
+
+
+def test_single_themed_creature_hunted_out_mixes_regional_pool():
+    import random
+
+    loc = gamedata.get_location("ae_ruinas_submersas")
+    bk = {"mon_faisca_destilacao": {"defeated": 8, "last_update_turn": 10}}
+    picks = [
+        wu.pick_encounter_enemy(
+            loc, 2, 10, bestiary_knowledge=bk, projection={}, rng=random.Random(s), theme=_themed()
+        )["id"]
+        for s in range(60)
+    ]
+    assert "mon_faisca_destilacao" in picks  # a temática ainda existe, só rareada
+    others = set(picks) - {"mon_faisca_destilacao"}
+    assert others, "pressão de caça esgotou a temática: o pool regional deve entrar"
+    for pid in others:  # porte estrito (Minion) e sem BOSS
+        e = gamedata.BESTIARY[pid]
+        assert _tier(e) == "minion" and not is_boss(e) and "aethelgard" in e["regions"]
+    # determinístico por seed
+    again = [
+        wu.pick_encounter_enemy(
+            loc, 2, 10, bestiary_knowledge=bk, projection={}, rng=random.Random(s), theme=_themed()
+        )["id"]
+        for s in range(60)
+    ]
+    assert picks == again
+
+
+def _enc_intel(loc, threat, intel, level=1, override=None):
+    world = {"current_location_id": loc, "looming_threat": threat}
+    if override:
+        world["danger_overrides"] = {loc: override}
+    return wu.check_encounter(world, gamedata.seed_factions(), intel, turn=10, player_level=level)
+
+
+def test_looming_public_hint_hides_unknown_faction():
+    enc = _enc_intel("nova_arcadia", CHAMA, {}, override=3)
+    assert enc["enemy_id"] == "enemy_iniciado_chama_azul"
+    assert enc["hint"] == "Iniciado da Chama Azul"  # canônico p/ spawn/dedupe (R6 da 289)
+    assert "Chama Azul" not in enc["public_hint"]
+    assert enc["concealed_faction"] == "filhos_chama_azul"
+    known = _enc_intel("nova_arcadia", CHAMA, {"filhos_chama_azul": {"known": True}}, override=3)
+    assert known["public_hint"] == "Iniciado da Chama Azul"
+    assert "concealed_faction" not in known
+
+
+def test_looming_elite_creature_of_faction_hides_unknown_faction():
+    seen = {}
+    for t in range(6):
+        world = {"current_location_id": "ae_ruinas_submersas", "looming_threat": CORVANE}
+        enc = wu.check_encounter(
+            world, gamedata.seed_factions(), {}, turn=10 + t * 5, player_level=9
+        )
+        seen[enc["enemy_id"]] = enc
+    cult = seen.get("enemy_cultista_destilacao")
+    assert cult is not None
+    assert "Destilação" not in cult["public_hint"]
+
+
+def test_creature_without_faction_has_plain_public_hint():
+    enc = _enc_intel("floresta_sussurros", CORVANE, {})
+    assert enc["public_hint"] == enc["hint"] and "concealed_faction" not in enc
+
+
+def test_controlled_branch_public_hint_hides_unknown_faction():
+    world = {
+        "current_location_id": "pradaria_ruinas",
+        "controlled": {"pradaria_ruinas": "bandos_nomades"},
+    }
+    facs = gamedata.seed_factions()
+    enc = wu.check_encounter(world, facs, {}, turn=10)
+    assert "Bandos Nômades" not in enc["public_hint"]
+    world2 = {
+        "current_location_id": "pradaria_ruinas",
+        "controlled": {"pradaria_ruinas": "bandos_nomades"},
+    }
+    enc2 = wu.check_encounter(world2, facs, {"bandos_nomades": {"known": True}}, turn=10)
+    assert enc2["public_hint"] == enc2["hint"]
+
+
+def test_handoff_carries_public_hint_and_narrator_clause():
+    from agents.combat import _faction_withhold_clause
+    from agents.storyteller import encounter_handoff
+
+    enc = _enc_intel("nova_arcadia", CHAMA, {}, override=3)
+    ho = encounter_handoff(enc)
+    assert ho["public_hint"] == enc["public_hint"] and ho["hint"] == enc["hint"]
+    facs = gamedata.seed_factions()
+    manifest = {"participants": [{"faction_id": "filhos_chama_azul"}, {"faction_id": ""}]}
+    clause = _faction_withhold_clause(manifest, facs, {})
+    assert "Chama Azul" in clause and "NÃO" in clause  # o aviso cita o nome só p/ proibi-lo
+    assert _faction_withhold_clause(manifest, facs, {"filhos_chama_azul": {"known": True}}) == ""
+    assert _faction_withhold_clause(None, facs, {}) == ""

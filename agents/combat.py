@@ -815,6 +815,23 @@ def _narrate_fall(player: dict, logs: list[str], killer: str = "") -> str:
     ).strip()
 
 
+def _faction_withhold_clause(manifest, factions, intel) -> str:
+    """SPEC-292 (P2-3): fações dos combatentes que o jogador AINDA não conhece ficam
+    sem nome na narração (descreve-se por aparência/armas). Vazio se nada a esconder."""
+    from world_utils import unknown_faction_names
+
+    ids = [p.get("faction_id") for p in (manifest or {}).get("participants") or []]
+    names = unknown_faction_names(ids, factions, intel)
+    if not names:
+        return ""
+    return (
+        "O herói NÃO conhece as facções: "
+        + "; ".join(names)
+        + ". NÃO cite esses nomes nem o nome de organização dos inimigos — descreva-os "
+        "por aparência, armas e comportamento."
+    )
+
+
 def _narrate(
     player: dict,
     enemies: list[dict],
@@ -825,6 +842,7 @@ def _narrate(
     world_ctx: str,
     aberturas: list[str] | None = None,
     manifest: dict | None = None,
+    withhold: str = "",
 ) -> str:
     from services import prose_guard
 
@@ -871,6 +889,7 @@ def _narrate(
     Herói: {player.get("name")} Vit {player.get("vitalidade")}/{player.get("max_vitalidade")}
     Inimigos ativos: {", ".join(alive) if alive else "nenhum"}
     {elenco}
+    {withhold}
     {fecho}{varie}
     """
     )
@@ -1402,6 +1421,9 @@ def _combat_node(state: GameState):
             world_pack.world_state_block,
             aberturas,
             manifest=combat_meta.get("encounter"),
+            withhold=_faction_withhold_clause(
+                combat_meta.get("encounter"), state.get("factions"), state.get("faction_intel")
+            ),
         )
     # ---- Resumo canônico do conflito (conflito-12) na saída ----
     conflict_sum = None

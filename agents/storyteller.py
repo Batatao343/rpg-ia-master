@@ -115,6 +115,8 @@ def encounter_handoff(enc: dict) -> dict:
         "enemy_id": str(enc.get("enemy_id") or ""),
         "reason": str(enc.get("reason") or ""),
         "hint": str(enc.get("hint") or ""),
+        # SPEC-292: rótulo seguro p/ o jogador (não expõe fação desconhecida)
+        "public_hint": str(enc.get("public_hint") or enc.get("hint") or ""),
     }
 
 

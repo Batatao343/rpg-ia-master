@@ -1,68 +1,61 @@
 # SPEC-292 — ameaca-tematica-followups
 
-> **Status:** `draft`
+> **Status:** `done` — dono autorizou em 19/10/2026 tudo que não exige ação externa dele (onda 19/10).
 > **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
-> **Depende de:** <specs anteriores que precisam estar `done`>
-> **Desbloqueia:** <specs/features que dependem desta>
+> **Depende de:** SPEC-289 (`done`), Fase 2 (`faction_intel`, não-onisciência)
+> **REVIEW_REQUIRED:** false (follow-ups P2 já revistos na SPEC-289; mudança pequena e determinística)
 
 ---
 
 ## 1. Contexto & Objetivo
 
-Por que esta spec existe. Qual problema resolve. 2-4 parágrafos no máximo.
-Referência ao princípio de arquitetura relevante (ver `ROADMAP.md` § Princípios).
+Follow-ups P2-2 e P2-3 de `handoffs/SPEC-289-review.md`.
+
+- **P2-2:** com UMA criatura temática no porte (só a Faísca da Destilação em `aethelgard`
+  Minion), a pressão de caça da Fase 6.3 não surtia efeito: o peso 0,1 da criatura farmada era o
+  único peso e migrantes estão desligados na camada temática.
+- **P2-3:** o nome canônico do combatente da fação ("Iniciado da Chama Azul") expõe a fação ao
+  jogador que ainda não a conhece (`faction_intel[fid].known`), e a narração de combate recebia o
+  elenco canônico sem restrição.
 
 ## 2. Requisitos
 
-Numerados, testáveis. Cada requisito deve poder virar assert.
-
-- **R1** — ...
-- **R2** — ...
+- **R1 — Pressão de caça mistura o pool (P2-2).** No sorteio ponderado temático, se a média dos
+  pesos base (`hunt_pressure × faction_boost`, sem a pontuação temática) ficar abaixo de
+  `MIGRANT_THRESHOLD + 0.2` (limiar da fauna rareada da 6.3), o pool regional do MESMO porte (BOSS
+  fora, porte estrito) entra no sorteio com peso base ×1; as temáticas seguem ×pontuação.
+  População intacta → idêntico à SPEC-289. Determinístico por `rng`/seed.
+- **R2 — `public_hint` (P2-3).** `check_encounter` (ramos `looming_threat` e `controlled`) devolve
+  também `public_hint`. O `hint` canônico NÃO muda (spawn, dedupe e manifesto `systemic`). Se a
+  fação da criatura é desconhecida E o nome da criatura casa radicais do nome da fação,
+  `public_hint = "combatente de uma ordem que você não reconhece"` e o retorno traz
+  `concealed_faction`; senão `public_hint == hint`. Conhecimento = regra existente `intel[fid].known`.
+- **R3 — Handoff e narração.** `encounter_handoff` carrega `public_hint`. `_narrate` recebe cláusula
+  proibindo citar o nome das fações dos combatentes que o jogador não conhece (manifesto +
+  `faction_intel`); conhecida → sem cláusula.
+- **R4 — Compatibilidade.** `pick_encounter_enemy` sem `theme` idêntico; save sem `public_hint` → `hint`.
 
 ### Fora de escopo
 
-Lista explícita do que esta spec NÃO cobre (anti-scope-creep).
+Renomear a criatura em `enemies[].name`/API (segue canônico); revelar a fação segue sendo
+`apply_faction_reveal`.
 
 ## 3. Design técnico
 
-Detalhe suficiente para uma sessão futura de IA implementar **sem reler o roadmap**:
+`world_utils.py`: mistura em `pick_encounter_enemy`; `concealed_faction`, `public_encounter_hint`,
+`unknown_faction_names`; `check_encounter`. `agents/storyteller.py`: `encounter_handoff`.
+`agents/combat.py`: `_faction_withhold_clause` + `_narrate(withhold=)`.
 
-- **Arquivos novos** — caminho + responsabilidade
-- **Arquivos alterados** — o que muda em cada um
-- **Schemas** — Pydantic/TypedDict completos (campos, tipos, defaults)
-- **Assinaturas** — funções públicas com tipos
-- **Formatos de dados** — JSON/frontmatter com exemplo real (usar IDs canônicos do projeto, não inventados)
+## 4. Plano
 
-## 4. Plano passo a passo
-
-Etapas ordenadas e testáveis. **Testes primeiro** (TDD): cada etapa nomeia os
-testes a escrever ANTES do código e o que cada um asserta.
-
-### Etapa N — <nome>
-
-1. **Testes** (`tests/test_<...>.py`): `test_x` asserta ...; `test_y` asserta ...
-2. **Implementação:** ...
-3. **Verificação:** `uv run pytest` verde.
+Testes primeiro em `tests/test_spec289_ameaca_tematica.py` (seção SPEC-292), depois implementação,
+escopo verde, playtest e suíte completa.
 
 ## 5. Critérios de aceite
 
-Checklist objetivo. A spec só vira `done` com todos marcados.
-
-- [ ] ...
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo (try/except ou isinstance)
-- [ ] Saves antigos continuam carregando
-
-## 6. Smoke test com LLM real
-
-Checklist manual curto (3-5 requests, dentro da quota Gemini de 20/dia/modelo).
-MockLLM esconde bugs de mapeamento de campo — este passo é obrigatório antes de `done`.
-
-1. ...
-2. ...
-
-## 7. Riscos & compatibilidade
-
-- Compatibilidade com saves antigos: ...
-- Comportamento no MockLLM / FallbackLLM: ...
-- Impacto em quota/latência: ...
+- [x] R1–R4 cobertos por testes
+- [x] Escopo (289, 288, 287, fase2, fase63, manifesto, fase0) verde
+- [x] `playtest run --profile combate --turns 200` seeds 11/22/33: 200/200, 0 erro, 0 violação
+      (runs `20261019-193918-497875`, `-193933-657362`, `-193945-206367`)
+- [x] Suíte completa 1x (resultado no hand-back)
+- [x] Sem `with_structured_output` novo; saves antigos carregam

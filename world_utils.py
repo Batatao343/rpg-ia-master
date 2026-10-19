@@ -798,6 +798,53 @@ def threat_theme_match(faction: dict, threat_text: str):
     return score
 
 
+_CONCEALED_HINT = "combatente de uma ordem que você não reconhece"
+
+
+def concealed_faction(entry, factions, intel) -> str:
+    """SPEC-292 (P2-3): id da fação que o NOME da criatura exporia ao jogador que ainda
+    não a conhece (`intel[fid].known`), reusando a regra de não-onisciência da Fase 2.
+    Só conta se o nome casa radicais do nome da fação; senão ""."""
+    fid = str((entry or {}).get("faction") or "")
+    if not fid or ensure_faction_intel(intel).get(fid, {}).get("known"):
+        return ""
+    fac = next(
+        (
+            f
+            for pool in (list(factions or []), gamedata.seed_factions())
+            for f in pool
+            if isinstance(f, dict) and f.get("id") == fid
+        ),
+        None,
+    )
+    if fac and _theme_stems(entry.get("name", "")) & _theme_stems(fac.get("name", "")):
+        return fid
+    return ""
+
+
+def public_encounter_hint(entry, factions, intel):
+    """(public_hint, concealed_faction_id) — o `hint` canônico segue p/ spawn/dedupe."""
+    if not entry:
+        return None, ""
+    fid = concealed_faction(entry, factions, intel)
+    return (_CONCEALED_HINT if fid else entry.get("name")), fid
+
+
+def unknown_faction_names(faction_ids, factions, intel) -> list:
+    """SPEC-292: nomes de exibição das fações (entre `faction_ids`) que o jogador não conhece."""
+    intel = ensure_faction_intel(intel)
+    out = []
+    for fid in dict.fromkeys(str(x) for x in faction_ids if x):
+        if intel.get(fid, {}).get("known"):
+            continue
+        for pool in (list(factions or []), gamedata.seed_factions()):
+            f = next((x for x in pool if isinstance(x, dict) and x.get("id") == fid), None)
+            if f:
+                out.append(str(f.get("name") or fid))
+                break
+    return out
+
+
 def pick_encounter_enemy(
     loc: dict,
     danger: int,
@@ -855,6 +902,7 @@ def pick_encounter_enemy(
     else:
         filtered = [e for e in pool if tier(e) == "elite"] or pool
     themed = False
+    regional = list(filtered or pool)  # SPEC-292: pool não-temático (mistura sob pressão de caça)
     if theme is not None:
         strict = filtered if danger <= 3 else [e for e in pool if tier(e) == "elite"]
         hits = [e for e in strict if theme(e) > 0]
@@ -870,11 +918,28 @@ def pick_encounter_enemy(
     from services import ecology as eco3
 
     loc_id = (loc or {}).get("id", "")
+
+    def _base(candidates):
+        return [
+            eco3.hunt_pressure(e.get("id", ""), bestiary_knowledge, turn)
+            * eco3.faction_boost(e, loc_id, projection)
+            for e in candidates
+        ]
+
+    base = _base(pool)
+    if themed and sum(base) / max(1, len(base)) < eco3.MIGRANT_THRESHOLD + 0.2:
+        # SPEC-292 (P2-2): a pressão de caça rareou as temáticas -> o pool regional
+        # (mesmo porte, sem BOSS) volta ao sorteio; sem isso a Fase 6.3 ficaria inócua.
+        ids = {e.get("id") for e in pool}
+        extra = [e for e in regional if e.get("id") not in ids]
+        pool = sorted(pool + extra, key=lambda e: e.get("id", ""))
+        base = _base(pool)
     weights = [
-        eco3.hunt_pressure(e.get("id", ""), bestiary_knowledge, turn)
-        * eco3.faction_boost(e, loc_id, projection)
-        * (theme(e) if themed else 1)  # SPEC-289: combatente da fação pesa x2
-        for e in pool
+        b
+        * (
+            (theme(e) or 1) if themed else 1
+        )  # SPEC-289: combatente da fação pesa x2 (extras SPEC-292 x1)
+        for b, e in zip(base, pool)
     ]
 
     # fauna local rareada -> no máx. 1 migrante entra no sorteio (peso 0.5)
@@ -989,14 +1054,19 @@ def check_encounter(
                 else "homens armados sob uma bandeira que você não reconhece"
             )
             flavor = "Homens armados sob uma bandeira estranha cercam você sem dar explicações."
-        return _stamp(
-            {
-                "hint": hint,
-                "flavor": flavor,
-                "reason": "controlled",
-                "enemy_id": entry.get("id", "") if entry else "",
-            }
-        )
+        res = {
+            "hint": hint,
+            "flavor": flavor,
+            "reason": "controlled",
+            "enemy_id": entry.get("id", "") if entry else "",
+            "public_hint": hint,
+        }
+        if entry and not intel.get(fid, {}).get("known"):
+            ph, cf = public_encounter_hint(entry, factions, intel)
+            res["public_hint"] = ph
+            if cf:
+                res["concealed_faction"] = cf
+        return _stamp(res)
 
     if threat and danger >= 3:
         # SPEC-288: a criatura é canônica (bestiário); o texto da ameaça é só flavor.
@@ -1021,14 +1091,18 @@ def check_encounter(
             flavor = (
                 f"A ameaça ronda a região: {threat} O que te ataca agora, porém, é outra coisa."
             )
-        return _stamp(
-            {
-                "hint": entry.get("name") if entry else f"feras/perigos de {region}",
-                "flavor": flavor,
-                "reason": "looming_threat",
-                "enemy_id": entry.get("id", "") if entry else "",
-            }
-        )
+        hint = entry.get("name") if entry else f"feras/perigos de {region}"
+        public, cf = public_encounter_hint(entry, factions, intel) if entry else (hint, "")
+        res = {
+            "hint": hint,
+            "public_hint": public,
+            "flavor": flavor,
+            "reason": "looming_threat",
+            "enemy_id": entry.get("id", "") if entry else "",
+        }
+        if cf:
+            res["concealed_faction"] = cf
+        return _stamp(res)
 
     if danger >= 4:
         entry = pick_encounter_enemy(
