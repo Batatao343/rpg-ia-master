@@ -1,7 +1,7 @@
 # SPEC-225 — Higiene de supply chain, CI e release: gitignore, permissões/pins de workflows, compras de teste do Play
 
 > **Status:** `in-progress`
-> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
+> **Criada:** 2026-10-15 · **Atualizada:** 2026-10-19
 > **Depende de:** nenhuma · complementa SPEC-173 `done` e SPEC-194/198 (ordem final 2026-10-15)
 > **Desbloqueia:** gate de release SPEC-197/198 (ordem final 2026-10-15)
 > **Origem:** auditoria de segurança 2026-10-15 — achados 07-01, 07-02, 07-03, 07-04, 07-05, 07-07, PAG-02 (todos baixos/info; nenhum segredo real encontrado no HEAD nem no histórico)
@@ -63,11 +63,11 @@ Objetivo: fechar a higiene preventiva com testes de contrato no CI e uma regra f
 
 ## 5. Critérios de aceite
 - [x] Etapa 0 vermelha, verde ao final; R1–R9 implementados; `uv run pytest` verde (ver evidência).
-- [ ] CI `validate` com gitleaks/pip-audit/npm audit verdes no PR (pendente: push/PR; pip-audit já sem allowlist: os 5 advisories foram corrigidos no lock em 2026-10-17, ver `docs/spec225/README.md`).
+- [x] CI `validate` com gitleaks/pip-audit/npm audit verdes (push da main `c64a717`, 2026-10-19: validate 39277806887, audit-local 39277806546, eval-gates 39277806563 `success`; ver `docs/spec225/README.md`).
 - [x] `git check-ignore` confirma a lista.
-- [ ] Dependabot abriu PRs (pendente: push); Environments verificados e anotados (pendente: `eval-provider`/`eval-holdout`/`post-deploy-smoke` não existem no GitHub e `eval-governance` sem restrição de branch; ver evidência).
+- [x] Dependabot abriu PRs (#28–#42); Environments verificados e anotados (os 4 com *deployment branches = main* e reviewer Batatao343; `ENVIRONMENTS_VERIFIED: 2026-10-19`).
 - [x] Sem a env (teste unitário) → 409 e sem consume.
-- [ ] Staging Android (`RPG_PLAY_ACCEPT_TEST_PURCHASES=1`): compra de license tester continua creditando (pendente: execução em staging).
+- [ ] Staging Android (`RPG_PLAY_ACCEPT_TEST_PURCHASES=1`): compra de license tester continua creditando (**bloqueado por SPEC-198**: exige app na trilha interna do Play Console com license tester e aparelho com Play Store; o AVD `rpg34` é `google_apis` sem Play. Quem age: dono (Play Console) + frente de staging (env).
 
 ## 6. Smoke test
 Sem LLM/pagamento real: CI do PR + `scripts/release/checklist.py --env staging` verde.
@@ -92,3 +92,15 @@ Sem LLM/pagamento real: CI do PR + `scripts/release/checklist.py --env staging` 
 - Defaults D-A/D-B/D-C aplicados como recomendados.
 - Achado resolvido em 2026-10-17: os 5 advisories do pip-audit foram corrigidos no lock (allowlist removida). Segue bloqueando o fechamento:
   os Environments de GitHub não estão configurados como R4 pede.
+
+## 11. Registro de fechamento (2026-10-19)
+
+- CI verde na main (`c64a717`) com `secret-scan`, `pip-audit`, `npm audit` e `npm-audit-full`; Dependabot ativo.
+- Environments reconferidos via `gh api`; `post-deploy-smoke` ganhou reviewer (R4 pede reviewers nos quatro).
+  Faltam só secrets do dono para rodar `eval-protected` (`GOOGLE_API_KEY` em `eval-provider`; `HOLDOUT_REPOSITORY` +
+  `HOLDOUT_REPOSITORY_TOKEN` em `eval-holdout`), fora dos critérios.
+- O primeiro `schedule` semanal do gitleaks (histórico) falhou com 3 falso-positivos em caminhos renomeados; corrigido
+  com `.gitleaksignore` (verificado localmente: 568 commits, `no leaks found`).
+- Smoke Android: AVD `rpg34` sobe e o Billing real reporta `billing_query_failed responseCode=-1`, mas a compra de license
+  tester não é exercível sem SPEC-198. **A spec segue `in-progress` só por esse critério**; recomendação: movê-lo para a
+  SPEC-198 e marcar esta `done`.

@@ -1,6 +1,6 @@
 # SPEC-225 — evidência: supply chain, CI e release hygiene
 
-**Status:** `in-progress` (ver "Pendências"). **Data de execução:** 2026-10-16.
+**Status:** `in-progress` (ver "Pendências"). **Data de execução:** 2026-10-16; fechamento parcial 2026-10-19.
 
 ## O que mudou
 
@@ -86,7 +86,7 @@ Aplicado pelo coordenador com autorização do dono (`gh api`, conta Batatao343)
 | `eval-holdout` | Batatao343 | só `main` |
 | `post-deploy-smoke` | — | só `main` |
 
-ENVIRONMENTS_VERIFIED: 2026-10-17
+ENVIRONMENTS_VERIFIED: 2026-10-19
 
 ## Pendências (por que a spec segue `in-progress`)
 
@@ -108,3 +108,55 @@ ENVIRONMENTS_VERIFIED: 2026-10-17
 - Nenhuma alteração de lógica de jobs de eval; nenhum secret tocado; nenhum recurso remoto criado.
 - `FORBIDDEN_IN_HOSTED` (citada em R8) não existe no repositório; a regra foi aplicada à lista de produção
   `FORBIDDEN_IN_PROD` do checklist, que é a lista equivalente em uso.
+
+## Verificação de 2026-10-19 (fechamento)
+
+### CI verde na main
+
+Último push da main com os três workflows concluídos, `c64a717` (2026-10-19T15:25Z): `validate` run 39277806887,
+`audit-local` 39277806546, `eval-gates` 39277806563, todos `success`. Dentro do `validate`: jobs `secret-scan` (gitleaks),
+`test` (inclui `pip-audit` e `npm audit --omit=dev --audit-level=high`) e `npm-audit-full` todos `success`.
+Os pushes anteriores do dia (`d2c3756`, `882579a`, `dd68811`) também ficaram verdes. Dependabot ativo: PRs #28–#42
+(ações, pip e npm), todos tratados menos #42 (TypeScript 7, aberta).
+
+### Scan semanal do histórico (D-B): primeiro resultado vermelho, corrigido
+
+O `schedule` de segunda (run 39261158983, `da6186b`, 2026-10-19T13:33Z) varreu 536 commits e falhou com **3 achados,
+todos falso-positivos** do `generic-api-key` em texto com barras: `numeros/hex` (`web/src/lib/clientErrors.ts:50` em
+`69a9f70`), `acknowledge/consume` (`docs/rpg-next-jev-golive-plan/examples/spec-model-contract.yaml:312` em `d988991`) e
+`headers/CORS/CSRF/RLS` (`specs/fase-10b-observabilidade-backup-caos.md:51` em `d5478ae`). Os dois últimos já estão no
+allowlist, mas pelo caminho atual (os arquivos foram renomeados depois). Correção: `.gitleaksignore` com as 3 impressões
+digitais (commit `ed47e4b` desta branch). Verificado com gitleaks v8.24.2 (Docker) no histórico completo do clone da branch:
+**568 commits, `no leaks found`**. O mesmo run teve `npm-audit-full` vermelho (job não bloqueante), já verde no push
+seguinte. O checklist `gitleaks_main_green` olha o último run concluído do `validate` na main, que inclui o `schedule`:
+sem o `.gitleaksignore` ele ficaria vermelho toda segunda.
+
+### Environments (reconferido com `gh api`)
+
+| Environment | Required reviewers | Deployment branches | Secrets/vars do environment | Usado por |
+|---|---|---|---|---|
+| `eval-governance` | Batatao343 | só `main` | var `EVALUATOR_CHANGE_APPROVED` (mantida, decisão do dono 19/10) | `eval-gates.yml` |
+| `eval-provider` | Batatao343 | só `main` | **faltando** secret `GOOGLE_API_KEY` | `eval-protected.yml` (contrato real) |
+| `eval-holdout` | Batatao343 | só `main` | **faltando** var `HOLDOUT_REPOSITORY` e secret `HOLDOUT_REPOSITORY_TOKEN` | `eval-protected.yml` (holdout) |
+| `post-deploy-smoke` | Batatao343 (**adicionado em 19/10**; R4 pede reviewers em todos) | só `main` | nenhum (smoke read-only) | `post-deploy-smoke.yml` |
+
+O repositório não tem secrets nem variables de nível de repo. Os secrets faltantes só o dono tem; sem eles os jobs
+manuais `eval-provider`/`eval-holdout` falham fechados (não vazam nada). Não fazem parte dos critérios da spec.
+
+### Smoke Android (AVD `rpg34`)
+
+AVD `rpg34` subiu headless (android-34 `google_apis` x86_64, `PlayStore.enabled = no`); APK debug gerado do `main`
+apontando para o staging. Provado o caminho de erro do Billing real (`billing_query_failed responseCode=-1`, ver
+[docs/spec259/README.md](../spec259/README.md)). **O critério "compra de license tester continua creditando no staging com
+`RPG_PLAY_ACCEPT_TEST_PURCHASES=1`" não é exercível aqui:** exige (1) o app numa trilha interna do Play Console com
+license tester (SPEC-198), (2) imagem/aparelho com Play Store, e (3) a env ligada no staging pela frente de staging. A
+compra fake do plugin nunca chega a esse ramo: em hosted a verificação vai ao Play Developer API, e um token fake é
+recusado por design (SPEC-194). A regra em si está coberta por teste unitário (`purchaseType=0` rejeitado por default,
+aceito com a env, sem consume).
+
+### Pendências restantes
+
+1. Compra de license tester no staging com `RPG_PLAY_ACCEPT_TEST_PURCHASES=1` — **depende de SPEC-198** (Play Console,
+   trilha interna, license tester; dono) e da frente de staging ligar a env. Sugestão: mover este critério para a 198.
+2. Observar o próximo `schedule` semanal verde depois do pouso do `.gitleaksignore` (segunda 2026-10-26).
+3. Secrets dos environments `eval-provider`/`eval-holdout` (dono), só quando quiser rodar `eval-protected`.
