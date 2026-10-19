@@ -7,6 +7,8 @@
 
 ## 2026-10-19 — onda: workspace, logs P2/P3, frontend majors, staging (222/236/279/280)
 
+- **19/10 — SPEC-289 `done`:** a criatura do encontro `looming_threat` acompanha o tema da ameaça, sem LLM: a ascensão grava a fação (save antigo resolve pelo texto); dentro da região da ameaça sai criatura ligada a ela (combatente da fação ou mesmo radical do nome), porte estrito, nunca Chefe; fora, mesma criatura e flavor "eco distante". Ex.: Corvane nas Ruínas Submersas → Faísca da Destilação / Afogado de Aethelgard. Revisão Opus APPROVED_WITH_FOLLOWUPS ([parecer](handoffs/SPEC-289-review.md)).
+
 - **19/10 — SPEC-290 `done`:** o bônus de sobrevivência de Chefe/Nomeado por Nível do Encontro (SPEC-287) vale também para Chefes gerados pelo LLM (default canônico 12 em Python pela `categoria` fechada; bestiário runtime guarda a base, não acumula) e para o laboratório de combate (cópia, bestiário global intacto). Ex.: `mon_urso_tita` 16 → 40 no laboratório. Revisão Opus APPROVED ([parecer](handoffs/SPEC-290-review.md)).
 
 - **19/10 — SPEC-287 `done`:** escala de encontro nível 5+ corrigida na causa: piso do orçamento conta corpos de forma superlinear (`floor_cost`, economia de ações) e Chefe/Nomeado ganham +12 de Vitalidade por Nível do Encontro acima de 2 (gerador oficial, teto de 2 passos). Arena níveis 5–8: horda de Lacaio 0,52–0,61 → 0,32–0,36; Lacaio < Padrão < Elite e Lacaio < Chefe; níveis 1–4 idênticos. Playtest morte/combate 0,541 → 0,497, 0 `no_progress`. Revisão Opus APPROVED_WITH_FOLLOWUPS ([parecer](handoffs/SPEC-287-review.md)). Chefe segue abaixo de Padrão/Elite (já era assim no 1–4; "Chefe no topo" = mudança de design, fica como pergunta ao dono).
