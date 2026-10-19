@@ -3,9 +3,11 @@
 RPG de texto com IA — motor LangGraph multi-agente com RAG híbrido e memória por sessão.
 Stack: Python 3.13 · FastAPI · LangGraph · FAISS · Google Gemini · uv
 
-> **AO RETOMAR:** leia `@ESTADO_ATUAL.md` primeiro — estado atual, como rodar,
-> bugs já corrigidos, limitações conhecidas e convenção crítica de resiliência.
-> Visão de produto e próximos passos: `ROADMAP.md` (Fase 0 entregue; Fases 1–3 mapeadas).
+> **Fonte única de instruções** para Codex (lê este arquivo) e Claude Code (`CLAUDE.md`
+> importa este arquivo e acrescenta só o específico do Claude Code).
+> **AO RETOMAR:** leia `ESTADO_ATUAL.md` (≤ 8 KB: estado, próximos passos, bloqueios
+> no dono, como rodar). Plano: `ROADMAP.md`. Histórico (`docs/historico/`,
+> `CHANGELOG.md`) só sob demanda — nunca leia ESTADO/ROADMAP antigos inteiros.
 
 ---
 
@@ -13,7 +15,9 @@ Stack: Python 3.13 · FastAPI · LangGraph · FAISS · Google Gemini · uv
 
 Ao retomar trabalho spec-driven:
 
-1. leia `ESTADO_ATUAL.md` e `specs/index.yaml`;
+1. leia `ESTADO_ATUAL.md`; status de spec = o cabeçalho da própria spec
+   (`specs/index.yaml` é **gerado** por `scripts/spec_index.py build`; consulte com
+   `spec_index.py summary`/`check` em vez de abrir o arquivo de 158 KB);
 2. identifique a `SPEC-ID` ativa e confirme que suas dependências estão `done`;
 3. o Project Index não entra no contexto ou fluxo padrão. Use
    `project_index/domains.yaml`, `repo_graph`, `state_ownership` ou `eval_map`
@@ -43,6 +47,23 @@ Long-runs, campanhas de 100/200 turnos e a matriz 10×200 são estritamente
 opt-in. Só execute por pedido explícito do usuário ou por spec de horizonte longo
 explicitamente aprovada; baseline, release e regressão não constituem permissão.
 
+### Fluxo de spec em 8 linhas
+
+1. Reserve o ID na `main`: `scripts/spec_index.py next-id --slug <slug> --create` +
+   `build` + commit "spec: reserve SPEC-NNN" (skill `/spec-new`).
+2. Worktree por spec, fora do OneDrive: `bash scripts/dev/wt.sh new NNN`.
+3. TDD no worktree; Python sempre via `bash scripts/dev/py.sh …` (raiz, UTF-8, venv).
+4. Testes do escopo durante o trabalho (camadas em `docs/guias/TESTES.md`).
+5. Status final só no cabeçalho da spec; revisão independente por outro agente.
+6. Pouso (`/spec-land`): `wt.sh sync` (rebase + `specs/index.yaml` + Project Index na
+   branch) → suíte completa 1× (`-n auto`) → `wt.sh land` (ff da `main`).
+7. `ESTADO_ATUAL.md` via `/estado`: substituir, nunca anexar (≤ 8 KB).
+8. Commit em inglês (Conventional Commits) com a linha `Co-Authored-By` do sistema.
+
+Subagentes: regras comuns em `docs/guias/BRIEF_SUBAGENTE.md`; não editam
+`ESTADO_ATUAL.md`, `ROADMAP.md`, `specs/index.yaml` nem `project_index/` — devolvem
+um parágrafo no hand-back e o coordenador integra.
+
 ---
 
 ## Comandos essenciais
@@ -58,13 +79,13 @@ uv run uvicorn api:app --port 8000        # API REST + frontend web (http://loca
 uv run python rag.py                      # re-indexar lore (data/codex/) + regras (data/rules.txt)
 uv run pytest                             # suíte offline (força MockLLM, não precisa de chave)
 bash scripts/smoke_api.sh [porta]         # smoke da API (health, /data/map, /game/new, /game/action)
-uv run python -m playtest run --all --turns 50   # Fase 5: harness — 13 perfis (MockLLM, offline)
+uv run python -m playtest run --all --turns 50   # Fase 5: harness — 14 perfis (MockLLM, offline)
 uv run python -m playtest report <run_id>        # relatório agregado (per-perfil/violações/custo)
 uv run python -m playtest transcript <run_id>    # transcrito ação→narração por turno (julgar prompt)
 ```
 
 **Playtest agêntico (Fase 5):** `playtest/` roda campanhas longas sobre o MESMO
-grafo (`app.invoke`) com 13 perfis determinísticos (`runner.py`/`profiles.py`);
+grafo (`app.invoke`) com 14 perfis determinísticos (`runner.py`/`profiles.py`);
 invariantes de estado por turno (`invariants.py` — HP/ouro/unique/NPC morto/
 fação/relógio/segredo/game_over); telemetria JSONL+summary por campanha
 (`telemetry.py`) + relatório Markdown (`report.py`) + transcrito por turno.
@@ -265,7 +286,7 @@ data/
                       #   timeline/ = história do mundo por era (reveals de secrets.txt ficam visibility:hidden)
   graph/              # entities.json (gerado) + edges.json/relation_types.json (curados à mão)
   rules.txt           # regras indexadas para FAISS
-  world_map.json      # grafo de locais — mapa de Valoria, 30 nós (Fase 2.5b)
+  world_map.json      # grafo de locais — mapa de Valoria, 35 nós (30 + 5 interiores)
   bestiary.json       # criaturas
   classes.json        # 5 Posturas diante do Abismo (base_stats+entropy, entropy_trigger/special_rule/abyss, 3 branches)
   class_themes.json   # allowed/forbidden/style por classe (só flavor do prólogo; gating por LLM aposentado — mecânica é Python)
@@ -274,13 +295,23 @@ data/
   cards/              # Cartas jogáveis e inimigas; substitui player_abilities.json
   npc_database.json   # cache de NPCs gerados (runtime)
 specs/
-  TEMPLATE.md         # template de spec (desenvolvimento spec-driven — ver seção acima)
-  fase-2.5*.md ...    # specs das fases 2.5–2.8 (Mundo Vivo v1)
-tests/
-  test_mvp.py         # suíte offline do MVP (dados, persistência, router, combate, beats)
-  test_fase0.py       # suíte da Fase 0 (mapa, relógio, viagem, descanso, gating, e2e)
-  test_fase25.py      # suíte da Fase 2.5 (event_log/projection, grafo, resolver, codex)
-  conftest.py         # força RPG_FORCE_MOCK=1 (suíte determinística e offline)
+  TEMPLATE.md         # template de spec (desenvolvimento spec-driven — ver seção abaixo)
+  SPEC-NNN-<slug>.md  # specs numeradas; status no cabeçalho (fonte única)
+  index.yaml          # GERADO por scripts/spec_index.py build — não editar à mão
+tests/                # ~350 arquivos test_*.py (suíte offline, MockLLM); camadas em docs/guias/TESTES.md
+  conftest.py         # força RPG_FORCE_MOCK=1, isola saves/memória/cache por tmp_path, xdist-safe
+infrastructure/       # adapters de perfil (legacy/local/hosted): Postgres, Auth, storage, wallet, jobs
+workers/              # jobs assíncronos (arte dinâmica, projeções, crons)
+supabase/             # migrations + config do Supabase (local e staging)
+observability/        # Prometheus/Grafana/OTel/Tempo opcionais
+evals/                # governança + harness de evals (caminhos protegidos em evals/protected-paths.txt)
+project_index/        # grafo do repo GERADO no pouso (consulta seletiva; source é a verdade)
+playtest/             # harness de campanhas longas (14 perfis, invariantes, telemetria)
+handoffs/             # revisões/handoffs por spec (template em docs/templates/handoff-review.md)
+docs/guias/           # guias operacionais (TESTES, BRIEF_SUBAGENTE, AUTORIA, ARTE_VISUAL)
+docs/historico/       # ESTADO/ROADMAP/changelog antigos — só sob demanda
+scripts/dev/          # tooling do workspace: py.sh, env.sh, wt.sh, reindex.sh, eval_publish.py, ruff_baseline.py
+scripts/spec_index.py # status de spec: build/check/summary/recent/next-id/estado-size
 conftest.py           # (raiz) injeta pythonpath
 faiss_lore_index/     # índice FAISS gerado — não editar à mão
 faiss_rules_index/    # índice FAISS gerado — não editar à mão
@@ -302,67 +333,13 @@ Toda feature/fase nova segue o fluxo de `specs/`:
 3. **Implementação segue o plano da spec** (etapas ordenadas, testes primeiro).
    Desvio necessário durante a implementação? Atualizar a spec no mesmo commit.
 4. **Conclusão:** critérios de aceite todos marcados + `uv run pytest` verde +
-   smoke test real da spec executado → status `done` + atualizar ROADMAP/ESTADO_ATUAL.
+   smoke test real da spec executado → status `done` no cabeçalho → `/spec-land`
+   (gera `specs/index.yaml`) → `/estado`. ROADMAP só se o plano mudou.
 5. **ROADMAP.md é resumo + link;** o detalhe técnico mora SÓ na spec (fonte única).
 
-Specs: 2.5 `done`; 2.5b (dados mecânicos Valoria) `done` (smoke real 2026-07-14); 2.6 (structured events) `done`;
-2.7 (rules engine) `done`; 2.8 (context builder) `done`; 3.1–3.4 `done` — **Fase 3 completa**;
-4.1–4.6 + 4.1b `done` — **Fase 4 completa**; 6.1–6.5 `done` — **Fase 6 completa**;
-7.1 (validadores+CI) · 7.2 (autoria/curadoria) · 7.3 (segredos de NPC) `done` —
-**Fase 7 completa** (lint `services/content_validator.py` + CLI
-`scripts/validate_content.py`; gate no `rag.py`; autoria em `docs/guias/AUTORIA.md`).
-2026-07-06: fase 10 fatia local (hardening: `save_path` UUID, `schema_version`+
-migrations, CORS/rate-limit/log) · fase 11 (contratos `-m llm_contract`, 9 verdes
-no Gemini real) · mapa (interiores + `travel_times`) · NPCs 3 camadas
-(`services/npc_layers.py` + `data/traits.json`) — todas `done`. Roteamento
-multi-provider `done`. **Fase 5 (5.1 harness + 5.2 invariantes + 5.3 telemetria)
-`done`** — `playtest/`. 2026-07-13: **ciclo de produto `done`** —
-balanceamento-early-game ("O Saque" + tuning nível 1 + replan por região) ·
-streaming-turno-sse (`POST /game/action/stream` + custo real no log `rpg.turn`) ·
-polish-sessao (`GET /game/saves` + DELETE + chips mecânicos de combate +
-export/busca da crônica + onboarding + mobile 390px).
-2026-07-16: **8 specs `draft`** do playtest longo real (3×100 turnos, análise em
-`docs/playtests/playtest-longrun-2026-07-14.md`): playtest-stop-gameover ·
-combate-lifecycle · pos-saque-recuperacao · npc-fallback-sem-alvo ·
-beats-visibilidade-ptbr · encontros-dedupe · polish-prosa · embeddings-provider
-— aguardando aprovação. 2026-07-17: **criação imersiva `done`** —
-onboarding-valoria (wizard 5 passos + `data/onboarding.json` +
-`GET /data/onboarding`) · inicio-personalizado (`POST /game/prologue` + seed de
-arco pessoal/NPCs/cena no `/game/new`; limites de schema viraram truncagem em
-Python + `StartScenarioIn` estrito na borda). **792 testes offline.**
-2026-07-18: **8 specs do playtest longo `done`** (embeddings-provider Jina ·
-playtest-stop-gameover · combate-lifecycle · pos-saque-recuperacao ·
-npc-fallback-sem-alvo · beats-visibilidade-ptbr · encontros-dedupe · polish-prosa)
-+ archivist fix + NPC relocável. 2026-07-19: **refatoracao-sistema-classes `done`**
-— 10 classes → **5 Posturas diante do Abismo** × 3 subclasses; recurso **Entropia**
-(pool único, recompõe integral no descanso) + **Carga do Abismo** (longo prazo);
-gatilhos/regras/consequências por classe 100% Python (`combat_mechanics`); migração
-v3; HUD Entropia/Carga. **Árvore RICA `done` (arvores-habilidade-classes, autoria
-Fable):** 101 habilidades (41 ativas + 35 passivas + 25 utilitárias) via
-`scripts/gen_classes_v2.py`; `ability_kind` + `player_passives` + 5 triggers de
-Entropia/Carga; utilitárias no contexto do storyteller (gate determinístico);
-selo ✦/⚒ no HUD (ver [docs/design/CLASSES.md](docs/design/CLASSES.md)).
-2026-07-19 (sessão 20): **revisão pós-épico** — 3 bugs de fiação de classe
-corrigidos (taunt/Transformação/Purga estavam mortos; `HANDLED_KINDS` +
-teste anti-órfão) · cache runtime isolado em `data/runtime/` (fim do `git
-checkout` manual) · harness com `--class` + telemetria de Entropia/Carga
-(baseline capturado; tuning dos 8 knobs `[BALANCEAR]` adiado por dado
-insuficiente) · traits 40→80 · curadoria da Rede Carmesim (over-share suavizado +
-reindex). **945 testes offline.** Próxima: tuning real dedicado + tiers 5+;
-Auditoria de mecânica-morta: gating narrativo por classe APOSENTADO
-(morto desde a deleção do Ruler; mecânica é Python) · weather GLOBAL fiado
-(trigger determinístico em `advance_weather` — Tempestade de Éter/Noite Sem
-Estrelas varrem e impactam o jogo). itens-vivos-e-luz: passiva de item fiada
-(`item_passives` em `player_passives`), item ativo ofensivo
-(`use_item_in_combat` com alvo), **sistema de LUZ** (`light_level` — escuro
-penaliza percepção/acerto, tocha anula) + **+22 itens** ancorados na lore.
-**970 testes offline.** Fase 8 (arte) vs 10b (público) segue adiada.
-2026-07-20 (sessão 22): **5 specs do playtest longo** — agente-curioso-entropia
-(perfil de teste usa habilidade + telemetria de GASTO de Entropia; destrava
-balanceamento) · npc-in-scene-viagem (fuga reseta cena) · aliados-em-combate
-(amigo em cena vira aliado transitório + perfil `recrutador`) · loot-exploracao
-(explorar recompensa via escada de raridade + baús curados) — 4 code `done`;
-letalidade-early-game-v2 `approved` (medir→decidir). **1001 testes offline.**
+Histórico de entregas por fase/sessão (o antigo parágrafo "Specs: 2.5 `done`…" que
+vivia aqui): [docs/historico/AGENTS-specs-entregues-ate-2026-10-19.md](docs/historico/AGENTS-specs-entregues-ate-2026-10-19.md).
+Estado atual das specs: `uv run python scripts/spec_index.py summary`.
 
 ---
 
@@ -386,8 +363,9 @@ letalidade-early-game-v2 `approved` (medir→decidir). **1001 testes offline.**
 - **Ao FINALIZAR qualquer tarefa (SEMPRE, sem exceção):**
   1. Rodar `uv run pytest` e garantir verde antes de declarar a tarefa concluída — nunca afirmar
      que funcionou sem a saída dos testes.
-  2. Atualizar **`ESTADO_ATUAL.md`** (TL;DR, contagem de testes, o que funciona, correções) **e**
-     **`ROADMAP.md`** (marcar item entregue/pendência) refletindo a mudança. Os dois, sempre.
+  2. **`ESTADO_ATUAL.md`: substituir, nunca anexar** (teto 8 KB; `/estado` gera o bloco de
+     decisões recentes). **`ROADMAP.md`: só quando o plano muda.** Detalhe de entrega vai
+     para `CHANGELOG.md` (`## AAAA-MM-DD`). Em onda paralela, só o coordenador edita os dois.
 
 ---
 
@@ -403,9 +381,10 @@ letalidade-early-game-v2 `approved` (medir→decidir). **1001 testes offline.**
   30–100KB cada e estouram o contexto. Usar `Grep` primeiro, `Read` com offset/limit no trecho,
   ou delegar a um subagent (Explore) e trazer só a conclusão. Vale também para `data/*.json`
   grandes (bestiary, npc_database): Grep pelo id/campo, não Read completo.
+- Não editar `specs/index.yaml` nem `project_index/` à mão — são gerados no pouso.
+- Não ler `docs/historico/`, `ESTADO`/`ROADMAP` antigos, transcritos `.jsonl` ou
+  `tool-results/` de outros agentes sem necessidade explícita.
 
 > **REFERENCE.md** (decisões arquiteturais e seus porquês) NÃO é carregado automaticamente —
 > ler sob demanda quando a tarefa envolver decisão estrutural (novo agente, troca de provider,
 > persistência, RAG). **CHANGELOG.md** = histórico de sessões antigas, também sob demanda.
-
-@ESTADO_ATUAL.md
