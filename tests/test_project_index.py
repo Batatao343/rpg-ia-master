@@ -223,6 +223,19 @@ def test_check_rejects_dirty_source_tree(tmp_path: Path) -> None:
         check_index(repo)
 
 
+def test_untracked_files_do_not_make_index_stale(tmp_path: Path) -> None:
+    repo = _fixture_repo(tmp_path)
+    build_index(repo)
+    (repo / "scratch_probe.py").write_text("def stray():\n    return 1\n", encoding="utf-8")
+    (repo / "notes.zip").write_bytes(b"PK\x03\x04")
+
+    check_index(repo)
+
+    _git(repo, "add", "scratch_probe.py")
+    with pytest.raises(ProjectIndexError, match="stale"):
+        check_index(repo)
+
+
 def test_committing_generated_artifacts_warns_without_infinite_staleness(tmp_path: Path) -> None:
     repo = _fixture_repo(tmp_path)
     _, manifest = build_index(repo)

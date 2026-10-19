@@ -80,10 +80,15 @@ def _git_head(root: Path) -> str:
 
 
 def _git_visible_files(root: Path) -> list[str]:
-    """Return tracked and non-ignored untracked files, never private ignored files."""
+    """Return tracked (committed or staged) files only.
+
+    Untracked files are deliberately ignored: a stray zip, scratch script or
+    new file not yet ``git add``-ed must not make the committed index stale,
+    so the index can be rebuilt in any spec worktree without a clean clone.
+    """
 
     result = subprocess.run(
-        ["git", "-C", str(root), "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
+        ["git", "-C", str(root), "ls-files", "-z", "--cached"],
         capture_output=True,
         env={**os.environ, "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_NOSYSTEM": "1"},
     )
