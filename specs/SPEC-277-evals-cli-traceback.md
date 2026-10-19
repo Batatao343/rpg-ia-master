@@ -1,6 +1,6 @@
 # SPEC-277 — Evals CLI: traceback e `error_type` na falha (follow-up da SPEC-260 R2)
 
-> **Status:** `approved` (dono, 19/10: autorizou tudo que não exige ação externa dele)
+> **Status:** `done` (dono, 19/10: autorizou tudo que não exige ação externa dele)
 > **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
 > **Origem:** revisão independente logs P2/P3 (achado 10, [parecer](../handoffs/LOGS-P2P3-review.md)); SPEC-260 R2 ficou fora por desvio deliberado
 > **Depende de:** SPEC-260

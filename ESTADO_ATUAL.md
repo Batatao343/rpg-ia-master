@@ -61,6 +61,8 @@ devolvem o parágrafo no hand-back. Ao abrir a próxima onda, mova estas notas p
 
 <!-- onda:inserir-aqui -->
 
+- **19/10 — SPEC-277 `done`:** CLI de evals mostra no stderr suite, `case_id` e traceback (≤ 40 linhas, só frames + classe, **sem a mensagem**, para não vazar caso do holdout no log do Actions); JSON ganha `errors:[{case_id,error_type}]`. Relock só dos 2 hashes; revisão Opus APPROVED com 1 correção ([parecer](handoffs/SPEC-277-review.md)). Flake do teste Jev sem chave sob xdist corrigido.
+
 - **19/10 (onda):** workspace, logs P2/P3 (+ staging), SPEC-222 delete com arte, SPEC-236 §6.2 dia 1, SPEC-276 (Vite 8/Playwright 1.64), SPEC-278 (React 19), SPEC-279/280 (gasto sobrevive ao delete; órfãos) — todos na main com CI verde. Detalhe por frente em `CHANGELOG.md` § 2026-10-19. Pendente: SPEC-236 §6.2 dia 2 (20/10, [roteiro](docs/staging-wave-2026-10-17/spec236-s62-plano.md)).
 
 ## Como rodar
