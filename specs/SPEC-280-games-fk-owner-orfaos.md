@@ -1,6 +1,6 @@
 # SPEC-280 — games-fk-owner-orfaos
 
-> **Status:** `approved` — decisão do dono em 19/10/2026 ("gere uma spec e desenvolva") sobre o achado do staging.
+> **Status:** `done` (19/10/2026) — aprovada pelo dono em 19/10/2026 ("gere uma spec e desenvolva") sobre o achado do staging.
 > **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
 > **Depende de:** SPEC-279 (apagar jogo não apaga mais gasto — a limpeza aqui apaga jogos), SPEC-190, SPEC-222
 > **Desbloqueia:** smokes de staging que apagam usuário pelo Admin API sem limpar jogos antes
@@ -89,11 +89,11 @@ prova do trigger com usuário sintético (cria usuário + jogo, apaga no Admin A
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R4 cobertos por testes verdes (offline + `infra_local`).
-- [ ] Migration aplicada no staging; órfãos 13 → 0 sem mudar gasto nem tabelas financeiras; trigger provado
+- [x] R1–R4 cobertos por testes verdes (offline + `infra_local`).
+- [x] Migration aplicada no staging; órfãos 13 → 0 sem mudar gasto nem tabelas financeiras; trigger provado
       com usuário sintético via Admin API; evidência em `docs/staging-wave-2026-10-17/evidence/spec280_*.json`.
-- [ ] Revisão independente (`handoffs/SPEC-280-review.md`) aprovada.
-- [ ] Suíte completa verde.
+- [x] Revisão independente (`handoffs/SPEC-280-review.md`) aprovada.
+- [x] Suíte completa verde.
 
 ## 6. Smoke
 
@@ -105,3 +105,18 @@ Sem LLM. Smoke = §4 Etapa 4 no staging.
   exclusão pelo app (SPEC-190) não muda.
 - Perfil OIDC: o trigger não dispara (não há delete em `auth.users`); o script recusa rodar sem usuários no Auth.
 - Ordem de deploy: SPEC-279 antes (o script verifica).
+
+## 8. Execução (19/10/2026)
+
+- Testes: `tests/test_spec280_orphan_games.py` (4, offline) e `tests/test_spec280_orphan_games_local.py`
+  (5, Supabase local); `-m infra_local` completo verde.
+- Revisão independente (Opus): `handoffs/SPEC-280-review.md` — CHANGES_REQUIRED (P1: owner com tombstone
+  fazia o delete no Auth falhar pela cerca da SPEC-190 → trigger pula tombstone; P2: script exclui qualquer
+  tombstone, migration exige BYPASSRLS, script restrito a `hosted-supabase`, saída 1 se sobrar órfão) →
+  re-revisão **APPROVED**.
+- Staging: migration `20261019151000` aplicada; dry-run 13 jogos órfãos / 13 owners; `--apply --expect 13`
+  apagou 13, gasto (US$ 46,000111112 em 51 eventos) e 9 tabelas financeiras idênticos antes/depois; dry-run
+  final 0. Trigger provado: usuário sintético criado e apagado pelo Admin API (200) → jogo apagado, uso mantido
+  com `game_id` NULL, soma de gasto igual; uso sintético removido. `e2e_session` verde depois.
+  Evidência: `docs/staging-wave-2026-10-17/evidence/spec280_*.json` e `spec279_280_*.json`.
+- Suíte offline completa: verde exceto os testes de índice, regenerados pelo coordenador no pouso.

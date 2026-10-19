@@ -53,3 +53,26 @@ RPG_TEST_DATABASE_URL=… pytest tests/test_spec280_orphan_games_local.py tests/
 psql (local): fecho de FKs de app.games + triggers + dono/bypassrls da função → confirmado acima
 psql (local, supabase_admin, BEGIN…ROLLBACK): tombstone + jogo + usage_events, delete auth.users como supabase_auth_admin → ERROR account_deleted (P1-1); sem tombstone → jogo apagado, usage game_id NULL
 ```
+
+## Re-revisão (commit `91dcef9`)
+
+> **Veredito final:** `APPROVED`
+
+| ID | Status | Verificação |
+|---|---|---|
+| P1-1 | corrigido | A função retorna sem apagar quando há tombstone (`migration:11-15`). Repeti a sonda: em BEGIN…ROLLBACK, como `supabase_auth_admin`, tombstone + jogo + `usage_events` → `DELETE 1` em `auth.users`, sem erro, e o jogo fica para o worker. Sem tombstone, o jogo é apagado e o uso fica com `game_id` NULL. O novo `test_auth_delete_of_tombstoned_owner_never_fails` passa. |
+| P2-1 | corrigido | O teste offline agora checa o skip por tombstone e o guard de `rolbypassrls`. |
+| P2-2 | corrigido | `_ORPHANS` e `skipped` excluem qualquer tombstone. Teste novo cobre `status='deleted'`. |
+| P2-3 | corrigido | O bloco `do $$` levanta exceção se `current_user` (dono da função) não tem BYPASSRLS. Ao aplicar no staging, confirme que o `postgres` do projeto hospedado tem `rolbypassrls`; se não tiver, a migration falha de forma explícita (sem no-op silencioso). |
+| P2-4 | corrigido | Docstring restringe o uso ao perfil `hosted-supabase` e lembra que o `--expect` é a última barreira. |
+| P2-5 | corrigido | `main` grava `ok` e sai 1 se sobrar órfão depois do `--apply`. |
+
+Observação residual, sem bloqueio: um owner com tombstone `deleted`, que ainda tenha jogos e seja apagado no Auth, fica com esses jogos sem dono. Nem o trigger nem o script os removem, e o worker SPEC-190 só reprocessa `deleting`. Isso é praticamente inalcançável: `finish` apaga os jogos antes de marcar `deleted`, e o fence impede inserts depois do tombstone.
+
+O diff `0a20fb9..91dcef9` também traz as mudanças do rebase da SPEC-279 (trigger `refuse_reused_operation_id`). Elas ficaram fora desta re-revisão.
+
+```text
+pytest tests/test_spec280_orphan_games.py → 4 passed
+pytest (local) test_spec280_orphan_games_local + test_account_lifecycle_local + test_account_lifecycle_worker_local → 12 passed, 1 failed (o mesmo DuplicateTable pré-existente)
+psql sonda tombstone como supabase_auth_admin → DELETE 1, sem erro
+```

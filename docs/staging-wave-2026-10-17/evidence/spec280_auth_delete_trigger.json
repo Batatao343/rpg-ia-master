@@ -1,0 +1,13 @@
+{
+  "admin_api_delete_status": 200,
+  "at": "2026-10-19T15:17:38.972683+00:00",
+  "game_after_auth_delete": 0,
+  "ok": true,
+  "orphans_now": 0,
+  "synthetic_usage_removed": 1,
+  "total_spend_after_delete_usd": "46.000581698",
+  "total_spend_before_delete_usd": "46.000581698",
+  "total_spend_end_usd": "46.000580698",
+  "trigger_present": 1,
+  "usage_kept": 1
+}

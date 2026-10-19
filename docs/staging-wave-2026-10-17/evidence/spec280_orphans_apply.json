@@ -1,0 +1,41 @@
+{
+  "apply": {
+    "deleted_games": 13,
+    "financial_rows_after": {
+      "google_play_purchases": 0,
+      "payment_orders": 0,
+      "purchase_reconciliation_state": 0,
+      "wallet_accounts": 4,
+      "wallet_attempt_tickets": 1,
+      "wallet_debt_entries": 0,
+      "wallet_entries": 6,
+      "wallet_reservations": 1,
+      "wallet_settled_usage": 1
+    },
+    "financial_rows_before": {
+      "google_play_purchases": 0,
+      "payment_orders": 0,
+      "purchase_reconciliation_state": 0,
+      "wallet_accounts": 4,
+      "wallet_attempt_tickets": 1,
+      "wallet_debt_entries": 0,
+      "wallet_entries": 6,
+      "wallet_reservations": 1,
+      "wallet_settled_usage": 1
+    },
+    "owners": 13,
+    "spend_after_usd": "46.000111112",
+    "spend_before_usd": "46.000111112",
+    "usage_events_after": 51,
+    "usage_events_before": 51
+  },
+  "mode": "apply",
+  "ok": true,
+  "plan": {
+    "orphan_games": 0,
+    "orphan_owners": 0,
+    "orphan_usage_events": 0,
+    "orphan_usage_spend_usd": "0",
+    "skipped_account_deletion_tombstone": 0
+  }
+}

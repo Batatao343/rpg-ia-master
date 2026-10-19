@@ -1,0 +1,11 @@
+{
+  "mode": "dry-run",
+  "ok": true,
+  "plan": {
+    "orphan_games": 13,
+    "orphan_owners": 13,
+    "orphan_usage_events": 51,
+    "orphan_usage_spend_usd": "46.000111112",
+    "skipped_account_deletion_tombstone": 0
+  }
+}
