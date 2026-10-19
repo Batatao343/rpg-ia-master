@@ -36,8 +36,14 @@
    - `error_code=session_*|csrf_*|credentials_invalid` → receita (e).
    - `operation_*|stale_version|pending_operation` → `operation.rejected` (motivo) e `db.lease_conflict`/`db.stale_version`.
 4. Turno envolvido? Copie `action_ref` e siga a receita (b).
-5. Sem nenhuma linha: o erro foi de rede/CDN antes do servidor (o cliente gera o `request_id` mesmo sem resposta).
-   Confira `runtime.boot` do período (receita h) e o status da Vercel.
+5. Sem nenhuma linha `http.request`: o erro foi de rede/CDN antes do servidor (o cliente gera o `request_id` mesmo
+   sem resposta). O mesmo valor costuma achar um `client.error` (SPEC-244, beacon do navegador): `kind`
+   (`network|sse|render|unhandled|native`), `code`, `route`, `build`, `stack` (`arquivo:linha` do bundle) e
+   `beacon_request_id`. Tela “Algo se partiu no caminho” = `kind=render` (o código de suporte dela é o `request_id`).
+   Confira também `runtime.boot` do período (receita h) e o status da Vercel.
+6. 429/413: `abuse.blocked` (`cls`, `scope`, `retry_after_s`, `limit`; amostrado 1×/min por chave) ou
+   `http.body_too_large` (`route`, `limit_bytes`, `declared_bytes`). `abuse.limiter_unavailable` (error, `site`) =
+   o limitador/cota caiu e a rota seguiu **sem limite** (fail-open) — métrica `rpg_rate_limiter_errors_total{site}`.
 
 ## (b) Turno falhou ou está lento (por `action_ref`)
 
@@ -106,13 +112,19 @@
 
 1. `--query job.failed` / `job.dead` / `job.lease_lost` (campos `kind`, `attempt`, `error_code` — `exc:<Classe>` quando o
    handler não definiu código, `will_retry`, `next_run_in_s`). O `request_id` do job é o do turno que o criou.
-2. Cron: `--query rpg.cron` (resultado do `drain_jobs` traz `processed`, `failed`, `dead`, `deferred`).
+2. Cron: `--query rpg.cron` (resultado do `drain_jobs` traz `processed`, `failed`, `dead`, `deferred`). Cada execução
+   tem `run_id`: `cron.started` → `rpg.cron` (fim) com o mesmo `run_id`; `cron.failed` (`error_type` + `stack`);
+   `cron.item_failed` (`item_kind=account_deletion|wallet_reservation|finops`, `item_ref` pseudônimo);
+   `cron.auth_rejected` (`reason=missing|invalid|not_configured`) = Bearer errado/ausente (pg_cron com segredo velho?).
+   Falhas consecutivas por task ficam em `app.cron_run_state` (≥ 3 ⇒ nível `error`); `cron.state_unavailable` = o
+   contador caiu para memória do processo (tabela ausente/banco fora).
 3. SQL:
    ```sql
    select kind, status, attempts, max_attempts, last_error_code, updated_at
      from app.jobs where status = 'dead' or (status = 'queued' and attempts > 0)
      order by updated_at desc limit 30;
    select * from app.cron_health_alerts order by detected_at desc limit 20;
+   select task, consecutive_failures, last_outcome, updated_at from app.cron_run_state order by updated_at desc;
    ```
 4. `db.lease_conflict reason=lease_lost|fence_invalid|worker_late` = outro worker assumiu o lease (esperado em retry).
 5. Projeção `post_response` pendente: veja `rpg_jobs{kind,status}` e `rpg_job_oldest_age_seconds`.
@@ -126,4 +138,58 @@
    `runtime.build_failed` (`component=db_pool|admin_pool|vector|blob|identity` + `error_type`) para falha de subida.
 3. Compare `http.request` com `status>=500` antes/depois do `instance_ref` novo. Rollback: `rollback.md`
    (promover o deploy anterior).
-4. Detecção de versão do cliente vs servidor (`build_skew`) é da SPEC-261 (ainda não implementada).
+4. Cliente velho × API nova: `http.request` traz `client_build` (`<sha7>+<AAAAMMDDhhmm>` do bundle, o mesmo que a
+   tela de Conta mostra em “Versão do app”) e `build_skew=true` quando o sha do bundle difere do `git_sha` do servidor;
+   no Android também `app_version` (`versionName+versionCode`). `--query build_skew` logo após um deploy mostra quem
+   ainda roda o bundle antigo.
+
+## (i) “Por que o jogador morreu?” / combate estranho
+
+1. `--query <action_ref>` do turno: `combat.summary` (info) traz `rounds`, `player_damage_taken`,
+   `enemy_damage_dealt`, `reactions`, `death_stage_reached`, `target_redirects`.
+2. Detalhe passo a passo: `combat.mechanics` (debug — exige `RPG_LOG_LEVEL_COMBAT=debug`) ou, sem depender do nível de
+   log, o `audit-export` da campanha (SPEC-207): `sessions/<epoch>.jsonl` → campo `mechanics.steps` por turno
+   (`initiative|attack|save|damage|reaction|death_stage|flee|target_redirect`, dados, modificador, defesa, resultado;
+   atores só por id de catálogo/`player`; ≤ 64 passos, `truncated` conta o excedente).
+3. `target_redirect` = o alvo pedido não estava ativo e o motor escolheu outro (antes era silencioso).
+
+## (j) O mundo/economia recusou algo
+
+1. `event.proposal_rejected`: `type`, `reason_code` (enum fechado `REASON_CODES`: `unproven`, `cooldown`,
+   `unknown_target`, `not_active`, `already_done`, `malformed`, …, `other`), `source` (`llm|rule|prevalidation`), `target_ref` (só id de catálogo).
+2. `narrative.rejected` (`kind=item|event|mediation`, `reason_code`, `count`) e o campo `narrative_rejected` do `turn`.
+3. Economia: `economy.trade` (`outcome=ok|refused`, `reason_code`, `gold_delta`, `item_id` de catálogo) e
+   `economy.unique_claim_conflict`. Campanha: `campaign.replan` (`reason`, `outcome=llm|template|previous_kept`).
+
+## (k) Voz (STT), imagem ou embeddings falhando
+
+1. `--query provider.attempt` (falha em `warning`; sucesso em `debug`): `capability=stt|image|embedding`, `provider`,
+   `model`, `outcome` (`http_error|timeout|transport_error|invalid_response|refused|circuit_open|kill_switch`),
+   `http_status`, `latency_ms`, `attempt`, `fell_back`. Métricas `rpg_provider_attempts_total` e
+   `rpg_provider_duration_seconds`.
+2. STT: `stt.circuit_opened` (3ª falha seguida abriu o circuito), `stt.switch_check_failed` (kill switch ilegível,
+   seguiu fail-open), `stt.internal_error` (o 503 `speech_internal_error`, com `error_type` + `stack`).
+3. Imagem: `image.generation_failed` (`job_id`, `http_status`, `outcome`) e `image.processing_failed`.
+
+## (l) Save/memória: migração, checkpoint, índice vetorial
+
+1. `persistence.migrated` (`from_version`, `to_version`, `steps`) e `persistence.save_schema_newer` (save de versão
+   mais nova recusado — 409). `persistence.checkpoint_written|checkpoint_restored` (`turn`).
+2. `persistence.atomic_retry` (debug) / `persistence.atomic_failed` (error, `attempts`) = rename do save travado
+   (antivírus/OneDrive no Windows). Falhas `persistence.*_failed` trazem `error_type`, `game_ref`, `duration_ms`.
+3. `rag.meta_unreadable` (`index` lógico) = o meta do índice FAISS está corrompido e caiu no provider legado;
+   `vector.profile_fallback` / `vector.semantic_degraded` = pgvector sem perfil ou busca semântica degradada para texto.
+
+## (m) App Android
+
+1. Billing: o JS recebe `billing_unavailable|billing_query_failed|billing_launch_failed|billing_bad_json` com
+   `responseCode` + `debugMessage` saneada; no servidor chega como `client.error kind=native code=<codigo>:<responseCode>`.
+2. Emulador/aparelho de debug: `adb logcat -s RPGBilling RPGWebView` (console do WebView só em build DEBUG).
+3. Versão: `http.request` com `client=android` traz `app_version`.
+
+## (n) Ferramentas (playtest, smoke, CI)
+
+1. Playtest: erro de turno/startup no JSONL tem `traceback` (≤ 40 linhas); `invariant.runner_crash` não trunca mais.
+2. `scripts/post_deploy_smoke.py` escreve a evidência SEMPRE (`status`, `failed_check(s)`, `http_status`/`latency_ms` por
+   check, `expected_git_sha`/`actual_git_sha`).
+3. CI `validate`: em falha, artifact com `pytest-junit.xml` + `pytest-tb.log`.

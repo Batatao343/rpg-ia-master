@@ -63,7 +63,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.spawn_identity_mismatch` | — |
 | `combat.spawn_scanner_discarded` | — |
 | `combat.started` | `enemies` |
-| `combat.summary` | — |
+| `combat.summary` | `death_stage_reached`, `enemy_damage_dealt`, `player_damage_taken`, `reactions`, `rounds`, `target_redirects` |
 | `cron.auth_rejected` | `reason` |
 | `cron.failed` | `duration_s`, `error_type`, `stack`, `task` |
 | `cron.item_failed` | `error_type`, `item_kind`, `item_ref`, `task` |
@@ -80,7 +80,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `db.statement_timeout` | `error_type`, `query_name` |
 | `death_flow.fallback` | — |
 | `economy.negative_gold_prevented` | `attempted_gold`, `player` |
-| `economy.trade` | — |
+| `economy.trade` | `gold_delta`, `item_id`, `mode`, `outcome`, `reason_code` |
 | `economy.unique_claim_conflict` | `item_id`, `source` |
 | `event.applied` | `event_id`, `type` |
 | `event.proposal_rejected` | — |

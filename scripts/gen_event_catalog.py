@@ -57,6 +57,10 @@ OVERRIDES: dict[str, tuple[str, ...]] = {
     # SPEC-261/259: campos de build/app vem de _client_build_fields (**kwargs).
     "http.request": ("app_version", "build_skew", "client", "client_build", "duration_ms", "error_code", "method",
                      "owner_ref", "request_id", "route", "status"),
+    # SPEC-251/252: agregados/campos montados em dict (**kwargs).
+    "combat.summary": ("death_stage_reached", "enemy_damage_dealt", "player_damage_taken", "reactions", "rounds",
+                       "target_redirects"),
+    "economy.trade": ("gold_delta", "item_id", "mode", "outcome", "reason_code"),
     # SPEC-244: campos validados pelo modelo ClientErrorReport (**kwargs).
     "client.error": ("beacon_request_id", "build", "client", "code", "error_name", "kind", "request_id", "route",
                      "stack", "ts"),
