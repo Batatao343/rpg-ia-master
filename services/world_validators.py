@@ -333,6 +333,69 @@ def reason_class(reason: str) -> str:
     return "invalid"
 
 
+REASON_CODES = frozenset({
+    "unproven", "cooldown", "rate_limited", "engine_only", "duplicate", "malformed",
+    "unknown_target", "wrong_type", "not_active", "already_done", "no_secret",
+    "invalid_payload", "no_connection", "unique_claimed", "other",
+})
+
+
+def reason_code(reason: str) -> str:
+    """SPEC-252 R1: código FECHADO (enum `REASON_CODES`) derivado do motivo textual do
+    validador. O texto livre nunca vai para log; motivo desconhecido => `other`."""
+    text = str(reason or "")
+    if text.startswith(UNPROVEN_PREFIX):
+        return "unproven"
+    if text.startswith(LIMIT_PREFIX):
+        return "cooldown" if "cooldown" in text else "rate_limited"
+    if "gerado pelo motor" in text or "registrada pelo motor" in text:
+        return "engine_only"
+    if text.startswith("duplicata"):
+        return "duplicate"
+    if text.startswith("proposta malformada"):
+        return "malformed"
+    if "id desconhecido" in text or "não existe no ARTIFACTS_DB" in text             or "não é local do mapa" in text or "relação desconhecida" in text:
+        return "unknown_target"
+    if "não é do type" in text or "não é facção" in text or "não é item único" in text             or "não é uma facção conhecida" in text or "sempre do player" in text             or "exige actor player" in text:
+        return "wrong_type"
+    if "não é uma quest ativa" in text:
+        return "not_active"
+    if "nenhum segredo" in text:
+        return "no_secret"
+    if "já está morto" in text or "já revelado" in text or "já ocorreu" in text             or "derrotada" in text or "bloqueada" in text:
+        return "already_done"
+    if "sem conexão" in text or "não têm conexão" in text:
+        return "no_connection"
+    if "ausente" in text or "inválido" in text or "fora do plano" in text             or "sem campaign_plan" in text:
+        return "invalid_payload"
+    return "other"
+
+
+_ENGINE_SOURCES = frozenset({"engine", "combat", "progression", "system", "rule"})
+
+
+def rejection_source(proposal: dict) -> str:
+    """SPEC-252 R1: `llm|rule|prevalidation` (conjunto fechado)."""
+    if proposal.get("_prevalidation_rejected") is True:
+        return "prevalidation"
+    return "rule" if proposal.get("source") in _ENGINE_SOURCES else "llm"
+
+
+def catalog_ref(target_id: object) -> str | None:
+    """SPEC-252: `target_ref` só se for id de catálogo (entidade do grafo, local do mapa ou
+    artefato). Qualquer outra coisa (nome livre vindo do LLM, id de quest) => None."""
+    tid = str(target_id or "")
+    if not tid or len(tid) > 80:
+        return None
+    try:
+        from gamedata import ARTIFACTS_DB, get_location
+        if gr.get_entity(tid) or get_location(tid) or tid in ARTIFACTS_DB:
+            return tid
+    except Exception:  # silent-ok: ref de catalogo e best-effort; sem ela o log omite o campo
+        return None
+    return None
+
+
 _VALIDATORS = {
     "npc_killed": _v_npc_killed,
     "secret_revealed": _v_secret_revealed,

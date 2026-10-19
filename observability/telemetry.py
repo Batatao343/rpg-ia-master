@@ -109,6 +109,7 @@ class _FallbackBucket(list):
     def __init__(self) -> None:
         super().__init__()
         self.seen: set[tuple[str, str]] = set()
+        self.counters: dict[str, int] = {}  # SPEC-252 R2: contadores por turno (chave fechada)
 
 
 _fallbacks: contextvars.ContextVar[_FallbackBucket | None] = contextvars.ContextVar(
@@ -119,6 +120,13 @@ def begin_fallbacks() -> tuple[contextvars.Token, list[str]]:
     """SPEC-250 R5: coleta ``node.reason`` dos fallbacks do turno (contado em ``rpg.turn``)."""
     bucket = _FallbackBucket()
     return _fallbacks.set(bucket), bucket
+
+
+def count_turn(name: str, n: int = 1) -> None:
+    """SPEC-252 R2: soma ``n`` ao contador ``name`` (chave fechada) do turno em curso (vai em ``rpg.turn``)."""
+    bucket = _fallbacks.get()
+    if bucket is not None:
+        bucket.counters[name] = bucket.counters.get(name, 0) + int(n)
 
 
 def end_fallbacks(token: contextvars.Token) -> None:

@@ -330,6 +330,54 @@ def _resolve_ref_in(ref: str, candidates: List[str]) -> Optional[str]:
     return None
 
 
+def trade_reason_code(reason: str) -> str:
+    """SPEC-252 R3: código FECHADO da recusa de transação (texto livre nunca vai ao log)."""
+    t = str(reason or "")
+    table = (
+        ("Ouro insuficiente", "insufficient_gold"),
+        ("Não há mercador", "no_merchant"),
+        ("à venda", "not_in_stock"),
+        ("Estoque insuficiente", "out_of_stock"),
+        ("para vender", "not_owned"),
+        ("valor de mercado", "no_value"),
+        ("Quantidade insuficiente", "insufficient_qty"),
+        ("já existe no mundo", "unique_conflict"),
+        ("receita", "no_recipe"),
+        ("para esse trabalho", "missing_station"),
+        ("não é do seu ofício", "wrong_craft"),
+        ("Falta ingrediente", "missing_ingredient"),
+        ("Não foi possível separar", "inventory_error"),
+        ("Modo de transação", "unknown_mode"),
+    )
+    for needle, code in table:
+        if needle in t:
+            return code
+    return "other"
+
+
+def log_trade(mode: str, outcome: dict) -> None:
+    """SPEC-252 R3: `economy.trade` (outcome ok|refused, reason_code, gold_delta, item_id so de
+    catalogo) + `economy.unique_claim_conflict` (warning) quando um unico ja existe no mundo."""
+    try:
+        from observability.telemetry import log_event
+        ok = bool(outcome.get("ok"))
+        code = "ok" if ok else trade_reason_code(outcome.get("reason"))
+        fields: Dict[str, Any] = {
+            "mode": mode if mode in ("buy", "sell", "craft") else "other",
+            "outcome": "ok" if ok else "refused", "reason_code": code,
+            "gold_delta": int(outcome.get("gold_delta", 0) or 0),
+        }
+        iid = str(outcome.get("item_id") or "")
+        if iid and iid in ARTIFACTS_DB:
+            fields["item_id"] = iid
+        log_event("economy", "trade", level="info", **fields)
+        if code == "unique_conflict":
+            log_event("economy", "unique_claim_conflict", level="warning", source="craft",
+                      **({"item_id": iid} if "item_id" in fields else {}))
+    except Exception:  # silent-ok: log best-effort; nunca altera a transacao
+        pass
+
+
 def execute_trade(state: dict, mode: str, item_ref: str, qty: int = 1) -> dict:
     """Compra/venda contra o mercador do local. Retorna TradeOutcome:
     {"ok", "reason", "item_id", "item_name", "qty", "gold_delta", "player", "world"}."""

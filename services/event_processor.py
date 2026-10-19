@@ -67,6 +67,27 @@ def _bounded_rejections(rows: list[Dict]) -> list[Dict]:
     return list(unique.values())[-_MAX_EVENT_REJECTIONS:]
 
 
+def _log_proposal_rejected(proposal: Dict, reason: str) -> None:
+    """SPEC-252 R1: `reason_code` (enum fechado), `target_ref` (so id de catalogo) e `source`.
+    O texto livre do motivo continua so em `event_rejections`."""
+    try:
+        from typing import get_args
+
+        from services.structured_outputs import EventType
+        from services.world_validators import catalog_ref, reason_code, rejection_source
+        etype = str(proposal.get("type") or "")
+        if etype not in get_args(EventType):
+            etype = "other"
+        fields = {"type": etype, "reason_code": reason_code(reason),
+                  "source": rejection_source(proposal)}
+        ref = catalog_ref(proposal.get("target_id"))
+        if ref:
+            fields["target_ref"] = ref
+        _log_event("event", "proposal_rejected", level="info", **fields)
+    except Exception:  # silent-ok: log best-effort; a rejeicao ja esta em event_rejections
+        pass
+
+
 def _record_rejection_metric(proposal: Dict, reason: str) -> None:
     """SPEC-223 R8: `rpg_world_events_rejected_total{type, reason_class}` (labels fechados)."""
     try:
@@ -324,7 +345,7 @@ def process_pending_events(state: Dict) -> Dict:
             except Exception as exc:  # silent-ok: vira ValidationResult(False) => event_rejections + metrica
                 result = ValidationResult(False, f"proposta malformada: {exc}")
         if not result.ok:
-            _log_event("event", "proposal_rejected", level="info", type=proposal.get('type'))
+            _log_proposal_rejected(proposal, result.reason)
             event_rejections = _bounded_rejections([*event_rejections, {
                 "turn": turn,
                 "type": str(proposal.get("type") or ""),

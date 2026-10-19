@@ -185,6 +185,7 @@ def loot_node(state: GameState):
             outcome = economy.execute_trade(work_state, intent.mode,
                                             intent.item_ref, intent.qty)
 
+        economy.log_trade(intent.mode, outcome)  # SPEC-252 R3
         public_action = {
             "action_id": (
                 f"{int(world.get('turn_count', 0) or 0)}:"

@@ -41,6 +41,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `campaign.fallback` | — |
 | `campaign.generating_plot` | — |
 | `campaign.planner_failed` | `error` |
+| `campaign.replan` | `outcome`, `reason` |
 | `character.ai_failed` | `error` |
 | `client_latency` | `ack_ms`, `action_ref`, `first_phase_ms`, `outcome`, `state_ms`, `transport`, `ttfmc_ms`, `ttlt_ms` |
 | `codex.doc_skipped` | `error` |
@@ -71,8 +72,10 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `db.statement_timeout` | `error_type`, `query_name` |
 | `death_flow.fallback` | — |
 | `economy.negative_gold_prevented` | `attempted_gold`, `player` |
+| `economy.trade` | — |
+| `economy.unique_claim_conflict` | `item_id`, `source` |
 | `event.applied` | `event_id`, `type` |
-| `event.proposal_rejected` | `type` |
+| `event.proposal_rejected` | — |
 | `gamedata.artifact_save_failed` | `error` |
 | `gamedata.artifact_saved` | — |
 | `gamedata.file_missing` | `file` |
@@ -105,6 +108,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `logging.config_invalid_level` | `fallback` |
 | `loot.narrate_failed` | `error` |
 | `loot.trade_parse_failed` | `error` |
+| `narrative.rejected` | `count`, `kind`, `reason_code` |
 | `npc.actor_failed` | `error` |
 | `npc.cache_hit` | — |
 | `npc.creating` | — |
@@ -175,7 +179,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `storyteller.fallback` | — |
 | `storyteller.unique_item_claimed_ignored` | `item_id` |
 | `storyteller.unknown_item_ignored` | — |
-| `turn` | `error`, `events_applied`, `events_rejected`, `fallbacks`, `game_id_ref`, `latency_ms`, `route`, `route_fallback_reason`, `route_source`, `turn` |
+| `turn` | `error`, `events_applied`, `events_rejected`, `fallbacks`, `game_id_ref`, `latency_ms`, `narrative_rejected`, `route`, `route_fallback_reason`, `route_source`, `turn` |
 | `turn_delivery` | `ack_server_ms`, `action_ref`, `outcome`, `pseudo_streaming`, `state_server_ms`, `transport`, `ttfmc_server_ms`, `ttlt_server_ms` |
 | `wallet.recovery_item_failed` | `error_type`, `op_ref`, `stage` |
 | `wallet.reservation_uncertain` | `error_type`, `op_ref`, `stage` |

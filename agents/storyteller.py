@@ -261,6 +261,15 @@ def _mediation_clause(state: GameState) -> str:
     return clause
 
 
+def _log_narrative_rejected(kind: str, codes: List[str]) -> None:
+    """SPEC-252 R2: `narrative.rejected` (kind item|event|mediation + reason_code fechado), 1 linha
+    por (kind, reason_code) com `count`; a contagem por kind tambem vai em `rpg.turn`."""
+    from observability.telemetry import count_turn
+    for code, n in Counter(codes).items():
+        _log_event("narrative", "rejected", level="info", kind=kind, reason_code=code, count=n)
+    count_turn(kind, len(codes))
+
+
 def _guard_mediation_secret(text: str, state: GameState) -> tuple[str, List[str]]:
     """SPEC-202 R11: parágrafo mediado com assinatura de segredo não revelado vira
     descrição observável neutra (determinística) + registro de rejeição."""
@@ -1048,6 +1057,7 @@ def storyteller_node(state: GameState):
             if str(g).strip()
         ]
         rejected_claims: List[str] = []
+        rejected_item_codes: List[str] = []
         if gained:
             from inventory import add_item, get_qty, is_unique, resolve_item_name
             from services.economy import claim_event, is_unique_available
@@ -1065,6 +1075,7 @@ def storyteller_node(state: GameState):
                 if not iid:
                     _log_event("storyteller", "unknown_item_ignored", level="warning")
                     rejected_claims.append(str(g))
+                    rejected_item_codes.append("unknown_item")
                     continue
                 # Fase 6.2: único já reclamado NUNCA re-entra pela narrativa
                 unique = is_unique(iid)
@@ -1077,6 +1088,9 @@ def storyteller_node(state: GameState):
                 if unique and (get_qty(inv, iid) > 0 or not is_unique_available(iid, proj)):
                     _log_event("storyteller", "unique_item_claimed_ignored", level="warning", item_id=iid)
                     rejected_claims.append(str(g))
+                    rejected_item_codes.append("unique_claimed")
+                    _log_event("economy", "unique_claim_conflict", level="warning",
+                               source="narrative", item_id=iid)
                     continue
                 inv = add_item(inv, iid, 1)
                 changed = True
@@ -1085,6 +1099,8 @@ def storyteller_node(state: GameState):
             if changed:
                 cur_p["inventory"] = inv
                 updates["player"] = cur_p
+        if rejected_item_codes:
+            _log_narrative_rejected("item", rejected_item_codes)
         if rejected_claims:
             clean = prose_guard.remove_rejected_claims(narrative_text, rejected_claims)
             clean = clean or "A busca não produz nenhum objeto utilizável."
@@ -1112,6 +1128,9 @@ def storyteller_node(state: GameState):
             current_text = str(updates["messages"][0].content or "").rstrip()
             updates["messages"] = [AIMessage(content=f"{current_text}\n\n{reward_note}")]
         if invalid_story_events:
+            from services.world_validators import reason_code as _reason_code
+            _log_narrative_rejected(
+                "event", [_reason_code(e.get("reason")) for e in invalid_story_events])
             updates["narrative_rejections"] = [
                 *list(updates.get("narrative_rejections") or []),
                 *[
@@ -1193,6 +1212,7 @@ def storyteller_node(state: GameState):
         if turn_bl is not state.get("turn_baseline"):
             updates["turn_baseline"] = turn_bl
         if mediation_rejections:
+            _log_narrative_rejected("mediation", ["secret_signature"] * len(mediation_rejections))
             updates["narrative_rejections"] = [
                 *list(updates.get("narrative_rejections") or []),
                 *mediation_rejections,

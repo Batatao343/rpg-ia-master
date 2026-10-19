@@ -1,7 +1,7 @@
 """Campaign planning node used to keep multi-step story arcs coherent."""
 from observability.telemetry import log_event as _log_event
 
-from typing import List
+from typing import List, Optional
 
 from langchain_core.messages import HumanMessage, SystemMessage
 from pydantic import BaseModel, Field, field_validator
@@ -103,7 +103,21 @@ def _should_replan(state: GameState) -> bool:
     return finished
 
 
-def _build_plan(state: GameState) -> CampaignPlan:
+def _replan_reason(state: GameState) -> str:
+    """SPEC-252 R4: motivo FECHADO do replanejamento (só observabilidade; mesma ordem de
+    `_should_replan`): needs_replan | first_plan | region_change | periodic."""
+    if state.get("needs_replan"):
+        return "needs_replan"
+    plan = state.get("campaign_plan")
+    if not plan:
+        return "first_plan"
+    world = state.get("world", {})
+    if plan.get("location") and plan["location"] != world.get("current_location")             and not _same_region(plan["location"], world.get("current_location", "")):
+        return "region_change"
+    return "periodic"
+
+
+def _build_plan(state: GameState, _info: Optional[dict] = None) -> CampaignPlan:
     """Generate a structured campaign plan for the current scene using RAG context."""
 
     world = state.get("world", {})
@@ -193,9 +207,13 @@ def _build_plan(state: GameState) -> CampaignPlan:
             if (not isinstance(plan, CampaignPlanModel)
                     or any(looks_english(b) for b in plan.beats)):
                 _log_event("campaign", "beats_english_after_retry", level="warning")
+                if _info is not None:
+                    _info["outcome"] = "previous_kept"
                 return None
 
         # R2: sanitiza a verdade oculta no TEXTO (beats/climax/arc_title).
+        if _info is not None:
+            _info["outcome"] = "llm"
         beats: List[CampaignBeat] = [
             {"description": sanitize_beat(beat, state), "status": "pending"}
             for beat in plan.beats
@@ -222,8 +240,12 @@ def _build_plan(state: GameState) -> CampaignPlan:
         if _old.get("beats") and _same_region(str(_old.get("location") or ""),
                                               str(current_loc or "")):
             log_fallback("campaign", "previous_plan_kept", exc)
+            if _info is not None:
+                _info["outcome"] = "previous_kept"
             return None
         log_fallback("campaign", "template_used", exc)
+        if _info is not None:
+            _info["outcome"] = "template"
         # spec beats-visibilidade-ptbr (achado F): o fallback ERA em inglês —
         # fonte real do "beat em inglês" quando o LLM falha. Agora em pt-BR.
         fallback_beats: List[CampaignBeat] = [
@@ -299,7 +321,10 @@ def _campaign_manager_node(state: GameState):
         }
 
     _log_event("campaign", "generating_plot", level="info")
-    new_plan = _build_plan(effective_state)
+    _plan_info: dict = {}
+    new_plan = _build_plan(effective_state, _plan_info)
+    _log_event("campaign", "replan", level="info", reason=_replan_reason(effective_state),
+               outcome=_plan_info.get("outcome", "llm" if new_plan else "previous_kept"))
     # spec beats-visibilidade-ptbr (R4): não conseguiu um plano em pt-BR → mantém
     # o anterior e deixa needs_replan ligado para tentar de novo no próximo turno.
     if new_plan is None:
