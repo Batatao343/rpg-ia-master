@@ -1,0 +1,31 @@
+{
+  "source": "npx vercel logs --environment production --since 20m --json (staging, deploy da6186b), filtrado em event=http.request; 2026-10-19T16:21Z",
+  "android_lines": [
+    {
+      "ts": "2026-10-19T16:19:39.946Z",
+      "path": "/auth/refresh",
+      "client": "android",
+      "client_build": "da6186b+202610191331",
+      "app_version": "(campo ausente)",
+      "status": 401
+    },
+    {
+      "ts": "2026-10-19T16:19:13.994Z",
+      "path": "/auth/refresh",
+      "client": "android",
+      "client_build": "da6186b+202610191331",
+      "app_version": "(campo ausente)",
+      "status": 401
+    },
+    {
+      "ts": "2026-10-19T16:18:46.745Z",
+      "path": "/auth/refresh",
+      "client": "android",
+      "client_build": "da6186b+202610191331",
+      "app_version": "(campo ausente)",
+      "status": 401
+    }
+  ],
+  "any_app_version": false,
+  "total_http_request_lines": 7
+}

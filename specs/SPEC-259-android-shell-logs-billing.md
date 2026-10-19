@@ -1,6 +1,6 @@
 # SPEC-259 — Android: códigos distintos de billing com debugMessage, console do WebView em debug e versão do app nas requisições
 
-> **Status:** `done` — aprovada pelo dono em 2026-10-19; implementada em 2026-10-19 (smoke no AVD pendente). Prioridade sugerida: **P3**.
+> **Status:** `in-progress` — aprovada pelo dono em 2026-10-19; implementada em 2026-10-19; smoke no AVD `rpg34` em 2026-10-19: R1/R2/R3 ok, **R4 falhou** (o shell nunca envia `X-RPG-App-Version`; ver §9). Prioridade sugerida: **P3**.
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-19
 > **Depende de:** SPEC-244, SPEC-261
 > **Desbloqueia:** —
@@ -56,7 +56,7 @@ R1–R5.
 ## 5. Critérios de aceite
 
 - [x] Cada falha de billing tem código distinto + `debugMessage` no JS; logcat de release só código + `responseCode` (R2), `debugMessage` saneada só em `BuildConfig.DEBUG`.
-- [x] `app_version` aparece no access log.
+- [ ] `app_version` aparece no access log (unitário ok; no AVD contra o staging o header não sai — §9).
 - [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
 - [ ] `uv run pytest` verde (suíte completa offline).
 - [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
@@ -96,3 +96,18 @@ R1–R5.
 - **Pendente (exige AVD `rpg34`, não executado — sem evidência inventada):** compra fake cancelada/erro no emulador
   mostrando `billing_*` com `responseCode` no JS e no `adb logcat -s RPGBilling RPGWebView`; requisição do WebView com
   `X-RPG-App-Version: 1.0.0+1` e `http.request app_version=1.0.0+1` no log do staging.
+
+## 9. Smoke no AVD `rpg34` (2026-10-19)
+
+Detalhe e evidência: [docs/spec259/README.md](../docs/spec259/README.md). APK debug com Billing real apontando para o staging
+(`da6186b`), usuário sintético apagado ao fim, sem deploy.
+
+- **R1/R2 ok:** `getProducts` rejeita com `billing_query_failed` + `{responseCode: -1, stage: "products", debugMessage}` no JS;
+  logcat `RPGBilling: billing_query_failed responseCode=-1 debugMessage=...` (debug); sem token no logcat.
+- **R3 ok:** console do WebView em `RPGWebView`.
+- **Cancelamento fake não gera código:** por design o cancelamento resolve `{cancelled: true}` (fake e real); o caminho de erro
+  foi provado com o BillingClient real (AVD `google_apis` sem Play: "Service connection is disconnected").
+- **R4 FALHA:** nenhuma requisição leva `X-RPG-App-Version` e o access log do staging não tem `app_version` nas linhas
+  `client=android`. Causa medida: `loadAppVersion()` roda na carga do módulo, quando `Capacitor.registerPlugin` ainda não
+  existe (aparece ~200 ms depois); lança `app_plugin_unavailable` e o cache fica `null` para sempre. Correção sugerida no
+  README (esperar `registerPlugin` ou reler de forma preguiçosa) + repetir o smoke. Quem age: executor da 259 (código web).

@@ -1,0 +1,125 @@
+{
+  "spec": "SPEC-259",
+  "when": "2026-10-19T16:15:27.039Z",
+  "apk": "debug, PLAY_BILLING_FAKE=false, server.url=staging",
+  "checks": {
+    "platform": "android",
+    "app_info": {
+      "version": "1.0.0",
+      "build": "1"
+    },
+    "header_on_api_request": false,
+    "logcat_has_code_and_responseCode": true,
+    "logcat_no_token": true
+  },
+  "package_version": [
+    "versionCode=1 minSdk=24 targetSdk=36",
+    "versionName=1.0.0"
+  ],
+  "verify_status": 200,
+  "requests": [
+    {
+      "path": "/auth/config",
+      "method": "GET",
+      "app_version": null,
+      "client": "android",
+      "request_id": "2ebd5a5bb460"
+    },
+    {
+      "path": "/auth/refresh",
+      "method": "POST",
+      "app_version": null,
+      "client": "android",
+      "request_id": "9e65f5464f90"
+    },
+    {
+      "path": "/auth/verify",
+      "method": "POST",
+      "app_version": null,
+      "client": "android",
+      "request_id": null
+    },
+    {
+      "path": "/",
+      "method": "GET",
+      "app_version": null,
+      "client": null,
+      "request_id": null
+    },
+    {
+      "path": "/auth/config",
+      "method": "GET",
+      "app_version": null,
+      "client": "android",
+      "request_id": "11e4ce117667"
+    },
+    {
+      "path": "/account/balance",
+      "method": "GET",
+      "app_version": null,
+      "client": "android",
+      "request_id": "c15a9283e333"
+    },
+    {
+      "path": "/game/saves",
+      "method": "GET",
+      "app_version": null,
+      "client": "android",
+      "request_id": "cf504969bfba"
+    },
+    {
+      "path": "/data/options",
+      "method": "GET",
+      "app_version": null,
+      "client": "android",
+      "request_id": "479ec43554ad"
+    },
+    {
+      "path": "/data/onboarding",
+      "method": "GET",
+      "app_version": null,
+      "client": "android",
+      "request_id": "0ef507fbd1c1"
+    },
+    {
+      "path": "/telemetry/client-error",
+      "method": "POST",
+      "app_version": null,
+      "client": null,
+      "request_id": null
+    }
+  ],
+  "billing_getProducts": {
+    "ok": false,
+    "code": "billing_query_failed",
+    "message": "billing_query_failed",
+    "data": {
+      "responseCode": -1,
+      "stage": "products",
+      "debugMessage": "Service connection is disconnected."
+    }
+  },
+  "billing_purchase": {
+    "ok": false,
+    "message": "product_unavailable"
+  },
+  "logcat_RPGBilling": [
+    "W RPGWebView: Unrecognized feature: 'xr-spatial-tracking'. @https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit:2\r",
+    "E RPGWebView: Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('https://challenges.cloudflare.com') does not match the recipient window's origin ('https://rpg-ia-master-staging.vercel.app'). @https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit:2\r",
+    "E RPGWebView: Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('https://challenges.cloudflare.com') does not match the recipient window's origin ('https://rpg-ia-master-staging.vercel.app'). @https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit:2\r",
+    "E RPGWebView: Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('https://challenges.cloudflare.com') does not match the recipient window's origin ('https://rpg-ia-master-staging.vercel.app'). @https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit:2\r",
+    "E RPGWebView: Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('https://challenges.cloudflare.com') does not match the recipient window's origin ('https://rpg-ia-master-staging.vercel.app'). @https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit:2\r",
+    "E RPGWebView: Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('https://challenges.cloudflare.com') does not match the recipient window's origin ('https://rpg-ia-master-staging.vercel.app'). @https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit:2\r",
+    "E RPGWebView: Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('https://challenges.cloudflare.com') does not match the recipient window's origin ('https://rpg-ia-master-staging.vercel.app'). @https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit:2\r",
+    "E RPGWebView: Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('https://challenges.cloudflare.com') does not match the recipient window's origin ('https://rpg-ia-master-staging.vercel.app'). @https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit:2\r",
+    "E RPGWebView: Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('https://challenges.cloudflare.com') does not match the recipient window's origin ('https://rpg-ia-master-staging.vercel.app'). @https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit:2\r",
+    "W RPGBilling: billing_query_failed responseCode=-1 debugMessage=Service connection is disconnected.\r",
+    "E RPGWebView: [object Object] @:330\r",
+    "W RPGWebView: Capacitor plugin \"App\" already registered. Cannot register plugins twice. @https://rpg-ia-master-staging.vercel.app/assets/index-cdAHqm31.js:2\r",
+    "W RPGWebView: Capacitor plugin \"PlayBilling\" already registered. Cannot register plugins twice. @https://rpg-ia-master-staging.vercel.app/assets/index-cdAHqm31.js:2\r",
+    "W RPGBilling: billing_query_failed responseCode=-1 debugMessage=Service connection is disconnected.\r",
+    "E RPGWebView: [object Object] @:330\r",
+    "W RPGWebView: Capacitor plugin \"PlayBilling\" already registered. Cannot register plugins twice. @https://rpg-ia-master-staging.vercel.app/assets/index-cdAHqm31.js:2\r",
+    "E RPGWebView: [object Object] @:330"
+  ]
+}
