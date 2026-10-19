@@ -21,6 +21,9 @@ export default defineConfig({
     },
   },
   build: {
+    // SPEC-276: mantém o alvo de navegadores do Vite 5 ("modules"); o default do Vite 8
+    // (Chrome 111 / Safari 16.4) derrubaria WebViews e iOS mais antigos sem aviso.
+    target: ["es2020", "edge88", "firefox78", "chrome87", "safari14"],
     outDir: "dist",
     emptyOutDir: true,
   },
