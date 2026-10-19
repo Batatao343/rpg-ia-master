@@ -42,7 +42,7 @@ jobs:
           cache-dependency-path: web/package-lock.json
       - run: npm ci
         working-directory: web
-      # SPEC-225 R6: bloqueia high/critical de runtime; a árvore de dev (vite 5/esbuild) é não bloqueante.
+      # SPEC-225 R6: bloqueia high/critical de runtime; a árvore completa é checada em npm-audit-full.
       - run: npm audit --omit=dev --audit-level=high
         working-directory: web
       - run: npm test
@@ -72,9 +72,8 @@ jobs:
           GITLEAKS_CONFIG: .gitleaks.toml
 
   npm-audit-full:
-    # SPEC-225 R6: árvore completa (inclui dev) informativa até migrar para Vite >= 6.4 (D-A).
+    # SPEC-225 R6 / SPEC-276: árvore completa (inclui dev) bloqueante desde a migração para Vite 8 (D-A).
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
