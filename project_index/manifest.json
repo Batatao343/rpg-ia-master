@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "8fd831781224005134b9a1ef5a03ecbad6e92e38",
+  "commit_sha": "27f3198cf257da15c53278d4998f88bb79d47db4",
   "edge_counts": {
-    "calls": 17537,
-    "contains": 730,
-    "defines": 9948,
-    "imports": 1616,
-    "likely_test_for": 997,
+    "calls": 17585,
+    "contains": 731,
+    "defines": 9967,
+    "imports": 1619,
+    "likely_test_for": 1000,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:c883314afb8519768295d5c9b56cf83d97e30a371e1ed6202df56b9e91d1a8b2",
+  "graph_hash": "sha256:ca76b50b28d0f7b09934aed5c5e980d31dd46c2aa3854eac794f025b545ab3d9",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -740,6 +740,7 @@
     "tests/test_spec286_heroi_inconsciente.py",
     "tests/test_spec287_encounter_scale.py",
     "tests/test_spec288_causa_morte.py",
+    "tests/test_spec289_ameaca_tematica.py",
     "tests/test_spec290_chefe_sobrevivencia.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
@@ -932,12 +933,12 @@
     "artifact": 9,
     "class": 795,
     "endpoint": 63,
-    "file": 876,
-    "function": 3053,
+    "file": 877,
+    "function": 3058,
     "method": 750,
-    "module": 730,
-    "test": 5349
+    "module": 731,
+    "test": 5363
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:6d64e246357e6ee5d6226104b5eb775208d89ef146a969668e3536f7037ea279"
+  "source_tree_hash": "sha256:1aa4b0a8bc84b28825ee7f190e6b309eb06988d3c91463012e53c85dac6ef74f"
 }
