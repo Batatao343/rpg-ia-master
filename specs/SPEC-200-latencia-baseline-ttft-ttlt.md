@@ -4,7 +4,7 @@
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** nenhuma · SPEC-116 `done`, SPEC-143 `done` NO-GO e SPEC-182 `done` são insumos. Recomendado (não bloqueia): medir após a SPEC-235 para não instrumentar o pending antigo (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-207, SPEC-212, SPEC-213, SPEC-214, SPEC-217 (ordem final 2026-10-15)
-> **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 09
+> **Origem:** pacote `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 09
 > **EXECUTOR_MODEL:** `Terra` (≡ Sonnet, ver docs/planos/equivalencia-modelos-claude.md)
 > **REVIEW_MODEL:** `Sol` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `true` (contextvars entre thread SSE e worker, métricas Prometheus, endpoint novo)
 > **EVAL_AUTHORING_REQUIRED:** `false` — o baseline é harness de medição, não evaluator/dataset protegido de `evals/`. Vira `true` somente se o dono quiser gate com limiar numérico em `evals/` (ver seção 8, P4).

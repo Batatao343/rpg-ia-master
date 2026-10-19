@@ -11,7 +11,7 @@
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-200 `done` (baseline/gate), SPEC-228 `done` (ordem save/checkpoint), SPEC-234 `done` (hot path do arquivista corrigido) · referências `done`: SPEC-093, SPEC-107, SPEC-111, SPEC-124, SPEC-170, SPEC-192 (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-214 (ordem final 2026-10-15)
-> **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 10
+> **Origem:** pacote `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 10
 > **EXECUTOR_MODEL:** `Sol` (≡ Opus, ver `docs/planos/equivalencia-modelos-claude.md`)
 > **REVIEW_MODEL:** `Astra` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `true`
 > **EVAL_AUTHORING_REQUIRED:** `false` — usa as suítes da SPEC-170 (`memory_write`, `memory_retrieval`, `context_grounding`, `generation_boundary`) como regressão, **sem editá-las**. Os testes novos de corrida/restart são testes unitários/integração do produto, não datasets de eval.

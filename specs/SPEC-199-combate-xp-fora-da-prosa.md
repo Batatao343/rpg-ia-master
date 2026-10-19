@@ -4,7 +4,7 @@
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
 > **Depende de:** SPEC-226 `done` (quantidade de XP correta antes de projetar o evento) · SPEC-144 e SPEC-077 `done` são evoluídas, não reabertas. R12 (cura no inimigo) foi transferido para a SPEC-232 (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-203, SPEC-205, SPEC-212 (ordem final 2026-10-15)
-> **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 04 (parte a)
+> **Origem:** pacote `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 04 (parte a)
 > **EXECUTOR_MODEL:** `Terra` (≡ Sonnet, ver docs/planos/equivalencia-modelos-claude.md)
 > **REVIEW_MODEL:** `Sol` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `false` — escopo limitado (um nó + projeção aditiva + chip de UI), sem mudança de regra de XP nem de schema de save
 > **EVAL_AUTHORING_REQUIRED:** `true` — eval narrativo "prosa sem números mecânicos de recompensa" (autoria em tarefa separada, ver seção 9)

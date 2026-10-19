@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_docs_only_classification_is_conservative():
     assert ci_docs_only.docs_only(["docs/a.md", "handoffs/SPEC-001-sol-review.md", "ESTADO_ATUAL.md"])
-    assert ci_docs_only.docs_only(["proximas-specs/x/y.md", "docs/img.png"])
+    assert ci_docs_only.docs_only(["docs/historico/proximas-specs/x/y.md", "docs/img.png"])
     # lore/specs/código nunca contam como docs-only
     assert not ci_docs_only.docs_only(["docs/a.md", "data/codex/x.md"])
     assert not ci_docs_only.docs_only(["specs/SPEC-001-x.md"])

@@ -4,7 +4,7 @@
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-201 `done` (matriz de efeitos), SPEC-204 `done` (shell), SPEC-205 `done` (gesto) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-209, SPEC-210, SPEC-211 (ordem final 2026-10-15)
-> **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 05
+> **Origem:** pacote `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 05
 > **EXECUTOR_MODEL:** `Terra` (≡ Sonnet, ver docs/planos/equivalencia-modelos-claude.md)
 > **REVIEW_MODEL:** `Sol` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `false`
 > **EVAL_AUTHORING_REQUIRED:** `false` — verificação por Playwright/axe determinísticos já existentes em `web/e2e/`; nenhum eval protegido novo. Se SPEC-201 exigir métrica de cliques falhos/cancelamentos como eval, é handoff separado.

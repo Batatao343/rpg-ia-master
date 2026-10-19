@@ -5,7 +5,7 @@
     python scripts/check_md_links.py --baseline f    # fail only on links not listed in f
 
 The repo has historical broken links; `--baseline` lets CI and moves (e.g. relocating
-proximas-specs/) prove "no NEW broken link" without fixing old ones first.
+docs/historico/proximas-specs/) prove "no NEW broken link" without fixing old ones first.
 """
 
 from __future__ import annotations

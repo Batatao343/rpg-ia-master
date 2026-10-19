@@ -4,7 +4,7 @@
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-15
 > **Depende de:** SPEC-204 `done` (workspace), SPEC-205 `done` (mira direta), SPEC-212 `done` (gate desktop) (ordem final 2026-10-15)
 > **Desbloqueia:** evidência mobile para SPEC-198 (ordem final 2026-10-15)
-> **Origem:** pacote `proximas-specs/…`, prompt 14
+> **Origem:** pacote `docs/historico/proximas-specs/…`, prompt 14
 > **EXECUTOR_MODEL:** `Terra` (≡ Sonnet, ver docs/planos/equivalencia-modelos-claude.md)
 > **REVIEW_MODEL:** `Sol` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `false`
 > **EVAL_AUTHORING_REQUIRED:** `true` — eval de viewport mobile (320x568, 390x844, WebView) em Playwright; autoria em tarefa separada, antes da otimização de produto.

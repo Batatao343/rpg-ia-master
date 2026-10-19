@@ -4,7 +4,7 @@
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
 > **Depende de:** SPEC-203 `done` (desfecho), SPEC-204 `done` (shell), SPEC-205 `done` (gesto), SPEC-208 `done` (tokens), SPEC-227 `done` (inventário/equipamento íntegros) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212 (ordem final 2026-10-15)
-> **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15`, prompt 06 (partes Combate e Personagem)
+> **Origem:** pacote `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15`, prompt 06 (partes Combate e Personagem)
 > **EXECUTOR_MODEL:** `Terra` (≡ Sonnet, ver docs/planos/equivalencia-modelos-claude.md)
 > **REVIEW_MODEL:** `Sol` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `false`
 > **EVAL_AUTHORING_REQUIRED:** `true` — jornadas frontend novas (deck fora de combate: preparar/evoluir/rejeição; Personagem: ficha/Jornada/retrato/reload) em `evals/` e Playwright F-series; autoria em tarefa separada, nunca pelo executor desta spec.

@@ -4,7 +4,7 @@
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** nenhuma · somente leitura do source (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-204, SPEC-208 (ordem final 2026-10-15)
-> **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 01
+> **Origem:** pacote `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 01
 > **EXECUTOR_MODEL:** `Terra` (≡ Sonnet, ver docs/planos/equivalencia-modelos-claude.md)
 > **REVIEW_MODEL:** `Sol` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `false`
 > **EVAL_AUTHORING_REQUIRED:** `false` — spec de diagnóstico, sem mudança de produto e sem eval novo. Os critérios de aceite das linhas da matriz viram eval apenas na SPEC-208+ (handoff separado).

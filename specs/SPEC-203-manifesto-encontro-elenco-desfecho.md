@@ -4,7 +4,7 @@
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-199 `done` (evento estruturado de XP), SPEC-228 `done` (guard de schema + morte/checkpoint corretos), SPEC-231 `done` (morte com aliados/`scene_allies` corretos) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-205, SPEC-209, SPEC-212 (ordem final 2026-10-15)
-> **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 04 (parte b)
+> **Origem:** pacote `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 04 (parte b)
 > **EXECUTOR_MODEL:** `Sol` (≡ Opus, ver `docs/planos/equivalencia-modelos-claude.md`)
 > **REVIEW_MODEL:** `Astra` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `true`
 > **EVAL_AUTHORING_REQUIRED:** `true` — casos novos de `state_rules` (identidade do elenco

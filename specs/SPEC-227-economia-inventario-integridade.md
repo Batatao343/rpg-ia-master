@@ -5,7 +5,7 @@
 > **Depende de:** nenhuma · SPEC-013/017/018 `done` corrigidas. Fronteira com SPEC-199 D-B: esta corrige o motor; recibo de economia na UI fica para spec futura (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-209, SPEC-212 (ordem final 2026-10-15)
 > **Nota de schema (cadeia final 2026-10-15):** ordem dos bumps de `SCHEMA_VERSION` (hoje 8): SPEC-228 primeiro (R9 recusa save de versão mais nova; sem bump) → [SPEC-227 só se D-C = migração; default sem bump] → SPEC-202 → SPEC-203 → SPEC-207 → SPEC-213 → SPEC-215. Nenhuma outra spec 199–236 altera o schema de save (SPEC-228 R7 `needs_replan` e SPEC-231 `scene_allies` usam default/campo existente, sem bump). Cada spec usa o próximo `SCHEMA_VERSION` livre no HEAD ao implementar e encadeia sua migração após a anterior; onde o texto disser "v8→v9", leia "vN→vN+1".
-> **Origem:** auditoria de bugs 2026-10-15 — achados BUG-03-03, 03-04, 03-05, 03-06, 03-07, 03-08, 03-09, 03-11 (`proximas-specs/novas-specs/bugs/achados/03-economia-loot-progressao.md`)
+> **Origem:** auditoria de bugs 2026-10-15 — achados BUG-03-03, 03-04, 03-05, 03-06, 03-07, 03-08, 03-09, 03-11 (`docs/historico/proximas-specs/novas-specs/bugs/achados/03-economia-loot-progressao.md`)
 > **EXECUTOR_MODEL:** `Terra` (≡ Sonnet)
 > **REVIEW_MODEL:** `Sol` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `true` — toca ouro/itens únicos (ledger de posse) e a API pública de criação
 > **EVAL_AUTHORING_REQUIRED:** `false` — cobertura por testes unitários determinísticos (sem LLM no caminho)

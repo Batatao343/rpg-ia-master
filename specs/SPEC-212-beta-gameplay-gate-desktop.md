@@ -4,7 +4,7 @@
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
 > **Depende de:** SPEC-199, 200, 202, 203, 204, 205, 206, 207, 209, 210, 211 (onda beta desktop) + SPEC-226..235 (bloqueadores de bug de gameplay/API) + SPEC-218, 219 (deploy exposto fail-closed e cota por owner antes de convidar testers) — todas `done` · leitura (não editar): SPEC-172 `done`, SPEC-173 `done`, SPEC-197 `in-progress` (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-216; go do beta pago (D6) via handoff para SPEC-197; convite de testers desktop (ordem final 2026-10-15)
-> **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 15
+> **Origem:** pacote `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 15
 > **EXECUTOR_MODEL:** `Terra` (≡ Sonnet, ver docs/planos/equivalencia-modelos-claude.md)
 > **REVIEW_MODEL:** `Sol` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `true`
 > **EVAL_AUTHORING_REQUIRED:** `true` — jornada vertical nova (J-V1) e oráculos novos (console/duplicação/segredo/a11y/latência-presença) em `evals/` e `web/e2e/`; autoria em tarefa separada, antes do executor de produto.

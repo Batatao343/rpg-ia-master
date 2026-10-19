@@ -5,7 +5,7 @@
 > **Depende de:** nenhuma · SPEC-060 checkpoints-morte, SPEC-086 hardening-persistencia-sse-idempotencia e SPEC-101 checkpoint-seguro-fora-combate `done` são corrigidas (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-202, SPEC-203, SPEC-207, SPEC-212, SPEC-213 (ordem final 2026-10-15)
 > **Nota de schema (cadeia final 2026-10-15):** ordem dos bumps de `SCHEMA_VERSION` (hoje 8): SPEC-228 primeiro (R9 recusa save de versão mais nova; sem bump) → [SPEC-227 só se D-C = migração; default sem bump] → SPEC-202 → SPEC-203 → SPEC-207 → SPEC-213 → SPEC-215. Nenhuma outra spec 199–236 altera o schema de save (SPEC-228 R7 `needs_replan` e SPEC-231 `scene_allies` usam default/campo existente, sem bump). Cada spec usa o próximo `SCHEMA_VERSION` livre no HEAD ao implementar e encadeia sua migração após a anterior; onde o texto disser "v8→v9", leia "vN→vN+1".
-> **Origem:** auditoria de bugs 2026-10-15 — achados BUG-04-01, 04-04, 04-05, 04-06, 04-07, obs-04-a, obs-04-b (`proximas-specs/novas-specs/bugs/achados/04-persistencia-concorrencia.md`)
+> **Origem:** auditoria de bugs 2026-10-15 — achados BUG-04-01, 04-04, 04-05, 04-06, 04-07, obs-04-a, obs-04-b (`docs/historico/proximas-specs/novas-specs/bugs/achados/04-persistencia-concorrencia.md`)
 > **EXECUTOR_MODEL:** `Terra` (≡ Sonnet)
 > **REVIEW_MODEL:** `Sol` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `true` — altera o fluxo de morte e a ordem de persistência (perda de progresso do jogador)
 > **EVAL_AUTHORING_REQUIRED:** `false` — cobertura por testes determinísticos de persistência/API (TestClient + MockLLM)

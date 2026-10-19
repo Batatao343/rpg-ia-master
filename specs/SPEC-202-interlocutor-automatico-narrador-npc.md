@@ -4,7 +4,7 @@
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-228 `done` (R9 recusa save mais novo antes do 1º bump de schema), SPEC-229 `done` (mesmo `agents/router.py`; parsers de intenção primeiro), SPEC-230 `done` (NPC vivo/em cena confiável) · SPEC-041, SPEC-149, SPEC-169, SPEC-186, SPEC-187 `done` (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212, SPEC-215 (ordem final 2026-10-15)
-> **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 07
+> **Origem:** pacote `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 07
 > **EXECUTOR_MODEL:** `Sol` (≡ Opus, ver `docs/planos/equivalencia-modelos-claude.md`)
 > **REVIEW_MODEL:** `Astra` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `true`
 > **EVAL_AUTHORING_REQUIRED:** `true` — corpus `routing.interlocutor.*` (casos de interlocutor + `speaker_kind`/`speaker_id` esperados), autoria em tarefa separada ligada à SPEC-169; quem implementa esta spec não edita `evals/datasets/regression/routing_actions.jsonl` nem `evals/evaluators/routing.py`.

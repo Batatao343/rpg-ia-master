@@ -1,6 +1,6 @@
 """Workspace C6: classify a push/PR as docs-only so CI can skip the heavy suite.
 
-docs-only = every changed path is under docs/, handoffs/ or proximas-specs/, or is a
+docs-only = every changed path is under docs/ or handoffs/, or is a
 top-level *.md (ESTADO_ATUAL, ROADMAP, CHANGELOG, AGENTS, CLAUDE...). Anything else,
 an unknown base (new branch, force push, schedule) or a git error => NOT docs-only
 (fail-safe: the full suite runs).
@@ -18,7 +18,7 @@ import sys
 from pathlib import Path, PurePosixPath
 
 ZERO_SHA = "0" * 40
-DOC_DIRS = ("docs/", "handoffs/", "proximas-specs/")
+DOC_DIRS = ("docs/", "handoffs/")
 DOC_TEST_PATTERN = re.compile(r"\.md\b|docs/|handoffs|proximas-specs|\"docs\"")
 
 

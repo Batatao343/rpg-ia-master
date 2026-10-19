@@ -4,7 +4,7 @@
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-202 `done` (interlocutor), SPEC-206 `done` (taxonomia), SPEC-214 `done` (cache de cena — recomendado), SPEC-223 `done` (mesmos `agents/npc.py`/`event_processor`; prova de eventos), SPEC-230 `done` (ciclo de vida do NPC) (ordem final 2026-10-15)
 > **Desbloqueia:** nada obrigatório (ordem final 2026-10-15)
-> **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 12 (parte b). Contexto histórico apenas: `historico-nao-executar/HISTORICO_SPEC-176*` (não executar).
+> **Origem:** pacote `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 12 (parte b). Contexto histórico apenas: `historico-nao-executar/HISTORICO_SPEC-176*` (não executar).
 > **EXECUTOR_MODEL:** `Sol` (≡ Opus, ver `docs/planos/equivalencia-modelos-claude.md`)
 > **REVIEW_MODEL:** `Astra` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `true`
 > **EVAL_AUTHORING_REQUIRED:** `true` — dataset novo `npc_knowledge` (testemunha/distância/mensageiro/mentira/save/spoiler) + oráculos de vazamento e de teleporte; autoria em tarefa separada, antes da implementação, sem que o executor edite evaluator/expected.

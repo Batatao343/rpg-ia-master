@@ -5,7 +5,7 @@
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-200 `done` (baseline de latência) · SPEC-177, SPEC-178, SPEC-179, SPEC-180 `done` (adapter, A/Bs anteriores, rollout `off|shadow|primary`)
 > **Desbloqueia:** nada obrigatório
-> **Origem:** pacote `proximas-specs/…`, prompt 13; reescrita por decisão do dono em 2026-10-18
+> **Origem:** pacote `docs/historico/proximas-specs/…`, prompt 13; reescrita por decisão do dono em 2026-10-18
 > **EXECUTOR_MODEL:** `Sol` (≡ Opus, ver docs/planos/equivalencia-modelos-claude.md)
 > **REVIEW_MODEL:** `Astra` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `true` — congelamento da estrutura ao fim da J1, regra de decisão, raw/summary e calibração antes de qualquer `shadow`/`primary`
 > **EVAL_AUTHORING_REQUIRED:** `true` — corpora DEV e FROZEN, sem sobreposição e com hash, autorados em tarefa SEPARADA antes da J1; especificação em [handoffs/SPEC-217-eval-authoring.md](../handoffs/SPEC-217-eval-authoring.md)

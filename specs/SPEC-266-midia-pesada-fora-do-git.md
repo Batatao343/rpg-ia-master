@@ -21,7 +21,7 @@ Cerca de **44 MB** de mídia de divulgação estão versionados (tamanho do blob
 | `docs/descricao_projeto/video/public/music/crossing_the_chasm.mp3` | 6.301.717 |
 | `docs/descricao_projeto/video/public/brag/play.mp4` | 2.468.079 |
 
-Também há prévias de 3,1 MB em `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/previas/*.png`
+Também há prévias de 3,1 MB em `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15/previas/*.png`
 e a pasta `historico-nao-executar/` (10 arquivos), resíduos do pacote cujas specs já
 viraram SPEC-199–236. Todo clone e todo checkout do CI baixam isso. Só `.gitignore`,
 `.gitleaks.toml` e `docs/README.md` citam `docs/descricao_projeto/`; o deploy da Vercel
@@ -42,7 +42,7 @@ exclui `docs/**`.
 - **R2** — `git rm` dos 2 arquivos renderizados; ignorar **só esses caminhos** (ou
   `docs/descricao_projeto/*.mp4` e `docs/descricao_projeto/brag-output/*.mp4`). **Não** usar
   `docs/descricao_projeto/**/*.mp4`/`*.mp3`: o glob passaria a ignorar os insumos de `video/public/`.
-- **R3** — *(revisado)* `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/` **fica inteiro**:
+- **R3** — *(revisado)* `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15/` **fica inteiro**:
   `MANIFEST_SHA256.txt:6-21` lista `historico-nao-executar/*` e `previas/*.png` (apagar deixa o
   manifesto falso), o `README_COMECE_AQUI.md:25` descreve as pastas, e SPEC-202:19, SPEC-203:17 e
   SPEC-205:20 linkam `historico-nao-executar/`. Ganho de 3,1 MB não paga a quebra.
@@ -88,7 +88,7 @@ Achados:
    `src/data/timeline_linkedin.json` `"music"`). Removê-los quebra o re-render dos vídeos. Agora só os dois
    MP4 renderizados saem (~35 MB dos 44 MB).
 2. O glob proposto `docs/descricao_projeto/**/*.mp4` passaria a ignorar os insumos em `video/public/`.
-3. O pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/` tem `MANIFEST_SHA256.txt` cobrindo
+3. O pacote `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15/` tem `MANIFEST_SHA256.txt` cobrindo
    `previas/` e `historico-nao-executar/`, e SPEC-202/203/205 linkam `historico-nao-executar/`. Fica inteiro.
 - O deploy não é afetado (`.vercelignore` e `vercel.json` excluem `docs/**`).
 

@@ -4,7 +4,7 @@
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
 > **Depende de:** SPEC-204 `done` (shell), SPEC-208 `done` (tokens), SPEC-229 `done` (detecção de viagem), SPEC-233 `done` (perigo efetivo) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212 (ordem final 2026-10-15)
-> **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15`, prompt 06 (parte Mapa)
+> **Origem:** pacote `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15`, prompt 06 (parte Mapa)
 > **EXECUTOR_MODEL:** `Terra` (≡ Sonnet, ver docs/planos/equivalencia-modelos-claude.md)
 > **REVIEW_MODEL:** `Sol` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `false`
 > **EVAL_AUTHORING_REQUIRED:** `true` (corrigido na revisão) — F06 `map_travel` clica o nó "Brumalta" e espera viagem imediata, e F13 expira sessão concorrendo com `GET /data/map` (`web/e2e/critical-journeys.spec.ts` l.103/208); o `DeterministicBackend` (`web/e2e/fixtures.ts` l.180) só serve `/data/map`. Com `GET /game/map`, painel de detalhe e botão Viajar separado (R6/R10), F06/F13 e o backend determinístico precisam ser adaptados por tarefa de eval separada (handoff `handoffs/SPEC-210-eval-authoring.md`), sem relaxar asserts; o executor desta spec não edita esses arquivos.

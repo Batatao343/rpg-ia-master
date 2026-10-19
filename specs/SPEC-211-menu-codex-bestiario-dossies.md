@@ -4,7 +4,7 @@
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-17
 > **Depende de:** SPEC-204 `done` (shell), SPEC-206 `done` (rótulos de certeza), SPEC-208 `done` (tokens) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212 (ordem final 2026-10-15)
-> **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15`, prompt 06 (parte b — Codex e Bestiário)
+> **Origem:** pacote `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15`, prompt 06 (parte b — Codex e Bestiário)
 > **EXECUTOR_MODEL:** `Terra` (≡ Sonnet, ver docs/planos/equivalencia-modelos-claude.md)
 > **REVIEW_MODEL:** `Sol` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `true` — risco de vazamento de segredo/estado privado de NPC por dossiê, tooltip, prefetch ou contagem.
 > **EVAL_AUTHORING_REQUIRED:** `true` — eval de leak de dossiê (fixtures com segredo `hidden`, trait oculto, carta/resistência não revelada, `hidden_traits`, estado privado de NPC; oráculo estruturado sobre o JSON da API e o DOM). Autoria em tarefa separada, nunca pelo executor desta spec.

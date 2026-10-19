@@ -1,6 +1,6 @@
 # Análise do pacote "próxima onda" — 2026-10-15
 
-Pacote extraído em `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/` (manifest SHA-256 43/43 OK).
+Pacote extraído em `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15/` (manifest SHA-256 43/43 OK).
 Natureza: 16 prompts de **autoria de specs**, não specs. Nenhum número do pacote é SPEC-ID.
 `historico-nao-executar/` usa IDs 176–183 que colidem com specs reais (Jev, hosted, metering…) — só contexto.
 

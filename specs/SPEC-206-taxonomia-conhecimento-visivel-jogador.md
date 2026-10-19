@@ -4,7 +4,7 @@
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-234 `done` (mapa segredo↔entidade) · SPEC-007, SPEC-024, SPEC-028, SPEC-085, SPEC-149 e SPEC-171 `done` não reabertas (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-207, SPEC-211, SPEC-212, SPEC-215 (ordem final 2026-10-15)
-> **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 12 (parte a — só o que o JOGADOR vê; conhecimento por NPC fica na SPEC-215)
+> **Origem:** pacote `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 12 (parte a — só o que o JOGADOR vê; conhecimento por NPC fica na SPEC-215)
 > **EXECUTOR_MODEL:** `Sol` (≡ Opus, ver docs/planos/equivalencia-modelos-claude.md)
 > **REVIEW_MODEL:** `Astra` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `true`
 > **EVAL_AUTHORING_REQUIRED:** `true` — corpus novo de vazamento/certeza do Codex do jogador (`player_knowledge`), com evaluator próprio, autorado em tarefa separada antes da implementação; os datasets da SPEC-171 (`evals/datasets/regression/narrative_npc.jsonl`) não são tocados.

@@ -4,7 +4,7 @@
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-200 `done` (timings por `action_id`), SPEC-206 `done` (taxonomia de conhecimento), SPEC-228 `done` (export fiel ao save) · reaproveita SPEC-190 `done` (prova de auth recente) e SPEC-182 `done` (`app.usage_events`) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-212 (ordem final 2026-10-15)
-> **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 08; referência `referencias/AUDITOR_PROMPT_MODELO.md`
+> **Origem:** pacote `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 08; referência `referencias/AUDITOR_PROMPT_MODELO.md`
 > **EXECUTOR_MODEL:** `Sol` (≡ Opus, ver docs/planos/equivalencia-modelos-claude.md)
 > **REVIEW_MODEL:** `Astra` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `true`
 > **EVAL_AUTHORING_REQUIRED:** `false` — o pacote produz insumo para propostas de eval do auditor; nenhum eval novo é fixado aqui

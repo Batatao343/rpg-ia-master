@@ -4,7 +4,7 @@
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-199 `done` (resultado fora da prosa), SPEC-203 `done` (identidade estável de elenco), SPEC-204 `done` (aba Combate), SPEC-232 `done` (efeitos reais de Carta/Reação + alvo default de carta) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-208, SPEC-209, SPEC-212, SPEC-216 (ordem final 2026-10-15)
-> **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 03
+> **Origem:** pacote `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 03
 > **EXECUTOR_MODEL:** `Terra` (≡ Sonnet, ver docs/planos/equivalencia-modelos-claude.md)
 > **REVIEW_MODEL:** `Sol` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `true`
 > **EVAL_AUTHORING_REQUIRED:** `true` — jornadas frontend novas (carta com alvo, carta sem alvo, ataque básico, cancelar, alvo inválido, idempotência) em `web/e2e/critical-journeys.yaml`; autoria em tarefa separada, sem editar evaluator/expected/dataset protegido na implementação.

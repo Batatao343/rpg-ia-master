@@ -4,7 +4,7 @@
 > **Criada:** 2026-10-15 · **Atualizada:** 2026-10-16
 > **Depende de:** SPEC-201 `done` (matriz de efeitos — informa, não bloqueia layout), SPEC-235 `done` (ciclo de ação pendente confiável) · SPEC-172 `done` (F01–F16), SPEC-077 `done` (contrato tático evoluído sem mudar API) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-205, SPEC-208, SPEC-209, SPEC-210, SPEC-211, SPEC-212, SPEC-216 (ordem final 2026-10-15)
-> **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 02
+> **Origem:** pacote `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 02
 > **EXECUTOR_MODEL:** `Sol` (≡ Opus, ver `docs/planos/equivalencia-modelos-claude.md`)
 > **REVIEW_MODEL:** `Sol` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `true`
 > **EVAL_AUTHORING_REQUIRED:** `true` — adaptar seletores de F04/F08/F15/F16 em `web/e2e/critical-journeys.spec.ts` à nova shell e adicionar jornadas F17 (workspace modes), F18 (abas/histórico), F19 (preservação draft/scroll/foco/pending em troca de aba e de jogo); autoria em tarefa separada, antes da implementação, por quem não implementa.

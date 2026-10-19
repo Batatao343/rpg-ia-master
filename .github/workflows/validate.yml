@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   scope:
-    # Workspace C6: push/PR só de docs (docs/, handoffs/, proximas-specs/, *.md da raiz)
+    # Workspace C6: push/PR só de docs (docs/, handoffs/, *.md da raiz)
     # pula a suíte pesada e roda o job docs-only. Base desconhecida => suíte completa.
     runs-on: ubuntu-24.04  # pin: ubuntu-latest migra de imagem sem aviso
     outputs:

@@ -158,7 +158,7 @@ Ganho: −40 K tokens por sessão e por subagente orientado; some a família
 
 ### P7 — Higiene de árvore e memória
 
-- `proximas-specs/`: mover para `docs/historico/proximas-specs-2026-10-15/`
+- **Feito 19/10 (workspace-2):** movido para `docs/historico/proximas-specs/` (sem sufixo de data: caminho mais curto; nenhum link Markdown apontava para lá, só caminhos em texto, atualizados nas specs). Proposta original: `proximas-specs/` → `docs/historico/proximas-specs-2026-10-15/`
   (ou apagar os 18 rascunhos já promovidos). O `.zip` solto na raiz
   (`git status`: `?? docs/PROXIMA_ONDA…zip`) entra no hash do Project Index e
   deixou o CI vermelho 3× em 15/10 — adicionar `*.zip` da raiz/docs ao

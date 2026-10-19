@@ -1,6 +1,6 @@
 # Prompt do auditor de sessão beta (sob demanda) — valoria-audit-export-v1
 
-> Derivado de `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/referencias/AUDITOR_PROMPT_MODELO.md`
+> Derivado de `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15/referencias/AUDITOR_PROMPT_MODELO.md`
 > (SPEC-207). Este prompt é usado pelo dono do pacote no PRÓPRIO coding agent, com créditos próprios.
 > O jogo não chama modelo nenhum para auditar.
 

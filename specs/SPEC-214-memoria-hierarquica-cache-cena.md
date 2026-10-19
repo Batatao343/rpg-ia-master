@@ -21,7 +21,7 @@
 > (Nota de 2026-10-17: a decisão do dono veio depois — ver **Execução** acima.) Evidência: [docs/spec214/gate-real-2026-10-17.md](../docs/spec214/gate-real-2026-10-17.md).
 > **Depende de:** SPEC-200 `done` (baseline/gate), SPEC-213 `done` (cursor das projeções — recomendado), SPEC-234 `done` (ledger/resumo que não congela) · SPEC-005, SPEC-085, SPEC-146, SPEC-147, SPEC-149 e SPEC-170 `done` (insumos/régua, não reabertos) (ordem final 2026-10-15)
 > **Desbloqueia:** SPEC-215, SPEC-217 (ordem final 2026-10-15)
-> **Origem:** pacote `proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 11
+> **Origem:** pacote `docs/historico/proximas-specs/pacote-prompts-rpg-beta-2026-10-15/`, prompt 11
 > **EXECUTOR_MODEL:** `Sol` (≡ Opus, ver docs/planos/equivalencia-modelos-claude.md) — cross-domain: estado canônico, invalidação, concorrência de turno, save/restore
 > **REVIEW_MODEL:** `Astra` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `true` — semântica de invalidação, vazamento de segredo e critério de promoção contra a régua SPEC-170
 > **EVAL_AUTHORING_REQUIRED:** `true` — fixtures determinísticas de invalidação/staleness do snapshot (troca de local, interlocutor, quest, combate, rollback, revisão de turno, morte) num dataset NOVO, autoradas em tarefa separada; a régua `evals/datasets/regression/memory_context.jsonl` e `evals/evaluators/memory.py` não são editadas
