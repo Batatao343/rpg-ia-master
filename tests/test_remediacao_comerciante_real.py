@@ -4,9 +4,9 @@ import copy
 
 from langchain_core.messages import HumanMessage
 
-from agents import loot
 import llm_setup
 import party
+from agents import loot
 from services import npc_layers, prose_guard
 
 

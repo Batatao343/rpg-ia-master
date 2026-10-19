@@ -1,11 +1,11 @@
 """Read-only preview and fenced release of expired durable operations."""
 
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
 
 from typing import Any
 from uuid import UUID
 
+from infrastructure.db_roles import admin_connection
 from infrastructure.postgres import PostgresPool
 
 

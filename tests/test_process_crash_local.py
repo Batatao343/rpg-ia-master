@@ -8,7 +8,7 @@ from uuid import UUID, uuid4
 import pytest
 
 from infrastructure.contracts import JobRequest, Principal
-from tests.test_postgres_jobs_local import infra, _state  # noqa: F401
+from tests.test_postgres_jobs_local import _state, infra  # noqa: F401
 
 pytestmark = pytest.mark.infra_local
 
@@ -28,6 +28,7 @@ def _worker_child(dsn, kind, signal):
 
 def _art_child(dsn, generation, signal):
     from types import SimpleNamespace
+
     from infrastructure.postgres import PostgresPool
     from services.dynamic_art import DynamicArtRepository
     from tests.fakes.fake_image_generator import FakeImageGenerator
@@ -52,8 +53,8 @@ def _transaction_child(dsn, owner, game, version, operation, signal):
     changed = _state(UUID(game))
     changed['world']['turn_count'] = 99
     def before_commit(connection, epoch, committed_version):
-        from services.dynamic_art import DynamicArtRepository
         from services.art_triggers import ArtGenerationRequest
+        from services.dynamic_art import DynamicArtRepository
         repository = DynamicArtRepository(pool, model='fake-only', profile_version='crash-test')
         repository.reserve(principal, UUID(game), timeline_epoch=epoch, generation_id=uuid4(),
             request=ArtGenerationRequest('player_portrait', operation, 'player', 'player', None, operation),
@@ -137,9 +138,10 @@ def test_kill_during_turn_commit_rolls_back_state_turn_and_checkpoint(infra):
 
 def test_art_crash_after_provider_requires_reconciliation_without_regeneration(infra):
     from types import SimpleNamespace
+
     from infrastructure.contracts import Conflict
-    from services.dynamic_art import DynamicArtRepository
     from services.art_triggers import ArtGenerationRequest
+    from services.dynamic_art import DynamicArtRepository
     from tests.fakes.fake_image_generator import FakeImageGenerator
     store, _, _, _ = infra
     owner, game, generation = uuid4(), uuid4(), uuid4()

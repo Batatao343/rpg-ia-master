@@ -1,10 +1,10 @@
 """Durable owner-scoped erasure. Financial facts are deliberately separate."""
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
 
 from uuid import UUID
 
 from infrastructure.contracts import Principal, Unauthorized
+from infrastructure.db_roles import admin_connection
 
 PRIVATE_TABLES = ("game_checkpoints", "game_events", "turns", "art_generations", "assets",
                   "chronicle_digests", "memory_documents", "runtime_catalog", "usage_events",

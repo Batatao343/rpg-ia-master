@@ -3,10 +3,10 @@
 Committed setup is required for independent transactions to see the same order.
 Canonical migrations are instantiated under an isolated schema; app is untouched.
 """
+import os
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from datetime import datetime, timezone
-import os
 from pathlib import Path
 from threading import Barrier
 from types import SimpleNamespace
@@ -18,9 +18,9 @@ from infrastructure.contracts import Principal
 from infrastructure.postgres import PostgresPool
 from infrastructure.stripe_payments import StripePayments
 from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256
-from tests.fakes.local_pricing import installed_card_max_age_seconds
 from services.stripe_checkout import StripeSettings
 from services.usage_metering import RATE_CARD_VERSION
+from tests.fakes.local_pricing import installed_card_max_age_seconds
 from tests.test_stripe_checkout_local import FakeStripe, checkout, deliver, event
 
 

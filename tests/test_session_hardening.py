@@ -273,6 +273,7 @@ def test_login_failure_response_is_closed_code(hardened):
 
 def test_signup_bucket_is_email_ip_composite():
     from fastapi import HTTPException
+
     from services.account_security import auth_limit
 
     runtime = SimpleNamespace(rate_limiter=MemoryRateLimiter())
@@ -289,6 +290,7 @@ def test_signup_bucket_is_email_ip_composite():
 
 def test_reset_email_only_bucket_blocks_bombing_from_many_ips():
     from fastapi import HTTPException
+
     from services.account_security import auth_limit
 
     runtime = SimpleNamespace(rate_limiter=MemoryRateLimiter())
@@ -358,6 +360,7 @@ def test_staging_auth_config_declares_session_policy_and_rejects_loose_redirects
 def test_login_failure_lockout_is_per_email_and_ip_so_victim_is_not_dosed():
     """Revisão Sol: 10 falhas de um IP atacante não trancam a vítima em outro IP."""
     from fastapi import HTTPException
+
     from services.account_security import auth_limit, auth_success
 
     runtime = SimpleNamespace(rate_limiter=MemoryRateLimiter())

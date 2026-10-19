@@ -9,9 +9,8 @@ from collections.abc import Callable
 from typing import Any
 
 from infrastructure.contracts import JobDeferred, JobQueue, LeasedJob, LeaseHeld
-from services.lease_heartbeat import keep_lease_alive
 from services.job_fence import job_scope
-
+from services.lease_heartbeat import keep_lease_alive
 
 JobHandler = Callable[[dict[str, Any]], dict[str, Any]]
 

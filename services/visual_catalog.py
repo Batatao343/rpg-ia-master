@@ -13,7 +13,6 @@ import gamedata
 from services.entity_identity import normalize_entity_label, resolve_npc_entity_id
 from services.npc_layers import is_in_scene
 
-
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PATH = ROOT / "data" / "visual_assets.json"
 WEB_PUBLIC = ROOT / "web" / "public"

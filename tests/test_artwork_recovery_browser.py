@@ -1,7 +1,7 @@
 """Render production components; image failures cannot poison the next asset."""
 import os
-from pathlib import Path
 import subprocess
+from pathlib import Path
 
 import pytest
 

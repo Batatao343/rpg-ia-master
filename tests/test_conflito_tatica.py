@@ -5,9 +5,9 @@ validação de ordem + controle de party + geração com guard) e
 `services/bestiary_knowledge.py` (painel público + revelação persistida no overlay
 runtime — isolado em tmp pela fixture autouse do conftest)."""
 
-from services import tactical_profile as tp
-from services import bestiary_knowledge as bk
 from llm_setup import FallbackLLM
+from services import bestiary_knowledge as bk
+from services import tactical_profile as tp
 
 
 class _CountingLLM:

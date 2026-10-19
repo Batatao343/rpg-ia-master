@@ -1,6 +1,6 @@
 """Real local GoTrue generated signup/recovery links, without sending email."""
-from contextlib import nullcontext
 import os
+from contextlib import nullcontext
 from pathlib import Path
 from uuid import uuid4
 

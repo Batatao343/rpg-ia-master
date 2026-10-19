@@ -1,8 +1,8 @@
 """SPEC-189 real PostgreSQL financial invariants; every fixture rolls back."""
-from contextlib import nullcontext
-from datetime import datetime, timezone
 import hashlib
 import os
+from contextlib import nullcontext
+from datetime import datetime, timezone
 from pathlib import Path
 from types import SimpleNamespace
 from uuid import uuid4
@@ -11,7 +11,7 @@ import pytest
 
 from infrastructure.contracts import Principal
 from infrastructure.stripe_payments import StripePayments
-from services.shard_pricing import INSTALLED_RATE_CARD_SHA256, INSTALLED_RATE_CARD_OBSERVED_AT
+from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256
 from services.stripe_checkout import StripeError, StripeSettings
 from services.usage_metering import RATE_CARD_VERSION
 

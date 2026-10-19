@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from concurrent.futures import ThreadPoolExecutor
 import os
 import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 import pytest
 

@@ -11,7 +11,7 @@ from infrastructure.contracts import Unauthorized
 from infrastructure.supabase_blob import SupabaseBlobStore
 from services.job_fence import job_scope
 from tests.fakes.fake_image_generator import FakeImageGenerator
-from tests.test_image_quotes_local import image_case, issue, confirm, lease
+from tests.test_image_quotes_local import confirm, image_case, issue, lease
 from workers.dynamic_art_jobs import generate_dynamic_art_job
 
 

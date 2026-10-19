@@ -5,13 +5,17 @@ creative; explicit critical contradictions are removed sentence by sentence.
 """
 from __future__ import annotations
 
+import re
 from copy import deepcopy
 from dataclasses import dataclass, field
-import re
 
 from services.memory_provenance import (
-    _fold, false_player_death_claim, canonical_location_contradiction,
-    inventory_possession_contradiction, npc_identity_contradiction, find_strict_unrevealed,
+    _fold,
+    canonical_location_contradiction,
+    false_player_death_claim,
+    find_strict_unrevealed,
+    inventory_possession_contradiction,
+    npc_identity_contradiction,
 )
 
 

@@ -4,8 +4,8 @@ Compõe Pré-Ação/Ação/Pós-Ação sobre os motores puros das specs 01-12, 1
 determinístico. rng fixo (min/max) para acerto/erro exatos."""
 
 import gamedata
-from services import conflict_turn as ct
 from services import conflict_scene as cs
+from services import conflict_turn as ct
 
 
 class _Rng:

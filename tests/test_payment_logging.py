@@ -23,8 +23,9 @@ def _logs(monkeypatch):
 
 @pytest.fixture()
 def client():
-    import api
     from fastapi.testclient import TestClient
+
+    import api
     api._rate_hits.clear()
     return TestClient(api.app)
 

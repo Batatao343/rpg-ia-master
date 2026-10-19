@@ -113,8 +113,9 @@ def test_running_operation_with_changed_version_stays_strict(infra):
 
 
 def test_equip_and_levelup_gate_pending_operation_against_real_operations(infra, monkeypatch):
-    import api
     from fastapi import HTTPException
+
+    import api
     from infrastructure import request_context, runtime
 
     store, _, coordinator, _ = infra

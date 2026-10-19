@@ -11,7 +11,6 @@ import yaml
 
 from project_index.generator import ProjectIndexError, check_index
 
-
 MAX_RESULTS = 50
 
 

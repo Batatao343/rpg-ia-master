@@ -7,8 +7,14 @@ from pathlib import Path
 import yaml
 
 from scripts.frontend_eval_report import (
-    JOURNEY_IDS, MOBILE_IDS, MOBILE_VIEWPORTS, VERTICAL_IDS, VERTICAL_VIEWPORTS,
-    summarize, summarize_mobile, summarize_vertical,
+    JOURNEY_IDS,
+    MOBILE_IDS,
+    MOBILE_VIEWPORTS,
+    VERTICAL_IDS,
+    VERTICAL_VIEWPORTS,
+    summarize,
+    summarize_mobile,
+    summarize_vertical,
 )
 
 ROOT = Path(__file__).resolve().parents[1]

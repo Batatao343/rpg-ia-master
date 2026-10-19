@@ -12,7 +12,6 @@ import pytest
 from evals.core.governance import GovernanceError, validate_repository
 from evals.core.hashing import sha256_file
 
-
 ROOT = Path(__file__).resolve().parents[1]
 
 

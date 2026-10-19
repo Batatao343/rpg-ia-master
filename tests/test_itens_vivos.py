@@ -7,7 +7,6 @@ import random
 import combat_mechanics as cm
 import world_utils as wu
 
-
 # --- fake artifacts DB (não depende da curadoria real) ----------------------
 _FAKE_DB = {
     "anel_ac": {"name": "Anel de Aço", "type": "accessory",

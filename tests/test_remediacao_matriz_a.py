@@ -8,11 +8,14 @@ import llm_setup
 from agents import combat
 from playtest import invariants
 from playtest.provider_profiles import (
-    ProviderPacer, ProviderPreflightError, activated_routes_profile, get_routes_profile,
+    ProviderPacer,
+    ProviderPreflightError,
+    activated_routes_profile,
+    get_routes_profile,
     preflight_real_routes,
 )
-from playtest.runner import CampaignResult, terminal_llm_invocation_count
 from playtest.report import RunReport, render_markdown
+from playtest.runner import CampaignResult, terminal_llm_invocation_count
 from services import conflict_orchestrator as orchestrator
 from services import conflict_scene
 

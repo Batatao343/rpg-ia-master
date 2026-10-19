@@ -9,7 +9,6 @@ from pathlib import Path
 
 import yaml
 
-
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "normalize_specs.py"
 
 

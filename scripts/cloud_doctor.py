@@ -12,10 +12,12 @@ from collections.abc import Mapping
 from urllib.parse import urlsplit
 
 from infrastructure.runtime import (
-    HOSTED_SECURITY_REQUIREMENTS, RuntimeConfig, _loopback_host, hosted_supabase_dsn_ref,
+    HOSTED_SECURITY_REQUIREMENTS,
+    RuntimeConfig,
+    _loopback_host,
+    hosted_supabase_dsn_ref,
     privileged_request_db_user,
 )
-
 
 _REQUIRED = {
     "hosted-supabase": (

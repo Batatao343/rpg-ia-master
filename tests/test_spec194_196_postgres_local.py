@@ -23,12 +23,15 @@ from infrastructure.reconciliation import PostgresStore, Reconciler
 from infrastructure.wallet import FinancialHold, PostgresWallet
 from services import kill_switches as ks
 from services.google_play import (
-    GooglePlayError, ProductPurchase, obfuscated_account_id, token_digest,
+    GooglePlayError,
+    ProductPurchase,
+    obfuscated_account_id,
+    token_digest,
 )
 from services.purchase_reconciliation import GOOGLE, STRIPE, Event
 from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256
-from tests.fakes.local_pricing import installed_card_max_age_seconds
 from services.usage_metering import RATE_CARD_VERSION
+from tests.fakes.local_pricing import installed_card_max_age_seconds
 
 pytestmark = pytest.mark.infra_local
 SHARD = 311
@@ -94,8 +97,9 @@ def lab_rb(lab):
 
     Stripe orders/events must not leak into the shared lab: the legacy SPEC-189 tests count
     app.stripe_events / payment_orders globally."""
-    import psycopg
     from contextlib import nullcontext
+
+    import psycopg
     from psycopg.rows import dict_row
     db = psycopg.connect(lab.dsn, row_factory=dict_row)
     db.execute("select 1")  # open the implicit tx so db.transaction() is a savepoint, never a COMMIT
@@ -126,6 +130,7 @@ def debt(lab, owner):
 def web_purchase(lab, owner, ref=None):
     """Real SPEC-189 flow: checkout -> paid webhook (credits the wallet). Returns the payment_intent."""
     import hashlib
+
     from infrastructure.stripe_payments import StripePayments
     from services.stripe_checkout import StripeSettings
     from tests.test_stripe_checkout_local import FakeStripe, event

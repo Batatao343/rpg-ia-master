@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
 import os
+from datetime import datetime, timezone
 from uuid import uuid4
 
 import pytest
@@ -11,7 +11,6 @@ import pytest
 from infrastructure.pricing_catalog import quote_published_sku
 from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256
 from services.usage_metering import RATE_CARD_VERSION
-
 
 pytestmark = pytest.mark.infra_local
 

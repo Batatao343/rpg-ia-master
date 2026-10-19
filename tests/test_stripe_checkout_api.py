@@ -3,8 +3,8 @@ import json
 from types import SimpleNamespace
 from uuid import uuid4
 
-from fastapi.testclient import TestClient
 import pytest
+from fastapi.testclient import TestClient
 
 import api
 from infrastructure.contracts import Principal, Unauthorized

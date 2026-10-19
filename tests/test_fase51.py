@@ -4,8 +4,7 @@ import os
 import pytest
 
 from playtest.profiles import PROFILES
-from playtest.runner import run_campaign, PLAYTEST_SAVES_DIR
-
+from playtest.runner import PLAYTEST_SAVES_DIR, run_campaign
 
 # --- Etapa 1 — runner + explorador -----------------------------------------
 

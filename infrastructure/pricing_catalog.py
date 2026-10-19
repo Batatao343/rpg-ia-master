@@ -10,7 +10,11 @@ from datetime import datetime
 from decimal import Decimal
 
 from services.shard_pricing import (
-    PricingUnavailable, PurchaseQuote, PurchaseSku, quote_purchase, version_from_record,
+    PricingUnavailable,
+    PurchaseQuote,
+    PurchaseSku,
+    quote_purchase,
+    version_from_record,
 )
 
 

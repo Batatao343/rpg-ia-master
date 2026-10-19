@@ -3,11 +3,11 @@
 Canonical migrations and all synthetic rows roll back. Storage/Auth network is
 replaced at the transport boundary; local Supabase table schemas remain real.
 """
-from contextlib import nullcontext
 import base64
 import json
 import os
 import time
+from contextlib import nullcontext
 from pathlib import Path
 from types import SimpleNamespace
 from uuid import uuid4

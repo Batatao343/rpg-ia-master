@@ -11,7 +11,6 @@ import party as party_mod
 from playtest import invariants as inv
 from playtest.profiles import Recrutador
 
-
 _LOC = "pantano_melancolia"
 
 

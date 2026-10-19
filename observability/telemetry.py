@@ -14,7 +14,6 @@ from dataclasses import dataclass
 from typing import Any, Iterator, Mapping
 from uuid import uuid4
 
-
 _correlation: contextvars.ContextVar[dict[str, str]] = contextvars.ContextVar(
     "rpg_correlation", default={},
 )

@@ -2,13 +2,20 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 import json
+from pathlib import Path
 
 import httpx
 import pytest
 
-from scripts.staging import auth_config, backup_restore, common, migrations, smoke_ab, synthetic_data
+from scripts.staging import (
+    auth_config,
+    backup_restore,
+    common,
+    migrations,
+    smoke_ab,
+    synthetic_data,
+)
 
 REF = "abcdefghijklmnopqrst"
 

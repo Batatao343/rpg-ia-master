@@ -15,7 +15,12 @@ import persistence
 from llm_setup import ModelTier
 from services import encounter_manifest as em
 from tests.test_encounter_identity_repro import (
-    _BANDIT, _CROW, _install_llm, _scan, _start_state, _bestiary_factory,
+    _BANDIT,
+    _CROW,
+    _bestiary_factory,
+    _install_llm,
+    _scan,
+    _start_state,
 )
 
 _WOLF = "enemy_lobo_sombrio"

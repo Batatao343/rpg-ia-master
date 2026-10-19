@@ -5,6 +5,7 @@ Os prazos aqui (D-B, default da spec) são declarados na seção de retenção d
 orçamento do cron; o que sobrar sai no próximo ciclo. Saída: só contagens.
 """
 from __future__ import annotations
+
 from infrastructure.db_roles import admin_connection
 
 BATCH = 1000

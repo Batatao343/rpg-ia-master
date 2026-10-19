@@ -1,7 +1,6 @@
 """Coordenação distribuída de mutações e rate limit em Postgres."""
 
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
 
 from datetime import timedelta
 from decimal import Decimal
@@ -19,7 +18,9 @@ from infrastructure.contracts import (
     RateLimitDecision,
     StaleVersion,
 )
-from infrastructure.db_log import conflict as _db_conflict, timed_call as _timed
+from infrastructure.db_log import conflict as _db_conflict
+from infrastructure.db_log import timed_call as _timed
+from infrastructure.db_roles import admin_connection
 from infrastructure.postgres import PostgresPool
 from services.usage_metering import UsageEvent
 
@@ -237,8 +238,8 @@ class PostgresTurnCoordinator:
                 _db_conflict("stale_version", "commit_divergence", op_kind='commit_game', operation_id=claim.operation_id, game_id=claim.game_id)
                 raise StaleVersion("versão/lease do jogo divergiu no commit")
             committed_version = int(row["version"])
-            from services.turn_effects import current_effects
             from infrastructure.pgvector_memory import PgVectorMemoryStore, configured_profile_id
+            from services.turn_effects import current_effects
             effects = current_effects()
             if effects is not None:
                 effects.flush(connection, memory_store=PgVectorMemoryStore(
@@ -368,8 +369,8 @@ class PostgresTurnCoordinator:
                 ),
             ).fetchone()
             version = int(row["version"])
-            from services.turn_effects import current_effects
             from infrastructure.pgvector_memory import PgVectorMemoryStore, configured_profile_id
+            from services.turn_effects import current_effects
             effects = current_effects()
             if effects is not None:
                 effects.flush(connection, memory_store=PgVectorMemoryStore(

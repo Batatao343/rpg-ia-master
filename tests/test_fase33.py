@@ -405,6 +405,7 @@ def test_quest_block_side_resolvidas_limitadas_a_5():
 
 def test_save_antigo_sem_quests_carrega_vazio(tmp_path, monkeypatch):
     import json
+
     import persistence
     monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
     old_save = {

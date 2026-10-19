@@ -15,7 +15,7 @@ import sys
 from collections import Counter
 
 from playtest.profiles import PROFILES
-from playtest.runner import run_campaign, CampaignResult
+from playtest.runner import CampaignResult, run_campaign
 
 # O harness também é executado diretamente no console Windows. Sem este ajuste,
 # símbolos usados no help/relatório (por exemplo, ação→narração) quebram em cp1252.
@@ -46,8 +46,7 @@ def _print_resumo(res: CampaignResult) -> None:
 
 
 def _cmd_run(args) -> int:
-    from playtest import telemetry
-    from playtest import scenarios
+    from playtest import scenarios, telemetry
     run_id = telemetry.new_run_id()
     selectors = int(bool(args.profile)) + int(bool(args.all)) + int(bool(args.scenario))
     if selectors != 1:
@@ -158,6 +157,7 @@ def _cmd_report(args) -> int:
 
 def _cmd_transcript(args) -> int:
     import os
+
     from playtest import report, telemetry
     run_dir = telemetry.run_dir(args.run_id)
     md = report.render_transcript(run_dir)

@@ -164,8 +164,9 @@ def test_item_nao_consumivel_nao_usa():
 
 def test_parse_item_id_no_combate(monkeypatch):
     """Declaração estruturada de item usa consumível, gasta turno e decrementa qty."""
-    from agents import combat as cbt
     from langchain_core.messages import HumanMessage
+
+    from agents import combat as cbt
     monkeypatch.setattr(cbt, "_narrate", lambda *a, **k: "Fim.")
 
     p = make_player(hp=10, inventory=inv.add_item([], "pocao_cura", 1))
@@ -241,6 +242,7 @@ def test_inventory_block_nome_canonico():
 
 def test_equip_endpoint(monkeypatch):
     from fastapi.testclient import TestClient
+
     import api as api_mod
 
     p = make_player(inventory=inv.add_item([], "espada_gasta", 1))

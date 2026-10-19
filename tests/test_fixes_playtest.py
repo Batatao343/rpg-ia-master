@@ -2,7 +2,6 @@
 Offline (MockLLM). Spec: specs/SPEC-033-fix-playtest-achados.md."""
 from langchain_core.messages import AIMessage, HumanMessage
 
-
 # --- R1 — beats em pt-BR -----------------------------------------------------
 
 def test_r1_campaign_beats_field_pt():
@@ -14,8 +13,9 @@ def test_r1_campaign_beats_field_pt():
 # --- R3 — quester objetivo curto --------------------------------------------
 
 def test_r3_quester_acao_curta():
-    from playtest.profiles import Quester
     import random
+
+    from playtest.profiles import Quester
     beat_longo = ("O amanhecer pinta o céu de laranja sobre as chaminés do Distrito "
                   "Industrial. Você observa operários e patrulhas da Legião de Ferro "
                   "enquanto um grupo carrega um barril lacrado para um depósito. " * 3)
@@ -126,8 +126,9 @@ def test_r5_forcado_carimba_eff_danger():
 # --- R5 (fuga) — jogador foge de verdade -------------------------------------
 
 def test_fujao_foge_quando_em_combate():
-    from playtest.profiles import Fujao
     import random
+
+    from playtest.profiles import Fujao
     st = {"combat": {"active": True}, "enemies": [{"status": "ativo", "hp": 5}]}
     for seed in range(5):
         acao = Fujao().next_action(st, random.Random(seed)).lower()
@@ -152,6 +153,7 @@ def _enemy(hp=12):
 def test_flee_encerra_combate_e_sobrevive():
     """R5: fuga do jogador ENCERRA o combate (antes o texto virava um ataque)."""
     import random
+
     import agents.combat as combat
     random.seed(2)
     state = {

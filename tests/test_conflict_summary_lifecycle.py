@@ -2,10 +2,9 @@
 
 from langchain_core.messages import AIMessage, HumanMessage
 
-from agents import archivist, loot, storyteller
-from agents import world_simulator
-from agents.archivist import MemoryUpdate
 import persistence
+from agents import archivist, loot, storyteller, world_simulator
+from agents.archivist import MemoryUpdate
 from services import conflict_summary as summary_service
 from services import context_builder
 from services.event_processor import process_pending_events

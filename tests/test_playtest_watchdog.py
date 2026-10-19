@@ -9,8 +9,7 @@ from datetime import datetime, timedelta
 
 import pytest
 
-from playtest import telemetry
-from playtest import runner
+from playtest import runner, telemetry
 
 
 def test_watchdog_interrompe_espera_no_teto_sem_bloquear_saida():

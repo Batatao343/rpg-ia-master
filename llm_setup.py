@@ -14,14 +14,14 @@ não decisão do LLM. Overrides por env (R8): RPG_FORCE_MOCK, LLM_PROVIDER (lega
 RPG_ROUTES (JSON).
 """
 import json
-import re
 import logging
 import os
+import re
 import threading
 import time
+from collections.abc import Mapping
 from contextlib import contextmanager
 from contextvars import ContextVar
-from collections.abc import Mapping
 from dataclasses import dataclass
 from enum import Enum
 from typing import TYPE_CHECKING, Callable, Literal, Optional

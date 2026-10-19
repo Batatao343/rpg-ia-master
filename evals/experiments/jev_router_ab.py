@@ -8,14 +8,14 @@ from __future__ import annotations
 
 import argparse
 import copy
-from contextlib import contextmanager
-from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
 import hashlib
 import json
 import os
-from pathlib import Path
 import time
+from contextlib import contextmanager
+from dataclasses import asdict, dataclass
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Iterator
 from uuid import uuid4
 
@@ -25,10 +25,13 @@ from evals.core.adapters import AdapterCase, RoutingAdapter
 from evals.core.governance import load_cases, validate_repository
 from evals.core.hashing import repository_identity, sha256_file
 from services.jev_decision import (
-    ChoiceAnswer, ChoiceQuestion, DecisionRequest, DecisionState,
-    JevDecisionBackend, JevError,
+    ChoiceAnswer,
+    ChoiceQuestion,
+    DecisionRequest,
+    DecisionState,
+    JevDecisionBackend,
+    JevError,
 )
-
 
 ROOT = Path(__file__).resolve().parents[2]
 DATASET = ROOT / "evals/datasets/regression/routing_actions.jsonl"

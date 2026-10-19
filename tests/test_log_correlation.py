@@ -7,7 +7,11 @@ import pytest
 
 from observability import logging_setup
 from observability.telemetry import (
-    bind_correlation, contextualize, correlation_scope, log_event, pseudonym,
+    bind_correlation,
+    contextualize,
+    correlation_scope,
+    log_event,
+    pseudonym,
 )
 
 

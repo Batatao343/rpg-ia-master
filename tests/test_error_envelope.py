@@ -113,8 +113,9 @@ def test_blocked_response_has_code_and_request_id():
 
 
 def test_sse_error_event_envelope(client, monkeypatch):
-    import api
     from fastapi import HTTPException
+
+    import api
     gid = client.post("/game/new", json={
         "name": "Envelope", "race": "Humano", "class_name": "Sangromante",
         "region": "Nova Arcádia", "level": 1}).json()["game_id"]

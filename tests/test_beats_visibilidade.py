@@ -2,9 +2,8 @@
 
 Offline/determinístico. Ver specs/SPEC-037-beats-visibilidade-ptbr.md.
 """
-from services import secret_signatures as ss
 from playtest import invariants as inv
-
+from services import secret_signatures as ss
 
 # --- R1: módulo compartilhado -----------------------------------------------
 

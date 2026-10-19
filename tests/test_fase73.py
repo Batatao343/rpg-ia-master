@@ -16,7 +16,6 @@ from scripts.migrate_lore_nova import split_npc_secrets
 from services.codex_loader import parse_codex_file
 from services.content_validator import validate_visibility
 
-
 # ---------------------------------------------------------------------------
 # Etapa 1 — split_npc_secrets
 # ---------------------------------------------------------------------------

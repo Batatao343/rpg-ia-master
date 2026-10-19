@@ -19,7 +19,7 @@ from decimal import Decimal
 from typing import Iterable, Mapping, Sequence
 
 from observability.metrics import metrics
-from services.finops import SkuMargin, TARGET_MARGIN
+from services.finops import TARGET_MARGIN, SkuMargin
 
 UNKNOWN_PRICING_VERSIONS = {"unknown-conservative-v1"}
 SUCCESS_OUTCOMES = {"success", "ok", "completed"}

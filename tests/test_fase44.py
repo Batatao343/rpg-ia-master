@@ -263,8 +263,9 @@ def test_treasure_usa_tabela():
 
 def test_trade_intent_guard_fallback(monkeypatch):
     """FallbackLLM devolve AIMessage -> nó não estoura, usa heurística."""
-    from agents import loot as loot_mod
     from langchain_core.messages import AIMessage as _AI
+
+    from agents import loot as loot_mod
 
     class _Fallback:
         def with_structured_output(self, model):

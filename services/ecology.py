@@ -12,9 +12,8 @@ services/ecology.py — População de criaturas reage à caça e ao poder (Fase
 
 Zero estado novo, zero LLM, pesos determinísticos auditáveis.
 """
-from typing import Dict, List, Optional
-
 import random
+from typing import Dict, List, Optional
 
 # Constantes de calibração (chute declarado — playtest ajusta)
 HUNT_WINDOW_FULL = 10    # kills "quentes" até N turnos atrás contam cheio

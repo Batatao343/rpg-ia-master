@@ -1,7 +1,6 @@
 """Pool e GameStore Postgres síncronos, sem transações durante chamadas LLM."""
 
 from __future__ import annotations
-from observability.telemetry import log_event as _log_event
 
 import json
 import time
@@ -11,8 +10,9 @@ from typing import Any, Iterator
 from urllib.parse import parse_qs, urlsplit
 from uuid import UUID
 
-from infrastructure.db_roles import REQUEST_DB_ROLE, admin_connection  # noqa: F401  (re-export)
 from infrastructure.contracts import Conflict, NotFound, Principal, StaleVersion, StoredGame
+from infrastructure.db_roles import REQUEST_DB_ROLE, admin_connection  # noqa: F401  (re-export)
+from observability.telemetry import log_event as _log_event
 from services.game_serialization import (
     deserialize_game_state,
     document_sha256,

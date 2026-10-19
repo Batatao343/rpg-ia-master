@@ -22,7 +22,6 @@ from evals.core.hashing import case_selection_hash, sha256_file
 from evals.core.schemas import EVALUATOR_VERSION, EvalRunMetadata, EvalRunResult
 from evals.evaluators import ExactEvaluator
 
-
 ROOT = Path(__file__).resolve().parents[1]
 EVAL_ROOT = ROOT / "evals"
 

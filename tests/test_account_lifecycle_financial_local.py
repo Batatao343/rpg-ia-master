@@ -11,7 +11,7 @@ from psycopg.types.json import Jsonb
 
 from infrastructure.account_lifecycle import PostgresAccountLifecycle
 from services.stripe_checkout import StripeError
-from tests.test_stripe_checkout_local import payment_case, checkout, deliver, event
+from tests.test_stripe_checkout_local import checkout, deliver, event, payment_case
 
 
 def install_lifecycle(c):

@@ -63,8 +63,9 @@ def test_stream_cut_after_first_chunk_is_conservative_spend(monkeypatch, mode):
     """Repro (review Astra): a stream that broke AFTER the first chunk has no usage block, but the
     provider generated (and billed) tokens. It must not become failed_no_usage/zero; the daily
     cap counts it, and it stays non-exact so a wallet reservation remains uncertain."""
-    import llm_setup
     from langchain_core.messages import AIMessageChunk
+
+    import llm_setup
 
     class FakeClient:
         def stream(self, _input):
@@ -186,7 +187,11 @@ def test_manual_override_only_same_day(monkeypatch):
 
 # --- R5 (pure) ------------------------------------------------------------------------------
 def test_stt_rejection_is_exact_zero_and_timeout_stays_unknown():
-    from services.speech_pricing import SPEECH_PRICING_VERSION, is_definitive_no_charge, speech_event
+    from services.speech_pricing import (
+        SPEECH_PRICING_VERSION,
+        is_definitive_no_charge,
+        speech_event,
+    )
     rejected = speech_event(OPERATION, 0, "groq", "whisper-large-v3-turbo", "rejected", {},
                             definitive_no_charge=True)
     assert rejected.cost_usd == 0 and rejected.billing_exact is True
@@ -202,6 +207,7 @@ def test_stt_429_then_fallback_success_is_all_exact():
     import asyncio
     import io
     import wave
+
     from services.speech_to_text import Candidate, ProviderReading, SpeechCircuit, transcribe_audio
 
     output = io.BytesIO()
@@ -244,7 +250,8 @@ def test_stt_429_then_fallback_success_is_all_exact():
 
 # --- R7 -------------------------------------------------------------------------------------
 def test_rate_card_window_configurable(monkeypatch):
-    from services.image_pricing import _CARD as image_card, require_image_prices
+    from services.image_pricing import _CARD as image_card
+    from services.image_pricing import require_image_prices
     from services.shard_pricing import PricingUnavailable
     from services.speech_pricing import require_speech_prices
     observed = datetime.fromisoformat(image_card["observed_at"])

@@ -7,9 +7,7 @@ import pytest
 
 from playtest import report as rp
 from playtest import telemetry as tm
-from playtest.runner import (CampaignResult, TurnRecord, resolve_class_name,
-                             run_campaign)
-
+from playtest.runner import CampaignResult, TurnRecord, resolve_class_name, run_campaign
 
 # --- R1: --class ------------------------------------------------------------
 

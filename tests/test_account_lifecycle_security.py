@@ -1,6 +1,6 @@
 """SPEC-190 adversarial API/adapter checks; no outbound mail or paid calls."""
-from datetime import UTC, datetime, timedelta
 from contextlib import nullcontext
+from datetime import UTC, datetime, timedelta
 from types import SimpleNamespace
 from uuid import uuid4
 

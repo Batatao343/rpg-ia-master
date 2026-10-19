@@ -156,9 +156,11 @@ def test_game_store_cannot_cross_owners_even_without_owner_filter(world):
 def test_full_runtime_user_paths_under_rpg_api_and_system_paths_on_admin_pool(world):
     """Runtime real (build_database_runtime): request via rpg_runtime+rpg_api, sistema via rpg_admin."""
     psycopg = pytest.importorskip("psycopg")
+    from urllib.parse import urlsplit as _split
+    from urllib.parse import urlunsplit as _unsplit
+
     from infrastructure.contracts import JobRequest
     from infrastructure.runtime import RuntimeConfig, build_database_runtime
-    from urllib.parse import urlsplit as _split, urlunsplit as _unsplit
 
     parts = _split(world["admin_dsn"])
     admin_pw = "rpg_admin_local_only"
@@ -233,8 +235,8 @@ def _image_quote_case(world, monkeypatch):
     from services.art_triggers import ArtGenerationRequest
     from services.image_quotes import ImageQuoteRepository
     from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256
-    from tests.fakes.local_pricing import installed_card_max_age_seconds
     from services.usage_metering import RATE_CARD_VERSION
+    from tests.fakes.local_pricing import installed_card_max_age_seconds
 
     at = datetime(2026, 10, 12, 12, tzinfo=timezone.utc)
 

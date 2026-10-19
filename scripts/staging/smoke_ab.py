@@ -158,6 +158,7 @@ def check_storage(ctx: Ctx) -> dict:
 
 def check_pgvector(ctx: Ctx) -> dict:
     from uuid import UUID
+
     from infrastructure.contracts import MemoryDocument, MemoryQuery, MemoryWriteIntent, Principal
     from infrastructure.pgvector_memory import PgVectorMemoryStore
     from infrastructure.postgres import PostgresGameStore, PostgresPool
@@ -190,6 +191,7 @@ def _seed_wallet_prereqs(dsn: str) -> None:
     """Idempotent synthetic pricing version + SKU (append-only ledger FKs; rows are retained by design)."""
     import psycopg
     from psycopg.types.json import Jsonb
+
     from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256
     from services.usage_metering import RATE_CARD_VERSION
     with psycopg.connect(dsn, autocommit=True, prepare_threshold=None) as c:
@@ -212,6 +214,7 @@ def check_wallet(ctx: Ctx) -> dict:
     """A gets one real purchase entry through PostgresWallet; B must see nothing. wallet_* facts are
     append-only (immutable triggers), so the synthetic account + 1 entry of A are RETAINED (documented)."""
     from uuid import UUID
+
     from infrastructure.contracts import Principal
     from infrastructure.postgres import PostgresPool
     from infrastructure.wallet import PostgresWallet

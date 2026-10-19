@@ -29,6 +29,7 @@ PROFILE = "local-1024"
 def make_owner(env) -> dict:
     """Synthetic user + game created through the deployed API (same path as the web client)."""
     import httpx
+
     from scripts.staging.e2e_session import _h
     admin = s192.Admin(env)
     user = admin.create_user()
@@ -106,6 +107,7 @@ def wait_for(env, ref: dict, timeout: int) -> dict:
 def phase_a(env, owner: dict) -> dict:
     from psycopg.rows import dict_row
     from psycopg_pool import ConnectionPool
+
     from infrastructure.contracts import LeaseHeld
     from infrastructure.postgres_jobs import PostgresJobQueue
     with s192.db(env) as conn:

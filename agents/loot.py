@@ -6,7 +6,6 @@ resultado; preços, estoques, receitas e raridade de drop resolvem em Python
 (services/economy.py). O antigo TransactionResult (LLM decidia sucesso, preço
 e itens) morreu aqui.
 """
-from observability.telemetry import log_event as _log_event
 import random
 import re
 import unicodedata
@@ -17,6 +16,7 @@ from pydantic import BaseModel, Field
 
 from gamedata import get_location
 from llm_setup import ModelTier, get_llm
+from observability.telemetry import log_event as _log_event
 from services import conflict_summary as conflict_summary_service
 from services import economy, prose_guard
 from services.turn_outcome import record_gain

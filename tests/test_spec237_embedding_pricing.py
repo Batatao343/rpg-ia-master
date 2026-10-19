@@ -109,7 +109,11 @@ def _version():
     from datetime import timedelta
 
     from services.shard_pricing import (
-        INSTALLED_RATE_CARD_OBSERVED_AT as at, INSTALLED_RATE_CARD_SHA256, ChannelFee,
+        INSTALLED_RATE_CARD_OBSERVED_AT as at,
+    )
+    from services.shard_pricing import (
+        INSTALLED_RATE_CARD_SHA256,
+        ChannelFee,
         PricingVersion,
     )
     from services.usage_metering import RATE_CARD_VERSION

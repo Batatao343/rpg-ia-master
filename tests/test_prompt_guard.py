@@ -157,9 +157,10 @@ def test_archivist_prompt_delimits_player_input(monkeypatch):
 
 
 def test_new_game_backstory_truncated_in_summary(tmp_path, monkeypatch):
+    from fastapi.testclient import TestClient
+
     import api
     import persistence
-    from fastapi.testclient import TestClient
     monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
     api._rate_hits.clear()
     client = TestClient(api.app)

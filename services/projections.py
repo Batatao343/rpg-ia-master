@@ -271,8 +271,8 @@ def strip_dead_npc_presence(text: str, state: dict) -> tuple[str, List[dict]]:
     """Remove frases do derivado que citam NPC canonicamente morto SEM falar da
     morte (presença/fala de morto = reintrodução). Conservador: qualquer
     vocabulário de morte/memória ou marcador de relato preserva a frase."""
-    from services.narrative_evidence import QUALIFIED_MARKER
     from services.memory_provenance import _fold
+    from services.narrative_evidence import QUALIFIED_MARKER
     from services.npc_layers import npc_alive
     projection = state.get("world_projection") or {}
     names = []

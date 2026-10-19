@@ -1,8 +1,8 @@
 """Operator recovery cannot turn a preview into a fresh account deletion."""
+import sys
 from contextlib import nullcontext
 from types import SimpleNamespace
 from uuid import uuid4
-import sys
 
 import pytest
 

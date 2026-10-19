@@ -122,8 +122,9 @@ def test_env_attack_mod_simetrico():
 
 
 def test_dot_outdoor_no_combate(monkeypatch):
-    from agents import combat as cbt
     from langchain_core.messages import HumanMessage, SystemMessage
+
+    from agents import combat as cbt
     monkeypatch.setattr(cbt, "_narrate", lambda *a, **k: "ok")
     enemy = {"id": "e1", "name": "Orc", "type": "Minion", "hp": 30, "max_hp": 30,
              "defense": 30, "status": "ativo", "attributes": {"dex": 10},

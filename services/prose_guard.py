@@ -6,8 +6,8 @@ repetição (telemetria R4) e alimentar a invariante R5. Zero mecânica de jogo.
 """
 from __future__ import annotations
 
-import logging
 import hashlib
+import logging
 import re
 from typing import List
 

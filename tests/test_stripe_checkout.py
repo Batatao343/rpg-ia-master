@@ -9,7 +9,6 @@ import pytest
 
 from services.stripe_checkout import StripeError, StripeTestAdapter, verify_event
 
-
 SECRET = "whsec_fixture_only"
 NOW = 1791892800
 

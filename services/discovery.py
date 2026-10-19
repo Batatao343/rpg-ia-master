@@ -17,6 +17,7 @@ import gamedata
 from services import graph_resolver as gr
 from services.codex_loader import codex_body
 
+
 def _bestiary_db() -> Dict:
     """spec isolar-cache-runtime (R2): view unificada curadoria ∪ overlay —
     criatura GERADA em jogo também entra no codex do jogador (lazy import p/
@@ -183,8 +184,8 @@ def _factions_block(state: Dict) -> List[Dict]:
 
 def _characters_block(state: Dict) -> List[Dict]:
     out = []
-    from services.npc_layers import trait_names
     from services.entity_identity import resolve_npc_entity_id
+    from services.npc_layers import trait_names
     for npc_name, npc in (state.get("npcs") or {}).items():
         if not isinstance(npc, dict):
             continue

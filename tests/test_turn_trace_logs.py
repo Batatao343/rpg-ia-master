@@ -172,8 +172,9 @@ def _patch_db(monkeypatch, coordinator):
     ("LeaseHeld", "operation_in_progress"), ("StaleVersion", "stale_version"),
     ("Conflict", "operation_conflict")])
 def test_operation_conflict_logged(capsys, monkeypatch, exc_name, reason):
-    import api
     from fastapi import HTTPException
+
+    import api
     from infrastructure import contracts
     _patch_db(monkeypatch, _FakeCoordinator(claim_exc=getattr(contracts, exc_name)("x")))
     state = {"game_id": str(uuid.uuid4()), "_storage_version": 1}
@@ -187,8 +188,9 @@ def test_operation_conflict_logged(capsys, monkeypatch, exc_name, reason):
 
 
 def test_request_mismatch_logged(capsys, monkeypatch):
-    import api
     from fastapi import HTTPException
+
+    import api
     from infrastructure.contracts import Conflict
     _patch_db(monkeypatch, _FakeCoordinator(receipt=Conflict("mismatch")))
     state = {"game_id": str(uuid.uuid4())}

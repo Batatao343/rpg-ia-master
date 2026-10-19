@@ -2,8 +2,8 @@
 world_simulator (Fase 2): eventos off-screen narrados em descanso/viagem.
 Offline/determinístico (MockLLM via conftest). Cobre nota, clamp de perigo, guard e contexto.
 """
-import gamedata
 import agents.world_simulator as ws
+import gamedata
 from llm_setup import FallbackLLM
 
 

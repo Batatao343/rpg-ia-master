@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timedelta, timezone
 import json
 import os
 import random
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timedelta, timezone
 from uuid import UUID, uuid4
 
 import pytest
@@ -15,12 +15,14 @@ from infrastructure.contracts import Principal
 from infrastructure.postgres import PostgresPool
 from infrastructure.usage_events import append_usage_events
 from infrastructure.wallet import (
-    InsufficientShards, PostgresWallet, SpendCeilingExceeded,
-    UncertainEffect, WalletConflict,
+    InsufficientShards,
+    PostgresWallet,
+    SpendCeilingExceeded,
+    UncertainEffect,
+    WalletConflict,
 )
 from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256
 from services.usage_metering import RATE_CARD_VERSION, normalize_attempts
-
 
 pytestmark = pytest.mark.infra_local
 TEST_AT = datetime(2026, 10, 8, 12, tzinfo=timezone.utc)

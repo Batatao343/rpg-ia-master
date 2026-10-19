@@ -10,6 +10,7 @@ aparecem como sinais sem nome. Guard de FallbackLLM (isinstance). Inerte sem cha
 """
 from dataclasses import dataclass
 from typing import Tuple
+
 from langchain_core.messages import SystemMessage
 from pydantic import BaseModel, Field
 

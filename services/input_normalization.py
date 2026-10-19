@@ -7,7 +7,6 @@ sentinelas de provider (por exemplo, ``"null"``) como entidades reais.
 
 from typing import Optional
 
-
 _EMPTY_ENTITY_REFS = frozenset({
     "null",
     "none",

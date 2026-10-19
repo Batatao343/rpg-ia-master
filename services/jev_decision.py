@@ -19,7 +19,6 @@ import httpx
 from dotenv import load_dotenv
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
 
-
 ENDPOINT = "https://api.typesafe.ai/v1/systemone"
 _IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]{0,63}\Z")
 _HEADER_ID = re.compile(r"[A-Za-z0-9._:-]{1,100}\Z")

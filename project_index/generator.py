@@ -15,7 +15,6 @@ from typing import Any
 
 import yaml
 
-
 GENERATOR_VERSION = "1.0.0"
 SOURCE_SUFFIXES = {".py", ".ts", ".tsx", ".js", ".jsx"}
 ARTIFACT_NAMES = {"pyproject.toml", "package.json", "vite.config.ts", "Procfile"}

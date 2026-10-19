@@ -14,7 +14,6 @@ ADITIVO: a mudança de GRAFO (mover `_spawn_enemies_integrated` pra fora do
 `combat_node`, NPC nascer com ficha completa em `agents/npc.py`) é o cutover
 (conflito-13). Aqui: motor puro + o builder de ficha de combate + testes.
 """
-from observability.telemetry import log_event as _log_event
 import json
 import os
 from copy import deepcopy
@@ -23,8 +22,9 @@ from typing import Dict, List, Optional
 from pydantic import BaseModel, ConfigDict, Field
 
 import gamedata
-from services import conflict_scene as cs
+from observability.telemetry import log_event as _log_event
 from services import abyss_events
+from services import conflict_scene as cs
 
 # R6: teto do Nível do Encontro (perigo ABSOLUTO — nunca depende da party).
 ENCOUNTER_LEVEL_MAX = 10

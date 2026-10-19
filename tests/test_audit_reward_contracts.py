@@ -108,6 +108,7 @@ def test_receipt_sums_repeated_rows_and_ignores_nonpositive_quantities(quantitie
 
 def test_second_nonstackable_item_appears_in_receipt_and_survives_serialization() -> None:
     import uuid
+
     import persistence
     state = _state()
     state["game_id"] = str(uuid.uuid4())
@@ -125,6 +126,7 @@ def test_second_nonstackable_item_appears_in_receipt_and_survives_serialization(
 
 def test_story_reward_through_graph_finalizer_and_save_load(story, monkeypatch):
     from uuid import uuid4
+
     import main
     import persistence
     from gamedata import ARTIFACTS_DB

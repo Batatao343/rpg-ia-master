@@ -7,16 +7,15 @@ pricing version and channel SKU outside this repository.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from hashlib import sha256
-from datetime import datetime, time, timedelta, timezone
-from decimal import Decimal, ROUND_CEILING, localcontext
 import json
+from dataclasses import dataclass
+from datetime import datetime, time, timedelta, timezone
+from decimal import ROUND_CEILING, Decimal, localcontext
+from hashlib import sha256
 from pathlib import Path
 from typing import Mapping, Sequence
 
 from services.usage_metering import RATE_CARD_VERSION, UsageEvent
-
 
 TARGET_MARGIN_RATE = Decimal("0.05")
 BRL_CENT = Decimal("0.01")

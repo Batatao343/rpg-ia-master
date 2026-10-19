@@ -158,7 +158,9 @@ def test_npc_killed_accepted_with_combat_summary_this_turn():
 # ------------------------------------------------------------------ quarentena + R8
 def test_unproven_event_quarantined_without_blocking_turn(monkeypatch):
     from types import SimpleNamespace
+
     from langchain_core.messages import HumanMessage
+
     from agents import storyteller
     monkeypatch.setattr(storyteller, "build_context_pack", lambda *a, **k: SimpleNamespace(
         lore_block="", memory_block="", world_state_block=""))
@@ -252,6 +254,7 @@ def test_word_missao_or_injection_is_not_investigation(text):
 def test_corpus_quest_force_complete_input_is_not_evidence():
     import json
     from pathlib import Path
+
     from services.quest_log import sync_action_progress
     corpus = json.loads(Path("tests/fixtures/prompt_injection/corpus.json").read_text("utf-8"))
     cases = corpus["cases"] if isinstance(corpus, dict) else corpus

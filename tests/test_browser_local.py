@@ -6,7 +6,6 @@ import pytest
 
 from scripts.browser_local import find_chrome, run
 
-
 pytestmark = pytest.mark.browser_local
 
 

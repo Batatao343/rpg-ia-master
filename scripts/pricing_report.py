@@ -7,16 +7,20 @@ simulation files; published SKU values must instead come from the DB catalog.
 from __future__ import annotations
 
 import argparse
+import json
 from dataclasses import asdict
 from datetime import datetime, timezone
 from decimal import Decimal
-import json
 from pathlib import Path
 from uuid import uuid4
 
 from services.shard_pricing import (
-    PricingUnavailable, PurchaseSku, contribution_report, quote_purchase,
-    quote_usage, version_from_record,
+    PricingUnavailable,
+    PurchaseSku,
+    contribution_report,
+    quote_purchase,
+    quote_usage,
+    version_from_record,
 )
 from services.usage_metering import UsageEvent
 

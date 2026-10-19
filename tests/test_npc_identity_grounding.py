@@ -5,6 +5,7 @@ from types import SimpleNamespace
 
 from langchain_core.messages import HumanMessage
 
+import persistence
 from agents import archivist, npc, storyteller
 from agents.archivist import MemoryUpdate
 from playtest.invariants import check_entities, check_memory_provenance
@@ -15,7 +16,6 @@ from services.memory_provenance import (
     npc_identity_contradiction,
     validate_memory_fact,
 )
-import persistence
 
 
 def _skriit(*, in_scene: bool = False, last_seen: int = 27) -> dict:

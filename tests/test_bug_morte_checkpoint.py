@@ -7,7 +7,10 @@ from copy import deepcopy
 import pytest
 from fastapi.testclient import TestClient
 from langchain_core.messages import (
-    AIMessage, HumanMessage, SystemMessage, ToolMessage,
+    AIMessage,
+    HumanMessage,
+    SystemMessage,
+    ToolMessage,
 )
 
 import api

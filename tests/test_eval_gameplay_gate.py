@@ -16,7 +16,6 @@ from evals.evaluators.gameplay_gate import (
     trace_problems,
 )
 
-
 ROOT = Path(__file__).resolve().parents[1]
 DATASET = "datasets/regression/gameplay_gate.jsonl"
 METRICS = (

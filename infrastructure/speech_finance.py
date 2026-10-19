@@ -1,12 +1,12 @@
 """SPEC-186 finance orchestration; canonical writers remain coordinator/wallet."""
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
 
-from datetime import datetime, timezone
 import os
+from datetime import datetime, timezone
 from uuid import UUID, uuid4
 
 from infrastructure.contracts import Principal
+from infrastructure.db_roles import admin_connection
 from infrastructure.wallet import PostgresWallet
 from services.shard_pricing import PricingUnavailable, quote_attempt_ceiling, version_from_record
 from services.speech_pricing import require_speech_prices, speech_bound

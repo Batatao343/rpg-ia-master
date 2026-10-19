@@ -12,7 +12,6 @@ import random
 from dataclasses import dataclass
 from typing import Dict, List, Literal, Optional, Protocol
 
-
 # --- leitura de estado (helpers compartilhados) -----------------------------
 
 def _last_narration(state: dict) -> str:

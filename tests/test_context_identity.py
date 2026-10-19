@@ -2,9 +2,9 @@
 from __future__ import annotations
 
 import asyncio
+import threading
 from concurrent.futures import ThreadPoolExecutor
 from contextvars import ContextVar
-import threading
 from types import SimpleNamespace
 from uuid import uuid4
 
@@ -13,7 +13,9 @@ import pytest
 from infrastructure.contracts import Principal
 from infrastructure.request_context import current_principal, principal_scope, set_current_principal
 from services.context_sources import (
-    EmbeddedContextQuery, acquire_context_sources, acquire_context_sources_async,
+    EmbeddedContextQuery,
+    acquire_context_sources,
+    acquire_context_sources_async,
 )
 
 

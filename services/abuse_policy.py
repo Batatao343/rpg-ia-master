@@ -177,6 +177,7 @@ def record_block(cls: str, scope: str, *, owner: Any = None, ip: str | None = No
     """Metrica (labels fechados, sem ids) + log JSON pseudonimizado e amostrado. Nunca levanta."""
     try:
         import time
+
         from observability.metrics import metrics
         from observability.telemetry import log_event, pseudonym
         metrics.increment("rpg_rate_limited_total", {"class": cls, "scope": scope})

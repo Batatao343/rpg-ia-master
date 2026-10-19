@@ -10,7 +10,6 @@ from uuid import UUID
 
 from PIL import Image, UnidentifiedImageError
 
-
 MAX_SOURCE_BYTES = 20 * 1024 * 1024
 MAX_PIXELS = 24_000_000
 VARIANTS = {"full": (1536, 1536), "thumb": (384, 384)}

@@ -9,8 +9,12 @@ import pytest
 from infrastructure.contracts import Principal
 from infrastructure.google_play_payments import GooglePlayPurchases, _public
 from services.google_play import (
-    GooglePlayClient, GooglePlayError, GooglePlaySettings, ProductPurchase,
-    obfuscated_account_id, token_digest,
+    GooglePlayClient,
+    GooglePlayError,
+    GooglePlaySettings,
+    ProductPurchase,
+    obfuscated_account_id,
+    token_digest,
 )
 
 TOKEN = "tok_" + "a" * 40
@@ -312,9 +316,10 @@ def test_account_id_is_hmac_keyed_and_fails_closed(monkeypatch):
 
 
 def test_shared_client_is_cached_per_env_and_bearer_reused(monkeypatch):
-    import services.google_play as gp
     from cryptography.hazmat.primitives import serialization
     from cryptography.hazmat.primitives.asymmetric import rsa
+
+    import services.google_play as gp
     pem = rsa.generate_private_key(65537, 2048).private_bytes(
         serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8,
         serialization.NoEncryption()).decode()

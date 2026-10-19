@@ -15,12 +15,11 @@ import pytest
 import persistence
 from persistence import (
     SCHEMA_VERSION,
+    load_game_state,
     migrate_state,
     save_game_state,
-    load_game_state,
     save_path,
 )
-
 
 # ---------------------------------------------------------------------------
 # Etapa 1 — save_path + validação de game_id
@@ -43,6 +42,7 @@ def test_save_path_rejeita_nao_uuid(malicioso):
 
 def test_endpoint_400_com_game_id_invalido():
     from fastapi.testclient import TestClient
+
     import api
 
     client = TestClient(api.app)
@@ -141,6 +141,7 @@ def test_cors_default_nao_e_wildcard():
 
 def test_rate_limit_429_apos_janela(monkeypatch):
     from fastapi.testclient import TestClient
+
     import api
 
     monkeypatch.setenv("RPG_RATE_LIMIT", "2")
@@ -154,6 +155,7 @@ def test_rate_limit_429_apos_janela(monkeypatch):
 
 def test_rate_limit_desligado(monkeypatch):
     from fastapi.testclient import TestClient
+
     import api
 
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
@@ -165,8 +167,9 @@ def test_rate_limit_desligado(monkeypatch):
 
 
 def test_log_de_turno_e_json_valido(caplog, monkeypatch):
-    import api  # noqa: F401 — garante o handler do logger configurado
     import logging
+
+    import api  # noqa: F401 — garante o handler do logger configurado
 
     logger = logging.getLogger("rpg.turn")
     monkeypatch.setattr(logger, "propagate", True)  # deixa o caplog ver o record

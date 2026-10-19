@@ -7,7 +7,6 @@ import re
 from pathlib import Path
 from typing import Any, Mapping, TypedDict
 
-
 PROFILE_PATH = Path(__file__).resolve().parents[1] / "data" / "dynamic_art_profiles.json"
 _ROLE_MARKERS = re.compile(r"(?i)(system|assistant|developer|ignore previous|instruções?|prompt)\s*:")
 

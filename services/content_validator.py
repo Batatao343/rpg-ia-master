@@ -12,8 +12,8 @@ O gate sobre os dados reais do repo é `tests/test_fase71.py::test_repo_content_
 
 from __future__ import annotations
 
-import json
 import hashlib
+import json
 import os
 import re
 import unicodedata

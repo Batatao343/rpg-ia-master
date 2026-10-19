@@ -59,17 +59,21 @@ line-length = 100
 # Dívida de lint anterior ao gate incremental (workspace #10): ignores por arquivo,
 # gerados por scripts/dev/ruff_baseline.py. Arquivo novo recebe todas as regras.
 extend = "ruff-baseline.toml"
-extend-exclude = ["web", "docs", "saves*", "data/runtime"]
+extend-exclude = ["web", "docs", "saves*", "data/runtime", "data", "lore_nova", "faiss_*"]
 
 [tool.ruff.lint]
 # Degrau 1: pyflakes (F), bugbear (B) e estrutura (E4/E7/E9). E501 fica fora;
 # B905 (zip sem strict) entra depois com --fix. Degraus 2–3 (I, UP, ruff format)
 # são commits mecânicos a fazer sem worktrees vivos — ver docs/guias/TESTES.md.
-select = ["E4", "E7", "E9", "F", "B"]
+select = ["E4", "E7", "E9", "F", "B", "I"]
 ignore = ["E501", "B905"]
 
 [tool.ruff.lint.extend-per-file-ignores]
 "tests/**" = ["F403", "F405", "F811"]
+# Arquivos protegidos de eval (evals/protected-paths.txt): hashes travados, não reescrever.
+"evals/core/**" = ["I", "UP"]
+"evals/evaluators/**" = ["I", "UP"]
+"evals/__main__.py" = ["I", "UP"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

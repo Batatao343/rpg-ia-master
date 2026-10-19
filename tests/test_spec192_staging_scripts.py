@@ -1,6 +1,11 @@
 """SPEC-192: offline logic of the staging evidence scripts (fakes, no network)."""
-from scripts.staging import (account_deletion_recovery as adr, e2e_session as e2e, job_survival as js,
-                             preview_isolation as pi, s192, schedule_cron as sc, verify_cron as vc)
+from scripts.staging import account_deletion_recovery as adr
+from scripts.staging import e2e_session as e2e
+from scripts.staging import job_survival as js
+from scripts.staging import preview_isolation as pi
+from scripts.staging import s192
+from scripts.staging import schedule_cron as sc
+from scripts.staging import verify_cron as vc
 
 
 def test_parse_sse_skips_pings_and_decodes_json():
@@ -126,6 +131,7 @@ def test_sse_disconnect_exactly_one_turn_predicate():
 def test_voice_smoke_synthetic_wav_is_valid_pcm():
     import io
     import wave
+
     from scripts.staging.voice_smoke import synthetic_wav
     with wave.open(io.BytesIO(synthetic_wav(1.0)), "rb") as w:
         assert (w.getnchannels(), w.getsampwidth(), w.getframerate(), w.getnframes()) == (1, 2, 16000, 16000)

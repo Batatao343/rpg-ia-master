@@ -15,15 +15,14 @@ Spec: specs/SPEC-003-fase-2.6-structured-events.md §3 · specs/SPEC-004-fase-2.
 """
 
 from __future__ import annotations
-from observability.telemetry import log_event as _log_event
 
 import copy
 import uuid
 from typing import Dict
 
+from observability.telemetry import log_event as _log_event
 from services import graph_resolver as gr
-from services import quest_log
-from services import rule_engine
+from services import quest_log, rule_engine
 from services.chronicle import append_entry, render_milestone
 from services.world_validators import (
     ValidationResult,

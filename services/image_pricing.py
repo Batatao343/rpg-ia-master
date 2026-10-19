@@ -1,16 +1,15 @@
 """Versioned Standard direct Images API prices, distinct from commercial quote profiles."""
 from __future__ import annotations
 
+import json
 from dataclasses import replace
 from datetime import datetime, timedelta, timezone
-from decimal import Decimal, ROUND_UP, localcontext
+from decimal import ROUND_UP, Decimal, localcontext
 from hashlib import sha256
-import json
 from pathlib import Path
 
 from services.shard_pricing import PricingUnavailable, rate_card_max_age
 from services.usage_metering import UsageEvent
-
 
 _BYTES = (Path(__file__).resolve().parents[1] / "data/pricing/image_rate_card_2026-10-12.json").read_bytes()
 _CARD = json.loads(_BYTES)

@@ -3,6 +3,7 @@
 Offline/determinístico. Grafo sintético via monkeypatch dos acessores do módulo.
 """
 import random
+
 import gamedata
 import playtest.profiles as pf
 

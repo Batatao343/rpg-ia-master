@@ -80,6 +80,7 @@ def test_ensure_factions_backfills_missing_fields():
 # --------------------------------------------------------------------------
 def test_factions_persist_round_trip(tmp_path, monkeypatch):
     import os
+
     import persistence
     monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
     state = {
@@ -371,6 +372,7 @@ def test_graph_rest_in_danger_triggers_combat():
 
 def test_npc_reveals_faction_to_player():
     from langchain_core.messages import HumanMessage
+
     from agents.npc import npc_actor_node
     state = {
         "game_id": "intel_test",

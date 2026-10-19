@@ -220,6 +220,7 @@ def test_validate_narrative_preserves_paragraphs():
 # --- R9 / R10 -------------------------------------------------------------
 def test_embedding_profile_id_and_dimension_guard():
     import pytest
+
     import rag
 
     assert rag.embedding_profile_id("jina") == "jina-jina-embeddings-v3-1024"
@@ -231,6 +232,7 @@ def test_embedding_profile_id_and_dimension_guard():
 
 def test_pgvector_rejects_wrong_dimension_and_isolates_profiles():
     import pytest
+
     from infrastructure.pgvector_memory import PgVectorMemoryStore, vector_literal
 
     with pytest.raises(ValueError):
@@ -275,8 +277,8 @@ def test_pgvector_rejects_wrong_dimension_and_isolates_profiles():
 
 
 def test_rag_degraded_metric_emitted(monkeypatch, tmp_path):
-    from observability.metrics import metrics
     import rag
+    from observability.metrics import metrics
 
     before = metrics.snapshot().get("rpg_rag_degraded_total{'source': 'session'}", 0)
     monkeypatch.setattr(rag, "SAVES_DIR", str(tmp_path))
@@ -359,6 +361,7 @@ def test_configured_profile_is_shared_by_every_adapter(monkeypatch):
     monkeypatch.setenv("RPG_EMBEDDINGS", "jina")
     assert configured_profile_id() == "jina-jina-embeddings-v3-1024"
     import inspect
+
     from infrastructure import postgres_turns
 
     src = inspect.getsource(postgres_turns)

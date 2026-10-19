@@ -5,9 +5,9 @@ from types import SimpleNamespace
 import pytest
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
+import mock_llm
 from agents import archivist, storyteller
 from agents.archivist import MemoryUpdate
-import mock_llm
 from services.event_processor import prevalidate_event_batch, process_pending_events
 from services.prose_guard import sanitize_meta_preamble
 

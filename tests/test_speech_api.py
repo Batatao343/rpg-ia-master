@@ -2,17 +2,17 @@
 from __future__ import annotations
 
 import io
+import wave
 from types import SimpleNamespace
 from uuid import uuid4
-import wave
 
-from fastapi.testclient import TestClient
 import pytest
+from fastapi.testclient import TestClient
 
 import api
 from infrastructure.contracts import Principal, Unauthorized
 from services.auth_sessions import CsrfSigner
-from services.speech_to_text import Candidate, MAX_AUDIO_BYTES, ProviderReading
+from services.speech_to_text import MAX_AUDIO_BYTES, Candidate, ProviderReading
 
 
 @pytest.fixture

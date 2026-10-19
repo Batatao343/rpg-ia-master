@@ -1,7 +1,6 @@
 """RuntimeCatalogStore Postgres com escopos e versionamento explícitos."""
 
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
 
 from copy import deepcopy
 from typing import Any
@@ -10,6 +9,7 @@ from uuid import UUID
 from psycopg.types.json import Jsonb
 
 from infrastructure.contracts import Conflict, validate_scope
+from infrastructure.db_roles import admin_connection
 from infrastructure.postgres import PostgresPool
 from services.game_serialization import document_sha256
 

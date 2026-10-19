@@ -8,10 +8,11 @@ no commit (``require_job_fence``). Conflito → ``ProjectionStale`` (retry com
 backoff; o próximo turno, dentro da própria cerca, drena se ainda pendente).
 """
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
 
 from typing import Any, Callable, Optional
 from uuid import UUID
+
+from infrastructure.db_roles import admin_connection
 
 
 class ProjectionStale(RuntimeError):
@@ -90,7 +91,9 @@ def apply_projection(pool, payload: dict[str, Any], *,
             if entry["status"] in ("completed", "stale"):
                 if memory_store is None:
                     from infrastructure.pgvector_memory import (
-                        PgVectorMemoryStore, configured_profile_id)
+                        PgVectorMemoryStore,
+                        configured_profile_id,
+                    )
                     memory_store = PgVectorMemoryStore(pool, profile_id=configured_profile_id())
                 effects.flush(connection, memory_store=memory_store, principal=principal,
                               game_id=game_id, epoch=epoch, version=new_version)

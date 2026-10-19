@@ -19,7 +19,7 @@ from dataclasses import dataclass
 from decimal import ROUND_CEILING, Decimal
 from pathlib import Path
 
-from services.finops import TARGET_MARGIN, estimate_fee, FeeRate
+from services.finops import TARGET_MARGIN, FeeRate, estimate_fee
 from services.shard_pricing import _ratio_units
 
 OUT = Path(__file__).resolve().parents[1] / "docs/spec196/margin-simulation.md"

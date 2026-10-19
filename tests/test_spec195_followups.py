@@ -12,7 +12,11 @@ from infrastructure.google_play_payments import GooglePlayPurchases, PostgresPur
 from infrastructure.reconciliation import MemoryStore, Reconciler
 from services.google_play import GooglePlayClient, GooglePlaySettings, obfuscated_account_id
 from services.purchase_reconciliation import (
-    GOOGLE, PARK_MAX_ATTEMPTS, STRIPE, Event, normalize_google_voided,
+    GOOGLE,
+    PARK_MAX_ATTEMPTS,
+    STRIPE,
+    Event,
+    normalize_google_voided,
 )
 
 S, G = 5000, 500
@@ -117,7 +121,13 @@ def test_v15_partial_reversal_returns_paid_money_before_closing_forgiven_debt():
 # ------------------------------------------------------------------ F1/F4 Postgres (lab)
 
 from tests.test_spec194_196_postgres_local import (  # noqa: E402,F401
-    FakeGoogle, SHARD, balance, debt, lab, lab_rb, reserve,
+    SHARD,
+    FakeGoogle,
+    balance,
+    debt,
+    lab,
+    lab_rb,
+    reserve,
 )
 
 

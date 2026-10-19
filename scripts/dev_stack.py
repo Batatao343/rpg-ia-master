@@ -18,7 +18,6 @@ from pathlib import Path
 from typing import Callable, Sequence
 from urllib.parse import urlsplit, urlunsplit
 
-
 ROOT = Path(__file__).resolve().parents[1]
 SUPABASE_DIR = ROOT / "supabase"
 SUPABASE_CLI_VERSION = "2.115.0"

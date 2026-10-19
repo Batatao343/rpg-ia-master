@@ -22,7 +22,6 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Iterator
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -200,8 +199,10 @@ def _contract_ok(result: dict, expected: dict) -> bool:
 def run_real_benchmark(*, repetitions: int, max_requests: int, max_cost: float,
                        timeout_seconds: float, routes_profile: str) -> dict:
     from langchain_core.messages import HumanMessage
+
     import llm_setup
     import rag
+    from main import build_game_graph
     from playtest import pricing
     from playtest.invariants import check_all
     from playtest.provider_profiles import activated_routes_profile, preflight_real_routes
@@ -210,7 +211,6 @@ def run_real_benchmark(*, repetitions: int, max_requests: int, max_cost: float,
         _run_with_watchdog,
         terminal_llm_invocation_count,
     )
-    from main import build_game_graph
 
     base = _build_offline_snapshot()
     samples: list[dict] = []

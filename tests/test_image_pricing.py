@@ -9,7 +9,6 @@ from services.image_pricing import IMAGE_PRICING_VERSION, price_image_event, req
 from services.shard_pricing import PricingUnavailable
 from services.usage_metering import normalize_attempts, safe_provider_usage
 
-
 MODEL = "gpt-image-2-2026-04-21"
 USAGE = {"input_tokens": 150, "output_tokens": 100,
          "input_tokens_details": {"text_tokens": 100, "image_tokens": 50}}
@@ -58,6 +57,7 @@ def test_unpublished_model_and_stale_card_cannot_authorize_dispatch():
 @pytest.mark.parametrize("references", [(), (b"synthetic input",)])
 def test_gpt_image_json_and_form_omit_unsupported_response_format(monkeypatch, references):
     import httpx
+
     from infrastructure.openai_images import OpenAIImageGenerator
     from infrastructure.ports import ImageGenerationInput
     calls = []

@@ -1,19 +1,18 @@
 """Campaign planning node used to keep multi-step story arcs coherent."""
-from observability.telemetry import log_event as _log_event
-
 from typing import List, Optional
 
 from langchain_core.messages import HumanMessage, SystemMessage
 from pydantic import BaseModel, Field, field_validator
 
 from llm_setup import ModelTier, get_llm
-from state import CampaignBeat, CampaignPlan, GameState
+from observability.telemetry import log_event as _log_event
 
 # --- INTEGRAÇÃO RAG ---
 from rag import query_rag  # <--- Importação necessária
 from services.chronicle import default_chapter_title, open_chapter
-from services.prompt_guard import PLAYER_INPUT_RULE, wrap_player_input
 from services.context_builder import build_context_pack
+from services.prompt_guard import PLAYER_INPUT_RULE, wrap_player_input
+from state import CampaignBeat, CampaignPlan, GameState
 
 
 class CampaignPlanModel(BaseModel):

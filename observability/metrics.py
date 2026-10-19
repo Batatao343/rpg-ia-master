@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-import threading
-import re
 import math
+import re
+import threading
 from collections import Counter, defaultdict
 from typing import Mapping
-
 
 LABELS = {
     "rpg_lease_renewals_total": {"outcome"},

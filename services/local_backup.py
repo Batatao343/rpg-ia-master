@@ -11,7 +11,6 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Iterable
 
-
 MANIFEST_VERSION = 1
 
 

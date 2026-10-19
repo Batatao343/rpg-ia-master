@@ -3,9 +3,10 @@ gamedata.py
 Central de Dados Estáticos e Dinâmicos.
 Gerencia o carregamento de regras, itens, bestiário e a persistência de criações da IA.
 """
-from observability.telemetry import log_event as _log_event
 import json
 import os
+
+from observability.telemetry import log_event as _log_event
 
 # --- CONFIGURAÇÃO DE CAMINHOS ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

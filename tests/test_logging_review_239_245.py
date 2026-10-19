@@ -9,7 +9,11 @@ import pytest
 
 from observability import logging_setup
 from observability.telemetry import (
-    bind_correlation, correlation, log_event, pseudonym, request_scope,
+    bind_correlation,
+    correlation,
+    log_event,
+    pseudonym,
+    request_scope,
 )
 
 SENT_TEXT = "SENTINELAJOGADOR777"

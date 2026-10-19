@@ -8,7 +8,6 @@ import pytest
 
 from infrastructure.contracts import Conflict, Principal, StaleVersion
 
-
 pytestmark = pytest.mark.infra_local
 
 

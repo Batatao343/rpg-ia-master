@@ -8,23 +8,26 @@ product router or ``services/jev_rollout.py`` (production default stays
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
 import hashlib
 import inspect
 import json
-from pathlib import Path
 import re
 import unicodedata
+from dataclasses import asdict, dataclass
+from pathlib import Path
 from typing import Any, Literal, Mapping
 
 from evals.core.hashing import sha256_file
-from evals.experiments.jev_router_ab import QUESTION as LEGACY_ROUTE_QUESTION, ROOT
+from evals.experiments.jev_router_ab import QUESTION as LEGACY_ROUTE_QUESTION
+from evals.experiments.jev_router_ab import ROOT
 from evals.experiments.jev_target_loot import _target_options
 from services.entity_identity import resolve_npc_entity_id
 from services.jev_decision import (
-    ChoiceQuestion, DecisionRequest, DecisionState, SceneActor,
+    ChoiceQuestion,
+    DecisionRequest,
+    DecisionState,
+    SceneActor,
 )
-
 
 DEV_CORPUS = ROOT / "evals/experiments/data/spec217_dev.jsonl"
 DEV_LOCK = ROOT / "evals/experiments/data/spec217_dev.sha256"

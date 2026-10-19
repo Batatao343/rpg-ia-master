@@ -1,9 +1,10 @@
 """SPEC-230 — NPC: guard de geração, ciclo de vida e relação em Python."""
 import logging
+
 from langchain_core.messages import AIMessage, HumanMessage
 
 import agents.npc as npc_mod
-from agents.npc import npc_actor_node, clamp_relationship_change
+from agents.npc import clamp_relationship_change, npc_actor_node
 from services import npc_layers
 
 
@@ -127,7 +128,7 @@ def test_relationship_change_clamped(caplog):
 
 
 def test_npc_fallback_hint_cleared():
-    from agents.router import _base_route_payload, RouteType
+    from agents.router import RouteType, _base_route_payload
     p = _base_route_payload(RouteType.STORY, {})
     assert "npc_fallback_hint" in p and p["npc_fallback_hint"] is None
 

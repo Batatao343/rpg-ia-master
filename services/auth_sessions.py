@@ -17,7 +17,6 @@ from uuid import UUID
 
 from infrastructure.contracts import CsrfError, Principal, SessionSecretError, Unauthorized
 
-
 ACCESS_COOKIE = "rpg_access"
 REFRESH_COOKIE = "rpg_refresh"
 CSRF_COOKIE = "rpg_csrf"

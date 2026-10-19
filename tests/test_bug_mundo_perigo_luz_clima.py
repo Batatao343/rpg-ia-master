@@ -98,8 +98,9 @@ def test_weather_duration_by_steps():  # R7
 
 
 def test_storyteller_exception_keeps_rest(monkeypatch):  # R8
-    import agents.storyteller as stt
     from langchain_core.messages import HumanMessage
+
+    import agents.storyteller as stt
 
     class _Boom:
         def with_structured_output(self, *_a, **_k):

@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from dataclasses import replace
 import base64
 import json
+from dataclasses import replace
 
 import pytest
 

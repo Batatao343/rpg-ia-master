@@ -11,7 +11,6 @@ from evals.core.governance import load_cases
 from evals.core.runner import run_eval
 from services.context_builder import ContextBudget
 
-
 ROOT = Path(__file__).resolve().parents[1]
 DATASET = "datasets/regression/memory_context.jsonl"
 
@@ -343,6 +342,7 @@ def test_product_context_selection_mutation_is_detected(monkeypatch) -> None:
 
 def test_product_generation_guard_mutation_is_detected(monkeypatch) -> None:
     from types import SimpleNamespace
+
     from services import narrative_evidence
 
     monkeypatch.setattr(

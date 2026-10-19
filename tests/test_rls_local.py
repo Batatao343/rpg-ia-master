@@ -5,7 +5,6 @@ from uuid import uuid4
 
 import pytest
 
-
 pytestmark = [pytest.mark.infra_local, pytest.mark.security_local]
 
 

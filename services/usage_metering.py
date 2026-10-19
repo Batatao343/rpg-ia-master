@@ -6,15 +6,14 @@ prices are conservative estimates and cannot authorize exact wallet billing.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from decimal import Decimal, InvalidOperation, ROUND_UP
 import json
+from dataclasses import dataclass
+from decimal import ROUND_UP, Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any, Literal, Mapping, Sequence
 from uuid import UUID, uuid5
 
 from services.embedding_pricing import EMBEDDING_PRICING_VERSION, embedding_cost
-
 
 _CARD = json.loads((Path(__file__).resolve().parents[1] /
                     "data/pricing/rate_card_2026-10-08.json").read_text(encoding="utf-8"))

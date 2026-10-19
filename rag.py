@@ -13,9 +13,8 @@ ao construir). Cada índice grava `embeddings_meta.json` e fica PINADO ao
 provider que o gerou; abrir com outro provider é proibido (índice desativado
 com aviso; re-index para trocar). Ver specs/SPEC-039-embeddings-provider.md.
 """
-from observability.telemetry import log_event as _log_event
-import json
 import hashlib
+import json
 import logging
 import os
 import re
@@ -27,13 +26,15 @@ from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, Iterator, List, Literal, Optional
+
 import httpx
-from langchain_community.vectorstores import FAISS
+from dotenv import load_dotenv
 from langchain_community.document_loaders import TextLoader
+from langchain_community.vectorstores import FAISS
 from langchain_core.embeddings import Embeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from dotenv import load_dotenv
 
+from observability.telemetry import log_event as _log_event
 from services.memory_provenance import format_memory_fact, make_memory_fact
 
 load_dotenv(override=True)  # .env canônico (sobrepõe env var do SO)
@@ -1125,6 +1126,7 @@ def add_memory_to_session(
     if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
         try:
             import hashlib
+
             from infrastructure.contracts import MemoryDocument, MemoryWriteIntent
             from infrastructure.request_context import current_principal
             from infrastructure.runtime import get_runtime
@@ -1479,6 +1481,7 @@ if __name__ == "__main__":
     # Console Windows é cp1252; força UTF-8 p/ os emojis dos prints não quebrarem
     # (main.py já faz isso no fluxo do jogo; aqui rodamos standalone).
     import sys
+
     # SPEC-222: o CLI de reindexação mostra os eventos rpg.rag/rpg.codex no terminal.
     from observability.logging_setup import configure_logging
     configure_logging()

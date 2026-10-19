@@ -6,11 +6,12 @@ apaga os objetos; é idempotente (apagar objeto ausente é sucesso) e varre tamb
 prefixo da campanha para pegar uploads não registrados.
 """
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
 
 from uuid import UUID, uuid4
 
 from psycopg.types.json import Jsonb
+
+from infrastructure.db_roles import admin_connection
 
 KIND = "purge_blobs"
 MAX_ATTEMPTS = 10

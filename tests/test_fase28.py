@@ -201,8 +201,9 @@ def test_storyteller_usa_pack(monkeypatch):
 # Etapa 4 — npc, combat (budget 1200), campaign_manager
 # --------------------------------------------------------------------------- #
 def test_npc_usa_pack(monkeypatch):
-    import agents.npc as npc
     from langchain_core.messages import HumanMessage
+
+    import agents.npc as npc
 
     calls = {}
 
@@ -260,8 +261,9 @@ def test_combat_pack_budget_1200(monkeypatch):
 
 
 def test_campaign_usa_pack(monkeypatch):
-    import agents.campaign_manager as cmgr
     from langchain_core.messages import HumanMessage
+
+    import agents.campaign_manager as cmgr
 
     calls = {}
     real_build = cb.build_context_pack

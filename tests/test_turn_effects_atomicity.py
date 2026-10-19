@@ -6,7 +6,7 @@ from infrastructure.contracts import MemoryDocument, MemoryWriteIntent, Principa
 
 
 def test_collected_memory_is_not_written_until_commit_and_discarded_on_exception():
-    from services.turn_effects import effect_scope, current_effects
+    from services.turn_effects import current_effects, effect_scope
     principal, gid = Principal(uuid4(), 'test', 'test'), uuid4()
     intent = MemoryWriteIntent(MemoryDocument('id', 'Chove.', 'session', {}), principal, gid)
     with pytest.raises(RuntimeError):
@@ -42,8 +42,8 @@ def test_commit_assigns_real_version_epoch_and_normalizes_provenance():
 
 
 def test_collector_rejects_wrong_campaign():
-    from services.turn_effects import effect_scope
     from infrastructure.contracts import Conflict
+    from services.turn_effects import effect_scope
     owner = Principal(uuid4(), 'test', 'test')
     with effect_scope() as effects:
         effects.memory.add(MemoryWriteIntent(MemoryDocument('id', 'Chove.', 'session', {}), owner, uuid4()))

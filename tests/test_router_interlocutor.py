@@ -5,7 +5,7 @@ import pytest
 from langchain_core.messages import HumanMessage
 
 import agents.router as router_mod
-from agents.router import RouteType, RouterDecision, dm_router_node
+from agents.router import RouterDecision, RouteType, dm_router_node
 from tests.test_interlocutor import _CountingLLM, _state
 
 

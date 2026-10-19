@@ -5,8 +5,8 @@ catálogo/base narrativa/região (R4/R7/R8), tabela de potência (R5), cena
 simplificada de segurança (R9) e a ficha de combate completa do NPC (R10). A
 geração pela LLM usa o guard (`FallbackLLM` → cena de segurança)."""
 
-from services import encounter_preparation as ep
 from llm_setup import FallbackLLM
+from services import encounter_preparation as ep
 
 
 # ==========================================================================

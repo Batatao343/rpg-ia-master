@@ -49,9 +49,10 @@ def test_dedupe_per_turn_but_counted_per_turn(capsys):
 
 
 def test_storyteller_with_fallback_llm_logs_structured_invalid(capsys, monkeypatch):
+    from fastapi.testclient import TestClient
+
     import agents.storyteller as st
     import api
-    from fastapi.testclient import TestClient
     from llm_setup import FallbackLLM
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
     api._rate_hits.clear()
@@ -84,9 +85,10 @@ def test_lease_release_failure_is_logged(capsys):
 
 
 def test_campaign_planner_error_logs_template_used(capsys, monkeypatch):
+    from fastapi.testclient import TestClient
+
     import agents.campaign_manager as cm
     import api
-    from fastapi.testclient import TestClient
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
     api._rate_hits.clear()
     gid = TestClient(api.app).post("/game/new", json={

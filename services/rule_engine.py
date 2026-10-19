@@ -23,7 +23,6 @@ Spec: specs/SPEC-004-fase-2.7-rules-engine.md.
 """
 
 from __future__ import annotations
-from observability.telemetry import log_event as _log_event
 
 import json
 import os
@@ -31,6 +30,7 @@ import re
 import uuid
 from typing import Any, Dict, List, Optional
 
+from observability.telemetry import log_event as _log_event
 from services import graph_resolver as gr
 
 RULES_PATH = os.path.join("data", "graph", "world_rules.json")

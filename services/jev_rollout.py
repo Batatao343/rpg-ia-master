@@ -25,20 +25,22 @@ pinned in ``tests/test_jev_rollout.py``.
 
 from __future__ import annotations
 
-from concurrent.futures import Future, ThreadPoolExecutor
-from concurrent.futures import TimeoutError as FutureTimeout
-from dataclasses import dataclass
 import hashlib
 import os
 import threading
 import time
 from collections.abc import Callable, Mapping
+from concurrent.futures import Future, ThreadPoolExecutor
+from concurrent.futures import TimeoutError as FutureTimeout
+from dataclasses import dataclass
 from typing import Any, Literal, cast
 
 from services.jev_decision import (
-    ChoiceAnswer, DecisionBackend, JevDecisionBackend, JevError,
+    ChoiceAnswer,
+    DecisionBackend,
+    JevDecisionBackend,
+    JevError,
 )
-
 
 RolloutMode = Literal["off", "shadow", "primary"]
 

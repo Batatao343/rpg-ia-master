@@ -9,7 +9,6 @@ from uuid import NAMESPACE_URL, uuid5
 
 from services.visual_catalog import visual_for
 
-
 NPC_LIMIT_PER_ARC = 4
 NPC_COOLDOWN_TURNS = 15
 

@@ -81,6 +81,7 @@ def main(argv=None) -> int:
     admin = s192.Admin(env)
     from psycopg.rows import dict_row
     from psycopg_pool import ConnectionPool
+
     from infrastructure.account_lifecycle import PostgresAccountLifecycle
     pool = ConnectionPool(env["RPG_STAGING_DB_URL"], min_size=1, max_size=2, kwargs={"row_factory": dict_row}, open=True)
     life = PostgresAccountLifecycle(pool, SimpleNamespace(), SimpleNamespace(bucket=BUCKET))

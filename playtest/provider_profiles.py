@@ -13,7 +13,6 @@ from pydantic import BaseModel
 
 from llm_setup import ModelTier
 
-
 _ROUTES_DIR = Path(__file__).with_name("routes")
 _PROFILE_FILES = {
     "deepseek-paid": _ROUTES_DIR / "deepseek_paid.json",

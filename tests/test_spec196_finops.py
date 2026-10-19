@@ -22,7 +22,9 @@ from infrastructure.contracts import Principal
 from infrastructure.finops_reader import FakeFinopsReader, OpsCounts
 from infrastructure.google_play_payments import GooglePlayPurchases
 from observability.metrics import LABELS, metrics
-from services import cron_internal, finops, finops_alerts as fa, kill_switches as ks
+from services import cron_internal, finops
+from services import finops_alerts as fa
+from services import kill_switches as ks
 from services.finops_job import run_finops
 from services.google_play import GooglePlayError, obfuscated_account_id
 from services.shard_pricing import PricingUnavailable
@@ -333,7 +335,7 @@ def test_new_purchase_switches_are_scoped_by_channel():
 
 
 def test_google_new_purchase_refused_but_replay_still_returns():
-    from tests.test_spec194_google_play import FakeGoogle, MemStore, TOKEN
+    from tests.test_spec194_google_play import TOKEN, FakeGoogle, MemStore
     who = Principal(uuid4(), "t", "x")
     store, google = MemStore(), FakeGoogle(account_id=obfuscated_account_id(who.user_id))
     svc = GooglePlayPurchases(store, google)
@@ -512,6 +514,7 @@ def test_f3_target_uses_net_revenue_and_full_refund_is_a_loss():
 
 def test_f3_reader_sql_covers_195_and_legacy_entries():
     import inspect
+
     from infrastructure.finops_reader import PostgresFinopsReader
     sql = inspect.getsource(PostgresFinopsReader.purchases)
     for needle in ("clawback", "claw_release", "'reversal'", "wallet_debt_entries", "'open'",
@@ -614,8 +617,8 @@ def test_f5_job_deferred_requeues_without_burning_attempt_or_failing():
 
 
 def test_f5_art_worker_defers_when_image_switch_off_before_any_provider_call(monkeypatch):
-    from infrastructure.contracts import JobDeferred
     import workers.run_worker as rw
+    from infrastructure.contracts import JobDeferred
     runtime = SimpleNamespace(resources=[object()], memory_store=object(), blob_store=None)
     monkeypatch.setattr(rw, "get_runtime", lambda: runtime)
     monkeypatch.setattr(rw, "PgVectorMemoryStore", object)

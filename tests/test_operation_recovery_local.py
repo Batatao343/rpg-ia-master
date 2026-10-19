@@ -8,7 +8,6 @@ import pytest
 
 from services.operation_recovery import abandon_expired, orphan_operations
 
-
 pytestmark = pytest.mark.infra_local
 
 

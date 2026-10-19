@@ -57,7 +57,7 @@ class JsonLineFormatter(logging.Formatter):
             from observability.telemetry import safe_stack
             data.setdefault("error_type", record.exc_info[0].__name__)
             data.setdefault("stack", safe_stack(record.exc_info[1]) if record.exc_info[1] else [])
-        from observability.boot import INSTANCE_REF   # SPEC-249 R4
+        from observability.boot import INSTANCE_REF  # SPEC-249 R4
         data.setdefault("instance_ref", INSTANCE_REF)
         data["level"] = record.levelname.lower()
         data["logger"] = record.name

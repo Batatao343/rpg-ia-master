@@ -8,7 +8,6 @@ from agents.npc import _mission_hint_block, npc_actor_node
 from agents.storyteller import _npc_fallback_clause
 from services.npc_layers import npcs_in_scene
 
-
 # --- R1: resolução de alvo (npcs_in_scene) ----------------------------------
 
 def test_npcs_in_scene_inclui_npc_e_party_exclui_waiting():

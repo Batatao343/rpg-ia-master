@@ -21,7 +21,6 @@ from infrastructure.postgres_jobs import PostgresJobQueue
 from infrastructure.postgres_turns import PostgresTurnCoordinator
 from services.dsn_cli import add_dsn_arguments, resolve_dsn
 
-
 DEFAULT_DSN = "postgresql://postgres:postgres@127.0.0.1:55322/postgres"
 
 

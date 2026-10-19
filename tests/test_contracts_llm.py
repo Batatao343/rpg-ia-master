@@ -25,10 +25,9 @@ _needs_key = pytest.mark.skipif(
 
 import world_utils as wu
 from agents.combat import combat_node
-from agents.npc import npc_actor_node
 from agents.loot import loot_node
+from agents.npc import npc_actor_node
 from main import app
-
 
 _FALLBACK_SIGNATURE = "narrador está indisponível"
 

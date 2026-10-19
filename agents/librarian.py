@@ -2,12 +2,15 @@
 agents/librarian.py
 Utilitário de consistência. Verifica se entidades já existem antes de criar novas.
 """
-from observability.telemetry import log_event as _log_event
 import difflib
 from typing import List, Optional
-from langchain_core.messages import BaseMessage, SystemMessage, HumanMessage
+
+from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
-from llm_setup import get_llm, ModelTier
+
+from llm_setup import ModelTier, get_llm
+from observability.telemetry import log_event as _log_event
+
 
 class EntityMatch(BaseModel):
     match_found: bool = Field(description="True se o pedido se refere a algo que já existe na lista.")

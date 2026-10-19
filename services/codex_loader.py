@@ -7,7 +7,6 @@ Spec: specs/SPEC-001-fase-2.5-codex-world-state.md §3.
 """
 
 from __future__ import annotations
-from observability.telemetry import log_event as _log_event
 
 import os
 from typing import Dict, List, Optional, Tuple
@@ -15,6 +14,8 @@ from typing import Dict, List, Optional, Tuple
 import yaml
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+from observability.telemetry import log_event as _log_event
 
 CODEX_DIR = os.path.join("data", "codex")
 CAMPOS_OBRIGATORIOS = ("id", "type", "name", "tags", "visibility")

@@ -14,7 +14,6 @@ from evals.experiments.jev_router_hybrid import Case, CorpusError
 from evals.experiments.spec217_j1 import BudgetExhausted
 from services.jev_decision import ChoiceAnswer, DecisionResult, JevRateLimitError
 
-
 # ---------------------------------------------------------------------------
 # Freeze, inputs, single run, ledger
 # ---------------------------------------------------------------------------
@@ -138,8 +137,9 @@ class _FakeClient:
         return self
 
     def invoke(self, _input):
-        from agents.router import RouterDecision
         from langchain_core.messages import AIMessage
+
+        from agents.router import RouterDecision
 
         self.calls += 1
         if self.fail:

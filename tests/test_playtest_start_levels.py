@@ -3,8 +3,8 @@ from __future__ import annotations
 import pytest
 
 from gamedata import prepared_slots_for_level
-from playtest.runner import _build_initial_state
 from playtest.matrix import LONGRUN_MATRIX, case_label, select_matrix_cases
+from playtest.runner import _build_initial_state
 from services.cards import get_card
 
 

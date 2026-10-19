@@ -1,9 +1,9 @@
 """Bounded renewal lifecycle. The database fence remains the final authority."""
 from __future__ import annotations
 
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from contextvars import copy_context
-from collections.abc import Callable, Iterator
 from threading import Event, Thread
 
 from infrastructure.contracts import LeaseHeld

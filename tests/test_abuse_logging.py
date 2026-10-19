@@ -99,6 +99,7 @@ def test_body_limit_route_label_is_templated():
 def test_body_limit_route_label_closed_for_unknown_paths(capsys):
     """Revisao P2/P3: path aleatorio (inexistente) nunca vira rotulo nem campo de log."""
     from fastapi.testclient import TestClient
+
     from api import app
     from observability.metrics import metrics
     from services.body_limit import route_label
@@ -131,8 +132,9 @@ def test_limiter_exception_logged_failopen(capsys):
 
 
 def test_owner_rate_limit_failopen_is_logged(monkeypatch, capsys):
-    import api
     from types import SimpleNamespace
+
+    import api
 
     class Broken:
         def consume(self, *a, **k):

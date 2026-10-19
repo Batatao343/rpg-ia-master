@@ -10,8 +10,18 @@ import pytest
 from infrastructure.reconciliation import MemoryStore, Reconciler
 from services.google_play import GooglePlayClient, GooglePlaySettings
 from services.purchase_reconciliation import (
-    GOOGLE, STRIPE, Event, FinancialHold, Ledger, ReconciliationError, fold, normalize_google_voided,
-    normalize_stripe_event, plan_adjustment, target_milli, transition_allowed,
+    GOOGLE,
+    STRIPE,
+    Event,
+    FinancialHold,
+    Ledger,
+    ReconciliationError,
+    fold,
+    normalize_google_voided,
+    normalize_stripe_event,
+    plan_adjustment,
+    target_milli,
+    transition_allowed,
 )
 
 S, G = 5000, 500
@@ -306,6 +316,7 @@ def test_google_client_lists_voided_with_pagination():
 def test_cron_reconciliation_route(monkeypatch):
     from fastapi import FastAPI
     from fastapi.testclient import TestClient
+
     from services import cron_internal
     monkeypatch.setenv("RPG_CRON_SECRET", "s" * 40)
     store, owner, _ = setup(spent=3000)

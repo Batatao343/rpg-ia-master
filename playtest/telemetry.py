@@ -7,9 +7,9 @@ puras sobre `CampaignResult` + `TurnRecord`; zero dependência nova.
 """
 from __future__ import annotations
 
+import glob
 import json
 import os
-import glob
 import socket
 from collections import Counter
 from datetime import datetime

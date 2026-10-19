@@ -7,32 +7,35 @@ Fase 10: `save_path()` é o ÚNICO lugar que monta caminho de save a partir de
 game_id vindo do cliente (valida UUID — anti path-traversal); saves carregam
 `schema_version` e passam pelo hard cut de compatibilidade no load.
 """
-from observability.telemetry import log_event as _log_event, pseudonym as _pseudonym
-import os
-import json
 import glob
-import tempfile
-import uuid
+import json
+import os
 import shutil
+import tempfile
 import time
+import uuid
 from copy import deepcopy
 from typing import Any, Dict, List, Optional
-from langchain_core.messages import HumanMessage, AIMessage, SystemMessage, BaseMessage
+
+from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage
+
 import gamedata
+from observability.telemetry import log_event as _log_event
+from observability.telemetry import pseudonym as _pseudonym
+from services.audit_trace import normalize_audit_trace
 from services.conflict_summary import (
     ensure_conflict_id,
     normalize_consumed_conflict_ids,
 )
-from services.audit_trace import normalize_audit_trace
-from services.memory_retry import normalize_pending_npc_memory
+from services.entity_identity import coalesce_runtime_npcs
 from services.memory_provenance import (
     MAX_MEMORY_PROMOTIONS,
     MAX_MEMORY_REJECTIONS,
     bounded_audit_rows,
     normalize_memory_facts,
 )
+from services.memory_retry import normalize_pending_npc_memory
 from services.memory_summary import compact_summary
-from services.entity_identity import coalesce_runtime_npcs
 
 # Configuração de Pastas
 SAVES_DIR = "saves"

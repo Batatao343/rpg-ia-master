@@ -137,6 +137,7 @@ def test_stage_metrics_distinguish_critical_path_work_and_overlap():
 
 def test_sequential_and_concurrent_graphs_have_same_canonical_result(monkeypatch):
     import copy
+
     import main
 
     calls = {"plan": 0, "route": 0}

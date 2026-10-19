@@ -1,11 +1,11 @@
 """Real Postgres transactions plus fake image provider; fixtures roll back everything."""
+import os
 from contextlib import nullcontext
 from dataclasses import replace
 from datetime import datetime, timedelta, timezone
-import os
 from pathlib import Path
 from types import SimpleNamespace
-from uuid import uuid4, UUID
+from uuid import UUID, uuid4
 
 import pytest
 
@@ -19,10 +19,10 @@ from services.art_triggers import ArtGenerationRequest
 from services.dynamic_art import DynamicArtRepository
 from services.image_quotes import ImageQuoteRepository, public_quote
 from services.job_fence import job_scope
-from services.shard_pricing import INSTALLED_RATE_CARD_SHA256, INSTALLED_RATE_CARD_OBSERVED_AT
-from tests.fakes.local_pricing import installed_card_max_age_seconds
+from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256
 from services.usage_metering import RATE_CARD_VERSION
 from tests.fakes.fake_image_generator import FakeImageGenerator
+from tests.fakes.local_pricing import installed_card_max_age_seconds
 from workers.dynamic_art_jobs import generate_dynamic_art_job
 
 
@@ -295,8 +295,8 @@ def test_quote_rls_owner_select_only_and_no_client_mutation(image_case):
 
 
 def test_real_worker_configuration_failure_releases_before_ticket(image_case, monkeypatch):
-    from infrastructure.pgvector_memory import PgVectorMemoryStore
     import workers.run_worker
+    from infrastructure.pgvector_memory import PgVectorMemoryStore
     c = image_case
     generation = confirm(c, issue(c))
     job = lease(c, generation)
@@ -312,6 +312,7 @@ def test_real_worker_configuration_failure_releases_before_ticket(image_case, mo
 
 def bind_api(case, monkeypatch):
     from copy import deepcopy
+
     import api
     import infrastructure.runtime
     from infrastructure.postgres_turns import PostgresTurnCoordinator
@@ -350,8 +351,9 @@ def test_api_canonical_commit_reserves_and_enqueues_once_and_round_trips_state(i
 
 
 def test_api_failed_atomic_commit_preserves_original_game_and_releases_operation_lease(image_case, monkeypatch):
-    from infrastructure.request_context import principal_scope
     from fastapi import HTTPException
+
+    from infrastructure.request_context import principal_scope
     c = image_case
     api, runtime = bind_api(c, monkeypatch)
     c.repo.wallet.adjust_admin(c.owner, adjustment_id=str(uuid4()), signed_milli=-1000,
@@ -387,9 +389,9 @@ def test_restore_releases_only_pre_ticket_images_and_keeps_uncertain_holds(image
 
 @pytest.mark.parametrize("image_type", ["npc", "scene"])
 def test_npc_and_scene_confirmation_and_uncertain_result_survive_reopen(image_case, monkeypatch, tmp_path, image_type):
-    from infrastructure.request_context import principal_scope
-    from services.art_brief import build_npc_art_brief, build_epic_art_brief
     import api
+    from infrastructure.request_context import principal_scope
+    from services.art_brief import build_epic_art_brief, build_npc_art_brief
     c = image_case
     if image_type == "npc":
         c.state["npcs"] = {"test-npc": {"name": "Iria", "role": "teste"}}
@@ -430,11 +432,13 @@ def test_npc_and_scene_confirmation_and_uncertain_result_survive_reopen(image_ca
 def test_real_adapter_documented_token_response_settles_without_provider_cost(image_case, monkeypatch, tmp_path):
     import base64
     from decimal import Decimal
+
     import httpx
+
+    import workers.run_worker
     from infrastructure.pgvector_memory import PgVectorMemoryStore
     from infrastructure.ports import ImageGenerationInput
     from services.image_pricing import IMAGE_PRICING_VERSION
-    import workers.run_worker
     c = image_case
     generation = confirm(c, issue(c))
     job = lease(c, generation)

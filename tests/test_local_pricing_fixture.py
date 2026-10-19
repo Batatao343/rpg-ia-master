@@ -14,8 +14,11 @@ from decimal import Decimal
 import pytest
 
 from services.shard_pricing import (
-    INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256, ChannelFee,
-    PricingUnavailable, PricingVersion,
+    INSTALLED_RATE_CARD_OBSERVED_AT,
+    INSTALLED_RATE_CARD_SHA256,
+    ChannelFee,
+    PricingUnavailable,
+    PricingVersion,
 )
 from services.usage_metering import RATE_CARD_VERSION
 from tests.fakes.local_pricing import installed_card_max_age_seconds

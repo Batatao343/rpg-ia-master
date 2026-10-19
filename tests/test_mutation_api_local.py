@@ -8,8 +8,8 @@ import httpx
 import pytest
 
 from infrastructure.contracts import Principal
-from tests.test_postgres_jobs_local import infra  # noqa: F401
 from tests.fakes.local_auth import create_confirmed_user, delete_confirmed_user
+from tests.test_postgres_jobs_local import infra  # noqa: F401
 
 pytestmark = pytest.mark.infra_local
 

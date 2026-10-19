@@ -10,6 +10,7 @@ DIST = Path(__file__).resolve().parents[1] / "web" / "dist"
 @pytest.mark.parametrize("slug", ["privacidade", "termos", "reembolso", "suporte"])
 def test_legal_page_served_with_csp_and_published(slug):
     from fastapi.testclient import TestClient
+
     import api
     r = TestClient(api.app).get(f"/{slug}/")
     assert r.status_code == 200 and "RASCUNHO" not in r.text

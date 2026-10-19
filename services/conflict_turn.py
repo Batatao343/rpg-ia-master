@@ -9,15 +9,15 @@ motores puros (`conflict_scene`, `conflict_resolution`, `conflict_damage`, `card
 uma manobra, um ataque/Carta, uso de objeto ou movimento. O jogador e a IA
 (perfil tático, conflito-08) emitem essa estrutura — não texto livre.
 """
-import random
 import logging
+import random
 from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
 import combat_mechanics as cm  # helpers que SOBREVIVEM (dados, condições, Entropia)
-from services import conflict_scene as cs
 from services import conflict_damage as cd
+from services import conflict_scene as cs
 from services import death_flow
 from services.conflict_resolution import resolve_attack, virtude_para_tipo, virtude_value
 

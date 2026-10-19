@@ -10,7 +10,6 @@ import agents.combat as combat
 from agents.router import dm_router_node
 from playtest import invariants as inv
 
-
 _LOC = "pantano_melancolia"      # tem conexões no mapa de Valoria
 _DEST_ID = "pm_profundezas"
 _DEST_NAME = "Profundezas do Pântano"

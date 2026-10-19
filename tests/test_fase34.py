@@ -213,8 +213,9 @@ class _FakeStoryLLM34:
 
 
 def test_storyteller_enfileira_reputation_changed(monkeypatch):
-    import agents.storyteller as stt
     from langchain_core.messages import HumanMessage
+
+    import agents.storyteller as stt
     fake = _FakeStoryLLM34(impacts=[{"faction_id": LEGIAO, "direction": "ajudou"}])
     monkeypatch.setattr(stt, "get_llm", lambda *a, **k: fake)
     state = {

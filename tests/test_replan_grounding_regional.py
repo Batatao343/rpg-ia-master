@@ -1,6 +1,7 @@
-from agents import campaign_manager as cm
 import pytest
 from pydantic import ValidationError
+
+from agents import campaign_manager as cm
 
 
 def _plan(location: str, statuses=("pending", "pending")) -> dict:

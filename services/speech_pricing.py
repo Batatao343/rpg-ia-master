@@ -1,10 +1,10 @@
 """Immutable speech prices, observed bounds and content-free usage normalization."""
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
-from decimal import Decimal, InvalidOperation, ROUND_UP
-from hashlib import sha256
 import json
+from datetime import datetime, timedelta, timezone
+from decimal import ROUND_UP, Decimal, InvalidOperation
+from hashlib import sha256
 from pathlib import Path
 from uuid import UUID, uuid5
 

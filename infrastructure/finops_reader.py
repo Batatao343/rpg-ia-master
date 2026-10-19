@@ -5,15 +5,15 @@ The Postgres reader must run on the privileged backend pool (same as reconciliat
 module and the pure aggregators; they never reach metrics, alerts or the cron response.
 """
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
 
 from dataclasses import dataclass, field
 from datetime import timedelta
 from decimal import Decimal
 from typing import Mapping
 
-from services.finops import COST_GROUPS, FeeRate, OwnerUsage, PricingRef, PurchaseFact
+from infrastructure.db_roles import admin_connection
 from infrastructure.usage_events import has_column, spend_schema_ready
+from services.finops import COST_GROUPS, FeeRate, OwnerUsage, PricingRef, PurchaseFact
 from services.finops_alerts import Backlog, Freshness, UsageGroup
 
 DURATION_STT_PROVIDERS = ("groq",)  # audio_units are milliseconds only for duration metering

@@ -11,7 +11,6 @@ from infrastructure.contracts import Conflict, Principal
 from services.game_serialization import document_sha256, serialize_game_state
 from services.game_transfer import export_game, import_saves, scan_saves, verify_export
 
-
 pytestmark = pytest.mark.infra_local
 
 

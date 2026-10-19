@@ -5,8 +5,12 @@ from langchain_core.messages import AIMessage
 import progression
 from playtest import invariants
 from playtest.profiles import PROFILES
-from playtest.runner import CampaignResult, TurnRecord, _resolve_profile_progression
-from playtest.runner import _campaign_experience_violations
+from playtest.runner import (
+    CampaignResult,
+    TurnRecord,
+    _campaign_experience_violations,
+    _resolve_profile_progression,
+)
 from playtest.telemetry import build_summary, turn_to_record
 
 
@@ -227,8 +231,9 @@ def test_oraculos_de_campanha_alertam_combate_e_zero_conversao():
 
 def test_mock_npc_propoe_quest_somente_apos_pedido_concreto():
     from langchain_core.messages import HumanMessage
-    from agents.npc import NPCResponse
+
     import mock_llm
+    from agents.npc import NPCResponse
 
     ordinary = mock_llm._npc_response(
         NPCResponse, [HumanMessage(content="Conte um rumor.")],

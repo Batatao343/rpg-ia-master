@@ -2,7 +2,8 @@
 import pytest
 
 from infrastructure.runtime import hosted_supabase_dsn_ref
-from scripts.staging import common, runtime_role as rr
+from scripts.staging import common
+from scripts.staging import runtime_role as rr
 
 
 def test_dsn_uses_tenant_user_port_6543_and_passes_runtime_validation():

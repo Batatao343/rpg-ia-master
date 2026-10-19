@@ -1,11 +1,12 @@
 """A API registra requests/falhas de provider sem expor conteúdo."""
 
-import api
-import pytest
 from decimal import Decimal
 from types import SimpleNamespace
 from uuid import uuid4
 
+import pytest
+
+import api
 from infrastructure.contracts import OperationClaim, Principal
 from infrastructure.request_context import principal_scope
 from llm_setup import LLMAttemptEvent, ModelTier
@@ -98,9 +99,10 @@ def test_api_commit_passes_one_normalized_consolidate_for_all_attempts(monkeypat
 
 def test_failed_api_turn_forwards_billable_attempts_to_failed_operation(monkeypatch):
     from fastapi import HTTPException
+
     import rag
-    from services import turn_execution
     from infrastructure import runtime
+    from services import turn_execution
 
     operation_id, game_id, owner_id = uuid4(), uuid4(), uuid4()
     claim = OperationClaim(operation_id, uuid4(), game_id, 1, "b" * 64)

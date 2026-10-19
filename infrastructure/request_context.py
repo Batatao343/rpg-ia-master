@@ -8,7 +8,6 @@ from typing import Iterator
 
 from infrastructure.contracts import Principal, Unauthorized
 
-
 _principal: contextvars.ContextVar[Principal | None] = contextvars.ContextVar(
     "rpg_principal", default=None,
 )

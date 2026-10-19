@@ -5,73 +5,86 @@ Atualizado para suportar Memória Híbrida (Game ID e Resumo).
 Fase 10: game_id validado (UUID) na borda, CORS por env, rate limit mínimo,
 log JSON por turno.
 """
-from observability.telemetry import log_event as _log_event
 import contextvars
-import re
 import hashlib
 import json
 import logging
-import queue
-import sys
 import os
+import queue
+import re
+import sys
 import threading
 import time
-import uvicorn
-import uuid # <--- Necessário para gerar IDs de sessão
-from contextlib import contextmanager, nullcontext
+import uuid  # <--- Necessário para gerar IDs de sessão
 from collections import Counter, defaultdict, deque
+from contextlib import contextmanager, nullcontext
 from copy import deepcopy
-from fastapi import FastAPI, HTTPException, Request, Response
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse, StreamingResponse
-from starlette.exceptions import HTTPException as StarletteHTTPException
-from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Annotated, Any, Dict, Iterator, List, Literal, Optional
+
+import uvicorn
+from fastapi import FastAPI, HTTPException, Request, Response
+from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.staticfiles import StaticFiles
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
+from observability.telemetry import log_event as _log_event
 
 # Adiciona raiz ao path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Imports do seu motor
-from main import app as game_graph
 import gamedata
-from infrastructure.db_roles import admin_connection
 import persistence as persistence_module
-from persistence import save_game_state, load_game_state, save_path, _serialize_messages, IncompatibleSaveError
-from infrastructure.contracts import AuthUnavailable
-from infrastructure.contracts import (
-    CsrfError, SessionSecretError, Unauthorized as _Unauthorized, public_auth_code,
-)
+import progression
 from character_creator import create_player_character
 from gamedata import CLASSES, load_json_data, seed_factions
+from infrastructure.contracts import (
+    AuthUnavailable,
+    CsrfError,
+    SessionSecretError,
+    public_auth_code,
+)
+from infrastructure.contracts import (
+    Unauthorized as _Unauthorized,
+)
+from infrastructure.db_roles import admin_connection
+
+# --- CONFIGURAÇÃO DA API ---
+# SPEC-218: boot fail-closed. Processo exposto (plataforma/bind) nunca sobe em
+# `legacy`; perfis DB validam a config de segurança já no import, não no 1º request.
+from infrastructure.runtime import assert_boot_policy, docs_enabled, is_hardened
 from llm_setup import (
     LLMAttemptEvent,
     is_simulated,
     set_llm_attempt_telemetry_hook,
     set_llm_telemetry_hook,
 )
-from services.usage_metering import normalize_attempts, operation_cost
-import progression
+from main import app as game_graph
+from persistence import (
+    IncompatibleSaveError,
+    _serialize_messages,
+    load_game_state,
+    save_game_state,
+    save_path,
+)
 from services import quest_log
-from services.prompt_guard import origin_fragment
 from services import state_views as sv
 from services.chronicle import default_chapter_title
 from services.discovery import player_codex
+from services.error_codes import api_error
 from services.prologue import StartScenarioIn, build_start_scenario, scenario_to_state_seed
+from services.prompt_guard import origin_fragment
+from services.usage_metering import normalize_attempts, operation_cost
 from services.visual_catalog import (
     creation_visuals,
     resolve_turn_visual_state,
     visual_response,
 )
 from world_utils import starting_world
-
-# --- CONFIGURAÇÃO DA API ---
-# SPEC-218: boot fail-closed. Processo exposto (plataforma/bind) nunca sobe em
-# `legacy`; perfis DB validam a config de segurança já no import, não no 1º request.
-from infrastructure.runtime import assert_boot_policy, docs_enabled, is_hardened
-from services.error_codes import api_error
 
 assert_boot_policy(os.environ)
 _DOCS_ON = docs_enabled(os.environ)
@@ -223,6 +236,7 @@ app.add_middleware(BodyLimitMiddleware, default_limit=256 * 1024, per_path={
 })
 
 from services.cron_internal import router as _cron_router
+
 app.include_router(_cron_router, include_in_schema=False)  # SPEC-192: bearer-secret auth, no cookies/CSRF flow
 
 
@@ -480,6 +494,7 @@ def _unhandled_response(request: Request, route: str, exc: Exception, request_id
 async def _correlation_boundary(request: Request, call_next):
     import re
     import time
+
     from observability.metrics import metrics
     from observability.telemetry import new_request_id, request_scope, span
 
@@ -560,8 +575,8 @@ def auth_config(request: Request):
     from services.account_security import captcha_config
     lifecycle = False
     if required:
-        from infrastructure.supabase_identity import SupabaseIdentityProvider
         from infrastructure.runtime import get_runtime
+        from infrastructure.supabase_identity import SupabaseIdentityProvider
         lifecycle = isinstance(get_runtime().identity_verifier, SupabaseIdentityProvider)
     return {"required": required, "authenticated": authenticated,
             "lifecycle_available": lifecycle,
@@ -590,7 +605,11 @@ def _android_refresh_max_age(request: Request | None) -> int | None:
 def _set_session_cookies(response: Response, tokens, *, clear_deletion: bool = True,
                          request: Request | None = None) -> str:
     from services.auth_sessions import (
-        ACCESS_COOKIE, CSRF_COOKIE, REFRESH_COOKIE, CsrfSigner, cookie_settings,
+        ACCESS_COOKIE,
+        CSRF_COOKIE,
+        REFRESH_COOKIE,
+        CsrfSigner,
+        cookie_settings,
     )
 
     secure = os.getenv("RPG_COOKIE_SECURE", "0") == "1"
@@ -619,7 +638,6 @@ def auth_login(body: AuthRequest, request: Request, response: Response):
         raise HTTPException(status_code=404, detail="auth desativada no perfil legacy")
     from infrastructure.contracts import Unauthorized
     from infrastructure.runtime import get_runtime
-
     from services.account_security import auth_limit, auth_success, captcha_config
     runtime = get_runtime()
     provider = runtime.identity_verifier
@@ -660,7 +678,6 @@ def auth_signup(body: SignupRequest, request: Request, response: Response):
         raise HTTPException(status_code=404, detail="auth desativada no perfil legacy")
     from infrastructure.contracts import Unauthorized
     from infrastructure.runtime import get_runtime
-
     from services.account_security import GENERIC_MESSAGE
     _auth_abuse(request, action="signup", email=body.email, captcha_token=body.captcha_token)
     try:
@@ -713,8 +730,8 @@ def _require_allowed_origin(request: Request) -> None:
 
 
 def _auth_abuse(request: Request, *, action: str, email: str = "", captcha_token: str | None = None) -> None:
-    from infrastructure.runtime import get_runtime
     from infrastructure.contracts import Unauthorized
+    from infrastructure.runtime import get_runtime
     from services.account_security import auth_limit, validate_captcha
     _require_allowed_origin(request)
     runtime = get_runtime()
@@ -751,13 +768,15 @@ class ResetPasswordRequest(BaseModel):
 @app.post("/auth/reset/request", status_code=202)
 @app.post("/auth/verify/request", status_code=202)
 def auth_email_request(body: EmailRequest, request: Request):
-    import httpx
     import logging
-    from services.account_security import GENERIC_MESSAGE
+
+    import httpx
+
     from infrastructure.contracts import Unauthorized
     from infrastructure.supabase_identity import AuthEmailDeliveryError
     from observability.metrics import metrics
     from observability.telemetry import correlation, safe_json
+    from services.account_security import GENERIC_MESSAGE
     runtime = _lifecycle_runtime()
     recovery = request.url.path == "/auth/reset/request"
     action = "reset" if recovery else "verify"
@@ -797,8 +816,8 @@ def auth_verify_email(body: VerifyEmailRequest, request: Request, response: Resp
 
 
 def _clear_auth_cookies(response: Response, *, keep_csrf: bool = False) -> None:
-    from services.auth_sessions import ACCESS_COOKIE, CSRF_COOKIE, REFRESH_COOKIE
     from services.account_security import RECENT_COOKIE
+    from services.auth_sessions import ACCESS_COOKIE, CSRF_COOKIE, REFRESH_COOKIE
     response.delete_cookie(ACCESS_COOKIE, path="/")
     response.delete_cookie(REFRESH_COOKIE, path="/auth/refresh")
     response.delete_cookie(RECENT_COOKIE, path="/")
@@ -846,9 +865,9 @@ def auth_reauthenticate(body: ReauthRequest, request: Request, response: Respons
 
 
 def _require_recent(request: Request, owner) -> None:
+    from infrastructure.contracts import Unauthorized
     from services.account_security import RECENT_COOKIE, proof_owner
     from services.auth_sessions import ACCESS_COOKIE
-    from infrastructure.contracts import Unauthorized
     try:
         if proof_owner(request.cookies.get(RECENT_COOKIE), "recent", request.cookies.get(ACCESS_COOKIE) or "") != owner:
             raise Unauthorized("recent_session_required")
@@ -859,8 +878,9 @@ def _require_recent(request: Request, owner) -> None:
 @app.get("/account/export")
 def account_export(request: Request):
     from fastapi.encoders import jsonable_encoder
-    from infrastructure.request_context import current_principal
+
     from infrastructure.account_lifecycle import PostgresAccountLifecycle
+    from infrastructure.request_context import current_principal
     runtime = _lifecycle_runtime()
     principal = current_principal()
     _require_recent(request, principal.user_id)
@@ -920,8 +940,8 @@ class DeleteAccountRequest(BaseModel):
 
 @app.post("/account/delete")
 def account_delete(body: DeleteAccountRequest, request: Request):
-    from infrastructure.request_context import current_principal
     from infrastructure.account_lifecycle import PostgresAccountLifecycle
+    from infrastructure.request_context import current_principal
     from services.account_security import DELETE_COOKIE, proof
     runtime = _lifecycle_runtime()
     principal = current_principal()
@@ -934,6 +954,7 @@ def account_delete(body: DeleteAccountRequest, request: Request):
         status = lifecycle.finish(principal.user_id)
     except Exception as exc:
         import logging
+
         from observability.telemetry import correlation, pseudonym, safe_json
         logging.getLogger("rpg.account").warning(safe_json({
             "event": "account.delete.finish_failed", "owner_ref": pseudonym(principal.user_id),
@@ -950,7 +971,9 @@ def account_delete(body: DeleteAccountRequest, request: Request):
 
 def _validate_auth_csrf(request: Request) -> None:
     from services.auth_sessions import (
-        CSRF_COOKIE, CsrfSigner, validate_mutation_request,
+        CSRF_COOKIE,
+        CsrfSigner,
+        validate_mutation_request,
     )
     validate_mutation_request(
         cookie_token=request.cookies.get(CSRF_COOKIE),
@@ -1038,7 +1061,7 @@ def _revoke_session(identity, access: str | None, refresh: str | None) -> None:
 from observability.logging_setup import configure_logging
 
 configure_logging()
-from observability.boot import log_boot_once   # SPEC-249
+from observability.boot import log_boot_once  # SPEC-249
 
 log_boot_once()
 _turn_logger = logging.getLogger("rpg.turn")
@@ -1300,7 +1323,7 @@ async def _rate_limit_metrics(request: Request, call_next):
 
 
 def _client_ip(request: Request) -> str:
-    from services.abuse_policy import client_ip   # SPEC-219 R4
+    from services.abuse_policy import client_ip  # SPEC-219 R4
     return client_ip(request)
 
 
@@ -1887,8 +1910,8 @@ def _cards_block(player: dict, *, prepared_only: bool = False) -> List[Dict[str,
     O frontend nunca tenta reproduzir frequência/custo por conta própria: recebe
     o contador já interpretado, mas o motor ainda revalida no uso.
     """
-    from services import cards
     import combat_mechanics as cm
+    from services import cards
     prepared = set(player.get("prepared_cards") or [])
     evolved = player.get("evolved_cards") or {}
     entropy = int(player.get("entropy", 0) or 0)
@@ -3107,9 +3130,16 @@ def checkout_status(order_id: uuid.UUID):
 async def stripe_webhook(request: Request):
     """External provider route: raw signature replaces user cookie/CSRF auth."""
     import hashlib
+
     from starlette.concurrency import run_in_threadpool
+
     from infrastructure.payment_log import stripe_webhook as _wh
-    from services.stripe_checkout import MAX_WEBHOOK_BYTES, StripeError, StripeSettings, verify_event
+    from services.stripe_checkout import (
+        MAX_WEBHOOK_BYTES,
+        StripeError,
+        StripeSettings,
+        verify_event,
+    )
     started = time.monotonic()
     try:
         try:
@@ -3168,7 +3198,10 @@ async def account_transcription(request: Request):
     from infrastructure.wallet import InsufficientShards, WalletConflict
     from services.shard_pricing import PricingUnavailable
     from services.speech_to_text import (
-        MAX_AUDIO_BYTES, SpeechError, canonical_mime, transcribe_audio,
+        MAX_AUDIO_BYTES,
+        SpeechError,
+        canonical_mime,
+        transcribe_audio,
     )
     if not _database_profile() or os.getenv('RPG_SPEECH_ENABLED', '0') != '1':
         raise HTTPException(503, 'speech_disabled')
@@ -3485,10 +3518,10 @@ def create_image_quote(game_id: str, req: ArtQuoteRequest):
 def confirm_player_art(game_id: str, req: ArtConfirmRequest):
     from infrastructure.contracts import Conflict
     from infrastructure.wallet import InsufficientShards, WalletConflict
-    from services.shard_pricing import PricingUnavailable
-    from services.turn_execution import operation_scope
-    from services.turn_effects import effect_scope
     from services.art_triggers import ArtGenerationRequest, reserve_request
+    from services.shard_pricing import PricingUnavailable
+    from services.turn_effects import effect_scope
+    from services.turn_execution import operation_scope
     # SPEC-196: replay of an existing generation must keep working with the switch off;
     # only a NEW confirm is refused (guard runs after the `prior` lookup below).
     runtime, principal, repository = _image_finance(guard=False)
@@ -3640,8 +3673,8 @@ def dynamic_art_quality(game_id: str, generation_id: str, req: ArtQualityRequest
 def new_game(req: CreateCharacterRequest):
     from infrastructure.runtime import get_runtime
     from rag import embedding_usage_scope
-    from services.turn_execution import operation_scope
     from services.turn_effects import effect_scope
+    from services.turn_execution import operation_scope
     _bind_corr(None, getattr(req, "action_id", None))
     claim, request_hash, prior = _begin_create_operation(req)
     if prior is not None:
@@ -4309,6 +4342,7 @@ def _latency_log_fields(timeline, llm_events: Optional[List[dict]],
         return {}
     try:
         from decimal import Decimal
+
         from observability.latency import input_size
         from observability.telemetry import pseudonym
         attempts = list(llm_attempts or [])
@@ -4428,9 +4462,9 @@ def _run_turn(state: dict, input_text: str,
               request_hash: str = "", progress=None,
               timeline=None, out: Optional[dict] = None,
               pre_drain: bool = False) -> GameResponse:
-    from services.turn_effects import effect_scope
-    from services.audit_trace import collecting as _audit_collecting
     from rag import embedding_usage_scope
+    from services.audit_trace import collecting as _audit_collecting
+    from services.turn_effects import effect_scope
     with effect_scope(), embedding_usage_scope(_embedding_telemetry_hook), _audit_collecting():
         return _run_turn_collected(state, input_text, action_id, claim=claim,
                                    request_hash=request_hash, progress=progress,
@@ -5198,6 +5232,7 @@ def game_levelup(req: LevelUpRequest):
             for progress_event in progression_events:
                 if progress_event.get("type") == "subclass_chosen":
                     from uuid import uuid4
+
                     from services.chronicle import append_entry
                     subclass_id = str(progress_event.get("subclass_id", ""))
                     option = next((row for row in progression.eligible_subclasses(player)

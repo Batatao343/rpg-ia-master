@@ -4,9 +4,8 @@ Offline/determinístico. Ver specs/SPEC-043-polish-prosa.md.
 """
 from langchain_core.messages import AIMessage, HumanMessage
 
-from services import prose_guard as pg
 from playtest import invariants as inv
-
+from services import prose_guard as pg
 
 # --- Etapa 1: prose_guard ---------------------------------------------------
 

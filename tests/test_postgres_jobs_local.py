@@ -1,15 +1,13 @@
 from __future__ import annotations
 
 import os
-from uuid import uuid4
 from decimal import Decimal
+from uuid import uuid4
 
 import pytest
 
-from infrastructure.contracts import JobRequest, LeaseHeld, Principal
-from infrastructure.contracts import Conflict
+from infrastructure.contracts import Conflict, JobRequest, LeaseHeld, Principal
 from services.usage_metering import normalize_attempts, operation_cost
-
 
 pytestmark = pytest.mark.infra_local
 

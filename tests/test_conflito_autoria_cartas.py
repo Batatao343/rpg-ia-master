@@ -235,6 +235,7 @@ def test_lint_das_cartas_reais_sem_erro():
 
 def test_lint_pega_carta_ruim(tmp_path):
     import json as _json
+
     from services.content_validator import validate_cards
     d = tmp_path / "cards"
     d.mkdir()

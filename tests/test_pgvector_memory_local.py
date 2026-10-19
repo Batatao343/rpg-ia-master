@@ -7,9 +7,13 @@ from uuid import uuid4
 import pytest
 
 from infrastructure.contracts import (
-    JobRequest, LeasedJob, MemoryDocument, MemoryQuery, MemoryWriteIntent, Principal,
+    JobRequest,
+    LeasedJob,
+    MemoryDocument,
+    MemoryQuery,
+    MemoryWriteIntent,
+    Principal,
 )
-
 
 pytestmark = pytest.mark.infra_local
 
@@ -53,10 +57,11 @@ def test_embedding_job_retries_record_every_provider_attempt_once():
     dsn = os.getenv("RPG_TEST_DATABASE_URL")
     if not dsn:
         pytest.skip("RPG_TEST_DATABASE_URL ausente")
+    from psycopg.types.json import Jsonb
+
     from infrastructure.postgres import PostgresGameStore, PostgresPool
     from infrastructure.postgres_jobs import PostgresJobQueue
     from infrastructure.usage_events import append_embedding_job_attempt
-    from psycopg.types.json import Jsonb
 
     pool = PostgresPool(dsn)
     owner_id, game_id = uuid4(), uuid4()

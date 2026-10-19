@@ -12,12 +12,12 @@ Run: ``uv run python -m evals.experiments.spec217_j1 --phase p1 --env-file <.env
 from __future__ import annotations
 
 import argparse
-from dataclasses import asdict
-from datetime import datetime, timezone
 import json
 import os
-from pathlib import Path
 import time
+from dataclasses import asdict
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Callable, Mapping
 
 from dotenv import load_dotenv
@@ -25,14 +25,29 @@ from dotenv import load_dotenv
 from evals.core.hashing import repository_identity, sha256_file
 from evals.experiments.jev_router_ab import _eligible, _write_json
 from evals.experiments.jev_router_hybrid import (
-    J1_CALL_CAP, ROOT, RESERVED_USD_PER_CALL, TOTAL_CALL_CAP, Case, Policy,
-    digest_of, frozen_lock_digest, frozen_request, load_dev_cases, scene_view,
-    screening_request, extract_verbs, summarize, summarize_p2,
+    J1_CALL_CAP,
+    RESERVED_USD_PER_CALL,
+    ROOT,
+    TOTAL_CALL_CAP,
+    Case,
+    Policy,
+    digest_of,
+    extract_verbs,
+    frozen_lock_digest,
+    frozen_request,
+    load_dev_cases,
+    scene_view,
+    screening_request,
+    summarize,
+    summarize_p2,
 )
 from services.jev_decision import (
-    ChoiceAnswer, DecisionBackend, DecisionRequest, JevDecisionBackend, JevError,
+    ChoiceAnswer,
+    DecisionBackend,
+    DecisionRequest,
+    JevDecisionBackend,
+    JevError,
 )
-
 
 RUNS = ROOT / "evals/runs/jev-router-ab/spec217-j1"
 LEDGER = RUNS / "ledger.json"

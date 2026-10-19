@@ -26,15 +26,18 @@ from typing import Dict, List, Optional
 
 import combat_mechanics as cm  # helpers que SOBREVIVEM (condições, Entropia/Carga)
 import gamedata
-from services import abyss_events
+from services import abyss_events, death_flow
 from services import conflict_scene as cs
 from services import conflict_turn as ct
-from services import death_flow
 from services import reactions as rx
-from services.conflict_resolution import (compute_esquiva, resolve_attack,
-                                          roll_initiative_by_side, virtude_value)
-from services.conflict_damage import resolve_damage_and_wounds
 from services import tactical_profile as tp
+from services.conflict_damage import resolve_damage_and_wounds
+from services.conflict_resolution import (
+    compute_esquiva,
+    resolve_attack,
+    roll_initiative_by_side,
+    virtude_value,
+)
 
 _VIRTUDES = ("forca", "agilidade", "corpo", "mente", "carisma")
 

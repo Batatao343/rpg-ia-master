@@ -446,6 +446,7 @@ _ROUNDTRIP_FIELDS = ["player", "world", "party", "enemies", "factions",
 def check_roundtrip(state: dict, prev: Optional[dict] = None, turn: int = 0) -> List[Violation]:
     """save → load → compara campos persistidos. NÃO entra em CHECKS (I/O)."""
     import json
+
     import persistence
 
     try:
@@ -611,8 +612,8 @@ def check_memory_provenance(
     from services.memory_provenance import (
         canonical_location_contradiction,
         inventory_possession_contradiction,
-        npc_identity_contradiction,
         normalize_memory_facts,
+        npc_identity_contradiction,
         source_is_applicable,
     )
 
@@ -1330,6 +1331,7 @@ def check_reproducibility(seed: int = 7, rounds: int = 6) -> bool:
     Determinismo do motor = seed do RNG local + `random` global (o dano usa
     `combat_mechanics.roll_dice_numeric`, que lê o `random` global)."""
     import random as _random
+
     from services import conflict_orchestrator as orch
     from services import conflict_scene as cs
     from services.conflict_turn import TurnDeclaration, TurnStep

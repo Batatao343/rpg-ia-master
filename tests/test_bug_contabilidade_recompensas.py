@@ -120,6 +120,7 @@ def test_beat_xp_keeps_discovery_loot(story):
 # ---------------------------------------------------------------- R4
 def test_planner_failure_keeps_plan(monkeypatch):
     from langchain_core.messages import AIMessage
+
     from agents import campaign_manager as cm
     plan = {"location": "X", "beats": [{"description": "a", "status": "pending"}],
             "climax": "c", "current_step": 0, "last_planned_turn": 0, "arc_title": "T"}
@@ -152,7 +153,7 @@ def test_revisit_looted_treasure_no_discovery():
 
 # ---------------------------------------------------------------- R6
 def test_quest_fingerprint_punctuation():
-    from services.quest_log import normalize_fingerprint, _is_distinct
+    from services.quest_log import _is_distinct, normalize_fingerprint
     a = normalize_fingerprint("Investigo a pista")
     assert a == normalize_fingerprint("Investigo a pista.")
     assert not _is_distinct(a, [" ".join(sorted(a))])
@@ -218,6 +219,7 @@ def test_kill_transition_pays_once_across_save_reload(monkeypatch):
     """Revisao Sol (R1/D-A): inimigo que morre na rodada N paga 1x; rodada N+1
     apos round-trip JSON (save/reload no meio do combate) nao paga de novo."""
     import json
+
     from agents import combat as cbt
     from services import conflict_orchestrator as orch
     monkeypatch.setattr(cbt, "_narrate", lambda *a, **k: "Fim.")
@@ -276,6 +278,7 @@ def test_planner_failure_other_region_uses_grounded_template(monkeypatch):
     """Revisao Sol (R4): plano antigo de OUTRA regiao nao sobrevive a falha do
     provider (transplante de ganchos); cai no template ancorado no local atual."""
     from langchain_core.messages import AIMessage
+
     from agents import campaign_manager as cm
     plan = {"location": "Nova Arcádia", "beats": [{"description": "a", "status": "pending"}],
             "climax": "c", "current_step": 0, "last_planned_turn": 0, "arc_title": "T"}

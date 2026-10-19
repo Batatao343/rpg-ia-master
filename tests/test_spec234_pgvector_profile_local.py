@@ -13,7 +13,11 @@ from uuid import uuid4
 import pytest
 
 from infrastructure.contracts import (
-    Conflict, MemoryDocument, MemoryQuery, MemoryWriteIntent, Principal,
+    Conflict,
+    MemoryDocument,
+    MemoryQuery,
+    MemoryWriteIntent,
+    Principal,
 )
 
 pytestmark = pytest.mark.infra_local

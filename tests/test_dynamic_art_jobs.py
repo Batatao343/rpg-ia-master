@@ -1,10 +1,11 @@
 from uuid import uuid4
+
 import pytest
 
+import workers.dynamic_art_jobs as art_jobs
 from infrastructure.file_blob import FileBlobStore
 from tests.fakes.fake_image_generator import FakeImageGenerator
 from workers.dynamic_art_jobs import generate_dynamic_art_job
-import workers.dynamic_art_jobs as art_jobs
 
 
 def test_worker_fake_gera_duas_variantes_privadas_sem_provider_real(tmp_path):

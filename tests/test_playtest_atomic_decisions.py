@@ -5,8 +5,7 @@ import random
 
 import pytest
 
-from playtest import invariants
-from playtest import runner
+from playtest import invariants, runner
 from playtest.profiles import PROFILES, ProfileDecision
 
 
@@ -226,10 +225,11 @@ def test_resolved_action_so_existe_quando_observada_no_turno_atual():
 
 
 def test_runner_chama_decide_uma_vez_e_injeta_o_mesmo_payload(monkeypatch):
+    from langchain_core.messages import HumanMessage
+
     import llm_setup
     import main
     import persistence
-    from langchain_core.messages import HumanMessage
     from playtest import profiles, runner
 
     class AtomicProfile:

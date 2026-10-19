@@ -7,7 +7,6 @@ import os
 from playtest import report, telemetry
 from playtest.runner import run_campaign
 
-
 # --- Etapa 1 — métricas R5 no summary/report --------------------------------
 
 def test_summary_tem_metricas_de_balanceamento(tmp_path, monkeypatch):
@@ -174,7 +173,7 @@ def test_local_de_plano_irresoluvel_nao_replaneja_por_viagem():
 
 
 def test_intervalo_15_turnos():
-    from agents.campaign_manager import _should_replan, REPLAN_INTERVAL
+    from agents.campaign_manager import REPLAN_INTERVAL, _should_replan
     assert REPLAN_INTERVAL == 15
     plan = _plan("Nova Arcádia", beats_status=("pending", "pending"), last_planned=0)
     plan["current_step"] = 0

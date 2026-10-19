@@ -11,7 +11,6 @@ from services.art_triggers import ArtGenerationRequest
 from tests.fakes.fake_image_generator import FakeImageGenerator
 from workers.dynamic_art_jobs import generate_dynamic_art_job
 
-
 pytestmark = pytest.mark.infra_local
 
 
@@ -22,8 +21,8 @@ def test_reserva_worker_e_promocao_de_arte_no_postgres_local(tmp_path):
         pytest.skip("RPG_TEST_DATABASE_URL ausente")
     from infrastructure.postgres import PostgresGameStore, PostgresPool
     from infrastructure.postgres_jobs import PostgresJobQueue
-    from services.job_fence import job_scope
     from services.dynamic_art import DynamicArtRepository
+    from services.job_fence import job_scope
 
     pool = PostgresPool(dsn)
     store = PostgresGameStore(pool)

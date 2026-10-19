@@ -8,14 +8,14 @@ from __future__ import annotations
 
 import argparse
 import copy
-from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
 import json
 import os
-from pathlib import Path
 import re
 import subprocess
 import time
+from dataclasses import asdict, dataclass
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Literal
 from uuid import uuid4
 
@@ -24,17 +24,32 @@ from dotenv import load_dotenv
 from evals.core.adapters import RoutingAdapter
 from evals.core.hashing import repository_identity, sha256_file
 from evals.experiments.jev_router_ab import (
-    Budget, ExperimentBlocked, ROOT, _candidate, _capture_classify, _cases as routing_cases,
+    ROOT,
+    Budget,
+    ExperimentBlocked,
+    _candidate,
+    _capture_classify,
     _eligible,
-    _error_result, _write_json,
+    _error_result,
+    _write_json,
+)
+from evals.experiments.jev_router_ab import (
+    _cases as routing_cases,
 )
 from services import graph_resolver, npc_layers
-from services.entity_identity import normalize_runtime_npc_ref, resolve_npc_entity_id, runtime_npc_aliases
-from services.jev_decision import (
-    ChoiceAnswer, ChoiceQuestion, DecisionRequest, DecisionState,
-    JevDecisionBackend, JevError,
+from services.entity_identity import (
+    normalize_runtime_npc_ref,
+    resolve_npc_entity_id,
+    runtime_npc_aliases,
 )
-
+from services.jev_decision import (
+    ChoiceAnswer,
+    ChoiceQuestion,
+    DecisionRequest,
+    DecisionState,
+    JevDecisionBackend,
+    JevError,
+)
 
 CORPUS = ROOT / "evals/experiments/data/spec179_corpus.jsonl"
 CORPUS_LOCK = ROOT / "evals/experiments/data/spec179_corpus.sha256"

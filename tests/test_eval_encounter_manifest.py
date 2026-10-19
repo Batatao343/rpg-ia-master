@@ -4,12 +4,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from evals.core.adapters import AdapterCase, AdapterError, default_registry
 from evals.core.governance import load_cases
 from evals.core.runner import run_eval
-
-import pytest
-
 
 ROOT = Path(__file__).resolve().parents[1]
 DATASET = "datasets/regression/encounter_manifest.jsonl"

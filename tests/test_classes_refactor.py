@@ -6,7 +6,6 @@ Ver specs/SPEC-048-refatoracao-sistema-classes.md.
 import combat_mechanics as cm
 import world_utils as wu
 
-
 # --- Etapa 1: recurso Entropia ----------------------------------------------
 
 def test_cards_tem_custo_de_entropia():
@@ -103,8 +102,8 @@ def test_onboarding_matches_classes():
 
 def test_class_attr_map_covers_five():
     # spec conflito-01: CLASS_ATTR_MAP (atributo D&D) virou CLASS_PRIMARY_VIRTUE.
-    from character_creator import CLASS_PRIMARY_VIRTUE
     import gamedata
+    from character_creator import CLASS_PRIMARY_VIRTUE
     assert set(CLASS_PRIMARY_VIRTUE.keys()) == FIVE_CLASSES
     assert all(v in gamedata.VIRTUDES for v in CLASS_PRIMARY_VIRTUE.values())
 
@@ -342,6 +341,7 @@ def test_old_class_save_is_archived_without_conversion():
 
 def test_old_save_loads_archived_sem_crash(tmp_path, monkeypatch):
     import json
+
     import persistence as ps
     monkeypatch.setattr(ps, "SAVES_DIR", str(tmp_path))
     gid = "11111111-1111-1111-1111-111111111111"
@@ -358,9 +358,10 @@ def test_old_save_loads_archived_sem_crash(tmp_path, monkeypatch):
 
 
 def test_no_old_class_in_active_data():
-    from gamedata import CLASSES, load_json_data
     import json
     import os
+
+    from gamedata import CLASSES, load_json_data
     old = {"Cavaleiro da Vigília", "Batedor das Fronteiras", "Inquisidor da Cinza",
            "Pastor de Pragas", "Guardião Selvagem", "Sombra da Corte",
            "Sapador da Fuligem"}

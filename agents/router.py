@@ -3,20 +3,21 @@ agents/router.py
 Roteador de Intenções.
 Agora com detecção explícita de início de combate para acionar o Spawner.
 """
-from contextvars import ContextVar
-
-from observability.telemetry import log_event as _log_event
-from enum import Enum
 import re
+from contextvars import ContextVar
+from enum import Enum
 from typing import Literal, Optional
-from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
+
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langgraph.graph import END
 from pydantic import BaseModel, Field, field_validator
 
 from llm_setup import ModelTier, get_llm
+from observability.telemetry import log_event as _log_event
 from services.input_normalization import optional_entity_ref
 from services.prompt_guard import PLAYER_INPUT_RULE
 from state import GameState
+
 
 class RouteType(str, Enum):
     STORY = "storyteller"

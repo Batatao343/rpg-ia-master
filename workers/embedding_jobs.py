@@ -1,10 +1,10 @@
 """Handler idempotente para jobs de embedding."""
 
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
 
 from collections.abc import Callable, Sequence
 
+from infrastructure.db_roles import admin_connection
 from infrastructure.pgvector_memory import PgVectorMemoryStore
 
 

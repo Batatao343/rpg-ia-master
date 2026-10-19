@@ -13,28 +13,28 @@ Fluxo de 1 chamada = 1 RODADA:
   → run_round (iniciativa/ataques/dano→Ferimento/Reações/Terminal/Abismo)
   → espelhar Vitalidade→hp (HUD/checkpoints) → narrar → summary→loot na vitória.
 """
-from observability.telemetry import log_event as _log_event
 import random
 import re
 from typing import Dict, List, NamedTuple, Optional
 
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+from pydantic import BaseModel, ConfigDict, Field
+
 import combat_mechanics as cm
 import gamedata
-from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
-
-from state import GameState
+from agents.bestiary import generate_new_enemy
 from llm_setup import ModelTier, get_llm
-from services import discovery as disc
-from services import graph_resolver as gr
+from observability.telemetry import log_event as _log_event
 from services import conflict_orchestrator as orch
 from services import conflict_scene as cs
 from services import conflict_summary as summ
 from services import death_flow
+from services import discovery as disc
 from services import encounter_preparation as prep
+from services import graph_resolver as gr
 from services.conflict_turn import _SUPPORT_EFFECTS, TurnDeclaration, TurnStep
 from services.context_builder import build_context_pack
-from agents.bestiary import generate_new_enemy
-from pydantic import BaseModel, ConfigDict, Field
+from state import GameState
 
 _PLAYER_ID = "player"
 
@@ -199,6 +199,7 @@ def _sync_enemy_knowledge(enemies: List[Dict], *, load_persisted: bool = False) 
     começa revelado. Persistir/ler o overlay compartilhado só no perfil `legacy` —
     mesmo fail-closed de `dossiers._revealed_for` (escopo não é por dono/jogo)."""
     import os
+
     from services import bestiary_knowledge as bk
     shared = os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() == "legacy"
     for enemy in enemies:
@@ -1009,8 +1010,7 @@ def _combat_node(state: GameState):
     logs: List[str] = []
     world_out = None
     world = state.get("world") or {}
-    from world_utils import (DARK_COMBAT_PENALTY, light_level,
-                             weather_effects)
+    from world_utils import DARK_COMBAT_PENALTY, light_level, weather_effects
     weather_fx = weather_effects(world)
     light_fx = light_level(world, player)
     weather_attack = int(weather_fx.get("combat_attack_mod", 0) or 0)

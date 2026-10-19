@@ -6,11 +6,11 @@ from langchain_core.messages import HumanMessage
 
 import agents.combat as combat
 from observability import logging_setup
-from services import audit_trace, chase, death_flow, mechanics_trace as mt, reactions
+from services import audit_trace, chase, death_flow, reactions
+from services import mechanics_trace as mt
 from services.conflict_damage import resolve_damage_and_wounds
 from services.conflict_orchestrator import ensure_combat_sheet
 from services.conflict_resolution import resolve_attack, roll_initiative_by_side
-
 from tests.test_aliados_combate import _enemy, _player, _world
 
 NAME = "Fulano Sentinela251"
@@ -157,6 +157,7 @@ def test_trace_crosses_langgraph_executor():
     """R3 via grafo: o coletor aberto em collecting() (como api._run_turn_collected) recebe os passos
     do combat_node executado pelo LangGraph (contextvar copiado para o executor)."""
     from langgraph.graph import END, START, StateGraph
+
     from state import GameState
     graph = StateGraph(GameState)
     graph.add_node("combat_agent", combat.combat_node)

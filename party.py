@@ -5,9 +5,9 @@ Companion = ficha estilo bestiário resolvida pelo MESMO motor dos inimigos
 (perfis 2.5b via resolve_ally_turn). O LLM nunca decide se um NPC aceita
 juntar-se: gate determinístico (relationship + teto + fação hostil).
 """
-from copy import deepcopy
 import re
 import unicodedata
+from copy import deepcopy
 from typing import Dict, List, Literal, Optional, Tuple, TypedDict
 
 from gamedata import load_json_data
@@ -297,9 +297,9 @@ def recruitment_decision(state: Dict, npc_name: str) -> RecruitmentDecision:
     npc = npcs.get(npc_key) or {}
     display_name = str(npc.get("name") or npc_key)
     rel = _relationship(npc)
-    from services.npc_layers import trait_dc_modifier
     # SPEC-232 R2: Carta de Virtude `bonus_social_por_estagio` facilita persuadir.
     import combat_mechanics as cm
+    from services.npc_layers import trait_dc_modifier
     social = max(0, int(cm.passive_modifiers(state.get("player") or {}).get("social", 0) or 0))
     required = max(3, min(10, RECRUIT_MIN_REL + trait_dc_modifier(npc, "persuasao") - social))
 

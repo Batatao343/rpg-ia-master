@@ -1,11 +1,10 @@
 """Contratos da interface tática de Cartas (spec conflito-16)."""
 from random import Random
 
+import api
 from services import conflict_orchestrator as orch
 from services import conflict_scene as scene_mod
 from services.conflict_turn import TurnDeclaration, TurnStep
-
-import api
 
 
 def _player() -> dict:

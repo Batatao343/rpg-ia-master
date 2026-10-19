@@ -11,7 +11,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from infrastructure.postgres import PostgresPool
 from services.dsn_cli import add_dsn_arguments, resolve_dsn
 
-
 LOCAL_DSN = "postgresql://postgres:postgres@127.0.0.1:55322/postgres"
 
 

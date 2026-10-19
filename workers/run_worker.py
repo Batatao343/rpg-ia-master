@@ -41,7 +41,7 @@ def build_handlers():
         raise RuntimeError("worker durável exige PgVectorMemoryStore")
 
     def generate(payload: dict) -> dict:
-        from infrastructure.contracts import Principal, Conflict
+        from infrastructure.contracts import Conflict, Principal
         from services.image_quotes import ImageQuoteRepository
         generation_id = UUID(str(payload["generation"]["generation_id"]))
         from infrastructure.contracts import JobDeferred

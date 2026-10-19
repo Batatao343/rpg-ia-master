@@ -15,8 +15,8 @@ Fundação determinística (sem LLM). O flip do fluxo de morte em `agents/combat
 from __future__ import annotations
 
 import copy
-import os
 import hashlib
+import os
 from typing import Any, Dict, Optional
 
 import persistence
@@ -98,7 +98,7 @@ def write_now(state: dict) -> bool:
 
 def _sanitize_legacy_combat_checkpoint(restored: dict) -> dict:
     """Fecha cena/transições efêmeras capturadas por versões antigas."""
-    from services.actor_lifecycle import transition_readiness, sanitize_interturn_state
+    from services.actor_lifecycle import sanitize_interturn_state, transition_readiness
     readiness = transition_readiness(restored)
     if readiness["ready"]:
         return restored

@@ -134,6 +134,7 @@ def _normal(email: str) -> str:
 def _too_many(decision, *, action: str = "auth", bucket: str = "ip", key: str = "") -> None:
     if not decision.allowed:
         from fastapi import HTTPException
+
         from observability.auth_log import rate_limited
         rate_limited(action, bucket, key, decision.retry_after_seconds)   # SPEC-245 R5
         raise HTTPException(429, "auth_rate_limit", headers={"Retry-After": str(decision.retry_after_seconds)})

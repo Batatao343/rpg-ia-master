@@ -3,11 +3,10 @@ from __future__ import annotations
 import pytest
 from langchain_core.messages import HumanMessage
 
-from agents.action_guard import action_guard_node
 from agents import combat
+from agents.action_guard import action_guard_node
 from agents.turn_finalizer import turn_finalizer_node
-from services import checkpoints
-from services import conflict_summary
+from services import checkpoints, conflict_summary
 from services.actor_lifecycle import (
     transition_readiness,
 )

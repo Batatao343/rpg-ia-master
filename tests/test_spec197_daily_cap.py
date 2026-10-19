@@ -12,7 +12,7 @@ from services import finops
 from services import finops_alerts as fa
 from services.daily_spend_cap import ACTOR, CAP_SWITCHES, day_start, evaluate_daily_cap
 from services.finops_job import run_finops
-from services.kill_switches import IMAGE, MemorySwitchStore, STT_FALLBACK, NEW_PURCHASES
+from services.kill_switches import IMAGE, NEW_PURCHASES, STT_FALLBACK, MemorySwitchStore
 
 NOW = datetime(2026, 10, 15, 15, tzinfo=timezone.utc)
 PRICING = {"v1": finops.PricingRef("v1", D("5"), {})}
@@ -219,9 +219,10 @@ def test_text_cap_under_budget_allows(monkeypatch):
 
 
 def test_turn_returns_503_when_text_cap_exceeded(monkeypatch):
-    import api
     from types import SimpleNamespace
     from uuid import uuid4
+
+    import api
     from infrastructure.contracts import Principal
     from infrastructure.request_context import reset_current_principal, set_current_principal
     from services import daily_spend_cap as cap

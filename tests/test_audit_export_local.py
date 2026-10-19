@@ -75,12 +75,12 @@ def pg(monkeypatch):
 
 @pytest.fixture()
 def world(pg, monkeypatch):
+    import api
     from infrastructure.contracts import Principal, Unauthorized
     from infrastructure.local_adapters import MemoryRateLimiter
     from infrastructure.postgres import PostgresGameStore
     from services.account_security import proof
     from services.auth_sessions import CsrfSigner
-    import api
 
     connection, state = pg
     a, b, c = uuid.uuid4(), uuid.uuid4(), uuid.uuid4()

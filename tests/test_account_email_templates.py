@@ -1,8 +1,8 @@
 """Rendered email links match the browser fragment contract without URL logging."""
+import tomllib
 from html import unescape
 from pathlib import Path
 from urllib.parse import urlsplit
-import tomllib
 
 
 def test_local_confirmation_and_recovery_links_use_fragment_only():

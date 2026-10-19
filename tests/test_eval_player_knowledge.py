@@ -11,7 +11,6 @@ from evals.core.governance import load_cases, load_metrics_registry
 from evals.core.runner import run_eval
 from evals.evaluators.player_knowledge import fold_text
 
-
 ROOT = Path(__file__).resolve().parents[1]
 DATASET = "datasets/regression/player_knowledge.jsonl"
 METRICS = (

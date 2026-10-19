@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import asyncio
-from concurrent.futures import ThreadPoolExecutor
 import threading
+from concurrent.futures import ThreadPoolExecutor
 
 from services import context_sources
 
@@ -185,8 +185,9 @@ def test_shared_embedding_refuses_same_provider_with_different_model(monkeypatch
 
 
 def test_shared_embedding_refuses_explicit_dimension_mismatch(monkeypatch):
-    import rag
     from types import SimpleNamespace
+
+    import rag
 
     monkeypatch.setenv("RPG_RUNTIME_PROFILE", "legacy")
     monkeypatch.setattr(rag, "_has_faiss_index", lambda _path: True)

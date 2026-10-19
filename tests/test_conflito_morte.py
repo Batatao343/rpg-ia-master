@@ -5,8 +5,8 @@ fixo (min/max) para tornar sucesso/falha de estabilização exatos, sem seed fr�
 A Cicatriz é o 1º structured output novo do épico — guard de `FallbackLLM` testado."""
 
 import gamedata
-from services import death_flow as df
 from llm_setup import FallbackLLM
+from services import death_flow as df
 
 
 class _Rng:

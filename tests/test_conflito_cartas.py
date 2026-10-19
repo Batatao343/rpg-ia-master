@@ -235,7 +235,7 @@ def test_criacao_carta_de_virtude_estagio_pela_virtude():
 # Etapa 3 — Progressão: nova Carta OU evolução por nível
 # --------------------------------------------------------------------------
 def test_levelup_oferece_escolha_de_carta():
-    from progression import grant_xp, XP_TABLE
+    from progression import XP_TABLE, grant_xp
     p = {"class_name": "Devoto do Abismo", "level": 1, "xp": 0, "max_hp": 40, "hp": 40,
          "max_entropy": 14, "entropy": 14, "virtudes": {"forca": 4, "corpo": 3,
          "carisma": 2, "mente": 1, "agilidade": 1}, "pending_choices": [],

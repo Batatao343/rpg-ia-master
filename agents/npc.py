@@ -3,25 +3,22 @@ agents/npc.py
 Gerador de NPCs com Persistência, Memória, RAG e Filtro de Ignorância.
 Contém tanto a fábrica de NPCs (generate_new_npc) quanto o ator (npc_actor_node).
 """
-from observability.telemetry import log_event as _log_event
+import inspect
 import json
 import logging
 import os
 import re
-import inspect
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
+
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from pydantic import BaseModel, Field, field_validator
-from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
-from state import GameState
+
 from llm_setup import ModelTier, get_llm
-from world_utils import apply_faction_reveal, ensure_factions, ensure_faction_intel
+from observability.telemetry import log_event as _log_event
 from services import graph_resolver as gr
 from services import quest_log
 from services.context_builder import build_context_pack
-from services.memory_retry import (
-    enqueue_npc_memory,
-    normalize_pending_npc_memory,
-)
+from services.input_normalization import optional_entity_ref
 from services.memory_provenance import (
     MAX_MEMORY_PROMOTIONS,
     bounded_audit_rows,
@@ -30,6 +27,11 @@ from services.memory_provenance import (
     memory_metadata,
     normalize_memory_facts,
 )
+from services.memory_retry import (
+    enqueue_npc_memory,
+    normalize_pending_npc_memory,
+)
+from services.prompt_guard import PLAYER_INPUT_RULE, guard_messages
 from services.prose_guard import (
     log_if_repeats,
     openings_clause,
@@ -38,13 +40,13 @@ from services.prose_guard import (
     strip_outer_quotes,
     vary_repeated_opening,
 )
-from services.input_normalization import optional_entity_ref
-from services.prompt_guard import PLAYER_INPUT_RULE, guard_messages
 from services.structured_outputs import ProposedQuest
+from state import GameState
+from world_utils import apply_faction_reveal, ensure_faction_intel, ensure_factions
 
 # Fallback para RAG
 try:
-    from rag import query_rag, add_npc_memory, query_npc_memory
+    from rag import add_npc_memory, query_npc_memory, query_rag
     RAG_AVAILABLE = True
 except ImportError:
     RAG_AVAILABLE = False

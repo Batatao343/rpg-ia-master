@@ -6,8 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-import yaml
 import pytest
+import yaml
 
 from scripts import normalize_specs as normalizer
 

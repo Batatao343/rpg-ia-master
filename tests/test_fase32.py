@@ -341,12 +341,12 @@ def test_local_nao_visitado_fora_do_codex():
 def test_endpoint_codex():
     # /game/codex monta o caminho como /game/state (f"saves/{game_id}.json", literal,
     # não via persistence.SAVES_DIR) — grava/limpa no saves/ real do projeto.
+    import uuid
+
     from fastapi.testclient import TestClient
 
     import api
     import persistence
-
-    import uuid
     game_id = str(uuid.uuid4())  # Fase 10: game_id da API precisa ser UUID
     save_path = os.path.join(persistence.SAVES_DIR, f"{game_id}.json")
     state = _base_state()
@@ -370,6 +370,7 @@ def test_endpoint_codex():
 
 def test_endpoint_codex_game_id_inexistente_404():
     import uuid
+
     from fastapi.testclient import TestClient
 
     import api

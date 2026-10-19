@@ -45,8 +45,9 @@ def test_valid_receipt_does_not_depend_on_current_game_version():
 
 
 def test_claim_context_releases_even_http_errors():
-    from services.turn_execution import operation_scope
     from fastapi import HTTPException
+
+    from services.turn_execution import operation_scope
     failed = []
     class Coordinator:
         def fail(self, claim, code):

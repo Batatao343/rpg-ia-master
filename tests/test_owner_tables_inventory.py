@@ -10,7 +10,11 @@ import os
 import pytest
 
 from infrastructure.account_lifecycle import (
-    EXPORT_COLUMNS, EXPORT_TABLES, FINANCIAL_TABLES, PRIVATE_TABLES, RETAINED_WITH_REASON,
+    EXPORT_COLUMNS,
+    EXPORT_TABLES,
+    FINANCIAL_TABLES,
+    PRIVATE_TABLES,
+    RETAINED_WITH_REASON,
 )
 
 

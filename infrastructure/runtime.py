@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-import os
-import ipaddress
 import base64
 import binascii
+import ipaddress
 import json
+import os
 import socket
 import threading
 from dataclasses import dataclass, field
@@ -14,8 +14,6 @@ from pathlib import Path
 from typing import Callable, Mapping, NamedTuple
 from urllib.parse import parse_qsl, urlsplit
 from uuid import UUID
-
-from observability.telemetry import log_event as _log_event
 
 from infrastructure.contracts import (
     BlobStore,
@@ -32,12 +30,13 @@ from infrastructure.local_adapters import (
     FileBlobStore,
     FileGameStore,
     FixedIdentityVerifier,
+    InlineJobQueue,
     InMemoryMemoryStore,
     InProcessTurnCoordinator,
-    InlineJobQueue,
     LegacyRuntimeCatalogStore,
     MemoryRateLimiter,
 )
+from observability.telemetry import log_event as _log_event
 
 LOCAL_PRINCIPAL_ID = UUID("00000000-0000-0000-0000-000000000001")
 
@@ -613,11 +612,12 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
     from infrastructure.postgres_catalog import PostgresRuntimeCatalogStore
     from infrastructure.postgres_jobs import PostgresJobQueue
     from infrastructure.postgres_turns import (
-        PostgresDailyQuota, PostgresRateLimiter, PostgresTurnCoordinator,
+        PostgresDailyQuota,
+        PostgresRateLimiter,
+        PostgresTurnCoordinator,
     )
     from infrastructure.supabase_blob import SupabaseBlobStore
     from infrastructure.supabase_identity import SupabaseIdentityProvider
-
     from observability.boot import log_build_failed
     admin_pool = None
     if config.admin_database_url and config.admin_database_url != config.database_url:

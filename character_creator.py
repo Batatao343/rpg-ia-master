@@ -5,13 +5,14 @@ Versão V7.0 (spec conflito-01): 5 Virtudes (0-5) substituem os 6 atributos D&D;
 Vitalidade/Ferimentos derivam de Corpo. A distribuição das Virtudes vem do JOGADOR
 (wizard) — a classe apenas RECOMENDA. O LLM só sugere inventário/flavor textual.
 """
-from observability.telemetry import log_event as _log_event
-from typing import Dict, Any, List
-from langchain_core.messages import SystemMessage, HumanMessage
+from typing import Any, Dict, List
+
+from langchain_core.messages import HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 
-from llm_setup import get_llm, ModelTier
 import gamedata
+from llm_setup import ModelTier, get_llm
+from observability.telemetry import log_event as _log_event
 
 # --- IMPORTAÇÕES ESSENCIAIS ---
 try:

@@ -1,13 +1,13 @@
 """Publish one synthetic portrait using real local storage, never a paid model."""
-from uuid import UUID
 from urllib.parse import urlsplit
+from uuid import UUID
 
 
 def publish_portrait(game_id: str, generation_id: str):
-    from scripts.start_local_api import _supabase_status
     from infrastructure.postgres import PostgresPool
     from infrastructure.postgres_jobs import PostgresJobQueue
     from infrastructure.supabase_blob import SupabaseBlobStore
+    from scripts.start_local_api import _supabase_status
     from services.dynamic_art import DynamicArtRepository
     from services.image_quotes import ImageQuoteRepository
     from services.job_fence import job_scope

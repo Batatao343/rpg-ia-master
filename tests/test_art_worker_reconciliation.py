@@ -8,9 +8,9 @@ pytest.importorskip('psycopg')
 
 
 def test_uncertain_art_result_cannot_be_generated_again(monkeypatch):
+    import workers.run_worker as module
     from infrastructure.contracts import Conflict
     from infrastructure.pgvector_memory import PgVectorMemoryStore
-    import workers.run_worker as module
 
     status, calls = ['pending'], []
     generation_id, owner_id, game_id = uuid4(), uuid4(), uuid4()

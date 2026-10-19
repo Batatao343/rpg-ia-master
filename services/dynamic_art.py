@@ -1,8 +1,6 @@
 """Registro durável e idempotente de gerações antes da chamada ao provider."""
 
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection, system_scope
-
 
 import hashlib
 from typing import Any
@@ -11,6 +9,7 @@ from uuid import NAMESPACE_URL, UUID, uuid5
 from psycopg.types.json import Jsonb
 
 from infrastructure.contracts import Conflict, Principal
+from infrastructure.db_roles import admin_connection, system_scope
 from infrastructure.postgres import PostgresPool
 from services.art_brief import ArtBrief, render_image_prompt
 from services.art_triggers import ArtGenerationRequest
@@ -210,9 +209,8 @@ class DynamicArtRepository:
                 (display_asset_id, Jsonb(safe_usage), generation_id),
             )
             if generation.get("image_quote_id"):
-                from infrastructure.wallet import PostgresWallet
+                from infrastructure.wallet import PostgresWallet, WalletConflict
                 from services.shard_pricing import PricingUnavailable
-                from infrastructure.wallet import WalletConflict
 
                 wallet = PostgresWallet(self.pool)
                 principal = Principal(generation["owner_id"], "worker", str(generation["owner_id"]))

@@ -10,8 +10,8 @@ ADITIVO (como 03-07): módulo novo + testes. A remoção de `get_behavior`/perfi
 fixos de `combat_mechanics.py` e a fiação em `agents/bestiary.py` vão no cutover
 (conflito-13); aqui o motor puro convive com o antigo.
 """
-from copy import deepcopy
 import unicodedata
+from copy import deepcopy
 from typing import Dict, List, Literal, Optional
 
 from pydantic import BaseModel, Field

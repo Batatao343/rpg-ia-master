@@ -1,7 +1,7 @@
 """Typed structures describing the shared game state for the LangGraph workflow."""
 
 import operator
-from typing import Any, Annotated, Dict, List, Literal, Optional, TypedDict
+from typing import Annotated, Any, Dict, List, Literal, Optional, TypedDict
 
 from langchain_core.messages import BaseMessage
 

@@ -12,8 +12,8 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts import latency_baseline as lb  # noqa: E402
 from playtest import latency_llm  # noqa: E402
+from scripts import latency_baseline as lb  # noqa: E402
 
 
 def _run(tmp_path, name, *, journeys="J1,J6", reps=2, seed=200, profile="typical"):

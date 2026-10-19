@@ -4,20 +4,25 @@ The caller must authenticate raw bytes using verify_event before accept_event.
 Orders/SKUs own money and credit units; metadata is only an opaque lookup.
 """
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
 
+import re
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
-import re
 from uuid import UUID, uuid4
 
 from psycopg.types.json import Jsonb
 
 from infrastructure.contracts import Principal
+from infrastructure.db_roles import admin_connection
 from infrastructure.pricing_catalog import quote_published_sku
 from infrastructure.wallet import PostgresWallet
 from services.shard_pricing import PricingUnavailable
-from services.stripe_checkout import OpenOrdersLimit, StripeError, StripeSettings, checkout_url_valid
+from services.stripe_checkout import (
+    OpenOrdersLimit,
+    StripeError,
+    StripeSettings,
+    checkout_url_valid,
+)
 
 PAID_EVENTS = {"checkout.session.completed", "checkout.session.async_payment_succeeded"}
 FINANCIAL_EVENTS = {"charge.refunded", "charge.dispute.created", "charge.dispute.closed"}
@@ -320,7 +325,7 @@ class StripePayments:
             store.ingest_backlog(50)
             store.reconcile("stripe", payment_intent)
         except Exception as exc:  # never fail a verified webhook delivery on a recoverable pass
-            from observability.telemetry import log_event   # error class only: no ids/amounts/PII
+            from observability.telemetry import log_event  # error class only: no ids/amounts/PII
             log_event("payments", "immediate_reconcile_failed", level="warning",
                       error_type=type(exc).__name__)
             return

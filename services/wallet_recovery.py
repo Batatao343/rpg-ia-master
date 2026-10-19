@@ -15,7 +15,6 @@ Image reservations belong to their ``generate_dynamic_art`` job: only a dead/can
 A grace period keeps the sweep away from requests that are still finishing normally.
 """
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
 
 import os
 from datetime import datetime, timedelta, timezone
@@ -23,6 +22,7 @@ from typing import Any
 from uuid import UUID, uuid4
 
 from infrastructure.contracts import Principal
+from infrastructure.db_roles import admin_connection
 
 DEFAULT_GRACE_SECONDS = 900
 

@@ -1,7 +1,7 @@
-from langchain_core.messages import AIMessage, HumanMessage
 import pytest
+from langchain_core.messages import AIMessage, HumanMessage
 
-from services.presentation_history import record_history, history_page, message_kind
+from services.presentation_history import history_page, message_kind, record_history
 
 
 def test_paginated_history_deduplicates_and_rejects_cursor_after_restore():

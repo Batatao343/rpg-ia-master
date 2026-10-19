@@ -1,7 +1,6 @@
 """MemoryStore PostgreSQL: fato bruto durável, vetor assíncrono e FTS fallback."""
 
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
 
 import hashlib
 from collections.abc import Callable, Sequence
@@ -10,9 +9,9 @@ from typing import Any
 from psycopg.types.json import Jsonb
 
 from infrastructure.contracts import Conflict, MemoryDocument, MemoryQuery, MemoryWriteIntent
+from infrastructure.db_roles import admin_connection
 from infrastructure.postgres import PostgresPool
 from services.memory_intents import intent_sha256, normalized_intent
-
 
 Embedder = Callable[[str], Sequence[float]]
 _VISIBILITY = {"public": 0, "hidden": 1, "secret": 2}

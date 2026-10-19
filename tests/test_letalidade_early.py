@@ -1,14 +1,14 @@
 """Contratos da spec letalidade-early-game-v2 após o cutover v4."""
 import random
 
-import combat_mechanics as cm
 import agents.combat as combat
+import combat_mechanics as cm
+import world_utils as wu
 from gamedata import CLASSES
 from playtest.profiles import PROFILES
 from services import conflict_orchestrator as orch
 from services import conflict_scene as cs
 from services import conflict_turn as ct
-import world_utils as wu
 
 
 def test_descanso_early_game_seguro_e_apex_preservado():

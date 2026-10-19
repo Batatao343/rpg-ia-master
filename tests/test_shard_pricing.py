@@ -2,22 +2,28 @@
 
 from __future__ import annotations
 
+import json
 from dataclasses import replace
 from datetime import datetime, timedelta, timezone
-from decimal import Decimal, ROUND_CEILING, ROUND_FLOOR
-import json
+from decimal import ROUND_CEILING, ROUND_FLOOR, Decimal
 from random import Random
 from uuid import uuid4
 
 import pytest
 
 from services.shard_pricing import (
-    INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256, ChannelFee,
-    PricingUnavailable, PricingVersion, PurchaseSku,
-    contribution_report, quote_purchase, quote_usage, version_from_record,
+    INSTALLED_RATE_CARD_OBSERVED_AT,
+    INSTALLED_RATE_CARD_SHA256,
+    ChannelFee,
+    PricingUnavailable,
+    PricingVersion,
+    PurchaseSku,
+    contribution_report,
+    quote_purchase,
+    quote_usage,
+    version_from_record,
 )
 from services.usage_metering import RATE_CARD_VERSION, UsageEvent, normalize_attempts
-
 
 NOW = datetime(2026, 10, 8, 12, tzinfo=timezone.utc)
 

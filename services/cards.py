@@ -6,10 +6,10 @@ vive em conflito-04/`conflict_turn`; o catálogo d20 antigo foi removido no cuto
 Convenções: funções que consomem recurso MUTAM `state`/`player` e retornam um
 Result dict {"ok": bool, "error": Optional[str], "log": str}.
 """
+import copy
 import glob
 import json
 import os
-import copy
 from typing import Dict, List, Optional
 
 import gamedata

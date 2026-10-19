@@ -12,8 +12,10 @@ from pydantic import BaseModel
 from services.actor_lifecycle import evaluate_action
 from services.entity_identity import coalesce_runtime_npcs, find_runtime_npc_key
 from services.memory_provenance import (
-    canonical_location_contradiction, inventory_possession_contradiction,
-    make_memory_fact, validate_memory_fact,
+    canonical_location_contradiction,
+    inventory_possession_contradiction,
+    make_memory_fact,
+    validate_memory_fact,
 )
 from services.turn_outcome import render_player_message
 
@@ -29,8 +31,8 @@ def test_recovery_does_not_authorize_mixed_physical_actions(action: str) -> None
 @pytest.mark.parametrize("incapacitated", [False, True])
 def test_recovery_graph_and_reload(incapacitated: bool) -> None:
     from main import app
-    from playtest.runner import _build_initial_state
     from persistence import _raw_to_state, _state_to_save_data
+    from playtest.runner import _build_initial_state
 
     state = _build_initial_state("normal", 9)
     state["player"].update(conscious=False, incapacitated=incapacitated, vitalidade=0, hp=0)
@@ -196,7 +198,8 @@ def test_structured_failures_have_distinct_causes(raw: AIMessage, expected: str)
 
 @pytest.mark.parametrize("failure", ["invariant", "turn", "incomplete", "observability"])
 def test_matrix_stops_before_next_campaign_on_failure(monkeypatch, failure: str) -> None:
-    from playtest import __main__ as cli, matrix, telemetry
+    from playtest import __main__ as cli
+    from playtest import matrix, telemetry
 
     cases = matrix.select_matrix_cases(1)[:2]
     calls = []

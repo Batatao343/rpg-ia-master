@@ -1,8 +1,8 @@
 """SPEC-188 strict API/automatic-offer and mandatory dispatch admission gates."""
 from uuid import uuid4
 
-from fastapi.testclient import TestClient
 import pytest
+from fastapi.testclient import TestClient
 
 from infrastructure.contracts import Conflict
 from services.art_triggers import ArtGenerationRequest

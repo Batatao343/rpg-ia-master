@@ -182,8 +182,9 @@ def test_legado_filtrado_por_jogo():
 
 
 def test_api_endpoint_fog_e_404(monkeypatch):
-    import api
     from fastapi.testclient import TestClient
+
+    import api
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
     api._rate_hits.clear()
     client = TestClient(api.app)
@@ -248,8 +249,9 @@ def test_saida_do_interior_reconhecida_pelo_router_de_viagem():
 
 
 def test_data_map_por_jogo_entra_na_fronteira_de_sessao_e_no_store(monkeypatch):
-    import api
     from fastapi.testclient import TestClient
+
+    import api
     assert api._session_scoped_path("/data/map", {"game_id": "x"}) is True
     assert api._session_scoped_path("/data/map", {}) is False
     assert api._session_scoped_path("/game/map", {}) is True

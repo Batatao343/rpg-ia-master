@@ -2,13 +2,13 @@
 from __future__ import annotations
 
 import asyncio
+import io
+import wave
 from datetime import datetime, timezone
 from decimal import Decimal
-import io
 from pathlib import Path
 from types import SimpleNamespace
 from uuid import uuid4
-import wave
 
 import httpx
 import pytest
@@ -16,8 +16,15 @@ import pytest
 from infrastructure.wallet import InsufficientShards
 from services.speech_pricing import SPEECH_PRICING_VERSION, speech_bound, speech_event
 from services.speech_to_text import (
-    Candidate, HttpSpeechProvider, MAX_AUDIO_BYTES, ProviderReading, SpeechCircuit,
-    SpeechError, configured_candidates, prepare_audio, transcribe_audio,
+    MAX_AUDIO_BYTES,
+    Candidate,
+    HttpSpeechProvider,
+    ProviderReading,
+    SpeechCircuit,
+    SpeechError,
+    configured_candidates,
+    prepare_audio,
+    transcribe_audio,
 )
 
 GROQ = Candidate('groq', 'whisper-large-v3-turbo')
@@ -231,9 +238,9 @@ def test_original_wav_extra_chunks_never_reach_provider(tmp_path):
 @pytest.mark.parametrize('extension,codec,mime', [('webm', 'libopus', 'audio/webm'),
     ('ogg', 'libopus', 'audio/ogg'), ('mp4', 'aac', 'audio/mp4')])
 def test_real_decoder_browser_media_round_trip(tmp_path, extension, codec, mime):
+    import os
     import shutil
     import subprocess
-    import os
     decoder = os.getenv('RPG_SPEECH_FFMPEG') or shutil.which('ffmpeg')
     if decoder is None:
         pytest.skip('ffmpeg absent; service fails closed for compressed formats')
@@ -321,6 +328,7 @@ def test_groq_adapter_response_and_duration_usage_are_private(monkeypatch):
 
 def test_quote_accepts_only_registered_exact_speech_card():
     from dataclasses import replace
+
     from services.shard_pricing import PricingUnavailable, quote_usage
     event = speech_event(uuid4(), 0, GROQ.provider, GROQ.model, 'success', {}, duration=Decimal('1'))
     version = SimpleNamespace(version_id='test', fx_usd_brl=Decimal('5'),

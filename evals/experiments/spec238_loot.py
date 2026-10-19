@@ -16,12 +16,12 @@ Live run (DEV only):
 from __future__ import annotations
 
 import argparse
-from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
 import hashlib
 import inspect
 import json
 import os
+from dataclasses import asdict, dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -29,13 +29,20 @@ from evals.core.hashing import sha256_file
 from evals.experiments import jev_router_hybrid as hybrid
 from evals.experiments.jev_router_ab import _write_json
 from evals.experiments.jev_router_hybrid import (
-    DEFAULT_TAU, FROZEN_J1_POLICY, ROOT, TAU_GRID, Case, Policy, digest_of,
-    frozen_request, hybrid_decision, percentile,
+    DEFAULT_TAU,
+    FROZEN_J1_POLICY,
+    ROOT,
+    TAU_GRID,
+    Case,
+    Policy,
+    digest_of,
+    frozen_request,
+    hybrid_decision,
+    percentile,
 )
 from gamedata import get_location
 from services.economy import merchants_at
 from services.jev_decision import ChoiceQuestion, DecisionRequest
-
 
 ORACLE = ROOT / "evals/experiments/data/spec238_loot_oracle.json"
 ORACLE_SHA256 = "sha256:129ac6fb9ff0c298c9b594d8db3afd756358063d4b7c5cbafe30d359fae00493"
@@ -404,6 +411,7 @@ class J1bLedger:
 
 def main() -> None:
     from dotenv import load_dotenv
+
     from evals.experiments.spec217_j1 import _meta, eligible_cases, run_phase
     from services.jev_decision import JevDecisionBackend
 

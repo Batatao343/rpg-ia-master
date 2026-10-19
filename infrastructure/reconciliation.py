@@ -4,7 +4,6 @@ Both stores apply the SAME pure plan (services.purchase_reconciliation). The job
 plans are recomputed from the ledger under the owner lock, so replays post nothing.
 """
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
 
 import logging
 import threading
@@ -12,10 +11,26 @@ import time
 from dataclasses import dataclass
 from uuid import UUID, uuid4
 
+from infrastructure.db_roles import admin_connection
 from services.purchase_reconciliation import (
-    GOOGLE, PARK_BASE_SECONDS, PARK_MAX_AGE_SECONDS, PARK_MAX_ATTEMPTS, PARK_MAX_SECONDS, STRIPE,
-    Event, FinancialHold, Ledger, ReconciliationError, derive_state, fold, normalize_stripe_event,
-    park_backoff_seconds, plan_adjustment, settlement_amount, target_milli, transition_allowed,
+    GOOGLE,
+    PARK_BASE_SECONDS,
+    PARK_MAX_AGE_SECONDS,
+    PARK_MAX_ATTEMPTS,
+    PARK_MAX_SECONDS,
+    STRIPE,
+    Event,
+    FinancialHold,
+    Ledger,
+    ReconciliationError,
+    derive_state,
+    fold,
+    normalize_stripe_event,
+    park_backoff_seconds,
+    plan_adjustment,
+    settlement_amount,
+    target_milli,
+    transition_allowed,
 )
 
 log = logging.getLogger("rpg.reconciliation")

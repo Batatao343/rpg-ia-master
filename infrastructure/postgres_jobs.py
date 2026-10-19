@@ -1,21 +1,20 @@
 """Fila Postgres com dedupe, SKIP LOCKED, fencing e retry/dead-letter."""
 
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
-
-from contextlib import nullcontext
 
 import hashlib
+from contextlib import nullcontext
 from datetime import timedelta
 from typing import Any
 from uuid import UUID, uuid4
 
 from psycopg.types.json import Jsonb
 
-from infrastructure.contracts import JobRequest, LeaseHeld, LeasedJob, NotFound
-from infrastructure.db_log import conflict as _db_conflict, timed_call as _timed
+from infrastructure.contracts import JobRequest, LeasedJob, LeaseHeld, NotFound
+from infrastructure.db_log import conflict as _db_conflict
+from infrastructure.db_log import timed_call as _timed
+from infrastructure.db_roles import admin_connection
 from infrastructure.postgres import PostgresPool
-
 
 # SPEC-236 R9: a dead/cancelled job for a document that is still pending is revived on the next
 # enqueue of the same (kind, dedupe_key), but at most once per cooldown so an automatic

@@ -121,6 +121,7 @@ def test_api_google_play_refuses_fake_flag_on_vercel_and_missing_key(monkeypatch
 
 def test_verify_maps_wallet_conflict_to_409(monkeypatch):
     from fastapi import HTTPException
+
     from infrastructure.wallet import WalletConflict
 
     class Boom:

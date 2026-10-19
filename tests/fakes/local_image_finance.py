@@ -12,12 +12,13 @@ from scripts.start_local_api import _supabase_status
 def fund_audit_portrait(user_id: UUID) -> None:
     """Publish local test pricing and credit one synthetic audit account."""
     from psycopg.types.json import Jsonb
+
     from infrastructure.contracts import Principal
     from infrastructure.postgres import PostgresPool
     from infrastructure.wallet import PostgresWallet
     from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256
-    from tests.fakes.local_pricing import installed_card_max_age_seconds
     from services.usage_metering import RATE_CARD_VERSION
+    from tests.fakes.local_pricing import installed_card_max_age_seconds
     status = _supabase_status()
     db_url = status["DB_URL"]
     parsed = urlsplit(db_url)

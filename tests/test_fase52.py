@@ -5,7 +5,7 @@ import uuid
 import pytest
 
 from playtest import invariants as inv
-from playtest.runner import run_campaign, _build_initial_state
+from playtest.runner import _build_initial_state, run_campaign
 
 
 def _base() -> dict:

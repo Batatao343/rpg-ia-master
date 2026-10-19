@@ -13,7 +13,6 @@ from PIL import Image
 from infrastructure.contracts import BlobMetadata
 from infrastructure.supabase_blob import SupabaseBlobStore
 
-
 pytestmark = [pytest.mark.infra_local, pytest.mark.security_local]
 
 

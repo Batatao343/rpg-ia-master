@@ -3,9 +3,9 @@
 Separate connections commit (unique owners/kinds per run, like ``test_wallet_local.py``)."""
 from __future__ import annotations
 
+import os
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
-import os
 from threading import Barrier
 from uuid import uuid4
 
@@ -13,8 +13,8 @@ import pytest
 
 from infrastructure.contracts import JobRequest, Principal
 from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256
-from tests.fakes.local_pricing import installed_card_max_age_seconds
 from services.usage_metering import RATE_CARD_VERSION, normalize_attempts
+from tests.fakes.local_pricing import installed_card_max_age_seconds
 
 pytestmark = pytest.mark.infra_local
 AT = datetime(2026, 10, 12, 12, tzinfo=timezone.utc)
@@ -24,6 +24,7 @@ AT = datetime(2026, 10, 12, 12, tzinfo=timezone.utc)
 def race_case():
     psycopg = pytest.importorskip("psycopg")
     from psycopg.types.json import Jsonb
+
     from infrastructure.postgres import PostgresPool
     from infrastructure.wallet import PostgresWallet
     dsn = os.getenv("RPG_TEST_DATABASE_URL")
@@ -103,11 +104,12 @@ def test_concurrent_sweeps_release_an_orphan_exactly_once(race_case):
 
 
 def test_concurrent_sweeps_and_owner_settle_one_terminal_outcome(race_case):
+    import psycopg
+    from psycopg.rows import dict_row
+
     from infrastructure.usage_events import append_usage_events
     from infrastructure.wallet import UncertainEffect
     from services.wallet_recovery import recover_wallet_reservations
-    import psycopg
-    from psycopg.rows import dict_row
     dsn, pool, wallet, owner, version = race_case
     op = _operation(dsn, owner, "completed")
     held = wallet.reserve(owner, reference_type="operation", reference_id=str(op),

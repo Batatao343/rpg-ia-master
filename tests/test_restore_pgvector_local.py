@@ -6,7 +6,7 @@ import pytest
 from infrastructure.contracts import MemoryDocument, MemoryWriteIntent, Principal
 from infrastructure.pgvector_memory import PgVectorMemoryStore
 from services.turn_effects import effect_scope
-from tests.test_postgres_jobs_local import infra, _state  # noqa: F401
+from tests.test_postgres_jobs_local import _state, infra  # noqa: F401
 
 pytestmark = pytest.mark.infra_local
 

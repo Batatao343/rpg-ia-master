@@ -15,7 +15,6 @@ from pathlib import Path
 
 import yaml
 
-
 ROOT = Path(os.environ.get("RPG_ROOT", Path(__file__).resolve().parents[1]))
 NPC_DIR = ROOT / "data" / "codex" / "npcs" / "mundo_vivo"
 GRAPH_DIR = ROOT / "data" / "graph"

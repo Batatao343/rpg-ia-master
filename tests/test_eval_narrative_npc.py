@@ -10,7 +10,6 @@ from evals.core.adapters import AdapterCase, AdapterOutput, AdapterRegistry
 from evals.core.governance import load_cases, load_metrics_registry
 from evals.core.runner import run_eval
 
-
 ROOT = Path(__file__).resolve().parents[1]
 DATASET = "datasets/regression/narrative_npc.jsonl"
 

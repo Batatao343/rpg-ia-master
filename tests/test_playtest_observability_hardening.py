@@ -899,8 +899,8 @@ def test_campanhas_offline_confirmam_rag_e_consumo_do_resumo(
 
 
 def test_cli_retorna_um_para_error_ou_aborto(monkeypatch, tmp_path):
-    from playtest import telemetry as telemetry_module
     from playtest import __main__ as cli
+    from playtest import telemetry as telemetry_module
 
     monkeypatch.setattr(
         telemetry_module, "PLAYTEST_RUNS_DIR", str(tmp_path / "runs"),

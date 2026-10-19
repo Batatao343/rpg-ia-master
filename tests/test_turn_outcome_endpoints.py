@@ -42,9 +42,10 @@ def test_source_mixed_when_origins_differ():
 
 
 def test_sse_state_carries_turn_outcome_equal_to_get_state(monkeypatch, tmp_path):
+    from fastapi.testclient import TestClient
+
     import api
     import persistence
-    from fastapi.testclient import TestClient
     from tests.test_streaming import _new_game, _read_sse
     monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
@@ -63,9 +64,10 @@ def test_sse_state_carries_turn_outcome_equal_to_get_state(monkeypatch, tmp_path
 
 
 def test_post_replay_same_receipt_single_xp_grant(monkeypatch):
+    from fastapi.testclient import TestClient
+
     import api
     import persistence
-    from fastapi.testclient import TestClient
     from tests.test_hardening_persistencia_sse import _state
     gid = str(uuid.uuid4())
     base = _state(gid)

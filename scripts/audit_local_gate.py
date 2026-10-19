@@ -1,12 +1,12 @@
 """Run the free audit gate against an already provisioned local Supabase stack."""
 from __future__ import annotations
 
-import os
 import json
-from pathlib import Path
+import os
 import subprocess
 import sys
 import time
+from pathlib import Path
 from uuid import uuid4
 
 import httpx

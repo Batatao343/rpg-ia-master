@@ -9,16 +9,30 @@ import pytest
 
 from evals.experiments import jev_router_hybrid as hybrid
 from evals.experiments.jev_router_hybrid import (
-    CLASSIFY_REFERENCE_MS, Case, Policy, decision_state, extract_verbs,
-    frozen_request, hybrid_decision, load_dev_cases, scene_view, score_policy,
-    screening_request, select, summarize, target_question,
+    CLASSIFY_REFERENCE_MS,
+    Case,
+    Policy,
+    decision_state,
+    extract_verbs,
+    frozen_request,
+    hybrid_decision,
+    load_dev_cases,
+    scene_view,
+    score_policy,
+    screening_request,
+    select,
+    summarize,
+    target_question,
 )
 from evals.experiments.spec217_j1 import BudgetExhausted, CallLedger, run_phase
 from services.jev_decision import (
-    ChoiceAnswer, DecisionRequest, DecisionResult, DecisionState, JevRateLimitError,
+    ChoiceAnswer,
+    DecisionRequest,
+    DecisionResult,
+    DecisionState,
+    JevRateLimitError,
 )
 from services.jev_rollout import frozen_request as rollout_request
-
 
 NPCS = {
     "Corvo": {"id": "npc_corvo_rapido", "name": "Corvo", "in_scene": True,

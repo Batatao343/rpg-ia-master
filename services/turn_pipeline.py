@@ -67,7 +67,6 @@ def turn_prepare_node(state: dict) -> dict:
 def route_intent_node(state: dict) -> dict:
     """Router branch adapter: it never owns the canonical world channel."""
     from agents.router import dm_router_node, last_decision, reset_last_decision
-
     from observability.telemetry import span
 
     reset_last_decision()

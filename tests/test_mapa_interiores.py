@@ -12,7 +12,6 @@ import gamedata
 import world_utils as wu
 from world_utils import apply_travel, find_travel_destination, travel_cost
 
-
 # ---------------------------------------------------------------------------
 # Helpers — mapa fixture injetado em gamedata._LOCATIONS_BY_ID
 # ---------------------------------------------------------------------------
@@ -196,6 +195,7 @@ def test_mapa_real_custos_curados():
 
 def test_data_map_sem_interiores():
     from fastapi.testclient import TestClient
+
     import api
 
     client = TestClient(api.app)

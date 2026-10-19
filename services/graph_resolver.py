@@ -9,11 +9,12 @@ por parâmetro (vem do GameState). Spec: specs/SPEC-001-fase-2.5-codex-world-sta
 """
 
 from __future__ import annotations
-from observability.telemetry import log_event as _log_event
 
 import json
 import os
 from typing import Dict, List, Optional
+
+from observability.telemetry import log_event as _log_event
 
 GRAPH_DIR = os.path.join("data", "graph")
 

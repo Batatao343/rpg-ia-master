@@ -38,10 +38,11 @@ def log_boot_once(env=None, *, force: bool = False) -> bool:
             return False
         _logged = True
     try:
+        import logging
+
         import llm_setup
         from infrastructure.runtime import HOSTED_PROFILES, is_hardened
         from observability.logging_setup import _parse_level
-        import logging
         profile = str(env.get("RPG_RUNTIME_PROFILE", "legacy")).strip().lower() or "legacy"
         level_name = logging.getLevelName(_parse_level(env.get("RPG_LOG_LEVEL"))[0]).lower()
 

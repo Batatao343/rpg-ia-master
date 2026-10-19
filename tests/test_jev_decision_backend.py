@@ -32,7 +32,6 @@ from services.jev_decision import (
     ScoreQuestion,
 )
 
-
 FIXTURE = json.loads(
     (Path(__file__).parent / "fixtures" / "jev_decision_success.json").read_text(encoding="utf-8")
 )

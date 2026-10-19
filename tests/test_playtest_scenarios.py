@@ -3,8 +3,9 @@ from __future__ import annotations
 
 from types import SimpleNamespace
 
-import party
 import pytest
+
+import party
 from playtest import scenarios
 from playtest.runner import run_campaign
 from services import economy

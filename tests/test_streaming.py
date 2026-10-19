@@ -11,7 +11,6 @@ import pytest
 
 import persistence
 
-
 # ---------------------------------------------------------------------------
 # Etapa 1 — caracterização do LangGraph (app.stream)
 # ---------------------------------------------------------------------------
@@ -155,8 +154,9 @@ def test_stream_memorial_devolve_error(client, tmp_path, monkeypatch):
 
 
 def test_stream_respeita_rate_limit(monkeypatch):
-    import api
     from fastapi.testclient import TestClient
+
+    import api
     monkeypatch.setenv("RPG_RATE_LIMIT", "2")
     api._rate_hits.clear()
     client = TestClient(api.app)

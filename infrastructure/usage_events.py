@@ -1,15 +1,15 @@
 """Append-only usage ledger writer, called inside the operation transaction."""
 
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
 
+import json
 from collections.abc import Sequence
 from decimal import Decimal
 from hashlib import sha256
-import json
 from uuid import UUID
 
 from infrastructure.contracts import Conflict
+from infrastructure.db_roles import admin_connection
 from services.usage_metering import UsageEvent
 
 

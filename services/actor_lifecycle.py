@@ -1,8 +1,8 @@
 """Canonical actor lifecycle and action eligibility (pure Python)."""
 from __future__ import annotations
 
-import re
 import copy
+import re
 import unicodedata
 from enum import StrEnum
 from typing import Literal, TypedDict

@@ -12,7 +12,6 @@ from pydantic import BaseModel, Field
 from llm_setup import ModelTier, get_llm
 from services.chronicle import ensure_chronicle_ids
 
-
 PROFILE_VERSION = "chronicle-digest-v1"
 
 

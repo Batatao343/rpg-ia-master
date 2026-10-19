@@ -1,8 +1,8 @@
 """SPEC-185 transactional Postgres check; all facts roll back after the test."""
 from __future__ import annotations
 
-from datetime import datetime, timezone
 import os
+from datetime import datetime, timezone
 from pathlib import Path
 from uuid import uuid4
 
@@ -10,7 +10,6 @@ import pytest
 
 from infrastructure.account_read_model import PostgresAccountReader
 from infrastructure.contracts import Principal
-
 
 pytestmark = pytest.mark.infra_local
 

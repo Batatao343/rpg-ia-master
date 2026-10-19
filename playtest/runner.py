@@ -321,6 +321,7 @@ def resolve_class_name(raw: str) -> str:
     slug (`devoto_do_abismo`, sem acento, case-insensitive) e devolve a chave
     canônica de CLASSES. Inválido → KeyError com as opções."""
     import unicodedata
+
     from gamedata import CLASSES
 
     def _norm(s: str) -> str:
@@ -350,6 +351,7 @@ def _build_initial_state(profile: str, seed: int,
                          random_game_id: bool = False) -> dict:
     """Monta o estado inicial da campanha — MESMO shape de api.new_game."""
     from langchain_core.messages import HumanMessage, SystemMessage
+
     from character_creator import create_player_character
     from gamedata import XP_TABLE, prepared_slots_for_level, seed_factions
     from services.chronicle import default_chapter_title
@@ -559,8 +561,8 @@ def _offline_embeddings(active: bool):
     if not active:
         yield
         return
-    import rag
     import persistence
+    import rag
     from agents import archivist as archivist_module
     from agents import npc as npc_module
     from agents import world_simulator as world_module
@@ -1069,9 +1071,10 @@ def run_campaign(profile: str, turns: int = 50, seed: int = 0,
             _isolated_runtime_cache(), _seeded_random_factory():
         _clear_caches()
         random.seed(seed)  # reproduz MockLLM + combate da campanha inteira
+        from langchain_core.messages import HumanMessage
+
         from main import app as game_graph
         from persistence import save_game_state, save_path
-        from langchain_core.messages import HumanMessage
 
         llm_setter(_llm_hook)
         if rag_setter:

@@ -45,6 +45,7 @@ def seed_wallet_prereqs(dsn: str) -> None:
     """Idempotent synthetic pricing version + web SKU (append-only rows, staging only)."""
     import psycopg
     from psycopg.types.json import Jsonb
+
     from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256
     from services.usage_metering import RATE_CARD_VERSION
     with psycopg.connect(dsn, autocommit=True, prepare_threshold=None) as c:
@@ -68,6 +69,7 @@ def seed_wallet(dsn: str, owner_id: str) -> dict:
     prerequisites (pricing version with a long rate-card window so reserve() is not 'stale')."""
     import psycopg
     from psycopg.types.json import Jsonb
+
     from infrastructure.contracts import Principal
     from infrastructure.postgres import PostgresPool
     from infrastructure.wallet import PostgresWallet
@@ -129,6 +131,7 @@ def compare_wallet(expected: Mapping[str, Any], actual: Mapping[str, Any]) -> di
 
 def seed(env: Mapping[str, str], client: httpx.Client | None = None, *, wallet: bool = False) -> dict:
     import psycopg
+
     from infrastructure.contracts import MemoryDocument, MemoryWriteIntent, Principal
     from infrastructure.pgvector_memory import PgVectorMemoryStore
     from infrastructure.postgres import PostgresGameStore, PostgresPool

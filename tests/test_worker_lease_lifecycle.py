@@ -1,4 +1,5 @@
-from threading import Event, enumerate as threads
+from threading import Event
+from threading import enumerate as threads
 from uuid import uuid4
 
 from infrastructure.contracts import JobRequest, LeasedJob, LeaseHeld

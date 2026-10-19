@@ -1,16 +1,17 @@
 """Narration agent that advances the story and campaign plan."""
-from observability.telemetry import log_event as _log_event
 import random
 import re
 from collections import Counter
 from copy import deepcopy
 from typing import Dict, List, Optional
+
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 
 from agents.npc import generate_new_npc
 from agents.world_simulator import simulate_world
 from llm_setup import get_llm
+from observability.telemetry import log_event as _log_event
 from rag import query_rag
 from services import discovery as disc
 from services import graph_resolver as gr
@@ -554,9 +555,8 @@ def storyteller_node(state: GameState):
         turn = int(world.get("turn_count", 0))
         # R5 (fix-playtest-achados): a FORÇA do encontro escala pelo nível (apex não).
         _plevel = int((state.get("player") or {}).get("level", 1) or 1)
-        from world_utils import recovery_rest_safe
         from gamedata import get_location as _get_location
-        from world_utils import effective_danger
+        from world_utils import effective_danger, recovery_rest_safe
         danger_now = effective_danger(world)  # SPEC-233 R1
         # spec letalidade-early-game-v2 (alavanca 1): um DESCANSO de early-game em
         # zona não-apex de perigo baixo recupera SEM sortear encontro — o laço de
@@ -590,8 +590,14 @@ def storyteller_node(state: GameState):
 
             # Fase 6.4 (R1): percepção decide surpresa; (R2): nem todo perigo é combate.
             # Reforço/fação dominante SEMPRE é combate (eles vieram POR você).
-            from world_utils import (detection_check, resolve_trap, resolve_track,
-                                     roll_encounter_type, weather_effects, light_level)
+            from world_utils import (
+                detection_check,
+                light_level,
+                resolve_track,
+                resolve_trap,
+                roll_encounter_type,
+                weather_effects,
+            )
             # Fase 6.5: neblina/vendaval atrapalham a percepção.
             # spec itens-vivos-e-luz (R3): escuridão sem luz também penaliza.
             _perc_mod = (weather_effects(world).get("perception_mod", 0)
@@ -990,7 +996,7 @@ def storyteller_node(state: GameState):
         # narrador generoso marcando beat no prólogo não pode virar XP grátis na
         # criação (achado do smoke real 2026-07-05). XP de beat só do turno 2 em diante.
         if beat_done and int(world.get("turn_count", 0) or 0) > 1:
-            from progression import grant_xp, XP_PER_BEAT
+            from progression import XP_PER_BEAT, grant_xp
             # SPEC-226 R3: compõe sobre o jogador já atualizado (descanso/achado).
             base_p = (rested_player if rested_player is not None
                       else discovery_player if discovery_player is not None

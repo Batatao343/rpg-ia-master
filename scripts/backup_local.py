@@ -11,7 +11,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from services.local_backup import copy_sources, write_manifest
 
-
 DB_CONTAINER = "supabase_db_rpg-ia-master-local"
 STORAGE_CONTAINER = "supabase_storage_rpg-ia-master-local"
 LOCAL_PROJECT = "rpg-ia-master-local"

@@ -13,7 +13,15 @@ from infrastructure.wallet import FinancialHold, _hold_guard
 from infrastructure.wallet_debt import forgive_debt, forgive_replay
 from services.purchase_reconciliation import PARK_MAX_ATTEMPTS, STRIPE
 from tests.test_spec194_196_postgres_local import (  # noqa: F401  (fixtures + helpers)
-    GROSS_CENTS, SHARD, balance, debt, ev, lab, lab_rb, reserve, web_purchase,
+    GROSS_CENTS,
+    SHARD,
+    balance,
+    debt,
+    ev,
+    lab,
+    lab_rb,
+    reserve,
+    web_purchase,
 )
 
 pytestmark = pytest.mark.infra_local

@@ -4,13 +4,13 @@ Commercial units are milli-Estilhas. Only settled wallet entries count as spend;
 usage telemetry is activity, not a charge.
 """
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
 
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from uuid import UUID
 
 from infrastructure.contracts import Principal
+from infrastructure.db_roles import admin_connection
 from infrastructure.postgres import PostgresPool
 from infrastructure.usage_events import has_column
 

@@ -6,7 +6,6 @@ import pytest
 
 from scripts.load_test import run
 
-
 pytestmark = pytest.mark.infra_local
 
 

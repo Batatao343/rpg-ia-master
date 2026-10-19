@@ -74,8 +74,8 @@ def test_reflexive_pronoun_is_not_a_conditional_escape(state):
     'Ontem você chegou a Brekmar.',
 ])
 def test_memory_ledger_and_context_keep_qualified_claims(state, text):
-    from services.memory_provenance import make_memory_fact, validate_memory_fact
     from services.context_builder import active_memory_facts
+    from services.memory_provenance import make_memory_fact, validate_memory_fact
     record = make_memory_fact(text, provenance='npc_claim')
     accepted, reason = validate_memory_fact(record, state)
     assert reason is None
@@ -85,8 +85,8 @@ def test_memory_ledger_and_context_keep_qualified_claims(state, text):
 
 @pytest.mark.parametrize('text', ['Ari morreu.', 'Você chegou a Brekmar.'])
 def test_memory_ledger_and_context_reject_explicit_contradictions(state, text):
-    from services.memory_provenance import make_memory_fact, validate_memory_fact
     from services.context_builder import active_memory_facts
+    from services.memory_provenance import make_memory_fact, validate_memory_fact
     record = make_memory_fact(text, provenance='inference')
     assert validate_memory_fact(record, state)[0] is None
     assert active_memory_facts([record], current_turn=3, state=state) == []

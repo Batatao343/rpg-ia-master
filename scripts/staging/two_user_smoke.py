@@ -53,10 +53,11 @@ class User:
 
 
 def run(base: str, env: dict[str, str]) -> dict:
+    from uuid import UUID
+
     from infrastructure.contracts import Principal
     from infrastructure.postgres import PostgresPool
     from infrastructure.wallet import PostgresWallet
-    from uuid import UUID
     admin = s192.Admin(env)
     out: dict = {"base": base, "at": s192.now_iso(), "checks": {}}
     ck = out["checks"]

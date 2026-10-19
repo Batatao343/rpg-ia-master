@@ -6,10 +6,10 @@ fixo, nunca de narração.
 """
 import random
 
+import combat_mechanics as cm
 from services import conflict_orchestrator as orch
 from services import conflict_scene as cs
 from services import conflict_turn as ct
-import combat_mechanics as cm
 
 
 def _mk(actor_id, **kw):
@@ -395,6 +395,7 @@ def test_prepare_prompt_is_compact_and_lists_valid_targets():
 
 def test_prepare_encounter_deadline_falls_back(monkeypatch):
     import time as _t
+
     from services import encounter_preparation as prep
     monkeypatch.setenv("RPG_PREP_TIMEOUT_SECONDS", "0.2")
 

@@ -80,9 +80,10 @@ def test_reported_cost_is_not_treated_as_zero() -> None:
 
 
 def test_capture_marks_build_failure_fatal_and_keeps_raw_usage() -> None:
+    from langchain_core.messages import AIMessage
+
     import llm_setup
     from agents.router import RouterDecision
-    from langchain_core.messages import AIMessage
 
     budget = experiment.Budget()
     with experiment._capture_classify(budget) as capture:

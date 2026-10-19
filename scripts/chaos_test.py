@@ -16,8 +16,8 @@ from infrastructure.contracts import Conflict, JobRequest, LeaseHeld, Principal
 from infrastructure.postgres import PostgresGameStore, PostgresPool
 from infrastructure.postgres_jobs import PostgresJobQueue
 from infrastructure.postgres_turns import PostgresTurnCoordinator
-from services.dsn_cli import add_dsn_arguments, resolve_dsn
 from scripts.load_test import DEFAULT_DSN, _state
+from services.dsn_cli import add_dsn_arguments, resolve_dsn
 
 
 def run(dsn: str = DEFAULT_DSN, *, output: Path | None = None) -> dict:

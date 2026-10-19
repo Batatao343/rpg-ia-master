@@ -1,7 +1,6 @@
 """BlobStore para Supabase Storage, usado somente pelo backend."""
 
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
 
 import hashlib
 from io import BytesIO
@@ -11,6 +10,7 @@ from uuid import UUID
 import httpx
 
 from infrastructure.contracts import BlobMetadata, BlobRef, Conflict, NotFound, Unauthorized
+from infrastructure.db_roles import admin_connection
 
 
 class SupabaseBlobStore:

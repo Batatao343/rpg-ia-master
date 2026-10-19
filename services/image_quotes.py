@@ -1,22 +1,22 @@
 """Owner-confirmed image quotes. Wallet and art repository remain canonical writers."""
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection, system_scope
 
+import os
 from dataclasses import asdict
 from datetime import datetime, timedelta, timezone
 from hashlib import sha256
-import os
-from uuid import UUID, uuid4, uuid5, NAMESPACE_URL
+from uuid import NAMESPACE_URL, UUID, uuid4, uuid5
 
 from psycopg.types.json import Jsonb
 
 from infrastructure.contracts import Conflict, JobRequest, Principal
+from infrastructure.db_roles import admin_connection, system_scope
 from infrastructure.wallet import PostgresWallet
 from services.art_brief import render_image_prompt
 from services.art_triggers import ArtGenerationRequest
 from services.dynamic_art import DynamicArtRepository, lock_art_game
-from services.job_fence import current_job, require_job_fence
 from services.image_pricing import IMAGE_PRICING_VERSION, require_image_prices
+from services.job_fence import current_job, require_job_fence
 from services.shard_pricing import PricingUnavailable, quote_attempt_ceiling, version_from_record
 
 

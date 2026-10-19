@@ -6,7 +6,6 @@ import os
 from playtest import pricing, report, telemetry
 from playtest.runner import run_campaign
 
-
 # --- Etapa 1 — telemetria por turno + summary ------------------------------
 
 def test_jsonl_uma_linha_por_turno(tmp_path, monkeypatch):

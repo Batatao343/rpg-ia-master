@@ -10,10 +10,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from services.local_backup import verify_manifest
 from scripts.backup_local import (
-    DB_CONTAINER, STORAGE_CONTAINER, _assert_local_container,
+    DB_CONTAINER,
+    STORAGE_CONTAINER,
+    _assert_local_container,
 )
+from services.local_backup import verify_manifest
 
 
 def _assert_empty_target() -> None:

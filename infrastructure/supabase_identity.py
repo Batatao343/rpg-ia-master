@@ -1,20 +1,20 @@
 """Adapter mínimo do Supabase Auth via HTTP, injetável e sem SDK no browser."""
 
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
 
-from datetime import UTC, datetime, timedelta
 import base64
 import hashlib
 import json
 import os
 import threading
 import time
+from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
 import httpx
 
 from infrastructure.contracts import AuthUnavailable, Principal, Unauthorized
+from infrastructure.db_roles import admin_connection
 from services.auth_sessions import SessionTokens
 
 

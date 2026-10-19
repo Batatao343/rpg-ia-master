@@ -29,13 +29,13 @@ Run: ``uv run python -m evals.experiments.spec217_j2 --phase run --env-file <.en
 from __future__ import annotations
 
 import argparse
-from datetime import datetime, timezone
-from fractions import Fraction
 import json
 import os
-from pathlib import Path
 import random
 import time
+from datetime import datetime, timezone
+from fractions import Fraction
+from pathlib import Path
 from typing import Any, Callable, Mapping
 
 from evals.core.hashing import repository_identity, sha256_file
@@ -43,11 +43,17 @@ from evals.experiments import jev_router_hybrid as hybrid
 from evals.experiments import spec238_loot as loot
 from evals.experiments.jev_router_ab import _write_json
 from evals.experiments.jev_router_hybrid import (
-    ROOT, Case, CorpusError, digest_of, extract_verbs, normalize_action, percentile, scene_view,
+    ROOT,
+    Case,
+    CorpusError,
+    digest_of,
+    extract_verbs,
+    normalize_action,
+    percentile,
+    scene_view,
 )
 from evals.experiments.spec217_j1 import LEDGER, BudgetExhausted, _answers
 from services.jev_decision import DecisionBackend, DecisionRequest, JevError
-
 
 FROZEN_CORPUS = ROOT / "evals/experiments/data/spec217_frozen.jsonl"
 FROZEN_LOCK = ROOT / "evals/experiments/data/spec217_frozen.sha256"
@@ -258,10 +264,10 @@ class _SlotBudget:
 
 def live_classify(ledger: J2Ledger) -> Callable[[Case, str], dict[str, Any]]:
     """Arm A: the current router through ``RoutingAdapter``, captured attempt by attempt."""
+    import llm_setup
     from agents.router import RouterDecision
     from evals.core.adapters import RoutingAdapter
     from evals.experiments.jev_router_ab import _candidate, _capture_classify
-    import llm_setup
 
     def run(case: Case, phase: str) -> dict[str, Any]:
         budget = _SlotBudget(ledger, phase, case.id)
@@ -636,6 +642,7 @@ def main() -> None:
                           "summary_sha256": sha256_file(args.run_dir / "summary.json")}))
         return
     from dotenv import load_dotenv
+
     from evals.experiments.jev_router_hybrid import load_dev_cases
     from services.jev_decision import JevDecisionBackend
 

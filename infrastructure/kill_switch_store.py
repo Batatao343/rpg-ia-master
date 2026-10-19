@@ -1,7 +1,7 @@
 """Postgres store for SPEC-196 kill switches (privileged backend pool only)."""
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
 
+from infrastructure.db_roles import admin_connection
 from services.kill_switches import validate_change
 
 

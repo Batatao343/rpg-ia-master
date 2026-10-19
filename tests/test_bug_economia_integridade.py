@@ -114,8 +114,8 @@ def test_hostile_consumable_without_target_not_consumed():
 
 
 def test_create_level_20_respects_entropy_cap():
-    from character_creator import create_player_character
     import progression
+    from character_creator import create_player_character
     from gamedata import CLASSES
     sheet = create_player_character(
         {"name": "A", "class_name": "Devoto do Abismo", "race": "Humano",

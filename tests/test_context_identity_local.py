@@ -8,7 +8,11 @@ import pytest
 
 from infrastructure.contracts import MemoryDocument, MemoryWriteIntent, Principal
 from infrastructure.request_context import principal_scope
-from services.context_sources import EmbeddedContextQuery, acquire_context_sources, acquire_context_sources_async
+from services.context_sources import (
+    EmbeddedContextQuery,
+    acquire_context_sources,
+    acquire_context_sources_async,
+)
 
 pytestmark = pytest.mark.infra_local
 

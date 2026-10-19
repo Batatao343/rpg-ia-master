@@ -11,18 +11,17 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import time
+from pathlib import Path
 from typing import Any
 
-from langchain_core.messages import HumanMessage
 import pytest
+from langchain_core.messages import HumanMessage
 
 import agents.router as router_mod
-from agents.router import RouteType, RouterDecision, dm_router_node
+from agents.router import RouterDecision, RouteType, dm_router_node
 from services import jev_rollout
 from services.jev_decision import ChoiceAnswer, DecisionResult, JevTimeoutError, Usage
-
 
 GOLDEN = Path(__file__).parent / "fixtures" / "router_off_golden.json"
 

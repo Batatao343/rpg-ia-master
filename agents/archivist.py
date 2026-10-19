@@ -2,18 +2,20 @@
 agents/archivist.py
 Gerencia a Memória de Curto (Resumo) e Longo Prazo (RAG) da sessão.
 """
-from observability.telemetry import log_event as _log_event
-import re
 import inspect
+import re
 from typing import List
+
 from langchain_core.messages import SystemMessage
 from pydantic import BaseModel, Field, field_validator
-from llm_setup import get_llm, ModelTier
+
+from llm_setup import ModelTier, get_llm
+from observability.telemetry import log_event as _log_event
 from rag import add_memory_to_session, add_npc_memory
-from services.chronicle import append_entry
 from services import conflict_summary as conflict_summary_service
+from services.chronicle import append_entry
+from services.context_builder import render_event
 from services.event_processor import process_pending_events
-from services.memory_retry import normalize_pending_npc_memory
 from services.memory_provenance import (
     MAX_MEMORY_PROMOTIONS,
     MAX_MEMORY_REJECTIONS,
@@ -28,9 +30,9 @@ from services.memory_provenance import (
     set_vector_status,
     validate_memory_fact,
 )
-from services.prose_guard import sanitize_meta_preamble
+from services.memory_retry import normalize_pending_npc_memory
 from services.prompt_guard import PLAYER_INPUT_RULE, guard_messages
-from services.context_builder import render_event
+from services.prose_guard import sanitize_meta_preamble
 from state import GameState
 
 
@@ -261,8 +263,9 @@ def _validate_derived(result: dict, state: GameState, evidence, audit: list, *,
 
 def archive_node(state: GameState):
     from langgraph.types import Overwrite
-    from services.narrative_evidence import build_evidence, guard_current_messages
+
     from services import projections
+    from services.narrative_evidence import build_evidence, guard_current_messages
 
     # Validate after event processing, before feeding prose back to the model.
     event_updates = process_pending_events(state)

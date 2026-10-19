@@ -30,6 +30,7 @@ def _chrome() -> str | None:
 
 def run(base: str, env: dict[str, str]) -> dict:
     from playwright.sync_api import sync_playwright
+
     from infrastructure.contracts import Principal
     from infrastructure.postgres import PostgresPool
     from infrastructure.wallet import PostgresWallet

@@ -6,6 +6,8 @@ from types import SimpleNamespace
 import pytest
 from pydantic import ValidationError
 
+import persistence
+import rag
 from agents import archivist
 from agents.archivist import MemoryUpdate
 from playtest.invariants import check_memory_provenance
@@ -22,8 +24,6 @@ from services.memory_provenance import (
     sanitize_inventory_grounding,
     validate_memory_fact,
 )
-import persistence
-import rag
 
 
 def _inventory_grounding_state(*, has_diary: bool = False) -> dict:

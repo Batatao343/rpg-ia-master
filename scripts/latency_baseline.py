@@ -185,6 +185,7 @@ def execute(journeys, reps: int, seed: int, profile: str, mode: str, scale: floa
             max_cost: Optional[float] = None, progress=None) -> List[Dict[str, Any]]:
     """Roda as jornadas in-process (TestClient, SSE real) e devolve os registros."""
     import random
+
     from fastapi.testclient import TestClient
 
     from playtest.latency_llm import LatencyContext, install, uninstall

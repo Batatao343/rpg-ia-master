@@ -3,16 +3,18 @@ agents/bestiary.py
 Gerador de Inimigos V8 (Refatorado Check-First + RAG).
 Correção: Prompt reforçado para garantir lista de ataques estruturada.
 """
-from observability.telemetry import log_event as _log_event
 import json
 import os
 import re
 import unicodedata
 from typing import Dict, List, Literal, Optional
-from langchain_core.messages import SystemMessage, HumanMessage
+
+from langchain_core.messages import HumanMessage, SystemMessage
 from pydantic import BaseModel, ConfigDict, Field
-from llm_setup import ModelTier, get_llm
+
 import gamedata
+from llm_setup import ModelTier, get_llm
+from observability.telemetry import log_event as _log_event
 
 try:
     from rag import query_rag
@@ -160,9 +162,8 @@ def _read_json(path: str) -> Dict:
 def load_bestiary() -> Dict:
     """View unificada: curadoria ∪ overlay runtime (curadoria VENCE conflito de
     id — gerado nunca sombreia entrada curada)."""
-    from infrastructure.runtime import get_runtime
-
     from agents.npc import catalog_owner_id
+    from infrastructure.runtime import get_runtime
 
     store = get_runtime().runtime_catalog
     overlay = store.list("bestiary_template", owner_id=None, game_id=None)

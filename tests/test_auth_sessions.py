@@ -5,8 +5,12 @@ from uuid import uuid4
 import pytest
 
 from infrastructure.contracts import CsrfError, Principal, Unauthorized
-from services.auth_sessions import CsrfSigner, cookie_settings, principal_from_session, validate_mutation_request
-
+from services.auth_sessions import (
+    CsrfSigner,
+    cookie_settings,
+    principal_from_session,
+    validate_mutation_request,
+)
 
 pytestmark = pytest.mark.security_local
 

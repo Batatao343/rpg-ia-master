@@ -12,7 +12,6 @@ import pytest
 import persistence
 from persistence import load_game_state, save_game_state
 
-
 # ---------------------------------------------------------------------------
 # Etapa 1 — event_log / world_projection / pending_world_events no save
 # ---------------------------------------------------------------------------

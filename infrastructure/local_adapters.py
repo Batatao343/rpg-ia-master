@@ -24,8 +24,8 @@ from infrastructure.contracts import (
     Conflict,
     Forbidden,
     JobRequest,
-    LeaseHeld,
     LeasedJob,
+    LeaseHeld,
     MemoryDocument,
     MemoryQuery,
     MemoryWriteIntent,
@@ -449,6 +449,7 @@ class InlineJobQueue:
             job_id = uuid4()
             if job.trace is None:     # SPEC-255 R1: correlacao do request de origem
                 from dataclasses import replace
+
                 from observability.telemetry import correlation
                 current = correlation()
                 job = replace(job, trace={k: current[k] for k in ("request_id", "action_ref")

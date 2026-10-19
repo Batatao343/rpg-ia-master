@@ -17,9 +17,18 @@ import random
 from typing import Any, Dict, List, Mapping, Optional, Tuple, TypedDict
 
 from gamedata import ARTIFACTS_DB, get_location, load_json_data
-from inventory import (add_item, find_entry_in_inventory, get_qty, item_display,
-                       make_entry, reconcile_equipment, remove_item,
-                       resolve_item_name, _fold, UNKNOWN_ID)
+from inventory import (
+    UNKNOWN_ID,
+    _fold,
+    add_item,
+    find_entry_in_inventory,
+    get_qty,
+    item_display,
+    make_entry,
+    reconcile_equipment,
+    remove_item,
+    resolve_item_name,
+)
 from services import graph_resolver as gr
 
 RECIPES: Dict[str, dict] = load_json_data("recipes.json") or {}

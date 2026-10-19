@@ -11,9 +11,8 @@ ADITIVO (como 03-08): módulo novo + testes. Substituir o fluxo simplificado atu
 `quester` do playtest é cutover (conflito-13).
 """
 import random
-from typing import Dict, List, Optional
-
 import re
+from typing import Dict, List, Optional
 
 from services.conflict_resolution import roll_kept, virtude_value
 from services.tactical_profile import pick_action

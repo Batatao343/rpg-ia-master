@@ -5,6 +5,7 @@ Definição da Arquitetura do Grafo (LangGraph).
 
 import os
 import sys
+
 from dotenv import load_dotenv
 from langgraph.graph import END, START, StateGraph
 
@@ -21,17 +22,17 @@ for _stream in (sys.stdout, sys.stderr):
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # --- IMPORTAÇÃO DOS ESTADOS E AGENTES ---
-from state import GameState
-from observability.telemetry import with_node
+from agents.action_guard import action_guard_node
+from agents.archivist import archive_node  # <--- NOVO
 from agents.campaign_manager import campaign_manager_node
 from agents.combat import combat_node
+from agents.loot import loot_node
 from agents.npc import npc_actor_node
 from agents.storyteller import storyteller_node
-from agents.loot import loot_node
-from agents.archivist import archive_node # <--- NOVO
-from agents.action_guard import action_guard_node
 from agents.turn_finalizer import turn_finalizer_node
+from observability.telemetry import with_node
 from services.turn_pipeline import dispatch_node, route_intent_node, turn_prepare_node
+from state import GameState
 
 load_dotenv(override=True)  # .env canônico (sobrepõe env var do SO)
 

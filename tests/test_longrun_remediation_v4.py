@@ -1,7 +1,7 @@
 """Regressões dos achados do long run real de 200 turnos (2026-08-16)."""
 
-from types import SimpleNamespace
 import random
+from types import SimpleNamespace
 
 from langchain_core.messages import HumanMessage
 
@@ -10,9 +10,8 @@ from agents import router as router_mod
 from playtest import invariants
 from playtest.metrics import quest_request_conversion_count
 from playtest.profiles import PROFILES
-from playtest.runner import TurnRecord, _campaign_experience_violations
+from playtest.runner import CampaignResult, TurnRecord, _campaign_experience_violations
 from playtest.telemetry import build_summary, turn_to_record
-from playtest.runner import CampaignResult
 
 
 def _state(**overrides):

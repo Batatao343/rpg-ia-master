@@ -19,7 +19,6 @@ from evals.core.hashing import repository_identity
 from evals.core.runner import run_eval, write_run
 from evals.core.schemas import EVALUATOR_VERSION
 
-
 ROOT = Path(__file__).resolve().parents[1]
 GOVERNANCE_DATASET = "datasets/regression/governance.jsonl"
 HARNESS_DATASET = "datasets/regression/harness.jsonl"

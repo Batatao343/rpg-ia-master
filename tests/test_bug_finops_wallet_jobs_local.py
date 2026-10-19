@@ -2,15 +2,15 @@
 from __future__ import annotations
 
 import asyncio
+import io
+import os
+import wave
 from contextlib import nullcontext
 from datetime import datetime, timezone
 from decimal import Decimal
-import io
-import os
 from pathlib import Path
 from types import SimpleNamespace
 from uuid import uuid4
-import wave
 
 import pytest
 
@@ -18,9 +18,9 @@ from infrastructure.contracts import JobRequest, Principal
 from infrastructure.postgres_turns import PostgresTurnCoordinator
 from infrastructure.speech_finance import PostgresSpeechFinance
 from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256
-from tests.fakes.local_pricing import installed_card_max_age_seconds
 from services.speech_to_text import Candidate, ProviderReading, SpeechCircuit, transcribe_audio
 from services.usage_metering import RATE_CARD_VERSION, normalize_attempts
+from tests.fakes.local_pricing import installed_card_max_age_seconds
 
 pytestmark = pytest.mark.infra_local
 AT = datetime(2026, 10, 12, 12, tzinfo=timezone.utc)
@@ -270,6 +270,7 @@ def test_stt_timeout_stays_held_until_operator_reconciles(db_case):
 # --- R6 -------------------------------------------------------------------------------------
 def test_partial_refund_before_checkout_still_credits(db_case):
     import hashlib
+
     from infrastructure.stripe_payments import StripePayments
     from services.stripe_checkout import StripeSettings
     c = db_case
@@ -386,6 +387,7 @@ def test_llm_settle_above_ceiling_caps_and_records_anomaly_once(db_case):
 @pytest.fixture
 def image_case(db_case, monkeypatch):
     from datetime import timedelta
+
     from infrastructure.postgres import PostgresGameStore
     from infrastructure.postgres_jobs import PostgresJobQueue
     from services.image_quotes import ImageQuoteRepository
@@ -434,6 +436,7 @@ def _generation(c, generation_id) -> dict:
 
 def test_image_deferred_too_long_releases_reservation(image_case):
     from datetime import timedelta
+
     from services.job_fence import job_scope
     i, c = image_case, image_case.c
     gid = i.generation["generation_id"]

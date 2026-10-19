@@ -17,7 +17,6 @@ from project_index.generator import (
 )
 from project_index.query import MAX_RESULTS, lookup_tests, query, state, symbol
 
-
 ROOT = Path(__file__).resolve().parents[1]
 
 

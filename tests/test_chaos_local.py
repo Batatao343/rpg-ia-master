@@ -6,7 +6,6 @@ import pytest
 
 from scripts.chaos_test import run
 
-
 pytestmark = pytest.mark.chaos_local
 
 

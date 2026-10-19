@@ -9,7 +9,6 @@ import pytest
 
 from scripts.browser_local import find_chrome
 
-
 pytestmark = [pytest.mark.browser_local, pytest.mark.skipif(
     os.getenv("RPG_VISUAL_BROWSER") != "1", reason="RPG_VISUAL_BROWSER=1 required")]
 

@@ -13,7 +13,6 @@ from services.content_validator import (
     validate_all,
 )
 
-
 ROOT = Path(__file__).resolve().parents[1]
 CLASS_FILES = ("devoto", "sangromante", "corruptor", "arcanista", "medico")
 HUB_REGIONS = {

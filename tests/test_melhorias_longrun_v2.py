@@ -1,8 +1,8 @@
 from copy import deepcopy
 
-from services import checkpoints, combat_origin, continuity, objectives, quest_log, social_direction
 from playtest.runner import TurnRecord
 from playtest.telemetry import turn_to_record
+from services import checkpoints, combat_origin, continuity, objectives, quest_log, social_direction
 
 
 def test_objetivo_publico_nao_expoe_beat_privado():

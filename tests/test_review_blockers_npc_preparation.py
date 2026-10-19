@@ -3,13 +3,14 @@
 import random
 from types import SimpleNamespace
 
-import gamedata
 from langchain_core.messages import AIMessage, HumanMessage
+
+import gamedata
 from agents import npc as npc_mod
 from agents import storyteller
 from services import conflict_scene as cs
-from services import encounter_preparation as prep
 from services import conflict_turn as ct
+from services import encounter_preparation as prep
 from services import tactical_profile as tactical
 
 

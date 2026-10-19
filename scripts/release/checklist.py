@@ -23,6 +23,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 from infrastructure.runtime import FORBIDDEN_IN_HOSTED, HOSTED_REQUIRED_ENV  # noqa: E402
+
 EVIDENCE = ROOT / "docs" / "spec197" / "evidence"
 SPEC_RANGE = range(176, 197)
 OK_SPEC_STATUSES = {"done"}
@@ -350,6 +351,7 @@ def real_remote_migrations(env: str) -> list[dict] | None:
     if not dsn:
         return None  # production not provisioned (docs/spec197/external-inputs.md)
     import psycopg
+
     from scripts.staging import migrations as mig
     with psycopg.connect(dsn, autocommit=True) as conn:
         return mig.fetch_remote(conn)

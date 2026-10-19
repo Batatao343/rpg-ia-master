@@ -1,6 +1,5 @@
 """SPEC-194 idempotent Google Play fulfillment: verify -> credit -> consume."""
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
 
 import logging
 import os
@@ -11,10 +10,19 @@ from uuid import UUID, uuid4
 from psycopg.types.json import Jsonb
 
 from infrastructure.contracts import Principal
+from infrastructure.db_roles import admin_connection
 from infrastructure.wallet import PostgresWallet
 from services.google_play import (
-    CANCELLED, ORDER_RE, PENDING, PRODUCT_RE, PURCHASED, TOKEN_RE, GooglePlayError,
-    ProductPurchase, obfuscated_account_id, token_digest,
+    CANCELLED,
+    ORDER_RE,
+    PENDING,
+    PRODUCT_RE,
+    PURCHASED,
+    TOKEN_RE,
+    GooglePlayError,
+    ProductPurchase,
+    obfuscated_account_id,
+    token_digest,
 )
 
 CHANNEL = "google_play"
@@ -69,7 +77,10 @@ class GooglePlayPurchases:
                 self._consume(prior)
                 prior = self.store.get_by_token(digest)
             return _public(prior)
-        from services.kill_switches import SwitchOff, require_purchases  # SPEC-196: NEW purchases only
+        from services.kill_switches import (  # SPEC-196: NEW purchases only
+            SwitchOff,
+            require_purchases,
+        )
         try:
             require_purchases("google_play")
         except SwitchOff:

@@ -16,8 +16,14 @@ from uuid import uuid4
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
 
-from observability.telemetry import (correlation, correlation_scope, log_event, pseudonym,
-                                     safe_json, safe_stack)
+from observability.telemetry import (
+    correlation,
+    correlation_scope,
+    log_event,
+    pseudonym,
+    safe_json,
+    safe_stack,
+)
 
 router = APIRouter(prefix="/internal/cron", tags=["internal"])
 _log = logging.getLogger("rpg.cron")

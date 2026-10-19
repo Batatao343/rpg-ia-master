@@ -597,8 +597,8 @@ for _k in ("contra_ataque", "dano", "cura", "aplicar_condicao", "empurrao", "buf
 
 
 def _utility_test():
-    from services.context_builder import utility_context_block
     from services.cards import all_cards
+    from services.context_builder import utility_context_block
     card = next(c for c in all_cards().values() if c.get("tipo") == "utilitaria")
     assert card["name"] in utility_context_block({"known_cards": [card["id"]],
                                                   "class_name": card.get("classe")})
@@ -624,6 +624,7 @@ for _k, _sub in (("buff", "ac"), ("buff", "attack"), ("debuff", "attack"),
 for _k in ("always", "carga_embrace", "damage_type", "light", "perception", "resist"):
     EFFECT_TESTS[f"item.passive:{_k}"] = _item_passive_test(_k)
 from services.reactions import GATILHOS as _GATILHOS  # noqa: E402
+
 for _g in _GATILHOS:
     EFFECT_TESTS[f"gatilho:{_g}"] = _gatilho_test(_g)
 EFFECT_TESTS["trait.dc:persuasao"] = _trait_test("persuasao")

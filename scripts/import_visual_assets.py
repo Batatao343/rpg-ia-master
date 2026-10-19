@@ -18,7 +18,6 @@ from typing import Any
 
 from PIL import Image, ImageOps
 
-
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PATH = ROOT / "data" / "visual_assets.json"
 OUTPUT_ROOT = ROOT / "web" / "public" / "art" / "v1"

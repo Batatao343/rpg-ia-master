@@ -19,7 +19,6 @@ from pathlib import Path
 
 import yaml
 
-
 STATUS_RE = re.compile(r"^\s*>\s*\*\*Status:\*\*\s*`([^`]+)`", re.IGNORECASE | re.MULTILINE)
 SPEC_ID_RE = re.compile(r"^SPEC-(\d{3})-(.+)\.md$", re.IGNORECASE)
 SPEC_REFERENCE_RE = re.compile(r"\bSPEC-(\d{3})\b")

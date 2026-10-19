@@ -5,13 +5,13 @@ cliente). Jogo alheio e inexistente são indistinguíveis (None). Falha de uma
 fonte secundária vira `unavailable` com motivo — o export continua.
 """
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection
 
 from decimal import Decimal
 from typing import Any, Dict, List, Optional
 from uuid import UUID
 
 from infrastructure.contracts import Principal, Unauthorized
+from infrastructure.db_roles import admin_connection
 from services.audit_export import AuditSource
 
 

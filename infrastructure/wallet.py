@@ -5,26 +5,28 @@ trusted backend DB connection may mutate these tables.
 """
 
 from __future__ import annotations
-from infrastructure.db_roles import admin_connection, system_scope
 
 from collections import Counter
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from decimal import Decimal
-from typing import Sequence
-from typing import Iterator
+from typing import Iterator, Sequence
 from uuid import UUID, uuid4
 
 from infrastructure.contracts import Principal
+from infrastructure.db_roles import admin_connection, system_scope
 from infrastructure.postgres import PostgresPool
-from services.shard_pricing import (
-    MAX_SHARD_MILLI, PricingUnavailable, quote_attempt_ceiling,
-    quote_usage, version_from_record,
-)
-from services.purchase_reconciliation import FinancialHold as _PureFinancialHold
-from services.usage_metering import UsageEvent, reserve_next_attempt
 from infrastructure.wallet_debt import owner_debt, settle_owner_debt
+from services.purchase_reconciliation import FinancialHold as _PureFinancialHold
+from services.shard_pricing import (
+    MAX_SHARD_MILLI,
+    PricingUnavailable,
+    quote_attempt_ceiling,
+    quote_usage,
+    version_from_record,
+)
+from services.usage_metering import UsageEvent, reserve_next_attempt
 
 
 class WalletConflict(ValueError):

@@ -11,10 +11,10 @@ faziam, agora aqui dentro e com try/except). Spec: specs/SPEC-005-fase-2.8-conte
 """
 from __future__ import annotations
 
+import hashlib
 import math
 import os
 import re
-import hashlib
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
@@ -474,7 +474,8 @@ def build_context_pack(state: Dict, query: str, purpose: str,
                        token_budget: int = 3500, game_id: Optional[str] = None,
                        npc_id: Optional[str] = None) -> ContextPack:
     """SPEC-200: mede a fase `context` (no-op sem timeline). Sem mudar comportamento."""
-    from observability.latency import TurnPhase, phase as _phase
+    from observability.latency import TurnPhase
+    from observability.latency import phase as _phase
     with _phase(TurnPhase.CONTEXT):
         pack = _build_context_pack(state, query, purpose, token_budget, game_id, npc_id)
     # SPEC-207 R7: refs do contexto visto vão ao coletor do turno (no-op fora do turno).

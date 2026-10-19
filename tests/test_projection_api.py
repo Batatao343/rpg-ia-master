@@ -13,8 +13,8 @@ from services import projections
 
 @pytest.fixture()
 def client(monkeypatch):
-    import api
     import agents.archivist as archive
+    import api
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
     monkeypatch.setenv(projections.MODE_ENV, "post_response")
     # Força a cadência do arquivista: todo turno tem derivado a projetar.

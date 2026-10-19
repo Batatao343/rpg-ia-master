@@ -11,8 +11,8 @@ existe, nunca cria do nada, e respeita proibições rígidas (R4/R6).
 ADITIVO: módulo novo + testes. O consumidor de `abyss_charge` e a fiação no loop
 de combate entram no cutover (conflito-13).
 """
-from typing import List, Optional, Tuple
 import random
+from typing import List, Optional, Tuple
 
 from pydantic import BaseModel, Field
 

@@ -145,7 +145,7 @@ def test_combat_block_exposes_additive_fields():
 
 # ---- paridade com o motor / borda ------------------------------------------
 def test_targeting_matches_server_revalidation():
-    from services.conflict_turn import _invalid_target_reason, TurnStep
+    from services.conflict_turn import TurnStep, _invalid_target_reason
     state = _state()
     scene = state["combat"]["scene"]
     actors = {"player": state["player"], **{e["id"]: e for e in state["enemies"]}}
@@ -213,6 +213,7 @@ def test_old_client_payload_still_valid():
 
 def _client(monkeypatch):
     from fastapi.testclient import TestClient
+
     import agents.campaign_manager as campaign_manager
     import agents.combat as combat_agent
     import character_creator

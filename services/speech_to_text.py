@@ -6,18 +6,18 @@ provider body. Unknown network effects are recorded and held for reconciliation.
 from __future__ import annotations
 
 import asyncio
-from dataclasses import dataclass
-from decimal import Decimal
 import os
-from pathlib import Path
 import re
 import subprocess
 import tempfile
 import threading
 import time
+import wave
+from dataclasses import dataclass
+from decimal import Decimal
+from pathlib import Path
 from typing import Protocol
 from uuid import UUID
-import wave
 
 import httpx
 
@@ -225,6 +225,7 @@ async def transcribe_audio(payload: bytes, mime: str, operation_id: UUID,
                            candidates: list[Candidate] | None = None,
                            circuit: SpeechCircuit | None = None) -> dict:
     import hashlib
+
     from observability.telemetry import log_provider_attempt
     circuit = circuit or SPEECH_CIRCUIT
     candidates = configured_candidates() if candidates is None else candidates

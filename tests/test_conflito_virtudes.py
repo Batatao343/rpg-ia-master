@@ -182,7 +182,7 @@ def _player_lvl(level=3, corpo=2, vit=None):
 
 
 def test_nivel_par_oferece_escolha_de_virtude():
-    from progression import grant_xp, XP_TABLE
+    from progression import XP_TABLE, grant_xp
     p = _player_lvl(level=3)
     p, events = grant_xp(p, XP_TABLE[4])  # sobe para nível 4
     assert p["level"] == 4
@@ -191,7 +191,7 @@ def test_nivel_par_oferece_escolha_de_virtude():
 
 
 def test_nivel_impar_nao_oferece_virtude():
-    from progression import grant_xp, XP_TABLE
+    from progression import XP_TABLE, grant_xp
     p = _player_lvl(level=2)
     p, _ = grant_xp(p, XP_TABLE[3])  # sobe para nível 3 (ímpar)
     assert p["level"] == 3
@@ -247,7 +247,9 @@ def test_migracao_v3_marca_arquivado_sem_converter():
 def test_acao_em_save_arquivado_recusa_sem_crash(tmp_path, monkeypatch):
     import json
     import uuid
+
     from fastapi.testclient import TestClient
+
     import api
     import persistence
 

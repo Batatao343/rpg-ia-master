@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import json
 import subprocess
-from pathlib import Path
 from contextlib import contextmanager
 from dataclasses import asdict
+from pathlib import Path
 
 import pytest
 

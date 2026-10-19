@@ -15,7 +15,6 @@ Spec: specs/SPEC-008-fase-3.3-quest-log.md §3.
 """
 
 from __future__ import annotations
-from observability.telemetry import log_event as _log_event
 
 import difflib
 import re
@@ -24,6 +23,7 @@ import uuid
 from typing import Dict, List, Tuple, Union
 
 import gamedata
+from observability.telemetry import log_event as _log_event
 from services import graph_resolver as gr
 
 MAX_ACTIVE_QUESTS = 8

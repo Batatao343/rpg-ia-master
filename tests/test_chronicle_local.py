@@ -10,7 +10,6 @@ from infrastructure.contracts import MemoryQuery, Principal
 from services.chronicle import append_entry, open_chapter
 from workers.chronicle_jobs import compress_chronicle_job
 
-
 pytestmark = pytest.mark.infra_local
 
 

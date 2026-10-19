@@ -11,7 +11,6 @@ confirm (API continua stateless por save).
 """
 
 from __future__ import annotations
-from observability.telemetry import log_event as _log_event
 
 from typing import List, Tuple
 
@@ -20,6 +19,7 @@ from pydantic import BaseModel, Field
 
 from gamedata import CLASS_THEMES, load_json_data
 from llm_setup import ModelTier, get_llm
+from observability.telemetry import log_event as _log_event
 from services.chronicle import default_chapter_title
 
 ATTITUDES = ("hostil", "neutro", "aliado")

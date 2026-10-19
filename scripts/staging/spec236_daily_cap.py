@@ -18,7 +18,6 @@ import argparse
 import json
 import sys
 from datetime import timedelta, timezone
-
 from uuid import uuid4
 
 import httpx

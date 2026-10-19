@@ -10,7 +10,7 @@ import pytest
 
 from observability import logging_setup
 from observability.metrics import metrics
-from services.speech_to_text import (Candidate, ProviderReading, SpeechCircuit, transcribe_audio)
+from services.speech_to_text import Candidate, ProviderReading, SpeechCircuit, transcribe_audio
 
 GROQ = Candidate("groq", "whisper-large-v3-turbo")
 OPENAI = Candidate("openai", "gpt-4o-mini-transcribe")
@@ -106,7 +106,7 @@ def test_stt_switch_check_failed_logged(capsys, monkeypatch):
 
 
 def test_image_http_status_logged(capsys, monkeypatch):
-    from infrastructure.openai_images import OpenAIImageGenerator, ImageProviderError
+    from infrastructure.openai_images import ImageProviderError, OpenAIImageGenerator
     from infrastructure.ports import ImageGenerationInput
     transport = httpx.MockTransport(lambda r: httpx.Response(503, text=SENTINEL))
     monkeypatch.setattr(httpx, "post", lambda url, **kw: httpx.Client(transport=transport).post(
@@ -121,7 +121,7 @@ def test_image_http_status_logged(capsys, monkeypatch):
 
 
 def test_image_refusal_outcome(capsys, monkeypatch):
-    from infrastructure.openai_images import OpenAIImageGenerator, ImageGenerationRefused
+    from infrastructure.openai_images import ImageGenerationRefused, OpenAIImageGenerator
     from infrastructure.ports import ImageGenerationInput
     transport = httpx.MockTransport(lambda r: httpx.Response(400, text="safety violation"))
     monkeypatch.setattr(httpx, "post", lambda url, **kw: httpx.Client(transport=transport).post(
