@@ -38,7 +38,7 @@ select jobid, status_code, created from net._http_response order by created desc
 select now() - max(evaluated_at) as age from app.finops_evaluations;          -- stale se > 2h
 select evaluated_at, blocking_alerts, alerts from app.finops_evaluations order by evaluated_at desc limit 1;
 ```
-Logs: `npx vercel logs --environment production --since 10m --query level:error` (linhas `rpg.cron`, `rpg.turn`).
+Logs: `npx vercel logs --environment production --since 10m --query level:error` (linhas `rpg.cron`, `rpg.turn`). Receitas por cenário (código de suporte, turno, pagamento, auth, jobs, deploy): [RUNBOOK_DEBUG](../../operacao/RUNBOOK_DEBUG.md).
 Alertas em `observability/alerts/finops.yml` (FinopsCostSpike, FinopsWalletMismatch, FinopsWebhookBacklog,
 FinopsProviderFailure, FinopsMarginBelowTarget, KillSwitchStoreUnreadable, FinopsEvaluationStale...). Sem Prometheus na
 Vercel, a checagem e via SQL acima ate haver scrape.

@@ -1,6 +1,6 @@
 # SPEC-262 — Runbook “como debugar X”, ferramenta de pseudônimo e decisão de retenção/drain de logs da Vercel
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P1**.
+> **Status:** `in-progress` — implementada em `logs-p1` (REVIEW_REQUIRED; smoke staging pendente)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-239, SPEC-240 (o runbook descreve os campos); pode ser escrito em paralelo e atualizado a cada spec de log entregue
 > **Desbloqueia:** operação do beta
@@ -57,10 +57,10 @@ R1–R5.
 
 - [ ] Cada receita executada uma vez em staging com o resultado anotado.
 - [ ] Decisão de retenção/drain registrada pelo dono.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] `uv run pytest` verde (suíte completa offline).
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -71,3 +71,7 @@ R1–R5.
 - Ativar drain envia logs a terceiro: precisa constar na política de privacidade antes (SPEC-222).
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## Execução (logs-p1, 2026-10-18)
+
+Implementado: `docs/operacao/RUNBOOK_DEBUG.md` (8 receitas a–h, com comandos `vercel logs --query`, SQL somente-leitura e métricas), `scripts/log_ref.py` (pseudônimo owner|game|action; segredo só do ambiente/.env/--stdin, recusa sem segredo e por argv), `docs/operacao/LOGS_RETENCAO.md` (níveis por área, volume por turno, **decisão com o default da spec: ficar só na Vercel, sem log drain** — não é decisão do dono; limites da Vercel marcados como não verificados por falta de rede), catálogo `observability/events.py` + `docs/operacao/EVENTOS_DE_LOG.md` gerados por `scripts/gen_event_catalog.py` (varredura AST + wrappers; teste falha se um evento literal novo não estiver registrado ou se o doc estiver velho), `incident.md` aponta para o runbook. Testes: `tests/test_log_ref.py`, `tests/test_log_event_registry.py`. Pendentes (dependem do operador/staging): dry-run de cada receita em staging, medição real de linhas/turno, decisão formal do dono sobre retenção/drain.
