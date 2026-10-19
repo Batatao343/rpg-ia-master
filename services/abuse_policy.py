@@ -42,6 +42,7 @@ ROUTE_CLASSES: dict[str, RouteClass] = {c.name: c for c in (
     _rc("export", rf"^/account/export$|^/game/{_ID}/audit-export$", ("GET", "POST"), 30, 6),
     _rc("stt", r"^/account/transcriptions$", ("POST",), 30, 0),   # owner: 5/min no proprio handler
     _rc("latency", r"^/telemetry/client-latency$", ("POST",), 30, 0),
+    _rc("telemetry", r"^/telemetry/client-error$", ("POST",), 30, 0),   # SPEC-244 (publico, so IP)
     _rc("read_auth", r"^/(game|account)(/|$)", ("GET", "HEAD"), 300, 120),
 )}
 

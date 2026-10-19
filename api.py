@@ -28,7 +28,7 @@ from fastapi.responses import JSONResponse, StreamingResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field, field_validator
-from typing import Any, Dict, Iterator, List, Literal, Optional
+from typing import Annotated, Any, Dict, Iterator, List, Literal, Optional
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
 # Adiciona raiz ao path
@@ -219,6 +219,7 @@ app.add_middleware(BodyLimitMiddleware, default_limit=256 * 1024, per_path={
     "/payments/stripe/webhook": 256 * 1024 + 64 * 1024,
     "/game/new": 64 * 1024,
     "/game/prologue": 64 * 1024,
+    "/telemetry/client-error": 4 * 1024,   # SPEC-244 R3
 })
 
 from services.cron_internal import router as _cron_router
@@ -233,6 +234,8 @@ def _session_scoped_path(path: str, query) -> bool:
     """Rotas com dado POR JOGO/conta: exigem sessão nos perfis com banco.
     SPEC-210 (revisão Sol): `/data/map?game_id=` é a view filtrada de UM save —
     sem a fronteira não haveria principal (404 sempre no perfil DB) nem no-store."""
+    if path == _CLIENT_ERROR_PATH:
+        return False      # SPEC-244: erro na tela de login (sem sessao) tambem precisa chegar
     if path.startswith(("/game", "/account", "/telemetry")):
         return True
     return path == "/data/map" and bool(query.get("game_id"))
@@ -1261,6 +1264,7 @@ def _reject_archived(state: dict) -> None:
 _RATE_WINDOW_S = 60.0
 _rate_hits: Dict[str, deque] = defaultdict(deque)
 _CLIENT_LATENCY_PATH = "/telemetry/client-latency"
+_CLIENT_ERROR_PATH = "/telemetry/client-error"
 
 
 def _rate_limit_max() -> int:
@@ -2375,6 +2379,51 @@ def client_latency(report: ClientLatencyReport):
         }))
     except Exception:
         pass
+    return Response(status_code=204)
+
+
+def _client_error_enabled() -> bool:
+    """SPEC-244 R3: ligado por default; ``RPG_CLIENT_ERROR_REPORT=0`` e o kill switch."""
+    return os.getenv("RPG_CLIENT_ERROR_REPORT", "1").strip() != "0"
+
+
+_STACK_FRAME = r"^[A-Za-z0-9_./-]{1,120}:\d{1,7}(?::\d{1,7})?$"
+
+
+class ClientErrorReport(BaseModel):
+    """SPEC-244 R2: corpo FECHADO. Nada de mensagem de erro, texto do jogador, URL com query ou e-mail:
+    todo campo tem enum/regex estreito e campo extra e 422."""
+    model_config = ConfigDict(extra="forbid")
+    kind: Literal["render", "unhandled", "network", "sse", "native"]
+    error_name: str = Field(pattern=r"^[A-Za-z_$][A-Za-z0-9_$.]{0,59}$")
+    code: Optional[str] = Field(default=None, pattern=r"^[a-z0-9_.:-]{1,64}$")
+    route: Optional[str] = Field(default=None, pattern=r"^/[A-Za-z0-9_/{}.-]{0,120}$")
+    request_id: Optional[str] = Field(default=None, pattern=r"^[A-Za-z0-9._:-]{8,64}$")
+    build: Optional[str] = Field(default=None, pattern=r"^(?:[0-9a-f]{7}|dev)\+\d{12}$")
+    client: Literal["web", "android"] = "web"
+    stack: list[Annotated[str, Field(pattern=_STACK_FRAME)]] = Field(default_factory=list, max_length=20)
+    ts: Optional[int] = Field(default=None, ge=0, le=10**14)
+
+
+@app.post(_CLIENT_ERROR_PATH, status_code=204, include_in_schema=False)
+def client_error(report: ClientErrorReport, request: Request):
+    """SPEC-244 R3: beacon de erro do cliente -> ``client.error`` (warning) + metrica por ``kind``.
+
+    Publico (fora da fronteira de sessao) mas: corpo <= 4 KiB, classe de rate limit ``telemetry``
+    por IP, Origin cruzada recusada e nenhum campo livre."""
+    if not _client_error_enabled():
+        raise HTTPException(status_code=404, detail="Not Found")
+    origin = request.headers.get("origin")
+    if origin and origin.rstrip("/") not in {o.rstrip("/") for o in _CORS_ORIGINS}:
+        raise HTTPException(status_code=403, detail="origin_denied")
+    from observability.metrics import metrics
+    from observability.telemetry import correlation
+    metrics.increment("rpg_client_errors_total", {"kind": report.kind})
+    beacon_id = correlation().get("request_id")
+    fields = {k: v for k, v in report.model_dump().items() if v not in (None, [])}
+    if report.request_id:   # o id da requisicao que falhou vence (busca pelo codigo de suporte)
+        fields["beacon_request_id"] = beacon_id
+    _log_event("client", "error", level="warning", **fields)
     return Response(status_code=204)
 
 

@@ -59,6 +59,8 @@ LABELS = {
     "rpg_kill_switch_load_errors_total": {"error"},
     # SPEC-219 R9: bloqueio anti-abuso (class fechada; scope=ip|owner|daily|authfail|cap).
     "rpg_rate_limited_total": {"class", "scope"},
+    # SPEC-244: erros reportados pelo cliente (kind fechado: render|unhandled|network|sse|native).
+    "rpg_client_errors_total": {"kind"},
     # SPEC-246: limitador/cota indisponivel (fail-open); site fechado: authfail|owner_minute|daily_quota.
     "rpg_rate_limiter_errors_total": {"site"},
     # SPEC-246 R3: 413 por rota (template com {id}, nunca ids).

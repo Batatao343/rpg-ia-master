@@ -54,6 +54,12 @@ OVERRIDES: dict[str, tuple[str, ...]] = {
     "wallet.settle_failed": ("error_type", "op_ref", "stage"),
     "wallet.recovery_item_failed": ("error_type", "op_ref", "stage"),
     "wallet.reservation_uncertain": ("error_type", "op_ref", "stage"),
+    # SPEC-261/259: campos de build/app vem de _client_build_fields (**kwargs).
+    "http.request": ("app_version", "build_skew", "client", "client_build", "duration_ms", "error_code", "method",
+                     "owner_ref", "request_id", "route", "status"),
+    # SPEC-244: campos validados pelo modelo ClientErrorReport (**kwargs).
+    "client.error": ("beacon_request_id", "build", "client", "code", "error_name", "kind", "request_id", "route",
+                     "stack", "ts"),
 }
 
 

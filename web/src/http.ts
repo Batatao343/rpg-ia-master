@@ -1,5 +1,6 @@
 import { isAndroidClient } from './native/platform';
 import { BUILD_ID } from './build';
+import { reportClientError } from './lib/clientErrors';
 import { isCodeLike, messageFor, rateLimitNotice, STALE_PAGE_MESSAGE } from './lib/errorMessages';
 
 export { rateLimitNotice, STALE_PAGE_MESSAGE };
@@ -104,6 +105,10 @@ async function fetchWithId(path: string, opts: RequestInit): Promise<{ response:
     // Sem resposta: o id local ainda permite ao suporte procurar a requisicao no servidor. O erro
     // ORIGINAL segue (TypeError): o fluxo de fallback SSE->POST depende de nao ser um HttpError.
     if (error instanceof Error) (error as Error & { requestId?: string }).requestId = requestId;
+    // SPEC-244 R2: fetch sem resposta (rede/CORS/offline). Cancelamento do usuario nao conta.
+    if (!(error instanceof Error && error.name === 'AbortError')) {
+      reportClientError({ kind: 'network', error, code: 'fetch_failed', route: path, requestId });
+    }
     throw error;
   }
 }

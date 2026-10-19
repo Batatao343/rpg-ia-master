@@ -1,7 +1,7 @@
 # SPEC-244 — Frontend: captura de erros do cliente (ErrorBoundary, onerror, falhas de API) com beacon redigido
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P2**.
-> **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
+> **Status:** `done` — aprovada pelo dono em 2026-10-19; implementada em 2026-10-19. Prioridade sugerida: **P2**.
+> **Criada:** 2026-10-18 · **Atualizada:** 2026-10-19
 > **Depende de:** SPEC-243
 > **Desbloqueia:** SPEC-262
 > **Origem:** auditoria de logs 2026-10-18 ([relatório](../docs/auditorias/logs-api-2026-10-18.md))
@@ -54,12 +54,12 @@ R1–R4.
 
 ## 5. Critérios de aceite
 
-- [ ] Erro de render aparece em `vercel logs` como `client.error` com `build` e `request_id` quando houver.
-- [ ] Payload com e-mail/texto livre é rejeitado ou redigido (teste).
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [ ] Erro de render aparece em `vercel logs` como `client.error` com `build` e `request_id` quando houver. — conferir no smoke de staging.
+- [x] Payload com e-mail/texto livre é rejeitado ou redigido (teste).
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
 - [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -70,3 +70,26 @@ R1–R4.
 - Endpoint público vira vetor de spam de log: rate limit + tamanho + flag de kill (`RPG_CLIENT_ERROR_REPORT=0`).
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## 8. Notas de implementação (2026-10-19)
+
+- **Endpoint** `POST /telemetry/client-error` (`api.py::client_error`): corpo `ClientErrorReport` FECHADO (`extra=forbid`,
+  `kind` ∈ `render|unhandled|network|sse|native`, `error_name`/`code`/`route`/`request_id`/`build` com regex estreita,
+  `stack` ≤ 20 frames `arquivo:linha[:coluna]`) ⇒ texto livre/e-mail/query são **rejeitados (422)**, não redigidos.
+  Teto de corpo 4 KiB (`BodyLimitMiddleware`), classe de rate limit `telemetry` (30/min por IP), Origin cruzada ⇒ 403.
+- **Desvio consciente:** a rota fica FORA da fronteira de sessão/CSRF (como o spec chama: “endpoint público”), para que
+  erros na tela de login também cheguem e para que `navigator.sendBeacon` (que não envia headers custom) funcione. Sem
+  owner no log por isso; a correlação é pelo `request_id` da requisição que falhou.
+- `client.error` (warning): os campos validados + `beacon_request_id` (id da própria requisição do beacon) quando o
+  cliente traz o `request_id` da requisição que falhou (este vence, para a busca pelo código de suporte achar os dois).
+  Métrica `rpg_client_errors_total{kind}`. Kill switch `RPG_CLIENT_ERROR_REPORT=0` (default ligado; documentado em
+  `.env.example`).
+- **Cliente:** `web/src/lib/clientErrors.ts` (payload sanitizado, dedupe 1×/min por assinatura, teto 20/sessão,
+  `sendBeacon` → `fetch keepalive`, falha nunca gera beacon), `ErrorBoundary` na raiz (tela “Recarregar” + código de
+  suporte local enviado como `request_id`), handlers `error`/`unhandledrejection`, `fetch` sem resposta em `http.ts`
+  (`kind=network`, `AbortError` ignorado) e SSE (`stream_read_failed`, `stream_no_final_state`) em `api.ts`.
+- Testes: `tests/test_client_error_beacon.py` (9), `web/tests/clientErrors.test.mjs` (4). O e2e Playwright “erro forçado
+  ⇒ exatamente 1 POST” não foi autorado (coberto pelos testes de dedupe/handler); fica para o smoke.
+- **Smoke de staging:** no app, devtools → `throw` dentro de um handler React (ou `Promise.reject(new TypeError())` no
+  console) ⇒ `npx vercel logs --since 30m --query client.error` mostra `kind`, `build` (= `X-RPG-Build` do bundle) e
+  `request_id`; repetir 2× em 1 min ⇒ 1 só linha (dedupe).

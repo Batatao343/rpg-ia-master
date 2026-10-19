@@ -19,6 +19,7 @@ import type {
 import { formatDetail, http, HttpError, rateLimitNotice, uploadAudio } from "./http";
 import { setClientLatencyReport } from "./lib/turnLatency";
 import { messageFor } from "./lib/errorMessages";
+import { reportClientError } from "./lib/clientErrors";
 export { HttpError } from "./http";
 export { refreshSessionOnce } from "./http";
 
@@ -193,7 +194,18 @@ export async function sendActionStream(
 
   let acked = false;
   for (;;) {
-    const { done, value } = await reader.read();
+    let chunk: ReadableStreamReadResult<Uint8Array>;
+    try {
+      chunk = await reader.read();
+    } catch (error) {
+      // SPEC-244 R2: conexao SSE caiu no meio do turno (o chamador cai no fallback POST).
+      if (!(error instanceof Error && error.name === "AbortError")) {
+        reportClientError({ kind: "sse", error, code: "stream_read_failed", route: "/game/action/stream",
+          requestId: res.headers.get("X-Request-ID") || undefined });
+      }
+      throw error;
+    }
+    const { done, value } = chunk;
     if (done) break;
     if (!acked) { acked = true; handlers.onAck?.(); }
     buffer += decoder.decode(value, { stream: true });
@@ -209,7 +221,11 @@ export async function sendActionStream(
       // linhas vazias e comentários (`: ping`) são ignorados
     }
   }
-  if (!finalState) throw new Error("stream terminou sem estado final");
+  if (!finalState) {
+    reportClientError({ kind: "sse", code: "stream_no_final_state", route: "/game/action/stream",
+      requestId: res.headers.get("X-Request-ID") || undefined });
+    throw new Error("stream terminou sem estado final");
+  }
   return finalState;
 }
 
