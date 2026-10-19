@@ -98,7 +98,8 @@ def test_task_failure_is_500_and_escalates_to_error_log(monkeypatch, caplog):
         for _ in range(3):
             r = client.post("/internal/cron/jobs", headers=H)
             assert r.status_code == 500 and "example.com" not in r.text
-    levels = [rec.levelname for rec in caplog.records if rec.name == "rpg.cron"]
+    levels = [rec.levelname for rec in caplog.records
+              if rec.name == "rpg.cron" and '"event": "rpg.cron"' in rec.getMessage()]
     assert levels == ["WARNING", "WARNING", "ERROR"]
     assert "example.com" not in caplog.text and '"consecutive_failures": 3' in caplog.text
 

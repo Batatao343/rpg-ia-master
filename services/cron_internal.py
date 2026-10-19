@@ -11,11 +11,13 @@ import os
 import threading
 import time
 from typing import Any, Callable
+from uuid import uuid4
 
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
 
-from observability.telemetry import safe_json
+from observability.telemetry import (correlation, correlation_scope, log_event, pseudonym,
+                                     safe_json, safe_stack)
 
 router = APIRouter(prefix="/internal/cron", tags=["internal"])
 _log = logging.getLogger("rpg.cron")
@@ -26,14 +28,23 @@ _failures: dict[str, int] = {}
 _failures_lock = threading.Lock()
 
 
+def _auth_rejected(reason: str) -> None:
+    # SPEC-256 R5: closed reason only; never the header, token or caller address.
+    log_event("cron", "auth_rejected", level="warning", reason=reason)
+
+
 def authorize(request: Request) -> None:
     secret = os.getenv("RPG_CRON_SECRET", "")
     if len(secret) < MIN_SECRET_LEN:
+        _auth_rejected("not_configured")
         raise HTTPException(503, "cron_not_configured")  # fail closed
     header = request.headers.get("authorization", "")
     scheme, _, token = header.partition(" ")
-    if scheme.lower() != "bearer" or not hmac.compare_digest(
-            token.encode(), secret.encode()):
+    if scheme.lower() != "bearer" or not token:
+        _auth_rejected("missing")
+        raise HTTPException(401, "unauthorized")
+    if not hmac.compare_digest(token.encode(), secret.encode()):
+        _auth_rejected("invalid")
         raise HTTPException(401, "unauthorized")
 
 
@@ -54,23 +65,64 @@ def _runtime():
     return get_runtime()
 
 
+def _bump_persisted(task: str, ok: bool) -> int | None:
+    """Cross-instance consecutive-failure count (app.cron_run_state); None = DB unavailable."""
+    try:
+        pool = getattr(_runtime().game_store, "pool", None)
+        if pool is None:
+            return None  # legacy/test profile: in-process counter only
+        from infrastructure.db_roles import admin_connection
+        with admin_connection(pool) as connection:
+            row = connection.execute(
+                "insert into app.cron_run_state (task, consecutive_failures, last_outcome) "
+                "values (%s, %s, %s) on conflict (task) do update set "
+                "consecutive_failures = case when %s then 0 "
+                "else app.cron_run_state.consecutive_failures + 1 end, "
+                "last_outcome = excluded.last_outcome, updated_at = now() "
+                "returning consecutive_failures",
+                (task, 0 if ok else 1, "ok" if ok else "failed", ok)).fetchone()
+        return int(row["consecutive_failures"] if isinstance(row, dict) else row[0])
+    except Exception as exc:
+        log_event("cron", "state_unavailable", level="warning", task=task,
+                  error_type=type(exc).__name__)
+        return None
+
+
 def _record(task: str, ok: bool, started: float, **fields: Any) -> None:
     with _failures_lock:
         _failures[task] = 0 if ok else _failures.get(task, 0) + 1
         consecutive = _failures[task]
+    persisted = _bump_persisted(task, ok)
+    if persisted is not None:
+        consecutive = persisted
     level = logging.ERROR if consecutive >= FAILURE_ALERT_AT else (
         logging.INFO if ok else logging.WARNING)
     _log.log(level, safe_json({
+        **correlation(),  # carries run_id
         "event": "rpg.cron", "task": task, "outcome": "ok" if ok else "failed",
         "consecutive_failures": consecutive,
         "duration_s": round(time.monotonic() - started, 3), **fields}))
 
 
+def item_failed(task: str, item_kind: str, item_id: object, exc: BaseException) -> None:
+    """SPEC-256 R4: one warning per failed item; id only as pseudonym, error as class name."""
+    log_event("cron", "item_failed", level="warning", task=task, item_kind=item_kind,
+              item_ref=pseudonym(item_id), error_type=type(exc).__name__)
+
+
 def _run(task: str, fn: Callable[[], dict[str, Any]]) -> dict[str, Any]:
+    with correlation_scope(run_id=uuid4().hex[:12]):
+        return _run_scoped(task, fn)
+
+
+def _run_scoped(task: str, fn: Callable[[], dict[str, Any]]) -> dict[str, Any]:
     started = time.monotonic()
+    log_event("cron", "started", task=task)
     try:
         result = fn()
     except Exception as exc:
+        log_event("cron", "failed", level="error", task=task, error_type=type(exc).__name__,
+                  stack=safe_stack(exc), duration_s=round(time.monotonic() - started, 3))
         _record(task, False, started, error_type=type(exc).__name__)
         raise HTTPException(500, "cron_task_failed") from None
     failed = int(result.get("failed", 0))
@@ -126,6 +178,7 @@ def cron_operations(request: Request):
             wallet = recover_wallet_reservations(
                 pool, int(os.getenv("RPG_CRON_MAX_WALLET_RECOVERY", "50")))
         except Exception as exc:
+            item_failed("operations", "wallet_reservation", "sweep", exc)
             wallet = {"wallet_errors": 1, "wallet_sweep_error": type(exc).__name__}
         # SPEC-222 R7: TTL of terminal technical metadata, count-only output.
         return {**released, **wallet, **purge_expired(pool), "failed": wallet["wallet_errors"]}
@@ -177,7 +230,8 @@ def _finops_recorder():
     try:
         from infrastructure.finops_reader import PostgresFinopsEvaluationStore
         return PostgresFinopsEvaluationStore(_runtime().game_store.pool)
-    except Exception:  # no Postgres pool (legacy profile): evaluation still runs
+    except Exception as exc:  # no Postgres pool (legacy profile): evaluation still runs
+        item_failed("finops", "finops", "recorder", exc)
         return None
 
 

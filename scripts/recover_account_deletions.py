@@ -46,6 +46,10 @@ def run_recovery_batch(runtime, max_items: int, *, rows: list[dict] | None = Non
         try:
             status = lifecycle.finish(row["owner_id"])
         except Exception as exc:
+            from observability.telemetry import log_event, pseudonym
+            log_event("cron", "item_failed", level="warning", task="account_deletions",
+                      item_kind="account_deletion", item_ref=pseudonym(row["owner_id"]),
+                      error_type=type(exc).__name__)
             results.append({"owner_id": str(row["owner_id"]), "status": "deleting",
                             "error_type": type(exc).__name__})
             continue
