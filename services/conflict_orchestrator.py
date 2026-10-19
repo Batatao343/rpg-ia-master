@@ -1271,11 +1271,14 @@ def _resolve_tactical_action(
                 {
                     "name": "Controle tático",
                     "dot": 0,
-                    # O controle nasce durante a rodada do Místico. Mantemos um
-                    # tick residual para que a condição continue observável até o
-                    # começo do próximo turno do alvo; consumíveis aplicados antes
-                    # da rodada continuam usando duration=1.
-                    "duration": 2,
+                    # SPEC-285 R4: nega exatamente UM turno do alvo. O controle é
+                    # observado no início do turno do portador e só então o tick
+                    # decrementa — duration=1 já sobrevive até o próximo turno do
+                    # alvo, nasça antes ou depois dele na rodada. O antigo
+                    # duration=2 negava DOIS turnos por controle e, com o cooldown
+                    # de 2 rodadas, um Místico sozinho prendia o alvo em
+                    # atordoamento contínuo.
+                    "duration": 1,
                     "source": actor_id,
                     "control": "stun",
                 },
@@ -1314,7 +1317,7 @@ def _resolve_tactical_action(
 # Resolução do turno de um ator (compõe conflict_turn + reações + AoO)
 # ==========================================================================
 def _extend_ally_defense(ev: dict, actors_by_id: dict[str, dict], out: dict) -> None:
-    """SPEC-283 R2: buff/debuff tipado expira no fim do turno do PORTADOR
+    """SPEC-283 R2 / SPEC-285 R3 (os dois lados): buff/debuff tipado expira no fim do turno do PORTADOR
     (SPEC-232 R1). Proteção posta num aliado que ainda vai agir nesta rodada
     expiraria antes de qualquer ataque do lado oposto — então ganha +1 turno e
     passa a cobrir os ataques da próxima rodada, como a defesa posta em si mesmo."""
@@ -1391,6 +1394,24 @@ def _resolve_actor_turn(
             actor_id,
             [ev.get("card_id") for ev in sub["enemy_support_cards"]],
         )
+    if actor_id not in set(sides.get("enemy", [])) and acao is not None and acao.kind == "card":
+        # SPEC-285 R3: simetria da SPEC-283 R2 — proteção que o lado do JOGADOR
+        # põe num aliado que ainda vai agir também ganha +1 turno.
+        for used in sub.get("cards_used", []):
+            if used.get("actor_id") != actor_id or acao.target_id not in _same_side_ids(
+                actor_id, sides
+            ):
+                continue
+            _extend_ally_defense(
+                {
+                    "kind": str(((used.get("card") or {}).get("efeito") or {}).get("kind") or ""),
+                    "actor_id": actor_id,
+                    "target_id": acao.target_id,
+                    "card_id": used.get("card_id"),
+                },
+                actors_by_id,
+                out,
+            )
     for tid in sub.get("terminal", []):
         if tid not in out["terminal"]:
             out["terminal"].append(tid)

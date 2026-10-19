@@ -212,7 +212,9 @@ def test_mistico_controla_um_turno_e_respeita_cooldown_fechado():
         rng=random.Random(5),
     )
     assert _tactics(first, "mystic", "control")
-    assert any(c.get("control") == "stun" for c in player["active_conditions"])
+    # SPEC-285 R4: o controle nega exatamente este turno e então expira.
+    assert any("atordoado e perde o turno" in line for line in first["logs"])
+    assert not any(c.get("control") == "stun" for c in player["active_conditions"])
     assert "player" not in first["resolved_turns"]
 
     second = orch.run_round(
