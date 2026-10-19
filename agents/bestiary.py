@@ -226,6 +226,37 @@ def _infer_tier_from_name(name: str) -> ModelTier:
     return ModelTier.FAST
 
 
+# SPEC-287: a "sobrevivência específica" do Chefe/Nomeado (regras §27.3) vale a
+# partir deste Nível do Encontro; abaixo dele a ficha é a do bestiário.
+ENCOUNTER_SURVIVAL_FROM_LEVEL = 3
+
+
+def apply_encounter_survival(data: dict, encounter_level: int) -> dict:
+    """SPEC-287: soma `vitalidade_por_nivel_encontro` × (Nível do Encontro − 2).
+
+    O campo vem do gerador oficial (`scripts/migrate_bestiary_v4.py`) e só existe
+    em Chefe/Nomeado. Muda a cópia recebida (nunca o bestiário em memória)."""
+    try:
+        per_level = int(data.get("vitalidade_por_nivel_encontro") or 0)
+        level = int(encounter_level or 1)
+    except (TypeError, ValueError):
+        return data
+    steps = max(0, level - (ENCOUNTER_SURVIVAL_FROM_LEVEL - 1))
+    bonus = max(0, per_level) * steps
+    if bonus:
+        data["max_vitalidade"] = int(data.get("max_vitalidade") or 0) + bonus
+    return data
+
+
+def _ready_v4(data: dict, encounter_level: int) -> dict:
+    apply_encounter_survival(data, encounter_level)
+    data["vitalidade"] = int(data.get("max_vitalidade") or 0)
+    data["hp"] = data["vitalidade"]
+    data["max_hp"] = int(data.get("max_vitalidade") or 0)
+    data["status"] = "ativo"
+    return data
+
+
 # --- GERADOR ---
 def template_by_id(enemy_id: str, *, encounter_level: int = 1) -> dict | None:
     """SPEC-203 R3: ficha de um id canônico do bestiário, SEM LLM (nem librarian).
@@ -236,11 +267,7 @@ def template_by_id(enemy_id: str, *, encounter_level: int = 1) -> dict | None:
     data = dict(db[enemy_id])
     data["id"] = enemy_id
     if data.get("virtudes") and data.get("max_vitalidade") is not None:
-        data["vitalidade"] = int(data.get("max_vitalidade") or 0)
-        data["hp"] = data["vitalidade"]
-        data["max_hp"] = int(data.get("max_vitalidade") or 0)
-        data["status"] = "ativo"
-        return data
+        return _ready_v4(data, encounter_level)
     normalized = materialize_enemy_concept(data, encounter_level=encounter_level)
     normalized["id"] = enemy_id
     return normalized
@@ -266,11 +293,7 @@ def generate_new_enemy(name: str, context: str = "", *, encounter_level: int = 1
             save_enemy(data)
 
         if data.get("virtudes") and data.get("max_vitalidade") is not None:
-            data["vitalidade"] = int(data.get("max_vitalidade") or 0)
-            data["hp"] = data["vitalidade"]
-            data["max_hp"] = int(data.get("max_vitalidade") or 0)
-            data["status"] = "ativo"
-            return data
+            return _ready_v4(data, encounter_level)
         # Overlay legado gerado por IA: números livres são descartados.
         normalized = materialize_enemy_concept(data, encounter_level=encounter_level)
         save_enemy(normalized)

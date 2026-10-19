@@ -98,7 +98,13 @@ def group_size(category: str, level: int) -> int:
     cost = eb.CATEGORIA_COST[category]
     budget = eb.encounter_budget(level, DANGER_BY_LEVEL.get(level, 4), 0)
     floor = max(eb.TIER_COST["minion"], budget // 2)
-    n = max(1, -(-floor // cost))
+    floor_cost = getattr(eb, "floor_cost", None)  # SPEC-287; commits antigos: linear
+    if floor_cost is not None:
+        n = 1
+        while floor_cost([{"categoria": category}] * n) < floor:
+            n += 1
+    else:
+        n = max(1, -(-floor // cost))
     if level == 1 and category == "elite":
         n = 1
     return n
@@ -157,6 +163,9 @@ def hero_decl(bot: str, player: dict, target_id: str) -> ct.TurnDeclaration:
 
 
 def fight(bid: str, n: int, class_name: str, level: int, seed: int, bot: str):
+    # SPEC-287: partes do motor ainda usam o `random` global; semeá-lo por luta
+    # torna a arena reproduzível (seed de str usa sha512, imune a PYTHONHASHSEED).
+    random.seed(f"{bot}|{level}|{class_name}|{bid}|{n}|{seed}")
     player = hero(class_name, level)
     enemies = _instances(template_by_id(bid, encounter_level=DANGER_BY_LEVEL.get(level, 4)), n)
     actors = {"player": player, **{e["id"]: e for e in enemies}}

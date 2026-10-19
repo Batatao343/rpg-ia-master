@@ -40,6 +40,11 @@ TYPE_TO_CATEGORIA = {
 }
 # Piso de Corpo por categoria (garante Vitalidade coerente com o papel).
 CORPO_FLOOR = {"lacaio": 0, "padrao": 2, "elite": 3, "chefe": 4, "nomeado": 3}
+# SPEC-287 ("sobrevivência específica", regras §27.3): Vitalidade extra do
+# Chefe/Nomeado por Nível do Encontro acima de 2 (aplicada em runtime por
+# `agents.bestiary.apply_encounter_survival`). O Nível do Encontro é perigo
+# absoluto (§5.1), nunca o nível da party. [BALANCEAR]
+SOBREVIVENCIA_POR_NIVEL_ENCONTRO = {"chefe": 12, "nomeado": 12}
 
 
 # ==========================================================================
@@ -1268,6 +1273,11 @@ def migrate_creature(cre) -> dict:
     cre["vitalidade"] = cre["max_vitalidade"]
     cre["ferimento_espacos"] = gamedata.espacos_ferimento_para_corpo(corpo)
     cre["ferimentos"] = {"leve": [], "grave": [], "critico": []}
+    survival = SOBREVIVENCIA_POR_NIVEL_ENCONTRO.get(categoria)
+    if survival:
+        cre["vitalidade_por_nivel_encontro"] = survival
+    else:
+        cre.pop("vitalidade_por_nivel_encontro", None)
 
     res = theme_resist(name)
     for damage_type, source in (cre.get("resistances_autorais") or {}).items():

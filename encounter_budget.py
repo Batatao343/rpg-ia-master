@@ -22,6 +22,37 @@ def tier_cost(enemy: dict) -> int:
     return CATEGORIA_COST[normalize_categoria(enemy)]
 
 
+# SPEC-287: economia de ações no PISO do encontro. O custo por categoria é
+# linear, mas no motor v4 cada corpo age uma vez por rodada contra uma
+# Vitalidade do herói que não cresce com o nível (só Corpo a altera). A arena
+# da SPEC-285 mediu a ameaça superlinear: 1→2→3 Lacaios = 0,05→0,32→0,56 de
+# morte no nível 5, com custo 2→4→6. Sem isso, o piso (budget//2) crescia com
+# o nível e o perigo e era completado com mais corpos: grupos de Lacaio nos
+# níveis 5–8 matavam mais que um Chefe.
+# [BALANCEAR] 1,25 é o menor passo que mantém os pisos dos níveis 5–8 da arena
+# em até 2 corpos; pisos ≤ 4 (níveis 1–4) não mudam para nenhum passo ≥ 0,
+# porque 1 corpo custa o mesmo e 2 corpos já alcançam qualquer piso ≤ 4.
+ACTION_ECONOMY_STEP = 1.25
+
+
+def action_economy_multiplier(bodies: int) -> float:
+    """Multiplicador do custo por número de corpos (1 corpo = ×1)."""
+    return 1.0 + ACTION_ECONOMY_STEP * max(0, int(bodies or 0) - 1)
+
+
+def floor_cost(enemies: list[dict]) -> float:
+    """SPEC-287: custo efetivo usado pelo piso (`fill_encounter`).
+
+    Chefe/Nomeado entram pelo custo linear (já ignoram o orçamento); os demais
+    somam o custo por categoria × `action_economy_multiplier(n)`, com n = número
+    de corpos não-chefe."""
+    bosses = [e for e in enemies if tier_cost(e) == TIER_COST["boss"]]
+    rest = [e for e in enemies if tier_cost(e) != TIER_COST["boss"]]
+    return sum(tier_cost(e) for e in bosses) + sum(
+        tier_cost(e) for e in rest
+    ) * action_economy_multiplier(len(rest))
+
+
 def encounter_budget(player_level: int, danger: int, allies_count: int = 0) -> int:
     d = max(1, min(4, int(danger or 1)))
     lvl = max(1, int(player_level or 1))
@@ -96,13 +127,15 @@ def fill_encounter(
 ) -> tuple[list[dict], list[str]]:
     """PISO (budget/2): local perigoso reforça encontro fraco com criatura regional.
     `make_instance(entry, i)` transforma a entrada do bestiário em instância de
-    combate (injetado pelo chamador para reusar o pipeline do spawn)."""
+    combate (injetado pelo chamador para reusar o pipeline do spawn).
+    SPEC-287: o piso é medido por `floor_cost` (economia de ações), não pela
+    soma linear — cada corpo extra pesa mais, então o piso fecha com menos corpos."""
     import world_utils as wu
 
     kept = list(enemies)
     logs: list[str] = []
     floor = max(TIER_COST["minion"], budget // 2)
-    spent = sum(tier_cost(e) for e in kept)
+    spent = floor_cost(kept)
     i = 0
     while spent < floor and i < 4:
         i += 1
@@ -113,6 +146,6 @@ def fill_encounter(
         if not inst:
             break
         kept.append(inst)
-        spent += tier_cost(inst)
+        spent = floor_cost(kept)
         logs.append(f"{inst.get('name', 'Algo')} surge atraído pelo tumulto.")
     return kept, logs

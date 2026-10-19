@@ -2185,7 +2185,8 @@
           "blocks": []
         }
       ]
-    }
+    },
+    "vitalidade_por_nivel_encontro": 12
   },
   "enemy_boss_vibora": {
     "id": "enemy_boss_vibora",
@@ -2349,7 +2350,8 @@
           "blocks": []
         }
       ]
-    }
+    },
+    "vitalidade_por_nivel_encontro": 12
   },
   "enemy_boss_general_escorpiao": {
     "id": "enemy_boss_general_escorpiao",
@@ -2510,7 +2512,8 @@
           "blocks": []
         }
       ]
-    }
+    },
+    "vitalidade_por_nivel_encontro": 12
   },
   "enemy_boss_arauto_nevoa": {
     "id": "enemy_boss_arauto_nevoa",
@@ -2673,7 +2676,8 @@
           "blocks": []
         }
       ]
-    }
+    },
+    "vitalidade_por_nivel_encontro": 12
   },
   "enemy_gigante_gelo_norte": {
     "id": "enemy_gigante_gelo_norte",
@@ -2838,7 +2842,8 @@
           "blocks": []
         }
       ]
-    }
+    },
+    "vitalidade_por_nivel_encontro": 12
   },
   "enemy_mimico_bau": {
     "id": "enemy_mimico_bau",
@@ -4690,7 +4695,8 @@
           "blocks": []
         }
       ]
-    }
+    },
+    "vitalidade_por_nivel_encontro": 12
   },
   "enemy_lobo_sombrio": {
     "name": "Lobo Sombrio",
@@ -5054,7 +5060,8 @@
           "blocks": []
         }
       ]
-    }
+    },
+    "vitalidade_por_nivel_encontro": 12
   },
   "enemy_goblin": {
     "name": "Goblin",
@@ -5372,7 +5379,8 @@
           "blocks": []
         }
       ]
-    }
+    },
+    "vitalidade_por_nivel_encontro": 12
   },
   "mon_lobo_de_vidro": {
     "id": "mon_lobo_de_vidro",
@@ -7418,7 +7426,8 @@
           "blocks": []
         }
       ]
-    }
+    },
+    "vitalidade_por_nivel_encontro": 12
   },
   "enemy_pirata_brekmar": {
     "id": "enemy_pirata_brekmar",
@@ -11481,6 +11490,7 @@
       "grave": [],
       "critico": []
     },
+    "vitalidade_por_nivel_encontro": 12,
     "resistances": {},
     "vulnerabilities": [],
     "immunities": [],
@@ -11570,6 +11580,7 @@
       "grave": [],
       "critico": []
     },
+    "vitalidade_por_nivel_encontro": 12,
     "resistances": {},
     "vulnerabilities": [],
     "immunities": [],
@@ -11659,6 +11670,7 @@
       "grave": [],
       "critico": []
     },
+    "vitalidade_por_nivel_encontro": 12,
     "resistances": {},
     "vulnerabilities": [],
     "immunities": [],
@@ -11748,6 +11760,7 @@
       "grave": [],
       "critico": []
     },
+    "vitalidade_por_nivel_encontro": 12,
     "resistances": {},
     "vulnerabilities": [],
     "immunities": [],
