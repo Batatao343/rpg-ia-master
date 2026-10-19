@@ -105,8 +105,10 @@ def migrant_candidates(loc: dict, bestiary: dict, projection: dict | None) -> li
         if nregion and nregion != region_id:
             neighbor_regions.add(nregion)
     out = []
+    from encounter_budget import is_boss  # SPEC-287: categoria canônica, não `type`
+
     for e in (bestiary or {}).values():
-        if "BOSS" in str(e.get("type", "")).upper():
+        if is_boss(e):
             continue  # boss não migra (fica onde o Codex o pôs)
         if neighbor_regions & set(e.get("regions") or []):
             if region_id not in (e.get("regions") or []):

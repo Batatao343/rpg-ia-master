@@ -757,10 +757,12 @@ def pick_encounter_enemy(
     region_id = (loc or {}).get("region_id", "")
     if not region_id:
         return None
+    from encounter_budget import is_boss  # SPEC-287: categoria canônica, não `type`
+
     pool = [
         e
         for e in (gamedata.BESTIARY or {}).values()
-        if region_id in (e.get("regions") or []) and "BOSS" not in str(e.get("type", "")).upper()
+        if region_id in (e.get("regions") or []) and not is_boss(e)
     ]
     if not pool:
         return None

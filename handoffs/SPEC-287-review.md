@@ -87,3 +87,16 @@ group_size antes/depois (script ad hoc) → níveis 1–4 idênticos; 5–8 Laca
 pick_encounter_enemy sondado (nova_arcadia/deserto_zhur, perigo 1–4, 60 turnos) → garrick/aranha_de_cristal saem em perigo 1–3
 arena_lethality.py 1 --levels 8 --bots cartas --categories lacaio,chefe (2×) → 0,253/0,508 idênticos
 ```
+
+## Correções aplicadas (executor)
+
+- P2-1: `encounter_budget.is_boss` (categoria canônica) usado em
+  `world_utils.pick_encounter_enemy` e `services/ecology.migrant_candidates`;
+  teste `test_random_pool_excludes_boss_by_category`.
+- P2-3: teto `ENCOUNTER_SURVIVAL_MAX_STEPS = 2` em `apply_encounter_survival`;
+  teste `test_survival_bonus_is_capped`.
+- Re-medição após as correções: playtest `combate` seeds 21–32 = 98/197 (0,497),
+  mediana 35, 0 `no_progress`; matriz SPEC-056 = 12/36, mediana 22. Idênticos à
+  primeira medição. Arena inalterada (sorteio regional não entra na arena; teto
+  não alcançado com perigo ≤ 4).
+- P2-2 e P2-4 ficam registrados na spec como follow-up/decisão do dono.

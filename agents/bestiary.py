@@ -229,10 +229,13 @@ def _infer_tier_from_name(name: str) -> ModelTier:
 # SPEC-287: a "sobrevivência específica" do Chefe/Nomeado (regras §27.3) vale a
 # partir deste Nível do Encontro; abaixo dele a ficha é a do bestiário.
 ENCOUNTER_SURVIVAL_FROM_LEVEL = 3
+# Revisão P2-3: teto de passos (perigo máximo 4 → 2 passos). Bônus de evento no
+# Nível do Encontro (até 10) não multiplica a Vitalidade sem limite.
+ENCOUNTER_SURVIVAL_MAX_STEPS = 2
 
 
 def apply_encounter_survival(data: dict, encounter_level: int) -> dict:
-    """SPEC-287: soma `vitalidade_por_nivel_encontro` × (Nível do Encontro − 2).
+    """SPEC-287: soma `vitalidade_por_nivel_encontro` × min(2, Nível do Encontro − 2).
 
     O campo vem do gerador oficial (`scripts/migrate_bestiary_v4.py`) e só existe
     em Chefe/Nomeado. Muda a cópia recebida (nunca o bestiário em memória)."""
@@ -241,7 +244,7 @@ def apply_encounter_survival(data: dict, encounter_level: int) -> dict:
         level = int(encounter_level or 1)
     except (TypeError, ValueError):
         return data
-    steps = max(0, level - (ENCOUNTER_SURVIVAL_FROM_LEVEL - 1))
+    steps = min(ENCOUNTER_SURVIVAL_MAX_STEPS, max(0, level - (ENCOUNTER_SURVIVAL_FROM_LEVEL - 1)))
     bonus = max(0, per_level) * steps
     if bonus:
         data["max_vitalidade"] = int(data.get("max_vitalidade") or 0) + bonus

@@ -35,6 +35,15 @@ def tier_cost(enemy: dict) -> int:
 ACTION_ECONOMY_STEP = 1.25
 
 
+def is_boss(entry: dict) -> bool:
+    """SPEC-287 (revisão P2-1): Chefe/Nomeado pela categoria canônica, não pelo
+    texto do `type` — havia Chefe/Nomeado com `type` não-BOSS no bestiário."""
+    try:
+        return tier_cost(entry) == TIER_COST["boss"]
+    except KeyError:
+        return "BOSS" in str(entry.get("type", "")).upper()
+
+
 def action_economy_multiplier(bodies: int) -> float:
     """Multiplicador do custo por número de corpos (1 corpo = ×1)."""
     return 1.0 + ACTION_ECONOMY_STEP * max(0, int(bodies or 0) - 1)

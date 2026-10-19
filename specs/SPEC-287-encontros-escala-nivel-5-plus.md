@@ -1,6 +1,6 @@
 # SPEC-287 — Escala do encontro no nível 5+
 
-> **Status:** `approved` (aprovada sob a autorização do dono de 19/10 para tudo que não exige ação externa dele; a meta da §2 é decisão do coordenador sob essa autorização)
+> **Status:** `done` (revisão Opus APPROVED_WITH_FOLLOWUPS em 2026-10-19; aprovada sob a autorização do dono de 19/10 para tudo que não exige ação externa dele; a meta da §2 é decisão do coordenador sob essa autorização e o desvio "Chefe no topo" fica para o dono ratificar)
 > **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
 > **Origem:** SPEC-285 §3 "Fora de escopo" e §8 (na arena, grupos de Lacaio nos níveis 5–8 matam mais que um Chefe)
 > **Depende de:** SPEC-285 (`done`), SPEC-288 (`done`)
@@ -86,8 +86,15 @@ Encontro ou economia de ações do Chefe) e fica para outra spec.
     (`SOBREVIVENCIA_POR_NIVEL_ENCONTRO = 12` `[BALANCEAR]`) e remove o campo das
     demais.
   - Em runtime, `agents.bestiary.apply_encounter_survival` soma
-    `campo × max(0, Nível do Encontro − 2)` à Vitalidade máxima. Vale em
-    `template_by_id` e no cache-hit de `generate_new_enemy`.
+    `campo × min(2, max(0, Nível do Encontro − 2))` à Vitalidade máxima (teto de
+    2 passos: bônus de evento no Nível do Encontro não multiplica sem limite). Vale
+    em `template_by_id` e no cache-hit de `generate_new_enemy`.
+  - Chefe/Nomeado nunca sai como reforço aleatório: o sorteio regional
+    (`world_utils.pick_encounter_enemy`) e os migrantes (`services.ecology`)
+    excluem pela categoria canônica (`encounter_budget.is_boss`), não mais pelo
+    texto "BOSS" do `type`. Antes, `enemy_aranha_de_cristal` (Chefe) e
+    `enemy_garrick,_o_silenciador` (Nomeado) entravam como reforço sem a
+    sobrevivência (achado P2-1 da revisão).
   - Nível do Encontro ≤ 2 não muda nada. Esse é todo o recorte dos níveis 1–4 da
     arena.
   - 12 é o menor valor testado (6/9/10/12) com margem ≥ 3 pp sobre o piso de Lacaio
@@ -115,9 +122,11 @@ Encontro ou economia de ações do Chefe) e fica para outra spec.
 ## 4. Design técnico
 
 - `encounter_budget.py`: `ACTION_ECONOMY_STEP`, `action_economy_multiplier(bodies)`,
-  `floor_cost(enemies)`. `fill_encounter` usa `floor_cost` no `spent` inicial e após
+  `floor_cost(enemies)`, `is_boss(entry)`. `fill_encounter` usa `floor_cost` no `spent` inicial e após
   cada reforço. A assinatura pública não muda.
-- `agents/bestiary.py`: `ENCOUNTER_SURVIVAL_FROM_LEVEL = 3`,
+- `world_utils.pick_encounter_enemy` e `services/ecology.migrant_candidates`:
+  filtro de Chefe/Nomeado por `is_boss`.
+- `agents/bestiary.py`: `ENCOUNTER_SURVIVAL_FROM_LEVEL = 3`, `ENCOUNTER_SURVIVAL_MAX_STEPS = 2`,
   `apply_encounter_survival(data, encounter_level)` e `_ready_v4`. O helper altera
   só a cópia: o bestiário em memória não muda.
 - `scripts/migrate_bestiary_v4.py`: `SOBREVIVENCIA_POR_NIVEL_ENCONTRO`, gravado em
@@ -140,7 +149,8 @@ Encontro ou economia de ações do Chefe) e fica para outra spec.
    - `test_clamp_stays_linear` (R3);
    - `test_generator_sets_survival_only_on_chefe_and_nomeado`,
      `test_template_by_id_survival_scales_from_encounter_level_3` e
-     `test_generate_new_enemy_cache_hit_applies_survival` (R4).
+     `test_generate_new_enemy_cache_hit_applies_survival`,
+     `test_survival_bonus_is_capped` e `test_random_pool_excludes_boss_by_category` (R4).
 3. Implementar, regenerar o bestiário pelo gerador e medir de novo (§8).
 
 ## 6. Critérios de aceite
@@ -158,8 +168,15 @@ Encontro ou economia de ações do Chefe) e fica para outra spec.
   dos níveis 1–3 muda
 - [x] E5/M5: 0 `combat.no_progress` em 12 × 200 turnos; parity de Cartas e lint de
   conteúdo verdes
-- [ ] Revisão independente Opus ([handoff](../handoffs/SPEC-287-review.md))
-- [ ] `uv run pytest` verde (suíte completa)
+- [x] Revisão independente Opus ([handoff](../handoffs/SPEC-287-review.md)):
+  APPROVED_WITH_FOLLOWUPS, sem P0/P1. P2-1 (Chefe/Nomeado de `type` não-BOSS como
+  reforço) e P2-3 (bônus sem teto) corrigidos; P2-5 coberto por prova analítica
+  revisada; P2-2 (Chefe gerado pela LLM e laboratório sem o bônus) e P2-4
+  (ratificar o desvio da §2) ficam para o dono/follow-up. Depois das correções,
+  playtest `combate` 12 seeds e matriz SPEC-056 deram resultado idêntico ao da
+  primeira medição.
+- [x] `uv run pytest` verde (suíte completa; só falhas de índice stale —
+  `specs/index.yaml` e Project Index — regenerados no pouso)
 - [x] Saves antigos carregam (sem schema novo)
 
 ## 7. Smoke real

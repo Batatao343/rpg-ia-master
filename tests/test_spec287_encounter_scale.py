@@ -161,3 +161,28 @@ def test_generate_new_enemy_cache_hit_applies_survival(monkeypatch):
     assert out["max_vitalidade"] == int(db[bid]["max_vitalidade"]) + int(
         db[bid]["vitalidade_por_nivel_encontro"]
     )
+
+
+def test_survival_bonus_is_capped():
+    """Revisão P2-3: Nível do Encontro alto (bônus de evento) não passa de 2 passos."""
+    from agents.bestiary import template_by_id
+
+    db, chefes, _ = _chefes_and_others()
+    bid = chefes[0]
+    base = int(db[bid]["max_vitalidade"])
+    per = int(db[bid]["vitalidade_por_nivel_encontro"])
+    assert template_by_id(bid, encounter_level=10)["max_vitalidade"] == base + 2 * per
+
+
+def test_random_pool_excludes_boss_by_category():
+    """Revisão P2-1: Chefe/Nomeado com `type` não-BOSS não sai como reforço aleatório."""
+    import gamedata
+    import world_utils as wu
+    from encounter_budget import is_boss
+
+    regions = {r for e in gamedata.BESTIARY.values() for r in (e.get("regions") or [])}
+    for region in regions:
+        for danger in (1, 2, 3, 4):
+            for turn in range(12):
+                entry = wu.pick_encounter_enemy({"region_id": region}, danger, turn)
+                assert entry is None or not is_boss(entry), (region, danger, entry.get("id"))
