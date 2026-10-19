@@ -1,11 +1,11 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "69f1c6978db55b39533301783b992ce82eaea44e",
+  "commit_sha": "1ed290055533388603bd1b55167d13ed82c8adc9",
   "edge_counts": {
-    "calls": 16715,
-    "contains": 693,
-    "defines": 9491,
-    "imports": 1559,
+    "calls": 16833,
+    "contains": 701,
+    "defines": 9546,
+    "imports": 1562,
     "likely_test_for": 959,
     "route_to": 63
   },
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:5af4ef8a388400a17b4b975ba5ec3841109d67e6edd3739c50380aa9d9590da1",
+  "graph_hash": "sha256:1be51e1a2e74cf2fa80d65f3927f04c4aaff4b760e713c909e8b5700aa844a10",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -199,6 +199,9 @@
     "scripts/ci_eval_scope.py",
     "scripts/cloud_doctor.py",
     "scripts/content_report.py",
+    "scripts/dev/eval_publish.py",
+    "scripts/dev/ruff_baseline.py",
+    "scripts/dev/transcript_stats.py",
     "scripts/dev_stack.py",
     "scripts/export_game_audit.py",
     "scripts/export_game_data.py",
@@ -233,6 +236,7 @@
     "scripts/run_llm_contract_gate.py",
     "scripts/seed_google_play_skus.py",
     "scripts/smoke_local_profile.py",
+    "scripts/spec_index.py",
     "scripts/staging/__init__.py",
     "scripts/staging/account_deletion_recovery.py",
     "scripts/staging/auth_config.py",
@@ -254,6 +258,8 @@
     "scripts/staging/schema_diff.py",
     "scripts/staging/security_wave_smoke.py",
     "scripts/staging/smoke_ab.py",
+    "scripts/staging/spec222_art_purge.py",
+    "scripts/staging/spec236_daily_cap.py",
     "scripts/staging/sse_disconnect.py",
     "scripts/staging/stt_fallback_smoke.py",
     "scripts/staging/synthetic_data.py",
@@ -489,6 +495,7 @@
     "tests/test_db_logging.py",
     "tests/test_death_flow.py",
     "tests/test_dev_stack.py",
+    "tests/test_dev_tooling.py",
     "tests/test_dossier_leak.py",
     "tests/test_dossiers.py",
     "tests/test_dossiers_api.py",
@@ -707,6 +714,7 @@
     "tests/test_spec272_conflito_ligado.py",
     "tests/test_spec275_stalemate.py",
     "tests/test_spec_index.py",
+    "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
     "tests/test_speech_api.py",
     "tests/test_speech_finance_local.py",
@@ -770,6 +778,7 @@
     "web/e2e/visual-surfaces.spec.ts",
     "web/e2e/voice-input.spec.ts",
     "web/e2e/workspace-shell.spec.ts",
+    "web/eslint.config.js",
     "web/package.json",
     "web/playwright.config.ts",
     "web/src/api.ts",
@@ -887,14 +896,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 767,
+    "class": 769,
     "endpoint": 63,
-    "file": 833,
-    "function": 2918,
+    "file": 842,
+    "function": 2954,
     "method": 742,
-    "module": 693,
-    "test": 5063
+    "module": 701,
+    "test": 5080
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:f4f3cfc021486e4fddbab13b07e784fc58e8bb771db6e48b15887fa5ee6ca06d"
+  "source_tree_hash": "sha256:6fdf1c27a53f56c0d57a38f241716fc7a7ff71d93a8c3b3a2ae57b0709c0003c"
 }

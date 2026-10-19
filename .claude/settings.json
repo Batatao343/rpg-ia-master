@@ -1,0 +1,41 @@
+{
+  "env": {
+    "PYTHONUTF8": "1",
+    "PYTHONIOENCODING": "utf-8"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(uv run --frozen pytest:*)",
+      "Bash(uv run --frozen ruff:*)",
+      "Bash(uv run pytest:*)",
+      "Bash(uv run ruff:*)",
+      "Bash(bash scripts/dev/py.sh:*)",
+      "Bash(bash scripts/dev/wt.sh path:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git worktree list:*)",
+      "Bash(git branch --list:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(npm run build)",
+      "Bash(npm run typecheck)",
+      "Bash(npm test)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/reindex-reminder.js\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

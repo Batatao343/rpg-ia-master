@@ -71,6 +71,20 @@ JEV_KEY_FROM_FILE = ("TYPESAFE_API_KEY", "JEVMODEL_API_KEY")
 # SPEC-213: modo do arquivista. ``inline`` (default do produto) = variavel ausente; ``post_response`` tira os
 # derivados (resumo/memoria/cronica) do caminho do jogador. Rollback: --projection-mode inline.
 PROJECTION_MODES = ("inline", "post_response")
+# SPEC-236 §6.2: teto diario temporariamente baixo (ex.: 0.01) para provocar um trip REAL pelo cron finops.
+# Reverter com um push sem a flag (volta ao default 5).
+DEFAULT_DAILY_CAP_BRL = NON_SECRET_LITERALS["RPG_DAILY_SPEND_CAP_BRL"]
+
+
+def _valid_cap(raw: str) -> str:
+    from decimal import Decimal, InvalidOperation
+    try:
+        value = Decimal(str(raw))
+    except InvalidOperation:
+        raise ValueError(f"daily_cap_brl invalido: {raw}") from None
+    if not value > 0:
+        raise ValueError(f"daily_cap_brl invalido: {raw}")
+    return str(raw)
 
 
 def stale_names(production: Mapping[str, str]) -> tuple[str, ...]:
@@ -105,7 +119,8 @@ def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST, use_admi
               text_cap: bool = True,
               projection_mode: str = "inline",
               jev_router_mode: str = "off",
-              owner_approved_primary: bool = False) -> tuple[dict[str, str], dict[str, str]]:
+              owner_approved_primary: bool = False,
+              daily_cap_brl: str = DEFAULT_DAILY_CAP_BRL) -> tuple[dict[str, str], dict[str, str]]:
     """Retorna (production, preview). Levanta KeyError com NOME do segredo ausente."""
     if projection_mode not in PROJECTION_MODES:
         raise ValueError(f"projection_mode invalido: {projection_mode}")
@@ -114,6 +129,7 @@ def build_env(files: Mapping[str, str], public_host: str = PUBLIC_HOST, use_admi
     if jev_router_mode == "primary" and not owner_approved_primary:
         raise ValueError("jev_router_mode=primary exige owner_approved_primary (aprovacao do dono)")
     production = dict(NON_SECRET_LITERALS)
+    production["RPG_DAILY_SPEND_CAP_BRL"] = _valid_cap(daily_cap_brl)
     if not text_cap:
         production.pop("RPG_DAILY_SPEND_CAP_TEXT", None)
     if projection_mode != "inline":
@@ -212,6 +228,8 @@ def main(argv: list[str] | None = None) -> int:
                     help="SPEC-217: shadow observa; primary decide (exige --owner-approved-primary); off apaga tudo")
     ap.add_argument("--owner-approved-primary", action="store_true",
                     help=f"SPEC-217: aprovacao do dono para primary no staging ({OWNER_PRIMARY_APPROVAL})")
+    ap.add_argument("--daily-cap-brl", default=DEFAULT_DAILY_CAP_BRL,
+                    help="SPEC-236 §6.2: teto diario em BRL (default 5); valor baixo provoca trip real; reverter sem a flag")
     args = ap.parse_args(argv)
     if args.project_name != PROJECT_NAME:
         print(f"recusado: projeto deve ser {PROJECT_NAME}", file=sys.stderr)
@@ -226,7 +244,8 @@ def main(argv: list[str] | None = None) -> int:
                                         args.invalid_deepseek_key, text_cap=not args.no_text_cap,
                                         projection_mode=args.projection_mode,
                                         jev_router_mode=args.jev_router_mode,
-                                        owner_approved_primary=args.owner_approved_primary)
+                                        owner_approved_primary=args.owner_approved_primary,
+                                        daily_cap_brl=args.daily_cap_brl)
     except (KeyError, ValueError) as exc:
         print(exc.args[0], file=sys.stderr)
         return 1
@@ -234,6 +253,7 @@ def main(argv: list[str] | None = None) -> int:
     print("production:", ", ".join(sorted(production)))
     print("preview:", ", ".join(sorted(preview)), "(sem segredos de DB/serviço)")
     print("a remover:", ", ".join(stale_names(production)))
+    print("RPG_DAILY_SPEND_CAP_BRL =", production["RPG_DAILY_SPEND_CAP_BRL"])
     if args.dry_run:
         return 0
     token = files.get("VERCEL_TOKEN") or os.environ.get("VERCEL_TOKEN", "")

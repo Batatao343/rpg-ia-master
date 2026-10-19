@@ -1,6 +1,6 @@
 # SPEC-239 — Configuração central de logging (handler JSON para todo `rpg.*`)
 
-> **Status:** `in-progress` — implementado em 2026-10-18 (branch `logs-p0`); falta a revisão Sol obrigatória e o smoke em staging.
+> **Status:** `done` — implementado em 2026-10-18 (branch `logs-p0`); revisão Sol APPROVED ([handoff](../handoffs/SPEC-239-245-SOL-review.md)) e smoke em staging `358c628` verde (ver `docs/historico/ESTADO_ATUAL-ate-2026-10-19.md`, Logging P0).
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** nenhuma
 > **Desbloqueia:** todas as specs 240–262 (sem isto, linhas `info` nunca chegam à Vercel)

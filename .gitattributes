@@ -1,3 +1,13 @@
+# Default: let Git detect text vs binary and store/check out text as LF.
+# (Workspace improvement #7: removes the "LF will be replaced by CRLF" noise
+# and the hand-written \r\n handling in scripts. Windows tools handle LF.)
+* text=auto eol=lf
+
+# Windows-only scripts keep CRLF.
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
 # Exact-byte eval locks and Project Index freshness must survive Git checkout
 # on Windows and Linux. Keep hashes strict; make measured text bytes portable.
 *.py text eol=lf
@@ -19,3 +29,13 @@ Procfile text eol=lf
 *.jpeg binary
 *.zip binary
 *.sha256 text eol=lf
+*.md text eol=lf
+*.sh text eol=lf
+*.mp3 binary
+*.mp4 binary
+*.pdf binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary

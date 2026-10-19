@@ -31,9 +31,23 @@ data/npc_database.json
 supabase/.temp/
 supabase/.branches/
 
-# Skills do Claude (locais, não versionar)
-.claude/skills/
+# Skills do Claude: as do fluxo do projeto são versionadas (workspace #9);
+# qualquer outra skill local (ex.: design visual) continua fora do git.
+.claude/skills/*
+!.claude/skills/qa/
+!.claude/skills/wrap-up/
+!.claude/skills/spec-new/
+!.claude/skills/spec-land/
+!.claude/skills/estado/
+!.claude/skills/reindex/
+!.claude/skills/eval-publish/
+!.claude/skills/staging-deploy/
+!.claude/skills/status-dono/
 .claude/settings.local.json
+
+# Pacotes/zip soltos na raiz ou em docs/ (entravam no hash do Project Index)
+/*.zip
+/docs/*.zip
 
 # Frontend React (web/) — deps, build e artefatos do tsc -b
 web/node_modules/
