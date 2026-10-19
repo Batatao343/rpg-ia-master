@@ -58,6 +58,10 @@ relações, entidades) leva os três `null`. Item **não público** leva os trê
 (`memory_provenance.accepted_secret_ids`: só `secret_revealed` aceito);
 `reveal_criteria_diverge: true` quando o corpus permissivo (`revealed_corpus`) discorda.
 
+## `mechanics` (em `sessions/<epoch>.jsonl`, só turnos com conflito)
+`{steps, truncated}`: até 64 passos `{kind, actor_ref, target_ref, dice, kept, modifier,
+dc_or_defense, result, amount, card_id, reason}` (refs = ids de catálogo ou `player`).
+
 ## `errors.jsonl`
 `error_ref`, `turn_ref`, `action_ref`, `node`, `tier`, `code`, `recovered`, `fallback`
 (`provider_next`|`none`|`rejected`), `error_class` (só nome de classe para `turn_failed`).
