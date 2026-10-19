@@ -320,7 +320,7 @@ test("auth debug 2026-10-18: login errors are readable and do not leak into reco
   await expect(page.getByRole("alert")).toContainText("Confirme seu e-mail");
   loginCode = "credentials_invalid";
   await page.getByRole("button", { name: "Entrar", exact: true }).click();
-  await expect(page.getByRole("alert")).toHaveText("E-mail ou senha incorretos.");
+  await expect(page.getByRole("alert")).toContainText("E-mail ou senha incorretos.");   // SPEC-243: + "Código de suporte"
   await expect(page.getByText("credentials_invalid")).toHaveCount(0);
 
   await page.getByRole("button", { name: "Esqueci minha senha" }).click();

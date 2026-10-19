@@ -151,6 +151,7 @@ export function errRequestId(err: unknown): string | undefined {
 }
 
 export function errMsg(err: unknown): string {
+  if (err instanceof TypeError) return MESSAGES.network_error;     // fetch sem resposta (rede/CORS)
   if (err instanceof Error) return isCodeLike(err.message) ? messageFor(err.message) : err.message;
   return typeof err === "string" && !isCodeLike(err) ? err : GENERIC_MESSAGE;
 }

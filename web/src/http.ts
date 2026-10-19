@@ -96,9 +96,10 @@ async function fetchWithId(path: string, opts: RequestInit): Promise<{ response:
   try {
     return { response: await fetch(path, options), requestId };
   } catch (error) {
-    if (error instanceof Error && error.name === 'AbortError') throw error;
-    // Sem resposta: o id local ainda permite ao suporte procurar a requisicao no servidor.
-    throw new HttpError(0, 'network_error', messageFor('network_error'), undefined, requestId);
+    // Sem resposta: o id local ainda permite ao suporte procurar a requisicao no servidor. O erro
+    // ORIGINAL segue (TypeError): o fluxo de fallback SSE->POST depende de nao ser um HttpError.
+    if (error instanceof Error) (error as Error & { requestId?: string }).requestId = requestId;
+    throw error;
   }
 }
 

@@ -67,8 +67,7 @@ test('network failure still exposes the locally generated request id', async () 
   globalThis.document = { cookie: '' };
   globalThis.fetch = async () => { throw new TypeError('Failed to fetch'); };
   await assert.rejects(http('/game/state'), (error) => {
-    assert.equal(error.status, 0);
-    assert.equal(error.code, 'network_error');
+    assert.ok(error instanceof TypeError);          // o erro original segue (fallback SSE->POST)
     assert.ok(error.requestId && error.requestId.length >= 8);
     return true;
   });
