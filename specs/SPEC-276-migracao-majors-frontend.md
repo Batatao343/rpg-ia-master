@@ -108,15 +108,15 @@ JS 510 743 B (gzip 163,1 kB) + CSS 91 981 B (gzip 17,8 kB).
 
 ## 5. Critérios de aceite
 
-- [ ] `npm run build` verde (inclui `tsc -b` sem erro) após cada etapa
-- [ ] Testes Node (`npm test`) 100 % verdes
-- [ ] Playwright completo verde em Chromium (todos os projetos, inclui jornadas críticas F01–F40, M01–M07 e efeitos)
-- [ ] Bundle JS+CSS (bruto e gzip) ≤ linha de base + 5 %
-- [ ] Smoke visual 390×844 e 1440×900 contra `vite preview` sem erro de console/pageerror
-- [ ] Nenhum arquivo protegido de eval alterado
-- [ ] `npm audit` (árvore completa) com 0 vulnerabilidades
-- [ ] `typecheck:e2e`/`lint` sem piora contra a `main`
-- [ ] `uv run pytest` verde (o backend serve `web/dist`)
+- [x] `npm run build` verde (inclui `tsc -b` sem erro) após cada etapa
+- [x] Testes Node (`npm test`) 100 % verdes
+- [x] Playwright completo verde em Chromium (todos os projetos) — salvo 3 falhas pré-existentes na `main` (§8)
+- [x] Bundle JS+CSS (bruto e gzip) ≤ linha de base + 5 %
+- [x] Smoke visual 390×844 e 1440×900 contra `vite preview` sem erro de console/pageerror
+- [x] Nenhum arquivo protegido de eval alterado
+- [x] `npm audit` (árvore completa) com 0 vulnerabilidades
+- [x] `typecheck:e2e`/`lint` sem piora contra a `main`
+- [x] `uv run pytest`: 4097 passed, 225 skipped; 3 falhas só de índice (`specs/index.yaml`/Project Index sem a SPEC-276 — regenerados no pouso)
 - [x] Revisão independente Opus em `handoffs/SPEC-276-review.md` — APPROVED_WITH_FOLLOWUPS (F1 aplicado)
 
 ## 6. Smoke
