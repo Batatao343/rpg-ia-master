@@ -7,6 +7,8 @@
 
 ## 2026-10-19 — onda: workspace, logs P2/P3, frontend majors, staging (222/236/279/280)
 
+- **19/10 — SPEC-293 `done`:** quem ainda não conhece a fação vê o combatente só pelo papel ("Iniciado"; "Combatente desconhecido" quando o nome é a própria fação) em HUD, POST/SSE/state, manifesto público, desfecho, log, histórico, crônica, Codex e dossiês. Rótulo calculado na leitura (`services/faction_display.py`); canônico segue no save/ids; após a revelação o nome completo aparece em tudo. Oráculo `assert_no_player_leak` ganhou a checagem (e). Revisão Opus APPROVED_WITH_FOLLOWUPS ([parecer](handoffs/SPEC-293-review.md)).
+
 - **19/10 — SPEC-292 `done`:** pressão de caça da 6.3 mistura o pool regional do mesmo porte quando a criatura temática rareia (determinístico; população intacta = SPEC-289); encontro ganha `public_hint`/`concealed_faction` e o narrador de combate chama combatente de fação desconhecida só pelo papel ("Iniciado"), validado com DeepSeek e Groq reais. Revisão Opus APPROVED_WITH_FOLLOWUPS ([parecer](handoffs/SPEC-292-review.md)). Follow-up P1 (pré-existente): HUD/manifesto público/log/Bestiário ainda mostram o nome com o radical da fação → spec de rótulo de exibição por observador.
 
 - **19/10 — SPEC-291 `done`:** falhas esporádicas do divisor do split no CI (F17 e `workspace-shell`, valor travado em 50) eram leitura sem espera após o arrasto com CPU carregada; os dois testes usam `expect.poll` (sem sleep, app intacto). 10× cada no chromium, 0 falhas.
