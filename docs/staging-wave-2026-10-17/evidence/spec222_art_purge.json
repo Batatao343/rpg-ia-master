@@ -1,0 +1,120 @@
+{
+  "analysis": {
+    "image_cost_usd": "0.011445 (rate_card, openai gpt-image-2 portrait); task ceiling US$ 0.20",
+    "local_clock_minus_db_seconds": -8.84,
+    "note": "timeline/gone_at use the workstation clock (8.84 s behind the DB). In DB time: delete ~11:53:10 UTC (after the 11:53:00 pg_cron run), purge_blobs job succeeded 11:54:00.7 by the very next scheduled rpg-cron-jobs run (11:54:00.02, HTTP 200), objects gone by ~11:54:01. Purged within 1 cron cycle, no manual trigger."
+  },
+  "at": "2026-10-19T11:50:47.868069+00:00",
+  "base": "https://rpg-ia-master-staging.vercel.app",
+  "checks": {
+    "confirm": {
+      "detail": null,
+      "generation_status": "pending",
+      "ok": true,
+      "status": 200
+    },
+    "delete_game": {
+      "asset_rows_before": 2,
+      "objects_right_after_delete": 2,
+      "ok": true,
+      "purge_job": [
+        {
+          "attempts": 0,
+          "keys": 2,
+          "status": "queued"
+        }
+      ],
+      "status": 200
+    },
+    "image_ready": {
+      "assets": 2,
+      "financial_status": "settled",
+      "object_bytes": [
+        172538,
+        16290
+      ],
+      "objects_in_bucket": 2,
+      "ok": true,
+      "status": "ready",
+      "usage_events": [
+        {
+          "cost_basis": "rate_card",
+          "cost_usd": "0.011445000",
+          "counts_as_spend": true,
+          "outcome": "success",
+          "provider": "openai"
+        }
+      ]
+    },
+    "login": {
+      "ok": true,
+      "status": 200
+    },
+    "new_game": {
+      "ok": true,
+      "status": 200
+    },
+    "purged": {
+      "gone_at": "2026-10-19T11:53:52.853802+00:00",
+      "job": [
+        {
+          "attempts": 1,
+          "status": "succeeded",
+          "updated_at": "2026-10-19 11:54:00.707634+00:00"
+        }
+      ],
+      "manual_cron_trigger": false,
+      "objects_left": 0,
+      "ok": true,
+      "polls": 6,
+      "scheduled_cron_runs_after_delete": [
+        {
+          "created_at": "2026-10-19 11:54:00.020613+00:00",
+          "status_code": 200
+        }
+      ]
+    },
+    "quote": {
+      "credits_milli": "46",
+      "detail": null,
+      "ok": true,
+      "status": 200
+    },
+    "wallet_credit": {
+      "available_milli": 1046,
+      "credited_milli": 1046,
+      "ok": true
+    }
+  },
+  "cleanup": {
+    "user_delete_status": 200
+  },
+  "ids": {
+    "game": "28b18cec1ee6",
+    "generation": "6bacc097542f",
+    "owner": "34461eb195da"
+  },
+  "ok": true,
+  "timeline": [
+    {
+      "at": "2026-10-19T11:51:06.470375+00:00",
+      "step": "game_created"
+    },
+    {
+      "at": "2026-10-19T11:51:07.890450+00:00",
+      "step": "confirmed"
+    },
+    {
+      "at": "2026-10-19T11:53:00.244373+00:00",
+      "step": "image_ready"
+    },
+    {
+      "at": "2026-10-19T11:53:01.555825+00:00",
+      "step": "game_deleted"
+    },
+    {
+      "at": "2026-10-19T11:53:52.853802+00:00",
+      "step": "objects_gone"
+    }
+  ]
+}
