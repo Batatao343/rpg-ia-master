@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "ebad2ea62c78119946cd8758354310432f081015",
+  "commit_sha": "f66ae13e474206a90c5f0284aa24d6f1f44e1648",
   "edge_counts": {
-    "calls": 17231,
-    "contains": 722,
-    "defines": 9820,
-    "imports": 1590,
-    "likely_test_for": 983,
+    "calls": 17353,
+    "contains": 724,
+    "defines": 9855,
+    "imports": 1597,
+    "likely_test_for": 986,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:0f61a3ebbb8bd97ed4a5355e0aab544ed95e7af122766c006d47d972d52ac50c",
+  "graph_hash": "sha256:2ee18b2b35568546a201213015e5dd2c3e116736c1ca75c48b5a06cc849f5c77",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -85,6 +85,7 @@
     "docs/descricao_projeto/video/src/types.ts",
     "docs/planos/rpg-next-jev-golive-plan/tools/validate_model_contract.py",
     "docs/spec221/evidence/local_smoke.py",
+    "docs/spec283/arena_ab.py",
     "encounter_budget.py",
     "evals/__init__.py",
     "evals/__main__.py",
@@ -733,6 +734,7 @@
     "tests/test_spec279_usage_retention_local.py",
     "tests/test_spec280_orphan_games.py",
     "tests/test_spec280_orphan_games_local.py",
+    "tests/test_spec283_enemy_support_cards.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -921,14 +923,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 788,
+    "class": 789,
     "endpoint": 63,
-    "file": 867,
-    "function": 3025,
+    "file": 869,
+    "function": 3034,
     "method": 750,
-    "module": 722,
-    "test": 5256
+    "module": 724,
+    "test": 5281
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:5b334a22829b94e10c6975001691ddd7067932eac44dbbcebff153bc6c5c53f5"
+  "source_tree_hash": "sha256:118275dd99ae0e56e57056bf3deead94317f5d4fdfc4d5272834e06acf832d01"
 }
