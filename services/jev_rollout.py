@@ -423,7 +423,11 @@ def begin(state: Mapping[str, Any], action: str, *,
     # Cold lazy imports of the frozen policy (~0.5 s, more on a loaded Windows box)
     # must not be charged to the turn's deadline: warm them before the clock starts,
     # otherwise the first turn spuriously times out instead of e.g. "configuration".
-    _frozen()
+    try:
+        _frozen()
+    except Exception:  # silent-ok: evento jev.* com outcome "error"; o router segue no CLASSIFY
+        _emit(JevRolloutEvent(mode, "error", None, 0, None, None, None))
+        return None  # a missing/broken frozen policy must never break the turn
     if backend is None:
         try:
             warm_client()  # SPEC-281: SSL/pool fora do prazo de 1 s

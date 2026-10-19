@@ -85,3 +85,16 @@ def test_build_failure_does_not_break_turn(monkeypatch: pytest.MonkeyPatch) -> N
     evaluation = pending._future.result(timeout=10)
     assert evaluation.outcome != "covered"
     assert jev_rollout._client is None
+
+
+def test_frozen_import_failure_does_not_break_turn(monkeypatch):
+    """A broken/missing frozen policy falls back (begin -> None) instead of raising."""
+    from services import jev_rollout
+    events = []
+    monkeypatch.setenv("RPG_JEV_ROUTER_MODE", "shadow")
+    monkeypatch.setattr(jev_rollout, "_emit", events.append)
+    def boom():
+        raise ImportError("frozen policy not packaged")
+    monkeypatch.setattr(jev_rollout, "_frozen", boom)
+    assert jev_rollout.begin({"player": {}}, "olho em volta") is None
+    assert [e.outcome for e in events][-1:] == ["error"]
