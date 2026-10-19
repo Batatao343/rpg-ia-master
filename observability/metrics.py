@@ -26,6 +26,8 @@ LABELS = {
     "rpg_operation_lease_age_seconds": {"kind"},
     "rpg_db_duration_seconds": {"operation", "outcome"},
     "rpg_db_pool": {"state"},
+    # SPEC-257 R2: verificacao de compra por provider (stripe|google_play); outcome = codigo fechado.
+    "rpg_payment_verifications_total": {"provider", "outcome"},
     # SPEC-254 R4: duracao por chamada ao banco; query_name = rotulo ESTATICO (nunca SQL/parametros).
     "rpg_db_query_seconds": {"query_name"},
     "rpg_metrics_db_error": set(),  # SPEC-221 R2

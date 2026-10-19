@@ -30,7 +30,6 @@ infrastructure/audit_source.py::PostgresAuditSource.load::4
 infrastructure/audit_source.py::PostgresAuditSource.load::5
 infrastructure/pgvector_memory.py::PgVectorMemoryStore.query::1
 infrastructure/pgvector_memory.py::configured_profile_id::1
-infrastructure/speech_finance.py::PostgresSpeechFinance.finish::1
 llm_setup.py::RoutedLLM._normalize_internal_structured_result::1
 llm_setup.py::_kill_switch_disabled::1
 llm_setup.py::_provider_slot::1
@@ -83,8 +82,6 @@ services/projections.py::normalize_plan::1
 services/quest_log.py::_valid_entity_ids::1
 services/speech_to_text.py::_allowed_by_switches::1
 services/tactical_profile.py::generate_tactical_profile::1
-services/wallet_recovery.py::_resolve_operation::1
-services/wallet_recovery.py::recover_wallet_reservations::1
 services/world_validators.py::validate_proposal::1
 workers/projection_jobs.py::make_handler.project.capture::1
 workers/run_worker.py::build_handlers.compress.capture::1

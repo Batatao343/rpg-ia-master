@@ -1,6 +1,6 @@
 # SPEC-257 — Pagamentos: webhook Stripe, verificação Google Play e wallet com desfecho em log
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P1**.
+> **Status:** `in-progress` — implementada em `logs-p1` (REVIEW_REQUIRED; smoke staging pendente)
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-240
 > **Desbloqueia:** SPEC-262 (runbook pagamento)
@@ -55,12 +55,12 @@ R1–R5.
 
 ## 5. Critérios de aceite
 
-- [ ] Todo evento de webhook e toda verificação Play tem 1 linha com `outcome`.
-- [ ] Zero segredo de pagamento em log.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Todo evento de webhook e toda verificação Play tem 1 linha com `outcome`.
+- [x] Zero segredo de pagamento em log.
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] `uv run pytest` verde (suíte completa offline).
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -71,3 +71,7 @@ R1–R5.
 - Nenhum.
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## Execução (logs-p1, 2026-10-18)
+
+Implementado: `infrastructure/payment_log.py` — `payments.stripe_webhook` (outcome applied|duplicate|replay_conflict|signature_invalid|too_large|timeout|ignored_type|rejected|disabled, `apply_result`, `event_ref` pseudonimizado, `duration_ms`), `payments.google_verify` (outcome = código `GooglePlayError`/credited/pending, `upstream_status`, `order_ref`) + métrica `rpg_payment_verifications_total{provider,outcome}`, `payments.checkout_failed`, `payments.fee_reconcile_failed`, `wallet.settle_failed|recovery_item_failed|reservation_uncertain`. `accept_event` devolve `apply_result` (aditivo, só classificação). Testes: `tests/test_payment_logging.py` (sentinelas de purchase_token/client_secret/evt id). Falta: smoke de staging em modo teste (§6) e a revisão Sol; Postgres local não executado.

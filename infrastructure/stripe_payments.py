@@ -240,21 +240,26 @@ class StripePayments:
                 db.execute("""insert into app.stripe_events(event_id,event_type,body_sha256,provider_created,facts)
                               values (%s,%s,%s,%s,%s)""",
                            (event["id"],event["type"],body_sha256,event["created"],Jsonb(facts)))
+            apply_result = "noop"          # SPEC-257 R1: so classificacao; nao muda o fluxo financeiro
             if event["type"] in PAID_EVENTS:
                 row = self._checkout_event(db, event["id"], event["type"], facts)
                 if row and row["stripe_payment_intent"]:
                     intent_for_fee = row["stripe_payment_intent"]
+                if row is not None:
+                    apply_result = ("late_paid_after_delete" if row["status"] == "reconciliation_required"
+                                    else "credited" if row["status"] == "paid" else "noop")
             elif event["type"] in FINANCIAL_EVENTS:
                 row = self._find_financial_order(db, facts)
                 if row:
                     self._financial_event(db, row, event["id"], event["type"], facts)
+                    apply_result = "financial_applied"
         # Fee reconciliation is optional and recoverable on duplicate paid
         # delivery; a provider outage never rolls back a verified purchase.
         if intent_for_fee:
             self.reconcile_fee(intent_for_fee)
         if facts["payment_intent"] and (event["type"] in FINANCIAL_EVENTS or event["type"] in PAID_EVENTS):
             self._reconcile_wallet(facts["payment_intent"])
-        return {"received": True, "duplicate": previous is not None}
+        return {"received": True, "duplicate": previous is not None, "apply_result": apply_result}
 
     def _checkout_event(self, db, event_id: str, kind: str, facts: dict):
         if not facts["order_id"]:
@@ -315,9 +320,9 @@ class StripePayments:
             store.ingest_backlog(50)
             store.reconcile("stripe", payment_intent)
         except Exception as exc:  # never fail a verified webhook delivery on a recoverable pass
-            import logging  # error class only: no ids/amounts/PII in the log line
-            logging.getLogger("rpg.reconciliation").warning(
-                "immediate_reconcile_failed error=%s", type(exc).__name__)
+            from observability.telemetry import log_event   # error class only: no ids/amounts/PII
+            log_event("payments", "immediate_reconcile_failed", level="warning",
+                      error_type=type(exc).__name__)
             return
 
     @staticmethod
@@ -397,7 +402,10 @@ class StripePayments:
             return
         try:
             economics = self.adapter.payment_economics(payment_intent)
-        except StripeError:
+        except StripeError as exc:
+            from observability.telemetry import log_event
+            log_event("payments", "fee_reconcile_failed", level="warning", stage="payment_economics",
+                      error_type=type(exc).__name__, error_code=str(exc.args[0] if exc.args else "")[:60])
             return
         if not economics:
             return

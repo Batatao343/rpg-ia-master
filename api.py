@@ -2858,7 +2858,9 @@ def checkout_create(body: CheckoutRequest, request: Request):
         raise QuotaExceeded('too_many_open_orders', 'owner', 60) from None
     except SwitchOff:
         raise HTTPException(503, 'new_purchases_disabled') from None
-    except (StripeError, PricingUnavailable):
+    except (StripeError, PricingUnavailable) as exc:
+        from infrastructure.payment_log import checkout_failed
+        checkout_failed("create", exc)
         raise HTTPException(503, 'stripe_checkout_unavailable') from None
 
 
@@ -2932,12 +2934,18 @@ def google_play_verify(body: GooglePlayVerifyRequest):
     unavailable = ('google_play_unavailable', 'google_play_unconfigured', 'new_purchases_disabled')
     conflicts = ('google_play_token_conflict', 'google_play_purchase_cancelled', 'google_play_already_consumed',
                  'google_play_test_purchase_rejected')
+    started = time.monotonic()
     try:
         result = _google_play().verify(current_principal(), body.product_id, body.purchase_token, body.order_id)
     except WalletConflict:
+        from infrastructure.payment_log import google_verify
+        google_verify("google_play_wallet_conflict", body, started, level="warning")
         raise HTTPException(409, 'google_play_wallet_conflict') from None
     except GooglePlayError as exc:
         code = str(exc)
+        from infrastructure.payment_log import google_verify
+        google_verify(code, body, started, upstream_status=getattr(exc, "upstream_status", 0),
+                      level="error" if code in unavailable else "warning")
         if code in unavailable:
             status = 503
         elif code in conflicts:
@@ -2947,6 +2955,8 @@ def google_play_verify(body: GooglePlayVerifyRequest):
         else:
             status = 422
         raise HTTPException(status, code) from None
+    from infrastructure.payment_log import google_verify
+    google_verify("pending" if result.get("status") == "pending" else "credited", body, started)
     return JSONResponse(result, headers={'Cache-Control': 'no-store'})
 
 
@@ -2956,7 +2966,9 @@ def checkout_status(order_id: uuid.UUID):
     from services.stripe_checkout import StripeError
     try:
         result = _stripe_payments().order(current_principal(), str(order_id))
-    except StripeError:
+    except StripeError as exc:
+        from infrastructure.payment_log import checkout_failed
+        checkout_failed("order", exc)
         raise HTTPException(503, 'stripe_checkout_unavailable') from None
     if result is None:
         raise HTTPException(404, 'payment_order_not_found')
@@ -2968,31 +2980,49 @@ async def stripe_webhook(request: Request):
     """External provider route: raw signature replaces user cookie/CSRF auth."""
     import hashlib
     from starlette.concurrency import run_in_threadpool
+    from infrastructure.payment_log import stripe_webhook as _wh
     from services.stripe_checkout import MAX_WEBHOOK_BYTES, StripeError, StripeSettings, verify_event
+    started = time.monotonic()
     try:
         try:
             settings = StripeSettings.from_env()
         except StripeError:
             settings = StripeSettings.for_reconciliation()
     except StripeError:
+        _wh("disabled", started)
         raise HTTPException(503, 'stripe_disabled') from None
     declared = request.headers.get('content-length')
     if declared is not None and (not declared.isdecimal() or int(declared) > MAX_WEBHOOK_BYTES):
+        _wh("too_large", started)
         raise HTTPException(413, 'stripe_body_limit')
     payload = bytearray()
+    event = None
     try:
         async with __import__('asyncio').timeout(15):
             async for chunk in request.stream():
                 if len(payload) + len(chunk) > MAX_WEBHOOK_BYTES:
+                    _wh("too_large", started)
                     raise HTTPException(413, 'stripe_body_limit')
                 payload.extend(chunk)
         raw_body = bytes(payload)
         event = verify_event(raw_body, request.headers.get('stripe-signature', ''), settings.webhook_secret)
-        return await run_in_threadpool(_stripe_payments().accept_event, event,
-                                       body_sha256=hashlib.sha256(raw_body).hexdigest())
-    except StripeError:
+        result = await run_in_threadpool(_stripe_payments().accept_event, event,
+                                         body_sha256=hashlib.sha256(raw_body).hexdigest())
+        _wh("duplicate" if result.get("duplicate") else "applied", started, event=event,
+            apply_result=result.get("apply_result"))
+        return result
+    except StripeError as exc:
+        code = str(exc.args[0] if exc.args else "")
+        if event is None:
+            _wh("signature_invalid", started, error_code=code)
+        elif code == "stripe_event_replay_conflict":
+            _wh("replay_conflict", started, event=event)
+        else:      # evento autentico recusado pelas regras financeiras (ex.: sku_mismatch)
+            _wh("rejected", started, event=event, error_code=code,
+                apply_result="sku_mismatch" if code == "stripe_order_sku_authority_mismatch" else None)
         raise HTTPException(400, 'stripe_event_invalid') from None
     except TimeoutError:
+        _wh("timeout", started)
         raise HTTPException(408, 'stripe_body_timeout') from None
 
 

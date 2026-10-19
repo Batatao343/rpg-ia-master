@@ -224,7 +224,10 @@ class DynamicArtRepository:
                     wallet.settle_usage(principal, generation["wallet_reservation_id"],
                         fence_token=generation["image_quote_id"], usage_event_ids=ids,
                         connection=connection, cap_confirmed_image=True)
-                except (PricingUnavailable, WalletConflict):
+                except (PricingUnavailable, WalletConflict) as exc:
+                    from infrastructure.payment_log import wallet_event
+                    wallet_event("reservation_uncertain", generation["wallet_reservation_id"], exc,
+                                 stage="image_settle")
                     wallet.mark_uncertain(principal, generation["wallet_reservation_id"],
                         reason="image_usage_requires_reconciliation", connection=connection)
 

@@ -33,6 +33,8 @@ ORDER_RE = re.compile(r"[A-Za-z0-9._\-]{1,128}")
 class GooglePlayError(ValueError):
     """Stable machine code in args[0]; never carries provider payloads."""
 
+    upstream_status: int = 0     # SPEC-257 R2: HTTP status da Play API quando houver (so o numero)
+
 
 def _account_key() -> bytes:
     key = os.getenv("RPG_PLAY_ACCOUNT_KEY", "")
@@ -172,14 +174,19 @@ class GooglePlayClient:
             with httpx.Client(transport=self.transport, timeout=15, follow_redirects=False) as client:
                 response = client.request(method, url, headers=self._headers(client), json=body)
                 if response.status_code in (400, 404, 410):
-                    raise GooglePlayError("google_play_purchase_not_found")
+                    err = GooglePlayError("google_play_purchase_not_found")
+                    err.upstream_status = int(response.status_code)
+                    raise err
                 response.raise_for_status()
                 return response.json() if response.content else {}
         except GooglePlayError:
             raise
         except (httpx.HTTPError, ValueError, KeyError, TypeError, OSError) as exc:
             # Includes signing failures; key material never enters the message.
-            raise GooglePlayError("google_play_unavailable") from exc
+            err = GooglePlayError("google_play_unavailable")
+            status = getattr(getattr(exc, "response", None), "status_code", 0)
+            err.upstream_status = int(status) if isinstance(status, int) else 0
+            raise err from exc
 
     def get_purchase(self, product_id: str, token: str) -> ProductPurchase:
         return ProductPurchase.from_api(self._call("GET", product_id, token))

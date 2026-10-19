@@ -16,7 +16,7 @@ SCAN_FILES = ("api.py", "llm_setup.py", "rag.py", "persistence.py")
 
 
 # chamadas que contam como "deixa rastro" (log, metrica, telemetria de tentativa, liberacao de lease)
-_ACCEPTED_CALLS = ("log", "metrics.increment", "fallback", "telemetry", "release_failed")
+_ACCEPTED_CALLS = ("log", "metrics.increment", "fallback", "telemetry", "release_failed", "wallet_event", "_db_conflict")
 
 
 def _is_broad(handler: ast.ExceptHandler) -> bool:

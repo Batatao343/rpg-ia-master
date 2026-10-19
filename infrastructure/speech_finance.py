@@ -76,9 +76,10 @@ class PostgresSpeechFinance:
                                          fence_token=self.claim.lease_token,
                                          usage_event_ids=[e.event_id for e in events], at=self.at)
                 return "settled"
-            except Exception:
+            except Exception as exc:
                 # Usage is already durable. Preserve funds/fence for reconciliation
                 # if settlement failed; never resend audio or silently refund.
-                pass
+                from infrastructure.payment_log import wallet_event
+                wallet_event("settle_failed", self.reservation.reservation_id, exc, stage="speech_settle")
         recovered = self.wallet.recover(self.principal, self.reservation.reservation_id, new_fence_token=uuid4())
         return 'settled' if recovered.status == 'settled' else "pending_reconciliation"

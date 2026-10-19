@@ -114,8 +114,10 @@ def _resolve_operation(pool, wallet, principal: Principal, row: dict) -> str:
             wallet.settle_usage(principal, row["reservation_id"], fence_token=row["fence_token"],
                                 usage_event_ids=[e["event_id"] for e in events])
             return "settled"
-        except Exception:
-            pass  # fall through: keep the funds held for reconciliation
+        except Exception as exc:
+            from infrastructure.payment_log import wallet_event
+            wallet_event("settle_failed", row["reservation_id"], exc, stage="settle_usage")
+            # fall through: keep the funds held for reconciliation
     try:
         done = wallet.recover(principal, row["reservation_id"], new_fence_token=uuid4())
     except UncertainEffect:
@@ -140,7 +142,9 @@ def recover_wallet_reservations(pool, max_items: int = 50, *, owner_id: UUID | N
                 outcome = "skipped"  # no durable operation to prove the effect is over
             else:
                 outcome = _resolve_operation(pool, wallet, principal, row)
-        except Exception:
+        except Exception as exc:
+            from infrastructure.payment_log import wallet_event
+            wallet_event("recovery_item_failed", row["reservation_id"], exc, stage="resolve")
             counts["wallet_errors"] += 1
             continue
         key = f"wallet_{outcome}"
