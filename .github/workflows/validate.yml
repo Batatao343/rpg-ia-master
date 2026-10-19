@@ -85,5 +85,5 @@ jobs:
           cache-dependency-path: web/package-lock.json
       - run: npm ci
         working-directory: web
-      - run: npm audit
+      - run: npm audit --audit-level=moderate
         working-directory: web

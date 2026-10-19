@@ -117,7 +117,7 @@ JS 510 743 B (gzip 163,1 kB) + CSS 91 981 B (gzip 17,8 kB).
 - [ ] `npm audit` (árvore completa) com 0 vulnerabilidades
 - [ ] `typecheck:e2e`/`lint` sem piora contra a `main`
 - [ ] `uv run pytest` verde (o backend serve `web/dist`)
-- [ ] Revisão independente Opus em `handoffs/SPEC-276-review.md`
+- [x] Revisão independente Opus em `handoffs/SPEC-276-review.md` — APPROVED_WITH_FOLLOWUPS (F1 aplicado)
 
 ## 6. Smoke
 
@@ -141,7 +141,7 @@ Linha de base final = `main` `da6186b`: **607 570 B / 181 877 B gzip**.
 | 2 TypeScript 7.0.2 | **bloqueado.** Funcionou antes do rebase (só `src/vite-env.d.ts` para `noUncheckedSideEffectImports` e `voice.test.mjs` sem `ts.transpileModule`), mas a `main` trouxe `typescript-eslint` 8.71 com peer `typescript >=4.8.4 <6.1.0`: o TS 7 não tem API programática e o `npm ci` recusaria o peer. Sem saída razoável até o typescript-eslint suportar o TS 7 (ou a 7.1 trazer a API nova). Caminho intermediário possível: TS 6.0 (fora do escopo dos PRs). | — |
 | 3 Vite 8.3.4 + plugin-react 6.1.2 | **entregue.** `esbuild` explícito (os testes Node o importam; o Vite 8 o tornou opcional). `build.target` fixado no alvo `modules` do Vite 5 (es2020/chrome87/safari14/firefox78/edge88) para não derrubar WebView/iOS antigos. Bundle **622 832 B (+2,5 %) / 181 058 B gzip (−0,5 %)**; o CSS cresce ~13 kB porque o Lightning CSS gera fallbacks para esse alvo. Build 1,7 s → 0,36 s. | `962ce43` |
 | 4 React 19.3.1 | **bloqueado pela R4.** Compila com uma mudança de tipo (`useModalFocus(ref: RefObject<HTMLElement \| null>)`), mas o bundle sobe para **697 188 B (+15,7 %) / 201 905 B gzip (+12,1 %)** — o `react-dom` 19 é ~79 kB maior minificado. Não há corte razoável que compense; decidir com o dono se o teto de 5 % vale para o React (code splitting das abas reduziria só o carregamento inicial, não o total). | — |
-| R6 audit | **entregue.** O Vite 8 elimina esbuild/postcss/nanoid/source-map-js; `npm audit fix` sobe browserslist/baseline-browser-mapping (via eslint-plugin-react-hooks); `uuid <11.1.1` (via `@capacitor/cli` > `xcode`) fica fixado por `overrides` em `^11.1.1` — o xcode só chama `require('uuid').v4()`, mantido no uuid 11 (o `--force` rebaixaria o `@capacitor/cli`). Sem allowlist. `npm audit`: **0**. `npm-audit-full` passa a bloqueante. | `c6eb24c` |
+| R6 audit | **entregue.** O Vite 8 elimina esbuild/postcss/nanoid/source-map-js; `npm audit fix` sobe browserslist/baseline-browser-mapping (via eslint-plugin-react-hooks); `uuid <11.1.1` (via `@capacitor/cli` > `xcode`) fica fixado por `overrides` em `^11.1.1` — o xcode só chama `require('uuid').v4()`, mantido no uuid 11 (o `--force` rebaixaria o `@capacitor/cli`). Sem allowlist. `npm audit`: **0**. `npm-audit-full` passa a bloqueante com `--audit-level=moderate` (revisão: advisory `low` novo não deve travar todos os PRs). | `c6eb24c` |
 
 Verificação do estado final (branch rebaseada sobre `da6186b`):
 
