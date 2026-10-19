@@ -1,11 +1,11 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "6c6b8921a513ff98187efbadd4dcb492ab536f6a",
+  "commit_sha": "855e165db46572c4ba8e4266cf0d794d3aee298f",
   "edge_counts": {
-    "calls": 17083,
-    "contains": 710,
-    "defines": 9724,
-    "imports": 1582,
+    "calls": 17155,
+    "contains": 716,
+    "defines": 9775,
+    "imports": 1584,
     "likely_test_for": 978,
     "route_to": 63
   },
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:7bc9e48969ff37fe92c2c50ef7b66ab90e9b369843bfb861deb35b2f32ea3b0a",
+  "graph_hash": "sha256:fcf984522ec3c85668e8c1e7124ed6c561895decf91f487e007eb73c1f27168d",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -185,6 +185,7 @@
     "pyproject.toml",
     "rag.py",
     "scripts/admin_kill_switch.py",
+    "scripts/admin_orphan_games.py",
     "scripts/admin_wallet_adjust.py",
     "scripts/admin_wallet_reconcile.py",
     "scripts/android/rename_package.py",
@@ -260,6 +261,7 @@
     "scripts/staging/smoke_ab.py",
     "scripts/staging/spec222_art_purge.py",
     "scripts/staging/spec236_daily_cap.py",
+    "scripts/staging/spec279_usage_survives_delete.py",
     "scripts/staging/sse_disconnect.py",
     "scripts/staging/stt_fallback_smoke.py",
     "scripts/staging/synthetic_data.py",
@@ -721,6 +723,10 @@
     "tests/test_spec267_static_mount.py",
     "tests/test_spec272_conflito_ligado.py",
     "tests/test_spec275_stalemate.py",
+    "tests/test_spec279_usage_retention.py",
+    "tests/test_spec279_usage_retention_local.py",
+    "tests/test_spec280_orphan_games.py",
+    "tests/test_spec280_orphan_games_local.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -909,14 +915,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 780,
+    "class": 784,
     "endpoint": 63,
-    "file": 855,
-    "function": 2998,
-    "method": 748,
-    "module": 710,
-    "test": 5197
+    "file": 861,
+    "function": 3011,
+    "method": 750,
+    "module": 716,
+    "test": 5229
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:f0d4c3cb54cb3f4db0b5e9975a4225c3361231498e6be37a6a671164e847cf61"
+  "source_tree_hash": "sha256:a4367c57681111970ba6a2cd73b59d422e1532861507875e86f2a41e2c394c28"
 }

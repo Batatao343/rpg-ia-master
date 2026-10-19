@@ -1,5 +1,5 @@
 {
-  "commit_sha": "6c6b8921a513ff98187efbadd4dcb492ab536f6a",
+  "commit_sha": "855e165db46572c4ba8e4266cf0d794d3aee298f",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -2084,6 +2084,17 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 1
+      },
+      "source": "file:scripts/admin_orphan_games.py",
+      "target": "module:scripts.admin_orphan_games",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "scripts/admin_wallet_adjust.py",
         "line": 1
       },
@@ -2903,6 +2914,17 @@
       },
       "source": "file:scripts/staging/spec236_daily_cap.py",
       "target": "module:scripts.staging.spec236_daily_cap",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 1
+      },
+      "source": "file:scripts/staging/spec279_usage_survives_delete.py",
+      "target": "module:scripts.staging.spec279_usage_survives_delete",
       "type": "contains"
     },
     {
@@ -17781,6 +17803,50 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention.py",
+        "line": 1
+      },
+      "source": "file:tests/test_spec279_usage_retention.py",
+      "target": "module:tests.test_spec279_usage_retention",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 1
+      },
+      "source": "file:tests/test_spec279_usage_retention_local.py",
+      "target": "module:tests.test_spec279_usage_retention_local",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games.py",
+        "line": 1
+      },
+      "source": "file:tests/test_spec280_orphan_games.py",
+      "target": "module:tests.test_spec280_orphan_games",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games_local.py",
+        "line": 1
+      },
+      "source": "file:tests/test_spec280_orphan_games_local.py",
+      "target": "module:tests.test_spec280_orphan_games_local",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec_index.py",
         "line": 1
       },
@@ -29431,7 +29497,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 55
+        "line": 15
+      },
+      "source": "module:infrastructure.account_read_model",
+      "target": "module:infrastructure.usage_events",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/account_read_model.py",
+        "line": 56
       },
       "source": "module:infrastructure.account_read_model",
       "target": "symbol:infrastructure.account_read_model.PostgresAccountReader",
@@ -29442,7 +29519,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 17
+        "line": 18
       },
       "source": "module:infrastructure.account_read_model",
       "target": "symbol:infrastructure.account_read_model._category_sql",
@@ -29453,7 +29530,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 32
+        "line": 33
       },
       "source": "module:infrastructure.account_read_model",
       "target": "symbol:infrastructure.account_read_model._cursor",
@@ -29464,7 +29541,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 45
+        "line": 46
       },
       "source": "module:infrastructure.account_read_model",
       "target": "symbol:infrastructure.account_read_model._page",
@@ -29475,7 +29552,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 22
+        "line": 23
       },
       "source": "module:infrastructure.account_read_model",
       "target": "symbol:infrastructure.account_read_model._page_limit",
@@ -29486,7 +29563,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 28
+        "line": 29
       },
       "source": "module:infrastructure.account_read_model",
       "target": "symbol:infrastructure.account_read_model._usd",
@@ -30102,7 +30179,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 187
+        "line": 191
       },
       "source": "module:infrastructure.finops_reader",
       "target": "symbol:infrastructure.finops_reader.FakeFinopsReader",
@@ -30124,7 +30201,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 224
+        "line": 228
       },
       "source": "module:infrastructure.finops_reader",
       "target": "symbol:infrastructure.finops_reader.PostgresFinopsEvaluationStore",
@@ -38648,6 +38725,116 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 33
+      },
+      "source": "module:scripts.admin_orphan_games",
+      "target": "symbol:scripts.admin_orphan_games.OrphanCleanupRefused",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 66
+      },
+      "source": "module:scripts.admin_orphan_games",
+      "target": "symbol:scripts.admin_orphan_games._col",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 103
+      },
+      "source": "module:scripts.admin_orphan_games",
+      "target": "symbol:scripts.admin_orphan_games._connect",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 109
+      },
+      "source": "module:scripts.admin_orphan_games",
+      "target": "symbol:scripts.admin_orphan_games._dsn",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 42
+      },
+      "source": "module:scripts.admin_orphan_games",
+      "target": "symbol:scripts.admin_orphan_games._guards",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 37
+      },
+      "source": "module:scripts.admin_orphan_games",
+      "target": "symbol:scripts.admin_orphan_games._one",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 54
+      },
+      "source": "module:scripts.admin_orphan_games",
+      "target": "symbol:scripts.admin_orphan_games._snapshot",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 83
+      },
+      "source": "module:scripts.admin_orphan_games",
+      "target": "symbol:scripts.admin_orphan_games.apply",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 120
+      },
+      "source": "module:scripts.admin_orphan_games",
+      "target": "symbol:scripts.admin_orphan_games.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 70
+      },
+      "source": "module:scripts.admin_orphan_games",
+      "target": "symbol:scripts.admin_orphan_games.plan",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "scripts/admin_wallet_adjust.py",
         "line": 16
       },
@@ -44956,6 +45143,61 @@
       },
       "source": "module:scripts.staging.spec236_daily_cap",
       "target": "symbol:scripts.staging.spec236_daily_cap.spend",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 20
+      },
+      "source": "module:scripts.staging.spec279_usage_survives_delete",
+      "target": "module:scripts.staging",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 26
+      },
+      "source": "module:scripts.staging.spec279_usage_survives_delete",
+      "target": "symbol:scripts.staging.spec279_usage_survives_delete._Pool",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 34
+      },
+      "source": "module:scripts.staging.spec279_usage_survives_delete",
+      "target": "symbol:scripts.staging.spec279_usage_survives_delete._measure",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 105
+      },
+      "source": "module:scripts.staging.spec279_usage_survives_delete",
+      "target": "symbol:scripts.staging.spec279_usage_survives_delete.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 46
+      },
+      "source": "module:scripts.staging.spec279_usage_survives_delete",
+      "target": "symbol:scripts.staging.spec279_usage_survives_delete.run",
       "type": "defines"
     },
     {
@@ -63663,7 +63905,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 35
+        "line": 37
       },
       "source": "module:tests.test_account_read_model",
       "target": "symbol:tests.test_account_read_model.Pool",
@@ -63685,7 +63927,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 50
+        "line": 52
       },
       "source": "module:tests.test_account_read_model",
       "target": "symbol:tests.test_account_read_model.principal",
@@ -63696,7 +63938,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 96
+        "line": 98
       },
       "source": "module:tests.test_account_read_model",
       "target": "symbol:tests.test_account_read_model.test_account_reads_are_owner_scoped_and_keyset_bounded",
@@ -63707,7 +63949,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 55
+        "line": 57
       },
       "source": "module:tests.test_account_read_model",
       "target": "symbol:tests.test_account_read_model.test_history_attribution_is_one_batch_for_50_messages_and_checks_each_epoch",
@@ -63718,7 +63960,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 111
+        "line": 113
       },
       "source": "module:tests.test_account_read_model",
       "target": "symbol:tests.test_account_read_model.test_purchase_history_uses_signed_kind_and_stable_keyset",
@@ -63729,7 +63971,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 87
+        "line": 89
       },
       "source": "module:tests.test_account_read_model",
       "target": "symbol:tests.test_account_read_model.test_record_history_returns_only_new_narrator_key_and_restore_gets_new_key",
@@ -63740,7 +63982,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 125
+        "line": 127
       },
       "source": "module:tests.test_account_read_model",
       "target": "symbol:tests.test_account_read_model.test_series_has_server_filled_zero_bins_and_only_settlement_sql",
@@ -63751,7 +63993,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 139
+        "line": 141
       },
       "source": "module:tests.test_account_read_model",
       "target": "symbol:tests.test_account_read_model.test_series_totals_are_calculated_on_server",
@@ -116363,6 +116605,314 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention.py",
+        "line": 12
+      },
+      "source": "module:tests.test_spec279_usage_retention",
+      "target": "symbol:tests.test_spec279_usage_retention._sql",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention.py",
+        "line": 34
+      },
+      "source": "module:tests.test_spec279_usage_retention",
+      "target": "symbol:tests.test_spec279_usage_retention.test_attribution_trigger_snapshots_kind_from_operations_and_still_fails_closed",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention.py",
+        "line": 16
+      },
+      "source": "module:tests.test_spec279_usage_retention",
+      "target": "symbol:tests.test_spec279_usage_retention.test_game_link_is_set_null_and_operation_link_no_longer_cascades",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention.py",
+        "line": 25
+      },
+      "source": "module:tests.test_spec279_usage_retention",
+      "target": "symbol:tests.test_spec279_usage_retention.test_migration_is_idempotent_and_regrants_runtime",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention.py",
+        "line": 42
+      },
+      "source": "module:tests.test_spec279_usage_retention",
+      "target": "symbol:tests.test_spec279_usage_retention.test_readers_keep_events_whose_operation_was_deleted",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention.py",
+        "line": 51
+      },
+      "source": "module:tests.test_spec279_usage_retention",
+      "target": "symbol:tests.test_spec279_usage_retention.test_reused_operation_id_is_refused_by_trigger",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 30
+      },
+      "source": "module:tests.test_spec279_usage_retention_local",
+      "target": "symbol:tests.test_spec279_usage_retention_local._Pool",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 38
+      },
+      "source": "module:tests.test_spec279_usage_retention_local",
+      "target": "symbol:tests.test_spec279_usage_retention_local._campaign",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 61
+      },
+      "source": "module:tests.test_spec279_usage_retention_local",
+      "target": "symbol:tests.test_spec279_usage_retention_local._day_spend",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 16
+      },
+      "source": "module:tests.test_spec279_usage_retention_local",
+      "target": "symbol:tests.test_spec279_usage_retention_local.db",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 119
+      },
+      "source": "module:tests.test_spec279_usage_retention_local",
+      "target": "symbol:tests.test_spec279_usage_retention_local.test_account_erasure_still_removes_usage",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 98
+      },
+      "source": "module:tests.test_spec279_usage_retention_local",
+      "target": "symbol:tests.test_spec279_usage_retention_local.test_attribution_still_fails_closed",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 69
+      },
+      "source": "module:tests.test_spec279_usage_retention_local",
+      "target": "symbol:tests.test_spec279_usage_retention_local.test_campaign_delete_keeps_spend_kind_and_history",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 130
+      },
+      "source": "module:tests.test_spec279_usage_retention_local",
+      "target": "symbol:tests.test_spec279_usage_retention_local.test_deleted_operation_id_cannot_be_reclaimed",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games.py",
+        "line": 53
+      },
+      "source": "module:tests.test_spec280_orphan_games",
+      "target": "symbol:tests.test_spec280_orphan_games._FakeConn",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games.py",
+        "line": 13
+      },
+      "source": "module:tests.test_spec280_orphan_games",
+      "target": "symbol:tests.test_spec280_orphan_games._sql",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games.py",
+        "line": 46
+      },
+      "source": "module:tests.test_spec280_orphan_games",
+      "target": "symbol:tests.test_spec280_orphan_games.test_cli_apply_requires_expect",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games.py",
+        "line": 35
+      },
+      "source": "module:tests.test_spec280_orphan_games",
+      "target": "symbol:tests.test_spec280_orphan_games.test_cli_is_dry_run_by_default",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games.py",
+        "line": 27
+      },
+      "source": "module:tests.test_spec280_orphan_games",
+      "target": "symbol:tests.test_spec280_orphan_games.test_migration_is_idempotent_and_locked_down",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games.py",
+        "line": 17
+      },
+      "source": "module:tests.test_spec280_orphan_games",
+      "target": "symbol:tests.test_spec280_orphan_games.test_trigger_after_delete_on_auth_users_is_definer_and_portable",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games_local.py",
+        "line": 44
+      },
+      "source": "module:tests.test_spec280_orphan_games_local",
+      "target": "symbol:tests.test_spec280_orphan_games_local._auth_user",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games_local.py",
+        "line": 28
+      },
+      "source": "module:tests.test_spec280_orphan_games_local",
+      "target": "symbol:tests.test_spec280_orphan_games_local._game",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games_local.py",
+        "line": 14
+      },
+      "source": "module:tests.test_spec280_orphan_games_local",
+      "target": "symbol:tests.test_spec280_orphan_games_local.db",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games_local.py",
+        "line": 50
+      },
+      "source": "module:tests.test_spec280_orphan_games_local",
+      "target": "symbol:tests.test_spec280_orphan_games_local.test_auth_delete_erases_games_but_keeps_spend_and_wallet",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games_local.py",
+        "line": 98
+      },
+      "source": "module:tests.test_spec280_orphan_games_local",
+      "target": "symbol:tests.test_spec280_orphan_games_local.test_auth_delete_of_tombstoned_owner_never_fails",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games_local.py",
+        "line": 107
+      },
+      "source": "module:tests.test_spec280_orphan_games_local",
+      "target": "symbol:tests.test_spec280_orphan_games_local.test_deleted_tombstone_owner_is_not_an_orphan_candidate",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games_local.py",
+        "line": 63
+      },
+      "source": "module:tests.test_spec280_orphan_games_local",
+      "target": "symbol:tests.test_spec280_orphan_games_local.test_plan_and_apply_remove_only_orphans_and_keep_spend",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games_local.py",
+        "line": 89
+      },
+      "source": "module:tests.test_spec280_orphan_games_local",
+      "target": "symbol:tests.test_spec280_orphan_games_local.test_refuses_when_usage_still_cascades",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec_index.py",
         "line": 47
       },
@@ -142984,7 +143534,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 56
+        "line": 57
       },
       "source": "symbol:infrastructure.account_read_model.PostgresAccountReader",
       "target": "symbol:infrastructure.account_read_model.PostgresAccountReader.__init__",
@@ -142995,7 +143545,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 59
+        "line": 60
       },
       "source": "symbol:infrastructure.account_read_model.PostgresAccountReader",
       "target": "symbol:infrastructure.account_read_model.PostgresAccountReader.balance",
@@ -143006,7 +143556,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 151
+        "line": 155
       },
       "source": "symbol:infrastructure.account_read_model.PostgresAccountReader",
       "target": "symbol:infrastructure.account_read_model.PostgresAccountReader.history_costs",
@@ -143017,7 +143567,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 190
+        "line": 194
       },
       "source": "symbol:infrastructure.account_read_model.PostgresAccountReader",
       "target": "symbol:infrastructure.account_read_model.PostgresAccountReader.operation_cost",
@@ -143028,7 +143578,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 68
+        "line": 69
       },
       "source": "symbol:infrastructure.account_read_model.PostgresAccountReader",
       "target": "symbol:infrastructure.account_read_model.PostgresAccountReader.purchases",
@@ -143039,7 +143589,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 109
+        "line": 113
       },
       "source": "symbol:infrastructure.account_read_model.PostgresAccountReader",
       "target": "symbol:infrastructure.account_read_model.PostgresAccountReader.series",
@@ -143050,7 +143600,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 87
+        "line": 88
       },
       "source": "symbol:infrastructure.account_read_model.PostgresAccountReader",
       "target": "symbol:infrastructure.account_read_model.PostgresAccountReader.usage",
@@ -143061,7 +143611,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 60
+        "line": 61
       },
       "source": "symbol:infrastructure.account_read_model.PostgresAccountReader.balance",
       "target": "symbol:infrastructure.db_roles.admin_connection",
@@ -143072,7 +143622,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 184
+        "line": 188
       },
       "source": "symbol:infrastructure.account_read_model.PostgresAccountReader.history_costs",
       "target": "symbol:infrastructure.account_read_model._usd",
@@ -143083,7 +143633,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 157
+        "line": 161
       },
       "source": "symbol:infrastructure.account_read_model.PostgresAccountReader.history_costs",
       "target": "symbol:infrastructure.db_roles.admin_connection",
@@ -143094,7 +143644,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 221
+        "line": 225
       },
       "source": "symbol:infrastructure.account_read_model.PostgresAccountReader.operation_cost",
       "target": "symbol:infrastructure.account_read_model._usd",
@@ -143105,43 +143655,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 192
+        "line": 196
       },
       "source": "symbol:infrastructure.account_read_model.PostgresAccountReader.operation_cost",
       "target": "symbol:infrastructure.db_roles.admin_connection",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "infrastructure/account_read_model.py",
-        "line": 71
-      },
-      "source": "symbol:infrastructure.account_read_model.PostgresAccountReader.purchases",
-      "target": "symbol:infrastructure.account_read_model._cursor",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "infrastructure/account_read_model.py",
-        "line": 81
-      },
-      "source": "symbol:infrastructure.account_read_model.PostgresAccountReader.purchases",
-      "target": "symbol:infrastructure.account_read_model._page",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "infrastructure/account_read_model.py",
-        "line": 70
-      },
-      "source": "symbol:infrastructure.account_read_model.PostgresAccountReader.purchases",
-      "target": "symbol:infrastructure.account_read_model._page_limit",
       "type": "calls"
     },
     {
@@ -143152,6 +143669,39 @@
         "line": 72
       },
       "source": "symbol:infrastructure.account_read_model.PostgresAccountReader.purchases",
+      "target": "symbol:infrastructure.account_read_model._cursor",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/account_read_model.py",
+        "line": 82
+      },
+      "source": "symbol:infrastructure.account_read_model.PostgresAccountReader.purchases",
+      "target": "symbol:infrastructure.account_read_model._page",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/account_read_model.py",
+        "line": 71
+      },
+      "source": "symbol:infrastructure.account_read_model.PostgresAccountReader.purchases",
+      "target": "symbol:infrastructure.account_read_model._page_limit",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/account_read_model.py",
+        "line": 73
+      },
+      "source": "symbol:infrastructure.account_read_model.PostgresAccountReader.purchases",
       "target": "symbol:infrastructure.db_roles.admin_connection",
       "type": "calls"
     },
@@ -143160,7 +143710,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 119
+        "line": 123
       },
       "source": "symbol:infrastructure.account_read_model.PostgresAccountReader.series",
       "target": "symbol:infrastructure.db_roles.admin_connection",
@@ -143171,7 +143721,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 93
+        "line": 97
       },
       "source": "symbol:infrastructure.account_read_model.PostgresAccountReader.usage",
       "target": "symbol:infrastructure.account_read_model._category_sql",
@@ -143182,7 +143732,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 90
+        "line": 91
       },
       "source": "symbol:infrastructure.account_read_model.PostgresAccountReader.usage",
       "target": "symbol:infrastructure.account_read_model._cursor",
@@ -143193,7 +143743,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 103
+        "line": 107
       },
       "source": "symbol:infrastructure.account_read_model.PostgresAccountReader.usage",
       "target": "symbol:infrastructure.account_read_model._page",
@@ -143204,7 +143754,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 89
+        "line": 90
       },
       "source": "symbol:infrastructure.account_read_model.PostgresAccountReader.usage",
       "target": "symbol:infrastructure.account_read_model._page_limit",
@@ -143215,10 +143765,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/account_read_model.py",
-        "line": 91
+        "line": 92
       },
       "source": "symbol:infrastructure.account_read_model.PostgresAccountReader.usage",
       "target": "symbol:infrastructure.db_roles.admin_connection",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/account_read_model.py",
+        "line": 95
+      },
+      "source": "symbol:infrastructure.account_read_model.PostgresAccountReader.usage",
+      "target": "symbol:infrastructure.usage_events.has_column",
       "type": "calls"
     },
     {
@@ -143809,7 +144370,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 217
+        "line": 221
       },
       "source": "symbol:infrastructure.finops_reader.FakeFinopsReader",
       "target": "symbol:infrastructure.finops_reader.FakeFinopsReader.backlogs",
@@ -143820,7 +144381,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 211
+        "line": 215
       },
       "source": "symbol:infrastructure.finops_reader.FakeFinopsReader",
       "target": "symbol:infrastructure.finops_reader.FakeFinopsReader.ops_counts",
@@ -143831,7 +144392,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 205
+        "line": 209
       },
       "source": "symbol:infrastructure.finops_reader.FakeFinopsReader",
       "target": "symbol:infrastructure.finops_reader.FakeFinopsReader.owner_usage",
@@ -143842,7 +144403,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 199
+        "line": 203
       },
       "source": "symbol:infrastructure.finops_reader.FakeFinopsReader",
       "target": "symbol:infrastructure.finops_reader.FakeFinopsReader.pricing",
@@ -143853,7 +144414,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 202
+        "line": 206
       },
       "source": "symbol:infrastructure.finops_reader.FakeFinopsReader",
       "target": "symbol:infrastructure.finops_reader.FakeFinopsReader.purchases",
@@ -143864,7 +144425,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 208
+        "line": 212
       },
       "source": "symbol:infrastructure.finops_reader.FakeFinopsReader",
       "target": "symbol:infrastructure.finops_reader.FakeFinopsReader.usage_groups",
@@ -143875,7 +144436,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 220
+        "line": 224
       },
       "source": "symbol:infrastructure.finops_reader.FakeFinopsReader",
       "target": "symbol:infrastructure.finops_reader.FakeFinopsReader.wallet_holds",
@@ -143886,7 +144447,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 214
+        "line": 218
       },
       "source": "symbol:infrastructure.finops_reader.FakeFinopsReader",
       "target": "symbol:infrastructure.finops_reader.FakeFinopsReader.wallet_mismatch",
@@ -143897,7 +144458,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 227
+        "line": 231
       },
       "source": "symbol:infrastructure.finops_reader.PostgresFinopsEvaluationStore",
       "target": "symbol:infrastructure.finops_reader.PostgresFinopsEvaluationStore.__init__",
@@ -143908,7 +144469,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 230
+        "line": 234
       },
       "source": "symbol:infrastructure.finops_reader.PostgresFinopsEvaluationStore",
       "target": "symbol:infrastructure.finops_reader.PostgresFinopsEvaluationStore.record",
@@ -143919,7 +144480,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 232
+        "line": 236
       },
       "source": "symbol:infrastructure.finops_reader.PostgresFinopsEvaluationStore.record",
       "target": "symbol:infrastructure.db_roles.admin_connection",
@@ -143941,7 +144502,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 170
+        "line": 174
       },
       "source": "symbol:infrastructure.finops_reader.PostgresFinopsReader",
       "target": "symbol:infrastructure.finops_reader.PostgresFinopsReader.backlogs",
@@ -144007,7 +144568,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 158
+        "line": 162
       },
       "source": "symbol:infrastructure.finops_reader.PostgresFinopsReader",
       "target": "symbol:infrastructure.finops_reader.PostgresFinopsReader.wallet_holds",
@@ -144018,7 +144579,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 149
+        "line": 153
       },
       "source": "symbol:infrastructure.finops_reader.PostgresFinopsReader",
       "target": "symbol:infrastructure.finops_reader.PostgresFinopsReader.wallet_mismatch",
@@ -144029,7 +144590,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 171
+        "line": 175
       },
       "source": "symbol:infrastructure.finops_reader.PostgresFinopsReader.backlogs",
       "target": "symbol:infrastructure.db_roles.admin_connection",
@@ -144040,7 +144601,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 180
+        "line": 184
       },
       "source": "symbol:infrastructure.finops_reader.PostgresFinopsReader.backlogs",
       "target": "symbol:services.finops_alerts.Backlog",
@@ -144051,7 +144612,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 182
+        "line": 186
       },
       "source": "symbol:infrastructure.finops_reader.PostgresFinopsReader.backlogs",
       "target": "symbol:services.finops_alerts.Backlog",
@@ -144073,10 +144634,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 146
+        "line": 150
       },
       "source": "symbol:infrastructure.finops_reader.PostgresFinopsReader.ops_counts",
       "target": "symbol:infrastructure.finops_reader.OpsCounts",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "infrastructure/finops_reader.py",
+        "line": 137
+      },
+      "source": "symbol:infrastructure.finops_reader.PostgresFinopsReader.ops_counts",
+      "target": "symbol:infrastructure.usage_events.has_column",
       "type": "calls"
     },
     {
@@ -144227,7 +144799,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 160
+        "line": 164
       },
       "source": "symbol:infrastructure.finops_reader.PostgresFinopsReader.wallet_holds",
       "target": "symbol:infrastructure.db_roles.admin_connection",
@@ -144238,7 +144810,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 162
+        "line": 166
       },
       "source": "symbol:infrastructure.finops_reader.PostgresFinopsReader.wallet_holds",
       "target": "symbol:infrastructure.usage_events.has_column",
@@ -144249,7 +144821,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "infrastructure/finops_reader.py",
-        "line": 150
+        "line": 154
       },
       "source": "symbol:infrastructure.finops_reader.PostgresFinopsReader.wallet_mismatch",
       "target": "symbol:infrastructure.db_roles.admin_connection",
@@ -166303,6 +166875,281 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 44
+      },
+      "source": "symbol:scripts.admin_orphan_games._guards",
+      "target": "symbol:scripts.admin_orphan_games.OrphanCleanupRefused",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 46
+      },
+      "source": "symbol:scripts.admin_orphan_games._guards",
+      "target": "symbol:scripts.admin_orphan_games.OrphanCleanupRefused",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 51
+      },
+      "source": "symbol:scripts.admin_orphan_games._guards",
+      "target": "symbol:scripts.admin_orphan_games.OrphanCleanupRefused",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 43
+      },
+      "source": "symbol:scripts.admin_orphan_games._guards",
+      "target": "symbol:scripts.admin_orphan_games._one",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 45
+      },
+      "source": "symbol:scripts.admin_orphan_games._guards",
+      "target": "symbol:scripts.admin_orphan_games._one",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 47
+      },
+      "source": "symbol:scripts.admin_orphan_games._guards",
+      "target": "symbol:scripts.admin_orphan_games._one",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 55
+      },
+      "source": "symbol:scripts.admin_orphan_games._snapshot",
+      "target": "symbol:scripts.admin_orphan_games._one",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 57
+      },
+      "source": "symbol:scripts.admin_orphan_games._snapshot",
+      "target": "symbol:scripts.admin_orphan_games._one",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 60
+      },
+      "source": "symbol:scripts.admin_orphan_games._snapshot",
+      "target": "symbol:scripts.admin_orphan_games._one",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 61
+      },
+      "source": "symbol:scripts.admin_orphan_games._snapshot",
+      "target": "symbol:scripts.admin_orphan_games._one",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 90
+      },
+      "source": "symbol:scripts.admin_orphan_games.apply",
+      "target": "symbol:scripts.admin_orphan_games.OrphanCleanupRefused",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 95
+      },
+      "source": "symbol:scripts.admin_orphan_games.apply",
+      "target": "symbol:scripts.admin_orphan_games.OrphanCleanupRefused",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 87
+      },
+      "source": "symbol:scripts.admin_orphan_games.apply",
+      "target": "symbol:scripts.admin_orphan_games._col",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 88
+      },
+      "source": "symbol:scripts.admin_orphan_games.apply",
+      "target": "symbol:scripts.admin_orphan_games._col",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 85
+      },
+      "source": "symbol:scripts.admin_orphan_games.apply",
+      "target": "symbol:scripts.admin_orphan_games._guards",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 91
+      },
+      "source": "symbol:scripts.admin_orphan_games.apply",
+      "target": "symbol:scripts.admin_orphan_games._snapshot",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 93
+      },
+      "source": "symbol:scripts.admin_orphan_games.apply",
+      "target": "symbol:scripts.admin_orphan_games._snapshot",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 131
+      },
+      "source": "symbol:scripts.admin_orphan_games.main",
+      "target": "symbol:scripts.admin_orphan_games._connect",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 131
+      },
+      "source": "symbol:scripts.admin_orphan_games.main",
+      "target": "symbol:scripts.admin_orphan_games._dsn",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 134
+      },
+      "source": "symbol:scripts.admin_orphan_games.main",
+      "target": "symbol:scripts.admin_orphan_games.apply",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 135
+      },
+      "source": "symbol:scripts.admin_orphan_games.main",
+      "target": "symbol:scripts.admin_orphan_games.plan",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 73
+      },
+      "source": "symbol:scripts.admin_orphan_games.plan",
+      "target": "symbol:scripts.admin_orphan_games._col",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 71
+      },
+      "source": "symbol:scripts.admin_orphan_games.plan",
+      "target": "symbol:scripts.admin_orphan_games._guards",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 75
+      },
+      "source": "symbol:scripts.admin_orphan_games.plan",
+      "target": "symbol:scripts.admin_orphan_games._one",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/admin_orphan_games.py",
+        "line": 74
+      },
+      "source": "symbol:scripts.admin_orphan_games.plan",
+      "target": "symbol:scripts.admin_orphan_games._snapshot",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "scripts/admin_wallet_adjust.py",
         "line": 84
       },
@@ -178353,6 +179200,226 @@
       },
       "source": "symbol:scripts.staging.spec236_daily_cap.spend",
       "target": "symbol:scripts.staging.s192.app_login",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 27
+      },
+      "source": "symbol:scripts.staging.spec279_usage_survives_delete._Pool",
+      "target": "symbol:scripts.staging.spec279_usage_survives_delete._Pool.__init__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 30
+      },
+      "source": "symbol:scripts.staging.spec279_usage_survives_delete._Pool",
+      "target": "symbol:scripts.staging.spec279_usage_survives_delete._Pool.connection",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 36
+      },
+      "source": "symbol:scripts.staging.spec279_usage_survives_delete._measure",
+      "target": "symbol:scripts.staging.spec279_usage_survives_delete._Pool",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 108
+      },
+      "source": "symbol:scripts.staging.spec279_usage_survives_delete.main",
+      "target": "symbol:scripts.staging.common.add_guard_args",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 106
+      },
+      "source": "symbol:scripts.staging.spec279_usage_survives_delete.main",
+      "target": "symbol:scripts.staging.common.load_dotenv_quietly",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 110
+      },
+      "source": "symbol:scripts.staging.spec279_usage_survives_delete.main",
+      "target": "symbol:scripts.staging.common.require_staging",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 112
+      },
+      "source": "symbol:scripts.staging.spec279_usage_survives_delete.main",
+      "target": "symbol:scripts.staging.common.write_evidence",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 111
+      },
+      "source": "symbol:scripts.staging.spec279_usage_survives_delete.main",
+      "target": "symbol:scripts.staging.s192.load_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 111
+      },
+      "source": "symbol:scripts.staging.spec279_usage_survives_delete.main",
+      "target": "symbol:scripts.staging.s192.now_iso",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 111
+      },
+      "source": "symbol:scripts.staging.spec279_usage_survives_delete.main",
+      "target": "symbol:scripts.staging.spec279_usage_survives_delete.run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 91
+      },
+      "source": "symbol:scripts.staging.spec279_usage_survives_delete.run",
+      "target": "symbol:scripts.staging.s192.query",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 59
+      },
+      "source": "symbol:scripts.staging.spec279_usage_survives_delete.run",
+      "target": "symbol:scripts.staging.spec279_usage_survives_delete._measure",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 75
+      },
+      "source": "symbol:scripts.staging.spec279_usage_survives_delete.run",
+      "target": "symbol:scripts.staging.spec279_usage_survives_delete._measure",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 78
+      },
+      "source": "symbol:scripts.staging.spec279_usage_survives_delete.run",
+      "target": "symbol:scripts.staging.spec279_usage_survives_delete._measure",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 88
+      },
+      "source": "symbol:scripts.staging.spec279_usage_survives_delete.run",
+      "target": "symbol:scripts.staging.spec279_usage_survives_delete._measure",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 51
+      },
+      "source": "symbol:scripts.staging.spec279_usage_survives_delete.run",
+      "target": "symbol:scripts.staging.spec279_usage_survives_delete.run.go",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 59
+      },
+      "source": "symbol:scripts.staging.spec279_usage_survives_delete.run.go",
+      "target": "symbol:scripts.staging.spec279_usage_survives_delete._measure",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 75
+      },
+      "source": "symbol:scripts.staging.spec279_usage_survives_delete.run.go",
+      "target": "symbol:scripts.staging.spec279_usage_survives_delete._measure",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 78
+      },
+      "source": "symbol:scripts.staging.spec279_usage_survives_delete.run.go",
+      "target": "symbol:scripts.staging.spec279_usage_survives_delete._measure",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/staging/spec279_usage_survives_delete.py",
+        "line": 88
+      },
+      "source": "symbol:scripts.staging.spec279_usage_survives_delete.run.go",
+      "target": "symbol:scripts.staging.spec279_usage_survives_delete._measure",
       "type": "calls"
     },
     {
@@ -211250,7 +212317,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 32
+        "line": 31
+      },
+      "source": "symbol:tests.test_account_read_model.Connection.execute",
+      "target": "symbol:tests.test_account_read_model.Result",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_account_read_model.py",
+        "line": 34
       },
       "source": "symbol:tests.test_account_read_model.Connection.execute",
       "target": "symbol:tests.test_account_read_model.Result",
@@ -211261,7 +212339,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 36
+        "line": 38
       },
       "source": "symbol:tests.test_account_read_model.Pool",
       "target": "symbol:tests.test_account_read_model.Pool.__init__",
@@ -211272,7 +212350,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 39
+        "line": 41
       },
       "source": "symbol:tests.test_account_read_model.Pool",
       "target": "symbol:tests.test_account_read_model.Pool.connection",
@@ -211283,7 +212361,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 40
+        "line": 42
       },
       "source": "symbol:tests.test_account_read_model.Pool.connection",
       "target": "symbol:tests.test_account_read_model.Pool.connection.Context",
@@ -211294,7 +212372,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 41
+        "line": 43
       },
       "source": "symbol:tests.test_account_read_model.Pool.connection.Context",
       "target": "symbol:tests.test_account_read_model.Pool.connection.Context.__enter__",
@@ -211305,7 +212383,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 44
+        "line": 46
       },
       "source": "symbol:tests.test_account_read_model.Pool.connection.Context",
       "target": "symbol:tests.test_account_read_model.Pool.connection.Context.__exit__",
@@ -211349,7 +212427,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 52
+        "line": 54
       },
       "source": "symbol:tests.test_account_read_model.principal",
       "target": "symbol:infrastructure.contracts.Principal",
@@ -211360,7 +212438,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 102
+        "line": 104
       },
       "source": "symbol:tests.test_account_read_model.test_account_reads_are_owner_scoped_and_keyset_bounded",
       "target": "symbol:infrastructure.account_read_model.PostgresAccountReader",
@@ -211371,7 +212449,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 101
+        "line": 103
       },
       "source": "symbol:tests.test_account_read_model.test_account_reads_are_owner_scoped_and_keyset_bounded",
       "target": "symbol:tests.test_account_read_model.Connection",
@@ -211382,7 +212460,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 102
+        "line": 104
       },
       "source": "symbol:tests.test_account_read_model.test_account_reads_are_owner_scoped_and_keyset_bounded",
       "target": "symbol:tests.test_account_read_model.Pool",
@@ -211393,7 +212471,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 97
+        "line": 99
       },
       "source": "symbol:tests.test_account_read_model.test_account_reads_are_owner_scoped_and_keyset_bounded",
       "target": "symbol:tests.test_account_read_model.principal",
@@ -211404,10 +212482,32 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 66
+        "line": 68
       },
       "source": "symbol:tests.test_account_read_model.test_history_attribution_is_one_batch_for_50_messages_and_checks_each_epoch",
       "target": "symbol:infrastructure.account_read_model.PostgresAccountReader",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_account_read_model.py",
+        "line": 60
+      },
+      "source": "symbol:tests.test_account_read_model.test_history_attribution_is_one_batch_for_50_messages_and_checks_each_epoch",
+      "target": "symbol:tests.test_account_read_model.Connection",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_account_read_model.py",
+        "line": 68
+      },
+      "source": "symbol:tests.test_account_read_model.test_history_attribution_is_one_batch_for_50_messages_and_checks_each_epoch",
+      "target": "symbol:tests.test_account_read_model.Pool",
       "type": "calls"
     },
     {
@@ -211418,28 +212518,6 @@
         "line": 58
       },
       "source": "symbol:tests.test_account_read_model.test_history_attribution_is_one_batch_for_50_messages_and_checks_each_epoch",
-      "target": "symbol:tests.test_account_read_model.Connection",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_account_read_model.py",
-        "line": 66
-      },
-      "source": "symbol:tests.test_account_read_model.test_history_attribution_is_one_batch_for_50_messages_and_checks_each_epoch",
-      "target": "symbol:tests.test_account_read_model.Pool",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_account_read_model.py",
-        "line": 56
-      },
-      "source": "symbol:tests.test_account_read_model.test_history_attribution_is_one_batch_for_50_messages_and_checks_each_epoch",
       "target": "symbol:tests.test_account_read_model.principal",
       "type": "calls"
     },
@@ -211448,7 +212526,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 117
+        "line": 119
       },
       "source": "symbol:tests.test_account_read_model.test_purchase_history_uses_signed_kind_and_stable_keyset",
       "target": "symbol:infrastructure.account_read_model.PostgresAccountReader",
@@ -211459,7 +212537,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 116
+        "line": 118
       },
       "source": "symbol:tests.test_account_read_model.test_purchase_history_uses_signed_kind_and_stable_keyset",
       "target": "symbol:tests.test_account_read_model.Connection",
@@ -211470,7 +212548,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 117
+        "line": 119
       },
       "source": "symbol:tests.test_account_read_model.test_purchase_history_uses_signed_kind_and_stable_keyset",
       "target": "symbol:tests.test_account_read_model.Pool",
@@ -211481,7 +212559,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 112
+        "line": 114
       },
       "source": "symbol:tests.test_account_read_model.test_purchase_history_uses_signed_kind_and_stable_keyset",
       "target": "symbol:tests.test_account_read_model.principal",
@@ -211492,18 +212570,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 90
-      },
-      "source": "symbol:tests.test_account_read_model.test_record_history_returns_only_new_narrator_key_and_restore_gets_new_key",
-      "target": "symbol:services.presentation_history.record_history",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_account_read_model.py",
-        "line": 91
+        "line": 92
       },
       "source": "symbol:tests.test_account_read_model.test_record_history_returns_only_new_narrator_key_and_restore_gets_new_key",
       "target": "symbol:services.presentation_history.record_history",
@@ -211525,7 +212592,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 128
+        "line": 95
+      },
+      "source": "symbol:tests.test_account_read_model.test_record_history_returns_only_new_narrator_key_and_restore_gets_new_key",
+      "target": "symbol:services.presentation_history.record_history",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_account_read_model.py",
+        "line": 130
       },
       "source": "symbol:tests.test_account_read_model.test_series_has_server_filled_zero_bins_and_only_settlement_sql",
       "target": "symbol:infrastructure.account_read_model.PostgresAccountReader",
@@ -211536,7 +212614,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 127
+        "line": 129
       },
       "source": "symbol:tests.test_account_read_model.test_series_has_server_filled_zero_bins_and_only_settlement_sql",
       "target": "symbol:tests.test_account_read_model.Connection",
@@ -211547,7 +212625,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 128
+        "line": 130
       },
       "source": "symbol:tests.test_account_read_model.test_series_has_server_filled_zero_bins_and_only_settlement_sql",
       "target": "symbol:tests.test_account_read_model.Pool",
@@ -211558,7 +212636,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 126
+        "line": 128
       },
       "source": "symbol:tests.test_account_read_model.test_series_has_server_filled_zero_bins_and_only_settlement_sql",
       "target": "symbol:tests.test_account_read_model.principal",
@@ -211569,7 +212647,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 146
+        "line": 148
       },
       "source": "symbol:tests.test_account_read_model.test_series_totals_are_calculated_on_server",
       "target": "symbol:infrastructure.account_read_model.PostgresAccountReader",
@@ -211580,7 +212658,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 142
+        "line": 144
       },
       "source": "symbol:tests.test_account_read_model.test_series_totals_are_calculated_on_server",
       "target": "symbol:tests.test_account_read_model.Connection",
@@ -211591,7 +212669,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 146
+        "line": 148
       },
       "source": "symbol:tests.test_account_read_model.test_series_totals_are_calculated_on_server",
       "target": "symbol:tests.test_account_read_model.Pool",
@@ -211602,7 +212680,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_account_read_model.py",
-        "line": 140
+        "line": 142
       },
       "source": "symbol:tests.test_account_read_model.test_series_totals_are_calculated_on_server",
       "target": "symbol:tests.test_account_read_model.principal",
@@ -319544,6 +320622,369 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention.py",
+        "line": 35
+      },
+      "source": "symbol:tests.test_spec279_usage_retention.test_attribution_trigger_snapshots_kind_from_operations_and_still_fails_closed",
+      "target": "symbol:tests.test_spec279_usage_retention._sql",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention.py",
+        "line": 17
+      },
+      "source": "symbol:tests.test_spec279_usage_retention.test_game_link_is_set_null_and_operation_link_no_longer_cascades",
+      "target": "symbol:tests.test_spec279_usage_retention._sql",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention.py",
+        "line": 26
+      },
+      "source": "symbol:tests.test_spec279_usage_retention.test_migration_is_idempotent_and_regrants_runtime",
+      "target": "symbol:tests.test_spec279_usage_retention._sql",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention.py",
+        "line": 52
+      },
+      "source": "symbol:tests.test_spec279_usage_retention.test_reused_operation_id_is_refused_by_trigger",
+      "target": "symbol:tests.test_spec279_usage_retention._sql",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 31
+      },
+      "source": "symbol:tests.test_spec279_usage_retention_local._Pool",
+      "target": "symbol:tests.test_spec279_usage_retention_local._Pool.__init__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 34
+      },
+      "source": "symbol:tests.test_spec279_usage_retention_local._Pool",
+      "target": "symbol:tests.test_spec279_usage_retention_local._Pool.connection",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 122
+      },
+      "source": "symbol:tests.test_spec279_usage_retention_local.test_account_erasure_still_removes_usage",
+      "target": "symbol:tests.test_spec279_usage_retention_local._campaign",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 101
+      },
+      "source": "symbol:tests.test_spec279_usage_retention_local.test_attribution_still_fails_closed",
+      "target": "symbol:tests.test_spec279_usage_retention_local._campaign",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 78
+      },
+      "source": "symbol:tests.test_spec279_usage_retention_local.test_campaign_delete_keeps_spend_kind_and_history",
+      "target": "symbol:tests.test_spec279_usage_retention_local._Pool",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 81
+      },
+      "source": "symbol:tests.test_spec279_usage_retention_local.test_campaign_delete_keeps_spend_kind_and_history",
+      "target": "symbol:tests.test_spec279_usage_retention_local._Pool",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 93
+      },
+      "source": "symbol:tests.test_spec279_usage_retention_local.test_campaign_delete_keeps_spend_kind_and_history",
+      "target": "symbol:tests.test_spec279_usage_retention_local._Pool",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 74
+      },
+      "source": "symbol:tests.test_spec279_usage_retention_local.test_campaign_delete_keeps_spend_kind_and_history",
+      "target": "symbol:tests.test_spec279_usage_retention_local._campaign",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 79
+      },
+      "source": "symbol:tests.test_spec279_usage_retention_local.test_campaign_delete_keeps_spend_kind_and_history",
+      "target": "symbol:tests.test_spec279_usage_retention_local._day_spend",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 91
+      },
+      "source": "symbol:tests.test_spec279_usage_retention_local.test_campaign_delete_keeps_spend_kind_and_history",
+      "target": "symbol:tests.test_spec279_usage_retention_local._day_spend",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 133
+      },
+      "source": "symbol:tests.test_spec279_usage_retention_local.test_deleted_operation_id_cannot_be_reclaimed",
+      "target": "symbol:tests.test_spec279_usage_retention_local._campaign",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec279_usage_retention_local.py",
+        "line": 135
+      },
+      "source": "symbol:tests.test_spec279_usage_retention_local.test_deleted_operation_id_cannot_be_reclaimed",
+      "target": "symbol:tests.test_spec279_usage_retention_local._campaign",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games.py",
+        "line": 54
+      },
+      "source": "symbol:tests.test_spec280_orphan_games._FakeConn",
+      "target": "symbol:tests.test_spec280_orphan_games._FakeConn.__enter__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games.py",
+        "line": 57
+      },
+      "source": "symbol:tests.test_spec280_orphan_games._FakeConn",
+      "target": "symbol:tests.test_spec280_orphan_games._FakeConn.__exit__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games.py",
+        "line": 63
+      },
+      "source": "symbol:tests.test_spec280_orphan_games._FakeConn",
+      "target": "symbol:tests.test_spec280_orphan_games._FakeConn.rollback",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games.py",
+        "line": 60
+      },
+      "source": "symbol:tests.test_spec280_orphan_games._FakeConn",
+      "target": "symbol:tests.test_spec280_orphan_games._FakeConn.transaction",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games.py",
+        "line": 38
+      },
+      "source": "symbol:tests.test_spec280_orphan_games.test_cli_is_dry_run_by_default",
+      "target": "symbol:tests.test_spec280_orphan_games._FakeConn",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games.py",
+        "line": 28
+      },
+      "source": "symbol:tests.test_spec280_orphan_games.test_migration_is_idempotent_and_locked_down",
+      "target": "symbol:tests.test_spec280_orphan_games._sql",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games.py",
+        "line": 18
+      },
+      "source": "symbol:tests.test_spec280_orphan_games.test_trigger_after_delete_on_auth_users_is_definer_and_portable",
+      "target": "symbol:tests.test_spec280_orphan_games._sql",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games_local.py",
+        "line": 51
+      },
+      "source": "symbol:tests.test_spec280_orphan_games_local.test_auth_delete_erases_games_but_keeps_spend_and_wallet",
+      "target": "symbol:tests.test_spec280_orphan_games_local._auth_user",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games_local.py",
+        "line": 52
+      },
+      "source": "symbol:tests.test_spec280_orphan_games_local.test_auth_delete_erases_games_but_keeps_spend_and_wallet",
+      "target": "symbol:tests.test_spec280_orphan_games_local._game",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games_local.py",
+        "line": 53
+      },
+      "source": "symbol:tests.test_spec280_orphan_games_local.test_auth_delete_erases_games_but_keeps_spend_and_wallet",
+      "target": "symbol:tests.test_spec280_orphan_games_local._game",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games_local.py",
+        "line": 100
+      },
+      "source": "symbol:tests.test_spec280_orphan_games_local.test_auth_delete_of_tombstoned_owner_never_fails",
+      "target": "symbol:tests.test_spec280_orphan_games_local._auth_user",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games_local.py",
+        "line": 101
+      },
+      "source": "symbol:tests.test_spec280_orphan_games_local.test_auth_delete_of_tombstoned_owner_never_fails",
+      "target": "symbol:tests.test_spec280_orphan_games_local._game",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games_local.py",
+        "line": 111
+      },
+      "source": "symbol:tests.test_spec280_orphan_games_local.test_deleted_tombstone_owner_is_not_an_orphan_candidate",
+      "target": "symbol:tests.test_spec280_orphan_games_local._game",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games_local.py",
+        "line": 65
+      },
+      "source": "symbol:tests.test_spec280_orphan_games_local.test_plan_and_apply_remove_only_orphans_and_keep_spend",
+      "target": "symbol:tests.test_spec280_orphan_games_local._auth_user",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games_local.py",
+        "line": 66
+      },
+      "source": "symbol:tests.test_spec280_orphan_games_local.test_plan_and_apply_remove_only_orphans_and_keep_spend",
+      "target": "symbol:tests.test_spec280_orphan_games_local._game",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games_local.py",
+        "line": 68
+      },
+      "source": "symbol:tests.test_spec280_orphan_games_local.test_plan_and_apply_remove_only_orphans_and_keep_spend",
+      "target": "symbol:tests.test_spec280_orphan_games_local._game",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec280_orphan_games_local.py",
+        "line": 69
+      },
+      "source": "symbol:tests.test_spec280_orphan_games_local.test_plan_and_apply_remove_only_orphans_and_keep_spend",
+      "target": "symbol:tests.test_spec280_orphan_games_local._game",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec_index.py",
         "line": 49
       },
@@ -333021,6 +334462,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:scripts/admin_orphan_games.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/admin_orphan_games.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:scripts/admin_wallet_adjust.py",
       "kind": "file",
       "line": 1,
@@ -333543,6 +334991,13 @@
       "kind": "file",
       "line": 1,
       "path": "scripts/staging/spec236_daily_cap.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:scripts/staging/spec279_usage_survives_delete.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/staging/spec279_usage_survives_delete.py",
       "qualified_name": null
     },
     {
@@ -336773,6 +338228,34 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/test_spec279_usage_retention.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_spec279_usage_retention.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_spec279_usage_retention_local.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_spec279_usage_retention_local.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_spec280_orphan_games.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_spec280_orphan_games.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_spec280_orphan_games_local.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_spec280_orphan_games_local.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/test_spec_index.py",
       "kind": "file",
       "line": 1,
@@ -338915,6 +340398,13 @@
       "qualified_name": "scripts.admin_kill_switch"
     },
     {
+      "id": "module:scripts.admin_orphan_games",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/admin_orphan_games.py",
+      "qualified_name": "scripts.admin_orphan_games"
+    },
+    {
       "id": "module:scripts.admin_wallet_adjust",
       "kind": "module",
       "line": 1,
@@ -339438,6 +340928,13 @@
       "line": 1,
       "path": "scripts/staging/spec236_daily_cap.py",
       "qualified_name": "scripts.staging.spec236_daily_cap"
+    },
+    {
+      "id": "module:scripts.staging.spec279_usage_survives_delete",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/staging/spec279_usage_survives_delete.py",
+      "qualified_name": "scripts.staging.spec279_usage_survives_delete"
     },
     {
       "id": "module:scripts.staging.sse_disconnect",
@@ -342665,6 +344162,34 @@
       "line": 1,
       "path": "tests/test_spec275_stalemate.py",
       "qualified_name": "tests.test_spec275_stalemate"
+    },
+    {
+      "id": "module:tests.test_spec279_usage_retention",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_spec279_usage_retention.py",
+      "qualified_name": "tests.test_spec279_usage_retention"
+    },
+    {
+      "id": "module:tests.test_spec279_usage_retention_local",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_spec279_usage_retention_local.py",
+      "qualified_name": "tests.test_spec279_usage_retention_local"
+    },
+    {
+      "id": "module:tests.test_spec280_orphan_games",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_spec280_orphan_games.py",
+      "qualified_name": "tests.test_spec280_orphan_games"
+    },
+    {
+      "id": "module:tests.test_spec280_orphan_games_local",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_spec280_orphan_games_local.py",
+      "qualified_name": "tests.test_spec280_orphan_games_local"
     },
     {
       "id": "module:tests.test_spec_index",
@@ -348906,91 +350431,91 @@
     {
       "id": "symbol:infrastructure.account_read_model.PostgresAccountReader",
       "kind": "class",
-      "line": 55,
+      "line": 56,
       "path": "infrastructure/account_read_model.py",
       "qualified_name": "infrastructure.account_read_model.PostgresAccountReader"
     },
     {
       "id": "symbol:infrastructure.account_read_model.PostgresAccountReader.__init__",
       "kind": "method",
-      "line": 56,
+      "line": 57,
       "path": "infrastructure/account_read_model.py",
       "qualified_name": "infrastructure.account_read_model.PostgresAccountReader.__init__"
     },
     {
       "id": "symbol:infrastructure.account_read_model.PostgresAccountReader.balance",
       "kind": "method",
-      "line": 59,
+      "line": 60,
       "path": "infrastructure/account_read_model.py",
       "qualified_name": "infrastructure.account_read_model.PostgresAccountReader.balance"
     },
     {
       "id": "symbol:infrastructure.account_read_model.PostgresAccountReader.history_costs",
       "kind": "method",
-      "line": 151,
+      "line": 155,
       "path": "infrastructure/account_read_model.py",
       "qualified_name": "infrastructure.account_read_model.PostgresAccountReader.history_costs"
     },
     {
       "id": "symbol:infrastructure.account_read_model.PostgresAccountReader.operation_cost",
       "kind": "method",
-      "line": 190,
+      "line": 194,
       "path": "infrastructure/account_read_model.py",
       "qualified_name": "infrastructure.account_read_model.PostgresAccountReader.operation_cost"
     },
     {
       "id": "symbol:infrastructure.account_read_model.PostgresAccountReader.purchases",
       "kind": "method",
-      "line": 68,
+      "line": 69,
       "path": "infrastructure/account_read_model.py",
       "qualified_name": "infrastructure.account_read_model.PostgresAccountReader.purchases"
     },
     {
       "id": "symbol:infrastructure.account_read_model.PostgresAccountReader.series",
       "kind": "method",
-      "line": 109,
+      "line": 113,
       "path": "infrastructure/account_read_model.py",
       "qualified_name": "infrastructure.account_read_model.PostgresAccountReader.series"
     },
     {
       "id": "symbol:infrastructure.account_read_model.PostgresAccountReader.usage",
       "kind": "method",
-      "line": 87,
+      "line": 88,
       "path": "infrastructure/account_read_model.py",
       "qualified_name": "infrastructure.account_read_model.PostgresAccountReader.usage"
     },
     {
       "id": "symbol:infrastructure.account_read_model._category_sql",
       "kind": "function",
-      "line": 17,
+      "line": 18,
       "path": "infrastructure/account_read_model.py",
       "qualified_name": "infrastructure.account_read_model._category_sql"
     },
     {
       "id": "symbol:infrastructure.account_read_model._cursor",
       "kind": "function",
-      "line": 32,
+      "line": 33,
       "path": "infrastructure/account_read_model.py",
       "qualified_name": "infrastructure.account_read_model._cursor"
     },
     {
       "id": "symbol:infrastructure.account_read_model._page",
       "kind": "function",
-      "line": 45,
+      "line": 46,
       "path": "infrastructure/account_read_model.py",
       "qualified_name": "infrastructure.account_read_model._page"
     },
     {
       "id": "symbol:infrastructure.account_read_model._page_limit",
       "kind": "function",
-      "line": 22,
+      "line": 23,
       "path": "infrastructure/account_read_model.py",
       "qualified_name": "infrastructure.account_read_model._page_limit"
     },
     {
       "id": "symbol:infrastructure.account_read_model._usd",
       "kind": "function",
-      "line": 28,
+      "line": 29,
       "path": "infrastructure/account_read_model.py",
       "qualified_name": "infrastructure.account_read_model._usd"
     },
@@ -349529,63 +351054,63 @@
     {
       "id": "symbol:infrastructure.finops_reader.FakeFinopsReader",
       "kind": "class",
-      "line": 187,
+      "line": 191,
       "path": "infrastructure/finops_reader.py",
       "qualified_name": "infrastructure.finops_reader.FakeFinopsReader"
     },
     {
       "id": "symbol:infrastructure.finops_reader.FakeFinopsReader.backlogs",
       "kind": "method",
-      "line": 217,
+      "line": 221,
       "path": "infrastructure/finops_reader.py",
       "qualified_name": "infrastructure.finops_reader.FakeFinopsReader.backlogs"
     },
     {
       "id": "symbol:infrastructure.finops_reader.FakeFinopsReader.ops_counts",
       "kind": "method",
-      "line": 211,
+      "line": 215,
       "path": "infrastructure/finops_reader.py",
       "qualified_name": "infrastructure.finops_reader.FakeFinopsReader.ops_counts"
     },
     {
       "id": "symbol:infrastructure.finops_reader.FakeFinopsReader.owner_usage",
       "kind": "method",
-      "line": 205,
+      "line": 209,
       "path": "infrastructure/finops_reader.py",
       "qualified_name": "infrastructure.finops_reader.FakeFinopsReader.owner_usage"
     },
     {
       "id": "symbol:infrastructure.finops_reader.FakeFinopsReader.pricing",
       "kind": "method",
-      "line": 199,
+      "line": 203,
       "path": "infrastructure/finops_reader.py",
       "qualified_name": "infrastructure.finops_reader.FakeFinopsReader.pricing"
     },
     {
       "id": "symbol:infrastructure.finops_reader.FakeFinopsReader.purchases",
       "kind": "method",
-      "line": 202,
+      "line": 206,
       "path": "infrastructure/finops_reader.py",
       "qualified_name": "infrastructure.finops_reader.FakeFinopsReader.purchases"
     },
     {
       "id": "symbol:infrastructure.finops_reader.FakeFinopsReader.usage_groups",
       "kind": "method",
-      "line": 208,
+      "line": 212,
       "path": "infrastructure/finops_reader.py",
       "qualified_name": "infrastructure.finops_reader.FakeFinopsReader.usage_groups"
     },
     {
       "id": "symbol:infrastructure.finops_reader.FakeFinopsReader.wallet_holds",
       "kind": "method",
-      "line": 220,
+      "line": 224,
       "path": "infrastructure/finops_reader.py",
       "qualified_name": "infrastructure.finops_reader.FakeFinopsReader.wallet_holds"
     },
     {
       "id": "symbol:infrastructure.finops_reader.FakeFinopsReader.wallet_mismatch",
       "kind": "method",
-      "line": 214,
+      "line": 218,
       "path": "infrastructure/finops_reader.py",
       "qualified_name": "infrastructure.finops_reader.FakeFinopsReader.wallet_mismatch"
     },
@@ -349599,21 +351124,21 @@
     {
       "id": "symbol:infrastructure.finops_reader.PostgresFinopsEvaluationStore",
       "kind": "class",
-      "line": 224,
+      "line": 228,
       "path": "infrastructure/finops_reader.py",
       "qualified_name": "infrastructure.finops_reader.PostgresFinopsEvaluationStore"
     },
     {
       "id": "symbol:infrastructure.finops_reader.PostgresFinopsEvaluationStore.__init__",
       "kind": "method",
-      "line": 227,
+      "line": 231,
       "path": "infrastructure/finops_reader.py",
       "qualified_name": "infrastructure.finops_reader.PostgresFinopsEvaluationStore.__init__"
     },
     {
       "id": "symbol:infrastructure.finops_reader.PostgresFinopsEvaluationStore.record",
       "kind": "method",
-      "line": 230,
+      "line": 234,
       "path": "infrastructure/finops_reader.py",
       "qualified_name": "infrastructure.finops_reader.PostgresFinopsEvaluationStore.record"
     },
@@ -349634,7 +351159,7 @@
     {
       "id": "symbol:infrastructure.finops_reader.PostgresFinopsReader.backlogs",
       "kind": "method",
-      "line": 170,
+      "line": 174,
       "path": "infrastructure/finops_reader.py",
       "qualified_name": "infrastructure.finops_reader.PostgresFinopsReader.backlogs"
     },
@@ -349676,14 +351201,14 @@
     {
       "id": "symbol:infrastructure.finops_reader.PostgresFinopsReader.wallet_holds",
       "kind": "method",
-      "line": 158,
+      "line": 162,
       "path": "infrastructure/finops_reader.py",
       "qualified_name": "infrastructure.finops_reader.PostgresFinopsReader.wallet_holds"
     },
     {
       "id": "symbol:infrastructure.finops_reader.PostgresFinopsReader.wallet_mismatch",
       "kind": "method",
-      "line": 149,
+      "line": 153,
       "path": "infrastructure/finops_reader.py",
       "qualified_name": "infrastructure.finops_reader.PostgresFinopsReader.wallet_mismatch"
     },
@@ -357500,6 +359025,76 @@
       "qualified_name": "scripts.admin_kill_switch.main"
     },
     {
+      "id": "symbol:scripts.admin_orphan_games.OrphanCleanupRefused",
+      "kind": "class",
+      "line": 33,
+      "path": "scripts/admin_orphan_games.py",
+      "qualified_name": "scripts.admin_orphan_games.OrphanCleanupRefused"
+    },
+    {
+      "id": "symbol:scripts.admin_orphan_games._col",
+      "kind": "function",
+      "line": 66,
+      "path": "scripts/admin_orphan_games.py",
+      "qualified_name": "scripts.admin_orphan_games._col"
+    },
+    {
+      "id": "symbol:scripts.admin_orphan_games._connect",
+      "kind": "function",
+      "line": 103,
+      "path": "scripts/admin_orphan_games.py",
+      "qualified_name": "scripts.admin_orphan_games._connect"
+    },
+    {
+      "id": "symbol:scripts.admin_orphan_games._dsn",
+      "kind": "function",
+      "line": 109,
+      "path": "scripts/admin_orphan_games.py",
+      "qualified_name": "scripts.admin_orphan_games._dsn"
+    },
+    {
+      "id": "symbol:scripts.admin_orphan_games._guards",
+      "kind": "function",
+      "line": 42,
+      "path": "scripts/admin_orphan_games.py",
+      "qualified_name": "scripts.admin_orphan_games._guards"
+    },
+    {
+      "id": "symbol:scripts.admin_orphan_games._one",
+      "kind": "function",
+      "line": 37,
+      "path": "scripts/admin_orphan_games.py",
+      "qualified_name": "scripts.admin_orphan_games._one"
+    },
+    {
+      "id": "symbol:scripts.admin_orphan_games._snapshot",
+      "kind": "function",
+      "line": 54,
+      "path": "scripts/admin_orphan_games.py",
+      "qualified_name": "scripts.admin_orphan_games._snapshot"
+    },
+    {
+      "id": "symbol:scripts.admin_orphan_games.apply",
+      "kind": "function",
+      "line": 83,
+      "path": "scripts/admin_orphan_games.py",
+      "qualified_name": "scripts.admin_orphan_games.apply"
+    },
+    {
+      "id": "symbol:scripts.admin_orphan_games.main",
+      "kind": "function",
+      "line": 120,
+      "path": "scripts/admin_orphan_games.py",
+      "qualified_name": "scripts.admin_orphan_games.main"
+    },
+    {
+      "id": "symbol:scripts.admin_orphan_games.plan",
+      "kind": "function",
+      "line": 70,
+      "path": "scripts/admin_orphan_games.py",
+      "qualified_name": "scripts.admin_orphan_games.plan"
+    },
+    {
       "id": "symbol:scripts.admin_wallet_adjust.build_parser",
       "kind": "function",
       "line": 16,
@@ -361194,6 +362789,55 @@
       "line": 70,
       "path": "scripts/staging/spec236_daily_cap.py",
       "qualified_name": "scripts.staging.spec236_daily_cap.spend"
+    },
+    {
+      "id": "symbol:scripts.staging.spec279_usage_survives_delete._Pool",
+      "kind": "class",
+      "line": 26,
+      "path": "scripts/staging/spec279_usage_survives_delete.py",
+      "qualified_name": "scripts.staging.spec279_usage_survives_delete._Pool"
+    },
+    {
+      "id": "symbol:scripts.staging.spec279_usage_survives_delete._Pool.__init__",
+      "kind": "method",
+      "line": 27,
+      "path": "scripts/staging/spec279_usage_survives_delete.py",
+      "qualified_name": "scripts.staging.spec279_usage_survives_delete._Pool.__init__"
+    },
+    {
+      "id": "symbol:scripts.staging.spec279_usage_survives_delete._Pool.connection",
+      "kind": "method",
+      "line": 30,
+      "path": "scripts/staging/spec279_usage_survives_delete.py",
+      "qualified_name": "scripts.staging.spec279_usage_survives_delete._Pool.connection"
+    },
+    {
+      "id": "symbol:scripts.staging.spec279_usage_survives_delete._measure",
+      "kind": "function",
+      "line": 34,
+      "path": "scripts/staging/spec279_usage_survives_delete.py",
+      "qualified_name": "scripts.staging.spec279_usage_survives_delete._measure"
+    },
+    {
+      "id": "symbol:scripts.staging.spec279_usage_survives_delete.main",
+      "kind": "function",
+      "line": 105,
+      "path": "scripts/staging/spec279_usage_survives_delete.py",
+      "qualified_name": "scripts.staging.spec279_usage_survives_delete.main"
+    },
+    {
+      "id": "symbol:scripts.staging.spec279_usage_survives_delete.run",
+      "kind": "function",
+      "line": 46,
+      "path": "scripts/staging/spec279_usage_survives_delete.py",
+      "qualified_name": "scripts.staging.spec279_usage_survives_delete.run"
+    },
+    {
+      "id": "symbol:scripts.staging.spec279_usage_survives_delete.run.go",
+      "kind": "function",
+      "line": 51,
+      "path": "scripts/staging/spec279_usage_survives_delete.py",
+      "qualified_name": "scripts.staging.spec279_usage_survives_delete.run.go"
     },
     {
       "id": "symbol:scripts.staging.sse_disconnect.exactly_one_turn",
@@ -373504,42 +375148,42 @@
     {
       "id": "symbol:tests.test_account_read_model.Pool",
       "kind": "class",
-      "line": 35,
+      "line": 37,
       "path": "tests/test_account_read_model.py",
       "qualified_name": "tests.test_account_read_model.Pool"
     },
     {
       "id": "symbol:tests.test_account_read_model.Pool.__init__",
       "kind": "test",
-      "line": 36,
+      "line": 38,
       "path": "tests/test_account_read_model.py",
       "qualified_name": "tests.test_account_read_model.Pool.__init__"
     },
     {
       "id": "symbol:tests.test_account_read_model.Pool.connection",
       "kind": "test",
-      "line": 39,
+      "line": 41,
       "path": "tests/test_account_read_model.py",
       "qualified_name": "tests.test_account_read_model.Pool.connection"
     },
     {
       "id": "symbol:tests.test_account_read_model.Pool.connection.Context",
       "kind": "class",
-      "line": 40,
+      "line": 42,
       "path": "tests/test_account_read_model.py",
       "qualified_name": "tests.test_account_read_model.Pool.connection.Context"
     },
     {
       "id": "symbol:tests.test_account_read_model.Pool.connection.Context.__enter__",
       "kind": "test",
-      "line": 41,
+      "line": 43,
       "path": "tests/test_account_read_model.py",
       "qualified_name": "tests.test_account_read_model.Pool.connection.Context.__enter__"
     },
     {
       "id": "symbol:tests.test_account_read_model.Pool.connection.Context.__exit__",
       "kind": "test",
-      "line": 44,
+      "line": 46,
       "path": "tests/test_account_read_model.py",
       "qualified_name": "tests.test_account_read_model.Pool.connection.Context.__exit__"
     },
@@ -373574,49 +375218,49 @@
     {
       "id": "symbol:tests.test_account_read_model.principal",
       "kind": "test",
-      "line": 50,
+      "line": 52,
       "path": "tests/test_account_read_model.py",
       "qualified_name": "tests.test_account_read_model.principal"
     },
     {
       "id": "symbol:tests.test_account_read_model.test_account_reads_are_owner_scoped_and_keyset_bounded",
       "kind": "test",
-      "line": 96,
+      "line": 98,
       "path": "tests/test_account_read_model.py",
       "qualified_name": "tests.test_account_read_model.test_account_reads_are_owner_scoped_and_keyset_bounded"
     },
     {
       "id": "symbol:tests.test_account_read_model.test_history_attribution_is_one_batch_for_50_messages_and_checks_each_epoch",
       "kind": "test",
-      "line": 55,
+      "line": 57,
       "path": "tests/test_account_read_model.py",
       "qualified_name": "tests.test_account_read_model.test_history_attribution_is_one_batch_for_50_messages_and_checks_each_epoch"
     },
     {
       "id": "symbol:tests.test_account_read_model.test_purchase_history_uses_signed_kind_and_stable_keyset",
       "kind": "test",
-      "line": 111,
+      "line": 113,
       "path": "tests/test_account_read_model.py",
       "qualified_name": "tests.test_account_read_model.test_purchase_history_uses_signed_kind_and_stable_keyset"
     },
     {
       "id": "symbol:tests.test_account_read_model.test_record_history_returns_only_new_narrator_key_and_restore_gets_new_key",
       "kind": "test",
-      "line": 87,
+      "line": 89,
       "path": "tests/test_account_read_model.py",
       "qualified_name": "tests.test_account_read_model.test_record_history_returns_only_new_narrator_key_and_restore_gets_new_key"
     },
     {
       "id": "symbol:tests.test_account_read_model.test_series_has_server_filled_zero_bins_and_only_settlement_sql",
       "kind": "test",
-      "line": 125,
+      "line": 127,
       "path": "tests/test_account_read_model.py",
       "qualified_name": "tests.test_account_read_model.test_series_has_server_filled_zero_bins_and_only_settlement_sql"
     },
     {
       "id": "symbol:tests.test_account_read_model.test_series_totals_are_calculated_on_server",
       "kind": "test",
-      "line": 139,
+      "line": 141,
       "path": "tests/test_account_read_model.py",
       "qualified_name": "tests.test_account_read_model.test_series_totals_are_calculated_on_server"
     },
@@ -407312,6 +408956,244 @@
       "qualified_name": "tests.test_spec275_stalemate.test_stalemate_guard_reveals_non_cowards_and_forces_attack"
     },
     {
+      "id": "symbol:tests.test_spec279_usage_retention._sql",
+      "kind": "test",
+      "line": 12,
+      "path": "tests/test_spec279_usage_retention.py",
+      "qualified_name": "tests.test_spec279_usage_retention._sql"
+    },
+    {
+      "id": "symbol:tests.test_spec279_usage_retention.test_attribution_trigger_snapshots_kind_from_operations_and_still_fails_closed",
+      "kind": "test",
+      "line": 34,
+      "path": "tests/test_spec279_usage_retention.py",
+      "qualified_name": "tests.test_spec279_usage_retention.test_attribution_trigger_snapshots_kind_from_operations_and_still_fails_closed"
+    },
+    {
+      "id": "symbol:tests.test_spec279_usage_retention.test_game_link_is_set_null_and_operation_link_no_longer_cascades",
+      "kind": "test",
+      "line": 16,
+      "path": "tests/test_spec279_usage_retention.py",
+      "qualified_name": "tests.test_spec279_usage_retention.test_game_link_is_set_null_and_operation_link_no_longer_cascades"
+    },
+    {
+      "id": "symbol:tests.test_spec279_usage_retention.test_migration_is_idempotent_and_regrants_runtime",
+      "kind": "test",
+      "line": 25,
+      "path": "tests/test_spec279_usage_retention.py",
+      "qualified_name": "tests.test_spec279_usage_retention.test_migration_is_idempotent_and_regrants_runtime"
+    },
+    {
+      "id": "symbol:tests.test_spec279_usage_retention.test_readers_keep_events_whose_operation_was_deleted",
+      "kind": "test",
+      "line": 42,
+      "path": "tests/test_spec279_usage_retention.py",
+      "qualified_name": "tests.test_spec279_usage_retention.test_readers_keep_events_whose_operation_was_deleted"
+    },
+    {
+      "id": "symbol:tests.test_spec279_usage_retention.test_reused_operation_id_is_refused_by_trigger",
+      "kind": "test",
+      "line": 51,
+      "path": "tests/test_spec279_usage_retention.py",
+      "qualified_name": "tests.test_spec279_usage_retention.test_reused_operation_id_is_refused_by_trigger"
+    },
+    {
+      "id": "symbol:tests.test_spec279_usage_retention_local._Pool",
+      "kind": "class",
+      "line": 30,
+      "path": "tests/test_spec279_usage_retention_local.py",
+      "qualified_name": "tests.test_spec279_usage_retention_local._Pool"
+    },
+    {
+      "id": "symbol:tests.test_spec279_usage_retention_local._Pool.__init__",
+      "kind": "test",
+      "line": 31,
+      "path": "tests/test_spec279_usage_retention_local.py",
+      "qualified_name": "tests.test_spec279_usage_retention_local._Pool.__init__"
+    },
+    {
+      "id": "symbol:tests.test_spec279_usage_retention_local._Pool.connection",
+      "kind": "test",
+      "line": 34,
+      "path": "tests/test_spec279_usage_retention_local.py",
+      "qualified_name": "tests.test_spec279_usage_retention_local._Pool.connection"
+    },
+    {
+      "id": "symbol:tests.test_spec279_usage_retention_local._campaign",
+      "kind": "test",
+      "line": 38,
+      "path": "tests/test_spec279_usage_retention_local.py",
+      "qualified_name": "tests.test_spec279_usage_retention_local._campaign"
+    },
+    {
+      "id": "symbol:tests.test_spec279_usage_retention_local._day_spend",
+      "kind": "test",
+      "line": 61,
+      "path": "tests/test_spec279_usage_retention_local.py",
+      "qualified_name": "tests.test_spec279_usage_retention_local._day_spend"
+    },
+    {
+      "id": "symbol:tests.test_spec279_usage_retention_local.db",
+      "kind": "test",
+      "line": 16,
+      "path": "tests/test_spec279_usage_retention_local.py",
+      "qualified_name": "tests.test_spec279_usage_retention_local.db"
+    },
+    {
+      "id": "symbol:tests.test_spec279_usage_retention_local.test_account_erasure_still_removes_usage",
+      "kind": "test",
+      "line": 119,
+      "path": "tests/test_spec279_usage_retention_local.py",
+      "qualified_name": "tests.test_spec279_usage_retention_local.test_account_erasure_still_removes_usage"
+    },
+    {
+      "id": "symbol:tests.test_spec279_usage_retention_local.test_attribution_still_fails_closed",
+      "kind": "test",
+      "line": 98,
+      "path": "tests/test_spec279_usage_retention_local.py",
+      "qualified_name": "tests.test_spec279_usage_retention_local.test_attribution_still_fails_closed"
+    },
+    {
+      "id": "symbol:tests.test_spec279_usage_retention_local.test_campaign_delete_keeps_spend_kind_and_history",
+      "kind": "test",
+      "line": 69,
+      "path": "tests/test_spec279_usage_retention_local.py",
+      "qualified_name": "tests.test_spec279_usage_retention_local.test_campaign_delete_keeps_spend_kind_and_history"
+    },
+    {
+      "id": "symbol:tests.test_spec279_usage_retention_local.test_deleted_operation_id_cannot_be_reclaimed",
+      "kind": "test",
+      "line": 130,
+      "path": "tests/test_spec279_usage_retention_local.py",
+      "qualified_name": "tests.test_spec279_usage_retention_local.test_deleted_operation_id_cannot_be_reclaimed"
+    },
+    {
+      "id": "symbol:tests.test_spec280_orphan_games._FakeConn",
+      "kind": "class",
+      "line": 53,
+      "path": "tests/test_spec280_orphan_games.py",
+      "qualified_name": "tests.test_spec280_orphan_games._FakeConn"
+    },
+    {
+      "id": "symbol:tests.test_spec280_orphan_games._FakeConn.__enter__",
+      "kind": "test",
+      "line": 54,
+      "path": "tests/test_spec280_orphan_games.py",
+      "qualified_name": "tests.test_spec280_orphan_games._FakeConn.__enter__"
+    },
+    {
+      "id": "symbol:tests.test_spec280_orphan_games._FakeConn.__exit__",
+      "kind": "test",
+      "line": 57,
+      "path": "tests/test_spec280_orphan_games.py",
+      "qualified_name": "tests.test_spec280_orphan_games._FakeConn.__exit__"
+    },
+    {
+      "id": "symbol:tests.test_spec280_orphan_games._FakeConn.rollback",
+      "kind": "test",
+      "line": 63,
+      "path": "tests/test_spec280_orphan_games.py",
+      "qualified_name": "tests.test_spec280_orphan_games._FakeConn.rollback"
+    },
+    {
+      "id": "symbol:tests.test_spec280_orphan_games._FakeConn.transaction",
+      "kind": "test",
+      "line": 60,
+      "path": "tests/test_spec280_orphan_games.py",
+      "qualified_name": "tests.test_spec280_orphan_games._FakeConn.transaction"
+    },
+    {
+      "id": "symbol:tests.test_spec280_orphan_games._sql",
+      "kind": "test",
+      "line": 13,
+      "path": "tests/test_spec280_orphan_games.py",
+      "qualified_name": "tests.test_spec280_orphan_games._sql"
+    },
+    {
+      "id": "symbol:tests.test_spec280_orphan_games.test_cli_apply_requires_expect",
+      "kind": "test",
+      "line": 46,
+      "path": "tests/test_spec280_orphan_games.py",
+      "qualified_name": "tests.test_spec280_orphan_games.test_cli_apply_requires_expect"
+    },
+    {
+      "id": "symbol:tests.test_spec280_orphan_games.test_cli_is_dry_run_by_default",
+      "kind": "test",
+      "line": 35,
+      "path": "tests/test_spec280_orphan_games.py",
+      "qualified_name": "tests.test_spec280_orphan_games.test_cli_is_dry_run_by_default"
+    },
+    {
+      "id": "symbol:tests.test_spec280_orphan_games.test_migration_is_idempotent_and_locked_down",
+      "kind": "test",
+      "line": 27,
+      "path": "tests/test_spec280_orphan_games.py",
+      "qualified_name": "tests.test_spec280_orphan_games.test_migration_is_idempotent_and_locked_down"
+    },
+    {
+      "id": "symbol:tests.test_spec280_orphan_games.test_trigger_after_delete_on_auth_users_is_definer_and_portable",
+      "kind": "test",
+      "line": 17,
+      "path": "tests/test_spec280_orphan_games.py",
+      "qualified_name": "tests.test_spec280_orphan_games.test_trigger_after_delete_on_auth_users_is_definer_and_portable"
+    },
+    {
+      "id": "symbol:tests.test_spec280_orphan_games_local._auth_user",
+      "kind": "test",
+      "line": 44,
+      "path": "tests/test_spec280_orphan_games_local.py",
+      "qualified_name": "tests.test_spec280_orphan_games_local._auth_user"
+    },
+    {
+      "id": "symbol:tests.test_spec280_orphan_games_local._game",
+      "kind": "test",
+      "line": 28,
+      "path": "tests/test_spec280_orphan_games_local.py",
+      "qualified_name": "tests.test_spec280_orphan_games_local._game"
+    },
+    {
+      "id": "symbol:tests.test_spec280_orphan_games_local.db",
+      "kind": "test",
+      "line": 14,
+      "path": "tests/test_spec280_orphan_games_local.py",
+      "qualified_name": "tests.test_spec280_orphan_games_local.db"
+    },
+    {
+      "id": "symbol:tests.test_spec280_orphan_games_local.test_auth_delete_erases_games_but_keeps_spend_and_wallet",
+      "kind": "test",
+      "line": 50,
+      "path": "tests/test_spec280_orphan_games_local.py",
+      "qualified_name": "tests.test_spec280_orphan_games_local.test_auth_delete_erases_games_but_keeps_spend_and_wallet"
+    },
+    {
+      "id": "symbol:tests.test_spec280_orphan_games_local.test_auth_delete_of_tombstoned_owner_never_fails",
+      "kind": "test",
+      "line": 98,
+      "path": "tests/test_spec280_orphan_games_local.py",
+      "qualified_name": "tests.test_spec280_orphan_games_local.test_auth_delete_of_tombstoned_owner_never_fails"
+    },
+    {
+      "id": "symbol:tests.test_spec280_orphan_games_local.test_deleted_tombstone_owner_is_not_an_orphan_candidate",
+      "kind": "test",
+      "line": 107,
+      "path": "tests/test_spec280_orphan_games_local.py",
+      "qualified_name": "tests.test_spec280_orphan_games_local.test_deleted_tombstone_owner_is_not_an_orphan_candidate"
+    },
+    {
+      "id": "symbol:tests.test_spec280_orphan_games_local.test_plan_and_apply_remove_only_orphans_and_keep_spend",
+      "kind": "test",
+      "line": 63,
+      "path": "tests/test_spec280_orphan_games_local.py",
+      "qualified_name": "tests.test_spec280_orphan_games_local.test_plan_and_apply_remove_only_orphans_and_keep_spend"
+    },
+    {
+      "id": "symbol:tests.test_spec280_orphan_games_local.test_refuses_when_usage_still_cascades",
+      "kind": "test",
+      "line": 89,
+      "path": "tests/test_spec280_orphan_games_local.py",
+      "qualified_name": "tests.test_spec280_orphan_games_local.test_refuses_when_usage_still_cascades"
+    },
+    {
       "id": "symbol:tests.test_spec_index._apply",
       "kind": "test",
       "line": 47,
@@ -411065,5 +412947,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:f0d4c3cb54cb3f4db0b5e9975a4225c3361231498e6be37a6a671164e847cf61"
+  "source_tree_hash": "sha256:a4367c57681111970ba6a2cd73b59d422e1532861507875e86f2a41e2c394c28"
 }
