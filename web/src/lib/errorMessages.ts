@@ -141,9 +141,13 @@ export function messageFor(code: string, prose?: string, retryAfterSeconds?: num
   return MESSAGES[code] ?? GENERIC_MESSAGE;
 }
 
-/** Código de suporte exibido ao usuário: 8 primeiros caracteres do request_id. */
-export const supportCode = (requestId?: string | null): string | undefined =>
-  requestId ? requestId.replace(/[^A-Za-z0-9]/g, "").slice(0, 8) || undefined : undefined;
+/** Código de suporte exibido ao usuário: o request_id INTEIRO (revisão Sol). A busca dos runtime logs da
+ *  Vercel casa token completo, não prefixo — um código truncado não acharia nada. O cliente gera ids curtos
+ *  (12 hex, `newRequestId`), então o código visível continua curto. */
+export const supportCode = (requestId?: string | null): string | undefined => {
+  const id = requestId ? requestId.replace(/[^A-Za-z0-9._:-]/g, "").slice(0, 64) : "";
+  return id || undefined;
+};
 
 export function errRequestId(err: unknown): string | undefined {
   const id = typeof err === "object" && err ? (err as { requestId?: unknown }).requestId : undefined;

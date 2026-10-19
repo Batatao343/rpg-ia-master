@@ -1326,5 +1326,5 @@ article.card[data-selected="true"]::before {
 
 /* SPEC-243: codigo de suporte copiavel (banner de erro) */
 .support-code { display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.4rem; margin-left: 0.5rem; font-size: 0.82rem; opacity: 0.95; }
-.support-code code { font-family: ui-monospace, monospace; letter-spacing: 0.04em; }
+.support-code code { font-family: ui-monospace, monospace; letter-spacing: 0.04em; overflow-wrap: anywhere; user-select: all; }
 .support-code-copy { min-height: 28px; padding: 0.1rem 0.6rem; border: 1px solid currentColor; border-radius: 999px; background: transparent; color: inherit; font: inherit; cursor: pointer; }

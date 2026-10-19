@@ -4314,7 +4314,7 @@ specs:
   lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P0
 - id: SPEC-242
   slug: envelope-erro-api-codigos-estaveis
-  status: in-progress
+  status: done
   path: specs/SPEC-242-envelope-erro-api-codigos-estaveis.md
   created_commit: null
   created_at: '2026-10-18'
@@ -4331,7 +4331,7 @@ specs:
   lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P1
 - id: SPEC-243
   slug: frontend-codigo-suporte-mapa-erros
-  status: in-progress
+  status: done
   path: specs/SPEC-243-frontend-codigo-suporte-mapa-erros.md
   created_commit: null
   created_at: '2026-10-18'
@@ -4405,7 +4405,7 @@ specs:
   lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P2
 - id: SPEC-247
   slug: turno-roteamento-sse-conflitos-logs
-  status: in-progress
+  status: done
   path: specs/SPEC-247-turno-roteamento-sse-conflitos-logs.md
   created_commit: null
   created_at: '2026-10-18'
@@ -4422,7 +4422,7 @@ specs:
   lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P1
 - id: SPEC-248
   slug: llm-roteamento-logs-estruturados
-  status: in-progress
+  status: done
   path: specs/SPEC-248-llm-roteamento-logs-estruturados.md
   created_commit: null
   created_at: '2026-10-18'
@@ -4441,7 +4441,7 @@ specs:
   lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P1
 - id: SPEC-249
   slug: boot-log-runtime
-  status: in-progress
+  status: done
   path: specs/SPEC-249-boot-log-runtime.md
   created_commit: null
   created_at: '2026-10-18'
@@ -4458,7 +4458,7 @@ specs:
   lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P1
 - id: SPEC-250
   slug: fallbacks-silenciosos-grafo
-  status: in-progress
+  status: done
   path: specs/SPEC-250-fallbacks-silenciosos-grafo.md
   created_commit: null
   created_at: '2026-10-18'
@@ -4530,7 +4530,7 @@ specs:
   lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P2
 - id: SPEC-254
   slug: postgres-lease-pool-logs
-  status: in-progress
+  status: done
   path: specs/SPEC-254-postgres-lease-pool-logs.md
   created_commit: null
   created_at: '2026-10-18'
@@ -4547,7 +4547,7 @@ specs:
   lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P1
 - id: SPEC-255
   slug: jobs-worker-logs-correlacao
-  status: in-progress
+  status: done
   path: specs/SPEC-255-jobs-worker-logs-correlacao.md
   created_commit: null
   created_at: '2026-10-18'
@@ -4583,7 +4583,7 @@ specs:
   lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P2
 - id: SPEC-257
   slug: pagamentos-webhook-play-wallet-logs
-  status: in-progress
+  status: done
   path: specs/SPEC-257-pagamentos-webhook-play-wallet-logs.md
   created_commit: null
   created_at: '2026-10-18'
@@ -4670,7 +4670,7 @@ specs:
   lineage_note: Authored from logging audit 2026-10-18 (docs/auditorias/logs-api-2026-10-18.md); draft awaiting approval; priority P2
 - id: SPEC-262
   slug: runbook-debug-operador
-  status: in-progress
+  status: done
   path: specs/SPEC-262-runbook-debug-operador.md
   created_commit: null
   created_at: '2026-10-18'

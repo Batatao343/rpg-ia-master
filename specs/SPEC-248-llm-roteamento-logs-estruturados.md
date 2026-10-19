@@ -1,6 +1,6 @@
 # SPEC-248 — LLM: tentativas, fallbacks, circuito e ativação de Mock/FallbackLLM em log estruturado
 
-> **Status:** `in-progress` — implementada em `logs-p1` (REVIEW_REQUIRED; smoke staging pendente)
+> **Status:** `done` — revisão Sol APPROVED + smoke staging (2026-10-19, [handoff](../handoffs/LOGS-P1-SOL-review.md)).
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-239, SPEC-240
 > **Desbloqueia:** SPEC-262 (runbook provider fora)

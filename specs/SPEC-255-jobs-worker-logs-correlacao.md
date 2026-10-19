@@ -1,6 +1,6 @@
 # SPEC-255 — Fila de jobs: logs por job (claim, sucesso, falha, retry, dead) e correlação com a requisição de origem
 
-> **Status:** `in-progress` — implementada em `logs-p1` (REVIEW_REQUIRED; smoke staging pendente)
+> **Status:** `done` — revisão Sol APPROVED + smoke staging (2026-10-19, [handoff](../handoffs/LOGS-P1-SOL-review.md)).
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-240, SPEC-254
 > **Desbloqueia:** SPEC-256

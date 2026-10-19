@@ -1,6 +1,6 @@
 # SPEC-243 — Frontend: mapa central código→mensagem e “código de suporte” (request_id) em todo erro
 
-> **Status:** `in-progress` — implementada em `logs-p1` (REVIEW_REQUIRED; smoke staging pendente)
+> **Status:** `done` — revisão Sol APPROVED + smoke staging (2026-10-19, [handoff](../handoffs/LOGS-P1-SOL-review.md)).
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-241, SPEC-242; branch `auth-debug` mergeada (`web/src/lib/authErrors.ts`)
 > **Desbloqueia:** SPEC-262 (runbook “usuário reportou erro”)

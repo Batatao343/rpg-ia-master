@@ -3,8 +3,10 @@
 > Para o operador: do relato ao log em poucos minutos, só com os logs, o `/metrics` e SQL somente-leitura.
 > Catálogo de códigos de erro: [CODIGOS_DE_ERRO.md](CODIGOS_DE_ERRO.md) · eventos: [EVENTOS_DE_LOG.md](EVENTOS_DE_LOG.md) ·
 > retenção/níveis: [LOGS_RETENCAO.md](LOGS_RETENCAO.md) · incidentes: [incident.md](../spec197/runbooks/incident.md).
-> **Estado:** receitas escritas a partir do código e dos testes; a execução de cada uma em staging (dry-run) ainda
-> está pendente (critério de aceite da SPEC-262).
+> **Estado:** dry-run em staging feito na revisão Sol de 2026-10-19 (deploy `bd2c708`): comandos `vercel logs`,
+> `log_ref.py` (pseudônimo bateu com o `owner_ref` do log) e o SQL de (c)/(g) executados; três passos corrigidos
+> (janela de retenção, busca por token inteiro, SQL de jobs/alertas). Resultados em
+> `handoffs/LOGS-P1-SOL-review.md`.
 
 ## Convenções (valem para todas as receitas)
 
@@ -12,17 +14,23 @@
   `request_id`, `action_ref`, `game_ref`, `owner_ref`. **Nunca** há texto do jogador, e-mail, IP cru, token ou id cru:
   ids aparecem só como pseudônimo (HMAC). Para achar o pseudônimo de um id conhecido:
   `uv run python scripts/log_ref.py owner|game|action <id>` (lê `RPG_TELEMETRY_SECRET` do ambiente, de `.env` ou de
-  `--stdin`; use o segredo do ambiente **alvo**).
+  `--stdin`; use o segredo do ambiente **alvo** — para staging, passe o valor de `.env.staging` por `--stdin`, nunca
+  por argumento). Saída: `owner_ref=<pseudônimo>`; busque só o pseudônimo.
 - Buscar logs (produção/staging): `npx vercel logs --environment production --since 30m --query "<texto>"`.
   Saída estruturada: acrescente `--json` e filtre com `jq`. Escolha o projeto/ambiente certo (staging é outro projeto).
+- **Retenção (Hobby = 1 hora):** `--since 1h` ou mais é recusado (`outside the available retention`); use no máximo
+  `--since 55m`. Relato mais antigo que isso já não tem log — vá direto ao SQL/`audit-export`.
+- **A busca casa o token inteiro, não prefixo:** `--query 5c6525e9` não acha `5c6525e92b49…`. Use sempre o valor
+  completo (código de suporte, `request_id`, `action_ref`, nome do evento).
 - `request_id` = header `X-Request-ID` de toda resposta; o **código de suporte** que o usuário vê é o início dele.
 - Métricas: `GET /metrics` com `Authorization: Bearer $RPG_METRICS_TOKEN` (`404` sem token).
 - SQL: só `select`, no SQL editor do Supabase do ambiente (nunca em produção com escrita).
 
 ## (a) Usuário reporta erro com código de suporte
 
-1. Peça o código (banner vermelho → “Código de suporte: `abcd1234`”; o botão Copiar leva o id completo).
-2. `npx vercel logs --environment production --since 24h --query abcd1234` (ou o id completo, se vier).
+1. Peça o código (banner vermelho → “Código de suporte: `3f9a0c1b7e24`”; é o `request_id` inteiro — o web gera
+   ids de 12 hex; o botão Copiar leva o mesmo valor).
+2. `npx vercel logs --environment production --since 55m --query 3f9a0c1b7e24` (valor completo; ver retenção acima).
 3. Olhe a linha `http.request`: `status`, `error_code` (catálogo em CODIGOS_DE_ERRO.md), `route`, `duration_ms`.
    - `status>=500` → `http.unhandled_exception` com o mesmo `request_id`: `error_type` + `stack` (`modulo:linha`).
    - `error_code=session_*|csrf_*|credentials_invalid` → receita (e).
@@ -34,7 +42,7 @@
 ## (b) Turno falhou ou está lento (por `action_ref`)
 
 1. Ache o `action_ref` (linha `rpg.turn`/`http.request` do relato) ou calcule: `uv run python scripts/log_ref.py action <action_id>`.
-2. `npx vercel logs --since 1h --query <action_ref>` — a linha de vida do turno, na ordem:
+2. `npx vercel logs --since 55m --query <action_ref>` — a linha de vida do turno, na ordem:
    `router.decision` (`source`, `fallback_reason`, `route`, `jev_mode`) → `llm.attempt` (um por candidato: `provider`,
    `tier`, `node`, `outcome`, `http_status`, `latency_ms`, `fell_back`) → `*.fallback` (degradação de nó, `reason`) →
    `turn` (latência por fase, `fallbacks`, `llm_errors`, `llm_http_statuses`, `error`) → `sse.*`/`turn_delivery`.
@@ -42,6 +50,8 @@
    - `llm.exhausted` (error) = todos os providers do tier falharam → receita (f).
    - `route_source=classify_fallback` = o CLASSIFY não devolveu decisão; o turno seguiu como história.
    - `sse.client_disconnected` + `sse.worker_finished_after_disconnect` = o cliente caiu, o servidor concluiu o turno.
+     **Na Vercel a desconexão do cliente não chega à função** (verificado em staging: a função termina de transmitir e
+     loga `turn_delivery outcome=ok`); lá, a evidência de queda é um `operation.replayed` do mesmo `action_ref` logo depois.
    - `operation.rejected reason=operation_in_progress` = outra operação do mesmo jogo ainda tem o lease (`db.lease_conflict`).
    - `db.slow_query`/`db.pool_timeout`/`db.statement_timeout` = gargalo no banco (`query_name` é um rótulo estático).
 4. Métrica: `rpg_turn_phase_seconds{phase=…}` e `rpg_db_query_seconds{query_name=…}` no `/metrics`.
@@ -100,8 +110,9 @@
 3. SQL:
    ```sql
    select kind, status, attempts, max_attempts, last_error_code, updated_at
-     from app.jobs where status in ('retry','dead') order by updated_at desc limit 30;
-   select * from app.cron_health_alerts order by created_at desc limit 20;
+     from app.jobs where status = 'dead' or (status = 'queued' and attempts > 0)
+     order by updated_at desc limit 30;
+   select * from app.cron_health_alerts order by detected_at desc limit 20;
    ```
 4. `db.lease_conflict reason=lease_lost|fence_invalid|worker_late` = outro worker assumiu o lease (esperado em retry).
 5. Projeção `post_response` pendente: veja `rpg_jobs{kind,status}` e `rpg_job_oldest_age_seconds`.

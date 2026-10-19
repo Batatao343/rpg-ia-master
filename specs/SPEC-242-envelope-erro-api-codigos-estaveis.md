@@ -1,6 +1,6 @@
 # SPEC-242 — Envelope de erro único `{detail, code, request_id}` e fim de `str(exc)` em respostas
 
-> **Status:** `in-progress` — implementada em `logs-p1` (REVIEW_REQUIRED; smoke staging pendente)
+> **Status:** `done` — revisão Sol APPROVED + smoke staging (2026-10-19, [handoff](../handoffs/LOGS-P1-SOL-review.md)).
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-241
 > **Desbloqueia:** SPEC-243

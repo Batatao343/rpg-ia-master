@@ -19,7 +19,7 @@ test("SPEC-243 invalid login shows a friendly message and a support code", async
   await page.getByRole("button", { name: "Entrar", exact: true }).click();
   const alert = page.getByRole("alert").filter({ hasText: "E-mail ou senha incorretos." });
   await expect(alert).toBeVisible();
-  await expect(alert).toContainText("Código de suporte: e2e0req1");
+  await expect(alert).toContainText("Código de suporte: e2e0req1-aaaa-bbbb-cccc-ddddeeeeffff");
   await expect(alert).not.toContainText("credentials_invalid");
   await expect(page.locator("body")).not.toContainText(/\b[a-z]+_[a-z_]+\b(?=\s*$)/m);
   await alert.getByRole("button", { name: "Copiar código de suporte" }).focus();

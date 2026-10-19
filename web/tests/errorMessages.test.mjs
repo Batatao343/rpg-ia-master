@@ -24,9 +24,11 @@ test('unknown codes never surface raw; server prose is preserved', async () => {
   assert.equal(errMsg(new Error('totally_unknown_code')), GENERIC_MESSAGE);
 });
 
-test('support code is the first 8 chars of the request id', async () => {
+test('support code is the whole request id (Vercel search matches full tokens only)', async () => {
   const { supportCode } = await load('lib/errorMessages');
-  assert.equal(supportCode('2be5aa81-d8be-46e8-9d90-390b6004612'), '2be5aa81');
+  assert.equal(supportCode('2be5aa81d8be'), '2be5aa81d8be');
+  assert.equal(supportCode('2be5aa81-d8be-46e8-9d90-390b6004612'), '2be5aa81-d8be-46e8-9d90-390b6004612');
+  assert.equal(supportCode('ab<script>cd12'), 'abscriptcd12');
   assert.equal(supportCode(undefined), undefined);
 });
 
@@ -46,7 +48,7 @@ test('HttpError carries request id from header/body and a friendly message', asy
     assert.equal(error.message, 'E-mail ou senha incorretos.');
     return true;
   });
-  assert.match(sent, /^[A-Za-z0-9._:-]{8,64}$/);
+  assert.match(sent, /^[0-9a-f]{12}$/);   // curto e buscavel inteiro (revisao Sol)
 });
 
 test('prose detail with body.code keeps stable code and server prose', async () => {

@@ -1,6 +1,6 @@
 # SPEC-262 — Runbook “como debugar X”, ferramenta de pseudônimo e decisão de retenção/drain de logs da Vercel
 
-> **Status:** `in-progress` — implementada em `logs-p1` (REVIEW_REQUIRED; smoke staging pendente)
+> **Status:** `done` — revisão Sol APPROVED + smoke staging (2026-10-19, [handoff](../handoffs/LOGS-P1-SOL-review.md)). Retenção: **default (só Vercel, sem drain) pendente de confirmação do dono**.
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
 > **Depende de:** SPEC-239, SPEC-240 (o runbook descreve os campos); pode ser escrito em paralelo e atualizado a cada spec de log entregue
 > **Desbloqueia:** operação do beta

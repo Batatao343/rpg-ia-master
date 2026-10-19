@@ -8,10 +8,13 @@ export class HttpError extends Error {
     public retryAfterSeconds?: number, public requestId?: string) { super(detail); }
 }
 
-/** SPEC-243 R4: id de correlacao gerado no cliente (o servidor aceita [A-Za-z0-9._:-]{8,64}). */
+/** SPEC-243 R4: id de correlacao gerado no cliente (o servidor aceita [A-Za-z0-9._:-]{8,64}).
+ *  12 hex (48 bits): curto para ditar ao suporte e buscavel inteiro nos logs da Vercel. */
 export function newRequestId(): string {
   const c = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
-  return c?.randomUUID ? c.randomUUID() : `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 12)}`;
+  const raw = c?.randomUUID ? c.randomUUID().replace(/-/g, "")
+    : `${Date.now().toString(16)}${Math.random().toString(16).slice(2)}`;
+  return raw.slice(0, 12).padEnd(12, "0");
 }
 
 let refreshing: Promise<void> | null = null;
