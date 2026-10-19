@@ -1,6 +1,6 @@
 # SPEC-279 — usage-events-retencao-delete-campanha
 
-> **Status:** `approved` — decisão do dono em 19/10/2026 ("gere uma spec e desenvolva") sobre o achado do staging.
+> **Status:** `done` (19/10/2026) — aprovada pelo dono em 19/10/2026 ("gere uma spec e desenvolva") sobre o achado do staging.
 > **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
 > **Depende de:** SPEC-182 (`usage_events`), SPEC-222 (retenção R7), SPEC-236 (`counts_as_spend`) — todas `done`
 > **Desbloqueia:** SPEC-280 (limpeza de jogos órfãos não pode apagar gasto)
@@ -90,12 +90,12 @@ Objetivo: o fato de consumo sobrevive ao delete da campanha; só o TTL de 13 mes
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R3 cobertos por teste `infra_local` verde em Supabase local.
-- [ ] R4: `test_account_lifecycle_local` e `test_spec222_retention_local` verdes.
-- [ ] Migration idempotente aplicada no staging; evidência sem PII em
+- [x] R1–R3 cobertos por teste `infra_local` verde em Supabase local.
+- [x] R4: `test_account_lifecycle_local` e `test_spec222_retention_local` verdes.
+- [x] Migration idempotente aplicada no staging; evidência sem PII em
       `docs/staging-wave-2026-10-17/evidence/spec279_*.json` (soma do dia inalterada após o delete).
-- [ ] Revisão independente (`handoffs/SPEC-279-review.md`) aprovada.
-- [ ] Suíte completa verde.
+- [x] Revisão independente (`handoffs/SPEC-279-review.md`) aprovada.
+- [x] Suíte completa verde.
 
 ## 6. Smoke
 
@@ -111,3 +111,17 @@ limpar (usuário e eventos sintéticos removidos; staging volta ao estado de ant
   por owner; se virar problema, spec própria (ex.: agregado diário anônimo).
 - `operation_id` pendurado (operação apagada) é só um UUID opaco; nenhum leitor faz `join` obrigatório
   com `operations` depois desta spec (`ops_counts`/histórico usam `left join`). Reuso do id é recusado (R5b).
+
+## 8. Execução (19/10/2026)
+
+- Testes: `tests/test_spec279_usage_retention.py` (5, offline) e `tests/test_spec279_usage_retention_local.py`
+  (4, Supabase local); `-m infra_local` completo verde no Supabase local com as migrations aplicadas.
+- Revisão independente (Opus): `handoffs/SPEC-279-review.md` — CHANGES_REQUIRED (P1: reuso de `operation_id`
+  de operação apagada escapava da medição → trigger `operations_refuse_reused_id`, R5b; P3: prova do staging
+  só pelo owner sintético) → re-revisão **APPROVED**.
+- Staging: migration `20261019150000` aplicada (`migrations push --apply`, histórico em sincronia, 31/31);
+  prova `scripts/staging/spec279_usage_survives_delete.py`: gasto do owner e do dia iguais antes/depois do
+  delete da campanha, evento mantido com `game_id` NULL e `operation_kind='turn'`, linhas sintéticas removidas
+  no fim (dia volta ao valor anterior). Evidência: `docs/staging-wave-2026-10-17/evidence/spec279_*.json`.
+- Suíte offline completa: verde exceto os testes de índice (`specs/index.yaml`/Project Index), que o
+  coordenador regenera no pouso.

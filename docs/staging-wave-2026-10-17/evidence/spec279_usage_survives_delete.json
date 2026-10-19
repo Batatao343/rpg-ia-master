@@ -1,0 +1,54 @@
+{
+  "after_cleanup": {
+    "day_spend_usd": "0",
+    "day_turns": 0,
+    "owner_spend_usd": "0"
+  },
+  "after_delete": {
+    "day_spend_usd": "0.000001000",
+    "day_turns": 1,
+    "owner_spend_usd": "0.000001000"
+  },
+  "at": "2026-10-19T15:16:45.718433+00:00",
+  "baseline": {
+    "day_spend_usd": "0",
+    "day_turns": 0,
+    "owner_spend_usd": "0"
+  },
+  "before_delete": {
+    "day_spend_usd": "0.000001000",
+    "day_turns": 1,
+    "owner_spend_usd": "0.000001000"
+  },
+  "checks": {
+    "cleanup_restored_owner": true,
+    "owner_spend_unchanged": true,
+    "rows_kept": true
+  },
+  "cleanup_usage_deleted": 2,
+  "games_deleted": 1,
+  "ok": true,
+  "operation_row_gone": true,
+  "rows_after_delete": [
+    {
+      "cost_usd": "0.000001000",
+      "counts_as_spend": true,
+      "game_detached": true,
+      "op_kept": true,
+      "operation_kind": "turn"
+    },
+    {
+      "cost_usd": "0E-9",
+      "counts_as_spend": false,
+      "game_detached": true,
+      "op_kept": true,
+      "operation_kind": "turn"
+    }
+  ],
+  "schema": {
+    "fks": {
+      "usage_events_game_id_fkey": "n"
+    },
+    "operation_kind_column": true
+  }
+}
