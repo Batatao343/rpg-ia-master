@@ -7,6 +7,7 @@ log JSON por turno.
 """
 from observability.telemetry import log_event as _log_event
 import contextvars
+import re
 import hashlib
 import json
 import logging
@@ -205,7 +206,8 @@ app.add_middleware(
     allow_origins=_CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
-    allow_headers=["content-type", "x-csrf-token", "x-request-id", "x-rpg-client", "x-operation-id", "idempotency-key"],
+    allow_headers=["content-type", "x-csrf-token", "x-request-id", "x-rpg-client", "x-operation-id", "idempotency-key",
+                   "x-rpg-build", "x-rpg-app-version"],
 )
 
 
@@ -411,6 +413,7 @@ def _access_log(request: Request, route: str, status: int, started: float,
             return  # arquivos estaticos do bundle web
         client = request.headers.get("x-rpg-client", "").strip().lower()
         client = client if client in {"web", "android"} else "unknown"
+        build_fields = _client_build_fields(request)
         level = "info"
         if status >= 500:
             level = "error"
@@ -428,9 +431,37 @@ def _access_log(request: Request, route: str, status: int, started: float,
             "http", "request", level=level, method=request.method, route=route, status=status,
             duration_ms=int((time.perf_counter() - started) * 1000), request_id=request_id,
             owner_ref=getattr(request.state, "owner_ref", None), client=client,
-            error_code=getattr(request.state, "error_code", None))
+            error_code=getattr(request.state, "error_code", None), **build_fields)
     except Exception:
         pass
+
+
+_CLIENT_BUILD_RE = re.compile(r"(?:[0-9a-f]{7}|dev)\+\d{12}")
+_APP_VERSION_RE = re.compile(r"\d{1,4}(?:\.\d{1,4}){0,3}\+\d{1,9}")
+
+
+def _server_git_sha() -> str:
+    return (os.getenv("GIT_SHA") or os.getenv("VERCEL_GIT_COMMIT_SHA") or "").strip().lower()
+
+
+def _client_build_fields(request: Request) -> Dict[str, Any]:
+    """SPEC-261 R2 / SPEC-259 R4: build do bundle web e versao do app Android no access log.
+
+    Formatos fechados (header fora do formato vira ``other``); ``build_skew`` so quando o sha do
+    bundle difere do sha do servidor (cliente velho em cache x API nova)."""
+    fields: Dict[str, Any] = {}
+    raw = request.headers.get("x-rpg-build", "").strip()
+    if raw:
+        build = raw if _CLIENT_BUILD_RE.fullmatch(raw) else "other"
+        fields["client_build"] = build
+        client_sha = build.split("+", 1)[0]
+        server_sha = _server_git_sha()
+        if client_sha not in {"dev", "other"} and server_sha and not server_sha.startswith(client_sha):
+            fields["build_skew"] = True
+    version = request.headers.get("x-rpg-app-version", "").strip()
+    if version:
+        fields["app_version"] = version if _APP_VERSION_RE.fullmatch(version) else "other"
+    return fields
 
 
 def _unhandled_response(request: Request, route: str, exc: Exception, request_id: str) -> JSONResponse:

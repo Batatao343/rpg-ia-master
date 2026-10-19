@@ -184,8 +184,27 @@ def query(env: dict[str, str], fn, retries: int = 4):
     raise last  # type: ignore[misc]
 
 
+def _head_sha() -> str:
+    try:
+        out = subprocess.run(["git", "rev-parse", "HEAD"], cwd=common.ROOT, capture_output=True,
+                             text=True, timeout=10).stdout.strip().lower()
+    except (OSError, subprocess.SubprocessError):
+        return ""
+    return out if len(out) == 40 and all(c in "0123456789abcdef" for c in out) else ""
+
+
+def deploy_args(args: list[str], sha: str) -> list[str]:
+    """SPEC-261 R3: todo ``vercel deploy`` leva ``GIT_SHA`` (runtime -> /health; build -> bundle web).
+
+    Deploy por CLI de worktree nao define ``VERCEL_GIT_COMMIT_SHA``; antes era ``-e GIT_SHA=`` manual."""
+    if not args or args[0] != "deploy" or not sha or any("GIT_SHA=" in a for a in args):
+        return list(args)
+    return [*args, "-e", f"GIT_SHA={sha}", "--build-env", f"GIT_SHA={sha}"]
+
+
 def vercel(args: list[str], env: dict[str, str], timeout: int = 900) -> subprocess.CompletedProcess:
     """Run npx vercel with the token injected via subprocess env (never in argv)."""
+    args = deploy_args(args, _head_sha())
     e = {**os.environ, "VERCEL_TOKEN": env.get("VERCEL_TOKEN", "")}
     return subprocess.run(["npx.cmd" if os.name == "nt" else "npx", "--yes", "vercel@64.2.0", *args],
                           cwd=common.ROOT, env=e, capture_output=True, text=True, timeout=timeout,

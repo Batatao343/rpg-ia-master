@@ -137,3 +137,41 @@ def test_request_id_header_on_session_401(monkeypatch):
     r = c.get("/game/saves", headers={"X-Request-ID": "sess-req-0001"})
     assert r.status_code in (401, 403, 503)
     assert r.headers["X-Request-ID"] == "sess-req-0001"
+
+
+def test_build_skew_flag(client, capsys, monkeypatch):
+    """SPEC-261 R2: client_build no access log; build_skew so quando o sha difere do servidor."""
+    monkeypatch.setenv("GIT_SHA", "abcdef1234567890abcdef1234567890abcdef12")
+    capsys.readouterr()
+    client.get("/game/saves", headers={"X-RPG-Build": "abcdef1+202610191345"})
+    line = _req_lines(capsys)[-1]
+    assert line["client_build"] == "abcdef1+202610191345" and "build_skew" not in line
+    client.get("/game/saves", headers={"X-RPG-Build": "0000000+202610191345"})
+    line = _req_lines(capsys)[-1]
+    assert line["build_skew"] is True
+    client.get("/game/saves", headers={"X-RPG-Build": "<script>alert(1)</script>"})
+    line = _req_lines(capsys)[-1]
+    assert line["client_build"] == "other" and "build_skew" not in line
+    client.get("/game/saves")
+    assert "client_build" not in _req_lines(capsys)[-1]
+
+
+def test_app_version_logged(client, capsys):
+    """SPEC-259 R4: versao do app Android (formato fechado) no access log."""
+    capsys.readouterr()
+    client.get("/game/saves", headers={"X-RPG-Client": "android", "X-RPG-App-Version": "1.0.3+7"})
+    line = _req_lines(capsys)[-1]
+    assert line["app_version"] == "1.0.3+7" and line["client"] == "android"
+    client.get("/game/saves", headers={"X-RPG-App-Version": "1.0 user@x.com"})
+    assert _req_lines(capsys)[-1]["app_version"] == "other"
+
+
+def test_deploy_args_inject_git_sha():
+    """SPEC-261 R3: vercel deploy pelos scripts de staging leva GIT_SHA (runtime + build)."""
+    from scripts.staging.s192 import deploy_args
+    sha = "a" * 40
+    assert deploy_args(["deploy", "--prod", "--yes"], sha) == [
+        "deploy", "--prod", "--yes", "-e", f"GIT_SHA={sha}", "--build-env", f"GIT_SHA={sha}"]
+    assert deploy_args(["env", "ls"], sha) == ["env", "ls"]
+    assert deploy_args(["deploy"], "") == ["deploy"]
+    assert deploy_args(["deploy", "-e", "GIT_SHA=x"], sha) == ["deploy", "-e", "GIT_SHA=x"]

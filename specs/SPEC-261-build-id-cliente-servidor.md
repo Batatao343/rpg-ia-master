@@ -1,7 +1,7 @@
 # SPEC-261 — Build id ponta a ponta: sha automático no `/health`, build do bundle web e header `X-RPG-Build`
 
-> **Status:** `draft` — aguardando aprovação do dono. Prioridade sugerida: **P2**.
-> **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
+> **Status:** `done` — aprovada pelo dono em 2026-10-19; implementada em 2026-10-19. Prioridade sugerida: **P2**.
+> **Criada:** 2026-10-18 · **Atualizada:** 2026-10-19
 > **Depende de:** SPEC-249
 > **Desbloqueia:** SPEC-243 (código de suporte com build), SPEC-244, SPEC-259
 > **Origem:** auditoria de logs 2026-10-18 ([relatório](../docs/auditorias/logs-api-2026-10-18.md))
@@ -54,11 +54,11 @@ R1–R4.
 
 ## 5. Critérios de aceite
 
-- [ ] Toda requisição do web carrega `X-RPG-Build`; `/health` nunca vazio em staging.
-- [ ] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
+- [x] Toda requisição do web carrega `X-RPG-Build` (teste `web/tests/build.test.mjs`). [ ] `/health` nunca vazio em staging — conferir no próximo deploy (smoke).
+- [x] Teste de sentinela: nenhuma linha nova contém texto do jogador, e-mail, IP cru, token ou id cru.
 - [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
-- [ ] Saves antigos continuam carregando.
+- [x] Guard de FallbackLLM preservado em todo `with_structured_output` tocado.
+- [x] Saves antigos continuam carregando.
 
 ## 6. Smoke test
 
@@ -69,3 +69,19 @@ R1–R4.
 - Nenhum.
 - Logs são aditivos: nenhum contrato de resposta muda, salvo onde a spec diz explicitamente.
 - MockLLM/FallbackLLM: comportamento inalterado; só passa a ser visível em log.
+
+## 8. Notas de implementação (2026-10-19)
+
+- `web/scripts/buildId.mjs::computeBuildId` → `<sha7>+<AAAAMMDDhhmm UTC>` (`VERCEL_GIT_COMMIT_SHA` > `GIT_SHA` > `git
+  rev-parse` > `dev`; valor fora de hex vira `dev`). `vite.config.ts` injeta em `__RPG_BUILD__`; `web/src/build.ts` expõe
+  `BUILD_ID`/`buildShort()`.
+- `http.ts` envia `X-RPG-Build` em toda requisição (inclusive upload de voz). CORS aceita `x-rpg-build` e
+  `x-rpg-app-version`.
+- Access log `http.request`: `client_build` (formato fechado; fora do formato ⇒ `other`) e `build_skew=true` só quando o
+  sha do bundle não é prefixo do `GIT_SHA`/`VERCEL_GIT_COMMIT_SHA` do servidor.
+- R3: `scripts/staging/s192.vercel` acrescenta `-e GIT_SHA=<HEAD> --build-env GIT_SHA=<HEAD>` a todo `deploy` que não o
+  traga (`deploy_args`, testado). O aviso `runtime.config_warning code=git_sha_missing` já existia (SPEC-249) e vale para
+  qualquer perfil.
+- R4: tela de Conta mostra "Versão do app: `<sha7>`".
+- Smoke de staging: `curl https://<staging>/health` ⇒ `git_sha` igual ao commit do deploy; abrir o app e conferir
+  `http.request` com `client_build=<sha7>+…` e sem `build_skew`.

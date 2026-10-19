@@ -1,3 +1,4 @@
+import { buildShort } from "../build";
 import { isAndroidClient } from "../native/platform";
 import { playAdapter, type StoreProduct } from "../purchases";
 import { useEffect, useRef, useState } from "react";
@@ -485,5 +486,7 @@ export function AccountScreen({ onBack, onBalanceChange, lifecycleAvailable, cap
         {accountActionNotice && <p role="status">{accountActionNotice}</p>}
         <p className="muted">Suporte: canal de atendimento será informado aqui quando estiver disponível.</p>
       </section>}
+      {/* SPEC-261 R4: build curto para relatos de bug (casa com client_build no log do servidor). */}
+      <p className="muted account-build">Versão do app: <code>{buildShort()}</code></p>
   </main>;
 }
