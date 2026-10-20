@@ -135,6 +135,13 @@ NPC precisa ser **único** e **coerente com a lore**.
     se for parecido demais, é regerado ou trocado pelo existente.
 - **Estado por jogo** (relação, memória, morte, cargo) continua isolado por
   jogo.
+- **Quarentena:** o NPC nasce e fica 1 dia (real) em hold, funcionando só no
+  jogo de origem. Depois de 1 dia, um job roda **uma chamada LLM de avaliação**
+  (lore, unicidade, conteúdo, PII, injeção). Sem problema, ele é promovido ao
+  pool global.
+- **Abrangência do pool:** NPCs, **criaturas geradas**, **itens/artefatos
+  gerados** e **locais/sublocais** criados em jogo. Um item único continua
+  único **por mundo**, e cada mundo tem a sua instância.
 
 ### A. Mundo autônomo
 - **Pressões regionais:** guerra/conflito, fome/escassez, praga/doença
