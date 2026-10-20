@@ -11,10 +11,12 @@ from services import jev_rollout
 
 class _SlowClient:
     built = 0
+    built_at = 0.0
 
     def __init__(self) -> None:
         type(self).built += 1
         time.sleep(0.4)
+        type(self).built_at = time.monotonic()
 
 
 @pytest.fixture(autouse=True)
@@ -46,8 +48,9 @@ def test_client_built_before_deadline_clock(monkeypatch: pytest.MonkeyPatch) -> 
     assert pending is not None
     assert _SlowClient.built == 1
     assert elapsed >= 0.4  # a construção foi paga ANTES do relógio
-    # O relógio só começou depois: a espera não inclui os 0.4 s de construção.
-    assert time.monotonic() - pending._started < 0.2
+    # O relógio só começou depois da construção (ordem, não tempo de parede:
+    # sob carga da suíte paralela o intervalo absoluto varia).
+    assert pending._started >= _SlowClient.built_at
     assert jev_rollout._client is not None
     pending._future.result(timeout=10)  # no worker outliving the test (would rebuild a real client)
 
