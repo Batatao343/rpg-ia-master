@@ -8,11 +8,11 @@
 
 ## Estado em 10 linhas
 
-- `main` = `4c4167b` (19/10). Única branch não mergeada: `spec-214` (NO_GO, fica fora).
-- Suíte offline: **4.023 passed, 229 skipped** (19/10, branch `workspace-improve`; ~4 min serial, ~1m45 com `-n auto`). Atualize
+- `main` = `94b5b0d` (19/10, SPEC-295 pousada; não pushada). Única branch não mergeada: `spec-214` (NO_GO, fica fora).
+- Suíte offline: **~4.400 passed, 238 skipped, exit 0** (19/10, SPEC-295, `-n auto`). Atualize
   **substituindo** este número.
-- Specs (gerado por `spec_index.py summary`): 258 `done` · 12 `draft` · 5 `in-progress`
-  (197 gate de release, 198 Google Play, 222 LGPD, 225 supply chain, 236 FinOps).
+- Specs (gerado por `spec_index.py summary`): 289 `done` · 2 `draft` · 4 `in-progress`
+  (197 gate de release, 198 Google Play, 222 LGPD, 236 FinOps).
 - Staging: https://rpg-ia-master-staging.vercel.app (Vercel `gru1` + Supabase
   `uzeagzcyvxzrpjgrhaql`), `hardened=true`, DeepSeek real, Jev `primary` ativo no router.
 - LLM: DeepSeek primário em todos os tiers (Groq/OpenAI/Anthropic/Gemini de fallback);
@@ -25,7 +25,7 @@
 > **Retomando? Leia primeiro [docs/HANDOFF-PROXIMA-SESSAO.md](docs/HANDOFF-PROXIMA-SESSAO.md).**
 
 1. SPEC-236 §6.2 dia 2 (a partir de 20/10 00:00 BRT; [roteiro](docs/staging-wave-2026-10-17/spec236-s62-plano.md)).
-2. Spec "Chefe no topo" — decidido pelo dono em 19/10 ("sim"); escopo no handoff.
+2. SPEC-295 follow-ups para o dono/SPEC-049: curva de Proteção do Chefe não monotônica (P2-1), Chefe 0,86–0,89 no `basico` 5–8 (P3-4), playtest dirigido de Chefe.
 3. Bloqueios externos abaixo, quando o dono agir.
 
 ## Bloqueios no dono
@@ -61,6 +61,8 @@ devolvem o parágrafo no hand-back. Ao abrir a próxima onda, mova estas notas p
 `CHANGELOG.md` (seção `## AAAA-MM-DD`) e esvazie a seção.
 
 <!-- onda:inserir-aqui -->
+
+- **19/10 (noite):** SPEC-295 (Chefe no topo) `done`: Chefe/Nomeado agem 2×/rodada (2ª ação no fim) + Proteção natural por Nível do Encontro {1: 2, 3: 1}; séquito e fases sondados e descartados. Arena: Chefe > Elite por 5,5–17,2 pp em todo nível 1–8, dois bots; Lacaio/Padrão/Elite e playtests idênticos à `main`. Revisão Opus APPROVED_WITH_FOLLOWUPS ([handoff](handoffs/SPEC-295-review.md)).
 
 - **19/10 (onda):** workspace, logs P2/P3 (+ staging), SPEC-222 delete com arte, SPEC-236 §6.2 dia 1, SPEC-276 (Vite 8/Playwright 1.64), SPEC-278 (React 19), SPEC-279/280 (gasto sobrevive ao delete; órfãos) — todos na main com CI verde. Detalhe por frente em `CHANGELOG.md` § 2026-10-19. Pendente: SPEC-236 §6.2 dia 2 (20/10, [roteiro](docs/staging-wave-2026-10-17/spec236-s62-plano.md)).
 
