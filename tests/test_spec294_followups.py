@@ -35,6 +35,8 @@ PROBLEM = f"e:concealed_faction_name:{FID}"
         "Iniciado da Chama Azul.",
         "(Iniciado da Chama Azul)",
         "Iniciado da Chama Azules",
+        "o Iniciado da Chama Azul™ ataca",
+        "ⓘIniciado da Chama Azul",
     ],
 )
 def test_oraculo_acusa_ocorrencia_de_palavra(text):

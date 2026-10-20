@@ -197,7 +197,8 @@ def conceal_for(state: Mapping, obj: Any) -> Any:
 def _fold(text: str) -> str:
     import unicodedata
 
-    decomposed = unicodedata.normalize("NFKD", str(text or ""))
+    # NFD, not NFKD: NFKD turns symbols into letters (™ -> tm) and hides glued names.
+    decomposed = unicodedata.normalize("NFD", str(text or ""))
     stripped = "".join(ch for ch in decomposed if not unicodedata.combining(ch))
     return _SEP.sub(" ", stripped.casefold()).strip()
 

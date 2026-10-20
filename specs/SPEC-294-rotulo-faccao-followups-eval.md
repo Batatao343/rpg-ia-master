@@ -1,6 +1,6 @@
 # SPEC-294 — Rótulo de fação oculta: follow-ups da revisão + caso de eval
 
-> **Status:** `approved` (o dono autorizou em 19/10 tudo que não exige ação externa dele)
+> **Status:** `done` (o dono autorizou em 19/10 tudo que não exige ação externa dele)
 > **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
 > **Depende de:** SPEC-293 (`services/faction_display.py`), SPEC-206 (`player_knowledge`)
 > **Desbloqueia:** —
@@ -93,12 +93,12 @@ P2-4 (texto da SPEC-293 §R3, corrigido no pouso pelo coordenador) e P2-5 (cache
 
 ## 5. Critérios de aceite
 
-- [ ] R1/R2 com testes
-- [ ] R3 casos de eval + lock + governance check verde + mutação detectada
-- [ ] R4/R5/R6 com testes
-- [ ] R7 registrado
-- [ ] Suíte completa + `python -m evals run` determinístico verdes
-- [ ] Saves antigos continuam carregando
+- [x] R1/R2 com testes
+- [x] R3 casos de eval + lock + governance check verde + mutação detectada
+- [x] R4/R5/R6 com testes
+- [x] R7 registrado
+- [x] Suíte completa + `python -m evals run` determinístico verdes
+- [x] Saves antigos continuam carregando
 
 ## 6. Smoke test com LLM real
 
@@ -111,3 +111,7 @@ determinístico).
 - Save legado com nomes repetidos: o primeiro herda as referências do nome antigo (a
   chave de `positions` só podia apontar um deles).
 - Publicar exige aprovação do environment `eval-governance` (dataset/lock protegidos).
+
+## Revisão independente (19/10)
+
+Opus `APPROVED_WITH_FOLLOWUPS` ([parecer](../handoffs/SPEC-294-review.md)). P2-1 corrigido no pouso: `_fold` usa NFD (NFKD transformava símbolos em letras e escondia o nome colado a `™`/`ⓘ`), com 2 casos novos no teste do oráculo. P2-2 (reescrita de refs por igualdade de string) e P2-3 (`archetype` legado) ficam registrados, sem impacto hoje.
