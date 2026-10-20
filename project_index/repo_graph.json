@@ -1,5 +1,5 @@
 {
-  "commit_sha": "abeeb3c53a46fe26572e1c53ed1aff28836ba359",
+  "commit_sha": "8ed8f7998cdbd02ca8210df6f034099e8eee2c43",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -94947,7 +94947,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_client_warm.py",
-        "line": 21
+        "line": 23
       },
       "source": "module:tests.test_jev_client_warm",
       "target": "symbol:tests.test_jev_client_warm._reset_client",
@@ -94958,7 +94958,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_client_warm.py",
-        "line": 73
+        "line": 76
       },
       "source": "module:tests.test_jev_client_warm",
       "target": "symbol:tests.test_jev_client_warm.test_build_failure_does_not_break_turn",
@@ -94969,7 +94969,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_client_warm.py",
-        "line": 37
+        "line": 39
       },
       "source": "module:tests.test_jev_client_warm",
       "target": "symbol:tests.test_jev_client_warm.test_client_built_before_deadline_clock",
@@ -94980,7 +94980,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_client_warm.py",
-        "line": 92
+        "line": 95
       },
       "source": "module:tests.test_jev_client_warm",
       "target": "symbol:tests.test_jev_client_warm.test_frozen_import_failure_does_not_break_turn",
@@ -94991,7 +94991,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_client_warm.py",
-        "line": 61
+        "line": 64
       },
       "source": "module:tests.test_jev_client_warm",
       "target": "symbol:tests.test_jev_client_warm.test_injected_backend_skips_warm",
@@ -95002,7 +95002,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_client_warm.py",
-        "line": 30
+        "line": 32
       },
       "source": "module:tests.test_jev_client_warm",
       "target": "symbol:tests.test_jev_client_warm.test_off_does_not_build_client",
@@ -95013,7 +95013,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_client_warm.py",
-        "line": 55
+        "line": 58
       },
       "source": "module:tests.test_jev_client_warm",
       "target": "symbol:tests.test_jev_client_warm.test_warm_is_singleton",
@@ -273840,7 +273840,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_client_warm.py",
-        "line": 15
+        "line": 16
       },
       "source": "symbol:tests.test_jev_client_warm._SlowClient",
       "target": "symbol:tests.test_jev_client_warm._SlowClient.__init__",
@@ -273851,7 +273851,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_client_warm.py",
-        "line": 85
+        "line": 88
       },
       "source": "symbol:tests.test_jev_client_warm.test_build_failure_does_not_break_turn",
       "target": "symbol:services.jev_rollout.begin",
@@ -273862,7 +273862,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_client_warm.py",
-        "line": 78
+        "line": 81
       },
       "source": "symbol:tests.test_jev_client_warm.test_build_failure_does_not_break_turn",
       "target": "symbol:tests.test_jev_client_warm.test_build_failure_does_not_break_turn._Broken",
@@ -273873,7 +273873,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_client_warm.py",
-        "line": 79
+        "line": 82
       },
       "source": "symbol:tests.test_jev_client_warm.test_build_failure_does_not_break_turn._Broken",
       "target": "symbol:tests.test_jev_client_warm.test_build_failure_does_not_break_turn._Broken.__init__",
@@ -273884,7 +273884,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_client_warm.py",
-        "line": 44
+        "line": 46
       },
       "source": "symbol:tests.test_jev_client_warm.test_client_built_before_deadline_clock",
       "target": "symbol:services.jev_rollout.begin",
@@ -273895,7 +273895,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_client_warm.py",
-        "line": 104
+        "line": 107
       },
       "source": "symbol:tests.test_jev_client_warm.test_frozen_import_failure_does_not_break_turn",
       "target": "symbol:services.jev_rollout.begin",
@@ -273906,7 +273906,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_client_warm.py",
-        "line": 100
+        "line": 103
       },
       "source": "symbol:tests.test_jev_client_warm.test_frozen_import_failure_does_not_break_turn",
       "target": "symbol:tests.test_jev_client_warm.test_frozen_import_failure_does_not_break_turn.boom",
@@ -273917,7 +273917,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_client_warm.py",
-        "line": 69
+        "line": 72
       },
       "source": "symbol:tests.test_jev_client_warm.test_injected_backend_skips_warm",
       "target": "symbol:services.jev_rollout.begin",
@@ -273928,7 +273928,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_client_warm.py",
-        "line": 65
+        "line": 68
       },
       "source": "symbol:tests.test_jev_client_warm.test_injected_backend_skips_warm",
       "target": "symbol:tests.test_jev_client_warm.test_injected_backend_skips_warm._B",
@@ -273939,7 +273939,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_client_warm.py",
-        "line": 66
+        "line": 69
       },
       "source": "symbol:tests.test_jev_client_warm.test_injected_backend_skips_warm._B",
       "target": "symbol:tests.test_jev_client_warm.test_injected_backend_skips_warm._B.decide",
@@ -273950,7 +273950,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_client_warm.py",
-        "line": 32
+        "line": 34
       },
       "source": "symbol:tests.test_jev_client_warm.test_off_does_not_build_client",
       "target": "symbol:services.jev_rollout.begin",
@@ -273961,7 +273961,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_client_warm.py",
-        "line": 56
+        "line": 59
       },
       "source": "symbol:tests.test_jev_client_warm.test_warm_is_singleton",
       "target": "symbol:services.jev_rollout.warm_client",
@@ -273972,7 +273972,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_jev_client_warm.py",
-        "line": 57
+        "line": 60
       },
       "source": "symbol:tests.test_jev_client_warm.test_warm_is_singleton",
       "target": "symbol:services.jev_rollout.warm_client",
@@ -404590,91 +404590,91 @@
     {
       "id": "symbol:tests.test_jev_client_warm._SlowClient.__init__",
       "kind": "test",
-      "line": 15,
+      "line": 16,
       "path": "tests/test_jev_client_warm.py",
       "qualified_name": "tests.test_jev_client_warm._SlowClient.__init__"
     },
     {
       "id": "symbol:tests.test_jev_client_warm._reset_client",
       "kind": "test",
-      "line": 21,
+      "line": 23,
       "path": "tests/test_jev_client_warm.py",
       "qualified_name": "tests.test_jev_client_warm._reset_client"
     },
     {
       "id": "symbol:tests.test_jev_client_warm.test_build_failure_does_not_break_turn",
       "kind": "test",
-      "line": 73,
+      "line": 76,
       "path": "tests/test_jev_client_warm.py",
       "qualified_name": "tests.test_jev_client_warm.test_build_failure_does_not_break_turn"
     },
     {
       "id": "symbol:tests.test_jev_client_warm.test_build_failure_does_not_break_turn._Broken",
       "kind": "class",
-      "line": 78,
+      "line": 81,
       "path": "tests/test_jev_client_warm.py",
       "qualified_name": "tests.test_jev_client_warm.test_build_failure_does_not_break_turn._Broken"
     },
     {
       "id": "symbol:tests.test_jev_client_warm.test_build_failure_does_not_break_turn._Broken.__init__",
       "kind": "test",
-      "line": 79,
+      "line": 82,
       "path": "tests/test_jev_client_warm.py",
       "qualified_name": "tests.test_jev_client_warm.test_build_failure_does_not_break_turn._Broken.__init__"
     },
     {
       "id": "symbol:tests.test_jev_client_warm.test_client_built_before_deadline_clock",
       "kind": "test",
-      "line": 37,
+      "line": 39,
       "path": "tests/test_jev_client_warm.py",
       "qualified_name": "tests.test_jev_client_warm.test_client_built_before_deadline_clock"
     },
     {
       "id": "symbol:tests.test_jev_client_warm.test_frozen_import_failure_does_not_break_turn",
       "kind": "test",
-      "line": 92,
+      "line": 95,
       "path": "tests/test_jev_client_warm.py",
       "qualified_name": "tests.test_jev_client_warm.test_frozen_import_failure_does_not_break_turn"
     },
     {
       "id": "symbol:tests.test_jev_client_warm.test_frozen_import_failure_does_not_break_turn.boom",
       "kind": "test",
-      "line": 100,
+      "line": 103,
       "path": "tests/test_jev_client_warm.py",
       "qualified_name": "tests.test_jev_client_warm.test_frozen_import_failure_does_not_break_turn.boom"
     },
     {
       "id": "symbol:tests.test_jev_client_warm.test_injected_backend_skips_warm",
       "kind": "test",
-      "line": 61,
+      "line": 64,
       "path": "tests/test_jev_client_warm.py",
       "qualified_name": "tests.test_jev_client_warm.test_injected_backend_skips_warm"
     },
     {
       "id": "symbol:tests.test_jev_client_warm.test_injected_backend_skips_warm._B",
       "kind": "class",
-      "line": 65,
+      "line": 68,
       "path": "tests/test_jev_client_warm.py",
       "qualified_name": "tests.test_jev_client_warm.test_injected_backend_skips_warm._B"
     },
     {
       "id": "symbol:tests.test_jev_client_warm.test_injected_backend_skips_warm._B.decide",
       "kind": "test",
-      "line": 66,
+      "line": 69,
       "path": "tests/test_jev_client_warm.py",
       "qualified_name": "tests.test_jev_client_warm.test_injected_backend_skips_warm._B.decide"
     },
     {
       "id": "symbol:tests.test_jev_client_warm.test_off_does_not_build_client",
       "kind": "test",
-      "line": 30,
+      "line": 32,
       "path": "tests/test_jev_client_warm.py",
       "qualified_name": "tests.test_jev_client_warm.test_off_does_not_build_client"
     },
     {
       "id": "symbol:tests.test_jev_client_warm.test_warm_is_singleton",
       "kind": "test",
-      "line": 55,
+      "line": 58,
       "path": "tests/test_jev_client_warm.py",
       "qualified_name": "tests.test_jev_client_warm.test_warm_is_singleton"
     },
@@ -425127,5 +425127,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:570a4102d99d6a45f220e3f06a9f56d5b281742f409e6bfad9b175a3d9af0c27"
+  "source_tree_hash": "sha256:32f2c5f7e6bbb3348c3f07277be5ef1ca369107d07e86a5e0d4b90d7aa677ea2"
 }
