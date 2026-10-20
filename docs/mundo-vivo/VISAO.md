@@ -105,6 +105,37 @@ aba de rumores.
   trair. Aceitam membro só as fações que fazem sentido na lore; a
   classificação das 19 vai na spec, para revisão.
 
+### C2. NPCs compartilhados entre mundos (pedido do dono, 20/10)
+Um NPC que nasce no jogo de um jogador (ex.: "Nihodim, o Destruidor",
+saqueador que virou rei) entra numa **base compartilhada**. Qualquer jogador
+que passe pela mesma região pode encontrá-lo, e o mundo se povoa com o uso. Cada
+NPC precisa ser **único** e **coerente com a lore**.
+
+- **Inverte uma decisão anterior:** a SPEC-223 R7 isolava templates gerados no
+  escopo do dono ([agents/npc.py:272-300](../../agents/npc.py)). A spec nova
+  precisa tratar o risco de texto influenciado por um jogador chegar a outros
+  (prompt injection guardado, conteúdo ofensivo, PII).
+- **Promoção automática com quarentena:**
+  - Validadores no nascimento: lore, schema, unicidade, filtro de
+    conteúdo/PII/injeção.
+  - A persona é reescrita pelo motor, sem texto literal do jogador.
+  - Depois entra em quarentena por N dias/jogos e só então vai ao pool. O dono
+    pode vetar.
+- **Estado compartilhado = base + lenda vaga:** identidade, aparência,
+  personalidade, origem, região e ambição. No jogo B, o NPC começa do ponto
+  base, e o destino do jogo A **não** vaza.
+- **Reuso com crescimento:** mistura de reuso do pool com uma fração de NPCs
+  novos, para o pool continuar crescendo. O reuso evita repetir o mesmo NPC no
+  mesmo jogo.
+- **Unicidade:**
+  - **Semente estruturada:** o motor sorteia os ingredientes antes da LLM
+    (raça, origem na lore, fação, profissão, desejo, medo, segredo,
+    contradição, maneirismo), e a LLM só costura.
+  - **Dedupe semântico:** cada NPC novo é comparado por embedding com o pool;
+    se for parecido demais, é regerado ou trocado pelo existente.
+- **Estado por jogo** (relação, memória, morte, cargo) continua isolado por
+  jogo.
+
 ### A. Mundo autônomo
 - **Pressões regionais:** guerra/conflito, fome/escassez, praga/doença
   (espalha pelas conexões) e Éter/Abismo (corrupção regional que mexe em
@@ -141,6 +172,18 @@ aba de rumores.
   recrutar, ou levar como prisioneiro (escolta, resgate).
 - **Saque:** partes de criatura que entram em receitas regionais (expande o
   crafting). Humanoide deixa o equipamento do seu tipo.
+
+### Calibração
+- **Crises perceptíveis** (cerco, praga, guerra): ~1 a cada 10–15 dias de jogo
+  numa região frequentada. Sinais pequenos (preço, rumor, patrulha) a cada 1–2
+  dias.
+- **Duração da campanha:** varia com o tipo de jogador. Estações e festas não
+  podem assumir uma duração fixa; o playtest mede quantos dias passam por
+  perfil.
+- **Saves existentes:** migração suave. Os campos novos nascem com default
+  neutro e o mundo vivo liga a partir do próximo dia virado.
+- **Procurado:** o jogador só percebe por sinais (cartazes, guardas, aviso de
+  NPC). Não há indicador direto.
 
 ### Processo
 - Playtest com LLM real: teto de **US$ 3/dia**, só campanhas curtas. Long-run
