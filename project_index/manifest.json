@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "3722a6faa7548f8485ed3c465a0b3adb3c36e7e8",
+  "commit_sha": "8d738ca994c06811868258177f7a6808759ac4a0",
   "edge_counts": {
-    "calls": 17711,
-    "contains": 734,
-    "defines": 10037,
-    "imports": 1631,
-    "likely_test_for": 1012,
+    "calls": 17781,
+    "contains": 735,
+    "defines": 10064,
+    "imports": 1636,
+    "likely_test_for": 1017,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:a1522c76bb876dcc2df3e1bca49efbff43b44ad187857ef1bdf4bc8d8f5cd3d7",
+  "graph_hash": "sha256:78079ce853d5a611ad86f2cf40ecbda36bde38eae925738e62dcffc3e3d624f1",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -745,6 +745,7 @@
     "tests/test_spec290_chefe_sobrevivencia.py",
     "tests/test_spec293_rotulo_faccao.py",
     "tests/test_spec294_followups.py",
+    "tests/test_spec295_chefe_no_topo.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -936,12 +937,12 @@
     "artifact": 9,
     "class": 795,
     "endpoint": 63,
-    "file": 880,
-    "function": 3085,
+    "file": 881,
+    "function": 3086,
     "method": 750,
-    "module": 734,
-    "test": 5406
+    "module": 735,
+    "test": 5432
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:32f2c5f7e6bbb3348c3f07277be5ef1ca369107d07e86a5e0d4b90d7aa677ea2"
+  "source_tree_hash": "sha256:8d31663adfc9fc0073147c4ccf32844c7e912c9c1aded117774c7a8fdd8605fd"
 }

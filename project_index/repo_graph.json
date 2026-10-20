@@ -1,5 +1,5 @@
 {
-  "commit_sha": "3722a6faa7548f8485ed3c465a0b3adb3c36e7e8",
+  "commit_sha": "8d738ca994c06811868258177f7a6808759ac4a0",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -18427,6 +18427,72 @@
       "type": "contains"
     },
     {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 11
+      },
+      "source": "file:tests/test_spec295_chefe_no_topo.py",
+      "target": "file:combat_mechanics.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 13
+      },
+      "source": "file:tests/test_spec295_chefe_no_topo.py",
+      "target": "file:combat_mechanics.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 14
+      },
+      "source": "file:tests/test_spec295_chefe_no_topo.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 15
+      },
+      "source": "file:tests/test_spec295_chefe_no_topo.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 16
+      },
+      "source": "file:tests/test_spec295_chefe_no_topo.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 1
+      },
+      "source": "file:tests/test_spec295_chefe_no_topo.py",
+      "target": "module:tests.test_spec295_chefe_no_topo",
+      "type": "contains"
+    },
+    {
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
@@ -20257,7 +20323,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 225
+        "line": 227
       },
       "source": "module:agents.bestiary",
       "target": "symbol:agents.bestiary._infer_tier_from_name",
@@ -20268,7 +20334,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 173
+        "line": 175
       },
       "source": "module:agents.bestiary",
       "target": "symbol:agents.bestiary._overlay_path",
@@ -20290,7 +20356,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 179
+        "line": 181
       },
       "source": "module:agents.bestiary",
       "target": "symbol:agents.bestiary._read_json",
@@ -20301,7 +20367,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 280
+        "line": 314
       },
       "source": "module:agents.bestiary",
       "target": "symbol:agents.bestiary._ready_v4",
@@ -20312,7 +20378,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 273
+        "line": 307
       },
       "source": "module:agents.bestiary",
       "target": "symbol:agents.bestiary._ready_v4_vitals",
@@ -20323,7 +20389,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 266
+        "line": 300
       },
       "source": "module:agents.bestiary",
       "target": "symbol:agents.bestiary._scaled_copy",
@@ -20345,7 +20411,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 244
+        "line": 263
       },
       "source": "module:agents.bestiary",
       "target": "symbol:agents.bestiary.apply_encounter_survival",
@@ -20356,7 +20422,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 305
+        "line": 339
       },
       "source": "module:agents.bestiary",
       "target": "symbol:agents.bestiary.generate_new_enemy",
@@ -20367,7 +20433,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 190
+        "line": 192
       },
       "source": "module:agents.bestiary",
       "target": "symbol:agents.bestiary.load_bestiary",
@@ -20389,7 +20455,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 203
+        "line": 205
       },
       "source": "module:agents.bestiary",
       "target": "symbol:agents.bestiary.save_enemy",
@@ -20400,7 +20466,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 290
+        "line": 324
       },
       "source": "module:agents.bestiary",
       "target": "symbol:agents.bestiary.template_by_id",
@@ -25471,7 +25537,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 617
+        "line": 624
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics._abilities_db",
@@ -25482,7 +25548,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 629
+        "line": 636
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics._branch_of",
@@ -25504,7 +25570,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 625
+        "line": 632
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics._classes_db",
@@ -25515,7 +25581,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 1049
+        "line": 1056
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics._condition_from_effect",
@@ -25526,7 +25592,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 442
+        "line": 449
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics._fold",
@@ -25548,7 +25614,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 675
+        "line": 682
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics._tier_index",
@@ -25570,7 +25636,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 660
+        "line": 667
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.abyss_tier",
@@ -25592,7 +25658,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 757
+        "line": 764
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.apply_blood_leak",
@@ -25603,7 +25669,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 487
+        "line": 494
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.apply_condition",
@@ -25614,7 +25680,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 921
+        "line": 928
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.apply_entropy_on_kill",
@@ -25625,7 +25691,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 684
+        "line": 691
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.apply_entropy_trigger",
@@ -25636,7 +25702,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 842
+        "line": 849
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.apply_scar",
@@ -25647,7 +25713,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 885
+        "line": 892
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.apply_transformacao",
@@ -25658,7 +25724,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 774
+        "line": 781
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.arm_boiler",
@@ -25680,7 +25746,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 946
+        "line": 953
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.check_recidiva",
@@ -25702,7 +25768,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 433
+        "line": 440
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -25713,7 +25779,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 977
+        "line": 984
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.compute_player_combat_stats",
@@ -25735,7 +25801,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 449
+        "line": 456
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.damage_type_bonus",
@@ -25746,7 +25812,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 868
+        "line": 875
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.dependencia_cost",
@@ -25768,7 +25834,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 640
+        "line": 647
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.entropy_config",
@@ -25801,7 +25867,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 469
+        "line": 476
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.has_control",
@@ -25812,7 +25878,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 474
+        "line": 481
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.is_condition_resisted",
@@ -25856,7 +25922,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 1100
+        "line": 1107
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.normalize_categoria",
@@ -25900,7 +25966,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 825
+        "line": 832
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.reduce_ally_abyss",
@@ -25911,7 +25977,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 679
+        "line": 686
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.reset_entropy_turn",
@@ -25933,7 +25999,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 747
+        "line": 754
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.taunt_aggro_multiplier",
@@ -25944,7 +26010,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 785
+        "line": 792
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.tick_boiler",
@@ -25955,7 +26021,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 506
+        "line": 513
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.tick_conditions",
@@ -25966,7 +26032,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 464
+        "line": 471
       },
       "source": "module:combat_mechanics",
       "target": "symbol:combat_mechanics.triggered_passives",
@@ -42213,7 +42279,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 425
+        "line": 432
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4.P",
@@ -42224,7 +42290,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 1211
+        "line": 1218
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4._build_new_creatures",
@@ -42235,7 +42301,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 55
+        "line": 62
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4._ecard",
@@ -42246,7 +42312,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 683
+        "line": 690
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4._has",
@@ -42257,7 +42323,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 738
+        "line": 745
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4._virt_bucket",
@@ -42268,7 +42334,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 688
+        "line": 695
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4.infer_archetype",
@@ -42279,7 +42345,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 743
+        "line": 750
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4.infer_virtudes",
@@ -42290,7 +42356,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 1299
+        "line": 1311
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4.main",
@@ -42301,7 +42367,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 1255
+        "line": 1262
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4.migrate_creature",
@@ -42312,7 +42378,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 771
+        "line": 778
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4.theme_cards",
@@ -42323,7 +42389,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 758
+        "line": 765
       },
       "source": "module:scripts.migrate_bestiary_v4",
       "target": "symbol:scripts.migrate_bestiary_v4.theme_resist",
@@ -50826,6 +50892,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
+        "line": 1841
+      },
+      "source": "module:services.conflict_orchestrator",
+      "target": "symbol:services.conflict_orchestrator.extra_actions",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
         "line": 1513
       },
       "source": "module:services.conflict_orchestrator",
@@ -50837,7 +50914,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1841
+        "line": 1853
       },
       "source": "module:services.conflict_orchestrator",
       "target": "symbol:services.conflict_orchestrator.run_round",
@@ -120499,6 +120576,325 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 11
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "module:combat_mechanics",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 13
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "module:combat_mechanics",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 14
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 15
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 16
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 21
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._generator",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 37
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._mk",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 47
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._round",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 30
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._split",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 155
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_boss_extra_action_acts_twice_and_logs",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 105
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_boss_protection_depends_only_on_encounter_level",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 116
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_boss_template_keeps_spec287_vitality",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 190
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_boss_terminal_after_first_action_does_not_act_again",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 207
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_condition_ticks_once_per_round",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 162
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_extra_action_comes_after_everyone",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 147
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_extra_actions_defaults_and_bad_values",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 176
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_extra_actions_only_for_enemy_side",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 83
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_generator_is_idempotent_for_boss_fields",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 72
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_generator_sets_boss_fields_only_on_chefe",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 238
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_invalid_survival_field_keeps_boss_actions_and_protection",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 96
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_materialized_llm_boss_gets_actions",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 131
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_natural_protection_absorbs_hit_but_not_dot",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 125
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_natural_protection_counts_as_protection_modifier",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 170
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_non_boss_acts_once",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 218
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_old_save_enemy_without_new_fields_acts_once",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 141
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_player_ignores_natural_protection_field",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 92
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_runtime_default_matches_generator",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 227
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 183
+      },
+      "source": "module:tests.test_spec295_chefe_no_topo",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_stun_denies_all_boss_actions",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec_index.py",
         "line": 47
       },
@@ -127562,7 +127958,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 186
+        "line": 188
       },
       "source": "symbol:agents.bestiary._read_json",
       "target": "symbol:observability.telemetry.log_event",
@@ -127573,7 +127969,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 281
+        "line": 315
       },
       "source": "symbol:agents.bestiary._ready_v4",
       "target": "symbol:agents.bestiary.apply_encounter_survival",
@@ -127584,7 +127980,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 270
+        "line": 304
       },
       "source": "symbol:agents.bestiary._scaled_copy",
       "target": "symbol:agents.bestiary._ready_v4_vitals",
@@ -127595,7 +127991,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 269
+        "line": 303
       },
       "source": "symbol:agents.bestiary._scaled_copy",
       "target": "symbol:agents.bestiary.apply_encounter_survival",
@@ -127606,7 +128002,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 338
+        "line": 372
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary._infer_tier_from_name",
@@ -127617,7 +128013,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 325
+        "line": 359
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary._ready_v4",
@@ -127628,7 +128024,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 329
+        "line": 363
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary._scaled_copy",
@@ -127639,7 +128035,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 361
+        "line": 395
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary._scaled_copy",
@@ -127650,7 +128046,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 369
+        "line": 403
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary._slug",
@@ -127661,7 +128057,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 310
+        "line": 344
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary.load_bestiary",
@@ -127672,7 +128068,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 327
+        "line": 361
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary.materialize_enemy_concept",
@@ -127683,7 +128079,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 358
+        "line": 392
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary.materialize_enemy_concept",
@@ -127694,7 +128090,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 366
+        "line": 400
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary.materialize_enemy_concept",
@@ -127705,7 +128101,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 322
+        "line": 356
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary.save_enemy",
@@ -127716,7 +128112,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 328
+        "line": 362
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary.save_enemy",
@@ -127727,7 +128123,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 360
+        "line": 394
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.bestiary.save_enemy",
@@ -127738,7 +128134,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 313
+        "line": 347
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:agents.librarian.find_existing_entity",
@@ -127749,7 +128145,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 338
+        "line": 372
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:llm_setup.get_llm",
@@ -127760,7 +128156,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 315
+        "line": 349
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:observability.telemetry.log_event",
@@ -127771,7 +128167,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 320
+        "line": 354
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:observability.telemetry.log_event",
@@ -127782,7 +128178,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 332
+        "line": 366
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:observability.telemetry.log_event",
@@ -127793,7 +128189,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 364
+        "line": 398
       },
       "source": "symbol:agents.bestiary.generate_new_enemy",
       "target": "symbol:observability.telemetry.log_event",
@@ -127804,7 +128200,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 200
+        "line": 202
       },
       "source": "symbol:agents.bestiary.load_bestiary",
       "target": "symbol:agents.bestiary._read_json",
@@ -127859,7 +128255,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 299
+        "line": 333
       },
       "source": "symbol:agents.bestiary.template_by_id",
       "target": "symbol:agents.bestiary._ready_v4",
@@ -127870,7 +128266,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 293
+        "line": 327
       },
       "source": "symbol:agents.bestiary.template_by_id",
       "target": "symbol:agents.bestiary.load_bestiary",
@@ -127881,7 +128277,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/bestiary.py",
-        "line": 300
+        "line": 334
       },
       "source": "symbol:agents.bestiary.template_by_id",
       "target": "symbol:agents.bestiary.materialize_enemy_concept",
@@ -137902,7 +138298,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 663
+        "line": 670
       },
       "source": "symbol:combat_mechanics.abyss_tier",
       "target": "symbol:combat_mechanics.entropy_config",
@@ -137935,7 +138331,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 760
+        "line": 767
       },
       "source": "symbol:combat_mechanics.apply_blood_leak",
       "target": "symbol:combat_mechanics.entropy_config",
@@ -137946,7 +138342,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 492
+        "line": 499
       },
       "source": "symbol:combat_mechanics.apply_condition",
       "target": "symbol:combat_mechanics.is_condition_resisted",
@@ -137957,7 +138353,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 932
+        "line": 939
       },
       "source": "symbol:combat_mechanics.apply_entropy_on_kill",
       "target": "symbol:combat_mechanics.player_passives",
@@ -137968,7 +138364,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 691
+        "line": 698
       },
       "source": "symbol:combat_mechanics.apply_entropy_trigger",
       "target": "symbol:combat_mechanics.entropy_config",
@@ -137979,7 +138375,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 726
+        "line": 733
       },
       "source": "symbol:combat_mechanics.apply_entropy_trigger",
       "target": "symbol:combat_mechanics.player_passives",
@@ -137990,7 +138386,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 847
+        "line": 854
       },
       "source": "symbol:combat_mechanics.apply_scar",
       "target": "symbol:combat_mechanics.entropy_config",
@@ -138001,7 +138397,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 896
+        "line": 903
       },
       "source": "symbol:combat_mechanics.apply_transformacao",
       "target": "symbol:combat_mechanics._abilities_db",
@@ -138012,7 +138408,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 896
+        "line": 903
       },
       "source": "symbol:combat_mechanics.apply_transformacao",
       "target": "symbol:combat_mechanics._branch_of",
@@ -138023,7 +138419,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 893
+        "line": 900
       },
       "source": "symbol:combat_mechanics.apply_transformacao",
       "target": "symbol:combat_mechanics.abyss_tier",
@@ -138034,7 +138430,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 911
+        "line": 918
       },
       "source": "symbol:combat_mechanics.apply_transformacao",
       "target": "symbol:combat_mechanics.apply_condition",
@@ -138045,7 +138441,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 890
+        "line": 897
       },
       "source": "symbol:combat_mechanics.apply_transformacao",
       "target": "symbol:combat_mechanics.entropy_config",
@@ -138056,7 +138452,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 776
+        "line": 783
       },
       "source": "symbol:combat_mechanics.arm_boiler",
       "target": "symbol:combat_mechanics.entropy_config",
@@ -138089,7 +138485,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 956
+        "line": 963
       },
       "source": "symbol:combat_mechanics.check_recidiva",
       "target": "symbol:combat_mechanics._tier_index",
@@ -138100,7 +138496,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 956
+        "line": 963
       },
       "source": "symbol:combat_mechanics.check_recidiva",
       "target": "symbol:combat_mechanics.abyss_tier",
@@ -138111,7 +138507,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 959
+        "line": 966
       },
       "source": "symbol:combat_mechanics.check_recidiva",
       "target": "symbol:combat_mechanics.apply_condition",
@@ -138122,7 +138518,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 952
+        "line": 959
       },
       "source": "symbol:combat_mechanics.check_recidiva",
       "target": "symbol:combat_mechanics.entropy_config",
@@ -138133,7 +138529,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 437
+        "line": 444
       },
       "source": "symbol:combat_mechanics.combat_modifiers",
       "target": "symbol:combat_mechanics.condition_modifiers",
@@ -138144,7 +138540,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 438
+        "line": 445
       },
       "source": "symbol:combat_mechanics.combat_modifiers",
       "target": "symbol:combat_mechanics.passive_modifiers",
@@ -138155,32 +138551,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 1026
+        "line": 1033
       },
       "source": "symbol:combat_mechanics.compute_player_combat_stats",
       "target": "symbol:combat_mechanics._tier_index",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "combat_mechanics.py",
-        "line": 1026
-      },
-      "source": "symbol:combat_mechanics.compute_player_combat_stats",
-      "target": "symbol:combat_mechanics.abyss_tier",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "combat_mechanics.py",
-        "line": 981
-      },
-      "source": "symbol:combat_mechanics.compute_player_combat_stats",
-      "target": "symbol:combat_mechanics.actor_mods",
       "type": "calls"
     },
     {
@@ -138191,7 +138565,7 @@
         "line": 1033
       },
       "source": "symbol:combat_mechanics.compute_player_combat_stats",
-      "target": "symbol:combat_mechanics.condition_modifiers",
+      "target": "symbol:combat_mechanics.abyss_tier",
       "type": "calls"
     },
     {
@@ -138202,7 +138576,7 @@
         "line": 988
       },
       "source": "symbol:combat_mechanics.compute_player_combat_stats",
-      "target": "symbol:combat_mechanics.equipped_ids",
+      "target": "symbol:combat_mechanics.actor_mods",
       "type": "calls"
     },
     {
@@ -138210,10 +138584,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 1005
+        "line": 1040
       },
       "source": "symbol:combat_mechanics.compute_player_combat_stats",
-      "target": "symbol:combat_mechanics.normalize_attr",
+      "target": "symbol:combat_mechanics.condition_modifiers",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "combat_mechanics.py",
+        "line": 995
+      },
+      "source": "symbol:combat_mechanics.compute_player_combat_stats",
+      "target": "symbol:combat_mechanics.equipped_ids",
       "type": "calls"
     },
     {
@@ -138224,6 +138609,17 @@
         "line": 1012
       },
       "source": "symbol:combat_mechanics.compute_player_combat_stats",
+      "target": "symbol:combat_mechanics.normalize_attr",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "combat_mechanics.py",
+        "line": 1019
+      },
+      "source": "symbol:combat_mechanics.compute_player_combat_stats",
       "target": "symbol:combat_mechanics.player_passives",
       "type": "calls"
     },
@@ -138232,7 +138628,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 452
+        "line": 459
       },
       "source": "symbol:combat_mechanics.damage_type_bonus",
       "target": "symbol:combat_mechanics._fold",
@@ -138243,7 +138639,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 456
+        "line": 463
       },
       "source": "symbol:combat_mechanics.damage_type_bonus",
       "target": "symbol:combat_mechanics._fold",
@@ -138254,7 +138650,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 453
+        "line": 460
       },
       "source": "symbol:combat_mechanics.damage_type_bonus",
       "target": "symbol:combat_mechanics.class_passives",
@@ -138265,7 +138661,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 453
+        "line": 460
       },
       "source": "symbol:combat_mechanics.damage_type_bonus",
       "target": "symbol:combat_mechanics.player_passives",
@@ -138276,7 +138672,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 877
+        "line": 884
       },
       "source": "symbol:combat_mechanics.dependencia_cost",
       "target": "symbol:combat_mechanics._tier_index",
@@ -138287,7 +138683,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 877
+        "line": 884
       },
       "source": "symbol:combat_mechanics.dependencia_cost",
       "target": "symbol:combat_mechanics.abyss_tier",
@@ -138298,7 +138694,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 873
+        "line": 880
       },
       "source": "symbol:combat_mechanics.dependencia_cost",
       "target": "symbol:combat_mechanics.entropy_config",
@@ -138309,7 +138705,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 644
+        "line": 651
       },
       "source": "symbol:combat_mechanics.entropy_config",
       "target": "symbol:combat_mechanics._abilities_db",
@@ -138320,7 +138716,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 651
+        "line": 658
       },
       "source": "symbol:combat_mechanics.entropy_config",
       "target": "symbol:combat_mechanics._branch_of",
@@ -138331,7 +138727,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 643
+        "line": 650
       },
       "source": "symbol:combat_mechanics.entropy_config",
       "target": "symbol:combat_mechanics._classes_db",
@@ -138342,7 +138738,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 481
+        "line": 488
       },
       "source": "symbol:combat_mechanics.is_condition_resisted",
       "target": "symbol:combat_mechanics.player_passives",
@@ -138474,7 +138870,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 749
+        "line": 756
       },
       "source": "symbol:combat_mechanics.taunt_aggro_multiplier",
       "target": "symbol:combat_mechanics.entropy_config",
@@ -138485,7 +138881,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 791
+        "line": 798
       },
       "source": "symbol:combat_mechanics.tick_boiler",
       "target": "symbol:combat_mechanics.entropy_config",
@@ -138496,7 +138892,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 796
+        "line": 803
       },
       "source": "symbol:combat_mechanics.tick_boiler",
       "target": "symbol:combat_mechanics.roll_dice_numeric",
@@ -138507,7 +138903,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "combat_mechanics.py",
-        "line": 466
+        "line": 473
       },
       "source": "symbol:combat_mechanics.triggered_passives",
       "target": "symbol:combat_mechanics.learned_passives",
@@ -174587,7 +174983,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 693
+        "line": 700
       },
       "source": "symbol:scripts.migrate_bestiary_v4.infer_archetype",
       "target": "symbol:scripts.migrate_bestiary_v4._has",
@@ -174598,18 +174994,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 697
-      },
-      "source": "symbol:scripts.migrate_bestiary_v4.infer_archetype",
-      "target": "symbol:scripts.migrate_bestiary_v4._has",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/migrate_bestiary_v4.py",
-        "line": 699
+        "line": 704
       },
       "source": "symbol:scripts.migrate_bestiary_v4.infer_archetype",
       "target": "symbol:scripts.migrate_bestiary_v4._has",
@@ -174631,7 +175016,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 708
+        "line": 713
       },
       "source": "symbol:scripts.migrate_bestiary_v4.infer_archetype",
       "target": "symbol:scripts.migrate_bestiary_v4._has",
@@ -174642,7 +175027,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 732
+        "line": 715
       },
       "source": "symbol:scripts.migrate_bestiary_v4.infer_archetype",
       "target": "symbol:scripts.migrate_bestiary_v4._has",
@@ -174653,7 +175038,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 746
+        "line": 739
+      },
+      "source": "symbol:scripts.migrate_bestiary_v4.infer_archetype",
+      "target": "symbol:scripts.migrate_bestiary_v4._has",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/migrate_bestiary_v4.py",
+        "line": 753
       },
       "source": "symbol:scripts.migrate_bestiary_v4.infer_virtudes",
       "target": "symbol:scripts.migrate_bestiary_v4._virt_bucket",
@@ -174664,7 +175060,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 747
+        "line": 754
       },
       "source": "symbol:scripts.migrate_bestiary_v4.infer_virtudes",
       "target": "symbol:scripts.migrate_bestiary_v4._virt_bucket",
@@ -174675,7 +175071,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 748
+        "line": 755
       },
       "source": "symbol:scripts.migrate_bestiary_v4.infer_virtudes",
       "target": "symbol:scripts.migrate_bestiary_v4._virt_bucket",
@@ -174686,7 +175082,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 749
+        "line": 756
       },
       "source": "symbol:scripts.migrate_bestiary_v4.infer_virtudes",
       "target": "symbol:scripts.migrate_bestiary_v4._virt_bucket",
@@ -174697,7 +175093,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 750
+        "line": 757
       },
       "source": "symbol:scripts.migrate_bestiary_v4.infer_virtudes",
       "target": "symbol:scripts.migrate_bestiary_v4._virt_bucket",
@@ -174708,7 +175104,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 1312
+        "line": 1324
       },
       "source": "symbol:scripts.migrate_bestiary_v4.main",
       "target": "symbol:scripts.migrate_bestiary_v4.migrate_creature",
@@ -174719,7 +175115,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 1264
+        "line": 1271
       },
       "source": "symbol:scripts.migrate_bestiary_v4.migrate_creature",
       "target": "symbol:scripts.migrate_bestiary_v4.infer_archetype",
@@ -174730,7 +175126,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 1266
+        "line": 1273
       },
       "source": "symbol:scripts.migrate_bestiary_v4.migrate_creature",
       "target": "symbol:scripts.migrate_bestiary_v4.infer_virtudes",
@@ -174741,7 +175137,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 1291
+        "line": 1303
       },
       "source": "symbol:scripts.migrate_bestiary_v4.migrate_creature",
       "target": "symbol:scripts.migrate_bestiary_v4.theme_cards",
@@ -174752,7 +175148,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 1282
+        "line": 1294
       },
       "source": "symbol:scripts.migrate_bestiary_v4.migrate_creature",
       "target": "symbol:scripts.migrate_bestiary_v4.theme_resist",
@@ -174763,7 +175159,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 772
+        "line": 779
       },
       "source": "symbol:scripts.migrate_bestiary_v4.theme_cards",
       "target": "symbol:scripts.migrate_bestiary_v4._has",
@@ -174774,7 +175170,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/migrate_bestiary_v4.py",
-        "line": 761
+        "line": 768
       },
       "source": "symbol:scripts.migrate_bestiary_v4.theme_resist",
       "target": "symbol:scripts.migrate_bestiary_v4._has",
@@ -192000,7 +192396,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 2000
+        "line": 2038
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:combat_mechanics.apply_entropy_on_kill",
@@ -192011,7 +192407,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1939
+        "line": 1951
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:combat_mechanics.apply_transformacao",
@@ -192022,7 +192418,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 2001
+        "line": 2039
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:combat_mechanics.check_recidiva",
@@ -192033,7 +192429,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1972
+        "line": 2009
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:combat_mechanics.has_control",
@@ -192044,7 +192440,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1918
+        "line": 1930
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:combat_mechanics.reset_entropy_turn",
@@ -192055,7 +192451,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1924
+        "line": 1936
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:combat_mechanics.tick_boiler",
@@ -192066,7 +192462,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1962
+        "line": 1974
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._agility",
@@ -192077,7 +192473,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1961
+        "line": 1973
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._can_act",
@@ -192088,7 +192484,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1967
+        "line": 1994
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._can_act",
@@ -192099,7 +192495,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1978
+        "line": 2003
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._can_act",
@@ -192110,7 +192506,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1977
+        "line": 2015
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator._can_act",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 2014
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._check_terminal",
@@ -192121,7 +192528,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1982
+        "line": 2020
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._expire_stat_conditions",
@@ -192132,7 +192539,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1990
+        "line": 2028
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._expire_stat_conditions",
@@ -192143,7 +192550,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1895
+        "line": 1907
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._find_player",
@@ -192154,7 +192561,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 2006
+        "line": 2044
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._maybe_abyss",
@@ -192165,7 +192572,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1981
+        "line": 1996
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._name",
@@ -192176,7 +192583,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1896
+        "line": 2019
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator._name",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 1908
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._player_id",
@@ -192187,109 +192605,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1930
+        "line": 1942
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_orchestrator._record_class_event",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/conflict_orchestrator.py",
-        "line": 1941
-      },
-      "source": "symbol:services.conflict_orchestrator.run_round",
-      "target": "symbol:services.conflict_orchestrator._record_class_event",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/conflict_orchestrator.py",
-        "line": 2005
-      },
-      "source": "symbol:services.conflict_orchestrator.run_round",
-      "target": "symbol:services.conflict_orchestrator._record_class_event",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/conflict_orchestrator.py",
-        "line": 1883
-      },
-      "source": "symbol:services.conflict_orchestrator.run_round",
-      "target": "symbol:services.conflict_orchestrator._refused_player_item",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/conflict_orchestrator.py",
-        "line": 1989
-      },
-      "source": "symbol:services.conflict_orchestrator.run_round",
-      "target": "symbol:services.conflict_orchestrator._resolve_actor_turn",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/conflict_orchestrator.py",
-        "line": 1993
-      },
-      "source": "symbol:services.conflict_orchestrator.run_round",
-      "target": "symbol:services.conflict_orchestrator._resolve_last_stands",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/conflict_orchestrator.py",
-        "line": 1891
-      },
-      "source": "symbol:services.conflict_orchestrator.run_round",
-      "target": "symbol:services.conflict_orchestrator._stalemate_guard",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/conflict_orchestrator.py",
-        "line": 1976
-      },
-      "source": "symbol:services.conflict_orchestrator.run_round",
-      "target": "symbol:services.conflict_orchestrator._tick_conditions_v4",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/conflict_orchestrator.py",
-        "line": 1986
-      },
-      "source": "symbol:services.conflict_orchestrator.run_round",
-      "target": "symbol:services.conflict_orchestrator.enemy_declaration",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/conflict_orchestrator.py",
-        "line": 1996
-      },
-      "source": "symbol:services.conflict_orchestrator.run_round",
-      "target": "symbol:services.conflict_orchestrator.resolve_terminals",
       "type": "calls"
     },
     {
@@ -192300,6 +192619,138 @@
         "line": 1953
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator._record_class_event",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 2043
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator._record_class_event",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 1895
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator._refused_player_item",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 2000
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator._resolve_actor_turn",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 2027
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator._resolve_actor_turn",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 2031
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator._resolve_last_stands",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 1903
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator._stalemate_guard",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 2013
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator._tick_conditions_v4",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 1997
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator.enemy_declaration",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 2024
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator.enemy_declaration",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 1983
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator.extra_actions",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 2034
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
+      "target": "symbol:services.conflict_orchestrator.resolve_terminals",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/conflict_orchestrator.py",
+        "line": 1965
+      },
+      "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_resolution.roll_initiative_by_side",
       "type": "calls"
     },
@@ -192308,7 +192759,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1890
+        "line": 1902
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_scene.advance_tactical_state",
@@ -192319,7 +192770,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 1899
+        "line": 1911
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
@@ -192330,7 +192781,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_orchestrator.py",
-        "line": 2010
+        "line": 2048
       },
       "source": "symbol:services.conflict_orchestrator.run_round",
       "target": "symbol:services.death_flow.combat_should_end",
@@ -330863,6 +331314,743 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 44
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo._mk",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 65
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo._round",
+      "target": "symbol:services.conflict_orchestrator.run_round",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 57
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo._round",
+      "target": "symbol:services.conflict_scene.freeze",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 54
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo._round",
+      "target": "symbol:services.conflict_scene.new_scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 56
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo._round",
+      "target": "symbol:services.conflict_scene.place",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 61
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo._round",
+      "target": "symbol:services.conflict_turn.TurnDeclaration",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 62
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo._round",
+      "target": "symbol:services.conflict_turn.TurnStep",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 48
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo._round",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 31
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo._split",
+      "target": "symbol:agents.bestiary.load_bestiary",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 32
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo._split",
+      "target": "symbol:combat_mechanics.normalize_categoria",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 33
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo._split",
+      "target": "symbol:combat_mechanics.normalize_categoria",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 156
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_boss_extra_action_acts_twice_and_logs",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 157
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_boss_extra_action_acts_twice_and_logs",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._round",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 109
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_boss_protection_depends_only_on_encounter_level",
+      "target": "symbol:agents.bestiary.template_by_id",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 112
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_boss_protection_depends_only_on_encounter_level",
+      "target": "symbol:agents.bestiary.template_by_id",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 106
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_boss_protection_depends_only_on_encounter_level",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._split",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 120
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_boss_template_keeps_spec287_vitality",
+      "target": "symbol:agents.bestiary.template_by_id",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 118
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_boss_template_keeps_spec287_vitality",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._split",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 193
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_boss_terminal_after_first_action_does_not_act_again",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 202
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_boss_terminal_after_first_action_does_not_act_again",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._round",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 196
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_boss_terminal_after_first_action_does_not_act_again",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_boss_terminal_after_first_action_does_not_act_again.resolve",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 209
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_condition_ticks_once_per_round",
+      "target": "symbol:combat_mechanics.apply_condition",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 208
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_condition_ticks_once_per_round",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 211
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_condition_ticks_once_per_round",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._round",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 163
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_extra_action_comes_after_everyone",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 164
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_extra_action_comes_after_everyone",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._round",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 148
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_extra_actions_defaults_and_bad_values",
+      "target": "symbol:services.conflict_orchestrator.extra_actions",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 149
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_extra_actions_defaults_and_bad_values",
+      "target": "symbol:services.conflict_orchestrator.extra_actions",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 150
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_extra_actions_defaults_and_bad_values",
+      "target": "symbol:services.conflict_orchestrator.extra_actions",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 151
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_extra_actions_defaults_and_bad_values",
+      "target": "symbol:services.conflict_orchestrator.extra_actions",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 152
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_extra_actions_defaults_and_bad_values",
+      "target": "symbol:services.conflict_orchestrator.extra_actions",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 178
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_extra_actions_only_for_enemy_side",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 177
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_extra_actions_only_for_enemy_side",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 179
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_extra_actions_only_for_enemy_side",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 179
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_extra_actions_only_for_enemy_side",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._round",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 84
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_generator_is_idempotent_for_boss_fields",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._generator",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 85
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_generator_is_idempotent_for_boss_fields",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._split",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 73
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_generator_sets_boss_fields_only_on_chefe",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._generator",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 74
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_generator_sets_boss_fields_only_on_chefe",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._split",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 246
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_invalid_survival_field_keeps_boss_actions_and_protection",
+      "target": "symbol:agents.bestiary.apply_encounter_survival",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 97
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_materialized_llm_boss_gets_actions",
+      "target": "symbol:agents.bestiary.materialize_enemy_concept",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 99
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_materialized_llm_boss_gets_actions",
+      "target": "symbol:agents.bestiary.materialize_enemy_concept",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 134
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_natural_protection_absorbs_hit_but_not_dot",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 127
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_natural_protection_counts_as_protection_modifier",
+      "target": "symbol:combat_mechanics.combat_modifiers",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 128
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_natural_protection_counts_as_protection_modifier",
+      "target": "symbol:combat_mechanics.combat_modifiers",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 126
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_natural_protection_counts_as_protection_modifier",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 128
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_natural_protection_counts_as_protection_modifier",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 171
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_non_boss_acts_once",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 171
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_non_boss_acts_once",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._round",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 224
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_old_save_enemy_without_new_fields_acts_once",
+      "target": "symbol:combat_mechanics.combat_modifiers",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 220
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_old_save_enemy_without_new_fields_acts_once",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 222
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_old_save_enemy_without_new_fields_acts_once",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._round",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 143
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_player_ignores_natural_protection_field",
+      "target": "symbol:combat_mechanics.combat_modifiers",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 142
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_player_ignores_natural_protection_field",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 93
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_runtime_default_matches_generator",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._generator",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 230
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome",
+      "target": "symbol:agents.bestiary.template_by_id",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 231
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 232
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._round",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 229
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._split",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 228
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome",
+      "target": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome.run",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 230
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome.run",
+      "target": "symbol:agents.bestiary.template_by_id",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 231
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome.run",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 232
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome.run",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._round",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 229
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome.run",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._split",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 185
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_stun_denies_all_boss_actions",
+      "target": "symbol:combat_mechanics.apply_condition",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 184
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_stun_denies_all_boss_actions",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec295_chefe_no_topo.py",
+        "line": 186
+      },
+      "source": "symbol:tests.test_spec295_chefe_no_topo.test_stun_denies_all_boss_actions",
+      "target": "symbol:tests.test_spec295_chefe_no_topo._round",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec_index.py",
         "line": 49
       },
@@ -348469,6 +349657,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/test_spec295_chefe_no_topo.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/test_spec_index.py",
       "kind": "file",
       "line": 1,
@@ -354538,6 +355733,13 @@
       "qualified_name": "tests.test_spec294_followups"
     },
     {
+      "id": "module:tests.test_spec295_chefe_no_topo",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo"
+    },
+    {
       "id": "module:tests.test_spec_index",
       "kind": "module",
       "line": 1,
@@ -355002,14 +356204,14 @@
     {
       "id": "symbol:agents.bestiary._infer_tier_from_name",
       "kind": "function",
-      "line": 225,
+      "line": 227,
       "path": "agents/bestiary.py",
       "qualified_name": "agents.bestiary._infer_tier_from_name"
     },
     {
       "id": "symbol:agents.bestiary._overlay_path",
       "kind": "function",
-      "line": 173,
+      "line": 175,
       "path": "agents/bestiary.py",
       "qualified_name": "agents.bestiary._overlay_path"
     },
@@ -355023,28 +356225,28 @@
     {
       "id": "symbol:agents.bestiary._read_json",
       "kind": "function",
-      "line": 179,
+      "line": 181,
       "path": "agents/bestiary.py",
       "qualified_name": "agents.bestiary._read_json"
     },
     {
       "id": "symbol:agents.bestiary._ready_v4",
       "kind": "function",
-      "line": 280,
+      "line": 314,
       "path": "agents/bestiary.py",
       "qualified_name": "agents.bestiary._ready_v4"
     },
     {
       "id": "symbol:agents.bestiary._ready_v4_vitals",
       "kind": "function",
-      "line": 273,
+      "line": 307,
       "path": "agents/bestiary.py",
       "qualified_name": "agents.bestiary._ready_v4_vitals"
     },
     {
       "id": "symbol:agents.bestiary._scaled_copy",
       "kind": "function",
-      "line": 266,
+      "line": 300,
       "path": "agents/bestiary.py",
       "qualified_name": "agents.bestiary._scaled_copy"
     },
@@ -355058,21 +356260,21 @@
     {
       "id": "symbol:agents.bestiary.apply_encounter_survival",
       "kind": "function",
-      "line": 244,
+      "line": 263,
       "path": "agents/bestiary.py",
       "qualified_name": "agents.bestiary.apply_encounter_survival"
     },
     {
       "id": "symbol:agents.bestiary.generate_new_enemy",
       "kind": "function",
-      "line": 305,
+      "line": 339,
       "path": "agents/bestiary.py",
       "qualified_name": "agents.bestiary.generate_new_enemy"
     },
     {
       "id": "symbol:agents.bestiary.load_bestiary",
       "kind": "function",
-      "line": 190,
+      "line": 192,
       "path": "agents/bestiary.py",
       "qualified_name": "agents.bestiary.load_bestiary"
     },
@@ -355086,14 +356288,14 @@
     {
       "id": "symbol:agents.bestiary.save_enemy",
       "kind": "function",
-      "line": 203,
+      "line": 205,
       "path": "agents/bestiary.py",
       "qualified_name": "agents.bestiary.save_enemy"
     },
     {
       "id": "symbol:agents.bestiary.template_by_id",
       "kind": "function",
-      "line": 290,
+      "line": 324,
       "path": "agents/bestiary.py",
       "qualified_name": "agents.bestiary.template_by_id"
     },
@@ -357844,14 +359046,14 @@
     {
       "id": "symbol:combat_mechanics._abilities_db",
       "kind": "function",
-      "line": 617,
+      "line": 624,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics._abilities_db"
     },
     {
       "id": "symbol:combat_mechanics._branch_of",
       "kind": "function",
-      "line": 629,
+      "line": 636,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics._branch_of"
     },
@@ -357865,21 +359067,21 @@
     {
       "id": "symbol:combat_mechanics._classes_db",
       "kind": "function",
-      "line": 625,
+      "line": 632,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics._classes_db"
     },
     {
       "id": "symbol:combat_mechanics._condition_from_effect",
       "kind": "function",
-      "line": 1049,
+      "line": 1056,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics._condition_from_effect"
     },
     {
       "id": "symbol:combat_mechanics._fold",
       "kind": "function",
-      "line": 442,
+      "line": 449,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics._fold"
     },
@@ -357893,7 +359095,7 @@
     {
       "id": "symbol:combat_mechanics._tier_index",
       "kind": "function",
-      "line": 675,
+      "line": 682,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics._tier_index"
     },
@@ -357907,7 +359109,7 @@
     {
       "id": "symbol:combat_mechanics.abyss_tier",
       "kind": "function",
-      "line": 660,
+      "line": 667,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.abyss_tier"
     },
@@ -357921,49 +359123,49 @@
     {
       "id": "symbol:combat_mechanics.apply_blood_leak",
       "kind": "function",
-      "line": 757,
+      "line": 764,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.apply_blood_leak"
     },
     {
       "id": "symbol:combat_mechanics.apply_condition",
       "kind": "function",
-      "line": 487,
+      "line": 494,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.apply_condition"
     },
     {
       "id": "symbol:combat_mechanics.apply_entropy_on_kill",
       "kind": "function",
-      "line": 921,
+      "line": 928,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.apply_entropy_on_kill"
     },
     {
       "id": "symbol:combat_mechanics.apply_entropy_trigger",
       "kind": "function",
-      "line": 684,
+      "line": 691,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.apply_entropy_trigger"
     },
     {
       "id": "symbol:combat_mechanics.apply_scar",
       "kind": "function",
-      "line": 842,
+      "line": 849,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.apply_scar"
     },
     {
       "id": "symbol:combat_mechanics.apply_transformacao",
       "kind": "function",
-      "line": 885,
+      "line": 892,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.apply_transformacao"
     },
     {
       "id": "symbol:combat_mechanics.arm_boiler",
       "kind": "function",
-      "line": 774,
+      "line": 781,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.arm_boiler"
     },
@@ -357977,7 +359179,7 @@
     {
       "id": "symbol:combat_mechanics.check_recidiva",
       "kind": "function",
-      "line": 946,
+      "line": 953,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.check_recidiva"
     },
@@ -357991,14 +359193,14 @@
     {
       "id": "symbol:combat_mechanics.combat_modifiers",
       "kind": "function",
-      "line": 433,
+      "line": 440,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.combat_modifiers"
     },
     {
       "id": "symbol:combat_mechanics.compute_player_combat_stats",
       "kind": "function",
-      "line": 977,
+      "line": 984,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.compute_player_combat_stats"
     },
@@ -358012,14 +359214,14 @@
     {
       "id": "symbol:combat_mechanics.damage_type_bonus",
       "kind": "function",
-      "line": 449,
+      "line": 456,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.damage_type_bonus"
     },
     {
       "id": "symbol:combat_mechanics.dependencia_cost",
       "kind": "function",
-      "line": 868,
+      "line": 875,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.dependencia_cost"
     },
@@ -358033,7 +359235,7 @@
     {
       "id": "symbol:combat_mechanics.entropy_config",
       "kind": "function",
-      "line": 640,
+      "line": 647,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.entropy_config"
     },
@@ -358054,14 +359256,14 @@
     {
       "id": "symbol:combat_mechanics.has_control",
       "kind": "function",
-      "line": 469,
+      "line": 476,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.has_control"
     },
     {
       "id": "symbol:combat_mechanics.is_condition_resisted",
       "kind": "function",
-      "line": 474,
+      "line": 481,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.is_condition_resisted"
     },
@@ -358089,7 +359291,7 @@
     {
       "id": "symbol:combat_mechanics.normalize_categoria",
       "kind": "function",
-      "line": 1100,
+      "line": 1107,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.normalize_categoria"
     },
@@ -358117,14 +359319,14 @@
     {
       "id": "symbol:combat_mechanics.reduce_ally_abyss",
       "kind": "function",
-      "line": 825,
+      "line": 832,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.reduce_ally_abyss"
     },
     {
       "id": "symbol:combat_mechanics.reset_entropy_turn",
       "kind": "function",
-      "line": 679,
+      "line": 686,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.reset_entropy_turn"
     },
@@ -358138,28 +359340,28 @@
     {
       "id": "symbol:combat_mechanics.taunt_aggro_multiplier",
       "kind": "function",
-      "line": 747,
+      "line": 754,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.taunt_aggro_multiplier"
     },
     {
       "id": "symbol:combat_mechanics.tick_boiler",
       "kind": "function",
-      "line": 785,
+      "line": 792,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.tick_boiler"
     },
     {
       "id": "symbol:combat_mechanics.tick_conditions",
       "kind": "function",
-      "line": 506,
+      "line": 513,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.tick_conditions"
     },
     {
       "id": "symbol:combat_mechanics.triggered_passives",
       "kind": "function",
-      "line": 464,
+      "line": 471,
       "path": "combat_mechanics.py",
       "qualified_name": "combat_mechanics.triggered_passives"
     },
@@ -370955,77 +372157,77 @@
     {
       "id": "symbol:scripts.migrate_bestiary_v4.P",
       "kind": "function",
-      "line": 425,
+      "line": 432,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4.P"
     },
     {
       "id": "symbol:scripts.migrate_bestiary_v4._build_new_creatures",
       "kind": "function",
-      "line": 1211,
+      "line": 1218,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4._build_new_creatures"
     },
     {
       "id": "symbol:scripts.migrate_bestiary_v4._ecard",
       "kind": "function",
-      "line": 55,
+      "line": 62,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4._ecard"
     },
     {
       "id": "symbol:scripts.migrate_bestiary_v4._has",
       "kind": "function",
-      "line": 683,
+      "line": 690,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4._has"
     },
     {
       "id": "symbol:scripts.migrate_bestiary_v4._virt_bucket",
       "kind": "function",
-      "line": 738,
+      "line": 745,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4._virt_bucket"
     },
     {
       "id": "symbol:scripts.migrate_bestiary_v4.infer_archetype",
       "kind": "function",
-      "line": 688,
+      "line": 695,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4.infer_archetype"
     },
     {
       "id": "symbol:scripts.migrate_bestiary_v4.infer_virtudes",
       "kind": "function",
-      "line": 743,
+      "line": 750,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4.infer_virtudes"
     },
     {
       "id": "symbol:scripts.migrate_bestiary_v4.main",
       "kind": "function",
-      "line": 1299,
+      "line": 1311,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4.main"
     },
     {
       "id": "symbol:scripts.migrate_bestiary_v4.migrate_creature",
       "kind": "function",
-      "line": 1255,
+      "line": 1262,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4.migrate_creature"
     },
     {
       "id": "symbol:scripts.migrate_bestiary_v4.theme_cards",
       "kind": "function",
-      "line": 771,
+      "line": 778,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4.theme_cards"
     },
     {
       "id": "symbol:scripts.migrate_bestiary_v4.theme_resist",
       "kind": "function",
-      "line": 758,
+      "line": 765,
       "path": "scripts/migrate_bestiary_v4.py",
       "qualified_name": "scripts.migrate_bestiary_v4.theme_resist"
     },
@@ -376154,6 +377356,13 @@
       "qualified_name": "services.conflict_orchestrator.ensure_combat_sheet"
     },
     {
+      "id": "symbol:services.conflict_orchestrator.extra_actions",
+      "kind": "function",
+      "line": 1841,
+      "path": "services/conflict_orchestrator.py",
+      "qualified_name": "services.conflict_orchestrator.extra_actions"
+    },
+    {
       "id": "symbol:services.conflict_orchestrator.resolve_terminals",
       "kind": "function",
       "line": 1513,
@@ -376163,7 +377372,7 @@
     {
       "id": "symbol:services.conflict_orchestrator.run_round",
       "kind": "function",
-      "line": 1841,
+      "line": 1853,
       "path": "services/conflict_orchestrator.py",
       "qualified_name": "services.conflict_orchestrator.run_round"
     },
@@ -421311,6 +422520,188 @@
       "qualified_name": "tests.test_spec294_followups.test_save_sem_inimigos_sem_copia"
     },
     {
+      "id": "symbol:tests.test_spec295_chefe_no_topo._generator",
+      "kind": "test",
+      "line": 21,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo._generator"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo._mk",
+      "kind": "test",
+      "line": 37,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo._mk"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo._round",
+      "kind": "test",
+      "line": 47,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo._round"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo._split",
+      "kind": "test",
+      "line": 30,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo._split"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_boss_extra_action_acts_twice_and_logs",
+      "kind": "test",
+      "line": 155,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_boss_extra_action_acts_twice_and_logs"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_boss_protection_depends_only_on_encounter_level",
+      "kind": "test",
+      "line": 105,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_boss_protection_depends_only_on_encounter_level"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_boss_template_keeps_spec287_vitality",
+      "kind": "test",
+      "line": 116,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_boss_template_keeps_spec287_vitality"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_boss_terminal_after_first_action_does_not_act_again",
+      "kind": "test",
+      "line": 190,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_boss_terminal_after_first_action_does_not_act_again"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_boss_terminal_after_first_action_does_not_act_again.resolve",
+      "kind": "test",
+      "line": 196,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_boss_terminal_after_first_action_does_not_act_again.resolve"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_condition_ticks_once_per_round",
+      "kind": "test",
+      "line": 207,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_condition_ticks_once_per_round"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_extra_action_comes_after_everyone",
+      "kind": "test",
+      "line": 162,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_extra_action_comes_after_everyone"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_extra_actions_defaults_and_bad_values",
+      "kind": "test",
+      "line": 147,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_extra_actions_defaults_and_bad_values"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_extra_actions_only_for_enemy_side",
+      "kind": "test",
+      "line": 176,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_extra_actions_only_for_enemy_side"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_generator_is_idempotent_for_boss_fields",
+      "kind": "test",
+      "line": 83,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_generator_is_idempotent_for_boss_fields"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_generator_sets_boss_fields_only_on_chefe",
+      "kind": "test",
+      "line": 72,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_generator_sets_boss_fields_only_on_chefe"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_invalid_survival_field_keeps_boss_actions_and_protection",
+      "kind": "test",
+      "line": 238,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_invalid_survival_field_keeps_boss_actions_and_protection"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_materialized_llm_boss_gets_actions",
+      "kind": "test",
+      "line": 96,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_materialized_llm_boss_gets_actions"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_natural_protection_absorbs_hit_but_not_dot",
+      "kind": "test",
+      "line": 131,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_natural_protection_absorbs_hit_but_not_dot"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_natural_protection_counts_as_protection_modifier",
+      "kind": "test",
+      "line": 125,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_natural_protection_counts_as_protection_modifier"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_non_boss_acts_once",
+      "kind": "test",
+      "line": 170,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_non_boss_acts_once"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_old_save_enemy_without_new_fields_acts_once",
+      "kind": "test",
+      "line": 218,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_old_save_enemy_without_new_fields_acts_once"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_player_ignores_natural_protection_field",
+      "kind": "test",
+      "line": 141,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_player_ignores_natural_protection_field"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_runtime_default_matches_generator",
+      "kind": "test",
+      "line": 92,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_runtime_default_matches_generator"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome",
+      "kind": "test",
+      "line": 227,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome.run",
+      "kind": "test",
+      "line": 228,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome.run"
+    },
+    {
+      "id": "symbol:tests.test_spec295_chefe_no_topo.test_stun_denies_all_boss_actions",
+      "kind": "test",
+      "line": 183,
+      "path": "tests/test_spec295_chefe_no_topo.py",
+      "qualified_name": "tests.test_spec295_chefe_no_topo.test_stun_denies_all_boss_actions"
+    },
+    {
       "id": "symbol:tests.test_spec_index._apply",
       "kind": "test",
       "line": 47,
@@ -425127,5 +426518,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:32f2c5f7e6bbb3348c3f07277be5ef1ca369107d07e86a5e0d4b90d7aa677ea2"
+  "source_tree_hash": "sha256:8d31663adfc9fc0073147c4ccf32844c7e912c9c1aded117774c7a8fdd8605fd"
 }
