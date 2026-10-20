@@ -45,6 +45,13 @@ CORPO_FLOOR = {"lacaio": 0, "padrao": 2, "elite": 3, "chefe": 4, "nomeado": 3}
 # `agents.bestiary.apply_encounter_survival`). O Nível do Encontro é perigo
 # absoluto (§5.1), nunca o nível da party. [BALANCEAR]
 SOBREVIVENCIA_POR_NIVEL_ENCONTRO = {"chefe": 12, "nomeado": 12}
+# SPEC-295 (K2, "Chefe no topo"): ações por rodada do Chefe/Nomeado. A 2ª ação
+# entra no fim da rodada (`services.conflict_orchestrator.run_round`); tick de
+# condição e stun valem uma vez por rodada. Fixo por categoria, nunca pelo nível
+# da party. [BALANCEAR] 2 é o menor valor que tira o Chefe de baixo do Elite: com
+# 1 ação ele fica 10–30 pp abaixo em todo nível; 3 ações estouram o teto de
+# Elite + 20 pp nos níveis 1–2 (SPEC-295 §8).
+ACOES_POR_RODADA = {"chefe": 2, "nomeado": 2}
 
 
 # ==========================================================================
@@ -1278,6 +1285,11 @@ def migrate_creature(cre) -> dict:
         cre["vitalidade_por_nivel_encontro"] = survival
     else:
         cre.pop("vitalidade_por_nivel_encontro", None)
+    actions = ACOES_POR_RODADA.get(categoria)
+    if actions:
+        cre["acoes_por_rodada"] = actions
+    else:
+        cre.pop("acoes_por_rodada", None)
 
     res = theme_resist(name)
     for damage_type, source in (cre.get("resistances_autorais") or {}).items():

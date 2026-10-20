@@ -427,6 +427,13 @@ def passive_modifiers(entity: dict) -> dict[str, int]:
                 out[stat] += int(pe.get("per_tier", 1) or 1) * _tier_index(abyss_tier(entity))
         except (TypeError, ValueError):
             continue
+    if not entity.get("is_player"):
+        # SPEC-295: Proteção natural do Chefe pelo Nível do Encontro, gravada na
+        # ficha por `agents.bestiary.apply_encounter_survival`. Ausente = 0.
+        try:
+            out["protection"] += max(0, int(entity.get("protecao_natural") or 0))
+        except (TypeError, ValueError):
+            pass
     return out
 
 

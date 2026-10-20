@@ -1838,6 +1838,16 @@ def _stalemate_guard(
     return events
 
 
+def extra_actions(actor: dict) -> int:
+    """SPEC-295 (K2): ações além da primeira na rodada (`acoes_por_rodada` − 1).
+
+    Só ficha de inimigo traz o campo; ausente (saves antigos) = 1 ação."""
+    try:
+        return max(0, int(actor.get("acoes_por_rodada") or 1) - 1)
+    except (TypeError, ValueError):
+        return 0
+
+
 def run_round(
     scene: dict,
     actors_by_id: dict[str, dict],
@@ -1961,10 +1971,35 @@ def run_round(
         members = [aid for aid in side_ids.get(side, []) if _can_act(actors_by_id.get(aid, {}))]
         members.sort(key=lambda aid: (-_agility(actors_by_id[aid]), str(aid)))
         seq += members
+    # SPEC-295 (K2): ações extras do Chefe entram no FIM da rodada, depois de todos.
+    # Tick de condição, stun e expiração de buffs acontecem só na 1ª ação.
+    first_turn = set(seq)
+    extra = [
+        aid
+        for aid in sides.get("enemy", [])
+        if aid in first_turn
+        for _ in range(extra_actions(actors_by_id.get(aid) or {}))
+    ]
+    seq += extra
+    denied: set[str] = set()
+    acted: set[str] = set()
 
     for actor_id in seq:
         actor = actors_by_id.get(actor_id)
+        if actor_id in acted:
+            # Ação extra: só se a 1ª não foi negada e o ator segue de pé. Stun
+            # aplicado no meio da rodada vale para a próxima, como para todos.
+            if actor is None or not _can_act(actor) or actor_id in denied:
+                continue
+            out["logs"].append(f"{_name(actor)} age de novo.")
+            decl = enemy_declaration(
+                scene, actor_id, actors_by_id, sides, scene_state=scene_state, rng=rng
+            )
+            _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
+            continue
+        acted.add(actor_id)
         if actor is None or not _can_act(actor):
+            denied.add(actor_id)
             continue
         # Controle é observado ANTES do tick: duration=1 precisa negar exatamente
         # esta ação e só então expirar. O fluxo anterior removia stun/sleep antes
@@ -1978,6 +2013,7 @@ def run_round(
         if not _can_act(actor):
             continue
         if stunned_this_turn:
+            denied.add(actor_id)
             out["logs"].append(f"{_name(actor)} está atordoado e perde o turno.")
             _expire_stat_conditions(actor, present_at_start, out)
             continue

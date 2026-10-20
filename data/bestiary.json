@@ -2186,7 +2186,8 @@
         }
       ]
     },
-    "vitalidade_por_nivel_encontro": 12
+    "vitalidade_por_nivel_encontro": 12,
+    "acoes_por_rodada": 2
   },
   "enemy_boss_vibora": {
     "id": "enemy_boss_vibora",
@@ -2351,7 +2352,8 @@
         }
       ]
     },
-    "vitalidade_por_nivel_encontro": 12
+    "vitalidade_por_nivel_encontro": 12,
+    "acoes_por_rodada": 2
   },
   "enemy_boss_general_escorpiao": {
     "id": "enemy_boss_general_escorpiao",
@@ -2513,7 +2515,8 @@
         }
       ]
     },
-    "vitalidade_por_nivel_encontro": 12
+    "vitalidade_por_nivel_encontro": 12,
+    "acoes_por_rodada": 2
   },
   "enemy_boss_arauto_nevoa": {
     "id": "enemy_boss_arauto_nevoa",
@@ -2677,7 +2680,8 @@
         }
       ]
     },
-    "vitalidade_por_nivel_encontro": 12
+    "vitalidade_por_nivel_encontro": 12,
+    "acoes_por_rodada": 2
   },
   "enemy_gigante_gelo_norte": {
     "id": "enemy_gigante_gelo_norte",
@@ -2843,7 +2847,8 @@
         }
       ]
     },
-    "vitalidade_por_nivel_encontro": 12
+    "vitalidade_por_nivel_encontro": 12,
+    "acoes_por_rodada": 2
   },
   "enemy_mimico_bau": {
     "id": "enemy_mimico_bau",
@@ -4696,7 +4701,8 @@
         }
       ]
     },
-    "vitalidade_por_nivel_encontro": 12
+    "vitalidade_por_nivel_encontro": 12,
+    "acoes_por_rodada": 2
   },
   "enemy_lobo_sombrio": {
     "name": "Lobo Sombrio",
@@ -5061,7 +5067,8 @@
         }
       ]
     },
-    "vitalidade_por_nivel_encontro": 12
+    "vitalidade_por_nivel_encontro": 12,
+    "acoes_por_rodada": 2
   },
   "enemy_goblin": {
     "name": "Goblin",
@@ -5380,7 +5387,8 @@
         }
       ]
     },
-    "vitalidade_por_nivel_encontro": 12
+    "vitalidade_por_nivel_encontro": 12,
+    "acoes_por_rodada": 2
   },
   "mon_lobo_de_vidro": {
     "id": "mon_lobo_de_vidro",
@@ -7427,7 +7435,8 @@
         }
       ]
     },
-    "vitalidade_por_nivel_encontro": 12
+    "vitalidade_por_nivel_encontro": 12,
+    "acoes_por_rodada": 2
   },
   "enemy_pirata_brekmar": {
     "id": "enemy_pirata_brekmar",
@@ -11491,6 +11500,7 @@
       "critico": []
     },
     "vitalidade_por_nivel_encontro": 12,
+    "acoes_por_rodada": 2,
     "resistances": {},
     "vulnerabilities": [],
     "immunities": [],
@@ -11581,6 +11591,7 @@
       "critico": []
     },
     "vitalidade_por_nivel_encontro": 12,
+    "acoes_por_rodada": 2,
     "resistances": {},
     "vulnerabilities": [],
     "immunities": [],
@@ -11671,6 +11682,7 @@
       "critico": []
     },
     "vitalidade_por_nivel_encontro": 12,
+    "acoes_por_rodada": 2,
     "resistances": {},
     "vulnerabilities": [],
     "immunities": [],
@@ -11761,6 +11773,7 @@
       "critico": []
     },
     "vitalidade_por_nivel_encontro": 12,
+    "acoes_por_rodada": 2,
     "resistances": {},
     "vulnerabilities": [],
     "immunities": [],

@@ -162,6 +162,8 @@ def materialize_enemy_concept(concept: dict | EnemySchema, *, encounter_level: i
     }
     if category in DEFAULT_SURVIVAL_PER_LEVEL:  # SPEC-290
         data["vitalidade_por_nivel_encontro"] = DEFAULT_SURVIVAL_PER_LEVEL[category]
+    if category in DEFAULT_ACTIONS_PER_ROUND:  # SPEC-295
+        data["acoes_por_rodada"] = DEFAULT_ACTIONS_PER_ROUND[category]
     return data
 
 
@@ -240,18 +242,38 @@ ENCOUNTER_SURVIVAL_MAX_STEPS = 2
 # (Chefe gerado pelo LLM, overlay runtime antigo). Espelha o gerador oficial.
 DEFAULT_SURVIVAL_PER_LEVEL = {"chefe": 12, "nomeado": 12}
 
+# SPEC-295 (K2): ações por rodada do Chefe/Nomeado quando a ficha não traz o
+# campo (Chefe gerado pelo LLM, overlay antigo). Espelha `ACOES_POR_RODADA` do
+# gerador oficial.
+DEFAULT_ACTIONS_PER_ROUND = {"chefe": 2, "nomeado": 2}
+
+# SPEC-295: Proteção natural do Chefe/Nomeado por Nível do Encontro (perigo
+# absoluto, §5.1 — nunca o nível da party). Absorve dano por golpe como a
+# Proteção de Carta; DoT e auto-dano passam (`bypass_armor`). Ausente = 0.
+# [BALANCEAR] Com 2 ações por rodada, a arena da SPEC-285 (10 seeds) fecha
+# `Chefe > Elite + 3 pp` em toda célula, exceto no Nível do Encontro 1 com o bot
+# `basico` (níveis 1–2: −1,3/−2,5 pp) e no Nível 3 com o bot `cartas` (nível 6:
+# +2,4 pp). 2 no Nível 1 e 1 no Nível 3 são os menores valores com folga ≥ 1 pp
+# sobre a barra de 3 pp (Proteção 1 no Nível 1 deixa 0,1 pp no nível 2 `basico`).
+# Nos Níveis 2 e 4 qualquer Proteção é dispensável, e no 2 estoura o teto de
+# Elite + 20 pp (nível 4 `cartas`). Tabela e sondas: SPEC-295 §8.
+CHEFE_PROTECAO_POR_NIVEL_ENCONTRO = {1: 2, 3: 1}
+
 
 def apply_encounter_survival(data: dict, encounter_level: int) -> dict:
     """SPEC-287: soma `vitalidade_por_nivel_encontro` × min(2, Nível do Encontro − 2).
 
     O campo vem do gerador oficial (`scripts/migrate_bestiary_v4.py`) e só existe
-    em Chefe/Nomeado. Muda a cópia recebida (nunca o bestiário em memória)."""
+    em Chefe/Nomeado. Muda a cópia recebida (nunca o bestiário em memória).
+    SPEC-295: no Chefe/Nomeado também grava `protecao_natural` pelo Nível do
+    Encontro e o default de `acoes_por_rodada` quando a ficha não o traz."""
+    from combat_mechanics import normalize_categoria
+
     try:
+        categoria = normalize_categoria(data)
         per_level = data.get("vitalidade_por_nivel_encontro")
         if per_level is None:
-            from combat_mechanics import normalize_categoria
-
-            per_level = DEFAULT_SURVIVAL_PER_LEVEL.get(normalize_categoria(data), 0)
+            per_level = DEFAULT_SURVIVAL_PER_LEVEL.get(categoria, 0)
         per_level = int(per_level or 0)
         level = int(encounter_level or 1)
     except (TypeError, ValueError):
@@ -260,6 +282,13 @@ def apply_encounter_survival(data: dict, encounter_level: int) -> dict:
     bonus = max(0, per_level) * steps
     if bonus:
         data["max_vitalidade"] = int(data.get("max_vitalidade") or 0) + bonus
+    if categoria in DEFAULT_ACTIONS_PER_ROUND:
+        data.setdefault("acoes_por_rodada", DEFAULT_ACTIONS_PER_ROUND[categoria])
+        protection = CHEFE_PROTECAO_POR_NIVEL_ENCONTRO.get(level, 0)
+        if protection:
+            data["protecao_natural"] = protection
+        else:
+            data.pop("protecao_natural", None)
     return data
 
 
