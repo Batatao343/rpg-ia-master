@@ -1,5 +1,5 @@
 {
-  "commit_sha": "e861ea7e04e406e12ea85a67c2adae8ad7b238cf",
+  "commit_sha": "4b898c6ce2caf3404322df6bf88228e04fa33343",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -18339,6 +18339,94 @@
       "type": "contains"
     },
     {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 10
+      },
+      "source": "file:tests/test_spec294_followups.py",
+      "target": "file:api.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 11
+      },
+      "source": "file:tests/test_spec294_followups.py",
+      "target": "file:gamedata.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 12
+      },
+      "source": "file:tests/test_spec294_followups.py",
+      "target": "file:persistence.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 13
+      },
+      "source": "file:tests/test_spec294_followups.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 14
+      },
+      "source": "file:tests/test_spec294_followups.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 15
+      },
+      "source": "file:tests/test_spec294_followups.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 16
+      },
+      "source": "file:tests/test_spec294_followups.py",
+      "target": "file:world_utils.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 1
+      },
+      "source": "file:tests/test_spec294_followups.py",
+      "target": "module:tests.test_spec294_followups",
+      "type": "contains"
+    },
+    {
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
@@ -35470,21 +35558,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 23
-      },
-      "source": "module:persistence",
-      "target": "module:gamedata",
-      "type": "imports"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "persistence.py",
         "line": 24
       },
       "source": "module:persistence",
-      "target": "module:observability.telemetry",
+      "target": "module:gamedata",
       "type": "imports"
     },
     {
@@ -35506,7 +35583,7 @@
         "line": 26
       },
       "source": "module:persistence",
-      "target": "module:services.audit_trace",
+      "target": "module:observability.telemetry",
       "type": "imports"
     },
     {
@@ -35517,7 +35594,7 @@
         "line": 27
       },
       "source": "module:persistence",
-      "target": "module:services.conflict_summary",
+      "target": "module:services.audit_trace",
       "type": "imports"
     },
     {
@@ -35525,10 +35602,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 31
+        "line": 28
       },
       "source": "module:persistence",
-      "target": "module:services.entity_identity",
+      "target": "module:services.conflict_summary",
       "type": "imports"
     },
     {
@@ -35539,7 +35616,7 @@
         "line": 32
       },
       "source": "module:persistence",
-      "target": "module:services.memory_provenance",
+      "target": "module:services.entity_identity",
       "type": "imports"
     },
     {
@@ -35547,10 +35624,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 38
+        "line": 33
       },
       "source": "module:persistence",
-      "target": "module:services.memory_retry",
+      "target": "module:services.memory_provenance",
       "type": "imports"
     },
     {
@@ -35561,6 +35638,17 @@
         "line": 39
       },
       "source": "module:persistence",
+      "target": "module:services.memory_retry",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "persistence.py",
+        "line": 40
+      },
+      "source": "module:persistence",
       "target": "module:services.memory_summary",
       "type": "imports"
     },
@@ -35569,7 +35657,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 269
+        "line": 270
       },
       "source": "module:persistence",
       "target": "symbol:persistence.IncompatibleSaveError",
@@ -35580,7 +35668,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 485
+        "line": 486
       },
       "source": "module:persistence",
       "target": "symbol:persistence._atomic_replace_directory",
@@ -35591,7 +35679,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 599
+        "line": 600
       },
       "source": "module:persistence",
       "target": "symbol:persistence._atomic_write_json",
@@ -35602,7 +35690,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 331
+        "line": 332
       },
       "source": "module:persistence",
       "target": "symbol:persistence._deserialize_messages",
@@ -35613,7 +35701,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 277
+        "line": 278
       },
       "source": "module:persistence",
       "target": "symbol:persistence._game_ref",
@@ -35624,7 +35712,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 373
+        "line": 374
       },
       "source": "module:persistence",
       "target": "symbol:persistence._iter_live_save_files",
@@ -35635,7 +35723,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 626
+        "line": 627
       },
       "source": "module:persistence",
       "target": "symbol:persistence._knowledge",
@@ -35646,7 +35734,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1033
+        "line": 890
+      },
+      "source": "module:persistence",
+      "target": "symbol:persistence._legacy_archetype",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "persistence.py",
+        "line": 1104
       },
       "source": "module:persistence",
       "target": "symbol:persistence._log_checkpoint_written",
@@ -35657,7 +35756,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 298
+        "line": 299
       },
       "source": "module:persistence",
       "target": "symbol:persistence._migrate_state",
@@ -35668,7 +35767,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 119
+        "line": 120
       },
       "source": "module:persistence",
       "target": "symbol:persistence._migrate_v3_to_v4",
@@ -35679,7 +35778,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 186
+        "line": 187
       },
       "source": "module:persistence",
       "target": "symbol:persistence._migrate_v4_to_v5",
@@ -35690,7 +35789,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 221
+        "line": 222
       },
       "source": "module:persistence",
       "target": "symbol:persistence._migrate_v5_to_v6",
@@ -35701,7 +35800,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 237
+        "line": 238
       },
       "source": "module:persistence",
       "target": "symbol:persistence._migrate_v6_to_v7",
@@ -35712,7 +35811,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 250
+        "line": 251
       },
       "source": "module:persistence",
       "target": "symbol:persistence._migrate_v7_to_v8",
@@ -35723,7 +35822,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 273
+        "line": 274
       },
       "source": "module:persistence",
       "target": "symbol:persistence._ms",
@@ -35734,7 +35833,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 885
+        "line": 955
       },
       "source": "module:persistence",
       "target": "symbol:persistence._normalize_combat_on_load",
@@ -35745,7 +35844,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 134
+        "line": 135
       },
       "source": "module:persistence",
       "target": "symbol:persistence._normalize_vitality_actor",
@@ -35756,7 +35855,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 632
+        "line": 633
       },
       "source": "module:persistence",
       "target": "symbol:persistence._projection_plan",
@@ -35767,7 +35866,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 620
+        "line": 621
       },
       "source": "module:persistence",
       "target": "symbol:persistence._projection_state",
@@ -35778,7 +35877,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 902
+        "line": 972
       },
       "source": "module:persistence",
       "target": "symbol:persistence._raw_to_state",
@@ -35789,7 +35888,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 46
+        "line": 47
       },
       "source": "module:persistence",
       "target": "symbol:persistence._replace_with_retry",
@@ -35800,7 +35899,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 586
+        "line": 902
+      },
+      "source": "module:persistence",
+      "target": "symbol:persistence._rewrite_refs",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "persistence.py",
+        "line": 587
       },
       "source": "module:persistence",
       "target": "symbol:persistence._safe_save_path",
@@ -35811,7 +35921,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 465
+        "line": 466
       },
       "source": "module:persistence",
       "target": "symbol:persistence._safe_session_memory_path",
@@ -35822,7 +35932,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 323
+        "line": 324
       },
       "source": "module:persistence",
       "target": "symbol:persistence._serialize_messages",
@@ -35833,7 +35943,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 638
+        "line": 639
       },
       "source": "module:persistence",
       "target": "symbol:persistence._state_to_save_data",
@@ -35844,7 +35954,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 556
+        "line": 918
+      },
+      "source": "module:persistence",
+      "target": "symbol:persistence.backfill_enemy_ids",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "persistence.py",
+        "line": 557
       },
       "source": "module:persistence",
       "target": "symbol:persistence.capture_session_memory",
@@ -35855,7 +35976,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 477
+        "line": 478
       },
       "source": "module:persistence",
       "target": "symbol:persistence.checkpoint_memory_path",
@@ -35866,7 +35987,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1139
+        "line": 1210
       },
       "source": "module:persistence",
       "target": "symbol:persistence.checkpoint_turn",
@@ -35877,7 +35998,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 440
+        "line": 441
       },
       "source": "module:persistence",
       "target": "symbol:persistence.delete_save",
@@ -35888,7 +36009,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1147
+        "line": 1218
       },
       "source": "module:persistence",
       "target": "symbol:persistence.ensure_synthetic_checkpoint",
@@ -35899,7 +36020,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 355
+        "line": 356
       },
       "source": "module:persistence",
       "target": "symbol:persistence.get_latest_save_file",
@@ -35910,7 +36031,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1124
+        "line": 1195
       },
       "source": "module:persistence",
       "target": "symbol:persistence.has_checkpoint",
@@ -35921,7 +36042,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 382
+        "line": 383
       },
       "source": "module:persistence",
       "target": "symbol:persistence.list_saves",
@@ -35932,7 +36053,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1186
+        "line": 1257
       },
       "source": "module:persistence",
       "target": "symbol:persistence.load_checkpoint",
@@ -35943,7 +36064,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 806
+        "line": 807
       },
       "source": "module:persistence",
       "target": "symbol:persistence.load_game_state",
@@ -35954,7 +36075,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 281
+        "line": 282
       },
       "source": "module:persistence",
       "target": "symbol:persistence.migrate_state",
@@ -35965,7 +36086,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 88
+        "line": 89
       },
       "source": "module:persistence",
       "target": "symbol:persistence.normalize_rejected_item_claims",
@@ -35976,7 +36097,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 571
+        "line": 572
       },
       "source": "module:persistence",
       "target": "symbol:persistence.restore_captured_session_memory",
@@ -35987,7 +36108,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 522
+        "line": 523
       },
       "source": "module:persistence",
       "target": "symbol:persistence.restore_checkpoint_memory",
@@ -35998,7 +36119,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1044
+        "line": 1115
       },
       "source": "module:persistence",
       "target": "symbol:persistence.save_checkpoint",
@@ -36009,7 +36130,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 501
+        "line": 502
       },
       "source": "module:persistence",
       "target": "symbol:persistence.save_checkpoint_memory",
@@ -36020,7 +36141,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 742
+        "line": 743
       },
       "source": "module:persistence",
       "target": "symbol:persistence.save_game_state",
@@ -36031,7 +36152,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 101
+        "line": 102
       },
       "source": "module:persistence",
       "target": "symbol:persistence.save_path",
@@ -55204,10 +55325,32 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/faction_display.py",
+        "line": 197
+      },
+      "source": "module:services.faction_display",
+      "target": "symbol:services.faction_display._fold",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/faction_display.py",
         "line": 111
       },
       "source": "module:services.faction_display",
       "target": "symbol:services.faction_display._name_regex",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/faction_display.py",
+        "line": 206
+      },
+      "source": "module:services.faction_display",
+      "target": "symbol:services.faction_display._oracle_regex",
       "type": "defines"
     },
     {
@@ -55292,7 +55435,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/faction_display.py",
-        "line": 197
+        "line": 221
       },
       "source": "module:services.faction_display",
       "target": "symbol:services.faction_display.concealed_name_problems",
@@ -120114,6 +120257,248 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 10
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "module:api",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 11
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "module:gamedata",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 12
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "module:persistence",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 13
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 14
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 15
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 16
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "module:world_utils",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 205
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "symbol:tests.test_spec294_followups._faction_label_cases",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 97
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "symbol:tests.test_spec294_followups._legacy_raw",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 212
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "symbol:tests.test_spec294_followups._oracle_outcomes",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 179
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "symbol:tests.test_spec294_followups.test_archetype_sem_casamento_cai_no_nome",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 138
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "symbol:tests.test_spec294_followups.test_backfill_ids_opacos_deterministicos_e_puros",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 152
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "symbol:tests.test_spec294_followups.test_backfill_reescreve_referencias_do_combate",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 228
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "symbol:tests.test_spec294_followups.test_eval_casos_do_rotulo_passam",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 234
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "symbol:tests.test_spec294_followups.test_eval_mutacao_do_oraculo_e_detectada",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 186
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "symbol:tests.test_spec294_followups.test_load_legado_sem_nome_canonico_em_ids_e_alvos",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 42
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "symbol:tests.test_spec294_followups.test_oraculo_acusa_ocorrencia_de_palavra",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 86
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "symbol:tests.test_spec294_followups.test_oraculo_cobre_projecao_e_projecao_e_limpa",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 61
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "symbol:tests.test_spec294_followups.test_oraculo_respeita_faccao_revelada",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 57
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "symbol:tests.test_spec294_followups.test_oraculo_respeita_fronteira",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 164
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "symbol:tests.test_spec294_followups.test_save_com_id_inalterado_e_colisao",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 174
+      },
+      "source": "module:tests.test_spec294_followups",
+      "target": "symbol:tests.test_spec294_followups.test_save_sem_inimigos_sem_copia",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec_index.py",
         "line": 47
       },
@@ -161442,7 +161827,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 491
+        "line": 492
       },
       "source": "symbol:persistence._atomic_replace_directory",
       "target": "symbol:persistence._replace_with_retry",
@@ -161453,7 +161838,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 493
+        "line": 494
       },
       "source": "symbol:persistence._atomic_replace_directory",
       "target": "symbol:persistence._replace_with_retry",
@@ -161464,7 +161849,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 496
+        "line": 497
       },
       "source": "symbol:persistence._atomic_replace_directory",
       "target": "symbol:persistence._replace_with_retry",
@@ -161475,7 +161860,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 611
+        "line": 612
       },
       "source": "symbol:persistence._atomic_write_json",
       "target": "symbol:persistence._replace_with_retry",
@@ -161486,7 +161871,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 278
+        "line": 279
       },
       "source": "symbol:persistence._game_ref",
       "target": "symbol:observability.telemetry.pseudonym",
@@ -161497,7 +161882,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1034
+        "line": 1105
       },
       "source": "symbol:persistence._log_checkpoint_written",
       "target": "symbol:observability.telemetry.log_event",
@@ -161508,7 +161893,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1038
+        "line": 1109
       },
       "source": "symbol:persistence._log_checkpoint_written",
       "target": "symbol:persistence._game_ref",
@@ -161519,7 +161904,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1040
+        "line": 1111
       },
       "source": "symbol:persistence._log_checkpoint_written",
       "target": "symbol:persistence._ms",
@@ -161530,7 +161915,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 300
+        "line": 301
       },
       "source": "symbol:persistence._migrate_state",
       "target": "symbol:observability.telemetry.log_event",
@@ -161541,7 +161926,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 308
+        "line": 309
       },
       "source": "symbol:persistence._migrate_state",
       "target": "symbol:persistence.IncompatibleSaveError",
@@ -161552,7 +161937,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 306
+        "line": 307
       },
       "source": "symbol:persistence._migrate_state",
       "target": "symbol:persistence._game_ref",
@@ -161563,7 +161948,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 310
+        "line": 311
       },
       "source": "symbol:persistence._migrate_state",
       "target": "symbol:persistence._migrate_v3_to_v4",
@@ -161574,7 +161959,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 315
+        "line": 316
       },
       "source": "symbol:persistence._migrate_state",
       "target": "symbol:persistence._migrate_v4_to_v5",
@@ -161585,7 +161970,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 312
+        "line": 313
       },
       "source": "symbol:persistence._migrate_state",
       "target": "symbol:persistence._migrate_v5_to_v6",
@@ -161596,7 +161981,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 317
+        "line": 318
       },
       "source": "symbol:persistence._migrate_state",
       "target": "symbol:persistence._migrate_v5_to_v6",
@@ -161607,32 +161992,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 312
+        "line": 313
       },
       "source": "symbol:persistence._migrate_state",
       "target": "symbol:persistence._migrate_v6_to_v7",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "persistence.py",
-        "line": 319
-      },
-      "source": "symbol:persistence._migrate_state",
-      "target": "symbol:persistence._migrate_v6_to_v7",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "persistence.py",
-        "line": 312
-      },
-      "source": "symbol:persistence._migrate_state",
-      "target": "symbol:persistence._migrate_v7_to_v8",
       "type": "calls"
     },
     {
@@ -161643,6 +162006,17 @@
         "line": 320
       },
       "source": "symbol:persistence._migrate_state",
+      "target": "symbol:persistence._migrate_v6_to_v7",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "persistence.py",
+        "line": 313
+      },
+      "source": "symbol:persistence._migrate_state",
       "target": "symbol:persistence._migrate_v7_to_v8",
       "type": "calls"
     },
@@ -161651,7 +162025,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 189
+        "line": 321
+      },
+      "source": "symbol:persistence._migrate_state",
+      "target": "symbol:persistence._migrate_v7_to_v8",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "persistence.py",
+        "line": 190
       },
       "source": "symbol:persistence._migrate_v4_to_v5",
       "target": "symbol:persistence._normalize_vitality_actor",
@@ -161662,7 +162047,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 192
+        "line": 193
       },
       "source": "symbol:persistence._migrate_v4_to_v5",
       "target": "symbol:persistence._normalize_vitality_actor",
@@ -161673,7 +162058,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 196
+        "line": 197
       },
       "source": "symbol:persistence._migrate_v4_to_v5",
       "target": "symbol:persistence._normalize_vitality_actor",
@@ -161684,7 +162069,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 212
+        "line": 213
       },
       "source": "symbol:persistence._migrate_v4_to_v5",
       "target": "symbol:services.conflict_summary.ensure_conflict_id",
@@ -161695,7 +162080,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 199
+        "line": 200
       },
       "source": "symbol:persistence._migrate_v4_to_v5",
       "target": "symbol:services.conflict_summary.normalize_consumed_conflict_ids",
@@ -161706,7 +162091,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 896
+        "line": 966
       },
       "source": "symbol:persistence._normalize_combat_on_load",
       "target": "symbol:observability.telemetry.log_event",
@@ -161717,7 +162102,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 173
+        "line": 174
       },
       "source": "symbol:persistence._normalize_vitality_actor",
       "target": "symbol:gamedata.sync_legacy_hp_aliases",
@@ -161728,7 +162113,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 182
+        "line": 183
       },
       "source": "symbol:persistence._normalize_vitality_actor",
       "target": "symbol:gamedata.sync_legacy_hp_aliases",
@@ -161739,7 +162124,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 171
+        "line": 172
       },
       "source": "symbol:persistence._normalize_vitality_actor",
       "target": "symbol:gamedata.sync_vitality",
@@ -161750,7 +162135,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 984
+        "line": 1055
       },
       "source": "symbol:persistence._raw_to_state",
       "target": "symbol:persistence._deserialize_messages",
@@ -161761,7 +162146,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 950
+        "line": 1021
       },
       "source": "symbol:persistence._raw_to_state",
       "target": "symbol:persistence._knowledge",
@@ -161772,7 +162157,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 981
+        "line": 1052
       },
       "source": "symbol:persistence._raw_to_state",
       "target": "symbol:persistence._normalize_combat_on_load",
@@ -161783,7 +162168,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1015
+        "line": 1086
       },
       "source": "symbol:persistence._raw_to_state",
       "target": "symbol:persistence._projection_plan",
@@ -161794,7 +162179,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1014
+        "line": 1085
       },
       "source": "symbol:persistence._raw_to_state",
       "target": "symbol:persistence._projection_state",
@@ -161805,7 +162190,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 906
+        "line": 977
+      },
+      "source": "symbol:persistence._raw_to_state",
+      "target": "symbol:persistence.backfill_enemy_ids",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "persistence.py",
+        "line": 976
       },
       "source": "symbol:persistence._raw_to_state",
       "target": "symbol:persistence.migrate_state",
@@ -161816,7 +162212,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 942
+        "line": 1013
       },
       "source": "symbol:persistence._raw_to_state",
       "target": "symbol:persistence.normalize_rejected_item_claims",
@@ -161827,7 +162223,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 929
+        "line": 1000
       },
       "source": "symbol:persistence._raw_to_state",
       "target": "symbol:services.audit_trace.normalize_audit_trace",
@@ -161838,7 +162234,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 917
+        "line": 988
       },
       "source": "symbol:persistence._raw_to_state",
       "target": "symbol:services.conflict_summary.normalize_consumed_conflict_ids",
@@ -161849,7 +162245,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 966
+        "line": 1037
       },
       "source": "symbol:persistence._raw_to_state",
       "target": "symbol:services.entity_identity.coalesce_runtime_npcs",
@@ -161860,7 +162256,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 934
+        "line": 1005
       },
       "source": "symbol:persistence._raw_to_state",
       "target": "symbol:services.memory_provenance.bounded_audit_rows",
@@ -161871,7 +162267,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 938
+        "line": 1009
       },
       "source": "symbol:persistence._raw_to_state",
       "target": "symbol:services.memory_provenance.bounded_audit_rows",
@@ -161882,7 +162278,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 922
+        "line": 993
       },
       "source": "symbol:persistence._raw_to_state",
       "target": "symbol:services.memory_provenance.normalize_memory_facts",
@@ -161893,7 +162289,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 923
+        "line": 994
       },
       "source": "symbol:persistence._raw_to_state",
       "target": "symbol:services.memory_provenance.normalize_memory_facts",
@@ -161904,7 +162300,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 945
+        "line": 1016
       },
       "source": "symbol:persistence._raw_to_state",
       "target": "symbol:services.memory_retry.normalize_pending_npc_memory",
@@ -161915,7 +162311,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 913
+        "line": 984
       },
       "source": "symbol:persistence._raw_to_state",
       "target": "symbol:services.memory_summary.compact_summary",
@@ -161926,7 +162322,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 56
+        "line": 57
       },
       "source": "symbol:persistence._replace_with_retry",
       "target": "symbol:observability.telemetry.log_event",
@@ -161937,7 +162333,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 66
+        "line": 67
       },
       "source": "symbol:persistence._replace_with_retry",
       "target": "symbol:observability.telemetry.log_event",
@@ -161948,7 +162344,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 590
+        "line": 905
+      },
+      "source": "symbol:persistence._rewrite_refs",
+      "target": "symbol:persistence._rewrite_refs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "persistence.py",
+        "line": 910
+      },
+      "source": "symbol:persistence._rewrite_refs",
+      "target": "symbol:persistence._rewrite_refs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "persistence.py",
+        "line": 591
       },
       "source": "symbol:persistence._safe_save_path",
       "target": "symbol:persistence.save_path",
@@ -161959,21 +162377,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 686
+        "line": 687
       },
       "source": "symbol:persistence._state_to_save_data",
       "target": "symbol:persistence._knowledge",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "persistence.py",
-        "line": 641
-      },
-      "source": "symbol:persistence._state_to_save_data",
-      "target": "symbol:persistence._normalize_vitality_actor",
       "type": "calls"
     },
     {
@@ -162003,7 +162410,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 684
+        "line": 644
+      },
+      "source": "symbol:persistence._state_to_save_data",
+      "target": "symbol:persistence._normalize_vitality_actor",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "persistence.py",
+        "line": 685
       },
       "source": "symbol:persistence._state_to_save_data",
       "target": "symbol:persistence._projection_plan",
@@ -162014,7 +162432,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 683
+        "line": 684
       },
       "source": "symbol:persistence._state_to_save_data",
       "target": "symbol:persistence._projection_state",
@@ -162025,7 +162443,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 738
+        "line": 739
       },
       "source": "symbol:persistence._state_to_save_data",
       "target": "symbol:persistence._serialize_messages",
@@ -162036,7 +162454,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 699
+        "line": 700
       },
       "source": "symbol:persistence._state_to_save_data",
       "target": "symbol:persistence.normalize_rejected_item_claims",
@@ -162047,7 +162465,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 681
+        "line": 682
       },
       "source": "symbol:persistence._state_to_save_data",
       "target": "symbol:services.audit_trace.normalize_audit_trace",
@@ -162058,7 +162476,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 653
+        "line": 654
       },
       "source": "symbol:persistence._state_to_save_data",
       "target": "symbol:services.conflict_summary.ensure_conflict_id",
@@ -162069,7 +162487,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 669
+        "line": 670
       },
       "source": "symbol:persistence._state_to_save_data",
       "target": "symbol:services.conflict_summary.normalize_consumed_conflict_ids",
@@ -162080,7 +162498,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 720
+        "line": 721
       },
       "source": "symbol:persistence._state_to_save_data",
       "target": "symbol:services.entity_identity.coalesce_runtime_npcs",
@@ -162091,7 +162509,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 691
+        "line": 692
       },
       "source": "symbol:persistence._state_to_save_data",
       "target": "symbol:services.memory_provenance.bounded_audit_rows",
@@ -162102,21 +162520,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 695
+        "line": 696
       },
       "source": "symbol:persistence._state_to_save_data",
       "target": "symbol:services.memory_provenance.bounded_audit_rows",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "persistence.py",
-        "line": 674
-      },
-      "source": "symbol:persistence._state_to_save_data",
-      "target": "symbol:services.memory_provenance.normalize_memory_facts",
       "type": "calls"
     },
     {
@@ -162135,7 +162542,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 700
+        "line": 676
+      },
+      "source": "symbol:persistence._state_to_save_data",
+      "target": "symbol:services.memory_provenance.normalize_memory_facts",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "persistence.py",
+        "line": 701
       },
       "source": "symbol:persistence._state_to_save_data",
       "target": "symbol:services.memory_retry.normalize_pending_npc_memory",
@@ -162146,7 +162564,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 665
+        "line": 666
       },
       "source": "symbol:persistence._state_to_save_data",
       "target": "symbol:services.memory_summary.compact_summary",
@@ -162157,7 +162575,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 558
+        "line": 946
+      },
+      "source": "symbol:persistence.backfill_enemy_ids",
+      "target": "symbol:persistence._legacy_archetype",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "persistence.py",
+        "line": 951
+      },
+      "source": "symbol:persistence.backfill_enemy_ids",
+      "target": "symbol:persistence._rewrite_refs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "persistence.py",
+        "line": 559
       },
       "source": "symbol:persistence.capture_session_memory",
       "target": "symbol:persistence._safe_session_memory_path",
@@ -162168,7 +162608,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 478
+        "line": 479
       },
       "source": "symbol:persistence.checkpoint_memory_path",
       "target": "symbol:persistence._safe_save_path",
@@ -162179,7 +162619,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1141
+        "line": 1212
       },
       "source": "symbol:persistence.checkpoint_turn",
       "target": "symbol:persistence.load_checkpoint",
@@ -162190,7 +162630,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 451
+        "line": 452
       },
       "source": "symbol:persistence.delete_save",
       "target": "symbol:persistence._safe_save_path",
@@ -162201,7 +162641,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 452
+        "line": 453
       },
       "source": "symbol:persistence.delete_save",
       "target": "symbol:persistence.checkpoint_memory_path",
@@ -162212,7 +162652,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 450
+        "line": 451
       },
       "source": "symbol:persistence.delete_save",
       "target": "symbol:persistence.save_path",
@@ -162223,7 +162663,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1172
+        "line": 1243
       },
       "source": "symbol:persistence.ensure_synthetic_checkpoint",
       "target": "symbol:observability.telemetry.log_event",
@@ -162234,7 +162674,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1169
+        "line": 1240
       },
       "source": "symbol:persistence.ensure_synthetic_checkpoint",
       "target": "symbol:persistence.checkpoint_turn",
@@ -162245,7 +162685,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1164
+        "line": 1235
       },
       "source": "symbol:persistence.ensure_synthetic_checkpoint",
       "target": "symbol:persistence.has_checkpoint",
@@ -162256,7 +162696,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1183
+        "line": 1254
       },
       "source": "symbol:persistence.ensure_synthetic_checkpoint",
       "target": "symbol:persistence.save_checkpoint",
@@ -162267,7 +162707,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 360
+        "line": 361
       },
       "source": "symbol:persistence.get_latest_save_file",
       "target": "symbol:persistence._iter_live_save_files",
@@ -162278,7 +162718,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1128
+        "line": 1199
       },
       "source": "symbol:persistence.has_checkpoint",
       "target": "symbol:persistence._safe_save_path",
@@ -162289,7 +162729,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1127
+        "line": 1198
       },
       "source": "symbol:persistence.has_checkpoint",
       "target": "symbol:persistence.load_checkpoint",
@@ -162300,7 +162740,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 414
+        "line": 415
       },
       "source": "symbol:persistence.list_saves",
       "target": "symbol:persistence._iter_live_save_files",
@@ -162311,7 +162751,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1201
+        "line": 1272
       },
       "source": "symbol:persistence.load_checkpoint",
       "target": "symbol:observability.telemetry.log_event",
@@ -162322,7 +162762,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1217
+        "line": 1288
       },
       "source": "symbol:persistence.load_checkpoint",
       "target": "symbol:observability.telemetry.log_event",
@@ -162333,7 +162773,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1206
+        "line": 1277
       },
       "source": "symbol:persistence.load_checkpoint",
       "target": "symbol:persistence._game_ref",
@@ -162344,7 +162784,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1222
+        "line": 1293
       },
       "source": "symbol:persistence.load_checkpoint",
       "target": "symbol:persistence._game_ref",
@@ -162355,7 +162795,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1207
+        "line": 1278
       },
       "source": "symbol:persistence.load_checkpoint",
       "target": "symbol:persistence._ms",
@@ -162366,7 +162806,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1223
+        "line": 1294
       },
       "source": "symbol:persistence.load_checkpoint",
       "target": "symbol:persistence._ms",
@@ -162377,7 +162817,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1215
+        "line": 1286
       },
       "source": "symbol:persistence.load_checkpoint",
       "target": "symbol:persistence._raw_to_state",
@@ -162388,7 +162828,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1210
+        "line": 1281
       },
       "source": "symbol:persistence.load_checkpoint",
       "target": "symbol:persistence._safe_save_path",
@@ -162399,7 +162839,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 844
+        "line": 845
       },
       "source": "symbol:persistence.load_game_state",
       "target": "symbol:observability.telemetry.log_event",
@@ -162410,7 +162850,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 872
+        "line": 873
       },
       "source": "symbol:persistence.load_game_state",
       "target": "symbol:observability.telemetry.log_event",
@@ -162421,7 +162861,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 849
+        "line": 850
       },
       "source": "symbol:persistence.load_game_state",
       "target": "symbol:persistence._game_ref",
@@ -162432,7 +162872,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 877
+        "line": 878
       },
       "source": "symbol:persistence.load_game_state",
       "target": "symbol:persistence._game_ref",
@@ -162443,7 +162883,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 852
+        "line": 853
       },
       "source": "symbol:persistence.load_game_state",
       "target": "symbol:persistence._ms",
@@ -162454,7 +162894,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 880
+        "line": 881
       },
       "source": "symbol:persistence.load_game_state",
       "target": "symbol:persistence._ms",
@@ -162465,7 +162905,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 867
+        "line": 868
       },
       "source": "symbol:persistence.load_game_state",
       "target": "symbol:persistence._raw_to_state",
@@ -162476,7 +162916,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 859
+        "line": 860
       },
       "source": "symbol:persistence.load_game_state",
       "target": "symbol:persistence.get_latest_save_file",
@@ -162487,7 +162927,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 286
+        "line": 287
       },
       "source": "symbol:persistence.migrate_state",
       "target": "symbol:observability.telemetry.log_event",
@@ -162498,7 +162938,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 293
+        "line": 294
       },
       "source": "symbol:persistence.migrate_state",
       "target": "symbol:persistence._game_ref",
@@ -162509,7 +162949,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 284
+        "line": 285
       },
       "source": "symbol:persistence.migrate_state",
       "target": "symbol:persistence._migrate_state",
@@ -162520,7 +162960,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 572
+        "line": 573
       },
       "source": "symbol:persistence.restore_captured_session_memory",
       "target": "symbol:persistence._safe_session_memory_path",
@@ -162531,7 +162971,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 549
+        "line": 550
       },
       "source": "symbol:persistence.restore_checkpoint_memory",
       "target": "symbol:persistence._atomic_replace_directory",
@@ -162542,7 +162982,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 546
+        "line": 547
       },
       "source": "symbol:persistence.restore_checkpoint_memory",
       "target": "symbol:persistence._replace_with_retry",
@@ -162553,7 +162993,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 527
+        "line": 528
       },
       "source": "symbol:persistence.restore_checkpoint_memory",
       "target": "symbol:persistence._safe_session_memory_path",
@@ -162564,7 +163004,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 524
+        "line": 525
       },
       "source": "symbol:persistence.restore_checkpoint_memory",
       "target": "symbol:persistence.checkpoint_memory_path",
@@ -162575,7 +163015,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1075
+        "line": 1146
       },
       "source": "symbol:persistence.save_checkpoint",
       "target": "symbol:observability.telemetry.log_event",
@@ -162586,7 +163026,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1113
+        "line": 1184
       },
       "source": "symbol:persistence.save_checkpoint",
       "target": "symbol:observability.telemetry.log_event",
@@ -162597,7 +163037,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1101
+        "line": 1172
       },
       "source": "symbol:persistence.save_checkpoint",
       "target": "symbol:persistence._atomic_write_json",
@@ -162608,7 +163048,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1080
+        "line": 1151
       },
       "source": "symbol:persistence.save_checkpoint",
       "target": "symbol:persistence._game_ref",
@@ -162619,7 +163059,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1118
+        "line": 1189
       },
       "source": "symbol:persistence.save_checkpoint",
       "target": "symbol:persistence._game_ref",
@@ -162630,7 +163070,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1072
+        "line": 1143
       },
       "source": "symbol:persistence.save_checkpoint",
       "target": "symbol:persistence._log_checkpoint_written",
@@ -162641,7 +163081,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1104
+        "line": 1175
       },
       "source": "symbol:persistence.save_checkpoint",
       "target": "symbol:persistence._log_checkpoint_written",
@@ -162652,7 +163092,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1081
+        "line": 1152
       },
       "source": "symbol:persistence.save_checkpoint",
       "target": "symbol:persistence._ms",
@@ -162663,7 +163103,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1119
+        "line": 1190
       },
       "source": "symbol:persistence.save_checkpoint",
       "target": "symbol:persistence._ms",
@@ -162674,7 +163114,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1110
+        "line": 1181
       },
       "source": "symbol:persistence.save_checkpoint",
       "target": "symbol:persistence._replace_with_retry",
@@ -162685,7 +163125,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1091
+        "line": 1162
       },
       "source": "symbol:persistence.save_checkpoint",
       "target": "symbol:persistence._safe_save_path",
@@ -162696,7 +163136,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1101
+        "line": 1172
       },
       "source": "symbol:persistence.save_checkpoint",
       "target": "symbol:persistence._state_to_save_data",
@@ -162707,7 +163147,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1092
+        "line": 1163
       },
       "source": "symbol:persistence.save_checkpoint",
       "target": "symbol:persistence.checkpoint_memory_path",
@@ -162718,7 +163158,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 1100
+        "line": 1171
       },
       "source": "symbol:persistence.save_checkpoint",
       "target": "symbol:persistence.save_checkpoint_memory",
@@ -162729,7 +163169,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 515
+        "line": 516
       },
       "source": "symbol:persistence.save_checkpoint_memory",
       "target": "symbol:persistence._atomic_replace_directory",
@@ -162740,7 +163180,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 503
+        "line": 504
       },
       "source": "symbol:persistence.save_checkpoint_memory",
       "target": "symbol:persistence._safe_session_memory_path",
@@ -162751,7 +163191,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 504
+        "line": 505
       },
       "source": "symbol:persistence.save_checkpoint_memory",
       "target": "symbol:persistence.checkpoint_memory_path",
@@ -162762,7 +163202,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 767
+        "line": 768
       },
       "source": "symbol:persistence.save_game_state",
       "target": "symbol:observability.telemetry.log_event",
@@ -162773,7 +163213,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 795
+        "line": 796
       },
       "source": "symbol:persistence.save_game_state",
       "target": "symbol:observability.telemetry.log_event",
@@ -162784,7 +163224,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 790
+        "line": 791
       },
       "source": "symbol:persistence.save_game_state",
       "target": "symbol:persistence._atomic_write_json",
@@ -162795,32 +163235,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 772
-      },
-      "source": "symbol:persistence.save_game_state",
-      "target": "symbol:persistence._game_ref",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "persistence.py",
-        "line": 800
-      },
-      "source": "symbol:persistence.save_game_state",
-      "target": "symbol:persistence._game_ref",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "persistence.py",
         "line": 773
       },
       "source": "symbol:persistence.save_game_state",
-      "target": "symbol:persistence._ms",
+      "target": "symbol:persistence._game_ref",
       "type": "calls"
     },
     {
@@ -162831,6 +163249,17 @@
         "line": 801
       },
       "source": "symbol:persistence.save_game_state",
+      "target": "symbol:persistence._game_ref",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "persistence.py",
+        "line": 774
+      },
+      "source": "symbol:persistence.save_game_state",
       "target": "symbol:persistence._ms",
       "type": "calls"
     },
@@ -162839,7 +163268,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 787
+        "line": 802
+      },
+      "source": "symbol:persistence.save_game_state",
+      "target": "symbol:persistence._ms",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "persistence.py",
+        "line": 788
       },
       "source": "symbol:persistence.save_game_state",
       "target": "symbol:persistence._safe_save_path",
@@ -162850,7 +163290,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "persistence.py",
-        "line": 788
+        "line": 789
       },
       "source": "symbol:persistence.save_game_state",
       "target": "symbol:persistence._state_to_save_data",
@@ -199920,6 +200360,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/faction_display.py",
+        "line": 211
+      },
+      "source": "symbol:services.faction_display._oracle_regex",
+      "target": "symbol:services.faction_display._fold",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/faction_display.py",
         "line": 132
       },
       "source": "symbol:services.faction_display._pattern",
@@ -200052,10 +200503,32 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/faction_display.py",
-        "line": 201
+        "line": 225
       },
       "source": "symbol:services.faction_display.concealed_name_problems",
       "target": "symbol:services.faction_display._concealed_entries",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/faction_display.py",
+        "line": 228
+      },
+      "source": "symbol:services.faction_display.concealed_name_problems",
+      "target": "symbol:services.faction_display._fold",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/faction_display.py",
+        "line": 233
+      },
+      "source": "symbol:services.faction_display.concealed_name_problems",
+      "target": "symbol:services.faction_display._oracle_regex",
       "type": "calls"
     },
     {
@@ -329808,7 +330281,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec293_rotulo_faccao.py",
-        "line": 294
+        "line": 293
       },
       "source": "symbol:tests.test_spec293_rotulo_faccao.test_conceal_tolera_espaco_acento_e_plural",
       "target": "symbol:services.faction_display.concealed_name_problems",
@@ -330010,6 +330483,380 @@
       },
       "source": "symbol:tests.test_spec293_rotulo_faccao.test_sse_sem_nome_canonico.fake_execute",
       "target": "symbol:api.format_response",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 134
+      },
+      "source": "symbol:tests.test_spec294_followups._legacy_raw",
+      "target": "symbol:persistence._state_to_save_data",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 111
+      },
+      "source": "symbol:tests.test_spec294_followups._legacy_raw",
+      "target": "symbol:services.conflict_scene.engage",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 107
+      },
+      "source": "symbol:tests.test_spec294_followups._legacy_raw",
+      "target": "symbol:services.conflict_scene.new_scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 108
+      },
+      "source": "symbol:tests.test_spec294_followups._legacy_raw",
+      "target": "symbol:services.conflict_scene.place",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 110
+      },
+      "source": "symbol:tests.test_spec294_followups._legacy_raw",
+      "target": "symbol:services.conflict_scene.place",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 219
+      },
+      "source": "symbol:tests.test_spec294_followups._oracle_outcomes",
+      "target": "symbol:tests.test_spec294_followups._faction_label_cases",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 181
+      },
+      "source": "symbol:tests.test_spec294_followups.test_archetype_sem_casamento_cai_no_nome",
+      "target": "symbol:persistence.backfill_enemy_ids",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 141
+      },
+      "source": "symbol:tests.test_spec294_followups.test_backfill_ids_opacos_deterministicos_e_puros",
+      "target": "symbol:persistence.backfill_enemy_ids",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 146
+      },
+      "source": "symbol:tests.test_spec294_followups.test_backfill_ids_opacos_deterministicos_e_puros",
+      "target": "symbol:persistence.backfill_enemy_ids",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 147
+      },
+      "source": "symbol:tests.test_spec294_followups.test_backfill_ids_opacos_deterministicos_e_puros",
+      "target": "symbol:persistence.backfill_enemy_ids",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 139
+      },
+      "source": "symbol:tests.test_spec294_followups.test_backfill_ids_opacos_deterministicos_e_puros",
+      "target": "symbol:tests.test_spec294_followups._legacy_raw",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 153
+      },
+      "source": "symbol:tests.test_spec294_followups.test_backfill_reescreve_referencias_do_combate",
+      "target": "symbol:persistence.backfill_enemy_ids",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 153
+      },
+      "source": "symbol:tests.test_spec294_followups.test_backfill_reescreve_referencias_do_combate",
+      "target": "symbol:tests.test_spec294_followups._legacy_raw",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 229
+      },
+      "source": "symbol:tests.test_spec294_followups.test_eval_casos_do_rotulo_passam",
+      "target": "symbol:tests.test_spec294_followups._faction_label_cases",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 231
+      },
+      "source": "symbol:tests.test_spec294_followups.test_eval_casos_do_rotulo_passam",
+      "target": "symbol:tests.test_spec294_followups._oracle_outcomes",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 236
+      },
+      "source": "symbol:tests.test_spec294_followups.test_eval_mutacao_do_oraculo_e_detectada",
+      "target": "symbol:tests.test_spec294_followups._oracle_outcomes",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 192
+      },
+      "source": "symbol:tests.test_spec294_followups.test_load_legado_sem_nome_canonico_em_ids_e_alvos",
+      "target": "symbol:api.format_response",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 187
+      },
+      "source": "symbol:tests.test_spec294_followups.test_load_legado_sem_nome_canonico_em_ids_e_alvos",
+      "target": "symbol:persistence._raw_to_state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 195
+      },
+      "source": "symbol:tests.test_spec294_followups.test_load_legado_sem_nome_canonico_em_ids_e_alvos",
+      "target": "symbol:services.combat_targeting.basic_action_targeting",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 199
+      },
+      "source": "symbol:tests.test_spec294_followups.test_load_legado_sem_nome_canonico_em_ids_e_alvos",
+      "target": "symbol:services.faction_display.concealed_name_problems",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 187
+      },
+      "source": "symbol:tests.test_spec294_followups.test_load_legado_sem_nome_canonico_em_ids_e_alvos",
+      "target": "symbol:tests.test_spec294_followups._legacy_raw",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 43
+      },
+      "source": "symbol:tests.test_spec294_followups.test_oraculo_acusa_ocorrencia_de_palavra",
+      "target": "symbol:services.faction_display.concealed_name_problems",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 88
+      },
+      "source": "symbol:tests.test_spec294_followups.test_oraculo_cobre_projecao_e_projecao_e_limpa",
+      "target": "symbol:services.faction_display.conceal_text",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 87
+      },
+      "source": "symbol:tests.test_spec294_followups.test_oraculo_cobre_projecao_e_projecao_e_limpa",
+      "target": "symbol:services.faction_display.concealed_name_map",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 89
+      },
+      "source": "symbol:tests.test_spec294_followups.test_oraculo_cobre_projecao_e_projecao_e_limpa",
+      "target": "symbol:services.faction_display.concealed_name_problems",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 91
+      },
+      "source": "symbol:tests.test_spec294_followups.test_oraculo_cobre_projecao_e_projecao_e_limpa",
+      "target": "symbol:services.faction_display.concealed_name_problems",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 62
+      },
+      "source": "symbol:tests.test_spec294_followups.test_oraculo_respeita_faccao_revelada",
+      "target": "symbol:gamedata.seed_factions",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 63
+      },
+      "source": "symbol:tests.test_spec294_followups.test_oraculo_respeita_faccao_revelada",
+      "target": "symbol:services.faction_display.concealed_name_problems",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 62
+      },
+      "source": "symbol:tests.test_spec294_followups.test_oraculo_respeita_faccao_revelada",
+      "target": "symbol:world_utils.apply_faction_reveal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 58
+      },
+      "source": "symbol:tests.test_spec294_followups.test_oraculo_respeita_fronteira",
+      "target": "symbol:services.faction_display.concealed_name_problems",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 167
+      },
+      "source": "symbol:tests.test_spec294_followups.test_save_com_id_inalterado_e_colisao",
+      "target": "symbol:persistence.backfill_enemy_ids",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 170
+      },
+      "source": "symbol:tests.test_spec294_followups.test_save_com_id_inalterado_e_colisao",
+      "target": "symbol:persistence.backfill_enemy_ids",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 165
+      },
+      "source": "symbol:tests.test_spec294_followups.test_save_com_id_inalterado_e_colisao",
+      "target": "symbol:tests.test_spec294_followups._legacy_raw",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec294_followups.py",
+        "line": 176
+      },
+      "source": "symbol:tests.test_spec294_followups.test_save_sem_inimigos_sem_copia",
+      "target": "symbol:persistence.backfill_enemy_ids",
       "type": "calls"
     },
     {
@@ -347615,6 +348462,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/test_spec294_followups.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_spec294_followups.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/test_spec_index.py",
       "kind": "file",
       "line": 1,
@@ -353675,6 +354529,13 @@
       "line": 1,
       "path": "tests/test_spec293_rotulo_faccao.py",
       "qualified_name": "tests.test_spec293_rotulo_faccao"
+    },
+    {
+      "id": "module:tests.test_spec294_followups",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_spec294_followups.py",
+      "qualified_name": "tests.test_spec294_followups"
     },
     {
       "id": "module:tests.test_spec_index",
@@ -365425,301 +366286,322 @@
     {
       "id": "symbol:persistence.IncompatibleSaveError",
       "kind": "class",
-      "line": 269,
+      "line": 270,
       "path": "persistence.py",
       "qualified_name": "persistence.IncompatibleSaveError"
     },
     {
       "id": "symbol:persistence._atomic_replace_directory",
       "kind": "function",
-      "line": 485,
+      "line": 486,
       "path": "persistence.py",
       "qualified_name": "persistence._atomic_replace_directory"
     },
     {
       "id": "symbol:persistence._atomic_write_json",
       "kind": "function",
-      "line": 599,
+      "line": 600,
       "path": "persistence.py",
       "qualified_name": "persistence._atomic_write_json"
     },
     {
       "id": "symbol:persistence._deserialize_messages",
       "kind": "function",
-      "line": 331,
+      "line": 332,
       "path": "persistence.py",
       "qualified_name": "persistence._deserialize_messages"
     },
     {
       "id": "symbol:persistence._game_ref",
       "kind": "function",
-      "line": 277,
+      "line": 278,
       "path": "persistence.py",
       "qualified_name": "persistence._game_ref"
     },
     {
       "id": "symbol:persistence._iter_live_save_files",
       "kind": "function",
-      "line": 373,
+      "line": 374,
       "path": "persistence.py",
       "qualified_name": "persistence._iter_live_save_files"
     },
     {
       "id": "symbol:persistence._knowledge",
       "kind": "function",
-      "line": 626,
+      "line": 627,
       "path": "persistence.py",
       "qualified_name": "persistence._knowledge"
     },
     {
+      "id": "symbol:persistence._legacy_archetype",
+      "kind": "function",
+      "line": 890,
+      "path": "persistence.py",
+      "qualified_name": "persistence._legacy_archetype"
+    },
+    {
       "id": "symbol:persistence._log_checkpoint_written",
       "kind": "function",
-      "line": 1033,
+      "line": 1104,
       "path": "persistence.py",
       "qualified_name": "persistence._log_checkpoint_written"
     },
     {
       "id": "symbol:persistence._migrate_state",
       "kind": "function",
-      "line": 298,
+      "line": 299,
       "path": "persistence.py",
       "qualified_name": "persistence._migrate_state"
     },
     {
       "id": "symbol:persistence._migrate_v3_to_v4",
       "kind": "function",
-      "line": 119,
+      "line": 120,
       "path": "persistence.py",
       "qualified_name": "persistence._migrate_v3_to_v4"
     },
     {
       "id": "symbol:persistence._migrate_v4_to_v5",
       "kind": "function",
-      "line": 186,
+      "line": 187,
       "path": "persistence.py",
       "qualified_name": "persistence._migrate_v4_to_v5"
     },
     {
       "id": "symbol:persistence._migrate_v5_to_v6",
       "kind": "function",
-      "line": 221,
+      "line": 222,
       "path": "persistence.py",
       "qualified_name": "persistence._migrate_v5_to_v6"
     },
     {
       "id": "symbol:persistence._migrate_v6_to_v7",
       "kind": "function",
-      "line": 237,
+      "line": 238,
       "path": "persistence.py",
       "qualified_name": "persistence._migrate_v6_to_v7"
     },
     {
       "id": "symbol:persistence._migrate_v7_to_v8",
       "kind": "function",
-      "line": 250,
+      "line": 251,
       "path": "persistence.py",
       "qualified_name": "persistence._migrate_v7_to_v8"
     },
     {
       "id": "symbol:persistence._ms",
       "kind": "function",
-      "line": 273,
+      "line": 274,
       "path": "persistence.py",
       "qualified_name": "persistence._ms"
     },
     {
       "id": "symbol:persistence._normalize_combat_on_load",
       "kind": "function",
-      "line": 885,
+      "line": 955,
       "path": "persistence.py",
       "qualified_name": "persistence._normalize_combat_on_load"
     },
     {
       "id": "symbol:persistence._normalize_vitality_actor",
       "kind": "function",
-      "line": 134,
+      "line": 135,
       "path": "persistence.py",
       "qualified_name": "persistence._normalize_vitality_actor"
     },
     {
       "id": "symbol:persistence._projection_plan",
       "kind": "function",
-      "line": 632,
+      "line": 633,
       "path": "persistence.py",
       "qualified_name": "persistence._projection_plan"
     },
     {
       "id": "symbol:persistence._projection_state",
       "kind": "function",
-      "line": 620,
+      "line": 621,
       "path": "persistence.py",
       "qualified_name": "persistence._projection_state"
     },
     {
       "id": "symbol:persistence._raw_to_state",
       "kind": "function",
-      "line": 902,
+      "line": 972,
       "path": "persistence.py",
       "qualified_name": "persistence._raw_to_state"
     },
     {
       "id": "symbol:persistence._replace_with_retry",
       "kind": "function",
-      "line": 46,
+      "line": 47,
       "path": "persistence.py",
       "qualified_name": "persistence._replace_with_retry"
     },
     {
+      "id": "symbol:persistence._rewrite_refs",
+      "kind": "function",
+      "line": 902,
+      "path": "persistence.py",
+      "qualified_name": "persistence._rewrite_refs"
+    },
+    {
       "id": "symbol:persistence._safe_save_path",
       "kind": "function",
-      "line": 586,
+      "line": 587,
       "path": "persistence.py",
       "qualified_name": "persistence._safe_save_path"
     },
     {
       "id": "symbol:persistence._safe_session_memory_path",
       "kind": "function",
-      "line": 465,
+      "line": 466,
       "path": "persistence.py",
       "qualified_name": "persistence._safe_session_memory_path"
     },
     {
       "id": "symbol:persistence._serialize_messages",
       "kind": "function",
-      "line": 323,
+      "line": 324,
       "path": "persistence.py",
       "qualified_name": "persistence._serialize_messages"
     },
     {
       "id": "symbol:persistence._state_to_save_data",
       "kind": "function",
-      "line": 638,
+      "line": 639,
       "path": "persistence.py",
       "qualified_name": "persistence._state_to_save_data"
     },
     {
+      "id": "symbol:persistence.backfill_enemy_ids",
+      "kind": "function",
+      "line": 918,
+      "path": "persistence.py",
+      "qualified_name": "persistence.backfill_enemy_ids"
+    },
+    {
       "id": "symbol:persistence.capture_session_memory",
       "kind": "function",
-      "line": 556,
+      "line": 557,
       "path": "persistence.py",
       "qualified_name": "persistence.capture_session_memory"
     },
     {
       "id": "symbol:persistence.checkpoint_memory_path",
       "kind": "function",
-      "line": 477,
+      "line": 478,
       "path": "persistence.py",
       "qualified_name": "persistence.checkpoint_memory_path"
     },
     {
       "id": "symbol:persistence.checkpoint_turn",
       "kind": "function",
-      "line": 1139,
+      "line": 1210,
       "path": "persistence.py",
       "qualified_name": "persistence.checkpoint_turn"
     },
     {
       "id": "symbol:persistence.delete_save",
       "kind": "function",
-      "line": 440,
+      "line": 441,
       "path": "persistence.py",
       "qualified_name": "persistence.delete_save"
     },
     {
       "id": "symbol:persistence.ensure_synthetic_checkpoint",
       "kind": "function",
-      "line": 1147,
+      "line": 1218,
       "path": "persistence.py",
       "qualified_name": "persistence.ensure_synthetic_checkpoint"
     },
     {
       "id": "symbol:persistence.get_latest_save_file",
       "kind": "function",
-      "line": 355,
+      "line": 356,
       "path": "persistence.py",
       "qualified_name": "persistence.get_latest_save_file"
     },
     {
       "id": "symbol:persistence.has_checkpoint",
       "kind": "function",
-      "line": 1124,
+      "line": 1195,
       "path": "persistence.py",
       "qualified_name": "persistence.has_checkpoint"
     },
     {
       "id": "symbol:persistence.list_saves",
       "kind": "function",
-      "line": 382,
+      "line": 383,
       "path": "persistence.py",
       "qualified_name": "persistence.list_saves"
     },
     {
       "id": "symbol:persistence.load_checkpoint",
       "kind": "function",
-      "line": 1186,
+      "line": 1257,
       "path": "persistence.py",
       "qualified_name": "persistence.load_checkpoint"
     },
     {
       "id": "symbol:persistence.load_game_state",
       "kind": "function",
-      "line": 806,
+      "line": 807,
       "path": "persistence.py",
       "qualified_name": "persistence.load_game_state"
     },
     {
       "id": "symbol:persistence.migrate_state",
       "kind": "function",
-      "line": 281,
+      "line": 282,
       "path": "persistence.py",
       "qualified_name": "persistence.migrate_state"
     },
     {
       "id": "symbol:persistence.normalize_rejected_item_claims",
       "kind": "function",
-      "line": 88,
+      "line": 89,
       "path": "persistence.py",
       "qualified_name": "persistence.normalize_rejected_item_claims"
     },
     {
       "id": "symbol:persistence.restore_captured_session_memory",
       "kind": "function",
-      "line": 571,
+      "line": 572,
       "path": "persistence.py",
       "qualified_name": "persistence.restore_captured_session_memory"
     },
     {
       "id": "symbol:persistence.restore_checkpoint_memory",
       "kind": "function",
-      "line": 522,
+      "line": 523,
       "path": "persistence.py",
       "qualified_name": "persistence.restore_checkpoint_memory"
     },
     {
       "id": "symbol:persistence.save_checkpoint",
       "kind": "function",
-      "line": 1044,
+      "line": 1115,
       "path": "persistence.py",
       "qualified_name": "persistence.save_checkpoint"
     },
     {
       "id": "symbol:persistence.save_checkpoint_memory",
       "kind": "function",
-      "line": 501,
+      "line": 502,
       "path": "persistence.py",
       "qualified_name": "persistence.save_checkpoint_memory"
     },
     {
       "id": "symbol:persistence.save_game_state",
       "kind": "function",
-      "line": 742,
+      "line": 743,
       "path": "persistence.py",
       "qualified_name": "persistence.save_game_state"
     },
     {
       "id": "symbol:persistence.save_path",
       "kind": "function",
-      "line": 101,
+      "line": 102,
       "path": "persistence.py",
       "qualified_name": "persistence.save_path"
     },
@@ -378072,11 +378954,25 @@
       "qualified_name": "services.faction_display._faction_entry"
     },
     {
+      "id": "symbol:services.faction_display._fold",
+      "kind": "function",
+      "line": 197,
+      "path": "services/faction_display.py",
+      "qualified_name": "services.faction_display._fold"
+    },
+    {
       "id": "symbol:services.faction_display._name_regex",
       "kind": "function",
       "line": 111,
       "path": "services/faction_display.py",
       "qualified_name": "services.faction_display._name_regex"
+    },
+    {
+      "id": "symbol:services.faction_display._oracle_regex",
+      "kind": "function",
+      "line": 206,
+      "path": "services/faction_display.py",
+      "qualified_name": "services.faction_display._oracle_regex"
     },
     {
       "id": "symbol:services.faction_display._pattern",
@@ -378144,7 +379040,7 @@
     {
       "id": "symbol:services.faction_display.concealed_name_problems",
       "kind": "function",
-      "line": 197,
+      "line": 221,
       "path": "services/faction_display.py",
       "qualified_name": "services.faction_display.concealed_name_problems"
     },
@@ -420310,6 +421206,111 @@
       "qualified_name": "tests.test_spec293_rotulo_faccao.test_sse_sem_nome_canonico.fake_execute"
     },
     {
+      "id": "symbol:tests.test_spec294_followups._faction_label_cases",
+      "kind": "test",
+      "line": 205,
+      "path": "tests/test_spec294_followups.py",
+      "qualified_name": "tests.test_spec294_followups._faction_label_cases"
+    },
+    {
+      "id": "symbol:tests.test_spec294_followups._legacy_raw",
+      "kind": "test",
+      "line": 97,
+      "path": "tests/test_spec294_followups.py",
+      "qualified_name": "tests.test_spec294_followups._legacy_raw"
+    },
+    {
+      "id": "symbol:tests.test_spec294_followups._oracle_outcomes",
+      "kind": "test",
+      "line": 212,
+      "path": "tests/test_spec294_followups.py",
+      "qualified_name": "tests.test_spec294_followups._oracle_outcomes"
+    },
+    {
+      "id": "symbol:tests.test_spec294_followups.test_archetype_sem_casamento_cai_no_nome",
+      "kind": "test",
+      "line": 179,
+      "path": "tests/test_spec294_followups.py",
+      "qualified_name": "tests.test_spec294_followups.test_archetype_sem_casamento_cai_no_nome"
+    },
+    {
+      "id": "symbol:tests.test_spec294_followups.test_backfill_ids_opacos_deterministicos_e_puros",
+      "kind": "test",
+      "line": 138,
+      "path": "tests/test_spec294_followups.py",
+      "qualified_name": "tests.test_spec294_followups.test_backfill_ids_opacos_deterministicos_e_puros"
+    },
+    {
+      "id": "symbol:tests.test_spec294_followups.test_backfill_reescreve_referencias_do_combate",
+      "kind": "test",
+      "line": 152,
+      "path": "tests/test_spec294_followups.py",
+      "qualified_name": "tests.test_spec294_followups.test_backfill_reescreve_referencias_do_combate"
+    },
+    {
+      "id": "symbol:tests.test_spec294_followups.test_eval_casos_do_rotulo_passam",
+      "kind": "test",
+      "line": 228,
+      "path": "tests/test_spec294_followups.py",
+      "qualified_name": "tests.test_spec294_followups.test_eval_casos_do_rotulo_passam"
+    },
+    {
+      "id": "symbol:tests.test_spec294_followups.test_eval_mutacao_do_oraculo_e_detectada",
+      "kind": "test",
+      "line": 234,
+      "path": "tests/test_spec294_followups.py",
+      "qualified_name": "tests.test_spec294_followups.test_eval_mutacao_do_oraculo_e_detectada"
+    },
+    {
+      "id": "symbol:tests.test_spec294_followups.test_load_legado_sem_nome_canonico_em_ids_e_alvos",
+      "kind": "test",
+      "line": 186,
+      "path": "tests/test_spec294_followups.py",
+      "qualified_name": "tests.test_spec294_followups.test_load_legado_sem_nome_canonico_em_ids_e_alvos"
+    },
+    {
+      "id": "symbol:tests.test_spec294_followups.test_oraculo_acusa_ocorrencia_de_palavra",
+      "kind": "test",
+      "line": 42,
+      "path": "tests/test_spec294_followups.py",
+      "qualified_name": "tests.test_spec294_followups.test_oraculo_acusa_ocorrencia_de_palavra"
+    },
+    {
+      "id": "symbol:tests.test_spec294_followups.test_oraculo_cobre_projecao_e_projecao_e_limpa",
+      "kind": "test",
+      "line": 86,
+      "path": "tests/test_spec294_followups.py",
+      "qualified_name": "tests.test_spec294_followups.test_oraculo_cobre_projecao_e_projecao_e_limpa"
+    },
+    {
+      "id": "symbol:tests.test_spec294_followups.test_oraculo_respeita_faccao_revelada",
+      "kind": "test",
+      "line": 61,
+      "path": "tests/test_spec294_followups.py",
+      "qualified_name": "tests.test_spec294_followups.test_oraculo_respeita_faccao_revelada"
+    },
+    {
+      "id": "symbol:tests.test_spec294_followups.test_oraculo_respeita_fronteira",
+      "kind": "test",
+      "line": 57,
+      "path": "tests/test_spec294_followups.py",
+      "qualified_name": "tests.test_spec294_followups.test_oraculo_respeita_fronteira"
+    },
+    {
+      "id": "symbol:tests.test_spec294_followups.test_save_com_id_inalterado_e_colisao",
+      "kind": "test",
+      "line": 164,
+      "path": "tests/test_spec294_followups.py",
+      "qualified_name": "tests.test_spec294_followups.test_save_com_id_inalterado_e_colisao"
+    },
+    {
+      "id": "symbol:tests.test_spec294_followups.test_save_sem_inimigos_sem_copia",
+      "kind": "test",
+      "line": 174,
+      "path": "tests/test_spec294_followups.py",
+      "qualified_name": "tests.test_spec294_followups.test_save_sem_inimigos_sem_copia"
+    },
+    {
       "id": "symbol:tests.test_spec_index._apply",
       "kind": "test",
       "line": 47,
@@ -424126,5 +425127,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:1d21242f3e6c0a7a3a646cbc726c146460879cd82aa6fc8cf335c0338961cdf7"
+  "source_tree_hash": "sha256:570a4102d99d6a45f220e3f06a9f56d5b281742f409e6bfad9b175a3d9af0c27"
 }

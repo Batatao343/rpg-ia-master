@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "e861ea7e04e406e12ea85a67c2adae8ad7b238cf",
+  "commit_sha": "4b898c6ce2caf3404322df6bf88228e04fa33343",
   "edge_counts": {
-    "calls": 17669,
-    "contains": 733,
-    "defines": 10017,
-    "imports": 1624,
-    "likely_test_for": 1005,
+    "calls": 17711,
+    "contains": 734,
+    "defines": 10037,
+    "imports": 1631,
+    "likely_test_for": 1012,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:ff5f83e34a3096cdbefd55623b34697d01bd81ca2ccc35f0476e142643769f23",
+  "graph_hash": "sha256:432a51772f50bedab89bb51db83858d0769a750f2381a883e19775963944e9ed",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -744,6 +744,7 @@
     "tests/test_spec289_ameaca_tematica.py",
     "tests/test_spec290_chefe_sobrevivencia.py",
     "tests/test_spec293_rotulo_faccao.py",
+    "tests/test_spec294_followups.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -935,12 +936,12 @@
     "artifact": 9,
     "class": 795,
     "endpoint": 63,
-    "file": 879,
-    "function": 3080,
+    "file": 880,
+    "function": 3085,
     "method": 750,
-    "module": 733,
-    "test": 5391
+    "module": 734,
+    "test": 5406
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:1d21242f3e6c0a7a3a646cbc726c146460879cd82aa6fc8cf335c0338961cdf7"
+  "source_tree_hash": "sha256:570a4102d99d6a45f220e3f06a9f56d5b281742f409e6bfad9b175a3d9af0c27"
 }
