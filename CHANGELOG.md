@@ -7,6 +7,8 @@
 
 ## 2026-10-19 — onda: workspace, logs P2/P3, frontend majors, staging (222/236/279/280)
 
+- **19/10 — SPEC-294 `done`:** oráculo de fação oculta casa por palavra inteira (acento/espaço/hífen/plural; "Azulado" não acusa; símbolo colado como `™` agora acusa — NFD); inimigo de save legado sem `id` ganha id opaco `enemy_legacy_<n>` no load, refs do combate migram junto; 5 casos novos de eval `player_knowledge` com mutação do oráculo (lock regenerado, aprovado no `eval-governance`). Laboratório de combate mantém o bestiário canônico (decisão do coordenador). Revisão Opus APPROVED_WITH_FOLLOWUPS ([parecer](handoffs/SPEC-294-review.md)).
+
 - **19/10 — SPEC-293 `done`:** quem ainda não conhece a fação vê o combatente só pelo papel ("Iniciado"; "Combatente desconhecido" quando o nome é a própria fação) em HUD, POST/SSE/state, manifesto público, desfecho, log, histórico, crônica, Codex e dossiês. Rótulo calculado na leitura (`services/faction_display.py`); canônico segue no save/ids; após a revelação o nome completo aparece em tudo. Oráculo `assert_no_player_leak` ganhou a checagem (e). Revisão Opus APPROVED_WITH_FOLLOWUPS ([parecer](handoffs/SPEC-293-review.md)).
 
 - **19/10 — SPEC-292 `done`:** pressão de caça da 6.3 mistura o pool regional do mesmo porte quando a criatura temática rareia (determinístico; população intacta = SPEC-289); encontro ganha `public_hint`/`concealed_faction` e o narrador de combate chama combatente de fação desconhecida só pelo papel ("Iniciado"), validado com DeepSeek e Groq reais. Revisão Opus APPROVED_WITH_FOLLOWUPS ([parecer](handoffs/SPEC-292-review.md)). Follow-up P1 (pré-existente): HUD/manifesto público/log/Bestiário ainda mostram o nome com o radical da fação → spec de rótulo de exibição por observador.
