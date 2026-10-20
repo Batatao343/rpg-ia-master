@@ -22,10 +22,11 @@
 
 ## Próximos 3 passos
 
-1. Fechar as 5 specs `in-progress` (bloqueios abaixo).
-2. Aprovar/ordenar os 12 drafts: logging P2 (244, 246, 251–253, 256, 258–261), 104
-   (cloud portátil, on hold) e 273 (não recomendada pelo dono).
-3. Rebalancear letalidade (SPEC-049): subiu com SPEC-232 e SPEC-275.
+> **Retomando? Leia primeiro [docs/HANDOFF-PROXIMA-SESSAO.md](docs/HANDOFF-PROXIMA-SESSAO.md).**
+
+1. SPEC-236 §6.2 dia 2 (a partir de 20/10 00:00 BRT; [roteiro](docs/staging-wave-2026-10-17/spec236-s62-plano.md)).
+2. Spec "Chefe no topo" — decidido pelo dono em 19/10 ("sim"); escopo no handoff.
+3. Bloqueios externos abaixo, quando o dono agir.
 
 ## Bloqueios no dono
 
@@ -42,7 +43,6 @@ Coluna "quando ele disser" = o que o coordenador executa na hora.
 | Logs externos (Axiom) | criar conta Axiom e colar o token no `.env.staging` | "faz o Axiom" → envio direto do app, retenção ~30 d |
 | SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera a 104" → certificação cloud |
 | Plugins não usados | desligar em claude.ai → Settings → Plugins | — |
-| Design: "Chefe no topo" | decidir se o Chefe deve ser o encontro mais letal do nível (hoje: abaixo de Padrão/Elite, acima de Lacaio — [SPEC-287](specs/SPEC-287-encontros-escala-nivel-5-plus.md)) | "Chefe no topo: sim" → spec de séquito/ações extras por Nível do Encontro |
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
 
 ## Decisões recentes (≤ 7 dias)
