@@ -1,6 +1,6 @@
 # SPEC-295 — Chefe no topo
 
-> **Status:** `in-progress` (decisão do dono em 2026-10-19: "Chefe no topo: sim"; ratifica o P2-4 da SPEC-287)
+> **Status:** `done` (decisão do dono em 2026-10-19: "Chefe no topo: sim"; ratifica o P2-4 da SPEC-287; revisão Opus APPROVED_WITH_FOLLOWUPS em 2026-10-19)
 > **Criada:** 2026-10-19 · **Atualizada:** 2026-10-19
 > **Origem:** SPEC-287 §2 (desvio "Chefe no topo") e revisão P2-4; `docs/HANDOFF-PROXIMA-SESSAO.md` §2
 > **Depende de:** SPEC-285 (`done`), SPEC-287 (`done`)
@@ -199,7 +199,19 @@ monta (Chefe + o que esta spec acrescentar, ex.: séquito):
 - [x] C5: E1–E3 da SPEC-287 seguem valendo (células não-Chefe idênticas; Chefe só subiu)
 - [x] R1/R2: tabela de sondas e justificativa da escolha mínima na §8
 - [x] R9: saves antigos carregam (ficha sem os campos = 1 ação, Proteção 0; teste)
-- [ ] Revisão independente Opus (`handoffs/SPEC-295-review.md`) sem P0/P1
+- [x] Revisão independente Opus ([handoff](../handoffs/SPEC-295-review.md)):
+  APPROVED_WITH_FOLLOWUPS, sem P0/P1.
+  - Corrigidos: P2-2 (teste de Chefe terminal entre a 1ª e a 2ª ação) e P3-3
+    (campo de sobrevivência inválido não tira mais as 2 ações nem a Proteção).
+  - Documentados no código: P3-1 (stun no meio da rodada vale na próxima) e P3-2
+    (as ações dividem o limite por turno das Cartas de inimigo).
+  - Para o dono/SPEC-049: P2-1 (Proteção `{1: 2, 3: 1}` não é monotônica: Nível
+    do Encontro 2 e 4+ ficam com 0) e P3-4 (Chefe mata 0,86–0,89 no `basico`
+    níveis 5–8; monitorar antes do beta).
+  - Instrumento: P3-5 (comparação com `main` só em árvore limpa; o overlay runtime
+    do checkout no OneDrive põe 2 criaturas a mais nos pools).
+  - Follow-up: cenário de playtest que force combate de Chefe (o loop real não
+    encontra Chefe nas seeds medidas).
 - [x] `uv run pytest` verde (suíte completa `-n auto`: 4.397 passed, 238 skipped; só as 3 falhas de índice stale — `specs/index.yaml` e Project Index — regenerados no pouso)
 
 ## 7. Smoke real

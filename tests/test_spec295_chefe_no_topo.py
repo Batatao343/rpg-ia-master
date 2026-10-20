@@ -187,6 +187,23 @@ def test_stun_denies_all_boss_actions():
     assert out["resolved_turns"].count("boss") == 0
 
 
+def test_boss_terminal_after_first_action_does_not_act_again(monkeypatch):
+    """Revisão P2-2: Chefe que entra em Estado Terminal entre a 1ª e a 2ª ação
+    não age de novo (Vitalidade 0 sozinha não é terminal no v4)."""
+    boss = _mk("boss", categoria="chefe", acoes_por_rodada=2)
+    real = orch._resolve_actor_turn
+
+    def resolve(scene, actor, actor_id, *args, **kwargs):
+        real(scene, actor, actor_id, *args, **kwargs)
+        if actor_id == "boss":
+            actor["estado_terminal"] = True
+
+    monkeypatch.setattr(orch, "_resolve_actor_turn", resolve)
+    out, _ = _round(boss)
+    assert out["resolved_turns"].count("boss") == 1
+    assert not any("age de novo" in line for line in out["logs"])
+
+
 def test_condition_ticks_once_per_round():
     boss = _mk("boss", categoria="chefe", acoes_por_rodada=3, max_vitalidade=50, vitalidade=50)
     cm.apply_condition(boss, {"name": "Sangrando", "dot": 1, "duration": 5})
@@ -216,3 +233,17 @@ def test_same_seed_same_outcome():
         return out["logs"], player["vitalidade"], boss["vitalidade"]
 
     assert run() == run()
+
+
+def test_invalid_survival_field_keeps_boss_actions_and_protection():
+    """Revisão P3-3: `vitalidade_por_nivel_encontro` inválido não tira K2 nem a Proteção."""
+    data = {
+        "name": "X",
+        "categoria": "chefe",
+        "max_vitalidade": 10,
+        "vitalidade_por_nivel_encontro": "x",
+    }
+    bestiary.apply_encounter_survival(data, 1)
+    assert data["acoes_por_rodada"] == 2
+    assert data["protecao_natural"] == bestiary.CHEFE_PROTECAO_POR_NIVEL_ENCONTRO[1]
+    assert data["max_vitalidade"] == 10

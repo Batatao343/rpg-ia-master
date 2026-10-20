@@ -1841,7 +1841,9 @@ def _stalemate_guard(
 def extra_actions(actor: dict) -> int:
     """SPEC-295 (K2): ações além da primeira na rodada (`acoes_por_rodada` − 1).
 
-    Só ficha de inimigo traz o campo; ausente (saves antigos) = 1 ação."""
+    Só ficha de inimigo traz o campo; ausente (saves antigos) = 1 ação.
+    As ações da rodada dividem o mesmo limite por turno das Cartas de inimigo
+    (`reset_enemy_card_usage` roda uma vez por rodada; revisão P3-2)."""
     try:
         return max(0, int(actor.get("acoes_por_rodada") or 1) - 1)
     except (TypeError, ValueError):

@@ -271,13 +271,18 @@ def apply_encounter_survival(data: dict, encounter_level: int) -> dict:
 
     try:
         categoria = normalize_categoria(data)
-        per_level = data.get("vitalidade_por_nivel_encontro")
-        if per_level is None:
-            per_level = DEFAULT_SURVIVAL_PER_LEVEL.get(categoria, 0)
-        per_level = int(per_level or 0)
         level = int(encounter_level or 1)
     except (TypeError, ValueError):
         return data
+    per_level = data.get("vitalidade_por_nivel_encontro")
+    if per_level is None:
+        per_level = DEFAULT_SURVIVAL_PER_LEVEL.get(categoria, 0)
+    try:
+        per_level = int(per_level or 0)
+    except (TypeError, ValueError):
+        # Revisão P3-3: campo inválido só zera o bônus de Vitalidade; o Chefe
+        # mantém as ações extras e a Proteção abaixo.
+        per_level = 0
     steps = min(ENCOUNTER_SURVIVAL_MAX_STEPS, max(0, level - (ENCOUNTER_SURVIVAL_FROM_LEVEL - 1)))
     bonus = max(0, per_level) * steps
     if bonus:
