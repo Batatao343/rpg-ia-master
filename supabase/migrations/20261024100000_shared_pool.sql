@@ -30,7 +30,10 @@ create table if not exists app.shared_pool (
   evaluated_at timestamptz,
   duplicate_of text,
   veto_reason text check (veto_reason is null or length(veto_reason) <= 200),
-  version int not null default 1
+  version int not null default 1,
+  -- P2-4: linha viva sem dono escaparia da exclusão de conta (LGPD) e do teto por dono.
+  constraint shared_pool_owner_required check (
+    origin_owner_id is not null or status in ('promoted','vetoed','retired'))
 );
 
 create index if not exists shared_pool_ns_status_region_idx
@@ -109,6 +112,14 @@ revoke all on function app.guard_deleted_account_write_origin() from public, ano
 drop trigger if exists account_write_fence on app.shared_pool;
 create trigger account_write_fence before insert or update on app.shared_pool
   for each row execute function app.guard_deleted_account_write_origin();
+
+-- R20: custo da avaliacao do pool entra em usage_events sob um dono de SISTEMA (nao do jogador);
+-- a operacao tem kind proprio.
+alter table app.operations drop constraint if exists operations_kind_check;
+alter table app.operations add constraint operations_kind_check check (
+  kind in ('new_game','turn','death','equip','levelup','delete','account_delete',
+           'art','embedding','prologue','chronicle_search','chronicle_compress',
+           'speech_to_text','archive_projection','pool_evaluation'));
 
 -- rpg_admin/rpg_runtime sao NOBYPASSRLS: cria as policies admin_all/runtime_all.
 select app.grant_runtime_access();

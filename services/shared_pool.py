@@ -116,7 +116,11 @@ def get_store():
         store = getattr(get_runtime(), "shared_pool", None)
         if store is not None:
             return store
-    except Exception as exc:  # silent-ok: runtime indisponível -> fallback legacy
+    except Exception as exc:
+        if not _is_legacy_profile():
+            # P2-5: fora do legacy NUNCA cai para JSON local (sem RLS): falha fechada.
+            log_event("pool", "store_runtime_unavailable", level="error", error=type(exc).__name__)
+            raise
         log_event("pool", "store_runtime_unavailable", level="debug", error=type(exc).__name__)
     if _default_store is None:
         from gamedata import runtime_cache_path
@@ -124,6 +128,10 @@ def get_store():
 
         _default_store = JsonSharedPoolStore(lambda: runtime_cache_path("shared_pool.json"))
     return _default_store
+
+
+def _is_legacy_profile() -> bool:
+    return str(os.getenv("RPG_RUNTIME_PROFILE", "legacy") or "legacy").strip().lower() == "legacy"
 
 
 def reset_default_store() -> None:
@@ -163,6 +171,8 @@ def submit(
     store = store or get_store()
     now = now or _utcnow()
     owner = owner_id if owner_id is not None else _current_owner_id()
+    if owner is None and not _is_legacy_profile():
+        raise ValueError("submit ao pool exige principal fora do perfil legacy")
     name = str(document.get("name", ""))[:60]
     eligible = name_origin != "player"  # D1: nome digitado nunca promove
     signature = seed_signature(seed) if seed is not None else ""
@@ -414,6 +424,7 @@ def evaluate(
     llm=None,
     similar_names: Sequence[str] = (),
     usage_sink: Callable[[SharedPoolEntry, list[dict]], None] | None = None,
+    attempts_out: list[dict] | None = None,
 ) -> PoolEvaluation | None:
     """1 invoke CLASSIFY temp 0. None = indisponível (fallback/erro): fail-closed (R17)."""
     from langchain_core.messages import HumanMessage, SystemMessage
@@ -459,6 +470,8 @@ def evaluate(
         log_event("pool", "eval_error", level="warning", error=type(exc).__name__)
         result = None
     finally:
+        if attempts_out is not None:
+            attempts_out.extend(attempts)
         if usage_sink is not None and attempts:
             try:
                 usage_sink(entry, attempts)
@@ -535,13 +548,21 @@ def promote_due(
                 log_event("pool", "eval_capped", level="warning")
                 counts["held"] += 1
                 break
+            seen_attempts: list[dict] = []
             result = evaluate(
                 entry,
                 llm=llm,
                 similar_names=[o.name for _score, o in similar],
                 usage_sink=usage_sink,
+                attempts_out=seen_attempts,
             )
             store.update(entry.entry_id, {"evaluated_at": now.isoformat()})
+            if result is not None and not allow_mock_eval():
+                if any(str(a.get("provider")) == "mock" for a in seen_attempts):
+                    # R17: a telemetria também acusa mock -> nunca promove.
+                    log_event("pool", "mock_eval_blocked", level="warning")
+                    counts["held"] += 1
+                    continue
             if result is None:
                 attempts = entry.attempts + 1
                 if attempts >= 3:
@@ -568,6 +589,7 @@ def promote_due(
                     "evaluation": evaluation,
                     "embedding": vector,
                     "embedding_profile": embedding_profile if vector is not None else None,
+                    "input_shingles": [],  # P2-3: não servem mais depois da promoção
                 },
             )
             log_event("pool", "promoted", entry_id=entry.entry_id, namespace=entry.namespace.value)
@@ -622,6 +644,18 @@ def admin_retire(store, entry_id: str) -> SharedPoolEntry:
 # Reuso no jogo B (R22-R24)
 # --------------------------------------------------------------------------- #
 CAST_MAX = 2
+ATTRIBUTE_KEYS = ("str", "dex", "con", "int", "wis", "cha")
+
+
+def name_typed_by_player(name: str, player_inputs: Sequence[str]) -> bool:
+    """P1-3: o nome (ou um token >= 4 letras dele) aparece nas entradas recentes do JOGADOR.
+
+    Impede que um nome digitado (ex.: pessoa real) seja "lavado" pelo narrador."""
+    inputs = {t for text in player_inputs for t in _TOKEN.findall(fold_name(text))}
+    folded = fold_name(name)
+    if folded and folded in " ".join(fold_name(t) for t in player_inputs):
+        return True
+    return any(len(tok) >= 4 and tok in inputs for tok in _TOKEN.findall(folded))
 
 
 def _clean_line(text: object, limit: int) -> str:
@@ -700,6 +734,7 @@ def cast_block_text(picked: Sequence[SharedPoolEntry]) -> str:
         + "\nSe a cena introduzir alguém novo, prefira um destes (use o nome EXATO em "
         "'introduced_npcs'); a lenda só pode surgir como fala de alguém em cena.\n"
         "</ELENCO_POSSIVEL>"
+        "\n\n    "
     )
 
 
@@ -729,8 +764,17 @@ def materialize_npc(entry: SharedPoolEntry, *, game_id: str, home_location_id: s
         "attributes", {"str": 10, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10}
     )
     try:
-        base["initial_relationship"] = int(base.get("initial_relationship", 5))
+        base["initial_relationship"] = max(-100, min(100, int(base.get("initial_relationship", 5))))
     except (TypeError, ValueError):
         base["initial_relationship"] = 5
+    attrs = base.get("attributes")
+    base["attributes"] = {
+        k: max(1, min(30, int(attrs.get(k, 10))))
+        if isinstance(attrs, dict)
+        and isinstance(attrs.get(k), int)
+        and not isinstance(attrs.get(k), bool)
+        else 10
+        for k in ATTRIBUTE_KEYS
+    }
     base["relationship"] = base["initial_relationship"]
     return _materialize_npc_combat_sheet(base)

@@ -97,6 +97,39 @@ def _text_fields(entry: SharedPoolEntry) -> dict[str, str]:
 # --------------------------------------------------------------------------- #
 # schema
 # --------------------------------------------------------------------------- #
+_ATTRIBUTE_KEYS = frozenset({"str", "dex", "con", "int", "wis", "cha"})
+
+
+def _is_int(value: object) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool)
+
+
+def _validate_typed_fields(entry: SharedPoolEntry) -> list[Finding]:
+    """P2-2: campos não-texto do documento (tipo e faixa)."""
+    doc = entry.document
+    findings: list[Finding] = []
+    attrs = doc.get("attributes")
+    if attrs is not None:
+        if not (
+            isinstance(attrs, dict)
+            and set(attrs) <= _ATTRIBUTE_KEYS
+            and all(_is_int(v) and 1 <= v <= 30 for v in attrs.values())
+        ):
+            findings.append(Finding("schema_bad_attributes", "attributes"))
+    rel = doc.get("initial_relationship")
+    if rel is not None and not (_is_int(rel) and -100 <= rel <= 100):
+        findings.append(Finding("schema_bad_value", "initial_relationship"))
+    for key in ("unique", "stackable"):
+        if key in doc and not isinstance(doc[key], bool):
+            findings.append(Finding("schema_bad_value", key))
+    tags = doc.get("tags", doc.get("region_tags"))
+    if tags is not None and not (
+        isinstance(tags, list) and len(tags) <= 20 and all(isinstance(t, str) for t in tags)
+    ):
+        findings.append(Finding("schema_bad_value", "tags"))
+    return findings
+
+
 def validate_schema(entry: SharedPoolEntry) -> list[Finding]:
     findings: list[Finding] = []
     allowed = DOCUMENT_ALLOWLIST[entry.namespace]
@@ -109,6 +142,7 @@ def validate_schema(entry: SharedPoolEntry) -> list[Finding]:
         "elite",
     }:
         findings.append(Finding("creature_category", "categoria"))
+    findings += _validate_typed_fields(entry)
     for key in _ID_FIELDS:
         value = entry.document.get(key)
         if value is not None and not (isinstance(value, str) and _ID_RE.match(value)):

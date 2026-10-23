@@ -186,14 +186,14 @@ def test_bestiary_submit_and_promoted_visible_by_name(monkeypatch, pool_on):
     )
     # promovida: o jogo B (flag on) enxerga o TIPO pela view do bestiário, ficha recalculada pelo motor
     sp.get_store().update(e.entry_id, {"status": "promoted"})
-    view = bst_mod.load_bestiary("game-b")
+    view = bst_mod.load_bestiary("game-b", "nova_arcadia")
     pooled = [v for v in view.values() if v.get("pool_entry_id") == e.entry_id]
     assert pooled and pooled[0]["max_vitalidade"] > 0 and pooled[0]["virtudes"]
     # flag shadow: nenhum leitor expõe entrada de outro jogo
     import os
 
     os.environ["RPG_SHARED_POOL"] = "shadow"
-    assert not [v for v in bst_mod.load_bestiary("game-b").values() if v.get("pool_entry_id")]
+    assert not [v for v in bst_mod.load_bestiary("game-b", "nova_arcadia").values() if v.get("pool_entry_id")]
     os.environ["RPG_SHARED_POOL"] = "on"
 
 

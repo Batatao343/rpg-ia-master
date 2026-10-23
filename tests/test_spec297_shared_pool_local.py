@@ -174,3 +174,103 @@ def test_write_fence_blocks_deleted_owner(db):
     db.execute("insert into app.account_deletions (owner_id) values (%s)", (owner,))
     with pytest.raises(Exception, match="account_deleted"):
         _insert_sql(db, entry(entry_id="pool_npc_fz", status="held", owner=owner))
+
+
+def test_live_row_without_owner_is_rejected_by_check(db):
+    _as_system(db)
+    with pytest.raises(Exception, match="shared_pool_owner_required"):
+        _insert_sql(db, entry(entry_id="pool_npc_no", status="held", owner=None))
+
+
+def test_usage_sink_and_owner_lookup_against_real_schema(db, store):
+    from infrastructure.usage_events import spend_schema_ready  # noqa: F401
+    from workers import shared_pool_jobs as jobs
+
+    _as_system(db)
+    attempts = [
+        {
+            "provider": "deepseek",
+            "model": "deepseek-chat",
+            "outcome": "success",
+            "network_attempted": True,
+            "usage": {"input_tokens": 100, "output_tokens": 20},
+        }
+    ]
+    jobs.make_usage_sink(store.pool)(entry(entry_id="pool_npc_u1"), attempts)
+    row = db.execute(
+        "select count(*) n from app.usage_events where owner_id=%s and component like 'pool_eval%%'",
+        (jobs.SYSTEM_OWNER_ID,),
+    ).fetchone()
+    assert row["n"] == 1
+    user = uuid4()
+    db.execute(
+        "insert into auth.users (id, email, raw_user_meta_data) values (%s, %s, %s::jsonb)",
+        (user, f"{user}@example.test", '{"full_name": "Pessoa De Teste"}'),
+    )
+    values = jobs.make_owner_values(store.pool)(entry(owner=user))
+    assert f"{user}@example.test" in values and "Pessoa De Teste" in values
+
+
+def test_export_includes_owner_pool_rows(db):
+    _as_system(db)
+    owner = uuid4()
+    _insert_sql(db, entry(entry_id="pool_npc_ex", status="held", owner=owner))
+    rows = db.execute(
+        "select entry_id from app.shared_pool where origin_owner_id=%s", (owner,)
+    ).fetchall()
+    assert [r["entry_id"] for r in rows] == ["pool_npc_ex"]
+
+
+def test_skip_locked_across_two_real_connections():
+    psycopg = pytest.importorskip("psycopg")
+    from psycopg.rows import dict_row
+
+    dsn = os.getenv("RPG_TEST_DATABASE_URL")
+    if not dsn:
+        pytest.skip("RPG_TEST_DATABASE_URL absent")
+    from infrastructure.postgres_shared_pool import PostgresSharedPoolStore
+
+    owner = uuid4()
+    ids = [f"pool_npc_sk{i}_{uuid4().hex[:6]}" for i in range(4)]
+    with psycopg.connect(dsn, row_factory=dict_row, autocommit=True) as setup:
+        if setup.execute("select to_regclass('app.shared_pool') t").fetchone()["t"] is None:
+            setup.execute(
+                Path("supabase/migrations/20261024100000_shared_pool.sql").read_text(
+                    encoding="utf-8"
+                )
+            )
+        for i, eid in enumerate(ids):
+            _insert_sql(
+                setup,
+                entry(
+                    entry_id=eid,
+                    status="held",
+                    owner=owner,
+                    name=f"Sk Teste{i}",
+                    promote_after=NOW - timedelta(hours=1),
+                ),
+            )
+    try:
+        with (
+            psycopg.connect(dsn, row_factory=dict_row) as holder,
+            psycopg.connect(dsn, row_factory=dict_row, autocommit=True) as worker,
+        ):
+            # worker 1 segura o lock de 2 linhas numa transação ABERTA
+            held = holder.execute(
+                "select entry_id from app.shared_pool where origin_owner_id=%s "
+                "order by created_at, entry_id limit 2 for update",
+                (owner,),
+            ).fetchall()
+            assert len(held) == 2
+
+            class Pool:
+                def connection(self):
+                    return nullcontext(worker)
+
+            got = PostgresSharedPoolStore(Pool()).due(NOW, 4)
+            mine = {e.entry_id for e in got} & set(ids)
+            assert mine.isdisjoint({r["entry_id"] for r in held}) and len(mine) == 2
+            holder.rollback()
+    finally:
+        with psycopg.connect(dsn, autocommit=True) as cleanup:
+            cleanup.execute("delete from app.shared_pool where origin_owner_id=%s", (owner,))

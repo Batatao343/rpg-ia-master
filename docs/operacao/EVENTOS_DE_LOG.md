@@ -163,6 +163,8 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `pool.embedder_unavailable` | `error` |
 | `pool.eval_capped` | — |
 | `pool.eval_error` | `error` |
+| `pool.eval_usage` | `attempts`, `entry_id` |
+| `pool.mock_eval_blocked` | — |
 | `pool.promote_failed` | `entry_id`, `error` |
 | `pool.promoted` | `entry_id`, `namespace` |
 | `pool.region_lookup_failed` | `error` |

@@ -441,6 +441,12 @@ def _deterministic_story_fallback(notes, light: dict) -> str:
     return "\n".join(parts) or ("O momento passa em silêncio; o mundo aguarda seu próximo passo.")
 
 
+def _typed_by_player(name: str, player_inputs) -> bool:
+    from services.shared_pool import name_typed_by_player
+
+    return name_typed_by_player(name, player_inputs)
+
+
 def _pool_enabled() -> bool:
     from services.shared_pool import enabled
 
@@ -508,7 +514,8 @@ def _with_new_npc(
             context=f"Local: {loc}",
             game_id=game_id,
             location_id=home_id,
-            name_origin="narrator",
+            # P1-3: nome que o jogador digitou e o narrador devolveu continua "player".
+            name_origin=("player" if _typed_by_player(new_name, player_inputs) else "narrator"),
             turn=turn,
             player_inputs=player_inputs,
         )
@@ -1044,9 +1051,7 @@ def storyteller_node(state: GameState):
 
     {capacidades_block}
 
-    {cast_block_text}
-
-    {pack.world_state_block}
+    {cast_block_text}{pack.world_state_block}
     (Se o ESTADO ATUAL DO MUNDO acima contradisser o lore/fatos passados abaixo, o ESTADO ATUAL VENCE.)
 
     <MEMORIA_RECENTE>
@@ -1262,7 +1267,7 @@ def storyteller_node(state: GameState):
         introduced_npcs = [] if quarantine_llm_payload else (update.introduced_npcs or [])
         _pool_used_new: list = []
         _recent_player_inputs = tuple(
-            str(m.content) for m in messages[-3:] if isinstance(m, HumanMessage)
+            str(m.content) for m in [m for m in messages if isinstance(m, HumanMessage)][-3:]
         )
         npcs_left_scene = (
             [] if quarantine_llm_payload else (getattr(update, "npcs_left_scene", []) or [])

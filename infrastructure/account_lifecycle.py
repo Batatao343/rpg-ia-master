@@ -393,6 +393,13 @@ class PostgresAccountLifecycle:
                 ).fetchall()
                 for table in _present_tables(db, EXPORT_TABLES)
             }
+            if db.execute("select to_regclass('app.shared_pool') as r").fetchone()["r"]:
+                # SPEC-297 P2-8: entidades geradas pelo titular ainda vinculadas a ele.
+                data["shared_pool"] = db.execute(
+                    """select entry_id,namespace,status,region_id,name,document,legend,created_at
+                    from app.shared_pool where origin_owner_id=%s""",
+                    (principal.user_id,),
+                ).fetchall()
             data["payment_financial_events"] = db.execute(
                 """select f.financial_id,f.order_id,f.kind,
                 f.amount_cents,f.currency,f.outcome,f.created_at from app.payment_financial_events f

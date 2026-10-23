@@ -228,7 +228,9 @@ def cron_shared_pool(request: Request):
         store = getattr(_runtime(), "shared_pool", None)
         if store is None:
             raise RuntimeError("shared_pool_store_missing")
-        return promote_due_job(store)
+        # R20/R14: com Postgres, custo -> usage_events (dono de sistema) e PII com o dono de origem.
+        pool = getattr(getattr(_runtime(), "game_store", None), "pool", None)
+        return promote_due_job(store, pool=pool)
 
     return _run("shared_pool", task)
 

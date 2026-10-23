@@ -774,3 +774,11 @@ Entregue: R1–R34 em código + testes `tests/test_spec297_*.py`. Desvios e lacu
 - `RPG_POOL_ALLOW_MOCK_EVAL` entrou em `FORBIDDEN_IN_HOSTED`.
 - `data/npc_seed_tables.json` é rascunho (D8): dono revisa antes de `on` no staging.
 - Etapa 11 (playtest `diplomatico`/`explorador`, seeds 21–26): ver hand-back.
+
+### Correções da revisão Sol (2026-10-24)
+
+- **P1-1:** o cron passa o pool Postgres a `promote_due_job(pool=…)`: `usage_sink` grava `app.operations` (kind novo `pool_evaluation`, na migração) + `usage_events` sob o dono de sistema `00000000-0000-0000-0000-000000000297` (a FinOps vê o custo; nenhuma carteira/teto de jogador é tocado — R20 não pode ser "sem dono" porque `usage_events.owner_id` é NOT NULL); `owner_values` resolve e-mail e nome de exibição de `auth.users`. No legacy (`scripts/pool_promote.py`) só há log `pool.eval_usage` (não há contas).
+- **P1-3/P2-6:** nome introduzido pelo narrador que aparece (nome ou token ≥ 4 letras) nas 3 últimas entradas **do jogador** vira `name_origin="player"` → `local_only`.
+- **P2:** tipos/faixas de `attributes`/`initial_relationship`/`unique`/`stackable`/tags; clamp na materialização; `input_shingles` zerado na promoção; `CHECK shared_pool_owner_required`; `submit` e `get_store()` falham fechados fora do legacy; mock detectado também pela telemetria (`provider == "mock"`); export LGPD inclui `shared_pool` do titular; bestiário filtra promovidas por região (`load_bestiary(game_id, region_id)`); separador do bloco de elenco só quando há bloco.
+- **Não feito (registrado):** grant por coluna/view sem `origin_*`/`input_shingles` para `rpg_api` (P2-3, segunda parte; `rpg_api` ainda lê esses campos de promovidas de outros tenants no request, e `input_shingles` agora vem vazio após a promoção); `pool_used: []` continua entrando no save com a flag off.
+- **Postgres (P1-4):** stack local deste repo (:55322). `tests/test_spec297_shared_pool_local.py` (13 testes: RLS insert/update/leitura, trigger de imutabilidade, CHECK de dono, lease + `skip locked` com 2 conexões reais, `erase_owner`, cerca de exclusão, sink de uso e lookup de `auth.users` reais) **passa**; `-m "security_local or infra_local"` do repo inteiro passa sem falhas. A migração ficou aplicada (commit) na base local 55322.

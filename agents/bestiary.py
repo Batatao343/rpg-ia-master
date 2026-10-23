@@ -208,7 +208,7 @@ def _pool_creature_template(entry) -> dict:
     return out
 
 
-def _pool_bestiary_view(game_id: str) -> dict:
+def _pool_bestiary_view(game_id: str, region_id: str = "") -> dict:
     """Criaturas do próprio jogo (qualquer status) + promovidas (só com a flag `on`)."""
     from services import shared_pool
     from services.shared_pool_models import PoolNamespace, PoolStatus
@@ -216,9 +216,13 @@ def _pool_bestiary_view(game_id: str) -> dict:
     view: dict = {}
     try:
         pool = []
-        if shared_pool.pool_mode() == "on":
+        if shared_pool.pool_mode() == "on" and region_id:
+            # P2-10: só as promovidas da região atual (indexado, com teto).
             pool += shared_pool.get_store().select(
-                namespace=PoolNamespace.CREATURE, statuses=[PoolStatus.PROMOTED], limit=200
+                namespace=PoolNamespace.CREATURE,
+                statuses=[PoolStatus.PROMOTED],
+                region_id=region_id,
+                limit=100,
             )
         pool += shared_pool.own_entries(PoolNamespace.CREATURE, game_id=game_id, limit=200)
         for entry in pool:
@@ -229,7 +233,7 @@ def _pool_bestiary_view(game_id: str) -> dict:
     return view
 
 
-def load_bestiary(game_id: str = "") -> dict:
+def load_bestiary(game_id: str = "", region_id: str = "") -> dict:
     """View unificada: curadoria ∪ overlay runtime (curadoria VENCE conflito de
     id — gerado nunca sombreia entrada curada). SPEC-297: com o pool ligado e
     `game_id`, soma as criaturas do pool (curadoria e overlay vencem)."""
@@ -240,7 +244,7 @@ def load_bestiary(game_id: str = "") -> dict:
     overlay = store.list("bestiary_template", owner_id=None, game_id=None)
     owner = catalog_owner_id()  # SPEC-223 R7: gerado do dono, nunca de outro tenant
     own = store.list("bestiary_template", owner_id=owner, game_id=None) if owner else {}
-    pooled = _pool_bestiary_view(game_id) if game_id and _pool_enabled() else {}
+    pooled = _pool_bestiary_view(game_id, region_id) if game_id and _pool_enabled() else {}
     return {**pooled, **own, **overlay, **_read_json(BESTIARY_FILE)}
 
 
@@ -426,7 +430,12 @@ def generate_new_enemy(
     pool_on = bool(game_id) and _pool_enabled()
     name = sanitize_entity_name(name) or "Criatura"  # SPEC-223 R7
     # 1. CHECK-FIRST
-    db = load_bestiary(game_id) if pool_on else load_bestiary()
+    if pool_on:
+        from services.shared_pool import _region_of
+
+        db = load_bestiary(game_id, _region_of(location_id))
+    else:
+        db = load_bestiary()
     existing_ids = list(db.keys())
 
     found_id = find_existing_entity(name, "Monster", existing_ids)
