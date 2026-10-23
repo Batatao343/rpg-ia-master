@@ -1,6 +1,6 @@
 # SPEC-300 — Companheiros com alma
 
-> **Status:** `draft`
+> **Status:** `approved` (dono, 2026-10-23)
 > **Criada:** 2026-10-20 · **Atualizada:** 2026-10-20
 > **Origem:** `docs/mundo-vivo/VISAO.md` — decisão 8 (Companheiros), decisão 7 (Visibilidade), Regra de ouro, § C. Sociedade viva (morte off-screen, relação alta destrava romance, "Companheiros falam"), § Calibração (migração suave)
 > **Depende de:** — (nenhuma spec aberta é pré-requisito técnico; na ordem da onda entra depois da SPEC-296). Integra-se, sem bloquear, a SPEC-298 (vocabulário de rótulos), SPEC-299 (tag de crime) e SPEC-302 (motor de mundo).
@@ -702,3 +702,11 @@ recrutada, alma derivada, em `montanhas_afiadas`), `--real`, teto
 ## 9. Registro de execução
 
 (preenchido pelo executor: sondas, smoke real, desvios)
+
+
+## Decisões do dono (2026-10-23)
+
+Todas as decisões abertas desta spec seguem o **default recomendado pelo autor**, exceto/explicitando:
+
+- D3: traição POR TRAÇO — traços gananciosos roubam (até 25% do ouro, máx. 60, viram desafeto); traços rancorosos ENTREGAM o jogador (aviso a inimigos/lei → emboscada telegrafada; consome interfaces da SPEC-299/302).
+- D4: romance com todo companheiro adulto, sem filtro pelo gênero do herói; traços de luto bloqueiam até a missão pessoal.
