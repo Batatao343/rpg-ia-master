@@ -69,6 +69,8 @@ def test_storyteller_prompt_has_ambient_block(monkeypatch):
 
 
 def test_storyteller_appends_news_on_pulse(monkeypatch):
+    # Pulso legado (SPEC-296): com o motor on (SPEC-302) as notícias vêm de world_perception.
+    monkeypatch.setenv("RPG_WORLD_ENGINE", "off")
     spy = _Spy()
     monkeypatch.setattr(stt, "get_llm", lambda *a, **k: spy)
     monkeypatch.setattr(
