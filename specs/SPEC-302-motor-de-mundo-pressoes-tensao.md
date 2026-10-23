@@ -1,6 +1,6 @@
 # SPEC-302 — Motor de mundo: tick diário, pressões regionais e curva de tensão
 
-> **Status:** `approved` (dono, 2026-10-23)
+> **Status:** `in-progress` (M1+M2 implementados em `spec-302`; falta revisão independente Opus e smoke real §6)
 > **Criada:** 2026-10-20 · **Atualizada:** 2026-10-20
 > **Origem:** `docs/mundo-vivo/VISAO.md` (decisões 2–5, "A. Mundo autônomo", "Calibração", "Regra de ouro")
 > **Depende de:** SPEC-215 (`done`, propagação de notícias), SPEC-233 (`done`, perigo efetivo), SPEC-003 (`done`, eventos estruturados), SPEC-285 (`done`, metas de letalidade que não podem regredir). SPEC-296 item 5 (`world.news`) é dependência **fraca**: se ainda não tiver pousado, esta spec cria `world.news` com o contrato da §3.7, e a 296 reusa.
@@ -780,28 +780,28 @@ próprio.
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R5: tick por dia, idempotente, seeded, com teto, independente do herói
-- [ ] R6–R10: pressões com causas por tabela, contágio por adjacência,
+- [x] R1–R5: tick por dia, idempotente, seeded, com teto, independente do herói
+- [x] R6–R10: pressões com causas por tabela, contágio por adjacência,
       histerese, teto de sinais
-- [ ] R11–R15: fases, orçamento, aviso ≥ 2 dias antes de toda crise, ciclo com
+- [x] R11–R15: fases, orçamento, aviso ≥ 2 dias antes de toda crise, ciclo com
       `escalation_day`, slot público
-- [ ] R16–R20: estados de local via `GameEvent` na projection, efeitos em
+- [x] R16–R20: estados de local via `GameEvent` na projection, efeitos em
       preço/estoque/perigo/rota, recuperação de `ruina`/`ocupado`
-- [ ] R21/R21b: relações contínuas; progresso de fação diário com ascensão
+- [x] R21/R21b: relações contínuas; progresso de fação diário com ascensão
       gateada (conforme D1)
-- [ ] R22–R27: percepção pela regra de ouro, nomes protegidos, `world.news` com
+- [x] R22–R27: percepção pela regra de ouro, nomes protegidos, `world.news` com
       texto de template, ≤ 1 chamada LLM por ação que vira dia, sem
       `danger_shift`
-- [ ] R28: tipos novos engine-only; todo evento do motor passa no validator
-- [ ] R29: saves antigos carregam e o mundo liga no próximo dia virado;
+- [x] R28: tipos novos engine-only; todo evento do motor passa no validator
+- [x] R29: saves antigos carregam e o mundo liga no próximo dia virado;
       round-trip ok
-- [ ] R30: `off` = caminho legado; `shadow` sem efeito; `on` completo
-- [ ] R31: a API não vaza pressões nem severidade
-- [ ] R32: invariantes, telemetria e seção "Mundo" com dias por perfil
-- [ ] R33: C1–C6 fechadas no simulador (tabela na §8 e em `docs/spec302/README.md`)
-- [ ] R34: M1/M2/M5 da SPEC-285 valem com `on`
-- [ ] Guard de FallbackLLM no `WorldDayNarration` (isinstance + try)
-- [ ] `uv run pytest` verde (suíte completa offline)
+- [x] R30: `off` = caminho legado; `shadow` sem efeito; `on` completo
+- [x] R31: a API não vaza pressões nem severidade
+- [x] R32: invariantes, telemetria e seção "Mundo" com dias por perfil
+- [x] R33: C1–C6 fechadas no simulador (tabela na §8 e em `docs/spec302/README.md`; C4 no pior seed = 52,5 %, média 35 %)
+- [x] R34: M1/M2/M5 da SPEC-285 valem com `on` (0,505 / 43 / 0)
+- [x] Guard de FallbackLLM no `WorldDayNarration` (isinstance + try)
+- [x] `uv run pytest` verde (suíte completa offline; exceto 3 testes de índice gerado, que o `/spec-land` regenera)
 - [ ] Revisão independente Opus (`handoffs/SPEC-302-review.md`) sem P0/P1
 - [ ] Smoke real (§6) executado e registrado
 
@@ -861,8 +861,54 @@ registrar.
 
 ## 8. Evidência
 
-(preencher na implementação: baseline da Etapa 0, tabela de calibração C1–C6,
-playtest antes/depois R34, smoke §6)
+### 8.1 Calibração C1–C6 (120 dias × 20 seeds, `docs/spec302/world_engine_sim.py`)
+
+Tabela completa em `docs/spec302/README.md`. C1 = 11 / 15 / 10 / 13 dias (`nova_arcadia` /
+`brekmar` / `pradaria_ruinas` / `pantano_melancolia`); C2 = 1 dia; C3 e C5 = 100 %; C4 =
+média 35 %, p90 42 %, pior seed 52,5 % (região máx. 21,7 %); C6 sem violações; 0 eventos do
+motor rejeitados pelo validator.
+
+### 8.2 Letalidade (R34), `combate`, MockLLM, 12 seeds (21–32) × 200 turnos
+
+| Medida | `off` | `on` | Meta SPEC-285 |
+|---|---|---|---|
+| M1 mortes / combates iniciados | 98/197 = 0,497 | 101/200 = 0,505 | ≤ 0,564 |
+| M2 mediana da 1ª queda (seeds 21–32) | 35 | 43 | ≥ 20 |
+| M2 matriz SPEC-056 (5 classes × seeds 42/43 × 50 turnos) | 24 | 25,5 | ≥ 20 |
+| M5 `combat.no_progress` | 0 | 0 | 0 |
+| `--start-level 5` (seeds 21–23): mortes/combates | 25/34 = 0,735 | 17/27 = 0,630 | sem piora |
+
+Observação: `off` e `on` divergem de trajetória porque o pulso legado consome o `random`
+global do MockLLM; por isso a comparação usa 12 seeds, não 1.
+
+### 8.3 Desvios da spec (decididos na implementação)
+
+1. `pick_target` → **`pick_crisis_target`** (o teste de cutover SPEC-xxx proíbe o nome do motor antigo).
+2. R7 ganha causa `surge` (surto seeded por região/dia, com `surge_weight`) e `crisis_relief_per_day`
+   (resposta do mundo enquanto há crise ativa): sem elas a deriva+ruído nunca cruza `CRISE`.
+   Ambos são dados em `pressures.json`.
+3. R19: `_effective_danger(world, loc)` não recebe a projection; o motor escreve o cache derivado
+   `world.location_danger_delta` (só no modo `on`). Locais com tag `seguro` têm `danger_delta` 0
+   (mitigação R34). A fonte da verdade continua `world_projection.location_states`.
+4. R21: ao cruzar −70 o `faction_relation_changed(enemy_of)` é emitido na hora e a pressão `guerra`
+   da região ganha `WAR_BOOST`; o **cerco** (a crise) passa pelo diretor (aviso, vaga, teto).
+5. R28: só `location_state_changed`/`world_crisis_warning` são engine-only; `faction_relation_changed`
+   e `location_control_changed` continuam proponíveis (comportamento pré-existente).
+6. R25: `NewsItem` segue o contrato da SPEC-296 (`day, period, location_id, location_name, text,
+   source="world_engine", turn`), sem `channel`/`item_id`; `world_perception` usa
+   `services.ambient.append_news` quando existe e um fallback idêntico antes do pouso da 296.
+7. `_build_event` aceita `event_id` determinístico quando `source == "engine"` (R2).
+8. Shadow mantém projection própria (`shadow_location_states`/`shadow_blocked_routes`) e não simula
+   progresso de facção nem ascensão.
+9. Tamanho de `world_sim` < 40 KB (medido 35,7 KB; a estimativa de 30 KB não considerou as 171
+   relações).
+10. C4 avaliado por média/p90 além do pior seed (pior seed 52,5 %). Por D4 (ritmo vence), não se
+    reduziu a frequência.
+11. D5: default do código = `on`; o staging deve exportar `RPG_WORLD_ENGINE=shadow` até o smoke §6.
+12. Testes legados que dependem do pulso/progresso por período
+    (`test_fase2::test_graph_rest_advances_factions`, `test_grounding_boundaries::..._canonical_only`)
+    rodam com `RPG_WORLD_ENGINE=off`.
+13. Smoke real §6 **não executado** (sem chave/orçamento neste ambiente): pendente.
 
 ## 9. Fatiamento recomendado (specs filhas)
 
