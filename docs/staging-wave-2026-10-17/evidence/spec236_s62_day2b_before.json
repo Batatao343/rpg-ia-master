@@ -1,0 +1,94 @@
+{
+  "before": {
+    "audit_recent": [
+      {
+        "actor_id": "staging-1910",
+        "created_at": "2026-10-20 07:52:37.845885+00:00",
+        "enabled": true,
+        "key": "stt_fallback_expensive",
+        "previous_enabled": true,
+        "reason": "SPEC-236 6.2 dia 2: re-enable manual apos trip de 19/10"
+      },
+      {
+        "actor_id": "staging-1910",
+        "created_at": "2026-10-20 07:52:26.861535+00:00",
+        "enabled": true,
+        "key": "image_generation",
+        "previous_enabled": true,
+        "reason": "SPEC-236 6.2 dia 2: re-enable manual apos trip de 19/10"
+      },
+      {
+        "actor_id": "staging-1910",
+        "created_at": "2026-10-19 12:17:25.981646+00:00",
+        "enabled": true,
+        "key": "stt_fallback_expensive",
+        "previous_enabled": false,
+        "reason": "SPEC-236 6.2 dia 1: restauracao apos trip real"
+      },
+      {
+        "actor_id": "staging-1910",
+        "created_at": "2026-10-19 12:15:52.453818+00:00",
+        "enabled": true,
+        "key": "image_generation",
+        "previous_enabled": false,
+        "reason": "SPEC-236 6.2 dia 1: restauracao apos trip real"
+      },
+      {
+        "actor_id": "system:finops",
+        "created_at": "2026-10-19 12:12:37.242074+00:00",
+        "enabled": false,
+        "key": "stt_fallback_expensive",
+        "previous_enabled": null,
+        "reason": "daily spend cap exceeded: 0.04 > 0.01 BRL"
+      },
+      {
+        "actor_id": "system:finops",
+        "created_at": "2026-10-19 12:12:37.161902+00:00",
+        "enabled": false,
+        "key": "image_generation",
+        "previous_enabled": true,
+        "reason": "daily spend cap exceeded: 0.04 > 0.01 BRL"
+      },
+      {
+        "actor_id": "drill-spec197",
+        "created_at": "2026-10-15 18:27:26.837764+00:00",
+        "enabled": true,
+        "key": "image_generation",
+        "previous_enabled": false,
+        "reason": "SPEC-197 incident drill reset (staging)"
+      },
+      {
+        "actor_id": "drill-spec197",
+        "created_at": "2026-10-15 18:27:20.864392+00:00",
+        "enabled": false,
+        "key": "image_generation",
+        "previous_enabled": null,
+        "reason": "SPEC-197 incident drill (staging)"
+      }
+    ],
+    "cap_day": "2026-10-23",
+    "cap_day_start_utc": "2026-10-23 03:00:00+00:00",
+    "db_now": "2026-10-23 04:24:56.325413+00:00",
+    "fx_usd_brl": "5.0000000000",
+    "spend_brl_estimate": 0.0,
+    "spend_events": 0,
+    "spend_usd_counts_as_spend": "0",
+    "switches": {
+      "image_generation": {
+        "actor_id": "staging-1910",
+        "enabled": true,
+        "updated_at": "2026-10-20 07:52:26.861535+00:00"
+      },
+      "stt_fallback_expensive": {
+        "actor_id": "staging-1910",
+        "enabled": true,
+        "updated_at": "2026-10-20 07:52:37.845885+00:00"
+      }
+    }
+  },
+  "health": {
+    "error": "ConnectError"
+  },
+  "label": "day2b_before",
+  "ok": true
+}

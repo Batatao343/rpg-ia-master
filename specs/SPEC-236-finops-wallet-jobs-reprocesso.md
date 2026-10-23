@@ -1,6 +1,6 @@
 # SPEC-236 — FinOps/wallet/jobs: custo fantasma de falhas, teto diário cross-day, reservas órfãs, STT incerto, refund parcial pré-crédito, lease e poison jobs
 
-> **Status:** `in-progress` — código + testes offline/Postgres local entregues (2026-10-16); revisão independente
+> **Status:** `done` (2026-10-23: §6.2 dia 2 verde, ver nota de 23/10) — código + testes offline/Postgres local entregues (2026-10-16); revisão independente
 > `Sol` (+Astra R1/R2/R5) **APPROVED_WITH_FIXES** em 2026-10-17 ([parecer](../handoffs/SPEC-236-SOL-independent-review.md)).
 > **17/10:** migration aplicada no staging; 429 do Groq gravados como `failed_no_usage` (custo 0, fora do gasto). **Falta:** o smoke §6 literal (sem chave DeepSeek/OpenAI no staging) e corrigir o rate card sem Jina (cada embedding = US$ 1 estimado, conta como gasto e dispara o cap de texto) — ver `docs/staging-wave-2026-10-17/README.md`.
 > **17/10 (DeepSeek no staging):** §6.1 **verde** (chave DeepSeek inválida temporária → 9 falhas `failed_no_usage`,
@@ -19,6 +19,7 @@
 > **REVIEW_MODEL:** `Sol` (≡ Opus em contexto separado) · **REVIEW_REQUIRED:** `true` · **REVIEW_ASTRA:** recomendada para R1/R2/R5 (dinheiro)
 > **EVAL_AUTHORING_REQUIRED:** `false` — cobertura por testes com fakes de `infrastructure/testing.py` + Postgres local (`-m infra_local`)
 
+> **23/10 (§6.2 dia 2 — VERDE):** dia-de-teto 2026-10-23, gasto real de hoje R$ 0,066 (3 turnos), re-enable humano hoje (`staging-1910`) após o trip `system:finops` de 19/10, teto temporário R$ 0,01 + deploy `5f31c9e` → cron finops real: `daily_cap_exceeded=true`, `daily_cap_switched_off=image_generation,stt_fallback_expensive`, `daily_cap_manual_override` VAZIO (override não vaza entre dias). Audit: trip 19/10 → re-enables 20/10 e 23/10 → trip `system:finops` 23/10 04:28Z. Restaurado: teto R$ 5, Jev `primary`, switches ligados, `e2e_session` ok. (O dia 2 começou em 20/10, mas o deploy ficou bloqueado por permissão; refeito inteiro em 23/10.) Evidência: `docs/staging-wave-2026-10-17/evidence/spec236_s62_day2_*.json`.
 ---
 
 ## 1. Contexto & Objetivo
@@ -231,7 +232,7 @@ update app.usage_events set counts_as_spend=false
       backoff exponencial no revive de job morto (F3), `stream_interrupted` no export de auditoria (F4); corridas reais
       em `tests/test_spec236_races_local.py`.
 - [x] Migration `20261017100000` aplicada no staging. **Staging 17/10:** aplicada, histórico 28/28.
-- [ ] Smoke real §6 em staging. **17/10 (DeepSeek):** §6.1 ✅ — deploy com `vercel_env.py --invalid-deepseek-key`, 2 turnos:
+- [x] Smoke real §6 em staging. **23/10:** §6.2 dia 2 ✅ (`spec236_s62_day2_cross_day.json`). **17/10 (DeepSeek):** §6.1 ✅ — deploy com `vercel_env.py --invalid-deepseek-key`, 2 turnos:
       `deepseek invoke_error` ×9 = `failed_no_usage`, `cost_usd=0`, `counts_as_spend=false`; gasto LLM do turno só Groq
       (US$ 0,002594, `token_priced`); chave real reposta e redeploy (`eovi9utqp`). §6.2 ❌ não exercido: exige gravar um
       trip de ontem em `app.kill_switch_audit` (imutável) — escrita retroativa no audit recusada; precisaria de 2 dias reais

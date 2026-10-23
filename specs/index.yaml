@@ -4216,7 +4216,7 @@ specs:
   lineage_note: Authored from functional bug audit 2026-10-15 (proximas-specs/novas-specs); draft awaiting approval
 - id: SPEC-236
   slug: finops-wallet-jobs-reprocesso
-  status: in-progress
+  status: done
   path: specs/SPEC-236-finops-wallet-jobs-reprocesso.md
   created_commit: null
   created_at: '2026-10-15'
