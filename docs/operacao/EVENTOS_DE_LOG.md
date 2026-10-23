@@ -234,5 +234,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `wallet.recovery_item_failed` | `error_type`, `op_ref`, `stage` |
 | `wallet.reservation_uncertain` | `error_type`, `op_ref`, `stage` |
 | `wallet.settle_failed` | `error_type`, `op_ref`, `stage` |
+| `world.tick` | `events`, `mode`, `perceived` |
+| `world.tick_capped` | `skipped` |
 | `world_simulator.fallback` | — |
 | `xp.level_up` | `new_level` |

@@ -51,6 +51,10 @@ SUBJECT_PARAMS: dict[str, tuple[float, int, int]] = {
     "route_blocked": (0.7, 10, 1),
     "route_cleared": (0.7, 10, 1),
     "quest_completed": (0.5, 5, 1),
+    # SPEC-302 R27 [BALANCEAR]: fatos do motor de mundo se propagam como rumor.
+    "location_state_changed": (0.9, 20, 2),
+    "world_crisis_warning": (0.8, 20, 2),
+    "faction_relation_changed": (0.7, 20, 2),
     RUMOR: (0.35, 5, 1),
     # SPEC-298 R14: feito do jogador (faction_deed e tipos registrados por outras specs)
     "player_deed": (0.7, 10, 2),

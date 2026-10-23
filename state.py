@@ -476,12 +476,63 @@ class KnowledgeDelivery(TypedDict, total=False):
     origin_clock: int
 
 
+class CrisisRecord(TypedDict, total=False):
+    """SPEC-302 §3.3: crise do diretor de tensão (anunciada, ativa ou encerrada)."""
+
+    crisis_id: str
+    kind: str  # guerra | fome | praga | abismo | ascensao
+    region_id: str
+    location_id: str
+    loc_state: str
+    faction_id: str
+    warned_day: int
+    start_day: int | None
+    escalation_day: int | None
+    severity: int
+    end_day: int | None
+    resolution: str
+    route: list[str]
+
+
+class WorldSimState(TypedDict, total=False):
+    """SPEC-302: estado PRIVADO do motor de mundo (dono: services.world_engine).
+    Nunca sai pela API. Chave aditiva, sem bump de SCHEMA_VERSION."""
+
+    version: int
+    mode: str
+    enabled_from_day: int
+    last_ticked_day: int
+    last_event_seq: int
+    pressures: dict[str, dict[str, int]]
+    bands: dict[str, dict[str, str]]
+    phase: str
+    phase_since_day: int
+    calm_until_day: int
+    recovery_until_day: int
+    last_crisis_start_day: int
+    region_last_crisis_end: dict[str, int]
+    announce_block: dict[str, int]
+    crises: list[CrisisRecord]
+    faction_relations: dict[str, int]
+    relation_bands: dict[str, str]
+    faction_acc: dict[str, float]
+    war_calm_days: dict[str, int]
+    signals: list[dict]
+    pending_digest: list[dict]
+    tick_log: list[dict]
+    shadow_location_states: dict[str, dict]
+    shadow_blocked_routes: list[dict]
+
+
 class WorldProjection(TypedDict, total=False):
     entities: dict[str, EntityState]
     dynamic_edges: list[DynamicEdge]
     disabled_edges: list[DisabledEdge]
     revealed_facts: dict[str, RevealedFact]  # chave = event_id revelador
     location_summaries: dict[str, str]  # loc_id -> resumo dinâmico curto
+    # SPEC-302 R17: estado de local (cerco/escassez/...) — escrito SÓ por apply_event
+    # (evento `location_state_changed`, source="engine"). Linha: LocationStateRow.
+    location_states: dict[str, dict]
 
 
 class GameState(TypedDict):
@@ -619,6 +670,9 @@ class GameState(TypedDict):
     event_log: list[GameEvent]  # append-only; auditoria do que mudou
     world_projection: WorldProjection  # estado calculado a partir do event_log
     pending_world_events: list[dict]  # propostas ainda não validadas (Fase 2.6)
+    # --- SPEC-302: motor de mundo (dono: services.world_engine; PRIVADO) ---
+    world_sim: WorldSimState
+    world_sim_shadow: WorldSimState
 
     # --- SPEC-215: conhecimento por NPC (ledger PRIVADO; dono services.npc_knowledge) ---
     # Aditivo, sem bump de schema: save sem as chaves carrega vazio + legacy=True.

@@ -732,6 +732,9 @@ def _state_to_save_data(state: dict[str, Any], game_id: str) -> dict[str, Any]:
         "world_projection": state.get("world_projection", {}),
         "pending_world_events": state.get("pending_world_events", []),
         "event_rejections": state.get("event_rejections", []),
+        # SPEC-302 (aditivo, sem bump): estado privado do motor de mundo.
+        "world_sim": deepcopy(state.get("world_sim") or {}),
+        "world_sim_shadow": deepcopy(state.get("world_sim_shadow") or {}),
         # --- Fase 4.6: save morto vira memorial (não aceita ações) ---
         "game_over": bool(state.get("game_over", False)),
         # --- spec checkpoints-morte: tela de morte pendente (persiste entre requests) ---
@@ -1053,6 +1056,9 @@ def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
         "world_projection": raw_data.get("world_projection", {}),
         "pending_world_events": raw_data.get("pending_world_events", []),
         "event_rejections": raw_data.get("event_rejections", []),
+        # SPEC-302: save sem as chaves = {} (o motor inicializa no 1o dia virado).
+        "world_sim": deepcopy(raw_data.get("world_sim") or {}),
+        "world_sim_shadow": deepcopy(raw_data.get("world_sim_shadow") or {}),
         # --- Recupera Transicionais ---
         "combat_target": raw_data.get("combat_target"),
         "loot_source": raw_data.get("loot_source"),

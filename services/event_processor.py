@@ -165,6 +165,41 @@ def apply_event(event: dict, projection: dict) -> dict:
             }
         )
 
+    elif etype == "location_state_changed":
+        # SPEC-302 R17: unica escrita de estado de local. Estado vazio remove.
+        rows = proj.setdefault("location_states", {})
+        new_state = payload.get("state") or ""
+        if new_state:
+            row = {
+                "state": new_state,
+                "severity": int(payload.get("severity", 1) or 1),
+                "since_day": int(payload.get("day", turn) or 0),
+                "crisis_id": str(payload.get("crisis_id") or ""),
+                "cause": str(payload.get("cause") or ""),
+            }
+            for extra in ("faction_id", "prev_controller"):
+                if payload.get(extra):
+                    row[extra] = str(payload[extra])
+            rows[target] = row
+        else:
+            rows.pop(target, None)
+
+    elif etype == "world_crisis_warning":
+        pass  # aviso: so event_log/propagacao; sem efeito na projection
+
+    elif etype == "faction_relation_changed" and (payload.get("relation") == "neutral"):
+        # SPEC-302: volta a faixa neutra desativa as arestas dinamicas do par.
+        other = payload.get("other_faction_id") or event.get("actor_id")
+        pair = {target, other}
+        proj["dynamic_edges"] = [
+            e
+            for e in proj.get("dynamic_edges", []) or []
+            if not (
+                e.get("type") in ("enemy_of", "allied_with")
+                and {e.get("source"), e.get("target")} == pair
+            )
+        ]
+
     elif etype == "faction_relation_changed":
         other = payload.get("other_faction_id") or event.get("actor_id")
         relation = payload.get("relation") or event.get("detail", "")
@@ -223,8 +258,12 @@ def _build_event(proposal: dict, turn: int) -> dict:
     detail = proposal.get("detail", "")
     if detail and "detail" not in payload:
         payload["detail"] = detail
+    # SPEC-302 R2: o motor de mundo traz event_id DETERMINISTICO (replay = mesmo id).
+    eid = proposal.get("event_id")
+    if proposal.get("source") != "engine" or not isinstance(eid, str) or not eid:
+        eid = uuid.uuid4().hex
     return {
-        "event_id": uuid.uuid4().hex,
+        "event_id": eid,
         "turn": turn,
         "type": proposal.get("type"),
         "actor_id": proposal.get("actor_id", "player"),

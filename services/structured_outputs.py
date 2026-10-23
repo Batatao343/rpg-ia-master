@@ -43,6 +43,9 @@ EventType = Literal[
     # o LLM nunca decide quem possui um artefato único.
     "unique_item_claimed",
     "unique_item_lost",
+    # SPEC-302: SO o motor de mundo emite (source="engine" no validator).
+    "location_state_changed",
+    "world_crisis_warning",
 ]
 
 

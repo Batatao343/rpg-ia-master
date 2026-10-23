@@ -1,6 +1,8 @@
 {
   "controls":    {"description": "Entidade controla local", "target": "location"},
   "enemy_of":    {"description": "Hostilidade mútua", "symmetric": true},
+  "neutral":     {"description": "Volta à neutralidade: desativa arestas dinâmicas do par (SPEC-302)", "symmetric": true},
+  "allied_with": {"description": "Aliança entre facções (SPEC-302)", "symmetric": true},
   "member_of":   {"description": "NPC pertence a fação", "source": "npc", "target": "faction"},
   "operates_in": {"description": "Fação/NPC atua na região", "target": "location"},
   "located_in":  {"description": "Entidade fica em local", "target": "location"},

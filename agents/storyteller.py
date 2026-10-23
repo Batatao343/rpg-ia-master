@@ -560,6 +560,28 @@ def _with_new_npc(
     return new_npcs
 
 
+def _engine_owns_factions() -> bool:
+    """SPEC-302 R21b: no modo `on` o progresso das facções roda no tick diário."""
+    from services import world_engine
+
+    return world_engine.mode() == "on"
+
+
+def _world_tick(state, world_before: dict, world: dict, factions: list, intel: dict):
+    """SPEC-302 R1: 1 tick por dia virado após viagem/descanso. Nunca levanta: falha do
+    motor não derruba o turno (devolve o mundo/facções como estavam e tick=None)."""
+    try:
+        from services import world_engine
+
+        tick = world_engine.advance_days(state, world_before, world, factions, intel)
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("storyteller", "world_tick_failed", exc)
+        return world, factions, None
+    return tick.world, tick.factions, tick
+
+
 def storyteller_node(state: GameState):
     messages = state.get("messages", [])
     if not messages:
@@ -605,6 +627,9 @@ def storyteller_node(state: GameState):
                 "archive_due": False,
             }
     travel_periods = 0
+    world_before = world  # SPEC-302: relogio ANTES de viagem/descanso (dias virados)
+    world_tick = None
+    sim_updates: dict = {}
     discovery_events: list = []
     reward_player_before = deepcopy(state.get("player") or {})
     discovery_player = None
@@ -616,10 +641,12 @@ def storyteller_node(state: GameState):
         # carimba `visited`). Baú curado (R3) pode reconceder-se? Não — one-shot.
         first_visit = dest["id"] not in (world.get("visited") or [])
         world = apply_travel(world, dest)
-        factions, faction_events = advance_factions(factions, travel_periods)
-        factions, world, faction_note = resolve_faction_completions(
-            factions, world, faction_events, intel
-        )
+        world, factions, world_tick = _world_tick(state, world_before, world, factions, intel)
+        if not _engine_owns_factions():
+            factions, faction_events = advance_factions(factions, travel_periods)
+            factions, world, faction_note = resolve_faction_completions(
+                factions, world, faction_events, intel
+            )
         # spec loot-exploracao: achado ambiental (1ª visita) OU baú curado (sempre
         # que houver e não saqueado). Muta player.inventory/gold + world in-place
         # (propaga: viagem sem descanso não substitui o player no updates parcial).
@@ -669,10 +696,12 @@ def storyteller_node(state: GameState):
         _rest_allies = _party_mod.active_allies(state)
         rested_player, world = apply_rest(dict(state.get("player", {})), world, allies=_rest_allies)
         # SPEC-233 R7: fações avançam pelo delta REAL do relógio (bloqueado = 1 período).
-        factions, faction_events = advance_factions(factions, 1 if rest_blocked else 2)
-        factions, world, faction_note = resolve_faction_completions(
-            factions, world, faction_events, intel
-        )
+        world, factions, world_tick = _world_tick(state, world_before, world, factions, intel)
+        if not _engine_owns_factions():
+            factions, faction_events = advance_factions(factions, 1 if rest_blocked else 2)
+            factions, world, faction_note = resolve_faction_completions(
+                factions, world, faction_events, intel
+            )
         if rest_blocked:
             rest_note = (
                 f"O jogador TENTOU descansar, mas o clima ({world.get('weather', 'o miasma')}) "
@@ -684,6 +713,12 @@ def storyteller_node(state: GameState):
                 f"O jogador DESCANSOU. O tempo avançou para {clock_label(world)} e ele recuperou parte das forças. "
                 "Narre a passagem do tempo e o estado do mundo ao acordar."
             )
+    if world_tick is not None:
+        if world_tick.world_sim is not None:
+            sim_updates[world_tick.sim_key] = world_tick.world_sim
+        extra_engine_events_tick = list(world_tick.pending_events)
+    else:
+        extra_engine_events_tick = []
     # Viagem fecha a cena anterior antes de qualquer encontro ou contexto. Isso
     # também protege retornos antecipados de combate contra NPCs teleportados.
     from services import npc_layers
@@ -705,7 +740,7 @@ def storyteller_node(state: GameState):
 
     # --- O tempo passou (viagem/descanso): ou cai em encontro, ou o mundo "respira" ---
     world_note = ""
-    extra_engine_events: list = []
+    extra_engine_events: list = list(extra_engine_events_tick)
     track_bk = None  # Fase 6.4: rastro atualiza o Codex do jogador
     # spec mapa-sublocais (R2): custo 0 (intra-cidade/interior) não rola encontro
     if (dest and travel_periods >= 1) or rested_player is not None:
@@ -812,10 +847,13 @@ def storyteller_node(state: GameState):
                 # se um encontro disparar na mesma chegada.
                 if turn_bl is not state.get("turn_baseline"):
                     updates["turn_baseline"] = turn_bl
-                if discovery_events:
+                updates.update(sim_updates)
+                if discovery_events or extra_engine_events:
                     updates["pending_world_events"] = (
-                        state.get("pending_world_events", []) or []
-                    ) + discovery_events
+                        (state.get("pending_world_events", []) or [])
+                        + discovery_events
+                        + list(extra_engine_events)
+                    )
                 # Fase 3.2 (R3): criatura nomeada no hint ANTES do combate = rumor.
                 enemy_id = enc.get("enemy_id")
                 if enemy_id:
@@ -867,18 +905,21 @@ def storyteller_node(state: GameState):
                 )
         # Sem emboscada: o mundo gera 1 evento off-screen narrado (e grava no RAG da sessão).
         try:
-            world, world_note = simulate_world(state, world, factions, intel, 1 if dest else 2)
-            if world_note.startswith("[ECOS DO MUNDO]"):
-                # SPEC-296 R6: rumor percebido persiste ("Ouvi dizer").
-                from services.ambient import append_news
+            if _engine_owns_factions():
+                world_note = ""  # modo on: a narracao diaria substitui o pulso (SPEC-302 R26)
+            else:
+                world, world_note = simulate_world(state, world, factions, intel, 1 if dest else 2)
+                if world_note.startswith("[ECOS DO MUNDO]"):
+                    # SPEC-296 R6: rumor percebido persiste ("Ouvi dizer").
+                    from services.ambient import append_news
 
-                world = append_news(
-                    world,
-                    text=world_note[len("[ECOS DO MUNDO]") :].strip(),
-                    location_id=world.get("current_location_id", ""),
-                    location_name=world.get("current_location", ""),
-                    turn=int(world.get("turn_count", 0) or 0),
-                )
+                    world = append_news(
+                        world,
+                        text=world_note[len("[ECOS DO MUNDO]") :].strip(),
+                        location_id=world.get("current_location_id", ""),
+                        location_name=world.get("current_location", ""),
+                        turn=int(world.get("turn_count", 0) or 0),
+                    )
         except Exception as exc:
             from observability.telemetry import log_fallback
 
@@ -1291,6 +1332,7 @@ def storyteller_node(state: GameState):
                 new_npcs = {**new_npcs, key: {**new_npcs[key], "in_scene": False}}
 
         updates = {
+            **sim_updates,
             "messages": [AIMessage(content=narrative_text)],
             "npcs": new_npcs,
             "world": world,
@@ -1509,6 +1551,7 @@ def storyteller_node(state: GameState):
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         fallback = {
+            **sim_updates,
             "messages": [
                 AIMessage(
                     content=_deterministic_story_fallback(
@@ -1516,7 +1559,7 @@ def storyteller_node(state: GameState):
                         _ll,
                     )
                 )
-            ]
+            ],
         }
         if dest:
             # viagem mecânica sobrevive ao LLM flaky: mundo anda e a cena esvazia

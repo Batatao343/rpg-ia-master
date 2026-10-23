@@ -1,0 +1,60 @@
+{
+  "_doc": "SPEC-302: parametros do motor de mundo. Valores [BALANCEAR] calibrados por docs/spec302/world_engine_sim.py.",
+  "constants": {
+    "SINAL": 40, "CRISE": 70, "RECUPERA": 35, "CRISE_HYST": 5,
+    "drift_per_day": 2, "noise": 3, "signal_delta": 4,
+    "spread_threshold": 50, "spread_p": 0.5, "spread_factor": 0.08,
+    "surge_p": 0.0065, "surge_min": 30, "surge_max": 60,
+    "crisis_relief_per_day": 14
+  },
+  "director": {
+    "MAX_DAYS_PER_ACTION": 10,
+    "MAX_ACTIVE_CRISES": 2,
+    "REGION_COOLDOWN_DAYS": 12,
+    "GLOBAL_GAP_DAYS": 3,
+    "MIN_WARNING_DAYS": 2,
+    "WARNING_TTL_DAYS": 8,
+    "ANNOUNCE_BLOCK_DAYS": 6,
+    "ESCALATION_DAYS": 6,
+    "MIN_CRISIS_DAYS": 3,
+    "ASCENSION_CRISIS_DAYS": 3,
+    "RECOVERY_DAYS": 2,
+    "INITIAL_CALM_DAYS": 5,
+    "MAX_SIGNALS_PER_DAY": 4,
+    "RUIN_RECOVERY_DAYS": 40,
+    "RUIN_ESCASSEZ_DAYS": 5,
+    "OCCUPATION_CALM_DAYS": 10,
+    "REOCCUPY_P": 0.15,
+    "FACTION_DAY_FACTOR": 0.25,
+    "ASCENSION_WARN_PROGRESS": 80
+  },
+  "surge_weight": {
+    "nova_arcadia": 1.6, "pradaria_ruinas": 1.5, "brekmar": 2.0, "pantano_melancolia": 1.4,
+    "deserto_zhur": 0.6, "floresta_sussurros": 0.5, "selva_xylos": 0.3, "skallgard": 0.3,
+    "aethelgard": 0.4, "ophidia": 1.6, "costa_negra": 1.6, "montanhas_afiadas": 0.5
+  },
+  "regions": {
+    "nova_arcadia":       {"guerra": 20, "fome": 15, "praga": 10, "abismo": 10},
+    "pantano_melancolia": {"guerra": 10, "fome": 20, "praga": 30, "abismo": 25},
+    "deserto_zhur":       {"guerra": 20, "fome": 30, "praga": 5,  "abismo": 20},
+    "floresta_sussurros": {"guerra": 5,  "fome": 10, "praga": 10, "abismo": 30},
+    "selva_xylos":        {"guerra": 10, "fome": 10, "praga": 30, "abismo": 15},
+    "skallgard":          {"guerra": 30, "fome": 25, "praga": 5,  "abismo": 20},
+    "aethelgard":         {"guerra": 10, "fome": 15, "praga": 10, "abismo": 35},
+    "ophidia":            {"guerra": 10, "fome": 10, "praga": 15, "abismo": 20},
+    "costa_negra":        {"guerra": 25, "fome": 15, "praga": 10, "abismo": 10},
+    "montanhas_afiadas":  {"guerra": 30, "fome": 20, "praga": 5,  "abismo": 10},
+    "pradaria_ruinas":    {"guerra": 30, "fome": 20, "praga": 10, "abismo": 15},
+    "brekmar":            {"guerra": 20, "fome": 10, "praga": 15, "abismo": 10}
+  },
+  "causes": [
+    {"on_event": "route_blocked", "pressure": "fome", "delta": 8, "scope": "endpoint_regions"},
+    {"on_event": "route_cleared", "pressure": "fome", "delta": -8, "scope": "endpoint_regions"},
+    {"on_event": "location_control_changed", "if": "new_controller_hostile", "pressure": "guerra", "delta": 15, "scope": "target_region"},
+    {"on_event": "npc_killed", "if": "target_leads_faction", "pressure": "guerra", "delta": 10, "scope": "faction_region"},
+    {"per_day": "active_loc_state", "state": "cerco", "pressure": "fome", "delta": 3, "scope": "region"},
+    {"per_day": "pressure_band", "pressure_src": "fome", "band": "crise", "pressure": "praga", "delta": 2, "scope": "region"},
+    {"per_day": "looming_threat", "pressure": "abismo", "delta": 3, "scope": "threat_faction_region"},
+    {"per_day": "faction_war_presence", "pressure": "guerra", "delta": 4, "scope": "shared_region"}
+  ]
+}

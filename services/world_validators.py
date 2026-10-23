@@ -430,6 +430,7 @@ def reason_code(reason: str) -> str:
         or "não é item único" in text
         or "não é uma facção conhecida" in text
         or "sempre do player" in text
+        or "é interior" in text
         or "exige actor player" in text
     ):
         return "wrong_type"
@@ -483,7 +484,43 @@ def catalog_ref(target_id: object) -> str | None:
     return None
 
 
+def _v_location_state_changed(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    """SPEC-302 R28: estado de local do motor (gate de source em validate_proposal)."""
+    from gamedata import get_location
+    from services.location_states import STATES
+
+    loc = get_location(ev.target_id)
+    if not loc:
+        return ValidationResult(False, f"{ev.target_id} não é local do mapa")
+    if loc.get("kind") == "interior":
+        return ValidationResult(False, f"{ev.target_id} é interior: o estado vive no local pai")
+    new_state = ev.payload.get("state", "")
+    if new_state and new_state not in STATES:
+        return ValidationResult(False, f"estado de local inválido: {new_state!r}")
+    sev = ev.payload.get("severity", 0)
+    if not isinstance(sev, int) or not 0 <= sev <= 3:
+        return ValidationResult(False, "payload.severity inválido")
+    return ValidationResult(True)
+
+
+def _v_world_crisis_warning(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    from gamedata import get_location
+    from services.world_pressures import region_ids
+
+    if not get_location(ev.target_id):
+        return ValidationResult(False, f"{ev.target_id} não é local do mapa")
+    if ev.payload.get("region_id") not in region_ids():
+        return ValidationResult(False, "payload.region_id inválido")
+    if not ev.payload.get("kind"):
+        return ValidationResult(False, "payload.kind ausente")
+    return ValidationResult(True)
+
+
+_ENGINE_ONLY_TYPES = frozenset({"location_state_changed", "world_crisis_warning"})
+
 _VALIDATORS = {
+    "location_state_changed": _v_location_state_changed,
+    "world_crisis_warning": _v_world_crisis_warning,
     "npc_killed": _v_npc_killed,
     "secret_revealed": _v_secret_revealed,
     "location_control_changed": _v_location_control_changed,
@@ -534,6 +571,9 @@ def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
     ):
         return ValidationResult(False, "posse de item único é registrada pelo motor, não proposta")
 
+    # SPEC-302 R28: estados de local e avisos de crise sao fatos do motor de mundo.
+    if ev.type in _ENGINE_ONLY_TYPES and proposal.get("source") != "engine":
+        return ValidationResult(False, "estado de mundo é gerado pelo motor, não proposto")
     projection = state.get("world_projection") or {}
     turn = (state.get("world") or {}).get("turn_count", 0)
 
@@ -548,6 +588,13 @@ def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
             if ev.type == "level_up" and (e.get("payload") or {}).get(
                 "new_level"
             ) != ev.payload.get("new_level"):
+                continue
+            # SPEC-302: o motor pode mudar o MESMO local mais de uma vez no turno
+            # (varios dias numa acao): distingue por estado/severidade/crise/dia.
+            if ev.type in _ENGINE_ONLY_TYPES and any(
+                (e.get("payload") or {}).get(k) != ev.payload.get(k)
+                for k in ("state", "severity", "crisis_id", "day", "kind")
+            ):
                 continue
             # Fase 6.1: mesmo local pode bloquear/limpar rotas para PARES diferentes
             if ev.type in ("route_blocked", "route_cleared") and (e.get("payload") or {}).get(
