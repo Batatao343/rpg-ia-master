@@ -1,5 +1,5 @@
 {
-  "commit_sha": "031c402fbcc2d4ba248c2e021269a22305212c42",
+  "commit_sha": "844755b45d68528d3117ce27b9812b189c2eb014",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -21005,7 +21005,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1777
+        "line": 1780
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._apply_flee_travel",
@@ -21016,7 +21016,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1725
+        "line": 1728
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._apply_weather_hazard",
@@ -21027,7 +21027,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1661
+        "line": 1664
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._attempt_flee",
@@ -21049,7 +21049,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1650
+        "line": 1653
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._can_attempt_flee",
@@ -21093,7 +21093,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1026
+        "line": 1029
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._combat_node",
@@ -21148,7 +21148,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 977
+        "line": 980
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._encounter_outcome",
@@ -21181,7 +21181,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 994
+        "line": 997
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._finish_encounter",
@@ -21269,7 +21269,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1850
+        "line": 1853
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._merge_formal_party",
@@ -21291,7 +21291,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 891
+        "line": 894
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._narrate",
@@ -21346,7 +21346,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1815
+        "line": 1818
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._reflect_scene_allies",
@@ -21357,7 +21357,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1758
+        "line": 1761
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat._register_environmental_damage_terminal",
@@ -21412,7 +21412,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1016
+        "line": 1019
       },
       "source": "module:agents.combat",
       "target": "symbol:agents.combat.combat_node",
@@ -129179,7 +129179,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1677
+        "line": 1680
       },
       "source": "symbol:agents.combat._attempt_flee",
       "target": "symbol:agents.combat.FleeDecision",
@@ -129190,7 +129190,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1683
+        "line": 1686
       },
       "source": "symbol:agents.combat._attempt_flee",
       "target": "symbol:agents.combat.FleeDecision",
@@ -129201,7 +129201,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1707
+        "line": 1710
       },
       "source": "symbol:agents.combat._attempt_flee",
       "target": "symbol:agents.combat.FleeDecision",
@@ -129212,7 +129212,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1722
+        "line": 1725
       },
       "source": "symbol:agents.combat._attempt_flee",
       "target": "symbol:agents.combat.FleeDecision",
@@ -129223,7 +129223,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1676
+        "line": 1679
       },
       "source": "symbol:agents.combat._attempt_flee",
       "target": "symbol:agents.combat._can_attempt_flee",
@@ -129234,7 +129234,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1682
+        "line": 1685
       },
       "source": "symbol:agents.combat._attempt_flee",
       "target": "symbol:combat_mechanics.has_control",
@@ -129267,7 +129267,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1479
+        "line": 1482
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._ambient_for_combat",
@@ -129278,7 +129278,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1638
+        "line": 1641
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._apply_flee_travel",
@@ -129289,7 +129289,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1282
+        "line": 1285
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._apply_weather_hazard",
@@ -129300,7 +129300,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1287
+        "line": 1290
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._attempt_flee",
@@ -129311,7 +129311,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1285
+        "line": 1288
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._can_attempt_flee",
@@ -129322,7 +129322,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1181
+        "line": 1184
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._canonical_player_action",
@@ -129333,7 +129333,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1388
+        "line": 1391
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._canonical_player_action",
@@ -129344,7 +129344,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1343
+        "line": 1346
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._card_target_for",
@@ -129355,7 +129355,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1499
+        "line": 1502
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._downed_identity_tokens",
@@ -129366,7 +129366,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1276
+        "line": 1279
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._early_game_reaction_initiator",
@@ -129377,54 +129377,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1182
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:agents.combat._encounter_outcome",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1524
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:agents.combat._encounter_outcome",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1291
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:agents.combat._enforce_flee_attempt_limit",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1482
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:agents.combat._faction_withhold_clause",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
         "line": 1185
       },
       "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:agents.combat._finish_encounter",
+      "target": "symbol:agents.combat._encounter_outcome",
       "type": "calls"
     },
     {
@@ -129435,6 +129391,39 @@
         "line": 1527
       },
       "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._encounter_outcome",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1294
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._enforce_flee_attempt_limit",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1485
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._faction_withhold_clause",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1188
+      },
+      "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._finish_encounter",
       "type": "calls"
     },
@@ -129443,7 +129432,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1535
+        "line": 1530
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._finish_encounter",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1538
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._flee_alert_world",
@@ -129454,7 +129454,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1290
+        "line": 1293
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._is_valid_flee_destination",
@@ -129465,7 +129465,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1578
+        "line": 1581
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._kill_events",
@@ -129476,7 +129476,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1461
+        "line": 1464
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._killer_identity",
@@ -129487,7 +129487,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1602
+        "line": 1605
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._killer_identity",
@@ -129498,318 +129498,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1610
+        "line": 1613
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:agents.combat._killer_identity",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1224
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:agents.combat._last_human_text",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1554
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:agents.combat._merge_formal_party",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1399
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:agents.combat._mirror_vitals",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1401
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:agents.combat._mirror_vitals",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1403
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:agents.combat._mirror_vitals",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1470
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:agents.combat._narrate",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1462
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:agents.combat._narrate_fall",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1321
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:agents.combat._parse_turn_declaration",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1098
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:agents.combat._prepare_scene",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1575
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:agents.combat._reflect_scene_allies",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1283
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:agents.combat._register_environmental_damage_terminal",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1083
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:agents.combat._spawn_v4_enemies",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1099
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:agents.combat._sync_enemy_knowledge",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1363
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:agents.combat._sync_enemy_knowledge",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1406
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:llm_setup.get_llm",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1135
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:observability.telemetry.log_event",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1032
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1033
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1093
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1095
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1163
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1164
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1209
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1210
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1353
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:services.conflict_orchestrator.run_round",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1176
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:services.conflict_summary.build_summary",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1490
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:services.conflict_summary.build_summary",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/combat.py",
-        "line": 1502
-      },
-      "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:services.conflict_summary.narrative_or_fallback",
       "type": "calls"
     },
     {
@@ -129820,7 +129512,7 @@
         "line": 1227
       },
       "source": "symbol:agents.combat._combat_node",
-      "target": "symbol:services.conflict_turn.TurnDeclaration",
+      "target": "symbol:agents.combat._last_human_text",
       "type": "calls"
     },
     {
@@ -129828,7 +129520,304 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1313
+        "line": 1557
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._merge_formal_party",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1402
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._mirror_vitals",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1404
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._mirror_vitals",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1406
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._mirror_vitals",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1473
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._narrate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1465
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._narrate_fall",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1324
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._parse_turn_declaration",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1101
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._prepare_scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1578
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._reflect_scene_allies",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1286
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._register_environmental_damage_terminal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1086
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._spawn_v4_enemies",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1102
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._sync_enemy_knowledge",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1366
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:agents.combat._sync_enemy_knowledge",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1409
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:llm_setup.get_llm",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1138
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:observability.telemetry.log_event",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1035
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1036
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1096
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1098
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1166
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1167
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1212
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1213
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1356
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:services.conflict_orchestrator.run_round",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1179
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:services.conflict_summary.build_summary",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1493
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:services.conflict_summary.build_summary",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1505
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:services.conflict_summary.narrative_or_fallback",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1230
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
@@ -129839,7 +129828,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1315
+        "line": 1316
+      },
+      "source": "symbol:agents.combat._combat_node",
+      "target": "symbol:services.conflict_turn.TurnDeclaration",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/combat.py",
+        "line": 1318
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.conflict_turn.TurnStep",
@@ -129850,7 +129850,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1467
+        "line": 1470
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.context_builder.build_context_pack",
@@ -129861,7 +129861,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1405
+        "line": 1408
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.death_flow.check_scar_required",
@@ -129872,7 +129872,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1431
+        "line": 1434
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.death_flow.critical_spaces_full",
@@ -129883,7 +129883,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1407
+        "line": 1410
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.death_flow.generate_scar",
@@ -129894,7 +129894,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1434
+        "line": 1437
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.death_flow.post_combat_consciousness",
@@ -129905,7 +129905,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1433
+        "line": 1436
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.death_flow.reset_terminal_episode",
@@ -129916,7 +129916,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1100
+        "line": 1103
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.discovery.record_encounter",
@@ -129927,7 +129927,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1421
+        "line": 1424
       },
       "source": "symbol:agents.combat._combat_node",
       "target": "symbol:services.discovery.record_kills",
@@ -130026,7 +130026,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1859
+        "line": 1862
       },
       "source": "symbol:agents.combat._merge_formal_party",
       "target": "symbol:agents.combat._mirror_vitals",
@@ -130048,7 +130048,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 953
+        "line": 956
       },
       "source": "symbol:agents.combat._narrate",
       "target": "symbol:llm_setup.get_llm",
@@ -130059,7 +130059,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 968
+        "line": 971
       },
       "source": "symbol:agents.combat._narrate",
       "target": "symbol:observability.telemetry.log_event",
@@ -130477,7 +130477,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1840
+        "line": 1843
       },
       "source": "symbol:agents.combat._reflect_scene_allies",
       "target": "symbol:gamedata.sync_legacy_hp_aliases",
@@ -130488,7 +130488,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1771
+        "line": 1774
       },
       "source": "symbol:agents.combat._register_environmental_damage_terminal",
       "target": "symbol:gamedata.sync_legacy_hp_aliases",
@@ -130499,7 +130499,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1765
+        "line": 1768
       },
       "source": "symbol:agents.combat._register_environmental_damage_terminal",
       "target": "symbol:services.death_flow.critical_spaces_full",
@@ -130510,7 +130510,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1773
+        "line": 1776
       },
       "source": "symbol:agents.combat._register_environmental_damage_terminal",
       "target": "symbol:services.death_flow.should_trigger_last_stand",
@@ -130521,7 +130521,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1774
+        "line": 1777
       },
       "source": "symbol:agents.combat._register_environmental_damage_terminal",
       "target": "symbol:services.death_flow.trigger_last_stand",
@@ -130708,7 +130708,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/combat.py",
-        "line": 1021
+        "line": 1024
       },
       "source": "symbol:agents.combat.combat_node",
       "target": "symbol:agents.combat._combat_node",
@@ -358028,21 +358028,21 @@
     {
       "id": "symbol:agents.combat._apply_flee_travel",
       "kind": "function",
-      "line": 1777,
+      "line": 1780,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._apply_flee_travel"
     },
     {
       "id": "symbol:agents.combat._apply_weather_hazard",
       "kind": "function",
-      "line": 1725,
+      "line": 1728,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._apply_weather_hazard"
     },
     {
       "id": "symbol:agents.combat._attempt_flee",
       "kind": "function",
-      "line": 1661,
+      "line": 1664,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._attempt_flee"
     },
@@ -358056,7 +358056,7 @@
     {
       "id": "symbol:agents.combat._can_attempt_flee",
       "kind": "function",
-      "line": 1650,
+      "line": 1653,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._can_attempt_flee"
     },
@@ -358084,7 +358084,7 @@
     {
       "id": "symbol:agents.combat._combat_node",
       "kind": "function",
-      "line": 1026,
+      "line": 1029,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._combat_node"
     },
@@ -358119,7 +358119,7 @@
     {
       "id": "symbol:agents.combat._encounter_outcome",
       "kind": "function",
-      "line": 977,
+      "line": 980,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._encounter_outcome"
     },
@@ -358140,7 +358140,7 @@
     {
       "id": "symbol:agents.combat._finish_encounter",
       "kind": "function",
-      "line": 994,
+      "line": 997,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._finish_encounter"
     },
@@ -358196,7 +358196,7 @@
     {
       "id": "symbol:agents.combat._merge_formal_party",
       "kind": "function",
-      "line": 1850,
+      "line": 1853,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._merge_formal_party"
     },
@@ -358210,7 +358210,7 @@
     {
       "id": "symbol:agents.combat._narrate",
       "kind": "function",
-      "line": 891,
+      "line": 894,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._narrate"
     },
@@ -358252,14 +358252,14 @@
     {
       "id": "symbol:agents.combat._reflect_scene_allies",
       "kind": "function",
-      "line": 1815,
+      "line": 1818,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._reflect_scene_allies"
     },
     {
       "id": "symbol:agents.combat._register_environmental_damage_terminal",
       "kind": "function",
-      "line": 1758,
+      "line": 1761,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat._register_environmental_damage_terminal"
     },
@@ -358294,7 +358294,7 @@
     {
       "id": "symbol:agents.combat.combat_node",
       "kind": "function",
-      "line": 1016,
+      "line": 1019,
       "path": "agents/combat.py",
       "qualified_name": "agents.combat.combat_node"
     },
@@ -428426,5 +428426,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:0398c50a965eb68335343a28f9893fee67e489beeb5ca4adbd8ad324d8641839"
+  "source_tree_hash": "sha256:c330f7f8705663c5c5fed84446bef5f612368b8ce3a05984413797eea5970752"
 }
