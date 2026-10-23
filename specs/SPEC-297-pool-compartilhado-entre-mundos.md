@@ -1,6 +1,6 @@
 # SPEC-297 — Pool compartilhado entre mundos (NPCs, criaturas, itens, locais)
 
-> **Status:** `approved` (dono, 2026-10-23)
+> **Status:** `in-progress` (dono aprovou 2026-10-23; implementação entregue, falta revisão independente + smoke real §6 + revisão D8 das tabelas)
 > **Criada:** 2026-10-20 · **Atualizada:** 2026-10-20
 > **Origem:** `docs/mundo-vivo/VISAO.md` § "C2. NPCs compartilhados entre mundos", "Regra de ouro" e "Restrições permanentes" (decisões do dono, 20/10)
 > **Depende de:** SPEC-223 (`done`, esta spec inverte a R7 dela atrás de flag), SPEC-215 (`done`), SPEC-230 (`done`, guard de fallback e cache sem entradas quebradas), SPEC-192 (`done`, cron interno)
@@ -759,3 +759,18 @@ Todas as decisões abertas desta spec seguem o **default recomendado pelo autor*
 
 - D3: NPCs promovidos FICAM no pool, desvinculados do autor, ao excluir a conta — exige cláusula nos termos (alinhar SPEC-222).
 - D7 (substitui a proposta): criaturas do pool ENTRAM no sorteio de encontros após calibração — números só do motor, teste de letalidade por categoria (arena SPEC-285) verde, peso baixo inicial.
+
+## Notas de implementação (executor, 2026-10-24)
+
+Entregue: R1–R34 em código + testes `tests/test_spec297_*.py`. Desvios e lacunas:
+
+- **Arquivos extras:** `services/shared_pool_models.py` (schemas sem ciclo) e `infrastructure/postgres_shared_pool.py` (o `PostgresSharedPoolStore` mora fora de `shared_pool_store.py`); `SharedPoolEntry` ganhou `embedding`, `evaluated_at`, `version`.
+- **`due()` no Postgres** faz claim por lease (`for update skip locked` + `promote_after = now + 15 min`), pois a LLM roda fora da transação; no JSON só filtra.
+- **Postgres não verificado:** migração `20261024100000_shared_pool.sql` e `tests/test_spec297_shared_pool_local.py` foram escritos sem Postgres local disponível (testes pulam sem `RPG_TEST_DATABASE_URL`). Rodar `infra_local` antes de aplicar no staging.
+- **Criaturas (R27 / D7 revisada):** a view `load_bestiary(game_id)` e a resolução por nome existem; nome de criatura vindo da dica/scanner de combate é texto do jogador, então nasce `name_origin="player"` → `local_only` (conservador, D1). Sem produtor `narrator`/`engine` de criatura hoje, o pool de criaturas só enche quando um produtor futuro submeter. Criatura `chefe` é rejeitada pelo validador (`creature_category`). **Pendente:** entrada no sorteio de encontros (D7 do dono: peso baixo + gate de letalidade SPEC-285) — não implementado aqui, exige spec/calibração própria.
+- **LGPD (D3):** `erase_owner` apaga held/local_only/rejected e desvincula o resto; a **cláusula nos termos de uso é do dono** (alinhar SPEC-222) — texto legal não editado.
+- **Itens (R30):** o teste cobre a projeção por jogo; o item do pool ainda não é materializado em `ARTIFACTS_DB` (produtor futuro).
+- **Cron:** job `rpg-cron-shared-pool` entrou em `schedule_cron.JOBS` (teste da SPEC-192 atualizado para 7 jobs).
+- `RPG_POOL_ALLOW_MOCK_EVAL` entrou em `FORBIDDEN_IN_HOSTED`.
+- `data/npc_seed_tables.json` é rascunho (D8): dono revisa antes de `on` no staging.
+- Etapa 11 (playtest `diplomatico`/`explorador`, seeds 21–26): ver hand-back.

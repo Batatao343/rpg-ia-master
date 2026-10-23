@@ -721,6 +721,7 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
     from infrastructure.pgvector_memory import PgVectorMemoryStore, configured_profile_id
     from infrastructure.postgres import PostgresGameStore, PostgresPool
     from infrastructure.postgres_catalog import PostgresRuntimeCatalogStore
+    from infrastructure.postgres_shared_pool import PostgresSharedPoolStore
     from infrastructure.postgres_jobs import PostgresJobQueue
     from infrastructure.postgres_turns import (
         PostgresDailyQuota,
@@ -849,6 +850,7 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
             game_store=PostgresGameStore(pool),
             memory_store=memory_store,
             runtime_catalog=PostgresRuntimeCatalogStore(pool),
+            shared_pool=PostgresSharedPoolStore(pool),
             blob_store=blob_store,
             turn_coordinator=PostgresTurnCoordinator(pool),
             job_queue=PostgresJobQueue(pool),

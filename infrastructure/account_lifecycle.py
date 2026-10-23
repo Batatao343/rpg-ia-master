@@ -535,6 +535,12 @@ class PostgresAccountLifecycle:
             # Each explicit predicate uses only the owner authenticated before revocation.
             for table in _present_tables(db, PRIVATE_TABLES):
                 db.execute(f"delete from app.{table} where owner_id=%s", (owner,))
+            # SPEC-297 R31: pool compartilhado - apaga hold/local/rejeitadas e desvincula
+            # as promovidas (D3). A tabela usa `origin_owner_id`, fora de PRIVATE_TABLES.
+            if db.execute("select to_regclass('app.shared_pool') as r").fetchone()["r"]:
+                from infrastructure.postgres_shared_pool import PostgresSharedPoolStore
+
+                PostgresSharedPoolStore.erase_owner(db, owner)
             # A retained financial row contains opaque IDs/numbers, no private prompt/data.
             db.execute(
                 "update app.payment_orders set checkout_url=null where owner_id=%s", (owner,)
