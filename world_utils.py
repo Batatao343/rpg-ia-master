@@ -386,7 +386,7 @@ def advance_factions(factions, periods: int = 1) -> tuple[list, list]:
 def _raise_danger(world: dict, loc_id: str) -> None:
     """Sobe o perigo de um local em +1 (teto 4), via override de runtime."""
     overrides = dict(world.get("danger_overrides") or {})
-    base = _effective_danger(world, loc_id)
+    base = _effective_danger(world, loc_id, with_state=False)  # sem o delta do estado de local
     overrides[loc_id] = min(4, int(base) + 1)
     world["danger_overrides"] = overrides
     # SPEC-233 R2: ascensão assume o override — o drift do world_simulator não decai.
@@ -601,7 +601,7 @@ def recovery_rest_safe(player_level: int, danger_now: int, loc: dict) -> bool:
     return int(danger_now or 1) <= RECOVERY_SAFE_DANGER
 
 
-def _effective_danger(world: dict, loc_id: str) -> int:
+def _effective_danger(world: dict, loc_id: str, *, with_state: bool = True) -> int:
     """Perigo atual do local: override de ascensão (se houver) senão o base do mapa.
     `danger_overrides[loc]` pode ser int (legado) ou dict {value,...} (SPEC-233)."""
     overrides = world.get("danger_overrides") or {}
@@ -609,9 +609,29 @@ def _effective_danger(world: dict, loc_id: str) -> int:
         v = overrides[loc_id]
         if isinstance(v, dict):
             v = v.get("value", 1)
-        return int(v)
+        base = int(v)
+    else:
+        loc = gamedata.get_location(loc_id) or {}
+        base = int(loc.get("danger", world.get("danger_level", 1)))
+    return _with_state_delta(world, loc_id, base) if with_state else base
+
+
+def _with_state_delta(world: dict, loc_id: str, base: int) -> int:
+    """SPEC-302 R19: soma o `danger_delta` do estado de local (cache derivado escrito pelo
+    motor de mundo no modo `on`), com clamp [0, 4]; nunca rebaixa um perigo > 4."""
+    deltas = world.get("location_danger_delta")
+    if not deltas:
+        return base
+    from services import world_engine
+
+    if world_engine.mode() != "on":
+        return base
     loc = gamedata.get_location(loc_id) or {}
-    return int(loc.get("danger", world.get("danger_level", 1)))
+    key = loc.get("parent_id") if loc.get("kind") == "interior" else loc_id
+    delta = int(deltas.get(key or loc_id, 0) or 0)
+    if not delta:
+        return base
+    return max(base, min(4, base + delta)) if delta > 0 else max(0, base + delta)
 
 
 def effective_danger(world: dict) -> int:

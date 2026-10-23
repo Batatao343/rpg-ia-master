@@ -52,9 +52,7 @@ def location_effects(state: dict, location_id: str) -> dict:
         return dict(_NEUTRAL)
     sev = max(1, min(3, int(row.get("severity", 1) or 1)))
     mults = spec.get("price_mult") or [1.0]
-    danger = int(spec.get("danger_delta", 0))
-    if "seguro" in (_location(_resolve_id(location_id)).get("tags") or []):
-        danger = 0  # abrigo seguro nunca vira armadilha de early-game (R34 / SPEC-285)
+    danger = danger_delta(row, location_id)
     closed_at = spec.get("merchant_closed_at")
     return {
         "price_mult": float(mults[min(sev, len(mults)) - 1]),
@@ -62,6 +60,14 @@ def location_effects(state: dict, location_id: str) -> dict:
         "restock_mult": float(spec.get("restock_mult", 1.0)),
         "merchant_closed": bool(closed_at and sev >= int(closed_at)),
     }
+
+
+def danger_delta(row: dict | None, location_id: str) -> int:
+    """`danger_delta` do estado (0 em abrigo `seguro`: o early-game nao perde o descanso)."""
+    spec = _cfg().get((row or {}).get("state", "")) or {}
+    if "seguro" in (_location(_resolve_id(location_id)).get("tags") or []):
+        return 0
+    return int(spec.get("danger_delta", 0))
 
 
 def public_label(row: dict | None) -> str:

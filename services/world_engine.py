@@ -631,6 +631,18 @@ def advance_days(
         sim["shadow_location_states"] = projection.get("location_states") or {}
         sim["shadow_blocked_routes"] = projection.get("blocked_routes") or []
     if m == "on":
+        from services import location_states as _ls
+
+        world["location_danger_delta"] = {
+            lid: d
+            for lid, row in (projection.get("location_states") or {}).items()
+            if (d := _ls.danger_delta(row, lid))
+        }
+        cur = world.get("current_location_id")
+        if cur:
+            from world_utils import _effective_danger
+
+            world["danger_level"] = _effective_danger(world, cur)
         sim["pending_digest"] = (sim.get("pending_digest", []) + all_digest)[-20:]
     return WorldTickResult(
         world if m == "on" else world_after,

@@ -207,6 +207,11 @@ def price(item_id: str, *, mode: str, state: dict, merchant: dict | None = None)
             p *= relation_price_mult(state, keeper, mode)
     if mode == "buy" and _controller_disposition(state, location_id) == "hostil":
         p *= HOSTILE_BUY_MULT
+    if mode == "buy":
+        # SPEC-302 R19: estado de local (cerco/escassez/...) encarece; neutro em off/shadow.
+        from services.location_states import location_effects
+
+        p *= float(location_effects(state, location_id)["price_mult"])
     if mode == "sell":
         p *= SELL_FACTOR
     return _round5(p)
@@ -292,8 +297,16 @@ def restock(world: dict, *, projection: dict | None = None) -> dict:
     last = world.setdefault("merchant_restock_day", {})
     from inventory import is_unique
 
+    from services.location_states import location_effects
+
+    pstate = {"world_projection": projection or {}}
     for mid, m in MERCHANTS.items():
-        if mid in stocks and day - int(last.get(mid, day)) >= int(m.get("restock_days", 3)):
+        # SPEC-302 R19: estado de local atrasa (restock_mult) ou suspende (loja fechada).
+        fx = location_effects(pstate, str(m.get("location_id") or ""))
+        if fx["merchant_closed"] or float(fx["restock_mult"]) <= 0:
+            continue
+        interval = float(m.get("restock_days", 3)) / float(fx["restock_mult"])
+        if mid in stocks and day - int(last.get(mid, day)) >= interval:
             held = {
                 iid: q
                 for iid, q in (stocks[mid] or {}).items()
