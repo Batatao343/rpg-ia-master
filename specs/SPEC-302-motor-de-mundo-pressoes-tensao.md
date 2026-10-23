@@ -1,7 +1,7 @@
 # SPEC-302 — Motor de mundo: tick diário, pressões regionais e curva de tensão
 
-> **Status:** `in-progress` (M1+M2 implementados em `spec-302`; falta revisão independente Opus e smoke real §6)
-> **Criada:** 2026-10-20 · **Atualizada:** 2026-10-20
+> **Status:** `done` (2026-10-23) — M1+M2 na main (`0433070`); revisão Sol APPROVED_WITH_FOLLOWUPS (`handoffs/SPEC-302-sol-review.md`; F-1 corrigido; F-2 `brekmar` C1 15–16 no limite, aceito pela D4). Smoke real §6 DeepSeek (cenário `mundo`, 15 turnos, seed 11): 6 dias, 1 crise iniciada e percebida, 4 sinais, 0 erros (28 `rag.persistence_error` = FAISS local com acento no caminho, não relacionado). Staging `RPG_WORLD_ENGINE=on` em `834f8d7` (`e2e_session` verde).
+> **Criada:** 2026-10-20 · **Atualizada:** 2026-10-23
 > **Origem:** `docs/mundo-vivo/VISAO.md` (decisões 2–5, "A. Mundo autônomo", "Calibração", "Regra de ouro")
 > **Depende de:** SPEC-215 (`done`, propagação de notícias), SPEC-233 (`done`, perigo efetivo), SPEC-003 (`done`, eventos estruturados), SPEC-285 (`done`, metas de letalidade que não podem regredir). SPEC-296 item 5 (`world.news`) é dependência **fraca**: se ainda não tiver pousado, esta spec cria `world.news` com o contrato da §3.7, e a 296 reusa.
 > **Desbloqueia:** SPEC-298 (fama por local), SPEC-299 (lei/notoriedade com decaimento diário), SPEC-300 (morte off-screen de companheiro), SPEC-301 (relações fação-fação), e as specs filhas propostas na §9 (calendário, agenda de NPCs, quests de mundo com prazo)
@@ -808,8 +808,8 @@ próprio.
 - [x] R34: M1/M2/M5 da SPEC-285 valem com `on` (0,505 / 43 / 0)
 - [x] Guard de FallbackLLM no `WorldDayNarration` (isinstance + try)
 - [x] `uv run pytest` verde (suíte completa offline; exceto 3 testes de índice gerado, que o `/spec-land` regenera)
-- [ ] Revisão independente Opus (`handoffs/SPEC-302-review.md`) sem P0/P1
-- [ ] Smoke real (§6) executado e registrado
+- [x] Revisão independente Opus (`handoffs/SPEC-302-sol-review.md`) sem P0/P1
+- [x] Smoke real (§6) executado e registrado
 
 ## 6. Smoke test com LLM real
 
