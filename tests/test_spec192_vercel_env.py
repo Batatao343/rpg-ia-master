@@ -216,3 +216,12 @@ def test_npc_knowledge_flag_sets_mode_and_off_deletes_it():
     assert "RPG_NPC_KNOWLEDGE" in ve.stale_names(off)
     with pytest.raises(ValueError):
         ve.build_env(FILES, npc_knowledge="maybe")
+
+
+def test_world_engine_defaults_to_shadow_on_staging():
+    env, prev = ve.build_env(FILES)
+    assert env["RPG_WORLD_ENGINE"] == "shadow" and "RPG_WORLD_ENGINE" not in prev
+    on, _ = ve.build_env(FILES, world_engine="on")
+    assert on["RPG_WORLD_ENGINE"] == "on"
+    with pytest.raises(ValueError):
+        ve.build_env(FILES, world_engine="maybe")
