@@ -70,6 +70,7 @@ OPTIONAL_FLAGS = (
     "RPG_JEV_ROUTER_MODE",
     "TYPESAFE_API_KEY",
     "RPG_JEV_ROUTER_PRIMARY_APPROVED",
+    "RPG_NPC_KNOWLEDGE",
 )
 # SPEC-217 R15: Jev no router. ``off`` (default) = variaveis ausentes; ``shadow`` observa sem mudar a rota e
 # envia a chave TypeSafe (secreta). ``primary`` exige ``owner_approved_primary`` (flag explicita
@@ -83,6 +84,8 @@ JEV_KEY_FROM_FILE = ("TYPESAFE_API_KEY", "JEVMODEL_API_KEY")
 # SPEC-213: modo do arquivista. ``inline`` (default do produto) = variavel ausente; ``post_response`` tira os
 # derivados (resumo/memoria/cronica) do caminho do jogador. Rollback: --projection-mode inline.
 PROJECTION_MODES = ("inline", "post_response")
+# SPEC-296 R1: propagação de notícias entre NPCs (SPEC-215). ``off`` (default do produto) = variavel ausente.
+NPC_KNOWLEDGE_MODES = ("off", "shadow", "on")
 # SPEC-236 §6.2: teto diario temporariamente baixo (ex.: 0.01) para provocar um trip REAL pelo cron finops.
 # Reverter com um push sem a flag (volta ao default 5).
 DEFAULT_DAILY_CAP_BRL = NON_SECRET_LITERALS["RPG_DAILY_SPEND_CAP_BRL"]
@@ -143,10 +146,13 @@ def build_env(
     jev_router_mode: str = "off",
     owner_approved_primary: bool = False,
     daily_cap_brl: str = DEFAULT_DAILY_CAP_BRL,
+    npc_knowledge: str = "off",
 ) -> tuple[dict[str, str], dict[str, str]]:
     """Retorna (production, preview). Levanta KeyError com NOME do segredo ausente."""
     if projection_mode not in PROJECTION_MODES:
         raise ValueError(f"projection_mode invalido: {projection_mode}")
+    if npc_knowledge not in NPC_KNOWLEDGE_MODES:
+        raise ValueError(f"npc_knowledge invalido: {npc_knowledge}")
     if jev_router_mode not in JEV_ROUTER_MODES:
         raise ValueError(f"jev_router_mode invalido: {jev_router_mode}")
     if jev_router_mode == "primary" and not owner_approved_primary:
@@ -157,6 +163,8 @@ def build_env(
         production.pop("RPG_DAILY_SPEND_CAP_TEXT", None)
     if projection_mode != "inline":
         production["RPG_PROJECTION_MODE"] = projection_mode
+    if npc_knowledge != "off":
+        production["RPG_NPC_KNOWLEDGE"] = npc_knowledge
     production["RPG_CORS_ORIGINS"] = f"https://{public_host}"
     site_key = next((files[k] for k in SITE_KEY_FROM_FILE if files.get(k)), None)
     if site_key:
@@ -299,6 +307,12 @@ def main(argv: list[str] | None = None) -> int:
         help=f"SPEC-217: aprovacao do dono para primary no staging ({OWNER_PRIMARY_APPROVAL})",
     )
     ap.add_argument(
+        "--npc-knowledge",
+        choices=NPC_KNOWLEDGE_MODES,
+        default="off",
+        help="SPEC-296 R1: propagacao de noticias entre NPCs (SPEC-215); off apaga a variavel",
+    )
+    ap.add_argument(
         "--daily-cap-brl",
         default=DEFAULT_DAILY_CAP_BRL,
         help="SPEC-236 §6.2: teto diario em BRL (default 5); valor baixo provoca trip real; reverter sem a flag",
@@ -323,6 +337,7 @@ def main(argv: list[str] | None = None) -> int:
             jev_router_mode=args.jev_router_mode,
             owner_approved_primary=args.owner_approved_primary,
             daily_cap_brl=args.daily_cap_brl,
+            npc_knowledge=args.npc_knowledge,
         )
     except (KeyError, ValueError) as exc:
         print(exc.args[0], file=sys.stderr)

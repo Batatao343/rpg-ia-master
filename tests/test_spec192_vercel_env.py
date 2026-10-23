@@ -204,3 +204,15 @@ def test_daily_cap_override_for_spec236_trip_and_default_restores_five():
     for bad in ("0", "-1", "abc"):
         with pytest.raises(ValueError):
             ve.build_env(FILES, daily_cap_brl=bad)
+
+
+def test_npc_knowledge_flag_sets_mode_and_off_deletes_it():
+    import pytest
+
+    on, prev = ve.build_env(FILES, npc_knowledge="on")
+    assert on["RPG_NPC_KNOWLEDGE"] == "on" and "RPG_NPC_KNOWLEDGE" not in prev
+    off, _ = ve.build_env(FILES)
+    assert "RPG_NPC_KNOWLEDGE" not in off
+    assert "RPG_NPC_KNOWLEDGE" in ve.stale_names(off)
+    with pytest.raises(ValueError):
+        ve.build_env(FILES, npc_knowledge="maybe")
