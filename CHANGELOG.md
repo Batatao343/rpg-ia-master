@@ -5,6 +5,13 @@
 
 ---
 
+## 2026-10-20/23 — iniciativa mundo vivo (auditoria + entrevista + onda 0)
+
+- **20/10 — auditoria + entrevista do dono:** 5 exploradores (combate, NPCs, simulação, narração, lore/playtest); visão e ~40 decisões em [docs/mundo-vivo/VISAO.md](docs/mundo-vivo/VISAO.md). Specs reservadas 296–305 (296 onda 0; 297 pool entre mundos; 298 reputação 4 níveis; 299 lei/crime; 300 companheiros; 301 patentes; 302 motor de mundo; 303 calendário; 304 NPCs off-screen; 305 quests de mundo). Todas `approved` em 23/10 (decisões no fim de cada spec).
+- **23/10 — SPEC-236 `done`:** §6.2 dia 2 verde no staging (override manual não vaza entre dias; trip `system:finops` 23/10 com `manual_override` vazio). Dia 2 refeito em 23/10 (deploy bloqueado por permissão em 20/10).
+- **23/10 — SPEC-296 `done`:** alerta de fuga → reforços (1/encontro; não em fuga do herói/derrota/rendição), bloco `<AMBIENTE>` único (período, clima local/global, luz, perigo em palavras, abrigo, saídas) no narrador/NPC/combate, `world.news` + `<OUVIU_DIZER>` + "Ouvi dizer" na Crônica. Staging `RPG_NPC_KNOWLEDGE=on` (`vercel_env.py --npc-knowledge`). Combate 200 Mock: letalidade 0,44, 0 `no_progress`.
+- **23/10 — main/CI:** pillow 13.0.0 + certifi 2026.10.23 (pip-audit); project index regenerado com LF (CRLF de scripts Python no Windows divergia do CI — usar `newline=""`).
+
 ## 2026-10-19 — onda: workspace, logs P2/P3, frontend majors, staging (222/236/279/280)
 
 - **19/10 — SPEC-294 `done`:** oráculo de fação oculta casa por palavra inteira (acento/espaço/hífen/plural; "Azulado" não acusa; símbolo colado como `™` agora acusa — NFD); inimigo de save legado sem `id` ganha id opaco `enemy_legacy_<n>` no load, refs do combate migram junto; 5 casos novos de eval `player_knowledge` com mutação do oráculo (lock regenerado, aprovado no `eval-governance`). Laboratório de combate mantém o bestiário canônico (decisão do coordenador). Revisão Opus APPROVED_WITH_FOLLOWUPS ([parecer](handoffs/SPEC-294-review.md)).

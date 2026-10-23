@@ -1,4 +1,4 @@
-# ESTADO_ATUAL — 2026-10-19
+# ESTADO_ATUAL — 2026-10-23
 
 > **Regra deste arquivo: substituir, nunca anexar.** Teto de 8 KB
 > (`uv run python scripts/spec_index.py estado-size` falha acima disso).
@@ -8,25 +8,18 @@
 
 ## Estado em 10 linhas
 
-- `main` = `94b5b0d` (19/10, SPEC-295 pousada; não pushada). Única branch não mergeada: `spec-214` (NO_GO, fica fora).
-- Suíte offline: **~4.400 passed, 238 skipped, exit 0** (19/10, SPEC-295, `-n auto`). Atualize
-  **substituindo** este número.
-- Specs (gerado por `spec_index.py summary`): 289 `done` · 2 `draft` · 4 `in-progress`
-  (197 gate de release, 198 Google Play, 222 LGPD, 236 FinOps).
-- Staging: https://rpg-ia-master-staging.vercel.app (Vercel `gru1` + Supabase
-  `uzeagzcyvxzrpjgrhaql`), `hardened=true`, DeepSeek real, Jev `primary` ativo no router.
-- LLM: DeepSeek primário em todos os tiers (Groq/OpenAI/Anthropic/Gemini de fallback);
-  embeddings Jina. Sem chave → MockLLM.
-- Logging P0+P1 na `main` (JSON em stdout, `request_id` ponta a ponta, código de suporte).
-- Frontend: `web/` React+Vite (shell chat + painel; mobile single-pane < 900px).
+- `main` = `ff48d41` (23/10, CI verde). Iniciativa **mundo vivo** em curso: visão + decisões do dono em [docs/mundo-vivo/VISAO.md](docs/mundo-vivo/VISAO.md).
+- Suíte offline: **~4.429 passed, 234 skipped, exit 0** (23/10, SPEC-296, `-n auto`). Atualize **substituindo**.
+- Specs: 291 `done` · 3 `in-progress` (197, 198, 222) · 296 `done`; 297–305 `approved` nos worktrees (main mostra `draft` até o pouso).
+- Staging: https://rpg-ia-master-staging.vercel.app em `bf3247e`, `hardened=true`, DeepSeek, Jev `primary`, teto R$ 5, **`RPG_NPC_KNOWLEDGE=on`** (SPEC-296 R1).
+- LLM: DeepSeek primário em todos os tiers; embeddings Jina. Sem chave → MockLLM.
+- Frontend: `web/` React+Vite; "Ouvi dizer" na aba Crônica (SPEC-296).
 
 ## Próximos 3 passos
 
-> **Retomando? Leia primeiro [docs/HANDOFF-PROXIMA-SESSAO.md](docs/HANDOFF-PROXIMA-SESSAO.md).**
-
-1. SPEC-236 §6.2 dia 2 (a partir de 20/10 00:00 BRT; [roteiro](docs/staging-wave-2026-10-17/spec236-s62-plano.md)).
-2. SPEC-295 follow-ups para o dono/SPEC-049: curva de Proteção do Chefe não monotônica (P2-1), Chefe 0,86–0,89 no `basico` 5–8 (P3-4), playtest dirigido de Chefe.
-3. Bloqueios externos abaixo, quando o dono agir.
+1. Pousar 298 (reputação; em revisão), 302 (motor de mundo; implementando) e 297 (pool entre mundos; revisão de segurança) — worktrees `rpg-spec-NNN`.
+2. Depois da 298: implementar 299 (lei), 300 (companheiros), 301 (patentes); depois da 302: 303 (calendário), 304 (NPCs off-screen), 305 (quests de mundo).
+3. Pendências do dono abaixo (inclui revisar tabelas de lore: semente de NPC 297, keepers de mercador 298, festas 303).
 
 ## Bloqueios no dono
 
@@ -44,6 +37,7 @@ Coluna "quando ele disser" = o que o coordenador executa na hora.
 | SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera a 104" → certificação cloud |
 | Plugins não usados | desligar em claude.ai → Settings → Plugins | — |
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
+| Termos (SPEC-297 D3) | cláusula: NPC promovido ao pool fica no mundo desvinculado do autor | "aprovo a cláusula" → texto legal + SPEC-222 |
 
 ## Decisões recentes (≤ 7 dias)
 
@@ -51,6 +45,11 @@ Gerado por `uv run python scripts/spec_index.py recent --days 7 --write ESTADO_A
 (roda dentro de `/spec-land` e `/estado`). Não edite à mão entre os marcadores.
 
 <!-- recent:start -->
+- 2026-10-23 · SPEC-305 `draft` — quests-de-mundo-com-prazo
+- 2026-10-23 · SPEC-304 `draft` — npcs-agenda-morte-offscreen
+- 2026-10-23 · SPEC-303 `draft` — calendario-estacoes-festas
+- 2026-10-23 · SPEC-296 `done` — mundo-vivo-onda0-religacoes
+- 2026-10-23 · SPEC-236 `done` — FinOps/wallet/jobs: custo fantasma de falhas, teto diário cross-day, reservas órfãs, STT incerto, refund parcial pré-crédito, lease e poison jobs
 <!-- recent:end -->
 
 ## Notas da onda em curso (coordenador)
@@ -62,11 +61,7 @@ devolvem o parágrafo no hand-back. Ao abrir a próxima onda, mova estas notas p
 
 <!-- onda:inserir-aqui -->
 
-- **19/10 (noite):** SPEC-295 (Chefe no topo) `done`: Chefe/Nomeado agem 2×/rodada (2ª ação no fim) + Proteção natural por Nível do Encontro {1: 2, 3: 1}; séquito e fases sondados e descartados. Arena: Chefe > Elite por 5,5–17,2 pp em todo nível 1–8, dois bots; Lacaio/Padrão/Elite e playtests idênticos à `main`. Revisão Opus APPROVED_WITH_FOLLOWUPS ([handoff](handoffs/SPEC-295-review.md)).
-
-- **19/10 (onda):** workspace, logs P2/P3 (+ staging), SPEC-222 delete com arte, SPEC-236 §6.2 dia 1, SPEC-276 (Vite 8/Playwright 1.64), SPEC-278 (React 19), SPEC-279/280 (gasto sobrevive ao delete; órfãos) — todos na main com CI verde. Detalhe por frente em `CHANGELOG.md` § 2026-10-19. Pendente: SPEC-236 §6.2 dia 2 (20/10, [roteiro](docs/staging-wave-2026-10-17/spec236-s62-plano.md)).
-
-- **19/10 (onda, cont.):** SPEC-225/259/277/281/282/283/284/286/285/288/287/290/289/291/292/293/294 `done` (283: IA inimiga usa Cartas de suporte; letalidade 0,564 → 0,598 → SPEC-285); workspace 2ª passada + Ruff `I`/`UP`/format (CI exige `ruff format --check`); aiohttp 3.14.5 (CVE); staging em `65c0f23` (Jev primary, teto R$ 5). Detalhe em `CHANGELOG.md` § 2026-10-19.
+- **20–23/10 (mundo vivo):** auditoria (5 frentes) + entrevista; specs 296–305 aprovadas; SPEC-236 e SPEC-296 `done`; staging com notícias entre NPCs `on`; pillow 13/certifi (CVE). Detalhe em `CHANGELOG.md` § 2026-10-20/23. Lição: script Python no Windows grava CRLF → índice diverge do CI; usar `newline=""`.
 
 ## Como rodar
 
