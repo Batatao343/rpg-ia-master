@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "6ef67d72192afbaa9bed37a65df92f7d1736ace7",
+  "commit_sha": "48f9c5f14fe2e638fc16ac89168b040559dbeff4",
   "edge_counts": {
-    "calls": 19183,
-    "contains": 770,
-    "defines": 10645,
-    "imports": 1738,
-    "likely_test_for": 1099,
+    "calls": 19817,
+    "contains": 786,
+    "defines": 10905,
+    "imports": 1782,
+    "likely_test_for": 1136,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:a486a48046e55337f82f84d3f988572a1866b1b918c40cff2d84642ba5b58b62",
+  "graph_hash": "sha256:4a8daba504aaa4027292c45f9707631d72cb8333a2ea98129d29acf4bee3fe89",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -87,6 +87,7 @@
     "docs/spec221/evidence/local_smoke.py",
     "docs/spec283/arena_ab.py",
     "docs/spec285/arena_lethality.py",
+    "docs/spec302/world_engine_sim.py",
     "encounter_budget.py",
     "evals/__init__.py",
     "evals/__main__.py",
@@ -338,6 +339,7 @@
     "services/event_processor.py",
     "services/exploration.py",
     "services/faction_display.py",
+    "services/faction_relations.py",
     "services/finops.py",
     "services/finops_alerts.py",
     "services/finops_job.py",
@@ -358,6 +360,7 @@
     "services/kill_switches.py",
     "services/lease_heartbeat.py",
     "services/local_backup.py",
+    "services/location_states.py",
     "services/map_view.py",
     "services/mechanics_trace.py",
     "services/memory_intents.py",
@@ -402,7 +405,11 @@
     "services/usage_metering.py",
     "services/visual_catalog.py",
     "services/wallet_recovery.py",
+    "services/world_director.py",
     "services/world_distance.py",
+    "services/world_engine.py",
+    "services/world_perception.py",
+    "services/world_pressures.py",
     "services/world_validators.py",
     "state.py",
     "tests/conftest.py",
@@ -415,6 +422,7 @@
     "tests/silent_except_scan.py",
     "tests/spec215_helpers.py",
     "tests/spec297_support.py",
+    "tests/spec302_helpers.py",
     "tests/test_abuse_logging.py",
     "tests/test_abuse_policy.py",
     "tests/test_account_api.py",
@@ -780,6 +788,14 @@
     "tests/test_spec298_reputacao_nucleo.py",
     "tests/test_spec298_social.py",
     "tests/test_spec298_visibilidade.py",
+    "tests/test_spec302_director.py",
+    "tests/test_spec302_effects_factions.py",
+    "tests/test_spec302_location_states.py",
+    "tests/test_spec302_perception.py",
+    "tests/test_spec302_playtest.py",
+    "tests/test_spec302_pressures.py",
+    "tests/test_spec302_review_fixes.py",
+    "tests/test_spec302_tick.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -971,14 +987,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 822,
+    "class": 836,
     "endpoint": 64,
-    "file": 917,
-    "function": 3293,
+    "file": 933,
+    "function": 3409,
     "method": 784,
-    "module": 770,
-    "test": 5745
+    "module": 786,
+    "test": 5875
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:292ded80cae05e5bd28cf79e08f53ab50feaec0ccf8ec18db6dd52a239dcc709"
+  "source_tree_hash": "sha256:30ee47ced7500b501329839c964d0fea0d18c3ba0adf4a9d33bc3508a668fff6"
 }
