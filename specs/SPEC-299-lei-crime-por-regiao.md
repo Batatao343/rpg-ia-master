@@ -1,6 +1,6 @@
 # SPEC-299 — Lei e crime por região
 
-> **Status:** `draft`
+> **Status:** `approved` (dono, 2026-10-23)
 > **Criada:** 2026-10-20 · **Atualizada:** 2026-10-20
 > **Origem:** `docs/mundo-vivo/VISAO.md` (Regra de ouro; C. Sociedade viva → "Crime e lei por região"; Calibração → "Procurado"; B. Combate vivo → "entregar/vender" prisioneiro)
 > **Depende de:** SPEC-215 (`done`, conhecimento por NPC), **SPEC-298** (fama por local; precisa estar `done`, ver §3.9), SPEC-296 (soft: bloco de ambiente da Onda 0, ver R19)
@@ -812,3 +812,12 @@ trechos curtos da narração (sem PII).
   6–9 avançam com o adaptador de fama em 0.
 - **D9:** default de `RPG_LAW` no staging depois do pouso: `shadow` por 1 playtest e depois
   `on` (proposta, igual à SPEC-215).
+
+
+## Decisões do dono (2026-10-23)
+
+Todas as decisões abertas desta spec seguem o **default recomendado pelo autor**, exceto/explicitando:
+
+- D2 (substitui a proposta): `magia_ilegal` LIGADA no Código de Ferro, com REGISTRO — usar Éter em público sem licença é crime testemunhado; licença obtida por custo/patente (SPEC-301) ou usar escondido.
+- D5: crime grave = prisão (Oubliette, dias de jogo passam) com saídas: fuga, resgate ou suborno. Sem execução nem mutilação.
+- D6: suborno entra como saída mínima da prisão/confronto (detalhe [BALANCEAR]).
