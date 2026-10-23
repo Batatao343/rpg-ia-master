@@ -1,6 +1,6 @@
 # SPEC-304 — NPCs off-screen: agenda, viagem, troca de lado e morte telegrafada
 
-> **Status:** `draft`
+> **Status:** `approved` (dono, 2026-10-23)
 > **Criada:** 2026-10-23 · **Atualizada:** 2026-10-23
 > **Origem:** `docs/mundo-vivo/VISAO.md` (decisão 3 "move NPCs (agenda, viagem, troca de lado, morte off-screen)", decisão 5 "duro, mas telegrafado", § C "NPCs simulados off-screen" e "Morte off-screen", Regra de ouro); SPEC-302 §9 (filha 302-C).
 > **Depende de:** SPEC-302 (`approved`; precisa estar `done` no marco M2: `advance_days`, hook `post`, `day_rng`, `request_crisis_slot`, `location_effects`, `world_perception`, `world.news`), SPEC-300 (`approved`; interface §3.8 `companions_exposed`/`telegraph_companion_danger`/`apply_companion_fate`), SPEC-298 (`approved`; `npc_tier`, `apply_npc_delta`), SPEC-215 (`done`; propagação), SPEC-230 (`done`; `npc_alive`/`apply_npc_death`).
@@ -907,3 +907,10 @@ antes/depois R32, smoke §6)
 - **D8 — Pesos de destino e hazard (§3.5).** Aceitar os defaults `[BALANCEAR]` e
   calibrar por N1–N7, ou fixar metas diferentes (ex.: P(morte | perigo maior)
   maior que 0,50).
+
+
+## Decisões do dono (2026-10-23)
+
+Todas as decisões abertas seguem o **default recomendado pelo autor**, exceto/explicitando:
+
+- D4: pedido de ajuda por MENSAGEIRO que encontra o jogador onde ele estiver (conta como testemunho/ouvido).
