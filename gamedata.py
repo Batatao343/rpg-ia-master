@@ -56,13 +56,39 @@ def _read_json_file(file_path: str) -> dict:
         return {}
 
 
-def save_custom_artifact(item_id: str, item_data: dict):
+def save_custom_artifact(item_id: str, item_data: dict, *, game_id: str | None = None):
     """
     Salva um item criado pela IA no cache persistente (overlay runtime — spec
     isolar-cache-runtime: nunca grava em data/; o legado data/custom_artifacts.json
     segue sendo LIDO no startup).
     Atualiza tanto o arquivo físico quanto a memória RAM.
+
+    SPEC-297 R29: com `RPG_SHARED_POOL` != off o item vai para HOLD no pool (jogo de
+    origem) e NÃO muta `ARTIFACTS_DB` do processo (vazaria entre tenants no mesmo
+    processo hosted). Sem `game_id` nesse modo, levanta `ValueError`.
     """
+    from services.shared_pool import enabled as _pool_enabled
+
+    if _pool_enabled():
+        if not game_id:
+            raise ValueError("game_id obrigatório para submeter item ao pool")
+        from services import shared_pool
+        from services.shared_pool_models import PoolNamespace
+
+        doc = {
+            k: item_data[k]
+            for k in ("name", "description", "type", "rarity", "unique", "stackable")
+            if k in item_data
+        }
+        doc["id"] = item_id
+        shared_pool.submit(
+            PoolNamespace.ARTIFACT,
+            doc,
+            game_id=str(game_id),
+            region_id=str(item_data.get("region_id") or ""),
+            name_origin=str(item_data.get("name_origin") or "engine"),
+        )
+        return
     try:
         from infrastructure.runtime import get_runtime
 

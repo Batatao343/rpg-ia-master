@@ -144,6 +144,10 @@ class NPCSchema(BaseModel):
     combat_stats: dict = Field(
         description="HP, AC e Attacks", default={"hp": 10, "ac": 10, "attacks": []}
     )
+    legend: str = Field(
+        default="",
+        description="SPEC-297: 'o que se diz dele' em <=160 chars (só com o pool ligado).",
+    )
 
 
 def _valid_race_id(value: object) -> str:
@@ -236,9 +240,41 @@ def _npc_entry_broken(entry) -> bool:
     )
 
 
-def load_npc_db():
+def _own_pool_npcs(game_id: str) -> dict:
+    """SPEC-297 R10/R25: NPCs criados por ESTE jogo (hold/local/promovido). Nunca de outro."""
+    from services import shared_pool
+    from services.shared_pool_models import PoolNamespace
+
+    out: dict = {}
+    try:
+        for entry in shared_pool.own_entries(PoolNamespace.NPC, game_id=game_id, limit=200):
+            doc = dict(entry.document)
+            out[str(doc.get("id") or entry.entry_id)] = {**doc, "pool_entry_id": entry.entry_id}
+    except Exception as exc:
+        _log_event("npc", "pool_own_read_failed", level="warning", error=type(exc).__name__)
+    return out
+
+
+def _pool_flag_on() -> bool:
+    from services.shared_pool import enabled
+
+    return enabled()
+
+
+def _npc_db_for_game(game_id: str):
+    from services.shared_pool import enabled
+
+    return load_npc_db(game_id) if enabled() and game_id else load_npc_db()
+
+
+def load_npc_db(game_id: str = ""):
     """SPEC-230: descarta (com log) entradas quebradas já persistidas."""
     raw = _load_npc_db_raw()
+    if game_id:
+        from services.shared_pool import enabled as _pool_enabled
+
+        if _pool_enabled():
+            raw = {**raw, **_own_pool_npcs(game_id)}
     clean = {k: v for k, v in raw.items() if not _npc_entry_broken(v)}
     if len(clean) != len(raw):
         logging.getLogger("rpg.npc").warning(
@@ -360,16 +396,63 @@ def _infer_tier_from_name(name: str) -> ModelTier:
 
 
 # --- FÁBRICA DE NPCs (A FUNÇÃO QUE FALTAVA) ---
-def generate_new_npc(name, context=""):
+_POOL_DOC_KEYS = (
+    "id",
+    "name",
+    "role",
+    "persona",
+    "appearance",
+    "attributes",
+    "initial_relationship",
+    "race_id",
+    "origin_region_id",
+    "faction_id",
+    "profession_id",
+    "legend",
+)
+
+
+def _pool_generation_prompt(name: str, context: str, lore_info: str, labels: dict) -> str:
+    """SPEC-297 R7: semente + nome sanitizado + local + lore pública. SEM a cena narrada."""
+    seed_lines = "\n".join(f"- {k}: {v}" for k, v in labels.items() if v)
+    return f"""
+            <role>RPG Character Designer</role>
+            <lore>{lore_info}</lore>
+            <semente>
+            {seed_lines}
+            </semente>
+            <task>Create NPC '{name}' honoring EVERY item of <semente> (do not contradict
+            it). Include all 6 attributes, a detailed persona and appearance. Also fill
+            'legend': one sentence (max 160 chars) of what rumor says about them, derived
+            from their desire and epithet.</task>
+            """
+
+
+def generate_new_npc(
+    name,
+    context="",
+    *,
+    game_id="",
+    location_id="",
+    name_origin="narrator",
+    turn=0,
+    player_inputs=(),
+):
     """
     Gera um novo NPC do zero usando IA ou recupera do cache se já existir.
     Usado pelo Storyteller para popular o mundo dinamicamente.
+
+    SPEC-297: com `RPG_SHARED_POOL` != off (e `game_id`), o motor sorteia uma semente,
+    o prompt NÃO recebe a cena e o resultado é submetido ao pool em hold (em vez de
+    gravar no catálogo de runtime).
     """
+    from services import shared_pool
     from services.prompt_guard import sanitize_entity_name
 
+    pool_on = shared_pool.enabled() and bool(game_id)
     name = sanitize_entity_name(name) or "Desconhecido"  # SPEC-223 R7
     # 1. CHECK-FIRST: Verifica se já existe
-    db = load_npc_db()
+    db = load_npc_db(game_id) if pool_on else load_npc_db()
     existing_ids = list(db.keys())
 
     found_id = find_existing_entity(name, "NPC", existing_ids)
@@ -381,29 +464,47 @@ def generate_new_npc(name, context=""):
             data["attributes"] = {"str": 10, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10}
             changed = True
         normalized = _materialize_npc_combat_sheet(data)
-        if normalized is not data or changed:
+        # SPEC-297 R13: cache-hit nunca reescreve o pool; só o catálogo legado (flag off).
+        if not pool_on and (normalized is not data or changed):
             save_npc_template(normalized)
         return normalized
 
     # 2. GERAÇÃO
     _log_event("npc", "creating", level="info")
-    lore_info = query_rag(f"{name} {context}", index_name="lore")
+    seed = None
+    labels: dict = {}
+    if pool_on:
+        from services import npc_seed
+        from services.shared_pool_models import PoolNamespace
+
+        seed = npc_seed.roll_unique_seed(
+            game_id=str(game_id),
+            turn=int(turn or 0),
+            location_id=str(location_id or ""),
+            signature_taken=lambda sig: shared_pool.signature_taken(PoolNamespace.NPC, sig),
+        )
+        if seed is not None:
+            labels = npc_seed.seed_labels(seed)
+        lore_info = query_rag(f"{name} {labels.get('local_de_origem', '')}", index_name="lore")
+    else:
+        lore_info = query_rag(f"{name} {context}", index_name="lore")
 
     llm = get_llm(temperature=0.7, tier=_infer_tier_from_name(name))
 
     try:
         designer = llm.with_structured_output(NPCSchema)
-        res = designer.invoke(
-            [
-                SystemMessage(
-                    content=f"""
+        if pool_on:
+            system_text = _pool_generation_prompt(name, context, lore_info, labels)
+            human_text = f"Local: {labels.get('local_de_origem', '')}"
+        else:
+            system_text = f"""
             <role>RPG Character Designer</role>
             <lore>{lore_info}</lore>
             <task>Create NPC '{name}'. Include all 6 attributes and a detailed persona.</task>
             """
-                ),
-                HumanMessage(content=f"Context: {context}"),
-            ]
+            human_text = f"Context: {context}"
+        res = designer.invoke(
+            [SystemMessage(content=system_text), HumanMessage(content=human_text)]
         )
 
         if not isinstance(res, NPCSchema):  # SPEC-230 R1: FallbackLLM -> AIMessage
@@ -427,14 +528,47 @@ def generate_new_npc(name, context=""):
             "combat_stats": {"hp": 10, "ac": 10, "attacks": []},
         }
 
-    data = _materialize_npc_combat_sheet(data)
     if data.get("id") == "fallback":
-        return data  # SPEC-230 R1: o fallback nunca envenena o cache de runtime
+        return _materialize_npc_combat_sheet(data)  # SPEC-230 R1: nunca envenena o cache/pool
+    if pool_on:
+        return _submit_generated_npc(data, seed, game_id, name_origin, player_inputs)
+    data = _materialize_npc_combat_sheet(data)
     try:
         save_npc_template(data)
     except Exception as exc:
         _log_event("npc", "db_persist_failed", level="warning", error=type(exc).__name__)
     return data
+
+
+def _submit_generated_npc(data, seed, game_id, name_origin, player_inputs) -> dict:
+    """SPEC-297 R9: projeta à allowlist, submete em hold e devolve a ficha LOCAL."""
+    from services import shared_pool
+    from services.shared_pool_models import PoolNamespace
+
+    data = dict(data)
+    data["legend"] = str(data.get("legend") or "")[:160]
+    if seed is not None:
+        data.update(
+            race_id=seed.race_id,
+            origin_region_id=seed.origin_region_id,
+            faction_id=seed.faction_id,
+            profession_id=seed.profession_id,
+        )
+    doc = {k: data[k] for k in _POOL_DOC_KEYS if k in data and data[k] is not None}
+    try:
+        entry = shared_pool.submit(
+            PoolNamespace.NPC,
+            doc,
+            game_id=str(game_id),
+            region_id=seed.origin_region_id if seed is not None else "",
+            name_origin=name_origin,
+            seed=seed,
+            player_inputs=list(player_inputs or ()),
+        )
+        data["pool_entry_id"] = entry.entry_id
+    except Exception as exc:
+        _log_event("npc", "pool_submit_failed", level="warning", error=type(exc).__name__)
+    return _materialize_npc_combat_sheet(data)
 
 
 _MISSION_RE = re.compile(
@@ -630,13 +764,21 @@ def npc_actor_node(state: GameState):
             "interlocutor_reason": "npc_unknown_absent",
         }
     if not npc_data:
-        db = load_npc_db()
+        db = _npc_db_for_game(str(state.get("game_id", "")))
         db_key = find_runtime_npc_key(db, npc_name)
         npc_data = db.get(db_key) if db_key is not None else None
     if not npc_data:
         # NPC ainda não existe na cena: gera na hora (persona + ficha) em vez de falhar.
         loc = state.get("world", {}).get("current_location", "")
-        npc_data = generate_new_npc(npc_name, context=f"Local: {loc}")
+        gen_kwargs = {}
+        if _pool_flag_on():
+            gen_kwargs = {
+                "game_id": str(state.get("game_id", "")),
+                "location_id": str(state.get("world", {}).get("current_location_id", "")),
+                "name_origin": "player",  # R8/D1: nome do jogador/router nunca promove
+                "turn": int(state.get("world", {}).get("turn_count", 0) or 0),
+            }
+        npc_data = generate_new_npc(npc_name, context=f"Local: {loc}", **gen_kwargs)
         npc_data.setdefault("location", loc)
         npc_data.setdefault("relationship", 5)
         npc_data.setdefault("memory", [])

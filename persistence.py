@@ -662,6 +662,7 @@ def _state_to_save_data(state: dict[str, Any], game_id: str) -> dict[str, Any]:
         "game_id": game_id,
         "processed_action_ids": list(state.get("processed_action_ids", []) or [])[-64:],
         "visual_seen_entity_ids": list(state.get("visual_seen_entity_ids", []) or [])[-64:],
+        "pool_used": list(state.get("pool_used", []) or [])[-500:],  # SPEC-297 R24
         "visual_cue_ledger": deepcopy(list(state.get("visual_cue_ledger", []) or [])[-64:]),
         "narrative_summary": compact_summary(state.get("narrative_summary", "")),
         "archivist_last_run": state.get("archivist_last_run", 0),
@@ -984,6 +985,7 @@ def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
         "game_id": raw_data.get("game_id", "recovered_session"),
         "processed_action_ids": list(raw_data.get("processed_action_ids", []) or [])[-64:],
         "visual_seen_entity_ids": list(raw_data.get("visual_seen_entity_ids", []) or [])[-64:],
+        "pool_used": list(raw_data.get("pool_used", []) or [])[-500:],  # SPEC-297 R24/R34
         "visual_cue_ledger": deepcopy(list(raw_data.get("visual_cue_ledger", []) or [])[-64:]),
         "narrative_summary": compact_summary(raw_data.get("narrative_summary", "")),
         "archivist_last_run": raw_data.get("archivist_last_run", 0),

@@ -164,12 +164,26 @@ def _bounded_enemy_groups(scan: EncounterScanner) -> list[tuple[str, int]]:
     return bounded
 
 
-def _grounded_template(name: str, context: str, encounter_level: int) -> dict:
+def _grounded_template(
+    name: str, context: str, encounter_level: int, state: dict | None = None
+) -> dict:
     """Factory do bestiário com trava de identidade (SPEC-203 R3/H3): se o
     dedupe/gerador devolver OUTRA espécie, descarta e materializa o nome pedido."""
     from services import encounter_manifest as em
 
-    template = generate_new_enemy(name, context=context, encounter_level=encounter_level)
+    pool_kwargs: dict = {}
+    from services.shared_pool import enabled as _pool_enabled
+
+    if _pool_enabled() and (state or {}).get("game_id"):
+        # SPEC-297 R9: nome vindo da dica/scanner (texto do jogador) nunca promove (D1).
+        pool_kwargs = {
+            "game_id": str(state.get("game_id")),
+            "location_id": str((state.get("world") or {}).get("current_location_id", "")),
+            "name_origin": "player",
+        }
+    template = generate_new_enemy(
+        name, context=context, encounter_level=encounter_level, **pool_kwargs
+    )
     if em.shares_identity(name, str(template.get("name") or "")) or em.shares_identity(
         name, str(template.get("id") or "")
     ):
@@ -310,7 +324,7 @@ def _spawn_v4_enemies(
                         _log_event("combat", "spawn_scanner_discarded", level="warning")
                     groups = grounded or [(str(target_hint).strip(), em.hint_count(target_hint))]
                 for name, count in groups:
-                    template = _grounded_template(name, mechanical_context, encounter_level)
+                    template = _grounded_template(name, mechanical_context, encounter_level, state)
                     enemies += _instances(template, count, next_instance_by_template)
                 if enemies:
                     meta.update(source="scanner", target_ref=str(target_hint or ""))

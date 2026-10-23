@@ -489,6 +489,7 @@ class GameState(TypedDict):
     game_id: str  # ID único da sessão para isolar o RAG
     processed_action_ids: list[str]  # ledger limitado de idempotência SSE/POST
     visual_seen_entity_ids: list[str]  # Fase 8A: NPCs já apresentados
+    pool_used: list[str]  # SPEC-297 R24: pool_entry_id já materializados neste jogo
     visual_cue_ledger: list[dict]  # Fase 8A: action_key -> cue|null (64)
     narrative_summary: str  # Resumo de curto prazo (contexto comprimido)
     archivist_last_run: int  # Controle de frequência do arquivista

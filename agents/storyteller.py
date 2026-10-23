@@ -441,6 +441,22 @@ def _deterministic_story_fallback(notes, light: dict) -> str:
     return "\n".join(parts) or ("O momento passa em silêncio; o mundo aguarda seu próximo passo.")
 
 
+def _pool_enabled() -> bool:
+    from services.shared_pool import enabled
+
+    return enabled()
+
+
+def _cast_match(cast: list | None, name: str):
+    """Entrada do elenco oferecido cujo nome (dobrado) bate com o introduzido."""
+    if not cast:
+        return None
+    from services.shared_pool_models import fold_name
+
+    folded = fold_name(name)
+    return next((e for e in cast if e.name_fold == folded), None)
+
+
 def _with_new_npc(
     npcs: dict[str, dict],
     new_name: str,
@@ -449,6 +465,9 @@ def _with_new_npc(
     game_id: str = "",
     home_id: str = "",
     turn: int = 0,
+    cast: list | None = None,
+    pool_used_out: list | None = None,
+    player_inputs: tuple = (),
 ) -> dict[str, dict]:
     from services import npc_layers
     from services.entity_identity import find_runtime_npc_key
@@ -471,7 +490,30 @@ def _with_new_npc(
                 "home_location_id": home_id or atual.get("home_location_id", ""),
             }
         return new_npcs
-    tpl = generate_new_npc(new_name, context=f"Local: {loc}. Cena: {narrative_text}")
+    tpl = None
+    pool_entry = _cast_match(cast, new_name)
+    if pool_entry is not None:
+        # SPEC-297 R23: elenco do pool = cópia da base, SEM chamada de LLM.
+        from observability.telemetry import log_event
+        from services import shared_pool
+
+        tpl = shared_pool.materialize_npc(pool_entry, game_id=game_id, home_location_id=home_id)
+        if pool_used_out is not None:
+            pool_used_out.append(pool_entry.entry_id)
+        log_event("pool", "cast_used", entry_id=pool_entry.entry_id)
+    elif _pool_enabled():
+        # R7: com o pool ligado a cena narrada NÃO entra no prompt de geração.
+        tpl = generate_new_npc(
+            new_name,
+            context=f"Local: {loc}",
+            game_id=game_id,
+            location_id=home_id,
+            name_origin="narrator",
+            turn=turn,
+            player_inputs=player_inputs,
+        )
+    else:
+        tpl = generate_new_npc(new_name, context=f"Local: {loc}. Cena: {narrative_text}")
     if not tpl:
         return npcs
     # O librarian/cache pode resolver uma referência técnica para uma ficha já
@@ -943,6 +985,18 @@ def storyteller_node(state: GameState):
     _fame = fame_line(state)
     fame_block = f"<FAMA_LOCAL>\n{_fame}\n</FAMA_LOCAL>" if _fame else ""
 
+    # SPEC-297 R22: elenco oferecido ao NARRADOR (não ao jogador); vazio salvo flag `on`.
+    try:
+        from services import shared_pool
+
+        _cast = shared_pool.cast_entries(state)
+        cast_block_text = shared_pool.cast_block_text(_cast)
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("storyteller", "pool_cast_failed", exc)
+        _cast, cast_block_text = [], ""
+
     sys = SystemMessage(
         content=f"""
     <PERSONA>
@@ -989,6 +1043,8 @@ def storyteller_node(state: GameState):
     </QUESTS_ATIVAS>
 
     {capacidades_block}
+
+    {cast_block_text}
 
     {pack.world_state_block}
     (Se o ESTADO ATUAL DO MUNDO acima contradisser o lore/fatos passados abaixo, o ESTADO ATUAL VENCE.)
@@ -1204,6 +1260,10 @@ def storyteller_node(state: GameState):
         home_id = world.get("current_location_id", "")
         _turn = int(world.get("turn_count", 0) or 0)
         introduced_npcs = [] if quarantine_llm_payload else (update.introduced_npcs or [])
+        _pool_used_new: list = []
+        _recent_player_inputs = tuple(
+            str(m.content) for m in messages[-3:] if isinstance(m, HumanMessage)
+        )
         npcs_left_scene = (
             [] if quarantine_llm_payload else (getattr(update, "npcs_left_scene", []) or [])
         )
@@ -1216,6 +1276,9 @@ def storyteller_node(state: GameState):
                 game_id=str(game_id or ""),
                 home_id=home_id,
                 turn=_turn,
+                cast=_cast,
+                pool_used_out=_pool_used_new,
+                player_inputs=_recent_player_inputs,
             )
         for gone_name in npcs_left_scene:
             key = next((k for k in new_npcs if k.lower() == str(gone_name).lower()), None)
@@ -1230,6 +1293,10 @@ def storyteller_node(state: GameState):
             "campaign_plan": updated_plan,
             "needs_replan": needs_replan,
         }
+        if _pool_used_new:  # SPEC-297 R24: nunca duas vezes no mesmo jogo
+            updates["pool_used"] = list(
+                dict.fromkeys([*(state.get("pool_used") or []), *_pool_used_new])
+            )
         # Rumores/cores do simulador são percepção narrativa, não fatos globais.
         # A consequência mecânica aplicada já é persistida diretamente pelo
         # world_simulator; o archivist deve ignorar inferências livres deste texto.

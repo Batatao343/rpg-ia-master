@@ -616,3 +616,121 @@ def admin_retire(store, entry_id: str) -> SharedPoolEntry:
     entry = store.update(entry_id, {"status": PoolStatus.RETIRED.value})
     log_event("pool", "admin_action", action="retire", entry_id=entry_id)
     return entry
+
+
+# --------------------------------------------------------------------------- #
+# Reuso no jogo B (R22-R24)
+# --------------------------------------------------------------------------- #
+CAST_MAX = 2
+
+
+def _clean_line(text: object, limit: int) -> str:
+    return " ".join(str(text or "").replace("<", " ").replace(">", " ").split())[:limit]
+
+
+def _region_of(location_id: str) -> str:
+    try:
+        from services.npc_seed import _lore
+
+        return str((_lore()["locations"].get(location_id) or {}).get("region_id") or "")
+    except Exception as exc:  # silent-ok: sem região = sem elenco
+        log_event("pool", "region_lookup_failed", level="debug", error=type(exc).__name__)
+        return ""
+
+
+def cast_rng(game_id: str, turn: int, location_id: str):
+    import hashlib
+    import random
+
+    key = f"{game_id}|{turn}|{location_id}|cast"
+    return random.Random(int.from_bytes(hashlib.sha256(key.encode("utf-8")).digest()[:8], "big"))
+
+
+def cast_entries(state: dict, *, store=None) -> list[SharedPoolEntry]:
+    """Sorteia até 2 NPCs `promoted` da região atual (R22). Vazio salvo flag `on`."""
+    if pool_mode() != "on":
+        return []
+    game_id = str(state.get("game_id") or "")
+    world = state.get("world") or {}
+    turn = int(world.get("turn_count", 0) or 0)
+    location_id = str(world.get("current_location_id") or "")
+    if not game_id:
+        return []
+    rng = cast_rng(game_id, turn, location_id)
+    if rng.random() >= reuse_rate():
+        return []
+    region = _region_of(location_id)
+    if not region:
+        return []
+    npcs = state.get("npcs") or {}
+    known = {str(k) for k in npcs} | {
+        str(v.get("name")) for v in npcs.values() if isinstance(v, dict) and v.get("name")
+    }
+    used = {str(x) for x in (state.get("pool_used") or [])}
+    used |= {
+        str(v.get("pool_entry_id"))
+        for v in npcs.values()
+        if isinstance(v, dict) and v.get("pool_entry_id")
+    }
+    found = candidates(
+        PoolNamespace.NPC,
+        region_id=region,
+        exclude_ids=used,
+        exclude_names=known,
+        limit=20,
+        store=store,
+    )
+    found = [e for e in found if e.origin_game_id != game_id]
+    return rng.sample(found, min(CAST_MAX, len(found))) if found else []
+
+
+def cast_block_text(picked: Sequence[SharedPoolEntry]) -> str:
+    """Texto do bloco `<ELENCO_POSSIVEL>` (R22); vazio sem candidatos."""
+    if not picked:
+        return ""
+    lines = [
+        f"- {_clean_line(e.name, 60)} ({_clean_line(e.document.get('role'), 60)}): "
+        f"{_clean_line(e.document.get('appearance'), 120)}"
+        for e in picked
+    ]
+    log_event("pool", "cast_offered", count=len(picked))
+    return (
+        "<ELENCO_POSSIVEL>\n"
+        + "\n".join(lines)
+        + "\nSe a cena introduzir alguém novo, prefira um destes (use o nome EXATO em "
+        "'introduced_npcs'); a lenda só pode surgir como fala de alguém em cena.\n"
+        "</ELENCO_POSSIVEL>"
+    )
+
+
+def cast_block(state: dict, *, store=None) -> tuple[str, list[str]]:
+    """(prompt, ids) do elenco oferecido ao narrador (R22)."""
+    picked = cast_entries(state, store=store)
+    return cast_block_text(picked), [e.entry_id for e in picked]
+
+
+def materialize_npc(entry: SharedPoolEntry, *, game_id: str, home_location_id: str = "") -> dict:
+    """R23: cópia SÓ da allowlist da base; ficha v4 pelo motor; sem LLM.
+
+    Relação, memória, morte, cargo e traços ocultos nunca atravessam: a relação
+    nasce de `initial_relationship` e os traços são sorteados pelo `game_id` do
+    jogo B (`npc_layers.ensure_npc_fields`, chamado pelo narrador)."""
+    from agents.npc import _materialize_npc_combat_sheet
+    from services.shared_pool_models import DOCUMENT_ALLOWLIST
+
+    allow = DOCUMENT_ALLOWLIST[PoolNamespace.NPC]
+    base = {k: v for k, v in entry.document.items() if k in allow}
+    base["name"] = entry.name
+    base["legend"] = entry.legend or str(base.get("legend") or "")
+    base["pool_entry_id"] = entry.entry_id
+    base.setdefault("role", "Desconhecido")
+    base.setdefault("persona", "")
+    base.setdefault(
+        "attributes", {"str": 10, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10}
+    )
+    try:
+        base["initial_relationship"] = int(base.get("initial_relationship", 5))
+    except (TypeError, ValueError):
+        base["initial_relationship"] = 5
+    base["relationship"] = base["initial_relationship"]
+    return _materialize_npc_combat_sheet(base)

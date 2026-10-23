@@ -9,7 +9,6 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `abuse.blocked` | `cls`, `ip_ref`, `limit`, `owner_ref`, `retry_after_s`, `scope` |
 | `abuse.limiter_unavailable` | `error_type`, `site` |
 | `account.delete.finish_failed` | `error_type`, `owner_ref`, `request_id` |
-| `ambient.fallback` | — |
 | `api.audit_trace_not_written` | `error` |
 | `api.character_create` | — |
 | `api.checkpoint_deferred` | — |
@@ -36,6 +35,8 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `bestiary.creating` | — |
 | `bestiary.generation_failed` | `error` |
 | `bestiary.legacy_monster_without_id` | — |
+| `bestiary.pool_submit_failed` | `error` |
+| `bestiary.pool_view_failed` | `error` |
 | `bestiary.read_failed` | `error` |
 | `blob_purge.fallback` | — |
 | `campaign.beats_english_after_retry` | — |
@@ -65,7 +66,6 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.spawn_scanner_discarded` | — |
 | `combat.started` | `enemies` |
 | `combat.summary` | `death_stage_reached`, `enemy_damage_dealt`, `player_damage_taken`, `reactions`, `rounds`, `target_redirects` |
-| `combat_agent.fallback` | — |
 | `cron.auth_rejected` | `reason` |
 | `cron.failed` | `duration_s`, `error_type`, `stack`, `task` |
 | `cron.item_failed` | `error_type`, `item_kind`, `item_ref`, `task` |
@@ -130,7 +130,8 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `npc.fallback` | — |
 | `npc.generation_failed` | `error` |
 | `npc.knowledge_failed` | `error` |
-| `npc.social_failed` | `error` |
+| `npc.pool_own_read_failed` | `error` |
+| `npc.pool_submit_failed` | `error` |
 | `operation.rejected` | `op_kind`, `op_ref`, `reason` |
 | `operation.release_failed` | `cause_type`, `error_type`, `op_ref` |
 | `operation.replayed` | `op_kind`, `op_ref` |
@@ -156,12 +157,15 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `persistence.store_load_failed` | `duration_ms`, `error_type`, `game_ref` |
 | `persistence.store_save_failed` | `duration_ms`, `error_type`, `game_ref` |
 | `pool.admin_action` | `action`, `entry_id` |
+| `pool.cast_offered` | `count` |
+| `pool.cast_used` | `entry_id` |
 | `pool.embed_failed` | `error` |
 | `pool.embedder_unavailable` | `error` |
 | `pool.eval_capped` | — |
 | `pool.eval_error` | `error` |
 | `pool.promote_failed` | `entry_id`, `error` |
 | `pool.promoted` | `entry_id`, `namespace` |
+| `pool.region_lookup_failed` | `error` |
 | `pool.region_summary_failed` | `error` |
 | `pool.rejected` | `code`, `entry_id` |
 | `pool.request_role_applied` | `role` |
@@ -192,7 +196,6 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `rag.rules_missing` | — |
 | `rag.session_memory_failed` | `error` |
 | `rag.session_memory_saved` | `facts` |
-| `reputation.process_failed` | `error` |
 | `router.decision` | `fallback_reason`, `jev_mode`, `route`, `source`, `target_kind` |
 | `router.failed` | `error` |
 | `router.orphan_combat_expired` | — |

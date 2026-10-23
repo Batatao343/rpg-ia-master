@@ -189,9 +189,50 @@ def _read_json(path: str) -> dict:
         return {}
 
 
-def load_bestiary() -> dict:
+def _pool_creature_template(entry) -> dict:
+    """SPEC-297 R27: o documento do pool é só CONCEITO; a ficha numérica é do motor."""
+    doc = dict(entry.document)
+    concept = {
+        "id": str(doc.get("id") or entry.entry_id),
+        "name": entry.name,
+        "description": str(doc.get("description") or ""),
+        "categoria": doc.get("categoria") or "padrao",
+        "arquetipo": doc.get("arquetipo") or "equilibrado",
+        "estilo_ataque": doc.get("estilo_ataque") or "corpo_a_corpo",
+        "nome_ataque": doc.get("nome_ataque") or "Ataque",
+        "regions": list(doc.get("region_tags") or []),
+    }
+    out = materialize_enemy_concept(concept, encounter_level=1)
+    out["id"] = concept["id"]
+    out["pool_entry_id"] = entry.entry_id
+    return out
+
+
+def _pool_bestiary_view(game_id: str) -> dict:
+    """Criaturas do próprio jogo (qualquer status) + promovidas (só com a flag `on`)."""
+    from services import shared_pool
+    from services.shared_pool_models import PoolNamespace, PoolStatus
+
+    view: dict = {}
+    try:
+        pool = []
+        if shared_pool.pool_mode() == "on":
+            pool += shared_pool.get_store().select(
+                namespace=PoolNamespace.CREATURE, statuses=[PoolStatus.PROMOTED], limit=200
+            )
+        pool += shared_pool.own_entries(PoolNamespace.CREATURE, game_id=game_id, limit=200)
+        for entry in pool:
+            template = _pool_creature_template(entry)
+            view[template["id"]] = template
+    except Exception as exc:
+        _log_event("bestiary", "pool_view_failed", level="warning", error=type(exc).__name__)
+    return view
+
+
+def load_bestiary(game_id: str = "") -> dict:
     """View unificada: curadoria ∪ overlay runtime (curadoria VENCE conflito de
-    id — gerado nunca sombreia entrada curada)."""
+    id — gerado nunca sombreia entrada curada). SPEC-297: com o pool ligado e
+    `game_id`, soma as criaturas do pool (curadoria e overlay vencem)."""
     from agents.npc import catalog_owner_id
     from infrastructure.runtime import get_runtime
 
@@ -199,7 +240,14 @@ def load_bestiary() -> dict:
     overlay = store.list("bestiary_template", owner_id=None, game_id=None)
     owner = catalog_owner_id()  # SPEC-223 R7: gerado do dono, nunca de outro tenant
     own = store.list("bestiary_template", owner_id=owner, game_id=None) if owner else {}
-    return {**own, **overlay, **_read_json(BESTIARY_FILE)}
+    pooled = _pool_bestiary_view(game_id) if game_id and _pool_enabled() else {}
+    return {**pooled, **own, **overlay, **_read_json(BESTIARY_FILE)}
+
+
+def _pool_enabled() -> bool:
+    from services.shared_pool import enabled
+
+    return enabled()
 
 
 def save_enemy(data: dict):
@@ -320,6 +368,34 @@ def _ready_v4(data: dict, encounter_level: int) -> dict:
     return data
 
 
+def _submit_generated_enemy(res, data: dict, game_id: str, location_id: str, name_origin: str):
+    """SPEC-297 R9/R27: só o CONCEITO vai ao pool (em hold); números são do motor."""
+    from services import shared_pool
+    from services.shared_pool_models import PoolNamespace
+
+    doc = {
+        "id": str(data.get("id") or _slug(res.name)),
+        "name": res.name,
+        "description": res.description,
+        "categoria": res.categoria,
+        "arquetipo": res.arquetipo,
+        "estilo_ataque": res.estilo_ataque,
+        "nome_ataque": res.nome_ataque,
+        "region_tags": list(res.regions or []),
+    }
+    region = shared_pool._region_of(location_id) or (res.regions[0] if res.regions else "")
+    try:
+        shared_pool.submit(
+            PoolNamespace.CREATURE,
+            doc,
+            game_id=str(game_id),
+            region_id=region,
+            name_origin=name_origin,
+        )
+    except Exception as exc:
+        _log_event("bestiary", "pool_submit_failed", level="warning", error=type(exc).__name__)
+
+
 # --- GERADOR ---
 def template_by_id(enemy_id: str, *, encounter_level: int = 1) -> dict | None:
     """SPEC-203 R3: ficha de um id canônico do bestiário, SEM LLM (nem librarian).
@@ -336,12 +412,21 @@ def template_by_id(enemy_id: str, *, encounter_level: int = 1) -> dict | None:
     return normalized
 
 
-def generate_new_enemy(name: str, context: str = "", *, encounter_level: int = 1) -> dict:
+def generate_new_enemy(
+    name: str,
+    context: str = "",
+    *,
+    encounter_level: int = 1,
+    game_id: str = "",
+    location_id: str = "",
+    name_origin: str = "player",
+) -> dict:
     from services.prompt_guard import sanitize_entity_name
 
+    pool_on = bool(game_id) and _pool_enabled()
     name = sanitize_entity_name(name) or "Criatura"  # SPEC-223 R7
     # 1. CHECK-FIRST
-    db = load_bestiary()
+    db = load_bestiary(game_id) if pool_on else load_bestiary()
     existing_ids = list(db.keys())
 
     found_id = find_existing_entity(name, "Monster", existing_ids)
@@ -353,13 +438,15 @@ def generate_new_enemy(name: str, context: str = "", *, encounter_level: int = 1
         if "id" not in data:
             _log_event("bestiary", "legacy_monster_without_id", level="info")
             data["id"] = found_id
-            save_enemy(data)
+            if not pool_on:  # SPEC-297 R13: cache-hit nunca reescreve o pool
+                save_enemy(data)
 
         if data.get("virtudes") and data.get("max_vitalidade") is not None:
             return _ready_v4(data, encounter_level)
         # Overlay legado gerado por IA: números livres são descartados.
         normalized = materialize_enemy_concept(data, encounter_level=encounter_level)
-        save_enemy(normalized)
+        if not pool_on:
+            save_enemy(normalized)
         return _scaled_copy(normalized, encounter_level)
 
     # 2. GERAÇÃO
@@ -391,7 +478,10 @@ def generate_new_enemy(name: str, context: str = "", *, encounter_level: int = 1
             raise TypeError(f"structured output inválido: {type(res).__name__}")
         data = materialize_enemy_concept(res, encounter_level=encounter_level)
 
-        save_enemy(data)
+        if pool_on:
+            _submit_generated_enemy(res, data, game_id, location_id, name_origin)
+        else:
+            save_enemy(data)
         return _scaled_copy(data, encounter_level)
 
     except Exception as e:

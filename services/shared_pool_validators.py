@@ -76,6 +76,7 @@ _ID_FIELDS = frozenset(
         "faction_id",
         "profession_id",
         "parent_location_id",
+        "region",
     }
 )
 _ID_RE = re.compile(r"^[a-z0-9_]{1,80}$")
@@ -102,6 +103,12 @@ def validate_schema(entry: SharedPoolEntry) -> list[Finding]:
     for key in entry.document:
         if key not in allowed:
             findings.append(Finding("schema_extra_field", str(key)[:40]))
+    if entry.namespace == PoolNamespace.CREATURE and entry.document.get("categoria") not in {
+        "lacaio",
+        "padrao",
+        "elite",
+    }:
+        findings.append(Finding("creature_category", "categoria"))
     for key in _ID_FIELDS:
         value = entry.document.get(key)
         if value is not None and not (isinstance(value, str) and _ID_RE.match(value)):
@@ -125,8 +132,13 @@ def validate_lore_refs(entry: SharedPoolEntry) -> list[Finding]:
 
     ids = lore_ids()
     findings: list[Finding] = []
-    if entry.region_id not in ids["regions"]:
+    # item sem região (produtor futuro) é aceito; NPC/criatura/local exigem região real.
+    region_optional = entry.namespace == PoolNamespace.ARTIFACT and not entry.region_id
+    if entry.region_id not in ids["regions"] and not region_optional:
         findings.append(Finding("lore_unknown_region", "region_id"))
+    parent = entry.document.get("parent_location_id")
+    if parent and parent not in ids["locations"]:
+        findings.append(Finding("lore_unknown_location", "parent_location_id"))
     seed = entry.seed
     if seed is not None:
         if seed.race_id not in ids["races"]:
