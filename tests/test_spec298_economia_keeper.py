@@ -26,6 +26,13 @@ def _state(location="skallgard", race="Humano", npcs=None):
     }
 
 
+def _visit(st, mid):
+    """Registra o keeper como o nó de loja faz: pela cópia devolvida em ``outcome['npcs']``."""
+    npcs = economy._persist_keeper(st, mid, economy.MERCHANTS[mid])
+    if npcs is not None:
+        st["npcs"] = npcs
+
+
 def _keeper(st, mid=MID):
     return rep.find_keeper(st, mid)[1]
 
@@ -39,25 +46,27 @@ def test_keeper_criado_sem_llm_na_primeira_visita(monkeypatch):
     st = _state(location="na_anel_dourado")
     mid, _stock = economy.merchant_stock(st, "na_anel_dourado")
     assert mid == MID_CURADO
+    assert st["npcs"] == {}  # consultar o estoque não muta o estado de entrada
+    _visit(st, MID_CURADO)
     row = _keeper(st, MID_CURADO)
     assert row["name"] == "Teodora Vance" and row["race_id"] == "race_humanos"
     assert row["hidden_traits"] and 2 <= row["relationship"] <= 8
     assert row["relationship_basis"] and row["known_by_player"] is False
     # idempotente
-    economy.merchant_stock(st, "na_anel_dourado")
+    assert economy._persist_keeper(st, MID_CURADO, economy.MERCHANTS[MID_CURADO]) is None
     assert len([r for r in st["npcs"].values() if r.get("keeper_of") == MID_CURADO]) == 1
 
 
 def test_keeper_grafo_brynja():
     st = _state()
-    economy.merchant_stock(st, "skallgard")
+    _visit(st, MID)
     row = _keeper(st)
     assert row["id"] == "npc_brynja_forja_fria" and "Brynja" in row["name"]
 
 
 def _with_keeper(rel, traits=(), race="Humano"):
     st = _state(race=race)
-    economy.merchant_stock(st, "skallgard")
+    _visit(st, MID)
     key, row = rep.find_keeper(st, MID)
     st["npcs"][key] = {**row, "relationship": rel, "hidden_traits": list(traits)}
     return st
@@ -144,7 +153,7 @@ def test_keeper_hostil_esconde_raro():
 
 def test_recusa_comercio_codigo():
     st = _state(location="na_anel_dourado", race="Anão da Fuligem")
-    economy.merchant_stock(st, "na_anel_dourado")
+    _visit(st, MID_CURADO)
     key, row = rep.find_keeper(st, MID_CURADO)
     # Teodora é humana (urbana, atitude 0): força um elfo hostil ao anão para o caso -2
     st["npcs"][key] = {**row, "race_id": "race_elfos", "relationship": 2}
@@ -153,3 +162,71 @@ def test_recusa_comercio_codigo():
     assert economy.trade_reason_code(out["reason"]) == "merchant_refuses"
     st["npcs"][key] = {**row, "race_id": "race_elfos", "relationship": 3}
     assert economy.execute_trade(st, "buy", "pocao_cura", 1).get("code") != "merchant_refuses"
+
+
+def test_compra_persiste_keeper_no_update_do_no_e_no_save(monkeypatch):
+    """P1-3: loot_node devolve `npcs`; save -> load preserva o keeper."""
+    import persistence
+    from agents import loot
+
+    monkeypatch.setattr(
+        loot, "get_llm", lambda *a, **k: (_ for _ in ()).throw(RuntimeError("sem LLM"))
+    )
+    st = _state(location="na_anel_dourado")
+    st["game_id"] = "22222222-2222-4222-8222-222222222222"
+    before = copy.deepcopy(st["npcs"])
+    out = economy.execute_trade(st, "buy", "pocao_cura", 1)
+    assert out["ok"] and st["npcs"] == before  # entrada intacta
+    keeper = next(r for r in out["npcs"].values() if r.get("keeper_of") == MID_CURADO)
+    assert keeper["relationship_basis"] and keeper["name"] == "Teodora Vance"
+    merged = {**persistence._raw_to_state(_raw(st)), "npcs": out["npcs"], "player": out["player"]}
+    assert persistence.save_game_state(merged)
+    back = persistence.load_game_state(persistence.save_path(st["game_id"]))
+    saved = next(r for r in back["npcs"].values() if r.get("keeper_of") == MID_CURADO)
+    assert saved["relationship_basis"] == keeper["relationship_basis"]
+    # segunda compra: keeper já registrado, nada a persistir de novo
+    st2 = {**st, "npcs": out["npcs"], "player": out["player"], "world": out["world"]}
+    assert "npcs" not in economy.execute_trade(st2, "buy", "pocao_cura", 1)
+
+
+def _raw(st):
+    return {
+        "game_id": st["game_id"],
+        "player": st["player"],
+        "world": st["world"],
+        "npcs": {},
+        "messages": [],
+    }
+
+
+def test_loot_node_real_devolve_npcs_e_sobrevive_ao_save_load(monkeypatch):
+    """P1-3: caminho de produto (loot_node SHOP) -> update parcial com `npcs` -> save/load."""
+    from langchain_core.messages import HumanMessage
+
+    import persistence
+    from agents import loot
+
+    st = _state(location="na_anel_dourado")
+    st.update(
+        {
+            "game_id": "33333333-3333-4333-8333-333333333333",
+            "loot_source": "SHOP",
+            "messages": [HumanMessage(content="compro uma poção de cura")],
+        }
+    )
+    monkeypatch.setattr(
+        loot,
+        "_parse_trade_intent",
+        lambda *a: loot.TradeIntent(mode="buy", item_ref="pocao_cura", qty=1),
+    )
+    out = loot.loot_node(st)
+    assert st["npcs"] == {}  # o nó não muta a entrada
+    assert any(r.get("keeper_of") == MID_CURADO for r in out["npcs"].values())
+    merged = {
+        **persistence._raw_to_state(_raw(st)),
+        **{k: out[k] for k in ("npcs", "player", "world")},
+    }
+    assert persistence.save_game_state(merged)
+    back = persistence.load_game_state(persistence.save_path(st["game_id"]))
+    keeper = next(r for r in back["npcs"].values() if r.get("keeper_of") == MID_CURADO)
+    assert keeper["relationship_basis"] and keeper["race_id"] == "race_humanos"

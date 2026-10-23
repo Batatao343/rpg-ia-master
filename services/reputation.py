@@ -544,18 +544,29 @@ def deed_info(state: Mapping, event: Mapping) -> dict | None:
     return None
 
 
-def faction_witnessed(state: Mapping, faction_id: str) -> bool:
-    """A fação viu: controla o local atual ou tem membro presente (em cena)."""
+def faction_witnessed(state: Mapping, faction_id: str, exclude_id: str = "") -> bool:
+    """A fação viu: controla o local atual ou tem membro presente (``in_scene`` explícito).
+
+    ``exclude_id`` tira a vítima de um ``npc_killed`` das testemunhas; NPC legado sem
+    ``in_scene`` não conta como testemunha universal (SPEC-298 review P1-2/P2-3)."""
     if not faction_id:
         return False
     from services import graph_resolver as gr
-    from services.npc_layers import is_in_scene
+    from services.npc_layers import npc_alive
 
     loc = _here(state)
     if loc and gr.get_current_controller(loc, state.get("world_projection")) == faction_id:
         return True
-    for row in (state.get("npcs") or {}).values():
-        if isinstance(row, dict) and is_in_scene(row) and npc_faction_id(row) == faction_id:
+    for key, row in (state.get("npcs") or {}).items():
+        if not isinstance(row, dict) or row.get("in_scene") is not True or not npc_alive(row):
+            continue
+        if exclude_id and exclude_id in (
+            str(key),
+            str(row.get("id") or ""),
+            str(row.get("name") or ""),
+        ):
+            continue
+        if npc_faction_id(row) == faction_id:
             home = str(row.get("home_location_id") or "")
             if not home or not loc or home == loc:
                 return True
@@ -603,7 +614,13 @@ def _consume_intercession(npcs: dict, faction_id: str) -> dict:
 
 
 def _apply_faction(
-    state: Mapping, factions: list, npcs: dict, faction_id: str, delta: int, deed_id: str
+    state: Mapping,
+    factions: list,
+    npcs: dict,
+    faction_id: str,
+    delta: int,
+    deed_id: str,
+    notice: bool = False,
 ) -> tuple[list, dict, dict | None, int]:
     """Aplica ``delta`` assinado na fação. Devolve (factions, npcs, evento, delta_aplicado)."""
     from world_utils import apply_reputation
@@ -623,7 +640,8 @@ def _apply_faction(
         if f.get("id") == faction_id:
             f = dict(f)
             f["knows_player"] = True
-            _push_recent(f, turn, f"{f.get('name') or faction_id} vai lembrar disso.")
+            if notice:  # só quando o jogador é avisado (testemunhou + fação conhecida)
+                _push_recent(f, turn, f"{f.get('name') or faction_id} vai lembrar disso.")
         out.append(f)
     proposal = {
         "type": "reputation_changed",
@@ -725,13 +743,14 @@ def process_deeds(state: Mapping, accepted_events: list[dict]) -> dict:
         fid, fd = info["faction_id"], info["faction_delta"]
         if not fid or not fd:
             continue
-        if faction_witnessed(state, fid) or faction_in_scene(
-            state, fid, state.get("world_projection")
-        ):
-            factions, npcs, proposal, applied = _apply_faction(state, factions, npcs, fid, fd, sid)
+        known = _known_faction(state, fid)
+        if faction_witnessed(state, fid, str(info.get("victim") or "")):
+            factions, npcs, proposal, applied = _apply_faction(
+                state, factions, npcs, fid, fd, sid, notice=known
+            )
             if proposal:
                 rep_events.append(proposal)
-                if _known_faction(state, fid):
+                if known:
                     fname = (_faction_row({"factions": factions}, fid) or {}).get("name") or fid
                     notices.append(_notice("faction", fid, f"{fname} vai lembrar disso.", turn))
         elif npc_knowledge.mode() == "on" and not any(
@@ -1185,7 +1204,9 @@ def apply_favor(state: Mapping, npc_key: str, npc: Mapping, kind: str) -> dict:
         text = f"{name} esconde você por um tempo."
     elif kind == "emprestar":
         player = _player_actor(state)
-        player["gold"] = _int(player.get("gold")) + LOAN_AMOUNT
+        from services.economy import clamp_gold
+
+        player["gold"] = clamp_gold(player, _int(player.get("gold")) + LOAN_AMOUNT)
         patch["player"] = player
         favors["debt"] = {
             "amount": LOAN_AMOUNT,
@@ -1306,14 +1327,15 @@ def debt_updates(state: Mapping) -> dict:
         new_row["favors"] = {**(row.get("favors") or {}), "debt": {**debt, "overdue_applied": True}}
         npcs[key] = new_row
         changed = True
-        name = str(new_row.get("name") or key)
-        notices.append(
-            _notice(
-                "favor",
-                str(new_row.get("id") or key),
-                f"{name} cobra a dívida atrasada.",
-                _turn(state),
-            )
-        )
         del notice
+        if new_row.get("in_scene") is True and new_row.get("known_by_player", True):
+            name = str(new_row.get("name") or key)
+            notices.append(
+                _notice(
+                    "favor",
+                    str(new_row.get("id") or key),
+                    f"{name} cobra a dívida atrasada.",
+                    _turn(state),
+                )
+            )
     return {"npcs": npcs, "notices": notices} if changed else {}

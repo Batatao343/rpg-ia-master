@@ -163,8 +163,20 @@ def test_quest_completed_gera_delta_tabela():
     assert _faction(out, st)["reputation"] == 8
 
 
+GUARDA = {
+    "Guarda": {
+        "id": "npc_guarda_legiao",
+        "name": "Guarda",
+        "in_scene": True,
+        "relationship": 5,
+        "faction_id": LEGIAO,
+    }
+}
+
+
 def test_npc_killed_por_player_gera_delta():
-    npcs = {**THRACE}
+    # testemunha real: um SEGUNDO membro presente (a vítima não conta)
+    npcs = {**THRACE, **GUARDA}
     st = _state(
         npcs,
         pending_world_events=[
@@ -243,3 +255,45 @@ def test_reputation_changed_source_reputation_alimenta_historico():
     out = process_pending_events(st)
     hist = sv.reputation_history(out["event_log"], LEGIAO)
     assert hist == [{"turn": 5, "delta": 4, "value": 4}]
+
+
+def test_vitima_sozinha_nao_e_testemunha_da_faccao(monkeypatch):
+    monkeypatch.setenv("RPG_NPC_KNOWLEDGE", "on")
+    st = _state(
+        {**THRACE},
+        pending_world_events=[
+            {
+                "type": "npc_killed",
+                "actor_id": "player",
+                "target_id": "npc_comandante_thrace",
+                "payload": {},
+                "source": "engine",
+            }
+        ],
+    )
+    out = process_pending_events(st)
+    assert _faction(out, st)["reputation"] == 0
+    assert len(out["reputation_pending"]) == 1
+
+
+def test_quest_ativa_so_vale_para_aceite_nao_para_testemunho(monkeypatch):
+    monkeypatch.setenv("RPG_NPC_KNOWLEDGE", "on")
+    quest = {
+        "id": "q1",
+        "title": "Q",
+        "status": "active",
+        "origin_entity_id": "npc_comandante_thrace",
+    }
+    st = _state({}, quests=[quest], pending_world_events=[_deed()])
+    assert validate_proposal(_deed(), st).ok  # aceite R11 pela quest
+    out = process_pending_events(st)
+    assert _faction(out, st)["reputation"] == 0  # a Legião não viu
+    assert len(out["reputation_pending"]) == 1
+    assert not any(n["kind"] == "faction" for n in out["reputation_notices"])
+    assert not _faction(out, st).get("recent_changes")
+
+
+def test_npc_legado_sem_in_scene_nao_e_testemunha_universal():
+    legado = {"Thrace": {"id": "npc_comandante_thrace", "name": "Thrace", "relationship": 5}}
+    assert not rep.faction_witnessed(_state(legado), LEGIAO)
+    assert rep.faction_witnessed(_state({**THRACE}), LEGIAO)

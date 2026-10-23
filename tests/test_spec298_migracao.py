@@ -51,3 +51,41 @@ def test_round_trip_save_load_preserva_fama():
     back = persistence.load_game_state(persistence.save_path(st["game_id"]))
     assert back["location_fame"] == st["location_fame"]
     assert back["reputation_pending"] == st["reputation_pending"]
+
+
+def test_round_trip_favors_shelter_knows_player_e_recent_changes():
+    st = persistence._raw_to_state(_old_state())
+    st["game_id"] = "44444444-4444-4444-8444-444444444444"
+    st["npcs"]["Brenna"].update(
+        {
+            "favors": {
+                "last_day": 2,
+                "debt": {"amount": 50, "due_day": 9, "overdue_applied": False},
+                "intercession": {"faction_id": "legiao_ferro"},
+            },
+            "heard_deeds": ["d1"],
+            "relationship_basis": {"race": -1, "origin": 1, "fame": 0, "faction": 0},
+            "recent_changes": [{"turn": 3, "text": "Brenna não gostou disso."}],
+        }
+    )
+    st["world"]["shelter"] = {"npc_id": "npc_brenna", "location_id": "skallgard", "until_clock": 14}
+    st["factions"] = [
+        {
+            "id": "legiao_ferro",
+            "name": "Legião",
+            "reputation": 4,
+            "disposition": "neutro",
+            "knows_player": True,
+            "recent_changes": [{"turn": 3, "text": "Legião vai lembrar disso."}],
+        }
+    ]
+    assert persistence.save_game_state(st)
+    back = persistence.load_game_state(persistence.save_path(st["game_id"]))
+    npc, orig = back["npcs"]["Brenna"], st["npcs"]["Brenna"]
+    for key in ("favors", "heard_deeds", "relationship_basis", "recent_changes"):
+        assert npc[key] == orig[key], key
+    assert back["world"]["shelter"] == st["world"]["shelter"]
+    fac = back["factions"][0]
+    assert (
+        fac["knows_player"] is True and fac["recent_changes"] == st["factions"][0]["recent_changes"]
+    )

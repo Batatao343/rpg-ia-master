@@ -1248,6 +1248,45 @@ def _read_json_file(path: str, default):
         return default
 
 
+def lint_merchant_keepers(merchants: dict) -> list[str]:
+    """SPEC-298 R7/R17: ``keeper`` = ``npc_id`` existente no grafo, ou ``name``/``role`` com
+    ``race_id`` válido."""
+    from services import graph_resolver as gr
+
+    valid = {
+        str(r.get("id"))
+        for r in (_read_json_file(os.path.join("data", "origins.json"), {}) or {}).get("races", [])
+    }
+    problems: list[str] = []
+    for mid, m in (merchants or {}).items():
+        keeper = (m or {}).get("keeper")
+        if keeper is None:
+            continue
+        if not isinstance(keeper, dict):
+            problems.append(f"{mid}: keeper inválido")
+        elif keeper.get("npc_id"):
+            ent = gr.get_entity(str(keeper["npc_id"]))
+            if not ent or ent.get("type") != "npc":
+                problems.append(f"{mid}: keeper.npc_id {keeper['npc_id']} não é NPC do grafo")
+        else:
+            if (
+                not str(keeper.get("name") or "").strip()
+                or not str(keeper.get("role") or "").strip()
+            ):
+                problems.append(f"{mid}: keeper curado exige name e role")
+            if keeper.get("race_id") not in valid:
+                problems.append(f"{mid}: keeper.race_id inválido")
+    return problems
+
+
+def validate_merchant_keepers() -> list[Finding]:
+    path = os.path.join("data", "merchants.json")
+    data = _read_json_file(path, None)
+    if data is None:
+        return [Finding("merchant_keepers", "error", path, "", "arquivo ausente ou inválido")]
+    return [Finding("merchant_keepers", "error", path, "", p) for p in lint_merchant_keepers(data)]
+
+
 def validate_race_attitudes() -> list[Finding]:
     path = os.path.join("data", "race_attitudes.json")
     data = _read_json_file(path, None)
@@ -1276,6 +1315,7 @@ def validate_all(
         findings.extend(validate_bestiary())
         findings.extend(validate_visual_assets())
         findings.extend(validate_race_attitudes())
+        findings.extend(validate_merchant_keepers())
     else:
         paths = _codex_md_paths(codex_dir)
         if os.path.isdir(graph_dir):

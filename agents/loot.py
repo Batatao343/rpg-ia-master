@@ -272,6 +272,8 @@ def loot_node(state: GameState):
                 ).get("quotes", []),
             },
         }
+        if outcome.get("npcs") is not None:  # SPEC-298 R17: keeper registrado pela transação
+            result["npcs"] = outcome["npcs"]
         # SPEC-226 R10: ganho (venda) / gasto (compra/craft) individual no baseline.
         _bl = record_gain(state.get("turn_baseline"), "gold", delta, "loot")
         if _bl is not state.get("turn_baseline"):

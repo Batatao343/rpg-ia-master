@@ -169,11 +169,18 @@ def test_favor_emprestar_e_divida_vencida():
     assert not rep.favor_decision(_state(_npc(rel=8)), _npc(rel=8), "emprestar")["ok"]
     patch = rep.apply_favor(_state(npc, gold=10), "Brenna", npc, "emprestar")
     assert patch["player"]["gold"] == 60
+    assert (
+        rep.apply_favor(_state(npc, gold=-100), "Brenna", npc, "emprestar")["player"]["gold"] == 0
+    )
     debt = patch["npc"]["favors"]["debt"]
     assert debt == {"amount": 50, "due_day": 10, "overdue_applied": False}
-    st = _state(patch["npc"], day=11)
+    away = _state(patch["npc"], day=11)
+    off = rep.turn_updates(away)
+    assert off["npcs"]["Brenna"]["relationship"] == 8  # -2 uma vez
+    assert not any("dívida" in n["text"] for n in off.get("reputation_notices", []))  # fora de cena
+    st = _state({**patch["npc"], "in_scene": True, "known_by_player": True}, day=11)
     out = rep.turn_updates(st)
-    assert out["npcs"]["Brenna"]["relationship"] == 8  # -2 uma vez
+    assert out["npcs"]["Brenna"]["relationship"] == 8
     assert any("dívida" in n["text"] for n in out["reputation_notices"])
     again = rep.turn_updates(_state(out["npcs"]["Brenna"], day=12, turn=8))
     assert "npcs" not in again

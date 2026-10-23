@@ -318,9 +318,11 @@ def merchant_stock(state: dict, location_id: str) -> tuple[str | None, dict[str,
     world = state.get("world") or {}
     stock = dict(_ensure_stock(world, mid, merchant))
     # SPEC-298 R17/R19: keeper vira NPC na primeira visita; relação libera/esconde raros.
-    from services.reputation import ensure_keeper, npc_tier
+    from services.reputation import keeper_for_price, npc_tier
 
-    _, keeper_row = ensure_keeper(state, mid, merchant)
+    # Não muta o estado de entrada: a persistência do keeper volta no update parcial
+    # do nó (ver `_persist_keeper` / `outcome["npcs"]`).
+    keeper_row = keeper_for_price(state, mid, merchant) if merchant.get("keeper") else {}
     keeper_tier = npc_tier(keeper_row.get("relationship")) if keeper_row else ""
     if keeper_tier == "leal":
         for iid, qty in (merchant.get("rare_stock") or {}).items():
@@ -493,9 +495,9 @@ def log_trade(mode: str, outcome: dict) -> None:
 
 def _keeper_refusal(state: dict, mid: str, merchant: dict) -> dict | None:
     """SPEC-298 R9/R19: recusa rara por preconceito + relação péssima (``comercio``)."""
-    from services.reputation import find_keeper, refuses
+    from services.reputation import keeper_for_price, refuses
 
-    _, keeper = find_keeper(state, mid)
+    keeper = keeper_for_price(state, mid, merchant) if merchant.get("keeper") else {}
     if keeper and refuses(state, keeper, "comercio"):
         return {
             "ok": False,
@@ -503,6 +505,19 @@ def _keeper_refusal(state: dict, mid: str, merchant: dict) -> dict | None:
             "reason": f"{keeper.get('name') or 'O mercador'} recusa negociar com você.",
         }
     return None
+
+
+def _persist_keeper(state: dict, mid: str, merchant: dict) -> dict | None:
+    """SPEC-298 R17: devolve uma CÓPIA de ``npcs`` com o keeper registrado (ou None)."""
+    if not merchant.get("keeper"):
+        return None
+    from services.reputation import ensure_keeper, find_keeper
+
+    if find_keeper(state, mid)[0] is not None:
+        return None
+    npcs = dict(state.get("npcs") or {})
+    ensure_keeper({**state, "npcs": npcs}, mid, merchant)
+    return npcs
 
 
 def execute_trade(state: dict, mode: str, item_ref: str, qty: int = 1) -> dict:
@@ -537,6 +552,7 @@ def execute_trade(state: dict, mode: str, item_ref: str, qty: int = 1) -> dict:
         player["gold"] = clamp_gold(player, int(player.get("gold", 0)) - total)
         player["inventory"] = add_item(player["inventory"], iid, qty)
         world["merchant_stocks"][mid][iid] = world["merchant_stocks"][mid].get(iid, 0) - qty
+        keeper_npcs = _persist_keeper(state, mid, merchant)
         out = {
             "ok": True,
             "mode": "buy",
@@ -547,6 +563,8 @@ def execute_trade(state: dict, mode: str, item_ref: str, qty: int = 1) -> dict:
             "player": player,
             "world": world,
         }
+        if keeper_npcs is not None:
+            out["npcs"] = keeper_npcs
         # Fase 6.2: comprar um único registra a posse (inclusive recompra do mercador)
         from inventory import is_unique
 
@@ -589,6 +607,9 @@ def execute_trade(state: dict, mode: str, item_ref: str, qty: int = 1) -> dict:
             "world": world,
             "unequipped": unequipped,
         }
+        keeper_npcs = _persist_keeper(state, mid, merchant)
+        if keeper_npcs is not None:
+            out["npcs"] = keeper_npcs
         # Fase 6.2: vender um único → mercador SEGURA o item (recomprável,
         # nunca volta ao pool de drop) e a perda entra no event_log.
         from inventory import is_unique

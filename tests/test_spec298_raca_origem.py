@@ -106,3 +106,19 @@ def test_lint_race_attitudes_exige_source():
     broken["races"]["race_elfos"]["race_vrel"]["value"] = 9
     broken["races"]["race_inventada"] = {}
     assert len(lint_race_attitudes(broken)) == 3
+
+
+def test_lint_merchant_keepers():
+    import json
+    from pathlib import Path
+
+    from services.content_validator import lint_merchant_keepers
+
+    data = json.loads(Path("data/merchants.json").read_text(encoding="utf-8"))
+    assert lint_merchant_keepers(data) == []
+    bad = {
+        "a": {"keeper": {"npc_id": "npc_inexistente"}},
+        "b": {"keeper": {"name": "X", "role": "Y", "race_id": "orc"}},
+        "c": {"keeper": {"name": "", "role": "Y", "race_id": "race_vrel"}},
+    }
+    assert len(lint_merchant_keepers(bad)) == 3

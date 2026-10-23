@@ -161,3 +161,59 @@ def test_prompt_storyteller_fama_so_se_conhecida():
     line = rep.fame_line(state)
     assert "afamado" in line and "malvisto" in line
     assert not any(ch.isdigit() for ch in line)
+
+
+def test_regras_de_emissao_r26_npc_presente_faccao_conhecida_fama_local():
+    """R26: aviso de NPC só de NPC em cena; de fação só testemunhada + conhecida;
+    de fama só ao mudar o rótulo no local onde o jogador está."""
+    from services.event_processor import process_pending_events
+
+    thrace = {"id": "npc_comandante_thrace", "name": "Thrace", "in_scene": True, "relationship": 5}
+    deed = {
+        "type": "faction_deed",
+        "actor_id": "player",
+        "target_id": "legiao_ferro",
+        "payload": {"direction": "ajudou", "magnitude": "menor"},
+        "source": "storyteller",
+    }
+    base = _state(npcs={"Thrace": thrace}, reputation_notices=[], pending_world_events=[deed])
+    base["factions"] = [{"id": "legiao_ferro", "name": "Legião", "reputation": 0}]
+    # fação conhecida + testemunhada -> aviso
+    out = process_pending_events(base)
+    assert any(n["kind"] == "faction" for n in out["reputation_notices"])
+    # fação desconhecida -> sem aviso (mas o estado muda)
+    unknown = {**base, "faction_intel": {}, "pending_world_events": [dict(deed)]}
+    out2 = process_pending_events(unknown)
+    assert not any(n["kind"] == "faction" for n in out2["reputation_notices"])
+    assert out2["factions"][0]["reputation"] == 4
+    assert not out2["factions"][0].get("recent_changes")
+    # NPC fora de cena: apply_npc_delta emite aviso, mas a dívida/ação só o mostra se em cena
+    away = rep.debt_updates(
+        _state(
+            npcs={
+                "Brenna": {
+                    "id": "n",
+                    "name": "Brenna",
+                    "relationship": 5,
+                    "in_scene": False,
+                    "favors": {"debt": {"amount": 50, "due_day": 0, "overdue_applied": False}},
+                }
+            }
+        )
+    )
+    assert away["notices"] == []
+    # fama: rótulo muda no local atual -> aviso; em outro local -> nenhum
+    kill = {
+        "type": "npc_killed",
+        "actor_id": "player",
+        "target_id": "npc_comandante_thrace",
+        "payload": {},
+        "source": "engine",
+    }
+    here = _state(
+        npcs={"Mira": {"id": "npc_mira", "name": "Mira", "in_scene": True, "relationship": 5}},
+        reputation_notices=[],
+        pending_world_events=[kill],
+    )
+    out3 = process_pending_events(here)
+    assert any(n["kind"] == "fame" for n in out3["reputation_notices"])
