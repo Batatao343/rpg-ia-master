@@ -1,7 +1,7 @@
 # SPEC-297 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED` (re-revisão de `6533e258`: restam 2 P1 pequenos, R-1 e R-2; corrigidos os dois, fica `APPROVED_WITH_FOLLOWUPS` sem nova rodada completa — basta o coordenador conferir os dois pontos)
-> **Revisor:** Opus (papel Sol, independente; foco em segurança entre tenants) · **Data:** 2026-10-23 (1ª rodada) / 2026-10-24 (re-revisão) · **Commits revisados:** `3855057`, depois `6533e258`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (final, após a 3ª rodada em `6357f9b3`; a 1ª e a 2ª rodadas foram `CHANGES_REQUIRED`)
+> **Revisor:** Opus (papel Sol, independente; foco em segurança entre tenants) · **Data:** 2026-10-23 / 2026-10-24 · **Commits revisados:** `3855057` → `6533e258` → `6357f9b3`
 
 ## Escopo
 
@@ -101,6 +101,24 @@ Conferi os P1 1–4 e os P2 que o executor marcou como feitos, olhando o código
   e a mecânica não muda. Só registrar na spec que `off` é byte a byte no prompt e na mecânica,
   não no formato do save.
 
+## Rodada final (delta `6533e258..6357f9b3`)
+
+- **R-1 — fechado.** `make_owner_values` não lê mais `auth.users` direto; chama
+  `app.runtime_auth_email(owner)`, que já existia, e `app.runtime_auth_display_names(owner)`,
+  criada nesta rodada. A função nova:
+  - é `SECURITY DEFINER`, com dono `postgres` e `search_path=pg_catalog`;
+  - devolve **só** um `text[]` com os valores de 5 chaves de nome do `raw_user_meta_data`
+    (com ≥ 3 caracteres). Nenhum outro campo de `auth.users` sai dela.
+  - Privilégios conferidos no :55322 com `has_function_privilege`: `rpg_runtime` e `rpg_admin` têm
+    execute (via `grant_runtime_access`, chamado no fim da migração, depois do `create`);
+    `rpg_api`, `anon`, `authenticated` e `public` **não têm** (revoke explícito).
+  - O teste local roda o lookup sob `set local role rpg_runtime` e passa.
+  - Resta um risco aceito: qualquer código com a conexão de sistema consegue o nome de qualquer
+    usuário, mas esse é o mesmo nível de confiança de `runtime_auth_email`.
+- **R-2 — fechado.** `ruff format --check` nos 37 `.py` alterados: "37 files already formatted".
+- O veredito passa a **`APPROVED_WITH_FOLLOWUPS`**. Os follow-ups estão em Pendências (nenhum é
+  P0/P1).
+
 ## Correções aplicadas
 
 Aplicadas pelo executor em 2026-10-24: P1-1, P1-2 (`ruff format` em `observability/events.py`; a remoção dos 2 eventos da SPEC-296 se resolve no rebase), P1-3, P1-4 (13 testes Postgres local passam, ver spec), P2-1, P2-2, P2-3 (parcial), P2-4, P2-5, P2-6, P2-7, P2-8, P2-9, P2-10. Detalhe na seção "Correções da revisão Sol" da spec.
@@ -130,4 +148,8 @@ ruff format --check <.py alterados> → 1 file would be reformatted (tests/test_
 ruff check <.py alterados> → All checks passed
 grep auth.users em migrations/infra → rpg_runtime sem grant em auth (só app.runtime_auth_email/runtime_session_active/runtime_revoke_auth)
 operations_kind_check → lista de 20261016121500 + 'pool_evaluation' (nada se perdeu)
+# rodada final 2026-10-24 (delta 6357f9b3)
+has_function_privilege(app.runtime_auth_display_names) → rpg_api/anon/authenticated/public=False; rpg_runtime/rpg_admin=True; prosecdef=True, search_path=pg_catalog, owner=postgres
+RPG_TEST_DATABASE_URL=…:55322 pytest (sem -n) tests/test_spec297_*.py tests/test_npc_catalog_scope.py tests/test_log_event_registry.py tests/test_rls_runtime_config.py → 173 passed, 0 failed, 0 skipped
+ruff format --check <37 .py alterados> → 37 files already formatted
 ```
