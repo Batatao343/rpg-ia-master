@@ -401,19 +401,21 @@ Phase = Literal["calmo", "tensao", "crise", "recuperacao"]
 CrisisKind = Literal["guerra", "fome", "praga", "abismo", "ascensao"]
 LocState = Literal["cerco", "escassez", "praga", "ocupado", "ruina", "festa", "corrompido"]
 
+
 class CrisisRecord(TypedDict, total=False):
-    crisis_id: str            # sha256(game_id|kind|region|warned_day)[:16]
+    crisis_id: str  # sha256(game_id|kind|region|warned_day)[:16]
     kind: CrisisKind
     region_id: str
-    location_id: str          # alvo (R18); "" enquanto só anunciada
+    location_id: str  # alvo (R18); "" enquanto só anunciada
     loc_state: LocState
-    faction_id: str           # atacante/ascendente, se houver
+    faction_id: str  # atacante/ascendente, se houver
     warned_day: int
-    start_day: int | None     # None = anunciada, ainda não aberta
+    start_day: int | None  # None = anunciada, ainda não aberta
     escalation_day: int | None
-    severity: int             # 1..3
+    severity: int  # 1..3
     end_day: int | None
-    resolution: str           # "" | "recuperou" | "escalou" | "intervencao" | "expirou_aviso"
+    resolution: str  # "" | "recuperou" | "escalou" | "intervencao" | "expirou_aviso"
+
 
 class WorldSignal(TypedDict):
     signal_id: str
@@ -424,6 +426,7 @@ class WorldSignal(TypedDict):
     template_id: str
     visibility: Literal["local", "regional"]
 
+
 class DigestItem(TypedDict, total=False):
     item_id: str
     day: int
@@ -431,40 +434,43 @@ class DigestItem(TypedDict, total=False):
     region_id: str
     location_id: str
     template_id: str
-    params: dict[str, str]    # só ids; nomes resolvidos no render (R24)
-    subject_id: str           # event_id quando há GameEvent (R23c)
+    params: dict[str, str]  # só ids; nomes resolvidos no render (R24)
+    subject_id: str  # event_id quando há GameEvent (R23c)
+
 
 class WorldSimState(TypedDict, total=False):
-    version: int                                   # 1
-    mode: str                                      # modo que gerou o estado
+    version: int  # 1
+    mode: str  # modo que gerou o estado
     enabled_from_day: int
     last_ticked_day: int
-    last_event_seq: int                            # índice no event_log já lido como causa
-    pressures: dict[str, dict[str, int]]           # region_id -> kind -> 0..100
-    bands: dict[str, dict[str, str]]               # region_id -> kind -> Band
+    last_event_seq: int  # índice no event_log já lido como causa
+    pressures: dict[str, dict[str, int]]  # region_id -> kind -> 0..100
+    bands: dict[str, dict[str, str]]  # region_id -> kind -> Band
     phase: str
     phase_since_day: int
     calm_until_day: int
     last_crisis_start_day: int
     region_last_crisis_end: dict[str, int]
-    crises: list[CrisisRecord]                     # ativas + anunciadas + últimas 30 encerradas
-    faction_relations: dict[str, int]              # "a|b" (ordenado) -> -100..100
-    relation_bands: dict[str, str]                 # "a|b" -> "guerra"|"neutra"|"alianca"
-    signals: list[WorldSignal]                     # anel 60
-    pending_digest: list[DigestItem]               # anel 20 (consumido pela percepção)
-    tick_log: list[dict]                           # anel 30 (telemetria/debug)
+    crises: list[CrisisRecord]  # ativas + anunciadas + últimas 30 encerradas
+    faction_relations: dict[str, int]  # "a|b" (ordenado) -> -100..100
+    relation_bands: dict[str, str]  # "a|b" -> "guerra"|"neutra"|"alianca"
+    signals: list[WorldSignal]  # anel 60
+    pending_digest: list[DigestItem]  # anel 20 (consumido pela percepção)
+    tick_log: list[dict]  # anel 30 (telemetria/debug)
 
-class LocationStateRow(TypedDict, total=False):   # em WorldProjection.location_states
+
+class LocationStateRow(TypedDict, total=False):  # em WorldProjection.location_states
     state: LocState
     severity: int
     since_day: int
     crisis_id: str
-    cause: str               # CrisisKind
+    cause: str  # CrisisKind
     faction_id: str
 
-class NewsItem(TypedDict):                        # WorldState.news (anel 12)
+
+class NewsItem(TypedDict):  # WorldState.news (anel 12)
     day: int
-    text: str                # render do template (nunca texto da LLM)
+    text: str  # render do template (nunca texto da LLM)
     channel: Literal["testemunho", "rumor"]
     item_id: str
 ```

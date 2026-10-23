@@ -460,7 +460,9 @@ def step_crises(
     for rec in ready:
         if not _can_open(sim, day, rec["region_id"], cfg):
             continue
-        target = ls.pick_crisis_target(rec["region_id"], rec["kind"], {"location_states": proj_rows}, rng)
+        target = ls.pick_crisis_target(
+            rec["region_id"], rec["kind"], {"location_states": proj_rows}, rng
+        )
         if target is None:
             end_crisis(sim, rec, day, "expirou_aviso", cfg)
             continue
