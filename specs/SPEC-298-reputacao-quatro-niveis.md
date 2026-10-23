@@ -154,31 +154,36 @@ Princípio: mecânica em Python, determinística por seed; o LLM só **classific
 ```python
 # state.py (aditivo)
 class FameEntry(TypedDict, total=False):
-    renown: int            # 0..100
-    infamy: int            # 0..100
-    deeds: list[str]       # subject_ids já contados aqui (teto 100, FIFO)
+    renown: int  # 0..100
+    infamy: int  # 0..100
+    deeds: list[str]  # subject_ids já contados aqui (teto 100, FIFO)
+
 
 class ReputationPending(TypedDict):
-    subject_id: str        # event_id do feito (assunto SPEC-215)
+    subject_id: str  # event_id do feito (assunto SPEC-215)
     faction_id: str
-    delta: int             # já calculado pela DEED_TABLE
+    delta: int  # já calculado pela DEED_TABLE
     created_day: int
+
 
 class ReputationNotice(TypedDict):
     kind: Literal["npc", "faction", "fame", "favor", "social"]
     subject_id: str
     text: str
 
+
 class NpcFavors(TypedDict, total=False):
     last_day: int
-    debt: dict | None          # {"amount": int, "due_day": int, "overdue_applied": bool}
+    debt: dict | None  # {"amount": int, "due_day": int, "overdue_applied": bool}
     intercession: dict | None  # {"faction_id": str}
+
 
 # PlayerStats += race_id: str; origin_region_id: str
 # npcs[*] += race_id: str; relationship_basis: dict[str,int]; heard_deeds: list[str]; favors: NpcFavors
 # GameState += location_fame: dict[str, FameEntry]; reputation_pending: list[ReputationPending];
 #              reputation_notices: list[ReputationNotice]
 # WorldState += shelter: dict | None   # {"npc_id","location_id","until_clock"}
+
 
 # agents/storyteller.py
 class FactionImpact(BaseModel):
@@ -187,37 +192,44 @@ class FactionImpact(BaseModel):
     magnitude: Literal["menor", "maior"] = "menor"
     # field_validator(mode="before"): valor fora do Literal -> None -> impacto descartado
 
+
 # agents/router.py (RouterDecision +)
-social_approach: Literal["conversar","intimidar","sondar","pedir_favor","pagar_divida"] | None = None
-favor_kind: Literal["esconder","emprestar","interceder"] | None = None
+social_approach: (
+    Literal["conversar", "intimidar", "sondar", "pedir_favor", "pagar_divida"] | None
+) = None
+favor_kind: Literal["esconder", "emprestar", "interceder"] | None = None
 ```
 
 ### 3.3 Assinaturas e tabelas
 
 ```python
 # services/reputation.py
-NpcTier = Literal["hostil","desconfiado","neutro","amistoso","leal"]
-FactionTier = Literal["hostil","desconfiado","neutro","amistoso","aliado"]
+NpcTier = Literal["hostil", "desconfiado", "neutro", "amistoso", "leal"]
+FactionTier = Literal["hostil", "desconfiado", "neutro", "amistoso", "aliado"]
+
 
 def npc_tier(relationship: Any) -> NpcTier: ...
 def faction_tier(reputation: Any) -> FactionTier: ...
 def fame_view(renown: int, infamy: int) -> dict[str, str]: ...
-def fame_at(state: Mapping, location_id: str) -> FameView: ...         # {renown, infamy, renown_label, infamy_label}
-def race_attitude(state: Mapping, npc: Mapping) -> int: ...            # −2..+2
+def fame_at(
+    state: Mapping, location_id: str
+) -> FameView: ...  # {renown, infamy, renown_label, infamy_label}
+def race_attitude(state: Mapping, npc: Mapping) -> int: ...  # −2..+2
 def initial_relationship(state: Mapping, npc: Mapping) -> tuple[int, dict[str, int]]: ...
 def refuses(state: Mapping, npc: Mapping, kind: str) -> bool: ...
-def apply_npc_delta(state: Mapping, npc_key: str, delta: int, *, reason: str,
-                    source: Literal["llm","engine"]) -> tuple[dict, ReputationNotice | None]: ...
+def apply_npc_delta(
+    state: Mapping, npc_key: str, delta: int, *, reason: str, source: Literal["llm", "engine"]
+) -> tuple[dict, ReputationNotice | None]: ...
 def faction_deed_delta(direction: str, magnitude: str) -> int: ...
-def process_deeds(state: Mapping, accepted_events: list[dict]) -> dict: ...   # updates parciais
-def turn_updates(state: Mapping) -> dict: ...                                 # finalizer
+def process_deeds(state: Mapping, accepted_events: list[dict]) -> dict: ...  # updates parciais
+def turn_updates(state: Mapping) -> dict: ...  # finalizer
 def register_deed_kind(event_type: str, weights: DeedWeights) -> None: ...
 def deed_known_at(state: Mapping, subject_id: str, location_id: str) -> bool: ...
 def relation_price_mult(state: Mapping, keeper: Mapping, mode: str) -> float: ...
 def social_check(state: Mapping, npc: Mapping, approach: str) -> SocialResult: ...
 def favor_decision(state: Mapping, npc: Mapping, kind: str) -> FavorDecision: ...
 def intercession_available(state: Mapping, faction_id: str) -> bool: ...
-def reveal_ceiling(tier: NpcTier) -> Literal["","existencia","objetivo","progresso"]: ...
+def reveal_ceiling(tier: NpcTier) -> Literal["", "existencia", "objetivo", "progresso"]: ...
 def knowledge_lines_cap(tier: NpcTier) -> int: ...
 def ensure_reputation_fields(state: dict) -> dict: ...
 ```
