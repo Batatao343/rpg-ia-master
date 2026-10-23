@@ -122,21 +122,22 @@ def test_schedule_is_idempotent_and_keeps_secret_out_of_command():
         "rpg-cron-operations",
         "rpg-cron-reconciliation",
         "rpg-cron-finops",
+        "rpg-cron-shared-pool",  # SPEC-297
         "rpg-cron-health",
     ]
     assert all("SECRETVALUE" not in p[2] for p in plans)
     assert all(
         "https://x.example/internal/cron/" in p[2] and "app.cron_requests" in p[2]
-        for p in plans[:5]
+        for p in plans[:6]
     )
-    assert plans[5][2] == "select app.cron_health_check()"
+    assert plans[6][2] == "select app.cron_health_check()"
     assert "vault.decrypted_secrets" in plans[0][2]
     for exists, verb in ((False, "create_secret"), (True, "update_secret")):
         c = FakeConn(exists)
         res = sc.apply(c, "https://x.example", "SECRETVALUE")
         text = " ".join(s for s, _ in c.sql)
         assert verb in text and res["vault"] == ("updated" if exists else "created")
-        assert text.count("cron.unschedule") == 6 and text.count("cron.schedule") == 6
+        assert text.count("cron.unschedule") == 7 and text.count("cron.schedule") == 7
         assert not any("SECRETVALUE" in str(p) for s, p in c.sql if "cron.schedule" in s)
 
 

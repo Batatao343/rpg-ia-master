@@ -214,6 +214,25 @@ def cron_account_deletions(request: Request):
     return _run("account_deletions", task)
 
 
+@router.post("/shared-pool")
+def cron_shared_pool(request: Request):
+    """SPEC-297 R18: valida/avalia/promove entradas vencidas do pool (flag != off)."""
+    authorize(request)
+
+    def task():
+        from services.shared_pool import pool_mode
+        from workers.shared_pool_jobs import promote_due_job
+
+        if pool_mode() == "off":
+            return {"promoted": 0, "rejected": 0, "held": 0, "failed": 0, "skipped": 1}
+        store = getattr(_runtime(), "shared_pool", None)
+        if store is None:
+            raise RuntimeError("shared_pool_store_missing")
+        return promote_due_job(store)
+
+    return _run("shared_pool", task)
+
+
 @router.post("/operations")
 def cron_operations(request: Request):
     authorize(request)

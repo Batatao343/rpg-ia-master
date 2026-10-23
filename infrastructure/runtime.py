@@ -473,6 +473,7 @@ FORBIDDEN_IN_HOSTED = (
     "RPG_ALLOW_INSECURE_HOSTED",
     "RPG_ALLOW_LEGACY_EXPOSED",
     "RPG_EXPOSE_OPENAPI",
+    "RPG_POOL_ALLOW_MOCK_EVAL",  # SPEC-297 R17: avaliação do pool por mock nunca em hosted
 )
 _LLM_PROVIDER_ALLOWLIST = frozenset({"gemini", "openai"})
 KILL_SWITCH_HOSTED_FAIL_CLOSED = ("image_generation", "stt_fallback_expensive")
@@ -682,6 +683,9 @@ class InfrastructureRuntime:
     identity_verifier: IdentityVerifier
     resources: tuple[object, ...] = ()
     daily_quota: object | None = None  # SPEC-219: bump(owner, class, limit); so perfis DB
+    shared_pool: object | None = (
+        None  # SPEC-297: SharedPoolStore (JSON no legacy; Postgres nos demais)
+    )
 
 
 def build_legacy_runtime(config: RuntimeConfig | None = None) -> InfrastructureRuntime:
@@ -700,7 +704,15 @@ def build_legacy_runtime(config: RuntimeConfig | None = None) -> InfrastructureR
         job_queue=InlineJobQueue(),
         rate_limiter=MemoryRateLimiter(),
         identity_verifier=FixedIdentityVerifier(principal),
+        shared_pool=_legacy_shared_pool_store(),
     )
+
+
+def _legacy_shared_pool_store():
+    from gamedata import runtime_cache_path
+    from infrastructure.shared_pool_store import JsonSharedPoolStore
+
+    return JsonSharedPoolStore(lambda: runtime_cache_path("shared_pool.json"))
 
 
 def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:

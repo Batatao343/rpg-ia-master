@@ -1295,6 +1295,51 @@ def validate_race_attitudes() -> list[Finding]:
     return [Finding("race_attitudes", "error", path, "", p) for p in lint_race_attitudes(data)]
 
 
+def validate_npc_seed_tables(path: str | None = None) -> list[Finding]:
+    """SPEC-297 R5 - tabelas de semente: ids existem, >=15 por lista, >=1000 combinações/origem."""
+    from services import npc_seed
+
+    path = path or npc_seed.SEED_TABLES_PATH
+    findings: list[Finding] = []
+
+    def err(entity_id: str, message: str) -> None:
+        findings.append(Finding("npc_seed_tables", "error", path, entity_id, message))
+
+    try:
+        tables = npc_seed._read_json(path)
+    except (OSError, ValueError) as exc:
+        return [Finding("npc_seed_tables", "error", path, "", f"ilegível: {type(exc).__name__}")]
+    ids = npc_seed.lore_ids()
+    seen: set[str] = set()
+    for key in npc_seed.TABLE_KEYS:
+        rows = tables.get(key)
+        if not isinstance(rows, list) or len(rows) < npc_seed.MIN_TABLE_ENTRIES:
+            err(key, f"lista '{key}' precisa de >= {npc_seed.MIN_TABLE_ENTRIES} entradas")
+            continue
+        for row in rows:
+            rid = str(row.get("id", ""))
+            if not rid or not row.get("label"):
+                err(key, "linha sem id/label")
+            if rid in seen:
+                err(rid, "id duplicado entre tabelas")
+            seen.add(rid)
+            for field, valid in (
+                ("regions", ids["regions"]),
+                ("races", ids["races"]),
+                ("factions", ids["factions"]),
+            ):
+                for ref in row.get(field) or []:
+                    if ref not in valid:
+                        err(rid, f"{field}: id '{ref}' inexistente")
+    if findings:
+        return findings
+    for region in sorted(ids["regions"]):
+        total = npc_seed.combinations_for_region(region, tables=tables)
+        if total < npc_seed.MIN_COMBINATIONS_PER_ORIGIN:
+            err(region, f"origem com apenas {total} combinações (mínimo 1000)")
+    return findings
+
+
 def validate_all(
     codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR, overrides_path: str = OVERRIDES_PATH
 ) -> list[Finding]:
@@ -1316,6 +1361,7 @@ def validate_all(
         findings.extend(validate_visual_assets())
         findings.extend(validate_race_attitudes())
         findings.extend(validate_merchant_keepers())
+        findings.extend(validate_npc_seed_tables())
     else:
         paths = _codex_md_paths(codex_dir)
         if os.path.isdir(graph_dir):

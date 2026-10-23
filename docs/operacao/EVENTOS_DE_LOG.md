@@ -155,7 +155,20 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `persistence.store_checkpoint_load_failed` | `duration_ms`, `error_type`, `game_ref` |
 | `persistence.store_load_failed` | `duration_ms`, `error_type`, `game_ref` |
 | `persistence.store_save_failed` | `duration_ms`, `error_type`, `game_ref` |
+| `pool.admin_action` | `action`, `entry_id` |
+| `pool.embed_failed` | `error` |
+| `pool.embedder_unavailable` | `error` |
+| `pool.eval_capped` | — |
+| `pool.eval_error` | `error` |
+| `pool.promote_failed` | `entry_id`, `error` |
+| `pool.promoted` | `entry_id`, `namespace` |
+| `pool.region_summary_failed` | `error` |
+| `pool.rejected` | `code`, `entry_id` |
 | `pool.request_role_applied` | `role` |
+| `pool.store_runtime_unavailable` | `error` |
+| `pool.submit_capped` | `namespace` |
+| `pool.submitted` | `entry_id`, `namespace`, `status` |
+| `pool.usage_sink_failed` | `error` |
 | `projection.await_failed` | `error` |
 | `projection.derived_failed` | `error` |
 | `projection.drain_failed` | `error`, `where` |
