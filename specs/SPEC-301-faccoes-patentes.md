@@ -1,6 +1,6 @@
 # SPEC-301 — Fações com patente: entrar, subir, sair, trair (e mover o mundo)
 
-> **Status:** `draft`
+> **Status:** `approved` (dono, 2026-10-23)
 > **Criada:** 2026-10-20 · **Atualizada:** 2026-10-20
 > **Depende de:** SPEC-296 (Onda 0: `world.news` e bloco de ambiente no prompt), SPEC-298
 > (reputação por fação com rótulo vago e API de delta). Integra **se estiverem `done`**, sem
@@ -681,3 +681,12 @@ Registrar custo e latência no hand-back. Se o provider real errar o nome do cam
 - **D7 — Status suspeito:** perde intendente/desconto e mantém abrigo (proposto)?
 - **D8 — `disposition`:** confirmar que a separação "postura do mundo × postura com o
   jogador" fica na SPEC-298, não aqui.
+
+
+## Decisões do dono (2026-10-23)
+
+Todas as decisões abertas desta spec seguem o **default recomendado pelo autor**, exceto/explicitando:
+
+- D2: Mercadores de Escravos FECHADOS.
+- D3: Devoradores de Sol aceitam só herói com origem no Deserto de Zhur.
+- D6: máx. 2 vínculos simultâneos, a fação secreta conta no limite.
