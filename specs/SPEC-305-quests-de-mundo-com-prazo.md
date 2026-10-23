@@ -1,6 +1,6 @@
 # SPEC-305 — Quests de mundo com prazo (nascem do estado, falham com consequência)
 
-> **Status:** `draft`
+> **Status:** `approved` (dono, 2026-10-23)
 > **Criada:** 2026-10-23 · **Atualizada:** 2026-10-23
 > **Origem:** filha **302-D** da SPEC-302 (§9); `docs/mundo-vivo/VISAO.md` decisões 3 e 5
 > (linhas 51-65), "Regra de ouro" (79-82) e "Mudanças no mapa" (153-155).
@@ -644,3 +644,10 @@ letalidade antes/depois, smoke §6)
 - **D10 — Consequências extras de falha** (`fail_causes`): `reabrir_rota` → `fome +6`;
   `libertar_ocupado` → 30 dias sem retomada natural. Recomendado: **sim**, valores
   `[BALANCEAR]`.
+
+
+## Decisões do dono (2026-10-23)
+
+Todas as decisões abertas seguem o **default recomendado pelo autor** (D1 entra sozinha no diário; D3 prazo por rótulo vago; D8 sem segunda chance — pode nascer quest nova da consequência), exceto:
+
+- D4 (amplia): os 8 tipos **mais um 9º, `recuperar_objeto`** — relíquia/artefato roubado ou perdido (ex.: item único tomado por fação/bandidos, tesouro de templo saqueado), nascido do estado (evento de roubo/saque, ocupação, `unique_item_lost`) e com prazo (o objeto é vendido, destruído ou levado para fora da região). Mesmas regras: só entra se percebido; falha = objeto perdido para este mundo (único segue único por mundo).
