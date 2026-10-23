@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "c410dad2408630c9e6b6e30cef7654f3cc227c7a",
+  "commit_sha": "031c402fbcc2d4ba248c2e021269a22305212c42",
   "edge_counts": {
-    "calls": 17781,
-    "contains": 735,
-    "defines": 10064,
-    "imports": 1636,
-    "likely_test_for": 1017,
+    "calls": 17857,
+    "contains": 739,
+    "defines": 10106,
+    "imports": 1646,
+    "likely_test_for": 1026,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:d815570ff5cec95af148396382726e9855496268784642628edf43b1375bdb09",
+  "graph_hash": "sha256:b3bf4f1a1602fd1347fde548d998ea97de0e05914df72cd117cb1588647ddb31",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -286,6 +286,7 @@
     "services/abyss_events.py",
     "services/account_security.py",
     "services/actor_lifecycle.py",
+    "services/ambient.py",
     "services/art_brief.py",
     "services/art_triggers.py",
     "services/asset_pipeline.py",
@@ -420,6 +421,8 @@
     "tests/test_account_read_model_local.py",
     "tests/test_agents_contract.py",
     "tests/test_aliados_combate.py",
+    "tests/test_ambient.py",
+    "tests/test_ambient_consumers.py",
     "tests/test_api_access_log.py",
     "tests/test_api_attempt_telemetry.py",
     "tests/test_api_npc_knowledge_private.py",
@@ -565,6 +568,7 @@
     "tests/test_feedback_ledger_recompensas.py",
     "tests/test_fix_vitalidade_terminal.py",
     "tests/test_fixes_playtest.py",
+    "tests/test_flee_alert_wiring.py",
     "tests/test_frontend_accessibility_contracts.py",
     "tests/test_frontend_auth_bootstrap.py",
     "tests/test_frontend_visual_contracts.py",
@@ -874,6 +878,7 @@
     "web/src/design/primitives.tsx",
     "web/src/design/tokens.ts",
     "web/src/dossiers.ts",
+    "web/src/heardNews.ts",
     "web/src/hooks/useTypewriter.ts",
     "web/src/http.ts",
     "web/src/lib.ts",
@@ -935,14 +940,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 795,
+    "class": 797,
     "endpoint": 63,
-    "file": 881,
-    "function": 3086,
+    "file": 886,
+    "function": 3093,
     "method": 750,
-    "module": 735,
-    "test": 5432
+    "module": 739,
+    "test": 5465
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:8d31663adfc9fc0073147c4ccf32844c7e912c9c1aded117774c7a8fdd8605fd"
+  "source_tree_hash": "sha256:0398c50a965eb68335343a28f9893fee67e489beeb5ca4adbd8ad324d8641839"
 }
