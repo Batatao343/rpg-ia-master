@@ -9,6 +9,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `abuse.blocked` | `cls`, `ip_ref`, `limit`, `owner_ref`, `retry_after_s`, `scope` |
 | `abuse.limiter_unavailable` | `error_type`, `site` |
 | `account.delete.finish_failed` | `error_type`, `owner_ref`, `request_id` |
+| `ambient.fallback` | — |
 | `api.audit_trace_not_written` | `error` |
 | `api.character_create` | — |
 | `api.checkpoint_deferred` | — |
@@ -64,6 +65,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.spawn_scanner_discarded` | — |
 | `combat.started` | `enemies` |
 | `combat.summary` | `death_stage_reached`, `enemy_damage_dealt`, `player_damage_taken`, `reactions`, `rounds`, `target_redirects` |
+| `combat_agent.fallback` | — |
 | `cron.auth_rejected` | `reason` |
 | `cron.failed` | `duration_s`, `error_type`, `stack`, `task` |
 | `cron.item_failed` | `error_type`, `item_kind`, `item_ref`, `task` |
