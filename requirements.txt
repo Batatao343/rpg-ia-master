@@ -20,7 +20,7 @@ anyio==4.14.2
     #   starlette
 attrs==26.1.0
     # via aiohttp
-certifi==2026.7.22
+certifi==2026.10.23
     # via
     #   httpcore
     #   httpx
@@ -158,7 +158,7 @@ packaging==26.3
     #   faiss-cpu
     #   langchain-core
     #   langsmith
-pillow==12.3.0
+pillow==13.0.0
     # via rpg-ia-master
 propcache==0.5.2
     # via
