@@ -414,17 +414,25 @@ jogador.
 
 ```python
 class PoolNamespace(StrEnum):
-    NPC = "npc_template"; CREATURE = "bestiary_template"
-    ARTIFACT = "custom_artifact"; LOCATION = "location"
+    NPC = "npc_template"
+    CREATURE = "bestiary_template"
+    ARTIFACT = "custom_artifact"
+    LOCATION = "location"
+
 
 class PoolStatus(StrEnum):
-    HELD = "held"; LOCAL_ONLY = "local_only"; PROMOTED = "promoted"
-    REJECTED = "rejected"; VETOED = "vetoed"; RETIRED = "retired"
+    HELD = "held"
+    LOCAL_ONLY = "local_only"
+    PROMOTED = "promoted"
+    REJECTED = "rejected"
+    VETOED = "vetoed"
+    RETIRED = "retired"
+
 
 class NpcSeed(BaseModel):
-    race_id: str                 # ex.: "race_anoes_fuligem"
-    origin_region_id: str        # ex.: "nova_arcadia"
-    home_location_id: str        # ex.: "na_anel_lama"
+    race_id: str  # ex.: "race_anoes_fuligem"
+    origin_region_id: str  # ex.: "nova_arcadia"
+    home_location_id: str  # ex.: "na_anel_lama"
     faction_id: str | None = None  # ex.: "legiao_ferro"
     profession_id: str
     desire_id: str
@@ -433,17 +441,18 @@ class NpcSeed(BaseModel):
     contradiction_id: str
     mannerism_id: str
 
+
 class SharedPoolEntry(BaseModel):
-    entry_id: str                          # "pool_npc_3f9a1c2b7d10"
+    entry_id: str  # "pool_npc_3f9a1c2b7d10"
     namespace: PoolNamespace
     status: PoolStatus
     region_id: str
     name: str = Field(max_length=60)
     name_fold: str
     name_origin: Literal["narrator", "player", "engine"]
-    document: dict                         # só allowlist do namespace (R23)
+    document: dict  # só allowlist do namespace (R23)
     legend: str = Field("", max_length=160)
-    seed: NpcSeed | None = None            # None p/ criatura/item/local
+    seed: NpcSeed | None = None  # None p/ criatura/item/local
     seed_signature: str = ""
     origin_owner_id: UUID | None = None
     origin_game_id: str | None = None
@@ -452,13 +461,15 @@ class SharedPoolEntry(BaseModel):
     created_at: datetime
     promote_after: datetime
     attempts: int = 0
-    evaluation: dict | None = None         # PoolEvaluation.model_dump() + findings
+    evaluation: dict | None = None  # PoolEvaluation.model_dump() + findings
     duplicate_of: str | None = None
     veto_reason: str | None = None
+
 
 class PoolCriterion(BaseModel):
     ok: bool
     reason: str = Field("", max_length=200)
+
 
 class PoolEvaluation(BaseModel):
     lore: PoolCriterion
@@ -484,17 +495,31 @@ Números mecânicos nunca vêm do documento; o motor recalcula.
 
 ```python
 def pool_mode() -> Literal["off", "shadow", "on"]: ...
-def submit(namespace: PoolNamespace, document: dict, *, game_id: str, region_id: str,
-           name_origin: str, seed: NpcSeed | None = None,
-           player_inputs: Sequence[str] = ()) -> SharedPoolEntry: ...
-def visible_entry(entry: SharedPoolEntry, *, game_id: str) -> bool: ...   # R10/R25
-def candidates(namespace: PoolNamespace, *, region_id: str, exclude_ids: set[str],
-               exclude_names: set[str], limit: int) -> list[SharedPoolEntry]: ...
-def cast_block(state: GameState) -> tuple[str, list[str]]: ...          # (prompt, ids)
+def submit(
+    namespace: PoolNamespace,
+    document: dict,
+    *,
+    game_id: str,
+    region_id: str,
+    name_origin: str,
+    seed: NpcSeed | None = None,
+    player_inputs: Sequence[str] = (),
+) -> SharedPoolEntry: ...
+def visible_entry(entry: SharedPoolEntry, *, game_id: str) -> bool: ...  # R10/R25
+def candidates(
+    namespace: PoolNamespace,
+    *,
+    region_id: str,
+    exclude_ids: set[str],
+    exclude_names: set[str],
+    limit: int,
+) -> list[SharedPoolEntry]: ...
+def cast_block(state: GameState) -> tuple[str, list[str]]: ...  # (prompt, ids)
 def materialize_npc(entry: SharedPoolEntry, *, game_id: str, home_location_id: str) -> dict: ...
 def evaluate(entry: SharedPoolEntry, *, llm=None) -> PoolEvaluation | None: ...
-def promote_due(store: SharedPoolStore, *, now: datetime, llm=None,
-                embedder=None) -> dict[str, int]: ...   # {"promoted","rejected","held","failed"}
+def promote_due(
+    store: SharedPoolStore, *, now: datetime, llm=None, embedder=None
+) -> dict[str, int]: ...  # {"promoted","rejected","held","failed"}
 def roll_npc_seed(*, game_id: str, turn: int, location_id: str, slot: int = 0) -> NpcSeed: ...
 ```
 
@@ -782,3 +807,11 @@ Entregue: R1–R34 em código + testes `tests/test_spec297_*.py`. Desvios e lacu
 - **P2:** tipos/faixas de `attributes`/`initial_relationship`/`unique`/`stackable`/tags; clamp na materialização; `input_shingles` zerado na promoção; `CHECK shared_pool_owner_required`; `submit` e `get_store()` falham fechados fora do legacy; mock detectado também pela telemetria (`provider == "mock"`); export LGPD inclui `shared_pool` do titular; bestiário filtra promovidas por região (`load_bestiary(game_id, region_id)`); separador do bloco de elenco só quando há bloco.
 - **Não feito (registrado):** grant por coluna/view sem `origin_*`/`input_shingles` para `rpg_api` (P2-3, segunda parte; `rpg_api` ainda lê esses campos de promovidas de outros tenants no request, e `input_shingles` agora vem vazio após a promoção); `pool_used: []` continua entrando no save com a flag off.
 - **Postgres (P1-4):** stack local deste repo (:55322). `tests/test_spec297_shared_pool_local.py` (13 testes: RLS insert/update/leitura, trigger de imutabilidade, CHECK de dono, lease + `skip locked` com 2 conexões reais, `erase_owner`, cerca de exclusão, sink de uso e lookup de `auth.users` reais) **passa**; `-m "security_local or infra_local"` do repo inteiro passa sem falhas. A migração ficou aplicada (commit) na base local 55322.
+
+### Re-revisão Sol (2026-10-24)
+
+- **R-1:** `make_owner_values` não lê `auth.users` (o runtime hosted é `rpg_runtime`, sem acesso ao schema `auth`): usa `app.runtime_auth_email(owner)` (existente) e a função nova `app.runtime_auth_display_names(owner)` (SECURITY DEFINER, `search_path = pg_catalog`, devolve só os valores de nome do metadado; sem grant a `rpg_api`/clientes; `rpg_runtime`/`rpg_admin` recebem execute por `app.grant_runtime_access()`). Teste local roda o lookup sob `rpg_runtime`, prova `permission denied` em `auth.users` e a negação para `rpg_api`.
+- **Flag `off`:** é byte a byte no prompt e na mecânica; o **formato do save** ganha `pool_used: []` (campo opcional, saves antigos carregam).
+- **Follow-up antes de `on` em produção:** view/grant por coluna para `rpg_api` sem `origin_owner_id`/`origin_game_id`/`input_shingles` (hoje a policy de leitura é por linha; `input_shingles` já vem vazio após a promoção).
+- **Pré-existente:** fixtures de `account_lifecycle_*_local` não são idempotentes em base local reutilizada.
+- `ruff format --check .` limpo; o único arquivo que acusava era esta própria spec (bloco de código com `;`), reformatado.

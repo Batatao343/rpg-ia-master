@@ -37,10 +37,10 @@ class FakeConn:
 
         class _R:
             def fetchone(self):
-                if "auth.users" in sql:
+                if "runtime_auth_email" in sql:
                     return {
                         "email": "dona.real@example.com",
-                        "meta": {"full_name": "Guilhermina Souza Ramos"},
+                        "names": ["Guilhermina Souza Ramos"],
                     }
                 return None
 

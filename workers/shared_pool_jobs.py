@@ -22,7 +22,6 @@ from services.shared_pool import promote_due
 
 # Dono técnico das linhas de custo do sistema (não é uma conta; sem FK em usage_events).
 SYSTEM_OWNER_ID = UUID("00000000-0000-0000-0000-000000000297")
-_NAME_KEYS = ("name", "full_name", "display_name", "user_name", "preferred_username")
 
 
 def log_usage_sink(entry, attempts: list[dict]) -> None:
@@ -73,14 +72,16 @@ def make_owner_values(pool) -> Callable[[object], Sequence[str]]:
         from infrastructure.db_roles import admin_connection
 
         with admin_connection(pool) as connection:
+            # `rpg_runtime` não lê o schema auth: só as funções SECURITY DEFINER (R-1).
             row = connection.execute(
-                "select email, raw_user_meta_data as meta from auth.users where id=%s", (owner,)
+                "select app.runtime_auth_email(%s) as email, "
+                "app.runtime_auth_display_names(%s) as names",
+                (owner, owner),
             ).fetchone()
         if not row:
             return ()
         values = [row["email"]] if row.get("email") else []
-        meta = row.get("meta") or {}
-        values += [str(meta[k]) for k in _NAME_KEYS if meta.get(k)]
+        values += [str(n) for n in (row.get("names") or [])]
         return tuple(v for v in values if len(v.strip()) >= 3)
 
     return lookup

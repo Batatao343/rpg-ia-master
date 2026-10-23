@@ -113,6 +113,20 @@ drop trigger if exists account_write_fence on app.shared_pool;
 create trigger account_write_fence before insert or update on app.shared_pool
   for each row execute function app.guard_deleted_account_write_origin();
 
+-- R14 `pii`: nomes de exibicao do dono de origem. `rpg_runtime`/`rpg_admin` nao leem o schema
+-- `auth`; como `app.runtime_auth_email`, e uma funcao SECURITY DEFINER (search_path travado) que
+-- devolve SOMENTE os valores de nome do metadado (nunca outros campos), sem grant a rpg_api/clientes.
+create or replace function app.runtime_auth_display_names(p_user uuid) returns text[]
+language sql stable security definer set search_path = pg_catalog as $$
+  select coalesce(array_agg(distinct v) filter (where v is not null and length(v) >= 3), '{}')
+    from auth.users u,
+         lateral unnest(array[u.raw_user_meta_data ->> 'name', u.raw_user_meta_data ->> 'full_name',
+                              u.raw_user_meta_data ->> 'display_name', u.raw_user_meta_data ->> 'user_name',
+                              u.raw_user_meta_data ->> 'preferred_username']) as t(v)
+   where u.id = p_user;
+$$;
+revoke all on function app.runtime_auth_display_names(uuid) from public, anon, authenticated, rpg_api;
+
 -- R20: custo da avaliacao do pool entra em usage_events sob um dono de SISTEMA (nao do jogador);
 -- a operacao tem kind proprio.
 alter table app.operations drop constraint if exists operations_kind_check;

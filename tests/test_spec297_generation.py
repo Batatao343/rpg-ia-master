@@ -193,7 +193,11 @@ def test_bestiary_submit_and_promoted_visible_by_name(monkeypatch, pool_on):
     import os
 
     os.environ["RPG_SHARED_POOL"] = "shadow"
-    assert not [v for v in bst_mod.load_bestiary("game-b", "nova_arcadia").values() if v.get("pool_entry_id")]
+    assert not [
+        v
+        for v in bst_mod.load_bestiary("game-b", "nova_arcadia").values()
+        if v.get("pool_entry_id")
+    ]
     os.environ["RPG_SHARED_POOL"] = "on"
 
 

@@ -28,12 +28,10 @@ def db():
     if not dsn:
         pytest.skip("RPG_TEST_DATABASE_URL absent")
     with psycopg.connect(dsn, row_factory=dict_row) as conn:
-        if conn.execute("select to_regclass('app.shared_pool') t").fetchone()["t"] is None:
-            conn.execute(
-                Path("supabase/migrations/20261024100000_shared_pool.sql").read_text(
-                    encoding="utf-8"
-                )
-            )
+        # A migração é idempotente: reaplica dentro da transação (rollback ao sair).
+        conn.execute(
+            Path("supabase/migrations/20261024100000_shared_pool.sql").read_text(encoding="utf-8")
+        )
         yield conn
         conn.rollback()
 
@@ -207,8 +205,22 @@ def test_usage_sink_and_owner_lookup_against_real_schema(db, store):
         "insert into auth.users (id, email, raw_user_meta_data) values (%s, %s, %s::jsonb)",
         (user, f"{user}@example.test", '{"full_name": "Pessoa De Teste"}'),
     )
+    # Em hosted a conexão de sistema é `rpg_runtime`, sem acesso ao schema auth (R-1): o lookup
+    # só pode passar pelas funções SECURITY DEFINER.
+    db.execute("grant rpg_runtime to current_user")  # só nesta transação (rollback)
+    db.execute("set local role rpg_runtime")
+    with pytest.raises(Exception, match="permission denied"), db.transaction():
+        db.execute("select 1 from auth.users limit 1")
     values = jobs.make_owner_values(store.pool)(entry(owner=user))
     assert f"{user}@example.test" in values and "Pessoa De Teste" in values
+    assert (
+        db.execute("select app.runtime_auth_display_names(%s) n", (uuid4(),)).fetchone()["n"] == []
+    )
+    # a função nova não é executável pelo tenant (rpg_api) nem por clientes
+    db.execute("reset role")
+    db.execute("set local role rpg_api")
+    with pytest.raises(Exception, match="permission denied"), db.transaction():
+        db.execute("select app.runtime_auth_display_names(%s)", (user,))
 
 
 def test_export_includes_owner_pool_rows(db):

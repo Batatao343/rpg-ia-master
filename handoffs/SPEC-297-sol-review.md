@@ -1,7 +1,7 @@
 # SPEC-297 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus (papel Sol, independente; foco em segurança entre tenants) · **Data:** 2026-10-23 · **Commit revisado:** `3855057`
+> **Veredito:** `CHANGES_REQUIRED` (re-revisão de `6533e258`: restam 2 P1 pequenos, R-1 e R-2; corrigidos os dois, fica `APPROVED_WITH_FOLLOWUPS` sem nova rodada completa — basta o coordenador conferir os dois pontos)
+> **Revisor:** Opus (papel Sol, independente; foco em segurança entre tenants) · **Data:** 2026-10-23 (1ª rodada) / 2026-10-24 (re-revisão) · **Commits revisados:** `3855057`, depois `6533e258`
 
 ## Escopo
 
@@ -64,6 +64,43 @@ foram revisados só por leitura.
 | P2-9 | P2 | `tests/test_spec297_shared_pool_local.py:125-139` | `test_skip_locked_two_workers_no_double_eval` usa a mesma conexão/transação nos dois "workers", então prova o lease, não o `skip locked`. | Usar duas conexões, com a primeira transação aberta. |
 | P2-10 | P2 | `agents/bestiary.py` (`_pool_bestiary_view`) | Lista até 200 criaturas promovidas sem filtro de região a cada `load_bestiary` (espírito de R33). | Filtrar por região atual ou pôr cache por turno. |
 
+## Re-revisão (delta `3855057..6533e258`)
+
+Conferi os P1 1–4 e os P2 que o executor marcou como feitos, olhando o código e rodando os testes.
+
+| Item | Situação |
+|---|---|
+| P1-1 | Corrigido na lógica: `promote_due_job(pool=…)` liga o `usage_sink` (`app.operations` com kind `pool_evaluation` + `usage_events` sob o dono de sistema `…0297`) e o `owner_values`. A nova `operations_kind_check` repete exatamente a lista anterior (`20261016121500`) e acrescenta `pool_evaluation`. **Mas o `owner_values` quebra em hosted (R-1).** |
+| P1-2 | `observability/events.py` agora passa no `ruff format --check`. Os 2 eventos "removidos" (`ambient.fallback`, `combat_agent.fallback`) vieram da `main` depois do ponto de partida da branch e voltam no rebase; não há emissor na branch. **Um arquivo novo de teste não está formatado (R-2).** |
+| P1-3 | Corrigido: `name_typed_by_player` (nome dobrado como substring, ou token ≥ 4 letras, nas 3 últimas entradas do jogador) rebaixa para `player`/`local_only`. A regra é conservadora (`"Ana"` casa com `"banana"`), o que é aceitável: o erro só tira o NPC do pool. Há teste. |
+| P1-4 | Corrigido: os 13 testes de `tests/test_spec297_shared_pool_local.py` passam contra o Postgres local :55322. Eles cobrem RLS de insert/update/leitura, trigger de imutabilidade, CHECK de dono, `skip locked` com 2 conexões, `erase_owner`, cerca de exclusão e sink real. A suposição dos testes locais é o superusuário `postgres`, e é daí que vem a R-1. |
+| P2-1 | Prompt corrigido: com a flag `off` ou sem elenco, o system prompt é idêntico ao da `main` (o separador agora mora dentro de `cast_block_text`). `pool_used: []` continua entrando no save. |
+| P2-2, P2-4…P2-10 | Conferidos e OK: tipos e faixas em `attributes`/`initial_relationship`/`unique`/`stackable`/tags; clamp na materialização; CHECK `shared_pool_owner_required` (o `erase_owner` apaga antes de desvincular, então respeita o CHECK); `submit` e `get_store()` falham fechados fora do legacy (`RPG_RUNTIME_PROFILE`, o mesmo nome que o runtime usa); `HumanMessage` filtrado antes do `[-3:]`; mock bloqueado também pela telemetria; export LGPD com `shared_pool`; bestiário filtrado por região, até 100 entradas. |
+| P2-3 | Parcial: `input_shingles` é zerado na promoção. Falta o grant por coluna (ver Pendências). |
+
+### Achados novos
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| R-1 | P1 | `workers/shared_pool_jobs.py` (`make_owner_values`) | Faz `select email, raw_user_meta_data from auth.users` pela conexão admin. Em staging e produção a conexão admin é o papel de login `rpg_runtime`, que **não tem acesso ao schema `auth`** (`20261015160000_runtime_login_role.sql:28-30`: o runtime só usa 3 funções SECURITY DEFINER). O lookup levanta `permission denied` e cai no `except` de `promote_due`: toda entrada com dono vira `failed`, o lease renova a cada 15 min e **nada é promovido em hosted**. É fail-closed (sem vazamento e sem custo de LLM, porque roda antes da avaliação), mas a feature fica inerte e o smoke §6 falharia. Os testes locais não pegam isso porque conectam como `postgres`. | Pegar o e-mail com `app.runtime_auth_email(owner)`, que já existe e já está concedida ao runtime. Para o nome de exibição, criar uma função SECURITY DEFINER nova (`app.runtime_auth_display_names(uuid) returns text[]`, `search_path` travado, revoke de public/anon/authenticated/rpg_api) na migração da 297, ou abrir mão do nome e documentar. Teste local: rodar `make_owner_values` com `set local role rpg_runtime`. |
+| R-2 | P1 | `tests/test_spec297_generation.py:196` | `ruff format --check` acusa "1 file would be reformatted", e o CI (`ruff format --check .`) quebra. | `uv run ruff format tests/test_spec297_generation.py`. |
+| R-3 | P2 | `services/shared_pool.py` (`admin_restore`) + CHECK `shared_pool_owner_required` | Restaurar uma entrada vetada ou aposentada cujo autor excluiu a conta (dono NULL) viola o CHECK e o comando falha. É fail-closed e coerente com o LGPD, mas a CLI devolve só um erro cru. | Na CLI, mensagem clara ("autor excluído; restauração indisponível"), ou permitir `promoted` direto via `restore --promoted`, se o dono quiser. |
+| R-4 | P2 | `tests/test_account_lifecycle_financial_local.py:24`, `tests/test_account_lifecycle_worker_local.py` | Esses 5 testes `*_local` reaplicam a migração `account_lifecycle` sem `if not exists` e falham com `DuplicateTable` numa base que já tem as migrações (caso do :55322). Isso existe antes da 297 e os arquivos não foram tocados na branch, mas contradiz "o `infra/security_local` do repo inteiro passa". | Follow-up fora da 297: deixar os fixtures idempotentes (checar `to_regclass` como `install_lifecycle` já faz para `image_quotes`). |
+
+### Pendente: bloqueia ou é follow-up?
+
+- **Grant por coluna ou view sem `origin_*`/`input_shingles` para o `rpg_api`:** **follow-up, não
+  bloqueia.** Depois da correção, `input_shingles` vem vazio nas linhas promovidas. O que sobra
+  legível de outros tenants é `origin_owner_id`/`origin_game_id` (UUIDs opacos), só dentro do
+  processo (nenhum caminho de API ou estado os copia; `materialize_npc` e
+  `_pool_creature_template` usam a allowlist), e o RLS de `games` impede usar esses ids.
+  Recomendo fechar antes de ligar `on` em produção (não precisa ser antes do `shadow` no
+  staging), com uma view `app.shared_pool_public` para o `rpg_api` ou revoke por coluna.
+- **`pool_used: []` no save com a flag `off`:** **follow-up/aceito, não bloqueia.** É aditivo,
+  o load de saves antigos e novos funciona nas duas direções (`_raw_to_state` usa `.get(..., [])`)
+  e a mecânica não muda. Só registrar na spec que `off` é byte a byte no prompt e na mecânica,
+  não no formato do save.
+
 ## Correções aplicadas
 
 Aplicadas pelo executor em 2026-10-24: P1-1, P1-2 (`ruff format` em `observability/events.py`; a remoção dos 2 eventos da SPEC-296 se resolve no rebase), P1-3, P1-4 (13 testes Postgres local passam, ver spec), P2-1, P2-2, P2-3 (parcial), P2-4, P2-5, P2-6, P2-7, P2-8, P2-9, P2-10. Detalhe na seção "Correções da revisão Sol" da spec.
@@ -75,7 +112,9 @@ Aplicadas pelo executor em 2026-10-24: P1-1, P1-2 (`ruff format` em `observabili
   coordenador.
 - D3: cláusula nos termos de uso (texto legal do dono, alinhar com a SPEC-222).
 - D8: revisão das tabelas de semente pelo dono antes de `on` no staging.
-- Smoke real §6.
+- Smoke real §6, que só passa depois da R-1.
+- Grant por coluna ou view para o `rpg_api` (P2-3, 2ª parte): antes de `on` em produção.
+- R-3, R-4 (P2).
 
 ## Comandos rodados
 
@@ -85,4 +124,10 @@ bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider tests/test_spec297_*.py 
 ruff format --check <35 .py alterados> → 1 file would be reformatted (observability/events.py)
 EVENTS main vs branch → 206 → 224; removidos: ambient.fallback, combat_agent.fallback
 docker ps → só há Supabase local de outro projeto (projeto-racha-spec-pack); não usado
+# re-revisão 2026-10-24 (delta 6533e258)
+RPG_TEST_DATABASE_URL=…:55322 pytest (sem -n) tests/test_spec297_*.py + npc/bestiário + rls_runtime_config + spec192 + log_event_registry + test_account_lifecycle*.py → 265 testes: 260 passed, 5 failed (só test_account_lifecycle_{financial,worker}_local: DuplicateTable no fixture, já existia antes da 297), 0 skipped; os 13 de test_spec297_shared_pool_local passam
+ruff format --check <.py alterados> → 1 file would be reformatted (tests/test_spec297_generation.py)
+ruff check <.py alterados> → All checks passed
+grep auth.users em migrations/infra → rpg_runtime sem grant em auth (só app.runtime_auth_email/runtime_session_active/runtime_revoke_auth)
+operations_kind_check → lista de 20261016121500 + 'pool_evaluation' (nada se perdeu)
 ```
