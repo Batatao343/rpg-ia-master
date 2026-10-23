@@ -1,6 +1,6 @@
 # SPEC-297 — Pool compartilhado entre mundos (NPCs, criaturas, itens, locais)
 
-> **Status:** `draft`
+> **Status:** `approved` (dono, 2026-10-23)
 > **Criada:** 2026-10-20 · **Atualizada:** 2026-10-20
 > **Origem:** `docs/mundo-vivo/VISAO.md` § "C2. NPCs compartilhados entre mundos", "Regra de ouro" e "Restrições permanentes" (decisões do dono, 20/10)
 > **Depende de:** SPEC-223 (`done`, esta spec inverte a R7 dela atrás de flag), SPEC-215 (`done`), SPEC-230 (`done`, guard de fallback e cache sem entradas quebradas), SPEC-192 (`done`, cron interno)
@@ -751,3 +751,11 @@ contas de teste (A e B). Teto: ≤ 15 chamadas LLM, < US$ 0,10.
   **não** (protege a SPEC-285; fica para o pilar B).
 - **D8 — Tabelas de semente:** o executor rascunha a partir da lore e o dono
   revisa antes de `on` no staging.
+
+
+## Decisões do dono (2026-10-23)
+
+Todas as decisões abertas desta spec seguem o **default recomendado pelo autor**, exceto/explicitando:
+
+- D3: NPCs promovidos FICAM no pool, desvinculados do autor, ao excluir a conta — exige cláusula nos termos (alinhar SPEC-222).
+- D7 (substitui a proposta): criaturas do pool ENTRAM no sorteio de encontros após calibração — números só do motor, teste de letalidade por categoria (arena SPEC-285) verde, peso baixo inicial.
