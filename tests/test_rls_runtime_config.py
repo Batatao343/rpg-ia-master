@@ -201,6 +201,7 @@ REQUEST_MODULES = [
     "infrastructure/postgres.py",
     "infrastructure/postgres_turns.py",
     "infrastructure/postgres_catalog.py",
+    "infrastructure/postgres_shared_pool.py",
     "infrastructure/pgvector_memory.py",
     "infrastructure/postgres_jobs.py",
     "services/chronicle_repository.py",
