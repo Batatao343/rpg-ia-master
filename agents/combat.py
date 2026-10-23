@@ -884,7 +884,10 @@ def _ambient_for_combat(world: dict, player: dict) -> str:
         from services.ambient import ambient_block
 
         return ambient_block(world, player, audience="combat")
-    except Exception:  # noqa: BLE001 - ambientação é opcional
+    except Exception as exc:  # noqa: BLE001 - ambientação é opcional
+        from observability.telemetry import log_fallback
+
+        log_fallback("combat_agent", "ambient_block_failed", exc)
         return ""
 
 

@@ -150,5 +150,8 @@ def ambient_block(
     """Ambientação é opcional: erro aqui nunca derruba o turno (review P2-2)."""
     try:
         return _ambient_block(world, player, audience=audience)
-    except Exception:  # noqa: BLE001
+    except Exception as exc:  # noqa: BLE001
+        from observability.telemetry import log_fallback
+
+        log_fallback("ambient", "ambient_block_failed", exc)
         return ""
