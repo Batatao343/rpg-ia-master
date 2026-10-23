@@ -1,0 +1,47 @@
+{
+  "_doc": "SPEC-298 R7: attitude(observador, alvo) em -2..+2. Cada entrada != 0 exige 'source' (arquivo:linha da lore). Humanos usam CULTURA (regiao do local-casa), nao a raca.",
+  "races": {
+    "race_elfos": {
+      "race_humanos": {"value": 1, "source": "lore_nova/races.txt:71"},
+      "race_anoes_fuligem": {"value": -2, "source": "lore_nova/races.txt:73"},
+      "race_cinzeus": {"value": -1, "source": "lore_nova/races.txt:75"},
+      "race_vrel": {"value": -1, "source": "lore_nova/races.txt:77"},
+      "race_osshari": {"value": 1, "source": "lore_nova/races.txt:79"}
+    },
+    "race_cinzeus": {
+      "race_elfos": {"value": -1, "source": "lore_nova/races.txt:250"},
+      "race_humanos": {"value": 0, "source": "lore_nova/races.txt:252"},
+      "race_vrel": {"value": 1, "source": "lore_nova/races.txt:256"},
+      "race_anoes_fuligem": {"value": -2, "source": "lore_nova/races.txt:258"}
+    },
+    "race_anoes_fuligem": {"*": {"value": 0, "source": "lore_nova/races.txt:119"}},
+    "race_osshari": {"*": {"value": 0, "source": "lore_nova/races.txt:293"}},
+    "race_vrel": {}
+  },
+  "human_cultures": {
+    "nascidos_do_gelo": {
+      "regions": ["skallgard"],
+      "race_elfos": {"value": -1, "source": "lore_nova/races.txt:364"},
+      "race_osshari": {"value": 1, "source": "lore_nova/races.txt:364"}
+    },
+    "devoradores_de_sol": {
+      "regions": ["deserto_zhur"],
+      "*": {"value": 0, "source": "lore_nova/races.txt:366"}
+    },
+    "urbanos": {
+      "regions": ["nova_arcadia"],
+      "*": {"value": 0, "source": "lore_nova/races.txt:368"}
+    },
+    "andarilhos": {
+      "regions": ["pradaria_ruinas"],
+      "*": {"value": 0, "source": "lore_nova/races.txt:370"}
+    },
+    "piratas": {
+      "regions": ["brekmar"],
+      "race_osshari": {"value": 1, "source": "lore_nova/races.txt:372"}
+    }
+  },
+  "local_rules": [
+    {"region": "skallgard", "target": "race_vrel", "value": 1, "source": "lore_nova/races.txt:197"}
+  ]
+}

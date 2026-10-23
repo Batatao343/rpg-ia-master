@@ -133,7 +133,8 @@ class NPCSchema(BaseModel):
     location: str
     persona: str
     appearance: str
-    initial_relationship: int = 5
+    initial_relationship: int = 5  # ignorado pelo motor (SPEC-298 R8: relação inicial é Python)
+    race_id: str = ""  # SPEC-298 R6: id de data/origins.json; inválido -> "" (neutro)
     attributes: dict[str, int] = Field(
         description="Stats base: str, dex, con, int, wis, cha. Padrão humano é 10.",
         json_schema_extra={
@@ -143,6 +144,12 @@ class NPCSchema(BaseModel):
     combat_stats: dict = Field(
         description="HP, AC e Attacks", default={"hp": 10, "ac": 10, "attacks": []}
     )
+
+
+def _valid_race_id(value: object) -> str:
+    from services.reputation import VALID_RACES
+
+    return value if isinstance(value, str) and value in VALID_RACES else ""
 
 
 class FactionReveal(BaseModel):
@@ -583,6 +590,17 @@ def npc_actor_node(state: GameState):
         in_scene=True if not from_state else None,
     )
     npc_data["known_by_player"] = True
+    if not from_state and not npc_data.get("relationship_basis"):
+        # SPEC-298 R8: relação inicial calculada em Python (raça/origem/fama/fação);
+        # o `initial_relationship` do LLM é ignorado. Só NPC novo na sessão.
+        from services import reputation
+
+        npc_data["race_id"] = _valid_race_id(npc_data.get("race_id")) or reputation.npc_race_id(
+            npc_data
+        )
+        rel0, basis = reputation.initial_relationship(state, npc_data)
+        npc_data["relationship"] = rel0
+        npc_data["relationship_basis"] = basis
 
     # O NPC NÃO é uma wikipédia: age por persona + memória própria (sem dump de lore global).
     last_msg = messages[-1].content if messages else ""
@@ -836,9 +854,18 @@ def npc_actor_node(state: GameState):
         # Atualiza memória e relação (com guardas contra chaves ausentes)
         turn = state.get("world", {}).get("turn_count", 0)
         delta = clamp_relationship_change(res.relationship_change, npc_data.get("name", npc_name))
-        rel_now = npc_data.get("relationship")
-        rel_now = 5 if rel_now is None else int(rel_now)
-        npc_data["relationship"] = max(0, min(10, rel_now + delta))
+        from services import reputation
+
+        npc_data["relationship"] = npc_data.get("relationship", 5)
+        _row, rel_notice = reputation.apply_npc_delta(
+            {**state, "npcs": {npc_state_key: npc_data}},
+            npc_state_key,
+            delta,
+            reason="dialogue",
+            source="llm",
+        )
+        if _row:
+            npc_data.update(_row)
         npc_data.setdefault("memory", [])
         # Memória registra a EXPERIÊNCIA observável (fala/resposta), não promove
         # `memory_update` livre da IA a verdade canônica.
@@ -971,6 +998,13 @@ def npc_actor_node(state: GameState):
             "memory_facts": memory_facts,
             "memory_promotions": memory_promotions,
         }
+        if rel_notice:  # SPEC-298 R26: aviso do turno (substituído no finalizer a cada turno)
+            _t = int(state.get("world", {}).get("turn_count", 0) or 0)
+            updates["reputation_notices"] = [
+                n
+                for n in (state.get("reputation_notices") or [])
+                if isinstance(n, dict) and n.get("turn") == _t
+            ] + [rel_notice]
 
         # Fase 3.3: quem originou a missão é o NPC em cena — resolvido em Python
         # (não confiado ao LLM). Só title/description/location_id/reward_hint vêm do LLM.

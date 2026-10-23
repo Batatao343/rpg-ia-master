@@ -194,8 +194,10 @@ def test_resposta_com_evento_invalido_e_unidade_atomica_sem_side_effects(
             AssertionError("NPC livre não pode materializar")
         ),
     )
+    import world_utils
+
     monkeypatch.setattr(
-        storyteller,
+        world_utils,
         "apply_reputation",
         lambda *_args, **_kwargs: (_ for _ in ()).throw(
             AssertionError("reputação livre não pode ser aplicada")

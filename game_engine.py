@@ -19,6 +19,7 @@ from main import app
 from persistence import load_game_state, save_game_state
 from services.chronicle import default_chapter_title
 from services.prompt_guard import origin_fragment
+from services.reputation import resolve_race_id, resolve_region_id
 from world_utils import starting_world
 
 
@@ -252,6 +253,8 @@ def create_character_wizard():
             "name": final_char["name"],
             "class_name": final_char["class_name"],
             "race": final_char["race"],
+            "race_id": resolve_race_id(final_char["race"]),
+            "origin_region_id": resolve_region_id(final_char.get("region")),
             "level": final_char["level"],
             "xp": 0,
             "hp": final_char["hp"],

@@ -118,6 +118,25 @@ def _v_reputation_changed(ev: ProposedWorldEvent, state: dict, proj: dict) -> Va
     return ValidationResult(True)
 
 
+def _v_faction_deed(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    """SPEC-298 R11: a fação existe, está viva e está *em cena* (controla o local
+    atual, tem NPC presente ou quest ativa de origem). Direção/magnitude fechadas."""
+    f = gr.get_entity(ev.target_id)
+    if not f or f.get("type") != "faction":
+        return ValidationResult(False, f"{ev.target_id} não é facção")
+    if not gr.is_alive(ev.target_id, proj):
+        return ValidationResult(False, f"facção {ev.target_id} está derrotada")
+    if ev.payload.get("direction") not in ("ajudou", "prejudicou"):
+        return ValidationResult(False, "payload.direction inválido (use ajudou|prejudicou)")
+    if ev.payload.get("magnitude", "menor") not in ("menor", "maior"):
+        return ValidationResult(False, "payload.magnitude inválido (use menor|maior)")
+    from services import reputation
+
+    if not reputation.faction_in_scene(state, ev.target_id, proj):
+        return ValidationResult(False, f"facção {ev.target_id} não está em cena")
+    return ValidationResult(True)
+
+
 def _v_level_up(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
     """Fase 4.1: evento do motor (grant_xp). O gate anti-LLM (source='progression')
     fica em validate_proposal; aqui só sanidade do payload."""
@@ -414,7 +433,7 @@ def reason_code(reason: str) -> str:
         or "exige actor player" in text
     ):
         return "wrong_type"
-    if "não é uma quest ativa" in text:
+    if "não é uma quest ativa" in text or "não está em cena" in text:
         return "not_active"
     if "nenhum segredo" in text:
         return "no_secret"
@@ -471,6 +490,7 @@ _VALIDATORS = {
     "quest_completed": _v_quest_completed,
     "faction_relation_changed": _v_faction_relation_changed,
     "reputation_changed": _v_reputation_changed,
+    "faction_deed": _v_faction_deed,
     "level_up": _v_level_up,
     "subclass_chosen": _v_progression_choice,
     "class_apex_unlocked": _v_progression_choice,
@@ -504,6 +524,9 @@ def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
     # spec balanceamento-early-game (R3): player_downed idem — só o combate emite.
     if ev.type == "player_downed" and proposal.get("source") != "combat":
         return ValidationResult(False, "player_downed é gerado pelo motor, não proposto")
+    # SPEC-298: faction_deed nasce no storyteller (Python), nunca de proposta livre do LLM.
+    if ev.type == "faction_deed" and proposal.get("source") != "storyteller":
+        return ValidationResult(False, "faction_deed é gerado pelo motor, não proposto")
     # Fase 6.2: posse de item único é observada pelo motor, nunca proposta.
     if (
         ev.type in ("unique_item_claimed", "unique_item_lost")

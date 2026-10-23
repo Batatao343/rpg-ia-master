@@ -259,6 +259,7 @@ EVENTS: dict[str, tuple[str, ...]] = {
     "rag.rules_missing": (),
     "rag.session_memory_failed": ("error",),
     "rag.session_memory_saved": ("facts",),
+    "reputation.process_failed": ("error",),
     "router.decision": ("fallback_reason", "jev_mode", "route", "source", "target_kind"),
     "router.failed": ("error",),
     "router.orphan_combat_expired": (),

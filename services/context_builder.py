@@ -68,6 +68,7 @@ EVENT_TEMPLATES: dict[str, str] = {
     "quest_completed": "[turno {turn}] Missão concluída: {target}.",
     "route_blocked": "[turno {turn}] A rota entre {target} e {other_loc} está BLOQUEADA (comércio cortado).",
     "route_cleared": "[turno {turn}] A rota entre {target} e {other_loc} foi reaberta.",
+    "faction_deed": "[turno {turn}] O jogador {deed} {target}.",
 }
 
 _WORD = re.compile(r"[\wáàâãéêíóôõúüç]+", re.IGNORECASE)
@@ -189,6 +190,7 @@ def render_event(event: dict, projection: dict | None = None) -> str:
         relation=payload.get("relation") or event.get("detail", "") or payload.get("detail", ""),
         other=_name(payload.get("other_faction_id") or event.get("actor_id")),
         other_loc=_name(payload.get("other_location_id")),
+        deed="ajudou" if payload.get("direction") == "ajudou" else "prejudicou",
     )
 
 

@@ -205,42 +205,42 @@ def _reps():
 
 
 def test_apply_reputation_increments_and_clamps():
-    out, ev = wu.apply_reputation(_reps(), "selo_palido", "ajudou")
+    out, ev = wu.apply_reputation(_reps(), "selo_palido", "ajudou", 12)
     f = next(x for x in out if x["id"] == "selo_palido")
-    assert f["reputation"] == wu.REP_STEP
-    assert ev and ev["delta"] == wu.REP_STEP and ev["direction"] == "ajudou"
+    assert f["reputation"] == 12
+    assert ev and ev["delta"] == 12 and ev["direction"] == "ajudou"
     # outras fações intactas
     assert next(x for x in out if x["id"] == "culto_clareira")["reputation"] == 0
 
     # clamp no teto e no piso
     high = [{"id": "selo_palido", "name": "O", "reputation": 95, "disposition": "aliado"}]
-    out_h, _ = wu.apply_reputation(high, "selo_palido", "ajudou")
+    out_h, _ = wu.apply_reputation(high, "selo_palido", "ajudou", 12)
     assert out_h[0]["reputation"] == wu.REP_MAX
     low = [{"id": "selo_palido", "name": "O", "reputation": -95, "disposition": "hostil"}]
-    out_l, _ = wu.apply_reputation(low, "selo_palido", "prejudicou")
+    out_l, _ = wu.apply_reputation(low, "selo_palido", "prejudicou", 12)
     assert out_l[0]["reputation"] == wu.REP_MIN
 
 
 def test_apply_reputation_flips_disposition():
     # de neutro a aliado ao cruzar +40
     base = [{"id": "selo_palido", "name": "O", "reputation": 36, "disposition": "neutro"}]
-    out, _ = wu.apply_reputation(base, "selo_palido", "ajudou")  # 36 + 12 = 48 >= 40
+    out, _ = wu.apply_reputation(base, "selo_palido", "ajudou", 12)  # 36 + 12 = 48 >= 40
     assert out[0]["disposition"] == "aliado"
     # de neutro a hostil ao cruzar -40
     base2 = [{"id": "selo_palido", "name": "O", "reputation": -32, "disposition": "neutro"}]
-    out2, _ = wu.apply_reputation(base2, "selo_palido", "prejudicou")  # -32 - 12 = -44 <= -40
+    out2, _ = wu.apply_reputation(base2, "selo_palido", "prejudicou", 12)  # -32 - 12 = -44 <= -40
     assert out2[0]["disposition"] == "hostil"
 
 
 def test_apply_reputation_unknown_id_noop():
     reps = _reps()
-    out, ev = wu.apply_reputation(reps, "nao_existe", "ajudou")
+    out, ev = wu.apply_reputation(reps, "nao_existe", "ajudou", 12)
     assert ev is None
     assert all(f["reputation"] == 0 for f in out)
 
 
 def test_apply_reputation_invalid_direction_noop():
-    out, ev = wu.apply_reputation(_reps(), "selo_palido", "olhou de lado")
+    out, ev = wu.apply_reputation(_reps(), "selo_palido", "olhou de lado", 12)
     assert ev is None
     assert all(f["reputation"] == 0 for f in out)
 
@@ -251,6 +251,15 @@ def test_graph_help_faction_changes_reputation():
     # jogador precisa CONHECER a fação para poder agir sobre ela (não-onisciência)
     st = _state_for_graph("ajudo a Legião de Ferro na sua causa")
     st["faction_intel"] = {"legiao_ferro": {"known": True, "knows_goal": True}}
+    # SPEC-298: a fação só muda quando está em cena (membro presente) e o feito é aceito
+    st["npcs"] = {
+        "Comandante Thrace": {
+            "id": "npc_comandante_thrace",
+            "name": "Comandante Thrace",
+            "in_scene": True,
+            "relationship": 5,
+        }
+    }
     result = app.invoke(st)
     factions = result.get("factions") or []
     alvo = next((f for f in factions if f["id"] == "legiao_ferro"), None)

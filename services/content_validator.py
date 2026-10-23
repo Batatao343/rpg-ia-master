@@ -1199,6 +1199,63 @@ def validate_secret_entity_ids(graph_dir: str = GRAPH_DIR) -> list[Finding]:
     return findings
 
 
+def lint_race_attitudes(data: dict) -> list[str]:
+    """SPEC-298 R7: ids válidos, valor em -2..2 e `source` em toda entrada != 0."""
+    valid = {
+        str(r.get("id"))
+        for r in (_read_json_file(os.path.join("data", "origins.json"), {}) or {}).get("races", [])
+    }
+    problems: list[str] = []
+
+    def entry(where: str, e: object) -> None:
+        if not isinstance(e, dict):
+            problems.append(f"{where}: entrada inválida")
+            return
+        try:
+            value = int(e.get("value", 0))
+        except (TypeError, ValueError):
+            problems.append(f"{where}: value não numérico")
+            return
+        if not -2 <= value <= 2:
+            problems.append(f"{where}: value {value} fora de -2..2")
+        if value != 0 and not str(e.get("source") or "").strip():
+            problems.append(f"{where}: source obrigatório para value != 0")
+
+    def block(where: str, rows: object) -> None:
+        for target, e in (rows or {}).items():
+            if target != "*" and target not in valid:
+                problems.append(f"{where}: alvo desconhecido {target}")
+            entry(f"{where}->{target}", e)
+
+    for observer, rows in (data.get("races") or {}).items():
+        if observer not in valid:
+            problems.append(f"races: observador desconhecido {observer}")
+        block(f"races.{observer}", rows)
+    for culture, rows in (data.get("human_cultures") or {}).items():
+        block(f"human_cultures.{culture}", {k: v for k, v in rows.items() if k != "regions"})
+    for i, rule in enumerate(data.get("local_rules") or []):
+        entry(f"local_rules[{i}]", rule)
+        if rule.get("target") not in valid:
+            problems.append(f"local_rules[{i}]: alvo desconhecido")
+    return problems
+
+
+def _read_json_file(path: str, default):
+    try:
+        with open(path, encoding="utf-8") as fh:
+            return json.load(fh)
+    except (OSError, ValueError):
+        return default
+
+
+def validate_race_attitudes() -> list[Finding]:
+    path = os.path.join("data", "race_attitudes.json")
+    data = _read_json_file(path, None)
+    if data is None:
+        return [Finding("race_attitudes", "error", path, "", "arquivo ausente ou inválido")]
+    return [Finding("race_attitudes", "error", path, "", p) for p in lint_race_attitudes(data)]
+
+
 def validate_all(
     codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR, overrides_path: str = OVERRIDES_PATH
 ) -> list[Finding]:
@@ -1218,6 +1275,7 @@ def validate_all(
         findings.extend(validate_cards())
         findings.extend(validate_bestiary())
         findings.extend(validate_visual_assets())
+        findings.extend(validate_race_attitudes())
     else:
         paths = _codex_md_paths(codex_dir)
         if os.path.isdir(graph_dir):

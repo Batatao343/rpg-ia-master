@@ -278,7 +278,7 @@ class _FakeStoryLLM34:
         )
 
 
-def test_storyteller_enfileira_reputation_changed(monkeypatch):
+def test_storyteller_enfileira_faction_deed(monkeypatch):
     from langchain_core.messages import HumanMessage
 
     import agents.storyteller as stt
@@ -315,11 +315,15 @@ def test_storyteller_enfileira_reputation_changed(monkeypatch):
     }
     out = stt.storyteller_node(state)
     assert "pending_world_events" in out
-    rep = [e for e in out["pending_world_events"] if e["type"] == "reputation_changed"]
+    # SPEC-298 R11: o storyteller NÃO aplica reputação; enfileira o feito para validação
+    assert not [e for e in out["pending_world_events"] if e["type"] == "reputation_changed"]
+    rep = [e for e in out["pending_world_events"] if e["type"] == "faction_deed"]
     assert len(rep) == 1
     assert rep[0]["target_id"] == LEGIAO
-    assert rep[0]["payload"]["delta"] > 0
-    assert rep[0]["payload"]["reason"] == "ajudou"
+    assert rep[0]["payload"]["direction"] == "ajudou"
+    assert rep[0]["payload"]["magnitude"] == "menor"
+    assert rep[0]["source"] == "storyteller"
+    assert next(f for f in out["factions"] if f["id"] == LEGIAO)["reputation"] == 0
 
 
 # ---------------------------------------------------------------------------

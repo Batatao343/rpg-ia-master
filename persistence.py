@@ -685,6 +685,10 @@ def _state_to_save_data(state: dict[str, Any], game_id: str) -> dict[str, Any]:
         "pending_derived": _projection_plan(state.get("pending_derived")),
         # SPEC-215 (aditivo, sem bump): ledger privado de conhecimento por NPC.
         **_knowledge(state, legacy_default=False),
+        # SPEC-298 (aditivo, sem bump): reputação em quatro níveis.
+        "location_fame": deepcopy(state.get("location_fame") or {}),
+        "reputation_pending": deepcopy(list(state.get("reputation_pending") or [])[-100:]),
+        "reputation_notices": deepcopy(list(state.get("reputation_notices") or [])[-16:]),
         "art_generation_ledger": deepcopy(state.get("art_generation_ledger") or []),
         "art_arc_budgets": deepcopy(state.get("art_arc_budgets") or {}),
         "art_offers": deepcopy(state.get("art_offers") or []),
@@ -1019,6 +1023,10 @@ def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
         "last_turn_outcome": deepcopy(raw_data.get("last_turn_outcome") or {}),
         # SPEC-215 (aditivo, sem bump): save sem ledger → vazio + legacy_knowledge.
         **_knowledge(raw_data, legacy_default=True),
+        # SPEC-298 (aditivo, sem bump): save antigo sem as chaves -> defaults neutros.
+        "location_fame": deepcopy(raw_data.get("location_fame") or {}),
+        "reputation_pending": deepcopy(list(raw_data.get("reputation_pending") or [])),
+        "reputation_notices": deepcopy(list(raw_data.get("reputation_notices") or [])),
         # SPEC-202 (aditivo, sem bump): save antigo/sem dict → {} (= narrador).
         "last_speaker": (
             deepcopy(raw_data["last_speaker"])
@@ -1095,6 +1103,9 @@ def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
             state["player"], _ = reconcile_equipment(player)
     except Exception:  # pragma: no cover - nunca quebrar o load por isso
         pass
+    from services.reputation import ensure_reputation_fields
+
+    ensure_reputation_fields(state)  # SPEC-298 R28: backfill idempotente
     return state
 
 

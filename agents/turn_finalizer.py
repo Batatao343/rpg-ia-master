@@ -43,6 +43,15 @@ def turn_finalizer_node(state: dict) -> dict:
         logging.getLogger("rpg.npc_knowledge").warning(
             "turn_updates falhou: %s", type(exc).__name__
         )
+    # SPEC-298: fama por notícia entregue, pendências de fação, reação de NPCs e avisos.
+    try:
+        from services import reputation
+
+        updates.update(reputation.turn_updates({**state, **updates}))
+    except Exception as exc:  # silent-ok: reputação nunca derruba o turno
+        import logging
+
+        logging.getLogger("rpg.reputation").warning("turn_updates falhou: %s", type(exc).__name__)
     if audit:
         updates["messages"] = Overwrite(messages)
         updates["evidence_rejections"] = [*(state.get("evidence_rejections") or []), *audit][-64:]

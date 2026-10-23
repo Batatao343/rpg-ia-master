@@ -274,7 +274,6 @@ def test_xp_tier_by_categoria(sheet, xp, cost):
 # ---------------------------------------------------------------- R8
 def test_faction_impact_dedupe(story):
     from agents.storyteller import FactionImpact
-    from world_utils import REP_STEP
 
     s = _story_state()
     impacts = [
@@ -283,9 +282,9 @@ def test_faction_impact_dedupe(story):
     ]
     out = story(s, faction_impacts=impacts)
     fac = next(f for f in out["factions"] if f["id"] == "legiao_ferro")
-    assert fac["reputation"] == REP_STEP  # 1x, nao 2x
-    revs = [e for e in out.get("pending_world_events", []) if e["type"] == "reputation_changed"]
-    assert len(revs) == 1
+    assert fac["reputation"] == 0  # SPEC-298: nada aplicado antes do aceite
+    deeds = [e for e in out.get("pending_world_events", []) if e["type"] == "faction_deed"]
+    assert len(deeds) == 1  # 1x, nao 2x
 
 
 # ---------------------------------------------------------------- R9
@@ -551,32 +550,39 @@ def test_loot_trade_records_ledger_and_guard(monkeypatch, mode, delta, gold_afte
 
 
 # ------------------------------------------- R8 rejeicao por outro motivo
-def test_rejected_reputation_is_reverted(story):
-    """Facção derrotada: o validador rejeita o reputation_changed (não por
-    duplicata) e a reputação aplicada pelo storyteller é desfeita."""
+def test_rejected_faction_deed_never_moves_reputation(story):
+    """Facção derrotada: o validador rejeita o faction_deed; a reputação nunca
+    chega a mudar (SPEC-298 R13: não há mais 'aplica antes e desfaz')."""
     from agents.storyteller import FactionImpact
     from services.event_processor import process_pending_events
 
     s = _story_state()
     s["world_projection"] = {"entities": {"legiao_ferro": {"alive": False}}}
     out = story(s, faction_impacts=[FactionImpact(faction_id="legiao_ferro", direction="ajudou")])
-    moved = next(f for f in out["factions"] if f["id"] == "legiao_ferro")
-    assert moved["reputation"] != 0
+    assert next(f for f in out["factions"] if f["id"] == "legiao_ferro")["reputation"] == 0
     merged = {**s, **out}
     done = process_pending_events(merged)
-    fac = next(f for f in done["factions"] if f["id"] == "legiao_ferro")
-    assert fac["reputation"] == 0
-    assert not [e for e in done["event_log"] if e["type"] == "reputation_changed"]
-    assert any(r["type"] == "reputation_changed" for r in done["event_rejections"])
+    assert "factions" not in done
+    assert not [e for e in done["event_log"] if e["type"] in ("faction_deed", "reputation_changed")]
+    assert any(r["type"] == "faction_deed" for r in done["event_rejections"])
 
 
-def test_accepted_reputation_not_touched(story):
+def test_accepted_faction_deed_moves_reputation_once(story):
     from agents.storyteller import FactionImpact
     from services.event_processor import process_pending_events
-    from world_utils import REP_STEP
 
     s = _story_state()
+    s["npcs"] = {
+        "Thrace": {
+            "id": "npc_comandante_thrace",
+            "name": "Thrace",
+            "in_scene": True,
+            "relationship": 5,
+        }
+    }
     out = story(s, faction_impacts=[FactionImpact(faction_id="legiao_ferro", direction="ajudou")])
     done = process_pending_events({**s, **out})
-    assert "factions" not in done  # aceito: nada a desfazer, sem aplicar 2x
-    assert next(f for f in out["factions"] if f["id"] == "legiao_ferro")["reputation"] == REP_STEP
+    fac = next(f for f in done["factions"] if f["id"] == "legiao_ferro")
+    assert fac["reputation"] == 4  # DEED_TABLE: ajudou/menor
+    types = [e["type"] for e in done["event_log"]]
+    assert types.count("reputation_changed") == 1

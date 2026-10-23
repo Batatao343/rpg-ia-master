@@ -4,10 +4,10 @@ import random
 import re
 from collections import Counter
 from copy import deepcopy
-from typing import Dict, List, Optional
+from typing import Dict, List, Literal, Optional
 
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from agents.npc import generate_new_npc
 from agents.world_simulator import simulate_world
@@ -23,7 +23,6 @@ from services.structured_outputs import ProposedQuest, ProposedWorldEvent
 from state import GameState
 from world_utils import (
     advance_factions,
-    apply_reputation,
     apply_rest,
     apply_travel,
     check_encounter,
@@ -42,9 +41,34 @@ class FactionImpact(BaseModel):
     faction_id: str = Field(
         description="id EXATO de uma fação listada em <FACÇÕES_CONHECIDAS>; vazio se nenhuma."
     )
-    direction: str = Field(
+    direction: Literal["ajudou", "prejudicou"] = Field(
         description="'ajudou' (jogador beneficiou a fação) ou 'prejudicou' (jogador a atrapalhou/traiu/atacou)."
     )
+    magnitude: Literal["menor", "maior"] = Field(
+        default="menor",
+        description="'maior' só para ato decisivo e inequívoco; na dúvida 'menor'.",
+    )
+
+
+def _coerce_faction_impacts(raw: object) -> list:
+    """SPEC-298 R10: impacto com direction/magnitude fora do Literal é DESCARTADO
+    (nunca derruba a resposta inteira — padrão SPEC-045)."""
+    if not isinstance(raw, list):
+        return []
+    out = []
+    for item in raw:
+        if isinstance(item, FactionImpact):
+            out.append(item)
+            continue
+        if not isinstance(item, dict):
+            continue
+        if item.get("direction") not in ("ajudou", "prejudicou"):
+            continue
+        magnitude = item.get("magnitude", "menor")
+        if magnitude not in ("menor", "maior"):
+            magnitude = "menor"
+        out.append({**item, "magnitude": magnitude})
+    return out
 
 
 class StoryUpdate(BaseModel):
@@ -68,6 +92,12 @@ class StoryUpdate(BaseModel):
             "nem prejudica claramente uma fação listada. Use o faction_id EXATO."
         ),
     )
+
+    @field_validator("faction_impacts", mode="before")
+    @classmethod
+    def _drop_invalid_impacts(cls, v: object) -> list:
+        return _coerce_faction_impacts(v)
+
     beat_completed: bool = Field(
         default=False,
         description=(
@@ -927,7 +957,7 @@ def storyteller_node(state: GameState):
     <FACÇÕES_CONHECIDAS>
     {faccoes_conhecidas}
     Se a ação do jogador NESTE turno claramente ajudar ou prejudicar uma destas fações,
-    registre em 'faction_impacts' (faction_id EXATO + direction 'ajudou'/'prejudicou').
+    registre em 'faction_impacts' (faction_id EXATO + direction 'ajudou'/'prejudicou' + magnitude 'menor'/'maior').
     Caso contrário, deixe 'faction_impacts' vazio. NÃO invente ids fora da lista.
     </FACÇÕES_CONHECIDAS>
 
@@ -1095,37 +1125,35 @@ def storyteller_node(state: GameState):
             str(narrative_text), _aberturas[0] if _aberturas else "", where="storyteller"
         )
 
-        # --- Fase 2: a ação do jogador altera a reputação das fações (Python resolve) ---
-        # A IA só identifica fação + direção; apply_reputation valida o id e fixa o delta.
-        # Fase 3.4: cada mudança vira proposta reputation_changed (Python, não LLM) —
-        # entra no event_log auditável pelo mesmo pipeline 2.6, alimenta a timeline.
+        # --- SPEC-298 R11: a ação do jogador NÃO altera mais a reputação aqui. O storyteller
+        # só enfileira propostas `faction_deed`; o validador exige a fação em cena e o
+        # processador (services.reputation) aplica com delta tabelado — ou guarda como
+        # pendência até a fação saber (regra de ouro).
         rep_events = []
         faction_impacts = (
             [] if quarantine_llm_payload else (getattr(update, "faction_impacts", []) or [])
         )
-        # SPEC-226 R8: 1 impacto por facção/turno (último vence) — o validador já
-        # rejeitaria o 2º reputation_changed, mas o estado teria movido 2×.
+        # SPEC-226 R8: 1 impacto por facção/turno (último vence).
         _by_fid: dict = {}
         for imp in faction_impacts:
             _by_fid[getattr(imp, "faction_id", "")] = imp
         for imp in _by_fid.values():
             fid = getattr(imp, "faction_id", "")
-            direction = getattr(imp, "direction", "")
-            factions, rep_ev = apply_reputation(factions, fid, direction)
-            if rep_ev:
-                rep_events.append(
-                    {
-                        "type": "reputation_changed",
-                        "actor_id": "player",
-                        "target_id": rep_ev["id"],
-                        "payload": {
-                            "delta": rep_ev["delta"],
-                            "new_value": rep_ev["reputation"],
-                            "reason": rep_ev["direction"],
-                        },
-                        "source": "storyteller",
-                    }
-                )
+            if not fid:
+                continue
+            rep_events.append(
+                {
+                    "type": "faction_deed",
+                    "actor_id": "player",
+                    "target_id": fid,
+                    "payload": {
+                        "direction": getattr(imp, "direction", ""),
+                        "magnitude": getattr(imp, "magnitude", "menor"),
+                        "location_id": (world or {}).get("current_location_id", ""),
+                    },
+                    "source": "storyteller",
+                }
+            )
 
         # --- Avanço de beat: o narrador sinaliza quando o objetivo da cena foi cumprido ---
         needs_replan = travel_needs_replan

@@ -52,7 +52,11 @@ SUBJECT_PARAMS: dict[str, tuple[float, int, int]] = {
     "route_cleared": (0.7, 10, 1),
     "quest_completed": (0.5, 5, 1),
     RUMOR: (0.35, 5, 1),
+    # SPEC-298 R14: feito do jogador (faction_deed e tipos registrados por outras specs)
+    "player_deed": (0.7, 10, 2),
 }
+# Tipos de evento que viram o assunto `player_deed` (extensível: reputation.register_deed_kind).
+PLAYER_DEED_TYPES: set[str] = {"faction_deed"}
 # Testemunhável mas NUNCA propagado (R7).
 WITNESS_ONLY_TYPES = {"secret_revealed"}
 RUMOR_PROVENANCE = {"npc_claim", "inference"}
@@ -233,7 +237,8 @@ def _subject_type(state: dict, kind: str, subject_id: str) -> str:
     if kind == "memory_fact":
         return RUMOR
     ev = _event_by_id(state, subject_id) or {}
-    return str(ev.get("type") or "")
+    etype = str(ev.get("type") or "")
+    return "player_deed" if etype in PLAYER_DEED_TYPES else etype
 
 
 def _subject_text(state: dict, kind: str, subject_id: str) -> str:
@@ -270,6 +275,8 @@ def _params(state: dict, kind: str, subject_id: str) -> tuple[float, int, int] |
 
 def _witnessable(event: dict) -> bool:
     etype = str(event.get("type") or "")
+    if etype in PLAYER_DEED_TYPES:
+        return True
     return (etype in SUBJECT_PARAMS and etype != RUMOR) or etype in WITNESS_ONLY_TYPES
 
 

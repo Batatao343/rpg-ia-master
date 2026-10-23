@@ -123,6 +123,8 @@ class PlayerStats(TypedDict, total=False):
     name: str
     class_name: str
     race: str
+    race_id: str  # SPEC-298 R5: id de data/origins.json ("" = neutro)
+    origin_region_id: str  # SPEC-298 R5: id da regiao de origem ("" = neutro)
     hp: int  # alias legado derivado de vitalidade
     max_hp: int  # alias legado derivado de max_vitalidade
     # spec refatoracao-sistema-classes: Entropia = pool ÚNICO das 5 classes novas
@@ -259,6 +261,39 @@ class WorldState(TypedDict, total=False):
     threat_alerts: list[
         dict
     ]  # Fase 2.5b: fugas viram alerta regional (ver world_utils.register_flee_alert)
+    shelter: dict | None  # SPEC-298 R24: {npc_id, location_id, until_clock} (favor esconder)
+
+
+class FameEntry(TypedDict, total=False):
+    """SPEC-298 R14: fama por local (so cresce com testemunha ou noticia entregue)."""
+
+    renown: int  # 0..100
+    infamy: int  # 0..100
+    deeds: list[str]  # subject_ids ja contados aqui (teto 100, FIFO)
+
+
+class ReputationPending(TypedDict):
+    """SPEC-298 R12: delta de facção que ainda nao foi testemunhado pela facção."""
+
+    subject_id: str
+    faction_id: str
+    delta: int
+    created_day: int
+
+
+class ReputationNotice(TypedDict, total=False):
+    """SPEC-298 R26: aviso de mudança (template fixo, sem numero)."""
+
+    kind: str  # npc | faction | fame | favor | social
+    subject_id: str
+    text: str
+    turn: int
+
+
+class NpcFavors(TypedDict, total=False):
+    last_day: int
+    debt: dict | None
+    intercession: dict | None
 
 
 class Faction(TypedDict, total=False):
@@ -506,6 +541,10 @@ class GameState(TypedDict):
     ]  # Fase 3.2: contadores por criatura (chave = id do bestiário)
     quests: list[Quest]  # Fase 3.3: side quests persistentes (main quest deriva de campaign_plan)
     npcs: dict[str, dict]
+    # SPEC-298: reputacao em 4 niveis (dono: services.reputation). Aditivo, sem bump.
+    location_fame: dict[str, FameEntry]
+    reputation_pending: list[ReputationPending]
+    reputation_notices: list[ReputationNotice]
     active_npc_name: str | None
     npc_fallback_hint: (
         str | None

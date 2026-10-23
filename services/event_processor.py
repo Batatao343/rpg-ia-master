@@ -284,37 +284,6 @@ def prevalidate_event_batch(
     return results
 
 
-def _revert_reputation(factions: list, proposal: dict) -> list:
-    """SPEC-226 R8: o storyteller aplica a reputação ao propor; se o pipeline
-    rejeita o `reputation_changed`, o delta exato aplicado é desfeito (estado e
-    log nunca divergem). Só proposta do motor (`source=storyteller`) com delta."""
-    if proposal.get("source") != "storyteller":
-        return factions
-    payload = proposal.get("payload") or {}
-    try:
-        delta = int(payload.get("delta", 0) or 0)
-        new_value = int(payload.get("new_value"))
-    except (TypeError, ValueError):
-        return factions
-    if not delta:
-        return factions
-    from world_utils import REP_MAX, REP_MIN, _disposition_for
-
-    out = []
-    for f in factions:
-        f = dict(f) if isinstance(f, dict) else f
-        if (
-            isinstance(f, dict)
-            and f.get("id") == proposal.get("target_id")
-            and int(f.get("reputation", 0) or 0) == new_value
-        ):
-            old = max(REP_MIN, min(REP_MAX, new_value - delta))
-            f["reputation"] = old
-            f["disposition"] = _disposition_for(old)
-        out.append(f)
-    return out
-
-
 def process_pending_events(state: dict) -> dict:
     """Valida/aplica a fila `pending_world_events`. Retorna updates parciais do GameState.
 
@@ -336,7 +305,7 @@ def process_pending_events(state: dict) -> dict:
     quests_completed = 0  # Fase 4.1: cada conclusão vale XP_PER_QUEST
     quest_reward_gold = 0
     killed_targets: list = []  # SPEC-230 R4
-    factions_reverted = None  # SPEC-226 R8: reputação de proposta rejeitada é desfeita
+    accepted_events: list[dict] = []  # SPEC-298: feitos aceitos -> services.reputation
     original_rejections = list(state.get("event_rejections") or [])
     event_rejections = _bounded_rejections(original_rejections)
     rejection_count_before = len(event_rejections)
@@ -391,16 +360,10 @@ def process_pending_events(state: dict) -> dict:
                 ]
             )
             _record_rejection_metric(proposal, result.reason)
-            if proposal.get("type") == "reputation_changed":
-                factions_reverted = _revert_reputation(
-                    factions_reverted
-                    if factions_reverted is not None
-                    else list(state.get("factions") or []),
-                    proposal,
-                )
             continue
         event = _build_event(_canonicalize_proposal(proposal, state, projection), turn)
         event_log.append(event)
+        accepted_events.append(event)
         projection = apply_event(event, projection)
 
         # Fase 3.3: conclusão de side quest — nada na projection (apply_event não
@@ -430,6 +393,7 @@ def process_pending_events(state: dict) -> dict:
         working["event_log"] = event_log
         for d in rule_engine.run_rules(event, working, depth=0):
             event_log.append(d)
+            accepted_events.append(d)
             if d.get("type") == "npc_killed":
                 killed_targets.append(d.get("target_id"))
             _log_event("rule", "derived", level="debug", type=d["type"], event_id=d["event_id"][:8])
@@ -481,17 +445,42 @@ def process_pending_events(state: dict) -> dict:
             _log_event("xp", "level_up", level="info", new_level=ev["payload"].get("new_level"))
             _chronicle_milestone(ev, projection)
 
-    if factions_reverted is not None and factions_reverted != list(state.get("factions") or []):
-        updates["factions"] = factions_reverted
+    # SPEC-298 R12/R13/R14: feitos aceitos -> fação (se testemunhou) / pendência / fama.
+    # A reputação NUNCA muda antes do aceite; rejeitado = nada a desfazer.
+    if accepted_events:
+        try:
+            from services import reputation
+
+            rep = reputation.process_deeds(
+                {
+                    **state,
+                    "event_log": event_log,
+                    "world_projection": projection,
+                    "quests": quests,
+                },
+                accepted_events,
+            )
+        except Exception as exc:  # silent-ok: reputação nunca derruba o turno
+            _log_event("reputation", "process_failed", level="warning", error=type(exc).__name__)
+            rep = {}
+        for rep_prop in rep.pop("reputation_events", []) or []:
+            rep_event = _build_event(rep_prop, turn)
+            event_log.append(rep_event)
+            _chronicle_milestone(rep_event, projection)
+        if rep:
+            updates.update(rep)
+            if chronicle_changed:
+                updates["chronicle"] = chronicle
 
     if killed_targets:
         from services.npc_layers import apply_npc_death
 
-        npcs_now, party_now = state.get("npcs") or {}, state.get("party") or []
+        npcs_now = updates.get("npcs", state.get("npcs") or {})
+        party_now = state.get("party") or []
         for tid in killed_targets:
             if tid:
                 npcs_now, party_now = apply_npc_death(npcs_now, party_now, str(tid), turn)
-        if npcs_now != (state.get("npcs") or {}):
+        if npcs_now != (state.get("npcs") or {}) or "npcs" in updates:
             updates["npcs"] = npcs_now
         if party_now != (state.get("party") or []):
             updates["party"] = party_now

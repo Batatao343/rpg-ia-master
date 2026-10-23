@@ -43,15 +43,10 @@ _EVENT_OUTCOME = {
 
 
 def disposition_label(relationship: Any) -> str:
-    try:
-        value = int(relationship)
-    except (TypeError, ValueError):
-        value = 5
-    value = max(0, min(10, value))
-    for ceiling, label in _DISPOSITION_BANDS:
-        if value <= ceiling:
-            return label
-    return _DISPOSITION_BANDS[-1][1]
+    """Rótulo de atitude do NPC (SPEC-298 R2: faixas em services.reputation.npc_tier)."""
+    from services.reputation import npc_tier
+
+    return npc_tier(relationship).capitalize()
 
 
 def _turn(value: Any) -> int | None:

@@ -4522,6 +4522,12 @@ def new_game(req: CreateCharacterRequest):
         _embedding_attempt_events.reset(embedding_token)
 
 
+def _reputation_ids(final_char: dict) -> tuple[str, str]:
+    from services.reputation import resolve_race_id, resolve_region_id
+
+    return resolve_race_id(final_char.get("race")), resolve_region_id(final_char.get("region"))
+
+
 def _create_game(req: CreateCharacterRequest, claim):
     _log_event("api", "character_create", level="info")
 
@@ -4568,6 +4574,9 @@ def _create_game(req: CreateCharacterRequest, claim):
             "name": final_char["name"],
             "class_name": final_char["class_name"],
             "race": final_char["race"],
+            # SPEC-298 R5: ids estáveis (o nome exibível não serve de chave)
+            "race_id": _reputation_ids(final_char)[0],
+            "origin_region_id": _reputation_ids(final_char)[1],
             "level": final_char["level"],
             "xp": final_char.get("xp", 0),
             "hp": final_char["hp"],

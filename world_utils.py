@@ -512,18 +512,17 @@ def apply_faction_reveal(intel, factions, faction_id: str, level: str, turn: int
     return intel
 
 
-# --- Fase 2: reputação muda por AÇÃO do jogador (determinístico) ---
-# Convenção: a IA só identifica fação + direção; o VALOR do delta é fixo aqui.
+# --- Fase 2: reputação de fação (SPEC-298: dono é services.reputation) ---
+# O VALOR do delta vem da DEED_TABLE de services.reputation (Python decide, não o LLM);
+# aqui só a aritmética pura e a derivação de `disposition` (hostil/neutro/aliado).
 
-REP_STEP = 12  # delta fixo por ação (Python decide, não o LLM)
 REP_MIN, REP_MAX = -100, 100
 _ALIADO_AT, _HOSTIL_AT = 40, -40  # limiares de disposição derivada da reputação
 
-_POS_CUES = ("ajud", "ajudo", "ajudou", "alia", "aliar", "favor", "apoi", "salv", "defend", "+")
-_NEG_CUES = ("prejud", "trai", "traiu", "sabot", "atac", "rouba", "mata", "destr", "contra", "-")
-
 
 def _disposition_for(rep: int) -> str:
+    """`factions[*].disposition` (hostil|neutro|aliado), consumido por economy.
+    NÃO confundir com a faixa de NPC (`npc_tier`) nem com `faction_tier` (SPEC-298 D8)."""
     if rep >= _ALIADO_AT:
         return "aliado"
     if rep <= _HOSTIL_AT:
@@ -531,30 +530,30 @@ def _disposition_for(rep: int) -> str:
     return "neutro"
 
 
-def _direction_sign(direction: str) -> int:
-    """+1 para ajuda, -1 para prejuízo, 0 (no-op) se ambíguo/desconhecido."""
-    d = (direction or "").strip().lower()
-    if any(c in d for c in _POS_CUES):
-        return 1
-    if any(c in d for c in _NEG_CUES):
-        return -1
-    return 0
-
-
 def apply_reputation(
-    factions, faction_id: str, direction: str, step: int = REP_STEP
+    factions, faction_id: str, direction: str, delta: int
 ) -> tuple[list, dict | None]:
     """
-    Aplica delta FIXO de reputação a uma fação identificada pelo id.
-    direction: 'ajudou' (+) | 'prejudicou' (-). Clampa em [-100, 100] e
-    re-deriva a disposition por limiar. id desconhecido ou direção ambígua → no-op.
+    Aplica `delta` (magnitude positiva, vinda da tabela de feitos) a uma fação.
+    direction: SÓ 'ajudou' (+) | 'prejudicou' (-) exatos; qualquer outro valor,
+    id desconhecido ou delta 0 = no-op. Clampa em [-100, 100] e re-deriva a
+    disposition por limiar.
 
     Retorna (novas_factions, evento|None). evento =
-    {id, name, reputation, disposition, direction, delta} — para narração/crônica.
+    {id, name, reputation, disposition, direction, delta}.
     """
     factions = ensure_factions(factions)
-    sign = _direction_sign(direction)
-    if not faction_id or sign == 0:
+    if direction == "ajudou":
+        sign = 1
+    elif direction == "prejudicou":
+        sign = -1
+    else:
+        return factions, None
+    try:
+        magnitude = abs(int(delta))
+    except (TypeError, ValueError):
+        return factions, None
+    if not faction_id or magnitude == 0:
         return factions, None
 
     new_list, event = [], None
@@ -562,8 +561,7 @@ def apply_reputation(
         f = dict(f)
         if f.get("id") == faction_id:
             old = int(f.get("reputation", 0))
-            delta = sign * int(step)
-            new_rep = max(REP_MIN, min(REP_MAX, old + delta))
+            new_rep = max(REP_MIN, min(REP_MAX, old + sign * magnitude))
             f["reputation"] = new_rep
             f["disposition"] = _disposition_for(new_rep)
             event = {
@@ -571,7 +569,7 @@ def apply_reputation(
                 "name": f.get("name"),
                 "reputation": new_rep,
                 "disposition": f["disposition"],
-                "direction": "ajudou" if sign > 0 else "prejudicou",
+                "direction": direction,
                 "delta": new_rep - old,
             }
         new_list.append(f)
