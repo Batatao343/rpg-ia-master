@@ -1,7 +1,7 @@
 # SPEC-302 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED` (1 P1, correção pequena; o resto é P2/follow-up)
-> **Revisor:** Claude Opus 5.5 / papel Sol (concorrência/estado) · **Data:** 2026-10-23 · **Commit revisado:** `e8772e4d`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (re-revisão do delta `e8772e4d..20cdc4c5`; veredito inicial era `CHANGES_REQUIRED` por P1-1, agora corrigido)
+> **Revisor:** Claude Opus 5.5 / papel Sol (concorrência/estado) · **Data:** 2026-10-23 · **Commit revisado:** `e8772e4d` (1ª passada) → `20cdc4c5` (final)
 
 ## Escopo
 
@@ -73,25 +73,41 @@ Fora: o playtest de letalidade (R34) não foi re-executado; usei os números da 
 | P2-5 | P2 | `agents/world_simulator.py:256` | O narrador manda **só** `SystemMessage`. Gemini e Anthropic (fallbacks) recusam prompt sem mensagem humana. O `RoutedLLM` cai para o próximo candidato e por fim nos templates, então nada quebra, mas há latência e chamadas desperdiçadas no fallback. O padrão já existia no pulso legado. | Separar em `[SystemMessage(instruções), HumanMessage(fatos)]`. |
 | P2-6 | P2 | §8.3 item 11 da spec | O default do código é `on`. Se o pouso acontecer sem `RPG_WORLD_ENGINE=shadow` no staging, o staging liga o motor antes do smoke §6, contra a D5. | No `/spec-land`, conferir ou setar a env no staging antes do deploy, e registrar no hand-back do coordenador. |
 
+| F-1 | P2 | `world_utils.py:665` (`decay_danger_overrides`), chamado agora por `agents/storyteller.py:556-561` | **Introduzido pela correção do P2-1.** No modo `on`, `decay_danger_overrides` calcula `cur = _effective_danger(world, loc_id)` com o default `with_state=True`. Isso grava o `danger_delta` do estado de local **dentro** do override, e o delta acaba contado duas vezes. Reproduzido: base 1, override 2 carimbado, delta de estado +2 → o override **sobe** para 3 em vez de descer. Só afeta save antigo com override carimbado num local que esteja em crise. O efeito é limitado (clamp 4) e desfaz-se depois que a crise acaba, a −1 a cada 10 turnos. | Trocar por `_effective_danger(world, loc_id, with_state=False)` dentro de `decay_danger_overrides` (uma linha) e adicionar um teste com `location_danger_delta`. Pode entrar antes do pouso sem nova revisão. |
+| F-2 | P2 | `data/world/pressures.json:32` (`brekmar` 2,5) | A C1 de `brekmar` fica no limite e depende do conjunto de seeds: **15 com 60 seeds e 16 com 20 seeds** (fora de [10, 15]). O peso 2,5 não fecha a meta com folga, só a deixa no limite. A frequência por região continua sã (região máx. 27,5 % ≤ 35 %; C3/C5 = 100 %). | Aceitável pela D4. Registrar na spec que C1 de `brekmar` = 15–16 conforme o conjunto de seeds. Se o playtest real mostrar `brekmar` "parado", subir para ~3,0 ou reduzir `REGION_COOLDOWN_DAYS` só lá (calibração na 302-B/D). |
+
 ## Correções aplicadas
 
-Nenhuma (só revisão).
+Commit `20cdc4c5` (`tests/test_spec302_review_fixes.py`, 7 testes):
+
+- **P1-1 corrigido.** `validate_proposal` rejeita `faction_relation_changed` com `neutral`/`allied_with` quando `source != "engine"`. O validador lê `payload.relation` ou `detail`, então a burla pelo `detail` também fica fechada. Há teste parametrizado.
+- **P2-1 corrigido**, mas a correção introduziu o F-1 (acima).
+- **P2-2 corrigido.** `blocked_routes` só sai quando uma das pontas é local visitado ou atual. O ajuste de `test_fase61::test_world_block_expoe_blocked_routes` **preserva a intenção** do teste original: a rota ainda é exposta quando o herói conhece a ponta (agora com `visited: [BREKMAR]`). O teste ganhou o caso negativo (sem ponta conhecida, lista vazia), o que reforça o contrato em vez de enfraquecê-lo. Ressalva aceitável: o cerco de um local visitado mas distante aparece no mapa mesmo sem percepção. É conhecimento geográfico do herói, não pressão.
+- **P2-3 corrigido.** O sim é reinicializado quando `day_before - last_ticked_day > MAX_DAYS_PER_ACTION`. Conferi que só a viagem e o descanso avançam o relógio (`advance_clock` em `world_utils`), e a fuga do combate usa `apply_travel`. Por isso o reset só dispara depois de um período longo com o motor desligado, nunca no jogo normal.
+- **P2-4 corrigido.** `ophidia`/`costa_negra` passaram para 1,0. A §8.1 e o README agora usam 60 seeds. Ver F-2 sobre `brekmar` 2,5.
+- **P2-5 corrigido.** O prompt agora é `[SystemMessage(instruções), HumanMessage(fatos)]`.
+- **P2-6** fica com o coordenador no `/spec-land` (env do staging).
 
 ## Pendências
 
-- P1-1 precisa ser corrigido pelo executor antes do pouso. Re-revisão curta: só o validator e o teste novo.
-- P2-1, P2-5 e P2-6: recomendados no mesmo ciclo (são poucas linhas cada).
-- P2-2 e P2-3: follow-up aceitável (dono: coordenador; destino: 302-D ou spec de mapa).
-- P2-4: calibração opcional, já que a D4 cobre. Atualizar os números da §8.1.
+- F-1: correção de uma linha, recomendada antes do pouso (sem re-revisão).
+- F-2: anotar na spec a sensibilidade da C1 de `brekmar` ao conjunto de seeds e recalibrar em spec filha se o playtest pedir.
+- P2-6: setar `RPG_WORLD_ENGINE=shadow` no staging antes do deploy (D5).
 - Smoke real §6 continua pendente (critério de aceite aberto).
 
 ## Comandos rodados
 
 ```text
+# 1ª passada (e8772e4d)
 pytest tests/test_spec302_*.py tests/test_ambient*.py tests/test_fase2.py tests/test_grounding_boundaries.py -n 4 → 145 passed
 pytest tests -k "world or faction or economy or storyteller" -n 4 → 150 passed
-py.sh docs/spec302/world_engine_sim.py --days 120 --seeds 20 → reproduz a tabela (C4 média 35,4 % / p90 41,7 % / pior 52,5 %)
-py.sh docs/spec302/world_engine_sim.py --days 120 --seeds 60 → C1 10/15/10/11; C4 média 36,1 % / p90 50,8 % / pior 62,5 %; região máx. 27,5 %; C3/C5 ok; 0 inválidos
-script ad hoc (scratchpad det.py) com PYTHONHASHSEED=1,2,3 → hash idêntico 84289e748f76227f (determinismo entre processos)
-script ad hoc (scratchpad v.py) → validate_proposal(faction_relation_changed, relation=neutral|allied_with, sem source) = ok=True (P1-1)
+py.sh docs/spec302/world_engine_sim.py --days 120 --seeds 20 → C4 média 35,4 % / p90 41,7 % / pior 52,5 %
+py.sh docs/spec302/world_engine_sim.py --days 120 --seeds 60 → C1 10/15/10/11; C4 36,1 % / 50,8 % / 62,5 %; região máx. 27,5 %
+script ad hoc PYTHONHASHSEED=1,2,3 → hash idêntico 84289e748f76227f (determinismo entre processos)
+script ad hoc → validate_proposal(relation=neutral|allied_with, sem source) = ok=True (P1-1)
+# re-revisão (20cdc4c5)
+pytest tests/test_spec302_*.py tests/test_fase61.py tests/test_ambient*.py tests/test_fase2.py tests/test_grounding_boundaries.py tests/test_bug_mundo_perigo_luz_clima.py -n 4 → 178 passed
+py.sh docs/spec302/world_engine_sim.py --days 120 --seeds 60 → C1 10/15/10/11,5; C4 34,5 % / 47,5 % / 62,5 %; região máx. 27,5 %; C3/C5 ok; 0 inválidos
+py.sh docs/spec302/world_engine_sim.py --days 120 --seeds 20 → C1 brekmar = 16 (fora de [10,15]); C4 33,4 % / 41,7 % / 51,7 %
+script ad hoc (decay em modo on com location_danger_delta) → override 2 → 3 (F-1)
 ```

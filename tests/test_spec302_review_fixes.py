@@ -113,3 +113,20 @@ def test_remote_regions_do_not_inflate_crisis_rate():
     weights = wp.get_config()["surge_weight"]
     assert weights["ophidia"] == 1.0 and weights["costa_negra"] == 1.0
     assert set(weights) == set(wp.region_ids()) and we.DEFAULT_MODE == "on"
+
+
+def test_decay_ignores_location_state_delta(monkeypatch):
+    """Review F-1: o decaimento opera no override cru — a crise não é carimbada nele."""
+    import world_utils
+
+    monkeypatch.setenv("RPG_WORLD_ENGINE", "on")
+    world = {
+        "current_location_id": "pr_vaelorn",
+        "turn_count": 20,
+        "danger_overrides": {"pr_vaelorn": 2},
+        "danger_shift_turns": {"pr_vaelorn": 0},
+        "location_danger_delta": {"pr_vaelorn": 2},
+    }
+    out = world_utils.decay_danger_overrides(world)
+    assert "pr_vaelorn" not in out["danger_overrides"]  # 2 -> 1 (= base): override some
+    assert out["danger_level"] == 3  # base 1 + crise +2, lida na hora

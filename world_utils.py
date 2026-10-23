@@ -661,7 +661,9 @@ def decay_danger_overrides(world: dict) -> dict:
         if now - int(last) < DANGER_DECAY_TURNS:
             continue
         base = int((gamedata.get_location(loc_id) or {}).get("danger", 1))
-        cur = _effective_danger(world, loc_id)
+        # SPEC-302 review F-1: decai o override CRU — o delta do estado de local (crise)
+        # é somado na leitura; incluí-lo aqui o carimbaria no override (conta dupla).
+        cur = _effective_danger(world, loc_id, with_state=False)
         cur += (base > cur) - (base < cur)
         if cur == base:
             overrides.pop(loc_id, None)
