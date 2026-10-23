@@ -71,6 +71,7 @@ OPTIONAL_FLAGS = (
     "TYPESAFE_API_KEY",
     "RPG_JEV_ROUTER_PRIMARY_APPROVED",
     "RPG_NPC_KNOWLEDGE",
+    "RPG_SHARED_POOL",
 )
 # SPEC-217 R15: Jev no router. ``off`` (default) = variaveis ausentes; ``shadow`` observa sem mudar a rota e
 # envia a chave TypeSafe (secreta). ``primary`` exige ``owner_approved_primary`` (flag explicita
@@ -89,6 +90,8 @@ NPC_KNOWLEDGE_MODES = ("off", "shadow", "on")
 # SPEC-302 D5: motor de mundo. Default do CODIGO e `on`; no staging o default e `shadow`
 # ate o smoke real (sempre enviado explicitamente).
 WORLD_ENGINE_MODES = ("off", "shadow", "on")
+# SPEC-297: pool compartilhado entre mundos. ``off`` (default) = variavel ausente.
+SHARED_POOL_MODES = ("off", "shadow", "on")
 # SPEC-236 §6.2: teto diario temporariamente baixo (ex.: 0.01) para provocar um trip REAL pelo cron finops.
 # Reverter com um push sem a flag (volta ao default 5).
 DEFAULT_DAILY_CAP_BRL = NON_SECRET_LITERALS["RPG_DAILY_SPEND_CAP_BRL"]
@@ -151,10 +154,13 @@ def build_env(
     daily_cap_brl: str = DEFAULT_DAILY_CAP_BRL,
     npc_knowledge: str = "off",
     world_engine: str = "shadow",
+    shared_pool: str = "off",
 ) -> tuple[dict[str, str], dict[str, str]]:
     """Retorna (production, preview). Levanta KeyError com NOME do segredo ausente."""
     if projection_mode not in PROJECTION_MODES:
         raise ValueError(f"projection_mode invalido: {projection_mode}")
+    if shared_pool not in SHARED_POOL_MODES:
+        raise ValueError(f"shared_pool invalido: {shared_pool}")
     if world_engine not in WORLD_ENGINE_MODES:
         raise ValueError(f"world_engine invalido: {world_engine}")
     if npc_knowledge not in NPC_KNOWLEDGE_MODES:
@@ -172,6 +178,8 @@ def build_env(
     if npc_knowledge != "off":
         production["RPG_NPC_KNOWLEDGE"] = npc_knowledge
     production["RPG_WORLD_ENGINE"] = world_engine
+    if shared_pool != "off":
+        production["RPG_SHARED_POOL"] = shared_pool
     production["RPG_CORS_ORIGINS"] = f"https://{public_host}"
     site_key = next((files[k] for k in SITE_KEY_FROM_FILE if files.get(k)), None)
     if site_key:
@@ -326,6 +334,12 @@ def main(argv: list[str] | None = None) -> int:
         help="SPEC-302 D5: motor de mundo; staging fica em shadow ate o smoke real",
     )
     ap.add_argument(
+        "--shared-pool",
+        choices=SHARED_POOL_MODES,
+        default="off",
+        help="SPEC-297: pool entre mundos; off apaga a variavel",
+    )
+    ap.add_argument(
         "--daily-cap-brl",
         default=DEFAULT_DAILY_CAP_BRL,
         help="SPEC-236 §6.2: teto diario em BRL (default 5); valor baixo provoca trip real; reverter sem a flag",
@@ -352,6 +366,7 @@ def main(argv: list[str] | None = None) -> int:
             daily_cap_brl=args.daily_cap_brl,
             npc_knowledge=args.npc_knowledge,
             world_engine=args.world_engine,
+            shared_pool=args.shared_pool,
         )
     except (KeyError, ValueError) as exc:
         print(exc.args[0], file=sys.stderr)

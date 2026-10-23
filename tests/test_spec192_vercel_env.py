@@ -225,3 +225,12 @@ def test_world_engine_defaults_to_shadow_on_staging():
     assert on["RPG_WORLD_ENGINE"] == "on"
     with pytest.raises(ValueError):
         ve.build_env(FILES, world_engine="maybe")
+
+
+def test_shared_pool_flag_sets_mode_and_off_deletes_it():
+    on, prev = ve.build_env(FILES, shared_pool="shadow")
+    assert on["RPG_SHARED_POOL"] == "shadow" and "RPG_SHARED_POOL" not in prev
+    off, _ = ve.build_env(FILES)
+    assert "RPG_SHARED_POOL" not in off and "RPG_SHARED_POOL" in ve.stale_names(off)
+    with pytest.raises(ValueError):
+        ve.build_env(FILES, shared_pool="maybe")
