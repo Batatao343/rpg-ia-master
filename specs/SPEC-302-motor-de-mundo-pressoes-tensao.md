@@ -1,6 +1,6 @@
 # SPEC-302 — Motor de mundo: tick diário, pressões regionais e curva de tensão
 
-> **Status:** `draft`
+> **Status:** `approved` (dono, 2026-10-23)
 > **Criada:** 2026-10-20 · **Atualizada:** 2026-10-20
 > **Origem:** `docs/mundo-vivo/VISAO.md` (decisões 2–5, "A. Mundo autônomo", "Calibração", "Regra de ouro")
 > **Depende de:** SPEC-215 (`done`, propagação de notícias), SPEC-233 (`done`, perigo efetivo), SPEC-003 (`done`, eventos estruturados), SPEC-285 (`done`, metas de letalidade que não podem regredir). SPEC-296 item 5 (`world.news`) é dependência **fraca**: se ainda não tiver pousado, esta spec cria `world.news` com o contrato da §3.7, e a 296 reusa.
@@ -919,3 +919,12 @@ NPC (risco alto).
   `shadow` no staging até o smoke §6; `on` no staging depois do OK.
 - **D6 — Baselines por região (§3.5).** Revisão de coerência com a lore.
 - **D7 — Fatiamento da §9.** Reservar 302-B/C/D (ou a alternativa de 2 specs).
+
+
+## Decisões do dono (2026-10-23)
+
+Todas as decisões abertas desta spec seguem o **default recomendado pelo autor**, exceto/explicitando:
+
+- D1: sim — progresso de fação no tick diário; ascensão consome vaga do diretor.
+- D4 (substitui a recomendação): RITMO DE CRISE VENCE — garantir a cadência C1 (~1 crise perceptível a cada 10-15 dias por região frequentada); o teto de crises SIMULTÂNEAS continua valendo.
+- D7: filhas reservadas — calendário/estações, agenda e morte off-screen de NPCs, quests de mundo com prazo.
