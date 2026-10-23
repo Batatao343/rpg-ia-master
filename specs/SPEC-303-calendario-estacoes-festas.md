@@ -1,6 +1,6 @@
 # SPEC-303 — Calendário: estações, passos de montanha e festas da lore
 
-> **Status:** `draft`
+> **Status:** `approved` (dono, 2026-10-23)
 > **Criada:** 2026-10-23 · **Atualizada:** 2026-10-23
 > **Origem:** `docs/mundo-vivo/VISAO.md` (§"A. Mundo autônomo" → Calendário; §Calibração → duração da campanha; Regra de ouro) e SPEC-302 §9 (filha **302-B**)
 > **Depende de:** SPEC-302 (`approved`; precisa estar `done` no marco M2: hooks diários, `world_sim`, estado `festa`, digest/percepção, `world.news`), SPEC-215 (`done`, propagação), SPEC-233 (`done`, perigo efetivo), SPEC-285 (`done`, metas de letalidade que não podem regredir)
@@ -727,3 +727,11 @@ antes/depois (R29), smoke §6)
 - **D8 — Maré baixa mensal de Aethelgard** (`timeline_completa.txt:106`).
   Recomendado: fora (é ciclo mensal, próximo de lua). Alternativa: virar data
   "uma vez por estação" numa spec futura.
+
+
+## Decisões do dono (2026-10-23)
+
+Todas as decisões abertas seguem o **default recomendado pelo autor**, exceto/explicitando:
+
+- D1: estação de 14 dias.
+- D3 (amplia a proposta): ~14 festas no total, distribuídas para que cada região tenha ao menos 1 (12 regiões), todas ancoradas na lore (grep, citação arquivo:linha) e marcadas `review: "dono"` — o dono edita texto/datas depois. As 5 propostas entram; o executor autora as demais na Etapa de dados.
