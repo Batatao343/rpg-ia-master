@@ -464,6 +464,68 @@ def _mission_hint_block(state: GameState, last_msg: str) -> str:
 
 
 # --- NÓ DE ATUAÇÃO (COM FILTRO DE IGNORÂNCIA) ---
+def _resolve_social(state, key: str, npc_data: dict, intent: dict) -> tuple[dict, dict, dict, list]:
+    """SPEC-298 R20-R24: abordagem social resolvida em Python ANTES do LLM.
+
+    Devolve ``(social, npc_row, extra_updates, notices)``; o LLM só narra o resultado."""
+    from services import reputation as rep
+
+    approach = str(intent.get("approach") or "conversar")
+    turn = int((state.get("world") or {}).get("turn_count", 0) or 0)
+    nid = str(npc_data.get("id") or key)
+    row, extra, notices = dict(npc_data), {}, []
+    social: dict = {"approach": approach, "success": None}
+    if approach in ("intimidar", "sondar"):
+        social = rep.social_check(state, row, approach)
+        if social.get("rel_delta"):
+            new_row, notice = rep.apply_npc_delta(
+                {**state, "npcs": {key: row}},
+                key,
+                social["rel_delta"],
+                reason=approach,
+                source="engine",
+            )
+            if new_row:
+                row = new_row
+            if notice:
+                notices.append(notice)
+        tid = social.get("reveal_trait")
+        if tid and tid in (row.get("hidden_traits") or []):
+            row["hidden_traits"] = [t for t in row["hidden_traits"] if t != tid]
+            row["revealed_traits"] = [*(row.get("revealed_traits") or []), tid]
+        if social.get("notice"):
+            notices.append(
+                {"kind": "social", "subject_id": nid, "text": social["notice"], "turn": turn}
+            )
+    elif approach == "pedir_favor":
+        kind = intent.get("favor_kind")
+        decision = rep.favor_decision(state, row, kind or "")
+        social = {"approach": approach, "success": bool(decision["ok"])}
+        if decision["ok"]:
+            patch = rep.apply_favor(state, key, row, kind)
+            row = patch.pop("npc")
+            notices.append(patch.pop("notice"))
+            extra.update(patch)
+            social["favor_prompt"] = f"o jogador pediu um favor ({kind}) e você ACEITOU."
+        else:
+            social["favor_prompt"] = (
+                "o jogador pediu um favor e você RECUSA (pelo momento ou pela confiança)."
+            )
+    elif approach == "pagar_divida":
+        result = rep.pay_debt(state, key, row)
+        social = {"approach": approach, "success": bool(result["ok"])}
+        if result["ok"]:
+            row = result["npc"]
+            extra["player"] = result["player"]
+            notices.append(result["notice"])
+            social["favor_prompt"] = "o jogador quitou a dívida com você."
+        else:
+            social["favor_prompt"] = (
+                "o jogador tenta pagar uma dívida que não existe ou não tem como pagar."
+            )
+    return social, row, extra, notices
+
+
 def npc_actor_node(state: GameState):
     messages = state.get("messages", [])
     npc_name = optional_entity_ref(state.get("active_npc_name"))
@@ -763,6 +825,29 @@ def npc_actor_node(state: GameState):
     # perguntava "o que a missão exige agora?").
     objetivo_block = _mission_hint_block(state, str(last_msg))
 
+    # SPEC-298 R20-R25: abordagem social resolvida em Python; o LLM só narra.
+    from services import reputation as _rep
+
+    social: dict | None = None
+    social_extra: dict = {}
+    social_notices: list = []
+    _intent = state.get("social_intent")
+    _turn_now = int((state.get("world") or {}).get("turn_count", 0) or 0)
+    if (
+        isinstance(_intent, dict)
+        and _intent.get("turn") == _turn_now
+        and _intent.get("approach") not in (None, "conversar")
+    ):
+        try:
+            social, npc_data, social_extra, social_notices = _resolve_social(
+                state, npc_state_key, npc_data, _intent
+            )
+        except Exception as exc:  # silent-ok: abordagem falha = conversa normal
+            social = None
+            _log_event("npc", "social_failed", level="warning", error=type(exc).__name__)
+    atitude_block = _rep.attitude_block(state, npc_data, social)
+    tier_now = _rep.npc_tier(npc_data.get("relationship"))
+
     system_msg = SystemMessage(
         content=f"""
     <ROLE>
@@ -778,6 +863,7 @@ def npc_actor_node(state: GameState):
             or "—"
         }
     </ROLE>
+    {atitude_block}
 
     <MEMORIA>
     {npc_data.get("memory", [])[-3:]}
@@ -968,11 +1054,17 @@ def npc_actor_node(state: GameState):
         # Não-onisciência: o que o NPC contou vira conhecimento do jogador (Python grava).
         intel = ensure_faction_intel(state.get("faction_intel"))
         for rev in getattr(res, "faction_reveals", []) or []:
+            # SPEC-298 R23: a faixa de relação limita o que o NPC revela (Python decide).
+            allowed = _rep.clamp_reveal(
+                getattr(rev, "reveal_level", ""), tier_now, (social or {}).get("reveal_mode")
+            )
+            if not allowed:
+                continue
             intel = apply_faction_reveal(
                 intel,
                 factions,
                 getattr(rev, "faction_id", ""),
-                getattr(rev, "reveal_level", ""),
+                allowed,
                 turn,
             )
 
@@ -998,13 +1090,16 @@ def npc_actor_node(state: GameState):
             "memory_facts": memory_facts,
             "memory_promotions": memory_promotions,
         }
-        if rel_notice:  # SPEC-298 R26: aviso do turno (substituído no finalizer a cada turno)
-            _t = int(state.get("world", {}).get("turn_count", 0) or 0)
+        _new_notices = [*social_notices, *([rel_notice] if rel_notice else [])]
+        if _new_notices:  # SPEC-298 R26: aviso do turno (substituído no finalizer a cada turno)
             updates["reputation_notices"] = [
                 n
                 for n in (state.get("reputation_notices") or [])
-                if isinstance(n, dict) and n.get("turn") == _t
-            ] + [rel_notice]
+                if isinstance(n, dict) and n.get("turn") == _turn_now
+            ] + _new_notices
+        updates.update(social_extra)  # player/world patches do favor (ouro, abrigo)
+        if state.get("social_intent"):
+            updates["social_intent"] = None
 
         # Fase 3.3: quem originou a missão é o NPC em cena — resolvido em Python
         # (não confiado ao LLM). Só title/description/location_id/reward_hint vêm do LLM.

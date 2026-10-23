@@ -941,6 +941,21 @@ def normalize_knowledge(raw: Any, *, legacy_default: bool = True) -> dict:
 # --------------------------------------------------------------------------- #
 # Gate de contexto (consumido por services.context_builder)
 # --------------------------------------------------------------------------- #
+def _lines_cap(state: dict, npc_id: str) -> int:
+    """SPEC-298 R23: teto de linhas por faixa de relação (hostil 0 ... leal 8)."""
+    from services.entity_identity import find_runtime_npc_key
+    from services.reputation import knowledge_lines_cap, npc_tier
+
+    npcs = state.get("npcs") or {}
+    key = find_runtime_npc_key(npcs, npc_id)
+    row = npcs.get(key) if key is not None else None
+    if not isinstance(row, dict) or row.get("relationship") is None:
+        return NPC_KNOWLEDGE_CONTEXT_MAX
+    if not row.get("relationship_basis"):
+        return NPC_KNOWLEDGE_CONTEXT_MAX  # NPC pré-SPEC-298 (save antigo/fixture): sem teto por faixa
+    return min(NPC_KNOWLEDGE_CONTEXT_MAX, knowledge_lines_cap(npc_tier(row["relationship"])))
+
+
 def context_gate(state: dict, npc_id: str) -> dict | None:
     """None com `off`. Senão {mode, lines, filter} — `filter` = assuntos
     selecionados (≤8). Falha interna → lines=[], filter=set() (fail-closed)."""
@@ -948,7 +963,7 @@ def context_gate(state: dict, npc_id: str) -> dict | None:
     if current == "off" or not npc_id:
         return None
     try:
-        lines = knowledge_lines(state, npc_id, NPC_KNOWLEDGE_CONTEXT_MAX)
+        lines = knowledge_lines(state, npc_id, _lines_cap(state, npc_id))
         error = None
     except Exception as exc:  # fail-closed: nunca abre para o pack onisciente
         lines, error = [], type(exc).__name__

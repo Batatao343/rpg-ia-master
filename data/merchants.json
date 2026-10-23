@@ -11,7 +11,11 @@
       "minerio_ferro": 5,
       "maca_de_ferro": 1,
       "art_coroa_pressao_rei_anao": 1
-    }
+    },
+    "keeper": {
+      "npc_id": "npc_brynja_forja_fria"
+    },
+    "rare_stock": {}
   },
   "mercado_anel_dourado": {
     "location_id": "na_anel_dourado",
@@ -26,7 +30,13 @@
       "corda": 3,
       "espada_gasta": 1,
       "art_bussola_que_aponta_para_ophidia": 1
-    }
+    },
+    "keeper": {
+      "name": "Teodora Vance",
+      "role": "Mercadora do Anel Dourado",
+      "race_id": "race_humanos"
+    },
+    "rare_stock": {}
   },
   "boticario_anel_ferro": {
     "location_id": "na_anel_ferro",
@@ -38,7 +48,13 @@
       "pocao_cura": 4,
       "erva_amarga": 6,
       "kit_medico": 2
-    }
+    },
+    "keeper": {
+      "name": "Horácio Cinza",
+      "role": "Boticário da Fuligem",
+      "race_id": "race_anoes_fuligem"
+    },
+    "rare_stock": {}
   },
   "quinquilharias_brekmar": {
     "location_id": "brekmar",
@@ -52,7 +68,13 @@
       "arco_de_caca": 1,
       "pocao_cura": 2,
       "art_arpao_primeiro_osshari": 1
-    }
+    },
+    "keeper": {
+      "name": "Maré-Velha Okka",
+      "role": "Atravessadora de Brekmar",
+      "race_id": "race_osshari"
+    },
+    "rare_stock": {}
   },
   "curandeira_pantano": {
     "location_id": "pantano_melancolia",
@@ -64,7 +86,13 @@
       "erva_amarga": 8,
       "musgo_cinzento": 4,
       "pocao_cura_maior": 1
-    }
+    },
+    "keeper": {
+      "name": "Irmã Lysa",
+      "role": "Curandeira do Pântano",
+      "race_id": "race_humanos"
+    },
+    "rare_stock": {}
   },
   "armeiro_vaelorn": {
     "location_id": "pr_vaelorn",
@@ -76,6 +104,12 @@
       "espada_gasta": 2,
       "maca_de_ferro": 1,
       "escudo_amassado": 2
-    }
+    },
+    "keeper": {
+      "name": "Berengar Sol-Alto",
+      "role": "Armeiro de Vaelorn",
+      "race_id": "race_elfos"
+    },
+    "rare_stock": {}
   }
 }

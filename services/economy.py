@@ -173,6 +173,23 @@ def supply_factor(item_id: str, location_id: str, projection: dict | None = None
     return SCARCE_MULT
 
 
+def _merchant_id_of(merchant: dict) -> str:
+    for mid, m in MERCHANTS.items():
+        if m is merchant or m == merchant:
+            return mid
+    return ""
+
+
+def _keeper_row(state: dict, merchant: dict | None) -> dict:
+    """Keeper do mercador (registrado ou virtual idêntico); {} sem keeper curado."""
+    if not merchant or not merchant.get("keeper"):
+        return {}
+    from services.reputation import keeper_for_price
+
+    mid = _merchant_id_of(merchant)
+    return keeper_for_price(state, mid, merchant) if mid else {}
+
+
 def price(item_id: str, *, mode: str, state: dict, merchant: dict | None = None) -> int:
     """Preço final determinístico. mode: 'buy' (jogador compra) | 'sell' (vende)."""
     location_id = (state.get("world") or {}).get("current_location_id", "")
@@ -182,6 +199,12 @@ def price(item_id: str, *, mode: str, state: dict, merchant: dict | None = None)
     p *= supply_factor(item_id, location_id, state.get("world_projection"))
     if merchant:
         p *= float(merchant.get("price_mult", 1.0) or 1.0)
+        # SPEC-298 R18: relação com o keeper (sem keeper no estado = comportamento anterior)
+        keeper = _keeper_row(state, merchant)
+        if keeper:
+            from services.reputation import relation_price_mult
+
+            p *= relation_price_mult(state, keeper, mode)
     if mode == "buy" and _controller_disposition(state, location_id) == "hostil":
         p *= HOSTILE_BUY_MULT
     if mode == "sell":
@@ -294,7 +317,15 @@ def merchant_stock(state: dict, location_id: str) -> tuple[str | None, dict[str,
     mid, merchant = here[0]
     world = state.get("world") or {}
     stock = dict(_ensure_stock(world, mid, merchant))
-    if _controller_disposition(state, location_id) == "hostil":
+    # SPEC-298 R17/R19: keeper vira NPC na primeira visita; relação libera/esconde raros.
+    from services.reputation import ensure_keeper, npc_tier
+
+    _, keeper_row = ensure_keeper(state, mid, merchant)
+    keeper_tier = npc_tier(keeper_row.get("relationship")) if keeper_row else ""
+    if keeper_tier == "leal":
+        for iid, qty in (merchant.get("rare_stock") or {}).items():
+            stock.setdefault(iid, int(qty))
+    if _controller_disposition(state, location_id) == "hostil" or keeper_tier == "hostil":
         stock = {
             iid: q
             for iid, q in stock.items()
@@ -422,6 +453,7 @@ def trade_reason_code(reason: str) -> str:
         ("Falta ingrediente", "missing_ingredient"),
         ("Não foi possível separar", "inventory_error"),
         ("Modo de transação", "unknown_mode"),
+        ("recusa negociar", "merchant_refuses"),
     )
     for needle, code in table:
         if needle in t:
@@ -459,6 +491,20 @@ def log_trade(mode: str, outcome: dict) -> None:
         pass
 
 
+def _keeper_refusal(state: dict, mid: str, merchant: dict) -> dict | None:
+    """SPEC-298 R9/R19: recusa rara por preconceito + relação péssima (``comercio``)."""
+    from services.reputation import find_keeper, refuses
+
+    _, keeper = find_keeper(state, mid)
+    if keeper and refuses(state, keeper, "comercio"):
+        return {
+            "ok": False,
+            "code": "merchant_refuses",
+            "reason": f"{keeper.get('name') or 'O mercador'} recusa negociar com você.",
+        }
+    return None
+
+
 def execute_trade(state: dict, mode: str, item_ref: str, qty: int = 1) -> dict:
     """Compra/venda contra o mercador do local. Retorna TradeOutcome:
     {"ok", "reason", "item_id", "item_name", "qty", "gold_delta", "player", "world"}."""
@@ -473,6 +519,9 @@ def execute_trade(state: dict, mode: str, item_ref: str, qty: int = 1) -> dict:
         if not mid:
             return {"ok": False, "reason": "Não há mercador neste local."}
         _, merchant = mid, MERCHANTS.get(mid, {})
+        refusal = _keeper_refusal(state, mid, merchant)
+        if refusal:
+            return refusal
         iid = _resolve_ref_in(item_ref, list(stock.keys()))
         if not iid:
             return {"ok": False, "reason": f"O mercador não tem '{item_ref}' à venda."}
@@ -518,6 +567,9 @@ def execute_trade(state: dict, mode: str, item_ref: str, qty: int = 1) -> dict:
         if not here:
             return {"ok": False, "reason": "Não há mercador neste local para comprar isso."}
         mid, merchant = here[0]
+        refusal = _keeper_refusal(state, mid, merchant)
+        if refusal:
+            return refusal
         unit = price(iid, mode="sell", state=state, merchant=merchant or None)
         total = unit * qty
         new_inv, removed = remove_item(player["inventory"], iid, qty)

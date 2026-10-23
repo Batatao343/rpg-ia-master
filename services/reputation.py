@@ -195,6 +195,7 @@ def apply_npc_delta(
     *,
     reason: str,
     source: Literal["llm", "engine"],
+    cap: int = REL_STEP_CAP,
 ) -> tuple[dict, dict | None]:
     """Único escritor de ``relationship`` pós-criação. Devolve ``(npc_row, aviso|None)``.
 
@@ -210,7 +211,7 @@ def apply_npc_delta(
         budget = {"turn": turn}
     used = _int(budget.get(source))
     wanted = _int(delta)
-    capped = max(-REL_STEP_CAP, min(REL_STEP_CAP, used + wanted)) - used
+    capped = max(-cap, min(cap, used + wanted)) - used
     old = _int(row.get("relationship"), 5) if row.get("relationship") is not None else 5
     new = max(REL_MIN, min(REL_MAX, old + capped))
     applied = new - old
@@ -810,6 +811,10 @@ def turn_updates(state: Mapping) -> dict:
         if react:
             updates["npcs"] = react["npcs"]
             notices.extend(react["notices"])
+    debt = debt_updates({**state, **updates})
+    if debt:
+        updates["npcs"] = debt["npcs"]
+        notices.extend(debt["notices"])
     if notices != cur_notices:
         updates["reputation_notices"] = notices
     return updates
@@ -943,3 +948,372 @@ def ensure_reputation_fields(state: dict) -> dict:
                 row.setdefault("heard_deeds", [])
                 row.setdefault("favors", {})
     return state
+
+
+# --------------------------------------------------------------------------- #
+# Efeitos econômicos (R17-R19)
+# --------------------------------------------------------------------------- #
+_PRICE_BAND = {
+    "hostil": 1.30,
+    "desconfiado": 1.15,
+    "neutro": 1.00,
+    "amistoso": 0.92,
+    "leal": 0.85,
+}
+PRICE_FACTOR_MIN, PRICE_FACTOR_MAX = 0.75, 1.50
+TRAIT_PRICE_STEP = 0.03
+
+
+def find_keeper(state: Mapping, merchant_id: str) -> tuple[str | None, dict]:
+    """(chave em ``state.npcs``, linha) do keeper do mercador, se já registrado."""
+    wanted = _keeper_npc_id(merchant_id, None)
+    for key, row in (state.get("npcs") or {}).items():
+        if isinstance(row, dict) and (
+            row.get("keeper_of") == merchant_id or row.get("id") == wanted
+        ):
+            return key, row
+    return None, {}
+
+
+def _keeper_npc_id(merchant_id: str, keeper: Mapping | None) -> str:
+    if keeper and keeper.get("npc_id"):
+        return str(keeper["npc_id"])
+    return f"merchant_{merchant_id}"
+
+
+def build_keeper(state: Mapping, merchant_id: str, merchant: Mapping) -> tuple[str, dict]:
+    """Linha determinística do keeper (pura: não toca o estado). ``("", {})`` sem keeper."""
+    keeper = merchant.get("keeper") if isinstance(merchant, Mapping) else None
+    if not isinstance(keeper, Mapping):
+        return "", {}
+    from services import graph_resolver as gr
+    from services import npc_layers
+
+    home = str(merchant.get("location_id") or "")
+    if keeper.get("npc_id"):
+        ent = gr.get_entity(str(keeper["npc_id"])) or {}
+        name = str(ent.get("name") or keeper["npc_id"])
+        role = str(ent.get("role") or merchant.get("name") or "Mercador")
+        nid = str(keeper["npc_id"])
+    else:
+        name = str(keeper.get("name") or merchant.get("name") or merchant_id)
+        role = str(keeper.get("role") or "Mercador")
+        nid = _keeper_npc_id(merchant_id, keeper)
+    row = {
+        "id": nid,
+        "name": name,
+        "role": role,
+        "persona": f"{role}. Negocia com firmeza e fala pouco de si.",
+        "location": home,
+        "race_id": str(keeper.get("race_id") or ""),
+        "keeper_of": merchant_id,
+        "memory": [],
+    }
+    row = npc_layers.ensure_npc_fields(row, str(state.get("game_id", "")), home, in_scene=True)
+    row["known_by_player"] = False
+    row["race_id"] = row["race_id"] if row["race_id"] in VALID_RACES else npc_race_id(row)
+    rel, basis = initial_relationship(state, row)
+    row["relationship"], row["relationship_basis"] = rel, basis
+    return name, row
+
+
+def keeper_for_price(state: Mapping, merchant_id: str, merchant: Mapping) -> dict:
+    """Keeper registrado, ou o virtual idêntico ao que seria criado (sem mutar)."""
+    _, row = find_keeper(state, merchant_id)
+    return row or build_keeper(state, merchant_id, merchant)[1]
+
+
+def ensure_keeper(state: dict, merchant_id: str, merchant: Mapping) -> tuple[str | None, dict]:
+    """R17: o keeper vira registro em ``state.npcs`` na primeira visita, SEM LLM.
+
+    Muta ``state['npcs']`` no lugar (mesmo padrão de ``_ensure_stock`` com ``world``);
+    sem ``npcs`` no estado não persiste nada e devolve o virtual."""
+    key, row = find_keeper(state, merchant_id)
+    if key is not None:
+        return key, row
+    name, row = build_keeper(state, merchant_id, merchant)
+    if not row:
+        return None, {}
+    npcs = state.get("npcs")
+    if isinstance(npcs, dict):
+        npcs[name] = row
+        return name, row
+    return None, row
+
+
+def relation_price_mult(state: Mapping, keeper: Mapping, mode: str) -> float:
+    """R18: faixa × traço ``comercio``; venda usa o inverso; clamp 0,75..1,50."""
+    from services.npc_layers import trait_dc_modifier
+
+    band = _PRICE_BAND[npc_tier(keeper.get("relationship"))]
+    trait = 1 + TRAIT_PRICE_STEP * trait_dc_modifier(dict(keeper), "comercio")
+    buy_factor = band * trait
+    factor = buy_factor if mode == "buy" else (1.0 / buy_factor if buy_factor else 1.0)
+    return max(PRICE_FACTOR_MIN, min(PRICE_FACTOR_MAX, factor))
+
+
+# --------------------------------------------------------------------------- #
+# Abordagens sociais e favores (R20-R24) — resolvidas em Python ANTES do LLM
+# --------------------------------------------------------------------------- #
+SOCIAL_APPROACHES = ("conversar", "intimidar", "sondar", "pedir_favor", "pagar_divida")
+FAVOR_KINDS = ("esconder", "emprestar", "interceder")
+FAVOR_COOLDOWN_DAYS = 3
+LOAN_AMOUNT = 50  # [BALANCEAR]
+LOAN_DUE_DAYS = 7
+BASE_SOCIAL_DC = 12
+_REVEAL_ORDER = ("", "existencia", "objetivo", "progresso")
+_ATTITUDE_PHRASE = {
+    "hostil": "despreza você",
+    "desconfiado": "desconfia de você",
+    "neutro": "ainda não decidiu o que pensar de você",
+    "amistoso": "gosta de você",
+    "leal": "confia em você",
+}
+
+
+def normalize_social_intent(approach: Any, favor_kind: Any = None) -> dict:
+    """Valor inválido vira ``conversar`` / ``None`` (nunca derruba o turno)."""
+    ap = approach if approach in SOCIAL_APPROACHES else "conversar"
+    fk = favor_kind if favor_kind in FAVOR_KINDS else None
+    return {"approach": ap, "favor_kind": fk}
+
+
+def _seeded_rng(state: Mapping, npc: Mapping, tag: str):
+    import hashlib
+    import random
+
+    raw = f"{state.get('game_id', '')}|{_turn(state)}|{npc.get('id') or npc.get('name')}|{tag}"
+    return random.Random(int(hashlib.sha256(raw.encode()).hexdigest(), 16))
+
+
+def _player_actor(state: Mapping) -> dict:
+    return dict(state.get("player") or {})
+
+
+def social_check(state: Mapping, npc: Mapping, approach: str) -> dict:
+    """R21/R22. Puro: devolve o resultado; quem aplica é o ``npc_actor``.
+
+    ``{approach, success, dc, roll, rel_delta, reveal_mode, reveal_trait, notice}``.
+    """
+    from services.conflict_resolution import general_test
+    from services.npc_layers import trait_dc_modifier
+
+    out: dict[str, Any] = {
+        "approach": approach,
+        "success": None,
+        "rel_delta": 0,
+        "reveal_mode": None,
+        "reveal_trait": None,
+        "notice": None,
+    }
+    name = str(npc.get("name") or "O interlocutor")
+    if approach == "intimidar":
+        fame = fame_at(state, _here(state))
+        bonus = -3 if fame["infamy"] >= 60 else -2 if fame["infamy"] >= 30 else 0
+        dc = BASE_SOCIAL_DC + trait_dc_modifier(dict(npc), "intimidacao") + bonus
+        rng = _seeded_rng(state, npc, "intimidar")
+        roll = general_test(_player_actor(state), "forca", dc, rng=rng)
+        out.update(
+            success=bool(roll["sucesso"]),
+            dc=dc,
+            roll=roll,
+            rel_delta=-1,
+            reveal_mode="up" if roll["sucesso"] else "none",
+        )
+        out["notice"] = (
+            f"{name} cede, mas não esquece."
+            if roll["sucesso"]
+            else f"{name} não se deixa intimidar."
+        )
+    elif approach == "sondar":
+        dc = BASE_SOCIAL_DC + trait_dc_modifier(dict(npc), "insight")
+        rng = _seeded_rng(state, npc, "sondar")
+        roll = general_test(_player_actor(state), "mente", dc, rng=rng)
+        out.update(success=bool(roll["sucesso"]), dc=dc, roll=roll)
+        hidden = list(npc.get("hidden_traits") or [])
+        if roll["sucesso"]:
+            if hidden:
+                out["reveal_trait"] = hidden[0]
+            phrase = _ATTITUDE_PHRASE[npc_tier(npc.get("relationship"))]
+            out["notice"] = f"Você percebe que {name} {phrase}."
+    return out
+
+
+def favor_decision(state: Mapping, npc: Mapping, kind: str) -> dict:
+    """R24: decisão determinística. ``{ok, code, kind}``."""
+    from services.npc_layers import trait_dc_modifier
+
+    result: dict[str, Any] = {"ok": False, "code": "unknown", "kind": kind}
+    if kind not in FAVOR_KINDS:
+        return result
+    if refuses(state, npc, "favor"):
+        return {**result, "code": "refuses"}
+    favors = npc.get("favors") or {}
+    last = favors.get("last_day")
+    if last is not None and _day(state) - _int(last) < FAVOR_COOLDOWN_DAYS:
+        return {**result, "code": "cooldown"}
+    base = 9 if kind == "emprestar" else 7
+    required = max(1, min(10, base + trait_dc_modifier(dict(npc), "persuasao")))
+    rel = _int(npc.get("relationship"), 5) if npc.get("relationship") is not None else 5
+    if rel < required:
+        return {**result, "code": "too_cold"}
+    if kind == "interceder" and not npc_faction_id(npc):
+        return {**result, "code": "no_faction"}
+    if kind == "emprestar" and isinstance(favors.get("debt"), dict):
+        return {**result, "code": "debt_open"}
+    return {**result, "ok": True, "code": "ok"}
+
+
+def apply_favor(state: Mapping, npc_key: str, npc: Mapping, kind: str) -> dict:
+    """Efeitos de um favor aceito. Devolve patches ``{npc, player?, world?, notice}``."""
+    from services.npc_knowledge import clock_index
+
+    day = _day(state)
+    row = dict(npc)
+    favors = dict(row.get("favors") or {})
+    favors["last_day"] = day
+    patch: dict[str, Any] = {}
+    name = str(row.get("name") or npc_key)
+    if kind == "esconder":
+        world = dict(_world(state))
+        world["shelter"] = {
+            "npc_id": str(row.get("id") or npc_key),
+            "location_id": _here(state),
+            "until_clock": clock_index(world) + 2,
+        }
+        patch["world"] = world
+        text = f"{name} esconde você por um tempo."
+    elif kind == "emprestar":
+        player = _player_actor(state)
+        player["gold"] = _int(player.get("gold")) + LOAN_AMOUNT
+        patch["player"] = player
+        favors["debt"] = {
+            "amount": LOAN_AMOUNT,
+            "due_day": day + LOAN_DUE_DAYS,
+            "overdue_applied": False,
+        }
+        text = f"{name} empresta algumas moedas e espera ser pago."
+    else:
+        favors["intercession"] = {"faction_id": npc_faction_id(row)}
+        text = f"{name} promete intervir a seu favor."
+    row["favors"] = favors
+    patch["npc"] = row
+    patch["notice"] = _notice("favor", str(row.get("id") or npc_key), text, _turn(state))
+    return patch
+
+
+def pay_debt(state: Mapping, npc_key: str, npc: Mapping) -> dict:
+    """``pagar_divida``: Python debita (``clamp_gold`` da economia)."""
+    from services.economy import clamp_gold
+
+    debt = (npc.get("favors") or {}).get("debt")
+    if not isinstance(debt, dict):
+        return {"ok": False, "code": "no_debt"}
+    player = _player_actor(state)
+    amount = _int(debt.get("amount"))
+    if _int(player.get("gold")) < amount:
+        return {"ok": False, "code": "insufficient_gold"}
+    player["gold"] = clamp_gold(player, _int(player.get("gold")) - amount)
+    row = dict(npc)
+    row["favors"] = {**(npc.get("favors") or {}), "debt": None}
+    name = str(row.get("name") or npc_key)
+    return {
+        "ok": True,
+        "code": "ok",
+        "player": player,
+        "npc": row,
+        "notice": _notice(
+            "favor", str(row.get("id") or npc_key), f"{name} dá a dívida por quitada.", _turn(state)
+        ),
+    }
+
+
+def clamp_reveal(level: str, tier: str, mode: str | None = None) -> str:
+    """R23: nível de revelação pedido pelo LLM, limitado pela faixa (``""`` = descartar)."""
+    idx = _REVEAL_ORDER.index(reveal_ceiling(tier))
+    if mode == "none":
+        idx = 0
+    elif mode == "up":
+        idx = min(len(_REVEAL_ORDER) - 1, idx + 1)
+    wanted = _REVEAL_ORDER.index(level) if level in _REVEAL_ORDER else 0
+    return _REVEAL_ORDER[min(wanted, idx)]
+
+
+def _social_prompt(social: Mapping) -> str:
+    approach = social.get("approach")
+    if approach == "intimidar":
+        if social.get("success"):
+            return "o jogador intimidou você e você CEDEU a contragosto."
+        return "o jogador tentou intimidar você e você NÃO se deixa intimidar; feche-se."
+    if approach == "sondar":
+        if social.get("success"):
+            return "o jogador tenta ler suas intenções e você deixa transparecer algo de si."
+        return "o jogador tenta ler suas intenções; você não entrega nada."
+    return str(social.get("favor_prompt") or "o jogador faz um pedido pessoal.")
+
+
+def attitude_block(state: Mapping, npc: Mapping, social: Mapping | None = None) -> str:
+    """R25: ``<ATITUDE>`` do prompt do NPC — rótulo, motivos qualitativos, sem números."""
+    tier = npc_tier(npc.get("relationship"))
+    basis = npc.get("relationship_basis") or {}
+    motives: list[str] = []
+    if _int(basis.get("race")) < 0:
+        motives.append("tem preconceito contra a raça do jogador")
+    elif _int(basis.get("race")) > 0:
+        motives.append("simpatiza com a raça do jogador")
+    if _int(basis.get("origin")) > 0:
+        motives.append("considera o jogador conterrâneo")
+    if _int(basis.get("fame")) > 0:
+        motives.append("ouviu falar bem do jogador por aqui")
+    elif _int(basis.get("fame")) < 0:
+        motives.append("ouviu falar mal do jogador por aqui")
+    if npc.get("heard_deeds"):
+        motives.append("soube de feitos do jogador")
+    lines = [f"Atitude atual em relação ao jogador: {tier}."]
+    if motives:
+        lines.append("Motivos: " + "; ".join(motives) + ".")
+    if social and social.get("approach") not in (None, "conversar"):
+        lines.append(f"Abordagem do jogador neste turno: {_social_prompt(social)}")
+    return "<ATITUDE>\n" + "\n".join(lines) + "\n</ATITUDE>"
+
+
+def fame_line(state: Mapping) -> str:
+    """R25: linha de fama do local atual para o storyteller (vazia se desconhecido)."""
+    view = fame_at(state, _here(state))
+    parts = []
+    if view["renown_label"] != "desconhecido":
+        parts.append(f"o jogador é {view['renown_label']} aqui")
+    if view["infamy_label"] != "—":
+        parts.append(f"é visto como {view['infamy_label']} aqui")
+    return ("Fama local: " + "; ".join(parts) + ".") if parts else ""
+
+
+def debt_updates(state: Mapping) -> dict:
+    """Dívida vencida: relação −2 uma vez (+ aviso). Parcial; ``{}`` se nada vence."""
+    npcs = dict(state.get("npcs") or {})
+    day, changed, notices = _day(state), False, []
+    for key, row in sorted(npcs.items(), key=lambda kv: str(kv[0])):
+        debt = ((row or {}).get("favors") or {}).get("debt") if isinstance(row, dict) else None
+        if not isinstance(debt, dict) or debt.get("overdue_applied"):
+            continue
+        if day <= _int(debt.get("due_day")):
+            continue
+        new_row, notice = apply_npc_delta(
+            {**state, "npcs": npcs}, key, -2, reason="debt", source="engine", cap=2
+        )
+        if not new_row:
+            continue
+        new_row["favors"] = {**(row.get("favors") or {}), "debt": {**debt, "overdue_applied": True}}
+        npcs[key] = new_row
+        changed = True
+        name = str(new_row.get("name") or key)
+        notices.append(
+            _notice(
+                "favor",
+                str(new_row.get("id") or key),
+                f"{name} cobra a dívida atrasada.",
+                _turn(state),
+            )
+        )
+        del notice
+    return {"npcs": npcs, "notices": notices} if changed else {}

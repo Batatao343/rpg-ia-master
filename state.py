@@ -545,6 +545,7 @@ class GameState(TypedDict):
     location_fame: dict[str, FameEntry]
     reputation_pending: list[ReputationPending]
     reputation_notices: list[ReputationNotice]
+    social_intent: dict | None  # SPEC-298 R20: {approach, favor_kind, turn} (transitório)
     active_npc_name: str | None
     npc_fallback_hint: (
         str | None

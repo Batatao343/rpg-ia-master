@@ -164,4 +164,7 @@ def test_router_decision_schema_intacto():
         "target",
         "reasoning",
         "confidence",
+        # SPEC-298 R20: abordagem social (aditivo, default None)
+        "social_approach",
+        "favor_kind",
     }

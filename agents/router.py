@@ -202,6 +202,10 @@ def _combat_gate(state: GameState, world: dict, combat: dict):
     return _tag(payload, "combat_gate")
 
 
+_SOCIAL_APPROACHES = ("conversar", "intimidar", "sondar", "pedir_favor", "pagar_divida")
+_FAVOR_KINDS = ("esconder", "emprestar", "interceder")
+
+
 class RouterDecision(BaseModel):
     route: RouteType
     loot_context: Literal["TREASURE", "SHOP", "CRAFT"] | None = Field(
@@ -212,6 +216,25 @@ class RouterDecision(BaseModel):
     )
     reasoning: str
     confidence: float
+    # SPEC-298 R20: abordagem social (só rota NPC). Inválido -> conversar / None.
+    social_approach: (
+        Literal["conversar", "intimidar", "sondar", "pedir_favor", "pagar_divida"] | None
+    ) = Field(default=None, description="Só rota NPC: como o jogador aborda o NPC.")
+    favor_kind: Literal["esconder", "emprestar", "interceder"] | None = Field(
+        default=None, description="Só quando social_approach=pedir_favor."
+    )
+
+    @field_validator("social_approach", mode="before")
+    @classmethod
+    def _normalize_social_approach(cls, value):
+        if value is None:
+            return None
+        return value if value in _SOCIAL_APPROACHES else "conversar"
+
+    @field_validator("favor_kind", mode="before")
+    @classmethod
+    def _normalize_favor_kind(cls, value):
+        return value if value in _FAVOR_KINDS else None
 
     @field_validator("loot_context", mode="before")
     @classmethod
@@ -350,6 +373,7 @@ def _classify(
     REGRAS:
     - COMBAT: Jogador ataca, saca armas ou reage a uma ameaça narrada. IMPORTANTE: Identifique o 'target' (inimigo).
     - NPC: Conversa social, diplomacia DIRIGIDA a um personagem presente. 'target' = nome EXATO de um NPC presente (ou vazio).
+    - Se a rota for NPC, preencha 'social_approach': conversar (padrão) | intimidar (ameaça/coação) | sondar (ler intenções, "ele mente?") | pedir_favor (esconder/emprestar/interceder -> 'favor_kind') | pagar_divida.
     - Pergunta ao narrador/mestre SOBRE alguém (o que sente, se mente, quem é) = STORY, não NPC.
     - LOOT: "Vasculhar corpo", "Pegar item", "Abrir baú" (TREASURE) ou "Comprar/Vender/Criar" (SHOP/CRAFT).
     - STORY: Movimentação, exploração, observar cenário.
@@ -428,7 +452,19 @@ def _finalize(
         resolution = interlocutor.post_classify(
             state, last_human, decision.route.value, decision.target
         )
-        return _resumed(_interlocutor_payload(resolution, world))
+        payload = _interlocutor_payload(resolution, world)
+        # SPEC-298 R20: a abordagem só vale na rota NPC; carrega o turno p/ não vazar.
+        intent = None
+        if decision.route == RouteType.NPC and decision.social_approach not in (None, "conversar"):
+            from services.reputation import normalize_social_intent
+
+            intent = {
+                **normalize_social_intent(decision.social_approach, decision.favor_kind),
+                "turn": int((world or {}).get("turn_count", 0) or 0),
+            }
+        if intent is not None:  # sem abordagem: payload byte a byte igual ao anterior
+            payload["social_intent"] = intent
+        return _resumed(payload)
 
     response_payload = _base_route_payload(decision.route, world)
     response_payload["interlocutor_reason"] = "classify_story"
