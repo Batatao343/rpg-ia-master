@@ -1,6 +1,9 @@
 # SPEC-296 — mundo-vivo-onda0-religacoes
 
 > **Status:** `done` (2026-10-23) — Etapas 1–4 na main (`fe88201`), revisão Sol APPROVED (P2 corrigidos: rumor ≤280, guarda+log no ambiente, sem alerta em derrota, CSS). R1: staging `RPG_NPC_KNOWLEDGE` shadow → `on` (deploy `bf3247e`, `e2e_session` verde nas duas etapas). §6 smoke real DeepSeek (explorador 12 turnos, seed 7): 0 erros; narração usa período/clima global/escuridão; 25 violações `rag.persistence_error` = FAISS local não abre caminho com acento (limitação conhecida, `docs/playtests/smoke-conflito-v4-2026-07-25.md`), não relacionada. Follow-up P2-4 (teste encadeado combate→storyteller do reforço).
+> **Criada:** 2026-10-20 · **Atualizada:** 2026-10-23
+> **Depende de:** SPEC-215 (`done`)
+> **Desbloqueia:** SPEC-298, SPEC-302 (consomem notícias e ambiente)
 
 ---
 
