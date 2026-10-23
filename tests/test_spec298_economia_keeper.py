@@ -95,7 +95,9 @@ def test_clamp_fator_075_150():
     # fator extremo é limitado (mesmo com traço muito forte)
     monkey = {**leal, "hidden_traits": ["ganancioso"] * 20}
     assert rep.relation_price_mult(st, monkey, "buy") == rep.PRICE_FACTOR_MIN
-    assert rep.relation_price_mult(st, {**keeper, "hidden_traits": ["ganancioso"] * 20}, "sell") <= 1.5
+    assert (
+        rep.relation_price_mult(st, {**keeper, "hidden_traits": ["ganancioso"] * 20}, "sell") <= 1.5
+    )
 
 
 def test_venda_amistoso_paga_mais():

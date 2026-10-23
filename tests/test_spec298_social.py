@@ -49,10 +49,15 @@ def test_router_social_approach_invalido_vira_conversar():
     base = {"route": RouteType.NPC, "loot_context": None, "target": None, "reasoning": "r"}
     d = RouterDecision(**base, confidence=0.9, social_approach="ameacar", favor_kind="roubar")
     assert d.social_approach == "conversar" and d.favor_kind is None
-    ok = RouterDecision(**base, confidence=0.9, social_approach="pedir_favor", favor_kind="esconder")
+    ok = RouterDecision(
+        **base, confidence=0.9, social_approach="pedir_favor", favor_kind="esconder"
+    )
     assert (ok.social_approach, ok.favor_kind) == ("pedir_favor", "esconder")
     assert RouterDecision(**base, confidence=0.9).social_approach is None
-    assert rep.normalize_social_intent("xyz", "abc") == {"approach": "conversar", "favor_kind": None}
+    assert rep.normalize_social_intent("xyz", "abc") == {
+        "approach": "conversar",
+        "favor_kind": None,
+    }
 
 
 def test_intimidar_usa_trait_e_infamia_no_dc(monkeypatch):
@@ -83,7 +88,9 @@ def test_intimidar_seed_deterministica(monkeypatch):
 def test_intimidar_sucesso_eleva_revelacao_e_custa_relacao(monkeypatch):
     monkeypatch.setattr(cr, "general_test", _fake_roll(True))
     npc = _npc(rel=5)
-    social, row, _extra, notices = _resolve_social(_state(npc), "Brenna", npc, {"approach": "intimidar"})
+    social, row, _extra, notices = _resolve_social(
+        _state(npc), "Brenna", npc, {"approach": "intimidar"}
+    )
     assert social["success"] and social["reveal_mode"] == "up"
     assert row["relationship"] == 4
     assert any(n["text"] == "Brenna não gostou disso." for n in notices)
@@ -129,9 +136,7 @@ def test_reveal_clamp_por_faixa():
     for tier, top in [("hostil", ""), ("desconfiado", ""), ("neutro", "existencia"),
                       ("amistoso", "objetivo"), ("leal", "progresso")]:  # fmt: skip
         assert rep.clamp_reveal("progresso", tier) == top
-        assert rep.clamp_reveal("existencia", tier) == min(
-            "existencia", top, key=order.index
-        )
+        assert rep.clamp_reveal("existencia", tier) == min("existencia", top, key=order.index)
 
 
 def test_teto_linhas_conhecimento_por_faixa():
@@ -194,9 +199,7 @@ def test_interceder_reduz_proximo_delta_negativo():
     )
     assert applied == -6 and factions[0]["reputation"] == -6
     assert not rep.intercession_available({**st, "npcs": npcs}, "legiao_ferro")
-    _f, _n, _p, second = rep._apply_faction(
-        st, factions, npcs, "legiao_ferro", -12, "d2"
-    )
+    _f, _n, _p, second = rep._apply_faction(st, factions, npcs, "legiao_ferro", -12, "d2")
     assert second == -12  # consumida
 
 
@@ -216,7 +219,11 @@ def test_favor_recusado_por_raca():
 def test_favor_exige_persuasao_do_traco():
     npc = _npc(rel=9, traits=["desconfiado"])  # persuasao +3 => exige 10
     assert rep.favor_decision(_state(npc), npc, "esconder")["code"] == "too_cold"
-    assert rep.favor_decision(_state(_npc(rel=10, traits=["desconfiado"])), _npc(rel=10, traits=["desconfiado"]), "esconder")["ok"]
+    assert rep.favor_decision(
+        _state(_npc(rel=10, traits=["desconfiado"])),
+        _npc(rel=10, traits=["desconfiado"]),
+        "esconder",
+    )["ok"]
 
 
 def test_guard_fallbackllm_router_e_npc(monkeypatch):

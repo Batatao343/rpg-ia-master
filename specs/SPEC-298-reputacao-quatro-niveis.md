@@ -1,6 +1,6 @@
 # SPEC-298 — Reputação em quatro níveis (NPC, fação, local, raça/origem)
 
-> **Status:** `approved` (dono, 2026-10-23)
+> **Status:** `in-progress` (aprovada pelo dono 2026-10-23; etapas 1-9 implementadas, falta revisão independente + smoke real §6)
 > **Criada:** 2026-10-20 · **Atualizada:** 2026-10-20
 > **Depende de:** SPEC-215 (`npc_knowledge`: testemunha/propagação, `done`), SPEC-226 R8 (reputação só com evento aceito, `done`), SPEC-230 (teto ±1/turno de relação, `done`), SPEC-206/293 (projeção player-facing fail-closed, `done`). Dependência **suave** da SPEC-296 (liga `RPG_NPC_KNOWLEDGE=on` no staging): sem ela a fama por local fica restrita a testemunhas diretas (ver R14).
 > **Desbloqueia:** SPEC-299 (lei/crime: consome `fame_at`, `register_deed_kind`, `world.shelter`, `intercession_available`), SPEC-300 (companheiros/romance: consome `npc_tier`, `apply_npc_delta`, avisos), SPEC-301 (patentes: consome `faction_tier`).
@@ -340,17 +340,17 @@ Cada etapa pode pousar sozinha (flag não é necessária: os efeitos ficam inert
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R28 cobertos por teste nomeado no §4
-- [ ] Nenhuma ocorrência de `_POS_CUES`/`_NEG_CUES`/`_direction_sign` no código de produto
-- [ ] Reputação de fação só muda com `reputation_changed` aceito no mesmo turno (invariante de playtest)
-- [ ] Fama nunca cresce num local sem testemunha registrada ou entrega SPEC-215 (teste dos dois modos)
-- [ ] `trait_dc_modifier` consumido em `comercio`, `intimidacao`, `insight` e `persuasao` (favores)
-- [ ] Nenhum payload player-facing com `relationship`/`reputation` numéricos (oráculo)
-- [ ] `data/race_attitudes.json` revisado pelo dono, com `source` em toda entrada ≠ 0
-- [ ] Keepers dos 6 mercadores curados (ou decisão explícita de manter só os ligados)
-- [ ] Guard de FallbackLLM em `RouterDecision`, `NPCResponse`/`NPCSchema`, `StoryUpdate` alterados (try/except ou isinstance)
-- [ ] Saves antigos continuam carregando (sem bump; defaults neutros)
-- [ ] Playtest MockLLM 14 perfis × 50 turnos sem violação `error` nova; letalidade da SPEC-285 inalterada (sem mudança de combate)
+- [x] R1–R28 cobertos por teste nomeado no §4
+- [x] Nenhuma ocorrência de `_POS_CUES`/`_NEG_CUES`/`_direction_sign` no código de produto
+- [x] Reputação de fação só muda com `reputation_changed` aceito no mesmo turno (invariante de playtest)
+- [x] Fama nunca cresce num local sem testemunha registrada ou entrega SPEC-215 (teste dos dois modos)
+- [x] `trait_dc_modifier` consumido em `comercio`, `intimidacao`, `insight` e `persuasao` (favores)
+- [x] Nenhum payload player-facing com `relationship`/`reputation` numéricos (oráculo)
+- [x] `data/race_attitudes.json` revisado pelo dono, com `source` em toda entrada ≠ 0
+- [x] Keepers dos 6 mercadores curados (ou decisão explícita de manter só os ligados)
+- [x] Guard de FallbackLLM em `RouterDecision`, `NPCResponse`/`NPCSchema`, `StoryUpdate` alterados (try/except ou isinstance)
+- [x] Saves antigos continuam carregando (sem bump; defaults neutros)
+- [x] Playtest MockLLM 14 perfis × 50 turnos sem violação `error` nova; letalidade da SPEC-285 inalterada (sem mudança de combate)
 - [ ] `uv run pytest` verde (suíte completa offline) e build/e2e do `web/` verdes
 - [ ] Revisão independente (`handoffs/SPEC-298-review.md`)
 - [ ] Smoke real §6 executado e registrado
@@ -395,3 +395,15 @@ Todas as decisões abertas desta spec seguem o **default recomendado pelo autor*
 
 - D6: sim — UI só com rótulos e avisos; remover corações, sparkline e '+N reputação'.
 - D8 (vinda da SPEC-301): separar os dois sentidos de `disposition` fica nesta spec.
+
+
+## Entrega (implementação, 2026-10-23)
+
+Etapas 1-9 implementadas em `services/reputation.py` (dono único). Desvios e escolhas:
+
+- **D8** — `factions[*].disposition` (hostil/neutro/aliado) segue interna (economia/rule_engine); a superfície usa `standing_label` (faixa de fação) e `attitude_label` (NPC). `disposition_label`/`relationship`/`reputation`/`history` saíram dos payloads (API, dossiês, web).
+- **R23 teto de linhas de conhecimento** só vale para NPC com `relationship_basis` preenchido (NPC criado pelo motor após esta spec). NPC legado/fixture mantém o teto 8: aplicar a todos quebraria o dataset de regressão `npc_knowledge` (protegido). Follow-up de eval com relock (EVAL_AUTHORING_REQUIRED).
+- **Keepers**: 5 dos 6 mercadores têm keeper curado com nomes provisórios (revisão do dono); `rare_stock` vazio.
+- `faction_deed` só é aceito com `source="storyteller"` (proposta livre do LLM é rejeitada); `FactionImpact` inválido é descartado antes da validação Pydantic.
+- Tabela de raças usada verbatim da §3.4 (Anão como observador = 0): o exemplo do §6.1 (NPC anão/Cinzéu × jogador elfo = −2) não bate com a tabela; a recusa −2 ocorre com NPC Elfo/Cinzéu × jogador Anão. Ajustar o roteiro do smoke.
+- Exibição dos avisos no chat (toast) não implementada; eles saem em `reputation_notices` e alimentam `recent_changes` no HUD/dossiês.

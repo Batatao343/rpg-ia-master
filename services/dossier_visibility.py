@@ -71,8 +71,8 @@ class NpcDossierModel(_DossierBase):
     role: str = ""
     location: str = ""
     status: str = ""
-    relationship: int = 5
-    disposition_label: str = ""
+    attitude_label: str = ""
+    recent_changes: list[dict[str, Any]] = []
     knowledge_source: str = "met"
     revealed_traits: list[dict[str, Any]] = []
     claims: list[ClaimModel] = []
@@ -95,8 +95,8 @@ class FactionDossierModel(_DossierBase):
     goal: str = ""
     knows_goal: bool = False
     region: str = ""
-    disposition: str = ""
-    reputation: int = 0
+    standing_label: str = ""
+    recent_changes: list[dict[str, Any]] = []
     progress: int | None = None
     intel_stale: bool = False
     stale_label: str = ""

@@ -937,6 +937,12 @@ def storyteller_node(state: GameState):
         "</ESTADO_DO_HEROI>"
     )
 
+    # SPEC-298 R25: fama do local atual (rótulo, nunca número) — só se o jogador é conhecido ali.
+    from services.reputation import fame_line
+
+    _fame = fame_line(state)
+    fame_block = f"<FAMA_LOCAL>\n{_fame}\n</FAMA_LOCAL>" if _fame else ""
+
     sys = SystemMessage(
         content=f"""
     <PERSONA>
@@ -953,6 +959,7 @@ def storyteller_node(state: GameState):
     {ambiente_block}
     {ouviu_block}
     {hero_state_block}
+    {fame_block}
 
     <FACÇÕES_CONHECIDAS>
     {faccoes_conhecidas}

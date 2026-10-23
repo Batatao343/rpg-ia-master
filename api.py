@@ -86,6 +86,7 @@ from services.visual_catalog import (
     resolve_turn_visual_state,
     visual_response,
 )
+from services.reputation import faction_tier
 from world_utils import starting_world
 
 assert_boot_policy(os.environ)
@@ -2030,7 +2031,8 @@ class GameResponse(BaseModel):
     chronicle: list[
         dict[str, Any]
     ] = []  # capítulos: {title, started_turn, location, entries[{text,turn,kind,event_id?}]}
-    factions: list[dict[str, Any]] = []  # fações vivas: objetivo, progresso, postura, reputação
+    factions: list[dict[str, Any]] = []  # fações vivas: objetivo, progresso, rótulo de standing
+    reputation_notices: list[dict[str, str]] = []  # SPEC-298 R26: avisos do turno (sem números)
     party: list[
         dict[str, Any]
     ] = []  # Fase 4.5: companheiros {name, hp, max_hp, active, archetype, status}
@@ -2206,6 +2208,7 @@ def _format_response_raw(state: dict, *, cue_action_key: str | None = None) -> G
             for c in (state.get("party") or [])
             if isinstance(c, dict)
         ],
+        reputation_notices=_reputation_notices(state),
         factions=_factions_block(
             state.get("factions", []) or [],
             state.get("faction_intel", {}) or {},
@@ -2220,6 +2223,23 @@ def _format_response_raw(state: dict, *, cue_action_key: str | None = None) -> G
         combat_simulation=simulation,
         visual=visual_response(state, cue_action_key=cue_action_key),
     )
+
+
+def _reputation_notices(state: dict) -> list[dict[str, str]]:
+    """SPEC-298 R26: avisos do turno corrente, textos fixos, passados pela projeção SPEC-293."""
+    from services.faction_display import conceal_for
+
+    turn = int((state.get("world") or {}).get("turn_count", 0) or 0)
+    rows = [
+        {
+            "kind": str(n.get("kind", "")),
+            "subject_id": str(n.get("subject_id", "")),
+            "text": str(n.get("text", "")),
+        }
+        for n in (state.get("reputation_notices") or [])
+        if isinstance(n, dict) and int(n.get("turn", -1) or 0) == turn
+    ]
+    return conceal_for(state, rows)
 
 
 def _inventory_block(player: dict) -> list[dict[str, Any]]:
@@ -2514,6 +2534,15 @@ def _chronicle_block(chronicle: list) -> list[dict[str, Any]]:
     return out
 
 
+def _recent_changes(row: dict) -> list[dict[str, Any]]:
+    """Até 3 mudanças recentes {turn, text} (avisos já emitidos; sem número)."""
+    return [
+        {"turn": int(r.get("turn", 0) or 0), "text": str(r.get("text", ""))}
+        for r in (row.get("recent_changes") or [])
+        if isinstance(r, dict)
+    ][-3:]
+
+
 def _factions_block(
     factions: list,
     intel: dict,
@@ -2552,10 +2581,11 @@ def _factions_block(
                 "region": f.get("region", ""),
                 "progress": int(seen) if seen is not None else None,
                 "intel_stale": bool(stale),
-                "disposition": f.get("disposition", "neutro"),
-                "reputation": int(f.get("reputation", 0)),
+                # SPEC-298 R27: só rótulo + mudanças recentes (sem número de reputação).
+                # D8: `standing_label` (faixa da fação) != `disposition` interna (hostil/neutro/aliado).
+                "standing_label": faction_tier(f.get("reputation", 0)),
+                "recent_changes": _recent_changes(f),
                 "completed": bool(f.get("completed", False)),
-                "history": sv.reputation_history(event_log or [], fid),
                 "stability_label": sv.stability_label(projection or {}, fid),
             }
         )

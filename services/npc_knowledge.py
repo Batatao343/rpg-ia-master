@@ -952,7 +952,9 @@ def _lines_cap(state: dict, npc_id: str) -> int:
     if not isinstance(row, dict) or row.get("relationship") is None:
         return NPC_KNOWLEDGE_CONTEXT_MAX
     if not row.get("relationship_basis"):
-        return NPC_KNOWLEDGE_CONTEXT_MAX  # NPC pré-SPEC-298 (save antigo/fixture): sem teto por faixa
+        return (
+            NPC_KNOWLEDGE_CONTEXT_MAX  # NPC pré-SPEC-298 (save antigo/fixture): sem teto por faixa
+        )
     return min(NPC_KNOWLEDGE_CONTEXT_MAX, knowledge_lines_cap(npc_tier(row["relationship"])))
 
 

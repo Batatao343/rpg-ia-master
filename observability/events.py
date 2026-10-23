@@ -188,6 +188,7 @@ EVENTS: dict[str, tuple[str, ...]] = {
     "npc.fallback": (),
     "npc.generation_failed": ("error",),
     "npc.knowledge_failed": ("error",),
+    "npc.social_failed": ("error",),
     "operation.rejected": ("op_kind", "op_ref", "reason"),
     "operation.release_failed": ("cause_type", "error_type", "op_ref"),
     "operation.replayed": ("op_kind", "op_ref"),

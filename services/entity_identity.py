@@ -53,6 +53,12 @@ def find_runtime_npc_key(
 
 
 _NPC_DYNAMIC_FIELDS = {
+    # SPEC-298: estado de reputação é por jogo, nunca do template de catálogo
+    "relationship_basis",
+    "heard_deeds",
+    "favors",
+    "recent_changes",
+    "_rel_budget",
     "home_location_id",
     "location",
     "in_scene",

@@ -990,7 +990,7 @@ const dosBase = (id: string, kind: string, title: string, version: number, stamp
 });
 const dosGrum = (version = 4, appears = true) => ({
   ...dosBase("npc_grum", "npc", "Grum", version),
-  role: "Ferreiro", location: "Nova Arcádia", status: "", relationship: 8, disposition_label: "Amistoso",
+  role: "Ferreiro", location: "Nova Arcádia", status: "", attitude_label: "amistoso",
   knowledge_source: "met", revealed_traits: [],
   claims: [
     { text: "Forja lâminas para a guarda.", knowledge: dosStamp("rumor", "Rumor", "rumor") },
@@ -1005,7 +1005,7 @@ const dosGrum = (version = 4, appears = true) => ({
 });
 const dosFaction = () => ({
   ...dosBase("legiao_ferro", "faction", "Legião de Ferro", 6, dosStamp("report", "Relato")),
-  body: "", goal: "", knows_goal: false, region: "norte", disposition: "neutro", reputation: 3,
+  body: "", goal: "", knows_goal: false, region: "norte", standing_label: "neutro",
   progress: null, intel_stale: true, stale_label: "informação defasada",
 });
 const dosCreature = (tier: number, extra: Record<string, unknown> = {}) => ({
@@ -1029,7 +1029,7 @@ test("F35 dossier_people_browse", async ({ page, backend }) => {
   await row.click();
   const dossier = page.getByRole("article", { name: "Dossiê: Grum" });
   await expect(dossier).toBeVisible();
-  await expect(dossier.getByText("Relação:")).toContainText("Amistoso");
+  await expect(dossier.getByText("Relação:")).toContainText(/amistoso/i);
   await expect(dossier.getByText("O que você sabe")).toBeVisible();
   await expect(dossier.getByText("O que ele parece saber")).toBeVisible();
   await expect(dossier.getByText("Viu você entrar na ferraria.")).toBeVisible();

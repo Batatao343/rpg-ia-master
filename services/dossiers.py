@@ -21,6 +21,7 @@ from services import graph_resolver as gr
 from services.chronicle import CHRONICLE_EVENT_TYPES
 from services.entity_identity import resolve_npc_entity_id
 from services.player_knowledge import entity_is_player_visible
+from services.reputation import faction_tier, npc_tier
 
 MAX_ENCOUNTERS = 20
 
@@ -40,6 +41,14 @@ _EVENT_OUTCOME = {
     "location_control_changed": "controle mudou",
     "secret_revealed": "segredo revelado",
 }
+
+
+def _recent(row: Mapping) -> list[dict]:
+    return [
+        {"turn": _turn(r.get("turn")) or 0, "text": str(r.get("text", ""))}
+        for r in (row.get("recent_changes") or [])
+        if isinstance(r, dict)
+    ][-3:]
 
 
 def disposition_label(relationship: Any) -> str:
@@ -165,8 +174,8 @@ def npc_dossier(entry: Mapping, state: Mapping, npc_index: Mapping) -> dict:
         "role": entry.get("role", ""),
         "location": entry.get("location", ""),
         "status": status,
-        "relationship": int(relationship) if isinstance(relationship, (int, float)) else 5,
-        "disposition_label": disposition_label(relationship),
+        "attitude_label": npc_tier(relationship),
+        "recent_changes": _recent(npc),
         "knowledge_source": entry.get("knowledge_source", "met"),
         "revealed_traits": list(entry.get("revealed_traits") or []),
         "claims": claims,
@@ -236,8 +245,8 @@ def faction_dossier(entry: Mapping, state: Mapping) -> dict:
         "goal": entry.get("goal", ""),
         "knows_goal": bool(entry.get("knows_goal")),
         "region": str(faction.get("region", "")),
-        "disposition": str(faction.get("disposition", "neutro")),
-        "reputation": int(faction.get("reputation", 0) or 0),
+        "standing_label": faction_tier(faction.get("reputation", 0)),
+        "recent_changes": _recent(faction),
         "progress": progress,
         "intel_stale": stale,
         "stale_label": "informação defasada" if stale else "",

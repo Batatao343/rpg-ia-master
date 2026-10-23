@@ -331,7 +331,7 @@ def test_storyteller_enfileira_faction_deed(monkeypatch):
 # ---------------------------------------------------------------------------
 
 
-def test_factions_block_history_so_known():
+def test_factions_block_so_conhecidas_e_sem_numeros():
     import api
 
     event_log = [_rep_event(1, 10, 10, fid=LEGIAO), _rep_event(2, 10, 10, fid=MAO_SOMBRIA)]
@@ -343,7 +343,11 @@ def test_factions_block_history_so_known():
     out = api._factions_block(factions, intel, turn=5, event_log=event_log, projection={})
     assert len(out) == 1
     assert out[0]["id"] == LEGIAO
-    assert len(out[0]["history"]) == 1
+    # SPEC-298 R27: sem reputation/disposition/history numéricos; rótulo + mudanças recentes
+    assert out[0]["standing_label"] == "amistoso"
+    assert out[0]["recent_changes"] == []
+    for key in ("reputation", "history", "disposition"):
+        assert key not in out[0]
     assert out[0]["stability_label"] == "estável"
 
 
@@ -387,5 +391,5 @@ def test_save_antigo_faction_sem_history():
         event_log=None,
         projection=None,
     )
-    assert out[0]["history"] == []
+    assert out[0]["recent_changes"] == []
     assert out[0]["stability_label"] == "estável"

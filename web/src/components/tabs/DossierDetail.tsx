@@ -60,7 +60,7 @@ function NpcView({ item }: { item: NpcDossier }) {
       <Header item={item} sub={[item.role, item.location].filter(Boolean).join(" · ") || undefined} />
       <Portrait item={item} />
       <p className="codex-entry__meta">
-        Relação: <b>{item.disposition_label}</b> ({item.relationship}/10)
+        Relação: <b style={{ textTransform: "capitalize" }}>{item.attitude_label}</b>
         {item.status === "morto" && " · morto"}
         {item.knowledge_source === "mentioned" && " · só ouviu falar"}
       </p>
@@ -115,7 +115,8 @@ function FactionView({ item }: { item: FactionDossier }) {
       <p className="codex-entry__meta">
         {item.knows_goal ? item.goal : "Plano desconhecido — descubra com quem sabe."}
       </p>
-      <p className="codex-entry__meta">Postura: {item.disposition} · Reputação: {item.reputation}</p>
+      <p className="codex-entry__meta">Posição diante de você: {item.standing_label}</p>
+      {(item.recent_changes ?? []).map((c, i) => <p key={i} className="codex-entry__meta">{c.text}</p>)}
       {item.intel_stale
         ? <p className="dossier__hint">{item.stale_label}</p>
         : item.progress != null && <p className="codex-entry__meta">Progresso conhecido: {item.progress}%</p>}

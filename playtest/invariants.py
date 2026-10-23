@@ -1888,7 +1888,68 @@ def check_npc_knowledge(state: dict, prev: dict | None, turn: int) -> list[Viola
 
 Check = Callable[[dict, dict | None, int], list[Violation]]
 
+
+def check_reputation(state: dict, prev: dict | None, turn: int) -> list[Violation]:
+    """SPEC-298 §3.6: faixas, `reputation_changed` no mesmo turno e avisos só de fação conhecida."""
+    out: list[Violation] = []
+    for name, npc in (state.get("npcs") or {}).items():
+        rel = npc.get("relationship") if isinstance(npc, dict) else None
+        if isinstance(rel, (int, float)) and not 0 <= rel <= 10:
+            out.append(_V("reputation.npc_range", "error", turn, f"{name}: relação fora de 0..10"))
+    prev_reps = {
+        f.get("id"): f.get("reputation", 0)
+        for f in ((prev or {}).get("factions") or [])
+        if isinstance(f, dict)
+    }
+    log = state.get("event_log") or []
+    for f in state.get("factions") or []:
+        if not isinstance(f, dict):
+            continue
+        rep = f.get("reputation", 0)
+        if isinstance(rep, (int, float)) and not -100 <= rep <= 100:
+            out.append(
+                _V("reputation.faction_range", "error", turn, f"{f.get('id')}: fora de -100..100")
+            )
+        if prev is not None and f.get("id") in prev_reps and prev_reps[f["id"]] != rep:
+            changed = any(
+                isinstance(e, dict)
+                and e.get("type") == "reputation_changed"
+                and e.get("target_id") == f.get("id")
+                and e.get("turn") == (state.get("world") or {}).get("turn_count")
+                for e in log
+            )
+            if not changed:
+                out.append(
+                    _V(
+                        "reputation.change_without_event",
+                        "error",
+                        turn,
+                        f"{f.get('id')}: reputação mudou sem reputation_changed no turno",
+                    )
+                )
+    for loc, entry in (state.get("location_fame") or {}).items():
+        for key in ("renown", "infamy"):
+            val = (entry or {}).get(key, 0)
+            if not 0 <= val <= 100:
+                out.append(
+                    _V("reputation.fame_range", "error", turn, f"{loc}.{key} fora de 0..100")
+                )
+    intel = state.get("faction_intel") or {}
+    for n in state.get("reputation_notices") or []:
+        if n.get("kind") == "faction" and not (intel.get(n.get("subject_id")) or {}).get("known"):
+            out.append(
+                _V(
+                    "reputation.notice_unknown_faction",
+                    "error",
+                    turn,
+                    "aviso de fação desconhecida",
+                )
+            )
+    return out
+
+
 CHECKS: list[Check] = [
+    check_reputation,
     check_vitals,
     check_vitality_consistency,
     check_wound_capacity,

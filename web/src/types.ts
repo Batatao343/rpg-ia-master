@@ -101,7 +101,8 @@ export interface NpcView {
   name: string;
   role: string;
   location: string;
-  relationship: number; // 0..10
+  attitude_label: "hostil" | "desconfiado" | "neutro" | "amistoso" | "leal"; // SPEC-298: só rótulo
+  recent_changes?: RecentChange[];
   last_memory: string;
 }
 
@@ -435,10 +436,15 @@ export interface SaveSummary {
   updated_at: number;
 }
 
-export interface ReputationPoint {
+export interface RecentChange {
   turn: number;
-  delta: number;
-  value: number;
+  text: string;
+}
+
+export interface ReputationNotice {
+  kind: string;
+  subject_id: string;
+  text: string;
 }
 
 export interface FactionView {
@@ -449,10 +455,9 @@ export interface FactionView {
   region: string;
   progress: number | null; // SNAPSHOT visto pelo jogador (null = desconhecido); nunca o ao vivo
   intel_stale: boolean; // true se o snapshot pode estar defasado
-  disposition: "hostil" | "neutro" | "aliado";
-  reputation: number; // -100..100
+  standing_label: "hostil" | "desconfiado" | "neutro" | "amistoso" | "aliado"; // SPEC-298: sem número
+  recent_changes: RecentChange[];
   completed: boolean;
-  history: ReputationPoint[]; // Fase 3.4: derivado do event_log (reputation_changed)
   stability_label: "estável" | "instável" | "em colapso"; // Fase 3.4: nunca o número interno
 }
 
@@ -541,6 +546,7 @@ export interface Speaker {
 }
 
 export interface GameResponse {
+  reputation_notices?: ReputationNotice[]; // SPEC-298 R26: avisos do turno (texto fixo, sem números)
   timeline_epoch?: number;
   art_offers?: { offer_id: string; type: "npc" | "scene" }[];
   art_generations?: { generation_id: string; type: "player" | "npc" | "scene"; subject_id: string }[];
@@ -868,8 +874,8 @@ export interface NpcDossier extends DossierBase {
   role: string;
   location: string;
   status: string;
-  relationship: number;
-  disposition_label: string;
+  attitude_label: string;
+  recent_changes?: RecentChange[];
   knowledge_source: string;
   revealed_traits: Array<{ id: string; name: string; description?: string }>;
   claims: DossierClaim[];
@@ -894,8 +900,8 @@ export interface FactionDossier extends DossierBase {
   goal: string;
   knows_goal: boolean;
   region: string;
-  disposition: string;
-  reputation: number;
+  standing_label: string;
+  recent_changes?: RecentChange[];
   progress: number | null;
   intel_stale: boolean;
   stale_label: string;

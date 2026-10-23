@@ -243,6 +243,8 @@ def trait_names(trait_ids: list[str]) -> list[dict]:
 
 def visible_npc_view(npcs: dict[str, dict]) -> list[dict]:
     """Camada 2 para a API (R8/R9): só conhecidos, SEM hidden_traits."""
+    from services.reputation import npc_tier
+
     out = []
     for key, npc in (npcs or {}).items():
         if not isinstance(npc, dict):
@@ -256,7 +258,13 @@ def visible_npc_view(npcs: dict[str, dict]) -> list[dict]:
                 "role": npc.get("role", ""),
                 "location": npc.get("location", ""),
                 "home_location_id": npc.get("home_location_id", ""),
-                "relationship": npc.get("relationship", 5),
+                # SPEC-298 R27: rótulo vago, nunca o número da relação
+                "attitude_label": npc_tier(npc.get("relationship", 5)),
+                "recent_changes": [
+                    {"turn": int(r.get("turn", 0) or 0), "text": str(r.get("text", ""))}
+                    for r in (npc.get("recent_changes") or [])
+                    if isinstance(r, dict)
+                ][-3:],
                 "knowledge_source": npc.get("knowledge_source", "met"),
                 "in_scene": bool(npc.get("in_scene", False)) and npc_alive(npc),
                 "status": "morto" if not npc_alive(npc) else str(npc.get("status") or ""),

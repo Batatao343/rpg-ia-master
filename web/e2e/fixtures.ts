@@ -40,7 +40,7 @@ export function gameState(gameId = "game-a", name = "Ayla"): GameResponse {
       wounds: { vitality: 20, max_vitality: 20, slots: {}, by_severity: { leve: [], grave: [], critico: [] } },
       chase: {}, player_conditions: [], cooldowns: {}, last_player_action: null, reactions: [], suggestions: [],
     },
-    npcs: [{ name: "Borin", role: "barqueiro", location: "Porto Cinzento", relationship: 6, last_memory: "Prometeu mostrar a rota." }],
+    npcs: [{ name: "Borin", role: "barqueiro", location: "Porto Cinzento", attitude_label: "neutro", last_memory: "Prometeu mostrar a rota." }],
     chronicle: [{ chapter_id: "c1", title: "Chegada", started_turn: 0, location: "Porto Cinzento", entries: [{ text: "Ayla chegou ao porto.", turn: 0, kind: "milestone" }] }],
     factions: [], party: [], death_pending: false, game_over: false,
     continuity: { session_action_count: 0, canonical_turn: 2, timeline_epoch: 1, last_checkpoint_turn: 1, death_history: [] },

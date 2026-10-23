@@ -28,7 +28,7 @@ const payload = (npcVersion = 4) => ({
     npcs: [{
       id: "npc_grum", kind: "npc", title: "Grum", last_updated_turn: npcVersion, version: npcVersion, art: null,
       knowledge: stamp("fact", "Fato confirmado"), notes: [],
-      role: "Ferreiro", location: "Nova Arcádia", status: "", relationship: 8, disposition_label: "Amistoso",
+      role: "Ferreiro", location: "Nova Arcádia", status: "", attitude_label: "amistoso",
       knowledge_source: "met", revealed_traits: [],
       claims: [{ text: "Forja lâminas para a guarda.", knowledge: stamp("perception", "Percepção") }],
       appears_to_know: [{ text: "Viu você entrar na ferraria.", knowledge: stamp("perception", "Percepção") }],
@@ -63,7 +63,7 @@ test.describe("dossiês 1440", () => {
     await row.click();
     const dossier = page.getByRole("article", { name: "Dossiê: Grum" });
     await expect(dossier).toBeVisible();
-    await expect(dossier.getByText("Relação:")).toContainText("Amistoso");
+    await expect(dossier.getByText("Relação:")).toContainText(/amistoso/i);
     await expect(dossier.getByText("O que ele parece saber")).toBeVisible();
     await expect(dossier.getByText("Viu você entrar na ferraria.")).toBeVisible();
     await expect(dossier.getByTestId("dossier-no-art")).toBeVisible();
