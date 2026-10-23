@@ -1,6 +1,6 @@
 # SPEC-298 — Reputação em quatro níveis (NPC, fação, local, raça/origem)
 
-> **Status:** `in-progress` (aprovada pelo dono 2026-10-23; etapas 1-9 implementadas, falta revisão independente + smoke real §6)
+> **Status:** `done` (2026-10-23) — na main (`5118930`); revisão Sol APPROVED_WITH_FOLLOWUPS (`handoffs/SPEC-298-sol-review.md`). Smoke real §6 DeepSeek (cenário `comercio`, 12 turnos, seed 5): 0 erros; keeper curado (Teodora) narrado e preços por relação; 27 `rag.persistence_error` = FAISS local com acento (não relacionado). Follow-ups: relock do eval `npc_knowledge` p/ teto R23 universal (EVAL_AUTHORING_REQUIRED); avisos como toast no chat; keeper registrado já na 1ª visita/conversa (hoje só na 1ª transação); arbitragem entre locais; nomes de keepers inventados aguardam revisão do dono.
 > **Criada:** 2026-10-20 · **Atualizada:** 2026-10-20
 > **Depende de:** SPEC-215 (`npc_knowledge`: testemunha/propagação, `done`), SPEC-226 R8 (reputação só com evento aceito, `done`), SPEC-230 (teto ±1/turno de relação, `done`), SPEC-206/293 (projeção player-facing fail-closed, `done`). Dependência **suave** da SPEC-296 (liga `RPG_NPC_KNOWLEDGE=on` no staging): sem ela a fama por local fica restrita a testemunhas diretas (ver R14).
 > **Desbloqueia:** SPEC-299 (lei/crime: consome `fame_at`, `register_deed_kind`, `world.shelter`, `intercession_available`), SPEC-300 (companheiros/romance: consome `npc_tier`, `apply_npc_delta`, avisos), SPEC-301 (patentes: consome `faction_tier`).
@@ -363,9 +363,9 @@ Cada etapa pode pousar sozinha (flag não é necessária: os efeitos ficam inert
 - [x] Guard de FallbackLLM em `RouterDecision`, `NPCResponse`/`NPCSchema`, `StoryUpdate` alterados (try/except ou isinstance)
 - [x] Saves antigos continuam carregando (sem bump; defaults neutros)
 - [x] Playtest MockLLM 14 perfis × 50 turnos sem violação `error` nova; letalidade da SPEC-285 inalterada (sem mudança de combate)
-- [ ] `uv run pytest` verde (suíte completa offline) e build/e2e do `web/` verdes
-- [ ] Revisão independente (`handoffs/SPEC-298-review.md`)
-- [ ] Smoke real §6 executado e registrado
+- [x] `uv run pytest` verde (suíte completa offline) e build/e2e do `web/` verdes
+- [x] Revisão independente (`handoffs/SPEC-298-review.md`)
+- [x] Smoke real §6 executado e registrado
 
 ## 6. Smoke test com LLM real
 
