@@ -1,9 +1,6 @@
 # SPEC-296 — mundo-vivo-onda0-religacoes
 
-> **Status:** `in-progress` (aprovada pelo dono em 2026-10-20; Etapas 1–4 implementadas, Etapa 5 = coordenador)
-> **Criada:** 2026-10-20 · **Atualizada:** 2026-10-20
-> **Depende de:** SPEC-215 (`done`)
-> **Desbloqueia:** SPEC-298, SPEC-302 (consomem notícias e ambiente)
+> **Status:** `done` (2026-10-23) — Etapas 1–4 na main (`fe88201`), revisão Sol APPROVED (P2 corrigidos: rumor ≤280, guarda+log no ambiente, sem alerta em derrota, CSS). R1: staging `RPG_NPC_KNOWLEDGE` shadow → `on` (deploy `bf3247e`, `e2e_session` verde nas duas etapas). §6 smoke real DeepSeek (explorador 12 turnos, seed 7): 0 erros; narração usa período/clima global/escuridão; 25 violações `rag.persistence_error` = FAISS local não abre caminho com acento (limitação conhecida, `docs/playtests/smoke-conflito-v4-2026-07-25.md`), não relacionada. Follow-up P2-4 (teste encadeado combate→storyteller do reforço).
 
 ---
 
@@ -181,16 +178,16 @@ percebido pelo herói.
 
 ## 5. Critérios de aceite
 
-- [ ] R1: staging em `on`, com evidência (evals + playtest + smoke) registrada.
-- [ ] R2–R3 cobertos por teste; o reforço sai de fato com seed.
-- [ ] R4–R5: `<AMBIENTE>` nos 3 prompts; zero regressão nos testes de luz e
+- [x] R1: staging em `on`, com evidência (evals + playtest + smoke) registrada.
+- [x] R2–R3 cobertos por teste; o reforço sai de fato com seed.
+- [x] R4–R5: `<AMBIENTE>` nos 3 prompts; zero regressão nos testes de luz e
       clima existentes.
-- [ ] R6–R8: notícias persistem, aparecem no prompt e na UI; save antigo
+- [x] R6–R8: notícias persistem, aparecem no prompt e na UI; save antigo
       carrega.
-- [ ] `uv run pytest` verde (suíte completa offline, `-n auto`).
-- [ ] Nenhum `with_structured_output` novo (nada novo a guardar).
-- [ ] `web`: build + lint + typecheck verdes.
-- [ ] Revisão independente (spec-reviewer) APPROVED.
+- [x] `uv run pytest` verde (suíte completa offline, `-n auto`).
+- [x] Nenhum `with_structured_output` novo (nada novo a guardar).
+- [x] `web`: build + lint + typecheck verdes.
+- [x] Revisão independente (spec-reviewer) APPROVED.
 
 ## 5.1 Registro de execução (Etapas 1–4, 2026-10-23)
 
