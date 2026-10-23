@@ -856,6 +856,37 @@ def _concealed_species(manifest, factions, intel) -> list[tuple[str, str]]:
     return out
 
 
+def _flee_alert_world(world: dict, enemies: list[dict], outcome: str) -> dict | None:
+    """SPEC-296 R2: devolve o world com 1 alerta de fuga (1º inimigo `fled`), ou None.
+    Fuga do herói, morte e rendição não registram."""
+    if outcome in ("fled", "death", "surrendered_enemy"):
+        return None
+    fugitive = next((e for e in enemies if e.get("fled") or e.get("status") == "fugiu"), None)
+    if fugitive is None:
+        return None
+    from world_utils import register_flee_alert
+
+    species, bestiary_id = _killer_identity([fugitive])
+    hint = species or str(fugitive.get("name") or "o fugitivo")
+    return register_flee_alert(
+        world,
+        hint,
+        faction_id=(fugitive.get("faction_id") or fugitive.get("faction") or None),
+        turn=int((world or {}).get("turn_count", 0) or 0),
+        enemy_id=bestiary_id,
+    )
+
+
+def _ambient_for_combat(world: dict, player: dict) -> str:
+    """SPEC-296 R5: `<AMBIENTE>` (sem saídas) na narração do combate; nunca quebra o turno."""
+    try:
+        from services.ambient import ambient_block
+
+        return ambient_block(world, player, audience="combat")
+    except Exception:  # noqa: BLE001 - ambientação é opcional
+        return ""
+
+
 def _narrate(
     player: dict,
     enemies: list[dict],
@@ -1442,7 +1473,9 @@ def _combat_node(state: GameState):
             spawned_flavor,
             intent,
             victory,
-            world_pack.world_state_block,
+            world_pack.world_state_block
+            + "\n"
+            + _ambient_for_combat(state.get("world") or {}, player),
             aberturas,
             manifest=combat_meta.get("encounter"),
             withhold=_faction_withhold_clause(
@@ -1487,14 +1520,20 @@ def _combat_node(state: GameState):
         combat_meta["scene"] = None
         combat_meta.pop("scene_allies", None)
         # SPEC-203 R5/R7: resolving → ended + snapshot do desfecho.
+        _outcome = _encounter_outcome(
+            player=player, enemies=enemies, hero_fled=hero_fled, player_dead=player_dead
+        )
         combat_meta = _finish_encounter(
             combat_meta,
             enemies,
-            _encounter_outcome(
-                player=player, enemies=enemies, hero_fled=hero_fled, player_dead=player_dead
-            ),
+            _outcome,
             loot=bool(victory) and not is_simulation,
         )
+        # SPEC-296 R2: inimigo que fugiu pode voltar com reforços (1 alerta/encontro).
+        if not is_simulation:
+            _alerted = _flee_alert_world(world_out or world, enemies, _outcome)
+            if _alerted is not None:
+                world_out = _alerted
     else:
         # Narração de entrada enviada → encontro confirmado (entering→active).
         if combat_meta.get("phase") == "entering":

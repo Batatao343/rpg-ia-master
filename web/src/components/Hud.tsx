@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { mdLite, pct, prettyItem } from "../lib";
 import { searchChronicle } from "../api";
-import type { ChronicleChapter, ChronicleSearchHit, CombatBlock, Condition, FactionView, GameResponse, NpcView } from "../types";
+import type { ChronicleChapter, ChronicleSearchHit, CombatBlock, Condition, FactionView, GameResponse, NewsItem, NpcView } from "../types";
+import { newsLabel, orderNews } from "../heardNews";
 import { SceneZones } from "./SceneZones";
 import { WoundTrack } from "./WoundTrack";
 
@@ -225,6 +226,28 @@ export function FactionsTab({ factions }: { factions: FactionView[] }) {
           );
         })}
       </ul>
+    </div>
+  );
+}
+
+/** SPEC-296 R8: rumores que o herói percebeu em viagem/descanso. */
+export function HeardNews({ news }: { news: NewsItem[] | undefined }) {
+  const items = orderNews(news);
+  return (
+    <div className="heard-news">
+      <p className="hud__label">Ouvi dizer</p>
+      {items.length === 0 ? (
+        <p className="combat-empty">Nenhum rumor chegou aos seus ouvidos — ainda.</p>
+      ) : (
+        <ul className="heard-news__list">
+          {items.map((n, i) => (
+            <li key={`${n.turn}-${i}`} className="heard-news__item">
+              <small className="muted">{newsLabel(n)}</small>
+              <p>{n.text}</p>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

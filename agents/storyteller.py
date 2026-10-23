@@ -789,6 +789,17 @@ def storyteller_node(state: GameState):
         # Sem emboscada: o mundo gera 1 evento off-screen narrado (e grava no RAG da sessão).
         try:
             world, world_note = simulate_world(state, world, factions, intel, 1 if dest else 2)
+            if world_note.startswith("[ECOS DO MUNDO]"):
+                # SPEC-296 R6: rumor percebido persiste ("Ouvi dizer").
+                from services.ambient import append_news
+
+                world = append_news(
+                    world,
+                    text=world_note[len("[ECOS DO MUNDO]") :].strip(),
+                    location_id=world.get("current_location_id", ""),
+                    location_name=world.get("current_location", ""),
+                    turn=int(world.get("turn_count", 0) or 0),
+                )
         except Exception as exc:
             from observability.telemetry import log_fallback
 
@@ -818,37 +829,21 @@ def storyteller_node(state: GameState):
 
     capacidades_block = utility_context_block(state.get("player", {}) or {})
 
-    # spec itens-vivos-e-luz (R7): ambiente de luz na narração.
+    # SPEC-296 R4/R5: bloco de ambiente único (período, clima local/global, luz,
+    # perigo, abrigo e saídas) — substitui luz_block/clima_block.
+    from services.ambient import ambient_block, heard_block
+    from world_utils import weather_effects as _weather_effects
+
+    ambiente_block = ambient_block(world, state.get("player", {}) or {}, audience="story")
+    ouviu_block = heard_block(world)
     from world_utils import light_level as _light_level
 
     _ll = _light_level(world, state.get("player", {}) or {})
-    if _ll.get("dark"):
-        luz_block = (
-            "<AMBIENTE_DE_LUZ>\n    Está ESCURO e o herói NÃO tem fonte de luz. "
-            "Descreva a visão limitada — sombras, sons e cheiros antes de formas; "
-            "o perigo pode surgir de perto. (Percepção e mira sofrem.)\n    </AMBIENTE_DE_LUZ>"
-        )
-    elif _ll.get("label") == "iluminado pela sua luz":
-        luz_block = (
-            "<AMBIENTE_DE_LUZ>\n    A luz que o herói carrega empurra a escuridão "
-            "num círculo trêmulo; além dele, o breu. Mencione a luz.\n    </AMBIENTE_DE_LUZ>"
-        )
-    else:
-        luz_block = ""
-    from world_utils import weather_effects as _weather_effects
-
-    _weather = _weather_effects(world)
     weather_note = ""
-    clima_block = ""
     if world.get("weather_global"):
         weather_note = (
-            f"Fenômeno global ativo: {_weather.get('label', 'clima anômalo')}. "
+            f"Fenômeno global ativo: {_weather_effects(world).get('label', 'clima anômalo')}. "
             "Ele domina o céu e afeta toda a cena."
-        )
-        clima_block = (
-            "<CLIMA_GLOBAL>\n    "
-            + weather_note
-            + " Mencione sua presença e consequências sensoriais.\n    </CLIMA_GLOBAL>"
         )
 
     campaign_plan = state.get("campaign_plan") or {}
@@ -925,8 +920,8 @@ def storyteller_node(state: GameState):
     <EVENTOS_DESTE_TURNO>
     {eventos_turno}
     </EVENTOS_DESTE_TURNO>
-    {luz_block}
-    {clima_block}
+    {ambiente_block}
+    {ouviu_block}
     {hero_state_block}
 
     <FACÇÕES_CONHECIDAS>

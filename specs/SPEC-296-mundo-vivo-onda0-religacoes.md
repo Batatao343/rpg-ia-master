@@ -1,6 +1,6 @@
 # SPEC-296 — mundo-vivo-onda0-religacoes
 
-> **Status:** `approved` (dono, 2026-10-20 — iniciativa mundo vivo, Onda 0)
+> **Status:** `in-progress` (aprovada pelo dono em 2026-10-20; Etapas 1–4 implementadas, Etapa 5 = coordenador)
 > **Criada:** 2026-10-20 · **Atualizada:** 2026-10-20
 > **Depende de:** SPEC-215 (`done`)
 > **Desbloqueia:** SPEC-298, SPEC-302 (consomem notícias e ambiente)
@@ -120,7 +120,9 @@ percebido pelo herói.
     fugiu.
   - `api.py` (`_world_block` ~:2792): passa a expor `news`.
   - `web/src/types.ts`: `news?: NewsItem[]`.
-  - `web/src/components/Hud.tsx` (ou o Codex): nova seção "Ouvi dizer".
+  - `web/src/components/Hud.tsx` (`HeardNews`) + `web/src/heardNews.ts` (ordem/rótulo,
+    testado em `web/tests/heardNews.test.mjs`), montado na aba Crônica do Codex
+    (`ContextSurface.tsx`).
   - `state.py`: `WorldState.news: list[dict]`, opcional.
 - **Staging:** as envs vão por `scripts/` do fluxo `staging-deploy`
   (`vercel_env.py`). Tudo fica registrado no CHANGELOG.
@@ -189,6 +191,18 @@ percebido pelo herói.
 - [ ] Nenhum `with_structured_output` novo (nada novo a guardar).
 - [ ] `web`: build + lint + typecheck verdes.
 - [ ] Revisão independente (spec-reviewer) APPROVED.
+
+## 5.1 Registro de execução (Etapas 1–4, 2026-10-23)
+
+- Desvios: o hint do alerta usa o rótulo canônico da espécie (`_killer_identity`), com o
+  nome do inimigo como fallback; `enemy_id` = id base do bestiário. O alerta só é
+  registrado no fechamento normal do encontro (não no ramo "sem ativos na entrada").
+- Locais: `agents/combat.py::_flee_alert_world`, `_ambient_for_combat`;
+  `services/ambient.py` (`ambient_block`, `append_news`, `heard_block`).
+- SPEC-215 com `RPG_NPC_KNOWLEDGE=shadow` e `on`: 50 passed em cada.
+- `playtest explorador --turns 50` (Mock, `on`): 0 erros, 0 violações.
+- `playtest combate --turns 200` (Mock), seeds 1/2: 0 violações (0 `no_progress`).
+  Mortes/encontros: baseline `main` 9/19 e 11/19; com a spec 11/25 e 8/18 (0,44 em ambos).
 
 ## 6. Smoke test com LLM real
 

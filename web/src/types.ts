@@ -131,6 +131,17 @@ export interface InteriorRef {
   tags: string[];
 }
 
+// SPEC-296: rumor percebido pelo herói ("Ouvi dizer").
+export interface NewsItem {
+  day: number;
+  period: string;
+  location_id: string;
+  location_name: string;
+  text: string;
+  source: string;
+  turn: number;
+}
+
 export interface WorldBlock {
   location: string;
   location_id: string;
@@ -147,6 +158,7 @@ export interface WorldBlock {
   blocked_routes: Array<{ a: string; b: string }>; // Fase 6.1: comércio cortado
   // spec mapa-sublocais: interiores do local atual + saída quando dentro de um
   interiors?: { here: InteriorRef[]; exit_to: { id: string; name: string } | null };
+  news?: NewsItem[]; // SPEC-296: "Ouvi dizer" (últimas 12, da mais antiga para a mais nova)
 }
 
 export interface Beat {

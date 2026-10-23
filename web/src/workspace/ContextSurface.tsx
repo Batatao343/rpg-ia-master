@@ -1,6 +1,6 @@
 import { Component, useLayoutEffect, useRef, type KeyboardEvent, type ReactNode } from "react";
 import type { ActionOptions, GameResponse } from "../types";
-import { ChronicleTab, FactionsTab, PeopleTab, type EquipFn } from "../components/Hud";
+import { ChronicleTab, FactionsTab, HeardNews, PeopleTab, type EquipFn } from "../components/Hud";
 import { CodexCategory, CodexTab, DossierCategory, type CodexSection } from "../components/CodexTab";
 import { RovingTablist } from "./RovingTablist";
 import { CONTEXT_TABS, TAB_LABELS, type ContextTab } from "./workspaceModel";
@@ -150,8 +150,13 @@ function renderTab(id: ContextTab, props: ContextSurfaceProps): ReactNode {
             </>
           ) },
         { id: "cronica", label: "Crônica",
-          render: () => <ChronicleTab chapters={data?.chronicle ?? []} gameId={data?.game_id}
-                                projectionStatus={data?.projections?.chronicle?.status} /> },
+          render: () => (
+            <>
+              <HeardNews news={data?.world?.news} />
+              <ChronicleTab chapters={data?.chronicle ?? []} gameId={data?.game_id}
+                            projectionStatus={data?.projections?.chronicle?.status} />
+            </>
+          ) },
       ];
       return <CodexTab gameId={data?.game_id} turnCount={data?.world.turn_count} open={open}
         excludeCategories={["creatures", "factions"]} sections={sections}

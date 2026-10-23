@@ -18,6 +18,7 @@ from llm_setup import ModelTier, get_llm
 from observability.telemetry import log_event as _log_event
 from services import graph_resolver as gr
 from services import quest_log
+from services.ambient import ambient_block
 from services.context_builder import build_context_pack
 from services.input_normalization import optional_entity_ref
 from services.memory_provenance import (
@@ -777,6 +778,7 @@ def npc_actor_node(state: GameState):
     </LORE_PUBLICO_CANONICO>
     {objetivo_block}
     {pack.world_state_block}
+    {ambient_block(state.get("world") or {}, state.get("player") or {}, audience="npc")}
     {_WORLD_TRUTH_NOTE_ON if knowledge_mode == "on" else _WORLD_TRUTH_NOTE_OFF}
 
     <FACÇÕES_DO_MUNDO>

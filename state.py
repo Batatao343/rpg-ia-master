@@ -255,6 +255,7 @@ class WorldState(TypedDict, total=False):
     looming_threat: str  # ameaça invocada (entidade) pairando sobre o mundo
     looming_threat_faction: str  # SPEC-289: fação que invocou a ameaça (tema da criatura)
     last_encounter_turn: int  # turno do último encontro automático (cooldown)
+    news: list[dict]  # SPEC-296: rumores percebidos ("Ouvi dizer"), FIFO 12
     threat_alerts: list[
         dict
     ]  # Fase 2.5b: fugas viram alerta regional (ver world_utils.register_flee_alert)

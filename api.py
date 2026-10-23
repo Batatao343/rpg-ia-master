@@ -2833,6 +2833,8 @@ def _world_block(
         # spec mapa-sublocais (R7): interiores do local atual ("Locais daqui")
         # + caminho de volta quando o jogador está DENTRO de um interior.
         "interiors": _interiors_block(w.get("current_location_id", "")),
+        # SPEC-296 R8: "Ouvi dizer" — rumores que o herói percebeu (últimas 12).
+        "news": [dict(n) for n in (w.get("news") or []) if isinstance(n, dict)][-12:],
     }
 
 
