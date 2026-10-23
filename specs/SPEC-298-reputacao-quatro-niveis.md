@@ -1,6 +1,6 @@
 # SPEC-298 — Reputação em quatro níveis (NPC, fação, local, raça/origem)
 
-> **Status:** `draft`
+> **Status:** `approved` (dono, 2026-10-23)
 > **Criada:** 2026-10-20 · **Atualizada:** 2026-10-20
 > **Depende de:** SPEC-215 (`npc_knowledge`: testemunha/propagação, `done`), SPEC-226 R8 (reputação só com evento aceito, `done`), SPEC-230 (teto ±1/turno de relação, `done`), SPEC-206/293 (projeção player-facing fail-closed, `done`). Dependência **suave** da SPEC-296 (liga `RPG_NPC_KNOWLEDGE=on` no staging): sem ela a fama por local fica restrita a testemunhas diretas (ver R14).
 > **Desbloqueia:** SPEC-299 (lei/crime: consome `fame_at`, `register_deed_kind`, `world.shelter`, `intercession_available`), SPEC-300 (companheiros/romance: consome `npc_tier`, `apply_npc_delta`, avisos), SPEC-301 (patentes: consome `faction_tier`).
@@ -387,3 +387,11 @@ Registrar custo, provider, modelo e resultado em `handoffs/SPEC-298-smoke.md`.
 - **D4 — Keepers dos mercadores.** Brynja Forja-fria para a Forja dos Clãs; quem cuida dos outros 5 (curadoria nova via AUTORIA) e se entram `rare_stock` já nesta spec.
 - **D5 — Virtudes dos testes.** Intimidar = `forca`, sondar = `mente` (proposta); alternativa: intimidar = maior entre `forca` e `carisma`.
 - **D6 — HUD.** Remover corações e sparkline (proposta, decisão 7 da VISAO) ou manter um ícone de rótulo sem escala.
+
+
+## Decisões do dono (2026-10-23)
+
+Todas as decisões abertas desta spec seguem o **default recomendado pelo autor**, exceto/explicitando:
+
+- D6: sim — UI só com rótulos e avisos; remover corações, sparkline e '+N reputação'.
+- D8 (vinda da SPEC-301): separar os dois sentidos de `disposition` fica nesta spec.
