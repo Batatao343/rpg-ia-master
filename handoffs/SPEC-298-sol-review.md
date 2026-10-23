@@ -1,7 +1,7 @@
 # SPEC-298 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus (papel Sol, revisão independente) · **Data:** 2026-10-23 · **Commit revisado:** `be0ec2dc`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (final, após re-revisão do delta `be0ec2dc..ba0028b7`)
+> **Revisor:** Opus (papel Sol, revisão independente) · **Data:** 2026-10-23 · **Commit revisado:** `be0ec2dc` (1ª rodada: `CHANGES_REQUIRED`) → `ba0028b7` (re-revisão)
 
 ## Escopo
 
@@ -62,7 +62,43 @@ O que está correto:
 
 ## Correções aplicadas
 
-Nenhuma ainda: o executor corrige P1-1, P1-2 e P1-3, e os P2 que forem baratos, e reenvia.
+Todos os achados foram corrigidos em `ba0028b7`. Conferi cada um no source e no teste:
+
+- **P1-1:** o ramo "aplica agora" usa só `faction_witnessed`; a quest ativa vale apenas para o
+  aceite (R11). Teste: `test_quest_ativa_so_vale_para_aceite_nao_para_testemunho` (pendência,
+  sem aviso, sem `recent_changes`).
+- **P1-2:** `faction_witnessed(..., exclude_id=victim)` compara chave, id e nome. Teste:
+  `test_vitima_sozinha_nao_e_testemunha_da_faccao`.
+- **P1-3:** `merchant_stock` e `_keeper_refusal` não mutam mais o estado; usam o keeper virtual
+  (`keeper_for_price`). `_persist_keeper` devolve uma cópia de `npcs` só em transação bem-sucedida
+  de compra ou venda, e `loot_node` propaga `npcs` no update parcial. Testes: round-trip pelo
+  `execute_trade` e pelo `loot_node` real, com `save_game_state`/`load_game_state` e a entrada
+  intacta.
+  - **Consequência pedida pelo coordenador (keeper virtual até a 1ª transação).** É
+    determinística: os traços usam a seed `sha256(npc_id|game_id)` e `ensure_npc_fields` não
+    depende do turno. Verifiquei por script que, no mesmo estado, a linha virtual de antes da
+    compra é **idêntica** (`==`) à gravada, e que o preço é igual antes e depois (55 → 55).
+  - Antes da 1ª transação, a relação virtual acompanha a fama e a fação atuais, porque o R8 é
+    calculado no primeiro registro. É o comportamento correto: nada é congelado antes de existir.
+- **P2-1:** `_apply_faction(notice=...)` só grava em `recent_changes` quando o aviso é emitido,
+  ou seja, a fação testemunhou e é conhecida. Entrega de pendência longe do jogador não marca nada.
+- **P2-2:** o aviso de dívida só sai com o NPC `in_scene is True` e conhecido; a relação −2
+  continua aplicada uma vez.
+- **P2-3:** para contar como testemunha, o NPC precisa de `in_scene is True` explícito e estar
+  vivo. Teste: NPC legado não é testemunha universal.
+- **P2-4:** `lint_merchant_keepers` e `validate_merchant_keepers` entraram em `validate_all`, com
+  teste.
+- **P2-5:** o round-trip agora cobre `favors`, `heard_deeds`, `relationship_basis`,
+  `recent_changes`, `world.shelter` e `knows_player`.
+- **P2-6:** novo teste `test_regras_de_emissao_r26_npc_presente_faccao_conhecida_fama_local`.
+- **P2-7:** `apply_favor` usa `clamp_gold`.
+
+Achado residual, sem bloquear (follow-up P2): o keeper só vira NPC persistente na **1ª
+transação**, não na 1ª visita como diz o texto do R17. Se o jogador falar com o keeper pelo
+`npc_actor` antes de comprar ou vender, o NPC é gerado pelo caminho normal (LLM), sem
+`keeper_of` e com outra linha. Duas saídas: registrar o keeper na entrada do `loot_node` em
+SHOP, ou fazer o `npc_actor` resolver o nome do keeper via `build_keeper`. Atualizar o texto do
+R17 ou a implementação.
 
 ## Pendências
 
@@ -75,10 +111,16 @@ Nenhuma ainda: o executor corrige P1-1, P1-2 e P1-3, e os P2 que forem baratos, 
   (×1,33 × 0,5) já dava margem antes; o fator de venda > 1 a amplia. Calibrar no playtest
   (`[BALANCEAR]`).
 - **Toast dos avisos no chat** não implementado (registrado na spec). Fica como follow-up de UI.
+- **Keeper persistido na 1ª transação, não na 1ª visita** (ver Correções aplicadas). Fica como follow-up P2 de R17: alinhar a spec ou o `npc_actor`.
+- **`project_index` stale na branch:** `test_project_index` falha até o `wt.sh sync` regenerar o índice no pouso. É esperado e não é bug da spec.
 
 ## Comandos rodados
 
 ```text
 bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider tests/test_spec298_*.py tests/test_fase2.py tests/test_fase34.py tests/test_bug_contabilidade_recompensas.py tests/test_grounding_boundaries.py tests/test_router_interlocutor.py tests/test_dossiers.py tests/test_npc_knowledge.py tests/test_npc_camadas.py → verde (~301 testes, 0 falhas)
 bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n auto tests -k "npc or reputation or economy or router or merchant or comerciante or faction or dossier or persistence or save" → 610 passed, 2 skipped (exit 0)
+# re-revisão (ba0028b7)
+bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n auto tests/test_spec298_*.py tests/test_fase2.py tests/test_fase34.py tests/test_fase44.py tests/test_fase61.py tests/test_fase62.py tests/test_bug_contabilidade_recompensas.py tests/test_grounding_boundaries.py tests/test_playtest_scenarios.py → 264 passed (exit 0)
+bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n auto tests -k "npc or reputation or economy or router or merchant or comerciante or faction or dossier or persistence or save or loot or trade or content" → 718 passed, 2 failed, 2 skipped. As 2 falhas não são da spec: test_jev_router_port (limite de tempo de 0,2 s sob -n auto; serial dá 32 passed) e test_project_index (índice stale, regenerado no pouso)
+script ad hoc (py.sh -c): keeper_for_price antes da compra == linha gravada em outcome["npcs"] → True; preço 55 → 55
 ```
