@@ -858,8 +858,9 @@ def _concealed_species(manifest, factions, intel) -> list[tuple[str, str]]:
 
 def _flee_alert_world(world: dict, enemies: list[dict], outcome: str) -> dict | None:
     """SPEC-296 R2: devolve o world com 1 alerta de fuga (1º inimigo `fled`), ou None.
-    Fuga do herói, morte e rendição não registram."""
-    if outcome in ("fled", "death", "surrendered_enemy"):
+    Fuga do herói, morte, derrota e rendição não registram (review P2-3: reforço
+    não chega em cima do herói caído)."""
+    if outcome in ("fled", "death", "defeat", "surrendered_enemy"):
         return None
     fugitive = next((e for e in enemies if e.get("fled") or e.get("status") == "fugiu"), None)
     if fugitive is None:

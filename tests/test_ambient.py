@@ -87,3 +87,20 @@ def test_heard_block_last_three_and_empty():
         w = append_news(w, text=f"rumor{i}", location_id="a", location_name="Lá", turn=i)
     out = heard_block(w)
     assert "rumor4" in out and "rumor2" in out and "rumor1" not in out
+
+
+def test_append_news_truncates_long_rumor():
+    from services.ambient import NEWS_TEXT_MAX, append_news
+
+    w = append_news({}, text="x" * 1000, location_id="skallgard", location_name="Skallgard", turn=1)
+    assert len(w["news"][-1]["text"]) == NEWS_TEXT_MAX
+
+
+def test_ambient_block_never_raises(monkeypatch):
+    import services.ambient as amb
+
+    def boom(*a, **k):
+        raise RuntimeError("x")
+
+    monkeypatch.setattr(amb, "_ambient_block", boom)
+    assert amb.ambient_block({}, {}, audience="story") == ""

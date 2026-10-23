@@ -10,6 +10,7 @@ from __future__ import annotations
 from typing import Literal
 
 NEWS_CAP = 12
+NEWS_TEXT_MAX = 280  # SPEC-296 review P2-1: rumor vem do LLM; corta antes de persistir
 
 
 def danger_words(level: int) -> str:
@@ -27,7 +28,7 @@ def danger_words(level: int) -> str:
     return "tranquilo"
 
 
-def ambient_block(
+def _ambient_block(
     world: dict,
     player: dict,
     *,
@@ -102,7 +103,7 @@ def append_news(
     Devolve um world NOVO; não muta o original."""
     new_world = dict(world or {})
     news = [dict(n) for n in (new_world.get("news") or []) if isinstance(n, dict)]
-    clean = str(text or "").strip()
+    clean = str(text or "").strip()[:NEWS_TEXT_MAX].rstrip()
     if not clean:
         new_world["news"] = news
         return new_world
@@ -138,3 +139,16 @@ def heard_block(world: dict, limit: int = 3) -> str:
         "<OUVIU_DIZER>\n    O herói ouviu estes rumores. Pode referenciar se fizer sentido; "
         "não invente detalhes além do texto.\n    " + "\n    ".join(rows) + "\n    </OUVIU_DIZER>"
     )
+
+
+def ambient_block(
+    world: dict,
+    player: dict,
+    *,
+    audience: Literal["story", "npc", "combat"],
+) -> str:
+    """Ambientação é opcional: erro aqui nunca derruba o turno (review P2-2)."""
+    try:
+        return _ambient_block(world, player, audience=audience)
+    except Exception:  # noqa: BLE001
+        return ""

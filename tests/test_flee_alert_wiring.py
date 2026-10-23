@@ -102,3 +102,10 @@ def test_alert_produces_reinforcements_encounter():
     assert wu.check_encounter(world, [], {}, turn=5, player_level=3) is None or (
         wu.check_encounter(world, [], {}, turn=5, player_level=3)["reason"] != "reinforcements"
     )
+
+
+def test_defeat_no_alert():
+    from agents.combat import _flee_alert_world
+
+    world = {"current_location_id": "skallgard", "turn_count": 3}
+    assert _flee_alert_world(world, [{"name": "Lobo", "fled": True}], "defeat") is None
