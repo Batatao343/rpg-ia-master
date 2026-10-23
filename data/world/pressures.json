@@ -29,9 +29,9 @@
     "ASCENSION_WARN_PROGRESS": 80
   },
   "surge_weight": {
-    "nova_arcadia": 1.6, "pradaria_ruinas": 1.5, "brekmar": 2.0, "pantano_melancolia": 1.4,
+    "nova_arcadia": 1.6, "pradaria_ruinas": 1.5, "brekmar": 2.5, "pantano_melancolia": 1.4,
     "deserto_zhur": 0.6, "floresta_sussurros": 0.5, "selva_xylos": 0.3, "skallgard": 0.3,
-    "aethelgard": 0.4, "ophidia": 1.6, "costa_negra": 1.6, "montanhas_afiadas": 0.5
+    "aethelgard": 0.4, "ophidia": 1.0, "costa_negra": 1.0, "montanhas_afiadas": 0.5
   },
   "regions": {
     "nova_arcadia":       {"guerra": 20, "fome": 15, "praga": 10, "abismo": 10},

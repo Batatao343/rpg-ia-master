@@ -2856,9 +2856,11 @@ def _world_block(
             "looming_threat": w.get("looming_threat", ""),
         },
         # Fase 6.1: rotas comerciais bloqueadas (WorldMap traceja a conexão)
+        # SPEC-302 (revisão P2-2): só rotas com ponta num local que o herói conhece.
         "blocked_routes": [
             {"a": r.get("a", ""), "b": r.get("b", "")}
             for r in (projection or {}).get("blocked_routes", []) or []
+            if {r.get("a"), r.get("b")} & {*(w.get("visited") or []), w.get("current_location_id")}
         ],
         # spec mapa-sublocais (R7): interiores do local atual ("Locais daqui")
         # + caminho de volta quando o jogador está DENTRO de um interior.

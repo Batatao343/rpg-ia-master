@@ -285,5 +285,12 @@ def test_context_builder_renderiza_rota():
 def test_world_block_expoe_blocked_routes():
     import api as api_mod
 
-    block = api_mod._world_block({"current_location": "X"}, _blocked((BREKMAR, NOVA)), [])
+    known = {"current_location": "X", "visited": [BREKMAR]}  # SPEC-302: so rotas conhecidas
+    block = api_mod._world_block(known, _blocked((BREKMAR, NOVA)), [])
     assert block["blocked_routes"] == [{"a": BREKMAR, "b": NOVA}]
+    assert (
+        api_mod._world_block({"current_location": "X"}, _blocked((BREKMAR, NOVA)), [])[
+            "blocked_routes"
+        ]
+        == []
+    )

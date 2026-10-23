@@ -574,6 +574,15 @@ def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
     # SPEC-302 R28: estados de local e avisos de crise sao fatos do motor de mundo.
     if ev.type in _ENGINE_ONLY_TYPES and proposal.get("source") != "engine":
         return ValidationResult(False, "estado de mundo é gerado pelo motor, não proposto")
+    # SPEC-302 (revisão P1-1): paz e aliança entre facções são cruzamentos do motor.
+    if (
+        ev.type == "faction_relation_changed"
+        and (ev.payload.get("relation") or ev.detail) in ("neutral", "allied_with")
+        and proposal.get("source") != "engine"
+    ):
+        return ValidationResult(
+            False, "relação neutral/allied_with é um cruzamento gerado pelo motor, não proposto"
+        )
     projection = state.get("world_projection") or {}
     turn = (state.get("world") or {}).get("turn_count", 0)
 

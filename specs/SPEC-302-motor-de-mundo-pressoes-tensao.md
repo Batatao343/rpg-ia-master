@@ -798,7 +798,7 @@ próprio.
 - [x] R30: `off` = caminho legado; `shadow` sem efeito; `on` completo
 - [x] R31: a API não vaza pressões nem severidade
 - [x] R32: invariantes, telemetria e seção "Mundo" com dias por perfil
-- [x] R33: C1–C6 fechadas no simulador (tabela na §8 e em `docs/spec302/README.md`; C4 no pior seed = 52,5 %, média 35 %)
+- [x] R33: C1–C6 fechadas no simulador (tabela na §8 e em `docs/spec302/README.md`; C4 no pior seed = 62,5 %, média 34,5 %)
 - [x] R34: M1/M2/M5 da SPEC-285 valem com `on` (0,505 / 43 / 0)
 - [x] Guard de FallbackLLM no `WorldDayNarration` (isinstance + try)
 - [x] `uv run pytest` verde (suíte completa offline; exceto 3 testes de índice gerado, que o `/spec-land` regenera)
@@ -863,9 +863,9 @@ registrar.
 
 ### 8.1 Calibração C1–C6 (120 dias × 20 seeds, `docs/spec302/world_engine_sim.py`)
 
-Tabela completa em `docs/spec302/README.md`. C1 = 11 / 15 / 10 / 13 dias (`nova_arcadia` /
+Tabela completa em `docs/spec302/README.md` (60 seeds, pós-revisão Sol; `ophidia`/`costa_negra` com peso 1,0, `brekmar` 2,5). C1 = 10 / 15 / 10 / 11,5 dias (`nova_arcadia` /
 `brekmar` / `pradaria_ruinas` / `pantano_melancolia`); C2 = 1 dia; C3 e C5 = 100 %; C4 =
-média 35 %, p90 42 %, pior seed 52,5 % (região máx. 21,7 %); C6 sem violações; 0 eventos do
+média 34,5 %, p90 47,5 %, pior seed 62,5 % (região máx. 27,5 %); C6 sem violações; 0 eventos do
 motor rejeitados pelo validator.
 
 ### 8.2 Letalidade (R34), `combate`, MockLLM, 12 seeds (21–32) × 200 turnos
@@ -902,7 +902,7 @@ global do MockLLM; por isso a comparação usa 12 seeds, não 1.
    progresso de facção nem ascensão.
 9. Tamanho de `world_sim` < 40 KB (medido 35,7 KB; a estimativa de 30 KB não considerou as 171
    relações).
-10. C4 avaliado por média/p90 além do pior seed (pior seed 52,5 %). Por D4 (ritmo vence), não se
+10. C4 avaliado por média/p90 além do pior seed (pior seed 62,5 %). Por D4 (ritmo vence), não se
     reduziu a frequência.
 11. D5: default do código = `on`; o staging deve exportar `RPG_WORLD_ENGINE=shadow` até o smoke §6.
 12. Testes legados que dependem do pulso/progresso por período

@@ -554,6 +554,9 @@ def advance_days(
     game_id = str(state.get("game_id", ""))
     day_before, day_after = _clock_day(world_before), _clock_day(world_after)
     sim = ensure_world_sim(state, day_before, factions)
+    if day_before - int(sim.get("last_ticked_day", day_before)) > int(dc["MAX_DAYS_PER_ACTION"]):
+        # on->off->on: sim velho (motor desligado por muito tempo) nao vira catch-up (R29)
+        sim = _new_sim(game_id, day_before, factions, m)
     sim["mode"] = m
     last = int(sim.get("last_ticked_day", day_before))
     if day_after <= last:

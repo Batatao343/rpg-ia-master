@@ -631,7 +631,13 @@ def _world_tick(state, world_before: dict, world: dict, factions: list, intel: d
 
         log_fallback("storyteller", "world_tick_failed", exc)
         return world, factions, None
-    return tick.world, tick.factions, tick
+    new_world = tick.world
+    if tick.sim_key == "world_sim":
+        # SPEC-302 (revisão P2-1): o decaimento de perigo (SPEC-233 R2) nao depende do pulso.
+        from world_utils import decay_danger_overrides
+
+        new_world = decay_danger_overrides(dict(new_world))
+    return new_world, tick.factions, tick
 
 
 def storyteller_node(state: GameState):

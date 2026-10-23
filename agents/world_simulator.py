@@ -12,7 +12,7 @@ aparecem como sinais sem nome. Guard de FallbackLLM (isinstance). Inerte sem cha
 from dataclasses import dataclass
 from typing import Tuple
 
-from langchain_core.messages import SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 
 from llm_setup import ModelTier, get_llm
@@ -248,12 +248,13 @@ def narrate_day(state: dict, items: list) -> str:
         content=(
             "Você narra, em 2-4 frases de dark fantasy em pt-BR, o que o herói viu ou ouviu "
             "enquanto o tempo passava. Use SOMENTE os fatos abaixo, sem inventar nomes, "
-            "números, causas nem consequências novas.\n" + facts
+            "números, causas nem consequências novas."
         )
     )
+    human = HumanMessage(content=facts)  # Gemini/Anthropic recusam prompt sem mensagem humana
     try:
         llm = get_llm(temperature=0.7, tier=ModelTier.FAST)
-        res = llm.with_structured_output(WorldDayNarration).invoke([sys])
+        res = llm.with_structured_output(WorldDayNarration).invoke([sys, human])
     except Exception as exc:
         from observability.telemetry import log_fallback
 
