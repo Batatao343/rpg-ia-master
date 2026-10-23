@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "b05904534cbe26f0f26e35ecc91d8555b1f5be2c",
+  "commit_sha": "54684af739126ae7de6ecb27149c2e98f4f10281",
   "edge_counts": {
-    "calls": 17861,
-    "contains": 739,
-    "defines": 10107,
-    "imports": 1646,
-    "likely_test_for": 1026,
+    "calls": 18450,
+    "contains": 748,
+    "defines": 10325,
+    "imports": 1670,
+    "likely_test_for": 1047,
     "route_to": 63
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:e721daffb64454b5904b3f9ebb1c48c1ca0590edeffdb4744d8777a0c766ba19",
+  "graph_hash": "sha256:09076f909d5673404ebf2ed37706b71ab94616d49fd710d705697abe4083c477",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -374,6 +374,7 @@
     "services/purchase_reconciliation.py",
     "services/quest_log.py",
     "services/reactions.py",
+    "services/reputation.py",
     "services/restore_effects.py",
     "services/retention.py",
     "services/rule_engine.py",
@@ -750,6 +751,14 @@
     "tests/test_spec293_rotulo_faccao.py",
     "tests/test_spec294_followups.py",
     "tests/test_spec295_chefe_no_topo.py",
+    "tests/test_spec298_economia_keeper.py",
+    "tests/test_spec298_faccao_eventos.py",
+    "tests/test_spec298_fama_local.py",
+    "tests/test_spec298_migracao.py",
+    "tests/test_spec298_raca_origem.py",
+    "tests/test_spec298_reputacao_nucleo.py",
+    "tests/test_spec298_social.py",
+    "tests/test_spec298_visibilidade.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -940,14 +949,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 797,
+    "class": 802,
     "endpoint": 63,
-    "file": 886,
-    "function": 3093,
-    "method": 750,
-    "module": 739,
-    "test": 5466
+    "file": 895,
+    "function": 3185,
+    "method": 753,
+    "module": 748,
+    "test": 5584
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:0df6a2e321570d94c2003a09da65a499c965633834cf5ecf8bbd30352bbd4e98"
+  "source_tree_hash": "sha256:83bd2d180aa90d3ca4b5ce3556c74cd4a9eee5cadf6c9ef810ae1c3cfe31721b"
 }
