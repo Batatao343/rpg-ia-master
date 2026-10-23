@@ -168,7 +168,9 @@ def _state_for_graph(user_text: str):
     }
 
 
-def test_graph_rest_advances_factions():
+def test_graph_rest_advances_factions(monkeypatch):
+    # SPEC-302 R21b (D1): no modo `on` o progresso roda no tick diario; este e o caminho legado.
+    monkeypatch.setenv("RPG_WORLD_ENGINE", "off")
     from main import app
 
     result = app.invoke(_state_for_graph("vou descansar e acampar aqui"))

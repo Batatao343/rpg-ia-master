@@ -29,7 +29,7 @@ from services import world_director as wd
 from services import world_pressures as wp
 
 MODES = ("off", "shadow", "on")
-DEFAULT_MODE = "shadow"
+DEFAULT_MODE = "on"
 SIM_VERSION = 1
 
 

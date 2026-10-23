@@ -521,6 +521,7 @@ class WorldSimState(TypedDict, total=False):
     signals: list[dict]
     pending_digest: list[dict]
     tick_log: list[dict]
+    perceived_stats: dict[str, int]
     shadow_location_states: dict[str, dict]
     shadow_blocked_routes: list[dict]
 

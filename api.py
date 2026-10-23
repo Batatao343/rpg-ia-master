@@ -2863,9 +2863,24 @@ def _world_block(
         # spec mapa-sublocais (R7): interiores do local atual ("Locais daqui")
         # + caminho de volta quando o jogador está DENTRO de um interior.
         "interiors": _interiors_block(w.get("current_location_id", "")),
-        # SPEC-296 R8: "Ouvi dizer" — rumores que o herói percebeu (últimas 12).
-        "news": [dict(n) for n in (w.get("news") or []) if isinstance(n, dict)][-12:],
+        # SPEC-296 R8 + SPEC-302 R31: só o rótulo vago do local ATUAL e as notícias
+        # percebidas (lista branca de campos); pressões/world_sim/relações nunca saem.
+        "location_state": _location_state_label(w.get("current_location_id", ""), projection),
+        "news": [
+            {k: n.get(k, "") for k in ("day", "period", "location_name", "text", "turn")}
+            for n in (w.get("news") or [])[-12:]
+            if isinstance(n, dict)
+        ],
     }
+
+
+def _location_state_label(loc_id: str, projection: dict | None) -> str:
+    from services.location_states import location_state, public_label
+    from services.world_engine import mode
+
+    if mode() != "on":
+        return ""
+    return public_label(location_state({"world_projection": projection or {}}, loc_id))
 
 
 def _interiors_block(loc_id: str) -> dict[str, Any]:

@@ -1948,6 +1948,52 @@ def check_reputation(state: dict, prev: dict | None, turn: int) -> list[Violatio
     return out
 
 
+def check_world_engine(state: dict, prev: dict | None, turn: int) -> list[Violation]:
+    """SPEC-302 R32: teto de crises, aviso previo, faixa das pressoes, tick unico por dia."""
+    sim = (state or {}).get("world_sim") or {}
+    if not sim:
+        return []
+    from services import world_pressures as wp
+
+    dc = wp.director_constants()
+    out: list[Violation] = []
+    crises = sim.get("crises") or []
+    active = [c for c in crises if c.get("start_day") is not None and c.get("end_day") is None]
+    if len(active) > int(dc["MAX_ACTIVE_CRISES"]):
+        out.append(
+            _V(
+                "world.crisis_cap_exceeded",
+                "error",
+                turn,
+                f"{len(active)} crises ativas",
+                active=len(active),
+            )
+        )
+    for c in crises:
+        if c.get("start_day") is not None and int(c["start_day"]) - int(
+            c.get("warned_day", 0)
+        ) < int(dc["MIN_WARNING_DAYS"]):
+            out.append(
+                _V(
+                    "world.crisis_without_warning",
+                    "error",
+                    turn,
+                    f"crise {c.get('kind')} em {c.get('region_id')} sem aviso de {dc['MIN_WARNING_DAYS']} dias",
+                    crisis_id=c.get("crisis_id"),
+                )
+            )
+    for region, row in (sim.get("pressures") or {}).items():
+        for kind, value in row.items():
+            if not isinstance(value, int) or not 0 <= value <= 100:
+                out.append(
+                    _V("world.pressure_out_of_range", "error", turn, f"{region}.{kind}={value}")
+                )
+    days = [e.get("day") for e in sim.get("tick_log") or [] if not e.get("capped")]
+    if len(days) != len(set(days)):
+        out.append(_V("world.day_ticked_twice", "error", turn, "dia simulado mais de uma vez"))
+    return out
+
+
 CHECKS: list[Check] = [
     check_reputation,
     check_vitals,
@@ -1981,6 +2027,7 @@ CHECKS: list[Check] = [
     check_unproven_event,
     check_projection_ahead,
     check_npc_knowledge,
+    check_world_engine,
 ]
 
 

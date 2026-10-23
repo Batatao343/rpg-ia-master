@@ -567,6 +567,58 @@ def _engine_owns_factions() -> bool:
     return world_engine.mode() == "on"
 
 
+def _perception_state(state, world: dict, factions: list, intel: dict) -> dict:
+    return {**state, "world": world, "factions": factions, "faction_intel": intel}
+
+
+def _perceive_world(state, world: dict, factions: list, intel: dict, tick):
+    """SPEC-302 R23/R25: filtra o digest pelo que o herói viu/ouviu, grava o TEXTO DO
+    TEMPLATE em `world.news` e devolve (world, itens percebidos). Só no modo `on`."""
+    if tick.sim_key != "world_sim" or not tick.days_ticked or tick.world_sim is None:
+        return world, []
+    try:
+        from services import world_perception as wperc
+
+        sim = tick.world_sim
+        pst = _perception_state(state, world, factions, intel)
+        items = list(sim.get("pending_digest") or [])
+        seen = wperc.perceivable(pst, items)
+        world = wperc.record_news(world, pst, seen)
+        done = {i["item_id"] for i in seen}
+        stats = dict(sim.get("perceived_stats") or {})
+        stats["items"] = int(stats.get("items", 0)) + len(seen)
+        stats["signals"] = int(stats.get("signals", 0)) + sum(
+            1 for i in seen if i["kind"] == "sinal"
+        )
+        stats["crises"] = int(stats.get("crises", 0)) + sum(1 for i in seen if i["kind"] == "crise")
+        sim["perceived_stats"] = stats
+        day = int((world.get("world_clock") or {}).get("day", 1) or 1)
+        # so rumores (com subject_id) esperam propagacao; o resto e testemunho do dia
+        sim["pending_digest"] = [
+            i
+            for i in items
+            if i["item_id"] not in done
+            and i.get("subject_id")
+            and day - int(i.get("day", day)) <= 10
+        ]
+        return world, seen
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("storyteller", "world_perception_failed", exc)
+        return world, []
+
+
+def _narrate_world(state, world: dict, factions: list, intel: dict, perceived: list) -> str:
+    """SPEC-302 R26: no máximo 1 chamada por ação; só com itens percebidos."""
+    if not perceived:
+        return ""
+    from agents.world_simulator import narrate_day
+
+    text = narrate_day(_perception_state(state, world, factions, intel), perceived)
+    return f"[ECOS DO MUNDO] {text}" if text else ""
+
+
 def _world_tick(state, world_before: dict, world: dict, factions: list, intel: dict):
     """SPEC-302 R1: 1 tick por dia virado após viagem/descanso. Nunca levanta: falha do
     motor não derruba o turno (devolve o mundo/facções como estavam e tick=None)."""
@@ -713,9 +765,11 @@ def storyteller_node(state: GameState):
                 f"O jogador DESCANSOU. O tempo avançou para {clock_label(world)} e ele recuperou parte das forças. "
                 "Narre a passagem do tempo e o estado do mundo ao acordar."
             )
+    perceived_items: list = []
     if world_tick is not None:
         if world_tick.world_sim is not None:
             sim_updates[world_tick.sim_key] = world_tick.world_sim
+            world, perceived_items = _perceive_world(state, world, factions, intel, world_tick)
         extra_engine_events_tick = list(world_tick.pending_events)
     else:
         extra_engine_events_tick = []
@@ -906,7 +960,11 @@ def storyteller_node(state: GameState):
         # Sem emboscada: o mundo gera 1 evento off-screen narrado (e grava no RAG da sessão).
         try:
             if _engine_owns_factions():
-                world_note = ""  # modo on: a narracao diaria substitui o pulso (SPEC-302 R26)
+                # modo on: a narracao diaria substitui o pulso (SPEC-302 R26); so se o dia
+                # virou e algo foi percebido (0 chamadas caso contrario)
+                world_note = world_note or _narrate_world(
+                    state, world, factions, intel, perceived_items
+                )
             else:
                 world, world_note = simulate_world(state, world, factions, intel, 1 if dest else 2)
                 if world_note.startswith("[ECOS DO MUNDO]"):

@@ -18,6 +18,7 @@ TRADE_START_GOLD = 200
 _SCENARIOS = {
     "recrutamento": "recrutador",
     "comercio": "comerciante",
+    "mundo": "explorador",
 }
 
 
@@ -49,6 +50,48 @@ def _move_world(world: dict, location_id: str) -> dict:
         visited.append(location_id)
     moved["visited"] = visited
     return moved
+
+
+def _prepare_mundo(prepared: dict) -> dict:
+    """SPEC-302 §6: `nova_arcadia.guerra` em crise e AVISO ja emitido no dia atual; a crise
+    deve abrir em ate 5 dias de jogo (MIN_WARNING_DAYS = 2) e virar `location_state`."""
+    from services import world_engine as we
+    from services import world_pressures as wp
+
+    prepared["world"] = _move_world(prepared.get("world") or {}, "nova_arcadia")
+    day = int(((prepared["world"].get("world_clock") or {}).get("day", 1)) or 1)
+    sim = prepared.get("world_sim") or we._new_sim(str(prepared.get("game_id", "")), day, [], "on")
+    sim["calm_until_day"] = 0
+    sim["pressures"]["nova_arcadia"]["guerra"] = 82
+    sim["bands"], _ = wp.update_bands(sim["bands"], sim["pressures"])
+    if not any(
+        c.get("kind") == "guerra" and c.get("region_id") == "nova_arcadia" for c in sim["crises"]
+    ):
+        from services import world_director as wd
+
+        wd.announce(sim, day, "nova_arcadia", "guerra", game_id=str(prepared.get("game_id", "")))
+        log = list(prepared.get("event_log") or [])
+        log.append(
+            {
+                "event_id": wd.event_id(
+                    str(prepared.get("game_id", "")), "world_crisis_warning", day, "nova_arcadia"
+                ),
+                "turn": 0,
+                "type": "world_crisis_warning",
+                "actor_id": "engine",
+                "target_id": "nova_arcadia",
+                "payload": {
+                    "kind": "guerra",
+                    "region_id": "nova_arcadia",
+                    "crisis_id": "",
+                    "earliest_day": day + 2,
+                },
+                "source": "engine",
+            }
+        )
+        prepared["event_log"] = log
+    prepared["world_sim"] = sim
+    return prepared
 
 
 def prepare(name: str, state: dict) -> dict:
@@ -85,6 +128,9 @@ def prepare(name: str, state: dict) -> dict:
         ]
         return prepared
 
+    if name == "mundo":
+        return _prepare_mundo(prepared)
+
     prepared["world"] = _move_world(
         prepared.get("world") or {},
         "na_anel_dourado",
@@ -103,6 +149,8 @@ def prepare(name: str, state: dict) -> dict:
 def decision_for(name: str, turn: int, state: dict) -> ProfileDecision | None:
     """A primeira ação é inequívoca; turnos extras voltam ao perfil normal."""
     profile_for(name)
+    if name == "mundo":
+        return ProfileDecision(text="Vou descansar e acampar aqui.", mode="free_text")
     if int(turn) != 1:
         return None
     if name == "recrutamento":
@@ -142,6 +190,23 @@ def oracle_violations(name: str, result) -> list[dict]:
             _violation(
                 "smoke.recruitment_not_observed",
                 f"{RECRUIT_NPC_NAME} não entrou na party ativa.",
+                turn,
+            )
+        ]
+
+    if name == "mundo":
+        sim = state.get("world_sim") or {}
+        opened = any(
+            c.get("region_id") == "nova_arcadia" and c.get("start_day") is not None
+            for c in sim.get("crises") or []
+        )
+        warned = any(e.get("type") == "world_crisis_warning" for e in state.get("event_log") or [])
+        if opened and warned:
+            return []
+        return [
+            _violation(
+                "smoke.world_crisis_not_observed",
+                "Aviso -> crise em nova_arcadia nao foi observado em 5 dias de jogo.",
                 turn,
             )
         ]

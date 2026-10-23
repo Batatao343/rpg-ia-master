@@ -344,6 +344,13 @@ def _world_pulse(model, messages):
     )
 
 
+def _world_day_narration(model, messages):
+    """SPEC-302 R26: reescreve so os FATOS dados (linhas `FATO: ...` do prompt)."""
+    content = " ".join(str(getattr(m, "content", "")) for m in messages)
+    facts = [ln[5:].strip() for ln in content.splitlines() if ln.strip().startswith("FATO:")]
+    return _fill(model, {"text": " ".join(facts) or "O dia passou sem novidades."})
+
+
 def _campaign_plan(model, messages):
     return _fill(
         model,
@@ -634,6 +641,7 @@ _DISPATCH = {
     "RouterDecision": _route_decision,
     "StoryUpdate": _story_update,
     "WorldPulse": _world_pulse,
+    "WorldDayNarration": _world_day_narration,
     "CampaignPlanModel": _campaign_plan,
     "MemoryUpdate": _memory_update,
     "PlayerStatsSchema": _player_stats,

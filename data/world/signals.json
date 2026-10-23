@@ -28,6 +28,7 @@
     "ocupado.crise.escala": {"visibility": "regional", "text": "{local} caiu: {faccao} ergue suas insígnias nas muralhas."},
     "ruina.crise.escala": {"visibility": "regional", "text": "{local} foi reduzida a ruínas; sobraram poucos para contar como foi."},
     "ascensao.crise.inicio": {"visibility": "regional", "text": "{percebido}"},
+    "ascensao.crise.desconhecida": {"visibility": "regional", "text": "Algo mudou na região de {regiao}: forças que ninguém soube nomear fizeram seu movimento."},
     "ascensao.aviso": {"visibility": "regional", "text": "Cresce em {regiao} o rumor de que {faccao} está prestes a dar um passo decisivo."},
     "rel.guerra": {"visibility": "regional", "text": "Corre pelas estradas que {faccao} e seus rivais romperam de vez e se preparam para o confronto."},
     "rel.alianca": {"visibility": "regional", "text": "Dizem que {faccao} selou uma aliança com antigos rivais."},

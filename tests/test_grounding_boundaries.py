@@ -444,6 +444,7 @@ def test_archivist_detecta_rejeicao_nova_com_buffer_ja_capado(monkeypatch):
 
 
 def test_rumor_de_mundo_ativa_politica_canonical_only(monkeypatch):
+    monkeypatch.setenv("RPG_WORLD_ENGINE", "off")  # SPEC-302: caminho legado do pulso (off)
     _stub_context(monkeypatch)
     monkeypatch.setattr(
         storyteller,

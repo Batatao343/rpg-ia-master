@@ -858,6 +858,24 @@ def _min_active_entropy_cost(player: dict) -> int:
     return min(costs) if costs else 0
 
 
+def _world_summary(state: dict) -> dict:
+    """SPEC-302 R32: dias decorridos, crises iniciadas/percebidas e sinais percebidos."""
+    sim = (state or {}).get("world_sim") or {}
+    stats = sim.get("perceived_stats") or {}
+    crises = [c for c in sim.get("crises") or [] if c.get("start_day") is not None]
+    return {
+        "enabled": bool(sim),
+        "days_elapsed": int(sim.get("last_ticked_day", 0) or 0)
+        - int(sim.get("enabled_from_day", 0) or 0)
+        if sim
+        else 0,
+        "crises_started": len(crises),
+        "crises_perceived": int(stats.get("crises", 0)),
+        "signals_perceived": int(stats.get("signals", 0)),
+        "items_perceived": int(stats.get("items", 0)),
+    }
+
+
 def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
     """Métricas agregadas da campanha (spec 5.3 R2)."""
     routes: dict = {}
@@ -1408,6 +1426,7 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
         "mock": result.mock,
         "aborted_reason": result.aborted_reason,
         "invariants_enabled": bool(getattr(result, "invariants_enabled", True)),
+        "world": _world_summary(result.final_state),
         "combat_coverage": {
             "executed_turns": len(
                 [record for record in turn_records if record.get("combat_executed")]

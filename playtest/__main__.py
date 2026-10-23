@@ -396,7 +396,7 @@ def main(argv=None) -> int:
     pr.add_argument("--profile", choices=sorted(PROFILES), default=None)
     pr.add_argument(
         "--scenario",
-        choices=("recrutamento", "comercio"),
+        choices=("recrutamento", "comercio", "mundo"),
         default=None,
         help="smoke dirigido com pré-condição e oráculo mecânico",
     )

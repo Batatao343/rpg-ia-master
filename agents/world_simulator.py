@@ -195,3 +195,82 @@ def simulate_world(state: dict, world: dict, factions, intel, periods: int = 1) 
 
             log_fallback("world_simulator", "rag_unavailable", exc)
     return world, note
+
+
+# --- SPEC-302 R26: narrador do digest diario (a LLM so NARRA; nunca decide) -------
+
+
+class WorldDayNarration(BaseModel):
+    text: str = Field(description="2-4 frases do que o personagem viu/ouviu; só os fatos dados.")
+
+
+NARRATION_MAX_CHARS = 600
+
+
+def _catalog_names() -> set[str]:
+    """Nomes de fações/NPCs do catálogo que nunca podem vazar sem estar liberados."""
+    from services import graph_resolver as gr
+
+    names = {str(f.get("name") or "") for f in gamedata.FACTIONS.values()}
+    names |= {
+        str(e.get("name") or "")
+        for e in gr.load_entities().values()
+        if e.get("type") in ("faction", "npc")
+    }
+    return {n for n in names if len(n) >= 5}
+
+
+def _allowed_names(state: dict) -> set[str]:
+    intel = (state or {}).get("faction_intel") or {}
+    allowed = {
+        str(f.get("name") or "")
+        for f in (state or {}).get("factions") or []
+        if (intel.get(f.get("id")) or {}).get("known")
+    }
+    allowed |= {str(k) for k in ((state or {}).get("npcs") or {})}
+    return allowed
+
+
+def _template_text(state: dict, items: list) -> str:
+    from services.world_perception import render
+
+    return " ".join(t for t in (render(state, it) for it in items) if t)[:NARRATION_MAX_CHARS]
+
+
+def narrate_day(state: dict, items: list) -> str:
+    """R26: reescreve o digest PERCEBIDO em 2-4 frases. Nunca levanta; saída inválida,
+    falha da LLM ou nome fora do conjunto permitido -> texto dos templates."""
+    fallback = _template_text(state, items)
+    if not items:
+        return ""
+    facts = "\n".join(f"FATO: {t}" for t in (_template_text(state, [it]) for it in items) if t)
+    sys = SystemMessage(
+        content=(
+            "Você narra, em 2-4 frases de dark fantasy em pt-BR, o que o herói viu ou ouviu "
+            "enquanto o tempo passava. Use SOMENTE os fatos abaixo, sem inventar nomes, "
+            "números, causas nem consequências novas.\n" + facts
+        )
+    )
+    try:
+        llm = get_llm(temperature=0.7, tier=ModelTier.FAST)
+        res = llm.with_structured_output(WorldDayNarration).invoke([sys])
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("world_simulator", "narration_invoke_error", exc)
+        return fallback
+    if not isinstance(res, WorldDayNarration):  # FallbackLLM devolve AIMessage
+        from observability.telemetry import log_fallback
+
+        log_fallback("world_simulator", "narration_structured_invalid")
+        return fallback
+    text = sanitize_meta_preamble(res.text or "").strip()
+    if not text or len(text) > NARRATION_MAX_CHARS:
+        return fallback if not text else text[:NARRATION_MAX_CHARS].rstrip()
+    lowered = text.lower()
+    allowed = {n.lower() for n in _allowed_names(state)}
+    for name in _catalog_names():
+        low = name.lower()
+        if low in lowered and low not in allowed:
+            return fallback
+    return text

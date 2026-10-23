@@ -291,6 +291,22 @@ def render_markdown(report: RunReport) -> str:
         )
     L.append("")
 
+    # SPEC-302 R32: seção "Mundo" (dias decorridos por perfil, crises e sinais percebidos).
+    with_world = [s for s in report.campaigns if (s.get("world") or {}).get("enabled")]
+    if with_world:
+        L.append("## Mundo")
+        L.append("")
+        L.append("| perfil | dias | crises iniciadas | crises percebidas | sinais percebidos |")
+        L.append("|---|---|---|---|---|")
+        for s in with_world:
+            w = s["world"]
+            L.append(
+                f"| {s.get('profile', '?')} | {w.get('days_elapsed', 0)} "
+                f"| {w.get('crises_started', 0)} | {w.get('crises_perceived', 0)} "
+                f"| {w.get('signals_perceived', 0)} |"
+            )
+        L.append("")
+
     # spec balanceamento-classes-pos-playtest (R3): matriz por classe.
     with_class = [s for s in report.campaigns if s.get("class_name")]
     if with_class:

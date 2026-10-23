@@ -94,7 +94,8 @@ def test_pick_target_never_interior():
 
 def test_pick_target_by_tags():
     counts = collections.Counter(
-        ls.pick_crisis_target("nova_arcadia", "guerra", {}, we.day_rng("g", d, "t")) for d in range(400)
+        ls.pick_crisis_target("nova_arcadia", "guerra", {}, we.day_rng("g", d, "t"))
+        for d in range(400)
     )
     # cidades pesam 3x: o conjunto nao e uniforme e nunca inclui o interior (taverna)
     assert "na_taverna_javali" not in counts
