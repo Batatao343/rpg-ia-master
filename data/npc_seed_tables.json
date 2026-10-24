@@ -196,7 +196,7 @@
     {"id": "sec_cristal_nao_declarado", "label": "guarda um cristal tirado das ruínas submersas e nunca o declarou", "regions": ["aethelgard"], "source": "lore_nova/daily_life.txt:297", "review": "dono"},
     {"id": "sec_caminho_seco", "label": "conhece o caminho seco até as ruínas e nega a quem pergunta", "regions": ["aethelgard"], "source": "lore_nova/locations.txt:253", "review": "dono"},
     {"id": "sec_origem_inventada", "label": "nunca esteve em Ophidia e inventou a origem para ser levado a sério", "regions": ["ophidia"], "source": "data/origins.json:126", "review": "dono"},
-    {"id": "sec_vende_atalhos", "label": "vende atalhos a bandos em troca de parte do saque dos viajantes", "regions": ["montanhas_afiadas"], "source": "lore_nova/locations.txt:357", "review": "dono"},
+    {"id": "sec_vende_atalhos", "label": "se faz passar por guia Cinzéu sem nunca ter atravessado as montanhas", "regions": ["montanhas_afiadas"], "source": "lore_nova/locations.txt:357", "review": "dono"},
     {"id": "sec_nome_do_espectro", "label": "reconheceu um espectro das ruínas e nunca contou à família", "regions": ["pradaria_ruinas"], "source": "lore_nova/locations.txt:405", "review": "dono"},
     {"id": "sec_elfo_ampulheta", "label": "sabe que a ampulheta está quase no fim e escondeu isso da família", "regions": ["pradaria_ruinas"], "races": ["race_elfos"], "source": "lore_nova/factions.txt:323", "review": "dono"},
     {"id": "sec_osshari_finge", "label": "finge sentir o êxtase da caçada que o seu povo exibe", "regions": ["costa_negra"], "races": ["race_osshari"], "source": "lore_nova/races.txt:289", "review": "dono"},
@@ -293,6 +293,6 @@
     {"id": "man_pisca_devagar", "label": "pisca devagar como quem recebe lembranças que não são suas", "races": ["race_vrel"], "source": "lore_nova/races.txt:176", "review": "dono"},
     {"id": "man_assina_tudo", "label": "assina e data tudo o que entrega, até um copo d'água", "races": ["race_anoes_fuligem"], "source": "lore_nova/races.txt:116", "review": "dono"},
     {"id": "man_risca_frases", "label": "risca frases curtas na superfície mais próxima enquanto fala", "races": ["race_cinzeus"], "source": "lore_nova/races.txt:240", "review": "dono"},
-    {"id": "man_de_frente_ao_mar", "label": "prefere sentar-se de frente para a porta e para o mar", "regions": ["brekmar"], "factions": ["grupos_piratas_rivais"], "source": "lore_nova/factions.txt:254", "review": "dono"}
+    {"id": "man_de_frente_ao_mar", "label": "prefere sentar-se de frente para a porta e para o mar", "regions": ["brekmar"], "factions": ["grupos_piratas_rivais"], "source": "lore_nova/factions.txt:258", "review": "dono"}
   ]
 }

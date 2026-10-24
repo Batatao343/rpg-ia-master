@@ -145,7 +145,7 @@ Marque `[x]` o que aprova e anote o que deve mudar. Para aprovar: diga "aprovo a
 | [ ] | `sec_cristal_nao_declarado` | guarda um cristal tirado das ruínas submersas e nunca o declarou | regiões: Aethelgard | `lore_nova/daily_life.txt:297` |
 | [ ] | `sec_caminho_seco` | conhece o caminho seco até as ruínas e nega a quem pergunta | regiões: Aethelgard | `lore_nova/locations.txt:253` |
 | [ ] | `sec_origem_inventada` | nunca esteve em Ophidia e inventou a origem para ser levado a sério | regiões: Ophidia | `data/origins.json:126` |
-| [ ] | `sec_vende_atalhos` | vende atalhos a bandos em troca de parte do saque dos viajantes | regiões: Montanhas Afiadas | `lore_nova/locations.txt:357` |
+| [ ] | `sec_vende_atalhos` | se faz passar por guia Cinzéu sem nunca ter atravessado as montanhas | regiões: Montanhas Afiadas | `lore_nova/locations.txt:357` |
 | [ ] | `sec_nome_do_espectro` | reconheceu um espectro das ruínas e nunca contou à família | regiões: Pradaria das Ruínas | `lore_nova/locations.txt:405` |
 | [ ] | `sec_elfo_ampulheta` | sabe que a ampulheta está quase no fim e escondeu isso da família | regiões: Pradaria das Ruínas; raças: Elfo | `lore_nova/factions.txt:323` |
 | [ ] | `sec_osshari_finge` | finge sentir o êxtase da caçada que o seu povo exibe | regiões: Costa Negra; raças: Osshari | `lore_nova/races.txt:289` |
@@ -211,7 +211,7 @@ Marque `[x]` o que aprova e anote o que deve mudar. Para aprovar: diga "aprovo a
 | [ ] | `man_pisca_devagar` | pisca devagar como quem recebe lembranças que não são suas | raças: Vrel | `lore_nova/races.txt:176` |
 | [ ] | `man_assina_tudo` | assina e data tudo o que entrega, até um copo d'água | raças: Anão da Fuligem | `lore_nova/races.txt:116` |
 | [ ] | `man_risca_frases` | risca frases curtas na superfície mais próxima enquanto fala | raças: Cinzéu | `lore_nova/races.txt:240` |
-| [ ] | `man_de_frente_ao_mar` | prefere sentar-se de frente para a porta e para o mar | regiões: Brekmar; facções: Os Grupos Piratas Rivais | `lore_nova/factions.txt:254` |
+| [ ] | `man_de_frente_ao_mar` | prefere sentar-se de frente para a porta e para o mar | regiões: Brekmar; facções: Os Grupos Piratas Rivais | `lore_nova/factions.txt:258` |
 
 ## Exemplos sorteados (game_id `review-306`, turnos 0 a 9)
 
