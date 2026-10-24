@@ -1,4 +1,4 @@
-# ESTADO_ATUAL — 2026-10-23
+# ESTADO_ATUAL — 2026-10-24
 
 > **Regra deste arquivo: substituir, nunca anexar.** Teto de 8 KB
 > (`uv run python scripts/spec_index.py estado-size` falha acima disso).
@@ -8,18 +8,18 @@
 
 ## Estado em 10 linhas
 
-- `main` = `35b9576` (23/10, CI verde até `6046d17`). Iniciativa **mundo vivo**: [docs/mundo-vivo/VISAO.md](docs/mundo-vivo/VISAO.md).
-- Pousadas: **296** (onda 0), **298** (reputação 4 níveis), **302** (motor de mundo: pressões, tensão, estados de local) `done`; **297** (pool entre mundos) na main `in-progress` (staging `shadow`; falta D8 do dono + smoke §6).
-- Suíte offline: **~4.734 passed, 249 skipped, exit 0** (23/10, SPEC-302, `-n auto`). Atualize **substituindo**.
-- Em implementação (worktrees `rpg-spec-NNN`): 299 lei/crime, 300 companheiros, 301 patentes, 303 calendário, 305 quests de mundo. 304 (NPCs off-screen) espera a 300.
-- Staging `35b9576`: DeepSeek, Jev `primary`, teto R$ 5, `RPG_NPC_KNOWLEDGE=on`, `RPG_WORLD_ENGINE=on`, `RPG_SHARED_POOL=shadow` (migração 297 aplicada).
-- Subagentes Sonnet bateram o limite semanal em 23/10 (reset 24/10 14h BRT); trabalho salvo nos worktrees.
+- `main` = `629c791` (24/10, CI verde). Iniciativa **mundo vivo**: [docs/mundo-vivo/VISAO.md](docs/mundo-vivo/VISAO.md).
+- Na main: **296** onda 0, **298** reputação, **302** motor de mundo (`done`); **297** pool entre mundos, **299** lei/crime, **300** companheiros, **301** patentes (revisão Sol aprovada; faltam smoke real §6).
+- Suíte offline: **~5.120 passed, 249 skipped** (24/10, SPEC-301, `-n 3`; `test_session_hardening_local` falha também na main por `supabase status` travado — follow-up de ambiente).
+- Em revisão: **305** quests de mundo; **303+307** calendário (estações/festas + calendário de Valoria: 7 meses de 20 dias, semana dos Cinco Sinos, Ano 112 da Era 7). Pendentes: **306** sementes de NPC +150 (spec aprovada), **304** NPCs off-screen.
+- Staging `35b9576`: DeepSeek, Jev `primary`, teto R$ 5, `RPG_NPC_KNOWLEDGE=on`, `RPG_WORLD_ENGINE=on`, `RPG_SHARED_POOL=shadow` (migração 297 aplicada). Flags novas (`RPG_LAW`, `RPG_COMPANION_SOUL`, `RPG_WORLD_QUESTS`) ainda não configuradas lá.
+- Regra nova (24/10): não disparar agentes em rajada; subagente só testes do escopo com `-n 2`; checar RAM (máquina de 16 GB travou). Ver `CLAUDE.md`.
 
 ## Próximos 3 passos
 
-1. Revisar e pousar 299/300/301/303/305 conforme terminarem; depois implementar 304.
-2. Dono: revisar `data/npc_seed_tables.json` (297 D8), keepers de mercador inventados (298), festas autoradas (303) → então 297 `on`.
-3. Follow-ups: relock eval `npc_knowledge` (298 R23), grant por coluna p/ `rpg_api` antes de 297 `on` em produção, D7 (criaturas do pool em encontros) em spec própria.
+1. Pousar 305 e 303+307 após revisão; implementar 306 e 304.
+2. Smoke real §6 das specs 297/299/300/301/305/303/307 (DeepSeek, US$ ≤ 3/dia) e staging com as flags novas em `shadow` → `on`.
+3. Follow-ups: relock eval `npc_knowledge` (298 R23), grant por coluna p/ `rpg_api` antes de 297 `on` em produção, D7 (criaturas do pool em encontros), 301 F-1 (missão no local conta no turno seguinte), derrota p/ lei → prisão (299), teste local de sessão travando.
 
 ## Bloqueios no dono
 
@@ -45,6 +45,11 @@ Gerado por `uv run python scripts/spec_index.py recent --days 7 --write ESTADO_A
 (roda dentro de `/spec-land` e `/estado`). Não edite à mão entre os marcadores.
 
 <!-- recent:start -->
+- 2026-10-24 · SPEC-307 `draft` — calendario-de-valoria
+- 2026-10-24 · SPEC-306 `draft` — sementes-npc-expansao
+- 2026-10-24 · SPEC-301 `in-progress` — Fações com patente: entrar, subir, sair, trair (e mover o mundo)
+- 2026-10-24 · SPEC-300 `in-progress` — Companheiros com alma
+- 2026-10-24 · SPEC-299 `in-progress` — Lei e crime por região
 - 2026-10-23 · SPEC-305 `draft` — quests-de-mundo-com-prazo
 - 2026-10-23 · SPEC-304 `draft` — npcs-agenda-morte-offscreen
 - 2026-10-23 · SPEC-303 `draft` — calendario-estacoes-festas
