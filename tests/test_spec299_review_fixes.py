@@ -253,6 +253,20 @@ def test_license_request_routes_through_router_and_charges():
     assert why == "licenciado"
 
 
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Peço licença ao mercador e entro na loja",
+        "Com licença, peço licença para passar",
+        "Faço o registro na estalagem",
+    ],
+)
+def test_license_request_ignores_non_magic_permission(text):
+    """Re-revisão P1-4: pedir licença/registro sem magia na frase não cobra a taxa."""
+    state = with_clock(base_state(), 40)
+    assert law.resolve_license_request(state, text) == {}
+
+
 def test_license_request_without_gold_or_outside_jurisdiction():
     poor = with_clock(base_state(player={"gold": 5}), 40)
     poor["messages"] = [HumanMessage(content="compro a licença de magia")]

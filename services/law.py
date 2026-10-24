@@ -93,6 +93,9 @@ _LICENSE_RE = re.compile(
     r"\b(?:pe[cç]o|pedir|compro|comprar|pago|pagar|solicito|requeiro|faco|fazer|tiro|tirar)\b"
     r"[^.!?]*\b(?:registro|licenca)\b"
 )
+# Review P1-4: "peço licença para passar" / "faço o registro na estalagem" não são o registro
+# de magia — o pedido só vale com magia/Éter na MESMA frase.
+_MAGIC_RE = re.compile(r"\b(?:magi\w*|eter|feiti\w*|arcan\w*|conjur\w*|encantament\w*)\b")
 _NEGATORS = frozenset({"nao", "jamais", "nunca", "recuso", "recusar", "recusa", "nem", "evito"})
 _CLAUSE_END = re.compile(r"[.!?;,:]|\be\b|\bmas\b")
 
@@ -1652,7 +1655,10 @@ def resolve_license_request(state: dict, text: str) -> dict:
     if mode() == "off" or not law_codes.is_active():
         return {}
     folded = _fold(text)
-    if not _affirmed(_LICENSE_RE, folded):
+    if not any(
+        _MAGIC_RE.search(sentence) and _affirmed(_LICENSE_RE, sentence)
+        for sentence in re.split(r"[.!?]", folded)
+    ):
         return {}
     code = law_codes.code_for_location(_here(state))
     if not code or not law_codes.crime_row(code, "magia_ilegal"):

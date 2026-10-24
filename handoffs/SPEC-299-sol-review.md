@@ -1,7 +1,7 @@
 # SPEC-299 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus (Sol, revisão independente) · **Data:** 2026-10-24 · **Commit revisado:** `fa05d92c`
+> **Veredito:** `CHANGES_REQUIRED` (re-revisão de `c67a7bb5`: P1-1/2/3 resolvidos; 1 P1 novo, P1-4, introduzido pela correção do P2-4)
+> **Revisor:** Opus (Sol, revisão independente) · **Data:** 2026-10-24 · **Commits revisados:** `fa05d92c` (1ª) e `fa05d92c..c67a7bb5` (re-revisão)
 
 ## Escopo
 
@@ -49,7 +49,7 @@ O que está correto:
 
 ## Correções aplicadas
 
-(nenhuma; o revisor não implementa)
+Commit `c67a7bb5` (executor), conferido na re-revisão abaixo: P1-1, P1-2, P1-3, P2-1, P2-2, P2-3, P2-4 (com regressão, ver P1-4), P2-5 (números na §8), P2-6, P2-7 (documentado).
 
 ## Pendências
 
@@ -70,4 +70,38 @@ bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 2 tests/test_combat_life
 sonda (scratchpad/probe_prison.py): preso + "vou para o Anel de Lama" → loc na_anel_lama, conf "imprisoned" mantido (P1-1)
 sonda (scratchpad/probe_neg.py): "Não me rendo! Saco a espada." → served sentence, na_anel_ferro; "não vou pagar nada" → multa debitada (P1-2)
 sonda (scratchpad/probe_travel.py): viagem nova_arcadia→na_anel_lama → scene_block calculado em nova_arcadia com patrulha (P1-3)
+```
+
+## Re-revisão — delta `fa05d92c..c67a7bb5`
+
+Escopo: só o delta (`agents/router.py`, `agents/storyteller.py`, `agents/turn_finalizer.py`,
+`state.py`, `services/law.py`, a §8 da spec e `tests/test_spec299_review_fixes.py`).
+
+| ID | Status | Evidência |
+|---|---|---|
+| P1-1 | **resolvido** | Preso, a intenção de viagem/fuga vira `_escape_prison` (rolagem + `evasao`), `law_gate_consumed` desliga viagem e descanso no storyteller, e o `imprisoned` deixa de valer fora da prisão. Sonda refeita: "vou para o Anel de Lama", "viajo para a Nova Arcadia" e "descanso" mantêm o jogador em `na_anel_ferro`, sem viagem grátis. O transitório é zerado no `turn_finalizer`. |
+| P1-2 | **resolvido** | `_affirmed` aplica negação por oração. Sonda: "Não me rendo! Saco a espada." → `combat_agent` (resistência), "não vou pagar nada" → conversa, sem débito, "não fujo, explico…" → conversa, "não tenho escolha, me rendo" → pena, "eu pago a multa" → multa. |
+| P1-3 | **resolvido** | `scene_block`/`crime_hint_enabled` recebem `{**state, "world": world, "npcs": scene_npcs}`. Sonda: viagem para `na_anel_lama` → bloco calculado no destino, vazio. |
+| P2-1 | resolvido | Léxico com formas fechadas ("furtivamente", "encantado" e "golpe de sorte" não casam mais). |
+| P2-2 | resolvido | Em `multa`, render-se paga a multa. Sem ouro, expulsão com `heat=30` (suspeito), sem caçadores. |
+| P2-3 | resolvido | Em `shadow`, sem fama e sem `crime_witnessed`. |
+| P2-4 | resolvido **com regressão** | Fiação router → `resolve_license_request` → `buy_license`, mais o sinal diegético do registro. Ver P1-4. |
+| P2-5/6/7 | resolvidos | Números da SPEC-285 na §8, concordância "da Legião de Ferro", ressalva do "byte a byte" documentada. |
+
+### Achado novo
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P1-4 | P1 | `services/law.py:92-95` (`_LICENSE_RE`), `agents/router.py:136-150` (`_law_gate`) | **"Pedir licença" é expressão comum ("com licença") e hoje compra a licença de magia.** O regex aceita qualquer verbo (`peço/pago/faço/tiro…`) seguido de `registro\|licenca` na mesma frase, sem exigir magia/Éter. Sonda em Nova Arcádia com `RPG_LAW=on` e sem confronto: "Peço licença ao mercador e entro na loja", "Com licença, peço licença para passar" e "Faço o registro na estalagem" debitaram **250 de ouro** cada (500 → 250), gravaram `licenses=["codigo_de_ferro"]` e consumiram o turno (`law_gate_consumed=True`, rota STORY no lugar de NPC). É o mesmo tipo de defeito do P1-2: o gate determinístico cobra do jogador contra a intenção dele. | Exigir o objeto mágico na mesma oração, ex.: `\b(?:registro\|licenca)\s+(?:para\s+(?:usar\s+)?\|d[eo]\s+(?:meu\s+\|minha\s+)?)?(?:magia\|eter\|feiticaria)\b` (e "registro meu Éter"), mantendo o `_affirmed`. Testes negativos com as 3 frases acima e positivos com "peço o registro do meu Éter" e "compro a licença de magia". |
+
+Veredito da re-revisão: **CHANGES_REQUIRED**, só por causa do P1-4. A correção é local (regex
+mais 2 testes). Depois dela o coordenador pode conferir os testes novos e pousar como
+`APPROVED_WITH_FOLLOWUPS` sem outra rodada minha. Os follow-ups que continuam: smoke real da
+§6, derrota em `law_enforcement` → prisão (sugestão) e o denominador de 15 perfis.
+
+```text
+bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 2 tests/test_spec299_*.py tests/test_npc_knowledge*.py tests/test_spec298_fama_local.py tests/test_spec298_visibilidade.py tests/test_combat_lifecycle.py tests/test_router_interlocutor.py tests/test_fase51.py → 242 passed (c67a7bb5)
+sonda probe_prison.py (c67a7bb5): viagem/descanso preso → permanece em na_anel_ferro (P1-1 ok)
+sonda probe_lic.py (c67a7bb5): negações ok (P1-2); "Peço licença ao mercador…" → gold 250, licenses=[codigo_de_ferro] (P1-4)
+sonda probe_travel.py (c67a7bb5): scene_block em na_anel_lama, vazio (P1-3 ok)
 ```
