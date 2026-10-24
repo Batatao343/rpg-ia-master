@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "25b318526ef0e88ef4253958d048a0682e14081d",
+  "commit_sha": "8b6875709fc70a83dce20462b42f4cad2765f475",
   "edge_counts": {
-    "calls": 20387,
-    "contains": 799,
-    "defines": 11128,
-    "imports": 1811,
-    "likely_test_for": 1162,
+    "calls": 21288,
+    "contains": 811,
+    "defines": 11410,
+    "imports": 1841,
+    "likely_test_for": 1189,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:9abc2721c2cefcbd1af05a3a21f618eb21e9a0bdc05844e93b707457b5f3fb5e",
+  "graph_hash": "sha256:7793dff8ce91055b6593909c159ca060c4836dec1a338f46c81082775bd30014",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -361,6 +361,8 @@
     "services/jev_rollout.py",
     "services/job_fence.py",
     "services/kill_switches.py",
+    "services/law.py",
+    "services/law_codes.py",
     "services/lease_heartbeat.py",
     "services/local_backup.py",
     "services/location_states.py",
@@ -425,6 +427,7 @@
     "tests/silent_except_scan.py",
     "tests/spec215_helpers.py",
     "tests/spec297_support.py",
+    "tests/spec299_helpers.py",
     "tests/spec300_helpers.py",
     "tests/spec302_helpers.py",
     "tests/test_abuse_logging.py",
@@ -792,6 +795,15 @@
     "tests/test_spec298_reputacao_nucleo.py",
     "tests/test_spec298_social.py",
     "tests/test_spec298_visibilidade.py",
+    "tests/test_spec299_confrontation.py",
+    "tests/test_spec299_crime_claims.py",
+    "tests/test_spec299_hunters.py",
+    "tests/test_spec299_law_codes.py",
+    "tests/test_spec299_law_state.py",
+    "tests/test_spec299_prisoner_api.py",
+    "tests/test_spec299_review_fixes.py",
+    "tests/test_spec299_wanted_signals.py",
+    "tests/test_spec299_witness_report.py",
     "tests/test_spec300_approval.py",
     "tests/test_spec300_departure.py",
     "tests/test_spec300_interfaces.py",
@@ -1000,14 +1012,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 842,
+    "class": 857,
     "endpoint": 64,
-    "file": 946,
-    "function": 3491,
-    "method": 784,
-    "module": 799,
-    "test": 6010
+    "file": 958,
+    "function": 3595,
+    "method": 790,
+    "module": 811,
+    "test": 6167
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:03b8be1d2181a77bc3c6080d3ef377ae24e060974e53f0a18a2690df7a4a7978"
+  "source_tree_hash": "sha256:23de2086d69db3291d9609cd2afec5ab3290ff6c3270653a30a20f7efc7968b1"
 }
