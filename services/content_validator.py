@@ -1296,6 +1296,43 @@ def validate_race_attitudes() -> list[Finding]:
     return [Finding("race_attitudes", "error", path, "", p) for p in lint_race_attitudes(data)]
 
 
+_NPC_SEED_PREFIX = {
+    "professions": "prof_",
+    "desires": "des_",
+    "fears": "fear_",
+    "secrets": "sec_",
+    "contradictions": "con_",
+    "mannerisms": "man_",
+}
+
+
+def _norm_seed_label(label: str) -> str:
+    """Casefold, sem acento, sem pontuação, espaços colapsados (SPEC-306 R10a)."""
+    import re
+    import unicodedata
+
+    base = unicodedata.normalize("NFD", label.casefold())
+    base = "".join(ch for ch in base if unicodedata.category(ch) != "Mn")
+    return re.sub(r"\s+", " ", re.sub(r"[^\w\s]", " ", base)).strip()
+
+
+def _seed_row_reachable(row: dict) -> bool:
+    """SPEC-306 R9: existe (região, raça, facção) que passa nos três filtros da linha."""
+    from services import npc_seed
+
+    ids = npc_seed.lore_ids()
+    for region in ids["regions"]:
+        for race in ids["races"]:
+            for faction in [None, *npc_seed.compatible_factions(region)]:
+                if (
+                    npc_seed._allowed(row, "regions", region)
+                    and npc_seed._allowed(row, "races", race)
+                    and npc_seed._allowed(row, "factions", faction)
+                ):
+                    return True
+    return False
+
+
 def validate_npc_seed_tables(path: str | None = None) -> list[Finding]:
     """SPEC-297 R5 - tabelas de semente: ids existem, >=15 por lista, >=1000 combinações/origem."""
     from services import npc_seed
@@ -1317,6 +1354,7 @@ def validate_npc_seed_tables(path: str | None = None) -> list[Finding]:
         if not isinstance(rows, list) or len(rows) < npc_seed.MIN_TABLE_ENTRIES:
             err(key, f"lista '{key}' precisa de >= {npc_seed.MIN_TABLE_ENTRIES} entradas")
             continue
+        labels_seen: dict[str, str] = {}
         for row in rows:
             rid = str(row.get("id", ""))
             if not rid or not row.get("label"):
@@ -1324,6 +1362,15 @@ def validate_npc_seed_tables(path: str | None = None) -> list[Finding]:
             if rid in seen:
                 err(rid, "id duplicado entre tabelas")
             seen.add(rid)
+            prefix = _NPC_SEED_PREFIX.get(key, "")
+            if rid and not rid.startswith(prefix):
+                err(rid, f"id da tabela '{key}' precisa do prefixo '{prefix}' (SPEC-306)")
+            norm_label = _norm_seed_label(str(row.get("label", "")))
+            if norm_label and norm_label in labels_seen:
+                err(rid, f"rótulo duplicado de '{labels_seen[norm_label]}' em '{key}' (SPEC-306)")
+            labels_seen.setdefault(norm_label, rid)
+            if not _seed_row_reachable(row):
+                err(rid, "linha inalcançável: nenhuma região/raça/facção a sorteia (SPEC-306)")
             for field, valid in (
                 ("regions", ids["regions"]),
                 ("races", ids["races"]),
