@@ -1,5 +1,5 @@
 {
-  "commit_sha": "bf3ffdb9e55fee2291c38e047a1c18049274a5c3",
+  "commit_sha": "6efe4cd74b8984f02332cdc9a013e3c5756940b9",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -73442,7 +73442,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 542
+        "line": 543
       },
       "source": "module:services.world_validators",
       "target": "symbol:services.world_validators._v_crime_witnessed",
@@ -73486,7 +73486,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 555
+        "line": 556
       },
       "source": "module:services.world_validators",
       "target": "symbol:services.world_validators._v_law_resolved",
@@ -73519,7 +73519,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 510
+        "line": 511
       },
       "source": "module:services.world_validators",
       "target": "symbol:services.world_validators._v_location_state_changed",
@@ -73640,7 +73640,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 529
+        "line": 530
       },
       "source": "module:services.world_validators",
       "target": "symbol:services.world_validators._v_world_crisis_warning",
@@ -73662,7 +73662,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 494
+        "line": 495
       },
       "source": "module:services.world_validators",
       "target": "symbol:services.world_validators.catalog_ref",
@@ -73706,7 +73706,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 487
+        "line": 488
       },
       "source": "module:services.world_validators",
       "target": "symbol:services.world_validators.rejection_source",
@@ -73728,7 +73728,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 595
+        "line": 596
       },
       "source": "module:services.world_validators",
       "target": "symbol:services.world_validators.validate_proposal",
@@ -254480,18 +254480,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 548
-      },
-      "source": "symbol:services.world_validators._v_crime_witnessed",
-      "target": "symbol:services.world_validators.ValidationResult",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/world_validators.py",
-        "line": 551
+        "line": 549
       },
       "source": "symbol:services.world_validators._v_crime_witnessed",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -254503,6 +254492,17 @@
         "extractor": "python_ast",
         "file": "services/world_validators.py",
         "line": 552
+      },
+      "source": "symbol:services.world_validators._v_crime_witnessed",
+      "target": "symbol:services.world_validators.ValidationResult",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/world_validators.py",
+        "line": 553
       },
       "source": "symbol:services.world_validators._v_crime_witnessed",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -254700,18 +254700,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 559
-      },
-      "source": "symbol:services.world_validators._v_law_resolved",
-      "target": "symbol:services.world_validators.ValidationResult",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/world_validators.py",
-        "line": 561
+        "line": 560
       },
       "source": "symbol:services.world_validators._v_law_resolved",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -254723,6 +254712,17 @@
         "extractor": "python_ast",
         "file": "services/world_validators.py",
         "line": 562
+      },
+      "source": "symbol:services.world_validators._v_law_resolved",
+      "target": "symbol:services.world_validators.ValidationResult",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/world_validators.py",
+        "line": 563
       },
       "source": "symbol:services.world_validators._v_law_resolved",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -254865,7 +254865,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 517
+        "line": 518
       },
       "source": "symbol:services.world_validators._v_location_state_changed",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -254876,7 +254876,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 519
+        "line": 520
       },
       "source": "symbol:services.world_validators._v_location_state_changed",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -254887,18 +254887,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 522
-      },
-      "source": "symbol:services.world_validators._v_location_state_changed",
-      "target": "symbol:services.world_validators.ValidationResult",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/world_validators.py",
-        "line": 525
+        "line": 523
       },
       "source": "symbol:services.world_validators._v_location_state_changed",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -254910,6 +254899,17 @@
         "extractor": "python_ast",
         "file": "services/world_validators.py",
         "line": 526
+      },
+      "source": "symbol:services.world_validators._v_location_state_changed",
+      "target": "symbol:services.world_validators.ValidationResult",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/world_validators.py",
+        "line": 527
       },
       "source": "symbol:services.world_validators._v_location_state_changed",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -255371,7 +255371,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 534
+        "line": 535
       },
       "source": "symbol:services.world_validators._v_world_crisis_warning",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -255382,18 +255382,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 536
-      },
-      "source": "symbol:services.world_validators._v_world_crisis_warning",
-      "target": "symbol:services.world_validators.ValidationResult",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/world_validators.py",
-        "line": 538
+        "line": 537
       },
       "source": "symbol:services.world_validators._v_world_crisis_warning",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -255405,6 +255394,17 @@
         "extractor": "python_ast",
         "file": "services/world_validators.py",
         "line": 539
+      },
+      "source": "symbol:services.world_validators._v_world_crisis_warning",
+      "target": "symbol:services.world_validators.ValidationResult",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/world_validators.py",
+        "line": 540
       },
       "source": "symbol:services.world_validators._v_world_crisis_warning",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -255459,7 +255459,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 503
+        "line": 504
       },
       "source": "symbol:services.world_validators.catalog_ref",
       "target": "symbol:services.graph_resolver.get_entity",
@@ -255470,7 +255470,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 601
+        "line": 602
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -255481,7 +255481,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 609
+        "line": 610
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -255492,7 +255492,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 612
+        "line": 613
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -255503,7 +255503,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 615
+        "line": 616
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -255514,7 +255514,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 618
+        "line": 619
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -255525,7 +255525,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 624
+        "line": 625
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -255536,7 +255536,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 627
+        "line": 628
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -255547,7 +255547,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 630
+        "line": 631
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -255558,7 +255558,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 638
+        "line": 639
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -255569,7 +255569,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 642
+        "line": 643
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -255580,7 +255580,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 649
+        "line": 650
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -255591,7 +255591,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 679
+        "line": 680
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -255602,7 +255602,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 689
+        "line": 690
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators._proof_gate",
@@ -255613,7 +255613,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 688
+        "line": 689
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.is_engine_proposal",
@@ -464006,7 +464006,7 @@
     {
       "id": "symbol:services.world_validators._v_crime_witnessed",
       "kind": "function",
-      "line": 542,
+      "line": 543,
       "path": "services/world_validators.py",
       "qualified_name": "services.world_validators._v_crime_witnessed"
     },
@@ -464034,7 +464034,7 @@
     {
       "id": "symbol:services.world_validators._v_law_resolved",
       "kind": "function",
-      "line": 555,
+      "line": 556,
       "path": "services/world_validators.py",
       "qualified_name": "services.world_validators._v_law_resolved"
     },
@@ -464055,7 +464055,7 @@
     {
       "id": "symbol:services.world_validators._v_location_state_changed",
       "kind": "function",
-      "line": 510,
+      "line": 511,
       "path": "services/world_validators.py",
       "qualified_name": "services.world_validators._v_location_state_changed"
     },
@@ -464132,7 +464132,7 @@
     {
       "id": "symbol:services.world_validators._v_world_crisis_warning",
       "kind": "function",
-      "line": 529,
+      "line": 530,
       "path": "services/world_validators.py",
       "qualified_name": "services.world_validators._v_world_crisis_warning"
     },
@@ -464153,7 +464153,7 @@
     {
       "id": "symbol:services.world_validators.catalog_ref",
       "kind": "function",
-      "line": 494,
+      "line": 495,
       "path": "services/world_validators.py",
       "qualified_name": "services.world_validators.catalog_ref"
     },
@@ -464181,7 +464181,7 @@
     {
       "id": "symbol:services.world_validators.rejection_source",
       "kind": "function",
-      "line": 487,
+      "line": 488,
       "path": "services/world_validators.py",
       "qualified_name": "services.world_validators.rejection_source"
     },
@@ -464195,7 +464195,7 @@
     {
       "id": "symbol:services.world_validators.validate_proposal",
       "kind": "function",
-      "line": 595,
+      "line": 596,
       "path": "services/world_validators.py",
       "qualified_name": "services.world_validators.validate_proposal"
     },
@@ -511815,5 +511815,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:65e74845fad6842e62b2457843ac935a7efe7d70e66d2e38272c6c3c22e24e7d"
+  "source_tree_hash": "sha256:b86477c16254453bdd638fe4d6332928691734a4abf82df1a49637435a539925"
 }
