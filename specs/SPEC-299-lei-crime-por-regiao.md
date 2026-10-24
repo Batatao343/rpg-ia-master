@@ -1,6 +1,6 @@
 # SPEC-299 — Lei e crime por região
 
-> **Status:** `approved` (dono, 2026-10-23)
+> **Status:** `in-progress` (implementada; aguarda revisão independente e suíte completa no pouso)
 > **Criada:** 2026-10-20 · **Atualizada:** 2026-10-20
 > **Origem:** `docs/mundo-vivo/VISAO.md` (Regra de ouro; C. Sociedade viva → "Crime e lei por região"; Calibração → "Procurado"; B. Combate vivo → "entregar/vender" prisioneiro)
 > **Depende de:** SPEC-215 (`done`, conhecimento por NPC), **SPEC-298** (fama por local; precisa estar `done`, ver §3.9), SPEC-296 (soft: bloco de ambiente da Onda 0, ver R19)
@@ -422,58 +422,63 @@ fichas que já existem, e uma ficha nova de caçador fica para D7.
 
 ```python
 class CrimeRecord(TypedDict):
-    crime_id: str              # sha256(game_id|turn|type|location_id)[:16]
-    crime_type: str            # catálogo R5
-    jurisdiction_id: str       # code_id
+    crime_id: str  # sha256(game_id|turn|type|location_id)[:16]
+    crime_type: str  # catálogo R5
+    jurisdiction_id: str  # code_id
     location_id: str
-    clock: int                 # npc_knowledge.clock_index
+    clock: int  # npc_knowledge.clock_index
     turn: int
-    victim_ref: str            # "" | "local" | holder id "npc:<id>"
-    victim_faction_id: str     # "" se não houver
-    severity: int              # já multiplicada
-    witnesses: list[str]       # holder ids + "patrol:<loc>"
+    victim_ref: str  # "" | "local" | holder id "npc:<id>"
+    victim_faction_id: str  # "" se não houver
+    severity: int  # já multiplicada
+    witnesses: list[str]  # holder ids + "patrol:<loc>"
     covert: bool
-    source: str                # "llm_claim" | "engine"
-    status: str                # "unwitnessed" | "pending_report" | "reported" | "dropped" | "resolved"
+    source: str  # "llm_claim" | "engine"
+    status: str  # "unwitnessed" | "pending_report" | "reported" | "dropped" | "resolved"
+
 
 class LawReport(TypedDict):
-    report_id: str             # sha256(crime_id|reporter)[:16]
+    report_id: str  # sha256(crime_id|reporter)[:16]
     crime_id: str
     jurisdiction_id: str
-    reporter: str              # holder id ou "patrol:<loc>"
+    reporter: str  # holder id ou "patrol:<loc>"
     due_clock: int
-    status: str                # "queued" | "delivered" | "dropped"
+    status: str  # "queued" | "delivered" | "dropped"
+
 
 class Wanted(TypedDict):
     jurisdiction_id: str
-    heat: int                  # 0..100, valor no last_crime_clock
-    bounty: int                # ouro
+    heat: int  # 0..100, valor no last_crime_clock
+    bounty: int  # ouro
     capital: bool
     last_crime_clock: int
-    known_at: dict[str, int]   # location_id -> clock em que a notícia chega
-    signals_shown: list[str]   # ids de sinal já exibidos (teto 32)
-    hunters_last_clock: int    # -1 = nunca
+    known_at: dict[str, int]  # location_id -> clock em que a notícia chega
+    signals_shown: list[str]  # ids de sinal já exibidos (teto 32)
+    hunters_last_clock: int  # -1 = nunca
+
 
 class LawConfrontation(TypedDict):
     jurisdiction_id: str
     location_id: str
     started_turn: int
     talk_turns: int
-    reason: str                # "patrol_witness" | "recognized" | "self_report"
+    reason: str  # "patrol_witness" | "recognized" | "self_report"
+
 
 class LawServed(TypedDict):
     jurisdiction_id: str
-    mode: str                  # "fine" | "sentence" | "expulsao"
+    mode: str  # "fine" | "sentence" | "expulsao"
     turn: int
     crime_ids: list[str]
 
+
 class LawState(TypedDict, total=False):
-    version: int               # 1
+    version: int  # 1
     crimes: list[CrimeRecord]  # ≤100
-    reports: list[LawReport]   # ≤100
+    reports: list[LawReport]  # ≤100
     wanted: dict[str, Wanted]
     confrontation: LawConfrontation | None
-    served: list[LawServed]    # ≤20
+    served: list[LawServed]  # ≤20
 ```
 
 Schema do LLM (em `agents/storyteller.py`, reaproveitado em `agents/npc.py`):
@@ -481,7 +486,10 @@ Schema do LLM (em `agents/storyteller.py`, reaproveitado em `agents/npc.py`):
 ```python
 class CrimeClaim(BaseModel):
     crime_type: Literal["furto", "agressao", "homicidio", "dano_propriedade", "magia_ilegal"]
-    victim: str = Field(default="", description="Nome EXATO de quem está na cena, 'local' para propriedade, ou vazio.")
+    victim: str = Field(
+        default="",
+        description="Nome EXATO de quem está na cena, 'local' para propriedade, ou vazio.",
+    )
     covert: bool = Field(default=False, description="True só se a ação foi às escondidas.")
 ```
 
@@ -511,11 +519,28 @@ def daily_tick(state: dict, day: int) -> dict  # gancho para SPEC-302; hoje no-o
 
 ```python
 class CrimeCandidate(TypedDict):
-    crime_type: str; victim_ref: str; covert: bool; source: str; location_id: str; turn: int; player_text: str
+    crime_type: str
+    victim_ref: str
+    covert: bool
+    source: str
+    location_id: str
+    turn: int
+    player_text: str
+
+
 class PrisonerRef(TypedDict):
-    prisoner_id: str; name: str; enemy_id: str; faction_id: str; alive: bool
+    prisoner_id: str
+    name: str
+    enemy_id: str
+    faction_id: str
+    alive: bool
+
+
 class LawReceipt(TypedDict):
-    ok: bool; reason: str; gold: int; jurisdiction_id: str
+    ok: bool
+    reason: str
+    gold: int
+    jurisdiction_id: str
 ```
 
 ### 3.6 Fluxo de um turno (modo `on`)
@@ -787,7 +812,23 @@ trechos curtos da narração (sem PII).
 
 ## 8. Evidência
 
-(preencher na implementação: tabelas da etapa 10, smoke real, revisão)
+(preenchido na implementação, 2026-10-24)
+
+**Desvios da spec (registrados no mesmo commit):**
+
+- **SPEC-298 já `done`:** `law._fame_bridge` usa `reputation.fame_at` (leitura, `max(renown, infamy)`) e o novo escritor público `reputation.add_location_fame` (idempotente por `crime:<tipo>:<crime_id>`, infâmia `FAME_DELTA_INFAMY`). Etapa 5 (R15) fechada.
+- **Decisões do dono (23/10):** `magia_ilegal` LIGADA no Código de Ferro (multa 150 / 10 dias; isenta em combate e com licença; `law.buy_license` é o gancho de custo para a SPEC-301, sem chamador no grafo). Prisão longa (pena ≥ `prison_phase_days`=15) deixa o jogador PRESO (`confrontation.reason="imprisoned"`) com saídas: esperar, subornar, fugir (2d10+Agilidade ≥ `escape_dc`) ou resgate por companheiro que esperava na prisão. Suborno (D6) também no confronto: custo = multa × `bribe_multiplier` 2,0 (capital: `bribe_capital_gold`), recusado se a vítima era da autoridade; deixa metade do heat. Sem execução nem mutilação.
+- `CrimeClaim`/`coerce_crime_claims` moram em `services/structured_outputs.py` (evita import circular storyteller/npc).
+- Dado: `data/law_codes.json` aceita bloco `defaults` mesclado em cada código. Tipos `crime_witnessed`/`law_resolved` têm `target_id` = `crime_id` / `code_id`.
+- Detecção do motor (R4b) roda no `turn_finalizer` (`law.turn_updates`), não no fim do `combat_node`; idempotente por `instance_id` do combate.
+- Reconhecimento ao entrar (R19) roda no fim do turno de chegada (`law_state.last_loc`); o confronto vale no turno seguinte. Texto de viagem durante confronto conta como fuga. Fuga/ataque: combate com `guard_pool`, origem `law_enforcement` (o "combate de fuga" reaproveita a mecânica de fuga do combate existente).
+- Fora do que foi feito: resgate de prisioneiro por NPC aliado externo (só companheiro da party em espera); wiring de uma ação de jogador "comprar licença"; execução (vetada).
+- Perfil `criminoso` entra em `PROFILES` (15 perfis); invariantes `law.*` em `playtest/invariants.py`.
+
+**Medição (MockLLM):** 14 perfis x 50 turnos seed 21 com `RPG_LAW=off` e `on`: resultado idêntico (turnos, erros, violações, eventos, mortes, ouro, local final). `criminoso` seeds 21-26 x 100 turnos, `on`: 0 erro, 0 violação; crimes 8/14/18/9/18/10 (parte `unwitnessed`), relatos entregues 7/7/7/5/6/5, sinais mostrados 5/6/5/3/4/4, multa paga em 3 das 6 campanhas. Letalidade SPEC-285 (combate 200 turnos, seeds 21-22, off x on): ver hand-back.
+
+**Smoke real (§6):** NÃO executado (sem chave/custo autorizado nesta sessão); pendente para o coordenador.
+
 
 ## Decisões pendentes do dono
 

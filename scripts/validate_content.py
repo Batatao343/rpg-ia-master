@@ -28,6 +28,7 @@ _ORDEM = (
     "cards",
     "bestiary",
     "visual_assets",
+    "law_codes",
 )
 
 

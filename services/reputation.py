@@ -687,6 +687,16 @@ def deed_known_at(state: Mapping, subject_id: str, location_id: str) -> bool:
     return subject_id in (entry.get("deeds") or [])
 
 
+def add_location_fame(
+    state: Mapping, location_id: str, subject_id: str, renown: int = 0, infamy: int = 0
+) -> dict | None:
+    """Escritor público da fama por local (SPEC-299 R15). Idempotente por
+    ``(local, subject_id)``. Devolve o novo ``location_fame`` ou None se nada mudou."""
+    current = dict(state.get("location_fame") or {})
+    fame, _changed = _add_fame(current, location_id, subject_id, renown, infamy)
+    return fame if fame != current else None
+
+
 def _present_witnesses(state: Mapping, victim_id: str = "") -> list[str]:
     from services import npc_knowledge
 

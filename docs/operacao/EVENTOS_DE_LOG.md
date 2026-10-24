@@ -113,6 +113,13 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `job.failed` | `attempt`, `error_code`, `error_type`, `kind`, `next_run_in_s`, `will_retry` |
 | `job.lease_lost` | `attempt`, `kind` |
 | `job.started` | `attempt`, `kind` |
+| `law.claims_failed` | `error` |
+| `law.claims_rejected` | `count` |
+| `law.crime_registered` | `crime_type`, `jurisdiction`, `reports`, `status`, `witnesses` |
+| `law.gate_failed` | `error` |
+| `law.hunters` | `jurisdiction` |
+| `law.reports` | `delivered`, `dropped`, `wanted` |
+| `law.resolved` | `crimes`, `mode` |
 | `librarian.checking_duplicates` | `entity_type` |
 | `librarian.failed` | `error` |
 | `librarian.match_found` | `existing_id` |

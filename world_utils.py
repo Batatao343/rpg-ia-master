@@ -1000,6 +1000,7 @@ def check_encounter(
     bestiary_knowledge: dict = None,
     projection: dict = None,
     player_level: int = 1,
+    law_hint: dict | None = None,
 ):
     """
     Gatilho DETERMINÍSTICO de encontro ao entrar/descansar num local perigoso.
@@ -1052,6 +1053,18 @@ def check_encounter(
                 "enemy_id": alert.get("enemy_id", ""),
             }
         )
+
+    # SPEC-299 R18: caçadores de recompensa (nível `cacado` + sinal já mostrado). A força vem
+    # do preço pela cabeça (`eff_danger`), NUNCA do nível do jogador. Sem `law_hint`: idêntico.
+    if law_hint:
+        world["encounter_eff_danger"] = int(law_hint.get("eff_danger") or eff)
+        return {
+            "hint": law_hint.get("hint", "caçadores de recompensa"),
+            "flavor": law_hint.get("flavor", "Caçadores de recompensa cercam você."),
+            "reason": "bounty_hunters",
+            "enemy_id": law_hint.get("enemy_id", ""),
+            "jurisdiction_id": law_hint.get("jurisdiction_id", ""),
+        }
 
     if ruler:
         fid = ruler.get("id")

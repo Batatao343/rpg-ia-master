@@ -16,10 +16,16 @@ from observability.telemetry import log_event as _log_event
 from rag import query_rag
 from services import discovery as disc
 from services import graph_resolver as gr
+from services import law as _law_mod
 from services import quest_log
 from services.context_builder import build_context_pack
 from services.prompt_guard import PLAYER_INPUT_RULE, guard_messages
-from services.structured_outputs import ProposedQuest, ProposedWorldEvent
+from services.structured_outputs import (
+    CrimeClaim,
+    ProposedQuest,
+    ProposedWorldEvent,
+    coerce_crime_claims,
+)
 from state import GameState
 from world_utils import (
     advance_factions,
@@ -97,6 +103,19 @@ class StoryUpdate(BaseModel):
     @classmethod
     def _drop_invalid_impacts(cls, v: object) -> list:
         return _coerce_faction_impacts(v)
+
+    crime_claims: list[CrimeClaim] = Field(
+        default_factory=list,
+        description=(
+            "Crimes que a AÇÃO do jogador cometeu NESTE turno (furto, agressao, homicidio, "
+            "dano_propriedade, magia_ilegal). Vazio se não houve crime — na dúvida, vazio."
+        ),
+    )
+
+    @field_validator("crime_claims", mode="before")
+    @classmethod
+    def _drop_invalid_crimes(cls, v: object) -> list:
+        return coerce_crime_claims(v)
 
     beat_completed: bool = Field(
         default=False,
@@ -822,6 +841,11 @@ def storyteller_node(state: GameState):
             enc = None
         else:
             # Fase 6.3: sorteio ponderado — pressão de caça/fação/migração
+            _law_hint = _law_mod.hunter_encounter(
+                {**state, "world": world},
+                str(world.get("current_location_id") or ""),
+                _law_mod.clock_of({**state, "world": world}),
+            )
             enc = check_encounter(
                 world,
                 factions,
@@ -830,6 +854,7 @@ def storyteller_node(state: GameState):
                 bestiary_knowledge=state.get("bestiary_knowledge"),
                 projection=state.get("world_projection"),
                 player_level=_plevel,
+                law_hint=_law_hint,
             )
         # spec encontros-dedupe (R3): não repete o MESMO template de encontro 2x
         # seguidas no mesmo local (o mundo não é um carrossel).
@@ -866,7 +891,7 @@ def storyteller_node(state: GameState):
             det = detection_check(base_p, danger, perception_mod=_perc_mod)
             kind = (
                 "combat"
-                if enc.get("reason") in ("reinforcements", "controlled")
+                if enc.get("reason") in ("reinforcements", "controlled", "bounty_hunters")
                 else roll_encounter_type(danger)
             )
 
@@ -899,6 +924,14 @@ def storyteller_node(state: GameState):
                     "npcs": scene_npcs,
                     "needs_replan": travel_needs_replan,
                 }
+                if enc.get("reason") == "bounty_hunters":
+                    updates.update(
+                        _law_mod.mark_hunters(
+                            state,
+                            str(enc.get("jurisdiction_id") or ""),
+                            _law_mod.clock_of({**state, "world": world}),
+                        )
+                    )
                 if rested_player is not None:
                     updates["player"] = rested_player  # já curou no descanso antes da emboscada
                 elif discovery_player is not None:
@@ -1120,6 +1153,13 @@ def storyteller_node(state: GameState):
         log_fallback("storyteller", "companion_block_failed", exc)
         companion_block, companion_ack = "", []
 
+    # SPEC-299 R9/R16/R19: fato de cena da lei (patrulha, confronto, sinais). Sem nada a
+    # dizer o bloco nem existe (zero token). Nunca heat/bounty/nível (R17).
+    _law_text, _law_scene_updates = _law_mod.scene_block(state)
+    lei_block = _law_text
+    if _law_mod.crime_hint_enabled(state):
+        lei_block = "\n".join(p for p in (lei_block, _law_mod.CRIME_CLAIM_HINT) if p)
+
     sys = SystemMessage(
         content=f"""
     <PERSONA>
@@ -1138,6 +1178,7 @@ def storyteller_node(state: GameState):
     {hero_state_block}
     {companion_block}
     {fame_block}
+    {lei_block}
 
     <FACÇÕES_CONHECIDAS>
     {faccoes_conhecidas}
@@ -1342,6 +1383,19 @@ def storyteller_node(state: GameState):
                 }
             )
 
+        # --- SPEC-299 R4(a)/R6/R7: crimes classificados pelo LLM; o motor valida e registra.
+        # Guard de FallbackLLM: `update` não-StoryUpdate já caiu no except acima (sem claim).
+        law_updates: dict = {}
+        try:
+            law_updates = _law_mod.apply_claims(
+                {**state, **_law_scene_updates, "world": world, "npcs": scene_npcs},
+                getattr(update, "crime_claims", []) or [],
+                player_text=str(last_user_input or ""),
+                quarantine=bool(quarantine_llm_payload),
+            )
+        except Exception as exc:  # silent-ok: lei nunca derruba o turno
+            _log_event("law", "claims_failed", level="warning", error=type(exc).__name__)
+
         # --- Avanço de beat: o narrador sinaliza quando o objetivo da cena foi cumprido ---
         needs_replan = travel_needs_replan
         updated_plan = campaign_plan
@@ -1422,6 +1476,9 @@ def storyteller_node(state: GameState):
             updates["pool_used"] = list(
                 dict.fromkeys([*(state.get("pool_used") or []), *_pool_used_new])
             )
+        # sinais mostrados + crime novo: o crime parte do estado já com os sinais
+        updates.update(_law_scene_updates)
+        updates.update(law_updates)
         # Rumores/cores do simulador são percepção narrativa, não fatos globais.
         # A consequência mecânica aplicada já é persistida diretamente pelo
         # world_simulator; o archivist deve ignorar inferências livres deste texto.

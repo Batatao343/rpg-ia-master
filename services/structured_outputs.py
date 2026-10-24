@@ -51,6 +51,9 @@ EventType = Literal[
     "companion_left",
     "companion_betrayed",
     "companion_fate",
+    # SPEC-299: lei e crime. SÓ o motor emite (source="law" exigido no validator).
+    "crime_witnessed",
+    "law_resolved",
 ]
 
 
@@ -83,3 +86,32 @@ class ProposedQuest(BaseModel):
         default="", description="Id de local EXATO de world_map.json, ou vazio."
     )
     reward_hint: str = ""
+
+
+class CrimeClaim(BaseModel):
+    """SPEC-299 R4(a): crime que a AÇÃO do jogador cometeu neste turno. O motor valida
+    (catálogo fechado, vítima em cena, suporte lexical na ação) antes de aceitar."""
+
+    crime_type: Literal["furto", "agressao", "homicidio", "dano_propriedade", "magia_ilegal"]
+    victim: str = Field(
+        default="",
+        description="Nome EXATO de quem está na cena, 'local' para propriedade, ou vazio.",
+    )
+    covert: bool = Field(default=False, description="True só se a ação foi às escondidas.")
+
+
+CRIME_CLAIM_TYPES = ("furto", "agressao", "homicidio", "dano_propriedade", "magia_ilegal")
+
+
+def coerce_crime_claims(raw: object) -> list:
+    """SPEC-299 R7: item com ``crime_type`` fora do catálogo é DESCARTADO, nunca derruba a
+    resposta inteira (padrão SPEC-045)."""
+    if not isinstance(raw, list):
+        return []
+    out = []
+    for item in raw:
+        if isinstance(item, CrimeClaim):
+            out.append(item)
+        elif isinstance(item, dict) and item.get("crime_type") in CRIME_CLAIM_TYPES:
+            out.append(item)
+    return out

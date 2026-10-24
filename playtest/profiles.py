@@ -1376,6 +1376,38 @@ class Normal(_Base):
         return "Descanso num lugar razoavelmente seguro e organizo meus pertences."
 
 
+class Criminoso(_Base):
+    """SPEC-299: furta e quebra em Nova Arcádia, foge para Brekmar (sem lei), volta e,
+    se a lei o cerca, paga a multa. Exercita crime → testemunha → relato → confronto."""
+
+    name = "criminoso"
+
+    def reset(self) -> None:
+        self._step = 0
+
+    def _next_action(self, state, rng):
+        conf = (state.get("law_state") or {}).get("confrontation")
+        if conf:
+            return "Pago a multa." if rng.random() < 0.7 else "Fujo correndo."
+        here = _current_id(state)
+        step = getattr(self, "_step", 0)
+        self._step = step + 1
+        hub = "nova_arcadia"
+        if here != hub:
+            hop = _next_hop_toward(here, hub)
+            if hop and step % 3 != 2:
+                return f"Viajo para {hop['name']} em busca de uma oportunidade."
+            return "Descanso escondido até a poeira baixar."
+        phase = step % 4
+        if phase == 0:
+            return "Roubo a bolsa de um passante distraído."
+        if phase == 1:
+            return "Quebro a vitrine de uma loja e saio andando."
+        if phase == 2:
+            return "Viajo para Brekmar para me esconder."
+        return "Observo a rua com cuidado."
+
+
 PROFILES: dict[str, Profile] = {
     p.name: p
     for p in [
@@ -1393,5 +1425,6 @@ PROFILES: dict[str, Profile] = {
         Fujao(),
         Recrutador(),
         Normal(),
+        Criminoso(),
     ]
 }

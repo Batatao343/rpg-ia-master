@@ -59,6 +59,16 @@ def turn_finalizer_node(state: dict) -> dict:
         logging.getLogger("rpg.npc_knowledge").warning(
             "turn_updates falhou: %s", type(exc).__name__
         )
+    # SPEC-299: entrega de relatos de crime, Wanted, confronto. `off` = {}; nunca derruba o turno.
+    try:
+        from services import law
+
+        if law.mode() != "off":
+            updates.update(law.turn_updates({**state, **updates}))
+    except Exception as exc:  # silent-ok: lei nunca derruba o turno
+        import logging
+
+        logging.getLogger("rpg.law").warning("turn_updates falhou: %s", type(exc).__name__)
     # SPEC-298: fama por notícia entregue, pendências de fação, reação de NPCs e avisos.
     try:
         from services import reputation

@@ -42,7 +42,7 @@ from services.prose_guard import (
     strip_outer_quotes,
     vary_repeated_opening,
 )
-from services.structured_outputs import ProposedQuest
+from services.structured_outputs import CrimeClaim, ProposedQuest, coerce_crime_claims
 from state import GameState
 from world_utils import apply_faction_reveal, ensure_faction_intel, ensure_factions
 
@@ -203,6 +203,19 @@ class NPCResponse(BaseModel):
             "missão de um papo qualquer."
         ),
     )
+    crime_claims: list[CrimeClaim] = Field(
+        default_factory=list,
+        description=(
+            "Crimes que a AÇÃO do jogador cometeu CONTRA você ou diante de você NESTE turno "
+            "(furto, agressao, homicidio, dano_propriedade, magia_ilegal). Vazio se não houve "
+            "crime — na dúvida, vazio."
+        ),
+    )
+
+    @field_validator("crime_claims", mode="before")
+    @classmethod
+    def _drop_invalid_crimes(cls, v: object) -> list:
+        return coerce_crime_claims(v)
 
 
 # --- PERSISTÊNCIA (spec isolar-cache-runtime) -------------------------------
@@ -987,6 +1000,13 @@ def npc_actor_node(state: GameState):
         except Exception as exc:  # silent-ok: abordagem falha = conversa normal
             social = None
             _log_event("npc", "social_failed", level="warning", error=type(exc).__name__)
+    # SPEC-299: fato de cena da lei + aviso de NPC amistoso (nunca heat/bounty/nível).
+    from services import law as _law_mod
+
+    _law_text, _law_scene_updates = _law_mod.scene_block(state, for_npc=npc_name)
+    lei_block = _law_text
+    if _law_mod.crime_hint_enabled(state):
+        lei_block = chr(10).join(p for p in (lei_block, _law_mod.CRIME_CLAIM_HINT) if p)
     atitude_block = _rep.attitude_block(state, npc_data, social)
     tier_now = _rep.npc_tier(npc_data.get("relationship"))
     # SPEC-300 R11: interlocutor companheiro recebe o bloco da alma (sem chamada extra).
@@ -1038,6 +1058,7 @@ def npc_actor_node(state: GameState):
     {objetivo_block}
     {pack.world_state_block}
     {ambient_block(state.get("world") or {}, state.get("player") or {}, audience="npc")}
+    {lei_block}
     {_WORLD_TRUTH_NOTE_ON if knowledge_mode == "on" else _WORLD_TRUTH_NOTE_OFF}
 
     <FACÇÕES_DO_MUNDO>
@@ -1280,6 +1301,18 @@ def npc_actor_node(state: GameState):
             )
         if quests_now != base_quests:
             updates["quests"] = quests_now
+        # SPEC-299 R4(a)/R7: crimes classificados pelo LLM (guard: só NPCResponse chega aqui).
+        try:
+            updates.update(_law_scene_updates)
+            updates.update(
+                _law_mod.apply_claims(
+                    {**state, **_law_scene_updates},
+                    getattr(res, "crime_claims", []) or [],
+                    player_text=str(last_msg or ""),
+                )
+            )
+        except Exception as exc:  # silent-ok: lei nunca derruba o turno
+            _log_event("law", "claims_failed", level="warning", error=type(exc).__name__)
         if knowledge_new:
             updates["knowledge_links"] = npc_knowledge.normalize_knowledge(
                 {"knowledge_links": [*(state.get("knowledge_links") or []), *knowledge_new]},

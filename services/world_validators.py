@@ -431,6 +431,7 @@ def reason_code(reason: str) -> str:
         or "não existe no ARTIFACTS_DB" in text
         or "não é local do mapa" in text
         or "relação desconhecida" in text
+        or "jurisdição desconhecida" in text
     ):
         return "unknown_target"
     if (
@@ -467,7 +468,7 @@ def reason_code(reason: str) -> str:
     return "other"
 
 
-_ENGINE_SOURCES = frozenset({"engine", "combat", "progression", "system", "rule"})
+_ENGINE_SOURCES = frozenset({"engine", "combat", "progression", "system", "rule", "law"})
 
 
 def rejection_source(proposal: dict) -> str:
@@ -525,11 +526,36 @@ def _v_world_crisis_warning(ev: ProposedWorldEvent, state: dict, proj: dict) -> 
     return ValidationResult(True)
 
 
+def _v_crime_witnessed(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    """SPEC-299 R13: o crime existe no ``law_state`` e a jurisdição é conhecida."""
+    from services import law_codes
+
+    jid = str(ev.payload.get("jurisdiction_id") or "")
+    if not law_codes.get_code(jid):
+        return ValidationResult(False, f"jurisdição desconhecida: {jid!r}")
+    crimes = (state.get("law_state") or {}).get("crimes") or []
+    if not any(c.get("crime_id") == ev.target_id for c in crimes if isinstance(c, dict)):
+        return ValidationResult(False, "crime_id ausente do law_state")
+    return ValidationResult(True)
+
+
+def _v_law_resolved(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    from services import law_codes
+
+    if not law_codes.get_code(ev.target_id):
+        return ValidationResult(False, f"jurisdição desconhecida: {ev.target_id!r}")
+    if ev.payload.get("mode") not in ("fine", "sentence", "expulsao", "bribe"):
+        return ValidationResult(False, "payload.mode inválido")
+    return ValidationResult(True)
+
+
 _ENGINE_ONLY_TYPES = frozenset({"location_state_changed", "world_crisis_warning"})
 
 _VALIDATORS = {
     "location_state_changed": _v_location_state_changed,
     "world_crisis_warning": _v_world_crisis_warning,
+    "crime_witnessed": _v_crime_witnessed,
+    "law_resolved": _v_law_resolved,
     "npc_killed": _v_npc_killed,
     "secret_revealed": _v_secret_revealed,
     "location_control_changed": _v_location_control_changed,
@@ -582,6 +608,9 @@ def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
         and proposal.get("source") != "engine"
     ):
         return ValidationResult(False, "evento de companheiro é gerado pelo motor, não proposto")
+    # SPEC-299: crime/pena nascem na lei (Python), nunca de proposta do LLM.
+    if ev.type in ("crime_witnessed", "law_resolved") and proposal.get("source") != "law":
+        return ValidationResult(False, f"{ev.type} é gerado pelo motor, não proposto")
     # Fase 6.2: posse de item único é observada pelo motor, nunca proposta.
     if (
         ev.type in ("unique_item_claimed", "unique_item_lost")

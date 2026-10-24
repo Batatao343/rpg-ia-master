@@ -58,6 +58,8 @@ SUBJECT_PARAMS: dict[str, tuple[float, int, int]] = {
     RUMOR: (0.35, 5, 1),
     # SPEC-298 R14: feito do jogador (faction_deed e tipos registrados por outras specs)
     "player_deed": (0.7, 10, 2),
+    # SPEC-299 R13: crime testemunhado (só o motor emite, source="law").
+    "crime_witnessed": (0.7, 10, 2),
 }
 # Tipos de evento que viram o assunto `player_deed` (extensível: reputation.register_deed_kind).
 PLAYER_DEED_TYPES: set[str] = {"faction_deed"}

@@ -568,6 +568,75 @@ class WorldSimState(TypedDict, total=False):
     shadow_blocked_routes: list[dict]
 
 
+class CrimeRecord(TypedDict, total=False):
+    """SPEC-299: crime aceito (dono: services.law). Estado PRIVADO (R17)."""
+
+    crime_id: str  # sha256(game_id|turn-ou-dedupe|type|location_id)[:16]
+    crime_type: str  # catálogo fechado (services.law_codes.CRIME_TYPES)
+    jurisdiction_id: str
+    location_id: str
+    clock: int
+    turn: int
+    victim_ref: str  # "" | "local" | "npc:<id>"
+    victim_faction_id: str
+    severity: int  # já multiplicada pelo código
+    witnesses: list[str]  # holder ids + "patrol:<loc>"
+    covert: bool
+    source: str  # "llm_claim" | "engine"
+    status: str  # unwitnessed | pending_report | reported | dropped | resolved
+
+
+class LawReport(TypedDict, total=False):
+    report_id: str
+    crime_id: str
+    jurisdiction_id: str
+    reporter: str  # holder id ou "patrol:<loc>"
+    due_clock: int
+    status: str  # queued | delivered | dropped
+
+
+class Wanted(TypedDict, total=False):
+    jurisdiction_id: str
+    heat: int  # 0..100, valor em last_crime_clock (decai preguiçosamente)
+    bounty: int
+    capital: bool
+    last_crime_clock: int
+    known_at: dict[str, int]  # location_id -> clock em que a notícia chega
+    signals_shown: list[str]  # teto 32
+    hunters_last_clock: int  # -1 = nunca
+
+
+class LawConfrontation(TypedDict, total=False):
+    jurisdiction_id: str
+    location_id: str
+    started_turn: int
+    talk_turns: int
+    reason: str  # patrol_witness | recognized | self_report | imprisoned
+    release_clock: int  # só em "imprisoned"
+
+
+class LawServed(TypedDict, total=False):
+    jurisdiction_id: str
+    mode: str  # fine | sentence | expulsao | bribe
+    turn: int
+    crime_ids: list[str]
+
+
+class LawState(TypedDict, total=False):
+    """SPEC-299: lei por região. Aditivo, sem bump de schema; ausente = vazio."""
+
+    version: int
+    crimes: list[CrimeRecord]  # teto 100
+    reports: list[LawReport]  # teto 100
+    wanted: dict[str, Wanted]
+    confrontation: LawConfrontation | None
+    served: list[LawServed]  # teto 20 (FIFO)
+    delivered: list[str]  # prisoner_id entregues (idempotência, teto 100)
+    licenses: list[str]  # códigos com licença de magia registrada
+    last_loc: str  # último local checado para reconhecimento
+    notice: dict | None  # {turn, text}: resultado de escolha do confronto (1 turno)
+
+
 class WorldProjection(TypedDict, total=False):
     entities: dict[str, EntityState]
     dynamic_edges: list[DynamicEdge]
@@ -728,3 +797,6 @@ class GameState(TypedDict):
     knowledge_queue: list[KnowledgeDelivery]  # teto 200
     location_heard: dict[str, list[str]]  # subject ids por local (teto 100/local)
     legacy_knowledge: bool
+
+    # --- SPEC-299: lei e crime por região (dono: services.law; PRIVADO, nunca na API) ---
+    law_state: LawState

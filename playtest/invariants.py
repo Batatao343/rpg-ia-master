@@ -2037,8 +2037,48 @@ def check_companions(state: dict, prev: dict | None, turn: int) -> list[Violatio
     return out
 
 
+_LAW_LEAK_KEYS = ("law_state", "heat", "bounty", "wanted")
+
+
+def check_law(state: dict, prev: dict | None, turn: int) -> list[Violation]:
+    """SPEC-299 §3.8: ``law.no_leak`` (a API nunca expõe a lei), ``law.report_needs_witness``
+    (todo relato vem de quem testemunhou) e ``law.heat_bounds`` (0..100)."""
+    law_state = state.get("law_state")
+    if not isinstance(law_state, dict) or not law_state:
+        return []
+    out: list[Violation] = []
+    crimes = {c.get("crime_id"): c for c in law_state.get("crimes") or [] if isinstance(c, dict)}
+    for rep in law_state.get("reports") or []:
+        crime = crimes.get(rep.get("crime_id")) if isinstance(rep, dict) else None
+        if crime is None or rep.get("reporter") not in (crime.get("witnesses") or []):
+            out.append(
+                _V(
+                    "law.report_needs_witness",
+                    "error",
+                    turn,
+                    "relato sem testemunha correspondente no crime",
+                    report=str((rep or {}).get("report_id")),
+                )
+            )
+    for jid, w in (law_state.get("wanted") or {}).items():
+        heat = (w or {}).get("heat", 0)
+        if not isinstance(heat, int) or not 0 <= heat <= 100:
+            out.append(_V("law.heat_bounds", "error", turn, f"{jid}: heat fora de 0..100"))
+    try:
+        import api
+
+        dumped = api.format_response(state).model_dump()
+        leaked = [k for k in _LAW_LEAK_KEYS if k in dumped]
+        if leaked:
+            out.append(_V("law.no_leak", "error", turn, f"GameResponse vazou {leaked}"))
+    except Exception:  # silent-ok: invariante é rede de segurança, nunca fonte de crash
+        pass
+    return out
+
+
 CHECKS: list[Check] = [
     check_companions,
+    check_law,
     check_reputation,
     check_vitals,
     check_vitality_consistency,

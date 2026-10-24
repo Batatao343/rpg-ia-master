@@ -630,6 +630,16 @@ def _knowledge(raw, *, legacy_default):
     return normalize_knowledge(raw, legacy_default=legacy_default)
 
 
+def _law_save(raw) -> dict:
+    """SPEC-299 (aditivo, sem bump): `law_state` só entra no save se existir (RPG_LAW=off
+    não escreve nada novo). Save antigo sem a chave carrega sem ela (= lei vazia)."""
+    if not isinstance(raw, dict) or not raw.get("law_state"):
+        return {}
+    from services.law import normalize_law
+
+    return {"law_state": normalize_law(raw.get("law_state"))}
+
+
 def _projection_plan(raw):
     from services.projections import normalize_plan
 
@@ -686,6 +696,8 @@ def _state_to_save_data(state: dict[str, Any], game_id: str) -> dict[str, Any]:
         "pending_derived": _projection_plan(state.get("pending_derived")),
         # SPEC-215 (aditivo, sem bump): ledger privado de conhecimento por NPC.
         **_knowledge(state, legacy_default=False),
+        # SPEC-299 (aditivo, sem bump): lei e crime por região (privado).
+        **_law_save(state),
         # SPEC-298 (aditivo, sem bump): reputação em quatro níveis.
         "location_fame": deepcopy(state.get("location_fame") or {}),
         "reputation_pending": deepcopy(list(state.get("reputation_pending") or [])[-100:]),
@@ -1030,6 +1042,7 @@ def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
         "last_turn_outcome": deepcopy(raw_data.get("last_turn_outcome") or {}),
         # SPEC-215 (aditivo, sem bump): save sem ledger → vazio + legacy_knowledge.
         **_knowledge(raw_data, legacy_default=True),
+        **_law_save(raw_data),
         # SPEC-298 (aditivo, sem bump): save antigo sem as chaves -> defaults neutros.
         "location_fame": deepcopy(raw_data.get("location_fame") or {}),
         "reputation_pending": deepcopy(list(raw_data.get("reputation_pending") or [])),

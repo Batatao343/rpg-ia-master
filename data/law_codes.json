@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "_nota": "SPEC-299. Todos os numeros sao [BALANCEAR]. Local ausente de 'jurisdictions' = sem lei. 'defaults' e mesclado em cada codigo; 'crimes' mescla por tipo.",
+  "jurisdictions": {
+    "nova_arcadia": "codigo_de_ferro",
+    "na_anel_dourado": "codigo_de_ferro",
+    "na_anel_ferro": "codigo_de_ferro",
+    "skallgard": "lei_dos_clas",
+    "sk_salao_do_jarl": "lei_dos_clas",
+    "pr_vaelorn": "lei_de_vaelorn",
+    "pr_solvhen": "lei_de_solvhen",
+    "sx_cidades_hospedeiros": "colmeia"
+  },
+  "defaults": {
+    "witness_mode": "individual",
+    "covert_possible": true,
+    "punishment": "prisao",
+    "prison_location_id": null,
+    "bribe_allowed": false,
+    "bribe_multiplier": 2.0,
+    "bribe_capital_gold": 400,
+    "license_cost": 250,
+    "report_chance": 0.7,
+    "report_delay_periods": 1,
+    "courier_delay_periods": 1,
+    "patrol_density": {"default": 0.35},
+    "decay_per_day": 3,
+    "max_talk_turns": 2,
+    "hunter_radius_periods": 4,
+    "hunter_delay_periods": 5,
+    "hunter_chance": 0.5,
+    "bounty_per_severity": 4,
+    "prison_phase_days": 15,
+    "max_sentence_days": 60,
+    "escape_dc": 16,
+    "dc_furtividade": {
+      "furto": 12,
+      "agressao": 14,
+      "homicidio": 16,
+      "dano_propriedade": 12,
+      "magia_ilegal": 13
+    },
+    "guard_pool": ["enemy_guerreiro_bjorn"],
+    "hunter_pool": ["enemy_bandido", "enemy_bandido_capitao"],
+    "bounty_by_enemy": {"enemy_bandido": 15, "enemy_bandido_capitao": 60},
+    "victim_multiplier": {}
+  },
+  "codes": {
+    "codigo_de_ferro": {
+      "name": "Código de Ferro",
+      "authority_faction_id": "legiao_ferro",
+      "prison_location_id": "na_anel_ferro",
+      "bribe_allowed": true,
+      "report_chance": 0.8,
+      "patrol_density": {"default": 0.5, "na_anel_dourado": 0.8, "na_anel_ferro": 0.7},
+      "guard_pool": ["enemy_soldado_legiao_ferro"],
+      "crimes": {
+        "furto": {"severity": 15, "fine": 40, "sentence_days": 3},
+        "dano_propriedade": {"severity": 10, "fine": 30, "sentence_days": 2},
+        "agressao": {"severity": 30, "fine": 90, "sentence_days": 6},
+        "homicidio": {"severity": 70, "fine": null, "sentence_days": 30, "capital": true},
+        "resistencia": {"severity": 25, "fine": 120, "sentence_days": 8},
+        "evasao": {"severity": 15, "fine": 60, "sentence_days": 4},
+        "magia_ilegal": {"enabled": true, "severity": 40, "fine": 150, "sentence_days": 10}
+      },
+      "victim_multiplier": {"legiao_ferro": 2.0}
+    },
+    "lei_dos_clas": {
+      "name": "Lei dos Clãs",
+      "authority_faction_id": "clas_combate",
+      "punishment": "multa",
+      "report_chance": 0.6,
+      "patrol_density": {"default": 0.3},
+      "guard_pool": ["enemy_guerreiro_bjorn"],
+      "crimes": {
+        "furto": {"severity": 12, "fine": 30, "sentence_days": 2},
+        "dano_propriedade": {"severity": 8, "fine": 20, "sentence_days": 1},
+        "agressao": {"severity": 20, "fine": 60, "sentence_days": 3},
+        "homicidio": {"severity": 60, "fine": 400, "sentence_days": 20},
+        "resistencia": {"severity": 20, "fine": 80, "sentence_days": 4},
+        "evasao": {"severity": 10, "fine": 40, "sentence_days": 2},
+        "magia_ilegal": {"enabled": false, "severity": 0, "fine": 0, "sentence_days": 0}
+      },
+      "victim_multiplier": {"clas_combate": 1.5}
+    },
+    "lei_de_vaelorn": {
+      "name": "Lei de Vaelorn",
+      "authority_faction_id": "cidades_estado_sobreviventes_vaelorn_solvhen",
+      "punishment": "multa",
+      "report_chance": 0.6,
+      "patrol_density": {"default": 0.25},
+      "crimes": {
+        "furto": {"severity": 12, "fine": 30, "sentence_days": 2},
+        "dano_propriedade": {"severity": 8, "fine": 20, "sentence_days": 1},
+        "agressao": {"severity": 20, "fine": 60, "sentence_days": 3},
+        "homicidio": {"severity": 60, "fine": 400, "sentence_days": 20},
+        "resistencia": {"severity": 20, "fine": 80, "sentence_days": 4},
+        "evasao": {"severity": 10, "fine": 40, "sentence_days": 2},
+        "magia_ilegal": {"enabled": false, "severity": 0, "fine": 0, "sentence_days": 0}
+      }
+    },
+    "lei_de_solvhen": {
+      "name": "Lei de Solvhen",
+      "authority_faction_id": "cidades_estado_sobreviventes_vaelorn_solvhen",
+      "punishment": "multa",
+      "report_chance": 0.6,
+      "patrol_density": {"default": 0.25},
+      "crimes": {
+        "furto": {"severity": 12, "fine": 30, "sentence_days": 2},
+        "dano_propriedade": {"severity": 8, "fine": 20, "sentence_days": 1},
+        "agressao": {"severity": 20, "fine": 60, "sentence_days": 3},
+        "homicidio": {"severity": 60, "fine": 400, "sentence_days": 20},
+        "resistencia": {"severity": 20, "fine": 80, "sentence_days": 4},
+        "evasao": {"severity": 10, "fine": 40, "sentence_days": 2},
+        "magia_ilegal": {"enabled": false, "severity": 0, "fine": 0, "sentence_days": 0}
+      }
+    },
+    "colmeia": {
+      "name": "Consenso da Colmeia",
+      "authority_faction_id": "colmeia_hospedeiros",
+      "witness_mode": "colmeia",
+      "covert_possible": false,
+      "punishment": "expulsao",
+      "report_chance": 1.0,
+      "report_delay_periods": 0,
+      "patrol_density": {"default": 0.4},
+      "guard_pool": ["mon_sentinela_hospedeiro"],
+      "crimes": {
+        "furto": {"severity": 15, "fine": 40, "sentence_days": 2},
+        "dano_propriedade": {"severity": 10, "fine": 30, "sentence_days": 1},
+        "agressao": {"severity": 30, "fine": 90, "sentence_days": 4},
+        "homicidio": {"severity": 70, "fine": null, "sentence_days": 20, "capital": true},
+        "resistencia": {"severity": 25, "fine": 120, "sentence_days": 4},
+        "evasao": {"severity": 15, "fine": 60, "sentence_days": 2},
+        "magia_ilegal": {"enabled": false, "severity": 0, "fine": 0, "sentence_days": 0}
+      }
+    }
+  }
+}

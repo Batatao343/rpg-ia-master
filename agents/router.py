@@ -127,6 +127,28 @@ def _interlocutor_payload(resolution, world: dict) -> dict:
     return payload
 
 
+def _law_gate(state: GameState, world: dict, messages) -> dict | None:
+    """SPEC-299 R19: com confronto da lei aberto (`law_state.confrontation`) o router NÃO
+    classifica: resolve por léxico determinístico (pagar/render-se/subornar/fugir/atacar/falar).
+    Sem confronto ou `RPG_LAW != on` devolve None e o router segue idêntico."""
+    from services import law
+
+    if law.mode() != "on" or not (state.get("law_state") or {}).get("confrontation"):
+        return None
+    try:
+        choice = law.resolve_choice(state, _last_human_text(messages))
+    except Exception as exc:  # silent-ok: a lei nunca derruba o turno; segue o roteamento normal
+        _log_event("law", "gate_failed", level="warning", error=type(exc).__name__)
+        return None
+    if not choice:
+        return None
+    route = RouteType(choice.pop("next"))
+    payload = _base_route_payload(route, world)
+    payload.update(choice)
+    payload["next"] = route.value
+    return _tag(payload, "law_gate")
+
+
 def _combat_gate(state: GameState, world: dict, combat: dict):
     """Gate determinístico quando `combat.active` (spec combate-lifecycle):
     - R2: força `combat_agent` (bloqueia npc/loot; conversa segue pro combate que narra).
@@ -271,6 +293,10 @@ def dm_router_node(state: GameState):
 
     if is_recovery_turn(state):
         return _tag(_base_route_payload(RouteType.STORY, world), "recovery")
+
+    law_payload = _law_gate(state, world, messages)
+    if law_payload is not None:
+        return law_payload
 
     # Descanso e viagem explícitos fora de combate são mecânicas de STORY.
     # Fechar essa borda evita que contexto hostil antigo reabra um conflito no

@@ -1340,6 +1340,14 @@ def validate_npc_seed_tables(path: str | None = None) -> list[Finding]:
     return findings
 
 
+def validate_law_codes() -> list[Finding]:
+    """SPEC-299 R1: lint dos códigos de lei por jurisdição."""
+    from services.law_codes import LAW_CODES_PATH, lint_law_codes
+
+    path = os.path.relpath(LAW_CODES_PATH)
+    return [Finding("law_codes", "error", path, "", p) for p in lint_law_codes()]
+
+
 def validate_all(
     codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR, overrides_path: str = OVERRIDES_PATH
 ) -> list[Finding]:
@@ -1362,6 +1370,7 @@ def validate_all(
         findings.extend(validate_race_attitudes())
         findings.extend(validate_merchant_keepers())
         findings.extend(validate_npc_seed_tables())
+        findings.extend(validate_law_codes())
     else:
         paths = _codex_md_paths(codex_dir)
         if os.path.isdir(graph_dir):

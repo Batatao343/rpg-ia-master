@@ -10,6 +10,7 @@ ORIGINS = {
     "regional_danger",
     "arc_pressure",
     "pursuit_recurrence",
+    "law_enforcement",
     "unknown",
 }
 
@@ -25,6 +26,8 @@ def from_encounter(
     encounter, world = encounter or {}, world or {}
     if (world.get("chase") or {}).get("active") or encounter.get("reason") == "recurrence":
         return "pursuit_recurrence"
+    if encounter.get("reason") in {"bounty_hunters", "law_confrontation"}:
+        return "law_enforcement"
     if encounter.get("reason") in {"reinforcements", "controlled", "faction_pressure"}:
         return "regional_danger"
     if encounter.get("reason") in {"arc", "beat", "scripted"}:

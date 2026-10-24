@@ -256,6 +256,25 @@ def _route_decision(model, messages):
 
 _MOCK_FACTION_ID = "legiao_ferro"  # id real de data/factions.json (modo simulado)
 
+# SPEC-299: o mock só emite `crime_claims` com léxico EXPLÍCITO (os 14 perfis do playtest
+# não usam estas frases, então não mudam). Não consome `random`.
+_MOCK_CRIME_RE = re.compile(
+    r"\b(?:roubo\s+a\s+bolsa|furto|esfaqueio\s+(?:o|a)\s+(?P<victim>\w+)|"
+    r"quebro\s+a\s+(?:vitrine|janela))\b"
+)
+
+
+def _mock_crime_claims(messages) -> list:
+    m = _MOCK_CRIME_RE.search(_last_human(messages).lower())
+    if not m:
+        return []
+    word = m.group(0)
+    if word.startswith("esfaqueio"):
+        return [{"crime_type": "agressao", "victim": (m.group("victim") or "").title()}]
+    if word.startswith("quebro"):
+        return [{"crime_type": "dano_propriedade", "victim": "local"}]
+    return [{"crime_type": "furto", "victim": "local", "covert": True}]
+
 
 def _story_update(model, messages):
     narrative = random.choice(_NARRATIVES).format(acao_eco=_acao_eco(messages))
@@ -320,6 +339,7 @@ def _story_update(model, messages):
             "faction_impacts": impacts,
             "proposed_quests": quests,
             "proposed_events": proposed_events,
+            "crime_claims": _mock_crime_claims(messages),
             "beat_completed": random.random() < 0.30,
         },
     )
@@ -439,6 +459,7 @@ def _npc_response(model, messages):
             "relationship_change": 1 if friendly else random.choice([-1, 0, 0, 1]),
             "faction_reveals": reveals,
             "proposed_quests": quests,
+            "crime_claims": _mock_crime_claims(messages),
         },
     )
 
