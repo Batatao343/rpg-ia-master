@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "1793a905aae892991e170f7c54aa45a9c242e3ea",
+  "commit_sha": "327ec0dd93f25e26e009ed0d4abb555e382a402f",
   "edge_counts": {
-    "calls": 23205,
-    "contains": 847,
-    "defines": 12048,
-    "imports": 1975,
-    "likely_test_for": 1315,
+    "calls": 23293,
+    "contains": 850,
+    "defines": 12099,
+    "imports": 1980,
+    "likely_test_for": 1319,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:cf23290a82f08ac4858c859dbf4373b0af5c535d0a2092ed41b5493d37c537fd",
+  "graph_hash": "sha256:e7432e1aacdbfd691cb38f3c32161a51992d1423df8d843f09d8cf98011317f5",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -233,6 +233,7 @@
     "scripts/migrate_file_saves.py",
     "scripts/migrate_lore_nova.py",
     "scripts/normalize_specs.py",
+    "scripts/npc_seed_review.py",
     "scripts/pool_admin.py",
     "scripts/pool_promote.py",
     "scripts/post_deploy_smoke.py",
@@ -852,6 +853,8 @@
     "tests/test_spec305_review.py",
     "tests/test_spec305_sources.py",
     "tests/test_spec305_surfaces.py",
+    "tests/test_spec306_npc_seed_expansion.py",
+    "tests/test_spec306_npc_seed_review.py",
     "tests/test_spec307_calendar.py",
     "tests/test_spec307_display_api.py",
     "tests/test_spec307_festivals.py",
@@ -1051,12 +1054,12 @@
     "artifact": 9,
     "class": 875,
     "endpoint": 64,
-    "file": 995,
-    "function": 3822,
+    "file": 998,
+    "function": 3839,
     "method": 794,
-    "module": 847,
-    "test": 6556
+    "module": 850,
+    "test": 6590
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:1c224128dec7b8b245465ca4734d69d7728539d81224a6874df638cb79e067bf"
+  "source_tree_hash": "sha256:9e3540757e6703d4e638d4fa3b4c33b81df7a4413ea2c3fee668bf9a05ec1c6c"
 }
