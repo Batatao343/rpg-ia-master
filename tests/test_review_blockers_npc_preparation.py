@@ -73,7 +73,8 @@ def test_with_new_npc_preserves_complete_v4_sheet_and_tactical_profile(monkeypat
     ):
         assert result[field] == generated[field]
     assert result["location"] == "Ponte Velha"
-    assert result["relationship"] == 7
+    # SPEC-298 R8: o `initial_relationship` do LLM é ignorado; a relação inicial é Python.
+    assert 2 <= result["relationship"] <= 8 and result["relationship_basis"]
     assert result["in_scene"] is True
 
 

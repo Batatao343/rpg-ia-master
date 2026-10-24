@@ -542,6 +542,7 @@ def _with_new_npc(
     cast: list | None = None,
     pool_used_out: list | None = None,
     player_inputs: tuple = (),
+    state: dict | None = None,
 ) -> dict[str, dict]:
     from services import npc_layers
     from services.entity_identity import find_runtime_npc_key
@@ -614,7 +615,16 @@ def _with_new_npc(
     novo.setdefault("role", "Desconhecido")
     novo.setdefault("persona", "")
     novo["location"] = loc
-    novo.setdefault("relationship", tpl.get("initial_relationship", 5))
+    # SPEC-298 R8: a relação inicial é Python (raça/origem/fama/fação, faixa 2..8); o
+    # `initial_relationship` que o LLM pôs na ficha é ignorado (vinha fora de 0..10).
+    if novo.get("relationship_basis") is None:
+        from services import reputation
+
+        novo.setdefault("home_location_id", home_id)
+        rel0, basis = reputation.initial_relationship(state or {}, novo)
+        novo["relationship"] = rel0
+        novo["relationship_basis"] = basis
+    novo["relationship"] = max(0, min(10, int(novo.get("relationship", 5) or 0)))
     novo.setdefault("memory", [])
     novo.setdefault("last_interaction", "")
     novo.setdefault("attributes", {})
@@ -1699,6 +1709,7 @@ def storyteller_node(state: GameState):
                 cast=_cast,
                 pool_used_out=_pool_used_new,
                 player_inputs=_recent_player_inputs,
+                state=state,
             )
         for gone_name in npcs_left_scene:
             key = next((k for k in new_npcs if k.lower() == str(gone_name).lower()), None)
