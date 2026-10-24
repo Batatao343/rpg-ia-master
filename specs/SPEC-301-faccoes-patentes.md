@@ -1,6 +1,6 @@
 # SPEC-301 — Fações com patente: entrar, subir, sair, trair (e mover o mundo)
 
-> **Status:** `in-progress` (implementada; falta revisão independente e smoke real da §6)
+> **Status:** `done` (2026-10-24) — na main, revisão independente aprovada (ver handoff). smoke real §6 DeepSeek 24/10 (dirigido: herói no Anel de Ferro com o Comandante Thrace, 2 turnos): 0 erros; o recrutador exige juramento e o herói entra na Legião (`faction_membership.legiao_ferro.status=ativo`, patente Recruta). O perfil `faccionario` real (12 turnos) só exercitou a recusa: o bot repete a frase e não vai ao posto (limitação do bot, follow-up).
 > **Criada:** 2026-10-20 · **Atualizada:** 2026-10-20
 > **Depende de:** SPEC-296 (Onda 0: `world.news` e bloco de ambiente no prompt), SPEC-298
 > (reputação por fação com rótulo vago e API de delta). Integra **se estiverem `done`**, sem
@@ -617,18 +617,18 @@ mais os arquivos de teste existentes que ela toca.
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R24 cobertos por teste (arquivos `tests/test_spec301_*.py`)
-- [ ] §3.2 aprovada pelo dono (linhas marcadas como decididas) antes da Etapa 1
-- [ ] `tests/test_fase2.py`, `tests/test_fase27.py` e `tests/test_bug_contabilidade_recompensas.py`
+- [x] R1–R24 cobertos por teste (arquivos `tests/test_spec301_*.py`)
+- [x] §3.2 aprovada pelo dono (linhas marcadas como decididas) antes da Etapa 1
+- [x] `tests/test_fase2.py`, `tests/test_fase27.py` e `tests/test_bug_contabilidade_recompensas.py`
       verdes **sem edição** (influence 0 = legado)
-- [ ] Nenhuma superfície da API expõe mérito, influência ou `rival_awareness`
+- [x] Nenhuma superfície da API expõe mérito, influência ou `rival_awareness`
       (`assert_no_player_leak` verde)
-- [ ] Guard de FallbackLLM em `membership_action` (storyteller e `npc_actor`)
-- [ ] Saves antigos carregam; round-trip de `faction_membership`/`influence` sem diferença
-- [ ] Perfil `faccionario` com 50 turnos em MockLLM e 0 violações `error`
-- [ ] Revisão independente Opus (`handoffs/SPEC-301-sol-review.md`)
-- [ ] `uv run pytest` verde (suíte completa offline, 1× no pouso)
-- [ ] Smoke real §6 executado e registrado
+- [x] Guard de FallbackLLM em `membership_action` (storyteller e `npc_actor`)
+- [x] Saves antigos carregam; round-trip de `faction_membership`/`influence` sem diferença
+- [x] Perfil `faccionario` com 50 turnos em MockLLM e 0 violações `error`
+- [x] Revisão independente Opus (`handoffs/SPEC-301-sol-review.md`)
+- [x] `uv run pytest` verde (suíte completa offline, 1× no pouso)
+- [x] Smoke real §6 executado e registrado
 
 ## 6. Smoke test com LLM real
 

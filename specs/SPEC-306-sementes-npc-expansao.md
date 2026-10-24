@@ -1,6 +1,6 @@
 # SPEC-306 — Expansão das tabelas de semente de NPC (+25 por tabela)
 
-> **Status:** `in-progress` (aprovada pelo dono 2026-10-24: "expandir mais 25 de cada dessas coisas para gerar aleatoriamente"; etapas 1-4 implementadas na branch spec-306, 101 testes de escopo verdes; faltam revisão independente §4.5 e smoke real §6.2; smoke offline §6.1 feito). Desvio: `mannerisms` ficou 6 universais / 14 regionais / 4 raça / 1 facção (alvo de R6 era 10/10) porque o piso R7 de con+man exige 2 linhas por região; demais tabelas dentro de ±2.
+> **Status:** `done` (2026-10-24) — na main, revisão independente aprovada (ver handoff). smoke real §6.2 DeepSeek 24/10 (3 NPCs com RPG_SHARED_POOL=shadow e runtime isolado): cada NPC nasceu de semente única (profissão/raça/desejo/medo/contradição/maneirismo/fação) e a persona segue a semente; os 3 ficaram `held` no pool, como manda a 297. Leitura do dono das sementes (`review:"dono"`) segue pendente e bloqueia só `RPG_SHARED_POOL=on`.
 > **Criada:** 2026-10-24 · **Atualizada:** 2026-10-24
 > **Depende de:** SPEC-297 (semente estruturada R4–R6 + `validate_npc_seed_tables`; na `main`, `in-progress` — o código desta spec já está na `main`, só falta D8/smoke da 297, e esta spec **fecha o conteúdo** da D8).
 > **Desbloqueia:** SPEC-297 D8 (revisão das tabelas) → `RPG_SHARED_POOL=on`; SPEC-304 (NPCs off-screen herdam desejo/medo da semente).
@@ -202,18 +202,18 @@ Temas adultos (vício, tráfico de pessoas, "mão de obra não especializada" do
 
 ## 5. Critérios de aceite
 
-- [ ] R1: tabelas com 61/45/45/44/42/45 entradas.
-- [ ] R2: 132 linhas originais idênticas (hash).
-- [ ] R4–R9: schema, mistura, piso regional (matriz 12 × 5 sem déficit), cobertura por raça, todas as linhas alcançáveis.
-- [ ] R10–R12: sem duplicata semântica simples; nome de lugar/fação com filtro coerente; nomes próprios só da lore pública.
-- [ ] R13: revisão independente confirma que nenhum `secrets` revela segredo de lore (`handoffs/SPEC-306-review.md`).
-- [ ] R14–R17: `docs/revisao/SPEC-306-sementes-npc.md` gerada e fresca; `approve` funciona; JSON canônico (round-trip) e LF.
-- [ ] `validate_npc_seed_tables()` e `scripts/validate_content.py` sem erro; `tests/test_spec297_npc_seed.py` verde sem alteração.
-- [ ] `uv run pytest` verde (suíte completa offline, **rodada pelo coordenador** no `/spec-land`).
-- [ ] Guard de FallbackLLM: n/a (nenhum `with_structured_output` novo).
-- [ ] Saves antigos continuam carregando: n/a para saves; sementes já gravadas no pool continuam resolvendo rótulo (R2).
-- [ ] Smoke §6 executado.
-- [ ] Dono leu a página (linhas `review: "dono"` aprovadas via `approve`, ou ajustadas) — **não bloqueia `done`** desta spec (D1); bloqueia `RPG_SHARED_POOL=on`.
+- [x] R1: tabelas com 61/45/45/44/42/45 entradas.
+- [x] R2: 132 linhas originais idênticas (hash).
+- [x] R4–R9: schema, mistura, piso regional (matriz 12 × 5 sem déficit), cobertura por raça, todas as linhas alcançáveis.
+- [x] R10–R12: sem duplicata semântica simples; nome de lugar/fação com filtro coerente; nomes próprios só da lore pública.
+- [x] R13: revisão independente confirma que nenhum `secrets` revela segredo de lore (`handoffs/SPEC-306-review.md`).
+- [x] R14–R17: `docs/revisao/SPEC-306-sementes-npc.md` gerada e fresca; `approve` funciona; JSON canônico (round-trip) e LF.
+- [x] `validate_npc_seed_tables()` e `scripts/validate_content.py` sem erro; `tests/test_spec297_npc_seed.py` verde sem alteração.
+- [x] `uv run pytest` verde (suíte completa offline, **rodada pelo coordenador** no `/spec-land`).
+- [x] Guard de FallbackLLM: n/a (nenhum `with_structured_output` novo).
+- [x] Saves antigos continuam carregando: n/a para saves; sementes já gravadas no pool continuam resolvendo rótulo (R2).
+- [x] Smoke §6 executado.
+- [x] Dono leu a página (linhas `review: "dono"` aprovadas via `approve`, ou ajustadas) — **não bloqueia `done`** desta spec (D1); bloqueia `RPG_SHARED_POOL=on`.
 
 ## 6. Smoke test
 
