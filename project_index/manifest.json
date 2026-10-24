@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "db62abc8268c409d4bba692343e6bc2fa4555efc",
+  "commit_sha": "1d4a51f140539261d19f750aefc16e5a618701e4",
   "edge_counts": {
-    "calls": 23294,
-    "contains": 851,
-    "defines": 12100,
-    "imports": 1981,
-    "likely_test_for": 1319,
+    "calls": 24033,
+    "contains": 863,
+    "defines": 12353,
+    "imports": 2022,
+    "likely_test_for": 1353,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:47c20438641e815f9f20f82abb0c605195cffa2b4a33d1fa29ed9e898afc9aad",
+  "graph_hash": "sha256:7144ab130f0b5c2d58a8e5d07f11379751667cba1a57072f26c34b8d443e0cc2",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -88,6 +88,7 @@
     "docs/spec283/arena_ab.py",
     "docs/spec285/arena_lethality.py",
     "docs/spec302/world_engine_sim.py",
+    "docs/spec304/npc_world_sim.py",
     "encounter_budget.py",
     "evals/__init__.py",
     "evals/__main__.py",
@@ -379,7 +380,9 @@
     "services/narrative_evidence.py",
     "services/npc_knowledge.py",
     "services/npc_layers.py",
+    "services/npc_perils.py",
     "services/npc_seed.py",
+    "services/npc_world.py",
     "services/objectives.py",
     "services/operation_recovery.py",
     "services/player_knowledge.py",
@@ -438,6 +441,7 @@
     "tests/spec301_support.py",
     "tests/spec302_helpers.py",
     "tests/spec303_helpers.py",
+    "tests/spec304_helpers.py",
     "tests/spec305_helpers.py",
     "tests/test_abuse_logging.py",
     "tests/test_abuse_policy.py",
@@ -848,6 +852,14 @@
     "tests/test_spec303_perception_api.py",
     "tests/test_spec303_playtest.py",
     "tests/test_spec303_weather_encounters.py",
+    "tests/test_spec304_agenda.py",
+    "tests/test_spec304_beliefs.py",
+    "tests/test_spec304_defection.py",
+    "tests/test_spec304_fate.py",
+    "tests/test_spec304_perils.py",
+    "tests/test_spec304_playtest.py",
+    "tests/test_spec304_review.py",
+    "tests/test_spec304_roster.py",
     "tests/test_spec305_events.py",
     "tests/test_spec305_lifecycle.py",
     "tests/test_spec305_perception.py",
@@ -1053,14 +1065,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 875,
+    "class": 881,
     "endpoint": 64,
-    "file": 999,
-    "function": 3839,
+    "file": 1011,
+    "function": 3945,
     "method": 794,
-    "module": 851,
-    "test": 6591
+    "module": 863,
+    "test": 6732
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:ce367b13a797e3d29fa54854618ab36e83f1275d7bb2badb193cc8254c6d5ab6"
+  "source_tree_hash": "sha256:f0946adac704ff61e94b125d353d03464c4ba4f7d7704c02e1a72d07c47f61a2"
 }
