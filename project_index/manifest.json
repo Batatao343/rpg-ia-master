@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "ed27acf14c89a3eb51a3e0c8fa6549b0e173d720",
+  "commit_sha": "747ff437d6571123bd7bd7d7ef0d84695d07ba81",
   "edge_counts": {
-    "calls": 19824,
-    "contains": 786,
-    "defines": 10907,
-    "imports": 1782,
-    "likely_test_for": 1136,
+    "calls": 20387,
+    "contains": 799,
+    "defines": 11128,
+    "imports": 1811,
+    "likely_test_for": 1162,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:e1fdbc993528e4e6825120a18b10f183d3a28717e1e615317c38e93248295970",
+  "graph_hash": "sha256:1862c6e22446375cbd4c969d8eaf969618bce07bd13c32a7356b48c2444cf8a6",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -311,6 +311,9 @@
     "services/codex_loader.py",
     "services/combat_origin.py",
     "services/combat_targeting.py",
+    "services/companion_prompt.py",
+    "services/companion_soul.py",
+    "services/companion_tags.py",
     "services/conflict_damage.py",
     "services/conflict_orchestrator.py",
     "services/conflict_resolution.py",
@@ -422,6 +425,7 @@
     "tests/silent_except_scan.py",
     "tests/spec215_helpers.py",
     "tests/spec297_support.py",
+    "tests/spec300_helpers.py",
     "tests/spec302_helpers.py",
     "tests/test_abuse_logging.py",
     "tests/test_abuse_policy.py",
@@ -788,6 +792,15 @@
     "tests/test_spec298_reputacao_nucleo.py",
     "tests/test_spec298_social.py",
     "tests/test_spec298_visibilidade.py",
+    "tests/test_spec300_approval.py",
+    "tests/test_spec300_departure.py",
+    "tests/test_spec300_interfaces.py",
+    "tests/test_spec300_persistence_api.py",
+    "tests/test_spec300_personal_quest.py",
+    "tests/test_spec300_prompt.py",
+    "tests/test_spec300_romance.py",
+    "tests/test_spec300_tags.py",
+    "tests/test_spec300_values.py",
     "tests/test_spec302_director.py",
     "tests/test_spec302_effects_factions.py",
     "tests/test_spec302_location_states.py",
@@ -987,14 +1000,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 836,
+    "class": 842,
     "endpoint": 64,
-    "file": 933,
-    "function": 3409,
+    "file": 946,
+    "function": 3491,
     "method": 784,
-    "module": 786,
-    "test": 5877
+    "module": 799,
+    "test": 6010
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:5f3971e88da7f5ba1dde3c9e9d7f7b0214eb11cb9f2cef656641eb78bd00cb64"
+  "source_tree_hash": "sha256:03b8be1d2181a77bc3c6080d3ef377ae24e060974e53f0a18a2690df7a4a7978"
 }
