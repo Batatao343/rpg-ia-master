@@ -198,6 +198,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `quest.active_cap_reached` | `cap` |
 | `quest.failed` | — |
 | `quest.proposal_duplicate_ignored` | — |
+| `quest.proposal_world_duplicate` | — |
 | `rag.global_index_read_failed` | `error`, `index` |
 | `rag.ingest_done` | `index` |
 | `rag.ingest_file_missing` | — |
@@ -239,6 +240,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `stt.switch_check_failed` | `error_type`, `model`, `provider` |
 | `turn` | `error`, `events_applied`, `events_rejected`, `fallbacks`, `game_id_ref`, `latency_ms`, `narrative_rejected`, `route`, `route_fallback_reason`, `route_source`, `turn` |
 | `turn_delivery` | `ack_server_ms`, `action_ref`, `outcome`, `pseudo_streaming`, `state_server_ms`, `transport`, `ttfmc_server_ms`, `ttlt_server_ms` |
+| `turn_finalizer.fallback` | — |
 | `vector.profile_fallback` | `error_type`, `profile` |
 | `vector.semantic_degraded` | `error_type` |
 | `wallet.recovery_item_failed` | `error_type`, `op_ref`, `stage` |
@@ -248,5 +250,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `world.tick` | `events`, `mode`, `perceived` |
 | `world.tick_capped` | `skipped` |
 | `world_engine.fallback` | `hook` |
+| `world_quest.relief` | `kind` |
+| `world_quests.fallback` | — |
 | `world_simulator.fallback` | — |
 | `xp.level_up` | `new_level` |
