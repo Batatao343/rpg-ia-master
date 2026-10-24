@@ -1,7 +1,7 @@
 # SPEC-305 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus / Sol (subagente independente, não escreveu o código) · **Data:** 2026-10-24 · **Commit revisado:** `956599bd`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (re-revisão de `0126a66b`; 1ª rodada em `956599bd`: `CHANGES_REQUIRED`)
+> **Revisor:** Opus / Sol (subagente independente, não escreveu o código) · **Data:** 2026-10-24 · **Commits revisados:** `956599bd` (1ª rodada), `0126a66b` (re-revisão)
 
 ## Escopo
 
@@ -59,21 +59,62 @@ Confirmado OK:
 
 ## Correções aplicadas
 
-(nenhuma; aguarda o executor)
+Todas no commit `0126a66b` (`fix(305): sol review fixes`). Testes novos em
+`tests/test_spec305_review.py`. Re-revisão feita só sobre o delta `956599bd..0126a66b`.
+
+- **P1-1 — resolvido.** `quest_log.public_quest_view` (:564-567) agora projeta `failed` e
+  `expired` de quest com `world_kind` no mesmo `status="expired"`, então o web mostra
+  "Prazo esgotado" + selo "prazo esgotado" nos dois casos. Quest comum e de fação mantêm `failed`.
+  Teste `test_failed_and_expired_world_quest_share_one_public_dict` compara o dict público inteiro.
+- **P1-2 — resolvido.** Duas defesas:
+  (a) `world_validators.validate_proposal` (:679-697) rejeita `quest_completed` com
+  `source != "engine"` para quest de mundo quando `clock.day >= deadline_day`. Essa regra roda
+  na pré-validação do storyteller (`preview_state` usa o `world` já depois do tick) e no
+  archivist, então a corrida da fila fica fechada. Teste
+  `test_completion_rejected_on_deadline_day_unless_engine` cobre storyteller/system rejeitados,
+  engine aceito e prova aceita no dia anterior.
+  (b) No storyteller (:1277-1282), as quests com `quest_failed` em `wq_events` deste turno saem de
+  `_prompt_quests` antes de `_quests_ativas_block`. **Conferido só por leitura** (não há teste):
+  o filtro é um `set` de `target_id` dos eventos `quest_failed` do mesmo tick, aplicado só à
+  lista do prompt. O estado continua com `wq_quests`. A defesa (a) já basta para a mecânica; (b)
+  só evita que o narrador seja convidado a concluir a quest.
+- **P2-1 — resolvido.** `invariants.py:2194-2196`: nos canais não-rumor, a prova é o livro-razão
+  `perceived_ids`. O `event_log` só vale para o testemunho direto de `reabrir_rota`/
+  `recuperar_objeto`. Teste novo.
+- **P2-2 — resolvido.** `RELIEVED_MAX_DAYS=8` (`pressures.json`): `step_crises` fecha a crise
+  aliviada com `intervencao` depois de 8 dias, mesmo com a pressão alta. É determinístico e fica
+  depois do fechamento por rota liberada. Teste novo.
+- **P2-3 — resolvido.** Teste de round-trip save/load dos campos de quest de mundo e do `world_sim`.
+- **P2-4 — resolvido.** Teste do feito da 298 com e sem fação de origem.
+- **P2-6 — resolvido.** O `turn_finalizer` chama `offer_from_heard` também em `shadow`. Teste
+  confirma que loga e não grava nada.
 
 ## Pendências
 
-- P1-1 e P1-2 bloqueiam o pouso; depois, re-revisão focada nesses dois.
-- P2-1..P2-6: podem ir no mesmo commit da correção ou virar follow-up registrado na spec.
-- Já declaradas pelo executor: smoke real §6, medição de letalidade SPEC-285 com as duas flags
-  `on`, `resgate` dormente até a SPEC-304, `recuperar_objeto` dormente (nenhum emissor grava
-  holder de fação).
+Follow-ups, nenhum bloqueia o pouso:
+
+- **P2-5** (aceito como follow-up pelo executor e registrado na §10 da spec): esconder do schema
+  do LLM os tipos engine-only (`quest_failed`, `world_quest_relief`, como os da 301). Medir a taxa
+  de rejeição `engine_only` no smoke §6.
+- **P2-7 (novo, menor)** `world_validators.py:679-697`: a regra do prazo também vale para quest
+  com `deadline_provisional=True` (crise só anunciada). Na pré-validação, o `preview_state` usa
+  as quests de **antes** de `sync_deadlines`, e o prazo provisório (`warned+8`) pode ser menor
+  que o `escalation_day` real da crise que abriu neste mesmo tick. Efeito: a conclusão pode ser
+  rejeitada por um dia, sem ganho indevido. Correção sugerida: pular a regra quando
+  `deadline_provisional` estiver ligado, ou validar contra `wq_quests`.
+- Já declaradas: smoke real §6, letalidade SPEC-285 com as duas flags `on`, `resgate` dormente
+  até a SPEC-304, `recuperar_objeto` dormente.
 
 ## Comandos rodados
 
 ```text
+# 1ª rodada (956599bd)
 git diff main...HEAD --stat → 31 files, +3428/-56
 bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 2 tests/test_spec305_*.py tests/test_spec301_*.py tests/test_spec302_*.py tests/test_fase33.py tests/test_fase34.py tests/test_world_event_proof.py → 374 passed (exit 0)
 cd web && npx tsc --noEmit → sem erros
 git diff main...HEAD --stat -- evals/ → vazio
+# re-revisão (0126a66b)
+git diff 956599bd..0126a66b --stat → 10 files, +274/-4
+mesma suíte focada (+ tests/test_spec305_review.py), -n 2 → 381 passed (exit 0)
+cd web && npx tsc --noEmit → sem erros
 ```
