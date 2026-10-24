@@ -989,6 +989,18 @@ def npc_actor_node(state: GameState):
             _log_event("npc", "social_failed", level="warning", error=type(exc).__name__)
     atitude_block = _rep.attitude_block(state, npc_data, social)
     tier_now = _rep.npc_tier(npc_data.get("relationship"))
+    # SPEC-300 R11: interlocutor companheiro recebe o bloco da alma (sem chamada extra).
+    try:
+        from services.companion_prompt import companion_prompt_block
+
+        companion_block, companion_ack = companion_prompt_block(
+            state, "npc", target=str(npc_data.get("id") or npc_data.get("name") or npc_name)
+        )
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("npc", "companion_block_failed", exc)
+        companion_block, companion_ack = "", []
 
     system_msg = SystemMessage(
         content=f"""
@@ -1006,6 +1018,7 @@ def npc_actor_node(state: GameState):
         }
     </ROLE>
     {atitude_block}
+    {companion_block}
 
     <MEMORIA>
     {npc_data.get("memory", [])[-3:]}
@@ -1239,6 +1252,8 @@ def npc_actor_node(state: GameState):
                 for n in (state.get("reputation_notices") or [])
                 if isinstance(n, dict) and n.get("turn") == _turn_now
             ] + _new_notices
+        if companion_ack:  # SPEC-300 R13: só o caminho feliz consome reação/intenção
+            updates["companion_voice_ack"] = list(companion_ack)
         updates.update(social_extra)  # player/world patches do favor (ouro, abrigo)
         if state.get("social_intent"):
             updates["social_intent"] = None

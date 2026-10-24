@@ -526,6 +526,8 @@ export interface PartyMember {
   active: boolean;
   archetype: string;
   status: string; // "ativo" | "morto"
+  approval_label?: string; // SPEC-300: rótulo vago (hostil/desconfiado/neutro/amistoso/leal), nunca número
+  bond_label?: string; // SPEC-300: "vínculo" | "compromisso" (só a partir do vínculo)
 }
 
 export interface TurnOutcome {
@@ -547,6 +549,7 @@ export interface Speaker {
 
 export interface GameResponse {
   reputation_notices?: ReputationNotice[]; // SPEC-298 R26: avisos do turno (texto fixo, sem números)
+  companion_feedback?: string[]; // SPEC-300 R29: "Brunna não gostou disso." (sem números)
   timeline_epoch?: number;
   art_offers?: { offer_id: string; type: "npc" | "scene" }[];
   art_generations?: { generation_id: string; type: "player" | "npc" | "scene"; subject_id: string }[];

@@ -690,6 +690,8 @@ def _state_to_save_data(state: dict[str, Any], game_id: str) -> dict[str, Any]:
         "location_fame": deepcopy(state.get("location_fame") or {}),
         "reputation_pending": deepcopy(list(state.get("reputation_pending") or [])[-100:]),
         "reputation_notices": deepcopy(list(state.get("reputation_notices") or [])[-16:]),
+        # SPEC-300 (aditivo, sem bump): alma dos companheiros (aprovação, aviso, romance).
+        "companion_souls": deepcopy(state.get("companion_souls") or {}),
         "art_generation_ledger": deepcopy(state.get("art_generation_ledger") or []),
         "art_arc_budgets": deepcopy(state.get("art_arc_budgets") or {}),
         "art_offers": deepcopy(state.get("art_offers") or []),
@@ -1032,6 +1034,13 @@ def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
         "location_fame": deepcopy(raw_data.get("location_fame") or {}),
         "reputation_pending": deepcopy(list(raw_data.get("reputation_pending") or [])),
         "reputation_notices": deepcopy(list(raw_data.get("reputation_notices") or [])),
+        # SPEC-300 (aditivo, sem bump): save antigo sem alma -> {} (companheiro legado
+        # ganha alma lazy no 1º fim de turno).
+        "companion_souls": (
+            deepcopy(raw_data["companion_souls"])
+            if isinstance(raw_data.get("companion_souls"), dict)
+            else {}
+        ),
         # SPEC-202 (aditivo, sem bump): save antigo/sem dict → {} (= narrador).
         "last_speaker": (
             deepcopy(raw_data["last_speaker"])

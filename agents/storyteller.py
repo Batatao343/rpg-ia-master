@@ -1109,6 +1109,17 @@ def storyteller_node(state: GameState):
         log_fallback("storyteller", "pool_cast_failed", exc)
         _cast, cast_block_text = [], ""
 
+    # SPEC-300: companheiros com alma (fala espontânea sem chamada LLM extra).
+    try:
+        from services.companion_prompt import companion_prompt_block
+
+        companion_block, companion_ack = companion_prompt_block(state, "story")
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("storyteller", "companion_block_failed", exc)
+        companion_block, companion_ack = "", []
+
     sys = SystemMessage(
         content=f"""
     <PERSONA>
@@ -1125,6 +1136,7 @@ def storyteller_node(state: GameState):
     {ambiente_block}
     {ouviu_block}
     {hero_state_block}
+    {companion_block}
     {fame_block}
 
     <FACÇÕES_CONHECIDAS>
@@ -1184,12 +1196,14 @@ def storyteller_node(state: GameState):
     # SPEC-233 R8: ganhos registrados ANTES da LLM (o except não herda XP de beat
     # que só seria aplicado no caminho feliz).
     turn_bl_pre_llm = turn_bl
+    companion_narrated = False  # SPEC-300 R13: o ack só vale no caminho feliz
     try:
         story_engine = llm.with_structured_output(StoryUpdate)
         # SPEC-223 R5: entrada do jogador delimitada como dado.
         update = story_engine.invoke([sys] + guard_messages(messages[-3:]))
 
         # Guard crítico: FallbackLLM devolve AIMessage, não o schema solicitado.
+        companion_narrated = isinstance(update, StoryUpdate)
         if not isinstance(update, StoryUpdate):
             from observability.telemetry import log_fallback
 
@@ -1604,6 +1618,8 @@ def storyteller_node(state: GameState):
             updates["archive_due"] = True  # nova missão é evento relevante
         if turn_bl is not state.get("turn_baseline"):
             updates["turn_baseline"] = turn_bl
+        if companion_narrated and companion_ack:
+            updates["companion_voice_ack"] = list(companion_ack)
         if mediation_rejections:
             _log_narrative_rejected("mediation", ["secret_signature"] * len(mediation_rejections))
             updates["narrative_rejections"] = [

@@ -1,0 +1,19 @@
+{
+  "tags": [
+    {"id": "aceitou_rendicao", "source": "combat", "axes": {"compaixao": 1, "honra": 1}, "magnitude": 2, "prose": "poupou um inimigo rendido"},
+    {"id": "fugiu_do_combate", "source": "combat", "axes": {"coragem": -2}, "magnitude": 1, "prose": "fugiu do combate"},
+    {"id": "matou_nomeado", "source": "event", "axes": {"coragem": 1, "compaixao": -1}, "magnitude": 1, "prose": "matou um oponente nomeado"},
+    {"id": "matou_inocente", "source": "event", "axes": {"compaixao": -2, "honra": -2, "ordem": -2}, "magnitude": 3, "prose": "matou quem não representava ameaça"},
+    {"id": "quest_concluida", "source": "event", "axes": {"honra": 2}, "magnitude": 1, "prose": "cumpriu uma missão"},
+    {"id": "quest_falhou", "source": "event", "axes": {"honra": -1}, "magnitude": 1, "prose": "deixou uma missão fracassar"},
+    {"id": "ajudou_faccao", "source": "event", "axes": {}, "magnitude": 1, "faction_param": true, "prose": "ajudou uma facção"},
+    {"id": "prejudicou_faccao", "source": "event", "axes": {}, "magnitude": 1, "faction_param": true, "prose": "prejudicou uma facção"},
+    {"id": "revelou_segredo", "source": "event", "axes": {"ordem": -1, "fe": -1}, "magnitude": 1, "prose": "revelou um segredo"},
+    {"id": "usou_abismo", "source": "baseline", "axes": {"abismo": 2, "fe": -1}, "magnitude": 2, "prose": "recorreu ao poder do Abismo"},
+    {"id": "doou_ouro", "source": "action_regex", "axes": {"compaixao": 2, "ganancia": -2}, "magnitude": 1, "prose": "deu ouro a quem precisava"},
+    {"id": "ameacou", "source": "action_regex", "axes": {"compaixao": -1, "honra": -1}, "magnitude": 1, "prose": "ameaçou alguém"},
+    {"id": "crime_testemunhado", "source": "event", "axes": {"ordem": -2, "honra": -1}, "magnitude": 2, "prose": "cometeu um crime à vista de todos"},
+    {"id": "pagou_multa", "source": "event", "axes": {"ordem": 1}, "magnitude": 1, "prose": "pagou a multa devida"},
+    {"id": "missao_pessoal_concluida", "source": "engine", "axes": {}, "magnitude": 1, "prose": "resolveu a missão pessoal dele"}
+  ]
+}

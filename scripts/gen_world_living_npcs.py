@@ -335,6 +335,7 @@ def main() -> int:
                     "home_location_id": region,
                     "role": role,
                     "faction": faction,
+                    "hook": hook,  # SPEC-300 R20: fonte da missão pessoal do companheiro
                 },
             }
             # Versões anteriores do gerador colocavam o lote no overlay extra;

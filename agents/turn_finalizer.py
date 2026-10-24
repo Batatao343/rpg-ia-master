@@ -52,6 +52,17 @@ def turn_finalizer_node(state: dict) -> dict:
         import logging
 
         logging.getLogger("rpg.reputation").warning("turn_updates falhou: %s", type(exc).__name__)
+    # SPEC-300: ÚNICO escritor da alma dos companheiros (aprovação, aviso, partida, missão
+    # pessoal, romance). `off` = no-op; falha interna nunca derruba o turno.
+    try:
+        from services import companion_soul
+
+        if companion_soul.mode() != "off":
+            updates.update(companion_soul.apply_turn({**state, **updates}))
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("companion_soul", "apply_turn_failed", exc)
     if audit:
         updates["messages"] = Overwrite(messages)
         updates["evidence_rejections"] = [*(state.get("evidence_rejections") or []), *audit][-64:]

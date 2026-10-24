@@ -379,6 +379,11 @@ export function PartyBars({ party }: { party: import("../types").PartyMember[] }
               <span>{m.name}{!m.active && m.status !== "morto" ? " (esperando)" : ""}{m.status === "morto" ? " †" : ""}</span>
               <span>{`${m.vitalidade}/${m.max_vitalidade}`}</span>
             </div>
+            {m.approval_label && (
+              <div className="party__mood">
+                {m.approval_label}{m.bond_label ? ` · ${m.bond_label}` : ""}
+              </div>
+            )}
             <div className="party__track">
               <div className="party__fill"
                    style={{ width: pct(m.vitalidade, m.max_vitalidade) + "%" }} />

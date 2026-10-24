@@ -46,6 +46,11 @@ EventType = Literal[
     # SPEC-302: SO o motor de mundo emite (source="engine" no validator).
     "location_state_changed",
     "world_crisis_warning",
+    # SPEC-300: partida/traição/destino off-screen de companheiro — SÓ o motor emite
+    # (source="engine" no validator); o LLM nunca decide quem sai do grupo.
+    "companion_left",
+    "companion_betrayed",
+    "companion_fate",
 ]
 
 

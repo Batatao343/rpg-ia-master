@@ -19,6 +19,7 @@ _SCENARIOS = {
     "recrutamento": "recrutador",
     "comercio": "comerciante",
     "mundo": "explorador",
+    "companheiro": "explorador",  # SPEC-300: Brunna já recrutada, alma derivada
 }
 
 
@@ -130,6 +131,18 @@ def prepare(name: str, state: dict) -> dict:
 
     if name == "mundo":
         return _prepare_mundo(prepared)
+    if name == "companheiro":
+        prepared = prepare("recrutamento", prepared)
+        import party
+        from services import companion_soul
+
+        npc = prepared["npcs"][RECRUIT_NPC_NAME]
+        comp = party.make_companion_from_npc(npc, RECRUIT_NPC_NAME)
+        prepared["party"] = [comp]
+        prepared["companion_souls"] = {
+            companion_soul.comp_id(comp): companion_soul.ensure_soul(prepared, comp)
+        }
+        return prepared
 
     prepared["world"] = _move_world(
         prepared.get("world") or {},
@@ -156,6 +169,11 @@ def decision_for(name: str, turn: int, state: dict) -> ProfileDecision | None:
     if name == "recrutamento":
         return ProfileDecision(
             text=(f"Peço que {RECRUIT_NPC_NAME} se junte a mim na jornada e venha comigo."),
+            mode="free_text",
+        )
+    if name == "companheiro":
+        return ProfileDecision(
+            text="Ameaço o mercador com a faca até ele baixar o preço.",
             mode="free_text",
         )
     return ProfileDecision(
@@ -207,6 +225,18 @@ def oracle_violations(name: str, result) -> list[dict]:
             _violation(
                 "smoke.world_crisis_not_observed",
                 "Aviso -> crise em nova_arcadia nao foi observado em 5 dias de jogo.",
+                turn,
+            )
+        ]
+
+    if name == "companheiro":
+        soul = (state.get("companion_souls") or {}).get(RECRUIT_NPC_ID) or {}
+        if soul and isinstance(soul.get("approval"), int):
+            return []
+        return [
+            _violation(
+                "smoke.companion_soul_not_observed",
+                f"{RECRUIT_NPC_NAME} não tem alma persistida após o turno dirigido.",
                 turn,
             )
         ]

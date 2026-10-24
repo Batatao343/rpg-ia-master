@@ -1994,7 +1994,51 @@ def check_world_engine(state: dict, prev: dict | None, turn: int) -> list[Violat
     return out
 
 
+def check_companions(state: dict, prev: dict | None, turn: int) -> list[Violation]:
+    """SPEC-300 R30: aprovação em 0..100; partida/traição só com aviso prévio; morte off-screen
+    só com telegrama >= 1 dia; uma missão pessoal por companheiro; `loyal` nunca trai."""
+    out: list[Violation] = []
+    souls = state.get("companion_souls") or {}
+    quests = [q for q in (state.get("quests") or []) if isinstance(q, dict)]
+    for cid, soul in souls.items():
+        if not isinstance(soul, dict):
+            continue
+        approval = soul.get("approval")
+        if not isinstance(approval, int) or isinstance(approval, bool) or not 0 <= approval <= 100:
+            out.append(
+                _V("companion.approval_range", "error", turn, f"{cid}: aprovação fora de 0..100")
+            )
+        if soul.get("departed") in ("left", "betrayed") and soul.get("warned_turn") is None:
+            out.append(
+                _V("companion.left_without_warning", "error", turn, f"{cid}: partiu sem aviso")
+            )
+        if soul.get("loyal") and soul.get("departed") == "betrayed":
+            out.append(_V("companion.loyal_betrayed", "error", turn, f"{cid}: leal não trai"))
+        if sum(1 for q in quests if q.get("personal_of") == cid) > 1:
+            out.append(
+                _V("companion.many_personal_quests", "error", turn, f"{cid}: >1 missão pessoal")
+            )
+    for ev in state.get("event_log") or []:
+        if not isinstance(ev, dict) or ev.get("type") != "companion_fate":
+            continue
+        payload = ev.get("payload") or {}
+        soul = souls.get(ev.get("target_id")) or {}
+        days = [t.get("day") for t in soul.get("telegraphs") or [] if isinstance(t, dict)]
+        day = payload.get("day")
+        if not days or not isinstance(day, int) or day - min(days) < 1:
+            out.append(
+                _V(
+                    "companion.fate_without_telegraph",
+                    "error",
+                    turn,
+                    f"{ev.get('target_id')}: destino off-screen sem telegrama de >= 1 dia",
+                )
+            )
+    return out
+
+
 CHECKS: list[Check] = [
+    check_companions,
     check_reputation,
     check_vitals,
     check_vitality_consistency,

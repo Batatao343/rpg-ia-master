@@ -7086,7 +7086,8 @@
     "components": {
       "home_location_id": "nova_arcadia",
       "role": "fiscal de rebites do Anel de Ferro",
-      "faction": "legiao_ferro"
+      "faction": "legiao_ferro",
+      "hook": "Encontrar a remessa de rebites ocos que faz caldeiras explodirem."
     }
   },
   "npc_mv_teo_chamine": {
@@ -7103,7 +7104,8 @@
     "components": {
       "home_location_id": "nova_arcadia",
       "role": "mensageiro pelos telhados fabris",
-      "faction": "resistencia_operaria_martelos_partidos"
+      "faction": "resistencia_operaria_martelos_partidos",
+      "hook": "Levar uma lista de operários presos sem cruzar uma patrulha da Legião."
     }
   },
   "npc_mv_mara_do_setimo_sino": {
@@ -7120,7 +7122,8 @@
     "components": {
       "home_location_id": "nova_arcadia",
       "role": "relojoeira e informante de turnos",
-      "faction": "guilda_corvos"
+      "faction": "guilda_corvos",
+      "hook": "Descobrir por que um sino toca sozinho antes de cada desaparecimento."
     }
   },
   "npc_mv_ume_lodo_claro": {
@@ -7137,7 +7140,8 @@
     "components": {
       "home_location_id": "pantano_melancolia",
       "role": "barqueira dos canais rasos",
-      "faction": "druidas_ciclo_cinzento"
+      "faction": "druidas_ciclo_cinzento",
+      "hook": "Guiar uma coleta de água que ainda não aprendeu a lembrar dos mortos."
     }
   },
   "npc_mv_padre_junco": {
@@ -7154,7 +7158,8 @@
     "components": {
       "home_location_id": "pantano_melancolia",
       "role": "guardião de túmulos flutuantes",
-      "faction": "druidas_ciclo_cinzento"
+      "faction": "druidas_ciclo_cinzento",
+      "hook": "Reatar três âncoras funerárias antes da próxima cheia de Éter."
     }
   },
   "npc_mv_sira_candeia": {
@@ -7171,7 +7176,8 @@
     "components": {
       "home_location_id": "pantano_melancolia",
       "role": "caçadora de luzes-fátuas",
-      "faction": "independente"
+      "faction": "independente",
+      "hook": "Capturar uma chama que repete a voz de uma criança desaparecida."
     }
   },
   "npc_mv_nahir_vidro_manso": {
@@ -7188,7 +7194,8 @@
     "components": {
       "home_location_id": "deserto_zhur",
       "role": "lapidador de vidro solar",
-      "faction": "tribos_devoradores_sol"
+      "faction": "tribos_devoradores_sol",
+      "hook": "Recuperar uma lente roubada capaz de revelar água sob as dunas."
     }
   },
   "npc_mv_kessa_tres_sombras": {
@@ -7205,7 +7212,8 @@
     "components": {
       "home_location_id": "deserto_zhur",
       "role": "batedora de caravanas",
-      "faction": "tribos_devoradores_sol"
+      "faction": "tribos_devoradores_sol",
+      "hook": "Mapear a sombra extra que acompanha uma caravana sem possuir dono."
     }
   },
   "npc_mv_orun_sal_negro": {
@@ -7222,7 +7230,8 @@
     "components": {
       "home_location_id": "deserto_zhur",
       "role": "negociador de poços",
-      "faction": "independente"
+      "faction": "independente",
+      "hook": "Impedir que dois clãs sangrem pelo mesmo poço envenenado."
     }
   },
   "npc_mv_eilin_folha_oca": {
@@ -7239,7 +7248,8 @@
     "components": {
       "home_location_id": "floresta_sussurros",
       "role": "intérprete dos sussurros de trilha",
-      "faction": "independente"
+      "faction": "independente",
+      "hook": "Traduzir o aviso que árvores diferentes repetem com a mesma voz."
     }
   },
   "npc_mv_tomir_musgo": {
@@ -7256,7 +7266,8 @@
     "components": {
       "home_location_id": "floresta_sussurros",
       "role": "curador de cascas feridas",
-      "faction": "guardiões_de_thessavar"
+      "faction": "guardiões_de_thessavar",
+      "hook": "Descobrir quem grava símbolos de Nova Arcádia em árvores antigas."
     }
   },
   "npc_mv_vaela_do_ninho": {
@@ -7273,7 +7284,8 @@
     "components": {
       "home_location_id": "floresta_sussurros",
       "role": "guia de copas baixas",
-      "faction": "independente"
+      "faction": "independente",
+      "hook": "Resgatar ovos de mariposa antes que o sussurro dentro deles desperte."
     }
   },
   "npc_mv_jori_sete_esporos": {
@@ -7290,7 +7302,8 @@
     "components": {
       "home_location_id": "selva_xylos",
       "role": "mediador entre hospedeiros",
-      "faction": "colmeia_hospedeiros"
+      "faction": "colmeia_hospedeiros",
+      "hook": "Separar uma memória coletiva que começou a acusar o corpo errado."
     }
   },
   "npc_mv_mae_aru": {
@@ -7307,7 +7320,8 @@
     "components": {
       "home_location_id": "selva_xylos",
       "role": "parteira das cidades de copa",
-      "faction": "colmeia_hospedeiros"
+      "faction": "colmeia_hospedeiros",
+      "hook": "Buscar uma planta que permita a um recém-hospedado conservar o próprio nome."
     }
   },
   "npc_mv_pel_sem_rosto": {
@@ -7324,7 +7338,8 @@
     "components": {
       "home_location_id": "selva_xylos",
       "role": "cartógrafo de trilhas migratórias",
-      "faction": "independente"
+      "faction": "independente",
+      "hook": "Marcar uma rota que muda quando ninguém está olhando para ela."
     }
   },
   "npc_mv_runa_brasa_branca": {
@@ -7341,7 +7356,8 @@
     "components": {
       "home_location_id": "skallgard",
       "role": "mecânica de aquecedores de clã",
-      "faction": "clas_tecnologicos"
+      "faction": "clas_tecnologicos",
+      "hook": "Reativar um forno soterrado antes que a noite congele o abrigo."
     }
   },
   "npc_mv_eirik_sem_pegadas": {
@@ -7358,7 +7374,8 @@
     "components": {
       "home_location_id": "skallgard",
       "role": "caçador da borda noturna",
-      "faction": "clas_combate"
+      "faction": "clas_combate",
+      "hook": "Seguir um lobo que deixa pegadas apontando na direção contrária."
     }
   },
   "npc_mv_solvi_cabo_cobre": {
@@ -7375,7 +7392,8 @@
     "components": {
       "home_location_id": "skallgard",
       "role": "operadora de rádio antigo",
-      "faction": "independente"
+      "faction": "independente",
+      "hook": "Localizar a estação que responde com notícias de amanhã."
     }
   },
   "npc_mv_maeril_caco_azul": {
@@ -7392,7 +7410,8 @@
     "components": {
       "home_location_id": "aethelgard",
       "role": "zelador de cristal de contenção",
-      "faction": "independente"
+      "faction": "independente",
+      "hook": "Substituir um cristal rachado sem repetir a falha da Destilação."
     }
   },
   "npc_mv_oren_ultimo_mapa": {
@@ -7409,7 +7428,8 @@
     "components": {
       "home_location_id": "aethelgard",
       "role": "copista das galerias élficas",
-      "faction": "independente"
+      "faction": "independente",
+      "hook": "Conferir uma sala que apareceu apenas na cópia mais recente do mapa."
     }
   },
   "npc_mv_tessa_ampola": {
@@ -7426,7 +7446,8 @@
     "components": {
       "home_location_id": "aethelgard",
       "role": "alquimista arrependida",
-      "faction": "cultistas_destilacao"
+      "faction": "cultistas_destilacao",
+      "hook": "Interceptar reagentes antes que cheguem a um novo laboratório clandestino."
     }
   },
   "npc_mv_nami_cinza_sal": {
@@ -7443,7 +7464,8 @@
     "components": {
       "home_location_id": "ophidia",
       "role": "pilota de canais vulcânicos",
-      "faction": "navegadores_ophidia"
+      "faction": "navegadores_ophidia",
+      "hook": "Atravessar uma caldeira marítima durante a breve maré de cinzas."
     }
   },
   "npc_mv_koro_remo_curto": {
@@ -7460,7 +7482,8 @@
     "components": {
       "home_location_id": "ophidia",
       "role": "pescador de tubos de lava",
-      "faction": "independente"
+      "faction": "independente",
+      "hook": "Retirar uma rede presa a algo grande demais para ser peixe."
     }
   },
   "npc_mv_iria_coral_cego": {
@@ -7477,7 +7500,8 @@
     "components": {
       "home_location_id": "ophidia",
       "role": "oraculista de recife",
-      "faction": "guardiões_do_recife"
+      "faction": "guardiões_do_recife",
+      "hook": "Interpretar uma resposta de coral que cita alguém ainda não nascido."
     }
   },
   "npc_mv_daro_osso_cantante": {
@@ -7494,7 +7518,8 @@
     "components": {
       "home_location_id": "costa_negra",
       "role": "afinador de ossadas titânicas",
-      "faction": "mercadores_curiosidades"
+      "faction": "mercadores_curiosidades",
+      "hook": "Silenciar uma costela gigante que chama predadores a cada vento."
     }
   },
   "npc_mv_mae_neris": {
@@ -7511,7 +7536,8 @@
     "components": {
       "home_location_id": "costa_negra",
       "role": "capitã de coleta de marfim",
-      "faction": "osshari"
+      "faction": "osshari",
+      "hook": "Encontrar três coletores antes que a maré exponha o caminho até eles."
     }
   },
   "npc_mv_ulk_marfim": {
@@ -7528,7 +7554,8 @@
     "components": {
       "home_location_id": "costa_negra",
       "role": "avaliador de relíquias costeiras",
-      "faction": "independente"
+      "faction": "independente",
+      "hook": "Provar que um dente vendido em Brekmar pertence a uma criatura viva."
     }
   },
   "npc_mv_brunna_ponte_alta": {
@@ -7545,7 +7572,8 @@
     "components": {
       "home_location_id": "montanhas_afiadas",
       "role": "engenheira das passagens anãs",
-      "faction": "ultimos_anoes_reino"
+      "faction": "ultimos_anoes_reino",
+      "hook": "Firmar uma ponte que o eco insiste em desmontar durante a noite."
     }
   },
   "npc_mv_skek_eco_curto": {
@@ -7562,7 +7590,8 @@
     "components": {
       "home_location_id": "montanhas_afiadas",
       "role": "prospector goblin",
-      "faction": "goblins_mineiros"
+      "faction": "goblins_mineiros",
+      "hook": "Seguir um veio que responde às picaretas com batidas codificadas."
     }
   },
   "npc_mv_odrin_calcario": {
@@ -7579,7 +7608,8 @@
     "components": {
       "home_location_id": "montanhas_afiadas",
       "role": "mediador das saídas baixas",
-      "faction": "bandos_orc_saidas_baixas"
+      "faction": "bandos_orc_saidas_baixas",
+      "hook": "Negociar passagem antes que dois túneis rivais se encontrem à força."
     }
   },
   "npc_mv_lio_bandeira_vazia": {
@@ -7596,7 +7626,8 @@
     "components": {
       "home_location_id": "pradaria_ruinas",
       "role": "arqueólogo de brasões apagados",
-      "faction": "cidades_estado_sobreviventes_vaelorn_solvhen"
+      "faction": "cidades_estado_sobreviventes_vaelorn_solvhen",
+      "hook": "Identificar a cidade de uma bandeira que ninguém consegue recordar."
     }
   },
   "npc_mv_hana_estribo": {
@@ -7613,7 +7644,8 @@
     "components": {
       "home_location_id": "pradaria_ruinas",
       "role": "correio dos bandos nômades",
-      "faction": "bandos_nomades"
+      "faction": "bandos_nomades",
+      "hook": "Entregar um tratado entre acampamentos que mudam de lugar a cada aurora."
     }
   },
   "npc_mv_korso_pedra_movel": {
@@ -7630,7 +7662,8 @@
     "components": {
       "home_location_id": "pradaria_ruinas",
       "role": "pastor de auroques",
-      "faction": "independente"
+      "faction": "independente",
+      "hook": "Desviar um rebanho antes que derrube a última torre de uma ruína habitada."
     }
   },
   "npc_mv_mina_sete_taxas": {
@@ -7647,7 +7680,8 @@
     "components": {
       "home_location_id": "brekmar",
       "role": "escrivã dos sindicatos",
-      "faction": "tres_sindicatos_comercio"
+      "faction": "tres_sindicatos_comercio",
+      "hook": "Encontrar o livro-caixa que cobra a mesma dívida de sete pessoas."
     }
   },
   "npc_mv_jax_corda_seca": {
@@ -7664,7 +7698,8 @@
     "components": {
       "home_location_id": "brekmar",
       "role": "salvador de tripulações",
-      "faction": "grupos_piratas_rivais"
+      "faction": "grupos_piratas_rivais",
+      "hook": "Resgatar marinheiros presos num navio que continua afundando fora d'água."
     }
   },
   "npc_mv_varo_dois_portos": {
@@ -7681,7 +7716,8 @@
     "components": {
       "home_location_id": "brekmar",
       "role": "corretor de rotas clandestinas",
-      "faction": "poder_kahen"
+      "faction": "poder_kahen",
+      "hook": "Descobrir qual dos dois portos desenhados em seu mapa passou a existir."
     }
   }
 }

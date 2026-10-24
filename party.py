@@ -30,6 +30,8 @@ class RecruitmentDecision(TypedDict):
         "already_member",
         "hostile",
         "too_few_interactions",
+        "estranged",  # SPEC-300 R17: partiu do grupo há menos de ESTRANGED_DAYS dias
+        "betrayed",  # SPEC-300 R17: traiu o grupo — nunca mais
     ]
     relationship: int
     required_relationship: int
@@ -342,6 +344,16 @@ def recruitment_decision(state: dict, npc_name: str) -> RecruitmentDecision:
         if fac_id
     ):
         return result(False, "hostile", f"{display_name} serve a um poder hostil a você.")
+    soul = (state.get("companion_souls") or {}).get(str(npc.get("id") or npc_key)) or {}
+    if soul.get("departed") == "betrayed":
+        return result(False, "betrayed", f"{display_name} não quer mais saber de você.")
+    if soul.get("departed") == "left":
+        from services.companion_soul import ESTRANGED_DAYS
+
+        clock = (state.get("world") or {}).get("world_clock") or {}
+        today = int(clock.get("day", 1) or 1)
+        if today - int(soul.get("left_party_day") or 0) < ESTRANGED_DAYS:
+            return result(False, "estranged", f"{display_name} precisa de uns dias longe de você.")
     if rel < required:
         return result(
             False, "relationship_too_low", f"{display_name} ainda não confia o bastante em você."
@@ -379,6 +391,23 @@ def recruit(state: dict, npc_name: str) -> tuple[list[dict] | None, str]:
     npc_key = find_runtime_npc_key(npcs, npc_name) or npc_name
     npc = npcs.get(npc_key) or {}
     comp = make_companion_from_npc(npc, str(npc.get("name") or npc_key))
+    return list(state.get("party") or []) + [comp], ""
+
+
+def recruit_prisoner(state: dict, prisoner: dict) -> tuple[list[dict] | None, str]:
+    """SPEC-300 R27 (interface para o pilar B): recruta um inimigo RENDIDO.
+
+    Ignora o gate de ``relationship`` e aceita fação hostil, mas respeita ``MAX_ACTIVE``.
+    A alma nasce no próximo fim de turno com ``origin="prisoner"`` e aprovação 20
+    (``bound="rendicao"``). Sem chamador no produto nesta spec.
+    """
+    if len(active_allies(state)) >= MAX_ACTIVE:
+        return None, f"Seu grupo já está cheio ({MAX_ACTIVE} companheiros)."
+    name = str((prisoner or {}).get("name") or "Prisioneiro")
+    comp = make_companion_from_npc(prisoner or {}, name)
+    comp["bound"] = "rendicao"
+    if not comp.get("origin_npc"):
+        comp["origin_npc"] = str(comp.get("id") or "")
     return list(state.get("party") or []) + [comp], ""
 
 

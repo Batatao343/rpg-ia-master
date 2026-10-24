@@ -1,0 +1,29 @@
+{
+  "by_trait": {
+    "luto_recente": {"title": "Uma despedida pendente", "description": "{name} perdeu alguém há pouco e não se despediu direito. Quer voltar a {place} e deixar o luto descansar.", "reward_hint": "gratidão de {name}"},
+    "dividas": {"title": "A dívida de {name}", "description": "{name} deve a quem não perdoa. Precisa chegar a {place} e acertar as contas antes que cobrem com juros de sangue.", "reward_hint": "{name} fica em dívida com você"},
+    "divida_de_sangue": {"title": "Uma vida devida", "description": "{name} deve uma vida a alguém de {place}. Quer pagar a dívida, em silêncio.", "reward_hint": "a lealdade de {name}"},
+    "protege_alguem": {"title": "Quem {name} esconde", "description": "{name} esconde alguém perto de {place}. Quer ver essa pessoa a salvo.", "reward_hint": "a confiança de {name}"},
+    "desertor_envergonhado": {"title": "A batalha que persegue", "description": "{name} fugiu de uma batalha em {place}. Quer encarar o lugar, ou o que restou dele.", "reward_hint": "a honra recuperada de {name}"},
+    "orfao_da_legiao": {"title": "O acampamento de infância", "description": "{name} foi criado nos acampamentos da Legião. Quer rever {place}, onde tudo começou.", "reward_hint": "a gratidão de {name}"},
+    "ex_legionario": {"title": "Contas com a Legião", "description": "{name} desertou da Legião. Há algo esquecido em {place} que precisa ser resolvido.", "reward_hint": "a confiança de {name}"},
+    "viuva_do_mar": {"title": "Uma promessa velha", "description": "O mar levou os seus. {name} quer deixar uma oferenda em {place}.", "reward_hint": "a gratidão de {name}"},
+    "exilado_das_torres": {"title": "Uma carta para Aethelgard", "description": "{name} sonha com Aethelgard. Quer entregar uma carta em {place} antes que seja tarde.", "reward_hint": "a gratidão de {name}"},
+    "marcado_pela_praga": {"title": "Os que a Praga levou", "description": "{name} perdeu alguém para a Praga de Ferro. Quer visitar {place} e enterrar um nome.", "reward_hint": "a gratidão de {name}"}
+  },
+  "by_region": {
+    "nova_arcadia": {"title": "Assunto antigo em Nova Arcádia", "description": "{name} tem um assunto inacabado em {place}, e prefere não ir sozinho(a).", "reward_hint": "a confiança de {name}"},
+    "pantano_melancolia": {"title": "Assunto antigo no Pântano", "description": "{name} tem um assunto inacabado em {place}, e prefere não ir sozinho(a).", "reward_hint": "a confiança de {name}"},
+    "deserto_zhur": {"title": "Assunto antigo no deserto", "description": "{name} tem um assunto inacabado em {place}, e prefere não ir sozinho(a).", "reward_hint": "a confiança de {name}"},
+    "floresta_sussurros": {"title": "Assunto antigo na Floresta", "description": "{name} tem um assunto inacabado em {place}, e prefere não ir sozinho(a).", "reward_hint": "a confiança de {name}"},
+    "selva_xylos": {"title": "Assunto antigo na Selva", "description": "{name} tem um assunto inacabado em {place}, e prefere não ir sozinho(a).", "reward_hint": "a confiança de {name}"},
+    "skallgard": {"title": "Assunto antigo em Skallgard", "description": "{name} tem um assunto inacabado em {place}, e prefere não ir sozinho(a).", "reward_hint": "a confiança de {name}"},
+    "aethelgard": {"title": "Assunto antigo em Aethelgard", "description": "{name} tem um assunto inacabado em {place}, e prefere não ir sozinho(a).", "reward_hint": "a confiança de {name}"},
+    "ophidia": {"title": "Assunto antigo em Ophidia", "description": "{name} tem um assunto inacabado em {place}, e prefere não ir sozinho(a).", "reward_hint": "a confiança de {name}"},
+    "costa_negra": {"title": "Assunto antigo na Costa Negra", "description": "{name} tem um assunto inacabado em {place}, e prefere não ir sozinho(a).", "reward_hint": "a confiança de {name}"},
+    "montanhas_afiadas": {"title": "Assunto antigo nas Montanhas", "description": "{name} tem um assunto inacabado em {place}, e prefere não ir sozinho(a).", "reward_hint": "a confiança de {name}"},
+    "pradaria_ruinas": {"title": "Assunto antigo na Pradaria", "description": "{name} tem um assunto inacabado em {place}, e prefere não ir sozinho(a).", "reward_hint": "a confiança de {name}"},
+    "brekmar": {"title": "Assunto antigo em Brekmar", "description": "{name} tem um assunto inacabado em {place}, e prefere não ir sozinho(a).", "reward_hint": "a confiança de {name}"}
+  },
+  "fallback": {"title": "Assunto pessoal de {name}", "description": "{name} tem um assunto pessoal a resolver em {place}.", "reward_hint": "a confiança de {name}"}
+}

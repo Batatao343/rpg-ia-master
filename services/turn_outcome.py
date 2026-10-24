@@ -56,6 +56,7 @@ def capture_baseline(state: dict) -> dict:
         "gold": int(player.get("gold", 0) or 0),
         "xp": int(player.get("xp", 0) or 0),
         "level": int(player.get("level", 1) or 1),
+        "abyss_charge": int(player.get("abyss_charge", 0) or 0),  # SPEC-300 (tag usou_abismo)
         "inventory": dict(_inventory(player)),
         "completed_quests": sorted(
             str(q.get("id") or "")

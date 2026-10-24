@@ -2033,6 +2033,7 @@ class GameResponse(BaseModel):
     ] = []  # capítulos: {title, started_turn, location, entries[{text,turn,kind,event_id?}]}
     factions: list[dict[str, Any]] = []  # fações vivas: objetivo, progresso, rótulo de standing
     reputation_notices: list[dict[str, str]] = []  # SPEC-298 R26: avisos do turno (sem números)
+    companion_feedback: list[str] = []  # SPEC-300 R29: frases do turno (sem números)
     party: list[
         dict[str, Any]
     ] = []  # Fase 4.5: companheiros {name, hp, max_hp, active, archetype, status}
@@ -2204,10 +2205,12 @@ def _format_response_raw(state: dict, *, cue_action_key: str | None = None) -> G
                 "active": bool(c.get("active")),
                 "archetype": c.get("archetype", ""),
                 "status": c.get("status", "ativo"),
+                **_companion_labels(state, c),
             }
             for c in (state.get("party") or [])
             if isinstance(c, dict)
         ],
+        companion_feedback=_companion_feedback(state),
         reputation_notices=_reputation_notices(state),
         factions=_factions_block(
             state.get("factions", []) or [],
@@ -2223,6 +2226,31 @@ def _format_response_raw(state: dict, *, cue_action_key: str | None = None) -> G
         combat_simulation=simulation,
         visual=visual_response(state, cue_action_key=cue_action_key),
     )
+
+
+def _companion_labels(state: dict, comp: dict) -> dict[str, str]:
+    """SPEC-300 R29: rótulos vagos do companheiro. NUNCA o número de aprovação nem os valores."""
+    from services import companion_soul as cs
+
+    if cs.mode() != "on":
+        return {}
+    soul = (state.get("companion_souls") or {}).get(cs.comp_id(comp)) or {}
+    if not isinstance(soul, dict) or "approval" not in soul:
+        return {}
+    out = {"approval_label": cs.approval_label(soul.get("approval", 50))}
+    if soul.get("romance") == "vinculo":
+        out["bond_label"] = "vínculo"
+    elif soul.get("romance") == "compromisso":
+        out["bond_label"] = "compromisso"
+    return out
+
+
+def _companion_feedback(state: dict) -> list[str]:
+    from services import companion_soul as cs
+
+    if cs.mode() != "on":
+        return []
+    return [str(t) for t in (state.get("companion_feedback") or []) if isinstance(t, str)]
 
 
 def _reputation_notices(state: dict) -> list[dict[str, str]]:

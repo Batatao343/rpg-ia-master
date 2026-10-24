@@ -347,6 +347,7 @@ class Quest(TypedDict, total=False):
     location_id: str  # alvo no mapa ("" se não aplicável)
     created_turn: int
     resolved_turn: int
+    personal_of: str  # SPEC-300: id do companheiro dono da missão pessoal ("" = comum)
     reward_hint: str  # texto livre ("o ferreiro prometeu 50 moedas")
     progress_log: list[
         dict
@@ -354,6 +355,47 @@ class Quest(TypedDict, total=False):
     completion_ready: bool  # objetivo verificável atingido; evento Python conclui no archivist
     reward_gold: int  # recompensa mecânica efetivamente entregue
     reward_delivered: bool
+
+
+class CompanionReaction(TypedDict, total=False):
+    """SPEC-300: reação pendente de um companheiro (fila curta; `delta` nunca sai na API)."""
+
+    id: str  # f"{turn}:{tag}" — estável
+    tag: str  # id do catálogo | "aviso" | "despedida" | "traicao" | "estagio"
+    delta: int
+    turn: int
+    consumed: bool
+
+
+class CompanionSoul(TypedDict, total=False):
+    """SPEC-300: alma de um companheiro. Aprovação 0..100 é INTERNA (só rótulos saem)."""
+
+    companion_id: str
+    npc_key: str
+    values: dict[str, int]  # eixo -> -2..2 (congelado na criação)
+    approval: int
+    origin: str  # "recruit" | "prisoner" | "legacy"
+    reactions: list[CompanionReaction]
+    warned_turn: int | None
+    warned_day: int | None
+    departure_pending: str  # "" | "leave" | "betray"
+    departure_turn: int | None
+    departed: str  # "" | "left" | "betrayed" | "dead"
+    left_party_day: int | None
+    betrayal_mode: str  # "" | "steal" | "deliver"
+    deliver_pending: bool  # hook p/ SPEC-299/302: o desertor entrega o jogador
+    loyal: bool
+    grudge: bool
+    rests_together: int
+    negative_after_warn: bool
+    personal_quest: str  # none | revealed | ready | completed | failed
+    romance: str  # none | interesse | vinculo | compromisso | rompido
+    romance_rests: int
+    romance_reopen_day: int | None
+    telegraphs: list[dict]
+    last_seen_day: int
+    bound: str  # "" | "rendicao"
+    last_gold_taken: int
 
 
 class ContinuityState(TypedDict, total=False):
@@ -599,6 +641,10 @@ class GameState(TypedDict):
     location_fame: dict[str, FameEntry]
     reputation_pending: list[ReputationPending]
     reputation_notices: list[ReputationNotice]
+    # SPEC-300: alma dos companheiros (writer único: services.companion_soul.apply_turn).
+    companion_souls: dict[str, CompanionSoul]
+    companion_voice_ack: list[str] | None  # TRANSITÓRIO: ids narrados (só caminho feliz)
+    companion_feedback: list[str]  # TRANSITÓRIO: frases públicas do turno (sem número)
     social_intent: dict | None  # SPEC-298 R20: {approach, favor_kind, turn} (transitório)
     active_npc_name: str | None
     npc_fallback_hint: (

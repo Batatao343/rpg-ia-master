@@ -68,6 +68,9 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.started` | `enemies` |
 | `combat.summary` | `death_stage_reached`, `enemy_damage_dealt`, `player_damage_taken`, `reactions`, `rounds`, `target_redirects` |
 | `combat_agent.fallback` | — |
+| `companion.personal_quest_completed` | — |
+| `companion.personal_quest_revealed` | — |
+| `companion_soul.fallback` | — |
 | `cron.auth_rejected` | `reason` |
 | `cron.failed` | `duration_s`, `error_type`, `stack`, `task` |
 | `cron.item_failed` | `error_type`, `item_kind`, `item_ref`, `task` |

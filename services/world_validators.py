@@ -199,6 +199,15 @@ def _v_unique_item(ev: ProposedWorldEvent, state: dict, proj: dict) -> Validatio
     return ValidationResult(True)
 
 
+def _v_companion_event(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    """SPEC-300: gate de source fica em validate_proposal; o alvo precisa ter alma."""
+    if ev.target_id not in (state.get("companion_souls") or {}):
+        return ValidationResult(
+            False, f"id desconhecido: {ev.target_id} não é um companheiro com alma"
+        )
+    return ValidationResult(True)
+
+
 def _v_player_died(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
     """Fase 4.6: evento do motor (combate) — gate anti-LLM em validate_proposal."""
     if ev.target_id != "player":
@@ -537,6 +546,9 @@ _VALIDATORS = {
     "route_cleared": _v_route_cleared,
     "unique_item_claimed": _v_unique_item,
     "unique_item_lost": _v_unique_item,
+    "companion_left": _v_companion_event,
+    "companion_betrayed": _v_companion_event,
+    "companion_fate": _v_companion_event,
 }
 
 
@@ -564,6 +576,12 @@ def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
     # SPEC-298: faction_deed nasce no storyteller (Python), nunca de proposta livre do LLM.
     if ev.type == "faction_deed" and proposal.get("source") != "storyteller":
         return ValidationResult(False, "faction_deed é gerado pelo motor, não proposto")
+    # SPEC-300: partida/traição/destino de companheiro são do motor, nunca propostos.
+    if (
+        ev.type in ("companion_left", "companion_betrayed", "companion_fate")
+        and proposal.get("source") != "engine"
+    ):
+        return ValidationResult(False, "evento de companheiro é gerado pelo motor, não proposto")
     # Fase 6.2: posse de item único é observada pelo motor, nunca proposta.
     if (
         ev.type in ("unique_item_claimed", "unique_item_lost")

@@ -221,6 +221,7 @@ def sync_action_progress(
         fresh = int(q.get("created_turn", -1) or -1) < int(turn)
         if (
             q.get("status") == "active"
+            and not q.get("personal_of")  # SPEC-300: missão pessoal é do motor
             and q.get("location_id") == location_id
             and reached
             and relevant
@@ -318,6 +319,8 @@ def has_completion_proof(quest: dict, state: dict) -> tuple[bool, str]:
     turn = _safe_turn(((state or {}).get("world") or {}).get("turn_count", 0))
     if not isinstance(quest, dict) or quest.get("status") != "active":
         return False, "quest não está ativa"
+    if quest.get("personal_of"):  # SPEC-300 R22: missão pessoal só o motor conclui
+        return False, "missão pessoal é concluída pelo motor"
     created = _safe_turn(quest.get("created_turn"))
     if created >= turn:
         return False, "quest criada neste turno"

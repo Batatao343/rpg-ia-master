@@ -1,6 +1,6 @@
 # SPEC-300 — Companheiros com alma
 
-> **Status:** `approved` (dono, 2026-10-23)
+> **Status:** `in-progress` (aprovada pelo dono 2026-10-23; etapas 0–9 implementadas, falta revisão independente + smoke real §6 — sem chave neste ambiente)
 > **Criada:** 2026-10-20 · **Atualizada:** 2026-10-20
 > **Origem:** `docs/mundo-vivo/VISAO.md` — decisão 8 (Companheiros), decisão 7 (Visibilidade), Regra de ouro, § C. Sociedade viva (morte off-screen, relação alta destrava romance, "Companheiros falam"), § Calibração (migração suave)
 > **Depende de:** — (nenhuma spec aberta é pré-requisito técnico; na ordem da onda entra depois da SPEC-296). Integra-se, sem bloquear, a SPEC-298 (vocabulário de rótulos), SPEC-299 (tag de crime) e SPEC-302 (motor de mundo).
@@ -92,11 +92,12 @@ nenhum bump de `SCHEMA_VERSION`).
   `party.active_allies(state)` ([party.py:241-251](../party.py)) — recebem deltas e
   reações. Companheiro em `waiting_at` ([party.py:392-400](../party.py)) não reage
   ao que não viu. Exceção única: tags da **própria** missão pessoal (R20).
-- **R8 — Rótulos vagos, nunca números.** Faixas de aprovação → rótulo
-  (substantivo, sem gênero): `< 15` "ressentimento", `15–34` "desconfiança",
-  `35–59` "cordialidade", `60–79` "amizade", `≥ 80` "lealdade". Mudança no turno →
+- **R8 — Rótulos vagos, nunca números.** Faixas de aprovação → rótulo, no vocabulário de
+  `reputation.NpcTier` (SPEC-298; teste garante o subconjunto): `< 15` "hostil",
+  `15–34` "desconfiado", `35–59` "neutro", `60–79` "amistoso", `≥ 80` "leal". Mudança no turno →
   frase: `|delta|` 2–3 "X reparou nisso." (só no prompt, não na UI), 4–7
-  "X gostou disso." / "X não gostou disso.", ≥ 8 "X aprovou muito." /
+  "X gostou disso." / "X não gostou disso." (a negativa reusa
+  `reputation.npc_notice_text`), ≥ 8 "X aprovou muito." /
   "X não vai esquecer isso.". Frases sem flexão de gênero (o NPC não tem campo de
   gênero). Nenhum endpoint, log público ou prompt expõe o número da aprovação nem
   o vetor de valores (teste varre o payload da API).
@@ -147,13 +148,18 @@ nenhum bump de `SCHEMA_VERSION`).
   removido da party; no `state.npcs` o NPC fica `in_scene=False`,
   `relationship = max(0, relationship − 2)`, `left_party_day`; evento
   `companion_left` (source `engine`).
-- **R16 — Traição, se o traço permitir.** Se, no momento da partida,
-  `approval < BETRAY_BELOW = 8`, o companheiro tem ≥ 1 traço de
-  `BETRAYAL_TRAITS` e nenhum de `BETRAYAL_BLOCKERS` (listas em
-  `data/companion_values.json`, propostas na §8 para revisão do dono), a partida
-  vira traição: além da R15, leva `min(floor(gold · 0,25), 60)` de ouro
-  `[BALANCEAR]`, `relationship = 0`, `grudge = True` e o evento é
-  `companion_betrayed`. O desconto de ouro aparece no recibo do turno (SPEC-199).
+- **R16 — Traição POR TRAÇO (decisão do dono, 2026-10-23).** Se, no momento em que a
+  partida fica pendente, `approval < BETRAY_BELOW = 8`, o companheiro tem ≥ 1 traço de
+  `betrayal_traits` e nenhum de `betrayal_blockers` (`data/companion_values.json`), a
+  partida vira traição, com o modo escolhido pelo traço (`deliver` vence `steal`):
+  - **`steal`** (ganancioso, cinico, dividas, contrabandista, guarda_subornavel,
+    apostador, usurario_paciente): além da R15, leva `min(floor(gold · 0,25), 60)` de
+    ouro `[BALANCEAR]`; o desconto aparece no recibo do turno (SPEC-199: `gold_delta`);
+  - **`deliver`** (rancoroso, lingua_dupla, informante, cortesao_de_ophidia): não leva
+    ouro; fica `deliver_pending = True` na alma — **só interface**
+    (`pending_betrayal_deliveries(state)`) que a SPEC-299/302 consome para o aviso a
+    inimigos/lei e a emboscada telegrafada. Esta spec não executa a entrega.
+  Em ambos: `relationship = 0`, `grudge = True`, evento `companion_betrayed`.
   Companheiro `loyal` (R22) nunca trai.
 - **R17 — Recrutar de novo.** `recruitment_decision`
   ([party.py:305-351](../party.py)) ganha os códigos `estranged` (partiu há menos de
@@ -337,20 +343,22 @@ nenhum bump de `SCHEMA_VERSION`).
 # state.py
 Axis = Literal["compaixao", "honra", "ordem", "ganancia", "fe", "coragem", "abismo"]
 
+
 class CompanionReaction(TypedDict, total=False):
-    id: str            # f"{turn}:{tag_id}" — estável
-    tag: str           # id do catálogo (ou "aviso" | "despedida" | "traicao")
-    delta: int         # interno; nunca sai na API
+    id: str  # f"{turn}:{tag_id}" — estável
+    tag: str  # id do catálogo (ou "aviso" | "despedida" | "traicao")
+    delta: int  # interno; nunca sai na API
     turn: int
     consumed: bool
 
+
 class CompanionSoul(TypedDict, total=False):
     companion_id: str
-    npc_key: str                     # chave em state.npcs (pode ser "")
-    values: dict[str, int]           # Axis -> -2..2 (congelado na criação)
-    approval: int                    # 0..100
-    origin: str                      # "recruit" | "prisoner" | "legacy"
-    reactions: list[CompanionReaction]   # máx. 3 não consumidas
+    npc_key: str  # chave em state.npcs (pode ser "")
+    values: dict[str, int]  # Axis -> -2..2 (congelado na criação)
+    approval: int  # 0..100
+    origin: str  # "recruit" | "prisoner" | "legacy"
+    reactions: list[CompanionReaction]  # máx. 3 não consumidas
     warned_turn: int | None
     warned_day: int | None
     departure_pending: Literal["", "leave", "betray"]
@@ -363,7 +371,7 @@ class CompanionSoul(TypedDict, total=False):
     romance: Literal["none", "interesse", "vinculo", "compromisso", "rompido"]
     romance_rests: int
     romance_reopen_day: int | None
-    telegraphs: list[dict]           # [{kind, day, turn}] — R26
+    telegraphs: list[dict]  # [{kind, day, turn}] — R26
     last_seen_day: int
 ```
 
@@ -381,18 +389,21 @@ não muda a personalidade; os traços ocultos já contam desde o início, como e
 | `matou_inocente` | `npc_killed` do jogador com alvo **fora** de combate e `relationship ≥ 5` | compaixao −2, honra −2, ordem −2 | 3 |
 | `quest_concluida` | evento `quest_completed` | honra +2 | 1 |
 | `quest_falhou` | evento `quest_failed` ([services/quest_log.py:371](../services/quest_log.py)) | honra −1 | 1 |
-| `ajudou_faccao` / `prejudicou_faccao` | evento `reputation_changed` com delta > 0 / < 0 (`faction_param` = alvo) | — (só `FACTION_DIRECT`) | 1 |
+| `ajudou_faccao` / `prejudicou_faccao` | evento `faction_deed` (SPEC-298 R11; `payload.direction` `ajudou`/`prejudicou`; `faction_param` = `target_id`) | — (só `FACTION_DIRECT`) | 1 |
 | `revelou_segredo` | evento `secret_revealed` | ordem −1, fe −1 | 1 |
 | `usou_abismo` | `abyss_charge` subiu vs. baseline | abismo +2, fe −1 | 2 |
 | `doou_ouro` | regex de doação **e** ouro caiu sem `last_economy_action` no turno | compaixao +2, ganancia −2 | 1 |
-| `ameacou` | regex de ameaça/intimidação na ação | compaixao −1, coragem +1 | 1 |
+| `ameacou` | regex de ameaça/intimidação na ação | compaixao −1, honra −1 (desvio: `coragem +1` saiu — ameaçar não é bravura e fazia Brunna aprovar o exemplo do §6) | 1 |
 | `crime_testemunhado` | evento `crime_witnessed` (SPEC-299, se existir) | ordem −2, honra −1 | 2 |
 | `pagou_multa` | evento `fine_paid` (SPEC-299, se existir) | ordem +1 | 1 |
 | `missao_pessoal_concluida` | motor (R22) | — (fixo +15, só o dono da missão) | — |
 
-`reputation_changed` hoje nasce de `faction_impacts` da LLM com delta decidido em
-Python ([services/event_processor.py:289-293](../services/event_processor.py)); ele é
-usado porque é evento validado, e herda qualquer melhoria da SPEC-298.
+Desvio de contrato (pós-SPEC-298): o evento de feito do jogador a favor/contra uma
+fação passou a ser `faction_deed` (Python, `source="storyteller"`, validado contra a
+fação em cena — `reputation.deed_info`), não `reputation_changed`. Ele é usado porque é
+evento validado e herda qualquer melhoria da SPEC-298. Rótulos, fação do NPC
+(`reputation.npc_faction_id`), raça (`npc_race_id`) e região (`region_id_of`) vêm
+dos contratos da SPEC-298.
 
 ### 3.5 Exemplo de `data/companion_values.json` (IDs reais)
 
@@ -418,8 +429,11 @@ usado porque é evento validado, e herda qualquer melhoria da SPEC-298.
   },
   "races": {"race_osshari": {}, "race_humanos": {}},
   "regions": {"montanhas_afiadas": {"coragem": 1}},
-  "betrayal_traits": ["ganancioso", "cinico", "rancoroso", "dividas", "contrabandista",
-                      "lingua_dupla", "guarda_subornavel", "apostador", "usurario_paciente"],
+  "betrayal_traits": {
+    "steal": ["ganancioso", "cinico", "dividas", "contrabandista", "guarda_subornavel",
+              "apostador", "usurario_paciente"],
+    "deliver": ["rancoroso", "lingua_dupla", "informante", "cortesao_de_ophidia"]
+  },
   "betrayal_blockers": ["honesto_demais", "leal_a_familia"],
   "romance_blockers_until_personal_quest": ["luto_recente", "viuva_do_mar"]
 }
@@ -436,27 +450,34 @@ def mode() -> Literal["off", "shadow", "on"]: ...
 def derive_values(npc: dict) -> dict[str, int]: ...
 def initial_approval(npc: dict, *, origin: str = "recruit") -> int: ...
 def ensure_soul(state: dict, companion: dict) -> CompanionSoul: ...
-def apply_tags(soul: CompanionSoul, tags: list[ChoiceTag], *, turn: int,
-               companion_faction: str) -> tuple[CompanionSoul, int]: ...  # (soul, delta do turno)
+def apply_tags(
+    soul: CompanionSoul, tags: list[ChoiceTag], *, turn: int, companion_faction: str
+) -> tuple[CompanionSoul, int]: ...  # (soul, delta do turno)
 def approval_label(approval: int) -> str: ...
 def change_phrase(name: str, delta: int) -> str | None: ...
-def step_departure(soul: CompanionSoul, *, turn: int, day: int,
-                   negative_after_warn: bool, traits: list[str]) -> CompanionSoul: ...
-def apply_turn(state: dict) -> dict: ...   # writer único; devolve updates parciais
+def step_departure(
+    soul: CompanionSoul, *, turn: int, day: int, negative_after_warn: bool, traits: list[str]
+) -> CompanionSoul: ...
+def apply_turn(state: dict) -> dict: ...  # writer único; devolve updates parciais
+
 
 # services/companion_tags.py
 class ChoiceTag(TypedDict):
     id: str
-    faction_id: str          # "" se não se aplica
-    sign: int                # +1 / -1 (para FACTION_DIRECT)
-    source_ref: str          # event_id | "combat:<encounter_id>" | "regex" | "baseline"
+    faction_id: str  # "" se não se aplica
+    sign: int  # +1 / -1 (para FACTION_DIRECT)
+    source_ref: str  # event_id | "combat:<encounter_id>" | "regex" | "baseline"
+
+
 def detect_choice_tags(state: dict) -> list[ChoiceTag]: ...
 def detect_action_tags(text: str) -> list[str]: ...
 def detect_romance_intent(text: str) -> bool: ...
 
+
 # services/companion_prompt.py
-def companion_prompt_block(state: dict, purpose: Literal["story", "npc"],
-                           *, target: str = "") -> tuple[str, list[str]]: ...  # (bloco, ids p/ ack)
+def companion_prompt_block(
+    state: dict, purpose: Literal["story", "npc"], *, target: str = ""
+) -> tuple[str, list[str]]: ...  # (bloco, ids p/ ack)
 ```
 
 ### 3.7 Formato do bloco (exemplo real, cenário Brunna)
@@ -478,15 +499,20 @@ Com romance ativo, acrescenta a linha fixa da R24. Sem companheiro presente: `""
 ```python
 class Exposure(TypedDict):
     companion_id: str
-    location_id: str      # waiting_at
+    location_id: str  # waiting_at
     days_away: int
-    danger_level: int     # do world_map do local
+    danger_level: int  # do world_map do local
+
 
 def companions_exposed(state: dict) -> list[Exposure]: ...
-def telegraph_companion_danger(state: dict, companion_id: str,
-                               kind: Literal["rumor", "pedido_de_ajuda"], day: int) -> dict: ...
-def apply_companion_fate(state: dict, companion_id: str,
-                         fate: Literal["ferido", "capturado", "morto"], day: int) -> dict: ...
+def telegraph_companion_danger(
+    state: dict, companion_id: str, kind: Literal["rumor", "pedido_de_ajuda"], day: int
+) -> dict: ...
+def apply_companion_fate(
+    state: dict, companion_id: str, fate: Literal["ferido", "capturado", "morto"], day: int
+) -> dict: ...
+
+
 class FateNotTelegraphed(Exception): ...
 ```
 
@@ -701,7 +727,24 @@ recrutada, alma derivada, em `montanhas_afiadas`), `--real`, teto
 
 ## 9. Registro de execução
 
-(preenchido pelo executor: sondas, smoke real, desvios)
+**Executado em 2026-10-23 (branch `spec-300`, sobre a main com SPEC-296/298).**
+
+- Implementado: etapas 0–9 (núcleo `services/companion_soul.py`/`companion_tags.py`/
+  `companion_prompt.py`, dados `data/companion_*.json`, `hook` em `entities.json`,
+  campos de estado/persistência, bloco no storyteller e no npc_actor, finalizer,
+  eventos de motor + validador + crônica, `party.recruit_prisoner`/`estranged`/`betrayed`,
+  API `approval_label`/`bond_label`/`companion_feedback`, HUD/narração, invariantes
+  R30, cenário `companheiro`, flags no `.env.example`).
+- Desvios (spec ajustada no mesmo commit): (1) rótulos no vocabulário da SPEC-298
+  (hostil…leal) em vez de ressentimento…lealdade; (2) `ajudou/prejudicou_faccao` vêm
+  de `faction_deed`, não `reputation_changed`; (3) `ameacou` perde `coragem +1`;
+  (4) traição por traço (decisão do dono): `steal` rouba, `deliver` só deixa o hook
+  `deliver_pending`; (5) missão pessoal só fica pronta num turno posterior à revelação;
+  (6) `quest_log` ignora `personal_of` em `sync_action_progress`/`has_completion_proof`
+  (a conclusão é só do motor); (7) o ouro roubado ajusta `last_turn_outcome.gold_delta`
+  porque a finalização do recibo precede o writer.
+- Morte off-screen e entrega da traição: só interface (SPEC-302/304/299), testadas com dublê.
+- Pendente: revisão independente e smoke real §6 (exige `DEEPSEEK_API_KEY`; não rodado aqui).
 
 
 ## Decisões do dono (2026-10-23)

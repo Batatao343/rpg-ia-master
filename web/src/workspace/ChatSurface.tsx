@@ -55,6 +55,11 @@ export function ChatSurface({ data, log, thinking, thinkingLabel, busy, blocked,
         <SceneArtwork scene={data?.visual?.scene} />
         {/* SPEC-199: chip mecânico do turno (aria-live, sem role="status"). */}
         <OutcomeToast outcome={data?.turn_outcome?.receipt_id ? (data.turn_outcome as TurnOutcome) : null} />
+        {(data?.companion_feedback?.length ?? 0) > 0 && (
+          <ul className="companion-feedback" aria-live="polite">
+            {data?.companion_feedback?.map((line) => <li key={line}>{line}</li>)}
+          </ul>
+        )}
         {showOnboard && gameId && <OnboardingHint gameId={gameId} />}
         <StoryLog entries={log} thinking={thinking} thinkingLabel={thinkingLabel} active={active}
           initialScroll={initialScroll}

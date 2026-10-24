@@ -35,6 +35,9 @@ CHRONICLE_EVENT_TYPES = {
     "unique_item_claimed",
     "subclass_chosen",
     "class_apex_unlocked",
+    "companion_left",
+    "companion_betrayed",
+    "companion_fate",
 }
 
 # Templates voltados ao JOGADOR (prosa curta), diferentes dos EVENT_TEMPLATES
@@ -51,6 +54,15 @@ CHRONICLE_TEMPLATES: dict[str, str] = {
     "unique_item_claimed": "{item} agora pertence ao herói — não há outro no mundo.",
     "subclass_chosen": "A senda {detail} foi escolhida.",
     "class_apex_unlocked": "O Ápice {detail} foi alcançado.",
+    "companion_left": "{who} deixou o grupo.",
+    "companion_betrayed": "{who} traiu a confiança do herói e partiu.",
+    "companion_fate": "{who} {fate}.",
+}
+
+_FATE_TEXT = {
+    "morto": "não voltou: morreu longe do herói",
+    "capturado": "foi capturado(a) longe do herói",
+    "ferido": "voltou ferido(a) de longe",
 }
 
 _DEFAULT_TITLE = "Crônica da jornada"
@@ -88,6 +100,11 @@ def render_milestone(event: dict, projection: dict) -> str:
             "name", event.get("target_id", "")
         )
         return tmpl.format(item=item)
+
+    if etype in ("companion_left", "companion_betrayed", "companion_fate"):
+        who = str(payload.get("name") or _name(event.get("target_id")))
+        fate = _FATE_TEXT.get(str(payload.get("fate") or ""), "teve um destino incerto")
+        return tmpl.format(who=who, fate=fate)
 
     if etype in ("subclass_chosen", "class_apex_unlocked"):
         detail = payload.get("name") or payload.get("card_id") or event.get("target_id", "")
