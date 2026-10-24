@@ -8,18 +8,18 @@
 
 ## Estado em 10 linhas
 
-- `main` = `629c791` (24/10, CI verde). Iniciativa **mundo vivo**: [docs/mundo-vivo/VISAO.md](docs/mundo-vivo/VISAO.md).
-- Na main: **296** onda 0, **298** reputação, **302** motor de mundo (`done`); **297** pool entre mundos, **299** lei/crime, **300** companheiros, **301** patentes (revisão Sol aprovada; faltam smoke real §6).
-- Suíte offline: **~5.120 passed, 249 skipped** (24/10, SPEC-301, `-n 3`; `test_session_hardening_local` falha também na main por `supabase status` travado — follow-up de ambiente).
-- Em revisão: **305** quests de mundo; **303+307** calendário (estações/festas + calendário de Valoria: 7 meses de 20 dias, semana dos Cinco Sinos, Ano 112 da Era 7). Pendentes: **306** sementes de NPC +150 (spec aprovada), **304** NPCs off-screen.
-- Staging `35b9576`: DeepSeek, Jev `primary`, teto R$ 5, `RPG_NPC_KNOWLEDGE=on`, `RPG_WORLD_ENGINE=on`, `RPG_SHARED_POOL=shadow` (migração 297 aplicada). Flags novas (`RPG_LAW`, `RPG_COMPANION_SOUL`, `RPG_WORLD_QUESTS`) ainda não configuradas lá.
-- Regra nova (24/10): não disparar agentes em rajada; subagente só testes do escopo com `-n 2`; checar RAM (máquina de 16 GB travou). Ver `CLAUDE.md`.
+- `main` = `b6592b3` (24/10). **Iniciativa mundo vivo concluída em código**: specs 296–307 na main; visão em [docs/mundo-vivo/VISAO.md](docs/mundo-vivo/VISAO.md).
+- `done`: 296 onda 0, 298 reputação, 299 lei/crime, 300 companheiros, 301 patentes, 302 motor de mundo, 303 estações/festas, 304 NPCs off-screen, 305 quests de mundo, 306 sementes +150, 307 calendário de Valoria (7 meses × 20 dias, Cinco Sinos, Ano 112 da Era 7). **297** pool entre mundos `in-progress` (falta leitura do dono das sementes → `on`).
+- Suíte offline: **~5.509 passed, 249 skipped** (24/10, SPEC-304, `-n 3`). `test_session_hardening_local` trava em `supabase status` com o stack local meio de pé (follow-up).
+- Smokes reais DeepSeek feitos para 296/298–307 (~US$ 0,10 no total). Bug achado e corrigido: NPC do narrador herdava relação do LLM fora de 0..10.
+- Staging `b6592b3`: DeepSeek, Jev `primary`, teto R$ 5, `RPG_NPC_KNOWLEDGE=on`, `RPG_WORLD_ENGINE=on`, `RPG_SHARED_POOL=shadow`, `RPG_LAW=shadow`, `RPG_NPC_WORLD=shadow`; companheiros e quests de mundo no default (`on`). `vercel_env.py --flag NOME=modo` para as flags do mundo vivo.
+- Regra (24/10): não disparar agentes em rajada; subagente só testes do escopo com `-n 2`; checar RAM (ver `CLAUDE.md`).
 
 ## Próximos 3 passos
 
-1. Pousar 305 e 303+307 após revisão; implementar 306 e 304.
-2. Smoke real §6 das specs 297/299/300/301/305/303/307 (DeepSeek, US$ ≤ 3/dia) e staging com as flags novas em `shadow` → `on`.
-3. Follow-ups: relock eval `npc_knowledge` (298 R23), grant por coluna p/ `rpg_api` antes de 297 `on` em produção, D7 (criaturas do pool em encontros), 301 F-1 (missão no local conta no turno seguinte), derrota p/ lei → prisão (299), teste local de sessão travando.
+1. Dono: revisar a página de lore (https://claude.ai/artifact/KgrPsuP1n2gSA5Y4fYbEF3) e dizer "aprovo as sementes" → `npc_seed_review.py approve`, `RPG_SHARED_POOL=on` no staging, fechar 297.
+2. Staging `shadow` → `on` para `RPG_LAW` e `RPG_NPC_WORLD` (antes do NPC_WORLD: medir C1 da 302 com `npc_perigo`, SPEC-304 P2-2, e o dono confirmar LEADER_DEATH_GAP 60 dias).
+3. Follow-ups: relock eval `npc_knowledge` (298 R23); grant por coluna p/ `rpg_api` antes de 297 `on` em produção; D7 (criaturas do pool em encontros); 301 F-1; 299 derrota→prisão; 305 P2-5/P2-7; 304 P2-5/P2-8; bot `faccionario` ir ao posto de recrutamento.
 
 ## Bloqueios no dono
 
@@ -37,6 +37,7 @@ Coluna "quando ele disser" = o que o coordenador executa na hora.
 | SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera a 104" → certificação cloud |
 | Plugins não usados | desligar em claude.ai → Settings → Plugins | — |
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
+| Sementes de NPC (297 D8 / 306) | revisar a página de lore e dizer "aprovo as sementes" | `npc_seed_review.py approve` → `RPG_SHARED_POOL=on` no staging → fechar 297 |
 | Termos (SPEC-297 D3) | cláusula: NPC promovido ao pool fica no mundo desvinculado do autor | "aprovo a cláusula" → texto legal + SPEC-222 |
 
 ## Decisões recentes (≤ 7 dias)
@@ -45,19 +46,14 @@ Gerado por `uv run python scripts/spec_index.py recent --days 7 --write ESTADO_A
 (roda dentro de `/spec-land` e `/estado`). Não edite à mão entre os marcadores.
 
 <!-- recent:start -->
-- 2026-10-24 · SPEC-307 `draft` — calendario-de-valoria
-- 2026-10-24 · SPEC-306 `draft` — sementes-npc-expansao
-- 2026-10-24 · SPEC-301 `in-progress` — Fações com patente: entrar, subir, sair, trair (e mover o mundo)
-- 2026-10-24 · SPEC-300 `in-progress` — Companheiros com alma
-- 2026-10-24 · SPEC-299 `in-progress` — Lei e crime por região
-- 2026-10-23 · SPEC-305 `draft` — quests-de-mundo-com-prazo
-- 2026-10-23 · SPEC-304 `draft` — npcs-agenda-morte-offscreen
-- 2026-10-23 · SPEC-303 `draft` — calendario-estacoes-festas
-- 2026-10-23 · SPEC-302 `done` — Motor de mundo: tick diário, pressões regionais e curva de tensão
-- 2026-10-23 · SPEC-298 `done` — Reputação em quatro níveis (NPC, fação, local, raça/origem)
-- 2026-10-23 · SPEC-297 `in-progress` — Pool compartilhado entre mundos (NPCs, criaturas, itens, locais)
-- 2026-10-23 · SPEC-296 `done` — mundo-vivo-onda0-religacoes
-- 2026-10-23 · SPEC-236 `done` — FinOps/wallet/jobs: custo fantasma de falhas, teto diário cross-day, reservas órfãs, STT incerto, refund parcial pré-crédito, lease e poison jobs
+- 2026-10-24 · SPEC-307 `done` — Calendário de Valoria: 7 meses, semana de 5 dias, data exibida
+- 2026-10-24 · SPEC-306 `done` — Expansão das tabelas de semente de NPC (+25 por tabela)
+- 2026-10-24 · SPEC-305 `done` — Quests de mundo com prazo (nascem do estado, falham com consequência)
+- 2026-10-24 · SPEC-304 `done` — NPCs off-screen: agenda, viagem, troca de lado e morte telegrafada
+- 2026-10-24 · SPEC-303 `done` — Calendário: estações, passos de montanha e festas da lore
+- 2026-10-24 · SPEC-301 `done` — Fações com patente: entrar, subir, sair, trair (e mover o mundo)
+- 2026-10-24 · SPEC-300 `done` — Companheiros com alma
+- 2026-10-24 · SPEC-299 `done` — Lei e crime por região
 <!-- recent:end -->
 
 ## Notas da onda em curso (coordenador)
