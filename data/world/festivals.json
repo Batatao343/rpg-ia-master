@@ -1,0 +1,111 @@
+{
+  "_doc": "SPEC-303 D3: festas/datas. AUTORIA NOVA ancorada na lore (lore_refs = arquivo:linha em lore_nova/); toda entrada review='dono' ate o dono aprovar ou editar. day_in_season <= 10.",
+  "festivals": [
+    {
+      "id": "dia_da_fundacao", "name": "Dia da Fundação",
+      "location_ids": ["nova_arcadia", "na_anel_dourado", "na_anel_ferro", "na_anel_lama"],
+      "season": "verao", "day_in_season": 7, "duration_days": 2, "label": "em festa",
+      "lore_refs": ["timeline_completa.txt:318", "timeline_completa.txt:432", "npcs.txt:88"],
+      "review": "dono"
+    },
+    {
+      "id": "noite_do_silencio", "name": "Noite do Silêncio",
+      "location_ids": ["nova_arcadia", "na_anel_dourado", "na_anel_ferro", "na_anel_lama"],
+      "season": "inverno", "day_in_season": 1, "duration_days": 1, "label": "em silêncio",
+      "effects": {"price_mult": 1.0, "restock_mult": 0.0, "merchant_closed": true},
+      "lore_refs": ["daily_life.txt:137", "timeline_completa.txt:340", "timeline_completa.txt:218"],
+      "review": "dono"
+    },
+    {
+      "id": "procissao_de_vaelorn", "name": "Procissão dos Antigos",
+      "location_ids": ["pr_vaelorn"],
+      "season": "outono", "day_in_season": 5, "duration_days": 1, "label": "em vigília",
+      "effects": {"price_mult": 1.0},
+      "lore_refs": ["creatures.txt:492"],
+      "review": "dono"
+    },
+    {
+      "id": "noite_dos_nomes", "name": "Noite dos Nomes",
+      "location_ids": ["skallgard"],
+      "season": "outono", "day_in_season": 1, "duration_days": 1, "label": "em luto",
+      "effects": {"price_mult": 1.0},
+      "lore_refs": ["daily_life.txt:201", "factions.txt:160"],
+      "review": "dono"
+    },
+    {
+      "id": "fim_do_ceu_vermelho", "name": "Dia do Céu Limpo",
+      "location_ids": ["brekmar"],
+      "season": "primavera", "day_in_season": 3, "duration_days": 1, "label": "em festa",
+      "lore_refs": ["timeline_completa.txt:368", "factions.txt:62"],
+      "review": "dono"
+    },
+    {
+      "id": "dia_da_estaca", "name": "Dia da Estaca",
+      "location_ids": ["pantano_melancolia"],
+      "season": "outono", "day_in_season": 2, "duration_days": 1, "label": "em vigília",
+      "effects": {"price_mult": 1.0},
+      "lore_refs": ["daily_life.txt:117", "npcs.txt:1123"],
+      "review": "dono"
+    },
+    {
+      "id": "rito_da_memoria", "name": "Rito da Memória de Sangue",
+      "location_ids": ["deserto_zhur"],
+      "season": "verao", "day_in_season": 8, "duration_days": 1, "label": "em rito",
+      "effects": {"price_mult": 1.0},
+      "lore_refs": ["locations.txt:131", "daily_life.txt:283", "npcs.txt:1760"],
+      "review": "dono"
+    },
+    {
+      "id": "colheita_do_po_de_sonho", "name": "Colheita do Pó de Sonho",
+      "location_ids": ["floresta_sussurros", "fs_fronteira_xylos"],
+      "season": "outono", "day_in_season": 8, "duration_days": 2, "label": "em colheita",
+      "lore_refs": ["creatures.txt:912", "creatures.txt:874"],
+      "review": "dono"
+    },
+    {
+      "id": "dia_da_simbiose", "name": "Dia da Simbiose",
+      "location_ids": ["sx_cidades_hospedeiros"],
+      "season": "primavera", "day_in_season": 6, "duration_days": 2, "label": "em festa",
+      "lore_refs": ["races.txt:396", "races.txt:415"],
+      "review": "dono"
+    },
+    {
+      "id": "vigilia_dos_afogados", "name": "Vigília dos Afogados",
+      "location_ids": ["aethelgard"],
+      "season": "inverno", "day_in_season": 6, "duration_days": 1, "label": "em vigília",
+      "effects": {"price_mult": 1.0},
+      "lore_refs": ["locations.txt:248", "timeline_completa.txt:106"],
+      "review": "dono"
+    },
+    {
+      "id": "noite_das_cores_erradas", "name": "Noite das Cores Erradas",
+      "location_ids": ["ophidia", "brekmar"],
+      "season": "verao", "day_in_season": 10, "duration_days": 1, "label": "em vigília",
+      "effects": {"price_mult": 1.0},
+      "lore_refs": ["creatures.txt:1623"],
+      "review": "dono"
+    },
+    {
+      "id": "colheita_das_carcacas", "name": "Colheita das Carcaças",
+      "location_ids": ["costa_negra"],
+      "season": "outono", "day_in_season": 9, "duration_days": 2, "label": "em colheita",
+      "lore_refs": ["daily_life.txt:304", "locations.txt:463"],
+      "review": "dono"
+    },
+    {
+      "id": "dia_do_levante", "name": "Dia do Levante",
+      "location_ids": ["montanhas_afiadas", "ma_saidas_baixas"],
+      "season": "primavera", "day_in_season": 9, "duration_days": 1, "label": "em festa",
+      "lore_refs": ["timeline_completa.txt:82", "npcs.txt:848"],
+      "review": "dono"
+    },
+    {
+      "id": "cancoes_de_pedra", "name": "Dia das Canções de Pedra",
+      "location_ids": ["pr_solvhen"],
+      "season": "inverno", "day_in_season": 4, "duration_days": 1, "label": "em luto",
+      "effects": {"price_mult": 1.0},
+      "lore_refs": ["races.txt:245", "creatures.txt:488", "factions.txt:325"],
+      "review": "dono"
+    }
+  ]
+}

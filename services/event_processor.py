@@ -177,7 +177,7 @@ def apply_event(event: dict, projection: dict) -> dict:
                 "crisis_id": str(payload.get("crisis_id") or ""),
                 "cause": str(payload.get("cause") or ""),
             }
-            for extra in ("faction_id", "prev_controller"):
+            for extra in ("faction_id", "prev_controller", "festival_id"):
                 if payload.get(extra):
                     row[extra] = str(payload[extra])
             rows[target] = row

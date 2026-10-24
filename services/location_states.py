@@ -54,12 +54,23 @@ def location_effects(state: dict, location_id: str) -> dict:
     mults = spec.get("price_mult") or [1.0]
     danger = danger_delta(row, location_id)
     closed_at = spec.get("merchant_closed_at")
-    return {
+    out = {
         "price_mult": float(mults[min(sev, len(mults)) - 1]),
         "danger_delta": danger,
         "restock_mult": float(spec.get("restock_mult", 1.0)),
         "merchant_closed": bool(closed_at and sev >= int(closed_at)),
     }
+    if row.get("state") == "festa" and row.get("festival_id"):
+        # SPEC-303 R18: override por festival (preço/estoque/mercador); perigo nunca muda
+        from services.world_calendar import festival_effects
+
+        ov = festival_effects(str(row["festival_id"]))
+        for key in ("price_mult", "restock_mult"):
+            if key in ov:
+                out[key] = float(ov[key])
+        if "merchant_closed" in ov:
+            out["merchant_closed"] = bool(ov["merchant_closed"])
+    return out
 
 
 def danger_delta(row: dict | None, location_id: str) -> int:
@@ -74,6 +85,10 @@ def public_label(row: dict | None) -> str:
     """Rotulo vago para a API (sem severidade numerica)."""
     if not row:
         return ""
+    if row.get("state") == "festa" and row.get("festival_id"):
+        from services.world_calendar import festival_label
+
+        return festival_label(str(row["festival_id"])) or "em festa"
     return str((_cfg().get(row.get("state", "")) or {}).get("label", ""))
 
 
@@ -107,7 +122,8 @@ def pick_crisis_target(region_id: str, kind: str, projection: dict, rng) -> str 
         if loc.get("region_id") == region_id and loc.get("kind") != "interior"
     )
     roll = rng.random()  # sempre sorteia: o fluxo do rng nao depende dos candidatos
-    free = [lid for lid in cands if lid not in rows]
+    # SPEC-303 R17: crise vence festa — um local em `festa` ainda e alvo valido da crise
+    free = [lid for lid in cands if lid not in rows or (rows[lid] or {}).get("state") == "festa"]
     weights = {lid: _weight(kind, _location(lid)) for lid in free}
     pool = [lid for lid in free if weights[lid] > 0] or free
     if not pool:

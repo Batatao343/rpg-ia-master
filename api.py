@@ -2908,11 +2908,27 @@ def _world_block(
         # SPEC-296 R8 + SPEC-302 R31: só o rótulo vago do local ATUAL e as notícias
         # percebidas (lista branca de campos); pressões/world_sim/relações nunca saem.
         "location_state": _location_state_label(w.get("current_location_id", ""), projection),
+        # SPEC-303 R22: estação com rótulo regional do local atual (só id+label; passos,
+        # festas e parâmetros do calendário nunca saem)
+        "season": _season_view(w),
         "news": [
             {k: n.get(k, "") for k in ("day", "period", "location_name", "text", "turn")}
             for n in (w.get("news") or [])[-12:]
             if isinstance(n, dict)
         ],
+    }
+
+
+def _season_view(w: dict) -> dict[str, str] | None:
+    from services import world_calendar
+    from services.world_pressures import region_of
+
+    sid = world_calendar.active_season(w)
+    if not sid:
+        return None
+    return {
+        "id": sid,
+        "label": world_calendar.label_for(sid, region_of(str(w.get("current_location_id") or ""))),
     }
 
 
@@ -4745,6 +4761,9 @@ def _create_game(req: CreateCharacterRequest, claim):
         "art_generation_ledger": [],
     }
     initial_state["player"] = progression.normalize_player_progression(initial_state["player"])
+    from services import world_calendar
+
+    world_calendar.init_new_game(initial_state)  # SPEC-303 R5: calendário ancorado no dia 1
 
     # spec inicio-personalizado (R5): cenário aprovado semeia plano pessoal,
     # capítulo 1, NPCs da história e a cena de abertura. Sem scenario, o

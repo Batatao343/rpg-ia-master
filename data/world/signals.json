@@ -32,7 +32,18 @@
     "ascensao.aviso": {"visibility": "regional", "text": "Cresce em {regiao} o rumor de que {faccao} está prestes a dar um passo decisivo."},
     "rel.guerra": {"visibility": "regional", "text": "Corre pelas estradas que {faccao} e seus rivais romperam de vez e se preparam para o confronto."},
     "rel.alianca": {"visibility": "regional", "text": "Dizem que {faccao} selou uma aliança com antigos rivais."},
-    "rel.neutra": {"visibility": "regional", "text": "As hostilidades entre {faccao} e seus rivais parecem ter esfriado."}
+    "rel.neutra": {"visibility": "regional", "text": "As hostilidades entre {faccao} e seus rivais parecem ter esfriado."},
+    "estacao.inicio.primavera": {"visibility": "global", "text": "O degelo chegou: a terra amolece e os dias ficam mais longos."},
+    "estacao.inicio.verao": {"visibility": "global", "text": "O calor do verão se instala; o ar pesa e as sombras encurtam."},
+    "estacao.inicio.outono": {"visibility": "global", "text": "As folhas e as cinzas caem juntas; o outono chegou."},
+    "estacao.inicio.inverno": {"visibility": "global", "text": "O frio chegou de vez; o vapor da respiração não se desfaz mais no ar."},
+    "estacao.inicio.noite_longa": {"visibility": "global", "text": "No norte, o sol não volta a nascer por meses; começa a Noite Longa."},
+    "estacao.inicio.dia_longo": {"visibility": "global", "text": "No norte, o sol quase não se põe mais; começa o Dia Longo."},
+    "passo.fechou": {"visibility": "regional", "text": "A neve fechou o passo para {local}; quem atravessar agora gasta o dia inteiro na travessia."},
+    "passo.abriu": {"visibility": "regional", "text": "O passo para {local} voltou a ser trilha; as caravanas sobem de novo."},
+    "festa.proxima": {"visibility": "regional", "text": "Em {local} já se fala do {festa}, daqui a poucos dias."},
+    "festa.inicio": {"visibility": "local", "text": "{local} está {rotulo}: é o {festa}."},
+    "festa.cancelada": {"visibility": "regional", "text": "Não haverá {festa} em {local} este ano; ninguém tem cabeça para isso agora."}
   },
   "unknown_faction_label": "homens sem insígnia que ninguém sabe nomear"
 }

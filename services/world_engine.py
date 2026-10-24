@@ -104,6 +104,8 @@ class DayHookResult:
     pressure_deltas: dict = field(default_factory=dict)  # region -> kind -> int
     events: list = field(default_factory=list)
     digest: list = field(default_factory=list)
+    # SPEC-303 R12: deslocamento de BASELINE (nao delta) da deriva do dia: region -> kind -> int
+    baseline_offsets: dict = field(default_factory=dict)
 
 
 DayHook = Callable[[DayContext], DayHookResult]
@@ -120,15 +122,26 @@ def register_day_hook(name: str, fn: DayHook, *, stage: Literal["pre", "post"], 
 
 def _run_hooks(stage: str, ctx: DayContext) -> DayHookResult:
     merged = DayHookResult()
-    for _, _stage, _, fn in sorted(
+    for name, _stage, _, fn in sorted(
         (h for h in _HOOKS if h[1] == stage), key=lambda h: (h[2], h[0])
     ):
-        res = fn(ctx)
+        try:
+            res = fn(ctx)
+        except Exception as exc:
+            from observability.telemetry import log_fallback
+
+            log_fallback("world_engine", "day_hook_failed", exc, hook=name)
+            continue
         for r, row in (res.pressure_deltas or {}).items():
             for k, v in row.items():
                 merged.pressure_deltas.setdefault(r, {})[k] = (
                     merged.pressure_deltas.get(r, {}).get(k, 0) + v
                 )
+        for r, row in (res.baseline_offsets or {}).items():
+            for k, v in row.items():
+                merged.baseline_offsets.setdefault(r, {})[k] = merged.baseline_offsets.get(
+                    r, {}
+                ).get(k, 0) + int(v)
         merged.events += list(res.events or [])
         merged.digest += list(res.digest or [])
     return merged
@@ -289,6 +302,8 @@ def _tick_day(
     # 1. hooks pre
     ctx = DayContext(game_id, day, sim, projection, world, factions, day_rng(game_id, day, "hooks"))
     pre = _run_hooks("pre", ctx)
+    commit(list(pre.events))  # SPEC-303: festas (location_state_changed) antes das causas/crises
+    digest += list(pre.digest)
 
     # 2-3. causas (eventos novos do event_log + estado)
     deltas = wp.event_deltas(
@@ -365,6 +380,7 @@ def _tick_day(
         deltas=deltas,
         relief=relief,
         blocked_pairs=blocked,
+        baseline_offsets=pre.baseline_offsets,
     )
 
     # 6. progresso de faccao (so `on`; R21b)
@@ -668,3 +684,13 @@ def advance_days(
         len(days),
         key,
     )
+
+
+def _register_default_hooks() -> None:
+    """SPEC-303: calendario = hook `pre` order 10 (estacao, festas, offsets de baseline)."""
+    from services import world_calendar
+
+    register_day_hook("calendar", world_calendar.calendar_day_hook, stage="pre", order=10)
+
+
+_register_default_hooks()

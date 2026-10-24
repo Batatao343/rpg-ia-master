@@ -542,6 +542,12 @@ def _v_location_state_changed(ev: ProposedWorldEvent, state: dict, proj: dict) -
     sev = ev.payload.get("severity", 0)
     if not isinstance(sev, int) or not 0 <= sev <= 3:
         return ValidationResult(False, "payload.severity inválido")
+    if ev.payload.get("cause") == "calendario":
+        # SPEC-303 R16: o calendario so abre/fecha `festa` de festival do catalogo
+        from services.world_calendar import valid_festival_event
+
+        if not valid_festival_event(ev.payload):
+            return ValidationResult(False, "payload.festival_id inválido para cause=calendario")
     return ValidationResult(True)
 
 

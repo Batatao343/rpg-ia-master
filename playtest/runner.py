@@ -514,6 +514,9 @@ def _build_initial_state(
             ),
         ]
     initial["player"]["gold"] = 50 * int(start_level)
+    from services import world_calendar
+
+    world_calendar.init_new_game(initial)  # SPEC-303 R5 (mesmo fluxo do /game/new)
     return initial
 
 

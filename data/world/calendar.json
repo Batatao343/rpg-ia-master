@@ -1,0 +1,35 @@
+{
+  "_doc": "SPEC-303: calendario, estacoes, passos sazonais. Valores [BALANCEAR] calibrados por docs/spec302/world_engine_sim.py --calendar on.",
+  "constants": {"SEASON_DAYS": 14, "FIRST_TURN_MIN": 4, "FIRST_TURN_MAX": 8,
+                "PASS_EXTRA_PERIODS": 2, "FESTIVAL_HERALD_DAYS": 2},
+  "labels": {
+    "default":      {"primavera": "Primavera", "verao": "Verão", "outono": "Outono", "inverno": "Inverno"},
+    "skallgard":    {"primavera": "Dia Longo", "verao": "Dia Longo", "outono": "Noite Longa", "inverno": "Noite Longa"},
+    "deserto_zhur": {"verao": "Estação do Vidro"}
+  },
+  "weather_mult": {
+    "default":            {"verao": {"chuva": 0.5, "limpo": 1.3}, "outono": {"chuva": 1.5, "nublado": 1.2},
+                           "inverno": {"chuva": 1.3, "nublado": 1.3}},
+    "skallgard":          {"primavera": {"nevasca": 0.7}, "verao": {"nevasca": 0.5},
+                           "outono": {"nevasca": 1.5}, "inverno": {"nevasca": 2.0}},
+    "montanhas_afiadas":  {"verao": {"nevasca": 0.5}, "inverno": {"nevasca": 2.0}},
+    "deserto_zhur":       {"verao": {"vendaval": 1.5}, "inverno": {"vendaval": 0.7}},
+    "pantano_melancolia": {"primavera": {"miasma": 1.3}}
+  },
+  "pressure_offsets": {
+    "inverno":   {"skallgard": {"fome": 15}, "montanhas_afiadas": {"fome": 10},
+                  "nova_arcadia": {"fome": 5}, "pradaria_ruinas": {"fome": 5}},
+    "verao":     {"deserto_zhur": {"fome": 10}},
+    "primavera": {"pantano_melancolia": {"praga": 10}, "selva_xylos": {"praga": 5}},
+    "outono":    {}
+  },
+  "encounter_mult": {
+    "skallgard":         {"inverno": {"enemy_lobo_invernal": 1.5, "enemy_yeti": 1.5}},
+    "montanhas_afiadas": {"inverno": {"enemy_yeti": 1.5}, "verao": {"enemy_wyvern_jovem": 1.5}},
+    "deserto_zhur":      {"verao": {"enemy_verme_areia_jovem": 1.5, "enemy_escorpiao_cristal": 1.3}},
+    "selva_xylos":       {"primavera": {"enemy_hospedeiro_fungico": 1.3}}
+  },
+  "passes": [
+    {"id": "passo_skallgard", "a": "montanhas_afiadas", "b": "skallgard", "closed_in": ["inverno"]}
+  ]
+}

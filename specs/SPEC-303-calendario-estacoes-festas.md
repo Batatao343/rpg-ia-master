@@ -1,6 +1,6 @@
 # SPEC-303 — Calendário: estações, passos de montanha e festas da lore
 
-> **Status:** `approved` (dono, 2026-10-23)
+> **Status:** `in-progress` (implementada em 2026-10-24; aguarda revisão independente Opus)
 > **Criada:** 2026-10-23 · **Atualizada:** 2026-10-23
 > **Origem:** `docs/mundo-vivo/VISAO.md` (§"A. Mundo autônomo" → Calendário; §Calibração → duração da campanha; Regra de ouro) e SPEC-302 §9 (filha **302-B**)
 > **Depende de:** SPEC-302 (`approved`; precisa estar `done` no marco M2: hooks diários, `world_sim`, estado `festa`, digest/percepção, `world.news`), SPEC-215 (`done`, propagação), SPEC-233 (`done`, perigo efetivo), SPEC-285 (`done`, metas de letalidade que não podem regredir)
@@ -321,15 +321,17 @@ dias o jogador vai jogar.
 ```python
 Season = Literal["primavera", "verao", "outono", "inverno"]
 
+
 class CalendarParams(TypedDict):
-    version: int            # 1
-    season_days: int        # congelado na criação (R4)
-    epoch_offset: int       # 0..YEAR_DAYS-1
-    anchor_day: int         # 1 em jogo novo; enabled_from_day em save migrado
-    first_turn_day: int     # anchor_day + k (auditoria do R3)
+    version: int  # 1
+    season_days: int  # congelado na criação (R4)
+    epoch_offset: int  # 0..YEAR_DAYS-1
+    anchor_day: int  # 1 em jogo novo; enabled_from_day em save migrado
+    first_turn_day: int  # anchor_day + k (auditoria do R3)
+
 
 class FestivalRecord(TypedDict, total=False):
-    festa_id: str           # sha256(game_id|festival_id|year)[:16]
+    festa_id: str  # sha256(game_id|festival_id|year)[:16]
     festival_id: str
     year: int
     start_day: int
@@ -337,16 +339,18 @@ class FestivalRecord(TypedDict, total=False):
     status: Literal["anunciada", "ativa", "encerrada", "cancelada"]
     location_ids: list[str]  # locais que receberam o estado
 
-class SeasonView(TypedDict):     # world["season"]
+
+class SeasonView(TypedDict):  # world["season"]
     id: Season
-    label: str               # rótulo regional do local atual
+    label: str  # rótulo regional do local atual
     day_in_season: int
+
 
 class SeasonInfo(TypedDict):
     season: Season
-    day_in_season: int       # 1..season_days
-    year: int                # interno
-    day_of_year: int         # 0..YEAR_DAYS-1
+    day_in_season: int  # 1..season_days
+    year: int  # interno
+    day_of_year: int  # 0..YEAR_DAYS-1
 ```
 
 `world_sim.festivals` guarda as anunciadas/ativas mais as últimas 20 encerradas
@@ -696,8 +700,26 @@ Custo esperado: ≤ US$ 0,80 no total. Estourou o teto: parar e registrar.
 
 ## 8. Evidência
 
-(preencher na implementação: baseline da Etapa 0, tabela S1–S4, letalidade
-antes/depois (R29), smoke §6)
+Calibração e pendências: `docs/spec303/README.md`.
+
+**Desvios do contrato real da SPEC-302 (alinhados no código):**
+
+- `DayContext` real = `{game_id, day, sim, projection, world, factions, rng}` (sem `region_ids`).
+  `DayHookResult` real = `{pressure_deltas, events, digest}` + novo campo `baseline_offsets`
+  (R12). O hook **muta `ctx.sim`/`ctx.world` in place** (calendário, `festivals`,
+  `world["season"]`) em vez de devolver `world_patch`/`sim_patch`; o engine passou a
+  confirmar `pre.events` (antes só lia deltas) e a juntar `pre.digest`. Hooks que lançam são
+  isolados (`log_fallback world_engine.day_hook_failed`).
+- Modo `shadow` do calendário grava em `world_sim.calendar_shadow` (não em
+  `world_sim_shadow.calendar`); só calcula e loga `world.calendar`. Festas só existem em `on`.
+- Save de 302 sem calendário: ancora em `day - 1` do primeiro tick (= `enabled_from_day`
+  na migração). `init_new_game` ancora no dia 1 em `/game/new`, `game_engine` e playtest.
+- `pick_crisis_target` trata local em `festa` como elegível (crise vence festa, R17).
+- D5: o preço ×1,8 vale (`supply_factor` com `extra_blocked`), mas a prateleira de
+  `economy` NÃO esconde bens por passo sazonal (só por `route_blocked`), para não zerar
+  Skallgard no inverno.
+- D3: 14 festas (5 propostas + 9 novas, uma por região restante), `lore_refs` arquivo:linha,
+  todas `review: "dono"`; teste valida que as linhas existem.
 
 ## 9. Decisões do dono
 
@@ -735,3 +757,15 @@ Todas as decisões abertas seguem o **default recomendado pelo autor**, exceto/e
 
 - D1: estação de 14 dias.
 - D3 (amplia a proposta): ~14 festas no total, distribuídas para que cada região tenha ao menos 1 (12 regiões), todas ancoradas na lore (grep, citação arquivo:linha) e marcadas `review: "dono"` — o dono edita texto/datas depois. As 5 propostas entram; o executor autora as demais na Etapa de dados.
+
+## 10. Evidência e desvios da implementação (2026-10-24)
+
+Desvios do contrato real da 302 (alinhados aqui):
+- `DayContext`/`DayHookResult` pousados não têm `region_ids`, `baseline_offsets`, `world_patch` nem `sim_patch`. Adicionei só `DayHookResult.baseline_offsets` (mesclado em `_run_hooks`); o hook muta `ctx.sim` (`calendar`, `festivals`) e `ctx.world["season"]` direto, e o engine passou a commitar `pre.events` e anexar `pre.digest`. `_run_hooks` agora isola falha de hook com `log_fallback`.
+- Shadow grava em `world_sim["calendar_shadow"]` (não em `world_sim_shadow.calendar`) e não rastreia festas.
+- `anchor_day` de save sem calendário = `day - 1` do primeiro tick (equivale a `enabled_from_day` na migração).
+- `pick_crisis_target` trata local em `festa` como elegível (crise vence festa). `economy.supply_factor` só encarece (×1,8); a prateleira não esconde bens por passo sazonal.
+- Ponto único de data: `services/world_calendar.py` + `world_sim.calendar` (qualquer calendário próprio futuro troca nomenclatura/duração ali).
+- 14 festas cobrindo as 12 regiões, `review: "dono"`, com `lore_refs` arquivo:linha (testadas).
+
+Calibração (60 seeds × 120 dias): C1 off = 10/15/10/11,5; on = 10/15/10/11 (dentro de [10,15]); C3/C5 true, C6 vazio. 20 seeds: S2 sem crise extra, S3 ok (viradas em +4..+8), S4 ok. Taxas de cancelamento por festa: 0 a 27,5 % (dia_da_fundacao 27,5 %, noite_do_silencio 23,9 %, dia_da_estaca 21,7 %). Letalidade R29 (playtest 12 seeds × 200) e smoke real §6 NÃO executados: pendentes para o coordenador.

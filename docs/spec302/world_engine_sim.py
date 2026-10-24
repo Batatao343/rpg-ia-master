@@ -5,6 +5,10 @@ estado sintetico (heroi inerte: R5), devolve os eventos ao `event_log`/projectio
 arquivista faria (validando cada um) e mede as metas C1-C6.
 
 Uso:  bash scripts/dev/py.sh docs/spec302/world_engine_sim.py [--days 120] [--seeds 20]
+                                                         [--calendar on|off] [--s303]
+
+SPEC-303 R28: `--calendar on|off` liga/desliga o calendario (estacoes, festas, offsets de
+baseline; default `on`, o modo de producao) e `--s303` imprime as metas S2-S4.
 """
 
 from __future__ import annotations
@@ -45,6 +49,8 @@ def run_campaign(seed: int, days: int = 120, *, check_validator: bool = True) ->
     active_per_day: list[list[dict]] = []
     invalid: list[tuple[str, str]] = []
     max_sim_bytes = 0
+    festivals: dict[str, dict] = {}
+    season_digest_days: list[int] = []
     for day in range(2, days + 2):
         before = copy.deepcopy(world)
         world = copy.deepcopy(world)
@@ -57,6 +63,9 @@ def run_campaign(seed: int, days: int = 120, *, check_validator: bool = True) ->
         state["world"] = world
         state[res.sim_key] = res.world_sim
         digest_days += res.digest
+        season_digest_days += [i["day"] for i in res.digest if i["kind"] == "estacao"]
+        for rec in (res.world_sim or {}).get("festivals", []):
+            festivals[rec["festa_id"]] = dict(rec)
         for ev in res.pending_events:
             if check_validator:
                 v = validate_proposal(ev, state)
@@ -86,6 +95,8 @@ def run_campaign(seed: int, days: int = 120, *, check_validator: bool = True) ->
         "invalid_events": invalid,
         "projection": state["world_projection"],
         "sim": state.get("world_sim") or {},
+        "festivals": festivals,
+        "season_digest_days": season_digest_days,
         "max_sim_bytes": max_sim_bytes,
         "adjacency": wp.region_adjacency(),
     }
@@ -158,11 +169,78 @@ def evaluate(seeds: int = 20, days: int = 120) -> dict:
     }
 
 
+def evaluate_s303(seeds: int = 20, days: int = 120) -> dict:
+    """SPEC-303 R28: S2 (estacao sozinha nao abre crise), S3 (1a virada em anchor+4..8),
+    S4 (cada festa ocorre ou e cancelada 1x por ano; taxa de cancelamento por festa)."""
+    from services import world_calendar as wcal
+    from services import world_pressures as wp
+
+    # S2: sem surtos e sem causas por evento, a unica diferenca e o calendario
+    cfg = wp.get_config()
+    saved = (cfg["constants"]["surge_p"], cfg["causes"])
+    cfg["constants"]["surge_p"], cfg["causes"] = 0.0, []
+    offset_kinds = {"fome", "praga"}
+    try:
+        s2_extra = []
+        for seed in range(1, seeds + 1):
+            os.environ["RPG_CALENDAR"] = "on"
+            on = run_campaign(seed, days)
+            os.environ["RPG_CALENDAR"] = "off"
+            off = run_campaign(seed, days)
+            key = lambda c: (c["region_id"], c["kind"])  # noqa: E731
+            base = {key(c) for c in off["crises"]}
+            s2_extra += [
+                f"seed{seed}:{c['region_id']}:{c['kind']}"
+                for c in on["crises"]
+                if c["kind"] in offset_kinds and key(c) not in base
+            ]
+    finally:
+        cfg["constants"]["surge_p"], cfg["causes"] = saved
+        os.environ["RPG_CALENDAR"] = "on"
+    s3_ok, s3_days = True, []
+    per_year: dict[tuple[str, str, int], int] = {}
+    outcome: dict[str, dict[str, int]] = {}
+    for seed in range(1, seeds + 1):
+        out = run_campaign(seed, days)
+        cal = out["sim"].get("calendar") or {}
+        first = (out["season_digest_days"] or [None])[0]
+        anchor = int(cal.get("anchor_day", 1))
+        s3_days.append(None if first is None else first - anchor)
+        s3_ok &= first is not None and 4 <= first - anchor <= 8 and first == cal["first_turn_day"]
+        for rec in out["festivals"].values():
+            if rec["status"] in ("encerrada", "cancelada", "ativa"):
+                tag = "cancelada" if rec["status"] == "cancelada" else "ocorreu"
+                k = (f"sim-{seed}", rec["festival_id"], rec["year"])
+                per_year[k] = per_year.get(k, 0) + 1
+                row = outcome.setdefault(rec["festival_id"], {"ocorreu": 0, "cancelada": 0})
+                row[tag] += 1
+    s4_ok = all(v == 1 for v in per_year.values())
+    cancel_rate = {
+        f: round(r["cancelada"] / max(1, r["ocorreu"] + r["cancelada"]), 3)
+        for f, r in sorted(outcome.items())
+    }
+    return {
+        "S2_extra_crises_from_season": s2_extra,
+        "S3_ok": s3_ok,
+        "S3_first_turn_offsets": sorted(set(x for x in s3_days if x is not None)),
+        "S4_ok": s4_ok,
+        "S4_cancel_rate_by_festival": cancel_rate,
+        "festival_years_observed": len(per_year),
+        "festivals_in_catalog": len(wcal.festivals_catalog()),
+    }
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--days", type=int, default=120)
     ap.add_argument("--seeds", type=int, default=20)
+    ap.add_argument("--calendar", choices=("on", "off"), default="on")
+    ap.add_argument("--s303", action="store_true", help="imprime S2-S4 da SPEC-303")
     args = ap.parse_args()
     import json
 
-    print(json.dumps(evaluate(args.seeds, args.days), indent=2, ensure_ascii=False, default=str))
+    os.environ["RPG_CALENDAR"] = args.calendar
+    result = evaluate(args.seeds, args.days)
+    if args.s303:
+        result = {"S1": result, **evaluate_s303(args.seeds, args.days)}
+    print(json.dumps(result, indent=2, ensure_ascii=False, default=str))

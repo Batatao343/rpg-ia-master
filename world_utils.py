@@ -203,11 +203,18 @@ def travel_cost(world: dict, dest: dict) -> int:
         return 0  # sair do interior para o pai também é grátis
     times = cur.get("travel_times") or {}
     if dest.get("id") in times:
-        return max(0, int(times[dest["id"]]))
-    times_dest = dest.get("travel_times") or {}
-    if cur_id in times_dest:
-        return max(0, int(times_dest[cur_id]))
-    return 1
+        base = max(0, int(times[dest["id"]]))
+    else:
+        times_dest = dest.get("travel_times") or {}
+        base = max(0, int(times_dest[cur_id])) if cur_id in times_dest else 1
+    return base + _seasonal_pass_extra(world, cur_id, dest.get("id"))
+
+
+def _seasonal_pass_extra(world: dict, a: str, b: str) -> int:
+    """SPEC-303 R11: passo de montanha fechado pela estação = travessia cara (nunca recusa)."""
+    from services import world_calendar
+
+    return world_calendar.pass_extra_periods() if world_calendar.pass_closed(world, a, b) else 0
 
 
 def apply_travel(world: dict, dest: dict) -> dict:
@@ -218,6 +225,13 @@ def apply_travel(world: dict, dest: dict) -> dict:
     """
     world = dict(world)
     cost = travel_cost(world, dest)
+    crossed_closed_pass = False
+    if cost > 0:
+        from services import world_calendar
+
+        crossed_closed_pass = world_calendar.pass_closed(
+            world, str(world.get("current_location_id") or ""), str(dest.get("id") or "")
+        )
     world["current_location_id"] = dest["id"]
     world["current_location"] = dest["name"]
     visited = list(world.get("visited", []))
@@ -236,10 +250,20 @@ def apply_travel(world: dict, dest: dict) -> dict:
         # SPEC-233 R7: a duração do clima global conta períodos avançados, não chamadas.
         for _ in range(cost):
             advance_weather(world)
+        if crossed_closed_pass:
+            _force_snow(world, dest)
         extra = weather_effects(world, dest).get("travel_cost_extra", 0)
         if extra:
             advance_clock(world, extra)
     return world
+
+
+def _force_snow(world: dict, dest: dict) -> None:
+    """SPEC-303 R11: ao chegar por passo fechado o clima do destino vira a neve da região."""
+    states = _weather_table(dest.get("region_id", "default")).get("states") or {}
+    if "nevasca" in states:
+        world["weather_state"] = "nevasca"
+        world["weather"] = states["nevasca"].get("label", "nevasca")
 
 
 def apply_rest(player: dict, world: dict, allies: list = None) -> tuple[dict, dict]:
@@ -918,6 +942,7 @@ def pick_encounter_enemy(
     projection: dict = None,
     rng=None,
     theme=None,
+    season: str | None = None,
 ):
     """
     Fase 2.5b (R11): sorteio DETERMINÍSTICO de criatura concreta do bestiário.
@@ -1004,6 +1029,12 @@ def pick_encounter_enemy(
         )  # SPEC-289: combatente da fação pesa x2 (extras SPEC-292 x1)
         for b, e in zip(base, pool)
     ]
+    if season:  # SPEC-303 R14b: estação redistribui pesos DENTRO do porte (só caminho ponderado)
+        from services import world_calendar
+
+        smult = world_calendar.encounter_multipliers(region_id, season)
+        if smult:
+            weights = [w * float(smult.get(e.get("id", ""), 1.0)) for w, e in zip(weights, pool)]
 
     # fauna local rareada -> no máx. 1 migrante entra no sorteio (peso 0.5)
     avg = sum(weights) / max(1, len(weights))
@@ -1079,6 +1110,9 @@ def check_encounter(
     # escalado pelo nível — salvo zona apex. Carimba p/ o combat spawn consumir
     # (one-shot, como encounter_surprise). Deliberado/scripted não passa por aqui.
     eff = forced_encounter_danger(loc, danger, player_level)
+    from services import world_calendar
+
+    season_id = world_calendar.active_season(world)  # SPEC-303 R14b (neutro sem calendário)
 
     # SPEC-233 R5: só carimba quando devolve um encontro (ver _stamp).
     def _stamp(result):
@@ -1119,6 +1153,7 @@ def check_encounter(
             faction_id=fid,
             bestiary_knowledge=bestiary_knowledge,
             projection=projection,
+            season=season_id,
         )
         if intel.get(fid, {}).get("known"):
             who = ruler.get("name")
@@ -1159,6 +1194,7 @@ def check_encounter(
             bestiary_knowledge=bestiary_knowledge,
             projection=projection,
             theme=theme,
+            season=season_id,
         )
         flavor = str(threat)
         if tfac and not in_sphere:
@@ -1183,7 +1219,12 @@ def check_encounter(
 
     if danger >= 4:
         entry = pick_encounter_enemy(
-            loc, eff, turn, bestiary_knowledge=bestiary_knowledge, projection=projection
+            loc,
+            eff,
+            turn,
+            bestiary_knowledge=bestiary_knowledge,
+            projection=projection,
+            season=season_id,
         )
         hint = entry.get("name") if entry else f"feras/perigos de {region}"
         return _stamp(
@@ -1275,7 +1316,16 @@ def _advance_weather_once(world: dict, rng=None) -> dict:
     if cur not in states:
         cur = table.get("start") or next(iter(states))
     trans = states[cur].get("transitions") or {cur: 100}
-    nxt = rng.choices(list(trans.keys()), weights=[max(0, int(w)) for w in trans.values()], k=1)[0]
+    weights = [max(0, int(w)) for w in trans.values()]
+    from services import world_calendar
+
+    mult = world_calendar.weather_multipliers(
+        loc.get("region_id", "default"), world_calendar.active_season(world)
+    )
+    if mult:  # SPEC-303 R8: estação multiplica os pesos de transição (soma 0 -> pesos crus)
+        scaled = [max(0, int(round(w * float(mult.get(k, 1.0))))) for k, w in zip(trans, weights)]
+        weights = scaled if sum(scaled) > 0 else weights
+    nxt = rng.choices(list(trans.keys()), weights=weights, k=1)[0]
     world["weather_state"] = nxt if nxt in states else cur
     world["weather"] = states[world["weather_state"]].get("label", world["weather_state"])
     return world

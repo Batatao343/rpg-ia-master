@@ -167,15 +167,18 @@ def step_pressures(
     deltas: dict | None = None,
     relief: dict | None = None,
     blocked_pairs: set | None = None,
+    baseline_offsets: dict | None = None,
 ) -> dict[str, dict[str, int]]:
     """Um dia de dinamica. Ordem: (a)+(b) `deltas`/`relief`/surtos, (c) deriva,
-    (d) ruido, (e) contagio de praga, (f) clamp. Puro: devolve nova tabela."""
+    (d) ruido, (e) contagio de praga, (f) clamp. Puro: devolve nova tabela.
+    `baseline_offsets` (SPEC-303 R12) desloca o ponto de equilibrio da deriva so naquele dia."""
     c = constants(cfg)
     base = baseline(cfg)
     weights = (cfg or get_config()).get("surge_weight", {})
     deltas = deltas or {}
     relief = relief or {}
     blocked_pairs = blocked_pairs or set()
+    offsets = baseline_offsets or {}
     out = {
         r: {k: int(pressures.get(r, {}).get(k, base[r][k])) for k in KINDS} for r in sorted(base)
     }
@@ -191,7 +194,7 @@ def step_pressures(
             if (relief.get(r) or {}).get(k):
                 v -= int(c["crisis_relief_per_day"])
             # (c) deriva rumo a baseline
-            b = base[r][k]
+            b = _clamp(base[r][k] + int((offsets.get(r) or {}).get(k, 0)))
             step = int(c["drift_per_day"])
             if v > b:
                 v = max(b, v - step)

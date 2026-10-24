@@ -60,8 +60,10 @@ def perceivable(state: dict, items: list[dict]) -> list[dict]:
             and bool(cur_region)
             and it.get("region_id") == cur_region
         )
+        # SPEC-303 R20: a estacao e visivel de qualquer lugar (ceu e frio) — unico tipo `global`
+        seen_everywhere = tpl.get("visibility") == "global" and it.get("kind") == "estacao"
         rumor = rumor_on and bool(it.get("subject_id")) and it["subject_id"] in heard
-        if local or regional or rumor:
+        if local or regional or rumor or seen_everywhere:
             out.append(it)
     return out
 
@@ -91,6 +93,18 @@ def render(state: dict, item: dict) -> str:
         intel = (state or {}).get("faction_intel") or {}
         if not (intel.get(fid) or {}).get("known"):
             tid = "ascensao.crise.desconhecida"
+    if tid.startswith("estacao.inicio."):
+        # SPEC-303 R6: no norte o rotulo regional vira Noite Longa / Dia Longo
+        cur_region = wp.region_of(
+            str(((state or {}).get("world") or {}).get("current_location_id") or "")
+        )
+        from services.world_calendar import label_for
+
+        regional_label = label_for(tid.rsplit(".", 1)[-1], cur_region)
+        tid = {
+            "Noite Longa": "estacao.inicio.noite_longa",
+            "Dia Longo": "estacao.inicio.dia_longo",
+        }.get(regional_label, tid)
     tpl = cfg["templates"].get(tid)
     if not tpl:
         return ""
@@ -103,6 +117,8 @@ def render(state: dict, item: dict) -> str:
         "regiao": wp.region_label(region) or "a região",
         "faccao": _faction_label(state, str(params.get("faccao") or "")),
         "percebido": _ascension_text(state, str(params.get("faccao") or "")),
+        "festa": str(params.get("festa") or ""),
+        "rotulo": str(params.get("rotulo") or ""),
     }
     for key, val in values.items():
         text = text.replace("{" + key + "}", val)

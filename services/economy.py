@@ -125,11 +125,14 @@ def _blocked_pairs(projection: dict | None) -> set:
     }
 
 
-def is_reachable(loc_a: str, loc_b: str, projection: dict | None) -> bool:
-    """BFS nas connections do mapa MENOS as rotas bloqueadas (par não-direcionado)."""
+def is_reachable(
+    loc_a: str, loc_b: str, projection: dict | None, extra_blocked: set | None = None
+) -> bool:
+    """BFS nas connections do mapa MENOS as rotas bloqueadas (par não-direcionado).
+    `extra_blocked` (SPEC-303 R11b): pares fechados pela estação (passo de montanha)."""
     if loc_a == loc_b:
         return True
-    blocked = _blocked_pairs(projection)
+    blocked = _blocked_pairs(projection) | set(extra_blocked or ())
     seen = {loc_a}
     frontier = [loc_a]
     while frontier:
@@ -158,7 +161,12 @@ def producing_locations(item_id: str) -> list[str]:
     ]
 
 
-def supply_factor(item_id: str, location_id: str, projection: dict | None = None) -> float:
+def supply_factor(
+    item_id: str,
+    location_id: str,
+    projection: dict | None = None,
+    extra_blocked: set | None = None,
+) -> float:
     """Fase 6.1: 0.6 produzido AQUI · 1.0 produtor alcançável · 1.8 escasso
     (todas as rotas até produtores bloqueadas). Item sem tags → 1.0 sempre."""
     producers = producing_locations(item_id)
@@ -168,7 +176,7 @@ def supply_factor(item_id: str, location_id: str, projection: dict | None = None
     item_tags = set((ARTIFACTS_DB.get(item_id) or {}).get("economy_tags") or [])
     if loc_tags & item_tags:
         return ABUNDANT_MULT
-    if any(is_reachable(location_id, p, projection) for p in producers):
+    if any(is_reachable(location_id, p, projection, extra_blocked) for p in producers):
         return 1.0
     return SCARCE_MULT
 
@@ -196,7 +204,14 @@ def price(item_id: str, *, mode: str, state: dict, merchant: dict | None = None)
     p = float(base_price(item_id))
     # Fase 6.1: escassez por alcançabilidade (subsume o regional_modifier da 4.4:
     # sem rota bloqueada os valores são idênticos)
-    p *= supply_factor(item_id, location_id, state.get("world_projection"))
+    from services import world_calendar
+
+    p *= supply_factor(
+        item_id,
+        location_id,
+        state.get("world_projection"),
+        world_calendar.seasonal_closed_pairs(state.get("world")),  # SPEC-303 R11b (D5 = sim)
+    )
     if merchant:
         p *= float(merchant.get("price_mult", 1.0) or 1.0)
         # SPEC-298 R18: relação com o keeper (sem keeper no estado = comportamento anterior)

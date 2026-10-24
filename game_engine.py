@@ -323,6 +323,9 @@ def create_character_wizard():
     import progression
 
     initial_state["player"] = progression.normalize_player_progression(initial_state["player"])
+    from services import world_calendar
+
+    world_calendar.init_new_game(initial_state)  # SPEC-303 R5
     return initial_state
 
 

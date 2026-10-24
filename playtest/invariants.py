@@ -2234,6 +2234,45 @@ def check_world_quests(state: dict, prev: dict | None, turn: int) -> list[Violat
     return out
 
 
+def check_calendar(state: dict, prev: dict | None, turn: int) -> list[Violation]:
+    """SPEC-303 R27: festa nunca por cima de crise; estação nunca anda para trás; parâmetros
+    do calendário congelados."""
+    sim = (state or {}).get("world_sim") or {}
+    cal = sim.get("calendar")
+    if not isinstance(cal, dict):
+        return []
+    from services import world_calendar as wcal
+
+    out: list[Violation] = []
+    prev_sim = (prev or {}).get("world_sim") or {}
+    prev_cal = prev_sim.get("calendar")
+    if isinstance(prev_cal, dict) and prev_cal != cal:
+        out.append(_V("calendar.params_changed", "error", turn, "world_sim.calendar mudou"))
+    rows = ((state.get("world_projection") or {}).get("location_states")) or {}
+    prev_rows = (((prev or {}).get("world_projection") or {}).get("location_states")) or {}
+    for lid, row in rows.items():
+        was = (prev_rows.get(lid) or {}).get("state")
+        if (row or {}).get("state") == "festa" and was and was != "festa":
+            out.append(_V("calendar.festa_over_crisis", "error", turn, f"{lid}: festa sobre {was}"))
+    cur_season = ((state.get("world") or {}).get("season") or {}).get("id")
+    prev_season = (((prev or {}).get("world") or {}).get("season") or {}).get("id")
+    if cur_season in wcal.SEASONS and prev_season in wcal.SEASONS:
+        dd = int(((state.get("world") or {}).get("world_clock") or {}).get("day", 1) or 1) - int(
+            (((prev or {}).get("world") or {}).get("world_clock") or {}).get("day", 1) or 1
+        )
+        step = (wcal.SEASONS.index(cur_season) - wcal.SEASONS.index(prev_season)) % 4
+        if (dd == 0 and step != 0) or (0 <= dd < int(cal["season_days"]) and step == 3):
+            out.append(
+                _V(
+                    "calendar.season_regressed",
+                    "error",
+                    turn,
+                    f"{prev_season} -> {cur_season} em {dd} dia(s)",
+                )
+            )
+    return out
+
+
 CHECKS: list[Check] = [
     check_companions,
     check_law,
@@ -2272,6 +2311,7 @@ CHECKS: list[Check] = [
     check_npc_knowledge,
     check_world_engine,
     check_world_quests,
+    check_calendar,
 ]
 
 

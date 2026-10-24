@@ -877,7 +877,7 @@ def _world_summary(state: dict) -> dict:
         ch = str((q.get("heard_via") or {}).get("channel") or "")
         if ch:
             by_channel[ch] = by_channel.get(ch, 0) + 1
-    return {
+    out = {
         "world_quests": {
             "offered": len(wq),
             "completed": sum(1 for q in wq if q.get("status") == "completed"),
@@ -895,6 +895,28 @@ def _world_summary(state: dict) -> dict:
         "crises_perceived": int(stats.get("crises", 0)),
         "signals_perceived": int(stats.get("signals", 0)),
         "items_perceived": int(stats.get("items", 0)),
+    }
+    out.update(_calendar_summary(sim))
+    return out
+
+
+def _calendar_summary(sim: dict) -> dict:
+    """SPEC-303 R27: estações vistas, viradas, festas percebidas/canceladas, travessias."""
+    cal = (sim or {}).get("calendar")
+    if not isinstance(cal, dict):
+        return {"seasons_seen": 0, "season_changes": 0}
+    from services import world_calendar as wcal
+
+    first, last = int(cal.get("anchor_day", 1)), int(sim.get("last_ticked_day", 1) or 1)
+    seq = [wcal.season_at(cal, d)["season"] for d in range(first, max(first, last) + 1)]
+    stats = sim.get("perceived_stats") or {}
+    fests = sim.get("festivals") or []
+    return {
+        "seasons_seen": len(set(seq)),
+        "season_changes": sum(1 for a, b in zip(seq, seq[1:], strict=False) if a != b),
+        "festas_perceived": int(stats.get("festas", 0)),
+        "festas_cancelled": sum(1 for f in fests if f.get("status") == "cancelada"),
+        "pass_crossings": int(stats.get("pass_crossings", 0)),
     }
 
 

@@ -628,6 +628,18 @@ def _with_new_npc(
     return new_npcs
 
 
+def _season_line(world: dict) -> str:
+    """SPEC-303 R21: linha 'Estação: <rótulo regional>' (vazia sem calendário)."""
+    from services import world_calendar
+    from services import world_pressures as _wp
+
+    sid = world_calendar.active_season(world)
+    if not sid:
+        return ""
+    region = _wp.region_of(str(world.get("current_location_id") or ""))
+    return f" Estação: {world_calendar.label_for(sid, region)}."
+
+
 def _engine_owns_factions() -> bool:
     """SPEC-302 R21b: no modo `on` o progresso das facções roda no tick diário."""
     from services import world_engine
@@ -659,6 +671,7 @@ def _perceive_world(state, world: dict, factions: list, intel: dict, tick):
             1 for i in seen if i["kind"] == "sinal"
         )
         stats["crises"] = int(stats.get("crises", 0)) + sum(1 for i in seen if i["kind"] == "crise")
+        stats["festas"] = int(stats.get("festas", 0)) + sum(1 for i in seen if i["kind"] == "festa")
         sim["perceived_stats"] = stats
         # SPEC-305 R6: livro-razao do que o jogador percebeu (prova de `heard_via`).
         ledger = list(sim.get("perceived_ids") or [])
@@ -810,6 +823,7 @@ def storyteller_node(state: GameState):
                 "archive_due": False,
             }
     travel_periods = 0
+    closed_pass = False
     world_before = world  # SPEC-302: relogio ANTES de viagem/descanso (dias virados)
     world_tick = None
     sim_updates: dict = {}
@@ -847,6 +861,11 @@ def storyteller_node(state: GameState):
         from world_utils import travel_cost
 
         travel_periods = travel_cost(world, dest)  # custo ANTES de mover (usa origem)
+        from services import world_calendar
+
+        closed_pass = world_calendar.pass_closed(
+            world, str(world.get("current_location_id") or ""), str(dest.get("id") or "")
+        )  # SPEC-303 R11: passo fechado pela neve (travessia cara, nunca recusa)
         # spec loot-exploracao (R1): fog of war checado ANTES de apply_travel (que
         # carimba `visited`). Baú curado (R3) pode reconceder-se? Não — one-shot.
         first_visit = dest["id"] not in (world.get("visited") or [])
@@ -896,6 +915,8 @@ def storyteller_node(state: GameState):
                 + (f" (viagem longa: {travel_periods} períodos). " if travel_periods > 1 else ". ")
                 + f"Contexto do local: {dest.get('lore_seed', '')} Descreva a chegada e o que ele vê agora."
             )
+            if closed_pass:
+                travel_note += f" {world_calendar.CROSSING_NOTE} Descreva a travessia dura e a nevasca ao chegar."
     elif last_user_input and not law_resolved and is_rest(last_user_input):
         from world_utils import weather_effects
 
@@ -927,6 +948,9 @@ def storyteller_node(state: GameState):
     wq_created: list = []
     if world_tick is not None:
         if world_tick.world_sim is not None:
+            if closed_pass:  # SPEC-303 R27: telemetria de travessia de passo fechado
+                _ps = world_tick.world_sim.setdefault("perceived_stats", {})
+                _ps["pass_crossings"] = int(_ps.get("pass_crossings", 0)) + 1
             sim_updates[world_tick.sim_key] = world_tick.world_sim
             world, perceived_items = _perceive_world(state, world, factions, intel, world_tick)
         extra_engine_events_tick = list(world_tick.pending_events)
@@ -1240,6 +1264,8 @@ def storyteller_node(state: GameState):
             "Ele domina o céu e afeta toda a cena."
         )
 
+    season_line = _season_line(world)  # SPEC-303 R21 (determinística, sem chamada LLM)
+
     campaign_plan = state.get("campaign_plan") or {}
     beats = [dict(beat) for beat in campaign_plan.get("beats", [])]
     current_step = campaign_plan.get("current_step", 0)
@@ -1351,7 +1377,7 @@ def storyteller_node(state: GameState):
     <PERSONA>
     Você é o Narrador (Mestre) de um RPG.
     Local Atual: {loc}.
-    Momento: {clock_label(world)}.
+    Momento: {clock_label(world)}.{season_line}
     NPCs na cena: {existing_npcs}.
     Objetivo Atual: {active_step}
     </PERSONA>
