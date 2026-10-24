@@ -27,6 +27,9 @@ Os tipos em `.claude/agents/` já embutem o papel; este arquivo é a regra comum
 
 - Iteração: `-q --lf -x`. Antes do hand-back: só os arquivos de teste do seu escopo.
 - **Não** rode a suíte completa: o coordenador roda 1× no `/spec-land`.
+- **Nunca** `-n auto`; no máximo `-n 2`. Vários agentes rodam ao mesmo tempo numa
+  máquina de 16 GB: em 24/10 cinco suítes `-n auto` paralelas esgotaram a RAM e
+  derrubaram a sessão. Não deixe `pytest` em background ao entregar o hand-back.
 - Comando > 2 min: `run_in_background: true` + `timeout` explícito, ou foreground com
   `timeout: 900000`. Espere com **uma** notificação/Monitor; nunca `sleep` em loop.
 

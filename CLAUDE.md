@@ -21,7 +21,19 @@ O conteúdo antigo daqui (cópia de `AGENTS.md` + changelog) está preservado em
 escreveu, `spec-author` (Opus) escreve spec, `code-locator`/`ci-watcher` (Haiku)
 localizam código e vigiam CI, `audit-reader` (Sonnet) audita só leitura. O prompt
 leva só `SPEC-NNN · worktree · decisões do dono`; regras comuns em
-`docs/guias/BRIEF_SUBAGENTE.md`. No máximo ~6 subagentes simultâneos.
+`docs/guias/BRIEF_SUBAGENTE.md`.
+
+**Memória da máquina (regra do dono, 24/10 — máquina de 16 GB; já travou):**
+- No máximo **3 subagentes que rodam testes** ao mesmo tempo (executor/revisor);
+  autores de spec, localizadores e ci-watcher não contam. Total ≤ 6.
+- Subagente **nunca** roda a suíte completa nem `-n auto`: só os testes do escopo,
+  com no máximo `-n 2`. A suíte completa é do coordenador, **uma por vez**, no pouso.
+- Antes de disparar executor/revisor e a cada marco: medir RAM livre
+  (`Get-CimInstance Win32_OperatingSystem` → `FreePhysicalMemory`). Abaixo de
+  ~3 GB, não dispara nada novo e enfileira.
+- Depois de reinício de sessão ou agente morto: procurar e matar por PID (árvore,
+  `taskkill /T /F /PID`) os `pytest`/`supabase status`/`python -` órfãos. Nunca
+  `taskkill /IM python.exe`.
 
 **Sessões longas (custo de contexto):**
 - `/goal` **nunca** com condição que dependa do dono (chave, aprovação, texto legal,
