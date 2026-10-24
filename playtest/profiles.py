@@ -381,13 +381,14 @@ def _combat_decision(state: dict, rng: random.Random) -> ProfileDecision:
             )
     target = enemies[rng.randrange(len(enemies))]
     tid = target.get("id") or target.get("name")
-    entropy = int(player.get("entropy", 0) or 0)
     payable_cards: list[tuple[str, str]] = []
     for cid in player.get("prepared_cards") or []:
         c = cards.get_card(cid)
         if not c:
             continue
-        if c.get("tipo") == "ativa" and int(c.get("custo_entropia", 0) or 0) <= entropy:
+        # Mesma economia de `use_card` (custo efetivo + frequência 1×cena/descanso): o bot
+        # não insiste numa Carta que o motor recusaria (empate artificial = no_progress falso).
+        if c.get("tipo") == "ativa" and cards.can_use_card(player, cid):
             target_id = _card_target_id(state, c, str(tid))
             if target_id is not None:
                 payable_cards.append((cid, target_id))
