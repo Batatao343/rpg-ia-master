@@ -1274,7 +1274,12 @@ def storyteller_node(state: GameState):
     # Fase 2.6: ids canônicos que o LLM pode usar em proposed_events (defesa em profundidade).
     entidades_canonicas = _scene_canonical_entities(scene_state, factions, intel, loc)
     # Fase 3.3: quests ativas que o LLM pode concluir via proposed_events(quest_completed).
-    quests_ativas = _quests_ativas_block(wq_quests, {**state, "world": world, "quests": wq_quests})
+    # SPEC-305 (revisao P1-2): quest que falha NESTE turno sai do bloco que o narrador pode concluir.
+    _failing = {e.get("target_id") for e in wq_events if e.get("type") == "quest_failed"}
+    _prompt_quests = [q for q in wq_quests if q.get("id") not in _failing]
+    quests_ativas = _quests_ativas_block(
+        _prompt_quests, {**state, "world": world, "quests": wq_quests}
+    )
     gancho_novo = _gancho_novo_block(wq_created)
 
     # spec npc-fallback-sem-alvo (R2): rota NPC sem interlocutor delegou aqui.

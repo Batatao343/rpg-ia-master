@@ -378,6 +378,12 @@ def step_crises(
             )
             continue
         relieved = rec.get("relieved_day") is not None
+        if relieved and day - int(rec["relieved_day"]) >= int(c["RELIEVED_MAX_DAYS"]):
+            # SPEC-305 (revisao P2-2): crise aliviada nao congela a regiao para sempre
+            _close_state(
+                sim, rec, day, game_id, events, digest, "intervencao", route_cleared=True, cfg=cfg
+            )
+            continue
         if pval(rec) < int(k["RECUPERA"]) and age >= int(c["MIN_CRISIS_DAYS"]):
             _close_state(
                 sim,

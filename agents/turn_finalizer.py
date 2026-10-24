@@ -75,7 +75,7 @@ def turn_finalizer_node(state: dict) -> dict:
     try:
         from services import world_quests
 
-        if world_quests.mode() == "on":
+        if world_quests.mode() in ("on", "shadow"):
             qstate = {**state, **updates}
             clock = (qstate.get("world") or {}).get("world_clock") or {}
             quests, created = world_quests.offer_from_heard(qstate, int(clock.get("day", 1) or 1))

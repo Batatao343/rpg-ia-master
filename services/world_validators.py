@@ -676,6 +676,26 @@ def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
     projection = state.get("world_projection") or {}
     turn = (state.get("world") or {}).get("turn_count", 0)
 
+    # SPEC-305 R11/R16 (revisao P1-2): quest de mundo nao conclui no/depois do prazo, a nao
+    # ser por prova do proprio motor (source="engine"); fecha a corrida no turno do vencimento.
+    if ev.type == "quest_completed" and proposal.get("source") != "engine":
+        quest = next(
+            (
+                q
+                for q in state.get("quests", []) or []
+                if isinstance(q, dict) and q.get("id") == ev.payload.get("quest_id")
+            ),
+            None,
+        )
+        day = int(((state.get("world") or {}).get("world_clock") or {}).get("day", 1) or 1)
+        if (
+            quest
+            and quest.get("world_kind")
+            and quest.get("deadline_day") is not None
+            and day >= int(quest["deadline_day"])
+        ):
+            return ValidationResult(False, f"{LIMIT_PREFIX}: prazo da quest de mundo esgotado")
+
     # 2. Sem duplicata (mesmo type+target já no event_log DESTE turno).
     #    Exceção: multi-level no mesmo turno (boss XP) — level_up distingue por new_level.
     for e in state.get("event_log") or []:

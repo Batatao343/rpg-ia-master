@@ -26,7 +26,8 @@
     "OCCUPATION_CALM_DAYS": 10,
     "REOCCUPY_P": 0.15,
     "FACTION_DAY_FACTOR": 0.25,
-    "ASCENSION_WARN_PROGRESS": 80
+    "ASCENSION_WARN_PROGRESS": 80,
+    "RELIEVED_MAX_DAYS": 8
   },
   "surge_weight": {
     "nova_arcadia": 1.6, "pradaria_ruinas": 1.5, "brekmar": 2.5, "pantano_melancolia": 1.4,

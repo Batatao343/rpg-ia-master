@@ -687,6 +687,13 @@ Confirmado no código pousado da 302: `world_director`/`CrisisRecord` (dict em `
 - R14: `reputation.deed_info` usa `origin_faction_id` quando não há `origin_entity_id`.
 - Modo `RPG_WORLD_QUESTS` default `on` (D9); `off` com motor ≠ `on`.
 
+- **Revisão Sol (CHANGES_REQUIRED) corrigida:** P1-1 status público único `expired` para
+  `failed`/`expired` de mundo; P1-2 `quest_completed` não-engine de quest de mundo rejeitado com
+  dia >= prazo + quest que falha no turno sai do bloco do prompt; P2-1 invariante exige ledger de
+  percepção; P2-2 `RELIEVED_MAX_DAYS` (8) fecha crise aliviada; P2-3/P2-4/P2-6 testes e shadow no
+  finalizer. P2-5 (esconder tipos engine-only do schema do LLM) fica como follow-up (mesmo padrão
+  da 301).
+
 ## 11. Evidência (parcial)
 
 Testes: `tests/test_spec305_{sources,events,perception,lifecycle,surfaces}.py`. Smoke real (§6) e

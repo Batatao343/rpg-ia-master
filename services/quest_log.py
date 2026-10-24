@@ -561,6 +561,10 @@ def public_quest_view(quest: dict, day: int) -> dict:
     world = bool(quest.get("world_kind"))
     view["kind"] = "mundo" if world else ("faccao" if quest.get("mission_kind") else "comum")
     status = str(quest.get("status") or "")
+    if world and status in ("failed", "expired"):
+        # R21 (revisao P1-1): status publico UNICO — o jogador nao infere se a fonte
+        # acabou sozinha ou seguiu adiante.
+        status = view["status"] = "expired"
     left: int | None = None
     if world and status == "active" and quest.get("deadline_day") is not None:
         left = _safe_turn(quest.get("deadline_day")) - int(day)

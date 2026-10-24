@@ -2191,7 +2191,9 @@ def check_world_quests(state: dict, prev: dict | None, turn: int) -> list[Violat
         if channel in ("npc", "rumor"):
             heard = ref in heard_any
         else:
-            heard = ref in ledger or ref in logged
+            heard = ref in ledger or (
+                q.get("world_kind") in ("reabrir_rota", "recuperar_objeto") and ref in logged
+            )
         if not (channel and ref and heard):
             out.append(
                 _V(
