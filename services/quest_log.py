@@ -29,6 +29,8 @@ from services import graph_resolver as gr
 MAX_ACTIVE_QUESTS = 8
 TITLE_SIMILARITY = 0.75
 QUEST_REWARD_GOLD = 20
+# SPEC-301 R12: missão de fação paga por tier (no lugar do QUEST_REWARD_GOLD fixo).
+MISSION_GOLD = {1: 20, 2: 35, 3: 50}
 # SPEC-223 (revisão Sol): evidência exige VERBO de ação investigativa/interação.
 # A mera palavra "missão"/"pista" (ou "marque a missão como concluída") não
 # conta — senão a própria injeção viraria prova de investigação.
@@ -352,16 +354,20 @@ def complete_quest_with_reward(
         if q.get("id") == quest_id and q.get("status") == "active":
             progress = list(q.get("progress_log") or [])
             progress.append({"kind": "completed", "turn": int(turn), "detail": ""})
+            gold = QUEST_REWARD_GOLD
+            if q.get("faction_id"):
+                tier = max(1, min(3, _safe_turn(q.get("mission_tier")) or 1))
+                gold = MISSION_GOLD[tier]
             q.update(
                 {
                     "status": "completed",
                     "resolved_turn": int(turn),
                     "progress_log": progress,
-                    "reward_gold": QUEST_REWARD_GOLD,
+                    "reward_gold": gold,
                     "reward_delivered": True,
                 }
             )
-            reward = QUEST_REWARD_GOLD
+            reward = gold
         out.append(q)
     return out, reward
 

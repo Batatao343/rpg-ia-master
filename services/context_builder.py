@@ -178,6 +178,10 @@ def render_event(event: dict, projection: dict | None = None) -> str:
     """1 frase determinística por GameEvent. `secret_revealed` NÃO passa por aqui
     (é renderizado de world_projection.revealed_facts). Tipo desconhecido → ""."""
     etype = event.get("type")
+    if etype == "faction_membership_changed":  # SPEC-301: vazio p/ fação secreta não exposta
+        from services.faction_membership import event_text
+
+        return event_text(event)
     tmpl = EVENT_TEMPLATES.get(etype)
     if not tmpl:
         return ""

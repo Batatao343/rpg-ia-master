@@ -28,6 +28,7 @@ GRAPH_DIR = os.path.join("data", "graph")
 LORE_DIR = "lore_nova"
 OVERRIDES_PATH = os.path.join("data", "codex_overrides.yaml")
 VISUAL_CATALOG_PATH = os.path.join("data", "visual_assets.json")
+FACTION_MEMBERSHIP_PATH = os.path.join("data", "faction_membership.json")  # SPEC-301
 
 Severity = Literal["error", "warning"]
 
@@ -1348,6 +1349,33 @@ def validate_law_codes() -> list[Finding]:
     return [Finding("law_codes", "error", path, "", p) for p in lint_law_codes()]
 
 
+def validate_faction_membership(path: str | None = None) -> list[Finding]:
+    """SPEC-301 R1/R9: catálogo de vínculo com fações vs fações, mapa, grafo e artefatos."""
+    from services.faction_membership_lint import lint_faction_membership
+
+    path = path or FACTION_MEMBERSHIP_PATH
+    data = _read_json_file(path, None)
+    if data is None:
+        return [Finding("faction_membership", "error", path, "", "arquivo ausente ou inválido")]
+    factions = _read_json_file(os.path.join("data", "factions.json"), {}) or {}
+    world_map = _read_json_file(os.path.join("data", "world_map.json"), {}) or {}
+    locations = {loc.get("id") for loc in world_map.get("locations", []) if isinstance(loc, dict)}
+    entities = _read_json_file(os.path.join(GRAPH_DIR, "entities.json"), {}) or {}
+    npc_ids = {k for k, v in entities.items() if isinstance(v, dict) and v.get("type") == "npc"}
+    items = set(_read_json_file(os.path.join("data", "artifacts.json"), {}) or {})
+    merchants = _read_json_file(os.path.join("data", "merchants.json"), {}) or {}
+    merchant_locs = {m.get("location_id") for m in merchants.values() if isinstance(m, dict)}
+    problems = lint_faction_membership(
+        data,
+        faction_ids=set(factions),
+        location_ids=locations,
+        npc_ids=npc_ids,
+        item_ids=items,
+        merchant_location_ids=merchant_locs,
+    )
+    return [Finding("faction_membership", "error", path, "", p) for p in problems]
+
+
 def validate_all(
     codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR, overrides_path: str = OVERRIDES_PATH
 ) -> list[Finding]:
@@ -1371,6 +1399,8 @@ def validate_all(
         findings.extend(validate_merchant_keepers())
         findings.extend(validate_npc_seed_tables())
         findings.extend(validate_law_codes())
+
+        findings.extend(validate_faction_membership())
     else:
         paths = _codex_md_paths(codex_dir)
         if os.path.isdir(graph_dir):

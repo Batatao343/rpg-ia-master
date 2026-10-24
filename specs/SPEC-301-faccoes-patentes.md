@@ -1,6 +1,6 @@
 # SPEC-301 — Fações com patente: entrar, subir, sair, trair (e mover o mundo)
 
-> **Status:** `approved` (dono, 2026-10-23)
+> **Status:** `in-progress` (implementada; falta revisão independente e smoke real da §6)
 > **Criada:** 2026-10-20 · **Atualizada:** 2026-10-20
 > **Depende de:** SPEC-296 (Onda 0: `world.news` e bloco de ambiente no prompt), SPEC-298
 > (reputação por fação com rótulo vago e API de delta). Integra **se estiverem `done`**, sem
@@ -315,29 +315,34 @@ propósito: raça, conversão, exílio.
 # state.py
 class MembershipRecord(TypedDict, total=False):
     faction_id: str
-    status: str            # "ativo" | "suspeito" | "ex_membro" | "expulso" | "traidor" | "dissolvida" | "rito_pendente"
-    rank_index: int        # índice em catalog[fid]["ranks"]
-    merit: int             # NUNCA exposto (R22)
-    joined_day: int        # world_clock.day
-    left_day: int          # 0 se ativo
+    status: str  # "ativo" | "suspeito" | "ex_membro" | "expulso" | "traidor" | "dissolvida" | "rito_pendente"
+    rank_index: int  # índice em catalog[fid]["ranks"]
+    merit: int  # NUNCA exposto (R22)
+    joined_day: int  # world_clock.day
+    left_day: int  # 0 se ativo
     cooldown_until_day: int
-    offenses: list[int]    # dias das ofensas (janela R18)
-    exposed: bool          # fação secreta: vínculo conhecido por ela/rivais
-    rival_awareness: dict[str, int]  # rival_fid -> delta pendente em passos (+1/-1); consumido em R16
-    last_info_day: int     # perk informacao 1x/dia
+    offenses: list[int]  # dias das ofensas (janela R18)
+    exposed: bool  # fação secreta: vínculo conhecido por ela/rivais
+    rival_awareness: dict[
+        str, int
+    ]  # rival_fid -> delta pendente em passos (+1/-1); consumido em R16
+    last_info_day: int  # perk informacao 1x/dia
     rite_quest_id: str
 
+
 class Faction(TypedDict, total=False):
-    ...                    # campos atuais
-    influence: int         # -9..+9 (R14); default 0
-    influence_periods: int # acumulador de decadência; default 0
+    ...  # campos atuais
+    influence: int  # -9..+9 (R14); default 0
+    influence_periods: int  # acumulador de decadência; default 0
+
 
 class Quest(TypedDict, total=False):
-    ...                    # campos atuais
-    faction_id: str        # "" para quest comum
-    mission_kind: str      # "apoio" | "sabotagem" | "rito"
-    mission_tier: int      # 1..3
-    target_faction_id: str # só sabotagem
+    ...  # campos atuais
+    faction_id: str  # "" para quest comum
+    mission_kind: str  # "apoio" | "sabotagem" | "rito"
+    mission_tier: int  # 1..3
+    target_faction_id: str  # só sabotagem
+
 
 # GameState
 faction_membership: dict[str, MembershipRecord]
@@ -348,6 +353,8 @@ faction_membership: dict[str, MembershipRecord]
 class MembershipAction(BaseModel):
     action: str = Field(default="", description="'join' | 'leave' | 'ask_mission'; vazio se nada.")
     faction_id: str = Field(default="", description="id EXATO de <FACÇÕES_CONHECIDAS>.")
+
+
 # StoryUpdate.membership_action: MembershipAction | None = None
 ```
 
@@ -415,6 +422,8 @@ def load_catalog() -> dict[str, dict]: ...
 def can_join(state: Mapping, faction_id: str) -> tuple[bool, str]: ...
 def apply_intent(state: Mapping, action: str, faction_id: str) -> tuple[dict, list[dict], str]:
     """-> (updates parciais do GameState, propostas de evento source=engine, nota narrável)."""
+
+
 def join(state, faction_id) -> tuple[dict, list[dict], str]: ...
 def leave(state, faction_id) -> tuple[dict, list[dict], str]: ...
 def register_offense(state, faction_id, kind: str) -> tuple[dict, list[dict], str]: ...
@@ -427,11 +436,16 @@ def has_perk(state, perk_type: str, *, location_id: str = "", faction_id: str = 
 def membership_view(state, faction_id: str) -> dict | None: ...
 def prompt_block(state) -> str: ...
 
+
 # services/faction_missions.py
 def offer_mission(state: Mapping, faction_id: str) -> tuple[list[dict], dict | None, str]: ...
 
+
 # services/economy.py
-def faction_quartermaster_stock(state: dict, location_id: str) -> tuple[str | None, dict[str, int]]: ...
+def faction_quartermaster_stock(
+    state: dict, location_id: str
+) -> tuple[str | None, dict[str, int]]: ...
+
 
 # world_utils.py (assinatura pública inalterada)
 def advance_factions(factions, periods: int = 1) -> tuple[list, list]: ...
@@ -690,3 +704,37 @@ Todas as decisões abertas desta spec seguem o **default recomendado pelo autor*
 - D2: Mercadores de Escravos FECHADOS.
 - D3: Devoradores de Sol aceitam só herói com origem no Deserto de Zhur.
 - D6: máx. 2 vínculos simultâneos, a fação secreta conta no limite.
+
+
+## Desvios da implementação (2026-10-24)
+
+Contrato da SPEC-298 usado: reputação numérica -100..100 (`faction_tier`), "passo" = `REP_STEP = 10`;
+`min_reputation_steps: 0` = "neutro ou melhor" (rep >= -9). Mudanças em relação ao texto acima:
+
+- **D2/D3 do dono:** Mercadores de Escravos `nao`; Devoradores de Sol `condicional` só com
+  `origin_region_id = deserto_zhur` (recrutador Vasketh). Totais: 9 sim, 6 condicionais, 4 não.
+- **R3:** enum de recusa ganhou `caminho` (condicionais por exílio/conversão/encontros com NPC) e
+  `reputacao` cobre também `requires_intel`; `never_member_of` recusa como `exclusiva:<fid>`.
+- **R5/R18:** "entrar numa exclusiva confirma traição" só existe no caminho autorado
+  `converts_from` (Ciclo→Renegados Druidas, Clãs→Renegados do Ermo); o resto é recusado.
+- **R14:** `pace + int(influence/3)` (trunca rumo a 0, simétrico) em vez de `//`.
+- **R15:** a influência ±1 e as ofensas (R18) são aplicadas em `event_processor` sobre as
+  `reputation_changed` realmente aplicadas por `reputation.process_deeds` (não há mais
+  `apply_reputation` no storyteller nem `_revert_reputation`). Reputação entregue depois por
+  pendência (`_deliver_pending`) não move influência.
+- **R12/R7:** `on_mission_completed` é chamado em `event_processor`; ouro por tier via
+  `MISSION_GOLD` no `quest_log`. Apoio concluído regulariza o status `suspeito`.
+  Nova regra mínima: reputação <= limiar hostil expulsa o membro (`check_expulsion`, evento `expelled`).
+- **R4:** custo do rito é cobrado na conclusão (ouro com piso 0); marca/ferimento do Batismo
+  ficam em `MembershipRecord.marks` e `player.ferimentos`.
+- **R10:** o intendente amplia o estoque do mercador do QG (`merchant_stock`); só vale onde há
+  mercador no QG (lint garante). Desconto = perk `desconto` nos QGs da fação.
+- **R16:** pendência aplicada na chegada à região do rival ou, com `RPG_NPC_KNOWLEDGE=on`, quando um
+  NPC da fação rival ouviu o evento (sempre checado a cada turno). Fação secreta nunca propaga.
+- **R20:** recusa e sucesso viram nota anexada à mensagem; id inexistente vira nota genérica.
+- **R22:** `standing_label` ganhou `ex-membro`, `fação dissolvida`, `em rito de entrada`.
+- **offer_mission** devolve `(quests_atualizadas, quest|None, nota)`; perk `informacao` dispara
+  em `ask_mission`.
+- **Etapa 8:** o painel é `web/src/components/Hud.tsx`; o caso Playwright novo não foi criado
+  (`web/e2e/contracts` protegido).
+- Perfil `faccionario` (MockLLM propõe `membership_action` só com pedido explícito): 50 turnos, 0 violações.

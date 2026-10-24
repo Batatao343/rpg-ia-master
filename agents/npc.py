@@ -164,6 +164,16 @@ class FactionReveal(BaseModel):
     )
 
 
+class MembershipAction(BaseModel):
+    """SPEC-301 R20: o recrutador só PROPÕE; Python valida requisito/limite/local."""
+
+    action: str = Field(
+        default="",
+        description="'join' | 'leave' | 'ask_mission'; vazio se o jogador não pediu isso.",
+    )
+    faction_id: str = Field(default="", description="id EXATO de <FACÇÕES_DO_MUNDO>.")
+
+
 RELATIONSHIP_STEP_CAP = 1  # SPEC-230 R7 (D-A default ±1 por turno); SPEC-223 R4 reusa
 
 
@@ -192,6 +202,14 @@ class NPCResponse(BaseModel):
             "Facções sobre as quais ESTE NPC contou algo ao jogador NESTE turno. "
             "Só preencha se o personagem plausivelmente saberia (ocupação/local) E o papo levou a isso. "
             "Vazio caso contrário. Use o faction_id EXATO da lista."
+        ),
+    )
+    membership_action: MembershipAction | None = Field(
+        default=None,
+        description=(
+            "SOMENTE se o jogador pediu EXPLICITAMENTE a você, neste turno, para entrar "
+            "numa fação, sair dela ou pedir uma missão a ela. faction_id EXATO de "
+            "<FACÇÕES_DO_MUNDO>. Na dúvida, vazio: o motor decide se é possível."
         ),
     )
     proposed_quests: list[ProposedQuest] = Field(
@@ -1021,6 +1039,9 @@ def npc_actor_node(state: GameState):
 
         log_fallback("npc", "companion_block_failed", exc)
         companion_block, companion_ack = "", []
+    from services import faction_membership as _fm
+
+    faction_member_block = _fm.prompt_block(state)  # SPEC-301 R21 (vazio sem vínculo)
 
     system_msg = SystemMessage(
         content=f"""
@@ -1069,6 +1090,7 @@ def npc_actor_node(state: GameState):
     Um camponês comum NÃO conhece os planos de cultos distantes. Na dúvida, deixe vazio ou solte só um rumor.
     </FACÇÕES_DO_MUNDO>
 
+    {faction_member_block}
     <MISSÃO>
     Se seu personagem tem um pedido/tarefa CONCRETA para o jogador (recuperar algo,
     entregar algo, investigar algo, resgatar alguém), registre em 'proposed_quests'.
@@ -1299,6 +1321,37 @@ def npc_actor_node(state: GameState):
             quests_now, _created = quest_log.register_proposed_quests(
                 quests_now, stamped, turn=turn
             )
+        # SPEC-301 R20: o recrutador propõe entrada/saída/missão; Python valida e decide.
+        # FallbackLLM nunca chega aqui (isinstance acima); campo ausente = no-op.
+        member_action = getattr(res, "membership_action", None)
+        if isinstance(member_action, MembershipAction) and member_action.action:
+            speaking = dict(new_npcs.get(npc_state_key) or {})
+            speaking["in_scene"] = True
+            fm_view = {
+                **state,
+                "npcs": {**new_npcs, npc_state_key: speaking},
+                "quests": quests_now,
+                "factions": factions,
+                "faction_intel": intel,
+            }
+            fm_upd, fm_events, fm_note = _fm.apply_intent(
+                fm_view, member_action.action, member_action.faction_id
+            )
+            if "quests" in fm_upd:
+                quests_now = fm_upd["quests"]
+            for key in ("faction_membership", "faction_intel"):
+                if key in fm_upd:
+                    updates[key] = fm_upd[key]
+            if "factions" in fm_upd:
+                updates["factions"] = fm_upd["factions"]
+            if fm_events:
+                updates["pending_world_events"] = list(
+                    state.get("pending_world_events", []) or []
+                ) + list(fm_events)
+            if fm_note:
+                updates["messages"] = [
+                    AIMessage(content=f"{updates['messages'][0].content}\n\n{fm_note}")
+                ]
         if quests_now != base_quests:
             updates["quests"] = quests_now
         # SPEC-299 R4(a)/R7: crimes classificados pelo LLM (guard: só NPCResponse chega aqui).

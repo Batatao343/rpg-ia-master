@@ -736,6 +736,8 @@ def _state_to_save_data(state: dict[str, Any], game_id: str) -> dict[str, Any]:
         "enemies": enemies,
         "factions": state.get("factions", []),
         "faction_intel": state.get("faction_intel", {}),
+        # SPEC-301 (aditivo, sem bump): save antigo sem o campo carrega {}.
+        "faction_membership": deepcopy(state.get("faction_membership") or {}),
         "bestiary_knowledge": state.get("bestiary_knowledge", {}),
         "npcs": coalesce_runtime_npcs(state.get("npcs", {})),
         "inventory": state.get("inventory", []),
@@ -1068,6 +1070,7 @@ def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
         "enemies": raw_data.get("enemies", []),
         "factions": raw_data.get("factions", []),
         "faction_intel": raw_data.get("faction_intel", {}),
+        "faction_membership": deepcopy(raw_data.get("faction_membership") or {}),
         "bestiary_knowledge": raw_data.get("bestiary_knowledge", {}),
         "npcs": coalesce_runtime_npcs(raw_data.get("npcs", {})),
         "inventory": raw_data.get("inventory", []),

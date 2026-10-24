@@ -27,6 +27,7 @@ from typing import Any, Literal
 from services import faction_relations as fr
 from services import world_director as wd
 from services import world_pressures as wp
+from world_utils import clamp_influence, effective_pace
 
 MODES = ("off", "shadow", "on")
 DEFAULT_MODE = "on"
@@ -373,12 +374,17 @@ def _tick_day(
         for f in factions:
             f = dict(f)
             if not f.get("completed") and not f.get("defeated"):
-                a = float(acc.get(f.get("id"), 0.0)) + float(f.get("pace", 3)) * float(
+                # SPEC-301 R14: a influência do jogador modula o pace NO TICK DIÁRIO e decai
+                # 1 por dia (influência 0 = pace de sempre). O legado vale só com o motor off.
+                a = float(acc.get(f.get("id"), 0.0)) + float(effective_pace(f)) * float(
                     dc["FACTION_DAY_FACTOR"]
                 )
                 inc = int(a)
                 acc[f.get("id")] = a - inc
                 f["progress"] = min(100, int(f.get("progress", 0)) + inc)
+                infl = clamp_influence(f.get("influence", 0))
+                if infl:
+                    f["influence"] = infl - (1 if infl > 0 else -1)
             new_factions.append(f)
         factions = new_factions
 

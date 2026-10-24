@@ -1231,6 +1231,71 @@ class Recrutador(_Base):
         )
 
 
+# --- 15. faccionario (SPEC-301) ----------------------------------------------
+
+
+class Faccionario(_Base):
+    """Se alista na Legião de Ferro, pede missões, cumpre (viaja + investiga), sabota um
+    rival quando a missão pede, e por fim deixa a fação — fecha o ciclo de membership."""
+
+    name = "faccionario"
+    FACTION_ID = "legiao_ferro"
+    FACTION_LABEL = "Legião de Ferro"
+    HQ_ID = "na_anel_ferro"
+    LEAVE_AFTER_COMPLETED = 2
+
+    def __init__(self):
+        self._left = False
+
+    def reset(self) -> None:
+        self._left = False
+
+    def _travel(self, state: dict, target_id: str) -> str | None:
+        hop = _next_hop_toward(_current_id(state), target_id)
+        return f"Viajo para {hop['name']}." if hop else None
+
+    def _next_action(self, state, rng):
+        rec = (state.get("faction_membership") or {}).get(self.FACTION_ID) or {}
+        status = rec.get("status")
+        here = _current_id(state)
+        quests = [q for q in (state.get("quests") or []) if isinstance(q, dict)]
+        mine = [q for q in quests if q.get("faction_id") == self.FACTION_ID]
+        done = sum(1 for q in mine if q.get("status") == "completed")
+        active = [q for q in mine if q.get("status") == "active"]
+        if status in ("ativo", "suspeito"):
+            if done >= self.LEAVE_AFTER_COMPLETED and not self._left:
+                self._left = True
+                return f"Deixo a {self.FACTION_LABEL}: o meu tempo aqui acabou."
+            if not active:
+                if here != self.HQ_ID:
+                    return self._travel(state, self.HQ_ID) or "Descanso um pouco."
+                return f"Peço uma missão à {self.FACTION_LABEL}."
+            q = active[0]
+            target = str(q.get("location_id") or "")
+            if target and here != target:
+                return self._travel(state, target) or "Procuro o caminho até o local da missão."
+            return rng.choice(
+                [
+                    "Investigo o local da missão e examino cada pista com cuidado.",
+                    "Procuro rastros e interrogo quem estiver por perto sobre a missão.",
+                    "Vasculho os arredores em busca de pistas da missão e anoto o que acho.",
+                ]
+            )
+        if status == "rito_pendente" and active:
+            q = active[0]
+            target = str(q.get("location_id") or "")
+            if target and here != target:
+                return self._travel(state, target) or "Procuro o caminho até o local do rito."
+            return "Investigo o local do rito e examino tudo com cuidado."
+        if self._left:
+            return rng.choice(
+                ["Descanso e reflito sobre o que vivi.", "Exploro os arredores com calma."]
+            )
+        if here != self.HQ_ID:
+            return self._travel(state, self.HQ_ID) or "Descanso um pouco."
+        return f"Quero me alistar na {self.FACTION_LABEL}."
+
+
 # --- 14. normal ------------------------------------------------------------
 
 
@@ -1426,5 +1491,6 @@ PROFILES: dict[str, Profile] = {
         Recrutador(),
         Normal(),
         Criminoso(),
+        Faccionario(),
     ]
 }

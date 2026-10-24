@@ -199,6 +199,13 @@ export function FactionsTab({ factions }: { factions: FactionView[] }) {
               <div className={"faction__stability " + (STABILITY_CLASS[f.stability_label] ?? "")}>
                 <span className="faction__stability-label">{f.stability_label}</span>
               </div>
+              {f.membership && (
+                <p className="faction__membership" data-testid="faction-membership">
+                  {f.membership.rank_name ? `${f.membership.rank_name} · ` : ""}
+                  {f.membership.standing_label}
+                  {f.membership.perks.length > 0 ? ` · ${f.membership.perks.join(", ")}` : ""}
+                </p>
+              )}
               {recent.length > 0 && (
                 <p className="faction__history">
                   {recent.map((h, i) => (

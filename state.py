@@ -308,6 +308,9 @@ class Faction(TypedDict, total=False):
     reputation: int  # reputação do jogador com a facção (-100..100)
     completed: bool  # objetivo concluído (dispara evento de mundo)
     defeated: bool  # eliminada por outra facção (Fase 2 — sai de jogo)
+    # SPEC-301 R14: contra-jogo do jogador (-9..+9). Dono: services.faction_membership.
+    influence: int
+    influence_periods: int  # acumulador de decadência da influência
 
 
 class BestiaryKnowledge(TypedDict, total=False):
@@ -355,6 +358,30 @@ class Quest(TypedDict, total=False):
     completion_ready: bool  # objetivo verificável atingido; evento Python conclui no archivist
     reward_gold: int  # recompensa mecânica efetivamente entregue
     reward_delivered: bool
+    # SPEC-301: missão de fação (gerada pelo motor, nunca pelo LLM).
+    faction_id: str  # "" para quest comum
+    mission_kind: str  # "apoio" | "sabotagem" | "rito"
+    mission_tier: int  # 1..3
+    target_faction_id: str  # só sabotagem
+
+
+class MembershipRecord(TypedDict, total=False):
+    """SPEC-301: vínculo do jogador com uma fação (dono: services.faction_membership)."""
+
+    faction_id: str
+    # "ativo" | "suspeito" | "ex_membro" | "expulso" | "traidor" | "dissolvida" | "rito_pendente"
+    status: str
+    rank_index: int  # índice em catalog[fid]["ranks"]
+    merit: int  # NUNCA exposto pela API
+    joined_day: int
+    left_day: int  # 0 se ativo
+    cooldown_until_day: int
+    offenses: list[int]  # dias das ofensas (janela de suspeita)
+    exposed: bool  # fação secreta: vínculo conhecido por ela/rivais
+    rival_awareness: dict[str, int]  # rival_fid -> delta pendente em passos (+1/-1)
+    last_info_day: int  # perk informacao: 1x/dia
+    rite_quest_id: str
+    marks: list[str]  # marcas do rito (ex.: cicatriz_labios)
 
 
 class CompanionReaction(TypedDict, total=False):
@@ -701,6 +728,8 @@ class GameState(TypedDict):
     party: list[CompanionState]
     factions: list[Faction]  # Fase 2: fações com objetivos próprios (mundo vivo)
     faction_intel: dict[str, dict]  # Fase 2: o que o jogador SABE de cada facção (não-onisciência)
+    # SPEC-301: vínculos do jogador com fações (dono: services.faction_membership). Aditivo.
+    faction_membership: dict[str, MembershipRecord]
     bestiary_knowledge: dict[
         str, BestiaryKnowledge
     ]  # Fase 3.2: contadores por criatura (chave = id do bestiário)

@@ -60,6 +60,8 @@ SUBJECT_PARAMS: dict[str, tuple[float, int, int]] = {
     "player_deed": (0.7, 10, 2),
     # SPEC-299 R13: crime testemunhado (só o motor emite, source="law").
     "crime_witnessed": (0.7, 10, 2),
+    # SPEC-301 R16b: entrada/promoção/traição em fação PÚBLICA (a secreta nunca propaga).
+    "faction_membership_changed": (0.6, 8, 2),
 }
 # Tipos de evento que viram o assunto `player_deed` (extensível: reputation.register_deed_kind).
 PLAYER_DEED_TYPES: set[str] = {"faction_deed"}
@@ -274,13 +276,25 @@ def _params(state: dict, kind: str, subject_id: str) -> tuple[float, int, int] |
     params = SUBJECT_PARAMS.get(stype)
     if not params or stype in WITNESS_ONLY_TYPES:
         return None
+    if stype == "faction_membership_changed" and _secret_membership(state, subject_id):
+        return None
     if _is_secret(state, _subject_text(state, kind, subject_id)):
         return None  # R7: assinatura hidden/secret não revelada nunca propaga
     return params
 
 
+def _secret_membership(state: dict, subject_id: str) -> bool:
+    from services.faction_membership import is_secret_event
+
+    return is_secret_event(_event_by_id(state, subject_id) or {})
+
+
 def _witnessable(event: dict) -> bool:
     etype = str(event.get("type") or "")
+    if etype == "faction_membership_changed":
+        from services.faction_membership import is_secret_event
+
+        return not is_secret_event(event)
     if etype in PLAYER_DEED_TYPES:
         return True
     return (etype in SUBJECT_PARAMS and etype != RUMOR) or etype in WITNESS_ONLY_TYPES

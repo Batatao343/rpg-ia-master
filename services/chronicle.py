@@ -38,6 +38,7 @@ CHRONICLE_EVENT_TYPES = {
     "companion_left",
     "companion_betrayed",
     "companion_fate",
+    "faction_membership_changed",
 }
 
 # Templates voltados ao JOGADOR (prosa curta), diferentes dos EVENT_TEMPLATES
@@ -57,6 +58,7 @@ CHRONICLE_TEMPLATES: dict[str, str] = {
     "companion_left": "{who} deixou o grupo.",
     "companion_betrayed": "{who} traiu a confiança do herói e partiu.",
     "companion_fate": "{who} {fate}.",
+    "faction_membership_changed": "{detail}",
 }
 
 _FATE_TEXT = {
@@ -105,6 +107,12 @@ def render_milestone(event: dict, projection: dict) -> str:
         who = str(payload.get("name") or _name(event.get("target_id")))
         fate = _FATE_TEXT.get(str(payload.get("fate") or ""), "teve um destino incerto")
         return tmpl.format(who=who, fate=fate)
+    if etype == "faction_membership_changed":
+        # SPEC-301: texto por ação; fação secreta não exposta não vira milestone público.
+        from services.faction_membership import chronicle_text
+
+        text = chronicle_text(event)
+        return tmpl.format(detail=text) if text else ""
 
     if etype in ("subclass_chosen", "class_apex_unlocked"):
         detail = payload.get("name") or payload.get("card_id") or event.get("target_id", "")

@@ -212,6 +212,11 @@ def price(item_id: str, *, mode: str, state: dict, merchant: dict | None = None)
         from services.location_states import location_effects
 
         p *= float(location_effects(state, location_id)["price_mult"])
+    if mode == "buy" and state.get("faction_membership"):
+        # SPEC-301 R9: desconto de patente nos mercadores do QG (sem vínculo: preço idêntico)
+        from services.faction_membership import discount_mult
+
+        p *= discount_mult(state, location_id)
     if mode == "sell":
         p *= SELL_FACTOR
     return _round5(p)
@@ -322,6 +327,15 @@ def restock(world: dict, *, projection: dict | None = None) -> dict:
     return world
 
 
+def faction_quartermaster_stock(state: dict, location_id: str) -> tuple[str | None, dict[str, int]]:
+    """SPEC-301 R10: (faction_id, itens do intendente liberados pela patente) no QG."""
+    if not state.get("faction_membership"):
+        return None, {}
+    from services.faction_membership import quartermaster_items
+
+    return quartermaster_items(state, location_id)
+
+
 def merchant_stock(state: dict, location_id: str) -> tuple[str | None, dict[str, int]]:
     """(merchant_id, estoque EFETIVO). Local hostil esconde itens raros+ (R6)."""
     here = merchants_at(location_id)
@@ -335,6 +349,11 @@ def merchant_stock(state: dict, location_id: str) -> tuple[str | None, dict[str,
 
     # Não muta o estado de entrada: a persistência do keeper volta no update parcial
     # do nó (ver `_persist_keeper` / `outcome["npcs"]`).
+    # SPEC-301 R10: o intendente da fação do jogador amplia o estoque do QG por patente.
+    # Mesma prateleira/validador de ouro; filtros de escassez e unicidade valem abaixo.
+    _qm_fid, qm_items = faction_quartermaster_stock(state, location_id)
+    for _iid, _qty in qm_items.items():
+        stock[_iid] = max(int(stock.get(_iid, 0) or 0), int(_qty))
     keeper_row = keeper_for_price(state, mid, merchant) if merchant.get("keeper") else {}
     keeper_tier = npc_tier(keeper_row.get("relationship")) if keeper_row else ""
     if keeper_tier == "leal":

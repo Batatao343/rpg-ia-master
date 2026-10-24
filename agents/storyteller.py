@@ -77,6 +77,16 @@ def _coerce_faction_impacts(raw: object) -> list:
     return out
 
 
+class MembershipAction(BaseModel):
+    """SPEC-301 R20: intenção do jogador sobre uma fação. O LLM só PROPÕE; Python decide."""
+
+    action: str = Field(
+        default="",
+        description="'join' | 'leave' | 'ask_mission'; vazio se o jogador não pediu isso.",
+    )
+    faction_id: str = Field(default="", description="id EXATO de <FACÇÕES_CONHECIDAS>.")
+
+
 class StoryUpdate(BaseModel):
     # default "" (não required): Gemini real às vezes omite o campo num schema
     # grande — melhor narrar via fallback do que perder o turno (smoke 2026-07-05)
@@ -96,6 +106,15 @@ class StoryUpdate(BaseModel):
         description=(
             "Fações afetadas pela AÇÃO do jogador NESTE turno. Vazio se a ação não ajuda "
             "nem prejudica claramente uma fação listada. Use o faction_id EXATO."
+        ),
+    )
+
+    membership_action: MembershipAction | None = Field(
+        default=None,
+        description=(
+            "SOMENTE se o jogador pediu EXPLICITAMENTE, neste turno, para entrar numa fação, "
+            "sair dela ou pedir uma missão a ela. Use o faction_id EXATO de "
+            "<FACÇÕES_CONHECIDAS>. Na dúvida, deixe vazio. O motor decide se é possível."
         ),
     )
 
@@ -711,8 +730,35 @@ def storyteller_node(state: GameState):
     world_before = world  # SPEC-302: relogio ANTES de viagem/descanso (dias virados)
     world_tick = None
     sim_updates: dict = {}
+    faction_events: list = []
     discovery_events: list = []
     reward_player_before = deepcopy(state.get("player") or {})
+
+    # SPEC-301: vínculo do jogador com fações (dono: services.faction_membership). O motor
+    # decide; `fm_extra` leva os updates parciais e `fm_events` as propostas source=engine.
+    from services import faction_membership as fm
+
+    fm_events: list = []
+    fm_post_notes: list = []
+    fm_extra: dict = {}
+
+    def _fm_view() -> dict:
+        return {**state, "world": world, "factions": factions, "faction_intel": intel, **fm_extra}
+
+    def _fm_apply(result) -> str:
+        nonlocal factions, intel
+        upd, evs, note = result
+        fm_events.extend(evs)
+        for key, value in upd.items():
+            if key == "factions":
+                factions = value
+            elif key == "faction_intel":
+                intel = value
+                fm_extra[key] = value
+            elif key != "player":  # o storyteller não aplica custo de rito (event_processor)
+                fm_extra[key] = value
+        return note
+
     discovery_player = None
     if dest:
         from world_utils import travel_cost
@@ -802,6 +848,30 @@ def storyteller_node(state: GameState):
         extra_engine_events_tick = list(world_tick.pending_events)
     else:
         extra_engine_events_tick = []
+    # --- SPEC-301: o tempo passou -> a fação do jogador pode ter ascendido/sido destruída,
+    # e rivais que já sabem do vínculo reagem (chegada à região deles ou notícia). ---
+    if state.get("faction_membership"):
+        _fm_notes: list = []
+        _was_defeated = {f.get("id") for f in (state.get("factions") or []) if f.get("defeated")}
+        for _f in list(factions):
+            if _f.get("defeated") and _f.get("id") not in _was_defeated:
+                _fm_notes.append(_fm_apply(fm.on_faction_defeated(_fm_view(), _f.get("id"))))
+        _asc = fm.ascension_member_note(_fm_view(), faction_events)
+        if _asc:
+            _fm_notes.append(_asc)
+        _fm_notes.append(
+            _fm_apply(
+                fm.apply_rival_awareness(
+                    _fm_view(),
+                    str(dest["id"]) if dest else str(world.get("current_location_id") or ""),
+                    arrived=bool(dest),
+                )
+            )
+        )
+        _fm_text = "\n".join(n for n in _fm_notes if n)
+        if _fm_text:
+            faction_note = (faction_note + "\n" + _fm_text).strip()
+
     # Viagem fecha a cena anterior antes de qualquer encontro ou contexto. Isso
     # também protege retornos antecipados de combate contra NPCs teleportados.
     from services import npc_layers
@@ -838,8 +908,14 @@ def storyteller_node(state: GameState):
         # zona não-apex de perigo baixo recupera SEM sortear encontro — o laço de
         # recuperação que faltava (viagem não cura; descanso interrompido = morte).
         # Só vale pra REST (rested_player is not None), nunca pra viagem.
-        _rest_recovers = rested_player is not None and recovery_rest_safe(
-            _plevel, danger_now, _get_location(world.get("current_location_id", "")) or {}
+        _rest_recovers = rested_player is not None and (
+            recovery_rest_safe(
+                _plevel, danger_now, _get_location(world.get("current_location_id", "")) or {}
+            )
+            # SPEC-301 R9: perk `abrigo` — descanso no QG da própria fação não sorteia encontro
+            or fm.has_perk(
+                _fm_view(), "abrigo", location_id=str(world.get("current_location_id") or "")
+            )
         )
         if _rest_recovers:
             enc = None
@@ -859,6 +935,7 @@ def storyteller_node(state: GameState):
                 projection=state.get("world_projection"),
                 player_level=_plevel,
                 law_hint=_law_hint,
+                exempt_factions=fm.passage_factions(_fm_view()),  # SPEC-301 perk `passagem`
             )
         # spec encontros-dedupe (R3): não repete o MESMO template de encontro 2x
         # seguidas no mesmo local (o mundo não é um carrossel).
@@ -1133,6 +1210,7 @@ def storyteller_node(state: GameState):
 
     _fame = fame_line(state)
     fame_block = f"<FAMA_LOCAL>\n{_fame}\n</FAMA_LOCAL>" if _fame else ""
+    faction_member_block = fm.prompt_block(_fm_view())  # SPEC-301 R21 (vazio sem vínculo)
 
     # SPEC-297 R22: elenco oferecido ao NARRADOR (não ao jogador); vazio salvo flag `on`.
     try:
@@ -1185,12 +1263,17 @@ def storyteller_node(state: GameState):
     {companion_block}
     {fame_block}
     {lei_block}
+    {faction_member_block}
 
     <FACÇÕES_CONHECIDAS>
     {faccoes_conhecidas}
     Se a ação do jogador NESTE turno claramente ajudar ou prejudicar uma destas fações,
     registre em 'faction_impacts' (faction_id EXATO + direction 'ajudou'/'prejudicou' + magnitude 'menor'/'maior').
     Caso contrário, deixe 'faction_impacts' vazio. NÃO invente ids fora da lista.
+    Só se o jogador pediu EXPLICITAMENTE para entrar numa destas fações, sair dela ou pedir
+    uma missão a ela, registre em 'membership_action' (join|leave|ask_mission + faction_id
+    EXATO); o motor decide se é possível. Não narre a entrada, a saída ou a missão como
+    concluídas: o resultado vem do motor.
     </FACÇÕES_CONHECIDAS>
 
     <ENTIDADES_CANONICAS>
@@ -1401,6 +1484,17 @@ def storyteller_node(state: GameState):
             )
         except Exception as exc:  # silent-ok: lei nunca derruba o turno
             _log_event("law", "claims_failed", level="warning", error=type(exc).__name__)
+        # --- SPEC-301 R20: intenção de vínculo proposta pelo LLM, validada em Python. ---
+        # FallbackLLM/quarentena: campo ignorado. Recusa vira nota narrável, sem estado.
+        _member_action = (
+            None if quarantine_llm_payload else getattr(update, "membership_action", None)
+        )
+        if isinstance(_member_action, MembershipAction) and _member_action.action:
+            _intent_note = _fm_apply(
+                fm.apply_intent(_fm_view(), _member_action.action, _member_action.faction_id)
+            )
+            if _intent_note:
+                fm_post_notes.append(_intent_note)
 
         # --- Avanço de beat: o narrador sinaliza quando o objetivo da cena foi cumprido ---
         needs_replan = travel_needs_replan
@@ -1485,6 +1579,8 @@ def storyteller_node(state: GameState):
         # sinais mostrados + crime novo: o crime parte do estado já com os sinais
         updates.update(_law_scene_updates)
         updates.update(law_updates)
+        for _k, _v in fm_extra.items():  # SPEC-301: vínculo/intel/quests parciais
+            updates[_k] = _v
         # Rumores/cores do simulador são percepção narrativa, não fatos globais.
         # A consequência mecânica aplicada já é persistida diretamente pelo
         # world_simulator; o archivist deve ignorar inferências livres deste texto.
@@ -1585,6 +1681,11 @@ def storyteller_node(state: GameState):
         if reward_note:
             current_text = str(updates["messages"][0].content or "").rstrip()
             updates["messages"] = [AIMessage(content=f"{current_text}\n\n{reward_note}")]
+        if fm_post_notes:  # SPEC-301: resultado do motor sobre a intenção (entrada/recusa/missão)
+            current_text = str(updates["messages"][0].content or "").rstrip()
+            updates["messages"] = [
+                AIMessage(content=f"{current_text}\n\n" + "\n".join(fm_post_notes))
+            ]
         if invalid_story_events:
             from services.world_validators import reason_code as _reason_code
 
@@ -1609,6 +1710,7 @@ def storyteller_node(state: GameState):
         pending = (
             pending_llm_events
             + rep_events
+            + fm_events
             + level_up_events
             + extra_engine_events
             + discovery_events
@@ -1643,7 +1745,7 @@ def storyteller_node(state: GameState):
             [] if quarantine_llm_payload else (getattr(update, "proposed_quests", []) or [])
         )
         new_quests, created = quest_log.register_proposed_quests(
-            state.get("quests", []), proposed_quests, turn=turn
+            fm_extra.get("quests", state.get("quests", [])), proposed_quests, turn=turn
         )
         new_quests = quest_log.sync_location_progress(
             new_quests,
@@ -1720,11 +1822,14 @@ def storyteller_node(state: GameState):
             fallback["world"] = world
             fallback["factions"] = factions
             fallback["archive_due"] = True
-        if discovery_events or extra_engine_events:
+        for _k, _v in fm_extra.items():  # SPEC-301: a mecânica já aplicada sobrevive à exceção
+            fallback[_k] = _v
+        if discovery_events or extra_engine_events or fm_events:
             fallback["pending_world_events"] = (
                 (state.get("pending_world_events", []) or [])
                 + list(discovery_events)
                 + list(extra_engine_events)
+                + list(fm_events)
             )
         if turn_bl_pre_llm is not state.get("turn_baseline"):
             fallback["turn_baseline"] = turn_bl_pre_llm

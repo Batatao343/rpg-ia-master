@@ -29,6 +29,7 @@ _ORDEM = (
     "bestiary",
     "visual_assets",
     "law_codes",
+    "faction_membership",
 )
 
 

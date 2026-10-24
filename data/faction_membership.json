@@ -1,0 +1,460 @@
+{
+  "legiao_ferro": {
+    "accepts": "sim",
+    "secret": false,
+    "exit_policy": "desonra",
+    "hq_location_ids": ["na_anel_ferro"],
+    "recruiter_npc_ids": ["npc_comandante_thrace"],
+    "requirements": {
+      "min_reputation_steps": 0,
+      "entry_rite": {
+        "classes": ["Arcanista Cinzento", "Sangromante", "Corruptor"],
+        "kind": "registro_arcano",
+        "gold_cost": 50
+      },
+      "not_wanted_in_region": "Nova Arcádia"
+    },
+    "exclusive_with": ["filhos_chama_azul"],
+    "rivals": ["filhos_chama_azul", "mao_sombria"],
+    "ranks": [
+      {"id": "recruta", "name": "Recruta", "merit": 0, "min_level": 1},
+      {"id": "legionario", "name": "Legionário", "merit": 3, "min_level": 2},
+      {"id": "sargento", "name": "Sargento", "merit": 7, "min_level": 3},
+      {"id": "tenente", "name": "Tenente", "merit": 12, "min_level": 5},
+      {"id": "comandante", "name": "Comandante de Batalhão", "merit": 18, "min_level": 7}
+    ],
+    "rank_cap": [],
+    "perks_by_rank": {
+      "0": [{"type": "abrigo"}],
+      "1": [{"type": "desconto", "mult": 0.9}, {"type": "intendente"}],
+      "2": [{"type": "passagem"}],
+      "3": [{"type": "informacao"}, {"type": "desconto", "mult": 0.8}],
+      "4": [{"type": "intercessao"}]
+    },
+    "quartermaster": {"gibao_de_couro": 0, "escudo_de_aco": 1, "espada_aco_temperado": 2, "pocao_cura_maior": 3},
+    "mission_templates": [
+      {"id": "legiao_patrulha_lama", "kind": "apoio", "tier": 1, "min_rank": 0, "location_ids": ["na_anel_lama"], "title": "Patrulha no Anel de Lama", "description": "O sargento quer olhos nos becos onde as fogueiras de sedição acendem."},
+      {"id": "legiao_quota_ferro", "kind": "apoio", "tier": 2, "min_rank": 1, "location_ids": ["na_anel_ferro"], "title": "Conferir a quota da forja", "description": "A contagem do Anel de Ferro não fecha. Alguém desvia aço, e a Legião quer saber quem."},
+      {"id": "legiao_cicatriz", "kind": "sabotagem", "tier": 2, "min_rank": 1, "target_faction_id": "filhos_chama_azul", "location_ids": ["na_anel_lama"], "title": "Apagar um altar de chama azul", "description": "Um altar clandestino dos Filhos da Chama Azul queima no Anel de Lama. Apague-o antes que a pregação se espalhe."},
+      {"id": "legiao_registro_arcano", "kind": "rito", "tier": 1, "min_rank": 0, "location_ids": ["na_anel_ferro"], "title": "Registro de conjurador", "description": "A Legião não admite magia sem selo. Apresente-se ao escrivão do Anel de Ferro e aceite o registro."}
+    ]
+  },
+  "mao_sombria": {
+    "accepts": "sim",
+    "secret": true,
+    "exit_policy": "traicao",
+    "hq_location_ids": ["na_anel_lama"],
+    "recruiter_npc_ids": ["npc_rato_de_ferro_tibb", "npc_pardal"],
+    "requirements": {"min_reputation_steps": 1, "requires_intel": true},
+    "exclusive_with": [],
+    "rivals": ["legiao_ferro"],
+    "ranks": [
+      {"id": "olheiro", "name": "Olheiro", "merit": 0, "min_level": 1},
+      {"id": "mula", "name": "Mula", "merit": 3, "min_level": 2},
+      {"id": "agente", "name": "Agente", "merit": 8, "min_level": 4},
+      {"id": "lider_celula", "name": "Líder de célula", "merit": 14, "min_level": 6}
+    ],
+    "rank_cap": [],
+    "perks_by_rank": {
+      "0": [{"type": "abrigo"}],
+      "1": [{"type": "informacao"}],
+      "2": [{"type": "desconto", "mult": 0.85}],
+      "3": [{"type": "intercessao"}]
+    },
+    "quartermaster": {},
+    "mission_templates": [
+      {"id": "mao_olhar_portao", "kind": "apoio", "tier": 1, "min_rank": 0, "location_ids": ["na_anel_ferro"], "title": "Contar os guardas do portão", "description": "Pardal quer saber quantos turnos a Legião troca no portão do Anel de Ferro, sem ser visto."},
+      {"id": "mao_entrega_discreta", "kind": "apoio", "tier": 2, "min_rank": 1, "location_ids": ["na_anel_dourado"], "title": "Entrega discreta", "description": "Um pacote sem rótulo precisa mudar de mãos no Anel Dourado antes do sino."},
+      {"id": "mao_roubar_quota", "kind": "sabotagem", "tier": 2, "min_rank": 1, "target_faction_id": "legiao_ferro", "location_ids": ["na_anel_ferro"], "title": "Desviar o carregamento da Legião", "description": "Um carregamento de aço da Legião passa mal vigiado pelo Anel de Ferro. A Mão quer que ele não chegue."}
+    ]
+  },
+  "filhos_chama_azul": {
+    "accepts": "condicional",
+    "secret": true,
+    "exit_policy": "traicao",
+    "hq_location_ids": ["na_anel_lama"],
+    "recruiter_npc_ids": [],
+    "requirements": {
+      "min_reputation_steps": 0,
+      "entry_rite": {"kind": "batismo_fogo", "wound": "leve", "wound_region": "labios", "mark": "cicatriz_labios"}
+    },
+    "exclusive_with": ["legiao_ferro"],
+    "rivals": ["legiao_ferro", "mao_sombria"],
+    "ranks": [
+      {"id": "simpatizante", "name": "Simpatizante", "merit": 0, "min_level": 1},
+      {"id": "batizado", "name": "Batizado", "merit": 3, "min_level": 2},
+      {"id": "brasa", "name": "Brasa", "merit": 8, "min_level": 4},
+      {"id": "pregador", "name": "Pregador", "merit": 14, "min_level": 6}
+    ],
+    "rank_cap": [],
+    "perks_by_rank": {
+      "0": [{"type": "abrigo"}],
+      "1": [{"type": "informacao"}],
+      "2": [{"type": "desconto", "mult": 0.9}],
+      "3": [{"type": "passagem"}]
+    },
+    "quartermaster": {},
+    "mission_templates": [
+      {"id": "chama_vigia_azul", "kind": "apoio", "tier": 1, "min_rank": 0, "location_ids": ["na_anel_lama"], "title": "Vigília da chama", "description": "A chama azul precisa de olhos acordados a noite toda no Anel de Lama."},
+      {"id": "chama_pregar_beco", "kind": "apoio", "tier": 2, "min_rank": 1, "location_ids": ["na_anel_dourado"], "title": "Espalhar a palavra", "description": "Leve a mensagem da chama aos ouvidos cansados do Anel Dourado."},
+      {"id": "chama_queimar_quota", "kind": "sabotagem", "tier": 2, "min_rank": 1, "target_faction_id": "legiao_ferro", "location_ids": ["na_anel_ferro"], "title": "Queimar o registro da Legião", "description": "O livro de registros da Legião guarda nomes demais. A chama quer que ele vire cinza."},
+      {"id": "chama_batismo_fogo", "kind": "rito", "tier": 1, "min_rank": 0, "location_ids": ["na_anel_lama"], "title": "Batismo de Fogo", "description": "Quem não aguenta a chama não entra. Aceite a brasa nos lábios e fique em pé."}
+    ]
+  },
+  "clas_combate": {
+    "accepts": "sim",
+    "secret": false,
+    "exit_policy": "desonra",
+    "hq_location_ids": ["skallgard"],
+    "recruiter_npc_ids": ["npc_vehkr_punho_de_gelo", "npc_aslaug_duas_lancas"],
+    "requirements": {
+      "min_reputation_steps": 0,
+      "entry_rite": {"kind": "rito_passagem", "exempt_origins": ["skallgard"]}
+    },
+    "exclusive_with": ["renegados_ermo"],
+    "rivals": ["renegados_ermo"],
+    "ranks": [
+      {"id": "aspirante", "name": "Aspirante", "merit": 0, "min_level": 1},
+      {"id": "cacador", "name": "Caçador", "merit": 3, "min_level": 2},
+      {"id": "cacador_expedicao", "name": "Caçador de Expedição", "merit": 8, "min_level": 4},
+      {"id": "voz_cla", "name": "Voz do Clã", "merit": 14, "min_level": 6}
+    ],
+    "rank_cap": [],
+    "perks_by_rank": {
+      "0": [{"type": "abrigo"}],
+      "1": [{"type": "desconto", "mult": 0.9}, {"type": "intendente"}],
+      "2": [{"type": "passagem"}],
+      "3": [{"type": "informacao"}, {"type": "desconto", "mult": 0.8}]
+    },
+    "quartermaster": {"manto_la_gelo": 1, "minerio_ferro": 0, "espada_aco_temperado": 2},
+    "mission_templates": [
+      {"id": "clas_caca_ermo", "kind": "apoio", "tier": 1, "min_rank": 0, "location_ids": ["sk_farol_chama_negra"], "title": "Caça nas bordas do Ermo", "description": "Os caçadores precisam de carne e de olhos novos nas bordas do Ermo Branco."},
+      {"id": "clas_escolta_forja", "kind": "apoio", "tier": 2, "min_rank": 1, "location_ids": ["sk_fortaleza_vorr"], "title": "Escoltar o minério até Vorr", "description": "Uma carga de minério precisa chegar à fortaleza de Vorr antes da neve fechar o caminho."},
+      {"id": "clas_cacar_desgarrado", "kind": "sabotagem", "tier": 2, "min_rank": 1, "target_faction_id": "renegados_ermo", "location_ids": ["sk_farol_chama_negra"], "title": "Desfazer o acampamento dos exilados", "description": "Exilados do Clã armaram acampamento perto do farol. O Clã quer o rastro deles apagado."},
+      {"id": "clas_rito_passagem", "kind": "rito", "tier": 1, "min_rank": 0, "location_ids": ["sk_farol_chama_negra"], "title": "Rito de passagem", "description": "Nenhum forasteiro caça com o Clã sem antes provar no Ermo que volta vivo."}
+    ]
+  },
+  "renegados_ermo": {
+    "accepts": "condicional",
+    "secret": false,
+    "exit_policy": "livre",
+    "hq_location_ids": ["skallgard"],
+    "recruiter_npc_ids": ["npc_korrin_sem_cla"],
+    "requirements": {
+      "min_reputation_steps": 0,
+      "requires_any": [
+        {"kind": "ex_membro_desonra", "faction": "clas_combate"},
+        {"kind": "traidor_de", "faction": "clas_combate"},
+        {"kind": "reputation_at_least", "faction": "clas_combate", "value": 40}
+      ],
+      "converts_from": ["clas_combate"]
+    },
+    "exclusive_with": ["clas_combate"],
+    "rivals": ["clas_combate"],
+    "ranks": [
+      {"id": "desgarrado", "name": "Desgarrado", "merit": 0, "min_level": 1},
+      {"id": "batedor_branco", "name": "Batedor do Branco", "merit": 4, "min_level": 3},
+      {"id": "lamina_korrin", "name": "Lâmina de Korrin", "merit": 10, "min_level": 5}
+    ],
+    "rank_cap": [],
+    "perks_by_rank": {
+      "0": [{"type": "abrigo"}],
+      "1": [{"type": "informacao"}],
+      "2": [{"type": "passagem"}]
+    },
+    "quartermaster": {},
+    "mission_templates": [
+      {"id": "renegados_batedor", "kind": "apoio", "tier": 1, "min_rank": 0, "location_ids": ["sk_farol_chama_negra"], "title": "Rastrear a patrulha do Clã", "description": "Korrin quer saber por onde passam os caçadores antes de decidir onde acampar."},
+      {"id": "renegados_suprimento", "kind": "apoio", "tier": 2, "min_rank": 1, "location_ids": ["skallgard"], "title": "Suprimento sem dono", "description": "Os desgarrados passam fome. Consiga mantimentos em Skallgard sem chamar a guarda."},
+      {"id": "renegados_vingar_rito", "kind": "sabotagem", "tier": 2, "min_rank": 1, "target_faction_id": "clas_combate", "location_ids": ["sk_salao_do_jarl"], "title": "Estragar a vitrine do Clã", "description": "O Clã expõe no salão do jarl os troféus que prendem os jovens a ele. Os desgarrados querem isso desfeito."}
+    ]
+  },
+  "bandos_orc_saidas_baixas": {"accepts": "nao"},
+  "goblins_mineiros": {"accepts": "nao"},
+  "ultimos_anoes_reino": {
+    "accepts": "sim",
+    "secret": false,
+    "exit_policy": "livre",
+    "hq_location_ids": ["ma_forja_profunda"],
+    "recruiter_npc_ids": ["npc_durgrim_ultimo_martelo"],
+    "requirements": {"min_reputation_steps": 0},
+    "exclusive_with": [],
+    "rivals": ["goblins_mineiros"],
+    "ranks": [
+      {"id": "contratado", "name": "Contratado", "merit": 0, "min_level": 1},
+      {"id": "guia_profundezas", "name": "Guia das Profundezas", "merit": 4, "min_level": 3},
+      {"id": "guardiao_registros", "name": "Guardião dos Registros", "merit": 10, "min_level": 5}
+    ],
+    "rank_cap": [],
+    "perks_by_rank": {
+      "0": [{"type": "abrigo"}],
+      "1": [{"type": "informacao"}],
+      "2": [{"type": "desconto", "mult": 0.85}]
+    },
+    "quartermaster": {},
+    "mission_templates": [
+      {"id": "anoes_mapear_veio", "kind": "apoio", "tier": 1, "min_rank": 0, "location_ids": ["ma_boca"], "title": "Mapear um veio abandonado", "description": "Os anões precisam descer onde já não podem mais. Mapeie o veio perto da boca da montanha."},
+      {"id": "anoes_resgatar_registro", "kind": "apoio", "tier": 2, "min_rank": 1, "location_ids": ["ma_saidas_baixas"], "title": "Resgatar um registro soterrado", "description": "Um livro de linhagens ficou nas galerias baixas. Os últimos anões não o deixam perdido."},
+      {"id": "anoes_tapar_tunel", "kind": "sabotagem", "tier": 2, "min_rank": 1, "target_faction_id": "goblins_mineiros", "location_ids": ["ma_boca"], "title": "Selar o túnel dos goblins", "description": "Os goblins cavam um atalho sob a forja. Os anões querem o túnel selado."}
+    ]
+  },
+  "druidas_ciclo_cinzento": {
+    "accepts": "sim",
+    "secret": false,
+    "exit_policy": "livre",
+    "hq_location_ids": ["pantano_melancolia"],
+    "recruiter_npc_ids": ["npc_arcante_gresh", "npc_nilo_folha_nova"],
+    "requirements": {"min_reputation_steps": 0, "never_member_of": ["druidas_renegados"]},
+    "exclusive_with": ["druidas_renegados"],
+    "rivals": ["druidas_renegados"],
+    "ranks": [
+      {"id": "aprendiz", "name": "Aprendiz", "merit": 0, "min_level": 1},
+      {"id": "irmao_ciclo", "name": "Irmão do Ciclo", "merit": 3, "min_level": 2},
+      {"id": "druida", "name": "Druida", "merit": 8, "min_level": 4},
+      {"id": "druida_senior", "name": "Druida Sênior", "merit": 14, "min_level": 6}
+    ],
+    "rank_cap": [],
+    "perks_by_rank": {
+      "0": [{"type": "abrigo"}],
+      "1": [{"type": "desconto", "mult": 0.9}, {"type": "intendente"}],
+      "2": [{"type": "informacao"}],
+      "3": [{"type": "desconto", "mult": 0.8}, {"type": "intercessao"}]
+    },
+    "quartermaster": {"erva_amarga": 0, "musgo_cinzento": 0, "po_do_sono_druida": 2},
+    "mission_templates": [
+      {"id": "druidas_colher_musgo", "kind": "apoio", "tier": 1, "min_rank": 0, "location_ids": ["pantano_melancolia"], "title": "Colher musgo para o chá", "description": "O chá dos druidas acaba antes da próxima maré. Colha musgo cinzento no pântano."},
+      {"id": "druidas_tratar_febris", "kind": "apoio", "tier": 2, "min_rank": 1, "location_ids": ["pm_cripta_afogada"], "title": "Levar remédio aos febris", "description": "Há infectados escondidos na cripta afogada. Leve o chá e volte com notícias."},
+      {"id": "druidas_cortar_raiz", "kind": "sabotagem", "tier": 2, "min_rank": 1, "target_faction_id": "druidas_renegados", "location_ids": ["pm_profundezas"], "title": "Cortar a raiz da melancolia", "description": "Os renegados cultivam um jardim de tumores nas profundezas. O Ciclo quer a raiz cortada."}
+    ]
+  },
+  "druidas_renegados": {
+    "accepts": "condicional",
+    "secret": true,
+    "exit_policy": "traicao",
+    "hq_location_ids": ["pm_profundezas"],
+    "recruiter_npc_ids": ["npc_saelwen_a_que_afundou"],
+    "requirements": {
+      "min_reputation_steps": 0,
+      "requires_any": [
+        {"kind": "traidor_de", "faction": "druidas_ciclo_cinzento"},
+        {"kind": "npc_met", "npc_id": "npc_saelwen_a_que_afundou", "min": 3}
+      ],
+      "converts_from": ["druidas_ciclo_cinzento"]
+    },
+    "exclusive_with": ["druidas_ciclo_cinzento"],
+    "rivals": ["druidas_ciclo_cinzento"],
+    "ranks": [
+      {"id": "ouvinte", "name": "Ouvinte", "merit": 0, "min_level": 1},
+      {"id": "afundado", "name": "Afundado", "merit": 4, "min_level": 3},
+      {"id": "jardineiro", "name": "Jardineiro de Tumores", "merit": 10, "min_level": 5}
+    ],
+    "rank_cap": [],
+    "perks_by_rank": {
+      "0": [{"type": "abrigo"}],
+      "1": [{"type": "informacao"}],
+      "2": [{"type": "passagem"}]
+    },
+    "quartermaster": {},
+    "mission_templates": [
+      {"id": "renegados_druid_escutar", "kind": "apoio", "tier": 1, "min_rank": 0, "location_ids": ["pm_profundezas"], "title": "Escutar a maré", "description": "Fique nas profundezas e ouça o que a melancolia sussurra. Saelwen quer o que você ouvir."},
+      {"id": "renegados_druid_semear", "kind": "apoio", "tier": 2, "min_rank": 1, "location_ids": ["pantano_melancolia"], "title": "Semear o jardim", "description": "Leve esporos ao pântano e deixe-os onde o Ciclo não costuma olhar."},
+      {"id": "renegados_druid_envenenar", "kind": "sabotagem", "tier": 2, "min_rank": 1, "target_faction_id": "druidas_ciclo_cinzento", "location_ids": ["pantano_melancolia"], "title": "Azedar o chá do Ciclo", "description": "O chá do Ciclo mantém a Praga calada. Os renegados querem o estoque estragado."}
+    ]
+  },
+  "tribos_devoradores_sol": {
+    "accepts": "condicional",
+    "secret": false,
+    "exit_policy": "desonra",
+    "hq_location_ids": ["deserto_zhur"],
+    "recruiter_npc_ids": ["npc_vasketh_o_que_duvida_do_sangue"],
+    "requirements": {"min_reputation_steps": 0, "origins_allowed": ["deserto_zhur"]},
+    "exclusive_with": [],
+    "rivals": ["bandos_nomades"],
+    "ranks": [
+      {"id": "sombra_cristal", "name": "Sombra do Cristal", "merit": 0, "min_level": 1},
+      {"id": "bebedor_memorias", "name": "Bebedor de Memórias", "merit": 4, "min_level": 3},
+      {"id": "herdeiro_sangue", "name": "Herdeiro do Sangue", "merit": 10, "min_level": 5}
+    ],
+    "rank_cap": [],
+    "perks_by_rank": {
+      "0": [{"type": "abrigo"}],
+      "1": [{"type": "informacao"}],
+      "2": [{"type": "passagem"}]
+    },
+    "quartermaster": {},
+    "mission_templates": [
+      {"id": "devoradores_fonte", "kind": "apoio", "tier": 1, "min_rank": 0, "location_ids": ["dz_borda_do_vazio"], "title": "Achar água na borda do vazio", "description": "A tribo precisa de água que ainda não esteja contaminada de cristal. Procure na borda do vazio."},
+      {"id": "devoradores_memoria", "kind": "apoio", "tier": 2, "min_rank": 1, "location_ids": ["deserto_zhur"], "title": "Trazer uma memória viva", "description": "Os anciões querem uma lembrança fresca do deserto. Ouça quem ainda a carrega e volte."},
+      {"id": "devoradores_afugentar", "kind": "sabotagem", "tier": 2, "min_rank": 1, "target_faction_id": "bandos_nomades", "location_ids": ["pradaria_ruinas"], "title": "Afugentar batedores nômades", "description": "Batedores nômades rondam o limite do deserto. A tribo quer a rota deles quebrada."}
+    ]
+  },
+  "colmeia_hospedeiros": {"accepts": "nao"},
+  "cultistas_destilacao": {
+    "accepts": "condicional",
+    "secret": true,
+    "exit_policy": "traicao",
+    "hq_location_ids": ["ae_ruinas_submersas"],
+    "recruiter_npc_ids": ["npc_corvane_o_mestre_destilador"],
+    "requirements": {
+      "min_reputation_steps": 0,
+      "classes_allowed": ["Arcanista Cinzento", "Sangromante", "Corruptor"]
+    },
+    "exclusive_with": [],
+    "rivals": ["cidades_estado_sobreviventes_vaelorn_solvhen"],
+    "ranks": [
+      {"id": "coletor", "name": "Coletor", "merit": 0, "min_level": 1},
+      {"id": "acolito_destilador", "name": "Acólito-Destilador", "merit": 4, "min_level": 3},
+      {"id": "destilador", "name": "Destilador", "merit": 10, "min_level": 5}
+    ],
+    "rank_cap": [],
+    "perks_by_rank": {
+      "0": [{"type": "abrigo"}],
+      "1": [{"type": "informacao"}],
+      "2": [{"type": "passagem"}]
+    },
+    "quartermaster": {},
+    "mission_templates": [
+      {"id": "cultistas_coletar", "kind": "apoio", "tier": 1, "min_rank": 0, "location_ids": ["ae_ruinas_submersas"], "title": "Coletar éter nas ruínas", "description": "A Destilação precisa de matéria-prima das ruínas submersas. Colete o que o éter deixou."},
+      {"id": "cultistas_camara", "kind": "apoio", "tier": 2, "min_rank": 1, "location_ids": ["ae_camara_seca"], "title": "Examinar a câmara seca", "description": "Corvane quer saber o que a câmara seca guarda antes que alguém a tome."},
+      {"id": "cultistas_perturbar", "kind": "sabotagem", "tier": 2, "min_rank": 1, "target_faction_id": "cidades_estado_sobreviventes_vaelorn_solvhen", "location_ids": ["pr_solvhen"], "title": "Perturbar o relógio de Solvhen", "description": "Solvhen guarda um instrumento que atrapalha a Destilação. O culto o quer parado."}
+    ]
+  },
+  "poder_kahen": {
+    "accepts": "sim",
+    "secret": false,
+    "exit_policy": "traicao",
+    "hq_location_ids": ["brekmar"],
+    "recruiter_npc_ids": ["npc_veu_de_sangue"],
+    "requirements": {"min_reputation_steps": 1},
+    "exclusive_with": ["grupos_piratas_rivais"],
+    "rivals": ["grupos_piratas_rivais"],
+    "ranks": [
+      {"id": "agente_poco", "name": "Agente do Poço", "merit": 0, "min_level": 1},
+      {"id": "executor", "name": "Executor", "merit": 5, "min_level": 3},
+      {"id": "sangue_leal", "name": "Sangue-Leal", "merit": 12, "min_level": 6}
+    ],
+    "rank_cap": [{"classes_except": ["Sangromante"], "max_index": 1}],
+    "perks_by_rank": {
+      "0": [{"type": "abrigo"}],
+      "1": [{"type": "desconto", "mult": 0.9}, {"type": "intendente"}],
+      "2": [{"type": "informacao"}, {"type": "intercessao"}]
+    },
+    "quartermaster": {"anel_ferro_negro": 1, "adaga_serrilhada": 1, "pocao_cura_maior": 2},
+    "mission_templates": [
+      {"id": "kahen_cobrar_divida", "kind": "apoio", "tier": 1, "min_rank": 0, "location_ids": ["bk_docas_velhas"], "title": "Cobrar uma dívida do Poço", "description": "Alguém nas docas velhas deve ao Poço das Dívidas. Faça o devedor lembrar."},
+      {"id": "kahen_escolta_carga", "kind": "apoio", "tier": 2, "min_rank": 1, "location_ids": ["brekmar"], "title": "Escoltar a carga de Kahen", "description": "Uma carga do Poder de Kahen cruza Brekmar sem que ninguém deva saber o que leva."},
+      {"id": "kahen_afundar_barco", "kind": "sabotagem", "tier": 2, "min_rank": 1, "target_faction_id": "grupos_piratas_rivais", "location_ids": ["bk_docas_velhas"], "title": "Furar o casco de um pirata rival", "description": "Um barco dos piratas rivais atraca nas docas velhas. Kahen o quer parado."}
+    ]
+  },
+  "grupos_piratas_rivais": {
+    "accepts": "sim",
+    "secret": false,
+    "exit_policy": "livre",
+    "hq_location_ids": ["brekmar"],
+    "recruiter_npc_ids": ["npc_capita_tormenta_ruiva"],
+    "requirements": {"min_reputation_steps": 0},
+    "exclusive_with": ["poder_kahen"],
+    "rivals": ["poder_kahen"],
+    "ranks": [
+      {"id": "grumete", "name": "Grumete", "merit": 0, "min_level": 1},
+      {"id": "marujo", "name": "Marujo", "merit": 3, "min_level": 2},
+      {"id": "contramestre", "name": "Contramestre", "merit": 8, "min_level": 4},
+      {"id": "imediato", "name": "Imediato", "merit": 14, "min_level": 6}
+    ],
+    "rank_cap": [],
+    "perks_by_rank": {
+      "0": [{"type": "abrigo"}],
+      "1": [{"type": "desconto", "mult": 0.9}, {"type": "intendente"}],
+      "2": [{"type": "informacao"}],
+      "3": [{"type": "desconto", "mult": 0.8}]
+    },
+    "quartermaster": {"luneta_marinheiro": 0, "oleo_incendiario": 1, "bomba_de_trovao": 2},
+    "mission_templates": [
+      {"id": "piratas_vigiar_cais", "kind": "apoio", "tier": 1, "min_rank": 0, "location_ids": ["bk_docas_velhas"], "title": "Vigiar o cais ao anoitecer", "description": "A capitã quer saber quem desembarca nas docas velhas depois do sino."},
+      {"id": "piratas_contrabando", "kind": "apoio", "tier": 2, "min_rank": 1, "location_ids": ["brekmar"], "title": "Passar contrabando pela Boca do Fundo", "description": "Uma caixa precisa entrar em Brekmar sem passar por quem cobra o Poço."},
+      {"id": "piratas_cortar_cabo", "kind": "sabotagem", "tier": 2, "min_rank": 1, "target_faction_id": "poder_kahen", "location_ids": ["brekmar"], "title": "Cortar o cabo de Kahen", "description": "Os cabos que prendem os navios de Kahen estão à vista. A capitã quer um deles solto."}
+    ]
+  },
+  "osshari_brekmar": {
+    "accepts": "condicional",
+    "secret": false,
+    "exit_policy": "desonra",
+    "hq_location_ids": ["bk_docas_velhas"],
+    "recruiter_npc_ids": ["npc_mare_funda", "npc_corrente_nova"],
+    "requirements": {"min_reputation_steps": 0, "races_allowed": ["race_osshari"]},
+    "exclusive_with": [],
+    "rivals": [],
+    "ranks": [
+      {"id": "filho_mare", "name": "Filho da Maré", "merit": 0, "min_level": 1},
+      {"id": "arpoador", "name": "Arpoador", "merit": 4, "min_level": 3},
+      {"id": "guardiao_ossario", "name": "Guardião do Ossário", "merit": 10, "min_level": 5}
+    ],
+    "rank_cap": [],
+    "perks_by_rank": {
+      "0": [{"type": "abrigo"}],
+      "1": [{"type": "informacao"}],
+      "2": [{"type": "intercessao"}]
+    },
+    "quartermaster": {},
+    "mission_templates": [
+      {"id": "osshari_ossos", "kind": "apoio", "tier": 1, "min_rank": 0, "location_ids": ["bk_docas_velhas"], "title": "Recolher ossos trazidos pela maré", "description": "A maré devolve ossos de leviatã. O povo da água quer cada um recolhido com respeito."},
+      {"id": "osshari_vigia", "kind": "apoio", "tier": 2, "min_rank": 1, "location_ids": ["brekmar"], "title": "Vigiar a água suja", "description": "Algo contamina o porto. Os Osshari querem saber de onde vem."},
+      {"id": "osshari_arpoar_ancora", "kind": "sabotagem", "tier": 2, "min_rank": 1, "target_faction_id": "poder_kahen", "location_ids": ["brekmar"], "title": "Prender a âncora de Kahen", "description": "Navios de Kahen ancoram em água sagrada. O povo Osshari quer a âncora presa no fundo."}
+    ]
+  },
+  "bandos_nomades": {
+    "accepts": "sim",
+    "secret": false,
+    "exit_policy": "livre",
+    "hq_location_ids": ["pradaria_ruinas"],
+    "recruiter_npc_ids": ["npc_haldric_o_capitao_cinza", "npc_kaarg_osso_pintado"],
+    "requirements": {"min_reputation_steps": 0},
+    "exclusive_with": ["cidades_estado_sobreviventes_vaelorn_solvhen"],
+    "rivals": ["cidades_estado_sobreviventes_vaelorn_solvhen"],
+    "ranks": [
+      {"id": "batedor", "name": "Batedor", "merit": 0, "min_level": 1},
+      {"id": "cavaleiro", "name": "Cavaleiro", "merit": 3, "min_level": 2},
+      {"id": "capitao_bando", "name": "Capitão de Bando", "merit": 9, "min_level": 5}
+    ],
+    "rank_cap": [],
+    "perks_by_rank": {
+      "0": [{"type": "abrigo"}],
+      "1": [{"type": "informacao"}],
+      "2": [{"type": "passagem"}]
+    },
+    "quartermaster": {},
+    "mission_templates": [
+      {"id": "nomades_batedor", "kind": "apoio", "tier": 1, "min_rank": 0, "location_ids": ["pr_ruinas_assombradas"], "title": "Bater as ruínas assombradas", "description": "O bando precisa saber se as ruínas assombradas estão livres para o acampamento."},
+      {"id": "nomades_cavalos", "kind": "apoio", "tier": 2, "min_rank": 1, "location_ids": ["pradaria_ruinas"], "title": "Levar cavalos ao outro bando", "description": "Um acordo de cavalos entre bandos precisa ser entregue sem atrasos."},
+      {"id": "nomades_saque", "kind": "sabotagem", "tier": 2, "min_rank": 1, "target_faction_id": "cidades_estado_sobreviventes_vaelorn_solvhen", "location_ids": ["pr_vaelorn"], "title": "Atrapalhar o comboio de Vaelorn", "description": "Vaelorn envia um comboio à fronteira. O bando quer que ele chegue tarde."}
+    ]
+  },
+  "mercadores_escravos_pradaria": {"accepts": "nao"},
+  "cidades_estado_sobreviventes_vaelorn_solvhen": {
+    "accepts": "sim",
+    "secret": false,
+    "exit_policy": "livre",
+    "hq_location_ids": ["pr_vaelorn", "pr_solvhen"],
+    "recruiter_npc_ids": ["npc_lady_aerwen", "npc_keeper_morvan"],
+    "requirements": {"min_reputation_steps": 0, "never_member_of": ["mercadores_escravos_pradaria"]},
+    "exclusive_with": ["bandos_nomades"],
+    "rivals": ["mercadores_escravos_pradaria", "bandos_nomades"],
+    "ranks": [
+      {"id": "amigo_cidade", "name": "Amigo da Cidade", "merit": 0, "min_level": 1},
+      {"id": "guarda_ampulheta", "name": "Guarda da Ampulheta", "merit": 4, "min_level": 3},
+      {"id": "protetor_cidades", "name": "Protetor das Cidades", "merit": 10, "min_level": 5}
+    ],
+    "rank_cap": [],
+    "perks_by_rank": {
+      "0": [{"type": "abrigo"}],
+      "1": [{"type": "desconto", "mult": 0.9}, {"type": "intendente"}],
+      "2": [{"type": "informacao"}, {"type": "desconto", "mult": 0.8}]
+    },
+    "quartermaster": {"pocao_cura": 0, "kit_medico": 0, "escudo_de_aco": 2},
+    "mission_templates": [
+      {"id": "cidades_ronda_muro", "kind": "apoio", "tier": 1, "min_rank": 0, "location_ids": ["pr_vaelorn"], "title": "Ronda no muro de Vaelorn", "description": "O muro de Vaelorn tem brechas. Percorra-o e anote cada uma."},
+      {"id": "cidades_mensagem", "kind": "apoio", "tier": 2, "min_rank": 1, "location_ids": ["pr_solvhen"], "title": "Levar a mensagem a Solvhen", "description": "Vaelorn e Solvhen precisam coordenar a defesa. Leve a mensagem em mãos."},
+      {"id": "cidades_quebrar_trafico", "kind": "sabotagem", "tier": 2, "min_rank": 1, "target_faction_id": "mercadores_escravos_pradaria", "location_ids": ["pr_ruinas_assombradas"], "title": "Quebrar a rota dos traficantes", "description": "Traficantes usam as ruínas assombradas como pouso. As cidades querem essa rota interrompida."}
+    ]
+  }
+}

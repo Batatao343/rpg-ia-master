@@ -344,8 +344,31 @@ def ensure_factions(factions) -> list:
         f.setdefault("disposition", "neutro")
         f.setdefault("reputation", 0)
         f.setdefault("completed", False)
+        # SPEC-301 R23: contra-jogo do jogador; save antigo = 0 (relógio linear de sempre).
+        f.setdefault("influence", 0)
+        f.setdefault("influence_periods", 0)
         out.append(f)
     return out
+
+
+# SPEC-301 R14: influência do jogador sobre o relógio de uma fação.
+INFLUENCE_MAX = 9
+INFLUENCE_PACE_DIV = 3  # +-9 de influência => +-3 de pace
+INFLUENCE_DECAY_PERIODS = 4  # a cada N períodos avançados a influência recua 1 rumo a 0
+
+
+def clamp_influence(value) -> int:
+    try:
+        v = int(value)
+    except (TypeError, ValueError):
+        v = 0
+    return max(-INFLUENCE_MAX, min(INFLUENCE_MAX, v))
+
+
+def effective_pace(faction: dict) -> int:
+    """Pace efetivo = pace + influência/3 (truncado rumo a 0), piso 0. Influência 0 = legado."""
+    infl = clamp_influence(faction.get("influence", 0))
+    return max(0, int(faction.get("pace", 3)) + int(infl / INFLUENCE_PACE_DIV))
 
 
 def advance_factions(factions, periods: int = 1) -> tuple[list, list]:
@@ -365,7 +388,24 @@ def advance_factions(factions, periods: int = 1) -> tuple[list, list]:
     for f in factions:
         f = dict(f)
         if not f.get("completed", False) and not f.get("defeated", False):
-            f["progress"] = min(100, f.get("progress", 0) + f.get("pace", 3) * periods)
+            infl = clamp_influence(f.get("influence", 0))
+            if infl == 0:
+                f["influence_periods"] = 0
+                f["progress"] = min(100, f.get("progress", 0) + f.get("pace", 3) * periods)
+            else:
+                # SPEC-301 R14: pace efetivo + decadência da influência (acumulador de períodos).
+                for idx in range(periods):
+                    f["progress"] = min(100, f.get("progress", 0) + effective_pace(f))
+                    acc = int(f.get("influence_periods", 0) or 0) + 1
+                    if acc >= INFLUENCE_DECAY_PERIODS:
+                        acc = 0
+                        f["influence"] = infl = infl - (1 if infl > 0 else -1)
+                    f["influence_periods"] = acc
+                    if infl == 0:
+                        f["influence_periods"] = 0
+                        rest = periods - (idx + 1)
+                        f["progress"] = min(100, f.get("progress", 0) + f.get("pace", 3) * rest)
+                        break
             if f["progress"] >= 100 and not f.get("completed", False):
                 f["completed"] = True
                 events.append(
@@ -678,10 +718,13 @@ def decay_danger_overrides(world: dict) -> dict:
     return world
 
 
-def _hostile_ruler(world: dict, factions, loc_id: str):
-    """Retorna a facção HOSTIL que domina o local atual, ou None."""
+def _hostile_ruler(world: dict, factions, loc_id: str, exempt=()):
+    """Retorna a facção HOSTIL que domina o local atual, ou None.
+
+    ``exempt``: ids de fações cujo domínio não conta como hostil (SPEC-301 perk
+    ``passagem`` — o membro atravessa o território da própria fação)."""
     fid = (world.get("controlled") or {}).get(loc_id)
-    if not fid:
+    if not fid or fid in (exempt or ()):
         return None
     for f in ensure_factions(factions):
         if f.get("id") == fid and f.get("disposition") == "hostil":
@@ -1001,6 +1044,7 @@ def check_encounter(
     projection: dict = None,
     player_level: int = 1,
     law_hint: dict | None = None,
+    exempt_factions=(),
 ):
     """
     Gatilho DETERMINÍSTICO de encontro ao entrar/descansar num local perigoso.
@@ -1027,7 +1071,7 @@ def check_encounter(
     loc_id = world.get("current_location_id", "")
     danger = _effective_danger(world, loc_id)
     threat = world.get("looming_threat")
-    ruler = _hostile_ruler(world, factions, loc_id)
+    ruler = _hostile_ruler(world, factions, loc_id, exempt_factions)
     loc = gamedata.get_location(loc_id) or {}
     region = loc.get("region", world.get("current_location", "a região"))
 

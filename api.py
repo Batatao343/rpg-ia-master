@@ -2218,6 +2218,7 @@ def _format_response_raw(state: dict, *, cue_action_key: str | None = None) -> G
             (state.get("world", {}) or {}).get("turn_count", 0),
             state.get("event_log", []) or [],
             state.get("world_projection", {}) or {},
+            state=state,
         ),
         death_pending=bool(state.get("death_pending", False)),
         game_over=bool(state.get("game_over", False)),
@@ -2577,6 +2578,7 @@ def _factions_block(
     turn: int = 0,
     event_log: list | None = None,
     projection: dict | None = None,
+    state: dict | None = None,
 ) -> list[dict[str, Any]]:
     """
     Fações para o HUD — não-onisciência: só as que o jogador CONHECE (intel.known).
@@ -2600,6 +2602,12 @@ def _factions_block(
         intel_turn = rec.get("intel_turn")
         stale = seen is not None and isinstance(intel_turn, int) and int(turn) > int(intel_turn)
         fid = f.get("id", "")
+        # SPEC-301 R22: vínculo só como rótulos/texto (nunca mérito, influência ou awareness).
+        membership = None
+        if state is not None and state.get("faction_membership"):
+            from services.faction_membership import membership_view
+
+            membership = membership_view(state, fid)
         out.append(
             {
                 "id": fid,
@@ -2615,6 +2623,7 @@ def _factions_block(
                 "recent_changes": _recent_changes(f),
                 "completed": bool(f.get("completed", False)),
                 "stability_label": sv.stability_label(projection or {}, fid),
+                **({"membership": membership} if membership else {}),
             }
         )
     return out

@@ -459,6 +459,16 @@ export interface FactionView {
   recent_changes: RecentChange[];
   completed: boolean;
   stability_label: "estável" | "instável" | "em colapso"; // Fase 3.4: nunca o número interno
+  membership?: FactionMembershipView; // SPEC-301: só se o jogador tem/teve vínculo
+}
+
+// SPEC-301 R22: vínculo do jogador com a fação — só rótulos e texto (sem mérito/influência).
+export interface FactionMembershipView {
+  status: string;
+  rank_name: string;
+  standing_label: string;
+  perks: string[];
+  active_mission_id: string;
 }
 
 export interface ChronicleEntry {

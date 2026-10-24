@@ -137,6 +137,19 @@ def _v_faction_deed(ev: ProposedWorldEvent, state: dict, proj: dict) -> Validati
     return ValidationResult(True)
 
 
+def _v_faction_membership_changed(
+    ev: ProposedWorldEvent, state: dict, proj: dict
+) -> ValidationResult:
+    """SPEC-301: evento do motor. Sanidade: fação do catálogo e ação do enum fechado."""
+    from services import faction_membership as fm
+
+    if ev.target_id not in fm.load_catalog():
+        return ValidationResult(False, f"{ev.target_id} não é fação com vínculo")
+    if ev.payload.get("action") not in fm.ACTIONS:
+        return ValidationResult(False, "payload.action inválido")
+    return ValidationResult(True)
+
+
 def _v_level_up(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
     """Fase 4.1: evento do motor (grant_xp). O gate anti-LLM (source='progression')
     fica em validate_proposal; aqui só sanidade do payload."""
@@ -563,6 +576,7 @@ _VALIDATORS = {
     "faction_relation_changed": _v_faction_relation_changed,
     "reputation_changed": _v_reputation_changed,
     "faction_deed": _v_faction_deed,
+    "faction_membership_changed": _v_faction_membership_changed,
     "level_up": _v_level_up,
     "subclass_chosen": _v_progression_choice,
     "class_apex_unlocked": _v_progression_choice,
@@ -611,6 +625,11 @@ def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
     # SPEC-299: crime/pena nascem na lei (Python), nunca de proposta do LLM.
     if ev.type in ("crime_witnessed", "law_resolved") and proposal.get("source") != "law":
         return ValidationResult(False, f"{ev.type} é gerado pelo motor, não proposto")
+    # SPEC-301: vínculo com fação é decidido por Python (apply_intent), nunca pelo LLM.
+    if ev.type == "faction_membership_changed" and proposal.get("source") != "engine":
+        return ValidationResult(
+            False, "faction_membership_changed é gerado pelo motor, não proposto"
+        )
     # Fase 6.2: posse de item único é observada pelo motor, nunca proposta.
     if (
         ev.type in ("unique_item_claimed", "unique_item_lost")

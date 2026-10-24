@@ -362,6 +362,30 @@ def process_pending_events(state: dict) -> dict:
             )
             chronicle_changed = True
 
+    # SPEC-301: estado de fação (vínculo/influência/intel/jogador) tocado por missões e
+    # reputação neste lote; mesclado em `updates` no fim. Notas viram avisos do turno.
+    fm_over: dict = {}
+    fm_notes: list[tuple[str, str]] = []
+
+    def _fm_state() -> dict:
+        return {**state, "quests": quests, **fm_over}
+
+    def _apply_fm(result: tuple[dict, list[dict], str], fid: str = "") -> None:
+        nonlocal quests, quests_changed
+        upd, props, note = result
+        for key, value in upd.items():
+            if key == "quests":
+                quests = value
+                quests_changed = True
+            else:
+                fm_over[key] = value
+        for prop in props:
+            fm_ev = _build_event(prop, turn)
+            event_log.append(fm_ev)
+            _chronicle_milestone(fm_ev, projection)
+        if note:
+            fm_notes.append((fid, note))
+
     # Estado de trabalho: valida cada proposta contra o já-aplicado nesta rodada
     # (pega duplicatas dentro do mesmo lote).
     working = dict(state)
@@ -419,6 +443,15 @@ def process_pending_events(state: dict) -> dict:
                 quests_changed = True
                 if was_active:  # SPEC-226 R2: XP só na transição real
                     quests_completed += 1
+                    if origem and origem.get("faction_id"):
+                        # SPEC-301 R12: mérito, promoção, contra-jogo e rito de entrada.
+                        from services import faction_membership
+
+                        done_q = next((q for q in quests if q.get("id") == qid), origem)
+                        _apply_fm(
+                            faction_membership.on_mission_completed(_fm_state(), done_q),
+                            str(origem.get("faction_id")),
+                        )
                 working["quests"] = quests
 
         _log_event(
@@ -451,6 +484,12 @@ def process_pending_events(state: dict) -> dict:
                     event_log.append(qf)
                     _log_event("quest", "failed", level="info")
                     _chronicle_milestone(qf, projection)
+                    failed_id = (qf.get("payload") or {}).get("quest_id")
+                    failed_q = next((q for q in quests if q.get("id") == failed_id), None)
+                    if failed_q and failed_q.get("faction_id"):
+                        from services import faction_membership
+
+                        fm_over.update(faction_membership.on_mission_failed(_fm_state(), failed_q))
 
     updates = {
         "event_log": event_log,
@@ -464,7 +503,8 @@ def process_pending_events(state: dict) -> dict:
         from progression import XP_PER_QUEST, grant_xp
 
         player, lvl_props = grant_xp(
-            dict(state.get("player") or {}), XP_PER_QUEST * quests_completed
+            dict(fm_over.get("player") or state.get("player") or {}),
+            XP_PER_QUEST * quests_completed,
         )
         player["gold"] = int(player.get("gold", 0) or 0) + quest_reward_gold
         updates["player"] = player
@@ -496,13 +536,15 @@ def process_pending_events(state: dict) -> dict:
                     "event_log": event_log,
                     "world_projection": projection,
                     "quests": quests,
+                    **fm_over,
                 },
                 accepted_events,
             )
         except Exception as exc:  # silent-ok: reputação nunca derruba o turno
             _log_event("reputation", "process_failed", level="warning", error=type(exc).__name__)
             rep = {}
-        for rep_prop in rep.pop("reputation_events", []) or []:
+        rep_props = rep.pop("reputation_events", []) or []
+        for rep_prop in rep_props:
             rep_event = _build_event(rep_prop, turn)
             event_log.append(rep_event)
             _chronicle_milestone(rep_event, projection)
@@ -510,6 +552,29 @@ def process_pending_events(state: dict) -> dict:
             updates.update(rep)
             if chronicle_changed:
                 updates["chronicle"] = chronicle
+        if rep_props and "factions" in rep:
+            # SPEC-301 R15/R18: reputação APLICADA move a influência (±1) e, contra a
+            # própria fação, vira ofensa (suspeito -> traição). Sem proposta aceita, nada.
+            from services import faction_membership
+
+            factions_now = rep["factions"]
+            for rep_prop in rep_props:
+                fid = str(rep_prop.get("target_id") or "")
+                delta = int((rep_prop.get("payload") or {}).get("delta") or 0)
+                if fid and delta:
+                    factions_now = faction_membership.bump_influence(
+                        factions_now, fid, 1 if delta > 0 else -1
+                    )
+            fm_over["factions"] = factions_now
+            for rep_prop in rep_props:
+                fid = str(rep_prop.get("target_id") or "")
+                delta = int((rep_prop.get("payload") or {}).get("delta") or 0)
+                if delta < 0 and faction_membership.is_member(_fm_state(), fid):
+                    _apply_fm(faction_membership.register_offense(_fm_state(), fid), fid)
+    if state.get("faction_membership") or fm_over.get("faction_membership"):
+        from services import faction_membership
+
+        _apply_fm(faction_membership.check_expulsion(_fm_state()))
 
     if killed_targets:
         from services.npc_layers import apply_npc_death
@@ -523,6 +588,19 @@ def process_pending_events(state: dict) -> dict:
             updates["npcs"] = npcs_now
         if party_now != (state.get("party") or []):
             updates["party"] = party_now
+    if fm_over:
+        for key, value in fm_over.items():
+            if key == "player" and "player" in updates:
+                continue  # grant_xp já partiu do jogador atualizado
+            updates[key] = value
+    if fm_notes:
+        notices = list(updates.get("reputation_notices", state.get("reputation_notices")) or [])
+        known = _fm_state().get("faction_intel") or {}
+        for fid, text in fm_notes:
+            if fid and not (known.get(fid) or {}).get("known"):
+                continue
+            notices.append({"kind": "faction", "subject_id": fid, "text": text, "turn": turn})
+        updates["reputation_notices"] = notices[-16:]
     if chronicle_changed:
         updates["chronicle"] = chronicle
     if quests_changed:

@@ -276,6 +276,35 @@ def _mock_crime_claims(messages) -> list:
     return [{"crime_type": "furto", "victim": "local", "covert": True}]
 
 
+_MOCK_MEMBERSHIP_FACTIONS = {
+    "legi": "legiao_ferro",
+    "druidas": "druidas_ciclo_cinzento",
+    "kahen": "poder_kahen",
+    "pirata": "grupos_piratas_rivais",
+    "anões": "ultimos_anoes_reino",
+    "anoes": "ultimos_anoes_reino",
+    "nômades": "bandos_nomades",
+    "nomades": "bandos_nomades",
+    "cidades": "cidades_estado_sobreviventes_vaelorn_solvhen",
+}
+
+
+def _mock_membership(txt: str) -> dict | None:
+    """SPEC-301: o mock só propõe vínculo quando o jogador PEDE explicitamente
+    (perfil `faccionario`); sem pedido, o campo fica vazio como no LLM real."""
+    action = ""
+    if any(k in txt for k in ("me alist", "quero entrar", "ingresso n")):
+        action = "join"
+    elif any(k in txt for k in ("deixo a ", "deixo o ", "abandono a ", "saio d")):
+        action = "leave"
+    elif any(k in txt for k in ("peço uma missão", "peco uma missao", "tem alguma missão")):
+        action = "ask_mission"
+    if not action:
+        return None
+    fid = next((v for k, v in _MOCK_MEMBERSHIP_FACTIONS.items() if k in txt), "")
+    return {"action": action, "faction_id": fid} if fid else None
+
+
 def _story_update(model, messages):
     narrative = random.choice(_NARRATIVES).format(acao_eco=_acao_eco(messages))
     # Fase 2: sem chave, deixa a reputação reagir a palavras-chave (jogável offline).
@@ -337,6 +366,7 @@ def _story_update(model, messages):
             "narrative": narrative,
             "introduced_npcs": [],
             "faction_impacts": impacts,
+            "membership_action": _mock_membership(txt),
             "proposed_quests": quests,
             "proposed_events": proposed_events,
             "crime_claims": _mock_crime_claims(messages),
@@ -458,6 +488,7 @@ def _npc_response(model, messages):
             "memory_update": "Conversou com o herói.",
             "relationship_change": 1 if friendly else random.choice([-1, 0, 0, 1]),
             "faction_reveals": reveals,
+            "membership_action": _mock_membership(txt),
             "proposed_quests": quests,
             "crime_claims": _mock_crime_claims(messages),
         },

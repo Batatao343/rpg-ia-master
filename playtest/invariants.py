@@ -1991,6 +1991,81 @@ def check_world_engine(state: dict, prev: dict | None, turn: int) -> list[Violat
     days = [e.get("day") for e in sim.get("tick_log") or [] if not e.get("capped")]
     if len(days) != len(set(days)):
         out.append(_V("world.day_ticked_twice", "error", turn, "dia simulado mais de uma vez"))
+
+
+def check_faction_membership(state: dict, prev: dict | None, turn: int) -> list[Violation]:
+    """SPEC-301: vínculo com fações (limite, fações fechadas, patente monótona, influência)."""
+    out: list[Violation] = []
+    records = state.get("faction_membership") or {}
+    if not isinstance(records, dict):
+        return [_V("faction.membership_shape", "error", turn, "faction_membership não é dict")]
+    from services import faction_membership as fm
+
+    catalog = fm.load_catalog()
+    open_rows = {
+        fid: r
+        for fid, r in records.items()
+        if isinstance(r, dict) and r.get("status") in fm.OPEN_STATUSES
+    }
+    if len(open_rows) > fm.MAX_MEMBERSHIPS:
+        out.append(
+            _V(
+                "faction.membership_count_le_2",
+                "error",
+                turn,
+                f"{len(open_rows)} vínculos abertos (máx. {fm.MAX_MEMBERSHIPS})",
+            )
+        )
+    for fid in records:
+        if (catalog.get(fid) or {}).get("accepts") not in ("sim", "condicional"):
+            out.append(
+                _V(
+                    "faction.no_membership_in_closed",
+                    "error",
+                    turn,
+                    f"{fid}: vínculo em fação que não aceita membros",
+                )
+            )
+    prev_rows = (prev or {}).get("faction_membership") or {}
+    for fid, row in records.items():
+        before = prev_rows.get(fid) or {}
+        if (
+            before
+            and row.get("status") in fm.ACTIVE_STATUSES
+            and before.get("status") in fm.ACTIVE_STATUSES
+            and row.get("joined_day") == before.get("joined_day")
+            and int(row.get("rank_index", 0) or 0) < int(before.get("rank_index", 0) or 0)
+        ):
+            out.append(
+                _V(
+                    "faction.rank_monotonic_unless_expelled",
+                    "error",
+                    turn,
+                    f"{fid}: patente caiu sem expulsão/traição",
+                )
+            )
+    for f in state.get("factions") or []:
+        if not isinstance(f, dict):
+            continue
+        infl = f.get("influence", 0)
+        if isinstance(infl, (int, float)) and abs(infl) > 9:
+            out.append(
+                _V("faction.influence_bounded", "error", turn, f"{f.get('id')}: influência {infl}")
+            )
+        if (
+            isinstance(f.get("progress"), (int, float))
+            and f["progress"] >= 100
+            and not f.get("completed")
+            and not f.get("defeated")
+        ):
+            out.append(
+                _V(
+                    "faction.progress_le_99_outside_tick",
+                    "error",
+                    turn,
+                    f"{f.get('id')}: progresso 100 sem ascensão (missão não ascende fação)",
+                )
+            )
     return out
 
 
@@ -2080,6 +2155,7 @@ CHECKS: list[Check] = [
     check_companions,
     check_law,
     check_reputation,
+    check_faction_membership,
     check_vitals,
     check_vitality_consistency,
     check_wound_capacity,

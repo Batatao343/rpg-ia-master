@@ -54,6 +54,9 @@ EventType = Literal[
     # SPEC-299: lei e crime. SÓ o motor emite (source="law" exigido no validator).
     "crime_witnessed",
     "law_resolved",
+    # SPEC-301: vínculo do jogador com fação (join/promote/leave/betray/dissolve).
+    # SÓ o motor emite (source="engine" exigido no validator).
+    "faction_membership_changed",
 ]
 
 
