@@ -133,10 +133,14 @@ def _law_gate(state: GameState, world: dict, messages) -> dict | None:
     Sem confronto ou `RPG_LAW != on` devolve None e o router segue idêntico."""
     from services import law
 
-    if law.mode() != "on" or not (state.get("law_state") or {}).get("confrontation"):
+    if law.mode() != "on":
         return None
+    resolver = law.resolve_choice
+    if not (state.get("law_state") or {}).get("confrontation"):
+        # D2: "peço o registro (licença) do meu Éter" — gesto diegético de licença.
+        resolver = law.resolve_license_request
     try:
-        choice = law.resolve_choice(state, _last_human_text(messages))
+        choice = resolver(state, _last_human_text(messages))
     except Exception as exc:  # silent-ok: a lei nunca derruba o turno; segue o roteamento normal
         _log_event("law", "gate_failed", level="warning", error=type(exc).__name__)
         return None
@@ -146,6 +150,9 @@ def _law_gate(state: GameState, world: dict, messages) -> dict | None:
     payload = _base_route_payload(route, world)
     payload.update(choice)
     payload["next"] = route.value
+    if route == RouteType.STORY:
+        # P1-1: o turno foi resolvido pela lei; o storyteller NÃO reaplica viagem/descanso.
+        payload["law_gate_consumed"] = True
     return _tag(payload, "law_gate")
 
 

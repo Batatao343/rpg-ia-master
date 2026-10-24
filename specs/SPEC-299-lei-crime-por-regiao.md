@@ -825,7 +825,7 @@ trechos curtos da narração (sem PII).
 - Fora do que foi feito: resgate de prisioneiro por NPC aliado externo (só companheiro da party em espera); wiring de uma ação de jogador "comprar licença"; execução (vetada).
 - Perfil `criminoso` entra em `PROFILES` (15 perfis); invariantes `law.*` em `playtest/invariants.py`.
 
-**Medição (MockLLM):** 14 perfis x 50 turnos seed 21 com `RPG_LAW=off` e `on`: resultado idêntico (turnos, erros, violações, eventos, mortes, ouro, local final). `criminoso` seeds 21-26 x 100 turnos, `on`: 0 erro, 0 violação; crimes 8/14/18/9/18/10 (parte `unwitnessed`), relatos entregues 7/7/7/5/6/5, sinais mostrados 5/6/5/3/4/4, multa paga em 3 das 6 campanhas. Letalidade SPEC-285 (combate 200 turnos, seeds 21-22, off x on): ver hand-back.
+**Medição (MockLLM):** 14 perfis x 50 turnos seed 21 com `RPG_LAW=off` e `on`: resultado idêntico (turnos, erros, violações, eventos, mortes, ouro, local final). `criminoso` seeds 21-26 x 100 turnos, `on`: 0 erro, 0 violação; crimes 8/14/18/9/18/10 (parte `unwitnessed`), relatos entregues 7/7/7/5/6/5, sinais mostrados 5/6/5/3/4/4, multa paga em 3 das 6 campanhas. Letalidade SPEC-285 (`combate` x 200 turnos, seeds 21 e 22, MockLLM), `RPG_LAW=off` x `on`: resultados idênticos nas duas seeds (0 erro, 10 mortes e 4-5 eventos nas duas rodadas; M5 = 0 `combat.no_progress` em ambas). Como a lei não age sem crime aceito (R27), M1 (mortes por combate iniciado, meta <= 0,564) e M2 (mediana da 1ª queda >= 20) ficam exatamente os da `main`; o acréscimo de combates (guardas/caçadores) só existe para quem comete crime.
 
 **Smoke real (§6):** NÃO executado (sem chave/custo autorizado nesta sessão); pendente para o coordenador.
 
@@ -862,3 +862,13 @@ Todas as decisões abertas desta spec seguem o **default recomendado pelo autor*
 - D2 (substitui a proposta): `magia_ilegal` LIGADA no Código de Ferro, com REGISTRO — usar Éter em público sem licença é crime testemunhado; licença obtida por custo/patente (SPEC-301) ou usar escondido.
 - D5: crime grave = prisão (Oubliette, dias de jogo passam) com saídas: fuga, resgate ou suborno. Sem execução nem mutilação.
 - D6: suborno entra como saída mínima da prisão/confronto (detalhe [BALANCEAR]).
+
+**Revisão Sol (CHANGES_REQUIRED, 2026-10-24) e correções:**
+
+- P1-1: preso, intenção de viagem/fuga vira tentativa de fuga (rolagem 2d10 + Agilidade, crime `evasao`); o gate marca `law_gate_consumed` e o storyteller não reaplica viagem/descanso no turno; `imprisoned` não persiste fora da prisão.
+- P1-2: o gate entende negação por oração ("não me rendo", "jamais me entrego", "me recuso a pagar", "não fujo"); negado = não escolhe a opção (ataque explícito > conversa).
+- P1-3: `<LEI_NA_CENA>` e a dica de `crime_claims` usam a cena do DESTINO; sinais da origem não são marcados.
+- P2-1: léxico com formas verbais fechadas. P2-2: Lei dos Clãs, render-se = pagar a multa; sem ouro, expulsão sem `cacado`. P2-3: `shadow` só observa (sem fama, sem `crime_witnessed`). P2-4: "peço/compro o registro (licença)" no router chama `law.buy_license`; 1ª magia testemunhada mostra o sinal do registro. P2-6: concordância ("Soldados da Legião de Ferro"). P2-5: números acima; follow-up sugerido: derrota em `law_enforcement` => prisão em vez de morte.
+- P2-7: "byte a byte" em `off` vale para estado e saída; o texto do prompt ganha uma linha em branco e o schema ganha `crime_claims`.
+- `criminoso` entra em `PROFILES` (15 perfis): comparações com baselines de 14 perfis devem excluí-lo.
+- Testes: `tests/test_spec299_review_fixes.py` (34). Smoke real (§6) segue pendente.

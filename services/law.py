@@ -43,28 +43,34 @@ RECOGNITION_K = 0.01
 FAME_DELTA_INFAMY = 6  # infâmia local por crime relatado [BALANCEAR]
 HUNTER_BAND_DIVISOR = 50  # eff_danger = 1 + bounty // 50 [BALANCEAR]
 
-# R6.4: léxico por tipo de crime (texto dobrado: minúsculo, sem acento) [BALANCEAR]
+# R6.4: léxico por tipo de crime (texto dobrado: minúsculo, sem acento) [BALANCEAR].
+# Formas verbais FECHADAS: "furtivamente", "golpe de sorte" ou "fico encantado" não contam.
 _LEXICON: dict[str, re.Pattern[str]] = {
     "furto": re.compile(
-        r"\b(?:roub\w*|furt\w*|surrup\w*|afan\w*|rapin\w*|pungu\w*|"
-        r"bat\w*\s+(?:a\s+)?carteira|pego\s+escondid\w*|levo\s+sem\s+pagar|"
-        r"tomo\s+sem\s+pagar|me\s+aposs\w*)\b"
+        r"\b(?:roub(?:o|ar|ei|amos|ando)|furt(?:o|ar|ei|amos|ando)|surrup(?:io|iar|iei|iamos)|"
+        r"afan(?:o|ar|ei|amos)|rapin(?:o|ar|ei|amos)|pungu(?:eio|ear)|"
+        r"bat(?:o|er)\s+(?:a\s+)?carteira|pego\s+escondid[oa]|levo\s+sem\s+pagar|"
+        r"tomo\s+sem\s+pagar|me\s+aposs(?:o|ar))\b"
     ),
     "agressao": re.compile(
-        r"\b(?:soc[oa]\w*|esmurr\w*|agred\w*|esfaque\w*|apunhal\w*|golpe\w*|atac\w*|"
-        r"chut\w*|estrangul\w*|tapa|cabecad\w*|firo|ferir|espanc\w*|bato\s+n\w+)\b"
+        r"\b(?:soco|socar|socamos|esmurr(?:o|ar|amos)|agrid(?:o|ir)|esfaque(?:io|ar|amos)|"
+        r"apunhal(?:o|ar|amos)|golpe(?:io|ar|amos)|dou\s+um\s+golpe\s+(?:n[oa]|em)|"
+        r"ataco|atacar|atacamos|ataquei|chuto|chutar|estrangul(?:o|ar)|"
+        r"dou\s+um\s+(?:tapa|soco|chute|cabecada)|firo|ferir|espanc(?:o|ar)|bato\s+n[oa])\b"
     ),
     "homicidio": re.compile(
-        r"\b(?:mato|matar|matei|matamos|matando|assassin\w*|degol\w*|esfaque\w*|"
-        r"apunhal\w*|execut\w*|elimin\w*|tiro\s+a\s+vida|estrangul\w*)\b"
+        r"\b(?:mato|matar|matei|matamos|matando|assassin(?:o|ar|ei)|degol(?:o|ar|ei)|"
+        r"esfaque(?:io|ar)|apunhal(?:o|ar)|execut(?:o|ar)\s+(?:o|a)\s+\w+|"
+        r"elimin(?:o|ar)\s+(?:o|a)\s+\w+|tiro\s+a\s+vida|estrangul(?:o|ar))\b"
     ),
     "dano_propriedade": re.compile(
-        r"\b(?:quebr\w*|destru\w*|incendi\w*|ponho\s+fogo|queim\w*|arromb\w*|"
-        r"vandaliz\w*|racho|derrub\w*)\b"
+        r"\b(?:quebro|quebrar|quebrei|destruo|destruir|incendeio|incendiar|ponho\s+fogo|"
+        r"queimo|queimar|arrombo|arrombar|arrombei|vandaliz(?:o|ar)|racho|derrubo|derrubar)\b"
     ),
     "magia_ilegal": re.compile(
-        r"\b(?:magi\w*|feitic\w*|conjur\w*|eter|invoc\w*|encant\w*|ritual|"
-        r"bola\s+de\s+fogo|lanco\s+(?:um\s+)?\w*feitico)\b"
+        r"\b(?:lanc(?:o|ar)\s+(?:um\s+|uma\s+)?(?:feitico|magia)|conjuro|conjurar|invoco|invocar|"
+        r"(?:uso|usar|canalizo|libero)\s+(?:minha\s+|a\s+|o\s+)?(?:magia|eter)|"
+        r"bola\s+de\s+fogo|faco\s+um\s+ritual)\b"
     ),
 }
 
@@ -83,6 +89,23 @@ _ESCAPE_RE = re.compile(
     r"\b(?:escap\w*|fug\w*|fuj\w*|arromb\w*|serro|cavo|tento\s+sair|forco\s+a\s+(?:cela|grade))\b"
 )
 _RESCUE_RE = re.compile(r"\b(?:resgat\w*|chamo\s+(?:meus|os)\s+(?:companheiros|aliados)|socorro)\b")
+_LICENSE_RE = re.compile(
+    r"\b(?:pe[cç]o|pedir|compro|comprar|pago|pagar|solicito|requeiro|faco|fazer|tiro|tirar)\b"
+    r"[^.!?]*\b(?:registro|licenca)\b"
+)
+_NEGATORS = frozenset({"nao", "jamais", "nunca", "recuso", "recusar", "recusa", "nem", "evito"})
+_CLAUSE_END = re.compile(r"[.!?;,:]|\be\b|\bmas\b")
+
+
+def _affirmed(pattern: re.Pattern[str], folded: str) -> bool:
+    """O léxico casa SEM negação na mesma oração ("não me rendo", "jamais me entrego",
+    "me recuso a pagar" não escolhem a opção). Ambiguidade = não escolhe."""
+    for m in pattern.finditer(folded):
+        clause = _CLAUSE_END.split(folded[: m.start()])[-1]
+        words = re.findall(r"[a-z]+", clause)[-4:]
+        if not any(w in _NEGATORS for w in words):
+            return True
+    return False
 
 
 CRIME_CLAIM_HINT = (
@@ -340,6 +363,15 @@ def patrol_present(state: dict, location_id: str, clock: int) -> bool:
     p = float(density.get(location_id, density.get("default", 0.0)) or 0.0)
     day, period = divmod(int(clock), _periods_per_day())
     return _unit(_gid(state), location_id, day, period, "patrol") < p
+
+
+def _authority_de(code: dict) -> str:
+    """ "da Legião de Ferro" / "do Conselho" / "de Fulano": concordância da autoridade."""
+    name = _authority_name(code).strip()
+    for art, contr in (("As ", "das"), ("Os ", "dos"), ("A ", "da"), ("O ", "do")):
+        if name.startswith(art):
+            return f"{contr} {name[len(art) :]}"
+    return f"de {name}"
 
 
 def _authority_name(code: dict) -> str:
@@ -765,27 +797,28 @@ def turn_updates(state: dict) -> dict:
         w["capital"] = bool(w.get("capital")) or bool(row.get("capital"))
         _spread_known_at(w, code, crime["location_id"], _int(rep.get("due_clock")))
         law["wanted"][jid] = w
-        loc_fame = _fame_bridge.write(
-            {**work, "location_fame": fame_update or work.get("location_fame")},
-            crime["location_id"],
-            crime["crime_id"],
-            crime["crime_type"],
-        )
-        if loc_fame is not None:
-            fame_update = loc_fame
-        events.append(
-            _event(
-                "crime_witnessed",
+        if m == "on":  # shadow só observa: sem fama (narrador/UI) nem evento (SPEC-215)
+            loc_fame = _fame_bridge.write(
+                {**work, "location_fame": fame_update or work.get("location_fame")},
+                crime["location_id"],
                 crime["crime_id"],
-                f"Um crime foi testemunhado em {_loc_name(crime['location_id'])}.",
-                {
-                    "crime_id": crime["crime_id"],
-                    "crime_type": crime["crime_type"],
-                    "jurisdiction_id": jid,
-                    "location_id": crime["location_id"],
-                },
+                crime["crime_type"],
             )
-        )
+            if loc_fame is not None:
+                fame_update = loc_fame
+            events.append(
+                _event(
+                    "crime_witnessed",
+                    crime["crime_id"],
+                    f"Um crime foi testemunhado em {_loc_name(crime['location_id'])}.",
+                    {
+                        "crime_id": crime["crime_id"],
+                        "crime_type": crime["crime_type"],
+                        "jurisdiction_id": jid,
+                        "location_id": crime["location_id"],
+                    },
+                )
+            )
         if reporter.startswith("patrol:") and new_patrol is None:
             new_patrol = crime
     in_combat = bool((work.get("combat") or {}).get("active"))
@@ -794,6 +827,8 @@ def turn_updates(state: dict) -> dict:
     if conf and conf.get("reason") != "imprisoned":
         if not cur_code or cur_code["id"] != conf.get("jurisdiction_id"):
             law["confrontation"] = conf = None  # R22: sair da jurisdição encerra
+    elif conf and here != conf.get("location_id"):
+        law["confrontation"] = conf = None  # `imprisoned` não persiste fora da prisão
     if (
         m == "on"
         and not conf
@@ -895,6 +930,24 @@ def _signal_candidates(state: dict, law: dict, clock: int, here: str) -> list[tu
                             f"{_bounty_phrase(_int(w['bounty']))} por quem o entregar.",
                         )
                     )
+            if (
+                code.get("id") not in law["licenses"]
+                and law_codes.crime_row(code, "magia_ilegal")
+                and any(
+                    c.get("crime_type") == "magia_ilegal"
+                    and c.get("jurisdiction_id") == code["id"]
+                    and c.get("status") in ("pending_report", "reported")
+                    for c in law["crimes"]
+                )
+                and f"registro:{code['id']}" not in w["signals_shown"]
+            ):
+                out.append(
+                    (
+                        f"registro:{code['id']}",
+                        "Um escrivão murmura que, sem registro na autoridade, "
+                        "Éter à vista de todos dá fogueira por aqui.",
+                    )
+                )
             day = clock // _periods_per_day()
             if _level_rank(lvl) >= _level_rank("suspeito") and patrol_present(state, here, clock):
                 sid = f"olhar:{here}:{day}"
@@ -963,11 +1016,11 @@ def scene_block(state: dict, *, for_npc: str | None = None) -> tuple[str, dict]:
         lines.append("Você está preso numa cela; os carcereiros vigiam cada movimento.")
     elif conf:
         lines.append(
-            f"Guardas de {_authority_name(code)} bloqueiam a saída e exigem que você "
+            f"Guardas {_authority_de(code)} bloqueiam a saída e exigem que você "
             "responda por seus atos."
         )
     elif patrol_present(state, here, clock):
-        lines.append(f"Soldados de {_authority_name(code)} patrulham o local à vista de todos.")
+        lines.append(f"Soldados {_authority_de(code)} patrulham o local à vista de todos.")
     candidates = _signal_candidates(state, law, clock, here)
     updates: dict[str, Any] = {}
     if candidates:
@@ -1202,6 +1255,16 @@ def serve_sentence(state: dict) -> dict:
     prison = code.get("prison_location_id")
     events = [*(state.get("pending_world_events") or [])]
     turn = _turn(state)
+    if code.get("punishment") == "multa":
+        # Lei branda: render-se = pagar a multa (se puder); sem ouro, expulsão SEM `cacado`.
+        upd, ok, _why = resolve_fine(state)
+        if ok:
+            fine_law = upd["law_state"]
+            fine_law["notice"] = {
+                "turn": turn,
+                "text": "Você se submete à lei local e paga a multa devida.",
+            }
+            return upd
     if code.get("punishment") == "prisao" and prison:
         world = _move_player(state, str(prison), 0)
         party = _party_wait(state, str(prison))
@@ -1235,7 +1298,9 @@ def serve_sentence(state: dict) -> dict:
     clock = _clock({**state, "world": world})
     _resolve(law, jid, "expulsao", turn, ids)
     w = law["wanted"].get(jid) or _empty_wanted(jid)
-    w.update(heat=70, last_crime_clock=clock, bounty=max(_int(w["bounty"]), 1))
+    # colmeia: banido e caçado lá fora; lei branda (multa): só `suspeito`, sem caçadores
+    heat = 70 if code.get("punishment") == "expulsao" else 30
+    w.update(heat=heat, last_crime_clock=clock, bounty=max(_int(w["bounty"]), 1))
     w["known_at"] = {**w["known_at"], dest: clock}
     law["wanted"][jid] = w
     events.append(_resolved_event(jid, "expulsao", ids))
@@ -1355,7 +1420,7 @@ def _escape_prison(state: dict, *, rescued: bool) -> dict:
 def _guard_row(state: dict, code: dict) -> tuple[str, dict]:
     from services import npc_layers
 
-    name = f"Guarda de {_authority_name(code)}"
+    name = f"Guarda {_authority_de(code)}"
     loc = _here(state)
     row = {
         "name": name,
@@ -1407,6 +1472,21 @@ def _notice(law: dict, state: dict, text: str) -> dict:
     return law
 
 
+_TRAVEL_NEG_RE = re.compile(r"\b(?:nao|jamais|nunca)\s+(?:vou|viajo|saio|fujo|irei|sigo)\b")
+
+
+def _flee_intent(state: dict, text: str, folded: str) -> bool:
+    """Fuga explícita ("fujo") ou intenção de viagem a um destino válido, sem negação."""
+    from services import chase
+    from world_utils import find_travel_destination
+
+    if _affirmed(chase.FLEE_RE, folded):
+        return True
+    if _TRAVEL_NEG_RE.search(folded):
+        return False
+    return bool(find_travel_destination(_world(state), text))
+
+
 def resolve_choice(state: dict, text: str) -> dict:
     """Gate do router (R19). Devolve o payload parcial de rota (``next`` + updates) ou
     ``{}`` se não há confronto. Léxico determinístico; sem LLM."""
@@ -1419,19 +1499,17 @@ def resolve_choice(state: dict, text: str) -> dict:
     code = law_codes.get_code(conf["jurisdiction_id"]) or {}
     folded = _fold(text)
     if conf.get("reason") == "imprisoned":
-        return _prison_choice(state, law, conf, folded)
+        return _prison_choice(state, law, conf, folded, text)
 
     story = {"next": "storyteller"}
 
     def done(upd: dict, text_ok: str) -> dict:
         return {**story, **upd, "law_state": _notice(upd["law_state"], state, text_ok)}
 
-    from services import chase
-
-    if _SURRENDER_RE.search(folded):
+    if _affirmed(_SURRENDER_RE, folded):
         upd = serve_sentence(state)
         return {**story, **upd}
-    if _PAY_RE.search(folded):
+    if _affirmed(_PAY_RE, folded):
         upd, ok, why = resolve_fine(state)
         if ok:
             return done(upd, "Você paga a multa e os guardas dão o assunto por encerrado.")
@@ -1441,7 +1519,7 @@ def resolve_choice(state: dict, text: str) -> dict:
             else "Você não tem ouro suficiente para pagar a multa; os guardas não se abalam."
         )
         return {**story, "law_state": _notice(law, state, msg)}
-    if _BRIBE_RE.search(folded):
+    if _affirmed(_BRIBE_RE, folded):
         upd, ok, why = resolve_bribe(state)
         if ok:
             return done(upd, "O guarda embolsa o ouro sem olhar e vira o rosto.")
@@ -1451,17 +1529,17 @@ def resolve_choice(state: dict, text: str) -> dict:
             else "Você não tem ouro suficiente para convencer o guarda."
         )
         return {**story, "law_state": _notice(law, state, msg)}
-    fled = bool(chase.FLEE_RE.search(folded))
-    if not fled:
-        from world_utils import find_travel_destination
-
-        fled = bool(find_travel_destination(_world(state), text))
-    if fled:
+    if _affirmed(_ATTACK_RE, folded) and not _flee_intent(state, text, folded):
+        upd = _engine_crime(state, "resistencia", f"conf:{conf.get('started_turn')}")
+        law2 = upd.get("law_state", law)
+        law2["confrontation"] = None
+        return {**_combat_payload(state, code, reason="law_confrontation"), "law_state": law2}
+    if _flee_intent(state, text, folded):
         upd = _engine_crime(state, "evasao", f"conf:{conf.get('started_turn')}")
         law2 = upd.get("law_state", law)
         law2["confrontation"] = None
         return {**_combat_payload(state, code, reason="law_confrontation"), "law_state": law2}
-    if _ATTACK_RE.search(folded):
+    if _affirmed(_ATTACK_RE, folded):
         upd = _engine_crime(state, "resistencia", f"conf:{conf.get('started_turn')}")
         law2 = upd.get("law_state", law)
         law2["confrontation"] = None
@@ -1480,10 +1558,10 @@ def resolve_choice(state: dict, text: str) -> dict:
     }
 
 
-def _prison_choice(state: dict, law: dict, conf: dict, folded: str) -> dict:
+def _prison_choice(state: dict, law: dict, conf: dict, folded: str, text: str) -> dict:
     story = {"next": "storyteller"}
     jid = conf["jurisdiction_id"]
-    if _BRIBE_RE.search(folded):
+    if _affirmed(_BRIBE_RE, folded):
         upd, ok, why = resolve_bribe(state)
         if ok:
             return {
@@ -1499,7 +1577,7 @@ def _prison_choice(state: dict, law: dict, conf: dict, folded: str) -> dict:
                 law, state, "O carcereiro nega: com esse crime, nem ouro compra a saída."
             ),
         }
-    if _RESCUE_RE.search(folded):
+    if _affirmed(_RESCUE_RE, folded):
         waiting = [
             c
             for c in (state.get("party") or [])
@@ -1513,9 +1591,11 @@ def _prison_choice(state: dict, law: dict, conf: dict, folded: str) -> dict:
                 law, state, "Ninguém virá resgatá-lo: não há companheiros à espera lá fora."
             ),
         }
-    if _ESCAPE_RE.search(folded):
+    # P1-1: preso, intenção de viagem/fuga = tentativa de fuga (rolagem + evasao); nunca
+    # uma viagem grátis. O storyteller não reaplica a viagem neste turno (law_gate_consumed).
+    if _affirmed(_ESCAPE_RE, folded) or _flee_intent(state, text, folded):
         return {**story, **_escape_prison(state, rescued=False)}
-    if _WAIT_RE.search(folded) or _clock(state) >= _int(conf.get("release_clock")):
+    if _affirmed(_WAIT_RE, folded) or _clock(state) >= _int(conf.get("release_clock")):
         remaining = max(0, _int(conf.get("release_clock")) - _clock(state))
         days = int(math.ceil(remaining / _periods_per_day()))
         crimes = _unresolved(law, jid)
@@ -1564,6 +1644,28 @@ def buy_license(state: dict) -> tuple[dict, bool, str]:
     player["gold"] = clamp_gold(player, _gold(state) - cost)
     law["licenses"] = [*law["licenses"], code["id"]]
     return {"law_state": law, "player": player}, True, "ok"
+
+
+def resolve_license_request(state: dict, text: str) -> dict:
+    """D2: gesto diegético "peço/compro o registro (licença) do meu Éter" num local com lei
+    que o criminaliza. Devolve o payload parcial de rota (router) ou ``{}``."""
+    if mode() == "off" or not law_codes.is_active():
+        return {}
+    folded = _fold(text)
+    if not _affirmed(_LICENSE_RE, folded):
+        return {}
+    code = law_codes.code_for_location(_here(state))
+    if not code or not law_codes.crime_row(code, "magia_ilegal"):
+        return {}
+    upd, ok, why = buy_license(state)
+    law = upd.get("law_state") or get_law(state)
+    msg = {
+        "ok": "Você paga a taxa e o escrivão registra o seu Éter nos livros da autoridade.",
+        "ja_licenciado": "O escrivão confere os livros: o seu Éter já está registrado.",
+        "insufficient_gold": "O escrivão balança a cabeça: falta ouro para a taxa do registro.",
+    }.get(why, "O escrivão não sabe do que você está falando.")
+    law["notice"] = {"turn": _turn(state), "text": msg}
+    return {"next": "storyteller", **upd, "law_state": law}
 
 
 def prisoner_bounty(state: dict, prisoner: dict, location_id: str) -> int:

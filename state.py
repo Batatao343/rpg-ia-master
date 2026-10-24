@@ -800,3 +800,4 @@ class GameState(TypedDict):
 
     # --- SPEC-299: lei e crime por região (dono: services.law; PRIVADO, nunca na API) ---
     law_state: LawState
+    law_gate_consumed: bool | None  # transitório: o turno foi resolvido pelo gate da lei

@@ -683,7 +683,11 @@ def storyteller_node(state: GameState):
     turn_bl = state.get("turn_baseline")
     factions = ensure_factions(state.get("factions"))
     intel = ensure_faction_intel(state.get("faction_intel"))
-    travel_intent = bool(last_user_input and is_travel_intent(str(last_user_input), world))
+    # SPEC-299 P1-1: turno já resolvido pelo gate da lei (fuga/pena/multa): sem viagem/descanso.
+    law_resolved = bool(state.get("law_gate_consumed"))
+    travel_intent = bool(
+        last_user_input and not law_resolved and is_travel_intent(str(last_user_input), world)
+    )
     dest = find_travel_destination(world, last_user_input) if travel_intent else None
     if travel_intent and not dest:
         try:
@@ -763,7 +767,7 @@ def storyteller_node(state: GameState):
                 + (f" (viagem longa: {travel_periods} períodos). " if travel_periods > 1 else ". ")
                 + f"Contexto do local: {dest.get('lore_seed', '')} Descreva a chegada e o que ele vê agora."
             )
-    elif last_user_input and is_rest(last_user_input):
+    elif last_user_input and not law_resolved and is_rest(last_user_input):
         from world_utils import weather_effects
 
         rest_blocked = weather_effects(world).get("rest_block", False)  # Fase 6.5
@@ -1155,9 +1159,11 @@ def storyteller_node(state: GameState):
 
     # SPEC-299 R9/R16/R19: fato de cena da lei (patrulha, confronto, sinais). Sem nada a
     # dizer o bloco nem existe (zero token). Nunca heat/bounty/nível (R17).
-    _law_text, _law_scene_updates = _law_mod.scene_block(state)
+    # P1-3: a cena é a do DESTINO (viagem já aplicada em `world`/`scene_npcs`).
+    law_scene = {**state, "world": world, "npcs": scene_npcs}
+    _law_text, _law_scene_updates = _law_mod.scene_block(law_scene)
     lei_block = _law_text
-    if _law_mod.crime_hint_enabled(state):
+    if _law_mod.crime_hint_enabled(law_scene):
         lei_block = "\n".join(p for p in (lei_block, _law_mod.CRIME_CLAIM_HINT) if p)
 
     sys = SystemMessage(

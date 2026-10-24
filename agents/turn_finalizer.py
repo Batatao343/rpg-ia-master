@@ -59,6 +59,8 @@ def turn_finalizer_node(state: dict) -> dict:
         logging.getLogger("rpg.npc_knowledge").warning(
             "turn_updates falhou: %s", type(exc).__name__
         )
+    if state.get("law_gate_consumed"):
+        updates["law_gate_consumed"] = False  # transitório de 1 turno (SPEC-299 P1-1)
     # SPEC-299: entrega de relatos de crime, Wanted, confronto. `off` = {}; nunca derruba o turno.
     try:
         from services import law
