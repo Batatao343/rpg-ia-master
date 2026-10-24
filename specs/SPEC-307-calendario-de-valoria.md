@@ -673,3 +673,18 @@ A preencher na implementação: tabelas R26/R27 e o smoke em
 - **D8 — Chip de estação regional no HUD.** Default: mostrar " · Noite Longa" /
   " · Estação do Vidro" só nas regiões que têm rótulo próprio. Alternativa: nunca
   mostrar (o mês já diz o clima).
+
+
+## Decisões do dono (2026-10-24)
+
+- **D1 meses:** "Os Sete do Monte" — Morrakh, Vaelith, Malagor, Solveth, Orrakh, Vorrnak, Thessrak.
+- **D2 dias da semana (substitui a proposta):** **"Os Cinco Sinos"**, do Anel de Ferro, onde o sino é a única forma de
+  saber a hora (`lore_nova/daily_life.txt:9`): **Sino de Ferro, Sino de Bronze, Sino de Cobre, Sino de Estanho, Sino Mudo**
+  (o Sino Mudo é o dia em que ninguém trabalha). Forma curta para HUD: Ferro, Bronze, Cobre, Estanho, Mudo.
+  Data exibida: "3º dia de Vorrnak, Sino de Cobre — Ano 112 da Era 7".
+- **D3:** 1 mês de primavera + 2 de outono (recomendado).
+- **D4 (substitui a proposta):** ano FIXO da Era 7, contado da fundação de Nova Arcádia: **Ano 112 da Era 7** no início de toda
+  campanha (a timeline diz que os conselhos governaram "por décadas" antes de Valerius, `timeline_completa.txt:432`).
+  Valor em dado curado (`data/world/calendar.json`), marcado `review: "dono"`.
+- **D5–D8:** defaults recomendados (Vigília dos Afogados no 6º de Thessrak; "seis meses" da lore → "metade do ano" em tarefa
+  de autoria; 307 aplicada no branch da 303 antes do pouso dela; chip de estação regional só onde há rótulo próprio).
