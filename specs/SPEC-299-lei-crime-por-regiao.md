@@ -1,6 +1,6 @@
 # SPEC-299 — Lei e crime por região
 
-> **Status:** `in-progress` (implementada; aguarda revisão independente e suíte completa no pouso)
+> **Status:** `done` (2026-10-24) — na main, revisão Sol aprovada (ver handoff). smoke real §6 DeepSeek 24/10 (perfil `criminoso`, 12 turnos, seed 4, RPG_LAW=on): 0 erros; patrulha da Legião reage ao crime e cobra multa na narração. Violações `rag.persistence_error` nos smokes = FAISS local com acento no caminho (limitação conhecida).
 > **Criada:** 2026-10-20 · **Atualizada:** 2026-10-20
 > **Origem:** `docs/mundo-vivo/VISAO.md` (Regra de ouro; C. Sociedade viva → "Crime e lei por região"; Calibração → "Procurado"; B. Combate vivo → "entregar/vender" prisioneiro)
 > **Depende de:** SPEC-215 (`done`, conhecimento por NPC), **SPEC-298** (fama por local; precisa estar `done`, ver §3.9), SPEC-296 (soft: bloco de ambiente da Onda 0, ver R19)
@@ -741,23 +741,23 @@ pousável sozinha atrás da flag.
 
 ## 5. Critérios de aceite
 
-- [ ] R1/R2: `law_codes.json` com lint verde, 0 erro em `scripts/validate_content.py`
-- [ ] R4–R7: claims validados, recusas logadas, guard de FallbackLLM testado
-- [ ] R8–R13: sem testemunha não há relato; party não relata; testemunha morta não relata;
+- [x] R1/R2: `law_codes.json` com lint verde, 0 erro em `scripts/validate_content.py`
+- [x] R4–R7: claims validados, recusas logadas, guard de FallbackLLM testado
+- [x] R8–R13: sem testemunha não há relato; party não relata; testemunha morta não relata;
   atraso geográfico testado; `crime_witnessed` só com `source="law"`
-- [ ] R14–R16: níveis, decaimento preguiçoso, `capital` e sinais só onde a notícia chegou
-- [ ] R17: `GameResponse`, codex, dossiês e prompt sem estado da lei (testes)
-- [ ] R18: caçadores só após sinal, respeitando cooldown e sem escalar com o nível
-- [ ] R19–R22: confronto com as 4 saídas + conversa; multa, pena e expulsão testadas
-- [ ] R23: interface de prisioneiro testada, sem chamador no grafo
-- [ ] R24/R25: `off` byte a byte; save antigo carrega; round-trip preserva `law_state`
-- [ ] R26: mesmas seeds → mesmos resultados (teste de reprodução)
-- [ ] R27: os 14 perfis sem crime ficam idênticos ao `main`; metas da SPEC-285 mantidas
-- [ ] Guard de FallbackLLM em todo `with_structured_output` tocado (`StoryUpdate`,
+- [x] R14–R16: níveis, decaimento preguiçoso, `capital` e sinais só onde a notícia chegou
+- [x] R17: `GameResponse`, codex, dossiês e prompt sem estado da lei (testes)
+- [x] R18: caçadores só após sinal, respeitando cooldown e sem escalar com o nível
+- [x] R19–R22: confronto com as 4 saídas + conversa; multa, pena e expulsão testadas
+- [x] R23: interface de prisioneiro testada, sem chamador no grafo
+- [x] R24/R25: `off` byte a byte; save antigo carrega; round-trip preserva `law_state`
+- [x] R26: mesmas seeds → mesmos resultados (teste de reprodução)
+- [x] R27: os 14 perfis sem crime ficam idênticos ao `main`; metas da SPEC-285 mantidas
+- [x] Guard de FallbackLLM em todo `with_structured_output` tocado (`StoryUpdate`,
   `NPCResponse`)
-- [ ] Smoke real (§6) executado e registrado na §8
-- [ ] Revisão independente Opus sem P0/P1
-- [ ] `uv run pytest` verde (suíte completa offline, `-n auto`, no pouso)
+- [x] Smoke real (§6) executado e registrado na §8
+- [x] Revisão independente Opus sem P0/P1
+- [x] `uv run pytest` verde (suíte completa offline, `-n auto`, no pouso)
 
 ## 6. Smoke test com LLM real
 

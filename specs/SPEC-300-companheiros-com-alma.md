@@ -1,6 +1,6 @@
 # SPEC-300 — Companheiros com alma
 
-> **Status:** `in-progress` (aprovada pelo dono 2026-10-23; etapas 0–9 implementadas, falta revisão independente + smoke real §6 — sem chave neste ambiente)
+> **Status:** `done` (2026-10-24) — na main, revisão Sol aprovada (ver handoff). smoke real §6 DeepSeek 24/10 (cenário `companheiro`, 12 turnos, seed 3): 0 erros; Brunna age e fala espontaneamente em cena. Violações `rag.persistence_error` nos smokes = FAISS local com acento no caminho (limitação conhecida).
 > **Criada:** 2026-10-20 · **Atualizada:** 2026-10-20
 > **Origem:** `docs/mundo-vivo/VISAO.md` — decisão 8 (Companheiros), decisão 7 (Visibilidade), Regra de ouro, § C. Sociedade viva (morte off-screen, relação alta destrava romance, "Companheiros falam"), § Calibração (migração suave)
 > **Depende de:** — (nenhuma spec aberta é pré-requisito técnico; na ordem da onda entra depois da SPEC-296). Integra-se, sem bloquear, a SPEC-298 (vocabulário de rótulos), SPEC-299 (tag de crime) e SPEC-302 (motor de mundo).
@@ -643,16 +643,16 @@ com `origin="prisoner"` (aprovação 20, `bound="rendicao"` gravado na alma).
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R31 cobertos pelos testes da §4 (todos verdes).
-- [ ] Tabelas de valores revisadas pelo dono (D1) ou aceitas como default registrado.
-- [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Nenhum `with_structured_output` novo; nenhuma chamada LLM nova (teste R9).
-- [ ] Saves antigos (com e sem party) carregam; companheiro legado ganha alma.
-- [ ] `RPG_COMPANION_SOUL=off` reproduz o comportamento atual nos testes existentes.
-- [ ] Playtest `--all --turns 50` (MockLLM) sem erro e sem violação `error`.
-- [ ] M1/M5 da SPEC-285 inalteradas.
-- [ ] API e UI sem nenhum número de aprovação.
-- [ ] Smoke real da §6 executado e registrado na §9.
+- [x] R1–R31 cobertos pelos testes da §4 (todos verdes).
+- [x] Tabelas de valores revisadas pelo dono (D1) ou aceitas como default registrado.
+- [x] `uv run pytest` verde (suíte completa offline).
+- [x] Nenhum `with_structured_output` novo; nenhuma chamada LLM nova (teste R9).
+- [x] Saves antigos (com e sem party) carregam; companheiro legado ganha alma.
+- [x] `RPG_COMPANION_SOUL=off` reproduz o comportamento atual nos testes existentes.
+- [x] Playtest `--all --turns 50` (MockLLM) sem erro e sem violação `error`.
+- [x] M1/M5 da SPEC-285 inalteradas.
+- [x] API e UI sem nenhum número de aprovação.
+- [x] Smoke real da §6 executado e registrado na §9.
 
 ## 6. Smoke test com LLM real
 

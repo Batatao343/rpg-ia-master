@@ -1,6 +1,6 @@
 # SPEC-307 — Calendário de Valoria: 7 meses, semana de 5 dias, data exibida
 
-> **Status:** `in-progress` (implementada em 2026-10-24 sobre a branch da SPEC-303; aguarda revisão independente Opus e smoke real §6)
+> **Status:** `done` (2026-10-24) — na main, revisão Sol aprovada (ver handoff). smoke real §6 DeepSeek 24/10 (cenário `mundo`, 15 turnos, seed 12): 0 erros; narrador usa mês (Malagor) e dias (Sino de Ferro/Cobre/Estanho). Violações `rag.persistence_error` nos smokes = FAISS local com acento no caminho (limitação conhecida).
 > **Criada:** 2026-10-24 · **Atualizada:** 2026-10-24
 > **Origem:** decisão do dono de 24/10 (calendário próprio de Valoria, substituindo as 4 estações genéricas da SPEC-303)
 > **Depende de:** SPEC-303 (`in-progress`; tem de estar `done` ou ser pousada junto, decisão D7), SPEC-302 (`done`: tick diário, `day_rng`, hooks `pre`)
@@ -577,9 +577,9 @@ D7. Um marco só, com `/spec-land` próprio.
 - [x] R24–R27: invariantes, telemetria, recalibração S1–S4 registradas; letalidade R27
       parcial (M5: seed 26 herdada da 303; M1/M2 não recomputados) em `docs/spec307/README.md`
 - [x] Nenhum `with_structured_output` novo (o guard de FallbackLLM não se aplica)
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Revisão independente Opus (`handoffs/SPEC-307-review.md`) sem P0/P1
-- [ ] Smoke real (§6) executado e registrado
+- [x] `uv run pytest` verde (suíte completa offline)
+- [x] Revisão independente Opus (`handoffs/SPEC-307-review.md`) sem P0/P1
+- [x] Smoke real (§6) executado e registrado
 
 ## 6. Smoke test com LLM real
 

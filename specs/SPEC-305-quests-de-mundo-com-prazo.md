@@ -1,6 +1,6 @@
 # SPEC-305 — Quests de mundo com prazo (nascem do estado, falham com consequência)
 
-> **Status:** `in-progress` (implementada na branch spec-305; aguarda revisão independente)
+> **Status:** `done` (2026-10-24) — na main, revisão Sol aprovada (ver handoff). smoke real §6 DeepSeek 24/10 (cenário `mundo`, 15 turnos, seed 12): 0 erros; 1 quest de mundo oferecida por testemunho (expirou no prazo). Violações `rag.persistence_error` nos smokes = FAISS local com acento no caminho (limitação conhecida).
 > **Criada:** 2026-10-23 · **Atualizada:** 2026-10-23
 > **Origem:** filha **302-D** da SPEC-302 (§9); `docs/mundo-vivo/VISAO.md` decisões 3 e 5
 > (linhas 51-65), "Regra de ouro" (79-82) e "Mudanças no mapa" (153-155).
@@ -558,23 +558,23 @@ correspondente é `skip` com motivo.
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R4: 8 tipos por catálogo, prazo do motor que nunca encurta, uma quest por fonte com
+- [x] R1–R4: 8 tipos por catálogo, prazo do motor que nunca encurta, uma quest por fonte com
       id determinístico, independente do herói
-- [ ] R5–R10: só nasce de percepção registrada (5 canais), dois pontos de oferta, viabilidade,
+- [x] R5–R10: só nasce de percepção registrada (5 canais), dois pontos de oferta, viabilidade,
       tetos, dedupe com o LLM
-- [ ] R11–R14: conclusão por vocabulário/`combat_won`/intervenção; alívio impede escalada e
+- [x] R11–R14: conclusão por vocabulário/`combat_won`/intervenção; alívio impede escalada e
       fecha a crise com `"intervencao"`; recompensa e feito da 298
-- [ ] R15–R19: `quest_failed` engine-only; falha só no prazo; consequência = a do motor (mais
+- [x] R15–R19: `quest_failed` engine-only; falha só no prazo; consequência = a do motor (mais
       `fail_causes`); texto de falha não revela desfecho; fonte encerrada → `expired`
-- [ ] R20–R23: API com lista branca, rótulo de prazo sem número, prompt com prazo, web com
+- [x] R20–R23: API com lista branca, rótulo de prazo sem número, prompt com prazo, web com
       `expired`
-- [ ] R24–R27: saves antigos carregam; idempotência; rollout `off|shadow|on`; invariantes e
+- [x] R24–R27: saves antigos carregam; idempotência; rollout `off|shadow|on`; invariantes e
       relatório
-- [ ] Nenhum `with_structured_output` novo (se surgir, guard de FallbackLLM obrigatório)
-- [ ] Letalidade SPEC-285 sem regressão com as duas flags `on`
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Revisão independente Opus (`handoffs/SPEC-305-review.md`) sem P0/P1
-- [ ] Smoke real (§6) executado e registrado na §8
+- [x] Nenhum `with_structured_output` novo (se surgir, guard de FallbackLLM obrigatório)
+- [x] Letalidade SPEC-285 sem regressão com as duas flags `on`
+- [x] `uv run pytest` verde (suíte completa offline)
+- [x] Revisão independente Opus (`handoffs/SPEC-305-review.md`) sem P0/P1
+- [x] Smoke real (§6) executado e registrado na §8
 
 ## 6. Smoke test com LLM real
 

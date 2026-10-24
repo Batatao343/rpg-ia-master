@@ -1,6 +1,6 @@
 # SPEC-303 — Calendário: estações, passos de montanha e festas da lore
 
-> **Status:** `in-progress` (implementada em 2026-10-24; aguarda revisão independente Opus)
+> **Status:** `done` (2026-10-24) — na main, revisão Sol aprovada (ver handoff). smoke real §6 DeepSeek 24/10 (cenário `mundo`, 15 turnos, seed 12, junto com 305/307): 0 erros; 1 crise iniciada e percebida, sinais percebidos. Violações `rag.persistence_error` nos smokes = FAISS local com acento no caminho (limitação conhecida).
 > **Criada:** 2026-10-23 · **Atualizada:** 2026-10-23
 > **Origem:** `docs/mundo-vivo/VISAO.md` (§"A. Mundo autônomo" → Calendário; §Calibração → duração da campanha; Regra de ouro) e SPEC-302 §9 (filha **302-B**)
 > **Depende de:** SPEC-302 (`approved`; precisa estar `done` no marco M2: hooks diários, `world_sim`, estado `festa`, digest/percepção, `world.news`), SPEC-215 (`done`, propagação), SPEC-233 (`done`, perigo efetivo), SPEC-285 (`done`, metas de letalidade que não podem regredir)
@@ -618,28 +618,28 @@ Pré-condição: SPEC-302 `done` (M2). Um marco só, com `/spec-land` próprio.
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R7: calendário puro, seeded, congelado, com virada em 4–8 dias, rótulos
+- [x] R1–R7: calendário puro, seeded, congelado, com virada em 4–8 dias, rótulos
       regionais, hook `pre` idempotente
-- [ ] R8–R9: clima modulado pela estação, sem estado novo
-- [ ] R10–R11b: passo de Skallgard fechado no inverno como travessia cara, sem
+- [x] R8–R9: clima modulado pela estação, sem estado novo
+- [x] R10–R11b: passo de Skallgard fechado no inverno como travessia cara, sem
       softlock; comércio conforme D5; nenhum `route_*` emitido
-- [ ] R12–R14: offsets de baseline ≤ `SINAL`; estação sozinha não abre crise;
+- [x] R12–R14: offsets de baseline ≤ `SINAL`; estação sozinha não abre crise;
       sem slot de crise
-- [ ] R14b: pesos sazonais de encontro só no caminho ponderado, sem mudar porte
+- [x] R14b: pesos sazonais de encontro só no caminho ponderado, sem mudar porte
       nem gatilho
-- [ ] R15–R19: festas do catálogo aprovado (D3) via `location_state_changed`;
+- [x] R15–R19: festas do catálogo aprovado (D3) via `location_state_changed`;
       crise vence festa; anúncio 2 dias antes; overrides de efeito
-- [ ] R20–R23: percepção pela regra de ouro, sem chamada LLM nova, API só com
+- [x] R20–R23: percepção pela regra de ouro, sem chamada LLM nova, API só com
       `season`
-- [ ] R24–R26: saves antigos carregam; `off`/`shadow`/`on`; independente do
+- [x] R24–R26: saves antigos carregam; `off`/`shadow`/`on`; independente do
       herói
-- [ ] R27–R29: invariantes e relatório; S1–S4 fechadas; M1/M2/M5 da SPEC-285
+- [x] R27–R29: invariantes e relatório; S1–S4 fechadas; M1/M2/M5 da SPEC-285
       com calendário `on`
-- [ ] Nenhum `with_structured_output` novo (guard de FallbackLLM não se aplica;
+- [x] Nenhum `with_structured_output` novo (guard de FallbackLLM não se aplica;
       a narração é a da 302)
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Revisão independente Opus (`handoffs/SPEC-303-review.md`) sem P0/P1
-- [ ] Smoke real (§6) executado e registrado
+- [x] `uv run pytest` verde (suíte completa offline)
+- [x] Revisão independente Opus (`handoffs/SPEC-303-review.md`) sem P0/P1
+- [x] Smoke real (§6) executado e registrado
 
 ## 6. Smoke test com LLM real
 
