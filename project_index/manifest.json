@@ -1,11 +1,11 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "1c404a5fd197e9567a430b9dfae4f9ac8883017a",
+  "commit_sha": "38a437a635678e2444c39b276abe86d5e1e8caf9",
   "edge_counts": {
-    "calls": 23293,
-    "contains": 850,
-    "defines": 12099,
-    "imports": 1980,
+    "calls": 23294,
+    "contains": 851,
+    "defines": 12100,
+    "imports": 1981,
     "likely_test_for": 1319,
     "route_to": 64
   },
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:a696db5e1ed9fa87586cbbd680d196b9656bc4317a82f0b042b8cfa36e41089c",
+  "graph_hash": "sha256:13523ccbf0071cfb505bd8d99128dd6e311692b65ccc50da81e0a8ec3e342df2",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -800,6 +800,7 @@
     "tests/test_spec298_faccao_eventos.py",
     "tests/test_spec298_fama_local.py",
     "tests/test_spec298_migracao.py",
+    "tests/test_spec298_nucleo.py",
     "tests/test_spec298_raca_origem.py",
     "tests/test_spec298_reputacao_nucleo.py",
     "tests/test_spec298_social.py",
@@ -1054,12 +1055,12 @@
     "artifact": 9,
     "class": 875,
     "endpoint": 64,
-    "file": 998,
+    "file": 999,
     "function": 3839,
     "method": 794,
-    "module": 850,
-    "test": 6590
+    "module": 851,
+    "test": 6591
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:9e3540757e6703d4e638d4fa3b4c33b81df7a4413ea2c3fee668bf9a05ec1c6c"
+  "source_tree_hash": "sha256:ce367b13a797e3d29fa54854618ab36e83f1275d7bb2badb193cc8254c6d5ab6"
 }
