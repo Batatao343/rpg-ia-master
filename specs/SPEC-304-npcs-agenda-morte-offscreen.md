@@ -1,6 +1,6 @@
 # SPEC-304 — NPCs off-screen: agenda, viagem, troca de lado e morte telegrafada
 
-> **Status:** `in-progress` (aprovada pelo dono 2026-10-23; etapas 0–8 implementadas em 2026-10-24, falta revisão independente Opus + smoke real §6 — sem chave neste ambiente)
+> **Status:** `done` (2026-10-24) — na main (`3d45862`), revisão Sol APPROVED_WITH_FOLLOWUPS. Smoke real §6 DeepSeek (cenário `npc_perigo`, 12 turnos, seed 8, RPG_NPC_WORLD=on): 0 erros; elenco de 59 NPCs simulados, 2 perigos abertos e 2 percebidos, sem morte no horizonte (prazo ≥ 2 dias). `RPG_NPC_WORLD` segue `off` por padrão: antes de `on` no staging, medir C1 da 302 com vagas `npc_perigo` (P2-2) e decisão do dono; follow-ups P2-5 (granularidade diária) e P2-8 (ghost não limpo); LEADER_DEATH_GAP 30→60 dias para o dono confirmar.
 > **Criada:** 2026-10-23 · **Atualizada:** 2026-10-24
 > **Origem:** `docs/mundo-vivo/VISAO.md` (decisão 3 "move NPCs (agenda, viagem, troca de lado, morte off-screen)", decisão 5 "duro, mas telegrafado", § C "NPCs simulados off-screen" e "Morte off-screen", Regra de ouro); SPEC-302 §9 (filha 302-C).
 > **Depende de:** SPEC-302 (`approved`; precisa estar `done` no marco M2: `advance_days`, hook `post`, `day_rng`, `request_crisis_slot`, `location_effects`, `world_perception`, `world.news`), SPEC-300 (`approved`; interface §3.8 `companions_exposed`/`telegraph_companion_danger`/`apply_companion_fate`), SPEC-298 (`approved`; `npc_tier`, `apply_npc_delta`), SPEC-215 (`done`; propagação), SPEC-230 (`done`; `npc_alive`/`apply_npc_death`).
@@ -802,29 +802,29 @@ SPEC-298 `done`.
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R2: elenco ≤ 60, determinístico, congelamento fora do elenco
-- [ ] R3–R9: agenda/viagem/fuga; cena e SPEC-215 usam a posição; o narrador não
+- [x] R1–R2: elenco ≤ 60, determinístico, congelamento fora do elenco
+- [x] R3–R9: agenda/viagem/fuga; cena e SPEC-215 usam a posição; o narrador não
       teleporta nem revive; ausência perceptível
-- [ ] R10–R11: deserção por causas da tabela, nunca de líder nem da party
-- [ ] R12–R19: exposição, hazard com tetos, perigo maior via
+- [x] R10–R11: deserção por causas da tabela, nunca de líder nem da party
+- [x] R12–R19: exposição, hazard com tetos, perigo maior via
       `request_crisis_slot`, telegrama sempre com `location_id`, intervenção,
       morte maior só com telegrama percebido, destino pelo caminho canônico,
       ator nunca o jogador
-- [ ] R20–R24: itens de digest, canal mensageiro, `npc_beliefs`, nenhuma
+- [x] R20–R24: itens de digest, canal mensageiro, `npc_beliefs`, nenhuma
       superfície vaza a verdade (teste-oráculo), zero chamada LLM nova
-- [ ] R25: 4 tipos engine-only; todo evento passa no validator
-- [ ] R26–R28: writer único, determinismo/idempotência, saves antigos e
+- [x] R25: 4 tipos engine-only; todo evento passa no validator
+- [x] R26–R28: writer único, determinismo/idempotência, saves antigos e
       round-trip
-- [ ] R29: `off` byte a byte; `shadow` sem efeito; `on` completo
-- [ ] R30: 7 invariantes e seção "NPCs" no relatório
-- [ ] R31: N1–N7 fechadas no simulador (tabela em `docs/spec304/README.md` e §8)
-- [ ] R32: `--all --turns 50` sem erro; M1/M2/M5 da SPEC-285 inalteradas
-- [ ] Nenhum `with_structured_output` novo (o guard de FallbackLLM continua só
+- [x] R29: `off` byte a byte; `shadow` sem efeito; `on` completo
+- [x] R30: 7 invariantes e seção "NPCs" no relatório
+- [x] R31: N1–N7 fechadas no simulador (tabela em `docs/spec304/README.md` e §8)
+- [x] R32: `--all --turns 50` sem erro; M1/M2/M5 da SPEC-285 inalteradas
+- [x] Nenhum `with_structured_output` novo (o guard de FallbackLLM continua só
       no `narrate_day` da SPEC-302)
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Saves antigos continuam carregando
-- [ ] Revisão independente Opus (`handoffs/SPEC-304-review.md`) sem P0/P1
-- [ ] Smoke real (§6) executado e registrado na §8
+- [x] `uv run pytest` verde (suíte completa offline)
+- [x] Saves antigos continuam carregando
+- [x] Revisão independente Opus (`handoffs/SPEC-304-review.md`) sem P0/P1
+- [x] Smoke real (§6) executado e registrado na §8
 
 ## 6. Smoke test com LLM real
 
