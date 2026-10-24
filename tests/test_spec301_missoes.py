@@ -274,3 +274,88 @@ def test_regulariza_suspeito_com_apoio():
     st2, _ = _complete(st)
     rec = st2["faction_membership"]["legiao_ferro"]
     assert rec["status"] == "ativo" and rec["offenses"] == []
+
+
+# --- revisão Sol P1-1: anti-farm de missões -----------------------------------------
+
+
+def test_um_pedido_por_dia_laco_de_8(monkeypatch):
+    """Sonda da revisão: 8 pedidos no mesmo dia de jogo -> só o 1º é aceito."""
+    st = _member(rank_index=1, merit=3)
+    st["player"]["level"] = 2
+    accepted = 0
+    for i in range(8):
+        st["world"]["turn_count"] = 10 + i * 3
+        upd, _, note = fm.apply_intent(st, "ask_mission", "legiao_ferro")
+        if "quests" in upd:
+            accepted += 1
+            quests = upd["quests"]
+            # conclui (como o laço do farm) e volta a pedir no mesmo dia
+            quests = [dict(q, status="completed") for q in quests]
+            st = merge(st, {**upd, "quests": quests})
+        else:
+            assert upd == {} and "hoje" in note  # recusa narrável, estado intacto
+    assert accepted == 1
+
+
+def test_dia_seguinte_oferece_e_modelo_nao_repete():
+    st = _member(rank_index=1, merit=3)
+    seen = []
+    for day in range(1, 40, 2):
+        st["world"]["world_clock"]["day"] = day
+        st["world"]["turn_count"] = day * 3
+        upd, _, _ = fm.apply_intent(st, "ask_mission", "legiao_ferro")
+        if "quests" not in upd:
+            continue
+        quest = upd["quests"][-1]
+        seen.append((day, quest["mission_template_id"]))
+        st = merge(st, {**upd, "quests": [dict(q, status="completed") for q in upd["quests"]]})
+    assert len(seen) >= 3
+    for i, (day, tid) in enumerate(seen):
+        for day2, tid2 in seen[:i]:
+            if tid == tid2:
+                assert day - day2 >= fmi.TEMPLATE_COOLDOWN_DAYS
+
+
+def test_recusa_nao_concede_info_nem_cooldown():
+    st = _member(rank_index=3, last_mission_day=3)  # hoje é o dia 3
+    upd, _, note = fm.apply_intent(st, "ask_mission", "legiao_ferro")
+    assert upd == {} and note
+
+
+def test_missao_no_local_atual_nao_nasce_alcancada():
+    st = _member(rank_index=1)
+    quest = mission_quest("legiao_ferro", location_id="na_anel_ferro", created_turn=5)
+    out = quest_log.sync_location_progress([quest], "na_anel_ferro", turn=5)
+    assert not any(r["kind"] == "location_reached" for r in out[0]["progress_log"])
+    out = quest_log.sync_location_progress(out, "na_anel_ferro", turn=6)
+    assert any(r["kind"] == "location_reached" for r in out[0]["progress_log"])
+    # quest comum segue como antes (alcançada no mesmo turno)
+    plain = dict(quest, faction_id="")
+    out = quest_log.sync_location_progress([plain], "na_anel_ferro", turn=5)
+    assert any(r["kind"] == "location_reached" for r in out[0]["progress_log"])
+    assert st
+
+
+def test_promocao_publica_enfileira_rivais():
+    st = _member(merit=6)
+    st["player"]["level"] = 9
+    st["quests"] = [mission_quest("legiao_ferro", kind="apoio", tier=3)]
+    upd, events, _ = fm.on_mission_completed(st, st["quests"][0])
+    rec = upd["faction_membership"]["legiao_ferro"]
+    assert rec["rank_index"] == 1 and rec["rival_awareness"]
+
+
+def test_new_ascensions_deriva_da_transicao_completed():
+    before = [{"id": "a", "completed": False}, {"id": "b", "completed": True}]
+    after = [{"id": "a", "completed": True, "name": "A"}, {"id": "b", "completed": True}]
+    assert fm.new_ascensions(before, after, []) == [{"id": "a", "name": "A"}]
+    legacy = [{"id": "a", "name": "A"}]
+    assert fm.new_ascensions(before, after, legacy) == legacy  # sem duplicar
+    st = _member()
+    assert fm.ascension_member_note(
+        st,
+        fm.new_ascensions(
+            [{"id": "legiao_ferro"}], [{"id": "legiao_ferro", "completed": True}], []
+        ),
+    )

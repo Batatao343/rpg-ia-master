@@ -147,6 +147,8 @@ def sync_location_progress(quests: list[dict], location_id: str, *, turn: int = 
         if (
             q.get("status") == "active"
             and location_id
+            # SPEC-301 (P1-1): missão de fação criada neste turno não nasce "alcançada"
+            and not (q.get("faction_id") and _safe_turn(q.get("created_turn")) >= int(turn))
             and q.get("location_id") == location_id
             and not any(row.get("kind") == "location_reached" for row in progress)
         ):

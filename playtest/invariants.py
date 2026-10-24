@@ -2053,18 +2053,27 @@ def check_faction_membership(state: dict, prev: dict | None, turn: int) -> list[
             out.append(
                 _V("faction.influence_bounded", "error", turn, f"{f.get('id')}: influência {infl}")
             )
+        # Transição, não estado: com o motor 302 `on` o tick pode deixar a fação em 100
+        # aguardando o aviso da ascensão. Erro = chegou a 100 num turno SEM virada de dia.
+        before = next(
+            (p for p in (prev or {}).get("factions") or [] if p.get("id") == f.get("id")), None
+        )
+        day = ((state.get("world") or {}).get("world_clock") or {}).get("day")
+        day_before = (((prev or {}).get("world") or {}).get("world_clock") or {}).get("day")
         if (
-            isinstance(f.get("progress"), (int, float))
-            and f["progress"] >= 100
+            before is not None
+            and isinstance(f.get("progress"), (int, float))
+            and f["progress"] >= 100 > (before.get("progress") or 0)
             and not f.get("completed")
             and not f.get("defeated")
+            and day == day_before
         ):
             out.append(
                 _V(
                     "faction.progress_le_99_outside_tick",
                     "error",
                     turn,
-                    f"{f.get('id')}: progresso 100 sem ascensão (missão não ascende fação)",
+                    f"{f.get('id')}: progresso chegou a 100 sem virada de dia (missão não ascende)",
                 )
             )
     return out

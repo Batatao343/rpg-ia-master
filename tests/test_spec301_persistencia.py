@@ -62,3 +62,26 @@ def test_save_antigo_sem_campos_carrega(tmp_path, monkeypatch):
     import world_utils as wu
 
     assert all(f["influence"] == 0 for f in wu.ensure_factions(loaded["factions"]))
+
+
+def _inv(prev, cur):
+    from playtest import invariants
+
+    return [v.check_id for v in invariants.check_faction_membership(cur, prev, 7)]
+
+
+def _inv_state(progress, day, completed=False):
+    return {
+        "world": {"world_clock": {"day": day}},
+        "factions": [{"id": "legiao_ferro", "progress": progress, "completed": completed}],
+        "faction_membership": {},
+    }
+
+
+def test_invariante_progress_100_checa_transicao():
+    # motor on: 100 aguardando aviso, estado estável -> 0 violações
+    assert _inv(_inv_state(100, 3), _inv_state(100, 3)) == []
+    # o tick virou o dia e levou a 100 -> legítimo
+    assert _inv(_inv_state(97, 3), _inv_state(100, 4)) == []
+    # chegou a 100 num turno SEM virada de dia -> erro (missão não ascende)
+    assert "faction.progress_le_99_outside_tick" in _inv(_inv_state(97, 3), _inv_state(100, 3))

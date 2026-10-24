@@ -20,6 +20,9 @@ def _valid_locations() -> set[str]:
     return quest_log._valid_location_ids()
 
 
+TEMPLATE_COOLDOWN_DAYS = 10  # um modelo de missão não se repete dentro desta janela
+
+
 def _seed(state: Mapping, fid: str) -> str:
     world = state.get("world") or {}
     return f"{state.get('game_id', '')}:{fid}:{int(world.get('turn_count', 0) or 0)}"
@@ -38,7 +41,7 @@ def _resolve_location(template: Mapping, rng: random.Random) -> tuple[bool, str]
 
 
 def mission_quest_from_template(
-    template: Mapping, faction_id: str, turn: int, location_id: str, seed: str
+    template: Mapping, faction_id: str, turn: int, location_id: str, seed: str, day: int = 0
 ) -> dict:
     kind = str(template.get("kind") or "apoio")
     quest = {
@@ -56,6 +59,8 @@ def mission_quest_from_template(
         "reward_gold": 0,
         "reward_delivered": False,
         "faction_id": faction_id,
+        "mission_template_id": str(template.get("id") or ""),
+        "mission_day": int(day),
         "mission_kind": kind,
         "mission_tier": max(1, min(3, int(template.get("tier") or 1))),
     }
@@ -96,10 +101,21 @@ def offer_mission(state: Mapping, faction_id: str) -> tuple[list[dict], dict | N
         return quests, None, fm.refusal_note(state, fid, "missao_ativa")
     if _active_count(quests) >= quest_log.MAX_ACTIVE_QUESTS:
         return quests, None, fm.refusal_note(state, fid, "missoes_cheias")
+    day = fm._day(state)
+    # SPEC-301 (revisão P1-1): no máximo 1 missão por fação por dia de jogo (anti-farm).
+    if fm._int(rec.get("last_mission_day")) >= day:
+        return quests, None, fm.refusal_note(state, fid, "missao_recente")
     rank = fm._int(rec.get("rank_index"))
     seed = _seed(state, fid)
     rng = random.Random(seed)
-    done_ids = {q.get("id") for q in quests}
+    # modelo usado há pouco não volta (cooldown longo por modelo)
+    recent_templates = {
+        q.get("mission_template_id")
+        for q in quests
+        if q.get("faction_id") == fid
+        and q.get("mission_template_id")
+        and day - fm._int(q.get("mission_day")) < TEMPLATE_COOLDOWN_DAYS
+    }
     members = fm.active_memberships(state)
     pool: list[tuple[dict, str]] = []
     for t in sorted(_templates(fid, ("apoio", "sabotagem")), key=lambda x: str(x.get("id"))):
@@ -110,22 +126,17 @@ def offer_mission(state: Mapping, faction_id: str) -> tuple[list[dict], dict | N
             row = fm._faction_row(state, target)
             if not row or row.get("defeated") or target in members:
                 continue
+        if t.get("id") in recent_templates:
+            continue
         ok, loc = _resolve_location(t, rng)
         if not ok:
             continue
         pool.append((t, loc))
     if not pool:
         return quests, None, fm.refusal_note(state, fid, "sem_missao")
-    # evita repetir a mesma missão enquanto houver outra disponível
-    fresh = [
-        (t, loc)
-        for t, loc in pool
-        if mission_quest_from_template(t, fid, 0, loc, seed)["id"] not in done_ids
-        and not any(q.get("title") == t.get("title") and q.get("faction_id") == fid for q in quests)
-    ]
-    template, loc = rng.choice(fresh or pool)
+    template, loc = rng.choice(pool)
     turn = fm._turn(state)
-    quest = mission_quest_from_template(template, fid, turn, loc, seed)
+    quest = mission_quest_from_template(template, fid, turn, loc, seed, day)
     quests.append(quest)
     note = (
         f'[FAÇÃO] {fm.faction_name(state, fid)} lhe confia uma missão: "{quest["title"]}". '

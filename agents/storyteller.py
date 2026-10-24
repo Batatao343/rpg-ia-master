@@ -856,7 +856,8 @@ def storyteller_node(state: GameState):
         for _f in list(factions):
             if _f.get("defeated") and _f.get("id") not in _was_defeated:
                 _fm_notes.append(_fm_apply(fm.on_faction_defeated(_fm_view(), _f.get("id"))))
-        _asc = fm.ascension_member_note(_fm_view(), faction_events)
+        _asc_events = fm.new_ascensions(state.get("factions"), factions, faction_events)
+        _asc = fm.ascension_member_note(_fm_view(), _asc_events)
         if _asc:
             _fm_notes.append(_asc)
         _fm_notes.append(

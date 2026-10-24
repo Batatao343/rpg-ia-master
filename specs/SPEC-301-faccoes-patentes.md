@@ -626,7 +626,7 @@ mais os arquivos de teste existentes que ela toca.
 - [ ] Guard de FallbackLLM em `membership_action` (storyteller e `npc_actor`)
 - [ ] Saves antigos carregam; round-trip de `faction_membership`/`influence` sem diferença
 - [ ] Perfil `faccionario` com 50 turnos em MockLLM e 0 violações `error`
-- [ ] Revisão independente Opus (`handoffs/SPEC-301-review.md`)
+- [ ] Revisão independente Opus (`handoffs/SPEC-301-sol-review.md`)
 - [ ] `uv run pytest` verde (suíte completa offline, 1× no pouso)
 - [ ] Smoke real §6 executado e registrado
 
@@ -742,3 +742,14 @@ Contrato da SPEC-298 usado: reputação numérica -100..100 (`faction_tier`), "p
   pace no tick diário (`world_engine`, passo 6: `effective_pace`) e decai 1 por dia; o
   `advance_factions` legado (decaimento a cada 4 períodos) só vale com o motor off. Em ambos,
   influência 0 = comportamento anterior, e missão nunca leva o progress a 100 (só o tick ascende).
+- **Revisão Sol (CHANGES_REQUIRED) — correções:**
+  - P1-1 anti-farm: no máximo 1 missão por fação por dia de jogo (`last_mission_day`, recusa
+    `missao_recente`, sem efeito colateral); o mesmo modelo não volta em 10 dias
+    (`mission_template_id`/`mission_day`); missão de fação não nasce "alcançada" no turno em que
+    é criada, mesmo no local atual.
+  - P1-2 o invariante `faction.progress_le_99_outside_tick` checa a TRANSIÇÃO para 100 num turno
+    sem virada de dia (com o motor 302 `on` o tick pode deixar a fação em 100 aguardando o aviso).
+  - P2-1 a linha `[FAÇÃO]` de ascensão deriva da transição `completed` (`new_ascensions`), pois com
+    o motor `on` não há `faction_events` legado. P2-2 promoção em fação pública também enfileira
+    `rival_awareness`. P2-3 a expulsão por reputação no limiar hostil acontece no mesmo lote, sem
+    aviso prévio (decisão: a traição é telegrafada, a expulsão por reputação não precisa ser).

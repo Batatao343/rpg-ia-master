@@ -103,6 +103,7 @@ _REFUSAL_TEXT = {
     "nao_membro": "Você não pertence a {f}.",
     "sem_missao": "{f} não tem nada a confiar a você agora.",
     "missao_ativa": "Você já tem uma missão de {f} em andamento.",
+    "missao_recente": "{f} já lhe deu trabalho hoje; volte quando o dia virar.",
 }
 
 
@@ -755,6 +756,18 @@ def on_faction_defeated(state: Mapping, faction_id: str) -> tuple[dict, list[dic
     return _finish(work, state)
 
 
+def new_ascensions(before: list | None, after: list | None, legacy_events: list | None) -> list:
+    """Eventos de ascensão do turno: os do `advance_factions` legado + a transição
+    `completed` (com o motor 302 `on` não existe lista legada)."""
+    out = list(legacy_events or [])
+    seen = {e.get("id") for e in out}
+    was = {f.get("id") for f in before or [] if isinstance(f, dict) and f.get("completed")}
+    for f in after or []:
+        if isinstance(f, dict) and f.get("completed") and f.get("id") not in was | seen:
+            out.append({"id": f.get("id"), "name": f.get("name")})
+    return out
+
+
 def ascension_member_note(state: Mapping, faction_events: list[dict]) -> str:
     """Linha ``[FAÇÃO]`` para o membro cuja fação acabou de ascender (R19)."""
     lines = []
@@ -824,6 +837,8 @@ def _try_promote(work: dict, fid: str) -> None:
         target.get("min_level"), 1
     ):
         _set_record(work, fid, rank_index=nxt)
+        if not _cat(fid).get("secret"):
+            _queue_rival_awareness(work, fid, -1)  # R16: promoção pública também é notícia
         work["_events"].append(
             _event(fid, "promoted", rank_id=target.get("id", ""), rank_name=target.get("name", ""))
         )
@@ -997,9 +1012,11 @@ def _ask_mission(state: Mapping, fid: str) -> tuple[dict, list[dict], str]:
         return {}, [], refusal_note(state, fid, "nao_membro")
     quests, quest, note = faction_missions.offer_mission(state, fid)
     work = _work(state)
-    if quest is not None:
-        work["quests"] = quests
     work["_notes"].append(note)
+    if quest is None:
+        return _finish(work, state)  # recusa: estado intacto (sem info, sem cooldown)
+    work["quests"] = quests
+    _set_record(work, fid, last_mission_day=_day(state))
     _grant_information(work, fid)
     return _finish(work, state)
 

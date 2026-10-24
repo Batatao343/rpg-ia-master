@@ -362,6 +362,8 @@ class Quest(TypedDict, total=False):
     faction_id: str  # "" para quest comum
     mission_kind: str  # "apoio" | "sabotagem" | "rito"
     mission_tier: int  # 1..3
+    mission_template_id: str  # id do modelo em data/faction_membership.json
+    mission_day: int  # dia de jogo em que foi oferecida
     target_faction_id: str  # só sabotagem
 
 
@@ -380,6 +382,7 @@ class MembershipRecord(TypedDict, total=False):
     exposed: bool  # fação secreta: vínculo conhecido por ela/rivais
     rival_awareness: dict[str, int]  # rival_fid -> delta pendente em passos (+1/-1)
     last_info_day: int  # perk informacao: 1x/dia
+    last_mission_day: int  # última missão oferecida (1 por fação por dia)
     rite_quest_id: str
     marks: list[str]  # marcas do rito (ex.: cicatriz_labios)
 
