@@ -16,6 +16,7 @@ import sys
 from collections import Counter
 
 from playtest.profiles import PROFILES
+from playtest.scenarios import names as scenario_names
 from playtest.runner import CampaignResult, run_campaign
 
 # O harness também é executado diretamente no console Windows. Sem este ajuste,
@@ -396,7 +397,7 @@ def main(argv=None) -> int:
     pr.add_argument("--profile", choices=sorted(PROFILES), default=None)
     pr.add_argument(
         "--scenario",
-        choices=("recrutamento", "comercio", "mundo"),
+        choices=scenario_names(),
         default=None,
         help="smoke dirigido com pré-condição e oráculo mecânico",
     )
