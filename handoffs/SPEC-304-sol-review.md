@@ -1,7 +1,7 @@
 # SPEC-304 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus / Sol (estado, concorrência) · **Data:** 2026-10-24 · **Commit revisado:** `993aa7e2`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (re-revisão de `993ffff3`; a revisão inicial de `993aa7e2` foi `CHANGES_REQUIRED`)
+> **Revisor:** Opus / Sol (estado, concorrência) · **Data:** 2026-10-24 · **Commits revisados:** `993aa7e2` (inicial) → `993ffff3` (re-revisão)
 
 ## Escopo
 
@@ -57,16 +57,36 @@ exatamente no teto. Registrar a mudança para o dono ver na próxima rodada de d
 
 ## Correções aplicadas
 
-Executor (2026-10-24): P1-1 (fail_orphan_quests adiado até `npc_fate_learned`), P1-2 (`public_party`/`public_quests` + `ghost`), P2-1, P2-3, P2-4, P2-6 e P2-7 corrigidos, com `tests/test_spec304_review.py`; P2-2 e P2-5 registrados como follow-up na spec. Pendente: re-revisão.
+O executor corrigiu tudo em `993ffff3` (com `tests/test_spec304_review.py`). Re-revisão do delta
+`993aa7e2..993ffff3` (10 arquivos, +475/−25):
+
+| ID | Situação | Como foi conferido |
+|---|---|---|
+| P1-1 | **Fechado** | `event_processor.py:620-626`: `fail_orphan_quests` só roda com `npc_killed` on-screen ou com `npc_fate_learned` de `morto`. **Sonda refeita:** a mesma morte de Skek não percebida não muda `quests` e não grava nada na crônica; `public_quests` = `active`. Depois de perceber o item `npc_destino`, sai `npc_fate_learned`, a quest vira `failed` e a crônica grava "Chegou a notícia: Skek Eco-Curto morreu em Montanhas Afiadas. A missão "Ajudar Skek" fracassou." Ordem e momento corretos. |
+| P1-2 | **Fechado** | `npc_world.public_party`/`public_quests` + `entry.ghost`/`ghost_quests` (o snapshot de antes do destino), usados em `api.py:2193` e `:2212`. O teste parametrizado (`ferido`/`capturado`/`morto`) compara a party e as quests públicas com o snapshot de antes do destino (sem status literal, sem vitalidade real, sem sumiço). O `quest_failed` pessoal fica oculto por `personal_of` + `fate_hidden`. Depois da percepção, vale a verdade. O contrato da SPEC-300 não mudou. |
+| P2-1 | **Fechado (inspeção)** | `storyteller.py:1188-1189` passa a excluir `npcs` do merge. O `scene_npcs` (`:1043`) já é derivado do `state` com o patch aplicado (`:993-994`), então o resgate +1 e o destino entram e o `reset_scene` é preservado. O teste novo só confere o texto do source. Montar um turno de encontro de verdade numa sonda é caro; a inspeção basta. |
+| P2-3 | **Fechado** | Os derivados de `rule_engine` herdam `offscreen` + `cause_event_id` e ficam ocultos até a causa entrar em `_known_sources`. Efeito colateral aceito: o milestone de controle derivado nunca entra na crônica, nem depois da percepção. |
+| P2-4 | **Fechado** | `is_offscreen_event` exige `source ∈ {engine, rule_engine}` (crônica, contexto, `_event_origin`). Há teste de flag forjada. |
+| P2-6 | **Fechado** | `known_events` (anel de 20) em `_knows`/`_known_sources`. |
+| P2-7 | **Fechado / documentado** | Teste engine-only com os 4 tipos. O save omite as chaves vazias (com `off` o save fica idêntico ao de antes; o load continua dando `{}`). `if not origin` só para fato off-screen. R32 seeds 21–32 (evidência do executor). Desvio da R12 justificado na spec. |
+| P2-2, P2-5 | **Follow-up** | Registrados na spec (§ "Correções da revisão Sol"). A flag segue `off`. |
+
+**Achado novo (P2-8, não bloqueia):** `npc_world.py:770-777`: o `ghost` só é gravado quando há
+`cpatch` e nunca é limpo. Cenário: um companheiro `ferido` (destino percebido) recebe, depois do
+cooldown, um segundo perigo que termina em `escapou`. Esse destino não gera `cpatch`, mas troca
+`fate_event_id`, então `fate_hidden` = True e `public_party` volta a mostrar o snapshot **antigo**
+(vitalidade e `waiting_at` velhos) até o `escapou` ser percebido. Não vaza a verdade; mostra
+informação desatualizada. Correção: limpar `ghost`/`ghost_quests` quando o destino é percebido, ou
+quando um destino novo sem `cpatch` é aplicado. Também dá para gravar o ghost a cada destino.
 
 ## Pendências
 
-- P1-1 e P1-2: corrigir na branch `spec-304` antes do pouso, com os testes-oráculo estendidos.
-- P2-1 e P2-4: baratos; recomendo corrigir junto.
-- P2-2 (C1 da 302): follow-up obrigatório antes de `RPG_NPC_WORLD=on` no staging. Dono:
-  coordenador + decisão do dono (D2 da 304 / D4 da 302).
-- P2-3, P2-5, P2-6, P2-7: follow-ups aceitáveis (spec 304b, ou registrar em §7 da spec).
-- Smoke real §6 e flip do default (D5): seguem pendentes, como já está no cabeçalho.
+- P2-2 (C1 da 302 com `npc_perigo`): obrigatório antes de `RPG_NPC_WORLD=on` no staging.
+  Mesclar `state_patch` no sim da 302, medir e decidir com o dono (D2 da 304 / D4 da 302).
+- P2-5 (granularidade diária da intervenção/percepção): spec 304b ou §7.
+- P2-8 (ghost não limpo): barato; corrigir no pouso ou na 304b.
+- `LEADER_DEATH_GAP_DAYS` 30→60: registrar para o dono (D6).
+- Smoke real §6 e flip do default (D5): seguem pendentes no cabeçalho.
 
 ## Comandos rodados
 
@@ -75,4 +95,8 @@ git diff main...HEAD --stat → 42 arquivos, +5858/−62 (sem mudança em evals/
 py.sh -m pytest -q -p no:cacheprovider -n 2 tests/test_spec304_*.py tests/test_spec302_*.py tests/test_spec305_*.py tests/test_spec300_*.py tests/test_dossier*.py tests/test_chronicle*.py → exit 0 (~430 testes, todos verdes)
 sonda (scratchpad) cenário de morte de NPC de grafo com quest → crônica "A missão \"Ajudar Skek\" fracassou.", quest failed, npc_beliefs vazio (P1-1 confirmado)
 sonda (scratchpad) sim da 302 + merge do state_patch, 20 seeds × 120 d, RPG_NPC_WORLD off vs on → C1 NA 10→9, brekmar 16→17; 0 eventos inválidos (P2-2)
+--- re-revisão (993ffff3) ---
+git diff 993aa7e2..HEAD --stat → 10 arquivos, +475/−25
+sonda P1-1 refeita: morte não percebida → quests inalteradas, crônica vazia, public_quests active; após npc_fate_learned → quest failed + "Chegou a notícia: … morreu em Montanhas Afiadas. A missão \"Ajudar Skek\" fracassou."
+py.sh -m pytest -q -p no:cacheprovider -n 2 (mesmos arquivos + tests/test_spec280_orphan_games*.py, inclui test_spec304_review.py) → exit 0 (~470 testes, todos verdes)
 ```
