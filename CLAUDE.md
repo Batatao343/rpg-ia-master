@@ -24,8 +24,9 @@ leva só `SPEC-NNN · worktree · decisões do dono`; regras comuns em
 `docs/guias/BRIEF_SUBAGENTE.md`.
 
 **Memória da máquina (regra do dono, 24/10 — máquina de 16 GB; já travou):**
-- No máximo **3 subagentes que rodam testes** ao mesmo tempo (executor/revisor);
-  autores de spec, localizadores e ci-watcher não contam. Total ≤ 6.
+- Não há teto fixo de agentes; o problema é **exagerar em rajada**. Dispare aos
+  poucos, conforme o trabalho pede, e não abra muitos executores/revisores de uma vez
+  só porque há vaga.
 - Subagente **nunca** roda a suíte completa nem `-n auto`: só os testes do escopo,
   com no máximo `-n 2`. A suíte completa é do coordenador, **uma por vez**, no pouso.
 - Antes de disparar executor/revisor e a cada marco: medir RAM livre
