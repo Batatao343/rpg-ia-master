@@ -271,9 +271,13 @@ def collect_dynamic_facts(
             and ev.get("event_id") in knowledge_filter
         }
 
+    from services import npc_world as _npc_world
+
     for ev in (state.get("event_log", []) or [])[-100:]:
         if knowledge_filter is not None:
             break
+        if _npc_world.event_hidden_from_player(state, ev):
+            continue  # SPEC-304 R23: fato off-screen que o jogador ainda nao percebeu
         text = render_event(ev, projection)
         impact = _IMPACT_BY_TYPE.get(ev.get("type"), _DEFAULT_IMPACT)
         turns_ago = max(0, current_turn - int(ev.get("turn", 0) or 0))
@@ -332,6 +336,8 @@ def collect_dynamic_facts(
         alive = est.get("alive", True)
         if knowledge_filter is not None and not alive and eid not in known_dead:
             continue
+        if not alive and _npc_world.entity_death_hidden(state, eid):
+            continue  # SPEC-304 R23: a morte fora de cena ainda nao foi percebida
         loc = est.get("location_id")
         status = "vivo" if alive else "morto"
         text = f"{_name(eid)}: {status}"

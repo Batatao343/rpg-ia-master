@@ -18,6 +18,9 @@ from services import location_states as ls
 from services import world_pressures as wp
 
 PRESSURE_KINDS = wp.KINDS
+# SPEC-304 R14: `CrisisKind` extra — perigo MAIOR de NPC (lider/party/querido) ocupa uma vaga do
+# mesmo orcamento (MAX_ACTIVE_CRISES), mas nao cria estado de local nem fase/cooldown de regiao.
+NPC_PERIL_KIND = "npc_perigo"
 _SIGNAL_TPL = {
     "guerra": "guerra.aviso.cerco",
     "fome": "fome.aviso.escassez",
@@ -105,11 +108,11 @@ def _has_record(sim: dict, region_id: str, kind: str, faction_id: str = "") -> b
 
 def update_phase(sim: dict, day: int) -> dict:
     """R11: `crise` > `recuperacao` > `tensao` > `calmo` (mutacao in place, devolve sim)."""
-    if active_crises(sim):
+    if [c for c in active_crises(sim) if c.get("kind") != NPC_PERIL_KIND]:
         phase = "crise"
     elif day < int(sim.get("recovery_until_day", 0)):
         phase = "recuperacao"
-    elif announced_crises(sim):
+    elif [c for c in announced_crises(sim) if c.get("kind") != NPC_PERIL_KIND]:
         phase = "tensao"
     else:
         phase = "calmo"
@@ -217,7 +220,7 @@ def announce(
 def end_crisis(sim: dict, rec: dict, day: int, resolution: str, cfg: dict | None = None) -> None:
     rec["end_day"] = int(day)
     rec["resolution"] = resolution
-    if rec.get("start_day") is not None:
+    if rec.get("start_day") is not None and rec.get("kind") != NPC_PERIL_KIND:
         sim.setdefault("region_last_crisis_end", {})[rec["region_id"]] = int(day)
         if not active_crises(sim):
             sim["recovery_until_day"] = int(day) + int(_dc(cfg)["RECOVERY_DAYS"])
@@ -435,6 +438,8 @@ def step_crises(
     for rec in list(announced_crises(sim)):
         if rec["kind"] == "ascensao":
             continue  # tratada pelo motor (progresso de faccao)
+        if rec["kind"] == NPC_PERIL_KIND:
+            continue  # SPEC-304: vaga de perigo de NPC; o ciclo e do services/npc_world
         stale = day - int(rec["warned_day"]) > int(c["WARNING_TTL_DAYS"])
         fell = pval(rec) < int(k["RECUPERA"])
         if stale or fell or rec.get("relieved_day") is not None:

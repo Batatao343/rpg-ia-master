@@ -137,6 +137,10 @@ def apply_event(event: dict, projection: dict) -> dict:
         entities = proj.setdefault("entities", {})
         entities[target] = {**entities.get(target, {}), "alive": False}
 
+    elif etype == "npc_defected":
+        # SPEC-304 R10: unica escrita de filiacao dinamica de NPC (leitura: npc_world.npc_faction)
+        proj.setdefault("npc_affiliations", {})[target] = str(payload.get("to_faction_id") or "")
+
     elif etype == "secret_revealed":
         facts = proj.setdefault("revealed_facts", {})
         facts[event_id] = {
@@ -440,8 +444,12 @@ def process_pending_events(state: dict) -> dict:
     event_rejections = _bounded_rejections(original_rejections)
     rejection_count_before = len(event_rejections)
 
+    offscreen_fates: list[dict] = []  # SPEC-304: ferido/capturado fora de cena -> ficha do NPC
+
     def _chronicle_milestone(ev: dict, proj: dict) -> None:
         nonlocal chronicle, chronicle_changed
+        if (ev.get("payload") or {}).get("offscreen"):
+            return  # SPEC-304 R23: a morte off-screen so entra na cronica quando PERCEBIDA
         milestone = render_milestone(ev, proj)
         if milestone:
             chronicle = append_entry(
@@ -589,6 +597,11 @@ def process_pending_events(state: dict) -> dict:
 
         if event["type"] == "npc_killed":
             killed_targets.append(event.get("target_id"))
+        elif event["type"] == "npc_offscreen_fate":  # SPEC-304 R18
+            if event["payload"].get("fate") == "morto":
+                killed_targets.append(event.get("target_id"))
+            elif event["payload"].get("fate") in ("ferido", "capturado"):
+                offscreen_fates.append(event)
 
         # Fase 3.3 (R4): NPC canônico morto → toda quest órfã falha sistemicamente.
         if event["type"] == "npc_killed":
@@ -700,6 +713,24 @@ def process_pending_events(state: dict) -> dict:
                     f["progress"] = max(0, int(f.get("progress", 0) or 0) - int(points))
         if facs:
             updates["factions"] = facs
+
+    if offscreen_fates:
+        from services.entity_identity import find_runtime_npc_key
+
+        npcs_f = dict(updates.get("npcs", state.get("npcs") or {}))
+        for fe in offscreen_fates:
+            fkey = find_runtime_npc_key(npcs_f, str(fe.get("target_id") or ""))
+            if fkey is None:
+                continue
+            fp = fe.get("payload") or {}
+            row = {**npcs_f[fkey], "status": fp["fate"], "in_scene": False}
+            if fp["fate"] == "ferido":
+                row["wounded_until_day"] = fp.get("until_day")
+            else:
+                row["captor_faction_id"] = str(fp.get("captor_faction_id") or "")
+                row["held_at_location_id"] = str(fp.get("held_at_location_id") or "")
+            npcs_f[fkey] = row
+        updates["npcs"] = npcs_f
 
     if killed_targets:
         from services.npc_layers import apply_npc_death

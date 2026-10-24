@@ -1,0 +1,170 @@
+{
+  "_doc": "SPEC-304: constantes [BALANCEAR], elenco curado, hazards, destinos e deserção. Dados puros; lógica em services/npc_world.py e services/npc_perils.py.",
+  "constants": {
+    "ROSTER_CAP": 60,
+    "PERIL_MIN_DANGER": 3,
+    "MAX_ACTIVE_PERILS": 3,
+    "PERIL_COOLDOWN_DAYS": 15,
+    "TELEGRAPH_MIN_DAYS": 2,
+    "PERIL_WINDOW": [
+      1,
+      3
+    ],
+    "MAX_EXTENSION_DAYS": 3,
+    "LEADER_DEATH_GAP_DAYS": 60,
+    "WOUND_DAYS": 5,
+    "RETURN_AFTER_CALM_DAYS": 5,
+    "MAX_DEFECTIONS_PER_DAY": 1,
+    "P_FLEE": 0.3
+  },
+  "BASE_HAZARD": {
+    "3": 0.06,
+    "4": 0.1
+  },
+  "CRISIS_MULT": {
+    "cerco": 3.0,
+    "praga": 2.0,
+    "ocupado": 1.5,
+    "ruina": 2.0,
+    "corrompido": 2.5,
+    "": 1.0
+  },
+  "ROLE_MULT": {
+    "sedentario": 1.0,
+    "mercador_itinerante": 1.3,
+    "patrulheiro": 1.5,
+    "peregrino": 1.0,
+    "mensageiro": 1.0,
+    "lider_residente": 0.5,
+    "lider_em_campanha": 1.0
+  },
+  "fate_weights": {
+    "emboscada": {
+      "morto": 6,
+      "ferido": 4,
+      "capturado": 1,
+      "escapou": 2
+    },
+    "cerco": {
+      "morto": 3,
+      "ferido": 3,
+      "capturado": 3,
+      "escapou": 2
+    },
+    "praga": {
+      "morto": 4,
+      "ferido": 5,
+      "capturado": 0,
+      "escapou": 2
+    },
+    "abismo": {
+      "morto": 4,
+      "ferido": 3,
+      "capturado": 0,
+      "escapou": 3
+    },
+    "cativeiro": {
+      "morto": 1,
+      "ferido": 1,
+      "capturado": 6,
+      "escapou": 2
+    }
+  },
+  "danger_morto_step": 0.25,
+  "agenda_by_npc": {
+    "npc_comandante_thrace": "lider_em_campanha",
+    "npc_kahen": "lider_em_campanha",
+    "npc_vehkr_punho_de_gelo": "lider_em_campanha",
+    "npc_gruumsha_quebra_espinha": "lider_em_campanha",
+    "npc_khatarn_olhos_de_obsidiana": "lider_em_campanha",
+    "npc_groth_algema_fria": "mercador_itinerante",
+    "npc_arcante_gresh": "lider_residente",
+    "npc_astrin_veia_fina": "lider_residente",
+    "npc_bors_martelo_partido": "lider_residente",
+    "npc_corvane_o_mestre_destilador": "lider_residente",
+    "npc_durgrim_ultimo_martelo": "lider_residente",
+    "npc_korrin_sem_cla": "lider_residente",
+    "npc_lady_aerwen": "lider_residente",
+    "npc_lyss": "lider_residente",
+    "npc_mare_funda": "lider_residente",
+    "npc_mestre_fundidor_kald": "lider_residente",
+    "npc_o_que_ouve_mais_longe": "lider_residente",
+    "npc_pardal": "lider_residente",
+    "npc_saelwen_a_que_afundou": "lider_residente",
+    "npc_skriit_mil_olhos": "lider_residente",
+    "npc_velha_magda": "lider_residente",
+    "npc_mv_teo_chamine": "mensageiro",
+    "npc_mv_hana_estribo": "mensageiro",
+    "npc_mv_kessa_tres_sombras": "mercador_itinerante",
+    "npc_mv_orun_sal_negro": "mercador_itinerante",
+    "npc_mv_jax_corda_seca": "patrulheiro",
+    "npc_mv_eirik_sem_pegadas": "patrulheiro",
+    "npc_mv_irena_prego_frio": "patrulheiro",
+    "npc_mv_vaela_do_ninho": "peregrino",
+    "npc_mv_sira_candeia": "peregrino",
+    "npc_mv_pel_sem_rosto": "peregrino",
+    "npc_mv_mina_sete_taxas": "sedentario",
+    "npc_mv_brunna_ponte_alta": "sedentario"
+  },
+  "key_npcs": [
+    "npc_mv_irena_prego_frio",
+    "npc_mv_teo_chamine",
+    "npc_mv_mara_do_setimo_sino",
+    "npc_mv_ume_lodo_claro",
+    "npc_mv_padre_junco",
+    "npc_mv_sira_candeia",
+    "npc_mv_nahir_vidro_manso",
+    "npc_mv_kessa_tres_sombras",
+    "npc_mv_orun_sal_negro",
+    "npc_mv_eilin_folha_oca",
+    "npc_mv_tomir_musgo",
+    "npc_mv_vaela_do_ninho",
+    "npc_mv_jori_sete_esporos",
+    "npc_mv_mae_aru",
+    "npc_mv_pel_sem_rosto",
+    "npc_mv_runa_brasa_branca",
+    "npc_mv_eirik_sem_pegadas",
+    "npc_mv_solvi_cabo_cobre",
+    "npc_mv_maeril_caco_azul",
+    "npc_mv_oren_ultimo_mapa",
+    "npc_mv_tessa_ampola",
+    "npc_mv_nami_cinza_sal",
+    "npc_mv_koro_remo_curto",
+    "npc_mv_iria_coral_cego",
+    "npc_mv_daro_osso_cantante",
+    "npc_mv_mae_neris",
+    "npc_mv_ulk_marfim",
+    "npc_mv_brunna_ponte_alta",
+    "npc_mv_skek_eco_curto",
+    "npc_mv_odrin_calcario",
+    "npc_mv_lio_bandeira_vazia",
+    "npc_mv_hana_estribo",
+    "npc_mv_korso_pedra_movel",
+    "npc_mv_mina_sete_taxas",
+    "npc_mv_jax_corda_seca",
+    "npc_mv_varo_dois_portos"
+  ],
+  "defection_causes": [
+    {
+      "on_event": "location_control_changed",
+      "scope": "home_location",
+      "p": 0.25
+    },
+    {
+      "per_day": "faction_defeated",
+      "p": 0.15
+    },
+    {
+      "per_day": "faction_war_occupied_region",
+      "p": 0.03
+    }
+  ],
+  "defection_trait_mult": {
+    "lingua_dupla": 2.0,
+    "desertor_envergonhado": 2.0,
+    "guarda_subornavel": 2.0,
+    "honesto_demais": 0.0,
+    "leal_a_familia": 0.0
+  },
+  "HOME_MULT": 0.05
+}

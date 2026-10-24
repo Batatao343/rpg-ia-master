@@ -416,6 +416,12 @@ def _item_matches(seed: QuestSeed, item: dict) -> bool:
     tid = str(item.get("template_id") or "")
     prefix = tid.split(".")[0]
     kind = str(item.get("kind") or "")
+    if seed.kind == "resgate":  # SPEC-304: o telegrama do perigo (rumor ou mensageiro)
+        return (
+            kind == "npc_perigo"
+            and bool(seed.npc_id)
+            and str((item.get("params") or {}).get("npc_id") or "") == seed.npc_id
+        )
     if seed.kind == "libertar_ocupado":
         return tid == "ocupado.crise.escala" and item.get("location_id") == seed.location_id
     if seed.kind == "frear_ascensao":

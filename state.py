@@ -753,8 +753,83 @@ class LawState(TypedDict, total=False):
     notice: dict | None  # {turn, text}: resultado de escolha do confronto (1 turno)
 
 
+NpcFate = Literal["morto", "ferido", "capturado", "escapou"]
+PerilKind = Literal["emboscada", "cerco", "praga", "abismo", "cativeiro"]
+
+
+class NpcPos(TypedDict, total=False):
+    """SPEC-304 R5: onde o NPC do elenco está (verdade; o jogador só vê `npc_beliefs`)."""
+
+    location_id: str  # "" enquanto em viagem
+    travel_from: str
+    travel_to: str
+    arrive_day: int | None
+    since_day: int
+    return_day: int | None
+    refugee_from: str  # casa em crise (R6)
+
+
+class NpcPeril(TypedDict, total=False):
+    peril_id: str  # sha256(game_id|npc|opened_day)[:16]
+    npc_id: str
+    major: bool  # R14
+    kind: str  # PerilKind
+    location_id: str
+    region_id: str
+    opened_day: int
+    earliest_day: int
+    deadline_day: int
+    extensions: int  # R17, <= MAX_EXTENSION_DAYS
+    channel: Literal["rumor", "pedido_de_ajuda"]
+    warning_event_id: str
+    perceived_day: int | None
+    resolution: str  # "" | "intervencao" | NpcFate
+    resolved_day: int | None
+    crisis_id: str  # registro no diretor (perigo maior)
+    slot_day: int | None
+
+
+class NpcSimEntry(TypedDict, total=False):
+    archetype: str
+    home: str
+    pos: NpcPos
+    status: str  # "" | "ferido" | "capturado" (espelho do evento)
+    status_until_day: int | None
+    last_peril_end_day: int | None
+    frozen: bool  # saiu do elenco (R1)
+    dead: bool
+    fate: str  # destino fora de cena já aplicado (verdade; nunca na API sem percepção)
+    fate_event_id: str
+    calm_days: int
+    absence_noted_since: int | None
+
+
+class NpcSimState(TypedDict, total=False):
+    version: int  # 1
+    enabled_from_day: int
+    roster: list[str]
+    roster_fingerprint: str
+    npcs: dict[str, NpcSimEntry]
+    perils: list[NpcPeril]  # ativos + últimos 30 resolvidos
+    last_leader_death_day: int | None
+    tick_log: list[dict]  # anel 30
+
+
+class NpcBelief(TypedDict, total=False):
+    status_known: (
+        str  # "" | "ausente" | "em_perigo" | "ferido" | "capturado" | "morto" | "desaparecido"
+    )
+    location_known: str  # location_id ou ""
+    faction_known: str
+    as_of_day: int
+    channel: Literal["testemunho", "rumor", "mensageiro"]
+    source_event_id: str
+
+
 class WorldProjection(TypedDict, total=False):
     entities: dict[str, EntityState]
+    # SPEC-304 R10: filiação dinâmica do NPC (escrita SÓ por apply_event `npc_defected`)
+    npc_affiliations: dict[str, str]
     dynamic_edges: list[DynamicEdge]
     disabled_edges: list[DisabledEdge]
     revealed_facts: dict[str, RevealedFact]  # chave = event_id revelador
@@ -908,6 +983,11 @@ class GameState(TypedDict):
     # --- SPEC-302: motor de mundo (dono: services.world_engine; PRIVADO) ---
     world_sim: WorldSimState
     world_sim_shadow: WorldSimState
+    # --- SPEC-304: NPCs off-screen (dono: services.npc_world; PRIVADO). `npc_beliefs` é o
+    # que o JOGADOR sabe do NPC (a API/dossiê leem a crença, não a verdade de `npc_sim`).
+    npc_sim: NpcSimState
+    npc_sim_shadow: NpcSimState
+    npc_beliefs: dict[str, NpcBelief]
 
     # --- SPEC-215: conhecimento por NPC (ledger PRIVADO; dono services.npc_knowledge) ---
     # Aditivo, sem bump de schema: save sem as chaves carrega vazio + legacy=True.

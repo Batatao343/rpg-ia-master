@@ -8,14 +8,27 @@ o render do template, nunca texto da LLM (R25). Puro: sem LLM, sem RNG.
 
 from __future__ import annotations
 
+from functools import lru_cache
+
 from services import world_pressures as wp
 
 NEWS_CAP = 12
 SOURCE = "world_engine"
 
 
+@lru_cache(maxsize=1)
+def _merged_templates() -> dict:
+    """signals.json + templates dos itens `npc_*` da SPEC-304 (R20)."""
+    base = dict(wp._load_json("signals.json"))
+    base["templates"] = {
+        **base["templates"],
+        **wp._load_json("npc_templates.json")["templates"],
+    }
+    return base
+
+
 def _templates() -> dict:
-    return wp._load_json("signals.json")
+    return _merged_templates()
 
 
 def _cur(state: dict) -> tuple[str, str]:
@@ -49,6 +62,7 @@ def perceivable(state: dict, items: list[dict]) -> list[dict]:
     heard = set(((state or {}).get("location_heard") or {}).get(cur, []) or [])
     rumor_on = _rumor_enabled()
     tpls = _templates()["templates"]
+    today = int((((state or {}).get("world") or {}).get("world_clock") or {}).get("day", 1) or 1)
     out: list[dict] = []
     for it in items or []:
         tpl = tpls.get(it.get("template_id", ""))
@@ -63,7 +77,12 @@ def perceivable(state: dict, items: list[dict]) -> list[dict]:
         # SPEC-303 R20: a estacao e visivel de qualquer lugar (ceu e frio) — unico tipo `global`
         seen_everywhere = tpl.get("visibility") == "global" and it.get("kind") == "estacao"
         rumor = rumor_on and bool(it.get("subject_id")) and it["subject_id"] in heard
-        if local or regional or rumor or seen_everywhere:
+        # SPEC-304 R21 (d): o mensageiro dirigido acha o jogador ONDE ELE ESTIVER, no dia de
+        # entrega (testemunho: alguem veio contar). Antes disso o item espera no digest.
+        messenger = tpl.get("visibility") == "dirigido" and today >= int(
+            (it.get("params") or {}).get("delivery_day", 1 << 30)
+        )
+        if local or regional or rumor or seen_everywhere or messenger:
             out.append(it)
     return out
 
@@ -120,6 +139,13 @@ def render(state: dict, item: dict) -> str:
         "festa": str(params.get("festa") or ""),
         "rotulo": str(params.get("rotulo") or ""),
     }
+    if tid.startswith("npc_"):  # SPEC-304 R20: nome so se conhecido; senao um rotulo
+        from services import npc_world
+
+        values["npc"] = npc_world.npc_label(state, str(params.get("npc_id") or ""))
+        values["destino"] = str(
+            (locs.get(str(params.get("destino") or "")) or {}).get("name") or "outro lugar"
+        )
     for key, val in values.items():
         text = text.replace("{" + key + "}", val)
     mes = str(params.get("mes") or "")

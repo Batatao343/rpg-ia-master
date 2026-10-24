@@ -62,6 +62,10 @@ SUBJECT_PARAMS: dict[str, tuple[float, int, int]] = {
     "crime_witnessed": (0.7, 10, 2),
     # SPEC-301 R16b: entrada/promoção/traição em fação PÚBLICA (a secreta nunca propaga).
     "faction_membership_changed": (0.6, 8, 2),
+    # SPEC-304 [BALANCEAR]: NPC off-screen (perigo, destino, troca de lado) se espalha como rumor.
+    "npc_peril_warning": (0.9, 20, 2),
+    "npc_offscreen_fate": (0.8, 15, 2),
+    "npc_defected": (0.6, 15, 1),
 }
 # Tipos de evento que viram o assunto `player_deed` (extensível: reputation.register_deed_kind).
 PLAYER_DEED_TYPES: set[str] = {"faction_deed"}
@@ -202,11 +206,18 @@ def _residents(state: dict, location_id: str) -> list[str]:
         for c in state.get("party") or []
         if isinstance(c, dict) and c.get("active")
     }
+    from services import npc_world
+
+    on = npc_world.mode() == "on"
     out: list[str] = []
     for key, row in sorted((state.get("npcs") or {}).items(), key=lambda kv: str(kv[0])):
         if not isinstance(row, dict) or not npc_alive(row):
             continue
-        if str(row.get("home_location_id") or "") != location_id:
+        # SPEC-304 R7/P13: quem viaja "ouve" onde esta, nao em casa
+        where = (
+            npc_world.location_of(state, str(key)) if on else str(row.get("home_location_id") or "")
+        )
+        if where != location_id:
             continue
         hid = holder_id(state, str(key))
         if hid and hid not in active_party and hid not in out:
@@ -307,6 +318,13 @@ def _event_origin(state: dict, event: dict) -> str:
     for cand in (payload.get("location_id"), event.get("target_id")):
         if cand and gamedata.get_location(str(cand)):
             return str(cand)
+    if payload.get("offscreen") or str(event.get("type") or "") in (
+        "npc_peril_warning",
+        "npc_offscreen_fate",
+        "npc_defected",
+    ):
+        # SPEC-304 P10: fato do motor sem local valido NAO "aconteceu" ao lado do jogador
+        return ""
     return str(_world(state).get("current_location_id") or "")
 
 
@@ -680,6 +698,8 @@ def turn_updates(state: dict) -> dict:
         if not sid:
             continue
         origin = _event_origin(state, ev)
+        if not origin:
+            continue
         links.extend(record_witnesses(working(), ev, origin, clock))
         if str(ev.get("type") or "") in WITNESS_ONLY_TYPES:
             continue  # R7: testemunhável, nunca vira rumor local nem propaga

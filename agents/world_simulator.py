@@ -227,7 +227,15 @@ def _allowed_names(state: dict) -> set[str]:
         for f in (state or {}).get("factions") or []
         if (intel.get(f.get("id")) or {}).get("known")
     }
-    allowed |= {str(k) for k in ((state or {}).get("npcs") or {})}
+    from services import npc_world
+
+    on = npc_world.mode() == "on"
+    allowed |= {
+        str(k)
+        for k, row in ((state or {}).get("npcs") or {}).items()
+        # SPEC-304 R24: com o modo on so o NPC CONHECIDO pode ser nomeado pela narracao
+        if not on or not isinstance(row, dict) or row.get("known_by_player", True)
+    }
     return allowed
 
 

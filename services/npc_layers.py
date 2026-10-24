@@ -132,14 +132,15 @@ def npcs_in_scene(state: dict) -> list[str]:
     NPCs `in_scene` no dict `npcs` + membros de party PRESENTES (ativos, não
     `waiting`). Ordem: NPCs da cena primeiro, depois aliados. Usado para
     resolver alvo quando o router não nomeou ninguém."""
+    from services import npc_world
+
     out: list[str] = []
     loc = str((state.get("world") or {}).get("current_location_id") or "")
     for name, npc in (state.get("npcs") or {}).items():
-        home = str(npc.get("home_location_id") or "") if isinstance(npc, dict) else ""
         if (
             isinstance(npc, dict)
             and is_in_scene(npc)
-            and (not home or not loc or home == loc)
+            and npc_world.present_here(state, str(name), loc)  # SPEC-304 R7 (legado = casa)
             and name not in out
         ):
             out.append(name)
@@ -168,15 +169,21 @@ def npcs_for_context(state: dict) -> list[str]:
     party_names = {
         c.get("name") for c in (state.get("party") or []) if isinstance(c, dict) and npc_alive(c)
     }
+    from services import npc_world
+
     out: list[str] = []
+    on = npc_world.mode() == "on"
     for name, npc in (state.get("npcs") or {}).items():
         if not isinstance(npc, dict) or not npc_alive(npc):
             continue
-        home = npc.get("home_location_id") or ""
+        # SPEC-304 R7: com o modo `on` a POSICAO simulada manda ("" = em viagem)
+        home = (
+            npc_world.location_of(state, str(name)) if on else (npc.get("home_location_id") or "")
+        )
         if name in party_names:
             out.append(name)
             continue
-        if is_in_scene(npc) and (not home or not loc or home == loc):
+        if is_in_scene(npc) and npc_world.present_here(state, str(name), loc):
             out.append(name)
             continue
         if home and loc and home == loc:
@@ -241,8 +248,12 @@ def trait_names(trait_ids: list[str]) -> list[dict]:
     return out
 
 
-def visible_npc_view(npcs: dict[str, dict]) -> list[dict]:
-    """Camada 2 para a API (R8/R9): só conhecidos, SEM hidden_traits."""
+def visible_npc_view(npcs: dict[str, dict], state: dict | None = None) -> list[dict]:
+    """Camada 2 para a API (R8/R9): só conhecidos, SEM hidden_traits.
+
+    Com `state` (SPEC-304 R23) o status/local vêm da CRENÇA do jogador quando existe um
+    destino fora de cena que ele ainda não percebeu — nunca da verdade do motor."""
+    from services import npc_world
     from services.reputation import npc_tier
 
     out = []
@@ -252,11 +263,12 @@ def visible_npc_view(npcs: dict[str, dict]) -> list[dict]:
         if not npc.get("known_by_player", True):
             continue
         mem = npc.get("memory") or []
+        ov = npc_world.belief_view(state, str(key)) if state is not None else None
         out.append(
             {
                 "name": npc.get("name", key),
                 "role": npc.get("role", ""),
-                "location": npc.get("location", ""),
+                "location": ov["location"] if ov is not None else npc.get("location", ""),
                 "home_location_id": npc.get("home_location_id", ""),
                 # SPEC-298 R27: rótulo vago, nunca o número da relação
                 "attitude_label": npc_tier(npc.get("relationship", 5)),
@@ -267,7 +279,11 @@ def visible_npc_view(npcs: dict[str, dict]) -> list[dict]:
                 ][-3:],
                 "knowledge_source": npc.get("knowledge_source", "met"),
                 "in_scene": bool(npc.get("in_scene", False)) and npc_alive(npc),
-                "status": "morto" if not npc_alive(npc) else str(npc.get("status") or ""),
+                "status": (
+                    npc_world.visible_status(state, str(key), npc)
+                    if state is not None
+                    else ("morto" if not npc_alive(npc) else str(npc.get("status") or ""))
+                ),
                 "revealed_traits": trait_names(npc.get("revealed_traits") or []),
                 "last_memory": mem[-1] if isinstance(mem, list) and mem else "",
             }

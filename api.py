@@ -2648,7 +2648,7 @@ def _npcs_block(npcs: dict, state: dict | None = None) -> list[dict[str, Any]]:
                 resolve_npc_entity_id(npc, str(npc.get("name", key))), state
             )
         }
-    out = visible_npc_view(npcs)
+    out = visible_npc_view(npcs, state)  # SPEC-304 R23: crenca do jogador, nao a verdade
     return out
 
 

@@ -1,0 +1,45 @@
+{
+  "_doc": "SPEC-304 R20: templates pt-BR dos itens npc_*. Placeholders: {npc} {local} {destino} {faccao}. Sem numeros.",
+  "templates": {
+    "npc_perigo.rumor": {
+      "visibility": "regional",
+      "text": "Viajantes contam que {npc} está encurralado em {local}; ninguém sabe por quanto tempo aguenta."
+    },
+    "npc_perigo.pedido_de_ajuda": {
+      "visibility": "dirigido",
+      "text": "Um mensageiro sem fôlego te encontra: {npc} pede ajuda em {local}, e o tempo é curto."
+    },
+    "npc_destino.morto": {
+      "visibility": "regional",
+      "text": "A notícia chega seca: {npc} não sobreviveu em {local}."
+    },
+    "npc_destino.capturado": {
+      "visibility": "regional",
+      "text": "Dizem que levaram {npc} preso de {local}."
+    },
+    "npc_destino.ferido": {
+      "visibility": "regional",
+      "text": "Corre a notícia de que {npc} saiu ferido de {local}, mas vivo."
+    },
+    "npc_destino.escapou": {
+      "visibility": "regional",
+      "text": "Dizem que {npc} escapou de {local} por pouco."
+    },
+    "npc_ausente.sabido": {
+      "visibility": "local",
+      "text": "Dizem que {npc} partiu para {destino} faz alguns dias."
+    },
+    "npc_ausente.ignorado": {
+      "visibility": "local",
+      "text": "{npc} não está; ninguém sabe dizer para onde foi."
+    },
+    "npc_resgate.chegada": {
+      "visibility": "local",
+      "text": "Você encontra {npc} acuado, ferido, mas vivo."
+    },
+    "npc_lado.mudou": {
+      "visibility": "regional",
+      "text": "Correm boatos de que {npc} agora anda com {faccao}."
+    }
+  }
+}

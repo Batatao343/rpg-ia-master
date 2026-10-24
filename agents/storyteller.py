@@ -544,10 +544,16 @@ def _with_new_npc(
     player_inputs: tuple = (),
     state: dict | None = None,
 ) -> dict[str, dict]:
-    from services import npc_layers
+    from services import npc_layers, npc_world
     from services.entity_identity import find_runtime_npc_key
 
     canonical = find_runtime_npc_key(npcs, new_name)
+    if canonical is not None and state is not None:
+        # SPEC-304 R8: o narrador nao teleporta NPC ausente/viajando/morto/capturado.
+        why = npc_world.reintroduction_block({**state, "npcs": npcs}, canonical, str(home_id or ""))
+        if why:
+            npc_world.log_reintroduction_blocked(why)
+            return npcs
     if canonical is not None:
         # já conhecido: a cena o trouxe de volta (camada 3).
         # spec encontros-dedupe (exceção narrativa): re-introduzir um NPC conhecido
@@ -565,6 +571,9 @@ def _with_new_npc(
                 "home_location_id": home_id or atual.get("home_location_id", ""),
             }
         return new_npcs
+    if state is not None and npc_world.dead_graph_npc(state, {"name": new_name}):
+        npc_world.log_reintroduction_blocked("dead")  # SPEC-304 R8/P3: morto nao volta vivo
+        return npcs
     tpl = None
     pool_entry = _cast_match(cast, new_name)
     if pool_entry is not None:
@@ -591,6 +600,9 @@ def _with_new_npc(
     else:
         tpl = generate_new_npc(new_name, context=f"Local: {loc}. Cena: {narrative_text}")
     if not tpl:
+        return npcs
+    if state is not None and npc_world.dead_graph_npc(state, tpl):
+        npc_world.log_reintroduction_blocked("dead")
         return npcs
     # O librarian/cache pode resolver uma referência técnica para uma ficha já
     # presente (ex.: npc_skriit_mil_olhos -> Skriit Mil-olhos). Revalida APÓS
@@ -708,6 +720,27 @@ def _perceive_world(state, world: dict, factions: list, intel: dict, tick):
 
         log_fallback("storyteller", "world_perception_failed", exc)
         return world, []
+
+
+def _npc_beliefs_update(state, world: dict, sim_updates: dict, perceived: list) -> list:
+    """SPEC-304 R22: o que o jogador percebeu vira crença (`npc_beliefs`); a morte percebida
+    gera `npc_fate_learned` (cronica). Nunca levanta. Devolve eventos para a fila."""
+    try:
+        from services import npc_world
+
+        if npc_world.mode() != "on":
+            return []
+        beliefs, learned = npc_world.on_perceived(
+            {**state, **sim_updates, "world": world}, perceived
+        )
+        if beliefs != (state.get("npc_beliefs") or {}):
+            sim_updates["npc_beliefs"] = beliefs
+        return learned
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("storyteller", "npc_beliefs_failed", exc)
+        return []
 
 
 def _narrate_world(state, world: dict, factions: list, intel: dict, perceived: list) -> str:
@@ -963,6 +996,11 @@ def storyteller_node(state: GameState):
     perceived_items: list = []
     wq_created: list = []
     if world_tick is not None:
+        if getattr(world_tick, "state_patch", None):
+            # SPEC-304: escritas dos hooks (npc_sim, party/npcs de destino de companheiro...):
+            # entram no estado do turno ANTES do resto (cena, contexto, quests leem `state`).
+            sim_updates.update(world_tick.state_patch)
+            state = {**state, **world_tick.state_patch}
         if world_tick.world_sim is not None:
             if closed_pass:  # SPEC-303 R27: telemetria de travessia de passo fechado
                 _ps = world_tick.world_sim.setdefault("perceived_stats", {})
@@ -970,6 +1008,7 @@ def storyteller_node(state: GameState):
             sim_updates[world_tick.sim_key] = world_tick.world_sim
             world, perceived_items = _perceive_world(state, world, factions, intel, world_tick)
         extra_engine_events_tick = list(world_tick.pending_events)
+        extra_engine_events_tick += _npc_beliefs_update(state, world, sim_updates, perceived_items)
     else:
         extra_engine_events_tick = []
     # --- SPEC-301: o tempo passou -> a fação do jogador pode ter ascendido/sido destruída,

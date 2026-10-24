@@ -97,6 +97,10 @@ class DayContext:
     world: dict
     factions: list
     rng: random.Random
+    # SPEC-304: hooks que simulam NPCs precisam do GameState (+ patches dos dias anteriores
+    # da MESMA acao), dos eventos do dia ja aplicados e do destino da acao do jogador.
+    state: dict | None = None
+    events: list = field(default_factory=list)
 
 
 @dataclass
@@ -106,6 +110,9 @@ class DayHookResult:
     digest: list = field(default_factory=list)
     # SPEC-303 R12: deslocamento de BASELINE (nao delta) da deriva do dia: region -> kind -> int
     baseline_offsets: dict = field(default_factory=dict)
+    # SPEC-304: chaves do GameState que o hook escreve (npc_sim, party, npcs, ...): o storyteller
+    # as mescla no estado do turno. Ultimo hook vence por chave.
+    state_patch: dict = field(default_factory=dict)
 
 
 DayHook = Callable[[DayContext], DayHookResult]
@@ -144,6 +151,7 @@ def _run_hooks(stage: str, ctx: DayContext) -> DayHookResult:
                 ).get(k, 0) + int(v)
         merged.events += list(res.events or [])
         merged.digest += list(res.digest or [])
+        merged.state_patch.update(res.state_patch or {})
     return merged
 
 
@@ -205,6 +213,7 @@ class WorldTickResult:
     digest: list
     days_ticked: int
     sim_key: str = "world_sim"
+    state_patch: dict = field(default_factory=dict)  # SPEC-304: escritas dos hooks no GameState
 
 
 def _clock_day(world: dict) -> int:
@@ -285,8 +294,11 @@ def _tick_day(
     intel: dict,
     m: str,
     cfg: dict,
+    state: dict | None = None,
+    carry: dict | None = None,
 ) -> tuple[list, list, dict, list]:
-    """Um tick. Devolve (eventos, digest, world, factions). Muta `sim` e `projection`."""
+    """Um tick. Devolve (eventos, digest, world, factions). Muta `sim`, `projection` e `carry`
+    (patches de estado dos hooks, acumulados entre os dias da acao)."""
     from services.event_processor import apply_event
 
     dc = wp.director_constants(cfg)
@@ -300,7 +312,17 @@ def _tick_day(
         events.extend(evs)
 
     # 1. hooks pre
-    ctx = DayContext(game_id, day, sim, projection, world, factions, day_rng(game_id, day, "hooks"))
+    carry = carry if carry is not None else {}
+    ctx = DayContext(
+        game_id,
+        day,
+        sim,
+        projection,
+        world,
+        factions,
+        day_rng(game_id, day, "hooks"),
+        state={**(state or {}), **carry} if state is not None else None,
+    )
     pre = _run_hooks("pre", ctx)
     commit(list(pre.events))  # SPEC-303: festas (location_state_changed) antes das causas/crises
     digest += list(pre.digest)
@@ -475,11 +497,20 @@ def _tick_day(
 
     # 10. hooks post, fase
     ctx = DayContext(
-        game_id, day, sim, projection, world, factions, day_rng(game_id, day, "hooks_post")
+        game_id,
+        day,
+        sim,
+        projection,
+        world,
+        factions,
+        day_rng(game_id, day, "hooks_post"),
+        state={**(state or {}), **carry} if state is not None else None,
+        events=list(new_events) + list(events),
     )
     post = _run_hooks("post", ctx)
     commit(list(post.events))
     digest += list(post.digest)
+    carry.update(post.state_patch or {})
     wd.update_phase(sim, day)
     return events, digest, world, factions
 
@@ -607,6 +638,7 @@ def advance_days(
     world = copy.deepcopy(world_after)
     all_events: list[dict] = []
     all_digest: list[dict] = []
+    carry: dict = {}
     for d in days:
         n_before = len(all_events)
         evs, dg, world, new_factions = _tick_day(
@@ -620,6 +652,8 @@ def advance_days(
             intel=intel or {},
             m=m,
             cfg=cfg,
+            state=state,
+            carry=carry,
         )
         if m == "on":
             factions = new_factions
@@ -683,14 +717,17 @@ def advance_days(
         all_digest,
         len(days),
         key,
+        carry,
     )
 
 
 def _register_default_hooks() -> None:
-    """SPEC-303: calendario = hook `pre` order 10 (estacao, festas, offsets de baseline)."""
-    from services import world_calendar
+    """SPEC-303: calendario = hook `pre` order 10 (estacao, festas, offsets de baseline).
+    SPEC-304: NPCs off-screen = hook `post` order 10 (agenda, deserção, perigo e destino)."""
+    from services import npc_world, world_calendar
 
     register_day_hook("calendar", world_calendar.calendar_day_hook, stage="pre", order=10)
+    register_day_hook("npc_world", npc_world.day_hook, stage="post", order=10)
 
 
 _register_default_hooks()

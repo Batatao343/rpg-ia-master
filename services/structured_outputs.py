@@ -61,6 +61,11 @@ EventType = Literal[
     "quest_failed",
     # SPEC-305 R13: alívio de quest de mundo concluída — SO derivado (event_processor).
     "world_quest_relief",
+    # SPEC-304: NPCs off-screen — SO o motor emite (source="engine" no validator).
+    "npc_peril_warning",
+    "npc_offscreen_fate",
+    "npc_defected",
+    "npc_fate_learned",
 ]
 
 

@@ -751,6 +751,10 @@ def _state_to_save_data(state: dict[str, Any], game_id: str) -> dict[str, Any]:
         # SPEC-302 (aditivo, sem bump): estado privado do motor de mundo.
         "world_sim": deepcopy(state.get("world_sim") or {}),
         "world_sim_shadow": deepcopy(state.get("world_sim_shadow") or {}),
+        # SPEC-304 (aditivo, sem bump): NPCs off-screen (verdade) e crença do jogador.
+        "npc_sim": deepcopy(state.get("npc_sim") or {}),
+        "npc_sim_shadow": deepcopy(state.get("npc_sim_shadow") or {}),
+        "npc_beliefs": deepcopy(state.get("npc_beliefs") or {}),
         # --- Fase 4.6: save morto vira memorial (não aceita ações) ---
         "game_over": bool(state.get("game_over", False)),
         # --- spec checkpoints-morte: tela de morte pendente (persiste entre requests) ---
@@ -1084,6 +1088,10 @@ def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
         # SPEC-302: save sem as chaves = {} (o motor inicializa no 1o dia virado).
         "world_sim": deepcopy(raw_data.get("world_sim") or {}),
         "world_sim_shadow": deepcopy(raw_data.get("world_sim_shadow") or {}),
+        # SPEC-304 R28: save sem as chaves = {} (init no 1o tick ligado, sem retroativo).
+        "npc_sim": deepcopy(raw_data.get("npc_sim") or {}),
+        "npc_sim_shadow": deepcopy(raw_data.get("npc_sim_shadow") or {}),
+        "npc_beliefs": deepcopy(raw_data.get("npc_beliefs") or {}),
         # --- Recupera Transicionais ---
         "combat_target": raw_data.get("combat_target"),
         "loot_source": raw_data.get("loot_source"),

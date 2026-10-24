@@ -587,9 +587,64 @@ def _v_law_resolved(ev: ProposedWorldEvent, state: dict, proj: dict) -> Validati
     return ValidationResult(True)
 
 
-_ENGINE_ONLY_TYPES = frozenset({"location_state_changed", "world_crisis_warning"})
+def _npc_target_known(ev: ProposedWorldEvent, state: dict) -> bool:
+    from services.entity_identity import find_runtime_npc_key
+
+    if find_runtime_npc_key(state.get("npcs") or {}, ev.target_id) is not None:
+        return True
+    ent = gr.get_entity(ev.target_id)
+    return bool(ent and ent.get("type") == "npc")
+
+
+def _v_npc_offscreen(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    """SPEC-304 R25: aviso/destino/aprendizado de NPC off-screen (alvo em `npcs` ou no grafo)."""
+    if not _npc_target_known(ev, state):
+        return ValidationResult(False, f"NPC desconhecido: {ev.target_id}")
+    if ev.type == "npc_peril_warning":
+        from gamedata import get_location
+
+        if not get_location(str(ev.payload.get("location_id") or "")):
+            return ValidationResult(False, "payload.location_id ausente/inválido")
+        if not ev.payload.get("peril_id"):
+            return ValidationResult(False, "payload.peril_id ausente")
+    elif ev.type == "npc_offscreen_fate":
+        if ev.payload.get("fate") not in ("morto", "ferido", "capturado", "escapou"):
+            return ValidationResult(False, "payload.fate inválido")
+    elif ev.type == "npc_fate_learned" and not ev.payload.get("source_event_id"):
+        return ValidationResult(False, "payload.source_event_id ausente")
+    return ValidationResult(True)
+
+
+def _v_npc_defected(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    import gamedata
+    from services import npc_world
+
+    if not _npc_target_known(ev, state):
+        return ValidationResult(False, f"NPC desconhecido: {ev.target_id}")
+    if npc_world.is_leader(ev.target_id):
+        return ValidationResult(False, "líder não deserta")
+    for k in ("from_faction_id", "to_faction_id"):
+        if str(ev.payload.get(k) or "") not in gamedata.FACTIONS:
+            return ValidationResult(False, f"payload.{k} não é uma facção conhecida")
+    return ValidationResult(True)
+
+
+_ENGINE_ONLY_TYPES = frozenset(
+    {
+        "location_state_changed",
+        "world_crisis_warning",
+        "npc_peril_warning",
+        "npc_offscreen_fate",
+        "npc_defected",
+        "npc_fate_learned",
+    }
+)
 
 _VALIDATORS = {
+    "npc_peril_warning": _v_npc_offscreen,
+    "npc_offscreen_fate": _v_npc_offscreen,
+    "npc_fate_learned": _v_npc_offscreen,
+    "npc_defected": _v_npc_defected,
     "location_state_changed": _v_location_state_changed,
     "world_crisis_warning": _v_world_crisis_warning,
     "crime_witnessed": _v_crime_witnessed,
@@ -718,7 +773,15 @@ def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
             # (varios dias numa acao): distingue por estado/severidade/crise/dia.
             if ev.type in _ENGINE_ONLY_TYPES and any(
                 (e.get("payload") or {}).get(k) != ev.payload.get(k)
-                for k in ("state", "severity", "crisis_id", "day", "kind")
+                for k in (
+                    "state",
+                    "severity",
+                    "crisis_id",
+                    "day",
+                    "kind",
+                    "peril_id",
+                    "source_event_id",
+                )
             ):
                 continue
             # Fase 6.1: mesmo local pode bloquear/limpar rotas para PARES diferentes

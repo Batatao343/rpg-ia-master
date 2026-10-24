@@ -108,6 +108,10 @@ def _events_about(state: Mapping, entity_id: str | None) -> list[dict]:
         etype = str(event.get("type") or "")
         if etype not in CHRONICLE_EVENT_TYPES or etype not in _EVENT_OUTCOME:
             continue
+        from services import npc_world
+
+        if npc_world.event_hidden_from_player(state, dict(event)):
+            continue  # SPEC-304 R23
         turn = _turn(event.get("turn"))
         if turn is None:
             continue
@@ -162,6 +166,10 @@ def npc_dossier(entry: Mapping, state: Mapping, npc_index: Mapping) -> dict:
     updated = _max_turn(last_seen, created, _notes_turn(notes), *[e["turn"] for e in encounters])
     relationship = npc.get("relationship", 5)
     status = "morto" if npc and not npc_alive(npc) else str(npc.get("status") or "")
+    if npc:  # SPEC-304 R23: crenca do jogador, nao a verdade fora de cena
+        from services import npc_world
+
+        status = npc_world.visible_status(state, str(key), npc)
     return {
         "id": entity_id or str(key),
         "kind": "npc",

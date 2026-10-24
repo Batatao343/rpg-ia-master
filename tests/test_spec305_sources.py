@@ -176,8 +176,10 @@ def test_deterministic_ids_and_idempotent_offer():
     assert c1[0]["id"] == c2[0]["id"] == wq.quest_id("g-302", "conter_praga", "crise-1")
 
 
-def test_resgate_off_without_spec304():
-    assert wq._peril_api() is None
+def test_resgate_on_with_spec304_but_no_perils():
+    """SPEC-304 pousou: o tipo `resgate` esta ligado (`active_perils`), mas sem perigo aberto
+    (nenhum NPC simulado em risco) nao nasce semente."""
+    assert wq._peril_api() is not None
     assert "resgate" not in _by_kind(base_state())
 
 
