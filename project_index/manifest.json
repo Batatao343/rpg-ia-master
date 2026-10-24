@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "a88da6abefe547389e43557a2b5e03403f36feae",
+  "commit_sha": "bf3ffdb9e55fee2291c38e047a1c18049274a5c3",
   "edge_counts": {
-    "calls": 21288,
-    "contains": 811,
-    "defines": 11410,
-    "imports": 1841,
-    "likely_test_for": 1189,
+    "calls": 22219,
+    "contains": 824,
+    "defines": 11679,
+    "imports": 1889,
+    "likely_test_for": 1233,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:7cf2ce5bf88f755b4551e34e271cda83078ed4f07ea32108bcf8fa75656e5782",
+  "graph_hash": "sha256:6d455cea20b9e5059a5be35c9ca41b3023fc630088e4860dc69d161e34a50b43",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -342,6 +342,9 @@
     "services/event_processor.py",
     "services/exploration.py",
     "services/faction_display.py",
+    "services/faction_membership.py",
+    "services/faction_membership_lint.py",
+    "services/faction_missions.py",
     "services/faction_relations.py",
     "services/finops.py",
     "services/finops_alerts.py",
@@ -429,6 +432,7 @@
     "tests/spec297_support.py",
     "tests/spec299_helpers.py",
     "tests/spec300_helpers.py",
+    "tests/spec301_support.py",
     "tests/spec302_helpers.py",
     "tests/test_abuse_logging.py",
     "tests/test_abuse_policy.py",
@@ -813,6 +817,15 @@
     "tests/test_spec300_romance.py",
     "tests/test_spec300_tags.py",
     "tests/test_spec300_values.py",
+    "tests/test_spec301_api.py",
+    "tests/test_spec301_catalogo.py",
+    "tests/test_spec301_contrajogo.py",
+    "tests/test_spec301_entrada.py",
+    "tests/test_spec301_llm.py",
+    "tests/test_spec301_missoes.py",
+    "tests/test_spec301_perks.py",
+    "tests/test_spec301_persistencia.py",
+    "tests/test_spec301_traicao.py",
     "tests/test_spec302_director.py",
     "tests/test_spec302_effects_factions.py",
     "tests/test_spec302_location_states.py",
@@ -1012,14 +1025,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 857,
+    "class": 863,
     "endpoint": 64,
-    "file": 958,
-    "function": 3595,
-    "method": 790,
-    "module": 811,
-    "test": 6167
+    "file": 971,
+    "function": 3697,
+    "method": 794,
+    "module": 824,
+    "test": 6324
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:23de2086d69db3291d9609cd2afec5ab3290ff6c3270653a30a20f7efc7968b1"
+  "source_tree_hash": "sha256:65e74845fad6842e62b2457843ac935a7efe7d70e66d2e38272c6c3c22e24e7d"
 }
