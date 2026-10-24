@@ -753,3 +753,5 @@ Todas as decisões abertas desta spec seguem o **default recomendado pelo autor*
 
 - D3: traição POR TRAÇO — traços gananciosos roubam (até 25% do ouro, máx. 60, viram desafeto); traços rancorosos ENTREGAM o jogador (aviso a inimigos/lei → emboscada telegrafada; consome interfaces da SPEC-299/302).
 - D4: romance com todo companheiro adulto, sem filtro pelo gênero do herói; traços de luto bloqueiam até a missão pessoal.
+
+**Correções pós-revisão Sol (6 P2):** (1) dispensado volta com a aprovação anterior (teto 40 só para quem partiu); (2) `apply_turn` roda antes do recibo no finalizer, então ouro roubado, eventos `companion_*` e missão pessoal entram no `receipt_id` (sem patch de `gold_delta`); (3) roubo com `max(0, …)`; (4) partida só com despedida narrada e companheiro presente — sem narração é adiada (o caminho `stale` foi removido; revisa R15); (5) descanso bloqueado pelo clima não conta; (6) saída por morte é detectada pela ficha do NPC (`dead`, não `dismissed`).

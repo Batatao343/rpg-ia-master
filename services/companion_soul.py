@@ -531,7 +531,16 @@ def _rest_turn(state: dict) -> bool:
     if not text or not is_rest(text):
         return False
     combat = state.get("combat") or {}
-    return combat.get("phase") not in ("entering", "active", "resolving")
+    if combat.get("phase") in ("entering", "active", "resolving"):
+        return False
+    try:  # P2-5: descanso bloqueado pelo clima não recupera nada nem conta como convivência
+        from world_utils import weather_effects
+
+        if weather_effects(_world(state)).get("rest_block", False):
+            return False
+    except Exception:  # silent-ok: sem dado de clima, vale a regex
+        pass
+    return True
 
 
 def _soul_for_quest(souls: dict, quest: dict) -> str:
@@ -617,9 +626,15 @@ def apply_turn(state: dict) -> dict:
             if souls[cid].get("departed") == "betrayed":
                 continue  # R17: quem traiu nunca mais volta
             soul = souls[cid]
+            # P2-1: o teto vale só para quem PARTIU; dispensado volta com a aprovação que tinha
+            revived = (
+                min(REVIVE_CAP, _int(soul.get("approval")) + REVIVE_BONUS)
+                if soul.get("departed") == "left"
+                else _int(soul.get("approval"))
+            )
             soul.update(
                 departed="",
-                approval=min(REVIVE_CAP, _int(soul.get("approval")) + REVIVE_BONUS),
+                approval=revived,
                 warned_turn=None,
                 warned_day=None,
                 departure_pending="",
@@ -636,6 +651,9 @@ def apply_turn(state: dict) -> dict:
         comp = next((c for c in party if comp_id(c) == cid), None)
         gone = comp is None
         dead = comp is not None and _is_dead(comp)
+        if comp is None:  # P2-6: saiu da party porque morreu? (ficha do NPC / evento)
+            _k, _row = npc_row(state, {"origin_npc": cid, "name": soul.get("npc_key") or cid})
+            dead = bool(_row) and _is_dead(_row)
         if gone or dead:
             soul["departed"] = "dead" if dead else "dismissed"
             soul["left_party_day"] = day
@@ -800,9 +818,10 @@ def apply_turn(state: dict) -> dict:
                 continue
             if turn <= _int(soul.get("departure_turn")):
                 continue
+            # P2-4: só sai depois de a despedida ser NARRADA (companheiro presente);
+            # sem narração o motor adia — nunca parte em silêncio.
             narrated = any(a.startswith(f"r:{cid}:") and a.endswith(":despedida") for a in ack)
-            stale = turn - _int(soul.get("departure_turn")) >= REACTION_TTL
-            if not (narrated or stale):
+            if not (narrated and cid in present_ids):
                 continue
             comp = next(c for c in party if comp_id(c) == cid)
             name = str(comp.get("name") or cid)
@@ -826,8 +845,9 @@ def apply_turn(state: dict) -> dict:
             if betray:
                 soul["grudge"] = True
                 if soul.get("betrayal_mode") == "steal":
-                    taken = min(
-                        int(_int(player.get("gold")) * BETRAY_GOLD_FRACTION), BETRAY_GOLD_CAP
+                    taken = max(
+                        0,
+                        min(int(_int(player.get("gold")) * BETRAY_GOLD_FRACTION), BETRAY_GOLD_CAP),
                     )
                     player["gold"] = _int(player.get("gold")) - taken
                     gold_taken += taken
@@ -867,10 +887,6 @@ def apply_turn(state: dict) -> dict:
         updates["chronicle"] = chronicle
     if gold_taken:
         updates["player"] = player
-        outcome = dict(state.get("last_turn_outcome") or {})
-        if outcome:
-            outcome["gold_delta"] = _int(outcome.get("gold_delta")) - gold_taken
-            updates["last_turn_outcome"] = outcome
     updates["companion_feedback"] = feedback if live else []
     return updates
 

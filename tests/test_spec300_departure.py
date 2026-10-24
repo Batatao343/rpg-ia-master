@@ -81,8 +81,12 @@ def test_partida_espera_turno_narrado_fora_de_combate():
     em_combate = _pending(ack=despedida_ack, combat={"phase": "active"})
     assert "party" not in cs.apply_turn(em_combate)
     assert cs.apply_turn(_pending(ack=despedida_ack))["party"] == []
-    expirada = _pending(turn_set=7, now=10)  # 3 turnos pendente, ninguém narrou
-    assert cs.apply_turn(expirada)["party"] == []
+    # P2-4: sem narração a partida é ADIADA (nunca sai em silêncio), mesmo após 3 turnos
+    sem_narracao = _pending(turn_set=7, now=10)
+    assert "party" not in cs.apply_turn(sem_narracao)
+    ausente = _pending(ack=despedida_ack)
+    ausente["party"][0].update(active=False, waiting_at="skallgard")
+    assert "party" not in cs.apply_turn(ausente)
 
 
 def test_partida_remove_da_party_e_ajusta_npc():
@@ -124,10 +128,16 @@ def test_traicao_ladra_leva_ouro_limitado_e_aparece_no_recibo():
         gold=100,
         ack=[f"r:{BRUNNA_ID}:10:despedida"],
     )
-    state["last_turn_outcome"] = {"gold_delta": 0, "receipt_id": "r"}
     out = cs.apply_turn(state)
     assert out["player"]["gold"] == 75  # 25%
-    assert out["last_turn_outcome"]["gold_delta"] == -25
+    # P2-2: o writer roda antes do recibo; o finalizer vê o roubo e os eventos no receipt
+    from agents import turn_finalizer
+
+    state["player"].update(xp=0, level=1)
+    state["turn_baseline"].update(xp=0, level=1)
+    receipt = turn_finalizer.turn_finalizer_node(state)["last_turn_outcome"]
+    assert receipt["gold_delta"] == -25
+    assert receipt["event_ids"]  # companion_betrayed entra no recibo
     soul = out["companion_souls"][BRUNNA_ID]
     assert soul["departed"] == "betrayed" and soul["grudge"] and not soul["deliver_pending"]
     assert out["npcs"][BRUNNA]["relationship"] == 0
@@ -193,6 +203,31 @@ def test_volta_ao_grupo_com_ultima_aprovacao_mais_10_limitada_a_40():
     assert soul["departed"] == "" and soul["approval"] == 22
     state["companion_souls"][BRUNNA_ID].update(departed="left", approval=70)
     assert cs.apply_turn(state)["companion_souls"][BRUNNA_ID]["approval"] == 40
+    # P2-1: dispensado volta com a aprovação que tinha (sem teto de 40)
+    state["companion_souls"][BRUNNA_ID].update(departed="dismissed", approval=80)
+    assert cs.apply_turn(state)["companion_souls"][BRUNNA_ID]["approval"] == 80
+
+
+def test_roubo_nunca_negativo_e_descanso_bloqueado_nao_conta(monkeypatch):
+    broke = _pending(
+        traits=["ganancioso"],
+        approval=5,
+        mode_="steal",
+        gold=-50,
+        ack=[f"r:{BRUNNA_ID}:10:despedida"],
+    )
+    assert "player" not in cs.apply_turn(broke)  # nada roubado de saldo negativo
+    state = make_state(text="Descanso aqui esta noite.")
+    assert cs.apply_turn(state)["companion_souls"][BRUNNA_ID]["rests_together"] == 1
+    monkeypatch.setattr("world_utils.weather_effects", lambda w: {"rest_block": True})
+    assert cs.apply_turn(state)["companion_souls"][BRUNNA_ID]["rests_together"] == 0
+
+
+def test_morto_fora_da_party_nao_vira_dispensado():
+    state = make_state()
+    state["npcs"][BRUNNA]["status"] = "morto"
+    state["party"] = []
+    assert cs.apply_turn(state)["companion_souls"][BRUNNA_ID]["departed"] == "dead"
 
 
 def test_eventos_companion_so_engine():

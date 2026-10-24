@@ -14,6 +14,21 @@ def turn_finalizer_node(state: dict) -> dict:
     readiness = transition_readiness(state)
     if readiness["code"] not in _RECEIPT_BOUNDARIES:
         raise RuntimeError(f"turn_boundary_not_ready:{readiness['code']}:{readiness['phase']}")
+    # SPEC-300: ÚNICO escritor da alma dos companheiros (aprovação, aviso, partida, missão
+    # pessoal, romance). Roda ANTES do recibo (P2-2): ouro roubado, eventos companion_* e a
+    # missão pessoal concluída entram no `receipt_id`. `off` = no-op; falha nunca derruba o turno.
+    companion_updates: dict = {}
+    try:
+        from services import companion_soul
+
+        if companion_soul.mode() != "off":
+            companion_updates = companion_soul.apply_turn(state)
+            state = {**state, **companion_updates}
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("companion_soul", "apply_turn_failed", exc)
+        companion_updates = {}
     outcome = finalize_outcome(state)
     outcome["transition_readiness"] = dict(readiness)
     from services.interlocutor import speaker_for_turn
@@ -22,6 +37,7 @@ def turn_finalizer_node(state: dict) -> dict:
         "last_turn_outcome": outcome,
         # SPEC-202 R9: único escritor de last_speaker num turno processado.
         "last_speaker": speaker_for_turn(state),
+        **companion_updates,
     }
     # SPEC-203 R7: o desfecho do encontro referencia o recibo SPEC-199 do turno de
     # término (uma vez só; replays/turnos seguintes não reescrevem).
@@ -52,17 +68,6 @@ def turn_finalizer_node(state: dict) -> dict:
         import logging
 
         logging.getLogger("rpg.reputation").warning("turn_updates falhou: %s", type(exc).__name__)
-    # SPEC-300: ÚNICO escritor da alma dos companheiros (aprovação, aviso, partida, missão
-    # pessoal, romance). `off` = no-op; falha interna nunca derruba o turno.
-    try:
-        from services import companion_soul
-
-        if companion_soul.mode() != "off":
-            updates.update(companion_soul.apply_turn({**state, **updates}))
-    except Exception as exc:
-        from observability.telemetry import log_fallback
-
-        log_fallback("companion_soul", "apply_turn_failed", exc)
     if audit:
         updates["messages"] = Overwrite(messages)
         updates["evidence_rejections"] = [*(state.get("evidence_rejections") or []), *audit][-64:]
