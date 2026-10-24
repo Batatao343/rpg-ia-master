@@ -71,6 +71,20 @@ def turn_finalizer_node(state: dict) -> dict:
         import logging
 
         logging.getLogger("rpg.law").warning("turn_updates falhou: %s", type(exc).__name__)
+    # SPEC-305 R7 (ponto 2): rumor/NPC que chegou sem o dia virar vira quest de mundo.
+    try:
+        from services import world_quests
+
+        if world_quests.mode() == "on":
+            qstate = {**state, **updates}
+            clock = (qstate.get("world") or {}).get("world_clock") or {}
+            quests, created = world_quests.offer_from_heard(qstate, int(clock.get("day", 1) or 1))
+            if created:
+                updates["quests"] = quests
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("turn_finalizer", "world_quests_failed", exc)
     # SPEC-298: fama por notícia entregue, pendências de fação, reação de NPCs e avisos.
     try:
         from services import reputation

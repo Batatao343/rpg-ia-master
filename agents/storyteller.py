@@ -278,9 +278,39 @@ def _quests_ativas_block(quests: list[dict], state: dict | None = None) -> str:
         ok, _why = quest_log.has_completion_proof(q, state)
         return " · prova: ok" if ok else " · prova: pendente"
 
+    day = int((((state or {}).get("world") or {}).get("world_clock") or {}).get("day", 1) or 1)
+
+    def _mundo(q: dict) -> str:
+        # SPEC-305 R22: urgencia como ROTULO vago (nunca numero de dia) para quest de mundo.
+        if not q.get("world_kind"):
+            return ""
+        view = quest_log.public_quest_view(q, day)
+        label = view.get("deadline_label", "")
+        return " · tipo: mundo" + (f" · prazo: {label}" if label else "")
+
     return "\n".join(
-        f"- id={q.get('id')} · {q.get('title')} · origem: {q.get('origin_name', '?')}{_prova(q)}"
+        f"- id={q.get('id')} · {q.get('title')} · origem: {q.get('origin_name', '?')}"
+        f"{_mundo(q)}{_prova(q)}"
         for q in ativas
+    )
+
+
+def _gancho_novo_block(created: list[dict]) -> str:
+    """SPEC-305 R22: linha com o gancho recem-criado (texto do template + canal) para o
+    narrador mostrar COMO o personagem soube. Sem chamada LLM nova; sem prazo exato."""
+    rows = [
+        f"- (canal: {q['heard_via']['channel']}) {q.get('description', '')}"
+        for q in created or []
+        if q.get("world_kind") and isinstance(q.get("heard_via"), dict)
+    ]
+    if not rows:
+        return ""
+    return (
+        "<GANCHO_NOVO>\n"
+        + "\n".join(rows)
+        + "\nNarre, de forma breve, como o personagem toma conhecimento disso pelo canal "
+        "indicado (testemunho, cartaz, alguém contando, rumor). NÃO invente prazo exato, "
+        "números de dias nem o desfecho.\n</GANCHO_NOVO>"
     )
 
 
@@ -630,6 +660,10 @@ def _perceive_world(state, world: dict, factions: list, intel: dict, tick):
         )
         stats["crises"] = int(stats.get("crises", 0)) + sum(1 for i in seen if i["kind"] == "crise")
         sim["perceived_stats"] = stats
+        # SPEC-305 R6: livro-razao do que o jogador percebeu (prova de `heard_via`).
+        ledger = list(sim.get("perceived_ids") or [])
+        ledger += [str(i.get("subject_id") or i["item_id"]) for i in seen]
+        sim["perceived_ids"] = ledger[-200:]
         day = int((world.get("world_clock") or {}).get("day", 1) or 1)
         # so rumores (com subject_id) esperam propagacao; o resto e testemunho do dia
         sim["pending_digest"] = [
@@ -676,6 +710,55 @@ def _world_tick(state, world_before: dict, world: dict, factions: list, intel: d
 
         new_world = decay_danger_overrides(dict(new_world))
     return new_world, tick.factions, tick
+
+
+def _world_quests_tick(state, world: dict, factions: list, intel: dict, tick, perceived: list):
+    """SPEC-305 R7/R16: depois do tick e da percepcao, vence/falha prazos e oferece quests
+    de mundo do que o jogador percebeu. Devolve `(quests, eventos_do_motor, criadas)`.
+    Nunca levanta: falha daqui nao derruba o turno."""
+    quests = list(state.get("quests") or [])
+    try:
+        from services import world_quests as wq
+
+        if (
+            wq.mode() == "off"
+            or tick is None
+            or tick.sim_key != "world_sim"
+            or not tick.days_ticked
+            or tick.world_sim is None
+        ):
+            return quests, [], []
+        day = int(((world or {}).get("world_clock") or {}).get("day", 1) or 1)
+        qstate = {
+            **_perception_state(state, world, factions, intel),
+            "world_sim": tick.world_sim,
+            "world_projection": wq.projection_after(state, tick.pending_events, day),
+            "quests": quests,
+        }
+        quests, fail_events = wq.sync_deadlines(qstate, day, perceived=perceived)
+        qstate["quests"] = quests
+        quests, created = wq.offer_from_perceived(qstate, perceived, day)
+        return quests, fail_events, created
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("storyteller", "world_quests_failed", exc)
+        return list(state.get("quests") or []), [], []
+
+
+def _world_quest_completions(state, world: dict, quests: list) -> list:
+    """SPEC-305 R12: conclusoes que o proprio motor prova (resgate, objeto recuperado)."""
+    if not any(q.get("world_kind") for q in quests or []):
+        return []
+    try:
+        from services import world_quests as wq
+
+        return wq.engine_completions({**state, "world": world, "quests": quests})
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("storyteller", "world_quest_completions_failed", exc)
+        return []
 
 
 def storyteller_node(state: GameState):
@@ -841,6 +924,7 @@ def storyteller_node(state: GameState):
                 "Narre a passagem do tempo e o estado do mundo ao acordar."
             )
     perceived_items: list = []
+    wq_created: list = []
     if world_tick is not None:
         if world_tick.world_sim is not None:
             sim_updates[world_tick.sim_key] = world_tick.world_sim
@@ -873,6 +957,15 @@ def storyteller_node(state: GameState):
         if _fm_text:
             faction_note = (faction_note + "\n" + _fm_text).strip()
 
+    # SPEC-305: quests de mundo (prazo/falha + oferta por percepcao); a lista parcial
+    # `wq_quests` substitui `state["quests"]` em todo o resto do turno.
+    wq_base = {**state, "quests": fm_extra["quests"]} if "quests" in fm_extra else state
+    wq_quests, wq_events, wq_created = _world_quests_tick(
+        wq_base, world, factions, intel, world_tick, perceived_items
+    )
+    extra_engine_events_tick += wq_events
+    extra_engine_events_tick += _world_quest_completions(state, world, wq_quests)
+    wq_changed = wq_quests != list(state.get("quests") or [])  # inclui quests da 301
     # Viagem fecha a cena anterior antes de qualquer encontro ou contexto. Isso
     # também protege retornos antecipados de combate contra NPCs teleportados.
     from services import npc_layers
@@ -1023,6 +1116,8 @@ def storyteller_node(state: GameState):
                 if turn_bl is not state.get("turn_baseline"):
                     updates["turn_baseline"] = turn_bl
                 updates.update(sim_updates)
+                if wq_changed:
+                    updates["quests"] = wq_quests
                 if discovery_events or extra_engine_events:
                     updates["pending_world_events"] = (
                         (state.get("pending_world_events", []) or [])
@@ -1179,7 +1274,8 @@ def storyteller_node(state: GameState):
     # Fase 2.6: ids canônicos que o LLM pode usar em proposed_events (defesa em profundidade).
     entidades_canonicas = _scene_canonical_entities(scene_state, factions, intel, loc)
     # Fase 3.3: quests ativas que o LLM pode concluir via proposed_events(quest_completed).
-    quests_ativas = _quests_ativas_block(state.get("quests", []), {**state, "world": world})
+    quests_ativas = _quests_ativas_block(wq_quests, {**state, "world": world, "quests": wq_quests})
+    gancho_novo = _gancho_novo_block(wq_created)
 
     # spec npc-fallback-sem-alvo (R2): rota NPC sem interlocutor delegou aqui.
     npc_fallback_clause = _npc_fallback_clause(scene_state)
@@ -1296,6 +1392,7 @@ def storyteller_node(state: GameState):
     ao local e investigar, ou voltar a quem pediu. Na dúvida, deixe vazio. NUNCA
     invente ids.
     </QUESTS_ATIVAS>
+    {gancho_novo}
 
     {capacidades_block}
 
@@ -1746,7 +1843,7 @@ def storyteller_node(state: GameState):
             [] if quarantine_llm_payload else (getattr(update, "proposed_quests", []) or [])
         )
         new_quests, created = quest_log.register_proposed_quests(
-            fm_extra.get("quests", state.get("quests", [])), proposed_quests, turn=turn
+            wq_quests, proposed_quests, turn=turn
         )
         new_quests = quest_log.sync_location_progress(
             new_quests,
@@ -1779,7 +1876,7 @@ def storyteller_node(state: GameState):
                 )
                 + quest_events
             )
-        if created or new_quests != list(state.get("quests", []) or []):
+        if created or wq_created or new_quests != list(state.get("quests", []) or []):
             updates["quests"] = new_quests
             updates["archive_due"] = True  # nova missão é evento relevante
         if turn_bl is not state.get("turn_baseline"):
@@ -1832,6 +1929,8 @@ def storyteller_node(state: GameState):
                 + list(extra_engine_events)
                 + list(fm_events)
             )
+        if wq_changed:
+            fallback["quests"] = wq_quests
         if turn_bl_pre_llm is not state.get("turn_baseline"):
             fallback["turn_baseline"] = turn_bl_pre_llm
         if track_bk is not None:  # rastro narrado no fallback também chega ao Codex

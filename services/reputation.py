@@ -493,7 +493,9 @@ def deed_info(state: Mapping, event: Mapping) -> dict | None:
     if etype == "quest_completed":
         qid = str(payload.get("quest_id") or "")
         quest = next((q for q in state.get("quests") or [] if q.get("id") == qid), {})
-        origin = str(quest.get("origin_entity_id") or "")
+        # SPEC-305 R14: quest de mundo nao tem NPC canonico de origem; a fação e a que
+        # controlava o alvo (`origin_faction_id`, entidade de fação do grafo).
+        origin = str(quest.get("origin_entity_id") or quest.get("origin_faction_id") or "")
         fid = _faction_of_entity(origin) if origin else ""
         if not fid:
             return None
@@ -506,7 +508,7 @@ def deed_info(state: Mapping, event: Mapping) -> dict | None:
             "infamy": 0,
             "location_id": loc,
             "direction": "ajudou",
-            "origin_npc": origin,
+            "origin_npc": str(quest.get("origin_entity_id") or ""),
         }
     if etype == "npc_killed":
         if str(event.get("actor_id") or "") != "player":

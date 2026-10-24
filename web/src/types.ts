@@ -180,13 +180,16 @@ export interface Quest {
   id: string;
   title: string;
   description: string;
-  status: "active" | "completed" | "failed";
+  status: "active" | "completed" | "failed" | "expired";
   origin_name: string;
   origin_entity_id: string;
   location_id: string;
   created_turn: number;
   resolved_turn: number;
   reward_hint: string;
+  // SPEC-305: quests de mundo. Rótulo vago de prazo, nunca número de dia.
+  kind?: "comum" | "faccao" | "mundo";
+  deadline_label?: string;
 }
 
 export interface QuestMarker {

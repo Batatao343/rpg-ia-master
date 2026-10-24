@@ -61,6 +61,33 @@ def _valid_entity_ids() -> set:
         return set()
 
 
+def _vocab_match(kind: str, text: str) -> bool:
+    """SPEC-305 R11: o texto casa o vocabulario de acao do tipo de quest de mundo."""
+    from services import world_quests
+
+    stems = world_quests.action_vocab(kind)
+    folded = _fold_name(text)
+    return bool(stems) and any(re.search(r"\b" + re.escape(stem), folded) for stem in stems)
+
+
+def _duplicates_world_quest(
+    proposal: dict, title: str, location_id: str, active: list[dict]
+) -> bool:
+    """SPEC-305 R10: proposta do LLM no alvo de quest de mundo ativa, com titulo parecido
+    (>= TITLE_SIMILARITY) ou texto no vocabulario do tipo, e duplicata."""
+    text = f"{title} {proposal.get('description') or ''}"
+    for q in active:
+        if not q.get("world_kind") or q.get("location_id") != location_id:
+            continue
+        similar = (
+            difflib.SequenceMatcher(None, title.lower(), str(q.get("title", "")).lower()).ratio()
+            >= TITLE_SIMILARITY
+        )
+        if similar or _vocab_match(str(q["world_kind"]), text):
+            return True
+    return False
+
+
 def register_proposed_quests(
     quests: list[dict], proposals: list, *, turn: int = 0
 ) -> tuple[list[dict], list[dict]]:
@@ -103,6 +130,11 @@ def register_proposed_quests(
         location_id = str(p.get("location_id") or "")
         if location_id and location_id not in valid_locs:
             location_id = ""
+
+        # SPEC-305 R10: o LLM nao reinventa uma quest de mundo ja ativa naquele alvo.
+        if location_id and _duplicates_world_quest(p, title, location_id, active_titles):
+            _log_event("quest", "proposal_world_duplicate", level="info")
+            continue
         origin_entity_id = str(p.get("origin_entity_id") or "")
         if origin_entity_id and origin_entity_id not in valid_entities:
             origin_entity_id = ""
@@ -205,7 +237,9 @@ def sync_action_progress(
     Duas ações distintas fecham o objetivo; repetição literal é idempotente.
     """
     action = " ".join(str(action_text or "").split())[:240]
-    if not action or not QUEST_ACTION_RE.search(action):
+    generic_verb = bool(QUEST_ACTION_RE.search(action)) if action else False
+    has_world = any(q.get("world_kind") and q.get("status") == "active" for q in quests or [])
+    if not action or not (generic_verb or has_world):
         return [dict(q) for q in (quests or [])], []
     action_words = _normalized_words(action)
     generic_reference = bool(
@@ -219,13 +253,21 @@ def sync_action_progress(
         q = dict(original)
         progress = [dict(row) for row in (q.get("progress_log") or [])]
         quest_words = _normalized_words(f"{q.get('title', '')} {q.get('description', '')}")
-        relevant = generic_reference or bool(action_words & quest_words)
+        world_kind = q.get("world_kind")
+        if world_kind:
+            # SPEC-305 R11: quest de mundo troca o verbo investigativo e a relevancia por
+            # titulo pelo vocabulario de acao do proprio tipo.
+            verb_ok = relevant = _vocab_match(str(world_kind), action)
+        else:
+            verb_ok = generic_verb
+            relevant = generic_reference or bool(action_words & quest_words)
         reached = any(row.get("kind") == "location_reached" for row in progress)
         already_ready = bool(q.get("completion_ready"))
         fresh = int(q.get("created_turn", -1) or -1) < int(turn)
         if (
             q.get("status") == "active"
             and not q.get("personal_of")  # SPEC-300: missão pessoal é do motor
+            and verb_ok
             and q.get("location_id") == location_id
             and reached
             and relevant
@@ -252,7 +294,11 @@ def sync_action_progress(
                 if all(_jaccard(toks, d) < FINGERPRINT_JACCARD for d in distinct):
                     distinct.append(toks)
             investigations = distinct
-            if len(investigations) >= 2:
+            # SPEC-305: vitoria em combate no alvo vale 1 evidencia distinta por combate.
+            combats = {
+                _safe_turn(row.get("turn")) for row in progress if row.get("kind") == "combat_won"
+            }
+            if len(investigations) + len(combats) >= 2:
                 q["completion_ready"] = True
                 progress.append(
                     {
@@ -268,7 +314,7 @@ def sync_action_progress(
 
 
 # --- SPEC-223 R1: prova determinística p/ conclusão proposta pelo LLM ------------
-PROOF_EVIDENCE_KINDS = ("investigation", "npc_interaction", "completion_ready")
+PROOF_EVIDENCE_KINDS = ("investigation", "npc_interaction", "completion_ready", "combat_won")
 
 
 def _fold_name(value: object) -> str:
@@ -406,6 +452,122 @@ def fail_orphan_quests(
             )
         out.append(q)
     return out, events
+
+
+def sync_combat_progress(quests: list[dict], location_id: str, *, turn: int = 0) -> list[dict]:
+    """SPEC-305 R11. PURO. Vitoria de combate no alvo de quest de mundo cujo tipo conta
+    combate = 1 evidencia (`combat_won`), 1 por combate/turno, nunca no turno de criacao."""
+    from services import world_quests
+
+    out: list[dict] = []
+    for original in quests or []:
+        q = dict(original)
+        kind = q.get("world_kind")
+        progress = list(q.get("progress_log") or [])
+        if (
+            kind
+            and q.get("status") == "active"
+            and location_id
+            and q.get("location_id") == location_id
+            and world_quests.combat_counts(str(kind))
+            and any(row.get("kind") == "location_reached" for row in progress)
+            and _safe_turn(q.get("created_turn")) < int(turn)
+            and not any(
+                row.get("kind") == "combat_won" and _safe_turn(row.get("turn")) == int(turn)
+                for row in progress
+            )
+        ):
+            progress.append({"kind": "combat_won", "turn": int(turn), "detail": str(location_id)})
+            q["progress_log"] = progress
+        out.append(q)
+    return out
+
+
+def _close_quest(
+    quests: list[dict], quest_id: str, status: str, turn: int, reason: str, day: int
+) -> list[dict]:
+    out: list[dict] = []
+    for original in quests or []:
+        q = dict(original)
+        if q.get("id") == quest_id and q.get("status") == "active":
+            progress = list(q.get("progress_log") or [])
+            progress.append({"kind": status, "turn": int(turn), "detail": reason})
+            note = str(q.get("fail_text") or "").strip()
+            desc = str(q.get("description") or "")
+            if note and note not in desc:
+                desc = f"{desc} {note}".strip()
+            q.update(
+                {
+                    "status": status,
+                    "resolved_turn": int(turn),
+                    "resolved_day": int(day),
+                    "fail_reason": reason,
+                    "progress_log": progress,
+                    "description": desc,
+                }
+            )
+        out.append(q)
+    return out
+
+
+def fail_quest(
+    quests: list[dict], quest_id: str, turn: int, reason: str, day: int = 0
+) -> list[dict]:
+    """SPEC-305 R15. PURO. Quest ATIVA -> failed (idempotente: id ausente/ja resolvida = igual).
+    O texto de falha vem do template gravado na criacao (neutro, R18)."""
+    return _close_quest(quests, quest_id, "failed", turn, reason, day)
+
+
+def expire_quest(quests: list[dict], quest_id: str, turn: int, day: int = 0) -> list[dict]:
+    """SPEC-305 R16/R19. PURO. A fonte acabou sozinha: quest ativa -> expired, sem falha."""
+    return _close_quest(quests, quest_id, "expired", turn, "superada", day)
+
+
+def deadline_label(days_left: int | None, status: str = "active") -> str:
+    """SPEC-305 R21: rotulo vago de prazo, sem numero. `failed`/`expired` = mesmo rotulo."""
+    if status in ("failed", "expired"):
+        return "prazo esgotado"
+    if days_left is None:
+        return ""
+    if days_left <= 2:
+        return "urgente"
+    if days_left <= 5:
+        return "em poucos dias"
+    return "há algum tempo"
+
+
+_PUBLIC_QUEST_FIELDS = (
+    "id",
+    "title",
+    "description",
+    "status",
+    "origin_name",
+    "origin_entity_id",
+    "location_id",
+    "created_turn",
+    "resolved_turn",
+    "reward_hint",
+)
+
+
+def public_quest_view(quest: dict, day: int) -> dict:
+    """SPEC-305 R20: LISTA BRANCA da quest para a API. Campos internos (prazo exato,
+    `world_source_id`, `heard_via`, `origin_faction_id`, `fail_reason`, `world_kind`...)
+    nunca saem por aqui."""
+    view = {
+        k: quest.get(k, "" if k not in ("created_turn", "resolved_turn") else 0)
+        for k in _PUBLIC_QUEST_FIELDS
+    }
+    world = bool(quest.get("world_kind"))
+    view["kind"] = "mundo" if world else ("faccao" if quest.get("mission_kind") else "comum")
+    status = str(quest.get("status") or "")
+    left: int | None = None
+    if world and status == "active" and quest.get("deadline_day") is not None:
+        left = _safe_turn(quest.get("deadline_day")) - int(day)
+    label = deadline_label(left, status) if world else ""
+    if label:
+        view["deadline_label"] = label
+    return view
 
 
 def quest_markers(quests: list[dict]) -> list[dict]:

@@ -4,6 +4,7 @@ const STATUS_LABEL: Record<Quest["status"], string> = {
   active: "Ativa",
   completed: "Concluída",
   failed: "Fracassada",
+  expired: "Prazo esgotado", // SPEC-305 R21: mesmo rótulo de "falhou por prazo"
 };
 
 export function QuestsTab({ quest }: { quest: QuestBlock | undefined }) {
@@ -36,6 +37,14 @@ export function QuestsTab({ quest }: { quest: QuestBlock | undefined }) {
                 <span className="quest__title">{q.title}</span>
                 <span className={"quest__status quest__status--" + q.status}>{STATUS_LABEL[q.status]}</span>
               </div>
+              {q.deadline_label && (
+                <p
+                  className={"quest__deadline" + (q.deadline_label === "urgente" ? " quest__deadline--urgent" : "")}
+                  data-testid="quest-deadline"
+                >
+                  {q.deadline_label}
+                </p>
+              )}
               {q.description && <p className="quest__desc">{q.description}</p>}
               <p className="quest__meta">
                 {[q.origin_name && `de ${q.origin_name}`, q.reward_hint].filter(Boolean).join(" · ") || "—"}

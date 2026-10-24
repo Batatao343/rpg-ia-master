@@ -1,6 +1,6 @@
 # SPEC-305 — Quests de mundo com prazo (nascem do estado, falham com consequência)
 
-> **Status:** `approved` (dono, 2026-10-23)
+> **Status:** `in-progress` (implementada na branch spec-305; aguarda revisão independente)
 > **Criada:** 2026-10-23 · **Atualizada:** 2026-10-23
 > **Origem:** filha **302-D** da SPEC-302 (§9); `docs/mundo-vivo/VISAO.md` decisões 3 e 5
 > (linhas 51-65), "Regra de ouro" (79-82) e "Mudanças no mapa" (153-155).
@@ -307,27 +307,37 @@ oferta, prazo ou consequência lê nível/ficha/ouro); duro mas telegrafado; nã
 ### 3.3 Schemas (`state.py`, aditivo)
 
 ```python
-WorldQuestKind = Literal["romper_cerco", "socorrer_escassez", "conter_praga", "selar_corrupcao",
-                         "libertar_ocupado", "reabrir_rota", "frear_ascensao", "resgate"]
+WorldQuestKind = Literal[
+    "romper_cerco",
+    "socorrer_escassez",
+    "conter_praga",
+    "selar_corrupcao",
+    "libertar_ocupado",
+    "reabrir_rota",
+    "frear_ascensao",
+    "resgate",
+]
 HeardChannel = Literal["testemunho", "cartaz", "npc", "rumor", "mensageiro"]
+
 
 class HeardVia(TypedDict):
     channel: HeardChannel
-    event_id: str            # aviso/perigo/evento-fonte percebido
+    event_id: str  # aviso/perigo/evento-fonte percebido
     day: int
 
+
 class Quest(TypedDict, total=False):
-    ...                      # campos atuais (state.py:303-319)
-    status: str              # + "expired"
-    world_kind: WorldQuestKind      # ausente/"" = quest comum ou de fação
-    world_source_id: str            # crisis_id | peril_id | "occ:..." | "route:..."
+    ...  # campos atuais (state.py:303-319)
+    status: str  # + "expired"
+    world_kind: WorldQuestKind  # ausente/"" = quest comum ou de fação
+    world_source_id: str  # crisis_id | peril_id | "occ:..." | "route:..."
     region_id: str
     created_day: int
-    deadline_day: int               # INTERNO (nunca na API)
-    heard_via: HeardVia             # INTERNO
-    origin_faction_id: str          # INTERNO; controlador do alvo (R14)
+    deadline_day: int  # INTERNO (nunca na API)
+    heard_via: HeardVia  # INTERNO
+    origin_faction_id: str  # INTERNO; controlador do alvo (R14)
     resolved_day: int
-    fail_reason: str                # "" | "prazo" | "superada" | "origin_killed"
+    fail_reason: str  # "" | "prazo" | "superada" | "origin_killed"
 ```
 
 `LocationStateRow` (SPEC-302) ganha opcionais `liberation_day: int` e
@@ -651,3 +661,34 @@ letalidade antes/depois, smoke §6)
 Todas as decisões abertas seguem o **default recomendado pelo autor** (D1 entra sozinha no diário; D3 prazo por rótulo vago; D8 sem segunda chance — pode nascer quest nova da consequência), exceto:
 
 - D4 (amplia): os 8 tipos **mais um 9º, `recuperar_objeto`** — relíquia/artefato roubado ou perdido (ex.: item único tomado por fação/bandidos, tesouro de templo saqueado), nascido do estado (evento de roubo/saque, ocupação, `unique_item_lost`) e com prazo (o objeto é vendido, destruído ou levado para fora da região). Mesmas regras: só entra se percebido; falha = objeto perdido para este mundo (único segue único por mundo).
+
+## 10. Desvios da implementação (Etapa 0, 2026-10-24)
+
+Confirmado no código pousado da 302: `world_director`/`CrisisRecord` (dict em `state.CrisisRecord`),
+`escalation_day`, passo 2/7 do tick via `new_events`, `DigestItem` = dict de `digest_item`
+(com `subject_id`). Ajustes:
+
+- **9 tipos** (decisão do dono): `recuperar_objeto` (unique_items com `holder` = fação). Hoje nenhum
+  emissor grava holder de fação (só jogador/mercador/mundo), então fica **dormente**: nasce por
+  testemunho no mesmo turno do evento e por rumor/NPC se `unique_item_lost` passar a propagar
+  (não adicionei o tipo a `SUBJECT_PARAMS` para não alterar a 215). Falha = objeto segue com a fação.
+- **`resgate` desligado**: SPEC-304 não pousou (`services.npc_world.active_perils` ausente);
+  contrato testado com módulo injetado. `world_distance.travel_periods` já existe (215).
+- **`LocationStateRow` não existe como TypedDict**: `liberation_day`/`consolidated_until_day` são
+  chaves da linha de `location_states` (escritas por `apply_event`).
+- **`world_source_id` de rota** usa `blocked_by_event[:8]` (não `heard_day`, que mudaria a cada dia
+  e quebraria R3); o prazo é `dia da oferta + ROUTE_WINDOW`. Objeto: `obj:<item>:<event[:8]>`.
+- **`fail_causes`** vivem em `pressures.json` (causa `quest_failed` com `if: world_kind:reabrir_rota`);
+  consolidação de ocupação é marca em `apply_event`. `world_quests.json` guarda só as constantes.
+- `Quest` ganha `other_location_id`, `deadline_provisional`, `fail_text`, `resolved_day`;
+  `WorldSimState.perceived_ids` (livro-razão da percepção para `quest.world_unheard`).
+- Crise só anunciada não falha enquanto não abre (o aviso expira por TTL → `expired`); crise que
+  encerra com `resolution="escalou"` conta como falha no prazo.
+- R14: `reputation.deed_info` usa `origin_faction_id` quando não há `origin_entity_id`.
+- Modo `RPG_WORLD_QUESTS` default `on` (D9); `off` com motor ≠ `on`.
+
+## 11. Evidência (parcial)
+
+Testes: `tests/test_spec305_{sources,events,perception,lifecycle,surfaces}.py`. Smoke real (§6) e
+letalidade SPEC-285 ficam para o coordenador (ver hand-back).
+

@@ -340,11 +340,33 @@ class CampaignPlan(TypedDict, total=False):
 # --- Fase 3.3: quest log — side quests persistentes (main quest = view do CampaignPlan) ---
 
 
+WorldQuestKind = Literal[
+    "romper_cerco",
+    "socorrer_escassez",
+    "conter_praga",
+    "selar_corrupcao",
+    "libertar_ocupado",
+    "reabrir_rota",
+    "frear_ascensao",
+    "resgate",
+    "recuperar_objeto",
+]
+HeardChannel = Literal["testemunho", "cartaz", "npc", "rumor", "mensageiro"]
+
+
+class HeardVia(TypedDict):
+    """SPEC-305 R6: prova de que o jogador viu/ouviu a fonte da quest de mundo."""
+
+    channel: HeardChannel
+    event_id: str  # aviso/perigo/evento-fonte percebido
+    day: int
+
+
 class Quest(TypedDict, total=False):
-    id: str  # uuid4 hex
+    id: str  # uuid4 hex (quest de mundo: sha256 determinístico, SPEC-305 R3)
     title: str
     description: str
-    status: str  # "active" | "completed" | "failed"
+    status: str  # "active" | "completed" | "failed" | "expired" (SPEC-305)
     origin_name: str  # quem/o que originou (nome exibível)
     origin_entity_id: str  # id canônico se houver (habilita falha sistêmica); "" senão
     location_id: str  # alvo no mapa ("" se não aplicável)
@@ -426,6 +448,20 @@ class CompanionSoul(TypedDict, total=False):
     last_seen_day: int
     bound: str  # "" | "rendicao"
     last_gold_taken: int
+    # --- SPEC-305: quests de mundo (todos opcionais; ausente = quest comum). INTERNOS:
+    # nunca saem pela API (lista branca em quest_log.public_quest_view).
+    world_kind: WorldQuestKind
+    world_source_id: str  # crisis_id | peril_id | "occ:..." | "route:..." | "obj:..."
+    region_id: str
+    other_location_id: str  # reabrir_rota: a outra ponta da conexão
+    created_day: int
+    deadline_day: int
+    deadline_provisional: bool  # crise só anunciada: o prazo vira o escalation_day ao abrir
+    heard_via: HeardVia
+    origin_faction_id: str  # controlador do alvo na projection (R14)
+    resolved_day: int
+    fail_reason: str  # "" | "prazo" | "superada" | "origin_killed"
+    fail_text: str  # texto neutro anexado à descrição ao falhar (R18)
 
 
 class ContinuityState(TypedDict, total=False):
@@ -565,6 +601,7 @@ class CrisisRecord(TypedDict, total=False):
     end_day: int | None
     resolution: str
     route: list[str]
+    relieved_day: int | None  # SPEC-305 R13: alívio (contra-jogo) — a crise não escala mais
 
 
 class WorldSimState(TypedDict, total=False):
@@ -594,6 +631,7 @@ class WorldSimState(TypedDict, total=False):
     pending_digest: list[dict]
     tick_log: list[dict]
     perceived_stats: dict[str, int]
+    perceived_ids: list[str]  # SPEC-305 R6: ids de itens/eventos que o jogador percebeu (200)
     shadow_location_states: dict[str, dict]
     shadow_blocked_routes: list[dict]
 

@@ -1587,6 +1587,24 @@ def _combat_node(state: GameState):
         if _bl is not state.get("turn_baseline"):
             result["turn_baseline"] = _bl
 
+    # SPEC-305 R11: vitoria no alvo de quest de mundo (cerco/ocupacao/ascensao/objeto) = 1
+    # evidencia `combat_won` por combate.
+    if (
+        victory
+        and not is_simulation
+        and any(q.get("world_kind") for q in state.get("quests") or [])
+    ):
+        from services import quest_log as _quest_log
+
+        _wstate = state.get("world") or {}
+        _synced = _quest_log.sync_combat_progress(
+            state.get("quests") or [],
+            str(_wstate.get("current_location_id") or ""),
+            turn=int(_wstate.get("turn_count", 0) or 0),
+        )
+        if _synced != list(state.get("quests") or []):
+            result["quests"] = _synced
+
     # ---- Reflexo dos aliados transitórios no NPC de origem ----
     if scene_tr:
         result["npcs"] = _reflect_scene_allies(state, scene_tr, allies, combat_over)

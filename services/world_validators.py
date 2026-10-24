@@ -92,6 +92,24 @@ def _v_quest_completed(ev: ProposedWorldEvent, state: dict, proj: dict) -> Valid
     return ValidationResult(True)
 
 
+def _v_quest_failed(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    """SPEC-305 R15: falha validada (so o motor chega aqui). A quest precisa estar ATIVA:
+    uma quest nunca recebe duas falhas."""
+    qid = ev.payload.get("quest_id") or ev.target_id
+    quest = next(
+        (q for q in state.get("quests", []) or [] if isinstance(q, dict) and q.get("id") == qid),
+        None,
+    )
+    if quest is None or quest.get("status") != "active":
+        return ValidationResult(False, f"quest_id {qid} não é uma quest ativa")
+    return ValidationResult(True)
+
+
+def _v_world_quest_relief(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
+    # SPEC-305 R13: derivado do event_processor; nunca uma proposta validavel.
+    return ValidationResult(False, "alívio de quest é um fato gerado pelo motor, não proposto")
+
+
 def _v_faction_relation_changed(
     ev: ProposedWorldEvent, state: dict, proj: dict
 ) -> ValidationResult:
@@ -574,6 +592,8 @@ _VALIDATORS = {
     "secret_revealed": _v_secret_revealed,
     "location_control_changed": _v_location_control_changed,
     "quest_completed": _v_quest_completed,
+    "quest_failed": _v_quest_failed,
+    "world_quest_relief": _v_world_quest_relief,
     "faction_relation_changed": _v_faction_relation_changed,
     "reputation_changed": _v_reputation_changed,
     "faction_deed": _v_faction_deed,
@@ -638,6 +658,9 @@ def validate_proposal(proposal: dict, state: dict) -> ValidationResult:
     ):
         return ValidationResult(False, "posse de item único é registrada pelo motor, não proposta")
 
+    # SPEC-305 R15: falha de quest e fato do motor (prazo), nunca proposta do LLM.
+    if ev.type == "quest_failed" and proposal.get("source") not in ("system", "engine"):
+        return ValidationResult(False, "falha de quest é um fato gerado pelo motor, não proposto")
     # SPEC-302 R28: estados de local e avisos de crise sao fatos do motor de mundo.
     if ev.type in _ENGINE_ONLY_TYPES and proposal.get("source") != "engine":
         return ValidationResult(False, "estado de mundo é gerado pelo motor, não proposto")

@@ -306,6 +306,17 @@ def render_markdown(report: RunReport) -> str:
                 f"| {w.get('signals_perceived', 0)} |"
             )
         L.append("")
+        # SPEC-305 R27: quests de mundo (ofertadas / concluidas / falhadas / expiradas) por perfil.
+        L.append("| perfil | quests de mundo | concluídas | falhadas | expiradas | por canal |")
+        L.append("|---|---|---|---|---|---|")
+        for s in with_world:
+            wq = s["world"].get("world_quests") or {}
+            chans = ", ".join(f"{k}={v}" for k, v in sorted((wq.get("by_channel") or {}).items()))
+            L.append(
+                f"| {s.get('profile', '?')} | {wq.get('offered', 0)} | {wq.get('completed', 0)} "
+                f"| {wq.get('failed', 0)} | {wq.get('expired', 0)} | {chans or '—'} |"
+            )
+        L.append("")
 
     # spec balanceamento-classes-pos-playtest (R3): matriz por classe.
     with_class = [s for s in report.campaigns if s.get("class_name")]

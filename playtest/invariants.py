@@ -2161,6 +2161,77 @@ def check_law(state: dict, prev: dict | None, turn: int) -> list[Violation]:
     return out
 
 
+def check_world_quests(state: dict, prev: dict | None, turn: int) -> list[Violation]:
+    """SPEC-305 R6/R9/R16/R2 (R27): quests de mundo — so do que foi percebido, teto de 3,
+    nunca falham antes do prazo e o prazo nunca encurta."""
+    quests = [q for q in (state or {}).get("quests") or [] if q.get("world_kind")]
+    if not quests:
+        return []
+    out: list[Violation] = []
+    active = [q for q in quests if q.get("status") == "active"]
+    if len(active) > 3:
+        out.append(
+            _V(
+                "quest.world_cap_exceeded",
+                "error",
+                turn,
+                f"{len(active)} quests de mundo ativas (teto 3)",
+                active=len(active),
+            )
+        )
+    sim = (state or {}).get("world_sim") or {}
+    ledger = set(sim.get("perceived_ids") or [])
+    heard_any = {i for ids in ((state or {}).get("location_heard") or {}).values() for i in ids}
+    logged = {str(e.get("event_id")) for e in (state or {}).get("event_log") or []}
+    prev_by_id = {q.get("id"): q for q in (prev or {}).get("quests") or [] if q.get("world_kind")}
+    for q in quests:
+        via = q.get("heard_via") or {}
+        ref = str(via.get("event_id") or "")
+        channel = str(via.get("channel") or "")
+        if channel in ("npc", "rumor"):
+            heard = ref in heard_any
+        else:
+            heard = ref in ledger or ref in logged
+        if not (channel and ref and heard):
+            out.append(
+                _V(
+                    "quest.world_unheard",
+                    "error",
+                    turn,
+                    "quest de mundo sem percepção registrada",
+                    kind=q.get("world_kind"),
+                    channel=channel,
+                )
+            )
+        if (
+            q.get("status") == "failed"
+            and q.get("fail_reason") == "prazo"
+            and q.get("world_kind") != "resgate"
+            and int(q.get("resolved_day", 0) or 0) < int(q.get("deadline_day", 0) or 0)
+        ):
+            out.append(
+                _V(
+                    "quest.failed_before_deadline",
+                    "error",
+                    turn,
+                    "quest de mundo falhou antes do prazo",
+                    kind=q.get("world_kind"),
+                )
+            )
+        before = prev_by_id.get(q.get("id"))
+        if before and int(q.get("deadline_day", 0) or 0) < int(before.get("deadline_day", 0) or 0):
+            out.append(
+                _V(
+                    "quest.deadline_shortened",
+                    "error",
+                    turn,
+                    "prazo de quest de mundo encurtou",
+                    kind=q.get("world_kind"),
+                )
+            )
+    return out
+
+
 CHECKS: list[Check] = [
     check_companions,
     check_law,
@@ -2198,6 +2269,7 @@ CHECKS: list[Check] = [
     check_projection_ahead,
     check_npc_knowledge,
     check_world_engine,
+    check_world_quests,
 ]
 
 

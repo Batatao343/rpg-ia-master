@@ -738,6 +738,10 @@ select {
 .quest__status { font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); white-space: nowrap; }
 .quest__status--completed { color: var(--accent); }
 .quest__status--failed { color: var(--danger, oklch(0.6 0.18 25)); }
+.quest--expired { border-left-color: var(--danger, oklch(0.54 0.20 25)); opacity: 0.85; }
+.quest__status--expired { color: var(--danger, oklch(0.6 0.18 25)); }
+.quest__deadline { margin: 0.2rem 0 0; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+.quest__deadline--urgent { color: var(--danger, oklch(0.6 0.18 25)); font-weight: 600; }
 .quest__desc { margin: 0.3rem 0 0.3rem; font-size: 0.9rem; font-style: italic; color: var(--muted); line-height: 1.45; }
 .quest__meta { margin: 0.2rem 0 0; font-size: 0.78rem; color: var(--muted); }
 

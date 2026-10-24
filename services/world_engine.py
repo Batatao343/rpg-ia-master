@@ -413,6 +413,12 @@ def _tick_day(
         )
     sim["signals"] = (sim.get("signals", []) + sigs)[-60:]
 
+    # 7b. SPEC-305 R13: alivio de quest de mundo concluida (contra-jogo) — a crise nao escala
+    for e in new_events:
+        if isinstance(e, dict) and e.get("type") == "world_quest_relief":
+            rp = e.get("payload") or {}
+            wd.relieve(sim, str(rp.get("world_source_id") or ""), int(rp.get("day", day) or day))
+
     # 8. diretor (crises de pressao)
     drng = day_rng(game_id, day, "director")
     if rel_events:

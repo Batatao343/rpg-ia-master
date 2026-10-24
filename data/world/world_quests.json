@@ -1,0 +1,161 @@
+{
+  "_doc": "SPEC-305: catalogo de quests de mundo. Textos sao templates (a LLM nunca escreve titulo/descricao/falha). Valores [BALANCEAR]. Placeholders: {local} {local_b} {faccao} {origem} {objeto}.",
+  "constants": {
+    "OCCUPATION_WINDOW": 10,
+    "ROUTE_WINDOW": 8,
+    "ASCENSION_WINDOW": 8,
+    "OBJECT_WINDOW": 12,
+    "LIBERATION_MULT": 3,
+    "OCCUPATION_CONSOLIDATION_DAYS": 30,
+    "ASCENSION_SETBACK": 15,
+    "RELIEF_DEFAULT": -25,
+    "MAX_WORLD_QUESTS_ACTIVE": 3
+  },
+  "origin_labels": {
+    "testemunho": "o que você viu",
+    "cartaz": "cartaz na praça",
+    "rumor": "rumor",
+    "mensageiro": "mensageiro",
+    "npc": ""
+  },
+  "kinds": {
+    "romper_cerco": {
+      "source": {"crisis_kind": "guerra", "loc_state": "cerco"},
+      "deadline": "escalation_day",
+      "action_vocab": ["romp", "furar", "escolt", "suprimento", "defend", "muralh", "portao", "sitiant", "ataco", "enfrent"],
+      "combat_counts": true,
+      "relief": {"pressure": "guerra", "delta": -25},
+      "title": "Romper o cerco de {local}",
+      "description": {
+        "testemunho": "Os portões de {local} estão fechados e há tropas de {faccao} diante das muralhas. A cidade não aguenta muito.",
+        "cartaz": "Um cartaz na praça pede braços para {local}, sitiada por {faccao}.",
+        "npc": "{origem} conta que {faccao} acampa diante dos muros de {local}. A cidade não aguenta muito.",
+        "rumor": "Dizem que {local} está cercada e que o pão lá dentro acaba logo."
+      },
+      "fail_text": "O tempo para socorrer {local} passou."
+    },
+    "socorrer_escassez": {
+      "source": {"crisis_kind": "fome", "loc_state": "escassez"},
+      "deadline": "escalation_day",
+      "action_vocab": ["socorr", "aliment", "distribu", "aliv", "provis", "cac", "plant", "coleta", "escolt", "comida", "pao"],
+      "combat_counts": false,
+      "relief": {"pressure": "fome", "delta": -25},
+      "title": "Socorrer {local} contra a escassez",
+      "description": {
+        "testemunho": "As prateleiras de {local} estão vazias e a fila por comida dobra a esquina.",
+        "cartaz": "Um cartaz na praça pede comida e mãos para levar suprimentos a {local}.",
+        "npc": "{origem} conta que a despensa de {local} está quase no fim e que a fome já chegou às ruas.",
+        "rumor": "Dizem que faltam mantimentos em {local} e que o povo começa a passar necessidade."
+      },
+      "fail_text": "O prazo para aliviar a escassez em {local} se esgotou."
+    },
+    "conter_praga": {
+      "source": {"crisis_kind": "praga"},
+      "deadline": "escalation_day",
+      "action_vocab": ["trat", "cur", "queim", "isol", "erva", "quarentena", "ferv", "enterr", "medic", "sangr", "remedio"],
+      "combat_counts": false,
+      "relief": {"pressure": "praga", "delta": -25},
+      "title": "Conter a febre em {local}",
+      "description": {
+        "testemunho": "Portas marcadas com cal em {local}: a febre chegou e os curandeiros não dão conta.",
+        "cartaz": "Um cartaz na praça pede ajuda de curandeiros e voluntários para conter a febre em {local}.",
+        "npc": "{origem} conta que a febre se espalha por {local} e que ninguém sabe como detê-la.",
+        "rumor": "Dizem que uma febre se alastra por {local} e que os curandeiros pedem socorro."
+      },
+      "fail_text": "O prazo para conter a febre em {local} se esgotou."
+    },
+    "selar_corrupcao": {
+      "source": {"crisis_kind": "abismo", "loc_state": "corrompido"},
+      "deadline": "escalation_day",
+      "action_vocab": ["sel", "banir", "purific", "consagr", "ritual", "fech", "ancor", "queim", "rezo", "reze"],
+      "combat_counts": false,
+      "relief": {"pressure": "abismo", "delta": -25},
+      "title": "Selar a rachadura em {local}",
+      "description": {
+        "testemunho": "Em {local} o ar pesa e as sombras se movem contra a luz: algo se abriu ali.",
+        "cartaz": "Um cartaz pede coragem e conhecimento para selar uma rachadura escura em {local}.",
+        "npc": "{origem} conta que algo escuro se abriu em {local} e que as pessoas sonham todas o mesmo sonho.",
+        "rumor": "Dizem que uma rachadura escura se abriu em {local} e que gente some por lá."
+      },
+      "fail_text": "O prazo para selar a rachadura em {local} se esgotou."
+    },
+    "libertar_ocupado": {
+      "source": {"loc_state": "ocupado"},
+      "deadline": "since_day+OCCUPATION_WINDOW",
+      "action_vocab": ["liberta", "expuls", "retom", "ataco", "infiltr", "sabot", "incit", "rebel", "derrub", "enfrent"],
+      "combat_counts": true,
+      "relief": {"pressure": "guerra", "delta": -25, "liberation": true},
+      "title": "Libertar {local}",
+      "description": {
+        "testemunho": "{faccao} ergueu suas insígnias nas muralhas de {local}. O povo ainda resiste, mas não por muito tempo.",
+        "cartaz": "Um cartaz clandestino chama quem tiver coragem a libertar {local}.",
+        "npc": "{origem} conta que {local} está sob o jugo de {faccao} e que há quem queira reagir.",
+        "rumor": "Dizem que {local} está sob novo senhor e que ainda há quem resista."
+      },
+      "fail_text": "A chance de libertar {local} passou."
+    },
+    "reabrir_rota": {
+      "source": {"route_blocked": true, "exclude_if_siege": true},
+      "deadline": "heard_day+ROUTE_WINDOW",
+      "action_vocab": ["limp", "desobstru", "remov", "abr", "escav", "pont", "conserto", "consert", "libero"],
+      "combat_counts": false,
+      "relief": {"emit": "route_cleared"},
+      "title": "Reabrir a estrada entre {local} e {local_b}",
+      "description": {
+        "testemunho": "A estrada entre {local} e {local_b} está bloqueada e os viajantes dão meia-volta.",
+        "cartaz": "Um cartaz na praça avisa que a estrada entre {local} e {local_b} está interditada e pede quem a desobstrua.",
+        "npc": "{origem} conta que a estrada entre {local} e {local_b} está bloqueada e o comércio sofre.",
+        "rumor": "Dizem que a estrada entre {local} e {local_b} está bloqueada."
+      },
+      "fail_text": "O prazo para reabrir a estrada entre {local} e {local_b} se esgotou."
+    },
+    "frear_ascensao": {
+      "source": {"crisis_kind": "ascensao"},
+      "deadline": "warned_day+ASCENSION_WINDOW",
+      "action_vocab": ["sabot", "infiltr", "interrompe", "frear", "deter", "impe", "ataco", "enfrent", "desmasc", "convenc", "negoci"],
+      "combat_counts": true,
+      "relief": {"setback": true},
+      "title": "Frear o passo decisivo de {faccao}",
+      "description": {
+        "testemunho": "Cresce em {regiao} o rumor de que {faccao} está prestes a dar um passo decisivo.",
+        "cartaz": "Um cartaz sem assinatura avisa que {faccao} prepara algo em {regiao} e pede quem se oponha.",
+        "npc": "{origem} sussurra que {faccao} está prestes a dar um passo decisivo em {regiao}.",
+        "rumor": "Dizem que {faccao} se prepara para algo grande em {regiao}."
+      },
+      "fail_text": "O prazo para impedir o plano de {faccao} se esgotou."
+    },
+    "resgate": {
+      "source": {"npc_peril": true},
+      "deadline": "peril.deadline_day",
+      "completion": "peril_intervention",
+      "action_vocab": [],
+      "combat_counts": false,
+      "relief": {},
+      "title": "Chegar a {local} antes que seja tarde para {origem}",
+      "description": {
+        "testemunho": "{origem} corre perigo em {local} e precisa de ajuda depressa.",
+        "cartaz": "Um aviso pregado na praça pede socorro para {origem}, retido em {local}.",
+        "npc": "{origem} corre perigo em {local} e precisa de ajuda depressa.",
+        "rumor": "Dizem que {origem} está em apuros perto de {local}.",
+        "mensageiro": "Um mensageiro traz o pedido de socorro de {origem}, em {local}."
+      },
+      "fail_text": "O prazo para ajudar {origem} em {local} se esgotou."
+    },
+    "recuperar_objeto": {
+      "source": {"unique_item_held_by_faction": true},
+      "deadline": "heard_day+OBJECT_WINDOW",
+      "completion": "item_recovered",
+      "action_vocab": ["recuper", "retom", "furt", "roub", "negoci", "compr", "resgat", "infiltr", "persuad", "intimid", "ataco", "enfrent"],
+      "combat_counts": true,
+      "relief": {},
+      "title": "Recuperar {objeto}",
+      "description": {
+        "testemunho": "{objeto} foi parar nas mãos de {faccao}. Ainda dá tempo de recuperá-lo, mas não por muito.",
+        "cartaz": "Um cartaz oferece recompensa a quem recuperar {objeto}, levado por {faccao}.",
+        "npc": "{origem} conta que {objeto} foi levado por {faccao} e que logo estará fora de alcance.",
+        "rumor": "Dizem que {objeto} foi levado por {faccao} e que logo sairá da região."
+      },
+      "fail_text": "A chance de recuperar {objeto} passou."
+    }
+  }
+}

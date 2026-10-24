@@ -863,7 +863,29 @@ def _world_summary(state: dict) -> dict:
     sim = (state or {}).get("world_sim") or {}
     stats = sim.get("perceived_stats") or {}
     crises = [c for c in sim.get("crises") or [] if c.get("start_day") is not None]
+    # SPEC-305 R27: quests de mundo por tipo e canal (oferecidas/concluidas/falhadas).
+    wq = [q for q in (state or {}).get("quests") or [] if q.get("world_kind")]
+    by_kind: dict[str, dict[str, int]] = {}
+    by_channel: dict[str, int] = {}
+    for q in wq:
+        row = by_kind.setdefault(
+            str(q["world_kind"]), {"offered": 0, "completed": 0, "failed": 0, "expired": 0}
+        )
+        row["offered"] += 1
+        if q.get("status") in row:
+            row[str(q["status"])] += 1
+        ch = str((q.get("heard_via") or {}).get("channel") or "")
+        if ch:
+            by_channel[ch] = by_channel.get(ch, 0) + 1
     return {
+        "world_quests": {
+            "offered": len(wq),
+            "completed": sum(1 for q in wq if q.get("status") == "completed"),
+            "failed": sum(1 for q in wq if q.get("status") == "failed"),
+            "expired": sum(1 for q in wq if q.get("status") == "expired"),
+            "by_kind": by_kind,
+            "by_channel": by_channel,
+        },
         "enabled": bool(sim),
         "days_elapsed": int(sim.get("last_ticked_day", 0) or 0)
         - int(sim.get("enabled_from_day", 0) or 0)

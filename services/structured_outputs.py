@@ -57,6 +57,10 @@ EventType = Literal[
     # SPEC-301: vínculo do jogador com fação (join/promote/leave/betray/dissolve).
     # SÓ o motor emite (source="engine" exigido no validator).
     "faction_membership_changed",
+    # SPEC-305 R15: falha de quest por prazo — SO o motor (source engine/system).
+    "quest_failed",
+    # SPEC-305 R13: alívio de quest de mundo concluída — SO derivado (event_processor).
+    "world_quest_relief",
 ]
 
 

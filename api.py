@@ -2853,7 +2853,10 @@ def _quest_block(plan: dict, quests: list, world: dict | None = None) -> dict[st
         key=lambda q: q.get("resolved_turn", 0),
         reverse=True,
     )[:5]
-    return {"main": main, "side": active + resolved, "markers": quest_log.quest_markers(quests)}
+    # SPEC-305 R20: lista branca — prazo exato, fonte, canal e motivo de falha nunca saem.
+    day = int(((world or {}).get("world_clock") or {}).get("day", 1) or 1)
+    side = [quest_log.public_quest_view(q, day) for q in active + resolved]
+    return {"main": main, "side": side, "markers": quest_log.quest_markers(quests)}
 
 
 def _world_block(

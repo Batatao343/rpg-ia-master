@@ -247,6 +247,25 @@ def apply_event(event: dict, projection: dict) -> dict:
             if frozenset((r.get("a"), r.get("b"))) != pair
         ]
 
+    elif etype in ("world_quest_relief", "quest_failed"):
+        # SPEC-305 R13/R17: marcas no estado de local (a projection segue sendo a fonte da
+        # verdade). Liberacao eleva a chance de retomada; falha de libertar consolida.
+        if payload.get("world_kind") == "libertar_ocupado":
+            row = (proj.get("location_states") or {}).get(payload.get("location_id") or target)
+            if isinstance(row, dict) and row.get("state") == "ocupado":
+                day = int(payload.get("day", turn) or 0)
+                if etype == "world_quest_relief":
+                    row["liberation_day"] = day
+                else:
+                    from services import world_pressures as _wp
+
+                    consolidation = int(
+                        _wp._load_json("world_quests.json")["constants"][
+                            "OCCUPATION_CONSOLIDATION_DAYS"
+                        ]
+                    )
+                    row["consolidated_until_day"] = day + consolidation
+
     # quest_completed: nada na projection — o registro no event_log já é o efeito.
 
     return proj
@@ -323,6 +342,77 @@ def prevalidate_event_batch(
     return results
 
 
+def _clock_day(state: dict) -> int:
+    clock = (state.get("world") or {}).get("world_clock") or {}
+    return _safe_int(clock.get("day", 1)) or 1
+
+
+def _world_quest_derived(quest: dict, state: dict, turn: int) -> tuple[list[dict], tuple | None]:
+    """SPEC-305 R13. Derivados do motor para a conclusao de uma quest de mundo: o
+    `world_quest_relief` (causa lida pelo tick seguinte) e, por tipo, `route_cleared`.
+    Devolve `(eventos, (faction_id, pontos) | None)`. Ids deterministicos."""
+    from services import world_director as wd
+    from services import world_pressures as wp
+
+    cfg = wp._load_json("world_quests.json")
+    consts = cfg["constants"]
+    kind = str(quest.get("world_kind"))
+    relief = (cfg["kinds"].get(kind) or {}).get("relief") or {}
+    day = _clock_day(state)
+    gid = str(state.get("game_id", ""))
+    loc = str(quest.get("location_id") or "")
+    payload: dict = {
+        "quest_id": quest.get("id"),
+        "world_kind": kind,
+        "world_source_id": quest.get("world_source_id", ""),
+        "region_id": quest.get("region_id", ""),
+        "location_id": loc,
+        "day": day,
+    }
+    if relief.get("pressure"):
+        payload["pressure"] = relief["pressure"]
+        payload["delta"] = int(relief.get("delta", consts["RELIEF_DEFAULT"]))
+    setback = None
+    if relief.get("setback"):
+        rec = next(
+            (
+                c
+                for c in (state.get("world_sim") or {}).get("crises") or []
+                if c.get("crisis_id") == quest.get("world_source_id")
+            ),
+            None,
+        )
+        fid = str((rec or {}).get("faction_id") or "")
+        if fid:
+            payload["faction_id"] = fid
+            setback = (fid, int(consts["ASCENSION_SETBACK"]))
+    events = [
+        {
+            "event_id": wd.event_id(gid, "world_quest_relief", day, str(quest.get("id"))),
+            "turn": turn,
+            "type": "world_quest_relief",
+            "actor_id": "engine",
+            "target_id": loc,
+            "payload": payload,
+            "source": "engine",
+        }
+    ]
+    other = str(quest.get("other_location_id") or "")
+    if relief.get("emit") == "route_cleared" and loc and other:
+        events.append(
+            {
+                "event_id": wd.event_id(gid, "route_cleared", day, loc, f"quest:{quest.get('id')}"),
+                "turn": turn,
+                "type": "route_cleared",
+                "actor_id": "player",
+                "target_id": loc,
+                "payload": {"other_location_id": other, "quest_id": quest.get("id")},
+                "source": "engine",
+            }
+        )
+    return events, setback
+
+
 def process_pending_events(state: dict) -> dict:
     """Valida/aplica a fila `pending_world_events`. Retorna updates parciais do GameState.
 
@@ -343,6 +433,7 @@ def process_pending_events(state: dict) -> dict:
     quests_changed = False
     quests_completed = 0  # Fase 4.1: cada conclusão vale XP_PER_QUEST
     quest_reward_gold = 0
+    faction_setbacks: list[tuple[str, int]] = []  # SPEC-305 R13: (faction_id, pontos)
     killed_targets: list = []  # SPEC-230 R4
     accepted_events: list[dict] = []  # SPEC-298: feitos aceitos -> services.reputation
     original_rejections = list(state.get("event_rejections") or [])
@@ -453,6 +544,30 @@ def process_pending_events(state: dict) -> dict:
                             str(origem.get("faction_id")),
                         )
                 working["quests"] = quests
+                if was_active and origem and origem.get("world_kind"):
+                    # SPEC-305 R13: conclusao de quest de mundo = alivio (derivado do motor).
+                    derived, setback = _world_quest_derived(origem, state, turn)
+                    for dev in derived:
+                        event_log.append(dev)
+                        projection = apply_event(dev, projection)
+                        _log_event("world_quest", "relief", level="info", kind=dev["type"])
+                    if setback:
+                        faction_setbacks.append(setback)
+
+        # SPEC-305 R15: falha de quest por prazo (so o motor chega aqui; validador exige
+        # quest ativa, entao uma quest nunca recebe duas falhas).
+        if event["type"] == "quest_failed":
+            qid = event["payload"].get("quest_id") or event.get("target_id")
+            quests = quest_log.fail_quest(
+                quests,
+                str(qid),
+                turn,
+                str(event["payload"].get("reason") or "prazo"),
+                _clock_day(state),
+            )
+            quests_changed = True
+            working["quests"] = quests
+            _log_event("quest", "failed", level="info")
 
         _log_event(
             "event", "applied", level="debug", type=event["type"], event_id=event["event_id"][:8]
@@ -575,6 +690,16 @@ def process_pending_events(state: dict) -> dict:
         from services import faction_membership
 
         _apply_fm(faction_membership.check_expulsion(_fm_state()))
+
+    if faction_setbacks:
+        base_factions = updates.get("factions", state.get("factions")) or []
+        facs = [dict(f) for f in base_factions if isinstance(f, dict)]
+        for fid, points in faction_setbacks:
+            for f in facs:
+                if f.get("id") == fid and not f.get("completed"):
+                    f["progress"] = max(0, int(f.get("progress", 0) or 0) - int(points))
+        if facs:
+            updates["factions"] = facs
 
     if killed_targets:
         from services.npc_layers import apply_npc_death

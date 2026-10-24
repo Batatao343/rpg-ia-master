@@ -227,6 +227,27 @@ def end_crisis(sim: dict, rec: dict, day: int, resolution: str, cfg: dict | None
     sim["crises"] = [c for c in sim["crises"] if c.get("end_day") is None or c in keep_done]
 
 
+def _liberation_mult() -> int:
+    return int(wp._load_json("world_quests.json")["constants"]["LIBERATION_MULT"])
+
+
+def relieve(sim: dict, crisis_id: str, day: int) -> dict:
+    """SPEC-305 R13: contra-jogo. Marca `relieved_day` na crise vigente: ela NAO escala mais e
+    encerra com `resolution="intervencao"` quando a pressao cai (writer que faltava). Aviso de
+    ascensao e retirado na hora. Idempotente; mutacao in place, devolve `sim`."""
+    for rec in sim.get("crises", []):
+        if rec.get("crisis_id") != crisis_id or rec.get("end_day") is not None:
+            continue
+        if rec.get("relieved_day") is None:
+            rec["relieved_day"] = int(day)
+        if rec.get("kind") == "ascensao" and rec.get("start_day") is None:
+            end_crisis(sim, rec, day, "intervencao")
+            sim.setdefault("announce_block", {})[
+                f"{rec['region_id']}|ascensao|{rec.get('faction_id', '')}"
+            ] = int(day) + int(_dc()["ANNOUNCE_BLOCK_DAYS"])
+    return sim
+
+
 def _attacker(
     region_id: str, factions: list, rng: Any, faction_region: Callable[[dict], str | None]
 ) -> str:
@@ -356,13 +377,23 @@ def step_crises(
                 sim, rec, day, game_id, events, digest, "intervencao", route_cleared=False, cfg=cfg
             )
             continue
+        relieved = rec.get("relieved_day") is not None
         if pval(rec) < int(k["RECUPERA"]) and age >= int(c["MIN_CRISIS_DAYS"]):
             _close_state(
-                sim, rec, day, game_id, events, digest, "recuperou", route_cleared=True, cfg=cfg
+                sim,
+                rec,
+                day,
+                game_id,
+                events,
+                digest,
+                "intervencao" if relieved else "recuperou",
+                route_cleared=True,
+                cfg=cfg,
             )
             continue
         if day >= int(rec["escalation_day"]):
-            if pval(rec) >= int(k["CRISE"]):
+            # SPEC-305 R13: crise aliviada nao escala (o prazo da proxima janela anda).
+            if pval(rec) >= int(k["CRISE"]) and not relieved:
                 if kind == "guerra" and int(rec["severity"]) >= 3:
                     _occupy(sim, rec, day, game_id, events, digest, factions, projection, cfg)
                     continue
@@ -400,8 +431,14 @@ def step_crises(
             continue  # tratada pelo motor (progresso de faccao)
         stale = day - int(rec["warned_day"]) > int(c["WARNING_TTL_DAYS"])
         fell = pval(rec) < int(k["RECUPERA"])
-        if stale or fell:
-            end_crisis(sim, rec, day, "expirou_aviso", cfg)
+        if stale or fell or rec.get("relieved_day") is not None:
+            end_crisis(
+                sim,
+                rec,
+                day,
+                "intervencao" if rec.get("relieved_day") is not None else "expirou_aviso",
+                cfg,
+            )
             sim.setdefault("announce_block", {})[
                 f"{rec['region_id']}|{rec['kind']}|{rec.get('faction_id', '')}"
             ] = day + int(c["ANNOUNCE_BLOCK_DAYS"])
@@ -669,8 +706,16 @@ def recovery_step(
         elif st == "ocupado":
             occupier = str(row.get("faction_id") or "")
             defeated = bool(occupier) and occupier in known and occupier not in alive
-            calmed = calm.get(region, 0) >= int(c["OCCUPATION_CALM_DAYS"]) and roll < float(
-                c["REOCCUPY_P"]
+            # SPEC-305 R13/R17: libertacao (alivio) multiplica a chance de retomada; a quest
+            # de libertar falhada consolida a ocupacao (so termina com a faccao derrotada).
+            p_retake = float(c["REOCCUPY_P"])
+            if row.get("liberation_day") is not None:
+                p_retake *= float(_liberation_mult())
+            consolidated = day < int(row.get("consolidated_until_day", 0) or 0)
+            calmed = (
+                not consolidated
+                and calm.get(region, 0) >= int(c["OCCUPATION_CALM_DAYS"])
+                and roll < p_retake
             )
             if defeated or calmed:
                 events.append(state_ev(loc, "", "ocupado", 0, "occ_end"))

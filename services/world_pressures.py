@@ -248,12 +248,18 @@ def event_deltas(
         etype = ev.get("type")
         payload = ev.get("payload") or {}
         target = str(ev.get("target_id") or "")
+        if etype in ("world_quest_relief", "quest_failed"):
+            # SPEC-305: o alvo geografico dessas causas vem do payload (o target e a quest).
+            target = str(payload.get("location_id") or target)
         for cause in (cfg or get_config()).get("causes", []):
             if cause.get("on_event") != etype:
                 continue
             cond = cause.get("if")
             fid = ""
-            if cond == "new_controller_hostile":
+            if isinstance(cond, str) and cond.startswith("world_kind:"):
+                if payload.get("world_kind") != cond.split(":", 1)[1]:
+                    continue
+            elif cond == "new_controller_hostile":
                 fid = str(payload.get("new_controller_id") or "")
                 if (by_id.get(fid) or {}).get("disposition") != "hostil":
                     continue
@@ -272,8 +278,13 @@ def event_deltas(
                 regions = [region_of(target)]
             elif scope == "faction_region":
                 regions = [faction_region(by_id.get(fid) or {}) if faction_region else ""]
+            pressure, delta = cause["pressure"], cause["delta"]
+            if pressure == "<payload>":  # SPEC-305: alivio carrega pressao/delta no payload
+                pressure, delta = payload.get("pressure"), payload.get("delta")
+                if pressure not in KINDS or delta is None:
+                    continue
             for region in dict.fromkeys(r for r in regions if r):
-                add(region, str(cause["pressure"]), int(cause["delta"]))
+                add(region, str(pressure), int(delta))
     return out
 
 
