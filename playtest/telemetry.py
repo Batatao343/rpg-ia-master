@@ -897,7 +897,33 @@ def _world_summary(state: dict) -> dict:
         "items_perceived": int(stats.get("items", 0)),
     }
     out.update(_calendar_summary(sim))
+    out["npcs"] = _npc_summary(state)
     return out
+
+
+def _npc_summary(state: dict) -> dict:
+    """SPEC-304 R30: perigos abertos/percebidos/resolvidos por destino, intervencoes e mortes."""
+    sim = (state or {}).get("npc_sim") or {}
+    perils = list(sim.get("perils") or [])  # ativos + ultimos 30 resolvidos
+    seen = set(((state or {}).get("world_sim") or {}).get("perceived_ids") or [])
+    by_fate: dict[str, int] = {}
+    for p in perils:
+        key = str(p.get("resolution") or "aberto")
+        by_fate[key] = by_fate.get(key, 0) + 1
+    events = [e for e in (state or {}).get("event_log") or [] if isinstance(e, dict)]
+    return {
+        "enabled": bool(sim),
+        "roster": len(sim.get("roster") or []),
+        "opened": len(perils),
+        "perceived": sum(1 for p in perils if p.get("warning_event_id") in seen),
+        "by_fate": by_fate,
+        "interventions": by_fate.get("intervencao", 0),
+        "deaths_major": sum(1 for p in perils if p.get("resolution") == "morto" and p.get("major")),
+        "deaths_minor": sum(
+            1 for p in perils if p.get("resolution") == "morto" and not p.get("major")
+        ),
+        "defections": sum(1 for e in events if e.get("type") == "npc_defected"),
+    }
 
 
 def _calendar_summary(sim: dict) -> dict:

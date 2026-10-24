@@ -599,7 +599,7 @@ def _npc_target_known(ev: ProposedWorldEvent, state: dict) -> bool:
 def _v_npc_offscreen(ev: ProposedWorldEvent, state: dict, proj: dict) -> ValidationResult:
     """SPEC-304 R25: aviso/destino/aprendizado de NPC off-screen (alvo em `npcs` ou no grafo)."""
     if not _npc_target_known(ev, state):
-        return ValidationResult(False, f"NPC desconhecido: {ev.target_id}")
+        return ValidationResult(False, f"id desconhecido: {ev.target_id} não é um NPC conhecido")
     if ev.type == "npc_peril_warning":
         from gamedata import get_location
 
@@ -620,9 +620,9 @@ def _v_npc_defected(ev: ProposedWorldEvent, state: dict, proj: dict) -> Validati
     from services import npc_world
 
     if not _npc_target_known(ev, state):
-        return ValidationResult(False, f"NPC desconhecido: {ev.target_id}")
+        return ValidationResult(False, f"id desconhecido: {ev.target_id} não é um NPC conhecido")
     if npc_world.is_leader(ev.target_id):
-        return ValidationResult(False, "líder não deserta")
+        return ValidationResult(False, "alvo inválido: líder não deserta")
     for k in ("from_faction_id", "to_faction_id"):
         if str(ev.payload.get(k) or "") not in gamedata.FACTIONS:
             return ValidationResult(False, f"payload.{k} não é uma facção conhecida")

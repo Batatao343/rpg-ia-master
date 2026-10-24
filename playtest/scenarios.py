@@ -20,7 +20,13 @@ _SCENARIOS = {
     "comercio": "comerciante",
     "mundo": "explorador",
     "companheiro": "explorador",  # SPEC-300: Brunna já recrutada, alma derivada
+    # SPEC-304: perigo off-screen forçado (minor: Skek; major: Brunna deixada esperando)
+    "npc_perigo": "explorador",
+    "companheiro_exposto": "explorador",
 }
+_NPC_SCENARIOS = ("npc_perigo", "companheiro_exposto")
+SKEK_ID = "npc_mv_skek_eco_curto"
+WAIT_LOCATION = "ma_saidas_baixas"
 
 
 def names() -> tuple[str, ...]:
@@ -95,6 +101,31 @@ def _prepare_mundo(prepared: dict) -> dict:
     return prepared
 
 
+def _prepare_npc_world(prepared: dict, name: str) -> dict:
+    """SPEC-304 §6: NPC exposto num local de perigo 3 e abertura do perigo FORÇADA (o hazard
+    sorteado vira acerto) — o resto do ciclo (telegrama, mensageiro, prazo, destino) é o real."""
+    from services import npc_world
+    from services import world_engine as we
+
+    prepared["world"] = _move_world(prepared.get("world") or {}, "nova_arcadia")
+    day = int(((prepared["world"].get("world_clock") or {}).get("day", 1)) or 1)
+    sim = prepared.get("world_sim") or we._new_sim(str(prepared.get("game_id", "")), day, [], "on")
+    sim["calm_until_day"] = 0  # sem a calma inicial do diretor
+    prepared["world_sim"] = sim
+    npc_sim = npc_world._new_sim(day)
+    if name == "companheiro_exposto":
+        import party
+
+        prepared = prepare("companheiro", prepared)
+        prepared["world"] = _move_world(prepared.get("world") or {}, "nova_arcadia")
+        prepared["party"], _ok = party.set_waiting(prepared, RECRUIT_NPC_NAME, WAIT_LOCATION)
+        npc_sim["forced"] = [RECRUIT_NPC_ID]
+    else:
+        npc_sim["forced"] = [SKEK_ID]
+    prepared["npc_sim"] = npc_sim
+    return prepared
+
+
 def prepare(name: str, state: dict) -> dict:
     """Devolve cópia do estado com pré-condições mecânicas do cenário."""
     profile_for(name)  # valida catálogo
@@ -131,6 +162,8 @@ def prepare(name: str, state: dict) -> dict:
 
     if name == "mundo":
         return _prepare_mundo(prepared)
+    if name in _NPC_SCENARIOS:
+        return _prepare_npc_world(prepared, name)
     if name == "companheiro":
         prepared = prepare("recrutamento", prepared)
         import party
@@ -162,7 +195,7 @@ def prepare(name: str, state: dict) -> dict:
 def decision_for(name: str, turn: int, state: dict) -> ProfileDecision | None:
     """A primeira ação é inequívoca; turnos extras voltam ao perfil normal."""
     profile_for(name)
-    if name == "mundo":
+    if name == "mundo" or name in _NPC_SCENARIOS:
         return ProfileDecision(text="Vou descansar e acampar aqui.", mode="free_text")
     if int(turn) != 1:
         return None
@@ -211,6 +244,35 @@ def oracle_violations(name: str, result) -> list[dict]:
                 turn,
             )
         ]
+
+    if name in _NPC_SCENARIOS:
+        target = RECRUIT_NPC_ID if name == "companheiro_exposto" else SKEK_ID
+        warned = [
+            e
+            for e in state.get("event_log") or []
+            if e.get("type") == "npc_peril_warning" and e.get("target_id") == target
+        ]
+        if not warned:
+            return [
+                _violation(
+                    "smoke.npc_peril_not_observed",
+                    f"npc_peril_warning de {target} não foi observado.",
+                    turn,
+                )
+            ]
+        if name == "companheiro_exposto":
+            seen = set((state.get("world_sim") or {}).get("perceived_ids") or [])
+            if warned[0]["payload"].get("channel") != "pedido_de_ajuda" or (
+                warned[0]["event_id"] not in seen
+            ):
+                return [
+                    _violation(
+                        "smoke.npc_help_request_not_perceived",
+                        "O pedido de ajuda não chegou ao jogador (mensageiro).",
+                        turn,
+                    )
+                ]
+        return []
 
     if name == "mundo":
         sim = state.get("world_sim") or {}

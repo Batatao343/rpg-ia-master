@@ -813,6 +813,8 @@ class NpcSimState(TypedDict, total=False):
     perils: list[NpcPeril]  # ativos + últimos 30 resolvidos
     last_leader_death_day: int | None
     tick_log: list[dict]  # anel 30
+    last_day: int  # ultimo dia simulado (idempotencia do hook)
+    forced: list[str]  # so cenarios dirigidos do playtest: NPCs cujo sorteio de perigo vira acerto
 
 
 class NpcBelief(TypedDict, total=False):

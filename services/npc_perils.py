@@ -172,6 +172,7 @@ def maybe_open(
     shadow: bool = False,
     player_loc: str | None = None,
     protected: bool = False,
+    force: bool = False,
 ) -> tuple[dict | None, list[dict]]:
     """Sorteia a abertura de um perigo para o NPC (R13). Devolve `(peril, eventos)`.
 
@@ -180,6 +181,8 @@ def maybe_open(
     O telegrama (`npc_peril_warning`) sai no MESMO dia, com `location_id` sempre (R15)."""
     pos = entry.get("pos") or {}
     roll = rng.random()  # sempre sorteia: o fluxo do rng não depende dos tetos
+    if force:  # cenario dirigido do playtest (`npc_sim["forced"]`): o sorteio vira acerto
+        roll = 0.0
     window_roll = rng.randint(*[int(x) for x in const("PERIL_WINDOW")])
     exposed, kind, danger = exposure(state, npc_key, pos, day, player_loc=player_loc)
     if not exposed or has_open(sim, npc_key) or in_cooldown(entry, day):

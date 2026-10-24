@@ -324,6 +324,26 @@ def render_markdown(report: RunReport) -> str:
                 f"| {wq.get('failed', 0)} | {wq.get('expired', 0)} | {chans or '—'} |"
             )
         L.append("")
+        # SPEC-304 R30: NPCs (perigos abertos/percebidos/resolvidos por destino, intervencoes).
+        with_npcs = [s for s in with_world if (s["world"].get("npcs") or {}).get("enabled")]
+        if with_npcs:
+            L.append("### NPCs")
+            L.append("")
+            L.append(
+                "| perfil | elenco | perigos abertos | percebidos | intervenções "
+                "| mortes (maior/menor) | destinos | trocas de lado |"
+            )
+            L.append("|---|---|---|---|---|---|---|---|")
+            for s in with_npcs:
+                n = s["world"]["npcs"]
+                fates = ", ".join(f"{k}={v}" for k, v in sorted((n.get("by_fate") or {}).items()))
+                L.append(
+                    f"| {s.get('profile', '?')} | {n.get('roster', 0)} | {n.get('opened', 0)} "
+                    f"| {n.get('perceived', 0)} | {n.get('interventions', 0)} "
+                    f"| {n.get('deaths_major', 0)}/{n.get('deaths_minor', 0)} | {fates or '—'} "
+                    f"| {n.get('defections', 0)} |"
+                )
+            L.append("")
 
     # spec balanceamento-classes-pos-playtest (R3): matriz por classe.
     with_class = [s for s in report.campaigns if s.get("class_name")]

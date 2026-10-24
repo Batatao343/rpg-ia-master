@@ -144,7 +144,10 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `npc.knowledge_failed` | `error` |
 | `npc.pool_own_read_failed` | `error` |
 | `npc.pool_submit_failed` | `error` |
+| `npc.reintroduction_blocked` | `reason` |
 | `npc.social_failed` | `error` |
+| `npc_world.fallback` | — |
+| `npc_world.tick` | `day`, `defections`, `mode`, `moved`, `perils_open`, `perils_resolved`, `roster`, `travelling` |
 | `operation.rejected` | `op_kind`, `op_ref`, `reason` |
 | `operation.release_failed` | `cause_type`, `error_type`, `op_ref` |
 | `operation.replayed` | `op_kind`, `op_ref` |
@@ -169,6 +172,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `persistence.store_checkpoint_load_failed` | `duration_ms`, `error_type`, `game_ref` |
 | `persistence.store_load_failed` | `duration_ms`, `error_type`, `game_ref` |
 | `persistence.store_save_failed` | `duration_ms`, `error_type`, `game_ref` |
+| `playtest.fallback` | — |
 | `pool.admin_action` | `action`, `entry_id` |
 | `pool.cast_offered` | `count` |
 | `pool.cast_used` | `entry_id` |

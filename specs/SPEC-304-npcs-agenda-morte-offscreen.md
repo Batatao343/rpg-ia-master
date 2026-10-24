@@ -1,7 +1,7 @@
 # SPEC-304 — NPCs off-screen: agenda, viagem, troca de lado e morte telegrafada
 
-> **Status:** `approved` (dono, 2026-10-23)
-> **Criada:** 2026-10-23 · **Atualizada:** 2026-10-23
+> **Status:** `in-progress` (aprovada pelo dono 2026-10-23; etapas 0–8 implementadas em 2026-10-24, falta revisão independente Opus + smoke real §6 — sem chave neste ambiente)
+> **Criada:** 2026-10-23 · **Atualizada:** 2026-10-24
 > **Origem:** `docs/mundo-vivo/VISAO.md` (decisão 3 "move NPCs (agenda, viagem, troca de lado, morte off-screen)", decisão 5 "duro, mas telegrafado", § C "NPCs simulados off-screen" e "Morte off-screen", Regra de ouro); SPEC-302 §9 (filha 302-C).
 > **Depende de:** SPEC-302 (`approved`; precisa estar `done` no marco M2: `advance_days`, hook `post`, `day_rng`, `request_crisis_slot`, `location_effects`, `world_perception`, `world.news`), SPEC-300 (`approved`; interface §3.8 `companions_exposed`/`telegraph_companion_danger`/`apply_companion_fate`), SPEC-298 (`approved`; `npc_tier`, `apply_npc_delta`), SPEC-215 (`done`; propagação), SPEC-230 (`done`; `npc_alive`/`apply_npc_death`).
 > **Desbloqueia:** SPEC-305 (resgate com prazo a partir de `NpcPeril.deadline_day`); pilar B (prisioneiro capturado; desafeto da SPEC-300 D3 que "entrega" o jogador).
@@ -184,7 +184,14 @@ nas metas da SPEC-285.
   "npc_perigo")` conceder vaga. O orçamento global da SPEC-302 R15 vale de
   verdade, e o tipo `npc_perigo` entra em `CrisisKind` sem estado de local.
   Perigo menor tem só os tetos da R13 (decisão D2). Além disso, só **1 morte de
-  líder** a cada `LEADER_DEATH_GAP_DAYS` (30) no mundo.
+  líder** a cada `LEADER_DEATH_GAP_DAYS` (**60**, calibrado em N3; a spec previa 30) no mundo.
+  **Implementação:** `request_crisis_slot` exige uma crise ANUNCIADA há ≥ `MIN_WARNING_DAYS`
+  (SPEC-302 R15). Então o perigo maior **anuncia** a vaga (`wd.announce`, que já respeita
+  `MAX_ACTIVE_CRISES`, calma inicial e cooldown) no dia do telegrama e **abre** a vaga com
+  `request_crisis_slot` a partir de `earliest_day`; o ciclo do registro é do `npc_world`
+  (`world_director` ignora o tipo no vencimento de avisos e no cooldown/recuperação). Sem vaga
+  no prazo, o prazo estende até `MAX_EXTENSION_DAYS` (como na R17) e depois o destino exclui
+  `morto`.
 - **R15 — Telegrama sempre.** Abrir um perigo emite **no mesmo dia**
   `npc_peril_warning` (engine-only): `target_id=<npc>`, `payload={peril_id, kind,
   location_id, region_id, opened_day, earliest_day, deadline_day, channel}`, com
@@ -334,7 +341,10 @@ nas metas da SPEC-285.
     efeito em cena/API; loga `npc_world.tick`.
   - `on`: tudo.
   Exige `RPG_WORLD_ENGINE=on`; com o motor `off`/`shadow`, a spec fica `off`
-  efetivo. Default: D5.
+  efetivo. Default: D5. **Implementação:** o default do CÓDIGO é `off` (`npc_world.DEFAULT_MODE`):
+  ligar `on` por padrão muda o comportamento de toda a suíte e a suíte completa é do `/spec-land`;
+  o coordenador vira o default para `on` (uma linha) depois de rodá-la. Nos testes e no playtest o
+  modo vem de `RPG_NPC_WORLD`.
 - **R30 — Telemetria e invariantes.**
   - Log `npc_world.tick` `{day, roster, moved, travelling, perils_open,
     perils_resolved{fate→n}, defections, mode}`.
@@ -451,53 +461,60 @@ nas metas da SPEC-285.
 NpcFate = Literal["morto", "ferido", "capturado", "escapou"]
 PerilKind = Literal["emboscada", "cerco", "praga", "abismo", "cativeiro"]
 
+
 class NpcPos(TypedDict, total=False):
-    location_id: str          # "" enquanto em viagem
+    location_id: str  # "" enquanto em viagem
     travel_from: str
     travel_to: str
     arrive_day: int | None
     since_day: int
     return_day: int | None
-    refugee_from: str         # casa em crise (R6)
+    refugee_from: str  # casa em crise (R6)
+
 
 class NpcPeril(TypedDict, total=False):
-    peril_id: str             # sha256(game_id|npc|opened_day)[:16]
+    peril_id: str  # sha256(game_id|npc|opened_day)[:16]
     npc_id: str
-    major: bool               # R14
-    kind: str                 # PerilKind
+    major: bool  # R14
+    kind: str  # PerilKind
     location_id: str
     region_id: str
     opened_day: int
     earliest_day: int
     deadline_day: int
-    extensions: int           # R17, ≤ MAX_EXTENSION_DAYS
+    extensions: int  # R17, ≤ MAX_EXTENSION_DAYS
     channel: Literal["rumor", "pedido_de_ajuda"]
     warning_event_id: str
     perceived_day: int | None
-    resolution: str           # "" | "intervencao" | NpcFate
+    resolution: str  # "" | "intervencao" | NpcFate
     resolved_day: int | None
+
 
 class NpcSimEntry(TypedDict, total=False):
     archetype: str
     pos: NpcPos
-    status: str               # "" | "ferido" | "capturado" (espelho do evento)
+    status: str  # "" | "ferido" | "capturado" (espelho do evento)
     status_until_day: int | None
     last_peril_end_day: int | None
-    frozen: bool              # saiu do elenco (R1)
+    frozen: bool  # saiu do elenco (R1)
+
 
 class NpcSimState(TypedDict, total=False):
-    version: int              # 1
+    version: int  # 1
     enabled_from_day: int
     roster: list[str]
     roster_fingerprint: str
     npcs: dict[str, NpcSimEntry]
-    perils: list[NpcPeril]    # ativos + últimos 30 resolvidos
+    perils: list[NpcPeril]  # ativos + últimos 30 resolvidos
     last_leader_death_day: int | None
-    tick_log: list[dict]      # anel 30
+    tick_log: list[dict]  # anel 30
+
 
 class NpcBelief(TypedDict, total=False):
-    status_known: str         # "" | "ausente" | "em_perigo" | "ferido" | "capturado" | "morto" | "desaparecido"
-    location_known: str       # location_id ou ""
+    status_known: (
+        str  # "" | "ausente" | "em_perigo" | "ferido" | "capturado" | "morto" | "desaparecido"
+    )
+    location_known: str  # location_id ou ""
     faction_known: str
     as_of_day: int
     channel: Literal["testemunho", "rumor", "mensageiro"]
@@ -529,12 +546,17 @@ def check_intervention(state: dict, peril: NpcPeril, day: int, player_ref_loc: s
 def resolve(state: dict, peril: NpcPeril, day: int, rng) -> tuple[NpcPeril, list[dict], dict]  # (perigo, eventos, patch SPEC-300)
 ```
 
-**Contrato com o hook da SPEC-302.** O `DayContext` precisa expor `state` (a
-cópia local com a projection já atualizada pelos dias anteriores, §3.4 da 302),
-`day`, `sim` (o `world_sim`), `player_ref_location` (o destino da ação) e
-`request_crisis_slot`. O `DayHookResult` precisa aceitar `pending_events`,
-`digest` e um `state_patch` restrito a `npc_sim`. Se a implementação da 302
-divergir, o executor ajusta esta spec no mesmo commit (§7).
+**Contrato com o hook da SPEC-302 (confirmado na Etapa 0 e ajustado).** O `DayContext` real
+tinha `game_id, day, sim, projection, world, factions, rng`. Foram acrescentados, de forma
+aditiva: `state` (o `GameState` + os patches dos dias anteriores da MESMA ação) e `events` (os
+eventos do log desde o último tick + os já aplicados no dia). O destino da ação do jogador é
+`ctx.world["current_location_id"]` e a vaga do diretor é `world_director.request_crisis_slot(ctx.sim,
+…)` (não há `request_crisis_slot` no contexto). O `DayHookResult` real tinha `pressure_deltas, events,
+digest, baseline_offsets`; ganhou `state_patch` (chaves do `GameState` que o hook escreve:
+`npc_sim`/`npc_sim_shadow`, e — via interface da SPEC-300 — `party`, `npcs`, `companion_souls`,
+`quests`, `event_log`). `WorldTickResult.state_patch` leva o patch ao storyteller, que o mescla
+no `sim_updates` E no `state` do turno antes de todo o resto (`agents/storyteller.py`). O
+registro do hook é `register_day_hook("npc_world", day_hook, stage="post", order=10)`.
 
 Ordem do hook por dia `d`:
 
@@ -877,8 +899,25 @@ registrar.
 
 ## 8. Evidência
 
-(preencher na implementação: baseline da Etapa 0, tabela N1–N7, playtest
-antes/depois R32, smoke §6)
+- **Etapa 0 (ownership/contrato):** writers de `npcs`/`party`/`world_projection`/`chronicle`
+  conferidos no source; novo owner de `npc_sim`/`npc_sim_shadow`/`npc_beliefs` =
+  `services/npc_world.py` (para registrar no PR). Contrato real do hook da 302 divergia: ver §3.4.
+- **Vazamentos de regra de ouro corrigidos (§1.1):** P7 (status `morto` na API/dossiê →
+  `npc_world.visible_status`/`belief_view`), P8 (crônica só em `npc_fate_learned`), P9 (contexto
+  do narrador sem eventos off-screen não percebidos, inclusive a linha "X: morto" de
+  `projection.entities`), P3 (NPC de grafo morto nunca é recriado/reintroduzido), P2/P6 (o
+  narrador não relocaliza; `waiting_at` resolvido por `resolve_location_ref`), P10
+  (`_event_origin` sem fallback ao local do jogador para eventos off-screen) e P13 (`_residents`
+  pela posição simulada).
+- **Calibração N1–N7:** `docs/spec304/README.md` (40 seeds × 120 dias; todas as metas fechadas).
+- **R32:** `--all --turns 50` (`RPG_WORLD_ENGINE=on RPG_NPC_WORLD=on`, MockLLM): 16 perfis, 0 erro,
+  0 violação `error`. `combate` 200 turnos, seeds 21–22, `off` vs `on`: 0 mortes e 0 quedas do
+  jogador nos dois (a spec não toca o combate).
+- **Testes:** `tests/test_spec304_{roster,agenda,defection,perils,fate,beliefs,playtest}.py`
+  (+ `spec304_helpers.py`). Ligou-se o tipo `resgate` da SPEC-305 (`_item_matches` casa o item
+  `npc_perigo`); `test_resgate_off_without_spec304` virou `test_resgate_on_with_spec304_but_no_perils`.
+- **Pendências:** revisão independente Opus; smoke real §6 (sem chave); D5 (flip do default);
+  `project_index` stale até o `/spec-land`.
 
 ## 9. Decisões do dono
 
@@ -914,3 +953,19 @@ antes/depois R32, smoke §6)
 Todas as decisões abertas seguem o **default recomendado pelo autor**, exceto/explicitando:
 
 - D4: pedido de ajuda por MENSAGEIRO que encontra o jogador onde ele estiver (conta como testemunho/ouvido).
+
+## Desvios e decisões de implementação (2026-10-24)
+
+- `BASE_HAZARD` 0,06/0,10, `HOME_MULT` 0,05 (novo), `fate_weights.emboscada.morto` 6,
+  `LEADER_DEATH_GAP_DAYS` 60: ver `docs/spec304/README.md` (N1–N7).
+- Perigo maior anuncia a vaga no telegrama e a abre em `earliest_day` (ver R14 acima).
+- Destino de companheiro afastado: `apply_companion_fate` sem o `chronicle` (a morte só entra
+  na crônica quando PERCEBIDA, via `npc_fate_learned`); recusa `FateNotTelegraphed` vira
+  intervenção. **Limitação conhecida:** o companheiro morto some da lista de `party` da API na hora
+  (a verdade da SPEC-300), antes de o jogador saber; o texto de morte não vaza, a ausência sim.
+- `npc_ferido`: a expiração é só de leitura (`wounded_until_day` na ficha); a ficha não tem writer
+  de expiração. O `npc_sim` zera o status no hook.
+- Cenários dirigidos (`npc_perigo`, `companheiro_exposto`) usam o único gancho de teste do
+  motor, `npc_sim["forced"]` (o sorteio de abertura vira acerto); ausente em jogo normal.
+- `data/world/npc_world.json` tem a tabela `agenda_by_npc` com os 21 líderes + 12 `npc_mv_*`
+  (os demais caem na tabela de radicais do `role`) e `key_npcs` = os 36 `npc_mv_*`.

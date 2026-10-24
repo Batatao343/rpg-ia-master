@@ -2324,6 +2324,106 @@ def _check_date(state: dict, prev: dict | None, turn: int) -> list[Violation]:
     return out
 
 
+def check_npc_world(state: dict, prev: dict | None, turn: int) -> list[Violation]:
+    """SPEC-304 R30: elenco, telegrama, percepcao, presenca, lideres e vazamento de crenca."""
+    sim = (state or {}).get("npc_sim") or {}
+    if not sim:
+        return []
+    from services import npc_perils, npc_world
+    from services.npc_layers import npc_alive
+
+    out: list[Violation] = []
+    cap = int(npc_perils.const("ROSTER_CAP"))
+    if len(sim.get("roster") or []) > cap:
+        out.append(
+            _V("npc.roster_cap_exceeded", "error", turn, f"{len(sim['roster'])} > {cap} no elenco")
+        )
+    world = (state or {}).get("world") or {}
+    here = str(world.get("current_location_id") or "")
+    day = int(((world.get("world_clock")) or {}).get("day", 1) or 1)
+    known_ids = {
+        str(e.get("event_id"))
+        for e in [
+            *((state or {}).get("event_log") or []),
+            *((state or {}).get("pending_world_events") or []),
+        ]
+        if isinstance(e, dict)
+    }
+    fates = ("morto", "ferido", "capturado", "escapou")
+    for p in sim.get("perils") or []:
+        res = str(p.get("resolution") or "")
+        if res not in fates:
+            continue
+        gap = int(p.get("resolved_day", 0) or 0) - int(p.get("opened_day", 0) or 0)
+        if (
+            not p.get("warning_event_id")
+            or gap < int(npc_perils.const("TELEGRAPH_MIN_DAYS"))
+            or p["warning_event_id"] not in known_ids
+        ):
+            out.append(
+                _V(
+                    "npc.fate_without_warning",
+                    "error",
+                    turn,
+                    f"destino {res} sem telegrama >= {npc_perils.const('TELEGRAPH_MIN_DAYS')} dias",
+                    peril_id=p.get("peril_id"),
+                )
+            )
+        if res == "morto" and p.get("major") and not npc_perils.perceived(p, day):
+            out.append(
+                _V(
+                    "npc.major_death_unperceived",
+                    "error",
+                    turn,
+                    "morte de perigo maior sem telegrama percebido",
+                    peril_id=p.get("peril_id"),
+                )
+            )
+        if int(p.get("resolved_day", -1) or -1) == day and npc_perils.at_player(
+            here, str(p.get("location_id") or "")
+        ):
+            out.append(
+                _V(
+                    "npc.fate_while_player_present",
+                    "error",
+                    turn,
+                    "destino aplicado no local do jogador",
+                    peril_id=p.get("peril_id"),
+                )
+            )
+    for key, row in ((state or {}).get("npcs") or {}).items():
+        if isinstance(row, dict) and row.get("in_scene") and not npc_alive(row):
+            out.append(_V("npc.dead_in_scene", "error", turn, f"{key} morto em cena"))
+    aff = ((state or {}).get("world_projection") or {}).get("npc_affiliations") or {}
+    for ref in aff:
+        if npc_world.is_leader(ref):
+            out.append(_V("npc.leader_defected", "error", turn, f"lider {ref} trocou de lado"))
+    try:
+        import api
+
+        shown = {v["name"]: v["status"] for v in api._npcs_block(state.get("npcs") or {}, state)}
+    except Exception as exc:  # silent-ok: sem API (ambiente reduzido) o check de vazamento pula
+        from observability.telemetry import log_fallback
+
+        log_fallback("playtest", "belief_leak_api_unavailable", exc)
+        shown = {}
+    for key, row in ((state or {}).get("npcs") or {}).items():
+        if not isinstance(row, dict):
+            continue
+        ov = npc_world.belief_view(state, str(key))
+        name = row.get("name", key)
+        if ov is not None and name in shown and shown[name] != ov["status"]:
+            out.append(
+                _V(
+                    "npc.belief_leak",
+                    "error",
+                    turn,
+                    f"API mostra status diferente da crenca de {key}",
+                )
+            )
+    return out
+
+
 CHECKS: list[Check] = [
     check_companions,
     check_law,
@@ -2363,6 +2463,7 @@ CHECKS: list[Check] = [
     check_world_engine,
     check_world_quests,
     check_calendar,
+    check_npc_world,
 ]
 
 

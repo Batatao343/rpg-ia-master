@@ -829,6 +829,7 @@ def day_hook(ctx: Any) -> Any:
             dsim=dsim,
             shadow=not emit,
             player_loc=player_loc,
+            force=ref in (sim.get("forced") or []),
             protected=(
                 ref not in waiting
                 and bool(entry.get("home"))
@@ -837,6 +838,7 @@ def day_hook(ctx: Any) -> Any:
         )
         if not peril:
             continue
+        sim["forced"] = [f for f in sim.get("forced") or [] if f != ref]
         opened += 1
         if not emit:
             sim["perils"].remove(peril)  # sombra: só conta, não deixa perigo "vivo"
