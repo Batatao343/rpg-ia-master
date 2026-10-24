@@ -1,7 +1,7 @@
 # SPEC-301 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus / papel Sol (revisão independente) · **Data:** 2026-10-24 · **Commit revisado:** `7bfe743d`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (re-revisão de `d2ad1580`; a 1ª rodada, em `7bfe743d`, foi `CHANGES_REQUIRED`)
+> **Revisor:** Opus / papel Sol (revisão independente) · **Data:** 2026-10-24 · **Commits revisados:** `7bfe743d` (1ª rodada) e `d2ad1580` (re-revisão)
 
 ## Escopo
 
@@ -50,21 +50,51 @@ Pontos de foco que conferem:
 
 ## Correções aplicadas
 
-P1-1, P1-2, P2-1..P2-4 corrigidos pelo executor (ver 'Revisão Sol' em Desvios da spec; testes em tests/test_spec301_missoes.py e test_spec301_persistencia.py). Pendente de re-revisão.
+Re-revisão do commit `d2ad1580` ("fix(301): sol review…"). A branch foi rebaseada: os SHAs anteriores
+viraram `554e3f3d`/`2c1fc4b6`.
+
+- **P1-1 — resolvido.** `offer_mission` recusa com `missao_recente` quando
+  `last_mission_day >= day`. O campo é gravado só quando a missão é de fato oferecida
+  (`_ask_mission`); na recusa o estado fica intacto e o perk `informacao` não dispara. Um modelo não
+  volta antes de `TEMPLATE_COOLDOWN_DAYS = 10` (`mission_template_id`/`mission_day` na `Quest`).
+  `sync_location_progress` não marca chegada a uma missão de fação no turno em que ela é criada.
+  Rodei `farm301b.py` (via `apply_intent`, 3 pedidos por dia, dias 3 a 12): **3 missões em 10 dias,
+  90 de ouro**, contra 8 missões e 250 de ouro num só dia antes. As demais tentativas foram recusadas
+  como `missao_recente` ou `sem_missao`. Nenhuma missão nasceu alcançada.
+- **P1-2 — resolvido.** O invariante agora checa a transição `before.progress < 100 <= progress`,
+  exigindo `world_clock.day` inalterado, fação não `completed`/`defeated` e linha anterior existente.
+  Uma fação parada em 100 à espera da ascensão do motor 302 já não dispara erro. Um empurrão por
+  missão até 100 sem virada de dia continua acusado.
+- **P2-1 — resolvido.** `new_ascensions(before, after, legacy)` junta os eventos legados com a
+  transição `completed`, e o storyteller passa essa lista para `ascension_member_note`.
+- **P2-2 — resolvido.** `_try_promote` enfileira `rival_awareness(-1)` em fação pública.
+- **P2-3 — resolvido** por decisão registrada na spec: a expulsão por limiar hostil vem sem aviso
+  prévio; a traição continua telegrafada.
+- **P2-4 — resolvido.** O critério de aceite agora aponta para `handoffs/SPEC-301-sol-review.md`.
 
 ## Pendências
 
-- P1-1 e P1-2 bloqueiam o pouso. P2-1..P2-4 podem virar follow-up na própria 301 antes do `done`.
-- Smoke real da §6 (DeepSeek), para validar o mapeamento de `membership_action` no provider real.
+- **F-1 (P2, follow-up na 301 ou spec de quests):** a spec diz que a missão "não nasce alcançada… mesmo
+  no local atual". Isso só vale no turno da criação. No turno seguinte, `sync_location_progress`
+  registra a chegada se o jogador continua no local (ex.: `legiao_quota_ferro` no QG). Com o limite de
+  1 por dia e o cooldown de 10 dias isso não é mais farm, mas o texto da spec promete mais do que o
+  código faz. Duas saídas: exigir a chegada por viagem (`dest`) para missões de fação, ou ajustar o
+  texto.
+- Smoke real da §6 (DeepSeek) antes do `done`: confirma o mapeamento de `membership_action` no
+  provider real.
+- Caso Playwright da Etapa 8 continua fora (`web/e2e/contracts` é protegido), conforme os desvios.
 - Coordenador, no pouso: criar a entrada `faction_membership` em `project_index/state_ownership.yaml`
   (§3.5).
 
 ## Comandos rodados
 
 ```text
-git diff e9127c4e...HEAD --stat → 37 arquivos, +5363/-49
-bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n 2 tests/test_spec301_*.py tests/test_spec302_*.py tests/test_spec298_*.py tests/test_fase2.py tests/test_fase27.py tests/test_fase34.py tests/test_bug_contabilidade_recompensas.py → 440 passed, exit 0
+git diff e9127c4e...HEAD --stat → 37 arquivos, +5363/-49 (1ª rodada)
+bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n 2 <301/302/298 + fase2/27/34 + bug_contabilidade> → 440 passed, exit 0 (7bfe743d)
 bash scripts/dev/py.sh scripts/validate_content.py → 0 erros, 0 avisos ([faction_membership] OK)
-git diff e9127c4e...HEAD -- tests/test_fase2.py tests/test_fase27.py tests/test_bug_contabilidade_recompensas.py evals/ web/e2e → vazio
-scratchpad/farm301.py (offer_mission ×8 no mesmo dia, QG da Legião) → 8 missões aceitas, 250 de ouro, 5 sem sair do QG
+scratchpad/farm301.py (offer_mission ×8 no mesmo dia, QG da Legião) → 8 missões, 250 de ouro (7bfe743d)
+git show d2ad1580 --stat → 10 arquivos, +250/-18
+scratchpad/farm301b.py (apply_intent ask_mission, 30 pedidos, dias 3-12) → 3 missões, 90 de ouro, nenhuma nasce alcançada (d2ad1580)
+bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n 2 <mesmos arquivos> → 447 testes coletados, exit 0 (d2ad1580)
+git diff 1d4653f7...HEAD -- tests/test_fase2.py tests/test_fase27.py tests/test_bug_contabilidade_recompensas.py evals/ web/e2e → vazio
 ```
