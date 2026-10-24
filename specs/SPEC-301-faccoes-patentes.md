@@ -738,3 +738,7 @@ Contrato da SPEC-298 usado: reputação numérica -100..100 (`faction_tier`), "p
 - **Etapa 8:** o painel é `web/src/components/Hud.tsx`; o caso Playwright novo não foi criado
   (`web/e2e/contracts` protegido).
 - Perfil `faccionario` (MockLLM propõe `membership_action` só com pedido explícito): 50 turnos, 0 violações.
+- **Integração com a SPEC-302 (rebase na main):** com `RPG_WORLD_ENGINE=on`, a influência modula o
+  pace no tick diário (`world_engine`, passo 6: `effective_pace`) e decai 1 por dia; o
+  `advance_factions` legado (decaimento a cada 4 períodos) só vale com o motor off. Em ambos,
+  influência 0 = comportamento anterior, e missão nunca leva o progress a 100 (só o tick ascende).

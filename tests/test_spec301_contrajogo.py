@@ -161,3 +161,27 @@ def test_prejudicar_a_propria_faccao_vira_ofensa():
     out = event_processor.process_pending_events(st)
     assert out["faction_membership"]["legiao_ferro"]["status"] == "suspeito"
     assert merge(st, out)["faction_membership"]["legiao_ferro"]["offenses"]
+
+
+def test_tick_diario_da_302_usa_influencia(monkeypatch):
+    """Motor `on`: a influência modula o pace NO TICK DIÁRIO e decai 1 por dia."""
+    from tests.spec302_helpers import make_state as make302
+    from tests.spec302_helpers import tick
+
+    monkeypatch.setenv("RPG_WORLD_ENGINE", "on")
+
+    def run(influence):
+        st = make302()
+        for f in st["factions"]:
+            f["progress"] = 0
+            f["influence"] = influence if f["id"] == "legiao_ferro" else 0
+        tick(st, 1, 1)
+        res = tick(st, 1, 4)
+        return next(f for f in res.factions if f["id"] == "legiao_ferro")
+
+    neutro, alto, baixo = run(0), run(9), run(-9)
+    assert alto["progress"] > neutro["progress"] > baixo["progress"] or (
+        alto["progress"] > neutro["progress"] >= baixo["progress"]
+    )
+    assert alto["influence"] < 9 and baixo["influence"] > -9  # decaiu rumo a 0
+    assert neutro["influence"] == 0

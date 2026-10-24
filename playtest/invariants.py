@@ -1991,6 +1991,7 @@ def check_world_engine(state: dict, prev: dict | None, turn: int) -> list[Violat
     days = [e.get("day") for e in sim.get("tick_log") or [] if not e.get("capped")]
     if len(days) != len(set(days)):
         out.append(_V("world.day_ticked_twice", "error", turn, "dia simulado mais de uma vez"))
+    return out
 
 
 def check_faction_membership(state: dict, prev: dict | None, turn: int) -> list[Violation]:
