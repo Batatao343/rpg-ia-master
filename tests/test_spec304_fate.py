@@ -224,9 +224,25 @@ def test_graph_npc_death_uses_npc_killed_canonical_path(monkeypatch):
     out = ep.process_pending_events(st)
     assert out["world_projection"]["entities"][ref]["alive"] is False  # alive=False
     assert out["npcs"]["Skek"]["status"] == "morto"  # apply_npc_death
-    assert (
-        next(q for q in out["quests"] if q["id"] == "q1")["status"] == "failed"
-    )  # fail_orphan_quests
+    # P1-1: a falha da quest orfa espera a PERCEPCAO da morte (senao a quest entregaria a morte)
+    assert next(q for q in out.get("quests", st["quests"]) if q["id"] == "q1")["status"] == "active"
+    st.update(out)
+    st["pending_world_events"] = [
+        {
+            "event_id": "learn-x",
+            "type": "npc_fate_learned",
+            "actor_id": "world",
+            "target_id": ref,
+            "source": "engine",
+            "payload": {
+                "fate": "morto",
+                "location_id": "montanhas_afiadas",
+                "source_event_id": killed[0]["event_id"],
+            },
+        }
+    ]
+    out2 = ep.process_pending_events(st)
+    assert next(q for q in out2["quests"] if q["id"] == "q1")["status"] == "failed"
     chron = " ".join(
         c.get("text", "") for ch in out.get("chronicle", []) for c in ch.get("entries", [])
     )

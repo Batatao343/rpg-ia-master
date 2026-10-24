@@ -318,7 +318,9 @@ def _event_origin(state: dict, event: dict) -> str:
     for cand in (payload.get("location_id"), event.get("target_id")):
         if cand and gamedata.get_location(str(cand)):
             return str(cand)
-    if payload.get("offscreen") or str(event.get("type") or "") in (
+    if (
+        payload.get("offscreen") and str(event.get("source") or "") in ("engine", "rule_engine")
+    ) or str(event.get("type") or "") in (
         "npc_peril_warning",
         "npc_offscreen_fate",
         "npc_defected",
@@ -698,8 +700,12 @@ def turn_updates(state: dict) -> dict:
         if not sid:
             continue
         origin = _event_origin(state, ev)
-        if not origin:
-            continue
+        if not origin and (
+            (ev.get("payload") or {}).get("offscreen")
+            or str(ev.get("type") or "")
+            in ("npc_peril_warning", "npc_offscreen_fate", "npc_defected")
+        ):
+            continue  # SPEC-304: fato off-screen sem local nao "acontece" ao lado do jogador
         links.extend(record_witnesses(working(), ev, origin, clock))
         if str(ev.get("type") or "") in WITNESS_ONLY_TYPES:
             continue  # R7: testemunhável, nunca vira rumor local nem propaga

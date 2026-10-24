@@ -969,3 +969,28 @@ Todas as decisões abertas seguem o **default recomendado pelo autor**, exceto/e
   motor, `npc_sim["forced"]` (o sorteio de abertura vira acerto); ausente em jogo normal.
 - `data/world/npc_world.json` tem a tabela `agenda_by_npc` com os 21 líderes + 12 `npc_mv_*`
   (os demais caem na tabela de radicais do `role`) e `key_npcs` = os 36 `npc_mv_*`.
+
+## Correções da revisão Sol (2026-10-24) e follow-ups
+
+- **P1-1** `fail_orphan_quests` de morte fora de cena espera o `npc_fate_learned` (a quest
+  `failed` entregaria a morte). **P1-2** a API lê a CRENÇA: `npc_world.public_party`/`public_quests`
+  mostram o companheiro (e a missão pessoal) como o jogador viu por último (`ghost` em
+  `npc_sim.npcs[cid]`) até a percepção; o contrato da SPEC-300 não mudou. **P2-1** o encontro não
+  sobrescreve `npcs` com o patch. **P2-3** os derivados de `rule_engine` de um `npc_killed`
+  off-screen herdam `offscreen`/`cause_event_id` (ocultos até a causa ser percebida). **P2-4**
+  `offscreen` só vale com `source` engine/rule_engine. **P2-6** a crença guarda `known_events`
+  (anel de 20). **P2-7** save sem as chaves quando vazias; `if not origin` só para fato
+  off-screen; os 4 tipos têm teste engine-only; R32 `combate` seeds 21–32 × 200: 0 mortes e 0
+  quedas em `off` e `on`.
+- **Desvio R12:** a exposição usa `npc_perils.exposure` (que resolve `waiting_at` para
+  `location_id`) em vez de `companions_exposed`, porque este devolve o perigo de `get_location`
+  com o nome de exibição e erra o `danger` (P6). O conjunto de companheiros é o mesmo.
+- **Follow-up P2-2 (antes de `RPG_NPC_WORLD=on` no staging):** o sim da 302 não mescla
+  `state_patch`; medir C1 com a 304 `on` (sonda do revisor: NA 10→9, brekmar 16→17) e decidir com o
+  dono se `npc_perigo` deixa de consumir `MAX_ACTIVE_CRISES` ou se o `surge_p` da 302 é
+  recalibrado. A flag fica `off`.
+- **Follow-up P2-5:** intervenção, percepção e crença por encontro rodam com granularidade
+  diária (posição do jogador no tick). Visita ao local do perigo dentro do mesmo dia, saindo antes
+  da virada, não conta; `perceived_day` tem até 1 dia de atraso (conservador). Spec 304b pode
+  registrar `world.visited_today`.
+- **Registrar para o dono:** `LEADER_DEATH_GAP_DAYS` 30→60 (D6) para fechar N3.

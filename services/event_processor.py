@@ -417,6 +417,14 @@ def _world_quest_derived(quest: dict, state: dict, turn: int) -> tuple[list[dict
     return events, setback
 
 
+def is_offscreen_event(ev: dict) -> bool:
+    """SPEC-304 P2-4: `payload.offscreen` so vale para evento do motor (a LLM nao o forja)."""
+    return bool((ev.get("payload") or {}).get("offscreen")) and str(ev.get("source") or "") in (
+        "engine",
+        "rule_engine",
+    )
+
+
 def process_pending_events(state: dict) -> dict:
     """Valida/aplica a fila `pending_world_events`. Retorna updates parciais do GameState.
 
@@ -448,7 +456,7 @@ def process_pending_events(state: dict) -> dict:
 
     def _chronicle_milestone(ev: dict, proj: dict) -> None:
         nonlocal chronicle, chronicle_changed
-        if (ev.get("payload") or {}).get("offscreen"):
+        if is_offscreen_event(ev):
             return  # SPEC-304 R23: a morte off-screen so entra na cronica quando PERCEBIDA
         milestone = render_milestone(ev, proj)
         if milestone:
@@ -587,6 +595,12 @@ def process_pending_events(state: dict) -> dict:
         working["world_projection"] = projection
         working["event_log"] = event_log
         for d in rule_engine.run_rules(event, working, depth=0):
+            if is_offscreen_event(event):  # SPEC-304 P2-3: a cascata herda o segredo da causa
+                d["payload"] = {
+                    **(d.get("payload") or {}),
+                    "offscreen": True,
+                    "cause_event_id": event["event_id"],
+                }
             event_log.append(d)
             accepted_events.append(d)
             if d.get("type") == "npc_killed":
@@ -604,7 +618,12 @@ def process_pending_events(state: dict) -> dict:
                 offscreen_fates.append(event)
 
         # Fase 3.3 (R4): NPC canônico morto → toda quest órfã falha sistemicamente.
-        if event["type"] == "npc_killed":
+        # SPEC-304 P1-1: morte fora de cena NAO percebida adia a falha ate `npc_fate_learned`
+        # (a quest `failed` na API/crônica entregaria a morte).
+        learned_death = (
+            event["type"] == "npc_fate_learned" and event["payload"].get("fate") == "morto"
+        )
+        if (event["type"] == "npc_killed" and not is_offscreen_event(event)) or learned_death:
             quests, qfailed = quest_log.fail_orphan_quests(quests, event.get("target_id"), turn)
             if qfailed:
                 quests_changed = True

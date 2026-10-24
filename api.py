@@ -73,6 +73,7 @@ from persistence import (
     save_game_state,
     save_path,
 )
+from services import npc_world as _npc_world
 from services import quest_log
 from services import state_views as sv
 from services.chronicle import default_chapter_title
@@ -2189,7 +2190,7 @@ def _format_response_raw(state: dict, *, cue_action_key: str | None = None) -> G
         ),
         quest=_quest_block(
             state.get("campaign_plan") or {},
-            state.get("quests", []) or [],
+            _npc_world.public_quests(state),  # SPEC-304: missao de destino nao percebido
             state.get("world") or {},
         ),
         combat=_combat_block(state),
@@ -2208,8 +2209,7 @@ def _format_response_raw(state: dict, *, cue_action_key: str | None = None) -> G
                 "status": c.get("status", "ativo"),
                 **_companion_labels(state, c),
             }
-            for c in (state.get("party") or [])
-            if isinstance(c, dict)
+            for c in _npc_world.public_party(state)  # SPEC-304 P1-2: o que o jogador viu
         ],
         companion_feedback=_companion_feedback(state),
         reputation_notices=_reputation_notices(state),

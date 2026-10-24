@@ -752,9 +752,12 @@ def _state_to_save_data(state: dict[str, Any], game_id: str) -> dict[str, Any]:
         "world_sim": deepcopy(state.get("world_sim") or {}),
         "world_sim_shadow": deepcopy(state.get("world_sim_shadow") or {}),
         # SPEC-304 (aditivo, sem bump): NPCs off-screen (verdade) e crença do jogador.
-        "npc_sim": deepcopy(state.get("npc_sim") or {}),
-        "npc_sim_shadow": deepcopy(state.get("npc_sim_shadow") or {}),
-        "npc_beliefs": deepcopy(state.get("npc_beliefs") or {}),
+        # so grava quando ha conteudo: com RPG_NPC_WORLD=off o save fica identico ao de antes
+        **{
+            k: deepcopy(state[k])
+            for k in ("npc_sim", "npc_sim_shadow", "npc_beliefs")
+            if state.get(k)
+        },
         # --- Fase 4.6: save morto vira memorial (não aceita ações) ---
         "game_over": bool(state.get("game_over", False)),
         # --- spec checkpoints-morte: tela de morte pendente (persiste entre requests) ---

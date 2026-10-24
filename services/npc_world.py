@@ -728,6 +728,8 @@ def day_hook(ctx: Any) -> Any:
         comp = ref in waiting
         _key_n, row = _row_for(st, ref)
         graph = graph_entity(ref) is not None
+        ghost = dict(_party_by_id(st).get(ref) or {}) if comp else {}
+        active_q = {q.get("id") for q in st.get("quests") or [] if q.get("status") == "active"}
         peril, evs, cpatch = perils.resolve(
             st,
             p,
@@ -766,6 +768,13 @@ def day_hook(ctx: Any) -> Any:
                 _start_trip(entry, dst, d, _rng(game_id, d, ref, "escape"), stay=[1, 1])
                 entry["pos"]["refugee_from"] = str(entry.get("home") or p["location_id"])
         if cpatch:
+            if ghost:  # P1-2: o que o jogador viu por ultimo (a API le isto ate a percepcao)
+                entry["ghost"] = ghost
+                entry["ghost_quests"] = sorted(
+                    q["id"]
+                    for q in cpatch.get("quests") or []
+                    if q.get("id") in active_q and q.get("status") == "failed"
+                )
             merge_patch(cpatch)
         if emit:
             events += evs
@@ -1115,6 +1124,21 @@ def record_beliefs(state: dict, perceived: list[dict]) -> dict:
     return on_perceived(state, perceived)[0]
 
 
+KNOWN_EVENTS_CAP = 20
+
+
+def _knows(belief: dict, event_id: str) -> bool:
+    """P2-6: a crenca lembra os eventos que o jogador ja percebeu (nao so o ultimo)."""
+    return bool(event_id) and (
+        belief.get("source_event_id") == event_id or event_id in (belief.get("known_events") or [])
+    )
+
+
+def _merge_known(old: dict, new_src: str) -> list[str]:
+    ids = [*(old.get("known_events") or []), str(old.get("source_event_id") or ""), new_src]
+    return list(dict.fromkeys(i for i in ids if i))[-KNOWN_EVENTS_CAP:]
+
+
 def on_perceived(state: dict, perceived: list[dict]) -> tuple[dict, list[dict]]:
     """(crenças novas, eventos `npc_fate_learned`). Só no modo `on`."""
     beliefs = copy.deepcopy((state or {}).get("npc_beliefs") or {})
@@ -1129,7 +1153,8 @@ def on_perceived(state: dict, perceived: list[dict]) -> tuple[dict, list[dict]]:
         old = beliefs.get(ref) or {}
         beliefs[ref] = {**old, **{k: v for k, v in belief.items() if v or k == "status_known"}}
         src = str(belief.get("source_event_id") or "")
-        if fate in ("morto", "capturado") and src and old.get("source_event_id") != src:
+        beliefs[ref]["known_events"] = _merge_known(old, src)
+        if fate in ("morto", "capturado") and src and not _knows(old, src):
             events.append(
                 perils.engine_event(
                     game_id,
@@ -1166,7 +1191,7 @@ def on_perceived(state: dict, perceived: list[dict]) -> tuple[dict, list[dict]]:
             here, str(p.get("location_id") or "")
         ):
             fid = str(entry.get("fate_event_id") or "")
-            if fid and (beliefs.get(p["npc_id"]) or {}).get("source_event_id") != fid:
+            if fid and not _knows(beliefs.get(p["npc_id"]) or {}, fid):
                 learn(
                     p["npc_id"],
                     {
@@ -1189,13 +1214,15 @@ def on_perceived(state: dict, perceived: list[dict]) -> tuple[dict, list[dict]]:
         entry = (sim.get("npcs") or {}).get(ref) or {}
         if not entry or str((entry.get("pos") or {}).get("location_id") or "") != here:
             continue  # so quem esta MESMO aqui (a cena do local anterior ainda nao foi zerada)
+        src = str(entry.get("fate_event_id") or "")
         beliefs[ref] = {
             "status_known": "",
             "location_known": here,
             "faction_known": (beliefs.get(ref) or {}).get("faction_known", ""),
             "as_of_day": day,
             "channel": "testemunho",
-            "source_event_id": str(entry.get("fate_event_id") or ""),
+            "source_event_id": src,
+            "known_events": _merge_known(beliefs.get(ref) or {}, src),
         }
     return beliefs, events
 
@@ -1213,7 +1240,7 @@ def belief_view(state: dict, npc_key: str) -> dict | None:
     if not entry.get("fate") or not fate_id:
         return None
     belief = (state.get("npc_beliefs") or {}).get(ref) or {}
-    if belief.get("source_event_id") == fate_id:
+    if _knows(belief, fate_id):
         return None
     return {
         "status": str(belief.get("status_known") or ""),
@@ -1222,11 +1249,62 @@ def belief_view(state: dict, npc_key: str) -> dict | None:
 
 
 def _known_sources(state: dict) -> set[str]:
-    return {
-        str(b.get("source_event_id") or "")
-        for b in (state.get("npc_beliefs") or {}).values()
-        if isinstance(b, dict)
+    out: set[str] = set()
+    for b in (state.get("npc_beliefs") or {}).values():
+        if isinstance(b, dict):
+            out.add(str(b.get("source_event_id") or ""))
+            out.update(str(i) for i in b.get("known_events") or [])
+    return out
+
+
+def fate_hidden(state: dict, ref: str) -> bool:
+    """Existe um destino fora de cena de `ref` que o jogador ainda NAO percebeu."""
+    if mode() != "on":
+        return False
+    entry = ((state.get("npc_sim") or {}).get("npcs") or {}).get(ref) or {}
+    fid = str(entry.get("fate_event_id") or "")
+    belief = (state.get("npc_beliefs") or {}).get(ref) or {}
+    return bool(entry.get("fate") and fid and not _knows(belief, fid))
+
+
+def public_party(state: dict) -> list[dict]:
+    """P1-2: a party que o JOGADOR ve. Companheiro com destino nao percebido aparece como o
+    jogador o viu por ultimo (linha fantasma): sem status literal, vitalidade real nem sumico."""
+    party = [c for c in (state.get("party") or []) if isinstance(c, dict)]
+    if mode() != "on":
+        return party
+    from services.companion_soul import comp_id
+
+    out = list(party)
+    for ref, entry in ((state.get("npc_sim") or {}).get("npcs") or {}).items():
+        ghost = entry.get("ghost")
+        if not ghost or not fate_hidden(state, ref):
+            continue
+        idx = next((i for i, c in enumerate(out) if comp_id(c) == ref), None)
+        if idx is None:
+            out.append(dict(ghost))
+        else:
+            out[idx] = dict(ghost)
+    return out
+
+
+def public_quests(state: dict) -> list[dict]:
+    """P1-1/P1-2: missao `failed` por destino nao percebido continua ativa para o jogador."""
+    quests = list(state.get("quests") or [])
+    if mode() != "on":
+        return quests
+    hidden = {
+        qid
+        for ref, entry in ((state.get("npc_sim") or {}).get("npcs") or {}).items()
+        if fate_hidden(state, ref)
+        for qid in entry.get("ghost_quests") or []
     }
+    if not hidden:
+        return quests
+    return [
+        {**q, "status": "active"} if q.get("id") in hidden and q.get("status") == "failed" else q
+        for q in quests
+    ]
 
 
 def event_hidden_from_player(state: dict, ev: dict) -> bool:
@@ -1234,9 +1312,14 @@ def event_hidden_from_player(state: dict, ev: dict) -> bool:
     if mode() != "on" or not isinstance(ev, dict):
         return False
     payload = ev.get("payload") or {}
-    if ev.get("type") not in OFFSCREEN_TYPES and not payload.get("offscreen"):
+    if ev.get("type") == "quest_failed" and payload.get("personal_of"):
+        return fate_hidden(state, str(payload["personal_of"]))  # missao pessoal de quem "sumiu"
+    from services.event_processor import is_offscreen_event
+
+    if ev.get("type") not in OFFSCREEN_TYPES and not is_offscreen_event(ev):
         return False
-    return str(ev.get("event_id") or "") not in _known_sources(state)
+    key = str(payload.get("cause_event_id") or ev.get("event_id") or "")
+    return key not in _known_sources(state)
 
 
 def entity_death_hidden(state: dict, entity_id: str) -> bool:

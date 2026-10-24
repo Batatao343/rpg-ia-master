@@ -1194,7 +1194,8 @@ def storyteller_node(state: GameState):
                 # se um encontro disparar na mesma chegada.
                 if turn_bl is not state.get("turn_baseline"):
                     updates["turn_baseline"] = turn_bl
-                updates.update(sim_updates)
+                # `npcs` do patch ja esta em `scene_npcs` (com o reset_scene da viagem): nao sobrescrever
+                updates.update({k: v for k, v in sim_updates.items() if k != "npcs"})
                 if wq_changed:
                     updates["quests"] = wq_quests
                 if discovery_events or extra_engine_events:
