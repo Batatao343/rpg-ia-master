@@ -628,6 +628,12 @@ def _with_new_npc(
     return new_npcs
 
 
+def _cal_of(state: dict) -> dict | None:
+    """SPEC-307 R13: calendário congelado de `world_sim` p/ o rótulo de data do narrador."""
+    cal = (state.get("world_sim") or {}).get("calendar")
+    return cal if isinstance(cal, dict) else None
+
+
 def _season_line(world: dict) -> str:
     """SPEC-303 R21: linha 'Estação: <rótulo regional>' (vazia sem calendário)."""
     from services import world_calendar
@@ -937,11 +943,11 @@ def storyteller_node(state: GameState):
             rest_note = (
                 f"O jogador TENTOU descansar, mas o clima ({world.get('weather', 'o miasma')}) "
                 f"NÃO permite descanso seguro ao relento — NADA foi recuperado e o tempo passou "
-                f"({clock_label(world)}). Narre a noite péssima e a exaustão."
+                f"({clock_label(world, _cal_of(state))}). Narre a noite péssima e a exaustão."
             )
         else:
             rest_note = (
-                f"O jogador DESCANSOU. O tempo avançou para {clock_label(world)} e ele recuperou parte das forças. "
+                f"O jogador DESCANSOU. O tempo avançou para {clock_label(world, _cal_of(state))} e ele recuperou parte das forças. "
                 "Narre a passagem do tempo e o estado do mundo ao acordar."
             )
     perceived_items: list = []
@@ -1265,6 +1271,13 @@ def storyteller_node(state: GameState):
         )
 
     season_line = _season_line(world)  # SPEC-303 R21 (determinística, sem chamada LLM)
+    from services import world_calendar as _wcal
+
+    if _wcal.clock_date_label(world, _cal_of(state)):  # SPEC-307 R18
+        season_line += (
+            " Use só os nomes de mês e de dia de Valoria que aparecem em Momento; "
+            "não invente datas nem meses de outro mundo."
+        )
 
     campaign_plan = state.get("campaign_plan") or {}
     beats = [dict(beat) for beat in campaign_plan.get("beats", [])]
@@ -1377,7 +1390,7 @@ def storyteller_node(state: GameState):
     <PERSONA>
     Você é o Narrador (Mestre) de um RPG.
     Local Atual: {loc}.
-    Momento: {clock_label(world)}.{season_line}
+    Momento: {clock_label(world, _cal_of(state))}.{season_line}
     NPCs na cena: {existing_npcs}.
     Objetivo Atual: {active_step}
     </PERSONA>

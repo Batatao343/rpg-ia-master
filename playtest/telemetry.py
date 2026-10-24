@@ -904,14 +904,20 @@ def _calendar_summary(sim: dict) -> dict:
     """SPEC-303 R27: estações vistas, viradas, festas percebidas/canceladas, travessias."""
     cal = (sim or {}).get("calendar")
     if not isinstance(cal, dict):
-        return {"seasons_seen": 0, "season_changes": 0}
+        return {"seasons_seen": 0, "season_changes": 0, "months_seen": 0}
     from services import world_calendar as wcal
 
     first, last = int(cal.get("anchor_day", 1)), int(sim.get("last_ticked_day", 1) or 1)
     seq = [wcal.season_at(cal, d)["season"] for d in range(first, max(first, last) + 1)]
     stats = sim.get("perceived_stats") or {}
     fests = sim.get("festivals") or []
+    months_seen = 0
+    if "month_days" in cal:  # SPEC-307 R25: meses vistos (calendario v2)
+        months_seen = len(
+            {wcal.date_at(cal, d)["month_id"] for d in range(first, max(first, last) + 1)}
+        )
     return {
+        "months_seen": months_seen,
         "seasons_seen": len(set(seq)),
         "season_changes": sum(1 for a, b in zip(seq, seq[1:], strict=False) if a != b),
         "festas_perceived": int(stats.get("festas", 0)),

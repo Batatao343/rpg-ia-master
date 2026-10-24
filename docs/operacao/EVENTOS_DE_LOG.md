@@ -244,7 +244,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `wallet.recovery_item_failed` | `error_type`, `op_ref`, `stage` |
 | `wallet.reservation_uncertain` | `error_type`, `op_ref`, `stage` |
 | `wallet.settle_failed` | `error_type`, `op_ref`, `stage` |
-| `world.calendar` | `changed`, `day`, `festas_cancelled`, `festas_started`, `mode`, `passes_closed`, `season` |
+| `world.calendar` | `changed`, `day`, `day_of_month`, `festas_cancelled`, `festas_started`, `migrated`, `mode`, `month_id`, `neutral`, `passes_closed`, `season`, `weekday_id`, `year` |
 | `world.tick` | `events`, `mode`, `perceived` |
 | `world.tick_capped` | `skipped` |
 | `world_engine.fallback` | `hook` |

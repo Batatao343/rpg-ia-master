@@ -2185,6 +2185,7 @@ def _format_response_raw(state: dict, *, cue_action_key: str | None = None) -> G
             state.get("world_projection", {}) or {},
             state.get("event_log", []) or [],
             state.get("player", {}) or {},
+            state.get("world_sim"),
         ),
         quest=_quest_block(
             state.get("campaign_plan") or {},
@@ -2864,6 +2865,7 @@ def _world_block(
     projection: dict | None = None,
     event_log: list | None = None,
     player: dict | None = None,
+    world_sim: dict | None = None,
 ) -> dict[str, Any]:
     clock = w.get("world_clock") or {}
     turn = w.get("turn_count", 0)
@@ -2911,12 +2913,58 @@ def _world_block(
         # SPEC-303 R22: estação com rótulo regional do local atual (só id+label; passos,
         # festas e parâmetros do calendário nunca saem)
         "season": _season_view(w),
+        # SPEC-307 R16: data de Valoria derivada (pura) de world_sim.calendar; nunca sai
+        # epoch_offset/year_offset/catalogo de festas.
+        "date": _date_block(w, world_sim),
         "news": [
-            {k: n.get(k, "") for k in ("day", "period", "location_name", "text", "turn")}
+            {
+                **{k: n.get(k, "") for k in ("day", "period", "location_name", "text", "turn")},
+                "date_label": _news_date_label(n, world_sim),
+            }
             for n in (w.get("news") or [])[-12:]
             if isinstance(n, dict)
         ],
     }
+
+
+def _date_block(w: dict, world_sim: dict | None) -> dict[str, Any] | None:
+    from services import world_calendar
+
+    if world_calendar.mode() != "on":
+        return None
+    day = int((w.get("world_clock") or {}).get("day", 1) or 1)
+    cal = world_calendar.calendar_for_read(world_sim, day)
+    if not cal:
+        return None
+    v = world_calendar.date_view(cal, day)
+    out = {
+        k: v[k]
+        for k in ("label", "day_of_month", "month", "month_id", "weekday", "year", "climate")
+    }
+    # D8: chip de estacao so onde a regiao tem rotulo proprio (Skallgard, Zhur)
+    from services.world_pressures import region_of
+
+    sid = world_calendar.active_season(w)
+    region = region_of(str(w.get("current_location_id") or ""))
+    out["season_chip"] = (
+        world_calendar.label_for(sid, region)
+        if sid and world_calendar.has_regional_label(sid, region)
+        else ""
+    )
+    return out
+
+
+def _news_date_label(item: dict, world_sim: dict | None) -> str:
+    from services import world_calendar
+
+    if world_calendar.mode() != "on":
+        return ""
+    try:
+        day = int(item.get("day") or 0)
+    except (TypeError, ValueError):
+        return ""
+    cal = world_calendar.calendar_for_read(world_sim, day) if day > 0 else None
+    return world_calendar.date_label(cal, day) if cal else ""
 
 
 def _season_view(w: dict) -> dict[str, str] | None:

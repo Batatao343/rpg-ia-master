@@ -2247,7 +2247,10 @@ def check_calendar(state: dict, prev: dict | None, turn: int) -> list[Violation]
     prev_sim = (prev or {}).get("world_sim") or {}
     prev_cal = prev_sim.get("calendar")
     if isinstance(prev_cal, dict) and prev_cal != cal:
-        out.append(_V("calendar.params_changed", "error", turn, "world_sim.calendar mudou"))
+        # SPEC-307 R24: exatamente uma mudanca v1 -> v2 (migracao) e legitima.
+        migrated = prev_cal.get("version") == 1 and cal.get("migrated_from") == 1
+        if not migrated:
+            out.append(_V("calendar.params_changed", "error", turn, "world_sim.calendar mudou"))
     rows = ((state.get("world_projection") or {}).get("location_states")) or {}
     prev_rows = (((prev or {}).get("world_projection") or {}).get("location_states")) or {}
     for lid, row in rows.items():
@@ -2261,7 +2264,8 @@ def check_calendar(state: dict, prev: dict | None, turn: int) -> list[Violation]
             (((prev or {}).get("world") or {}).get("world_clock") or {}).get("day", 1) or 1
         )
         step = (wcal.SEASONS.index(cur_season) - wcal.SEASONS.index(prev_season)) % 4
-        if (dd == 0 and step != 0) or (0 <= dd < int(cal["season_days"]) and step == 3):
+        min_season = int(cal.get("month_days") or cal.get("season_days") or 14)  # R24: v2 = 20
+        if (dd == 0 and step != 0) or (0 <= dd < min_season and step == 3):
             out.append(
                 _V(
                     "calendar.season_regressed",
@@ -2270,6 +2274,53 @@ def check_calendar(state: dict, prev: dict | None, turn: int) -> list[Violation]
                     f"{prev_season} -> {cur_season} em {dd} dia(s)",
                 )
             )
+    out.extend(_check_date(state, prev, turn))
+    return out
+
+
+def _check_date(state: dict, prev: dict | None, turn: int) -> list[Violation]:
+    """SPEC-307 R24: data nunca anda para tras; vista `world["date"]` fresca apos o tick."""
+    w = (state or {}).get("world") or {}
+    view = w.get("date")
+    if not isinstance(view, dict):
+        return []
+    out: list[Violation] = []
+    day = int((w.get("world_clock") or {}).get("day", 1) or 1)
+    pw = (prev or {}).get("world") or {}
+    pview = pw.get("date")
+    pday = int((pw.get("world_clock") or {}).get("day", 1) or 1)
+    if isinstance(pview, dict) and day > pday:
+        from services import world_calendar as wcal
+
+        order = [m["id"] for m in wcal.months()]
+
+        def _key(v: dict) -> tuple[int, int, int]:
+            mid = v.get("month_id")
+            return (
+                int(v.get("year", 0) or 0),
+                order.index(mid) if mid in order else -1,
+                int(v.get("day_of_month", 0) or 0),
+            )
+
+        if _key(view) < _key(pview):
+            out.append(
+                _V(
+                    "calendar.date_regressed",
+                    "error",
+                    turn,
+                    f"{pview.get('label')} -> {view.get('label')}",
+                )
+            )
+    sim_day = int(((state or {}).get("world_sim") or {}).get("last_ticked_day", 0) or 0)
+    if sim_day >= day and view.get("day") != day:
+        out.append(
+            _V(
+                "calendar.date_stale",
+                "warning",
+                turn,
+                f"world.date.day={view.get('day')} != world_clock.day={day}",
+            )
+        )
     return out
 
 

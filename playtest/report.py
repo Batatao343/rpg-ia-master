@@ -299,9 +299,9 @@ def render_markdown(report: RunReport) -> str:
         L.append(
             "| perfil | dias | crises iniciadas | crises percebidas | sinais percebidos "
             "| estações vistas | viradas | festas percebidas | festas canceladas "
-            "| travessias de inverno |"
+            "| travessias de inverno | meses vistos |"
         )
-        L.append("|---|---|---|---|---|---|---|---|---|---|")
+        L.append("|---|---|---|---|---|---|---|---|---|---|---|")
         for s in with_world:
             w = s["world"]
             L.append(
@@ -309,7 +309,8 @@ def render_markdown(report: RunReport) -> str:
                 f"| {w.get('crises_started', 0)} | {w.get('crises_perceived', 0)} "
                 f"| {w.get('signals_perceived', 0)} | {w.get('seasons_seen', 0)} "
                 f"| {w.get('season_changes', 0)} | {w.get('festas_perceived', 0)} "
-                f"| {w.get('festas_cancelled', 0)} | {w.get('pass_crossings', 0)} |"
+                f"| {w.get('festas_cancelled', 0)} | {w.get('pass_crossings', 0)} "
+                f"| {w.get('months_seen', 0)} |"
             )
         L.append("")
         # SPEC-305 R27: quests de mundo (ofertadas / concluidas / falhadas / expiradas) por perfil.

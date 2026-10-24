@@ -228,6 +228,53 @@ class WorldClock(TypedDict):
     period: str  # "Amanhecer" | "Manhã" | "Tarde" | "Anoitecer" | "Noite"
 
 
+Climate = Literal["frio", "calor", "transicao"]
+
+
+class CalendarParams(TypedDict, total=False):
+    """SPEC-307 R7: parametros congelados do calendario (`world_sim.calendar`, v2)."""
+
+    version: int  # 2
+    month_days: int  # 20, congelado
+    months: int  # 7, congelado
+    week_days: int  # 5, congelado
+    epoch_offset: int  # 0..139
+    year_offset: int  # 0 em jogo novo; ajuste da migracao v1 (R19), pode ser negativo
+    anchor_day: int
+    first_turn_day: int
+    migrated_from: int  # 1, so quando veio da SPEC-303
+
+
+class CalendarDate(TypedDict):
+    """SPEC-307 R4: data derivada (nunca gravada como verdade)."""
+
+    year: int  # exibido (R14)
+    month_index: int  # 0..6
+    month_id: str
+    day_of_month: int  # 1..20
+    weekday_index: int  # 0..4
+    weekday_id: str
+    season: str  # chave canonica da SPEC-303
+    climate: Climate
+    day_of_year: int  # 0..139
+    day_in_season: int  # 1..season_len
+    season_len: int
+
+
+class DateView(TypedDict):
+    """SPEC-307 R15: `world["date"]` e `world` da API (sem day_of_year/epoch)."""
+
+    day: int  # world_clock.day a que a vista se refere (frescor, R13)
+    label: str  # "3º dia de Vorrnak, Sino de Cobre — Ano 112 da Era 7"
+    day_of_month: int
+    month: str
+    month_id: str
+    weekday: str
+    weekday_short: str
+    year: int
+    climate: Climate
+
+
 class WorldState(TypedDict, total=False):
     current_location: str
     current_location_id: str  # id no grafo data/world_map.json
@@ -263,6 +310,7 @@ class WorldState(TypedDict, total=False):
         dict
     ]  # Fase 2.5b: fugas viram alerta regional (ver world_utils.register_flee_alert)
     shelter: dict | None  # SPEC-298 R24: {npc_id, location_id, until_clock} (favor esconder)
+    date: DateView  # SPEC-307 R15: data de Valoria (vista derivada, writer = world_calendar)
 
 
 class FameEntry(TypedDict, total=False):

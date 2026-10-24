@@ -23,3 +23,9 @@ test('newsLabel: Dia N · Período · Local', async () => {
   assert.equal(m.newsLabel(mk('a', 3)), 'Dia 3 · Noite · Brekmar');
   assert.equal(m.newsLabel({ ...mk('a', 3), period: '' }), 'Dia 3 · Brekmar');
 });
+
+test('newsLabel: date_label substitui o Dia N (SPEC-307)', async () => {
+  const m = await load();
+  assert.equal(m.newsLabel({ ...mk('a', 3), date_label: '3º dia de Vorrnak, Sino de Cobre — Ano 112 da Era 7' }),
+    '3º dia de Vorrnak, Sino de Cobre — Ano 112 da Era 7 · Noite · Brekmar');
+});

@@ -1,7 +1,25 @@
 {
-  "_doc": "SPEC-303: calendario, estacoes, passos sazonais. Valores [BALANCEAR] calibrados por docs/spec302/world_engine_sim.py --calendar on.",
-  "constants": {"SEASON_DAYS": 14, "FIRST_TURN_MIN": 4, "FIRST_TURN_MAX": 8,
+  "_doc": "SPEC-303/307: calendario de Valoria (7 meses de 20 dias, semana de 5, estacao canonica por mes), passos sazonais. Valores [BALANCEAR] calibrados por docs/spec302/world_engine_sim.py --calendar on.",
+  "constants": {"MONTH_DAYS": 20, "WEEK_DAYS": 5, "YEAR_BASE": 112, "ERA": 7,
+                "FIRST_TURN_MIN": 4, "FIRST_TURN_MAX": 8,
                 "PASS_EXTRA_PERIODS": 2, "FESTIVAL_HERALD_DAYS": 2},
+  "year_review": "dono",
+  "months": [
+    {"id": "morrakh",  "name": "Morrakh",  "of": "de Morrakh",  "climate": "transicao", "season": "primavera", "lore_ref": "timeline_completa.txt:338"},
+    {"id": "vaelith",  "name": "Vaelith",  "of": "de Vaelith",  "climate": "calor",     "season": "verao",     "lore_ref": "timeline_completa.txt:334"},
+    {"id": "malagor",  "name": "Malagor",  "of": "de Malagor",  "climate": "calor",     "season": "verao",     "lore_ref": "timeline_completa.txt:326"},
+    {"id": "solveth",  "name": "Solveth",  "of": "de Solveth",  "climate": "transicao", "season": "outono",    "lore_ref": "timeline_completa.txt:330"},
+    {"id": "orrakh",   "name": "Orrakh",   "of": "de Orrakh",   "climate": "transicao", "season": "outono",    "lore_ref": "timeline_completa.txt:336"},
+    {"id": "vorrnak",  "name": "Vorrnak",  "of": "de Vorrnak",  "climate": "frio",      "season": "inverno",   "lore_ref": "timeline_completa.txt:328"},
+    {"id": "thessrak", "name": "Thessrak", "of": "de Thessrak", "climate": "frio",      "season": "inverno",   "lore_ref": "timeline_completa.txt:332"}
+  ],
+  "weekdays": [
+    {"id": "ferro",   "name": "Sino de Ferro",   "short": "Ferro",   "lore_ref": "daily_life.txt:9"},
+    {"id": "bronze",  "name": "Sino de Bronze",  "short": "Bronze",  "lore_ref": "daily_life.txt:9"},
+    {"id": "cobre",   "name": "Sino de Cobre",   "short": "Cobre",   "lore_ref": "daily_life.txt:9"},
+    {"id": "estanho", "name": "Sino de Estanho", "short": "Estanho", "lore_ref": "daily_life.txt:9"},
+    {"id": "mudo",    "name": "Sino Mudo",       "short": "Mudo",    "lore_ref": "daily_life.txt:9"}
+  ],
   "labels": {
     "default":      {"primavera": "Primavera", "verao": "Verão", "outono": "Outono", "inverno": "Inverno"},
     "skallgard":    {"primavera": "Dia Longo", "verao": "Dia Longo", "outono": "Noite Longa", "inverno": "Noite Longa"},

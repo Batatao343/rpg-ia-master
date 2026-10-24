@@ -21,23 +21,23 @@ def _mode_on(monkeypatch):
     monkeypatch.setenv("RPG_CALENDAR", "on")
 
 
-def test_four_seasons_fixed_order_no_other_cycles():
+def test_four_seasons_fixed_order_canonical_keys():
+    # SPEC-307 (decisao do dono de 24/10 substitui a 303 R1): ha semana de 5 dias e mes;
+    # as 4 estacoes seguem como chave canonica das tabelas de modulacao.
     assert wc.SEASONS == ("primavera", "verao", "outono", "inverno")
-    names = {n.lower() for n in dir(wc)}
-    assert not {n for n in names if any(w in n for w in ("lua", "lunar", "moon", "week", "semana"))}
-    assert not {n for n in names if "market" in n or "mercado" in n}
     cal = cal_for("primavera", 1)
-    seen = [wc.season_at(cal, d)["season"] for d in range(1, 57)]
-    assert seen[0] == "primavera" and seen[13] == "primavera" and seen[14] == "verao"
-    assert seen[28] == "outono" and seen[42] == "inverno" and seen[55] == "inverno"
-    assert wc.season_at(cal, 57)["season"] == "primavera" and wc.season_at(cal, 57)["year"] == 2
+    seen = [wc.season_at(cal, d)["season"] for d in range(1, 141)]
+    assert seen[0] == "primavera" and seen[19] == "primavera" and seen[20] == "verao"
+    assert seen[59] == "verao" and seen[60] == "outono" and seen[100] == "inverno"
+    assert seen[139] == "inverno"
+    assert wc.season_at(cal, 141)["season"] == "primavera" and wc.season_at(cal, 141)["year"] == 2
 
 
 def test_season_at_is_pure_and_deterministic():
     cal = wc.create_calendar("g", 1)
     a = [wc.season_at(cal, d) for d in range(1, 80)]
     assert a == [wc.season_at(dict(cal), d) for d in range(1, 80)]
-    assert all(1 <= x["day_in_season"] <= cal["season_days"] for x in a)
+    assert all(1 <= x["day_in_season"] <= 40 for x in a)
 
 
 def test_no_global_random_in_calendar_module():
@@ -70,10 +70,10 @@ def test_start_season_distribution_covers_all_four():
 def test_params_frozen_when_constant_changes(monkeypatch):
     cal = wc.create_calendar("frozen", 1)
     before = [wc.season_at(cal, d) for d in range(1, 120)]
-    cfg = {**wc._cfg(), "constants": {**wc._cfg()["constants"], "SEASON_DAYS": 20}}
+    cfg = {**wc._cfg(), "constants": {**wc._cfg()["constants"], "MONTH_DAYS": 25}}
     monkeypatch.setattr(wc, "_cfg", lambda: cfg)
     assert [wc.season_at(cal, d) for d in range(1, 120)] == before
-    assert wc.create_calendar("frozen", 1)["season_days"] == 20  # so jogos novos mudam
+    assert wc.create_calendar("frozen", 1)["month_days"] == 25  # so jogos novos mudam
 
 
 def test_new_game_anchor_is_day_1():
@@ -121,6 +121,8 @@ def test_regional_labels_skallgard_noite_longa():
         "label": "Inverno",
         "day_in_season": 1,
     }
+    assert wc.has_regional_label("inverno", "skallgard")
+    assert not wc.has_regional_label("inverno", "brekmar")
 
 
 def test_calendar_independent_of_player():

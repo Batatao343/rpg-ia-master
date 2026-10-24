@@ -5,7 +5,10 @@ export function orderNews(news: NewsItem[] | undefined | null): NewsItem[] {
   return (news ?? []).slice().reverse();
 }
 
-/** "Dia N · Período · Local" (campos ausentes são omitidos). */
+/** "Dia N · Período · Local" (campos ausentes são omitidos). SPEC-307 R17: com `date_label`
+ * (data de Valoria) ele substitui o "Dia N". */
 export function newsLabel(item: NewsItem): string {
-  return [`Dia ${item.day}`, item.period, item.location_name].filter(Boolean).join(" · ");
+  return [item.date_label || `Dia ${item.day}`, item.period, item.location_name]
+    .filter(Boolean)
+    .join(" · ");
 }

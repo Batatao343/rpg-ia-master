@@ -141,6 +141,19 @@ export interface NewsItem {
   text: string;
   source: string;
   turn: number;
+  date_label?: string; // SPEC-307: "3º dia de Vorrnak, Sino de Cobre — Ano 112 da Era 7" (vazio sem calendário)
+}
+
+// SPEC-307: data de Valoria derivada do calendário (null fora do modo `on` / sem calendário).
+export interface WorldDate {
+  label: string;
+  day_of_month: number;
+  month: string;
+  month_id: string;
+  weekday: string;
+  year: number;
+  climate: "frio" | "calor" | "transicao";
+  season_chip?: string; // só onde a região tem rótulo próprio ("Noite Longa", "Estação do Vidro")
 }
 
 export interface WorldBlock {
@@ -160,6 +173,8 @@ export interface WorldBlock {
   // spec mapa-sublocais: interiores do local atual + saída quando dentro de um
   interiors?: { here: InteriorRef[]; exit_to: { id: string; name: string } | null };
   news?: NewsItem[]; // SPEC-296: "Ouvi dizer" (últimas 12, da mais antiga para a mais nova)
+  season?: { id: string; label: string } | null; // SPEC-303 R22
+  date?: WorldDate | null; // SPEC-307 R16
 }
 
 export interface Beat {

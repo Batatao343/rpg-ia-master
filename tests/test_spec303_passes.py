@@ -108,11 +108,11 @@ def test_route_events_untouched_by_season():
 
 
 def test_pass_digest_regional_on_close_and_open():
-    # inverno comeca no dia 7 e termina no dia 21 (primavera)
+    # inverno comeca no dia 7 e termina no dia 46 (primavera, SPEC-307: 40 dias)
     st = cal_state(cal_for("inverno", 7))
     st["world"]["current_location_id"] = "skallgard"
     closes, opens = [], []
-    for d in range(2, 23):
+    for d in range(2, 48):
         for it in step(st, d).digest:
             if it["kind"] == "passo":
                 (closes if it["template_id"] == "passo.fechou" else opens).append(it)

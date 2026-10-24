@@ -59,9 +59,9 @@ def test_baseline_offset_moves_equilibrium_not_accumulates(monkeypatch):
     cfg = wp.get_config()
     monkeypatch.setitem(cfg["constants"], "noise", 0)
     monkeypatch.setitem(cfg["constants"], "surge_p", 0.0)
-    cal = cal_for("inverno", 1, season_days=100)  # 60 dias de inverno corrido
+    cal = cal_for("inverno", 1)  # inverno de 40 dias corridos (SPEC-307)
     st = cal_state(cal)
-    for d in range(2, 62):
+    for d in range(2, 41):
         step(st, d)
         assert st["world_sim"]["pressures"]["skallgard"]["fome"] <= 40
     assert st["world_sim"]["pressures"]["skallgard"]["fome"] == 40  # 25 baseline + 15

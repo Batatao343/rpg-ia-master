@@ -1,6 +1,6 @@
 # SPEC-307 — Calendário de Valoria: 7 meses, semana de 5 dias, data exibida
 
-> **Status:** `approved` (aprovada pelo dono em 2026-10-24 na própria encomenda; escolhas de nome da §9 seguem o default recomendado até o dono trocar)
+> **Status:** `in-progress` (implementada em 2026-10-24 sobre a branch da SPEC-303; aguarda revisão independente Opus e smoke real §6)
 > **Criada:** 2026-10-24 · **Atualizada:** 2026-10-24
 > **Origem:** decisão do dono de 24/10 (calendário próprio de Valoria, substituindo as 4 estações genéricas da SPEC-303)
 > **Depende de:** SPEC-303 (`in-progress`; tem de estar `done` ou ser pousada junto, decisão D7), SPEC-302 (`done`: tick diário, `day_rng`, hooks `pre`)
@@ -566,17 +566,17 @@ D7. Um marco só, com `/spec-land` próprio.
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R8: ano de 7 × 20 dias, semana de 5, mês com clima (2/2/3), estações
+- [x] R1–R8: ano de 7 × 20 dias, semana de 5, mês com clima (2/2/3), estações
       contíguas, virada em 4–8 dias, parâmetros congelados, rótulos regionais
-- [ ] R9–R11: 14 festas em mês+dia, estação da 303 preservada, desvio da Vigília
+- [x] R9–R11: 14 festas em mês+dia, estação da 303 preservada, desvio da Vigília
       conforme D5, S4 em 2 anos
-- [ ] R12–R18: data "Nº dia de <Mês>, <Dia> — Ano N" no HUD, nas notícias e no
+- [x] R12–R18: data "Nº dia de <Mês>, <Dia> — Ano N" no HUD, nas notícias e no
       narrador; legado byte a byte em `off`/`shadow`; sem chamada LLM nova
-- [ ] R19–R22: migração v1 → v2 sem salto de estação nem de ano; saves v1/v2/sem
+- [x] R19–R22: migração v1 → v2 sem salto de estação nem de ano; saves v1/v2/sem
       calendário carregam; modos `off`/`shadow`/`on`
-- [ ] R24–R27: invariantes, telemetria, recalibração S1–S4 e letalidade M1/M2/M5
-      registradas em `docs/spec307/README.md`
-- [ ] Nenhum `with_structured_output` novo (o guard de FallbackLLM não se aplica)
+- [x] R24–R27: invariantes, telemetria, recalibração S1–S4 registradas; letalidade R27
+      parcial (M5: seed 26 herdada da 303; M1/M2 não recomputados) em `docs/spec307/README.md`
+- [x] Nenhum `with_structured_output` novo (o guard de FallbackLLM não se aplica)
 - [ ] `uv run pytest` verde (suíte completa offline)
 - [ ] Revisão independente Opus (`handoffs/SPEC-307-review.md`) sem P0/P1
 - [ ] Smoke real (§6) executado e registrado
@@ -632,8 +632,35 @@ Estourou o teto: parar e registrar.
 
 ## 8. Evidência
 
-A preencher na implementação: tabelas R26/R27 e o smoke em
-`docs/spec307/README.md`.
+Tabelas R26/R27 em `docs/spec307/README.md`. Resumo: S1–S4 fecham (C1 [10, 15], 0 crise só
+da estação, 1ª virada em `anchor+4..+8` em 100 % das seeds, S4 de 280 dias com cada festa
+1×/ano). R27: 11 de 12 campanhas `combate` limpas; seed 26 tem 1 `combat.no_progress`, que
+**já ocorre no código da 303** com o calendário `on` (0 com `off`) — pendência herdada, não
+da 307. Smoke real §6 **não executado**.
+
+### Desvios da implementação (registrados no mesmo commit)
+
+- **Ano das festas (R11/R14/R19).** `festa_id` usa o ano **interno** (`season_at["year"]` =
+  ano exibido − (`YEAR_BASE` − 1)), não o ano exibido. Com a D4 do dono (Ano 112), usar o
+  exibido faria todo save v1 migrado trocar o `festa_id` e repetir festas (viola R20). O
+  ano exibido é `interno + YEAR_BASE − 1`. `year_offset` da migração ajusta o ano interno.
+- **Data exibida.** O rótulo é `"{d}º dia {of}, {Sino} — Ano {N} da Era 7"` (D2/D4 do
+  dono: Cinco Sinos, Ano 112 da Era 7 fixo). `ERA` e `YEAR_BASE` vivem em
+  `data/world/calendar.json` (`constants`) com `year_review: "dono"`. `DateView` ganhou
+  `weekday_short` (forma curta Ferro/Bronze/Cobre/Estanho/Mudo, não usada no HUD ainda).
+- **Chip regional (D8).** Sai em `date.season_chip` (vazio fora de Skallgard/Zhur), e não
+  no bloco `season` (a lista branca `{id,label}` da 303 R22 fica intacta).
+- **Notícia de virada de estação.** `data/world/signals.json` não cita mais verão/outono:
+  o item de digest `estacao` carrega `params.mes` e o texto vira `Começa o mês de <Mês>. …`
+  (`services/world_perception.render`).
+- **`season_at` aceita v1** (legado) para a migração e a telemetria; `calendar_for_read`
+  converte v1 em memória para a API/narrador. Versão desconhecida: hook neutro + log
+  `world.calendar` com `neutral=true`, nunca recriada.
+- **Testes da 303 reescritos para v2:** `spec303_helpers.cal_for/zero_cal` agora geram
+  calendário v2 (`v1_cal` novo para os testes de migração); `test_four_seasons…`,
+  `test_params_frozen…`, `test_catalog_valid` e os dias-âncora de festas/passos (inverno de
+  40 dias, Vaelith 18 = dia 38 etc.) foram atualizados. A 303 R1 ("sem semana") é
+  substituída pela decisão do dono de 24/10.
 
 ## 9. Decisões do dono
 

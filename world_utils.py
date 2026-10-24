@@ -1642,9 +1642,17 @@ def resolve_track(state_bk: dict, loc: dict, danger: int, turn: int, rng=None) -
     return bk, note, treasure
 
 
-def clock_label(world: dict) -> str:
+def clock_label(world: dict, calendar: dict | None = None) -> str:
+    """Relógio exibido. SPEC-307 R13: com calendário v2 (modo `on`) ou vista `world["date"]`
+    fresca, mostra a data de Valoria; senão o texto legado `Dia N · Período` (byte a byte)."""
     c = world.get("world_clock") or {}
-    return f"Dia {c.get('day', 1)} · {c.get('period', PERIODS[0])}"
+    period = c.get("period", PERIODS[0])
+    from services import world_calendar
+
+    date_text = world_calendar.clock_date_label(world, calendar)
+    if date_text:
+        return f"{date_text} · {period}"
+    return f"Dia {c.get('day', 1)} · {period}"
 
 
 def starting_world(region_name: str, level: int) -> dict:

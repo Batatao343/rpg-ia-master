@@ -8,8 +8,33 @@ from services.event_processor import _build_event, apply_event
 from tests.spec302_helpers import make_state, world_at
 
 
-def cal_for(season: str, day: int = 1, *, season_days: int = 14, anchor: int = 1) -> dict:
-    """Calendario cujo `day` e o 1o dia de `season` (`first_turn_day` irrelevante)."""
+def cal_for(season: str, day: int = 1, *, anchor: int = 1) -> dict:
+    """Calendario v2 (SPEC-307) cujo `day` e o 1o dia do 1o mes de `season`."""
+    ms = wc.months()
+    first = next(i for i, m in enumerate(ms) if m["season"] == season)
+    md = int(wc.constants()["MONTH_DAYS"])
+    return {
+        "version": 2,
+        "month_days": md,
+        "months": len(ms),
+        "week_days": int(wc.constants()["WEEK_DAYS"]),
+        "epoch_offset": (first * md - (day - 1)) % (len(ms) * md),
+        "year_offset": 0,
+        "anchor_day": anchor,
+        "first_turn_day": anchor + 6,
+    }
+
+
+def zero_cal() -> dict:
+    """Ano comeca no dia 1 (epoch_offset 0): 1o de Morrakh = dia 1; Vaelith 18 = dia 38;
+    Solveth 1 = dia 61; Vorrnak 1 = dia 101."""
+    return {**cal_for("primavera", 1), "epoch_offset": 0}
+
+
+def v1_cal(
+    season: str = "primavera", day: int = 1, *, season_days: int = 14, anchor: int = 1
+) -> dict:
+    """Calendario v1 (SPEC-303) para os testes de migracao: `day` = 1o dia de `season`."""
     year = 4 * season_days
     doy = wc.SEASONS.index(season) * season_days
     return {
@@ -18,17 +43,6 @@ def cal_for(season: str, day: int = 1, *, season_days: int = 14, anchor: int = 1
         "epoch_offset": (doy - (day - 1)) % year,
         "anchor_day": anchor,
         "first_turn_day": anchor + 6,
-    }
-
-
-def zero_cal(season_days: int = 14) -> dict:
-    """Ano comeca no dia 1 (epoch_offset 0): verao d7 = dia 21, outono d1 = dia 29."""
-    return {
-        "version": 1,
-        "season_days": season_days,
-        "epoch_offset": 0,
-        "anchor_day": 1,
-        "first_turn_day": 7,
     }
 
 

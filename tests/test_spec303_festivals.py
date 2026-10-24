@@ -14,7 +14,7 @@ from services import world_calendar as wc
 from services.world_validators import validate_proposal
 from tests.spec303_helpers import cal_state, run, step, zero_cal
 
-# calendario zero: verao d7 = dia 21 (dia_da_fundacao, 2 dias); outono d1 = dia 29
+# calendario zero (SPEC-307): Vaelith 18 = dia 38 (dia_da_fundacao, 2 dias); Solveth 1 = dia 61
 FUND = ("nova_arcadia", "na_anel_dourado", "na_anel_ferro", "na_anel_lama")
 
 
@@ -40,8 +40,8 @@ def test_catalog_valid():
     lore = pathlib.Path("lore_nova")
     covered = set()
     for f in cat:
-        assert f["review"] == "dono" and f["season"] in wc.SEASONS
-        assert 1 <= f["day_in_season"] <= 10 and f["duration_days"] >= 1
+        assert f["review"] == "dono" and f["month"] in {m["id"] for m in wc.months()}
+        assert 1 <= f["day_of_month"] <= 20 and f["duration_days"] >= 1
         assert f["label"] and f["lore_refs"]
         for lid in f["location_ids"]:
             assert lid in locs and locs[lid].get("kind") != "interior"
@@ -55,7 +55,7 @@ def test_catalog_valid():
 
 def test_festa_starts_and_ends_via_location_state_changed():
     st = _fresh()
-    res = run(st, 2, 22)
+    res = run(st, 2, 39)
     started = [
         e
         for r in res
@@ -71,7 +71,7 @@ def test_festa_starts_and_ends_via_location_state_changed():
     assert _rows(st)["nova_arcadia"]["festival_id"] == "dia_da_fundacao"
     ended = [
         e
-        for r in run(st, 23, 23)
+        for r in run(st, 40, 40)
         for e in r.pending_events
         if e["payload"].get("festival_id") == "dia_da_fundacao"
     ]
@@ -85,7 +85,7 @@ def test_festa_id_deterministic_per_year():
     assert a == wc.festa_id("g", "dia_da_fundacao", 1) and len(a) == 16
     assert a != wc.festa_id("g", "dia_da_fundacao", 2) != wc.festa_id("h", "dia_da_fundacao", 2)
     st = _fresh()
-    run(st, 2, 21)
+    run(st, 2, 38)
     assert _rows(st)["nova_arcadia"]["crisis_id"] == wc.festa_id(
         st["game_id"], "dia_da_fundacao", 1
     )
@@ -93,7 +93,7 @@ def test_festa_id_deterministic_per_year():
 
 def test_interior_inherits_festa():
     st = _fresh(day=1)
-    run(st, 2, 29)  # noite_dos_nomes: skallgard, outono d1 = dia 29
+    run(st, 2, 61)  # noite_dos_nomes: skallgard, 1o de Solveth = dia 61
     row = ls.location_state(st, "sk_salao_do_jarl")
     assert row and row["state"] == "festa" and row["festival_id"] == "noite_dos_nomes"
 
@@ -103,7 +103,7 @@ def test_festa_cancelled_when_location_has_crisis_state():
     st["world_projection"] = {
         "location_states": {"nova_arcadia": {"state": "cerco", "severity": 1, "crisis_id": "c"}}
     }
-    res = run(st, 2, 21)
+    res = run(st, 2, 38)
     assert _rows(st)["nova_arcadia"]["state"] == "cerco"  # nao sobrescrito
     assert all(_rows(st)[lid]["state"] == "festa" for lid in FUND[1:])
     cancelled = [i for r in res for i in r.digest if i["kind"] == "festa_cancelada"]
@@ -113,21 +113,21 @@ def test_festa_cancelled_when_location_has_crisis_state():
 
 def test_festa_cancelled_when_region_has_announced_crisis():
     st = _fresh()
-    run(st, 2, 19)
+    run(st, 2, 36)
     st["world_sim"]["pressures"]["nova_arcadia"]["fome"] = 90  # aviso nao expira por queda
     st["world_sim"]["crises"].append(
         {
             "crisis_id": "x",
             "kind": "fome",
             "region_id": "nova_arcadia",
-            "warned_day": 19,
+            "warned_day": 36,
             "start_day": None,
             "end_day": None,
             "severity": 0,
             "loc_state": "escassez",
         }
     )
-    res = run(st, 20, 22)
+    res = run(st, 37, 39)
     assert not [lid for lid in FUND if _rows(st).get(lid, {}).get("state") == "festa"]
     assert not [
         e
@@ -152,14 +152,14 @@ def test_festa_cancelled_when_region_has_announced_crisis():
 
 def test_crisis_during_festa_overwrites_and_end_is_noop():
     st = _fresh()
-    run(st, 2, 21)
+    run(st, 2, 38)
     st["world_projection"]["location_states"]["nova_arcadia"] = {
         "state": "escassez",
         "severity": 1,
         "crisis_id": "crise-x",
         "cause": "fome",
     }
-    res = run(st, 22, 23)
+    res = run(st, 39, 40)
     ends = [e for r in res for e in r.pending_events if e["payload"].get("state") == ""]
     assert "nova_arcadia" not in {e["target_id"] for e in ends}
     assert set(FUND[1:]) <= {e["target_id"] for e in ends}
@@ -221,7 +221,7 @@ def test_llm_proposal_of_festa_rejected():
 
 def test_noite_do_silencio_closes_merchants():
     st = _fresh()
-    run(st, 2, 14 * 3 + 1)  # inverno d1 = dia 43
+    run(st, 2, 101)  # 1o de Vorrnak = dia 101
     eff = ls.location_effects(st, "nova_arcadia")
     assert eff["merchant_closed"] is True and eff["restock_mult"] == 0.0
     assert eff["price_mult"] == 1.0 and eff["danger_delta"] == 0
@@ -230,7 +230,7 @@ def test_noite_do_silencio_closes_merchants():
 
 def test_festa_label_in_public_label():
     st = _fresh()
-    run(st, 2, 21)
+    run(st, 2, 38)
     row = ls.location_state(st, "nova_arcadia")
     assert ls.public_label(row) == "em festa"
     eff = ls.location_effects(st, "nova_arcadia")
@@ -241,22 +241,22 @@ def test_festa_label_in_public_label():
 def test_herald_two_days_before():
     st = _fresh()
     seen: dict[int, list] = {}
-    for d in range(2, 22):
+    for d in range(2, 39):
         seen[d] = [
             i
             for i in step(st, d).digest
             if i["kind"] == "festa_proxima" and i["params"]["festa"] == "Dia da Fundação"
         ]
     days = [d for d, items in seen.items() if items]
-    assert days == [19]  # inicio 21 - FESTIVAL_HERALD_DAYS
-    assert {i["region_id"] for i in seen[19]} == {"nova_arcadia"}
-    assert seen[19][0]["template_id"] == "festa.proxima"
+    assert days == [36]  # inicio 38 - FESTIVAL_HERALD_DAYS
+    assert {i["region_id"] for i in seen[36]} == {"nova_arcadia"}
+    assert seen[36][0]["template_id"] == "festa.proxima"
 
 
 def test_one_occurrence_or_cancel_per_year():
     st = _fresh()
     seen: dict[tuple[str, int], str] = {}
-    for d in range(2, 3 * 56 + 1):
+    for d in range(2, 3 * 140 + 1):
         step(st, d)
         for rec in st["world_sim"]["festivals"]:
             if rec["status"] in ("ativa", "encerrada", "cancelada"):

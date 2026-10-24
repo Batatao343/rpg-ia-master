@@ -122,6 +122,9 @@ def render(state: dict, item: dict) -> str:
     }
     for key, val in values.items():
         text = text.replace("{" + key + "}", val)
+    mes = str(params.get("mes") or "")
+    if mes and tid.startswith("estacao.inicio."):
+        text = f"Começa o mês de {mes}. {text}"  # SPEC-307: rótulo do calendário, não a estação
     return text
 
 

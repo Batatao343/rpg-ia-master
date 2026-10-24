@@ -122,7 +122,7 @@ def propose_world_pulse(
     Você é o SIMULADOR DO MUNDO de um RPG dark fantasy. O tempo passou ({periods} período(s))
     enquanto o jogador descansava/viajava. Gere UM evento off-screen plausível.
 
-    Local: {loc_name}. Momento: {clock_label(world)}. Perigo atual: {danger}/4.
+    Local: {loc_name}. Momento: {clock_label(world, (state.get("world_sim") or {}).get("calendar"))}. Perigo atual: {danger}/4.
     Ameaça pairando: {threat}.
     Fações que o JOGADOR conhece:
     {_known_factions_ctx(factions, intel)}

@@ -5,6 +5,7 @@ import { shards } from "./AccountScreen";
 import { Workspace, type WorkspaceHandle } from "../workspace/Workspace";
 import { useModalFocus } from "../workspace/useModalFocus";
 import { levelUpHeldByOutcome, resultFrom } from "../combatOutcome";
+import { clockLabel } from "../clockLabel";
 
 interface Props {
   data: GameResponse | null;
@@ -39,7 +40,7 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
     : w?.light?.label === "iluminado pela sua luz"
     ? " · 🔦 Iluminado"
     : "";
-  const clock = (w?.period ? `Dia ${w.day} · ${w.period}` : "Dia 1 · Amanhecer")
+  const clock = clockLabel(w)
     + (w?.weather ? ` · ${w.weather}` : "")
     + lightChip;
   const gameOver = !!data?.game_over;
