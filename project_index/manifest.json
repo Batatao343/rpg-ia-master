@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "eac8119541bceb3b963e6e0f462a69985f5ae700",
+  "commit_sha": "43bfc04f7a0822422748dcd332159eaaa0420e72",
   "edge_counts": {
-    "calls": 22595,
-    "contains": 832,
-    "defines": 11832,
-    "imports": 1922,
-    "likely_test_for": 1264,
+    "calls": 23205,
+    "contains": 847,
+    "defines": 12048,
+    "imports": 1975,
+    "likely_test_for": 1315,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:fbf62c5784b377c91d698b73a9b2af773d9251f648c725d4cd202b210c5769d8",
+  "graph_hash": "sha256:19b552a12ff485456131005c9df2f761956cfd5f07eed390b90ef5a982c74dbe",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -413,6 +413,7 @@
     "services/usage_metering.py",
     "services/visual_catalog.py",
     "services/wallet_recovery.py",
+    "services/world_calendar.py",
     "services/world_director.py",
     "services/world_distance.py",
     "services/world_engine.py",
@@ -435,6 +436,7 @@
     "tests/spec300_helpers.py",
     "tests/spec301_support.py",
     "tests/spec302_helpers.py",
+    "tests/spec303_helpers.py",
     "tests/spec305_helpers.py",
     "tests/test_abuse_logging.py",
     "tests/test_abuse_policy.py",
@@ -836,12 +838,25 @@
     "tests/test_spec302_pressures.py",
     "tests/test_spec302_review_fixes.py",
     "tests/test_spec302_tick.py",
+    "tests/test_spec303_calendar.py",
+    "tests/test_spec303_calibration.py",
+    "tests/test_spec303_festivals.py",
+    "tests/test_spec303_hook.py",
+    "tests/test_spec303_passes.py",
+    "tests/test_spec303_perception_api.py",
+    "tests/test_spec303_playtest.py",
+    "tests/test_spec303_weather_encounters.py",
     "tests/test_spec305_events.py",
     "tests/test_spec305_lifecycle.py",
     "tests/test_spec305_perception.py",
     "tests/test_spec305_review.py",
     "tests/test_spec305_sources.py",
     "tests/test_spec305_surfaces.py",
+    "tests/test_spec307_calendar.py",
+    "tests/test_spec307_display_api.py",
+    "tests/test_spec307_festivals.py",
+    "tests/test_spec307_migration.py",
+    "tests/test_spec307_playtest.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -915,6 +930,7 @@
     "web/src/api.ts",
     "web/src/App.tsx",
     "web/src/build.ts",
+    "web/src/clockLabel.ts",
     "web/src/codexKnowledge.ts",
     "web/src/combat/Arena.tsx",
     "web/src/combat/CardTooltip.tsx",
@@ -1033,14 +1049,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 866,
+    "class": 875,
     "endpoint": 64,
-    "file": 979,
-    "function": 3769,
+    "file": 995,
+    "function": 3822,
     "method": 794,
-    "module": 832,
-    "test": 6402
+    "module": 847,
+    "test": 6556
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:8009fd3647a78c703ed3e6945c198b0615bcf000b4d663909741533ede00bdd2"
+  "source_tree_hash": "sha256:1c224128dec7b8b245465ca4734d69d7728539d81224a6874df638cb79e067bf"
 }
