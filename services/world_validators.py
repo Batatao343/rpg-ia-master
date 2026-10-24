@@ -450,6 +450,7 @@ def reason_code(reason: str) -> str:
     if (
         "não é do type" in text
         or "não é facção" in text
+        or "não é fação com vínculo" in text
         or "não é item único" in text
         or "não é uma facção conhecida" in text
         or "sempre do player" in text
