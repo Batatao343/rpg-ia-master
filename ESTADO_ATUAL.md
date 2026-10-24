@@ -8,18 +8,18 @@
 
 ## Estado em 10 linhas
 
-- `main` = `ff48d41` (23/10, CI verde). Iniciativa **mundo vivo** em curso: visão + decisões do dono em [docs/mundo-vivo/VISAO.md](docs/mundo-vivo/VISAO.md).
-- Suíte offline: **~4.429 passed, 234 skipped, exit 0** (23/10, SPEC-296, `-n auto`). Atualize **substituindo**.
-- Specs: 291 `done` · 3 `in-progress` (197, 198, 222) · 296 `done`; 297–305 `approved` nos worktrees (main mostra `draft` até o pouso).
-- Staging: https://rpg-ia-master-staging.vercel.app em `bf3247e`, `hardened=true`, DeepSeek, Jev `primary`, teto R$ 5, **`RPG_NPC_KNOWLEDGE=on`** (SPEC-296 R1).
-- LLM: DeepSeek primário em todos os tiers; embeddings Jina. Sem chave → MockLLM.
-- Frontend: `web/` React+Vite; "Ouvi dizer" na aba Crônica (SPEC-296).
+- `main` = `35b9576` (23/10, CI verde até `6046d17`). Iniciativa **mundo vivo**: [docs/mundo-vivo/VISAO.md](docs/mundo-vivo/VISAO.md).
+- Pousadas: **296** (onda 0), **298** (reputação 4 níveis), **302** (motor de mundo: pressões, tensão, estados de local) `done`; **297** (pool entre mundos) na main `in-progress` (staging `shadow`; falta D8 do dono + smoke §6).
+- Suíte offline: **~4.734 passed, 249 skipped, exit 0** (23/10, SPEC-302, `-n auto`). Atualize **substituindo**.
+- Em implementação (worktrees `rpg-spec-NNN`): 299 lei/crime, 300 companheiros, 301 patentes, 303 calendário, 305 quests de mundo. 304 (NPCs off-screen) espera a 300.
+- Staging `35b9576`: DeepSeek, Jev `primary`, teto R$ 5, `RPG_NPC_KNOWLEDGE=on`, `RPG_WORLD_ENGINE=on`, `RPG_SHARED_POOL=shadow` (migração 297 aplicada).
+- Subagentes Sonnet bateram o limite semanal em 23/10 (reset 24/10 14h BRT); trabalho salvo nos worktrees.
 
 ## Próximos 3 passos
 
-1. Pousar 298 (reputação; em revisão), 302 (motor de mundo; implementando) e 297 (pool entre mundos; revisão de segurança) — worktrees `rpg-spec-NNN`.
-2. Depois da 298: implementar 299 (lei), 300 (companheiros), 301 (patentes); depois da 302: 303 (calendário), 304 (NPCs off-screen), 305 (quests de mundo).
-3. Pendências do dono abaixo (inclui revisar tabelas de lore: semente de NPC 297, keepers de mercador 298, festas 303).
+1. Revisar e pousar 299/300/301/303/305 conforme terminarem; depois implementar 304.
+2. Dono: revisar `data/npc_seed_tables.json` (297 D8), keepers de mercador inventados (298), festas autoradas (303) → então 297 `on`.
+3. Follow-ups: relock eval `npc_knowledge` (298 R23), grant por coluna p/ `rpg_api` antes de 297 `on` em produção, D7 (criaturas do pool em encontros) em spec própria.
 
 ## Bloqueios no dono
 
@@ -48,6 +48,9 @@ Gerado por `uv run python scripts/spec_index.py recent --days 7 --write ESTADO_A
 - 2026-10-23 · SPEC-305 `draft` — quests-de-mundo-com-prazo
 - 2026-10-23 · SPEC-304 `draft` — npcs-agenda-morte-offscreen
 - 2026-10-23 · SPEC-303 `draft` — calendario-estacoes-festas
+- 2026-10-23 · SPEC-302 `done` — Motor de mundo: tick diário, pressões regionais e curva de tensão
+- 2026-10-23 · SPEC-298 `done` — Reputação em quatro níveis (NPC, fação, local, raça/origem)
+- 2026-10-23 · SPEC-297 `in-progress` — Pool compartilhado entre mundos (NPCs, criaturas, itens, locais)
 - 2026-10-23 · SPEC-296 `done` — mundo-vivo-onda0-religacoes
 - 2026-10-23 · SPEC-236 `done` — FinOps/wallet/jobs: custo fantasma de falhas, teto diário cross-day, reservas órfãs, STT incerto, refund parcial pré-crédito, lease e poison jobs
 <!-- recent:end -->
