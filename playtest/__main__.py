@@ -16,8 +16,8 @@ import sys
 from collections import Counter
 
 from playtest.profiles import PROFILES
-from playtest.scenarios import names as scenario_names
 from playtest.runner import CampaignResult, run_campaign
+from playtest.scenarios import names as scenario_names
 
 # O harness também é executado diretamente no console Windows. Sem este ajuste,
 # símbolos usados no help/relatório (por exemplo, ação→narração) quebram em cp1252.
