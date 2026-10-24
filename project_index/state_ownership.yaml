@@ -62,3 +62,19 @@ state:
       - persistence.py
     invariants:
       - operations.idempotent_claim_and_replay
+  faction_membership:
+    canonical_domain: state_rules
+    intended_writers:
+      - services/faction_membership.py
+    important_readers:
+      - agents/storyteller.py
+      - agents/npc.py
+      - services/event_processor.py
+      - services/world_engine.py
+      - api.py
+    invariants:
+      - faction.rank_monotonic_unless_expelled
+      - faction.no_membership_in_closed
+      - faction.membership_count_le_2
+      - faction.influence_bounded
+      - faction.progress_le_99_outside_tick
