@@ -892,6 +892,14 @@ def _flee_alert_world(world: dict, enemies: list[dict], outcome: str) -> dict | 
     )
 
 
+def _perceived_for_combat(state: dict) -> str:
+    """SPEC-309 R19: `<MUNDO_PERCEBIDO>` na narracao do combate (so ambiente; nunca quebra)."""
+    from services.perceived_world import perceived_world_block
+
+    block = perceived_world_block(state, audience="combat")
+    return f"\n{block}" if block else ""
+
+
 def _ambient_for_combat(world: dict, player: dict) -> str:
     """SPEC-296 R5: `<AMBIENTE>` (sem saídas) na narração do combate; nunca quebra o turno."""
     try:
@@ -1493,7 +1501,8 @@ def _combat_node(state: GameState):
             victory,
             world_pack.world_state_block
             + "\n"
-            + _ambient_for_combat(state.get("world") or {}, player),
+            + _ambient_for_combat(state.get("world") or {}, player)
+            + _perceived_for_combat(state),
             aberturas,
             manifest=combat_meta.get("encounter"),
             withhold=_faction_withhold_clause(

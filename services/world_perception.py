@@ -309,3 +309,22 @@ def perceived_projection(state: dict, projection: dict | None = None) -> dict:
         if proj.get(key):
             out[key] = [r for r in proj[key] if not isinstance(r, dict) or ok(r.get(field))]
     return out
+
+
+def hidden_blocked_route_events(state: dict, a: str, b: str) -> list[str]:
+    """SPEC-309 F2 (SPEC-308 review): ids dos eventos do motor que bloqueiam a rota a<->b e que o
+    heroi ainda NAO percebeu. Ao tentar viajar por ela, ele descobre o bloqueio."""
+    pair = frozenset((a, b))
+    index = {
+        str(e.get("event_id")): e
+        for e in (state or {}).get("event_log") or []
+        if isinstance(e, dict) and e.get("event_id")
+    }
+    out: list[str] = []
+    for r in ((state or {}).get("world_projection") or {}).get("blocked_routes") or []:
+        if not isinstance(r, dict) or frozenset((r.get("a"), r.get("b"))) != pair:
+            continue
+        ev = index.get(str(r.get("blocked_by_event") or ""))
+        if ev is not None and not event_perceived(state, ev):
+            out.append(str(ev["event_id"]))
+    return out

@@ -1,6 +1,6 @@
 # SPEC-309 — Mundo percebido no narrador: templates do motor, memória do dia e `<MUNDO_PERCEBIDO>`
 
-> **Status:** `approved` (dono 24/10: "escreva specs para isso", onda 2 do mundo vivo; D1–D3 da §9 seguem abertas e têm default recomendado)
+> **Status:** `in-progress` (implementada 24/10; aguarda revisão independente Opus; dono aprovou D1–D3 nos defaults em 24/10)
 > **Criada:** 2026-10-24 · **Atualizada:** 2026-10-24
 > **Origem:** `docs/mundo-vivo/REVISAO-ORQUESTRADA-2026-10-24.md` proposta **R2** (§4.1), achados **A7** e **A10** (§1.1), mapa de munição (§2.1); regras em `docs/mundo-vivo/VISAO.md:68-69` (rótulos sem números) e `:79-82` (regra de ouro)
 > **Depende de:** **SPEC-308** (filtro de eventos do motor: helper `event_perceived(state, ev)`; precisa estar `done` antes da Etapa 2), SPEC-302 (`done`, motor/estados de local/digest), SPEC-303 e SPEC-307 (`done`, festas/calendário), SPEC-299/300/301/304 (`done`, tipos de evento de lei, companheiro, fação e destino de NPC)
@@ -245,12 +245,27 @@ Prefixo `[turno {turn}]` como nos existentes. `{local}` = nome do mapa de `targe
 Rótulos fechados (constantes, pt-BR):
 
 ```python
-CRISIS_LABELS = {"guerra": "guerra", "fome": "fome", "praga": "praga", "abismo": "o Abismo inquieto"}
-CRIME_LABELS = {"furto": "um furto", "agressao": "uma agressão", "homicidio": "um homicídio",
-                "dano_propriedade": "dano a propriedade", "magia_ilegal": "magia proibida",
-                "resistencia": "resistência à guarda", "evasao": "uma fuga da guarda"}
-MODE_LABELS = {"fine": "multa paga", "sentence": "pena cumprida",
-               "expulsao": "expulsão", "bribe": "acerto por fora"}
+CRISIS_LABELS = {
+    "guerra": "guerra",
+    "fome": "fome",
+    "praga": "praga",
+    "abismo": "o Abismo inquieto",
+}
+CRIME_LABELS = {
+    "furto": "um furto",
+    "agressao": "uma agressão",
+    "homicidio": "um homicídio",
+    "dano_propriedade": "dano a propriedade",
+    "magia_ilegal": "magia proibida",
+    "resistencia": "resistência à guarda",
+    "evasao": "uma fuga da guarda",
+}
+MODE_LABELS = {
+    "fine": "multa paga",
+    "sentence": "pena cumprida",
+    "expulsao": "expulsão",
+    "bribe": "acerto por fora",
+}
 ```
 
 Chave fora da tabela vira `""` (frase descartada), nunca o id cru.
@@ -264,21 +279,26 @@ MAX_LINES: int = 4
 MAX_TOKENS: int = 120
 DAY_FACTS_MAX: int = 6
 
+
 def perceived_world_lines(state: dict, *, audience: Audience) -> list[str]: ...
 def perceived_world_block(state: dict, *, audience: Audience) -> str:
     """'' ou '<MUNDO_PERCEBIDO>\n{instrução}\n- linha\n...\n</MUNDO_PERCEBIDO>'."""
+
+
 def day_memory_facts(state: dict, items: list[dict]) -> list[str]:
     """R7: textos de template dos itens percebidos (ordem do digest, sem vazio/duplicata, teto)."""
 
-# contrato assumido da SPEC-308 (não implementado aqui)
-def event_perceived(state: dict, ev: dict) -> bool:
-    """True para evento não-motor (testemunhado por construção) e para evento do motor cujo
-    event_id/cause ∈ world_sim.perceived_ids ∪ npc_world._known_sources, independente de
-    RPG_NPC_WORLD."""
+
+# contrato REAL da SPEC-308 (`services/world_perception.py`, já na main)
+def event_perceived(state: dict, ev: dict) -> bool: ...
+def perceived_projection(state: dict, projection: dict | None = None) -> dict: ...
+# F2 (esta spec): ids de eventos que bloqueiam a rota a<->b e que o herói ainda não percebeu
+def hidden_blocked_route_events(state: dict, a: str, b: str) -> list[str]: ...
 ```
 
-Se a SPEC-308 pousar com outro nome ou lugar, a Etapa 0 ajusta o import e atualiza esta
-spec no mesmo commit.
+A SPEC-308 pousou com este nome e lugar; `collect_dynamic_facts` e `_event_memory_records`
+já aplicam `event_perceived` (R6 estava pronto), então esta spec só acrescentou o portão
+de tipos do motor em `_event_memory_records` (R9).
 
 ### 3.4 Exemplo real (Brekmar/Skallgard, ids canônicos)
 
@@ -478,7 +498,13 @@ Registrar custo, run_ids e trechos na §8. Se estourar o teto, parar e registrar
 
 ## 8. Registro de execução
 
-(preencher na implementação: commits, testes rodados, smoke §6 com run_ids e custo)
+- Implementação 24/10 (Sonnet): Etapas 1 e 2 no mesmo commit, 3-5 em seguida; sem desvio de requisito.
+- **D1–D3:** defaults (só o template vira `canonical_event`; crime neutro; NPC com estado do local + estação).
+- **R3:** `npc_fate_learned` usa `payload.name` (o evento só nasce quando o herói soube do destino, então o nome já é conhecido); fação nunca aparece nos templates novos.
+- **R10:** a limpeza incondicional vale nos dois caminhos de retorno do arquivista (`elif policy_facts`).
+- **F2 (follow-up da 308):** o servidor hoje **não recusa** viagem por rota bloqueada (o bloqueio é de comércio; só o mapa a mostra como indisponível). Implementado o equivalente: ao viajar por rota cujo bloqueio vem de evento não percebido, o `travel_note` manda narrar a descoberta e o `event_id` entra em `world_sim.perceived_ids` (`world_perception.hidden_blocked_route_events`). Teste `test_f2_*`.
+- Testes: `tests/test_spec309_{templates,golden_rule,day_memory,perceived_block,prompts}.py`.
+- Smoke real §6: pendente (coordenador).
 
 ## 9. Decisões do dono
 

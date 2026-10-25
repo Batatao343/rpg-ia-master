@@ -875,6 +875,7 @@ def storyteller_node(state: GameState):
             }
     travel_periods = 0
     closed_pass = False
+    discovered_routes: list[str] = []
     world_before = world  # SPEC-302: relogio ANTES de viagem/descanso (dias virados)
     world_tick = None
     sim_updates: dict = {}
@@ -920,6 +921,16 @@ def storyteller_node(state: GameState):
         # spec loot-exploracao (R1): fog of war checado ANTES de apply_travel (que
         # carimba `visited`). Baú curado (R3) pode reconceder-se? Não — one-shot.
         first_visit = dest["id"] not in (world.get("visited") or [])
+        try:  # SPEC-309 F2: rota bloqueada por evento nao percebido = descoberta ao tentar
+            from services import world_perception as _wperc
+
+            discovered_routes = _wperc.hidden_blocked_route_events(
+                state, str(world.get("current_location_id") or ""), str(dest.get("id") or "")
+            )
+        except Exception as exc:
+            from observability.telemetry import log_fallback
+
+            log_fallback("storyteller", "route_discovery_failed", exc)
         world = apply_travel(world, dest)
         world, factions, world_tick = _world_tick(state, world_before, world, factions, intel)
         if not _engine_owns_factions():
@@ -966,6 +977,11 @@ def storyteller_node(state: GameState):
                 + (f" (viagem longa: {travel_periods} períodos). " if travel_periods > 1 else ". ")
                 + f"Contexto do local: {dest.get('lore_seed', '')} Descreva a chegada e o que ele vê agora."
             )
+            if discovered_routes:
+                travel_note += (
+                    " A rota estava BLOQUEADA (o comércio por ela está cortado) e o jogador só "
+                    "descobre isso agora, ao tentar passar: narre a descoberta, sem inventar a causa."
+                )
             if closed_pass:
                 travel_note += f" {world_calendar.CROSSING_NOTE} Descreva a travessia dura e a nevasca ao chegar."
     elif last_user_input and not law_resolved and is_rest(last_user_input):
@@ -1009,6 +1025,23 @@ def storyteller_node(state: GameState):
                 _ps["pass_crossings"] = int(_ps.get("pass_crossings", 0)) + 1
             sim_updates[world_tick.sim_key] = world_tick.world_sim
             world, perceived_items = _perceive_world(state, world, factions, intel, world_tick)
+            if discovered_routes:  # F2: o bloqueio descoberto entra no livro-razao do heroi
+                _sim = world_tick.world_sim
+                _sim["perceived_ids"] = [*(_sim.get("perceived_ids") or []), *discovered_routes][
+                    -400:
+                ]
+            # SPEC-309 R7/R8: o que o heroi percebeu hoje vira memoria canonica (texto de
+            # template, nunca a prosa da LLM), haja ou nao narracao do dia
+            from services.perceived_world import day_memory_facts
+
+            _day_facts = day_memory_facts(
+                _perception_state(state, world, factions, intel), perceived_items
+            )
+            if _day_facts:
+                sim_updates["memory_canonical_facts"] = list(
+                    dict.fromkeys([*(state.get("memory_canonical_facts") or []), *_day_facts])
+                )
+                sim_updates["archive_due"] = True
         extra_engine_events_tick = list(world_tick.pending_events)
         extra_engine_events_tick += _npc_beliefs_update(state, world, sim_updates, perceived_items)
         if (
@@ -1325,6 +1358,11 @@ def storyteller_node(state: GameState):
 
     ambiente_block = ambient_block(world, state.get("player", {}) or {}, audience="story")
     ouviu_block = heard_block(world)
+    from services.perceived_world import perceived_world_block
+
+    mundo_percebido_block = perceived_world_block(
+        {**state, **sim_updates, "world": world}, audience="story"
+    )  # SPEC-309 R18
     from world_utils import light_level as _light_level
 
     _ll = _light_level(world, state.get("player", {}) or {})
@@ -1464,6 +1502,7 @@ def storyteller_node(state: GameState):
     {eventos_turno}
     </EVENTOS_DESTE_TURNO>
     {ambiente_block}
+    {mundo_percebido_block}
     {ouviu_block}
     {hero_state_block}
     {companion_block}

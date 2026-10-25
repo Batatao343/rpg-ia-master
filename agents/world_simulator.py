@@ -256,9 +256,15 @@ def narrate_day(state: dict, items: list) -> str:
         content=(
             "Você narra, em 2-4 frases de dark fantasy em pt-BR, o que o herói viu ou ouviu "
             "enquanto o tempo passava. Use SOMENTE os fatos abaixo, sem inventar nomes, "
-            "números, causas nem consequências novas."
+            "números, causas nem consequências novas. Use o CONTEXTO (se houver) só para "
+            "ambientar; os fatos continuam sendo só as linhas FATO."
         )
     )
+    from services.perceived_world import perceived_world_lines
+
+    ctx_lines = perceived_world_lines(state, audience="day")  # SPEC-309 R12
+    if ctx_lines:
+        facts += "\nCONTEXTO (não é fato novo):\n" + "\n".join(f"- {line}" for line in ctx_lines)
     human = HumanMessage(content=facts)  # Gemini/Anthropic recusam prompt sem mensagem humana
     try:
         llm = get_llm(temperature=0.7, tier=ModelTier.FAST)

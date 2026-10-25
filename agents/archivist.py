@@ -188,11 +188,18 @@ def _validate_candidates(candidates: list[dict], state: dict) -> tuple[list[dict
     return accepted, rejected
 
 
+# SPEC-309 R9: estes tipos do motor viram memoria SO pelo texto do digest percebido
+# (`memory_canonical_facts`), no dia em que o heroi percebe; nao por evento.
+_DIGEST_MEMORY_TYPES = frozenset({"location_state_changed", "world_crisis_warning"})
+
+
 def _event_memory_records(events: list[dict], state: dict) -> list[dict]:
     projection = state.get("world_projection") or {}
     records: list[dict] = []
     for event in events:
         if not isinstance(event, dict) or not event.get("event_id"):
+            continue
+        if event.get("type") in _DIGEST_MEMORY_TYPES:
             continue
         if not event_perceived(state, event):
             continue  # SPEC-308 R6: o motor so vira memoria depois de percebido
@@ -986,6 +993,8 @@ def _archive_node(
                 if canonical_only and not remaining_npc_memory:
                     updates["memory_fact_policy"] = None
                     updates["memory_canonical_facts"] = []
+                elif policy_facts:  # SPEC-309 R10: allowlist ja no ledger; nunca sobrevive
+                    updates["memory_canonical_facts"] = []
                 return {**event_updates, **updates}
             # Plain-text também falhou — mantém estado atual (mas eventos já processados).
             _log_event("archivist", "both_paths_failed", level="warning")
@@ -1081,6 +1090,8 @@ def _archive_node(
             updates["narrative_rejections"] = []
         if canonical_only and not remaining_npc_memory:
             updates["memory_fact_policy"] = None
+            updates["memory_canonical_facts"] = []
+        elif policy_facts:  # SPEC-309 R10: allowlist ja no ledger; nunca sobrevive
             updates["memory_canonical_facts"] = []
 
         # 3. Crônica do menestrel (prosa) — appenda SOBRE o chronicle já atualizado

@@ -33,6 +33,7 @@ from services.memory_retry import (
     enqueue_npc_memory,
     normalize_pending_npc_memory,
 )
+from services.perceived_world import perceived_world_block
 from services.prompt_guard import PLAYER_INPUT_RULE, guard_messages
 from services.prose_guard import (
     log_if_repeats,
@@ -1079,6 +1080,7 @@ def npc_actor_node(state: GameState):
     {objetivo_block}
     {pack.world_state_block}
     {ambient_block(state.get("world") or {}, state.get("player") or {}, audience="npc")}
+    {perceived_world_block(state, audience="npc")}
     {lei_block}
     {_WORLD_TRUTH_NOTE_ON if knowledge_mode == "on" else _WORLD_TRUTH_NOTE_OFF}
 

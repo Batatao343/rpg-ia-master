@@ -71,6 +71,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `companion.personal_quest_completed` | — |
 | `companion.personal_quest_revealed` | — |
 | `companion_soul.fallback` | — |
+| `context_builder.fallback` | — |
 | `cron.auth_rejected` | `reason` |
 | `cron.failed` | `duration_s`, `error_type`, `stack`, `task` |
 | `cron.item_failed` | `error_type`, `item_kind`, `item_ref`, `task` |
@@ -156,6 +157,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `payments.google_verify` | `duration_ms`, `order_ref`, `outcome`, `product_id`, `upstream_status` |
 | `payments.immediate_reconcile_failed` | `error_type` |
 | `payments.stripe_webhook` | `apply_result`, `duration_ms`, `error_code`, `event_ref`, `event_type`, `outcome` |
+| `perceived_world.fallback` | — |
 | `persistence.atomic_failed` | `attempts`, `error_type` |
 | `persistence.atomic_retry` | `attempt`, `attempts`, `error_type` |
 | `persistence.checkpoint_ahead_discarded` | `checkpoint_turn`, `turn` |

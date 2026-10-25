@@ -58,6 +58,18 @@ _IMPACT_BY_TYPE = {
     "secret_revealed": 0.8,
     "route_blocked": 0.8,  # Fase 6.1: rota fechada muda a cena (comércio/viagem)
     "route_cleared": 0.6,
+    # SPEC-309 R5 [BALANCEAR]: o motor ganha voz
+    "location_state_changed": 0.9,
+    "world_crisis_warning": 0.6,
+    "companion_left": 0.8,
+    "companion_betrayed": 0.9,
+    "companion_fate": 0.9,
+    "crime_witnessed": 0.5,
+    "law_resolved": 0.6,
+    "quest_failed": 0.7,
+    "unique_item_claimed": 0.5,
+    "unique_item_lost": 0.5,
+    "npc_fate_learned": 0.9,
 }
 _DEFAULT_IMPACT = 0.4
 
@@ -69,6 +81,29 @@ EVENT_TEMPLATES: dict[str, str] = {
     "route_blocked": "[turno {turn}] A rota entre {target} e {other_loc} está BLOQUEADA (comércio cortado).",
     "route_cleared": "[turno {turn}] A rota entre {target} e {other_loc} foi reaberta.",
     "faction_deed": "[turno {turn}] O jogador {deed} {target}.",
+}
+
+# SPEC-309 §3.2: rotulos fechados (chave fora da tabela => frase descartada, nunca o id cru)
+CRISIS_LABELS = {
+    "guerra": "guerra",
+    "fome": "fome",
+    "praga": "praga",
+    "abismo": "o Abismo inquieto",
+}
+CRIME_LABELS = {
+    "furto": "um furto",
+    "agressao": "uma agressão",
+    "homicidio": "um homicídio",
+    "dano_propriedade": "dano a propriedade",
+    "magia_ilegal": "magia proibida",
+    "resistencia": "resistência à guarda",
+    "evasao": "uma fuga da guarda",
+}
+MODE_LABELS = {
+    "fine": "multa paga",
+    "sentence": "pena cumprida",
+    "expulsao": "expulsão",
+    "bribe": "acerto por fora",
 }
 
 _WORD = re.compile(r"[\wáàâãéêíóôõúüç]+", re.IGNORECASE)
@@ -174,6 +209,113 @@ def _name(entity_id: str | None) -> str:
     return entity_id
 
 
+def _loc_name(location_id: Any) -> str:
+    import gamedata
+
+    return str((gamedata.get_location(str(location_id or "")) or {}).get("name") or "")
+
+
+def _state_label(state_id: str, festival_id: str = "") -> str:
+    from services import location_states
+
+    return location_states.public_label({"state": state_id, "festival_id": festival_id})
+
+
+def _render_engine_voice(etype: str, event: dict, payload: dict) -> str | None:
+    """SPEC-309 R1-R3: frases do motor, sem numeros e so com nomes conhecidos. `None` = tipo
+    nao coberto aqui. Retorna o corpo SEM o prefixo `[turno N]`; "" descarta a frase."""
+    target = event.get("target_id")
+    if etype == "location_state_changed":
+        local = _loc_name(payload.get("location_id") or target) or "um local"
+        new = str(payload.get("state") or "")
+        if not new:  # fim de estado
+            prev = str(payload.get("previous") or "")
+            fest = str(payload.get("festival_id") or "")
+            prev_label = _state_label(prev, fest if prev == "festa" else "")
+            return f"{local} não está mais {prev_label}." if prev_label else ""
+        fest = str(payload.get("festival_id") or "")
+        if new == "festa" and payload.get("cause") == "calendario":
+            from services import world_calendar
+
+            f = world_calendar._festival(fest) or {}
+            if not f:
+                return ""
+            return f"{local} está {f.get('label', 'em festa')}: {f.get('name', '')}."
+        label = _state_label(new)
+        return f"{local} agora está {label}." if label else ""
+    if etype == "world_crisis_warning":
+        from services import world_pressures as wp
+
+        kind = CRISIS_LABELS.get(str(payload.get("kind") or ""))
+        region = wp.region_label(str(payload.get("region_id") or ""))
+        return f"Há sinais de {kind} em {region or 'a região'}." if kind else ""
+    if etype in ("companion_left", "companion_betrayed", "companion_fate"):
+        name = str(payload.get("name") or "") or "um companheiro"
+        if etype == "companion_left":
+            return f"{name} deixou o grupo."
+        if etype == "companion_betrayed":
+            return f"{name} traiu o grupo e partiu."
+        from services.chronicle import _FATE_TEXT
+
+        fate = _FATE_TEXT.get(str(payload.get("fate") or ""), "teve um destino incerto")
+        return f"{name} {fate}."
+    if etype == "crime_witnessed":
+        crime = CRIME_LABELS.get(str(payload.get("crime_type") or ""))
+        if not crime:
+            return ""
+        local = _loc_name(payload.get("location_id")) or "um local"
+        return f"Houve {crime} em {local}."
+    if etype == "law_resolved":
+        from services import law_codes
+
+        mode_ = MODE_LABELS.get(str(payload.get("mode") or ""))
+        name = str(
+            (law_codes.get_code(str(payload.get("jurisdiction_id") or "")) or {}).get("name") or ""
+        )
+        if not mode_ or not name:
+            return ""
+        return f"A pendência do herói com {name} foi resolvida ({mode_})."
+    if etype == "quest_failed":
+        title = str(payload.get("quest_title") or "") or _name(target)
+        return f"Missão fracassada: {title}." if title else ""
+    if etype in ("unique_item_claimed", "unique_item_lost"):
+        if etype == "unique_item_claimed" and payload.get("holder", "player") != "player":
+            return ""
+        from gamedata import ARTIFACTS_DB
+
+        item = str((ARTIFACTS_DB.get(str(target or "")) or {}).get("name") or "")
+        if not item:
+            return ""
+        if etype == "unique_item_claimed":
+            return f"O herói obteve {item}, peça única no mundo."
+        return f"O herói perdeu {item}."
+    if etype == "npc_fate_learned":
+        verb = {"morto": "morreu", "capturado": "foi capturado"}.get(str(payload.get("fate") or ""))
+        if not verb:
+            return ""
+        who = str(payload.get("name") or "") or "alguém"
+        where = _loc_name(payload.get("location_id"))
+        return f"Chegou a notícia: {who} {verb}{' em ' + where if where else ''}."
+    return None
+
+
+_ENGINE_VOICE_TYPES = frozenset(
+    {
+        "location_state_changed",
+        "world_crisis_warning",
+        "companion_left",
+        "companion_betrayed",
+        "companion_fate",
+        "crime_witnessed",
+        "law_resolved",
+        "quest_failed",
+        "unique_item_claimed",
+        "unique_item_lost",
+        "npc_fate_learned",
+    }
+)
+
+
 def render_event(event: dict, projection: dict | None = None) -> str:
     """1 frase determinística por GameEvent. `secret_revealed` NÃO passa por aqui
     (é renderizado de world_projection.revealed_facts). Tipo desconhecido → ""."""
@@ -182,10 +324,19 @@ def render_event(event: dict, projection: dict | None = None) -> str:
         from services.faction_membership import event_text
 
         return event_text(event)
+    payload = event.get("payload", {}) or {}
+    if etype in _ENGINE_VOICE_TYPES:  # SPEC-309 R1
+        try:
+            body = _render_engine_voice(str(etype), event, payload)
+        except Exception as exc:  # payload legado/corrompido nunca derruba o pack (R21)
+            from observability.telemetry import log_fallback
+
+            log_fallback("context_builder", "render_event_failed", exc)
+            return ""
+        return f"[turno {event.get('turn', 0)}] {body}" if body else ""
     tmpl = EVENT_TEMPLATES.get(etype)
     if not tmpl:
         return ""
-    payload = event.get("payload", {}) or {}
     return tmpl.format(
         turn=event.get("turn", 0),
         target=_name(event.get("target_id")),
