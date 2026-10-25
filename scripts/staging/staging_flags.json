@@ -1,12 +1,12 @@
 {
   "_doc": "Estado APROVADO pelo dono para o staging. vercel_env.py carrega isto por padrao; flags da CLI sobrescrevem; --no-preset volta aos defaults antigos do script. Mudou a decisao? Edite aqui (com a data) e commite.",
-  "_updated": "2026-10-25: dono aprovou rumores (312), quests de lore (313) e arte dinamica on; mundo vivo on desde 24/10; Jev primary desde 18/10",
+  "_updated": "2026-10-25: dono aprovou rumores (312), quests de lore (313) e arte dinamica (off ate o teste de consistencia de arte passar); mundo vivo on desde 24/10; Jev primary desde 18/10",
   "jev_router_mode": "primary",
   "owner_approved_primary": true,
   "npc_knowledge": "on",
   "world_engine": "on",
   "shared_pool": "on",
-  "dynamic_art": "on",
+  "dynamic_art": "off",
   "flags": {
     "RPG_LAW": "on",
     "RPG_NPC_WORLD": "on",
