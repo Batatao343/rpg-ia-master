@@ -81,7 +81,6 @@ OPTIONAL_FLAGS = (
     "RPG_RUMORS_PROPOSED",
     "RPG_LORE_QUESTS",
     "RPG_DYNAMIC_ART_ENABLED",
-    "RPG_ROUTES",
     "RPG_ROUTER_DETERMINISTIC_NPC",
     "RPG_PROMPT_STATIC_FIRST",
 )
@@ -121,7 +120,8 @@ WORLD_FLAGS = (
     "RPG_PROMPT_STATIC_FIRST",  # SPEC-317 R9: on|off (ausente = off)
 )
 # SPEC-317 R1: A/B do tier CLASSIFY. ``groq_first`` poe o Groq gpt-oss-20b na frente (DeepSeek
-# em 2o) via RPG_ROUTES inline; ``default`` apaga a variavel (volta ao ROUTES do codigo).
+# em 2o) via RPG_ROUTES inline; ``default`` apaga a variavel (volta ao ROUTES do codigo). Sem a flag
+# (nem no preset) o script NAO toca em RPG_ROUTES: um valor posto a mao sobrevive.
 CLASSIFY_ROUTES_MODES = ("default", "groq_first")
 CLASSIFY_GROQ_FIRST_ROUTES = json.dumps(
     {
@@ -198,7 +198,7 @@ def build_env(
     shared_pool: str = "off",
     world_flags: Mapping[str, str] | None = None,
     dynamic_art: bool = False,
-    classify_routes: str = "default",
+    classify_routes: str | None = None,
 ) -> tuple[dict[str, str], dict[str, str]]:
     """Retorna (production, preview). Levanta KeyError com NOME do segredo ausente."""
     if projection_mode not in PROJECTION_MODES:
@@ -206,7 +206,7 @@ def build_env(
     for name, value in (world_flags or {}).items():
         if name not in WORLD_FLAGS or value not in ("off", "shadow", "on"):
             raise ValueError(f"flag de mundo invalida: {name}={value}")
-    if classify_routes not in CLASSIFY_ROUTES_MODES:
+    if classify_routes is not None and classify_routes not in CLASSIFY_ROUTES_MODES:
         raise ValueError(f"classify_routes invalido: {classify_routes}")
     if shared_pool not in SHARED_POOL_MODES:
         raise ValueError(f"shared_pool invalido: {shared_pool}")
@@ -461,7 +461,7 @@ def main(argv: list[str] | None = None) -> int:
                 **dict(f.split("=", 1) for f in args.flag if "=" in f),
             },
             dynamic_art=(args.dynamic_art or preset.get("dynamic_art", "off")) == "on",
-            classify_routes=args.classify_routes or preset.get("classify_routes", "default"),
+            classify_routes=args.classify_routes or preset.get("classify_routes"),
         )
     except (KeyError, ValueError) as exc:
         print(exc.args[0], file=sys.stderr)
@@ -469,7 +469,12 @@ def main(argv: list[str] | None = None) -> int:
     secrets = FORBIDDEN_IN_PREVIEW
     print("production:", ", ".join(sorted(production)))
     print("preview:", ", ".join(sorted(preview)), "(sem segredos de DB/serviço)")
-    print("a remover:", ", ".join(stale_names(production)))
+    stale = stale_names(production) + (
+        ("RPG_ROUTES",)
+        if (args.classify_routes or preset.get("classify_routes")) == "default"
+        else ()
+    )
+    print("a remover:", ", ".join(stale))
     print("RPG_DAILY_SPEND_CAP_BRL =", production["RPG_DAILY_SPEND_CAP_BRL"])
     if args.dry_run:
         return 0
@@ -479,7 +484,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     push(token, link["projectId"], link["orgId"], "production", production, secrets)
     push(token, link["projectId"], link["orgId"], "preview", preview, secrets)
-    removed = remove(token, link["projectId"], link["orgId"], stale_names(production))
+    removed = remove(token, link["projectId"], link["orgId"], stale)
     print("removidas:", ", ".join(removed) or "nenhuma")
     print("ok: variáveis enviadas")
     return 0

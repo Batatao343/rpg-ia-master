@@ -110,3 +110,9 @@ def test_turn_prepare_node_starts_prefetch(monkeypatch):
     query = context_prefetch.story_query(state)
     assert context_prefetch.take("g-prefetch", 5, query) is not None
     assert calls == [query]
+
+
+def test_no_prefetch_for_non_story_turns(monkeypatch):
+    _fake_embedder(monkeypatch)
+    assert not context_prefetch.start_prefetch(_state("Ataco o guarda"), 5)
+    assert not context_prefetch.start_prefetch(_state("Compro uma corda"), 5)

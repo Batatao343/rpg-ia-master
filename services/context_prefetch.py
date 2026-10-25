@@ -24,6 +24,7 @@ from observability.telemetry import log_event as _log_event
 _MAX_ENTRIES = 8
 _LOCK = threading.Lock()
 _ENTRIES: OrderedDict[tuple[str, int, str], Future] = OrderedDict()
+_STARTED: dict[int, threading.Event] = {}  # id(future) -> worker pegou a tarefa
 _EXECUTOR: ThreadPoolExecutor | None = None
 
 
@@ -62,6 +63,18 @@ def story_query(state: dict) -> str:
     return compose_lore_query(state, text)
 
 
+def _likely_story(state: dict) -> bool:
+    """So STORY consome o vetor: pula vocativo a NPC, combate, saque e comercio (barato, puro)."""
+    try:
+        from agents.router import likely_non_story
+
+        messages = state.get("messages") or []
+        text = str(getattr(messages[-1], "content", "") or "") if messages else ""
+        return not likely_non_story(state, text)
+    except Exception:  # silent-ok: na duvida, prefetch (so custa 1 embedding)
+        return True
+
+
 def _embed(query: str, game_id: str) -> Any:
     from services.context_sources import embed_context_query_uncached
 
@@ -78,6 +91,8 @@ def start_prefetch(state: dict, turn: int | None = None) -> bool:
             return False
         world = state.get("world") or {}
         turn = int(turn if turn is not None else int(world.get("turn_count", 0) or 0) + 1)
+        if not _likely_story(state):
+            return False
         query = story_query(state)
         if not query.strip():
             return False
@@ -86,12 +101,16 @@ def start_prefetch(state: dict, turn: int | None = None) -> bool:
             if key in _ENTRIES:
                 return False
             future: Future = Future()
+            started = threading.Event()
+            _STARTED[id(future)] = started
             _ENTRIES[key] = future
             while len(_ENTRIES) > _MAX_ENTRIES:
-                _ENTRIES.popitem(last=False)
+                _old = _ENTRIES.popitem(last=False)[1]
+                _STARTED.pop(id(_old), None)
         ctx = copy_context()
 
         def run() -> None:
+            started.set()
             try:
                 future.set_result(ctx.run(_embed, query, game_id))
             except BaseException as exc:  # silent-ok: o consumidor cai no embedding inline
@@ -113,12 +132,19 @@ def take(game_id: str | None, turn: int | None, query: str) -> Any | None:
         future = _ENTRIES.get(key)
     if future is None:
         return None
+    with _LOCK:
+        started = _STARTED.get(id(future))
+    # pequena folga p/ o worker pegar a tarefa; fila ocupada por outro usuario => inline
+    if not future.done() and started is not None and not started.wait(0.1):
+        # ainda na fila (outro usuario ocupa o unico worker): nao espere, embede inline
+        _log_event("context", "prefetch_miss", level="info", reason="not_started")
+        return None
     try:
         result = future.result(timeout=_wait_seconds())
     except Exception as exc:  # silent-ok: falha/timeout => caminho inline
-        _log_event("context", "prefetch_miss", level="debug", error=type(exc).__name__)
+        _log_event("context", "prefetch_miss", level="info", reason=type(exc).__name__)
         return None
-    _log_event("context", "prefetch_hit", level="debug")
+    _log_event("context", "prefetch_hit", level="info")
     return result
 
 
@@ -131,3 +157,4 @@ def take_vector(game_id: str | None, turn: int | None, query: str) -> list[float
 def clear() -> None:
     with _LOCK:
         _ENTRIES.clear()
+        _STARTED.clear()

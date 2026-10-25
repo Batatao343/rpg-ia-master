@@ -23,7 +23,7 @@ import threading
 import time
 import unicodedata
 import uuid
-from collections import Counter
+from collections import Counter, OrderedDict
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass, field
@@ -706,7 +706,7 @@ def _embeddings_for_index(dir_path: str) -> object | None:
 # So os caminhos SOMENTE-LEITURA usam o cache; quem faz add_texts le direto do disco
 # (nunca muta o objeto residente). Um cache por processo; entre instancias serverless
 # o mtime do arquivo no disco decide.
-_INDEX_CACHE: dict[str, tuple[tuple, str, Any]] = {}
+_INDEX_CACHE: OrderedDict[str, tuple[tuple, str, Any]] = OrderedDict()
 _INDEX_CACHE_MAX = 64
 _INDEX_CACHE_LOCK = threading.Lock()
 
@@ -748,13 +748,15 @@ def _load_index(path: str, embeddings: Any) -> Any:
         return FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
     with _INDEX_CACHE_LOCK:
         hit = _INDEX_CACHE.get(key)
-    if hit is not None and hit[0] == stamp and hit[1] == sig:
-        return hit[2]
+        if hit is not None and hit[0] == stamp and hit[1] == sig:
+            _INDEX_CACHE.move_to_end(key)  # LRU: o lore global nunca sai por causa das sessoes
+            return hit[2]
     db = FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
     with _INDEX_CACHE_LOCK:
-        if len(_INDEX_CACHE) >= _INDEX_CACHE_MAX:
-            _INDEX_CACHE.pop(next(iter(_INDEX_CACHE)), None)
         _INDEX_CACHE[key] = (stamp, sig, db)
+        _INDEX_CACHE.move_to_end(key)
+        while len(_INDEX_CACHE) > _INDEX_CACHE_MAX:
+            _INDEX_CACHE.popitem(last=False)
     return db
 
 

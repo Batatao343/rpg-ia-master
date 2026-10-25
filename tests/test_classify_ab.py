@@ -56,7 +56,8 @@ def test_vercel_env_classify_routes_flag():
     prod, _ = ve.build_env(files, classify_routes="groq_first")
     assert json.loads(prod["RPG_ROUTES"]) == ab.GROQ_FIRST
     prod_default, _ = ve.build_env(files)
-    assert "RPG_ROUTES" not in prod_default and "RPG_ROUTES" in ve.stale_names(prod_default)
+    # sem --classify-routes o script nao gerencia (nem apaga) um RPG_ROUTES posto a mao
+    assert "RPG_ROUTES" not in prod_default and "RPG_ROUTES" not in ve.stale_names(prod_default)
     prod_flags, _ = ve.build_env(
         files, world_flags={"RPG_ROUTER_DETERMINISTIC_NPC": "on", "RPG_PROMPT_STATIC_FIRST": "on"}
     )

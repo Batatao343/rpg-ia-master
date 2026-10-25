@@ -11,8 +11,21 @@ _DYNAMIC_MARKER = {"story": "<PERSONA>", "npc": "<ROLE>", "router": "Local Atual
 _STATIC_MARKER = {"story": "<INSTRUÇÕES>", "npc": "<REGRAS DE ATUAÇÃO", "router": "REGRAS:"}
 
 
+# sha256 dos prompts gerados pelo codigo de `main` ANTES da SPEC-317 (flag off), na fixture de
+# tests/prompt_capture.py. Mudanca legitima de prompt em outra spec atualiza estes hashes.
+_MAIN_GOLDEN = {
+    "npc": "b6bd8f60d58defd157f24595e7f48528b27f47590d2fb05ac4212cd94953bc45",
+    "router": "adbe6157f91b7a7ba50ff33a620fea95b79246861ca639924cdfd3abadd3fd46",
+    "story": "34ddf51f41975b7bf4b39b9ba39ff4f0c0f2ceb4452b43db760cab7cec20e696",
+}
+
+
 def _lines(text: str) -> list[str]:
-    return sorted(line.strip() for line in text.splitlines() if line.strip())
+    return sorted(
+        line.strip()
+        for line in text.splitlines()
+        if line.strip() and line.strip() != prompt_layout.DYNAMIC_LABEL
+    )
 
 
 @pytest.fixture()
@@ -45,6 +58,10 @@ def test_flag_off_byte_identical(monkeypatch):
     monkeypatch.setenv("RPG_PROMPT_STATIC_FIRST", "off")
     second = capture(monkeypatch)
     assert first == second
+    import hashlib
+
+    for key, golden in _MAIN_GOLDEN.items():
+        assert hashlib.sha256(first[key].encode("utf-8")).hexdigest() == golden, key
     parts = [("a\n", True), ("b\n", False), ("c\n", True)]
     assert prompt_layout.compose(parts, static_first=False) == "a\nb\nc\n"
     assert prompt_layout.compose(parts, static_first=True).index("c") < prompt_layout.compose(

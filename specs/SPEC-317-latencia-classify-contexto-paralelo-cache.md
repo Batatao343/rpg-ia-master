@@ -162,6 +162,8 @@ Staging, DeepSeek + Groq, teto **US$ 0,20** total:
    `route_next` por input (mesmo roteiro).
 2. R9/R10: 15 turnos com `RPG_PROMPT_STATIC_FIRST=on`; conferir `cache_hit_ratio` > 0 na linha `rpg.turn`.
 3. R11/R12: `scripts/staging/measure.py` para cold start/bundle antes e depois do deploy.
+**Resultado do A/B offline (coordenador, 25/10, `classify_ab.py`, 16 inputs ×2):** concordância 0,9375; p50 DeepSeek 1630,7 ms vs Groq 1270,4 ms (−22 %); p95 11378,3 vs 2144,2 ms ⇒ `promote_groq_first=false` (gates 40 % / 95 %). O p95 do DeepSeek (cauda de ~11 s) é insumo para o hedge da SPEC-319.
+
 Alvos: CLASSIFY p50 ≤ 0,8 s; TTLT p50 −1 s vs baseline do dia; ack p95 ≤ 3 s em função morna.
 
 ## 7. Riscos & compatibilidade
@@ -185,6 +187,12 @@ Alvos: CLASSIFY p50 ≤ 0,8 s; TTLT p50 −1 s vs baseline do dia; ack p95 ≤ 3
 - **R11:** SDKs de provider, PIL e faiss já eram lazy; o ganho veio de tirar `uvicorn` do topo de `api.py` e `TextLoader`/splitter do topo de `rag.py` (mediana de `-X importtime` de `vercel_app`: 3,34 s → 2,19 s, −34 %).
 - **R12:** `evals/**` NÃO pode ser excluído inteiro (`jev_rollout` importa `evals.core/evaluators/experiments` em runtime; guardado por `test_spec192_vercel_packaging`) e `data/codex/**` fica (`discovery.codex_body` lê o codex em runtime, D5). Entram em `excludeFiles`: `lore_nova/**`, `handoffs/**`, `project_index/**`.
 - **R1:** `RPG_ROUTES` passou a aceitar JSON inline (a Vercel não tem arquivo extra no bundle); `vercel_env.py --classify-routes groq_first|default`; harness `scripts/staging/classify_ab.py` (replay do dataset do router, somente leitura).
+
+**Correções da revisão (sol, 25/10):**
+- R2: `agree` do shadow exige também `social_intent is None` e traz `decided_by` (`classify`|`jev`); o léxico de exclusão roda sobre o texto DOBRADO (sem acento) e ganhou raízes de combate/coerção/sondagem/favor; o atalho roda DEPOIS do Jev primary (que, coberto, decide e também gera linha de shadow).
+- R4: janela enxuta atrás de `RPG_ROUTER_WINDOW_TRIM=on|off` (default `off`); preserva a narração inteira se a parte descartada tem ameaça. `evals compare` de `routing_actions` (candidato com TRIM=on e NPC=on vs base): sem regressão (o eval usa MockLLM, então só garante os gates Python).
+- R3: `merchant_stock` roda sobre `deepcopy` do world; `_QTY_HINT_RE` cobre numerais por extenso, `par`, `punhado`, `dezena` etc.
+- R5: prefetch só em turnos prováveis de STORY, não espera future que nem começou (folga de 100 ms), hit/miss em `info`. R6: LRU. R9: bloco dinâmico abre com rótulo fixo; teste off compara com hashes golden de `main`. `vercel_env.py` só gerencia `RPG_ROUTES` com `--classify-routes`.
 
 ## 8. Decisões do dono
 

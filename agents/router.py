@@ -44,11 +44,14 @@ _EXPLICIT_HOSTILITY_RE = re.compile(
 )
 
 # SPEC-317 R2: verbos que tiram um turno do "vocativo puro" (saque/comercio/coacao/favor/divida).
-# Casados contra o texto cru: qualquer um manda o turno ao CLASSIFY.
+# Casados contra o texto DOBRADO (sem acento, minusculo): qualquer um manda o turno ao CLASSIFY.
 _NON_PLAIN_TALK_RE = re.compile(
-    r"\b(?:saque\w*|pego|pegar|vasculh\w*|roub\w*|abro|abrir|compr\w*|vend\w*|troc\w*|cri[ao]r?|"
-    r"forj\w*|ameac\w*|intimid\w*|mato|matar|mat[ae]rei|entregu\w*|esconda\w*|esconder|"
-    r"emprest\w*|interced\w*|d[ií]vida|pago|pagar|suborn\w*|minto|mentir)\b",
+    r"\b(?:saque\w*|peg[oa]\w*|vasculh\w*|roub\w*|abr[oi]\w*|compr\w*|vend\w*|troc\w*|cri[ao]r?|"
+    r"forj\w*|ameac\w*|intimid\w*|mat[aeo]\w*|esfaque\w*|cort[aeo]\w*|soc[oa]\w*|"
+    r"desafi\w*|chut\w*|empurr\w*|estrangul\w*|enforc\w*|agarr\w*|segur[oa]\w*|"
+    r"entreg\w*|esconda\w*|escond\w*|emprest\w*|interced\w*|divida|pag[oa]\w*|suborn\w*|"
+    r"ment[ie]\w*|mintu\w*|minto|sond\w*|verdade|pression\w*|exij\w*|exig\w*|"
+    r"obrig\w*|chantag\w*|blef\w*|favor|peco|pedir|imploro|suplico)\b",
     re.IGNORECASE,
 )
 
@@ -347,14 +350,10 @@ def dm_router_node(state: GameState):
     if pre is not None:
         return _tag(_resumed(_interlocutor_payload(pre, world)), "interlocutor")
 
-    # SPEC-317 R2: vocativo inequivoco a NPC presente -> rota NPC sem CLASSIFY.
+    # SPEC-317 R2: vocativo inequivoco a NPC presente -> rota NPC sem CLASSIFY. Roda DEPOIS do
+    # Jev primary (que, coberto, decide); em shadow so observa e compara com a decisao real.
     det_mode = _deterministic_npc_mode()
-    det_pre = None
-    if det_mode != "off":
-        det_pre = _deterministic_npc(state, last_human)
-        if det_pre is not None and det_mode == "on":
-            _log_event("router", "deterministic_npc", route="npc_actor")
-            return _tag(_resumed(_interlocutor_payload(det_pre, world)), "deterministic_npc")
+    det_pre = _deterministic_npc(state, last_human) if det_mode != "off" else None
 
     # SPEC-217 R14 (rollout SPEC-180): the Jev runs only AFTER every Python gate.
     # ``off`` (default) returns None with no side effect. Primary decides when the
@@ -365,28 +364,18 @@ def dm_router_node(state: GameState):
     if pending is not None and pending.mode == "primary":
         routing = pending.primary_routing()
         if routing is not None:
-            return _tag(
-                _finalize(
-                    state,
-                    last_human,
-                    world,
-                    _jev_decision(state, routing),
-                    _resumed,
-                    resume_explore,
-                ),
-                "jev",
+            jev_payload = _finalize(
+                state, last_human, world, _jev_decision(state, routing), _resumed, resume_explore
             )
+            _log_deterministic_shadow(det_mode, det_pre, jev_payload, "jev")
+            return _tag(jev_payload, "jev")
+
+    if det_pre is not None and det_mode == "on":
+        _log_event("router", "deterministic_npc", route="npc_actor")
+        return _tag(_resumed(_interlocutor_payload(det_pre, world)), "deterministic_npc")
 
     payload = _classify(state, messages, last_human, world, loc, _resumed, resume_explore)
-    if det_pre is not None and det_mode == "shadow":
-        _log_event(
-            "router",
-            "deterministic_shadow",
-            agree=bool(
-                payload.get("next") == RouteType.NPC.value
-                and payload.get("active_npc_name") == det_pre.npc_state_key
-            ),
-        )
+    _log_deterministic_shadow(det_mode, det_pre, payload, "classify")
     if pending is not None and pending.mode == "shadow":
         pending.observe(
             payload,
@@ -396,6 +385,35 @@ def dm_router_node(state: GameState):
             state,
         )
     return payload
+
+
+def likely_non_story(state: GameState, text: str) -> bool:
+    """Heuristica pura (sem LLM) p/ o prefetch: o turno provavelmente NAO e STORY."""
+    from services import interlocutor
+
+    folded = interlocutor._norm(text)
+    if _EXPLICIT_HOSTILITY_RE.search(folded) or _NON_PLAIN_TALK_RE.search(folded):
+        return True
+    if (state.get("combat") or {}).get("active"):
+        return True
+    return interlocutor.addressed_in_scene(state, text) is not None
+
+
+def _log_deterministic_shadow(mode: str, det_pre, payload: dict, source: str) -> None:
+    """Shadow do R2: ``agree`` exige rota, NPC E ausencia de abordagem social (SPEC-298 R20),
+    porque o caminho ``on`` sempre devolve ``conversar``."""
+    if det_pre is None or mode != "shadow":
+        return
+    _log_event(
+        "router",
+        "deterministic_shadow",
+        agree=bool(
+            payload.get("next") == RouteType.NPC.value
+            and payload.get("active_npc_name") == det_pre.npc_state_key
+            and payload.get("social_intent") is None
+        ),
+        decided_by=source,
+    )
 
 
 def _deterministic_npc_mode() -> str:
@@ -413,7 +431,12 @@ def _deterministic_npc(state: GameState, last_human: str):
     coercion or favour lexicon; anything else returns None and goes to CLASSIFY."""
     from services import interlocutor
 
-    if _EXPLICIT_HOSTILITY_RE.search(last_human) or _NON_PLAIN_TALK_RE.search(last_human):
+    folded = interlocutor._norm(last_human)
+    if (
+        _EXPLICIT_HOSTILITY_RE.search(last_human)
+        or _EXPLICIT_HOSTILITY_RE.search(folded)
+        or _NON_PLAIN_TALK_RE.search(folded)
+    ):
         return None
     try:
         addressed = interlocutor.addressed_in_scene(state, last_human)
@@ -425,12 +448,24 @@ def _deterministic_npc(state: GameState, last_human: str):
     return interlocutor.deterministic_npc_resolution(addressed[0])
 
 
+_THREAT_NARRATED_RE = re.compile(
+    r"\b(?:ameac\w*|hostil\w*|armad[oa]s?|ataq\w*|emboscad\w*|perig\w*|sac[ao]u?|rosn\w*)\b"
+)
+
+
+def _window_trim_enabled() -> bool:
+    """``RPG_ROUTER_WINDOW_TRIM=on|off`` (default off ate o evals compare do router, SPEC-317 R4)."""
+    import os
+
+    return os.environ.get("RPG_ROUTER_WINDOW_TRIM", "off").strip().lower() == "on"
+
+
 def _router_window(messages) -> list:
     """SPEC-317 R4: ultima fala do jogador + cauda (400 chars) da narracao anterior
     + fala anterior do jogador, em ordem cronologica."""
     msgs = list(messages or [])
     humans = [i for i, m in enumerate(msgs) if getattr(m, "type", "") == "human"]
-    if not humans:
+    if not humans or not _window_trim_enabled():
         return msgs[-3:]
     last_i = humans[-1]
     out: list = []
@@ -441,7 +476,14 @@ def _router_window(messages) -> list:
         m = msgs[i]
         if getattr(m, "type", "") == "ai" and str(getattr(m, "content", "") or "").strip():
             text = str(m.content)
-            out.append(AIMessage(content=text[-400:]) if len(text) > 400 else m)
+            # a cabeca descartada nunca pode conter uma ameaca narrada (regra COMBAT do prompt)
+            head = text[:-400]
+            from services.interlocutor import _norm
+
+            keep_all = len(text) <= 400 or bool(
+                _EXPLICIT_HOSTILITY_RE.search(head) or _THREAT_NARRATED_RE.search(_norm(head))
+            )
+            out.append(m if keep_all else AIMessage(content=text[-400:]))
             break
     out.append(msgs[last_i])
     return out

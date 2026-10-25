@@ -205,7 +205,7 @@ def test_shadow_mode_calls_classify_and_logs_agreement(monkeypatch):
     out = dm_router_node(_state("Brunna, você viu o barco?"))
     assert llm.calls == 1 and out["next"] == RouteType.NPC.value
     shadow = [k for a, k in events if a[:2] == ("router", "deterministic_shadow")]
-    assert shadow == [{"agree": True}]
+    assert shadow == [{"agree": True, "decided_by": "classify"}]
 
 
 def test_off_mode_does_not_shortcut(monkeypatch):
@@ -215,8 +215,10 @@ def test_off_mode_does_not_shortcut(monkeypatch):
     assert llm.calls == 1
 
 
-def test_router_window_trims_previous_narration():
+def test_router_window_trims_previous_narration(monkeypatch):
     from langchain_core.messages import AIMessage
+
+    monkeypatch.setenv("RPG_ROUTER_WINDOW_TRIM", "on")
 
     msgs = [
         HumanMessage(content="primeira"),
@@ -227,3 +229,73 @@ def test_router_window_trims_previous_narration():
     assert [m.content[:1] for m in win] == ["p", "x", "s"]
     assert len(win[1].content) == 400
     assert router_mod._router_window([HumanMessage(content="só")])[-1].content == "só"
+
+
+def test_router_window_default_off_is_last_three(monkeypatch):
+    from langchain_core.messages import AIMessage
+
+    monkeypatch.delenv("RPG_ROUTER_WINDOW_TRIM", raising=False)
+    msgs = [HumanMessage(content="a"), AIMessage(content="x" * 900), HumanMessage(content="b")]
+    assert router_mod._router_window(msgs) == msgs[-3:]
+
+
+def test_router_window_keeps_narration_with_threat_in_the_head(monkeypatch):
+    from langchain_core.messages import AIMessage
+
+    monkeypatch.setenv("RPG_ROUTER_WINDOW_TRIM", "on")
+    long_text = "Um bandido armado ameaça a vila. " + "x" * 800
+    msgs = [HumanMessage(content="a"), AIMessage(content=long_text), HumanMessage(content="b")]
+    assert router_mod._router_window(msgs)[1].content == long_text
+
+
+_PROBES = [  # vocativo a NPC presente + coerção/combate/saque/favor/sondagem: vai ao CLASSIFY
+    "Brunna, ameaço contar tudo ao conde",
+    "Brunna, esfaqueio você agora",
+    "Brunna, corto a sua corda",
+    "Brunna, soco a mesa e exijo respostas",
+    "Brunna, mata esse sujeito pra mim",
+    "Brunna, desafio você para um duelo",
+    "Brunna, você está mentindo?",
+    "Brunna, intimido você até falar",
+    "Brunna, peço um favor: me esconda",
+    "Brunna, empresto a minha adaga?",
+    "Brunna, pago a dívida que tenho com você",
+    "Brunna, compro o barco",
+    "Brunna, vasculho o seu bolso",
+]
+
+
+@pytest.mark.parametrize("text", _PROBES)
+def test_vocative_probe_phrases_go_to_classify(monkeypatch, text):
+    monkeypatch.setenv("RPG_ROUTER_DETERMINISTIC_NPC", "on")
+    llm = _install(monkeypatch, RouteType.NPC, "Brunna")
+    dm_router_node(_state(text))
+    assert llm.calls == 1, text
+
+
+def test_shadow_disagrees_when_classify_finds_social_approach(monkeypatch):
+    monkeypatch.setenv("RPG_ROUTER_DETERMINISTIC_NPC", "shadow")
+    events = []
+    monkeypatch.setattr(router_mod, "_log_event", lambda *a, **k: events.append((a, k)) or None)
+    llm = _install(monkeypatch, RouteType.NPC, "Brunna")
+    llm.decision.social_approach = "sondar"
+    dm_router_node(_state("Brunna, você viu o barco?"))
+    shadow = [k for a, k in events if a[:2] == ("router", "deterministic_shadow")]
+    assert shadow and shadow[0]["agree"] is False
+
+
+def test_deterministic_shortcut_runs_after_jev_primary(monkeypatch):
+    monkeypatch.setenv("RPG_ROUTER_DETERMINISTIC_NPC", "on")
+    llm = _install(monkeypatch, RouteType.STORY)
+    import services.jev_rollout as jev
+
+    class _Primary:
+        mode = "primary"
+
+        def primary_routing(self):
+            return jev.JevRouting("storyteller", None, None, 0.9)
+
+    monkeypatch.setattr(jev, "begin", lambda s, t: _Primary())
+    out = dm_router_node(_state("Brunna, você viu o barco?"))
+    assert router_mod.last_decision()["route_source"] == "jev" and llm.calls == 0
+    assert out["next"] in (RouteType.STORY.value, RouteType.NPC.value)

@@ -59,3 +59,20 @@ def test_craft_with_unique_recipe_skips_classify(monkeypatch):
     from services import economy
 
     assert economy.find_recipe(intent.item_ref) is not None
+
+
+def test_number_words_call_classify(monkeypatch):
+    _install(monkeypatch)
+    loot._parse_trade_intent(_market_state(), "SHOP", "Compro doze cordas.")
+    assert _Boom.calls == 1
+    loot._parse_trade_intent(_market_state(), "SHOP", "Compro um par de cordas.")
+    assert _Boom.calls == 2
+
+
+def test_resolve_item_ref_does_not_mutate_state(monkeypatch):
+    import copy
+
+    state = _market_state()
+    before = copy.deepcopy(state["world"])
+    loot._resolve_item_ref(state, "buy", "compro a corda")
+    assert state["world"] == before

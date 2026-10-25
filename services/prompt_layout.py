@@ -18,6 +18,10 @@ from collections.abc import Sequence
 
 Part = tuple[str, bool]
 
+# Rotulo fixo que abre o bloco dinamico em static-first: separa "regras" de "estado do turno"
+# (as clausulas dinamicas que antes viviam dentro das instrucoes vem depois dele).
+DYNAMIC_LABEL = "[ESTADO E CONTEXTO DESTE TURNO - as regras acima continuam valendo]"
+
 
 def static_first_enabled() -> bool:
     """``RPG_PROMPT_STATIC_FIRST=on|off`` (default ``off`` até medir ``cache_hit_ratio``)."""
@@ -32,4 +36,5 @@ def compose(parts: Sequence[Part], *, static_first: bool | None = None) -> str:
         return "".join(text for text, _static in parts)
     statics = "".join(text for text, is_static in parts if is_static)
     dynamics = "".join(text for text, is_static in parts if not is_static)
-    return f"{statics.strip(chr(10))}\n\n{dynamics.strip(chr(10))}\n"
+    nl = chr(10)
+    return nl.join([statics.strip(nl), "", DYNAMIC_LABEL, dynamics.strip(nl), ""])

@@ -75,7 +75,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `companion_soul.fallback` | — |
 | `context.prefetch_failed` | `error` |
 | `context.prefetch_hit` | — |
-| `context.prefetch_miss` | `error` |
+| `context.prefetch_miss` | `reason` |
 | `context_builder.fallback` | — |
 | `cron.auth_rejected` | `reason` |
 | `cron.failed` | `duration_s`, `error_type`, `stack`, `task` |
@@ -239,7 +239,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `router.decision` | `fallback_reason`, `jev_mode`, `route`, `source`, `target_kind` |
 | `router.deterministic_npc` | `route` |
 | `router.deterministic_npc_failed` | `error` |
-| `router.deterministic_shadow` | `agree` |
+| `router.deterministic_shadow` | `agree`, `decided_by` |
 | `router.failed` | `error` |
 | `router.orphan_combat_expired` | — |
 | `router.travel_in_combat_flee` | — |

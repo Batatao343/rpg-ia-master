@@ -59,8 +59,10 @@ def _validated_narrative(canonical_summary: dict, proposed_text: str) -> str:
 
 
 _QTY_HINT_RE = re.compile(
-    r"\d|\b(?:dois|duas|tres|quatro|cinco|seis|sete|oito|nove|dez|varios|varias|alguns|algumas|"
-    r"todos|todas|uma\s+duzia|duzia)\b"
+    r"\d|\b(?:dois|duas|tres|quatro|cinco|seis|sete|oito|nove|dez|onze|doze|treze|catorze|quatorze|quinze|"
+    r"dezesseis|dezessete|dezoito|dezenove|vinte|trinta|quarenta|cinquenta|sessenta|setenta|oitenta|noventa|"
+    r"cem|cento|duzentos|mil|par|pares|punhado|dezena|dezenas|centena|centenas|duzia|duzias|meia|"
+    r"varios|varias|alguns|algumas|todos|todas|muitos|muitas|bastante|bastantes)\b"
 )
 
 
@@ -73,9 +75,12 @@ def _resolve_item_ref(state: GameState, mode: str | None, folded: str) -> str | 
     try:
         names: dict[str, set[str]] = {}  # id -> nomes normalizados
         if mode == "buy":
-            world = state.get("world") or {}
+            import copy
+
+            # deepcopy: merchant_stock/_ensure_stock gravam no world que recebem
+            world = copy.deepcopy(state.get("world") or {})
             _mid, stock = economy.merchant_stock(
-                {**state, "world": dict(world)}, world.get("current_location_id", "")
+                {**state, "world": world}, world.get("current_location_id", "")
             )
             for iid in (stock or {}).keys():
                 name = (economy.ARTIFACTS_DB.get(iid) or {}).get("name", iid)

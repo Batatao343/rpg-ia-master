@@ -74,3 +74,20 @@ def test_cache_off_flag_loads_every_time(index, monkeypatch):
     rag._load_index(path, emb)
     rag._load_index(path, emb)
     assert calls["n"] == 2
+
+
+def test_lru_keeps_hot_index_when_cache_is_full(index, monkeypatch, tmp_path):
+    path, emb, calls = index
+    monkeypatch.setattr(rag, "_INDEX_CACHE_MAX", 2)
+    others = []
+    for n in range(3):
+        other = str(tmp_path / f"o{n}")
+        rag._save_index(FAISS.from_texts([f"t{n}"], emb), other, "fake")
+        others.append(other)
+    rag._load_index(path, emb)
+    rag._load_index(others[0], emb)
+    rag._load_index(path, emb)  # path fica "quente"
+    rag._load_index(others[1], emb)  # expulsa others[0], nao path
+    before = calls["n"]
+    rag._load_index(path, emb)
+    assert calls["n"] == before
