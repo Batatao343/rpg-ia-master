@@ -1,5 +1,5 @@
 {
-  "commit_sha": "7128a5be208e0d7243e8045a6307ac5efc1dad65",
+  "commit_sha": "8fd3caeb6c03e763c04f6d62081633b82e34462d",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -158637,6 +158637,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec311_planner.py",
+        "line": 285
+      },
+      "source": "module:tests.test_spec311_planner",
+      "target": "symbol:tests.test_spec311_planner.test_world_replan_cause_from_real_perception_path",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec311_planner.py",
         "line": 162
       },
       "source": "module:tests.test_spec311_planner",
@@ -203924,7 +203935,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/__main__.py",
-        "line": 400
+        "line": 406
       },
       "source": "symbol:playtest.__main__.main",
       "target": "symbol:playtest.scenarios.names",
@@ -449257,6 +449268,28 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec311_planner.py",
+        "line": 305
+      },
+      "source": "symbol:tests.test_spec311_planner.test_world_replan_cause_from_real_perception_path",
+      "target": "symbol:services.planner_context.world_replan_cause",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec311_planner.py",
+        "line": 309
+      },
+      "source": "symbol:tests.test_spec311_planner.test_world_replan_cause_from_real_perception_path",
+      "target": "symbol:services.planner_context.world_replan_cause",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec311_planner.py",
         "line": 166
       },
       "source": "symbol:tests.test_spec311_planner.test_world_replan_cause_ignores_unperceived_crisis",
@@ -561454,6 +561487,13 @@
       "qualified_name": "tests.test_spec311_planner.test_world_replan_cause_crise_regiao"
     },
     {
+      "id": "symbol:tests.test_spec311_planner.test_world_replan_cause_from_real_perception_path",
+      "kind": "test",
+      "line": 285,
+      "path": "tests/test_spec311_planner.py",
+      "qualified_name": "tests.test_spec311_planner.test_world_replan_cause_from_real_perception_path"
+    },
+    {
       "id": "symbol:tests.test_spec311_planner.test_world_replan_cause_ignores_unperceived_crisis",
       "kind": "test",
       "line": 162,
@@ -565592,5 +565632,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:60a3177c011d9dfd77d1f164765a1cfd9df0a615cd358b52976d6e60626776ec"
+  "source_tree_hash": "sha256:dc8a83935a6660a55873c599d9adfd136d50551a40ccd2df19c4c97280964f43"
 }
