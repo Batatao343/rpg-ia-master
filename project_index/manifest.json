@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "e154e314f1a04f07d85afd933e8b0814da769f57",
+  "commit_sha": "3d40fc23250815a30fd073fc89aac4f764b8f9fd",
   "edge_counts": {
-    "calls": 24130,
-    "contains": 865,
-    "defines": 12390,
-    "imports": 2032,
-    "likely_test_for": 1361,
+    "calls": 24335,
+    "contains": 872,
+    "defines": 12484,
+    "imports": 2055,
+    "likely_test_for": 1383,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:06c07ace256443256a2ba1275f8b998207f93de29fde958f8d650b5b389cbe35",
+  "graph_hash": "sha256:d0e4c5f4d551b7c240bb208ca3f63c7733b71c47a8d150d8e8c5f5b0909cab2c",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -385,6 +385,7 @@
     "services/npc_world.py",
     "services/objectives.py",
     "services/operation_recovery.py",
+    "services/perceived_world.py",
     "services/player_knowledge.py",
     "services/presentation_history.py",
     "services/projections.py",
@@ -443,6 +444,7 @@
     "tests/spec303_helpers.py",
     "tests/spec304_helpers.py",
     "tests/spec305_helpers.py",
+    "tests/spec309_helpers.py",
     "tests/test_abuse_logging.py",
     "tests/test_abuse_policy.py",
     "tests/test_account_api.py",
@@ -875,6 +877,11 @@
     "tests/test_spec307_playtest.py",
     "tests/test_spec308_filtro.py",
     "tests/test_spec308_oraculo.py",
+    "tests/test_spec309_day_memory.py",
+    "tests/test_spec309_golden_rule.py",
+    "tests/test_spec309_perceived_block.py",
+    "tests/test_spec309_prompts.py",
+    "tests/test_spec309_templates.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -1067,14 +1074,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 882,
+    "class": 887,
     "endpoint": 64,
-    "file": 1013,
-    "function": 3951,
+    "file": 1020,
+    "function": 3967,
     "method": 794,
-    "module": 865,
-    "test": 6762
+    "module": 872,
+    "test": 6835
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:6ac22dd1e2a1429cb6c65016ecc5a647f51cd11e20aae31ee54e9361f1c63ae7"
+  "source_tree_hash": "sha256:3068257cf2cf1fc7302b1a63738fc45e960f0cd337cb9c8e0c3d9cec57a18ed5"
 }
