@@ -84,3 +84,50 @@ def test_companion_fate_needs_perception(perceived):
         state["world_sim"]["perceived_ids"].append(fate["event_id"])
     texts = [r["text"] for r in _event_memory_records([fate], state)]
     assert bool(texts) is perceived
+
+
+def test_hidden_offscreen_personal_quest_failed_not_in_memory(monkeypatch):
+    """P1-1: quest_failed pessoal de companheiro com destino oculto nao vira memoria."""
+    monkeypatch.setenv("RPG_NPC_WORLD", "on")
+    state = world_state_two_regions()
+    state["npc_sim"] = {"npcs": {"comp-zed": {"fate": "morto", "fate_event_id": "fx"}}}
+    ev = {
+        "event_id": "q-fail",
+        "type": "quest_failed",
+        "turn": 9,
+        "actor_id": "system",
+        "target_id": "q1",
+        "source": "system",
+        "payload": {"quest_title": "A Promessa", "personal_of": "comp-zed"},
+    }
+    assert _event_memory_records([ev], state) == []
+    state["npc_beliefs"] = {"comp-zed": {"known_events": ["fx"]}}
+    texts = [r["text"] for r in _event_memory_records([ev], state)]
+    assert texts == ["[turno 9] Missão fracassada: A Promessa."]
+
+
+def test_old_save_without_new_fields_renders(monkeypatch):
+    """R21: save pre-302 (sem world_sim/memory_canonical_facts) carrega e renderiza."""
+    import persistence
+
+    old = {
+        "game_id": "old-309",
+        "messages": [],
+        "player": {"name": "T", "class_name": "Guerreiro", "level": 1},
+        "world": {
+            "current_location_id": "skallgard",
+            "current_location": "Skallgard",
+            "turn_count": 3,
+            "world_clock": {"day": 2, "period": "Manhã"},
+        },
+        "event_log": [{"type": "companion_left", "turn": 1}, {"type": "quest_failed", "turn": 2}],
+    }
+    assert persistence.save_game_state(old)
+    import os
+
+    loaded = persistence.load_game_state(os.path.join(persistence.SAVES_DIR, "old-309.json"))
+    assert loaded is not None
+    assert isinstance(perceived_world_block(loaded, audience="story"), str)
+    pack = build_context_pack(loaded, "x", "story")
+    assert isinstance(pack.world_state_block, str)
+    assert not loaded.get("memory_canonical_facts")

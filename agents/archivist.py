@@ -201,6 +201,10 @@ def _event_memory_records(events: list[dict], state: dict) -> list[dict]:
             continue
         if event.get("type") in _DIGEST_MEMORY_TYPES:
             continue
+        from services import npc_world
+
+        if npc_world.event_hidden_from_player(state, event):
+            continue  # SPEC-309 P1-1: fato off-screen (ex.: quest_failed pessoal) ainda oculto
         if not event_perceived(state, event):
             continue  # SPEC-308 R6: o motor so vira memoria depois de percebido
         text = render_event(event, projection)
@@ -725,6 +729,7 @@ def _archive_node(
     if (
         duplicate_conflict
         and not canonical_only
+        and not policy_facts
         and not new_rejections
         and not narrative_rejections
         and not new_events

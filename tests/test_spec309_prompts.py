@@ -209,5 +209,5 @@ def test_f2_blocked_route_unperceived_is_discovered_on_travel(monkeypatch):
     st["world_sim"] = {"perceived_ids": []}
     st["messages"] = [HumanMessage(content=f"Viajo para {dest['name']}")]
     out = stt.storyteller_node(st)
-    assert "BLOQUEADA" in spy.prompts[0]
+    assert "estrada estava cortada" in spy.prompts[0]
     assert ev["event_id"] in (out.get("world_sim") or {}).get("perceived_ids", [])

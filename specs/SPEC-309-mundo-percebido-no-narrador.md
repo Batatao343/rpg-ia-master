@@ -343,8 +343,9 @@ fome na região do herói **percebido** (id em `world_sim.perceived_ids`); (c) u
    `_event_memory_records`;
 2. a frase de (b) aparece no pack e no bloco;
 3. o nome do companheiro de (c) com o texto de destino não aparece em lugar nenhum;
-4. nenhum bloco/linha nova casa `\d` (fora do prefixo `[turno N]` do pack) nem as palavras
-   `severidade|pressão|tensão|fase|banda|multa|recompensa`;
+4. nenhum **bloco** `<MUNDO_PERCEBIDO>` nem linha de pack casa `\d` (fora do prefixo
+   `[turno N]`) nem as palavras `severidade|pressão|tensão|fase|banda|multa|recompensa`. O
+   rótulo `multa paga` de `law_resolved` (§3.2) é permitido: é o modo, nunca uma quantia;
 5. quando (a) passa a ser percebido (id adicionado ao ledger), "Brekmar" aparece no pack, e
    no bloco só se Brekmar for da região atual.
 
@@ -504,6 +505,7 @@ Registrar custo, run_ids e trechos na §8. Se estourar o teto, parar e registrar
 - **R10:** a limpeza incondicional vale nos dois caminhos de retorno do arquivista (`elif policy_facts`).
 - **F2 (follow-up da 308):** o servidor hoje **não recusa** viagem por rota bloqueada (o bloqueio é de comércio; só o mapa a mostra como indisponível). Implementado o equivalente: ao viajar por rota cujo bloqueio vem de evento não percebido, o `travel_note` manda narrar a descoberta e o `event_id` entra em `world_sim.perceived_ids` (`world_perception.hidden_blocked_route_events`). Teste `test_f2_*`.
 - Testes: `tests/test_spec309_{templates,golden_rule,day_memory,perceived_block,prompts}.py`.
+- Revisão Sol: P1-1 corrigido (memória também respeita `event_hidden_from_player`; o fato oculto não é regravado depois, a crônica e `npc_fate_learned` o cobrem); P2-1..P2-5 corrigidos.
 - Smoke real §6: pendente (coordenador).
 
 ## 9. Decisões do dono

@@ -967,6 +967,7 @@ def storyteller_node(state: GameState):
                 "exploration",
             )
         if travel_periods == 0:
+            discovered_routes = []  # entrar em interior nao descobre rota
             travel_note = (
                 f"O jogador ENTROU em {dest['name']} (mesma cidade — o tempo não passou). "
                 f"Contexto do local: {dest.get('lore_seed', '')} Descreva o que ele vê ao entrar."
@@ -979,8 +980,9 @@ def storyteller_node(state: GameState):
             )
             if discovered_routes:
                 travel_note += (
-                    " A rota estava BLOQUEADA (o comércio por ela está cortado) e o jogador só "
-                    "descobre isso agora, ao tentar passar: narre a descoberta, sem inventar a causa."
+                    " A estrada estava cortada (o comércio por ela está parado) e o jogador só "
+                    "descobre isso agora: ele PASSOU com dificuldade e chegou. Narre a travessia "
+                    "difícil e a descoberta, sem inventar a causa nem um desvio."
                 )
             if closed_pass:
                 travel_note += f" {world_calendar.CROSSING_NOTE} Descreva a travessia dura e a nevasca ao chegar."
