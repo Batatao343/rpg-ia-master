@@ -133,7 +133,11 @@ def test_stream_ordem_de_eventos(client):
     assert names[-1] == "state"
     # fases na ordem real do grafo
     phases = [d["node"] for e, d in events if e == "phase"]
-    assert phases[0] == "campaign_manager" and phases[-1] == "archivist"
+    # SPEC-318: o plano ja existe (jogo novo) -> o replan sai da frente do router; o no
+    # `enrich` roda entre o narrador e o arquivista, DEPOIS da entrega.
+    assert phases[0] == "dm_router" and phases[-1] == "archivist"
+    assert phases.index("storyteller") < phases.index("enrich") < phases.index("archivist")
+    assert names.index("narrative") < len(names) - 1  # entrega antes do fim do turno
 
 
 def test_stream_state_igual_ao_post(client):

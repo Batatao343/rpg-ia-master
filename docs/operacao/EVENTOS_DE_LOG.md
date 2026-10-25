@@ -19,6 +19,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `archivist.facts_extracted` | `count` |
 | `archivist.fallback` | — |
 | `archivist.fallback_text_failed` | `error` |
+| `archivist.lean_shadow` | `would_skip` |
 | `archivist.node_failed` | `error` |
 | `archivist.npc_memory_retry_failed` | `error` |
 | `archivist.rag_persist_failed` | `error` |
@@ -44,7 +45,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `campaign.fallback` | — |
 | `campaign.generating_plot` | — |
 | `campaign.planner_failed` | `error` |
-| `campaign.replan` | `outcome`, `reason` |
+| `campaign.replan` | `deferred`, `outcome`, `reason` |
 | `campaign.world_replan_trigger` | `cause` |
 | `campaign_manager.fallback` | — |
 | `character.ai_failed` | `error` |
@@ -96,6 +97,9 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `economy.negative_gold_prevented` | `attempted_gold`, `player` |
 | `economy.trade` | `gold_delta`, `item_id`, `mode`, `outcome`, `reason_code` |
 | `economy.unique_claim_conflict` | `item_id`, `source` |
+| `enrich.fallback` | — |
+| `enrich.npc_sheet_completed` | — |
+| `enrich.npc_sheet_failed` | — |
 | `event.applied` | `event_id`, `type` |
 | `event.proposal_rejected` | `reason_code`, `source`, `target_ref`, `type` |
 | `faction_gate.fallback` | — |

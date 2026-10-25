@@ -265,3 +265,23 @@ def test_dynamic_art_liga_a_variavel():
     off, _ = ve.build_env(FILES)
     assert "RPG_DYNAMIC_ART_ENABLED" not in off
     assert "RPG_DYNAMIC_ART_ENABLED" in ve.stale_names(off)
+
+
+def test_spec318_latency_flags_are_allowlisted_and_not_dropped():
+    flags = {
+        "RPG_NPC_TWO_PHASE": "on",
+        "RPG_REPLAN_AFTER": "off",
+        "RPG_DAY_DIGEST": "llm",
+        "RPG_ARCHIVE_POLICY": "lean",
+        "RPG_ARCHIVE_POLICY_SHADOW": "1",
+    }
+    env, _ = ve.build_env(FILES, world_flags=flags)
+    for name, value in flags.items():
+        assert env[name] == value
+        assert name in ve.OPTIONAL_FLAGS and name in ve.WORLD_FLAGS
+    plain, _ = ve.build_env(FILES)
+    assert "RPG_ARCHIVE_POLICY" in ve.stale_names(plain)  # ausente => o script apaga a antiga
+    with pytest.raises(ValueError):
+        ve.build_env(FILES, world_flags={"RPG_ARCHIVE_POLICY": "on"})
+    with pytest.raises(ValueError):
+        ve.build_env(FILES, world_flags={"RPG_DAY_DIGEST": "shadow"})

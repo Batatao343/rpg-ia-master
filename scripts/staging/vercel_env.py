@@ -84,6 +84,11 @@ OPTIONAL_FLAGS = (
     "RPG_ROUTER_DETERMINISTIC_NPC",
     "RPG_PROMPT_STATIC_FIRST",
     "RPG_EARLY_NARRATIVE",
+    "RPG_NPC_TWO_PHASE",
+    "RPG_REPLAN_AFTER",
+    "RPG_DAY_DIGEST",
+    "RPG_ARCHIVE_POLICY",
+    "RPG_ARCHIVE_POLICY_SHADOW",
 )
 # Estado aprovado do staging (25/10): carregado por padrao para que rodar o script sem flags
 # reproduza o que o dono aprovou, em vez de apagar o mundo vivo e o Jev primary.
@@ -120,7 +125,18 @@ WORLD_FLAGS = (
     "RPG_ROUTER_DETERMINISTIC_NPC",  # SPEC-317 R2: off|shadow|on (ausente = shadow)
     "RPG_EARLY_NARRATIVE",  # SPEC-316: off|shadow|on (ausente = shadow)
     "RPG_PROMPT_STATIC_FIRST",  # SPEC-317 R9: on|off (ausente = off)
+    "RPG_NPC_TWO_PHASE",  # SPEC-318 R1: off|on (ausente = on)
+    "RPG_REPLAN_AFTER",  # SPEC-318 R4: off|on (ausente = on)
+    "RPG_DAY_DIGEST",  # SPEC-318 R3: llm|inline (ausente = inline)
+    "RPG_ARCHIVE_POLICY",  # SPEC-318 R5: legacy|lean (ausente = legacy)
+    "RPG_ARCHIVE_POLICY_SHADOW",  # SPEC-318 R5: 0|1 (ausente = 0)
 )
+# Valores aceitos por flag que fogem de off|shadow|on.
+WORLD_FLAG_VALUES: dict[str, tuple[str, ...]] = {
+    "RPG_DAY_DIGEST": ("llm", "inline"),
+    "RPG_ARCHIVE_POLICY": ("legacy", "lean"),
+    "RPG_ARCHIVE_POLICY_SHADOW": ("0", "1"),
+}
 # SPEC-317 R1: A/B do tier CLASSIFY. ``groq_first`` poe o Groq gpt-oss-20b na frente (DeepSeek
 # em 2o) via RPG_ROUTES inline; ``default`` apaga a variavel (volta ao ROUTES do codigo). Sem a flag
 # (nem no preset) o script NAO toca em RPG_ROUTES: um valor posto a mao sobrevive.
@@ -206,7 +222,9 @@ def build_env(
     if projection_mode not in PROJECTION_MODES:
         raise ValueError(f"projection_mode invalido: {projection_mode}")
     for name, value in (world_flags or {}).items():
-        if name not in WORLD_FLAGS or value not in ("off", "shadow", "on"):
+        if name not in WORLD_FLAGS or value not in WORLD_FLAG_VALUES.get(
+            name, ("off", "shadow", "on")
+        ):
             raise ValueError(f"flag de mundo invalida: {name}={value}")
     if classify_routes is not None and classify_routes not in CLASSIFY_ROUTES_MODES:
         raise ValueError(f"classify_routes invalido: {classify_routes}")

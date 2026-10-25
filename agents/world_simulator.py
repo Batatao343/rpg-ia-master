@@ -251,6 +251,19 @@ def _template_text(state: dict, items: list) -> str:
     return " ".join(t for t in (render(state, it) for it in items) if t)[:NARRATION_MAX_CHARS]
 
 
+def digest_prompt_lines(state: dict, items: list) -> list[str]:
+    """SPEC-318 R3: linhas `FATO:`/`BOATO:` (templates determinísticos) do digest percebido,
+    para o prompt do narrador. Sem LLM; boato nunca entra como fato (SPEC-312 R22)."""
+    from services import rumors
+
+    lines: list[str] = []
+    for it in items or []:
+        t = _template_text(state, [it])
+        if t:
+            lines.append(f"{'BOATO' if rumors.is_rumor_item(it) else 'FATO'}: {t}")
+    return lines
+
+
 def narrate_day(state: dict, items: list) -> str:
     """R26: reescreve o digest PERCEBIDO em 2-4 frases. Nunca levanta; saída inválida,
     falha da LLM ou nome fora do conjunto permitido -> texto dos templates."""

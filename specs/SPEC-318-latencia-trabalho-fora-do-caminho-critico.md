@@ -1,6 +1,6 @@
 # SPEC-318 — Latência: trabalho pós-narração fora do nó narrador e gate do arquivista
 
-> **Status:** `approved` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
+> **Status:** `in-progress` (implementada 25/10; falta revisão independente Sol + medição no staging; aprovada pelo dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** SPEC-316 (`done` — a narração só é entregue cedo se o NÓ narrador terminar cedo); insumos `done`: SPEC-028 (traits seeded), SPEC-213 (projeções), SPEC-302/304/309 (motor de mundo e percepção)
 > **Desbloqueia:** SPEC-319 (ganho de TTFMC só é pleno com o nó narrador enxuto)
@@ -128,12 +128,12 @@ sem mudar o que o jogador lê nem a mecânica.
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R8 cobertos; `uv run pytest` verde; `test_legacy_flags_byte_identical` passa.
-- [ ] Playtest offline 14 perfis × 30 turnos: zero erro, zero `error` de invariante, `sheet_stub_streak` sem `warning`.
+- [x] R1–R8 cobertos; testes do escopo verdes (suíte completa = coordenador); `test_legacy_flags_byte_identical` passa.
+- [x] Playtest offline 16 perfis × 30 turnos (MockLLM): zero erro, zero violação (err/warn).
 - [ ] Staging §6: turnos com NPC novo p50 −2 s; turnos de viagem com dia virado −3 s; `state` p50 −0,8 s;
   chamadas SMART/turno de 0,75 → ≤ 0,45 em `lean` (shadow conta), com `evals compare` sem piora nos hard gates.
-- [ ] Guard de FallbackLLM nas chamadas movidas para `enrich` (mesmos `isinstance`/`try`).
-- [ ] Saves antigos carregam (`sheet_status` default `full`).
+- [x] Guard de FallbackLLM nas chamadas movidas para `enrich` (ficha `id == "fallback"` conta como falha; o replan herda o guard do planner).
+- [x] Saves antigos carregam (`sheet_status` ausente = ficha completa; nunca pendente).
 - [ ] Revisão independente (Sol) da topologia e da continuidade de NPC.
 
 ## 6. Smoke test com LLM real
@@ -165,3 +165,30 @@ stub responde coerente no turno seguinte; plano novo aparece no turno após a tr
 - **D3 — Digest do dia:** **`inline` no prompt do narrador** (alternativa: paralelizar `narrate_day` com o pack —
   mantém a chamada e o custo).
 - **D4 — Política do arquivista:** **`legacy` + shadow na main; `lean` no staging após `compare` sem piora**.
+
+## 9. Histórico de mudanças
+
+- **2026-10-25 — implementação (executor).** Desvios e decisões de desenho em relação ao texto acima:
+  - **Marca `archive_low`** (campo transitório de `GameState`, não persistido): os emissores (conversa de NPC sem
+    consequência, loot barato, viagem na mesma região) marcam o turno como de baixo valor e `_should_archive`
+    `lean` a lê; só vale no próprio turno e **só é escrita quando `lean`/shadow está ligado** (paridade R7).
+    A política não tem como saber o "motivo" do `archive_due` de outro modo; o plano falava em
+    `memory_fact_policy`, que o `npc_actor` põe em toda conversa.
+  - **Fila de memória de NPC** (`pending_npc_memory`): com `RPG_NPC_TWO_PHASE=on` o `npc_actor` só enfileira;
+    entrada nova (sem `attempts`) é gravada pelo arquivista no mesmo turno, falha ganha `attempts` e espera a
+    janela de retry (turno % 3). Em `lean` a drenagem roda mesmo quando o SMART é pulado
+    (`_drain_npc_memory`, extraída de `_archive_node`).
+  - **Digest inline (R3):** em vez do bloco `<MUNDO_PERCEBIDO>` (que traz só estado local/crises), os fatos do
+    dia entram como nota `[ECOS DO MUNDO]` em *Eventos do turno* (`FATO:`/`BOATO:` de template, boato só como
+    boato). Sem chamada FAST; `memory_fact_policy`/marcos seguem pelo caminho determinístico.
+  - **Replan (R4):** `campaign_manager` fica no grafo; `turn_prepare` só passa por ele sem plano. O `enrich`
+    replaneja com a mesma regra (`_should_replan`) e não replaneja em combate ativo nem com `game_over`/morte
+    pendente; a correção "beat em inglês" usa FAST.
+  - **Ficha em duas fases (R1):** o stub reaproveita a cauda de `_with_new_npc` (relação inicial, vínculo de
+    local, traits seeded); a completa mantém nome, papel (se inferido), id e todo o estado dinâmico do stub.
+    Falha = `id == "fallback"` ou nenhuma entrada nova; `sheet_attempts` ≤ 3 e o invariante de playtest
+    `npc.sheet_stub_streak` avisa quando desiste. O NPC do elenco do pool (sem LLM) nasce completo.
+  - **Flags no staging:** as 5 flags entram em `OPTIONAL_FLAGS`/`WORLD_FLAGS` de `scripts/staging/vercel_env.py`
+    com validação de valores por flag (`WORLD_FLAG_VALUES`).
+  - **Não feito aqui:** medição em staging (§6) e `evals compare` de `memory_context.jsonl` (exigem a corrida
+    `lean`; nenhum dataset/expected foi tocado). `EVAL_AUTHORING_REQUIRED` continua `false`.

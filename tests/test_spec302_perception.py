@@ -133,6 +133,7 @@ class _CountingLLM:
 def test_narrator_called_at_most_once_and_only_when_day_turned(monkeypatch):
     from agents import storyteller
 
+    monkeypatch.setenv("RPG_DAY_DIGEST", "llm")  # SPEC-318: modo legado com a chamada FAST
     _CountingLLM.calls = 0
     monkeypatch.setattr(wsim, "get_llm", lambda **kw: _CountingLLM())
     st = _state()
@@ -210,6 +211,7 @@ def _rest_state(period="Noite"):
 def test_integration_rest_turning_day_narrates_once_and_records_news(monkeypatch):
     from main import app
 
+    monkeypatch.setenv("RPG_DAY_DIGEST", "llm")  # SPEC-318: modo legado com a chamada FAST
     item = _item("fome.sinal.preco", region="nova_arcadia", loc="nova_arcadia")
     _CountingLLM.calls = 0
     monkeypatch.setattr(we, "advance_days", _stub_tick(1, item))

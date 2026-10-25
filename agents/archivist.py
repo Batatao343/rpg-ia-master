@@ -14,6 +14,7 @@ from llm_setup import ModelTier, get_llm
 from observability.telemetry import log_event as _log_event
 from rag import add_memory_to_session, add_npc_memory
 from services import conflict_summary as conflict_summary_service
+from services import latency_flags
 from services.chronicle import append_entry
 from services.context_builder import render_event
 from services.event_processor import process_pending_events
@@ -240,7 +241,7 @@ def _rejection_identity(row) -> tuple:
     )
 
 
-def _should_archive(state: GameState, turn: int) -> bool:
+def _should_archive_legacy(state: GameState, turn: int) -> bool:
     """
     Cadência do arquivista: só roda o LLM em EVENTO RELEVANTE (flag archive_due, setada por
     combate/viagem/descanso/NPC/loot) OU a cada ~10 turnos. Exploração trivial não dispara.
@@ -258,6 +259,40 @@ def _should_archive(state: GameState, turn: int) -> bool:
         return True
     last = int(state.get("archivist_last_run", 0) or 0)
     return (turn - last) >= _ARCHIVE_EVERY
+
+
+def _lean_keeps(state: GameState, turn: int) -> bool:
+    """SPEC-318 R5: o que a política `lean` MANTÉM do gate legado. Conversa de NPC sem fato
+    memorável, loot barato e viagem na mesma região chegam com `archive_low == turno` (marca
+    posta pelo emissor, só vale no próprio turno) e deixam de pagar o SMART. A fila de memória
+    de NPC não é gatilho: o `_drain_npc_memory` roda mesmo quando o LLM é pulado."""
+    if state.get("conflict_summary") or state.get("memory_canonical_facts"):
+        return True
+    if state.get("archive_due") and state.get("archive_low") != turn:
+        return True
+    if state.get("pending_memory_facts") and int(turn) % _VECTOR_RETRY_EVERY == 0:
+        return True
+    last = int(state.get("archivist_last_run", 0) or 0)
+    return (turn - last) >= _ARCHIVE_EVERY
+
+
+def _should_archive(state: GameState, turn: int, policy: str | None = None) -> bool:
+    legacy = _should_archive_legacy(state, turn)
+    policy = policy or latency_flags.archive_policy()
+    if not legacy:
+        return False
+    if policy == "lean":
+        keep = _lean_keeps(state, turn)
+        if not keep:
+            from observability import latency as _lat
+
+            _lat.bump("archive_skipped_by_policy")
+        return keep
+    if latency_flags.archive_policy_shadow():
+        _log_event(
+            "archivist", "lean_shadow", level="info", would_skip=not _lean_keeps(state, turn)
+        )
+    return True
 
 
 def _validate_derived(
@@ -397,6 +432,152 @@ def run_derived_projection(state: GameState, plan: dict) -> dict:
     return result
 
 
+def _drain_npc_memory(
+    state: GameState,
+    game_id,
+    turn,
+    memory_facts,
+    memory_promotions,
+    pending_memory_facts,
+    event_updates: dict,
+):
+    """Retry/drenagem operation-scoped da memória vetorial de NPC (SPEC-318: extraída para
+    rodar também quando a política `lean` pula o LLM do arquivista).
+
+    Devolve (event_updates, memory_facts, memory_promotions, remaining_npc_memory,
+    npc_retry_committed)."""
+    # Retry operation-scoped da memória vetorial de NPC. Cada sucesso sai da
+    # fila imediatamente; falhas permanecem sem que uma interação nova ou um
+    # persist([]) global possa mascará-las.
+    pending_npc_memory = normalize_pending_npc_memory(state.get("pending_npc_memory"))
+    npc_retry_committed = False
+    remaining_npc_memory: list = []
+    # SPEC-318 R2: com a escrita fora do no de NPC, a entrada NUNCA tentada (sem `attempts`)
+    # grava ja neste turno; so as que falharam esperam a janela de retry.
+    deferred_mode = latency_flags.two_phase_on()
+    fresh_npc_memory = deferred_mode and any(not w.get("attempts") for w in pending_npc_memory)
+    if pending_npc_memory and int(turn) % _VECTOR_RETRY_EVERY != 0 and not fresh_npc_memory:
+        remaining_npc_memory = list(pending_npc_memory)  # fora da janela de retry
+    elif pending_npc_memory:
+        remaining_npc_memory = []
+        committed_npc_records = []
+        retry_window = int(turn) % _VECTOR_RETRY_EVERY == 0
+        for write in pending_npc_memory:
+            if deferred_mode and write.get("attempts") and not retry_window:
+                remaining_npc_memory.append(write)  # ja falhou antes: aguarda a janela
+                continue
+            try:
+                npc_records = [
+                    make_memory_fact(
+                        fact,
+                        provenance="npc_claim",
+                        source_id=f"npc:{write['npc_id']}",
+                        source_turn=int(turn),
+                        canonical_entity_ids=[write["npc_id"]],
+                    )
+                    for fact in write["facts"]
+                ]
+                parameters = inspect.signature(add_npc_memory).parameters.values()
+                accepts_metadata = any(
+                    parameter.name == "metadatas" or parameter.kind == inspect.Parameter.VAR_KEYWORD
+                    for parameter in parameters
+                )
+                if accepts_metadata:
+                    ok = (
+                        add_npc_memory(
+                            game_id,
+                            write["npc_id"],
+                            list(write["facts"]),
+                            metadatas=[memory_metadata(record) for record in npc_records],
+                        )
+                        is not False
+                    )
+                else:
+                    ok = (
+                        add_npc_memory(
+                            game_id,
+                            write["npc_id"],
+                            list(write["facts"]),
+                        )
+                        is not False
+                    )
+            except Exception as exc:
+                _log_event(
+                    "archivist",
+                    "npc_memory_retry_failed",
+                    level="warning",
+                    error=type(exc).__name__,
+                )
+                ok = False
+            if not ok:
+                remaining_npc_memory.append(
+                    {**write, "attempts": int(write.get("attempts") or 0) + 1}
+                    if deferred_mode
+                    else write
+                )
+            else:
+                committed_npc_records.extend(npc_records)
+        if committed_npc_records:
+            memory_facts, promoted = commit_memory_facts(
+                memory_facts,
+                committed_npc_records,
+            )
+            if promoted:
+                memory_promotions = bounded_audit_rows(
+                    [
+                        *memory_promotions,
+                        {"turn": int(turn), "count": promoted, "reason": "canonical_source"},
+                    ],
+                    limit=MAX_MEMORY_PROMOTIONS,
+                )
+        event_updates = {
+            **event_updates,
+            "pending_npc_memory": remaining_npc_memory,
+            "memory_facts": memory_facts,
+            "memory_promotions": memory_promotions,
+        }
+        if remaining_npc_memory:
+            waiting_ids = ", ".join(
+                dict.fromkeys(write["npc_id"] for write in remaining_npc_memory)
+            )
+            event_updates["rag_persistence_error"] = (
+                event_updates.get("rag_persistence_error")
+                or state.get("rag_persistence_error")
+                or f"Falha ao persistir memória de {waiting_ids}."
+            )
+        else:
+            npc_retry_committed = True
+            if not pending_memory_facts:
+                event_updates["rag_persistence_error"] = None
+    return (
+        event_updates,
+        memory_facts,
+        memory_promotions,
+        remaining_npc_memory,
+        npc_retry_committed,
+    )
+
+
+def _lean_skip_updates(state: GameState, game_id, turn) -> dict:
+    """SPEC-318 R5: o gate `lean` pulou o LLM do arquivista. A fila de memória de NPC ainda é
+    drenada (barato: embedding, sem LLM) e a política transitória do turno é descartada."""
+    out: dict = {}
+    if state.get("memory_fact_policy"):
+        out["memory_fact_policy"] = None
+    if state.get("pending_npc_memory") and latency_flags.two_phase_on():
+        drained, *_rest = _drain_npc_memory(
+            state,
+            game_id,
+            turn,
+            normalize_memory_facts(state.get("memory_facts")),
+            bounded_audit_rows(state.get("memory_promotions"), limit=MAX_MEMORY_PROMOTIONS),
+            normalize_memory_facts(state.get("pending_memory_facts"), pending=True),
+            {},
+        )
+        out.update(drained)
+    return out
+
+
 def _archive_node(
     state: GameState, *, event_updates: dict | None = None, baseline: dict | None = None
 ):
@@ -435,6 +616,7 @@ def _archive_node(
         and str(event["event_id"]) not in prior_event_ids
     ]
     if not _should_archive(effective_state, turn):
+        skip_extra = _lean_skip_updates(state, game_id, turn)
         if new_events:
             # O event_log já é durável e canônico. Não força uma chamada SMART
             # fora da cadência: agenda a cópia derivada para o índice no próximo
@@ -471,8 +653,13 @@ def _archive_node(
                     state.get("memory_promotions"),
                     limit=MAX_MEMORY_PROMOTIONS,
                 ),
+                **skip_extra,
             }
-        return {"archive_due": False, **event_updates}  # turno trivial: pula o LLM do arquivista
+        return {
+            "archive_due": False,
+            **event_updates,
+            **skip_extra,
+        }  # turno trivial: pula o LLM do arquivista
 
     # Retry global ocorre antes de produzir candidatos novos. O ledger só muda
     # depois do write físico; uma falha deixa exatamente os mesmos IDs pendentes.
@@ -539,97 +726,21 @@ def _archive_node(
         }
         effective_state = {**state, **event_updates}
 
-    # Retry operation-scoped da memória vetorial de NPC. Cada sucesso sai da
-    # fila imediatamente; falhas permanecem sem que uma interação nova ou um
-    # persist([]) global possa mascará-las.
-    pending_npc_memory = normalize_pending_npc_memory(state.get("pending_npc_memory"))
-    npc_retry_committed = False
-    remaining_npc_memory: list = []
-    if pending_npc_memory and int(turn) % _VECTOR_RETRY_EVERY != 0:
-        remaining_npc_memory = list(pending_npc_memory)  # fora da janela de retry
-    elif pending_npc_memory:
-        remaining_npc_memory = []
-        committed_npc_records = []
-        for write in pending_npc_memory:
-            try:
-                npc_records = [
-                    make_memory_fact(
-                        fact,
-                        provenance="npc_claim",
-                        source_id=f"npc:{write['npc_id']}",
-                        source_turn=int(turn),
-                        canonical_entity_ids=[write["npc_id"]],
-                    )
-                    for fact in write["facts"]
-                ]
-                parameters = inspect.signature(add_npc_memory).parameters.values()
-                accepts_metadata = any(
-                    parameter.name == "metadatas" or parameter.kind == inspect.Parameter.VAR_KEYWORD
-                    for parameter in parameters
-                )
-                if accepts_metadata:
-                    ok = (
-                        add_npc_memory(
-                            game_id,
-                            write["npc_id"],
-                            list(write["facts"]),
-                            metadatas=[memory_metadata(record) for record in npc_records],
-                        )
-                        is not False
-                    )
-                else:
-                    ok = (
-                        add_npc_memory(
-                            game_id,
-                            write["npc_id"],
-                            list(write["facts"]),
-                        )
-                        is not False
-                    )
-            except Exception as exc:
-                _log_event(
-                    "archivist",
-                    "npc_memory_retry_failed",
-                    level="warning",
-                    error=type(exc).__name__,
-                )
-                ok = False
-            if not ok:
-                remaining_npc_memory.append(write)
-            else:
-                committed_npc_records.extend(npc_records)
-        if committed_npc_records:
-            memory_facts, promoted = commit_memory_facts(
-                memory_facts,
-                committed_npc_records,
-            )
-            if promoted:
-                memory_promotions = bounded_audit_rows(
-                    [
-                        *memory_promotions,
-                        {"turn": int(turn), "count": promoted, "reason": "canonical_source"},
-                    ],
-                    limit=MAX_MEMORY_PROMOTIONS,
-                )
-        event_updates = {
-            **event_updates,
-            "pending_npc_memory": remaining_npc_memory,
-            "memory_facts": memory_facts,
-            "memory_promotions": memory_promotions,
-        }
-        if remaining_npc_memory:
-            waiting_ids = ", ".join(
-                dict.fromkeys(write["npc_id"] for write in remaining_npc_memory)
-            )
-            event_updates["rag_persistence_error"] = (
-                event_updates.get("rag_persistence_error")
-                or state.get("rag_persistence_error")
-                or f"Falha ao persistir memória de {waiting_ids}."
-            )
-        else:
-            npc_retry_committed = True
-            if not pending_memory_facts:
-                event_updates["rag_persistence_error"] = None
+    (
+        event_updates,
+        memory_facts,
+        memory_promotions,
+        remaining_npc_memory,
+        npc_retry_committed,
+    ) = _drain_npc_memory(
+        state,
+        game_id,
+        turn,
+        memory_facts,
+        memory_promotions,
+        pending_memory_facts,
+        event_updates,
+    )
 
     from services.memory_summary import compact_summary
 
@@ -915,7 +1026,9 @@ def _archive_node(
             summary = (
                 current_summary
                 if suppress_free_facts and not conflict_summary
-                else _extract_summary_plain(llm, context_msgs, current_summary)
+                else _extract_summary_plain(
+                    get_llm(temperature=0.3, tier=ModelTier.FAST), context_msgs, current_summary
+                )
             )
             rag_ok = persist_records(authoritative_records) and not pending_memory_facts
             grounded_summary, summary_rejections = sanitize_location_grounding(summary)

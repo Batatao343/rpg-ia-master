@@ -19,7 +19,7 @@ from gamedata import get_location
 from llm_setup import ModelTier, get_llm
 from observability.telemetry import log_event as _log_event
 from services import conflict_summary as conflict_summary_service
-from services import economy, prose_guard
+from services import economy, latency_flags, prose_guard
 from services.turn_outcome import record_gain
 from state import GameState
 
@@ -282,6 +282,18 @@ def _rumor_cache_find(state, player: dict, world: dict, loc: dict, text: str) ->
         return None
 
 
+_LEAN_TRADE_GOLD = 50  # SPEC-318 R5: so transacao >= 50 ouro (ou item unico) pede arquivista
+
+
+def _turn_of(world: dict) -> int:
+    return int((world or {}).get("turn_count", 0) or 0)
+
+
+def _low(world: dict) -> dict:
+    """SPEC-318 R5: marca `archive_low` so quando a politica `lean`/shadow vai le-la."""
+    return {"archive_low": _turn_of(world)} if latency_flags.archive_low_wanted() else {}
+
+
 def loot_node(state: GameState):
     player = dict(state["player"])
     player["inventory"] = list(player.get("inventory", []))
@@ -370,6 +382,7 @@ def loot_node(state: GameState):
                 "world": world,
                 "loot_source": None,
                 "archive_due": True,
+                **_low(world),  # SPEC-318 R5: recusa nao e memoria
                 "last_economy_action": public_action,
             }
 
@@ -420,6 +433,8 @@ def loot_node(state: GameState):
             result["pending_world_events"] = (
                 state.get("pending_world_events", []) or []
             ) + outcome["pending_events"]
+        if abs(delta) < _LEAN_TRADE_GOLD and not outcome.get("pending_events"):
+            result.update(_low(world))  # SPEC-318 R5: compra barata, sem unico
         return result
 
     # =========================================================
@@ -503,6 +518,8 @@ def loot_node(state: GameState):
     }
     if conflict_summary:
         result["conflict_summary"] = conflict_summary
+    elif not unique_events:
+        result.update(_low(world))  # SPEC-318 R5: achado comum, sem unico
     _bl = record_gain(state.get("turn_baseline"), "gold", int(roll["gold"]), "loot")  # SPEC-226 R10
     if _bl is not state.get("turn_baseline"):
         result["turn_baseline"] = _bl

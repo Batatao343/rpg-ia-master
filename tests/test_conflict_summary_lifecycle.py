@@ -217,11 +217,12 @@ def test_grafo_real_consume_combate_loot_e_summary_no_mesmo_invoke(monkeypatch):
 
     node_names = [name for name, _update in node_updates]
     assert node_names[:2] == ["action_guard", "turn_prepare"]
-    assert set(node_names[2:4]) == {"campaign_manager", "dm_router"}
+    # SPEC-318: plano ja existe -> o replan nao fica na frente do router; `enrich` fecha o turno
+    assert node_names[2:4] == ["dm_router", "dispatch"]
     assert node_names[4:] == [
-        "dispatch",
         "combat_agent",
         "loot_agent",
+        "enrich",
         "archivist",
         "turn_finalizer",
     ]
@@ -485,6 +486,7 @@ def test_archivist_nao_confirma_retry_vazio_nem_apaga_erro_previo(monkeypatch):
 
 
 def test_archivist_retry_npc_falha_depois_confirma_e_limpa(monkeypatch):
+    monkeypatch.setenv("RPG_NPC_TWO_PHASE", "off")  # contrato legado da fila (sem `attempts`)
     succeeds = False
     attempts = []
 

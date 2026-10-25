@@ -3,6 +3,7 @@
 import random
 from types import SimpleNamespace
 
+import pytest
 from langchain_core.messages import AIMessage, HumanMessage
 
 import gamedata
@@ -309,6 +310,12 @@ def _dialogue_state():
         "faction_intel": {},
         "quests": [],
     }
+
+
+@pytest.fixture(autouse=True)
+def _legacy_npc_memory(monkeypatch):
+    """SPEC-318: estes testes cobrem a escrita direta (legado); a fila diferida tem testes proprios."""
+    monkeypatch.setenv("RPG_NPC_TWO_PHASE", "off")
 
 
 def test_npc_dialogue_marks_memory_as_canonical_only(monkeypatch):

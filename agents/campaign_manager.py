@@ -233,7 +233,9 @@ def _build_plan(state: GameState, _info: dict | None = None) -> CampaignPlan:
     from services.secret_signatures import looks_english, sanitize_beat
 
     def _invoke(reforco: str = ""):
-        structured = planner_llm.with_structured_output(CampaignPlanModel)
+        # SPEC-318 R4: o reforco de idioma e uma correcao curta -> tier FAST
+        llm_ = get_llm(temperature=0.4, tier=ModelTier.FAST) if reforco else planner_llm
+        structured = llm_.with_structured_output(CampaignPlanModel)
         msgs = [system_msg, human_msg]
         if reforco:
             msgs.append(SystemMessage(content=reforco))
@@ -411,3 +413,43 @@ def _campaign_manager_node(state: GameState):
             location=world.get("current_location", ""),
         )
     return updated_state
+
+
+def needs_inline_plan(state: GameState) -> bool:
+    """SPEC-318 R4: sem plano nenhum (1o turno) o narrador precisa dele ja; qualquer outro
+    replan espera a entrega (no `enrich`)."""
+    return not state.get("campaign_plan")
+
+
+def replan_after_delivery(state: GameState) -> dict:
+    """SPEC-318 R4: replan do arco DEPOIS da narracao (nó `enrich`), para o proximo turno.
+    Devolve so os campos do plano (`campaign_plan`, `needs_replan`, `chronicle`); `{}` se nada
+    a fazer. Mesma regra e mesmo planejador do nó legado."""
+    world = dict(state.get("world", {}))
+    if (state.get("combat") or {}).get("active") or not _should_replan(state):
+        return {}
+    _log_event("campaign", "generating_plot", level="info")
+    info: dict = {}
+    reason = _replan_reason(state)
+    new_plan = _build_plan(state, info)
+    _log_event(
+        "campaign",
+        "replan",
+        level="info",
+        reason=reason,
+        outcome=info.get("outcome", "llm" if new_plan else "previous_kept"),
+        deferred=True,
+    )
+    if new_plan is None:
+        return {"needs_replan": True}
+    out: dict = {"campaign_plan": new_plan, "needs_replan": False}
+    new_title = (new_plan.get("arc_title") or "").strip()
+    old_title = (state.get("campaign_plan") or {}).get("arc_title", "")
+    if new_title and new_title != old_title:
+        out["chronicle"] = open_chapter(
+            state.get("chronicle") or [],
+            title=new_title,
+            turn=world.get("turn_count", 0),
+            location=world.get("current_location", ""),
+        )
+    return out

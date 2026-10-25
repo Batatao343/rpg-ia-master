@@ -81,7 +81,8 @@ def test_grafo_npc_actor_liga_no_storyteller():
     edges = g.get_graph().edges
     pares = {(e.source, e.target) for e in edges}
     assert ("npc_actor", "storyteller") in pares
-    assert ("npc_actor", "archivist") in pares
+    assert ("npc_actor", "enrich") in pares  # SPEC-318: enrich -> archivist
+    assert ("enrich", "archivist") in pares
 
 
 # --- R4: pergunta de missão usa o beat --------------------------------------

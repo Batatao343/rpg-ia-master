@@ -24,13 +24,15 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 # --- IMPORTAÇÃO DOS ESTADOS E AGENTES ---
 from agents.action_guard import action_guard_node
 from agents.archivist import archive_node  # <--- NOVO
-from agents.campaign_manager import campaign_manager_node
+from agents.campaign_manager import campaign_manager_node, needs_inline_plan
 from agents.combat import combat_node
+from agents.enrich import enrich_node
 from agents.loot import loot_node
 from agents.npc import npc_actor_node
 from agents.storyteller import storyteller_node
 from agents.turn_finalizer import turn_finalizer_node
 from observability.telemetry import with_node
+from services import latency_flags
 from services.turn_pipeline import dispatch_node, route_intent_node, turn_prepare_node
 from state import GameState
 
@@ -49,6 +51,7 @@ def build_game_graph():
     workflow.add_node("combat_agent", with_node("combat_agent", combat_node))
     workflow.add_node("npc_actor", with_node("npc_actor", npc_actor_node))
     workflow.add_node("loot_agent", with_node("loot_agent", loot_node))
+    workflow.add_node("enrich", with_node("enrich", enrich_node))  # SPEC-318 R6
     workflow.add_node("archivist", with_node("archivist", archive_node))  # <--- NOVO
     workflow.add_node("action_guard", with_node("action_guard", action_guard_node))
     workflow.add_node("turn_finalizer", with_node("turn_finalizer", turn_finalizer_node))
@@ -95,7 +98,17 @@ def build_game_graph():
         workflow.add_edge("turn_prepare", "dm_router")
         workflow.add_edge(["campaign_manager", "dm_router"], "dispatch")
     else:
-        workflow.add_edge("turn_prepare", "campaign_manager")
+        # SPEC-318 R4: com `RPG_REPLAN_AFTER=on` so o 1o plano (sem plano nenhum) corre antes
+        # do router; os demais replans rodam no `enrich`, depois da entrega.
+        workflow.add_conditional_edges(
+            "turn_prepare",
+            lambda s: (
+                "campaign_manager"
+                if not latency_flags.replan_after_on() or needs_inline_plan(s)
+                else "dm_router"
+            ),
+            {"campaign_manager": "campaign_manager", "dm_router": "dm_router"},
+        )
         workflow.add_edge("campaign_manager", "dm_router")
         workflow.add_edge("dm_router", "dispatch")
 
@@ -114,23 +127,23 @@ def build_game_graph():
 
     # 4. Encerramento com Arquivamento
     # Todo fim de turno passa pelo arquivista para atualizar memórias
-    workflow.add_edge("loot_agent", "archivist")
+    workflow.add_edge("loot_agent", "enrich")
 
     # spec npc-fallback-sem-alvo (R2): sem interlocutor, o npc_actor delega ao
     # storyteller (narra a ausência + gancho) em vez de "Ninguém responde.".
     # Caso normal (conversou) segue direto para o arquivista.
     workflow.add_conditional_edges(
         "npc_actor",
-        lambda s: "storyteller" if s.get("next") == "storyteller" else "archivist",
-        {"storyteller": "storyteller", "archivist": "archivist"},
+        lambda s: "storyteller" if s.get("next") == "storyteller" else "enrich",
+        {"storyteller": "storyteller", "enrich": "enrich"},
     )
 
     # Storyteller pode disparar um ENCONTRO (mundo perigoso/dominado/ameaçado) → combate.
     # Caso contrário, segue para o arquivista normalmente.
     workflow.add_conditional_edges(
         "storyteller",
-        lambda s: "combat_agent" if s.get("next") == "combat_agent" else "archivist",
-        {"combat_agent": "combat_agent", "archivist": "archivist"},
+        lambda s: "combat_agent" if s.get("next") == "combat_agent" else "enrich",
+        {"combat_agent": "combat_agent", "enrich": "enrich"},
     )
 
     # Combate: ao vencer, o nó sinaliza next="loot" para gerar espólio.
@@ -142,15 +155,16 @@ def build_game_graph():
             if (state.get("combat_simulation") or {}).get("enabled")
             else "loot_agent"
             if state.get("next") == "loot"
-            else "archivist"
+            else "enrich"
         ),
         {
             "loot_agent": "loot_agent",
-            "archivist": "archivist",
+            "enrich": "enrich",
             "__end__": END,
         },
     )
 
+    workflow.add_edge("enrich", "archivist")
     workflow.add_edge("archivist", "turn_finalizer")
     workflow.add_edge("turn_finalizer", END)
 

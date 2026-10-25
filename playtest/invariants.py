@@ -1612,6 +1612,28 @@ def check_unproven_event(state: dict, prev: dict | None, turn: int) -> list[Viol
     return out
 
 
+def check_sheet_stub_streak(state: dict, prev: dict | None, turn: int) -> list[Violation]:
+    """SPEC-318 R1: NPC que seguiu em ficha provisoria apos 3 tentativas da completa (o `enrich`
+    desistiu). Warning: o jogo segue, mas a ficha completa nunca chegou."""
+    out: list[Violation] = []
+    for key, npc in (state.get("npcs") or {}).items():
+        if (
+            isinstance(npc, dict)
+            and npc.get("sheet_status") == "stub"
+            and int(npc.get("sheet_attempts", 0) or 0) >= 3
+        ):
+            out.append(
+                _V(
+                    "npc.sheet_stub_streak",
+                    "warning",
+                    turn,
+                    f"NPC '{key}' segue com ficha provisória após 3 tentativas",
+                    npc=str(key),
+                )
+            )
+    return out
+
+
 def check_phantom_ally(state: dict, prev: dict | None, turn: int) -> list[Violation]:
     """spec aliados-em-combate (R5): nome de aliado CITADO na narração de combate
     sem combatente correspondente do lado herói = aliado fantasma (a lacuna que
@@ -2734,6 +2756,7 @@ CHECKS: list[Check] = [
     check_lore_quests,
     check_calendar,
     check_npc_world,
+    check_sheet_stub_streak,
 ]
 
 

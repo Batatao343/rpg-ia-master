@@ -294,6 +294,15 @@ def unbind(token: contextvars.Token) -> None:
         pass
 
 
+def bump(key: str, n: int = 1) -> None:
+    """Soma ``n`` (contagem) em ``extra[key]``. No-op sem timeline (SPEC-318 R8)."""
+    timeline = _current.get()
+    if timeline is None:
+        return
+    with timeline._lock:
+        timeline.extra[key] = int(timeline.extra.get(key, 0)) + int(n)
+
+
 @contextmanager
 def accumulate(key: str) -> Iterator[None]:
     """Soma o tempo do bloco em ``extra[key]`` (ms). No-op sem timeline."""

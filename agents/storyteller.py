@@ -16,8 +16,8 @@ from observability.telemetry import log_event as _log_event
 from rag import query_rag
 from services import discovery as disc
 from services import graph_resolver as gr
+from services import latency_flags, quest_log
 from services import law as _law_mod
-from services import quest_log
 from services.context_builder import build_context_pack
 from services.lore_query import compose_lore_query
 from services.prompt_guard import PLAYER_INPUT_RULE, guard_messages
@@ -621,6 +621,7 @@ def _with_new_npc(
     pool_used_out: list | None = None,
     player_inputs: tuple = (),
     state: dict | None = None,
+    stub_only: bool = False,
 ) -> dict[str, dict]:
     from services import npc_layers, npc_world
     from services.entity_identity import find_runtime_npc_key
@@ -663,6 +664,9 @@ def _with_new_npc(
         if pool_used_out is not None:
             pool_used_out.append(pool_entry.entry_id)
         log_event("pool", "cast_used", entry_id=pool_entry.entry_id)
+    elif stub_only:
+        # SPEC-318 R1: ficha provisoria deterministica (sem LLM/RAG); o no `enrich` completa.
+        tpl = stub_npc_template(new_name, narrative_text)
     elif _pool_enabled():
         # R7: com o pool ligado a cena narrada NÃO entra no prompt de geração.
         tpl = generate_new_npc(
@@ -724,8 +728,67 @@ def _with_new_npc(
     novo["last_seen_turn"] = turn
     # spec npcs-3-camadas: quem a cena introduziu está EM cena e é conhecido.
     novo = npc_layers.ensure_npc_fields(novo, game_id, home_location_id=home_id, in_scene=True)
+    if tpl.get("sheet_status") == "stub":
+        novo["sheet_status"] = "stub"
     new_npcs[str(novo.get("name") or new_name)] = novo
     return new_npcs
+
+
+_ROLE_HINTS = (
+    ("estalajadeir", "Estalajadeiro"),
+    ("taverneir", "Taverneiro"),
+    ("mercador", "Mercador"),
+    ("comerciante", "Comerciante"),
+    ("ferreir", "Ferreiro"),
+    ("sacerdot", "Sacerdote"),
+    ("curandeir", "Curandeiro"),
+    ("guarda", "Guarda"),
+    ("soldado", "Soldado"),
+    ("capit", "Capitão"),
+    ("caçador", "Caçador"),
+    ("cacador", "Caçador"),
+    ("bardo", "Bardo"),
+    ("escriba", "Escriba"),
+    ("monge", "Monge"),
+    ("viajante", "Viajante"),
+    ("mendig", "Mendigo"),
+    ("ladr", "Ladrão"),
+    ("barqueir", "Barqueiro"),
+)
+
+
+def _infer_role(name: str, text: str) -> str:
+    """Papel pelo trecho da narracao ja exibida que cita o nome (regex/palavra-chave; sem LLM)."""
+    lowered_name = str(name or "").lower().strip()
+    if not lowered_name:
+        return "Desconhecido"
+    for sentence in re.split(r"(?<=[.!?\n])\s+", str(text or "")):
+        low = sentence.lower()
+        if lowered_name not in low:
+            continue
+        for key, role in _ROLE_HINTS:
+            if key in low:
+                return role
+    return "Desconhecido"
+
+
+def stub_npc_template(name: str, narrative_text: str) -> dict:
+    """SPEC-318 R1: nome + papel inferido do TEXTO JA NARRADO + persona neutra. Nada que o
+    jogador nao tenha visto (regra de ouro): traits ocultos vem do seed no `ensure_npc_fields`."""
+    from agents.npc import _materialize_npc_combat_sheet
+    from services.prompt_guard import sanitize_entity_name
+
+    clean = sanitize_entity_name(name) or "Desconhecido"
+    return _materialize_npc_combat_sheet(
+        {
+            "name": clean,
+            "id": f"npc_{clean.lower().replace(' ', '_')}",
+            "role": _infer_role(clean, narrative_text),
+            "persona": "Pouco se sabe ainda sobre esta pessoa; reaja ao que a cena já mostrou.",
+            "attributes": {"str": 10, "dex": 10, "con": 10, "int": 10, "wis": 10, "cha": 10},
+            "sheet_status": "stub",
+        }
+    )
 
 
 def _cal_of(state: dict) -> dict | None:
@@ -873,10 +936,31 @@ def _apply_proposed_rumors(state, updates: dict, update, turn: int, quarantined:
         log_fallback("storyteller", "proposed_rumor_failed", exc)
 
 
+def _same_region_travel(state: dict, world: dict) -> bool:
+    from agents.campaign_manager import _same_region
+
+    before = str((state.get("world") or {}).get("current_location") or "")
+    after = str((world or {}).get("current_location") or "")
+    return bool(before and after) and _same_region(before, after)
+
+
 def _narrate_world(state, world: dict, factions: list, intel: dict, perceived: list) -> str:
     """SPEC-302 R26: no máximo 1 chamada por ação; só com itens percebidos."""
     if not perceived:
         return ""
+    if latency_flags.day_digest_inline():
+        # SPEC-318 R3: sem chamada FAST; os fatos PERCEBIDOS (templates) vao ao prompt do
+        # narrador, que os tece na propria narracao. Marcos/perceived_ids seguem deterministicos.
+        from agents.world_simulator import digest_prompt_lines
+
+        lines = digest_prompt_lines(_perception_state(state, world, factions, intel), perceived)
+        if not lines:
+            return ""
+        return (
+            "[ECOS DO MUNDO] O herói percebeu, enquanto o tempo passava: teça estes fatos na "
+            "narração em 1 a 3 frases, sem listá-los nem acrescentar nomes, números ou "
+            "causas (BOATO só como boato: dizem, contam).\n" + "\n".join(lines)
+        )
     from agents.world_simulator import narrate_day
 
     text = narrate_day(_perception_state(state, world, factions, intel), perceived)
@@ -2126,6 +2210,7 @@ def storyteller_node(state: GameState):
                 pool_used_out=_pool_used_new,
                 player_inputs=_recent_player_inputs,
                 state=state,
+                stub_only=latency_flags.two_phase_on(),
             )
         for gone_name in npcs_left_scene:
             key = next((k for k in new_npcs if k.lower() == str(gone_name).lower()), None)
@@ -2369,6 +2454,18 @@ def storyteller_node(state: GameState):
                 *mediation_rejections,
             ]
         _apply_proposed_rumors(state, updates, update, turn, bool(quarantine_llm_payload))
+        # SPEC-318 R5: viagem dentro da mesma regiao, sem descanso/beat/evento/missao, e baixo valor.
+        if (
+            latency_flags.archive_low_wanted()
+            and dest
+            and rested_player is None
+            and not beat_done
+            and not updates.get("pending_world_events")
+            and "quests" not in updates
+            and "memory_canonical_facts" not in updates
+            and _same_region_travel(state, world)
+        ):
+            updates["archive_low"] = turn
         return updates
 
     except Exception as e:

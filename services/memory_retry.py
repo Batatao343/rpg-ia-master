@@ -42,13 +42,16 @@ def normalize_pending_npc_memory(rows: Iterable | None) -> list[dict]:
             if not fact or identity in seen:
                 continue
             seen.add(identity)
-            normalized.append(
-                {
-                    "operation": "add_npc_memory",
-                    "npc_id": npc_id,
-                    "facts": [fact],
-                }
-            )
+            entry = {
+                "operation": "add_npc_memory",
+                "npc_id": npc_id,
+                "facts": [fact],
+            }
+            attempts = row.get("attempts")
+            # SPEC-318: so aparece depois de uma tentativa falha (formato antigo intacto).
+            if isinstance(attempts, int) and not isinstance(attempts, bool) and attempts > 0:
+                entry["attempts"] = min(attempts, 99)
+            normalized.append(entry)
     return normalized[-MAX_PENDING_NPC_MEMORY:]
 
 

@@ -17,7 +17,7 @@ from pydantic import BaseModel, Field, field_validator
 from llm_setup import ModelTier, get_llm
 from observability.telemetry import log_event as _log_event
 from services import graph_resolver as gr
-from services import quest_log
+from services import latency_flags, quest_log
 from services.ambient import ambient_block
 from services.context_builder import build_context_pack
 from services.input_normalization import optional_entity_ref
@@ -629,6 +629,23 @@ def _submit_generated_npc(data, seed, game_id, name_origin, player_inputs) -> di
         _log_event("npc", "pool_submit_failed", level="warning", error=type(exc).__name__)
     return _materialize_npc_combat_sheet(data)
 
+
+_CHAT_BASE_KEYS = frozenset(
+    {
+        "messages",
+        "npcs",
+        "active_npc_name",
+        "faction_intel",
+        "archive_due",
+        "memory_fact_policy",
+        "pending_npc_memory",
+        "rag_persistence_error",
+        "memory_facts",
+        "memory_promotions",
+        "companion_voice_ack",
+        "social_intent",
+    }
+)
 
 _MISSION_RE = re.compile(
     r"miss|objetiv|quest|o que.*(faç|faz|devo)|para onde|pr[óo]ximo passo|tarefa|rumo"
@@ -1345,7 +1362,12 @@ def npc_actor_node(state: GameState):
         # Memória de longo prazo: vetoriza o fato no índice deste npc (inerte sem chave).
         rag_ok = True
         record = None
-        if RAG_AVAILABLE and game_id and npc_said:
+        # SPEC-318 R2: o embedding sai do no. O fato entra na fila `pending_npc_memory` e o
+        # arquivista (que roda em seguida, `pending_npc_memory` forca o gate) grava o vetor.
+        defer_memory = latency_flags.two_phase_on() and bool(RAG_AVAILABLE and game_id and npc_said)
+        if defer_memory:
+            rag_ok = False
+        elif RAG_AVAILABLE and game_id and npc_said:
             try:
                 record = make_memory_fact(
                     fato,
@@ -1384,7 +1406,9 @@ def npc_actor_node(state: GameState):
                 fato,
             )
         memory_error = state.get("rag_persistence_error")
-        if not rag_ok:
+        if defer_memory:
+            pass  # pendente por desenho (nao e falha); o arquivista limpa ou sinaliza
+        elif not rag_ok:
             memory_error = f"Falha ao persistir memória de {npc_id}."
         elif not pending_npc_memory:
             # Só uma interação bem-sucedida sem backlog pode limpar diretamente.
@@ -1564,6 +1588,18 @@ def npc_actor_node(state: GameState):
                 {"knowledge_links": [*(state.get("knowledge_links") or []), *knowledge_new]},
             )["knowledge_links"]
 
+        # SPEC-318 R5: conversa sem consequência (relação, traço, fação, missão, lei, evento)
+        # é "baixo valor": a política `lean` do arquivista a pula (marca vale só neste turno).
+        _plain_keys = _CHAT_BASE_KEYS | {"archive_low"}
+        if (
+            latency_flags.archive_low_wanted()
+            and not rel_notice
+            and not trait_revelados
+            and intel == ensure_faction_intel(state.get("faction_intel"))
+            and not (set(updates) - _plain_keys)
+            and not _new_notices
+        ):
+            updates["archive_low"] = int(_turn_now or 0)
         return updates
     except Exception as e:
         _log_event("npc", "actor_failed", level="error", error=type(e).__name__)
