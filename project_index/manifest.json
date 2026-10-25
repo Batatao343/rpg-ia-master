@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "80a7e5279a59fd7c2c50c7f9de9538f78bbdf1db",
+  "commit_sha": "bfebdba01b7c63dad6e70351750195b377c09e32",
   "edge_counts": {
-    "calls": 26179,
-    "contains": 912,
-    "defines": 13233,
-    "imports": 2205,
-    "likely_test_for": 1529,
+    "calls": 26748,
+    "contains": 920,
+    "defines": 13401,
+    "imports": 2233,
+    "likely_test_for": 1556,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:a61cad95727dc953f9a53cf271c477689dbce6d7986fd0afbacb73d9d9c0120f",
+  "graph_hash": "sha256:9182bc4474bdeca8456722896b298eafad9cc2b36b9e3515a12595ce62903b2f",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -405,6 +405,7 @@
     "services/restore_effects.py",
     "services/retention.py",
     "services/rule_engine.py",
+    "services/rumor_adoption.py",
     "services/rumors.py",
     "services/secret_signatures.py",
     "services/shard_pricing.py",
@@ -455,6 +456,7 @@
     "tests/spec310_helpers.py",
     "tests/spec312_helpers.py",
     "tests/spec313_helpers.py",
+    "tests/spec315_helpers.py",
     "tests/test_abuse_logging.py",
     "tests/test_abuse_policy.py",
     "tests/test_account_api.py",
@@ -922,6 +924,12 @@
     "tests/test_spec314_no_leak.py",
     "tests/test_spec314_npc_proposals.py",
     "tests/test_spec314_review_fixes.py",
+    "tests/test_spec315_claim.py",
+    "tests/test_spec315_materialize.py",
+    "tests/test_spec315_property.py",
+    "tests/test_spec315_resolution.py",
+    "tests/test_spec315_tiers.py",
+    "tests/test_spec315_truth.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -1114,14 +1122,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 904,
+    "class": 908,
     "endpoint": 64,
-    "file": 1060,
-    "function": 4212,
-    "method": 796,
-    "module": 912,
-    "test": 7320
+    "file": 1068,
+    "function": 4274,
+    "method": 798,
+    "module": 920,
+    "test": 7420
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:634143a95fb3a8a3b93dd7ad4dcfdbe509d451277bb32b3ae3f1935220d9169a"
+  "source_tree_hash": "sha256:f421b03eb4c90a47bc2a8c2fba182b7105af461fd84cfda8f015f7baed216f94"
 }
