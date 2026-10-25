@@ -777,4 +777,8 @@ def materialize_npc(entry: SharedPoolEntry, *, game_id: str, home_location_id: s
         for k in ATTRIBUTE_KEYS
     }
     base["relationship"] = base["initial_relationship"]
+    if entry.seed is not None:  # SPEC-310 R13/D2: motivos atravessam mundos (campo privado)
+        from agents.npc import seed_motives_of
+
+        base["seed_motives"] = seed_motives_of(entry.seed)
     return _materialize_npc_combat_sheet(base)

@@ -572,6 +572,17 @@ def generate_new_npc(
     return data
 
 
+def seed_motives_of(seed) -> dict:
+    """SPEC-310 R13: ids de motivação da semente que viram campo privado da ficha runtime."""
+    return {
+        "desire_id": seed.desire_id,
+        "fear_id": seed.fear_id,
+        "secret_id": seed.secret_id,
+        "contradiction_id": seed.contradiction_id,
+        "mannerism_id": seed.mannerism_id,
+    }
+
+
 def _submit_generated_npc(data, seed, game_id, name_origin, player_inputs) -> dict:
     """SPEC-297 R9: projeta à allowlist, submete em hold e devolve a ficha LOCAL."""
     from services import shared_pool
@@ -585,6 +596,7 @@ def _submit_generated_npc(data, seed, game_id, name_origin, player_inputs) -> di
             origin_region_id=seed.origin_region_id,
             faction_id=seed.faction_id,
             profession_id=seed.profession_id,
+            seed_motives=seed_motives_of(seed),  # SPEC-310 R13 (só ids; fora da allowlist do pool)
         )
     doc = {k: data[k] for k in _POOL_DOC_KEYS if k in data and data[k] is not None}
     try:
@@ -606,6 +618,21 @@ def _submit_generated_npc(data, seed, game_id, name_origin, player_inputs) -> di
 _MISSION_RE = re.compile(
     r"miss|objetiv|quest|o que.*(faç|faz|devo)|para onde|pr[óo]ximo passo|tarefa|rumo"
 )
+
+
+def _npc_self_prompt(state, npc_key, npc_data, npc_id, evidence_ids) -> str:
+    """SPEC-310: blocos `<SOBRE_VOCE>`/`<MOTIVACOES_INTERNAS>`/`<O_QUE_VOCE_SABE>` (vazio = sem linha)."""
+    from services import npc_self
+
+    try:
+        return npc_self.npc_self_blocks(
+            state, str(npc_key), npc_data, pack_evidence_ids=evidence_ids, knowledge_id=npc_id
+        ).text()
+    except Exception as exc:  # defesa extra; o módulo já protege a si mesmo
+        from observability.telemetry import log_fallback
+
+        log_fallback("npc", "self_block_failed", exc)
+        return ""
 
 
 def _mission_hint_block(state: GameState, last_msg: str) -> str:
@@ -1043,6 +1070,11 @@ def npc_actor_node(state: GameState):
     from services import faction_membership as _fm
 
     faction_member_block = _fm.prompt_block(state)  # SPEC-301 R21 (vazio sem vínculo)
+    self_knowledge_block = _npc_self_prompt(
+        pack_state, npc_state_key or npc_name, npc_data, npc_id, pack.evidence_ids
+    )  # SPEC-310
+    if self_knowledge_block:  # bloco vazio não deixa linha em branco
+        self_knowledge_block = chr(10) + self_knowledge_block
 
     system_msg = SystemMessage(
         content=f"""
@@ -1058,7 +1090,7 @@ def npc_actor_node(state: GameState):
             )
             or "—"
         }
-    </ROLE>
+    </ROLE>{self_knowledge_block}
     {atitude_block}
     {companion_block}
 

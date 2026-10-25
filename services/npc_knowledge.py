@@ -28,7 +28,7 @@ import os
 import re
 import unicodedata
 from typing import Any, Dict, List, Optional, Set, Tuple
-from collections.abc import Iterable
+from collections.abc import Collection, Iterable
 
 logger = logging.getLogger("rpg.npc_knowledge")
 
@@ -847,8 +847,16 @@ def knowledge_lines(
     return out
 
 
-def npc_knowledge_block(state: dict, npc_id: str, limit: int = NPC_KNOWLEDGE_CONTEXT_MAX) -> str:
-    lines = [line for _sid, line in knowledge_lines(state, npc_id, limit)]
+def npc_knowledge_block(
+    state: dict,
+    npc_id: str,
+    limit: int | None = None,
+    exclude_ids: Collection[str] = (),
+) -> str:
+    """SPEC-310 R18: `limit=None` = teto da faixa; `exclude_ids` tira o que o pack já injetou."""
+    cap = lines_cap(state, npc_id) if limit is None else int(limit)
+    skip = set(exclude_ids)
+    lines = [line for sid, line in knowledge_lines(state, npc_id, cap) if sid not in skip]
     if not lines:
         return ""
     return "<O_QUE_VOCE_SABE>\n" + "\n".join(lines) + "\n</O_QUE_VOCE_SABE>"
@@ -1002,6 +1010,11 @@ def _lines_cap(state: dict, npc_id: str) -> int:
             NPC_KNOWLEDGE_CONTEXT_MAX  # NPC pré-SPEC-298 (save antigo/fixture): sem teto por faixa
         )
     return min(NPC_KNOWLEDGE_CONTEXT_MAX, knowledge_lines_cap(npc_tier(row["relationship"])))
+
+
+def lines_cap(state: dict, npc_id: str) -> int:
+    """SPEC-310: alias público de `_lines_cap` (teto de linhas pela faixa de relação)."""
+    return _lines_cap(state, npc_id)
 
 
 def context_gate(state: dict, npc_id: str) -> dict | None:

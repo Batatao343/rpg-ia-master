@@ -1,6 +1,6 @@
 # SPEC-310 — O NPC sabe de si (fação, patente, agenda, o que ouviu, motivações)
 
-> **Status:** `approved` (dono 24/10, escopo da proposta R3; decisões D1–D6 abaixo seguem a recomendação até o dono dizer o contrário)
+> **Status:** `in-progress` (implementada 25/10; falta revisão independente + smoke real §6)
 > **Criada:** 2026-10-24 · **Atualizada:** 2026-10-24
 > **Depende de:** SPEC-215 (ledger de conhecimento por NPC), SPEC-297/306 (semente de NPC),
 > SPEC-298 (`<ATITUDE>`, teto de linhas por faixa), SPEC-301 (catálogo de patentes),
@@ -250,14 +250,17 @@ MOTIVES_MAX_CHARS = 450
 KNOWS_MAX_CHARS = 800
 MAX_RELATION_LINES = 2
 
+
 @dataclass(frozen=True)
 class NpcSelfBlocks:
-    sobre_voce: str = ""      # "<SOBRE_VOCE>\n...\n</SOBRE_VOCE>" ou ""
-    motivacoes: str = ""      # "<MOTIVACOES_INTERNAS>\n...\n</MOTIVACOES_INTERNAS>" ou ""
-    o_que_sabe: str = ""      # "<O_QUE_VOCE_SABE>\n...\n</O_QUE_VOCE_SABE>" ou ""
-    def text(self) -> str: ...   # blocos não vazios unidos por "\n"
+    sobre_voce: str = ""  # "<SOBRE_VOCE>\n...\n</SOBRE_VOCE>" ou ""
+    motivacoes: str = ""  # "<MOTIVACOES_INTERNAS>\n...\n</MOTIVACOES_INTERNAS>" ou ""
+    o_que_sabe: str = ""  # "<O_QUE_VOCE_SABE>\n...\n</O_QUE_VOCE_SABE>" ou ""
 
-def mode() -> Literal["on", "off"]: ...                      # RPG_NPC_SELF
+    def text(self) -> str: ...  # blocos não vazios unidos por "\n"
+
+
+def mode() -> Literal["on", "off"]: ...  # RPG_NPC_SELF
 def self_faction(state: dict, npc_key: str, row: dict) -> str: ...
 def self_rank(state: dict, ref: str, row: dict, faction_id: str) -> str: ...
 def agenda_lines(state: dict, npc_key: str, row: dict) -> list[str]: ...
@@ -455,3 +458,15 @@ Staging ou local com DeepSeek, `RPG_WORLD_ENGINE=on`, `RPG_NPC_KNOWLEDGE=on`,
   omitida).
 - **D6 — Kill switch default.** **`RPG_NPC_SELF=on`** (o produto default já roda com
   muita coisa desligada, revisão §1.4). Alternativa: `off` + ligar no staging primeiro.
+
+## 9. Desvios na implementação (25/10)
+
+- `npc_self_blocks` ganhou o kwarg `knowledge_id` (o id que o `npc_actor` usa no ledger); o lint
+  de R15 mora em `services/content_validator.py` (`validate_npc_secret_topics`, rodado por
+  `validate_content.py`), não no script.
+- Frase da identidade sem gênero: "Você serve em X como Sargento." / "Você lidera X." /
+  "Você é membro de X." (em vez de "Sargento da X").
+- `Filhos da Chama Azul` é `secret: true` no catálogo: a linha de guerra contra ela só sai com
+  `faction_intel.known` (R12 aplicado às relações, como pede R11).
+- "Aqui, agora: <rótulo>" repete a linha local do `<MUNDO_PERCEBIDO>` (SPEC-309, audience npc);
+  mantido por R10 (a data de hoje só vem daqui). Unificar fica como follow-up barato.

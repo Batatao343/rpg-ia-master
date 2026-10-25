@@ -204,6 +204,7 @@ EVENTS: dict[str, tuple[str, ...]] = {
     "npc.pool_own_read_failed": ("error",),
     "npc.pool_submit_failed": ("error",),
     "npc.reintroduction_blocked": ("reason",),
+    "npc.self_block": ("chars", "sections", "truncated"),
     "npc.social_failed": ("error",),
     "npc_world.fallback": (),
     "npc_world.tick": (

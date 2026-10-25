@@ -1388,6 +1388,51 @@ def validate_npc_seed_tables(path: str | None = None) -> list[Finding]:
     return findings
 
 
+SECRET_TOPIC_MAX_CHARS = 60
+SECRET_TOPIC_MIN_WORD = 5
+
+
+def _topic_words(text: str) -> set[str]:
+    return {w for w in _norm_seed_label(text).split() if len(w) >= SECRET_TOPIC_MIN_WORD}
+
+
+def lint_secret_topics(topics: dict, secrets: list[dict]) -> list[str]:
+    """SPEC-310 R15: todo segredo tem tópico vago; nunca repete o label nem palavra de >=5 letras."""
+    problems: list[str] = []
+    labels = {str(r.get("id")): str(r.get("label", "")) for r in secrets}
+    for sid, label in labels.items():
+        topic = topics.get(sid)
+        if not isinstance(topic, str) or not topic.strip():
+            problems.append(f"{sid}: sem tópico")
+            continue
+        if len(topic) > SECRET_TOPIC_MAX_CHARS:
+            problems.append(f"{sid}: tópico com mais de {SECRET_TOPIC_MAX_CHARS} caracteres")
+        if _norm_seed_label(label) in _norm_seed_label(topic):
+            problems.append(f"{sid}: tópico contém o label do segredo")
+        shared = _topic_words(topic) & _topic_words(label)
+        if shared:
+            problems.append(f"{sid}: tópico repete palavra do label ({sorted(shared)[0]})")
+    for sid in topics:
+        if sid != "_doc" and sid not in labels:
+            problems.append(f"{sid}: id inexistente em npc_seed_tables")
+    return problems
+
+
+def validate_npc_secret_topics() -> list[Finding]:
+    from services import npc_seed
+
+    path = os.path.join(os.path.dirname(npc_seed.SEED_TABLES_PATH), "npc_secret_topics.json")
+    try:
+        topics = npc_seed._read_json(path)
+        secrets = npc_seed.load_seed_tables().get("secrets", [])
+    except (OSError, ValueError) as exc:
+        return [Finding("npc_secret_topics", "error", path, "", f"ilegível: {type(exc).__name__}")]
+    return [
+        Finding("npc_secret_topics", "error", path, "", p)
+        for p in lint_secret_topics(topics, secrets)
+    ]
+
+
 def validate_law_codes() -> list[Finding]:
     """SPEC-299 R1: lint dos códigos de lei por jurisdição."""
     from services.law_codes import LAW_CODES_PATH, lint_law_codes
@@ -1445,6 +1490,7 @@ def validate_all(
         findings.extend(validate_race_attitudes())
         findings.extend(validate_merchant_keepers())
         findings.extend(validate_npc_seed_tables())
+        findings.extend(validate_npc_secret_topics())
         findings.extend(validate_law_codes())
 
         findings.extend(validate_faction_membership())
