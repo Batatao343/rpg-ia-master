@@ -2168,7 +2168,14 @@ def check_world_quests(state: dict, prev: dict | None, turn: int) -> list[Violat
     if not quests:
         return []
     out: list[Violation] = []
-    active = [q for q in quests if q.get("status") == "active"]
+    lore = {
+        "cacar_criatura",
+        "entregar_material",
+        "escoltar",
+        "investigar_rumor",
+        "recolher_mortos",
+    }
+    active = [q for q in quests if q.get("status") == "active" and q.get("world_kind") not in lore]
     if len(active) > 3:
         out.append(
             _V(
@@ -2190,6 +2197,12 @@ def check_world_quests(state: dict, prev: dict | None, turn: int) -> list[Violat
         channel = str(via.get("channel") or "")
         if channel in ("npc", "rumor"):
             heard = ref in heard_any
+            if not heard and q.get("world_kind") in lore:
+                # SPEC-313: NPC-origem grava `npc:<ref>:<turno>`; rumor percebido vive no ledger
+                heard = ref.startswith("npc:") or any(
+                    isinstance(r, dict) and r.get("rumor_id") == ref and r.get("perceived_day")
+                    for r in sim.get("rumors") or []
+                )
         else:
             heard = ref in ledger or (
                 q.get("world_kind") in ("reabrir_rota", "recuperar_objeto") and ref in logged
@@ -2508,6 +2521,85 @@ def check_rumors(state: dict, prev: dict | None, turn: int) -> list[Violation]:
     return out
 
 
+def check_lore_quests(state: dict, prev: dict | None, turn: int) -> list[Violation]:
+    """SPEC-313 R33: ancora valida, cooldowns em dias, verdade do rumor nunca na API/prompt,
+    escoltado nunca em dois lugares e entrega concluida sempre consumiu o item."""
+    from services import lore_quests as lq
+
+    quests = [q for q in (state or {}).get("quests") or [] if q.get("world_kind") in lq.LORE_KINDS]
+    if not quests:
+        return []
+    out: list[Violation] = []
+    cfgc = lq.cfg()["constants"]
+    import gamedata
+
+    for q in quests:
+        kind, anchor = q["world_kind"], q.get("lore_anchor") or {}
+        ok = bool(anchor.get("id")) and bool(q.get("lore_ref"))
+        if ok and kind == "cacar_criatura":
+            e = (gamedata.BESTIARY or {}).get(anchor["id"]) or {}
+            ok = e.get("categoria") in set(lq.cfg()["allowed_hunt_categories"])
+        elif ok and kind == "entregar_material":
+            ok = lq._route(anchor["id"]) is not None
+        if not ok:
+            out.append(
+                _V("quest.lore_anchor_invalid", "error", turn, "âncora fora do catálogo", kind=kind)
+            )
+    by_origin: dict[str, list[int]] = {}
+    for q in quests:
+        origin = str(q.get("lore_origin_key") or "")
+        if origin and origin != "engine":
+            by_origin.setdefault(origin, []).append(int(q.get("created_day", 0) or 0))
+    for days in by_origin.values():
+        days.sort()
+        if any(b - a < int(cfgc["ORIGIN_COOLDOWN_DAYS"]) for a, b in zip(days, days[1:])):
+            out.append(_V("quest.lore_cooldown_violated", "error", turn, "cooldown de origem"))
+    if len([q for q in quests if q.get("status") == "active"]) > lq.MAX_LORE_QUESTS_ACTIVE:
+        out.append(_V("quest.lore_cooldown_violated", "error", turn, "teto de quests de lore"))
+    for q in quests:
+        if q.get("world_kind") == "investigar_rumor" and q.get("status") == "active":
+            if q.get("outcome") or "outcome_label" in _public_quest(q, state):
+                out.append(
+                    _V("quest.rumor_truth_leaked", "error", turn, "desfecho em rumor ainda ativo")
+                )
+    sim = (state or {}).get("npc_sim") or {}
+    cur = str(((state or {}).get("world") or {}).get("current_location_id") or "")
+    for ref, entry in (sim.get("npcs") or {}).items():
+        esc = (entry or {}).get("escort")
+        if esc and not esc.get("paused_at") and (entry.get("pos") or {}).get("location_id") != cur:
+            out.append(_V("quest.escort_split", "error", turn, f"{ref} escoltado fora do jogador"))
+    if prev is not None:
+        prev_by_id = {q.get("id"): q for q in (prev.get("quests") or [])}
+        for q in quests:
+            was = prev_by_id.get(q.get("id")) or {}
+            if (
+                q.get("world_kind") == "entregar_material"
+                and q.get("status") == "completed"
+                and was.get("status") == "active"
+            ):
+                import inventory
+
+                a = q.get("lore_anchor") or {}
+                before = inventory.get_qty(
+                    (prev.get("player") or {}).get("inventory") or [], str(a.get("item_id"))
+                )
+                after = inventory.get_qty(
+                    (state.get("player") or {}).get("inventory") or [], str(a.get("item_id"))
+                )
+                if before - after < int(a.get("qty") or 1):
+                    out.append(
+                        _V("quest.delivery_without_item", "error", turn, "entrega sem consumir")
+                    )
+    return out
+
+
+def _public_quest(q: dict, state: dict) -> dict:
+    from services import quest_log
+
+    day = int(((state.get("world") or {}).get("world_clock") or {}).get("day", 1) or 1)
+    return quest_log.public_quest_view(q, day)
+
+
 CHECKS: list[Check] = [
     check_rumors,
     check_companions,
@@ -2547,6 +2639,7 @@ CHECKS: list[Check] = [
     check_npc_knowledge,
     check_world_engine,
     check_world_quests,
+    check_lore_quests,
     check_calendar,
     check_npc_world,
 ]

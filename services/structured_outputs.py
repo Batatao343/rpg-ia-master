@@ -98,6 +98,13 @@ class ProposedQuest(BaseModel):
         default="", description="Id de local EXATO de world_map.json, ou vazio."
     )
     reward_hint: str = ""
+    # SPEC-313 R5: só o tipo e a âncora; prazo, valor e dificuldade são do motor.
+    kind: Literal[
+        "comum", "cacar_criatura", "entregar_material", "escoltar", "investigar_rumor"
+    ] = Field(default="comum", description="Tipo da tarefa; só use um kind do <GANCHOS_POSSIVEIS>.")
+    anchor_id: str = Field(
+        default="", description="anchor_id EXATO do <GANCHOS_POSSIVEIS>, ou vazio."
+    )
 
 
 class CrimeClaim(BaseModel):

@@ -23,8 +23,12 @@ _SCENARIOS = {
     # SPEC-304: perigo off-screen forçado (minor: Skek; major: Brunna deixada esperando)
     "npc_perigo": "explorador",
     "companheiro_exposto": "explorador",
+    # SPEC-313: caçador em Skallgard oferece uma tarefa ancorada na lore (caça)
+    "lore_quests": "explorador",
 }
 _NPC_SCENARIOS = ("npc_perigo", "companheiro_exposto")
+LORE_NPC_NAME = "Rolf Caçador"
+LORE_NPC_ID = "npc_mv_rolf_cacador"
 SKEK_ID = "npc_mv_skek_eco_curto"
 WAIT_LOCATION = "ma_saidas_baixas"
 
@@ -126,10 +130,35 @@ def _prepare_npc_world(prepared: dict, name: str) -> dict:
     return prepared
 
 
+def _prepare_lore_quests(prepared: dict) -> dict:
+    """SPEC-313 §6: caçador em cena em Skallgard; o menu `<GANCHOS_POSSIVEIS>` oferece a caça."""
+    prepared["world"] = _move_world(prepared.get("world") or {}, "skallgard")
+    npcs = copy.deepcopy(prepared.get("npcs") or {})
+    npcs[LORE_NPC_NAME] = {
+        "id": LORE_NPC_ID,
+        "name": LORE_NPC_NAME,
+        "persona": "Caçador calado dos clãs; conhece as trilhas e as feras de Skallgard.",
+        "role": "caçador",
+        "relationship": 6,
+        "interaction_count": 2,
+        "in_scene": True,
+        "known_by_player": True,
+        "home_location_id": "skallgard",
+        "location": "Skallgard",
+        "traits": [],
+        "memory": [],
+    }
+    prepared["npcs"] = npcs
+    prepared["active_npc_name"] = LORE_NPC_NAME
+    return prepared
+
+
 def prepare(name: str, state: dict) -> dict:
     """Devolve cópia do estado com pré-condições mecânicas do cenário."""
     profile_for(name)  # valida catálogo
     prepared = copy.deepcopy(dict(state or {}))
+    if name == "lore_quests":
+        return _prepare_lore_quests(prepared)
     if name == "recrutamento":
         prepared["world"] = _move_world(
             prepared.get("world") or {},
@@ -197,6 +226,11 @@ def decision_for(name: str, turn: int, state: dict) -> ProfileDecision | None:
     profile_for(name)
     if name == "mundo" or name in _NPC_SCENARIOS:
         return ProfileDecision(text="Vou descansar e acampar aqui.", mode="free_text")
+    if name == "lore_quests":
+        return ProfileDecision(
+            text=f"Converso com {LORE_NPC_NAME} e peço um trabalho: uma tarefa concreta.",
+            mode="free_text",
+        )
     if int(turn) != 1:
         return None
     if name == "recrutamento":
@@ -273,6 +307,19 @@ def oracle_violations(name: str, result) -> list[dict]:
                     )
                 ]
         return []
+
+    if name == "lore_quests":
+        from services.lore_quests import LORE_KINDS
+
+        if any(q.get("world_kind") in LORE_KINDS for q in state.get("quests") or []):
+            return []
+        return [
+            _violation(
+                "smoke.lore_quest_not_observed",
+                "Nenhuma quest ancorada em lore foi oferecida pelo caçador.",
+                turn,
+            )
+        ]
 
     if name == "mundo":
         sim = state.get("world_sim") or {}

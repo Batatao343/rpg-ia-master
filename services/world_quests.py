@@ -21,7 +21,7 @@ from __future__ import annotations
 import hashlib
 import math
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 from services import world_director as wd
@@ -41,6 +41,7 @@ _CRISIS_KIND = {
 }
 CRISIS_QUEST_KINDS = frozenset(_CRISIS_KIND.values())
 _BAD_CRISIS_RESOLUTIONS = frozenset({"escalou"})
+_MORTOS_TEMPLATES = frozenset({"ruina.crise.escala", "praga.crise.escala"})
 
 
 # --- catalogo ----------------------------------------------------------------------
@@ -99,6 +100,21 @@ class QuestSeed:
     item_id: str = ""
     provisional: bool = False
     origin_faction_id: str = ""
+    # --- SPEC-313: quests ancoradas em lore (INTERNO; vazio nas 9 quests de crise)
+    enemy_id: str = ""
+    route_id: str = ""
+    rumor_id: str = ""
+    escort_npc_key: str = ""
+    qty: int = 0
+    reward_gold: int = 0
+    reward_label: str = ""
+    llm_title: str = ""
+    llm_description: str = ""
+    origin_key: str = ""
+    to_location_id: str = ""
+    anchor_label: str = ""
+    rumor_text: str = ""
+    anchor: dict = field(default_factory=dict)
 
 
 def quest_id(game_id: str, kind: str, world_source_id: str) -> str:
@@ -319,6 +335,83 @@ def _peril_seeds(state: dict) -> list[QuestSeed]:
     return out
 
 
+def _rumor_api() -> Any:
+    """SPEC-312 (`services.rumors`): sem `investigable/truth_of/mark_resolved` o tipo
+    `investigar_rumor` fica desligado (fora do menu e de `candidates`)."""
+    try:
+        from services import rumors
+    except ImportError:
+        return None
+    ok = all(hasattr(rumors, n) for n in ("investigable", "truth_of", "mark_resolved"))
+    return rumors if ok else None
+
+
+def _rumor_seeds(state: dict, day: int) -> list[QuestSeed]:
+    """SPEC-313 R23 (origem motor): rumor PERCEBIDO e `quest_eligible` vira candidata; falso
+    e verdadeiro sao indistinguiveis aqui (a verdade so existe na conclusao)."""
+    api = _rumor_api()
+    if api is None:
+        return []
+    from services import lore_quests as lq
+
+    out: list[QuestSeed] = []
+    for row in api.investigable(state, day):
+        loc = str(row.get("location_id") or "")
+        rid = str(row.get("rumor_id") or "")
+        if not loc or not rid or not wp._map_index()[0].get(loc):
+            continue
+        anchor = {"type": "rumor", "id": rid, "ttl_day": row.get("expires_day")}
+        gold, label = lq.reward_for("investigar_rumor", anchor, "engine")
+        out.append(
+            QuestSeed(
+                kind="investigar_rumor",
+                world_source_id=f"rumor:{rid}",
+                region_id=wp.region_of(loc),
+                location_id=loc,
+                deadline_day=lq.deadline_for(state, "investigar_rumor", anchor, day),
+                rumor_id=rid,
+                rumor_text=lq.rumor_public_text(state, rid),
+                origin_key="engine",
+                reward_gold=gold,
+                reward_label=label,
+                anchor={"type": "rumor", "id": rid},
+            )
+        )
+    return out
+
+
+def _dead_seeds(sim: dict, day: int) -> list[QuestSeed]:
+    """SPEC-313 R24: guerra/praga que escalou deixa corpos (uma quest por crise)."""
+    from services import lore_quests as lq
+
+    out: list[QuestSeed] = []
+    for rec in sim.get("crises") or []:
+        if rec.get("kind") not in ("guerra", "praga"):
+            continue
+        if not (rec.get("resolution") == "escalou" or int(rec.get("severity", 0) or 0) >= 2):
+            continue
+        loc = str(rec.get("location_id") or "") or wp.region_primary_location(rec["region_id"])
+        if not loc:
+            continue
+        gold, label = lq.reward_for("recolher_mortos", {}, "engine")
+        cid = str(rec["crisis_id"])
+        out.append(
+            QuestSeed(
+                kind="recolher_mortos",
+                world_source_id=f"mortos:{cid}",
+                region_id=str(rec["region_id"]),
+                location_id=loc,
+                deadline_day=lq.deadline_for({}, "recolher_mortos", {}, day),
+                crisis_kind=str(rec["kind"]),
+                origin_key="engine",
+                reward_gold=gold,
+                reward_label=label,
+                anchor={"type": "crisis", "id": cid},
+            )
+        )
+    return out
+
+
 def candidates(state: dict, day: int) -> list[QuestSeed]:
     """R1: fontes ativas no estado do motor, SEM percepcao (R4: nada do heroi)."""
     sim = (state or {}).get("world_sim") or {}
@@ -330,6 +423,10 @@ def candidates(state: dict, day: int) -> list[QuestSeed]:
         *_object_seeds(state, proj, day),
         *_peril_seeds(state),
     ]
+    from services import lore_quests as lq
+
+    if lq.mode() != "off":  # SPEC-313: fontes do motor (rumor percebido, corpos)
+        seeds += [*_rumor_seeds(state, day), *_dead_seeds(sim, day)]
     return sorted(seeds, key=lambda s: (s.deadline_day, s.world_source_id))
 
 
@@ -371,7 +468,12 @@ def render_quest_text(
     tpls = cfg.get("description") or {}
     tpl = tpls.get(channel) or tpls.get("npc") or tpls.get("testemunho") or ""
     npc_name = origin or (_npc_label(state, seed.npc_id) if seed.npc_id else "alguém")
+    rumor = seed.rumor_text or "Dizem que algo anda acontecendo por lá."
     values = {
+        "criatura": seed.anchor_label or "a fera",
+        "material": seed.anchor_label or "a encomenda",
+        "rumor": rumor,
+        "rumor_curto": rumor.rstrip(".!? ")[:70],
         "local": _loc_name(seed.location_id) or "o lugar",
         "local_b": _loc_name(seed.other_location_id) or "o outro lado",
         "faccao": wperc._faction_label(state, seed.faction_id),
@@ -426,6 +528,8 @@ def _item_matches(seed: QuestSeed, item: dict) -> bool:
             and bool(seed.npc_id)
             and str((item.get("params") or {}).get("npc_id") or "") == seed.npc_id
         )
+    if seed.kind == "recolher_mortos":  # SPEC-313 R24: so o que o heroi percebeu da escalada
+        return tid in _MORTOS_TEMPLATES and item.get("region_id") == seed.region_id
     if seed.kind == "libertar_ocupado":
         return tid == "ocupado.crise.escala" and item.get("location_id") == seed.location_id
     if seed.kind == "frear_ascensao":
@@ -452,7 +556,9 @@ def _seed_event_ids(state: dict, seed: QuestSeed) -> list[str]:
         if not isinstance(ev, dict):
             continue
         payload = ev.get("payload") or {}
-        if seed.kind in CRISIS_QUEST_KINDS and payload.get("crisis_id") == seed.world_source_id:
+        if seed.kind == "recolher_mortos" and payload.get("crisis_id") == seed.anchor.get("id"):
+            ids.append(str(ev.get("event_id") or ""))
+        elif seed.kind in CRISIS_QUEST_KINDS and payload.get("crisis_id") == seed.world_source_id:
             ids.append(str(ev.get("event_id") or ""))
         elif (
             seed.kind == "libertar_ocupado"
@@ -497,6 +603,8 @@ def _resolve_channel(
     """(canal, event_id, origem) ou None. Sem percepcao registrada nao nasce quest."""
     from services import world_perception as wperc
 
+    if seed.kind == "investigar_rumor":  # SPEC-313: `investigable` so devolve rumor PERCEBIDO
+        return ("rumor", seed.rumor_id, "") if seed.rumor_id else None
     cur = _cur(state)
     if not cur:
         return None
@@ -528,7 +636,13 @@ def _resolve_channel(
 
 
 def _active_world(quests: list[dict]) -> int:
-    return sum(1 for q in quests if q.get("world_kind") and q.get("status") == "active")
+    from services.lore_quests import LORE_KINDS
+
+    return sum(
+        1
+        for q in quests
+        if q.get("world_kind") and q["world_kind"] not in LORE_KINDS and q.get("status") == "active"
+    )
 
 
 def _bucket(left: int) -> str:
@@ -586,7 +700,33 @@ def _build_quest(
         quest["other_location_id"] = seed.other_location_id
     if seed.provisional:
         quest["deadline_provisional"] = True
+    if seed.kind in _lore_kinds():
+        quest.update(_lore_fields(seed))
     return quest
+
+
+def _lore_kinds() -> frozenset:
+    from services.lore_quests import LORE_KINDS
+
+    return LORE_KINDS
+
+
+def _lore_fields(seed: QuestSeed) -> dict:
+    """SPEC-313 R15/R28: campos INTERNOS da quest ancorada + texto da LLM (ja guardado).
+    O `reward_hint` da LLM e descartado; vale o rotulo do motor."""
+    refs = kind_cfg(seed.kind).get("lore_refs") or [""]
+    out = {
+        "lore_anchor": dict(seed.anchor),
+        "lore_origin_key": seed.origin_key or "engine",
+        "lore_ref": str(refs[0]),
+        "reward_gold_planned": int(seed.reward_gold),
+        "reward_hint": seed.reward_label,
+    }
+    if seed.llm_title:
+        out["title"] = seed.llm_title
+    if seed.llm_description:
+        out["description"] = seed.llm_description
+    return out
 
 
 def _offer(state: dict, day: int, perceived: list[dict] | None) -> tuple[list[dict], list[dict]]:
@@ -614,12 +754,28 @@ def _offer(state: dict, day: int, perceived: list[dict] | None) -> tuple[list[di
     created: list[dict] = []
     active_world = _active_world(quests)
     active_all = sum(1 for q in quests if q.get("status") == "active")
+    from services import lore_quests as lq
     from services.quest_log import MAX_ACTIVE_QUESTS
 
     for _key, seed, (channel, event_id, origin) in ready:
-        if active_world >= MAX_WORLD_QUESTS_ACTIVE or active_all >= MAX_ACTIVE_QUESTS:
+        if seed.kind in lq.LORE_KINDS:
+            # SPEC-313: teto proprio (R18) e anti-farm (R17); sem vaga => nenhuma quest.
+            lore_mode = lq.mode()
+            if lore_mode == "off":
+                continue
+            if lq.cap_reached({"quests": quests}) or active_all >= MAX_ACTIVE_QUESTS:
+                lq._log("cap_reached", kind=seed.kind)
+                continue
+            if lq.on_cooldown(
+                {"quests": quests}, seed.kind, seed.anchor, seed.origin_key or "engine", day
+            ):
+                continue
+            if lore_mode == "shadow":
+                lq._log("shadow_offer", kind=seed.kind, channel=channel)
+                continue
+        elif active_world >= MAX_WORLD_QUESTS_ACTIVE or active_all >= MAX_ACTIVE_QUESTS:
             _log("cap_reached", kind=seed.kind)
-            break
+            continue
         quest = _build_quest(state, seed, channel, event_id, origin, day)
         left = int(seed.deadline_day) - int(day)
         if m == "shadow":
@@ -643,6 +799,71 @@ def offer_from_perceived(
 def offer_from_heard(state: dict, day: int) -> tuple[list[dict], list[dict]]:
     """R7 (ponto 2, `turn_finalizer`): canais `npc`/`rumor` e testemunho direto."""
     return _offer(state, day, None)
+
+
+def offer_from_proposal(
+    state: dict,
+    proposal: Any,
+    npc_key: str,
+    menu: list[dict],
+    day: int,
+    *,
+    origin_entity_id: str = "",
+) -> tuple[list[dict], dict | None, str]:
+    """SPEC-313 R7: proposta ANCORADA do `npc_actor` -> quest montada pelo motor.
+
+    `(quests, criada | None, motivo)`. Motivo "" = criada; motivo em
+    `lore_quests.DOWNGRADE_REASONS` = o chamador a trata como quest COMUM (R3); qualquer outro
+    motivo = descartada (cooldown, teto, duplicata, inviavel, fonte ja usada). Nunca levanta."""
+    from difflib import SequenceMatcher
+
+    from services import lore_quests as lq
+    from services.quest_log import MAX_ACTIVE_QUESTS
+
+    quests = [dict(q) for q in (state.get("quests") or [])]
+    kind = str(getattr(proposal, "kind", None) or (proposal or {}).get("kind", "comum") or "comum")
+    m = lq.mode()
+    reason = ""
+    if m == "off":
+        reason = "mode_off"
+    elif kind not in lq.NPC_PROPOSABLE:
+        reason = "bad_kind"
+    seed = None
+    if not reason:
+        seed, reason = lq.seed_for_proposal(state, proposal, npc_key, menu, day)
+    if seed is not None:
+        existing = {q.get("world_source_id") for q in quests if q.get("world_kind")}
+        active = [q for q in quests if q.get("status") == "active"]
+        if seed.world_source_id in existing:
+            reason = "source_used"
+        elif len(active) >= MAX_ACTIVE_QUESTS:
+            reason = "cap"
+        elif not is_feasible(state, seed.location_id, seed.deadline_day, day):
+            reason = "infeasible"
+    if seed is None or reason:
+        key = "downgraded" if reason in lq.DOWNGRADE_REASONS else "ignored"
+        lq._log(key, kind=kind, reason=reason)
+        if reason == "cap":
+            lq._log("cap_reached", kind=kind)
+        return quests, None, reason
+    _k, row = lq._npc(state, npc_key)
+    origin_name = str(row.get("name") or npc_key)
+    turn = _turn(state)
+    quest = _build_quest(state, seed, "npc", f"npc:{seed.origin_key}:{turn}", origin_name, day)
+    if any(
+        SequenceMatcher(None, quest["title"].lower(), str(q.get("title", "")).lower()).ratio()
+        >= 0.75
+        for q in active
+    ):
+        lq._log("ignored", kind=kind, reason="title_duplicate")
+        return quests, None, "title_duplicate"
+    quest["origin_entity_id"] = origin_entity_id
+    if m == "shadow":
+        lq._log("shadow_offer", kind=kind, channel="npc")
+        return quests, None, "shadow"
+    quests.append(quest)
+    lq._log("offered", kind=kind, channel="npc")
+    return quests, quest, ""
 
 
 # --- prazo, falha e conclusao do motor (R12/R16/R19) -------------------------------
@@ -692,6 +913,22 @@ def _source_state(state: dict, q: dict) -> str:
         if not res:
             return "active"
         return "ok_end" if res == "intervencao" else "bad_end"
+    if kind == "escoltar":  # SPEC-313: o escoltado morreu por outra via => sem falha (R25)
+        from services import npc_world
+
+        ref = str((q.get("lore_anchor") or {}).get("id") or "")
+        key, row = npc_world._row_for(state, ref)
+        sim_row = ((state.get("npc_sim") or {}).get("npcs") or {}).get(ref) or {}
+        dead = bool(sim_row.get("dead")) or (bool(row) and npc_world._is_dead(state, ref, row, {}))
+        return "ok_end" if dead else "active"
+    if kind == "investigar_rumor":  # SPEC-313: o rumor sumiu ou ja foi resolvido
+        api = _rumor_api()
+        inst = (
+            api.instance(state, str((q.get("lore_anchor") or {}).get("id") or "")) if api else None
+        )
+        return "ok_end" if (inst is None or inst.get("resolution")) else "active"
+    if kind in ("cacar_criatura", "entregar_material", "recolher_mortos"):
+        return "active"
     return "ok_end"
 
 
@@ -715,7 +952,7 @@ def _retarget(q: dict, location_id: str) -> dict:
 def _quest_event(state: dict, etype: str, q: dict, day: int, reason: str = "") -> dict:
     payload = {
         "quest_id": q["id"],
-        "quest_title": q.get("title", ""),
+        "quest_title": _event_title(q),
         "world_kind": q.get("world_kind", ""),
         "location_id": q.get("location_id", ""),
         "region_id": q.get("region_id", ""),
@@ -841,6 +1078,44 @@ def engine_completions(state: dict) -> list[dict]:
                 ((proj.get("unique_items") or {}).get(sid.split(":")[1]) or {}).get("holder")
             )
             done = holder == "player"
+        elif q["world_kind"] == "cacar_criatura":  # SPEC-313 R19/R20: so por morte da ancora
+            done = any(r.get("kind") == "hunt_kill" for r in q.get("progress_log") or [])
+        elif q["world_kind"] == "entregar_material":  # R21
+            done = _delivery_ready(state, q)
+        elif q["world_kind"] == "escoltar":  # R22
+            from services import npc_world
+
+            done = npc_world.escort_arrived(state, q)
         if done and not _already_queued(state, "quest_completed", q["id"]):
             events.append(_quest_event(state, "quest_completed", q, day))
     return events
+
+
+def _last_player_text(state: dict) -> str:
+    for msg in reversed(state.get("messages") or []):
+        if getattr(msg, "type", "") == "human":
+            return str(getattr(msg, "content", "") or "")
+    return ""
+
+
+def _delivery_ready(state: dict, q: dict) -> bool:
+    """SPEC-313 R21: no destino, com `qty` do item no inventario e verbo de entrega na acao do
+    turno. A remocao do item acontece no `event_processor` (mesmo apply do ouro)."""
+    import inventory
+    from services import quest_log
+
+    anchor = q.get("lore_anchor") or {}
+    if _cur(state) != str(anchor.get("to") or "") or _turn(state) <= int(q.get("created_turn", 0)):
+        return False
+    inv = (state.get("player") or {}).get("inventory") or []
+    if inventory.get_qty(inv, str(anchor.get("item_id") or "")) < int(anchor.get("qty") or 1):
+        return False
+    return quest_log._vocab_match("entregar_material", _last_player_text(state))
+
+
+def _event_title(q: dict) -> str:
+    """Titulo que entra no event_log/cronica. `investigar_rumor` leva texto de rumor no titulo:
+    nunca vai para o log canonico (SPEC-312 R24 `rumor.became_fact`)."""
+    if q.get("world_kind") == "investigar_rumor":
+        return "Conferir um rumor"
+    return str(q.get("title", ""))

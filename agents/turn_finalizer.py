@@ -85,6 +85,17 @@ def turn_finalizer_node(state: dict) -> dict:
         from observability.telemetry import log_fallback
 
         log_fallback("turn_finalizer", "world_quests_failed", exc)
+    # SPEC-313 R22: o escoltado acompanha (ou pausa com) o jogador; escolta sem quest ativa solta.
+    try:
+        from services import npc_world
+
+        if npc_world.mode() == "on":
+            qstate = {**state, **updates}
+            updates.update(npc_world.escort_sync(qstate))
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("turn_finalizer", "escort_sync_failed", exc)
     # SPEC-298: fama por notícia entregue, pendências de fação, reação de NPCs e avisos.
     try:
         from services import reputation

@@ -27,6 +27,11 @@ from observability.telemetry import log_event as _log_event
 from services import graph_resolver as gr
 
 MAX_ACTIVE_QUESTS = 8
+_LORE_KINDS = frozenset(
+    {"cacar_criatura", "entregar_material", "escoltar", "investigar_rumor", "recolher_mortos"}
+)
+# SPEC-313 R19: tipos cuja conclusao so o motor prova (combate, inventario, chegada)
+_MECHANICAL = frozenset({"cacar_criatura", "entregar_material", "escoltar"})
 TITLE_SIMILARITY = 0.75
 QUEST_REWARD_GOLD = 20
 # SPEC-301 R12: missão de fação paga por tier (no lugar do QUEST_REWARD_GOLD fixo).
@@ -254,6 +259,9 @@ def sync_action_progress(
         progress = [dict(row) for row in (q.get("progress_log") or [])]
         quest_words = _normalized_words(f"{q.get('title', '')} {q.get('description', '')}")
         world_kind = q.get("world_kind")
+        if world_kind in _MECHANICAL:
+            out.append(q)  # SPEC-313 R19: nenhuma "investigacao" conclui caca/entrega/escolta
+            continue
         if world_kind:
             # SPEC-305 R11: quest de mundo troca o verbo investigativo e a relevancia por
             # titulo pelo vocabulario de acao do proprio tipo.
@@ -314,7 +322,13 @@ def sync_action_progress(
 
 
 # --- SPEC-223 R1: prova determinística p/ conclusão proposta pelo LLM ------------
-PROOF_EVIDENCE_KINDS = ("investigation", "npc_interaction", "completion_ready", "combat_won")
+PROOF_EVIDENCE_KINDS = (
+    "investigation",
+    "npc_interaction",
+    "completion_ready",
+    "combat_won",
+    "hunt_kill",
+)
 
 
 def _fold_name(value: object) -> str:
@@ -371,6 +385,8 @@ def has_completion_proof(quest: dict, state: dict) -> tuple[bool, str]:
         return False, "quest não está ativa"
     if quest.get("personal_of"):  # SPEC-300 R22: missão pessoal só o motor conclui
         return False, "missão pessoal é concluída pelo motor"
+    if quest.get("world_kind") in _MECHANICAL:  # SPEC-313 R19: caça/entrega/escolta = motor
+        return False, "prova mecânica: só o motor conclui"
     created = _safe_turn(quest.get("created_turn"))
     if created >= turn:
         return False, "quest criada neste turno"
@@ -403,7 +419,9 @@ def complete_quest_with_reward(
             progress = list(q.get("progress_log") or [])
             progress.append({"kind": "completed", "turn": int(turn), "detail": ""})
             gold = QUEST_REWARD_GOLD
-            if q.get("faction_id"):
+            if q.get("world_kind") in _LORE_KINDS and "reward_gold_planned" in q:
+                gold = max(0, _safe_turn(q.get("reward_gold_planned")))  # SPEC-313 R15
+            elif q.get("faction_id"):
                 tier = max(1, min(3, _safe_turn(q.get("mission_tier")) or 1))
                 gold = MISSION_GOLD[tier]
             q.update(
@@ -478,6 +496,34 @@ def sync_combat_progress(quests: list[dict], location_id: str, *, turn: int = 0)
             )
         ):
             progress.append({"kind": "combat_won", "turn": int(turn), "detail": str(location_id)})
+            q["progress_log"] = progress
+        out.append(q)
+    return out
+
+
+def sync_hunt_progress(
+    quests: list[dict], dead_bestiary_ids: list[str], region_id: str, *, turn: int = 0
+) -> list[dict]:
+    """SPEC-313 R20. PURO. Vitoria de combate em que morreu a criatura-ancora de uma
+    `cacar_criatura` ativa da regiao = evidencia `hunt_kill` (1 por quest). Nunca no turno de
+    criacao."""
+    dead = {str(i) for i in dead_bestiary_ids or [] if i}
+    out: list[dict] = []
+    for original in quests or []:
+        q = dict(original)
+        anchor = q.get("lore_anchor") or {}
+        progress = list(q.get("progress_log") or [])
+        if (
+            q.get("world_kind") == "cacar_criatura"
+            and q.get("status") == "active"
+            and str(anchor.get("id")) in dead
+            and (not anchor.get("region_id") or anchor.get("region_id") == region_id)
+            and _safe_turn(q.get("created_turn")) < int(turn)
+            and not any(row.get("kind") == "hunt_kill" for row in progress)
+        ):
+            progress.append(
+                {"kind": "hunt_kill", "turn": int(turn), "detail": str(anchor.get("id"))}
+            )
             q["progress_log"] = progress
         out.append(q)
     return out
@@ -571,6 +617,12 @@ def public_quest_view(quest: dict, day: int) -> dict:
     label = deadline_label(left, status) if world else ""
     if label:
         view["deadline_label"] = label
+    if world and quest.get("world_kind") == "investigar_rumor":
+        from services.lore_quests import outcome_label
+
+        outcome = outcome_label(quest)  # SPEC-313 R28: so depois de concluida
+        if outcome:
+            view["outcome_label"] = outcome
     return view
 
 

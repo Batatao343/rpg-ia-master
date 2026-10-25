@@ -1239,6 +1239,8 @@ def storyteller_node(state: GameState):
                 str(world.get("current_location_id") or ""),
                 _law_mod.clock_of({**state, "world": world}),
             )
+            from services import lore_quests as _lq
+
             enc = check_encounter(
                 world,
                 factions,
@@ -1249,6 +1251,7 @@ def storyteller_node(state: GameState):
                 player_level=_plevel,
                 law_hint=_law_hint,
                 exempt_factions=fm.passage_factions(_fm_view()),  # SPEC-301 perk `passagem`
+                hunt_anchor=_lq.active_hunt_anchor({**state, "world": world}),  # SPEC-313 R26
             )
         # spec encontros-dedupe (R3): não repete o MESMO template de encontro 2x
         # seguidas no mesmo local (o mundo não é um carrossel).
@@ -1380,8 +1383,14 @@ def storyteller_node(state: GameState):
                 if info:
                     extra_engine_events += info.get("level_up_events", [])
             elif kind == "track":
+                from services import lore_quests as _lq
+
                 track_bk, note, hint = resolve_track(
-                    state.get("bestiary_knowledge", {}), loc_node, danger, turn
+                    state.get("bestiary_knowledge", {}),
+                    loc_node,
+                    danger,
+                    turn,
+                    hunt_anchor=_lq.active_hunt_anchor({**state, "world": world}),  # SPEC-313 R26
                 )
                 if hint:
                     world["treasure_hint"] = True
@@ -1518,6 +1527,11 @@ def storyteller_node(state: GameState):
         _prompt_quests, {**state, "world": world, "quests": wq_quests}
     )
     gancho_novo = _gancho_novo_block(wq_created) + _rumor_proposal_hint()
+    from services import lore_quests as _lore  # SPEC-313 R23: desfecho do rumor investigado
+
+    _desfecho = _lore.desfecho_block({**state, "world": world, "quests": wq_quests})
+    if _desfecho:
+        gancho_novo += "\n" + _desfecho
 
     # spec npc-fallback-sem-alvo (R2): rota NPC sem interlocutor delegou aqui.
     npc_fallback_clause = _npc_fallback_clause(scene_state)
@@ -2090,6 +2104,14 @@ def storyteller_node(state: GameState):
         proposed_quests = (
             [] if quarantine_llm_payload else (getattr(update, "proposed_quests", []) or [])
         )
+        # SPEC-313 R6: so o `npc_actor` ancora; `kind` do narrador vira quest comum.
+        _downgraded = [
+            p for p in proposed_quests if str(getattr(p, "kind", "comum") or "comum") != "comum"
+        ]
+        if _downgraded:
+            from services import lore_quests as _lq2
+
+            _lq2._log("downgraded", kind="storyteller", reason="not_npc", count=len(_downgraded))
         new_quests, created = quest_log.register_proposed_quests(
             wq_quests, proposed_quests, turn=turn
         )

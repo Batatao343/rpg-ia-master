@@ -461,6 +461,29 @@ def _npc_schema(model, messages):
     )
 
 
+def _mock_lore_quest(messages) -> list[dict]:
+    """SPEC-313 R34: com `<GANCHOS_POSSIVEIS>` no prompt, o NPC simulado oferece o PRIMEIRO item
+    do menu (determinístico), para o playtest offline cobrir oferta -> conclusao."""
+    blob = "\n".join(str(getattr(m, "content", "")) for m in messages or [])
+    if "<GANCHOS_POSSIVEIS>" not in blob:
+        return []
+    m = re.search(r"- kind=(\w+) anchor_id=(\S+)", blob.split("<GANCHOS_POSSIVEIS>", 1)[1])
+    if not m:
+        return []
+    return [
+        {
+            "title": "Um pedido do mundo",
+            "description": "",
+            "origin_name": "",
+            "origin_entity_id": "",
+            "location_id": "",
+            "reward_hint": "",
+            "kind": m.group(1),
+            "anchor_id": m.group(2),
+        }
+    ]
+
+
 def _npc_response(model, messages):
     # Não-onisciência: se o jogador perguntar de fações/rumores, o NPC "revela" algo (offline).
     txt = _last_human(messages).lower()
@@ -480,6 +503,7 @@ def _npc_response(model, messages):
                 "reward_hint": "informação e algumas moedas",
             }
         ]
+    quests = _mock_lore_quest(messages) or quests
     return _fill(
         model,
         {

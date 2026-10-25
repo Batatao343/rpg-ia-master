@@ -139,6 +139,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `loot.price_reasons_failed` | `error` |
 | `loot.trade_parse_failed` | `error` |
 | `lore_query.fallback` | — |
+| `lore_quests.fallback` | — |
 | `narrative.rejected` | `count`, `kind`, `reason_code` |
 | `npc.actor_failed` | `error` |
 | `npc.cache_hit` | — |

@@ -1614,6 +1614,26 @@ def _combat_node(state: GameState):
         if _synced != list(state.get("quests") or []):
             result["quests"] = _synced
 
+    # SPEC-313 R20: a morte da criatura-ancora numa quest `cacar_criatura` e a unica prova da
+    # caca (inimigo que fugiu e combate simulado nao contam).
+    if (
+        victory
+        and not is_simulation
+        and any(q.get("world_kind") == "cacar_criatura" for q in state.get("quests") or [])
+    ):
+        from services import quest_log as _quest_log
+        from services import world_pressures as _wp
+
+        _w = state.get("world") or {}
+        _hunted = _quest_log.sync_hunt_progress(
+            result.get("quests", state.get("quests") or []),
+            [str(e.get("bestiary_id") or "") for e in dead],
+            _wp.region_of(str(_w.get("current_location_id") or "")),
+            turn=int(_w.get("turn_count", 0) or 0),
+        )
+        if _hunted != list(result.get("quests", state.get("quests") or [])):
+            result["quests"] = _hunted
+
     # ---- Reflexo dos aliados transitórios no NPC de origem ----
     if scene_tr:
         result["npcs"] = _reflect_scene_allies(state, scene_tr, allies, combat_over)

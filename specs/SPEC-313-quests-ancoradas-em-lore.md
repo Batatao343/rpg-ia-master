@@ -1,6 +1,6 @@
 # SPEC-313 — Quests ancoradas em lore (caça, entrega, escolta, rumor, mortos)
 
-> **Status:** `approved` (escopo e decisões D-A/D-B do dono em 24/10; demais Dx no default recomendado, §9)
+> **Status:** `in-progress` (implementada 25/10 no worktree; falta revisão independente, suíte completa e smoke real; escopo e decisões D-A/D-B do dono em 24/10; demais Dx no default recomendado, §9)
 > **Criada:** 2026-10-24 · **Atualizada:** 2026-10-24
 > **Origem:** `docs/mundo-vivo/REVISAO-ORQUESTRADA-2026-10-24.md` proposta **N6** (§4.2, linha 239),
 > §2.3 (linhas 176-177: "Quest de mundo: só motor" / "Quest proposta pela LLM: sem âncora,
@@ -396,36 +396,43 @@ class ProposedQuest(BaseModel):
     kind: Literal[
         "comum", "cacar_criatura", "entregar_material", "escoltar", "investigar_rumor"
     ] = Field(default="comum", description="Tipo da tarefa; só use um kind do <GANCHOS_POSSIVEIS>.")
-    anchor_id: str = Field(default="", description="anchor_id EXATO do <GANCHOS_POSSIVEIS>, ou vazio.")
+    anchor_id: str = Field(
+        default="", description="anchor_id EXATO do <GANCHOS_POSSIVEIS>, ou vazio."
+    )
+
 
 # state.py
 LoreQuestKind = Literal[
     "cacar_criatura", "entregar_material", "escoltar", "investigar_rumor", "recolher_mortos"
 ]
 
-class LoreAnchor(TypedDict, total=False):   # INTERNO
+
+class LoreAnchor(TypedDict, total=False):  # INTERNO
     type: Literal["enemy", "route", "npc", "rumor", "crisis"]
-    id: str            # enemy_id | route_id | npc_key | rumor_id | crisis_id
-    item_id: str       # entrega
-    qty: int           # entrega
-    to: str            # entrega/escolta: location_id destino
+    id: str  # enemy_id | route_id | npc_key | rumor_id | crisis_id
+    item_id: str  # entrega
+    qty: int  # entrega
+    to: str  # entrega/escolta: location_id destino
+
 
 class Quest(TypedDict, total=False):
-    ...                         # campos atuais + os da SPEC-305
-    lore_anchor: LoreAnchor     # INTERNO
-    lore_origin_key: str        # INTERNO: npc_key de origem ou "engine"
-    lore_ref: str               # INTERNO: primeiro lore_refs do tipo (auditoria)
-    reward_gold_planned: int    # INTERNO
-    outcome: str                # "" | "confirmado" | "boato" (só investigar_rumor, após concluir)
+    ...  # campos atuais + os da SPEC-305
+    lore_anchor: LoreAnchor  # INTERNO
+    lore_origin_key: str  # INTERNO: npc_key de origem ou "engine"
+    lore_ref: str  # INTERNO: primeiro lore_refs do tipo (auditoria)
+    reward_gold_planned: int  # INTERNO
+    outcome: str  # "" | "confirmado" | "boato" (só investigar_rumor, após concluir)
+
 
 class EscortState(TypedDict, total=False):
     quest_id: str
     to: str
     since_day: int
-    paused_at: str              # "" = seguindo o jogador
+    paused_at: str  # "" = seguindo o jogador
+
 
 class NpcSimEntry(TypedDict, total=False):
-    ...                         # campos atuais (SPEC-304)
+    ...  # campos atuais (SPEC-304)
     escort: EscortState
 ```
 
@@ -779,8 +786,50 @@ afrouxar a validação).
 
 ## 8. Evidência
 
-(preencher na implementação: ofertas/rebaixamentos por tipo e perfil, letalidade antes/depois,
-smoke §6)
+### 8.1 Implementação (25/10)
+
+Testes do escopo: `tests/test_spec313_*.py` (catálogo/lint de lore, menu e validação, oferta/anti-farm,
+caça e encontros, rumor, entrega/escolta, mortos/superfícies, rollout/invariantes/mock/cenário
+`lore_quests`). Pendentes (coordenador): suíte completa 1×, playtest `--all --turns 50`, letalidade
+SPEC-285 M1/M2/M5 (seeds 21-32 × 200, `combate`), smoke real §6, revisão independente.
+
+### 8.2 Desvios da implementação em relação ao texto acima (todos deliberados)
+
+- **Contrato da 312 (como já previsto na nota do coordenador):** `rumors.investigable(state, day)`,
+  `rumors.truth_of(state, rumor_id)`, `rumors.mark_resolved(sim, rumor_id, outcome, day)`. O
+  desfecho da quest usa o vocabulário da 312: `confirmado | desmentido | inconclusivo` (no lugar de
+  `boato`); o rótulo público de `desmentido` continua "era só boato". Gancho único para a 315:
+  `lore_quests.resolve_rumor_outcome(state, quest, day)` (só ele lê a verdade). `investigable`
+  não devolve texto nem canal: a descrição usa `rumors.text_for` (texto público) e o canal de
+  origem-motor é `rumor` com `event_id = rumor_id` (o invariante `quest.world_unheard` aceita o
+  rumor com `perceived_day`).
+- **R10/§3.4:** `world_quests.offer_from_proposal(state, proposal, npc_key, menu, day, *,
+  origin_entity_id="")` devolve `(quests, criada | None, motivo)`; motivo em
+  `lore_quests.DOWNGRADE_REASONS` => o `npc_actor` registra como quest comum; qualquer outro =>
+  descartada. Não há `lore_hook` em `register_proposed_quests`: o desvio é feito em
+  `agents/npc.py::_apply_lore_proposals`, depois do bloco de `membership_action` (R9).
+- **R19 (entrega):** o piso de distância é `DELIVERY_MIN_PERIODS = 1` (não `PERIODS_PER_DAY`). No
+  mapa real nenhuma rota curada de lore tem ≥ 5 períodos (pântano → Anel de Lama = 1), então a
+  regra original eliminaria a rota-exemplo da própria spec. Destino = local de origem continua
+  proibido. Prazo e recompensa seguem as bandas por dias (R14/R15).
+- **R25:** o `fail_text` de `recolher_mortos` foi reescrito ("O prazo para recolher o que restou em
+  {local} passou.") porque o texto original continha "mortos", proibido pelo próprio R25.
+- **R11:** ordenação das criaturas por abundância decrescente (`hunt_pressure` maior primeiro; o
+  "menor primeiro" do texto contradizia "abundância"); itens intercalados por tipo e cortados para
+  ≤ 150 tokens (≤ 9 itens). Rumores do menu = rumores `investigable` da região do NPC (o filtro "o
+  NPC conhece" da 215/312 é aproximado pela região).
+- **R22:** além de `escort_start/escort_stop/escort_destinations`, `npc_world.escort_sync` roda no
+  `turn_finalizer` (acompanha/pausa; solta a escolta cuja quest não está mais ativa: concluída,
+  falhada, expirada ou abandonada); o `event_processor` não chama `escort_stop`.
+- **R20:** a prova `hunt_kill` é registrada na vitória (`agents/combat.py`); a conclusão é emitida
+  por `engine_completions` no turno seguinte do narrador.
+- **R23/312 R24:** títulos de evento de `investigar_rumor` no `event_log`/crônica são genéricos
+  ("Conferir um rumor") e o payload do alívio não carrega o `rumor_id`.
+- **R32:** em `shadow` o menu é calculado e logado (`lore_quest.shadow_offer`) mas nunca emitido.
+- **R34:** o mock propõe o primeiro item do menu em toda conversa (sem o "1 em cada 4"); o
+  cooldown de origem (R17) impede repetição.
+- **305 `_offer`:** o teto de 3 quests de crise passou de `break` para `continue` para não bloquear
+  ofertas de lore na mesma rodada.
 
 ## 9. Decisões do dono
 

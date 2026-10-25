@@ -398,8 +398,24 @@ WorldQuestKind = Literal[
     "frear_ascensao",
     "resgate",
     "recuperar_objeto",
+    # SPEC-313: quests ancoradas em lore
+    "cacar_criatura",
+    "entregar_material",
+    "escoltar",
+    "investigar_rumor",
+    "recolher_mortos",
 ]
 HeardChannel = Literal["testemunho", "cartaz", "npc", "rumor", "mensageiro"]
+
+
+class LoreAnchor(TypedDict, total=False):
+    """SPEC-313: âncora INTERNA de quest de lore (nunca sai pela API)."""
+
+    type: Literal["enemy", "route", "npc", "rumor", "crisis"]
+    id: str  # enemy_id | route_id | npc_key | rumor_id | crisis_id
+    item_id: str  # entrega
+    qty: int  # entrega
+    to: str  # entrega/escolta: location_id destino
 
 
 class HeardVia(TypedDict):
@@ -510,6 +526,12 @@ class CompanionSoul(TypedDict, total=False):
     resolved_day: int
     fail_reason: str  # "" | "prazo" | "superada" | "origin_killed"
     fail_text: str  # texto neutro anexado à descrição ao falhar (R18)
+    # --- SPEC-313: quests ancoradas em lore (INTERNOS; ausente = comportamento anterior)
+    lore_anchor: LoreAnchor
+    lore_origin_key: str  # npc_key de origem ou "engine"
+    lore_ref: str  # primeiro lore_refs do tipo (auditoria)
+    reward_gold_planned: int  # ouro materializado na criação
+    outcome: str  # "" | "confirmado" | "boato" (investigar_rumor, após concluir)
 
 
 class ContinuityState(TypedDict, total=False):
@@ -819,6 +841,16 @@ class NpcPeril(TypedDict, total=False):
     slot_day: int | None
 
 
+class EscortState(TypedDict, total=False):
+    """SPEC-313 R22: o NPC viaja com o jogador enquanto a quest `escoltar` está ativa."""
+
+    quest_id: str
+    to: str
+    since_day: int
+    at: str  # local onde o NPC está agora
+    paused_at: str  # "" = seguindo o jogador
+
+
 class NpcSimEntry(TypedDict, total=False):
     archetype: str
     home: str
@@ -832,6 +864,7 @@ class NpcSimEntry(TypedDict, total=False):
     fate_event_id: str
     calm_days: int
     absence_noted_since: int | None
+    escort: EscortState  # SPEC-313
 
 
 class NpcSimState(TypedDict, total=False):

@@ -156,6 +156,95 @@
         "rumor": "Dizem que {objeto} foi levado por {faccao} e que logo sairá da região."
       },
       "fail_text": "A chance de recuperar {objeto} passou."
+    },
+    "cacar_criatura": {
+      "origin": ["npc"],
+      "anchor_type": "enemy",
+      "deadline_rule": "day+HUNT_DAYS",
+      "reward_rule": "by_categoria",
+      "proof": "mechanical",
+      "lore_refs": ["lore_nova/factions.txt:152-153", "lore_nova/creatures.txt:600-600"],
+      "lore_keyword": "caçadores",
+      "action_vocab": ["caç", "rastre", "persig", "embosc", "arm", "isc"],
+      "combat_counts": false,
+      "relief": {},
+      "title": "Caçar {criatura} perto de {local}",
+      "description": {
+        "npc": "{origem} quer {criatura} longe de {local}. A fera não fica muito tempo no mesmo lugar."
+      },
+      "fail_text": "A trilha de {criatura} esfriou."
+    },
+    "entregar_material": {
+      "origin": ["npc"],
+      "anchor_type": "route",
+      "deadline_rule": "ceil(periods/PERIODS_PER_DAY)*2+DELIVERY_SLACK",
+      "reward_rule": "by_distance",
+      "proof": "mechanical",
+      "lore_refs": ["lore_nova/factions.txt:241-241", "lore_nova/locations.txt:111-114"],
+      "lore_keyword": "rotas",
+      "action_vocab": ["entreg", "deix", "repass", "descarreg", "trag"],
+      "combat_counts": false,
+      "relief": {},
+      "title": "Levar {material} a {local}",
+      "description": {
+        "npc": "{origem} precisa que {material} chegue a {local}, e logo."
+      },
+      "fail_text": "A encomenda para {local} perdeu a hora."
+    },
+    "escoltar": {
+      "origin": ["npc"],
+      "anchor_type": "npc",
+      "deadline_rule": "ceil(periods/PERIODS_PER_DAY)+ESCORT_SLACK",
+      "reward_rule": "by_distance",
+      "proof": "mechanical",
+      "lore_refs": ["lore_nova/npcs.txt:925-925", "lore_nova/npcs.txt:1042-1042"],
+      "lore_keyword": "escolta",
+      "action_vocab": ["escolt", "acompanh", "guard", "proteg", "segu"],
+      "combat_counts": false,
+      "relief": {},
+      "title": "Escoltar {origem} até {local}",
+      "description": {
+        "npc": "{origem} quer chegar a {local} em segurança e não quer ir sozinho."
+      },
+      "fail_text": "{origem} seguiu por outro caminho."
+    },
+    "investigar_rumor": {
+      "origin": ["engine", "npc"],
+      "anchor_type": "rumor",
+      "deadline_rule": "min(day+RUMOR_DAYS, rumor.ttl_day)",
+      "reward_rule": "npc_only",
+      "lore_refs": ["lore_nova/rumors.txt:1-2", "lore_nova/rumors.txt:24-25"],
+      "lore_keyword": "confiabilidade",
+      "action_vocab": ["investig", "pergunt", "procur", "examin", "vasculh", "confer", "escut"],
+      "combat_counts": false,
+      "relief": {},
+      "title": "Ver com os próprios olhos: {rumor_curto}",
+      "description": {
+        "rumor": "{rumor} Alguém precisa ir até {local} e ver.",
+        "cartaz": "{rumor} Alguém precisa ir até {local} e ver.",
+        "testemunho": "{rumor} Alguém precisa ir até {local} e ver.",
+        "npc": "{rumor} {origem} jura que é assim. Vale ir até {local} conferir."
+      },
+      "fail_text": "Ninguém foi conferir a história de {local} a tempo."
+    },
+    "recolher_mortos": {
+      "origin": ["engine"],
+      "anchor_type": "crisis",
+      "deadline_rule": "day+BODIES_DAYS",
+      "reward_rule": "flat",
+      "lore_refs": ["lore_nova/timeline_completa.txt:470-470", "lore_nova/factions.txt:78-78"],
+      "lore_keyword": "mortos-vivos",
+      "action_vocab": ["recolh", "queim", "crem", "enterr", "carreg", "cav", "cobr"],
+      "combat_counts": false,
+      "relief": {"pressure": "praga", "delta": -10},
+      "title": "Os mortos de {local}",
+      "description": {
+        "testemunho": "Há corpos sem recolher em {local}. Quem conhece a Guilda dos Corvos sabe o que acontece com corpos largados.",
+        "cartaz": "Há corpos sem recolher em {local}. Quem conhece a Guilda dos Corvos sabe o que acontece com corpos largados.",
+        "npc": "{origem} conta que há corpos sem recolher em {local}.",
+        "rumor": "Dizem que os corpos de {local} ficaram onde caíram."
+      },
+      "fail_text": "O prazo para recolher o que restou em {local} passou."
     }
   }
 }

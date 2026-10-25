@@ -79,6 +79,17 @@ def _v_quest_completed(ev: ProposedWorldEvent, state: dict, proj: dict) -> Valid
     if qid:
         ativas = {q.get("id") for q in state.get("quests", []) or [] if q.get("status") == "active"}
         if qid in ativas:
+            quest = next((q for q in state.get("quests") or [] if q.get("id") == qid), {})
+            if quest.get("world_kind") == "entregar_material":
+                # SPEC-313 R21: vendeu o material entre a proposta e o apply => rejeitada.
+                import inventory
+
+                anchor = quest.get("lore_anchor") or {}
+                inv = (state.get("player") or {}).get("inventory") or []
+                if inventory.get_qty(inv, str(anchor.get("item_id") or "")) < int(
+                    anchor.get("qty") or 1
+                ):
+                    return ValidationResult(False, "entrega sem o material no inventário")
             return ValidationResult(True)
         return ValidationResult(False, f"quest_id {qid} não é uma quest ativa")
     # Modo beat (Fase 2.6, comportamento original — sem quest_id no payload).

@@ -369,7 +369,8 @@ def _world_quest_derived(quest: dict, state: dict, turn: int) -> tuple[list[dict
     payload: dict = {
         "quest_id": quest.get("id"),
         "world_kind": kind,
-        "world_source_id": quest.get("world_source_id", ""),
+        # SPEC-313: o id do rumor nunca entra no event_log (rumor.became_fact)
+        "world_source_id": "" if kind == "investigar_rumor" else quest.get("world_source_id", ""),
         "region_id": quest.get("region_id", ""),
         "location_id": loc,
         "day": day,
@@ -454,6 +455,7 @@ def process_pending_events(state: dict) -> dict:
     rejection_count_before = len(event_rejections)
 
     offscreen_fates: list[dict] = []  # SPEC-304: ferido/capturado fora de cena -> ficha do NPC
+    world_sim_patch: dict | None = None  # SPEC-313: `mark_resolved` do rumor investigado
 
     def _chronicle_milestone(ev: dict, proj: dict) -> None:
         nonlocal chronicle, chronicle_changed
@@ -546,11 +548,39 @@ def process_pending_events(state: dict) -> dict:
             if qid:
                 origem = next((q for q in quests if q.get("id") == qid), None)
                 if origem:
-                    event["payload"]["quest_title"] = origem.get("title", "")
+                    from services.world_quests import _event_title
+
+                    event["payload"]["quest_title"] = _event_title(origem)
                 was_active = any(q.get("id") == qid and q.get("status") == "active" for q in quests)
                 quests, delivered = quest_log.complete_quest_with_reward(quests, qid, turn)
                 quest_reward_gold += delivered
                 quests_changed = True
+                if was_active and origem and origem.get("world_kind") == "entregar_material":
+                    # SPEC-313 R21: o material sai do inventario UMA vez, no mesmo apply do ouro.
+                    import inventory
+
+                    anchor = origem.get("lore_anchor") or {}
+                    hero = dict(fm_over.get("player") or state.get("player") or {})
+                    inv, removed = inventory.remove_item(
+                        hero.get("inventory") or [],
+                        str(anchor.get("item_id") or ""),
+                        int(anchor.get("qty") or 1),
+                    )
+                    if removed:
+                        hero["inventory"] = inv
+                        fm_over["player"] = hero
+                if was_active and origem and origem.get("world_kind") == "investigar_rumor":
+                    # SPEC-313 R23: a verdade do rumor so e lida AQUI; boato nunca vira fato.
+                    from services import lore_quests
+
+                    outcome, world_sim_patch = lore_quests.resolve_rumor_outcome(
+                        {**state, "world_sim": world_sim_patch or state.get("world_sim") or {}},
+                        origem,
+                        _clock_day(state),
+                    )
+                    quests = [
+                        {**q, "outcome": outcome} if q.get("id") == qid else q for q in quests
+                    ]
                 if was_active:  # SPEC-226 R2: XP só na transição real
                     quests_completed += 1
                     if origem and origem.get("faction_id"):
@@ -786,6 +816,8 @@ def process_pending_events(state: dict) -> dict:
         updates["chronicle"] = chronicle
     if quests_changed:
         updates["quests"] = quests
+    if world_sim_patch is not None:
+        updates["world_sim"] = world_sim_patch
     if len(event_rejections) != rejection_count_before or event_rejections != original_rejections:
         updates["event_rejections"] = event_rejections
     return updates

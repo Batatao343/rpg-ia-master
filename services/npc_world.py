@@ -347,6 +347,9 @@ def presence(state: dict, npc_key: str) -> tuple[str, bool]:
     entry = ((state.get("npc_sim") or {}).get("npcs") or {}).get(ref)
     if entry is None or not entry.get("pos"):
         return legacy, False
+    esc = entry.get("escort")
+    if esc:  # SPEC-313 R22: escoltado viaja com o jogador (ou fica onde a escolta pausou)
+        return str(esc.get("paused_at") or _player_loc(state) or esc.get("at") or ""), False
     pos = entry["pos"]
     loc = str(pos.get("location_id") or "")
     return loc, (not loc and pos.get("arrive_day") is not None)
@@ -809,6 +812,7 @@ def day_hook(ctx: Any) -> Any:
             or entry.get("dead")
             or entry.get("frozen")
             or entry.get("status") == "capturado"
+            or entry.get("escort")  # SPEC-313 R22: o escoltado nao segue a agenda
             or ref in waiting
             or (ref in _party_by_id(st) and _party_by_id(st)[ref].get("active"))
         ):
@@ -832,6 +836,7 @@ def day_hook(ctx: Any) -> Any:
             or entry.get("dead")
             or entry.get("frozen")
             or entry.get("status") == "capturado"
+            or entry.get("escort")  # SPEC-313 R22: sem perigo off-screen enquanto escoltado
             or (ref in _party_by_id(st) and _party_by_id(st)[ref].get("active"))
         ):
             continue
@@ -1384,3 +1389,122 @@ def active_perils(state: dict) -> list[dict]:
             }
         )
     return out
+
+
+# --------------------------------------------------------------------------- #
+# Escolta (SPEC-313 R22): o NPC viaja com o jogador, sem virar companheiro
+# --------------------------------------------------------------------------- #
+def _player_loc(state: dict) -> str:
+    return str(((state or {}).get("world") or {}).get("current_location_id") or "")
+
+
+def _sim_entry(state: dict, ref: str) -> dict:
+    return (((state or {}).get(sim_key()) or {}).get("npcs") or {}).get(ref) or {}
+
+
+def escort_destinations(state: dict, ref: str) -> list[str]:
+    """Destinos da rota do arquetipo do NPC (sem bloqueados), do mais perto ao mais longe."""
+    from services import world_distance
+
+    entry = _sim_entry(state, ref)
+    if not entry or not entry.get("pos"):
+        return []
+    agendas = _agendas()["archetypes"]
+    arch = agendas.get(entry.get("archetype") or "sedentario") or agendas["sedentario"]
+    here = str((entry["pos"] or {}).get("location_id") or "")
+    cands = _route_candidates(state, entry, ref, arch, (state or {}).get("world_projection") or {})
+    scored = []
+    for lid in cands:
+        d = world_distance.travel_periods(here, lid)
+        if d is not None and d >= 1 and lid != here:
+            scored.append((d, lid))
+    return [lid for _d, lid in sorted(scored)]
+
+
+def escort_start(state: dict, ref: str, quest_id: str, to: str, day: int) -> dict:
+    """`npc_sim` novo com a escolta ligada (pura). Sem entrada simulada => `npc_sim` igual."""
+    sim = copy.deepcopy((state or {}).get(sim_key()) or {})
+    entry = (sim.get("npcs") or {}).get(ref)
+    if not entry or entry.get("escort"):
+        return sim
+    here = _player_loc(state)
+    entry["escort"] = {
+        "quest_id": str(quest_id),
+        "to": str(to),
+        "since_day": int(day),
+        "at": here,
+        "paused_at": "",
+    }
+    entry["pos"] = {"location_id": here, "since_day": int(day), "arrive_day": None}
+    return sim
+
+
+def escort_stop(state: dict, ref: str, day: int) -> dict:
+    """`npc_sim` novo sem a escolta; o NPC fica onde esta (`escort.at`) e a simulacao da 304
+    segue dali (pura)."""
+    sim = copy.deepcopy((state or {}).get(sim_key()) or {})
+    entry = (sim.get("npcs") or {}).get(ref)
+    if entry and entry.get("escort"):
+        esc = entry.pop("escort")
+        at = str(esc.get("paused_at") or esc.get("at") or "")
+        entry["pos"] = {"location_id": at, "since_day": int(day), "arrive_day": None}
+    return sim
+
+
+def escort_eval(state: dict, esc: dict) -> dict:
+    """Nova `escort` dado onde o jogador esta agora (pura). Segue se o local novo ENCURTA a
+    distancia ao destino; senao pausa onde o NPC estava; volta a seguir quando o jogador
+    retorna ao local da pausa."""
+    from services import world_distance
+
+    cur, to = _player_loc(state), str(esc.get("to") or "")
+    at, paused = str(esc.get("at") or ""), str(esc.get("paused_at") or "")
+    if paused:
+        return {**esc, "at": cur, "paused_at": ""} if cur == paused else dict(esc)
+    if not cur or cur == at:
+        return dict(esc)
+    d_old, d_new = world_distance.travel_periods(at, to), world_distance.travel_periods(cur, to)
+    if cur == to or (d_old is not None and d_new is not None and d_new < d_old):
+        return {**esc, "at": cur, "paused_at": ""}
+    return {**esc, "paused_at": at}
+
+
+def escort_arrived(state: dict, quest: dict) -> bool:
+    """O jogador chegou ao destino COM a escolta ativa e nao pausada (pura)."""
+    ref = str((quest.get("lore_anchor") or {}).get("id") or "")
+    esc = _sim_entry(state, ref).get("escort")
+    if not esc or esc.get("quest_id") != quest.get("id"):
+        return False
+    new = escort_eval(state, esc)
+    return not new.get("paused_at") and _player_loc(state) == str(esc.get("to"))
+
+
+def escort_sync(state: dict) -> dict:
+    """Fim de turno: acompanha o jogador, e solta a escolta cuja quest nao esta mais ativa.
+    Devolve `{sim_key: npc_sim}` ou `{}` se nada mudou."""
+    key = sim_key()
+    sim = (state or {}).get(key)
+    if mode() == "off" or not isinstance(sim, dict):
+        return {}
+    active = {q.get("id") for q in (state.get("quests") or []) if q.get("status") == "active"}
+    day = _day_of((state or {}).get("world"))
+    new = copy.deepcopy(sim)
+    changed = False
+    for entry in (new.get("npcs") or {}).values():
+        esc = entry.get("escort")
+        if not esc:
+            continue
+        if esc.get("quest_id") not in active:
+            at = str(esc.get("paused_at") or esc.get("at") or "")
+            entry.pop("escort")
+            entry["pos"] = {"location_id": at, "since_day": day, "arrive_day": None}
+            changed = True
+            continue
+        nxt = escort_eval(state, esc)
+        if nxt != esc:
+            entry["escort"] = nxt
+            changed = True
+        if not nxt.get("paused_at") and entry["pos"].get("location_id") != nxt.get("at"):
+            entry["pos"] = {"location_id": nxt["at"], "since_day": day, "arrive_day": None}
+            changed = True
+    return {key: new} if changed else {}

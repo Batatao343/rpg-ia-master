@@ -54,6 +54,7 @@
     {"on_event": "location_control_changed", "if": "new_controller_hostile", "pressure": "guerra", "delta": 15, "scope": "target_region"},
     {"on_event": "world_quest_relief", "pressure": "<payload>", "delta": "<payload>", "scope": "target_region"},
     {"on_event": "quest_failed", "if": "world_kind:reabrir_rota", "pressure": "fome", "delta": 6, "scope": "endpoint_regions"},
+    {"on_event": "quest_failed", "if": "world_kind:recolher_mortos", "pressure": "praga", "delta": 6, "scope": "target_region"},
     {"on_event": "npc_killed", "if": "target_leads_faction", "pressure": "guerra", "delta": 10, "scope": "faction_region"},
     {"per_day": "active_loc_state", "state": "cerco", "pressure": "fome", "delta": 3, "scope": "region"},
     {"per_day": "pressure_band", "pressure_src": "fome", "band": "crise", "pressure": "praga", "delta": 2, "scope": "region"},

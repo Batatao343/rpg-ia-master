@@ -1,0 +1,48 @@
+{
+  "_doc": "SPEC-313: constantes [BALANCEAR] e rotas de entrega curadas das quests ancoradas em lore. delivery_routes exige revisao de conteudo do dono (D8). Cada rota cita o trecho de lore (arquivo:linha) que a sustenta.",
+  "constants": {
+    "HUNT_DAYS": 6,
+    "RUMOR_DAYS": 8,
+    "BODIES_DAYS": 4,
+    "DELIVERY_SLACK": 2,
+    "ESCORT_SLACK": 2,
+    "ORIGIN_COOLDOWN_DAYS": 7,
+    "ANCHOR_COOLDOWN_DAYS": 10,
+    "MAX_LORE_QUESTS_ACTIVE": 2,
+    "MENU_MAX_PER_KIND": 3,
+    "DELIVERY_MIN_PERIODS": 1
+  },
+  "allowed_hunt_categories": ["lacaio", "padrao", "elite"],
+  "rewards": {
+    "cacar_criatura": {"lacaio": 15, "padrao": 25, "elite": 40},
+    "entregar_material": [15, 25, 40],
+    "escoltar": [20, 30, 45],
+    "investigar_rumor": {"npc": 10, "engine": 0},
+    "recolher_mortos": 15
+  },
+  "reward_labels": {"0": "", "10": "modesta", "15": "modesta", "20": "modesta", "25": "justa", "30": "justa", "40": "generosa", "45": "generosa"},
+  "escort_archetypes": ["mercador_itinerante", "peregrino", "mensageiro"],
+  "delivery_routes": [
+    {
+      "id": "cha_druidas_anel_lama",
+      "origin_region": "pantano_melancolia",
+      "to": "na_anel_lama",
+      "item_id": "musgo_cinzento",
+      "qty": 2,
+      "patron_tags": ["druida", "erv", "curandeir", "druidas_ciclo_cinzento"],
+      "lore_ref": "lore_nova/locations.txt:114-114",
+      "lore_keyword": "Nova Arcádia"
+    },
+    {
+      "id": "minerio_skallgard_brekmar",
+      "origin_region": "skallgard",
+      "to": "brekmar",
+      "item_id": "minerio_ferro",
+      "qty": 3,
+      "patron_tags": ["mercador", "ferr", "minei", "sindicat"],
+      "lore_ref": "lore_nova/factions.txt:241-241",
+      "lore_keyword": "rotas",
+      "review": "dono"
+    }
+  ]
+}

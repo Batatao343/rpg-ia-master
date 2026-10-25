@@ -636,6 +636,62 @@ def _npc_self_prompt(state, npc_key, npc_data, npc_id, evidence_ids) -> str:
         return ""
 
 
+def _lore_menu(state, npc_key: str) -> tuple[str, list]:
+    """SPEC-313 R11: `<GANCHOS_POSSIVEIS>` (vazio sem nada elegivel). Nunca derruba o turno."""
+    try:
+        from services import lore_quests
+
+        return lore_quests.anchor_menu(state, npc_key)
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("npc", "lore_menu_failed", exc)
+        return "", []
+
+
+def _apply_lore_proposals(
+    state, quests: list, pending: list, npc_key: str, menu: list, canonical_id: str, turn: int
+) -> tuple[list, dict]:
+    """SPEC-313 R6/R7/R9: propostas ancoradas do NPC em cena viram quest do MOTOR (ou, com
+    ancora invalida, quest comum). Devolve `(quests, updates_extras)`. Nunca levanta."""
+    from services import lore_quests, npc_world, world_quests
+
+    extras: dict = {}
+    wturn = int((state.get("world") or {}).get("turn_count", 0) or 0)
+    mission_now = any(
+        q.get("faction_id")
+        and int(q.get("created_turn", -1) or -1) == wturn
+        and q.get("status") == "active"
+        for q in quests
+    )
+    day = int(((state.get("world") or {}).get("world_clock") or {}).get("day", 1) or 1)
+    for p in pending:
+        if mission_now:  # R9: a missao de facção do mesmo turno ja ocupa a oferta
+            lore_quests._log("ignored", kind=str(p.get("kind")), reason="faction_mission_same_turn")
+            continue
+        view = {**state, "quests": quests, **extras}
+        try:
+            new_quests, created, reason = world_quests.offer_from_proposal(
+                view, p, npc_key, menu, day, origin_entity_id=canonical_id
+            )
+        except Exception as exc:  # silent-ok: ancora falha = quest comum (comportamento antigo)
+            from observability.telemetry import log_fallback
+
+            log_fallback("npc", "lore_offer_failed", exc)
+            new_quests, created, reason = quests, None, "invalid_anchor"
+        if created is not None:
+            quests = new_quests
+            if created.get("world_kind") == "escoltar":
+                anchor = created.get("lore_anchor") or {}
+                sim = npc_world.escort_start(
+                    view, str(anchor.get("id")), created["id"], str(anchor.get("to")), day
+                )
+                extras[npc_world.sim_key()] = sim
+        elif reason in lore_quests.DOWNGRADE_REASONS:
+            quests, _c = quest_log.register_proposed_quests(quests, [p], turn=turn)
+    return quests, extras
+
+
 def _commerce_block(state, npc_data) -> str:
     """SPEC-311 R15: `<SEU_COMERCIO>` do keeper presente no próprio mercado ('' sem motivo).
 
@@ -1116,6 +1172,9 @@ def npc_actor_node(state: GameState):
     comercio_block = _commerce_block(state, npc_data)  # SPEC-311 R15
     if comercio_block:
         comercio_block = chr(10) + comercio_block
+    ganchos_block, lore_menu = _lore_menu(state, npc_state_key or npc_name)  # SPEC-313 R11
+    if ganchos_block:
+        ganchos_block = chr(10) + ganchos_block
 
     system_msg = SystemMessage(
         content=f"""
@@ -1170,7 +1229,7 @@ def npc_actor_node(state: GameState):
     Se seu personagem tem um pedido/tarefa CONCRETA para o jogador (recuperar algo,
     entregar algo, investigar algo, resgatar alguém), registre em 'proposed_quests'.
     Vazio se a conversa não chegou a um pedido concreto.
-    </MISSÃO>
+    </MISSÃO>{ganchos_block}
 
     <REGRAS DE ATUAÇÃO - CRÍTICO>
     1. NÃO SEJA UMA WIKIPÉDIA. Você é uma pessoa limitada pela sua ocupação e local.
@@ -1385,6 +1444,7 @@ def npc_actor_node(state: GameState):
             base_quests, npc_data.get("name", npc_name), turn=int(turn or 0)
         )
         proposals = getattr(res, "proposed_quests", []) or []
+        lore_pending: list = []
         if proposals:
             canonical_id = _canonical_npc_id(npc_data.get("name", npc_name))
             stamped = []
@@ -1392,7 +1452,10 @@ def npc_actor_node(state: GameState):
                 p = p.model_dump() if hasattr(p, "model_dump") else dict(p)
                 p["origin_name"] = npc_data.get("name", npc_name)
                 p["origin_entity_id"] = canonical_id
-                stamped.append(p)
+                if str(p.get("kind") or "comum") == "comum":
+                    stamped.append(p)
+                else:  # SPEC-313: ancorada => depois da missão de facção (R9)
+                    lore_pending.append(p)
             quests_now, _created = quest_log.register_proposed_quests(
                 quests_now, stamped, turn=turn
             )
@@ -1427,6 +1490,17 @@ def npc_actor_node(state: GameState):
                 updates["messages"] = [
                     AIMessage(content=f"{updates['messages'][0].content}\n\n{fm_note}")
                 ]
+        if lore_pending:
+            quests_now, lore_extras = _apply_lore_proposals(
+                {**state, "npcs": new_npcs},
+                quests_now,
+                lore_pending,
+                npc_state_key or npc_name,
+                lore_menu,
+                _canonical_npc_id(npc_data.get("name", npc_name)),
+                int(turn or 0),
+            )
+            updates.update(lore_extras)
         if quests_now != base_quests:
             updates["quests"] = quests_now
         # SPEC-299 R4(a)/R7: crimes classificados pelo LLM (guard: só NPCResponse chega aqui).

@@ -1052,6 +1052,15 @@ def pick_encounter_enemy(
 _APEX_TAG = "apex"
 
 
+def hunt_theme(anchor_id: str):
+    """SPEC-313 R26: `theme` que pontua SÓ a criatura-âncora de uma caça (None = sem preferência).
+    Mesmo mecanismo da SPEC-289: se a âncora não couber no porte do perigo, o sorteio normal segue."""
+    anchor = str(anchor_id or "")
+    if not anchor:
+        return None
+    return lambda e: 2 if str((e or {}).get("id") or "") == anchor else 0
+
+
 def forced_encounter_danger(loc: dict, danger_real: int, player_level: int) -> int:
     """R5 (fix-playtest-achados): a FORÇA de um encontro FORÇADO escala com o nível
     — mesmo knob `danger` que `pick_encounter_enemy`/`encounter_budget` consomem —,
@@ -1076,6 +1085,7 @@ def check_encounter(
     player_level: int = 1,
     law_hint: dict | None = None,
     exempt_factions=(),
+    hunt_anchor: str = "",
 ):
     """
     Gatilho DETERMINÍSTICO de encontro ao entrar/descansar num local perigoso.
@@ -1086,6 +1096,8 @@ def check_encounter(
     Não-onisciência: a dica do inimigo só NOMEIA a facção dominante se o jogador a conhece.
     O hint traz o NOME EXATO de uma criatura do bestiário quando possível (R11) —
     o spawn cai no cache em vez de gerar via LLM.
+    SPEC-313 R26: `hunt_anchor` (bestiary_id de quest `cacar_criatura` ativa na região) só
+    PREFERE a criatura no sorteio de um encontro que JÁ disparou; nunca cria gatilho.
     Retorna {hint, flavor, reason} ou None.
     """
     world = world or {}
@@ -1187,6 +1199,8 @@ def check_encounter(
         tfac = threat_faction(world, factions)
         in_sphere = bool(tfac) and loc.get("region_id") in threat_sphere(tfac)
         theme = threat_theme_match(tfac, str(threat)) if in_sphere else None
+        if theme is None:
+            theme = hunt_theme(hunt_anchor)
         entry = pick_encounter_enemy(
             loc,
             eff,
@@ -1199,7 +1213,7 @@ def check_encounter(
         flavor = str(threat)
         if tfac and not in_sphere:
             flavor = f"Ecos de uma ameaça distante: {threat} Aqui, porém, o perigo é outro."
-        elif theme is not None and entry and theme(entry) == 0:
+        elif in_sphere and theme is not None and entry and theme(entry) == 0:
             # revisão P2-1: na esfera, mas sem criatura temática no porte (fallback).
             flavor = (
                 f"A ameaça ronda a região: {threat} O que te ataca agora, porém, é outra coisa."
@@ -1224,6 +1238,7 @@ def check_encounter(
             turn,
             bestiary_knowledge=bestiary_knowledge,
             projection=projection,
+            theme=hunt_theme(hunt_anchor),
             season=season_id,
         )
         hint = entry.get("name") if entry else f"feras/perigos de {region}"
@@ -1619,13 +1634,15 @@ def resolve_trap(
     return p, logs, {"trap": trap, "dodged": False, "level_up_events": []}
 
 
-def resolve_track(state_bk: dict, loc: dict, danger: int, turn: int, rng=None) -> tuple:
+def resolve_track(
+    state_bk: dict, loc: dict, danger: int, turn: int, rng=None, hunt_anchor: str = ""
+) -> tuple:
     """Fase 6.4 (R4): rastro — revela criatura regional no Codex (grau rumor, 3.2)
     e/ou marca pista de tesouro (próximo TREASURE da região rola banda alta).
     Retorna (bestiary_knowledge, note, treasure_hint: bool)."""
     from services import discovery as disc
 
-    entry = pick_encounter_enemy(loc, danger, turn)
+    entry = pick_encounter_enemy(loc, danger, turn, theme=hunt_theme(hunt_anchor))
     note = "Você encontra rastros antigos, ilegíveis."
     bk = state_bk or {}
     if entry:
