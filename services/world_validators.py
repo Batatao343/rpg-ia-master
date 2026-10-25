@@ -506,6 +506,7 @@ def reason_code(reason: str) -> str:
         or "inválido" in text
         or "fora do plano" in text
         or "sem campaign_plan" in text
+        or "sem o material" in text
     ):
         return "invalid_payload"
     return "other"
