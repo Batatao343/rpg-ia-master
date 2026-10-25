@@ -63,6 +63,22 @@ não o `event_id` do evento que originou o item. Por isso não dá para filtrar 
   percepção registrada ficam ocultos, o que é o comportamento correto. `RPG_WORLD_ENGINE=off` não tem
   eventos do motor, então nada muda.
 
+### Decisoes da revisao Sol (24/10)
+
+- **Projection percebida (P0-1/P1-3, decisao do coordenador):** a API e o prompt mostram o que o
+  heroi SABE. `world_perception.perceived_projection` remove da projection as arestas dinamicas, as
+  desativacoes de aresta base e as rotas bloqueadas escritas por evento do motor nao percebido
+  (`created_by_event`/`disabled_by_event`/`blocked_by_event`; evento fora do `event_log` nao filtra).
+  Usada na secao `relations` do contexto, em `controlled`/`blocked_routes` (`api._world_block`) e no
+  `/data/map`. A viagem em si continua validada no servidor contra a projection real.
+- **R7:** `recent_control_changes` (overlay e `contested`) e o dossie de local usam `event_perceived`.
+- **P2-1:** `cause_event_id` so herda de `WORLD_EVENT_TYPES`. **P2-2:** evento com `actor_id="player"`
+  (ex.: `route_cleared` por quest de mundo) e testemunho. **P2-5:** marco tardio usa o turno da
+  percepcao e tambem roda quando a crenca muda.
+- **P2-3 (registrado):** em producao o `companion_fate` usa `uuid4` que nao entra em `npc_beliefs`;
+  quem da voz ao destino e o `npc_fate_learned`. **P2-4 (registrado):** `ruin_rec`/`ruin_end` e
+  `route_cleared` sem item de digest ficam ocultos; a SPEC-309 da voz.
+
 ### Fora de escopo
 
 - Novos templates de `render_event` e o bloco `<MUNDO_PERCEBIDO>` (SPEC-309).

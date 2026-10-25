@@ -313,7 +313,10 @@ def collect_dynamic_facts(
 
     # --- relations: edges efetivas relevantes ao local/cena ---
     seen_edges = set()
-    for edge in gr.resolve_edges(projection, include_hidden=include_hidden):
+    # SPEC-308 P0-1: arestas escritas por evento do motor nao percebido nao chegam ao prompt
+    for edge in gr.resolve_edges(
+        world_perception.perceived_projection(state, projection), include_hidden=include_hidden
+    ):
         eid = edge.get("id") or f"{edge.get('source')}:{edge.get('type')}:{edge.get('target')}"
         if eid in seen_edges:
             continue

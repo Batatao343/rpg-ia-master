@@ -93,7 +93,9 @@ def _travel_options(world: dict, blocked: set) -> list[dict[str, Any]]:
 
 def build_map_view(state: dict) -> dict[str, Any]:
     world = dict(state.get("world") or {})
-    projection = state.get("world_projection") or {}
+    from services.world_perception import perceived_projection
+
+    projection = perceived_projection(state, state.get("world_projection") or {})  # SPEC-308 P1-3
     blocked = _blocked_pairs(projection)
     cur = world.get("current_location_id", "") or ""
     anchor = _anchor_id(world)
@@ -107,7 +109,7 @@ def build_map_view(state: dict) -> dict[str, Any]:
     threats = {t["region_id"]: t["hint"] for t in sv.active_threats(world, turn)}
     contested = {
         c["location_id"]
-        for c in sv.recent_control_changes(state.get("event_log") or [], visited, turn)
+        for c in sv.recent_control_changes(state.get("event_log") or [], visited, turn, state=state)
     }
     quest_targets = {
         q.get("location_id")

@@ -55,10 +55,19 @@ def stability_label(projection: dict | None, faction_id: str) -> str:
 
 
 def recent_control_changes(
-    event_log: list[dict], visited: list[str], current_turn: int, window: int = RECENT_TURNS
+    event_log: list[dict],
+    visited: list[str],
+    current_turn: int,
+    window: int = RECENT_TURNS,
+    state: dict | None = None,
 ) -> list[dict]:
-    """`location_control_changed` recentes em locais visitados (fog of war vale aqui também)."""
+    """`location_control_changed` recentes em locais visitados (fog of war vale aqui também).
+    Com `state`, só eventos que o herói percebeu (SPEC-308 R7)."""
     visited_set = set(visited or [])
+    if state is not None:
+        from services.world_perception import perceived_events
+
+        event_log = perceived_events(state, event_log)
     out = []
     for ev in event_log or []:
         if ev.get("type") != "location_control_changed":

@@ -1011,7 +1011,9 @@ def storyteller_node(state: GameState):
             world, perceived_items = _perceive_world(state, world, factions, intel, world_tick)
         extra_engine_events_tick = list(world_tick.pending_events)
         extra_engine_events_tick += _npc_beliefs_update(state, world, sim_updates, perceived_items)
-        if perceived_items:  # SPEC-308 R6: marco de evento do motor percebido so agora
+        if (
+            perceived_items or "npc_beliefs" in sim_updates
+        ):  # SPEC-308 R6: marco de evento do motor percebido so agora
             try:
                 from services.chronicle import perceived_milestones
 

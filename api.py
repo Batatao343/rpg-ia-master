@@ -2187,6 +2187,7 @@ def _format_response_raw(state: dict, *, cue_action_key: str | None = None) -> G
             state.get("event_log", []) or [],
             state.get("player", {}) or {},
             state.get("world_sim"),
+            state=state,
         ),
         quest=_quest_block(
             state.get("campaign_plan") or {},
@@ -2866,7 +2867,18 @@ def _world_block(
     event_log: list | None = None,
     player: dict | None = None,
     world_sim: dict | None = None,
+    state: dict | None = None,
 ) -> dict[str, Any]:
+    # SPEC-308 R7/P1-3: o mapa mostra o que o heroi SABE (eventos do motor so apos percebidos)
+    from services.world_perception import perceived_projection
+
+    pstate = state or {
+        "world": w,
+        "world_sim": world_sim,
+        "event_log": event_log or [],
+        "world_projection": projection or {},
+    }
+    projection = perceived_projection(pstate, projection or {})
     clock = w.get("world_clock") or {}
     turn = w.get("turn_count", 0)
     # spec itens-vivos-e-luz (R7): estado de luz p/ o HUD (precisa do player p/
@@ -2892,7 +2904,7 @@ def _world_block(
         "danger_overrides": dict(w.get("danger_overrides") or {}),
         "map_overlays": {
             "control_changes": sv.recent_control_changes(
-                event_log or [], w.get("visited", []), turn
+                event_log or [], w.get("visited", []), turn, state=pstate
             ),
             "threats": sv.active_threats(w, turn),
             "looming_threat": w.get("looming_threat", ""),

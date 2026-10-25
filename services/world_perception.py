@@ -234,6 +234,8 @@ def _is_engine_derived(ev: dict) -> bool:
     src = str(ev.get("source") or "")
     if payload.get("offscreen"):
         return False  # SPEC-304 (R23) ja cobre
+    if ev.get("actor_id") == "player":
+        return False  # feito do proprio heroi (ex.: rota liberada por quest de mundo): testemunho
     if src == "engine":
         return ev.get("type") in WORLD_EVENT_TYPES
     return src == "rule_engine" and bool(payload.get("cause_event_id"))
@@ -275,3 +277,35 @@ def event_perceived(state: dict, ev: dict) -> bool:
         if x
     }
     return any(cur in _family(p) for p in places)
+
+
+def perceived_events(state: dict, events: list | None) -> list[dict]:
+    """SPEC-308 R7: so os eventos que o heroi pode saber (para mapa/dossie/API)."""
+    return [e for e in events or [] if isinstance(e, dict) and event_perceived(state, e)]
+
+
+def perceived_projection(state: dict, projection: dict | None = None) -> dict:
+    """SPEC-308 R7/P0-1: a projection COMO O HEROI A CONHECE. Remove o que um evento do motor
+    nao percebido escreveu: arestas dinamicas (`controls`, `enemy_of`...), desativacoes de aresta
+    base (o controlador antigo volta) e rotas bloqueadas. Evento fora do `event_log` (log
+    truncado) nao filtra. Copia rasa; nao muta a original."""
+    proj = projection if projection is not None else (state or {}).get("world_projection") or {}
+    index = {
+        str(e.get("event_id")): e
+        for e in (state or {}).get("event_log") or []
+        if isinstance(e, dict) and e.get("event_id")
+    }
+
+    def ok(event_id) -> bool:
+        ev = index.get(str(event_id or ""))
+        return ev is None or event_perceived(state, ev)
+
+    out = dict(proj)
+    for key, field in (
+        ("dynamic_edges", "created_by_event"),
+        ("disabled_edges", "disabled_by_event"),
+        ("blocked_routes", "blocked_by_event"),
+    ):
+        if proj.get(key):
+            out[key] = [r for r in proj[key] if not isinstance(r, dict) or ok(r.get(field))]
+    return out

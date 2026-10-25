@@ -24,7 +24,7 @@ from observability.telemetry import log_event as _log_event
 from services import graph_resolver as gr
 from services import quest_log, rule_engine
 from services.chronicle import append_entry, render_milestone
-from services.world_perception import event_perceived
+from services.world_perception import WORLD_EVENT_TYPES, event_perceived
 from services.world_validators import (
     ValidationResult,
     canonical_secret_detail,
@@ -604,7 +604,8 @@ def process_pending_events(state: dict) -> dict:
                     "offscreen": True,
                     "cause_event_id": event["event_id"],
                 }
-            elif event.get("source") == "engine":  # SPEC-308 R5: herda a causa do motor
+            elif event.get("source") == "engine" and event.get("type") in WORLD_EVENT_TYPES:
+                # SPEC-308 R5: herda a causa do motor de mundo (nao de quest/membership)
                 d["payload"] = {**(d.get("payload") or {}), "cause_event_id": event["event_id"]}
             event_log.append(d)
             accepted_events.append(d)

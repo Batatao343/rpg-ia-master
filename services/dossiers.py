@@ -112,6 +112,10 @@ def _events_about(state: Mapping, entity_id: str | None) -> list[dict]:
 
         if npc_world.event_hidden_from_player(state, dict(event)):
             continue  # SPEC-304 R23
+        from services.world_perception import event_perceived
+
+        if not event_perceived(state, dict(event)):
+            continue  # SPEC-308 R7
         turn = _turn(event.get("turn"))
         if turn is None:
             continue

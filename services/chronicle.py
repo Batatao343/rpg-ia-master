@@ -244,8 +244,8 @@ def perceived_milestones(state: dict) -> list[dict] | None:
             chronicle = append_entry(
                 chronicle,
                 text=text,
-                turn=int(ev.get("turn", 0) or 0),
-                kind="milestone",
+                turn=int((state.get("world") or {}).get("turn_count", 0) or ev.get("turn", 0) or 0),
+                kind="milestone",  # R6: marco no turno da PERCEPCAO
                 event_id=str(ev["event_id"]),
             )
             have.add(str(ev["event_id"]))
