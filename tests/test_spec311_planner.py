@@ -280,3 +280,30 @@ def test_storyteller_trigger_survives_ambush_early_return(monkeypatch):
     out = stt.storyteller_node(st)
     assert out.get("next") == "combat_agent", out.keys()
     assert out["needs_replan"] is True
+
+
+def test_world_replan_cause_from_real_perception_path(monkeypatch):
+    """Digest real do diretor -> `perceivable` real -> gatilho (nada de dict escrito à mão)."""
+    from services import world_director as wd
+    from services import world_perception as wperc
+    from tests.spec302_helpers import fresh_sim
+    from tests.test_spec302_director import hot, step
+
+    sim = fresh_sim()
+    hot(sim)
+    step(sim, 10)
+    step(sim, 11)
+    _ev, _ev12, digest = step(sim, 12)
+    assert any(d["kind"] == "crise" for d in digest)
+    crisis = wd.active_crises(sim)[0]
+    here = {
+        "world": {"current_location_id": crisis["region_id"], "world_clock": {"day": 12}},
+        "game_id": "g-302",
+    }
+    seen = wperc.perceivable(here, digest)
+    assert any(i["kind"] == "crise" for i in seen)
+    assert pc.world_replan_cause(here, seen, []) == "crise_regiao"
+    # longe da região, o digest real não é percebido e o gatilho não dispara
+    far_loc = "pantano_melancolia" if crisis["region_id"] != "pantano_melancolia" else "skallgard"
+    far = {**here, "world": {"current_location_id": far_loc, "world_clock": {"day": 12}}}
+    assert pc.world_replan_cause(far, wperc.perceivable(far, digest), []) is None

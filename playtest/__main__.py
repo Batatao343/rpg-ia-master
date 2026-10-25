@@ -390,6 +390,12 @@ def _cmd_matrix_suite(args) -> int:
 
 
 def main(argv=None) -> int:
+    import os
+
+    if os.getenv("RPG_LOG_LEVEL"):  # opt-in: logs estruturados `rpg.*` no stdout do smoke
+        from observability.logging_setup import configure_logging
+
+        configure_logging()
     parser = argparse.ArgumentParser(prog="playtest", description="Harness de playtest agêntico")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
