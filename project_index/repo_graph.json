@@ -1,5 +1,5 @@
 {
-  "commit_sha": "71ff910fa4c2272b632e58bebb9e60219124d46e",
+  "commit_sha": "e154e314f1a04f07d85afd933e8b0814da769f57",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -152367,7 +152367,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 268
+        "line": 269
       },
       "source": "module:tests.test_spec306_npc_seed_expansion",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._has_phrase",
@@ -152411,7 +152411,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 249
+        "line": 250
       },
       "source": "module:tests.test_spec306_npc_seed_expansion",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._place_index",
@@ -152422,7 +152422,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 289
+        "line": 290
       },
       "source": "module:tests.test_spec306_npc_seed_expansion",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._public_words",
@@ -152433,7 +152433,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 207
+        "line": 208
       },
       "source": "module:tests.test_spec306_npc_seed_expansion",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._reachable",
@@ -152455,7 +152455,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 181
+        "line": 182
       },
       "source": "module:tests.test_spec306_npc_seed_expansion",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._region_count",
@@ -152488,7 +152488,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 221
+        "line": 222
       },
       "source": "module:tests.test_spec306_npc_seed_expansion",
       "target": "symbol:tests.test_spec306_npc_seed_expansion.test_every_row_reachable",
@@ -152499,7 +152499,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 161
+        "line": 162
       },
       "source": "module:tests.test_spec306_npc_seed_expansion",
       "target": "symbol:tests.test_spec306_npc_seed_expansion.test_new_rows_mix",
@@ -152521,7 +152521,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 226
+        "line": 227
       },
       "source": "module:tests.test_spec306_npc_seed_expansion",
       "target": "symbol:tests.test_spec306_npc_seed_expansion.test_no_semantic_duplicates",
@@ -152543,7 +152543,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 272
+        "line": 273
       },
       "source": "module:tests.test_spec306_npc_seed_expansion",
       "target": "symbol:tests.test_spec306_npc_seed_expansion.test_place_names_require_filters",
@@ -152554,7 +152554,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 310
+        "line": 311
       },
       "source": "module:tests.test_spec306_npc_seed_expansion",
       "target": "symbol:tests.test_spec306_npc_seed_expansion.test_proper_nouns_from_public_codex",
@@ -152565,7 +152565,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 171
+        "line": 172
       },
       "source": "module:tests.test_spec306_npc_seed_expansion",
       "target": "symbol:tests.test_spec306_npc_seed_expansion.test_race_coverage_new_rows",
@@ -152576,7 +152576,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 203
+        "line": 204
       },
       "source": "module:tests.test_spec306_npc_seed_expansion",
       "target": "symbol:tests.test_spec306_npc_seed_expansion.test_region_ids_match_lore",
@@ -152587,7 +152587,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 191
+        "line": 192
       },
       "source": "module:tests.test_spec306_npc_seed_expansion",
       "target": "symbol:tests.test_spec306_npc_seed_expansion.test_regional_floor",
@@ -152609,7 +152609,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 328
+        "line": 329
       },
       "source": "module:tests.test_spec306_npc_seed_expansion",
       "target": "symbol:tests.test_spec306_npc_seed_expansion.test_validator_flags_unreachable_and_dup_label",
@@ -152620,7 +152620,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 324
+        "line": 325
       },
       "source": "module:tests.test_spec306_npc_seed_expansion",
       "target": "symbol:tests.test_spec306_npc_seed_expansion.test_validator_green",
@@ -432966,7 +432966,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 256
+        "line": 257
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion._place_index",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._norm",
@@ -432977,7 +432977,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 258
+        "line": 259
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion._place_index",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._norm",
@@ -432988,21 +432988,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 263
+        "line": 264
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion._place_index",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._norm",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 250
-      },
-      "source": "symbol:tests.test_spec306_npc_seed_expansion._place_index",
-      "target": "symbol:tests.test_spec306_npc_seed_expansion._read",
       "type": "calls"
     },
     {
@@ -433032,7 +433021,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 295
+        "line": 253
+      },
+      "source": "symbol:tests.test_spec306_npc_seed_expansion._place_index",
+      "target": "symbol:tests.test_spec306_npc_seed_expansion._read",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec306_npc_seed_expansion.py",
+        "line": 296
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion._public_words",
       "target": "symbol:services.codex_loader.parse_codex_file",
@@ -433043,21 +433043,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 303
+        "line": 304
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion._public_words",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._read",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 213
-      },
-      "source": "symbol:tests.test_spec306_npc_seed_expansion._reachable",
-      "target": "symbol:services.npc_seed._allowed",
       "type": "calls"
     },
     {
@@ -433087,7 +433076,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 211
+        "line": 216
+      },
+      "source": "symbol:tests.test_spec306_npc_seed_expansion._reachable",
+      "target": "symbol:services.npc_seed._allowed",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec306_npc_seed_expansion.py",
+        "line": 212
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion._reachable",
       "target": "symbol:services.npc_seed.compatible_factions",
@@ -433098,7 +433098,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 208
+        "line": 209
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion._reachable",
       "target": "symbol:services.npc_seed.lore_ids",
@@ -433131,7 +433131,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 222
+        "line": 223
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_every_row_reachable",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._all_rows",
@@ -433142,7 +433142,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 222
+        "line": 223
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_every_row_reachable",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._reachable",
@@ -433153,7 +433153,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 163
+        "line": 164
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_new_rows_mix",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._category",
@@ -433164,7 +433164,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 162
+        "line": 163
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_new_rows_mix",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._new_rows",
@@ -433197,7 +433197,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 235
+        "line": 236
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_no_semantic_duplicates",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._norm",
@@ -433208,7 +433208,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 231
+        "line": 232
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_no_semantic_duplicates",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._tables",
@@ -433219,7 +433219,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 238
+        "line": 239
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_no_semantic_duplicates",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._tokens",
@@ -433241,7 +433241,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 275
+        "line": 276
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_place_names_require_filters",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._all_rows",
@@ -433252,7 +433252,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 278
+        "line": 279
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_place_names_require_filters",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._has_phrase",
@@ -433263,7 +433263,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 281
+        "line": 282
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_place_names_require_filters",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._has_phrase",
@@ -433274,7 +433274,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 276
+        "line": 277
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_place_names_require_filters",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._norm",
@@ -433285,7 +433285,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 273
+        "line": 274
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_place_names_require_filters",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._place_index",
@@ -433296,7 +433296,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 313
+        "line": 314
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_proper_nouns_from_public_codex",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._all_rows",
@@ -433307,7 +433307,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 311
+        "line": 312
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_proper_nouns_from_public_codex",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._public_words",
@@ -433318,7 +433318,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 172
+        "line": 173
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_race_coverage_new_rows",
       "target": "symbol:services.npc_seed.lore_ids",
@@ -433329,7 +433329,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 174
+        "line": 175
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_race_coverage_new_rows",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._new_rows",
@@ -433340,7 +433340,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 204
+        "line": 205
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_region_ids_match_lore",
       "target": "symbol:services.npc_seed.lore_ids",
@@ -433351,7 +433351,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 194
+        "line": 195
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_regional_floor",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._region_count",
@@ -433362,7 +433362,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 198
+        "line": 199
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_regional_floor",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._region_count",
@@ -433373,7 +433373,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 192
+        "line": 193
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_regional_floor",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._tables",
@@ -433395,7 +433395,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 343
+        "line": 344
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_validator_flags_unreachable_and_dup_label",
       "target": "symbol:services.content_validator.validate_npc_seed_tables",
@@ -433406,7 +433406,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 329
+        "line": 330
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_validator_flags_unreachable_and_dup_label",
       "target": "symbol:tests.test_spec306_npc_seed_expansion._tables",
@@ -433417,7 +433417,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec306_npc_seed_expansion.py",
-        "line": 325
+        "line": 326
       },
       "source": "symbol:tests.test_spec306_npc_seed_expansion.test_validator_green",
       "target": "symbol:services.content_validator.validate_npc_seed_tables",
@@ -544867,7 +544867,7 @@
     {
       "id": "symbol:tests.test_spec306_npc_seed_expansion._has_phrase",
       "kind": "test",
-      "line": 268,
+      "line": 269,
       "path": "tests/test_spec306_npc_seed_expansion.py",
       "qualified_name": "tests.test_spec306_npc_seed_expansion._has_phrase"
     },
@@ -544895,21 +544895,21 @@
     {
       "id": "symbol:tests.test_spec306_npc_seed_expansion._place_index",
       "kind": "test",
-      "line": 249,
+      "line": 250,
       "path": "tests/test_spec306_npc_seed_expansion.py",
       "qualified_name": "tests.test_spec306_npc_seed_expansion._place_index"
     },
     {
       "id": "symbol:tests.test_spec306_npc_seed_expansion._public_words",
       "kind": "test",
-      "line": 289,
+      "line": 290,
       "path": "tests/test_spec306_npc_seed_expansion.py",
       "qualified_name": "tests.test_spec306_npc_seed_expansion._public_words"
     },
     {
       "id": "symbol:tests.test_spec306_npc_seed_expansion._reachable",
       "kind": "test",
-      "line": 207,
+      "line": 208,
       "path": "tests/test_spec306_npc_seed_expansion.py",
       "qualified_name": "tests.test_spec306_npc_seed_expansion._reachable"
     },
@@ -544923,7 +544923,7 @@
     {
       "id": "symbol:tests.test_spec306_npc_seed_expansion._region_count",
       "kind": "test",
-      "line": 181,
+      "line": 182,
       "path": "tests/test_spec306_npc_seed_expansion.py",
       "qualified_name": "tests.test_spec306_npc_seed_expansion._region_count"
     },
@@ -544944,14 +544944,14 @@
     {
       "id": "symbol:tests.test_spec306_npc_seed_expansion.test_every_row_reachable",
       "kind": "test",
-      "line": 221,
+      "line": 222,
       "path": "tests/test_spec306_npc_seed_expansion.py",
       "qualified_name": "tests.test_spec306_npc_seed_expansion.test_every_row_reachable"
     },
     {
       "id": "symbol:tests.test_spec306_npc_seed_expansion.test_new_rows_mix",
       "kind": "test",
-      "line": 161,
+      "line": 162,
       "path": "tests/test_spec306_npc_seed_expansion.py",
       "qualified_name": "tests.test_spec306_npc_seed_expansion.test_new_rows_mix"
     },
@@ -544965,7 +544965,7 @@
     {
       "id": "symbol:tests.test_spec306_npc_seed_expansion.test_no_semantic_duplicates",
       "kind": "test",
-      "line": 226,
+      "line": 227,
       "path": "tests/test_spec306_npc_seed_expansion.py",
       "qualified_name": "tests.test_spec306_npc_seed_expansion.test_no_semantic_duplicates"
     },
@@ -544979,35 +544979,35 @@
     {
       "id": "symbol:tests.test_spec306_npc_seed_expansion.test_place_names_require_filters",
       "kind": "test",
-      "line": 272,
+      "line": 273,
       "path": "tests/test_spec306_npc_seed_expansion.py",
       "qualified_name": "tests.test_spec306_npc_seed_expansion.test_place_names_require_filters"
     },
     {
       "id": "symbol:tests.test_spec306_npc_seed_expansion.test_proper_nouns_from_public_codex",
       "kind": "test",
-      "line": 310,
+      "line": 311,
       "path": "tests/test_spec306_npc_seed_expansion.py",
       "qualified_name": "tests.test_spec306_npc_seed_expansion.test_proper_nouns_from_public_codex"
     },
     {
       "id": "symbol:tests.test_spec306_npc_seed_expansion.test_race_coverage_new_rows",
       "kind": "test",
-      "line": 171,
+      "line": 172,
       "path": "tests/test_spec306_npc_seed_expansion.py",
       "qualified_name": "tests.test_spec306_npc_seed_expansion.test_race_coverage_new_rows"
     },
     {
       "id": "symbol:tests.test_spec306_npc_seed_expansion.test_region_ids_match_lore",
       "kind": "test",
-      "line": 203,
+      "line": 204,
       "path": "tests/test_spec306_npc_seed_expansion.py",
       "qualified_name": "tests.test_spec306_npc_seed_expansion.test_region_ids_match_lore"
     },
     {
       "id": "symbol:tests.test_spec306_npc_seed_expansion.test_regional_floor",
       "kind": "test",
-      "line": 191,
+      "line": 192,
       "path": "tests/test_spec306_npc_seed_expansion.py",
       "qualified_name": "tests.test_spec306_npc_seed_expansion.test_regional_floor"
     },
@@ -545021,14 +545021,14 @@
     {
       "id": "symbol:tests.test_spec306_npc_seed_expansion.test_validator_flags_unreachable_and_dup_label",
       "kind": "test",
-      "line": 328,
+      "line": 329,
       "path": "tests/test_spec306_npc_seed_expansion.py",
       "qualified_name": "tests.test_spec306_npc_seed_expansion.test_validator_flags_unreachable_and_dup_label"
     },
     {
       "id": "symbol:tests.test_spec306_npc_seed_expansion.test_validator_green",
       "kind": "test",
-      "line": 324,
+      "line": 325,
       "path": "tests/test_spec306_npc_seed_expansion.py",
       "qualified_name": "tests.test_spec306_npc_seed_expansion.test_validator_green"
     },
@@ -549647,5 +549647,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:b43f7fcb66638d456bc2863c0130f75590097e21973231b455e76b3a75483146"
+  "source_tree_hash": "sha256:6ac22dd1e2a1429cb6c65016ecc5a647f51cd11e20aae31ee54e9361f1c63ae7"
 }
