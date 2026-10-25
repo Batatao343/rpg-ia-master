@@ -1,6 +1,6 @@
 # SPEC-313 — Quests ancoradas em lore (caça, entrega, escolta, rumor, mortos)
 
-> **Status:** `in-progress` (implementada 25/10 no worktree; falta revisão independente, suíte completa e smoke real; escopo e decisões D-A/D-B do dono em 24/10; demais Dx no default recomendado, §9)
+> **Status:** `done` (implementada 25/10; revisão Sol CHANGES_REQUIRED → P1/P2 corrigidos; smoke real 25/10, cobertura parcial)
 > **Criada:** 2026-10-24 · **Atualizada:** 2026-10-24
 > **Origem:** `docs/mundo-vivo/REVISAO-ORQUESTRADA-2026-10-24.md` proposta **N6** (§4.2, linha 239),
 > §2.3 (linhas 176-177: "Quest de mundo: só motor" / "Quest proposta pela LLM: sem âncora,
@@ -875,3 +875,9 @@ A SPEC-312 (escrita em paralelo, branch `spec-312`) define a interface de rumor 
 (§3.6 da 312), sem expor `truth` na oferta. **Esta spec segue a interface da 312**, que pousa antes; os
 nomes `heard_rumors`/`rumor_truth`/`mark_investigated` daqui são substituídos por ela na Etapa 0. Sem a
 312 pousada, `investigar_rumor` fica desligado (como já previsto).
+
+## Smoke real §6 (25/10, coordenador, DeepSeek, ~US$ 0,10)
+
+- 1ª rodada (`--scenario lore_quests` seeds 31–34): 0 violação, mas 29 `downgraded not_in_menu` × 4 `offered`; os cenários não variavam por seed. Corrigido em `08dc91c5` (menu vazio → `<GANCHOS_POSSIVEIS>` manda `kind=comum`; motivo do rebaixamento com `menu_size`; cenários `lore_quests_entrega/_rumor/_escolta`).
+- 2ª rodada: caça `20261025-030920-207037` — oferecida ("O rastro do Renegado"), 1 `downgraded menu_empty`, não concluída em 12 turnos (o bot não enfrentou a âncora; a conclusão por morte está coberta pelo teste de integração do P1-1). Entrega `20261025-031152-647355` — `entregar_material` oferecida ("A Entrega do Musgo Cinzento"), 1 `downgraded not_in_menu` com `menu_size=3` (único erro real do modelo: ~1 em 6 propostas), não entregue em 10 turnos. Rumor `20261025-031417-018591` — `investigar_rumor` oferecida e **concluída `desmentido`**, 0 violação. Escolta `20261025-031558-561871` — o NPC ofereceu caça em vez de escolta (`smoke.lore_quests_escolta_not_observed`).
+- **Follow-up:** observar no real a conclusão de caça, entrega e escolta (perfil de bot que persegue a quest ativa). Staging fica `RPG_LORE_QUESTS=shadow` (D9) até isso.
