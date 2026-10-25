@@ -1,6 +1,6 @@
 # SPEC-311 — Planner que vê o mundo percebido, preço com motivo e RAG de lore contextual
 
-> **Status:** `in-progress` (implementada em 25/10; falta revisão independente, suíte completa e smoke real; dono 24/10: "escreva specs para isso", onda 2 do mundo vivo; propostas R8, R9 e R10 da revisão orquestrada; as decisões D1–D4 da §9 têm default recomendado)
+> **Status:** `done` (implementada 25/10; revisão Sol APPROVED_WITH_FOLLOWUPS, P2 corrigidos; smoke real 25/10)
 > **Criada:** 2026-10-24 · **Atualizada:** 2026-10-25
 > **Origem:** `docs/mundo-vivo/REVISAO-ORQUESTRADA-2026-10-24.md` §4.1 (R8, R9, R10), achado A9 (§1.1, linha 49) e §2.1 (linhas 139-143).
 > **Depende de:** SPEC-302, SPEC-303, SPEC-305, SPEC-307, SPEC-298 e SPEC-301 (`done`). **SPEC-308** (`approved`, helper `world_perception.event_perceived`) e **SPEC-309** (`approved`, módulo `services/perceived_world.py`) precisam estar `done` **só para a Etapa 4**. As Etapas 1 a 3 não dependem delas e podem pousar antes.
@@ -624,3 +624,10 @@ Todas têm default recomendado. O executor segue o default se o dono não disser
   embedding por pack, como hoje). Alternativa: query composta só para a lore. A memória de sessão
   fica com a query crua, ao custo de um segundo embedding por pack (latência e custo de embedding,
   não de LLM).
+
+## Smoke real §6 (25/10, coordenador, DeepSeek, ~US$ 0,045)
+
+- Passo 1 (`--scenario mundo --seed 41`): 1ª tentativa `20261025-011740-064439` sem logs (`campaign.world_replan_trigger` invisível; o playtest não ligava os loggers `rpg.*` → `RPG_LOG_LEVEL` opt-in em `6886bc2e`). Repetido `20261025-013325-146679` com `RPG_LOG_LEVEL=info`: 20 turnos, 0 violação, `world_replan_trigger` → `campaign.replan reason=needs_replan`. Beats do novo plano usam o cerco como gancho ("tochas de tropas sem insígnia", "notícias do cerco e dos portões fechados", "recrutadores que percorrem as vilas"), sem número nem causa inventada; só locais percebidos.
+- Passo 2 (`--scenario comercio --seed 42`, `20261025-012143-224493`) e passo 3 (`--profile comerciante --seed 43`, `20261025-012312-376995`): 0 violação; compra/venda citam no máximo um motivo ("cobra caro por natureza"), sem número de motivo. Números de preço só quando o jogador pede a lista do estoque (valor do motor).
+- Passo 4 (lore por região): não comparado turno a turno; coberto pelos testes de R20/R21 e pela mitigação P2-1 (páginas de fação secreta sem bônus de região até a SPEC-314).
+- Tokens do planner (P2-5 da revisão): não medidos; follow-up.
