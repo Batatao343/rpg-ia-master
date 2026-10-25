@@ -744,16 +744,24 @@ devolver `anchor_id` com nome em vez de id, `kind` fora do enum (Groq strict) ou
    `mock=False`; ≥ 1 proposta com `kind="cacar_criatura"` aceita **ou** rebaixamento logado com
    motivo (anotar o motivo); `/game/state` com `kind="mundo"`, `deadline_label`, `reward_hint` em
    palavras e sem `lore_anchor`/`reward_gold_planned`; combate na região com a âncora → concluída.
-2. **Entrega** (mesmo cenário, `--seed 32`, início no `pantano_melancolia` com um druida): a quest
+2. **Entrega** (`--scenario lore_quests_entrega --turns 10 --seed 32`; início no `pantano_melancolia`, druida em cena e 2 `musgo_cinzento` no inventário): a quest
    `cha_druidas_anel_lama` é oferecida; viajar a `na_anel_lama` com 2 `musgo_cinzento` (fixture do
    cenário) e entregar → concluída, item removido uma vez, ouro pago uma vez.
-3. **Rumor falso** (só se a SPEC-312 estiver `done`; `--seed 33`): rumor `truth=False` ouvido →
-   quest → investigar no local → `outcome="boato"`; ler o transcrito: o narrador não trata como
+3. **Rumor falso** (`--scenario lore_quests_rumor --turns 10 --seed 33`; boato `truth=False` já percebido): rumor ouvido →
+   quest → investigar no local → `outcome="desmentido"` (rótulo "era só boato"); ler o transcrito: o narrador não trata como
    verdade antes nem depois; nenhum fato novo no `event_log`.
-4. **Escolta** (`--seed 34`, mercador itinerante em cena): oferta → viagem de 2 locais → o NPC
+4. **Escolta** (`--scenario lore_quests_escolta --turns 10 --seed 34`, mercador itinerante em cena): oferta → viagem de 2 locais → o NPC
    aparece em cena em cada parada → chegada conclui.
 5. Leitura humana de 5 trechos dos transcritos: nenhum número de dias ou moedas na fala do NPC
    sobre a tarefa, nenhuma fação desconhecida nomeada, nenhuma tarefa que o personagem não ouviu.
+
+Comando-base (todas as flags; trocar `--scenario`/`--seed`): `RPG_WORLD_ENGINE=on RPG_WORLD_QUESTS=on
+RPG_LORE_QUESTS=on RPG_NPC_WORLD=on RPG_NPC_KNOWLEDGE=on RPG_LOG_LEVEL=info bash scripts/dev/py.sh -m
+playtest run --scenario <lore_quests|lore_quests_entrega|lore_quests_rumor|lore_quests_escolta>
+--turns <12|10|10|10> --real --max-cost 0.40 --seed <31|32|33|34>`. Contar `lore_quest.downgraded` por
+`reason` (`menu_empty`, `kind_mismatch`, `name_not_id`, `not_in_menu`): só `name_not_id`/`not_in_menu`
+com menu não vazio contam como erro do modelo; `menu_empty` é a LLM ancorando sem menu (o prompt agora
+diz `kind="comum"` quando o teto/cooldown esvazia o menu).
 
 Custo esperado: ≤ US$ 1,20. Se um passo estourar o teto, parar e registrar. Se o modelo errar o
 `anchor_id` com frequência (> 50% de rebaixamentos), registrar e ajustar só o texto do menu (nunca

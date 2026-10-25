@@ -76,7 +76,12 @@ def test_one_per_source_any_status():
     _b, menu = lq.anchor_menu(st, NPC_KEY)
     p = proposal("cacar_criatura", aid)
     _q, again, reason = wq.offer_from_proposal(st, p, NPC_KEY, menu, 40)
-    assert again is None and reason in {"not_in_menu", "source_used", "origin_cooldown"}
+    assert again is None and reason in {
+        "not_in_menu",
+        "menu_empty",
+        "source_used",
+        "origin_cooldown",
+    }
 
 
 def test_origin_cooldown_and_anchor_cooldown_in_days():
@@ -98,7 +103,8 @@ def test_lore_cap_two_and_global_cap():
     _b, menu = lq.anchor_menu(st, NPC_KEY)
     st["quests"] = [{**base, "id": "a"}, {**base, "id": "b"}]
     assert lq.cap_reached(st)
-    assert lq.anchor_menu(st, NPC_KEY) == ("", [])  # sem vaga: nem promete a tarefa
+    block, empty = lq.anchor_menu(st, NPC_KEY)  # sem vaga: nem promete a tarefa
+    assert empty == [] and 'kind="comum"' in block and "anchor_id=" not in block
     _q, created, reason = wq.offer_from_proposal(
         st, proposal("cacar_criatura", first_anchor(menu, "cacar_criatura")), NPC_KEY, menu, 17
     )

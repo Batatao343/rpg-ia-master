@@ -25,10 +25,19 @@ _SCENARIOS = {
     "companheiro_exposto": "explorador",
     # SPEC-313: caçador em Skallgard oferece uma tarefa ancorada na lore (caça)
     "lore_quests": "explorador",
+    # SPEC-313 §6 passos 2-4: entrega (druida + 2 musgo), rumor falso percebido, escolta
+    "lore_quests_entrega": "explorador",
+    "lore_quests_rumor": "explorador",
+    "lore_quests_escolta": "explorador",
 }
+_LORE_VARIANTS = ("lore_quests_entrega", "lore_quests_rumor", "lore_quests_escolta")
 _NPC_SCENARIOS = ("npc_perigo", "companheiro_exposto")
 LORE_NPC_NAME = "Rolf Caçador"
 LORE_NPC_ID = "npc_mv_rolf_cacador"
+LORE_DRUID_ID = "npc_mv_rolf_druida"
+LORE_MERCHANT_ID = "npc_mv_rolf_mercador"
+LORE_RUMOR_SEED = "rumor_a_legiao_esta_fabricando_soldados_a_partir_de_mortos"
+LORE_RUMOR_LOC = "na_anel_ferro"
 SKEK_ID = "npc_mv_skek_eco_curto"
 WAIT_LOCATION = "ma_saidas_baixas"
 
@@ -153,10 +162,162 @@ def _prepare_lore_quests(prepared: dict) -> dict:
     return prepared
 
 
+def _lore_npc(name: str, npc_id: str, role: str, loc_id: str, loc_name: str) -> dict:
+    return {
+        "id": npc_id,
+        "name": name,
+        "persona": f"{role.capitalize()} de {loc_name}; fala pouco e conhece o ofício.",
+        "role": role,
+        "relationship": 6,
+        "interaction_count": 2,
+        "in_scene": True,
+        "known_by_player": True,
+        "home_location_id": loc_id,
+        "location": loc_name,
+        "traits": [],
+        "memory": [],
+    }
+
+
+def _prepare_lore_variant(prepared: dict, name: str) -> dict:
+    """SPEC-313 §6 passos 2-4. Pré-condições mecânicas; oferta, viagem e conclusão são do jogo."""
+    from services import npc_world
+    from services import rumors as _rumors
+    from services import world_engine as we
+
+    day = int(((prepared.get("world") or {}).get("world_clock") or {}).get("day", 1) or 1)
+    if name == "lore_quests_entrega":
+        loc = "pantano_melancolia"
+        npc = _lore_npc("Rolf Druida", LORE_DRUID_ID, "druida herbalista", loc, "Pântano")
+        player = copy.deepcopy(prepared.get("player") or {})
+        player["inventory"] = [
+            *[i for i in (player.get("inventory") or []) if i.get("id") != "musgo_cinzento"],
+            {"id": "musgo_cinzento", "qty": 2},
+        ]
+        prepared["player"] = player
+    elif name == "lore_quests_escolta":
+        loc = "nova_arcadia"
+        npc = _lore_npc(
+            "Rolf Mercador", LORE_MERCHANT_ID, "mercador de caravana", loc, "Nova Arcádia"
+        )
+    else:  # lore_quests_rumor
+        loc = "nova_arcadia"
+        npc = None
+    prepared["world"] = _move_world(prepared.get("world") or {}, loc)
+    if npc:
+        npcs = copy.deepcopy(prepared.get("npcs") or {})
+        npcs[npc["name"]] = npc
+        prepared["npcs"] = npcs
+        prepared["active_npc_name"] = npc["name"]
+    sim = prepared.get("world_sim") or we._new_sim(str(prepared.get("game_id", "")), day, [], "on")
+    sim["calm_until_day"] = day + 30  # sem crise nova atrapalhando o roteiro
+    if name == "lore_quests_rumor":
+        # boato FALSO já percebido, com gancho de quest (a verdade é só do motor)
+        rid = _rumors._sha(str(prepared.get("game_id", "")), LORE_RUMOR_SEED, day)[:16]
+        sim["rumors"] = [
+            *[r for r in (sim.get("rumors") or []) if r.get("rumor_id") != rid],  # idempotente
+            {
+                "rumor_id": rid,
+                "seed_id": LORE_RUMOR_SEED,
+                "family": "lore",
+                "region_id": "nova_arcadia",
+                "location_id": LORE_RUMOR_LOC,
+                "entities": [],
+                "subject": "pessoa",
+                "truth": False,
+                "quest_eligible": True,
+                "born_day": day,
+                "born_turn": 0,
+                "expires_day": day + 14,
+                "perceived_day": max(1, day - 1),
+                "resolution": "",
+            },
+        ]
+        sim["rumor_last_perceived_day"] = day  # cooldown: nenhum outro boato percebido hoje
+    prepared["world_sim"] = sim
+    if name == "lore_quests_escolta":
+        npc_sim = prepared.get("npc_sim") or npc_world._new_sim(day)
+        npc_sim["npcs"][LORE_MERCHANT_ID] = {
+            "archetype": "mercador_itinerante",
+            "home": loc,
+            "pos": {"location_id": loc, "since_day": day, "arrive_day": None},
+            "status": "",
+            "frozen": False,
+        }
+        npc_sim["roster"] = [
+            *[r for r in npc_sim.get("roster", []) if r != LORE_MERCHANT_ID],
+            LORE_MERCHANT_ID,
+        ]
+        prepared["npc_sim"] = npc_sim
+    return prepared
+
+
+def _lore_hop_text(state: dict, target: str) -> str:
+    """Próximo passo (um nó do mapa) rumo a `target`, em texto de viagem."""
+    import gamedata
+    from services import world_distance
+
+    cur = str((state.get("world") or {}).get("current_location_id") or "")
+    best = min(  # proximo no do caminho minimo; o proprio alvo vence os empates (aneis custam 0)
+        (
+            (
+                world_distance._edge_cost(cur, n["id"])
+                + world_distance.travel_periods(n["id"], target),
+                0 if n["id"] == target else 1,
+                n["id"],
+            )
+            for n in gamedata.get_connections(cur)
+            if n.get("id") and world_distance.travel_periods(n["id"], target) is not None
+        ),
+        default=(0, 0, target),
+    )
+    return f"Viajo para {gamedata.get_location(best[2])['name']}."
+
+
+_LORE_ASK = {
+    "lore_quests_entrega": "Converso com Rolf Druida e peço uma tarefa concreta de entrega.",
+    "lore_quests_escolta": "Converso com Rolf Mercador: preciso de uma tarefa concreta, uma escolta.",
+    "lore_quests_rumor": "Olho ao redor e escuto o que dizem sobre os soldados da Legião.",
+}
+_LORE_INVESTIGATE = (
+    "Investigo as fundições e pergunto aos ferreiros sobre os soldados.",
+    "Examino o local e procuro sinais do que dizem por aí.",
+    "Escuto os trabalhadores e confiro a história com cuidado.",
+)
+
+
+def _lore_variant_decision(name: str, turn: int, state: dict) -> ProfileDecision:
+    """Roteiro: pede a tarefa; com a quest ativa viaja ao alvo e cumpre o verbo do tipo."""
+    from services.lore_quests import LORE_KINDS
+
+    quest = next(
+        (
+            q
+            for q in state.get("quests") or []
+            if q.get("world_kind") in LORE_KINDS and q.get("status") == "active"
+        ),
+        None,
+    )
+    if quest is None:
+        return ProfileDecision(text=_LORE_ASK[name], mode="free_text")
+    cur = str((state.get("world") or {}).get("current_location_id") or "")
+    target = str(quest.get("location_id") or "")
+    if cur != target:
+        return ProfileDecision(text=_lore_hop_text(state, target), mode="free_text")
+    if quest["world_kind"] == "entregar_material":
+        return ProfileDecision(text="Entrego o musgo ao boticário.", mode="free_text")
+    if quest["world_kind"] == "investigar_rumor":
+        text = _LORE_INVESTIGATE[int(turn) % len(_LORE_INVESTIGATE)]
+        return ProfileDecision(text=text, mode="free_text")
+    return ProfileDecision(text="Descanso um instante e observo o local.", mode="free_text")
+
+
 def prepare(name: str, state: dict) -> dict:
     """Devolve cópia do estado com pré-condições mecânicas do cenário."""
     profile_for(name)  # valida catálogo
     prepared = copy.deepcopy(dict(state or {}))
+    if name in _LORE_VARIANTS:
+        return _prepare_lore_variant(prepared, name)
     if name == "lore_quests":
         return _prepare_lore_quests(prepared)
     if name == "recrutamento":
@@ -226,6 +387,8 @@ def decision_for(name: str, turn: int, state: dict) -> ProfileDecision | None:
     profile_for(name)
     if name == "mundo" or name in _NPC_SCENARIOS:
         return ProfileDecision(text="Vou descansar e acampar aqui.", mode="free_text")
+    if name in _LORE_VARIANTS:
+        return _lore_variant_decision(name, turn, state)
     if name == "lore_quests":
         return ProfileDecision(
             text=f"Converso com {LORE_NPC_NAME} e peço um trabalho: uma tarefa concreta.",
@@ -307,6 +470,24 @@ def oracle_violations(name: str, result) -> list[dict]:
                     )
                 ]
         return []
+
+    if name in _LORE_VARIANTS:
+        from services.lore_quests import LORE_KINDS
+
+        want = {
+            "lore_quests_entrega": "entregar_material",
+            "lore_quests_rumor": "investigar_rumor",
+            "lore_quests_escolta": "escoltar",
+        }[name]
+        if any(q.get("world_kind") == want for q in state.get("quests") or []):
+            return []
+        return [
+            _violation(
+                f"smoke.{name}_not_observed",
+                f"Nenhuma quest `{want}` foi criada no cenário.",
+                turn,
+            )
+        ]
 
     if name == "lore_quests":
         from services.lore_quests import LORE_KINDS

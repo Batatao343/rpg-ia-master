@@ -162,3 +162,64 @@ def test_scenario_lore_quests_offers_hunt(monkeypatch):
         q for q in result.final_state.get("quests", []) if q.get("world_kind") in lq.LORE_KINDS
     ]
     assert quests and quests[0]["heard_via"]["channel"] == "npc"
+
+
+def _run(name: str, turns: int, monkeypatch):
+    setup_env(monkeypatch)
+    from playtest.runner import run_campaign
+
+    result = run_campaign("explorador", turns=turns, seed=31, scenario=name)
+    errors = [v for v in result.violations if v.get("severity") == "error"]
+    assert not errors, errors
+    return result.final_state
+
+
+def test_scenario_lore_quests_entrega_offers_and_delivers(monkeypatch):
+    st = _run("lore_quests_entrega", 8, monkeypatch)
+    q = next(q for q in st["quests"] if q["world_kind"] == "entregar_material")
+    assert q["lore_anchor"]["id"] == "cha_druidas_anel_lama"
+    assert q["status"] == "completed"
+    assert not [i for i in st["player"]["inventory"] if i.get("id") == "musgo_cinzento"]
+
+
+def test_scenario_lore_quests_rumor_investigates_false_rumor(monkeypatch):
+    st = _run("lore_quests_rumor", 8, monkeypatch)
+    q = next(q for q in st["quests"] if q["world_kind"] == "investigar_rumor")
+    assert q["heard_via"]["channel"] == "rumor"
+    assert q["status"] == "completed" and q["outcome"] == "desmentido"
+
+
+def test_scenario_lore_quests_escolta_offers_and_travels(monkeypatch):
+    st = _run("lore_quests_escolta", 8, monkeypatch)
+    q = next(q for q in st["quests"] if q["world_kind"] == "escoltar")
+    assert q["status"] == "completed"
+
+
+def test_scenario_variants_registered_and_mock_picks_requested_kind():
+    from playtest import scenarios
+
+    assert {"lore_quests_entrega", "lore_quests_rumor", "lore_quests_escolta"} <= set(
+        scenarios.names()
+    )
+    from langchain_core.messages import HumanMessage, SystemMessage
+
+    import mock_llm
+
+    menu = (
+        "<GANCHOS_POSSIVEIS>\n- kind=cacar_criatura anchor_id=a (x)\n"
+        "- kind=entregar_material anchor_id=b (y)\n</GANCHOS_POSSIVEIS>"
+    )
+    out = mock_llm._mock_lore_quest(
+        [SystemMessage(content=menu), HumanMessage(content="uma tarefa de entrega")]
+    )
+    assert out[0]["kind"] == "entregar_material" and out[0]["anchor_id"] == "b"
+
+
+def test_downgrade_causes_are_distinguished():
+    from services import lore_quests as lq
+
+    menu = [{"kind": "cacar_criatura", "anchor_id": "enemy_x", "label": "Lobo Cinzento anda"}]
+    assert lq._menu_miss_cause("cacar_criatura", "enemy_x", []) == "menu_empty"
+    assert lq._menu_miss_cause("escoltar", "enemy_x", menu) == "kind_mismatch"
+    assert lq._menu_miss_cause("cacar_criatura", "Lobo Cinzento", menu) == "name_not_id"
+    assert lq._menu_miss_cause("cacar_criatura", "outro", menu) == "not_in_menu"

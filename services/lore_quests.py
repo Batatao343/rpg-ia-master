@@ -30,7 +30,18 @@ MECHANICAL_KINDS = frozenset({"cacar_criatura", "entregar_material", "escoltar"}
 MAX_LORE_QUESTS_ACTIVE = 2
 PERIODS_PER_DAY = 5
 # downgrade = vira quest comum; o resto e descarte silencioso (R3 vs R9/R10/R17/R18)
-DOWNGRADE_REASONS = frozenset({"not_npc", "bad_kind", "not_in_menu", "invalid_anchor", "mode_off"})
+DOWNGRADE_REASONS = frozenset(
+    {
+        "not_npc",
+        "bad_kind",
+        "not_in_menu",
+        "menu_empty",  # a LLM ancorou sem menu (cap/cooldown/nada elegivel)
+        "kind_mismatch",  # anchor_id valido, mas de outro kind
+        "name_not_id",  # devolveu o nome/rotulo em vez do anchor_id exato
+        "invalid_anchor",
+        "mode_off",
+    }
+)
 
 _TIME_OR_MONEY = re.compile(
     r"\d+\s*(dia|dias|noite|noites|semana|semanas|hora|horas|moeda|moedas|ouro|coroa|coroas|"
@@ -264,8 +275,10 @@ def anchor_menu(state: dict, npc_key: str) -> tuple[str, list[dict]]:
     """`(bloco, itens)`. Bloco vazio se nada elegivel ou modo != on. Nunca inclui verdade de
     rumor, numero, perigo ou fraqueza (R11)."""
     m = mode()
-    if m == "off" or not _npc_here(state, npc_key) or cap_reached(state):
+    if m == "off" or not _npc_here(state, npc_key):
         return "", []
+    if cap_reached(state):
+        return _empty_notice(m), []
     from services import ecology
 
     day, cur = _day(state), _cur(state)
@@ -348,6 +361,12 @@ def anchor_menu(state: dict, npc_key: str) -> tuple[str, list[dict]]:
         if items:
             _log("shadow_offer", kind="menu", channel="npc", count=len(items))
         return "", []
+    if (
+        not items
+        and on_cooldown(state, "cacar_criatura", {"type": "enemy", "id": ""}, origin, day)
+        == "origin_cooldown"
+    ):
+        return _empty_notice(m), []
     items = _interleave(items)
     while items:
         block = _render_menu(items)
@@ -358,6 +377,17 @@ def anchor_menu(state: dict, npc_key: str) -> tuple[str, list[dict]]:
 
 
 MENU_TOKEN_BUDGET = 150
+
+
+def _empty_notice(m: str) -> str:
+    """Menu vazio por teto/cooldown: avisa a LLM para nao ancorar (ela lembra de menus
+    anteriores e repetiria o anchor_id). Em `shadow` nada e emitido."""
+    if m != "on":
+        return ""
+    return (
+        "<GANCHOS_POSSIVEIS>\nNenhuma tarefa do mundo para oferecer agora: "
+        'use sempre kind="comum" e deixe anchor_id vazio.\n</GANCHOS_POSSIVEIS>'
+    )
 
 
 def _interleave(items: list[dict]) -> list[dict]:
@@ -406,6 +436,18 @@ def rumor_public_text(state: dict, rumor_id: str) -> str:
 # --- validacao da ancora (R3) ----------------------------------------------------------
 
 
+def _menu_miss_cause(kind: str, anchor_id: str, menu: list[dict]) -> str:
+    """Por que a ancora nao esta no menu (telemetria do smoke real, SPEC-313 §6)."""
+    if not menu:
+        return "menu_empty"
+    if any(i.get("anchor_id") == anchor_id for i in menu):
+        return "kind_mismatch"
+    needle = _fold(anchor_id)
+    if needle and any(needle in _fold(i.get("label")) for i in menu):
+        return "name_not_id"
+    return "not_in_menu"
+
+
 def validate_anchor(
     state: dict,
     kind: str,
@@ -418,7 +460,7 @@ def validate_anchor(
     if kind not in NPC_PROPOSABLE:
         return False, "bad_kind"
     if not any(i.get("kind") == kind and i.get("anchor_id") == anchor_id for i in menu or []):
-        return False, "not_in_menu"
+        return False, _menu_miss_cause(kind, anchor_id, menu)
     cur = location_id or _cur(state)
     region = wp.region_of(cur)
     if kind == "cacar_criatura":

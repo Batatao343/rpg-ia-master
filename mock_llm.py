@@ -467,9 +467,15 @@ def _mock_lore_quest(messages) -> list[dict]:
     blob = "\n".join(str(getattr(m, "content", "")) for m in messages or [])
     if "<GANCHOS_POSSIVEIS>" not in blob:
         return []
-    m = re.search(r"- kind=(\w+) anchor_id=(\S+)", blob.split("<GANCHOS_POSSIVEIS>", 1)[1])
-    if not m:
+    rows = re.findall(r"- kind=(\w+) anchor_id=(\S+)", blob.split("<GANCHOS_POSSIVEIS>", 1)[1])
+    if not rows:
         return []
+    ask = _last_human(messages).lower()
+    wanted = next(
+        (k for key, k in (("entreg", "entregar_material"), ("escolt", "escoltar")) if key in ask),
+        "",
+    )
+    kind, anchor = next((r for r in rows if r[0] == wanted), rows[0])
     return [
         {
             "title": "Um pedido do mundo",
@@ -478,8 +484,8 @@ def _mock_lore_quest(messages) -> list[dict]:
             "origin_entity_id": "",
             "location_id": "",
             "reward_hint": "",
-            "kind": m.group(1),
-            "anchor_id": m.group(2),
+            "kind": kind,
+            "anchor_id": anchor,
         }
     ]
 

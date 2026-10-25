@@ -843,7 +843,7 @@ def offer_from_proposal(
             reason = "infeasible"
     if seed is None or reason:
         key = "downgraded" if reason in lq.DOWNGRADE_REASONS else "ignored"
-        lq._log(key, kind=kind, reason=reason)
+        lq._log(key, kind=kind, reason=reason, menu_size=len(menu or []))
         if reason == "cap":
             lq._log("cap_reached", kind=kind)
         return quests, None, reason
