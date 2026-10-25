@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "f13eb939895b621550708d51a934b7745696d6e4",
+  "commit_sha": "4f37cb23e483eb1fe59fae653c9c641b57b8c1d4",
   "edge_counts": {
-    "calls": 24033,
-    "contains": 863,
-    "defines": 12353,
-    "imports": 2022,
-    "likely_test_for": 1353,
+    "calls": 24130,
+    "contains": 865,
+    "defines": 12390,
+    "imports": 2032,
+    "likely_test_for": 1361,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:adac4a2848dfdcec0dc9c92097e5d1534e3e9c465194fb56060f855845358c9d",
+  "graph_hash": "sha256:18e85204092ad31dbe778161e5ee3590b5f4a95a862bf31c7027c859b89d4d22",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -873,6 +873,8 @@
     "tests/test_spec307_festivals.py",
     "tests/test_spec307_migration.py",
     "tests/test_spec307_playtest.py",
+    "tests/test_spec308_filtro.py",
+    "tests/test_spec308_oraculo.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -1065,14 +1067,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 881,
+    "class": 882,
     "endpoint": 64,
-    "file": 1011,
-    "function": 3945,
+    "file": 1013,
+    "function": 3951,
     "method": 794,
-    "module": 863,
-    "test": 6732
+    "module": 865,
+    "test": 6762
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:f0946adac704ff61e94b125d353d03464c4ba4f7d7704c02e1a72d07c47f61a2"
+  "source_tree_hash": "sha256:b43f7fcb66638d456bc2863c0130f75590097e21973231b455e76b3a75483146"
 }
