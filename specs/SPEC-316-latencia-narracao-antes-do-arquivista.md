@@ -1,6 +1,6 @@
 # SPEC-316 — Latência: narração entregue antes do arquivista e do commit (stream aberto)
 
-> **Status:** `in-progress` (servidor + testes implementados 25/10; pendem medição §6, revisão independente e UI do cliente na SPEC-320) (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
+> **Status:** `in-progress` (aprovada 25/10; implementada + revisão Sol aplicada; pousada na main em `shadow` 25/10; falta medição §6 com `on` no staging, que espera a SPEC-320)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** SPEC-036 (`done`, SSE), SPEC-200 (`done`, marcas ttfmc/ttlt), SPEC-213 (`done`, projeções), SPEC-247 (`done`, worker SSE sobrevive à desconexão)
 > **Desbloqueia:** SPEC-318 (trabalho fora do caminho crítico), SPEC-319 (streaming de tokens e cauda)
@@ -225,3 +225,9 @@ some no `state`, input libera só no `state`.
   (alternativa: apagar o texto — rejeitada: pior percepção e perde o que o LLM já produziu).
 - **D4 — Guard alterou o texto:** **substituir silenciosamente (`replace: true`)** sem aviso ao jogador
   (alternativa: mostrar aviso — rejeitada, caso raro e confuso).
+
+## Histórico de mudanças
+
+- 25/10 — aprovada pelo dono ("boa, aprovo"), padrões recomendados.
+- 25/10 — implementada (`883bb691`); revisão Sol CHANGES_REQUIRED (P1-1 recibo cru no texto antecipado; P2-1..5) → corrigida em `bee2a4f4`.
+- 25/10 — pousada na main com `RPG_EARLY_NARRATIVE` no default `shadow` (zero mudança para o jogador; mede `early_gain_ms`/`early_calc_ms`). Suíte completa verde. `done` só depois da medição §6 com `on` no staging, que por P2-2 espera a SPEC-320 (cliente com selo/"não salvo"/retry).
