@@ -1,6 +1,6 @@
 # SPEC-312 — Rumores com semente (lore → motor sorteia → LLM costura; boato falso nunca vira fato)
 
-> **Status:** `in-progress`
+> **Status:** `done` (implementada 25/10; revisão Sol APPROVED_WITH_FOLLOWUPS, P2 corrigidos; smoke real 25/10)
 > **Criada:** 2026-10-24 · **Atualizada:** 2026-10-24
 > **Origem:** proposta **N1** de `docs/mundo-vivo/REVISAO-ORQUESTRADA-2026-10-24.md` (§4.2, linha 234)
 > + §3 "Rumores com metadado" (linha 191) + §2.3 (linha 175: rumor = "só motor; sem boato falso").
@@ -806,3 +806,10 @@ RPG_NPC_KNOWLEDGE=on`): 0 erros, 0 violacoes. Cenario `mundo` (40 turnos): 10 ru
   Recomendado: **fora do v1** (confunde a leitura da crise da 305 antes de medir o v1).
 - **D6 — Teto por ação = 1** (descanso longo traz 1 rumor, não N). Recomendado: **1**
   `[BALANCEAR]`.
+
+## Smoke real §6 (25/10, coordenador, DeepSeek, ~US$ 0,05)
+
+- Passo 1 (`--scenario mundo --seed 31`, `20261025-014357-451478`): 20 turnos, 0 erro; 5 nascidos, 4 percebidos nos dias 2/4/6/8 (cooldown de 2 dias respeitado); `world.news` com rumores redigidos como boato ("Copistas da corte juram que as leis de Valerius foram escritas numa só noite"). As 23 violações `rag.persistence_error` foram HTTP da Jina (embeddings, externo; a 312 não toca no RAG) — run curto seguinte `20261025-015236-213402` (seed 33, 12 turnos) limpo: 0 violação.
+- Achados corrigidos em `610f8671` (D-12): rumor percebido expulso de `world.news` pelo FIFO de 12; artigo no template de avistamento; convite `<BOATOS>` + `rumor.proposed_seen` porque 35 turnos reais com a flag `on` não trouxeram proposta.
+- Passo 3 após a correção (`--profile diplomatico --seed 32`, `20261025-015830-120641`): 12 turnos, 0 violação; 3 turnos do narrador, `proposed_seen` 0/1/0, 1 `proposed_accepted`: "Dizem que há gente em Nova Arcádia que se reúne para ouvir pregadores falando do que dorme sob a pedra." (`family=narrador`, `truth=false`, sem número, sem nome desconhecido).
+- Passos 2 (taverneiro repete o boato) e 4 (TTL de 11 dias) cobertos pelos testes de propagação/TTL; não refeitos no real.
