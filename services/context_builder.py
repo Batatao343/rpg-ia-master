@@ -583,6 +583,9 @@ def _block(facts: list[ScoredFact]) -> str:
     return "\n".join(f.text for f in facts)
 
 
+LORE_SEP = "\n---\n"  # separador do RAG (rag._format_documents)
+
+
 def assemble_pack(
     facts: list[ScoredFact], budget: ContextBudget, lore_text: str = "", memory_text: str = ""
 ) -> ContextPack:
@@ -592,16 +595,28 @@ def assemble_pack(
     resultado RAG grande não torne a seção inteira indivisível e descartável."""
     facts = list(facts)
     if lore_text:
-        lore_id = "lore_content_" + hashlib.sha256(lore_text.encode("utf-8")).hexdigest()[:24]
-        facts.append(
-            ScoredFact(
-                text=lore_text,
-                score=1.0,
-                section="lore",
-                source_id=lore_id,
-                visibility="public",
+        # SPEC-311 R19: cada chunk do RAG é um fato próprio (cota curta ainda leva o 1º).
+        lore_chunks: list[str] = []
+        for part in (p.strip() for p in str(lore_text).split(LORE_SEP)):
+            while len(part) > 600:
+                cut = part.rfind(" ", 0, 601)
+                if cut < 300:
+                    cut = 600
+                lore_chunks.append(part[:cut].rstrip())
+                part = part[cut:].lstrip()
+            if part:
+                lore_chunks.append(part)
+        for index, chunk in enumerate(lore_chunks):
+            lore_id = "lore_content_" + hashlib.sha256(chunk.encode("utf-8")).hexdigest()[:24]
+            facts.append(
+                ScoredFact(
+                    text=chunk,
+                    score=1.0 - min(index, 1000) * 0.0001,
+                    section="lore",
+                    source_id=lore_id,
+                    visibility="public",
+                )
             )
-        )
     if memory_text:
         chunks: list[str] = []
         for line in (part.strip() for part in memory_text.splitlines()):
@@ -634,7 +649,7 @@ def assemble_pack(
         or "Sem mudanças registradas no mundo (estado canônico vale)."
     )
     world_state_block = f"<ESTADO_ATUAL_DO_MUNDO>\n{ws_body}\n</ESTADO_ATUAL_DO_MUNDO>"
-    lore_block = _block(chosen.get("lore", []))
+    lore_block = LORE_SEP.join(f.text for f in chosen.get("lore", []))
     memory_block = _block(chosen.get("session_memory", []))
     evidence_ids = [
         fact.source_id
@@ -824,12 +839,21 @@ def _build_context_pack(
         workers = max(1, min(3, int(os.getenv("RPG_CONTEXT_MAX_CONCURRENCY", "3"))))
     except ValueError:
         workers = 3
+    # SPEC-311 R23: lore prefere a região onde o herói está (story/planning/npc)
+    prefer_region = None
+    if purpose in ("story", "planning", "npc"):
+        from services import world_pressures
+
+        prefer_region = (
+            world_pressures.region_of(str(world.get("current_location_id") or "")) or None
+        )
     acquired = acquire_context_sources(
         embedded,
         game_id=game_id,
         npc_id=npc_id,
         max_workers=workers,
         readers=custom_readers,
+        **({"prefer_region": prefer_region} if prefer_region else {}),
     )
     source_text = {result.source: result.text for result in acquired}
     lore_text = source_text.get("lore", "")

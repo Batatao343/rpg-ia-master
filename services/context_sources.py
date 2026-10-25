@@ -67,9 +67,16 @@ def embed_context_query(
 
 
 def _default_readers(
-    query: EmbeddedContextQuery, *, game_id: str | None, npc_id: str | None
+    query: EmbeddedContextQuery,
+    *,
+    game_id: str | None,
+    npc_id: str | None,
+    prefer_region: str | None = None,
 ) -> dict[str, Callable[[], str]]:
     import rag
+
+    # SPEC-311 R23: a região só viaja quando existe (leitores/dublês antigos não a conhecem)
+    region_kw: dict[str, str] = {"prefer_region": prefer_region} if prefer_region else {}
 
     vector = list(query.vector) if query.vector is not None else None
     # A compatible profile was selected but its one shared embedding failed:
@@ -78,12 +85,16 @@ def _default_readers(
     shared_embedding_failed = query.vector is None and query.embedding_provider is not None
     readers: dict[str, Callable[[], str]] = {
         "lore": (
-            (lambda: rag.query_global_by_vector(vector, "lore", "public"))
+            (lambda: rag.query_global_by_vector(vector, "lore", "public", **region_kw))
             if vector is not None
             else (
                 (lambda: "")
                 if shared_embedding_failed
-                else (lambda: rag.query_rag(query.text, index_name="lore", max_visibility="public"))
+                else (
+                    lambda: rag.query_rag(
+                        query.text, index_name="lore", max_visibility="public", **region_kw
+                    )
+                )
             )
         ),
     }
@@ -117,8 +128,12 @@ def acquire_context_sources(
     npc_id: str | None,
     max_workers: int = 3,
     readers: dict[str, Callable[[], str]] | None = None,
+    prefer_region: str | None = None,
 ) -> tuple[ContextSourceResult, ...]:
-    readers = dict(readers or _default_readers(query, game_id=game_id, npc_id=npc_id))
+    readers = dict(
+        readers
+        or _default_readers(query, game_id=game_id, npc_id=npc_id, prefer_region=prefer_region)
+    )
     order = [source for source in ("lore", "session", "npc") if source in readers]
 
     def run(source: str) -> ContextSourceResult:

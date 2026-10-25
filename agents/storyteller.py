@@ -19,6 +19,7 @@ from services import graph_resolver as gr
 from services import law as _law_mod
 from services import quest_log
 from services.context_builder import build_context_pack
+from services.lore_query import compose_lore_query
 from services.prompt_guard import PLAYER_INPUT_RULE, guard_messages
 from services.structured_outputs import (
     CrimeClaim,
@@ -1111,6 +1112,14 @@ def storyteller_node(state: GameState):
             str(world.get("current_location") or ""),
         ):
             travel_needs_replan = True
+    # SPEC-311 R6-R8: o mundo mudou DIANTE do herói (crise na região, cidade caída, quest dele
+    # falhou) => o arco replaneja. Lê só o que foi percebido hoje; vale em todo caminho de saída.
+    from services.planner_context import world_replan_cause
+
+    _replan_cause = world_replan_cause(scene_state, perceived_items, wq_events)
+    if _replan_cause:
+        travel_needs_replan = True
+        _log_event("campaign", "world_replan_trigger", cause=_replan_cause)
 
     # (Ação livre: o gating é feito pelo PRÓPRIO narrador no prompt — sem chamada extra ao Ruler.)
 
@@ -1343,7 +1352,10 @@ def storyteller_node(state: GameState):
     # --- Fase 2.8: contexto centralizado (estado dinâmico + lore + memória, com budget) ---
     # ESTADO ATUAL entra ANTES da lore base: a verdade viva vence o canônico.
     pack = build_context_pack(
-        scene_state, query=f"{loc} {last_user_input}", purpose="story", game_id=game_id
+        scene_state,
+        query=compose_lore_query(scene_state, last_user_input),
+        purpose="story",
+        game_id=game_id,
     )
     lore_context = pack.lore_block or "Dark Fantasy Genérica."
     memoria_recente = pack.memory_block or "Sem memória recente dentro do budget deste turno."
@@ -2067,6 +2079,8 @@ def storyteller_node(state: GameState):
         applied_player = rested_player if rested_player is not None else discovery_player
         if applied_player is not None:
             fallback["player"] = applied_player
+        if _replan_cause:  # SPEC-311 R7: o gatilho do mundo também sobrevive ao fallback
+            fallback["needs_replan"] = travel_needs_replan
         if dest or rested_player is not None:
             fallback["world"] = world
             fallback["factions"] = factions

@@ -1,0 +1,10 @@
+{
+  "_doc": "SPEC-311 R22: aliases de regiao -> tags do Codex que o slug automatico (id, rotulo, locais) nao cobre. Chaves sao region_id; valores sao slugs.",
+  "pradaria_ruinas": ["pradaria"],
+  "pantano_melancolia": ["pantano"],
+  "deserto_zhur": ["zhur", "deserto"],
+  "selva_xylos": ["xylos", "selva"],
+  "floresta_sussurros": ["floresta"],
+  "montanhas_afiadas": ["montanhas"],
+  "nova_arcadia": ["arcadia"]
+}

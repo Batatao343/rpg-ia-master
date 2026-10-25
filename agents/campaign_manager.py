@@ -127,6 +127,38 @@ def _replan_reason(state: GameState) -> str:
     return "arc_finished"
 
 
+PLANNER_WORLD_INSTRUCTION = (
+    "Estes são fatos que o herói conhece. O arco não pode contradizê-los. Você pode usar uma "
+    "crise ou uma missão do herói como pano de fundo ou gancho de um beat. Não declare missão "
+    "concluída nem fracassada, não invente prazo e não acrescente número, gravidade ou causa "
+    "que não esteja escrito."
+)
+
+
+def _planner_world_blocks(state: GameState, world: dict) -> str:
+    """SPEC-311 R1-R5: blocos percebidos + instrução fixa ('' quando não há nada a dizer).
+    Deriva só de `perceived_world`, `world.news` e `state['quests']`."""
+    try:
+        from services.ambient import heard_block
+        from services.perceived_world import perceived_world_block
+        from services.planner_context import planner_quests_block
+
+        blocks = [
+            perceived_world_block(state, audience="planning"),
+            heard_block(world),
+            planner_quests_block(state),
+        ]
+        blocks = [b for b in blocks if b]
+        if not blocks:
+            return ""
+        return "\n".join([*blocks, PLANNER_WORLD_INSTRUCTION]) + "\n"
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("campaign_manager", "world_blocks_failed", exc)
+        return ""
+
+
 def _build_plan(state: GameState, _info: dict | None = None) -> CampaignPlan:
     """Generate a structured campaign plan for the current scene using RAG context."""
 
@@ -140,10 +172,15 @@ def _build_plan(state: GameState, _info: dict | None = None) -> CampaignPlan:
 
     # --- 1. CONTEXTO (Fase 2.8: pack centraliza lore + estado atual do mundo) ---
     # purpose="planning" → o arquiteto pode ver edges hidden/secret (visão de mundo).
-    search_query = f"{current_loc} {last_intent}"
+    from services.lore_query import compose_lore_query
+
+    search_query = compose_lore_query(state, str(last_intent))  # SPEC-311 R17-R18
     pack = build_context_pack(state, query=search_query, purpose="planning")
     lore_context = pack.lore_block or "No specific lore available for this location."
     world_state_context = pack.world_state_block
+
+    # SPEC-311 R1-R4: o planner vê o mundo PERCEBIDO (quests do herói, notícias, estado do local)
+    mundo_block = _planner_world_blocks(state, world)
 
     # --- 2. CONFIGURAÇÃO DO LLM ---
     planner_llm = get_llm(
@@ -158,6 +195,7 @@ def _build_plan(state: GameState, _info: dict | None = None) -> CampaignPlan:
             f"Location: {current_loc}\n"
             f"Weather/Time: {world.get('weather', 'unknown')} / {world.get('time_of_day', 'unknown')}\n"
             f"{world_state_context}\n"
+            f"{mundo_block}"
             "(Se o estado atual do mundo contradisser o lore, o estado atual VENCE.)\n"
             "<LORE_CONTEXT>\n"
             f"{lore_context}\n"

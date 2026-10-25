@@ -1,7 +1,7 @@
 # SPEC-311 — Planner que vê o mundo percebido, preço com motivo e RAG de lore contextual
 
-> **Status:** `approved` (dono 24/10: "escreva specs para isso", onda 2 do mundo vivo; propostas R8, R9 e R10 da revisão orquestrada; as decisões D1–D4 da §9 têm default recomendado)
-> **Criada:** 2026-10-24 · **Atualizada:** 2026-10-24
+> **Status:** `in-progress` (implementada em 25/10; falta revisão independente, suíte completa e smoke real; dono 24/10: "escreva specs para isso", onda 2 do mundo vivo; propostas R8, R9 e R10 da revisão orquestrada; as decisões D1–D4 da §9 têm default recomendado)
+> **Criada:** 2026-10-24 · **Atualizada:** 2026-10-25
 > **Origem:** `docs/mundo-vivo/REVISAO-ORQUESTRADA-2026-10-24.md` §4.1 (R8, R9, R10), achado A9 (§1.1, linha 49) e §2.1 (linhas 139-143).
 > **Depende de:** SPEC-302, SPEC-303, SPEC-305, SPEC-307, SPEC-298 e SPEC-301 (`done`). **SPEC-308** (`approved`, helper `world_perception.event_perceived`) e **SPEC-309** (`approved`, módulo `services/perceived_world.py`) precisam estar `done` **só para a Etapa 4**. As Etapas 1 a 3 não dependem delas e podem pousar antes.
 > **Desbloqueia:** nada formalmente. Dá mais munição às SPEC-312 (rumores) e SPEC-313 (quests ancoradas), porque o planner passa a tramar com o mundo percebido.
@@ -253,48 +253,71 @@ nunca multiplicador.
 ```python
 # services/economy.py
 class PriceFactor(TypedDict):
-    code: str      # "supply_local" | "supply_rota" | "supply_passo" | "mercador" | "relacao"
-                   # | "controlador_hostil" | "estado_local" | "festa" | "patente"
+    code: str  # "supply_local" | "supply_rota" | "supply_passo" | "mercador" | "relacao"
+    # | "controlador_hostil" | "estado_local" | "festa" | "patente" | "venda"
     mult: float
+
 
 class PriceReason(TypedDict):
     code: str
     direction: Literal["encarece", "barateia"]
-    text: str      # frase da tabela §3.3, sem número
+    text: str  # frase da tabela §3.3, sem número
+
 
 REASON_MIN_DELTA: float = 0.05
 REASONS_MAX: int = 3
 
-def price_factors(item_id: str, *, mode: str, state: dict,
-                  merchant: dict | None = None) -> list[PriceFactor]: ...
+
+def price_factors(
+    item_id: str, *, mode: str, state: dict, merchant: dict | None = None
+) -> list[PriceFactor]: ...
 def price(item_id: str, *, mode: str, state: dict, merchant: dict | None = None) -> int:
     """Inalterado no contrato e no número (R10)."""
-def price_reasons(state: dict, *, mode: str, item_id: str | None = None,
-                  merchant: dict | None = None) -> list[PriceReason]: ...
+
+
+def price_reasons(
+    state: dict, *, mode: str, item_id: str | None = None, merchant: dict | None = None
+) -> list[PriceReason]: ...
 def market_direction(state: dict, merchant: dict) -> Literal["alta", "baixa", ""]: ...
+
 
 # services/lore_query.py
 LORE_K: int = 3
 LORE_QUERY_INPUT_MAX: int = 300
+
+
 def slug(text: str) -> str: ...
 def compose_lore_query(state: dict, base: str) -> str: ...
 def region_lore_tags(region_id: str) -> frozenset[str]: ...
 def rerank_by_region(docs: list, region_id: str | None, k: int) -> list: ...
 
+
 # services/planner_context.py
 PLANNER_QUESTS_MAX: int = 6
+
+
 def planner_quests_block(state: dict) -> str:
     """'' ou '<QUESTS_DO_HEROI>\n- ...\n</QUESTS_DO_HEROI>' (R1)."""
-def world_replan_cause(state: dict, perceived: list[dict],
-                       wq_events: list[dict]) -> str | None:
+
+
+def world_replan_cause(state: dict, perceived: list[dict], wq_events: list[dict]) -> str | None:
     """'crise_regiao' | 'queda_cidade' | 'quest_falhou' | None (R6, ordem fixa)."""
 
+
 # rag.py
-def query_rag(query: str, index_name: str = "lore", game_id: str | None = None,
-              max_visibility: str = "public", prefer_region: str | None = None) -> str: ...
-def query_global_by_vector(vector: list[float], index_name: str = "lore",
-                           max_visibility: str = "public",
-                           prefer_region: str | None = None) -> str: ...
+def query_rag(
+    query: str,
+    index_name: str = "lore",
+    game_id: str | None = None,
+    max_visibility: str = "public",
+    prefer_region: str | None = None,
+) -> str: ...
+def query_global_by_vector(
+    vector: list[float],
+    index_name: str = "lore",
+    max_visibility: str = "public",
+    prefer_region: str | None = None,
+) -> str: ...
 ```
 
 `price_factors`: o fator `supply_*` sai de `supply_factor` (`economy.py:164-181`). Para separar
@@ -483,12 +506,12 @@ coordenador no pouso.
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R28 cobertos pelos testes da §4 (cada R citado no docstring do teste)
-- [ ] `test_price_characterization_matrix` escrito antes da refatoração e verde depois (R10)
-- [ ] Oráculo §3.6 verde (planner, gatilho, query e preço)
-- [ ] Nenhuma chamada LLM nova e nenhum `with_structured_output` novo (R27)
-- [ ] `query_faiss_evidence` e `evals/` intocados
-- [ ] Saves antigos carregam e o planner roda sobre eles (R26)
+- [x] R1–R28 cobertos pelos testes da §4 (cada R citado no docstring do teste)
+- [x] `test_price_characterization_matrix` escrito antes da refatoração e verde depois (R10)
+- [x] Oráculo §3.6 verde (planner, gatilho, query e preço)
+- [x] Nenhuma chamada LLM nova e nenhum `with_structured_output` novo (R27)
+- [x] `query_faiss_evidence` e `evals/` intocados
+- [x] Saves antigos carregam e o planner roda sobre eles (R26)
 - [ ] `uv run pytest` verde (suíte completa offline, rodada pelo coordenador no pouso)
 - [ ] Revisão independente Opus (`handoffs/SPEC-311-review.md`) sem P0/P1
 - [ ] Smoke real (§6) executado e registrado na §8
@@ -553,7 +576,35 @@ Registrar run_ids, custo e trechos na §8. Se estourar o teto, parar e registrar
 
 ## 8. Registro de execução
 
-(preencher na implementação: commits, testes rodados, Etapa 0, smoke §6 com run_ids e custo)
+**Implementação (25/10, branch `spec-311`).** Etapas 0-5 feitas; testes novos em `tests/test_spec311_*.py`
+(lore_query, price_reasons, planner, integration). Fora do escopo desta entrega: revisão Opus, suíte
+completa (coordenador) e smoke §6 (não rodado por regra do dono).
+
+**Etapa 0.** 308 e 309 já `done` na main (`world_perception.event_perceived`, `perceived_world`).
+Nome do mês: `world_calendar.date_view(cal, day)["month"]` (cal de `calendar_for_read(world_sim, day)`;
+cai em `world.date.month`). As 12 regiões têm o próprio `region_id` como tag em `data/codex/`; o JSON de
+aliases só acrescenta os apelidos curtos (`pradaria`, `pantano`, `zhur`...). Hosted: nenhuma escrita de
+`tags` no metadado do `memory_store` foi encontrada no repo, então a reordenação (R21) é no-op ali até
+alguém gravar `tags` (follow-up, não bloqueia; R28).
+
+**Desvios (todos pequenos):**
+- `price()` multiplica **em sequência** (`p *= f.mult`), não `base * prod(...)`: preserva a associação de
+  floats e o resultado idêntico (R10). `PriceFactor.code` ganhou `"venda"` (SELL_FACTOR no rastro).
+- `price_reasons` com `item_id=None`: o motivo de rota entra se **algum** item do `base_stock` do mercador
+  estiver escasso (primeiro encontrado), como em R11.
+- Na linha de motivos do loot, em `sell` os verbos são "paga mais/paga menos" (em vez de
+  encarece/barateia), porque o fator já é o do pagamento ao jogador. `PriceReason.direction` não muda.
+- R20: faixa 2 ("só de outra região") usa só tags de **identidade** (id, rótulo, aliases) das 12 regiões;
+  a faixa 0 usa o conjunto completo de `region_lore_tags` (inclui ids/nomes dos locais). Evita rebaixar
+  chunk por nome genérico de local.
+- R17: storyteller e planner passam como `base` só o input do jogador (o local já é a 1ª parte da query);
+  o NPC mantém `"{nome} {local} {fala}"`. `RERANK_CANDIDATES = 6` e `LORE_SEP` são constantes novas.
+- R3: a audiência `"planning"` só entrou no `Literal`; as linhas 1-4 da 309 já saem para qualquer audiência
+  diferente de `npc`/`story`.
+- R7: o fallback do storyteller só levava `needs_replan` em viagem; agora também leva quando o gatilho do
+  mundo disparou.
+
+Smoke §6: pendente (opt-in, coordenador).
 
 ## 9. Decisões do dono
 

@@ -973,8 +973,13 @@ def prepare_shared_query_vector(
 
 
 def query_global_by_vector(
-    vector: list[float], index_name: str = "lore", max_visibility: str = "public"
+    vector: list[float],
+    index_name: str = "lore",
+    max_visibility: str = "public",
+    prefer_region: str | None = None,
 ) -> str:
+    from services.lore_query import LORE_K, RERANK_CANDIDATES, rerank_by_region
+
     if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
         from infrastructure.contracts import MemoryQuery
         from infrastructure.runtime import get_runtime
@@ -984,11 +989,13 @@ def query_global_by_vector(
                 text="",
                 scope="rules" if index_name == "rules" else "lore",
                 max_visibility=max_visibility,
-                k=2,
+                k=RERANK_CANDIDATES if prefer_region else LORE_K,  # SPEC-311 R21
                 vector=tuple(vector),
                 embedding_profile_id=embedding_profile_id(),
             )
         )
+        if prefer_region:
+            documents = rerank_by_region(documents, prefer_region, LORE_K)
         return "\n---\n".join(document.text for document in documents if document.text)
     path = get_global_db_path(index_name)
     if not vector or not _has_faiss_index(path):
@@ -1001,11 +1008,13 @@ def query_global_by_vector(
         evidence = query_faiss_evidence(
             db,
             vector,
-            k=2,
-            fetch_k=6,
+            k=RERANK_CANDIDATES if prefer_region else LORE_K,
+            fetch_k=RERANK_CANDIDATES,
             max_visibility=max_visibility,
             source=index_name,
         )
+        if prefer_region:  # SPEC-311 R20: só reordena candidatos JÁ filtrados por visibilidade
+            evidence = rerank_by_region(evidence, prefer_region, LORE_K)
         return _format_documents(evidence)
     except Exception:
         _LOG.warning("RAG: consulta degradada (rpg.rag.degraded)", exc_info=True)
@@ -1094,7 +1103,11 @@ def context_index_paths(
 
 
 def _query_rag_impl(
-    query: str, index_name: str = "lore", game_id: str | None = None, max_visibility: str = "public"
+    query: str,
+    index_name: str = "lore",
+    game_id: str | None = None,
+    max_visibility: str = "public",
+    prefer_region: str | None = None,
 ) -> str:
     """
     Busca contexto de forma híbrida:
@@ -1105,6 +1118,8 @@ def _query_rag_impl(
     (public < hidden < secret). Default preserva o comportamento antigo:
     o jogador/narrador só vê `public`; chunks sem metadado contam como public.
     """
+    from services.lore_query import LORE_K, RERANK_CANDIDATES, rerank_by_region
+
     if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
         from infrastructure.contracts import MemoryQuery
         from infrastructure.request_context import current_principal
@@ -1116,9 +1131,11 @@ def _query_rag_impl(
                 text=query,
                 scope="rules" if index_name == "rules" else "lore",
                 max_visibility=max_visibility,
-                k=2,
+                k=RERANK_CANDIDATES if prefer_region else LORE_K,  # SPEC-311 R21
             )
         )
+        if prefer_region:
+            global_docs = rerank_by_region(global_docs, prefer_region, LORE_K)
         session_docs = []
         if game_id:
             principal = current_principal()
@@ -1155,7 +1172,10 @@ def _query_rag_impl(
                 visiveis = [
                     d for d in candidatos if vis_rank(d.metadata.get("visibility")) <= max_rank
                 ]
-                global_results.extend(visiveis[:2])
+                if prefer_region:  # SPEC-311 R20 (após o filtro de visibilidade)
+                    global_results.extend(rerank_by_region(visiveis, prefer_region, LORE_K))
+                else:
+                    global_results.extend(visiveis[:LORE_K])
             except Exception as e:
                 _log_event(
                     "rag",
@@ -1182,7 +1202,11 @@ def _query_rag_impl(
 
 
 def query_rag(
-    query: str, index_name: str = "lore", game_id: str | None = None, max_visibility: str = "public"
+    query: str,
+    index_name: str = "lore",
+    game_id: str | None = None,
+    max_visibility: str = "public",
+    prefer_region: str | None = None,
 ) -> str:
     """Boundary observável da busca híbrida, sem expor consulta nem IDs."""
     started = time.perf_counter()
@@ -1192,7 +1216,7 @@ def query_rag(
         from observability.telemetry import span
 
         with span("rag.query", scope=scope):
-            return _query_rag_impl(query, index_name, game_id, max_visibility)
+            return _query_rag_impl(query, index_name, game_id, max_visibility, prefer_region)
     except Exception:
         outcome = "error"
         raise

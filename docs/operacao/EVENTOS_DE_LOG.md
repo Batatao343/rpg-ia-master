@@ -45,6 +45,8 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `campaign.generating_plot` | — |
 | `campaign.planner_failed` | `error` |
 | `campaign.replan` | `outcome`, `reason` |
+| `campaign.world_replan_trigger` | `cause` |
+| `campaign_manager.fallback` | — |
 | `character.ai_failed` | `error` |
 | `client.error` | `beacon_request_id`, `build`, `client`, `code`, `error_name`, `kind`, `request_id`, `route`, `stack`, `ts` |
 | `client_latency` | `ack_ms`, `action_ref`, `first_phase_ms`, `outcome`, `state_ms`, `transport`, `ttfmc_ms`, `ttlt_ms` |
@@ -87,6 +89,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `db.stale_version` | `game_ref`, `op_kind`, `op_ref`, `reason` |
 | `db.statement_timeout` | `error_type`, `query_name` |
 | `death_flow.fallback` | — |
+| `economy.fallback` | — |
 | `economy.negative_gold_prevented` | `attempted_gold`, `player` |
 | `economy.trade` | `gold_delta`, `item_id`, `mode`, `outcome`, `reason_code` |
 | `economy.unique_claim_conflict` | `item_id`, `source` |
@@ -133,7 +136,9 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `llm.routes_invalid` | `error_type` |
 | `logging.config_invalid_level` | `fallback` |
 | `loot.narrate_failed` | `error` |
+| `loot.price_reasons_failed` | `error` |
 | `loot.trade_parse_failed` | `error` |
+| `lore_query.fallback` | — |
 | `narrative.rejected` | `count`, `kind`, `reason_code` |
 | `npc.actor_failed` | `error` |
 | `npc.cache_hit` | — |
@@ -175,6 +180,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `persistence.store_checkpoint_load_failed` | `duration_ms`, `error_type`, `game_ref` |
 | `persistence.store_load_failed` | `duration_ms`, `error_type`, `game_ref` |
 | `persistence.store_save_failed` | `duration_ms`, `error_type`, `game_ref` |
+| `planner_context.fallback` | — |
 | `playtest.fallback` | — |
 | `pool.admin_action` | `action`, `entry_id` |
 | `pool.cast_offered` | `count` |

@@ -14,8 +14,9 @@ from __future__ import annotations
 
 import copy
 import logging
+import math
 import random
-from typing import Any, Dict, List, Optional, Tuple, TypedDict
+from typing import Any, Dict, List, Literal, Optional, Tuple, TypedDict
 from collections.abc import Mapping
 
 from gamedata import ARTIFACTS_DB, get_location, load_json_data
@@ -198,43 +199,232 @@ def _keeper_row(state: dict, merchant: dict | None) -> dict:
     return keeper_for_price(state, mid, merchant) if mid else {}
 
 
-def price(item_id: str, *, mode: str, state: dict, merchant: dict | None = None) -> int:
-    """Preço final determinístico. mode: 'buy' (jogador compra) | 'sell' (vende)."""
-    location_id = (state.get("world") or {}).get("current_location_id", "")
-    p = float(base_price(item_id))
-    # Fase 6.1: escassez por alcançabilidade (subsume o regional_modifier da 4.4:
-    # sem rota bloqueada os valores são idênticos)
-    from services import world_calendar
+class PriceFactor(TypedDict):
+    """Um fator do preço (SPEC-311 R10): `code` estável + multiplicador."""
 
-    p *= supply_factor(
-        item_id,
-        location_id,
-        state.get("world_projection"),
-        world_calendar.seasonal_closed_pairs(state.get("world")),  # SPEC-303 R11b (D5 = sim)
-    )
+    code: str
+    mult: float
+
+
+class PriceReason(TypedDict):
+    """Motivo qualitativo de preço (SPEC-311 R11-R12): frase fixa, sem número."""
+
+    code: str
+    direction: Literal["encarece", "barateia"]
+    text: str
+
+
+REASON_MIN_DELTA = 0.05  # [BALANCEAR] só fator que mexe >= 5% vira motivo
+REASONS_MAX = 3
+
+
+def _local_factors(state: dict, mode: str, merchant: dict | None) -> list[PriceFactor]:
+    """Fatores do preço que não dependem do item, na ordem e sob as condições de sempre."""
+    location_id = (state.get("world") or {}).get("current_location_id", "")
+    out: list[PriceFactor] = []
     if merchant:
-        p *= float(merchant.get("price_mult", 1.0) or 1.0)
+        out.append({"code": "mercador", "mult": float(merchant.get("price_mult", 1.0) or 1.0)})
         # SPEC-298 R18: relação com o keeper (sem keeper no estado = comportamento anterior)
         keeper = _keeper_row(state, merchant)
         if keeper:
             from services.reputation import relation_price_mult
 
-            p *= relation_price_mult(state, keeper, mode)
+            out.append({"code": "relacao", "mult": relation_price_mult(state, keeper, mode)})
     if mode == "buy" and _controller_disposition(state, location_id) == "hostil":
-        p *= HOSTILE_BUY_MULT
+        out.append({"code": "controlador_hostil", "mult": HOSTILE_BUY_MULT})
     if mode == "buy":
         # SPEC-302 R19: estado de local (cerco/escassez/...) encarece; neutro em off/shadow.
-        from services.location_states import location_effects
+        from services.location_states import location_effects, location_state
 
-        p *= float(location_effects(state, location_id)["price_mult"])
+        row = location_state(state, location_id) or {}
+        code = "festa" if row.get("state") == "festa" else "estado_local"
+        mult = float(location_effects(state, location_id)["price_mult"])
+        out.append({"code": code, "mult": mult})
     if mode == "buy" and state.get("faction_membership"):
         # SPEC-301 R9: desconto de patente nos mercadores do QG (sem vínculo: preço idêntico)
         from services.faction_membership import discount_mult
 
-        p *= discount_mult(state, location_id)
+        out.append({"code": "patente", "mult": discount_mult(state, location_id)})
+    return out
+
+
+def _supply_factor_for(item_id: str, state: dict) -> PriceFactor:
+    from services import world_calendar
+
+    world = state.get("world") or {}
+    location_id = world.get("current_location_id", "")
+    projection = state.get("world_projection")
+    # Fase 6.1 + SPEC-303 R11b (D5 = sim): escassez por rota e por passo fechado pela estação
+    value = supply_factor(
+        item_id, location_id, projection, world_calendar.seasonal_closed_pairs(world)
+    )
+    if value == ABUNDANT_MULT:
+        code = "supply_local"
+    elif value == SCARCE_MULT:
+        plain = supply_factor(item_id, location_id, projection, None)
+        code = "supply_passo" if plain == 1.0 else "supply_rota"
+    else:
+        code = "supply_rota"
+    return {"code": code, "mult": value}
+
+
+def price_factors(
+    item_id: str, *, mode: str, state: dict, merchant: dict | None = None
+) -> list[PriceFactor]:
+    """SPEC-311 R10: o rastro do cálculo de `price()` — mesma ordem, mesmas condições.
+    Fator igual a 1.0 também entra; o filtro de motivos vem depois."""
+    out: list[PriceFactor] = [_supply_factor_for(item_id, state)]
+    out += _local_factors(state, mode, merchant)
     if mode == "sell":
-        p *= SELL_FACTOR
+        out.append({"code": "venda", "mult": SELL_FACTOR})
+    return out
+
+
+def price(item_id: str, *, mode: str, state: dict, merchant: dict | None = None) -> int:
+    """Preço final determinístico. mode: 'buy' (jogador compra) | 'sell' (vende)."""
+    p = float(base_price(item_id))
+    # Multiplicação sequencial (não `prod`): preserva a associação de floats de sempre.
+    for factor in price_factors(item_id, mode=mode, state=state, merchant=merchant):
+        p *= factor["mult"]
     return _round5(p)
+
+
+# ---------------------------------------------------------------------------
+# SPEC-311 R11-R16 — motivos qualitativos do preço (regra de ouro: sem número, sem id)
+# ---------------------------------------------------------------------------
+def _faction_name(state: dict, fid: str) -> str:
+    import gamedata
+
+    for pool in (state.get("factions") or [], gamedata.seed_factions()):
+        for fac in pool:
+            if isinstance(fac, dict) and fac.get("id") == fid and fac.get("name"):
+                return str(fac["name"])
+    return ""
+
+
+def _faction_known(state: dict, fid: str) -> bool:
+    return bool(((state.get("faction_intel") or {}).get(fid) or {}).get("known"))
+
+
+def _reason_text(code: str, direction: str, state: dict, merchant: dict | None) -> str:
+    """Frase da tabela normativa §3.3; '' = sem linha / sem dado => não vira motivo."""
+    location_id = (state.get("world") or {}).get("current_location_id", "")
+    if code in ("estado_local", "festa"):
+        from services.location_states import location_state, public_label
+
+        row = location_state(state, location_id)
+        if code == "festa":
+            from services import world_calendar
+
+            fest = world_calendar._festival(str((row or {}).get("festival_id") or "")) or {}
+            return f"é tempo de {fest['name']}" if fest.get("name") else ""
+        label = public_label(row)
+        here = str((get_location(location_id) or {}).get("name") or "")
+        return f"{here} está {label}" if label and here else ""
+    if code == "supply_rota":
+        return "mercadorias de fora não estão chegando"
+    if code == "supply_passo":
+        return "a estação fechou o caminho por onde a mercadoria vinha"
+    if code == "supply_local":
+        return "a mercadoria é feita aqui mesmo"
+    if code == "mercador":
+        if direction == "encarece":
+            return "este mercador cobra caro por natureza"
+        return "este mercador costuma cobrar pouco"
+    if code == "relacao":
+        keeper = _keeper_row(state, merchant)
+        name = str(keeper.get("name") or "")
+        if not name:
+            return ""
+        from services.reputation import _ATTITUDE_PHRASE, npc_tier
+
+        text = f"{name} {_ATTITUDE_PHRASE[npc_tier(keeper.get('relationship'))]}"
+        fame = (keeper.get("relationship_basis") or {}).get("fame", 0)
+        try:
+            fame = int(fame or 0)
+        except (TypeError, ValueError):
+            fame = 0
+        if fame:
+            text += f" e ouviu falar {'bem' if fame > 0 else 'mal'} de você por aqui"
+        return text
+    if code == "controlador_hostil":
+        controller = gr.get_current_controller(location_id, state.get("world_projection"))
+        name = _faction_name(state, controller) if controller else ""
+        if controller and name and _faction_known(state, controller):
+            return f"{name} manda aqui e é hostil a você"
+        return "quem manda aqui não vê você com bons olhos"
+    if code == "patente":
+        from services import faction_membership as fm
+
+        for fid in fm.active_memberships(state):
+            if location_id in (fm._cat(fid).get("hq_location_ids") or []):
+                name = _faction_name(state, fid)
+                if name:
+                    return f"desconto pela sua patente em {name}"
+        return ""
+    return ""  # código sem linha na tabela: falha fechada
+
+
+def _reasons_from(
+    factors: list[PriceFactor], state: dict, merchant: dict | None
+) -> list[PriceReason]:
+    scored: list[tuple[float, str, PriceReason]] = []
+    seen: set[str] = set()
+    for f in factors:
+        mult = float(f["mult"])
+        if f["code"] == "venda" or abs(mult - 1.0) < REASON_MIN_DELTA or mult <= 0:
+            continue
+        direction = "encarece" if mult > 1.0 else "barateia"
+        if f["code"] in ("supply_rota", "supply_passo") and direction != "encarece":
+            continue
+        if f["code"] in seen:
+            continue
+        text = _reason_text(f["code"], direction, state, merchant)
+        if not text:
+            continue
+        seen.add(f["code"])
+        reason: PriceReason = {"code": f["code"], "direction": direction, "text": text}  # type: ignore[typeddict-item]
+        scored.append((-abs(math.log(mult)), f["code"], reason))
+    scored.sort(key=lambda t: (t[0], t[1]))
+    return [r for _s, _c, r in scored[:REASONS_MAX]]
+
+
+def price_reasons(
+    state: dict, *, mode: str, item_id: str | None = None, merchant: dict | None = None
+) -> list[PriceReason]:
+    """Motivos qualitativos (<= 3) do preço atual. Nunca levanta; sem número, id ou causa de rota."""
+    try:
+        if item_id:
+            factors = price_factors(item_id, mode=mode, state=state, merchant=merchant)
+        else:
+            factors = _local_factors(state, mode, merchant)
+            for iid in (merchant or {}).get("base_stock") or {}:
+                fac = _supply_factor_for(str(iid), state)
+                if fac["mult"] > 1.0:
+                    factors.append(fac)
+                    break
+        return _reasons_from(factors, state, merchant)
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("economy", "price_reasons_failed", exc)
+        return []
+
+
+def market_direction(state: dict, merchant: dict) -> Literal["alta", "baixa", ""]:
+    """SPEC-311 R15: direção geral dos preços de compra no local (produto dos fatores de local)."""
+    try:
+        prod = 1.0
+        for f in _local_factors(state, "buy", merchant):
+            prod *= float(f["mult"])
+        if abs(prod - 1.0) < REASON_MIN_DELTA:
+            return ""
+        return "alta" if prod > 1.0 else "baixa"
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("economy", "market_direction_failed", exc)
+        return ""
 
 
 # ---------------------------------------------------------------------------

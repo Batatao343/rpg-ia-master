@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-Audience = Literal["story", "npc", "combat", "day"]
+Audience = Literal["story", "npc", "combat", "day", "planning"]  # planning: SPEC-311 R3
 
 MAX_LINES: int = 4  # [BALANCEAR]
 MAX_TOKENS: int = 120  # [BALANCEAR]

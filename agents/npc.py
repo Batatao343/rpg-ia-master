@@ -21,6 +21,7 @@ from services import quest_log
 from services.ambient import ambient_block
 from services.context_builder import build_context_pack
 from services.input_normalization import optional_entity_ref
+from services.lore_query import compose_lore_query
 from services.memory_provenance import (
     MAX_MEMORY_PROMOTIONS,
     bounded_audit_rows,
@@ -635,6 +636,42 @@ def _npc_self_prompt(state, npc_key, npc_data, npc_id, evidence_ids) -> str:
         return ""
 
 
+def _commerce_block(state, npc_data) -> str:
+    """SPEC-311 R15: `<SEU_COMERCIO>` do keeper presente no próprio mercado ('' sem motivo).
+
+    Direção geral + motivos qualitativos de `economy.price_reasons`; nunca números."""
+    try:
+        keeper_of = str((npc_data or {}).get("keeper_of") or "")
+        if not keeper_of:
+            return ""
+        from services import economy
+
+        merchant = economy.MERCHANTS.get(keeper_of)
+        here = str(((state or {}).get("world") or {}).get("current_location_id") or "")
+        if not merchant or merchant.get("location_id") != here:
+            return ""
+        reasons = economy.price_reasons(state, mode="buy", item_id=None, merchant=merchant)
+        if not reasons:
+            return ""
+        direction = economy.market_direction(state, merchant)
+        lines = ["<SEU_COMERCIO>"]
+        if direction == "alta":
+            lines.append("Seus preços hoje estão mais altos que o normal.")
+        elif direction == "baixa":
+            lines.append("Seus preços hoje estão mais baixos que o normal.")
+        lines += [f"- {r['text']}" for r in reasons]
+        lines.append(
+            "Fale disso só se a conversa for sobre comércio. Nunca diga números nem porcentagens."
+        )
+        lines.append("</SEU_COMERCIO>")
+        return "\n    ".join(lines)
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("npc", "commerce_block_failed", exc)
+        return ""
+
+
 def _mission_hint_block(state: GameState, last_msg: str) -> str:
     """spec npc-fallback-sem-alvo (R4): se a fala do jogador pergunta sobre a
     missão/objetivo, devolve um bloco com o beat atual do plano para o NPC
@@ -983,7 +1020,9 @@ def npc_actor_node(state: GameState):
             knowledge_new = []
     pack = build_context_pack(
         pack_state,
-        query=f"{npc_data.get('name', npc_name)} {npc_location} {last_msg}".strip(),
+        query=compose_lore_query(
+            pack_state, f"{npc_data.get('name', npc_name)} {npc_location} {last_msg}".strip()
+        ),  # SPEC-311 R18
         purpose="npc",
         game_id=game_id,
         npc_id=npc_id,
@@ -1075,6 +1114,9 @@ def npc_actor_node(state: GameState):
     )  # SPEC-310
     if self_knowledge_block:  # bloco vazio não deixa linha em branco
         self_knowledge_block = chr(10) + self_knowledge_block
+    comercio_block = _commerce_block(state, npc_data)  # SPEC-311 R15
+    if comercio_block:
+        comercio_block = chr(10) + comercio_block
 
     system_msg = SystemMessage(
         content=f"""
@@ -1091,7 +1133,7 @@ def npc_actor_node(state: GameState):
             or "—"
         }
     </ROLE>{self_knowledge_block}
-    {atitude_block}
+    {atitude_block}{comercio_block}
     {companion_block}
 
     <MEMORIA>

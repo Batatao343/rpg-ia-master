@@ -146,6 +146,33 @@ def _narrate(context: str, fallback_text: str, canonical_summary: dict | None = 
     return _validated_narrative(canonical_summary, fallback) if canonical_summary else fallback
 
 
+def _price_reasons_context(state: dict, mode: str, item_id: str | None) -> str:
+    """SPEC-311 R14: linha de motivos do preço p/ o narrador (palavras, nunca números).
+    '' sem mercador, fora de compra/venda ou sem motivo; nunca levanta."""
+    if mode not in ("buy", "sell"):
+        return ""
+    try:
+        loc = (state.get("world") or {}).get("current_location_id", "")
+        here = economy.merchants_at(loc)
+        if not here:
+            return ""
+        reasons = economy.price_reasons(
+            state, mode=mode, item_id=item_id or None, merchant=here[0][1]
+        )
+        if not reasons:
+            return ""
+        verbs = (
+            {"encarece": "paga mais", "barateia": "paga menos"}
+            if mode == "sell"
+            else {"encarece": "encarece", "barateia": "barateia"}
+        )
+        rows = "\n".join(f"- {verbs[r['direction']]}: {r['text']}" for r in reasons)
+        return "MOTIVOS DO PREÇO (cite no máximo um, com palavras; nunca números):\n" + rows
+    except Exception as e:
+        _log_event("loot", "price_reasons_failed", level="warning", error=type(e).__name__)
+        return ""
+
+
 def _player_facing_message(prose: str, system: str) -> str:
     """Monta a mensagem sem tocar no ledger mecânico de sistema."""
     visible = prose_guard.normalize_protagonist_voice(str(prose or "").strip())
@@ -225,8 +252,11 @@ def loot_node(state: GameState):
         }
 
         if not outcome.get("ok"):
+            reasons_ctx = _price_reasons_context(work_state, intent.mode, outcome.get("item_id"))
+            recusa = f"TRANSAÇÃO RECUSADA: {outcome.get('reason')}"
             msg = _narrate(
-                f"TRANSAÇÃO RECUSADA: {outcome.get('reason')}", f"🚫 {outcome.get('reason')}"
+                f"{recusa}\n{reasons_ctx}" if reasons_ctx else recusa,
+                f"🚫 {outcome.get('reason')}",
             )
             return {
                 "messages": [
@@ -251,7 +281,11 @@ def loot_node(state: GameState):
             f"{outcome['mode'].upper()}: {outcome['qty']}x {outcome['item_name']}, "
             f"ouro {delta:+d}, ouro final {outcome['player'].get('gold', 0)}"
         )
-        msg = _narrate(resumo, "O negócio se fecha sem cerimônia.")
+        reasons_ctx = _price_reasons_context(work_state, intent.mode, outcome.get("item_id"))
+        msg = _narrate(
+            f"{resumo}\n{reasons_ctx}" if reasons_ctx else resumo,
+            "O negócio se fecha sem cerimônia.",
+        )
         result = {
             "player": outcome["player"],
             "world": outcome.get("world", world),
