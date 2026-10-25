@@ -278,17 +278,19 @@ O objetivo é ligar cada uma no pipeline vivo (`agents/combat.py` → `conflict_
 **Schemas (todos opcionais, `total=False`)**
 ```python
 # combat_meta["chase"] (existente) ganha:
-approach: str                      # chave de APPROACH_VIRTUDE
-last_luck: dict[str, int]          # ally_id -> -1|0|1 (rodada anterior)
-sacrifice_offer: str | None        # ally_id; ofertado 1x
+approach: str  # chave de APPROACH_VIRTUDE
+last_luck: dict[str, int]  # ally_id -> -1|0|1 (rodada anterior)
+sacrifice_offer: str | None  # ally_id; ofertado 1x
 sacrifice_offered: bool
 abandoned: list[str]
 # party[i] ganha:
 pending_fate: {"resultado": str, "fate": str, "day": int, "location_id": str, "seed": str}
-waiting_at: str                    # já usado pela SPEC-300/304
+waiting_at: str  # já usado pela SPEC-300/304
 # inimigo ganha:
-status: "incapacitado"; incapacitated: bool; nonlethal_by: str
-revealed_resistances: list[str]    # "<dtype>:<imune|resiste|vulneravel>"
+status: "incapacitado"
+incapacitated: bool
+nonlethal_by: str
+revealed_resistances: list[str]  # "<dtype>:<imune|resiste|vulneravel>"
 # combat_meta ganha:
 next_by_template: dict[str, int]
 reinforcement: {"trigger_id": str, "leader_id": str, "warned_round": int, "fired": bool}
