@@ -73,8 +73,9 @@ def test_max_one_new_rumor_per_day_and_per_action():
     rumors.mark_perceived(sim, [a["subject_id"]], 5)
     # segunda acao no mesmo dia: nenhum rumor novo
     assert rumors.limit_perceived(st, sim, [b], 5) == []
-    # dia seguinte: o excedente pode ser percebido
-    assert rumors.limit_perceived(st, sim, [b], 6) == [b]
+    # cooldown global: dia seguinte ainda nao; depois de RUMOR_MIN_GAP_DAYS sim
+    assert rumors.limit_perceived(st, sim, [b], 6) == []
+    assert rumors.limit_perceived(st, sim, [b], 7) == [b]
 
 
 def test_excess_rumor_stays_pending_until_ttl():

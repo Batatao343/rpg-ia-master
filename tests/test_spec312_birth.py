@@ -26,10 +26,11 @@ def _ids(cands):
 
 
 def test_frequented_regions_window():
-    sim = {"region_presence": {"brekmar": 31, "nova_arcadia": 17, "skallgard": 10}}
+    w = rumors.const("FREQUENT_WINDOW_DAYS")
+    sim = {"region_presence": {"brekmar": 31, "nova_arcadia": 31 - w, "skallgard": 30 - w}}
     assert rumors.frequented_regions(sim, 31) == ["brekmar", "nova_arcadia"]
     assert "skallgard" not in rumors.frequented_regions(sim, 31)
-    assert "skallgard" in rumors.frequented_regions(sim, 24)
+    assert "skallgard" in rumors.frequented_regions(sim, 30)
 
 
 def test_hook_records_presence_of_current_region():
@@ -118,11 +119,14 @@ def _row(n, expires, perceived=0):
 
 
 def test_ledger_cap_never_drops_active_perceived():
-    # 45 expirados recentes (idade 3 dias): o teto despeja primeiro os nao percebidos
-    sim = {"rumors": [_row(n, 105, n if n % 2 else 0) for n in range(45)]}
+    # 30 percebidos expirados ha 3 dias: o teto despeja so o excedente, nunca os ativos
+    sim = {"rumors": [_row(n, 105, 1) for n in range(30)]}
     rumors._cap_ledger(sim, 108)
-    assert len(sim["rumors"]) == 40
-    assert sum(1 for r in sim["rumors"] if r["perceived_day"]) == 22  # nenhum percebido saiu
+    assert len(sim["rumors"]) == rumors.const("RUMOR_LEDGER_MAX")
+    # nao percebido expirado sai na hora (o cooldown vive em rumor_seed_last_born)
+    sim_u = {"rumors": [_row(n, 105, 0) for n in range(5)]}
+    rumors._cap_ledger(sim_u, 108)
+    assert sim_u["rumors"] == []
     # ativos (nao expirados) nunca saem, mesmo acima do teto
     sim2 = {"rumors": [_row(n, 999, 1) for n in range(45)]}
     rumors._cap_ledger(sim2, 100)

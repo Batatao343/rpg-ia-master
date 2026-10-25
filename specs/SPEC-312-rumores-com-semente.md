@@ -700,18 +700,19 @@ Custo esperado: ≤ US$ 0,80. Estourou o teto → parar e registrar.
 
 ## 8. Evidência
 
-Simulador `bash scripts/dev/py.sh docs/spec302/world_engine_sim.py --s312 --days 120 --seeds 8`
-(percepcao REAL via `storyteller._perceive_world`; metas na Etapa 7):
+Simulador `bash scripts/dev/py.sh docs/spec302/world_engine_sim.py --s312 --days 120 --seeds 30`
+(percepcao REAL via `storyteller._perceive_world`; baseline do S6 medido por perfil com
+`RPG_RUMORS=off`). Valores finais, ambos os perfis dentro das metas:
 
 | meta | parado em `nova_arcadia` | viajante (3 em 3 dias) |
 |---|---|---|
-| S1 nascimentos por regiao frequentada por dia ∈ [0,45; 0,55] | **0,498** | **0,504** |
-| S2 dias com rumor novo percebido ∈ [0,35; 0,65] | **0,498** | 0,933 (fora: ver §10, D-3) |
-| S3 falsos entre percebidos ∈ [0,20; 0,30] | **0,209** | **0,295** |
+| S1 nascimentos por regiao frequentada por dia ∈ [0,45; 0,55] | **0,494** | **0,489** |
+| S2 dias com rumor novo percebido ∈ [0,35; 0,65] | **0,441** | **0,438** |
+| S3 falsos entre percebidos ∈ [0,20; 0,30] | **0,248** | **0,238** |
 | S4 semente `lore` percebida 2x no mesmo mundo | **0** | **0** |
 | S5 violacoes em `world.news` (> 4 rumores ou expirado) | **0** | **0** |
-| S6 crescimento de `world_sim` (repr) ≤ 8 KB | **7,7 KB** | 18,9 KB (fora: ver §10, D-3) |
-| teto diario (>1 percebido no mesmo dia) | **0** | **0** |
+| S6 crescimento de `world_sim` (repr) ≤ 8 KB (8192 B) | **7,4 KB** | **8,05 KB** |
+| teto (> 1 percebido no mesmo dia) | **0** | **0** |
 
 S7 (informativo): a familia `lore` esgota as 22 sementes de Nova Arcadia; depois disso so o
 `avistamento` (e a re-oferta por cooldown) sustenta o ritmo.
@@ -724,16 +725,20 @@ RPG_NPC_KNOWLEDGE=on`): 0 erros, 0 violacoes. Cenario `mundo` (40 turnos): 10 ru
 
 - **D-1 `settlement_tags`** = `cidade, vila, porto, favela, docas` (a spec dizia `cidade, vila`;
   Brekmar e o Anel de Lama ficariam mudos). Confirmado no `world_map.json`.
-- **D-2 `AVISTAMENTO_FALSE_P` 0,25 → 0,15** (calibracao S3: parado 0,31 / viajante 0,34 com 0,25).
-- **D-3 viajante fora de S2/S6.** Com 3 regioes frequentadas nascem ~1,5 rumores/dia e o teto de 1
-  percebido/dia fica saturado (0,93); o ledger maior pesa 18,9 KB. O perfil parado cumpre ambas.
-  Nao mexi no `RUMOR_BIRTH_P` (decisao do dono); o coordenador decide se quer reduzir para
-  regioes onde o heroi nao esta.
+- **D-2 calibracao (coordenador, frequencia delegada).** Nova constante `RUMOR_MIN_GAP_DAYS=2`
+  (cooldown GLOBAL: ≤ 1 rumor novo percebido a cada 2 dias, todas as regioes) - e o que derruba o
+  S2 do viajante de 0,93 para 0,44 sem mexer em `RUMOR_BIRTH_P`. Para o S6: `FREQUENT_WINDOW_DAYS`
+  14 → **1** (regiao "frequentada" = onde o heroi esta/esteve ontem; nao nascem rumores em regioes
+  que ele so cruzou ha dias), `RUMOR_LEDGER_MAX` 40 → 24, nova `RUMOR_DIGEST_MAX=4` (rumores
+  pendentes no digest), envelhecimento do ledger mais curto (nao percebido sai ao expirar,
+  percebido 3 dias depois). `AVISTAMENTO_FALSE_P` 0,25 → **0,20** (S3). `SEED_COOLDOWN_DAYS` segue 30
+  (15 empurrava S3 para < 0,20). O simulador passou a medir o baseline do S6 por perfil.
+- **D-3** (superado por D-2: o viajante agora cumpre S2/S6).
 - **D-4 instancia compacta.** `entities`/`subject`/`quest_eligible` das familias `lore`/`avistamento`
   vem da semente (`rumors.entities_of/subject_of/is_quest_eligible`); so `narrador` os grava.
   `resolution` so existe depois de `mark_resolved` (que tambem grava `resolved_day`).
-- **D-5 envelhecimento do ledger.** Instancia nao percebida some 5 dias depois de expirar, a
-  percebida 20 dias depois (`_cap_ledger`); `rumor_seed_last_born` guarda o cooldown e o marcador
+- **D-5 envelhecimento do ledger.** Instancia nao percebida some ao expirar, a
+  percebida 3 dias depois (`_cap_ledger`, D-2); `rumor_seed_last_born` guarda o cooldown e o marcador
   `NEVER_AGAIN` (lore/narrador percebidos ou resolvidos nunca renascem; `avistamento` renasce
   depois do cooldown).
 - **D-6 item do digest autossuficiente.** `params` do item de rumor leva `seed_id`, `family` e

@@ -245,8 +245,8 @@ def _make_instance(game_id: str, seed: dict, region: str, day: int, turn: int) -
     }  # compacto (S6): entities/subject/quest_eligible vem da semente; `resolution` so se houver
 
 
-STALE_UNPERCEIVED_DAYS = 5  # instancia nao percebida some 5 dias depois de expirar
-STALE_PERCEIVED_DAYS = 20  # a percebida fica mais (a 313 consulta `truth_of` na resolucao)
+STALE_UNPERCEIVED_DAYS = 0  # instancia nao percebida some 5 dias depois de expirar
+STALE_PERCEIVED_DAYS = 3  # a percebida fica mais (a 313 consulta `truth_of` na resolucao)
 
 
 def _forget(last: dict, r: dict) -> None:
@@ -355,6 +355,11 @@ def day_hook(ctx: Any):
 
 def trim_digest(items: list[dict], cap: int) -> list[dict]:
     """Teto do `pending_digest`: se estourar, rumores saem antes de qualquer outro item."""
+    rum_idx = [i for i, it in enumerate(items) if is_rumor_item(it)]
+    over = max(0, len(rum_idx) - int(const("RUMOR_DIGEST_MAX")))  # S6: poucos rumores pendentes
+    if over:
+        gone = set(rum_idx[:over])
+        items = [it for i, it in enumerate(items) if i not in gone]
     excess = len(items) - cap
     if excess <= 0:
         return list(items)
@@ -462,7 +467,9 @@ def limit_perceived(state: dict, sim: dict, seen: list[dict], day: int) -> list[
     if not rumors:
         return list(seen)
     allowed = 0
-    if int((sim or {}).get("rumor_last_perceived_day", 0) or 0) != int(day):
+    last = int((sim or {}).get("rumor_last_perceived_day", 0) or 0)
+    # cooldown global (coordenador): >= RUMOR_MIN_GAP_DAYS entre rumores novos percebidos
+    if int(day) - last >= int(const("RUMOR_MIN_GAP_DAYS")):
         allowed = min(int(const("RUMORS_PER_ACTION_MAX")), int(const("RUMOR_PERCEIVED_PER_DAY")))
     fresh = []
     for it in rumors:
