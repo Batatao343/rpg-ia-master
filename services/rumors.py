@@ -772,6 +772,7 @@ def _apply_proposal(
             ):  # teto de achado verdadeiro vive FORA do ledger (que descarta a linha)
                 finds = [*(sim.get("find_log") or []), int(day)]
                 sim["find_log"] = finds[-int(rumor_adoption.const("ADOPT_LOG_MAX")) :]
+                inst = {**inst, "find_logged": True}
     sim["rumors"] = [*(sim.get("rumors") or []), inst]
     sim["rumor_last_perceived_day"] = int(day)
     sim["rumor_born_total"] = int(sim.get("rumor_born_total", 0)) + 1
@@ -832,6 +833,7 @@ def mark_materialized(sim: dict, rumor_id: str, day: int, materialization: dict)
     materializada, falsa ou nao adotada devolve `sim` INTACTO (R18)."""
     rows = []
     changed = False
+    log = list(sim.get("find_log") or [])
     for r in sim.get("rumors") or []:
         if (
             isinstance(r, dict)
@@ -841,9 +843,17 @@ def mark_materialized(sim: dict, rumor_id: str, day: int, materialization: dict)
             and not r.get("materialized_day")
         ):
             r = {**r, "materialized_day": int(day), "materialization": dict(materialization)}
+            if materialization.get("kind") == "cache" and not r.get("find_logged"):
+                log.append(int(day))  # achado sem registro na adocao (ex.: linha injetada)
+                r["find_logged"] = True
             changed = True
         rows.append(r)
-    return {**sim, "rumors": rows} if changed else sim
+    if not changed:
+        return sim
+    from services import rumor_adoption
+
+    cap = int(rumor_adoption.const("ADOPT_LOG_MAX"))
+    return {**sim, "rumors": rows, "find_log": log[-cap:]} if log else {**sim, "rumors": rows}
 
 
 def outcome_of(state: dict, rumor_id: str) -> str | None:

@@ -986,6 +986,36 @@ def _rumor_cache_trigger(state, world: dict, sim_updates: dict, text: str, quest
         return None, "", []
 
 
+_FIND_VERB_RE = re.compile(r"\b(encontr|ach[aeo]|descobr|revel|surg|aparec|desenterr)", re.I)
+_CACHE_NOUN_RE = re.compile(
+    r"(esconderij|ba[úu]|tesouro|al[çc]ap|cofre|compartiment|esconde |escondid|moedas|ouro\b|"
+    r"fundo falso|fresta)",
+    re.I,
+)
+NOTHING_FOUND_FACT = (
+    "<RESULTADO_DA_BUSCA>: nada do que o boato prometia está aqui; há só os sinais comuns do "
+    "lugar. NÃO narre esconderijo, baú, tesouro, alçapão nem qualquer achado escondido."
+    "</RESULTADO_DA_BUSCA>"
+)
+NOTHING_FOUND_PROSE = "A busca não revela nada além dos sinais comuns do lugar."
+
+
+def _neutralize_false_find(text: str) -> str:
+    """SPEC-315 §6.2: a busca no alvo de um boato falso (ou ainda nao devido) nunca vira achado
+    na prosa: frase que afirma esconderijo/tesouro encontrado e trocada pelo fato do motor."""
+    parts = re.split(r"(?<=[.!?…])\s+", str(text or "").strip())
+    out: list[str] = []
+    changed = False
+    for sent in parts:
+        if _FIND_VERB_RE.search(sent) and _CACHE_NOUN_RE.search(sent):
+            changed = True
+            if NOTHING_FOUND_PROSE not in out:
+                out.append(NOTHING_FOUND_PROSE)
+        else:
+            out.append(sent)
+    return " ".join(out) if changed else str(text or "")
+
+
 def _rumor_arrival(state, world: dict, sim_updates: dict, level: int, turn: int):
     """SPEC-315 R14/R16: ao VIAJAR ao alvo, boato verdadeiro de encontro vira `rumor_hint`;
     o de NPC agendado so e marcado (o NPC ja viajou de verdade, R17). Devolve
@@ -1287,11 +1317,25 @@ def storyteller_node(state: GameState):
     extra_engine_events_tick += wq_events
     extra_engine_events_tick += _world_quest_completions(state, world, wq_quests)
     wq_changed = wq_quests != list(state.get("quests") or [])  # inclui quests da 301
+    rumor_nothing = False  # SPEC-315 §6.2: busca no alvo de boato sem achado devido
     rumor_find = False  # SPEC-315: achado de boato => `world.looted_locations` tem de sobreviver
     if not dest and rested_player is None and not law_resolved and last_user_input:
         _cache_player, _cache_note, _cache_events = _rumor_cache_trigger(
             state, world, sim_updates, str(last_user_input), wq_quests
         )  # SPEC-315: boato verdadeiro de achado, no alvo, com busca/quest
+        if _cache_player is None:
+            try:
+                from services import rumor_adoption as _ra_n
+
+                rumor_nothing = _ra_n.nothing_found(
+                    {**state, **sim_updates, "world": world},
+                    str(world.get("current_location_id") or ""),
+                    str(last_user_input),
+                )
+            except Exception as exc:
+                from observability.telemetry import log_fallback
+
+                log_fallback("storyteller", "rumor_nothing_failed", exc)
         if _cache_player is not None:
             rumor_find = True
             discovery_events = list(discovery_events) + _cache_events  # claim de unico
@@ -1646,7 +1690,17 @@ def storyteller_node(state: GameState):
 
     # PROMPT ATUALIZADO
     eventos_turno = (
-        "\n".join(n for n in (travel_note, rest_note, faction_note, world_note) if n)
+        "\n".join(
+            n
+            for n in (
+                travel_note,
+                rest_note,
+                faction_note,
+                world_note,
+                NOTHING_FOUND_FACT if rumor_nothing else "",
+            )
+            if n
+        )
         or "Nenhum evento especial."
     )
 
@@ -1905,6 +1959,8 @@ def storyteller_node(state: GameState):
                 _ll,
             )
         narrative_text = prose_guard.sanitize_player_facing(str(narrative_text))
+        if rumor_nothing:
+            narrative_text = _neutralize_false_find(narrative_text)
         narrative_text = prose_guard.reconcile_player_gold_claims(
             narrative_text, int((state.get("player") or {}).get("gold", 0) or 0)
         )

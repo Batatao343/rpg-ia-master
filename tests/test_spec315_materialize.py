@@ -374,3 +374,76 @@ def test_scenario_cleanup_unsets_forced_flag(monkeypatch):
     monkeypatch.setenv("RPG_PLAYTEST_FORCED_ADOPT", "1")
     scenarios.cleanup("rumor_adotado")
     assert "RPG_PLAYTEST_FORCED_ADOPT" not in os.environ
+
+
+def test_find_log_written_once_via_real_node_and_survives_save_load(monkeypatch):
+    """Smoke: linha adotada sem `find_log` (injetada) -> achado real grava o dia 1x; save/load
+    preserva e um 2o achado verdadeiro em < 20 dias e recusado."""
+    import persistence
+    from tests.spec315_helpers import claim
+
+    monkeypatch.setattr(stt, "get_llm", lambda *a, **k: _Spy())
+    row = adopted_row("aaaaaaaaaaaa", "esconderijo", FAR, truth=True)
+    st = _story_at_far("Procuro e examino o local", [row])
+    st["game_id"] = "44444444-4444-4444-8444-444444444444"
+    out = stt.storyteller_node(st)
+    sim = out["world_sim"]
+    assert sim["find_log"] == [5] and sim["rumors"][0]["find_logged"] is True
+    merged = {**st, **{k: v for k, v in out.items() if k != "messages"}, "messages": []}
+    merged["player"] = {**(out.get("player") or st["player"]), "class_name": "x"}
+    assert persistence.save_game_state(merged)
+    loaded = persistence.load_game_state(persistence._safe_save_path(st["game_id"]))
+    assert loaded["world_sim"]["find_log"] == [5]
+    again = {**loaded, "messages": []}
+    assert ra.validate_claim(again, claim("item_perdido", "pradaria_ruinas"), 10) == "budget"
+    # materializar de novo a mesma linha nao duplica o registro
+    assert (
+        rumors.mark_materialized(loaded["world_sim"], row["rumor_id"], 9, {"kind": "cache"})
+        is (loaded["world_sim"])
+    )
+
+
+def test_false_claim_search_passes_nothing_fact_and_neutralizes_prose(monkeypatch):
+    from langchain_core.messages import AIMessage
+
+    class _Liar(_Spy):
+        def invoke(self, msgs, *a, **k):
+            super().invoke(msgs)
+            from agents.storyteller import StoryUpdate
+
+            return StoryUpdate(
+                narrative="Você revira o chão. Você encontra o segundo esconderijo, pequeno e honesto. "
+                "O vento sopra frio.",
+            )
+
+    spy = _Liar()
+    monkeypatch.setattr(stt, "get_llm", lambda *a, **k: spy)
+    row = adopted_row("bbbbbbbbbbbb", "esconderijo", FAR, truth=False)
+    out = stt.storyteller_node(_story_at_far("Procuro e examino o local", [row]))
+    assert "<RESULTADO_DA_BUSCA>" in spy.prompts[0] and "NÃO narre esconderijo" in spy.prompts[0]
+    prose = out["messages"][0].content
+    assert "esconderijo" not in prose and "sinais comuns do lugar" in prose
+    assert "O vento sopra frio." in prose
+    assert isinstance(AIMessage(content=""), AIMessage)
+    # busca fora do alvo ou sem verbo de busca: nenhum fato extra
+    spy2 = _Liar()
+    monkeypatch.setattr(stt, "get_llm", lambda *a, **k: spy2)
+    stt.storyteller_node(_story_at_far("Converso com o taverneiro", [row]))
+    assert "<RESULTADO_DA_BUSCA>" not in spy2.prompts[0]
+
+
+def test_true_claim_not_due_also_gets_nothing_fact(monkeypatch):
+    spy = _Spy()
+    monkeypatch.setattr(stt, "get_llm", lambda *a, **k: spy)
+    row = adopted_row(
+        "cccccccccccc", "esconderijo", FAR, truth=True, born=5
+    )  # nasce hoje: nao devido
+    stt.storyteller_node(_story_at_far("Procuro e examino o local", [row]))
+    assert "<RESULTADO_DA_BUSCA>" in spy.prompts[0]
+
+
+def test_neutralize_helper_keeps_innocent_sentences():
+    text = "A chuva cai. Você encontra um baú cheio de ouro. Nada mais acontece."
+    out = stt._neutralize_false_find(text)
+    assert "baú" not in out and "A chuva cai." in out and "Nada mais acontece." in out
+    assert stt._neutralize_false_find("O vento passa.") == "O vento passa."

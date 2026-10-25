@@ -491,3 +491,14 @@ criado: `python -m playtest run --scenario rumor_adotado --turns 10` (MockLLM) p
   `scenarios.cleanup` ao fim da campanha (`runner.run_campaign`). R-P2-2: `loot_node` não desvia para o
   achado do boato quando há corpo a saquear (`conflict_summary.mortos`): o corpo vem primeiro, o achado
   na busca seguinte (ou pelo storyteller). R-P2-3: `blocked` do achado inclui `player.equipment`.
+- **D-11 — Smoke real: `find_log` e narração (25/10).** (1) Achado materializado de linha adotada sem
+  registro (ex.: injetada pelo harness) não entrava em `find_log`: `rumors.mark_materialized` agora
+  grava o dia do achado **uma única vez** (`find_logged` evita duplicar com o registro da adoção).
+  (2) No alvo de uma alegação de achado adotada que não entrega nada agora (falsa, ou verdadeira fora
+  da janela), a busca passa ao narrador o fato `<RESULTADO_DA_BUSCA>` (nada do boato está aqui) e a
+  prosa que afirma esconderijo/baú/tesouro encontrado é neutralizada (`_neutralize_false_find`).
+
+- **2026-10-25 — Smoke real (DeepSeek, `rumor_adotado`, seed 42): 2 falhas** — `find_log` ausente após
+  achado real e narrador inventando achados no alvo falso (turnos 4–12). Corrigidas em D-11; testes:
+  integração pelo nó real + save/load (`find_log == [5]`, 2º achado < 20 d recusado) e prompt capturado
+  com `<RESULTADO_DA_BUSCA>` + prosa neutralizada.

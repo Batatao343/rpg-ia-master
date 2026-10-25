@@ -451,6 +451,24 @@ def search_intent(text: str) -> bool:
     return _is_search(text or "")
 
 
+def nothing_found(state: dict, location_id: str, text: str) -> bool:
+    """True se o heroi BUSCA no alvo de uma alegacao de achado adotada que NAO entrega nada agora
+    (falsa, ou verdadeira ainda fora da janela/gatilho). O narrador recebe o fato "nada aqui"."""
+    if mode() != "on" or not _is_search(text or ""):
+        return False
+    from services import world_perception as wperc
+
+    for r in _sim(state).get("rumors") or []:
+        if not isinstance(r, dict) or not r.get("adopted") or r.get("materialized_day"):
+            continue
+        c = r.get("claim") or {}
+        if c.get("kind") in LOOT_KINDS and location_id in wperc._family(
+            str(c.get("location_id") or "")
+        ):
+            return True
+    return False
+
+
 def _has_investigation_quest(state: dict, rumor_id: str) -> bool:
     for q in (state or {}).get("quests") or []:
         if (
