@@ -59,3 +59,44 @@ py.sh -m pytest tests/test_spec313_rumor.py tests/test_spec313_offer.py tests/te
 sonda scratchpad/r315/probe315.py → validate_claim direto: player_steered; via _apply_proposed_rumors: adopted=True (P1-1)
 sonda scratchpad/r315/probe_budget.py → dia 16 antes do _cap_ledger: budget; depois: '' (P1-2)
 ```
+
+## Re-review (delta `f1a37de1..98fc39a8`)
+
+> **Veredito:** `CHANGES_REQUIRED` (1 P1 novo, regressão de teste existente; todos os achados anteriores resolvidos)
+> **Revisor:** Opus 5.5 / Sol · **Data:** 2026-10-25 · **Commit revisado:** `98fc39a8`
+
+### Achados anteriores
+
+| ID | Status | Evidência |
+|---|---|---|
+| P1-1 | resolvido | `agents/storyteller.py:858-859` preserva `state["messages"]`; sonda `probe315.py`: via `_apply_proposed_rumors` agora `adopted=None truth=False` (antes `True/True`) |
+| P1-2 | resolvido | `world_sim.find_log` gravado em `services/rumors.py:770-774`, lido em `rumor_adoption._budget_reason` com `LOOT_TRUE_PER_WINDOW`; sonda `probe_budget2.py`: achado no dia 1, ledger vazio após `_cap_ledger(16)` → dia 16 `budget`, dia 22 `''`. Invariante usa `find_log`. (`probe_budget.py` antigo agora dá `''` antes do cap porque monta só a linha do ledger sem `find_log` — esperado.) |
+| P1-3 | resolvido | `test_secret_faction_gate` verde |
+| P2-1 | resolvido | `_faction_hidden` chama `faction_gate` direto |
+| P2-2 | resolvido | `fallback["world"]` quando `rumor_find`; nota começa com "Ao explorar X, o jogador ENCONTROU:" (regex diegético existente) |
+| P2-3 | resolvido | 5 eventos `rumor_adopt.*` literais e no catálogo; `test_log_event_registry` verde |
+| P2-4 | resolvido | `agents/loot.py:182-234`, gancho no TREASURE (`:381`) com claim de único em `pending_world_events` |
+| P2-5 | resolvido | gatilho `present` para `npc_em_local`; invariante `npc_teleport` compara `prev`→atual no mesmo dia |
+| P2-6 | resolvido | `forced_adopt` só com `RPG_PLAYTEST_FORCED_ADOPT=1` |
+
+### D6-rev1 (loteria de tamanho)
+
+OK: `roll_loot` com os defaults (`step_up=0`, `min_rarity=None`) é no-op (`_shift_rarity` devolve `pick`, sem RNG extra, fallback de pool só com tier) — sonda: mesmas saídas para 150 seeds/perigos; teto de ouro por tier (`min(gold*mult, gold_max)`); `item_perdido` sem ouro; único só no `excepcional`, filtrado por `is_unique_available` (projection) + `_placed_uniques` (baús curados) + inventário, com claim via `_grant_items` → `pending_world_events` nos dois caminhos (storyteller/loot_node são rotas exclusivas no turno; `due_materialization` devolve 1 instância e `mark_materialized` é idempotente, então não há dupla concessão); tier por `day_rng(game_id, born_day, "rumor_tier:"+id)` + perigo estático do mapa — não lê o herói; invariante `loot_over_cap` por tier. Spec registra D6 riscado, D6-rev1 com a frase do dono, antes/depois/racional e "Histórico de mudanças".
+
+### Achados novos
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| R-P1-1 | P1 | `services/economy.py:971-981` × `tests/test_conflito_resumo.py:112-123` | **Regressão:** `test_roll_loot_nao_muda_assinatura` falha — a guarda de assinatura de outra spec (risco §7: "proíbe reescrever economy") lista exatamente 7 parâmetros; agora são 9. A suíte do pouso fica vermelha. | Ou (a) tornar `step_up`/`min_rarity` keyword-only e ajustar a guarda para "os 7 originais na mesma ordem + só opcionais keyword-only depois", registrando em D-10 que o comportamento default é idêntico; ou (b) não tocar `roll_loot` e criar `economy.roll_loot_tiered(...)` que reusa as tabelas. Não editar a guarda sem registrar na spec. |
+| R-P2-1 | P2 | `playtest/scenarios.py:305` | `os.environ["RPG_PLAYTEST_FORCED_ADOPT"]="1"` é global e vaza para o resto do processo (outros cenários/testes no mesmo worker). Impacto baixo (só vale se houver `forced_adopt` no save). | Setar/limpar no runner do cenário (ou `monkeypatch` nos testes). |
+| R-P2-2 | P2 | `agents/loot.py:381` | Busca roteada a LOOT no alvo depois de um combate ("vasculho o corpo") consome o achado do boato e pula o saque do corpo nesse turno. | Só desviar quando não houver `loot_ctx` de combate pendente (ou entregar os dois). |
+| R-P2-3 | P2 | `services/exploration.py:191` | `owned` olha só `player.inventory`; itens equipados não entram. Coberto na prática pela projection (único concedido gera claim), mas a regra "não é do herói" fica incompleta para saves legados. | Incluir `player.equipment` no conjunto `blocked`. |
+
+### Comandos (re-review)
+
+```text
+probe315.py → direct: player_steered; via storyteller: adopted=None truth=False
+probe_budget2.py → find_log [1]; d16 budget; d22 ''; roll_loot default identical: True
+py.sh -m pytest tests/test_spec315_{claim,truth,materialize,property,resolution,tiers}.py tests/test_log_event_registry.py (serial) → todos passed, exit=0
+py.sh -m pytest 12 arquivos de loot/economia + test_spec313_rumor/312_proposed/304_agenda (serial) → 1 failed (test_conflito_resumo::test_roll_loot_nao_muda_assinatura), demais passed, exit=1
+```

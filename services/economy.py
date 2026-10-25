@@ -976,14 +976,47 @@ def roll_loot(
     bestiary_knowledge: dict | None = None,
     turn: int = 0,
     boost: bool = False,
-    step_up: int = 0,
-    min_rarity: str | None = None,
 ) -> dict:
     """Sorteia raridade (pesos por banda de perigo) e item do pool da região.
     Retorna {"item_id", "rarity", "gold"} — item_id None se pool vazio (só ouro).
     Fase 6.2: único já reclamado sai do pool ANTES do sorteio (nunca re-dropa).
     Fase 6.3: drops de criaturas quase-extintas na região somem temporariamente.
     Fase 6.4: `boost` (pista de rastro) força a banda alta — one-shot."""
+    return _roll_loot_impl(
+        region_id, danger, rng, projection, bestiary_knowledge, turn, boost, 0, None
+    )
+
+
+def roll_loot_tiered(
+    region_id: str,
+    danger: int,
+    rng: random.Random | None = None,
+    projection: dict | None = None,
+    bestiary_knowledge: dict | None = None,
+    turn: int = 0,
+    boost: bool = False,
+    *,
+    step_up: int = 0,
+    min_rarity: str | None = None,
+) -> dict:
+    """SPEC-315 D6-rev1: `roll_loot` com a raridade subida `step_up` degraus e/ou piso
+    `min_rarity` (mesmas tabelas, mesmo sorteio; so o achado de boato usa)"""
+    return _roll_loot_impl(
+        region_id, danger, rng, projection, bestiary_knowledge, turn, boost, step_up, min_rarity
+    )
+
+
+def _roll_loot_impl(
+    region_id: str,
+    danger: int,
+    rng: random.Random | None,
+    projection: dict | None,
+    bestiary_knowledge: dict | None,
+    turn: int,
+    boost: bool,
+    step_up: int,
+    min_rarity: str | None,
+) -> dict:
     rng = rng or random.Random()
     table = LOOT_TABLES.get(region_id) or LOOT_TABLES.get("default") or {}
     band = "3-4" if boost else ("1-2" if int(danger or 1) <= 2 else "3-4")

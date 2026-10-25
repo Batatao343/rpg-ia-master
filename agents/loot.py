@@ -378,7 +378,12 @@ def loot_node(state: GameState):
     # TREASURE — raridade/item saem da TABELA da região (Python)
     # =========================================================
     loc = get_location(world.get("current_location_id", "")) or {}
-    rumor_find = _rumor_cache_find(state, player, world, loc, text)  # SPEC-315 P2-4
+    # SPEC-315 P2-4: achado de boato; se ha corpo a saquear (pos-combate), o corpo vem primeiro
+    rumor_find = (
+        None
+        if conflict_summary.get("mortos")
+        else _rumor_cache_find(state, player, world, loc, text)
+    )
     if rumor_find is not None:
         return rumor_find
     region_id = loc.get("region_id", "default")

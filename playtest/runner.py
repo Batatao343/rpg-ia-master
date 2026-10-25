@@ -1588,6 +1588,8 @@ def run_campaign(
             if history:
                 history[-1].violations.extend(item["check_id"] for item in scenario_violations)
                 history[-1].violation_details.extend(scenario_violations)
+    if scenario_module is not None:
+        scenario_module.cleanup(str(scenario))  # flags do harness nao vazam para o processo
     return result
 
 

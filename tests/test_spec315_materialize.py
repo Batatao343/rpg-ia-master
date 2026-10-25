@@ -34,7 +34,7 @@ def test_cache_uses_roll_loot_no_unique_gold_cap(monkeypatch):
         calls.append((region, danger, kw.get("boost")))
         return {"item_id": UNIQUE if len(calls) < 3 else "pocao_cura", "rarity": "x", "gold": 999}
 
-    monkeypatch.setattr(economy, "roll_loot", fake)
+    monkeypatch.setattr(economy, "roll_loot_tiered", fake)
     loc = gamedata.get_location("pradaria_ruinas")
     player, world = {"gold": 0, "inventory": []}, {}
     note, got = exploration.grant_rumor_cache(
@@ -44,7 +44,7 @@ def test_cache_uses_roll_loot_no_unique_gold_cap(monkeypatch):
     assert all(c[0] == loc["region_id"] and c[1] == loc["danger"] and c[2] is False for c in calls)
     assert player["gold"] == 0 and UNIQUE not in str(player["inventory"])
     # esconderijo sem item (pool vazio): ouro limitado a 40
-    monkeypatch.setattr(economy, "roll_loot", lambda *a, **k: {"item_id": None, "gold": 999})
+    monkeypatch.setattr(economy, "roll_loot_tiered", lambda *a, **k: {"item_id": None, "gold": 999})
     player = {"gold": 5, "inventory": []}
     _n, got = exploration.grant_rumor_cache(
         player, {}, loc, random.Random(2), kind="esconderijo", gold_max=40
@@ -350,3 +350,27 @@ def test_find_turn_llm_exception_keeps_world(monkeypatch):
     assert FAR in out["world"]["looted_locations"]
     assert out["world_sim"]["rumors"][0]["materialized_day"] == 5
     assert "O boato era" not in str(out["messages"][0].content)
+
+
+def test_loot_node_corpse_first_then_rumor_find(monkeypatch):
+    """R-P2-2: pos-combate o saque do corpo nao e pulado pelo achado do boato."""
+    import agents.loot as loot
+
+    monkeypatch.setattr(loot, "get_llm", lambda *a, **k: _Spy())
+    row = adopted_row("aaaaaaaaaaaa", "esconderijo", FAR, truth=True)
+    st = _story_at_far("Vasculho o corpo", [row])
+    st["loot_source"] = "TREASURE"
+    st["conflict_summary"] = {"mortos": ["Rato"], "loot_obtido": []}
+    out = loot.loot_node(st)
+    assert "world_sim" not in out  # saque generico do corpo
+    assert FAR not in (out["world"].get("looted_locations") or [])
+
+
+def test_scenario_cleanup_unsets_forced_flag(monkeypatch):
+    import os
+
+    from playtest import scenarios
+
+    monkeypatch.setenv("RPG_PLAYTEST_FORCED_ADOPT", "1")
+    scenarios.cleanup("rumor_adotado")
+    assert "RPG_PLAYTEST_FORCED_ADOPT" not in os.environ

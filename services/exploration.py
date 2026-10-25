@@ -189,6 +189,7 @@ def grant_rumor_cache(
     danger = int(loc.get("danger", 1) or 1)
     region_id = loc.get("region_id", "default")
     owned = {str(i.get("id")) for i in player.get("inventory") or [] if isinstance(i, dict)}
+    owned |= {str(v) for v in (player.get("equipment") or {}).values() if v}  # equipados tambem
     blocked = _placed_uniques() | owned
     allow_unique = bool(tier.get("allow_unique"))
     item_id = None
@@ -199,7 +200,7 @@ def grant_rumor_cache(
         min_r = tier.get("min_rarity")
         if tier_id == "excepcional" and fallback:
             min_r = "raro"
-        roll = economy.roll_loot(
+        roll = economy.roll_loot_tiered(
             region_id,
             danger,
             rng,

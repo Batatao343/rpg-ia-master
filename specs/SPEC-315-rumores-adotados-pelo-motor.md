@@ -457,8 +457,9 @@ criado: `python -m playtest run --scenario rumor_adotado --turns 10` (MockLLM) p
   gatilho `present` para NPC que chega depois; `forced_adopt` só com `RPG_PLAYTEST_FORCED_ADOPT=1`;
   invariante `npc_teleport` compara `prev`→atual no mesmo dia.
 - **D-10 — Revisão sol P1/P2 (25/10).** Ver *Histórico de mudanças*. `loot_node` ganhou gancho
-  (`_rumor_cache_find`); `economy.roll_loot` ganhou `step_up`/`min_rarity` (sem mudar o sorteio
-  quando omitidos); `_rumor_cache_trigger` devolve `(player, nota, eventos)` (claim de único).
+  (`_rumor_cache_find`); `economy.roll_loot` **mantém a assinatura original** (guarda de `test_conflito_resumo`); o miolo foi
+  extraído para `_roll_loot_impl` e `economy.roll_loot_tiered(..., *, step_up, min_rarity)` é o único
+  caminho com tier (só a SPEC-315 o usa); `_rumor_cache_trigger` devolve `(player, nota, eventos)` (claim de único).
 
 ## Histórico de mudanças
 
@@ -484,3 +485,9 @@ criado: `python -m playtest run --scenario rumor_adotado --turns 10` (MockLLM) p
   `find_tier`, `exploration.grant_rumor_cache(tier=)`, `economy.roll_loot(step_up, min_rarity)`,
   `_placed_uniques`; testes `tests/test_spec315_tiers.py` (distribuição ±3 pp, único nunca duplicado,
   teto por tier, frequência 1/20 dias).
+- **2026-10-25 — Re-review: `CHANGES_REQUIRED`** (R-P1-1, R-P2-1..3). R-P1-1: `roll_loot` voltou à
+  assinatura original e o tier passou para `roll_loot_tiered` (decisão do coordenador; a guarda de
+  `test_conflito_resumo` não foi tocada). R-P2-1: a flag `RPG_PLAYTEST_FORCED_ADOPT` é limpa por
+  `scenarios.cleanup` ao fim da campanha (`runner.run_campaign`). R-P2-2: `loot_node` não desvia para o
+  achado do boato quando há corpo a saquear (`conflict_summary.mortos`): o corpo vem primeiro, o achado
+  na busca seguinte (ou pelo storyteller). R-P2-3: `blocked` do achado inclui `player.equipment`.

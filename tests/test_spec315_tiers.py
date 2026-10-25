@@ -171,3 +171,30 @@ def test_materialize_records_tier_and_events():
     assert mat["tier"] in TIERS and "_events" not in mat
     assert mat["gold"] <= TIERS[mat["tier"]]["gold_max"]
     assert isinstance(upd["events"], list)
+
+
+def test_roll_loot_signature_untouched_and_tiered_default_is_identical():
+    import inspect
+
+    assert len(inspect.signature(economy.roll_loot).parameters) == 7
+    for seed in range(60):
+        a = economy.roll_loot("default", 3, random.Random(seed))
+        b = economy.roll_loot_tiered("default", 3, random.Random(seed))
+        assert a == b
+
+
+def test_equipped_unique_is_never_found_again():
+    unique = "art_adaga_vidro_dragao"
+    loc = gamedata.get_location("montanhas_afiadas")
+    for seed in range(300):
+        player = {"gold": 0, "inventory": [], "equipment": {"weapon": unique}}
+        _n, got = exploration.grant_rumor_cache(
+            player,
+            {},
+            loc,
+            random.Random(seed),
+            kind="item_perdido",
+            tier=TIERS["excepcional"],
+            tier_id="excepcional",
+        )
+        assert got["item_id"] != unique

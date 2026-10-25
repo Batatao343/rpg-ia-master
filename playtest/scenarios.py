@@ -47,6 +47,12 @@ SKEK_ID = "npc_mv_skek_eco_curto"
 WAIT_LOCATION = "ma_saidas_baixas"
 
 
+def cleanup(name: str) -> None:
+    """Desfaz o que `prepare` deixou fora do estado (flag do harness de `rumor_adotado`)."""
+    if name == "rumor_adotado":
+        os.environ.pop("RPG_PLAYTEST_FORCED_ADOPT", None)
+
+
 def names() -> tuple[str, ...]:
     return tuple(_SCENARIOS)
 
