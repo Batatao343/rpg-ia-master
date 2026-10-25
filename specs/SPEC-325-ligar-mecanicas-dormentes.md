@@ -463,6 +463,7 @@ Para todos: 0 erro, 0 violação `error`, `mock=False`. Registrar os run_ids e o
 - **D5 — Long-run.** **Autorizar até 4 campanhas `combate` 12 × 200 MockLLM (offline, US$ 0; uma por
   fase), rodadas pelo coordenador uma por vez.** Sem o OK, as Fases A–C vão a `on` só com arena e matriz
   de 50 turnos, e a Fase D não vai a `on`.
+  **Dono 25/10: "ok" — long-run autorizado nos termos acima (até 4 campanhas 12 × 200 MockLLM, uma por fase, uma por vez).**
 - **D6 — Rollout.** **Código em `shadow`; staging `on` por fase depois do gate; produção segue o staging.**
 - **D7 — Itens fora do combate.** **Fases de Chefe: apagar os blocos `phases` mortos numa spec de poda
   separada** (alternativa: portar o K3 da SPEC-295). **`asset_pipeline.can_serve`: auditoria separada da
