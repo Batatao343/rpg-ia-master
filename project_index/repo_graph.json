@@ -1,5 +1,5 @@
 {
-  "commit_sha": "41778c8bcac11052092fdda8f7fb76e1abd41886",
+  "commit_sha": "ae4fc825ddae77c4dfa73101787935cc52563cd1",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -42664,7 +42664,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 757
+        "line": 763
       },
       "source": "module:mock_llm",
       "target": "symbol:mock_llm.MockLLM",
@@ -42675,7 +42675,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 743
+        "line": 749
       },
       "source": "module:mock_llm",
       "target": "symbol:mock_llm._StructuredMock",
@@ -42708,7 +42708,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 657
+        "line": 663
       },
       "source": "module:mock_llm",
       "target": "symbol:mock_llm._combat_action",
@@ -42719,7 +42719,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 540
+        "line": 546
       },
       "source": "module:mock_llm",
       "target": "symbol:mock_llm._encounter_scanner",
@@ -42730,7 +42730,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 522
+        "line": 528
       },
       "source": "module:mock_llm",
       "target": "symbol:mock_llm._enemy_schema",
@@ -42741,7 +42741,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 622
+        "line": 628
       },
       "source": "module:mock_llm",
       "target": "symbol:mock_llm._entity_match",
@@ -42763,7 +42763,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 580
+        "line": 586
       },
       "source": "module:mock_llm",
       "target": "symbol:mock_llm._item_generation",
@@ -42796,7 +42796,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 550
+        "line": 556
       },
       "source": "module:mock_llm",
       "target": "symbol:mock_llm._loot_schema",
@@ -42851,7 +42851,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 487
+        "line": 493
       },
       "source": "module:mock_llm",
       "target": "symbol:mock_llm._npc_response",
@@ -42895,7 +42895,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 610
+        "line": 616
       },
       "source": "module:mock_llm",
       "target": "symbol:mock_llm._ruling",
@@ -42906,7 +42906,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 676
+        "line": 682
       },
       "source": "module:mock_llm",
       "target": "symbol:mock_llm._start_scenario",
@@ -42928,7 +42928,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 626
+        "line": 632
       },
       "source": "module:mock_llm",
       "target": "symbol:mock_llm._trade_intent",
@@ -42939,7 +42939,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 597
+        "line": 603
       },
       "source": "module:mock_llm",
       "target": "symbol:mock_llm._transaction",
@@ -46613,7 +46613,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 49
+        "line": 255
+      },
+      "source": "module:playtest.scenarios",
+      "target": "symbol:playtest.scenarios._lore_hop_text",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/scenarios.py",
+        "line": 165
+      },
+      "source": "module:playtest.scenarios",
+      "target": "symbol:playtest.scenarios._lore_npc",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/scenarios.py",
+        "line": 289
+      },
+      "source": "module:playtest.scenarios",
+      "target": "symbol:playtest.scenarios._lore_variant_decision",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/scenarios.py",
+        "line": 58
       },
       "source": "module:playtest.scenarios",
       "target": "symbol:playtest.scenarios._move_world",
@@ -46624,7 +46657,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 133
+        "line": 142
       },
       "source": "module:playtest.scenarios",
       "target": "symbol:playtest.scenarios._prepare_lore_quests",
@@ -46635,7 +46668,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 66
+        "line": 182
+      },
+      "source": "module:playtest.scenarios",
+      "target": "symbol:playtest.scenarios._prepare_lore_variant",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/scenarios.py",
+        "line": 75
       },
       "source": "module:playtest.scenarios",
       "target": "symbol:playtest.scenarios._prepare_mundo",
@@ -46646,7 +46690,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 108
+        "line": 117
       },
       "source": "module:playtest.scenarios",
       "target": "symbol:playtest.scenarios._prepare_npc_world",
@@ -46657,7 +46701,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 252
+        "line": 415
       },
       "source": "module:playtest.scenarios",
       "target": "symbol:playtest.scenarios._violation",
@@ -46668,7 +46712,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 224
+        "line": 385
       },
       "source": "module:playtest.scenarios",
       "target": "symbol:playtest.scenarios.decision_for",
@@ -46679,7 +46723,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 36
+        "line": 45
       },
       "source": "module:playtest.scenarios",
       "target": "symbol:playtest.scenarios.names",
@@ -46690,7 +46734,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 262
+        "line": 425
       },
       "source": "module:playtest.scenarios",
       "target": "symbol:playtest.scenarios.oracle_violations",
@@ -46701,7 +46745,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 156
+        "line": 315
       },
       "source": "module:playtest.scenarios",
       "target": "symbol:playtest.scenarios.prepare",
@@ -46712,7 +46756,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 40
+        "line": 49
       },
       "source": "module:playtest.scenarios",
       "target": "symbol:playtest.scenarios.profile_for",
@@ -70934,7 +70978,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 202
+        "line": 213
       },
       "source": "module:services.lore_quests",
       "target": "symbol:services.lore_quests._allowed_cats",
@@ -70945,7 +70989,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 74
+        "line": 85
       },
       "source": "module:services.lore_quests",
       "target": "symbol:services.lore_quests._cur",
@@ -70956,7 +71000,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 70
+        "line": 81
       },
       "source": "module:services.lore_quests",
       "target": "symbol:services.lore_quests._day",
@@ -70967,7 +71011,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 163
+        "line": 174
       },
       "source": "module:services.lore_quests",
       "target": "symbol:services.lore_quests._days",
@@ -70978,7 +71022,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 245
+        "line": 382
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests._empty_notice",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 256
       },
       "source": "module:services.lore_quests",
       "target": "symbol:services.lore_quests._escort_ok",
@@ -70989,7 +71044,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 65
+        "line": 76
       },
       "source": "module:services.lore_quests",
       "target": "symbol:services.lore_quests._fold",
@@ -71000,7 +71055,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 493
+        "line": 535
       },
       "source": "module:services.lore_quests",
       "target": "symbol:services.lore_quests._get",
@@ -71011,7 +71066,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 259
+        "line": 270
       },
       "source": "module:services.lore_quests",
       "target": "symbol:services.lore_quests._hunt_anchor",
@@ -71022,7 +71077,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 206
+        "line": 217
       },
       "source": "module:services.lore_quests",
       "target": "symbol:services.lore_quests._hunt_ok",
@@ -71033,7 +71088,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 363
+        "line": 393
       },
       "source": "module:services.lore_quests",
       "target": "symbol:services.lore_quests._interleave",
@@ -71044,7 +71099,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 82
+        "line": 93
       },
       "source": "module:services.lore_quests",
       "target": "symbol:services.lore_quests._item_name",
@@ -71055,7 +71110,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 78
+        "line": 89
       },
       "source": "module:services.lore_quests",
       "target": "symbol:services.lore_quests._loc_name",
@@ -71066,7 +71121,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 51
+        "line": 62
       },
       "source": "module:services.lore_quests",
       "target": "symbol:services.lore_quests._log",
@@ -71077,285 +71132,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 457
+        "line": 439
       },
       "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests._names_index",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 97
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests._npc",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 110
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests._npc_here",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 236
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests._patron_match",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 382
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests._render_menu",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 216
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests._rollable",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 225
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests._route",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 229
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests._route_valid",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 88
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests._rumor_api",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 612
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests.active_hunt_anchor",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 263
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests.anchor_menu",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 156
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests.cap_reached",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 57
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests.cfg",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 61
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests.const",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 167
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests.deadline_for",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 638
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests.desfecho_block",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 376
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests.estimate_tokens",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 122
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests.lore_active",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 42
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests.mode",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 128
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests.on_cooldown",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 103
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests.origin_ref",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 627
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests.outcome_label",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 661
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests.resolve_rumor_outcome",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 184
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests.reward_for",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 393
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests.rumor_public_text",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 466
-      },
-      "source": "module:services.lore_quests",
-      "target": "symbol:services.lore_quests.safe_llm_text",
+      "target": "symbol:services.lore_quests._menu_miss_cause",
       "type": "defines"
     },
     {
@@ -71366,6 +71146,292 @@
         "line": 499
       },
       "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests._names_index",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 108
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests._npc",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 121
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests._npc_here",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 247
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests._patron_match",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 412
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests._render_menu",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 227
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests._rollable",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 236
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests._route",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 240
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests._route_valid",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 99
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests._rumor_api",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 654
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests.active_hunt_anchor",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 274
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests.anchor_menu",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 167
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests.cap_reached",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 68
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests.cfg",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 72
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests.const",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 178
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests.deadline_for",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 680
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests.desfecho_block",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 406
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests.estimate_tokens",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 133
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests.lore_active",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 53
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests.mode",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 139
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests.on_cooldown",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 114
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests.origin_ref",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 669
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests.outcome_label",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 703
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests.resolve_rumor_outcome",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 195
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests.reward_for",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 423
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests.rumor_public_text",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 508
+      },
+      "source": "module:services.lore_quests",
+      "target": "symbol:services.lore_quests.safe_llm_text",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 541
+      },
+      "source": "module:services.lore_quests",
       "target": "symbol:services.lore_quests.seed_for_proposal",
       "type": "defines"
     },
@@ -71374,7 +71440,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 602
+        "line": 644
       },
       "source": "module:services.lore_quests",
       "target": "symbol:services.lore_quests.seed_from_proposal",
@@ -71385,7 +71451,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 409
+        "line": 451
       },
       "source": "module:services.lore_quests",
       "target": "symbol:services.lore_quests.validate_anchor",
@@ -82605,7 +82671,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 601
+        "line": 602
       },
       "source": "module:services.world_validators",
       "target": "symbol:services.world_validators._npc_target_known",
@@ -82682,7 +82748,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 578
+        "line": 579
       },
       "source": "module:services.world_validators",
       "target": "symbol:services.world_validators._v_crime_witnessed",
@@ -82726,7 +82792,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 591
+        "line": 592
       },
       "source": "module:services.world_validators",
       "target": "symbol:services.world_validators._v_law_resolved",
@@ -82759,7 +82825,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 540
+        "line": 541
       },
       "source": "module:services.world_validators",
       "target": "symbol:services.world_validators._v_location_state_changed",
@@ -82770,7 +82836,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 629
+        "line": 630
       },
       "source": "module:services.world_validators",
       "target": "symbol:services.world_validators._v_npc_defected",
@@ -82792,7 +82858,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 610
+        "line": 611
       },
       "source": "module:services.world_validators",
       "target": "symbol:services.world_validators._v_npc_offscreen",
@@ -82913,7 +82979,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 565
+        "line": 566
       },
       "source": "module:services.world_validators",
       "target": "symbol:services.world_validators._v_world_crisis_warning",
@@ -82946,7 +83012,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 524
+        "line": 525
       },
       "source": "module:services.world_validators",
       "target": "symbol:services.world_validators.catalog_ref",
@@ -82990,7 +83056,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 517
+        "line": 518
       },
       "source": "module:services.world_validators",
       "target": "symbol:services.world_validators.rejection_source",
@@ -83012,7 +83078,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 688
+        "line": 689
       },
       "source": "module:services.world_validators",
       "target": "symbol:services.world_validators.validate_proposal",
@@ -164423,7 +164489,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 134
+        "line": 140
       },
       "source": "module:tests.test_spec313_offer",
       "target": "symbol:tests.test_spec313_offer.test_complete_uses_planned_reward_not_flat_20",
@@ -164456,7 +164522,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 124
+        "line": 130
       },
       "source": "module:tests.test_spec313_offer",
       "target": "symbol:tests.test_spec313_offer.test_deterministic_ids_and_idempotent_offer",
@@ -164467,7 +164533,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 114
+        "line": 120
       },
       "source": "module:tests.test_spec313_offer",
       "target": "symbol:tests.test_spec313_offer.test_infeasible_not_offered",
@@ -164478,7 +164544,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 95
+        "line": 100
       },
       "source": "module:tests.test_spec313_offer",
       "target": "symbol:tests.test_spec313_offer.test_lore_cap_two_and_global_cap",
@@ -164511,7 +164577,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 82
+        "line": 87
       },
       "source": "module:tests.test_spec313_offer",
       "target": "symbol:tests.test_spec313_offer.test_origin_cooldown_and_anchor_cooldown_in_days",
@@ -164599,6 +164665,28 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_playtest.py",
+        "line": 167
+      },
+      "source": "module:tests.test_spec313_playtest",
+      "target": "symbol:tests.test_spec313_playtest._run",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec313_playtest.py",
+        "line": 218
+      },
+      "source": "module:tests.test_spec313_playtest",
+      "target": "symbol:tests.test_spec313_playtest.test_downgrade_causes_are_distinguished",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec313_playtest.py",
         "line": 121
       },
       "source": "module:tests.test_spec313_playtest",
@@ -164654,10 +164742,54 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_playtest.py",
+        "line": 177
+      },
+      "source": "module:tests.test_spec313_playtest",
+      "target": "symbol:tests.test_spec313_playtest.test_scenario_lore_quests_entrega_offers_and_delivers",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec313_playtest.py",
+        "line": 192
+      },
+      "source": "module:tests.test_spec313_playtest",
+      "target": "symbol:tests.test_spec313_playtest.test_scenario_lore_quests_escolta_offers_and_travels",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec313_playtest.py",
         "line": 155
       },
       "source": "module:tests.test_spec313_playtest",
       "target": "symbol:tests.test_spec313_playtest.test_scenario_lore_quests_offers_hunt",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec313_playtest.py",
+        "line": 185
+      },
+      "source": "module:tests.test_spec313_playtest",
+      "target": "symbol:tests.test_spec313_playtest.test_scenario_lore_quests_rumor_investigates_false_rumor",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec313_playtest.py",
+        "line": 198
+      },
+      "source": "module:tests.test_spec313_playtest",
+      "target": "symbol:tests.test_spec313_playtest.test_scenario_variants_registered_and_mock_picks_requested_kind",
       "type": "defines"
     },
     {
@@ -206883,7 +207015,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 763
+        "line": 769
       },
       "source": "symbol:mock_llm.MockLLM",
       "target": "symbol:mock_llm.MockLLM.__init__",
@@ -206894,7 +207026,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 766
+        "line": 772
       },
       "source": "symbol:mock_llm.MockLLM",
       "target": "symbol:mock_llm.MockLLM.bind_tools",
@@ -206905,7 +207037,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 775
+        "line": 781
       },
       "source": "symbol:mock_llm.MockLLM",
       "target": "symbol:mock_llm.MockLLM.invoke",
@@ -206916,7 +207048,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 779
+        "line": 785
       },
       "source": "symbol:mock_llm.MockLLM",
       "target": "symbol:mock_llm.MockLLM.stream",
@@ -206927,7 +207059,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 772
+        "line": 778
       },
       "source": "symbol:mock_llm.MockLLM",
       "target": "symbol:mock_llm.MockLLM.with_retry",
@@ -206938,7 +207070,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 769
+        "line": 775
       },
       "source": "symbol:mock_llm.MockLLM",
       "target": "symbol:mock_llm.MockLLM.with_structured_output",
@@ -206949,7 +207081,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 777
+        "line": 783
       },
       "source": "symbol:mock_llm.MockLLM.invoke",
       "target": "symbol:mock_llm._acao_eco",
@@ -206960,7 +207092,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 770
+        "line": 776
       },
       "source": "symbol:mock_llm.MockLLM.with_structured_output",
       "target": "symbol:mock_llm._StructuredMock",
@@ -206971,7 +207103,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 744
+        "line": 750
       },
       "source": "symbol:mock_llm._StructuredMock",
       "target": "symbol:mock_llm._StructuredMock.__init__",
@@ -206982,7 +207114,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 750
+        "line": 756
       },
       "source": "symbol:mock_llm._StructuredMock",
       "target": "symbol:mock_llm._StructuredMock.invoke",
@@ -206993,7 +207125,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 747
+        "line": 753
       },
       "source": "symbol:mock_llm._StructuredMock",
       "target": "symbol:mock_llm._StructuredMock.with_retry",
@@ -207004,7 +207136,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 754
+        "line": 760
       },
       "source": "symbol:mock_llm._StructuredMock.invoke",
       "target": "symbol:mock_llm._fill",
@@ -207037,7 +207169,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 671
+        "line": 677
       },
       "source": "symbol:mock_llm._combat_action",
       "target": "symbol:mock_llm._fill",
@@ -207048,7 +207180,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 659
+        "line": 665
       },
       "source": "symbol:mock_llm._combat_action",
       "target": "symbol:mock_llm._last_human",
@@ -207059,7 +207191,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 544
+        "line": 550
       },
       "source": "symbol:mock_llm._encounter_scanner",
       "target": "symbol:mock_llm._fill",
@@ -207070,7 +207202,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 545
+        "line": 551
       },
       "source": "symbol:mock_llm._encounter_scanner",
       "target": "symbol:mock_llm._fill",
@@ -207081,7 +207213,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 541
+        "line": 547
       },
       "source": "symbol:mock_llm._encounter_scanner",
       "target": "symbol:mock_llm._last_human",
@@ -207092,7 +207224,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 543
+        "line": 549
       },
       "source": "symbol:mock_llm._encounter_scanner",
       "target": "symbol:mock_llm._list_item_cls",
@@ -207103,7 +207235,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 524
+        "line": 530
       },
       "source": "symbol:mock_llm._enemy_schema",
       "target": "symbol:mock_llm._fill",
@@ -207114,7 +207246,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 623
+        "line": 629
       },
       "source": "symbol:mock_llm._entity_match",
       "target": "symbol:mock_llm._fill",
@@ -207136,7 +207268,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 582
+        "line": 588
       },
       "source": "symbol:mock_llm._item_generation",
       "target": "symbol:mock_llm._fill",
@@ -207147,7 +207279,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 556
+        "line": 562
       },
       "source": "symbol:mock_llm._loot_schema",
       "target": "symbol:mock_llm._fill",
@@ -207158,7 +207290,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 570
+        "line": 576
       },
       "source": "symbol:mock_llm._loot_schema",
       "target": "symbol:mock_llm._fill",
@@ -207169,7 +207301,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 551
+        "line": 557
       },
       "source": "symbol:mock_llm._loot_schema",
       "target": "symbol:mock_llm._list_item_cls",
@@ -207202,7 +207334,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 507
+        "line": 473
+      },
+      "source": "symbol:mock_llm._mock_lore_quest",
+      "target": "symbol:mock_llm._last_human",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "mock_llm.py",
+        "line": 513
       },
       "source": "symbol:mock_llm._npc_response",
       "target": "symbol:mock_llm._fill",
@@ -207213,7 +207356,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 489
+        "line": 495
       },
       "source": "symbol:mock_llm._npc_response",
       "target": "symbol:mock_llm._last_human",
@@ -207224,7 +207367,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 517
+        "line": 523
       },
       "source": "symbol:mock_llm._npc_response",
       "target": "symbol:mock_llm._mock_crime_claims",
@@ -207235,7 +207378,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 506
+        "line": 512
       },
       "source": "symbol:mock_llm._npc_response",
       "target": "symbol:mock_llm._mock_lore_quest",
@@ -207246,7 +207389,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 515
+        "line": 521
       },
       "source": "symbol:mock_llm._npc_response",
       "target": "symbol:mock_llm._mock_membership",
@@ -207345,7 +207488,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 611
+        "line": 617
       },
       "source": "symbol:mock_llm._ruling",
       "target": "symbol:mock_llm._fill",
@@ -207356,7 +207499,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 683
+        "line": 689
       },
       "source": "symbol:mock_llm._start_scenario",
       "target": "symbol:mock_llm._fill",
@@ -207367,7 +207510,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 694
+        "line": 700
       },
       "source": "symbol:mock_llm._start_scenario",
       "target": "symbol:mock_llm._fill",
@@ -207378,7 +207521,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 679
+        "line": 685
       },
       "source": "symbol:mock_llm._start_scenario",
       "target": "symbol:mock_llm._list_item_cls",
@@ -207444,7 +207587,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 654
+        "line": 660
       },
       "source": "symbol:mock_llm._trade_intent",
       "target": "symbol:mock_llm._fill",
@@ -207455,7 +207598,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 628
+        "line": 634
       },
       "source": "symbol:mock_llm._trade_intent",
       "target": "symbol:mock_llm._last_human",
@@ -207466,7 +207609,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "mock_llm.py",
-        "line": 598
+        "line": 604
       },
       "source": "symbol:mock_llm._transaction",
       "target": "symbol:mock_llm._fill",
@@ -214759,7 +214902,73 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 135
+        "line": 302
+      },
+      "source": "symbol:playtest.scenarios._lore_variant_decision",
+      "target": "symbol:playtest.profiles.ProfileDecision",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/scenarios.py",
+        "line": 306
+      },
+      "source": "symbol:playtest.scenarios._lore_variant_decision",
+      "target": "symbol:playtest.profiles.ProfileDecision",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/scenarios.py",
+        "line": 308
+      },
+      "source": "symbol:playtest.scenarios._lore_variant_decision",
+      "target": "symbol:playtest.profiles.ProfileDecision",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/scenarios.py",
+        "line": 311
+      },
+      "source": "symbol:playtest.scenarios._lore_variant_decision",
+      "target": "symbol:playtest.profiles.ProfileDecision",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/scenarios.py",
+        "line": 312
+      },
+      "source": "symbol:playtest.scenarios._lore_variant_decision",
+      "target": "symbol:playtest.profiles.ProfileDecision",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/scenarios.py",
+        "line": 306
+      },
+      "source": "symbol:playtest.scenarios._lore_variant_decision",
+      "target": "symbol:playtest.scenarios._lore_hop_text",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/scenarios.py",
+        "line": 144
       },
       "source": "symbol:playtest.scenarios._prepare_lore_quests",
       "target": "symbol:playtest.scenarios._move_world",
@@ -214770,31 +214979,42 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 72
+        "line": 191
+      },
+      "source": "symbol:playtest.scenarios._prepare_lore_variant",
+      "target": "symbol:playtest.scenarios._lore_npc",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/scenarios.py",
+        "line": 200
+      },
+      "source": "symbol:playtest.scenarios._prepare_lore_variant",
+      "target": "symbol:playtest.scenarios._lore_npc",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/scenarios.py",
+        "line": 206
+      },
+      "source": "symbol:playtest.scenarios._prepare_lore_variant",
+      "target": "symbol:playtest.scenarios._move_world",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/scenarios.py",
+        "line": 81
       },
       "source": "symbol:playtest.scenarios._prepare_mundo",
-      "target": "symbol:playtest.scenarios._move_world",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "playtest/scenarios.py",
-        "line": 114
-      },
-      "source": "symbol:playtest.scenarios._prepare_npc_world",
-      "target": "symbol:playtest.scenarios._move_world",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "playtest/scenarios.py",
-        "line": 124
-      },
-      "source": "symbol:playtest.scenarios._prepare_npc_world",
       "target": "symbol:playtest.scenarios._move_world",
       "type": "calls"
     },
@@ -214806,6 +215026,28 @@
         "line": 123
       },
       "source": "symbol:playtest.scenarios._prepare_npc_world",
+      "target": "symbol:playtest.scenarios._move_world",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/scenarios.py",
+        "line": 133
+      },
+      "source": "symbol:playtest.scenarios._prepare_npc_world",
+      "target": "symbol:playtest.scenarios._move_world",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/scenarios.py",
+        "line": 132
+      },
+      "source": "symbol:playtest.scenarios._prepare_npc_world",
       "target": "symbol:playtest.scenarios.prepare",
       "type": "calls"
     },
@@ -214814,7 +215056,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 228
+        "line": 389
       },
       "source": "symbol:playtest.scenarios.decision_for",
       "target": "symbol:playtest.profiles.ProfileDecision",
@@ -214825,7 +215067,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 230
+        "line": 393
       },
       "source": "symbol:playtest.scenarios.decision_for",
       "target": "symbol:playtest.profiles.ProfileDecision",
@@ -214836,7 +215078,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 237
+        "line": 400
       },
       "source": "symbol:playtest.scenarios.decision_for",
       "target": "symbol:playtest.profiles.ProfileDecision",
@@ -214847,7 +215089,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 242
+        "line": 405
       },
       "source": "symbol:playtest.scenarios.decision_for",
       "target": "symbol:playtest.profiles.ProfileDecision",
@@ -214858,7 +215100,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 246
+        "line": 409
       },
       "source": "symbol:playtest.scenarios.decision_for",
       "target": "symbol:playtest.profiles.ProfileDecision",
@@ -214869,7 +215111,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 226
+        "line": 391
+      },
+      "source": "symbol:playtest.scenarios.decision_for",
+      "target": "symbol:playtest.scenarios._lore_variant_decision",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/scenarios.py",
+        "line": 387
       },
       "source": "symbol:playtest.scenarios.decision_for",
       "target": "symbol:playtest.scenarios.profile_for",
@@ -214880,7 +215133,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 275
+        "line": 438
       },
       "source": "symbol:playtest.scenarios.oracle_violations",
       "target": "symbol:playtest.scenarios._violation",
@@ -214891,7 +215144,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 291
+        "line": 454
       },
       "source": "symbol:playtest.scenarios.oracle_violations",
       "target": "symbol:playtest.scenarios._violation",
@@ -214902,7 +215155,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 303
+        "line": 466
       },
       "source": "symbol:playtest.scenarios.oracle_violations",
       "target": "symbol:playtest.scenarios._violation",
@@ -214913,7 +215166,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 317
+        "line": 485
       },
       "source": "symbol:playtest.scenarios.oracle_violations",
       "target": "symbol:playtest.scenarios._violation",
@@ -214924,7 +215177,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 334
+        "line": 498
       },
       "source": "symbol:playtest.scenarios.oracle_violations",
       "target": "symbol:playtest.scenarios._violation",
@@ -214935,7 +215188,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 346
+        "line": 515
       },
       "source": "symbol:playtest.scenarios.oracle_violations",
       "target": "symbol:playtest.scenarios._violation",
@@ -214946,7 +215199,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 363
+        "line": 527
       },
       "source": "symbol:playtest.scenarios.oracle_violations",
       "target": "symbol:playtest.scenarios._violation",
@@ -214957,7 +215210,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 264
+        "line": 544
+      },
+      "source": "symbol:playtest.scenarios.oracle_violations",
+      "target": "symbol:playtest.scenarios._violation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/scenarios.py",
+        "line": 427
       },
       "source": "symbol:playtest.scenarios.oracle_violations",
       "target": "symbol:playtest.scenarios.profile_for",
@@ -214968,7 +215232,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 163
+        "line": 324
       },
       "source": "symbol:playtest.scenarios.prepare",
       "target": "symbol:playtest.scenarios._move_world",
@@ -214979,7 +215243,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 209
+        "line": 370
       },
       "source": "symbol:playtest.scenarios.prepare",
       "target": "symbol:playtest.scenarios._move_world",
@@ -214990,7 +215254,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 161
+        "line": 322
       },
       "source": "symbol:playtest.scenarios.prepare",
       "target": "symbol:playtest.scenarios._prepare_lore_quests",
@@ -215001,7 +215265,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 193
+        "line": 320
+      },
+      "source": "symbol:playtest.scenarios.prepare",
+      "target": "symbol:playtest.scenarios._prepare_lore_variant",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "playtest/scenarios.py",
+        "line": 354
       },
       "source": "symbol:playtest.scenarios.prepare",
       "target": "symbol:playtest.scenarios._prepare_mundo",
@@ -215012,7 +215287,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 195
+        "line": 356
       },
       "source": "symbol:playtest.scenarios.prepare",
       "target": "symbol:playtest.scenarios._prepare_npc_world",
@@ -215023,7 +215298,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 197
+        "line": 358
       },
       "source": "symbol:playtest.scenarios.prepare",
       "target": "symbol:playtest.scenarios.prepare",
@@ -215034,7 +215309,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "playtest/scenarios.py",
-        "line": 158
+        "line": 317
       },
       "source": "symbol:playtest.scenarios.prepare",
       "target": "symbol:playtest.scenarios.profile_for",
@@ -265458,7 +265733,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 203
+        "line": 214
       },
       "source": "symbol:services.lore_quests._allowed_cats",
       "target": "symbol:services.lore_quests.cfg",
@@ -265469,7 +265744,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 256
+        "line": 267
       },
       "source": "symbol:services.lore_quests._escort_ok",
       "target": "symbol:services.lore_quests._cur",
@@ -265480,7 +265755,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 248
+        "line": 259
       },
       "source": "symbol:services.lore_quests._escort_ok",
       "target": "symbol:services.lore_quests._npc_here",
@@ -265491,7 +265766,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 254
+        "line": 265
       },
       "source": "symbol:services.lore_quests._escort_ok",
       "target": "symbol:services.lore_quests.cfg",
@@ -265502,7 +265777,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 250
+        "line": 261
       },
       "source": "symbol:services.lore_quests._escort_ok",
       "target": "symbol:services.lore_quests.origin_ref",
@@ -265513,7 +265788,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 211
+        "line": 222
       },
       "source": "symbol:services.lore_quests._hunt_ok",
       "target": "symbol:services.lore_quests._allowed_cats",
@@ -265524,7 +265799,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 79
+        "line": 90
       },
       "source": "symbol:services.lore_quests._loc_name",
       "target": "symbol:services.world_pressures._map_index",
@@ -265535,7 +265810,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 463
+        "line": 445
+      },
+      "source": "symbol:services.lore_quests._menu_miss_cause",
+      "target": "symbol:services.lore_quests._fold",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 446
+      },
+      "source": "symbol:services.lore_quests._menu_miss_cause",
+      "target": "symbol:services.lore_quests._fold",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 505
       },
       "source": "symbol:services.lore_quests._names_index",
       "target": "symbol:services.lore_quests._fold",
@@ -265546,7 +265843,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 462
+        "line": 504
       },
       "source": "symbol:services.lore_quests._names_index",
       "target": "symbol:services.world_pressures._map_index",
@@ -265557,7 +265854,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 111
+        "line": 122
       },
       "source": "symbol:services.lore_quests._npc_here",
       "target": "symbol:services.lore_quests._npc",
@@ -265568,7 +265865,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 241
+        "line": 252
       },
       "source": "symbol:services.lore_quests._patron_match",
       "target": "symbol:services.lore_quests._fold",
@@ -265579,7 +265876,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 242
+        "line": 253
       },
       "source": "symbol:services.lore_quests._patron_match",
       "target": "symbol:services.lore_quests._fold",
@@ -265590,7 +265887,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 237
+        "line": 248
       },
       "source": "symbol:services.lore_quests._patron_match",
       "target": "symbol:services.lore_quests._npc",
@@ -265601,7 +265898,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 226
+        "line": 237
       },
       "source": "symbol:services.lore_quests._route",
       "target": "symbol:services.lore_quests.cfg",
@@ -265612,7 +265909,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 616
+        "line": 658
       },
       "source": "symbol:services.lore_quests.active_hunt_anchor",
       "target": "symbol:services.lore_quests._cur",
@@ -265623,7 +265920,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 614
+        "line": 656
       },
       "source": "symbol:services.lore_quests.active_hunt_anchor",
       "target": "symbol:services.lore_quests.mode",
@@ -265634,7 +265931,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 616
+        "line": 658
       },
       "source": "symbol:services.lore_quests.active_hunt_anchor",
       "target": "symbol:services.world_pressures.region_of",
@@ -265645,7 +265942,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 271
+        "line": 284
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests._cur",
@@ -265656,7 +265953,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 271
+        "line": 284
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests._day",
@@ -265667,7 +265964,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 318
+        "line": 281
+      },
+      "source": "symbol:services.lore_quests.anchor_menu",
+      "target": "symbol:services.lore_quests._empty_notice",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 369
+      },
+      "source": "symbol:services.lore_quests.anchor_menu",
+      "target": "symbol:services.lore_quests._empty_notice",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 331
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests._escort_ok",
@@ -265678,7 +265997,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 290
+        "line": 303
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests._hunt_anchor",
@@ -265689,7 +266008,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 288
+        "line": 301
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests._hunt_ok",
@@ -265700,7 +266019,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 351
+        "line": 370
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests._interleave",
@@ -265711,7 +266030,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 315
+        "line": 328
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests._item_name",
@@ -265722,7 +266041,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 315
+        "line": 328
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests._loc_name",
@@ -265733,7 +266052,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 326
+        "line": 339
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests._loc_name",
@@ -265744,7 +266063,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 349
+        "line": 362
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests._log",
@@ -265755,7 +266074,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 267
+        "line": 278
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests._npc_here",
@@ -265766,7 +266085,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 308
+        "line": 321
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests._patron_match",
@@ -265777,7 +266096,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 353
+        "line": 372
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests._render_menu",
@@ -265788,7 +266107,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 289
+        "line": 302
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests._rollable",
@@ -265799,7 +266118,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 307
+        "line": 320
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests._route_valid",
@@ -265810,7 +266129,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 329
+        "line": 342
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests._rumor_api",
@@ -265821,7 +266140,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 277
+        "line": 290
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests.anchor_menu.free",
@@ -265832,7 +266151,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 267
+        "line": 280
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests.cap_reached",
@@ -265843,7 +266162,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 304
+        "line": 317
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests.cfg",
@@ -265854,7 +266173,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 274
+        "line": 287
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests.const",
@@ -265865,7 +266184,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 354
+        "line": 373
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests.estimate_tokens",
@@ -265876,7 +266195,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 266
+        "line": 277
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests.mode",
@@ -265887,7 +266206,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 278
+        "line": 291
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests.on_cooldown",
@@ -265898,7 +266217,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 273
+        "line": 366
+      },
+      "source": "symbol:services.lore_quests.anchor_menu",
+      "target": "symbol:services.lore_quests.on_cooldown",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 286
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests.origin_ref",
@@ -265909,7 +266239,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 343
+        "line": 356
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.lore_quests.rumor_public_text",
@@ -265920,7 +266250,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 272
+        "line": 285
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.world_pressures.region_of",
@@ -265931,7 +266261,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 335
+        "line": 348
       },
       "source": "symbol:services.lore_quests.anchor_menu",
       "target": "symbol:services.world_pressures.region_of",
@@ -265942,7 +266272,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 278
+        "line": 291
       },
       "source": "symbol:services.lore_quests.anchor_menu.free",
       "target": "symbol:services.lore_quests.on_cooldown",
@@ -265953,7 +266283,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 157
+        "line": 168
       },
       "source": "symbol:services.lore_quests.cap_reached",
       "target": "symbol:services.lore_quests.lore_active",
@@ -265964,7 +266294,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 58
+        "line": 69
       },
       "source": "symbol:services.lore_quests.cfg",
       "target": "symbol:services.world_pressures._load_json",
@@ -265975,7 +266305,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 62
+        "line": 73
       },
       "source": "symbol:services.lore_quests.const",
       "target": "symbol:services.lore_quests.cfg",
@@ -265986,7 +266316,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 174
+        "line": 185
       },
       "source": "symbol:services.lore_quests.deadline_for",
       "target": "symbol:services.lore_quests._days",
@@ -265997,7 +266327,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 176
+        "line": 187
       },
       "source": "symbol:services.lore_quests.deadline_for",
       "target": "symbol:services.lore_quests._days",
@@ -266008,7 +266338,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 169
+        "line": 180
       },
       "source": "symbol:services.lore_quests.deadline_for",
       "target": "symbol:services.lore_quests.cfg",
@@ -266019,7 +266349,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 130
+        "line": 141
       },
       "source": "symbol:services.lore_quests.on_cooldown",
       "target": "symbol:services.lore_quests.cfg",
@@ -266030,7 +266360,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 106
+        "line": 117
       },
       "source": "symbol:services.lore_quests.origin_ref",
       "target": "symbol:services.lore_quests._npc",
@@ -266041,7 +266371,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 667
+        "line": 709
       },
       "source": "symbol:services.lore_quests.resolve_rumor_outcome",
       "target": "symbol:services.lore_quests._rumor_api",
@@ -266052,7 +266382,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 190
+        "line": 201
       },
       "source": "symbol:services.lore_quests.reward_for",
       "target": "symbol:services.lore_quests._days",
@@ -266063,7 +266393,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 186
+        "line": 197
       },
       "source": "symbol:services.lore_quests.reward_for",
       "target": "symbol:services.lore_quests.cfg",
@@ -266074,7 +266404,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 196
+        "line": 207
       },
       "source": "symbol:services.lore_quests.reward_for",
       "target": "symbol:services.lore_quests.cfg",
@@ -266085,7 +266415,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 472
+        "line": 514
       },
       "source": "symbol:services.lore_quests.safe_llm_text",
       "target": "symbol:services.lore_quests._fold",
@@ -266096,7 +266426,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 481
+        "line": 523
       },
       "source": "symbol:services.lore_quests.safe_llm_text",
       "target": "symbol:services.lore_quests._fold",
@@ -266107,7 +266437,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 483
+        "line": 525
       },
       "source": "symbol:services.lore_quests.safe_llm_text",
       "target": "symbol:services.lore_quests._fold",
@@ -266118,7 +266448,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 484
+        "line": 526
       },
       "source": "symbol:services.lore_quests.safe_llm_text",
       "target": "symbol:services.lore_quests._names_index",
@@ -266129,252 +266459,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 512
+        "line": 554
       },
       "source": "symbol:services.lore_quests.seed_for_proposal",
       "target": "symbol:services.lore_quests._cur",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 506
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests._get",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 507
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests._get",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 586
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests._get",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 587
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests._get",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 518
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests._hunt_ok",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 543
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests._item_name",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 553
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests._item_name",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 516
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests._loc_name",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 543
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests._loc_name",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 559
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests._loc_name",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 533
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests._route",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 569
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests._rumor_api",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 583
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests.cap_reached",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 591
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests.deadline_for",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 580
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests.on_cooldown",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 511
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests.origin_ref",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 585
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests.reward_for",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 578
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests.rumor_public_text",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 586
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests.safe_llm_text",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 587
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests.safe_llm_text",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 508
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.lore_quests.validate_anchor",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/lore_quests.py",
-        "line": 513
-      },
-      "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.world_pressures.region_of",
       "type": "calls"
     },
     {
@@ -266385,7 +266473,7 @@
         "line": 548
       },
       "source": "symbol:services.lore_quests.seed_for_proposal",
-      "target": "symbol:services.world_pressures.region_of",
+      "target": "symbol:services.lore_quests._get",
       "type": "calls"
     },
     {
@@ -266393,7 +266481,227 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 576
+        "line": 549
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.lore_quests._get",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 628
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.lore_quests._get",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 629
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.lore_quests._get",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 560
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.lore_quests._hunt_ok",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 585
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.lore_quests._item_name",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 595
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.lore_quests._item_name",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 558
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.lore_quests._loc_name",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 585
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.lore_quests._loc_name",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 601
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.lore_quests._loc_name",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 575
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.lore_quests._route",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 611
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.lore_quests._rumor_api",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 625
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.lore_quests.cap_reached",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 633
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.lore_quests.deadline_for",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 622
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.lore_quests.on_cooldown",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 553
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.lore_quests.origin_ref",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 627
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.lore_quests.reward_for",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 620
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.lore_quests.rumor_public_text",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 628
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.lore_quests.safe_llm_text",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 629
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.lore_quests.safe_llm_text",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 550
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.lore_quests.validate_anchor",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 555
       },
       "source": "symbol:services.lore_quests.seed_for_proposal",
       "target": "symbol:services.world_pressures.region_of",
@@ -266404,7 +266712,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 605
+        "line": 590
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.world_pressures.region_of",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 618
+      },
+      "source": "symbol:services.lore_quests.seed_for_proposal",
+      "target": "symbol:services.world_pressures.region_of",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 647
       },
       "source": "symbol:services.lore_quests.seed_from_proposal",
       "target": "symbol:services.lore_quests.seed_for_proposal",
@@ -266415,7 +266745,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 422
+        "line": 464
       },
       "source": "symbol:services.lore_quests.validate_anchor",
       "target": "symbol:services.lore_quests._cur",
@@ -266426,7 +266756,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 450
+        "line": 492
       },
       "source": "symbol:services.lore_quests.validate_anchor",
       "target": "symbol:services.lore_quests._day",
@@ -266437,7 +266767,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 440
+        "line": 482
       },
       "source": "symbol:services.lore_quests.validate_anchor",
       "target": "symbol:services.lore_quests._escort_ok",
@@ -266448,7 +266778,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 425
+        "line": 467
       },
       "source": "symbol:services.lore_quests.validate_anchor",
       "target": "symbol:services.lore_quests._hunt_ok",
@@ -266459,7 +266789,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 429
+        "line": 463
+      },
+      "source": "symbol:services.lore_quests.validate_anchor",
+      "target": "symbol:services.lore_quests._menu_miss_cause",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/lore_quests.py",
+        "line": 471
       },
       "source": "symbol:services.lore_quests.validate_anchor",
       "target": "symbol:services.lore_quests._route",
@@ -266470,7 +266811,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 430
+        "line": 472
       },
       "source": "symbol:services.lore_quests.validate_anchor",
       "target": "symbol:services.lore_quests._route_valid",
@@ -266481,7 +266822,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 447
+        "line": 489
       },
       "source": "symbol:services.lore_quests.validate_anchor",
       "target": "symbol:services.lore_quests._rumor_api",
@@ -266492,7 +266833,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 433
+        "line": 475
       },
       "source": "symbol:services.lore_quests.validate_anchor",
       "target": "symbol:services.lore_quests.const",
@@ -266503,7 +266844,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 440
+        "line": 482
       },
       "source": "symbol:services.lore_quests.validate_anchor",
       "target": "symbol:services.lore_quests.origin_ref",
@@ -266514,7 +266855,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/lore_quests.py",
-        "line": 423
+        "line": 465
       },
       "source": "symbol:services.lore_quests.validate_anchor",
       "target": "symbol:services.world_pressures.region_of",
@@ -287458,7 +287799,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 606
+        "line": 607
       },
       "source": "symbol:services.world_validators._npc_target_known",
       "target": "symbol:services.graph_resolver.get_entity",
@@ -287667,18 +288008,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 584
-      },
-      "source": "symbol:services.world_validators._v_crime_witnessed",
-      "target": "symbol:services.world_validators.ValidationResult",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/world_validators.py",
-        "line": 587
+        "line": 585
       },
       "source": "symbol:services.world_validators._v_crime_witnessed",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -287690,6 +288020,17 @@
         "extractor": "python_ast",
         "file": "services/world_validators.py",
         "line": 588
+      },
+      "source": "symbol:services.world_validators._v_crime_witnessed",
+      "target": "symbol:services.world_validators.ValidationResult",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/world_validators.py",
+        "line": 589
       },
       "source": "symbol:services.world_validators._v_crime_witnessed",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -287887,18 +288228,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 595
-      },
-      "source": "symbol:services.world_validators._v_law_resolved",
-      "target": "symbol:services.world_validators.ValidationResult",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/world_validators.py",
-        "line": 597
+        "line": 596
       },
       "source": "symbol:services.world_validators._v_law_resolved",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -287910,6 +288240,17 @@
         "extractor": "python_ast",
         "file": "services/world_validators.py",
         "line": 598
+      },
+      "source": "symbol:services.world_validators._v_law_resolved",
+      "target": "symbol:services.world_validators.ValidationResult",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/world_validators.py",
+        "line": 599
       },
       "source": "symbol:services.world_validators._v_law_resolved",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288052,7 +288393,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 547
+        "line": 548
       },
       "source": "symbol:services.world_validators._v_location_state_changed",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288063,7 +288404,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 549
+        "line": 550
       },
       "source": "symbol:services.world_validators._v_location_state_changed",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288074,7 +288415,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 552
+        "line": 553
       },
       "source": "symbol:services.world_validators._v_location_state_changed",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288085,18 +288426,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 555
-      },
-      "source": "symbol:services.world_validators._v_location_state_changed",
-      "target": "symbol:services.world_validators.ValidationResult",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/world_validators.py",
-        "line": 561
+        "line": 556
       },
       "source": "symbol:services.world_validators._v_location_state_changed",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288118,7 +288448,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 634
+        "line": 563
+      },
+      "source": "symbol:services.world_validators._v_location_state_changed",
+      "target": "symbol:services.world_validators.ValidationResult",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/world_validators.py",
+        "line": 635
       },
       "source": "symbol:services.world_validators._v_npc_defected",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288129,18 +288470,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 636
-      },
-      "source": "symbol:services.world_validators._v_npc_defected",
-      "target": "symbol:services.world_validators.ValidationResult",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/world_validators.py",
-        "line": 639
+        "line": 637
       },
       "source": "symbol:services.world_validators._v_npc_defected",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288162,7 +288492,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 633
+        "line": 641
+      },
+      "source": "symbol:services.world_validators._v_npc_defected",
+      "target": "symbol:services.world_validators.ValidationResult",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/world_validators.py",
+        "line": 634
       },
       "source": "symbol:services.world_validators._v_npc_defected",
       "target": "symbol:services.world_validators._npc_target_known",
@@ -288239,7 +288580,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 613
+        "line": 614
       },
       "source": "symbol:services.world_validators._v_npc_offscreen",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288250,7 +288591,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 618
+        "line": 619
       },
       "source": "symbol:services.world_validators._v_npc_offscreen",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288261,7 +288602,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 620
+        "line": 621
       },
       "source": "symbol:services.world_validators._v_npc_offscreen",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288272,18 +288613,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 623
-      },
-      "source": "symbol:services.world_validators._v_npc_offscreen",
-      "target": "symbol:services.world_validators.ValidationResult",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/world_validators.py",
-        "line": 625
+        "line": 624
       },
       "source": "symbol:services.world_validators._v_npc_offscreen",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288305,7 +288635,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 612
+        "line": 627
+      },
+      "source": "symbol:services.world_validators._v_npc_offscreen",
+      "target": "symbol:services.world_validators.ValidationResult",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/world_validators.py",
+        "line": 613
       },
       "source": "symbol:services.world_validators._v_npc_offscreen",
       "target": "symbol:services.world_validators._npc_target_known",
@@ -288734,7 +289075,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 570
+        "line": 571
       },
       "source": "symbol:services.world_validators._v_world_crisis_warning",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288745,18 +289086,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 572
-      },
-      "source": "symbol:services.world_validators._v_world_crisis_warning",
-      "target": "symbol:services.world_validators.ValidationResult",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/world_validators.py",
-        "line": 574
+        "line": 573
       },
       "source": "symbol:services.world_validators._v_world_crisis_warning",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288768,6 +289098,17 @@
         "extractor": "python_ast",
         "file": "services/world_validators.py",
         "line": 575
+      },
+      "source": "symbol:services.world_validators._v_world_crisis_warning",
+      "target": "symbol:services.world_validators.ValidationResult",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/world_validators.py",
+        "line": 576
       },
       "source": "symbol:services.world_validators._v_world_crisis_warning",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288833,7 +289174,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 533
+        "line": 534
       },
       "source": "symbol:services.world_validators.catalog_ref",
       "target": "symbol:services.graph_resolver.get_entity",
@@ -288844,7 +289185,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 694
+        "line": 695
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288855,7 +289196,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 702
+        "line": 703
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288866,7 +289207,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 705
+        "line": 706
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288877,7 +289218,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 708
+        "line": 709
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288888,7 +289229,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 711
+        "line": 712
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288899,7 +289240,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 717
+        "line": 718
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288910,7 +289251,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 720
+        "line": 721
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288921,7 +289262,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 723
+        "line": 724
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288932,7 +289273,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 731
+        "line": 732
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288943,7 +289284,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 735
+        "line": 736
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288954,7 +289295,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 738
+        "line": 739
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288965,7 +289306,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 745
+        "line": 746
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288976,7 +289317,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 769
+        "line": 770
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288987,7 +289328,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 803
+        "line": 804
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.ValidationResult",
@@ -288998,7 +289339,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 813
+        "line": 814
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators._proof_gate",
@@ -289009,7 +289350,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/world_validators.py",
-        "line": 812
+        "line": 813
       },
       "source": "symbol:services.world_validators.validate_proposal",
       "target": "symbol:services.world_validators.is_engine_proposal",
@@ -465988,7 +466329,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 137
+        "line": 143
       },
       "source": "symbol:tests.test_spec313_offer.test_complete_uses_planned_reward_not_flat_20",
       "target": "symbol:tests.spec313_helpers.npc_state",
@@ -465999,7 +466340,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 138
+        "line": 144
       },
       "source": "symbol:tests.test_spec313_offer.test_complete_uses_planned_reward_not_flat_20",
       "target": "symbol:tests.test_spec313_offer._hunt",
@@ -466120,7 +466461,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 130
+        "line": 136
       },
       "source": "symbol:tests.test_spec313_offer.test_deterministic_ids_and_idempotent_offer",
       "target": "symbol:services.lore_quests.anchor_menu",
@@ -466131,7 +466472,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 125
+        "line": 131
       },
       "source": "symbol:tests.test_spec313_offer.test_deterministic_ids_and_idempotent_offer",
       "target": "symbol:tests.spec313_helpers.npc_state",
@@ -466142,7 +466483,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 126
+        "line": 132
       },
       "source": "symbol:tests.test_spec313_offer.test_deterministic_ids_and_idempotent_offer",
       "target": "symbol:tests.test_spec313_offer._hunt",
@@ -466153,7 +466494,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 127
+        "line": 133
       },
       "source": "symbol:tests.test_spec313_offer.test_deterministic_ids_and_idempotent_offer",
       "target": "symbol:tests.test_spec313_offer._hunt",
@@ -466164,7 +466505,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 116
+        "line": 122
       },
       "source": "symbol:tests.test_spec313_offer.test_infeasible_not_offered",
       "target": "symbol:services.lore_quests.anchor_menu",
@@ -466175,7 +466516,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 118
+        "line": 124
       },
       "source": "symbol:tests.test_spec313_offer.test_infeasible_not_offered",
       "target": "symbol:services.world_quests.offer_from_proposal",
@@ -466186,7 +466527,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 119
+        "line": 125
       },
       "source": "symbol:tests.test_spec313_offer.test_infeasible_not_offered",
       "target": "symbol:tests.spec313_helpers.first_anchor",
@@ -466197,7 +466538,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 115
+        "line": 121
       },
       "source": "symbol:tests.test_spec313_offer.test_infeasible_not_offered",
       "target": "symbol:tests.spec313_helpers.npc_state",
@@ -466208,7 +466549,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 119
+        "line": 125
       },
       "source": "symbol:tests.test_spec313_offer.test_infeasible_not_offered",
       "target": "symbol:tests.spec313_helpers.proposal",
@@ -466219,7 +466560,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 98
+        "line": 103
       },
       "source": "symbol:tests.test_spec313_offer.test_lore_cap_two_and_global_cap",
       "target": "symbol:services.lore_quests.anchor_menu",
@@ -466230,7 +466571,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 101
+        "line": 106
       },
       "source": "symbol:tests.test_spec313_offer.test_lore_cap_two_and_global_cap",
       "target": "symbol:services.lore_quests.anchor_menu",
@@ -466241,7 +466582,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 100
+        "line": 105
       },
       "source": "symbol:tests.test_spec313_offer.test_lore_cap_two_and_global_cap",
       "target": "symbol:services.lore_quests.cap_reached",
@@ -466252,7 +466593,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 110
+        "line": 116
       },
       "source": "symbol:tests.test_spec313_offer.test_lore_cap_two_and_global_cap",
       "target": "symbol:services.lore_quests.cap_reached",
@@ -466263,7 +466604,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 111
+        "line": 117
       },
       "source": "symbol:tests.test_spec313_offer.test_lore_cap_two_and_global_cap",
       "target": "symbol:services.world_quests._active_world",
@@ -466274,7 +466615,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 102
+        "line": 108
       },
       "source": "symbol:tests.test_spec313_offer.test_lore_cap_two_and_global_cap",
       "target": "symbol:services.world_quests.offer_from_proposal",
@@ -466285,7 +466626,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 103
+        "line": 109
       },
       "source": "symbol:tests.test_spec313_offer.test_lore_cap_two_and_global_cap",
       "target": "symbol:tests.spec313_helpers.first_anchor",
@@ -466296,7 +466637,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 96
+        "line": 101
       },
       "source": "symbol:tests.test_spec313_offer.test_lore_cap_two_and_global_cap",
       "target": "symbol:tests.spec313_helpers.npc_state",
@@ -466307,7 +466648,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 103
+        "line": 109
       },
       "source": "symbol:tests.test_spec313_offer.test_lore_cap_two_and_global_cap",
       "target": "symbol:tests.spec313_helpers.proposal",
@@ -466395,7 +466736,62 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 87
+        "line": 92
+      },
+      "source": "symbol:tests.test_spec313_offer.test_origin_cooldown_and_anchor_cooldown_in_days",
+      "target": "symbol:services.lore_quests.on_cooldown",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec313_offer.py",
+        "line": 93
+      },
+      "source": "symbol:tests.test_spec313_offer.test_origin_cooldown_and_anchor_cooldown_in_days",
+      "target": "symbol:services.lore_quests.on_cooldown",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec313_offer.py",
+        "line": 94
+      },
+      "source": "symbol:tests.test_spec313_offer.test_origin_cooldown_and_anchor_cooldown_in_days",
+      "target": "symbol:services.lore_quests.on_cooldown",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec313_offer.py",
+        "line": 95
+      },
+      "source": "symbol:tests.test_spec313_offer.test_origin_cooldown_and_anchor_cooldown_in_days",
+      "target": "symbol:services.lore_quests.on_cooldown",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec313_offer.py",
+        "line": 96
+      },
+      "source": "symbol:tests.test_spec313_offer.test_origin_cooldown_and_anchor_cooldown_in_days",
+      "target": "symbol:services.lore_quests.on_cooldown",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec313_offer.py",
+        "line": 97
       },
       "source": "symbol:tests.test_spec313_offer.test_origin_cooldown_and_anchor_cooldown_in_days",
       "target": "symbol:services.lore_quests.on_cooldown",
@@ -466409,61 +466805,6 @@
         "line": 88
       },
       "source": "symbol:tests.test_spec313_offer.test_origin_cooldown_and_anchor_cooldown_in_days",
-      "target": "symbol:services.lore_quests.on_cooldown",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec313_offer.py",
-        "line": 89
-      },
-      "source": "symbol:tests.test_spec313_offer.test_origin_cooldown_and_anchor_cooldown_in_days",
-      "target": "symbol:services.lore_quests.on_cooldown",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec313_offer.py",
-        "line": 90
-      },
-      "source": "symbol:tests.test_spec313_offer.test_origin_cooldown_and_anchor_cooldown_in_days",
-      "target": "symbol:services.lore_quests.on_cooldown",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec313_offer.py",
-        "line": 91
-      },
-      "source": "symbol:tests.test_spec313_offer.test_origin_cooldown_and_anchor_cooldown_in_days",
-      "target": "symbol:services.lore_quests.on_cooldown",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec313_offer.py",
-        "line": 92
-      },
-      "source": "symbol:tests.test_spec313_offer.test_origin_cooldown_and_anchor_cooldown_in_days",
-      "target": "symbol:services.lore_quests.on_cooldown",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec313_offer.py",
-        "line": 83
-      },
-      "source": "symbol:tests.test_spec313_offer.test_origin_cooldown_and_anchor_cooldown_in_days",
       "target": "symbol:tests.spec313_helpers.npc_state",
       "type": "calls"
     },
@@ -466472,7 +466813,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec313_offer.py",
-        "line": 84
+        "line": 89
       },
       "source": "symbol:tests.test_spec313_offer.test_origin_cooldown_and_anchor_cooldown_in_days",
       "target": "symbol:tests.test_spec313_offer._hunt",
@@ -466597,6 +466938,61 @@
       },
       "source": "symbol:tests.test_spec313_offer.test_reward_label_no_number",
       "target": "symbol:services.lore_quests.cfg",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec313_playtest.py",
+        "line": 168
+      },
+      "source": "symbol:tests.test_spec313_playtest._run",
+      "target": "symbol:tests.spec313_helpers.setup_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec313_playtest.py",
+        "line": 222
+      },
+      "source": "symbol:tests.test_spec313_playtest.test_downgrade_causes_are_distinguished",
+      "target": "symbol:services.lore_quests._menu_miss_cause",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec313_playtest.py",
+        "line": 223
+      },
+      "source": "symbol:tests.test_spec313_playtest.test_downgrade_causes_are_distinguished",
+      "target": "symbol:services.lore_quests._menu_miss_cause",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec313_playtest.py",
+        "line": 224
+      },
+      "source": "symbol:tests.test_spec313_playtest.test_downgrade_causes_are_distinguished",
+      "target": "symbol:services.lore_quests._menu_miss_cause",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec313_playtest.py",
+        "line": 225
+      },
+      "source": "symbol:tests.test_spec313_playtest.test_downgrade_causes_are_distinguished",
+      "target": "symbol:services.lore_quests._menu_miss_cause",
       "type": "calls"
     },
     {
@@ -466960,6 +467356,39 @@
       },
       "source": "symbol:tests.test_spec313_playtest.test_requires_world_quests_on",
       "target": "symbol:tests.spec313_helpers.setup_env",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec313_playtest.py",
+        "line": 178
+      },
+      "source": "symbol:tests.test_spec313_playtest.test_scenario_lore_quests_entrega_offers_and_delivers",
+      "target": "symbol:tests.test_spec313_playtest._run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec313_playtest.py",
+        "line": 193
+      },
+      "source": "symbol:tests.test_spec313_playtest.test_scenario_lore_quests_escolta_offers_and_travels",
+      "target": "symbol:tests.test_spec313_playtest._run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec313_playtest.py",
+        "line": 186
+      },
+      "source": "symbol:tests.test_spec313_playtest.test_scenario_lore_quests_rumor_investigates_false_rumor",
+      "target": "symbol:tests.test_spec313_playtest._run",
       "type": "calls"
     },
     {
@@ -506319,77 +506748,77 @@
     {
       "id": "symbol:mock_llm.MockLLM",
       "kind": "class",
-      "line": 757,
+      "line": 763,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm.MockLLM"
     },
     {
       "id": "symbol:mock_llm.MockLLM.__init__",
       "kind": "method",
-      "line": 763,
+      "line": 769,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm.MockLLM.__init__"
     },
     {
       "id": "symbol:mock_llm.MockLLM.bind_tools",
       "kind": "method",
-      "line": 766,
+      "line": 772,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm.MockLLM.bind_tools"
     },
     {
       "id": "symbol:mock_llm.MockLLM.invoke",
       "kind": "method",
-      "line": 775,
+      "line": 781,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm.MockLLM.invoke"
     },
     {
       "id": "symbol:mock_llm.MockLLM.stream",
       "kind": "method",
-      "line": 779,
+      "line": 785,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm.MockLLM.stream"
     },
     {
       "id": "symbol:mock_llm.MockLLM.with_retry",
       "kind": "method",
-      "line": 772,
+      "line": 778,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm.MockLLM.with_retry"
     },
     {
       "id": "symbol:mock_llm.MockLLM.with_structured_output",
       "kind": "method",
-      "line": 769,
+      "line": 775,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm.MockLLM.with_structured_output"
     },
     {
       "id": "symbol:mock_llm._StructuredMock",
       "kind": "class",
-      "line": 743,
+      "line": 749,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm._StructuredMock"
     },
     {
       "id": "symbol:mock_llm._StructuredMock.__init__",
       "kind": "method",
-      "line": 744,
+      "line": 750,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm._StructuredMock.__init__"
     },
     {
       "id": "symbol:mock_llm._StructuredMock.invoke",
       "kind": "method",
-      "line": 750,
+      "line": 756,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm._StructuredMock.invoke"
     },
     {
       "id": "symbol:mock_llm._StructuredMock.with_retry",
       "kind": "method",
-      "line": 747,
+      "line": 753,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm._StructuredMock.with_retry"
     },
@@ -506410,28 +506839,28 @@
     {
       "id": "symbol:mock_llm._combat_action",
       "kind": "function",
-      "line": 657,
+      "line": 663,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm._combat_action"
     },
     {
       "id": "symbol:mock_llm._encounter_scanner",
       "kind": "function",
-      "line": 540,
+      "line": 546,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm._encounter_scanner"
     },
     {
       "id": "symbol:mock_llm._enemy_schema",
       "kind": "function",
-      "line": 522,
+      "line": 528,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm._enemy_schema"
     },
     {
       "id": "symbol:mock_llm._entity_match",
       "kind": "function",
-      "line": 622,
+      "line": 628,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm._entity_match"
     },
@@ -506445,7 +506874,7 @@
     {
       "id": "symbol:mock_llm._item_generation",
       "kind": "function",
-      "line": 580,
+      "line": 586,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm._item_generation"
     },
@@ -506466,7 +506895,7 @@
     {
       "id": "symbol:mock_llm._loot_schema",
       "kind": "function",
-      "line": 550,
+      "line": 556,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm._loot_schema"
     },
@@ -506501,7 +506930,7 @@
     {
       "id": "symbol:mock_llm._npc_response",
       "kind": "function",
-      "line": 487,
+      "line": 493,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm._npc_response"
     },
@@ -506536,14 +506965,14 @@
     {
       "id": "symbol:mock_llm._ruling",
       "kind": "function",
-      "line": 610,
+      "line": 616,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm._ruling"
     },
     {
       "id": "symbol:mock_llm._start_scenario",
       "kind": "function",
-      "line": 676,
+      "line": 682,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm._start_scenario"
     },
@@ -506557,14 +506986,14 @@
     {
       "id": "symbol:mock_llm._trade_intent",
       "kind": "function",
-      "line": 626,
+      "line": 632,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm._trade_intent"
     },
     {
       "id": "symbol:mock_llm._transaction",
       "kind": "function",
-      "line": 597,
+      "line": 603,
       "path": "mock_llm.py",
       "qualified_name": "mock_llm._transaction"
     },
@@ -509635,72 +510064,100 @@
       "qualified_name": "playtest.runner.terminal_llm_invocation_count"
     },
     {
+      "id": "symbol:playtest.scenarios._lore_hop_text",
+      "kind": "function",
+      "line": 255,
+      "path": "playtest/scenarios.py",
+      "qualified_name": "playtest.scenarios._lore_hop_text"
+    },
+    {
+      "id": "symbol:playtest.scenarios._lore_npc",
+      "kind": "function",
+      "line": 165,
+      "path": "playtest/scenarios.py",
+      "qualified_name": "playtest.scenarios._lore_npc"
+    },
+    {
+      "id": "symbol:playtest.scenarios._lore_variant_decision",
+      "kind": "function",
+      "line": 289,
+      "path": "playtest/scenarios.py",
+      "qualified_name": "playtest.scenarios._lore_variant_decision"
+    },
+    {
       "id": "symbol:playtest.scenarios._move_world",
       "kind": "function",
-      "line": 49,
+      "line": 58,
       "path": "playtest/scenarios.py",
       "qualified_name": "playtest.scenarios._move_world"
     },
     {
       "id": "symbol:playtest.scenarios._prepare_lore_quests",
       "kind": "function",
-      "line": 133,
+      "line": 142,
       "path": "playtest/scenarios.py",
       "qualified_name": "playtest.scenarios._prepare_lore_quests"
     },
     {
+      "id": "symbol:playtest.scenarios._prepare_lore_variant",
+      "kind": "function",
+      "line": 182,
+      "path": "playtest/scenarios.py",
+      "qualified_name": "playtest.scenarios._prepare_lore_variant"
+    },
+    {
       "id": "symbol:playtest.scenarios._prepare_mundo",
       "kind": "function",
-      "line": 66,
+      "line": 75,
       "path": "playtest/scenarios.py",
       "qualified_name": "playtest.scenarios._prepare_mundo"
     },
     {
       "id": "symbol:playtest.scenarios._prepare_npc_world",
       "kind": "function",
-      "line": 108,
+      "line": 117,
       "path": "playtest/scenarios.py",
       "qualified_name": "playtest.scenarios._prepare_npc_world"
     },
     {
       "id": "symbol:playtest.scenarios._violation",
       "kind": "function",
-      "line": 252,
+      "line": 415,
       "path": "playtest/scenarios.py",
       "qualified_name": "playtest.scenarios._violation"
     },
     {
       "id": "symbol:playtest.scenarios.decision_for",
       "kind": "function",
-      "line": 224,
+      "line": 385,
       "path": "playtest/scenarios.py",
       "qualified_name": "playtest.scenarios.decision_for"
     },
     {
       "id": "symbol:playtest.scenarios.names",
       "kind": "function",
-      "line": 36,
+      "line": 45,
       "path": "playtest/scenarios.py",
       "qualified_name": "playtest.scenarios.names"
     },
     {
       "id": "symbol:playtest.scenarios.oracle_violations",
       "kind": "function",
-      "line": 262,
+      "line": 425,
       "path": "playtest/scenarios.py",
       "qualified_name": "playtest.scenarios.oracle_violations"
     },
     {
       "id": "symbol:playtest.scenarios.prepare",
       "kind": "function",
-      "line": 156,
+      "line": 315,
       "path": "playtest/scenarios.py",
       "qualified_name": "playtest.scenarios.prepare"
     },
     {
       "id": "symbol:playtest.scenarios.profile_for",
       "kind": "function",
-      "line": 40,
+      "line": 49,
       "path": "playtest/scenarios.py",
       "qualified_name": "playtest.scenarios.profile_for"
     },
@@ -525065,301 +525522,315 @@
     {
       "id": "symbol:services.lore_quests._allowed_cats",
       "kind": "function",
-      "line": 202,
+      "line": 213,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._allowed_cats"
     },
     {
       "id": "symbol:services.lore_quests._cur",
       "kind": "function",
-      "line": 74,
+      "line": 85,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._cur"
     },
     {
       "id": "symbol:services.lore_quests._day",
       "kind": "function",
-      "line": 70,
+      "line": 81,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._day"
     },
     {
       "id": "symbol:services.lore_quests._days",
       "kind": "function",
-      "line": 163,
+      "line": 174,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._days"
     },
     {
+      "id": "symbol:services.lore_quests._empty_notice",
+      "kind": "function",
+      "line": 382,
+      "path": "services/lore_quests.py",
+      "qualified_name": "services.lore_quests._empty_notice"
+    },
+    {
       "id": "symbol:services.lore_quests._escort_ok",
       "kind": "function",
-      "line": 245,
+      "line": 256,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._escort_ok"
     },
     {
       "id": "symbol:services.lore_quests._fold",
       "kind": "function",
-      "line": 65,
+      "line": 76,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._fold"
     },
     {
       "id": "symbol:services.lore_quests._get",
       "kind": "function",
-      "line": 493,
+      "line": 535,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._get"
     },
     {
       "id": "symbol:services.lore_quests._hunt_anchor",
       "kind": "function",
-      "line": 259,
+      "line": 270,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._hunt_anchor"
     },
     {
       "id": "symbol:services.lore_quests._hunt_ok",
       "kind": "function",
-      "line": 206,
+      "line": 217,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._hunt_ok"
     },
     {
       "id": "symbol:services.lore_quests._interleave",
       "kind": "function",
-      "line": 363,
+      "line": 393,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._interleave"
     },
     {
       "id": "symbol:services.lore_quests._item_name",
       "kind": "function",
-      "line": 82,
+      "line": 93,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._item_name"
     },
     {
       "id": "symbol:services.lore_quests._loc_name",
       "kind": "function",
-      "line": 78,
+      "line": 89,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._loc_name"
     },
     {
       "id": "symbol:services.lore_quests._log",
       "kind": "function",
-      "line": 51,
+      "line": 62,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._log"
     },
     {
+      "id": "symbol:services.lore_quests._menu_miss_cause",
+      "kind": "function",
+      "line": 439,
+      "path": "services/lore_quests.py",
+      "qualified_name": "services.lore_quests._menu_miss_cause"
+    },
+    {
       "id": "symbol:services.lore_quests._names_index",
       "kind": "function",
-      "line": 457,
+      "line": 499,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._names_index"
     },
     {
       "id": "symbol:services.lore_quests._npc",
       "kind": "function",
-      "line": 97,
+      "line": 108,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._npc"
     },
     {
       "id": "symbol:services.lore_quests._npc_here",
       "kind": "function",
-      "line": 110,
+      "line": 121,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._npc_here"
     },
     {
       "id": "symbol:services.lore_quests._patron_match",
       "kind": "function",
-      "line": 236,
+      "line": 247,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._patron_match"
     },
     {
       "id": "symbol:services.lore_quests._render_menu",
       "kind": "function",
-      "line": 382,
+      "line": 412,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._render_menu"
     },
     {
       "id": "symbol:services.lore_quests._rollable",
       "kind": "function",
-      "line": 216,
+      "line": 227,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._rollable"
     },
     {
       "id": "symbol:services.lore_quests._route",
       "kind": "function",
-      "line": 225,
+      "line": 236,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._route"
     },
     {
       "id": "symbol:services.lore_quests._route_valid",
       "kind": "function",
-      "line": 229,
+      "line": 240,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._route_valid"
     },
     {
       "id": "symbol:services.lore_quests._rumor_api",
       "kind": "function",
-      "line": 88,
+      "line": 99,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests._rumor_api"
     },
     {
       "id": "symbol:services.lore_quests.active_hunt_anchor",
       "kind": "function",
-      "line": 612,
+      "line": 654,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.active_hunt_anchor"
     },
     {
       "id": "symbol:services.lore_quests.anchor_menu",
       "kind": "function",
-      "line": 263,
+      "line": 274,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.anchor_menu"
     },
     {
       "id": "symbol:services.lore_quests.anchor_menu.free",
       "kind": "function",
-      "line": 277,
+      "line": 290,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.anchor_menu.free"
     },
     {
       "id": "symbol:services.lore_quests.cap_reached",
       "kind": "function",
-      "line": 156,
+      "line": 167,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.cap_reached"
     },
     {
       "id": "symbol:services.lore_quests.cfg",
       "kind": "function",
-      "line": 57,
+      "line": 68,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.cfg"
     },
     {
       "id": "symbol:services.lore_quests.const",
       "kind": "function",
-      "line": 61,
+      "line": 72,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.const"
     },
     {
       "id": "symbol:services.lore_quests.deadline_for",
       "kind": "function",
-      "line": 167,
+      "line": 178,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.deadline_for"
     },
     {
       "id": "symbol:services.lore_quests.desfecho_block",
       "kind": "function",
-      "line": 638,
+      "line": 680,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.desfecho_block"
     },
     {
       "id": "symbol:services.lore_quests.estimate_tokens",
       "kind": "function",
-      "line": 376,
+      "line": 406,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.estimate_tokens"
     },
     {
       "id": "symbol:services.lore_quests.lore_active",
       "kind": "function",
-      "line": 122,
+      "line": 133,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.lore_active"
     },
     {
       "id": "symbol:services.lore_quests.mode",
       "kind": "function",
-      "line": 42,
+      "line": 53,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.mode"
     },
     {
       "id": "symbol:services.lore_quests.on_cooldown",
       "kind": "function",
-      "line": 128,
+      "line": 139,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.on_cooldown"
     },
     {
       "id": "symbol:services.lore_quests.origin_ref",
       "kind": "function",
-      "line": 103,
+      "line": 114,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.origin_ref"
     },
     {
       "id": "symbol:services.lore_quests.outcome_label",
       "kind": "function",
-      "line": 627,
+      "line": 669,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.outcome_label"
     },
     {
       "id": "symbol:services.lore_quests.resolve_rumor_outcome",
       "kind": "function",
-      "line": 661,
+      "line": 703,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.resolve_rumor_outcome"
     },
     {
       "id": "symbol:services.lore_quests.reward_for",
       "kind": "function",
-      "line": 184,
+      "line": 195,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.reward_for"
     },
     {
       "id": "symbol:services.lore_quests.rumor_public_text",
       "kind": "function",
-      "line": 393,
+      "line": 423,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.rumor_public_text"
     },
     {
       "id": "symbol:services.lore_quests.safe_llm_text",
       "kind": "function",
-      "line": 466,
+      "line": 508,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.safe_llm_text"
     },
     {
       "id": "symbol:services.lore_quests.seed_for_proposal",
       "kind": "function",
-      "line": 499,
+      "line": 541,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.seed_for_proposal"
     },
     {
       "id": "symbol:services.lore_quests.seed_from_proposal",
       "kind": "function",
-      "line": 602,
+      "line": 644,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.seed_from_proposal"
     },
     {
       "id": "symbol:services.lore_quests.validate_anchor",
       "kind": "function",
-      "line": 409,
+      "line": 451,
       "path": "services/lore_quests.py",
       "qualified_name": "services.lore_quests.validate_anchor"
     },
@@ -532415,7 +532886,7 @@
     {
       "id": "symbol:services.world_validators._npc_target_known",
       "kind": "function",
-      "line": 601,
+      "line": 602,
       "path": "services/world_validators.py",
       "qualified_name": "services.world_validators._npc_target_known"
     },
@@ -532464,7 +532935,7 @@
     {
       "id": "symbol:services.world_validators._v_crime_witnessed",
       "kind": "function",
-      "line": 578,
+      "line": 579,
       "path": "services/world_validators.py",
       "qualified_name": "services.world_validators._v_crime_witnessed"
     },
@@ -532492,7 +532963,7 @@
     {
       "id": "symbol:services.world_validators._v_law_resolved",
       "kind": "function",
-      "line": 591,
+      "line": 592,
       "path": "services/world_validators.py",
       "qualified_name": "services.world_validators._v_law_resolved"
     },
@@ -532513,14 +532984,14 @@
     {
       "id": "symbol:services.world_validators._v_location_state_changed",
       "kind": "function",
-      "line": 540,
+      "line": 541,
       "path": "services/world_validators.py",
       "qualified_name": "services.world_validators._v_location_state_changed"
     },
     {
       "id": "symbol:services.world_validators._v_npc_defected",
       "kind": "function",
-      "line": 629,
+      "line": 630,
       "path": "services/world_validators.py",
       "qualified_name": "services.world_validators._v_npc_defected"
     },
@@ -532534,7 +533005,7 @@
     {
       "id": "symbol:services.world_validators._v_npc_offscreen",
       "kind": "function",
-      "line": 610,
+      "line": 611,
       "path": "services/world_validators.py",
       "qualified_name": "services.world_validators._v_npc_offscreen"
     },
@@ -532611,7 +533082,7 @@
     {
       "id": "symbol:services.world_validators._v_world_crisis_warning",
       "kind": "function",
-      "line": 565,
+      "line": 566,
       "path": "services/world_validators.py",
       "qualified_name": "services.world_validators._v_world_crisis_warning"
     },
@@ -532639,7 +533110,7 @@
     {
       "id": "symbol:services.world_validators.catalog_ref",
       "kind": "function",
-      "line": 524,
+      "line": 525,
       "path": "services/world_validators.py",
       "qualified_name": "services.world_validators.catalog_ref"
     },
@@ -532667,7 +533138,7 @@
     {
       "id": "symbol:services.world_validators.rejection_source",
       "kind": "function",
-      "line": 517,
+      "line": 518,
       "path": "services/world_validators.py",
       "qualified_name": "services.world_validators.rejection_source"
     },
@@ -532681,7 +533152,7 @@
     {
       "id": "symbol:services.world_validators.validate_proposal",
       "kind": "function",
-      "line": 688,
+      "line": 689,
       "path": "services/world_validators.py",
       "qualified_name": "services.world_validators.validate_proposal"
     },
@@ -582773,7 +583244,7 @@
     {
       "id": "symbol:tests.test_spec313_offer.test_complete_uses_planned_reward_not_flat_20",
       "kind": "test",
-      "line": 134,
+      "line": 140,
       "path": "tests/test_spec313_offer.py",
       "qualified_name": "tests.test_spec313_offer.test_complete_uses_planned_reward_not_flat_20"
     },
@@ -582794,21 +583265,21 @@
     {
       "id": "symbol:tests.test_spec313_offer.test_deterministic_ids_and_idempotent_offer",
       "kind": "test",
-      "line": 124,
+      "line": 130,
       "path": "tests/test_spec313_offer.py",
       "qualified_name": "tests.test_spec313_offer.test_deterministic_ids_and_idempotent_offer"
     },
     {
       "id": "symbol:tests.test_spec313_offer.test_infeasible_not_offered",
       "kind": "test",
-      "line": 114,
+      "line": 120,
       "path": "tests/test_spec313_offer.py",
       "qualified_name": "tests.test_spec313_offer.test_infeasible_not_offered"
     },
     {
       "id": "symbol:tests.test_spec313_offer.test_lore_cap_two_and_global_cap",
       "kind": "test",
-      "line": 95,
+      "line": 100,
       "path": "tests/test_spec313_offer.py",
       "qualified_name": "tests.test_spec313_offer.test_lore_cap_two_and_global_cap"
     },
@@ -582829,7 +583300,7 @@
     {
       "id": "symbol:tests.test_spec313_offer.test_origin_cooldown_and_anchor_cooldown_in_days",
       "kind": "test",
-      "line": 82,
+      "line": 87,
       "path": "tests/test_spec313_offer.py",
       "qualified_name": "tests.test_spec313_offer.test_origin_cooldown_and_anchor_cooldown_in_days"
     },
@@ -582853,6 +583324,20 @@
       "line": 11,
       "path": "tests/test_spec313_playtest.py",
       "qualified_name": "tests.test_spec313_playtest._ids"
+    },
+    {
+      "id": "symbol:tests.test_spec313_playtest._run",
+      "kind": "test",
+      "line": 167,
+      "path": "tests/test_spec313_playtest.py",
+      "qualified_name": "tests.test_spec313_playtest._run"
+    },
+    {
+      "id": "symbol:tests.test_spec313_playtest.test_downgrade_causes_are_distinguished",
+      "kind": "test",
+      "line": 218,
+      "path": "tests/test_spec313_playtest.py",
+      "qualified_name": "tests.test_spec313_playtest.test_downgrade_causes_are_distinguished"
     },
     {
       "id": "symbol:tests.test_spec313_playtest.test_invariant_delivery_without_item",
@@ -582890,11 +583375,39 @@
       "qualified_name": "tests.test_spec313_playtest.test_requires_world_quests_on"
     },
     {
+      "id": "symbol:tests.test_spec313_playtest.test_scenario_lore_quests_entrega_offers_and_delivers",
+      "kind": "test",
+      "line": 177,
+      "path": "tests/test_spec313_playtest.py",
+      "qualified_name": "tests.test_spec313_playtest.test_scenario_lore_quests_entrega_offers_and_delivers"
+    },
+    {
+      "id": "symbol:tests.test_spec313_playtest.test_scenario_lore_quests_escolta_offers_and_travels",
+      "kind": "test",
+      "line": 192,
+      "path": "tests/test_spec313_playtest.py",
+      "qualified_name": "tests.test_spec313_playtest.test_scenario_lore_quests_escolta_offers_and_travels"
+    },
+    {
       "id": "symbol:tests.test_spec313_playtest.test_scenario_lore_quests_offers_hunt",
       "kind": "test",
       "line": 155,
       "path": "tests/test_spec313_playtest.py",
       "qualified_name": "tests.test_spec313_playtest.test_scenario_lore_quests_offers_hunt"
+    },
+    {
+      "id": "symbol:tests.test_spec313_playtest.test_scenario_lore_quests_rumor_investigates_false_rumor",
+      "kind": "test",
+      "line": 185,
+      "path": "tests/test_spec313_playtest.py",
+      "qualified_name": "tests.test_spec313_playtest.test_scenario_lore_quests_rumor_investigates_false_rumor"
+    },
+    {
+      "id": "symbol:tests.test_spec313_playtest.test_scenario_variants_registered_and_mock_picks_requested_kind",
+      "kind": "test",
+      "line": 198,
+      "path": "tests/test_spec313_playtest.py",
+      "qualified_name": "tests.test_spec313_playtest.test_scenario_variants_registered_and_mock_picks_requested_kind"
     },
     {
       "id": "symbol:tests.test_spec313_playtest.test_shadow_writes_nothing",
@@ -587084,5 +587597,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:3791bd4965237a1d150ddadaef3723e5762ffb99376aad807adf02d4fd12c7cd"
+  "source_tree_hash": "sha256:2bbca8aa0be57c181bbfacc5728c0c5013ca14f781053c71cdd4cb39743e792d"
 }
