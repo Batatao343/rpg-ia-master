@@ -1086,6 +1086,7 @@ def check_encounter(
     law_hint: dict | None = None,
     exempt_factions=(),
     hunt_anchor: str = "",
+    rumor_hint: dict | None = None,
 ):
     """
     Gatilho DETERMINÍSTICO de encontro ao entrar/descansar num local perigoso.
@@ -1098,6 +1099,8 @@ def check_encounter(
     o spawn cai no cache em vez de gerar via LLM.
     SPEC-313 R26: `hunt_anchor` (bestiary_id de quest `cacar_criatura` ativa na região) só
     PREFERE a criatura no sorteio de um encontro que JÁ disparou; nunca cria gatilho.
+    SPEC-315 R16: `rumor_hint` (boato verdadeiro que o motor adotou) forca UM encontro, ignorando
+    o cooldown so desta vez; mesma forma/precedencia do `law_hint`, forca de `eff_danger`.
     Retorna {hint, flavor, reason} ou None.
     """
     world = world or {}
@@ -1108,6 +1111,16 @@ def check_encounter(
         _EARLY_COOLDOWN_BONUS if int(player_level or 1) <= EARLY_GAME_LEVEL else 0
     )
     world.pop("encounter_eff_danger", None)  # SPEC-233 R5: flag one-shot nunca gruda
+    if rumor_hint:
+        world["encounter_eff_danger"] = int(rumor_hint.get("eff_danger") or 1)
+        return {
+            "hint": rumor_hint.get("hint", ""),
+            "flavor": rumor_hint.get("flavor", ""),
+            "reason": "rumor",
+            "enemy_id": rumor_hint.get("enemy_id", ""),
+            "rumor_id": rumor_hint.get("rumor_id", ""),
+            "always_combat": bool(rumor_hint.get("always_combat")),
+        }
     if turn - int(world.get("last_encounter_turn", -99)) < cooldown:
         return None
 

@@ -1,6 +1,6 @@
 # SPEC-315 — Rumores adotados pelo motor (a LLM inventa o conteúdo; o motor decide se é verdade e o materializa)
 
-> **Status:** `approved` (dono 25/10, `/goal` "execute e suba todas as specs em draft a partir do número 300": decisões nos padrões recomendados)
+> **Status:** `in-progress` (implementada em `spec-315`; falta revisão independente e smoke real §6; aprovada pelo dono em 25/10, `/goal` "execute e suba todas as specs em draft a partir do número 300": decisões nos padrões recomendados)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Origem:** pedido do dono (25/10): "o motor decide e a LLM narra, mas o mundo tem que ser vivo".
 > O motor tem um conjunto fechado de **tipos** de desfecho; a LLM pode inventar o **conteúdo**, que o
@@ -408,3 +408,31 @@ Custo esperado ≤ US$ 0,35. Estourou → parar e registrar.
   na suíte, staging `on` após 1 semana de shadow com taxa de rejeição < 60 %.**
 - **D8 — Revogar a D4 da 312** ("boato do narrador é sempre falso") **só quando
   `RPG_RUMORS_ADOPTED=on`**; com `off`/`shadow` a 312 fica como está. **Sim.**
+
+## 9. Evidência
+
+Smoke real §6 **não rodado** (fora do escopo do executor; custo US$ 0,40). Cenário do harness
+criado: `python -m playtest run --scenario rumor_adotado --turns 10` (MockLLM) passa com oráculo
+(achado verdadeiro materializa 1x, falso não); para o smoke real use `--real --max-cost 0.15`.
+
+## 10. Desvios (implementação)
+
+- **D-1 — Schema por subclasse.** `ProposedRumor` fica intacto; `ProposedRumorWithClaim` (com `claim`) e
+  `StoryUpdateWithRumorClaims` só entram com `RPG_RUMORS_ADOPTED != off` (R2: o campo não existe no
+  schema com a flag desligada). `coerce_proposed_rumors(raw, model)` aceita o modelo.
+- **D-2 — Gap (R12) só na alegação.** Intervalo de `RUMOR_MIN_GAP_DAYS` vira `reason="gap"` em
+  `validate_claim` (a alegação é descartada e o boato segue pela 312); `_validate_proposal` da 312 não
+  muda (boato sem `claim` mantém o `daily_cap`).
+- **D-3 — NPC fora do elenco.** `npc_em_local` exige o NPC em `npc_sim.npcs` (elenco simulado); fora
+  dele, `reason="canon"`. Líder, capturado, ferido/congelado, escoltado ou com perigo aberto: rejeitado.
+- **D-4 — Gatilho `quest`.** Com quest `investigar_rumor` ativa ancorada no rumor, o herói no alvo
+  materializa o achado em qualquer ação (a conclusão da quest é decidida pelo event processor, que não
+  escreve em `player`); sem quest, exige `SEARCH_VOCAB`.
+- **D-5 — Rota LOOT.** Verbos de busca que o router classifica como `LOOT` (ex.: "vasculho") não passam
+  pelo storyteller e não materializam; materializa na próxima ação STORY (limitação conhecida).
+- **D-6 — Visibilidade.** Aresta oculta (`canonical_secret_detail`) só barra a **entidade** da alegação;
+  local com aresta oculta (quase todos têm) só é barrado por `visibility != public` ou assinatura secreta.
+- **D-7 — Fação secreta (R7).** Adapter local: `services.faction_gate` (SPEC-314) se existir; senão
+  `npc_self._faction_is_secret` + `faction_intel[f].known`.
+- **D-8 — Cenário.** `--scenario rumor_adotado` (instâncias adotadas pré-injetadas + `world_sim["forced_adopt"]`
+  para alegações emitidas pela LLM) em vez de reaproveitar `mundo`.

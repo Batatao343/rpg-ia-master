@@ -288,6 +288,21 @@ def _forget(last: dict, r: dict) -> None:
         last[key] = max(int(last.get(key, 0)), int(r.get("born_day", 0)))
 
 
+def _expire_adopted(r: dict, day: int) -> dict:
+    from observability.telemetry import log_event
+    from services.rumor_adoption import resolve_outcome
+
+    outcome = resolve_outcome(r)
+    if r.get("truth") and not r.get("materialized_day"):
+        log_event(
+            "rumor_adopt",
+            "expired_unmaterialized",
+            level="info",
+            kind=str((r.get("claim") or {}).get("kind") or ""),
+        )
+    return {**r, "resolution": outcome, "resolved_day": int(day)}
+
+
 def _cap_ledger(sim: dict, day: int) -> None:
     """Mantem o ledger pequeno: expirados velhos saem; teto `RUMOR_LEDGER_MAX` despeja primeiro
     os expirados nao percebidos, depois os percebidos; nunca um rumor ativo nem um percebido
@@ -297,6 +312,8 @@ def _cap_ledger(sim: dict, day: int) -> None:
     keep: list[dict] = []
     for r in (x for x in sim.get("rumors") or [] if isinstance(x, dict)):
         age = day - int(r.get("expires_day", 0))
+        if age > 0 and r.get("adopted") and not r.get("resolution"):
+            r = _expire_adopted(r, day)  # SPEC-315 R22: sem quest, o TTL fecha com o mesmo desfecho
         if r.get("perceived_day"):
             limit = INVESTIGABLE_HORIZON_DAYS if _investigable_row(r) else STALE_PERCEIVED_DAYS
         else:
@@ -635,10 +652,18 @@ def _duplicate(
 
 
 def accept_proposed(
-    state: dict, proposals: list, *, turn: int, day: int, quarantined: bool
+    state: dict,
+    proposals: list,
+    *,
+    turn: int,
+    day: int,
+    quarantined: bool,
+    extra: dict | None = None,
 ) -> tuple[dict | None, dict | None, list[str]]:
     """R26/R27: `(world_sim novo | None, world novo | None, motivos de rejeicao)`.
-    Aceito vira rumor `narrador`: falso, nao elegivel a quest, ja percebido. Nunca levanta."""
+    Aceito vira rumor `narrador`: falso, nao elegivel a quest, ja percebido. Nunca levanta.
+    SPEC-315: com `extra` (dict) e uma `claim` no boato, o motor pode ADOTA-LA (verdade sorteada,
+    elegivel a quest); `extra` devolve `npc_sim` quando a verdade agenda a visita de um NPC."""
     from observability.telemetry import log_event
 
     reasons: list[str] = []
@@ -655,7 +680,7 @@ def accept_proposed(
             reasons.append(why)
             log_event("rumor", "proposed_rejected", level="info", reason=why)
             continue
-        world, sim = _apply_proposal(state, p, turn=turn, day=day)
+        world, sim = _apply_proposal(state, p, turn=turn, day=day, extra=extra)
         log_event("rumor", "proposed_accepted", level="info", family="narrador")
         return sim, world, reasons
     return None, None, reasons
@@ -705,7 +730,9 @@ def _subject_of(entities: list[str]) -> str:
     return "lugar"
 
 
-def _apply_proposal(state: dict, p: Any, *, turn: int, day: int) -> tuple[dict, dict]:
+def _apply_proposal(
+    state: dict, p: Any, *, turn: int, day: int, extra: dict | None = None
+) -> tuple[dict, dict]:
     from services import world_pressures as wp
     from services.ambient import NEWS_TEXT_MAX, append_news
 
@@ -733,6 +760,13 @@ def _apply_proposal(state: dict, p: Any, *, turn: int, day: int) -> tuple[dict, 
         "text": text[:NEWS_TEXT_MAX],
         "resolution": "",
     }
+    if extra is not None and _get(p, "claim", None) is not None:
+        from services import rumor_adoption  # SPEC-315: o motor adota (ou nao) a alegacao
+
+        inst = rumor_adoption.process(state, p, inst, day, extra)
+        if extra.get("adopted"):
+            log = [*(sim.get("adopt_log") or []), int(day)]
+            sim["adopt_log"] = log[-int(rumor_adoption.const("ADOPT_LOG_MAX")) :]
     sim["rumors"] = [*(sim.get("rumors") or []), inst]
     sim["rumor_last_perceived_day"] = int(day)
     sim["rumor_born_total"] = int(sim.get("rumor_born_total", 0)) + 1
@@ -786,6 +820,36 @@ def truth_of(state: dict, rumor_id: str) -> bool | None:
     """Verdade INTERNA do rumor (None se a instancia nao existe). So a resolucao da 313 chama."""
     inst = instance(state, rumor_id)
     return None if inst is None else bool(inst.get("truth"))
+
+
+def mark_materialized(sim: dict, rumor_id: str, day: int, materialization: dict) -> dict:
+    """SPEC-315 R14: unico writer de `materialized_day`. Uma vez por rumor: instancia ja
+    materializada, falsa ou nao adotada devolve `sim` INTACTO (R18)."""
+    rows = []
+    changed = False
+    for r in sim.get("rumors") or []:
+        if (
+            isinstance(r, dict)
+            and r.get("rumor_id") == rumor_id
+            and r.get("adopted")
+            and r.get("truth")
+            and not r.get("materialized_day")
+        ):
+            r = {**r, "materialized_day": int(day), "materialization": dict(materialization)}
+            changed = True
+        rows.append(r)
+    return {**sim, "rumors": rows} if changed else sim
+
+
+def outcome_of(state: dict, rumor_id: str) -> str | None:
+    """Desfecho que a 313 grava ao concluir `investigar_rumor` (None se a instancia sumiu).
+    Alegacao adotada e verdadeira mas nao materializada = `inconclusivo` (SPEC-315 R22)."""
+    inst = instance(state, rumor_id)
+    if inst is None:
+        return None
+    from services.rumor_adoption import resolve_outcome
+
+    return resolve_outcome(inst)
 
 
 def mark_resolved(sim: dict, rumor_id: str, outcome: str, day: int) -> dict:

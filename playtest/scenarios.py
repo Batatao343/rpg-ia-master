@@ -29,7 +29,11 @@ _SCENARIOS = {
     "lore_quests_entrega": "explorador",
     "lore_quests_rumor": "explorador",
     "lore_quests_escolta": "explorador",
+    # SPEC-315 §6 passo 2: 1 achado de boato VERDADEIRO e 1 FALSO; viajar e buscar nas duas
+    "rumor_adotado": "explorador",
 }
+ADOPT_TRUE_LOC = "na_anel_ferro"
+ADOPT_FALSE_LOC = "na_anel_lama"
 _LORE_VARIANTS = ("lore_quests_entrega", "lore_quests_rumor", "lore_quests_escolta")
 _NPC_SCENARIOS = ("npc_perigo", "companheiro_exposto")
 LORE_NPC_NAME = "Rolf Caçador"
@@ -252,6 +256,74 @@ def _prepare_lore_variant(prepared: dict, name: str) -> dict:
     return prepared
 
 
+def _adopted_row(game_id: str, loc: str, day: int, truth: bool, perceived: int = 1) -> dict:
+    from services import rumors as _rumors
+
+    rid = _rumors._sha(game_id, "adopt:" + loc, day)[:16]
+    return {
+        "rumor_id": rid,
+        "seed_id": "narrador:" + rid[:12],
+        "family": "narrador",
+        "location_id": loc,
+        "entities": ["nova_arcadia"],
+        "subject": "lugar",
+        "truth": truth,
+        "quest_eligible": True,
+        "adopted": True,
+        "claim": {"kind": "esconderijo", "location_id": loc, "entity_id": ""},
+        "materialized_day": 0,
+        "born_day": max(0, day - 1),
+        "born_turn": 0,
+        "expires_day": day + 8,
+        "perceived_day": perceived,
+        "text": "Dizem que alguem escondeu algo por la",
+        "resolution": "",
+    }
+
+
+def _prepare_rumor_adotado(prepared: dict) -> dict:
+    """SPEC-315 §6 passo 2: duas alegacoes ADOTADAS (uma verdadeira, uma falsa) ja percebidas;
+    viagem, busca e materializacao sao do jogo real."""
+    from services import world_engine as we
+
+    prepared["world"] = _move_world(prepared.get("world") or {}, "nova_arcadia")
+    day = int(((prepared["world"].get("world_clock") or {}).get("day", 1)) or 1)
+    gid = str(prepared.get("game_id", ""))
+    sim = prepared.get("world_sim") or we._new_sim(gid, day, [], "on")
+    sim["calm_until_day"] = day + 30
+    sim["rumors"] = [
+        _adopted_row(gid, ADOPT_TRUE_LOC, day, True),
+        _adopted_row(gid, ADOPT_FALSE_LOC, day, False, perceived=2),
+    ]
+    sim["rumor_last_perceived_day"] = day
+    sim["forced_adopt"] = [
+        {"kind": "esconderijo", "location_id": ADOPT_TRUE_LOC, "truth": True},
+        {"kind": "esconderijo", "location_id": ADOPT_FALSE_LOC, "truth": False},
+    ]
+    prepared["world_sim"] = sim
+    return prepared
+
+
+def _adopted_decision(state: dict) -> ProfileDecision:
+    cur = str((state.get("world") or {}).get("current_location_id") or "")
+    rows = {
+        r["claim"]["location_id"]: r
+        for r in (state.get("world_sim") or {}).get("rumors") or []
+        if isinstance(r, dict) and r.get("adopted")
+    }
+    for loc in (ADOPT_TRUE_LOC, ADOPT_FALSE_LOC):
+        row = rows.get(loc) or {}
+        if row.get("materialized_day"):
+            continue
+        if cur != loc:
+            return ProfileDecision(text=_lore_hop_text(state, loc), mode="free_text")
+        return ProfileDecision(
+            text="Examino e procuro cada canto do local em busca de um esconderijo.",
+            mode="free_text",
+        )
+    return ProfileDecision(text="Observo o local e descanso um instante.", mode="free_text")
+
+
 def _lore_hop_text(state: dict, target: str) -> str:
     """Próximo passo (um nó do mapa) rumo a `target`, em texto de viagem."""
     import gamedata
@@ -320,6 +392,8 @@ def prepare(name: str, state: dict) -> dict:
         return _prepare_lore_variant(prepared, name)
     if name == "lore_quests":
         return _prepare_lore_quests(prepared)
+    if name == "rumor_adotado":
+        return _prepare_rumor_adotado(prepared)
     if name == "recrutamento":
         prepared["world"] = _move_world(
             prepared.get("world") or {},
@@ -389,6 +463,8 @@ def decision_for(name: str, turn: int, state: dict) -> ProfileDecision | None:
         return ProfileDecision(text="Vou descansar e acampar aqui.", mode="free_text")
     if name in _LORE_VARIANTS:
         return _lore_variant_decision(name, turn, state)
+    if name == "rumor_adotado":
+        return _adopted_decision(state)
     if name == "lore_quests":
         return ProfileDecision(
             text=f"Converso com {LORE_NPC_NAME} e peço um trabalho: uma tarefa concreta.",
@@ -469,6 +545,32 @@ def oracle_violations(name: str, result) -> list[dict]:
                         turn,
                     )
                 ]
+        return []
+
+    if name == "rumor_adotado":
+        rows = [
+            r
+            for r in (state.get("world_sim") or {}).get("rumors") or []
+            if isinstance(r, dict) and r.get("adopted")
+        ]
+        true_row = next((r for r in rows if r.get("truth")), {})
+        false_row = next((r for r in rows if not r.get("truth")), {})
+        if not true_row.get("materialized_day"):
+            return [
+                _violation(
+                    "smoke.rumor_adopt_true_not_materialized",
+                    "O achado do boato verdadeiro nao materializou.",
+                    turn,
+                )
+            ]
+        if false_row.get("materialized_day"):
+            return [
+                _violation(
+                    "smoke.rumor_adopt_false_materialized",
+                    "O boato falso materializou (proibido).",
+                    turn,
+                )
+            ]
         return []
 
     if name in _LORE_VARIANTS:

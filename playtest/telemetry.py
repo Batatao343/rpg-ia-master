@@ -909,11 +909,33 @@ def _rumor_summary(sim: dict) -> dict:
     proposed = [r for r in rows if r.get("family") == "narrador"]
     false_seen = [r for r in seen if r.get("family") != "narrador" and not r.get("truth")]
     lore_seen = [r for r in seen if r.get("family") != "narrador"]
-    return {
+    out = {
         "born": max(int((sim or {}).get("rumor_born_total", 0) or 0), len(rows)),
         "perceived": len(seen),
         "false_pct": round(100 * len(false_seen) / len(lore_seen), 1) if lore_seen else 0.0,
         "proposed_accepted": len(proposed),
+    }
+    if any(r.get("claim") for r in proposed):  # SPEC-315 R27: so com alegacao adotada
+        out["adopted"] = _adopt_summary(proposed)
+    return out
+
+
+def _adopt_summary(rows: list[dict]) -> dict:
+    """SPEC-315 R27: por campanha, adotadas por tipo, verdadeiras, materializadas e ouro dos achados."""
+    adopted = [r for r in rows if r.get("adopted")]
+    by_kind: dict[str, int] = {}
+    for r in adopted:
+        k = str((r.get("claim") or {}).get("kind") or "")
+        by_kind[k] = by_kind.get(k, 0) + 1
+    return {
+        "with_claim": sum(1 for r in rows if r.get("claim")),
+        "adopted": len(adopted),
+        "by_kind": by_kind,
+        "true": sum(1 for r in adopted if r.get("truth")),
+        "materialized": sum(1 for r in adopted if r.get("materialized_day")),
+        "gold_granted": sum(
+            int((r.get("materialization") or {}).get("gold", 0) or 0) for r in adopted
+        ),
     }
 
 

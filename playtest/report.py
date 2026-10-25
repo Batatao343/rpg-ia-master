@@ -338,6 +338,20 @@ def render_markdown(report: RunReport) -> str:
                     f"| {ru.get('false_pct', 0)} | {ru.get('proposed_accepted', 0)} |"
                 )
             L.append("")
+            ad = [
+                s for s in with_rumors if (s["world"]["rumors"].get("adopted") or {}).get("adopted")
+            ]
+            if ad:  # SPEC-315 R27: adotadas por tipo, verdadeiras, materializadas, ouro dos achados
+                L.append("| perfil | adotadas | por tipo | verdadeiras | materializadas | ouro |")
+                L.append("|---|---|---|---|---|---|")
+                for s in ad:
+                    a = s["world"]["rumors"]["adopted"]
+                    kinds = ", ".join(f"{k}={v}" for k, v in sorted(a["by_kind"].items()))
+                    L.append(
+                        f"| {s.get('profile', '?')} | {a['adopted']} | {kinds or '—'} "
+                        f"| {a['true']} | {a['materialized']} | {a['gold_granted']} |"
+                    )
+                L.append("")
         # SPEC-304 R30: NPCs (perigos abertos/percebidos/resolvidos por destino, intervencoes).
         with_npcs = [s for s in with_world if (s["world"].get("npcs") or {}).get("enabled")]
         if with_npcs:

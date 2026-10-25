@@ -1,0 +1,23 @@
+{
+  "_doc": "SPEC-315: constantes [BALANCEAR] da adocao de alegacoes de rumor pelo motor. A LLM nomeia o que e onde; verdade, valor e tetos sao deste arquivo.",
+  "constants": {
+    "ADOPTED_PER_WINDOW": 2,
+    "ADOPT_WINDOW_DAYS": 10,
+    "ADOPTED_ACTIVE_MAX": 2,
+    "LOOT_TRUE_PER_WINDOW": 1,
+    "LOOT_WINDOW_DAYS": 20,
+    "ADOPTED_GOLD_MAX": 40,
+    "ADOPT_LOG_MAX": 20,
+    "STEER_INPUTS": 3,
+    "ROAD_WAR_BONUS": 0.25,
+    "TRUTH_CAP": 0.85
+  },
+  "truth_base": {
+    "esconderijo": 0.35,
+    "item_perdido": 0.3,
+    "perigo_na_estrada": 0.4,
+    "criatura_avistada": 0.5,
+    "npc_em_local": 0.4
+  },
+  "search_vocab": ["procur", "vasculh", "cav", "revir", "busc", "investig"]
+}

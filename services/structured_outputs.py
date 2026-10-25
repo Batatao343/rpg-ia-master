@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from typing import Dict, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 EventType = Literal[
     "npc_killed",
@@ -130,7 +130,56 @@ class ProposedRumor(BaseModel):
     location_id: str = Field(default="", description="Id de local EXATO ou vazio (= aqui).")
 
 
-def coerce_proposed_rumors(raw: object) -> list:
+ClaimKind = Literal[
+    "esconderijo", "item_perdido", "perigo_na_estrada", "criatura_avistada", "npc_em_local"
+]
+CLAIM_KINDS = (
+    "esconderijo",
+    "item_perdido",
+    "perigo_na_estrada",
+    "criatura_avistada",
+    "npc_em_local",
+)
+
+
+class RumorClaim(BaseModel):
+    """SPEC-315 R1: alegacao FECHADA que o boato faz. Nenhum campo de quantidade, raridade,
+    item ou ouro existe: a LLM nomeia o que e onde; verdade e valor sao do motor."""
+
+    kind: ClaimKind
+    location_id: str = Field(description="Id EXATO de local do mapa, diferente do local atual.")
+    entity_id: str = Field(
+        default="",
+        description="criatura_avistada: id do bestiário; npc_em_local: id do NPC; demais: vazio.",
+    )
+
+
+class ProposedRumorWithClaim(ProposedRumor):
+    """SPEC-315 R2: so com `RPG_RUMORS_ADOPTED` != off o provider ve o campo `claim`."""
+
+    claim: RumorClaim | None = Field(
+        default=None,
+        description=(
+            "OPCIONAL. Só se o boato afirma algo concreto e verificável num local DISTANTE "
+            "(esconderijo, item perdido, perigo na estrada, criatura avistada, NPC em local). "
+            "O motor decide se é verdade. Vazio na dúvida."
+        ),
+    )
+
+    @field_validator("claim", mode="before")
+    @classmethod
+    def _drop_invalid_claim(cls, v: object) -> RumorClaim | None:
+        if isinstance(v, RumorClaim):
+            return v
+        if isinstance(v, dict):
+            try:
+                return RumorClaim(**v)
+            except Exception:  # silent-ok: claim malformada vira None; o boato segue (R1)
+                return None
+        return None
+
+
+def coerce_proposed_rumors(raw: object, model: type[ProposedRumor] = ProposedRumor) -> list:
     """SPEC-312 R25: item invalido e DESCARTADO, nunca derruba a resposta inteira."""
     if not isinstance(raw, list):
         return []
@@ -140,7 +189,7 @@ def coerce_proposed_rumors(raw: object) -> list:
             out.append(item)
         elif isinstance(item, dict) and isinstance(item.get("text"), str) and item["text"].strip():
             try:
-                out.append(ProposedRumor(**item))
+                out.append(model(**item))
             except Exception:  # silent-ok: item invalido e descartado por contrato (R25)
                 continue
     return out

@@ -146,3 +146,63 @@ def discover_on_arrival(
         f"{' e '.join(partes)}. Descreva o achado modesto.",
         unique_events,
     )
+
+
+def grant_rumor_cache(
+    player: dict,
+    world: dict,
+    loc: dict,
+    rng: random.Random,
+    *,
+    kind: str = "esconderijo",
+    projection: dict | None = None,
+    gold_max: int = 40,
+    bestiary_knowledge: dict | None = None,
+    turn: int = 0,
+) -> tuple[str, dict]:
+    """SPEC-315 R15: achado de um boato VERDADEIRO. Reusa `roll_loot` com o perigo do ALVO,
+    sem boost e sem unico (R2b); ouro limitado por `gold_max`. `item_perdido` = so item;
+    `esconderijo` = item ou ouro. O alvo entra em `looted_locations` (nunca rende de novo).
+    MUTA `player`/`world` (copias do chamador). Devolve `(nota_para_o_narrador, {item_id, gold})`."""
+    from inventory import is_unique
+
+    loc = loc or {}
+    loc_id = str(loc.get("id") or "")
+    danger = int(loc.get("danger", 1) or 1)
+    region_id = loc.get("region_id", "default")
+    item_id = None
+    roll_gold = 0
+    for _ in range(6):  # unico nunca sai por aqui: re-sorteia (deterministico pelo rng)
+        roll = economy.roll_loot(
+            region_id,
+            danger,
+            rng,
+            projection=projection,
+            bestiary_knowledge=bestiary_knowledge,
+            turn=turn,
+            boost=False,
+        )
+        cand = roll.get("item_id")
+        if cand and not is_unique(cand):
+            item_id = cand
+        roll_gold = min(int(roll.get("gold", 0) or 0), int(gold_max))
+        if item_id or kind != "item_perdido":
+            break
+    labels: list[str] = []
+    if item_id:
+        labels, _events = _grant_items(player, [item_id], projection)
+        if not labels:
+            item_id = None
+    # item_perdido = so item; esconderijo = item OU ouro (nunca os dois)
+    gold = 0 if (kind == "item_perdido" or labels) else roll_gold
+    if gold:
+        player["gold"] = int(player.get("gold", 0) or 0) + gold
+    if loc_id:
+        world["looted_locations"] = list(world.get("looted_locations") or []) + [loc_id]
+    partes = ([", ".join(labels)] if labels else []) + ([f"{gold} de ouro"] if gold else [])
+    note = (
+        f"O boato era VERDADE: em {loc.get('name', 'o local')} o jogador ENCONTROU "
+        f"{' e '.join(partes) if partes else 'apenas vestigios de alguem que passou ali'}. "
+        "Descreva o achado modesto."
+    )
+    return note, {"item_id": item_id, "gold": gold}

@@ -549,6 +549,45 @@ def _nearest_safe(state: dict, home: str, proj: dict) -> str:
     return best[1] if best else ""
 
 
+def schedule_visit(
+    sim: dict, ref: str, location_id: str, from_day: int, until_day: int, rumor_id: str
+) -> dict:
+    """SPEC-315 R17: agenda a visita de `ref` a `location_id` ate `until_day` (boato verdadeiro).
+    Writer unico de `rumor_visit`; `_step_position` viaja DE VERDADE (nunca teleporta). Devolve um
+    `npc_sim` novo; NPC fora do elenco ou sem posicao nao muda nada."""
+    entry = ((sim or {}).get("npcs") or {}).get(ref)
+    if not isinstance(entry, dict) or not entry.get("pos"):
+        return sim
+    npcs = {**sim["npcs"], ref: {**entry}}
+    npcs[ref]["rumor_visit"] = {
+        "location_id": str(location_id),
+        "from_day": int(from_day),
+        "until_day": int(until_day),
+        "rumor_id": str(rumor_id),
+    }
+    return {**sim, "npcs": npcs}
+
+
+def _step_visit(entry: dict, visit: dict, d: int, rng: Any, in_crisis: bool) -> bool:
+    """R17: True se a visita consumiu o passo. Fuga/perigo/fim da janela soltam o NPC."""
+    pos = entry["pos"]
+    if in_crisis or pos.get("refugee_from") or entry.get("status") or entry.get("dead"):
+        entry.pop("rumor_visit", None)  # cancela: a alegacao vira `inconclusivo`
+        return False
+    if d > int(visit.get("until_day", 0)):
+        entry.pop("rumor_visit", None)  # libera: o fluxo normal volta para casa
+        return False
+    target = str(visit.get("location_id") or "")
+    if str(pos.get("location_id") or "") == target:
+        pos["return_day"] = int(visit["until_day"])
+        return True
+    if _start_trip(entry, target, d, rng, stay=[1, 1]):
+        entry["pos"]["return_day"] = int(visit["until_day"])
+    else:
+        entry.pop("rumor_visit", None)
+    return True
+
+
 def _step_position(
     state: dict, ref: str, entry: dict, d: int, game_id: str, proj: dict, player_loc: str
 ) -> None:
@@ -582,6 +621,9 @@ def _step_position(
     entry["calm_days"] = 0 if in_crisis else int(entry.get("calm_days", 0)) + 1
     if perils.at_player(player_loc, cur):
         return  # quem está na cena do herói não some no meio dela
+    visit = entry.get("rumor_visit")
+    if isinstance(visit, dict) and _step_visit(entry, visit, d, rng, in_crisis):
+        return  # SPEC-315 R17: visita agendada por boato verdadeiro
     if pos.get("refugee_from"):
         if entry["calm_days"] >= int(_const("RETURN_AFTER_CALM_DAYS")):
             if _start_trip(entry, home, d, rng, stay=[1, 1]):

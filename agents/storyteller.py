@@ -25,6 +25,7 @@ from services.structured_outputs import (
     CrimeClaim,
     ProposedQuest,
     ProposedRumor,
+    ProposedRumorWithClaim,
     ProposedWorldEvent,
     coerce_crime_claims,
     coerce_proposed_rumors,
@@ -193,6 +194,21 @@ class StoryUpdateWithRumors(StoryUpdate):
         return coerce_proposed_rumors(v)
 
 
+class StoryUpdateWithRumorClaims(StoryUpdateWithRumors):
+    """SPEC-315 R2: com `RPG_RUMORS_ADOPTED` != off o boato proposto pode levar uma `claim`
+    (vocabulario fechado). Mesma chamada: o campo e so um objeto opcional a mais."""
+
+    proposed_rumors: list[ProposedRumorWithClaim] = Field(
+        default_factory=list,
+        description=StoryUpdateWithRumors.model_fields["proposed_rumors"].description,
+    )
+
+    @field_validator("proposed_rumors", mode="before")
+    @classmethod
+    def _drop_invalid_rumors(cls, v: object) -> list:
+        return coerce_proposed_rumors(v, ProposedRumorWithClaim)
+
+
 _MONEY_CLAIM_RE = re.compile(r"\b(?:ouro|moedas?)\b", re.IGNORECASE)
 
 
@@ -316,6 +332,15 @@ def _quests_ativas_block(quests: list[dict], state: dict | None = None) -> str:
     )
 
 
+def _story_schema_for_rumors(rumors_mod) -> type:
+    """Schema do narrador: o campo `claim` so existe com a SPEC-315 ligada (R2)."""
+    if rumors_mod.proposed_mode() != "on":
+        return StoryUpdate
+    from services import rumor_adoption
+
+    return StoryUpdateWithRumorClaims if rumor_adoption.mode() != "off" else StoryUpdateWithRumors
+
+
 def _rumor_proposal_hint() -> str:
     """SPEC-312 R25: so com `RPG_RUMORS_PROPOSED=on` o narrador e convidado a registrar o boato."""
     from services import rumors
@@ -328,6 +353,22 @@ def _rumor_proposal_hint() -> str:
         "registre em 'proposed_rumors' (text em 1 frase, sem números; entity_ids com ids EXATOS "
         "de <ENTIDADES_CANONICAS> citados no boato). Só o que foi dito em cena; nunca invente "
         "fatos. Na dúvida, deixe vazio.\n    </BOATOS>"
+    ) + _rumor_claim_hint()
+
+
+def _rumor_claim_hint() -> str:
+    """SPEC-315: a LLM pode anexar `claim` (vocabulario fechado); o motor sorteia a verdade."""
+    from services import rumor_adoption
+
+    if rumor_adoption.mode() == "off":
+        return ""
+    return (
+        "\n    <BOATOS_ALEGACAO>\n    Se o boato afirma algo CONCRETO sobre um local DISTANTE (não "
+        "este), preencha 'claim' com kind em {esconderijo, item_perdido, perigo_na_estrada, "
+        "criatura_avistada, npc_em_local}, location_id EXATO do mapa e, só para "
+        "criatura_avistada/npc_em_local, o entity_id EXATO. Nunca fale de quantidade, item ou "
+        "valor. O motor decide se é verdade; a narração NUNCA confirma o boato.\n    "
+        "</BOATOS_ALEGACAO>"
     )
 
 
@@ -518,7 +559,7 @@ def _dedupe_encounter(enc, world: dict):
     2x seguidas no mesmo local — exceto reforços/controle, consequência prometida."""
     if not enc:
         return enc
-    if enc.get("reason") in ("reinforcements", "controlled"):
+    if enc.get("reason") in ("reinforcements", "controlled", "rumor"):
         return enc
     if (
         enc.get("hint")
@@ -815,12 +856,15 @@ def _apply_proposed_rumors(state, updates: dict, update, turn: int, quarantined:
         world = updates.get("world") or state.get("world") or {}
         day = int((world.get("world_clock") or {}).get("day", 1) or 1)
         pst = {**state, **updates, "world": world}
+        extra: dict = {}  # SPEC-315: devolve `npc_sim` se a verdade agenda a visita de um NPC
         new_sim, new_world, _why = rumors.accept_proposed(
-            pst, proposals, turn=turn, day=day, quarantined=quarantined
+            pst, proposals, turn=turn, day=day, quarantined=quarantined, extra=extra
         )
         if new_sim is not None and new_world is not None:
             updates[sim_key] = new_sim
             updates["world"] = new_world
+            if extra.get("npc_sim") is not None:
+                updates[str(extra.get("npc_sim_key") or "npc_sim")] = extra["npc_sim"]
     except Exception as exc:
         from observability.telemetry import log_fallback
 
@@ -905,6 +949,67 @@ def _world_quest_completions(state, world: dict, quests: list) -> list:
 
         log_fallback("storyteller", "world_quest_completions_failed", exc)
         return []
+
+
+def _rumor_cache_trigger(state, world: dict, sim_updates: dict, text: str, quests: list):
+    """SPEC-315 R14/R15: boato VERDADEIRO de achado materializa uma vez, no alvo, com busca ou
+    quest. Devolve `(player | None, nota)`; commit no `world_sim` via `sim_updates`. Nunca levanta."""
+    try:
+        from services import rumor_adoption as ra
+
+        if ra.mode() != "on":
+            return None, ""
+        day = int(((world or {}).get("world_clock") or {}).get("day", 1) or 1)
+        here = str((world or {}).get("current_location_id") or "")
+        view = {**state, **sim_updates, "world": world, "quests": quests}
+        inst = ra.due_materialization(view, "search", here, day, text) or (
+            ra.due_materialization(view, "quest", here, day)
+        )
+        if inst is None:
+            return None, ""
+        upd, marked = ra.materialize(view, inst, day)
+        sim = sim_updates.get("world_sim") or state.get("world_sim") or {}
+        sim_updates["world_sim"] = ra.commit(
+            sim, str(inst["rumor_id"]), day, marked["materialization"]
+        )
+        world["looted_locations"] = list(upd["world"].get("looted_locations") or [])
+        return upd["player"], str(upd.get("note") or "")
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("storyteller", "rumor_cache_failed", exc)
+        return None, ""
+
+
+def _rumor_arrival(state, world: dict, sim_updates: dict, level: int, turn: int):
+    """SPEC-315 R14/R16: ao VIAJAR ao alvo, boato verdadeiro de encontro vira `rumor_hint`;
+    o de NPC agendado so e marcado (o NPC ja viajou de verdade, R17). Devolve
+    `(hint | None, rumor_id)`. Nunca levanta."""
+    try:
+        from services import rumor_adoption as ra
+
+        if ra.mode() != "on":
+            return None, ""
+        day = int(((world or {}).get("world_clock") or {}).get("day", 1) or 1)
+        here = str((world or {}).get("current_location_id") or "")
+        view = {**state, **sim_updates, "world": world}
+        inst = ra.due_materialization(view, "travel", here, day)
+        if inst is None:
+            return None, ""
+        kind = str((inst.get("claim") or {}).get("kind") or "")
+        if kind == "npc_em_local":
+            sim = sim_updates.get("world_sim") or state.get("world_sim") or {}
+            _upd, marked = ra.materialize(view, inst, day)
+            sim_updates["world_sim"] = ra.commit(
+                sim, str(inst["rumor_id"]), day, marked["materialization"]
+            )
+            return None, ""
+        return ra.encounter_hint(view, inst, world, level, turn), str(inst["rumor_id"])
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("storyteller", "rumor_arrival_failed", exc)
+        return None, ""
 
 
 def storyteller_node(state: GameState):
@@ -1177,6 +1282,20 @@ def storyteller_node(state: GameState):
     extra_engine_events_tick += wq_events
     extra_engine_events_tick += _world_quest_completions(state, world, wq_quests)
     wq_changed = wq_quests != list(state.get("quests") or [])  # inclui quests da 301
+    if not dest and rested_player is None and not law_resolved and last_user_input:
+        _cache_player, _cache_note = _rumor_cache_trigger(
+            state, world, sim_updates, str(last_user_input), wq_quests
+        )  # SPEC-315: boato verdadeiro de achado, no alvo, com busca/quest
+        if _cache_player is not None:
+            discovery_player = _cache_player
+            faction_note = (faction_note + " " + _cache_note).strip()
+            turn_bl = record_gain(
+                turn_bl,
+                "gold",
+                int(_cache_player.get("gold", 0) or 0)
+                - int((state.get("player") or {}).get("gold", 0) or 0),
+                "exploration",
+            )
     # Viagem fecha a cena anterior antes de qualquer encontro ou contexto. Isso
     # também protege retornos antecipados de combate contra NPCs teleportados.
     from services import npc_layers
@@ -1241,6 +1360,11 @@ def storyteller_node(state: GameState):
             )
             from services import lore_quests as _lq
 
+            _rumor_hint, _rumor_id = (
+                _rumor_arrival(state, world, sim_updates, _plevel, turn)
+                if dest and travel_periods >= 1
+                else (None, "")
+            )  # SPEC-315 R16
             enc = check_encounter(
                 world,
                 factions,
@@ -1252,7 +1376,17 @@ def storyteller_node(state: GameState):
                 law_hint=_law_hint,
                 exempt_factions=fm.passage_factions(_fm_view()),  # SPEC-301 perk `passagem`
                 hunt_anchor=_lq.active_hunt_anchor({**state, "world": world}),  # SPEC-313 R26
+                rumor_hint=_rumor_hint,
             )
+            if enc and enc.get("reason") == "rumor":
+                from services import rumor_adoption as _ra
+
+                sim_updates["world_sim"] = _ra.commit(
+                    sim_updates.get("world_sim") or state.get("world_sim") or {},
+                    _rumor_id,
+                    int((world.get("world_clock") or {}).get("day", 1) or 1),
+                    {"kind": "encounter", "enemy_id": str(enc.get("enemy_id") or "")},
+                )
         # spec encontros-dedupe (R3): não repete o MESMO template de encontro 2x
         # seguidas no mesmo local (o mundo não é um carrossel).
         enc = _dedupe_encounter(enc, world)  # SPEC-233 R6
@@ -1289,6 +1423,7 @@ def storyteller_node(state: GameState):
             kind = (
                 "combat"
                 if enc.get("reason") in ("reinforcements", "controlled", "bounty_hunters")
+                or enc.get("always_combat")
                 else roll_encounter_type(danger)
             )
 
@@ -1685,9 +1820,7 @@ def storyteller_node(state: GameState):
     try:
         from services import rumors as _rumors_mod
 
-        story_engine = llm.with_structured_output(
-            StoryUpdateWithRumors if _rumors_mod.proposed_mode() == "on" else StoryUpdate
-        )
+        story_engine = llm.with_structured_output(_story_schema_for_rumors(_rumors_mod))
         # SPEC-223 R5: entrada do jogador delimitada como dado.
         update = story_engine.invoke([sys] + guard_messages(messages[-3:]))
 

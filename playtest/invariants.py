@@ -2462,6 +2462,10 @@ def check_rumors(state: dict, prev: dict | None, turn: int) -> list[Violation]:
     out: list[Violation] = []
     ids = {str(r.get("rumor_id")) for r in rows} | {str(r.get("seed_id")) for r in rows}
     sigs = _rumor_signatures(sim)
+    # SPEC-315 R28: so a alegacao VERDADEIRA e materializada pode aparecer como fato canonico
+    mat = [r for r in rows if r.get("truth") and r.get("materialized_day")]
+    mat_ids = {str(r.get("rumor_id")) for r in mat} | {str(r.get("seed_id")) for r in mat}
+    mat_sigs = _rumor_signatures({"rumors": mat})
 
     def leaks(blob: str) -> bool:
         low = blob.lower()
@@ -2479,7 +2483,11 @@ def check_rumors(state: dict, prev: dict | None, turn: int) -> list[Violation]:
         ],
     }
     for name, value in canonical.items():
-        if leaks(repr(value)):
+        blob = repr(value)
+        low_blob = blob.lower()
+        if any(i and i in blob for i in ids - mat_ids if len(i) >= 12) or any(
+            sg in low_blob for sg in set(sigs) - set(mat_sigs)
+        ):
             out.append(
                 _V("rumor.became_fact", "error", turn, f"boato apareceu em {name} (fato canonico)")
             )
@@ -2518,6 +2526,54 @@ def check_rumors(state: dict, prev: dict | None, turn: int) -> list[Violation]:
         logging.getLogger("rpg.playtest").debug(
             "rumor payload check skipped: %s", type(exc).__name__
         )
+    return out
+
+
+def check_rumor_adopt(state: dict, prev: dict | None, turn: int) -> list[Violation]:
+    """SPEC-315 R28: falso nunca materializa, materializa no maximo uma vez, achado dentro do teto
+    e NPC agendado nunca em dois lugares."""
+    from services import rumor_adoption as ra
+
+    sim = (state or {}).get("world_sim") or {}
+    rows = [r for r in sim.get("rumors") or [] if isinstance(r, dict) and r.get("claim")]
+    if not rows:
+        return []
+    out: list[Violation] = []
+    before = {
+        str(r.get("rumor_id")): r
+        for r in ((prev or {}).get("world_sim") or {}).get("rumors") or []
+        if isinstance(r, dict)
+    }
+    cap_gold = int(ra.const("ADOPTED_GOLD_MAX"))
+    caches: list[int] = []
+    for r in rows:
+        md = int(r.get("materialized_day", 0) or 0)
+        mat = r.get("materialization") or {}
+        old = int((before.get(str(r.get("rumor_id"))) or {}).get("materialized_day", 0) or 0)
+        if md and (not r.get("truth") or not r.get("adopted")):
+            out.append(_V("rumor_adopt.false_materialized", "error", turn, "falso materializou"))
+        if old and md and md != old:
+            out.append(_V("rumor_adopt.double_materialized", "error", turn, "materializou 2x"))
+        if md and mat.get("kind") == "cache":
+            caches.append(md)
+            from inventory import is_unique
+
+            if int(mat.get("gold", 0) or 0) > cap_gold or (
+                mat.get("item_id") and is_unique(str(mat["item_id"]))
+            ):
+                out.append(_V("rumor_adopt.loot_over_cap", "error", turn, "achado fora do teto"))
+    span = int(ra.const("LOOT_WINDOW_DAYS"))
+    caches.sort()
+    for a, b in zip(caches, caches[1:]):
+        if b - a < span:
+            out.append(
+                _V("rumor_adopt.loot_over_cap", "error", turn, "2 achados verdadeiros na janela")
+            )
+            break
+    for ref, entry in ((state.get("npc_sim") or {}).get("npcs") or {}).items():
+        pos = (entry or {}).get("pos") or {}
+        if (entry or {}).get("rumor_visit") and pos.get("location_id") and pos.get("arrive_day"):
+            out.append(_V("rumor_adopt.npc_teleport", "error", turn, f"{ref} em dois lugares"))
     return out
 
 
@@ -2614,6 +2670,7 @@ def _public_quest(q: dict, state: dict) -> dict:
 
 CHECKS: list[Check] = [
     check_rumors,
+    check_rumor_adopt,
     check_companions,
     check_law,
     check_reputation,

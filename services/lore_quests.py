@@ -741,4 +741,7 @@ def resolve_rumor_outcome(state: dict, quest: dict, day: int) -> tuple[str, dict
         return "inconclusivo", sim
     truth = api.truth_of(state, rid)
     outcome = "inconclusivo" if truth is None else ("confirmado" if truth else "desmentido")
+    outcome_of = getattr(api, "outcome_of", None)  # SPEC-315 R22: verdade nao materializada
+    if truth is not None and callable(outcome_of):
+        outcome = outcome_of(state, rid) or outcome
     return outcome, api.mark_resolved(sim, rid, outcome, int(day))
