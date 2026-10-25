@@ -5,6 +5,13 @@
 
 ---
 
+## 2026-10-24/25 — mundo vivo, onda 2 (regra de ouro e munição para a LLM)
+
+- **24/10:** revisão orquestrada (Fable) → specs 308–313 aprovadas; 308 `done`; staging com tudo do mundo vivo `on`; cláusula de mundo compartilhado nos Termos/Privacidade; sementes de NPC aprovadas. Regra de RAM/processos registrada em `CLAUDE.md`.
+- **25/10 — 309–313 `done`** (cada uma: executor Sonnet → revisão Sol → suíte completa → smoke real DeepSeek): 309 mundo percebido no narrador (P1: memória do arquivista vazava morte off-screen); 310 NPC sabe de si (11 falhas de stub sem `evidence_ids`); 311 planner vê o mundo percebido, motivos de preço, RAG por região (gatilho de replan invisível sem `RPG_LOG_LEVEL`); 312 rumores com semente (frequência: cooldown global de 2 dias; Víbora `truth=false`; 8 sementes secretas bloqueadas; proposta da LLM sempre falsa); 313 quests ancoradas em lore (P1: caça nunca concluía por `bestiary_id` ausente no inimigo).
+- **Novas specs `draft`:** 314 (plano de fação secreta vaza no prompt do NPC — achado no smoke da 310) e 315 (rumor adotado pelo motor).
+- Lições: o exit code de `… | tail` não é o do pytest; worktree sem `.env` roda no mock; `uv run` direto no worktree cria `.venv` parcial; Docker Desktop travado segurava 1,2 GB e causava o `supabase status` preso.
+
 ## 2026-10-20/23 — iniciativa mundo vivo (auditoria + entrevista + onda 0)
 
 - **20/10 — auditoria + entrevista do dono:** 5 exploradores (combate, NPCs, simulação, narração, lore/playtest); visão e ~40 decisões em [docs/mundo-vivo/VISAO.md](docs/mundo-vivo/VISAO.md). Specs reservadas 296–305 (296 onda 0; 297 pool entre mundos; 298 reputação 4 níveis; 299 lei/crime; 300 companheiros; 301 patentes; 302 motor de mundo; 303 calendário; 304 NPCs off-screen; 305 quests de mundo). Todas `approved` em 23/10 (decisões no fim de cada spec).

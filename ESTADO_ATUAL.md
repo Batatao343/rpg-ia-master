@@ -1,4 +1,4 @@
-# ESTADO_ATUAL — 2026-10-24
+# ESTADO_ATUAL — 2026-10-25
 
 > **Regra deste arquivo: substituir, nunca anexar.** Teto de 8 KB
 > (`uv run python scripts/spec_index.py estado-size` falha acima disso).
@@ -8,18 +8,18 @@
 
 ## Estado em 10 linhas
 
-- `main` = `b6592b3` (24/10). **Iniciativa mundo vivo concluída em código**: specs 296–307 na main; visão em [docs/mundo-vivo/VISAO.md](docs/mundo-vivo/VISAO.md).
-- `done`: 296 onda 0, 298 reputação, 299 lei/crime, 300 companheiros, 301 patentes, 302 motor de mundo, 303 estações/festas, 304 NPCs off-screen, 305 quests de mundo, 306 sementes +150, 307 calendário de Valoria (7 meses × 20 dias, Cinco Sinos, Ano 112 da Era 7). **297** pool entre mundos `in-progress` (falta leitura do dono das sementes → `on`).
-- Suíte offline: **~5.509 passed, 249 skipped** (24/10, SPEC-304, `-n 3`). `test_session_hardening_local` trava em `supabase status` com o stack local meio de pé (follow-up).
-- Smokes reais DeepSeek feitos para 296/298–307 (~US$ 0,10 no total). Bug achado e corrigido: NPC do narrador herdava relação do LLM fora de 0..10.
-- Staging `839f23f` (24/10): DeepSeek, Jev `primary`, teto R$ 5; **tudo do mundo vivo `on`** (dono aprovou 24/10): `RPG_NPC_KNOWLEDGE`, `RPG_WORLD_ENGINE`, `RPG_SHARED_POOL`, `RPG_LAW`, `RPG_NPC_WORLD`; companheiros e quests de mundo no default (`on`). SPEC-308 (regra de ouro dos eventos do motor) na main e no staging.
-- Regra (24/10): não disparar agentes em rajada; subagente só testes do escopo com `-n 2`; checar RAM (ver `CLAUDE.md`).
+- `main` = `5d7b6c5` (25/10). **Onda 2 do mundo vivo pousada**: 308 regra de ouro, 309 mundo percebido no narrador, 310 NPC sabe de si, 311 planner/preço/RAG por contexto, 312 rumores com semente, 313 quests ancoradas em lore — todas `done` com revisão Sol + smoke real DeepSeek (~US$ 0,25 na onda). Visão: [docs/mundo-vivo/VISAO.md](docs/mundo-vivo/VISAO.md).
+- Onda 1 (296–307) `done`; **297** pool entre mundos `in-progress` (fecha na 1ª promoção observada no staging).
+- **Novas `draft` aguardando o dono:** 314 (fações secretas vazam plano no prompt do NPC e no lore público; D1–D6) e 315 (rumor adotado pelo motor: LLM propõe alegação, motor decide verdade e materializa; D1–D8).
+- Suíte offline verde no pouso da 313 (`-n 2`, sem `test_session_hardening_local`, que trava em `supabase status`).
+- Staging `839f23f` (24/10) com tudo do mundo vivo `on`; deploy da onda 2 em andamento com `RPG_RUMORS=shadow` e `RPG_LORE_QUESTS=shadow` até observar conclusão real.
+- Regra (24/10): não disparar agentes em rajada; subagente só testes do escopo com `-n 2` e nunca `uv run` direto no worktree (cria `.venv` parcial); checar RAM (ver `CLAUDE.md`).
 
 ## Próximos 3 passos
 
-1. Onda 2 do mundo vivo (specs 308–313, todas aprovadas; 308 `done`): implementar 309 (mundo percebido no narrador) → 310/311 (NPC sabe de si; planner/preço/RAG) → 312 (rumores com semente) → 313 (quests ancoradas em lore). Revisão: [docs/mundo-vivo/REVISAO-ORQUESTRADA-2026-10-24.md](docs/mundo-vivo/REVISAO-ORQUESTRADA-2026-10-24.md).
-2. SPEC-297: pool `on` no staging; fechar `done` quando a 1ª promoção (hold 24 h + avaliação) for observada. Cláusula de termos (D3) aprovada pelo dono em 24/10 → escrever no texto legal (SPEC-222).
-3. Follow-ups: relock eval `npc_knowledge` (298 R23); grant por coluna p/ `rpg_api` antes de 297 `on` em produção; D7 (criaturas do pool em encontros); 301 F-1; 299 derrota→prisão; 304 P2-2/P2-5/P2-8; bot `faccionario` ir ao posto.
+1. Dono: aprovar 314 e 315 (ou ajustar decisões) → implementar 314 primeiro (vazamento ativo; a 311 só mitiga), depois 315.
+2. Staging: observar rumores/quests de lore em `shadow` → `on`; SPEC-297 fechar `done` na 1ª promoção.
+3. Follow-ups: 313 ver caça/entrega/escolta concluídas no real (bot que persegue a quest); 311 medir tokens do planner; 312 maiúsculas no nome de criatura; relock eval `npc_knowledge`; grant por coluna p/ `rpg_api` antes de 297 em produção; 304 P2s.
 
 ## Bloqueios no dono
 
@@ -37,6 +37,8 @@ Coluna "quando ele disser" = o que o coordenador executa na hora.
 | SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera a 104" → certificação cloud |
 | Plugins não usados | desligar em claude.ai → Settings → Plugins | — |
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
+| SPEC-314 / 315 | ler e aprovar as decisões (padrões recomendados em negrito) | "aprovo a 314/315" → implementar |
+| Rumores da lore (312 D1) e rotas de entrega (313 D8) | ler `data/world/rumor_seed_overrides.json` e `data/world/lore_quests.json` | ajustes → editar e reindexar |
 
 ## Decisões recentes (≤ 7 dias)
 
@@ -44,11 +46,13 @@ Gerado por `uv run python scripts/spec_index.py recent --days 7 --write ESTADO_A
 (roda dentro de `/spec-land` e `/estado`). Não edite à mão entre os marcadores.
 
 <!-- recent:start -->
-- 2026-10-24 · SPEC-313 `draft` — quests-ancoradas-em-lore
-- 2026-10-24 · SPEC-312 `draft` — rumores-com-semente
-- 2026-10-24 · SPEC-311 `draft` — planner-preco-rag-contextual
-- 2026-10-24 · SPEC-310 `draft` — npc-sabe-de-si
-- 2026-10-24 · SPEC-309 `draft` — mundo-percebido-no-narrador
+- 2026-10-25 · SPEC-315 `draft` — Rumores adotados pelo motor (a LLM inventa o conteúdo; o motor decide se é verdade e o materializa)
+- 2026-10-25 · SPEC-314 `draft` — Fações do mundo sob a regra de ouro (o NPC não entrega o plano secreto)
+- 2026-10-25 · SPEC-313 `done` — Quests ancoradas em lore (caça, entrega, escolta, rumor, mortos)
+- 2026-10-25 · SPEC-312 `done` — Rumores com semente (lore → motor sorteia → LLM costura; boato falso nunca vira fato)
+- 2026-10-25 · SPEC-311 `done` — Planner que vê o mundo percebido, preço com motivo e RAG de lore contextual
+- 2026-10-25 · SPEC-310 `done` — O NPC sabe de si (fação, patente, agenda, o que ouviu, motivações)
+- 2026-10-25 · SPEC-309 `done` — Mundo percebido no narrador: templates do motor, memória do dia e `<MUNDO_PERCEBIDO>`
 - 2026-10-24 · SPEC-308 `done` — Regra de ouro para eventos do motor de mundo
 - 2026-10-24 · SPEC-307 `done` — Calendário de Valoria: 7 meses, semana de 5 dias, data exibida
 - 2026-10-24 · SPEC-306 `done` — Expansão das tabelas de semente de NPC (+25 por tabela)
@@ -58,6 +62,10 @@ Gerado por `uv run python scripts/spec_index.py recent --days 7 --write ESTADO_A
 - 2026-10-24 · SPEC-301 `done` — Fações com patente: entrar, subir, sair, trair (e mover o mundo)
 - 2026-10-24 · SPEC-300 `done` — Companheiros com alma
 - 2026-10-24 · SPEC-299 `done` — Lei e crime por região
+- 2026-10-23 · SPEC-302 `done` — Motor de mundo: tick diário, pressões regionais e curva de tensão
+- 2026-10-23 · SPEC-298 `done` — Reputação em quatro níveis (NPC, fação, local, raça/origem)
+- 2026-10-23 · SPEC-297 `in-progress` — Pool compartilhado entre mundos (NPCs, criaturas, itens, locais)
+- 2026-10-23 · SPEC-296 `done` — mundo-vivo-onda0-religacoes
 <!-- recent:end -->
 
 ## Notas da onda em curso (coordenador)
@@ -69,7 +77,6 @@ devolvem o parágrafo no hand-back. Ao abrir a próxima onda, mova estas notas p
 
 <!-- onda:inserir-aqui -->
 
-- **20–23/10 (mundo vivo):** auditoria (5 frentes) + entrevista; specs 296–305 aprovadas; SPEC-236 e SPEC-296 `done`; staging com notícias entre NPCs `on`; pillow 13/certifi (CVE). Detalhe em `CHANGELOG.md` § 2026-10-20/23. Lição: script Python no Windows grava CRLF → índice diverge do CI; usar `newline=""`.
 
 ## Como rodar
 
