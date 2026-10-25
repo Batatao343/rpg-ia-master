@@ -7,13 +7,15 @@ import { OnboardingHint, onboardingDismissed } from "../components/OnboardingHin
 import { useVoiceInput } from "../voice/useVoiceInput";
 import { getChatSession, setChatSession } from "./chatSessionStore";
 import { Pressable } from "../design/primitives";
+import { TurnStatus } from "./TurnStatus";
+import { useTurnClock } from "../hooks/useTurnClock";
+import { IDLE_TURN, type TurnWait } from "../turnWait";
 
 /** SPEC-204: superfície do chat — arte de cena, atalhos de lugar e a narrativa. */
-export function ChatSurface({ data, log, thinking, thinkingLabel, busy, blocked, active, onAction, mobile = false, onOpenCombat }: {
+export function ChatSurface({ data, log, thinking, busy, blocked, active, onAction, mobile = false, onOpenCombat }: {
   data: GameResponse | null;
   log: LogEntry[];
   thinking: boolean;
-  thinkingLabel?: string | null;
   busy: boolean;
   blocked: boolean;
   active: boolean;
@@ -61,7 +63,7 @@ export function ChatSurface({ data, log, thinking, thinkingLabel, busy, blocked,
           </ul>
         )}
         {showOnboard && gameId && <OnboardingHint gameId={gameId} />}
-        <StoryLog entries={log} thinking={thinking} thinkingLabel={thinkingLabel} active={active}
+        <StoryLog entries={log} thinking={thinking} active={active}
           initialScroll={initialScroll}
           onScrollPosition={onScrollPosition} />
       </div>
@@ -84,8 +86,12 @@ export const Composer = forwardRef<HTMLInputElement, {
   onAction: (text: string, options?: ActionOptions) => void;
   /** SPEC-216: mobile em outra superficie — composer some e o microfone e liberado. */
   offSurface?: boolean;
-}>(function Composer({ data, busy, blocked, reactionCardId, onAction, offSurface = false }, inputRef) {
+  /** SPEC-320: espera do turno (fases, estágio, último erro) e "Tentar de novo". */
+  turn?: TurnWait;
+  onRetry?: () => void;
+}>(function Composer({ data, busy, blocked, reactionCardId, onAction, offSurface = false, turn = IDLE_TURN, onRetry }, inputRef) {
   const gameId = data?.game_id;
+  const elapsed = useTurnClock(busy);
   const [input, setInputState] = useState(() => getChatSession(gameId).draft);
   const setInput = (update: string | ((current: string) => string)) => {
     setInputState((current) => {
@@ -119,6 +125,9 @@ export const Composer = forwardRef<HTMLInputElement, {
 
   return (
     <form className={"actionbar ws-composer" + (offSurface ? " is-offsurface" : "")} onSubmit={submit}>
+      <TurnStatus key={turn.seq} phases={turn.ledger.phases} current={turn.ledger.current}
+        elapsedMs={turn.gotChunk ? 0 : elapsed} stage={turn.stage} lastError={turn.error}
+        onRetry={() => onRetry?.()} />
       <div className="actionbar__composer">
       <input
         ref={inputRef}
@@ -149,9 +158,9 @@ export const Composer = forwardRef<HTMLInputElement, {
         onClick={voice.phase === "recording" ? voice.stop : voice.start}>
         {voice.phase === "recording" ? "Parar" : "Voz"}
       </button>
-      {/* SPEC-201 A13: estado pendente com texto e aria-busy, não só "…". */}
-      <Pressable variant="primary" type="submit" effect="chat.pending" disabled={busy || blocked} aria-label="Agir"
-        pending={busy} pendingLabel="Enviando…">
+      {/* SPEC-201 A13 / SPEC-320 R4: nome acessível = texto visível; depois do ack, "Aguardando o narrador". */}
+      <Pressable variant="primary" type="submit" effect="chat.pending" disabled={busy || blocked}
+        pending={busy} pendingLabel={turn.acked ? "Aguardando o narrador" : undefined}>
         {fighting ? "Lutar" : "Agir"}
       </Pressable>
       </div>

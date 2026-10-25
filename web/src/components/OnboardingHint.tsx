@@ -44,8 +44,9 @@ export function OnboardingHint({ gameId }: { gameId: string }) {
         ))}
       </ul>
       <p className="onboard__tip">
-        Em combate, chips com suas habilidades aparecem acima da caixa de texto —
-        um toque executa a ação.
+        Em combate, abra a aba Combate para jogar Cartas — ou descreva a ação.
+        Cada turno leva uns 10 segundos: o narrador está pensando, não travou.
+        Prefere falar? O botão Voz grava a ação para você.
       </p>
     </aside>
   );

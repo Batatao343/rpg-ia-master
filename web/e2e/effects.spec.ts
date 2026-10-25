@@ -107,7 +107,8 @@ for (const [width, height] of [[1440, 900], [1280, 720]] as const) {
       await submit(page).click();
       const btn = page.locator('[data-effect="chat.pending"]');
       await expect(btn).toHaveAttribute("aria-busy", "true");
-      await expect(btn).toHaveText("Enviando…");
+      // SPEC-320 R4: sem "Enviando…"; antes do ack o rótulo é "Agir", depois "Aguardando o narrador".
+      await expect(btn).toHaveText(/^(Agir|Aguardando o narrador)$/);
       await expect(btn).toBeDisabled();
       expect(await css(btn, "cursor")).toBe("not-allowed");
       // R6: nenhum efeito bloqueia o resto — trocar de aba durante o pendente responde na hora.
@@ -174,6 +175,18 @@ for (const [width, height] of [[1440, 900], [1280, 720]] as const) {
       backend.releaseStream();
       await expect(page.locator('[data-effect="chat.pending"]')).toHaveText("Agir");
       expect(streams(backend)).toHaveLength(1);
+    });
+
+    test("turn.status.ink: traço de tinta anima só com efeitos e fica estático sem eles", async ({ page, backend }, info) => {
+      await openGame(page);
+      backend.delayStream();
+      await composer(page).fill("olho ao redor");
+      await composer(page).press("Enter");
+      const ink = page.locator('[data-effect="turn.status.ink"]');
+      await expect(ink).toBeVisible();
+      expect(await css(ink, "animation-name")).toBe(isMotion(info) ? "turn-ink" : "none");
+      backend.releaseStream();
+      await expect(ink).toHaveCount(0);
     });
 
     test("M09: entradas do chat não animam (histórico nem bloco novo) e não há blur", async ({ page }) => {

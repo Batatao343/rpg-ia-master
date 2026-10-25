@@ -868,6 +868,10 @@ export interface LogEntry {
   streaming?: boolean;  // true enquanto texto está sendo revelado (typewriter)
   visual?: VisualCue | null;
   onTypewriterDone?: () => void;  // fim real da animação (SPEC-235 R7)
+  /** SPEC-320 R11: abre capítulo (1ª narração da sessão / 1ª após trocar de local) → capitular. */
+  opening?: boolean;
+  /** SPEC-320 R13: narração mostrada, mas o turno falhou antes de salvar ("não salvo"). */
+  unsaved?: boolean;
 }
 
 // --- SPEC-211: dossiês vivos (GET /game/codex/dossiers) ---

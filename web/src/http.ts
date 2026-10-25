@@ -7,6 +7,8 @@ import { isCodeLike, messageFor, rateLimitNotice, STALE_PAGE_MESSAGE } from './l
 export { rateLimitNotice, STALE_PAGE_MESSAGE };
 
 export class HttpError extends Error {
+  /** SPEC-316 R5: erro do stream DEPOIS de a narração já ter sido mostrada. */
+  narrativeShown?: boolean;
   constructor(public status: number, public code: string, detail: string,
     public retryAfterSeconds?: number, public requestId?: string) { super(detail); }
 }

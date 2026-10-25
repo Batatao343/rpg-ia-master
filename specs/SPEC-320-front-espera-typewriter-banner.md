@@ -1,6 +1,6 @@
 # SPEC-320 — Front: espera do turno, typewriter e banner de erro
 
-> **Status:** `approved` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
+> **Status:** `in-progress` (implementada em 25/10; falta e2e/visual do coordenador e revisão independente; dono 25/10: "boa, aprovo")
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** nenhuma (funciona com o pseudo-streaming atual). Melhora sozinha quando SPEC-316 e SPEC-319 pousarem.
 > **Desbloqueia:** SPEC-321, SPEC-323 (que reaproveitam a linha de status do compositor)
@@ -97,6 +97,8 @@ Dois problemas menores entram aqui também:
   - Banner no fluxo (`:637-638`).
 - `web/src/components/OnboardingHint.tsx:46-48`: copy nova.
 - `web/src/design/effects.registry.ts` + `web/e2e/effects.spec.ts`: registrar o efeito "traço de tinta" da linha de status (`transform: scaleX`, desligado com effects-off) e remover `thinking__dot`.
+
+**Desvios da implementação (25/10):** (1) `TurnStatus` fica no `<form>` do compositor, acima da linha input/botões (a linha é flex horizontal). (2) Na tela de jogo o `Banner` é renderizado dentro do `.play` por um slot de `PlayScreen` (no fluxo, abaixo da topbar); nas outras telas segue fixo. (3) Modelo puro em `web/src/turnWait.ts` e corte de HTML em `web/src/revealHtml.ts` (mdLite roda 1× por texto; o typewriter só corta o HTML pronto). (4) "Tentar de novo" com turno em voo consulta `getOperation`: `completed` recupera o estado e invalida o fluxo SSE (`turnToken`); senão avisa e continua esperando; sem turno em voo reaproveita o pending. (5) Erro `narrative_shown` chega por `HttpError.narrativeShown` (api.ts). (6) Os e2e de banner/espera ficaram em `web/e2e/turn-wait.spec.ts` (não estendi `support-code.spec.ts`, que cobre o login).
 
 **Pular capitular com pontuação:** o model calcula `opening && !/^[—“"«]/.test(text.trimStart())`, porque CSS não consegue testar o caractere.
 

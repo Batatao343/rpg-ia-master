@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useReducer, useRef, useState,
   type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from "react";
 import type { ActionOptions, GameResponse, LogEntry } from "../types";
+import type { TurnWait } from "../turnWait";
 import { useVitalityHit, type EquipFn } from "../components/Hud";
 import { ChatSurface, Composer } from "./ChatSurface";
 import { ContextSurface } from "./ContextSurface";
@@ -25,7 +26,9 @@ interface Props {
   data: GameResponse | null;
   log: LogEntry[];
   thinking: boolean;
-  thinkingLabel?: string | null;
+  /** SPEC-320: espera do turno para a linha de status do compositor. */
+  turn?: TurnWait;
+  onRetryTurn?: () => void;
   busy: boolean;
   blocked: boolean;
   onAction: (text: string, options?: ActionOptions) => void;
@@ -60,7 +63,7 @@ function modalOpen(): boolean {
 /** SPEC-204: chat + UM painel de contexto (`chat` | `split` | `context`). Montado
  *  com `key={game_id}`: layout, rascunho e scroll nunca vazam entre jogos (R8). */
 export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(props, ref) {
-  const { owner, data, log, thinking, thinkingLabel, busy, blocked, onAction, onEquip } = props;
+  const { owner, data, log, thinking, turn, onRetryTurn, busy, blocked, onAction, onEquip } = props;
   const gameId = data?.game_id ?? null;
   const simulation = !!data?.combat_simulation?.enabled;
   const fighting = !!data?.combat?.active;
@@ -302,7 +305,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
       )}
 
       <div className={`ws ws--${mode}${isDragging ? " is-dragging" : ""}`} data-mode={mode} ref={gridRef} style={style}>
-        <ChatSurface data={data} log={log} thinking={thinking} thinkingLabel={thinkingLabel}
+        <ChatSurface data={data} log={log} thinking={thinking}
           busy={busy} blocked={blocked} active={chatVisible} onAction={onAction}
           mobile={mobile} onOpenCombat={() => openTab("combate")} />
         {mode === "split" && (
@@ -325,7 +328,8 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
             dismissedResult={props.dismissedResult} onDismissResult={props.onDismissResult} />
         </div>
         <Composer ref={composerRef} data={data} busy={busy} blocked={blocked}
-          reactionCardId={reactionCardId} onAction={onAction} offSurface={mobile && surface !== "chat"} />
+          reactionCardId={reactionCardId} onAction={onAction} offSurface={mobile && surface !== "chat"}
+          turn={turn} onRetry={onRetryTurn} />
       </div>
       {mobile && <MobileTabBar surface={surface} fighting={fighting} hidden={keyboardOpen} onSelect={selectSurface} />}
     </div>

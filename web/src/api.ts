@@ -174,18 +174,20 @@ export async function sendActionStream(
     handlers.onEvent?.(name, payload);
     const rid = typeof payload?.request_id === "string" ? payload.request_id : undefined;
     if (name === "error") {
+      // SPEC-316 R5 / SPEC-320: `narrative_shown` = a prosa já apareceu; o chamador mantém o texto.
+      const fail = (e: HttpError): HttpError => { if (payload.narrative_shown === true) e.narrativeShown = true; return e; };
       // SPEC-205: detail estruturado (ex.: invalid_target) preserva code/mensagem.
       if (payload.detail && typeof payload.detail === "object") {
         const formatted = formatDetail(payload.detail, "erro no stream");
-        throw new HttpError(Number(payload.code || 500), formatted.code, messageFor(formatted.code, formatted.message), undefined, rid);
+        throw fail(new HttpError(Number(payload.code || 500), formatted.code, messageFor(formatted.code, formatted.message), undefined, rid));
       }
       if (typeof payload.detail === "string") {
         const notice = rateLimitNotice(payload.detail, payload.retry_after_seconds);   // SPEC-219
-        if (notice) throw new HttpError(Number(payload.code || 429), payload.detail, notice, payload.retry_after_seconds, rid);
+        if (notice) throw fail(new HttpError(Number(payload.code || 429), payload.detail, notice, payload.retry_after_seconds, rid));
       }
       // SPEC-242 R5: ``error_code`` (string estavel) + ``request_id`` no evento de erro; ``code`` segue numerico.
       const errorCode = typeof payload.error_code === "string" ? payload.error_code : "stream_error";
-      throw new HttpError(Number(payload.code || 500), errorCode, messageFor(errorCode, payload.detail), undefined, rid);
+      throw fail(new HttpError(Number(payload.code || 500), errorCode, messageFor(errorCode, payload.detail), undefined, rid));
     }
     if (name === "phase") handlers.onPhase?.(payload.node);
     else if (name === "route") handlers.onRoute?.(payload.route);

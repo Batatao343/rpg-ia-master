@@ -1,5 +1,6 @@
-import { useRef, useState } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import type { ActionOptions, GameResponse, LogEntry } from "../types";
+import type { TurnWait } from "../turnWait";
 import { LevelUpModal, type LevelUpPick } from "./LevelUpModal";
 import { shards } from "./AccountScreen";
 import { Workspace, type WorkspaceHandle } from "../workspace/Workspace";
@@ -11,7 +12,10 @@ interface Props {
   data: GameResponse | null;
   log: LogEntry[];
   thinking: boolean;
-  thinkingLabel?: string | null;
+  /** SPEC-320: espera do turno + retry; banner entra no fluxo abaixo da topbar. */
+  turn?: TurnWait;
+  onRetryTurn?: () => void;
+  banner?: ReactNode;
   busy: boolean;
   onAction: (text: string, options?: ActionOptions) => void;
   onNew: () => void;
@@ -27,7 +31,7 @@ interface Props {
 
 /** SPEC-204: orquestrador da tela de jogo — topbar + workspace (chat + UM painel)
  *  + overlays. Controles táticos vivem só na aba Combate do workspace. */
-export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction, onNew, onLevelUp, onEquip, onPrepareCards, onLogout, onAccount, accountBalance, owner = "legacy" }: Props) {
+export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, busy, onAction, onNew, onLevelUp, onEquip, onPrepareCards, onLogout, onAccount, accountBalance, owner = "legacy" }: Props) {
   const [luDismissedKey, setLuDismissedKey] = useState<string | null>(null);
   const [dismissedResult, setDismissedResult] = useState<string | null>(null);
   const [reading, setReading] = useState(false); // memorial: ler a crônica
@@ -97,9 +101,10 @@ export function PlayScreen({ data, log, thinking, thinkingLabel, busy, onAction,
             onClick={onLogout} aria-label="Encerrar sessão">Sair</button>}
         </div>
       </header>
+      {banner}
 
       <Workspace key={data?.game_id ?? "sem-jogo"} ref={workspace} owner={owner} data={data} log={log}
-        thinking={thinking} thinkingLabel={thinkingLabel} busy={busy} blocked={blocked}
+        thinking={thinking} turn={turn} onRetryTurn={onRetryTurn} busy={busy} blocked={blocked}
         onAction={onAction} onEquip={onEquip}
         onPrepareCards={onPrepareCards} onOpenLevelUp={openLevelUp}
         dismissedResult={dismissedResult} onDismissResult={setDismissedResult} />

@@ -1,6 +1,9 @@
-import { Fragment, memo, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Fragment, memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { mdLite, roleLabel } from "../lib";
 import { useTypewriter } from "../hooks/useTypewriter";
+import { useEffectsEnabled } from "../design/motion";
+import { htmlToPlain, revealHtml } from "../revealHtml";
+import { openingAllowed } from "../turnWait";
 import type { LogEntry } from "../types";
 import { VisualArtwork } from "./VisualArtwork";
 import { shards } from "./AccountScreen";
@@ -9,10 +12,9 @@ import { shards } from "./AccountScreen";
 const BOTTOM_SLACK = 48;
 
 /** Memoizado (SPEC-204): trocar aba/modo/ratio re-renderiza o Workspace, não a narrativa. */
-export const StoryLog = memo(function StoryLog({ entries, thinking, thinkingLabel, active = true, initialScroll, onScrollPosition }: {
+export const StoryLog = memo(function StoryLog({ entries, thinking, active = true, initialScroll, onScrollPosition }: {
   entries: LogEntry[];
   thinking: boolean;
-  thinkingLabel?: string | null;
   /** Falso quando a superfície do chat está oculta (modo só-contexto). */
   active?: boolean;
   initialScroll?: { scrollTop: number | null; atBottom: boolean };
@@ -55,9 +57,20 @@ export const StoryLog = memo(function StoryLog({ entries, thinking, thinkingLabe
 
   const streaming = entries.some((entry) => entry.streaming);
 
+  // SPEC-320 R6: entradas em revelação se registram aqui; Esc/Espaço na região da história revela tudo.
+  const revealers = useRef(new Map<number, () => void>());
+  const registerReveal = useCallback((id: number, fn: (() => void) | null) => {
+    if (fn) revealers.current.set(id, fn); else revealers.current.delete(id);
+  }, []);
+  function onKeyDown(e: KeyboardEvent<HTMLElement>) {
+    if (e.target !== e.currentTarget || (e.key !== "Escape" && e.key !== " ") || revealers.current.size === 0) return;
+    e.preventDefault(); // Espaço não rola enquanto há algo a revelar
+    [...revealers.current.values()].forEach(fn => fn());
+  }
+
   return (
-    // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- região rolável precisa ser focável por teclado (WCAG 2.1.1)
-    <section className="story" aria-label="Narrativa" ref={storyRef} tabIndex={0} onScroll={onScroll}>
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex, jsx-a11y/no-noninteractive-element-interactions -- região rolável focável por teclado (WCAG 2.1.1); Esc/Espaço revelam o texto (SPEC-320 R6)
+    <section className="story" aria-label="Narrativa" ref={storyRef} tabIndex={0} onScroll={onScroll} onKeyDown={onKeyDown}>
       {/* SPEC-201 A08: um anúncio por bloco novo; aria-busy segura a leitura enquanto o texto escorre. */}
       <div className="log" role="log" aria-live="polite" aria-relevant="additions" aria-busy={streaming || thinking}>
         {entries.map((e, i) => {
@@ -72,25 +85,26 @@ export const StoryLog = memo(function StoryLog({ entries, thinking, thinkingLabe
                   <span>❧</span>
                 </div>
               )}
-              <LogEntryItem entry={e} />
+              <LogEntryItem entry={e} registerReveal={registerReveal} />
             </Fragment>
           );
         })}
       </div>
-      {thinking && (
-        <div className="thinking" aria-live="polite">
-          <span className="thinking__dot" />
-          <span className="thinking__dot" />
-          <span className="thinking__dot" />
-          <span className="thinking__label">{thinkingLabel || "o narrador tece o destino…"}</span>
-        </div>
-      )}
     </section>
   );
 });
 
-function LogEntryItem({ entry }: { entry: LogEntry }) {
-  const displayedText = useTypewriter(entry.text, entry.streaming, entry.onTypewriterDone);
+function LogEntryItem({ entry, registerReveal }: { entry: LogEntry; registerReveal: (id: number, fn: (() => void) | null) => void }) {
+  // R8: mdLite roda no máximo uma vez por texto recebido (chunk); a revelação só corta o HTML pronto.
+  const html = useMemo(() => mdLite(entry.text), [entry.text]);
+  const plain = useMemo(() => htmlToPlain(html), [html]);
+  const effects = useEffectsEnabled();
+  const { displayedText, reveal, revealing } = useTypewriter(plain, entry.streaming, entry.onTypewriterDone, { effects });
+  useEffect(() => {
+    registerReveal(entry.id, revealing ? reveal : null);
+    return () => registerReveal(entry.id, null);
+  }, [entry.id, revealing, reveal, registerReveal]);
+  const shownHtml = displayedText.length >= plain.length ? html : revealHtml(html, displayedText.length);
   const [costOpen, setCostOpen] = useState(false);
   const technical = entry.technicalCostUsd && /[1-9]/.test(entry.technicalCostUsd)
     ? `${entry.technicalCostExact ? "Custo técnico registrado" : "Estimativa de custo técnico"}: US$ ${entry.technicalCostUsd.replace(".", ",")}`
@@ -107,16 +121,21 @@ function LogEntryItem({ entry }: { entry: LogEntry }) {
     || (entry.role === "narrator" && (entry.type !== "STORY" || entry.speaker?.kind === "npc"));
 
   return (
-    <article className={"msg msg--" + (entry.role === "player" ? "player" : entry.type.toLowerCase())}>
+    // Toque/clique revela tudo (R6); o equivalente de teclado (Esc/Espaço) vive na região `.story`.
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
+    <article className={"msg msg--" + (entry.role === "player" ? "player" : entry.type.toLowerCase())}
+      data-opening={entry.opening && entry.role === "narrator" && openingAllowed(entry.text, true) ? "" : undefined}
+      onClick={revealing ? reveal : undefined}>
       {entry.visual && <VisualArtwork asset={entry.visual.asset}
         name={entry.visual.subject_name} caption={entry.visual.caption}
         className="msg__visual" />}
       {showRole && <p className="msg__role">{roleLabel(entry.role, entry.type, entry.speaker)}</p>}
       <div
         className="msg__body"
-        dangerouslySetInnerHTML={{ __html: mdLite(displayedText) }}
+        dangerouslySetInnerHTML={{ __html: shownHtml }}
       />
       {entry.streaming && <span className="msg__cursor" />}
+      {entry.unsaved && <span className="msg__unsaved">não salvo</span>}
       {entry.role === "narrator" && costText && !entry.streaming &&
         <span className="msg__cost">
           <button type="button" className="msg__cost-button" aria-expanded={costOpen}

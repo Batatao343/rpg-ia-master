@@ -28,6 +28,10 @@ import { AccountScreen, shards } from "./components/AccountScreen";
 import { ImageQuoteDialog } from "./components/ImageQuoteDialog";
 import { GeneratedArtCard } from "./components/GeneratedArtCard";
 import { TurnLatencyTracker, reportClientLatency } from "./lib/turnLatency";
+import {
+  IDLE_TURN, PHASE_TEXTS, ROUTE_TEXTS, addPhase, nextOpening, nextStage,
+  type OpeningMemo, type TurnWait,
+} from "./turnWait";
 
 /** Logout/troca de dono: pendências, layout do workspace e rascunhos em memória (SPEC-204 R9). */
 function clearOwner(owner: string) {
@@ -38,22 +42,6 @@ function clearOwner(owner: string) {
 
 const LS_KEY = "cronicas_game_id";
 
-// spec streaming-turno-sse (R4): textos curados por nó/rota do grafo.
-const PHASE_TEXTS: Record<string, string> = {
-  campaign_manager: "O mestre consulta os arcanos…",
-  dm_router: "O mestre decide o rumo…",
-  storyteller: "O narrador tece o destino…",
-  combat_agent: "⚔️ O aço encontra o aço…",
-  npc_actor: "🗣️ Vozes se erguem…",
-  loot_agent: "💰 Algo reluz entre os despojos…",
-  archivist: "O escriba registra a jornada…",
-};
-const ROUTE_TEXTS: Record<string, string> = {
-  combat_agent: "⚔️ O aço encontra o aço…",
-  npc_actor: "🗣️ Vozes se erguem…",
-  loot: "💰 Algo reluz entre os despojos…",
-  storyteller: "O narrador tece o destino…",
-};
 
 export function App() {
   type Screen = "bootstrap" | "auth" | "saves" | "create" | "simulator" | "play" | "account";
@@ -69,8 +57,12 @@ export function App() {
   const [log, setLog] = useState<LogEntry[]>([]);
   const [busy, setBusy] = useState(false);
   const [thinking, setThinking] = useState(false);
-  const [phaseLabel, setPhaseLabel] = useState<string | null>(null);
+  const [turn, setTurn] = useState<TurnWait>(IDLE_TURN);
+  const turnToken = useRef(0);
+  const openingMemo = useRef<OpeningMemo>({ gid: "", seen: false, loc: "" });
+  const resetTurn = useCallback(() => setTurn(t => ({ ...IDLE_TURN, seq: t.seq })), []);
   const [banner, setBanner] = useState<BannerState | null>(null);
+  const clearBanner = useCallback(() => setBanner(null), []);
   const [continueData, setContinueData] = useState<GameResponse | null>(null);
   const [saves, setSaves] = useState<SaveSummary[]>([]);
   const [authError, setAuthError] = useState("");
@@ -256,7 +248,7 @@ export function App() {
     safeStorage.remove(LS_KEY);
     gameId.current = null;
     setData(null); setContinueData(null); setLog([]);
-    setBanner(null); setPhaseLabel(null); setThinking(false);
+    setBanner(null); resetTurn(); setThinking(false);
     setAccountBalance(null); setSaves([]);
     setAuthConfig(previous => previous ? { ...previous, authenticated: false, user_id: undefined } : previous);
     const url = new URL(window.location.href);
@@ -326,17 +318,26 @@ export function App() {
     setAccountBalance(availableMilli);
   }
 
+  /** SPEC-320 R11: a narração abre capítulo (capitular)? 1ª da sessão ou 1ª após trocar de local. */
+  function markOpening(r: GameResponse): boolean {
+    const next = nextOpening(openingMemo.current, r.game_id || gameId.current || "",
+      r.world?.location_id || r.world?.location || "", r.message ?? "");
+    openingMemo.current = next.memo;
+    return next.opening;
+  }
+
   function onTurn(r: GameResponse): number {
     const generation = session.current;
     const entryId = logSeq.current++;
     gameId.current = r.game_id || gameId.current;
     if (gameId.current) safeStorage.set(LS_KEY, gameId.current);
 
+    const opening = markOpening(r);
     // Cria entrada com streaming=true, que ativa efeito typewriter
     setLog((prev) => [
       ...prev,
       { id: entryId, text: r.message, role: "narrator", type: r.message_type || "STORY", speaker: r.speaker ?? null,
-        streaming: true, visual: r.visual?.cue,
+        streaming: true, visual: r.visual?.cue, opening,
         // Fim REAL da animação (SPEC-235 R7), não um timer fixo que corta textos longos.
         onTypewriterDone: () => {
           if (session.current !== generation) return;
@@ -387,7 +388,7 @@ export function App() {
         art_offers: art.art_offers ?? prev.art_offers,
       } : prev);
       setImageQuote(null);
-      setBanner({ msg: "Imagem confirmada. O saldo foi reservado e a geração será processada.", kind: "warn" });
+      setBanner({ msg: "Imagem confirmada. O saldo foi reservado e a geração será processada.", kind: "info" });
       if (authRequired) void refreshBalance(owner.current, current.session);
     } catch (error) {
       if (session.current === current.session) setImageError("Não foi possível confirmar: " + errMsg(error));
@@ -462,8 +463,16 @@ export function App() {
     });
   }
 
+  /** SPEC-316: `replace` traz o texto final INTEIRO (guard/recibo mudou a prosa); nunca anexa. */
+  function replaceStreamText(text: string) {
+    const id = streamEntryId.current;
+    if (id === null) return;
+    setLog((prev) => prev.map((e) => (e.id === id ? { ...e, text } : e)));
+  }
+
   function appendChunk(chunk: string, done: boolean) {
     if (done) return;
+    setTurn(t => (t.gotChunk ? t : { ...t, gotChunk: true }));
     setLog((prev) => {
       const id = streamEntryId.current;
       const idx = id === null ? -1 : prev.findIndex((e) => e.id === id);
@@ -481,6 +490,7 @@ export function App() {
   function finishStreamEntry(r: GameResponse): number | null {
     const id = streamEntryId.current;
     streamEntryId.current = null;
+    const opening = id === null ? false : markOpening(r);
     setLog((prev) => {
       const idx = id === null ? -1 : prev.findIndex((e) => e.id === id);
       if (idx < 0) return prev; // nenhum chunk chegou — onTurn cuida
@@ -488,7 +498,7 @@ export function App() {
       return [
         ...prev.slice(0, idx),
         { ...entry, text: r.message, type: r.message_type || "STORY", speaker: r.speaker ?? null, streaming: false,
-          visual: entry.visual ?? r.visual?.cue },
+          visual: entry.visual ?? r.visual?.cue, opening, unsaved: false },
         ...prev.slice(idx + 1),
       ];
     });
@@ -512,8 +522,10 @@ export function App() {
   async function handleAction(text: string, options: ActionOptions = {}) {
     if (busy || !text.trim() || !gameId.current) return;
     const gid = gameId.current, generation = session.current, user = owner.current;
-    const active = () => session.current === generation && gameId.current === gid;
+    const token = ++turnToken.current; // "Tentar de novo" que recupera o turno invalida este fluxo (sem duplicar)
+    const active = () => session.current === generation && gameId.current === gid && turnToken.current === token;
     setBusy(true); setThinking(true);
+    setTurn(t => ({ ...IDLE_TURN, seq: t.seq + 1, stage: nextStage("idle", "submit") }));
     try {
       const old = loadPending(user, gid);
       if (old && old.payload.input_text !== text) throw new Error("Resolva a ação pendente antes de enviar outra.");
@@ -538,25 +550,37 @@ export function App() {
       }
       if (status.status === "running") throw new Error("Esta ação ainda está sendo processada. Consulte novamente em instantes.");
       pendingVisual.current = null;
+      // Retry depois de "não salvo": remove a narração órfã e o eco da ação (o mesmo action_id volta a rodar).
+      setLog(prev => {
+        const at = prev.findIndex(e => e.unsaved);
+        if (at < 0) return prev;
+        const echo = at > 0 && prev[at - 1].role === "player" ? at - 1 : at;
+        return [...prev.slice(0, echo), ...prev.slice(at + 1)];
+      });
       pushLog(operation.payload.input_text, "player", "STORY");
-      setPhaseLabel(PHASE_TEXTS.campaign_manager);
+      setTurn(t => ({ ...t, ledger: addPhase(t.ledger, PHASE_TEXTS.campaign_manager) }));
       let hadChunks = false;
       const latency = new TurnLatencyTracker(operation.operation_id, "stream");
       const reportLatency = () => void reportClientLatency(latency.summary(), api.sendClientLatency);
       try {
         latency.submit();
         const r = await api.sendActionStream(operation.payload.input_text, gid, {
-          onAck: () => latency.firstBytes(),
+          onAck: () => { latency.firstBytes(); if (active()) setTurn(t => ({ ...t, acked: true })); },
           onEvent: (name, payload) => latency.event(name, payload),
-          onPhase: node => { if (active()) setPhaseLabel(PHASE_TEXTS[node] ?? null); },
-          onRoute: route => { if (active()) setPhaseLabel(ROUTE_TEXTS[route] ?? PHASE_TEXTS.storyteller); },
+          onPhase: node => { if (active()) setTurn(t => ({ ...t, ledger: addPhase(t.ledger, PHASE_TEXTS[node] ?? null) })); },
+          onRoute: route => {
+            if (active()) setTurn(t => ({ ...t, ledger: addPhase(t.ledger, ROUTE_TEXTS[route] ?? PHASE_TEXTS.storyteller) }));
+          },
           onVisual: visual => { if (active()) attachStreamVisual(visual); },
           onChunk: (chunk, done) => {
             if (active()) {
               if (!done) hadChunks = true;
+              // SPEC-316: `done` = narração entregue, turno ainda NÃO salvo → selo "registrando…" até o `state`.
+              else if (hadChunks) setTurn(t => ({ ...t, stage: nextStage(t.stage, "narrative-done") }));
               appendChunk(chunk, done);
             }
           },
+          onReplace: text => { if (active()) replaceStreamText(text); },
         }, requestOptions);
         clearPending(user, gid);
         reportLatency();
@@ -567,6 +591,15 @@ export function App() {
         void refreshTurnCost(gid, operation.operation_id, entryId, generation, user);
       } catch (error) {
         if (!active()) return;
+        if (error instanceof api.HttpError && error.narrativeShown) {
+          // SPEC-316 R5/SPEC-320 R13: a narração JÁ foi mostrada e o turno falhou depois — mantém o texto
+          // ("não salvo"), preserva o pending e deixa "Tentar de novo" reenviar com o mesmo action_id.
+          const shown = streamEntryId.current;
+          streamEntryId.current = null; pendingVisual.current = null;
+          if (shown !== null) setLog(prev => prev.map(e => (e.id === shown ? { ...e, streaming: false, unsaved: true } : e)));
+          setTurn(t => ({ ...t, stage: nextStage(t.stage, "error-after-narration") }));
+          throw error;
+        }
         if (error instanceof api.HttpError && error.status < 500) {
           // A definitive refusal can never be retried as-is: release the input (SPEC-235 R2).
           if (shouldClearPending(error.status, error.code)) {
@@ -590,13 +623,48 @@ export function App() {
           void refreshTurnCost(gid, operation.operation_id, entryId, generation, user); }
       }
     } catch (error) {
-      if (active()) setBanner({ msg: "Ação não confirmada: " + errMsg(error), kind: "error", requestId: errRequestId(error) });
+      if (active()) {
+        const failure: BannerState = { msg: "Ação não confirmada: " + errMsg(error), kind: "error", requestId: errRequestId(error) };
+        setBanner(failure);
+        setTurn(t => ({ ...t, error: failure })); // o último erro fica na linha de status até o próximo turno (R10)
+      }
       // SPEC-205 R9: alvo velho — refaz a mira com o estado novo do servidor.
       if (error instanceof api.HttpError && error.code === "invalid_target" && active()) {
         try { const fresh = await api.getState(gid); if (active()) setData(fresh); } catch { /* o banner já explica */ }
       }
     } finally {
-      if (active()) { setThinking(false); setPhaseLabel(null); setBusy(false); }
+      if (active()) {
+        setThinking(false); setBusy(false);
+        // state (ou erro sem narração) destrava; só "falhou depois da narração" permanece para o retry.
+        setTurn(t => (t.stage === "failed-after-narration" ? t : { ...IDLE_TURN, seq: t.seq, error: t.error }));
+      }
+    }
+  }
+
+  /** "Tentar de novo" (SPEC-320 R3/R13): reaproveita o pending por operation_id — nunca cria envio novo. */
+  async function retryTurn() {
+    const gid = gameId.current;
+    if (!gid) return;
+    const pending = loadPending(owner.current, gid);
+    if (!pending) return;
+    if (!busy) { void handleAction(pending.payload.input_text); return; }
+    // Turno ainda em voo: pergunta ao servidor pelo mesmo operation_id em vez de reenviar.
+    try {
+      const status = await api.getOperation(gid, pending.operation_id);
+      if (status.status === "completed") {
+        const generation = session.current;
+        turnToken.current++; // o fluxo SSE ainda em voo passa a ser ignorado
+        streamEntryId.current = null; pendingVisual.current = null;
+        clearPending(owner.current, gid); setPending(null);
+        const restored = await api.getState(gid);
+        if (session.current !== generation || gameId.current !== gid) return;
+        setData(restored); resetTurn(); setThinking(false); setBusy(false);
+        await loadHistory(gid, generation);
+      } else {
+        setBanner({ msg: "O turno ainda está em andamento no servidor; continue esperando.", kind: "info" });
+      }
+    } catch (error) {
+      setBanner({ msg: "Não consegui consultar o turno: " + errMsg(error), kind: "warn", requestId: errRequestId(error) });
     }
   }
 
@@ -769,7 +837,7 @@ export function App() {
     <MotionConfig reducedMotion="user">
       <div className="atmosphere" aria-hidden />
       <EmberField />
-      <Banner state={banner} onDone={() => setBanner(null)} />
+      {screen !== "play" && <Banner state={banner} onDone={clearBanner} />}
       {imageQuote && imageQuote.session === session.current && screen === "play" &&
         <ImageQuoteDialog quote={imageQuote.quote} busy={imageBusy} error={imageError}
           onConfirm={() => void confirmImageQuote()} onCancel={() => setImageQuote(null)} />}
@@ -902,7 +970,9 @@ export function App() {
               data={data}
               log={log}
               thinking={thinking}
-              thinkingLabel={phaseLabel}
+              turn={turn}
+              onRetryTurn={retryTurn}
+              banner={<Banner state={banner} onDone={clearBanner} />}
               busy={busy}
               onAction={handleAction}
               onNew={handleNew}
