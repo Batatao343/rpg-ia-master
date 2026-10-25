@@ -65,3 +65,22 @@ test('status table decides whether the pending command is dropped (R2)', async (
   ];
   for (const [status, code, expected] of table) assert.equal(shouldClearPending(status, code), expected, `${status} ${code}`);
 });
+
+test('clearPendingIfOwn clears only the pending of that operation (SPEC-320 P1-1)', async () => {
+  storage();
+  const pending = await load();
+  const first = await pending.preparePending('a', 'game', 'Observo', {});
+  assert.equal(pending.clearPendingIfOwn('a', 'game', first.operation_id), true);
+  assert.equal(pending.loadPending('a', 'game'), null);
+});
+
+test('clearPendingIfOwn keeps a newer operation when an old flow finishes late', async () => {
+  storage();
+  const pending = await load();
+  const old = await pending.preparePending('a', 'game', 'Primeira', {});
+  pending.clearPending('a', 'game');
+  const newer = await pending.preparePending('a', 'game', 'Segunda', {});
+  assert.notEqual(newer.operation_id, old.operation_id);
+  assert.equal(pending.clearPendingIfOwn('a', 'game', old.operation_id), false);
+  assert.equal(pending.loadPending('a', 'game')?.operation_id, newer.operation_id);
+});

@@ -7,7 +7,7 @@ import { installNativeLifecycle } from "./native/lifecycle";
 import { decideBack } from "./native/backPolicy";
 import { offChatSurface, returnToChat } from "./workspace/mobileSurface";
 import { safeStorage } from "./safeStorage";
-import { preparePending, loadPending, clearPending, clearOwner as clearPendingOwner, shouldClearPending, type PendingOperation } from "./pendingOperation";
+import { preparePending, loadPending, clearPending, clearPendingIfOwn, clearOwner as clearPendingOwner, shouldClearPending, type PendingOperation } from "./pendingOperation";
 import { clearWorkspaceOwner } from "./workspace/workspaceStorage";
 import { forgetAllChatSessions } from "./workspace/chatSessionStore";
 import { looksDegraded, speakerFromHistory } from "./lib";
@@ -60,6 +60,7 @@ export function App() {
   const [turn, setTurn] = useState<TurnWait>(IDLE_TURN);
   const turnToken = useRef(0);
   const retryBypass = useRef(false);
+  const retrying = useRef(false);
   const openingMemo = useRef<OpeningMemo>({ gid: "", seen: false, loc: "" });
   const resetTurn = useCallback(() => setTurn(t => ({ ...IDLE_TURN, seq: t.seq })), []);
   const [banner, setBanner] = useState<BannerState | null>(null);
@@ -563,9 +564,7 @@ export function App() {
         return [...prev.slice(0, echo), ...prev.slice(at + 1)];
       });
       // P1-1: um fluxo antigo (já invalidado) nunca apaga o pending de um turno mais novo.
-      const clearOwnPending = () => {
-        if (loadPending(user, gid)?.operation_id === operation.operation_id) clearPending(user, gid);
-      };
+      const clearOwnPending = () => { clearPendingIfOwn(user, gid, operation.operation_id); };
       pushLog(operation.payload.input_text, "player", "STORY");
       setTurn(t => ({ ...t, ledger: addPhase(t.ledger, PHASE_TEXTS.campaign_manager) }));
       let hadChunks = false;
@@ -657,7 +656,12 @@ export function App() {
   /** "Tentar de novo" (SPEC-320 R3/R13): reaproveita o pending por operation_id — nunca cria envio novo. */
   async function retryTurn() {
     const gid = gameId.current;
-    if (!gid) return;
+    if (!gid || retrying.current) return; // F-2: duplo clique enquanto getOperation voa
+    retrying.current = true;
+    try { await retryTurnInner(gid); } finally { retrying.current = false; }
+  }
+
+  async function retryTurnInner(gid: string) {
     const pending = loadPending(owner.current, gid);
     if (!pending) return;
     if (!busy) { void handleAction(pending.payload.input_text); return; }
@@ -680,7 +684,12 @@ export function App() {
         // `unknown`/`failed`: o fluxo está pendurado. Abandona o SSE e repete o MESMO action_id (idempotente).
         turnToken.current++;
         streamEntryId.current = null; pendingVisual.current = null;
-        setLog(prev => prev.filter(e => e.role !== "narrator" || !e.streaming));
+        // F-3: some a narração em voo e o eco do envio abandonado (o reenvio empurra o seu).
+        setLog(prev => {
+          const kept = prev.filter(e => e.role !== "narrator" || !e.streaming);
+          const echo = kept.map(e => e.role === "player" && e.text === pending.payload.input_text).lastIndexOf(true);
+          return echo < 0 ? kept : [...kept.slice(0, echo), ...kept.slice(echo + 1)];
+        });
         setThinking(false); setBusy(false); resetTurn();
         setBanner({ msg: "O turno não respondeu; reenviando a mesma ação.", kind: "warn" });
         retryBypass.current = true;

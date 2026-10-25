@@ -188,9 +188,18 @@ Staging, conta logada, DeepSeek. Sem LLM extra além dos turnos normais: ~4 turn
 - **Contratos e2e protegidos:** se alguma asserção em `web/e2e/contracts` cobrir "Enviando…" ou `.thinking`, a mudança passa pelo fluxo `eval-governance` (`/eval-publish`). Quem implementa não altera o contrato na mesma tarefa.
 - **Saves antigos:** nada muda no estado persistido; `opening` é derivado no cliente.
 - **MockLLM:** sem impacto, porque a mudança é só de front.
+- **Perfil legacy (F-4):** `getOperation` devolve `unknown` no perfil legacy; "Tentar de novo" com turno em voo cai então no ramo "stream pendurado" (abandona o SSE e repete o mesmo `action_id`, idempotente). Aceito: o perfil legacy não tem login e serializa por processo.
 - **Conflito de arquivos:** toca `styles.css`. Pode rodar antes da 321 ou da 322, mas não em paralelo com elas.
 
 ## 8. Decisões do dono
 
 - **D1 — ritmo do typewriter.** **Recomendado: teto de 2,5 s por beat agora, com toque para completar; reavaliar quando a SPEC-319 trouxer streaming de tokens.** A alternativa é reveal instantâneo como padrão, com o typewriter opcional nas configurações.
 - **D2 — limiares da espera.** **Recomendado: tranquilização aos 8 s e retry aos 25 s.** Ajustáveis por constante.
+
+## Histórico de mudanças
+
+- 2026-10-25 — Spec aprovada pelo dono ("boa, aprovo"), padrões recomendados.
+- 2026-10-25 — Implementação (`f957fe13`); revisão independente: `CHANGES_REQUIRED` (P1-1 corrida do pending, P1-2 sem e2e do contrato SSE da 316, P2-1..P2-10).
+- 2026-10-25 — Correções da revisão (`89ce60d2`): `clearOwnPending`, fixture SSE controlada + e2e 316, região viva única, typewriter por ref, saída para stream pendurado.
+- 2026-10-25 — Regressões do e2e do coordenador corrigidas (`5794f216`): região `aria-live` sem `role=status`, erro sem texto duplicado, id de stream síncrono, barra de pending sobre "Tentar de novo", combate usa "Lutar".
+- 2026-10-25 — Re-revisão: `APPROVED_WITH_FOLLOWUPS`; follow-ups F-1..F-4 aplicados (`clearPendingIfOwn` + testes, guarda de duplo clique no retry, eco removido no reenvio, nota do perfil legacy).

@@ -48,6 +48,12 @@ export function shouldClearPending(status: number, code: string): boolean {
 }
 
 export function clearPending(owner: string, game: string) { safeStorage.remove(key(owner, game)); }
+/** SPEC-320 P1-1: só apaga se o pending gravado ainda é desta operação (fluxo antigo nunca pisa no turno novo). */
+export function clearPendingIfOwn(owner: string, game: string, operationId: string): boolean {
+  if (loadPending(owner, game)?.operation_id !== operationId) return false;
+  clearPending(owner, game);
+  return true;
+}
 export function clearOwner(owner: string) {
   safeStorage.keys().filter(k => k.startsWith(PREFIX + owner + ':')).forEach(k => safeStorage.remove(k));
 }

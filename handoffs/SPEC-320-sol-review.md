@@ -67,3 +67,49 @@ cd web && npx tsc --noEmit -p . → sem erros
 cd web && npx eslint <11 arquivos alterados em src/> → sem achados
 Playwright/build: não rodados (coordenador)
 ```
+
+## Re-review (delta `f957fe13..5794f216`)
+
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
+> **Revisor:** Sol (Opus) · **Data:** 2026-10-25 · **Commits revisados:** `89ce60d2` (correções da revisão), `5794f216` (regressões de e2e)
+
+Revisei só `git diff f957fe13 5794f216`.
+
+| ID | Status | Evidência |
+|---|---|---|
+| P1-1 | **corrigido** | `App.tsx` `clearOwnPending()` só apaga quando `loadPending(...).operation_id === operation.operation_id`. Cobre os três pontos: sucesso do stream, POST de fallback e 4xx definitivo. O ramo `completed` do `retryTurn` continua com `clearPending` incondicional, o que está certo: `busy` segue verdadeiro até ali, então não existe pending mais novo. Sem teste (ver F-1). |
+| P1-2 | **corrigido** | `turn-wait.spec.ts` ganhou um SSE controlado (o `fetch` é trocado por um `ReadableStream`). Os casos cobrem: ack → "Aguardando o narrador" + `aria-busy`; "registrando…" com o envio travado até o `state`; `replace` trocando o texto inteiro, sem anexar e sem redigitar; `narrative_shown` → "não salvo" com zero POST, retry com exatamente +1 stream e o **mesmo** `action_id`; "Lutar" em combate com `exact`. `combat-outcome.spec.ts` Agir→Lutar é legítimo: o fixture está em combate e o nome acessível agora é o texto visível. O arquivo não é protegido. |
+| P2-1 | corrigido | `useTypewriter.ts` `shownRef`: `idx`/`perTick` saem do ref, não do updater. |
+| P2-2 | corrigido | `running` → "continue esperando". `unknown`/`failed` → abandona o SSE (`turnToken++`) e repete o mesmo `action_id` via `handleAction` com `retryBypass` de uso único. O re-POST não é cego: vem depois de `getOperation` e é idempotente por `action_id` (hosted responde 409 `operation_in_progress` ou replay do recibo). |
+| P2-3 | corrigido | `resetTurn()` em `discardPending`, `handleContinueSave` e `handleNew`. |
+| P2-4 | corrigido | No ramo `completed`, `busy` só cai depois de `loadHistory`. |
+| P2-5 | corrigido | `onFocusInput` devolve o foco ao input (o e2e assere `toBeFocused`). |
+| P2-6 | corrigido | Uma única `<span class="sr-only" aria-live="polite" aria-atomic>`, sem `role=status`, só com a fase atual, o aviso ou "registrando…". Livro-razão e botões ficam fora dela. A linha de erro virou "O último envio falhou; veja o aviso acima." com `aria-hidden`, então só o banner `alert` anuncia o erro. Axe roda na espera e no "registrando". |
+| P2-7 | corrigido | Ramo `narrativeShown`: um 4xx definitivo descarta o pending e não entra em `failed-after-narration`. |
+| P2-8 | corrigido | Espaço com foco na `.story`, `info`/`warn` sumindo em 9 s, axe, contagem de POST. Falta só `Esc` (o mesmo handler; aceitável). |
+| P2-9 | corrigido | Texto que não é prefixo do já exibido é revelado direto. |
+| P2-10 | corrigido | `.turn-status` não é renderizada quando vazia; a região viva fica fora dela. |
+
+Mudanças novas conferidas:
+- `ensureStreamId()`: aloca o id de forma síncrona antes do `setLog`, o que fecha a janela em que `replace`/erro no mesmo tick do 1º chunk achava `streamEntryId === null`. Correto.
+- `.pending-operation.is-busy { pointer-events: none }`: os botões já estão `disabled` durante o turno, então só deixa de cobrir "Tentar de novo".
+- `.is-raised { bottom: 12rem }` em `failed-after-narration`: é paliativo de layout. Nesse estágio a barra e o "Tentar de novo" fazem a mesma coisa (`handleAction` com o mesmo pending). A SPEC-321 deve unificar.
+
+### Follow-ups (P2, não bloqueiam)
+
+| ID | Arquivo:linha | Problema | Correção |
+|---|---|---|---|
+| F-1 | `web/src/App.tsx` (`clearOwnPending`) | P1-1 não tem teste. Um teste unitário é viável e barato: extrair `clearPendingIfOwn(owner, game, operationId)` para `pendingOperation.ts`, que já tem testes `node:test` com `safeStorage`. Casos: grava A, `clearPendingIfOwn(A)` limpa; grava B, `clearPendingIfOwn(A)` não limpa. | Extrair o helper e testar. 2 casos, ~15 linhas. |
+| F-2 | `App.tsx` `retryTurn`, ramo `unknown`/`failed` | Não há trava enquanto o `getOperation` está em voo. Dois cliques rápidos em "Tentar de novo" (< ~100 ms) disparam dois reenvios com o mesmo `action_id`. O segundo invalida o primeiro e o servidor responde 409 ou replay. Não há cobrança dupla, mas sai um banner de erro espúrio. | Ref `retrying` que ignora cliques até o `getOperation` resolver. |
+| F-3 | `App.tsx` `retryTurn`, ramo `unknown`/`failed` | O `setLog` remove só a narração em streaming. O eco do jogador do envio abandonado fica, e o `handleAction` faz `pushLog` de novo: a ação aparece duas vezes no log. | Remover também o eco `player` imediatamente anterior, como já se faz com `unsaved`. |
+| F-4 | `App.tsx` `retryTurn` + `api.py:4198` | No perfil legacy, `getOperation` responde `unknown` mesmo com o turno rodando, então todo "Tentar de novo" aos 25 s reenvia. É idempotente por `action_id` (o legacy serializa por processo), mas o texto "O turno não respondeu" pode ser falso localmente. | Aceitável (legacy = dev). Se incomodar, distinguir pela flag `legacy: true` da resposta. |
+
+### Comandos rodados (re-review)
+
+```text
+git diff f957fe13 5794f216 --stat → 8 arquivos, +341/-68
+cd web && npm test → 166 pass, 0 fail
+cd web && npx tsc --noEmit -p . → exit 0
+cd web && npx eslint App.tsx useTypewriter.ts TurnStatus.tsx ChatSurface.tsx → sem achados
+Playwright/build: não rodados (executor: turn-wait 18/18, critical-journeys 36/36, combat-outcome 2/2; 1 falha de perf em effects sensível a carga, passa isolada)
+```
