@@ -1,5 +1,5 @@
 {
-  "commit_sha": "223a0c5d7770468e7eccc040f42ae55566d65c41",
+  "commit_sha": "ff815496e85cf111533794b9d7c69184016f463d",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -29079,7 +29079,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 783
+        "line": 798
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._apply_proposed_rumors",
@@ -29090,7 +29090,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 674
+        "line": 689
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._cal_of",
@@ -29101,7 +29101,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 545
+        "line": 560
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._cast_match",
@@ -29123,7 +29123,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 501
+        "line": 516
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._dedupe_encounter",
@@ -29134,7 +29134,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 517
+        "line": 532
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -29145,7 +29145,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 692
+        "line": 707
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._engine_owns_factions",
@@ -29156,7 +29156,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 319
+        "line": 334
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._gancho_novo_block",
@@ -29167,7 +29167,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 439
+        "line": 454
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._guard_mediation_secret",
@@ -29200,7 +29200,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 429
+        "line": 444
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._log_narrative_rejected",
@@ -29211,7 +29211,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 356
+        "line": 371
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._mediated_subject_view",
@@ -29222,7 +29222,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 378
+        "line": 393
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._mediation_clause",
@@ -29233,7 +29233,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 809
+        "line": 830
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._narrate_world",
@@ -29244,7 +29244,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 762
+        "line": 777
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._npc_beliefs_update",
@@ -29255,7 +29255,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 338
+        "line": 353
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._npc_fallback_clause",
@@ -29266,7 +29266,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 703
+        "line": 718
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._perceive_world",
@@ -29277,7 +29277,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 699
+        "line": 714
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._perception_state",
@@ -29288,7 +29288,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 472
+        "line": 487
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._player_facing_note",
@@ -29299,7 +29299,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 539
+        "line": 554
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._pool_enabled",
@@ -29332,6 +29332,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
+        "line": 319
+      },
+      "source": "module:agents.storyteller",
+      "target": "symbol:agents.storyteller._rumor_proposal_hint",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/storyteller.py",
         "line": 245
       },
       "source": "module:agents.storyteller",
@@ -29343,7 +29354,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 680
+        "line": 695
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._season_line",
@@ -29354,7 +29365,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 533
+        "line": 548
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._typed_by_player",
@@ -29365,7 +29376,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 555
+        "line": 570
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._with_new_npc",
@@ -29376,7 +29387,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 874
+        "line": 895
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._world_quest_completions",
@@ -29387,7 +29398,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 840
+        "line": 861
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._world_quests_tick",
@@ -29398,7 +29409,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 819
+        "line": 840
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller._world_tick",
@@ -29420,7 +29431,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 889
+        "line": 910
       },
       "source": "module:agents.storyteller",
       "target": "symbol:agents.storyteller.storyteller_node",
@@ -48362,7 +48373,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 80
+        "line": 86
       },
       "source": "module:scripts.build_rumor_seeds",
       "target": "symbol:scripts.build_rumor_seeds._entities",
@@ -48373,7 +48384,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 76
+        "line": 82
       },
       "source": "module:scripts.build_rumor_seeds",
       "target": "symbol:scripts.build_rumor_seeds._json",
@@ -48384,7 +48395,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 128
+        "line": 134
       },
       "source": "module:scripts.build_rumor_seeds",
       "target": "symbol:scripts.build_rumor_seeds._location_index",
@@ -48395,7 +48406,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 86
+        "line": 92
       },
       "source": "module:scripts.build_rumor_seeds",
       "target": "symbol:scripts.build_rumor_seeds._strip_article",
@@ -48406,7 +48417,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 189
+        "line": 195
       },
       "source": "module:scripts.build_rumor_seeds",
       "target": "symbol:scripts.build_rumor_seeds._subject",
@@ -48417,7 +48428,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 232
+        "line": 238
       },
       "source": "module:scripts.build_rumor_seeds",
       "target": "symbol:scripts.build_rumor_seeds.avistamento_seeds",
@@ -48428,7 +48439,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 265
+        "line": 274
       },
       "source": "module:scripts.build_rumor_seeds",
       "target": "symbol:scripts.build_rumor_seeds.build",
@@ -48439,7 +48450,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 168
+        "line": 174
       },
       "source": "module:scripts.build_rumor_seeds",
       "target": "symbol:scripts.build_rumor_seeds.find_entities",
@@ -48450,7 +48461,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 64
+        "line": 70
       },
       "source": "module:scripts.build_rumor_seeds",
       "target": "symbol:scripts.build_rumor_seeds.fold",
@@ -48461,7 +48472,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 259
+        "line": 268
       },
       "source": "module:scripts.build_rumor_seeds",
       "target": "symbol:scripts.build_rumor_seeds.load_overrides",
@@ -48472,7 +48483,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 198
+        "line": 204
       },
       "source": "module:scripts.build_rumor_seeds",
       "target": "symbol:scripts.build_rumor_seeds.lore_seeds",
@@ -48483,7 +48494,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 294
+        "line": 303
       },
       "source": "module:scripts.build_rumor_seeds",
       "target": "symbol:scripts.build_rumor_seeds.main",
@@ -48494,7 +48505,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 90
+        "line": 96
       },
       "source": "module:scripts.build_rumor_seeds",
       "target": "symbol:scripts.build_rumor_seeds.parse_lore",
@@ -48505,7 +48516,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 290
+        "line": 299
       },
       "source": "module:scripts.build_rumor_seeds",
       "target": "symbol:scripts.build_rumor_seeds.render",
@@ -48516,7 +48527,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 139
+        "line": 145
       },
       "source": "module:scripts.build_rumor_seeds",
       "target": "symbol:scripts.build_rumor_seeds.resolve_tags",
@@ -48527,7 +48538,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 72
+        "line": 78
       },
       "source": "module:scripts.build_rumor_seeds",
       "target": "symbol:scripts.build_rumor_seeds.slug",
@@ -55908,7 +55919,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/ambient.py",
-        "line": 159
+        "line": 93
+      },
+      "source": "module:services.ambient",
+      "target": "symbol:services.ambient._fifo_cap",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/ambient.py",
+        "line": 175
       },
       "source": "module:services.ambient",
       "target": "symbol:services.ambient.ambient_block",
@@ -55919,7 +55941,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/ambient.py",
-        "line": 93
+        "line": 109
       },
       "source": "module:services.ambient",
       "target": "symbol:services.ambient.append_news",
@@ -55941,7 +55963,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/ambient.py",
-        "line": 131
+        "line": 147
       },
       "source": "module:services.ambient",
       "target": "symbol:services.ambient.heard_block",
@@ -75917,7 +75939,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 707
+        "line": 708
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors._apply_proposal",
@@ -75961,7 +75983,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 587
+        "line": 588
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors._digits",
@@ -75972,7 +75994,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 611
+        "line": 612
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors._duplicate",
@@ -76016,7 +76038,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 663
+        "line": 664
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors._get",
@@ -76071,7 +76093,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 591
+        "line": 592
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors._reject_text",
@@ -76115,7 +76137,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 465
+        "line": 466
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors._settlement",
@@ -76148,7 +76170,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 694
+        "line": 695
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors._subject_of",
@@ -76170,7 +76192,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 667
+        "line": 668
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors._validate_proposal",
@@ -76181,7 +76203,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 636
+        "line": 637
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors.accept_proposed",
@@ -76203,7 +76225,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 475
+        "line": 476
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors.channel_of",
@@ -76269,7 +76291,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 543
+        "line": 544
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors.from_item",
@@ -76291,7 +76313,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 755
+        "line": 756
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors.investigable",
@@ -76324,7 +76346,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 498
+        "line": 499
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors.limit_perceived",
@@ -76346,7 +76368,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 525
+        "line": 526
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors.mark_perceived",
@@ -76357,7 +76379,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 790
+        "line": 791
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors.mark_resolved",
@@ -76379,7 +76401,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 557
+        "line": 558
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors.news_extra",
@@ -76390,7 +76412,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 494
+        "line": 495
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors.perceivable",
@@ -76412,7 +76434,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 565
+        "line": 566
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors.prune_news",
@@ -76423,7 +76445,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 579
+        "line": 580
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors.public_kind",
@@ -76434,7 +76456,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 457
+        "line": 458
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors.public_names",
@@ -76489,7 +76511,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 449
+        "line": 450
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors.text_for",
@@ -76511,7 +76533,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 784
+        "line": 785
       },
       "source": "module:services.rumors",
       "target": "symbol:services.rumors.truth_of",
@@ -161156,6 +161178,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec312_perception.py",
+        "line": 262
+      },
+      "source": "module:tests.test_spec312_perception",
+      "target": "symbol:tests.test_spec312_perception.test_avistamento_text_has_article_and_reads_naturally",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec312_perception.py",
         "line": 81
       },
       "source": "module:tests.test_spec312_perception",
@@ -161182,6 +161215,17 @@
       },
       "source": "module:tests.test_spec312_perception",
       "target": "symbol:tests.test_spec312_perception.test_heard_channel_requires_location_heard_and_215_on",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec312_perception.py",
+        "line": 240
+      },
+      "source": "module:tests.test_spec312_perception",
+      "target": "symbol:tests.test_spec312_perception.test_live_rumor_survives_news_fifo_cap",
       "type": "defines"
     },
     {
@@ -161530,6 +161574,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec312_proposed.py",
+        "line": 180
+      },
+      "source": "module:tests.test_spec312_proposed",
+      "target": "symbol:tests.test_spec312_proposed.test_function_calling_schema_exposes_proposed_rumors_only_when_on",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec312_proposed.py",
         "line": 39
       },
       "source": "module:tests.test_spec312_proposed",
@@ -161545,6 +161600,17 @@
       },
       "source": "module:tests.test_spec312_proposed",
       "target": "symbol:tests.test_spec312_proposed.test_only_one_per_turn",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec312_proposed.py",
+        "line": 192
+      },
+      "source": "module:tests.test_spec312_proposed",
+      "target": "symbol:tests.test_spec312_proposed.test_prompt_hint_only_when_proposed_on",
       "type": "defines"
     },
     {
@@ -161622,6 +161688,17 @@
       },
       "source": "module:tests.test_spec312_proposed",
       "target": "symbol:tests.test_spec312_proposed.test_rejects_when_quarantined",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec312_proposed.py",
+        "line": 198
+      },
+      "source": "module:tests.test_spec312_proposed",
+      "target": "symbol:tests.test_spec312_proposed.test_seen_event_logged_every_turn_with_flag_on",
       "type": "defines"
     },
     {
@@ -173344,7 +173421,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 519
+        "line": 534
       },
       "source": "symbol:agents.storyteller._deterministic_story_fallback",
       "target": "symbol:agents.storyteller._player_facing_note",
@@ -173355,7 +173432,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 450
+        "line": 465
       },
       "source": "symbol:agents.storyteller._guard_mediation_secret",
       "target": "symbol:agents.storyteller._mediated_subject_view",
@@ -173366,7 +173443,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 435
+        "line": 450
       },
       "source": "symbol:agents.storyteller._log_narrative_rejected",
       "target": "symbol:observability.telemetry.log_event",
@@ -173377,7 +173454,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 405
+        "line": 420
       },
       "source": "symbol:agents.storyteller._mediation_clause",
       "target": "symbol:agents.storyteller._mediated_subject_view",
@@ -173388,7 +173465,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 815
+        "line": 836
       },
       "source": "symbol:agents.storyteller._narrate_world",
       "target": "symbol:agents.storyteller._perception_state",
@@ -173399,7 +173476,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 712
+        "line": 727
       },
       "source": "symbol:agents.storyteller._perceive_world",
       "target": "symbol:agents.storyteller._perception_state",
@@ -173520,7 +173597,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 611
+        "line": 626
       },
       "source": "symbol:agents.storyteller._with_new_npc",
       "target": "symbol:agents.npc.generate_new_npc",
@@ -173531,7 +173608,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 622
+        "line": 637
       },
       "source": "symbol:agents.storyteller._with_new_npc",
       "target": "symbol:agents.npc.generate_new_npc",
@@ -173542,7 +173619,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 599
+        "line": 614
       },
       "source": "symbol:agents.storyteller._with_new_npc",
       "target": "symbol:agents.storyteller._cast_match",
@@ -173553,7 +173630,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 609
+        "line": 624
       },
       "source": "symbol:agents.storyteller._with_new_npc",
       "target": "symbol:agents.storyteller._pool_enabled",
@@ -173564,7 +173641,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 617
+        "line": 632
       },
       "source": "symbol:agents.storyteller._with_new_npc",
       "target": "symbol:agents.storyteller._typed_by_player",
@@ -173575,7 +173652,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 858
+        "line": 879
       },
       "source": "symbol:agents.storyteller._world_quests_tick",
       "target": "symbol:agents.storyteller._perception_state",
@@ -173586,7 +173663,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1665
+        "line": 1686
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller.StoryUpdate",
@@ -173597,7 +173674,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2119
+        "line": 2140
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._apply_proposed_rumors",
@@ -173608,7 +173685,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1070
+        "line": 1091
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._cal_of",
@@ -173619,7 +173696,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1074
+        "line": 1095
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._cal_of",
@@ -173630,7 +173707,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1453
+        "line": 1474
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._cal_of",
@@ -173641,7 +173718,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1570
+        "line": 1591
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._cal_of",
@@ -173652,7 +173729,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1234
+        "line": 1255
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._dedupe_encounter",
@@ -173663,7 +173740,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1666
+        "line": 1687
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -173674,7 +173751,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1727
+        "line": 1748
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -173685,7 +173762,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1741
+        "line": 1762
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -173696,7 +173773,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2128
+        "line": 2149
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -173707,7 +173784,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 997
+        "line": 1018
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._engine_owns_factions",
@@ -173718,7 +173795,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1061
+        "line": 1082
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._engine_owns_factions",
@@ -173729,7 +173806,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1377
+        "line": 1398
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._engine_owns_factions",
@@ -173740,7 +173817,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1499
+        "line": 1520
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._gancho_novo_block",
@@ -173751,7 +173828,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1760
+        "line": 1781
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._guard_mediation_secret",
@@ -173762,7 +173839,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1940
+        "line": 1961
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._is_monetary_claim",
@@ -173773,7 +173850,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1980
+        "line": 2001
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._log_narrative_rejected",
@@ -173784,7 +173861,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2017
+        "line": 2038
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._log_narrative_rejected",
@@ -173795,7 +173872,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2114
+        "line": 2135
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._log_narrative_rejected",
@@ -173806,7 +173883,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1504
+        "line": 1525
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._mediation_clause",
@@ -173817,7 +173894,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1380
+        "line": 1401
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._narrate_world",
@@ -173828,7 +173905,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1109
+        "line": 1130
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._npc_beliefs_update",
@@ -173839,7 +173916,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1502
+        "line": 1523
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._npc_fallback_clause",
@@ -173850,7 +173927,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1090
+        "line": 1111
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._perceive_world",
@@ -173861,7 +173938,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1101
+        "line": 1122
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._perception_state",
@@ -173872,7 +173949,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1496
+        "line": 1517
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._quests_ativas_block",
@@ -173883,7 +173960,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2002
+        "line": 2023
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._reward_confirmation",
@@ -173894,7 +173971,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1491
+        "line": 1520
+      },
+      "source": "symbol:agents.storyteller.storyteller_node",
+      "target": "symbol:agents.storyteller._rumor_proposal_hint",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/storyteller.py",
+        "line": 1512
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._scene_canonical_entities",
@@ -173905,7 +173993,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1450
+        "line": 1471
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._season_line",
@@ -173916,7 +174004,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1873
+        "line": 1894
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._with_new_npc",
@@ -173927,7 +174015,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1157
+        "line": 1178
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._world_quest_completions",
@@ -173938,7 +174026,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1153
+        "line": 1174
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._world_quests_tick",
@@ -173949,7 +174037,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 996
+        "line": 1017
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._world_tick",
@@ -173960,7 +174048,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1060
+        "line": 1081
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._world_tick",
@@ -173971,7 +174059,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1289
+        "line": 1310
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller.encounter_handoff",
@@ -173982,7 +174070,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 958
+        "line": 979
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller.storyteller_node._fm_apply",
@@ -173993,7 +174081,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 955
+        "line": 976
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller.storyteller_node._fm_view",
@@ -174004,7 +174092,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1384
+        "line": 1405
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.world_simulator.simulate_world",
@@ -174015,7 +174103,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1472
+        "line": 1493
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:llm_setup.get_llm",
@@ -174026,7 +174114,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1182
+        "line": 1203
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -174037,7 +174125,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1810
+        "line": 1831
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -174048,7 +174136,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1946
+        "line": 1967
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -174059,7 +174147,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1959
+        "line": 1980
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -174070,7 +174158,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1964
+        "line": 1985
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -174081,7 +174169,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2123
+        "line": 2144
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -174092,7 +174180,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1414
+        "line": 1435
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.context_builder.build_context_pack",
@@ -174103,7 +174191,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1329
+        "line": 1350
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.discovery.record_rumor",
@@ -174114,7 +174202,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1803
+        "line": 1824
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.law.apply_claims",
@@ -174125,7 +174213,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1219
+        "line": 1240
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.law.clock_of",
@@ -174136,7 +174224,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1305
+        "line": 1326
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.law.clock_of",
@@ -174147,7 +174235,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1562
+        "line": 1583
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.law.crime_hint_enabled",
@@ -174158,7 +174246,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1216
+        "line": 1237
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.law.hunter_encounter",
@@ -174169,7 +174257,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1302
+        "line": 1323
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.law.mark_hunters",
@@ -174180,7 +174268,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1560
+        "line": 1581
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.law.scene_block",
@@ -174191,7 +174279,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1416
+        "line": 1437
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.lore_query.compose_lore_query",
@@ -174202,7 +174290,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1657
+        "line": 1678
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.prompt_guard.guard_messages",
@@ -174213,7 +174301,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2072
+        "line": 2093
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.quest_log.register_proposed_quests",
@@ -174224,7 +174312,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2080
+        "line": 2101
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.quest_log.sync_action_progress",
@@ -174235,7 +174323,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2075
+        "line": 2096
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.quest_log.sync_location_progress",
@@ -174246,7 +174334,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 998
+        "line": 1019
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.advance_factions",
@@ -174257,7 +174345,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1062
+        "line": 1083
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.advance_factions",
@@ -174268,7 +174356,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1058
+        "line": 1079
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.apply_rest",
@@ -174279,7 +174367,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 995
+        "line": 1016
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.apply_travel",
@@ -174290,7 +174378,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1221
+        "line": 1242
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.check_encounter",
@@ -174301,7 +174389,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1070
+        "line": 1091
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.clock_label",
@@ -174312,7 +174400,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1074
+        "line": 1095
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.clock_label",
@@ -174323,7 +174411,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1570
+        "line": 1591
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.clock_label",
@@ -174334,7 +174422,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 912
+        "line": 933
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.ensure_faction_intel",
@@ -174345,7 +174433,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 911
+        "line": 932
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.ensure_factions",
@@ -174356,7 +174444,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 901
+        "line": 922
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.ensure_world",
@@ -174367,7 +174455,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 918
+        "line": 939
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.find_travel_destination",
@@ -174378,7 +174466,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1050
+        "line": 1071
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.is_rest",
@@ -174389,7 +174477,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 916
+        "line": 937
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.is_travel_intent",
@@ -174400,7 +174488,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 999
+        "line": 1020
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.resolve_faction_completions",
@@ -174411,7 +174499,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 1063
+        "line": 1084
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:world_utils.resolve_faction_completions",
@@ -216739,7 +216827,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 81
+        "line": 87
       },
       "source": "symbol:scripts.build_rumor_seeds._entities",
       "target": "symbol:scripts.build_rumor_seeds._json",
@@ -216750,32 +216838,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 82
+        "line": 88
       },
       "source": "symbol:scripts.build_rumor_seeds._entities",
       "target": "symbol:scripts.build_rumor_seeds._json",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 129
-      },
-      "source": "symbol:scripts.build_rumor_seeds._location_index",
-      "target": "symbol:scripts.build_rumor_seeds._json",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 131
-      },
-      "source": "symbol:scripts.build_rumor_seeds._location_index",
-      "target": "symbol:scripts.build_rumor_seeds.fold",
       "type": "calls"
     },
     {
@@ -216786,39 +216852,6 @@
         "line": 135
       },
       "source": "symbol:scripts.build_rumor_seeds._location_index",
-      "target": "symbol:scripts.build_rumor_seeds.fold",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 87
-      },
-      "source": "symbol:scripts.build_rumor_seeds._strip_article",
-      "target": "symbol:scripts.build_rumor_seeds.fold",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 190
-      },
-      "source": "symbol:scripts.build_rumor_seeds._subject",
-      "target": "symbol:scripts.build_rumor_seeds._entities",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 240
-      },
-      "source": "symbol:scripts.build_rumor_seeds.avistamento_seeds",
       "target": "symbol:scripts.build_rumor_seeds._json",
       "type": "calls"
     },
@@ -216827,196 +216860,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 266
+        "line": 137
       },
-      "source": "symbol:scripts.build_rumor_seeds.build",
-      "target": "symbol:scripts.build_rumor_seeds.avistamento_seeds",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 270
-      },
-      "source": "symbol:scripts.build_rumor_seeds.build",
-      "target": "symbol:scripts.build_rumor_seeds.load_overrides",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 266
-      },
-      "source": "symbol:scripts.build_rumor_seeds.build",
-      "target": "symbol:scripts.build_rumor_seeds.lore_seeds",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 169
-      },
-      "source": "symbol:scripts.build_rumor_seeds.find_entities",
-      "target": "symbol:scripts.build_rumor_seeds._entities",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 173
-      },
-      "source": "symbol:scripts.build_rumor_seeds.find_entities",
-      "target": "symbol:scripts.build_rumor_seeds._strip_article",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 175
-      },
-      "source": "symbol:scripts.build_rumor_seeds.find_entities",
-      "target": "symbol:scripts.build_rumor_seeds.fold",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 177
-      },
-      "source": "symbol:scripts.build_rumor_seeds.find_entities",
-      "target": "symbol:scripts.build_rumor_seeds.fold",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 262
-      },
-      "source": "symbol:scripts.build_rumor_seeds.load_overrides",
-      "target": "symbol:scripts.build_rumor_seeds._json",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 215
-      },
-      "source": "symbol:scripts.build_rumor_seeds.lore_seeds",
-      "target": "symbol:scripts.build_rumor_seeds._subject",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 203
-      },
-      "source": "symbol:scripts.build_rumor_seeds.lore_seeds",
-      "target": "symbol:scripts.build_rumor_seeds.find_entities",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 212
-      },
-      "source": "symbol:scripts.build_rumor_seeds.lore_seeds",
-      "target": "symbol:scripts.build_rumor_seeds.fold",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 200
-      },
-      "source": "symbol:scripts.build_rumor_seeds.lore_seeds",
-      "target": "symbol:scripts.build_rumor_seeds.parse_lore",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 202
-      },
-      "source": "symbol:scripts.build_rumor_seeds.lore_seeds",
-      "target": "symbol:scripts.build_rumor_seeds.resolve_tags",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 201
-      },
-      "source": "symbol:scripts.build_rumor_seeds.lore_seeds",
-      "target": "symbol:scripts.build_rumor_seeds.slug",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 295
-      },
-      "source": "symbol:scripts.build_rumor_seeds.main",
-      "target": "symbol:scripts.build_rumor_seeds.build",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 296
-      },
-      "source": "symbol:scripts.build_rumor_seeds.main",
-      "target": "symbol:scripts.build_rumor_seeds.render",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 111
-      },
-      "source": "symbol:scripts.build_rumor_seeds.parse_lore",
-      "target": "symbol:scripts.build_rumor_seeds.fold",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/build_rumor_seeds.py",
-        "line": 112
-      },
-      "source": "symbol:scripts.build_rumor_seeds.parse_lore",
+      "source": "symbol:scripts.build_rumor_seeds._location_index",
       "target": "symbol:scripts.build_rumor_seeds.fold",
       "type": "calls"
     },
@@ -217027,6 +216873,259 @@
         "file": "scripts/build_rumor_seeds.py",
         "line": 141
       },
+      "source": "symbol:scripts.build_rumor_seeds._location_index",
+      "target": "symbol:scripts.build_rumor_seeds.fold",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 93
+      },
+      "source": "symbol:scripts.build_rumor_seeds._strip_article",
+      "target": "symbol:scripts.build_rumor_seeds.fold",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 196
+      },
+      "source": "symbol:scripts.build_rumor_seeds._subject",
+      "target": "symbol:scripts.build_rumor_seeds._entities",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 246
+      },
+      "source": "symbol:scripts.build_rumor_seeds.avistamento_seeds",
+      "target": "symbol:scripts.build_rumor_seeds._json",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 258
+      },
+      "source": "symbol:scripts.build_rumor_seeds.avistamento_seeds",
+      "target": "symbol:scripts.build_rumor_seeds.slug",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 275
+      },
+      "source": "symbol:scripts.build_rumor_seeds.build",
+      "target": "symbol:scripts.build_rumor_seeds.avistamento_seeds",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 279
+      },
+      "source": "symbol:scripts.build_rumor_seeds.build",
+      "target": "symbol:scripts.build_rumor_seeds.load_overrides",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 275
+      },
+      "source": "symbol:scripts.build_rumor_seeds.build",
+      "target": "symbol:scripts.build_rumor_seeds.lore_seeds",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 175
+      },
+      "source": "symbol:scripts.build_rumor_seeds.find_entities",
+      "target": "symbol:scripts.build_rumor_seeds._entities",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 179
+      },
+      "source": "symbol:scripts.build_rumor_seeds.find_entities",
+      "target": "symbol:scripts.build_rumor_seeds._strip_article",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 181
+      },
+      "source": "symbol:scripts.build_rumor_seeds.find_entities",
+      "target": "symbol:scripts.build_rumor_seeds.fold",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 183
+      },
+      "source": "symbol:scripts.build_rumor_seeds.find_entities",
+      "target": "symbol:scripts.build_rumor_seeds.fold",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 271
+      },
+      "source": "symbol:scripts.build_rumor_seeds.load_overrides",
+      "target": "symbol:scripts.build_rumor_seeds._json",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 221
+      },
+      "source": "symbol:scripts.build_rumor_seeds.lore_seeds",
+      "target": "symbol:scripts.build_rumor_seeds._subject",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 209
+      },
+      "source": "symbol:scripts.build_rumor_seeds.lore_seeds",
+      "target": "symbol:scripts.build_rumor_seeds.find_entities",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 218
+      },
+      "source": "symbol:scripts.build_rumor_seeds.lore_seeds",
+      "target": "symbol:scripts.build_rumor_seeds.fold",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 206
+      },
+      "source": "symbol:scripts.build_rumor_seeds.lore_seeds",
+      "target": "symbol:scripts.build_rumor_seeds.parse_lore",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 208
+      },
+      "source": "symbol:scripts.build_rumor_seeds.lore_seeds",
+      "target": "symbol:scripts.build_rumor_seeds.resolve_tags",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 207
+      },
+      "source": "symbol:scripts.build_rumor_seeds.lore_seeds",
+      "target": "symbol:scripts.build_rumor_seeds.slug",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 304
+      },
+      "source": "symbol:scripts.build_rumor_seeds.main",
+      "target": "symbol:scripts.build_rumor_seeds.build",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 305
+      },
+      "source": "symbol:scripts.build_rumor_seeds.main",
+      "target": "symbol:scripts.build_rumor_seeds.render",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 117
+      },
+      "source": "symbol:scripts.build_rumor_seeds.parse_lore",
+      "target": "symbol:scripts.build_rumor_seeds.fold",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 118
+      },
+      "source": "symbol:scripts.build_rumor_seeds.parse_lore",
+      "target": "symbol:scripts.build_rumor_seeds.fold",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/build_rumor_seeds.py",
+        "line": 147
+      },
       "source": "symbol:scripts.build_rumor_seeds.resolve_tags",
       "target": "symbol:scripts.build_rumor_seeds._location_index",
       "type": "calls"
@@ -217036,7 +217135,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 146
+        "line": 152
       },
       "source": "symbol:scripts.build_rumor_seeds.resolve_tags",
       "target": "symbol:scripts.build_rumor_seeds.fold",
@@ -217047,7 +217146,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/build_rumor_seeds.py",
-        "line": 73
+        "line": 79
       },
       "source": "symbol:scripts.build_rumor_seeds.slug",
       "target": "symbol:scripts.build_rumor_seeds.fold",
@@ -231116,10 +231215,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/ambient.py",
-        "line": 167
+        "line": 183
       },
       "source": "symbol:services.ambient.ambient_block",
       "target": "symbol:services.ambient._ambient_block",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/ambient.py",
+        "line": 143
+      },
+      "source": "symbol:services.ambient.append_news",
+      "target": "symbol:services.ambient._fifo_cap",
       "type": "calls"
     },
     {
@@ -272476,21 +272586,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 738
+        "line": 739
       },
       "source": "symbol:services.rumors._apply_proposal",
       "target": "symbol:services.rumors._cap_ledger",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/rumors.py",
-        "line": 712
-      },
-      "source": "symbol:services.rumors._apply_proposal",
-      "target": "symbol:services.rumors._get",
       "type": "calls"
     },
     {
@@ -272509,7 +272608,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 716
+        "line": 714
       },
       "source": "symbol:services.rumors._apply_proposal",
       "target": "symbol:services.rumors._get",
@@ -272520,7 +272619,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 718
+        "line": 717
+      },
+      "source": "symbol:services.rumors._apply_proposal",
+      "target": "symbol:services.rumors._get",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/rumors.py",
+        "line": 719
       },
       "source": "symbol:services.rumors._apply_proposal",
       "target": "symbol:services.rumors._sha",
@@ -272531,7 +272641,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 720
+        "line": 721
       },
       "source": "symbol:services.rumors._apply_proposal",
       "target": "symbol:services.rumors._sha",
@@ -272542,7 +272652,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 711
+        "line": 712
       },
       "source": "symbol:services.rumors._apply_proposal",
       "target": "symbol:services.rumors._sim",
@@ -272553,7 +272663,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 725
+        "line": 726
       },
       "source": "symbol:services.rumors._apply_proposal",
       "target": "symbol:services.rumors._subject_of",
@@ -272564,7 +272674,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 730
+        "line": 731
       },
       "source": "symbol:services.rumors._apply_proposal",
       "target": "symbol:services.rumors.const",
@@ -272575,7 +272685,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 749
+        "line": 750
       },
       "source": "symbol:services.rumors._apply_proposal",
       "target": "symbol:services.rumors.prune_news",
@@ -272652,7 +272762,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 616
+        "line": 617
       },
       "source": "symbol:services.rumors._duplicate",
       "target": "symbol:services.rumors._duplicate.near",
@@ -272663,7 +272773,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 617
+        "line": 618
       },
       "source": "symbol:services.rumors._duplicate",
       "target": "symbol:services.rumors._fold",
@@ -272674,7 +272784,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 614
+        "line": 615
       },
       "source": "symbol:services.rumors._duplicate",
       "target": "symbol:services.rumors.const",
@@ -272685,7 +272795,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 624
+        "line": 625
       },
       "source": "symbol:services.rumors._duplicate",
       "target": "symbol:services.rumors.entities_of",
@@ -272696,7 +272806,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 626
+        "line": 627
       },
       "source": "symbol:services.rumors._duplicate",
       "target": "symbol:services.rumors.load_seeds",
@@ -272707,7 +272817,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 622
+        "line": 623
       },
       "source": "symbol:services.rumors._duplicate",
       "target": "symbol:services.rumors.render_news",
@@ -272718,7 +272828,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 617
+        "line": 618
       },
       "source": "symbol:services.rumors._duplicate.near",
       "target": "symbol:services.rumors._fold",
@@ -272784,7 +272894,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 594
+        "line": 595
       },
       "source": "symbol:services.rumors._reject_text",
       "target": "symbol:services.rumors._digits",
@@ -272795,7 +272905,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 599
+        "line": 600
       },
       "source": "symbol:services.rumors._reject_text",
       "target": "symbol:services.rumors._secret",
@@ -272806,7 +272916,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 469
+        "line": 470
       },
       "source": "symbol:services.rumors._settlement",
       "target": "symbol:services.rumors.config",
@@ -272839,21 +272949,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 687
+        "line": 688
       },
       "source": "symbol:services.rumors._validate_proposal",
       "target": "symbol:services.rumors._duplicate",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/rumors.py",
-        "line": 672
-      },
-      "source": "symbol:services.rumors._validate_proposal",
-      "target": "symbol:services.rumors._get",
       "type": "calls"
     },
     {
@@ -272872,7 +272971,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 679
+        "line": 674
       },
       "source": "symbol:services.rumors._validate_proposal",
       "target": "symbol:services.rumors._get",
@@ -272883,7 +272982,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 683
+        "line": 680
+      },
+      "source": "symbol:services.rumors._validate_proposal",
+      "target": "symbol:services.rumors._get",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/rumors.py",
+        "line": 684
       },
       "source": "symbol:services.rumors._validate_proposal",
       "target": "symbol:services.rumors._reject_text",
@@ -272894,7 +273004,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 671
+        "line": 672
       },
       "source": "symbol:services.rumors._validate_proposal",
       "target": "symbol:services.rumors._sim",
@@ -272905,7 +273015,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 657
+        "line": 658
       },
       "source": "symbol:services.rumors.accept_proposed",
       "target": "symbol:services.rumors._apply_proposal",
@@ -272916,7 +273026,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 652
+        "line": 653
       },
       "source": "symbol:services.rumors.accept_proposed",
       "target": "symbol:services.rumors._validate_proposal",
@@ -272927,7 +273037,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 651
+        "line": 652
       },
       "source": "symbol:services.rumors.accept_proposed",
       "target": "symbol:services.rumors.const",
@@ -272938,7 +273048,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 644
+        "line": 645
       },
       "source": "symbol:services.rumors.accept_proposed",
       "target": "symbol:services.rumors.mode",
@@ -272949,7 +273059,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 644
+        "line": 645
       },
       "source": "symbol:services.rumors.accept_proposed",
       "target": "symbol:services.rumors.proposed_mode",
@@ -273070,7 +273180,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 488
+        "line": 489
       },
       "source": "symbol:services.rumors.channel_of",
       "target": "symbol:services.rumors._settlement",
@@ -273213,7 +273323,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 766
+        "line": 767
       },
       "source": "symbol:services.rumors.investigable",
       "target": "symbol:services.rumors._secret",
@@ -273224,7 +273334,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 766
+        "line": 767
       },
       "source": "symbol:services.rumors.investigable",
       "target": "symbol:services.rumors._secret_locked",
@@ -273235,7 +273345,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 759
+        "line": 760
       },
       "source": "symbol:services.rumors.investigable",
       "target": "symbol:services.rumors._sim",
@@ -273246,7 +273356,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 779
+        "line": 780
       },
       "source": "symbol:services.rumors.investigable",
       "target": "symbol:services.rumors.entities_of",
@@ -273257,7 +273367,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 764
+        "line": 765
       },
       "source": "symbol:services.rumors.investigable",
       "target": "symbol:services.rumors.is_quest_eligible",
@@ -273268,7 +273378,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 779
+        "line": 780
       },
       "source": "symbol:services.rumors.investigable",
       "target": "symbol:services.rumors.region_of_row",
@@ -273279,7 +273389,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 766
+        "line": 767
       },
       "source": "symbol:services.rumors.investigable",
       "target": "symbol:services.rumors.render_news",
@@ -273290,7 +273400,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 766
+        "line": 767
       },
       "source": "symbol:services.rumors.investigable",
       "target": "symbol:services.rumors.seed_of",
@@ -273301,7 +273411,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 779
+        "line": 780
       },
       "source": "symbol:services.rumors.investigable",
       "target": "symbol:services.rumors.subject_of",
@@ -273323,21 +273433,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 516
+        "line": 517
       },
       "source": "symbol:services.rumors.limit_perceived",
       "target": "symbol:services.rumors.channel_of",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/rumors.py",
-        "line": 506
-      },
-      "source": "symbol:services.rumors.limit_perceived",
-      "target": "symbol:services.rumors.const",
       "type": "calls"
     },
     {
@@ -273356,7 +273455,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 510
+        "line": 508
+      },
+      "source": "symbol:services.rumors.limit_perceived",
+      "target": "symbol:services.rumors.const",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/rumors.py",
+        "line": 511
       },
       "source": "symbol:services.rumors.limit_perceived",
       "target": "symbol:services.rumors.instance",
@@ -273367,7 +273477,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 500
+        "line": 501
       },
       "source": "symbol:services.rumors.limit_perceived",
       "target": "symbol:services.rumors.is_rumor_item",
@@ -273378,7 +273488,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 522
+        "line": 523
       },
       "source": "symbol:services.rumors.limit_perceived",
       "target": "symbol:services.rumors.is_rumor_item",
@@ -273400,7 +273510,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 535
+        "line": 536
       },
       "source": "symbol:services.rumors.mark_perceived",
       "target": "symbol:services.rumors._k",
@@ -273411,7 +273521,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 801
+        "line": 802
       },
       "source": "symbol:services.rumors.mark_resolved",
       "target": "symbol:services.rumors._k",
@@ -273422,7 +273532,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 495
+        "line": 496
       },
       "source": "symbol:services.rumors.perceivable",
       "target": "symbol:services.rumors.channel_of",
@@ -273433,7 +273543,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 570
+        "line": 571
       },
       "source": "symbol:services.rumors.prune_news",
       "target": "symbol:services.rumors.const",
@@ -273444,7 +273554,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 569
+        "line": 570
       },
       "source": "symbol:services.rumors.prune_news",
       "target": "symbol:services.rumors.is_rumor_item",
@@ -273455,7 +273565,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 571
+        "line": 572
       },
       "source": "symbol:services.rumors.prune_news",
       "target": "symbol:services.rumors.is_rumor_item",
@@ -273466,7 +273576,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 581
+        "line": 582
       },
       "source": "symbol:services.rumors.public_kind",
       "target": "symbol:services.rumors.is_rumor_item",
@@ -273477,7 +273587,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 458
+        "line": 459
       },
       "source": "symbol:services.rumors.public_names",
       "target": "symbol:services.rumors._all_seeds",
@@ -273510,7 +273620,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 436
+        "line": 437
       },
       "source": "symbol:services.rumors.render_news",
       "target": "symbol:services.rumors.region_of_row",
@@ -273543,7 +273653,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 452
+        "line": 453
       },
       "source": "symbol:services.rumors.text_for",
       "target": "symbol:services.rumors._day_of",
@@ -273554,7 +273664,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 451
+        "line": 452
       },
       "source": "symbol:services.rumors.text_for",
       "target": "symbol:services.rumors.instance",
@@ -273565,7 +273675,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 454
+        "line": 455
       },
       "source": "symbol:services.rumors.text_for",
       "target": "symbol:services.rumors.render_news",
@@ -273609,7 +273719,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/rumors.py",
-        "line": 786
+        "line": 787
       },
       "source": "symbol:services.rumors.truth_of",
       "target": "symbol:services.rumors.instance",
@@ -456748,6 +456858,50 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec312_perception.py",
+        "line": 273
+      },
+      "source": "symbol:tests.test_spec312_perception.test_avistamento_text_has_article_and_reads_naturally",
+      "target": "symbol:services.rumors.from_item",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec312_perception.py",
+        "line": 269
+      },
+      "source": "symbol:tests.test_spec312_perception.test_avistamento_text_has_article_and_reads_naturally",
+      "target": "symbol:services.rumors.load_seeds",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec312_perception.py",
+        "line": 274
+      },
+      "source": "symbol:tests.test_spec312_perception.test_avistamento_text_has_article_and_reads_naturally",
+      "target": "symbol:services.rumors.render_news",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec312_perception.py",
+        "line": 271
+      },
+      "source": "symbol:tests.test_spec312_perception.test_avistamento_text_has_article_and_reads_naturally",
+      "target": "symbol:tests.spec312_helpers.make_rumor",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec312_perception.py",
         "line": 86
       },
       "source": "symbol:tests.test_spec312_perception.test_excess_rumor_stays_pending_until_ttl",
@@ -458035,6 +458189,28 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec312_proposed.py",
+        "line": 193
+      },
+      "source": "symbol:tests.test_spec312_proposed.test_prompt_hint_only_when_proposed_on",
+      "target": "symbol:agents.storyteller._rumor_proposal_hint",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec312_proposed.py",
+        "line": 195
+      },
+      "source": "symbol:tests.test_spec312_proposed.test_prompt_hint_only_when_proposed_on",
+      "target": "symbol:agents.storyteller._rumor_proposal_hint",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec312_proposed.py",
         "line": 153
       },
       "source": "symbol:tests.test_spec312_proposed.test_proposed_mode_off_ignores_field",
@@ -458412,6 +458588,72 @@
         "line": 131
       },
       "source": "symbol:tests.test_spec312_proposed.test_rejects_when_quarantined",
+      "target": "symbol:tests.test_spec312_proposed._state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec312_proposed.py",
+        "line": 206
+      },
+      "source": "symbol:tests.test_spec312_proposed.test_seen_event_logged_every_turn_with_flag_on",
+      "target": "symbol:agents.storyteller.StoryUpdateWithRumors",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec312_proposed.py",
+        "line": 210
+      },
+      "source": "symbol:tests.test_spec312_proposed.test_seen_event_logged_every_turn_with_flag_on",
+      "target": "symbol:agents.storyteller.StoryUpdateWithRumors",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec312_proposed.py",
+        "line": 206
+      },
+      "source": "symbol:tests.test_spec312_proposed.test_seen_event_logged_every_turn_with_flag_on",
+      "target": "symbol:agents.storyteller._apply_proposed_rumors",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec312_proposed.py",
+        "line": 207
+      },
+      "source": "symbol:tests.test_spec312_proposed.test_seen_event_logged_every_turn_with_flag_on",
+      "target": "symbol:agents.storyteller._apply_proposed_rumors",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec312_proposed.py",
+        "line": 210
+      },
+      "source": "symbol:tests.test_spec312_proposed.test_seen_event_logged_every_turn_with_flag_on",
+      "target": "symbol:tests.test_spec312_proposed._prop",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec312_proposed.py",
+        "line": 205
+      },
+      "source": "symbol:tests.test_spec312_proposed.test_seen_event_logged_every_turn_with_flag_on",
       "target": "symbol:tests.test_spec312_proposed._state",
       "type": "calls"
     },
@@ -486552,21 +486794,21 @@
     {
       "id": "symbol:agents.storyteller._apply_proposed_rumors",
       "kind": "function",
-      "line": 783,
+      "line": 798,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._apply_proposed_rumors"
     },
     {
       "id": "symbol:agents.storyteller._cal_of",
       "kind": "function",
-      "line": 674,
+      "line": 689,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._cal_of"
     },
     {
       "id": "symbol:agents.storyteller._cast_match",
       "kind": "function",
-      "line": 545,
+      "line": 560,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._cast_match"
     },
@@ -486580,35 +486822,35 @@
     {
       "id": "symbol:agents.storyteller._dedupe_encounter",
       "kind": "function",
-      "line": 501,
+      "line": 516,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._dedupe_encounter"
     },
     {
       "id": "symbol:agents.storyteller._deterministic_story_fallback",
       "kind": "function",
-      "line": 517,
+      "line": 532,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._deterministic_story_fallback"
     },
     {
       "id": "symbol:agents.storyteller._engine_owns_factions",
       "kind": "function",
-      "line": 692,
+      "line": 707,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._engine_owns_factions"
     },
     {
       "id": "symbol:agents.storyteller._gancho_novo_block",
       "kind": "function",
-      "line": 319,
+      "line": 334,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._gancho_novo_block"
     },
     {
       "id": "symbol:agents.storyteller._guard_mediation_secret",
       "kind": "function",
-      "line": 439,
+      "line": 454,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._guard_mediation_secret"
     },
@@ -486629,70 +486871,70 @@
     {
       "id": "symbol:agents.storyteller._log_narrative_rejected",
       "kind": "function",
-      "line": 429,
+      "line": 444,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._log_narrative_rejected"
     },
     {
       "id": "symbol:agents.storyteller._mediated_subject_view",
       "kind": "function",
-      "line": 356,
+      "line": 371,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._mediated_subject_view"
     },
     {
       "id": "symbol:agents.storyteller._mediation_clause",
       "kind": "function",
-      "line": 378,
+      "line": 393,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._mediation_clause"
     },
     {
       "id": "symbol:agents.storyteller._narrate_world",
       "kind": "function",
-      "line": 809,
+      "line": 830,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._narrate_world"
     },
     {
       "id": "symbol:agents.storyteller._npc_beliefs_update",
       "kind": "function",
-      "line": 762,
+      "line": 777,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._npc_beliefs_update"
     },
     {
       "id": "symbol:agents.storyteller._npc_fallback_clause",
       "kind": "function",
-      "line": 338,
+      "line": 353,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._npc_fallback_clause"
     },
     {
       "id": "symbol:agents.storyteller._perceive_world",
       "kind": "function",
-      "line": 703,
+      "line": 718,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._perceive_world"
     },
     {
       "id": "symbol:agents.storyteller._perception_state",
       "kind": "function",
-      "line": 699,
+      "line": 714,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._perception_state"
     },
     {
       "id": "symbol:agents.storyteller._player_facing_note",
       "kind": "function",
-      "line": 472,
+      "line": 487,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._player_facing_note"
     },
     {
       "id": "symbol:agents.storyteller._pool_enabled",
       "kind": "function",
-      "line": 539,
+      "line": 554,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._pool_enabled"
     },
@@ -486725,6 +486967,13 @@
       "qualified_name": "agents.storyteller._reward_confirmation"
     },
     {
+      "id": "symbol:agents.storyteller._rumor_proposal_hint",
+      "kind": "function",
+      "line": 319,
+      "path": "agents/storyteller.py",
+      "qualified_name": "agents.storyteller._rumor_proposal_hint"
+    },
+    {
       "id": "symbol:agents.storyteller._scene_canonical_entities",
       "kind": "function",
       "line": 245,
@@ -486734,42 +486983,42 @@
     {
       "id": "symbol:agents.storyteller._season_line",
       "kind": "function",
-      "line": 680,
+      "line": 695,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._season_line"
     },
     {
       "id": "symbol:agents.storyteller._typed_by_player",
       "kind": "function",
-      "line": 533,
+      "line": 548,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._typed_by_player"
     },
     {
       "id": "symbol:agents.storyteller._with_new_npc",
       "kind": "function",
-      "line": 555,
+      "line": 570,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._with_new_npc"
     },
     {
       "id": "symbol:agents.storyteller._world_quest_completions",
       "kind": "function",
-      "line": 874,
+      "line": 895,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._world_quest_completions"
     },
     {
       "id": "symbol:agents.storyteller._world_quests_tick",
       "kind": "function",
-      "line": 840,
+      "line": 861,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._world_quests_tick"
     },
     {
       "id": "symbol:agents.storyteller._world_tick",
       "kind": "function",
-      "line": 819,
+      "line": 840,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller._world_tick"
     },
@@ -486783,21 +487032,21 @@
     {
       "id": "symbol:agents.storyteller.storyteller_node",
       "kind": "function",
-      "line": 889,
+      "line": 910,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller.storyteller_node"
     },
     {
       "id": "symbol:agents.storyteller.storyteller_node._fm_apply",
       "kind": "function",
-      "line": 958,
+      "line": 979,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller.storyteller_node._fm_apply"
     },
     {
       "id": "symbol:agents.storyteller.storyteller_node._fm_view",
       "kind": "function",
-      "line": 955,
+      "line": 976,
       "path": "agents/storyteller.py",
       "qualified_name": "agents.storyteller.storyteller_node._fm_view"
     },
@@ -501574,112 +501823,112 @@
     {
       "id": "symbol:scripts.build_rumor_seeds._entities",
       "kind": "function",
-      "line": 80,
+      "line": 86,
       "path": "scripts/build_rumor_seeds.py",
       "qualified_name": "scripts.build_rumor_seeds._entities"
     },
     {
       "id": "symbol:scripts.build_rumor_seeds._json",
       "kind": "function",
-      "line": 76,
+      "line": 82,
       "path": "scripts/build_rumor_seeds.py",
       "qualified_name": "scripts.build_rumor_seeds._json"
     },
     {
       "id": "symbol:scripts.build_rumor_seeds._location_index",
       "kind": "function",
-      "line": 128,
+      "line": 134,
       "path": "scripts/build_rumor_seeds.py",
       "qualified_name": "scripts.build_rumor_seeds._location_index"
     },
     {
       "id": "symbol:scripts.build_rumor_seeds._strip_article",
       "kind": "function",
-      "line": 86,
+      "line": 92,
       "path": "scripts/build_rumor_seeds.py",
       "qualified_name": "scripts.build_rumor_seeds._strip_article"
     },
     {
       "id": "symbol:scripts.build_rumor_seeds._subject",
       "kind": "function",
-      "line": 189,
+      "line": 195,
       "path": "scripts/build_rumor_seeds.py",
       "qualified_name": "scripts.build_rumor_seeds._subject"
     },
     {
       "id": "symbol:scripts.build_rumor_seeds.avistamento_seeds",
       "kind": "function",
-      "line": 232,
+      "line": 238,
       "path": "scripts/build_rumor_seeds.py",
       "qualified_name": "scripts.build_rumor_seeds.avistamento_seeds"
     },
     {
       "id": "symbol:scripts.build_rumor_seeds.build",
       "kind": "function",
-      "line": 265,
+      "line": 274,
       "path": "scripts/build_rumor_seeds.py",
       "qualified_name": "scripts.build_rumor_seeds.build"
     },
     {
       "id": "symbol:scripts.build_rumor_seeds.find_entities",
       "kind": "function",
-      "line": 168,
+      "line": 174,
       "path": "scripts/build_rumor_seeds.py",
       "qualified_name": "scripts.build_rumor_seeds.find_entities"
     },
     {
       "id": "symbol:scripts.build_rumor_seeds.fold",
       "kind": "function",
-      "line": 64,
+      "line": 70,
       "path": "scripts/build_rumor_seeds.py",
       "qualified_name": "scripts.build_rumor_seeds.fold"
     },
     {
       "id": "symbol:scripts.build_rumor_seeds.load_overrides",
       "kind": "function",
-      "line": 259,
+      "line": 268,
       "path": "scripts/build_rumor_seeds.py",
       "qualified_name": "scripts.build_rumor_seeds.load_overrides"
     },
     {
       "id": "symbol:scripts.build_rumor_seeds.lore_seeds",
       "kind": "function",
-      "line": 198,
+      "line": 204,
       "path": "scripts/build_rumor_seeds.py",
       "qualified_name": "scripts.build_rumor_seeds.lore_seeds"
     },
     {
       "id": "symbol:scripts.build_rumor_seeds.main",
       "kind": "function",
-      "line": 294,
+      "line": 303,
       "path": "scripts/build_rumor_seeds.py",
       "qualified_name": "scripts.build_rumor_seeds.main"
     },
     {
       "id": "symbol:scripts.build_rumor_seeds.parse_lore",
       "kind": "function",
-      "line": 90,
+      "line": 96,
       "path": "scripts/build_rumor_seeds.py",
       "qualified_name": "scripts.build_rumor_seeds.parse_lore"
     },
     {
       "id": "symbol:scripts.build_rumor_seeds.render",
       "kind": "function",
-      "line": 290,
+      "line": 299,
       "path": "scripts/build_rumor_seeds.py",
       "qualified_name": "scripts.build_rumor_seeds.render"
     },
     {
       "id": "symbol:scripts.build_rumor_seeds.resolve_tags",
       "kind": "function",
-      "line": 139,
+      "line": 145,
       "path": "scripts/build_rumor_seeds.py",
       "qualified_name": "scripts.build_rumor_seeds.resolve_tags"
     },
     {
       "id": "symbol:scripts.build_rumor_seeds.slug",
       "kind": "function",
-      "line": 72,
+      "line": 78,
       "path": "scripts/build_rumor_seeds.py",
       "qualified_name": "scripts.build_rumor_seeds.slug"
     },
@@ -505982,16 +506231,23 @@
       "qualified_name": "services.ambient._ambient_block"
     },
     {
+      "id": "symbol:services.ambient._fifo_cap",
+      "kind": "function",
+      "line": 93,
+      "path": "services/ambient.py",
+      "qualified_name": "services.ambient._fifo_cap"
+    },
+    {
       "id": "symbol:services.ambient.ambient_block",
       "kind": "function",
-      "line": 159,
+      "line": 175,
       "path": "services/ambient.py",
       "qualified_name": "services.ambient.ambient_block"
     },
     {
       "id": "symbol:services.ambient.append_news",
       "kind": "function",
-      "line": 93,
+      "line": 109,
       "path": "services/ambient.py",
       "qualified_name": "services.ambient.append_news"
     },
@@ -506005,7 +506261,7 @@
     {
       "id": "symbol:services.ambient.heard_block",
       "kind": "function",
-      "line": 131,
+      "line": 147,
       "path": "services/ambient.py",
       "qualified_name": "services.ambient.heard_block"
     },
@@ -518829,7 +519085,7 @@
     {
       "id": "symbol:services.rumors._apply_proposal",
       "kind": "function",
-      "line": 707,
+      "line": 708,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors._apply_proposal"
     },
@@ -518857,21 +519113,21 @@
     {
       "id": "symbol:services.rumors._digits",
       "kind": "function",
-      "line": 587,
+      "line": 588,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors._digits"
     },
     {
       "id": "symbol:services.rumors._duplicate",
       "kind": "function",
-      "line": 611,
+      "line": 612,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors._duplicate"
     },
     {
       "id": "symbol:services.rumors._duplicate.near",
       "kind": "function",
-      "line": 616,
+      "line": 617,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors._duplicate.near"
     },
@@ -518899,7 +519155,7 @@
     {
       "id": "symbol:services.rumors._get",
       "kind": "function",
-      "line": 663,
+      "line": 664,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors._get"
     },
@@ -518934,7 +519190,7 @@
     {
       "id": "symbol:services.rumors._reject_text",
       "kind": "function",
-      "line": 591,
+      "line": 592,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors._reject_text"
     },
@@ -518962,7 +519218,7 @@
     {
       "id": "symbol:services.rumors._settlement",
       "kind": "function",
-      "line": 465,
+      "line": 466,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors._settlement"
     },
@@ -518983,7 +519239,7 @@
     {
       "id": "symbol:services.rumors._subject_of",
       "kind": "function",
-      "line": 694,
+      "line": 695,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors._subject_of"
     },
@@ -518997,14 +519253,14 @@
     {
       "id": "symbol:services.rumors._validate_proposal",
       "kind": "function",
-      "line": 667,
+      "line": 668,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors._validate_proposal"
     },
     {
       "id": "symbol:services.rumors.accept_proposed",
       "kind": "function",
-      "line": 636,
+      "line": 637,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors.accept_proposed"
     },
@@ -519018,7 +519274,7 @@
     {
       "id": "symbol:services.rumors.channel_of",
       "kind": "function",
-      "line": 475,
+      "line": 476,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors.channel_of"
     },
@@ -519060,7 +519316,7 @@
     {
       "id": "symbol:services.rumors.from_item",
       "kind": "function",
-      "line": 543,
+      "line": 544,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors.from_item"
     },
@@ -519074,7 +519330,7 @@
     {
       "id": "symbol:services.rumors.investigable",
       "kind": "function",
-      "line": 755,
+      "line": 756,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors.investigable"
     },
@@ -519095,7 +519351,7 @@
     {
       "id": "symbol:services.rumors.limit_perceived",
       "kind": "function",
-      "line": 498,
+      "line": 499,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors.limit_perceived"
     },
@@ -519109,14 +519365,14 @@
     {
       "id": "symbol:services.rumors.mark_perceived",
       "kind": "function",
-      "line": 525,
+      "line": 526,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors.mark_perceived"
     },
     {
       "id": "symbol:services.rumors.mark_resolved",
       "kind": "function",
-      "line": 790,
+      "line": 791,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors.mark_resolved"
     },
@@ -519130,14 +519386,14 @@
     {
       "id": "symbol:services.rumors.news_extra",
       "kind": "function",
-      "line": 557,
+      "line": 558,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors.news_extra"
     },
     {
       "id": "symbol:services.rumors.perceivable",
       "kind": "function",
-      "line": 494,
+      "line": 495,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors.perceivable"
     },
@@ -519151,21 +519407,21 @@
     {
       "id": "symbol:services.rumors.prune_news",
       "kind": "function",
-      "line": 565,
+      "line": 566,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors.prune_news"
     },
     {
       "id": "symbol:services.rumors.public_kind",
       "kind": "function",
-      "line": 579,
+      "line": 580,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors.public_kind"
     },
     {
       "id": "symbol:services.rumors.public_names",
       "kind": "function",
-      "line": 457,
+      "line": 458,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors.public_names"
     },
@@ -519200,7 +519456,7 @@
     {
       "id": "symbol:services.rumors.text_for",
       "kind": "function",
-      "line": 449,
+      "line": 450,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors.text_for"
     },
@@ -519214,7 +519470,7 @@
     {
       "id": "symbol:services.rumors.truth_of",
       "kind": "function",
-      "line": 784,
+      "line": 785,
       "path": "services/rumors.py",
       "qualified_name": "services.rumors.truth_of"
     },
@@ -571663,6 +571919,13 @@
       "qualified_name": "tests.test_spec312_perception.test_api_news_kind_only_no_truth_or_ids"
     },
     {
+      "id": "symbol:tests.test_spec312_perception.test_avistamento_text_has_article_and_reads_naturally",
+      "kind": "test",
+      "line": 262,
+      "path": "tests/test_spec312_perception.py",
+      "qualified_name": "tests.test_spec312_perception.test_avistamento_text_has_article_and_reads_naturally"
+    },
+    {
       "id": "symbol:tests.test_spec312_perception.test_excess_rumor_stays_pending_until_ttl",
       "kind": "test",
       "line": 81,
@@ -571682,6 +571945,13 @@
       "line": 52,
       "path": "tests/test_spec312_perception.py",
       "qualified_name": "tests.test_spec312_perception.test_heard_channel_requires_location_heard_and_215_on"
+    },
+    {
+      "id": "symbol:tests.test_spec312_perception.test_live_rumor_survives_news_fifo_cap",
+      "kind": "test",
+      "line": 240,
+      "path": "tests/test_spec312_perception.py",
+      "qualified_name": "tests.test_spec312_perception.test_live_rumor_survives_news_fifo_cap"
     },
     {
       "id": "symbol:tests.test_spec312_perception.test_max_one_new_rumor_per_day_and_per_action",
@@ -571859,6 +572129,13 @@
       "qualified_name": "tests.test_spec312_proposed.test_fallbackllm_story_update_without_field_is_safe"
     },
     {
+      "id": "symbol:tests.test_spec312_proposed.test_function_calling_schema_exposes_proposed_rumors_only_when_on",
+      "kind": "test",
+      "line": 180,
+      "path": "tests/test_spec312_proposed.py",
+      "qualified_name": "tests.test_spec312_proposed.test_function_calling_schema_exposes_proposed_rumors_only_when_on"
+    },
+    {
       "id": "symbol:tests.test_spec312_proposed.test_invalid_items_dropped_not_whole_response",
       "kind": "test",
       "line": 39,
@@ -571871,6 +572148,13 @@
       "line": 141,
       "path": "tests/test_spec312_proposed.py",
       "qualified_name": "tests.test_spec312_proposed.test_only_one_per_turn"
+    },
+    {
+      "id": "symbol:tests.test_spec312_proposed.test_prompt_hint_only_when_proposed_on",
+      "kind": "test",
+      "line": 192,
+      "path": "tests/test_spec312_proposed.py",
+      "qualified_name": "tests.test_spec312_proposed.test_prompt_hint_only_when_proposed_on"
     },
     {
       "id": "symbol:tests.test_spec312_proposed.test_proposed_mode_off_ignores_field",
@@ -571920,6 +572204,13 @@
       "line": 130,
       "path": "tests/test_spec312_proposed.py",
       "qualified_name": "tests.test_spec312_proposed.test_rejects_when_quarantined"
+    },
+    {
+      "id": "symbol:tests.test_spec312_proposed.test_seen_event_logged_every_turn_with_flag_on",
+      "kind": "test",
+      "line": 198,
+      "path": "tests/test_spec312_proposed.py",
+      "qualified_name": "tests.test_spec312_proposed.test_seen_event_logged_every_turn_with_flag_on"
     },
     {
       "id": "symbol:tests.test_spec312_review._lore",
@@ -575969,5 +576260,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:129f3bd65781744958f6f9dcb347480111b9adcc4fc846720c84196437db514d"
+  "source_tree_hash": "sha256:48065a84fcdf1c71cd60e4597b9fcb130e6681bcefc23ac332d77a13e666da8a"
 }
