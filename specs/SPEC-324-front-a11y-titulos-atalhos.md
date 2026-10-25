@@ -1,68 +1,110 @@
-# SPEC-324 — front-a11y-titulos-atalhos
+# SPEC-324 — Front: a11y estrutural (headings) e atalhos de teclado
 
 > **Status:** `draft`
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
-> **Depende de:** <specs anteriores que precisam estar `done`>
-> **Desbloqueia:** <specs/features que dependem desta>
+> **Depende de:** nenhuma em código. Pode correr em paralelo com a 322 ou a 323 (arquivos TSX diferentes, quase nada de CSS). Não corre em paralelo com a 321, que também mexe em `Workspace.tsx`.
+> **Desbloqueia:** —
 
 ---
 
 ## 1. Contexto & Objetivo
 
-Por que esta spec existe. Qual problema resolve. 2-4 parágrafos no máximo.
-Referência ao princípio de arquitetura relevante (ver `ROADMAP.md` § Princípios).
+**A tela de jogo não tem estrutura de headings.**
+- O local é um `<span className="topbar__place">` (`web/src/components/PlayScreen.tsx:73`).
+- Os rótulos de seção são `<p className="hud__label">`, usados 22 vezes em `web/src/components/Hud.tsx`, `CharacterTab.tsx`, `ContextSurface.tsx` e outros.
+- O único heading é o `h2` do título mobile (`web/src/workspace/Workspace.tsx:282`).
+- Usuário de leitor de tela não consegue pular entre "Inventário", "Missões" e "Ouvi dizer" (WCAG 1.3.1 / 2.4.6).
+
+**Os atalhos colidem com o navegador.** Usam Ctrl/⌘+1 (compositor) e Ctrl/⌘+2…6 (painéis) (`Workspace.tsx:170-190`). No Chrome e no Edge, Ctrl+1…8 trocam de aba do navegador e não chegam à página. Não existe `aria-keyshortcuts`, dica nem folha de ajuda.
+
+**Objetivo:** navegação por headings e atalhos que funcionem e possam ser descobertos, sem mudança visual.
 
 ## 2. Requisitos
 
-Numerados, testáveis. Cada requisito deve poder virar assert.
-
-- **R1** — ...
-- **R2** — ...
+- **R1 — hierarquia de headings.**
+  - O nome do local na tela de jogo é o `h1`.
+  - Títulos de painel/aba são `h2`; no celular, o `h2` existente do título da surface continua.
+  - Os rótulos de seção (`.hud__label`) viram `h3`, com a mesma classe e a mesma aparência.
+  - Nenhum nível é pulado.
+- **R2 — sem mudança visual.** Os headings novos herdam o estilo atual (reset de margem e fonte na classe). A comparação de screenshot antes/depois tem diff ≤ limiar do Playwright (`maxDiffPixelRatio` 0,01).
+- **R3 — atalhos novos.**
+  - Alt+1 foca o compositor; Alt+2…6 abrem os painéis, na mesma ordem de hoje.
+  - Alt+←/→ continua.
+  - Ctrl+\ é substituído por Alt+\ (ou mantido, se funcionar no Chrome/Edge/Firefox; testar).
+  - No macOS, Option+dígito gera caractere, então lá vale `Ctrl+Option+dígito` ou sequência (ver D1).
+  - Os atalhos de dígito não disparam com o foco num `input`/`textarea`, exceto Alt+1.
+- **R4 — atalhos descobríveis.**
+  - Cada aba e botão com atalho tem `aria-keyshortcuts` e a tecla no `title`.
+  - `?` (com o foco fora de campo de texto) abre uma folha "Atalhos", um modal com foco preso via `useModalFocus` que lista todos e fecha com `Esc`.
+- **R5 — skip link.** "Pular para a ação" (âncora para o compositor) é o primeiro elemento focável da tela de jogo.
 
 ### Fora de escopo
 
-Lista explícita do que esta spec NÃO cobre (anti-scope-creep).
+- Status de turno e `aria-live` (SPEC-320). Contraste (SPEC-322). Rótulos de mapa (SPEC-323).
 
 ## 3. Design técnico
 
-Detalhe suficiente para uma sessão futura de IA implementar **sem reler o roadmap**:
+**Arquivos novos**
+- `web/src/workspace/shortcuts.ts`: tabela única `SHORTCUTS: { id; keys: string; aria: string; label: string; run(ctx) }[]` + `matchShortcut(event, platform): id | null` (pura, testável).
+- `web/src/components/ShortcutsSheet.tsx`: modal da folha.
 
-- **Arquivos novos** — caminho + responsabilidade
-- **Arquivos alterados** — o que muda em cada um
-- **Schemas** — Pydantic/TypedDict completos (campos, tipos, defaults)
-- **Assinaturas** — funções públicas com tipos
-- **Formatos de dados** — JSON/frontmatter com exemplo real (usar IDs canônicos do projeto, não inventados)
+**Arquivos alterados**
+- `web/src/workspace/Workspace.tsx:167-197`: o handler passa a usar `matchShortcut`; `aria-keyshortcuts` e `title` nas abas e botões (`:282-298`).
+- `web/src/components/PlayScreen.tsx:73`: `<h1 className="topbar__place">`.
+- `web/src/components/Hud.tsx`, `CharacterTab.tsx`, `ContextSurface.tsx`, `QuestsTab.tsx` e demais com `hud__label`: `<p>` → `<h3>`. Títulos de painel → `<h2>`.
+- `web/src/styles.css`: `h1.topbar__place, h2.panel-title, h3.hud__label { margin: 0; font: inherit; … }` para preservar o visual. Ajuste mínimo, sem conflito real com a 322.
 
 ## 4. Plano passo a passo
 
-Etapas ordenadas e testáveis. **Testes primeiro** (TDD): cada etapa nomeia os
-testes a escrever ANTES do código e o que cada um asserta.
+### Etapa 1 — `matchShortcut`
+1. **Testes:** `web/tests/shortcuts.test.mjs`:
+   - Alt+2 → painel 2 (Windows e Linux);
+   - Ctrl+2 → null;
+   - Alt+3 com o foco em input → null;
+   - Alt+1 em input → foco no compositor;
+   - `?` fora de input → folha;
+   - mac: a combinação de D1 → o id esperado.
+2. **Implementação:** `shortcuts.ts` + a troca no `Workspace`.
 
-### Etapa N — <nome>
+### Etapa 2 — headings
+1. **Testes:**
+   - e2e `web/e2e/a11y-headings.spec.ts` (novo): na tela de jogo existe exatamente um `h1` com o nome do local; todo `.hud__label` é `h3`; existe um `h2` antes de cada `h3`; nenhum nível pulado (varrer `h1..h6` em ordem).
+   - axe `heading-order` sem violação.
+   - Screenshot 1440×900 e 390×844 com diff ≤ 1 %.
+2. **Implementação:** trocas de tag + CSS de reset.
 
-1. **Testes** (`tests/test_<...>.py`): `test_x` asserta ...; `test_y` asserta ...
-2. **Implementação:** ...
-3. **Verificação:** `uv run pytest` verde.
+### Etapa 3 — folha de atalhos e skip link
+1. **Testes:** e2e: `?` abre a folha, o foco fica preso e `Esc` fecha e devolve o foco; Alt+3 abre o painel 3 no Chromium; o 1º Tab na tela de jogo foca "Pular para a ação".
+2. **Implementação:** `ShortcutsSheet`, skip link.
+
+**Verificação:** `cd web && npm test && npm run lint && npm run test:e2e -- a11y-headings workspace-shell mobile-single-pane`.
 
 ## 5. Critérios de aceite
 
-Checklist objetivo. A spec só vira `done` com todos marcados.
+- [ ] Um `h1` (local), `h2` por painel e `h3` por seção; axe `heading-order` limpo; sem mudança visual (diff ≤ 1 %).
+- [ ] Atalhos fora de Ctrl/⌘+dígito; funcionam no Chromium e no Firefox (e2e); não disparam em campo de texto (exceto o foco no compositor).
+- [ ] `aria-keyshortcuts` e a tecla no `title` de cada aba e botão com atalho; folha "?" lista todos.
+- [ ] Skip link "Pular para a ação".
+- [ ] `npm test` e o e2e do escopo verdes; `uv run pytest` verde.
 
-- [ ] ...
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo (try/except ou isinstance)
-- [ ] Saves antigos continuam carregando
+## 6. Smoke test real
 
-## 6. Smoke test com LLM real
+Staging, conta logada, 1–2 turnos.
 
-Checklist manual curto (3-5 requests, dentro da quota Gemini de 20/dia/modelo).
-MockLLM esconde bugs de mapeamento de campo — este passo é obrigatório antes de `done`.
-
-1. ...
-2. ...
+1. **Antes do deploy:** screenshots a 1440×900 e 390×844 da tela de jogo, mais a lista de headings exportada (NVDA, ou a extensão HeadingsMap).
+2. **Depois do deploy:** os mesmos screenshots (sem diferença visível) e a lista de headings com h1/h2/h3.
+3. No Chrome: Alt+2…6 trocam de painel e o navegador não troca de aba. Alt+1 foca o compositor e um turno é enviado só pelo teclado.
+4. `?` abre a folha; com NVDA, se disponível, navegar por `H` entre Inventário, Missões e Ouvi dizer.
+5. Anexar ao handoff.
 
 ## 7. Riscos & compatibilidade
 
-- Compatibilidade com saves antigos: ...
-- Comportamento no MockLLM / FallbackLLM: ...
-- Impacto em quota/latência: ...
+- **Alt no Windows:** Alt sozinho foca a barra de menu em alguns navegadores. Usar `preventDefault` só quando houver match e testar no Edge.
+- **macOS:** Option+dígito produz caractere (ex.: "¡"), daí D1.
+- **Testes que dependem de Ctrl+dígito:** procurar em `web/e2e` (incluindo `contracts`, que é protegido: `/eval-publish`) e adaptar.
+- **Conflito de arquivo:** `Workspace.tsx` também é tocado pela 321 (rótulos e cabeça). Rodar depois da 321 ou rebasear com cuidado.
+- **Backend e saves:** sem impacto.
+
+## 8. Decisões do dono
+
+- **D1 — combinação de atalhos.** **Recomendado: Alt+1…6 no Windows/Linux e Ctrl+Option+1…6 no macOS, com folha "?".** Alternativa: sequências estilo Gmail (`g` depois `c`/`p`/`m`) fora de campos de texto, que são iguais em qualquer SO, porém menos óbvias.
