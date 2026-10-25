@@ -20,6 +20,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+from observability.telemetry import log_event
+
 MODES = ("off", "shadow", "on")
 DEFAULT_MODE = "shadow"  # D7: shadow ate o smoke real
 KINDS = ("esconderijo", "item_perdido", "perigo_na_estrada", "criatura_avistada", "npc_em_local")
@@ -66,12 +68,6 @@ def claim_dict(claim: Any) -> dict:
     }
 
 
-def _log(event: str, **fields: Any) -> None:
-    from observability.telemetry import log_event
-
-    log_event("rumor_adopt", event, level="info", **fields)
-
-
 def _sim(state: dict) -> dict:
     return (state or {}).get("world_sim") or {}
 
@@ -103,23 +99,14 @@ def _entity(eid: str) -> dict:
     return ent if isinstance(ent, dict) else {}
 
 
-# --- fação secreta (adapter local; SPEC-314 pode pousar antes ou depois) ---------------
+# --- fação secreta (gate da SPEC-314) ------------------------------------------------
 
 
 def _faction_hidden(state: dict, fid: str) -> bool:
-    """True se `fid` e fação secreta que o jogador ainda nao conhece (R7)."""
-    try:
-        from services import faction_gate  # SPEC-314
+    """True se `fid` e fação secreta que o jogador ainda nao conhece (R7, gate da SPEC-314)."""
+    from services import faction_gate
 
-        if not faction_gate.is_secret(fid):
-            return False
-        return not faction_gate.known_to_player(state, fid)
-    except ImportError:
-        from services import npc_self
-
-        if not npc_self._faction_is_secret(fid):
-            return False
-        return not npc_self._faction_known(state, fid)
+    return faction_gate.is_secret(fid) and not faction_gate.known_to_player(state, fid)
 
 
 def _is_faction(eid: str) -> bool:
@@ -301,14 +288,9 @@ def _budget_reason(state: dict, claim: dict, day: int) -> str:
         return "budget"
     if claim["kind"] in LOOT_KINDS:
         span = int(const("LOOT_WINDOW_DAYS"))
-        for r in rows:
-            kind = str((r.get("claim") or {}).get("kind") or "")
-            if (
-                kind in LOOT_KINDS
-                and r.get("truth")
-                and int(day) - int(r.get("born_day", 0)) < span
-            ):
-                return "budget"
+        finds = [int(d) for d in sim.get("find_log") or [] if int(day) - int(d) < span]
+        if len(finds) >= int(const("LOOT_TRUE_PER_WINDOW")):
+            return "budget"
     return ""
 
 
@@ -370,10 +352,16 @@ def truth_p(state: dict, claim: Any, day: int | None = None) -> float:
     return max(0.0, min(1.0, p))
 
 
+def _playtest_forced() -> bool:
+    """`world_sim["forced_adopt"]` so vale no harness (`RPG_PLAYTEST_FORCED_ADOPT=1`)."""
+    return os.getenv("RPG_PLAYTEST_FORCED_ADOPT", "").strip() == "1"
+
+
 def _truth_roll(state: dict, rumor_id: str, day: int, claim: dict) -> bool:
     from services.world_engine import day_rng
 
-    for forced in _sim(state).get("forced_adopt") or []:  # cenario dirigido do playtest
+    forced_rows = _sim(state).get("forced_adopt") if _playtest_forced() else None
+    for forced in forced_rows or []:  # cenario dirigido do playtest
         if (
             isinstance(forced, dict)
             and forced.get("kind") == claim["kind"]
@@ -395,14 +383,14 @@ def adopt(state: dict, inst: dict, claim: Any, day: int) -> tuple[dict, dict | N
     if m == "off" or claim is None:
         return inst, None
     c = claim_dict(claim)
-    _log("proposed", kind=c["kind"])
+    log_event("rumor_adopt", "proposed", level="info", kind=c["kind"])
     why = validate_claim(state, c, day)
     if why:
-        _log("rejected", kind=c["kind"], reason=why)
+        log_event("rumor_adopt", "rejected", level="info", kind=c["kind"], reason=why)
         return inst, None
     truth = _truth_roll(state, str(inst.get("rumor_id")), day, c)
     if m == "shadow":
-        _log("shadow", kind=c["kind"], truth=truth, reason="")
+        log_event("rumor_adopt", "shadow", level="info", kind=c["kind"], truth=truth, reason="")
         return inst, None
     out = {
         **inst,
@@ -413,7 +401,7 @@ def adopt(state: dict, inst: dict, claim: Any, day: int) -> tuple[dict, dict | N
         "location_id": c["location_id"],
         "materialized_day": 0,
     }
-    _log("adopted", kind=c["kind"])
+    log_event("rumor_adopt", "adopted", level="info", kind=c["kind"])
     npc_sim = None
     if truth and c["kind"] == "npc_em_local":
         from services import npc_world
@@ -521,8 +509,10 @@ def due_materialization(
         if kind in LOOT_KINDS:
             ok = trigger == "quest" and _has_investigation_quest(state, str(r.get("rumor_id")))
             ok = ok or (trigger == "search" and _is_search(text))
-        elif kind in ENCOUNTER_KINDS or kind == "npc_em_local":
+        elif kind in ENCOUNTER_KINDS:
             ok = trigger == "travel"
+        elif kind == "npc_em_local":
+            ok = trigger in ("travel", "present")  # herói chegou, ou o NPC chegou depois
         else:
             ok = False
         if ok and _still_valid(state, r):
@@ -530,10 +520,36 @@ def due_materialization(
     return None
 
 
+TIER_ORDER = ("comum", "bom", "raro", "excepcional")
+
+
+def find_tier(state: dict, inst: dict, loc: dict) -> str:
+    """Loteria do TAMANHO do achado (D6): 1 sorteio por `day_rng` (chave da familia do sorteio de
+    verdade, outro sal), sobe 1 degrau em local de perigo alto. Nunca le o heroi."""
+    from services.world_engine import day_rng
+
+    tiers = config()["find_tiers"]
+    rng = day_rng(
+        str((state or {}).get("game_id") or ""),
+        int(inst.get("born_day", 0) or 0),
+        "rumor_tier:" + str(inst.get("rumor_id")),
+    )
+    total = sum(float(tiers[t]["weight"]) for t in TIER_ORDER)
+    u, acc, pick = rng.random() * total, 0.0, TIER_ORDER[-1]
+    for t in TIER_ORDER:
+        acc += float(tiers[t]["weight"])
+        if u < acc:
+            pick = t
+            break
+    if int((loc or {}).get("danger", 1) or 1) >= int(const("DANGER_TIER_BUMP_AT")):
+        pick = TIER_ORDER[min(len(TIER_ORDER) - 1, TIER_ORDER.index(pick) + 1)]
+    return pick
+
+
 def materialize(state: dict, inst: dict, day: int) -> tuple[dict, dict]:
     """Achado (`esconderijo`/`item_perdido`) ou chegada ao NPC agendado. Devolve
-    `(updates, instancia marcada)`; updates: `player`, `world`, `note`. Encontros usam
-    `encounter_hint` + `commit` (so contam quando o encontro realmente dispara)."""
+    `(updates, instancia marcada)`; updates: `player`, `world`, `note`, `events` (claim de unico).
+    Encontros usam `encounter_hint` + `commit` (so contam quando o encontro realmente dispara)."""
     from copy import deepcopy
 
     from services import exploration
@@ -552,6 +568,7 @@ def materialize(state: dict, inst: dict, day: int) -> tuple[dict, dict]:
             int(day),
             "rumor_cache:" + str(inst["rumor_id"]),
         )
+        tier_id = find_tier(state, inst, loc)
         note, got = exploration.grant_rumor_cache(
             player,
             world,
@@ -562,8 +579,11 @@ def materialize(state: dict, inst: dict, day: int) -> tuple[dict, dict]:
             gold_max=int(const("ADOPTED_GOLD_MAX")),
             bestiary_knowledge=(state or {}).get("bestiary_knowledge"),
             turn=int((world or {}).get("turn_count", 0) or 0),
+            tier=config()["find_tiers"][tier_id],
+            tier_id=tier_id,
         )
-        updates = {"player": player, "world": world, "note": note}
+        events = list(got.pop("_events", []) or [])
+        updates = {"player": player, "world": world, "note": note, "events": events}
         mat = {"kind": "cache", **got}
     marked = {**inst, "materialized_day": int(day), "materialization": mat}
     return updates, marked
@@ -619,7 +639,9 @@ def commit(sim: dict, rumor_id: str, day: int, materialization: dict) -> dict:
 
     out = rumors.mark_materialized(sim, rumor_id, day, materialization)
     if out is not sim:
-        _log("materialized", kind=str(materialization.get("kind") or ""))
+        log_event(
+            "rumor_adopt", "materialized", level="info", kind=str(materialization.get("kind") or "")
+        )
     return out
 
 

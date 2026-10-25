@@ -136,6 +136,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `llm.mock_selected` | `profile`, `reason` |
 | `llm.routes_invalid` | `error_type` |
 | `logging.config_invalid_level` | `fallback` |
+| `loot.fallback` | — |
 | `loot.narrate_failed` | `error` |
 | `loot.price_reasons_failed` | `error` |
 | `loot.trade_parse_failed` | `error` |
@@ -245,7 +246,12 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `rumor.proposed_rejected` | `reason` |
 | `rumor.proposed_seen` | `count` |
 | `rumor.shadow_born` | `family`, `truth` |
+| `rumor_adopt.adopted` | `kind` |
 | `rumor_adopt.expired_unmaterialized` | `kind` |
+| `rumor_adopt.materialized` | `kind` |
+| `rumor_adopt.proposed` | `kind` |
+| `rumor_adopt.rejected` | `kind`, `reason` |
+| `rumor_adopt.shadow` | `kind`, `reason`, `truth` |
 | `runtime.boot` | `cold_start_ms`, `embedding_provider`, `git_sha`, `hardened`, `instance_ref`, `jev_mode`, `llm_mode`, `llm_providers_with_key`, `log_level`, `profile`, `projection_mode`, `region` |
 | `runtime.build_failed` | `component`, `error_type` |
 | `runtime.config_warning` | `code`, `present` |

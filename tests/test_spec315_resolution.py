@@ -179,6 +179,10 @@ def test_invariants_detect_false_double_cap_teleport():
     other = adopted_row("bbbbbbbbbbbb", "item_perdido", "pradaria_ruinas", materialized=12)
     other["materialization"] = {"kind": "cache", "gold": 0}
     assert "rumor_adopt.loot_over_cap" in ids(with_rows(state(), good, other), st)  # 2 em < 20 d
+    logged = with_rows(state(world_sim={"find_log": [1, 9]}), good)  # ledger ja descartou linhas
+    assert "rumor_adopt.loot_over_cap" in ids(logged, st)
+    spaced = with_rows(state(world_sim={"find_log": [1, 25]}), good)
+    assert "rumor_adopt.loot_over_cap" not in ids(spaced, st)
     tele = with_rows(state(), good)
     tele["npc_sim"] = {
         "npcs": {
@@ -189,6 +193,21 @@ def test_invariants_detect_false_double_cap_teleport():
         }
     }
     assert "rumor_adopt.npc_teleport" in ids(tele, st)
+    # salto de posicao no MESMO dia, sem viagem (location_id nunca ficou vazio)
+    jump_prev = with_rows(state(), good)
+    jump_prev["npc_sim"] = {"npcs": {"npc_x": {"pos": {"location_id": "brekmar"}}}}
+    jump = with_rows(state(), good)
+    jump["npc_sim"] = {
+        "npcs": {
+            "npc_x": {
+                "rumor_visit": {"location_id": FAR},
+                "pos": {"location_id": FAR, "arrive_day": None},
+            }
+        }
+    }
+    assert "rumor_adopt.npc_teleport" in ids(jump, jump_prev)
+    jump["world"] = {**jump["world"], "world_clock": {"day": 9}}  # dia virou: viagem legitima
+    assert "rumor_adopt.npc_teleport" not in ids(jump, jump_prev)
 
 
 def test_became_fact_exempts_materialized_true():

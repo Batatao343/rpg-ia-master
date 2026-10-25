@@ -132,20 +132,10 @@ def test_window_active_and_loot_caps_before_roll():
     )
     assert ra.validate_claim(st, claim("esconderijo", FAR), 5) == "budget"
     # achado verdadeiro nos ultimos 20 dias: so achados sao barrados, ANTES do sorteio
-    st = with_rows(
-        state(),
-        adopted_row(
-            "cccccccccccc", "item_perdido", "pradaria_ruinas", truth=True, born=-10, expires=3
-        ),
-    )
+    st = state(world_sim={"find_log": [1]})
     assert ra.validate_claim(st, claim("esconderijo", FAR), 5) == "budget"
     assert ra.validate_claim(st, claim("perigo_na_estrada", "montanhas_afiadas"), 5) == ""
-    old = with_rows(
-        state(day=40),
-        adopted_row(
-            "dddddddddddd", "item_perdido", "pradaria_ruinas", truth=True, born=5, expires=15
-        ),
-    )
+    old = state(day=40, world_sim={"find_log": [5]})
     assert ra.validate_claim(old, claim("esconderijo", FAR), 40) == ""  # janela de 20 dias passou
 
 
@@ -156,11 +146,29 @@ def test_no_global_random():
     assert "random" not in names and "random" not in imports
 
 
-def test_forced_adopt_overrides_truth():
+def test_loot_cap_survives_ledger_cleanup(monkeypatch):
+    """P1-2: o achado verdadeiro do dia 1 segue barrando no dia 16, depois do `_cap_ledger`."""
+    monkeypatch.setattr(ra, "_truth_roll", lambda *_a: True)
+    sim, _w, _why, _extra = accept(state(day=1), [proposal(claim=claim())], day=1)
+    assert sim["find_log"] == [1] and sim["rumors"][-1]["truth"] is True
+    from services import rumors
+
+    rumors._cap_ledger(sim, 16)
+    assert not any(r.get("adopted") for r in sim["rumors"])  # a linha ja saiu do ledger
+    st = state(day=16, world_sim=sim)
+    assert ra.validate_claim(st, claim("esconderijo", FAR), 16) == "budget"
+    assert ra.validate_claim(st, claim("perigo_na_estrada", "montanhas_afiadas"), 16) == ""
+    assert ra.validate_claim(state(day=22, world_sim=sim), claim("esconderijo", FAR), 22) == ""
+
+
+def test_forced_adopt_overrides_truth(monkeypatch):
+    monkeypatch.setenv("RPG_PLAYTEST_FORCED_ADOPT", "1")
     st = state(
         world_sim={"forced_adopt": [{"kind": "esconderijo", "location_id": FAR, "truth": True}]}
     )
     assert all(ra._truth_roll(st, f"r{i}", 5, claim()) for i in range(20))
+    monkeypatch.delenv("RPG_PLAYTEST_FORCED_ADOPT")  # P2-6: em producao o override e ignorado
+    assert not all(ra._truth_roll(st, f"r{i}", 5, claim()) for i in range(40))
 
 
 def test_shadow_does_not_adopt(monkeypatch):

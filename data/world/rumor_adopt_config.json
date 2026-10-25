@@ -1,5 +1,5 @@
 {
-  "_doc": "SPEC-315: constantes [BALANCEAR] da adocao de alegacoes de rumor pelo motor. A LLM nomeia o que e onde; verdade, valor e tetos sao deste arquivo.",
+  "_doc": "SPEC-315: constantes [BALANCEAR] da adocao de alegacoes de rumor pelo motor. A LLM nomeia o que e onde; verdade, valor e tetos sao deste arquivo. find_tiers: loteria do TAMANHO do achado (D6, dono 25/10), sorteada 1x por day_rng; nunca depende do heroi.",
   "constants": {
     "ADOPTED_PER_WINDOW": 2,
     "ADOPT_WINDOW_DAYS": 10,
@@ -10,7 +10,8 @@
     "ADOPT_LOG_MAX": 20,
     "STEER_INPUTS": 3,
     "ROAD_WAR_BONUS": 0.25,
-    "TRUTH_CAP": 0.85
+    "TRUTH_CAP": 0.85,
+    "DANGER_TIER_BUMP_AT": 4
   },
   "truth_base": {
     "esconderijo": 0.35,
@@ -19,5 +20,43 @@
     "criatura_avistada": 0.5,
     "npc_em_local": 0.4
   },
-  "search_vocab": ["procur", "vasculh", "cav", "revir", "busc", "investig"]
+  "search_vocab": [
+    "procur",
+    "vasculh",
+    "cav",
+    "revir",
+    "busc",
+    "investig"
+  ],
+  "find_tiers": {
+    "comum": {
+      "weight": 55,
+      "step_up": 0,
+      "min_rarity": null,
+      "gold_mult": 1,
+      "gold_max": 40
+    },
+    "bom": {
+      "weight": 30,
+      "step_up": 1,
+      "min_rarity": null,
+      "gold_mult": 2,
+      "gold_max": 90
+    },
+    "raro": {
+      "weight": 12,
+      "step_up": 0,
+      "min_rarity": "raro",
+      "gold_mult": 4,
+      "gold_max": 180
+    },
+    "excepcional": {
+      "weight": 3,
+      "step_up": 0,
+      "min_rarity": "epico",
+      "gold_mult": 8,
+      "gold_max": 400,
+      "allow_unique": true
+    }
+  }
 }

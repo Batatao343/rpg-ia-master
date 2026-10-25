@@ -179,6 +179,61 @@ def _player_facing_message(prose: str, system: str) -> str:
     return f"{visible}\n\n{system}"
 
 
+def _rumor_cache_find(state, player: dict, world: dict, loc: dict, text: str) -> dict | None:
+    """SPEC-315 P2-4: busca roteada para LOOT no alvo de um boato VERDADEIRO materializa o
+    achado do boato (roll_loot capado) no lugar do sorteio generico. Nunca levanta."""
+    try:
+        from services import rumor_adoption as ra
+
+        if ra.mode() != "on":
+            return None
+        day = int((world.get("world_clock") or {}).get("day", 1) or 1)
+        view = {**state, "player": player, "world": world}
+        inst = ra.due_materialization(
+            view, "search", str(world.get("current_location_id") or ""), day, text
+        )
+        if inst is None or (inst.get("claim") or {}).get("kind") not in ra.LOOT_KINDS:
+            return None
+        upd, marked = ra.materialize(view, inst, day)
+        mat = marked["materialization"]
+        sim = ra.commit(state.get("world_sim") or {}, str(inst["rumor_id"]), day, mat)
+        parts = []
+        if mat.get("item_id"):
+            from inventory import item_display, make_entry
+
+            parts.append(item_display(make_entry(mat["item_id"])))
+        if mat.get("gold"):
+            parts.append(f"+{mat['gold']} de ouro")
+        achado = " e ".join(parts) or "apenas vestígios de alguém que passou ali"
+        msg = _narrate(
+            f"O jogador procura em {loc.get('name', 'o local')} e encontra EXATAMENTE: {achado}.",
+            "Você revira o lugar com paciência e algo aparece entre a poeira.",
+            None,
+        )
+        gold_delta = int(upd["player"].get("gold", 0) or 0) - int(player.get("gold", 0) or 0)
+        result = {
+            "player": upd["player"],
+            "world": upd["world"],
+            "world_sim": sim,
+            "messages": [AIMessage(content=_player_facing_message(msg, f"[SISTEMA] {achado}"))],
+            "loot_source": None,
+            "archive_due": True,
+        }
+        if upd.get("events"):  # claim de unico no mesmo caminho do loot generico
+            result["pending_world_events"] = (state.get("pending_world_events", []) or []) + list(
+                upd["events"]
+            )
+        bl = record_gain(state.get("turn_baseline"), "gold", gold_delta, "loot")
+        if bl is not state.get("turn_baseline"):
+            result["turn_baseline"] = bl
+        return result
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("loot", "rumor_find_failed", exc)
+        return None
+
+
 def loot_node(state: GameState):
     player = dict(state["player"])
     player["inventory"] = list(player.get("inventory", []))
@@ -323,6 +378,9 @@ def loot_node(state: GameState):
     # TREASURE — raridade/item saem da TABELA da região (Python)
     # =========================================================
     loc = get_location(world.get("current_location_id", "")) or {}
+    rumor_find = _rumor_cache_find(state, player, world, loc, text)  # SPEC-315 P2-4
+    if rumor_find is not None:
+        return rumor_find
     region_id = loc.get("region_id", "default")
     combat = state.get("combat") or {}
     loot_ctx = conflict_summary_service.loot_context(

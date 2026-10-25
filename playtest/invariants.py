@@ -2558,22 +2558,45 @@ def check_rumor_adopt(state: dict, prev: dict | None, turn: int) -> list[Violati
             caches.append(md)
             from inventory import is_unique
 
-            if int(mat.get("gold", 0) or 0) > cap_gold or (
-                mat.get("item_id") and is_unique(str(mat["item_id"]))
+            tiers = ra.config()["find_tiers"]
+            cap_t = int(
+                (tiers.get(str(mat.get("tier") or "comum")) or {}).get("gold_max", cap_gold)
+            )
+            unique_ok = bool((tiers.get(str(mat.get("tier") or "comum")) or {}).get("allow_unique"))
+            if int(mat.get("gold", 0) or 0) > cap_t or (
+                not unique_ok and mat.get("item_id") and is_unique(str(mat["item_id"]))
             ):
                 out.append(_V("rumor_adopt.loot_over_cap", "error", turn, "achado fora do teto"))
     span = int(ra.const("LOOT_WINDOW_DAYS"))
+    cap = int(ra.const("LOOT_TRUE_PER_WINDOW"))
     caches.sort()
-    for a, b in zip(caches, caches[1:]):
-        if b - a < span:
+    finds = sorted(int(d) for d in sim.get("find_log") or [])  # fora do ledger (P1-2)
+    for days in (caches, finds):
+        if any(days[i + cap] - days[i] < span for i in range(len(days) - cap)):
             out.append(
-                _V("rumor_adopt.loot_over_cap", "error", turn, "2 achados verdadeiros na janela")
+                _V("rumor_adopt.loot_over_cap", "error", turn, "achados verdadeiros na janela")
             )
             break
+    from services import world_distance
+
+    prev_npcs = ((prev or {}).get("npc_sim") or {}).get("npcs") or {}
+
+    def _day(st: dict | None) -> int:
+        return int((((st or {}).get("world") or {}).get("world_clock") or {}).get("day", 0) or 0)
+
+    same_day = prev is not None and _day(prev) == _day(state)  # dia virado = viagem legitima
     for ref, entry in ((state.get("npc_sim") or {}).get("npcs") or {}).items():
         pos = (entry or {}).get("pos") or {}
-        if (entry or {}).get("rumor_visit") and pos.get("location_id") and pos.get("arrive_day"):
+        if not (entry or {}).get("rumor_visit"):
+            continue
+        cur = str(pos.get("location_id") or "")
+        if cur and pos.get("arrive_day"):
             out.append(_V("rumor_adopt.npc_teleport", "error", turn, f"{ref} em dois lugares"))
+        before_loc = str(((prev_npcs.get(ref) or {}).get("pos") or {}).get("location_id") or "")
+        # salto entre turnos sem passar por viagem (pos.location_id vazio) e com custo > 0
+        if same_day and cur and before_loc and cur != before_loc:
+            if (world_distance.travel_periods(before_loc, cur) or 0) > 0:
+                out.append(_V("rumor_adopt.npc_teleport", "error", turn, f"{ref} saltou de lugar"))
     return out
 
 

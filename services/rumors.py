@@ -767,6 +767,11 @@ def _apply_proposal(
         if extra.get("adopted"):
             log = [*(sim.get("adopt_log") or []), int(day)]
             sim["adopt_log"] = log[-int(rumor_adoption.const("ADOPT_LOG_MAX")) :]
+            if inst.get("truth") and (inst.get("claim") or {}).get("kind") in (
+                rumor_adoption.LOOT_KINDS
+            ):  # teto de achado verdadeiro vive FORA do ledger (que descarta a linha)
+                finds = [*(sim.get("find_log") or []), int(day)]
+                sim["find_log"] = finds[-int(rumor_adoption.const("ADOPT_LOG_MAX")) :]
     sim["rumors"] = [*(sim.get("rumors") or []), inst]
     sim["rumor_last_perceived_day"] = int(day)
     sim["rumor_born_total"] = int(sim.get("rumor_born_total", 0)) + 1

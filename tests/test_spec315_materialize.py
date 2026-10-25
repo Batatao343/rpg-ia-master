@@ -58,7 +58,12 @@ def test_cache_marks_looted_and_never_repeats():
     assert ra.due_materialization(st, "search", FAR, 5, "Procuro por todo lado") is inst
     upd, marked = ra.materialize(st, inst, 5)
     assert FAR in upd["world"]["looted_locations"] and marked["materialized_day"] == 5
-    assert set(upd) == {"player", "world", "note"}  # R20: nenhum evento fora do turno do heroi
+    assert set(upd) == {
+        "player",
+        "world",
+        "note",
+        "events",
+    }  # R20: nenhum evento fora do turno do heroi
     sim = ra.commit(st["world_sim"], inst["rumor_id"], 5, marked["materialization"])
     after = {**st, "world_sim": sim, "world": upd["world"]}
     assert ra.due_materialization(after, "search", FAR, 6, "procuro") is None
@@ -292,3 +297,56 @@ def test_npc_arrival_marks_only_when_present():
     assert ra.due_materialization(here, "travel", FAR, 6) is npc
     away = _at_far(6, npc, npc_sim=_npc_sim())  # sem visita agendada
     assert ra.due_materialization(away, "travel", FAR, 6) is None
+
+
+def test_npc_arrives_after_hero_materializes_on_presence():
+    """P2-5: o heroi ja esta no alvo; o NPC chega depois (gatilho `present`)."""
+    npc = adopted_row("cccccccccccc", "npc_em_local", FAR, entity="npc_x")
+    sim = npc_world.schedule_visit(_npc_sim(), "npc_x", FAR, 5, 14, npc["rumor_id"])
+    travelling = _at_far(6, npc, npc_sim=sim)
+    assert ra.due_materialization(travelling, "present", FAR, 6) is None  # ainda a caminho
+    sim["npcs"]["npc_x"]["pos"] = {"location_id": FAR, "since_day": 7, "arrive_day": None}
+    arrived = _at_far(8, npc, npc_sim=sim)
+    assert ra.due_materialization(arrived, "present", FAR, 8) is npc
+    # pela costura do storyteller: so marca, nada concedido
+    sim_updates: dict = {}
+    player, note, events = stt._rumor_cache_trigger(
+        arrived, arrived["world"], sim_updates, "olho", []
+    )
+    assert player is None and note == "" and events == []
+    assert sim_updates["world_sim"]["rumors"][0]["materialized_day"] == 8
+
+
+def test_loot_node_search_at_target_materializes(monkeypatch):
+    """P2-4: busca roteada para LOOT no alvo entrega o achado do boato."""
+    import agents.loot as loot
+
+    monkeypatch.setattr(loot, "get_llm", lambda *a, **k: _Spy())
+    row = adopted_row("aaaaaaaaaaaa", "esconderijo", FAR, truth=True)
+    st = _story_at_far("Vasculho o local", [row])
+    st["loot_source"] = "TREASURE"
+    out = loot.loot_node(st)
+    assert out["world_sim"]["rumors"][0]["materialized_day"] == 5
+    assert FAR in out["world"]["looted_locations"]
+    assert out["world_sim"]["rumors"][0]["materialization"]["gold"] <= 40
+    # alegacao falsa: cai no sorteio generico, sem marcar nada
+    false_row = adopted_row("bbbbbbbbbbbb", "esconderijo", FAR, truth=False)
+    st2 = _story_at_far("Vasculho o local", [false_row])
+    st2["loot_source"] = "TREASURE"
+    out2 = loot.loot_node(st2)
+    assert "world_sim" not in out2 and FAR not in (out2["world"].get("looted_locations") or [])
+
+
+def test_find_turn_llm_exception_keeps_world(monkeypatch):
+    """P2-2: excecao do LLM no turno do achado nao perde `looted_locations` nem o rumor marcado."""
+
+    class _Boom(_Spy):
+        def invoke(self, msgs, *_a, **_k):
+            raise RuntimeError("boom")
+
+    monkeypatch.setattr(stt, "get_llm", lambda *a, **k: _Boom())
+    row = adopted_row("aaaaaaaaaaaa", "esconderijo", FAR, truth=True)
+    out = stt.storyteller_node(_story_at_far("Procuro por todo lado", [row]))
+    assert FAR in out["world"]["looted_locations"]
+    assert out["world_sim"]["rumors"][0]["materialized_day"] == 5
+    assert "O boato era" not in str(out["messages"][0].content)

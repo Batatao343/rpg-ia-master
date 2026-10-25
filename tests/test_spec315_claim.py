@@ -160,18 +160,29 @@ def test_secret_and_hidden_rejected(monkeypatch):
 
 
 def test_secret_faction_gate(monkeypatch):
-    from services import npc_self, npc_world
+    from services import faction_gate, npc_world
 
     monkeypatch.setattr(npc_world, "npc_faction", lambda *_a: "fac_sombria")
-    monkeypatch.setattr(npc_self, "_faction_is_secret", lambda fid: True)
-    monkeypatch.setattr(npc_self, "_faction_known", lambda *_a: False)
+    monkeypatch.setattr(faction_gate, "is_secret", lambda fid: True)
+    monkeypatch.setattr(faction_gate, "known_to_player", lambda *_a: False)
     c = claim("npc_em_local", FAR, "npc_x")
     assert ra._secret_reason(state(), c) == "secret"
-    monkeypatch.setattr(npc_self, "_faction_known", lambda *_a: True)
+    monkeypatch.setattr(faction_gate, "known_to_player", lambda *_a: True)
     assert ra._secret_reason(state(), c) == ""
-    monkeypatch.setattr(npc_self, "_faction_is_secret", lambda fid: False)
-    monkeypatch.setattr(npc_self, "_faction_known", lambda *_a: False)
+    monkeypatch.setattr(faction_gate, "is_secret", lambda fid: False)
+    monkeypatch.setattr(faction_gate, "known_to_player", lambda *_a: False)
     assert ra._secret_reason(state(), c) == ""  # fação publica
+
+
+def test_secret_faction_real_catalog():
+    """Caminho real da 314: fação secreta do catálogo + `faction_intel`."""
+    from services import faction_gate
+
+    fid = "filhos_chama_azul"
+    assert faction_gate.is_secret(fid)
+    assert ra._faction_hidden(state(), fid) is True
+    known = state(faction_intel={fid: {"known": True}})
+    assert ra._faction_hidden(known, fid) is False
 
 
 def test_player_steered_loot_rejected():
@@ -222,3 +233,22 @@ def test_fallbackllm_without_field_is_safe():
     )
     stt._apply_proposed_rumors(state(), updates, plain, 5, False)
     assert updates["world_sim"]["rumors"][-1]["truth"] is False  # 312 pura, sem claim
+
+
+def test_player_steered_through_apply_proposed_rumors():
+    """P1-1: o caminho real substitui `updates["messages"]` pela narracao; o historico do
+    jogador tem de sobreviver para o anti-direcao (R8) funcionar."""
+    st = state(messages=[HumanMessage(content="Conte-me do esconderijo na Floresta dos Sussurros")])
+    updates = {"messages": [AIMessage(content="O taverneiro fala baixo.")]}
+    upd = stt.StoryUpdateWithRumorClaims(
+        narrative="x",
+        proposed_rumors=[{"text": TEXT, "entity_ids": ["brekmar"], "claim": claim()}],
+    )
+    stt._apply_proposed_rumors(st, updates, upd, 5, False)
+    inst = updates["world_sim"]["rumors"][-1]
+    assert "adopted" not in inst and inst["truth"] is False  # 312 pura
+    # sem o nome digitado, a mesma alegacao e adotada
+    clean = state(messages=[HumanMessage(content="Que novidades ha?")])
+    updates2 = {"messages": [AIMessage(content="ok")]}
+    stt._apply_proposed_rumors(clean, updates2, upd, 5, False)
+    assert updates2["world_sim"]["rumors"][-1]["adopted"] is True

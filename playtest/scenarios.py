@@ -7,6 +7,7 @@ específica sem esperar que a simulação sorteie NPC ou mercador adequados.
 from __future__ import annotations
 
 import copy
+import os
 from typing import Optional
 
 from playtest.profiles import ProfileDecision
@@ -301,6 +302,7 @@ def _prepare_rumor_adotado(prepared: dict) -> dict:
         {"kind": "esconderijo", "location_id": ADOPT_FALSE_LOC, "truth": False},
     ]
     prepared["world_sim"] = sim
+    os.environ["RPG_PLAYTEST_FORCED_ADOPT"] = "1"  # so o harness honra `forced_adopt`
     return prepared
 
 

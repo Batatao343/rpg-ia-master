@@ -855,7 +855,8 @@ def _apply_proposed_rumors(state, updates: dict, update, turn: int, quarantined:
         sim_key = "world_sim"
         world = updates.get("world") or state.get("world") or {}
         day = int((world.get("world_clock") or {}).get("day", 1) or 1)
-        pst = {**state, **updates, "world": world}
+        # `updates["messages"]` e a narracao: o historico do JOGADOR (anti-direcao R8) fica
+        pst = {**state, **updates, "world": world, "messages": state.get("messages") or []}
         extra: dict = {}  # SPEC-315: devolve `npc_sim` se a verdade agenda a visita de um NPC
         new_sim, new_world, _why = rumors.accept_proposed(
             pst, proposals, turn=turn, day=day, quarantined=quarantined, extra=extra
@@ -958,27 +959,31 @@ def _rumor_cache_trigger(state, world: dict, sim_updates: dict, text: str, quest
         from services import rumor_adoption as ra
 
         if ra.mode() != "on":
-            return None, ""
+            return None, "", []
         day = int(((world or {}).get("world_clock") or {}).get("day", 1) or 1)
         here = str((world or {}).get("current_location_id") or "")
         view = {**state, **sim_updates, "world": world, "quests": quests}
-        inst = ra.due_materialization(view, "search", here, day, text) or (
-            ra.due_materialization(view, "quest", here, day)
+        inst = (
+            ra.due_materialization(view, "search", here, day, text)
+            or ra.due_materialization(view, "quest", here, day)
+            or ra.due_materialization(view, "present", here, day)  # NPC chegou depois do heroi
         )
         if inst is None:
-            return None, ""
+            return None, "", []
         upd, marked = ra.materialize(view, inst, day)
         sim = sim_updates.get("world_sim") or state.get("world_sim") or {}
         sim_updates["world_sim"] = ra.commit(
             sim, str(inst["rumor_id"]), day, marked["materialization"]
         )
+        if not upd:  # npc_em_local: so marca; nada a conceder
+            return None, "", []
         world["looted_locations"] = list(upd["world"].get("looted_locations") or [])
-        return upd["player"], str(upd.get("note") or "")
+        return upd["player"], str(upd.get("note") or ""), list(upd.get("events") or [])
     except Exception as exc:
         from observability.telemetry import log_fallback
 
         log_fallback("storyteller", "rumor_cache_failed", exc)
-        return None, ""
+        return None, "", []
 
 
 def _rumor_arrival(state, world: dict, sim_updates: dict, level: int, turn: int):
@@ -1282,11 +1287,14 @@ def storyteller_node(state: GameState):
     extra_engine_events_tick += wq_events
     extra_engine_events_tick += _world_quest_completions(state, world, wq_quests)
     wq_changed = wq_quests != list(state.get("quests") or [])  # inclui quests da 301
+    rumor_find = False  # SPEC-315: achado de boato => `world.looted_locations` tem de sobreviver
     if not dest and rested_player is None and not law_resolved and last_user_input:
-        _cache_player, _cache_note = _rumor_cache_trigger(
+        _cache_player, _cache_note, _cache_events = _rumor_cache_trigger(
             state, world, sim_updates, str(last_user_input), wq_quests
         )  # SPEC-315: boato verdadeiro de achado, no alvo, com busca/quest
         if _cache_player is not None:
+            rumor_find = True
+            discovery_events = list(discovery_events) + _cache_events  # claim de unico
             discovery_player = _cache_player
             faction_note = (faction_note + " " + _cache_note).strip()
             turn_bl = record_gain(
@@ -2322,6 +2330,8 @@ def storyteller_node(state: GameState):
             fallback["player"] = applied_player
         if _replan_cause:  # SPEC-311 R7: o gatilho do mundo também sobrevive ao fallback
             fallback["needs_replan"] = travel_needs_replan
+        if rumor_find:
+            fallback["world"] = world
         if dest or rested_player is not None:
             fallback["world"] = world
             fallback["factions"] = factions

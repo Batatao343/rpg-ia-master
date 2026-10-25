@@ -953,6 +953,21 @@ def execute_craft(state: dict, item_ref: str) -> dict:
 # ---------------------------------------------------------------------------
 # Drop tables — raridade rolada em Python (LLM só descreve)
 # ---------------------------------------------------------------------------
+RARITY_LADDER = ("comum", "incomum", "raro", "epico", "lendario")
+
+
+def _shift_rarity(pick: str, step_up: int = 0, min_rarity: str | None = None) -> str:
+    """Sobe a raridade `step_up` degraus e garante o piso `min_rarity` (escada existente)."""
+    if not step_up and not min_rarity:
+        return pick
+    ladder = RARITY_LADDER
+    idx = ladder.index(pick) if pick in ladder else 0
+    idx = min(len(ladder) - 1, idx + max(0, int(step_up)))
+    if min_rarity in ladder:
+        idx = max(idx, ladder.index(min_rarity))
+    return ladder[idx]
+
+
 def roll_loot(
     region_id: str,
     danger: int,
@@ -961,6 +976,8 @@ def roll_loot(
     bestiary_knowledge: dict | None = None,
     turn: int = 0,
     boost: bool = False,
+    step_up: int = 0,
+    min_rarity: str | None = None,
 ) -> dict:
     """Sorteia raridade (pesos por banda de perigo) e item do pool da região.
     Retorna {"item_id", "rarity", "gold"} — item_id None se pool vazio (só ouro).
@@ -973,6 +990,7 @@ def roll_loot(
     weights: dict[str, int] = dict(table.get(band) or {"comum": 100})
     rarities = list(weights.keys())
     pick = rng.choices(rarities, weights=[max(0, int(weights[r])) for r in rarities], k=1)[0]
+    pick = _shift_rarity(pick, step_up, min_rarity)  # SPEC-315: achado de boato (sem rng extra)
     pools = table.get("pools") or {}
     suppressed: set = set()
     if bestiary_knowledge is not None:
@@ -980,11 +998,21 @@ def roll_loot(
         from services.ecology import suppressed_loot
 
         suppressed = suppressed_loot(region_id, BESTIARY or {}, bestiary_knowledge, turn)
-    pool = [
-        i
-        for i in (pools.get(pick) or [])
-        if i in ARTIFACTS_DB and is_unique_available(i, projection) and i not in suppressed
-    ]
+
+    def _pool(rarity: str) -> list:
+        return [
+            i
+            for i in (pools.get(rarity) or [])
+            if i in ARTIFACTS_DB and is_unique_available(i, projection) and i not in suppressed
+        ]
+
+    pool = _pool(pick)
+    if not pool and (step_up or min_rarity) and pick in RARITY_LADDER:
+        for lower in reversed(RARITY_LADDER[: RARITY_LADDER.index(pick)]):  # piso sem pool: desce
+            pool = _pool(lower)
+            if pool:
+                pick = lower
+                break
     item_id = rng.choice(pool) if pool else None
     gold = rng.randint(3, 12) * max(1, int(danger or 1))
     return {"item_id": item_id, "rarity": pick, "gold": gold}

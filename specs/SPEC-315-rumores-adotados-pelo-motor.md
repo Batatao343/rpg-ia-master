@@ -138,8 +138,10 @@ O boato precisa primeiro passar na validação da 312 (`_validate_proposal`,
   Grava `materialized_day` e `materialization` na instância (owner: `services/rumors.py`).
 - **R15 — Achado limitado pela economia (anti-abuso).** Materializador novo
   `exploration.grant_rumor_cache(player, world, loc, rng, projection)` reusa `roll_loot`
-  (`services/economy.py:956-990`) com o perigo **do alvo**, `boost=False`, sem único (mesma regra R2b
-  de `services/exploration.py:52-55`), e ouro ≤ `ADOPTED_GOLD_MAX` (40) `[BALANCEAR]`.
+  (`services/economy.py:956-990`) com o perigo **do alvo**, `boost=False`, ~~sem único (mesma regra R2b
+  de `services/exploration.py:52-55`), e ouro ≤ `ADOPTED_GOLD_MAX` (40)~~ *(substituído em 25/10, ver
+  **D6-rev1**)*: o tamanho do achado vem da **loteria de tier** (`find_tiers`, §8 D6-rev1): raridade
+  subida/piso e teto de ouro por tier; único só no tier `excepcional` e só se livre `[BALANCEAR]`.
   `item_perdido` = só item (sem ouro); `esconderijo` = item ou ouro. O alvo entra em
   `world.looted_locations` (não rende baú nem achado de novo). A LLM nunca escolhe item, raridade ou
   valor. RNG = `day_rng(game_id, day, "rumor_cache:" + rumor_id)`.
@@ -195,8 +197,8 @@ O boato precisa primeiro passar na validação da 312 (`_validate_proposal`,
   grava por campanha: propostas, adotadas por tipo, verdadeiras, materializadas, ouro concedido por
   achado.
 - **R28 — Invariantes de playtest (`error`).** `rumor_adopt.false_materialized`;
-  `rumor_adopt.double_materialized`; `rumor_adopt.loot_over_cap` (ouro > `ADOPTED_GOLD_MAX`, único,
-  ou > `LOOT_TRUE_PER_WINDOW`); `rumor_adopt.npc_teleport` (NPC agendado em dois lugares ou sem
+  `rumor_adopt.double_materialized`; `rumor_adopt.loot_over_cap` (ouro > teto **do tier** sorteado (D6-rev1), único fora do tier
+  `excepcional`, ou > `LOOT_TRUE_PER_WINDOW` em `world_sim.find_log`); `rumor_adopt.npc_teleport` (NPC agendado em dois lugares ou sem
   viagem). `rumor.became_fact` passa a ignorar instâncias com `truth=true` **e** `materialized_day`
   (único ajuste no invariante da 312; corrige P4).
 
@@ -230,7 +232,7 @@ writers acima. Nenhum writer novo de `event_log`/projection.
 - **Novo** `services/rumor_adoption.py`: `mode()`, `validate_claim`, `truth_p`, `adopt`,
   `due_materialization`, `materialize`, `resolve_outcome`. Puro, sem LLM, sem RNG global.
 - **Novo** `data/world/rumor_adopt_config.json`: bases, vieses, tetos, `SEARCH_VOCAB`,
-  `ADOPTED_GOLD_MAX`.
+  `find_tiers` (D6-rev1; `ADOPTED_GOLD_MAX` = teto do tier `comum`).
 - **Alterados:** `services/structured_outputs.py` (`RumorClaim`, campo em `ProposedRumor`, coerção);
   `agents/storyteller.py` (classe de schema com `claim` só com a flag; `_apply_proposed_rumors` chama
   `rumor_adoption.adopt`; gatilho de achado perto de `:952`; `rumor_hint` em `:1156-1171`);
@@ -346,7 +348,7 @@ seção 10 "Desvios" no mesmo commit.
 - [ ] R1–R3: `RumorClaim` fechado, só com a flag, coerção sem derrubar o turno
 - [ ] R4–R9: validação por tipo, segredo, fação secreta, anti-direção, quarentena
 - [ ] R10–R13: verdade determinística por tipo/estado, independente do herói; orçamento 312 + tetos
-- [ ] R14–R20: materialização uma vez, só no alvo, via writers existentes; achado dentro de `roll_loot`
+- [ ] R14–R20: materialização uma vez, só no alvo, via writers existentes; achado dentro de `roll_loot` e da loteria de tier (D6-rev1)
 - [ ] R21–R22: quest elegível sem vazar verdade; desfechos corretos
 - [ ] R23–R28: saves antigos, round-trip, flag `shadow` default, telemetria, invariantes
 - [ ] Teste de propriedade (falso nunca materializa; verdadeiro materializa exatamente 1×)
@@ -368,7 +370,7 @@ preenche `claim` com ids válidos, nem se a prosa "confirma" o boato antes da ho
 2. Cenário dirigido (`--scenario mundo --turns 12 --real --max-cost 0.15 --seed 42`, com
    `world_sim["forced_adopt"]` do harness, padrão `npc_sim["forced"]` de
    `services/npc_perils.py:184`, só no playtest): 1 alegação verdadeira de `esconderijo` e 1 falsa;
-   viajar e buscar nas duas. Asserta: verdadeira materializa 1× com ouro ≤ 40 e sem único; falsa não
+   viajar e buscar nas duas. Asserta: verdadeira materializa 1× com ouro ≤ teto do tier sorteado (D6-rev1) e sem único duplicado; falsa não
    muda inventário; narração da chegada não inventa achado na falsa; `/game/state` sem
    `truth`/`claim`; 0 violação `error`; `mock=False`.
 3. Invokes por ação = baseline da 312 (contador do harness).
@@ -381,7 +383,7 @@ Custo esperado ≤ US$ 0,35. Estourou → parar e registrar.
   `rumor_visit` = 304 pura. Rollback de código: chaves ignoradas; uma visita agendada vira entrada
   inerte (o `_step_position` antigo não a lê).
 - **Farm de tesouro:** limitado por R4 (não aqui), R8 (não encomendado), R13 (1 achado verdadeiro a
-  cada 20 dias), R15 (`roll_loot`, sem único, ouro ≤ 40) e pelo orçamento compartilhado da 312.
+  cada 20 dias), R15 (`roll_loot` + loteria de tier, D6-rev1: ouro ≤ 400 só no tier excepcional, 3 %, único só se livre) e pelo orçamento compartilhado da 312.
   Esperado: ≤ ~2 % do ouro de uma campanha de 50 dias (medir no playtest, R27).
 - **Encontro "encomendado" para matar o herói:** força por `forced_encounter_danger`, descanso seguro
   respeitado, sem BOSS.
@@ -403,7 +405,24 @@ Custo esperado ≤ US$ 0,35. Estourou → parar e registrar.
   Alternativa: aceitar e reduzir a chance de verdade pela metade.
 - **D4 — Taxas de verdade.** **35 / 30 / 40 (+25 com guerra ou rota) / 50 / 40 %**, `[BALANCEAR]`.
 - **D5 — `npc_em_local` com líderes** (Valerius etc.). **Não**: líder nunca é agendado por boato.
-- **D6 — Achado.** **Ouro ≤ 40 por achado, sem único, 1 achado verdadeiro a cada 20 dias.**
+- ~~**D6 — Achado.** **Ouro ≤ 40 por achado, sem único, 1 achado verdadeiro a cada 20 dias.**~~
+  *(substituída em 25/10, ver D6-rev1; o limite de frequência de 1 achado verdadeiro a cada 20 dias
+  **permanece**.)*
+- **D6-rev1 — Achado com loteria de tamanho (dono, 25/10/2026).** Palavras do dono: "gosto do
+  limite, mas acho melhor colocar um sorteador. ter chance de aparecer coisas maiores ou não ter.
+  limitando assim fica chato que sempre vai ter um loot ruim".
+  - **Antes:** ouro ≤ 40, sem único, sempre `roll_loot` comum.
+  - **Depois:** tier sorteado 1x por `day_rng(game_id, born_day, "rumor_tier:"+rumor_id)` (nunca
+    influenciado pelo herói): **comum 55 %** (`roll_loot`, ouro ≤ 40) · **bom 30 %** (raridade +1
+    degrau, ouro ≤ 90) · **raro 12 %** (raridade ≥ raro, ouro ≤ 180) · **excepcional 3 %**
+    (raridade ≥ épico, ouro ≤ 400; único só se não reclamado, não colocado em baú curado e não do
+    herói, com claim na projection; senão cai para raro). Local de perigo ≥ 4 sobe 1 tier
+    (determinístico). Ouro do tier = ouro do `roll_loot` × multiplicador (1/2/4/8) limitado ao teto.
+    A narração mostra o tamanho pelo que foi achado, nunca rótulo/número de tier.
+  - **Racional:** teto fixo de 40 tornava todo achado pobre; a loteria dá chance real de coisas
+    grandes sem mexer na frequência (1 achado verdadeiro / 20 dias) nem criar economia nova (reusa
+    `roll_loot`, a escada de raridade e as regras de único). Constantes `[BALANCEAR]` em
+    `data/world/rumor_adopt_config.json` (`find_tiers`).
 - **D7 — Rollout.** **`shadow` por padrão (local, suíte e staging) até o smoke §6; depois `on` local e
   na suíte, staging `on` após 1 semana de shadow com taxa de rejeição < 60 %.**
 - **D8 — Revogar a D4 da 312** ("boato do narrador é sempre falso") **só quando
@@ -428,11 +447,40 @@ criado: `python -m playtest run --scenario rumor_adotado --turns 10` (MockLLM) p
 - **D-4 — Gatilho `quest`.** Com quest `investigar_rumor` ativa ancorada no rumor, o herói no alvo
   materializa o achado em qualquer ação (a conclusão da quest é decidida pelo event processor, que não
   escreve em `player`); sem quest, exige `SEARCH_VOCAB`.
-- **D-5 — Rota LOOT.** Verbos de busca que o router classifica como `LOOT` (ex.: "vasculho") não passam
-  pelo storyteller e não materializam; materializa na próxima ação STORY (limitação conhecida).
+- **D-5 — Rota LOOT.** `loot_node` (TREASURE) também chama `due_materialization` e entrega o achado do boato no lugar do sorteio genérico.
 - **D-6 — Visibilidade.** Aresta oculta (`canonical_secret_detail`) só barra a **entidade** da alegação;
   local com aresta oculta (quase todos têm) só é barrado por `visibility != public` ou assinatura secreta.
-- **D-7 — Fação secreta (R7).** Adapter local: `services.faction_gate` (SPEC-314) se existir; senão
-  `npc_self._faction_is_secret` + `faction_intel[f].known`.
+- **D-7 — Fação secreta (R7).** Chama `services.faction_gate` (SPEC-314) direto.
 - **D-8 — Cenário.** `--scenario rumor_adotado` (instâncias adotadas pré-injetadas + `world_sim["forced_adopt"]`
   para alegações emitidas pela LLM) em vez de reaproveitar `mundo`.
+- **D-9 — Revisão sol.** Teto de achado verdadeiro em `world_sim.find_log` (fora do ledger);
+  gatilho `present` para NPC que chega depois; `forced_adopt` só com `RPG_PLAYTEST_FORCED_ADOPT=1`;
+  invariante `npc_teleport` compara `prev`→atual no mesmo dia.
+- **D-10 — Revisão sol P1/P2 (25/10).** Ver *Histórico de mudanças*. `loot_node` ganhou gancho
+  (`_rumor_cache_find`); `economy.roll_loot` ganhou `step_up`/`min_rarity` (sem mudar o sorteio
+  quando omitidos); `_rumor_cache_trigger` devolve `(player, nota, eventos)` (claim de único).
+
+## Histórico de mudanças
+
+- **2026-10-25 — Aprovação.** Dono aprovou via `/goal` ("execute e suba todas as specs em draft a
+  partir do número 300") com os padrões recomendados D1–D8.
+- **2026-10-25 — Implementação inicial** (commit `f1a37de1`): `rumor_adoption`, materializadores,
+  invariantes, cenário `rumor_adotado`; desvios D-1..D-8 acima.
+- **2026-10-25 — Revisão independente: `CHANGES_REQUIRED`** (`handoffs/SPEC-315-sol-review.md`).
+  - P1-1 anti-direção morto (`pst` perdia o histórico do jogador) → `_apply_proposed_rumors` preserva
+    `state["messages"]`; teste via `_apply_proposed_rumors`.
+  - P1-2 teto de 1 achado/20 dias vazava com o ledger → `world_sim.find_log` (fora do ledger,
+    `LOOT_TRUE_PER_WINDOW`), invariante e teste de save/limpeza.
+  - P1-3 teste vermelho pós-rebase → mocka/usa `faction_gate` real.
+  - P2-1 fallback morto de `_faction_hidden` removido (chama `faction_gate`).
+  - P2-2 fallback de exceção do LLM leva `world`; nota do achado diegética (`Ao explorar X, o jogador
+    ENCONTROU:` → 2ª pessoa via `_player_facing_note`).
+  - P2-3 eventos `rumor_adopt.*` com `log_event` literal + catálogo regenerado.
+  - P2-4 gancho em `loot_node` (TREASURE) para busca roteada a LOOT.
+  - P2-5 gatilho `present` (NPC chega depois do herói) e invariante `npc_teleport` por `prev`→atual
+    no mesmo dia.
+  - P2-6 `forced_adopt` só com `RPG_PLAYTEST_FORCED_ADOPT=1` (setado pelo cenário do harness).
+- **2026-10-25 — D6-rev1** (decisão do dono): loteria de tamanho do achado; ver §8. Código:
+  `find_tier`, `exploration.grant_rumor_cache(tier=)`, `economy.roll_loot(step_up, min_rarity)`,
+  `_placed_uniques`; testes `tests/test_spec315_tiers.py` (distribuição ±3 pp, único nunca duplicado,
+  teto por tier, frequência 1/20 dias).

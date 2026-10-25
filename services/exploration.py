@@ -148,6 +148,19 @@ def discover_on_arrival(
     )
 
 
+def _placed_uniques() -> set[str]:
+    """Unicos ja colocados no mundo (bau curado de local): o achado de boato nunca os duplica."""
+    from inventory import is_unique
+    from services import world_pressures as wp
+
+    out: set[str] = set()
+    for loc in wp._map_index()[0].values():
+        for iid in (loc.get("treasure") or {}).get("items") or []:
+            if is_unique(str(iid)):
+                out.add(str(iid))
+    return out
+
+
 def grant_rumor_cache(
     player: dict,
     world: dict,
@@ -159,20 +172,33 @@ def grant_rumor_cache(
     gold_max: int = 40,
     bestiary_knowledge: dict | None = None,
     turn: int = 0,
+    tier: dict | None = None,
+    tier_id: str = "comum",
 ) -> tuple[str, dict]:
-    """SPEC-315 R15: achado de um boato VERDADEIRO. Reusa `roll_loot` com o perigo do ALVO,
-    sem boost e sem unico (R2b); ouro limitado por `gold_max`. `item_perdido` = so item;
-    `esconderijo` = item ou ouro. O alvo entra em `looted_locations` (nunca rende de novo).
-    MUTA `player`/`world` (copias do chamador). Devolve `(nota_para_o_narrador, {item_id, gold})`."""
+    """SPEC-315 R15 + D6: achado de um boato VERDADEIRO. Reusa `roll_loot` com o perigo do ALVO,
+    sem boost; o TAMANHO vem da loteria `tier` (raridade subida/piso e teto de ouro; nunca do
+    heroi). Unico so no tier `allow_unique`, e so se disponivel, nao colocado no mundo nem ja
+    do heroi — senao cai para nao-unico. `item_perdido` = so item; `esconderijo` = item OU ouro.
+    O alvo entra em `looted_locations`. MUTA `player`/`world`. Devolve `(nota, {item_id, gold,
+    tier, _events})`; `_events` (claim de unico) e do chamador."""
     from inventory import is_unique
 
+    tier = tier or {"step_up": 0, "min_rarity": None, "gold_mult": 1, "gold_max": gold_max}
     loc = loc or {}
     loc_id = str(loc.get("id") or "")
     danger = int(loc.get("danger", 1) or 1)
     region_id = loc.get("region_id", "default")
+    owned = {str(i.get("id")) for i in player.get("inventory") or [] if isinstance(i, dict)}
+    blocked = _placed_uniques() | owned
+    allow_unique = bool(tier.get("allow_unique"))
     item_id = None
     roll_gold = 0
-    for _ in range(6):  # unico nunca sai por aqui: re-sorteia (deterministico pelo rng)
+    for attempt in range(8):  # re-sorteia (deterministico pelo rng)
+        # sem unico liberado (ou apos varias falhas) o tier excepcional cai para "raro"
+        fallback = not allow_unique or attempt >= 4
+        min_r = tier.get("min_rarity")
+        if tier_id == "excepcional" and fallback:
+            min_r = "raro"
         roll = economy.roll_loot(
             region_id,
             danger,
@@ -181,16 +207,22 @@ def grant_rumor_cache(
             bestiary_knowledge=bestiary_knowledge,
             turn=turn,
             boost=False,
+            step_up=int(tier.get("step_up") or 0),
+            min_rarity=min_r,
         )
         cand = roll.get("item_id")
-        if cand and not is_unique(cand):
+        ok = bool(cand) and (not is_unique(cand) or (not fallback and cand not in blocked))
+        if ok:
             item_id = cand
-        roll_gold = min(int(roll.get("gold", 0) or 0), int(gold_max))
+        roll_gold = min(
+            int(roll.get("gold", 0) or 0) * int(tier.get("gold_mult") or 1), int(tier["gold_max"])
+        )
         if item_id or kind != "item_perdido":
             break
     labels: list[str] = []
+    events: list = []
     if item_id:
-        labels, _events = _grant_items(player, [item_id], projection)
+        labels, events = _grant_items(player, [item_id], projection)
         if not labels:
             item_id = None
     # item_perdido = so item; esconderijo = item OU ouro (nunca os dois)
@@ -201,8 +233,12 @@ def grant_rumor_cache(
         world["looted_locations"] = list(world.get("looted_locations") or []) + [loc_id]
     partes = ([", ".join(labels)] if labels else []) + ([f"{gold} de ouro"] if gold else [])
     note = (
-        f"O boato era VERDADE: em {loc.get('name', 'o local')} o jogador ENCONTROU "
+        f"Ao explorar {loc.get('name', 'o local')}, o jogador ENCONTROU: "
         f"{' e '.join(partes) if partes else 'apenas vestigios de alguem que passou ali'}. "
         "Descreva o achado modesto."
+        if tier_id == "comum"
+        else f"Ao explorar {loc.get('name', 'o local')}, o jogador ENCONTROU: "
+        f"{' e '.join(partes) if partes else 'apenas vestigios de alguem que passou ali'}. "
+        "Descreva o achado."
     )
-    return note, {"item_id": item_id, "gold": gold}
+    return note, {"item_id": item_id, "gold": gold, "tier": tier_id, "_events": events}
