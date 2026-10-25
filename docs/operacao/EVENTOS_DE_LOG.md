@@ -239,6 +239,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `rumor.perceived` | `channel` |
 | `rumor.proposed_accepted` | `family` |
 | `rumor.proposed_rejected` | `reason` |
+| `rumor.proposed_seen` | `count` |
 | `rumor.shadow_born` | `family`, `truth` |
 | `runtime.boot` | `cold_start_ms`, `embedding_provider`, `git_sha`, `hardened`, `instance_ref`, `jev_mode`, `llm_mode`, `llm_providers_with_key`, `log_level`, `profile`, `projection_mode`, `region` |
 | `runtime.build_failed` | `component`, `error_type` |

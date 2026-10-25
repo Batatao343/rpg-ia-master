@@ -16,7 +16,13 @@
     "PROPOSED_PER_TURN": 1,
     "TITLE_SIMILARITY": 0.75
   },
-  "settlement_tags": ["cidade", "vila", "porto", "favela", "docas"],
+  "settlement_tags": [
+    "cidade",
+    "vila",
+    "porto",
+    "favela",
+    "docas"
+  ],
   "templates": {
     "rumor.lore": [
       "{fonte_label} juram que {gist}.",
@@ -24,9 +30,11 @@
       "Dizem por aí, segundo {fonte_label}, que {gist}."
     ],
     "rumor.avistamento": [
-      "Caçadores contam de um avistamento rondando {local}: {criatura}.",
-      "Na taverna, alguém jura ter visto algo perto de {local}: {criatura}."
+      "Caçadores contam ter visto {artigo} {criatura} rondando {local}.",
+      "Na taverna, alguém jura ter visto {artigo} {criatura} perto de {local}."
     ],
-    "rumor.narrador": ["{text}"]
+    "rumor.narrador": [
+      "{text}"
+    ]
   }
 }

@@ -432,17 +432,18 @@ def render_news(state: dict, rumor: dict) -> str:
         "text": str(rumor.get("text") or ""),
         "gist": str(seed.get("gist") or ""),
         "fonte_label": str(seed.get("fonte_label") or "alguns"),
-        "criatura": str(seed.get("creature_label") or "uma criatura"),
+        "criatura": str(seed.get("creature_label") or "criatura"),
+        "artigo": str(seed.get("creature_article", "um")),
         "local": local or wp.region_label(region_of_row(rumor)) or "a região",
     }
     if family in ("lore", "avistamento") and not (
-        values["gist"] or values["criatura"] != "uma criatura"
+        values["gist"] or values["criatura"] != "criatura"
     ):
         return ""
     text = tpl
     for k, v in values.items():
         text = text.replace("{" + k + "}", v)
-    text = text.strip()
+    text = re.sub(r" {2,}", " ", text).strip()
     return text[:1].upper() + text[1:] if text else ""
 
 

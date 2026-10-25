@@ -175,3 +175,40 @@ def test_fallbackllm_story_update_without_field_is_safe():
     )  # guard de FallbackLLM
     stt._apply_proposed_rumors(st, updates, None, 5, False)
     assert updates == {}
+
+
+def test_function_calling_schema_exposes_proposed_rumors_only_when_on():
+    """Forma real: o schema que o provider (DeepSeek/Groq via function_calling) recebe."""
+    from langchain_core.utils.function_calling import convert_to_openai_tool
+
+    on = convert_to_openai_tool(stt.StoryUpdateWithRumors)["function"]["parameters"]["properties"]
+    off = convert_to_openai_tool(stt.StoryUpdate)["function"]["parameters"]["properties"]
+    assert "proposed_rumors" in on and "proposed_rumors" not in off
+    assert "BOATO" in on["proposed_rumors"]["description"]
+    item = convert_to_openai_tool(stt.StoryUpdateWithRumors)["function"]["parameters"]
+    assert "entity_ids" in str(item) and "location_id" in str(item)
+
+
+def test_prompt_hint_only_when_proposed_on(monkeypatch):
+    assert "proposed_rumors" in stt._rumor_proposal_hint()
+    monkeypatch.setenv("RPG_RUMORS_PROPOSED", "off")
+    assert stt._rumor_proposal_hint() == ""
+
+
+def test_seen_event_logged_every_turn_with_flag_on(monkeypatch):
+    seen = []
+    import observability.telemetry as tel
+
+    monkeypatch.setattr(
+        tel, "log_event", lambda cat, name, **kw: seen.append((cat, name, kw.get("count")))
+    )
+    st = _state()
+    stt._apply_proposed_rumors(st, {}, stt.StoryUpdateWithRumors(narrative="x"), 5, False)
+    stt._apply_proposed_rumors(
+        st,
+        {"world": st["world"]},
+        stt.StoryUpdateWithRumors(narrative="x", proposed_rumors=[_prop()]),
+        5,
+        False,
+    )
+    assert ("rumor", "proposed_seen", 0) in seen and ("rumor", "proposed_seen", 1) in seen

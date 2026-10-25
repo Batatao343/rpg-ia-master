@@ -36,6 +36,7 @@ OVERRIDE_FIELDS = (
     "review",
     "subject",
     "creature_label",
+    "creature_article",
     "entities",
     "secret_id",
 )
@@ -58,6 +59,11 @@ TAG_ALIASES = {
     "hospedeiros": "sx_cidades_hospedeiros",
 }
 ENTITY_ALIASES = {"valerius": "npc_valerius"}
+# Substantivos femininos entre os nomes do bestiario (artigo "uma"); o resto sai "um".
+FEMININE_NOUNS = frozenset(
+    "mumia vinha gargula sombra aranha sereia fumaca gaivota viuva mariposa larva rainha faisca "
+    "sanguessuga cabra serpente vipera quimera moreia capita sentinela".split()
+)
 SUBJECT_BY_TYPE = {"npc": "pessoa", "faction": "faccao", "location": "lugar"}
 
 
@@ -248,6 +254,9 @@ def avistamento_seeds() -> dict[str, dict]:
             "subject": "criatura",
             "entities": [eid],
             "creature_label": name[:1].lower() + name[1:],
+            "creature_article": (
+                "uma" if slug(re.split(r"[ -]", name.strip())[0]) in FEMININE_NOUNS else "um"
+            ),
             "confiabilidade": "media",
             "truth_mode": "regional",
             "quest_eligible": True,

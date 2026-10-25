@@ -771,6 +771,15 @@ RPG_NPC_KNOWLEDGE=on`): 0 erros, 0 violacoes. Cenario `mundo` (40 turnos): 10 ru
   coordenador (frequencia delegada), em troca do canal (b) quase nunca ocorrer; D2 do dono segue
   recomendando 14 se ele preferir mais rumores de outras regioes.
 
+- **D-12 smoke real (DeepSeek).** (a) 0 propostas em 35 turnos: o schema chega ao provider (teste
+  do schema function_calling), mas a so-description era conservadora demais; agora, com
+  `RPG_RUMORS_PROPOSED=on`, o prompt ganha o bloco `<BOATOS>` (convite explicito) e cada turno
+  loga `rumor.proposed_seen{count}` (0 != 100% rejeitadas). (b) O boato do dia 2 sumiu por causa do
+  FIFO de 12 de `world.news` (festas/calendario o empurraram); `append_news` agora evicta a
+  noticia mais antiga que NAO e boato (o boato vivo tem TTL e teto proprios). (c) Avistamento
+  com artigo: `creature_article` (um/uma, por substantivo feminino conhecido; override para
+  plural) - "ter visto um troll de Ponte perto de Nova Arcadia".
+
 ## 9. Decisões do dono
 
 ### Registradas (2026-10-24)

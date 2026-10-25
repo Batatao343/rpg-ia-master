@@ -967,6 +967,7 @@
         "enemy_rato_peste_anel_lama"
       ],
       "creature_label": "rato da Peste",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -984,6 +985,7 @@
         "enemy_degolador_mao_sombria"
       ],
       "creature_label": "degolador de rua",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1000,6 +1002,7 @@
         "enemy_soldado_legiao_ferro"
       ],
       "creature_label": "soldado de armadura de ferro",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1016,6 +1019,7 @@
         "enemy_iniciado_chama_azul"
       ],
       "creature_label": "iniciado da Chama Azul",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1032,6 +1036,7 @@
         "enemy_devorador_sol_zhur"
       ],
       "creature_label": "devorador de Sol",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1048,6 +1053,7 @@
         "enemy_escorpiao_cristal"
       ],
       "creature_label": "escorpião de Cristal",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1064,6 +1070,7 @@
         "enemy_mumia_de_po"
       ],
       "creature_label": "múmia de Pó",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1080,6 +1087,7 @@
         "enemy_hospedeiro_fungico"
       ],
       "creature_label": "hospedeiro Fúngico",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1097,6 +1105,7 @@
         "enemy_vinha_estranguladora"
       ],
       "creature_label": "vinha Estranguladora",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1113,6 +1122,7 @@
         "enemy_guerreiro_bjorn"
       ],
       "creature_label": "guerreiro Bjorn",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1129,6 +1139,7 @@
         "enemy_lobo_invernal"
       ],
       "creature_label": "lobo das Geleiras",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1146,6 +1157,7 @@
         "enemy_sentinela_ferro"
       ],
       "creature_label": "sentinela de Ferro",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1162,6 +1174,7 @@
         "enemy_horror_esgoto"
       ],
       "creature_label": "horror do Esgoto",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1179,6 +1192,7 @@
         "enemy_necromante_renegado"
       ],
       "creature_label": "necromante Renegado",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1195,6 +1209,7 @@
         "enemy_esqueleto_legiao_antiga"
       ],
       "creature_label": "esqueleto da Legião Antiga",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1212,6 +1227,7 @@
         "enemy_espectro_lamento"
       ],
       "creature_label": "espectro do Lamento",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1228,6 +1244,7 @@
         "enemy_gargula_ferro"
       ],
       "creature_label": "gárgula de Ferro",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1245,6 +1262,7 @@
         "enemy_assassino_cinzeu"
       ],
       "creature_label": "assassino Cinzéu",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1261,6 +1279,7 @@
         "enemy_urso_coruja_mutante"
       ],
       "creature_label": "urso-Coruja Mutante",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1277,6 +1296,7 @@
         "enemy_elemental_fogo_poluido"
       ],
       "creature_label": "elemental de Fogo Poluído",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1294,6 +1314,7 @@
         "enemy_mimico_bau"
       ],
       "creature_label": "mímico",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1310,6 +1331,7 @@
         "enemy_basilisco_caverna"
       ],
       "creature_label": "basilisco da Caverna",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1327,6 +1349,7 @@
         "enemy_troll_ponte"
       ],
       "creature_label": "troll de Ponte",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1343,6 +1366,7 @@
         "enemy_golem_lixo"
       ],
       "creature_label": "golem de Lixo",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1360,6 +1384,7 @@
         "enemy_sombra_espreitadora"
       ],
       "creature_label": "sombra Espreitadora",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1376,6 +1401,7 @@
         "enemy_verme_areia_jovem"
       ],
       "creature_label": "verme da Areia",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1392,6 +1418,7 @@
         "enemy_djinn_menor"
       ],
       "creature_label": "djinn Menor",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1409,6 +1436,7 @@
         "enemy_esqueleto_mago"
       ],
       "creature_label": "esqueleto Arcanista",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1425,6 +1453,7 @@
         "enemy_nomade_canibal"
       ],
       "creature_label": "nômade Canibal",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1442,6 +1471,7 @@
         "enemy_yeti"
       ],
       "creature_label": "yeti das Cavernas",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1459,6 +1489,7 @@
         "enemy_wyvern_jovem"
       ],
       "creature_label": "wyvern Jovem",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1476,6 +1507,7 @@
         "enemy_bandido_capitao"
       ],
       "creature_label": "capitão dos Bandidos",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1492,6 +1524,7 @@
         "enemy_morcego_vampiro"
       ],
       "creature_label": "morcego Vampiro Gigante",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1508,6 +1541,7 @@
         "enemy_aranha_lobo"
       ],
       "creature_label": "aranha Lobo",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1525,6 +1559,7 @@
         "enemy_zumbi_blindado"
       ],
       "creature_label": "zumbi Blindado",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1541,6 +1576,7 @@
         "enemy_polvo_esgoto"
       ],
       "creature_label": "polvo do Esgoto",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1558,6 +1594,7 @@
         "enemy_fantasma"
       ],
       "creature_label": "fantasma",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1574,6 +1611,7 @@
         "enemy_observador_menor"
       ],
       "creature_label": "observador Menor",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1590,6 +1628,7 @@
         "enemy_minotauro_esqueleto"
       ],
       "creature_label": "minotauro Esqueleto",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1606,6 +1645,7 @@
         "enemy_golem_carne"
       ],
       "creature_label": "golem de Carne",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1622,6 +1662,7 @@
         "mon_lobo_de_vidro"
       ],
       "creature_label": "lobo de Vidro",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1638,6 +1679,7 @@
         "mon_verme_do_gelo"
       ],
       "creature_label": "verme do Gelo",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1654,6 +1696,7 @@
         "enemy_renegado_ermo"
       ],
       "creature_label": "renegado do Ermo",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1670,6 +1713,7 @@
         "mon_sanguessuga_braco"
       ],
       "creature_label": "sanguessuga-Braço",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1686,6 +1730,7 @@
         "mon_sapo_boi_acido"
       ],
       "creature_label": "sapo-Boi Ácido",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1702,6 +1747,7 @@
         "mon_afogado_da_batalha"
       ],
       "creature_label": "afogado da Batalha",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1718,6 +1764,7 @@
         "enemy_druida_renegado"
       ],
       "creature_label": "druida-Renegado",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1734,6 +1781,7 @@
         "mon_urso_de_espinha"
       ],
       "creature_label": "urso-de-Espinha",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1750,6 +1798,7 @@
         "mon_serpente_raiz"
       ],
       "creature_label": "serpente-Raiz",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1766,6 +1815,7 @@
         "mon_vipera_flora"
       ],
       "creature_label": "vipera-Flora",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1782,6 +1832,7 @@
         "mon_predador_crescido"
       ],
       "creature_label": "predador Crescido",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1798,6 +1849,7 @@
         "mon_sentinela_hospedeiro"
       ],
       "creature_label": "sentinela Hospedeiro",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1814,6 +1866,7 @@
         "mon_afogado_de_aethelgard"
       ],
       "creature_label": "afogado de Aethelgard",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1830,6 +1883,7 @@
         "mon_mergulhadores_saqueadores"
       ],
       "creature_label": "mergulhador Saqueador",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1846,6 +1900,7 @@
         "enemy_cultista_destilacao"
       ],
       "creature_label": "cultista da Destilação",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1862,6 +1917,7 @@
         "mon_sereia_de_ophidia"
       ],
       "creature_label": "sereia de Ophidia",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1878,6 +1934,7 @@
         "mon_fumaca_de_cor_errada"
       ],
       "creature_label": "fumaça de Cor Errada",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1894,7 +1951,8 @@
       "entities": [
         "mon_os_que_voltaram_e_nao_eram_eles"
       ],
-      "creature_label": "os Que Voltaram",
+      "creature_label": "os que voltaram",
+      "creature_article": "",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1911,6 +1969,7 @@
         "mon_tubarao_de_casco"
       ],
       "creature_label": "tubarão de Casco",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1927,6 +1986,7 @@
         "mon_caranguejo_mare"
       ],
       "creature_label": "caranguejeiro da Maré",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1943,6 +2003,7 @@
         "mon_gaivota_ladra"
       ],
       "creature_label": "gaivota-Ladra",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1960,6 +2021,7 @@
         "enemy_pirata_brekmar"
       ],
       "creature_label": "pirata de Brekmar",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1976,6 +2038,7 @@
         "mon_capangas_do_poco"
       ],
       "creature_label": "capanga do Poço",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1993,6 +2056,7 @@
         "enemy_arpoador_osshari"
       ],
       "creature_label": "arpoador Osshari",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2009,6 +2073,7 @@
         "enemy_orc_saidas_baixas"
       ],
       "creature_label": "orc das Saídas Baixas",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2025,6 +2090,7 @@
         "mon_cabra_navalha"
       ],
       "creature_label": "cabra-Navalha",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2041,6 +2107,7 @@
         "mon_anao_eco"
       ],
       "creature_label": "anão-Eco",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2057,6 +2124,7 @@
         "mon_espectro_elfico"
       ],
       "creature_label": "espectro Élfico",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2073,6 +2141,7 @@
         "mon_lobo_da_pradaria"
       ],
       "creature_label": "lobo da Pradaria",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2089,6 +2158,7 @@
         "enemy_capturador_groth"
       ],
       "creature_label": "capturador de Groth",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2105,6 +2175,7 @@
         "mon_rato_caldeira"
       ],
       "creature_label": "rato de Caldeira",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2121,6 +2192,7 @@
         "mon_cao_rebite"
       ],
       "creature_label": "cão de Rebite",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2137,6 +2209,7 @@
         "mon_automato_fundicao"
       ],
       "creature_label": "autômato de Fundição",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2153,6 +2226,7 @@
         "mon_mosquito_eter"
       ],
       "creature_label": "mosquito de Éter",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2169,6 +2243,7 @@
         "mon_viuva_lodo"
       ],
       "creature_label": "viúva do Lodo",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2185,6 +2260,7 @@
         "mon_cervo_afogado"
       ],
       "creature_label": "cervo Afogado",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2201,6 +2277,7 @@
         "mon_escaravelho_vidro"
       ],
       "creature_label": "escaravelho de Vidro",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2217,6 +2294,7 @@
         "mon_hiena_sol"
       ],
       "creature_label": "hiena do Sol Partido",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2233,6 +2311,7 @@
         "mon_colosso_duna"
       ],
       "creature_label": "colosso de Duna Oca",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2249,6 +2328,7 @@
         "mon_mariposa_sussurro"
       ],
       "creature_label": "mariposa do Sussurro",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2265,6 +2345,7 @@
         "mon_cacador_casca"
       ],
       "creature_label": "caçador de Casca",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2281,6 +2362,7 @@
         "mon_ent_dormindo"
       ],
       "creature_label": "ent que Sonha Acordado",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2297,6 +2379,7 @@
         "mon_larva_hospedeira"
       ],
       "creature_label": "larva Hospedeira",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2313,6 +2396,7 @@
         "mon_macaco_esporo"
       ],
       "creature_label": "macaco de Esporo",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2329,6 +2413,7 @@
         "mon_rainha_cipo"
       ],
       "creature_label": "rainha-Cipó",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2345,6 +2430,7 @@
         "mon_corvo_gelo"
       ],
       "creature_label": "corvo de Gelo Negro",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2361,6 +2447,7 @@
         "mon_lobo_aurora"
       ],
       "creature_label": "lobo da Aurora Morta",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2377,6 +2464,7 @@
         "mon_jotun_cinza"
       ],
       "creature_label": "jötunn de Cinza",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2393,6 +2481,7 @@
         "mon_faisca_destilacao"
       ],
       "creature_label": "faísca da Destilação",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2409,6 +2498,7 @@
         "mon_vigia_caco"
       ],
       "creature_label": "vigia de Caco",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2425,6 +2515,7 @@
         "mon_quimera_cristal"
       ],
       "creature_label": "quimera de Cristal Destilado",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2441,6 +2532,7 @@
         "mon_caranguejo_cinza"
       ],
       "creature_label": "caranguejo de Cinza",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2457,6 +2549,7 @@
         "mon_moreia_vulcanica"
       ],
       "creature_label": "moreia Vulcânica",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2473,6 +2566,7 @@
         "mon_oraculo_coral"
       ],
       "creature_label": "oráculo de Coral",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2489,6 +2583,7 @@
         "mon_carrapato_osso"
       ],
       "creature_label": "carrapato de Osso",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2505,6 +2600,7 @@
         "mon_saqueador_marfim"
       ],
       "creature_label": "saqueador de Marfim",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2521,6 +2617,7 @@
         "mon_baleia_ossario"
       ],
       "creature_label": "filhote de Baleia-Ossário",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2537,6 +2634,7 @@
         "mon_goblin_eco"
       ],
       "creature_label": "goblin de Eco",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2553,6 +2651,7 @@
         "mon_cabra_labirinto"
       ],
       "creature_label": "cabra do Labirinto",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2569,6 +2668,7 @@
         "mon_guardiao_basalto"
       ],
       "creature_label": "guardião de Basalto",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2585,6 +2685,7 @@
         "mon_gafanhoto_runa"
       ],
       "creature_label": "gafanhoto de Runa",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2601,6 +2702,7 @@
         "mon_cavaleiro_sem_rosto"
       ],
       "creature_label": "cavaleiro sem Rosto",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2617,6 +2719,7 @@
         "mon_auroque_ruinas"
       ],
       "creature_label": "auroque das Ruínas",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2633,6 +2736,7 @@
         "mon_rato_cais_brekmar"
       ],
       "creature_label": "rato de Cais de Brekmar",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2649,6 +2753,7 @@
         "mon_cobrador_gancho"
       ],
       "creature_label": "cobrador do Gancho",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2665,6 +2770,7 @@
         "mon_capita_corda"
       ],
       "creature_label": "capitã da Corda Molhada",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,

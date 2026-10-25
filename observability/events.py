@@ -329,6 +329,7 @@ EVENTS: dict[str, tuple[str, ...]] = {
     "rumor.perceived": ("channel",),
     "rumor.proposed_accepted": ("family",),
     "rumor.proposed_rejected": ("reason",),
+    "rumor.proposed_seen": ("count",),
     "rumor.shadow_born": ("family", "truth"),
     "runtime.boot": (
         "cold_start_ms",

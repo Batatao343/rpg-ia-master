@@ -1,5 +1,5 @@
 {
-  "_doc": "Curadoria manual (SPEC-312 R4): vence o gerado em truth/gist/fonte_label/public_names/labels/regions/location_id/quest_eligible/disabled/review/subject/creature_label/entities/secret_id (segredo que a semente revelaria: bloqueia o nascimento ate a revelacao). Editar a mao; o dono revisa truth/public_names/quest_eligible (D1).",
+  "_doc": "Curadoria manual (SPEC-312 R4): vence o gerado em truth/gist/fonte_label/public_names/labels/regions/location_id/quest_eligible/disabled/review/subject/creature_label/creature_article/entities/secret_id (segredo que a semente revelaria: bloqueia o nascimento ate a revelacao). Editar a mao; o dono revisa truth/public_names/quest_eligible (D1).",
   "overrides": {
     "rumor_valerius_nao_come_nem_dorme": {
       "fonte_label": "servos do Anel Dourado",
@@ -195,6 +195,10 @@
     },
     "rumor_avist_enemy_soldado_legiao_ferro": {
       "creature_label": "soldado de armadura de ferro"
+    },
+    "rumor_avist_mon_os_que_voltaram_e_nao_eram_eles": {
+      "creature_label": "os que voltaram",
+      "creature_article": ""
     }
   }
 }

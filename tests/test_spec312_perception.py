@@ -235,3 +235,41 @@ def test_unknown_faction_names_never_in_render():
     r = make_rumor(sim, "rumor_a_legiao_esta_fabricando_soldados_a_partir_de_mortos", day=5)
     text = wperc.render(base_state(5), r)
     assert "Legião de Ferro" not in text and "legião" in text.lower()
+
+
+def test_live_rumor_survives_news_fifo_cap():
+    """Run real (explorador/31): o boato do dia 2 sumiu quando 12 noticias comuns o empurraram."""
+    from services.ambient import NEWS_CAP, append_news
+
+    world = {"world_clock": {"day": 2, "period": "Manhã"}}
+    world = append_news(
+        world,
+        text="boato vivo",
+        location_id="x",
+        location_name="X",
+        turn=1,
+        extra={"kind": "rumor", "rumor_id": "r", "expires_day": 12},
+    )
+    for i in range(NEWS_CAP + 3):
+        world = append_news(
+            world, text=f"comum {i}", location_id="x", location_name="X", turn=2 + i
+        )
+    texts = [n["text"] for n in world["news"]]
+    assert "boato vivo" in texts and len(texts) == NEWS_CAP
+    assert "comum 0" not in texts and f"comum {NEWS_CAP + 2}" in texts
+
+
+def test_avistamento_text_has_article_and_reads_naturally():
+    sim: dict = {}
+    for sid, expect in (
+        ("rumor_avist_mon_troll_de_ponte", "um troll de"),
+        ("rumor_avist_mon_mumia_de_po", "uma múmia de"),
+        ("rumor_avist_mon_os_que_voltaram_e_nao_eram_eles", "ter visto os que voltaram"),
+    ):
+        if sid not in rumors.load_seeds():
+            continue
+        item = make_rumor(sim, sid, region="nova_arcadia", loc="nova_arcadia")
+        for n in range(6):  # todos os templates
+            inst = {**rumors.from_item(item), "rumor_id": f"v{n}"}
+            text = rumors.render_news({}, inst)
+            assert expect in text and "  " not in text and "algo perto" not in text

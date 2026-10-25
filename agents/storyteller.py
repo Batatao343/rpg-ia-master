@@ -316,6 +316,21 @@ def _quests_ativas_block(quests: list[dict], state: dict | None = None) -> str:
     )
 
 
+def _rumor_proposal_hint() -> str:
+    """SPEC-312 R25: so com `RPG_RUMORS_PROPOSED=on` o narrador e convidado a registrar o boato."""
+    from services import rumors
+
+    if rumors.proposed_mode() != "on":
+        return ""
+    return (
+        "\n    <BOATOS>\n    Se um personagem PRESENTE NA CENA contar ao jogador, NESTE turno, "
+        "um boato (algo que ouviu dizer e não pode confirmar: uma fofoca, um 'dizem que...'), "
+        "registre em 'proposed_rumors' (text em 1 frase, sem números; entity_ids com ids EXATOS "
+        "de <ENTIDADES_CANONICAS> citados no boato). Só o que foi dito em cena; nunca invente "
+        "fatos. Na dúvida, deixe vazio.\n    </BOATOS>"
+    )
+
+
 def _gancho_novo_block(created: list[dict]) -> str:
     """SPEC-305 R22: linha com o gancho recem-criado (texto do template + canal) para o
     narrador mostrar COMO o personagem soube. Sem chamada LLM nova; sem prazo exato."""
@@ -787,8 +802,14 @@ def _apply_proposed_rumors(state, updates: dict, update, turn: int, quarantined:
     try:
         from services import rumors
 
+        if rumors.proposed_mode() != "on":
+            return
         proposals = getattr(update, "proposed_rumors", None) or []
-        if not proposals or rumors.proposed_mode() != "on":
+        from observability.telemetry import log_event
+
+        # mede se o narrador propoe (0 propostas != 100% rejeitadas): 1 linha por turno com a flag on
+        log_event("rumor", "proposed_seen", level="info", count=len(proposals))
+        if not proposals:
             return
         sim_key = "world_sim"
         world = updates.get("world") or state.get("world") or {}
@@ -1496,7 +1517,7 @@ def storyteller_node(state: GameState):
     quests_ativas = _quests_ativas_block(
         _prompt_quests, {**state, "world": world, "quests": wq_quests}
     )
-    gancho_novo = _gancho_novo_block(wq_created)
+    gancho_novo = _gancho_novo_block(wq_created) + _rumor_proposal_hint()
 
     # spec npc-fallback-sem-alvo (R2): rota NPC sem interlocutor delegou aqui.
     npc_fallback_clause = _npc_fallback_clause(scene_state)

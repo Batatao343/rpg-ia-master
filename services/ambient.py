@@ -90,6 +90,22 @@ def _ambient_block(
     return f"<AMBIENTE>\n    {body}\n    </AMBIENTE>"
 
 
+def _fifo_cap(news: list[dict]) -> list[dict]:
+    """FIFO de `NEWS_CAP`; SPEC-312: o boato ainda vivo (<= `RUMOR_NEWS_MAX`, TTL proprio) nao e
+    empurrado por notícia comum - sai a noticia mais antiga que NAO e boato."""
+    excess = len(news) - NEWS_CAP
+    if excess <= 0:
+        return news
+    drop: set[int] = set()
+    for i, n in enumerate(news):
+        if len(drop) >= excess:
+            break
+        if n.get("kind") != "rumor":
+            drop.add(i)
+    kept = [n for i, n in enumerate(news) if i not in drop]
+    return kept[-NEWS_CAP:]
+
+
 def append_news(
     world: dict,
     *,
@@ -124,7 +140,7 @@ def append_news(
     if extra:  # SPEC-312: campos adicionais (kind/rumor_id/expires_day) sem mexer no resto
         entry.update(extra)
     news.append(entry)
-    new_world["news"] = news[-NEWS_CAP:]
+    new_world["news"] = _fifo_cap(news)
     return new_world
 
 
