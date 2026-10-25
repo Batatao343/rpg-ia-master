@@ -320,7 +320,10 @@ lore real. **≤ 5 requests**, teto US$ 0,05. Cada passo: save preparado + 1 fal
   de lore substituto com assinatura antiga (sem `exclude_ids`/`**kw`) não recebe o filtro.
 - `rerank_by_region` mantém o pin de página de fação secreta (mitigação da 311) só para o que
   sobrar do filtro R13 (ex.: o jogador já sabe o plano).
-- Fora do escopo, achados em R19: (a) arestas do grafo no pack (`A Mão Sombria —operates_in→
-  Nova Arcádia`) e (b) o menu de ganchos da 313 (criaturas "da Mão Sombria") ainda citam o
-  NOME de fação secreta; o plano não vaza. Mascarar (a) quebra o snapshot de ouro de
-  `tests/test_context_npc_gate.py` — follow-up.
+- Vazamentos de NOME achados no R19 e corrigidos aqui (decisão do coordenador, 25/10):
+  (a) arestas do grafo no pack passam por `display_if_faction` (fora do `planning`);
+  (b) o menu `<GANCHOS_POSSIVEIS>` da 313 mascara o nome ("Degolador da [facção
+  desconhecida]") via `faction_gate.mask_secret_names`; os itens guardam o rótulo real;
+  (c) R19 agora afirma que o nome (inteiro e sem artigo) não aparece em NENHUM ponto do prompt
+  com intel ausente. O snapshot `tests/fixtures/spec215_npc_pack_off.txt` (fixture de produto,
+  fora de `evals/protected-paths.txt`) foi atualizado com o nome mascarado.

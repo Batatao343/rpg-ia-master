@@ -88,6 +88,23 @@ def display_if_faction(state: Mapping | None, entity_id: str, fallback: str) -> 
     return fallback
 
 
+def mask_secret_names(state: Mapping | None, text: str) -> str:
+    """Troca o NOME de fação secreta ignota por "[facção desconhecida]" num texto livre."""
+    from services import faction_membership as fm
+
+    out = str(text or "")
+    for fid in fm.load_catalog():
+        if is_secret(fid) and not known_to_player(state, fid):
+            name = fm.faction_name({}, fid)
+            if name and name in out:
+                out = out.replace(name, "[facção desconhecida]")
+            # nome sem artigo ("Mão Sombria" em "da Mão Sombria")
+            bare = name.split(" ", 1)[1] if name.split(" ", 1)[0] in ("A", "O", "Os", "As") else ""
+            if bare and bare in out:
+                out = out.replace(bare, "[facção desconhecida]")
+    return out
+
+
 def redacted_lore_ids(state: Mapping | None, own: str = "") -> frozenset[str]:
     """R13: páginas do Codex de fação secreta cujo plano o jogador ainda não conhece.
 

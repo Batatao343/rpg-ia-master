@@ -3,8 +3,8 @@ Quem controla Nova Arcádia agora: Lorde Protetor Valerius.
 [turno 4] Lorde Protetor Valerius foi morto (por: player).
 Lorde Protetor Valerius —controls→ Nova Arcádia
 A Legião de Ferro —operates_in→ Nova Arcádia
-A Mão Sombria —operates_in→ Nova Arcádia
-Os Filhos da Chama Azul —operates_in→ Nova Arcádia
+uma facção desconhecida —operates_in→ Nova Arcádia
+uma facção desconhecida —operates_in→ Nova Arcádia
 A Guilda dos Corvos —operates_in→ Nova Arcádia
 Os Encapuzados da Fornalha —operates_in→ Nova Arcádia
 A Resistência Operária (os Martelos Partidos) —operates_in→ Nova Arcádia
@@ -19,7 +19,7 @@ Comandante Thrace —leads→ A Legião de Ferro
 Mestre-fundidor Kald —leads→ Os Encapuzados da Fornalha
 Bors Martelo-partido —leads→ A Resistência Operária (os Martelos Partidos)
 Pardal —leads→ A Quadrilha dos Telhados
-Os Filhos da Chama Azul —enemy_of→ A Legião de Ferro
+uma facção desconhecida —enemy_of→ A Legião de Ferro
 A Resistência Operária (os Martelos Partidos) —enemy_of→ A Legião de Ferro
 A Resistência Operária (os Martelos Partidos) —enemy_of→ Os Encapuzados da Fornalha
 Os Clãs de Combate —operates_in→ Skallgard e o Ermo Branco
@@ -50,15 +50,15 @@ Os Últimos Anões do Reino —operates_in→ As Montanhas Afiadas
 Durgrim Último-martelo —leads→ Os Últimos Anões do Reino
 Os Druidas do Ciclo Cinzento —operates_in→ O Pântano da Melancolia
 Arcante Gresh —leads→ Os Druidas do Ciclo Cinzento
-Os Druidas-renegados —operates_in→ O Pântano da Melancolia
-Saelwen, a que Afundou —leads→ Os Druidas-renegados
-Os Druidas do Ciclo Cinzento —enemy_of→ Os Druidas-renegados
+uma facção desconhecida —operates_in→ O Pântano da Melancolia
+Saelwen, a que Afundou —leads→ uma facção desconhecida
+Os Druidas do Ciclo Cinzento —enemy_of→ uma facção desconhecida
 A Colmeia dos Hospedeiros —controls→ A Selva de Xylos
 O que Ouve Mais Longe —leads→ A Colmeia dos Hospedeiros
 As Tribos dos Devoradores de Sol —operates_in→ O Deserto de Zhur
 Khatarn Olhos-de-obsidiana —leads→ As Tribos dos Devoradores de Sol
-Os Cultistas da Destilação —operates_in→ As Ruínas Submersas de Aethelgard
-Corvane, o Mestre-destilador —leads→ Os Cultistas da Destilação
+uma facção desconhecida —operates_in→ As Ruínas Submersas de Aethelgard
+Corvane, o Mestre-destilador —leads→ uma facção desconhecida
 Os Mercadores de Curiosidades —operates_in→ O Cemitério de Leviatãs
 Ume Lodo-Claro —located_in→ O Pântano da Melancolia
 Padre Junco —located_in→ O Pântano da Melancolia

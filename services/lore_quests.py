@@ -369,7 +369,7 @@ def anchor_menu(state: dict, npc_key: str) -> tuple[str, list[dict]]:
         return _empty_notice(m), []
     items = _interleave(items)
     while items:
-        block = _render_menu(items)
+        block = _render_menu(items, state)
         if estimate_tokens(block) <= MENU_TOKEN_BUDGET:
             return block, items
         items = items[:-1]  # orcamento do prompt: descarta o fim da lista
@@ -409,13 +409,19 @@ def estimate_tokens(text: str) -> int:
     return _est(text)
 
 
-def _render_menu(items: list[dict]) -> str:
+def _render_menu(items: list[dict], state: dict | None = None) -> str:
     lines = [
         "<GANCHOS_POSSIVEIS>",
         "Se oferecer uma dessas tarefas, use o kind e o anchor_id EXATOS. "
         "Não diga prazo nem valor: o mundo decide.",
     ]
-    lines += [f"- kind={i['kind']} anchor_id={i['anchor_id']} ({i['label']})" for i in items]
+    from services import faction_gate
+
+    lines += [  # SPEC-314: nome de fação secreta ignota não vai ao prompt
+        f"- kind={i['kind']} anchor_id={i['anchor_id']} "
+        f"({faction_gate.mask_secret_names(state, str(i['label']))})"
+        for i in items
+    ]
     lines.append("</GANCHOS_POSSIVEIS>")
     return "\n".join(lines)
 

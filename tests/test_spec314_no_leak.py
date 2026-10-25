@@ -69,9 +69,11 @@ def test_prompt_inteiro_por_faccao_secreta(monkeypatch, fid, intel, tier):
         intel == "known" and tier == "leal" and fid in RIVAIS_DA_LEGIAO
     )  # R2/D2
     assert (f["goal"] in p) is goal_ok
-    # R1 vale para o bloco de facções (arestas do grafo e o menu de ganchos da 313 são follow-up)
     bloco = re.search(r"<FACÇÕES_DO_MUNDO>.*?</FACÇÕES_DO_MUNDO>", p, flags=re.S).group(0)
-    assert (f["name"] in bloco) is (intel != "ausente")
+    assert (f["name"] in bloco) is (intel != "ausente")  # R1
+    if intel == "ausente":  # o nome não aparece em NENHUM ponto do prompt (arestas, ganchos, lore)
+        bare = f["name"].split(" ", 1)[1]
+        assert f["name"] not in p and bare not in p
     assert (_codex_body(fid)[:80] in p) is (intel == "goal")  # R13
 
 

@@ -502,8 +502,14 @@ def collect_dynamic_facts(
         ):
             continue
         rel = edge.get("type", "relação")
+        src, dst = _name(edge.get("source")), _name(edge.get("target"))
+        if not include_hidden:  # SPEC-314 R14: fação secreta ignota não é nomeada
+            from services import faction_gate
+
+            src = faction_gate.display_if_faction(state, str(edge.get("source") or ""), src)
+            dst = faction_gate.display_if_faction(state, str(edge.get("target") or ""), dst)
         add(
-            f"{_name(edge.get('source'))} —{rel}→ {_name(edge.get('target'))}",
+            f"{src} —{rel}→ {dst}",
             "relations",
             impact=_DEFAULT_IMPACT,
             turns_ago=0,
