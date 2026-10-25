@@ -154,7 +154,8 @@ def test_new_rows_schema(table):
         match = re.fullmatch(r"((?:lore_nova|data)/[\w.]+):(\d+)", row.get("source", ""))
         assert match, f"{rid}: source inválido"
         assert 1 <= int(match.group(2)) <= _file_lines(match.group(1)), rid
-        assert row.get("review") == "dono", rid
+        # Pendente = review:"dono"; depois de `npc_seed_review.py approve` a marca sai (dono, 24/10).
+        assert row.get("review") in ("dono", None), rid
 
 
 @pytest.mark.parametrize("table", ns.TABLE_KEYS)
